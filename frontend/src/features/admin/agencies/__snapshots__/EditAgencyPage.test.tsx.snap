@@ -13,7 +13,11 @@ Array [
         <svg
           fill="currentColor"
           height={20}
+          onBlur={[Function]}
           onClick={[Function]}
+          onFocus={[Function]}
+          onMouseOut={[Function]}
+          onMouseOver={[Function]}
           size={20}
           stroke="currentColor"
           strokeWidth="0"
@@ -176,7 +180,7 @@ Array [
                   className="form-label"
                   htmlFor="input-isDisabled"
                 >
-                  Is Disabled?
+                  Disable Agency?
                   <svg
                     className="tooltip-icon"
                     fill="currentColor"
@@ -227,7 +231,7 @@ Array [
                   className="form-label"
                   htmlFor="input-sendEmail"
                 >
-                  Send email?
+                  Email Notifications?
                   <svg
                     className="tooltip-icon"
                     fill="currentColor"

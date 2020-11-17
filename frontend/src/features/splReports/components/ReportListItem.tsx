@@ -4,6 +4,7 @@ import { Row, Col, Form } from 'react-bootstrap';
 import ElipsisControls from './ElipsisControls';
 import { IReport } from '../interfaces';
 import { formatApiDateTime } from 'utils';
+import TooltipWrapper from 'components/common/TooltipWrapper';
 
 interface IReportListitemProps {
   /** The underlying report that this control is mapped to. */
@@ -66,9 +67,11 @@ const ReportListitem: React.FunctionComponent<IReportListitemProps> = ({
   return (
     <>
       <ListItemRow className={className}>
-        <Report onClick={() => onOpen(report)} md={9} title={getName(report)}>
-          {getName(report)}
-        </Report>
+        <TooltipWrapper toolTipId="open-report" toolTip="Open Report">
+          <Report onClick={() => onOpen(report)} md={9} title={getName(report)}>
+            {getName(report)}
+          </Report>
+        </TooltipWrapper>
         <FlexCol md={3}>
           <CheckBox type="checkbox" checked={report.isFinal} disabled={true}></CheckBox>
           <ElipsisControls {...{ onOpen, onFinal, onDelete, report }} />

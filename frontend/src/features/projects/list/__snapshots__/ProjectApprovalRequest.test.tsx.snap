@@ -365,7 +365,7 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
                   "width": "3.5%",
                 }
               }
-              title=""
+              title="View Disposal Project details"
               width="3.5%"
             >
               <div>
@@ -390,7 +390,7 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
                   "width": "7%",
                 }
               }
-              title=""
+              title="View Disposal Project details"
               width="7%"
             >
               Project name 16
@@ -411,7 +411,7 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
                   "width": "7%",
                 }
               }
-              title=""
+              title="View Disposal Project details"
               width="7%"
             >
               Approval
@@ -432,7 +432,7 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
                   "width": "7%",
                 }
               }
-              title=""
+              title="View Disposal Project details"
               width="7%"
             >
               AEST
@@ -453,7 +453,7 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
                   "width": "7%",
                 }
               }
-              title=""
+              title="View Disposal Project details"
               width="7%"
             >
               UOV
@@ -474,7 +474,7 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
                   "width": "3.5%",
                 }
               }
-              title=""
+              title="View Disposal Project details"
               width="3.5%"
             >
               
@@ -495,7 +495,7 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
                   "width": "3.5%",
                 }
               }
-              title=""
+              title="View Disposal Project details"
               width="3.5%"
             >
               
@@ -516,7 +516,7 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
                   "width": "3.5%",
                 }
               }
-              title=""
+              title="View Disposal Project details"
               width="3.5%"
             >
               $0
@@ -537,7 +537,7 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
                   "width": "3.5%",
                 }
               }
-              title=""
+              title="View Disposal Project details"
               width="3.5%"
             >
               $0
@@ -558,7 +558,7 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
                   "width": "7%",
                 }
               }
-              title=""
+              title="View Disposal Project details"
               width="7%"
             >
               2020-05-28
@@ -579,7 +579,7 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
                   "width": "7%",
                 }
               }
-              title=""
+              title="View Disposal Project details"
               width="7%"
             >
               User, Administrator
