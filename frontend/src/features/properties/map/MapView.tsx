@@ -72,7 +72,7 @@ const MapView: React.FC<MapViewProps> = (props: MapViewProps) => {
     }
   };
 
-  const { showSideBar } = useParamSideBar();
+  const { showSideBar, size } = useParamSideBar();
   return (
     <div className={classNames(showSideBar ? 'side-bar' : '', 'd-flex')}>
       <MapSideBarContainer
@@ -80,9 +80,10 @@ const MapView: React.FC<MapViewProps> = (props: MapViewProps) => {
           mapRef.current?.leafletElement.fireEvent('clear');
         }}
         properties={properties}
-      ></MapSideBarContainer>
+      />
       <FilterProvider>
         <Map
+        sidebarSize={size}
           lat={
             (propertyDetail?.parcelDetail?.latitude as number) ??
             selectedDraftProperty?.parcelDetail?.latitude ??

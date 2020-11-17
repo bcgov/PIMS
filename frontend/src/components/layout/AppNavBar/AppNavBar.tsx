@@ -8,6 +8,7 @@ import { Claims } from 'constants/claims';
 import { useConfiguration } from 'hooks/useConfiguration';
 import { FaHome } from 'react-icons/fa';
 import queryString from 'query-string';
+import { SidebarContextType } from 'features/mapSideBar/hooks/useQueryParamSideBar';
 
 /**
  * Nav bar with role-based functionality.
@@ -73,6 +74,8 @@ function SubmitPropertyNav() {
             disabled: false,
             loadDraft: false,
             new: true,
+            sidebarContext: SidebarContextType.ADD_PROPERTY_TYPE_SELECTOR,
+            sidebarSize: 'narrow',
           }),
         })
       }
