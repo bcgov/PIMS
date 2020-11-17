@@ -16,6 +16,7 @@ import TooltipIcon from 'components/common/TooltipIcon';
 import { formatApiDateTime } from 'utils';
 import useCodeLookups from 'hooks/useLookupCodes';
 import { ILookupCode } from 'actions/lookupActions';
+import { AUTHORIZATION_URL } from 'constants/strings';
 
 interface IEditUserPageProps extends IUserDetailParams {
   match?: any;
@@ -59,15 +60,26 @@ const EditUserPage = (props: IEditUserPageProps) => {
   );
 
   const checkRoles = (
-    <Select
-      label="Roles"
-      field="roles"
-      data-testid="role"
-      multiple={true}
-      required={true}
-      options={selectRoles}
-      placeholder={user?.roles?.length > 0 ? undefined : 'Please Select'}
-    />
+    <Form.Group className={'check-roles'}>
+      <Form.Label>
+        Roles{' '}
+        <TooltipIcon
+          toolTipId="roles-tooltip"
+          toolTip={'To select multiple roles, hold Ctrl and click selections.'}
+        />{' '}
+        <a target="_blank" rel="noopener noreferrer" href={AUTHORIZATION_URL}>
+          Role Descriptions
+        </a>
+      </Form.Label>
+      <Select
+        field="roles"
+        data-testid="role"
+        multiple={true}
+        required={true}
+        options={selectRoles}
+        placeholder={user?.roles?.length > 0 ? undefined : 'Please Select'}
+      />
+    </Form.Group>
   );
 
   const goBack = () => {
@@ -209,10 +221,10 @@ const EditUserPage = (props: IEditUserPageProps) => {
 
                 <Form.Group className={'is-disabled'}>
                   <Form.Label>
-                    Is Disabled?{' '}
+                    Disable Account?{' '}
                     <TooltipIcon
                       toolTipId="is-disabled-tooltip"
-                      toolTip={'Toggle to change account status and click save.'}
+                      toolTip={'Click to change account status then click Save.'}
                     />{' '}
                   </Form.Label>
                   <Field data-testid="isDisabled" type="checkbox" name="isDisabled" />

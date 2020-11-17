@@ -164,8 +164,8 @@ describe('Project list view tests', () => {
         </Router>
       </Provider>,
     );
-    expect(queryByTitle('Export Generic Report')).not.toBeInTheDOM();
-    expect(queryByTitle('Export CSV')).not.toBeInTheDOM();
+    expect(queryByTitle('Export to Excel')).not.toBeInTheDOM();
+    expect(queryByTitle('Export to CSV')).not.toBeInTheDOM();
     expect(queryByText('SPL Report')).not.toBeInTheDOM();
   });
 
@@ -186,8 +186,8 @@ describe('Project list view tests', () => {
         </Router>
       </Provider>,
     );
-    expect(queryByTitle('Export Generic Report')).toBeInTheDOM();
-    expect(queryByTitle('Export CSV')).toBeInTheDOM();
+    expect(queryByTitle('Export to Excel')).toBeInTheDOM();
+    expect(queryByTitle('Export to CSV')).toBeInTheDOM();
   });
 
   it('Displays export buttons with spl reports permission', async () => {
