@@ -47,6 +47,7 @@ import { saveParcelLayerData } from 'reducers/parcelLayerDataSlice';
 import { SidebarSize } from 'features/mapSideBar/hooks/useQueryParamSideBar';
 import { saveParcelLayerData } from 'reducers/parcelLayerDataSlice';
 import useActiveFeatureLayer from '../hooks/useActiveFeatureLayer';
+import { SidebarSize } from 'features/mapSideBar/hooks/useQueryParamSideBar';
 import LayersControl from './LayersControl';
 import { InventoryLayer } from './InventoryLayer';
 import { PointFeature } from '../types';
