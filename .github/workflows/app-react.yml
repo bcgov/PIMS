@@ -2,9 +2,9 @@ name: APP (React)
 
 on:
   push:
-    branches: [master, dev]
+    branches: [master, dev, dev-alpha]
   pull_request:
-    branches: [master, dev]
+    branches: [master, dev, dev-alpha]
 
 jobs:
   build:
