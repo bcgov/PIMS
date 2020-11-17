@@ -20,6 +20,7 @@ import { FaArrowAltCircleLeft } from 'react-icons/fa';
 import GenericModal from 'components/common/GenericModal';
 import { AgencyEditSchema } from 'utils/YupSchema';
 import service from 'features/properties/service';
+import TooltipWrapper from 'components/common/TooltipWrapper';
 
 interface IEditAgencyPageProps {
   /** id prop to identify which agency to edit */
@@ -89,7 +90,9 @@ const EditAgencyPage = (props: IEditAgencyPageProps) => {
       <Navbar className="navBar" expand="sm" variant="light" bg="light">
         <Navbar.Brand>
           {' '}
-          <FaArrowAltCircleLeft onClick={goBack} size={20} />
+          <TooltipWrapper toolTipId="back" toolTip="Back to Agency list">
+            <FaArrowAltCircleLeft onClick={goBack} size={20} />
+          </TooltipWrapper>
         </Navbar.Brand>
         <h4>Agency Information</h4>
       </Navbar>
@@ -155,16 +158,16 @@ const EditAgencyPage = (props: IEditAgencyPageProps) => {
 
                 <Form.Group className="checkboxes">
                   <Check
-                    toolTip="Toggle to change Agency status and click Save"
+                    toolTip="Click to change Agency status then click Save Changes."
                     toolTipId="is-disabled-tooltip"
                     field="isDisabled"
-                    label="Is Disabled?"
+                    label="Disable Agency?"
                   />
                   <Check
-                    toolTip="Toggle to change whether to send an email and click Save"
+                    toolTip="Click to enable to email notifications for Agency then click Save Changes."
                     toolTipId="email-tooltip"
                     field="sendEmail"
-                    label="Send email?"
+                    label="Email Notifications?"
                   />
                 </Form.Group>
 

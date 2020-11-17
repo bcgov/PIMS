@@ -17,7 +17,7 @@ interface IPlusButtonProps extends ButtonProps {
 const PlusButton: React.FC<IPlusButtonProps> = ({ ...props }) => {
   return (
     <TooltipWrapper toolTipId={props.toolId} toolTip={props.toolText}>
-      <Button className="bg-success" {...props} icon={<FaPlus size={20} />} />
+      <Button className="primary" {...props} icon={<FaPlus size={20} />} />
     </TooltipWrapper>
   );
 };

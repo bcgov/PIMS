@@ -11,6 +11,7 @@ import {
   IProject,
   onTransferredWithinTheGreTooltip,
   onHoldNotificationTooltip,
+  clearanceNotifictionSent,
   proceedToSplWarning,
   notInSplWarning,
 } from '../../common';
@@ -98,6 +99,7 @@ const EnhancedReferralCompleteForm = ({
       <Form.Row>
         <Form.Label column md={4}>
           Clearance Notification Sent
+          <TooltipIcon toolTipId="clearanceNotificationSent" toolTip={clearanceNotifictionSent} />
         </Form.Label>
         <FastDatePicker
           outerClassName="col-md-2"

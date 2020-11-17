@@ -181,7 +181,7 @@ describe('Spl Report Container', () => {
         mockApi().getProjectReports.mockResolvedValue([defaultReport]);
         mockApi().getProjectReportSnapshotsById.mockResolvedValue([defaultSnapshot]);
         const { findByTitle, findByText } = renderContainer();
-        const elipsis = await findByTitle('1-elipsis');
+        const elipsis = await findByTitle('Report 1 actions');
         fireEvent.click(elipsis);
         const deleteButton = await findByText('Delete');
         fireEvent.click(deleteButton);
@@ -198,7 +198,7 @@ describe('Spl Report Container', () => {
         mockApi().getProjectReportSnapshotsById.mockResolvedValue([defaultSnapshot]);
         const { findByTitle, findByText } = renderContainer();
 
-        const elipsis = await findByTitle('1-elipsis');
+        const elipsis = await findByTitle('Report 1 actions');
         fireEvent.click(elipsis);
         const deleteButton = await findByText('Delete');
         fireEvent.click(deleteButton);
@@ -219,7 +219,7 @@ describe('Spl Report Container', () => {
         mockApi().getProjectReportSnapshotsById.mockResolvedValue([defaultSnapshot]);
         const { findByTitle, findByText } = renderContainer();
 
-        const elipsis = await findByTitle('1-elipsis');
+        const elipsis = await findByTitle('Report 1 actions');
         fireEvent.click(elipsis);
         const deleteButton = await findByText('Delete');
         fireEvent.click(deleteButton);
@@ -238,7 +238,7 @@ describe('Spl Report Container', () => {
         mockApi().getProjectReports.mockResolvedValue([{ ...defaultReport }]);
         mockApi().getProjectReportSnapshotsById.mockResolvedValue([defaultSnapshot]);
         const { findByTitle, findByText } = renderContainer();
-        const elipsis = await findByTitle('1-elipsis');
+        const elipsis = await findByTitle('Report 1 actions');
         fireEvent.click(elipsis);
         const finalButton = await findByText('Mark as Final');
         fireEvent.click(finalButton);
@@ -253,7 +253,7 @@ describe('Spl Report Container', () => {
         mockApi().getProjectReports.mockResolvedValue([{ ...defaultReport, isFinal: true }]);
         mockApi().getProjectReportSnapshotsById.mockResolvedValue([defaultSnapshot]);
         const { findByTitle, findByText } = renderContainer();
-        const elipsis = await findByTitle('1-elipsis');
+        const elipsis = await findByTitle('Report 1 actions');
         fireEvent.click(elipsis);
         const finalButton = await findByText('Remove Final');
         fireEvent.click(finalButton);
@@ -270,7 +270,7 @@ describe('Spl Report Container', () => {
         mockApi().getProjectReportSnapshotsById.mockResolvedValue([defaultSnapshot]);
         const { findByTitle, findByText } = renderContainer();
 
-        const elipsis = await findByTitle('1-elipsis');
+        const elipsis = await findByTitle('Report 1 actions');
         fireEvent.click(elipsis);
         const finalButton = await findByText('Remove Final');
         fireEvent.click(finalButton);

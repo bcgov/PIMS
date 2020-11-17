@@ -37,3 +37,4 @@ export const DISCLAIMER_URL = 'https://www2.gov.bc.ca//gov/content/home/disclaim
 export const PRIVACY_POLICY_URL = 'http://www.gov.bc.ca/gov/content/home/privacy';
 export const HARMFUL_DISCLOSURE_URL =
   'https://www2.gov.bc.ca/gov/content/governments/services-for-government/policies-procedures/foippa-manual/disclosure-harmful-individual-public-safety';
+export const AUTHORIZATION_URL = 'https://github.com/bcgov/PIMS/wiki/Architecture-Security';
