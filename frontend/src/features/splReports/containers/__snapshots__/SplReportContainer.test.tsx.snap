@@ -9,7 +9,7 @@ exports[`Spl Report Container basic data loading and display Displays project sn
         <div title=\\"report 1\\" class=\\"sc-AxirZ gtQOKE col-md-9\\">report 1</div>
         <div class=\\"sc-AxhCb bonQhK col-md-3\\"><input disabled=\\"\\" type=\\"checkbox\\" class=\\"sc-AxiKw cklZaN form-control\\">
           <div class=\\"elipsis-dropdown dropdown\\"><button aria-haspopup=\\"true\\" aria-expanded=\\"false\\" id=\\"1-elipsis-controls\\" type=\\"button\\" class=\\"dropdown-toggle elipsis elipsis-primary\\"><svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 512 512\\" height=\\"1em\\" width=\\"1em\\" xmlns=\\"http://www.w3.org/2000/svg\\">
-                <title>1-elipsis</title>
+                <title>Report 1 actions</title>
                 <path d=\\"M328 256c0 39.8-32.2 72-72 72s-72-32.2-72-72 32.2-72 72-72 72 32.2 72 72zm104-72c-39.8 0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72zm-352 0c-39.8 0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72z\\"></path>
               </svg></button></div>
         </div>
@@ -18,7 +18,7 @@ exports[`Spl Report Container basic data loading and display Displays project sn
         <div title=\\"report 2\\" class=\\"sc-AxirZ gtQOKE col-md-9\\">report 2</div>
         <div class=\\"sc-AxhCb bonQhK col-md-3\\"><input disabled=\\"\\" type=\\"checkbox\\" class=\\"sc-AxiKw cklZaN form-control\\">
           <div class=\\"elipsis-dropdown dropdown\\"><button aria-haspopup=\\"true\\" aria-expanded=\\"false\\" id=\\"1-elipsis-controls\\" type=\\"button\\" class=\\"dropdown-toggle elipsis elipsis-primary\\"><svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 512 512\\" height=\\"1em\\" width=\\"1em\\" xmlns=\\"http://www.w3.org/2000/svg\\">
-                <title>1-elipsis</title>
+                <title>Report 1 actions</title>
                 <path d=\\"M328 256c0 39.8-32.2 72-72 72s-72-32.2-72-72 32.2-72 72-72 72 32.2 72 72zm104-72c-39.8 0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72zm-352 0c-39.8 0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72z\\"></path>
               </svg></button></div>
         </div>

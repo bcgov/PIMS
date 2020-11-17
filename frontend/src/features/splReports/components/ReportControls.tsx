@@ -142,7 +142,12 @@ const ReportControls: React.FunctionComponent<IReportControlsProps> = ({
                   ></Button>
                 </TooltipWrapper>
                 <Input label="Name:" field="name" disabled={values.isFinal} />
-                <Check label="Is Final:" field="isFinal" />
+                <TooltipWrapper
+                  toolTipId="is-final"
+                  toolTip="Mark report as final, no more changes to be made."
+                >
+                  <Check label="Is Final:" field="isFinal" />
+                </TooltipWrapper>
                 <Button
                   className="h-75 mr-auto"
                   type="submit"
@@ -161,18 +166,22 @@ const ReportControls: React.FunctionComponent<IReportControlsProps> = ({
                 >
                   Save
                 </Button>
-                <FileIcon>
-                  <FaFileExcel
-                    size={36}
-                    onClick={() => currentReport && onExport(currentReport, 'excel')}
-                  />
-                </FileIcon>
-                <FileIcon>
-                  <FaFileAlt
-                    size={36}
-                    onClick={() => currentReport && onExport(currentReport, 'csv')}
-                  />
-                </FileIcon>
+                <TooltipWrapper toolTipId="export-to-excel" toolTip="Export to Excel">
+                  <FileIcon>
+                    <FaFileExcel
+                      size={36}
+                      onClick={() => currentReport && onExport(currentReport, 'excel')}
+                    />
+                  </FileIcon>
+                </TooltipWrapper>
+                <TooltipWrapper toolTipId="export-to-excel" toolTip="Export to CSV">
+                  <FileIcon>
+                    <FaFileAlt
+                      size={36}
+                      onClick={() => currentReport && onExport(currentReport, 'csv')}
+                    />
+                  </FileIcon>
+                </TooltipWrapper>
               </Row>
             </Form>
             <Prompt

@@ -125,6 +125,7 @@ const ManageAgencies: React.FC = () => {
           pageCount={Math.ceil(pagedAgencies.total / pageSize)}
           loading={!(agencies && !agencies.isFetching)}
           lockPageSize={true}
+          clickableTooltip="View agency details"
         />
       </div>
     </Container>

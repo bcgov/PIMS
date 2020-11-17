@@ -28,6 +28,7 @@ import download from 'utils/download';
 import { mapLookupCode, mapStatuses } from 'utils';
 import styled from 'styled-components';
 import { ParentGroupedFilter } from 'components/SearchBar/ParentGroupedFilter';
+import TooltipWrapper from 'components/common/TooltipWrapper';
 
 interface IProjectFilterState {
   name?: string;
@@ -306,23 +307,38 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
         <Container fluid className="TableToolbar">
           <h3 className="mr-4">{title}</h3>
           {keycloak.hasClaim(Claims.REPORTS_SPL) && (
-            <Button className="mr-auto" onClick={() => history.push('/reports/spl')}>
-              SPL Report
-            </Button>
+            <TooltipWrapper toolTipId="spl-report" toolTip="View SPL Reports">
+              <Button className="mr-auto" onClick={() => history.push('/reports/spl')}>
+                SPL Report
+              </Button>
+            </TooltipWrapper>
           )}
           {keycloak.hasClaim(Claims.REPORTS_VIEW) && (
             <>
-              <FileIcon className="mr-1 p-0" onClick={() => fetch('excel', 'generic')}>
-                <FaFileExcel size={36} title="Export Generic Report" />
-              </FileIcon>
-              <FileIcon className="mr-1 p-0" onClick={() => fetch('csv', 'generic')}>
-                <FaFileAlt title="Export CSV" size={36} />
-              </FileIcon>
+              <TooltipWrapper toolTipId="export-to-excel" toolTip="Export to Excel">
+                <FileIcon>
+                  <FaFileExcel
+                    size={36}
+                    title="Export to Excel"
+                    onClick={() => fetch('excel', 'generic')}
+                  />
+                </FileIcon>
+              </TooltipWrapper>
+              <TooltipWrapper toolTipId="export-to-excel" toolTip="Export to CSV">
+                <FileIcon>
+                  <FaFileAlt
+                    size={36}
+                    title="Export to CSV"
+                    onClick={() => fetch('csv', 'generic')}
+                  />
+                </FileIcon>
+              </TooltipWrapper>
             </>
           )}
         </Container>
         <Table<IProject>
           name="projectsTable"
+          clickableTooltip="View Disposal Project details"
           columns={mode === PageMode.APPROVAL ? columns() : columns(initiateDelete)}
           data={data}
           onRequestData={handleRequestData}
