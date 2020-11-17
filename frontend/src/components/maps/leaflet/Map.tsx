@@ -48,8 +48,10 @@ import {
   LayerPopupTitle,
   PopupContentConfig,
 } from './LayerPopup/LayerPopupContent';
+import classNames from 'classnames';
 import { useLayerQuery } from './LayerPopup/hooks/useLayerQuery';
 import { saveParcelLayerData } from 'reducers/parcelLayerDataSlice';
+import { SidebarSize } from 'features/mapSideBar/hooks/useQueryParamSideBar';
 import useActiveFeatureLayer from '../hooks/useActiveFeatureLayer';
 import useMarkerZoom from '../hooks/useMarkerZoom';
 
@@ -87,6 +89,7 @@ export type MapProps = {
   disableMapFilterBar?: boolean;
   interactive?: boolean;
   showParcelBoundaries?: boolean;
+  sidebarSize?: SidebarSize;
 };
 
 export type LayerPopupInformation = PopupContentConfig & {
@@ -112,6 +115,7 @@ const Map: React.FC<MapProps> = ({
   disableMapFilterBar,
   interactive = true,
   mapRef,
+  sidebarSize,
 }) => {
   // state and refs
   const dispatch = useDispatch();
@@ -359,7 +363,7 @@ const Map: React.FC<MapProps> = ({
       {({ width }: any) => {
         setMapWidth(width);
         return (
-          <Container fluid className="px-0 map">
+          <Container fluid className={classNames('px-0 map', { narrow: sidebarSize === 'narrow' })}>
             {!disableMapFilterBar ? (
               <Container fluid className="px-0 map-filter-container">
                 <Container className="px-0">

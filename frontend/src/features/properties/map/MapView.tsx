@@ -133,7 +133,7 @@ const MapView: React.FC<MapViewProps> = (props: MapViewProps) => {
     throttledFetch(parcelBounds);
   }, [dispatch, throttledFetch]);
 
-  const { showSideBar } = useParamSideBar();
+  const { showSideBar, size } = useParamSideBar();
   return (
     <div className={classNames(showSideBar ? 'side-bar' : '', 'd-flex')}>
       <MapSideBarContainer
@@ -142,8 +142,9 @@ const MapView: React.FC<MapViewProps> = (props: MapViewProps) => {
           mapRef.current?.leafletElement.fireEvent('clear');
         }}
         properties={properties}
-      ></MapSideBarContainer>
+      />
       <Map
+        sidebarSize={size}
         lat={
           (propertyDetail?.parcelDetail?.latitude as number) ??
           selectedDraftProperty?.parcelDetail?.latitude ??
