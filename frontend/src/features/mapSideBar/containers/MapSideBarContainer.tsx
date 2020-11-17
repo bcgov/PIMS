@@ -1,6 +1,6 @@
 import * as React from 'react';
 import MapSideBarLayout from '../components/MapSideBarLayout';
-import useParamSideBar from '../hooks/useQueryParamSideBar';
+import useParamSideBar, { SidebarContextType } from '../hooks/useQueryParamSideBar';
 import ParcelDetailContainer from 'features/properties/containers/ParcelDetailContainer';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from 'reducers/rootReducer';
@@ -11,6 +11,9 @@ import { fetchParcelDetail } from 'actionCreators/parcelsActionCreator';
 import { Spinner } from 'react-bootstrap';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
 import * as parcelsActions from 'actions/parcelsActions';
+import { LeafletMouseEvent } from 'leaflet';
+import { BuildingForm, SubmitPropertySelector } from '../SidebarContents';
+import { BuildingSvg, LandSvg } from 'components/common/Icons';
 
 interface IMapSideBarContainerProps {
   refreshParcels: Function;
@@ -31,6 +34,10 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
     overrideParcelId,
     disabled,
     loadDraft,
+    context,
+    size,
+    addBuilding,
+    addRawLand,
   } = useParamSideBar();
   const dispatch = useDispatch();
   const parcelDetailRequest = useSelector<RootState, IGenericNetworkAction>(
@@ -67,31 +74,78 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
     (activePropertyDetail?.parcelDetail as any)?.rowVersion,
   ]);
 
+  const renderParcelDetailsContainer = () => {
+    return parcelId !== cachedParcelDetail?.id ? (
+      <>
+        <Spinner animation="border"></Spinner>
+      </>
+    ) : (
+      <ParcelDetailContainer
+        persistCallback={(data: IParcel) => {
+          if (!showSideBar) {
+            setShowSideBar(true);
+          }
+          overrideParcelId(data?.id === '' ? undefined : data?.id);
+        }}
+        onDelete={() => {
+          dispatch(parcelsActions.storeParcelDetail(null));
+          refreshParcels();
+          setShowSideBar(false);
+        }}
+        parcelDetail={cachedParcelDetail}
+        disabled={disabled}
+        loadDraft={loadDraft}
+        properties={properties}
+        // mapClickMouseEvent={leafletMouseEvent}
+      />
+    );
+  };
+
+  const getSidebarTitle = (): React.ReactNode => {
+    switch (context) {
+      case SidebarContextType.ADD_BUILDING:
+        return (
+          <>
+            <BuildingSvg className="svg" /> Submit Building (to inventory)
+          </>
+        );
+      case SidebarContextType.ADD_RAW_LAND:
+        return (
+          <>
+            <LandSvg className="svg" /> Submit Raw Land (to inventory)
+          </>
+        );
+      case SidebarContextType.VIEW_BUILDING:
+        return 'Building Details';
+      case SidebarContextType.VIEW_RAW_LAND:
+        return 'Raw Land Details';
+      default:
+        return 'Submit a Property';
+    }
+  };
+
+  const render = (): React.ReactNode => {
+    switch (context) {
+      case SidebarContextType.ADD_BUILDING:
+        return <BuildingForm />;
+      case SidebarContextType.ADD_RAW_LAND:
+        return <BuildingForm />;
+      case SidebarContextType.ADD_PROPERTY_TYPE_SELECTOR:
+        return <SubmitPropertySelector addBuilding={addBuilding} addRawLand={addRawLand} />;
+      default:
+        return renderParcelDetailsContainer();
+    }
+  };
+
   return (
-    <MapSideBarLayout show={showSideBar} setShowSideBar={setShowSideBar}>
-      {parcelId !== cachedParcelDetail?.id ? (
-        <>
-          <Spinner animation="border"></Spinner>
-        </>
-      ) : (
-        <ParcelDetailContainer
-          persistCallback={(data: IParcel) => {
-            if (!showSideBar) {
-              setShowSideBar(true);
-            }
-            overrideParcelId(data?.id === '' ? undefined : data?.id);
-          }}
-          onDelete={() => {
-            dispatch(parcelsActions.storeParcelDetail(null));
-            refreshParcels();
-            setShowSideBar(false);
-          }}
-          parcelDetail={cachedParcelDetail}
-          disabled={disabled}
-          loadDraft={loadDraft}
-          properties={properties}
-        />
-      )}
+    <MapSideBarLayout
+      title={getSidebarTitle()}
+      show={showSideBar}
+      setShowSideBar={setShowSideBar}
+      size={size}
+      hidePolicy={true}
+    >
+      {render()}
     </MapSideBarLayout>
   );
 };
