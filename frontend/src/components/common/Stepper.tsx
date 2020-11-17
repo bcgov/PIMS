@@ -2,12 +2,17 @@ import React, { Fragment } from 'react';
 import classNames from 'classnames';
 import { FaCheck } from 'react-icons/fa';
 import './Stepper.scss';
+import { ObjectSchema } from 'yup';
 
 export interface IStep {
   title: string;
   route: string;
   completed: boolean;
   canGoToStep: boolean;
+  validation?: {
+    schema: ObjectSchema<object>;
+    nameSpace: (currentTab: number) => string;
+  };
 }
 
 interface StepperProps {

@@ -668,6 +668,29 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
                   </div>
                 </div>
               </div>
+              <div
+                class="form-row"
+              >
+                <label
+                  class="form-label col-form-label col-md-4"
+                >
+                  Net Proceeds
+                </label>
+                <div
+                  class="col-md-8 form-group col"
+                >
+                  <div
+                    class="input-tooltip-wrapper"
+                  >
+                    <input
+                      class="form-control input-number"
+                      name="netProceeds"
+                      placeholder=""
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
             <div
               class="col-md-1"
@@ -1704,6 +1727,9 @@ exports[`ERP Approval Step renders correctly 1`] = `
                     name="interestFromEnhancedReferralNote"
                     onBlur={[Function]}
                     onChange={[Function]}
+                    onFocus={[Function]}
+                    onMouseOut={[Function]}
+                    onMouseOver={[Function]}
                   />
                 </div>
               </div>

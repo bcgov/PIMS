@@ -1,12 +1,12 @@
 import './InputGroup.scss';
 
-import React from 'react';
-import { Form, FormControlProps, InputGroup as BootstrapInputGroup } from 'react-bootstrap';
+import React, { CSSProperties } from 'react';
+import { FormControlProps, InputGroup as BootstrapInputGroup } from 'react-bootstrap';
 import { Input } from './Input';
 import { FastInput } from './FastInput';
-import { FormikProps, getIn } from 'formik';
+import { FormikProps } from 'formik';
 import classNames from 'classnames';
-import TooltipWrapper from '../TooltipWrapper';
+import { Label } from '../Label';
 
 type RequiredAttributes = {
   /** The field name */
@@ -36,6 +36,8 @@ type OptionalAttributes = {
   fast?: boolean;
   outerClassName?: string;
   displayErrorTooltips?: boolean;
+  /** style to pass down to the FastInput or Input */
+  style?: CSSProperties;
 };
 
 // only "field" is required for <Input>, the rest are optional
@@ -47,6 +49,7 @@ export type InputGroupProps = FormControlProps & OptionalAttributes & RequiredAt
 export const InputGroup: React.FC<InputGroupProps> = ({
   field,
   label,
+  style,
   as: is, // `as` is reserved in typescript
   placeholder,
   disabled,
@@ -62,9 +65,6 @@ export const InputGroup: React.FC<InputGroupProps> = ({
   displayErrorTooltips,
   ...rest
 }) => {
-  const error = getIn(formikProps?.errors, field);
-  const touch = getIn(formikProps?.touched, field);
-  const errorTooltip = error && touch && displayErrorTooltips ? error : undefined;
   return (
     <div
       className={classNames(
@@ -74,7 +74,8 @@ export const InputGroup: React.FC<InputGroupProps> = ({
         disabled ? 'disabled' : '',
       )}
     >
-      {!!label && <Form.Label>{label}</Form.Label>}
+      {!!label && !required && <Label>{label}</Label>}
+      {!!label && required && <Label required>{label}</Label>}
 
       {preText && (
         <BootstrapInputGroup.Prepend>
@@ -85,30 +86,34 @@ export const InputGroup: React.FC<InputGroupProps> = ({
         <BootstrapInputGroup.Prepend>{PrependComponent}</BootstrapInputGroup.Prepend>
       )}
       <div className="input-group-content">
-        <TooltipWrapper toolTipId={`${field}-error-tooltip}`} toolTip={errorTooltip}>
-          {fast ? (
-            <FastInput
-              formikProps={formikProps}
-              disabled={disabled}
-              field={field}
-              className={className}
-              placeholder={placeholder}
-              {...rest}
-            />
-          ) : (
-            <Input
-              disabled={disabled}
-              field={field}
-              className={className}
-              placeholder={placeholder}
-              {...rest}
-            />
-          )}
-        </TooltipWrapper>
+        {fast ? (
+          <FastInput
+            formikProps={formikProps}
+            disabled={disabled}
+            style={style}
+            field={field}
+            className={className}
+            placeholder={placeholder}
+            displayErrorTooltips={displayErrorTooltips}
+            {...rest}
+          />
+        ) : (
+          <Input
+            disabled={disabled}
+            field={field}
+            className={className}
+            style={style}
+            placeholder={placeholder}
+            displayErrorTooltips={displayErrorTooltips}
+            {...rest}
+          />
+        )}
       </div>
       {postText && (
         <BootstrapInputGroup.Append>
-          <BootstrapInputGroup.Text>{postText}</BootstrapInputGroup.Text>
+          <BootstrapInputGroup.Text className={disabled ? 'append-disabled' : ''}>
+            {postText}
+          </BootstrapInputGroup.Text>
         </BootstrapInputGroup.Append>
       )}
     </div>

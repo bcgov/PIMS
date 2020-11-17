@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Button, Container } from 'react-bootstrap';
+import classNames from 'classnames';
 
-import { useHistory } from 'react-router-dom';
+export enum ModalSize {
+  XLARGE = 'modal-xl',
+  LARGE = 'modal-l',
+  SMALL = 'modal-s',
+}
 
 interface ModalProps {
   /** Optional function to control behaviour of cancel button. Default is to close the modal. */
@@ -51,7 +56,7 @@ interface ModalProps {
   /** Optional title to display - no default. */
   title?: string;
   /** Optional message to display - no default. */
-  message?: string;
+  message?: string | React.ReactNode;
   /** allows the parent component to control the display of this modal.
    * Default behaviour is to show this modal on creation and close it on button click. */
   display?: boolean;
@@ -59,6 +64,8 @@ interface ModalProps {
   setDisplay?: (display: boolean) => void;
   /** optional override to control the x button in the top right of the modal. Default is to show. */
   closeButton?: boolean;
+  /** provide the size of the modal, default width is 500px */
+  size?: ModalSize;
 }
 
 /**
@@ -66,7 +73,6 @@ interface ModalProps {
  * @param props customize the component with custom text, and an operation to take when the component is closed.
  */
 const GenericModal = (props: ModalProps) => {
-  const history = useHistory();
   const [show, setShow] = useState(true);
   useEffect(() => {
     if (props.display !== undefined) {
@@ -86,7 +92,8 @@ const GenericModal = (props: ModalProps) => {
   const handleOk =
     props.handleOk ??
     (() => {
-      history.push('/');
+      props.setDisplay && props.setDisplay(false);
+      setShow(false);
     });
   const ok = () => {
     props.setDisplay && props.setDisplay(false);
@@ -96,7 +103,7 @@ const GenericModal = (props: ModalProps) => {
 
   return (
     <Container>
-      <Modal show={show} onHide={close}>
+      <Modal show={show} onHide={close} dialogClassName={classNames(props.size)}>
         <Modal.Header closeButton={props.closeButton}>
           <Modal.Title>{props.title}</Modal.Title>
         </Modal.Header>

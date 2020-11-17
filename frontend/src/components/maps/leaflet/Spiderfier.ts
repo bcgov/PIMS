@@ -71,6 +71,7 @@ export class Spiderfier {
 
     // only one cluster expanded at a time
     if (this.cluster === cluster || cluster == null) {
+      this.cluster = null;
       return {};
     }
     this.unspiderfy();

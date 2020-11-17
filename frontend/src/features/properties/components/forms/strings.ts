@@ -1,4 +1,29 @@
 /* eslint-disable no-multi-str */
+export const CoreOperational =
+  'Core Operational – assets that are functionally and financially effective and continue to \n' +
+  'provide substantial support to ongoing program needs but are not uniquely strategic \n' +
+  '(i.e. alternatives exist).';
+
+export const CoreStrategic =
+  'Core Strategic – assets that are uniquely integral to a larger long-term service delivery \n' +
+  'strategy and/or are functionally and financially effective relative to critical service \n' +
+  'delivery needs that could not reasonably be met by available alternatives. This may \n' +
+  'include vacant or underutilized assets in appropriate circumstances.';
+
+export const SurplusEncumbered =
+  'Surplus Encumbered – assets that are surplus and cannot readily be redeployed or \n' +
+  'disposed of due to one or more major obstacles such as significant First Nations \n' +
+  'interests, environmental contamination, restrictions on title, etc';
+
+export const ClassificationSelectionText =
+  'A disposal project must be initiated in order to mark a property as "surplus active".';
+
+export const PidPinTooltip =
+  'PID: Parcel Identifier, a unique nine-digit number that identifies a parcel ' +
+  'in the land title registry of BC. It is NOT the same identification number used by Crown Lands (PIN).\n\n' +
+  'PIN: Parcel Identification Number, a unique number system used by Crown Lands to identify a parcel of land. ' +
+  'It is NOT the same identification number used by the Land Title and Survey Authority (PID).';
+
 export const PidTooltip =
   'Parcel Identifier, a unique nine-digit number that identifies a parcel ' +
   'in the land title registry of BC. It is NOT the same identification number used by Crown Lands (PIN).';

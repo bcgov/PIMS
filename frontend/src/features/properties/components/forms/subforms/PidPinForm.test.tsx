@@ -50,15 +50,4 @@ describe('PidPin sub-form', () => {
     const { input } = await fillInput(container, 'pid', '123456789');
     expect(input).toHaveValue('123-456-789');
   });
-
-  it('calls handlePidChange when pid is modified', async () => {
-    const { container } = render(form);
-    await fillInput(container, 'pid', '123456789');
-    expect(handlePidChange).toHaveBeenCalled();
-  });
-  it('calls handlePinChange when pin is modified', async () => {
-    const { container } = render(form);
-    await fillInput(container, 'pin', '123456789');
-    expect(handlePinChange).toHaveBeenCalled();
-  });
 });

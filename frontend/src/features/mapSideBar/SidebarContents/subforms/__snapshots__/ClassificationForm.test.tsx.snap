@@ -1,0 +1,111 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+Array [
+  .c0 {
+  float: left;
+}
+
+<div
+    className="row"
+  >
+    <h4
+      className="c0"
+    />
+  </div>,
+  .c0 {
+  border: 1px solid #f2f2f2;
+  border-radius: 4px;
+  text-align: left;
+  padding: 8px 12px 10px;
+}
+
+<div
+    className="row"
+  >
+    <div
+      className="col-md-6"
+    >
+      <div
+        className="row"
+        style={
+          Object {
+            "display": "flex",
+          }
+        }
+      >
+        <p
+          className="label"
+          style={
+            Object {
+              "marginBottom": "0",
+              "textAlign": "right",
+            }
+          }
+        />
+        <div
+          className="required form-group"
+        >
+          <select
+            className="form-control"
+            id="input-classificationId-fast"
+            name="classificationId"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            onMouseOut={[Function]}
+            onMouseOver={[Function]}
+            required={true}
+            style={
+              Object {
+                "display": "flex",
+                "marginTop": "5px",
+              }
+            }
+            type="number"
+            value=""
+          >
+            <option
+              value=""
+            >
+              Must Select One
+            </option>
+            <option
+              value={0}
+            >
+              Core Operational
+            </option>
+            <option
+              value={1}
+            >
+              Core Strategic
+            </option>
+            <option
+              value={3}
+            >
+              Surplus Encumbered
+            </option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div
+      className="col-md-6"
+    >
+      <div
+        className="c0"
+      >
+        <p
+          style={
+            Object {
+              "fontSize": "11px",
+            }
+          }
+        >
+          Select a classification from the dropdown list to show the definition here. For further information, see the Inventory Policy.
+        </p>
+      </div>
+    </div>
+  </div>,
+]
+`;

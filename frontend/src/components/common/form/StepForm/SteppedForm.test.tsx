@@ -1,10 +1,10 @@
 import React from 'react';
-import renderer from 'react-test-renderer';
 import Adapter from 'enzyme-adapter-react-16';
 import Enzyme from 'enzyme';
 import { Container, Button } from 'react-bootstrap';
 import { SteppedForm, useFormStepper } from '.';
 import { Input } from '..';
+import { render } from '@testing-library/react';
 
 Enzyme.configure({ adapter: new Adapter() });
 
@@ -58,7 +58,7 @@ const Component = () => {
 
 describe('SteppedForm', () => {
   it('component renders correctly', () => {
-    const tree = renderer.create(<Component />).toJSON();
-    expect(tree).toMatchSnapshot();
+    const { container } = render(<Component />);
+    expect(container.firstChild).toMatchSnapshot();
   });
 });
