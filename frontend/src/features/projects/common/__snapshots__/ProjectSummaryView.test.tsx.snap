@@ -168,19 +168,6 @@ exports[`Review Summary View renders approved correctly 1`] = `
           >
             *
           </span>
-          <p />
-          <p>
-            Tier 1: Properties with a net value of less than $1M.
-          </p>
-          <p>
-            Tier 2: Properties with a net value of $1M or more and less than $10M.
-          </p>
-          <p>
-            Tier 3: Properties are single parcels with a net value of $10M or more.
-          </p>
-          <p>
-            Tier 4: Properties are multiple parcels with a cumulative net value of $10M or more.
-          </p>
         </label>
         <div
           className="col-md-2 form-group"
@@ -201,6 +188,34 @@ exports[`Review Summary View renders approved correctly 1`] = `
             </option>
           </select>
         </div>
+      </div>
+      <div
+        className="form-row"
+      >
+        <small>
+          Tier 1: Properties with a net value of less than $1M.
+        </small>
+      </div>
+      <div
+        className="form-row"
+      >
+        <small>
+          Tier 2: Properties with a net value of $1M or more and less than $10M.
+        </small>
+      </div>
+      <div
+        className="form-row"
+      >
+        <small>
+          Tier 3: Properties are single parcels with a net value of $10M or more.
+        </small>
+      </div>
+      <div
+        className="form-row"
+      >
+        <small>
+          Tier 4: Properties are multiple parcels with a cumulative net value of $10M or more.
+        </small>
       </div>
       <div
         className="form-row"
@@ -1006,19 +1021,6 @@ exports[`Review Summary View renders denied correctly 1`] = `
           >
             *
           </span>
-          <p />
-          <p>
-            Tier 1: Properties with a net value of less than $1M.
-          </p>
-          <p>
-            Tier 2: Properties with a net value of $1M or more and less than $10M.
-          </p>
-          <p>
-            Tier 3: Properties are single parcels with a net value of $10M or more.
-          </p>
-          <p>
-            Tier 4: Properties are multiple parcels with a cumulative net value of $10M or more.
-          </p>
         </label>
         <div
           className="col-md-2 form-group"
@@ -1039,6 +1041,34 @@ exports[`Review Summary View renders denied correctly 1`] = `
             </option>
           </select>
         </div>
+      </div>
+      <div
+        className="form-row"
+      >
+        <small>
+          Tier 1: Properties with a net value of less than $1M.
+        </small>
+      </div>
+      <div
+        className="form-row"
+      >
+        <small>
+          Tier 2: Properties with a net value of $1M or more and less than $10M.
+        </small>
+      </div>
+      <div
+        className="form-row"
+      >
+        <small>
+          Tier 3: Properties are single parcels with a net value of $10M or more.
+        </small>
+      </div>
+      <div
+        className="form-row"
+      >
+        <small>
+          Tier 4: Properties are multiple parcels with a cumulative net value of $10M or more.
+        </small>
       </div>
       <div
         className="form-row"
@@ -1844,19 +1874,6 @@ exports[`Review Summary View renders submitted correctly 1`] = `
           >
             *
           </span>
-          <p />
-          <p>
-            Tier 1: Properties with a net value of less than $1M.
-          </p>
-          <p>
-            Tier 2: Properties with a net value of $1M or more and less than $10M.
-          </p>
-          <p>
-            Tier 3: Properties are single parcels with a net value of $10M or more.
-          </p>
-          <p>
-            Tier 4: Properties are multiple parcels with a cumulative net value of $10M or more.
-          </p>
         </label>
         <div
           className="col-md-2 form-group"
@@ -1877,6 +1894,34 @@ exports[`Review Summary View renders submitted correctly 1`] = `
             </option>
           </select>
         </div>
+      </div>
+      <div
+        className="form-row"
+      >
+        <small>
+          Tier 1: Properties with a net value of less than $1M.
+        </small>
+      </div>
+      <div
+        className="form-row"
+      >
+        <small>
+          Tier 2: Properties with a net value of $1M or more and less than $10M.
+        </small>
+      </div>
+      <div
+        className="form-row"
+      >
+        <small>
+          Tier 3: Properties are single parcels with a net value of $10M or more.
+        </small>
+      </div>
+      <div
+        className="form-row"
+      >
+        <small>
+          Tier 4: Properties are multiple parcels with a cumulative net value of $10M or more.
+        </small>
       </div>
       <div
         className="form-row"
