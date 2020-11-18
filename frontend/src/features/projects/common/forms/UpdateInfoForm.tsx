@@ -51,13 +51,7 @@ const UpdateInfoForm = ({
         <Form.Label column md={2}>
           Assign Tier&nbsp;
           <span className="required">*</span>
-          <p></p>
-          <p>{tier1Tooltip}</p>
-          <p>{tier2Tooltip}</p>
-          <p>{tier3Tooltip}</p>
-          <p>{tier4Tooltip}</p>
         </Form.Label>
-
         <Select
           disabled={isReadOnly}
           outerClassName="col-md-2"
@@ -67,6 +61,19 @@ const UpdateInfoForm = ({
           options={tierCodes}
         />
       </Form.Row>
+      <Form.Row>
+        <small>{tier1Tooltip}</small>
+      </Form.Row>
+      <Form.Row>
+        <small>{tier2Tooltip}</small>
+      </Form.Row>
+      <Form.Row>
+        <small>{tier3Tooltip}</small>
+      </Form.Row>
+      <Form.Row>
+        <small>{tier4Tooltip}</small>
+      </Form.Row>
+
       <Form.Row style={{ alignItems: 'unset' }}>
         <h3 className="col-md-8">Project Totals</h3>
       </Form.Row>

@@ -19,17 +19,15 @@ exports[`Review Approve Step renders correctly 1`] = `
       </div>
     </div>
     <div class=\\"UpdateInfoForm container-fluid\\">
-      <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-2\\">Assign Tier&nbsp;<span class=\\"required\\">*</span>
-          <p></p>
-          <p>Tier 1: Properties with a net value of less than $1M.</p>
-          <p>Tier 2: Properties with a net value of $1M or more and less than $10M.</p>
-          <p>Tier 3: Properties are single parcels with a net value of $10M or more.</p>
-          <p>Tier 4: Properties are multiple parcels with a cumulative net value of $10M or more.</p>
-        </label>
+      <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-2\\">Assign Tier&nbsp;<span class=\\"required\\">*</span></label>
         <div class=\\"col-md-2 form-group\\"><select name=\\"tierLevelId\\" disabled=\\"\\" id=\\"input-tierLevelId\\" class=\\"form-select form-control\\">
             <option value=\\"\\">Must Select One</option>
           </select></div>
       </div>
+      <div class=\\"form-row\\"><small>Tier 1: Properties with a net value of less than $1M.</small></div>
+      <div class=\\"form-row\\"><small>Tier 2: Properties with a net value of $1M or more and less than $10M.</small></div>
+      <div class=\\"form-row\\"><small>Tier 3: Properties are single parcels with a net value of $10M or more.</small></div>
+      <div class=\\"form-row\\"><small>Tier 4: Properties are multiple parcels with a cumulative net value of $10M or more.</small></div>
       <div class=\\"form-row\\" style=\\"align-items: unset;\\">
         <h3 class=\\"col-md-8\\">Project Totals</h3>
       </div>

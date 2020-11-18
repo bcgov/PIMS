@@ -3,6 +3,7 @@ import { Typeahead, TypeaheadModel, TypeaheadProps } from 'react-bootstrap-typea
 import { Form } from 'react-bootstrap';
 import { getIn, useFormikContext } from 'formik';
 import styled from 'styled-components';
+import TooltipIcon from 'components/common/TooltipIcon';
 
 interface ITypeaheadFieldProps<T extends TypeaheadModel> extends TypeaheadProps<T> {
   name: string;
@@ -10,6 +11,8 @@ interface ITypeaheadFieldProps<T extends TypeaheadModel> extends TypeaheadProps<
   required?: boolean;
   /** whether or not this component is being used to filter so we can ignore the validation checkmark */
   filter?: boolean;
+  /**Tooltip text */
+  tooltip?: string;
 }
 
 const Group = styled(Form.Group)`
@@ -31,6 +34,7 @@ export function TypeaheadField<T extends TypeaheadModel>({
   required,
   name,
   filter,
+  tooltip,
   ...rest
 }: ITypeaheadFieldProps<T>) {
   const { touched, values, errors, setFieldTouched, setFieldValue } = useFormikContext();
@@ -44,7 +48,7 @@ export function TypeaheadField<T extends TypeaheadModel>({
           {label} {!!required && <span className="required">*</span>}
         </Label>
       )}
-
+      {!!tooltip && <TooltipIcon toolTipId="typeAhead-tip" toolTip={tooltip} />}
       <Typeahead<T>
         {...rest}
         inputProps={{ ...rest.inputProps, name: name }}
