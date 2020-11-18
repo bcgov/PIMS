@@ -5,28 +5,35 @@ import PidPinForm from './PidPinForm';
 import useKeycloakWrapper, { IKeycloak } from 'hooks/useKeycloakWrapper';
 import { Formik, Form } from 'formik';
 import { fillInput } from 'utils/testUtils';
+import { IParcel } from 'actions/parcelsActions';
 
+jest.mock('lodash/debounce', () => jest.fn(fn => fn));
 jest.mock('hooks/useKeycloakWrapper');
 (useKeycloakWrapper as jest.Mock<Partial<IKeycloak>>).mockReturnValue({ hasClaim: () => true });
 
 describe('PidPin sub-form', () => {
   let form: JSX.Element;
+  let handlePidChange = jest.fn();
+  let handlePinChange = jest.fn();
   beforeEach(() => {
     form = (
-      <Formik
+      <Formik<Partial<IParcel>>
         initialValues={{ pid: '', pin: '', projectNumber: '' }}
+        initialTouched={{ pid: true, pin: true }}
         validateOnChange={false}
         onSubmit={() => {}}
       >
         {formikProps => (
           <Form>
-            <PidPinForm />
+            <PidPinForm handlePidChange={handlePidChange} handlePinChange={handlePinChange} />
           </Form>
         )}
       </Formik>
     );
   });
   afterEach(() => {
+    handlePinChange.mockReset();
+    handlePidChange.mockReset();
     cleanup();
   });
   afterAll(() => {
@@ -42,5 +49,16 @@ describe('PidPin sub-form', () => {
     const { container } = render(form);
     const { input } = await fillInput(container, 'pid', '123456789');
     expect(input).toHaveValue('123-456-789');
+  });
+
+  it('calls handlePidChange when pid is modified', async () => {
+    const { container } = render(form);
+    await fillInput(container, 'pid', '123456789');
+    expect(handlePidChange).toHaveBeenCalled();
+  });
+  it('calls handlePinChange when pin is modified', async () => {
+    const { container } = render(form);
+    await fillInput(container, 'pin', '123456789');
+    expect(handlePinChange).toHaveBeenCalled();
   });
 });

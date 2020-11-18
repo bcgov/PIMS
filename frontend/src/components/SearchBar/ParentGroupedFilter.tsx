@@ -52,7 +52,7 @@ export const ParentGroupedFilter: React.FC<IParentGroupedFilterProps> = ({
               {sortBy(parents[parent], (x: SelectOption) => x.value).map((i, index) => {
                 return (
                   <MenuItem key={index + 1} option={i} position={index + 1}>
-                    <Highlighter>{i.label}</Highlighter>
+                    <Highlighter search="">{i.label}</Highlighter>
                   </MenuItem>
                 );
               })}

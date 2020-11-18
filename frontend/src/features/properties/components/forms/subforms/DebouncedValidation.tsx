@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useCallback } from 'react';
 import { useFormikContext } from 'formik';
 import _ from 'lodash';
+import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
 
 interface IDebouncedValidationProps {
   formikProps: any;
@@ -14,13 +15,20 @@ interface IDebouncedValidationProps {
 const DebouncedValidation = (props: IDebouncedValidationProps) => {
   const { validateForm } = useFormikContext();
   const validation = useCallback(
-    _.debounce(() => {
-      validateForm();
+    _.debounce((abort: boolean) => {
+      if (!abort) {
+        validateForm();
+      }
     }, 400),
     [],
   );
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  React.useEffect(() => validation(), [JSON.stringify(props.formikProps.values), validation]);
+
+  useDeepCompareEffect(() => {
+    validation(false);
+    return () => {
+      validation(true);
+    };
+  }, [props.formikProps.values, validation]);
 
   return <></>;
 };

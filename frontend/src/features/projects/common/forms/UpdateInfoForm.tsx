@@ -70,7 +70,7 @@ const UpdateInfoForm = ({
       <Form.Row style={{ alignItems: 'unset' }}>
         <h3 className="col-md-8">Project Totals</h3>
       </Form.Row>
-      <ProjectFinancialTable />
+      <ProjectFinancialTable disabled={!!isReadOnly} />
       <Form.Row>
         <h6 className="col-md-12" style={{ margin: '1rem 0' }}>
           {updateInfoMessage}

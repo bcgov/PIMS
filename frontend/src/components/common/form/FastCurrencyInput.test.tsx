@@ -1,28 +1,26 @@
 import React from 'react';
-import renderer from 'react-test-renderer';
 import Adapter from 'enzyme-adapter-react-16';
 import Enzyme from 'enzyme';
 import { Formik, Form } from 'formik';
 import { FastCurrencyInput } from './FastCurrencyInput';
 import { render } from '@testing-library/react';
 import { noop } from 'lodash';
+import pretty from 'pretty';
 
 Enzyme.configure({ adapter: new Adapter() });
 
 describe('FastCurrencyInput', () => {
   it('fast currency input renders correctly', () => {
-    const tree = renderer
-      .create(
-        <Formik initialValues={{ assessed: '' }} onSubmit={noop}>
-          {props => (
-            <Form>
-              <FastCurrencyInput formikProps={props} field={'assessed'} tooltip={'Tooltip'} />
-            </Form>
-          )}
-        </Formik>,
-      )
-      .toJSON();
-    expect(tree).toMatchSnapshot();
+    const { container } = render(
+      <Formik initialValues={{ assessed: '' }} onSubmit={noop}>
+        {props => (
+          <Form>
+            <FastCurrencyInput formikProps={props} field={'assessed'} tooltip={'Tooltip'} />
+          </Form>
+        )}
+      </Formik>,
+    );
+    expect(pretty(container.innerHTML)).toMatchSnapshot();
   });
 
   it('fast currency input should not show tooltip', () => {

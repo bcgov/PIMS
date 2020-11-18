@@ -55,6 +55,8 @@ interface ModalProps {
   /** allows the parent component to control the display of this modal.
    * Default behaviour is to show this modal on creation and close it on button click. */
   display?: boolean;
+  /** set the value of the externally tracked display prop above. */
+  setDisplay?: (display: boolean) => void;
   /** optional override to control the x button in the top right of the modal. Default is to show. */
   closeButton?: boolean;
 }
@@ -77,6 +79,7 @@ const GenericModal = (props: ModalProps) => {
 
   const close = () => {
     setShow(false);
+    props.setDisplay && props.setDisplay(false);
     handleCancel();
   };
 
@@ -86,6 +89,7 @@ const GenericModal = (props: ModalProps) => {
       history.push('/');
     });
   const ok = () => {
+    props.setDisplay && props.setDisplay(false);
     setShow(false);
     handleOk();
   };

@@ -1,7 +1,14 @@
-import { FeatureCollection } from 'geojson';
+import { FeatureCollection, Geometry, GeoJsonProperties } from 'geojson';
 import axios from 'axios';
-import { LatLng } from 'leaflet';
-import { useCallback } from 'react';
+import { LatLng, geoJSON } from 'leaflet';
+import { useCallback, Dispatch } from 'react';
+import parcelLayerDataSlice, {
+  saveParcelLayerData,
+  IParcelLayerData,
+} from 'reducers/parcelLayerDataSlice';
+import { error } from 'actions/genericActions';
+import { useSelector } from 'react-redux';
+import { RootState } from 'reducers/rootReducer';
 
 interface IUserLayerQuery {
   /**
@@ -9,7 +16,48 @@ interface IUserLayerQuery {
    * @param latlng = {lat, lng}
    */
   findOneWhereContains: (latlng: LatLng) => Promise<FeatureCollection>;
+  /**
+   * function to find GeoJSON shape matching the passed non-zero padded pid.
+   * @param pid
+   */
+  findByPid: (pid: string) => Promise<FeatureCollection>;
+  /**
+   * function to find GeoJSON shape matching the passed pin.
+   * @param pin
+   */
+  findByPin: (pin: string) => Promise<FeatureCollection>;
 }
+
+/**
+ * Standard logic to handle a parcel layer data response, independent of whether this is a lat/lng or pid query response.
+ * @param response axios response
+ * @param dispatch redux store, required to save results.
+ */
+export const handleParcelDataLayerResponse = (
+  response: Promise<FeatureCollection<Geometry, GeoJsonProperties>>,
+  dispatch: Dispatch<any>,
+) => {
+  return response
+    .then((resp: FeatureCollection<Geometry, GeoJsonProperties>) => {
+      if (resp?.features?.length > 0) {
+        //save with a synthetic event to timestamp the relevance of this data.
+        dispatch(
+          saveParcelLayerData({
+            e: { timeStamp: document?.timeline?.currentTime ?? 0 } as any,
+            data: {
+              ...resp.features[0].properties!,
+              CENTER: geoJSON(resp.features[0].geometry)
+                .getBounds()
+                .getCenter(),
+            },
+          }),
+        );
+      }
+    })
+    .catch((axiosError: any) => {
+      dispatch(error(parcelLayerDataSlice.reducer.name, axiosError?.response?.status, axiosError));
+    });
+};
 
 /**
  * Custom hook to fetch layer feature collection from wfs url
@@ -17,17 +65,44 @@ interface IUserLayerQuery {
  * @param geometry the name of the geometry in the feature collection
  */
 export const useLayerQuery = (url: string, geometryName: string = 'SHAPE'): IUserLayerQuery => {
+  const parcelLayerData = useSelector<RootState, IParcelLayerData | null>(
+    state => state.parcelLayerData?.parcelLayerData,
+  );
   const findOneWhereContains = useCallback(
     async (latlng: LatLng): Promise<FeatureCollection> => {
       const data: FeatureCollection = (
         await axios.get(
-          `${url}&count=1&cql_filter=CONTAINS(${geometryName}, SRID=4326;POINT ( ${latlng.lng} ${latlng.lat}))`,
+          `${url}&srsName=EPSG:4326&count=1&cql_filter=CONTAINS(${geometryName},SRID=4326;POINT ( ${latlng.lng} ${latlng.lat}))`,
         )
       ).data;
       return data;
     },
     [url, geometryName],
   );
+  const findByPid = useCallback(
+    async (pid: string): Promise<FeatureCollection> => {
+      //Do not make a request if we our currently cached response matches the requested pid.
+      const data: FeatureCollection =
+        parcelLayerData?.data?.PID === pid || parcelLayerData?.data?.PID_NUMBER.toString() === pid
+          ? undefined
+          : (await axios.get(`${url}&srsName=EPSG:4326&count=1&&CQL_FILTER=PID_NUMBER=${pid}`))
+              .data;
+      return data;
+    },
+    [url, parcelLayerData],
+  );
 
-  return { findOneWhereContains };
+  const findByPin = useCallback(
+    async (pin: string): Promise<FeatureCollection> => {
+      //Do not make a request if we our currently cached response matches the requested pid.
+      const data: FeatureCollection =
+        parcelLayerData?.data?.PIN === pin
+          ? undefined
+          : (await axios.get(`${url}&srsName=EPSG:4326&count=1&&CQL_FILTER=PIN=${pin}`)).data;
+      return data;
+    },
+    [url, parcelLayerData],
+  );
+
+  return { findOneWhereContains, findByPid, findByPin };
 };

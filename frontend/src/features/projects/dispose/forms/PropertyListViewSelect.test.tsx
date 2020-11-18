@@ -1,5 +1,4 @@
 import React from 'react';
-import renderer from 'react-test-renderer';
 import * as reducerTypes from 'constants/reducerTypes';
 import { createMemoryHistory } from 'history';
 import configureMockStore from 'redux-mock-store';
@@ -14,7 +13,8 @@ import { IFilterBarState } from '../../common/components/FilterBar';
 import { useFormikContext, getIn } from 'formik';
 import { PropertyListViewSelect } from '../../common/components/PropertyListViewSelect';
 import { useKeycloak } from '@react-keycloak/web';
-import { render, wait, fireEvent, cleanup } from '@testing-library/react';
+import { render, fireEvent, cleanup, wait, act } from '@testing-library/react';
+import pretty from 'pretty';
 
 jest.mock('formik');
 (useFormikContext as jest.Mock).mockReturnValue({
@@ -140,8 +140,10 @@ describe('Property List View Select', () => {
     cleanup();
   });
   it('renders correctly', () => {
-    const tree = renderer.create(getComponent()).toJSON();
-    expect(tree).toMatchSnapshot();
+    act(() => {
+      const { container } = render(getComponent());
+      expect(pretty(container.innerHTML)).toMatchSnapshot();
+    });
   });
 
   it('removes property from project', async () => {

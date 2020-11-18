@@ -1,360 +1,50 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Edit user page EditUserPage renders 1`] = `
-Array [
-  <div>
-    <nav
-      className="navBar navbar navbar-expand-sm navbar-light bg-light"
-    >
-      <a
-        className="navbar-brand"
-        href="#"
-      >
-        User Information
-      </a>
-    </nav>
-    <div
-      className="container-fluid"
-    >
-      <div
-        className="user-edit-form-container row"
-      >
-        <form
-          className="userInfo"
-          noValidate={true}
-          onSubmit={[Function]}
-        >
-          <p
-            className="label"
-          >
-            IDIR/BCeID
-          </p>
-          <div
-            className="form-group"
-          >
-            <input
-              className="form-control"
-              data-testid="username"
-              id="input-username"
-              name="username"
-              onBlur={[Function]}
-              onChange={[Function]}
-              readOnly={true}
-              type="text"
-              value="test.user"
-            />
+"<div>
+  <nav class=\\"navBar navbar navbar-expand-sm navbar-light bg-light\\"><a href=\\"#\\" class=\\"navbar-brand\\">User Information</a></nav>
+  <div class=\\"container-fluid\\">
+    <div class=\\"user-edit-form-container row\\">
+      <form novalidate=\\"\\" class=\\"userInfo\\">
+        <p class=\\"label\\">IDIR/BCeID</p>
+        <div class=\\"form-group\\"><input name=\\"username\\" data-testid=\\"username\\" type=\\"text\\" readonly=\\"\\" id=\\"input-username\\" class=\\"form-control\\" value=\\"test.user\\"></div>
+        <p class=\\"label\\">Last Login</p>
+        <div class=\\"form-group\\"><input name=\\"lastLogin\\" data-testid=\\"lastLogin\\" type=\\"text\\" readonly=\\"\\" id=\\"input-lastLogin\\" class=\\"form-control\\" value=\\"\\"></div>
+        <div class=\\"row\\">
+          <div class=\\"col\\">
+            <p class=\\"label\\">First Name</p>
+            <div class=\\"form-group\\"><input name=\\"firstName\\" data-testid=\\"firstName\\" placeholder=\\"Test\\" type=\\"text\\" id=\\"input-firstName\\" class=\\"form-control\\" value=\\"Test\\"></div>
           </div>
-          <p
-            className="label"
-          >
-            Last Login
-          </p>
-          <div
-            className="form-group"
-          >
-            <input
-              className="form-control"
-              data-testid="lastLogin"
-              id="input-lastLogin"
-              name="lastLogin"
-              onBlur={[Function]}
-              onChange={[Function]}
-              readOnly={true}
-              type="text"
-              value=""
-            />
+          <div class=\\"col\\">
+            <p class=\\"label\\">Last Name</p>
+            <div class=\\"form-group\\"><input name=\\"lastName\\" data-testid=\\"lastName\\" placeholder=\\"User\\" type=\\"text\\" id=\\"input-lastName\\" class=\\"form-control\\" value=\\"User\\"></div>
           </div>
-          <div
-            className="row"
-          >
-            <div
-              className="col"
-            >
-              <p
-                className="label"
-              >
-                First Name
-              </p>
-              <div
-                className="form-group"
-              >
-                <input
-                  className="form-control"
-                  data-testid="firstName"
-                  id="input-firstName"
-                  name="firstName"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  placeholder="Test"
-                  type="text"
-                  value="Test"
-                />
-              </div>
-            </div>
-            <div
-              className="col"
-            >
-              <p
-                className="label"
-              >
-                Last Name
-              </p>
-              <div
-                className="form-group"
-              >
-                <input
-                  className="form-control"
-                  data-testid="lastName"
-                  id="input-lastName"
-                  name="lastName"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  placeholder="User"
-                  type="text"
-                  value="User"
-                />
-              </div>
-            </div>
-          </div>
-          <p
-            className="label"
-          >
-            Email
-          </p>
-          <div
-            className="form-group"
-          >
-            <input
-              className="form-control"
-              data-testid="email"
-              id="input-email"
-              name="email"
-              onBlur={[Function]}
-              onChange={[Function]}
-              placeholder="test@user.com"
-              type="email"
-              value="test@user.com"
-            />
-          </div>
-          <div
-            className="required form-group"
-          >
-            <label
-              className="form-label"
-              htmlFor="input-agency"
-            >
-              Agency
-            </label>
-            <span
-              className="required"
-            >
-              *
-            </span>
-            <select
-              className="form-select form-control"
-              data-testid="agency"
-              id="input-agency"
-              name="agency"
-              onBlur={[Function]}
-              onChange={[Function]}
-              required={true}
-              value=""
-            >
-              <option
-                value=""
-              >
-                Please Select
-              </option>
-              <option
-                className="option"
-                value="1"
-              >
-                agencyVal
-              </option>
-            </select>
-          </div>
-          <p
-            className="label"
-          >
-            Position
-          </p>
-          <div
-            className="form-group"
-          >
-            <input
-              className="form-control"
-              data-testid="position"
-              id="input-position"
-              name="position"
-              onBlur={[Function]}
-              onChange={[Function]}
-              placeholder="e.g) Director, Real Estate and Stakeholder Engagement"
-              type="text"
-            />
-          </div>
-          <div
-            className="check-roles form-group"
-          >
-            <label
-              className="form-label"
-            >
-              Roles
-               
-              <svg
-                className="tooltip-icon"
-                fill="currentColor"
-                height="1em"
-                onBlur={[Function]}
-                onFocus={[Function]}
-                onMouseOut={[Function]}
-                onMouseOver={[Function]}
-                stroke="currentColor"
-                strokeWidth="0"
-                style={
-                  Object {
-                    "color": undefined,
-                  }
-                }
-                viewBox="0 0 512 512"
-                width="1em"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"
-                />
-              </svg>
-               
-              <a
-                href="https://github.com/bcgov/PIMS/wiki/Architecture-Security"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                Role Descriptions
-              </a>
-            </label>
-            <div
-              className="required form-group"
-            >
-              <span
-                className="required"
-              >
-                *
-              </span>
-              <select
-                className="form-select form-control"
-                data-testid="role"
-                id="input-roles"
-                multiple={true}
-                name="roles"
-                onBlur={[Function]}
-                onChange={[Function]}
-                required={true}
-                value={
-                  Array [
-                    "2",
-                  ]
-                }
-              >
-                <option
-                  className="option"
-                  value="1"
-                >
-                  roleVal
-                </option>
-              </select>
-            </div>
-          </div>
-          <p
-            className="label"
-          >
-            Note
-          </p>
-          <div
-            className="form-group"
-          >
-            <textarea
-              className="form-control"
-              data-testid="note"
-              id="input-note"
-              name="note"
-              onBlur={[Function]}
-              onChange={[Function]}
-              placeholder="A note about this user"
-              type="text"
-              value="test note"
-            />
-          </div>
-          <div
-            className="is-disabled form-group"
-          >
-            <label
-              className="form-label"
-            >
-              Disable Account?
-               
-              <svg
-                className="tooltip-icon"
-                fill="currentColor"
-                height="1em"
-                onBlur={[Function]}
-                onFocus={[Function]}
-                onMouseOut={[Function]}
-                onMouseOver={[Function]}
-                stroke="currentColor"
-                strokeWidth="0"
-                style={
-                  Object {
-                    "color": undefined,
-                  }
-                }
-                viewBox="0 0 512 512"
-                width="1em"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"
-                />
-              </svg>
-               
-            </label>
-            <input
-              checked={false}
-              data-testid="isDisabled"
-              name="isDisabled"
-              onBlur={[Function]}
-              onChange={[Function]}
-              type="checkbox"
-              value={false}
-            />
-          </div>
-          <div
-            className="justify-content-md-center row"
-          >
-            <div
-              className="cancelSave btn-toolbar"
-              role="toolbar"
-            >
-              <button
-                className="mr-5 btn btn-secondary"
-                disabled={false}
-                onClick={[Function]}
-                type="button"
-              >
-                Cancel
-              </button>
-              <button
-                className="mr-5 btn btn-primary"
-                disabled={false}
-                type="submit"
-              >
-                Save
-              </button>
-            </div>
-          </div>
-        </form>
-      </div>
+        </div>
+        <p class=\\"label\\">Email</p>
+        <div class=\\"form-group\\"><input name=\\"email\\" data-testid=\\"email\\" placeholder=\\"test@user.com\\" type=\\"email\\" id=\\"input-email\\" class=\\"form-control\\" value=\\"test@user.com\\"></div>
+        <div class=\\"required form-group\\"><label class=\\"form-label\\" for=\\"input-agency\\">Agency</label><span class=\\"required\\">*</span><select name=\\"agency\\" required=\\"\\" data-testid=\\"agency\\" id=\\"input-agency\\" class=\\"form-select form-control\\">
+            <option value=\\"\\">Please Select</option>
+            <option value=\\"1\\" class=\\"option\\">agencyVal</option>
+          </select></div>
+        <p class=\\"label\\">Position</p>
+        <div class=\\"form-group\\"><input name=\\"position\\" data-testid=\\"position\\" placeholder=\\"e.g) Director, Real Estate and Stakeholder Engagement\\" type=\\"text\\" id=\\"input-position\\" class=\\"form-control\\" value=\\"\\"></div>
+        <div class=\\"check-roles form-group\\"><label class=\\"form-label\\">Roles <svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 512 512\\" class=\\"tooltip-icon\\" height=\\"1em\\" width=\\"1em\\" xmlns=\\"http://www.w3.org/2000/svg\\">
+              <path d=\\"M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z\\"></path>
+            </svg> <a target=\\"_blank\\" rel=\\"noopener noreferrer\\" href=\\"https://github.com/bcgov/PIMS/wiki/Architecture-Security\\">Role Descriptions</a></label>
+          <div class=\\"required form-group\\"><span class=\\"required\\">*</span><select multiple=\\"\\" name=\\"roles\\" required=\\"\\" data-testid=\\"role\\" id=\\"input-roles\\" class=\\"form-select form-control\\">
+              <option value=\\"1\\" class=\\"option\\">roleVal</option>
+            </select></div>
+        </div>
+        <p class=\\"label\\">Note</p>
+        <div class=\\"form-group\\"><textarea name=\\"note\\" data-testid=\\"note\\" placeholder=\\"A note about this user\\" type=\\"text\\" id=\\"input-note\\" class=\\"form-control\\">test note</textarea></div>
+        <div class=\\"is-disabled form-group\\"><label class=\\"form-label\\">Disable Account? <svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 512 512\\" class=\\"tooltip-icon\\" height=\\"1em\\" width=\\"1em\\" xmlns=\\"http://www.w3.org/2000/svg\\">
+              <path d=\\"M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z\\"></path>
+            </svg> </label><input name=\\"isDisabled\\" data-testid=\\"isDisabled\\" type=\\"checkbox\\" value=\\"false\\"></div>
+        <div class=\\"justify-content-md-center row\\">
+          <div role=\\"toolbar\\" class=\\"cancelSave btn-toolbar\\"><button type=\\"button\\" class=\\"mr-5 btn btn-secondary\\">Cancel</button><button type=\\"submit\\" class=\\"mr-5 btn btn-primary\\">Save</button></div>
+        </div>
+      </form>
     </div>
-  </div>,
-  ",",
-]
+  </div>
+</div>,"
 `;

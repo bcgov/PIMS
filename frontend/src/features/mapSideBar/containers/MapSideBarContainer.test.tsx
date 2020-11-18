@@ -1,7 +1,7 @@
 import React from 'react';
 import { Router, Route } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
-import { render, cleanup } from '@testing-library/react';
+import { render, cleanup, wait } from '@testing-library/react';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
@@ -17,16 +17,9 @@ import { mockDetails } from 'mocks/filterDataMock';
 import VisibilitySensor from 'react-visibility-sensor';
 import { useKeycloak } from '@react-keycloak/web';
 
-// jest.mock('react-visibility-sensor', (): any => {
-//   return {
-//     __esModule: true,
-//     default: (props: any) => <>{props.children}</>,
-//   };
-// });
-
 jest.mock(
   'react-visibility-sensor',
-  (): typeof VisibilitySensor => ({ children, ...rest }: any) => (
+  (): typeof VisibilitySensor => ({ children, partialVisibility, ...rest }: any) => (
     <div {...rest}>{typeof children === 'function' ? children({ isVisible: true }) : children}</div>
   ),
 );
@@ -108,6 +101,14 @@ describe('Parcel Detail MapSideBarContainer', () => {
         await findByDisplayValue('000-000-000');
         expect(pretty(container.innerHTML)).toMatchSnapshot();
       });
+    });
+
+    it('removes the parcel id when the sidebar is closed', () => {
+      history.push('/mapview/1?sidebar=false');
+      renderContainer({
+        store: getStore(mockDetails[0]),
+      });
+      wait(() => expect(history.location.pathname).toEqual('/mapview'));
     });
   });
 });

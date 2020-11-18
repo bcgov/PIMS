@@ -9,9 +9,9 @@ import * as actionTypes from 'constants/actionTypes';
 import * as reducerTypes from 'constants/reducerTypes';
 import * as API from 'constants/API';
 import { ManageUsersPage } from './ManageUsersPage';
-import { create, ReactTestInstance } from 'react-test-renderer';
 import { fireEvent, render, wait } from '@testing-library/react';
 import moment from 'moment-timezone';
+import pretty from 'pretty';
 
 const history = createMemoryHistory();
 history.push('admin');
@@ -73,15 +73,6 @@ const getStore = (includeDate?: boolean) =>
   });
 
 describe('Manage Users Component', () => {
-  const componentRender = (store: any) =>
-    create(
-      <Provider store={store}>
-        <Router history={history}>
-          <ManageUsersPage />
-        </Router>
-      </Provider>,
-    );
-
   const testRender = (store: any) =>
     render(
       <Provider store={store}>
@@ -92,15 +83,14 @@ describe('Manage Users Component', () => {
     );
 
   it('Snapshot matches', () => {
-    const component = componentRender(getStore());
-    expect(component.toJSON()).toMatchSnapshot();
+    const { container } = testRender(getStore());
+    expect(pretty(container.innerHTML)).toMatchSnapshot();
   });
 
   it('Table row count is 2', () => {
-    const component = componentRender(getStore());
-    const instance = component.root;
-    const table = (instance as ReactTestInstance).findByProps({ name: 'usersTable' });
-    expect(table.props.data.length).toBe(2);
+    const { container } = testRender(getStore());
+    const rows = container.querySelectorAll('.tbody .tr');
+    expect(rows.length).toBe(2);
   });
 
   it('displays enabled agencies via autocomplete', async () => {

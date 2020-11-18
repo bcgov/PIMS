@@ -7,13 +7,9 @@ import LatLongForm from './subforms/LatLongForm';
 import SumFinancialsForm from './subforms/SumFinancialsForm';
 import EvaluationForm from './subforms/EvaluationForm';
 import { useFormikContext } from 'formik';
-import { IGeocoderResponse, useApi } from 'hooks/useApi';
+import { IGeocoderResponse } from 'hooks/useApi';
 import useCodeLookups from 'hooks/useLookupCodes';
-import * as API from 'constants/API';
-import {
-  ParcelDetailTabs,
-  IPidSelection,
-} from 'features/properties/containers/ParcelDetailContainer';
+import { ParcelDetailTabs } from 'features/properties/containers/ParcelDetailContainer';
 
 import PagedBuildingForms from './subforms/PagedBuildingForms';
 import { IParcel } from 'actions/parcelsActions';
@@ -22,16 +18,21 @@ import './ParcelDetailForm.scss';
 import { isTabInError } from 'components/common/tabValidation';
 import LandForm from './subforms/LandForm';
 import ErrorTabs from 'components/common/ErrorTabs';
+import * as API from 'constants/API';
+import { IPidSelection } from 'features/properties/hooks/useGeocoder';
 
 interface IParcelDetailFormProps {
   disabled: boolean;
   allowEdit: boolean;
   formikRef: any;
-  setPidSelection: (value: IPidSelection) => void;
   pidSelection: IPidSelection;
+  setPidSelection: (selection: IPidSelection) => void;
   currentTab: ParcelDetailTabs;
   setCurrentTab: (tab: ParcelDetailTabs) => void;
   setMovingPinNameSpace: (nameSpace: string) => void;
+  handleGeocoderChanges: (data: IGeocoderResponse) => Promise<void>;
+  handlePidChange: (pid: string) => void;
+  handlePinChange: (pin: string) => void;
   isAdmin?: boolean;
 }
 
@@ -39,86 +40,20 @@ const ParcelDetailForm: React.FunctionComponent<IParcelDetailFormProps> = ({
   disabled,
   allowEdit,
   formikRef,
-  setPidSelection,
   pidSelection,
+  setPidSelection,
   currentTab,
   setCurrentTab,
   setMovingPinNameSpace,
+  handleGeocoderChanges,
+  handlePidChange,
+  handlePinChange,
   isAdmin,
 }) => {
   const formikProps = useFormikContext<IParcel>();
-  const { lookupCodes, getOptionsByType } = useCodeLookups();
-  const api = useApi();
+  const { getOptionsByType } = useCodeLookups();
   const agencies = getOptionsByType(API.AGENCY_CODE_SET_NAME);
   const classifications = getOptionsByType(API.PROPERTY_CLASSIFICATION_CODE_SET_NAME);
-
-  const handleGeocoderChanges = async (data: IGeocoderResponse) => {
-    if (!!formikRef?.current && data) {
-      const newValues = {
-        ...formikRef.current.values,
-        latitude: data.latitude,
-        longitude: data.longitude,
-        address: {
-          ...formikRef.current.values.address,
-          line1: data.fullAddress,
-        },
-      };
-
-      const administrativeArea = data.administrativeArea
-        ? lookupCodes.find(code => {
-            return (
-              code.type === API.AMINISTRATIVE_AREA_CODE_SET_NAME &&
-              code.name === data.administrativeArea
-            );
-          })
-        : undefined;
-
-      if (administrativeArea) {
-        newValues.address.administrativeArea = administrativeArea.name;
-      } else {
-        newValues.address.administrativeArea = '';
-      }
-
-      const province = data.provinceCode
-        ? lookupCodes.find(code => {
-            return code.type === API.PROVINCE_CODE_SET_NAME && code.code === data.provinceCode;
-          })
-        : undefined;
-
-      if (province) {
-        newValues.address.provinceId = province.code;
-        newValues.address.province = province.name;
-      }
-
-      // Ask geocoder for PIDs associated with this address
-      let parcelPid: string = '';
-      if (data.siteId) {
-        try {
-          const { pids } = await api.getSitePids(data.siteId);
-          parcelPid = pids && pids.length > 0 ? pids[0] : '';
-        } catch (error) {
-          console.error('Failed to get pids');
-        }
-      }
-      if (
-        formikRef.current.values.pid &&
-        parcelPid !== '' &&
-        formikRef.current.values.pid !== parcelPid
-      ) {
-        setPidSelection({
-          showPopup: true,
-          geoPID: parcelPid.replace(/(\d{3})(\d{3})(\d{3})/, '$1-$2-$3'),
-        });
-      } else if (formikRef.current.values.pid && parcelPid === '') {
-        newValues.pid = formikRef.current.values.pid;
-      } else {
-        newValues.pid = parcelPid;
-      }
-
-      // update form with values returned from geocoder
-      formikRef.current.setValues(newValues);
-    }
-  };
 
   return (
     <ErrorTabs currentTab={currentTab} setCurrentTab={setCurrentTab}>
@@ -150,7 +85,11 @@ const ParcelDetailForm: React.FunctionComponent<IParcelDetailFormProps> = ({
                 }
               />
             )}
-            <PidPinForm disabled={disabled || !allowEdit} />
+            <PidPinForm
+              disabled={disabled || !allowEdit}
+              handlePidChange={handlePidChange}
+              handlePinChange={handlePinChange}
+            />
             <InformationForm
               isAdmin={isAdmin ?? false}
               agencies={agencies}
