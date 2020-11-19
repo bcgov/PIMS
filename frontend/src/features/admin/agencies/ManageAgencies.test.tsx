@@ -10,7 +10,7 @@ import * as reducerTypes from 'constants/reducerTypes';
 import * as API from 'constants/API';
 import ManageAgencies from './ManageAgencies';
 import { create } from 'react-test-renderer';
-import { render } from '@testing-library/react';
+import { render, cleanup } from '@testing-library/react';
 
 const history = createMemoryHistory();
 history.push('admin/agencies');
@@ -66,6 +66,9 @@ const getStore = () =>
   });
 
 describe('Manage Agencies Component', () => {
+  afterEach(() => {
+    cleanup();
+  });
   const componentRender = (store: any) =>
     create(
       <Provider store={store}>

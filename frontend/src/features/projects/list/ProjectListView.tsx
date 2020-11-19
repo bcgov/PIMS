@@ -112,7 +112,7 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
   const columns = useMemo(() => cols, []);
 
   // We'll start our table without any data
-  const [data, setData] = useState<IProject[]>([]);
+  const [data, setData] = useState<IProject[] | undefined>(undefined);
 
   // Filtering and pagination state
   const [filter, setFilter] = useState<IProjectFilterState>({});
@@ -163,11 +163,9 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
       // Give this fetch an ID
       const fetchId = ++fetchIdRef.current;
 
-      // TODO: Set the loading state
-      // setLoading(true);
-
       // Only update the data if this is the latest fetch
       if (fetchId === fetchIdRef.current && agencyIds?.length > 0) {
+        setData(undefined);
         const query = getServerQuery({
           pageIndex,
           pageSize,
@@ -183,8 +181,6 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
           }),
         );
         setPageCount(Math.ceil(data.total / pageSize));
-
-        // setLoading(false);
       }
     },
     [setData, setPageCount, mode],
@@ -218,10 +214,10 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
   };
 
   const handleDelete = async () => {
-    const project = data.find(p => p.projectNumber === deleteId);
+    const project = data?.find(p => p.projectNumber === deleteId);
     if (project) {
       await service.deleteProject(project);
-      setData(data.filter(p => p.projectNumber !== project.projectNumber));
+      setData(data?.filter(p => p.projectNumber !== project.projectNumber));
     }
   };
 
@@ -256,7 +252,7 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
         return { ...map, [projectId]: current[projectId] };
       }, {});
       setData(
-        data.map(d => {
+        data?.map(d => {
           return !!projectPropertiesMap[d.projectNumber]
             ? { ...d, properties: projectPropertiesMap[d.projectNumber] }
             : d;
@@ -340,7 +336,8 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
           name="projectsTable"
           clickableTooltip="View Disposal Project details"
           columns={mode === PageMode.APPROVAL ? columns() : columns(initiateDelete)}
-          data={data}
+          data={data || []}
+          loading={data === undefined}
           onRequestData={handleRequestData}
           pageCount={pageCount}
           pageSize={pageSize}

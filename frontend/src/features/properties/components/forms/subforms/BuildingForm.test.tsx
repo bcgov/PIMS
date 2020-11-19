@@ -1,12 +1,11 @@
 import React from 'react';
-import renderer from 'react-test-renderer';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 import * as API from 'constants/API';
 import * as reducerTypes from 'constants/reducerTypes';
 import BuildingForm, { defaultBuildingValues } from './BuildingForm';
-import { render, fireEvent, wait, cleanup } from '@testing-library/react';
+import { render, fireEvent, cleanup, wait } from '@testing-library/react';
 import { fillInput } from 'utils/testUtils';
 import { Formik, Form } from 'formik';
 import { IFormBuilding } from './BuildingForm';
@@ -15,19 +14,22 @@ import * as YupSchema from 'utils/YupSchema';
 import { Button } from 'components/common/form';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
+import pretty from 'pretty';
+import { noop } from 'lodash';
 
 const mockAxios = new MockAdapter(axios);
 mockAxios.onAny().reply(200, {});
 
 const mockBuilding: IFormBuilding = {
   address: {
-    cityId: 1,
+    administrativeArea: 'Victoria',
     line1: 'line1',
     postal: 'v8x3P5',
     provinceId: '2',
-    city: 'city',
     province: 'province',
   },
+  agency: 'agency',
+  agencyCode: 'AGE',
   name: 'name',
   classification: 'class',
   agencyId: 3,
@@ -115,7 +117,7 @@ describe('sub-form BuildingForm functionality', () => {
         >
           {formikProps => (
             <Form>
-              <BuildingForm {...formikProps}></BuildingForm>
+              <BuildingForm {...formikProps} setMovingPinNameSpace={noop}></BuildingForm>
               <Button type="submit">Submit</Button>
             </Form>
           )}
@@ -125,8 +127,8 @@ describe('sub-form BuildingForm functionality', () => {
   };
   it('loads initial building data', () => {
     const pagedBuildingForms = getBuildingForm(mockBuilding, () => {});
-    const tree = renderer.create(pagedBuildingForms).toJSON();
-    expect(tree).toMatchSnapshot();
+    const { container } = render(pagedBuildingForms);
+    expect(pretty(container.innerHTML)).toMatchSnapshot();
   });
 
   it('renders EvaluationForm as expected', () => {

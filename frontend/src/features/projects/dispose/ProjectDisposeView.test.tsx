@@ -1,5 +1,4 @@
 import React from 'react';
-import renderer from 'react-test-renderer';
 import ProjectDisposeView from './ProjectDisposeView';
 import * as reducerTypes from 'constants/reducerTypes';
 import { createMemoryHistory } from 'history';
@@ -8,15 +7,22 @@ import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 import { Router, match as Match } from 'react-router-dom';
 import * as actionTypes from 'constants/actionTypes';
-import { render, cleanup } from '@testing-library/react';
+import { render, cleanup, act } from '@testing-library/react';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 import useStepper from './hooks/useStepper';
 import { noop } from 'lodash';
+import pretty from 'pretty';
+import * as redux from 'react-redux';
+
+const useDispatchSpy = jest.spyOn(redux, 'useDispatch');
+const mockDispatchFn = jest.fn().mockReturnValue({ then: jest.fn() });
+useDispatchSpy.mockReturnValue(mockDispatchFn);
 
 const mockStore = configureMockStore([thunk]);
 const history = createMemoryHistory();
 
+jest.mock('./hooks/useStepper');
 jest.mock('./hooks/useStepper');
 (useStepper as jest.Mock).mockReturnValue({
   currentStatus: {},
@@ -91,8 +97,10 @@ describe('Project Dispose View', () => {
     mockAxios.onAny().reply(200, {});
   });
   it('renders', () => {
-    const tree = renderer.create(renderElement(store)).toJSON();
-    expect(tree).toMatchSnapshot();
+    act(() => {
+      const { container } = render(renderElement(store));
+      expect(pretty(container.innerHTML)).toMatchSnapshot();
+    });
   });
 
   it('throws error with correct project # when unable to fetch project', () => {

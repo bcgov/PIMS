@@ -47,9 +47,6 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
     state => state.parcel?.parcelDetail as IPropertyDetail,
   );
   const [cachedParcelDetail, setCachedParcelDetail] = React.useState<IParcel | null>(null);
-  const leafletMouseEvent = useSelector<RootState, LeafletMouseEvent | null>(
-    state => state.leafletClickEvent?.mapClickEvent,
-  );
 
   useDeepCompareEffect(() => {
     if (showSideBar && parcelId) {
@@ -99,7 +96,7 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
         disabled={disabled}
         loadDraft={loadDraft}
         properties={properties}
-        mapClickMouseEvent={leafletMouseEvent}
+        // mapClickMouseEvent={leafletMouseEvent}
       />
     );
   };

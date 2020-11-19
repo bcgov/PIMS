@@ -2,8 +2,7 @@ import PropertyListView from './PropertyListView';
 import React from 'react';
 import { Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
-import { render, cleanup } from '@testing-library/react';
-import renderer from 'react-test-renderer';
+import { render, cleanup, act, wait } from '@testing-library/react';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { ILookupCode } from 'actions/lookupActions';
@@ -11,6 +10,7 @@ import * as API from 'constants/API';
 import { Provider } from 'react-redux';
 import * as reducerTypes from 'constants/reducerTypes';
 import service from '../service';
+import pretty from 'pretty';
 
 // Set all module functions to jest.fn
 jest.mock('../service');
@@ -47,7 +47,7 @@ describe('Property list view', () => {
     cleanup();
   });
 
-  it('Matches snapshot', () => {
+  it('Matches snapshot', async () => {
     // API "returns" no results
     mockedService.getPropertyList.mockResolvedValueOnce({
       quantity: 0,
@@ -57,16 +57,19 @@ describe('Property list view', () => {
       items: [],
     });
 
-    const tree = renderer
-      .create(
+    await act(async () => {
+      const { container } = render(
         <Provider store={store}>
           <Router history={history}>
             <PropertyListView />,
           </Router>
         </Provider>,
-      )
-      .toJSON();
-    expect(tree).toMatchSnapshot();
+      );
+      expect(pretty(container.innerHTML)).toMatchSnapshot();
+      await wait(async () => {
+        expect(container.querySelector('span[class="spinner-border"]')).not.toBeInTheDocument();
+      });
+    });
   });
 
   it('Displays message for empty list', async () => {

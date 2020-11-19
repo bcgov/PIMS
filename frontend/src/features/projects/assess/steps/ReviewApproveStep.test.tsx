@@ -1,5 +1,4 @@
 import React from 'react';
-import renderer from 'react-test-renderer';
 import * as reducerTypes from 'constants/reducerTypes';
 import { createMemoryHistory } from 'history';
 import configureMockStore from 'redux-mock-store';
@@ -22,6 +21,7 @@ import { Button } from 'react-bootstrap';
 import GenericModal from 'components/common/GenericModal';
 import { IProperty } from 'features/properties/list/interfaces';
 import { act } from 'react-dom/test-utils';
+import pretty from 'pretty';
 
 Enzyme.configure({ adapter: new Adapter() });
 
@@ -103,8 +103,7 @@ const mockProperty: IProperty = {
   agencyCode: 'TST',
   address: '1234 Test St',
   addressId: 1,
-  city: 'Victoria',
-  cityId: 1,
+  administrativeArea: 'Victoria',
   province: 'BC',
   postal: 'A1A 1A1',
   estimated: 123,
@@ -183,19 +182,25 @@ describe('Review Approve Step', () => {
     mockKeycloak([]);
   });
   it('renders correctly', () => {
-    const tree = renderer.create(getReviewApproveStep()).toJSON();
-    expect(tree).toMatchSnapshot();
+    act(() => {
+      const { container } = render(getReviewApproveStep());
+      expect(pretty(container.innerHTML)).toMatchSnapshot();
+    });
   });
   it('edit button is visible when user has correct claims', () => {
     mockKeycloak([Claims.ADMIN_PROJECTS]);
-    const { getByText } = render(getReviewApproveStep());
-    const editButton = getByText(/Edit/);
-    expect(editButton).toBeTruthy();
+    act(() => {
+      const { getByText } = render(getReviewApproveStep());
+      const editButton = getByText(/Edit/);
+      expect(editButton).toBeTruthy();
+    });
   });
   it('edit button is not visible when user does not have required agency/claims', () => {
-    const { queryByText } = render(getReviewApproveStep());
-    const editButton = queryByText(/Edit/);
-    expect(editButton).toBeFalsy();
+    act(() => {
+      const { queryByText } = render(getReviewApproveStep());
+      const editButton = queryByText(/Edit/);
+      expect(editButton).toBeFalsy();
+    });
   });
 
   it('Review step submits correctly', async done => {
@@ -210,30 +215,30 @@ describe('Review Approve Step', () => {
       },
     });
     let component: any;
-    act(() => {
+    await act(async () => {
       component = mount(getReviewApproveStep(store(mockProject(mockTasks))));
-    });
-    const button = component.findWhere((node: { type: () => any; text: () => string }) => {
-      return node.type() === Button && node.text() === 'Save';
-    });
-
-    mockAxios
-      .onPut()
-      .reply((config: any) => {
-        done();
-        return [200, Promise.resolve({})];
-      })
-      .onAny()
-      .reply((config: any) => {
-        return [200, Promise.resolve({})];
+      const button = component.findWhere((node: { type: () => any; text: () => string }) => {
+        return node.type() === Button && node.text() === 'Save';
       });
 
-    button.simulate('click');
+      mockAxios
+        .onPut()
+        .reply((config: any) => {
+          done();
+          return [200, Promise.resolve({})];
+        })
+        .onAny()
+        .reply((config: any) => {
+          return [200, Promise.resolve({})];
+        });
+
+      button.simulate('click');
+    });
   });
 });
 
 describe('Review approve modal behaviour', () => {
-  it('confirmation popup does not appear when there are incomplete tasks', () => {
+  it('confirmation popup does not appear when there are incomplete tasks', async () => {
     (useKeycloak as jest.Mock).mockReturnValue({
       keycloak: {
         userInfo: {
@@ -243,13 +248,17 @@ describe('Review approve modal behaviour', () => {
         subject: 'test',
       },
     });
-    const component = mount(getReviewApproveStep(store(mockProject(incompleteTask))));
-    const button = component.findWhere((node: { type: () => any; text: () => string }) => {
-      return node.type() === Button && node.text() === 'Approve';
-    });
-    button.simulate('click');
-    return Promise.resolve().then(() => {
-      expect(component.find(GenericModal)).toHaveLength(0);
+    await act(async () => {
+      const component = mount(getReviewApproveStep(store(mockProject(incompleteTask))));
+      const button = component.findWhere((node: { type: () => any; text: () => string }) => {
+        return node.type() === Button && node.text() === 'Approve';
+      });
+
+      button.simulate('click');
+
+      return Promise.resolve().then(() => {
+        expect(component.find(GenericModal)).toHaveLength(0);
+      });
     });
   });
 });
