@@ -2,7 +2,7 @@ import { FunctionComponent, useCallback } from 'react';
 import React from 'react';
 import { Input, Form } from 'components/common/form';
 import { PidTooltip, PinTooltip } from '../strings';
-import { useFormikContext, getIn } from 'formik';
+import { useFormikContext } from 'formik';
 import { IParcel } from 'actions/parcelsActions';
 import debounce from 'lodash/debounce';
 
@@ -38,7 +38,7 @@ const PidPinForm: FunctionComponent<PidPinProps> = (props: PidPinProps) => {
     const { nameSpace } = props;
     return nameSpace ? `${nameSpace}.${fieldName}` : fieldName;
   };
-  const { touched } = useFormikContext<IParcel>();
+  const { initialValues } = useFormikContext<IParcel>();
 
   const debouncedHandlePidChange = useCallback(
     debounce((pid: string) => {
@@ -58,7 +58,7 @@ const PidPinForm: FunctionComponent<PidPinProps> = (props: PidPinProps) => {
           disabled={props.disabled}
           pattern={RegExp(/^[\d\- ]*$/)}
           onBlurFormatter={(pid: string) => {
-            if (pid && getIn(touched, withNameSpace('pid'))) {
+            if (pid && initialValues.pid !== pid) {
               debouncedHandlePidChange(pid);
             }
             return pid.replace(pid, pidFormatter(pid));
@@ -77,7 +77,7 @@ const PidPinForm: FunctionComponent<PidPinProps> = (props: PidPinProps) => {
           disabled={props.disabled}
           field={withNameSpace('pin')}
           onBlurFormatter={(pin: string) => {
-            if (pin && getIn(touched, withNameSpace('pin'))) {
+            if (pin && initialValues.pin !== pin) {
               props.handlePinChange(pin);
             }
             return pin;
