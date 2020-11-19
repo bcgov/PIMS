@@ -82,7 +82,7 @@ const useParcelLayerData = ({ formikRef, parcelId }: IUseParcelLayerDataProps) =
   useDeepCompareEffect(() => {
     if (!!formikRef?.current && isMouseEventRecent(parcelLayerData?.e) && !!parcelLayerData?.data) {
       if (!parcelId) {
-        toast.dark('Autofilling form utilizing BC Geographic Warehouse data.', { autoClose: 7000 });
+        toast.dark('Autofilling form utilizing BC Data Warehouse data.', { autoClose: 7000 });
         setParcelFieldsFromLayerData(
           parcelLayerData,
           formikRef,

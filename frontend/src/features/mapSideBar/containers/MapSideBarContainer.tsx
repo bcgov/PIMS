@@ -96,7 +96,7 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
         disabled={disabled}
         loadDraft={loadDraft}
         properties={properties}
-        mapClickMouseEvent={leafletMouseEvent}
+        // mapClickMouseEvent={leafletMouseEvent}
       />
     );
   };

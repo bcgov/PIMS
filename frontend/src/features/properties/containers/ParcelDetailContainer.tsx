@@ -74,6 +74,7 @@ const ParcelDetailContainer: React.FunctionComponent<IParcelDetailContainerProps
     const response = parcelsService.findByPin(pin);
     handleParcelDataLayerResponse(response, dispatch);
   };
+  };
 
   React.useEffect(() => {
     if (movingPinNameSpace !== undefined) {
