@@ -1,131 +1,26 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Project Draft Step renders correctly 1`] = `
-<div
-  className="container-fluid"
->
-  <form
-    className="ProjectDraftForm"
-    noValidate={true}
-    onSubmit={[Function]}
-  >
-    <div
-      className="ProjectDraftForm container-fluid"
-    >
-      <div
-        className="form-row"
-      >
-        <h3
-          className="col-md-8"
-        >
-          Review
-        </h3>
-        <span
-          className="col-md-4"
-        />
+"<div class=\\"container-fluid\\">
+  <form novalidate=\\"\\" class=\\"ProjectDraftForm\\">
+    <div class=\\"ProjectDraftForm container-fluid\\">
+      <div class=\\"form-row\\">
+        <h3 class=\\"col-md-8\\">Review</h3><span class=\\"col-md-4\\"></span>
       </div>
-      <div
-        className="col-md-10 form-row"
-      >
-        <label
-          className="col-md-2 form-label"
-        >
-          Project No.
-        </label>
-        <div
-          className="col-md-2 form-group"
-        >
-          <input
-            className="form-control"
-            disabled={true}
-            id="input-projectNumber"
-            name="projectNumber"
-            onBlur={[Function]}
-            onChange={[Function]}
-            placeholder="SPP-XXXXXX"
-            value="TEST-NUMBER"
-          />
-        </div>
+      <div class=\\"col-md-10 form-row\\"><label class=\\"col-md-2 form-label\\">Project No.</label>
+        <div class=\\"col-md-2 form-group\\"><input name=\\"projectNumber\\" disabled=\\"\\" placeholder=\\"SPP-XXXXXX\\" id=\\"input-projectNumber\\" class=\\"form-control\\" value=\\"TEST-NUMBER\\"></div>
       </div>
-      <div
-        className="form-row"
-      >
-        <div
-          className="required col-md-10 form-group"
-        >
-          <label
-            className="form-label"
-            htmlFor="input-name"
-          >
-            Name
-            <span
-              className="required"
-            >
-              *
-            </span>
-          </label>
-          <input
-            className="col-md-5 form-control"
-            disabled={true}
-            id="input-name"
-            name="name"
-            onBlur={[Function]}
-            onChange={[Function]}
-            required={true}
-          />
-        </div>
+      <div class=\\"form-row\\">
+        <div class=\\"required col-md-10 form-group\\"><label class=\\"form-label\\" for=\\"input-name\\">Name<span class=\\"required\\">*</span></label><input name=\\"name\\" required=\\"\\" disabled=\\"\\" id=\\"input-name\\" class=\\"col-md-5 form-control\\" value=\\"\\"></div>
       </div>
-      <div
-        className="form-row"
-      >
-        <div
-          className="col-md-10 form-group"
-        >
-          <label
-            className="form-label"
-            htmlFor="input-description"
-          >
-            Description
-          </label>
-          <textarea
-            className="col-md-5 form-control"
-            disabled={true}
-            id="input-description"
-            name="description"
-            onBlur={[Function]}
-            onChange={[Function]}
-          />
-        </div>
+      <div class=\\"form-row\\">
+        <div class=\\"col-md-10 form-group\\"><label class=\\"form-label\\" for=\\"input-description\\">Description</label><textarea name=\\"description\\" disabled=\\"\\" id=\\"input-description\\" class=\\"col-md-5 form-control\\"></textarea></div>
       </div>
     </div>
-    <div
-      className="ProjectNotes form-row"
-    >
-      <div
-        className="col-md-10 form-group"
-      >
-        <label
-          className="form-label"
-          htmlFor="input-note"
-        >
-          Notes
-        </label>
-        <textarea
-          className="col-md-5 form-control"
-          id="input-note"
-          name="note"
-          onBlur={[Function]}
-          onChange={[Function]}
-        />
-      </div>
+    <div class=\\"ProjectNotes form-row\\">
+      <div class=\\"col-md-10 form-group\\"><label class=\\"form-label\\" for=\\"input-note\\">Notes</label><textarea name=\\"note\\" id=\\"input-note\\" class=\\"col-md-5 form-control\\"></textarea></div>
     </div>
-    <div
-      style={
-        Object {
-          "textAlign": "right",
-        }
-      }
-    />
+    <div style=\\"text-align: right;\\"></div>
   </form>
-</div>
+</div>"
 `;

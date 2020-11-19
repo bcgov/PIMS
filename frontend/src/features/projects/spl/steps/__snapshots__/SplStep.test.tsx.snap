@@ -1,2073 +1,321 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`SPL Approval Step close out form tab renders correctly 1`] = `
-.c0 {
-  text-align: center;
-  margin-bottom: 1rem;
-}
-
-.c1 {
-  padding-top: 1rem;
-  padding-bottom: 1rem;
-  font-family: 'BCSans',Fallback,sans-serif;
-}
-
-.c3 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: row-reverse;
-  -ms-flex-direction: row-reverse;
-  flex-direction: row-reverse;
-  margin: 0.5rem 0;
-  text-align: right;
-}
-
-.c2 {
-  text-align: center;
-  font-family: 'BCSans-Bold';
-  margin-bottom: 1.5rem;
-}
-
-<div
-  className="splStep container-fluid"
->
-  <form
-    action="#"
-    onReset={[Function]}
-    onSubmit={[Function]}
-  >
-    <div
-      className="c0 default-status"
-    >
-      <h5
-        className="c1"
-      >
-        Approved for Surplus Property Program
-      </h5>
-      <svg
-        fill="currentColor"
-        height={64}
-        size={64}
-        stroke="currentColor"
-        strokeWidth="0"
-        style={
-          Object {
-            "color": "#20a74d",
-          }
-        }
-        viewBox="0 0 512 512"
-        width={64}
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          d="M256 8C119.033 8 8 119.033 8 256s111.033 248 248 248 248-111.033 248-248S392.967 8 256 8zm0 48c110.532 0 200 89.451 200 200 0 110.532-89.451 200-200 200-110.532 0-200-89.451-200-200 0-110.532 89.451-200 200-200m140.204 130.267l-22.536-22.718c-4.667-4.705-12.265-4.736-16.97-.068L215.346 303.697l-59.792-60.277c-4.667-4.705-12.265-4.736-16.97-.069l-22.719 22.536c-4.705 4.667-4.736 12.265-.068 16.971l90.781 91.516c4.667 4.705 12.265 4.736 16.97.068l172.589-171.204c4.704-4.668 4.734-12.266.067-16.971z"
-        />
+"<div class=\\"splStep container-fluid\\">
+  <form action=\\"#\\">
+    <div class=\\"sc-fzoXzr kRiuky default-status\\">
+      <h5 class=\\"sc-fzpjYC dfCYhg\\">Approved for Surplus Property Program</h5><svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 512 512\\" size=\\"64\\" style=\\"color: rgb(32, 167, 77);\\" height=\\"64\\" width=\\"64\\" xmlns=\\"http://www.w3.org/2000/svg\\">
+        <path d=\\"M256 8C119.033 8 8 119.033 8 256s111.033 248 248 248 248-111.033 248-248S392.967 8 256 8zm0 48c110.532 0 200 89.451 200 200 0 110.532-89.451 200-200 200-110.532 0-200-89.451-200-200 0-110.532 89.451-200 200-200m140.204 130.267l-22.536-22.718c-4.667-4.705-12.265-4.736-16.97-.068L215.346 303.697l-59.792-60.277c-4.667-4.705-12.265-4.736-16.97-.069l-22.719 22.536c-4.705 4.667-4.736 12.265-.068 16.971l90.781 91.516c4.667 4.705 12.265 4.736 16.97.068l172.589-171.204c4.704-4.668 4.734-12.266.067-16.971z\\"></path>
       </svg>
-      <h5
-        className="c1"
-      >
-        Approval Date 2020-07-15
-      </h5>
+      <h5 class=\\"sc-fzpjYC dfCYhg\\">Approval Date 2020-07-15</h5>
     </div>
-    <div
-      className="c2"
-    >
-      Approved for ERP
-    </div>
-    <nav
-      className="nav nav-tabs"
-      onKeyDown={[Function]}
-      role="tablist"
-    >
-      <a
-        aria-controls="approvalTabs-tabpane-projectInformation"
-        aria-selected={false}
-        className="nav-item nav-link"
-        data-rb-event-key="projectInformation"
-        href="#"
-        id="approvalTabs-tab-projectInformation"
-        onClick={[Function]}
-        onKeyDown={[Function]}
-        role="tab"
-        tabIndex={-1}
-      >
-        Project Information
-      </a>
-      <a
-        aria-controls="approvalTabs-tabpane-documentation"
-        aria-selected={false}
-        className="nav-item nav-link"
-        data-rb-event-key="documentation"
-        href="#"
-        id="approvalTabs-tab-documentation"
-        onClick={[Function]}
-        onKeyDown={[Function]}
-        role="tab"
-        tabIndex={-1}
-      >
-        Documentation
-      </a>
-      <a
-        aria-controls="approvalTabs-tabpane-enhancedReferralProcess"
-        aria-selected={false}
-        className="nav-item nav-link"
-        data-rb-event-key="enhancedReferralProcess"
-        href="#"
-        id="approvalTabs-tab-enhancedReferralProcess"
-        onClick={[Function]}
-        onKeyDown={[Function]}
-        role="tab"
-        tabIndex={-1}
-      >
-        Enhanced Referral Process
-      </a>
-      <a
-        aria-controls="approvalTabs-tabpane-surplusPropertyList"
-        aria-selected={false}
-        className="nav-item nav-link"
-        data-rb-event-key="surplusPropertyList"
-        href="#"
-        id="approvalTabs-tab-surplusPropertyList"
-        onClick={[Function]}
-        onKeyDown={[Function]}
-        role="tab"
-        tabIndex={-1}
-      >
-        Surplus Properties List
-      </a>
-      <a
-        aria-controls="approvalTabs-tabpane-closeOutForm"
-        aria-selected={true}
-        className="nav-item nav-link active"
-        data-rb-event-key="closeOutForm"
-        href="#"
-        id="approvalTabs-tab-closeOutForm"
-        onClick={[Function]}
-        onKeyDown={[Function]}
-        role="tab"
-      >
-        Close Out Form
-      </a>
-    </nav>
-    <div
-      className="tab-content"
-    >
-      <div
-        aria-hidden={false}
-        aria-labelledby="approvalTabs-tab-closeOutForm"
-        className="fade tab-pane active show"
-        id="approvalTabs-tabpane-closeOutForm"
-        role="tabpanel"
-      >
-        <div
-          className="container-fluid"
-        >
-          <div
-            className="form-row"
-          >
-            <div
-              className="col-md-6"
-            >
-              <div
-                className="form-row"
-              >
-                <label
-                  className="form-label col-form-label col-md-4"
-                >
-                  Project Number
-                </label>
-                <div
-                  className="col-md-8 form-group"
-                >
-                  <input
-                    className="form-control"
-                    disabled={true}
-                    id="input-projectNumber"
-                    name="projectNumber"
-                    onBlur={[Function]}
-                    onChange={[Function]}
-                    value="test-01"
-                  />
-                </div>
+    <div class=\\"sc-fzqBkg dFezUw\\">Approved for ERP</div>
+    <nav class=\\"nav nav-tabs\\" role=\\"tablist\\"><a href=\\"#\\" role=\\"tab\\" data-rb-event-key=\\"projectInformation\\" id=\\"approvalTabs-tab-projectInformation\\" aria-controls=\\"approvalTabs-tabpane-projectInformation\\" tabindex=\\"-1\\" aria-selected=\\"false\\" class=\\"nav-item nav-link\\">Project Information</a><a href=\\"#\\" role=\\"tab\\" data-rb-event-key=\\"documentation\\" id=\\"approvalTabs-tab-documentation\\" aria-controls=\\"approvalTabs-tabpane-documentation\\" tabindex=\\"-1\\" aria-selected=\\"false\\" class=\\"nav-item nav-link\\">Documentation</a><a href=\\"#\\" role=\\"tab\\" data-rb-event-key=\\"enhancedReferralProcess\\" id=\\"approvalTabs-tab-enhancedReferralProcess\\" aria-controls=\\"approvalTabs-tabpane-enhancedReferralProcess\\" tabindex=\\"-1\\" aria-selected=\\"false\\" class=\\"nav-item nav-link\\">Enhanced Referral Process</a><a href=\\"#\\" role=\\"tab\\" data-rb-event-key=\\"surplusPropertyList\\" id=\\"approvalTabs-tab-surplusPropertyList\\" aria-controls=\\"approvalTabs-tabpane-surplusPropertyList\\" tabindex=\\"-1\\" aria-selected=\\"false\\" class=\\"nav-item nav-link\\">Surplus Properties List</a><a href=\\"#\\" role=\\"tab\\" data-rb-event-key=\\"closeOutForm\\" id=\\"approvalTabs-tab-closeOutForm\\" aria-controls=\\"approvalTabs-tabpane-closeOutForm\\" aria-selected=\\"true\\" class=\\"nav-item nav-link active\\">Close Out Form</a></nav>
+    <div class=\\"tab-content\\">
+      <div id=\\"approvalTabs-tabpane-closeOutForm\\" aria-labelledby=\\"approvalTabs-tab-closeOutForm\\" role=\\"tabpanel\\" aria-hidden=\\"false\\" class=\\"fade tab-pane active show\\">
+        <div class=\\"container-fluid\\">
+          <div class=\\"form-row\\">
+            <div class=\\"col-md-6\\">
+              <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-4\\">Project Number</label>
+                <div class=\\"col-md-8 form-group\\"><input name=\\"projectNumber\\" disabled=\\"\\" id=\\"input-projectNumber\\" class=\\"form-control\\" value=\\"test-01\\"></div>
               </div>
-              <div
-                className="form-row"
-              >
-                <label
-                  className="form-label col-form-label col-md-4"
-                >
-                  Agency
-                </label>
-                <div
-                  className="col-md-8 form-group"
-                >
-                  <input
-                    className="form-control"
-                    disabled={true}
-                    id="input-agency"
-                    name="agency"
-                    onBlur={[Function]}
-                    onChange={[Function]}
-                  />
-                </div>
+              <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-4\\">Agency</label>
+                <div class=\\"col-md-8 form-group\\"><input name=\\"agency\\" disabled=\\"\\" id=\\"input-agency\\" class=\\"form-control\\" value=\\"\\"></div>
               </div>
-              <div
-                className="form-row"
-              >
-                <label
-                  className="form-label col-form-label col-md-4"
-                >
-                  Sub Agency
-                </label>
-                <div
-                  className="col-md-8 form-group"
-                >
-                  <input
-                    className="form-control"
-                    disabled={true}
-                    id="input-subAgency"
-                    name="subAgency"
-                    onBlur={[Function]}
-                    onChange={[Function]}
-                  />
-                </div>
+              <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-4\\">Sub Agency</label>
+                <div class=\\"col-md-8 form-group\\"><input name=\\"subAgency\\" disabled=\\"\\" id=\\"input-subAgency\\" class=\\"form-control\\" value=\\"\\"></div>
               </div>
             </div>
-            <div
-              className="col-md-6"
-            >
-              <div
-                className="form-row"
-              >
-                <label
-                  className="form-label col-form-label col-md-4"
-                >
-                  Project Manager(s)
-                </label>
-                <div
-                  className="col-md-8 form-group"
-                >
-                  <input
-                    className="form-control"
-                    disabled={false}
-                    id="input-manager"
-                    name="manager"
-                    onBlur={[Function]}
-                    onChange={[Function]}
-                  />
+            <div class=\\"col-md-6\\">
+              <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-4\\">Project Manager(s)</label>
+                <div class=\\"col-md-8 form-group\\"><input name=\\"manager\\" id=\\"input-manager\\" class=\\"form-control\\" value=\\"\\"></div>
+              </div>
+            </div>
+          </div>
+          <h3>Purchase Information</h3>
+          <div class=\\"form-row\\">
+            <div class=\\"col-md-6\\">
+              <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-4\\">Name of Purchaser</label>
+                <div class=\\"col-md-8 form-group\\"><input name=\\"purchaser\\" disabled=\\"\\" id=\\"input-purchaser\\" class=\\"form-control\\" value=\\"purchaser\\"></div>
+              </div>
+              <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-4\\">Real Estate Agent</label>
+                <div class=\\"col-md-8 form-group\\"><input name=\\"realtor\\" id=\\"input-realtor\\" class=\\"form-control\\" value=\\"\\"></div>
+              </div>
+            </div>
+            <div class=\\"col-md-6\\">
+              <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-4\\">Real Estate Agent Rate</label>
+                <div class=\\"col-md-8 form-group\\"><input name=\\"realtorRate\\" id=\\"input-realtorRate\\" class=\\"form-control\\" value=\\"\\"></div>
+              </div>
+              <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-4\\">Real Estate Commission Paid</label>
+                <div class=\\"col-md-8 fast-currency-input form-group\\">
+                  <div class=\\"input-tooltip-wrapper\\"><input name=\\"realtorCommission\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
                 </div>
               </div>
             </div>
           </div>
-          <h3>
-            Purchase Information
-          </h3>
-          <div
-            className="form-row"
-          >
-            <div
-              className="col-md-6"
-            >
-              <div
-                className="form-row"
-              >
-                <label
-                  className="form-label col-form-label col-md-4"
-                >
-                  Name of Purchaser
-                </label>
-                <div
-                  className="col-md-8 form-group"
-                >
-                  <input
-                    className="form-control"
-                    disabled={true}
-                    id="input-purchaser"
-                    name="purchaser"
-                    onBlur={[Function]}
-                    onChange={[Function]}
-                    value="purchaser"
-                  />
+          <h3>Sale Information</h3>
+          <div class=\\"form-row\\">
+            <div class=\\"col-md-6\\">
+              <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-4\\">Sales Completion Date</label>
+                <div class=\\"col-md-8 form-group\\">
+                  <div class=\\"react-datepicker-wrapper\\">
+                    <div class=\\"react-datepicker__input-container\\"><input type=\\"text\\" id=\\"datepicker-disposedOn\\" name=\\"disposedOn\\" placeholder=\\"--/--/----\\" autocomplete=\\"off\\" class=\\"form-control date-picker\\" value=\\"01/01/2020\\"></div>
+                  </div>
                 </div>
               </div>
-              <div
-                className="form-row"
-              >
-                <label
-                  className="form-label col-form-label col-md-4"
-                >
-                  Real Estate Agent
-                </label>
-                <div
-                  className="col-md-8 form-group"
-                >
-                  <input
-                    className="form-control"
-                    disabled={false}
-                    id="input-realtor"
-                    name="realtor"
-                    onBlur={[Function]}
-                    onChange={[Function]}
-                  />
-                </div>
-              </div>
-            </div>
-            <div
-              className="col-md-6"
-            >
-              <div
-                className="form-row"
-              >
-                <label
-                  className="form-label col-form-label col-md-4"
-                >
-                  Real Estate Agent Rate
-                </label>
-                <div
-                  className="col-md-8 form-group"
-                >
-                  <input
-                    className="form-control"
-                    disabled={false}
-                    id="input-realtorRate"
-                    name="realtorRate"
-                    onBlur={[Function]}
-                    onChange={[Function]}
-                  />
-                </div>
-              </div>
-              <div
-                className="form-row"
-              >
-                <label
-                  className="form-label col-form-label col-md-4"
-                >
-                  Real Estate Commission Paid
-                </label>
-                <div
-                  className="col-md-8 fast-currency-input form-group"
-                >
-                  <div
-                    className="input-tooltip-wrapper"
-                  >
-                    <input
-                      className="form-control"
-                      disabled={false}
-                      name="realtorCommission"
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      placeholder=""
-                      value=""
-                    />
+              <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-4\\">Sales Adjustment Date</label>
+                <div class=\\"col-md-8 form-group\\">
+                  <div class=\\"react-datepicker-wrapper\\">
+                    <div class=\\"react-datepicker__input-container\\"><input type=\\"text\\" id=\\"datepicker-adjustedOn\\" name=\\"adjustedOn\\" placeholder=\\"--/--/----\\" autocomplete=\\"off\\" class=\\"form-control date-picker\\" value=\\"\\"></div>
                   </div>
                 </div>
               </div>
             </div>
+            <div class=\\"col-md-6\\">
+              <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-4\\">Actual Fiscal Year of Sale</label>
+                <div class=\\"col-md-8 form-group\\"><input name=\\"actualFiscalYear\\" class=\\"form-control\\" placeholder=\\"YYYY/YYYY\\" value=\\"\\"></div>
+              </div>
+              <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-4\\">Best Information of Future Planned Use</label>
+                <div class=\\"col-md-8 form-group\\"><input name=\\"plannedFutureUse\\" id=\\"input-plannedFutureUse\\" class=\\"form-control\\" value=\\"\\"></div>
+              </div>
+            </div>
           </div>
-          <h3>
-            Sale Information
-          </h3>
-          <div
-            className="form-row"
-          >
-            <div
-              className="col-md-6"
-            >
-              <div
-                className="form-row"
-              >
-                <label
-                  className="form-label col-form-label col-md-4"
-                >
-                  Sales Completion Date
-                </label>
-                <div
-                  className="col-md-8 form-group"
-                >
-                  <div
-                    className="react-datepicker-wrapper"
-                  >
-                    <div
-                      className="react-datepicker__input-container"
-                    >
-                      <input
-                        autoComplete="off"
-                        className="form-control date-picker"
-                        disabled={false}
-                        id="datepicker-disposedOn"
-                        name="disposedOn"
-                        onBlur={[Function]}
-                        onChange={[Function]}
-                        onClick={[Function]}
-                        onFocus={[Function]}
-                        onKeyDown={[Function]}
-                        placeholder="--/--/----"
-                        readOnly={false}
-                        type="text"
-                        value="01/01/2020"
-                      />
+          <h3>Appraisal</h3>
+          <div class=\\"form-row\\">
+            <div class=\\"PropertyListView container-fluid\\">
+              <div class=\\"ScrollContainer\\">
+                <div role=\\"table\\" class=\\"table\\">
+                  <div class=\\"thead thead-light\\">
+                    <div role=\\"row\\" style=\\"display: flex; flex: 1 0 auto; min-width: 845px;\\" class=\\"tr\\">
+                      <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Property Name</div>
+                      <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Street Address</div>
+                      <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Location</div>
+                      <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 60 0 auto; min-width: 30px; width: 60px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Type</div>
+                      <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Appraised Value</div>
+                      <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Appraised Date</div>
+                      <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Appraisal Firm</div>
+                      <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Assessed Value</div>
+                      <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Assessed Date</div>
                     </div>
                   </div>
-                </div>
-              </div>
-              <div
-                className="form-row"
-              >
-                <label
-                  className="form-label col-form-label col-md-4"
-                >
-                  Sales Adjustment Date
-                </label>
-                <div
-                  className="col-md-8 form-group"
-                >
-                  <div
-                    className="react-datepicker-wrapper"
-                  >
-                    <div
-                      className="react-datepicker__input-container"
-                    >
-                      <input
-                        autoComplete="off"
-                        className="form-control date-picker"
-                        disabled={false}
-                        id="datepicker-adjustedOn"
-                        name="adjustedOn"
-                        onBlur={[Function]}
-                        onChange={[Function]}
-                        onClick={[Function]}
-                        onFocus={[Function]}
-                        onKeyDown={[Function]}
-                        placeholder="--/--/----"
-                        readOnly={false}
-                        type="text"
-                        value=""
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div
-              className="col-md-6"
-            >
-              <div
-                className="form-row"
-              >
-                <label
-                  className="form-label col-form-label col-md-4"
-                >
-                  Actual Fiscal Year of Sale
-                </label>
-                <div
-                  className="col-md-8 form-group"
-                >
-                  <input
-                    className="form-control"
-                    disabled={false}
-                    name="actualFiscalYear"
-                    onBlur={[Function]}
-                    onChange={[Function]}
-                    placeholder="YYYY/YYYY"
-                    value=""
-                  />
-                </div>
-              </div>
-              <div
-                className="form-row"
-              >
-                <label
-                  className="form-label col-form-label col-md-4"
-                >
-                  Best Information of Future Planned Use
-                </label>
-                <div
-                  className="col-md-8 form-group"
-                >
-                  <input
-                    className="form-control"
-                    disabled={false}
-                    id="input-plannedFutureUse"
-                    name="plannedFutureUse"
-                    onBlur={[Function]}
-                    onChange={[Function]}
-                  />
+                  <div class=\\"no-rows-message\\">No rows to display</div>
                 </div>
               </div>
             </div>
           </div>
-          <h3>
-            Appraisal
-          </h3>
-          <div
-            className="form-row"
-          >
-            <div
-              className="PropertyListView container-fluid"
-            >
-              <div
-                className="ScrollContainer"
-              >
-                <div
-                  className="table"
-                  role="table"
-                  style={
-                    Object {
-                      "minWidth": undefined,
-                    }
-                  }
-                >
-                  <div
-                    className="thead thead-light"
-                  >
-                    <div
-                      className="tr"
-                      role="row"
-                      style={
-                        Object {
-                          "display": "flex",
-                          "flex": "1 0 auto",
-                          "minWidth": "845px",
-                        }
-                      }
-                    >
-                      <div
-                        className="th"
-                        colSpan={1}
-                        onClick={[Function]}
-                        role="columnheader"
-                        style={
-                          Object {
-                            "alignItems": "center",
-                            "boxSizing": "border-box",
-                            "display": "flex",
-                            "flex": "100 0 auto",
-                            "justifyContent": "flex-start",
-                            "minWidth": "30px",
-                            "textAlign": "left",
-                            "width": "100px",
-                          }
-                        }
-                      >
-                        Property Name
-                      </div>
-                      <div
-                        className="th"
-                        colSpan={1}
-                        onClick={[Function]}
-                        role="columnheader"
-                        style={
-                          Object {
-                            "alignItems": "center",
-                            "boxSizing": "border-box",
-                            "display": "flex",
-                            "flex": "100 0 auto",
-                            "justifyContent": "flex-start",
-                            "minWidth": "30px",
-                            "textAlign": "left",
-                            "width": "100px",
-                          }
-                        }
-                      >
-                        Street Address
-                      </div>
-                      <div
-                        className="th"
-                        colSpan={1}
-                        onClick={[Function]}
-                        role="columnheader"
-                        style={
-                          Object {
-                            "alignItems": "center",
-                            "boxSizing": "border-box",
-                            "display": "flex",
-                            "flex": "100 0 auto",
-                            "justifyContent": "flex-start",
-                            "minWidth": "30px",
-                            "textAlign": "left",
-                            "width": "100px",
-                          }
-                        }
-                      >
-                        Location
-                      </div>
-                      <div
-                        className="th"
-                        colSpan={1}
-                        onClick={[Function]}
-                        role="columnheader"
-                        style={
-                          Object {
-                            "alignItems": "center",
-                            "boxSizing": "border-box",
-                            "display": "flex",
-                            "flex": "60 0 auto",
-                            "justifyContent": "flex-start",
-                            "minWidth": "30px",
-                            "textAlign": "left",
-                            "width": "60px",
-                          }
-                        }
-                      >
-                        Type
-                      </div>
-                      <div
-                        className="th"
-                        colSpan={1}
-                        onClick={[Function]}
-                        role="columnheader"
-                        style={
-                          Object {
-                            "alignItems": "center",
-                            "boxSizing": "border-box",
-                            "display": "flex",
-                            "flex": "145 0 auto",
-                            "justifyContent": "flex-start",
-                            "minWidth": "145px",
-                            "textAlign": "left",
-                            "width": "145px",
-                          }
-                        }
-                      >
-                        Appraised Value
-                      </div>
-                      <div
-                        className="th"
-                        colSpan={1}
-                        onClick={[Function]}
-                        role="columnheader"
-                        style={
-                          Object {
-                            "alignItems": "center",
-                            "boxSizing": "border-box",
-                            "display": "flex",
-                            "flex": "145 0 auto",
-                            "justifyContent": "flex-start",
-                            "minWidth": "145px",
-                            "textAlign": "left",
-                            "width": "145px",
-                          }
-                        }
-                      >
-                        Appraised Date
-                      </div>
-                      <div
-                        className="th"
-                        colSpan={1}
-                        onClick={[Function]}
-                        role="columnheader"
-                        style={
-                          Object {
-                            "alignItems": "center",
-                            "boxSizing": "border-box",
-                            "display": "flex",
-                            "flex": "145 0 auto",
-                            "justifyContent": "flex-start",
-                            "minWidth": "145px",
-                            "textAlign": "left",
-                            "width": "145px",
-                          }
-                        }
-                      >
-                        Appraisal Firm
-                      </div>
-                      <div
-                        className="th"
-                        colSpan={1}
-                        onClick={[Function]}
-                        role="columnheader"
-                        style={
-                          Object {
-                            "alignItems": "center",
-                            "boxSizing": "border-box",
-                            "display": "flex",
-                            "flex": "145 0 auto",
-                            "justifyContent": "flex-start",
-                            "minWidth": "145px",
-                            "textAlign": "left",
-                            "width": "145px",
-                          }
-                        }
-                      >
-                        Assessed Value
-                      </div>
-                      <div
-                        className="th"
-                        colSpan={1}
-                        onClick={[Function]}
-                        role="columnheader"
-                        style={
-                          Object {
-                            "alignItems": "center",
-                            "boxSizing": "border-box",
-                            "display": "flex",
-                            "flex": "145 0 auto",
-                            "justifyContent": "flex-start",
-                            "minWidth": "145px",
-                            "textAlign": "left",
-                            "width": "145px",
-                          }
-                        }
-                      >
-                        Assessed Date
-                      </div>
-                    </div>
+          <h3>Financial Summary</h3>
+          <div class=\\"form-row\\">
+            <div class=\\"col-md-6\\">
+              <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-4\\">Sales Proceeds</label>
+                <div class=\\"col-md-8 fast-currency-input form-group\\">
+                  <div class=\\"input-tooltip-wrapper\\"><input name=\\"salesProceeds\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
+                </div>
+              </div>
+              <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-4\\">Cost of Sales</label>
+                <div class=\\"col-md-8 fast-currency-input form-group\\">
+                  <div class=\\"input-tooltip-wrapper\\"><input name=\\"salesCost\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
+                </div>
+              </div>
+              <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-4\\">Net Book Value</label>
+                <div class=\\"col-md-8 fast-currency-input form-group\\">
+                  <div class=\\"input-tooltip-wrapper\\"><input name=\\"closeOutNetbook\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
+                </div>
+              </div>
+              <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-4\\">Gain Before SPP Cost</label>
+                <div class=\\"col-md-8 fast-currency-input form-group\\">
+                  <div class=\\"input-tooltip-wrapper\\"><input name=\\"gainBeforeSpp\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
+                </div>
+              </div>
+              <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-4\\">Remediation (Not funded throuch COS. TRAN only)</label>
+                <div class=\\"col-md-8 form-group\\"><input name=\\"remediation\\" id=\\"input-remediation\\" class=\\"form-control\\" value=\\"\\"></div>
+              </div>
+            </div>
+            <div class=\\"col-md-6\\">
+              <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-4\\">SPP Cost</label>
+                <div class=\\"col-md-8 fast-currency-input form-group\\">
+                  <div class=\\"input-tooltip-wrapper\\"><input name=\\"programCost\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
+                </div>
+              </div>
+              <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-4\\">SPP Cost Calculation Notes</label>
+                <div class=\\"col-md-8 form-group\\"><input name=\\"notes[12].note\\" id=\\"input-notes[12].note\\" class=\\"form-control\\" value=\\"sppcost\\"></div>
+              </div>
+              <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-4\\">Gain after SPP Cost</label>
+                <div class=\\"col-md-8 fast-currency-input form-group\\">
+                  <div class=\\"input-tooltip-wrapper\\"><input name=\\"gainAfterSpp\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
+                </div>
+              </div>
+              <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-4\\">Gain after SPP Cost Calculation Notes</label>
+                <div class=\\"col-md-8 form-group\\"><input name=\\"notes[13].note\\" id=\\"input-notes[13].note\\" class=\\"form-control\\" value=\\"sppgain\\"></div>
+              </div>
+              <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-4\\">Interest Component</label>
+                <div class=\\"col-md-8 fast-currency-input form-group\\">
+                  <div class=\\"input-tooltip-wrapper\\"><input name=\\"interestComponent\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <h3>Financing Information</h3>
+          <div class=\\"ProjectNotes form-row\\">
+            <div class=\\"col-md-12 form-group\\"><label class=\\"form-label\\" for=\\"input-notes[10].note\\">Loan Terms</label><textarea name=\\"notes[10].note\\" id=\\"input-notes[10].note\\" class=\\"col-md-5 form-control\\">loanterms</textarea></div>
+          </div>
+          <div class=\\"ProjectNotes form-row\\">
+            <div class=\\"col-md-12 form-group\\"><label class=\\"form-label\\" for=\\"input-notes[15].note\\">Notes</label><textarea name=\\"notes[15].note\\" id=\\"input-notes[15].note\\" class=\\"col-md-5 form-control\\">closeout</textarea></div>
+          </div>
+          <h3>OCG</h3>
+          <div class=\\"col-md-12 form-row\\"><label class=\\"form-label col-form-label col-md-2\\">OCG Gain / Loss</label>
+            <div class=\\"col-md-4 fast-currency-input form-group\\">
+              <div class=\\"input-tooltip-wrapper\\"><input name=\\"ocgFinancialStatement\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
+            </div>
+          </div>
+          <div class=\\"ProjectNotes form-row\\">
+            <div class=\\"col-md-12 form-group\\"><label class=\\"form-label\\" for=\\"input-notes[14].note\\">Sales History Notes</label><textarea name=\\"notes[14].note\\" id=\\"input-notes[14].note\\" class=\\"col-md-5 form-control\\">saleshistory</textarea></div>
+          </div>
+          <div class=\\"ProjectNotes form-row\\">
+            <div class=\\"col-md-12 form-group\\"><label class=\\"form-label\\" for=\\"input-notes[16].note\\">Project Comments<svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 512 512\\" class=\\"tooltip-icon\\" height=\\"1em\\" width=\\"1em\\" xmlns=\\"http://www.w3.org/2000/svg\\">
+                  <path d=\\"M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z\\"></path>
+                </svg></label><textarea name=\\"notes[16].note\\" id=\\"input-notes[16].note\\" class=\\"col-md-5 form-control\\">comments</textarea></div>
+          </div>
+          <h3>Signed by Chief Financial Officer</h3>
+          <div class=\\"form-row\\">
+            <div class=\\"col-md-6\\">
+              <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-4\\">Preliminary Form Signed By</label>
+                <div class=\\"col-md-8 form-group\\"><input name=\\"preliminaryFormSignedBy\\" id=\\"input-preliminaryFormSignedBy\\" class=\\"form-control\\" value=\\"\\"></div>
+              </div>
+              <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-4\\">Final Form Signed by</label>
+                <div class=\\"col-md-8 form-group\\"><input name=\\"finalFormSignedBy\\" id=\\"input-finalFormSignedBy\\" class=\\"form-control\\" value=\\"\\"></div>
+              </div>
+            </div>
+            <div class=\\"col-md-6\\">
+              <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-4\\">Signature Date</label>
+                <div class=\\"col-md-8 form-group\\">
+                  <div class=\\"react-datepicker-wrapper\\">
+                    <div class=\\"react-datepicker__input-container\\"><input type=\\"text\\" id=\\"datepicker-preliminaryFormSignedOn\\" name=\\"preliminaryFormSignedOn\\" placeholder=\\"--/--/----\\" autocomplete=\\"off\\" class=\\"form-control date-picker\\" value=\\"\\"></div>
                   </div>
-                  <div
-                    className="no-rows-message"
-                  >
-                    No rows to display
+                </div>
+              </div>
+              <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-4\\">Signature Date</label>
+                <div class=\\"col-md-8 form-group\\">
+                  <div class=\\"react-datepicker-wrapper\\">
+                    <div class=\\"react-datepicker__input-container\\"><input type=\\"text\\" id=\\"datepicker-finalFormSignedOn\\" name=\\"finalFormSignedOn\\" placeholder=\\"--/--/----\\" autocomplete=\\"off\\" class=\\"form-control date-picker\\" value=\\"\\"></div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <h3>
-            Financial Summary
-          </h3>
-          <div
-            className="form-row"
-          >
-            <div
-              className="col-md-6"
-            >
-              <div
-                className="form-row"
-              >
-                <label
-                  className="form-label col-form-label col-md-4"
-                >
-                  Sales Proceeds
-                </label>
-                <div
-                  className="col-md-8 fast-currency-input form-group"
-                >
-                  <div
-                    className="input-tooltip-wrapper"
-                  >
-                    <input
-                      className="form-control"
-                      disabled={false}
-                      name="salesProceeds"
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      placeholder=""
-                      value=""
-                    />
-                  </div>
-                </div>
-              </div>
-              <div
-                className="form-row"
-              >
-                <label
-                  className="form-label col-form-label col-md-4"
-                >
-                  Cost of Sales
-                </label>
-                <div
-                  className="col-md-8 fast-currency-input form-group"
-                >
-                  <div
-                    className="input-tooltip-wrapper"
-                  >
-                    <input
-                      className="form-control"
-                      disabled={false}
-                      name="salesCost"
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      placeholder=""
-                      value=""
-                    />
-                  </div>
-                </div>
-              </div>
-              <div
-                className="form-row"
-              >
-                <label
-                  className="form-label col-form-label col-md-4"
-                >
-                  Net Book Value
-                </label>
-                <div
-                  className="col-md-8 fast-currency-input form-group"
-                >
-                  <div
-                    className="input-tooltip-wrapper"
-                  >
-                    <input
-                      className="form-control"
-                      disabled={false}
-                      name="closeOutNetbook"
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      placeholder=""
-                      value=""
-                    />
-                  </div>
-                </div>
-              </div>
-              <div
-                className="form-row"
-              >
-                <label
-                  className="form-label col-form-label col-md-4"
-                >
-                  Gain Before SPP Cost
-                </label>
-                <div
-                  className="col-md-8 fast-currency-input form-group"
-                >
-                  <div
-                    className="input-tooltip-wrapper"
-                  >
-                    <input
-                      className="form-control"
-                      disabled={false}
-                      name="gainBeforeSpp"
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      placeholder=""
-                      value=""
-                    />
-                  </div>
-                </div>
-              </div>
-              <div
-                className="form-row"
-              >
-                <label
-                  className="form-label col-form-label col-md-4"
-                >
-                  Remediation (Not funded throuch COS. TRAN only)
-                </label>
-                <div
-                  className="col-md-8 form-group"
-                >
-                  <input
-                    className="form-control"
-                    disabled={false}
-                    id="input-remediation"
-                    name="remediation"
-                    onBlur={[Function]}
-                    onChange={[Function]}
-                  />
+          <h3>Adjustment to Prior Year Sale</h3>
+          <div class=\\"form-row\\">
+            <div class=\\"col-md-6\\">
+              <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-4\\">Adjustment to Prior Year Sale Amount</label>
+                <div class=\\"col-md-8 fast-currency-input form-group\\">
+                  <div class=\\"input-tooltip-wrapper\\"><input name=\\"priorYearAdjustmentAmount\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
                 </div>
               </div>
             </div>
-            <div
-              className="col-md-6"
-            >
-              <div
-                className="form-row"
-              >
-                <label
-                  className="form-label col-form-label col-md-4"
-                >
-                  SPP Cost
-                </label>
-                <div
-                  className="col-md-8 fast-currency-input form-group"
-                >
-                  <div
-                    className="input-tooltip-wrapper"
-                  >
-                    <input
-                      className="form-control"
-                      disabled={false}
-                      name="programCost"
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      placeholder=""
-                      value=""
-                    />
-                  </div>
-                </div>
-              </div>
-              <div
-                className="form-row"
-              >
-                <label
-                  className="form-label col-form-label col-md-4"
-                >
-                  SPP Cost Calculation Notes
-                </label>
-                <div
-                  className="col-md-8 form-group"
-                >
-                  <input
-                    className="form-control"
-                    disabled={false}
-                    id="input-notes[12].note"
-                    name="notes[12].note"
-                    onBlur={[Function]}
-                    onChange={[Function]}
-                    value="sppcost"
-                  />
-                </div>
-              </div>
-              <div
-                className="form-row"
-              >
-                <label
-                  className="form-label col-form-label col-md-4"
-                >
-                  Gain after SPP Cost
-                </label>
-                <div
-                  className="col-md-8 fast-currency-input form-group"
-                >
-                  <div
-                    className="input-tooltip-wrapper"
-                  >
-                    <input
-                      className="form-control"
-                      disabled={false}
-                      name="gainAfterSpp"
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      placeholder=""
-                      value=""
-                    />
-                  </div>
-                </div>
-              </div>
-              <div
-                className="form-row"
-              >
-                <label
-                  className="form-label col-form-label col-md-4"
-                >
-                  Gain after SPP Cost Calculation Notes
-                </label>
-                <div
-                  className="col-md-8 form-group"
-                >
-                  <input
-                    className="form-control"
-                    disabled={false}
-                    id="input-notes[13].note"
-                    name="notes[13].note"
-                    onBlur={[Function]}
-                    onChange={[Function]}
-                    value="sppgain"
-                  />
-                </div>
-              </div>
-              <div
-                className="form-row"
-              >
-                <label
-                  className="form-label col-form-label col-md-4"
-                >
-                  Interest Component
-                </label>
-                <div
-                  className="col-md-8 fast-currency-input form-group"
-                >
-                  <div
-                    className="input-tooltip-wrapper"
-                  >
-                    <input
-                      className="form-control"
-                      disabled={false}
-                      name="interestComponent"
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      placeholder=""
-                      value=""
-                    />
+            <div class=\\"col-md-6\\">
+              <div class=\\"form-row\\"></div>
+              <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-4\\">Adjustment to Prior Year Sale Date</label>
+                <div class=\\"col-md-8 form-group\\">
+                  <div class=\\"react-datepicker-wrapper\\">
+                    <div class=\\"react-datepicker__input-container\\"><input type=\\"text\\" id=\\"datepicker-priorYearAdjustmentOn\\" name=\\"priorYearAdjustmentOn\\" placeholder=\\"--/--/----\\" autocomplete=\\"off\\" class=\\"form-control date-picker\\" value=\\"\\"></div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <h3>
-            Financing Information
-          </h3>
-          <div
-            className="ProjectNotes form-row"
-          >
-            <div
-              className="col-md-12 form-group"
-            >
-              <label
-                className="form-label"
-                htmlFor="input-notes[10].note"
-              >
-                Loan Terms
-              </label>
-              <textarea
-                className="col-md-5 form-control"
-                id="input-notes[10].note"
-                name="notes[10].note"
-                onBlur={[Function]}
-                onChange={[Function]}
-                value="loanterms"
-              />
-            </div>
-          </div>
-          <div
-            className="ProjectNotes form-row"
-          >
-            <div
-              className="col-md-12 form-group"
-            >
-              <label
-                className="form-label"
-                htmlFor="input-notes[15].note"
-              >
-                Notes
-              </label>
-              <textarea
-                className="col-md-5 form-control"
-                id="input-notes[15].note"
-                name="notes[15].note"
-                onBlur={[Function]}
-                onChange={[Function]}
-                value="closeout"
-              />
-            </div>
-          </div>
-          <h3>
-            OCG
-          </h3>
-          <div
-            className="col-md-12 form-row"
-          >
-            <label
-              className="form-label col-form-label col-md-2"
-            >
-              OCG Gain / Loss
-            </label>
-            <div
-              className="col-md-4 fast-currency-input form-group"
-            >
-              <div
-                className="input-tooltip-wrapper"
-              >
-                <input
-                  className="form-control"
-                  disabled={false}
-                  name="ocgFinancialStatement"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  placeholder=""
-                  value=""
-                />
-              </div>
-            </div>
-          </div>
-          <div
-            className="ProjectNotes form-row"
-          >
-            <div
-              className="col-md-12 form-group"
-            >
-              <label
-                className="form-label"
-                htmlFor="input-notes[14].note"
-              >
-                Sales History Notes
-              </label>
-              <textarea
-                className="col-md-5 form-control"
-                id="input-notes[14].note"
-                name="notes[14].note"
-                onBlur={[Function]}
-                onChange={[Function]}
-                value="saleshistory"
-              />
-            </div>
-          </div>
-          <div
-            className="ProjectNotes form-row"
-          >
-            <div
-              className="col-md-12 form-group"
-            >
-              <label
-                className="form-label"
-                htmlFor="input-notes[16].note"
-              >
-                Project Comments
-                <svg
-                  className="tooltip-icon"
-                  fill="currentColor"
-                  height="1em"
-                  onBlur={[Function]}
-                  onFocus={[Function]}
-                  onMouseOut={[Function]}
-                  onMouseOver={[Function]}
-                  stroke="currentColor"
-                  strokeWidth="0"
-                  style={
-                    Object {
-                      "color": undefined,
-                    }
-                  }
-                  viewBox="0 0 512 512"
-                  width="1em"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"
-                  />
-                </svg>
-              </label>
-              <textarea
-                className="col-md-5 form-control"
-                id="input-notes[16].note"
-                name="notes[16].note"
-                onBlur={[Function]}
-                onChange={[Function]}
-                value="comments"
-              />
-            </div>
-          </div>
-          <h3>
-            Signed by Chief Financial Officer
-          </h3>
-          <div
-            className="form-row"
-          >
-            <div
-              className="col-md-6"
-            >
-              <div
-                className="form-row"
-              >
-                <label
-                  className="form-label col-form-label col-md-4"
-                >
-                  Preliminary Form Signed By
-                </label>
-                <div
-                  className="col-md-8 form-group"
-                >
-                  <input
-                    className="form-control"
-                    disabled={false}
-                    id="input-preliminaryFormSignedBy"
-                    name="preliminaryFormSignedBy"
-                    onBlur={[Function]}
-                    onChange={[Function]}
-                  />
-                </div>
-              </div>
-              <div
-                className="form-row"
-              >
-                <label
-                  className="form-label col-form-label col-md-4"
-                >
-                  Final Form Signed by
-                </label>
-                <div
-                  className="col-md-8 form-group"
-                >
-                  <input
-                    className="form-control"
-                    disabled={false}
-                    id="input-finalFormSignedBy"
-                    name="finalFormSignedBy"
-                    onBlur={[Function]}
-                    onChange={[Function]}
-                  />
-                </div>
-              </div>
-            </div>
-            <div
-              className="col-md-6"
-            >
-              <div
-                className="form-row"
-              >
-                <label
-                  className="form-label col-form-label col-md-4"
-                >
-                  Signature Date
-                </label>
-                <div
-                  className="col-md-8 form-group"
-                >
-                  <div
-                    className="react-datepicker-wrapper"
-                  >
-                    <div
-                      className="react-datepicker__input-container"
-                    >
-                      <input
-                        autoComplete="off"
-                        className="form-control date-picker"
-                        disabled={false}
-                        id="datepicker-preliminaryFormSignedOn"
-                        name="preliminaryFormSignedOn"
-                        onBlur={[Function]}
-                        onChange={[Function]}
-                        onClick={[Function]}
-                        onFocus={[Function]}
-                        onKeyDown={[Function]}
-                        placeholder="--/--/----"
-                        readOnly={false}
-                        type="text"
-                        value=""
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div
-                className="form-row"
-              >
-                <label
-                  className="form-label col-form-label col-md-4"
-                >
-                  Signature Date
-                </label>
-                <div
-                  className="col-md-8 form-group"
-                >
-                  <div
-                    className="react-datepicker-wrapper"
-                  >
-                    <div
-                      className="react-datepicker__input-container"
-                    >
-                      <input
-                        autoComplete="off"
-                        className="form-control date-picker"
-                        disabled={false}
-                        id="datepicker-finalFormSignedOn"
-                        name="finalFormSignedOn"
-                        onBlur={[Function]}
-                        onChange={[Function]}
-                        onClick={[Function]}
-                        onFocus={[Function]}
-                        onKeyDown={[Function]}
-                        placeholder="--/--/----"
-                        readOnly={false}
-                        type="text"
-                        value=""
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <h3>
-            Adjustment to Prior Year Sale
-          </h3>
-          <div
-            className="form-row"
-          >
-            <div
-              className="col-md-6"
-            >
-              <div
-                className="form-row"
-              >
-                <label
-                  className="form-label col-form-label col-md-4"
-                >
-                  Adjustment to Prior Year Sale Amount
-                </label>
-                <div
-                  className="col-md-8 fast-currency-input form-group"
-                >
-                  <div
-                    className="input-tooltip-wrapper"
-                  >
-                    <input
-                      className="form-control"
-                      disabled={false}
-                      name="priorYearAdjustmentAmount"
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      placeholder=""
-                      value=""
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div
-              className="col-md-6"
-            >
-              <div
-                className="form-row"
-              />
-              <div
-                className="form-row"
-              >
-                <label
-                  className="form-label col-form-label col-md-4"
-                >
-                  Adjustment to Prior Year Sale Date
-                </label>
-                <div
-                  className="col-md-8 form-group"
-                >
-                  <div
-                    className="react-datepicker-wrapper"
-                  >
-                    <div
-                      className="react-datepicker__input-container"
-                    >
-                      <input
-                        autoComplete="off"
-                        className="form-control date-picker"
-                        disabled={false}
-                        id="datepicker-priorYearAdjustmentOn"
-                        name="priorYearAdjustmentOn"
-                        onBlur={[Function]}
-                        onChange={[Function]}
-                        onClick={[Function]}
-                        onFocus={[Function]}
-                        onKeyDown={[Function]}
-                        placeholder="--/--/----"
-                        readOnly={false}
-                        type="text"
-                        value=""
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
-            className="ProjectNotes form-row"
-          >
-            <div
-              className="col-md-12 form-group"
-            >
-              <label
-                className="form-label"
-                htmlFor="input-notes[11].note"
-              >
-                Adjustment to Prior Year Sale Notes
-              </label>
-              <textarea
-                className="col-md-5 form-control"
-                id="input-notes[11].note"
-                name="notes[11].note"
-                onBlur={[Function]}
-                onChange={[Function]}
-                value="adjustment"
-              />
-            </div>
+          <div class=\\"ProjectNotes form-row\\">
+            <div class=\\"col-md-12 form-group\\"><label class=\\"form-label\\" for=\\"input-notes[11].note\\">Adjustment to Prior Year Sale Notes</label><textarea name=\\"notes[11].note\\" id=\\"input-notes[11].note\\" class=\\"col-md-5 form-control\\">adjustment</textarea></div>
           </div>
         </div>
       </div>
     </div>
-    <div
-      style={
-        Object {
-          "textAlign": "right",
-        }
-      }
-    />
-    <div
-      className="c3"
-    />
-    <div
-      className="c3"
-    >
-      <span>
-        <button
-          className="Button btn btn-primary"
-          disabled={false}
-          onClick={[Function]}
-          style={
-            Object {
-              "marginLeft": 10,
-            }
-          }
-          type="button"
-        >
-          <div
-            className="Button__value"
-          >
-            Save
-          </div>
-        </button>
-      </span>
-      <span>
-        <button
-          className="Button btn btn-danger"
-          disabled={false}
-          onClick={[Function]}
-          type="button"
-        >
-          <div
-            className="Button__value"
-          >
-            Cancel Project
-          </div>
-        </button>
-      </span>
-    </div>
+    <div style=\\"text-align: right;\\"></div>
+    <div class=\\"sc-fzoiQi llNIiU\\"></div>
+    <div class=\\"sc-fzoiQi llNIiU\\"><span><button style=\\"margin-left: 10px;\\" type=\\"button\\" class=\\"Button btn btn-primary\\"><div class=\\"Button__value\\">Save</div></button></span><span><button type=\\"button\\" class=\\"Button btn btn-danger\\"><div class=\\"Button__value\\">Cancel Project</div></button></span></div>
   </form>
-</div>
+</div>"
 `;
 
 exports[`SPL Approval Step renders correctly 1`] = `
-.c0 {
-  text-align: center;
-  margin-bottom: 1rem;
-}
-
-.c1 {
-  padding-top: 1rem;
-  padding-bottom: 1rem;
-  font-family: 'BCSans',Fallback,sans-serif;
-}
-
-.c2 {
-  text-align: center;
-  font-family: 'BCSans-Bold';
-  margin-bottom: 1.5rem;
-}
-
-<div
-  className="splStep container-fluid"
->
-  <form
-    action="#"
-    onReset={[Function]}
-    onSubmit={[Function]}
-  >
-    <div
-      className="c0 default-status"
-    >
-      <h5
-        className="c1"
-      >
-        Approved for Surplus Property Program
-      </h5>
-      <svg
-        fill="currentColor"
-        height={64}
-        size={64}
-        stroke="currentColor"
-        strokeWidth="0"
-        style={
-          Object {
-            "color": "#20a74d",
-          }
-        }
-        viewBox="0 0 512 512"
-        width={64}
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          d="M256 8C119.033 8 8 119.033 8 256s111.033 248 248 248 248-111.033 248-248S392.967 8 256 8zm0 48c110.532 0 200 89.451 200 200 0 110.532-89.451 200-200 200-110.532 0-200-89.451-200-200 0-110.532 89.451-200 200-200m140.204 130.267l-22.536-22.718c-4.667-4.705-12.265-4.736-16.97-.068L215.346 303.697l-59.792-60.277c-4.667-4.705-12.265-4.736-16.97-.069l-22.719 22.536c-4.705 4.667-4.736 12.265-.068 16.971l90.781 91.516c4.667 4.705 12.265 4.736 16.97.068l172.589-171.204c4.704-4.668 4.734-12.266.067-16.971z"
-        />
+"<div class=\\"splStep container-fluid\\">
+  <form action=\\"#\\">
+    <div class=\\"sc-fzoXzr kRiuky default-status\\">
+      <h5 class=\\"sc-fzpjYC dfCYhg\\">Approved for Surplus Property Program</h5><svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 512 512\\" size=\\"64\\" style=\\"color: rgb(32, 167, 77);\\" height=\\"64\\" width=\\"64\\" xmlns=\\"http://www.w3.org/2000/svg\\">
+        <path d=\\"M256 8C119.033 8 8 119.033 8 256s111.033 248 248 248 248-111.033 248-248S392.967 8 256 8zm0 48c110.532 0 200 89.451 200 200 0 110.532-89.451 200-200 200-110.532 0-200-89.451-200-200 0-110.532 89.451-200 200-200m140.204 130.267l-22.536-22.718c-4.667-4.705-12.265-4.736-16.97-.068L215.346 303.697l-59.792-60.277c-4.667-4.705-12.265-4.736-16.97-.069l-22.719 22.536c-4.705 4.667-4.736 12.265-.068 16.971l90.781 91.516c4.667 4.705 12.265 4.736 16.97.068l172.589-171.204c4.704-4.668 4.734-12.266.067-16.971z\\"></path>
       </svg>
-      <h5
-        className="c1"
-      >
-        Approval Date 2020-07-15
-      </h5>
+      <h5 class=\\"sc-fzpjYC dfCYhg\\">Approval Date 2020-07-15</h5>
     </div>
-    <div
-      className="c2"
-    >
-      Approved for ERP
-    </div>
-    <nav
-      className="nav nav-tabs"
-      onKeyDown={[Function]}
-      role="tablist"
-    >
-      <a
-        aria-controls="approvalTabs-tabpane-projectInformation"
-        aria-selected={false}
-        className="nav-item nav-link"
-        data-rb-event-key="projectInformation"
-        href="#"
-        id="approvalTabs-tab-projectInformation"
-        onClick={[Function]}
-        onKeyDown={[Function]}
-        role="tab"
-        tabIndex={-1}
-      >
-        Project Information
-      </a>
-      <a
-        aria-controls="approvalTabs-tabpane-documentation"
-        aria-selected={false}
-        className="nav-item nav-link"
-        data-rb-event-key="documentation"
-        href="#"
-        id="approvalTabs-tab-documentation"
-        onClick={[Function]}
-        onKeyDown={[Function]}
-        role="tab"
-        tabIndex={-1}
-      >
-        Documentation
-      </a>
-      <a
-        aria-controls="approvalTabs-tabpane-enhancedReferralProcess"
-        aria-selected={false}
-        className="nav-item nav-link"
-        data-rb-event-key="enhancedReferralProcess"
-        href="#"
-        id="approvalTabs-tab-enhancedReferralProcess"
-        onClick={[Function]}
-        onKeyDown={[Function]}
-        role="tab"
-        tabIndex={-1}
-      >
-        Enhanced Referral Process
-      </a>
-      <a
-        aria-controls="approvalTabs-tabpane-surplusPropertyList"
-        aria-selected={true}
-        className="nav-item nav-link active"
-        data-rb-event-key="surplusPropertyList"
-        href="#"
-        id="approvalTabs-tab-surplusPropertyList"
-        onClick={[Function]}
-        onKeyDown={[Function]}
-        role="tab"
-      >
-        Surplus Properties List
-      </a>
-      <a
-        aria-controls="approvalTabs-tabpane-closeOutForm"
-        aria-selected={false}
-        className="nav-item nav-link"
-        data-rb-event-key="closeOutForm"
-        href="#"
-        id="approvalTabs-tab-closeOutForm"
-        onClick={[Function]}
-        onKeyDown={[Function]}
-        role="tab"
-        tabIndex={-1}
-      >
-        Close Out Form
-      </a>
-    </nav>
-    <div
-      className="tab-content"
-    >
-      <div
-        aria-hidden={false}
-        aria-labelledby="approvalTabs-tab-surplusPropertyList"
-        className="fade tab-pane active show"
-        id="approvalTabs-tabpane-surplusPropertyList"
-        role="tabpanel"
-      >
-        <div
-          className="SurplusPropertyListForm container-fluid"
-        >
-          <div
-            className="form-row"
-          >
-            <label
-              className="form-label col-form-label col-md-3"
-            >
-              Date Entered Market
-              <span
-                className="required"
-              >
-                 *
-              </span>
-              <svg
-                className="tooltip-icon"
-                fill="currentColor"
-                height="1em"
-                onBlur={[Function]}
-                onFocus={[Function]}
-                onMouseOut={[Function]}
-                onMouseOver={[Function]}
-                stroke="currentColor"
-                strokeWidth="0"
-                style={
-                  Object {
-                    "color": undefined,
-                  }
-                }
-                viewBox="0 0 512 512"
-                width="1em"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"
-                />
-              </svg>
-            </label>
-            <div
-              className="col-md-2 form-group"
-            >
-              <div
-                className="react-datepicker-wrapper"
-              >
-                <div
-                  className="react-datepicker__input-container"
-                >
-                  <input
-                    autoComplete="off"
-                    className="form-control date-picker"
-                    disabled={true}
-                    id="datepicker-marketedOn"
-                    name="marketedOn"
-                    onBlur={[Function]}
-                    onChange={[Function]}
-                    onClick={[Function]}
-                    onFocus={[Function]}
-                    onKeyDown={[Function]}
-                    placeholder="--/--/----"
-                    readOnly={false}
-                    type="text"
-                    value="01/01/2020"
-                  />
-                </div>
+    <div class=\\"sc-fzqBkg dFezUw\\">Approved for ERP</div>
+    <nav class=\\"nav nav-tabs\\" role=\\"tablist\\"><a href=\\"#\\" role=\\"tab\\" data-rb-event-key=\\"projectInformation\\" id=\\"approvalTabs-tab-projectInformation\\" aria-controls=\\"approvalTabs-tabpane-projectInformation\\" tabindex=\\"-1\\" aria-selected=\\"false\\" class=\\"nav-item nav-link\\">Project Information</a><a href=\\"#\\" role=\\"tab\\" data-rb-event-key=\\"documentation\\" id=\\"approvalTabs-tab-documentation\\" aria-controls=\\"approvalTabs-tabpane-documentation\\" tabindex=\\"-1\\" aria-selected=\\"false\\" class=\\"nav-item nav-link\\">Documentation</a><a href=\\"#\\" role=\\"tab\\" data-rb-event-key=\\"enhancedReferralProcess\\" id=\\"approvalTabs-tab-enhancedReferralProcess\\" aria-controls=\\"approvalTabs-tabpane-enhancedReferralProcess\\" tabindex=\\"-1\\" aria-selected=\\"false\\" class=\\"nav-item nav-link\\">Enhanced Referral Process</a><a href=\\"#\\" role=\\"tab\\" data-rb-event-key=\\"surplusPropertyList\\" id=\\"approvalTabs-tab-surplusPropertyList\\" aria-controls=\\"approvalTabs-tabpane-surplusPropertyList\\" aria-selected=\\"true\\" class=\\"nav-item nav-link active\\">Surplus Properties List</a><a href=\\"#\\" role=\\"tab\\" data-rb-event-key=\\"closeOutForm\\" id=\\"approvalTabs-tab-closeOutForm\\" aria-controls=\\"approvalTabs-tabpane-closeOutForm\\" tabindex=\\"-1\\" aria-selected=\\"false\\" class=\\"nav-item nav-link\\">Close Out Form</a></nav>
+    <div class=\\"tab-content\\">
+      <div id=\\"approvalTabs-tabpane-surplusPropertyList\\" aria-labelledby=\\"approvalTabs-tab-surplusPropertyList\\" role=\\"tabpanel\\" aria-hidden=\\"false\\" class=\\"fade tab-pane active show\\">
+        <div class=\\"SurplusPropertyListForm container-fluid\\">
+          <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-3\\">Date Entered Market<span class=\\"required\\">&nbsp;*</span><svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 512 512\\" class=\\"tooltip-icon\\" height=\\"1em\\" width=\\"1em\\" xmlns=\\"http://www.w3.org/2000/svg\\">
+                <path d=\\"M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z\\"></path>
+              </svg></label>
+            <div class=\\"col-md-2 form-group\\">
+              <div class=\\"react-datepicker-wrapper\\">
+                <div class=\\"react-datepicker__input-container\\"><input type=\\"text\\" id=\\"datepicker-marketedOn\\" name=\\"marketedOn\\" placeholder=\\"--/--/----\\" disabled=\\"\\" autocomplete=\\"off\\" class=\\"form-control date-picker\\" value=\\"01/01/2020\\"></div>
               </div>
             </div>
-            <div
-              className="col-md-7"
-            >
-              <button
-                className="btn btn-primary"
-                disabled={true}
-                onClick={[Function]}
-                type="button"
-              >
-                Change Status to Marketing
-              </button>
-            </div>
+            <div class=\\"col-md-7\\"><button disabled=\\"\\" type=\\"button\\" class=\\"btn btn-primary\\">Change Status to Marketing</button></div>
           </div>
-          <div
-            className="ProjectNotes form-row"
-          >
-            <div
-              className="col-md-12 form-group"
-            >
-              <label
-                className="form-label"
-                htmlFor="input-offersNote"
-              >
-                Offers Received
-                <svg
-                  className="tooltip-icon"
-                  fill="currentColor"
-                  height="1em"
-                  onBlur={[Function]}
-                  onFocus={[Function]}
-                  onMouseOut={[Function]}
-                  onMouseOver={[Function]}
-                  stroke="currentColor"
-                  strokeWidth="0"
-                  style={
-                    Object {
-                      "color": undefined,
-                    }
-                  }
-                  viewBox="0 0 512 512"
-                  width="1em"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"
-                  />
-                </svg>
-              </label>
-              <textarea
-                className="col-md-5 form-control"
-                disabled={true}
-                id="input-offersNote"
-                name="offersNote"
-                onBlur={[Function]}
-                onChange={[Function]}
-              />
-            </div>
+          <div class=\\"ProjectNotes form-row\\">
+            <div class=\\"col-md-12 form-group\\"><label class=\\"form-label\\" for=\\"input-offersNote\\">Offers Received<svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 512 512\\" class=\\"tooltip-icon\\" height=\\"1em\\" width=\\"1em\\" xmlns=\\"http://www.w3.org/2000/svg\\">
+                  <path d=\\"M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z\\"></path>
+                </svg></label><textarea name=\\"offersNote\\" disabled=\\"\\" id=\\"input-offersNote\\" class=\\"col-md-5 form-control\\"></textarea></div>
           </div>
-          <div
-            className="form-row"
-          >
-            <label
-              className="form-label col-form-label col-md-3"
-            >
-              Contract in Place
-              <span
-                className="required"
-              >
-                 *
-              </span>
-            </label>
-            <div
-              className="form-group"
-            >
-              <div
-                className="check-field"
-              >
-                <div
-                  className="form-check"
-                >
-                  <input
-                    checked={true}
-                    className="form-check-input"
-                    disabled={false}
-                    id="input-isContractConditional"
-                    name="isContractConditional"
-                    onChange={[Function]}
-                    type="radio"
-                    value={true}
-                  />
-                  <label
-                    className="form-check-label"
-                    htmlFor="input-isContractConditional"
-                    title=""
-                  >
-                    Conditional
-                  </label>
-                </div>
-                <div
-                  className="form-check"
-                >
-                  <input
-                    checked={false}
-                    className="form-check-input"
-                    disabled={false}
-                    id="input-isContractConditional-2"
-                    name="isContractConditional"
-                    onChange={[Function]}
-                    type="radio"
-                    value={false}
-                  />
-                  <label
-                    className="form-check-label"
-                    htmlFor="input-isContractConditional-2"
-                    title=""
-                  >
-                    Unconditional
-                  </label>
-                </div>
+          <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-3\\">Contract in Place<span class=\\"required\\">&nbsp;*</span></label>
+            <div class=\\"form-group\\">
+              <div class=\\"check-field\\">
+                <div class=\\"form-check\\"><input name=\\"isContractConditional\\" type=\\"radio\\" id=\\"input-isContractConditional\\" class=\\"form-check-input\\" value=\\"true\\" checked=\\"\\"><label title=\\"\\" for=\\"input-isContractConditional\\" class=\\"form-check-label\\">Conditional</label></div>
+                <div class=\\"form-check\\"><input name=\\"isContractConditional\\" type=\\"radio\\" id=\\"input-isContractConditional-2\\" class=\\"form-check-input\\" value=\\"false\\"><label title=\\"\\" for=\\"input-isContractConditional-2\\" class=\\"form-check-label\\">Unconditional</label></div>
               </div>
             </div>
           </div>
-          <div
-            className="form-row"
-          >
-            <label
-              className="form-label col-form-label col-md-3"
-            >
-              Date of Accepted Offer
-              <span
-                className="required"
-              >
-                 *
-              </span>
-            </label>
-            <div
-              className="col-md-2 form-group"
-            >
-              <div
-                className="react-datepicker-wrapper"
-              >
-                <div
-                  className="react-datepicker__input-container"
-                >
-                  <input
-                    autoComplete="off"
-                    className="form-control date-picker"
-                    disabled={true}
-                    id="datepicker-offerAcceptedOn"
-                    name="offerAcceptedOn"
-                    onBlur={[Function]}
-                    onChange={[Function]}
-                    onClick={[Function]}
-                    onFocus={[Function]}
-                    onKeyDown={[Function]}
-                    placeholder="--/--/----"
-                    readOnly={false}
-                    type="text"
-                    value="01/01/2020"
-                  />
-                </div>
+          <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-3\\">Date of Accepted Offer<span class=\\"required\\">&nbsp;*</span></label>
+            <div class=\\"col-md-2 form-group\\">
+              <div class=\\"react-datepicker-wrapper\\">
+                <div class=\\"react-datepicker__input-container\\"><input type=\\"text\\" id=\\"datepicker-offerAcceptedOn\\" name=\\"offerAcceptedOn\\" placeholder=\\"--/--/----\\" disabled=\\"\\" autocomplete=\\"off\\" class=\\"form-control date-picker\\" value=\\"01/01/2020\\"></div>
               </div>
             </div>
           </div>
-          <div
-            className="form-row"
-          >
-            <label
-              className="form-label col-form-label col-md-3"
-            >
-              Purchaser
-              <span
-                className="required"
-              >
-                 *
-              </span>
-            </label>
-            <div
-              className="col-md-2 form-group"
-            >
-              <input
-                className="form-control"
-                disabled={true}
-                id="input-purchaser"
-                name="purchaser"
-                onBlur={[Function]}
-                onChange={[Function]}
-                value="purchaser"
-              />
-            </div>
+          <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-3\\">Purchaser<span class=\\"required\\">&nbsp;*</span></label>
+            <div class=\\"col-md-2 form-group\\"><input name=\\"purchaser\\" disabled=\\"\\" id=\\"input-purchaser\\" class=\\"form-control\\" value=\\"purchaser\\"></div>
           </div>
-          <div
-            className="form-row"
-          >
-            <label
-              className="form-label col-form-label col-md-3"
-            >
-              Offer Amount
-              <span
-                className="required"
-              >
-                 *
-              </span>
-            </label>
-            <div
-              className="col-md-2 fast-currency-input form-group"
-            >
-              <div
-                className="input-tooltip-wrapper"
-              >
-                <input
-                  className="form-control"
-                  disabled={true}
-                  name="offerAmount"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  placeholder=""
-                  value={123}
-                />
+          <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-3\\">Offer Amount<span class=\\"required\\">&nbsp;*</span></label>
+            <div class=\\"col-md-2 fast-currency-input form-group\\">
+              <div class=\\"input-tooltip-wrapper\\"><input name=\\"offerAmount\\" class=\\"form-control\\" disabled=\\"\\" placeholder=\\"\\" value=\\"123\\"></div>
+            </div><button disabled=\\"\\" type=\\"button\\" class=\\"btn btn-primary\\">Change Status to Contract in Place</button>
+            <div class=\\"col-md-6\\"></div>
+          </div>
+          <div class=\\"ProjectNotes form-row\\">
+            <div class=\\"col-md-12 form-group\\"><label class=\\"form-label\\" for=\\"input-note\\">Notes</label><textarea name=\\"note\\" disabled=\\"\\" id=\\"input-note\\" class=\\"col-md-5 form-control\\">my notes</textarea></div>
+          </div>
+          <div class=\\"ProjectNotes form-row\\">
+            <div class=\\"col-md-12 form-group\\"><label class=\\"form-label\\" for=\\"input-appraisedNote\\">Appraised Notes</label><textarea name=\\"appraisedNote\\" disabled=\\"\\" id=\\"input-appraisedNote\\" class=\\"col-md-5 form-control\\"></textarea></div>
+          </div>
+          <div class=\\"ProjectNotes form-row\\">
+            <div class=\\"col-md-12 form-group\\"><label class=\\"form-label\\" for=\\"input-publicNote\\">Shared Notes<svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 512 512\\" class=\\"tooltip-icon\\" height=\\"1em\\" width=\\"1em\\" xmlns=\\"http://www.w3.org/2000/svg\\">
+                  <path d=\\"M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z\\"></path>
+                </svg></label><textarea name=\\"publicNote\\" disabled=\\"\\" id=\\"input-publicNote\\" class=\\"col-md-5 form-control\\">public note</textarea></div>
+          </div>
+          <div class=\\"ProjectNotes form-row\\">
+            <div class=\\"col-md-12 form-group\\"><label class=\\"form-label\\" for=\\"input-privateNote\\">Private Notes<svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 512 512\\" class=\\"tooltip-icon\\" height=\\"1em\\" width=\\"1em\\" xmlns=\\"http://www.w3.org/2000/svg\\">
+                  <path d=\\"M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z\\"></path>
+                </svg></label><textarea name=\\"privateNote\\" disabled=\\"\\" id=\\"input-privateNote\\" class=\\"col-md-5 form-control\\">private note</textarea></div>
+          </div>
+          <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-3\\">Date Disposed Externally<span class=\\"required\\">&nbsp;*</span></label>
+            <div class=\\"col-md-2 form-group\\">
+              <div class=\\"react-datepicker-wrapper\\">
+                <div class=\\"react-datepicker__input-container\\"><input type=\\"text\\" id=\\"datepicker-disposedOn\\" name=\\"disposedOn\\" placeholder=\\"--/--/----\\" disabled=\\"\\" autocomplete=\\"off\\" class=\\"form-control date-picker\\" value=\\"01/01/2020\\"></div>
               </div>
             </div>
-            <button
-              className="btn btn-primary"
-              disabled={true}
-              onClick={[Function]}
-              type="button"
-            >
-              Change Status to Contract in Place
-            </button>
-            <div
-              className="col-md-6"
-            />
-          </div>
-          <div
-            className="ProjectNotes form-row"
-          >
-            <div
-              className="col-md-12 form-group"
-            >
-              <label
-                className="form-label"
-                htmlFor="input-note"
-              >
-                Notes
-              </label>
-              <textarea
-                className="col-md-5 form-control"
-                disabled={true}
-                id="input-note"
-                name="note"
-                onBlur={[Function]}
-                onChange={[Function]}
-                value="my notes"
-              />
-            </div>
-          </div>
-          <div
-            className="ProjectNotes form-row"
-          >
-            <div
-              className="col-md-12 form-group"
-            >
-              <label
-                className="form-label"
-                htmlFor="input-appraisedNote"
-              >
-                Appraised Notes
-              </label>
-              <textarea
-                className="col-md-5 form-control"
-                disabled={true}
-                id="input-appraisedNote"
-                name="appraisedNote"
-                onBlur={[Function]}
-                onChange={[Function]}
-              />
-            </div>
-          </div>
-          <div
-            className="ProjectNotes form-row"
-          >
-            <div
-              className="col-md-12 form-group"
-            >
-              <label
-                className="form-label"
-                htmlFor="input-publicNote"
-              >
-                Shared Notes
-                <svg
-                  className="tooltip-icon"
-                  fill="currentColor"
-                  height="1em"
-                  onBlur={[Function]}
-                  onFocus={[Function]}
-                  onMouseOut={[Function]}
-                  onMouseOver={[Function]}
-                  stroke="currentColor"
-                  strokeWidth="0"
-                  style={
-                    Object {
-                      "color": undefined,
-                    }
-                  }
-                  viewBox="0 0 512 512"
-                  width="1em"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"
-                  />
-                </svg>
-              </label>
-              <textarea
-                className="col-md-5 form-control"
-                disabled={true}
-                id="input-publicNote"
-                name="publicNote"
-                onBlur={[Function]}
-                onChange={[Function]}
-                value="public note"
-              />
-            </div>
-          </div>
-          <div
-            className="ProjectNotes form-row"
-          >
-            <div
-              className="col-md-12 form-group"
-            >
-              <label
-                className="form-label"
-                htmlFor="input-privateNote"
-              >
-                Private Notes
-                <svg
-                  className="tooltip-icon"
-                  fill="currentColor"
-                  height="1em"
-                  onBlur={[Function]}
-                  onFocus={[Function]}
-                  onMouseOut={[Function]}
-                  onMouseOver={[Function]}
-                  stroke="currentColor"
-                  strokeWidth="0"
-                  style={
-                    Object {
-                      "color": undefined,
-                    }
-                  }
-                  viewBox="0 0 512 512"
-                  width="1em"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"
-                  />
-                </svg>
-              </label>
-              <textarea
-                className="col-md-5 form-control"
-                disabled={true}
-                id="input-privateNote"
-                name="privateNote"
-                onBlur={[Function]}
-                onChange={[Function]}
-                value="private note"
-              />
-            </div>
-          </div>
-          <div
-            className="form-row"
-          >
-            <label
-              className="form-label col-form-label col-md-3"
-            >
-              Date Disposed Externally
-              <span
-                className="required"
-              >
-                 *
-              </span>
-            </label>
-            <div
-              className="col-md-2 form-group"
-            >
-              <div
-                className="react-datepicker-wrapper"
-              >
-                <div
-                  className="react-datepicker__input-container"
-                >
-                  <input
-                    autoComplete="off"
-                    className="form-control date-picker"
-                    disabled={true}
-                    id="datepicker-disposedOn"
-                    name="disposedOn"
-                    onBlur={[Function]}
-                    onChange={[Function]}
-                    onClick={[Function]}
-                    onFocus={[Function]}
-                    onKeyDown={[Function]}
-                    placeholder="--/--/----"
-                    readOnly={false}
-                    type="text"
-                    value="01/01/2020"
-                  />
-                </div>
-              </div>
-            </div>
-            <div
-              className="col-md-6"
-            >
-              <button
-                className="btn btn-primary"
-                disabled={true}
-                onClick={[Function]}
-                type="button"
-              >
-                Change Status to Disposed Externally
-              </button>
-            </div>
+            <div class=\\"col-md-6\\"><button disabled=\\"\\" type=\\"button\\" class=\\"btn btn-primary\\">Change Status to Disposed Externally</button></div>
           </div>
         </div>
       </div>
     </div>
-    <div
-      style={
-        Object {
-          "textAlign": "right",
-        }
-      }
-    />
+    <div style=\\"text-align: right;\\"></div>
   </form>
-</div>
+</div>"
 `;

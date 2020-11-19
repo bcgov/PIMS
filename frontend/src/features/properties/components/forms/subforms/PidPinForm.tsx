@@ -1,9 +1,14 @@
-import { FunctionComponent } from 'react';
+import { FunctionComponent, useCallback } from 'react';
 import React from 'react';
 import { Input, Form } from 'components/common/form';
 import { PidTooltip, PinTooltip } from '../strings';
+import { useFormikContext, getIn } from 'formik';
+import { IParcel } from 'actions/parcelsActions';
+import debounce from 'lodash/debounce';
 
 interface PidPinProps {
+  handlePidChange: (pid: string) => void;
+  handlePinChange: (pin: string) => void;
   nameSpace?: string;
   disabled?: boolean;
 }
@@ -19,7 +24,7 @@ export const defaultPidPinFormValues: {
  * The pidFormatter is used to format the specified PID value
  * @param {string} pid This is the target PID to be formatted
  */
-const pidFormatter = (pid: string) => {
+export const pidFormatter = (pid: string) => {
   const regex = /(\d\d\d)[\s-]?(\d\d\d)[\s-]?(\d\d\d)/;
   const format = pid.match(regex);
   if (format !== null && format.length === 4) {
@@ -33,6 +38,14 @@ const PidPinForm: FunctionComponent<PidPinProps> = (props: PidPinProps) => {
     const { nameSpace } = props;
     return nameSpace ? `${nameSpace}.${fieldName}` : fieldName;
   };
+  const { touched } = useFormikContext<IParcel>();
+
+  const debouncedHandlePidChange = useCallback(
+    debounce((pid: string) => {
+      props.handlePidChange(pid);
+    }, 100),
+    [],
+  );
 
   return (
     <>
@@ -44,7 +57,12 @@ const PidPinForm: FunctionComponent<PidPinProps> = (props: PidPinProps) => {
           tooltip={PidTooltip}
           disabled={props.disabled}
           pattern={RegExp(/^[\d\- ]*$/)}
-          onBlurFormatter={(pid: string) => pid.replace(pid, pidFormatter(pid))}
+          onBlurFormatter={(pid: string) => {
+            if (pid && getIn(touched, withNameSpace('pid'))) {
+              debouncedHandlePidChange(pid);
+            }
+            return pid.replace(pid, pidFormatter(pid));
+          }}
           field={withNameSpace('pid')}
         />
         <Form.Label style={{ width: '35px', minWidth: '35px', paddingLeft: '5px' }}>
@@ -58,6 +76,12 @@ const PidPinForm: FunctionComponent<PidPinProps> = (props: PidPinProps) => {
           tooltip={PinTooltip}
           disabled={props.disabled}
           field={withNameSpace('pin')}
+          onBlurFormatter={(pin: string) => {
+            if (pin && getIn(touched, withNameSpace('pin'))) {
+              props.handlePinChange(pin);
+            }
+            return pin;
+          }}
           type="number"
         />
       </Form.Row>

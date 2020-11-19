@@ -1,5 +1,4 @@
 import React from 'react';
-import renderer from 'react-test-renderer';
 import ProjectDisposeLayout from './ProjectDisposeLayout';
 import * as reducerTypes from 'constants/reducerTypes';
 import { createMemoryHistory } from 'history';
@@ -15,6 +14,7 @@ import { render, fireEvent, wait } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
 import useProject from '../common/hooks/useProject';
 import { mockWorkflow } from './testUtils';
+import pretty from 'pretty';
 
 const mockStore = configureMockStore([thunk]);
 const history = createMemoryHistory();
@@ -92,8 +92,8 @@ describe('dispose project draft step display', () => {
     goToNextStep.mockReset();
   });
   it('stepper renders correctly based off of workflow', () => {
-    const tree = renderer.create(uiElement).toJSON();
-    expect(tree).toMatchSnapshot();
+    const { container } = render(uiElement);
+    expect(pretty(container.innerHTML)).toMatchSnapshot();
   });
 
   it('displays draft page at draft route', () => {

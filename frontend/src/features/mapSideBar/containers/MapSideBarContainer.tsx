@@ -11,7 +11,6 @@ import { fetchParcelDetail } from 'actionCreators/parcelsActionCreator';
 import { Spinner } from 'react-bootstrap';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
 import * as parcelsActions from 'actions/parcelsActions';
-import { LeafletMouseEvent } from 'leaflet';
 
 interface IMapSideBarContainerProps {
   refreshParcels: Function;
@@ -41,9 +40,6 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
     state => state.parcel?.parcelDetail as IPropertyDetail,
   );
   const [cachedParcelDetail, setCachedParcelDetail] = React.useState<IParcel | null>(null);
-  const leafletMouseEvent = useSelector<RootState, LeafletMouseEvent | null>(
-    state => state.leafletClickEvent?.mapClickEvent,
-  );
 
   useDeepCompareEffect(() => {
     if (showSideBar && parcelId) {
@@ -94,7 +90,6 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
           disabled={disabled}
           loadDraft={loadDraft}
           properties={properties}
-          mapClickMouseEvent={leafletMouseEvent}
         />
       )}
     </MapSideBarLayout>
