@@ -181,8 +181,6 @@ exports[`Manage Agencies Component Snapshot matches 1`] = `
             onFocus={[Function]}
             onMouseOut={[Function]}
             onMouseOver={[Function]}
-            toolId="agency-filter-add"
-            toolText="Add a new Agency"
             type="button"
           >
             <div

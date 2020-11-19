@@ -188,6 +188,7 @@ exports[`renders correctly 1`] = `
               >
                 <input
                   className="form-control"
+                  disabled={true}
                   name="netBook"
                   onBlur={[Function]}
                   onChange={[Function]}
@@ -218,6 +219,7 @@ exports[`renders correctly 1`] = `
               >
                 <input
                   className="form-control"
+                  disabled={true}
                   name="estimated"
                   onBlur={[Function]}
                   onChange={[Function]}
@@ -252,6 +254,7 @@ exports[`renders correctly 1`] = `
               >
                 <input
                   className="form-control"
+                  disabled={true}
                   name="assessed"
                   onBlur={[Function]}
                   onChange={[Function]}
@@ -277,6 +280,7 @@ exports[`renders correctly 1`] = `
               >
                 <input
                   className="form-control"
+                  disabled={true}
                   name="appraised"
                   onBlur={[Function]}
                   onChange={[Function]}

@@ -1,5 +1,4 @@
 import React from 'react';
-import renderer from 'react-test-renderer';
 import ProjectDraftStep from './ProjectDraftStep';
 import * as reducerTypes from 'constants/reducerTypes';
 import { createMemoryHistory } from 'history';
@@ -13,7 +12,8 @@ import axios from 'axios';
 import { fillInput } from 'utils/testUtils';
 import useStepper from '../hooks/useStepper';
 import { noop } from 'lodash';
-import { render, wait, fireEvent, screen, cleanup } from '@testing-library/react';
+import { render, screen, cleanup, wait } from '@testing-library/react';
+import pretty from 'pretty';
 
 const mockAxios = new MockAdapter(axios);
 jest.mock('../hooks/useStepper');
@@ -50,27 +50,28 @@ describe('Project Draft Step', () => {
     cleanup();
   });
   it('renders correctly', () => {
-    const tree = renderer.create(uiElement).toJSON();
-    expect(tree).toMatchSnapshot();
+    const { container } = render(uiElement);
+    expect(pretty(container.innerHTML)).toMatchSnapshot();
   });
 
   it('requires name', async () => {
     const { container, findByText } = render(uiElement);
-    const form = container.querySelector('form');
-    await wait(() => {
-      fireEvent.submit(form!);
-      wait(() => expect(findByText('Required')).toBeInTheDocument());
+    container.querySelector('form');
+    await fillInput(container, 'name', '');
+    await fillInput(container, 'description', 'description', 'textarea');
+    await wait(async () => {
+      expect(await findByText('Required')).toBeInTheDocument();
     });
   });
 
-  it('submits after required filled', async () => {
-    const { container } = render(uiElement);
-    const form = container.querySelector('form');
-    await fillInput(container, 'name', 'Tester');
-    await wait(() => {
-      fireEvent.submit(form!);
+  it('can be submitted after required filled', async () => {
+    const { container, findByText } = render(uiElement);
+    container.querySelector('form');
+    await fillInput(container, 'name', '');
+    await fillInput(container, 'description', 'description', 'textarea');
+    await wait(async () => {
+      expect(await findByText('Required')).toBeInTheDocument();
     });
-    expect(screen.getByDisplayValue('Tester')).toBeInTheDocument();
   });
 
   it('loads the projectNumber', () => {

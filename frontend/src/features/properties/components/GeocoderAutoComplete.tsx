@@ -4,9 +4,10 @@ import './GeocoderAutoComplete.scss';
 import { Form, FormControlProps } from 'react-bootstrap';
 import { DisplayError } from 'components/common/form';
 import ClickAwayListener from 'react-click-away-listener';
-import { debounce } from 'lodash';
+import debounce from 'lodash/debounce';
 import TooltipIcon from 'components/common/TooltipIcon';
 import TooltipWrapper from 'components/common/TooltipWrapper';
+import { useCallback } from 'react';
 
 interface IGeocoderAutoCompleteProps {
   field: string;
@@ -44,19 +45,29 @@ export const GeocoderAutoComplete: React.FC<IGeocoderAutoCompleteProps> = ({
   const api = useApi();
   const errorTooltip = error && touch && displayErrorTooltips ? error : undefined;
 
-  const search = debounce(async (val: string) => {
-    const data = await api.searchAddress(val);
-    setOptions(data);
-  }, debounceTimeout || 500);
+  const search = useCallback(
+    debounce(async (val: string, abort: boolean) => {
+      if (!abort) {
+        const data = await api.searchAddress(val);
+        setOptions(data);
+      }
+    }, debounceTimeout || 500),
+    [],
+  );
 
   const onTextChanged = async (val?: string) => {
     onTextChange && onTextChange(val);
     if (val && val.length >= 5 && val !== value) {
-      search(val);
+      await search(val, false);
     } else {
       setOptions([]);
     }
   };
+  React.useEffect(() => {
+    return () => {
+      search('', true);
+    };
+  }, [search]);
 
   const suggestionSelected = (val: IGeocoderResponse) => {
     setOptions([]);

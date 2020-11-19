@@ -2,7 +2,14 @@ import './Map.scss';
 
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
-import { LatLngBounds, LeafletMouseEvent, LeafletEvent, LatLng, Map as LeafletMap } from 'leaflet';
+import {
+  LatLngBounds,
+  LeafletMouseEvent,
+  LeafletEvent,
+  LatLng,
+  Map as LeafletMap,
+  geoJSON,
+} from 'leaflet';
 import {
   MapProps as LeafletMapProps,
   TileLayer,
@@ -42,6 +49,7 @@ import {
   PopupContentConfig,
 } from './LayerPopup/LayerPopupContent';
 import { useLayerQuery } from './LayerPopup/hooks/useLayerQuery';
+import { saveParcelLayerData } from 'reducers/parcelLayerDataSlice';
 
 export type MapViewportChangeEvent = {
   bounds: LatLngBounds | null;
@@ -82,6 +90,7 @@ export type MapProps = {
 export type LayerPopupInformation = PopupContentConfig & {
   latlng: LatLng;
   title: string;
+  center?: LatLng;
 };
 
 const Map: React.FC<MapProps> = ({
@@ -298,6 +307,7 @@ const Map: React.FC<MapProps> = ({
     const parcel = await parcelsService.findOneWhereContains(event.latlng);
 
     let properties = {};
+    let center: LatLng | undefined;
     let displayConfig = {};
     let title = 'Municipality Information';
     if (municipality.features.length === 1) {
@@ -309,6 +319,11 @@ const Map: React.FC<MapProps> = ({
       title = 'Parcel Information';
       properties = parcel.features[0].properties!;
       displayConfig = parcelLayerPopupConfig;
+      center = parcel.features[0]?.geometry
+        ? geoJSON(parcel.features[0].geometry)
+            .getBounds()
+            .getCenter()
+        : undefined;
     }
 
     if (!isEmpty(properties)) {
@@ -317,6 +332,7 @@ const Map: React.FC<MapProps> = ({
         data: properties as any,
         config: displayConfig as any,
         latlng: event.latlng,
+        center,
       } as any);
     }
   };
@@ -390,6 +406,10 @@ const Map: React.FC<MapProps> = ({
                       <LayerPopupContent
                         data={layerPopup.data as any}
                         config={layerPopup.config as any}
+                        center={layerPopup.center}
+                        onAddToParcel={(e: MouseEvent, data: { [key: string]: string }) => {
+                          dispatch(saveParcelLayerData({ e, data }));
+                        }}
                       />
                     </Popup>
                   )}

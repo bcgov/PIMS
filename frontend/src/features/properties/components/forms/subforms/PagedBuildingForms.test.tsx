@@ -1,5 +1,5 @@
 import React from 'react';
-import renderer, { act } from 'react-test-renderer';
+import { act } from 'react-test-renderer';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
@@ -17,6 +17,7 @@ import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 import { createMemoryHistory } from 'history';
 import { Router } from 'react-router-dom';
+import pretty from 'pretty';
 
 const mockAxios = new MockAdapter(axios);
 mockAxios.onAny().reply(200, {});
@@ -30,6 +31,8 @@ const mockBuilding: IFormBuilding = {
     administrativeArea: 'administrativeArea',
     province: 'province',
   },
+  agency: 'agency',
+  agencyCode: 'AGE',
   name: 'name',
   classification: 'class',
   agencyId: 3,
@@ -124,8 +127,8 @@ describe('PagedBuildingForms functionality', () => {
       buildings: [mockBuilding],
     };
     const pagedBuildingForms = getPagedBuildingForms(initialValues, () => {});
-    const tree = renderer.create(pagedBuildingForms).toJSON();
-    expect(tree).toMatchSnapshot();
+    const { container } = render(pagedBuildingForms);
+    expect(pretty(container.innerHTML)).toMatchSnapshot();
   });
 
   it('displays a page for each building', () => {

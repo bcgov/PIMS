@@ -106,7 +106,7 @@ const PropertyListView: React.FC = () => {
   const columns = useMemo(() => cols, []);
 
   // We'll start our table without any data
-  const [data, setData] = useState<IProperty[]>([]);
+  const [data, setData] = useState<IProperty[] | undefined>();
   // For getting the buildings on parcel folder click
   const [expandData, setExpandData] = useState<any>({});
 
@@ -169,6 +169,7 @@ const PropertyListView: React.FC = () => {
 
       // Only update the data if this is the latest fetch
       if (agencyIds?.length > 0) {
+        setData(undefined);
         const query = getServerQuery({ pageIndex, pageSize, filter, agencyIds });
         const data = await service.getPropertyList(query);
         // The server could send back total page count.
@@ -295,7 +296,8 @@ const PropertyListView: React.FC = () => {
           name="propertiesTable"
           lockPageSize={true}
           columns={columns}
-          data={data}
+          data={data || []}
+          loading={data === undefined}
           pageIndex={pageIndex}
           onRequestData={handleRequestData}
           pageCount={pageCount}

@@ -14,6 +14,7 @@ import { IProject, SPPApprovalTabs } from '../../common';
 import { ErpStep } from '..';
 import Claims from 'constants/claims';
 import ReactDOM from 'react-dom';
+import pretty from 'pretty';
 
 ReactDOM.createPortal = (node: any) => node;
 jest.mock('@react-keycloak/web');
@@ -322,8 +323,10 @@ describe('ERP Approval Step', () => {
     const store = getStore(project, SPPApprovalTabs.closeOutForm);
 
     it('renders correctly', () => {
-      const tree = renderer.create(getApprovalStep(store)).toJSON();
-      expect(tree).toMatchSnapshot();
+      act(() => {
+        const { container } = render(getApprovalStep(store));
+        expect(pretty(container.innerHTML)).toMatchSnapshot();
+      });
     });
 
     it('displays close out form tab by default if project not in spl', () => {

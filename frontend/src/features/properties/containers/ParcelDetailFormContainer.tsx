@@ -72,6 +72,7 @@ export const valuesToApiFormat = (values: IFormParcel): IFormParcel => {
   values.fiscals = _.filter(allFinancials, financial =>
     Object.keys(FiscalKeys).includes(financial.key),
   );
+  values.landArea = +values.landArea;
   values.financials = [];
   values.buildings.forEach(building => {
     building.agencyId = building?.agencyId ? building.agencyId : values.agencyId;
@@ -118,7 +119,9 @@ const ParcelDetailForm: React.FunctionComponent<IParcelPropertyProps> = ({
     });
 
     initialValues = {
+      ...initialValues,
       ...parcelDetail,
+      address: { ...initialValues.address, ...parcelDetail.address },
       pid: parcelDetail.pid ?? '',
       pin: parcelDetail.pin ?? '',
       projectNumber: parcelDetail.projectNumber ?? '',
@@ -134,15 +137,9 @@ const ParcelDetailForm: React.FunctionComponent<IParcelPropertyProps> = ({
    * @param values formik form values to validate.
    */
   const handleValidate = async (values: IFormParcel) => {
-    let financialErrors = {};
-
     const yupErrors: any = ParcelSchema.validate(values, { abortEarly: false }).then(
-      () => {
-        return financialErrors;
-      },
-      (err: any) => {
-        return _.merge(yupToFormErrors(err), financialErrors);
-      },
+      () => ({}),
+      (err: any) => yupToFormErrors(err),
     );
 
     let pidDuplicated = false;
