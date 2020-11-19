@@ -1,6 +1,7 @@
 import { useLocation, useHistory, useParams } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import queryString from 'query-string';
+import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
 
 export type SidebarSize = 'narrow' | 'wide' | undefined;
 
@@ -39,16 +40,22 @@ const useQueryParamSideBar = (): IMapSideBar => {
   const history = useHistory();
 
   const searchParams = queryString.parse(location.search);
-  useEffect(() => {
+  useDeepCompareEffect(() => {
     setShowSideBar(searchParams.sidebar === 'true');
     setParcelId(id ? parseInt(id) || undefined : undefined);
     setSideBarSize(searchParams.sidebarSize as SidebarSize);
     setContextName(searchParams.sidebarContext as SidebarContextType);
     if (searchParams?.new === 'true') {
-      const queryParams = { ...queryString.parse(location.search), new: false };
+      const queryParams = { ...searchParams, new: false };
       history.replace({ pathname: '/mapview', search: queryString.stringify(queryParams) });
     }
-  }, [id, searchParams, location.search, history]);
+    if (!!id && searchParams.sidebar === 'false') {
+      history.replace({
+        pathname: '/mapview',
+        search: queryString.stringify(searchParams),
+      });
+    }
+  }, [id, searchParams, location.search]);
 
   const setShow = (show: boolean, contextName?: SidebarContextType, size?: SidebarSize) => {
     if (show && !contextName) {

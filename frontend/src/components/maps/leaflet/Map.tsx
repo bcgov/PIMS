@@ -2,7 +2,14 @@ import './Map.scss';
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { LatLngBounds, LeafletMouseEvent, LatLng, Map as LeafletMap, geoJSON } from 'leaflet';
+import {
+  LatLngBounds,
+  LeafletMouseEvent,
+  LeafletEvent,
+  LatLng,
+  Map as LeafletMap,
+  geoJSON,
+} from 'leaflet';
 import {
   MapProps as LeafletMapProps,
   TileLayer,
@@ -38,6 +45,7 @@ import classNames from 'classnames';
 import { useLayerQuery } from './LayerPopup/hooks/useLayerQuery';
 import { saveParcelLayerData } from 'reducers/parcelLayerDataSlice';
 import { SidebarSize } from 'features/mapSideBar/hooks/useQueryParamSideBar';
+import { saveParcelLayerData } from 'reducers/parcelLayerDataSlice';
 import useActiveFeatureLayer from '../hooks/useActiveFeatureLayer';
 import LayersControl from './LayersControl';
 import { InventoryLayer } from './InventoryLayer';

@@ -3,6 +3,7 @@ import ExemptionRequest from './ExemptionRequest';
 import { useFormikContext, getIn } from 'formik';
 import { render } from '@testing-library/react';
 import { noop } from 'lodash';
+import pretty from 'pretty';
 
 jest.mock('formik');
 (useFormikContext as jest.Mock).mockReturnValue({
