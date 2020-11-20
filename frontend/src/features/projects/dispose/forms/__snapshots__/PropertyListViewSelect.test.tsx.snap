@@ -8,19 +8,18 @@ exports[`Property List View Select renders correctly 1`] = `
     </div>
     <div role=\\"table\\" class=\\"table\\">
       <div class=\\"thead thead-light\\">
-        <div role=\\"row\\" style=\\"display: flex; flex: 1 0 auto; min-width: 705px;\\" class=\\"tr\\">
+        <div role=\\"row\\" style=\\"display: flex; flex: 1 0 auto; min-width: 675px;\\" class=\\"tr\\">
           <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 40 0 auto; min-width: 30px; width: 40px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">
             <div><input type=\\"checkbox\\" title=\\"Toggle All Rows Selected\\" style=\\"cursor: pointer;\\"></div>
           </div>
           <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Agency</div>
-          <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Sub Agency</div>
-          <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Property Name</div>
+          <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Name</div>
           <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Civic Address</div>
           <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 140 0 auto; min-width: 30px; width: 140px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Classification</div>
           <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Current Zoning Code</div>
           <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Potential Zoning Code</div>
-          <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Netbook Value</div>
-          <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Estimated Value</div>
+          <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Net Book Value</div>
+          <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Market Value</div>
           <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Assessed Value</div>
           <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 60 0 auto; min-width: 30px; width: 60px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Type</div>
         </div>
@@ -35,27 +34,26 @@ exports[`Property List View Select renders correctly 1`] = `
     </div>
     <div role=\\"table\\" class=\\"table\\">
       <div class=\\"thead thead-light\\">
-        <div role=\\"row\\" style=\\"display: flex; flex: 1 0 auto; min-width: 735px;\\" class=\\"tr\\">
+        <div role=\\"row\\" style=\\"display: flex; flex: 1 0 auto; min-width: 705px;\\" class=\\"tr\\">
           <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 40 0 auto; min-width: 30px; width: 40px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">
             <div><input type=\\"checkbox\\" title=\\"Toggle All Rows Selected\\" style=\\"cursor: pointer;\\"></div>
           </div>
           <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 40 0 auto; min-width: 30px; width: 40px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\"></div>
           <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Agency</div>
-          <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Sub Agency</div>
-          <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Property Name</div>
+          <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Name</div>
           <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Civic Address</div>
           <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 140 0 auto; min-width: 30px; width: 140px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Classification</div>
           <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Current Zoning Code</div>
           <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Potential Zoning Code</div>
-          <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Netbook Value</div>
-          <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Estimated Value</div>
+          <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Net Book Value</div>
+          <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Market Value</div>
           <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Assessed Value</div>
           <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 60 0 auto; min-width: 30px; width: 60px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Type</div>
         </div>
       </div>
       <div role=\\"rowgroup\\" class=\\"tbody\\">
         <div class=\\"tr-wrapper\\">
-          <div role=\\"row\\" style=\\"display: flex; flex: 1 0 auto; min-width: 735px;\\" class=\\"tr\\">
+          <div role=\\"row\\" style=\\"display: flex; flex: 1 0 auto; min-width: 705px;\\" class=\\"tr\\">
             <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 40 0 auto; min-width: 30px; width: 40px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">
               <div><input type=\\"checkbox\\" title=\\"Toggle Row Selected\\" style=\\"cursor: pointer;\\"></div>
             </div>
@@ -64,8 +62,7 @@ exports[`Property List View Select renders correctly 1`] = `
                 <path d=\\"M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm0 448c-110.5 0-200-89.5-200-200S145.5 56 256 56s200 89.5 200 200-89.5 200-200 200zm101.8-262.2L295.6 256l62.2 62.2c4.7 4.7 4.7 12.3 0 17l-22.6 22.6c-4.7 4.7-12.3 4.7-17 0L256 295.6l-62.2 62.2c-4.7 4.7-12.3 4.7-17 0l-22.6-22.6c-4.7-4.7-4.7-12.3 0-17l62.2-62.2-62.2-62.2c-4.7-4.7-4.7-12.3 0-17l22.6-22.6c4.7-4.7 12.3-4.7 17 0l62.2 62.2 62.2-62.2c4.7-4.7 12.3-4.7 17 0l22.6 22.6c4.7 4.7 4.7 12.3 0 17z\\"></path>
               </svg></div>
             <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"Click to view property details\\" class=\\"td clickable\\">AEST</div>
-            <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"Click to view property details\\" class=\\"td clickable\\"></div>
-            <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"Click to view property details\\" class=\\"td clickable\\"></div>
+            <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"Click to view property details\\" class=\\"td clickable\\">213-221-321</div>
             <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"Click to view property details\\" class=\\"td clickable\\">Test, Alert Bay</div>
             <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 140 0 auto; min-width: 30px; width: 140px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"Click to view property details\\" class=\\"td clickable\\">Core Operational</div>
             <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"Click to view property details\\" class=\\"td clickable\\"></div>
@@ -78,10 +75,9 @@ exports[`Property List View Select renders correctly 1`] = `
         </div>
       </div>
       <div class=\\"tfoot tfoot-light\\">
-        <div role=\\"row\\" style=\\"display: flex; flex: 1 0 auto; min-width: 735px;\\" class=\\"tr\\">
+        <div role=\\"row\\" style=\\"display: flex; flex: 1 0 auto; min-width: 705px;\\" class=\\"tr\\">
           <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 40 0 auto; min-width: 30px; width: 40px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">&nbsp;</div>
           <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 40 0 auto; min-width: 30px; width: 40px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">&nbsp;</div>
-          <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">&nbsp;</div>
           <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">&nbsp;</div>
           <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">&nbsp;</div>
           <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">&nbsp;</div>

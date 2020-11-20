@@ -48,10 +48,7 @@ namespace Pims.Dal.Entities
         /// <param name="note"></param>
         public ProjectNote(Project project, NoteTypes type, string note)
         {
-            if (note == null) throw new ArgumentNullException(nameof(project));
-            if (String.IsNullOrWhiteSpace(note)) throw new ArgumentException("Argument cannot be null, empty or whitespace.", nameof(note));
-
-            this.Note = note;
+            this.Note = note ?? throw new ArgumentNullException(nameof(project));
             this.NoteType = type;
             this.ProjectId = project?.Id ?? throw new ArgumentNullException(nameof(project));
             this.Project = project;

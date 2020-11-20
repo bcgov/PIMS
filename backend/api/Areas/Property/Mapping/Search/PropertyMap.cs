@@ -42,8 +42,8 @@ namespace Pims.Api.Areas.Property.Mapping.Search
                 .Map(dest => dest.Zoning, src => src.Zoning)
                 .Map(dest => dest.ZoningPotential, src => src.ZoningPotential)
 
-                .Map(dest => dest.Estimated, src => src.Fiscals.OrderByDescending(f => f.FiscalYear).FirstOrDefault(f => f.Key == FiscalKeys.Estimated) == null ? 0 : src.Fiscals.OrderByDescending(f => f.FiscalYear).FirstOrDefault(f => f.Key == FiscalKeys.Estimated).Value)
-                .Map(dest => dest.EstimatedFiscalYear, src => src.Fiscals.OrderByDescending(f => f.FiscalYear).FirstOrDefault(f => f.Key == FiscalKeys.Estimated) == null ? (int?)null : src.Fiscals.OrderByDescending(f => f.FiscalYear).FirstOrDefault(f => f.Key == FiscalKeys.Estimated).FiscalYear)
+                .Map(dest => dest.Market, src => src.Fiscals.OrderByDescending(f => f.FiscalYear).FirstOrDefault(f => f.Key == FiscalKeys.Market) == null ? 0 : src.Fiscals.OrderByDescending(f => f.FiscalYear).FirstOrDefault(f => f.Key == FiscalKeys.Market).Value)
+                .Map(dest => dest.MarketFiscalYear, src => src.Fiscals.OrderByDescending(f => f.FiscalYear).FirstOrDefault(f => f.Key == FiscalKeys.Market) == null ? (int?)null : src.Fiscals.OrderByDescending(f => f.FiscalYear).FirstOrDefault(f => f.Key == FiscalKeys.Market).FiscalYear)
                 .Map(dest => dest.NetBook, src => src.Fiscals.OrderByDescending(f => f.FiscalYear).FirstOrDefault(f => f.Key == FiscalKeys.NetBook) == null ? 0 : src.Fiscals.OrderByDescending(f => f.FiscalYear).FirstOrDefault(f => f.Key == FiscalKeys.NetBook).Value)
                 .Map(dest => dest.NetBookFiscalYear, src => src.Fiscals.OrderByDescending(f => f.FiscalYear).FirstOrDefault(f => f.Key == FiscalKeys.NetBook) == null ? (int?)null : src.Fiscals.OrderByDescending(f => f.FiscalYear).FirstOrDefault(f => f.Key == FiscalKeys.NetBook).FiscalYear)
                 .Map(dest => dest.Assessed, src => src.Evaluations.OrderByDescending(f => f.Date).FirstOrDefault(f => f.Key == EvaluationKeys.Assessed) == null ? 0 : src.Evaluations.OrderByDescending(f => f.Date).FirstOrDefault(f => f.Key == EvaluationKeys.Assessed).Value)
@@ -88,8 +88,8 @@ namespace Pims.Api.Areas.Property.Mapping.Search
                 .Map(dest => dest.Zoning, src => src.Parcels.FirstOrDefault() == null ? null : src.Parcels.FirstOrDefault().Parcel.Zoning)
                 .Map(dest => dest.ZoningPotential, src => src.Parcels.FirstOrDefault() == null ? null : src.Parcels.FirstOrDefault().Parcel.ZoningPotential)
 
-                .Map(dest => dest.Estimated, src => src.Fiscals.OrderByDescending(f => f.FiscalYear).FirstOrDefault(f => f.Key == FiscalKeys.Estimated) == null ? 0 : src.Fiscals.OrderByDescending(f => f.FiscalYear).FirstOrDefault(f => f.Key == FiscalKeys.Estimated).Value)
-                .Map(dest => dest.EstimatedFiscalYear, src => src.Fiscals.OrderByDescending(f => f.FiscalYear).FirstOrDefault(f => f.Key == FiscalKeys.Estimated) == null ? (int?)null : src.Fiscals.OrderByDescending(f => f.FiscalYear).FirstOrDefault(f => f.Key == FiscalKeys.Estimated).FiscalYear)
+                .Map(dest => dest.Market, src => src.Fiscals.OrderByDescending(f => f.FiscalYear).FirstOrDefault(f => f.Key == FiscalKeys.Market) == null ? 0 : src.Fiscals.OrderByDescending(f => f.FiscalYear).FirstOrDefault(f => f.Key == FiscalKeys.Market).Value)
+                .Map(dest => dest.MarketFiscalYear, src => src.Fiscals.OrderByDescending(f => f.FiscalYear).FirstOrDefault(f => f.Key == FiscalKeys.Market) == null ? (int?)null : src.Fiscals.OrderByDescending(f => f.FiscalYear).FirstOrDefault(f => f.Key == FiscalKeys.Market).FiscalYear)
                 .Map(dest => dest.NetBook, src => src.Fiscals.OrderByDescending(f => f.FiscalYear).FirstOrDefault(f => f.Key == FiscalKeys.NetBook) == null ? 0 : src.Fiscals.OrderByDescending(f => f.FiscalYear).FirstOrDefault(f => f.Key == FiscalKeys.NetBook).Value)
                 .Map(dest => dest.NetBookFiscalYear, src => src.Fiscals.OrderByDescending(f => f.FiscalYear).FirstOrDefault(f => f.Key == FiscalKeys.NetBook) == null ? (int?)null : src.Fiscals.OrderByDescending(f => f.FiscalYear).FirstOrDefault(f => f.Key == FiscalKeys.NetBook).FiscalYear)
                 .Map(dest => dest.Assessed, src => src.Evaluations.OrderByDescending(f => f.Date).FirstOrDefault(f => f.Key == EvaluationKeys.Assessed) == null ? 0 : src.Evaluations.OrderByDescending(f => f.Date).FirstOrDefault(f => f.Key == EvaluationKeys.Assessed).Value)
@@ -138,8 +138,8 @@ namespace Pims.Api.Areas.Property.Mapping.Search
                 .Map(dest => dest.Province, src => src.Province)
                 .Map(dest => dest.Postal, src => src.Postal)
 
-                .Map(dest => dest.Estimated, src => src.Estimated)
-                .Map(dest => dest.EstimatedFiscalYear, src => src.EstimatedFiscalYear)
+                .Map(dest => dest.Market, src => src.Market)
+                .Map(dest => dest.MarketFiscalYear, src => src.MarketFiscalYear)
                 .Map(dest => dest.NetBook, src => src.NetBook)
                 .Map(dest => dest.NetBookFiscalYear, src => src.NetBookFiscalYear)
                 .Map(dest => dest.Assessed, src => src.Assessed)
@@ -193,8 +193,8 @@ namespace Pims.Api.Areas.Property.Mapping.Search
                 .Map(dest => dest.Province, src => src.Province)
                 .Map(dest => dest.Postal, src => src.Postal)
 
-                .Map(dest => dest.Estimated, src => src.Estimated)
-                .Map(dest => dest.EstimatedFiscalYear, src => src.EstimatedFiscalYear)
+                .Map(dest => dest.Market, src => src.Market)
+                .Map(dest => dest.MarketFiscalYear, src => src.MarketFiscalYear)
                 .Map(dest => dest.NetBook, src => src.NetBook)
                 .Map(dest => dest.NetBookFiscalYear, src => src.NetBookFiscalYear)
                 .Map(dest => dest.Assessed, src => src.Assessed)

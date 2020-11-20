@@ -5,7 +5,6 @@ namespace Pims.Dal.Entities
     /// <summary>
     /// ProjectReport class, provides an entity for the datamodel to manage project reports.
     /// </summary>
-    ///
     public class ProjectReport : BaseEntity
     {
         #region Properties
@@ -39,6 +38,38 @@ namespace Pims.Dal.Entities
         /// </summary>
         public ReportTypes ReportTypeId { get; set; }
 
+        #endregion
+
+        #region Constructors
+        /// <summary>
+        /// Creates a new instance of a ProejctReport.
+        /// </summary>
+        public ProjectReport() { }
+
+        /// <summary>
+        /// Creates a new instance of a ProjectReport, initializes with specified arguments.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        public ProjectReport(ReportTypes type, DateTime? from, DateTime? to)
+        {
+            this.ReportTypeId = type;
+            this.From = from;
+            this.To = to;
+        }
+
+        /// <summary>
+        /// Creates a new instance of a ProjectReport, initializes with specified argumentss
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="name"></param>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        public ProjectReport(ReportTypes type, string name, DateTime? from, DateTime? to) : this(type, from, to)
+        {
+            this.Name = name;
+        }
         #endregion
     }
 }

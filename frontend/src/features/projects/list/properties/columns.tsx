@@ -32,23 +32,15 @@ const spacing = {
 export const columns: ColumnWithProps<IProperty>[] = [
   {
     Header: 'Agency',
-    accessor: 'agencyCode', // accessor is the "key" in the data
+    accessor: row => (row.subAgency ? `${row.subAgency} (${row.agencyCode})` : row.agencyCode), // accessor is the "key" in the data
     align: 'left',
     responsive: true,
     width: spacing.small,
     minWidth: 65, // px
   },
   {
-    Header: 'Sub Agency',
-    accessor: 'subAgency',
-    align: 'left',
-    responsive: true,
-    width: spacing.medium,
-    minWidth: 80,
-  },
-  {
     Header: 'Property Name',
-    accessor: 'description',
+    accessor: row => (row.name ? row.name : row.pid ?? row.pin),
     align: 'left',
     responsive: true,
     width: spacing.medium,
@@ -64,19 +56,11 @@ export const columns: ColumnWithProps<IProperty>[] = [
   },
   {
     Header: 'Street Address',
-    accessor: 'address',
+    accessor: row => `${row.address}, ${row.administrativeArea}`,
     align: 'left',
     responsive: true,
     width: spacing.large,
     minWidth: 160,
-  },
-  {
-    Header: 'Location',
-    accessor: 'administrativeArea',
-    align: 'left',
-    responsive: true,
-    width: spacing.medium,
-    minWidth: 80,
   },
   {
     Header: 'Zoning',
@@ -104,7 +88,7 @@ export const columns: ColumnWithProps<IProperty>[] = [
     minWidth: 80,
   },
   {
-    Header: 'Netbook Value',
+    Header: 'Net Book Value',
     accessor: 'netBook',
     Cell: MoneyCell,
     align: 'right',
@@ -113,8 +97,8 @@ export const columns: ColumnWithProps<IProperty>[] = [
     minWidth: 80,
   },
   {
-    Header: 'Estimated Value',
-    accessor: 'estimated',
+    Header: 'Market Value',
+    accessor: 'market',
     Cell: MoneyCell,
     align: 'right',
     responsive: true,

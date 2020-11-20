@@ -28,6 +28,10 @@ namespace Pims.Tools.Converters.ExcelConverter.Configuration
         /// <summary>
         /// The value is null or the default for the type.
         /// </summary>
-        NullOrDefault = 5
+        NullOrDefault = 5,
+        /// <summary>
+        /// The value is null.
+        /// </summary>
+        NotNull = 6
     }
 }

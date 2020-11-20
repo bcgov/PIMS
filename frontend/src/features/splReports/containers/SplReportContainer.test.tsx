@@ -50,7 +50,7 @@ const defaultReport: IReport = {
 const defaultSnapshot: ISnapshot = {
   assessed: 1,
   baselineIntegrity: 2,
-  estimated: 3,
+  market: 3,
   gainLoss: 4,
   interestComponent: 5,
   netBook: 6,

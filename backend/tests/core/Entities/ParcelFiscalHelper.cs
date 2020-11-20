@@ -18,7 +18,7 @@ namespace Pims.Core.Test
         /// <param name="key"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static Entity.ParcelFiscal CreateFiscal(Entity.Parcel parcel, int fiscalYear, Entity.FiscalKeys key = Entity.FiscalKeys.Estimated, decimal value = 1)
+        public static Entity.ParcelFiscal CreateFiscal(Entity.Parcel parcel, int fiscalYear, Entity.FiscalKeys key = Entity.FiscalKeys.Market, decimal value = 1)
         {
             return new Entity.ParcelFiscal()
             {
@@ -41,7 +41,7 @@ namespace Pims.Core.Test
         /// <param name="count"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static List<Entity.ParcelFiscal> CreateFiscals(Entity.Parcel parcel, int startFiscalYear, int count, Entity.FiscalKeys key = Entity.FiscalKeys.Estimated, decimal value = 1)
+        public static List<Entity.ParcelFiscal> CreateFiscals(Entity.Parcel parcel, int startFiscalYear, int count, Entity.FiscalKeys key = Entity.FiscalKeys.Market, decimal value = 1)
         {
             for (var i = startFiscalYear; i < (startFiscalYear + count); i++)
             {
@@ -57,7 +57,7 @@ namespace Pims.Core.Test
         /// <param name="fiscalYears"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static List<Entity.ParcelFiscal> CreateFiscals(Entity.Parcel parcel, int[] fiscalYears, Entity.FiscalKeys key = Entity.FiscalKeys.Estimated, decimal value = 1)
+        public static List<Entity.ParcelFiscal> CreateFiscals(Entity.Parcel parcel, int[] fiscalYears, Entity.FiscalKeys key = Entity.FiscalKeys.Market, decimal value = 1)
         {
             foreach (var fiscalYear in fiscalYears)
             {
@@ -75,7 +75,7 @@ namespace Pims.Core.Test
         /// <param name="key"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static Entity.ParcelFiscal CreateFiscal(this PimsContext context, Entity.Parcel parcel, int fiscalYear, Entity.FiscalKeys key = Entity.FiscalKeys.Estimated, decimal value = 1)
+        public static Entity.ParcelFiscal CreateFiscal(this PimsContext context, Entity.Parcel parcel, int fiscalYear, Entity.FiscalKeys key = Entity.FiscalKeys.Market, decimal value = 1)
         {
             var evaluation = CreateFiscal(parcel, fiscalYear, key, value);
             context.ParcelFiscals.Add(evaluation);
@@ -92,7 +92,7 @@ namespace Pims.Core.Test
         /// <param name="key"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static List<Entity.ParcelFiscal> CreateFiscals(this PimsContext context, Entity.Parcel parcel, int startFiscalYear, int count, Entity.FiscalKeys key = Entity.FiscalKeys.Estimated, decimal value = 1)
+        public static List<Entity.ParcelFiscal> CreateFiscals(this PimsContext context, Entity.Parcel parcel, int startFiscalYear, int count, Entity.FiscalKeys key = Entity.FiscalKeys.Market, decimal value = 1)
         {
             var evaluations = new List<Entity.ParcelFiscal>(count);
             for (var i = startFiscalYear; i < (startFiscalYear + count); i++)
@@ -111,7 +111,7 @@ namespace Pims.Core.Test
         /// <param name="key"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static List<Entity.ParcelFiscal> CreateFiscals(this PimsContext context, Entity.Parcel parcel, int[] fiscalYears, Entity.FiscalKeys key = Entity.FiscalKeys.Estimated, decimal value = 1)
+        public static List<Entity.ParcelFiscal> CreateFiscals(this PimsContext context, Entity.Parcel parcel, int[] fiscalYears, Entity.FiscalKeys key = Entity.FiscalKeys.Market, decimal value = 1)
         {
             var evaluations = new List<Entity.ParcelFiscal>(fiscalYears.Length);
             foreach (var fiscalYear in fiscalYears)

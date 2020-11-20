@@ -16,5 +16,7 @@ namespace Pims.Dal.Services.Admin
         Project Get(string projectNumber, params Expression<Func<Project, object>>[] includes);
         void Add(IEnumerable<Project> projects);
         void Update(IEnumerable<Project> projects);
+        string GenerateProjectNumber();
+        void UpdateProjectNumber(Project project, string projectNumber);
     }
 }

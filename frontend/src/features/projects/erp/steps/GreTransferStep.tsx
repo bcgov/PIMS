@@ -49,17 +49,24 @@ const FlexRight = styled.div`
  */
 const GreTransferStep = ({ formikRef }: IStepProps) => {
   const { project } = useProject();
-  const { onSubmitReview, canUserApproveForm, noFetchingProjectRequests } = useStepForm();
+  const {
+    onSubmitReview,
+    canUserApproveForm,
+    canUserOverride,
+    noFetchingProjectRequests,
+  } = useStepForm();
   const [updatePims, setUpdatePims] = useState(false);
 
   const initialValues: IProject = {
     ...project,
   };
+
   const canEdit =
-    canUserApproveForm() &&
-    (project.statusCode === ReviewWorkflowStatus.ERP ||
-      project.statusCode === ReviewWorkflowStatus.OnHold ||
-      project.statusCode === ReviewWorkflowStatus.ApprovedForExemption);
+    canUserOverride() ||
+    (canUserApproveForm() &&
+      (project.statusCode === ReviewWorkflowStatus.ERP ||
+        project.statusCode === ReviewWorkflowStatus.OnHold ||
+        project.statusCode === ReviewWorkflowStatus.ApprovedForExemption));
   return (
     <Container fluid className="GreTransferStep">
       <Formik

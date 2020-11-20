@@ -40,7 +40,7 @@ exports[`Review Approve Step renders correctly 1`] = `
           </div>
           <div class=\\"row\\"><label class=\\"form-label col-form-label col-md-4\\">Estimated Market Value <span class=\\"required\\">*</span></label>
             <div class=\\"fast-currency-input form-group\\">
-              <div class=\\"input-tooltip-wrapper\\"><input name=\\"estimated\\" class=\\"form-control\\" disabled=\\"\\" placeholder=\\"\\" value=\\"\\"></div>
+              <div class=\\"input-tooltip-wrapper\\"><input name=\\"market\\" class=\\"form-control\\" disabled=\\"\\" placeholder=\\"\\" value=\\"\\"></div>
             </div>
           </div>
         </div>
@@ -65,26 +65,24 @@ exports[`Review Approve Step renders correctly 1`] = `
         <div class=\\"ScrollContainer\\">
           <div role=\\"table\\" class=\\"table\\">
             <div class=\\"thead thead-light\\">
-              <div role=\\"row\\" style=\\"display: flex; flex: 1 0 auto; min-width: 675px;\\" class=\\"tr\\">
+              <div role=\\"row\\" style=\\"display: flex; flex: 1 0 auto; min-width: 645px;\\" class=\\"tr\\">
                 <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Agency</div>
-                <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Sub Agency</div>
-                <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Property Name</div>
+                <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Name</div>
                 <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Civic Address</div>
                 <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 140 0 auto; min-width: 30px; width: 140px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Classification</div>
                 <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Current Zoning Code</div>
                 <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Potential Zoning Code</div>
-                <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Netbook Value</div>
-                <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Estimated Value</div>
+                <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Net Book Value</div>
+                <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Market Value</div>
                 <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Assessed Value</div>
                 <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 60 0 auto; min-width: 30px; width: 60px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Type</div>
               </div>
             </div>
             <div role=\\"rowgroup\\" class=\\"tbody\\">
               <div class=\\"tr-wrapper\\">
-                <div role=\\"row\\" style=\\"display: flex; flex: 1 0 auto; min-width: 675px;\\" class=\\"tr\\">
+                <div role=\\"row\\" style=\\"display: flex; flex: 1 0 auto; min-width: 645px;\\" class=\\"tr\\">
                   <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"Click to view property details\\" class=\\"td clickable\\">TST</div>
-                  <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"Click to view property details\\" class=\\"td clickable\\"></div>
-                  <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"Click to view property details\\" class=\\"td clickable\\">test</div>
+                  <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"Click to view property details\\" class=\\"td clickable\\">123-123-123</div>
                   <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"Click to view property details\\" class=\\"td clickable\\">1234 Test St</div>
                   <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 140 0 auto; min-width: 30px; width: 140px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"Click to view property details\\" class=\\"td clickable\\">Surplus Active</div>
                   <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"Click to view property details\\" class=\\"td clickable\\"></div>
@@ -97,8 +95,7 @@ exports[`Review Approve Step renders correctly 1`] = `
               </div>
             </div>
             <div class=\\"tfoot tfoot-light\\">
-              <div role=\\"row\\" style=\\"display: flex; flex: 1 0 auto; min-width: 675px;\\" class=\\"tr\\">
-                <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">&nbsp;</div>
+              <div role=\\"row\\" style=\\"display: flex; flex: 1 0 auto; min-width: 645px;\\" class=\\"tr\\">
                 <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">&nbsp;</div>
                 <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">&nbsp;</div>
                 <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">&nbsp;</div>

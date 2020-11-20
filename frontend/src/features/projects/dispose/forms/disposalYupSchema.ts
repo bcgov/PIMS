@@ -18,7 +18,7 @@ export const DocumentationStepSchema = Yup.object().shape({
 
 export const UpdateInfoStepYupSchema = Yup.object().shape({
   netBook: Yup.number().required('Required'),
-  estimated: Yup.number().required('Required'),
+  market: Yup.number().required('Required'),
   assessed: Yup.number().required('Required'),
   properties: Yup.array().of(
     Yup.object().shape({

@@ -1265,14 +1265,8 @@ namespace Pims.Dal.Migrations
                     b.Property<int>("AgencyId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("AgencyId1")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("Appraised")
+                    b.Property<decimal?>("Appraised")
                         .HasColumnType("MONEY");
-
-                    b.Property<string>("AppraisedNote")
-                        .HasColumnType("NVARCHAR(MAX)");
 
                     b.Property<DateTime?>("ApprovedOn")
                         .HasColumnType("DATETIME2");
@@ -1301,21 +1295,12 @@ namespace Pims.Dal.Migrations
                         .HasColumnType("nvarchar(1000)")
                         .HasMaxLength(1000);
 
-                    b.Property<decimal>("Estimated")
-                        .HasColumnType("MONEY");
-
-                    b.Property<string>("ExemptionRationale")
-                        .HasColumnType("nvarchar(2000)")
-                        .HasMaxLength(2000);
-
-                    b.Property<bool>("ExemptionRequested")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
-
                     b.Property<string>("Manager")
                         .HasColumnType("nvarchar(150)")
                         .HasMaxLength(150);
+
+                    b.Property<decimal>("Market")
+                        .HasColumnType("MONEY");
 
                     b.Property<string>("Metadata")
                         .HasColumnType("NVARCHAR(MAX)");
@@ -1328,26 +1313,13 @@ namespace Pims.Dal.Migrations
                     b.Property<decimal>("NetBook")
                         .HasColumnType("MONEY");
 
-                    b.Property<string>("Note")
-                        .HasColumnType("nvarchar(2000)")
-                        .HasMaxLength(2000);
-
-                    b.Property<string>("OffersNote")
-                        .HasColumnType("nvarchar(2000)")
-                        .HasMaxLength(2000);
-
-                    b.Property<string>("PrivateNote")
-                        .HasColumnType("nvarchar(2000)")
-                        .HasMaxLength(2000);
-
                     b.Property<string>("ProjectNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(25)")
                         .HasMaxLength(25);
 
-                    b.Property<string>("PublicNote")
-                        .HasColumnType("nvarchar(2000)")
-                        .HasMaxLength(2000);
+                    b.Property<int>("ProjectType")
+                        .HasColumnType("int");
 
                     b.Property<int>("ReportedFiscalYear")
                         .HasColumnType("int");
@@ -1382,8 +1354,6 @@ namespace Pims.Dal.Migrations
 
                     b.HasIndex("AgencyId");
 
-                    b.HasIndex("AgencyId1");
-
                     b.HasIndex("CreatedById");
 
                     b.HasIndex("ProjectNumber")
@@ -1401,7 +1371,7 @@ namespace Pims.Dal.Migrations
 
                     b.HasIndex("Name", "StatusId", "TierLevelId", "AgencyId");
 
-                    b.HasIndex("Assessed", "NetBook", "Estimated", "ReportedFiscalYear", "ActualFiscalYear", "ExemptionRequested");
+                    b.HasIndex("Assessed", "NetBook", "Market", "ReportedFiscalYear", "ActualFiscalYear");
 
                     b.ToTable("Projects");
                 });
@@ -1726,13 +1696,10 @@ namespace Pims.Dal.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<decimal>("Appraised")
+                    b.Property<decimal?>("Appraised")
                         .HasColumnType("MONEY");
 
                     b.Property<decimal>("Assessed")
-                        .HasColumnType("MONEY");
-
-                    b.Property<decimal?>("BaselineIntegrity")
                         .HasColumnType("MONEY");
 
                     b.Property<Guid?>("CreatedById")
@@ -1743,25 +1710,13 @@ namespace Pims.Dal.Migrations
                         .HasColumnType("DATETIME2")
                         .HasDefaultValueSql("GETUTCDATE()");
 
-                    b.Property<decimal>("Estimated")
+                    b.Property<decimal>("Market")
                         .HasColumnType("MONEY");
 
-                    b.Property<decimal?>("GainLoss")
-                        .HasColumnType("MONEY");
-
-                    b.Property<decimal?>("InterestComponent")
-                        .HasColumnType("MONEY");
+                    b.Property<string>("Metadata")
+                        .HasColumnType("NVARCHAR(MAX)");
 
                     b.Property<decimal>("NetBook")
-                        .HasColumnType("MONEY");
-
-                    b.Property<decimal?>("NetProceeds")
-                        .HasColumnType("MONEY");
-
-                    b.Property<decimal?>("OcgFinancialStatement")
-                        .HasColumnType("MONEY");
-
-                    b.Property<decimal?>("ProgramCost")
                         .HasColumnType("MONEY");
 
                     b.Property<int>("ProjectId")
@@ -1771,12 +1726,6 @@ namespace Pims.Dal.Migrations
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("rowversion");
-
-                    b.Property<bool>("SaleWithLeaseInPlace")
-                        .HasColumnType("bit");
-
-                    b.Property<decimal?>("SalesCost")
-                        .HasColumnType("MONEY");
 
                     b.Property<DateTime>("SnapshotOn")
                         .HasColumnType("DATETIME2");
@@ -3041,14 +2990,10 @@ namespace Pims.Dal.Migrations
             modelBuilder.Entity("Pims.Dal.Entities.Project", b =>
                 {
                     b.HasOne("Pims.Dal.Entities.Agency", "Agency")
-                        .WithMany()
+                        .WithMany("Projects")
                         .HasForeignKey("AgencyId")
                         .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
-
-                    b.HasOne("Pims.Dal.Entities.Agency", null)
-                        .WithMany("Projects")
-                        .HasForeignKey("AgencyId1");
 
                     b.HasOne("Pims.Dal.Entities.User", "CreatedBy")
                         .WithMany()
@@ -3061,13 +3006,13 @@ namespace Pims.Dal.Migrations
                         .IsRequired();
 
                     b.HasOne("Pims.Dal.Entities.ProjectStatus", "Status")
-                        .WithMany()
+                        .WithMany("Projects")
                         .HasForeignKey("StatusId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Pims.Dal.Entities.TierLevel", "TierLevel")
-                        .WithMany()
+                        .WithMany("Projects")
                         .HasForeignKey("TierLevelId")
                         .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
