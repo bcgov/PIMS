@@ -13,7 +13,7 @@ import { IAddress } from 'actions/parcelsActions';
 import { GeocoderAutoComplete } from '../../GeocoderAutoComplete';
 import { IGeocoderResponse } from 'hooks/useApi';
 import { TypeaheadField } from 'components/common/form/Typeahead';
-import { streetAddressTooltip } from '../strings';
+import { streetAddressTooltip, locationTip } from '../strings';
 
 interface AddressProps {
   nameSpace?: string;
@@ -91,6 +91,7 @@ const AddressForm = <T extends any>(props: AddressProps & FormikProps<T>) => {
           disabled={props.disabled}
           paginate={false}
           required
+          tooltip={locationTip}
         />
       </Form.Row>
       <Form.Row>

@@ -509,7 +509,7 @@ exports[`Manage access requests Snapshot matches 1`] = `
                   "width": "100px",
                 }
               }
-              title="Click user IDIR/BCeID to view User Information.\\\\nClick row to open Access Request details."
+              title="Click user IDIR/BCeID to view User Information. Click row to open Access Request details."
             >
               firstName
             </div>
@@ -529,7 +529,7 @@ exports[`Manage access requests Snapshot matches 1`] = `
                   "width": "100px",
                 }
               }
-              title="Click user IDIR/BCeID to view User Information.\\\\nClick row to open Access Request details."
+              title="Click user IDIR/BCeID to view User Information. Click row to open Access Request details."
             >
               lastName
             </div>
@@ -549,7 +549,7 @@ exports[`Manage access requests Snapshot matches 1`] = `
                   "width": "200px",
                 }
               }
-              title="Click user IDIR/BCeID to view User Information.\\\\nClick row to open Access Request details."
+              title="Click user IDIR/BCeID to view User Information. Click row to open Access Request details."
             >
               user@email.com
             </div>
@@ -569,7 +569,7 @@ exports[`Manage access requests Snapshot matches 1`] = `
                   "width": "100px",
                 }
               }
-              title="Click user IDIR/BCeID to view User Information.\\\\nClick row to open Access Request details."
+              title="Click user IDIR/BCeID to view User Information. Click row to open Access Request details."
             >
               position 1
             </div>
@@ -589,7 +589,7 @@ exports[`Manage access requests Snapshot matches 1`] = `
                   "width": "100px",
                 }
               }
-              title="Click user IDIR/BCeID to view User Information.\\\\nClick row to open Access Request details."
+              title="Click user IDIR/BCeID to view User Information. Click row to open Access Request details."
             >
               On Hold
             </div>
@@ -609,7 +609,7 @@ exports[`Manage access requests Snapshot matches 1`] = `
                   "width": "200px",
                 }
               }
-              title="Click user IDIR/BCeID to view User Information.\\\\nClick row to open Access Request details."
+              title="Click user IDIR/BCeID to view User Information. Click row to open Access Request details."
             >
               agency 1
             </div>
@@ -629,7 +629,7 @@ exports[`Manage access requests Snapshot matches 1`] = `
                   "width": "200px",
                 }
               }
-              title="Click user IDIR/BCeID to view User Information.\\\\nClick row to open Access Request details."
+              title="Click user IDIR/BCeID to view User Information. Click row to open Access Request details."
             >
               role1
             </div>

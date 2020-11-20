@@ -1,29 +1,22 @@
 /* eslint-disable no-multi-str */
 export const PidTooltip =
-  'Land Title Office PID\n\n\
- The PID (Parcel Identification number) is a unique system-generated number \
- used by the Land Title Office. It is NOT the same identification number (PIN) \
-  as used by Crown Lands.';
+  'Parcel Identifier, a unique nine-digit number that identifies a parcel ' +
+  'in the land title registry of BC. It is NOT the same identification number used by Crown Lands (PIN).';
 
 export const PinTooltip =
-  'PIN\n\n\
-  PINs (or Parcel Identification Number) are the unique numbering system generated \
-  number used by Crown lands and registry (and Gator) to identify a parcel. \
-  It is NOT the same identification number used by the Land Title Office (PID). \
-  PINs are not necessarily limited to 7 digits. \
-  From the Gator Survey Parcel Search by PIN page, \
-  users can enter the PIN number to search for a particular parcel or from the \
-  Parcel Encumbrance Report link, enter the PIN number for a combination report.';
+  'Parcel Identification Number, a unique number used by Crown Lands to identify a parcel of land. ' +
+  'It is NOT the same identification number used by the Land Title and Survey Authority (PID).';
 
-export const senstiveTooltip =
-  'Is the building you’re about to submit/update considered harmful if released according to FOIPPA policy?  Examples would be a women’s transition house.\n\n Click this link for more details.';
+export const sensitiveTooltip = 'Example: women’s transition house. See Policy for more details';
 
 export const streetAddressTooltip =
-  'Enter the address and select the option that matches to auto-populate the location and PID.';
+  'Begin typing address and select correct option to auto-populate available information.';
 
 export const latitudeTooltip =
-  'Click on the map to automatically populate the latitude and longitude.';
+  'Drag and drop the pin on the map to mark the location or enter the latitude and longitude manually.';
 
-export const currentZoningTooltip = 'The current zoning';
+export const SPPtip = 'For use if building in SPP only';
 
-export const potentialZoningTooltip = 'The potential zoning';
+export const locationTip = 'City or Municipality';
+
+export const classificationTip = 'See Inventory Policy for classification definitions';

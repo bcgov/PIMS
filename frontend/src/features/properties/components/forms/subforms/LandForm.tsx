@@ -2,7 +2,6 @@ import { useCallback } from 'react';
 import React from 'react';
 import { FormikProps } from 'formik';
 import { Form, InputGroup, FastInput } from 'components/common/form';
-import { currentZoningTooltip, potentialZoningTooltip } from '../strings';
 
 interface LandProps {
   nameSpace?: string;
@@ -39,17 +38,11 @@ const LandForm = <T extends any>(props: LandProps & FormikProps<T>) => {
       </Form.Row>
       <Form.Row>
         <Form.Label>Current Zoning</Form.Label>
-        <FastInput
-          tooltip={currentZoningTooltip}
-          formikProps={props}
-          disabled={props.disabled}
-          field={withNameSpace('zoning')}
-        />
+        <FastInput formikProps={props} disabled={props.disabled} field={withNameSpace('zoning')} />
       </Form.Row>
       <Form.Row>
         <Form.Label>Potential Zoning</Form.Label>
         <FastInput
-          tooltip={potentialZoningTooltip}
           formikProps={props}
           disabled={props.disabled}
           field={withNameSpace('zoningPotential')}
