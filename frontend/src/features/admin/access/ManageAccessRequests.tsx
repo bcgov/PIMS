@@ -108,7 +108,7 @@ const ManageAccessRequests = () => {
           pageCount={Math.ceil(pagedAccessRequests.total / pageSize)}
           onRequestData={req => dispatch(getUpdateAccessRequestPageIndex(req.pageIndex))}
           onRowClick={showDetails}
-          clickableTooltip="Click user IDIR/BCeID to view User Information.\nClick row to open Access Request details."
+          clickableTooltip="Click user IDIR/BCeID to view User Information. Click row to open Access Request details."
         />
       </div>
     </div>
