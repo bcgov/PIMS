@@ -175,19 +175,14 @@ const useProjectFinancialValues = (project: IProject, editable?: boolean) => {
 export const defaultPropertyColumns: any[] = [
   {
     Header: 'Agency',
-    accessor: 'agencyCode', // accessor is the "key" in the data
+    accessor: (row: IProperty) =>
+      row.subAgency ? `${row.subAgency} (${row.agencyCode})` : row.agencyCode, // accessor is the "key" in the data
     align: 'left',
     clickable: true,
   },
   {
-    Header: 'Sub Agency',
-    accessor: 'subAgency',
-    align: 'left',
-    clickable: true,
-  },
-  {
-    Header: 'Property Name',
-    accessor: 'description',
+    Header: 'Name',
+    accessor: (row: IProperty) => row.name ?? row.pid,
     maxWidth: 170,
     align: 'left',
     clickable: true,
@@ -233,15 +228,15 @@ export const getPropertyColumns = ({
       Cell: editableZoning ? EditableParcelInputCell : (cellInfo: any) => cellInfo.value ?? null,
     },
     {
-      Header: 'Netbook Value',
+      Header: 'Net Book Value',
       accessor: 'netBook',
       Cell: editableFinancials ? getEditableMoneyCell() : MoneyCell,
       minWidth: 145,
       align: 'left',
     },
     {
-      Header: 'Estimated Value',
-      accessor: 'estimated',
+      Header: 'Market Value',
+      accessor: 'market',
       Cell: editableFinancials ? getEditableMoneyCell() : MoneyCell,
       minWidth: 145,
       align: 'left',

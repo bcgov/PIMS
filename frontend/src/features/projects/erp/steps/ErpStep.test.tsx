@@ -234,7 +234,7 @@ describe('ERP Approval Step', () => {
       project.clearanceNotificationSentOn = new Date();
       project.assessed = 1;
       project.netBook = 2;
-      project.estimated = 3;
+      project.market = 3;
 
       const component = render(getApprovalStep(getStore(project)));
       const proceedToSplButton = component.getByText(/Proceed to SPL/);
@@ -249,7 +249,7 @@ describe('ERP Approval Step', () => {
       const project = _.cloneDeep(mockProject);
       project.assessed = 1;
       project.netBook = 2;
-      project.estimated = 3;
+      project.market = 3;
       project.clearanceNotificationSentOn = new Date();
 
       const component = render(getApprovalStep(getStore(project)));

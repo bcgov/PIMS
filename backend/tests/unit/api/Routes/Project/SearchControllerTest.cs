@@ -65,7 +65,7 @@ namespace Pims.Api.Test.Routes.Project
             // Act
             // Assert
             Assert.NotNull(endpoint);
-            endpoint.HasPost("page/filter");
+            endpoint.HasPost("page");
             endpoint.HasPermissions(Permissions.ProjectView);
         }
         #endregion

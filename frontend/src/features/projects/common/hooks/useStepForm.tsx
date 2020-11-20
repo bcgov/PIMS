@@ -9,6 +9,7 @@ import { FormikValues } from 'formik';
 import { AxiosError } from 'axios';
 import { RootState } from 'reducers/rootReducer';
 import { updateWorkflowStatus, updateProject, createProject, IProject } from '..';
+import { Roles } from 'constants/roles';
 
 /** hook providing utilities for project dispose step forms. */
 const useStepForm = () => {
@@ -59,6 +60,10 @@ const useStepForm = () => {
     }
   };
 
+  const canUserOverride = () => {
+    return keycloak.hasRole(Roles.SRES_FINANCIAL_MANAGER); // TODO: This is a temporary way to allow for editing the historical projects and should be replaced with a better implementation.
+  };
+
   const canUserEditForm = (projectAgencyId: number) => {
     return (
       (keycloak.hasAgency(projectAgencyId) && keycloak.hasClaim(Claims.PROJECT_EDIT)) ||
@@ -105,6 +110,7 @@ const useStepForm = () => {
   };
   return {
     onSubmit,
+    canUserOverride,
     canUserEditForm,
     canUserApproveForm,
     onSubmitReview,

@@ -2,6 +2,7 @@ using Pims.Api.Areas.Tools.Controllers;
 using Pims.Core.Extensions;
 using Pims.Core.Test;
 using Pims.Dal.Security;
+using System;
 using System.Diagnostics.CodeAnalysis;
 using Xunit;
 using Model = Pims.Api.Areas.Tools.Models.Import;
@@ -14,7 +15,6 @@ namespace Pims.Api.Test.Routes.Project
     [Trait("category", "unit")]
     [Trait("category", "api")]
     [Trait("area", "tools")]
-    [Trait("group", "ches")]
     [Trait("group", "route")]
     [ExcludeFromCodeCoverage]
     public class ImportControllerTest
@@ -60,7 +60,7 @@ namespace Pims.Api.Test.Routes.Project
         public void ImportProjects_Route()
         {
             // Arrange
-            var endpoint = typeof(ImportController).FindMethod(nameof(ImportController.ImportProjects), typeof(Model.ImportProjectModel[]), typeof(bool), typeof(string));
+            var endpoint = typeof(ImportController).FindMethod(nameof(ImportController.ImportProjects), typeof(Model.ImportProjectModel[]), typeof(bool), typeof(DateTime?), typeof(string));
 
             // Act
             // Assert

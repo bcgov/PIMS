@@ -318,12 +318,6 @@ namespace Pims.Dal.Services
                             this.Context.Entry(existingBuildingFiscal).CurrentValues.SetValues(buildingFiscal);
                         }
                     }
-
-                    // update only an active project with any financial value changes.
-                    if (updateProject && !String.IsNullOrWhiteSpace(existingBuilding.ProjectNumber) && (!this.Context.Projects.Include(p => p.Status).FirstOrDefault(p => p.ProjectNumber == existingBuilding.ProjectNumber)?.IsProjectClosed() ?? false))
-                    {
-                        this.Context.UpdateProjectFinancials(existingBuilding.ProjectNumber);
-                    }
                 }
             }
 
@@ -410,13 +404,6 @@ namespace Pims.Dal.Services
                     {
                         this.Context.ParcelFiscals.Remove(parcelFiscals);
                     }
-                }
-
-                // update only an active project with any financial value changes.
-                if (!String.IsNullOrWhiteSpace(parcel.ProjectNumber)
-                    && (!this.Context.Projects.Include(p => p.Status).FirstOrDefault(p => p.ProjectNumber == parcel.ProjectNumber)?.IsProjectClosed() ?? false))
-                {
-                    this.Context.UpdateProjectFinancials(parcel.ProjectNumber);
                 }
             }
 

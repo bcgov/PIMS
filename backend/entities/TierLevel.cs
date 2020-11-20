@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Pims.Dal.Entities
 {
     /// <summary>
@@ -10,6 +12,11 @@ namespace Pims.Dal.Entities
         /// get/set - A description of the tier.
         /// </summary>
         public string Description { get; set; }
+
+        /// <summary>
+        /// get - Collection of projects.
+        /// </summary>
+        public ICollection<Project> Projects { get; } = new List<Project>();
         #endregion
 
         #region Constructors

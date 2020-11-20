@@ -8,6 +8,7 @@ namespace Pims.Dal.Entities
     public abstract class Property : BaseEntity
     {
         #region Properties
+        #region Identity
         /// <summary>
         /// get/set - The primary key IDENTITY SEED.
         /// </summary>
@@ -47,7 +48,9 @@ namespace Pims.Dal.Entities
         /// get/set - The agency this property belongs to.
         /// /summary>
         public Agency Agency { get; set; }
+        #endregion
 
+        #region Location
         /// <summary>
         /// get/set - The foreign key to the property address.
         /// </summary>
@@ -67,6 +70,7 @@ namespace Pims.Dal.Entities
         /// get/set - The property boundary polygon.
         /// </summary>
         public Geometry Boundary { get; set; }
+        #endregion
 
         /// <summary>
         /// get/set - Whether this property is considered sensitive and should only be visible to users who are part of the owning agency.

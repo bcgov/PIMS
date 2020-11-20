@@ -124,17 +124,17 @@ export const getEvaluationCols = (
       columns: [
         {
           Header: 'Fiscal Year',
-          accessor: 'estimated.fiscalYear',
+          accessor: 'market.fiscalYear',
           maxWidth: 50,
           align: 'left',
-          Cell: getFiscalYear('estimated.fiscalYear'),
+          Cell: getFiscalYear('market.fiscalYear'),
         },
         {
           Header: 'Value',
-          accessor: 'estimated.value',
+          accessor: 'market.value',
           maxWidth: 140,
           align: 'left',
-          Cell: getEditableMoneyCell(disabled, namespace, 'estimated'),
+          Cell: getEditableMoneyCell(disabled, namespace, 'market'),
         },
       ],
     },

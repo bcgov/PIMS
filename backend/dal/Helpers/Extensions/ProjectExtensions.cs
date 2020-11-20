@@ -1,8 +1,7 @@
-using DocumentFormat.OpenXml.Presentation;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using Pims.Core.Extensions;
 using Pims.Dal.Entities;
+using Pims.Dal.Entities.Models;
 using Pims.Dal.Security;
 using System;
 using System.Collections.Generic;
@@ -57,7 +56,7 @@ namespace Pims.Dal.Helpers.Extensions
             if (!String.IsNullOrWhiteSpace(filter.ProjectNumber))
                 query = query.Where(p => EF.Functions.Like(p.ProjectNumber, $"%{filter.ProjectNumber}%"));
             if (!String.IsNullOrWhiteSpace(filter.Name))
-                query = query.Where(p => EF.Functions.Like(p.Name, $"%{filter.Name}%"));
+                query = query.Where(p => EF.Functions.Like(p.Name, $"%{filter.Name}%") || EF.Functions.Like(p.ProjectNumber, $"%{filter.Name}%"));
             if (filter.TierLevelId.HasValue)
                 query = query.Where(p => p.TierLevelId == filter.TierLevelId);
             if (filter.CreatedByMe.HasValue && filter.CreatedByMe.Value)
@@ -100,7 +99,7 @@ namespace Pims.Dal.Helpers.Extensions
             if (filter.Sort?.Any() == true)
                 query = query.OrderByProperty(filter.Sort);
             else
-                query = query.OrderByDescending(p => p.CreatedOn);
+                query = query.OrderByDescending(p => p.ActualFiscalYear).OrderByDescending(p => p.ReportedFiscalYear).OrderByDescending(p => p.ProjectNumber).OrderByDescending(p => p.CreatedOn);
 
             return query;
         }
@@ -279,32 +278,6 @@ namespace Pims.Dal.Helpers.Extensions
         }
 
         /// <summary>
-        /// Update the project financial values for the specified 'projectNumber'.
-        /// </summary>
-        /// <param name="context"></param>
-        /// <param name="projectNumber"></param>
-        public static void UpdateProjectFinancials(this PimsContext context, string projectNumber)
-        {
-            var project = context.Projects
-                .Include(p => p.Properties)
-                .ThenInclude(p => p.Parcel)
-                .ThenInclude(p => p.Evaluations)
-                .Include(p => p.Properties)
-                .ThenInclude(p => p.Parcel)
-                .ThenInclude(p => p.Fiscals)
-                .Include(p => p.Properties)
-                .ThenInclude(p => p.Building)
-                .ThenInclude(b => b.Evaluations)
-                .Include(p => p.Properties)
-                .ThenInclude(p => p.Building)
-                .ThenInclude(b => b.Fiscals)
-                .FirstOrDefault(p => p.ProjectNumber == projectNumber);
-            JsonConvert.PopulateObject(project.Metadata, project);
-
-            project.UpdateProjectFinancials();
-        }
-
-        /// <summary>
         /// Release properties from project, such as during the deny or cancelled statuses
         /// </summary>
         /// <param name="context"></param>
@@ -363,19 +336,6 @@ namespace Pims.Dal.Helpers.Extensions
         }
 
         /// <summary>
-        /// Update the project financial values for the specified 'project'.
-        /// Note - This requires that the referenced project includes all properties and their evaluations and fiscals.
-        /// </summary>
-        /// <param name="project"></param>
-        public static void UpdateProjectFinancials(this Entity.Project project)
-        {
-            var date = project.GetProjectFinancialDate();
-            var year = date.Year;
-            var fiscalYear = date.GetFiscalYear(); // TODO: Unclear if this should be 'Reported' or 'Actual', or current year.  Using the most recent fiscal year based on financial data in project.
-
-        }
-
-        /// <summary>
         /// Determine if the project is editable to the specified 'user'.
         /// </summary>
         /// <param name="project"></param>
@@ -419,11 +379,14 @@ namespace Pims.Dal.Helpers.Extensions
         {
             // Update a project
             var agency = originalProject.Agency;
-            var metadata = originalProject.Metadata;
+            var originalMetadata = context.Deserialize<DisposalProjectMetadata>(originalProject.Metadata); // TODO: Need to test whether automatically overwriting the metadata is correct.
 
+            var createdById = originalProject.CreatedById;
+            var updatedById = originalProject.UpdatedById;
             context.Entry(originalProject).CurrentValues.SetValues(updatedProject);
-            originalProject.Agency = agency; // TODO: this should not be necessary.
-            originalProject.Metadata = metadata;
+            originalProject.Agency = agency; // Don't want to allow agency to change through this method.
+            originalProject.CreatedById = updatedById; // Don't want these updated externally.
+            originalProject.UpdatedById = updatedById; // Don't want these updated externally.
             context.SetOriginalRowVersion(originalProject);
 
             var agencies = originalProject.Agency.ParentId.HasValue ? new[] { originalProject.AgencyId } : context.Agencies.Where(a => a.ParentId == originalProject.AgencyId || a.Id == originalProject.AgencyId).Select(a => a.Id).ToArray();
@@ -498,7 +461,8 @@ namespace Pims.Dal.Helpers.Extensions
                                     context.Entry(existingEvaluation).CurrentValues.SetValues(evaluation);
                                 }
                             }
-                            existingProperty.Parcel.RemoveEvaluationsWithinOneYear(property.Parcel, originalProject.DisposedOn);
+
+                            existingProperty.Parcel.RemoveEvaluationsWithinOneYear(property.Parcel, originalMetadata.DisposedOn);
 
                             context.Entry(existingProperty.Parcel).Collection(p => p.Fiscals).Load();
                             foreach (var fiscal in property.Parcel.Fiscals)
@@ -539,7 +503,7 @@ namespace Pims.Dal.Helpers.Extensions
                                     context.Entry(existingEvaluation).CurrentValues.SetValues(evaluation);
                                 }
                             }
-                            existingProperty.Building.RemoveEvaluationsWithinOneYear(property.Building, originalProject.DisposedOn);
+                            existingProperty.Building.RemoveEvaluationsWithinOneYear(property.Building, originalMetadata.DisposedOn);
 
                             context.Entry(existingProperty.Building).Collection(p => p.Fiscals).Load();
                             foreach (var fiscal in property.Building.Fiscals)
@@ -639,12 +603,6 @@ namespace Pims.Dal.Helpers.Extensions
             foreach (var task in toStatus.Tasks.Where(t => !taskIds.Contains(t.Id)))
             {
                 originalProject.Tasks.Add(new Entity.ProjectTask(updatedProject, task));
-            }
-
-            // Update project financials if the project is still active.
-            if (!updatedProject.IsProjectClosed())
-            {
-                originalProject.UpdateProjectFinancials();
             }
         }
 

@@ -232,6 +232,13 @@ INSERT INTO dbo.[Agencies] (
     , 'BC Assessment'
     , 0
     , 0
+), (
+    42 -- Added after release.
+    , 8
+    , 'PRHC'
+    , 'Provincial Rental Housing Corporation'
+    , 0
+    , 0
 )
 
 -- Child Agencies for MAG.
@@ -247,6 +254,13 @@ INSERT INTO dbo.[Agencies] (
     , 11
     , 'ICBC'
     , 'Insurance Coporation of BC'
+    , 0
+    , 0
+),(
+    51 -- Added after release.
+    , 11
+    , 'LDB'
+    , 'BC Liquor Distribution Branch'
     , 0
     , 0
 )
@@ -509,7 +523,14 @@ INSERT INTO dbo.[Agencies] (
     131
     , 9
     , 'BCT'
-    , 'BC Transit '
+    , 'BC Transit'
+    , 0
+    , 0
+),(
+    132 -- Added after release.
+    , 9
+    , 'BCTFA'
+    , 'BC Transportation Financing Authority'
     , 0
     , 0
 )

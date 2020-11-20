@@ -34,7 +34,7 @@ const mockProject: IProject = {
       classificationId: CLASSIFICATIONS.SurplusActive,
       constructionTypeId: 0,
       description: '',
-      estimated: 0,
+      market: 0,
       floorCount: 0,
       id: 1,
       isSensitive: false,

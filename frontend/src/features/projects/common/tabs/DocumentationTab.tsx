@@ -12,6 +12,7 @@ import {
 } from '../../common';
 
 interface IDocumentationTabProps {
+  canOverride?: boolean;
   isReadOnly?: boolean;
   appraisalTaskStatusCode?: string;
 }
@@ -21,6 +22,7 @@ interface IDocumentationTabProps {
  * @param param0 IDocumentationTabProps.
  */
 const DocumentationTab: React.FunctionComponent<IDocumentationTabProps> = ({
+  canOverride,
   isReadOnly,
   appraisalTaskStatusCode,
 }: IDocumentationTabProps) => {
@@ -31,7 +33,7 @@ const DocumentationTab: React.FunctionComponent<IDocumentationTabProps> = ({
 
   return (
     <Container fluid>
-      <DocumentationForm tasks={documentationTasks} isReadOnly={true} />
+      <DocumentationForm tasks={documentationTasks} isReadOnly={!canOverride} />
       <AppraisalCheckListForm isReadOnly={isReadOnly} taskStatusCode={appraisalTaskStatusCode} />
       <FirstNationsCheckListForm isReadOnly={isReadOnly} />
       <ProjectNotes disabled={true} />

@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
 using Pims.Dal.Entities;
+using Pims.Dal.Entities.Models;
 using Pims.Dal.Exceptions;
 using Pims.Dal.Helpers.Extensions;
 using Pims.Dal.Security;
@@ -19,7 +19,6 @@ namespace Pims.Dal.Services
     public class ProjectReportService : BaseService<ProjectReport>, IProjectReportService
     {
         #region Variables
-        private readonly PimsOptions _options;
         #endregion
 
         #region Constructors
@@ -29,12 +28,9 @@ namespace Pims.Dal.Services
         /// <param name="dbContext"></param>
         /// <param name="user"></param>
         /// <param name="service"></param>
-        /// <param name="notifyService"></param>
-        /// <param name="options"></param>
         /// <param name="logger"></param>
-        public ProjectReportService(PimsContext dbContext, ClaimsPrincipal user, IPimsService service, INotificationService notifyService, IOptions<PimsOptions> options, ILogger<ProjectService> logger) : base(dbContext, user, service, logger)
+        public ProjectReportService(PimsContext dbContext, ClaimsPrincipal user, IPimsService service, ILogger<ProjectService> logger) : base(dbContext, user, service, logger)
         {
-            _options = options.Value;
         }
         #endregion
 
@@ -96,7 +92,7 @@ namespace Pims.Dal.Services
             //This may occur if a user refreshes their report, and changes the 'From' date without saving.
             if (toSnapshots.Count() == 0)
             {
-                return GenerateSnapshots((DateTime) report.To, report.From);
+                return GenerateSnapshots(report.From, (DateTime) report.To);
             }
 
             var fromSnapshots = currentSnapshots.Where(s => s.SnapshotOn == report.From).ToDictionary(s => (int?)s.ProjectId, s => s);
@@ -104,8 +100,11 @@ namespace Pims.Dal.Services
 
             foreach (ProjectSnapshot snapshot in toSnapshots)
             {
-                var previousSnapshot = fromSnapshots.FirstOrDefault(s => s.Key == snapshot.ProjectId);
-                snapshot.BaselineIntegrity = (snapshot?.NetProceeds ?? 0) - (previousSnapshot.Value?.NetProceeds ?? 0);
+                var metadata = !String.IsNullOrWhiteSpace(snapshot.Metadata) ? this.Context.Deserialize<DisposalProjectSnapshotMetadata>(snapshot.Metadata) : new DisposalProjectSnapshotMetadata();
+                var prevSnapshot = fromSnapshots.GetValueOrDefault(snapshot.ProjectId);
+                var prevMetadata = prevSnapshot != null ? this.Context.Deserialize<DisposalProjectMetadata>(prevSnapshot.Metadata) : null;
+                metadata.BaselineIntegrity = (metadata?.NetProceeds ?? 0) - (prevMetadata?.NetProceeds ?? 0);
+                snapshot.Metadata = this.Context.Serialize(metadata);
             }
 
             return toSnapshots;
@@ -160,7 +159,7 @@ namespace Pims.Dal.Services
             }
             this.Context.Add(report);
 
-            this.Context.ProjectSnapshots.AddRange(GenerateSnapshots((DateTime)report.To, report.From));
+            this.Context.ProjectSnapshots.AddRange(GenerateSnapshots(report.From, (DateTime)report.To));
 
             this.Context.CommitTransaction();
 
@@ -188,10 +187,13 @@ namespace Pims.Dal.Services
             if (originalReport.IsFinal && report.IsFinal) throw new InvalidOperationException($"Unable to update FINAL project reports.");
             if (report.From == report.To) throw new InvalidOperationException($"Project report start and end dates cannot be the same.");
 
-            //If the report 'To' date has changed regenerate all the snapshots based on that date.
-            if (!originalReport.To.Equals(report.To))
+            // If the report 'To' date has changed regenerate all the snapshots based on that date.
+            var originalTo = (DateTime?)this.Context.Entry(originalReport).OriginalValues[nameof(ProjectReport.To)];
+            if (!originalTo.Equals(report.To))
             {
-                this.Context.ProjectSnapshots.AddRange(GenerateSnapshots((DateTime)report.To, report.From));
+                var snapshots = GenerateSnapshots(report.From, report.To.Value, originalTo);
+                this.Context.ProjectSnapshots.UpdateRange(snapshots.Where(s => s.Id != 0));
+                this.Context.ProjectSnapshots.AddRange(snapshots.Where(s => s.Id == 0));
             }
 
             this.Context.Entry(originalReport).CurrentValues.SetValues(report);
@@ -214,7 +216,7 @@ namespace Pims.Dal.Services
             this.User.ThrowIfNotAuthorized(Permissions.ReportsSpl);
             var report = Get(reportId);
 
-            var generatedSnapshots = GenerateSnapshots(DateTime.UtcNow, report.From);
+            var generatedSnapshots = GenerateSnapshots(report.From, DateTime.UtcNow);
 
             return generatedSnapshots;
         }
@@ -241,42 +243,55 @@ namespace Pims.Dal.Services
             this.Context.CommitTransaction();
         }
 
-
         /// <summary>
-        /// Generate snapshots for all SPL projects using the passed 'to' date as the snapshot date.
+        /// Generate snapshots for all SPL projects.
+        /// To compare prior snapshots use the specified 'from' date.
+        /// To update prior snapshots use the specified 'originalTo' date.
         /// </summary>
+        /// <param name="from"></param>
         /// <param name="to"></param>
+        /// <param name="originalTo"></param>
         /// <returns></returns>
-        private IEnumerable<ProjectSnapshot> GenerateSnapshots(DateTime to, DateTime? from)
+        private IEnumerable<ProjectSnapshot> GenerateSnapshots(DateTime? from, DateTime to, DateTime? originalTo = null)
         {
             var splProjects = this.Context.Projects
                 .Include(p => p.Agency)
                 .Include(p => p.Status)
                 .Where(p => p.Workflow.Code == "SPL");
 
-            Dictionary<int?, ProjectSnapshot> fromSnapshots = new Dictionary<int?, ProjectSnapshot>();
-            if (from != null) {
+            var fromSnapshots = new Dictionary<int, ProjectSnapshot>();
+            if (from.HasValue)
+            {
                 fromSnapshots = this.Context.ProjectSnapshots
-                    .Include(s => s.Project).ThenInclude(p => p.Agency)
-                    .Include(s => s.Project).ThenInclude(p => p.Status)
                     .Where(s => s.SnapshotOn == from)
-                    .ToDictionary(s => (int?)s.ProjectId, s => s);
+                    .ToDictionary(s => s.ProjectId, s => s);
             }
 
-            IEnumerable<ProjectSnapshot> projectSnapshots = new HashSet<ProjectSnapshot>();
-            
+            var toSnapshots = new Dictionary<int, ProjectSnapshot>();
+            if (originalTo.HasValue)
+            {
+                toSnapshots = this.Context.ProjectSnapshots
+                    .Where(s => s.SnapshotOn == originalTo)
+                    .ToDictionary(s => s.ProjectId, s => s);
+            }
+
+            var projectSnapshots = new HashSet<ProjectSnapshot>();
+
             foreach (Project project in splProjects)
             {
-                JsonConvert.PopulateObject(project.Metadata ?? "{}", project);
-                ProjectSnapshot snapshot = new ProjectSnapshot(project);
+                var metadata = !String.IsNullOrWhiteSpace(project.Metadata) ? this.Context.Deserialize<DisposalProjectSnapshotMetadata>(project.Metadata) : new DisposalProjectSnapshotMetadata();
+                var prevSnapshot = fromSnapshots.GetValueOrDefault(project.Id);
+                var prevMetadata = prevSnapshot != null ? this.Context.Deserialize<DisposalProjectSnapshotMetadata>(prevSnapshot.Metadata) : new DisposalProjectSnapshotMetadata();
+
+                metadata.BaselineIntegrity = (metadata?.NetProceeds ?? 0) - (prevMetadata?.NetProceeds ?? 0);
+
+                var snapshot = toSnapshots.GetValueOrDefault(project.Id) ?? new ProjectSnapshot(project);
                 snapshot.SnapshotOn = to;
-                snapshot.BaselineIntegrity = project.NetProceeds ?? 0 - (fromSnapshots.GetValueOrDefault(project.Id)?.NetProceeds ?? 0);
-
-                projectSnapshots = projectSnapshots.Append(snapshot);
+                snapshot.Metadata = this.Context.Serialize(metadata);
+                projectSnapshots.Add(snapshot);
             }
-            return projectSnapshots;
+            return projectSnapshots.AsEnumerable();
         }
-
         #endregion
     }
 }

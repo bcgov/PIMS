@@ -13,7 +13,7 @@ export interface ISnapshot {
   project?: IProject;
   snapshotOn: string;
   netBook: number;
-  estimated: number;
+  market: number;
   assessed: number;
   salesCost: number;
   netProceeds: number;
