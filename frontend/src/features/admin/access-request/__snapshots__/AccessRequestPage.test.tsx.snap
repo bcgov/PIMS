@@ -165,48 +165,73 @@ exports[`AccessRequestPage functionality renders RequestAccessPage correctly 1`]
           />
         </div>
         <div
-          className="required form-group"
+          className="check-roles form-group"
         >
           <label
             className="form-label"
-            htmlFor="input-role"
           >
-            Role
+            Roles
+             
+            <a
+              href="https://github.com/bcgov/PIMS/wiki/Architecture-Security"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Role Descriptions
+            </a>
           </label>
-          <span
-            className="required"
+          <div
+            className="required form-group"
           >
-            *
-          </span>
-          <select
-            className="form-select form-control"
-            id="input-role"
-            name="role"
-            onBlur={[Function]}
-            onChange={[Function]}
-            required={true}
-          >
-            <option
-              value=""
+            <label
+              className="form-label"
+              htmlFor="input-role"
             >
-              Please Select
-            </option>
-            <option
-              className="option"
-              value="1"
+              Role
+            </label>
+            <span
+              className="required"
             >
-              roleVal
-            </option>
-          </select>
+              *
+            </span>
+            <select
+              className="form-select form-control"
+              id="input-role"
+              name="role"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              onMouseOut={[Function]}
+              onMouseOver={[Function]}
+              required={true}
+            >
+              <option
+                value=""
+              >
+                Please Select
+              </option>
+              <option
+                className="option"
+                value="1"
+              >
+                roleVal
+              </option>
+            </select>
+          </div>
         </div>
         <div
-          className="form-group"
+          className="required form-group"
         >
           <label
             className="form-label"
             htmlFor="input-note"
           >
             Notes
+            <span
+              className="required"
+            >
+              *
+            </span>
           </label>
           <textarea
             className="form-control"
@@ -214,7 +239,8 @@ exports[`AccessRequestPage functionality renders RequestAccessPage correctly 1`]
             name="note"
             onBlur={[Function]}
             onChange={[Function]}
-            placeholder="Please specify why you need access to this site."
+            placeholder="Please specify why you need access to PIMS and include your manager's name."
+            required={true}
             value=""
           />
         </div>
