@@ -81,8 +81,9 @@ const InformationForm: FunctionComponent<InformationFormProps> = (props: Informa
       <Form.Row>
         <Form.Label></Form.Label>
         <div className="input-medium">
-          <p>Would this information be harmful if released?&nbsp;</p>
           <p>
+            Would this information be harmful if released?&nbsp;
+            <br />
             <TooltipIcon toolTipId="sensitive-harmful" toolTip={sensitiveTooltip} />
             <a target="_blank" rel="noopener noreferrer" href={HARMFUL_DISCLOSURE_URL}>
               Policy

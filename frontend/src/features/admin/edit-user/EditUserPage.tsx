@@ -69,7 +69,7 @@ const EditUserPage = (props: IEditUserPageProps) => {
       </Form.Label>
       <TooltipWrapper
         toolTipId="select-roles-tip"
-        toolTip="To select multiple roles, hold Ctrl and select options."
+        toolTip="To select multiple roles, hold Ctrl and click options."
       >
         <Select
           field="roles"
@@ -211,7 +211,7 @@ const EditUserPage = (props: IEditUserPageProps) => {
 
                 {checkRoles}
 
-                <Label>Note</Label>
+                <Label>Notes</Label>
                 <Input
                   as="textarea"
                   field="note"
