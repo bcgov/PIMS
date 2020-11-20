@@ -430,7 +430,6 @@ const Map: React.FC<MapProps> = ({
                     </Popup>
                   )}
                   <LegendControl />
-
                   <LayersControl position="topright">
                     <LayersControl.Overlay checked name="Parcel Boundaries">
                       <WMSTileLayer
