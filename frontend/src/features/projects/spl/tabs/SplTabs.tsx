@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Tab } from 'react-bootstrap';
-import { SPPApprovalTabs, ReviewWorkflowStatus, IProject } from '../../common';
+import { SPPApprovalTabs, ReviewWorkflowStatus, IProject, useStepForm } from '../../common';
 import { DocumentationTab } from '../../common';
 import { SurplusPropertyInformationTab, SplTab, CloseOutFormTab } from '..';
 import { useFormikContext } from 'formik';
@@ -33,6 +33,8 @@ const SplTabs: React.FunctionComponent<ISplTabsProps> = ({
   setSubmitStatusCode,
 }) => {
   const { errors, values } = useFormikContext<IProject>();
+  const { canUserOverride } = useStepForm();
+  const canOverride = canUserOverride();
   return (
     <React.Fragment>
       <ErrorTabs setCurrentTab={setCurrentTab} currentTab={currentTab}>
@@ -49,6 +51,7 @@ const SplTabs: React.FunctionComponent<ISplTabsProps> = ({
           tabClassName={isTabInError(errors, SPPApprovalTabs.documentation)}
         >
           <DocumentationTab
+            canOverride={canOverride}
             isReadOnly={isReadOnly}
             appraisalTaskStatusCode={ReviewWorkflowStatus.Disposed}
           />
@@ -63,7 +66,7 @@ const SplTabs: React.FunctionComponent<ISplTabsProps> = ({
           tabClassName={isTabInError(errors, SPPApprovalTabs.erp)}
         >
           <EnhancedReferralTab
-            isReadOnly={true}
+            isReadOnly={!canOverride}
             setSubmitStatusCode={noop}
             goToGreTransferred={noop}
           />

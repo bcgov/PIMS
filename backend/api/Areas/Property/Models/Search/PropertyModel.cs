@@ -134,14 +134,14 @@ namespace Pims.Api.Areas.Property.Models.Search
         public string Postal { get; set; }
 
         /// <summary>
-        /// get/set - The property estimated value.
+        /// get/set - The property market value.
         /// </summary>
-        public decimal Estimated { get; set; }
+        public decimal Market { get; set; }
 
         /// <summary>
-        /// get/set - The fiscal year of the estimated value.
+        /// get/set - The fiscal year of the market value.
         /// </summary>
-        public int? EstimatedFiscalYear { get; set; }
+        public int? MarketFiscalYear { get; set; }
 
         /// <summary>
         /// get/set - The property netbook value.

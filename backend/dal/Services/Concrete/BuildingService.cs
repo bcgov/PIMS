@@ -198,12 +198,6 @@ namespace Pims.Dal.Services
 
             this.Context.Entry(existingBuilding).CurrentValues.SetValues(building);
 
-            // update only an active project with any financial value changes.
-            if (!String.IsNullOrWhiteSpace(existingBuilding.ProjectNumber) && (!this.Context.Projects.Include(p => p.Status).FirstOrDefault(p => p.ProjectNumber == existingBuilding.ProjectNumber)?.IsProjectClosed() ?? false))
-            {
-                this.Context.UpdateProjectFinancials(existingBuilding.ProjectNumber);
-            }
-
             this.Context.Buildings.Update(existingBuilding); // TODO: Must detach entity before returning it.
             this.Context.CommitTransaction();
             return existingBuilding;

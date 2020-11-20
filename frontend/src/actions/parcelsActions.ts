@@ -10,11 +10,12 @@ export enum PropertyTypes {
 }
 
 export interface IProperty {
-  id: number;
-  propertyTypeId: PropertyTypes;
-  latitude: number;
-  longitude: number;
+  id: number | '';
+  propertyTypeId?: PropertyTypes;
+  latitude: number | '';
+  longitude: number | '';
   name?: string;
+  description?: string;
   projectNumber?: string;
   projectStatus?: string;
 }
@@ -60,15 +61,9 @@ export interface IAddress {
   postal: string;
 }
 
-export interface IBuilding {
-  id: number;
+export interface IBuilding extends IProperty {
   parcelId: number;
-  projectNumber?: string;
-  name: string;
-  description: string;
   address: IAddress;
-  latitude: number | '';
-  longitude: number | '';
   buildingFloorCount?: number | '';
   buildingConstructionType?: string;
   buildingConstructionTypeId: number | '';
@@ -109,17 +104,11 @@ export interface IEvaluation {
   rowVersion?: string;
 }
 
-export interface IParcel {
-  id?: number | '';
+export interface IParcel extends IProperty {
   pid?: string;
   pin?: number | '';
-  projectNumber?: string;
-  latitude: number | '';
-  longitude: number | '';
   classification?: string;
   classificationId: number | '';
-  name: string;
-  description: string;
   address?: IAddress;
   landArea: number | '';
   landLegalDescription: string;

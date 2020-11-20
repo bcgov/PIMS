@@ -55,13 +55,13 @@ export const columns: any[] = [
   },
   {
     Header: 'CMV',
-    accessor: 'estimated',
+    accessor: 'market',
     align: 'right',
     responsive: true,
     width: spacing.small,
     minWidth: 80,
     Cell: (props: CellProps<ISnapshot>) => {
-      return formatMoney(props.row.original.estimated);
+      return formatMoney(props.row.original.market);
     },
   },
   {

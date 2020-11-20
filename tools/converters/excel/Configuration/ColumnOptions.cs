@@ -35,7 +35,7 @@ namespace Pims.Tools.Converters.ExcelConverter.Configuration
         /// get/set - An array of columns names to pull values from to pass as arguments to the converter.
         /// The order must batch the converter function arguments order.
         /// </summary>
-        public string[] ConverterArgs { get; set; }
+        public ActionArgumentOptions[] ConverterArgs { get; set; }
 
         /// <summary>
         /// get/set - The default value if none is provided.
@@ -57,6 +57,11 @@ namespace Pims.Tools.Converters.ExcelConverter.Configuration
         /// The order generally is only important if the converter returns a tuple.
         /// </summary>
         public string[] OutputTo { get; set; }
+
+        /// <summary>
+        /// get/set - Whether the output should be to an array.
+        /// </summary>
+        public bool OutputToArray { get; set; }
         #endregion
     }
 }

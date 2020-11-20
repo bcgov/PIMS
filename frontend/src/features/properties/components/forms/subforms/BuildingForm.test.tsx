@@ -16,6 +16,8 @@ import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 import pretty from 'pretty';
 import { noop } from 'lodash';
+import { createMemoryHistory } from 'history';
+import { Router } from 'react-router-dom';
 
 const mockAxios = new MockAdapter(axios);
 mockAxios.onAny().reply(200, {});
@@ -99,6 +101,7 @@ const lCodes = {
 };
 
 const mockStore = configureMockStore([thunk]);
+const history = createMemoryHistory();
 const store = mockStore({
   [reducerTypes.LOOKUP_CODE]: lCodes,
 });
@@ -108,23 +111,27 @@ describe('sub-form BuildingForm functionality', () => {
     cleanup();
   });
   const getBuildingForm = (initialValues: IFormBuilding, onSubmit: any) => {
+    history.location.pathname = '/mapview/1';
     return (
       <Provider store={store}>
-        <Formik
-          initialValues={initialValues as any}
-          onSubmit={onSubmit}
-          validationSchema={YupSchema.Building}
-        >
-          {formikProps => (
-            <Form>
-              <BuildingForm {...formikProps} setMovingPinNameSpace={noop}></BuildingForm>
-              <Button type="submit">Submit</Button>
-            </Form>
-          )}
-        </Formik>
+        <Router history={history}>
+          <Formik
+            initialValues={initialValues as any}
+            onSubmit={onSubmit}
+            validationSchema={YupSchema.Building}
+          >
+            {formikProps => (
+              <Form>
+                <BuildingForm {...formikProps} setMovingPinNameSpace={noop}></BuildingForm>
+                <Button type="submit">Submit</Button>
+              </Form>
+            )}
+          </Formik>
+        </Router>
       </Provider>
     );
   };
+
   it('loads initial building data', () => {
     const pagedBuildingForms = getBuildingForm(mockBuilding, () => {});
     const { container } = render(pagedBuildingForms);

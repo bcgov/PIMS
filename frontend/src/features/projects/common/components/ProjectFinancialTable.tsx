@@ -19,7 +19,7 @@ const ProjectFinancialTable = ({ disabled }: { disabled: boolean }) => {
             <Form.Label column md={4}>
               Estimated Market Value <span className="required">*</span>
             </Form.Label>
-            <FastCurrencyInput field="estimated" formikProps={context} disabled={disabled} />
+            <FastCurrencyInput field="market" formikProps={context} disabled={disabled} />
           </Row>
         </Col>
         <Col md={4}>

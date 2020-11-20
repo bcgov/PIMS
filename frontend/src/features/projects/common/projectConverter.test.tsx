@@ -23,7 +23,7 @@ const createAppraisal = (date: Moment): IEvaluation => {
 
 const createFiscal = (year: number): IFiscal => {
   return {
-    key: FiscalKeys.Estimated,
+    key: FiscalKeys.Market,
     value: 123,
     fiscalYear: year,
   };
@@ -67,14 +67,14 @@ describe('projectConverter function tests', () => {
   });
   describe('getCurrentFiscal', () => {
     it('returns undefined if passed an empty array', () => {
-      expect(getCurrentFiscal([], FiscalKeys.Estimated)).toBeUndefined();
+      expect(getCurrentFiscal([], FiscalKeys.Market)).toBeUndefined();
     });
     it('returns the most recent fiscal', () => {
       const fiscals = [];
       fiscals.push(createFiscal(2020));
       fiscals.push(createFiscal(2021));
       fiscals.push(createFiscal(2018));
-      expect(getCurrentFiscal(fiscals, FiscalKeys.Estimated)).toBe(fiscals[1]);
+      expect(getCurrentFiscal(fiscals, FiscalKeys.Market)).toBe(fiscals[1]);
     });
   });
   describe('getMostRecentEvaluation', () => {
