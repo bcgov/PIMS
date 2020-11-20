@@ -5,6 +5,7 @@ import { DisplayError } from './DisplayError';
 import { SelectOption } from './Select';
 import { formikFieldMemo } from 'utils';
 import classNames from 'classnames';
+import TooltipIcon from 'components/common/TooltipIcon';
 
 type RequiredAttributes = {
   /** The field name */
@@ -38,6 +39,8 @@ type OptionalAttributes = {
   custom?: boolean;
   /** force formik errors to display even if this field hasn't been touched */
   errorPrompt?: boolean;
+  /** Tooltip text */
+  tooltip?: string;
 };
 
 // only "field" and "options" are required for <Select>, the rest are optional
@@ -63,6 +66,7 @@ export const FastSelect: React.FC<FastSelectProps> = memo(
     custom,
     type,
     errorPrompt,
+    tooltip,
     formikProps: {
       values,
       errors,
@@ -143,6 +147,7 @@ export const FastSelect: React.FC<FastSelectProps> = memo(
       >
         {!!label && <Form.Label>{label}</Form.Label>}
         {!!required && <span className="required">*</span>}
+        {!!tooltip && <TooltipIcon toolTipId="fastSelect-tip" toolTip={tooltip} />}
         <Form.Control
           as={asElement}
           name={field}

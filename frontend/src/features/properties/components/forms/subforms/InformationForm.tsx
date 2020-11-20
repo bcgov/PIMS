@@ -10,9 +10,9 @@ import {
   Check,
 } from 'components/common/form';
 import { useFormikContext } from 'formik';
-import TooltipWrapper from 'components/common/TooltipWrapper';
+import TooltipIcon from 'components/common/TooltipIcon';
 import { HARMFUL_DISCLOSURE_URL } from 'constants/strings';
-import { senstiveTooltip as sensitiveTooltip } from '../strings';
+import { sensitiveTooltip, classificationTip } from '../strings';
 
 interface InformationFormProps {
   nameSpace?: string;
@@ -55,6 +55,7 @@ const InformationForm: FunctionComponent<InformationFormProps> = (props: Informa
           placeholder="Must Select One"
           field={withNameSpace('classificationId')}
           options={props.classifications}
+          tooltip={classificationTip}
         />
       </Form.Row>
       <Form.Row>
@@ -80,13 +81,12 @@ const InformationForm: FunctionComponent<InformationFormProps> = (props: Informa
       <Form.Row>
         <Form.Label></Form.Label>
         <div className="input-medium">
+          <p>Would this information be harmful if released?&nbsp;</p>
           <p>
-            Harmful if Released?&nbsp;
-            <TooltipWrapper toolTipId="sensitive-harmful" toolTip={sensitiveTooltip}>
-              <a target="_blank" rel="noopener noreferrer" href={HARMFUL_DISCLOSURE_URL}>
-                Policy
-              </a>
-            </TooltipWrapper>
+            <TooltipIcon toolTipId="sensitive-harmful" toolTip={sensitiveTooltip} />
+            <a target="_blank" rel="noopener noreferrer" href={HARMFUL_DISCLOSURE_URL}>
+              Policy
+            </a>
           </p>
           <Check
             type="radio"
