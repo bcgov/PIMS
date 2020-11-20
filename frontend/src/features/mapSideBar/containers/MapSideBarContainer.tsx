@@ -12,12 +12,22 @@ import { Spinner } from 'react-bootstrap';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
 import * as parcelsActions from 'actions/parcelsActions';
 import { LeafletMouseEvent } from 'leaflet';
-import { BuildingForm, SubmitPropertySelector } from '../SidebarContents';
+import { BuildingForm, SubmitPropertySelector, LandForm } from '../SidebarContents';
 import { BuildingSvg, LandSvg } from 'components/common/Icons';
+import { FormikValues } from 'formik';
+import { useState } from 'react';
+import useGeocoder from 'features/properties/hooks/useGeocoder';
+import { isMouseEventRecent } from 'utils';
+import {
+  handleParcelDataLayerResponse,
+  PARCELS_LAYER_URL,
+  useLayerQuery,
+} from 'components/maps/leaflet/LayerPopup';
 
 interface IMapSideBarContainerProps {
   refreshParcels: Function;
   properties: IProperty[];
+  movingPinNameSpaceProp?: string;
 }
 
 /**
@@ -26,6 +36,7 @@ interface IMapSideBarContainerProps {
 const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = ({
   refreshParcels,
   properties,
+  movingPinNameSpaceProp,
 }) => {
   const {
     showSideBar,
@@ -47,6 +58,70 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
     state => state.parcel?.parcelDetail as IPropertyDetail,
   );
   const [cachedParcelDetail, setCachedParcelDetail] = React.useState<IParcel | null>(null);
+
+  const [movingPinNameSpace, setMovingPinNameSpace] = useState<string | undefined>(
+    movingPinNameSpaceProp,
+  );
+  const leafletMouseEvent = useSelector<RootState, LeafletMouseEvent | null>(
+    state => state.leafletClickEvent?.mapClickEvent,
+  );
+  const [propertyType, setPropertyType] = useState('');
+  const formikRef = React.useRef<FormikValues>();
+  const { handleGeocoderChanges } = useGeocoder({ formikRef });
+  const parcelsService = useLayerQuery(PARCELS_LAYER_URL);
+
+  const handlePidChange = (pid: string) => {
+    const formattedPid = pid.replace(/-/g, '');
+    const response = parcelsService.findByPid(formattedPid);
+    handleParcelDataLayerResponse(response, dispatch);
+  };
+  const handlePinChange = (pin: string) => {
+    const response = parcelsService.findByPin(pin);
+    handleParcelDataLayerResponse(response, dispatch);
+  };
+
+  React.useEffect(() => {
+    if (movingPinNameSpace !== undefined) {
+      document.body.className = propertyType === 'building' ? 'building-cursor' : 'parcel-cursor';
+    }
+    return () => {
+      //make sure to reset the cursor when this component is disposed.
+      document.body.className = '';
+    };
+  }, [propertyType, movingPinNameSpace]);
+
+  //Add a pin to the map where the user has clicked.
+  useDeepCompareEffect(() => {
+    //If we click on the map, create a new pin at the click location.
+    if (
+      movingPinNameSpace !== undefined &&
+      !!formikRef?.current &&
+      isMouseEventRecent(leafletMouseEvent?.originalEvent)
+    ) {
+      let nameSpace = (movingPinNameSpace?.length ?? 0) > 0 ? `${movingPinNameSpace}.` : '';
+      if (propertyType === 'land') {
+        formikRef.current.setFieldValue(
+          `${nameSpace}data.latitude`,
+          leafletMouseEvent?.latlng.lat || 0,
+        );
+        formikRef.current.setFieldValue(
+          `${nameSpace}data.longitude`,
+          leafletMouseEvent?.latlng.lng || 0,
+        );
+      } else {
+        formikRef.current.setFieldValue(
+          `data.buildings.0.latitude`,
+          leafletMouseEvent?.latlng.lat || 0,
+        );
+        formikRef.current.setFieldValue(
+          `data.buildings.0.longitude`,
+          leafletMouseEvent?.latlng.lng || 0,
+        );
+      }
+
+      setMovingPinNameSpace(undefined);
+    }
+  }, [dispatch, leafletMouseEvent]);
 
   useDeepCompareEffect(() => {
     if (showSideBar && parcelId) {
@@ -127,9 +202,30 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
   const render = (): React.ReactNode => {
     switch (context) {
       case SidebarContextType.ADD_BUILDING:
-        return <BuildingForm />;
+        if (propertyType !== 'building') {
+          setPropertyType('building');
+        }
+        return (
+          <BuildingForm
+            formikRef={formikRef}
+            setMovingPinNameSpace={setMovingPinNameSpace}
+            nameSpace="data.buildings"
+            index="0"
+          />
+        );
       case SidebarContextType.ADD_RAW_LAND:
-        return <BuildingForm />;
+        if (propertyType !== 'land') {
+          setPropertyType('land');
+        }
+        return (
+          <LandForm
+            setMovingPinNameSpace={setMovingPinNameSpace}
+            formikRef={formikRef}
+            handleGeocoderChanges={handleGeocoderChanges}
+            handlePidChange={handlePidChange}
+            handlePinChange={handlePinChange}
+          />
+        );
       case SidebarContextType.ADD_PROPERTY_TYPE_SELECTOR:
         return <SubmitPropertySelector addBuilding={addBuilding} addRawLand={addRawLand} />;
       default:

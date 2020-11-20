@@ -141,6 +141,7 @@ export class Spiderfier {
   }
 
   private handleChildMarkerClick(e: LeafletMouseEvent) {
+    e.originalEvent.stopPropagation();
     const marker = e?.target as Marker;
     const geojson = marker?.feature;
     const newPos = marker?.getLatLng();

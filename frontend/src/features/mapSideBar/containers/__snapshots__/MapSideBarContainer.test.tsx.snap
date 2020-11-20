@@ -60,13 +60,9 @@ exports[`Parcel Detail MapSideBarContainer basic data loading and display parcel
             <div id=\\"approvalTabs-tabpane-parcel\\" aria-labelledby=\\"approvalTabs-tab-parcel\\" role=\\"tabpanel\\" aria-hidden=\\"false\\" class=\\"fade tab-pane active show\\">
               <div class=\\"row no-gutters\\">
                 <div class=\\"col-md-6\\">
-                  <div class=\\"d-inline-flex flex-nowrap form-row\\"><label class=\\"required form-label\\">PID</label>
-                    <div class=\\"form-group\\"><svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 512 512\\" class=\\"tooltip-icon\\" height=\\"1em\\" width=\\"1em\\" xmlns=\\"http://www.w3.org/2000/svg\\">
-                        <path d=\\"M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z\\"></path>
-                      </svg><input name=\\"pid\\" id=\\"input-pid\\" class=\\"input-small form-control\\" value=\\"000-000-000\\"></div><label class=\\"form-label\\" style=\\"width: 35px; min-width: 35px; padding-left: 5px;\\">or<br>PIN&nbsp;</label>
-                    <div class=\\"form-group\\"><svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 512 512\\" class=\\"tooltip-icon\\" height=\\"1em\\" width=\\"1em\\" xmlns=\\"http://www.w3.org/2000/svg\\">
-                        <path d=\\"M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z\\"></path>
-                      </svg><input name=\\"pin\\" type=\\"number\\" id=\\"input-pin\\" class=\\"input-small form-control\\" value=\\"\\"></div>
+                  <div class=\\"d-inline-flex flex-nowrap form-row\\"><label class=\\"form-label\\"><span class=\\"req\\">*</span>PID</label>
+                    <div class=\\"form-group\\"><input name=\\"pid\\" id=\\"input-pid\\" class=\\"input-small form-control\\" value=\\"000-000-000\\"></div><label class=\\"form-label\\">PIN</label>
+                    <div class=\\"form-group\\"><input name=\\"pin\\" type=\\"number\\" id=\\"input-pin\\" class=\\"input-small form-control\\" value=\\"\\"></div>
                   </div>
                   <div class=\\"form-row\\"><label class=\\"form-label\\">Name</label>
                     <div class=\\"form-group\\"><input name=\\"name\\" id=\\"input-name\\" class=\\"form-control\\" value=\\"test name\\"></div>
@@ -74,7 +70,7 @@ exports[`Parcel Detail MapSideBarContainer basic data loading and display parcel
                   <div class=\\"form-row\\"><label class=\\"form-label\\">Description</label>
                     <div class=\\"form-group\\"><textarea name=\\"description\\" id=\\"input-description\\" class=\\"form-control\\">test</textarea></div>
                   </div>
-                  <div class=\\"form-row\\"><label class=\\"required form-label\\">Classification</label>
+                  <div class=\\"form-row\\"><label class=\\"form-label\\">Classification</label>
                     <div class=\\"form-group\\"><select name=\\"classificationId\\" type=\\"number\\" id=\\"input-classificationId-fast\\" class=\\"form-control\\">
                         <option value=\\"\\">Must Select One</option>
                       </select></div>
@@ -86,61 +82,49 @@ exports[`Parcel Detail MapSideBarContainer basic data loading and display parcel
                       </div>
                     </div>
                   </div>
-                  <div class=\\"form-row\\"><label class=\\"form-label\\">Sub-Agency</label>
-                    <div class=\\"AutoCompleteText\\">
-                      <div class=\\"form-group\\">
-                        <div class=\\"input-area\\"><input name=\\"agencyId\\" id=\\"input-agencyId\\" class=\\"form-control\\" value=\\"\\"></div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class=\\"form-row\\"><label class=\\"form-label\\"></label>
-                    <div class=\\"input-medium\\">
-                      <p>Harmful if Released?&nbsp;<a target=\\"_blank\\" rel=\\"noopener noreferrer\\" href=\\"https://www2.gov.bc.ca/gov/content/governments/services-for-government/policies-procedures/foippa-manual/disclosure-harmful-individual-public-safety\\">Policy</a></p>
-                      <div class=\\"form-group\\">
-                        <div class=\\"check-field\\">
-                          <div class=\\"form-check\\"><input name=\\"isSensitive\\" type=\\"radio\\" id=\\"input-isSensitive\\" class=\\"form-check-input\\" value=\\"false\\"><label title=\\"\\" for=\\"input-isSensitive\\" class=\\"form-check-label\\">Yes</label></div>
-                          <div class=\\"form-check\\"><input name=\\"isSensitive\\" type=\\"radio\\" id=\\"input-isSensitive-2\\" class=\\"form-check-input\\" value=\\"true\\" checked=\\"\\"><label title=\\"\\" for=\\"input-isSensitive-2\\" class=\\"form-check-label\\">No</label></div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
                 </div>
                 <div class=\\"col-md-6\\">
-                  <div class=\\"form-row\\"><label class=\\"required form-label\\">Street Address</label>
+                  <div class=\\"field-row row\\">
+                    <p class=\\"label\\"><span class=\\"req\\">*</span>Street Address</p>
                     <div class=\\"GeocoderAutoComplete\\">
                       <div>
-                        <div class=\\"form-group\\"><svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 512 512\\" class=\\"tooltip-icon\\" height=\\"1em\\" width=\\"1em\\" xmlns=\\"http://www.w3.org/2000/svg\\">
-                            <path d=\\"M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z\\"></path>
-                          </svg><input name=\\"address.line1\\" field=\\"address.line1\\" id=\\"input-address.line1\\" class=\\"form-control\\" value=\\"1234 mock Street\\"></div>
+                        <div class=\\"form-group\\"><input name=\\"address.line1\\" field=\\"address.line1\\" id=\\"input-address.line1\\" class=\\"form-control\\" value=\\"1234 mock Street\\"></div>
                       </div>
                     </div>
                   </div>
-                  <div class=\\"form-row\\"><label class=\\"required form-label\\">Location</label>
+                  <div class=\\"field-row row\\">
+                    <p class=\\"label\\"><span class=\\"req\\">*</span>Location</p>
                     <div class=\\"sc-AxjAm gLmrxD form-group\\">
                       <div class=\\"rbt\\" style=\\"outline: none; position: relative;\\" tabindex=\\"-1\\">
                         <div style=\\"display: flex; flex: 1; height: 100%; position: relative;\\"><input autocomplete=\\"off\\" type=\\"text\\" name=\\"address.administrativeArea\\" aria-autocomplete=\\"both\\" aria-expanded=\\"false\\" aria-haspopup=\\"listbox\\" role=\\"combobox\\" class=\\"rbt-input-main form-control rbt-input\\" value=\\"Victoria\\"><input aria-hidden=\\"true\\" class=\\"rbt-input-hint\\" readonly=\\"\\" style=\\"background-color: transparent; border-color: transparent; box-shadow: none; color: rgba(0, 0, 0, 0.35); left: 0px; pointer-events: none; position: absolute; top: 0px; width: 100%; border-style: inset inset inset inset; border-width: 2px 2px 2px 2px; line-height: normal; padding: 1px 1px 1px 1px;\\" tabindex=\\"-1\\" value=\\"\\"></div>
                       </div>
                     </div>
                   </div>
-                  <div class=\\"form-row\\"><label class=\\"form-label\\">Province</label>
+                  <div class=\\"field-row row\\">
+                    <p class=\\"label\\">Province</p>
                     <div class=\\"form-group\\"><select name=\\"address.provinceId\\" disabled=\\"\\" id=\\"input-address.provinceId\\" class=\\"form-select form-control\\">
                         <option value=\\"\\">Must Select One</option>
                       </select></div>
                   </div>
-                  <div class=\\"form-row\\"><label class=\\"form-label\\">Postal</label>
+                  <div class=\\"field-row row\\">
+                    <p class=\\"label\\">Postal</p>
                     <div class=\\"form-group\\"><input name=\\"address.postal\\" id=\\"input-address.postal\\" class=\\"input-small form-control\\" value=\\"V1V1V1\\"></div>
                   </div>
-                  <div style=\\"position: relative;\\">
-                    <div class=\\"form-row\\"><label class=\\"required form-label\\">Latitude</label>
-                      <div class=\\"form-group\\"><svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 512 512\\" class=\\"tooltip-icon\\" height=\\"1em\\" width=\\"1em\\" xmlns=\\"http://www.w3.org/2000/svg\\">
-                          <path d=\\"M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z\\"></path>
-                        </svg><input name=\\"latitude\\" type=\\"number\\" id=\\"input-latitude\\" class=\\"input-medium form-control\\" value=\\"48\\"></div>
+                  <div class=\\"lat-long\\" style=\\"position: relative;\\">
+                    <div class=\\"row\\">
+                      <div class=\\"col-md-9\\">
+                        <p class=\\"instruction\\"><span class=\\"req\\">*</span>Drag and drop the pin on the map to mark the location of this property, or if you already have the coordinates, you can enter them manually in the fields below.</p>
+                      </div>
+                      <div class=\\"marker-svg col\\"><button class=\\"sc-fzoKki bhbZHm\\"><svg class=\\"parcel-icon\\">draft-parcel-icon.svg</svg></button></div>
                     </div>
-                    <div class=\\"form-row\\"><label class=\\"required form-label\\">Longitude</label>
+                    <div class=\\"form-row\\">
+                      <p class=\\"label\\">Latitude</p>
+                      <div class=\\"form-group\\"><input name=\\"latitude\\" type=\\"number\\" id=\\"input-latitude\\" class=\\"input-medium form-control\\" value=\\"48\\"></div>
+                    </div>
+                    <div class=\\"form-row\\">
+                      <p class=\\"label\\">Longitude</p>
                       <div class=\\"form-group\\"><input name=\\"longitude\\" type=\\"number\\" id=\\"input-longitude\\" class=\\"input-medium form-control\\" value=\\"123\\"></div>
-                    </div><button class=\\"sc-fzoKki cUJjYh\\">
-                      <p>Place Pin</p><svg>draft-parcel-icon.svg</svg>
-                    </button>
+                    </div>
                   </div>
                   <div class=\\"form-row\\"><label class=\\"required form-label\\">Lot Size</label>
                     <div class=\\"input-group\\">

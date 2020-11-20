@@ -52,7 +52,6 @@ import classNames from 'classnames';
 import { useLayerQuery } from './LayerPopup/hooks/useLayerQuery';
 import { SidebarSize } from 'features/mapSideBar/hooks/useQueryParamSideBar';
 import { saveParcelLayerData } from 'reducers/parcelLayerDataSlice';
-import { SidebarSize } from 'features/mapSideBar/hooks/useQueryParamSideBar';
 
 export type MapViewportChangeEvent = {
   bounds: LatLngBounds | null;

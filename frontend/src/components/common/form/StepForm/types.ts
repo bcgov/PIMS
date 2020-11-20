@@ -26,6 +26,7 @@ export interface ISteppedFormProps {
   persistable?: boolean;
   // options to set persist component
   persistProps?: IPersistProps;
+  formikRef?: any;
 }
 
 export interface IStepperFieldProps {

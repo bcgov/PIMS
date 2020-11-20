@@ -36,6 +36,8 @@ type OptionalAttributes = {
   tooltip?: string;
   /** Display errors in a tooltip instead of in a div */
   displayErrorTooltips?: boolean;
+  /** a way to style to label */
+  horizontal?: boolean;
 };
 
 // only "field" is required for <Input>, the rest are optional
@@ -57,6 +59,7 @@ export const Input: React.FC<InputProps> = ({
   custom,
   onBlurFormatter,
   tooltip,
+  horizontal,
   displayErrorTooltips,
   ...rest
 }) => {
@@ -90,7 +93,7 @@ export const Input: React.FC<InputProps> = ({
   return (
     <Form.Group
       controlId={`input-${field}`}
-      className={classNames(!!required ? 'required' : '', outerClassName)}
+      className={classNames(!!required ? 'required' : '', outerClassName, { horizontal })}
     >
       {!!label && (
         <Form.Label>
