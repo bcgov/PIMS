@@ -189,6 +189,7 @@ const ParcelDetailForm: React.FunctionComponent<IParcelPropertyProps> = ({
           validate={handleValidate}
           enableReinitialize={true}
           onSubmit={async (values, actions) => {
+            console.log(values.name);
             const apiValues = valuesToApiFormat(_.cloneDeep(values));
             try {
               if (!values.id) {

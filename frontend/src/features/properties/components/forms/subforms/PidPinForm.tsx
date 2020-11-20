@@ -1,7 +1,7 @@
 import { FunctionComponent, useCallback } from 'react';
 import React from 'react';
 import { Input, Form } from 'components/common/form';
-import { PidTooltip, PinTooltip } from '../strings';
+// import { PidTooltip, PinTooltip } from '../strings';
 import { useFormikContext, getIn } from 'formik';
 import { IParcel } from 'actions/parcelsActions';
 import debounce from 'lodash/debounce';
@@ -54,7 +54,7 @@ const PidPinForm: FunctionComponent<PidPinProps> = (props: PidPinProps) => {
         <Input
           displayErrorTooltips
           className="input-small"
-          tooltip={PidTooltip}
+          // tooltip={PidTooltip}
           disabled={props.disabled}
           pattern={RegExp(/^[\d\- ]*$/)}
           onBlurFormatter={(pid: string) => {
@@ -65,15 +65,11 @@ const PidPinForm: FunctionComponent<PidPinProps> = (props: PidPinProps) => {
           }}
           field={withNameSpace('pid')}
         />
-        <Form.Label style={{ width: '35px', minWidth: '35px', paddingLeft: '5px' }}>
-          or
-          <br />
-          PIN&nbsp;
-        </Form.Label>
+        <Form.Label>PIN</Form.Label>
         <Input
           displayErrorTooltips
           className="input-small"
-          tooltip={PinTooltip}
+          // tooltip={PinTooltip}
           disabled={props.disabled}
           field={withNameSpace('pin')}
           onBlurFormatter={(pin: string) => {

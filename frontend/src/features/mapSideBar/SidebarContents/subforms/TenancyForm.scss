@@ -1,0 +1,23 @@
+.tenancy {
+  h4 {
+    margin-bottom: 20px;
+  }
+  margin-top: 10px;
+  .form-group,
+  .input-group,
+  .react-datepicker-wrapper {
+    width: 200px;
+  }
+  .label {
+    text-align: right;
+    width: 200px;
+    clear: both;
+    float: left;
+    margin-right: 15px;
+  }
+  .classification {
+    padding-top: 10px;
+    background-color: #e9ecef;
+    border-radius: 10px;
+  }
+}

@@ -1,18 +1,8 @@
 import { FunctionComponent } from 'react';
 import React from 'react';
-import {
-  Input,
-  Form,
-  TextArea,
-  FastSelect,
-  SelectOption,
-  AutoCompleteText,
-  Check,
-} from 'components/common/form';
+import { Input, Form, TextArea, FastSelect, SelectOption } from 'components/common/form';
 import { useFormikContext } from 'formik';
-import TooltipWrapper from 'components/common/TooltipWrapper';
-import { HARMFUL_DISCLOSURE_URL } from 'constants/strings';
-import { senstiveTooltip as sensitiveTooltip } from '../strings';
+import { TypeaheadField } from 'components/common/form/Typeahead';
 
 interface InformationFormProps {
   nameSpace?: string;
@@ -47,7 +37,7 @@ const InformationForm: FunctionComponent<InformationFormProps> = (props: Informa
         <TextArea disabled={props.disabled} field={withNameSpace('description')} />
       </Form.Row>
       <Form.Row>
-        <Form.Label className="required">Classification</Form.Label>
+        <Form.Label>Classification</Form.Label>
         <FastSelect
           formikProps={formikProps}
           disabled={props.disabled}
@@ -59,43 +49,11 @@ const InformationForm: FunctionComponent<InformationFormProps> = (props: Informa
       </Form.Row>
       <Form.Row>
         <Form.Label>Agency</Form.Label>
-        <AutoCompleteText
-          field={withNameSpace('agencyId')}
+        <TypeaheadField
+          name={withNameSpace('agencyId')}
           options={props.agencies}
           disabled={!props.isAdmin || props.disabled}
-          getValueDisplay={(val: SelectOption) => val.code!}
-          agencyType="parent"
         />
-      </Form.Row>
-      <Form.Row>
-        <Form.Label>Sub-Agency</Form.Label>
-        <AutoCompleteText
-          field={withNameSpace('agencyId')}
-          options={props.agencies}
-          disabled={!props.isAdmin || props.disabled}
-          getValueDisplay={(val: SelectOption) => val.code!}
-          agencyType="child"
-        />
-      </Form.Row>
-      <Form.Row>
-        <Form.Label></Form.Label>
-        <div className="input-medium">
-          <p>
-            Harmful if Released?&nbsp;
-            <TooltipWrapper toolTipId="sensitive-harmful" toolTip={sensitiveTooltip}>
-              <a target="_blank" rel="noopener noreferrer" href={HARMFUL_DISCLOSURE_URL}>
-                Policy
-              </a>
-            </TooltipWrapper>
-          </p>
-          <Check
-            type="radio"
-            disabled={props.disabled}
-            field={withNameSpace('isSensitive')}
-            radioLabelOne="Yes"
-            radioLabelTwo="No"
-          />
-        </div>
       </Form.Row>
     </>
   );

@@ -1,0 +1,73 @@
+.parcel-identification {
+  // overflow-y: scroll;
+  h4 {
+    margin-bottom: 20px;
+    float: left;
+  }
+  .container {
+    .form-container {
+      .row {
+        .form-control {
+          width: 250px;
+        }
+        .form-row {
+          .form-label {
+            text-align: center;
+            margin-right: 10px;
+            margin-left: 10px;
+          }
+          .form-group {
+            .form-control {
+              max-width: 150px;
+            }
+          }
+        }
+      }
+    }
+    .label {
+      display: inline-block;
+      width: 140px;
+      text-align: right;
+      margin-right: 20px;
+    }
+    .harmful {
+      background-color: #fae1e7;
+      width: 400px;
+      border-radius: 5px;
+      justify-content: left;
+    }
+    .address,
+    .field-row {
+      .form-control {
+        width: 250px;
+      }
+    }
+    .lat-long {
+      padding: 20px;
+      .instruction {
+        text-align: left;
+        .pracel-icon {
+          margin-top: 220px;
+        }
+      }
+      background-color: #e9ecef;
+      border-radius: 5px;
+      margin-bottom: 10px;
+      width: 400px;
+      .form-label {
+        margin-right: 20px;
+      }
+      .form-control {
+        width: 200px;
+      }
+      .input-group {
+        .form-label {
+          margin-right: 20px;
+        }
+        .form-control {
+          width: 150px;
+        }
+      }
+    }
+  }
+}

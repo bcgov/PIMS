@@ -14,7 +14,9 @@ export const SteppedForm = function<T extends object = {}>({
   steps,
   children,
   initialValues,
+  validate,
   onSubmit,
+  formikRef,
   ...rest
 }: ISteppedFormProps & FormikConfig<ISteppedFormValues<T>>) {
   if (rest.persistable && !rest.persistProps) {
@@ -22,7 +24,14 @@ export const SteppedForm = function<T extends object = {}>({
   }
 
   return (
-    <Formik<ISteppedFormValues<T>> initialValues={initialValues} onSubmit={onSubmit} {...rest}>
+    <Formik<ISteppedFormValues<T>>
+      initialValues={initialValues}
+      enableReinitialize
+      onSubmit={onSubmit}
+      validate={validate}
+      innerRef={formikRef}
+      {...rest}
+    >
       {() => (
         <Form>
           <StepperField name="activeStep" steps={steps} />
