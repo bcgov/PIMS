@@ -1,0 +1,129 @@
+.building-review-section {
+  .content-item,
+  .field-row,
+  .val-item {
+    height: 30px;
+  }
+  .val-item {
+    .label {
+      margin-right: 10px;
+      width: 120px;
+    }
+    margin-left: 20px;
+  }
+  .vl {
+    border-left: 1px solid #666666;
+    height: 30px;
+    margin-right: 15px;
+  }
+  .form-control:disabled {
+    border: none;
+    background-color: transparent;
+  }
+  max-width: 900px;
+  .review-steps {
+    text-align: left;
+  }
+  .valuation {
+    background-color: #f2f2f2;
+    margin-top: 10px;
+    border-radius: 10px;
+    padding: 10px;
+    margin-left: 30px;
+    font-size: small;
+    .valuation-header {
+      margin-left: 10px;
+      margin-bottom: 10px;
+      width: 400px;
+      .svg {
+        margin-right: 5px;
+      }
+      .edit {
+        margin-left: 250px;
+        cursor: pointer;
+        color: #1a5a96;
+      }
+    }
+  }
+  .tenancy {
+    background-color: #f2f2f2;
+    border-radius: 10px;
+    padding: 10px;
+    margin-top: 10px;
+    margin-left: 30px;
+    font-size: small;
+    .form-control,
+    .input-group {
+      height: 30px;
+      font-size: small;
+      width: 200px;
+    }
+    .input-group-content {
+      width: 100px;
+    }
+    .input-group-append {
+      height: 30px;
+    }
+    .label {
+      text-align: right;
+      width: 150px;
+      clear: both;
+      float: left;
+      margin-right: 15px;
+    }
+    .rentable-area {
+      background-color: red;
+    }
+    .tenancy-header {
+      margin-left: 10px;
+      margin-bottom: 10px;
+      width: 400px;
+      .svg {
+        margin-right: 5px;
+      }
+      .edit {
+        margin-left: 250px;
+        cursor: pointer;
+        color: #1a5a96;
+      }
+    }
+  }
+  .identification {
+    background-color: #f2f2f2;
+    border-radius: 10px;
+    font-size: small;
+    .form-control,
+    .GeocoderAutoComplete,
+    .AutoCompleteText,
+    .input-group {
+      width: 200px;
+      height: 30px;
+      font-size: small;
+      padding: 0;
+    }
+    .input-group {
+      .form-control {
+        width: 100px;
+      }
+    }
+    .label {
+      display: inline-block;
+      width: 140px;
+      text-align: right;
+      margin-right: 20px;
+    }
+    .identification-header {
+      margin-left: 10px;
+      margin-top: 10px;
+      width: 450px !important;
+      .svg {
+        margin-right: 5px;
+      }
+      .edit {
+        margin-left: 150px;
+        cursor: pointer;
+        color: #1a5a96;
+      }
+    }
+  }
+}

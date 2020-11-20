@@ -7,18 +7,22 @@ import { ILookupCode } from 'actions/lookupActions';
 import { ILookupCodeState } from 'reducers/lookupCodeReducer';
 import _ from 'lodash';
 import * as API from 'constants/API';
-import { Form, FastInput, Select } from 'components/common/form';
+import { FastInput, Select } from 'components/common/form';
 import { mapLookupCode } from 'utils';
 import { IAddress } from 'actions/parcelsActions';
 import { GeocoderAutoComplete } from '../../GeocoderAutoComplete';
 import { IGeocoderResponse } from 'hooks/useApi';
 import { TypeaheadField } from 'components/common/form/Typeahead';
-import { streetAddressTooltip, locationTip } from '../strings';
+import { streetAddressTooltip } from '../strings';
+import { Label } from 'components/common/Label';
+import { Row } from 'react-bootstrap';
 
 interface AddressProps {
   nameSpace?: string;
   disabled?: boolean;
   onGeocoderChange?: (data: IGeocoderResponse) => void;
+  toolTips?: boolean;
+  verticalLine?: boolean;
 }
 
 export const defaultAddressValues: IAddress = {
@@ -69,11 +73,12 @@ const AddressForm = <T extends any>(props: AddressProps & FormikProps<T>) => {
 
   return (
     <>
-      <Form.Row>
-        <Form.Label>Street Address</Form.Label>
+      <Row className="field-row">
+        <Label required>Street Address</Label>
+        {props.verticalLine && <span className="vl"></span>}
+
         <GeocoderAutoComplete
-          required
-          tooltip={streetAddressTooltip}
+          tooltip={props.toolTips ? streetAddressTooltip : undefined}
           value={getIn(props.values, withNameSpace('line1'))}
           disabled={props.disabled}
           field={withNameSpace('line1')}
@@ -83,29 +88,31 @@ const AddressForm = <T extends any>(props: AddressProps & FormikProps<T>) => {
           touch={getIn(props.touched, withNameSpace('line1'))}
           displayErrorTooltips
         />
-      </Form.Row>
-      <Form.Row>
-        <Form.Label>Location</Form.Label>
+      </Row>
+      <Row className="field-row">
+        <Label required>Location</Label>
+        {props.verticalLine && <span className="vl"></span>}
         <TypeaheadField
           options={administrativeAreas.map(x => x.label)}
           name={withNameSpace('administrativeArea')}
           disabled={props.disabled}
           paginate={false}
           required
-          tooltip={locationTip}
         />
-      </Form.Row>
-      <Form.Row>
-        <Form.Label>Province</Form.Label>
+      </Row>
+      <Row className="field-row">
+        <Label>Province</Label>
+        {props.verticalLine && <span className="vl"></span>}
         <Select
           disabled={true}
           placeholder="Must Select One"
           field={withNameSpace('provinceId')}
           options={provinces}
         />
-      </Form.Row>
-      <Form.Row>
-        <Form.Label>Postal Code</Form.Label>
+      </Row>
+      <Row className="field-row">
+        <Label>Postal</Label>
+        {props.verticalLine && <span className="vl"></span>}
         <FastInput
           className="input-small"
           formikProps={props}
@@ -114,7 +121,7 @@ const AddressForm = <T extends any>(props: AddressProps & FormikProps<T>) => {
           field={withNameSpace('postal')}
           displayErrorTooltips
         />
-      </Form.Row>
+      </Row>
     </>
   );
 };

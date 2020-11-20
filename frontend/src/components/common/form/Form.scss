@@ -7,15 +7,19 @@ $fc-placeholder-color: #999;
 $fc-focus-border-color: #5091cd;
 $fc-invalid-color: #d8292f;
 $fc-invalid-bg: #f2f2f2;
-
 // --- VALIDATION ---
-
 .form-group.required {
   & .control-label {
     &::after {
       content: ' *';
       color: $fc-invalid-color;
       font-weight: 700;
+    }
+  }
+  &.horizontal {
+    display: flex;
+    :last-child {
+      margin-left: 5px;
     }
   }
 }

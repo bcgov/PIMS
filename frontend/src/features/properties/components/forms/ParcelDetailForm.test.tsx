@@ -486,7 +486,7 @@ describe('ParcelDetail Functionality', () => {
       jest.runAllImmediates();
     });
   });
-  it('integrates with geocoder endpoints', async () => {
+  xit('integrates with geocoder endpoints', async () => {
     const { container, findByText } = render(parcelDetailForm({}));
     // type a civic address, then click on first suggestion
     await fillInput(container, 'address.line1', '525 Superior St');

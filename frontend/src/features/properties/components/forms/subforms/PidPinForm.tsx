@@ -1,8 +1,8 @@
 import { FunctionComponent, useCallback } from 'react';
 import React from 'react';
 import { Input, Form } from 'components/common/form';
-import { PidTooltip, PinTooltip } from '../strings';
-import { useFormikContext } from 'formik';
+// import { PidTooltip, PinTooltip } from '../strings';
+import { useFormikContext, getIn } from 'formik';
 import { IParcel } from 'actions/parcelsActions';
 import debounce from 'lodash/debounce';
 
@@ -38,7 +38,7 @@ const PidPinForm: FunctionComponent<PidPinProps> = (props: PidPinProps) => {
     const { nameSpace } = props;
     return nameSpace ? `${nameSpace}.${fieldName}` : fieldName;
   };
-  const { initialValues } = useFormikContext<IParcel>();
+  const { touched } = useFormikContext<IParcel>();
 
   const debouncedHandlePidChange = useCallback(
     debounce((pid: string) => {
@@ -50,36 +50,32 @@ const PidPinForm: FunctionComponent<PidPinProps> = (props: PidPinProps) => {
   return (
     <>
       <Form.Row className="d-inline-flex flex-nowrap">
-        <Form.Label>PID</Form.Label>
+        <Form.Label>
+          <span className="req">*</span>PID
+        </Form.Label>
         <Input
-          required
           displayErrorTooltips
           className="input-small"
-          tooltip={PidTooltip}
+          // tooltip={PidTooltip}
           disabled={props.disabled}
           pattern={RegExp(/^[\d\- ]*$/)}
           onBlurFormatter={(pid: string) => {
-            if (pid && initialValues.pid !== pid) {
+            if (pid && getIn(touched, withNameSpace('pid'))) {
               debouncedHandlePidChange(pid);
             }
             return pid.replace(pid, pidFormatter(pid));
           }}
           field={withNameSpace('pid')}
         />
-        <Form.Label style={{ width: '35px', minWidth: '35px', paddingLeft: '5px' }}>
-          or
-          <br />
-          PIN&nbsp;
-        </Form.Label>
+        <Form.Label>PIN</Form.Label>
         <Input
-          required
           displayErrorTooltips
           className="input-small"
-          tooltip={PinTooltip}
+          // tooltip={PinTooltip}
           disabled={props.disabled}
           field={withNameSpace('pin')}
           onBlurFormatter={(pin: string) => {
-            if (pin && initialValues.pin !== pin) {
+            if (pin && getIn(touched, withNameSpace('pin'))) {
               props.handlePinChange(pin);
             }
             return pin;
