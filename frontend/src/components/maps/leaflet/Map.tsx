@@ -54,7 +54,6 @@ import { saveParcelLayerData } from 'reducers/parcelLayerDataSlice';
 import { SidebarSize } from 'features/mapSideBar/hooks/useQueryParamSideBar';
 import useActiveFeatureLayer from '../hooks/useActiveFeatureLayer';
 import { saveParcelLayerData } from 'reducers/parcelLayerDataSlice';
-import { SidebarSize } from 'features/mapSideBar/hooks/useQueryParamSideBar';
 import useMarkerZoom from '../hooks/useMarkerZoom';
 
 export type MapViewportChangeEvent = {
