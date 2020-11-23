@@ -56,7 +56,8 @@ const useDraftMarkerSynchronizer = ({ properties }: { properties: IProperty[] })
     () =>
       properties.filter(
         (property: IProperty) =>
-          property.propertyTypeId ?? PropertyTypes.PARCEL <= PropertyTypes.BUILDING,
+          property.propertyTypeId !== undefined &&
+          [PropertyTypes.BUILDING, PropertyTypes.PARCEL].includes(property.propertyTypeId),
       ),
     [properties],
   );
@@ -98,7 +99,7 @@ const useDraftMarkerSynchronizer = ({ properties }: { properties: IProperty[] })
 
   useDeepCompareEffect(() => {
     synchronize(values, nonDraftProperties);
-  }, [values, properties, synchronize]);
+  }, [values, nonDraftProperties, synchronize]);
 
   return;
 };

@@ -51,6 +51,7 @@ import {
 import { useLayerQuery } from './LayerPopup/hooks/useLayerQuery';
 import { saveParcelLayerData } from 'reducers/parcelLayerDataSlice';
 import useActiveFeatureLayer from '../hooks/useActiveFeatureLayer';
+import useMarkerZoom from '../hooks/useMarkerZoom';
 
 export type MapViewportChangeEvent = {
   bounds: LatLngBounds | null;
@@ -134,6 +135,13 @@ const Map: React.FC<MapProps> = ({
   const municipalitiesService = useLayerQuery(MUNICIPALITY_LAYER_URL);
   const parcelsService = useLayerQuery(PARCELS_LAYER_URL);
 
+  // load and prepare data
+  const points = createPoints(properties);
+  const { setZoomProperty, onMarkerZoomEnd } = useMarkerZoom({
+    mapRef,
+    points,
+  });
+
   const [layerPopup, setLayerPopup] = useState<LayerPopupInformation>();
   if (mapRef.current && !selectedProperty?.parcelDetail) {
     lat = (mapRef.current.props.center as Array<number>)[0];
@@ -209,12 +217,15 @@ const Map: React.FC<MapProps> = ({
   };
 
   const onZoomEnd = (event: LeafletEvent) => {
+    onMarkerZoomEnd();
     dispatch(setMapViewZoom(event.target._zoom));
   };
 
-  const closeMarkerPopup = () => {
-    setLayerPopup(undefined);
-    dispatch(storeParcelDetail(null));
+  const closeMarkerPopup = (e: any) => {
+    if (e.target._animateToZoom === mapRef.current?.leafletElement.getZoom()) {
+      setLayerPopup(undefined);
+      dispatch(storeParcelDetail(null));
+    }
   };
 
   const zoomToAdministrativeArea = async (city: string) => {
@@ -252,9 +263,6 @@ const Map: React.FC<MapProps> = ({
     });
   }, []);
 
-  // load and prepare data
-  const points = createPoints(properties);
-
   // get map bounds
   const updateMap = useCallback(() => {
     if (!mapRef?.current) {
@@ -290,6 +298,7 @@ const Map: React.FC<MapProps> = ({
           propertyTypeId={propertyTypeId}
           propertyDetail={parcelDetail}
           disabled={!interactive}
+          zoomTo={zoom < 14 ? () => setZoomProperty(selectedProperty) : undefined}
         />
       </Popup>
     );

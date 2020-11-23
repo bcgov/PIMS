@@ -12,6 +12,7 @@ import queryString from 'query-string';
 
 export interface IParcelDetailProps {
   parcel: IParcel | null;
+  zoomTo?: () => void;
   disabled?: boolean;
 }
 
@@ -98,7 +99,6 @@ export const ParcelPopupView = (props: IParcelDetailProps | null) => {
                 {(keycloak.hasAgency(parcelDetail?.agencyId as number) ||
                   keycloak.hasClaim(Claims.ADMIN_PROPERTIES)) && (
                   <Link
-                    style={{ paddingLeft: '5px' }}
                     to={{
                       pathname: `/mapview/${parcelDetail?.id}`,
                       search: queryString.stringify({
@@ -110,6 +110,11 @@ export const ParcelPopupView = (props: IParcelDetailProps | null) => {
                     }}
                   >
                     Update
+                  </Link>
+                )}
+                {props?.zoomTo && (
+                  <Link to={{ ...location }} onClick={props?.zoomTo}>
+                    Zoom
                   </Link>
                 )}
               </Col>
