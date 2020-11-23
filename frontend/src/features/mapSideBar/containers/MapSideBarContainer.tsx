@@ -31,6 +31,7 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
     overrideParcelId,
     disabled,
     loadDraft,
+    newParcel,
   } = useParamSideBar();
   const dispatch = useDispatch();
   const parcelDetailRequest = useSelector<RootState, IGenericNetworkAction>(
@@ -69,7 +70,7 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
 
   return (
     <MapSideBarLayout show={showSideBar} setShowSideBar={setShowSideBar}>
-      {parcelId !== cachedParcelDetail?.id ? (
+      {parcelId !== cachedParcelDetail?.id || newParcel ? (
         <>
           <Spinner animation="border"></Spinner>
         </>

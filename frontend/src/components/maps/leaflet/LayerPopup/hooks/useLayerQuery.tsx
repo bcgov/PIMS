@@ -68,28 +68,30 @@ export const useLayerQuery = (url: string, geometryName: string = 'SHAPE'): IUse
   const parcelLayerData = useSelector<RootState, IParcelLayerData | null>(
     state => state.parcelLayerData?.parcelLayerData,
   );
+  const baseUrl = `${url}&srsName=EPSG:4326&count=1`;
   const findOneWhereContains = useCallback(
     async (latlng: LatLng): Promise<FeatureCollection> => {
       const data: FeatureCollection = (
         await axios.get(
-          `${url}&srsName=EPSG:4326&count=1&cql_filter=CONTAINS(${geometryName},SRID=4326;POINT ( ${latlng.lng} ${latlng.lat}))`,
+          `${baseUrl}&cql_filter=CONTAINS(${geometryName},SRID=4326;POINT ( ${latlng.lng} ${latlng.lat}))`,
         )
       ).data;
       return data;
     },
-    [url, geometryName],
+    [baseUrl, geometryName],
   );
   const findByPid = useCallback(
     async (pid: string): Promise<FeatureCollection> => {
       //Do not make a request if we our currently cached response matches the requested pid.
+      const formattedPid = pid.replace(/-/g, '');
       const data: FeatureCollection =
-        parcelLayerData?.data?.PID === pid || parcelLayerData?.data?.PID_NUMBER.toString() === pid
+        parcelLayerData?.data?.PID === formattedPid ||
+        parcelLayerData?.data?.PID_NUMBER.toString() === formattedPid
           ? undefined
-          : (await axios.get(`${url}&srsName=EPSG:4326&count=1&&CQL_FILTER=PID_NUMBER=${pid}`))
-              .data;
+          : (await axios.get(`${baseUrl}&CQL_FILTER=PID_NUMBER=${+formattedPid}`)).data;
       return data;
     },
-    [url, parcelLayerData],
+    [baseUrl, parcelLayerData],
   );
 
   const findByPin = useCallback(
@@ -98,10 +100,10 @@ export const useLayerQuery = (url: string, geometryName: string = 'SHAPE'): IUse
       const data: FeatureCollection =
         parcelLayerData?.data?.PIN === pin
           ? undefined
-          : (await axios.get(`${url}&srsName=EPSG:4326&count=1&&CQL_FILTER=PIN=${pin}`)).data;
+          : (await axios.get(`${baseUrl}&CQL_FILTER=PIN=${pin}`)).data;
       return data;
     },
-    [url, parcelLayerData],
+    [baseUrl, parcelLayerData],
   );
 
   return { findOneWhereContains, findByPid, findByPin };

@@ -28,7 +28,7 @@ import { PopupView } from '../PopupView';
 import { useDispatch, useSelector } from 'react-redux';
 import { setMapViewZoom } from 'reducers/mapViewZoomSlice';
 import { RootState } from 'reducers/rootReducer';
-import { BBox } from 'geojson';
+import { BBox, Feature } from 'geojson';
 import { createPoints, PointFeature, asProperty } from './mapUtils';
 import PointClusterer from './PointClusterer';
 import { LegendControl } from './Legend/LegendControl';
@@ -50,6 +50,7 @@ import {
 } from './LayerPopup/LayerPopupContent';
 import { useLayerQuery } from './LayerPopup/hooks/useLayerQuery';
 import { saveParcelLayerData } from 'reducers/parcelLayerDataSlice';
+import useActiveFeatureLayer from '../hooks/useActiveFeatureLayer';
 
 export type MapViewportChangeEvent = {
   bounds: LatLngBounds | null;
@@ -91,6 +92,7 @@ export type LayerPopupInformation = PopupContentConfig & {
   latlng: LatLng;
   title: string;
   center?: LatLng;
+  feature: Feature;
 };
 
 const Map: React.FC<MapProps> = ({
@@ -137,6 +139,7 @@ const Map: React.FC<MapProps> = ({
     lat = (mapRef.current.props.center as Array<number>)[0];
     lng = (mapRef.current.props.center as Array<number>)[1];
   }
+  useActiveFeatureLayer({ selectedProperty, layerPopup, mapRef });
 
   const lastZoom = useSelector<RootState, number>(state => state.mapViewZoom) ?? zoomProp;
   useEffect(() => {
@@ -310,9 +313,11 @@ const Map: React.FC<MapProps> = ({
     let center: LatLng | undefined;
     let displayConfig = {};
     let title = 'Municipality Information';
+    let feature = {};
     if (municipality.features.length === 1) {
       properties = municipality.features[0].properties!;
       displayConfig = municipalityLayerPopupConfig;
+      feature = municipality.features[0];
     }
 
     if (parcel.features.length === 1) {
@@ -324,6 +329,7 @@ const Map: React.FC<MapProps> = ({
             .getBounds()
             .getCenter()
         : undefined;
+      feature = parcel.features[0];
     }
 
     if (!isEmpty(properties)) {
@@ -333,6 +339,7 @@ const Map: React.FC<MapProps> = ({
         config: displayConfig as any,
         latlng: event.latlng,
         center,
+        feature,
       } as any);
     }
   };
@@ -424,6 +431,7 @@ const Map: React.FC<MapProps> = ({
                         format="image/png"
                         zIndex={10}
                         id="parcelLayer"
+                        on
                       />
                     </LayersControl.Overlay>
                     <LayersControl.Overlay checked name="Municipalities">
