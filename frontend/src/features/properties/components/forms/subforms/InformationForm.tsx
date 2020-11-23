@@ -9,10 +9,12 @@ import {
   AutoCompleteText,
   Check,
 } from 'components/common/form';
-import { useFormikContext } from 'formik';
+import { getIn, useFormikContext } from 'formik';
 import TooltipIcon from 'components/common/TooltipIcon';
 import { HARMFUL_DISCLOSURE_URL } from 'constants/strings';
-import { sensitiveTooltip, classificationTip } from '../strings';
+import { IProperty } from 'actions/parcelsActions';
+import { Link } from 'react-router-dom';
+import { classificationTip, sensitiveTooltip } from '../strings';
 
 interface InformationFormProps {
   nameSpace?: string;
@@ -35,9 +37,19 @@ const InformationForm: FunctionComponent<InformationFormProps> = (props: Informa
     return nameSpace ? `${nameSpace}.${fieldName}` : fieldName;
   };
   const formikProps = useFormikContext();
+  const { values } = useFormikContext<IProperty>();
+  const projectNumber = getIn(values, withNameSpace('projectNumber'));
 
   return (
     <>
+      {projectNumber ? (
+        <Form.Row>
+          <Form.Label>Project No.</Form.Label>
+          <Form.Group>
+            <Link to={`/projects/summary?projectNumber=${projectNumber}`}>{projectNumber}</Link>
+          </Form.Group>
+        </Form.Row>
+      ) : null}
       <Form.Row>
         <Form.Label>Name</Form.Label>
         <Input disabled={props.disabled} field={withNameSpace('name')} />

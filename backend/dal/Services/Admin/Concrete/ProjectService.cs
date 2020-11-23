@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Pims.Core.Extensions;
 using Pims.Dal.Entities;
 using Pims.Dal.Helpers.Extensions;
@@ -17,6 +18,10 @@ namespace Pims.Dal.Services.Admin
     /// </summary>
     public class ProjectService : BaseService<Project>, IProjectService
     {
+        #region Variables
+        private readonly PimsOptions _options;
+        #endregion
+
         #region Constructors
         /// <summary>
         /// Creates a new instance of a ProjectService class, and initializes it with the specified arguments.
@@ -24,8 +29,12 @@ namespace Pims.Dal.Services.Admin
         /// <param name="dbContext"></param>
         /// <param name="user"></param>
         /// <param name="service"></param>
+        /// <param name="options"></param>
         /// <param name="logger"></param>
-        public ProjectService(PimsContext dbContext, ClaimsPrincipal user, IPimsService service, ILogger<ProjectService> logger) : base(dbContext, user, service, logger) { }
+        public ProjectService(PimsContext dbContext, ClaimsPrincipal user, IPimsService service, IOptions<PimsOptions> options, ILogger<ProjectService> logger) : base(dbContext, user, service, logger)
+        {
+            _options = options.Value;
+        }
         #endregion
 
         #region Methods
@@ -97,6 +106,29 @@ namespace Pims.Dal.Services.Admin
         }
 
         /// <summary>
+        /// Generate a new project number.
+        /// This does not apply the generated number to a project, this is up to you to do.
+        /// </summary>
+        /// <returns></returns>
+        public string GenerateProjectNumber()
+        {
+            var projectNumber = this.Context.GenerateProjectNumber(_options.Project.NumberFormat);
+            return projectNumber;
+        }
+
+        /// <summary>
+        /// Apply the specified 'projectNumber' to the specified 'project' and update all properties associated with it.
+        /// </summary>
+        /// <param name="project"></param>
+        /// <param name="projectNumber"></param>
+        /// <returns></returns>
+        public void UpdateProjectNumber(Project project, string projectNumber)
+        {
+            this.Context.UpdateProjectNumber(project, projectNumber);
+            this.Context.SaveChanges();
+        }
+
+        /// <summary>
         /// Add the specified project to the datasource.
         /// </summary>
         /// <param name="project"></param>
@@ -136,23 +168,12 @@ namespace Pims.Dal.Services.Admin
 
             projects.ForEach((project) =>
             {
-                if (project == null) throw new ArgumentNullException();
+                if (project == null) return;
 
-                project.Workflow = null;
-                project.Status = null;
-                project.Agency = null;
-                project.TierLevel = null;
-                project.Risk = null;
-
-                project.Responses.ForEach(r =>
+                if (String.IsNullOrWhiteSpace(project.ProjectNumber))
                 {
-                    r.Agency = null;
-                });
-
-                project.Tasks.ForEach(t =>
-                {
-                    t.Task = null;
-                });
+                    project.ProjectNumber = $"TEMP-{DateTime.UtcNow.Ticks:00000}";
+                }
 
                 this.Context.Projects.Add(project);
             });

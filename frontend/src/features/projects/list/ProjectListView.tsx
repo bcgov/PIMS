@@ -283,7 +283,7 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
               />
             </Col>
             <Col xs={2} className="bar-item">
-              <Input field="name" placeholder="Search by project name" />
+              <Input field="name" placeholder="Search by project name or number" />
             </Col>
           </FilterBar>
         )}
@@ -309,7 +309,7 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
               </Button>
             </TooltipWrapper>
           )}
-          {keycloak.hasClaim(Claims.REPORTS_VIEW) && (
+          {keycloak.hasClaim(Claims.PROJECT_VIEW) && (
             <>
               <TooltipWrapper toolTipId="export-to-excel" toolTip="Export to Excel">
                 <FileIcon>

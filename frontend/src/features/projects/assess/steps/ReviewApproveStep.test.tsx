@@ -106,7 +106,7 @@ const mockProperty: IProperty = {
   administrativeArea: 'Victoria',
   province: 'BC',
   postal: 'A1A 1A1',
-  estimated: 123,
+  market: 123,
   netBook: 223,
   assessed: 123,
   appraised: 1000,

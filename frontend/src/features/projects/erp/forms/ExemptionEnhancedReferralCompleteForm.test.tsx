@@ -36,7 +36,7 @@ const testProject: IProject = {
   description: '',
   agencyId: 35,
   netBook: 1,
-  estimated: 1,
+  market: 1,
   properties: [],
   clearanceNotificationSentOn: new Date(Date.UTC(2020, 5, 9, 8)),
   transferredWithinGreOn: new Date(Date.UTC(2020, 5, 9, 8)),

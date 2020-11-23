@@ -19,7 +19,7 @@ namespace Pims.Api.Areas.Reports.Models.Property
         public bool IsSensitive { get; set; }
 
         public decimal Assessed { get; set; }
-        public decimal Estimated { get; set; }
+        public decimal Market { get; set; }
 
 
         #region Parcel Properties

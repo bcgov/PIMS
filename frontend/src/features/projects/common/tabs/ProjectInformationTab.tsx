@@ -25,6 +25,12 @@ const ProjectInformationTab: React.FunctionComponent<IProjectInformationTabProps
       <ProjectNotes disabled={true} />
       <PublicNotes disabled={isReadOnly} />
       <PrivateNotes disabled={isReadOnly} />
+      <ProjectNotes
+        label="Reporting"
+        field="reportingNote"
+        disabled={isReadOnly}
+        tooltip="Notes for Reporting"
+      />
     </Container>
   );
 };

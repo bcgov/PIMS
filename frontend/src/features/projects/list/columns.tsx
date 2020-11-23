@@ -52,7 +52,7 @@ export const columns = (onDelete?: (id: string) => void): ColumnWithProps<IProje
       responsive: true,
       clickable: true,
       width: spacing.medium,
-      minWidth: 80,
+      minWidth: 200,
     },
     {
       Header: 'Status',
@@ -65,16 +65,7 @@ export const columns = (onDelete?: (id: string) => void): ColumnWithProps<IProje
     },
     {
       Header: 'Agency',
-      accessor: 'agency',
-      align: 'left',
-      responsive: true,
-      clickable: true,
-      width: spacing.medium,
-      minWidth: 80,
-    },
-    {
-      Header: 'Sub Agency',
-      accessor: 'subAgency',
+      accessor: item => (item.subAgency ? `${item.subAgency} (${item.agency})` : item.agency),
       align: 'left',
       responsive: true,
       clickable: true,
@@ -100,7 +91,7 @@ export const columns = (onDelete?: (id: string) => void): ColumnWithProps<IProje
       minWidth: 80,
     },
     {
-      Header: 'Sum Netbook',
+      Header: 'Net Book',
       accessor: 'netBook',
       align: 'left',
       clickable: true,
@@ -112,19 +103,19 @@ export const columns = (onDelete?: (id: string) => void): ColumnWithProps<IProje
       },
     },
     {
-      Header: 'Sum Estimated',
-      accessor: 'estimated',
+      Header: 'Market Value',
+      accessor: 'market',
       align: 'left',
       clickable: true,
       responsive: true,
       width: spacing.small,
       minWidth: 80,
       Cell: (props: CellProps<IProject>) => {
-        return formatMoney(props.row.original.estimated);
+        return formatMoney(props.row.original.market);
       },
     },
     {
-      Header: 'Last Updated',
+      Header: 'Updated On',
       accessor: 'updatedOn',
       align: 'left',
       responsive: true,
@@ -136,7 +127,7 @@ export const columns = (onDelete?: (id: string) => void): ColumnWithProps<IProje
       },
     },
     {
-      Header: 'Last Updated By',
+      Header: 'Updated By',
       accessor: 'updatedById',
       align: 'left',
       responsive: true,
