@@ -306,7 +306,7 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): React
               props.canRowExpand(row) &&
               renderExpandRowStateButton(
                 props.detailsPanel && props.detailsPanel.checkExpanded(row.original, expandedRows),
-                'td',
+                'td expander',
                 e => handleExpandClick(e, row.original),
               )}
             {props.canRowExpand && !props.canRowExpand(row) ? (
@@ -318,7 +318,7 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): React
             {!props.canRowExpand &&
               renderExpandRowStateButton(
                 props.detailsPanel && props.detailsPanel.checkExpanded(row.original, expandedRows),
-                'td',
+                'td expander',
                 e => handleExpandClick(e, row.original),
               )}
             {row.cells.map((cell: CellWithProps<T>) => {
