@@ -28,6 +28,12 @@ const SurplusPropertyInformationTab: React.FunctionComponent<ISurplusPropertyInf
       <ProjectNotes field="appraisedNote" label="Appraised Notes" disabled={isReadOnly} />
       <PublicNotes disabled={isReadOnly} />
       <PrivateNotes disabled={isReadOnly} />
+      <ProjectNotes
+        label="Reporting"
+        field="reportingNote"
+        disabled={isReadOnly}
+        tooltip="Notes for Reporting"
+      />
     </Container>
   );
 };

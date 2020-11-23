@@ -164,7 +164,7 @@ const MapView: React.FC<MapViewProps> = (props: MapViewProps) => {
         onMarkerClick={
           props.onMarkerClick ??
           ((p, position) => {
-            if (p.propertyTypeId <= PropertyTypes.BUILDING) {
+            if (p.propertyTypeId ?? PropertyTypes.PARCEL <= PropertyTypes.BUILDING) {
               p.id && dispatch(fetchPropertyDetail(p.id, p.propertyTypeId as any, position));
             } else {
               setSelectedDraftProperty({

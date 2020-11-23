@@ -10,5 +10,6 @@ namespace Pims.Dal.Services.Admin
     {
         IEnumerable<Workflow> GetAll();
         Workflow Get(int id);
+        IEnumerable<Workflow> GetForStatus(string code);
     }
 }

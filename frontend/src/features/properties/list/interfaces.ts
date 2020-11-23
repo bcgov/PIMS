@@ -27,8 +27,8 @@ export interface IProperty {
   postal: string;
 
   // Financial Values
-  estimated: number;
-  estimatedFiscalYear?: number;
+  market: number;
+  marketFiscalYear?: number;
   netBook: number;
   netBookFiscalYear?: number;
 

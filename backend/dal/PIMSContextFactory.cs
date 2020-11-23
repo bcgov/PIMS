@@ -6,6 +6,7 @@ using Pims.Core.Extensions;
 using System;
 using System.Data.SqlClient;
 using System.IO;
+using System.Text.Json;
 
 namespace Pims.Dal
 {
@@ -67,6 +68,8 @@ namespace Pims.Dal
 
             builder.AddEnvironmentVariables();
 
+            _logger.LogInformation("Context Factory Started");
+
             var config = builder.Build();
 
             var cs = config.GetConnectionString("PIMS");
@@ -81,7 +84,15 @@ namespace Pims.Dal
                 options.CommandTimeout((int)TimeSpan.FromMinutes(10).TotalSeconds);
                 options.UseNetTopologySuite();
             });
-            return new PimsContext(optionsBuilder.Options);
+
+            var serializerOptions = new JsonSerializerOptions()
+            {
+                IgnoreNullValues = true,
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                WriteIndented = true
+            };
+            var optionsSerializer = Microsoft.Extensions.Options.Options.Create(serializerOptions);
+            return new PimsContext(optionsBuilder.Options, null, optionsSerializer);
         }
         #endregion
     }

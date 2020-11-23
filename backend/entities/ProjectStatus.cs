@@ -35,12 +35,12 @@ namespace Pims.Dal.Entities
         public string Route { get; set; }
 
         /// <summary>
-        /// get - A collection of tasks associated to this project status.
+        /// get - Collection of tasks associated to this project status.
         /// </summary>
         public ICollection<Task> Tasks { get; } = new List<Task>();
 
         /// <summary>
-        /// get - A collection of workflows that contain this project status.
+        /// get - Collection of workflows that contain this project status.
         /// </summary>
         public ICollection<WorkflowProjectStatus> Workflows { get; } = new List<WorkflowProjectStatus>();
 
@@ -48,6 +48,11 @@ namespace Pims.Dal.Entities
         /// get - Collection of workflows that go to this status.
         /// </summary>
         public ICollection<WorkflowProjectStatus> FromWorkflows { get; } = new List<WorkflowProjectStatus>();
+
+        /// <summary>
+        /// get - Collection of projects.
+        /// </summary>
+        public ICollection<Project> Projects { get; } = new List<Project>();
         #endregion
 
         #region Constructors

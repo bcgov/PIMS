@@ -28,16 +28,21 @@ namespace Pims.Dal.Entities
         /// </summary>
         public DateTime SnapshotOn { get; set; }
 
+        /// <summary>
+        /// get/set - Additional serialized metadata.
+        /// </summary>
+        public string Metadata { get; set; }
+
         #region Financials
         /// <summary>
-        /// get/set - The netbook value.
+        /// get/set - The net book value.
         /// </summary>
         public decimal NetBook { get; set; }
 
         /// <summary>
-        /// get/set - The estimated value.
+        /// get/set - The market value.
         /// </summary>
-        public decimal Estimated { get; set; }
+        public decimal Market { get; set; }
 
         /// <summary>
         /// get/set - The assessed value.
@@ -47,47 +52,7 @@ namespace Pims.Dal.Entities
         /// <summary>
         /// get/set - The appraised value.
         /// </summary>
-        public decimal Appraised { get; set; }
-
-        /// <summary>
-        /// get/set - The sales cost.
-        /// </summary>
-        public decimal? SalesCost { get; set; } // TODO: Move to metadata property.
-
-        /// <summary>
-        /// get/set - The net proceeds
-        /// </summary>
-        public decimal? NetProceeds { get; set; } // TODO: Move to metadata property.
-
-        /// <summary>
-        /// get/set - The net proceed baseline integrity
-        /// </summary>
-        public decimal? BaselineIntegrity { get; set; } // TODO: Move to metadata property.
-
-        /// <summary>
-        /// get/set - The program cost.
-        /// </summary>
-        public decimal? ProgramCost { get; set; } // TODO: Move to metadata property.
-
-        /// <summary>
-        /// get/set - The gain or loss from selling the properties.
-        /// </summary>
-        public decimal? GainLoss { get; set; } // TODO: Move to metadata property.
-
-        /// <summary>
-        /// get/set - OCG final statement.
-        /// </summary>
-        public decimal? OcgFinancialStatement { get; set; } // TODO: Move to metadata property.
-
-        /// <summary>
-        /// get/set - Record the interest component.
-        /// </summary>
-        public decimal? InterestComponent { get; set; } // TODO: Move to metadata property.
-
-        /// <summary>
-        /// get/set - Whether the sale includes a lease in place (SLIP).
-        /// </summary>
-        public bool SaleWithLeaseInPlace { get; set; } // TODO: Move to metadata property.
+        public decimal? Appraised { get; set; }
         #endregion
         #endregion
 
@@ -104,17 +69,16 @@ namespace Pims.Dal.Entities
         public ProjectSnapshot(Project project)
         {
             this.ProjectId = project?.Id ?? throw new ArgumentNullException(nameof(project));
+
+            this.SnapshotOn = DateTime.UtcNow;
             this.Project = project;
+
             this.NetBook = project.NetBook;
-            this.Estimated = project.Estimated;
+            this.Market = project.Market;
             this.Assessed = project.Assessed;
-            this.SalesCost = project.SalesCost;
-            this.NetProceeds = project.NetProceeds;
-            this.ProgramCost = project.ProgramCost;
-            this.GainLoss = project.GainLoss;
-            this.OcgFinancialStatement = project.OcgFinancialStatement;
-            this.InterestComponent = project.InterestComponent;
-            this.SaleWithLeaseInPlace = project.SaleWithLeaseInPlace;
+            this.Appraised = project.Appraised;
+
+            this.Metadata = project.Metadata;
         }
         #endregion
     }

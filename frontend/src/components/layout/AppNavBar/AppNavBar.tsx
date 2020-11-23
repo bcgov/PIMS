@@ -197,9 +197,7 @@ function ReportsDropdown() {
       id="reports"
     >
       {keycloak.hasClaim(Claims.REPORTS_SPL) ? (
-        <NavDropdown.Item onClick={() => history.push('/reports/spl')}>
-          SPL With Variance
-        </NavDropdown.Item>
+        <NavDropdown.Item onClick={() => history.push('/reports/spl')}>SPL Report</NavDropdown.Item>
       ) : null}
     </NavDropdown>
   ) : null;

@@ -5,22 +5,81 @@ namespace Pims.Dal.Entities
     /// </summary>
     public enum NoteTypes
     {
+        /// <summary>
+        /// General default notes.
+        /// </summary>
         General = 0,
+        /// <summary>
+        /// Publically shared notes.
+        /// </summary>
         Public = 1,
+        /// <summary>
+        /// Private notes only visible to SRES.
+        /// </summary>
         Private = 2,
+        /// <summary>
+        /// Exception notes.
+        /// </summary>
         Exemption = 3,
+        /// <summary>
+        /// ERP agency interest notes.
+        /// </summary>
         AgencyInterest = 4,
+        /// <summary>
+        /// Financial notes.
+        /// </summary>
         Financial = 5,
+        /// <summary>
+        /// Pre-marketing notes for SPL.
+        /// </summary>
         PreMarketing = 6,
+        /// <summary>
+        /// Marketing notes for SPL.
+        /// </summary>
         Marketing = 7,
+        /// <summary>
+        /// Contract in place notes for SPL.
+        /// </summary>
         ContractInPlace = 8,
+        /// <summary>
+        /// Notes to include in reports.
+        /// </summary>
         Reporting = 9,
+        /// <summary>
+        /// Loan term notes.
+        /// </summary>
         LoanTerms = 10,
+        /// <summary>
+        /// Adjustment notes.
+        /// </summary>
         Adjustment = 11,
+        /// <summary>
+        /// SPP program cost notes.
+        /// </summary>
         SppCost = 12,
+        /// <summary>
+        /// SPP gain or loss notes.
+        /// </summary>
         SppGain = 13,
+        /// <summary>
+        /// Sales history notes.
+        /// </summary>
         SalesHistory = 14,
+        /// <summary>
+        /// Close out form notes.
+        /// </summary>
         CloseOut = 15,
+        /// <summary>
+        /// General comments.
+        /// </summary>
         Comments = 16,
+        /// <summary>
+        /// Appraisal note.
+        /// </summary>
+        Appraisal = 17,
+        /// <summary>
+        /// A purchaser has made an offer.
+        /// </summary>
+        Offer = 18
     }
 }

@@ -37,7 +37,7 @@ const getDraftMarkers = (values: IParcel) => {
   const buildingMarkers = values.buildings.map((building: IBuilding, index: number) => ({
     latitude: building.latitude,
     longitude: building.longitude,
-    name: building.name.length ? building.name : `Building #${index + 1}`,
+    name: building.name?.length ? building.name : `Building #${index + 1}`,
     propertyTypeId: PropertyTypes.DRAFT_BUILDING,
   }));
   return [...parcelMarkers, ...buildingMarkers].filter(
@@ -54,7 +54,10 @@ const useDraftMarkerSynchronizer = ({ properties }: { properties: IProperty[] })
   const dispatch = useDispatch();
   const nonDraftProperties = React.useMemo(
     () =>
-      properties.filter((property: IProperty) => property.propertyTypeId <= PropertyTypes.BUILDING),
+      properties.filter(
+        (property: IProperty) =>
+          property.propertyTypeId ?? PropertyTypes.PARCEL <= PropertyTypes.BUILDING,
+      ),
     [properties],
   );
 

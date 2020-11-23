@@ -49,11 +49,11 @@ namespace Pims.Api.Areas.Reports.Models.Project
 
         [DisplayName("Sales_Cost")]
         [CsvHelper.Configuration.Attributes.Name("Sales_Cost")]
-        public decimal SalesCost { get; set; }
+        public decimal? SalesCost { get; set; }
 
         [DisplayName("Net_Proceeds")]
         [CsvHelper.Configuration.Attributes.Name("Net_Proceeds")]
-        public decimal NetProceeds { get; set; }
+        public decimal? NetProceeds { get; set; }
 
         [DisplayName("Baseline_Integrity_Check")]
         [CsvHelper.Configuration.Attributes.Name("Baseline_Integrity_Check")]
@@ -73,7 +73,7 @@ namespace Pims.Api.Areas.Reports.Models.Project
 
         [DisplayName("Comment_Weekly_Review")]
         [CsvHelper.Configuration.Attributes.Name("Comment_Weekly_Review")]
-        public string PrivateNote { get; set; }
+        public string ReportingNote { get; set; }
 
         [DisplayName("Item Type")]
         [CsvHelper.Configuration.Attributes.Name("Item Type")]
@@ -89,11 +89,11 @@ namespace Pims.Api.Areas.Reports.Models.Project
 
         [DisplayName("Program_Cost")]
         [CsvHelper.Configuration.Attributes.Name("Program_Cost")]
-        public decimal ProgramCost { get; set; }
+        public decimal? ProgramCost { get; set; }
 
         [DisplayName("Gain_(Loss)")]
         [CsvHelper.Configuration.Attributes.Name("Gain_(Loss)")]
-        public decimal GainLoss { get; set; }
+        public decimal? GainLoss { get; set; }
 
         [DisplayName("OCG_Fin_Stmts")]
         [CsvHelper.Configuration.Attributes.Name("OCG_Fin_Stmts")]
@@ -101,7 +101,7 @@ namespace Pims.Api.Areas.Reports.Models.Project
 
         [DisplayName("Interest_Component")]
         [CsvHelper.Configuration.Attributes.Name("Interest_Component")]
-        public decimal InterestComponent { get; set; }
+        public decimal? InterestComponent { get; set; }
 
         /// <summary>
         /// get/set - The reported fiscal year this project.

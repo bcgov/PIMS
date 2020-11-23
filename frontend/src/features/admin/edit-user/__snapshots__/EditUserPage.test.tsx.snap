@@ -33,7 +33,7 @@ exports[`Edit user page EditUserPage renders 1`] = `
               <option value=\\"1\\" class=\\"option\\">roleVal</option>
             </select></div>
         </div>
-        <p class=\\"label\\">Note</p>
+        <p class=\\"label\\">Notes</p>
         <div class=\\"form-group\\"><textarea name=\\"note\\" data-testid=\\"note\\" placeholder=\\"A note about this user\\" type=\\"text\\" id=\\"input-note\\" class=\\"form-control\\">test note</textarea></div>
         <div class=\\"is-disabled form-group\\"><label class=\\"form-label\\">Disable Account?&nbsp;</label><input name=\\"isDisabled\\" data-testid=\\"isDisabled\\" type=\\"checkbox\\" value=\\"false\\"></div>
         <div class=\\"justify-content-md-center row\\">

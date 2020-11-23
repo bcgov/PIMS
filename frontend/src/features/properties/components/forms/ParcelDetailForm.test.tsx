@@ -293,7 +293,7 @@ describe('ParcelDetail Functionality', () => {
           date: '',
           year: 2020,
           fiscalYear: 2020,
-          key: FiscalKeys.Estimated,
+          key: FiscalKeys.Market,
           value: 1,
         },
       ],

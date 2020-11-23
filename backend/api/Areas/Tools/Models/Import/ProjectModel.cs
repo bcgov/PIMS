@@ -215,14 +215,14 @@ namespace Pims.Api.Areas.Tools.Models.Import
         public decimal NetBook { get; set; }
 
         /// <summary>
-        /// get/set - The estimated value.
+        /// get/set - The market value.
         /// </summary>
-        public decimal Estimated { get; set; }
+        public decimal Market { get; set; }
 
         /// <summary>
         /// get/set - The appraised value.
         /// </summary>
-        public decimal Appraised { get; set; }
+        public decimal? Appraised { get; set; }
 
         /// <summary>
         /// get/set - The assessed value.
@@ -232,32 +232,32 @@ namespace Pims.Api.Areas.Tools.Models.Import
         /// <summary>
         /// get/set - The sales cost.
         /// </summary>
-        public decimal SalesCost { get; set; }
+        public decimal? SalesCost { get; set; }
 
         /// <summary>
         /// get/set - The net proceeds
         /// </summary>
-        public decimal NetProceeds { get; set; }
+        public decimal? NetProceeds { get; set; }
 
         /// <summary>
         /// get/set - The program cost.
         /// </summary>
-        public decimal ProgramCost { get; set; }
+        public decimal? ProgramCost { get; set; }
 
         /// <summary>
         /// get/set - The gain or loss from selling the properties.
         /// </summary>
-        public decimal GainLoss { get; set; }
+        public decimal? GainLoss { get; set; }
 
         /// <summary>
         /// get/set - OCG final statement.
         /// </summary>
-        public decimal OcgFinancialStatement { get; set; }
+        public decimal? OcgFinancialStatement { get; set; }
 
         /// <summary>
         /// get/set - Record the interest component.
         /// </summary>
-        public decimal InterestComponent { get; set; }
+        public decimal? InterestComponent { get; set; }
         #endregion
 
         ///// <summary>

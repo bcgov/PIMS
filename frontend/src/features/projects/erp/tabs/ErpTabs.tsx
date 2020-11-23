@@ -1,6 +1,12 @@
 import * as React from 'react';
 import { Tab, Spinner } from 'react-bootstrap';
-import { SPPApprovalTabs, initialValues, ReviewWorkflowStatus, IProject } from '../../common';
+import {
+  SPPApprovalTabs,
+  initialValues,
+  ReviewWorkflowStatus,
+  IProject,
+  useStepForm,
+} from '../../common';
 import { useFormikContext } from 'formik';
 import { EnhancedReferralTab } from '..';
 import { isEqual } from 'lodash';
@@ -36,6 +42,8 @@ const ErpTabs: React.FunctionComponent<IErpTabsProps> = ({
   goToGreTransferred,
 }) => {
   const { submitForm, values, errors } = useFormikContext<IProject>();
+  const { canUserOverride } = useStepForm();
+  const canOverride = canUserOverride();
   if (isEqual(values, initialValues)) {
     return <Spinner animation="border" />;
   }
@@ -55,7 +63,7 @@ const ErpTabs: React.FunctionComponent<IErpTabsProps> = ({
           title="Documentation"
           tabClassName={isTabInError(errors, SPPApprovalTabs.documentation)}
         >
-          <DocumentationTab isReadOnly={isReadOnly} />
+          <DocumentationTab canOverride={canOverride} isReadOnly={isReadOnly} />
         </Tab>
         <Tab
           tabClassName={isTabInError(errors, SPPApprovalTabs.erp)}

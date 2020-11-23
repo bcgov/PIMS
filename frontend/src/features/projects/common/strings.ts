@@ -19,11 +19,11 @@ export const agencyResponsesNoteTooltip =
 export const cancellationWarning =
   'Are you sure you want to cancel the project? Please ensure to provide reasoning in the shared notes prior to clicking Cancel Project';
 export const onHoldNotificationTooltip =
-  'On Hold Notification Sent Date required to Place Project On Hold.';
+  'Enter On Hold Notification Sent Date to be able to Place Project On Hold.';
 export const onTransferredWithinTheGreTooltip =
-  'Date Transferred within the GRE required to Update Property Information.';
+  'Enter Date Transferred within the GRE to be able to Update Property Information.';
 export const clearanceNotifictionSent =
-  'Clearance Notification Sent date required to Proceed to SPL or Not Include in SPL';
+  'Enter Clearance Notification Sent date to be able to Proceed to SPL or Not Include in SPL';
 export const updatePimsWarning =
   'Please ensure all the updated information is correct before clicking Update PIMS.';
 export const proceedToSplWarning = `Are you sure you want to approve this project for the Surplus Properties List?`;

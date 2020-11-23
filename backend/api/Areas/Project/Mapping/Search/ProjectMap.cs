@@ -1,6 +1,6 @@
 using Mapster;
-using Newtonsoft.Json;
 using Pims.Api.Mapping.Converters;
+using Pims.Dal.Helpers.Extensions;
 using Entity = Pims.Dal.Entities;
 using Model = Pims.Api.Areas.Project.Models.Search;
 
@@ -24,12 +24,12 @@ namespace Pims.Api.Areas.Project.Mapping.Search
                 .Map(dest => dest.TierLevelId, src => src.TierLevelId)
                 .Map(dest => dest.TierLevel, src => src.TierLevel == null ? null : src.TierLevel.Name)
                 .Map(dest => dest.Description, src => src.Description)
-                .Map(dest => dest.Note, src => src.Note)
+                .Map(dest => dest.Note, src => src.GetNoteText(Entity.NoteTypes.General))
                 .Map(dest => dest.AgencyId, src => src.AgencyId)
                 .Map(dest => dest.Agency, src => AgencyConverter.ConvertAgency(src.Agency))
                 .Map(dest => dest.SubAgency, src => AgencyConverter.ConvertSubAgency(src.Agency))
                 .Map(dest => dest.NetBook, src => src.NetBook)
-                .Map(dest => dest.Estimated, src => src.Estimated)
+                .Map(dest => dest.Market, src => src.Market)
                 .Map(dest => dest.Assessed, src => src.Assessed)
                 .Map(dest => dest.Appraised, src => src.Appraised)
                 .Map(dest => dest.Properties, src => src.Properties)

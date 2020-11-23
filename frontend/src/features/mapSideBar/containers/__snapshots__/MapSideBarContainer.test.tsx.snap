@@ -61,8 +61,7 @@ exports[`Parcel Detail MapSideBarContainer basic data loading and display Empty 
                   </div>
                   <div class=\\"form-row\\"><label class=\\"form-label\\"></label>
                     <div class=\\"input-medium\\">
-                      <p>Would this information be harmful if released?&nbsp;</p>
-                      <p><svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 512 512\\" class=\\"tooltip-icon\\" height=\\"1em\\" width=\\"1em\\" xmlns=\\"http://www.w3.org/2000/svg\\">
+                      <p>Would this information be harmful if released?&nbsp;<br><svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 512 512\\" class=\\"tooltip-icon\\" height=\\"1em\\" width=\\"1em\\" xmlns=\\"http://www.w3.org/2000/svg\\">
                           <path d=\\"M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z\\"></path>
                         </svg><a target=\\"_blank\\" rel=\\"noopener noreferrer\\" href=\\"https://www2.gov.bc.ca/gov/content/governments/services-for-government/policies-procedures/foippa-manual/disclosure-harmful-individual-public-safety\\">Policy</a></p>
                       <div class=\\"form-group\\">
@@ -148,9 +147,9 @@ exports[`Parcel Detail MapSideBarContainer basic data loading and display Empty 
                             <div class=\\"input-tooltip-wrapper\\"><input name=\\"NetBook\\" class=\\"form-control\\" disabled=\\"\\" placeholder=\\"$0\\" value=\\"\\"></div>
                           </div>
                         </div>
-                        <div class=\\"form-row\\"><label class=\\"form-label\\">Estimated Sum</label>
+                        <div class=\\"form-row\\"><label class=\\"form-label\\">Market Sum</label>
                           <div class=\\"fast-currency-input form-group\\">
-                            <div class=\\"input-tooltip-wrapper\\"><input name=\\"Estimated\\" class=\\"form-control\\" disabled=\\"\\" placeholder=\\"$0\\" value=\\"\\"></div>
+                            <div class=\\"input-tooltip-wrapper\\"><input name=\\"Market\\" class=\\"form-control\\" disabled=\\"\\" placeholder=\\"$0\\" value=\\"\\"></div>
                           </div>
                         </div>
                       </div>
@@ -191,7 +190,7 @@ exports[`Parcel Detail MapSideBarContainer basic data loading and display Empty 
                                 <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">20/21</div>
                                 <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">
                                   <div class=\\"fast-currency-input form-group\\">
-                                    <div class=\\"input-tooltip-wrapper\\"><input name=\\"financials.0.estimated.value\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
+                                    <div class=\\"input-tooltip-wrapper\\"><input name=\\"financials.0.market.value\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
                                   </div>
                                 </div>
                               </div>
@@ -215,7 +214,7 @@ exports[`Parcel Detail MapSideBarContainer basic data loading and display Empty 
                                 <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">19/20</div>
                                 <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">
                                   <div class=\\"fast-currency-input form-group\\">
-                                    <div class=\\"input-tooltip-wrapper\\"><input name=\\"financials.1.estimated.value\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
+                                    <div class=\\"input-tooltip-wrapper\\"><input name=\\"financials.1.market.value\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
                                   </div>
                                 </div>
                               </div>
@@ -314,8 +313,7 @@ exports[`Parcel Detail MapSideBarContainer basic data loading and display parcel
                   </div>
                   <div class=\\"form-row\\"><label class=\\"form-label\\"></label>
                     <div class=\\"input-medium\\">
-                      <p>Would this information be harmful if released?&nbsp;</p>
-                      <p><svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 512 512\\" class=\\"tooltip-icon\\" height=\\"1em\\" width=\\"1em\\" xmlns=\\"http://www.w3.org/2000/svg\\">
+                      <p>Would this information be harmful if released?&nbsp;<br><svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 512 512\\" class=\\"tooltip-icon\\" height=\\"1em\\" width=\\"1em\\" xmlns=\\"http://www.w3.org/2000/svg\\">
                           <path d=\\"M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z\\"></path>
                         </svg><a target=\\"_blank\\" rel=\\"noopener noreferrer\\" href=\\"https://www2.gov.bc.ca/gov/content/governments/services-for-government/policies-procedures/foippa-manual/disclosure-harmful-individual-public-safety\\">Policy</a></p>
                       <div class=\\"form-group\\">
@@ -401,9 +399,9 @@ exports[`Parcel Detail MapSideBarContainer basic data loading and display parcel
                             <div class=\\"input-tooltip-wrapper\\"><input name=\\"NetBook\\" class=\\"form-control\\" disabled=\\"\\" placeholder=\\"$0\\" value=\\"10000\\"></div>
                           </div>
                         </div>
-                        <div class=\\"form-row\\"><label class=\\"form-label\\">Estimated Sum</label>
+                        <div class=\\"form-row\\"><label class=\\"form-label\\">Market Sum</label>
                           <div class=\\"fast-currency-input form-group\\">
-                            <div class=\\"input-tooltip-wrapper\\"><input name=\\"Estimated\\" class=\\"form-control\\" disabled=\\"\\" placeholder=\\"$0\\" value=\\"\\"></div>
+                            <div class=\\"input-tooltip-wrapper\\"><input name=\\"Market\\" class=\\"form-control\\" disabled=\\"\\" placeholder=\\"$0\\" value=\\"\\"></div>
                           </div>
                         </div>
                       </div>
@@ -444,7 +442,7 @@ exports[`Parcel Detail MapSideBarContainer basic data loading and display parcel
                                 <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">20/21</div>
                                 <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">
                                   <div class=\\"fast-currency-input form-group\\">
-                                    <div class=\\"input-tooltip-wrapper\\"><input name=\\"financials.0.estimated.value\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
+                                    <div class=\\"input-tooltip-wrapper\\"><input name=\\"financials.0.market.value\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
                                   </div>
                                 </div>
                               </div>
@@ -468,7 +466,7 @@ exports[`Parcel Detail MapSideBarContainer basic data loading and display parcel
                                 <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">19/20</div>
                                 <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">
                                   <div class=\\"fast-currency-input form-group\\">
-                                    <div class=\\"input-tooltip-wrapper\\"><input name=\\"financials.1.estimated.value\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
+                                    <div class=\\"input-tooltip-wrapper\\"><input name=\\"financials.1.market.value\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
                                   </div>
                                 </div>
                               </div>

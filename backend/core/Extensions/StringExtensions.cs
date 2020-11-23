@@ -92,5 +92,17 @@ namespace Pims.Core.Extensions
             var bytes = Encoding.Default.GetBytes(replaceLineBreaks ? value.Replace("\r\n", " ") : value);
             return Encoding.UTF8.GetString(bytes);
         }
+
+        /// <summary>
+        /// Truncate the specified 'value' to the specified 'length'.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="maxLength"></param>
+        /// <returns></returns>
+        public static string Truncate(this string value, int maxLength)
+        {
+            if (string.IsNullOrEmpty(value)) return value;
+            return value.Length <= maxLength ? value : value.Substring(0, maxLength);
+        }
     }
 }
