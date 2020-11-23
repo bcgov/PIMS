@@ -2,8 +2,7 @@ import ProjectListView from './ProjectListView';
 import React from 'react';
 import { Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
-import { render, cleanup } from '@testing-library/react';
-import { create } from 'react-test-renderer';
+import { render, cleanup, act, wait } from '@testing-library/react';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { ILookupCode } from 'actions/lookupActions';
@@ -15,6 +14,7 @@ import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 import { useKeycloak } from '@react-keycloak/web';
 import Claims from 'constants/claims';
+import pretty from 'pretty';
 
 const mockAxios = new MockAdapter(axios);
 mockAxios.onAny().reply(200, {});
@@ -113,17 +113,19 @@ describe('Project list view tests', () => {
     jest.clearAllMocks();
   });
 
-  it('Matches snapshot', () => {
+  it('Matches snapshot', async () => {
     mockedService.getProjectList.mockResolvedValueOnce(testData as any);
 
-    const tree = create(
-      <Provider store={store}>
-        <Router history={history}>
-          <ProjectListView />
-        </Router>
-      </Provider>,
-    );
-    expect(tree.toJSON()).toMatchSnapshot();
+    await act(async () => {
+      const { container } = render(
+        <Provider store={store}>
+          <Router history={history}>
+            <ProjectListView />
+          </Router>
+        </Provider>,
+      );
+      expect(pretty(container.innerHTML)).toMatchSnapshot();
+    });
   });
 
   it('Displays message for empty list', async () => {
@@ -135,17 +137,20 @@ describe('Project list view tests', () => {
       items: [],
     });
 
-    const { findByText } = render(
-      <Provider store={store}>
-        <Router history={history}>
-          <ProjectListView />
-        </Router>
-      </Provider>,
-    );
+    await act(async () => {
+      const { findByText, container } = render(
+        <Provider store={store}>
+          <Router history={history}>
+            <ProjectListView />
+          </Router>
+        </Provider>,
+      );
 
-    // default table message when there is no data to display
-    const noResults = await findByText('No rows to display');
-    expect(noResults).toBeInTheDocument();
+      // default table message when there is no data to display
+      const noResults = await findByText('No rows to display');
+      expect(noResults).toBeVisible();
+      expect(container.querySelector('span[class="spinner-border"]')).not.toBeInTheDocument();
+    });
   });
 
   it('Does not display export buttons by default', async () => {
@@ -157,16 +162,19 @@ describe('Project list view tests', () => {
       items: [],
     });
 
-    const { queryByText, queryByTitle } = render(
-      <Provider store={store}>
-        <Router history={history}>
-          <ProjectListView />
-        </Router>
-      </Provider>,
-    );
-    expect(queryByTitle('Export Generic Report')).not.toBeInTheDOM();
-    expect(queryByTitle('Export CSV')).not.toBeInTheDOM();
-    expect(queryByText('SPL Report')).not.toBeInTheDOM();
+    await act(async () => {
+      const { queryByText, queryByTitle, container } = render(
+        <Provider store={store}>
+          <Router history={history}>
+            <ProjectListView />
+          </Router>
+        </Provider>,
+      );
+      expect(queryByTitle('Export to Excel')).not.toBeInTheDocument();
+      expect(queryByTitle('Export to CSV')).not.toBeInTheDocument();
+      expect(queryByText('SPL Report')).not.toBeInTheDocument();
+      expect(container.querySelector('span[class="spinner-border"]')).not.toBeInTheDocument();
+    });
   });
 
   it('Displays export buttons with view reports permission', async () => {
@@ -179,15 +187,18 @@ describe('Project list view tests', () => {
       items: [],
     });
 
-    const { queryByTitle } = render(
-      <Provider store={store}>
-        <Router history={history}>
-          <ProjectListView />
-        </Router>
-      </Provider>,
-    );
-    expect(queryByTitle('Export Generic Report')).toBeInTheDOM();
-    expect(queryByTitle('Export CSV')).toBeInTheDOM();
+    await act(async () => {
+      const { queryByTitle, container } = render(
+        <Provider store={store}>
+          <Router history={history}>
+            <ProjectListView />
+          </Router>
+        </Provider>,
+      );
+      expect(queryByTitle('Export to Excel')).toBeInTheDocument();
+      expect(queryByTitle('Export to CSV')).toBeInTheDocument();
+      expect(container.querySelector('span[class="spinner-border"]')).not.toBeInTheDocument();
+    });
   });
 
   it('Displays export buttons with spl reports permission', async () => {
@@ -200,13 +211,18 @@ describe('Project list view tests', () => {
       items: [],
     });
 
-    const { queryByText } = render(
-      <Provider store={store}>
-        <Router history={history}>
-          <ProjectListView />
-        </Router>
-      </Provider>,
-    );
-    expect(queryByText('SPL Report')).toBeVisible();
+    await act(async () => {
+      const { queryByText, container } = render(
+        <Provider store={store}>
+          <Router history={history}>
+            <ProjectListView />
+          </Router>
+        </Provider>,
+      );
+      expect(queryByText('SPL Report')).toBeVisible();
+      await wait(async () => {
+        expect(container.querySelector('span[class="spinner-border"]')).not.toBeInTheDocument();
+      });
+    });
   });
 });

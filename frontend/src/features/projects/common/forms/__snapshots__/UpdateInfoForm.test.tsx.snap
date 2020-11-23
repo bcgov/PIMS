@@ -105,6 +105,7 @@ exports[`Update Info Form Matches Snapshot 1`] = `
             >
               <input
                 className="form-control"
+                disabled={false}
                 name="netBook"
                 onBlur={[Function]}
                 onChange={[Function]}
@@ -135,6 +136,7 @@ exports[`Update Info Form Matches Snapshot 1`] = `
             >
               <input
                 className="form-control"
+                disabled={false}
                 name="estimated"
                 onBlur={[Function]}
                 onChange={[Function]}
@@ -169,6 +171,7 @@ exports[`Update Info Form Matches Snapshot 1`] = `
             >
               <input
                 className="form-control"
+                disabled={false}
                 name="assessed"
                 onBlur={[Function]}
                 onChange={[Function]}
@@ -194,6 +197,7 @@ exports[`Update Info Form Matches Snapshot 1`] = `
             >
               <input
                 className="form-control"
+                disabled={false}
                 name="appraised"
                 onBlur={[Function]}
                 onChange={[Function]}

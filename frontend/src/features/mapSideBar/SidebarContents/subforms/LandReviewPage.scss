@@ -1,0 +1,131 @@
+.review-section {
+  .field-row,
+  .content-item,
+  .val-row {
+    height: 30px;
+  }
+  .break {
+    margin-bottom: 50px;
+  }
+  .harmful {
+    justify-content: center;
+  }
+  .vl {
+    border-left: 1px solid #666666;
+    height: 45px;
+    margin-right: 15px;
+  }
+  .form-control:disabled {
+    border: none;
+    background-color: transparent;
+  }
+  max-width: 900px;
+  .review-steps {
+    text-align: left;
+  }
+  .valuation {
+    background-color: #f2f2f2;
+    margin-top: 10px;
+    border-radius: 10px;
+    padding: 20px;
+    margin-left: 30px;
+    font-size: small;
+    .valuation-header {
+      margin-left: 10px;
+      margin-bottom: 10px;
+      width: 400px;
+      .svg {
+        margin-right: 5px;
+      }
+      .edit {
+        margin-left: 250px;
+        cursor: pointer;
+        color: #1a5a96;
+      }
+    }
+    .val-row {
+      .label {
+        margin-right: 15px;
+        text-align: right;
+        width: 120px;
+      }
+      .form-control {
+        height: 30px;
+        font-size: small;
+        width: 200px;
+      }
+    }
+  }
+  .usage {
+    background-color: #f2f2f2;
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 10px;
+    margin-left: 30px;
+    font-size: small;
+    .form-control {
+      height: 30px;
+      font-size: small;
+      width: 200px;
+    }
+    .label {
+      text-align: right;
+      width: 100px;
+      clear: both;
+      float: left;
+      margin-right: 15px;
+    }
+    .usage-header {
+      margin-left: 10px;
+      margin-bottom: 10px;
+      width: 400px;
+      .svg {
+        margin-right: 5px;
+      }
+      .edit {
+        margin-left: 280px;
+        cursor: pointer;
+        color: #1a5a96;
+      }
+    }
+  }
+  .identification {
+    padding: 20px;
+    background-color: #f2f2f2;
+    border-radius: 10px;
+    font-size: small;
+    .form-control,
+    .GeocoderAutoComplete,
+    .AutoCompleteText,
+    .input-group {
+      width: 200px;
+      height: 30px;
+      font-size: small;
+      padding: 0;
+    }
+    .input-group {
+      .form-control {
+        width: 100px;
+      }
+    }
+    .label {
+      display: inline-block;
+      width: 140px;
+      text-align: right;
+      margin-right: 20px;
+    }
+    .identification-header {
+      margin-left: 10px;
+      margin-top: 10px;
+      width: 400px;
+      .svg {
+        margin-right: 5px;
+      }
+      .edit {
+        margin-left: 150px;
+        cursor: pointer;
+        color: #1a5a96;
+      }
+    }
+  }
+}

@@ -1,5 +1,4 @@
 import React from 'react';
-import renderer from 'react-test-renderer';
 import { createMemoryHistory } from 'history';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
@@ -13,6 +12,7 @@ import { getStore, mockProject as defaultProject } from '../../dispose/testUtils
 import { IProject, SPPApprovalTabs } from '../../common';
 import { SplStep } from '..';
 import Claims from 'constants/claims';
+import pretty from 'pretty';
 
 jest.mock('@react-keycloak/web');
 const mockKeycloak = (claims: string[]) => {
@@ -55,8 +55,8 @@ describe('SPL Approval Step', () => {
   });
   it('renders correctly', () => {
     mockKeycloak([]);
-    const tree = renderer.create(getSplStep()).toJSON();
-    expect(tree).toMatchSnapshot();
+    const { container } = render(getSplStep());
+    expect(pretty(container.innerHTML)).toMatchSnapshot();
   });
   describe('SPL tab Display', () => {
     beforeAll(() => {
@@ -333,8 +333,8 @@ describe('SPL Approval Step', () => {
     });
     const store = getStore(mockProject, SPPApprovalTabs.closeOutForm);
     it('renders correctly', () => {
-      const tree = renderer.create(getSplStep(store)).toJSON();
-      expect(tree).toMatchSnapshot();
+      const { container } = render(getSplStep(store));
+      expect(pretty(container.innerHTML)).toMatchSnapshot();
     });
 
     it('displays close out form tab by default if project disposed', () => {

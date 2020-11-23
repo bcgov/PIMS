@@ -22,6 +22,7 @@ import projectStatusesSlice from 'features/projects/common/slices/projectStatuse
 import filterSlice from './filterSlice';
 import agencyReducer from './agencyReducer';
 import agencyDetailReducer from './agencyDetailReducer';
+import parcelLayerDataSlice from './parcelLayerDataSlice';
 
 export const reducerObject = {
   loadingBar: loadingBarReducer,
@@ -34,6 +35,7 @@ export const reducerObject = {
   [reducerTypes.AGENCIES]: agencyReducer,
   [reducerTypes.NETWORK]: networkReducer,
   [reducerTypes.LEAFLET_CLICK_EVENT]: leafletMouseSlice.reducer,
+  [reducerTypes.PARCEL_LAYER_DATA]: parcelLayerDataSlice.reducer,
   [reducerTypes.JWT]: jwtSlice.reducer,
   [reducerTypes.FILTER]: filterSlice.reducer,
   [ProjectReducers.WORKFLOW]: projectWorkflowSlice.reducer,

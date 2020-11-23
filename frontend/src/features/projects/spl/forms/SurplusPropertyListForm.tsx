@@ -8,12 +8,14 @@ import {
   IProject,
   TasksForm,
   disposeWarning,
+  dateEnteredMarket,
 } from '../../common';
 import { PrivateNotes, PublicNotes } from '../../common/components/ProjectNotes';
 import './SurplusPropertyListForm.scss';
 import _ from 'lodash';
 import GenericModal from 'components/common/GenericModal';
 import { validateFormikWithCallback } from 'utils';
+import TooltipIcon from 'components/common/TooltipIcon';
 
 interface ISurplusPropertyListFormProps {
   isReadOnly?: boolean;
@@ -46,6 +48,7 @@ const SurplusPropertyListForm = ({
         <Form.Label column md={3}>
           Date Entered Market
           <span className="required">&nbsp;*</span>
+          <TooltipIcon toolTipId="dateEnteredMarket" toolTip={dateEnteredMarket} />
         </Form.Label>
         <FastDatePicker
           outerClassName="col-md-2"
@@ -69,7 +72,7 @@ const SurplusPropertyListForm = ({
       </Form.Row>
       <ProjectNotes
         label="Offers Received"
-        tooltip="Review Required for offer(s) in Tier 3 & 4"
+        tooltip="Review required for offer(s) in Tier 3 & 4"
         field="offersNote"
         outerClassName="col-md-12"
         disabled={isReadOnly}

@@ -1,303 +1,43 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Edit agency page EditAgencyPage renders 1`] = `
-Array [
-  <div>
-    <nav
-      className="navBar navbar navbar-expand-sm navbar-light bg-light"
-    >
-      <span
-        className="navbar-brand"
-      >
-         
-        <svg
-          fill="currentColor"
-          height={20}
-          onClick={[Function]}
-          size={20}
-          stroke="currentColor"
-          strokeWidth="0"
-          style={
-            Object {
-              "color": undefined,
-            }
-          }
-          viewBox="0 0 512 512"
-          width={20}
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M256 504C119 504 8 393 8 256S119 8 256 8s248 111 248 248-111 248-248 248zm116-292H256v-70.9c0-10.7-13-16.1-20.5-8.5L121.2 247.5c-4.7 4.7-4.7 12.2 0 16.9l114.3 114.9c7.6 7.6 20.5 2.2 20.5-8.5V300h116c6.6 0 12-5.4 12-12v-64c0-6.6-5.4-12-12-12z"
-          />
-        </svg>
-      </span>
-      <h4>
-        Agency Information
-      </h4>
-    </nav>
-    <div
-      className="container-fluid"
-    >
-      <div
-        className="agency-edit-form-container row"
-      >
-        <form
-          className="agencyInfo"
-          noValidate={true}
-          onSubmit={[Function]}
-        >
-          <div
-            className="required form-group"
-          >
-            <label
-              className="form-label"
-              htmlFor="input-name"
-            >
-              Agency
-              <span
-                className="required"
-              >
-                *
-              </span>
-            </label>
-            <input
-              className="form-control"
-              id="input-name"
-              name="name"
-              onBlur={[Function]}
-              onChange={[Function]}
-              required={true}
-              type="text"
-              value="Test Agency"
-            />
-          </div>
-          <div
-            className="required form-group"
-          >
-            <label
-              className="form-label"
-              htmlFor="input-code"
-            >
-              Short Name (Code)
-              <span
-                className="required"
-              >
-                *
-              </span>
-            </label>
-            <input
-              className="form-control"
-              id="input-code"
-              name="code"
-              onBlur={[Function]}
-              onChange={[Function]}
-              required={true}
-              type="text"
-              value="TEST"
-            />
-          </div>
-          <div
-            className="form-group"
-          >
-            <label
-              className="form-label"
-              htmlFor="input-parentId"
-            >
-              Parent Agency - If applicable
-            </label>
-            <select
-              className="form-select form-control"
-              disabled={true}
-              id="input-parentId"
-              name="parentId"
-              onBlur={[Function]}
-              onChange={[Function]}
-            >
-              <option
-                value=""
-              >
-                No parent
-              </option>
-              <option
-                className="option"
-                value="111"
-              >
-                Test Agency
-              </option>
-            </select>
-          </div>
-          <div
-            className="form-group"
-          >
-            <label
-              className="form-label"
-              htmlFor="input-description"
-            >
-              Description
-            </label>
-            <input
-              className="form-control"
-              id="input-description"
-              name="description"
-              onBlur={[Function]}
-              onChange={[Function]}
-              type="text"
-            />
-          </div>
-          <div
-            className="form-group"
-          >
-            <label
-              className="form-label"
-              htmlFor="input-email"
-            >
-              Agency e-mail address
-            </label>
-            <input
-              className="form-control"
-              id="input-email"
-              name="email"
-              onBlur={[Function]}
-              onChange={[Function]}
-              type="text"
-              value="test@email.com"
-            />
-          </div>
-          <div
-            className="checkboxes form-group"
-          >
-            <div
-              className="form-group"
-            >
-              <div
-                className="check-field"
-              >
-                <label
-                  className="form-label"
-                  htmlFor="input-isDisabled"
-                >
-                  Is Disabled?
-                  <svg
-                    className="tooltip-icon"
-                    fill="currentColor"
-                    height="1em"
-                    onBlur={[Function]}
-                    onFocus={[Function]}
-                    onMouseOut={[Function]}
-                    onMouseOver={[Function]}
-                    stroke="currentColor"
-                    strokeWidth="0"
-                    style={
-                      Object {
-                        "color": undefined,
-                      }
-                    }
-                    viewBox="0 0 512 512"
-                    width="1em"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"
-                    />
-                  </svg>
-                </label>
-                <div
-                  className="form-check"
-                >
-                  <input
-                    checked={false}
-                    className="form-check-input position-static"
-                    disabled={false}
-                    id="input-isDisabled"
-                    name="isDisabled"
-                    onChange={[Function]}
-                    type="checkbox"
-                    value={false}
-                  />
-                </div>
-              </div>
-            </div>
-            <div
-              className="form-group"
-            >
-              <div
-                className="check-field"
-              >
-                <label
-                  className="form-label"
-                  htmlFor="input-sendEmail"
-                >
-                  Send email?
-                  <svg
-                    className="tooltip-icon"
-                    fill="currentColor"
-                    height="1em"
-                    onBlur={[Function]}
-                    onFocus={[Function]}
-                    onMouseOut={[Function]}
-                    onMouseOver={[Function]}
-                    stroke="currentColor"
-                    strokeWidth="0"
-                    style={
-                      Object {
-                        "color": undefined,
-                      }
-                    }
-                    viewBox="0 0 512 512"
-                    width="1em"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"
-                    />
-                  </svg>
-                </label>
-                <div
-                  className="form-check"
-                >
-                  <input
-                    checked={true}
-                    className="form-check-input position-static"
-                    disabled={false}
-                    id="input-sendEmail"
-                    name="sendEmail"
-                    onChange={[Function]}
-                    type="checkbox"
-                    value={true}
-                  />
-                </div>
-              </div>
+"<div>
+  <nav class=\\"navBar navbar navbar-expand-sm navbar-light bg-light\\"><span class=\\"navbar-brand\\"> <svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 512 512\\" size=\\"20\\" height=\\"20\\" width=\\"20\\" xmlns=\\"http://www.w3.org/2000/svg\\"><path d=\\"M256 504C119 504 8 393 8 256S119 8 256 8s248 111 248 248-111 248-248 248zm116-292H256v-70.9c0-10.7-13-16.1-20.5-8.5L121.2 247.5c-4.7 4.7-4.7 12.2 0 16.9l114.3 114.9c7.6 7.6 20.5 2.2 20.5-8.5V300h116c6.6 0 12-5.4 12-12v-64c0-6.6-5.4-12-12-12z\\"></path></svg></span>
+    <h4>Agency Information</h4>
+  </nav>
+  <div class=\\"container-fluid\\">
+    <div class=\\"agency-edit-form-container row\\">
+      <form novalidate=\\"\\" class=\\"agencyInfo\\">
+        <div class=\\"required form-group\\"><label class=\\"form-label\\" for=\\"input-name\\">Agency<span class=\\"required\\">*</span></label><input name=\\"name\\" required=\\"\\" type=\\"text\\" id=\\"input-name\\" class=\\"form-control\\" value=\\"Test Agency\\"></div>
+        <div class=\\"required form-group\\"><label class=\\"form-label\\" for=\\"input-code\\">Short Name (Code)<span class=\\"required\\">*</span></label><input name=\\"code\\" required=\\"\\" type=\\"text\\" id=\\"input-code\\" class=\\"form-control\\" value=\\"TEST\\"></div>
+        <div class=\\"form-group\\"><label class=\\"form-label\\" for=\\"input-parentId\\">Parent Agency - If applicable</label><select name=\\"parentId\\" disabled=\\"\\" id=\\"input-parentId\\" class=\\"form-select form-control\\">
+            <option value=\\"\\">No parent</option>
+            <option value=\\"111\\" class=\\"option\\">Test Agency</option>
+          </select></div>
+        <div class=\\"form-group\\"><label class=\\"form-label\\" for=\\"input-description\\">Description</label><input name=\\"description\\" type=\\"text\\" id=\\"input-description\\" class=\\"form-control\\" value=\\"\\"></div>
+        <div class=\\"form-group\\"><label class=\\"form-label\\" for=\\"input-email\\">Agency e-mail address</label><input name=\\"email\\" type=\\"text\\" id=\\"input-email\\" class=\\"form-control\\" value=\\"test@email.com\\"></div>
+        <div class=\\"checkboxes form-group\\">
+          <div class=\\"form-group\\">
+            <div class=\\"check-field\\"><label class=\\"form-label\\" for=\\"input-isDisabled\\">Disable Agency?<svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 512 512\\" class=\\"tooltip-icon\\" height=\\"1em\\" width=\\"1em\\" xmlns=\\"http://www.w3.org/2000/svg\\">
+                  <path d=\\"M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z\\"></path>
+                </svg></label>
+              <div class=\\"form-check\\"><input name=\\"isDisabled\\" type=\\"checkbox\\" id=\\"input-isDisabled\\" class=\\"form-check-input position-static\\" value=\\"false\\"></div>
             </div>
           </div>
-          <hr />
-          <div
-            className="buttons row"
-          >
-            <div
-              className="cancelSave btn-toolbar"
-              role="toolbar"
-            >
-              <button
-                className="bg-danger mr-5 btn btn-primary"
-                disabled={false}
-                onClick={[Function]}
-                type="button"
-              >
-                Delete Agency
-              </button>
-              <button
-                className="mr-5 btn btn-primary"
-                disabled={false}
-                type="submit"
-              >
-                Save Changes
-              </button>
+          <div class=\\"form-group\\">
+            <div class=\\"check-field\\"><label class=\\"form-label\\" for=\\"input-sendEmail\\">Email Notifications?<svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 512 512\\" class=\\"tooltip-icon\\" height=\\"1em\\" width=\\"1em\\" xmlns=\\"http://www.w3.org/2000/svg\\">
+                  <path d=\\"M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z\\"></path>
+                </svg></label>
+              <div class=\\"form-check\\"><input name=\\"sendEmail\\" type=\\"checkbox\\" id=\\"input-sendEmail\\" class=\\"form-check-input position-static\\" value=\\"true\\" checked=\\"\\"></div>
             </div>
           </div>
-        </form>
-      </div>
+        </div>
+        <hr>
+        <div class=\\"buttons row\\">
+          <div role=\\"toolbar\\" class=\\"cancelSave btn-toolbar\\"><button type=\\"button\\" class=\\"bg-danger mr-5 btn btn-primary\\">Delete Agency</button><button type=\\"submit\\" class=\\"mr-5 btn btn-primary\\">Save Changes</button></div>
+        </div>
+      </form>
     </div>
-  </div>,
-  ",",
-]
+  </div>
+</div>,"
 `;

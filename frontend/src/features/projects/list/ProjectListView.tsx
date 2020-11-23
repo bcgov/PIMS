@@ -28,6 +28,7 @@ import download from 'utils/download';
 import { mapLookupCode, mapStatuses } from 'utils';
 import styled from 'styled-components';
 import { ParentGroupedFilter } from 'components/SearchBar/ParentGroupedFilter';
+import TooltipWrapper from 'components/common/TooltipWrapper';
 
 interface IProjectFilterState {
   name?: string;
@@ -111,7 +112,7 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
   const columns = useMemo(() => cols, []);
 
   // We'll start our table without any data
-  const [data, setData] = useState<IProject[]>([]);
+  const [data, setData] = useState<IProject[] | undefined>(undefined);
 
   // Filtering and pagination state
   const [filter, setFilter] = useState<IProjectFilterState>({});
@@ -162,11 +163,9 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
       // Give this fetch an ID
       const fetchId = ++fetchIdRef.current;
 
-      // TODO: Set the loading state
-      // setLoading(true);
-
       // Only update the data if this is the latest fetch
       if (fetchId === fetchIdRef.current && agencyIds?.length > 0) {
+        setData(undefined);
         const query = getServerQuery({
           pageIndex,
           pageSize,
@@ -182,8 +181,6 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
           }),
         );
         setPageCount(Math.ceil(data.total / pageSize));
-
-        // setLoading(false);
       }
     },
     [setData, setPageCount, mode],
@@ -217,10 +214,10 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
   };
 
   const handleDelete = async () => {
-    const project = data.find(p => p.projectNumber === deleteId);
+    const project = data?.find(p => p.projectNumber === deleteId);
     if (project) {
       await service.deleteProject(project);
-      setData(data.filter(p => p.projectNumber !== project.projectNumber));
+      setData(data?.filter(p => p.projectNumber !== project.projectNumber));
     }
   };
 
@@ -255,7 +252,7 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
         return { ...map, [projectId]: current[projectId] };
       }, {});
       setData(
-        data.map(d => {
+        data?.map(d => {
           return !!projectPropertiesMap[d.projectNumber]
             ? { ...d, properties: projectPropertiesMap[d.projectNumber] }
             : d;
@@ -306,25 +303,41 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
         <Container fluid className="TableToolbar">
           <h3 className="mr-4">{title}</h3>
           {keycloak.hasClaim(Claims.REPORTS_SPL) && (
-            <Button className="mr-auto" onClick={() => history.push('/reports/spl')}>
-              SPL Report
-            </Button>
+            <TooltipWrapper toolTipId="spl-report" toolTip="View SPL Reports">
+              <Button className="mr-auto" onClick={() => history.push('/reports/spl')}>
+                SPL Report
+              </Button>
+            </TooltipWrapper>
           )}
           {keycloak.hasClaim(Claims.REPORTS_VIEW) && (
             <>
-              <FileIcon className="mr-1 p-0" onClick={() => fetch('excel', 'generic')}>
-                <FaFileExcel size={36} title="Export Generic Report" />
-              </FileIcon>
-              <FileIcon className="mr-1 p-0" onClick={() => fetch('csv', 'generic')}>
-                <FaFileAlt title="Export CSV" size={36} />
-              </FileIcon>
+              <TooltipWrapper toolTipId="export-to-excel" toolTip="Export to Excel">
+                <FileIcon>
+                  <FaFileExcel
+                    size={36}
+                    title="Export to Excel"
+                    onClick={() => fetch('excel', 'generic')}
+                  />
+                </FileIcon>
+              </TooltipWrapper>
+              <TooltipWrapper toolTipId="export-to-excel" toolTip="Export to CSV">
+                <FileIcon>
+                  <FaFileAlt
+                    size={36}
+                    title="Export to CSV"
+                    onClick={() => fetch('csv', 'generic')}
+                  />
+                </FileIcon>
+              </TooltipWrapper>
             </>
           )}
         </Container>
         <Table<IProject>
           name="projectsTable"
+          clickableTooltip="View Disposal Project details"
           columns={mode === PageMode.APPROVAL ? columns() : columns(initiateDelete)}
-          data={data}
+          data={data || []}
+          loading={data === undefined}
           onRequestData={handleRequestData}
           pageCount={pageCount}
           pageSize={pageSize}

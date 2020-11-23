@@ -2,8 +2,7 @@ import { ProjectApprovalRequestListView } from './ProjectListView';
 import React from 'react';
 import { Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
-import { render, wait, cleanup } from '@testing-library/react';
-import { create } from 'react-test-renderer';
+import { render, cleanup, wait } from '@testing-library/react';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { ILookupCode } from 'actions/lookupActions';
@@ -11,6 +10,7 @@ import * as API from 'constants/API';
 import { Provider } from 'react-redux';
 import * as reducerTypes from 'constants/reducerTypes';
 import service from '../apiService';
+import pretty from 'pretty';
 
 const testData = {
   items: [
@@ -95,7 +95,7 @@ describe('Project Approval Request list view', () => {
   it('Matches snapshot', async () => {
     mockedService.getProjectList.mockResolvedValueOnce(testData as any);
 
-    const tree = create(
+    const { container } = render(
       <Provider store={store}>
         <Router history={history}>
           <ProjectApprovalRequestListView />
@@ -103,7 +103,7 @@ describe('Project Approval Request list view', () => {
       </Provider>,
     );
     await wait(() => expect(service.getProjectList).toHaveBeenCalledTimes(1), { timeout: 500 });
-    expect(tree.toJSON()).toMatchSnapshot();
+    expect(pretty(container.innerHTML)).toMatchSnapshot();
   });
 
   it('Displays message for empty list', async () => {

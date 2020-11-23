@@ -129,6 +129,7 @@ export const ManageUsersPage = () => {
             sort={sort}
             onPageSizeChange={size => dispatch(setUsersPageSize(size))}
             loading={!(users && !users.isFetching)}
+            clickableTooltip="Click IDIR/BCeID link to view User Information page"
           />
         </TableContainer>
       }

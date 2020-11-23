@@ -1,6 +1,5 @@
 import EditAgencyPage from './EditAgencyPage';
 import React from 'react';
-import renderer, { act } from 'react-test-renderer';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { ILookupCode } from 'actions/lookupActions';
@@ -9,10 +8,11 @@ import { Provider } from 'react-redux';
 import * as reducerTypes from 'constants/reducerTypes';
 import { createMemoryHistory } from 'history';
 import { Router } from 'react-router-dom';
-import { render, cleanup } from '@testing-library/react';
+import { render, cleanup, act } from '@testing-library/react';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 import { ToastContainer } from 'react-toastify';
+import pretty from 'pretty';
 
 const mockStore = configureMockStore([thunk]);
 const history = createMemoryHistory();
@@ -66,16 +66,14 @@ describe('Edit agency page', () => {
     mockAxios.onAny().reply(200, {});
   });
   it('EditAgencyPage renders', () => {
-    const tree = renderer
-      .create(
-        <Provider store={store}>
-          <Router history={history}>
-            <EditAgencyPage id={111} />,
-          </Router>
-        </Provider>,
-      )
-      .toJSON();
-    expect(tree).toMatchSnapshot();
+    const { container } = render(
+      <Provider store={store}>
+        <Router history={history}>
+          <EditAgencyPage id={111} />,
+        </Router>
+      </Provider>,
+    );
+    expect(pretty(container.innerHTML)).toMatchSnapshot();
   });
 
   describe('appropriate fields are autofilled', () => {
@@ -86,7 +84,7 @@ describe('Edit agency page', () => {
       );
       expect(getByLabelText('Agency*').getAttribute('value')).toEqual('Test Agency');
       expect(getByLabelText('Short Name (Code)*').getAttribute('value')).toEqual('TEST');
-      expect(getByLabelText(/send email?/i).getAttribute('value')).toEqual('true');
+      expect(getByLabelText(/email notifications?/i).getAttribute('value')).toEqual('true');
     });
   });
 

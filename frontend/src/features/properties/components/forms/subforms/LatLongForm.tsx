@@ -1,16 +1,18 @@
 import { useCallback } from 'react';
 import React from 'react';
 import { FormikProps } from 'formik';
-import { Form, FastInput } from 'components/common/form';
-import { latitudeTooltip } from '../strings';
+import { Form, FastInput, InputGroup } from 'components/common/form';
 import { ReactComponent as BuildingDraftIcon } from 'assets/images/draft-building-icon.svg';
 import { ReactComponent as ParcelDraftIcon } from 'assets/images/draft-parcel-icon.svg';
 import styled from 'styled-components';
+import { Label } from 'components/common/Label';
+import { Col, Row } from 'react-bootstrap';
 
 interface LatLongFormProps {
   setMovingPinNameSpace: (nameSpace: string) => void;
   nameSpace?: string;
   disabled?: boolean;
+  showLandArea?: boolean;
 }
 
 export const defaultLatLongValues: any = {
@@ -19,15 +21,12 @@ export const defaultLatLongValues: any = {
 };
 
 const DraftMarkerButton = styled.button`
-  position: absolute;
+  // position: absolute;
   top: 20px;
   right: 20px;
   border: 0px;
+  background-color: none;
   display: flex;
-  p {
-    width: 35px;
-    margin: 0;
-  }
 `;
 
 const LatLongForm = <T extends any>(props: LatLongFormProps & FormikProps<T>) => {
@@ -39,44 +38,68 @@ const LatLongForm = <T extends any>(props: LatLongFormProps & FormikProps<T>) =>
   );
 
   return (
-    <div style={{ position: 'relative' }}>
+    <div className="lat-long" style={{ position: 'relative' }}>
+      <Row>
+        <Col md={9}>
+          <p className="instruction">
+            <span className="req">*</span>
+            Drag and drop the pin on the map to mark the location of this property, or if you
+            already have the coordinates, you can enter them manually in the fields below.
+          </p>
+        </Col>
+        <Col className="marker-svg">
+          <DraftMarkerButton
+            disabled={props.disabled}
+            onClick={(e: any) => {
+              props.setMovingPinNameSpace(props.nameSpace ?? '');
+              e.preventDefault();
+            }}
+          >
+            {props?.nameSpace?.includes('building') === true ? (
+              <BuildingDraftIcon />
+            ) : (
+              <ParcelDraftIcon className="parcel-icon" />
+            )}
+          </DraftMarkerButton>
+        </Col>
+      </Row>
       <Form.Row>
-        <Form.Label className="required">Latitude</Form.Label>
+        <Label>Latitude</Label>
         <FastInput
           className="input-medium"
           displayErrorTooltips
-          tooltip={latitudeTooltip}
+          // tooltip={latitudeTooltip}
           formikProps={props}
           disabled={props.disabled}
           type="number"
-          field={withNameSpace('latitude')}
+          field={props.showLandArea ? withNameSpace('data.latitude') : withNameSpace('latitude')}
         />
       </Form.Row>
       <Form.Row>
-        <Form.Label className="required">Longitude</Form.Label>
+        <Label>Longitude</Label>
         <FastInput
           className="input-medium"
           displayErrorTooltips
           formikProps={props}
           disabled={props.disabled}
           type="number"
-          field={withNameSpace('longitude')}
+          field={props.showLandArea ? withNameSpace('data.longitude') : withNameSpace('longitude')}
         />
       </Form.Row>
-      <DraftMarkerButton
-        disabled={props.disabled}
-        onClick={(e: any) => {
-          props.setMovingPinNameSpace(props.nameSpace ?? '');
-          e.preventDefault();
-        }}
-      >
-        <p>Place Pin</p>
-        {props?.nameSpace?.includes('building') === true ? (
-          <BuildingDraftIcon />
-        ) : (
-          <ParcelDraftIcon />
-        )}
-      </DraftMarkerButton>
+      {props.showLandArea && (
+        <Form.Row>
+          <InputGroup
+            displayErrorTooltips
+            fast={true}
+            disabled={props.disabled}
+            label="Lot Size"
+            type="number"
+            field={withNameSpace('data.landArea')}
+            formikProps={props}
+            postText="Hectares"
+          />
+        </Form.Row>
+      )}
     </div>
   );
 };

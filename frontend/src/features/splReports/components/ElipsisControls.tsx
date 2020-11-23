@@ -29,7 +29,7 @@ const ElipsisControls: React.FunctionComponent<IElipsisControlsProps> = ({
       id={`${report.id}-elipsis-controls`}
       bsPrefix="elipsis"
       className="elipsis-dropdown"
-      title={<FaEllipsisH title={`${report.id}-elipsis`} />}
+      title={<FaEllipsisH title={`Report ${report.id} actions`} />}
     >
       <Dropdown.Item eventKey="1" onClick={() => onOpen(report)}>
         Open

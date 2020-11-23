@@ -1,29 +1,11 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Auto Complete Text component renders correctly 1`] = `
-<form
-  action="#"
-  onReset={[Function]}
-  onSubmit={[Function]}
->
-  <div
-    className="AutoCompleteText"
-  >
-    <div
-      className="form-group"
-    >
-      <div
-        className="input-area"
-      >
-        <input
-          className="form-control"
-          id="input-city"
-          name="city"
-          onChange={[Function]}
-          value=""
-        />
-      </div>
+"<form action=\\"#\\">
+  <div class=\\"AutoCompleteText\\">
+    <div class=\\"form-group\\">
+      <div class=\\"input-area\\"><input name=\\"city\\" id=\\"input-city\\" class=\\"form-control\\" value=\\"Victoria\\"></div>
     </div>
   </div>
-</form>
+</form>"
 `;

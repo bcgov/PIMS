@@ -1,0 +1,27 @@
+.parcel-usage {
+  .classification {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    background-color: #e9ecef;
+    border-radius: 5px;
+    // height: 80px;
+    .form-group {
+      padding-top: 10px;
+      width: 250px;
+    }
+    .label {
+      display: inline-block;
+      // float: left;
+      text-align: right;
+      width: 150px;
+      padding-top: 10px;
+    }
+  }
+  .label {
+    width: 150px;
+    padding: 10px;
+  }
+  .form-group {
+    width: 250px;
+  }
+}

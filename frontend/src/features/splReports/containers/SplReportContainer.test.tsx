@@ -2,7 +2,7 @@ import SplReportContainer from './SplReportContainer';
 import React from 'react';
 import { Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
-import { render, cleanup, fireEvent } from '@testing-library/react';
+import { render, cleanup, fireEvent, wait } from '@testing-library/react';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
@@ -11,7 +11,7 @@ import { IReport, ISnapshot } from '../interfaces';
 import { formatApiDateTime } from 'utils';
 import pretty from 'pretty';
 import { act } from 'react-dom/test-utils';
-import { screen, waitFor } from '@testing-library/dom';
+import { screen } from '@testing-library/dom';
 import { ToastContainer } from 'react-toastify';
 import { fillInput } from 'utils/testUtils';
 
@@ -33,7 +33,11 @@ const mockApi = ((useProjectSnapshotApi as unknown) as jest.Mock<
 
 const mockStore = configureMockStore([thunk]);
 
-const history = createMemoryHistory();
+const history = createMemoryHistory({
+  getUserConfirmation: (message, callback) => {
+    callback(true);
+  },
+});
 const defaultReport: IReport = {
   id: 1,
   name: 'report 1',
@@ -181,7 +185,7 @@ describe('Spl Report Container', () => {
         mockApi().getProjectReports.mockResolvedValue([defaultReport]);
         mockApi().getProjectReportSnapshotsById.mockResolvedValue([defaultSnapshot]);
         const { findByTitle, findByText } = renderContainer();
-        const elipsis = await findByTitle('1-elipsis');
+        const elipsis = await findByTitle('Report 1 actions');
         fireEvent.click(elipsis);
         const deleteButton = await findByText('Delete');
         fireEvent.click(deleteButton);
@@ -198,7 +202,7 @@ describe('Spl Report Container', () => {
         mockApi().getProjectReportSnapshotsById.mockResolvedValue([defaultSnapshot]);
         const { findByTitle, findByText } = renderContainer();
 
-        const elipsis = await findByTitle('1-elipsis');
+        const elipsis = await findByTitle('Report 1 actions');
         fireEvent.click(elipsis);
         const deleteButton = await findByText('Delete');
         fireEvent.click(deleteButton);
@@ -219,7 +223,7 @@ describe('Spl Report Container', () => {
         mockApi().getProjectReportSnapshotsById.mockResolvedValue([defaultSnapshot]);
         const { findByTitle, findByText } = renderContainer();
 
-        const elipsis = await findByTitle('1-elipsis');
+        const elipsis = await findByTitle('Report 1 actions');
         fireEvent.click(elipsis);
         const deleteButton = await findByText('Delete');
         fireEvent.click(deleteButton);
@@ -238,7 +242,7 @@ describe('Spl Report Container', () => {
         mockApi().getProjectReports.mockResolvedValue([{ ...defaultReport }]);
         mockApi().getProjectReportSnapshotsById.mockResolvedValue([defaultSnapshot]);
         const { findByTitle, findByText } = renderContainer();
-        const elipsis = await findByTitle('1-elipsis');
+        const elipsis = await findByTitle('Report 1 actions');
         fireEvent.click(elipsis);
         const finalButton = await findByText('Mark as Final');
         fireEvent.click(finalButton);
@@ -253,7 +257,7 @@ describe('Spl Report Container', () => {
         mockApi().getProjectReports.mockResolvedValue([{ ...defaultReport, isFinal: true }]);
         mockApi().getProjectReportSnapshotsById.mockResolvedValue([defaultSnapshot]);
         const { findByTitle, findByText } = renderContainer();
-        const elipsis = await findByTitle('1-elipsis');
+        const elipsis = await findByTitle('Report 1 actions');
         fireEvent.click(elipsis);
         const finalButton = await findByText('Remove Final');
         fireEvent.click(finalButton);
@@ -270,7 +274,7 @@ describe('Spl Report Container', () => {
         mockApi().getProjectReportSnapshotsById.mockResolvedValue([defaultSnapshot]);
         const { findByTitle, findByText } = renderContainer();
 
-        const elipsis = await findByTitle('1-elipsis');
+        const elipsis = await findByTitle('Report 1 actions');
         fireEvent.click(elipsis);
         const finalButton = await findByText('Remove Final');
         fireEvent.click(finalButton);
@@ -295,7 +299,7 @@ describe('Spl Report Container', () => {
         const report = await findByText('report 2');
         mockApi().getProjectReportSnapshotsById.mockClear();
         fireEvent.click(report);
-        await waitFor(() => {
+        await wait(() => {
           expect(mockApi().getProjectReportSnapshotsById).toHaveBeenCalledWith<[number]>(2);
         });
       });
@@ -350,7 +354,7 @@ describe('Spl Report Container', () => {
         await result.findByText('report 1');
       });
       await fillInput(result.container, 'name', 'a new name');
-      await waitFor(async () => {
+      await wait(async () => {
         const save = await result.findByText('Save');
         expect(save).not.toBeDisabled();
       });

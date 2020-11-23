@@ -174,15 +174,13 @@ exports[`Manage Agencies Component Snapshot matches 1`] = `
           className="bar-item flex-grow-0 plus-button col"
         >
           <button
-            className="Button Button--icon-only bg-success btn btn-primary"
+            className="Button Button--icon-only primary btn btn-primary"
             disabled={false}
             onBlur={[Function]}
             onClick={[Function]}
             onFocus={[Function]}
             onMouseOut={[Function]}
             onMouseOver={[Function]}
-            toolId="agency-filter-add"
-            toolText="Add a new Agency"
             type="button"
           >
             <div
@@ -355,7 +353,7 @@ exports[`Manage Agencies Component Snapshot matches 1`] = `
                   "width": "100px",
                 }
               }
-              title=""
+              title="View agency details"
             >
               BC Assessment
             </div>
@@ -375,7 +373,7 @@ exports[`Manage Agencies Component Snapshot matches 1`] = `
                   "width": "100px",
                 }
               }
-              title=""
+              title="View agency details"
             >
               BCA
             </div>
@@ -395,7 +393,7 @@ exports[`Manage Agencies Component Snapshot matches 1`] = `
                   "width": "100px",
                 }
               }
-              title=""
+              title="View agency details"
             >
               
             </div>
@@ -415,7 +413,7 @@ exports[`Manage Agencies Component Snapshot matches 1`] = `
                   "width": "100px",
                 }
               }
-              title=""
+              title="View agency details"
             >
               <a
                 href="/admin/agency/undefined"
@@ -454,7 +452,7 @@ exports[`Manage Agencies Component Snapshot matches 1`] = `
                   "width": "100px",
                 }
               }
-              title=""
+              title="View agency details"
             >
               BC Test
             </div>
@@ -474,7 +472,7 @@ exports[`Manage Agencies Component Snapshot matches 1`] = `
                   "width": "100px",
                 }
               }
-              title=""
+              title="View agency details"
             >
               TEST
             </div>
@@ -494,7 +492,7 @@ exports[`Manage Agencies Component Snapshot matches 1`] = `
                   "width": "100px",
                 }
               }
-              title=""
+              title="View agency details"
             >
               
             </div>
@@ -514,7 +512,7 @@ exports[`Manage Agencies Component Snapshot matches 1`] = `
                   "width": "100px",
                 }
               }
-              title=""
+              title="View agency details"
             >
               <a
                 href="/admin/agency/12"
