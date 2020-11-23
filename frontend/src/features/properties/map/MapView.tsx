@@ -120,10 +120,6 @@ const MapView: React.FC<MapViewProps> = (props: MapViewProps) => {
     return apiParams;
   };
   const saveLatLng = (e: LeafletMouseEvent) => {
-    // TODO: this prevents click events on markers from being recorded, would like a better way.
-    if (!(e?.originalEvent?.target as any)?.className?.indexOf('leaflet-marker')) {
-      return;
-    }
     if (!props.disabled) {
       dispatch(saveLeafletMouseEvent(e));
     }
