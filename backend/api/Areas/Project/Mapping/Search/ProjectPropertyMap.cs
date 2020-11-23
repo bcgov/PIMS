@@ -31,12 +31,12 @@ namespace Pims.Api.Areas.Project.Mapping.Search
                         : GetParcelAssessedValue(src.Parcel.Evaluations))
                 .Map(dest => dest.NetBook,
                     src => src.Building != null
-                        ? GetBuildingNetValue(src.Building.Fiscals)
-                        : GetParcelNetValue(src.Parcel.Fiscals))
-                .Map(dest => dest.Estimated,
+                        ? GetBuildingNetBookValue(src.Building.Fiscals)
+                        : GetParcelNetBookValue(src.Parcel.Fiscals))
+                .Map(dest => dest.Market,
                     src => src.Building != null
-                        ? GetBuildingEstimatedValue(src.Building.Fiscals)
-                        : GetParcelEstimatedValue(src.Parcel.Fiscals))
+                        ? GetBuildingMarketValue(src.Building.Fiscals)
+                        : GetParcelMarketValue(src.Parcel.Fiscals))
                 .Map(dest => dest.Zoning, src => src.Building != null ? src.Building.GetZoning().First() : src.Parcel.Zoning)
                 .Map(dest => dest.ZoningPotential, src => src.Building != null ? src.Building.GetZoningPotential().First() : src.Parcel.ZoningPotential)
 
@@ -78,27 +78,27 @@ namespace Pims.Api.Areas.Project.Mapping.Search
             return parcelEvaluation?.Value ?? 0;
         }
 
-        private decimal GetBuildingNetValue(ICollection<BuildingFiscal> fiscals)
+        private decimal GetBuildingNetBookValue(ICollection<BuildingFiscal> fiscals)
         {
             var buildingFiscal = fiscals.OrderByDescending(f => f.FiscalYear).FirstOrDefault(f => f.Key == FiscalKeys.NetBook);
             return buildingFiscal?.Value ?? 0;
         }
 
-        private decimal GetBuildingEstimatedValue(ICollection<BuildingFiscal> fiscals)
+        private decimal GetBuildingMarketValue(ICollection<BuildingFiscal> fiscals)
         {
-            var buildingFiscal = fiscals.OrderByDescending(f => f.FiscalYear).FirstOrDefault(f => f.Key == FiscalKeys.Estimated);
+            var buildingFiscal = fiscals.OrderByDescending(f => f.FiscalYear).FirstOrDefault(f => f.Key == FiscalKeys.Market);
             return buildingFiscal?.Value ?? 0;
         }
 
-        private decimal GetParcelNetValue(ICollection<ParcelFiscal> fiscals)
+        private decimal GetParcelNetBookValue(ICollection<ParcelFiscal> fiscals)
         {
             var parcelFiscal = fiscals.OrderByDescending(f => f.FiscalYear).FirstOrDefault(f => f.Key == FiscalKeys.NetBook);
             return parcelFiscal?.Value ?? 0;
         }
 
-        private decimal GetParcelEstimatedValue(ICollection<ParcelFiscal> fiscals)
+        private decimal GetParcelMarketValue(ICollection<ParcelFiscal> fiscals)
         {
-            var parcelFiscal = fiscals.OrderByDescending(f => f.FiscalYear).FirstOrDefault(f => f.Key == FiscalKeys.Estimated);
+            var parcelFiscal = fiscals.OrderByDescending(f => f.FiscalYear).FirstOrDefault(f => f.Key == FiscalKeys.Market);
             return parcelFiscal?.Value ?? 0;
         }
 

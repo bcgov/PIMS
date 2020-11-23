@@ -140,9 +140,9 @@ exports[`ParcelDetail Functionality ParcelDetailForm renders view-only correctly
                         <div class=\\"input-tooltip-wrapper\\"><input name=\\"NetBook\\" class=\\"form-control\\" disabled=\\"\\" placeholder=\\"$0\\" value=\\"10000\\"></div>
                       </div>
                     </div>
-                    <div class=\\"form-row\\"><label class=\\"form-label\\">Estimated Sum</label>
+                    <div class=\\"form-row\\"><label class=\\"form-label\\">Market Sum</label>
                       <div class=\\"fast-currency-input form-group\\">
-                        <div class=\\"input-tooltip-wrapper\\"><input name=\\"Estimated\\" class=\\"form-control\\" disabled=\\"\\" placeholder=\\"$0\\" value=\\"\\"></div>
+                        <div class=\\"input-tooltip-wrapper\\"><input name=\\"Market\\" class=\\"form-control\\" disabled=\\"\\" placeholder=\\"$0\\" value=\\"\\"></div>
                       </div>
                     </div>
                   </div>
@@ -183,7 +183,7 @@ exports[`ParcelDetail Functionality ParcelDetailForm renders view-only correctly
                             <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">20/21</div>
                             <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">
                               <div class=\\"fast-currency-input form-group\\">
-                                <div class=\\"input-tooltip-wrapper\\"><input name=\\"financials.0.estimated.value\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
+                                <div class=\\"input-tooltip-wrapper\\"><input name=\\"financials.0.market.value\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
                               </div>
                             </div>
                           </div>
@@ -207,7 +207,7 @@ exports[`ParcelDetail Functionality ParcelDetailForm renders view-only correctly
                             <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">19/20</div>
                             <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">
                               <div class=\\"fast-currency-input form-group\\">
-                                <div class=\\"input-tooltip-wrapper\\"><input name=\\"financials.1.estimated.value\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
+                                <div class=\\"input-tooltip-wrapper\\"><input name=\\"financials.1.market.value\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
                               </div>
                             </div>
                           </div>

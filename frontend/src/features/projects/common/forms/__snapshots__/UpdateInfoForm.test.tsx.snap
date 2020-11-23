@@ -152,7 +152,7 @@ exports[`Update Info Form Matches Snapshot 1`] = `
               <input
                 className="form-control"
                 disabled={false}
-                name="estimated"
+                name="market"
                 onBlur={[Function]}
                 onChange={[Function]}
                 placeholder=""
@@ -288,7 +288,7 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                 Object {
                   "display": "flex",
                   "flex": "1 0 auto",
-                  "minWidth": "735px",
+                  "minWidth": "705px",
                 }
               }
             >
@@ -382,27 +382,7 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                   }
                 }
               >
-                Sub Agency
-              </div>
-              <div
-                className="th"
-                colSpan={1}
-                onClick={[Function]}
-                role="columnheader"
-                style={
-                  Object {
-                    "alignItems": "center",
-                    "boxSizing": "border-box",
-                    "display": "flex",
-                    "flex": "100 0 auto",
-                    "justifyContent": "flex-start",
-                    "minWidth": "30px",
-                    "textAlign": "left",
-                    "width": "100px",
-                  }
-                }
-              >
-                Property Name
+                Name
               </div>
               <div
                 className="th"
@@ -502,7 +482,7 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                   }
                 }
               >
-                Netbook Value
+                Net Book Value
               </div>
               <div
                 className="th"
@@ -522,7 +502,7 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                   }
                 }
               >
-                Estimated Value
+                Market Value
               </div>
               <div
                 className="th"
@@ -580,7 +560,7 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                   Object {
                     "display": "flex",
                     "flex": "1 0 auto",
-                    "minWidth": "735px",
+                    "minWidth": "705px",
                   }
                 }
               >
@@ -697,27 +677,7 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                   }
                   title="Click to view property details"
                 >
-                  
-                </div>
-                <div
-                  className="td clickable"
-                  onClick={[Function]}
-                  role="cell"
-                  style={
-                    Object {
-                      "alignItems": "flex-start",
-                      "boxSizing": "border-box",
-                      "display": "flex",
-                      "flex": "100 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "30px",
-                      "textAlign": "left",
-                      "width": "100px",
-                    }
-                  }
-                  title="Click to view property details"
-                >
-                  
+                  213-221-321
                 </div>
                 <div
                   className="td clickable"
@@ -898,7 +858,7 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                     >
                       <input
                         className="form-control"
-                        name="properties.0.estimated"
+                        name="properties.0.market"
                         onBlur={[Function]}
                         onChange={[Function]}
                         placeholder=""
@@ -980,7 +940,7 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                 Object {
                   "display": "flex",
                   "flex": "1 0 auto",
-                  "minWidth": "735px",
+                  "minWidth": "705px",
                 }
               }
             >
@@ -1017,25 +977,6 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                     "minWidth": "30px",
                     "textAlign": "left",
                     "width": "40px",
-                  }
-                }
-              >
-                 
-              </div>
-              <div
-                className="th"
-                colSpan={1}
-                role="columnheader"
-                style={
-                  Object {
-                    "alignItems": "center",
-                    "boxSizing": "border-box",
-                    "display": "flex",
-                    "flex": "100 0 auto",
-                    "justifyContent": "flex-start",
-                    "minWidth": "30px",
-                    "textAlign": "left",
-                    "width": "100px",
                   }
                 }
               >

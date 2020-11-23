@@ -55,7 +55,7 @@ const copyAppraisalTasks = (project: IProject): IProject => {
 
 const SplStep = ({ formikRef }: IStepProps) => {
   const { project, getStatusTransitionWorkflow } = useProject();
-  const { onSubmitReview, canUserApproveForm } = useStepForm();
+  const { onSubmitReview, canUserApproveForm, canUserOverride } = useStepForm();
   const [submitStatusCode, setSubmitStatusCode] = useState(undefined);
   const defaultTab =
     project?.statusCode === ReviewWorkflowStatus.Disposed
@@ -65,12 +65,13 @@ const SplStep = ({ formikRef }: IStepProps) => {
   const dispatch = useDispatch();
 
   const canUserEdit =
-    canUserApproveForm() &&
-    (project?.statusCode === ReviewWorkflowStatus.ApprovedForSpl ||
-      project?.statusCode === ReviewWorkflowStatus.PreMarketing ||
-      project?.statusCode === ReviewWorkflowStatus.OnMarket ||
-      project?.statusCode === ReviewWorkflowStatus.ContractInPlace ||
-      currentTab === SPPApprovalTabs.closeOutForm);
+    canUserOverride() ||
+    (canUserApproveForm() &&
+      (project?.statusCode === ReviewWorkflowStatus.ApprovedForSpl ||
+        project?.statusCode === ReviewWorkflowStatus.PreMarketing ||
+        project?.statusCode === ReviewWorkflowStatus.OnMarket ||
+        project?.statusCode === ReviewWorkflowStatus.ContractInPlace ||
+        currentTab === SPPApprovalTabs.closeOutForm));
   const setCurrentTab = (tabName: string) => {
     dispatch(saveSplTab(tabName));
   };

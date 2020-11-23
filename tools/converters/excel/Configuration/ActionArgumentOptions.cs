@@ -8,6 +8,7 @@ namespace Pims.Tools.Converters.ExcelConverter.Configuration
         #region Properties
         /// <summary>
         /// get/set - The column that this action will be performed on.
+        /// Use an '*' asterix to use the source column.
         /// </summary>
         public string Column { get; set; }
 

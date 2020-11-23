@@ -81,6 +81,7 @@ describe('project router', () => {
     });
     (useStepForm as jest.Mock).mockReturnValue({
       noFetchingProjectRequests: true,
+      canUserOverride: () => false,
       canUserEditForm: () => true,
       onSubmit: onSubmit,
       onSave: onSave,

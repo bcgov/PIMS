@@ -175,8 +175,8 @@ namespace Pims.Dal.Entities.Models
                 Zoning = filter.Zoning,
                 ZoningPotential = filter.ZoningPotential,
 
-                MinEstimatedValue = filter.MinEstimatedValue,
-                MaxEstimatedValue = filter.MaxEstimatedValue,
+                MinMarketValue = filter.MinMarketValue,
+                MaxMarketValue = filter.MaxMarketValue,
                 MinAssessedValue = filter.MinAssessedValue,
                 MaxAssessedValue = filter.MaxAssessedValue,
 
@@ -220,8 +220,8 @@ namespace Pims.Dal.Entities.Models
                 MinRentableArea = filter.MinRentableArea,
                 MaxRentableArea = filter.MaxRentableArea,
 
-                MinEstimatedValue = filter.MinEstimatedValue,
-                MaxEstimatedValue = filter.MaxEstimatedValue,
+                MinMarketValue = filter.MinMarketValue,
+                MaxMarketValue = filter.MaxMarketValue,
                 MinAssessedValue = filter.MinAssessedValue,
                 MaxAssessedValue = filter.MaxAssessedValue,
 

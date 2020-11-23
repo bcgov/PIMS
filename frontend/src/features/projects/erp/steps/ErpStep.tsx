@@ -39,7 +39,7 @@ const CenterBoldText = styled.div`
 
 const ErpStep = ({ formikRef }: IStepProps) => {
   const { project, getStatusTransitionWorkflow } = useProject();
-  const { onSubmitReview, canUserApproveForm } = useStepForm();
+  const { onSubmitReview, canUserApproveForm, canUserOverride } = useStepForm();
   const [submitStatusCode, setSubmitStatusCode] = useState(undefined);
   const defaultTab =
     project.statusCode === ReviewWorkflowStatus.NotInSpl
@@ -51,11 +51,12 @@ const ErpStep = ({ formikRef }: IStepProps) => {
   const { projectAgencyResponses } = useAgencyResponseTable();
   const initialValues: IProject = { ...project, projectAgencyResponses: projectAgencyResponses };
   const canUserEdit =
-    canUserApproveForm() &&
-    (project?.statusCode === ReviewWorkflowStatus.ERP ||
-      project?.statusCode === ReviewWorkflowStatus.OnHold ||
-      project?.statusCode === ReviewWorkflowStatus.ApprovedForExemption ||
-      currentTab === SPPApprovalTabs.closeOutForm);
+    canUserOverride() ||
+    (canUserApproveForm() &&
+      (project?.statusCode === ReviewWorkflowStatus.ERP ||
+        project?.statusCode === ReviewWorkflowStatus.OnHold ||
+        project?.statusCode === ReviewWorkflowStatus.ApprovedForExemption ||
+        currentTab === SPPApprovalTabs.closeOutForm));
   const setCurrentTab = (tabName: string) => {
     dispatch(saveErpTab(tabName));
   };

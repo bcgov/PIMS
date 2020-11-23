@@ -111,18 +111,18 @@ namespace Pims.Dal.Helpers.Extensions
                 query = query.Where(b => b.RentableArea <= filter.MaxRentableArea);
 
             // TODO: Review performance of the evaluation query component.
-            if (filter.MinEstimatedValue.HasValue)
+            if (filter.MinMarketValue.HasValue)
                 query = query.Where(b =>
-                    filter.MinEstimatedValue <= b.Fiscals
+                    filter.MinMarketValue <= b.Fiscals
                         .FirstOrDefault(e => e.FiscalYear == context.ParcelFiscals
-                            .Where(pe => pe.ParcelId == b.Id && pe.Key == Entity.FiscalKeys.Estimated)
+                            .Where(pe => pe.ParcelId == b.Id && pe.Key == Entity.FiscalKeys.Market)
                             .Max(pe => pe.FiscalYear))
                         .Value);
-            if (filter.MaxEstimatedValue.HasValue)
+            if (filter.MaxMarketValue.HasValue)
                 query = query.Where(b =>
-                    filter.MaxEstimatedValue >= b.Fiscals
+                    filter.MaxMarketValue >= b.Fiscals
                         .FirstOrDefault(e => e.FiscalYear == context.ParcelFiscals
-                            .Where(pe => pe.ParcelId == b.Id && pe.Key == Entity.FiscalKeys.Estimated)
+                            .Where(pe => pe.ParcelId == b.Id && pe.Key == Entity.FiscalKeys.Market)
                             .Max(pe => pe.FiscalYear))
                         .Value);
 
