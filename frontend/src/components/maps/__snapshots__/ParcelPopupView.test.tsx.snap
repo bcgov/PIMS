@@ -121,11 +121,6 @@ exports[`Parcel popup view renders correctly 1`] = `
       <a
         href="/mapview/1?disabled=false&loadDraft=false&sidebar=true"
         onClick={[Function]}
-        style={
-          Object {
-            "paddingLeft": "5px",
-          }
-        }
       >
         Update
       </a>
