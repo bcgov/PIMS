@@ -8,8 +8,9 @@ exports[`header renders correctly 1`] = `
     className="brand-box navbar-brand"
   >
     <a
-      href="/"
-      onClick={[Function]}
+      href="https://www2.gov.bc.ca/gov/content/home"
+      rel="noopener noreferrer"
+      target="_blank"
     >
       <img
         alt="Go to the Government of British Columbia website"
