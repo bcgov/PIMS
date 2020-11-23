@@ -345,7 +345,10 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
           onRowClick={onRowClick}
           detailsPanel={{
             render: project => <Properties data={project.properties} />,
-            icons: { open: <FaFolderOpen color="black" />, closed: <FaFolder color="black" /> },
+            icons: {
+              open: <FaFolderOpen color="black" size={20} />,
+              closed: <FaFolder color="black" size={20} />,
+            },
             checkExpanded: (row, state) => !!state.find(x => x.projectNumber === row.projectNumber),
             onExpand: lazyLoadProperties,
             getRowId: row => row.projectNumber,
