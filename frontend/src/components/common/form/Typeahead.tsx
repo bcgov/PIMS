@@ -8,8 +8,8 @@ interface ITypeaheadFieldProps<T extends TypeaheadModel> extends TypeaheadProps<
   name: string;
   label?: string;
   required?: boolean;
-  /** whether or not this component is being used to filter so we can ignore the validation checkmark */
-  filter?: boolean;
+  /** whether or not this component should show the validation checkmark */
+  hideValidation?: boolean;
 }
 
 const Group = styled(Form.Group)`
@@ -30,7 +30,7 @@ export function TypeaheadField<T extends TypeaheadModel>({
   label,
   required,
   name,
-  filter,
+  hideValidation,
   ...rest
 }: ITypeaheadFieldProps<T>) {
   const { touched, values, errors, setFieldTouched, setFieldValue } = useFormikContext();
@@ -49,7 +49,7 @@ export function TypeaheadField<T extends TypeaheadModel>({
         {...rest}
         inputProps={{ ...rest.inputProps, name: name }}
         isInvalid={hasError as any}
-        isValid={!filter && isValid}
+        isValid={!hideValidation && isValid}
         selected={!!getIn(values, name) ? [getIn(values, name)] : []}
         onChange={(newValues: T[]) => {
           setFieldValue(name, newValues[0]);

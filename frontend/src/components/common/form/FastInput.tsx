@@ -37,6 +37,8 @@ type OptionalAttributes = {
   tooltip?: string;
   /** Display errors in a tooltip instead of in a div */
   displayErrorTooltips?: boolean;
+  /** Determine style of input if needed */
+  style?: any;
 };
 
 // only "field" is required for <Input>, the rest are optional
@@ -61,6 +63,7 @@ export const FastInput: React.FC<FastInputProps> = memo(
     onBlurFormatter,
     tooltip,
     displayErrorTooltips,
+    style,
     formikProps: {
       values,
       errors,
@@ -105,6 +108,7 @@ export const FastInput: React.FC<FastInputProps> = memo(
             name={field}
             className={className}
             required={required}
+            style={style!}
             disabled={disabled}
             custom={custom}
             isInvalid={!!touch && !!error}

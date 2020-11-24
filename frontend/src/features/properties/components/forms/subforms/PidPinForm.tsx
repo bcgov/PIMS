@@ -5,6 +5,7 @@ import { Input, Form } from 'components/common/form';
 import { useFormikContext, getIn } from 'formik';
 import { IParcel } from 'actions/parcelsActions';
 import debounce from 'lodash/debounce';
+import { PidPinTooltip } from '../strings';
 
 interface PidPinProps {
   handlePidChange: (pid: string) => void;
@@ -56,7 +57,6 @@ const PidPinForm: FunctionComponent<PidPinProps> = (props: PidPinProps) => {
         <Input
           displayErrorTooltips
           className="input-small"
-          // tooltip={PidTooltip}
           disabled={props.disabled}
           pattern={RegExp(/^[\d\- ]*$/)}
           onBlurFormatter={(pid: string) => {
@@ -71,7 +71,7 @@ const PidPinForm: FunctionComponent<PidPinProps> = (props: PidPinProps) => {
         <Input
           displayErrorTooltips
           className="input-small"
-          // tooltip={PinTooltip}
+          tooltip={PidPinTooltip}
           disabled={props.disabled}
           field={withNameSpace('pin')}
           onBlurFormatter={(pin: string) => {

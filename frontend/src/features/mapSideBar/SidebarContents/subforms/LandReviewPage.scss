@@ -16,6 +16,13 @@
     margin-right: 15px;
   }
   .form-control:disabled {
+    font-weight: bold;
+    border: none;
+    background-color: transparent;
+    resize: none;
+    appearance: none;
+  }
+  .append-disabled {
     border: none;
     background-color: transparent;
   }
@@ -46,6 +53,7 @@
     .val-row {
       .label {
         margin-right: 15px;
+        margin-top: 5px;
         text-align: right;
         width: 120px;
       }
@@ -74,6 +82,7 @@
       clear: both;
       float: left;
       margin-right: 15px;
+      margin-top: 5px;
     }
     .usage-header {
       margin-left: 10px;
@@ -110,6 +119,7 @@
     }
     .label {
       display: inline-block;
+      margin-top: 5px;
       width: 140px;
       text-align: right;
       margin-right: 20px;

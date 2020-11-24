@@ -117,6 +117,7 @@ const useGeocoder = ({ formikRef }: IUseGeocoderProps) => {
       }
 
       // update form with values returned from geocoder
+      newValues.agencyId = formikRef.current.values.data.agencyId;
       formikRef.current.setValues({ ...formikRef.current.values, data: { ...newValues } });
     }
   };

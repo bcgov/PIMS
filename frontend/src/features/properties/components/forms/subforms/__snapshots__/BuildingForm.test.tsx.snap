@@ -48,23 +48,25 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
             <option value=\\"2\\" class=\\"option\\">test province</option>
           </select></div>
       </div>
-      <div class=\\"field-row row\\">
-        <p class=\\"label\\">Postal</p>
-        <div class=\\"form-group\\"><input name=\\"address.postal\\" id=\\"input-address.postal\\" class=\\"input-small form-control\\" value=\\"v8x3P5\\"></div>
+      <div class=\\"postal row\\">
+        <p class=\\"label\\">Postal Code</p>
+        <div class=\\"form-group\\"><input name=\\"address.postal\\" style=\\"width: 120px;\\" id=\\"input-address.postal\\" class=\\"input-small form-control\\" value=\\"v8x3P5\\"></div>
       </div>
       <div class=\\"lat-long\\" style=\\"position: relative;\\">
         <div class=\\"row\\">
           <div class=\\"col-md-9\\">
-            <p class=\\"instruction\\"><span class=\\"req\\">*</span>Drag and drop the pin on the map to mark the location of this property, or if you already have the coordinates, you can enter them manually in the fields below.</p>
+            <div class=\\"instruction\\">
+              <p>Drag and drop the pin on the map to mark the location of this parcel, or if you already have the coordinates, you can enter them manually in the fields below.</p>
+            </div>
           </div>
           <div class=\\"marker-svg col\\"><button class=\\"sc-fzoLsD gdPrCc\\"><svg class=\\"parcel-icon\\">draft-parcel-icon.svg</svg></button></div>
         </div>
         <div class=\\"form-row\\">
-          <p class=\\"label\\">Latitude</p>
+          <p class=\\"label\\"><span class=\\"req\\">*</span>Latitude</p>
           <div class=\\"form-group\\"><input name=\\"latitude\\" type=\\"number\\" id=\\"input-latitude\\" class=\\"input-medium form-control\\" value=\\"9\\"></div>
         </div>
         <div class=\\"form-row\\">
-          <p class=\\"label\\">Longitude</p>
+          <p class=\\"label\\"><span class=\\"req\\">*</span>Longitude</p>
           <div class=\\"form-group\\"><input name=\\"longitude\\" type=\\"number\\" id=\\"input-longitude\\" class=\\"input-medium form-control\\" value=\\"10\\"></div>
         </div>
       </div>

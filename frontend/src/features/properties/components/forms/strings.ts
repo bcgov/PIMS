@@ -1,4 +1,10 @@
 /* eslint-disable no-multi-str */
+export const PidPinTooltip =
+  'PID: Parcel Identifier, a unique nine-digit number that identifies a parcel ' +
+  'in the land title registry of BC. It is NOT the same identification number used by Crown Lands (PIN).\n\n' +
+  'PIN: Parcel Identification Number, a unique number system used by Crown Lands to identify a parcel of land. ' +
+  'It is NOT the same identification number used by the Land Title and Survey Authority (PID).';
+
 export const PidTooltip =
   'Land Title Office PID\n\n\
  The PID (Parcel Identification number) is a unique system-generated number \

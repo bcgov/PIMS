@@ -3,6 +3,14 @@
   font-weight: bold;
 }
 
+.postal {
+  .form-group {
+    .form-control {
+      width: 120px;
+    }
+  }
+}
+
 .parcel-identification {
   h4 {
     margin-bottom: 20px;
@@ -15,16 +23,21 @@
           width: 250px;
         }
         .form-row {
-          margin-left: 100px;
+          margin-left: 95px;
           .form-label {
             text-align: center;
             margin-right: 10px;
             margin-left: 10px;
           }
           .form-group {
+            display: flex;
             .form-control {
               max-width: 100px;
               font-size: smaller;
+            }
+            .tooltip-icon {
+              margin-top: 8px;
+              margin-left: 5px;
             }
           }
         }
@@ -70,7 +83,6 @@
         width: 200px;
       }
       .input-group {
-        margin-left: 90px;
         .form-label {
           margin-right: 20px;
         }
@@ -79,7 +91,7 @@
         }
         .input-group-append {
           font-size: smaller;
-          height: 40px;
+          height: 38px;
         }
       }
     }
