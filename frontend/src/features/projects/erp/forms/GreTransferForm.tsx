@@ -1,7 +1,6 @@
 import React, { Fragment, useEffect, useMemo, useState } from 'react';
 import { ProjectDraftForm, ProjectNotes, IProject, PublicNotes, PrivateNotes } from '../../common';
 import { PropertyListViewUpdate } from '../../common/components/PropertyListViewUpdate';
-import { AutoCompleteText } from 'components/common/form';
 import { useFormikContext } from 'formik';
 import useCodeLookups from 'hooks/useLookupCodes';
 import _ from 'lodash';
@@ -11,6 +10,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from 'reducers/rootReducer';
 import { ILookupCodeState } from 'reducers/lookupCodeReducer';
 import * as API from 'constants/API';
+import { TypeaheadField } from 'components/common/form/Typeahead';
 
 /**
  * Form component of GreTransferStep.
@@ -43,23 +43,24 @@ const GreTransferForm = ({ canEdit }: { canEdit: boolean }) => {
       }
     });
   }, [setFieldValue, values.properties, values.agencyId, agencies, touched, initialAgencyId]);
-  // const agencies = useCodeLookups().getByType('Agency');
-  // const agency: ILookupCode = _.find(agencies, { id: values.agencyId }) as ILookupCode;
   return (
     <Fragment>
       <ProjectDraftForm isReadOnly={true} />
       <h3>Properties in the Project</h3>
       <p>Update Properties with New Agency Owner Name</p>
       <Form.Row>
-        <Form.Label column md={2} htmlFor="input-agencyId">
+        <Form.Label column md={2} htmlFor="agencyId-field">
           New Owning Agency
         </Form.Label>
-        <AutoCompleteText
-          autoSetting="new-password"
-          field="agencyId"
+        <TypeaheadField
           options={agencyOptions}
-          disabled={!canEdit}
-          required={true}
+          name="agencyId"
+          labelKey="label"
+          paginate={false}
+          required
+          getOptionByValue={(value: number) =>
+            _.filter(agencyOptions, { value: value?.toString() }) ?? []
+          }
         />
       </Form.Row>
       <PropertyListViewUpdate

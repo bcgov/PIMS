@@ -17,7 +17,8 @@ import { NETWORK } from '../../../constants/reducerTypes';
 import * as actionTypes from '../../../constants/actionTypes';
 import * as API from 'constants/API';
 import * as reducerTypes from 'constants/reducerTypes';
-import { render } from '@testing-library/react';
+import { render, fireEvent, wait } from '@testing-library/react';
+import { fillInput } from 'utils/testUtils';
 
 Enzyme.configure({ adapter: new Adapter() });
 
@@ -150,17 +151,20 @@ describe('AccessRequestPage functionality', () => {
       expect(queryByText('privateRole')).toBeNull();
     });
 
-    xit('displays a success message', () => {
-      expect(
-        componentRender
-          .find('div.alert')
-          .first()
-          .text(),
-      ).toContain('Your request has been submitted.');
+    it('displays a success message', async () => {
+      const { container, getByText } = testRender();
+      await fillInput(container, 'agency', '1', 'select');
+      await fillInput(container, 'role', '1', 'select');
+      await fillInput(container, 'note', 'some notes', 'textarea');
+      const submit = getByText('Submit');
+      wait(() => {
+        fireEvent.click(submit);
+        expect(getByText('Your request has been submitted.')).toBeVisible();
+      });
     });
   });
 
-  xit('does not show success message by default', () => {
+  it('does not show success message by default', () => {
     const component = mount(
       <Provider store={store}>
         <Router history={history}>
@@ -168,11 +172,6 @@ describe('AccessRequestPage functionality', () => {
         </Router>
       </Provider>,
     );
-    expect(
-      component
-        .find('div.alert')
-        .first()
-        .text(),
-    ).toContain('Your request has been submitted.');
+    expect(component.find('div.alert').isEmpty).toBeTruthy();
   });
 });
