@@ -111,6 +111,7 @@ exports[`FilterBar renders correctly 1`] = `
               aria-haspopup="listbox"
               autoComplete="off"
               className="rbt-input-main form-control rbt-input map-filter-typeahead"
+              id="agencies-field"
               name="agencies"
               onBlur={[Function]}
               onChange={[Function]}

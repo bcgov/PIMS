@@ -59,6 +59,7 @@ const GreTransferStep = ({ formikRef }: IStepProps) => {
 
   const initialValues: IProject = {
     ...project,
+    agencyId: 0,
   };
 
   const canEdit =
@@ -75,6 +76,8 @@ const GreTransferStep = ({ formikRef }: IStepProps) => {
         validationSchema={GreTransferStepYupSchema}
         enableReinitialize={true}
         onSubmit={(values: IProject) => {
+          values.agencyId = +values.agencyId;
+          values.properties?.forEach(p => (p.agencyId = +p.agencyId));
           onSubmitReview(values, formikRef, ReviewWorkflowStatus.TransferredGRE);
         }}
       >
@@ -101,7 +104,7 @@ const GreTransferStep = ({ formikRef }: IStepProps) => {
               <FlexRight>
                 <Button
                   style={{ maxWidth: '18rem' }}
-                  disabled={values.agencyId === project.agencyId}
+                  disabled={values.agencyId === project.agencyId || values.agencyId === 0}
                   showSubmitting
                   isSubmitting={!noFetchingProjectRequests}
                   onClick={() =>
