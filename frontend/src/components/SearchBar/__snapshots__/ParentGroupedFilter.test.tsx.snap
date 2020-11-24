@@ -34,6 +34,7 @@ exports[`ParentGroupedFilter renders 1`] = `
         aria-haspopup="listbox"
         autoComplete="off"
         className="rbt-input-main form-control rbt-input test-id"
+        id="test-field"
         name="test"
         onBlur={[Function]}
         onChange={[Function]}

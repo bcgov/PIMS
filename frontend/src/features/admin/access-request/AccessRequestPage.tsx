@@ -145,7 +145,7 @@ const AccessRequestPage = () => {
               } catch (error) {
                 setAlert({
                   variant: 'danger',
-                  message: 'Failed to submit you access request.',
+                  message: 'Failed to submit your access request.',
                   show: true,
                 });
               }

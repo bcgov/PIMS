@@ -13,6 +13,8 @@ interface ITypeaheadFieldProps<T extends TypeaheadModel> extends TypeaheadProps<
   filter?: boolean;
   /**Tooltip text */
   tooltip?: string;
+  /** A function that takes in the value stored in formik and returns the corresponding label for that value. */
+  getOptionByValue?: (value?: any) => T[];
 }
 
 const Group = styled(Form.Group)`
@@ -35,12 +37,15 @@ export function TypeaheadField<T extends TypeaheadModel>({
   name,
   filter,
   tooltip,
+  getOptionByValue,
   ...rest
 }: ITypeaheadFieldProps<T>) {
   const { touched, values, errors, setFieldTouched, setFieldValue } = useFormikContext();
   const hasError = !!getIn(touched, name) && !!getIn(errors, name);
   const isValid = !!getIn(touched, name) && !getIn(errors, name);
-
+  if (!getOptionByValue) {
+    getOptionByValue = (value: T) => (!!value ? ([value] as T[]) : ([] as T[]));
+  }
   return (
     <Group>
       {!!label && (
@@ -51,12 +56,12 @@ export function TypeaheadField<T extends TypeaheadModel>({
       {!!tooltip && <TooltipIcon toolTipId="typeAhead-tip" toolTip={tooltip} />}
       <Typeahead<T>
         {...rest}
-        inputProps={{ ...rest.inputProps, name: name }}
+        inputProps={{ ...rest.inputProps, name: name, id: `${name}-field` }}
         isInvalid={hasError as any}
         isValid={!filter && isValid}
-        selected={!!getIn(values, name) ? [getIn(values, name)] : []}
+        selected={getOptionByValue(getIn(values, name))}
         onChange={(newValues: T[]) => {
-          setFieldValue(name, newValues[0]);
+          setFieldValue(name, getIn(newValues[0], 'value') ?? newValues[0]);
         }}
         onBlur={() => setFieldTouched(name, true)}
         id={`${name}-field`}
