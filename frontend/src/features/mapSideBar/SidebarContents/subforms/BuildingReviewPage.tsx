@@ -23,7 +23,6 @@ import { noop } from 'lodash';
 
 interface IReviewProps {
   nameSpace?: string;
-  disabled?: boolean;
   classifications: any;
   predominateUses: SelectOptions;
   constructionType: SelectOptions;
@@ -104,7 +103,6 @@ export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
               <FastInput
                 className="input-medium"
                 displayErrorTooltips
-                // tooltip={latitudeTooltip}
                 formikProps={formikProps}
                 disabled={editInfo.identification}
                 type="number"
@@ -160,6 +158,29 @@ export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
                 type="number"
               />
             </Row>
+            {(formikProps.values as any).data.projectNumber && (
+              <Row>
+                <Label>SPP</Label>
+                <span className="vl"></span>
+                <FastInput
+                  displayErrorTooltips
+                  className="input-small"
+                  formikProps={formikProps}
+                  disabled={editInfo.identification}
+                  field={withNameSpace('projectNumber')}
+                />
+              </Row>
+            )}
+            <Row className="sensitive" style={{ justifyContent: 'center' }}>
+              <Label>Harmful if info released?</Label>
+              <Check
+                type="radio"
+                disabled={editInfo.identification}
+                field={withNameSpace('isSensitive')}
+                radioLabelOne="Yes"
+                radioLabelTwo="No"
+              />
+            </Row>
           </div>
         </Col>
         <Col md={5}>
@@ -178,7 +199,9 @@ export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
                 <Label>Rentable Area</Label>
                 <span className="vl"></span>
                 <InputGroup
+                  className="area"
                   displayErrorTooltips
+                  style={{ width: '100px' }}
                   fast={true}
                   formikProps={formikProps}
                   disabled={editInfo.tenancy}
@@ -220,7 +243,7 @@ export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
                 />
               </Row>
               <Row className="content-item">
-                <Label>Date Lease Expires</Label>
+                <Label>Lease Expiry Date</Label>
                 <span className="vl"></span>
                 <FastDatePicker
                   formikProps={formikProps}
@@ -230,7 +253,6 @@ export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
               </Row>
               <Row style={{ justifyContent: 'center' }} className="content-item">
                 <Label>Transfer lease with land?</Label>
-                {/* <span className="vl"></span> */}
                 <Check disabled={editInfo.tenancy} field={withNameSpace('transferLeaseOnSale')} />
               </Row>
             </div>

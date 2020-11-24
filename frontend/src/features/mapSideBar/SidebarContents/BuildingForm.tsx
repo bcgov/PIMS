@@ -18,12 +18,13 @@ import { defaultBuildingValues } from 'features/properties/components/forms/subf
 import { createParcel, updateParcel } from 'actionCreators/parcelsActionCreator';
 import { useDispatch } from 'react-redux';
 import _ from 'lodash';
+import { BuildingSteps } from 'constants/propertySteps';
 
 const Container = styled.div`
   background-color: #fff;
   height: 100%;
   width: 100%;
-  overflow-y: scroll;
+  overflow-y: auto;
 `;
 
 const FormContentWrapper = styled.div`
@@ -51,9 +52,18 @@ const FillRemainingSpace = styled.span`
   flex: 1 1 auto;
 `;
 
+/**
+ * A component used for submitting standalone buildings or buildings grouped with land.
+ * This form will appear after selecting 'Add Building' after navigating to Manage Property > Submit Property in PIMS
+ * @component
+ */
+
 interface IFormProps {
+  /** determine whether certain fields are editable */
   isAdmin?: boolean;
+  /** to change the user's cursor when adding a marker */
   setMovingPinNameSpace: (nameSpace: string) => void;
+  /** to help determine the namespace of the field (eg. address.line1) */
   nameSpace: string;
 }
 const Form: React.FC<IFormProps> = ({ isAdmin, setMovingPinNameSpace, nameSpace }) => {
@@ -69,7 +79,7 @@ const Form: React.FC<IFormProps> = ({ isAdmin, setMovingPinNameSpace, nameSpace 
 
   const render = (): React.ReactNode => {
     switch (stepper.current) {
-      case 0:
+      case BuildingSteps.IDENTIFICATION:
         return (
           <div className="identification">
             <IdentificationForm
@@ -83,7 +93,7 @@ const Form: React.FC<IFormProps> = ({ isAdmin, setMovingPinNameSpace, nameSpace 
             />
           </div>
         );
-      case 1:
+      case BuildingSteps.TENANCY:
         return (
           <TenancyForm
             classifications={classifications}
@@ -92,9 +102,9 @@ const Form: React.FC<IFormProps> = ({ isAdmin, setMovingPinNameSpace, nameSpace 
             nameSpace={nameSpace}
           />
         );
-      case 2:
+      case BuildingSteps.VALUATION:
         return <BuildingValuationForm nameSpace={nameSpace} formikProps={formikProps} />;
-      case 3:
+      case BuildingSteps.REVIEW:
         return (
           <BuildingReviewPage
             classifications={classifications}
@@ -120,7 +130,7 @@ const Form: React.FC<IFormProps> = ({ isAdmin, setMovingPinNameSpace, nameSpace 
           </Button>
         )}
         {formikProps.dirty && stepper.current === 3 && (
-          <Button type="submit">Submit Building</Button>
+          <Button type="submit">Submit to Inventory</Button>
         )}
       </FormFooter>
     </FormContentWrapper>
@@ -128,9 +138,13 @@ const Form: React.FC<IFormProps> = ({ isAdmin, setMovingPinNameSpace, nameSpace 
 };
 
 interface IBuildingForm {
+  /** to pass the formik ref */
   formikRef?: any;
+  /** to change the user's cursor when adding a marker */
   setMovingPinNameSpace: (nameSpace: string) => void;
+  /** to help determine the namespace of the field (eg. address.line1) */
   nameSpace: string;
+  /** to help with the nameSpace of fields for fields in list form (eg. financials, buildings) */
   index: string;
 }
 

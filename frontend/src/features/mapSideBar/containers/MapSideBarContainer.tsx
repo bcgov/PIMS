@@ -180,7 +180,7 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
       case SidebarContextType.ADD_BUILDING:
         return (
           <>
-            <BuildingSvg className="svg" /> Submit Building (to inventory)
+            <BuildingSvg className="svg" /> Submit a Building (to inventory)
           </>
         );
       case SidebarContextType.ADD_RAW_LAND:

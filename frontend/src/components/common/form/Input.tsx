@@ -38,6 +38,8 @@ type OptionalAttributes = {
   displayErrorTooltips?: boolean;
   /** a way to style to label */
   horizontal?: boolean;
+  /** style input */
+  style?: any;
 };
 
 // only "field" is required for <Input>, the rest are optional
@@ -55,6 +57,7 @@ export const Input: React.FC<InputProps> = ({
   outerClassName,
   pattern,
   required,
+  style,
   disabled,
   custom,
   onBlurFormatter,
@@ -96,13 +99,13 @@ export const Input: React.FC<InputProps> = ({
       className={classNames(!!required ? 'required' : '', outerClassName, { horizontal })}
     >
       {!!label && <Form.Label>{label}</Form.Label>}
-      {!!tooltip && !label && <TooltipIcon toolTipId={`${field}-tooltip`} toolTip={tooltip} />}
 
       <TooltipWrapper toolTipId={`${field}-error-tooltip}`} toolTip={errorTooltip}>
         <Form.Control
           className={className}
           as={asElement}
           name={field}
+          style={style}
           required={required}
           disabled={disabled}
           custom={custom}
@@ -120,6 +123,7 @@ export const Input: React.FC<InputProps> = ({
           }}
           onChange={pattern ? handleRestrictedChange : handleChange}
         />
+        {!!tooltip && !label && <TooltipIcon toolTipId={`${field}-tooltip`} toolTip={tooltip} />}
       </TooltipWrapper>
       <DisplayError field={field} />
     </Form.Group>

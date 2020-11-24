@@ -1,19 +1,28 @@
 .tenancy {
   .type-occupant {
-    width: 200px;
+    width: 300px;
   }
   h4 {
     margin-bottom: 20px;
   }
   margin-top: 10px;
   .input-group {
-    width: 150px;
-    .input-group-append {
-      height: 40px;
+    width: 200px;
+    .input-group-content {
+      .form-control {
+        width: 120px;
+      }
     }
+    .input-group-append {
+      height: 38px;
+    }
+  }
+  .percentage {
+    width: 120px;
   }
   .react-datepicker-wrapper {
     width: 150px;
+    margin-right: 36px;
   }
   .label {
     text-align: right;
@@ -26,5 +35,8 @@
     padding-top: 10px;
     background-color: #e9ecef;
     border-radius: 10px;
+  }
+  .check-field {
+    margin-top: 5px;
   }
 }

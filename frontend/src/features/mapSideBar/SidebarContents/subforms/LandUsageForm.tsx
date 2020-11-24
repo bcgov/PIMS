@@ -31,7 +31,7 @@ export const LandUsageForm = <T extends any>(props: ILandUsageProps & FormikProp
       )}
 
       <Row className="classification field-row">
-        <Label required>Classification</Label>
+        <Label required={!props.verticalLine}>Classification</Label>
         {props.verticalLine && <span className="vl"></span>}
         <FastSelect
           formikProps={formikProps}

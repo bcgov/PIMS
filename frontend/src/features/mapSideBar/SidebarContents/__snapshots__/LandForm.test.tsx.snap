@@ -1,0 +1,820 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Land Form component renders correctly 1`] = `
+.c3 div {
+  width: 100%;
+}
+
+.c4 {
+  top: 20px;
+  right: 20px;
+  border: 0px;
+  background-color: none;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.c6 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-align-content: center;
+  -ms-flex-line-pack: center;
+  align-content: center;
+}
+
+.c7 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+.c0 {
+  background-color: #fff;
+  height: 100%;
+  width: 100%;
+  overflow-y: auto;
+}
+
+.c1 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  margin-bottom: 50px;
+}
+
+.c2 {
+  border-top: 1px solid #666666;
+  width: 100%;
+  min-height: 100px;
+}
+
+.c5 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  width: 100%;
+  height: 70px;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.c8 {
+  -webkit-flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+}
+
+<div
+  className="c0 landForm"
+>
+  <form
+    action="#"
+    onReset={[Function]}
+    onSubmit={[Function]}
+  >
+    <div
+      className="bs-stepper"
+    >
+      <div
+        className="bs-stepper-header"
+      >
+        <div
+          className="step active"
+          data-target="stepper-0"
+        >
+          <button
+            className="step-trigger"
+            disabled={false}
+            onClick={[Function]}
+            type="button"
+          >
+            <span
+              className="bs-stepper-circle"
+            >
+              1
+            </span>
+            <span
+              className="bs-stepper-label"
+            >
+              Parcel ID
+            </span>
+          </button>
+        </div>
+        <div
+          className="line"
+        />
+        <div
+          className="step"
+          data-target="stepper-1"
+        >
+          <button
+            className="step-trigger"
+            disabled={false}
+            onClick={[Function]}
+            type="button"
+          >
+            <span
+              className="bs-stepper-circle"
+            >
+              2
+            </span>
+            <span
+              className="bs-stepper-label"
+            >
+              Usage
+            </span>
+          </button>
+        </div>
+        <div
+          className="line"
+        />
+        <div
+          className="step"
+          data-target="stepper-2"
+        >
+          <button
+            className="step-trigger"
+            disabled={false}
+            onClick={[Function]}
+            type="button"
+          >
+            <span
+              className="bs-stepper-circle"
+            >
+              3
+            </span>
+            <span
+              className="bs-stepper-label"
+            >
+              Valuation
+            </span>
+          </button>
+        </div>
+        <div
+          className="line"
+        />
+        <div
+          className="step"
+          data-target="stepper-3"
+        >
+          <button
+            className="step-trigger"
+            disabled={false}
+            onClick={[Function]}
+            type="button"
+          >
+            <span
+              className="bs-stepper-circle"
+            >
+              4
+            </span>
+            <span
+              className="bs-stepper-label"
+            >
+              Review
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div
+      className="c1"
+    >
+      <div
+        className="c2"
+      >
+        <div
+          className="parcel-identification"
+        >
+          <div
+            className="container"
+          >
+            <div
+              className="row"
+            >
+              <h4>
+                Parcel Identification
+              </h4>
+            </div>
+            <div
+              className="row no-gutters"
+            >
+              <div
+                className="form-container col-md-6"
+              >
+                <div
+                  className="pid-pin row no-gutters"
+                >
+                  <div
+                    className="d-inline-flex flex-nowrap form-row"
+                  >
+                    <label
+                      className="form-label"
+                    >
+                      <span
+                        className="req"
+                      >
+                        *
+                      </span>
+                      PID
+                    </label>
+                    <div
+                      className="form-group"
+                    >
+                      <input
+                        className="input-small form-control"
+                        id="input-data.pid"
+                        name="data.pid"
+                        onBlur={[Function]}
+                        onChange={[Function]}
+                        value=""
+                      />
+                    </div>
+                    <label
+                      className="form-label"
+                    >
+                      PIN
+                    </label>
+                    <div
+                      className="form-group"
+                    >
+                      <input
+                        className="input-small form-control"
+                        id="input-data.pin"
+                        name="data.pin"
+                        onBlur={[Function]}
+                        onChange={[Function]}
+                        type="number"
+                        value=""
+                      />
+                      <svg
+                        className="tooltip-icon"
+                        fill="currentColor"
+                        height="1em"
+                        onBlur={[Function]}
+                        onFocus={[Function]}
+                        onMouseOut={[Function]}
+                        onMouseOver={[Function]}
+                        stroke="currentColor"
+                        strokeWidth="0"
+                        style={
+                          Object {
+                            "color": undefined,
+                          }
+                        }
+                        viewBox="0 0 512 512"
+                        width="1em"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  className="field-row row"
+                >
+                  <p
+                    className="label"
+                  >
+                    Agency
+                  </p>
+                  <div
+                    className="AutoCompleteText"
+                  >
+                    <div
+                      className="form-group"
+                    >
+                      <div
+                        className="input-area"
+                      >
+                        <input
+                          className="form-control"
+                          disabled={true}
+                          id="input-data.agencyId"
+                          name="data.agencyId"
+                          onChange={[Function]}
+                          value=""
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  className="field-row row"
+                >
+                  <p
+                    className="label"
+                  >
+                    Name
+                  </p>
+                  <div
+                    className="form-group"
+                  >
+                    <input
+                      className="form-control"
+                      disabled={false}
+                      id="input-data.name"
+                      name="data.name"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      value=""
+                    />
+                  </div>
+                </div>
+                <div
+                  className="field-row row"
+                >
+                  <p
+                    className="label"
+                  >
+                    Description
+                  </p>
+                  <div
+                    className="form-group"
+                  >
+                    <textarea
+                      className="form-control"
+                      disabled={false}
+                      id="input-data.description"
+                      name="data.description"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      value=""
+                    />
+                  </div>
+                </div>
+                <div
+                  className="field-row row"
+                >
+                  <p
+                    className="label"
+                  >
+                    <span
+                      className="req"
+                    >
+                      *
+                    </span>
+                    Street Address
+                  </p>
+                  <div
+                    className="GeocoderAutoComplete"
+                  >
+                    <div>
+                      <div
+                        className="form-group"
+                      >
+                        <input
+                          className="form-control"
+                          disabled={false}
+                          field="data.address.line1"
+                          id="input-data.address.line1"
+                          name="data.address.line1"
+                          onChange={[Function]}
+                          value=""
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  className="field-row row"
+                >
+                  <p
+                    className="label"
+                  >
+                    <span
+                      className="req"
+                    >
+                      *
+                    </span>
+                    Location
+                  </p>
+                  <div
+                    className="c3 form-group"
+                  >
+                    <div
+                      className="rbt"
+                      style={
+                        Object {
+                          "outline": "none",
+                          "position": "relative",
+                        }
+                      }
+                      tabIndex={-1}
+                    >
+                      <div
+                        style={
+                          Object {
+                            "display": "flex",
+                            "flex": 1,
+                            "height": "100%",
+                            "position": "relative",
+                          }
+                        }
+                      >
+                        <input
+                          aria-autocomplete="both"
+                          aria-expanded={false}
+                          aria-haspopup="listbox"
+                          autoComplete="off"
+                          className="rbt-input-main form-control rbt-input"
+                          disabled={false}
+                          name="data.address.administrativeArea"
+                          onBlur={[Function]}
+                          onChange={[Function]}
+                          onClick={[Function]}
+                          onFocus={[Function]}
+                          onKeyDown={[Function]}
+                          role="combobox"
+                          type="text"
+                          value=""
+                        />
+                        <input
+                          aria-hidden={true}
+                          className="rbt-input-hint"
+                          readOnly={true}
+                          style={
+                            Object {
+                              "backgroundColor": "transparent",
+                              "borderColor": "transparent",
+                              "boxShadow": "none",
+                              "color": "rgba(0, 0, 0, 0.35)",
+                              "left": 0,
+                              "pointerEvents": "none",
+                              "position": "absolute",
+                              "top": 0,
+                              "width": "100%",
+                            }
+                          }
+                          tabIndex={-1}
+                          value=""
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  className="field-row row"
+                >
+                  <p
+                    className="label"
+                  >
+                    Province
+                  </p>
+                  <div
+                    className="form-group"
+                  >
+                    <select
+                      className="form-select form-control"
+                      disabled={true}
+                      id="input-data.address.provinceId"
+                      name="data.address.provinceId"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      value="BC"
+                    >
+                      <option
+                        value=""
+                      >
+                        Must Select One
+                      </option>
+                    </select>
+                  </div>
+                </div>
+                <div
+                  className="postal row"
+                >
+                  <p
+                    className="label"
+                  >
+                    Postal Code
+                  </p>
+                  <div
+                    className="form-group"
+                  >
+                    <input
+                      className="input-small form-control"
+                      disabled={false}
+                      id="input-data.address.postal"
+                      name="data.address.postal"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      style={
+                        Object {
+                          "width": "120px",
+                        }
+                      }
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                className="col-md-6"
+              >
+                <div
+                  className="lat-long"
+                  style={
+                    Object {
+                      "position": "relative",
+                    }
+                  }
+                >
+                  <div
+                    className="row"
+                  >
+                    <div
+                      className="col-md-9"
+                    >
+                      <div
+                        className="instruction"
+                      >
+                        <p>
+                          Drag and drop the pin on the map to mark the location of this parcel, or if you already have the coordinates, you can enter them manually in the fields below.
+                        </p>
+                      </div>
+                    </div>
+                    <div
+                      className="marker-svg col"
+                    >
+                      <button
+                        className="c4"
+                        onClick={[Function]}
+                      >
+                        <svg
+                          className="parcel-icon"
+                        >
+                          draft-parcel-icon.svg
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                  <div
+                    className="form-row"
+                  >
+                    <p
+                      className="label"
+                    >
+                      <span
+                        className="req"
+                      >
+                        *
+                      </span>
+                      Latitude
+                    </p>
+                    <div
+                      className="form-group"
+                    >
+                      <input
+                        className="input-medium form-control"
+                        id="input-data.latitude"
+                        name="data.latitude"
+                        onBlur={[Function]}
+                        onChange={[Function]}
+                        type="number"
+                        value=""
+                      />
+                    </div>
+                  </div>
+                  <div
+                    className="form-row"
+                  >
+                    <p
+                      className="label"
+                    >
+                      <span
+                        className="req"
+                      >
+                        *
+                      </span>
+                      Longitude
+                    </p>
+                    <div
+                      className="form-group"
+                    >
+                      <input
+                        className="input-medium form-control"
+                        id="input-data.longitude"
+                        name="data.longitude"
+                        onBlur={[Function]}
+                        onChange={[Function]}
+                        type="number"
+                        value=""
+                      />
+                    </div>
+                  </div>
+                  <div
+                    className="form-row"
+                  >
+                    <div
+                      className="input-group required"
+                    >
+                      <p
+                        className="label"
+                      >
+                        <span
+                          className="req"
+                        >
+                          *
+                        </span>
+                        Lot Size
+                      </p>
+                      <div
+                        className="input-group-content"
+                      >
+                        <div
+                          className="form-group"
+                        >
+                          <input
+                            className="form-control"
+                            id="input-data.landArea"
+                            name="data.landArea"
+                            onBlur={[Function]}
+                            onChange={[Function]}
+                            type="number"
+                            value=""
+                          />
+                        </div>
+                      </div>
+                      <div
+                        className="input-group-append"
+                      >
+                        <span
+                          className="input-group-text"
+                        >
+                          Hectares
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  className="input-medium harmful"
+                >
+                  <p>
+                    <span
+                      className="req"
+                    >
+                      *
+                    </span>
+                    Would this information be harmful if released? 
+                    <a
+                      href="https://www2.gov.bc.ca/gov/content/governments/services-for-government/policies-procedures/foippa-manual/disclosure-harmful-individual-public-safety"
+                      onBlur={[Function]}
+                      onFocus={[Function]}
+                      onMouseOut={[Function]}
+                      onMouseOver={[Function]}
+                      rel="noopener noreferrer"
+                      target="_blank"
+                    >
+                      Policy
+                    </a>
+                  </p>
+                  <div
+                    className="form-group"
+                  >
+                    <div
+                      className="check-field"
+                    >
+                      <div
+                        className="form-check"
+                      >
+                        <input
+                          checked={false}
+                          className="form-check-input"
+                          disabled={false}
+                          id="input-data.isSensitive"
+                          name="data.isSensitive"
+                          onChange={[Function]}
+                          type="radio"
+                          value={false}
+                        />
+                        <label
+                          className="form-check-label"
+                          htmlFor="input-data.isSensitive"
+                          title=""
+                        >
+                          Yes
+                        </label>
+                      </div>
+                      <div
+                        className="form-check"
+                      >
+                        <input
+                          checked={true}
+                          className="form-check-input"
+                          disabled={false}
+                          id="input-data.isSensitive-2"
+                          name="data.isSensitive"
+                          onChange={[Function]}
+                          type="radio"
+                          value={true}
+                        />
+                        <label
+                          className="form-check-label"
+                          htmlFor="input-data.isSensitive-2"
+                          title=""
+                        >
+                          No
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="c5"
+      >
+        <div
+          className="c6"
+        >
+          <div
+            className="SresManual"
+            onClick={[Function]}
+          >
+            <div>
+              <svg
+                fill="none"
+                height={28}
+                size={28}
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                style={
+                  Object {
+                    "color": undefined,
+                  }
+                }
+                viewBox="0 0 24 24"
+                width={28}
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"
+                />
+                <path
+                  d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"
+                />
+              </svg>
+            </div>
+          </div>
+          <small
+            className="c7 p-1 mr-2"
+          >
+            Inventory Policy
+          </small>
+        </div>
+        <span
+          className="c8"
+        />
+        <button
+          className="btn btn-primary btn-sm"
+          disabled={false}
+          onClick={[Function]}
+          type="button"
+        >
+          Continue
+        </button>
+      </div>
+    </div>
+  </form>
+</div>
+`;

@@ -56,7 +56,6 @@ export const IdentificationForm: React.FC<IIdentificationProps> = ({
             <Label required>Main Usage</Label>
             <FastSelect
               formikProps={formikProps}
-              // disabled={disabled || readonly}
               placeholder="Must Select One"
               field={withNameSpace('buildingPredominateUseId')}
               type="number"
@@ -67,7 +66,6 @@ export const IdentificationForm: React.FC<IIdentificationProps> = ({
             <Label required>Construction Type</Label>
             <FastSelect
               formikProps={formikProps}
-              // disabled={props.disabled || readonly}
               placeholder="Must Select One"
               field={withNameSpace('buildingConstructionTypeId')}
               type="number"
@@ -78,16 +76,19 @@ export const IdentificationForm: React.FC<IIdentificationProps> = ({
             <Label>Number of Floors</Label>
             <FastInput
               displayErrorTooltips
+              style={{ width: '100px' }}
               className="input-small"
               formikProps={formikProps}
               field={withNameSpace('buildingFloorCount')}
               type="number"
             />
           </Row>
-          <Row>
-            <Label>SPP</Label>
-            <FastInput disabled formikProps={formikProps} field="projectNumber" />
-          </Row>
+          {(formikProps.values as any).data.projectNumber && (
+            <Row>
+              <Label>SPP</Label>
+              <FastInput disabled formikProps={formikProps} field="projectNumber" />
+            </Row>
+          )}
           <Row>
             <Label></Label>
             <div className="input-medium harmful">
@@ -122,6 +123,7 @@ export const IdentificationForm: React.FC<IIdentificationProps> = ({
         <Col>
           <LatLongForm
             {...formikProps}
+            building
             setMovingPinNameSpace={setMovingPinNameSpace}
             nameSpace={withNameSpace('')}
           />

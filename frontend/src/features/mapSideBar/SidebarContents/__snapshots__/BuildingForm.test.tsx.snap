@@ -1,0 +1,806 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Building Form component renders correctly 1`] = `
+.c3 div {
+  width: 100%;
+}
+
+.c4 {
+  top: 20px;
+  right: 20px;
+  border: 0px;
+  background-color: none;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.c6 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-align-content: center;
+  -ms-flex-line-pack: center;
+  align-content: center;
+}
+
+.c7 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+.c0 {
+  background-color: #fff;
+  height: 100%;
+  width: 100%;
+  overflow-y: auto;
+}
+
+.c1 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  margin-bottom: 50px;
+}
+
+.c2 {
+  border-top: 1px solid #666666;
+  width: 100%;
+  min-height: 100px;
+}
+
+.c5 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  width: 100%;
+  height: 70px;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.c8 {
+  -webkit-flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+}
+
+<div
+  className="c0 buildingForm"
+>
+  <form
+    action="#"
+    onReset={[Function]}
+    onSubmit={[Function]}
+  >
+    <div
+      className="bs-stepper"
+    >
+      <div
+        className="bs-stepper-header"
+      >
+        <div
+          className="step active"
+          data-target="stepper-0"
+        >
+          <button
+            className="step-trigger"
+            disabled={false}
+            onClick={[Function]}
+            type="button"
+          >
+            <span
+              className="bs-stepper-circle"
+            >
+              1
+            </span>
+            <span
+              className="bs-stepper-label"
+            >
+              Building ID
+            </span>
+          </button>
+        </div>
+        <div
+          className="line"
+        />
+        <div
+          className="step"
+          data-target="stepper-1"
+        >
+          <button
+            className="step-trigger"
+            disabled={false}
+            onClick={[Function]}
+            type="button"
+          >
+            <span
+              className="bs-stepper-circle"
+            >
+              2
+            </span>
+            <span
+              className="bs-stepper-label"
+            >
+              Tenancy
+            </span>
+          </button>
+        </div>
+        <div
+          className="line"
+        />
+        <div
+          className="step"
+          data-target="stepper-2"
+        >
+          <button
+            className="step-trigger"
+            disabled={false}
+            onClick={[Function]}
+            type="button"
+          >
+            <span
+              className="bs-stepper-circle"
+            >
+              3
+            </span>
+            <span
+              className="bs-stepper-label"
+            >
+              Valuation
+            </span>
+          </button>
+        </div>
+        <div
+          className="line"
+        />
+        <div
+          className="step"
+          data-target="stepper-3"
+        >
+          <button
+            className="step-trigger"
+            disabled={false}
+            onClick={[Function]}
+            type="button"
+          >
+            <span
+              className="bs-stepper-circle"
+            >
+              4
+            </span>
+            <span
+              className="bs-stepper-label"
+            >
+              Review
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div
+      className="c1"
+    >
+      <div
+        className="c2"
+      >
+        <div
+          className="identification"
+        >
+          <div
+            className="container"
+          >
+            <div
+              className="row"
+            >
+              <h4>
+                Building Identification
+              </h4>
+            </div>
+            <div
+              className="row"
+            >
+              <div
+                className="col"
+              >
+                <div
+                  className="form-row"
+                >
+                  <label
+                    className="form-label"
+                  >
+                    Name
+                  </label>
+                  <div
+                    className="form-group"
+                  >
+                    <input
+                      className="form-control"
+                      id="input-building.0.name"
+                      name="building.0.name"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                    />
+                  </div>
+                </div>
+                <div
+                  className="form-row"
+                >
+                  <label
+                    className="form-label"
+                  >
+                    Description
+                  </label>
+                  <div
+                    className="form-group"
+                  >
+                    <textarea
+                      className="form-control"
+                      id="input-building.0.description"
+                      name="building.0.description"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                    />
+                  </div>
+                </div>
+                <div
+                  className="form-row"
+                >
+                  <label
+                    className="form-label"
+                  >
+                    Agency
+                  </label>
+                  <div
+                    className="AutoCompleteText"
+                  >
+                    <div
+                      className="form-group"
+                    >
+                      <div
+                        className="input-area"
+                      >
+                        <input
+                          className="form-control"
+                          disabled={true}
+                          id="input-building.0.agencyId"
+                          name="building.0.agencyId"
+                          onChange={[Function]}
+                          value=""
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                className="col"
+              >
+                <div
+                  className="row"
+                >
+                  <p
+                    className="label"
+                  >
+                    <span
+                      className="req"
+                    >
+                      *
+                    </span>
+                    Main Usage
+                  </p>
+                  <div
+                    className="form-group"
+                  >
+                    <select
+                      className="form-control"
+                      id="input-building.0.buildingPredominateUseId-fast"
+                      name="building.0.buildingPredominateUseId"
+                      onChange={[Function]}
+                      type="number"
+                    >
+                      <option
+                        value=""
+                      >
+                        Must Select One
+                      </option>
+                    </select>
+                  </div>
+                </div>
+                <div
+                  className="row"
+                >
+                  <p
+                    className="label"
+                  >
+                    <span
+                      className="req"
+                    >
+                      *
+                    </span>
+                    Construction Type
+                  </p>
+                  <div
+                    className="form-group"
+                  >
+                    <select
+                      className="form-control"
+                      id="input-building.0.buildingConstructionTypeId-fast"
+                      name="building.0.buildingConstructionTypeId"
+                      onChange={[Function]}
+                      type="number"
+                    >
+                      <option
+                        value=""
+                      >
+                        Must Select One
+                      </option>
+                    </select>
+                  </div>
+                </div>
+                <div
+                  className="row"
+                >
+                  <p
+                    className="label"
+                  >
+                    Number of Floors
+                  </p>
+                  <div
+                    className="form-group"
+                  >
+                    <input
+                      className="input-small form-control"
+                      id="input-building.0.buildingFloorCount"
+                      name="building.0.buildingFloorCount"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      style={
+                        Object {
+                          "width": "100px",
+                        }
+                      }
+                      type="number"
+                    />
+                  </div>
+                </div>
+                <div
+                  className="row"
+                >
+                  <p
+                    className="label"
+                  />
+                  <div
+                    className="input-medium harmful"
+                  >
+                    <p>
+                      <span
+                        className="req"
+                      >
+                        *
+                      </span>
+                      Would this information be harmful if released? 
+                      <a
+                        href="https://www2.gov.bc.ca/gov/content/governments/services-for-government/policies-procedures/foippa-manual/disclosure-harmful-individual-public-safety"
+                        onBlur={[Function]}
+                        onFocus={[Function]}
+                        onMouseOut={[Function]}
+                        onMouseOver={[Function]}
+                        rel="noopener noreferrer"
+                        target="_blank"
+                      >
+                        Policy
+                      </a>
+                    </p>
+                    <div
+                      className="form-group"
+                    >
+                      <div
+                        className="check-field"
+                      >
+                        <div
+                          className="form-check"
+                        >
+                          <input
+                            checked={false}
+                            className="form-check-input"
+                            disabled={false}
+                            id="input-building.0.isSensitive"
+                            name="building.0.isSensitive"
+                            onChange={[Function]}
+                            type="radio"
+                            value={false}
+                          />
+                          <label
+                            className="form-check-label"
+                            htmlFor="input-building.0.isSensitive"
+                            title=""
+                          >
+                            Yes
+                          </label>
+                        </div>
+                        <div
+                          className="form-check"
+                        >
+                          <input
+                            checked={true}
+                            className="form-check-input"
+                            disabled={false}
+                            id="input-building.0.isSensitive-2"
+                            name="building.0.isSensitive"
+                            onChange={[Function]}
+                            type="radio"
+                            value={true}
+                          />
+                          <label
+                            className="form-check-label"
+                            htmlFor="input-building.0.isSensitive-2"
+                            title=""
+                          >
+                            No
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <hr />
+            <div
+              className="row"
+            >
+              <h4>
+                Location
+              </h4>
+            </div>
+            <div
+              className="row"
+            >
+              <div
+                className="col"
+              >
+                <div
+                  className="field-row row"
+                >
+                  <p
+                    className="label"
+                  >
+                    <span
+                      className="req"
+                    >
+                      *
+                    </span>
+                    Street Address
+                  </p>
+                  <div
+                    className="GeocoderAutoComplete"
+                  >
+                    <div>
+                      <div
+                        className="form-group"
+                      >
+                        <input
+                          className="form-control"
+                          field="building.0.address.line1"
+                          id="input-building.0.address.line1"
+                          name="building.0.address.line1"
+                          onChange={[Function]}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  className="field-row row"
+                >
+                  <p
+                    className="label"
+                  >
+                    <span
+                      className="req"
+                    >
+                      *
+                    </span>
+                    Location
+                  </p>
+                  <div
+                    className="c3 form-group"
+                  >
+                    <div
+                      className="rbt"
+                      style={
+                        Object {
+                          "outline": "none",
+                          "position": "relative",
+                        }
+                      }
+                      tabIndex={-1}
+                    >
+                      <div
+                        style={
+                          Object {
+                            "display": "flex",
+                            "flex": 1,
+                            "height": "100%",
+                            "position": "relative",
+                          }
+                        }
+                      >
+                        <input
+                          aria-autocomplete="both"
+                          aria-expanded={false}
+                          aria-haspopup="listbox"
+                          autoComplete="off"
+                          className="rbt-input-main form-control rbt-input"
+                          name="building.0.address.administrativeArea"
+                          onBlur={[Function]}
+                          onChange={[Function]}
+                          onClick={[Function]}
+                          onFocus={[Function]}
+                          onKeyDown={[Function]}
+                          role="combobox"
+                          type="text"
+                          value=""
+                        />
+                        <input
+                          aria-hidden={true}
+                          className="rbt-input-hint"
+                          readOnly={true}
+                          style={
+                            Object {
+                              "backgroundColor": "transparent",
+                              "borderColor": "transparent",
+                              "boxShadow": "none",
+                              "color": "rgba(0, 0, 0, 0.35)",
+                              "left": 0,
+                              "pointerEvents": "none",
+                              "position": "absolute",
+                              "top": 0,
+                              "width": "100%",
+                            }
+                          }
+                          tabIndex={-1}
+                          value=""
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  className="field-row row"
+                >
+                  <p
+                    className="label"
+                  >
+                    Province
+                  </p>
+                  <div
+                    className="form-group"
+                  >
+                    <select
+                      className="form-select form-control"
+                      disabled={true}
+                      id="input-building.0.address.provinceId"
+                      name="building.0.address.provinceId"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                    >
+                      <option
+                        value=""
+                      >
+                        Must Select One
+                      </option>
+                    </select>
+                  </div>
+                </div>
+                <div
+                  className="postal row"
+                >
+                  <p
+                    className="label"
+                  >
+                    Postal Code
+                  </p>
+                  <div
+                    className="form-group"
+                  >
+                    <input
+                      className="input-small form-control"
+                      id="input-building.0.address.postal"
+                      name="building.0.address.postal"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      style={
+                        Object {
+                          "width": "120px",
+                        }
+                      }
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                className="col"
+              >
+                <div
+                  className="lat-long"
+                  style={
+                    Object {
+                      "position": "relative",
+                    }
+                  }
+                >
+                  <div
+                    className="row"
+                  >
+                    <div
+                      className="col-md-9"
+                    >
+                      <div
+                        className="instruction"
+                      >
+                        <p>
+                          Drag and drop the pin on the map to mark the location of this building, or if you already have the coordinates, you can enter them manually in the fields below.
+                        </p>
+                      </div>
+                    </div>
+                    <div
+                      className="marker-svg col"
+                    >
+                      <button
+                        className="c4"
+                        onClick={[Function]}
+                      >
+                        <svg>
+                          draft-building-icon.svg
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                  <div
+                    className="form-row"
+                  >
+                    <p
+                      className="label"
+                    >
+                      <span
+                        className="req"
+                      >
+                        *
+                      </span>
+                      Latitude
+                    </p>
+                    <div
+                      className="form-group"
+                    >
+                      <input
+                        className="input-medium form-control"
+                        id="input-building.0.latitude"
+                        name="building.0.latitude"
+                        onBlur={[Function]}
+                        onChange={[Function]}
+                        type="number"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    className="form-row"
+                  >
+                    <p
+                      className="label"
+                    >
+                      <span
+                        className="req"
+                      >
+                        *
+                      </span>
+                      Longitude
+                    </p>
+                    <div
+                      className="form-group"
+                    >
+                      <input
+                        className="input-medium form-control"
+                        id="input-building.0.longitude"
+                        name="building.0.longitude"
+                        onBlur={[Function]}
+                        onChange={[Function]}
+                        type="number"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="c5"
+      >
+        <div
+          className="c6"
+        >
+          <div
+            className="SresManual"
+            onClick={[Function]}
+          >
+            <div>
+              <svg
+                fill="none"
+                height={28}
+                size={28}
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                style={
+                  Object {
+                    "color": undefined,
+                  }
+                }
+                viewBox="0 0 24 24"
+                width={28}
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"
+                />
+                <path
+                  d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"
+                />
+              </svg>
+            </div>
+          </div>
+          <small
+            className="c7 p-1 mr-2"
+          >
+            Inventory Policy
+          </small>
+        </div>
+        <span
+          className="c8"
+        />
+        <button
+          className="btn btn-primary btn-sm"
+          disabled={false}
+          onClick={[Function]}
+          type="button"
+        >
+          Continue
+        </button>
+      </div>
+    </div>
+  </form>
+</div>
+`;

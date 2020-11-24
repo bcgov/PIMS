@@ -58,6 +58,7 @@ export const TenancyForm: React.FC<ITenancyProps> = ({
         <FastInput
           displayErrorTooltips
           formikProps={formikProps}
+          className="percentage"
           disabled={disabled || readOnly}
           field={withNameSpace('buildingTenancy')}
         />
@@ -84,16 +85,13 @@ export const TenancyForm: React.FC<ITenancyProps> = ({
           field={withNameSpace('occupantName')}
         />
       </Row>
-      <Row>
+      <Row style={{ display: 'flex' }}>
         <Label>Lease Expiry Date</Label>
         <FastDatePicker
           formikProps={formikProps}
           disabled={disabled || readOnly}
           field={withNameSpace('leaseExpiry')}
         />
-      </Row>
-      <Row>
-        <Label></Label>
         <Check
           postLabel="Transfer Lease with Land"
           disabled={disabled || readOnly}
