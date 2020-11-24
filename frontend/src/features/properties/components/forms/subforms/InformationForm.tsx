@@ -9,10 +9,9 @@ import {
   AutoCompleteText,
 } from 'components/common/form';
 import { getIn, useFormikContext } from 'formik';
-import TooltipIcon from 'components/common/TooltipIcon';
 import { IProperty } from 'actions/parcelsActions';
 import { Link } from 'react-router-dom';
-import { classificationTip, sensitiveTooltip } from '../strings';
+import { classificationTip } from '../strings';
 
 interface InformationFormProps {
   nameSpace?: string;
@@ -66,7 +65,7 @@ const InformationForm: FunctionComponent<InformationFormProps> = (props: Informa
             placeholder="Must Select One"
             field={withNameSpace('classificationId')}
             options={props.classifications}
-          tooltip={classificationTip}
+            tooltip={classificationTip}
           />
         </Form.Row>
       )}
