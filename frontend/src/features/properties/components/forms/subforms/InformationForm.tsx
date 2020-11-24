@@ -29,7 +29,6 @@ export const defaultInformationFormValues = {
   agencyId: '',
   isSensitive: false,
 };
-
 const InformationForm: FunctionComponent<InformationFormProps> = (props: InformationFormProps) => {
   const withNameSpace: Function = (fieldName: string) => {
     const { nameSpace } = props;

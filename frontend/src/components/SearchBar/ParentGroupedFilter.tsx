@@ -29,7 +29,7 @@ export const ParentGroupedFilter: React.FC<IParentGroupedFilterProps> = ({
       bsSize={inputSize}
       filterBy={filterBy}
       placeholder={placeholder}
-      filter={true}
+      hideValidation
       renderMenu={(results, menuProps) => {
         const parents = groupBy(
           results.map((x: SelectOption) => {

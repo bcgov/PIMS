@@ -13,6 +13,8 @@ interface LatLongFormProps {
   nameSpace?: string;
   disabled?: boolean;
   showLandArea?: boolean;
+  /** determine the text for the lat long for depending on where it is being called */
+  building?: boolean;
 }
 
 export const defaultLatLongValues: any = {
@@ -41,11 +43,20 @@ const LatLongForm = <T extends any>(props: LatLongFormProps & FormikProps<T>) =>
     <div className="lat-long" style={{ position: 'relative' }}>
       <Row>
         <Col md={9}>
-          <p className="instruction">
-            <span className="req">*</span>
-            Drag and drop the pin on the map to mark the location of this property, or if you
-            already have the coordinates, you can enter them manually in the fields below.
-          </p>
+          <div className="instruction">
+            {props.building && (
+              <p>
+                Drag and drop the pin on the map to mark the location of this building, or if you
+                already have the coordinates, you can enter them manually in the fields below.
+              </p>
+            )}
+            {!props.building && (
+              <p>
+                Drag and drop the pin on the map to mark the location of this parcel, or if you
+                already have the coordinates, you can enter them manually in the fields below.
+              </p>
+            )}
+          </div>
         </Col>
         <Col className="marker-svg">
           <DraftMarkerButton
@@ -64,7 +75,7 @@ const LatLongForm = <T extends any>(props: LatLongFormProps & FormikProps<T>) =>
         </Col>
       </Row>
       <Form.Row>
-        <Label>Latitude</Label>
+        <Label required>Latitude</Label>
         <FastInput
           className="input-medium"
           displayErrorTooltips
@@ -76,7 +87,7 @@ const LatLongForm = <T extends any>(props: LatLongFormProps & FormikProps<T>) =>
         />
       </Form.Row>
       <Form.Row>
-        <Label>Longitude</Label>
+        <Label required>Longitude</Label>
         <FastInput
           className="input-medium"
           displayErrorTooltips
@@ -93,6 +104,7 @@ const LatLongForm = <T extends any>(props: LatLongFormProps & FormikProps<T>) =>
             fast={true}
             disabled={props.disabled}
             label="Lot Size"
+            required
             type="number"
             field={withNameSpace('data.landArea')}
             formikProps={props}

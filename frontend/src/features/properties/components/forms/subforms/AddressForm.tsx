@@ -74,9 +74,8 @@ const AddressForm = <T extends any>(props: AddressProps & FormikProps<T>) => {
   return (
     <>
       <Row className="field-row">
-        <Label required>Street Address</Label>
+        <Label required={!props.verticalLine}>Street Address</Label>
         {props.verticalLine && <span className="vl"></span>}
-
         <GeocoderAutoComplete
           tooltip={props.toolTips ? streetAddressTooltip : undefined}
           value={getIn(props.values, withNameSpace('line1'))}
@@ -90,7 +89,7 @@ const AddressForm = <T extends any>(props: AddressProps & FormikProps<T>) => {
         />
       </Row>
       <Row className="field-row">
-        <Label required>Location</Label>
+        <Label required={!props.verticalLine}>Location</Label>
         {props.verticalLine && <span className="vl"></span>}
         <TypeaheadField
           options={administrativeAreas.map(x => x.label)}
@@ -99,6 +98,7 @@ const AddressForm = <T extends any>(props: AddressProps & FormikProps<T>) => {
           paginate={false}
           required
           tooltip={locationTip}
+          hideValidation
         />
       </Row>
       <Row className="field-row">
@@ -111,12 +111,13 @@ const AddressForm = <T extends any>(props: AddressProps & FormikProps<T>) => {
           options={provinces}
         />
       </Row>
-      <Row className="field-row">
-        <Label>Postal</Label>
+      <Row className="postal">
+        <Label>Postal Code</Label>
         {props.verticalLine && <span className="vl"></span>}
         <FastInput
           className="input-small"
           formikProps={props}
+          style={{ width: '120px' }}
           disabled={props.disabled}
           onBlurFormatter={(postal: string) => postal.replace(postal, postalCodeFormatter(postal))}
           field={withNameSpace('postal')}

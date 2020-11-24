@@ -24,6 +24,10 @@ interface IReviewProps {
   disabled?: boolean;
   classifications: any;
   agencies: any;
+  /** handle the pid formatting on change */
+  handlePidChange: (pid: string) => void;
+  /** handle the pin formatting on change */
+  handlePinChange: (pin: string) => void;
 }
 
 export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
@@ -96,6 +100,20 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
               nameSpace="data.address"
             />
             <p className="break"></p>
+            <Row className="content-item">
+              <Label>PID/PIN</Label>
+              <span className="vl"></span>
+              <Input
+                displayErrorTooltips
+                className="input-small"
+                disabled={editInfo.identification}
+                field={
+                  (formikProps.values as any).data.pid
+                    ? withNameSpace('data.pid')
+                    : withNameSpace('data.pin')
+                }
+              />
+            </Row>
             <Row className="content-item">
               <Label>Lot Size</Label>
               <span className="vl"></span>
