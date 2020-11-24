@@ -17,15 +17,24 @@ import { senstiveTooltip as sensitiveTooltip } from '../../../../../src/features
 import { HARMFUL_DISCLOSURE_URL } from 'constants/strings';
 import { useFormikContext } from 'formik';
 import PidPinForm from 'features/properties/components/forms/subforms/PidPinForm';
+import { IGeocoderResponse } from 'hooks/useApi';
 
 interface IIdentificationProps {
+  /** used for changign the agency - note that only select users will be able to edit this field */
   agencies: SelectOptions;
+  /** pass the options for classifications */
   classifications: SelectOptions;
+  /** used for determining nameSpace of field */
   nameSpace?: any;
+  /** for list fields (eg. buildings, financials) */
   index?: any;
-  handleGeocoderChanges: any;
+  /** handle the population of Geocoder information */
+  handleGeocoderChanges: (data: IGeocoderResponse) => Promise<void>;
+  /** help set the cursor type when click the add marker button */
   setMovingPinNameSpace: (nameSpace: string) => void;
+  /** handle the pid formatting on change */
   handlePidChange: (pid: string) => void;
+  /** handle the pin formatting on change */
   handlePinChange: (pin: string) => void;
 }
 

@@ -1,7 +1,7 @@
 import { ISteppedFormValues, SteppedForm, useFormStepper } from 'components/common/form/StepForm';
 import { defaultInformationFormValues } from 'features/properties/components/forms/subforms/InformationForm';
 import { useFormikContext, yupToFormErrors } from 'formik';
-import { useApi } from 'hooks/useApi';
+import { IGeocoderResponse, useApi } from 'hooks/useApi';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import useCodeLookups from 'hooks/useLookupCodes';
 import { noop } from 'lodash';
@@ -32,12 +32,13 @@ import { useDispatch } from 'react-redux';
 import { ParcelSchema } from 'utils/YupSchema';
 import { createParcel, updateParcel } from 'actionCreators/parcelsActionCreator';
 import { LandValuationForm } from './subforms/LandValuationForm';
+import { LandSteps } from 'constants/propertySteps';
 
 const Container = styled.div`
   background-color: #fff;
   height: 100%;
   width: 100%;
-  overflow-y: scroll;
+  overflow-y: auto;
 `;
 
 const FormContentWrapper = styled.div`
@@ -104,14 +105,7 @@ export const valuesToApiFormat = (values: ISteppedFormValues<IFormParcel>): IFor
   return values.data;
 };
 
-interface ILandSubformProps {
-  handlePidChange: (pid: string) => void;
-  handlePinChange: (pin: string) => void;
-  setMovingPinNameSpace: (nameSpace: string) => void;
-  handleGeocoderChanges: any;
-}
-
-const Form: React.FC<ILandSubformProps> = ({
+const Form: React.FC<ILandForm> = ({
   handleGeocoderChanges,
   setMovingPinNameSpace,
   handlePidChange,
@@ -128,7 +122,7 @@ const Form: React.FC<ILandSubformProps> = ({
 
   const render = (): React.ReactNode => {
     switch (stepper.current) {
-      case 0:
+      case LandSteps.IDENTIFICATION:
         return (
           <div className="parcel-identification">
             <ParcelIdentificationForm
@@ -141,16 +135,23 @@ const Form: React.FC<ILandSubformProps> = ({
             />
           </div>
         );
-      case 1:
+      case LandSteps.USAGE:
         return (
           <div className="parcel-usage">
             <LandUsageForm classifications={classifications} nameSpace="data" {...formikProps} />
           </div>
         );
-      case 2:
+      case LandSteps.VALUATION:
         return <LandValuationForm />;
-      case 3:
-        return <LandReviewPage classifications={classifications} agencies={agencies} />;
+      case LandSteps.REVIEW:
+        return (
+          <LandReviewPage
+            classifications={classifications}
+            agencies={agencies}
+            handlePidChange={handlePidChange}
+            handlePinChange={handlePinChange}
+          />
+        );
     }
   };
   return (
@@ -181,12 +182,23 @@ const Form: React.FC<ILandSubformProps> = ({
 };
 
 interface ILandForm {
+  /** pass the formikRef on to other components */
   formikRef?: any;
-  handleGeocoderChanges?: any;
+  /** to autopopulate fields based on Geocoder information */
+  handleGeocoderChanges: (data: IGeocoderResponse) => Promise<void>;
+  /** to change the user's cursor when adding a marker */
   setMovingPinNameSpace: (nameSpace: string) => void;
+  /** to autopopulate fields based on Geocoder information */
   handlePidChange: (pid: string) => void;
+  /** help with formatting of the pin */
   handlePinChange: (pin: string) => void;
 }
+
+/**
+ * A component used for submitting bare land.
+ * This form will appear after selecting 'Add Bare Land' after navigating to Manage Property > Submit Property in PIMS
+ * @component
+ */
 
 const LandForm: React.FC<ILandForm> = (props: ILandForm) => {
   const keycloak = useKeycloakWrapper();

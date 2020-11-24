@@ -57,23 +57,25 @@ exports[`PagedBuildingForms functionality displays any pre-existing buildings 1`
           <option value=\\"2222\\" class=\\"option\\">test province</option>
         </select></div>
     </div>
-    <div class=\\"field-row row\\">
-      <p class=\\"label\\">Postal</p>
-      <div class=\\"form-group\\"><input name=\\"buildings.0.address.postal\\" id=\\"input-buildings.0.address.postal\\" class=\\"input-small form-control\\" value=\\"postal\\" disabled=\\"\\"></div>
+    <div class=\\"postal row\\">
+      <p class=\\"label\\">Postal Code</p>
+      <div class=\\"form-group\\"><input name=\\"buildings.0.address.postal\\" style=\\"width: 120px;\\" id=\\"input-buildings.0.address.postal\\" class=\\"input-small form-control\\" value=\\"postal\\" disabled=\\"\\"></div>
     </div>
     <div class=\\"lat-long\\" style=\\"position: relative;\\">
       <div class=\\"row\\">
         <div class=\\"col-md-9\\">
-          <p class=\\"instruction\\"><span class=\\"req\\">*</span>Drag and drop the pin on the map to mark the location of this property, or if you already have the coordinates, you can enter them manually in the fields below.</p>
+          <div class=\\"instruction\\">
+            <p>Drag and drop the pin on the map to mark the location of this parcel, or if you already have the coordinates, you can enter them manually in the fields below.</p>
+          </div>
         </div>
         <div class=\\"marker-svg col\\"><button class=\\"sc-fzoLsD gdPrCc\\" disabled=\\"\\"><svg>draft-building-icon.svg</svg></button></div>
       </div>
       <div class=\\"form-row\\">
-        <p class=\\"label\\">Latitude</p>
+        <p class=\\"label\\"><span class=\\"req\\">*</span>Latitude</p>
         <div class=\\"form-group\\"><input name=\\"buildings.0.latitude\\" type=\\"number\\" id=\\"input-buildings.0.latitude\\" class=\\"input-medium form-control\\" value=\\"9\\" disabled=\\"\\"></div>
       </div>
       <div class=\\"form-row\\">
-        <p class=\\"label\\">Longitude</p>
+        <p class=\\"label\\"><span class=\\"req\\">*</span>Longitude</p>
         <div class=\\"form-group\\"><input name=\\"buildings.0.longitude\\" type=\\"number\\" id=\\"input-buildings.0.longitude\\" class=\\"input-medium form-control\\" value=\\"10\\" disabled=\\"\\"></div>
       </div>
     </div>
@@ -102,7 +104,7 @@ exports[`PagedBuildingForms functionality displays any pre-existing buildings 1`
           <div class=\\"input-group-content\\">
             <div class=\\"form-group\\"><input name=\\"buildings.0.rentableArea\\" type=\\"number\\" id=\\"input-buildings.0.rentableArea\\" class=\\"form-control\\" value=\\"12\\" disabled=\\"\\"></div>
           </div>
-          <div class=\\"input-group-append\\"><span class=\\"input-group-text\\">Sq. Ft</span></div>
+          <div class=\\"input-group-append\\"><span class=\\"append-disabled input-group-text\\">Sq. Ft</span></div>
         </div>
       </div>
       <div class=\\"form-row\\"><label class=\\"form-label\\">Number of Floors</label>

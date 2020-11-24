@@ -23,10 +23,17 @@
       background-color: #fae1e7;
       width: 400px;
       border-radius: 5px;
+      margin-left: 14px;
     }
     .lat-long {
+      width: 400px;
       .marker-svg {
         margin-top: 20px;
+      }
+      .form-group {
+        .form-control {
+          width: 200px;
+        }
       }
       text-align: left;
       padding: 15px;
