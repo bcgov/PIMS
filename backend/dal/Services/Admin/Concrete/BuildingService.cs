@@ -91,7 +91,7 @@ namespace Pims.Dal.Services.Admin
                 .Include(p => p.Address).ThenInclude(a => a.Province)
                 .Include(p => p.Agency).ThenInclude(a => a.Parent)
                 .AsNoTracking()
-                .Where(b => b.Parcels.Any(pb => pb.Parcel.PID == pid) && (name == null || EF.Functions.Like($"{name}%", b.Name)));
+                .Where(b => b.Parcels.Any(pb => pb.Parcel.PID == pid) && (name == null || EF.Functions.Like(b.Name, $"{name}%")));
         }
 
         /// <summary>
