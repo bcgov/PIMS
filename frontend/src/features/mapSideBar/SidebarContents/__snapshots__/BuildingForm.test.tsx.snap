@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Building Form component renders correctly 1`] = `
-"<div class=\\"sc-fzqMdD cQpTAp buildingForm\\">
+"<div class=\\"sc-fzoVTD bzEXZg buildingForm\\">
   <form action=\\"#\\">
     <div class=\\"bs-stepper\\">
       <div class=\\"bs-stepper-header\\">
@@ -14,8 +14,8 @@ exports[`Building Form component renders correctly 1`] = `
         <div class=\\"step\\" data-target=\\"stepper-3\\"><button type=\\"button\\" class=\\"step-trigger\\"><span class=\\"bs-stepper-circle\\">4</span><span class=\\"bs-stepper-label\\">Review</span></button></div>
       </div>
     </div>
-    <div class=\\"sc-fzowVh dAoMJd\\">
-      <div class=\\"sc-fzoJus fCEPUG\\">
+    <div class=\\"sc-fzpisO hGuDBq\\">
+      <div class=\\"sc-fznyYp bqOhHX\\">
         <div class=\\"identification\\">
           <div class=\\"container\\">
             <div class=\\"row\\">
@@ -67,6 +67,24 @@ exports[`Building Form component renders correctly 1`] = `
                   </div>
                 </div>
               </div>
+            </div>
+            <hr>
+            <div class=\\"row\\">
+              <h4 class=\\"sc-fznAgC UvNjr\\">Strategic Real Estate Classification</h4>
+            </div>
+            <div class=\\"row\\">
+              <div class=\\"col-md-6\\">
+                <div style=\\"display: flex;\\" class=\\"row\\">
+                  <p class=\\"label\\"><span class=\\"req\\">*</span>Building Classification</p>
+                  <div class=\\"form-group\\"><select name=\\"building.0.classificationId\\" style=\\"margin-top: 5px; display: flex;\\" type=\\"number\\" id=\\"input-building.0.classificationId-fast\\" class=\\"form-control\\">
+                      <option value=\\"\\">Must Select One</option>
+                    </select></div>
+                  <div style=\\"margin-top: 8px; margin-left: 20px;\\"><svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 512 512\\" class=\\"tooltip-icon\\" height=\\"1em\\" width=\\"1em\\" xmlns=\\"http://www.w3.org/2000/svg\\">
+                      <path d=\\"M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z\\"></path>
+                    </svg></div>
+                </div>
+              </div>
+              <div class=\\"col-md-6\\"></div>
             </div>
             <hr>
             <div class=\\"row\\">
@@ -125,7 +143,7 @@ exports[`Building Form component renders correctly 1`] = `
           </div>
         </div>
       </div>
-      <div class=\\"sc-fzoVTD jeJpz\\">
+      <div class=\\"sc-fznLxA dAlBcV\\">
         <div class=\\"sc-fzpkJw bcujmr\\">
           <div class=\\"SresManual\\">
             <div><svg stroke=\\"currentColor\\" fill=\\"none\\" stroke-width=\\"2\\" viewBox=\\"0 0 24 24\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" size=\\"28\\" height=\\"28\\" width=\\"28\\" xmlns=\\"http://www.w3.org/2000/svg\\">
@@ -133,7 +151,7 @@ exports[`Building Form component renders correctly 1`] = `
                 <path d=\\"M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z\\"></path>
               </svg></div>
           </div><small class=\\"sc-fznzOf kDlsJ p-1 mr-2\\">Inventory Policy</small>
-        </div><span class=\\"sc-fzpisO hqwTnu\\"></span><button type=\\"button\\" class=\\"btn btn-primary btn-sm\\">Continue</button>
+        </div><span class=\\"sc-fznXWL knqDJu\\"></span><button type=\\"button\\" class=\\"btn btn-primary btn-sm\\">Continue</button>
       </div>
     </div>
   </form>

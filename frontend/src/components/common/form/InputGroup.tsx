@@ -1,6 +1,6 @@
 import './InputGroup.scss';
 
-import React from 'react';
+import React, { CSSProperties } from 'react';
 import { FormControlProps, InputGroup as BootstrapInputGroup } from 'react-bootstrap';
 import { Input } from './Input';
 import { FastInput } from './FastInput';
@@ -38,7 +38,7 @@ type OptionalAttributes = {
   outerClassName?: string;
   displayErrorTooltips?: boolean;
   /** style to pass down to the FastInput or Input */
-  style?: any;
+  style?: CSSProperties;
 };
 
 // only "field" is required for <Input>, the rest are optional

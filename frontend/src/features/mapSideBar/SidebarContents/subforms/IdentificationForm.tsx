@@ -10,6 +10,7 @@ import { Col, Container, Row } from 'react-bootstrap';
 import TooltipWrapper from 'components/common/TooltipWrapper';
 import { sensitiveTooltip } from '../../../../../src/features/properties/components/forms/strings';
 import { HARMFUL_DISCLOSURE_URL } from 'constants/strings';
+import { ClassificationForm } from './ClassificationForm';
 
 interface IIdentificationProps {
   agencies: SelectOptions;
@@ -112,6 +113,14 @@ export const IdentificationForm: React.FC<IIdentificationProps> = ({
           </Row>
         </Col>
       </Row>
+      <hr></hr>
+      <ClassificationForm
+        field={withNameSpace('classificationId')}
+        fieldLabel="Building Classification"
+        classifications={classifications}
+        title="Strategic Real Estate Classification"
+        toolTip="Placeholder"
+      />
       <hr></hr>
       <Row>
         <h4>Location</h4>
