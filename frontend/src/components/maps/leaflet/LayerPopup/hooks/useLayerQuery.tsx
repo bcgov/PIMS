@@ -96,14 +96,15 @@ export const useLayerQuery = (url: string, geometryName: string = 'SHAPE'): IUse
   const findByPid = useCallback(
     async (pid: string): Promise<FeatureCollection> => {
       //Do not make a request if we our currently cached response matches the requested pid.
+      const formattedPid = pid.replace(/-/g, '');
       const data: FeatureCollection =
-        parcelLayerData?.data?.PID === pid || parcelLayerData?.data?.PID_NUMBER.toString() === pid
+        parcelLayerData?.data?.PID === formattedPid ||
+        parcelLayerData?.data?.PID_NUMBER.toString() === formattedPid
           ? undefined
-          : (await axios.get(`${url}&srsName=EPSG:4326&count=1&&CQL_FILTER=PID_NUMBER=${pid}`))
-              .data;
+          : (await axios.get(`${baseUrl}&CQL_FILTER=PID_NUMBER=${+formattedPid}`)).data;
       return data;
     },
-    [url, parcelLayerData],
+    [baseUrl, parcelLayerData],
   );
 
   const findByPin = useCallback(

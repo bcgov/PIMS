@@ -1,5 +1,4 @@
 import React from 'react';
-import renderer from 'react-test-renderer';
 import noop from 'lodash/noop';
 import { LandForm } from '.';
 import { Provider } from 'react-redux';
@@ -12,6 +11,7 @@ import * as API from 'constants/API';
 import { ILookupCode } from 'actions/lookupActions';
 import * as reducerTypes from 'constants/reducerTypes';
 import { fireEvent, render, wait } from '@testing-library/react';
+import pretty from 'pretty';
 
 const mockStore = configureMockStore([thunk]);
 const history = createMemoryHistory();
@@ -57,8 +57,8 @@ const landForm = (
 
 describe('Land Form', () => {
   it('component renders correctly', () => {
-    const tree = renderer.create(landForm).toJSON();
-    expect(tree).toMatchSnapshot();
+    const { container } = render(landForm);
+    expect(pretty(container.innerHTML)).toMatchSnapshot();
   });
 
   it('displays identification page on initial load', () => {

@@ -16,6 +16,8 @@ import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 import pretty from 'pretty';
 import { noop } from 'lodash';
+import { createMemoryHistory } from 'history';
+import { Router } from 'react-router-dom';
 
 import { noop } from 'lodash';
 import { createMemoryHistory } from 'history';

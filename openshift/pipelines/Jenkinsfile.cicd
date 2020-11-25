@@ -22,9 +22,6 @@ pipeline {
   environment {
     CI = 'true'
 
-    // The name of your application
-    APP_NAME = 'pims-alpha'
-
     // The name of the project namespace(s).
     NAME_SPACE = 'jcxjin'
 

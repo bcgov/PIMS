@@ -147,6 +147,7 @@ export const FastSelect: React.FC<FastSelectProps> = memo(
       >
         {!!label && <Form.Label>{label}</Form.Label>}
         {!!tooltip && <TooltipIcon toolTipId="fastSelect-tip" toolTip={tooltip} />}
+        {!!tooltip && <TooltipIcon toolTipId="fastSelect-tip" toolTip={tooltip} />}
         <Form.Control
           as={asElement}
           name={field}

@@ -23,7 +23,7 @@ import BasemapToggle, { BasemapToggleEvent, BaseLayer } from '../BasemapToggle';
 import { useDispatch, useSelector } from 'react-redux';
 import { setMapViewZoom } from 'reducers/mapViewZoomSlice';
 import { RootState } from 'reducers/rootReducer';
-import { Feature } from 'geojson';
+import { BBox, Feature, GeoJsonObject } from 'geojson';
 import { asProperty } from './mapUtils';
 import { LegendControl } from './Legend/LegendControl';
 import { useMediaQuery } from 'react-responsive';
@@ -156,7 +156,10 @@ const Map: React.FC<MapProps> = ({
     lat = (mapRef.current.props.center as Array<number>)[0];
     lng = (mapRef.current.props.center as Array<number>)[1];
   }
-  useActiveFeatureLayer({ selectedProperty, layerPopup, mapRef });
+  const parcelLayerFeature = useSelector<RootState, GeoJsonObject | null>(
+    state => state.parcelLayerData?.parcelLayerFeature,
+  );
+  useActiveFeatureLayer({ selectedProperty, layerPopup, mapRef, parcelLayerFeature });
 
   const lastZoom = useSelector<RootState, number>(state => state.mapViewZoom) ?? zoomProp;
   useEffect(() => {

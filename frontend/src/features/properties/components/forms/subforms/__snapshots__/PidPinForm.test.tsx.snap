@@ -10,15 +10,11 @@ exports[`PidPin sub-form renders correctly 1`] = `
     className="d-inline-flex flex-nowrap form-row"
   >
     <label
-      className="form-label"
+      className="req form-label"
     >
-      <span
-        className="req"
-      >
-        *
-      </span>
-      PID
+      *
     </label>
+    PID
     <div
       className="required form-group"
     >
@@ -34,8 +30,17 @@ exports[`PidPin sub-form renders correctly 1`] = `
     </div>
     <label
       className="form-label"
+      style={
+        Object {
+          "minWidth": "35px",
+          "paddingLeft": "5px",
+          "width": "35px",
+        }
+      }
     >
-      PIN
+      or
+      <br />
+      PIN 
     </label>
     <div
       className="required form-group"

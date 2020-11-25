@@ -22,6 +22,7 @@ import {
   PARCELS_LAYER_URL,
   useLayerQuery,
 } from 'components/maps/leaflet/LayerPopup';
+import { LeafletMouseEvent } from 'leaflet';
 
 interface IMapSideBarContainerProps {
   refreshParcels: Function;
@@ -170,7 +171,6 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
         disabled={disabled}
         loadDraft={loadDraft}
         properties={properties}
-        // mapClickMouseEvent={leafletMouseEvent}
       />
     );
   };

@@ -97,7 +97,6 @@ const AddressForm = <T extends any>(props: AddressProps & FormikProps<T>) => {
           disabled={props.disabled}
           paginate={false}
           required
-          hideValidation
         />
       </Row>
       <Row className="field-row">
