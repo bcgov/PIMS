@@ -87,16 +87,16 @@ namespace Pims.Dal.Entities.Models
         public string AdministrativeArea { get; set; }
 
         /// <summary>
-        /// get/set - Building minimum estimated value.
+        /// get/set - Building minimum market value.
         /// </summary>
         /// <value></value>
-        public decimal? MinEstimatedValue { get; set; }
+        public decimal? MinMarketValue { get; set; }
 
         /// <summary>
-        /// get/set - Building maximum estimated value.
+        /// get/set - Building maximum market value.
         /// </summary>
         /// <value></value>
-        public decimal? MaxEstimatedValue { get; set; }
+        public decimal? MaxMarketValue { get; set; }
 
         /// <summary>
         /// get/set - Property minimum assessed value.
@@ -144,18 +144,18 @@ namespace Pims.Dal.Entities.Models
         /// <param name="address"></param>
         /// <param name="agencyId"></param>
         /// <param name="classificationId"></param>
-        /// <param name="minEstimatedValue"></param>
-        /// <param name="maxEstimatedValue"></param>
+        /// <param name="minMarketValue"></param>
+        /// <param name="maxMarketValue"></param>
         /// <param name="minAssessedValue"></param>
         /// <param name="maxAssessedValue"></param>
         /// <param name="sort"></param>
         /// <returns></returns>
-        public PropertyFilter(string address, int? agencyId, int? classificationId, decimal? minEstimatedValue, decimal? maxEstimatedValue, decimal? minAssessedValue, decimal? maxAssessedValue, string[] sort)
+        public PropertyFilter(string address, int? agencyId, int? classificationId, decimal? minMarketValue, decimal? maxMarketValue, decimal? minAssessedValue, decimal? maxAssessedValue, string[] sort)
         {
             this.Address = address;
             this.ClassificationId = classificationId;
-            this.MinEstimatedValue = minEstimatedValue;
-            this.MaxEstimatedValue = maxEstimatedValue;
+            this.MinMarketValue = minMarketValue;
+            this.MaxMarketValue = maxMarketValue;
             this.MinAssessedValue = minAssessedValue;
             this.MaxAssessedValue = maxAssessedValue;
             if (agencyId.HasValue)
@@ -185,8 +185,8 @@ namespace Pims.Dal.Entities.Models
 
             this.ClassificationId = filter.GetIntNullValue(nameof(this.ClassificationId));
             this.Description = filter.GetStringValue(nameof(this.Description));
-            this.MinEstimatedValue = filter.GetDecimalNullValue(nameof(this.MinEstimatedValue));
-            this.MaxEstimatedValue = filter.GetDecimalNullValue(nameof(this.MaxEstimatedValue));
+            this.MinMarketValue = filter.GetDecimalNullValue(nameof(this.MinMarketValue));
+            this.MaxMarketValue = filter.GetDecimalNullValue(nameof(this.MaxMarketValue));
             this.MinAssessedValue = filter.GetDecimalNullValue(nameof(this.MinAssessedValue));
             this.MaxAssessedValue = filter.GetDecimalNullValue(nameof(this.MaxAssessedValue));
 
@@ -214,8 +214,8 @@ namespace Pims.Dal.Entities.Models
                 || !String.IsNullOrWhiteSpace(this.Description)
                 || this.MaxAssessedValue.HasValue
                 || this.MinAssessedValue.HasValue
-                || this.MinEstimatedValue.HasValue
-                || this.MaxEstimatedValue.HasValue
+                || this.MinMarketValue.HasValue
+                || this.MaxMarketValue.HasValue
                 || this.Agencies?.Any() == true
                 || this.ClassificationId.HasValue;
         }

@@ -67,8 +67,7 @@ const ParcelDetailContainer: React.FunctionComponent<IParcelDetailContainerProps
   const parcelsService = useLayerQuery(PARCELS_LAYER_URL);
 
   const handlePidChange = (pid: string) => {
-    const formattedPid = pid.replace(/-/g, '');
-    const response = parcelsService.findByPid(formattedPid);
+    const response = parcelsService.findByPid(pid);
     handleParcelDataLayerResponse(response, dispatch);
   };
   const handlePinChange = (pin: string) => {

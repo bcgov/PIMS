@@ -20,6 +20,8 @@ import { mapLookupCode } from 'utils';
 import { AccessRequestStatus } from 'constants/accessStatus';
 import { Snackbar, ISnackbarState } from 'components/common/Snackbar';
 import useCodeLookups from 'hooks/useLookupCodes';
+import TooltipWrapper from 'components/common/TooltipWrapper';
+import { AUTHORIZATION_URL } from 'constants/strings';
 
 interface IAccessRequestForm extends IAccessRequest {
   agency: number;
@@ -87,13 +89,26 @@ const AccessRequestPage = () => {
   );
 
   const checkRoles = (
-    <Select
-      label="Role"
-      field="role"
-      required={true}
-      options={selectRoles}
-      placeholder={initialValues?.roles?.length > 0 ? undefined : 'Please Select'}
-    />
+    <Form.Group className={'check-roles'}>
+      <Form.Label>
+        Roles{' '}
+        <a target="_blank" rel="noopener noreferrer" href={AUTHORIZATION_URL}>
+          Role Descriptions
+        </a>
+      </Form.Label>
+      <TooltipWrapper
+        toolTipId="select-roles-tip"
+        toolTip="To select multiple roles, hold Ctrl and select options."
+      >
+        <Select
+          label="Role"
+          field="role"
+          required={true}
+          options={selectRoles}
+          placeholder={initialValues?.roles?.length > 0 ? undefined : 'Please Select'}
+        />
+      </TooltipWrapper>
+    </Form.Group>
   );
 
   const button = initialValues.id === 0 ? 'Submit' : 'Update';
@@ -130,7 +145,7 @@ const AccessRequestPage = () => {
               } catch (error) {
                 setAlert({
                   variant: 'danger',
-                  message: 'Failed to submit you access request.',
+                  message: 'Failed to submit your access request.',
                   show: true,
                 });
               }
@@ -192,7 +207,8 @@ const AccessRequestPage = () => {
                 <TextArea
                   label="Notes"
                   field="note"
-                  placeholder="Please specify why you need access to this site."
+                  placeholder="Please specify why you need access to PIMS and include your manager's name."
+                  required={true}
                 />
 
                 <p>

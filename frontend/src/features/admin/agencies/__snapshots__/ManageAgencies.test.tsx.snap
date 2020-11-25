@@ -58,6 +58,7 @@ exports[`Manage Agencies Component Snapshot matches 1`] = `
                 aria-haspopup="listbox"
                 autoComplete="off"
                 className="rbt-input-main form-control rbt-input agency-search"
+                id="id-field"
                 name="id"
                 onBlur={[Function]}
                 onChange={[Function]}

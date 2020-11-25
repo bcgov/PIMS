@@ -65,8 +65,8 @@ namespace Pims.Dal.Configuration.Views
                             SubAgency = b.Agency.ParentId.HasValue ? null : b.Agency.Name,
                             SubAgencyCode = b.Agency.ParentId.HasValue ? null : b.Agency.Code,
 
-                            Estimated = b.Fiscals.Any(f => f.Key == FiscalKeys.Estimated) ? b.Fiscals.OrderByDescending(f => f.FiscalYear).FirstOrDefault(f => f.Key == FiscalKeys.Estimated).Value : 0,
-                            EstimatedFiscalYear = b.Fiscals.Any(f => f.Key == FiscalKeys.Estimated) ? b.Fiscals.OrderByDescending(f => f.FiscalYear).FirstOrDefault(f => f.Key == FiscalKeys.Estimated).FiscalYear : (int?)null,
+                            Market = b.Fiscals.Any(f => f.Key == FiscalKeys.Market) ? b.Fiscals.OrderByDescending(f => f.FiscalYear).FirstOrDefault(f => f.Key == FiscalKeys.Market).Value : 0,
+                            MarketFiscalYear = b.Fiscals.Any(f => f.Key == FiscalKeys.Market) ? b.Fiscals.OrderByDescending(f => f.FiscalYear).FirstOrDefault(f => f.Key == FiscalKeys.Market).FiscalYear : (int?)null,
                             NetBook = b.Fiscals.Any(f => f.Key == FiscalKeys.NetBook) ? b.Fiscals.OrderByDescending(f => f.FiscalYear).FirstOrDefault(f => f.Key == FiscalKeys.NetBook).Value : 0,
                             NetBookFiscalYear = b.Fiscals.Any(f => f.Key == FiscalKeys.NetBook) ? b.Fiscals.OrderByDescending(f => f.FiscalYear).FirstOrDefault(f => f.Key == FiscalKeys.NetBook).FiscalYear : (int?)null,
                             Assessed = b.Evaluations.Any(f => f.Key == EvaluationKeys.Assessed) ? b.Evaluations.OrderByDescending(f => f.Date).FirstOrDefault(f => f.Key == EvaluationKeys.Assessed).Value : 0,
@@ -117,8 +117,8 @@ namespace Pims.Dal.Configuration.Views
                                 SubAgency = p.Agency.ParentId.HasValue ? null : p.Agency.Name,
                                 SubAgencyCode = p.Agency.ParentId.HasValue ? null : p.Agency.Code,
 
-                                Estimated = p.Fiscals.Any(f => f.Key == FiscalKeys.Estimated) ? p.Fiscals.OrderByDescending(f => f.FiscalYear).FirstOrDefault(f => f.Key == FiscalKeys.Estimated).Value : 0,
-                                EstimatedFiscalYear = p.Fiscals.Any(f => f.Key == FiscalKeys.Estimated) ? p.Fiscals.OrderByDescending(f => f.FiscalYear).FirstOrDefault(f => f.Key == FiscalKeys.Estimated).FiscalYear : (int?)null,
+                                Market = p.Fiscals.Any(f => f.Key == FiscalKeys.Market) ? p.Fiscals.OrderByDescending(f => f.FiscalYear).FirstOrDefault(f => f.Key == FiscalKeys.Market).Value : 0,
+                                MarketFiscalYear = p.Fiscals.Any(f => f.Key == FiscalKeys.Market) ? p.Fiscals.OrderByDescending(f => f.FiscalYear).FirstOrDefault(f => f.Key == FiscalKeys.Market).FiscalYear : (int?)null,
                                 NetBook = p.Fiscals.Any(f => f.Key == FiscalKeys.NetBook) ? p.Fiscals.OrderByDescending(f => f.FiscalYear).FirstOrDefault(f => f.Key == FiscalKeys.NetBook).Value : 0,
                                 NetBookFiscalYear = p.Fiscals.Any(f => f.Key == FiscalKeys.NetBook) ? p.Fiscals.OrderByDescending(f => f.FiscalYear).FirstOrDefault(f => f.Key == FiscalKeys.NetBook).FiscalYear : (int?)null,
                                 Assessed = p.Evaluations.Any(f => f.Key == EvaluationKeys.Assessed) ? p.Evaluations.OrderByDescending(f => f.Date).FirstOrDefault(f => f.Key == EvaluationKeys.Assessed).Value : 0,

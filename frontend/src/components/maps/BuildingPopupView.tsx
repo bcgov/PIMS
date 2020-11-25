@@ -13,6 +13,7 @@ import queryString from 'query-string';
 
 export interface IBuildingDetailProps {
   building: IBuilding | null;
+  zoomTo?: () => void;
   disabled?: boolean;
 }
 
@@ -95,7 +96,6 @@ export const BuildingPopupView: React.FC<IBuildingDetailProps> = (props: IBuildi
                 {(keycloak.hasAgency(buildingDetail?.agencyId as number) ||
                   keycloak.hasClaim(Claims.ADMIN_PROPERTIES)) && (
                   <Link
-                    style={{ paddingLeft: '5px' }}
                     to={{
                       pathname: `/mapview/${buildingDetail?.parcelId}`,
                       search: queryString.stringify({
@@ -107,6 +107,11 @@ export const BuildingPopupView: React.FC<IBuildingDetailProps> = (props: IBuildi
                     }}
                   >
                     Update
+                  </Link>
+                )}
+                {props.zoomTo && (
+                  <Link to={{ ...location }} onClick={props.zoomTo}>
+                    Zoom
                   </Link>
                 )}
               </Col>

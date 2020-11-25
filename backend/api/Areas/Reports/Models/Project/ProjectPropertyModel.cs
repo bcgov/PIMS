@@ -66,9 +66,9 @@ namespace Pims.Api.Areas.Reports.Models.Project
         public decimal Assessed { get; set; }
 
         /// <summary>
-        /// get/set - The property estimated value.
+        /// get/set - The property market value.
         /// </summary>
-        public decimal Estimated { get; set; }
+        public decimal Market { get; set; }
 
         /// <summary>
         /// get/set - The land area of the parcel.

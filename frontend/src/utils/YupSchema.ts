@@ -98,7 +98,7 @@ export const FinancialYear = Yup.object().shape({
   assessed: Financial.required(),
   appraised: Financial.required(),
   netbook: Financial.required(),
-  estimated: Financial.required(),
+  market: Financial.required(),
 });
 
 export const Building = Yup.object().shape({

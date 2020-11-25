@@ -14,12 +14,12 @@ exports[`Project list view tests Matches snapshot 1`] = `
         <div class=\\"bar-item col-2\\">
           <div class=\\"sc-AxjAm gLmrxD form-group\\">
             <div class=\\"rbt\\" style=\\"outline: none; position: relative;\\" tabindex=\\"-1\\">
-              <div style=\\"display: flex; flex: 1; height: 100%; position: relative;\\"><input autocomplete=\\"off\\" placeholder=\\"Enter an Agency\\" type=\\"text\\" name=\\"agencies\\" aria-autocomplete=\\"both\\" aria-expanded=\\"false\\" aria-haspopup=\\"listbox\\" role=\\"combobox\\" class=\\"rbt-input-main form-control rbt-input map-filter-typeahead\\" value=\\"\\"><input aria-hidden=\\"true\\" class=\\"rbt-input-hint\\" readonly=\\"\\" style=\\"background-color: transparent; border-color: transparent; box-shadow: none; color: rgba(0, 0, 0, 0.35); left: 0px; pointer-events: none; position: absolute; top: 0px; width: 100%;\\" tabindex=\\"-1\\" value=\\"\\"></div>
+              <div style=\\"display: flex; flex: 1; height: 100%; position: relative;\\"><input autocomplete=\\"off\\" placeholder=\\"Enter an Agency\\" type=\\"text\\" name=\\"agencies\\" id=\\"agencies-field\\" aria-autocomplete=\\"both\\" aria-expanded=\\"false\\" aria-haspopup=\\"listbox\\" role=\\"combobox\\" class=\\"rbt-input-main form-control rbt-input map-filter-typeahead\\" value=\\"\\"><input aria-hidden=\\"true\\" class=\\"rbt-input-hint\\" readonly=\\"\\" style=\\"background-color: transparent; border-color: transparent; box-shadow: none; color: rgba(0, 0, 0, 0.35); left: 0px; pointer-events: none; position: absolute; top: 0px; width: 100%;\\" tabindex=\\"-1\\" value=\\"\\"></div>
             </div>
           </div>
         </div>
         <div class=\\"bar-item col-2\\">
-          <div class=\\"form-group\\"><input name=\\"name\\" placeholder=\\"Search by project name\\" id=\\"input-name\\" class=\\"form-control\\" value=\\"\\"></div>
+          <div class=\\"form-group\\"><input name=\\"name\\" placeholder=\\"Search by project name or number\\" id=\\"input-name\\" class=\\"form-control\\" value=\\"\\"></div>
         </div>
         <div class=\\"bar-item flex-grow-0 col\\"><button type=\\"submit\\" class=\\"Button Button--icon-only bg-warning btn btn-primary\\">
             <div class=\\"Button__icon\\"><svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 512 512\\" size=\\"20\\" height=\\"20\\" width=\\"20\\" xmlns=\\"http://www.w3.org/2000/svg\\">
@@ -40,21 +40,20 @@ exports[`Project list view tests Matches snapshot 1`] = `
     </div>
     <div role=\\"table\\" class=\\"table\\">
       <div class=\\"thead thead-light\\">
-        <div role=\\"row\\" style=\\"display: flex; flex: 1 0 auto; min-width: 835px;\\" class=\\"tr\\">
-          <div class=\\"th expander svg-btn\\"><svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 576 512\\" color=\\"black\\" style=\\"color: black;\\" height=\\"1em\\" width=\\"1em\\" xmlns=\\"http://www.w3.org/2000/svg\\">
+        <div role=\\"row\\" style=\\"display: flex; flex: 1 0 auto; min-width: 875px;\\" class=\\"tr\\">
+          <div class=\\"th expander svg-btn\\"><svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 576 512\\" color=\\"black\\" size=\\"20\\" style=\\"color: black;\\" height=\\"20\\" width=\\"20\\" xmlns=\\"http://www.w3.org/2000/svg\\">
               <path d=\\"M572.694 292.093L500.27 416.248A63.997 63.997 0 0 1 444.989 448H45.025c-18.523 0-30.064-20.093-20.731-36.093l72.424-124.155A64 64 0 0 1 152 256h399.964c18.523 0 30.064 20.093 20.73 36.093zM152 224h328v-48c0-26.51-21.49-48-48-48H272l-64-64H48C21.49 64 0 85.49 0 112v278.046l69.077-118.418C86.214 242.25 117.989 224 152 224z\\"></path>
             </svg></div>
           <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 65 0 auto; min-width: 65px; width: 3.5%; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" width=\\"3.5%\\" class=\\"th\\">Project No.</div>
-          <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 7%; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" width=\\"7%\\" class=\\"th\\">Name</div>
+          <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 200 0 auto; min-width: 200px; width: 7%; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" width=\\"7%\\" class=\\"th\\">Name</div>
           <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 50 0 auto; min-width: 50px; width: 7%; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" width=\\"7%\\" class=\\"th\\">Status</div>
           <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 7%; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" width=\\"7%\\" class=\\"th\\">Agency</div>
-          <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 7%; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" width=\\"7%\\" class=\\"th\\">Sub Agency</div>
           <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 3.5%; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" width=\\"3.5%\\" class=\\"th\\">Zoning</div>
           <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 3.5%; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" width=\\"3.5%\\" class=\\"th\\">Zoning Potential</div>
-          <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 3.5%; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" width=\\"3.5%\\" class=\\"th\\">Sum Netbook</div>
-          <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 3.5%; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" width=\\"3.5%\\" class=\\"th\\">Sum Estimated</div>
-          <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 7%; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" width=\\"7%\\" class=\\"th\\">Last Updated</div>
-          <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 7%; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" width=\\"7%\\" class=\\"th\\">Last Updated By</div>
+          <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 3.5%; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" width=\\"3.5%\\" class=\\"th\\">Net Book</div>
+          <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 3.5%; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" width=\\"3.5%\\" class=\\"th\\">Market Value</div>
+          <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 7%; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" width=\\"7%\\" class=\\"th\\">Updated On</div>
+          <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 7%; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" width=\\"7%\\" class=\\"th\\">Updated By</div>
         </div>
       </div>
       <div class=\\"table-loading\\">

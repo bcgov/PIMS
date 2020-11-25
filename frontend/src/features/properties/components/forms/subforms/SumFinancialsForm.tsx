@@ -144,12 +144,12 @@ const SumFinancialsForm: React.FC<SumProps> = (props: SumProps) => {
             />
           </Form.Row>
           <Form.Row>
-            <Form.Label>Estimated Sum</Form.Label>
+            <Form.Label>Market Sum</Form.Label>
             <FastCurrencyInput
               formikProps={props.formikProps}
               disabled={true}
-              value={summedFinancials[FiscalKeys.Estimated]}
-              field={FiscalKeys.Estimated}
+              value={summedFinancials[FiscalKeys.Market]}
+              field={FiscalKeys.Market}
               placeholder="$0"
             />
           </Form.Row>

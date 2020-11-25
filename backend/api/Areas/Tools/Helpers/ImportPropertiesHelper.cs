@@ -23,7 +23,7 @@ namespace Pims.Api.Areas.Tools.Helpers
         private readonly IList<Entity.BuildingPredominateUse> _buildingPredominateUses;
         private readonly IList<Entity.PropertyClassification> _propertyClassifications;
         private readonly IList<Entity.Agency> _agencies;
-        private readonly Dictionary<string, string> _agencyCodeCorrections = new Dictionary<string, string>() { { "BT", "BCT" }, { "ICOB", "ICBC" } };
+        private readonly Dictionary<string, string> _agencyCodeCorrections = new Dictionary<string, string>() { { "BT", "BCT" }, { "ICOB", "ICBC" } }; // TODO: Move logic to converter tool
         #endregion
 
         #region Constructors
@@ -335,11 +335,14 @@ namespace Pims.Api.Areas.Tools.Helpers
         /// <returns></returns>
         private Entity.Parcel AddUpdateBuilding(Model.ImportPropertyModel property, int pid, Entity.Agency agency)
         {
-            var lid = property.LocalId.ConvertToUTF8();
-            // Multiple buildings could be returned for the PID and LocalId (name), we will default to the first one hoping that the LocalId will ensure we get the correct one.
-            var b_e = ExceptionHelper.HandleKeyNotFoundWithDefault(() => _pimsAdminService.Building.GetByPid(pid, lid).FirstOrDefault() ?? throw new KeyNotFoundException());
+            var name = GenerateName(property.Name, property.Description, property.LocalId);
+            // Multiple buildings could be returned for the PID and Name.
+            var b_e = ExceptionHelper.HandleKeyNotFoundWithDefault(() => _pimsAdminService.Building.GetByPid(pid, name).FirstOrDefault(n => n.Name == name) ?? throw new KeyNotFoundException());
             var evaluationDate = new DateTime(property.FiscalYear, 1, 1); // Defaulting to Jan 1st because SIS data doesn't have the actual date.
-
+            if (property.LocalId == "B0032789")
+            {
+                var a = b_e.Name;
+            }
             // Find parcel
             var parcel = ExceptionHelper.HandleKeyNotFound(() => _pimsAdminService.Parcel.GetByPid(pid));
 
@@ -362,7 +365,7 @@ namespace Pims.Api.Areas.Tools.Helpers
                 b_e.Agency = agency;
                 if (!b_e.Parcels.Any(pb => pb.ParcelId == parcel.Id))
                     b_e.Parcels.Add(new Entity.ParcelBuilding(parcel, b_e) { Parcel = null, Building = null });
-                b_e.Name = GenerateName(property.Name, property.Description, property.LocalId);
+                b_e.Name = name;
                 b_e.Description = property.Description.ConvertToUTF8(false);
                 var lng = property.Longitude != 0 ? property.Longitude : b_e.Location?.X ?? 0; // This is to stop data from some imports resulting in removing the lat/long.
                 var lat = property.Latitude != 0 ? property.Latitude : b_e.Location?.Y ?? 0;
@@ -469,7 +472,8 @@ namespace Pims.Api.Areas.Tools.Helpers
         /// <returns></returns>
         private string GenerateName(string name, string description = null, string localId = null)
         {
-            return (localId == null ? null : $"{localId.ConvertToUTF8()} ") + (name != null ? name.ConvertToUTF8() : description?.Substring(0, 150 < description.Length ? 150 : description.Length).Trim().ConvertToUTF8());
+            return (localId == null ? null : $"{localId.ConvertToUTF8()} ") +
+                (name != null ? name.ConvertToUTF8() : description?.Substring(0, 150 < description.Length ? 150 : description.Length).Trim().ConvertToUTF8());
         }
         #endregion
     }

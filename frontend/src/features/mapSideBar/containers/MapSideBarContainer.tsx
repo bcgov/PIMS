@@ -11,7 +11,6 @@ import { fetchParcelDetail } from 'actionCreators/parcelsActionCreator';
 import { Spinner } from 'react-bootstrap';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
 import * as parcelsActions from 'actions/parcelsActions';
-import { LeafletMouseEvent } from 'leaflet';
 import { BuildingForm, SubmitPropertySelector, LandForm } from '../SidebarContents';
 import { BuildingSvg, LandSvg } from 'components/common/Icons';
 import { FormikValues } from 'formik';
@@ -46,6 +45,7 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
     disabled,
     loadDraft,
     context,
+    newParcel,
     size,
     addBuilding,
     addRawLand,
@@ -61,9 +61,6 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
 
   const [movingPinNameSpace, setMovingPinNameSpace] = useState<string | undefined>(
     movingPinNameSpaceProp,
-  );
-  const leafletMouseEvent = useSelector<RootState, LeafletMouseEvent | null>(
-    state => state.leafletClickEvent?.mapClickEvent,
   );
   const [propertyType, setPropertyType] = useState('');
   const formikRef = React.useRef<FormikValues>();
@@ -171,7 +168,7 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
         disabled={disabled}
         loadDraft={loadDraft}
         properties={properties}
-        // mapClickMouseEvent={leafletMouseEvent}
+        mapClickMouseEvent={leafletMouseEvent}
       />
     );
   };

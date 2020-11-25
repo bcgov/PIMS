@@ -12,7 +12,7 @@ import * as API from 'constants/API';
 import './EditUserPage.scss';
 import { Label } from 'components/common/Label';
 import { useHistory } from 'react-router-dom';
-import TooltipIcon from 'components/common/TooltipIcon';
+import TooltipWrapper from 'components/common/TooltipWrapper';
 import { formatApiDateTime } from 'utils';
 import useCodeLookups from 'hooks/useLookupCodes';
 import { ILookupCode } from 'actions/lookupActions';
@@ -63,22 +63,23 @@ const EditUserPage = (props: IEditUserPageProps) => {
     <Form.Group className={'check-roles'}>
       <Form.Label>
         Roles{' '}
-        <TooltipIcon
-          toolTipId="roles-tooltip"
-          toolTip={'To select multiple roles, hold Ctrl and click selections.'}
-        />{' '}
         <a target="_blank" rel="noopener noreferrer" href={AUTHORIZATION_URL}>
           Role Descriptions
         </a>
       </Form.Label>
-      <Select
-        field="roles"
-        data-testid="role"
-        multiple={true}
-        required={true}
-        options={selectRoles}
-        placeholder={user?.roles?.length > 0 ? undefined : 'Please Select'}
-      />
+      <TooltipWrapper
+        toolTipId="select-roles-tip"
+        toolTip="To select multiple roles, hold Ctrl and click options."
+      >
+        <Select
+          field="roles"
+          data-testid="role"
+          multiple={true}
+          required={true}
+          options={selectRoles}
+          placeholder={user?.roles?.length > 0 ? undefined : 'Please Select'}
+        />
+      </TooltipWrapper>
     </Form.Group>
   );
 
@@ -210,7 +211,7 @@ const EditUserPage = (props: IEditUserPageProps) => {
 
                 {checkRoles}
 
-                <Label>Note</Label>
+                <Label>Notes</Label>
                 <Input
                   as="textarea"
                   field="note"
@@ -220,14 +221,13 @@ const EditUserPage = (props: IEditUserPageProps) => {
                 />
 
                 <Form.Group className={'is-disabled'}>
-                  <Form.Label>
-                    Disable Account?{' '}
-                    <TooltipIcon
-                      toolTipId="is-disabled-tooltip"
-                      toolTip={'Click to change account status then click Save.'}
-                    />{' '}
-                  </Form.Label>
-                  <Field data-testid="isDisabled" type="checkbox" name="isDisabled" />
+                  <Form.Label>Disable Account?&nbsp;</Form.Label>
+                  <TooltipWrapper
+                    toolTipId="is-disabled-tooltip"
+                    toolTip={'Click to change account status then click Save.'}
+                  >
+                    <Field data-testid="isDisabled" type="checkbox" name="isDisabled" />
+                  </TooltipWrapper>
                 </Form.Group>
 
                 <Row className="justify-content-md-center">

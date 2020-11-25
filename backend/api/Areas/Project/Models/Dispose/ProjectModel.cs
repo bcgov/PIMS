@@ -115,6 +115,11 @@ namespace Pims.Api.Areas.Project.Models.Dispose
         public string OffersNote { get; set; }
 
         /// <summary>
+        /// get/set - Note for reporting.
+        /// </summary>
+        public string ReportingNote { get; set; }
+
+        /// <summary>
         /// get/set - Note for comments.
         /// </summary>
         public string Comments { get; set; }
@@ -210,6 +215,16 @@ namespace Pims.Api.Areas.Project.Models.Dispose
         public DateTime? ClearanceNotificationSentOn { get; set; }
 
         /// <summary>
+        /// get/set - When a request to be added to SPL was received.
+        /// </summary>
+        public DateTime? RequestForSplReceivedOn { get; set; }
+
+        /// <summary>
+        /// get/set - When the project was approved to be added to SPL.
+        /// </summary>
+        public DateTime? ApprovedForSplOn { get; set; }
+
+        /// <summary>
         /// get/set - When the project was externally marketed.
         /// </summary>
         public DateTime? MarketedOn { get; set; }
@@ -265,14 +280,9 @@ namespace Pims.Api.Areas.Project.Models.Dispose
         public decimal NetBook { get; set; }
 
         /// <summary>
-        /// get/set - A static netbook value used on the close out form.
+        /// get/set - The market value.
         /// </summary>
-        public decimal? CloseOutNetbook { get; set; }
-
-        /// <summary>
-        /// get/set - The estimated value.
-        /// </summary>
-        public decimal Estimated { get; set; }
+        public decimal Market { get; set; }
 
         /// <summary>
         /// get/set - The appraised value.
@@ -293,11 +303,6 @@ namespace Pims.Api.Areas.Project.Models.Dispose
         /// get/set - The net proceeds
         /// </summary>
         public decimal? NetProceeds { get; set; }
-
-        /// <summary>
-        /// get/set - The sales proceeds
-        /// </summary>
-        public decimal? SalesProceeds { get; set; }
 
         /// <summary>
         /// get/set - The program cost.

@@ -85,6 +85,16 @@
         "Composite": false
       },
       {
+        "Name": "reports-view",
+        "Description": "Ability to view reports.",
+        "Composite": false
+      },
+      {
+        "Name": "reports-spl",
+        "Description": "Ability to view SPL report.",
+        "Composite": false
+      },
+      {
         "Name": "agency-administrator",
         "Description": "Agency Administrator of the users agency.",
         "Composite": true,
@@ -199,6 +209,10 @@
           "project-delete",
           "dispose-approve"
         ]
+      },
+      {
+        "Name": "SRES Financial Manager",
+        "RealmRoles": ["reports-view", "reports-spl"]
       }
     ],
     "Clients": [
@@ -430,7 +444,7 @@
         "BaseUrl": "/",
         "WebOrigins": ["*"],
         "ServiceAccount": {
-          "RealmRoles": ["system-administrator"],
+          "RealmRoles": ["system-administrator", "reports-spl"],
           "ClientRoles": [
             {
               "ClientId": "realm-management",

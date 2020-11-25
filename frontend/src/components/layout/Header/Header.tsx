@@ -3,7 +3,7 @@ import './Header.scss';
 import React, { useState } from 'react';
 import { Navbar, Row, Col, Modal, Button, Nav } from 'react-bootstrap';
 import logoUrl from 'assets/images/logo-banner.svg';
-import { useHistory, Link } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { IGenericNetworkAction, clear } from 'actions/genericActions';
 import { RootState } from 'reducers/rootReducer';
 import { useSelector, useDispatch } from 'react-redux';
@@ -81,7 +81,7 @@ const Header = () => {
   return (
     <Navbar expand className="App-header">
       <Navbar.Brand className="brand-box">
-        <Link to="/">
+        <a target="_blank" rel="noopener noreferrer" href="https://www2.gov.bc.ca/gov/content/home">
           <img
             className="bc-gov-icon"
             src={logoUrl}
@@ -89,7 +89,7 @@ const Header = () => {
             height="43"
             alt="Go to the Government of British Columbia website"
           />
-        </Link>
+        </a>
       </Navbar.Brand>
       <Nav className="title mr-auto">
         <Nav.Item>

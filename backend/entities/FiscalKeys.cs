@@ -5,7 +5,13 @@ namespace Pims.Dal.Entities
     /// </summary>
     public enum FiscalKeys
     {
+        /// <summary>
+        /// Net Book Value.
+        /// </summary>
         NetBook,
-        Estimated
+        /// <summary>
+        /// Estimated/Current Market Value.
+        /// </summary>
+        Market
     }
 }

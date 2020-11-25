@@ -97,7 +97,7 @@ export const columns: ColumnWithProps<IProperty>[] = [
     minWidth: 80,
   },
   {
-    Header: 'Netbook Value',
+    Header: 'Net Book Value',
     accessor: 'netBook',
     Cell: MoneyCell,
     align: 'right',
@@ -106,8 +106,8 @@ export const columns: ColumnWithProps<IProperty>[] = [
     minWidth: 80,
   },
   {
-    Header: 'Estimated Value',
-    accessor: 'estimated',
+    Header: 'Market Value',
+    accessor: 'market',
     Cell: MoneyCell,
     align: 'right',
     responsive: true,

@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.Extensions.Options;
 using Moq;
 using Pims.Core.Helpers;
 using Pims.Dal;
@@ -9,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Security.Claims;
+using System.Text.Json;
 
 namespace Pims.Core.Test
 {
@@ -86,7 +88,10 @@ namespace Pims.Core.Test
             var httpContext = helper.CreateHttpContext(user);
             contextAccessor.Setup(m => m.HttpContext).Returns(httpContext);
 
-            var context = new PimsContext(options, contextAccessor.Object);
+            var serializerOptions = new Mock<IOptions<JsonSerializerOptions>>();
+            helper.AddSingleton(serializerOptions);
+
+            var context = new PimsContext(options, contextAccessor.Object, serializerOptions.Object);
 
             if (ensureDeleted) context.Database.EnsureDeleted();
             helper.AddSingleton(context);

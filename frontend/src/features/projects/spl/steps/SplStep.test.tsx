@@ -215,7 +215,7 @@ describe('SPL Approval Step', () => {
       project.isContractConditional = true;
       project.marketedOn = new Date();
       project.assessed = 123;
-      project.estimated = 123;
+      project.market = 123;
       project.netBook = 123;
 
       const component = render(getSplStep(getStore(project)));
@@ -294,7 +294,7 @@ describe('SPL Approval Step', () => {
       project.disposedOn = new Date();
       project.statusCode = ReviewWorkflowStatus.ContractInPlace;
       project.assessed = 123;
-      project.estimated = 123;
+      project.market = 123;
       project.netBook = 123;
 
       const component = render(getSplStep(getStore(project)));

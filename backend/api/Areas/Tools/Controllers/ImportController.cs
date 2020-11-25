@@ -1,14 +1,17 @@
 using MapsterMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Pims.Api.Areas.Tools.Helpers;
 using Pims.Api.Policies;
 using Pims.Dal;
 using Pims.Dal.Security;
 using Pims.Dal.Services.Admin;
 using Swashbuckle.AspNetCore.Annotations;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using Model = Pims.Api.Areas.Tools.Models.Import;
 
 namespace Pims.Api.Areas.Tools.Controllers
@@ -29,6 +32,7 @@ namespace Pims.Api.Areas.Tools.Controllers
         private readonly IPimsService _pimsService;
         private readonly IPimsAdminService _pimsAdminService;
         private readonly IMapper _mapper;
+        private readonly IOptions<JsonSerializerOptions> _serializerOptions;
         #endregion
 
         #region Constructors
@@ -39,12 +43,14 @@ namespace Pims.Api.Areas.Tools.Controllers
         /// <param name="pimsService"></param>
         /// <param name="pimsAdminService"></param>
         /// <param name="mapper"></param>
-        public ImportController(ILogger<ImportController> logger, IPimsService pimsService, IPimsAdminService pimsAdminService, IMapper mapper)
+        /// <param name="serializerOptions"></param>
+        public ImportController(ILogger<ImportController> logger, IPimsService pimsService, IPimsAdminService pimsAdminService, IMapper mapper, IOptions<JsonSerializerOptions> serializerOptions)
         {
             _logger = logger;
             _pimsService = pimsService;
             _pimsAdminService = pimsAdminService;
             _mapper = mapper;
+            _serializerOptions = serializerOptions;
         }
         #endregion
 
@@ -104,6 +110,7 @@ namespace Pims.Api.Areas.Tools.Controllers
         /// </summary>
         /// <param name="models">An array of property models.</param>
         /// <param name="stopOnError">Whether to throw an error if a failture occurs.</param>
+        /// <param name="fromSnapshot">The date and time an SPL report should be generated from.</param>
         /// <param name="defaults">A semi-colon separated list of key=value pairs of default values for properties if they are null or not provided.</param>
         /// <returns>The properties added.</returns>
         [HttpPost("projects")]
@@ -112,12 +119,12 @@ namespace Pims.Api.Areas.Tools.Controllers
         [ProducesResponseType(typeof(Pims.Api.Models.ErrorResponseModel), 400)]
         [SwaggerOperation(Tags = new[] { "tools-import" })]
         [HasPermission(Permissions.SystemAdmin)]
-        public IActionResult ImportProjects([FromBody] Model.ImportProjectModel[] models, bool stopOnError = true, string defaults = null)
+        public IActionResult ImportProjects([FromBody] Model.ImportProjectModel[] models, bool stopOnError = true, DateTime? fromSnapshot = null, string defaults = null)
         {
             if (models.Count() > 100) return BadRequest("Must not submit more than 100 projects in a single request.");
 
-            var helper = new ImportProjectsHelper(_pimsService, _pimsAdminService, _logger);
-            var entities = helper.AddUpdateProjects(models, stopOnError, defaults?.Split(";"));
+            var helper = new ImportProjectsHelper(_pimsService, _pimsAdminService, _serializerOptions, _logger);
+            var entities = helper.AddUpdateProjects(models, stopOnError, fromSnapshot, defaults?.Split(";"));
             var parcels = _mapper.Map<Model.ProjectModel[]>(entities);
 
             return new JsonResult(parcels);

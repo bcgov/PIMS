@@ -21,7 +21,7 @@ namespace Pims.Api.Areas.Reports.Mapping.Property
                 .Map(dest => dest.IsSensitive, src => src.IsSensitive)
 
                 .Map(dest => dest.Assessed, src => src.Assessed)
-                .Map(dest => dest.Estimated, src => src.Estimated)
+                .Map(dest => dest.Market, src => src.Market)
 
                 .Map(dest => dest.PID, src => src.ParcelIdentity)
                 .Map(dest => dest.PIN, src => src.PIN)

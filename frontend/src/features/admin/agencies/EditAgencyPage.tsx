@@ -157,18 +157,18 @@ const EditAgencyPage = (props: IEditAgencyPageProps) => {
                 <Input label="Agency e-mail address" field="email" type="text" />
 
                 <Form.Group className="checkboxes">
-                  <Check
+                  <TooltipWrapper
                     toolTip="Click to change Agency status then click Save Changes."
                     toolTipId="is-disabled-tooltip"
-                    field="isDisabled"
-                    label="Disable Agency?"
-                  />
-                  <Check
+                  >
+                    <Check field="isDisabled" label="Disable Agency?" />
+                  </TooltipWrapper>
+                  <TooltipWrapper
                     toolTip="Click to enable to email notifications for Agency then click Save Changes."
                     toolTipId="email-tooltip"
-                    field="sendEmail"
-                    label="Email Notifications?"
-                  />
+                  >
+                    <Check field="sendEmail" label="Email Notifications?" />
+                  </TooltipWrapper>
                 </Form.Group>
 
                 <hr></hr>
