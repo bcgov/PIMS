@@ -20,7 +20,6 @@ const LegendButton = styled(Button)`
 export const LegendControl: React.FC = () => {
   const [visible, setVisible] = React.useState<boolean>(false);
   const target = React.useRef(null);
-
   return (
     <Control position="topleft">
       <ClickAwayListener onClickAway={() => setVisible(false)}>
