@@ -59,7 +59,7 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
               <p>Drag and drop the pin on the map to mark the location of this parcel, or if you already have the coordinates, you can enter them manually in the fields below.</p>
             </div>
           </div>
-          <div class=\\"marker-svg col\\"><button class=\\"sc-fzoLsD gdPrCc\\"><svg class=\\"parcel-icon\\">draft-parcel-icon.svg</svg></button></div>
+          <div class=\\"marker-svg col\\"><button class=\\"sc-fzoyAV bxqCh\\"><svg class=\\"parcel-icon\\">draft-parcel-icon.svg</svg></button></div>
         </div>
         <div class=\\"form-row\\">
           <p class=\\"label\\"><span class=\\"req\\">*</span>Latitude</p>
@@ -179,6 +179,66 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
                   </div>
                 </div>
               </div>
+              <div class=\\"tr-wrapper\\">
+                <div role=\\"row\\" style=\\"display: flex; flex: 1 0 auto; min-width: 60px;\\" class=\\"tr\\">
+                  <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">2018</div>
+                  <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">
+                    <div class=\\"fast-currency-input form-group\\">
+                      <div class=\\"input-tooltip-wrapper\\"><input name=\\"financials.3.assessed.value\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class=\\"tr-wrapper\\">
+                <div role=\\"row\\" style=\\"display: flex; flex: 1 0 auto; min-width: 60px;\\" class=\\"tr\\">
+                  <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">2017</div>
+                  <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">
+                    <div class=\\"fast-currency-input form-group\\">
+                      <div class=\\"input-tooltip-wrapper\\"><input name=\\"financials.4.assessed.value\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class=\\"tr-wrapper\\">
+                <div role=\\"row\\" style=\\"display: flex; flex: 1 0 auto; min-width: 60px;\\" class=\\"tr\\">
+                  <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">2016</div>
+                  <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">
+                    <div class=\\"fast-currency-input form-group\\">
+                      <div class=\\"input-tooltip-wrapper\\"><input name=\\"financials.5.assessed.value\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class=\\"tr-wrapper\\">
+                <div role=\\"row\\" style=\\"display: flex; flex: 1 0 auto; min-width: 60px;\\" class=\\"tr\\">
+                  <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">2015</div>
+                  <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">
+                    <div class=\\"fast-currency-input form-group\\">
+                      <div class=\\"input-tooltip-wrapper\\"><input name=\\"financials.6.assessed.value\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class=\\"tr-wrapper\\">
+                <div role=\\"row\\" style=\\"display: flex; flex: 1 0 auto; min-width: 60px;\\" class=\\"tr\\">
+                  <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">2014</div>
+                  <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">
+                    <div class=\\"fast-currency-input form-group\\">
+                      <div class=\\"input-tooltip-wrapper\\"><input name=\\"financials.7.assessed.value\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class=\\"tr-wrapper\\">
+                <div role=\\"row\\" style=\\"display: flex; flex: 1 0 auto; min-width: 60px;\\" class=\\"tr\\">
+                  <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">2013</div>
+                  <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">
+                    <div class=\\"fast-currency-input form-group\\">
+                      <div class=\\"input-tooltip-wrapper\\"><input name=\\"financials.8.assessed.value\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
           <div class=\\"table-toolbar\\"></div>
@@ -223,6 +283,72 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
                   <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">
                     <div class=\\"fast-currency-input form-group\\">
                       <div class=\\"input-tooltip-wrapper\\"><input name=\\"financials.2.netbook.value\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class=\\"tr-wrapper\\">
+                <div role=\\"row\\" style=\\"display: flex; flex: 1 0 auto; min-width: 90px;\\" class=\\"tr\\">
+                  <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">17/18</div>
+                  <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\"></div>
+                  <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">
+                    <div class=\\"fast-currency-input form-group\\">
+                      <div class=\\"input-tooltip-wrapper\\"><input name=\\"financials.3.netbook.value\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class=\\"tr-wrapper\\">
+                <div role=\\"row\\" style=\\"display: flex; flex: 1 0 auto; min-width: 90px;\\" class=\\"tr\\">
+                  <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">16/17</div>
+                  <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\"></div>
+                  <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">
+                    <div class=\\"fast-currency-input form-group\\">
+                      <div class=\\"input-tooltip-wrapper\\"><input name=\\"financials.4.netbook.value\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class=\\"tr-wrapper\\">
+                <div role=\\"row\\" style=\\"display: flex; flex: 1 0 auto; min-width: 90px;\\" class=\\"tr\\">
+                  <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">15/16</div>
+                  <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\"></div>
+                  <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">
+                    <div class=\\"fast-currency-input form-group\\">
+                      <div class=\\"input-tooltip-wrapper\\"><input name=\\"financials.5.netbook.value\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class=\\"tr-wrapper\\">
+                <div role=\\"row\\" style=\\"display: flex; flex: 1 0 auto; min-width: 90px;\\" class=\\"tr\\">
+                  <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">14/15</div>
+                  <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\"></div>
+                  <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">
+                    <div class=\\"fast-currency-input form-group\\">
+                      <div class=\\"input-tooltip-wrapper\\"><input name=\\"financials.6.netbook.value\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class=\\"tr-wrapper\\">
+                <div role=\\"row\\" style=\\"display: flex; flex: 1 0 auto; min-width: 90px;\\" class=\\"tr\\">
+                  <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">13/14</div>
+                  <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\"></div>
+                  <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">
+                    <div class=\\"fast-currency-input form-group\\">
+                      <div class=\\"input-tooltip-wrapper\\"><input name=\\"financials.7.netbook.value\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class=\\"tr-wrapper\\">
+                <div role=\\"row\\" style=\\"display: flex; flex: 1 0 auto; min-width: 90px;\\" class=\\"tr\\">
+                  <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">12/13</div>
+                  <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\"></div>
+                  <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">
+                    <div class=\\"fast-currency-input form-group\\">
+                      <div class=\\"input-tooltip-wrapper\\"><input name=\\"financials.8.netbook.value\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
                     </div>
                   </div>
                 </div>
