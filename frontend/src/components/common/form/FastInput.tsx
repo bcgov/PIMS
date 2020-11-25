@@ -1,4 +1,4 @@
-import React, { memo, useEffect } from 'react';
+import React, { CSSProperties, memo, useEffect } from 'react';
 import { Col, Form, FormControlProps } from 'react-bootstrap';
 import { getIn, FormikProps } from 'formik';
 import { DisplayError } from './DisplayError';
@@ -38,7 +38,7 @@ type OptionalAttributes = {
   /** Display errors in a tooltip instead of in a div */
   displayErrorTooltips?: boolean;
   /** Determine style of input if needed */
-  style?: any;
+  style?: CSSProperties;
 };
 
 // only "field" is required for <Input>, the rest are optional

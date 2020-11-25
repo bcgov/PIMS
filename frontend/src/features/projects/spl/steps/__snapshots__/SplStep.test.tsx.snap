@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`SPL Approval Step close out form tab renders correctly 1`] = `
-.c0 {
+4.c0 {
   text-align: center;
   margin-bottom: 1rem;
 }

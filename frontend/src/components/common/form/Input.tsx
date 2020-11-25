@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, CSSProperties } from 'react';
 import { Form, FormControlProps } from 'react-bootstrap';
 import { useFormikContext, getIn } from 'formik';
 import { DisplayError } from './DisplayError';
@@ -39,7 +39,7 @@ type OptionalAttributes = {
   /** a way to style to label */
   horizontal?: boolean;
   /** style input */
-  style?: any;
+  style?: CSSProperties;
 };
 
 // only "field" is required for <Input>, the rest are optional
