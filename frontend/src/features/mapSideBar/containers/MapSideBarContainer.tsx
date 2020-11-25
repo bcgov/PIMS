@@ -22,6 +22,7 @@ import {
   PARCELS_LAYER_URL,
   useLayerQuery,
 } from 'components/maps/leaflet/LayerPopup';
+import { LeafletMouseEvent } from 'leaflet';
 
 interface IMapSideBarContainerProps {
   refreshParcels: Function;
@@ -45,7 +46,6 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
     disabled,
     loadDraft,
     context,
-    newParcel,
     size,
     addBuilding,
     addRawLand,
@@ -61,6 +61,9 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
 
   const [movingPinNameSpace, setMovingPinNameSpace] = useState<string | undefined>(
     movingPinNameSpaceProp,
+  );
+  const leafletMouseEvent = useSelector<RootState, LeafletMouseEvent | null>(
+    state => state.leafletClickEvent?.mapClickEvent,
   );
   const [propertyType, setPropertyType] = useState('');
   const formikRef = React.useRef<FormikValues>();
@@ -168,7 +171,6 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
         disabled={disabled}
         loadDraft={loadDraft}
         properties={properties}
-        mapClickMouseEvent={leafletMouseEvent}
       />
     );
   };

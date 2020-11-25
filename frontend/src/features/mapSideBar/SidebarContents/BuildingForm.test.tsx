@@ -1,5 +1,4 @@
 import React from 'react';
-import renderer from 'react-test-renderer';
 import noop from 'lodash/noop';
 import { BuildingForm } from '.';
 import { Provider } from 'react-redux';
@@ -12,6 +11,7 @@ import * as API from 'constants/API';
 import { ILookupCode } from 'actions/lookupActions';
 import * as reducerTypes from 'constants/reducerTypes';
 import { fireEvent, render, wait } from '@testing-library/react';
+import pretty from 'pretty';
 
 const mockStore = configureMockStore([thunk]);
 const history = createMemoryHistory();
@@ -50,8 +50,8 @@ const buildingForm = (
 
 describe('Building Form', () => {
   it('component renders correctly', () => {
-    const tree = renderer.create(buildingForm).toJSON();
-    expect(tree).toMatchSnapshot();
+    const { container } = render(buildingForm);
+    expect(pretty(container.innerHTML)).toMatchSnapshot();
   });
 
   it('displays identification page on initial load', () => {

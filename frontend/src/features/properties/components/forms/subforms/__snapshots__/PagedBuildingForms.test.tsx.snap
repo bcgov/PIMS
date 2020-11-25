@@ -13,19 +13,14 @@ exports[`PagedBuildingForms functionality displays any pre-existing buildings 1`
 </div>
 <div style=\\"margin-bottom: 0px;\\" class=\\"buildingForm row no-gutters\\">
   <div class=\\"col-md-6\\">
-    <div class=\\"form-row\\"><label class=\\"form-label\\">Project No.</label>
-      <div class=\\"form-group\\"><a href=\\"/projects/summary?projectNumber=projectNumber\\">projectNumber</a></div>
-    </div>
     <div class=\\"form-row\\"><label class=\\"form-label\\">Name</label>
       <div class=\\"form-group\\"><input name=\\"buildings.0.name\\" id=\\"input-buildings.0.name\\" class=\\"form-control\\" value=\\"name\\" disabled=\\"\\"></div>
     </div>
     <div class=\\"form-row\\"><label class=\\"form-label\\">Description</label>
       <div class=\\"form-group\\"><textarea name=\\"buildings.0.description\\" id=\\"input-buildings.0.description\\" class=\\"form-control\\" disabled=\\"\\">description</textarea></div>
     </div>
-    <div class=\\"form-row\\"><label class=\\"required form-label\\">Classification</label>
-      <div class=\\"form-group\\"><svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 512 512\\" class=\\"tooltip-icon\\" height=\\"1em\\" width=\\"1em\\" xmlns=\\"http://www.w3.org/2000/svg\\">
-          <path d=\\"M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z\\"></path>
-        </svg><select name=\\"buildings.0.classificationId\\" type=\\"number\\" id=\\"input-buildings.0.classificationId-fast\\" class=\\"form-control\\" disabled=\\"\\">
+    <div class=\\"form-row\\"><label class=\\"form-label\\">Classification</label>
+      <div class=\\"form-group\\"><select name=\\"buildings.0.classificationId\\" type=\\"number\\" id=\\"input-buildings.0.classificationId-fast\\" class=\\"form-control\\" disabled=\\"\\">
           <option value=\\"\\">Must Select One</option>
           <option value=\\"1\\">classification test</option>
         </select></div>
@@ -33,70 +28,56 @@ exports[`PagedBuildingForms functionality displays any pre-existing buildings 1`
     <div class=\\"form-row\\"><label class=\\"form-label\\">Agency</label>
       <div class=\\"AutoCompleteText\\">
         <div class=\\"form-group\\">
-          <div class=\\"input-area\\"><input name=\\"buildings.0.agencyId\\" disabled=\\"\\" id=\\"input-buildings.0.agencyId\\" class=\\"form-control\\" value=\\"\\"></div>
-        </div>
-      </div>
-    </div>
-    <div class=\\"form-row\\"><label class=\\"form-label\\">Sub-Agency</label>
-      <div class=\\"AutoCompleteText\\">
-        <div class=\\"form-group\\">
-          <div class=\\"input-area\\"><input name=\\"buildings.0.agencyId\\" disabled=\\"\\" id=\\"input-buildings.0.agencyId\\" class=\\"form-control\\" value=\\"\\"></div>
-        </div>
-      </div>
-    </div>
-    <div class=\\"form-row\\"><label class=\\"form-label\\"></label>
-      <div class=\\"input-medium\\">
-        <p>Would this information be harmful if released?&nbsp;<br><svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 512 512\\" class=\\"tooltip-icon\\" height=\\"1em\\" width=\\"1em\\" xmlns=\\"http://www.w3.org/2000/svg\\">
-            <path d=\\"M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z\\"></path>
-          </svg><a target=\\"_blank\\" rel=\\"noopener noreferrer\\" href=\\"https://www2.gov.bc.ca/gov/content/governments/services-for-government/policies-procedures/foippa-manual/disclosure-harmful-individual-public-safety\\">Policy</a></p>
-        <div class=\\"form-group\\">
-          <div class=\\"check-field\\">
-            <div class=\\"form-check\\"><input name=\\"buildings.0.isSensitive\\" type=\\"radio\\" id=\\"input-buildings.0.isSensitive\\" class=\\"form-check-input\\" value=\\"false\\" disabled=\\"\\"><label title=\\"\\" for=\\"input-buildings.0.isSensitive\\" class=\\"form-check-label\\">Yes</label></div>
-            <div class=\\"form-check\\"><input name=\\"buildings.0.isSensitive\\" type=\\"radio\\" id=\\"input-buildings.0.isSensitive-2\\" class=\\"form-check-input\\" value=\\"true\\" checked=\\"\\" disabled=\\"\\"><label title=\\"\\" for=\\"input-buildings.0.isSensitive-2\\" class=\\"form-check-label\\">No</label></div>
-          </div>
+          <div class=\\"input-area\\"><input name=\\"buildings.0.agencyId\\" id=\\"input-buildings.0.agencyId\\" class=\\"form-control\\" value=\\"\\"></div>
         </div>
       </div>
     </div>
   </div>
   <div class=\\"col-md-6\\">
-    <div class=\\"form-row\\"><label class=\\"required form-label\\">Street Address</label>
+    <div class=\\"field-row row\\">
+      <p class=\\"label\\"><span class=\\"req\\">*</span>Street Address</p>
       <div class=\\"GeocoderAutoComplete\\">
         <div>
-          <div class=\\"form-group\\"><svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 512 512\\" class=\\"tooltip-icon\\" height=\\"1em\\" width=\\"1em\\" xmlns=\\"http://www.w3.org/2000/svg\\">
-              <path d=\\"M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z\\"></path>
-            </svg><input name=\\"buildings.0.address.line1\\" field=\\"buildings.0.address.line1\\" id=\\"input-buildings.0.address.line1\\" class=\\"form-control\\" value=\\"line1\\" disabled=\\"\\"></div>
+          <div class=\\"form-group\\"><input name=\\"buildings.0.address.line1\\" field=\\"buildings.0.address.line1\\" id=\\"input-buildings.0.address.line1\\" class=\\"form-control\\" value=\\"line1\\" disabled=\\"\\"></div>
         </div>
       </div>
     </div>
-    <div class=\\"form-row\\"><label class=\\"required form-label\\">Location</label>
-      <div class=\\"sc-AxjAm gLmrxD form-group\\"><svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 512 512\\" class=\\"tooltip-icon\\" height=\\"1em\\" width=\\"1em\\" xmlns=\\"http://www.w3.org/2000/svg\\">
-          <path d=\\"M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z\\"></path>
-        </svg>
+    <div class=\\"field-row row\\">
+      <p class=\\"label\\"><span class=\\"req\\">*</span>Location</p>
+      <div class=\\"sc-AxjAm gLmrxD form-group\\">
         <div class=\\"rbt\\" style=\\"outline: none; position: relative;\\" tabindex=\\"-1\\">
           <div style=\\"display: flex; flex: 1; height: 100%; position: relative;\\"><input autocomplete=\\"off\\" type=\\"text\\" name=\\"buildings.0.address.administrativeArea\\" id=\\"buildings.0.address.administrativeArea-field\\" aria-autocomplete=\\"both\\" aria-expanded=\\"false\\" aria-haspopup=\\"listbox\\" role=\\"combobox\\" class=\\"rbt-input-main form-control rbt-input\\" value=\\"administrativeArea\\" disabled=\\"\\"><input aria-hidden=\\"true\\" class=\\"rbt-input-hint\\" readonly=\\"\\" style=\\"background-color: transparent; border-color: transparent; box-shadow: none; color: rgba(0, 0, 0, 0.35); left: 0px; pointer-events: none; position: absolute; top: 0px; width: 100%; border-style: inset inset inset inset; border-width: 2px 2px 2px 2px; line-height: normal; padding: 1px 1px 1px 1px;\\" tabindex=\\"-1\\" value=\\"\\"></div>
         </div>
       </div>
     </div>
-    <div class=\\"form-row\\"><label class=\\"form-label\\">Province</label>
+    <div class=\\"field-row row\\">
+      <p class=\\"label\\">Province</p>
       <div class=\\"form-group\\"><select name=\\"buildings.0.address.provinceId\\" disabled=\\"\\" id=\\"input-buildings.0.address.provinceId\\" class=\\"form-select form-control\\">
           <option value=\\"\\">Must Select One</option>
           <option value=\\"2222\\" class=\\"option\\">test province</option>
         </select></div>
     </div>
-    <div class=\\"form-row\\"><label class=\\"form-label\\">Postal</label>
-      <div class=\\"form-group\\"><input name=\\"buildings.0.address.postal\\" id=\\"input-buildings.0.address.postal\\" class=\\"input-small form-control\\" value=\\"postal\\" disabled=\\"\\"></div>
+    <div class=\\"postal row\\">
+      <p class=\\"label\\">Postal Code</p>
+      <div class=\\"form-group\\"><input name=\\"buildings.0.address.postal\\" style=\\"width: 120px;\\" id=\\"input-buildings.0.address.postal\\" class=\\"input-small form-control\\" value=\\"postal\\" disabled=\\"\\"></div>
     </div>
-    <div style=\\"position: relative;\\">
-      <div class=\\"form-row\\"><label class=\\"required form-label\\">Latitude</label>
-        <div class=\\"form-group\\"><svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 512 512\\" class=\\"tooltip-icon\\" height=\\"1em\\" width=\\"1em\\" xmlns=\\"http://www.w3.org/2000/svg\\">
-            <path d=\\"M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z\\"></path>
-          </svg><input name=\\"buildings.0.latitude\\" type=\\"number\\" id=\\"input-buildings.0.latitude\\" class=\\"input-medium form-control\\" value=\\"9\\" disabled=\\"\\"></div>
+    <div class=\\"lat-long\\" style=\\"position: relative;\\">
+      <div class=\\"row\\">
+        <div class=\\"col-md-9\\">
+          <div class=\\"instruction\\">
+            <p>Drag and drop the pin on the map to mark the location of this parcel, or if you already have the coordinates, you can enter them manually in the fields below.</p>
+          </div>
+        </div>
+        <div class=\\"marker-svg col\\"><button class=\\"sc-fzoLsD gdPrCc\\" disabled=\\"\\"><svg>draft-building-icon.svg</svg></button></div>
       </div>
-      <div class=\\"form-row\\"><label class=\\"required form-label\\">Longitude</label>
+      <div class=\\"form-row\\">
+        <p class=\\"label\\"><span class=\\"req\\">*</span>Latitude</p>
+        <div class=\\"form-group\\"><input name=\\"buildings.0.latitude\\" type=\\"number\\" id=\\"input-buildings.0.latitude\\" class=\\"input-medium form-control\\" value=\\"9\\" disabled=\\"\\"></div>
+      </div>
+      <div class=\\"form-row\\">
+        <p class=\\"label\\"><span class=\\"req\\">*</span>Longitude</p>
         <div class=\\"form-group\\"><input name=\\"buildings.0.longitude\\" type=\\"number\\" id=\\"input-buildings.0.longitude\\" class=\\"input-medium form-control\\" value=\\"10\\" disabled=\\"\\"></div>
-      </div><button class=\\"sc-AxheI gfSNaO\\" disabled=\\"\\">
-        <p>Place Pin</p><svg>draft-building-icon.svg</svg>
-      </button>
+      </div>
     </div>
   </div>
 </div>
@@ -123,7 +104,7 @@ exports[`PagedBuildingForms functionality displays any pre-existing buildings 1`
           <div class=\\"input-group-content\\">
             <div class=\\"form-group\\"><input name=\\"buildings.0.rentableArea\\" type=\\"number\\" id=\\"input-buildings.0.rentableArea\\" class=\\"form-control\\" value=\\"12\\" disabled=\\"\\"></div>
           </div>
-          <div class=\\"input-group-append\\"><span class=\\"input-group-text\\">Sq. Ft</span></div>
+          <div class=\\"input-group-append\\"><span class=\\"append-disabled input-group-text\\">Sq. Ft</span></div>
         </div>
       </div>
       <div class=\\"form-row\\"><label class=\\"form-label\\">Number of Floors</label>
