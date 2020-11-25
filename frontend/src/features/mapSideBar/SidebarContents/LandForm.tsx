@@ -33,6 +33,7 @@ import { ParcelSchema } from 'utils/YupSchema';
 import { createParcel, updateParcel } from 'actionCreators/parcelsActionCreator';
 import { LandValuationForm } from './subforms/LandValuationForm';
 import { LandSteps } from 'constants/propertySteps';
+import useDraftMarkerSynchronizer from 'features/properties/hooks/useDraftMarkerSynchronizer';
 
 const Container = styled.div`
   background-color: #fff;
@@ -119,6 +120,7 @@ const Form: React.FC<ILandForm> = ({
   const { getOptionsByType } = useCodeLookups();
   const agencies = getOptionsByType(API.AGENCY_CODE_SET_NAME);
   const classifications = getOptionsByType(API.PROPERTY_CLASSIFICATION_CODE_SET_NAME);
+  useDraftMarkerSynchronizer();
 
   const render = (): React.ReactNode => {
     switch (stepper.current) {

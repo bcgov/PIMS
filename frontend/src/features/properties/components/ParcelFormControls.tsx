@@ -164,7 +164,7 @@ const ParcelFormControls: React.FunctionComponent<IParcelFormControlsProps> = ({
   currentTab,
 }) => {
   const formikProps = useFormikContext<IFormParcel>();
-  useDraftMarkerSynchronizer({ properties });
+  useDraftMarkerSynchronizer();
   return (
     <>
       <FormControls className="form-controls">
