@@ -69,7 +69,7 @@ describe('Building Form', () => {
     await wait(() => {
       fireEvent.click(getByText(/Continue/i));
     });
-    expect(getByText(/Building Valuation Information/i)).toBeInTheDocument();
+    expect(getByText(/Building Valuation/i)).toBeInTheDocument();
     await wait(() => {
       fireEvent.click(getByText(/Continue/i));
     });

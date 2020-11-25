@@ -24,9 +24,6 @@
         &:hover {
           background-color: $table-color;
         }
-        .td {
-          border: none;
-        }
       }
       .tbody {
         padding-left: 50px;
@@ -50,7 +47,7 @@
 
   .td,
   .th {
-    padding: 0.75rem;
+    padding: 5px;
     vertical-align: top;
     border-top: 1px solid $table-color;
 

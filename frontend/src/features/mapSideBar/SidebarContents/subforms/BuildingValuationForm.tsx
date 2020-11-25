@@ -22,7 +22,7 @@ export const BuildingValuationForm: React.FC<ITenancyProps> = ({ formikProps, na
   return (
     <Col className="building-valuation">
       <Row>
-        <h4>Building Valuation Information</h4>
+        <h4>Building Valuation</h4>
         <br></br>
       </Row>
       <Row className="val-table">
