@@ -46,7 +46,7 @@ exports[`PagedBuildingForms functionality displays any pre-existing buildings 1`
       <p class=\\"label\\"><span class=\\"req\\">*</span>Location</p>
       <div class=\\"sc-AxjAm gLmrxD form-group\\">
         <div class=\\"rbt\\" style=\\"outline: none; position: relative;\\" tabindex=\\"-1\\">
-          <div style=\\"display: flex; flex: 1; height: 100%; position: relative;\\"><input autocomplete=\\"off\\" type=\\"text\\" name=\\"buildings.0.address.administrativeArea\\" aria-autocomplete=\\"both\\" aria-expanded=\\"false\\" aria-haspopup=\\"listbox\\" role=\\"combobox\\" class=\\"rbt-input-main form-control rbt-input\\" value=\\"administrativeArea\\" disabled=\\"\\"><input aria-hidden=\\"true\\" class=\\"rbt-input-hint\\" readonly=\\"\\" style=\\"background-color: transparent; border-color: transparent; box-shadow: none; color: rgba(0, 0, 0, 0.35); left: 0px; pointer-events: none; position: absolute; top: 0px; width: 100%; border-style: inset inset inset inset; border-width: 2px 2px 2px 2px; line-height: normal; padding: 1px 1px 1px 1px;\\" tabindex=\\"-1\\" value=\\"\\"></div>
+          <div style=\\"display: flex; flex: 1; height: 100%; position: relative;\\"><input autocomplete=\\"off\\" type=\\"text\\" name=\\"buildings.0.address.administrativeArea\\" id=\\"buildings.0.address.administrativeArea-field\\" aria-autocomplete=\\"both\\" aria-expanded=\\"false\\" aria-haspopup=\\"listbox\\" role=\\"combobox\\" class=\\"rbt-input-main form-control rbt-input\\" value=\\"administrativeArea\\" disabled=\\"\\"><input aria-hidden=\\"true\\" class=\\"rbt-input-hint\\" readonly=\\"\\" style=\\"background-color: transparent; border-color: transparent; box-shadow: none; color: rgba(0, 0, 0, 0.35); left: 0px; pointer-events: none; position: absolute; top: 0px; width: 100%; border-style: inset inset inset inset; border-width: 2px 2px 2px 2px; line-height: normal; padding: 1px 1px 1px 1px;\\" tabindex=\\"-1\\" value=\\"\\"></div>
         </div>
       </div>
     </div>
@@ -177,7 +177,7 @@ exports[`PagedBuildingForms functionality displays any pre-existing buildings 1`
                 <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">20/21</div>
                 <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">
                   <div class=\\"fast-currency-input form-group\\">
-                    <div class=\\"input-tooltip-wrapper\\"><input name=\\"buildings.0.financials.0.estimated.value\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
+                    <div class=\\"input-tooltip-wrapper\\"><input name=\\"buildings.0.financials.0.market.value\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
                   </div>
                 </div>
               </div>
@@ -199,7 +199,7 @@ exports[`PagedBuildingForms functionality displays any pre-existing buildings 1`
                 <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">19/20</div>
                 <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">
                   <div class=\\"fast-currency-input form-group\\">
-                    <div class=\\"input-tooltip-wrapper\\"><input name=\\"buildings.0.financials.1.estimated.value\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
+                    <div class=\\"input-tooltip-wrapper\\"><input name=\\"buildings.0.financials.1.market.value\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
                   </div>
                 </div>
               </div>

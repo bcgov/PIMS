@@ -66,7 +66,7 @@ class PersistImpl extends React.Component<
         if (decryptedData.version !== packageJson.version) {
           this.discardForm();
         } else {
-          this.props.formik.setFormikState(decryptedData.data);
+          this.props.formik.resetForm({ values: decryptedData.data.values });
           return decryptedData.data.values;
         }
       } catch (e) {

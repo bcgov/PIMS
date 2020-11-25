@@ -99,16 +99,16 @@ namespace Pims.Api.Areas.Property.Models.Search
         public float? MaxLotArea { get; set; }
 
         /// <summary>
-        /// get/set - Building minimum estimated value.
+        /// get/set - Building minimum market value.
         /// </summary>
         /// <value></value>
-        public decimal? MinEstimatedValue { get; set; }
+        public decimal? MinMarketValue { get; set; }
 
         /// <summary>
-        /// get/set - Building maximum estimated value.
+        /// get/set - Building maximum market value.
         /// </summary>
         /// <value></value>
-        public decimal? MaxEstimatedValue { get; set; }
+        public decimal? MaxMarketValue { get; set; }
 
         /// <summary>
         /// get/set - Parcel minimum assessed value.
@@ -286,8 +286,8 @@ namespace Pims.Api.Areas.Property.Models.Search
             this.InSurplusPropertyProgram = filter.GetBoolNullValue(nameof(this.InSurplusPropertyProgram));
             this.InEnhancedReferralProcess = filter.GetBoolNullValue(nameof(this.InEnhancedReferralProcess));
 
-            this.MinEstimatedValue = filter.GetDecimalNullValue(nameof(this.MinEstimatedValue));
-            this.MaxEstimatedValue = filter.GetDecimalNullValue(nameof(this.MaxEstimatedValue));
+            this.MinMarketValue = filter.GetDecimalNullValue(nameof(this.MinMarketValue));
+            this.MaxMarketValue = filter.GetDecimalNullValue(nameof(this.MaxMarketValue));
             this.MinAssessedValue = filter.GetDecimalNullValue(nameof(this.MinAssessedValue));
             this.MaxAssessedValue = filter.GetDecimalNullValue(nameof(this.MaxAssessedValue));
 
@@ -335,8 +335,8 @@ namespace Pims.Api.Areas.Property.Models.Search
                 MinLandArea = model.MinLandArea ?? model.MinLotArea,
                 MaxLandArea = model.MaxLandArea ?? model.MaxLotArea,
 
-                MinEstimatedValue = model.MinEstimatedValue,
-                MaxEstimatedValue = model.MaxEstimatedValue,
+                MinMarketValue = model.MinMarketValue,
+                MaxMarketValue = model.MaxMarketValue,
                 MinAssessedValue = model.MinAssessedValue,
                 MaxAssessedValue = model.MaxAssessedValue,
 
@@ -378,8 +378,8 @@ namespace Pims.Api.Areas.Property.Models.Search
                 MinRentableArea = model.MinRentableArea ?? model.MinLotArea,
                 MaxRentableArea = model.MaxRentableArea ?? model.MaxLotArea,
 
-                MinEstimatedValue = model.MinEstimatedValue,
-                MaxEstimatedValue = model.MaxEstimatedValue,
+                MinMarketValue = model.MinMarketValue,
+                MaxMarketValue = model.MaxMarketValue,
                 MinAssessedValue = model.MinAssessedValue,
                 MaxAssessedValue = model.MaxAssessedValue,
 
@@ -427,8 +427,8 @@ namespace Pims.Api.Areas.Property.Models.Search
                 MinRentableArea = model.MinRentableArea ?? model.MinLotArea,
                 MaxRentableArea = model.MaxRentableArea ?? model.MaxLotArea,
 
-                MinEstimatedValue = model.MinEstimatedValue,
-                MaxEstimatedValue = model.MaxEstimatedValue,
+                MinMarketValue = model.MinMarketValue,
+                MaxMarketValue = model.MaxMarketValue,
                 MinAssessedValue = model.MinAssessedValue,
                 MaxAssessedValue = model.MaxAssessedValue,
 
@@ -455,8 +455,8 @@ namespace Pims.Api.Areas.Property.Models.Search
                 || !String.IsNullOrWhiteSpace(this.AdministrativeArea)
                 || this.MaxAssessedValue.HasValue
                 || this.MinAssessedValue.HasValue
-                || this.MinEstimatedValue.HasValue
-                || this.MaxEstimatedValue.HasValue
+                || this.MinMarketValue.HasValue
+                || this.MaxMarketValue.HasValue
                 || this.Agencies?.Any() == true
                 || this.StatusId.HasValue
                 || this.ClassificationId.HasValue

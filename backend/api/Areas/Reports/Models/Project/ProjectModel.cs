@@ -112,9 +112,9 @@ namespace Pims.Api.Areas.Reports.Models.Project
         public decimal NetBook { get; set; }
 
         /// <summary>
-        /// get/set - The estimated value.
+        /// get/set - The market value.
         /// </summary>
-        public decimal Estimated { get; set; }
+        public decimal Market { get; set; }
 
         /// <summary>
         /// get/set - The assessed value.
@@ -129,22 +129,22 @@ namespace Pims.Api.Areas.Reports.Models.Project
         /// <summary>
         /// get/set - The sales cost.
         /// </summary>
-        public decimal SalesCost { get; set; } // TODO: Move to metadata property.
+        public decimal? SalesCost { get; set; } // TODO: Move to metadata property.
 
         /// <summary>
         /// get/set - The net proceeds
         /// </summary>
-        public decimal NetProceeds { get; set; } // TODO: Move to metadata property.
+        public decimal? NetProceeds { get; set; } // TODO: Move to metadata property.
 
         /// <summary>
         /// get/set - The program cost.
         /// </summary>
-        public decimal ProgramCost { get; set; } // TODO: Move to metadata property.
+        public decimal? ProgramCost { get; set; } // TODO: Move to metadata property.
 
         /// <summary>
         /// get/set - The gain or loss from selling the properties.
         /// </summary>
-        public decimal GainLoss { get; set; } // TODO: Move to metadata property.
+        public decimal? GainLoss { get; set; } // TODO: Move to metadata property.
 
         /// <summary>
         /// get/set - OCG final statement.
@@ -154,17 +154,17 @@ namespace Pims.Api.Areas.Reports.Models.Project
         /// <summary>
         /// get/set - Record the interest component.
         /// </summary>
-        public decimal InterestComponent { get; set; } // TODO: Move to metadata property.
+        public decimal? InterestComponent { get; set; } // TODO: Move to metadata property.
 
         /// <summary>
         /// get/set - Amount offered during SPL
         /// </summary>
-        public decimal OfferAmount { get; set; }
+        public decimal? OfferAmount { get; set; }
 
         /// <summary>
         /// get/set - Whether the sale includes a lease in place (SLIP).
         /// </summary>
-        public bool SaleWithLeaseInPlace { get; set; } // TODO: Move to metadata property.
+        public bool? SaleWithLeaseInPlace { get; set; } // TODO: Move to metadata property.
         #endregion
 
         #region Notes

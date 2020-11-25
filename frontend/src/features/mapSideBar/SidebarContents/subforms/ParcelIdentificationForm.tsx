@@ -13,7 +13,7 @@ import LatLongForm from 'features/properties/components/forms/subforms/LatLongFo
 import React from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
 import TooltipWrapper from 'components/common/TooltipWrapper';
-import { senstiveTooltip as sensitiveTooltip } from '../../../../../src/features/properties/components/forms/strings';
+import { sensitiveTooltip } from '../../../../../src/features/properties/components/forms/strings';
 import { HARMFUL_DISCLOSURE_URL } from 'constants/strings';
 import { useFormikContext } from 'formik';
 import PidPinForm from 'features/properties/components/forms/subforms/PidPinForm';

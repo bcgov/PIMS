@@ -1,12 +1,14 @@
 using Mapster;
 using MapsterMapper;
 using Microsoft.Extensions.DependencyInjection;
-using Pims.Core.Extensions;
+using Microsoft.Extensions.Options;
 using Pims.Dal.Configuration.Generators;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Reflection;
+using System.Text.Json;
 
 namespace Pims.Core.Test
 {
@@ -16,23 +18,18 @@ namespace Pims.Core.Test
     [ExcludeFromCodeCoverage]
     public class TestHelper
     {
-        #region Variables
-        private IServiceProvider _provider;
-        private readonly IServiceCollection _services = new ServiceCollection();
-        #endregion
-
         #region Properties
         /// <summary>
         /// get - The service provider.
         /// </summary>
         /// <value></value>
-        public IServiceProvider Provider { get { return _provider; } }
+        public IServiceProvider Provider { get; private set; }
 
         /// <summary>
         /// get - The services collection.
         /// </summary>
         /// <value></value>
-        public IServiceCollection Services { get { return _services; } }
+        public IServiceCollection Services { get; } = new ServiceCollection();
         #endregion
 
         #region Constructors
@@ -43,7 +40,18 @@ namespace Pims.Core.Test
         {
             var config = new TypeAdapterConfig();
             var assemblies = AppDomain.CurrentDomain.GetAssemblies().Where(a => a.FullName.StartsWith("Pims"));
-            assemblies.ForEach(a => config.Scan(a));
+
+            // TODO: Use Singleton pattern to speed up initialization of this.
+            var serializerOptions = Options.Create(new JsonSerializerOptions());
+            var registers = assemblies.Select(assembly => assembly.GetTypes()
+                .Where(x => typeof(IRegister).GetTypeInfo().IsAssignableFrom(x.GetTypeInfo()) && x.GetTypeInfo().IsClass && !x.GetTypeInfo().IsAbstract))
+                .SelectMany(registerTypes =>
+                    registerTypes.Select(registerType =>
+                        registerType.GetConstructor(Type.EmptyTypes) == null
+                        ? (IRegister)Activator.CreateInstance(registerType, new[] { serializerOptions })
+                        : (IRegister)Activator.CreateInstance(registerType))).ToList();
+
+            config.Apply(registers);
 
             config.Default.IgnoreNonMapped(true);
             config.Default.IgnoreNullValues(true);
@@ -54,9 +62,9 @@ namespace Pims.Core.Test
                 member.Type.IsGenericType &&
                 member.Type.GetGenericTypeDefinition() == typeof(ICollection<>));
 
-            _services.AddSingleton<IntIdentityGenerator>();
-            _services.AddSingleton(config);
-            _services.AddSingleton<IMapper, ServiceMapper>();
+            Services.AddSingleton<IntIdentityGenerator>();
+            Services.AddSingleton(config);
+            Services.AddSingleton<IMapper, ServiceMapper>();
         }
         #endregion
 
@@ -68,11 +76,11 @@ namespace Pims.Core.Test
         /// <returns></returns>
         public IServiceProvider BuildServiceProvider()
         {
-            if (_provider == null)
+            if (Provider == null)
             {
-                _provider = _services.BuildServiceProvider();
+                Provider = Services.BuildServiceProvider();
             }
-            return _provider;
+            return Provider;
         }
 
         /// <summary>
@@ -81,8 +89,8 @@ namespace Pims.Core.Test
         /// <typeparam name="T"></typeparam>
         public IServiceCollection AddSingleton<T>() where T : class
         {
-            if (_provider != null) throw new InvalidOperationException("Cannot add to the service collection once the provider has been built.");
-            return _services.AddSingleton<T>();
+            if (Provider != null) throw new InvalidOperationException("Cannot add to the service collection once the provider has been built.");
+            return Services.AddSingleton<T>();
         }
 
         /// <summary>
@@ -92,8 +100,8 @@ namespace Pims.Core.Test
         /// <typeparam name="T"></typeparam>
         public IServiceCollection AddSingleton<T>(T item) where T : class
         {
-            if (_provider != null) throw new InvalidOperationException("Cannot add to the service collection once the provider has been built.");
-            return _services.AddSingleton<T>(item);
+            if (Provider != null) throw new InvalidOperationException("Cannot add to the service collection once the provider has been built.");
+            return Services.AddSingleton<T>(item);
         }
 
         /// <summary>
@@ -104,8 +112,8 @@ namespace Pims.Core.Test
         /// <typeparam name="T"></typeparam>
         public IServiceCollection AddSingleton(Type type, object item)
         {
-            if (_provider != null) throw new InvalidOperationException("Cannot add to the service collection once the provider has been built.");
-            return _services.AddSingleton(type, item);
+            if (Provider != null) throw new InvalidOperationException("Cannot add to the service collection once the provider has been built.");
+            return Services.AddSingleton(type, item);
         }
 
         /// <summary>
@@ -134,7 +142,7 @@ namespace Pims.Core.Test
         /// <returns></returns>
         public T CreateInstance<T>()
         {
-            return (T)ActivatorUtilities.CreateInstance(_provider, typeof(T));
+            return (T)ActivatorUtilities.CreateInstance(Provider, typeof(T));
         }
         #endregion
     }

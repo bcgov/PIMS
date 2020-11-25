@@ -28,18 +28,14 @@ exports[`Edit user page EditUserPage renders 1`] = `
           </select></div>
         <p class=\\"label\\">Position</p>
         <div class=\\"form-group\\"><input name=\\"position\\" data-testid=\\"position\\" placeholder=\\"e.g) Director, Real Estate and Stakeholder Engagement\\" type=\\"text\\" id=\\"input-position\\" class=\\"form-control\\" value=\\"\\"></div>
-        <div class=\\"check-roles form-group\\"><label class=\\"form-label\\">Roles <svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 512 512\\" class=\\"tooltip-icon\\" height=\\"1em\\" width=\\"1em\\" xmlns=\\"http://www.w3.org/2000/svg\\">
-              <path d=\\"M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z\\"></path>
-            </svg> <a target=\\"_blank\\" rel=\\"noopener noreferrer\\" href=\\"https://github.com/bcgov/PIMS/wiki/Architecture-Security\\">Role Descriptions</a></label>
+        <div class=\\"check-roles form-group\\"><label class=\\"form-label\\">Roles <a target=\\"_blank\\" rel=\\"noopener noreferrer\\" href=\\"https://github.com/bcgov/PIMS/wiki/Architecture-Security\\">Role Descriptions</a></label>
           <div class=\\"required form-group\\"><span class=\\"required\\">*</span><select multiple=\\"\\" name=\\"roles\\" required=\\"\\" data-testid=\\"role\\" id=\\"input-roles\\" class=\\"form-select form-control\\">
               <option value=\\"1\\" class=\\"option\\">roleVal</option>
             </select></div>
         </div>
-        <p class=\\"label\\">Note</p>
+        <p class=\\"label\\">Notes</p>
         <div class=\\"form-group\\"><textarea name=\\"note\\" data-testid=\\"note\\" placeholder=\\"A note about this user\\" type=\\"text\\" id=\\"input-note\\" class=\\"form-control\\">test note</textarea></div>
-        <div class=\\"is-disabled form-group\\"><label class=\\"form-label\\">Disable Account? <svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 512 512\\" class=\\"tooltip-icon\\" height=\\"1em\\" width=\\"1em\\" xmlns=\\"http://www.w3.org/2000/svg\\">
-              <path d=\\"M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z\\"></path>
-            </svg> </label><input name=\\"isDisabled\\" data-testid=\\"isDisabled\\" type=\\"checkbox\\" value=\\"false\\"></div>
+        <div class=\\"is-disabled form-group\\"><label class=\\"form-label\\">Disable Account?&nbsp;</label><input name=\\"isDisabled\\" data-testid=\\"isDisabled\\" type=\\"checkbox\\" value=\\"false\\"></div>
         <div class=\\"justify-content-md-center row\\">
           <div role=\\"toolbar\\" class=\\"cancelSave btn-toolbar\\"><button type=\\"button\\" class=\\"mr-5 btn btn-secondary\\">Cancel</button><button type=\\"submit\\" class=\\"mr-5 btn btn-primary\\">Save</button></div>
         </div>

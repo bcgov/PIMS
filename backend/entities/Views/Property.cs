@@ -118,15 +118,15 @@ namespace Pims.Dal.Entities.Views
 
         #region Financials
         /// <summary>
-        /// get/set - The most recent estimate.
+        /// get/set - The most recent market value.
         /// </summary>
         [Column(TypeName = "MONEY")]
-        public decimal Estimated { get; set; }
+        public decimal Market { get; set; }
 
         /// <summary>
-        /// get/set - The fiscal year estimate.
+        /// get/set - The fiscal year for the market value.
         /// </summary>
-        public int? EstimatedFiscalYear { get; set; }
+        public int? MarketFiscalYear { get; set; }
 
         /// <summary>
         /// get/set - The most recent netbook value.

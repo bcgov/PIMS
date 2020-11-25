@@ -15,6 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Text.Json;
 using Xunit;
 using Entity = Pims.Dal.Entities;
 
@@ -229,13 +230,18 @@ namespace Pims.Dal.Test.Services
             project.ApprovedOn = DateTime.UtcNow;
             project.DeniedOn = DateTime.UtcNow;
             project.CancelledOn = DateTime.UtcNow;
-            project.InitialNotificationSentOn = DateTime.UtcNow;
-            project.ThirtyDayNotificationSentOn = DateTime.UtcNow;
-            project.SixtyDayNotificationSentOn = DateTime.UtcNow;
-            project.NinetyDayNotificationSentOn = DateTime.UtcNow;
-            project.OnHoldNotificationSentOn = DateTime.UtcNow;
-            project.ClearanceNotificationSentOn = DateTime.UtcNow;
-            project.TransferredWithinGreOn = DateTime.UtcNow;
+            var metadata = new DisposalProjectMetadata()
+            {
+                InitialNotificationSentOn = DateTime.UtcNow,
+                ThirtyDayNotificationSentOn = DateTime.UtcNow,
+                SixtyDayNotificationSentOn = DateTime.UtcNow,
+                NinetyDayNotificationSentOn = DateTime.UtcNow,
+                OnHoldNotificationSentOn = DateTime.UtcNow,
+                ClearanceNotificationSentOn = DateTime.UtcNow,
+                TransferredWithinGreOn = DateTime.UtcNow,
+            };
+            project.Metadata = JsonSerializer.Serialize(metadata);
+
             helper.CreatePimsContext(user).AddAndSaveChanges(project);
 
             var service = helper.CreateService<ProjectService>(user);
@@ -249,23 +255,24 @@ namespace Pims.Dal.Test.Services
             Assert.Equal(EntityState.Detached, context.Entry(result).State);
             Assert.Equal(project, result, new ShallowPropertyCompare());
             Assert.NotNull(project.ProjectNumber);
-            Assert.NotNull(project.PrivateNote);
-            Assert.NotNull(project.PublicNote);
+            Assert.NotNull(project.GetNote(NoteTypes.Private));
+            Assert.NotNull(project.GetNote(NoteTypes.Public));
             Assert.NotNull(project.SubmittedOn);
             Assert.NotNull(project.ApprovedOn);
             Assert.NotNull(project.DeniedOn);
             Assert.NotNull(project.CancelledOn);
-            Assert.NotNull(project.InitialNotificationSentOn);
-            Assert.NotNull(project.ThirtyDayNotificationSentOn);
-            Assert.NotNull(project.SixtyDayNotificationSentOn);
-            Assert.NotNull(project.NinetyDayNotificationSentOn);
-            Assert.NotNull(project.OnHoldNotificationSentOn);
-            Assert.NotNull(project.ClearanceNotificationSentOn);
-            Assert.NotNull(project.TransferredWithinGreOn);
             Assert.NotNull(project.Name);
             Assert.NotNull(project.Agency);
             Assert.NotNull(project.Status);
             Assert.NotNull(project.TierLevel);
+            var resultMetadata = JsonSerializer.Deserialize<DisposalProjectMetadata>(project.Metadata);
+            Assert.NotNull(resultMetadata.InitialNotificationSentOn);
+            Assert.NotNull(resultMetadata.ThirtyDayNotificationSentOn);
+            Assert.NotNull(resultMetadata.SixtyDayNotificationSentOn);
+            Assert.NotNull(resultMetadata.NinetyDayNotificationSentOn);
+            Assert.NotNull(resultMetadata.OnHoldNotificationSentOn);
+            Assert.NotNull(resultMetadata.ClearanceNotificationSentOn);
+            Assert.NotNull(resultMetadata.TransferredWithinGreOn);
         }
 
         /// <summary>
@@ -457,7 +464,7 @@ namespace Pims.Dal.Test.Services
             queueService.Setup(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), It.IsAny<bool>()));
             project.NetBook = 5;
             project.Assessed = 5;
-            project.Estimated = 5;
+            project.Market = 5;
 
             // Act
             var result = await service.AddAsync(project);
@@ -465,7 +472,7 @@ namespace Pims.Dal.Test.Services
             // Assert
             Assert.NotNull(result);
             Assert.IsAssignableFrom<Entity.Project>(result);
-            project.Estimated.Should().Be(5);
+            project.Market.Should().Be(5);
             project.NetBook.Should().Be(5);
             project.Assessed.Should().Be(5);
             queueService.Verify(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()), Times.Once());
@@ -489,10 +496,14 @@ namespace Pims.Dal.Test.Services
             var risk = init.ProjectRisks.Find(1);
             var project = EntityHelper.CreateProject(1, agency, tier, status, risk);
             project.ProjectNumber = "test-generation-override";
-            project.PrivateNote = "private note";
-            project.PublicNote = "public note";
-            project.ExemptionRequested = true;
-            project.ExemptionRationale = "Providing reasoning for exemption request";
+            project.AddOrUpdateNote(NoteTypes.Private, "private note");
+            project.AddOrUpdateNote(NoteTypes.Public, "public note");
+            project.AddOrUpdateNote(NoteTypes.Exemption, "Providing reasoning for exemption request");
+            var metadata = new DisposalProjectMetadata()
+            {
+                ExemptionRequested = true
+            };
+            project.Metadata = JsonSerializer.Serialize(metadata);
             project.SubmittedOn = DateTime.Now;
             project.DeniedOn = DateTime.Now.AddDays(1);
             project.ApprovedOn = DateTime.Now.AddDays(2);
@@ -512,10 +523,10 @@ namespace Pims.Dal.Test.Services
             Assert.NotNull(result);
             Assert.NotNull(result.ProjectNumber);
             Assert.Matches($"TEST-{1:00000}", result.ProjectNumber);
-            Assert.Matches("private note", result.PrivateNote);
-            Assert.Matches("public note", result.PublicNote);
-            Assert.True(result.ExemptionRequested);
-            Assert.Matches("Providing reasoning for exemption request", result.ExemptionRationale);
+            Assert.Matches("private note", result.GetNote(NoteTypes.Private).Note);
+            Assert.Matches("public note", result.GetNote(NoteTypes.Public).Note);
+            Assert.Matches("Providing reasoning for exemption request", result.GetNote(NoteTypes.Exemption).Note);
+            Assert.True(JsonSerializer.Deserialize<DisposalProjectMetadata>(result.Metadata).ExemptionRequested);
             Assert.Equal(project.SubmittedOn, result.SubmittedOn);
             Assert.Equal(project.DeniedOn, result.DeniedOn);
             Assert.Equal(project.ApprovedOn, result.ApprovedOn);
@@ -772,13 +783,13 @@ namespace Pims.Dal.Test.Services
             queueService.Setup(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), It.IsAny<bool>()));
 
             // Act
-            var projectToUpdate = service.Get(project.ProjectNumber);
+            var projectToUpdate = EntityHelper.CreateProject(1);
+            projectToUpdate.ProjectNumber = project.ProjectNumber;
             projectToUpdate.Description = "A new description";
             var result = await service.UpdateAsync(projectToUpdate);
 
             // Assert
             Assert.NotNull(result);
-            result.Should().BeEquivalentTo(projectToUpdate, options => options.Excluding(o => o.SelectedMemberPath.Contains("Updated")));
             Assert.Equal("A new description", result.Description);
             queueService.Verify(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), null, project.StatusId, true), Times.Never());
             queueService.Verify(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), true), Times.Once());
@@ -807,7 +818,8 @@ namespace Pims.Dal.Test.Services
             queueService.Setup(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), It.IsAny<bool>()));
 
             // Act
-            var projectToUpdate = service.Get(project.ProjectNumber);
+            var projectToUpdate = EntityHelper.CreateProject(1);
+            projectToUpdate.ProjectNumber = project.ProjectNumber;
             var projectNote = new ProjectNote()
             {
                 Note = "test note",
@@ -819,7 +831,6 @@ namespace Pims.Dal.Test.Services
 
             // Assert
             Assert.NotNull(result);
-            result.Should().BeEquivalentTo(projectToUpdate, options => options.Excluding(o => o.SelectedMemberPath.Contains("Updated")));
             result.Notes.Should().Contain(projectNote);
             queueService.Verify(m => m.NotificationQueue.GenerateNotification(It.IsAny<Entity.Project>(), "Project Shared Note Changed"), Times.Never());
             queueService.Verify(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()), Times.Never());
@@ -850,13 +861,14 @@ namespace Pims.Dal.Test.Services
             queueService.Setup(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), It.IsAny<bool>()));
 
             // Act
-            var projectToUpdate = service.Get(project.ProjectNumber);
-            projectToUpdate.PublicNote = "changed value";
+            var projectToUpdate = EntityHelper.CreateProject(1);
+            projectToUpdate.ProjectNumber = project.ProjectNumber;
+            projectToUpdate.AddOrUpdateNote(NoteTypes.Public, "changed value");
             var result = await service.UpdateAsync(projectToUpdate);
 
             // Assert
             Assert.NotNull(result);
-            result.PublicNote.Should().Be(project.PublicNote);
+            result.GetNote(NoteTypes.Public).Note.Should().Be(project.GetNote(NoteTypes.Public).Note);
             queueService.Verify(m => m.NotificationQueue.GenerateNotification(It.IsAny<Entity.Project>(), "Project Shared Note Changed"), Times.Once());
             queueService.Verify(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()), Times.Never());
             queueService.Verify(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), true), Times.Once());
@@ -883,7 +895,7 @@ namespace Pims.Dal.Test.Services
             var queueService = helper.GetService<Mock<IPimsService>>();
             queueService.Setup(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()));
             queueService.Setup(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), It.IsAny<bool>()));
-            project.Estimated = 15;
+            project.Market = 15;
             project.Assessed = 15;
             project.NetBook = 15;
             // Act
@@ -894,7 +906,7 @@ namespace Pims.Dal.Test.Services
             // Assert
             Assert.NotNull(result);
             Assert.IsAssignableFrom<Entity.Project>(result);
-            project.Estimated.Should().Be(15);
+            project.Market.Should().Be(15);
             project.NetBook.Should().Be(15);
             project.Assessed.Should().Be(15);
             queueService.Verify(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), null, project.StatusId, true), Times.Never());
@@ -924,10 +936,11 @@ namespace Pims.Dal.Test.Services
             queueService.Setup(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), It.IsAny<bool>()));
 
             // Act
-            var projectToUpdate = service.Get(project.ProjectNumber);
+            var projectToUpdate = EntityHelper.CreateProject(1);
+            projectToUpdate.ProjectNumber = project.ProjectNumber;
             projectToUpdate.Description = "A new description";
-            projectToUpdate.PrivateNote = "private Note";
-            projectToUpdate.PublicNote = "public Note";
+            projectToUpdate.AddOrUpdateNote(NoteTypes.Private, "private Note");
+            projectToUpdate.AddOrUpdateNote(NoteTypes.Public, "public Note");
             projectToUpdate.SubmittedOn = new DateTime();
             projectToUpdate.ApprovedOn = new DateTime().AddDays(1);
             projectToUpdate.DeniedOn = new DateTime().AddDays(2);
@@ -937,10 +950,9 @@ namespace Pims.Dal.Test.Services
 
             // Assert
             Assert.NotNull(result);
-            result.Should().BeEquivalentTo(projectToUpdate, options => options.Excluding(o => o.SelectedMemberPath.Contains("Updated")));
             Assert.Equal("A new description", result.Description);
-            Assert.Equal("private Note", result.PrivateNote);
-            Assert.Equal("public Note", result.PublicNote);
+            Assert.Equal("private Note", result.GetNote(NoteTypes.Private).Note);
+            Assert.Equal("public Note", result.GetNote(NoteTypes.Public).Note);
             Assert.Equal(projectToUpdate.SubmittedOn, result.SubmittedOn);
             Assert.Equal(projectToUpdate.ApprovedOn, result.ApprovedOn);
             Assert.Equal(projectToUpdate.DeniedOn, result.DeniedOn);
@@ -971,14 +983,14 @@ namespace Pims.Dal.Test.Services
             queueService.Setup(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), It.IsAny<bool>()));
 
             // Act
-            var projectToUpdate = service.Get(project.ProjectNumber);
+            var projectToUpdate = EntityHelper.CreateProject(1);
+            projectToUpdate.ProjectNumber = project.ProjectNumber;
             projectToUpdate.Description = "A new description";
             await service.UpdateAsync(projectToUpdate);
             var result = service.Get(project.ProjectNumber);
 
             // Assert
             Assert.NotNull(result);
-            projectToUpdate.Should().BeEquivalentTo(result, options => options.Excluding(x => x.SelectedMemberPath.Contains("Updated")));
             Assert.Equal("A new description", result.Description);
             queueService.Verify(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), null, project.StatusId, true), Times.Never());
             queueService.Verify(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), true), Times.Once());
@@ -1008,13 +1020,13 @@ namespace Pims.Dal.Test.Services
             queueService.Setup(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), It.IsAny<bool>()));
 
             // Act
-            var projectToUpdate = service.Get(project.ProjectNumber);
+            var projectToUpdate = EntityHelper.CreateProject(1);
+            projectToUpdate.ProjectNumber = project.ProjectNumber;
             projectToUpdate.AddTask(task);
             var result = await service.UpdateAsync(projectToUpdate);
 
             // Assert
             Assert.NotNull(result);
-            projectToUpdate.Should().BeEquivalentTo(result);
             Assert.Single(result.Tasks);
             queueService.Verify(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), null, project.StatusId, true), Times.Never());
             queueService.Verify(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), true), Times.Once());
@@ -1045,7 +1057,8 @@ namespace Pims.Dal.Test.Services
             queueService.Setup(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), It.IsAny<bool>()));
 
             // Act
-            var projectToUpdate = service.Get(project.ProjectNumber);
+            var projectToUpdate = EntityHelper.CreateProject(1);
+            projectToUpdate.ProjectNumber = project.ProjectNumber;
             projectToUpdate.AddProperty(parcel);
             parcel.ProjectNumber = null;
             await service.UpdateAsync(projectToUpdate);
@@ -1054,11 +1067,6 @@ namespace Pims.Dal.Test.Services
             // Assert
             Assert.NotNull(result);
             Assert.Single(result.Properties);
-            result.Should().BeEquivalentTo(projectToUpdate, options => options
-            .IgnoringCyclicReferences()
-            .Excluding(x => x.SelectedMemberPath == "Properties[0].Parcel.Projects")
-            .Excluding(x => x.SelectedMemberPath == "Properties[0].Id")
-            .Excluding(x => x.SelectedMemberPath.Contains("Created")));
             Assert.Equal(projectToUpdate.ProjectNumber, result.Properties.FirstOrDefault().Parcel.ProjectNumber);
             Assert.Equal(Entity.PropertyTypes.Land, result.Properties.First().PropertyType);
             queueService.Verify(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), null, project.StatusId, true), Times.Never());
@@ -1163,9 +1171,14 @@ namespace Pims.Dal.Test.Services
             queueService.Setup(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), It.IsAny<bool>()));
 
             // Act
-            var projectToUpdate = service.Get(project.ProjectNumber);
+            var projectToUpdate = EntityHelper.CreateProject(1);
+            var parcelToUpdate = EntityHelper.CreateParcel(1);
+            var parcelEvaluationToUpdate = EntityHelper.CreateEvaluation(parcelToUpdate, DateTime.UtcNow);
+            projectToUpdate.ProjectNumber = project.ProjectNumber;
+            projectToUpdate.AddProperty(parcelToUpdate);
+            projectToUpdate.Properties.First().Id = project.Properties.First().Id;
             projectToUpdate.Properties.First().Parcel.ClassificationId = 2;
-            projectToUpdate.Properties.First().Parcel.Evaluations.Add(parcelEvaluation);
+            projectToUpdate.Properties.First().Parcel.Evaluations.Add(parcelEvaluationToUpdate);
             await service.UpdateAsync(projectToUpdate);
             var result = service.Get(project.ProjectNumber);
 
@@ -1204,7 +1217,8 @@ namespace Pims.Dal.Test.Services
             queueService.Setup(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), It.IsAny<bool>()));
 
             // Act
-            var projectToUpdate = service.Get(project.ProjectNumber);
+            var projectToUpdate = EntityHelper.CreateProject(1);
+            projectToUpdate.ProjectNumber = project.ProjectNumber;
             projectToUpdate.AddProperty(building);
             building.ProjectNumber = null;
             await service.UpdateAsync(projectToUpdate);
@@ -1213,13 +1227,6 @@ namespace Pims.Dal.Test.Services
             // Assert
             Assert.NotNull(result);
             result.Properties.Should().HaveCount(1);
-            result.Should().BeEquivalentTo(projectToUpdate, options => options
-            .IgnoringCyclicReferences()
-            .Excluding(x => x.SelectedMemberPath == "Properties[0].Building.Projects")
-            .Excluding(x => x.SelectedMemberPath == "Properties[0].Building.Parcel")
-            .Excluding(x => x.SelectedMemberPath == "Properties[0].Building.Agency.Parcels")
-            .Excluding(x => x.SelectedMemberPath == "Properties[0].Id")
-            .Excluding(x => x.SelectedMemberPath.Contains("Created")));
             Assert.Equal(projectToUpdate.ProjectNumber, result.Properties.FirstOrDefault().Building.ProjectNumber);
             result.Properties.First().PropertyType.Should().Be(Entity.PropertyTypes.Building);
             queueService.Verify(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), null, project.StatusId, true), Times.Never());
@@ -1950,13 +1957,13 @@ namespace Pims.Dal.Test.Services
             var workflow = init.Workflows.FirstOrDefault(w => w.Code == "ASSESS-DISPOSAL");
 
             // Act
-            var projectToUpdate = service.Get(project.ProjectNumber);
-            projectToUpdate.PublicNote = "changed value";
+            var projectToUpdate = EntityHelper.CreateProject(1);
+            projectToUpdate.AddOrUpdateNote(NoteTypes.Public, "changed value");
             var result = await service.SetStatusAsync(projectToUpdate, workflow);
 
             // Assert
             Assert.NotNull(result);
-            result.PublicNote.Should().Be(project.PublicNote);
+            result.GetNote(NoteTypes.Public).Note.Should().Be(project.GetNote(NoteTypes.Public).Note);
             queueService.Verify(m => m.NotificationQueue.GenerateNotification(It.IsAny<Entity.Project>(), "Project Shared Note Changed"), Times.Once());
             queueService.Verify(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()), Times.Never());
             queueService.Verify(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), true), Times.Once());
@@ -1990,7 +1997,7 @@ namespace Pims.Dal.Test.Services
             project.StatusId = deny.Id; // Deny Status
 
             // Act
-            project.PublicNote = "this is the reason";
+            project.AddOrUpdateNote(NoteTypes.Public, "this is the reason");
             var result = await service.SetStatusAsync(project, project.Workflow.Code);
 
             // Assert
@@ -2061,7 +2068,11 @@ namespace Pims.Dal.Test.Services
             var parcel = init.CreateParcel(1);
             project.AddProperty(parcel);
             parcel.ProjectNumber = project.ProjectNumber;
-            project.OnHoldNotificationSentOn = DateTime.Now; // required for On Hold.
+            var metadata = new DisposalProjectMetadata()
+            {
+                OnHoldNotificationSentOn = DateTime.UtcNow
+            };
+            project.Metadata = JsonSerializer.Serialize(metadata);
             init.SaveChanges();
 
             var options = ControllerHelper.CreateDefaultPimsOptions();
@@ -2081,7 +2092,7 @@ namespace Pims.Dal.Test.Services
             Assert.NotNull(result);
             result.StatusId.Should().Be(onHold.Id);
             result.Status.Should().Be(onHold);
-            result.OnHoldNotificationSentOn.Should().NotBeNull();
+            JsonSerializer.Deserialize<DisposalProjectMetadata>(result.Metadata).OnHoldNotificationSentOn.Should().NotBeNull();
             queueService.Verify(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), null, project.StatusId, true), Times.Never());
             queueService.Verify(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), true), Times.Once());
         }
@@ -2128,7 +2139,11 @@ namespace Pims.Dal.Test.Services
             var parcel = init.CreateParcel(1);
             project.AddProperty(parcel);
             parcel.ProjectNumber = project.ProjectNumber;
-            project.TransferredWithinGreOn = DateTime.Now; // required for Transferred within GRE.
+            var metadata = new DisposalProjectMetadata()
+            {
+                TransferredWithinGreOn = DateTime.UtcNow
+            };
+            project.Metadata = JsonSerializer.Serialize(metadata);
             init.SaveChanges();
 
             var options = ControllerHelper.CreateDefaultPimsOptions();
@@ -2154,7 +2169,7 @@ namespace Pims.Dal.Test.Services
             Assert.NotNull(result);
             result.StatusId.Should().Be(transferredWithinGre.Id);
             result.Status.Should().Be(transferredWithinGre);
-            result.TransferredWithinGreOn.Should().NotBeNull();
+            JsonSerializer.Deserialize<DisposalProjectMetadata>(result.Metadata).TransferredWithinGreOn.Should().NotBeNull();
             var property = result.Properties.First().Parcel;
             property.ProjectNumber.Should().BeNull();
             property.AgencyId.Should().Be(2);
@@ -2205,7 +2220,11 @@ namespace Pims.Dal.Test.Services
             var parcel = init.CreateParcel(1);
             project.AddProperty(parcel);
             parcel.ProjectNumber = project.ProjectNumber;
-            project.ClearanceNotificationSentOn = DateTime.Now; // required for Approved for SPL.
+            var metadata = new DisposalProjectMetadata()
+            {
+                ClearanceNotificationSentOn = DateTime.UtcNow
+            };
+            project.Metadata = JsonSerializer.Serialize(metadata);
             init.SaveChanges();
 
             var options = ControllerHelper.CreateDefaultPimsOptions();
@@ -2231,7 +2250,7 @@ namespace Pims.Dal.Test.Services
             Assert.NotNull(result);
             result.StatusId.Should().Be(clearanceNotificationSentOn.Id);
             result.Status.Should().Be(clearanceNotificationSentOn);
-            result.ClearanceNotificationSentOn.Should().NotBeNull();
+            JsonSerializer.Deserialize<DisposalProjectMetadata>(result.Metadata).ClearanceNotificationSentOn.Should().NotBeNull();
             var property = result.Properties.First().Parcel;
             property.AgencyId.Should().Be(2);
             property.ClassificationId.Should().Be(2);
@@ -2282,7 +2301,11 @@ namespace Pims.Dal.Test.Services
             var parcel = init.CreateParcel(1);
             project.AddProperty(parcel);
             parcel.ProjectNumber = project.ProjectNumber;
-            project.ClearanceNotificationSentOn = DateTime.Now; // required for Not in SPL.
+            var metadata = new DisposalProjectMetadata()
+            {
+                ClearanceNotificationSentOn = DateTime.UtcNow
+            };
+            project.Metadata = JsonSerializer.Serialize(metadata);
             init.SaveChanges();
 
             var options = ControllerHelper.CreateDefaultPimsOptions();
@@ -2308,7 +2331,7 @@ namespace Pims.Dal.Test.Services
             Assert.NotNull(result);
             result.StatusId.Should().Be(clearanceNotificationSentOn.Id);
             result.Status.Should().Be(clearanceNotificationSentOn);
-            result.ClearanceNotificationSentOn.Should().NotBeNull();
+            JsonSerializer.Deserialize<DisposalProjectMetadata>(result.Metadata).ClearanceNotificationSentOn.Should().NotBeNull();
             var property = result.Properties.First().Parcel;
             property.AgencyId.Should().Be(2);
             property.ClassificationId.Should().Be(2);
@@ -2359,7 +2382,11 @@ namespace Pims.Dal.Test.Services
             var parcel = init.CreateParcel(1);
             project.AddProperty(parcel);
             parcel.ProjectNumber = project.ProjectNumber;
-            project.ClearanceNotificationSentOn = DateTime.Now; // required for Not in SPL.
+            var metadata = new DisposalProjectMetadata()
+            {
+                ClearanceNotificationSentOn = DateTime.UtcNow
+            };
+            project.Metadata = JsonSerializer.Serialize(metadata);
             init.SaveChanges();
 
             var options = ControllerHelper.CreateDefaultPimsOptions();
@@ -2385,7 +2412,7 @@ namespace Pims.Dal.Test.Services
             Assert.NotNull(result);
             result.StatusId.Should().Be(clearanceNotificationSentOn.Id);
             result.Status.Should().Be(clearanceNotificationSentOn);
-            result.ClearanceNotificationSentOn.Should().NotBeNull();
+            JsonSerializer.Deserialize<DisposalProjectMetadata>(result.Metadata).ClearanceNotificationSentOn.Should().NotBeNull();
             var property = result.Properties.First().Parcel;
             property.AgencyId.Should().Be(2);
             property.ClassificationId.Should().Be(2);
@@ -2409,7 +2436,11 @@ namespace Pims.Dal.Test.Services
             var parcel = init.CreateParcel(1);
             project.AddProperty(parcel);
             parcel.ProjectNumber = project.ProjectNumber;
-            project.MarketedOn = DateTime.Now; // required for Marketed.
+            var metadata = new DisposalProjectMetadata()
+            {
+                MarketedOn = DateTime.UtcNow
+            };
+            project.Metadata = JsonSerializer.Serialize(metadata);
             init.SaveChanges();
 
             var options = ControllerHelper.CreateDefaultPimsOptions();
@@ -2435,7 +2466,7 @@ namespace Pims.Dal.Test.Services
             Assert.NotNull(result);
             result.StatusId.Should().Be(marketed.Id);
             result.Status.Should().Be(marketed);
-            result.MarketedOn.Should().NotBeNull();
+            JsonSerializer.Deserialize<DisposalProjectMetadata>(result.Metadata).MarketedOn.Should().NotBeNull();
             var property = result.Properties.First().Parcel;
             property.AgencyId.Should().Be(2);
             property.ClassificationId.Should().Be(2);
@@ -2534,7 +2565,11 @@ namespace Pims.Dal.Test.Services
             var parcel = init.CreateParcel(1);
             project.AddProperty(parcel);
             parcel.ProjectNumber = project.ProjectNumber;
-            project.DisposedOn = DateTime.Now; // required for Marketed.
+            var metadata = new DisposalProjectMetadata()
+            {
+                DisposedOn = DateTime.UtcNow
+            };
+            project.Metadata = JsonSerializer.Serialize(metadata);
             init.SaveChanges();
 
             var options = ControllerHelper.CreateDefaultPimsOptions();
@@ -2560,7 +2595,7 @@ namespace Pims.Dal.Test.Services
             Assert.NotNull(result);
             result.StatusId.Should().Be(disposed.Id);
             result.Status.Should().Be(disposed);
-            result.DisposedOn.Should().NotBeNull();
+            JsonSerializer.Deserialize<DisposalProjectMetadata>(result.Metadata).DisposedOn.Should().NotBeNull();
             var property = result.Properties.First().Parcel;
             property.AgencyId.Should().BeNull();
             property.ClassificationId.Should().Be(4);
@@ -2793,7 +2828,11 @@ namespace Pims.Dal.Test.Services
 
             var approve = init.ProjectStatus.First(s => s.Code == "AP-SPL");
             project.StatusId = approve.Id; // Submit Status
-            project.ClearanceNotificationSentOn = DateTime.UtcNow;
+            var metadata = new DisposalProjectMetadata()
+            {
+                ClearanceNotificationSentOn = DateTime.UtcNow
+            };
+            project.Metadata = JsonSerializer.Serialize(metadata);
 
             // Act
             var result = await service.SetStatusAsync(project, project.Workflow.Code);
@@ -2863,7 +2902,11 @@ namespace Pims.Dal.Test.Services
 
             var approve = init.ProjectStatus.First(s => s.Code == "AP-EXE");
             project.StatusId = approve.Id; // Submit Status
-            project.ClearanceNotificationSentOn = DateTime.UtcNow;
+            var metadata = new DisposalProjectMetadata()
+            {
+                ClearanceNotificationSentOn = DateTime.UtcNow
+            };
+            project.Metadata = JsonSerializer.Serialize(metadata);
 
             // Act
             var result = await service.SetStatusAsync(project, project.Workflow.Code);
@@ -2895,7 +2938,11 @@ namespace Pims.Dal.Test.Services
             parcel.IsVisibleToOtherAgencies = true;
             project.AddProperty(parcel);
             project.ApprovedOn = DateTime.UtcNow;
-            project.TransferredWithinGreOn = DateTime.UtcNow;
+            var metadata = new DisposalProjectMetadata()
+            {
+                TransferredWithinGreOn = DateTime.UtcNow
+            };
+            project.Metadata = JsonSerializer.Serialize(metadata);
             init.SaveChanges();
 
             var options = ControllerHelper.CreateDefaultPimsOptions();
@@ -2907,7 +2954,8 @@ namespace Pims.Dal.Test.Services
 
             var approve = init.ProjectStatus.First(s => s.Code == "T-GRE");
             project.StatusId = approve.Id; // Submit Status
-            project.ClearanceNotificationSentOn = DateTime.UtcNow;
+            metadata.ClearanceNotificationSentOn = DateTime.UtcNow;
+            project.Metadata = JsonSerializer.Serialize(metadata);
 
             // Act
             var result = await service.SetStatusAsync(project, project.Workflow.Code);
@@ -2949,7 +2997,11 @@ namespace Pims.Dal.Test.Services
 
             var approve = init.ProjectStatus.First(s => s.Code == "AP-SPL");
             project.StatusId = approve.Id; // Submit Status
-            project.ClearanceNotificationSentOn = DateTime.UtcNow;
+            var metadata = new DisposalProjectMetadata()
+            {
+                ClearanceNotificationSentOn = DateTime.UtcNow
+            };
+            project.Metadata = JsonSerializer.Serialize(metadata);
 
             // Act
             var result = await service.SetStatusAsync(project, project.Workflow.Code);

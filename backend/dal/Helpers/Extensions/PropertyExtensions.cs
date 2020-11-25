@@ -116,10 +116,10 @@ namespace Pims.Dal.Helpers.Extensions
             if (filter.MaxRentableArea.HasValue)
                 query = query.Where(b => b.RentableArea <= filter.MaxRentableArea);
 
-            if (filter.MinEstimatedValue.HasValue)
-                query = query.Where(p => p.Estimated >= filter.MinEstimatedValue);
-            if (filter.MaxEstimatedValue.HasValue)
-                query = query.Where(p => p.Estimated <= filter.MaxEstimatedValue);
+            if (filter.MinMarketValue.HasValue)
+                query = query.Where(p => p.Market >= filter.MinMarketValue);
+            if (filter.MaxMarketValue.HasValue)
+                query = query.Where(p => p.Market <= filter.MaxMarketValue);
 
             if (filter.MinAssessedValue.HasValue)
                 query = query.Where(p => p.Assessed >= filter.MinAssessedValue);

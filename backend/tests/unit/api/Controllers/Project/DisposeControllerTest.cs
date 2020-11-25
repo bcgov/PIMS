@@ -2,7 +2,6 @@ using FluentAssertions;
 using MapsterMapper;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
-using Newtonsoft.Json;
 using Pims.Api.Areas.Project.Controllers;
 using Pims.Core.Comparers;
 using Pims.Core.Test;
@@ -14,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Text.Json;
 using Xunit;
 using Entity = Pims.Dal.Entities;
 using Model = Pims.Api.Areas.Project.Models.Dispose;
@@ -166,7 +166,7 @@ namespace Pims.Api.Test.Controllers
             Assert.Equal(project.TierLevelId, actualResult.TierLevelId);
             Assert.Equal(project.AgencyId, actualResult.AgencyId);
             Assert.Equal(project.Properties.Count(), actualResult.Properties.Count());
-            actualResult.OfferAmount.Should().Be(JsonConvert.DeserializeObject<Entity.Project>(project.Metadata).OfferAmount);
+            actualResult.OfferAmount.Should().Be(JsonSerializer.Deserialize<Entity.Models.DisposalProjectMetadata>(project.Metadata).OfferAmount);
         }
         #endregion
 
@@ -191,7 +191,7 @@ namespace Pims.Api.Test.Controllers
             var actionResult = Assert.IsType<CreatedAtActionResult>(result);
             Assert.Equal(201, actionResult.StatusCode);
             var actualProject = Assert.IsType<Model.ProjectModel>(actionResult.Value);
-            actualProject.OfferAmount.Should().Be(JsonConvert.DeserializeObject<Entity.Project>(project.Metadata).OfferAmount);
+            actualProject.OfferAmount.Should().Be(JsonSerializer.Deserialize<Entity.Models.DisposalProjectMetadata>(project.Metadata).OfferAmount);
             service.Verify(m => m.Project.AddAsync(It.IsAny<Entity.Project>()), Times.Once());
         }
         #endregion
@@ -217,7 +217,7 @@ namespace Pims.Api.Test.Controllers
             var actionResult = Assert.IsType<JsonResult>(result);
             Assert.Null(actionResult.StatusCode);
             var actualResult = Assert.IsType<Model.ProjectModel>(actionResult.Value);
-            actualResult.OfferAmount.Should().Be(JsonConvert.DeserializeObject<Entity.Project>(project.Metadata).OfferAmount);
+            actualResult.OfferAmount.Should().Be(JsonSerializer.Deserialize<Entity.Models.DisposalProjectMetadata>(project.Metadata).OfferAmount);
             service.Verify(m => m.Project.UpdateAsync(It.IsAny<Entity.Project>()), Times.Once());
         }
         #endregion
@@ -243,7 +243,7 @@ namespace Pims.Api.Test.Controllers
             var actionResult = Assert.IsType<JsonResult>(result);
             Assert.Null(actionResult.StatusCode);
             var actualResult = Assert.IsType<Model.ProjectModel>(actionResult.Value);
-            actualResult.OfferAmount.Should().Be(JsonConvert.DeserializeObject<Entity.Project>(project.Metadata).OfferAmount);
+            actualResult.OfferAmount.Should().Be(JsonSerializer.Deserialize<Entity.Models.DisposalProjectMetadata>(project.Metadata).OfferAmount);
             Assert.Equal(mapper.Map<Model.ProjectModel>(project), actualResult, new DeepPropertyCompare());
             service.Verify(m => m.Project.RemoveAsync(It.IsAny<Entity.Project>()), Times.Once());
         }
@@ -276,7 +276,7 @@ namespace Pims.Api.Test.Controllers
             Assert.Equal(mapper.Map<Model.ProjectModel>(project), actualResult, new DeepPropertyCompare());
             actualResult.WorkflowId.Should().Be(1);
             actualResult.StatusId.Should().Be(1);
-            actualResult.OfferAmount.Should().Be(JsonConvert.DeserializeObject<Entity.Project>(project.Metadata).OfferAmount);
+            actualResult.OfferAmount.Should().Be(JsonSerializer.Deserialize<Entity.Models.DisposalProjectMetadata>(project.Metadata).OfferAmount);
             service.Verify(m => m.Workflow.Get(workflow.Code), Times.Once());
             service.Verify(m => m.Project.SetStatusAsync(It.IsAny<Entity.Project>(), workflow), Times.Once());
         }

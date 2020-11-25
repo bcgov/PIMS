@@ -109,9 +109,9 @@ namespace Pims.Api.Areas.Project.Models.Search
         public decimal NetBook { get; set; }
 
         /// <summary>
-        /// get/set - The estimated value which is the sum of the properties.
+        /// get/set - The market value which is the sum of the properties.
         /// </summary>
-        public decimal Estimated { get; set; }
+        public decimal Market { get; set; }
 
         /// <summary>
         /// get/set - The assessed value which is the sum of the properties.

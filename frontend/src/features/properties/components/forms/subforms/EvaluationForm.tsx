@@ -36,7 +36,7 @@ export interface IFinancialYear {
   assessed: IFinancial;
   appraised: IFinancial;
   netbook: IFinancial;
-  estimated: IFinancial;
+  market: IFinancial;
 }
 const NUMBER_OF_EVALUATIONS_PER_PAGE = 2;
 const NUMBER_OF_GENERATED_EVALUATIONS = 20;

@@ -49,17 +49,25 @@ const FlexRight = styled.div`
  */
 const GreTransferStep = ({ formikRef }: IStepProps) => {
   const { project } = useProject();
-  const { onSubmitReview, canUserApproveForm, noFetchingProjectRequests } = useStepForm();
+  const {
+    onSubmitReview,
+    canUserApproveForm,
+    canUserOverride,
+    noFetchingProjectRequests,
+  } = useStepForm();
   const [updatePims, setUpdatePims] = useState(false);
 
   const initialValues: IProject = {
     ...project,
+    agencyId: 0,
   };
+
   const canEdit =
-    canUserApproveForm() &&
-    (project.statusCode === ReviewWorkflowStatus.ERP ||
-      project.statusCode === ReviewWorkflowStatus.OnHold ||
-      project.statusCode === ReviewWorkflowStatus.ApprovedForExemption);
+    canUserOverride() ||
+    (canUserApproveForm() &&
+      (project.statusCode === ReviewWorkflowStatus.ERP ||
+        project.statusCode === ReviewWorkflowStatus.OnHold ||
+        project.statusCode === ReviewWorkflowStatus.ApprovedForExemption));
   return (
     <Container fluid className="GreTransferStep">
       <Formik
@@ -68,6 +76,8 @@ const GreTransferStep = ({ formikRef }: IStepProps) => {
         validationSchema={GreTransferStepYupSchema}
         enableReinitialize={true}
         onSubmit={(values: IProject) => {
+          values.agencyId = +values.agencyId;
+          values.properties?.forEach(p => (p.agencyId = +p.agencyId));
           onSubmitReview(values, formikRef, ReviewWorkflowStatus.TransferredGRE);
         }}
       >
@@ -94,7 +104,7 @@ const GreTransferStep = ({ formikRef }: IStepProps) => {
               <FlexRight>
                 <Button
                   style={{ maxWidth: '18rem' }}
-                  disabled={values.agencyId === project.agencyId}
+                  disabled={values.agencyId === project.agencyId || values.agencyId === 0}
                   showSubmitting
                   isSubmitting={!noFetchingProjectRequests}
                   onClick={() =>

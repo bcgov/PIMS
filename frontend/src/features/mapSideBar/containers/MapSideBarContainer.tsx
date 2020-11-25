@@ -11,7 +11,6 @@ import { fetchParcelDetail } from 'actionCreators/parcelsActionCreator';
 import { Spinner } from 'react-bootstrap';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
 import * as parcelsActions from 'actions/parcelsActions';
-import { LeafletMouseEvent } from 'leaflet';
 import { BuildingForm, SubmitPropertySelector, LandForm } from '../SidebarContents';
 import { BuildingSvg, LandSvg } from 'components/common/Icons';
 import { FormikValues } from 'formik';
@@ -23,6 +22,7 @@ import {
   PARCELS_LAYER_URL,
   useLayerQuery,
 } from 'components/maps/leaflet/LayerPopup';
+import { LeafletMouseEvent } from 'leaflet';
 
 interface IMapSideBarContainerProps {
   refreshParcels: Function;
@@ -171,7 +171,6 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
         disabled={disabled}
         loadDraft={loadDraft}
         properties={properties}
-        // mapClickMouseEvent={leafletMouseEvent}
       />
     );
   };

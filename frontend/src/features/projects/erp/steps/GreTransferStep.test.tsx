@@ -3,7 +3,7 @@ import renderer from 'react-test-renderer';
 import { createMemoryHistory } from 'history';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
-import { render, act, screen, fireEvent, wait } from '@testing-library/react';
+import { render, act, screen, wait } from '@testing-library/react';
 import { useKeycloak } from '@react-keycloak/web';
 import { Claims } from 'constants/claims';
 import MockAdapter from 'axios-mock-adapter';
@@ -14,6 +14,7 @@ import { getStore, mockProject as project } from '../../dispose/testUtils';
 import { CLASSIFICATIONS } from 'constants/classifications';
 import { IProject, ReviewWorkflowStatus } from '../../common';
 import { GreTransferStep } from '..';
+import { fillInput } from 'utils/testUtils';
 
 jest.mock('@react-keycloak/web');
 const mockProject: IProject = {
@@ -34,7 +35,7 @@ const mockProject: IProject = {
       classificationId: CLASSIFICATIONS.SurplusActive,
       constructionTypeId: 0,
       description: '',
-      estimated: 0,
+      market: 0,
       floorCount: 0,
       id: 1,
       isSensitive: false,
@@ -139,7 +140,7 @@ describe('GRE Transfer Step', () => {
       project.statusCode = ReviewWorkflowStatus.TransferredGRE;
     });
 
-    xit('update button is not rendered', () => {
+    it('update button is not rendered', () => {
       const component = render(getGreTransferStep(getStore(project)));
       const updateButton = component.queryByText(/Update Property Information Management System/);
       expect(updateButton).toBeNull();
@@ -153,46 +154,36 @@ describe('GRE Transfer Step', () => {
       });
     });
   });
-  describe('form actions', () => {
+  describe('GRE Transfer form actions', () => {
     beforeAll(() => {
       mockKeycloak([Claims.ADMIN_PROJECTS]);
     });
-    xit('enables update button when new agency is selected', async (done: any) => {
+    it('enables update button when new agency is selected', async () => {
       const project = _.cloneDeep(mockProject);
-      render(getGreTransferStep(getStore(project)));
+      const { container } = render(getGreTransferStep(getStore(project)));
       const updateButton = screen.getByText(/Update Property Information Management System/);
-      const agencyField = screen.getByLabelText(/New Owning Agency/);
-      act(() => {
-        fireEvent.change(agencyField, { persist: () => {}, target: { value: 'BC Transit' } });
-        updateButton.click();
-      });
+      await fillInput(container, 'agencyId', 'BC Transit', 'typeahead');
 
       expect(updateButton).not.toBeDisabled();
-      done();
     });
-    xit('displays modal when Update PIMS button clicked', async (done: any) => {
+    it('displays modal when Update PIMS button clicked', async () => {
       const project = _.cloneDeep(mockProject);
       project.properties[0].classificationId = CLASSIFICATIONS.CoreOperational;
-      render(getGreTransferStep(getStore(project)));
+      const { container } = render(getGreTransferStep(getStore(project)));
       const updateButton = screen.getByText(/Update Property Information Management System/);
-      const agencyField = screen.getByLabelText(/New Owning Agency/);
-      await act(async () => {
-        fireEvent.change(agencyField, { persist: () => {}, target: { value: 'BC Transit' } });
-      });
+      await fillInput(container, 'agencyId', 'BC Transit', 'typeahead');
       await wait(() => expect(updateButton).not.toBeDisabled());
       updateButton.click();
 
       const errorSummary = await screen.findByText(/Really Update PIMS/);
       expect(errorSummary).toBeVisible();
-      done();
     });
-    xit('performs validation on update', async (done: any) => {
+    it('performs validation on update', async () => {
       const project = _.cloneDeep(mockProject);
-      render(getGreTransferStep(getStore(project)));
+      const { container } = render(getGreTransferStep(getStore(project)));
       const updateButton = screen.getByText(/Update Property Information Management System/);
-      const agencyField = screen.getByLabelText(/New Owning Agency/);
+      await fillInput(container, 'agencyId', 'BC Transit', 'typeahead');
       await act(async () => {
-        fireEvent.change(agencyField, { persist: () => {}, target: { value: 'BC Transit' } });
         await wait(() => expect(updateButton).not.toBeDisabled());
         updateButton.click();
       });
@@ -200,7 +191,6 @@ describe('GRE Transfer Step', () => {
         /Must select Core Operational or Core Strategic/,
       );
       expect(errorSummary).toBeVisible();
-      done();
     });
   });
 });

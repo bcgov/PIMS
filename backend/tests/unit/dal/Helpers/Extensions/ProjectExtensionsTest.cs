@@ -1,7 +1,6 @@
 using FluentAssertions;
 using Pims.Core.Extensions;
 using Pims.Core.Test;
-using Pims.Dal.Entities;
 using Pims.Dal.Helpers.Extensions;
 using Pims.Dal.Security;
 using System;
@@ -54,26 +53,7 @@ namespace Pims.Dal.Test.Helpers.Extensions
         }
         #endregion
 
-        #region UpdateProjectFinancials
-        [Fact]
-        public void UpdateProjectFinancials()
-        {
-            // Arrange
-            var project = EntityHelper.CreateProject(1);
-            project.ReportedFiscalYear = 2019;
-            project.NetBook = 10;
-            project.Assessed = 10;
-            project.Estimated = 10;
-
-            // Act
-            project.UpdateProjectFinancials();
-
-            // Assert
-            project.Estimated.Should().Be(10);
-            project.NetBook.Should().Be(10);
-            project.Assessed.Should().Be(10);
-        }
-
+        #region SetProjectPropertiesVisiblity
         [Fact]
         public void SetProjectPropertiesVisiblity()
         {

@@ -52,6 +52,23 @@ namespace Pims.Dal.Services.Admin
         }
 
         /// <summary>
+        /// Get an array of workflows that are associated with the specified project 'code'.
+        /// </summary>
+        /// <param name="code"></param>
+        /// <returns></returns>
+        public IEnumerable<Workflow> GetForStatus(string code)
+        {
+            return (
+                from s in this.Context.ProjectStatus
+                join ws in this.Context.WorkflowProjectStatus on s.Id equals ws.StatusId
+                join w in this.Context.Workflows.Include(w => w.Status).ThenInclude(s => s.Status) on ws.WorkflowId equals w.Id
+                where s.Code == code
+                select w
+                )
+                .ToArray();
+        }
+
+        /// <summary>
         /// Updates the specified workflow in the datasource.
         /// </summary>
         /// <param name="entity"></param>

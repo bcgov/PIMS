@@ -75,13 +75,13 @@ namespace Pims.Dal.Entities.Models
         /// <param name="tenancy"></param>
         /// <param name="minRentableArea"></param>
         /// <param name="maxRentableArea"></param>
-        /// <param name="minEstimatedValue"></param>
-        /// <param name="maxEstimatedValue"></param>
+        /// <param name="minMarketValue"></param>
+        /// <param name="maxMarketValue"></param>
         /// <param name="minAssessedValue"></param>
         /// <param name="maxAssessedValue"></param>
         /// <param name="sort"></param>
         /// <returns></returns>
-        public BuildingFilter(string address, int? agencyId, int? constructionTypeId, int? predominantUseId, int? floorCount, string tenancy, float? minRentableArea, float? maxRentableArea, decimal? minEstimatedValue, decimal? maxEstimatedValue, decimal? minAssessedValue, decimal? maxAssessedValue, string[] sort)
+        public BuildingFilter(string address, int? agencyId, int? constructionTypeId, int? predominantUseId, int? floorCount, string tenancy, float? minRentableArea, float? maxRentableArea, decimal? minMarketValue, decimal? maxMarketValue, decimal? minAssessedValue, decimal? maxAssessedValue, string[] sort)
         {
             this.Address = address;
             this.ConstructionTypeId = constructionTypeId;
@@ -90,8 +90,8 @@ namespace Pims.Dal.Entities.Models
             this.Tenancy = tenancy;
             this.MinRentableArea = minRentableArea;
             this.MaxRentableArea = maxRentableArea;
-            this.MinEstimatedValue = minEstimatedValue;
-            this.MaxEstimatedValue = maxEstimatedValue;
+            this.MinMarketValue = minMarketValue;
+            this.MaxMarketValue = maxMarketValue;
             this.MinAssessedValue = minAssessedValue;
             this.MaxAssessedValue = maxAssessedValue;
             if (agencyId.HasValue)

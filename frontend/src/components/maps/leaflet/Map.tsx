@@ -28,7 +28,7 @@ import { PopupView } from '../PopupView';
 import { useDispatch, useSelector } from 'react-redux';
 import { setMapViewZoom } from 'reducers/mapViewZoomSlice';
 import { RootState } from 'reducers/rootReducer';
-import { BBox } from 'geojson';
+import { BBox, Feature } from 'geojson';
 import { createPoints, PointFeature, asProperty } from './mapUtils';
 import PointClusterer from './PointClusterer';
 import { LegendControl } from './Legend/LegendControl';
@@ -52,6 +52,8 @@ import classNames from 'classnames';
 import { useLayerQuery } from './LayerPopup/hooks/useLayerQuery';
 import { SidebarSize } from 'features/mapSideBar/hooks/useQueryParamSideBar';
 import { saveParcelLayerData } from 'reducers/parcelLayerDataSlice';
+import useActiveFeatureLayer from '../hooks/useActiveFeatureLayer';
+import useMarkerZoom from '../hooks/useMarkerZoom';
 
 export type MapViewportChangeEvent = {
   bounds: LatLngBounds | null;
@@ -94,6 +96,7 @@ export type LayerPopupInformation = PopupContentConfig & {
   latlng: LatLng;
   title: string;
   center?: LatLng;
+  feature: Feature;
 };
 
 const Map: React.FC<MapProps> = ({
@@ -136,11 +139,19 @@ const Map: React.FC<MapProps> = ({
   const municipalitiesService = useLayerQuery(MUNICIPALITY_LAYER_URL);
   const parcelsService = useLayerQuery(PARCELS_LAYER_URL);
 
+  // load and prepare data
+  const points = createPoints(properties);
+  const { setZoomProperty, onMarkerZoomEnd } = useMarkerZoom({
+    mapRef,
+    points,
+  });
+
   const [layerPopup, setLayerPopup] = useState<LayerPopupInformation>();
   if (mapRef.current && !selectedProperty?.parcelDetail) {
     lat = (mapRef.current.props.center as Array<number>)[0];
     lng = (mapRef.current.props.center as Array<number>)[1];
   }
+  useActiveFeatureLayer({ selectedProperty, layerPopup, mapRef });
 
   const lastZoom = useSelector<RootState, number>(state => state.mapViewZoom) ?? zoomProp;
   useEffect(() => {
@@ -210,12 +221,15 @@ const Map: React.FC<MapProps> = ({
   };
 
   const onZoomEnd = (event: LeafletEvent) => {
+    onMarkerZoomEnd();
     dispatch(setMapViewZoom(event.target._zoom));
   };
 
-  const closeMarkerPopup = () => {
-    setLayerPopup(undefined);
-    dispatch(storeParcelDetail(null));
+  const closeMarkerPopup = (e: any) => {
+    if (e.target._animateToZoom === mapRef.current?.leafletElement.getZoom()) {
+      setLayerPopup(undefined);
+      dispatch(storeParcelDetail(null));
+    }
   };
 
   const zoomToAdministrativeArea = async (city: string) => {
@@ -253,9 +267,6 @@ const Map: React.FC<MapProps> = ({
     });
   }, []);
 
-  // load and prepare data
-  const points = createPoints(properties);
-
   // get map bounds
   const updateMap = useCallback(() => {
     if (!mapRef?.current) {
@@ -291,6 +302,7 @@ const Map: React.FC<MapProps> = ({
           propertyTypeId={propertyTypeId}
           propertyDetail={parcelDetail}
           disabled={!interactive}
+          zoomTo={zoom < 14 ? () => setZoomProperty(selectedProperty) : undefined}
         />
       </Popup>
     );
@@ -314,9 +326,11 @@ const Map: React.FC<MapProps> = ({
     let center: LatLng | undefined;
     let displayConfig = {};
     let title = 'Municipality Information';
+    let feature = {};
     if (municipality.features.length === 1) {
       properties = municipality.features[0].properties!;
       displayConfig = municipalityLayerPopupConfig;
+      feature = municipality.features[0];
     }
 
     if (parcel.features.length === 1) {
@@ -328,6 +342,7 @@ const Map: React.FC<MapProps> = ({
             .getBounds()
             .getCenter()
         : undefined;
+      feature = parcel.features[0];
     }
 
     if (!isEmpty(properties)) {
@@ -337,6 +352,7 @@ const Map: React.FC<MapProps> = ({
         config: displayConfig as any,
         latlng: event.latlng,
         center,
+        feature,
       } as any);
     }
   };
@@ -418,7 +434,6 @@ const Map: React.FC<MapProps> = ({
                     </Popup>
                   )}
                   <LegendControl />
-
                   <LayersControl position="topright">
                     <LayersControl.Overlay checked name="Parcel Boundaries">
                       <WMSTileLayer
@@ -428,6 +443,7 @@ const Map: React.FC<MapProps> = ({
                         format="image/png"
                         zIndex={10}
                         id="parcelLayer"
+                        on
                       />
                     </LayersControl.Overlay>
                     <LayersControl.Overlay checked name="Municipalities">

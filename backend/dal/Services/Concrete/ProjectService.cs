@@ -2,7 +2,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
 using Pims.Core.Extensions;
 using Pims.Dal.Entities;
 using Pims.Dal.Entities.Models;
@@ -409,9 +408,6 @@ namespace Pims.Dal.Services
                 buildings.ForEach(b => b.ProjectNumber = project.ProjectNumber);
             }
 
-            // Update project financials.
-            project.UpdateProjectFinancials();
-
             this.Context.Projects.Update(project);
             this.Context.CommitTransaction();
 
@@ -446,6 +442,7 @@ namespace Pims.Dal.Services
                 .Include(p => p.Tasks).ThenInclude(t => t.Task)
                 .Include(p => p.Responses)
                 .Include(p => p.Workflow)
+                .Include(p => p.Notes)
                 .SingleOrDefault(p => p.Id == project.Id) ?? throw new KeyNotFoundException();
 
             //The following reduces the load on the database compared to eager loading all parcel/building props.
@@ -482,8 +479,7 @@ namespace Pims.Dal.Services
             // If the user isn't allowed to update the project, just update the notes.
             if (!this.IsAllowedToUpdate(originalProject, _options.Project) && !originalProject.IsProjectInDraft(_options.Project) && !originalProject.IsProjectClosed())
             {
-                originalProject.Note = project.Note;
-                originalProject.PublicNote = project.PublicNote;
+                originalProject.AddOrUpdateNotes(project);
                 this.Context.SaveChanges();
                 this.Context.CommitTransaction();
                 return Get(originalProject.Id);
@@ -526,10 +522,11 @@ namespace Pims.Dal.Services
             var responses = project.GetResponseChanges(project);
 
             // If the note was changed generate a notification for it.
-            var noteChanged = originalProject.PublicNote != project.PublicNote;
+            var noteChanged = !String.IsNullOrWhiteSpace(project.GetNoteText(NoteTypes.Public)) && originalProject.GetNoteText(NoteTypes.Public) != project.GetNoteText(NoteTypes.Public);
 
             originalProject.Merge(project, this.Context);
             originalProject.Metadata = project.Metadata;
+            originalProject.AddOrUpdateNotes(project);
 
             this.Context.SaveChanges();
             this.Context.CommitTransaction();
@@ -595,7 +592,10 @@ namespace Pims.Dal.Services
 
             await this.CancelNotificationsAsync(project.Id);
 
+            originalProject.Notifications.ForEach(n => this.Context.NotificationQueue.Remove(n));
             originalProject.Notifications.Clear(); // TODO: Need to test this to determine if it'll let us delete a project with existing notifications.
+            originalProject.Notes.ForEach(n => this.Context.ProjectNotes.Remove(n));
+            originalProject.Notes.Clear();
             this.Context.Projects.Remove(originalProject);
             this.Context.CommitTransaction();
         }
@@ -668,6 +668,7 @@ namespace Pims.Dal.Services
                 .Include(p => p.Tasks)
                 .Include(p => p.Workflow)
                 .Include(p => p.Responses)
+                .Include(p => p.Notes)
                 .FirstOrDefault(p => p.Id == project.Id) ?? throw new KeyNotFoundException();
 
             var userAgencies = this.User.GetAgencies();
@@ -710,8 +711,9 @@ namespace Pims.Dal.Services
             var responses = project.GetResponseChanges(project);
 
             // If the note was changed generate a notification for it.
-            var noteChanged = originalProject.PublicNote != project.PublicNote;
+            var noteChanged = !String.IsNullOrWhiteSpace(project.GetNoteText(NoteTypes.Public)) && originalProject.GetNoteText(NoteTypes.Public) != project.GetNoteText(NoteTypes.Public);
 
+            var metadata = !String.IsNullOrWhiteSpace(project.Metadata) ? this.Context.Deserialize<DisposalProjectMetadata>(project.Metadata) : new DisposalProjectMetadata();
             originalProject.Merge(project, this.Context);
 
             // Hardcoded logic to handle milestone project status transitions.
@@ -733,30 +735,30 @@ namespace Pims.Dal.Services
                     var now = DateTime.UtcNow;
                     originalProject.ApprovedOn = now;
                     // Default notification dates.
-                    project.InitialNotificationSentOn = now;
-                    project.ThirtyDayNotificationSentOn = now.AddDays(30);
-                    project.SixtyDayNotificationSentOn = now.AddDays(60);
-                    project.NinetyDayNotificationSentOn = now.AddDays(90);
+                    metadata.InitialNotificationSentOn = now;
+                    metadata.ThirtyDayNotificationSentOn = now.AddDays(30);
+                    metadata.SixtyDayNotificationSentOn = now.AddDays(60);
+                    metadata.NinetyDayNotificationSentOn = now.AddDays(90);
                     break;
                 case ("AP-SPL"): // Approve for SPL
                     this.User.ThrowIfNotAuthorized(Permissions.DisposeApprove, "User does not have permission to approve project.");
-                    if (project.ClearanceNotificationSentOn == null) throw new InvalidOperationException("Approved for SPL status requires Clearance Notification Sent date.");
+                    if (metadata.ClearanceNotificationSentOn == null) throw new InvalidOperationException("Approved for SPL status requires Clearance Notification Sent date.");
                     originalProject.ApprovedOn = DateTime.UtcNow;
                     this.Context.SetProjectPropertiesVisiblity(originalProject, false);
                     originalProject.SubmittedOn = DateTime.UtcNow;
                     break;
                 case ("AP-!SPL"): // Not in SPL
                     this.User.ThrowIfNotAuthorized(Permissions.DisposeApprove, "User does not have permission to approve project.");
-                    if (project.ClearanceNotificationSentOn == null) throw new InvalidOperationException("Not in SPL status requires Clearance Notification Sent date.");
+                    if (metadata.ClearanceNotificationSentOn == null) throw new InvalidOperationException("Not in SPL status requires Clearance Notification Sent date.");
                     originalProject.ApprovedOn = DateTime.UtcNow;
                     this.Context.SetProjectPropertiesVisiblity(originalProject, false);
                     break;
                 case ("SPL-M"): // Marketing
-                    if (project.MarketedOn == null) throw new InvalidOperationException("Marketing status requires Marketed On date.");
+                    if (metadata.MarketedOn == null) throw new InvalidOperationException("Marketing status requires Marketed On date.");
                     break;
                 case ("DE"): // Deny
                     // Must have shared note with a reason.
-                    if (String.IsNullOrWhiteSpace(project.PublicNote)) throw new InvalidOperationException("Shared note must contain a reason before denying project.");
+                    if (String.IsNullOrWhiteSpace(project.GetNoteText(NoteTypes.Public))) throw new InvalidOperationException("Shared note must contain a reason before denying project.");
                     // Remove ProjectNumber from properties.
                     this.Context.ReleaseProjectProperties(originalProject);
                     originalProject.DeniedOn = DateTime.UtcNow;
@@ -769,19 +771,17 @@ namespace Pims.Dal.Services
                     await CancelNotificationsAsync(originalProject.Id);
                     break;
                 case ("DIS"): // DISPOSED
-                    if (project.DisposedOn == null) throw new InvalidOperationException("Disposed status requires Disposed Notification Sent date.");
+                    if (metadata.DisposedOn == null) throw new InvalidOperationException("Disposed status requires Disposed Notification Sent date.");
                     this.Context.DisposeProjectProperties(originalProject);
-                    project.DisposedOn = DateTime.UtcNow;
+                    metadata.DisposedOn = DateTime.UtcNow;
                     originalProject.CompletedOn = DateTime.UtcNow;
                     break;
                 case ("ERP-OH"): // OnHold
-                    if (project.OnHoldNotificationSentOn == null) throw new InvalidOperationException("On Hold status requires On Hold Notification Sent date.");
-                    originalProject.OnHoldNotificationSentOn = project.OnHoldNotificationSentOn;
+                    if (metadata.OnHoldNotificationSentOn == null) throw new InvalidOperationException("On Hold status requires On Hold Notification Sent date.");
                     this.Context.SetProjectPropertiesVisiblity(originalProject, false);
                     break;
                 case ("T-GRE"): // Transferred within the GRE
-                    if (project.TransferredWithinGreOn == null) throw new InvalidOperationException("Transferred within GRE status requires Transferred Within GRE date.");
-                    originalProject.TransferredWithinGreOn = project.TransferredWithinGreOn;
+                    if (metadata.TransferredWithinGreOn == null) throw new InvalidOperationException("Transferred within GRE status requires Transferred Within GRE date.");
                     this.Context.TransferProjectProperties(originalProject, project);
                     break;
                 case ("ERP-ON"):
@@ -797,7 +797,7 @@ namespace Pims.Dal.Services
             originalProject.StatusId = toStatus.Id;
             originalProject.Status = toStatus;
 
-            originalProject.Metadata = JsonConvert.SerializeObject(project);
+            originalProject.Metadata = this.Context.Serialize(metadata);
             project.CopyRowVersionTo(originalProject);
             this.Context.CommitTransaction();
 

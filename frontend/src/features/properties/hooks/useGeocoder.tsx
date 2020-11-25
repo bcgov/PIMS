@@ -55,7 +55,7 @@ const useGeocoder = ({ formikRef }: IUseGeocoderProps) => {
         latitude: data.latitude,
         longitude: data.longitude,
         address: {
-          ...formikRef.current.values.data.address,
+          ...formikRef.current.values.address,
           line1: data.fullAddress,
         },
       };
@@ -70,9 +70,9 @@ const useGeocoder = ({ formikRef }: IUseGeocoderProps) => {
         : undefined;
 
       if (administrativeArea) {
-        newValues.data.address.administrativeArea = administrativeArea.name;
+        newValues.address.administrativeArea = administrativeArea.name;
       } else {
-        newValues.data.address.administrativeArea = '';
+        newValues.address.administrativeArea = '';
       }
 
       const province = data.provinceCode
@@ -82,8 +82,8 @@ const useGeocoder = ({ formikRef }: IUseGeocoderProps) => {
         : undefined;
 
       if (province) {
-        newValues.data.address.provinceId = province.code;
-        newValues.data.address.province = province.name;
+        newValues.address.provinceId = province.code;
+        newValues.address.province = province.name;
       }
 
       // Ask geocoder for PIDs associated with this address
@@ -97,16 +97,16 @@ const useGeocoder = ({ formikRef }: IUseGeocoderProps) => {
         }
       }
       if (
-        formikRef.current.values.data.pid &&
+        formikRef.current.values.pid &&
         parcelPid !== '' &&
-        formikRef.current.values.data.pid !== parcelPid
+        formikRef.current.values.pid !== parcelPid
       ) {
         setPidSelection({
           showPopup: true,
           geoPID: parcelPid.replace(/(\d{3})(\d{3})(\d{3})/, '$1-$2-$3'),
         });
-      } else if (formikRef.current.values.data.pid && parcelPid === '') {
-        newValues.pid = formikRef.current.values.data.pid;
+      } else if (formikRef.current.values.pid && parcelPid === '') {
+        newValues.pid = formikRef.current.values.pid;
       } else {
         newValues.pid = parcelPid;
         // Only populate the form with the parcel data layer if the parcelPid is being set and we don't already have the data layer response using the lat/lng.

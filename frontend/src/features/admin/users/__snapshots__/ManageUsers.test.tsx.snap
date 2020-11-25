@@ -21,9 +21,9 @@ exports[`Manage Users Component Snapshot matches 1`] = `
         <div class=\\"form-group\\"><input name=\\"position\\" placeholder=\\"Position\\" id=\\"input-position\\" class=\\"form-control\\" value=\\"\\"></div>
       </div>
       <div class=\\"bar-item col\\">
-        <div class=\\"sc-fznyAO rzsMl form-group\\">
+        <div class=\\"sc-fzplWN jsJtWp form-group\\">
           <div class=\\"rbt\\" style=\\"outline: none; position: relative;\\" tabindex=\\"-1\\">
-            <div style=\\"display: flex; flex: 1; height: 100%; position: relative;\\"><input autocomplete=\\"off\\" placeholder=\\"Enter an Agency\\" type=\\"text\\" name=\\"agency\\" aria-autocomplete=\\"both\\" aria-expanded=\\"false\\" aria-haspopup=\\"listbox\\" role=\\"combobox\\" class=\\"rbt-input-main form-control rbt-input map-filter-typeahead\\" value=\\"\\"><input aria-hidden=\\"true\\" class=\\"rbt-input-hint\\" readonly=\\"\\" style=\\"background-color: transparent; border-color: transparent; box-shadow: none; color: rgba(0, 0, 0, 0.35); left: 0px; pointer-events: none; position: absolute; top: 0px; width: 100%;\\" tabindex=\\"-1\\" value=\\"\\"></div>
+            <div style=\\"display: flex; flex: 1; height: 100%; position: relative;\\"><input autocomplete=\\"off\\" placeholder=\\"Enter an Agency\\" type=\\"text\\" name=\\"agency\\" id=\\"agency-field\\" aria-autocomplete=\\"both\\" aria-expanded=\\"false\\" aria-haspopup=\\"listbox\\" role=\\"combobox\\" class=\\"rbt-input-main form-control rbt-input map-filter-typeahead\\" value=\\"\\"><input aria-hidden=\\"true\\" class=\\"rbt-input-hint\\" readonly=\\"\\" style=\\"background-color: transparent; border-color: transparent; box-shadow: none; color: rgba(0, 0, 0, 0.35); left: 0px; pointer-events: none; position: absolute; top: 0px; width: 100%;\\" tabindex=\\"-1\\" value=\\"\\"></div>
           </div>
         </div>
       </div>

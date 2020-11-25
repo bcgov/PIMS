@@ -8,6 +8,7 @@ export enum Roles {
   ASSISTANT_DEPUTY_MINISTER = 'Assistant Deputy Minister',
   ASSISTANT_DEPUTY_MINISTER_ASSISTANT = 'Assistant Deputy Minister Assistant',
   EXECUTIVE_DIRECTOR = 'Executive Director',
+  SRES_FINANCIAL_MANAGER = 'SRES Financial Manager',
 }
 
 export default Roles;
