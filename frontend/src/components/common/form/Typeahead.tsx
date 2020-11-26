@@ -9,12 +9,14 @@ interface ITypeaheadFieldProps<T extends TypeaheadModel> extends TypeaheadProps<
   name: string;
   label?: string;
   required?: boolean;
-  /** whether or not this component is being used to filter so we can ignore the validation checkmark */
-  filter?: boolean;
+  /** whether or not this component should show the validation checkmark */
+  hideValidation?: boolean;
   /**Tooltip text */
   tooltip?: string;
   /** A function that takes in the value stored in formik and returns the corresponding label for that value. */
   getOptionByValue?: (value?: any) => T[];
+  /** pass a custom onChange to the TypeaheadField */
+  onChange?: (vals: any) => void;
 }
 
 const Group = styled(Form.Group)`
@@ -35,9 +37,10 @@ export function TypeaheadField<T extends TypeaheadModel>({
   label,
   required,
   name,
-  filter,
+  hideValidation,
   tooltip,
   getOptionByValue,
+  onChange,
   ...rest
 }: ITypeaheadFieldProps<T>) {
   const { touched, values, errors, setFieldTouched, setFieldValue } = useFormikContext();
@@ -58,11 +61,15 @@ export function TypeaheadField<T extends TypeaheadModel>({
         {...rest}
         inputProps={{ ...rest.inputProps, name: name, id: `${name}-field` }}
         isInvalid={hasError as any}
-        isValid={!filter && isValid}
+        isValid={!hideValidation && isValid}
         selected={getOptionByValue(getIn(values, name))}
-        onChange={(newValues: T[]) => {
-          setFieldValue(name, getIn(newValues[0], 'value') ?? newValues[0]);
-        }}
+        onChange={
+          onChange
+            ? onChange
+            : (newValues: T[]) => {
+                setFieldValue(name, getIn(newValues[0], 'value') ?? newValues[0]);
+              }
+        }
         onBlur={() => setFieldTouched(name, true)}
         id={`${name}-field`}
       />
