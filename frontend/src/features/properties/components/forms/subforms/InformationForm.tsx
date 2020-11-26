@@ -59,8 +59,9 @@ const InformationForm: FunctionComponent<InformationFormProps> = (props: Informa
         <TextArea disabled={props.disabled} field={withNameSpace('description')} />
       </Form.Row>
       <Form.Row>
-        <Form.Label className="required">Classification</Form.Label>
+        <Form.Label>Classification</Form.Label>
         <FastSelect
+          required
           formikProps={formikProps}
           disabled={props.disabled}
           type="number"

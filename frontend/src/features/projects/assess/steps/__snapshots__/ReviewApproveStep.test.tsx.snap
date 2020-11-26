@@ -12,15 +12,15 @@ exports[`Review Approve Step renders correctly 1`] = `
         <div class=\\"col-md-2 form-group\\"><input name=\\"projectNumber\\" disabled=\\"\\" placeholder=\\"SPP-XXXXXX\\" id=\\"input-projectNumber\\" class=\\"form-control\\" value=\\"test-01\\"></div>
       </div>
       <div class=\\"form-row\\">
-        <div class=\\"required col-md-10 form-group\\"><label class=\\"form-label\\" for=\\"input-name\\">Name<span class=\\"required\\">*</span></label><input name=\\"name\\" required=\\"\\" disabled=\\"\\" id=\\"input-name\\" class=\\"col-md-5 form-control\\" value=\\"my project\\"></div>
+        <div class=\\"required col-md-10 form-group\\"><label class=\\"form-label\\" for=\\"input-name\\">Name</label><input name=\\"name\\" required=\\"\\" disabled=\\"\\" id=\\"input-name\\" class=\\"col-md-5 form-control\\" value=\\"my project\\"></div>
       </div>
       <div class=\\"form-row\\">
         <div class=\\"col-md-10 form-group\\"><label class=\\"form-label\\" for=\\"input-description\\">Description</label><textarea name=\\"description\\" disabled=\\"\\" id=\\"input-description\\" class=\\"col-md-5 form-control\\">my project description</textarea></div>
       </div>
     </div>
     <div class=\\"UpdateInfoForm container-fluid\\">
-      <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-2\\">Assign Tier&nbsp;<span class=\\"required\\">*</span></label>
-        <div class=\\"col-md-2 form-group\\"><select name=\\"tierLevelId\\" disabled=\\"\\" id=\\"input-tierLevelId\\" class=\\"form-select form-control\\">
+      <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-2\\">Assign Tier&nbsp;</label>
+        <div class=\\"required col-md-2 form-group\\"><select name=\\"tierLevelId\\" required=\\"\\" disabled=\\"\\" id=\\"input-tierLevelId\\" class=\\"form-select form-control\\">
             <option value=\\"\\">Must Select One</option>
           </select></div>
       </div>
@@ -33,25 +33,25 @@ exports[`Review Approve Step renders correctly 1`] = `
       </div>
       <div class=\\"row\\">
         <div class=\\"col-md-4\\">
-          <div class=\\"row\\"><label class=\\"form-label col-form-label col-md-4\\">Net Book Value <span class=\\"required\\">*</span></label>
-            <div class=\\"fast-currency-input form-group\\">
+          <div class=\\"row\\"><label class=\\"form-label col-form-label col-md-4\\">Net Book Value</label>
+            <div class=\\"required form-group\\">
               <div class=\\"input-tooltip-wrapper\\"><input name=\\"netBook\\" class=\\"form-control\\" disabled=\\"\\" placeholder=\\"\\" value=\\"\\"></div>
             </div>
           </div>
-          <div class=\\"row\\"><label class=\\"form-label col-form-label col-md-4\\">Estimated Market Value <span class=\\"required\\">*</span></label>
-            <div class=\\"fast-currency-input form-group\\">
+          <div class=\\"row\\"><label class=\\"form-label col-form-label col-md-4\\">Estimated Market Value</label>
+            <div class=\\"required form-group\\">
               <div class=\\"input-tooltip-wrapper\\"><input name=\\"market\\" class=\\"form-control\\" disabled=\\"\\" placeholder=\\"\\" value=\\"\\"></div>
             </div>
           </div>
         </div>
         <div class=\\"col-md-4\\">
-          <div class=\\"row\\"><label class=\\"form-label col-form-label col-md-4\\">Assessed Value <span class=\\"required\\">*</span></label>
-            <div class=\\"fast-currency-input form-group\\">
+          <div class=\\"row\\"><label class=\\"form-label col-form-label col-md-4\\">Assessed Value</label>
+            <div class=\\"required form-group\\">
               <div class=\\"input-tooltip-wrapper\\"><input name=\\"assessed\\" class=\\"form-control\\" disabled=\\"\\" placeholder=\\"\\" value=\\"\\"></div>
             </div>
           </div>
           <div class=\\"row\\"><label class=\\"form-label col-form-label col-md-4\\">Appraised Value</label>
-            <div class=\\"fast-currency-input form-group\\">
+            <div class=\\"form-group\\">
               <div class=\\"input-tooltip-wrapper\\"><input name=\\"appraised\\" class=\\"form-control\\" disabled=\\"\\" placeholder=\\"\\" value=\\"\\"></div>
             </div>
           </div>
@@ -122,7 +122,7 @@ exports[`Review Approve Step renders correctly 1`] = `
     <div class=\\"tasksForm reviewRequired form-row\\">
       <div class=\\"required form-group\\">
         <div class=\\"check-field\\">
-          <div class=\\"form-check\\"><input name=\\"tasks.1.isCompleted\\" required=\\"\\" type=\\"checkbox\\" disabled=\\"\\" id=\\"input-tasks.1.isCompleted\\" class=\\"form-check-input position-static\\" value=\\"true\\" checked=\\"\\"></div><span class=\\"required\\">*</span><label class=\\"form-label\\" for=\\"input-tasks.1.isCompleted\\">two</label>
+          <div class=\\"form-check\\"><input name=\\"tasks.1.isCompleted\\" required=\\"\\" type=\\"checkbox\\" disabled=\\"\\" id=\\"input-tasks.1.isCompleted\\" class=\\"form-check-input position-static\\" value=\\"true\\" checked=\\"\\"></div><label class=\\"form-label\\" for=\\"input-tasks.1.isCompleted\\">two</label>
         </div>
       </div>
     </div>
@@ -147,7 +147,7 @@ exports[`Review Approve Step renders correctly 1`] = `
     <div class=\\"form-row\\">
       <div class=\\"required form-group\\">
         <div class=\\"check-field\\">
-          <div class=\\"form-check\\"><input name=\\"confirmation\\" required=\\"\\" type=\\"checkbox\\" disabled=\\"\\" id=\\"input-confirmation\\" class=\\"form-check-input position-static\\" value=\\"true\\" checked=\\"\\"></div><span class=\\"required\\">*</span><label class=\\"form-label\\" for=\\"input-confirmation\\">I, Pims User, confirm by checking this box that I have received the approval
+          <div class=\\"form-check\\"><input name=\\"confirmation\\" required=\\"\\" type=\\"checkbox\\" disabled=\\"\\" id=\\"input-confirmation\\" class=\\"form-check-input position-static\\" value=\\"true\\" checked=\\"\\"></div><label class=\\"form-label\\" for=\\"input-confirmation\\">I, Pims User, confirm by checking this box that I have received the approval
             to request the property be submitted to the Enhanced Referral Program and marketed internally to other Ministry
             and Broader Public Sector Agencies for 90 days before listing the property to be sold on the public commercial real estate market</label>
         </div>

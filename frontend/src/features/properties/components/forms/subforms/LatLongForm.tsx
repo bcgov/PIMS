@@ -41,8 +41,9 @@ const LatLongForm = <T extends any>(props: LatLongFormProps & FormikProps<T>) =>
   return (
     <div style={{ position: 'relative' }}>
       <Form.Row>
-        <Form.Label className="required">Latitude</Form.Label>
+        <Form.Label>Latitude</Form.Label>
         <FastInput
+          required
           className="input-medium"
           displayErrorTooltips
           tooltip={latitudeTooltip}
@@ -53,8 +54,9 @@ const LatLongForm = <T extends any>(props: LatLongFormProps & FormikProps<T>) =>
         />
       </Form.Row>
       <Form.Row>
-        <Form.Label className="required">Longitude</Form.Label>
+        <Form.Label>Longitude</Form.Label>
         <FastInput
+          required
           className="input-medium"
           displayErrorTooltips
           formikProps={props}

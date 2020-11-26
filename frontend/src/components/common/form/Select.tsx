@@ -21,7 +21,7 @@ type OptionalAttributes = {
   placeholder?: string;
   /** A custom class to add to the input element of the <Select> component */
   className?: string;
-  /** Makes the input element required. */
+  /** Whether the field is required. Makes the field border blue. */
   required?: boolean;
   /** Specifies that the HTML element should be disabled */
   disabled?: boolean;
@@ -93,7 +93,7 @@ export const Select: React.FC<SelectProps> = ({
     if (!placeholder) {
       return null;
     }
-    return <option value="">{`${placeholder}${!label && required ? ' *' : ''}`}</option>;
+    return <option value="">{`${placeholder}`}</option>;
   };
 
   const renderOptions = () => {
@@ -110,7 +110,6 @@ export const Select: React.FC<SelectProps> = ({
       className={classNames(!!required ? 'required' : '', outerClassName)}
     >
       {!!label && <Form.Label>{label}</Form.Label>}
-      {!!required && <span className="required">*</span>}
       <Form.Control
         as={asElement}
         name={field}
