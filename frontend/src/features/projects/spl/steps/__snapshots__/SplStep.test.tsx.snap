@@ -164,7 +164,7 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
             <div class=\\"col-md-12 form-group\\"><label class=\\"form-label\\" for=\\"input-notes[10].note\\">Loan Terms</label><textarea name=\\"notes[10].note\\" id=\\"input-notes[10].note\\" class=\\"col-md-5 form-control\\">loanterms</textarea></div>
           </div>
           <div class=\\"ProjectNotes form-row\\">
-            <div class=\\"col-md-12 form-group\\"><label class=\\"form-label\\" for=\\"input-notes[15].note\\">Notes</label><textarea name=\\"notes[15].note\\" id=\\"input-notes[15].note\\" class=\\"col-md-5 form-control\\">closeout</textarea></div>
+            <div class=\\"col-md-12 form-group\\"><label class=\\"form-label\\" for=\\"input-notes[15].note\\">Close Out</label><textarea name=\\"notes[15].note\\" id=\\"input-notes[15].note\\" class=\\"col-md-5 form-control\\">closeout</textarea></div>
           </div>
           <h3>OCG</h3>
           <div class=\\"col-md-12 form-row\\"><label class=\\"form-label col-form-label col-md-2\\">OCG Gain / Loss</label>
@@ -254,6 +254,31 @@ exports[`SPL Approval Step renders correctly 1`] = `
     <div class=\\"tab-content\\">
       <div id=\\"approvalTabs-tabpane-surplusPropertyList\\" aria-labelledby=\\"approvalTabs-tab-surplusPropertyList\\" role=\\"tabpanel\\" aria-hidden=\\"false\\" class=\\"fade tab-pane active show\\">
         <div class=\\"SurplusPropertyListForm container-fluid\\">
+          <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-3\\">Change the Status</label>
+            <div class=\\"form-group\\"><button disabled=\\"\\" type=\\"button\\" class=\\"btn btn-secondary\\">Remove from SPL</button><button disabled=\\"\\" type=\\"button\\" class=\\"btn btn-secondary\\">Conditional</button><button disabled=\\"\\" type=\\"button\\" class=\\"btn btn-secondary\\">Unconditional</button>
+              <div class=\\"col-md-6\\"></div>
+            </div>
+          </div>
+          <div class=\\"container-fluid\\">
+            <h3>Surplus Properties List Approval</h3>
+            <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-3\\">Request for Addition to SPL Received</label>
+              <div class=\\"required col-md-2 form-group\\">
+                <div class=\\"react-datepicker-wrapper\\">
+                  <div class=\\"react-datepicker__input-container\\"><input type=\\"text\\" id=\\"datepicker-requestForSplReceivedOn\\" name=\\"requestForSplReceivedOn\\" placeholder=\\"--/--/----\\" disabled=\\"\\" autocomplete=\\"off\\" class=\\"form-control date-picker\\" required=\\"\\" value=\\"\\"></div>
+                </div>
+              </div>
+            </div>
+            <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-3\\">Addition Approved</label>
+              <div class=\\"required col-md-2 form-group\\">
+                <div class=\\"react-datepicker-wrapper\\">
+                  <div class=\\"react-datepicker__input-container\\"><input type=\\"text\\" id=\\"datepicker-approvedForSplOn\\" name=\\"approvedForSplOn\\" placeholder=\\"--/--/----\\" disabled=\\"\\" autocomplete=\\"off\\" class=\\"form-control date-picker\\" required=\\"\\" value=\\"\\"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class=\\"form-row\\">
+            <h3>Marketing</h3>
+          </div>
           <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-3\\">Date Entered Market<svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 512 512\\" class=\\"tooltip-icon\\" height=\\"1em\\" width=\\"1em\\" xmlns=\\"http://www.w3.org/2000/svg\\">
                 <path d=\\"M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z\\"></path>
               </svg></label>
@@ -262,20 +287,14 @@ exports[`SPL Approval Step renders correctly 1`] = `
                 <div class=\\"react-datepicker__input-container\\"><input type=\\"text\\" id=\\"datepicker-marketedOn\\" name=\\"marketedOn\\" placeholder=\\"--/--/----\\" disabled=\\"\\" autocomplete=\\"off\\" class=\\"form-control date-picker\\" required=\\"\\" value=\\"01/01/2020\\"></div>
               </div>
             </div>
-            <div class=\\"col-md-7\\"><button disabled=\\"\\" type=\\"button\\" class=\\"btn btn-primary\\">Change Status to Marketing</button></div>
+          </div>
+          <div class=\\"form-row\\">
+            <h3>Contract in Place</h3>
           </div>
           <div class=\\"ProjectNotes form-row\\">
             <div class=\\"col-md-12 form-group\\"><label class=\\"form-label\\" for=\\"input-offersNote\\">Offers Received<svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 512 512\\" class=\\"tooltip-icon\\" height=\\"1em\\" width=\\"1em\\" xmlns=\\"http://www.w3.org/2000/svg\\">
                   <path d=\\"M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z\\"></path>
                 </svg></label><textarea name=\\"offersNote\\" disabled=\\"\\" id=\\"input-offersNote\\" class=\\"col-md-5 form-control\\"></textarea></div>
-          </div>
-          <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-3\\">Contract in Place</label>
-            <div class=\\"required form-group\\">
-              <div class=\\"check-field\\">
-                <div class=\\"form-check\\"><input name=\\"isContractConditional\\" required=\\"\\" type=\\"radio\\" id=\\"input-isContractConditional\\" class=\\"form-check-input\\" value=\\"true\\" checked=\\"\\"><label title=\\"\\" for=\\"input-isContractConditional\\" class=\\"form-check-label\\">Conditional</label></div>
-                <div class=\\"form-check\\"><input name=\\"isContractConditional\\" required=\\"\\" type=\\"radio\\" id=\\"input-isContractConditional-2\\" class=\\"form-check-input\\" value=\\"false\\"><label title=\\"\\" for=\\"input-isContractConditional-2\\" class=\\"form-check-label\\">Unconditional</label></div>
-              </div>
-            </div>
           </div>
           <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-3\\">Date of Accepted Offer</label>
             <div class=\\"required col-md-2 form-group\\">
@@ -289,33 +308,9 @@ exports[`SPL Approval Step renders correctly 1`] = `
           </div>
           <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-3\\">Offer Amount</label>
             <div class=\\"required col-md-2 form-group\\">
-              <div class=\\"input-tooltip-wrapper\\"><input name=\\"offerAmount\\" class=\\"form-control\\" disabled=\\"\\" placeholder=\\"\\" value=\\"123\\"></div>
-            </div><button disabled=\\"\\" type=\\"button\\" class=\\"btn btn-primary\\">Change Status to Contract in Place</button>
-            <div class=\\"col-md-6\\"></div>
-          </div>
-          <div class=\\"ProjectNotes form-row\\">
-            <div class=\\"col-md-12 form-group\\"><label class=\\"form-label\\" for=\\"input-note\\">Notes</label><textarea name=\\"note\\" disabled=\\"\\" id=\\"input-note\\" class=\\"col-md-5 form-control\\">my notes</textarea></div>
-          </div>
-          <div class=\\"ProjectNotes form-row\\">
-            <div class=\\"col-md-12 form-group\\"><label class=\\"form-label\\" for=\\"input-appraisedNote\\">Appraised Notes</label><textarea name=\\"appraisedNote\\" disabled=\\"\\" id=\\"input-appraisedNote\\" class=\\"col-md-5 form-control\\"></textarea></div>
-          </div>
-          <div class=\\"ProjectNotes form-row\\">
-            <div class=\\"col-md-12 form-group\\"><label class=\\"form-label\\" for=\\"input-publicNote\\">Shared Notes<svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 512 512\\" class=\\"tooltip-icon\\" height=\\"1em\\" width=\\"1em\\" xmlns=\\"http://www.w3.org/2000/svg\\">
-                  <path d=\\"M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z\\"></path>
-                </svg></label><textarea name=\\"publicNote\\" disabled=\\"\\" id=\\"input-publicNote\\" class=\\"col-md-5 form-control\\">public note</textarea></div>
-          </div>
-          <div class=\\"ProjectNotes form-row\\">
-            <div class=\\"col-md-12 form-group\\"><label class=\\"form-label\\" for=\\"input-privateNote\\">Private Notes<svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 512 512\\" class=\\"tooltip-icon\\" height=\\"1em\\" width=\\"1em\\" xmlns=\\"http://www.w3.org/2000/svg\\">
-                  <path d=\\"M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z\\"></path>
-                </svg></label><textarea name=\\"privateNote\\" disabled=\\"\\" id=\\"input-privateNote\\" class=\\"col-md-5 form-control\\">private note</textarea></div>
-          </div>
-          <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-3\\">Date Disposed Externally</label>
-            <div class=\\"required col-md-2 form-group\\">
-              <div class=\\"react-datepicker-wrapper\\">
-                <div class=\\"react-datepicker__input-container\\"><input type=\\"text\\" id=\\"datepicker-disposedOn\\" name=\\"disposedOn\\" placeholder=\\"--/--/----\\" disabled=\\"\\" autocomplete=\\"off\\" class=\\"form-control date-picker\\" required=\\"\\" value=\\"01/01/2020\\"></div>
-              </div>
+              <div class=\\"input-tooltip-wrapper\\"><input name=\\"offerAmount\\" class=\\"form-control\\" disabled=\\"\\" required=\\"\\" placeholder=\\"\\" value=\\"123\\"></div>
             </div>
-            <div class=\\"col-md-6\\"><button disabled=\\"\\" type=\\"button\\" class=\\"btn btn-primary\\">Change Status to Disposed Externally</button></div>
+            <div class=\\"col-md-6\\"></div>
           </div>
         </div>
       </div>

@@ -14,6 +14,28 @@ exports[`ExemptionEnhancedReferralCompleteForm renders successfully 1`] = `
     className="EnhancedReferralCompleteForm container-fluid"
   >
     <div
+      className="ProjectNotes form-row"
+    >
+      <div
+        className="col-md-12 form-group"
+      >
+        <label
+          className="form-label"
+          htmlFor="input-exemptionRationale"
+        >
+          Exemption Rationale
+        </label>
+        <textarea
+          className="col-md-5 form-control"
+          disabled={true}
+          id="input-exemptionRationale"
+          name="exemptionRationale"
+          onBlur={[Function]}
+          onChange={[Function]}
+        />
+      </div>
+    </div>
+    <div
       className="form-row"
     >
       <label
@@ -131,12 +153,45 @@ exports[`ExemptionEnhancedReferralCompleteForm renders successfully 1`] = `
     <div
       className="form-row"
     >
+      <label
+        className="form-label col-form-label col-md-4"
+      >
+        Request Received On
+      </label>
+      <div
+        className="col-md-2 form-group"
+      >
+        <div
+          className="react-datepicker-wrapper"
+        >
+          <div
+            className="react-datepicker__input-container"
+          >
+            <input
+              autoComplete="off"
+              className="form-control date-picker"
+              disabled={false}
+              id="datepicker-requestForSplReceivedOn"
+              name="requestForSplReceivedOn"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onClick={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              placeholder="--/--/----"
+              readOnly={false}
+              type="text"
+              value=""
+            />
+          </div>
+        </div>
+      </div>
       <div
         className="justify-content-center"
       >
         <button
           className="btn btn-primary"
-          disabled={false}
+          disabled={true}
           onClick={[Function]}
           type="button"
         >
@@ -174,119 +229,6 @@ exports[`ExemptionEnhancedReferralCompleteForm renders successfully 1`] = `
         >
           Add to Enhanced Referral Process
         </button>
-      </div>
-    </div>
-    <div
-      className="ProjectNotes form-row"
-    >
-      <div
-        className="col-md-12 form-group"
-      >
-        <label
-          className="form-label"
-          htmlFor="input-note"
-        >
-          Notes
-        </label>
-        <textarea
-          className="col-md-5 form-control"
-          disabled={true}
-          id="input-note"
-          name="note"
-          onBlur={[Function]}
-          onChange={[Function]}
-          value="string"
-        />
-      </div>
-    </div>
-    <div
-      className="ProjectNotes form-row"
-    >
-      <div
-        className="col-md-12 form-group"
-      >
-        <label
-          className="form-label"
-          htmlFor="input-publicNote"
-        >
-          Shared Notes
-          <svg
-            className="tooltip-icon"
-            fill="currentColor"
-            height="1em"
-            onBlur={[Function]}
-            onFocus={[Function]}
-            onMouseOut={[Function]}
-            onMouseOver={[Function]}
-            stroke="currentColor"
-            strokeWidth="0"
-            style={
-              Object {
-                "color": undefined,
-              }
-            }
-            viewBox="0 0 512 512"
-            width="1em"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"
-            />
-          </svg>
-        </label>
-        <textarea
-          className="col-md-5 form-control"
-          id="input-publicNote"
-          name="publicNote"
-          onBlur={[Function]}
-          onChange={[Function]}
-          value=""
-        />
-      </div>
-    </div>
-    <div
-      className="ProjectNotes form-row"
-    >
-      <div
-        className="col-md-12 form-group"
-      >
-        <label
-          className="form-label"
-          htmlFor="input-privateNote"
-        >
-          Private Notes
-          <svg
-            className="tooltip-icon"
-            fill="currentColor"
-            height="1em"
-            onBlur={[Function]}
-            onFocus={[Function]}
-            onMouseOut={[Function]}
-            onMouseOver={[Function]}
-            stroke="currentColor"
-            strokeWidth="0"
-            style={
-              Object {
-                "color": undefined,
-              }
-            }
-            viewBox="0 0 512 512"
-            width="1em"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"
-            />
-          </svg>
-        </label>
-        <textarea
-          className="col-md-5 form-control"
-          id="input-privateNote"
-          name="privateNote"
-          onBlur={[Function]}
-          onChange={[Function]}
-          value="string"
-        />
       </div>
     </div>
   </div>

@@ -6,7 +6,6 @@ import styled from 'styled-components';
 import { useFormikContext } from 'formik';
 import TooltipIcon from 'components/common/TooltipIcon';
 import {
-  ProjectNotes,
   ReviewWorkflowStatus,
   IProject,
   onTransferredWithinTheGreTooltip,
@@ -14,8 +13,8 @@ import {
   clearanceNotifictionSent,
   proceedToSplWarning,
   notInSplWarning,
+  requestForSplReceivedOn,
 } from '../../common';
-import { PrivateNotes, PublicNotes } from '../../common/components/ProjectNotes';
 import GenericModal from 'components/common/GenericModal';
 import { validateFormikWithCallback } from 'utils';
 
@@ -107,21 +106,47 @@ const EnhancedReferralCompleteForm = ({
           disabled={isReadOnly}
           field="clearanceNotificationSentOn"
         />
-        <div className="col-md-6" style={{ display: 'flex' }}>
-          <Button
-            disabled={isReadOnly || !formikProps.values.clearanceNotificationSentOn}
-            onClick={() => validateFormikWithCallback(formikProps, () => setProceedToSpl(true))}
-          >
-            Proceed to SPL
-          </Button>
-          <OrText>OR</OrText>
-          <Button
-            disabled={isReadOnly || !formikProps.values.clearanceNotificationSentOn}
-            onClick={() => validateFormikWithCallback(formikProps, () => setNotInSpl(true))}
-          >
-            Not Included in the SPL
-          </Button>
-        </div>
+      </Form.Row>
+      <Form.Row>
+        <Form.Label column md={4}>
+          Request for SPL Received On
+          <TooltipIcon toolTipId="requestForSplReceivedOn" toolTip={requestForSplReceivedOn} />
+        </Form.Label>
+        <FastDatePicker
+          outerClassName="col-md-2"
+          formikProps={formikProps}
+          disabled={isReadOnly}
+          field="requestForSplReceivedOn"
+        />
+        {(formikProps.values.statusCode === ReviewWorkflowStatus.ApprovedForErp ||
+          formikProps.values.statusCode === ReviewWorkflowStatus.InErp ||
+          formikProps.values.statusCode === ReviewWorkflowStatus.OnHold ||
+          formikProps.values.statusCode === ReviewWorkflowStatus.ApprovedForExemption ||
+          formikProps.values.statusCode === ReviewWorkflowStatus.NotInSpl) && (
+          <div className="col-md-6" style={{ display: 'flex' }}>
+            <Button
+              disabled={
+                isReadOnly ||
+                !formikProps.values.clearanceNotificationSentOn ||
+                !formikProps.values.requestForSplReceivedOn
+              }
+              onClick={() => validateFormikWithCallback(formikProps, () => setProceedToSpl(true))}
+            >
+              Proceed to SPL
+            </Button>
+            {formikProps.values.statusCode !== ReviewWorkflowStatus.NotInSpl && (
+              <>
+                <OrText>OR</OrText>
+                <Button
+                  disabled={isReadOnly || !formikProps.values.clearanceNotificationSentOn}
+                  onClick={() => validateFormikWithCallback(formikProps, () => setNotInSpl(true))}
+                >
+                  Not Included in the SPL
+                </Button>
+              </>
+            )}
+          </div>
+        )}
         {notInSpl && (
           <GenericModal
             display={notInSpl}
@@ -155,15 +180,6 @@ const EnhancedReferralCompleteForm = ({
           />
         )}
       </Form.Row>
-      <ProjectNotes outerClassName="col-md-12" disabled={true} />
-      <ProjectNotes
-        outerClassName="col-md-12"
-        field="appraisedNote"
-        label="Appraised Notes"
-        disabled={isReadOnly}
-      />
-      <PublicNotes outerClassName="col-md-12" disabled={isReadOnly} />
-      <PrivateNotes outerClassName="col-md-12" disabled={isReadOnly} />
     </Container>
   );
 };

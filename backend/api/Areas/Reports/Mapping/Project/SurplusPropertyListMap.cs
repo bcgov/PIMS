@@ -46,7 +46,7 @@ namespace Pims.Api.Areas.Reports.Mapping.Project
                 .Map(dest => dest.Path, src => (string)null)
                 .Map(dest => dest.Manager, src => src.Manager)
                 .Map(dest => dest.ReportingNote, src => src.GetNoteText(Entity.NoteTypes.Reporting))
-                .Map(dest => dest.FinancialNote, src => src.GetNoteText(Entity.NoteTypes.Financial))  
+                .Map(dest => dest.FinancialNote, src => src.GetNoteText(Entity.NoteTypes.Financial))
                 .AfterMapping((src, dest) =>
                  {
                      var metadata = JsonSerializer.Deserialize<Entity.Models.DisposalProjectMetadata>(src.Metadata ?? "{}", _serializerOptions);
@@ -82,8 +82,9 @@ namespace Pims.Api.Areas.Reports.Mapping.Project
         {
             return project.Status.Code switch
             {
-                "SPL-CIP" => "Conditionally Sold", // "Unconditionally Sold" // TODO: Need to link to contracts
-                "DIS" => "Complete", // "Complete - Adjustment to Prior Year // TODO: Not sure what this means
+                "SPL-CIP-C" => "Conditionally Sold",
+                "SPL-CIP-U" => "Unconditionally Sold",
+                "DIS" => "Complete",
                 _ => project.Status.Name
             };
         }

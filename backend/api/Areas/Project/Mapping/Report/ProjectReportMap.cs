@@ -14,7 +14,7 @@ namespace Pims.Api.Areas.Project.Mapping.Report
                 .Map(dest => dest.To, src => src.To)
                 .Map(dest => dest.IsFinal, src => src.IsFinal)
                 .Map(dest => dest.Name, src => src.Name)
-                .Map(dest => dest.ReportTypeId, src => src.ReportTypeId)
+                .Map(dest => dest.ReportType, src => src.ReportType)
                 .Inherits<Entity.BaseEntity, Api.Models.BaseModel>();
 
             config.NewConfig<Model.ProjectReportModel, Entity.ProjectReport>()
@@ -23,7 +23,7 @@ namespace Pims.Api.Areas.Project.Mapping.Report
                 .Map(dest => dest.To, src => src.To)
                 .Map(dest => dest.IsFinal, src => src.IsFinal)
                 .Map(dest => dest.Name, src => src.Name)
-                .Map(dest => dest.ReportTypeId, src => src.ReportTypeId)
+                .Map(dest => dest.ReportType, src => src.ReportType)
                 .Inherits<Api.Models.BaseModel, Entity.BaseEntity>();
         }
     }
