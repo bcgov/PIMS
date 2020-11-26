@@ -61,7 +61,7 @@ export function TypeaheadField<T extends TypeaheadModel>({
         isValid={!filter && isValid}
         selected={getOptionByValue(getIn(values, name))}
         onChange={(newValues: T[]) => {
-          setFieldValue(name, getIn(newValues[0], 'value') ?? newValues[0]);
+          setFieldValue(name, getIn(newValues[0], 'name') ?? newValues[0]);
         }}
         onBlur={() => setFieldTouched(name, true)}
         id={`${name}-field`}
