@@ -19,6 +19,7 @@ import { createParcel, updateParcel } from 'actionCreators/parcelsActionCreator'
 import { useDispatch } from 'react-redux';
 import _ from 'lodash';
 import { BuildingSteps } from 'constants/propertySteps';
+import useDraftMarkerSynchronizer from 'features/properties/hooks/useDraftMarkerSynchronizer';
 
 const Container = styled.div`
   background-color: #fff;
@@ -68,6 +69,7 @@ interface IFormProps {
 }
 const Form: React.FC<IFormProps> = ({ isAdmin, setMovingPinNameSpace, nameSpace }) => {
   const stepper = useFormStepper();
+  useDraftMarkerSynchronizer();
   const formikProps = useFormikContext<IParcel>();
   const { getOptionsByType } = useCodeLookups();
 

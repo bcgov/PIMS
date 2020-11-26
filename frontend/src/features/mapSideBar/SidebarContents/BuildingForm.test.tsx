@@ -27,6 +27,7 @@ const lCodes = {
 
 const store = mockStore({
   [reducerTypes.LOOKUP_CODE]: lCodes,
+  [reducerTypes.PARCEL]: { parcels: [], draftParcels: [] },
 });
 
 jest.mock('@react-keycloak/web');

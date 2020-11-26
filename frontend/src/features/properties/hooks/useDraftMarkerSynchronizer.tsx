@@ -10,8 +10,9 @@ import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
 import debounce from 'lodash/debounce';
 import { useFormikContext } from 'formik';
 import { useCallback } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import _ from 'lodash';
+import { RootState } from 'reducers/rootReducer';
 
 interface IDraftMarker {
   latitude: number | '';
@@ -34,12 +35,13 @@ const getDraftMarkers = (values: IParcel) => {
       propertyTypeId: PropertyTypes.DRAFT_PARCEL,
     },
   ];
-  const buildingMarkers = values.buildings.map((building: IBuilding, index: number) => ({
-    latitude: building.latitude,
-    longitude: building.longitude,
-    name: building.name?.length ? building.name : `Building #${index + 1}`,
-    propertyTypeId: PropertyTypes.DRAFT_BUILDING,
-  }));
+  const buildingMarkers =
+    values.buildings?.map((building: IBuilding, index: number) => ({
+      latitude: building.latitude,
+      longitude: building.longitude,
+      name: building.name?.length ? building.name : `Building #${index + 1}`,
+      propertyTypeId: PropertyTypes.DRAFT_BUILDING,
+    })) ?? [];
   return [...parcelMarkers, ...buildingMarkers].filter(
     marker => marker.latitude !== '' && marker.longitude !== '',
   );
@@ -49,8 +51,12 @@ const getDraftMarkers = (values: IParcel) => {
  * A hook that automatically syncs any updates to the lat/lngs of the parcel form with the map.
  * @param param0 The currently displayed list of properties on the map.
  */
-const useDraftMarkerSynchronizer = ({ properties }: { properties: IProperty[] }) => {
-  const { values } = useFormikContext<IParcel>();
+const useDraftMarkerSynchronizer = () => {
+  const { values } = useFormikContext();
+  const properties = useSelector<RootState, IProperty[]>(state => [
+    ...state.parcel.parcels,
+    ...state.parcel.draftParcels,
+  ]);
   const dispatch = useDispatch();
   const nonDraftProperties = React.useMemo(
     () =>
@@ -73,8 +79,8 @@ const useDraftMarkerSynchronizer = ({ properties }: { properties: IProperty[] })
    * @param values the current form values
    * @param dbProperties the currently displayed list of (DB) map properties.
    */
-  const synchronizeMarkers = (values: IParcel, dbProperties: IProperty[]) => {
-    const draftMarkers = getDraftMarkers(values);
+  const synchronizeMarkers = (values: any, dbProperties: IProperty[]) => {
+    const draftMarkers = values.data ? getDraftMarkers(values.data) : getDraftMarkers(values);
     if (draftMarkers.length) {
       const newDraftMarkers = _.filter(
         draftMarkers,
@@ -91,7 +97,7 @@ const useDraftMarkerSynchronizer = ({ properties }: { properties: IProperty[] })
   };
 
   const synchronize = useCallback(
-    debounce((values: IParcel, properties: IProperty[]) => {
+    debounce((values: any, properties: IProperty[]) => {
       synchronizeMarkers(values, properties);
     }, 400),
     [],
