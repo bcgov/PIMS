@@ -147,6 +147,7 @@ const store = mockStore({
   [reducerTypes.PARCEL]: { parcelDetail: {} },
   [reducerTypes.LOOKUP_CODE]: lCodes,
   [reducerTypes.PARCEL_LAYER_DATA]: {},
+  [reducerTypes.PARCEL]: { parcels: [], draftParcels: [] },
 });
 
 const parcelDetailForm = ({
@@ -442,6 +443,7 @@ describe('ParcelDetail Functionality', () => {
       parcelDetailForm({
         storeOverride: mockStore({
           [reducerTypes.LOOKUP_CODE]: lCodes,
+          [reducerTypes.PARCEL]: { parcels: [], draftParcels: [] },
           [reducerTypes.LEAFLET_CLICK_EVENT]: {
             mapClickEvent: {
               originalEvent: null,
@@ -530,6 +532,7 @@ describe('ParcelDetail Functionality', () => {
           storeOverride: mockStore({
             parcelLayerData: { parcelLayerData: { e: null, data: { PID: '123456789' } } },
             [reducerTypes.LOOKUP_CODE]: lCodes,
+            [reducerTypes.PARCEL]: { parcels: [], draftParcels: [] },
           }),
         }),
       );
@@ -550,6 +553,7 @@ describe('ParcelDetail Functionality', () => {
               },
             },
             [reducerTypes.LOOKUP_CODE]: lCodes,
+            [reducerTypes.PARCEL]: { parcels: [], draftParcels: [] },
           }),
         }),
       );
@@ -569,6 +573,7 @@ describe('ParcelDetail Functionality', () => {
               },
             },
             [reducerTypes.LOOKUP_CODE]: lCodes,
+            [reducerTypes.PARCEL]: { parcels: [], draftParcels: [] },
           }),
         }),
       );
@@ -589,6 +594,7 @@ describe('ParcelDetail Functionality', () => {
               },
             },
             [reducerTypes.LOOKUP_CODE]: lCodes,
+            [reducerTypes.PARCEL]: { parcels: [], draftParcels: [] },
           }),
         }),
       );
