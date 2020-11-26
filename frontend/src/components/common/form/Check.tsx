@@ -22,7 +22,7 @@ type OptionalAttributes = {
   placeholder?: string;
   /** Adds a custom class to the input element of the <Input> component */
   className?: string;
-  /** Whether the field is required. Shows an asterisk after the label. */
+  /** Whether the field is required. Makes the field border blue. */
   required?: boolean;
   /** Specifies that the HTML element should be disabled */
   disabled?: boolean;
@@ -74,13 +74,12 @@ export const Check: React.FC<CheckProps> = ({
   return (
     <Form.Group
       controlId={`input-${field}`}
-      className={classNames(outerClassName, !!required ? 'required' : '')}
+      className={classNames(!!required ? 'required' : '', outerClassName)}
     >
       <div className="check-field">
         {!!label && (
           <Form.Label>
             {label}
-            {!!required && <span className="required">*</span>}
             {!!toolTip && <TooltipIcon toolTipId={toolTipId!} toolTip={toolTip} />}
           </Form.Label>
         )}
@@ -123,7 +122,6 @@ export const Check: React.FC<CheckProps> = ({
         </>
         {!!postLabel && !!required && (
           <>
-            <span className="required">*</span>
             <Form.Label>{postLabel}</Form.Label>
           </>
         )}

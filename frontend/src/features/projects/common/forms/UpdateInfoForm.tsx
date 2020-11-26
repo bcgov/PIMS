@@ -50,7 +50,6 @@ const UpdateInfoForm = ({
       <Form.Row>
         <Form.Label column md={2}>
           Assign Tier&nbsp;
-          <span className="required">*</span>
         </Form.Label>
         <Select
           disabled={isReadOnly}
@@ -59,6 +58,7 @@ const UpdateInfoForm = ({
           field="tierLevelId"
           type="number"
           options={tierCodes}
+          required
         />
       </Form.Row>
       <Form.Row>

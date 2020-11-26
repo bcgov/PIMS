@@ -11,23 +11,28 @@ const ProjectFinancialTable = ({ disabled }: { disabled: boolean }) => {
         <Col md={4}>
           <Row>
             <Form.Label column md={4}>
-              Net Book Value <span className="required">*</span>
+              Net Book Value
             </Form.Label>
-            <FastCurrencyInput field="netBook" formikProps={context} disabled={disabled} />
+            <FastCurrencyInput field="netBook" required formikProps={context} disabled={disabled} />
           </Row>
           <Row>
             <Form.Label column md={4}>
-              Estimated Market Value <span className="required">*</span>
+              Estimated Market Value
             </Form.Label>
-            <FastCurrencyInput field="market" formikProps={context} disabled={disabled} />
+            <FastCurrencyInput field="market" required formikProps={context} disabled={disabled} />
           </Row>
         </Col>
         <Col md={4}>
           <Row>
             <Form.Label column md={4}>
-              Assessed Value <span className="required">*</span>
+              Assessed Value
             </Form.Label>
-            <FastCurrencyInput field="assessed" formikProps={context} disabled={disabled} />
+            <FastCurrencyInput
+              field="assessed"
+              required
+              formikProps={context}
+              disabled={disabled}
+            />
           </Row>
           <Row>
             <Form.Label column md={4}>

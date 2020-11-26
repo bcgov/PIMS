@@ -28,13 +28,13 @@
       }
     }
     .page-item.error.active a {
-      background-color: #dc3545;
+      background-color: $danger-color;
       color: black;
       z-index: 3;
     }
     .page-item.error a {
-      border: 1px solid #dc3545;
-      color: #dc3545;
+      border: 1px solid $danger-color;
+      color: $danger-color;
       z-index: 3;
     }
     .pagination {

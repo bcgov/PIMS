@@ -8,6 +8,7 @@ import debounce from 'lodash/debounce';
 import TooltipIcon from 'components/common/TooltipIcon';
 import TooltipWrapper from 'components/common/TooltipWrapper';
 import { useCallback } from 'react';
+import classNames from 'classnames';
 
 interface IGeocoderAutoCompleteProps {
   field: string;
@@ -23,6 +24,8 @@ interface IGeocoderAutoCompleteProps {
   onTextChange?: (value?: string) => void;
   tooltip?: string;
   displayErrorTooltips?: boolean;
+  /** class to apply to entire form group */
+  outerClassName?: string;
 }
 
 export const GeocoderAutoComplete: React.FC<IGeocoderAutoCompleteProps> = ({
@@ -39,6 +42,7 @@ export const GeocoderAutoComplete: React.FC<IGeocoderAutoCompleteProps> = ({
   onTextChange,
   tooltip,
   displayErrorTooltips,
+  outerClassName,
   ...rest
 }) => {
   const [options, setOptions] = React.useState<IGeocoderResponse[]>([]);
@@ -98,7 +102,10 @@ export const GeocoderAutoComplete: React.FC<IGeocoderAutoCompleteProps> = ({
   return (
     <div className="GeocoderAutoComplete">
       <ClickAwayListener onClickAway={() => setOptions([])}>
-        <Form.Group controlId={`input-${field}`}>
+        <Form.Group
+          controlId={`input-${field}`}
+          className={classNames(!!required ? 'required' : '', outerClassName)}
+        >
           {!!tooltip && <TooltipIcon toolTipId={`${field}-tooltip`} toolTip={tooltip} />}
           <TooltipWrapper toolTipId={`${field}-error-tooltip}`} toolTip={errorTooltip}>
             <InputControl

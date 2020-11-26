@@ -111,11 +111,6 @@ exports[`Review Summary View renders approved correctly 1`] = `
             htmlFor="input-name"
           >
             Name
-            <span
-              className="required"
-            >
-              *
-            </span>
           </label>
           <input
             className="col-md-5 form-control"
@@ -163,14 +158,9 @@ exports[`Review Summary View renders approved correctly 1`] = `
           className="form-label col-form-label col-md-2"
         >
           Assign Tier 
-          <span
-            className="required"
-          >
-            *
-          </span>
         </label>
         <div
-          className="col-md-2 form-group"
+          className="required col-md-2 form-group"
         >
           <select
             className="form-select form-control"
@@ -179,6 +169,7 @@ exports[`Review Summary View renders approved correctly 1`] = `
             name="tierLevelId"
             onBlur={[Function]}
             onChange={[Function]}
+            required={true}
             value={1}
           >
             <option
@@ -243,15 +234,10 @@ exports[`Review Summary View renders approved correctly 1`] = `
             <label
               className="form-label col-form-label col-md-4"
             >
-              Net Book Value 
-              <span
-                className="required"
-              >
-                *
-              </span>
+              Net Book Value
             </label>
             <div
-              className="fast-currency-input form-group"
+              className="required form-group"
             >
               <div
                 className="input-tooltip-wrapper"
@@ -274,15 +260,10 @@ exports[`Review Summary View renders approved correctly 1`] = `
             <label
               className="form-label col-form-label col-md-4"
             >
-              Estimated Market Value 
-              <span
-                className="required"
-              >
-                *
-              </span>
+              Estimated Market Value
             </label>
             <div
-              className="fast-currency-input form-group"
+              className="required form-group"
             >
               <div
                 className="input-tooltip-wrapper"
@@ -309,15 +290,10 @@ exports[`Review Summary View renders approved correctly 1`] = `
             <label
               className="form-label col-form-label col-md-4"
             >
-              Assessed Value 
-              <span
-                className="required"
-              >
-                *
-              </span>
+              Assessed Value
             </label>
             <div
-              className="fast-currency-input form-group"
+              className="required form-group"
             >
               <div
                 className="input-tooltip-wrapper"
@@ -343,7 +319,7 @@ exports[`Review Summary View renders approved correctly 1`] = `
               Appraised Value
             </label>
             <div
-              className="fast-currency-input form-group"
+              className="form-group"
             >
               <div
                 className="input-tooltip-wrapper"
@@ -654,11 +630,6 @@ exports[`Review Summary View renders approved correctly 1`] = `
               value={true}
             />
           </div>
-          <span
-            className="required"
-          >
-            *
-          </span>
           <label
             className="form-label"
             htmlFor="input-confirmation"
@@ -944,11 +915,6 @@ exports[`Review Summary View renders denied correctly 1`] = `
             htmlFor="input-name"
           >
             Name
-            <span
-              className="required"
-            >
-              *
-            </span>
           </label>
           <input
             className="col-md-5 form-control"
@@ -996,14 +962,9 @@ exports[`Review Summary View renders denied correctly 1`] = `
           className="form-label col-form-label col-md-2"
         >
           Assign Tier 
-          <span
-            className="required"
-          >
-            *
-          </span>
         </label>
         <div
-          className="col-md-2 form-group"
+          className="required col-md-2 form-group"
         >
           <select
             className="form-select form-control"
@@ -1012,6 +973,7 @@ exports[`Review Summary View renders denied correctly 1`] = `
             name="tierLevelId"
             onBlur={[Function]}
             onChange={[Function]}
+            required={true}
             value={1}
           >
             <option
@@ -1076,15 +1038,10 @@ exports[`Review Summary View renders denied correctly 1`] = `
             <label
               className="form-label col-form-label col-md-4"
             >
-              Net Book Value 
-              <span
-                className="required"
-              >
-                *
-              </span>
+              Net Book Value
             </label>
             <div
-              className="fast-currency-input form-group"
+              className="required form-group"
             >
               <div
                 className="input-tooltip-wrapper"
@@ -1107,15 +1064,10 @@ exports[`Review Summary View renders denied correctly 1`] = `
             <label
               className="form-label col-form-label col-md-4"
             >
-              Estimated Market Value 
-              <span
-                className="required"
-              >
-                *
-              </span>
+              Estimated Market Value
             </label>
             <div
-              className="fast-currency-input form-group"
+              className="required form-group"
             >
               <div
                 className="input-tooltip-wrapper"
@@ -1142,15 +1094,10 @@ exports[`Review Summary View renders denied correctly 1`] = `
             <label
               className="form-label col-form-label col-md-4"
             >
-              Assessed Value 
-              <span
-                className="required"
-              >
-                *
-              </span>
+              Assessed Value
             </label>
             <div
-              className="fast-currency-input form-group"
+              className="required form-group"
             >
               <div
                 className="input-tooltip-wrapper"
@@ -1176,7 +1123,7 @@ exports[`Review Summary View renders denied correctly 1`] = `
               Appraised Value
             </label>
             <div
-              className="fast-currency-input form-group"
+              className="form-group"
             >
               <div
                 className="input-tooltip-wrapper"
@@ -1487,11 +1434,6 @@ exports[`Review Summary View renders denied correctly 1`] = `
               value={true}
             />
           </div>
-          <span
-            className="required"
-          >
-            *
-          </span>
           <label
             className="form-label"
             htmlFor="input-confirmation"
@@ -1777,11 +1719,6 @@ exports[`Review Summary View renders submitted correctly 1`] = `
             htmlFor="input-name"
           >
             Name
-            <span
-              className="required"
-            >
-              *
-            </span>
           </label>
           <input
             className="col-md-5 form-control"
@@ -1829,14 +1766,9 @@ exports[`Review Summary View renders submitted correctly 1`] = `
           className="form-label col-form-label col-md-2"
         >
           Assign Tier 
-          <span
-            className="required"
-          >
-            *
-          </span>
         </label>
         <div
-          className="col-md-2 form-group"
+          className="required col-md-2 form-group"
         >
           <select
             className="form-select form-control"
@@ -1845,6 +1777,7 @@ exports[`Review Summary View renders submitted correctly 1`] = `
             name="tierLevelId"
             onBlur={[Function]}
             onChange={[Function]}
+            required={true}
             value={1}
           >
             <option
@@ -1909,15 +1842,10 @@ exports[`Review Summary View renders submitted correctly 1`] = `
             <label
               className="form-label col-form-label col-md-4"
             >
-              Net Book Value 
-              <span
-                className="required"
-              >
-                *
-              </span>
+              Net Book Value
             </label>
             <div
-              className="fast-currency-input form-group"
+              className="required form-group"
             >
               <div
                 className="input-tooltip-wrapper"
@@ -1940,15 +1868,10 @@ exports[`Review Summary View renders submitted correctly 1`] = `
             <label
               className="form-label col-form-label col-md-4"
             >
-              Estimated Market Value 
-              <span
-                className="required"
-              >
-                *
-              </span>
+              Estimated Market Value
             </label>
             <div
-              className="fast-currency-input form-group"
+              className="required form-group"
             >
               <div
                 className="input-tooltip-wrapper"
@@ -1975,15 +1898,10 @@ exports[`Review Summary View renders submitted correctly 1`] = `
             <label
               className="form-label col-form-label col-md-4"
             >
-              Assessed Value 
-              <span
-                className="required"
-              >
-                *
-              </span>
+              Assessed Value
             </label>
             <div
-              className="fast-currency-input form-group"
+              className="required form-group"
             >
               <div
                 className="input-tooltip-wrapper"
@@ -2009,7 +1927,7 @@ exports[`Review Summary View renders submitted correctly 1`] = `
               Appraised Value
             </label>
             <div
-              className="fast-currency-input form-group"
+              className="form-group"
             >
               <div
                 className="input-tooltip-wrapper"
@@ -2320,11 +2238,6 @@ exports[`Review Summary View renders submitted correctly 1`] = `
               value={true}
             />
           </div>
-          <span
-            className="required"
-          >
-            *
-          </span>
           <label
             className="form-label"
             htmlFor="input-confirmation"
