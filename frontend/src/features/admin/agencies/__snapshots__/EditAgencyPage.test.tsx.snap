@@ -8,8 +8,8 @@ exports[`Edit agency page EditAgencyPage renders 1`] = `
   <div class=\\"container-fluid\\">
     <div class=\\"agency-edit-form-container row\\">
       <form novalidate=\\"\\" class=\\"agencyInfo\\">
-        <div class=\\"required form-group\\"><label class=\\"form-label\\" for=\\"input-name\\">Agency<span class=\\"required\\">*</span></label><input name=\\"name\\" required=\\"\\" type=\\"text\\" id=\\"input-name\\" class=\\"form-control\\" value=\\"Test Agency\\"></div>
-        <div class=\\"required form-group\\"><label class=\\"form-label\\" for=\\"input-code\\">Short Name (Code)<span class=\\"required\\">*</span></label><input name=\\"code\\" required=\\"\\" type=\\"text\\" id=\\"input-code\\" class=\\"form-control\\" value=\\"TEST\\"></div>
+        <div class=\\"required form-group\\"><label class=\\"form-label\\" for=\\"input-name\\">Agency</label><input name=\\"name\\" required=\\"\\" type=\\"text\\" id=\\"input-name\\" class=\\"form-control\\" value=\\"Test Agency\\"></div>
+        <div class=\\"required form-group\\"><label class=\\"form-label\\" for=\\"input-code\\">Short Name (Code)</label><input name=\\"code\\" required=\\"\\" type=\\"text\\" id=\\"input-code\\" class=\\"form-control\\" value=\\"TEST\\"></div>
         <div class=\\"form-group\\"><label class=\\"form-label\\" for=\\"input-parentId\\">Parent Agency - If applicable</label><select name=\\"parentId\\" disabled=\\"\\" id=\\"input-parentId\\" class=\\"form-select form-control\\">
             <option value=\\"\\">No parent</option>
             <option value=\\"111\\" class=\\"option\\">Test Agency</option>

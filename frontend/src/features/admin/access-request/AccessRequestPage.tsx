@@ -89,7 +89,7 @@ const AccessRequestPage = () => {
   );
 
   const checkRoles = (
-    <Form.Group className={'check-roles'}>
+    <Form.Group className="check-roles">
       <Form.Label>
         Roles{' '}
         <a target="_blank" rel="noopener noreferrer" href={AUTHORIZATION_URL}>

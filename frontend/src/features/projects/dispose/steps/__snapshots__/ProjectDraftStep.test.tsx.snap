@@ -11,7 +11,7 @@ exports[`Project Draft Step renders correctly 1`] = `
         <div class=\\"col-md-2 form-group\\"><input name=\\"projectNumber\\" disabled=\\"\\" placeholder=\\"SPP-XXXXXX\\" id=\\"input-projectNumber\\" class=\\"form-control\\" value=\\"TEST-NUMBER\\"></div>
       </div>
       <div class=\\"form-row\\">
-        <div class=\\"required col-md-10 form-group\\"><label class=\\"form-label\\" for=\\"input-name\\">Name<span class=\\"required\\">*</span></label><input name=\\"name\\" required=\\"\\" disabled=\\"\\" id=\\"input-name\\" class=\\"col-md-5 form-control\\" value=\\"\\"></div>
+        <div class=\\"required col-md-10 form-group\\"><label class=\\"form-label\\" for=\\"input-name\\">Name</label><input name=\\"name\\" required=\\"\\" disabled=\\"\\" id=\\"input-name\\" class=\\"col-md-5 form-control\\" value=\\"\\"></div>
       </div>
       <div class=\\"form-row\\">
         <div class=\\"col-md-10 form-group\\"><label class=\\"form-label\\" for=\\"input-description\\">Description</label><textarea name=\\"description\\" disabled=\\"\\" id=\\"input-description\\" class=\\"col-md-5 form-control\\"></textarea></div>

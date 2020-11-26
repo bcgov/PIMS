@@ -36,11 +36,6 @@ exports[`Documentation Step renders correctly 1`] = `
               value={false}
             />
           </div>
-          <span
-            className="required"
-          >
-            *
-          </span>
           <label
             className="form-label"
             htmlFor="input-tasks.0.isCompleted"
@@ -74,11 +69,6 @@ exports[`Documentation Step renders correctly 1`] = `
               value={false}
             />
           </div>
-          <span
-            className="required"
-          >
-            *
-          </span>
           <label
             className="form-label"
             htmlFor="input-tasks.1.isCompleted"
