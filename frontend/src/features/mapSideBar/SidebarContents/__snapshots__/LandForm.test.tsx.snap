@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Land Form component renders correctly 1`] = `
-"<div class=\\"sc-fznAgC fvDhqG landForm\\">
+"<div class=\\"sc-fzomuh iHipUC landForm\\">
   <form action=\\"#\\">
     <div class=\\"bs-stepper\\">
       <div class=\\"bs-stepper-header\\">
@@ -14,8 +14,8 @@ exports[`Land Form component renders correctly 1`] = `
         <div class=\\"step\\" data-target=\\"stepper-3\\"><button type=\\"button\\" class=\\"step-trigger\\"><span class=\\"bs-stepper-circle\\">4</span><span class=\\"bs-stepper-label\\">Review</span></button></div>
       </div>
     </div>
-    <div class=\\"sc-fznLPX lknOsR\\">
-      <div class=\\"sc-fzoaKM dHPftx\\">
+    <div class=\\"sc-fzqAui hcvrID\\">
+      <div class=\\"sc-fzqMdD iOpgCN\\">
         <div class=\\"parcel-identification\\">
           <div class=\\"container\\">
             <div class=\\"row\\">
@@ -115,7 +115,7 @@ exports[`Land Form component renders correctly 1`] = `
           </div>
         </div>
       </div>
-      <div class=\\"sc-fzomuh bTrBxN\\">
+      <div class=\\"sc-fzowVh fMTegc\\">
         <div class=\\"sc-fzpkJw bcujmr\\">
           <div class=\\"SresManual\\">
             <div><svg stroke=\\"currentColor\\" fill=\\"none\\" stroke-width=\\"2\\" viewBox=\\"0 0 24 24\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" size=\\"28\\" height=\\"28\\" width=\\"28\\" xmlns=\\"http://www.w3.org/2000/svg\\">
@@ -123,7 +123,7 @@ exports[`Land Form component renders correctly 1`] = `
                 <path d=\\"M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z\\"></path>
               </svg></div>
           </div><small class=\\"sc-fznzOf kDlsJ p-1 mr-2\\">Inventory Policy</small>
-        </div><span class=\\"sc-fzqAui EUqer\\"></span><button type=\\"button\\" class=\\"btn btn-primary btn-sm\\">Continue</button>
+        </div><span class=\\"sc-fzoJus dMLkXA\\"></span><button type=\\"button\\" class=\\"btn btn-primary btn-sm\\">Continue</button>
       </div>
     </div>
   </form>

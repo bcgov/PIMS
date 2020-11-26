@@ -1,4 +1,4 @@
-import React, { memo, useEffect } from 'react';
+import React, { CSSProperties, memo, useEffect } from 'react';
 import { Form, FormControlProps } from 'react-bootstrap';
 import { getIn, FormikProps } from 'formik';
 import { DisplayError } from './DisplayError';
@@ -41,6 +41,8 @@ type OptionalAttributes = {
   errorPrompt?: boolean;
   /** Tooltip text */
   tooltip?: string;
+  /** add style to the select input */
+  style?: CSSProperties;
 };
 
 // only "field" and "options" are required for <Select>, the rest are optional
@@ -67,6 +69,7 @@ export const FastSelect: React.FC<FastSelectProps> = memo(
     type,
     errorPrompt,
     tooltip,
+    style,
     formikProps: {
       values,
       errors,
@@ -154,6 +157,7 @@ export const FastSelect: React.FC<FastSelectProps> = memo(
           className={className}
           required={required}
           disabled={disabled}
+          style={style}
           custom={custom}
           isInvalid={!!touch && !!error}
           isValid={false}
