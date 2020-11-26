@@ -19,9 +19,16 @@ const SplTab: React.FunctionComponent<ISplTabProps> = ({
     <>
       <SurplusPropertyListForm
         isReadOnly={isReadOnly}
-        onClickMarketedOn={() => setSubmitStatusCode(ReviewWorkflowStatus.OnMarket)}
-        onClickContractInPlace={() => setSubmitStatusCode(ReviewWorkflowStatus.ContractInPlace)}
+        onClickProceedToSPL={() => setSubmitStatusCode(ReviewWorkflowStatus.ApprovedForSpl)}
+        onClickRemoveFromSPL={() => setSubmitStatusCode(ReviewWorkflowStatus.NotInSpl)}
         onClickPreMarketing={() => setSubmitStatusCode(ReviewWorkflowStatus.PreMarketing)}
+        onClickMarketedOn={() => setSubmitStatusCode(ReviewWorkflowStatus.OnMarket)}
+        onClickContractInPlaceConditional={() =>
+          setSubmitStatusCode(ReviewWorkflowStatus.ContractInPlaceConditional)
+        }
+        onClickContractInPlaceUnconditional={() =>
+          setSubmitStatusCode(ReviewWorkflowStatus.ContractInPlaceUnconditional)
+        }
         onClickDisposedExternally={() => setSubmitStatusCode(ReviewWorkflowStatus.Disposed)}
       />
     </>

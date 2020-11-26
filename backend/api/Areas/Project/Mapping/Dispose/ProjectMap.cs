@@ -109,7 +109,6 @@ namespace Pims.Api.Areas.Project.Mapping.Dispose
                     dest.RealtorCommission = metadata.RealtorCommission;
                     dest.Remediation = metadata.Remediation;
                     dest.PlannedFutureUse = metadata.PlannedFutureUse;
-                    dest.IsContractConditional = metadata.IsContractConditional;
                     dest.PreliminaryFormSignedOn = metadata.PreliminaryFormSignedOn;
                     dest.PreliminaryFormSignedBy = metadata.PreliminaryFormSignedBy;
                     dest.FinalFormSignedOn = metadata.FinalFormSignedOn;
@@ -180,7 +179,6 @@ namespace Pims.Api.Areas.Project.Mapping.Dispose
                         RealtorCommission = src.RealtorCommission,
                         Remediation = src.Remediation,
                         PlannedFutureUse = src.PlannedFutureUse,
-                        IsContractConditional = src.IsContractConditional,
                         PreliminaryFormSignedOn = src.PreliminaryFormSignedOn,
                         PreliminaryFormSignedBy = src.PreliminaryFormSignedBy,
                         FinalFormSignedOn = src.FinalFormSignedOn,

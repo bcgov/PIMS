@@ -45,11 +45,6 @@ namespace Pims.Dal.Entities
         public ICollection<WorkflowProjectStatus> Workflows { get; } = new List<WorkflowProjectStatus>();
 
         /// <summary>
-        /// get - Collection of workflows that go to this status.
-        /// </summary>
-        public ICollection<WorkflowProjectStatus> FromWorkflows { get; } = new List<WorkflowProjectStatus>();
-
-        /// <summary>
         /// get - Collection of projects.
         /// </summary>
         public ICollection<Project> Projects { get; } = new List<Project>();

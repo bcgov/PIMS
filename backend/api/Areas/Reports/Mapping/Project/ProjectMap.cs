@@ -93,7 +93,6 @@ namespace Pims.Api.Areas.Reports.Mapping.Project
                     dest.DisposedOn = metadata.DisposedOn;
                     dest.MarketedOn = metadata.MarketedOn;
                     dest.Purchaser = metadata.Purchaser;
-                    dest.IsContractConditional = metadata.IsContractConditional;
                 });
         }
         #endregion

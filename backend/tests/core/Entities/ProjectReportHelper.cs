@@ -43,7 +43,7 @@ namespace Pims.Core.Test
                 To = toDate,
                 From = fromDate,
                 IsFinal = isFinal,
-                ReportTypeId = 0,
+                ReportType = 0,
                 CreatedBy = user,
                 CreatedById = user.Id,
                 CreatedOn = DateTime.UtcNow,

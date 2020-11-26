@@ -149,6 +149,8 @@ export interface IProject {
   onHoldNotificationSentOn?: Date | string;
   transferredWithinGreOn?: Date | string;
   clearanceNotificationSentOn?: Date | string;
+  requestForSplReceivedOn?: Date | string;
+  approvedForSplOn?: Date | string;
   marketedOn?: Date | string;
   disposedOn?: Date | string;
   assessedOn?: Date | string;
@@ -161,7 +163,6 @@ export interface IProject {
   appraised?: number | '';
   market?: number | '';
   workflowCode?: string;
-  isContractConditional?: boolean;
   purchaser?: string;
   manager?: string;
   actualFiscalYear?: string;
@@ -199,6 +200,11 @@ export enum NoteTypes {
   Comments = 16,
 }
 
+export enum DisposalWorkflows {
+  Erp = 'ERP',
+  Spl = 'SPL',
+}
+
 export enum DisposeWorkflowStatus {
   Draft = 'DR',
   SelectProperties = 'DR-P',
@@ -222,7 +228,8 @@ export enum ReviewWorkflowStatus {
   ApprovedForSpl = 'AP-SPL',
   PreMarketing = 'SPL-PM',
   OnMarket = 'SPL-M',
-  ContractInPlace = 'SPL-CIP',
+  ContractInPlaceConditional = 'SPL-CIP-C',
+  ContractInPlaceUnconditional = 'SPL-CIP-U',
   NotInSpl = 'AP-!SPL',
   ApprovedForExemption = 'AP-EXE',
   Denied = 'DE',
@@ -315,7 +322,6 @@ export const initialValues: IProject = {
   market: '',
   workflowCode: '',
   offerAmount: '',
-  isContractConditional: undefined,
   purchaser: '',
   manager: '',
   actualFiscalYear: '',

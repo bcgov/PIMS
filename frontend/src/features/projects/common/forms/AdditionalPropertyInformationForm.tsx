@@ -1,6 +1,6 @@
 import React from 'react';
 import { Container } from 'react-bootstrap';
-import { Form, FastInput, FastFiscalYearInput } from 'components/common/form';
+import { Form, FastInput, FastFiscalYearInput, FastDatePicker } from 'components/common/form';
 import { useFormikContext } from 'formik';
 
 interface IAdditionalPropertyInformationFormProps {
@@ -17,6 +17,17 @@ const AdditionalPropertyInformationForm = ({
   const formikProps = useFormikContext();
   return (
     <Container fluid>
+      <Form.Row>
+        <Form.Label column md={3}>
+          Project Approved On
+        </Form.Label>
+        <FastDatePicker
+          outerClassName="col-md-2"
+          formikProps={formikProps}
+          disabled={isReadOnly}
+          field="approvedOn"
+        />
+      </Form.Row>
       <Form.Row>
         <Form.Label column md={3}>
           Manager Names

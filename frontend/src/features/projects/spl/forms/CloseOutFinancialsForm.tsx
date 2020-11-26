@@ -20,7 +20,7 @@ const CloseOutFinancialsForm = (props: CloseOutFinancialsFormProps) => {
       />
       <ProjectNotes
         field={`notes[${NoteTypes.CloseOut}].note`}
-        label="Notes"
+        label="Close Out"
         outerClassName="col-md-12"
       />
       <h3>OCG</h3>

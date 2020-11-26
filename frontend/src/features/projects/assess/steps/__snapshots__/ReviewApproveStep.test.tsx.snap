@@ -24,30 +24,34 @@ exports[`Review Approve Step renders correctly 1`] = `
             <option value=\\"\\">Must Select One</option>
           </select></div>
       </div>
-      <div class=\\"form-row\\"><small>Tier 1: Properties with a net value of less than $1M.</small></div>
-      <div class=\\"form-row\\"><small>Tier 2: Properties with a net value of $1M or more and less than $10M.</small></div>
-      <div class=\\"form-row\\"><small>Tier 3: Properties are single parcels with a net value of $10M or more.</small></div>
-      <div class=\\"form-row\\"><small>Tier 4: Properties are multiple parcels with a cumulative net value of $10M or more.</small></div>
+      <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-2\\"></label>
+        <div class=\\"form-group\\">
+          <div><small>Tier 1: Properties with a net value of less than $1M.</small></div>
+          <div><small>Tier 2: Properties with a net value of $1M or more and less than $10M.</small></div>
+          <div><small>Tier 3: Properties are single parcels with a net value of $10M or more.</small></div>
+          <div><small>Tier 4: Properties are multiple parcels with a cumulative net value of $10M or more.</small></div>
+        </div>
+      </div>
       <div class=\\"form-row\\" style=\\"align-items: unset;\\">
-        <h3 class=\\"col-md-8\\">Project Totals</h3>
+        <h3 class=\\"col-md-8\\">Financial Information</h3>
       </div>
       <div class=\\"row\\">
         <div class=\\"col-md-4\\">
           <div class=\\"row\\"><label class=\\"form-label col-form-label col-md-4\\">Net Book Value</label>
             <div class=\\"required form-group\\">
-              <div class=\\"input-tooltip-wrapper\\"><input name=\\"netBook\\" class=\\"form-control\\" disabled=\\"\\" placeholder=\\"\\" value=\\"\\"></div>
+              <div class=\\"input-tooltip-wrapper\\"><input name=\\"netBook\\" class=\\"form-control\\" disabled=\\"\\" required=\\"\\" placeholder=\\"\\" value=\\"\\"></div>
             </div>
           </div>
           <div class=\\"row\\"><label class=\\"form-label col-form-label col-md-4\\">Estimated Market Value</label>
             <div class=\\"required form-group\\">
-              <div class=\\"input-tooltip-wrapper\\"><input name=\\"market\\" class=\\"form-control\\" disabled=\\"\\" placeholder=\\"\\" value=\\"\\"></div>
+              <div class=\\"input-tooltip-wrapper\\"><input name=\\"market\\" class=\\"form-control\\" disabled=\\"\\" required=\\"\\" placeholder=\\"\\" value=\\"\\"></div>
             </div>
           </div>
         </div>
         <div class=\\"col-md-4\\">
           <div class=\\"row\\"><label class=\\"form-label col-form-label col-md-4\\">Assessed Value</label>
             <div class=\\"required form-group\\">
-              <div class=\\"input-tooltip-wrapper\\"><input name=\\"assessed\\" class=\\"form-control\\" disabled=\\"\\" placeholder=\\"\\" value=\\"\\"></div>
+              <div class=\\"input-tooltip-wrapper\\"><input name=\\"assessed\\" class=\\"form-control\\" disabled=\\"\\" required=\\"\\" placeholder=\\"\\" value=\\"\\"></div>
             </div>
           </div>
           <div class=\\"row\\"><label class=\\"form-label col-form-label col-md-4\\">Appraised Value</label>
@@ -58,7 +62,7 @@ exports[`Review Approve Step renders correctly 1`] = `
         </div>
       </div>
       <div class=\\"form-row\\">
-        <h6 class=\\"col-md-12\\" style=\\"margin: 1rem 0px;\\">Please make any necessary updates to the valuation information and the classification</h6>
+        <h6 class=\\"col-md-12\\" style=\\"margin: 1rem 0px;\\">Please make any necessary updates to the valuation information and the classification.</h6>
         <h2 class=\\"col-md-5\\">Properties in the Project</h2>
       </div>
       <div class=\\"container-fluid\\">

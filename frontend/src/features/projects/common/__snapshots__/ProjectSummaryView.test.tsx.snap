@@ -183,30 +183,33 @@ exports[`Review Summary View renders approved correctly 1`] = `
       <div
         className="form-row"
       >
-        <small>
-          Tier 1: Properties with a net value of less than $1M.
-        </small>
-      </div>
-      <div
-        className="form-row"
-      >
-        <small>
-          Tier 2: Properties with a net value of $1M or more and less than $10M.
-        </small>
-      </div>
-      <div
-        className="form-row"
-      >
-        <small>
-          Tier 3: Properties are single parcels with a net value of $10M or more.
-        </small>
-      </div>
-      <div
-        className="form-row"
-      >
-        <small>
-          Tier 4: Properties are multiple parcels with a cumulative net value of $10M or more.
-        </small>
+        <label
+          className="form-label col-form-label col-md-2"
+        />
+        <div
+          className="form-group"
+        >
+          <div>
+            <small>
+              Tier 1: Properties with a net value of less than $1M.
+            </small>
+          </div>
+          <div>
+            <small>
+              Tier 2: Properties with a net value of $1M or more and less than $10M.
+            </small>
+          </div>
+          <div>
+            <small>
+              Tier 3: Properties are single parcels with a net value of $10M or more.
+            </small>
+          </div>
+          <div>
+            <small>
+              Tier 4: Properties are multiple parcels with a cumulative net value of $10M or more.
+            </small>
+          </div>
+        </div>
       </div>
       <div
         className="form-row"
@@ -219,7 +222,7 @@ exports[`Review Summary View renders approved correctly 1`] = `
         <h3
           className="col-md-8"
         >
-          Project Totals
+          Financial Information
         </h3>
       </div>
       <div
@@ -249,6 +252,7 @@ exports[`Review Summary View renders approved correctly 1`] = `
                   onBlur={[Function]}
                   onChange={[Function]}
                   placeholder=""
+                  required={true}
                   value=""
                 />
               </div>
@@ -275,6 +279,7 @@ exports[`Review Summary View renders approved correctly 1`] = `
                   onBlur={[Function]}
                   onChange={[Function]}
                   placeholder=""
+                  required={true}
                   value=""
                 />
               </div>
@@ -305,6 +310,7 @@ exports[`Review Summary View renders approved correctly 1`] = `
                   onBlur={[Function]}
                   onChange={[Function]}
                   placeholder=""
+                  required={true}
                   value=""
                 />
               </div>
@@ -349,7 +355,7 @@ exports[`Review Summary View renders approved correctly 1`] = `
             }
           }
         >
-          Please make any necessary updates to the valuation information and the classification
+          Please make any necessary updates to the valuation information and the classification.
         </h6>
         <h2
           className="col-md-5"
@@ -987,30 +993,33 @@ exports[`Review Summary View renders denied correctly 1`] = `
       <div
         className="form-row"
       >
-        <small>
-          Tier 1: Properties with a net value of less than $1M.
-        </small>
-      </div>
-      <div
-        className="form-row"
-      >
-        <small>
-          Tier 2: Properties with a net value of $1M or more and less than $10M.
-        </small>
-      </div>
-      <div
-        className="form-row"
-      >
-        <small>
-          Tier 3: Properties are single parcels with a net value of $10M or more.
-        </small>
-      </div>
-      <div
-        className="form-row"
-      >
-        <small>
-          Tier 4: Properties are multiple parcels with a cumulative net value of $10M or more.
-        </small>
+        <label
+          className="form-label col-form-label col-md-2"
+        />
+        <div
+          className="form-group"
+        >
+          <div>
+            <small>
+              Tier 1: Properties with a net value of less than $1M.
+            </small>
+          </div>
+          <div>
+            <small>
+              Tier 2: Properties with a net value of $1M or more and less than $10M.
+            </small>
+          </div>
+          <div>
+            <small>
+              Tier 3: Properties are single parcels with a net value of $10M or more.
+            </small>
+          </div>
+          <div>
+            <small>
+              Tier 4: Properties are multiple parcels with a cumulative net value of $10M or more.
+            </small>
+          </div>
+        </div>
       </div>
       <div
         className="form-row"
@@ -1023,7 +1032,7 @@ exports[`Review Summary View renders denied correctly 1`] = `
         <h3
           className="col-md-8"
         >
-          Project Totals
+          Financial Information
         </h3>
       </div>
       <div
@@ -1053,6 +1062,7 @@ exports[`Review Summary View renders denied correctly 1`] = `
                   onBlur={[Function]}
                   onChange={[Function]}
                   placeholder=""
+                  required={true}
                   value=""
                 />
               </div>
@@ -1079,6 +1089,7 @@ exports[`Review Summary View renders denied correctly 1`] = `
                   onBlur={[Function]}
                   onChange={[Function]}
                   placeholder=""
+                  required={true}
                   value=""
                 />
               </div>
@@ -1109,6 +1120,7 @@ exports[`Review Summary View renders denied correctly 1`] = `
                   onBlur={[Function]}
                   onChange={[Function]}
                   placeholder=""
+                  required={true}
                   value=""
                 />
               </div>
@@ -1153,7 +1165,7 @@ exports[`Review Summary View renders denied correctly 1`] = `
             }
           }
         >
-          Please make any necessary updates to the valuation information and the classification
+          Please make any necessary updates to the valuation information and the classification.
         </h6>
         <h2
           className="col-md-5"
@@ -1791,30 +1803,33 @@ exports[`Review Summary View renders submitted correctly 1`] = `
       <div
         className="form-row"
       >
-        <small>
-          Tier 1: Properties with a net value of less than $1M.
-        </small>
-      </div>
-      <div
-        className="form-row"
-      >
-        <small>
-          Tier 2: Properties with a net value of $1M or more and less than $10M.
-        </small>
-      </div>
-      <div
-        className="form-row"
-      >
-        <small>
-          Tier 3: Properties are single parcels with a net value of $10M or more.
-        </small>
-      </div>
-      <div
-        className="form-row"
-      >
-        <small>
-          Tier 4: Properties are multiple parcels with a cumulative net value of $10M or more.
-        </small>
+        <label
+          className="form-label col-form-label col-md-2"
+        />
+        <div
+          className="form-group"
+        >
+          <div>
+            <small>
+              Tier 1: Properties with a net value of less than $1M.
+            </small>
+          </div>
+          <div>
+            <small>
+              Tier 2: Properties with a net value of $1M or more and less than $10M.
+            </small>
+          </div>
+          <div>
+            <small>
+              Tier 3: Properties are single parcels with a net value of $10M or more.
+            </small>
+          </div>
+          <div>
+            <small>
+              Tier 4: Properties are multiple parcels with a cumulative net value of $10M or more.
+            </small>
+          </div>
+        </div>
       </div>
       <div
         className="form-row"
@@ -1827,7 +1842,7 @@ exports[`Review Summary View renders submitted correctly 1`] = `
         <h3
           className="col-md-8"
         >
-          Project Totals
+          Financial Information
         </h3>
       </div>
       <div
@@ -1857,6 +1872,7 @@ exports[`Review Summary View renders submitted correctly 1`] = `
                   onBlur={[Function]}
                   onChange={[Function]}
                   placeholder=""
+                  required={true}
                   value=""
                 />
               </div>
@@ -1883,6 +1899,7 @@ exports[`Review Summary View renders submitted correctly 1`] = `
                   onBlur={[Function]}
                   onChange={[Function]}
                   placeholder=""
+                  required={true}
                   value=""
                 />
               </div>
@@ -1913,6 +1930,7 @@ exports[`Review Summary View renders submitted correctly 1`] = `
                   onBlur={[Function]}
                   onChange={[Function]}
                   placeholder=""
+                  required={true}
                   value=""
                 />
               </div>
@@ -1957,7 +1975,7 @@ exports[`Review Summary View renders submitted correctly 1`] = `
             }
           }
         >
-          Please make any necessary updates to the valuation information and the classification
+          Please make any necessary updates to the valuation information and the classification.
         </h6>
         <h2
           className="col-md-5"

@@ -67,7 +67,7 @@ const SplTabs: React.FunctionComponent<ISplTabsProps> = ({
         >
           <EnhancedReferralTab
             isReadOnly={!canOverride}
-            setSubmitStatusCode={noop}
+            setSubmitStatusCode={setSubmitStatusCode}
             goToGreTransferred={noop}
           />
         </Tab>

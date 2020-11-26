@@ -30,7 +30,7 @@ const UpdateInfoStep = ({ isReadOnly, formikRef }: IStepProps) => {
         <Form>
           <UpdateInfoForm
             isReadOnly={isReadOnly || !canUserEditForm(project.agencyId)}
-            title="Update Info"
+            title="Project Information"
           />
           <ProjectNotes />
           <StepErrorSummary />

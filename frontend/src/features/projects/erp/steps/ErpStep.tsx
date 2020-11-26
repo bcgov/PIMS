@@ -30,6 +30,7 @@ import * as Yup from 'yup';
 import _ from 'lodash';
 import './ErpStep.scss';
 import { ValidationGroup } from 'components/common/tabValidation';
+import { EnhancedReferralExemptionApprovedForSplSchema } from '../forms/erpYupSchema';
 
 const CenterBoldText = styled.div`
   text-align: center;
@@ -80,7 +81,23 @@ const ErpStep = ({ formikRef }: IStepProps) => {
       tab: SPPApprovalTabs.erp,
       statusCode: ReviewWorkflowStatus.ApprovedForErp,
     },
+    {
+      schema: EnhancedReferralExemptionApprovedForSplSchema,
+      tab: SPPApprovalTabs.erp,
+      statusCode: ReviewWorkflowStatus.ApprovedForSpl,
+    },
   ];
+
+  /**
+   * Get the validation rules for the specified 'statusCode' or return them all.
+   * @param statusCode The status code for the desired status.
+   */
+  const getValidationGroups = (statusCode?: string) => {
+    if (statusCode) {
+      return validationGroups.filter(g => g.statusCode === statusCode);
+    }
+    return [];
+  };
 
   return (
     <Container fluid className="erpStep">
@@ -94,14 +111,18 @@ const ErpStep = ({ formikRef }: IStepProps) => {
             submitStatusCode,
             getStatusTransitionWorkflow(submitStatusCode),
           ).then((project: IProject) => {
-            if (project?.statusCode === ReviewWorkflowStatus.ApprovedForSpl) {
+            if (project?.statusCode === ReviewWorkflowStatus.ApprovedForErp) {
+              history.go(0);
+            } else if (project?.statusCode === ReviewWorkflowStatus.ApprovedForSpl) {
               goToSpl();
             } else if (project?.statusCode === ReviewWorkflowStatus.NotInSpl) {
               setCurrentTab(SPPApprovalTabs.closeOutForm);
             }
           });
         }}
-        validate={(values: IProject) => handleValidate(values, validationGroups)}
+        validate={(values: IProject) =>
+          handleValidate(values, getValidationGroups(submitStatusCode))
+        }
       >
         {({ values, errors, touched }) => (
           <Form>

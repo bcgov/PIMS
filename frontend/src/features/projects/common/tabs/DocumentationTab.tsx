@@ -1,11 +1,9 @@
 import * as React from 'react';
 import { Container } from 'react-bootstrap';
 import _ from 'lodash';
-import { PublicNotes, PrivateNotes } from '../../common/components/ProjectNotes';
 import {
   DocumentationForm,
   AppraisalCheckListForm,
-  ProjectNotes,
   DisposeWorkflowStatus,
   FirstNationsCheckListForm,
   useProject,
@@ -36,9 +34,6 @@ const DocumentationTab: React.FunctionComponent<IDocumentationTabProps> = ({
       <DocumentationForm tasks={documentationTasks} isReadOnly={!canOverride} />
       <AppraisalCheckListForm isReadOnly={isReadOnly} taskStatusCode={appraisalTaskStatusCode} />
       <FirstNationsCheckListForm isReadOnly={isReadOnly} />
-      <ProjectNotes disabled={true} />
-      <PublicNotes disabled={isReadOnly} />
-      <PrivateNotes disabled={isReadOnly} />
     </Container>
   );
 };

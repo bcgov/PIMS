@@ -37,7 +37,7 @@ namespace Pims.Api.Areas.Project.Models.Report
         /// <summary>
         /// get/set - The type of this report.
         /// </summary>
-        public ReportTypes ReportTypeId { get; set; }
+        public ReportTypes ReportType { get; set; }
         #endregion
     }
 }
