@@ -82,8 +82,8 @@ describe('Edit agency page', () => {
       expect(getByLabelText(/agency e-mail address/i).getAttribute('value')).toEqual(
         'test@email.com',
       );
-      expect(getByLabelText('Agency*').getAttribute('value')).toEqual('Test Agency');
-      expect(getByLabelText('Short Name (Code)*').getAttribute('value')).toEqual('TEST');
+      expect(getByLabelText('Agency').getAttribute('value')).toEqual('Test Agency');
+      expect(getByLabelText('Short Name (Code)').getAttribute('value')).toEqual('TEST');
       expect(getByLabelText(/email notifications?/i).getAttribute('value')).toEqual('true');
     });
   });

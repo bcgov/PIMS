@@ -39,6 +39,8 @@ type OptionalAttributes = {
   outerClassName?: string;
   /** formik state used for context and memo calculations */
   formikProps: FormikProps<any>;
+  /** Whether the field is required. Makes the field border blue. */
+  required?: boolean;
 };
 /**
  * Formik-wrapped currency input providing a numeric mask over number fields
@@ -53,6 +55,7 @@ const CurrencyInput = ({
   disabled,
   placeholder,
   tooltip,
+  required,
   formikProps: {
     handleBlur,
     values,
@@ -81,7 +84,7 @@ const CurrencyInput = ({
   const isInvalid = error && touch ? 'is-invalid ' : '';
   const isValid = !error && touch && value && !disabled ? 'is-valid ' : '';
   return (
-    <Form.Group className={classNames(outerClassName, 'fast-currency-input')}>
+    <Form.Group className={classNames(!!required ? 'required' : '', outerClassName)}>
       <div className="input-tooltip-wrapper">
         <MaskedInput
           value={value}
