@@ -2,7 +2,6 @@ import * as React from 'react';
 import { Container } from 'react-bootstrap';
 import { ProjectNotes, ProjectDraftForm, UpdateInfoForm, useProject } from '../../common';
 import { PublicNotes, PrivateNotes } from '../../common';
-import { SurplusPropertyListApprovalForm } from '..';
 import AdditionalPropertyInformationForm from '../../common/forms/AdditionalPropertyInformationForm';
 
 interface ISurplusPropertyInformationTabProps {
@@ -15,17 +14,18 @@ const SurplusPropertyInformationTab: React.FunctionComponent<ISurplusPropertyInf
   const { goToDisposePath } = useProject();
   return (
     <Container fluid>
-      <SurplusPropertyListApprovalForm isReadOnly={isReadOnly} />
-      <h3>Project Property Information</h3>
-      <AdditionalPropertyInformationForm isReadOnly={isReadOnly} />
       <ProjectDraftForm isReadOnly={isReadOnly} title="" />
+      <AdditionalPropertyInformationForm isReadOnly={isReadOnly} />
+
       <UpdateInfoForm
         isReadOnly={isReadOnly}
+        showRisk={true}
         goToAddProperties={() => goToDisposePath('assess/properties/update')}
-        title=""
+        title="Property Information"
       />
-      <ProjectNotes disabled={true} />
-      <ProjectNotes field="appraisedNote" label="Appraised Notes" disabled={isReadOnly} />
+
+      <h3>Notes</h3>
+      <ProjectNotes disabled={true} label="Agency Notes" />
       <PublicNotes disabled={isReadOnly} />
       <PrivateNotes disabled={isReadOnly} />
       <ProjectNotes

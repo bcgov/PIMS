@@ -106,6 +106,18 @@ namespace Pims.Dal.Services.Admin
         }
 
         /// <summary>
+        /// Return all the snaphots for the specified 'projectId'.
+        /// </summary>
+        /// <param name="projectId"></param>
+        /// <returns></returns>
+        public IEnumerable<ProjectSnapshot> GetSnapshots(int projectId)
+        {
+            return this.Context.ProjectSnapshots
+                .Where(s => s.ProjectId == projectId)
+                .ToArray();
+        }
+
+        /// <summary>
         /// Generate a new project number.
         /// This does not apply the generated number to a project, this is up to you to do.
         /// </summary>

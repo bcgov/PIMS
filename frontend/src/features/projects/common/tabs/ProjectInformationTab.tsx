@@ -14,15 +14,17 @@ const ProjectInformationTab: React.FunctionComponent<IProjectInformationTabProps
   const { goToDisposePath } = useProject();
   return (
     <Container fluid>
-      <h3>Project Property Information</h3>
-      <AdditionalPropertyInformationForm isReadOnly={isReadOnly} />
       <ProjectDraftForm isReadOnly={isReadOnly} title="" />
+      <AdditionalPropertyInformationForm isReadOnly={isReadOnly} />
+
       <UpdateInfoForm
         isReadOnly={isReadOnly}
         goToAddProperties={() => goToDisposePath('assess/properties/update')}
-        title=""
+        title="Property Information"
       />
-      <ProjectNotes disabled={true} />
+
+      <h3>Notes</h3>
+      <ProjectNotes disabled={true} label="Agency Notes" />
       <PublicNotes disabled={isReadOnly} />
       <PrivateNotes disabled={isReadOnly} />
       <ProjectNotes

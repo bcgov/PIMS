@@ -1,9 +1,15 @@
 import * as Yup from 'yup';
 
-export const SurplusPropertyListYupSchema = Yup.object().shape({
+export const SurplusPropertyListNotInSplYupSchema = Yup.object().shape({
+  clearanceNotificationSentOn: Yup.date().required('Required'),
+});
+
+export const SurplusPropertyListOnMarketYupSchema = Yup.object().shape({
   marketedOn: Yup.date().required('Required'),
+});
+
+export const SurplusPropertyListContractInPlaceYupSchema = Yup.object().shape({
   offersReceived: Yup.string().max(2000, 'Offers received must be less then 2000 characters'),
-  isContractConditional: Yup.boolean().required('Required'),
   offerAcceptedOn: Yup.date().required('Required'),
   purchaser: Yup.string()
     .required('Required')
@@ -11,6 +17,9 @@ export const SurplusPropertyListYupSchema = Yup.object().shape({
   offerAmount: Yup.number()
     .min(1, 'Offer amount must be a positive number')
     .required('Required'),
+});
+
+export const SurplusPropertyListDisposeYupSchema = Yup.object().shape({
   disposedOn: Yup.date().required('Required'),
 });
 

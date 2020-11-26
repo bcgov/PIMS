@@ -92,7 +92,7 @@ namespace Pims.Dal.Services
             //This may occur if a user refreshes their report, and changes the 'From' date without saving.
             if (toSnapshots.Count() == 0)
             {
-                return GenerateSnapshots(report.From, (DateTime) report.To);
+                return GenerateSnapshots(report.From, (DateTime)report.To);
             }
 
             var fromSnapshots = currentSnapshots.Where(s => s.SnapshotOn == report.From).ToDictionary(s => (int?)s.ProjectId, s => s);
@@ -151,7 +151,7 @@ namespace Pims.Dal.Services
             if (report.From == null)
             {
                 var mostRecentReport = this.Context.ProjectReports
-                    .Where(r => r.ReportTypeId == ReportTypes.SPL)
+                    .Where(r => r.ReportType == ReportTypes.SPL)
                     .OrderByDescending(r => r.IsFinal)
                     .ThenByDescending(r => r.To)
                     .FirstOrDefault();
@@ -168,7 +168,7 @@ namespace Pims.Dal.Services
 
         /// <summary>
         /// Update the specified project report metadata in the datasource.
-        /// If the project 'To' date has changed, 
+        /// If the project 'To' date has changed,
         /// </summary>
         /// <param name="project"></param>
         /// <exception cref="ArgumentNullException">Argument 'report' is required.</exception>

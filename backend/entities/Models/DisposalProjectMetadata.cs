@@ -76,11 +76,6 @@ namespace Pims.Dal.Entities.Models
         public string Purchaser { get; set; }
 
         /// <summary>
-        /// get/set - Whether or not the contract for the project is conditional
-        /// </summary>
-        public bool? IsContractConditional { get; set; }
-
-        /// <summary>
         /// get/set - When the offer was accepted on.
         /// </summary>
         public DateTime? OfferAcceptedOn { get; set; }

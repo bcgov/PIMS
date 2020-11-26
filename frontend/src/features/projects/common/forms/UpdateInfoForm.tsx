@@ -15,6 +15,10 @@ import {
   tier2Tooltip,
   tier3Tooltip,
   tier4Tooltip,
+  risk1Tooltip,
+  risk2Tooltip,
+  risk3Tooltip,
+  risk4Tooltip,
 } from '../../common';
 import { PropertyListViewUpdate } from '../components/PropertyListViewUpdate';
 import { Container } from 'react-bootstrap';
@@ -22,6 +26,7 @@ import ProjectFinancialTable from '../components/ProjectFinancialTable';
 
 interface IUpdateInfoFormProps {
   title?: string;
+  showRisk?: boolean;
   goToAddProperties?: Function;
 }
 
@@ -33,12 +38,19 @@ const classificationLimitLabels = ['Surplus Active', 'Surplus Encumbered'];
  */
 const UpdateInfoForm = ({
   isReadOnly,
+  showRisk,
   goToAddProperties,
   title,
 }: IStepProps & IUpdateInfoFormProps) => {
   const codeLookups = useCodeLookups();
   const tierCodes = codeLookups.getByType('TierLevel').map(mapLookupCode);
   const [selectedProperties, setSelectedProperties] = useState([]);
+  const risks = [
+    { value: 1, label: 'Complete' },
+    { value: 2, label: 'Green' },
+    { value: 3, label: 'Yellow' },
+    { value: 4, label: 'Red' },
+  ];
 
   return (
     <Container fluid className="UpdateInfoForm">
@@ -62,20 +74,59 @@ const UpdateInfoForm = ({
         />
       </Form.Row>
       <Form.Row>
-        <small>{tier1Tooltip}</small>
-      </Form.Row>
-      <Form.Row>
-        <small>{tier2Tooltip}</small>
-      </Form.Row>
-      <Form.Row>
-        <small>{tier3Tooltip}</small>
-      </Form.Row>
-      <Form.Row>
-        <small>{tier4Tooltip}</small>
+        <Form.Label column md={2}></Form.Label>
+        <Form.Group>
+          <div>
+            <small>{tier1Tooltip}</small>
+          </div>
+          <div>
+            <small>{tier2Tooltip}</small>
+          </div>
+          <div>
+            <small>{tier3Tooltip}</small>
+          </div>
+          <div>
+            <small>{tier4Tooltip}</small>
+          </div>
+        </Form.Group>
       </Form.Row>
 
+      {showRisk && (
+        <>
+          <Form.Row>
+            <Form.Label column md={2}>
+              Risk
+            </Form.Label>
+            <Select
+              disabled={isReadOnly}
+              outerClassName="col-md-2"
+              field="riskId"
+              type="number"
+              options={risks}
+            />
+          </Form.Row>
+          <Form.Row>
+            <Form.Label column md={2}></Form.Label>
+            <Form.Group>
+              <div>
+                <small>{risk1Tooltip}</small>
+              </div>
+              <div>
+                <small>{risk2Tooltip}</small>
+              </div>
+              <div>
+                <small>{risk3Tooltip}</small>
+              </div>
+              <div>
+                <small>{risk4Tooltip}</small>
+              </div>
+            </Form.Group>
+          </Form.Row>
+        </>
+      )}
+
       <Form.Row style={{ alignItems: 'unset' }}>
-        <h3 className="col-md-8">Project Totals</h3>
+        <h3 className="col-md-8">Financial Information</h3>
       </Form.Row>
       <ProjectFinancialTable disabled={!!isReadOnly} />
       <Form.Row>
