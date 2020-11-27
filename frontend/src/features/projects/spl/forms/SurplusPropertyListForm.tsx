@@ -47,10 +47,10 @@ const SurplusPropertyListForm = ({
       <Form.Row>
         <Form.Label column md={3}>
           Date Entered Market
-          <span className="required">&nbsp;*</span>
           <TooltipIcon toolTipId="dateEnteredMarket" toolTip={dateEnteredMarket} />
         </Form.Label>
         <FastDatePicker
+          required
           outerClassName="col-md-2"
           formikProps={formikProps}
           disabled={isReadOnly}
@@ -80,9 +80,9 @@ const SurplusPropertyListForm = ({
       <Form.Row>
         <Form.Label column md={3}>
           Contract in Place
-          <span className="required">&nbsp;*</span>
         </Form.Label>
         <Check
+          required
           type="radio"
           field="isContractConditional"
           radioLabelOne="Conditional"
@@ -92,9 +92,9 @@ const SurplusPropertyListForm = ({
       <Form.Row>
         <Form.Label column md={3}>
           Date of Accepted Offer
-          <span className="required">&nbsp;*</span>
         </Form.Label>
         <FastDatePicker
+          required
           outerClassName="col-md-2"
           formikProps={formikProps}
           disabled={isReadOnly}
@@ -104,9 +104,9 @@ const SurplusPropertyListForm = ({
       <Form.Row>
         <Form.Label column md={3}>
           Purchaser
-          <span className="required">&nbsp;*</span>
         </Form.Label>
         <FastInput
+          required
           field="purchaser"
           outerClassName="col-md-2"
           disabled={isReadOnly}
@@ -116,9 +116,9 @@ const SurplusPropertyListForm = ({
       <Form.Row>
         <Form.Label column md={3}>
           Offer Amount
-          <span className="required">&nbsp;*</span>
         </Form.Label>
         <FastCurrencyInput
+          required
           field="offerAmount"
           outerClassName="col-md-2"
           disabled={isReadOnly}
@@ -144,9 +144,9 @@ const SurplusPropertyListForm = ({
       <Form.Row>
         <Form.Label column md={3}>
           Date Disposed Externally
-          <span className="required">&nbsp;*</span>
         </Form.Label>
         <FastDatePicker
+          required
           outerClassName="col-md-2"
           formikProps={formikProps}
           disabled={isReadOnly}

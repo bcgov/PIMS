@@ -10,12 +10,12 @@ exports[`PidPin sub-form renders correctly 1`] = `
     className="d-inline-flex flex-nowrap form-row"
   >
     <label
-      className="required form-label"
+      className="form-label"
     >
       PID
     </label>
     <div
-      className="form-group"
+      className="required form-group"
     >
       <svg
         className="tooltip-icon"
@@ -46,6 +46,7 @@ exports[`PidPin sub-form renders correctly 1`] = `
         name="pid"
         onBlur={[Function]}
         onChange={[Function]}
+        required={true}
         value=""
       />
     </div>
@@ -64,7 +65,7 @@ exports[`PidPin sub-form renders correctly 1`] = `
       PIN 
     </label>
     <div
-      className="form-group"
+      className="required form-group"
     >
       <svg
         className="tooltip-icon"
@@ -95,6 +96,7 @@ exports[`PidPin sub-form renders correctly 1`] = `
         name="pin"
         onBlur={[Function]}
         onChange={[Function]}
+        required={true}
         type="number"
         value=""
       />

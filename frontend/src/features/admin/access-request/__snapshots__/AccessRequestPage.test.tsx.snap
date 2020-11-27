@@ -118,11 +118,6 @@ exports[`AccessRequestPage functionality renders RequestAccessPage correctly 1`]
           >
             Agency
           </label>
-          <span
-            className="required"
-          >
-            *
-          </span>
           <select
             className="form-select form-control"
             id="input-agency"
@@ -189,11 +184,6 @@ exports[`AccessRequestPage functionality renders RequestAccessPage correctly 1`]
             >
               Role
             </label>
-            <span
-              className="required"
-            >
-              *
-            </span>
             <select
               className="form-select form-control"
               id="input-role"
@@ -227,11 +217,6 @@ exports[`AccessRequestPage functionality renders RequestAccessPage correctly 1`]
             htmlFor="input-note"
           >
             Notes
-            <span
-              className="required"
-            >
-              *
-            </span>
           </label>
           <textarea
             className="form-control"

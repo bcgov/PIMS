@@ -70,8 +70,9 @@ const AddressForm = <T extends any>(props: AddressProps & FormikProps<T>) => {
   return (
     <>
       <Form.Row>
-        <Form.Label className="required">Street Address</Form.Label>
+        <Form.Label>Street Address</Form.Label>
         <GeocoderAutoComplete
+          required
           tooltip={streetAddressTooltip}
           value={getIn(props.values, withNameSpace('line1'))}
           disabled={props.disabled}
@@ -84,7 +85,7 @@ const AddressForm = <T extends any>(props: AddressProps & FormikProps<T>) => {
         />
       </Form.Row>
       <Form.Row>
-        <Form.Label className="required">Location</Form.Label>
+        <Form.Label>Location</Form.Label>
         <TypeaheadField
           options={administrativeAreas.map(x => x.label)}
           name={withNameSpace('administrativeArea')}
@@ -104,7 +105,7 @@ const AddressForm = <T extends any>(props: AddressProps & FormikProps<T>) => {
         />
       </Form.Row>
       <Form.Row>
-        <Form.Label>Postal</Form.Label>
+        <Form.Label>Postal Code</Form.Label>
         <FastInput
           className="input-small"
           formikProps={props}

@@ -26,6 +26,8 @@ type OptionalAttributes = {
   oldDateWarning?: boolean;
   /** form label */
   label?: string;
+  /** Whether the field is required. Makes the field border blue. */
+  required?: boolean;
 };
 
 export type FastDatePickerProps = FormControlProps &
@@ -44,6 +46,7 @@ const FormikDatePicker: FunctionComponent<FastDatePickerProps> = ({
   minDate,
   oldDateWarning,
   label,
+  required,
   formikProps: {
     values,
     initialValues,
@@ -79,7 +82,10 @@ const FormikDatePicker: FunctionComponent<FastDatePickerProps> = ({
   const isInvalid = error && touch ? 'is-invalid ' : '';
   const isValid = !error && touch && value && !disabled ? 'is-valid ' : '';
   return (
-    <FormGroup className={outerClassName ?? ''} controlId={`datepicker-${field}`}>
+    <FormGroup
+      className={classNames(!!required ? 'required' : '', outerClassName)}
+      controlId={`datepicker-${field}`}
+    >
       {!!label && <Form.Label>{label}</Form.Label>}
 
       <DatePicker
@@ -89,6 +95,7 @@ const FormikDatePicker: FunctionComponent<FastDatePickerProps> = ({
         yearDropdownItemNumber={10}
         autoComplete="off"
         name={field}
+        required={required}
         placeholderText="--/--/----"
         className={classNames('form-control', 'date-picker', isInvalid, isValid)}
         dateFormat="MM/dd/yyyy"

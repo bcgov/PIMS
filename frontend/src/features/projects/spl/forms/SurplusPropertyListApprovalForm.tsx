@@ -19,9 +19,9 @@ const SurplusPropertyListApprovalForm = ({ isReadOnly }: ISurplusPropertyListApp
       <Form.Row>
         <Form.Label column md={3}>
           Request for Addition to SPL Received
-          <span className="required">&nbsp;*</span>
         </Form.Label>
         <FastDatePicker
+          required
           outerClassName="col-md-2"
           formikProps={formikProps}
           disabled={isReadOnly}
@@ -31,9 +31,9 @@ const SurplusPropertyListApprovalForm = ({ isReadOnly }: ISurplusPropertyListApp
       <Form.Row>
         <Form.Label column md={3}>
           Addition Approved
-          <span className="required">&nbsp;*</span>
         </Form.Label>
         <FastDatePicker
+          required
           outerClassName="col-md-2"
           formikProps={formikProps}
           disabled={isReadOnly}

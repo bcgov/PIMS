@@ -50,8 +50,9 @@ const PidPinForm: FunctionComponent<PidPinProps> = (props: PidPinProps) => {
   return (
     <>
       <Form.Row className="d-inline-flex flex-nowrap">
-        <Form.Label className="required">PID</Form.Label>
+        <Form.Label>PID</Form.Label>
         <Input
+          required
           displayErrorTooltips
           className="input-small"
           tooltip={PidTooltip}
@@ -71,6 +72,7 @@ const PidPinForm: FunctionComponent<PidPinProps> = (props: PidPinProps) => {
           PIN&nbsp;
         </Form.Label>
         <Input
+          required
           displayErrorTooltips
           className="input-small"
           tooltip={PinTooltip}

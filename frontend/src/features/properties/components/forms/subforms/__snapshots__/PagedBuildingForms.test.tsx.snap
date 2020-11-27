@@ -22,10 +22,10 @@ exports[`PagedBuildingForms functionality displays any pre-existing buildings 1`
     <div class=\\"form-row\\"><label class=\\"form-label\\">Description</label>
       <div class=\\"form-group\\"><textarea name=\\"buildings.0.description\\" id=\\"input-buildings.0.description\\" class=\\"form-control\\" disabled=\\"\\">description</textarea></div>
     </div>
-    <div class=\\"form-row\\"><label class=\\"required form-label\\">Classification</label>
-      <div class=\\"form-group\\"><svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 512 512\\" class=\\"tooltip-icon\\" height=\\"1em\\" width=\\"1em\\" xmlns=\\"http://www.w3.org/2000/svg\\">
+    <div class=\\"form-row\\"><label class=\\"form-label\\">Classification</label>
+      <div class=\\"required form-group\\"><svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 512 512\\" class=\\"tooltip-icon\\" height=\\"1em\\" width=\\"1em\\" xmlns=\\"http://www.w3.org/2000/svg\\">
           <path d=\\"M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z\\"></path>
-        </svg><select name=\\"buildings.0.classificationId\\" type=\\"number\\" id=\\"input-buildings.0.classificationId-fast\\" class=\\"form-control\\" disabled=\\"\\">
+        </svg><select name=\\"buildings.0.classificationId\\" required=\\"\\" type=\\"number\\" id=\\"input-buildings.0.classificationId-fast\\" class=\\"form-control\\" disabled=\\"\\">
           <option value=\\"\\">Must Select One</option>
           <option value=\\"1\\">classification test</option>
         </select></div>
@@ -59,17 +59,17 @@ exports[`PagedBuildingForms functionality displays any pre-existing buildings 1`
     </div>
   </div>
   <div class=\\"col-md-6\\">
-    <div class=\\"form-row\\"><label class=\\"required form-label\\">Street Address</label>
+    <div class=\\"form-row\\"><label class=\\"form-label\\">Street Address</label>
       <div class=\\"GeocoderAutoComplete\\">
         <div>
-          <div class=\\"form-group\\"><svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 512 512\\" class=\\"tooltip-icon\\" height=\\"1em\\" width=\\"1em\\" xmlns=\\"http://www.w3.org/2000/svg\\">
+          <div class=\\"required form-group\\"><svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 512 512\\" class=\\"tooltip-icon\\" height=\\"1em\\" width=\\"1em\\" xmlns=\\"http://www.w3.org/2000/svg\\">
               <path d=\\"M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z\\"></path>
-            </svg><input name=\\"buildings.0.address.line1\\" field=\\"buildings.0.address.line1\\" id=\\"input-buildings.0.address.line1\\" class=\\"form-control\\" value=\\"line1\\" disabled=\\"\\"></div>
+            </svg><input name=\\"buildings.0.address.line1\\" required=\\"\\" field=\\"buildings.0.address.line1\\" id=\\"input-buildings.0.address.line1\\" class=\\"form-control\\" value=\\"line1\\" disabled=\\"\\"></div>
         </div>
       </div>
     </div>
-    <div class=\\"form-row\\"><label class=\\"required form-label\\">Location</label>
-      <div class=\\"sc-AxjAm gLmrxD form-group\\"><svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 512 512\\" class=\\"tooltip-icon\\" height=\\"1em\\" width=\\"1em\\" xmlns=\\"http://www.w3.org/2000/svg\\">
+    <div class=\\"form-row\\"><label class=\\"form-label\\">Location</label>
+      <div class=\\"required form-group\\"><svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 512 512\\" class=\\"tooltip-icon\\" height=\\"1em\\" width=\\"1em\\" xmlns=\\"http://www.w3.org/2000/svg\\">
           <path d=\\"M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z\\"></path>
         </svg>
         <div class=\\"rbt\\" style=\\"outline: none; position: relative;\\" tabindex=\\"-1\\">
@@ -83,18 +83,18 @@ exports[`PagedBuildingForms functionality displays any pre-existing buildings 1`
           <option value=\\"2222\\" class=\\"option\\">test province</option>
         </select></div>
     </div>
-    <div class=\\"form-row\\"><label class=\\"form-label\\">Postal</label>
+    <div class=\\"form-row\\"><label class=\\"form-label\\">Postal Code</label>
       <div class=\\"form-group\\"><input name=\\"buildings.0.address.postal\\" id=\\"input-buildings.0.address.postal\\" class=\\"input-small form-control\\" value=\\"postal\\" disabled=\\"\\"></div>
     </div>
     <div style=\\"position: relative;\\">
-      <div class=\\"form-row\\"><label class=\\"required form-label\\">Latitude</label>
-        <div class=\\"form-group\\"><svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 512 512\\" class=\\"tooltip-icon\\" height=\\"1em\\" width=\\"1em\\" xmlns=\\"http://www.w3.org/2000/svg\\">
+      <div class=\\"form-row\\"><label class=\\"form-label\\">Latitude</label>
+        <div class=\\"required form-group\\"><svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 512 512\\" class=\\"tooltip-icon\\" height=\\"1em\\" width=\\"1em\\" xmlns=\\"http://www.w3.org/2000/svg\\">
             <path d=\\"M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z\\"></path>
-          </svg><input name=\\"buildings.0.latitude\\" type=\\"number\\" id=\\"input-buildings.0.latitude\\" class=\\"input-medium form-control\\" value=\\"9\\" disabled=\\"\\"></div>
+          </svg><input name=\\"buildings.0.latitude\\" required=\\"\\" type=\\"number\\" id=\\"input-buildings.0.latitude\\" class=\\"input-medium form-control\\" value=\\"9\\" disabled=\\"\\"></div>
       </div>
-      <div class=\\"form-row\\"><label class=\\"required form-label\\">Longitude</label>
-        <div class=\\"form-group\\"><input name=\\"buildings.0.longitude\\" type=\\"number\\" id=\\"input-buildings.0.longitude\\" class=\\"input-medium form-control\\" value=\\"10\\" disabled=\\"\\"></div>
-      </div><button class=\\"sc-AxheI gfSNaO\\" disabled=\\"\\">
+      <div class=\\"form-row\\"><label class=\\"form-label\\">Longitude</label>
+        <div class=\\"required form-group\\"><input name=\\"buildings.0.longitude\\" required=\\"\\" type=\\"number\\" id=\\"input-buildings.0.longitude\\" class=\\"input-medium form-control\\" value=\\"10\\" disabled=\\"\\"></div>
+      </div><button class=\\"sc-AxhUy jCfTQa\\" disabled=\\"\\">
         <p>Place Pin</p><svg>draft-building-icon.svg</svg>
       </button>
     </div>
@@ -104,22 +104,22 @@ exports[`PagedBuildingForms functionality displays any pre-existing buildings 1`
   <h4>Information</h4>
   <div class=\\"row no-gutters\\">
     <div class=\\"col-md-6\\">
-      <div class=\\"form-row\\"><label class=\\"required form-label\\">Predominate Use</label>
-        <div class=\\"form-group\\"><select name=\\"buildings.0.buildingPredominateUseId\\" type=\\"number\\" id=\\"input-buildings.0.buildingPredominateUseId-fast\\" class=\\"form-control\\" disabled=\\"\\">
+      <div class=\\"form-row\\"><label class=\\"form-label\\">Predominate Use</label>
+        <div class=\\"required form-group\\"><select name=\\"buildings.0.buildingPredominateUseId\\" required=\\"\\" type=\\"number\\" id=\\"input-buildings.0.buildingPredominateUseId-fast\\" class=\\"form-control\\" disabled=\\"\\">
             <option value=\\"\\">Must Select One</option>
             <option value=\\"1\\">predominate use test type</option>
           </select></div>
       </div>
-      <div class=\\"form-row\\"><label class=\\"required form-label\\">Type of Construction</label>
-        <div class=\\"form-group\\"><select name=\\"buildings.0.buildingConstructionTypeId\\" type=\\"number\\" id=\\"input-buildings.0.buildingConstructionTypeId-fast\\" class=\\"form-control\\" disabled=\\"\\">
+      <div class=\\"form-row\\"><label class=\\"form-label\\">Type of Construction</label>
+        <div class=\\"required form-group\\"><select name=\\"buildings.0.buildingConstructionTypeId\\" required=\\"\\" type=\\"number\\" id=\\"input-buildings.0.buildingConstructionTypeId-fast\\" class=\\"form-control\\" disabled=\\"\\">
             <option value=\\"\\">Must Select One</option>
             <option value=\\"1\\">construction test type</option>
           </select></div>
       </div>
     </div>
     <div class=\\"col-md-6\\">
-      <div class=\\"form-row\\"><label class=\\"required form-label\\">Rentable Area</label>
-        <div class=\\"input-group disabled\\">
+      <div class=\\"form-row\\"><label class=\\"form-label\\">Rentable Area</label>
+        <div class=\\"input-group required disabled\\">
           <div class=\\"input-group-content\\">
             <div class=\\"form-group\\"><input name=\\"buildings.0.rentableArea\\" type=\\"number\\" id=\\"input-buildings.0.rentableArea\\" class=\\"form-control\\" value=\\"12\\" disabled=\\"\\"></div>
           </div>
@@ -134,8 +134,8 @@ exports[`PagedBuildingForms functionality displays any pre-existing buildings 1`
   <h4>Tenancy</h4>
   <div class=\\"buildingTenancy row no-gutters\\">
     <div class=\\"col-md-6\\">
-      <div class=\\"form-row\\"><label class=\\"required form-label\\">Type of Current Occupant</label>
-        <div class=\\"form-group\\"><select name=\\"buildings.0.buildingOccupantTypeId\\" type=\\"number\\" id=\\"input-buildings.0.buildingOccupantTypeId-fast\\" class=\\"form-control\\" disabled=\\"\\">
+      <div class=\\"form-row\\"><label class=\\"form-label\\">Type of Current Occupant</label>
+        <div class=\\"required form-group\\"><select name=\\"buildings.0.buildingOccupantTypeId\\" required=\\"\\" type=\\"number\\" id=\\"input-buildings.0.buildingOccupantTypeId-fast\\" class=\\"form-control\\" disabled=\\"\\">
             <option value=\\"\\">Must Select One</option>
             <option value=\\"1\\">occupent type test</option>
           </select></div>
@@ -189,13 +189,13 @@ exports[`PagedBuildingForms functionality displays any pre-existing buildings 1`
                 <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">N/A</div>
                 <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">20/21</div>
                 <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">
-                  <div class=\\"fast-currency-input form-group\\">
+                  <div class=\\"form-group\\">
                     <div class=\\"input-tooltip-wrapper\\"><input name=\\"buildings.0.financials.0.netbook.value\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
                   </div>
                 </div>
                 <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">20/21</div>
                 <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">
-                  <div class=\\"fast-currency-input form-group\\">
+                  <div class=\\"form-group\\">
                     <div class=\\"input-tooltip-wrapper\\"><input name=\\"buildings.0.financials.0.market.value\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
                   </div>
                 </div>
@@ -205,19 +205,19 @@ exports[`PagedBuildingForms functionality displays any pre-existing buildings 1`
               <div role=\\"row\\" style=\\"display: flex; flex: 1 0 auto; min-width: 180px;\\" class=\\"tr\\">
                 <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">2020</div>
                 <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">
-                  <div class=\\"fast-currency-input form-group\\">
+                  <div class=\\"form-group\\">
                     <div class=\\"input-tooltip-wrapper\\"><input name=\\"buildings.0.financials.1.assessed.value\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
                   </div>
                 </div>
                 <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">19/20</div>
                 <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">
-                  <div class=\\"fast-currency-input form-group\\">
+                  <div class=\\"form-group\\">
                     <div class=\\"input-tooltip-wrapper\\"><input name=\\"buildings.0.financials.1.netbook.value\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
                   </div>
                 </div>
                 <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">19/20</div>
                 <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">
-                  <div class=\\"fast-currency-input form-group\\">
+                  <div class=\\"form-group\\">
                     <div class=\\"input-tooltip-wrapper\\"><input name=\\"buildings.0.financials.1.market.value\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
                   </div>
                 </div>
