@@ -160,17 +160,6 @@ namespace Pims.Dal.Entities.Views
         /// get/set - When the appraisal was completed.
         /// </summary>
         public DateTime? AppraisedDate { get; set; }
-
-        /// <summary>
-        /// get/set - The most recent improvement.
-        /// </summary>
-        [Column(TypeName = "MONEY")]
-        public decimal Improvements { get; set; }
-
-        /// <summary>
-        /// get/set - When the improvement was completed.
-        /// </summary>
-        public DateTime? ImprovementsDate { get; set; }
         #endregion
 
         #region Parcel Properties

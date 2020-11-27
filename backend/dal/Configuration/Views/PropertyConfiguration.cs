@@ -73,8 +73,6 @@ namespace Pims.Dal.Configuration.Views
                             AssessedDate = b.Evaluations.Any(f => f.Key == EvaluationKeys.Assessed) ? b.Evaluations.OrderByDescending(f => f.Date).FirstOrDefault(f => f.Key == EvaluationKeys.Assessed).Date : (DateTime?)null,
                             Appraised = b.Evaluations.Any(f => f.Key == EvaluationKeys.Appraised) ? b.Evaluations.OrderByDescending(f => f.Date).FirstOrDefault(f => f.Key == EvaluationKeys.Appraised).Value : 0,
                             AppraisedDate = b.Evaluations.Any(f => f.Key == EvaluationKeys.Appraised) ? b.Evaluations.OrderByDescending(f => f.Date).FirstOrDefault(f => f.Key == EvaluationKeys.Appraised).Date : (DateTime?)null,
-                            Improvements = b.Evaluations.Any(f => f.Key == EvaluationKeys.Improvements) ? b.Evaluations.OrderByDescending(f => f.Date).FirstOrDefault(f => f.Key == EvaluationKeys.Improvements).Value : 0,
-                            ImprovementsDate = b.Evaluations.Any(f => f.Key == EvaluationKeys.Improvements) ? b.Evaluations.OrderByDescending(f => f.Date).FirstOrDefault(f => f.Key == EvaluationKeys.Improvements).Date : (DateTime?)null,
 
                             RentableArea = b.RentableArea,
                             BuildingFloorCount = b.BuildingFloorCount,
@@ -127,8 +125,6 @@ namespace Pims.Dal.Configuration.Views
                                 AssessedDate = p.Evaluations.Any(f => f.Key == EvaluationKeys.Assessed) ? p.Evaluations.OrderByDescending(f => f.Date).FirstOrDefault(f => f.Key == EvaluationKeys.Assessed).Date : (DateTime?)null,
                                 Appraised = p.Evaluations.Any(f => f.Key == EvaluationKeys.Appraised) ? p.Evaluations.OrderByDescending(f => f.Date).FirstOrDefault(f => f.Key == EvaluationKeys.Appraised).Value : 0,
                                 AppraisedDate = p.Evaluations.Any(f => f.Key == EvaluationKeys.Appraised) ? p.Evaluations.OrderByDescending(f => f.Date).FirstOrDefault(f => f.Key == EvaluationKeys.Appraised).Date : (DateTime?)null,
-                                Improvements = p.Evaluations.Any(f => f.Key == EvaluationKeys.Improvements) ? p.Evaluations.OrderByDescending(f => f.Date).FirstOrDefault(f => f.Key == EvaluationKeys.Improvements).Value : 0,
-                                ImprovementsDate = p.Evaluations.Any(f => f.Key == EvaluationKeys.Improvements) ? p.Evaluations.OrderByDescending(f => f.Date).FirstOrDefault(f => f.Key == EvaluationKeys.Improvements).Date : (DateTime?)null,
 
                                 RentableArea = 0,
                                 BuildingFloorCount = 0,
