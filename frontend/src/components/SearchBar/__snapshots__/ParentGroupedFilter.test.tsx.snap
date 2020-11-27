@@ -1,12 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`ParentGroupedFilter renders 1`] = `
-.c0 div {
-  width: 100%;
-}
-
 <div
-  className="c0 form-group"
+  className="form-group"
 >
   <div
     className="rbt"

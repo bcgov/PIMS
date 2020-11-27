@@ -1,10 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`GRE Transfer Step renders correctly 1`] = `
-.c3 div {
-  width: 100%;
-}
-
 .c0 {
   text-align: center;
   margin-bottom: 1rem;
@@ -115,11 +111,6 @@ exports[`GRE Transfer Step renders correctly 1`] = `
             htmlFor="input-name"
           >
             Name
-            <span
-              className="required"
-            >
-              *
-            </span>
           </label>
           <input
             className="col-md-5 form-control"
@@ -173,7 +164,7 @@ exports[`GRE Transfer Step renders correctly 1`] = `
         New Owning Agency
       </label>
       <div
-        className="c3 form-group"
+        className="required form-group"
       >
         <div
           className="rbt"

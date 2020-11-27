@@ -23,7 +23,7 @@ type OptionalAttributes = {
   placeholder?: string;
   /** Adds a custom class to the input element of the <Input> component */
   className?: string;
-  /** Whether the field is required. Shows an asterisk after the label. */
+  /** Whether the field is required. Makes the field border blue. */
   required?: boolean;
   /** Specifies that the HTML element should be disabled */
   disabled?: boolean;
@@ -98,7 +98,6 @@ export const FastInput: React.FC<FastInputProps> = memo(
         )}
         {!!tooltip && !label && <TooltipIcon toolTipId={`${field}-tooltip`} toolTip={tooltip} />}
 
-        {!!required && <span className="required">*</span>}
         <TooltipWrapper toolTipId={`${field}-error-tooltip}`} toolTip={errorTooltip}>
           <Form.Control
             as={asElement}
