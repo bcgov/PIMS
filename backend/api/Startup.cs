@@ -128,6 +128,7 @@ namespace Pims.Api
                     options.JsonSerializerOptions.WriteIndented = jsonSerializerOptions.WriteIndented;
                     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
                     options.JsonSerializerOptions.Converters.Add(new Int32ToStringJsonConverter());
+                    options.JsonSerializerOptions.Converters.Add(new GeometryJsonConverter());
                 });
 
             services.AddMvcCore()
@@ -139,6 +140,7 @@ namespace Pims.Api
                     options.JsonSerializerOptions.WriteIndented = jsonSerializerOptions.WriteIndented;
                     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
                     options.JsonSerializerOptions.Converters.Add(new Int32ToStringJsonConverter());
+                    options.JsonSerializerOptions.Converters.Add(new GeometryJsonConverter());
                 });
 
             services.AddRouting(options =>

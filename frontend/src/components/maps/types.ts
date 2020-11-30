@@ -8,7 +8,7 @@ export type ICluster<
 > = Supercluster.ClusterFeature<C> | Supercluster.PointFeature<P>;
 
 export type PointFeature = Supercluster.PointFeature<{
-  propertyId: number;
+  id: number;
   propertyTypeId: PropertyTypes;
   projectStatus?: string;
   name?: string;

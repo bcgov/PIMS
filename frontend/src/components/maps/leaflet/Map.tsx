@@ -26,9 +26,8 @@ import { PopupView } from '../PopupView';
 import { useDispatch, useSelector } from 'react-redux';
 import { setMapViewZoom } from 'reducers/mapViewZoomSlice';
 import { RootState } from 'reducers/rootReducer';
-import { BBox, Feature } from 'geojson';
-import { createPoints, PointFeature, asProperty } from './mapUtils';
-import PointClusterer from './PointClusterer';
+import { Feature } from 'geojson';
+import { createPoints, asProperty } from './mapUtils';
 import { LegendControl } from './Legend/LegendControl';
 import { useMediaQuery } from 'react-responsive';
 import { useApi } from 'hooks/useApi';
@@ -51,6 +50,8 @@ import { saveParcelLayerData } from 'reducers/parcelLayerDataSlice';
 import useActiveFeatureLayer from '../hooks/useActiveFeatureLayer';
 import useMarkerZoom from '../hooks/useMarkerZoom';
 import LayersControl from './LayersControl';
+import { InventoryLayer } from './InventoryLayer';
+import { PointFeature } from '../types';
 
 export type MapViewportChangeEvent = {
   bounds: LatLngBounds | null;
@@ -158,7 +159,6 @@ const Map: React.FC<MapProps> = ({
   }, [mapRef, mapWidth]);
 
   // TODO: refactor various zoom settings
-  const [bounds, setBounds] = useState<BBox>();
   const [zoom, setZoom] = useState(lastZoom);
 
   if (!interactive) {
@@ -267,13 +267,6 @@ const Map: React.FC<MapProps> = ({
     if (!mapRef?.current) {
       return;
     }
-    const b = mapRef.current.leafletElement.getBounds();
-    setBounds([
-      b.getSouthWest().lng,
-      b.getSouthWest().lat,
-      b.getNorthEast().lng,
-      b.getNorthEast().lat,
-    ]);
     setZoom(mapRef.current.leafletElement.getZoom());
   }, [mapRef]);
 
@@ -402,12 +395,6 @@ const Map: React.FC<MapProps> = ({
                       zIndex={0}
                     />
                   )}
-                  <PointClusterer
-                    points={points}
-                    zoom={zoom}
-                    bounds={bounds}
-                    onMarkerClick={onSingleMarkerClick}
-                  />
                   {selectedProperty && renderPopup(selectedProperty)}
                   {!!layerPopup && (
                     <Popup
@@ -430,6 +417,15 @@ const Map: React.FC<MapProps> = ({
                   )}
                   <LegendControl />
                   <LayersControl />
+                  <InventoryLayer
+                    zoom={zoom}
+                    onMarkerClick={onSingleMarkerClick}
+                    filter={{
+                      ...mapFilter,
+                      minLandArea: mapFilter.minLotSize,
+                      maxLandArea: mapFilter.maxLotSize,
+                    }}
+                  ></InventoryLayer>
                 </ReactLeafletMap>
               </Col>
             </Row>
