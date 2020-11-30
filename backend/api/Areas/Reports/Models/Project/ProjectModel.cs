@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 
 namespace Pims.Api.Areas.Reports.Models.Project
 {
@@ -61,17 +62,9 @@ namespace Pims.Api.Areas.Reports.Models.Project
         /// <summary>
         /// get/set - The owning agency code.
         /// </summary>
+        [DisplayName("Agency")]
+        [CsvHelper.Configuration.Attributes.Name("Agency")]
         public string AgencyCode { get; set; }
-
-        /// <summary>
-        /// get/set - The owning subagency name.
-        /// </summary>
-        public string SubAgency { get; set; }
-
-        /// <summary>
-        /// get/set - The owning subagency code.
-        /// </summary>
-        public string SubAgencyCode { get; set; }
 
         /// <summary>
         /// get/set - User name
@@ -208,26 +201,36 @@ namespace Pims.Api.Areas.Reports.Models.Project
         /// <summary>
         /// get/set - When the initial enhanced referral notification was sent.
         /// </summary>
+        [DisplayName("ERP_Initial_Notification_Sent_On")]
+        [CsvHelper.Configuration.Attributes.Name("ERP_Initial_Notification_Sent_On")]
         public DateTime? InitialNotificationSentOn { get; set; }
 
         /// <summary>
         /// get/set - When the 30 day enhanced referral notification was sent.
         /// </summary>
+        [DisplayName("ERP_Thirty_Day_Notification_Sent_On")]
+        [CsvHelper.Configuration.Attributes.Name("ERP_Thirty_Day_Notification_Sent_On")]
         public DateTime? ThirtyDayNotificationSentOn { get; set; }
 
         /// <summary>
         /// get/set - When the 60 day enhanced referral notification was sent.
         /// </summary>
+        [DisplayName("ERP_Sixty_Day_Notification_Sent_On")]
+        [CsvHelper.Configuration.Attributes.Name("ERP_Sixty_Day_Notification_Sent_On")]
         public DateTime? SixtyDayNotificationSentOn { get; set; }
 
         /// <summary>
         /// get/set - When the 90 day enhanced referral notification was sent.
         /// </summary>
+        [DisplayName("ERP_Ninety_Day_Notification_Sent_On")]
+        [CsvHelper.Configuration.Attributes.Name("ERP_Ninty_Day_Notification_Sent_On")]
         public DateTime? NinetyDayNotificationSentOn { get; set; }
 
         /// <summary>
         /// get/set - When the on hold enhanced referral notification was sent.
         /// </summary>
+        [DisplayName("ERP_On_Hold_Notification_Sent_On")]
+        [CsvHelper.Configuration.Attributes.Name("ERP_On_Hold_Notification_Sent_On")]
         public DateTime? OnHoldNotificationSentOn { get; set; }
 
         /// <summary>
@@ -238,6 +241,8 @@ namespace Pims.Api.Areas.Reports.Models.Project
         /// <summary>
         /// get/set - When the clearance enhanced referral notification was sent.
         /// </summary>
+        [DisplayName("ERP_Clearance_Notification_Sent_On")]
+        [CsvHelper.Configuration.Attributes.Name("ERP_Clearance_Notification_Sent_On")]
         public DateTime? ClearanceNotificationSentOn { get; set; }
 
         /// <summary>

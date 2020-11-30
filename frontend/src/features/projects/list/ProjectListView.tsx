@@ -309,7 +309,7 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
               </Button>
             </TooltipWrapper>
           )}
-          {keycloak.hasClaim(Claims.PROJECT_VIEW) && (
+          {keycloak.hasClaim(Claims.REPORTS_VIEW) && (
             <>
               <TooltipWrapper toolTipId="export-to-excel" toolTip="Export to Excel">
                 <FileIcon>
