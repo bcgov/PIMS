@@ -51,6 +51,22 @@ export interface IPropertySearchParams {
 export const PROPERTIES = (params: IPropertySearchParams | null) =>
   `/properties/search?${params ? queryString.stringify(params) : ''}`; // get filtered properties or all if not specified.
 
+export interface IGeoSearchParams {
+  bbox?: string | undefined;
+  address?: string;
+  administrativeArea?: string;
+  pid?: string;
+  projectNumber?: string;
+  agencies?: string; // TODO: Switch to number[]
+  classificationId?: string; // TODO: Switch to number
+  minLandArea?: string; // TODO: Switch to number
+  maxLandArea?: string; // TODO: Switch to number
+  inSurplusPropertyProgram?: boolean;
+  inEnhancedReferralProcess?: boolean;
+}
+export const GEO_PROPERTIES = (params: IGeoSearchParams | null) =>
+  `/properties/search/wfs?${params ? queryString.stringify(params) : ''}`; // get filtered properties or all if not specified.
+
 export interface IParcelDetailParams {
   id: number;
 }

@@ -78,6 +78,8 @@ namespace Pims.Dal.Services
                 }
             }
 
+            // TODO: Add optional paging ability to query.
+
             return properties;
         }
 
