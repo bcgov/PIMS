@@ -47,6 +47,9 @@ const FormFooter = styled.div`
   width: 100%;
   height: 70px;
   align-items: center;
+  position: sticky;
+  background-color: #f2f2f2;
+  bottom: 40px;
 `;
 
 const FillRemainingSpace = styled.span`
@@ -92,13 +95,13 @@ const Form: React.FC<IFormProps> = ({ isAdmin, setMovingPinNameSpace, nameSpace 
               agencies={agencies}
               setMovingPinNameSpace={setMovingPinNameSpace}
               nameSpace={nameSpace}
+              isAdmin={isAdmin}
             />
           </div>
         );
       case BuildingSteps.TENANCY:
         return (
           <TenancyForm
-            classifications={classifications}
             formikProps={formikProps}
             occupantTypes={occupancyType}
             nameSpace={nameSpace}
@@ -127,7 +130,7 @@ const Form: React.FC<IFormProps> = ({ isAdmin, setMovingPinNameSpace, nameSpace 
         <InventoryPolicy />
         <FillRemainingSpace />
         {stepper.current !== 3 && (
-          <Button size="sm" onClick={() => stepper.gotoNext()}>
+          <Button style={{ marginRight: 10 }} size="sm" onClick={() => stepper.gotoNext()}>
             Continue
           </Button>
         )}
@@ -148,12 +151,15 @@ interface IBuildingForm {
   nameSpace: string;
   /** to help with the nameSpace of fields for fields in list form (eg. financials, buildings) */
   index: string;
+  /** to determine whether certain locked fields can be editable */
+  isAdmin?: boolean;
 }
 
 const BuidingForm: React.FC<IBuildingForm> = ({
   setMovingPinNameSpace,
   nameSpace,
   index,
+  isAdmin,
   formikRef,
 }) => {
   const keycloak = useKeycloakWrapper();
@@ -179,10 +185,10 @@ const BuidingForm: React.FC<IBuildingForm> = ({
       <SteppedForm
         // Provide the steps
         steps={[
-          { route: 'building-id', title: 'Building ID', completed: false, canGoToStep: true },
-          { route: 'tenancy', title: 'Tenancy', completed: false, canGoToStep: true },
+          { route: 'building-id', title: 'Building Info', completed: false, canGoToStep: true },
+          { route: 'tenancy', title: 'Occupancy', completed: false, canGoToStep: true },
           { route: 'valuation', title: 'Valuation', completed: false, canGoToStep: true },
-          { route: 'review', title: 'Review', completed: false, canGoToStep: true },
+          { route: 'review', title: 'Review & Submit', completed: false, canGoToStep: true },
         ]}
         persistable={true}
         persistProps={{
@@ -215,7 +221,11 @@ const BuidingForm: React.FC<IBuildingForm> = ({
           }
         }}
       >
-        <Form setMovingPinNameSpace={setMovingPinNameSpace} nameSpace={withNameSpace('')} />
+        <Form
+          isAdmin={isAdmin}
+          setMovingPinNameSpace={setMovingPinNameSpace}
+          nameSpace={withNameSpace('')}
+        />
       </SteppedForm>
     </Container>
   );

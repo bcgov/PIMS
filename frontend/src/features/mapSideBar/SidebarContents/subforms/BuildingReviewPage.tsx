@@ -9,7 +9,6 @@ import {
   SelectOptions,
   FastDatePicker,
   Check,
-  AutoCompleteText,
   FastCurrencyInput,
 } from 'components/common/form';
 import React, { useCallback, useState } from 'react';
@@ -20,6 +19,7 @@ import { FaEdit } from 'react-icons/fa';
 import { BuildingSvg } from 'components/common/Icons';
 import AddressForm from 'features/properties/components/forms/subforms/AddressForm';
 import { noop } from 'lodash';
+import { ParentSelect } from 'components/common/form/ParentSelect';
 
 interface IReviewProps {
   nameSpace?: string;
@@ -55,7 +55,7 @@ export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
           click the submit button to save this information to the PIMS inventory.
         </p>
       </Row>
-      <Row noGutters>
+      <Row noGutters style={{ marginBottom: 20 }}>
         <Col md={6}>
           <div className="identification">
             <Row className="identification-header">
@@ -72,9 +72,10 @@ export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
             <Row className="content-item">
               <Label>Agency</Label>
               <span className="vl"></span>
-              <AutoCompleteText
+              <ParentSelect
                 field={withNameSpace('agencyId')}
                 options={props.agencies}
+                filterBy={['code', 'label', 'parent']}
                 disabled={editInfo.identification}
               />
             </Row>
@@ -122,6 +123,18 @@ export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
               />
             </Row>
             <br></br>
+            <Row className="content-item">
+              <Label>SRES Classification</Label>
+              <span className="vl"></span>
+              <FastSelect
+                formikProps={formikProps}
+                disabled={editInfo.identification}
+                placeholder="Must Select One"
+                field={withNameSpace('classificationId')}
+                type="number"
+                options={props.classifications}
+              />
+            </Row>
             <Row className="content-item">
               <Label>Main Usage</Label>
               <span className="vl"></span>
@@ -188,7 +201,7 @@ export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
             <div className="tenancy">
               <Row className="tenancy-header">
                 <BuildingSvg className="svg" />
-                <h5>Tenancy</h5>
+                <h5>Occupancy</h5>
                 <FaEdit
                   size={20}
                   className="edit"
@@ -270,7 +283,7 @@ export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
                   }
                 />
               </Row>
-              <Row className="val-item">
+              <Row className="val-item" style={{ display: 'flex' }}>
                 <Label>Net Book Value</Label>
                 <span className="vl"></span>
                 <FastCurrencyInput
@@ -278,23 +291,24 @@ export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
                   field="data.buildings.0.financials.0.netbook.value"
                   disabled={editInfo.valuation}
                 />
-              </Row>
-              <Row className="val-item">
-                <Label>Est'd Market Value</Label>
-                <span className="vl"></span>
-                <FastCurrencyInput
-                  formikProps={formikProps}
-                  field="data.buildings.0.financials.0.estimated.value"
-                  disabled={editInfo.valuation}
+                <Input
+                  field="data.buildings.0.financials.0.netbook.fiscalYear"
+                  disabled
+                  style={{ width: 50, fontSize: 11 }}
                 />
               </Row>
-              <Row className="val-item">
+              <Row className="val-item" style={{ display: 'flex' }}>
                 <Label>Assessed Value</Label>
                 <span className="vl"></span>
                 <FastCurrencyInput
                   formikProps={formikProps}
                   field="data.buildings.0.financials.0.assessed.value"
                   disabled={editInfo.valuation}
+                />
+                <Input
+                  field="data.buildings.0.financials.0.assessed.year"
+                  disabled
+                  style={{ width: 50, fontSize: 11 }}
                 />
               </Row>
             </div>
