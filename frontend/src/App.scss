@@ -31,13 +31,13 @@ div.bootstrap-table {
 }
 
 .Toastify__toast.Toastify__toast--dark {
-  color: $accent-color;
-  background-color: $dark-variant-color;
+  color: #fff;
+  background-color: $secondary-variant-color;
 }
 
 .Toastify__toast.Toastify__toast--warning {
-  color: black;
-  background-color: $accent-color;
+  color: $text-color;
+  background-color: $light-accent-color;
 }
 
 .Toastify__toast.Toastify__toast--error {
