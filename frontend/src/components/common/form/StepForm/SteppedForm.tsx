@@ -4,6 +4,62 @@ import * as React from 'react';
 import { StepperFormProvider } from './context';
 import { StepperField } from './StepperField';
 import { ISteppedFormProps, ISteppedFormValues } from './types';
+import { Tabs, Tab } from 'react-bootstrap';
+import styled from 'styled-components';
+import PlusButton from '../PlusButton';
+import { FaWindowClose } from 'react-icons/fa';
+import TooltipWrapper from 'components/common/TooltipWrapper';
+import { useState } from 'react';
+import GenericModal from 'components/common/GenericModal';
+
+const TabbedForm = styled(Form)`
+  .hideTabs {
+    a.nav-item {
+      background-color: white;
+      display: none;
+    }
+  }
+  .nav-tabs > .nav-item:last-child {
+    border: 0;
+    svg {
+      position: relative;
+      color: white;
+    }
+    padding: 0;
+  }
+  .tab-content {
+    border: 0;
+    padding: 0;
+  }
+  .nav-tabs {
+    .nav-item.active {
+      border: 0;
+      color: white;
+      svg {
+        background-color: #428bca;
+        color: white;
+      }
+    }
+    .nav-item {
+      border: 1px solid black;
+      background-color: white;
+      color: black;
+      position: relative;
+      display: inline-flex;
+      p {
+        margin: 0;
+      }
+      position: relative;
+      svg {
+        color: black;
+        position: absolute;
+        top: 1px;
+        right: 1px;
+      }
+    }
+    border: 0;
+  }
+`;
 
 /**
  * A formik form with a stepper. Use the ```useFormStepper``` hook to access and control the stepper in the form children
@@ -17,27 +73,100 @@ export const SteppedForm = function<T extends object = {}>({
   validate,
   onSubmit,
   formikRef,
+  getTabs,
+  onAddTab,
+  onRemoveTab,
   ...rest
 }: ISteppedFormProps & FormikConfig<ISteppedFormValues<T>>) {
+  const [tabToDeleteId, setTabToDeleteId] = useState<number | undefined>();
   if (rest.persistable && !rest.persistProps) {
     throw new Error('SteppedForm: "persistProps" are required when "persistable" is true');
   }
 
+  if (!getTabs) {
+    initialValues.tabs = [{ activeStep: initialValues.activeStep }];
+  }
+
+  const tabTitle = (title: string, index: number) => {
+    return (
+      <>
+        <p>{title}</p>
+        <TooltipWrapper
+          toolTipId="remove-associated-parcel"
+          toolTip="Remove this associated parcel"
+        >
+          <FaWindowClose
+            size={15}
+            onClick={(e: any) => {
+              e.preventDefault();
+              e.stopPropagation();
+              setTabToDeleteId(index);
+            }}
+          ></FaWindowClose>
+        </TooltipWrapper>
+      </>
+    );
+  };
+  const getFormikTabs = getTabs ? getTabs : () => ['Tab 1'];
+
   return (
     <Formik<ISteppedFormValues<T>>
       initialValues={initialValues}
-      enableReinitialize
       onSubmit={onSubmit}
       validate={validate}
       innerRef={formikRef}
       {...rest}
     >
-      {() => (
-        <Form>
-          <StepperField name="activeStep" steps={steps} />
-          <StepperFormProvider steps={steps}>{children}</StepperFormProvider>
+      {({ values, setFieldValue }) => (
+        <>
+          <TabbedForm>
+            <Tabs
+              id="steppedform-tabs"
+              className={!getTabs ? 'hideTabs' : ''}
+              activeKey={values.activeTab}
+              onSelect={(tab: string) => setFieldValue('activeTab', +tab)}
+              unmountOnExit
+            >
+              {getFormikTabs().map((tab, index) => (
+                <Tab title={tabTitle(tab, index)} eventKey={index} key={`stepped-tab-${index}`}>
+                  <StepperField name={`tabs.${values.activeTab}.activeStep`} steps={steps} />
+                  <StepperFormProvider steps={steps} tabs={getFormikTabs()}>
+                    {children}
+                  </StepperFormProvider>
+                </Tab>
+              ))}
+              <Tab
+                eventKey=""
+                title={
+                  <PlusButton
+                    toolText="Add another associated Parcel"
+                    toolId="add-associated-parcel"
+                    onClick={() => {
+                      onAddTab && onAddTab();
+                      setFieldValue('tabs', [...values.tabs, { activeStep: 0 }]);
+                    }}
+                  />
+                }
+              ></Tab>
+            </Tabs>
+            <GenericModal
+              display={!!tabToDeleteId}
+              setDisplay={() => setTabToDeleteId(undefined)}
+              title="Really Remove Associated Parcel?"
+              message="Click OK to remove the association between this parcel and the current building."
+              handleOk={() => {
+                if (onRemoveTab && !!tabToDeleteId) {
+                  onRemoveTab(tabToDeleteId);
+                  const tabs = [...values.tabs];
+                  tabs.splice(tabToDeleteId, 1);
+                  setFieldValue('tabs', tabs);
+                }
+              }}
+              cancelButtonText="Cancel"
+            />
+          </TabbedForm>
           {rest.persistable && <Persist {...rest.persistProps!} initialValues={initialValues} />}
-        </Form>
+        </>
       )}
     </Formik>
   );

@@ -27,6 +27,11 @@ namespace Pims.Dal.Entities
         /// get/set - The building located on the parcel.
         /// </summary>
         public Building Building { get; set; }
+
+        /// <summary>
+        /// get/set - Additional serialized metadata.
+        /// </summary>
+        public string LeasedLandMetadata { get; set; }
         #endregion
 
         #region Constructors

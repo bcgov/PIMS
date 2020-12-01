@@ -1,6 +1,6 @@
 import * as API from 'constants/API';
 import { IGeocoderResponse, useApi } from 'hooks/useApi';
-import { FormikValues } from 'formik';
+import { FormikValues, setIn, getIn } from 'formik';
 import { useState } from 'react';
 import useCodeLookups from 'hooks/useLookupCodes';
 import {
@@ -10,7 +10,9 @@ import {
 } from 'components/maps/leaflet/LayerPopup';
 import { LatLng } from 'leaflet';
 import { useDispatch } from 'react-redux';
-import { FeatureCollection, Geometry, GeoJsonProperties } from 'geojson';
+import { fetchParcelsDetail } from 'actionCreators/parcelsActionCreator';
+import { toast } from 'react-toastify';
+import _ from 'lodash';
 
 interface IUseGeocoderProps {
   formikRef: React.MutableRefObject<FormikValues | undefined>;
@@ -38,20 +40,44 @@ const useGeocoder = ({ formikRef }: IUseGeocoderProps) => {
   const [pidSelection, setPidSelection] = useState<IPidSelection>({ showPopup: false, geoPID: '' });
   const api = useApi();
   const dispatch = useDispatch();
-  const handleGeocoderChanges = async (data: IGeocoderResponse) => {
-    let parcelDataLayerResponse:
-      | Promise<FeatureCollection<Geometry, GeoJsonProperties>>
-      | undefined;
-    if (data.latitude && data.longitude) {
-      parcelDataLayerResponse = parcelsService.findOneWhereContains({
-        lat: data.latitude,
-        lng: data.longitude,
-      } as LatLng);
-      handleParcelDataLayerResponse(parcelDataLayerResponse, dispatch);
+
+  const updateForm = (newValues: any, nameSpace?: string) => {
+    if (!!formikRef?.current) {
+      // update form with values returned from geocoder
+      newValues.agencyId = formikRef.current.values.data.agencyId;
+      if (!!nameSpace) {
+        const { resetForm, values } = formikRef.current;
+        resetForm({ values: setIn(values, nameSpace, newValues) });
+      } else {
+        formikRef.current.setValues(newValues);
+      }
     }
+  };
+
+  const fetchPimsParcelByPid = (newValues: any, parcelPid: string, nameSpace?: string) => {
+    updateForm(newValues, nameSpace);
+    fetchParcelsDetail({ pid: parcelPid } as any)(dispatch).then(resp => {
+      const matchingParcel: any = resp?.data?.length ? _.first(resp?.data) : undefined;
+      if (!!nameSpace && !!formikRef?.current?.values && !!matchingParcel?.id) {
+        const { resetForm, values } = formikRef.current;
+        resetForm({ values: setIn(values, nameSpace, matchingParcel) });
+        toast.dark('Found matching parcel within PIMS. Form data will be pre-populated.', {
+          autoClose: 7000,
+        });
+      } else {
+        const parcelDataLayerResponse = parcelsService.findByPid(parcelPid);
+        handleParcelDataLayerResponse(parcelDataLayerResponse, dispatch);
+      }
+    });
+  };
+
+  const handleGeocoderChanges = async (data: IGeocoderResponse, nameSpace?: string) => {
     if (!!formikRef?.current && data) {
+      const currentValues = !!nameSpace
+        ? { ...getIn(formikRef.current.values, nameSpace) }
+        : { ...formikRef.current.values };
       const newValues = {
-        ...formikRef.current.values,
+        ...currentValues,
         latitude: data.latitude,
         longitude: data.longitude,
         address: {
@@ -108,17 +134,19 @@ const useGeocoder = ({ formikRef }: IUseGeocoderProps) => {
       } else if (formikRef.current.values.pid && parcelPid === '') {
         newValues.pid = formikRef.current.values.pid;
       } else {
-        newValues.pid = parcelPid;
-        // Only populate the form with the parcel data layer if the parcelPid is being set and we don't already have the data layer response using the lat/lng.
-        if (!parcelDataLayerResponse) {
-          parcelDataLayerResponse = parcelsService.findByPid(parcelPid);
-          handleParcelDataLayerResponse(parcelDataLayerResponse, dispatch);
+        if (parcelPid?.length) {
+          newValues.pid = parcelPid;
+          fetchPimsParcelByPid(newValues, parcelPid, nameSpace);
+        } else {
+          if (data.latitude && data.longitude) {
+            const parcelDataLayerResponse = parcelsService.findOneWhereContains({
+              lat: data.latitude,
+              lng: data.longitude,
+            } as LatLng);
+            handleParcelDataLayerResponse(parcelDataLayerResponse, dispatch);
+          }
         }
       }
-
-      // update form with values returned from geocoder
-      newValues.agencyId = formikRef.current.values.data.agencyId;
-      formikRef.current.setValues({ ...formikRef.current.values, data: { ...newValues } });
     }
   };
   return { handleGeocoderChanges, pidSelection, setPidSelection };

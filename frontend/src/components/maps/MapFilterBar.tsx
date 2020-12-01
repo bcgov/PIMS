@@ -148,7 +148,6 @@ const MapFilterBar: React.FC<MapFilterProps> = ({
       validationSchema={FilterBarSchema}
       onSubmit={(values, { setSubmitting }) => {
         setSubmitting(true);
-        setSubmitting(true);
         delete values.inEnhancedReferralProcess;
         delete values.inSurplusPropertyProgram;
         onFilterChange?.({ ...values, agencies: (values.agencies as any)?.value });

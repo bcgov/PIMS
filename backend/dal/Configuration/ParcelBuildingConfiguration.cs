@@ -16,6 +16,8 @@ namespace Pims.Dal.Configuration
 
             builder.HasKey(m => new { m.ParcelId, m.BuildingId });
 
+            builder.Property(m => m.LeasedLandMetadata).HasColumnType("NVARCHAR(MAX)");
+
             builder.Property(m => m.ParcelId).IsRequired();
             builder.Property(m => m.ParcelId).ValueGeneratedNever();
 

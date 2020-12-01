@@ -23,6 +23,7 @@ interface AddressProps {
   onGeocoderChange?: (data: IGeocoderResponse) => void;
   toolTips?: boolean;
   verticalLine?: boolean;
+  hideStreetAddress?: boolean;
 }
 
 export const defaultAddressValues: IAddress = {
@@ -73,21 +74,23 @@ const AddressForm = <T extends any>(props: AddressProps & FormikProps<T>) => {
 
   return (
     <>
-      <Row className="field-row">
-        <Label required={!props.verticalLine}>Street Address</Label>
-        {props.verticalLine && <span className="vl"></span>}
-        <GeocoderAutoComplete
-          tooltip={props.toolTips ? streetAddressTooltip : undefined}
-          value={getIn(props.values, withNameSpace('line1'))}
-          disabled={props.disabled}
-          field={withNameSpace('line1')}
-          onSelectionChanged={handleGeocoderChanges}
-          onTextChange={value => props.setFieldValue(withNameSpace('line1'), value)}
-          error={getIn(props.errors, withNameSpace('line1'))}
-          touch={getIn(props.touched, withNameSpace('line1'))}
-          displayErrorTooltips
-        />
-      </Row>
+      {props.hideStreetAddress !== true && (
+        <Row className="field-row">
+          <Label required={!props.verticalLine}>Street Address</Label>
+          {props.verticalLine && <span className="vl"></span>}
+          <GeocoderAutoComplete
+            tooltip={props.toolTips ? streetAddressTooltip : undefined}
+            value={getIn(props.values, withNameSpace('line1'))}
+            disabled={props.disabled}
+            field={withNameSpace('line1')}
+            onSelectionChanged={handleGeocoderChanges}
+            onTextChange={value => props.setFieldValue(withNameSpace('line1'), value)}
+            error={getIn(props.errors, withNameSpace('line1'))}
+            touch={getIn(props.touched, withNameSpace('line1'))}
+            displayErrorTooltips
+          />
+        </Row>
+      )}
       <Row className="field-row">
         <Label required={!props.verticalLine}>Location</Label>
         {props.verticalLine && <span className="vl"></span>}

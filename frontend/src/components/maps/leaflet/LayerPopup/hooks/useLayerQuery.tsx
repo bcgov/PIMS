@@ -84,6 +84,9 @@ export const useLayerQuery = (url: string, geometryName: string = 'SHAPE'): IUse
     async (pid: string): Promise<FeatureCollection> => {
       //Do not make a request if we our currently cached response matches the requested pid.
       const formattedPid = pid.replace(/-/g, '');
+      if (isNaN(+formattedPid)) {
+        return { features: [], type: 'FeatureCollection' };
+      }
       const data: FeatureCollection =
         parcelLayerData?.data?.PID === formattedPid ||
         parcelLayerData?.data?.PID_NUMBER.toString() === formattedPid

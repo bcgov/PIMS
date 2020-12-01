@@ -59,7 +59,7 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
               <p>Drag and drop the pin on the map to mark the location of this parcel, or if you already have the coordinates, you can enter them manually in the fields below.</p>
             </div>
           </div>
-          <div class=\\"marker-svg col\\"><button class=\\"sc-fzoyAV bxqCh\\"><svg class=\\"parcel-icon\\">draft-parcel-icon.svg</svg></button></div>
+          <div class=\\"marker-svg col\\"><button class=\\"sc-fzoLag jpnsoB\\"><svg class=\\"parcel-icon\\">draft-parcel-icon.svg</svg></button></div>
         </div>
         <div class=\\"form-row\\">
           <p class=\\"label\\"><span class=\\"req\\">*</span>Latitude</p>

@@ -213,6 +213,20 @@ namespace Pims.Dal.Services
         /// <returns></returns>
         public Parcel Update(Parcel parcel)
         {
+            parcel = PendingUpdate(parcel);
+            this.Context.SaveChanges();
+            this.Context.CommitTransaction();
+            return parcel;
+        }
+
+        /// <summary>
+        /// Update the specified parcel in the datasource, but do not commit the transaction.
+        /// </summary>
+        /// <param name="parcel"></param>
+        /// <exception type="KeyNotFoundException">Entity does not exist in the datasource.</exception>
+        /// <returns></returns>
+        public Parcel PendingUpdate(Parcel parcel)
+        {
             parcel.ThrowIfNotAllowedToEdit(nameof(parcel), this.User, new[] { Permissions.PropertyEdit, Permissions.AdminProperties });
             var isAdmin = this.User.HasPermission(Permissions.AdminProperties);
 
@@ -248,8 +262,8 @@ namespace Pims.Dal.Services
 
             if (allowEdit)
             {
-                this.Context.Entry(originalParcel).CurrentValues.SetValues(parcel);
                 this.Context.Entry(originalParcel.Address).CurrentValues.SetValues(parcel.Address);
+                this.Context.Entry(originalParcel).CurrentValues.SetValues(parcel);
                 this.Context.SetOriginalRowVersion(originalParcel);
             }
 
@@ -407,8 +421,6 @@ namespace Pims.Dal.Services
                 }
             }
 
-            this.Context.SaveChanges();
-            this.Context.CommitTransaction();
             return parcel;
         }
 

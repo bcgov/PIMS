@@ -40,11 +40,12 @@ namespace Pims.Api.Areas.Property.Mapping.Building
                 .Map(dest => dest.IsSensitive, src => src.IsSensitive)
                 .Map(dest => dest.Evaluations, src => src.Evaluations)
                 .Map(dest => dest.Fiscals, src => src.Fiscals)
+                .Map(dest => dest.Parcels, src => src.Parcels)
                 .Inherits<Entity.BaseEntity, BModel.BaseModel>();
 
             config.NewConfig<Model.BuildingModel, Entity.Building>()
                 .Map(dest => dest.Id, src => src.Id)
-                .Map(dest => dest.Parcels, src => new List<Entity.ParcelBuilding>() { new Entity.ParcelBuilding() { ParcelId = src.ParcelId, BuildingId = src.Id } })
+                .Map(dest => dest.Parcels, src => src.Parcels)
                 .Map(dest => dest.ProjectNumber, src => src.ProjectNumber)
                 .Map(dest => dest.ClassificationId, src => src.ClassificationId)
                 .Map(dest => dest.Classification, src => src.Classification)
