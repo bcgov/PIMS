@@ -1,16 +1,13 @@
 import * as React from 'react';
 import MapSideBarLayout from '../components/MapSideBarLayout';
 import useParamSideBar, { SidebarContextType } from '../hooks/useQueryParamSideBar';
-import ParcelDetailContainer from 'features/properties/containers/ParcelDetailContainer';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from 'reducers/rootReducer';
 import { IGenericNetworkAction } from 'actions/genericActions';
 import { IPropertyDetail, IParcel, IProperty } from 'actions/parcelsActions';
 import * as actionTypes from 'constants/actionTypes';
 import { fetchParcelDetail } from 'actionCreators/parcelsActionCreator';
-import { Spinner } from 'react-bootstrap';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
-import * as parcelsActions from 'actions/parcelsActions';
 import { BuildingForm, SubmitPropertySelector, LandForm } from '../SidebarContents';
 import { BuildingSvg, LandSvg } from 'components/common/Icons';
 import { FormikValues } from 'formik';
@@ -34,17 +31,12 @@ interface IMapSideBarContainerProps {
  * container responsible for logic related to map sidebar display. Synchronizes the state of the parcel detail forms with the corresponding query parameters (push/pull).
  */
 const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = ({
-  refreshParcels,
-  properties,
   movingPinNameSpaceProp,
 }) => {
   const {
     showSideBar,
     setShowSideBar,
     parcelId,
-    overrideParcelId,
-    disabled,
-    loadDraft,
     context,
     size,
     addBuilding,
@@ -149,32 +141,6 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
     (activePropertyDetail?.parcelDetail as any)?.rowVersion,
   ]);
 
-  const renderParcelDetailsContainer = () => {
-    return parcelId !== cachedParcelDetail?.id ? (
-      <>
-        <Spinner animation="border"></Spinner>
-      </>
-    ) : (
-      <ParcelDetailContainer
-        persistCallback={(data: IParcel) => {
-          if (!showSideBar) {
-            setShowSideBar(true);
-          }
-          overrideParcelId(data?.id === '' ? undefined : data?.id);
-        }}
-        onDelete={() => {
-          dispatch(parcelsActions.storeParcelDetail(null));
-          refreshParcels();
-          setShowSideBar(false);
-        }}
-        parcelDetail={cachedParcelDetail}
-        disabled={disabled}
-        loadDraft={loadDraft}
-        properties={properties}
-      />
-    );
-  };
-
   const getSidebarTitle = (): React.ReactNode => {
     switch (context) {
       case SidebarContextType.ADD_BUILDING:
@@ -225,10 +191,8 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
             handlePinChange={handlePinChange}
           />
         );
-      case SidebarContextType.ADD_PROPERTY_TYPE_SELECTOR:
-        return <SubmitPropertySelector addBuilding={addBuilding} addRawLand={addRawLand} />;
       default:
-        return renderParcelDetailsContainer();
+        return <SubmitPropertySelector addBuilding={addBuilding} addRawLand={addRawLand} />;
     }
   };
 

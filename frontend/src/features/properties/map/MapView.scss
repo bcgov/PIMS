@@ -15,6 +15,7 @@ $narrowSidebarSize: 700px;
   position: absolute;
   &.close {
     z-index: -1;
+    max-width: $narrowSidebarSize;
   }
   &.narrow {
     min-width: $narrowSidebarSize;

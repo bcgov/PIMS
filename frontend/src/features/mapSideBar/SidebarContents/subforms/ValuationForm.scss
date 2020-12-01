@@ -1,7 +1,35 @@
 .val-table {
-  justify-content: center;
   .table {
     align-content: center;
-    width: 800px;
+    &.netbook {
+      width: 600px;
+      .tbody {
+        max-height: 200px;
+        overflow-y: auto;
+      }
+    }
+    &.assessed {
+      .tbody {
+        max-height: 150px;
+        overflow-y: auto;
+      }
+      width: 520px;
+    }
+    .form-group {
+      margin-bottom: 0;
+    }
+    .thead :first-child .th {
+      justify-content: flex-start !important;
+    }
+    .td,
+    .th {
+      border: 2px solid #dee2e6;
+      justify-content: center !important;
+      font-size: 18px !important;
+    }
+    //the first subheader should not be bold
+    .thead :nth-child(2) .th:first-child {
+      font-weight: normal;
+    }
   }
 }

@@ -68,7 +68,7 @@ describe('Land Form', () => {
   });
 
   it('goes to corresponding steps', async () => {
-    const { getByText, queryByText } = render(landForm);
+    const { getByText, queryByText, getAllByText } = render(landForm);
     await wait(() => {
       fireEvent.click(getByText(/continue/i));
     });
@@ -76,7 +76,7 @@ describe('Land Form', () => {
     await wait(() => {
       fireEvent.click(getByText(/Continue/i));
     });
-    expect(getByText(/net book value/i)).toBeInTheDocument();
+    expect(getAllByText(/Net Book Value/i)).toHaveLength(2);
     await wait(() => {
       fireEvent.click(getByText(/Continue/i));
     });
