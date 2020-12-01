@@ -72,7 +72,7 @@ describe('Land Form', () => {
     await wait(() => {
       fireEvent.click(getByText(/continue/i));
     });
-    expect(getByText(/usage & zoning/i)).toBeInTheDocument();
+    expect(getByText(/Strategic Real Estate Classification/i)).toBeInTheDocument();
     await wait(() => {
       fireEvent.click(getByText(/Continue/i));
     });

@@ -25,7 +25,7 @@ exports[`Manage Agencies Component Snapshot matches 1`] = `
           Agencies
         </h3>
         <p
-          className="label"
+          className="label undefined"
         >
           Search agency by name: 
         </p>

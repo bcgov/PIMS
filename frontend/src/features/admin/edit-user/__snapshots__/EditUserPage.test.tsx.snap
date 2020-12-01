@@ -6,34 +6,34 @@ exports[`Edit user page EditUserPage renders 1`] = `
   <div class=\\"container-fluid\\">
     <div class=\\"user-edit-form-container row\\">
       <form novalidate=\\"\\" class=\\"userInfo\\">
-        <p class=\\"label\\">IDIR/BCeID</p>
+        <p class=\\"label undefined\\">IDIR/BCeID</p>
         <div class=\\"form-group\\"><input name=\\"username\\" data-testid=\\"username\\" type=\\"text\\" readonly=\\"\\" id=\\"input-username\\" class=\\"form-control\\" value=\\"test.user\\"></div>
-        <p class=\\"label\\">Last Login</p>
+        <p class=\\"label undefined\\">Last Login</p>
         <div class=\\"form-group\\"><input name=\\"lastLogin\\" data-testid=\\"lastLogin\\" type=\\"text\\" readonly=\\"\\" id=\\"input-lastLogin\\" class=\\"form-control\\" value=\\"\\"></div>
         <div class=\\"row\\">
           <div class=\\"col\\">
-            <p class=\\"label\\">First Name</p>
+            <p class=\\"label undefined\\">First Name</p>
             <div class=\\"form-group\\"><input name=\\"firstName\\" data-testid=\\"firstName\\" placeholder=\\"Test\\" type=\\"text\\" id=\\"input-firstName\\" class=\\"form-control\\" value=\\"Test\\"></div>
           </div>
           <div class=\\"col\\">
-            <p class=\\"label\\">Last Name</p>
+            <p class=\\"label undefined\\">Last Name</p>
             <div class=\\"form-group\\"><input name=\\"lastName\\" data-testid=\\"lastName\\" placeholder=\\"User\\" type=\\"text\\" id=\\"input-lastName\\" class=\\"form-control\\" value=\\"User\\"></div>
           </div>
         </div>
-        <p class=\\"label\\">Email</p>
+        <p class=\\"label undefined\\">Email</p>
         <div class=\\"form-group\\"><input name=\\"email\\" data-testid=\\"email\\" placeholder=\\"test@user.com\\" type=\\"email\\" id=\\"input-email\\" class=\\"form-control\\" value=\\"test@user.com\\"></div>
         <div class=\\"required form-group\\"><label class=\\"form-label\\" for=\\"input-agency\\">Agency</label><span class=\\"required\\">*</span><select name=\\"agency\\" required=\\"\\" data-testid=\\"agency\\" id=\\"input-agency\\" class=\\"form-select form-control\\">
             <option value=\\"\\">Please Select</option>
             <option value=\\"1\\" class=\\"option\\">agencyVal</option>
           </select></div>
-        <p class=\\"label\\">Position</p>
+        <p class=\\"label undefined\\">Position</p>
         <div class=\\"form-group\\"><input name=\\"position\\" data-testid=\\"position\\" placeholder=\\"e.g) Director, Real Estate and Stakeholder Engagement\\" type=\\"text\\" id=\\"input-position\\" class=\\"form-control\\" value=\\"\\"></div>
         <div class=\\"check-roles form-group\\"><label class=\\"form-label\\">Roles <a target=\\"_blank\\" rel=\\"noopener noreferrer\\" href=\\"https://github.com/bcgov/PIMS/wiki/Architecture-Security\\">Role Descriptions</a></label>
           <div class=\\"required form-group\\"><span class=\\"required\\">*</span><select multiple=\\"\\" name=\\"roles\\" required=\\"\\" data-testid=\\"role\\" id=\\"input-roles\\" class=\\"form-select form-control\\">
               <option value=\\"1\\" class=\\"option\\">roleVal</option>
             </select></div>
         </div>
-        <p class=\\"label\\">Notes</p>
+        <p class=\\"label undefined\\">Notes</p>
         <div class=\\"form-group\\"><textarea name=\\"note\\" data-testid=\\"note\\" placeholder=\\"A note about this user\\" type=\\"text\\" id=\\"input-note\\" class=\\"form-control\\">test note</textarea></div>
         <div class=\\"is-disabled form-group\\"><label class=\\"form-label\\">Disable Account?&nbsp;</label><input name=\\"isDisabled\\" data-testid=\\"isDisabled\\" type=\\"checkbox\\" value=\\"false\\"></div>
         <div class=\\"justify-content-md-center row\\">

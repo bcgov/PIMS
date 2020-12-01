@@ -1,16 +1,19 @@
 import * as React from 'react';
 import './Label.scss';
 interface ILabelProps {
-  children?: string;
+  content?: string;
   required?: boolean;
 }
 
-/** generic inline label element */
-export const Label = (props: ILabelProps | null | undefined) => {
+/** Generic inline label element */
+export const Label: React.FunctionComponent<ILabelProps & React.HTMLAttributes<HTMLDivElement>> = ({
+  required,
+  ...rest
+}) => {
   return (
-    <p className="label">
-      {props?.required && <span className="req">*</span>}
-      {props?.children}
+    <p {...rest} className={`label ${rest.className}`}>
+      {required && <span className="req">*</span>}
+      {rest.children}
     </p>
   );
 };
