@@ -7,6 +7,7 @@ import { INVENTORY_POLICY_URL } from 'constants/strings';
 import { InventoryPolicy } from './InventoryPolicy';
 import { SidebarSize } from '../hooks/useQueryParamSideBar';
 import { FaWindowClose } from 'react-icons/fa';
+import './MapSideBarLayout.scss';
 
 interface IMapSideBarLayoutProps {
   show: boolean;

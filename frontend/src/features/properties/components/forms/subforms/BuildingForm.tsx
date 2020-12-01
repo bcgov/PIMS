@@ -279,7 +279,7 @@ const BuildingForm = (props: BuildingProps & FormikProps<any>) => {
         </Row>
         <Row noGutters>
           <Col>
-            <h4>Building Valuation Information</h4>
+            <h4>Building Valuation</h4>
             <EvaluationForm
               {...props}
               nameSpace={withNameSpace('financials')}

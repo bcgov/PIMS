@@ -173,6 +173,16 @@ namespace Pims.Api.Areas.Property.Models.Search
         /// </summary>
         public DateTime? AppraisedDate { get; set; }
 
+        /// <summary>
+        /// get/set - The property improvements value.
+        /// </summary>
+        public decimal Improvements { get; set; }
+
+        /// <summary>
+        /// get/set - the date when the improvements occured.
+        /// </summary>
+        public DateTime? ImprovementsDate { get; set; }
+
         #region Parcel Properties
         /// <summary>
         /// get/set - The land area of the parcel.

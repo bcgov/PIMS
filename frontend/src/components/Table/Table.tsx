@@ -23,6 +23,7 @@ import { Spinner, Collapse } from 'react-bootstrap';
 import { FaAngleDown, FaAngleRight } from 'react-icons/fa';
 import TooltipWrapper from 'components/common/TooltipWrapper';
 import ColumnSort from './ColumnSort';
+import classNames from 'classnames';
 
 // these provide a way to inject custom CSS into table headers and cells
 const headerProps = <T extends object>(
@@ -102,6 +103,7 @@ export interface TableProps<T extends object = {}> extends TableOptions<T> {
   manualPagination?: boolean;
   // Limit where you would like an expansion button to appear based off this props criteria
   canRowExpand?: (val: any) => boolean;
+  className?: string;
 }
 
 const IndeterminateCheckbox = React.forwardRef(({ indeterminate, ...rest }: any, ref) => {
@@ -435,7 +437,10 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): React
   // Render the UI for your table
   return (
     <>
-      <div {...getTableProps({ style: { minWidth: undefined } })} className="table">
+      <div
+        {...getTableProps({ style: { minWidth: undefined } })}
+        className={classNames('table', props.className ?? '')}
+      >
         <div className="thead thead-light">
           {headerGroups.map(headerGroup => (
             <div {...headerGroup.getHeaderGroupProps()} className="tr">
