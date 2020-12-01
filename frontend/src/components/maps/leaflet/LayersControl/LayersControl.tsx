@@ -5,16 +5,20 @@ import Control from 'react-leaflet-control';
 import styled from 'styled-components';
 import clsx from 'classnames';
 import LayersTree from './LayersTree';
+import * as L from 'leaflet';
+import { useEffect } from 'react';
 
 const LayersContainer = styled.div`
   margin-right: -10px;
   width: 341px;
   min-height: 52px;
   height: 500px;
+  max-height: 500px;
   background-color: #fff;
   position: relative;
   border-radius: 4px;
   box-shadow: -2px 1px 4px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
 
   &.closed {
     width: 0px;
@@ -40,6 +44,10 @@ const LayersContent = styled.div`
   width: 100%;
   height: calc(100% - 80px);
   padding: 16px;
+
+  &.open {
+    overflow-y: scroll;
+  }
 `;
 
 const LayersIcon = styled(FaLayerGroup)`
@@ -78,9 +86,16 @@ const ControlButton = styled(Button)`
 const LayersControl: React.FC = () => {
   const [open, setOpen] = React.useState<boolean>(false);
 
+  useEffect(() => {
+    const elem = L.DomUtil.get('layersContainer');
+    if (elem) {
+      L.DomEvent.on(elem!, 'mousewheel', L.DomEvent.stopPropagation);
+    }
+  });
+
   return (
     <Control position="topright">
-      <LayersContainer className={clsx({ closed: !open })}>
+      <LayersContainer id="layersContainer" className={clsx({ closed: !open })}>
         {open && (
           <LayersHeader>
             <LayersIcon />
@@ -88,17 +103,16 @@ const LayersControl: React.FC = () => {
           </LayersHeader>
         )}
         <ControlButton
+          id="layersControlButton"
           variant="outline-secondary"
           onClick={() => setOpen(!open)}
           className={clsx({ open })}
         >
           <LayersIcon />
         </ControlButton>
-        {open && (
-          <LayersContent>
-            <LayersTree />
-          </LayersContent>
-        )}
+        <LayersContent className={clsx({ open })}>
+          <LayersTree />
+        </LayersContent>
       </LayersContainer>
     </Control>
   );

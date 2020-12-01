@@ -43,7 +43,7 @@ const featureGroup = new L.FeatureGroup();
  * A component to draw polygons on a map
  * @example ./LeafletDraw.md
  */
-const LeafletDraw: React.FC<ILeafletDrawProps> = ({
+export const LeafletDraw: React.FC<ILeafletDrawProps> = ({
   onChange,
   onCreate,
   value,
