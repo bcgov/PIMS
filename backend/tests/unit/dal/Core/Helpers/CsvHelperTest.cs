@@ -119,10 +119,10 @@ namespace Pims.Api.Test.Helpers
             Assert.IsType<DataTable>(result);
             Assert.Equal(2, result.Columns.Count);
             Assert.Equal(2, result.Rows.Count);
-            Assert.Equal(typeof(string), result.Columns[0].DataType);
-            Assert.Equal("", result.Rows[1][0]);
+            Assert.Equal(typeof(int), result.Columns[0].DataType);
+            Assert.Equal(DBNull.Value, result.Rows[1][0]);
             Assert.True(result.Columns[0].AllowDBNull);
-            Assert.False(result.Columns[1].AllowDBNull);
+            Assert.True(result.Columns[1].AllowDBNull);
         }
         #endregion
     }
