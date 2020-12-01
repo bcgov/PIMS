@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Row } from 'react-bootstrap';
 
 /**
- * Subform that allows the user to either find or enter the associated parcel when the are the owner.
+ * Subform that allows the user to either find or enter the associated parcel when they are the owner.
  */
 const LeasedLandOwned: React.FunctionComponent = () => {
   return (

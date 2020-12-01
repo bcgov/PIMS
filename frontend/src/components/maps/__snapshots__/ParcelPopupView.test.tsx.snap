@@ -50,7 +50,7 @@ exports[`Parcel popup view renders correctly 1`] = `
           onClick={[Function]}
         >
           <p
-            className="label undefined"
+            className="label"
           >
             Assessed Value:
           </p>
@@ -85,7 +85,7 @@ exports[`Parcel popup view renders correctly 1`] = `
           onClick={[Function]}
         >
           <p
-            className="label undefined"
+            className="label"
           >
             Agency:
           </p>
@@ -97,7 +97,7 @@ exports[`Parcel popup view renders correctly 1`] = `
           onClick={[Function]}
         >
           <p
-            className="label undefined"
+            className="label"
           >
             Classification: 
           </p>

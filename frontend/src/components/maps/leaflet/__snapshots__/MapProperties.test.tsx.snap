@@ -50,7 +50,7 @@ exports[`MapProperties View ParcelPopupView renders correctly 1`] = `
           onClick={[Function]}
         >
           <p
-            className="label undefined"
+            className="label"
           >
             Assessed Value:
           </p>
@@ -90,7 +90,7 @@ exports[`MapProperties View ParcelPopupView renders correctly 1`] = `
           onClick={[Function]}
         >
           <p
-            className="label undefined"
+            className="label"
           >
             Agency:
           </p>
@@ -103,7 +103,7 @@ exports[`MapProperties View ParcelPopupView renders correctly 1`] = `
           onClick={[Function]}
         >
           <p
-            className="label undefined"
+            className="label"
           >
             Classification: 
           </p>

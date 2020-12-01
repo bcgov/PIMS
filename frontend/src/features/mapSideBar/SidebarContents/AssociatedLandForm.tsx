@@ -154,7 +154,7 @@ const Form: React.FC<IAssociatedLandForm> = ({
           </div>
         );
       case AssociatedLandSteps.VALUATION:
-        return <LandValuationForm nameSpace={currentParcelNameSpace} />;
+        return <LandValuationForm nameSpace={currentParcelNameSpace} title="Land Valuation" />;
       case AssociatedLandSteps.REVIEW:
         return (
           <LandReviewPage
@@ -186,7 +186,7 @@ const Form: React.FC<IAssociatedLandForm> = ({
         )}
         {formikProps.dirty && formikProps.isValid && stepper.current === 3 && (
           <Button size="sm" type="submit">
-            Submit Raw Land
+            Add associated land
           </Button>
         )}
       </FormFooter>

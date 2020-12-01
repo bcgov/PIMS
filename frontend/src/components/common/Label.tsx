@@ -1,5 +1,6 @@
 import * as React from 'react';
 import './Label.scss';
+import classNames from 'classnames';
 interface ILabelProps {
   content?: string;
   required?: boolean;
@@ -11,7 +12,7 @@ export const Label: React.FunctionComponent<ILabelProps & React.HTMLAttributes<H
   ...rest
 }) => {
   return (
-    <p {...rest} className={`label ${rest.className}`}>
+    <p {...rest} className={classNames('label', rest.className)}>
       {required && <span className="req">*</span>}
       {rest.children}
     </p>

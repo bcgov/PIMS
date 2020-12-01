@@ -54,6 +54,8 @@ interface IClassificationFormProps {
   toolTip?: string;
   /** enter a brief description if desired regarding the select options */
   fieldDescription?: string;
+  /** disable form controls */
+  disabled?: boolean;
 }
 
 /**
@@ -66,6 +68,7 @@ export const ClassificationForm: React.FC<IClassificationFormProps> = ({
   field,
   toolTip,
   fieldDescription,
+  disabled,
 }) => {
   const formikProps = useFormikContext();
 
@@ -112,6 +115,7 @@ export const ClassificationForm: React.FC<IClassificationFormProps> = ({
               placeholder="Must Select One"
               field={field}
               options={filteredClassifications}
+              disabled={disabled}
             />
             {toolTip && (
               <div style={{ marginTop: '8px', marginLeft: '20px' }}>
@@ -127,11 +131,13 @@ export const ClassificationForm: React.FC<IClassificationFormProps> = ({
         </Col>
         <Col md={6}>{renderInfo()}</Col>
       </Row>
-      <Row>
-        <FieldDescription>
-          A disposal project must be initiated in order to mark a property as "surplus active".
-        </FieldDescription>
-      </Row>
+      {!disabled && (
+        <Row>
+          <FieldDescription>
+            A disposal project must be initiated in order to mark a property as "surplus active".
+          </FieldDescription>
+        </Row>
+      )}
     </>
   );
 };
