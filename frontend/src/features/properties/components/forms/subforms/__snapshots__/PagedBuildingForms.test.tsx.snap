@@ -26,9 +26,9 @@ exports[`PagedBuildingForms functionality displays any pre-existing buildings 1`
         </select></div>
     </div>
     <div class=\\"form-row\\"><label class=\\"form-label\\">Agency</label>
-      <div class=\\"AutoCompleteText\\">
-        <div class=\\"form-group\\">
-          <div class=\\"input-area\\"><input name=\\"buildings.0.agencyId\\" id=\\"input-buildings.0.agencyId\\" class=\\"form-control\\" value=\\"\\"></div>
+      <div class=\\"sc-AxjAm gLmrxD form-group\\">
+        <div class=\\"rbt\\" style=\\"outline: none; position: relative;\\" tabindex=\\"-1\\">
+          <div style=\\"display: flex; flex: 1; height: 100%; position: relative;\\"><input autocomplete=\\"off\\" type=\\"text\\" name=\\"buildings.0.agencyId\\" id=\\"buildings.0.agencyId-field\\" disabled=\\"\\" aria-autocomplete=\\"both\\" aria-expanded=\\"false\\" aria-haspopup=\\"listbox\\" role=\\"combobox\\" class=\\"rbt-input-main form-control rbt-input\\" value=\\"\\"><input aria-hidden=\\"true\\" class=\\"rbt-input-hint\\" readonly=\\"\\" style=\\"background-color: transparent; border-color: transparent; box-shadow: none; color: rgba(0, 0, 0, 0.35); left: 0px; pointer-events: none; position: absolute; top: 0px; width: 100%; border-style: inset inset inset inset; border-width: 2px 2px 2px 2px; line-height: normal; padding: 1px 1px 1px 1px;\\" tabindex=\\"-1\\" value=\\"\\"></div>
         </div>
       </div>
     </div>
@@ -64,18 +64,18 @@ exports[`PagedBuildingForms functionality displays any pre-existing buildings 1`
     <div class=\\"lat-long\\" style=\\"position: relative;\\">
       <div class=\\"row\\">
         <div class=\\"col-md-9\\">
-          <div class=\\"instruction\\">
+          <div class=\\"instruction\\" style=\\"display: flex;\\"><span style=\\"color: red; margin-right: 5px;\\">*</span>
             <p>Drag and drop the pin on the map to mark the location of this parcel, or if you already have the coordinates, you can enter them manually in the fields below.</p>
           </div>
         </div>
-        <div class=\\"marker-svg col\\"><button class=\\"sc-fzoLag jpnsoB\\" disabled=\\"\\"><svg>draft-building-icon.svg</svg></button></div>
+        <div class=\\"marker-svg col\\"><button class=\\"sc-fzoXzr fxxQgr\\" disabled=\\"\\"><svg>draft-building-icon.svg</svg></button></div>
       </div>
       <div class=\\"form-row\\">
-        <p class=\\"label\\"><span class=\\"req\\">*</span>Latitude</p>
+        <p class=\\"label\\">Latitude</p>
         <div class=\\"form-group\\"><input name=\\"buildings.0.latitude\\" type=\\"number\\" id=\\"input-buildings.0.latitude\\" class=\\"input-medium form-control\\" value=\\"9\\" disabled=\\"\\"></div>
       </div>
       <div class=\\"form-row\\">
-        <p class=\\"label\\"><span class=\\"req\\">*</span>Longitude</p>
+        <p class=\\"label\\">Longitude</p>
         <div class=\\"form-group\\"><input name=\\"buildings.0.longitude\\" type=\\"number\\" id=\\"input-buildings.0.longitude\\" class=\\"input-medium form-control\\" value=\\"10\\" disabled=\\"\\"></div>
       </div>
     </div>

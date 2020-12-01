@@ -4,6 +4,7 @@ import { Form } from 'react-bootstrap';
 import { getIn, useFormikContext } from 'formik';
 import styled from 'styled-components';
 import TooltipIcon from 'components/common/TooltipIcon';
+import { useRef } from 'react';
 
 interface ITypeaheadFieldProps<T extends TypeaheadModel> extends TypeaheadProps<T> {
   name: string;
@@ -15,6 +16,10 @@ interface ITypeaheadFieldProps<T extends TypeaheadModel> extends TypeaheadProps<
   tooltip?: string;
   /** A function that takes in the value stored in formik and returns the corresponding label for that value. */
   getOptionByValue?: (value?: any) => T[];
+  /** pass a custom onChange to the TypeaheadField */
+  onChange?: (vals: any) => void;
+  /** clear menu on custom header click */
+  clearMenu?: boolean;
 }
 
 const Group = styled(Form.Group)`
@@ -38,6 +43,8 @@ export function TypeaheadField<T extends TypeaheadModel>({
   hideValidation,
   tooltip,
   getOptionByValue,
+  onChange,
+  clearMenu,
   ...rest
 }: ITypeaheadFieldProps<T>) {
   const { touched, values, errors, setFieldTouched, setFieldValue } = useFormikContext();
@@ -46,6 +53,12 @@ export function TypeaheadField<T extends TypeaheadModel>({
   if (!getOptionByValue) {
     getOptionByValue = (value: T) => (!!value ? ([value] as T[]) : ([] as T[]));
   }
+  const ref = useRef<any>();
+  React.useEffect(() => {
+    if (clearMenu && ref.current?.blur) {
+      ref.current.blur();
+    }
+  }, [clearMenu]);
   return (
     <Group>
       {!!label && (
@@ -60,9 +73,14 @@ export function TypeaheadField<T extends TypeaheadModel>({
         isInvalid={hasError as any}
         isValid={!hideValidation && isValid}
         selected={getOptionByValue(getIn(values, name))}
-        onChange={(newValues: T[]) => {
-          setFieldValue(name, getIn(newValues[0], 'value') ?? newValues[0]);
-        }}
+        ref={ref}
+        onChange={
+          onChange
+            ? onChange
+            : (newValues: T[]) => {
+                setFieldValue(name, getIn(newValues[0], 'value') ?? newValues[0]);
+              }
+        }
         onBlur={() => setFieldTouched(name, true)}
         id={`${name}-field`}
       />

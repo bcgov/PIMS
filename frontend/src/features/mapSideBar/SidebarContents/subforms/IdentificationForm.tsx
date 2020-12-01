@@ -8,17 +8,29 @@ import LatLongForm from 'features/properties/components/forms/subforms/LatLongFo
 import React from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
 import TooltipWrapper from 'components/common/TooltipWrapper';
-import { sensitiveTooltip } from '../../../../../src/features/properties/components/forms/strings';
+import {
+  ClassificationSelectionText,
+  sensitiveTooltip,
+} from '../../../../../src/features/properties/components/forms/strings';
 import { HARMFUL_DISCLOSURE_URL } from 'constants/strings';
 import { ClassificationForm } from './ClassificationForm';
 
 interface IIdentificationProps {
+  /** passed down from parent to lock/unlock designated fields */
+  isAdmin?: boolean;
+  /** the agencies for the form to use */
   agencies: SelectOptions;
+  /** the classification for the form to use */
   classifications: SelectOptions;
+  /** the predominate uses for the form to use */
   predominateUses: SelectOptions;
+  /** the construction types for the form to use */
   constructionType: SelectOptions;
+  /** access formik context */
   formikProps: any;
+  /** nameSpace passed down to access desired field */
   nameSpace?: any;
+  /** used to determine which marker to set the cursor to when adding a new property */
   setMovingPinNameSpace: (nameSpace: string) => void;
 }
 
@@ -30,6 +42,7 @@ export const IdentificationForm: React.FC<IIdentificationProps> = ({
   constructionType,
   nameSpace,
   setMovingPinNameSpace,
+  isAdmin,
 }) => {
   const withNameSpace: Function = React.useCallback(
     (name?: string) => {
@@ -40,12 +53,12 @@ export const IdentificationForm: React.FC<IIdentificationProps> = ({
   return (
     <Container>
       <Row>
-        <h4>Building Identification</h4>
+        <h4>Building Information</h4>
       </Row>
       <Row>
         <Col>
           <InformationForm
-            isAdmin
+            isAdmin={!!isAdmin}
             wizard
             agencies={agencies}
             classifications={classifications}
@@ -104,7 +117,6 @@ export const IdentificationForm: React.FC<IIdentificationProps> = ({
               </p>
               <Check
                 type="radio"
-                // disabled={disabled}
                 field={withNameSpace('isSensitive')}
                 radioLabelOne="Yes"
                 radioLabelTwo="No"
@@ -119,13 +131,13 @@ export const IdentificationForm: React.FC<IIdentificationProps> = ({
         fieldLabel="Building Classification"
         classifications={classifications}
         title="Strategic Real Estate Classification"
-        toolTip="Placeholder"
+        fieldDescription={ClassificationSelectionText}
       />
       <hr></hr>
       <Row>
         <h4>Location</h4>
       </Row>
-      <Row>
+      <Row style={{ marginBottom: 10 }}>
         <Col>
           <AddressForm {...formikProps} nameSpace={withNameSpace('address')} />
         </Col>

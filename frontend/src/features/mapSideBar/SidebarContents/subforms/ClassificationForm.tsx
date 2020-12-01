@@ -2,14 +2,15 @@ import { FastSelect, SelectOptions } from 'components/common/form';
 import { Label } from 'components/common/Label';
 import TooltipIcon from 'components/common/TooltipIcon';
 import { CLASSIFICATIONS } from 'constants/classifications';
+import {
+  CoreOperational,
+  CoreStrategic,
+  SurplusEncumbered,
+} from 'features/properties/components/forms/strings';
 import { getIn, useFormikContext } from 'formik';
 import React from 'react';
 import { Col, Row } from 'react-bootstrap';
 import styled from 'styled-components';
-
-/**
- * component responsible for displaying classifcations of properties with conditional renders of information based on the classification selected.
- */
 
 const Title = styled.h4`
   float: left;
@@ -25,7 +26,7 @@ const InfoBox = styled.div`
 
 /** formatted field description that will appear underneath the select input */
 const FieldDescription = styled.p`
-  margin-left: 152px;
+  margin-left: 154px;
   font-size: 12px;
   width: 250px;
   text-align: left;
@@ -55,6 +56,9 @@ interface IClassificationFormProps {
   fieldDescription?: string;
 }
 
+/**
+ * component responsible for displaying classifcations of properties with conditional renders of information based on the classification selected.
+ */
 export const ClassificationForm: React.FC<IClassificationFormProps> = ({
   title,
   classifications,
@@ -68,16 +72,25 @@ export const ClassificationForm: React.FC<IClassificationFormProps> = ({
   /** classId based on current formik values to determine which classsification information box to display */
   let classId = getIn(formikProps.values, field);
 
+  /** users not allowed to select disposed or surplus active at this stage */
+  const filteredClassifications = classifications.filter(
+    c =>
+      Number(c.value) !== CLASSIFICATIONS.SurplusActive &&
+      Number(c.value) !== CLASSIFICATIONS.Disposed,
+  );
+
   const renderInfo = () => {
     switch (classId) {
       case CLASSIFICATIONS.CoreOperational:
-        return InfoBoxWithContent('Core Operational');
+        return InfoBoxWithContent(CoreOperational);
       case CLASSIFICATIONS.CoreStrategic:
-        return InfoBoxWithContent('Core Strategic');
-      case CLASSIFICATIONS.SurplusActive:
-        return InfoBoxWithContent('Surplus Actice');
+        return InfoBoxWithContent(CoreStrategic);
       case CLASSIFICATIONS.SurplusEncumbered:
-        return InfoBoxWithContent('Surplus Encumbered');
+        return InfoBoxWithContent(SurplusEncumbered);
+      default:
+        return InfoBoxWithContent(
+          'Select a classification from the dropdown list to show the definition here. For further information, see the Inventory Policy.',
+        );
     }
   };
 
@@ -96,7 +109,7 @@ export const ClassificationForm: React.FC<IClassificationFormProps> = ({
               style={{ marginTop: '5px', display: 'flex' }}
               placeholder="Must Select One"
               field={field}
-              options={classifications}
+              options={filteredClassifications}
             />
             {toolTip && (
               <div style={{ marginTop: '8px', marginLeft: '20px' }}>

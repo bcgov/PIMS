@@ -1,14 +1,9 @@
 import { FunctionComponent } from 'react';
 import React from 'react';
-import {
-  Input,
-  Form,
-  TextArea,
-  FastSelect,
-  SelectOption,
-  AutoCompleteText,
-} from 'components/common/form';
-import { useFormikContext } from 'formik';
+import { Input, Form, TextArea, FastSelect, SelectOption } from 'components/common/form';
+import { getIn, useFormikContext } from 'formik';
+import { ParentSelect } from 'components/common/form/ParentSelect';
+import { mapSelectOptionWithParent } from 'utils';
 
 interface InformationFormProps {
   nameSpace?: string;
@@ -31,6 +26,8 @@ const InformationForm: FunctionComponent<InformationFormProps> = (props: Informa
     return nameSpace ? `${nameSpace}.${fieldName}` : fieldName;
   };
   const formikProps = useFormikContext();
+  const agencies = (props.agencies ?? []).map(c => mapSelectOptionWithParent(c, props.agencies));
+  const agency = getIn(formikProps.values, withNameSpace('agencyId'));
 
   return (
     <>
@@ -56,12 +53,19 @@ const InformationForm: FunctionComponent<InformationFormProps> = (props: Informa
         </Form.Row>
       )}
       <Form.Row>
-        <Form.Label>Agency</Form.Label>
-        <AutoCompleteText
-          disabled={props.wizard}
-          options={props.agencies}
+        <Form.Label>{agency?.parent ? 'Sub Agency' : 'Agency'}</Form.Label>
+        <ParentSelect
           field={withNameSpace('agencyId')}
+          options={agencies}
+          filterBy={['code', 'label', 'parent']}
+          disabled={!props.isAdmin}
         />
+        {agency?.parent && (
+          <Form.Row>
+            <Form.Label>Agency</Form.Label>
+            <Input field="parent" disabled value={agency.parent} style={{ marginLeft: '5px' }} />
+          </Form.Row>
+        )}
       </Form.Row>
     </>
   );
