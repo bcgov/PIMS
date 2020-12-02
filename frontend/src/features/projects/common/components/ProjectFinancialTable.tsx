@@ -6,20 +6,20 @@ import { useFormikContext } from 'formik';
 export interface IProjectFinacialTableProps {
   /** Whether form fields are disabled. */
   disabled: boolean;
-  /** An optional label to display. */
-  label?: string;
+  /** An optional title to display. */
+  title?: string;
 }
 
 /**
- *
+ * Provides a way to display and edit project financial information.
  */
-export const ProjectFinancialTable = ({ disabled, label }: IProjectFinacialTableProps) => {
+export const ProjectFinancialTable = ({ disabled, title }: IProjectFinacialTableProps) => {
   const context = useFormikContext();
   return (
     <>
-      {label && (
+      {title && (
         <Form.Row style={{ alignItems: 'unset' }}>
-          <h3 className="col-md-8">{label}</h3>
+          <h3 className="col-md-8">{title}</h3>
         </Form.Row>
       )}
       <Form.Row>
