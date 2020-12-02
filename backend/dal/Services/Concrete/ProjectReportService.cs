@@ -254,10 +254,12 @@ namespace Pims.Dal.Services
         /// <returns></returns>
         private IEnumerable<ProjectSnapshot> GenerateSnapshots(DateTime? from, DateTime to, DateTime? originalTo = null)
         {
+            // Only fetch projects in SPL that have not been cancelled.
             var splProjects = this.Context.Projects
                 .Include(p => p.Agency)
                 .Include(p => p.Status)
-                .Where(p => p.Workflow.Code == "SPL");
+                .Where(p => p.Workflow.Code == "SPL" && p.Status.Code != "CA");
+            // TODO: Because project status codes could change in the future, this should be updated to not be magic strings.
 
             var fromSnapshots = new Dictionary<int, ProjectSnapshot>();
             if (from.HasValue)
