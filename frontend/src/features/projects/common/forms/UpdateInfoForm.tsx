@@ -125,10 +125,7 @@ const UpdateInfoForm = ({
         </>
       )}
 
-      <Form.Row style={{ alignItems: 'unset' }}>
-        <h3 className="col-md-8">Financial Information</h3>
-      </Form.Row>
-      <ProjectFinancialTable disabled={!!isReadOnly} />
+      <ProjectFinancialTable disabled={!!isReadOnly} label="Financial Information" />
       <Form.Row>
         <h6 className="col-md-12" style={{ margin: '1rem 0' }}>
           {updateInfoMessage}

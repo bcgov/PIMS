@@ -35,28 +35,40 @@ exports[`Review Approve Step renders correctly 1`] = `
       <div class=\\"form-row\\" style=\\"align-items: unset;\\">
         <h3 class=\\"col-md-8\\">Financial Information</h3>
       </div>
-      <div class=\\"row\\">
+      <div class=\\"form-row\\">
         <div class=\\"col-md-4\\">
-          <div class=\\"row\\"><label class=\\"form-label col-form-label col-md-4\\">Net Book Value</label>
+          <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-4\\">Net Book Value</label>
             <div class=\\"required form-group\\">
               <div class=\\"input-tooltip-wrapper\\"><input name=\\"netBook\\" class=\\"form-control\\" disabled=\\"\\" required=\\"\\" placeholder=\\"\\" value=\\"\\"></div>
             </div>
           </div>
-          <div class=\\"row\\"><label class=\\"form-label col-form-label col-md-4\\">Estimated Market Value</label>
+          <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-4\\">Estimated Market Value</label>
             <div class=\\"required form-group\\">
               <div class=\\"input-tooltip-wrapper\\"><input name=\\"market\\" class=\\"form-control\\" disabled=\\"\\" required=\\"\\" placeholder=\\"\\" value=\\"\\"></div>
             </div>
           </div>
         </div>
         <div class=\\"col-md-4\\">
-          <div class=\\"row\\"><label class=\\"form-label col-form-label col-md-4\\">Assessed Value</label>
+          <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-4\\">Assessed Value</label>
             <div class=\\"required form-group\\">
               <div class=\\"input-tooltip-wrapper\\"><input name=\\"assessed\\" class=\\"form-control\\" disabled=\\"\\" required=\\"\\" placeholder=\\"\\" value=\\"\\"></div>
             </div>
           </div>
-          <div class=\\"row\\"><label class=\\"form-label col-form-label col-md-4\\">Appraised Value</label>
+          <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-4\\">Appraised Value</label>
             <div class=\\"form-group\\">
               <div class=\\"input-tooltip-wrapper\\"><input name=\\"appraised\\" class=\\"form-control\\" disabled=\\"\\" placeholder=\\"\\" value=\\"\\"></div>
+            </div>
+          </div>
+        </div>
+        <div class=\\"col-md-4\\">
+          <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-4\\">Estimated Sales Costs</label>
+            <div class=\\"form-group\\">
+              <div class=\\"input-tooltip-wrapper\\"><input name=\\"salesCost\\" class=\\"form-control\\" disabled=\\"\\" placeholder=\\"\\" value=\\"\\"></div>
+            </div>
+          </div>
+          <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-4\\">Estimated Program Recovery Fees</label>
+            <div class=\\"form-group\\">
+              <div class=\\"input-tooltip-wrapper\\"><input name=\\"programCost\\" class=\\"form-control\\" disabled=\\"\\" placeholder=\\"\\" value=\\"\\"></div>
             </div>
           </div>
         </div>
