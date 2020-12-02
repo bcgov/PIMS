@@ -141,7 +141,8 @@ namespace Pims.Api.Areas.Project.Mapping.Dispose
                 .Map(dest => dest.Tasks, src => src.Tasks)
                 .Map(dest => dest.Responses, src => src.ProjectAgencyResponses)
                 .Map(dest => dest.Notes, src => src.Notes)
-                .AfterMapping((src, dest) => {
+                .AfterMapping((src, dest) =>
+                {
                     var metadata = new Entity.Models.DisposalProjectMetadata()
                     {
                         Purchaser = src.Purchaser,
