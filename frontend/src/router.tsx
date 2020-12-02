@@ -22,6 +22,7 @@ import { ProjectDisposeView } from 'features/projects/dispose';
 import SplReportContainer from 'features/splReports/containers/SplReportContainer';
 import ManageAgencies from 'features/admin/agencies/ManageAgencies';
 import EditAgencyPage from 'features/admin/agencies/EditAgencyPage';
+import { IENotSupportedPage } from 'features/account/IENotSupportedPage';
 
 const AppRouter: React.FC = () => {
   const getTitle = (page: string) => {
@@ -34,6 +35,12 @@ const AppRouter: React.FC = () => {
         path="/login"
         title={getTitle('Login')}
         component={Login}
+        layout={PublicLayout}
+      ></AppRoute>
+      <AppRoute
+        path="/ienotsupported"
+        title={getTitle('IE Not Supported')}
+        component={IENotSupportedPage}
         layout={PublicLayout}
       ></AppRoute>
       <AppRoute path="/logout" title={getTitle('Logout')} component={LogoutPage}></AppRoute>
