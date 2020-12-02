@@ -125,7 +125,7 @@ const UpdateInfoForm = ({
         </>
       )}
 
-      <ProjectFinancialTable disabled={!!isReadOnly} label="Financial Information" />
+      <ProjectFinancialTable disabled={!!isReadOnly} title="Financial Information" />
       <Form.Row>
         <h6 className="col-md-12" style={{ margin: '1rem 0' }}>
           {updateInfoMessage}
