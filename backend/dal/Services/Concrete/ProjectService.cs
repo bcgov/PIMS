@@ -673,7 +673,7 @@ namespace Pims.Dal.Services
 
             var userAgencies = this.User.GetAgencies();
             if (!isAdmin && !userAgencies.Contains(originalProject.AgencyId)) throw new NotAuthorizedException("User may not edit projects outside of their agency.");
-             
+
             // Only allow valid project status transitions.
             var fromStatusId = (int)this.Context.Entry(originalProject).OriginalValues[nameof(Project.StatusId)];
             var fromStatus = this.Context.WorkflowProjectStatus
@@ -713,7 +713,7 @@ namespace Pims.Dal.Services
             // If the note was changed generate a notification for it.
             var noteChanged = !String.IsNullOrWhiteSpace(project.GetNoteText(NoteTypes.Public)) && originalProject.GetNoteText(NoteTypes.Public) != project.GetNoteText(NoteTypes.Public);
 
-            var metadata = !String.IsNullOrWhiteSpace(project.Metadata) ? this.Context.Deserialize<DisposalProjectMetadata>(project.Metadata) : new DisposalProjectMetadata();
+            var metadata = !String.IsNullOrWhiteSpace(project.Metadata) ? this.Context.Deserialize<DisposalProjectMetadata>(project.Metadata ?? "{}") : new DisposalProjectMetadata();
             originalProject.Merge(project, this.Context);
             var now = DateTime.UtcNow;
 

@@ -100,9 +100,9 @@ namespace Pims.Dal.Services
 
             foreach (ProjectSnapshot snapshot in toSnapshots)
             {
-                var metadata = !String.IsNullOrWhiteSpace(snapshot.Metadata) ? this.Context.Deserialize<DisposalProjectSnapshotMetadata>(snapshot.Metadata) : new DisposalProjectSnapshotMetadata();
+                var metadata = !String.IsNullOrWhiteSpace(snapshot.Metadata) ? this.Context.Deserialize<DisposalProjectSnapshotMetadata>(snapshot.Metadata ?? "{}") : new DisposalProjectSnapshotMetadata();
                 var prevSnapshot = fromSnapshots.GetValueOrDefault(snapshot.ProjectId);
-                var prevMetadata = prevSnapshot != null ? this.Context.Deserialize<DisposalProjectMetadata>(prevSnapshot.Metadata) : null;
+                var prevMetadata = prevSnapshot != null ? this.Context.Deserialize<DisposalProjectMetadata>(prevSnapshot.Metadata ?? "{}") : null;
                 metadata.BaselineIntegrity = (metadata?.NetProceeds ?? 0) - (prevMetadata?.NetProceeds ?? 0);
                 snapshot.Metadata = this.Context.Serialize(metadata);
             }
@@ -281,9 +281,9 @@ namespace Pims.Dal.Services
 
             foreach (Project project in splProjects)
             {
-                var metadata = !String.IsNullOrWhiteSpace(project.Metadata) ? this.Context.Deserialize<DisposalProjectSnapshotMetadata>(project.Metadata) : new DisposalProjectSnapshotMetadata();
+                var metadata = !String.IsNullOrWhiteSpace(project.Metadata) ? this.Context.Deserialize<DisposalProjectSnapshotMetadata>(project.Metadata ?? "{}") : new DisposalProjectSnapshotMetadata();
                 var prevSnapshot = fromSnapshots.GetValueOrDefault(project.Id);
-                var prevMetadata = prevSnapshot != null ? this.Context.Deserialize<DisposalProjectSnapshotMetadata>(prevSnapshot.Metadata) : new DisposalProjectSnapshotMetadata();
+                var prevMetadata = prevSnapshot != null ? this.Context.Deserialize<DisposalProjectSnapshotMetadata>(prevSnapshot.Metadata ?? "{}") : new DisposalProjectSnapshotMetadata();
 
                 metadata.BaselineIntegrity = (metadata?.NetProceeds ?? 0) - (prevMetadata?.NetProceeds ?? 0);
 
