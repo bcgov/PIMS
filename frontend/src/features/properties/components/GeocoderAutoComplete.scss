@@ -43,5 +43,6 @@
 }
 
 .GeocoderAutoComplete option:hover {
-  background-color: $accent-color;
+  background-color: $active-color;
+  color: #fff;
 }
