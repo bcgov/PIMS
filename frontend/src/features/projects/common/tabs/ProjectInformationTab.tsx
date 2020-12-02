@@ -19,6 +19,7 @@ const ProjectInformationTab: React.FunctionComponent<IProjectInformationTabProps
 
       <UpdateInfoForm
         isReadOnly={isReadOnly}
+        showRisk={true}
         goToAddProperties={() => goToDisposePath('assess/properties/update')}
         title="Property Information"
       />
