@@ -8,6 +8,7 @@ import {
   AutoCompleteText,
   FastCurrencyInput,
   Check,
+  FastSelect,
 } from 'components/common/form';
 import React, { useCallback, useState } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
@@ -55,155 +56,174 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
           click the submit button to save this information to the PIMS inventory.
         </p>
       </Row>
-      <Row noGutters>
+      <Row>
         <Col md={6}>
-          <div className="identification">
-            <Row className="identification-header">
-              <LandSvg className="svg" />
-              <h5>Parcel Identification</h5>
-              <FaEdit
-                size={20}
-                className="edit"
-                onClick={() =>
-                  setEditInfo({ ...defaultEditValues, identification: !editInfo.identification })
-                }
-              />
-            </Row>
-            <Row className="content-item">
-              <Label>Agency</Label>
-              <span className="vl"></span>
-              <AutoCompleteText
-                field={withNameSpace('data.agencyId')}
-                options={props.agencies}
-                disabled={editInfo.identification}
-              />
-            </Row>
-            <Row className="content-item">
-              <Label>Name</Label>
-              <span className="vl"></span>
-              <Input disabled={editInfo.identification} field={withNameSpace('data.name')} />
-            </Row>
-            <Row className="content-item">
-              <Label>Description</Label>
-              <span className="vl"></span>
-              <TextArea
-                disabled={editInfo.identification}
-                field={withNameSpace('data.description')}
-              />
-            </Row>
+          <Row>
+            <div className="identification">
+              <Row className="section-header">
+                <span>
+                  <LandSvg className="svg" />
+                  <h5>Parcel Identification</h5>
+                </span>
+                <FaEdit
+                  size={20}
+                  className="edit"
+                  onClick={() =>
+                    setEditInfo({ ...defaultEditValues, identification: !editInfo.identification })
+                  }
+                />
+              </Row>
+              <Row className="content-item">
+                <Label>Agency</Label>
+                <AutoCompleteText
+                  field={withNameSpace('data.agencyId')}
+                  options={props.agencies}
+                  disabled={editInfo.identification}
+                />
+              </Row>
+              <Row className="content-item">
+                <Label>Name</Label>
+                <Input disabled={editInfo.identification} field={withNameSpace('data.name')} />
+              </Row>
+              <Row className="content-item">
+                <Label>Description</Label>
+                <TextArea
+                  disabled={editInfo.identification}
+                  field={withNameSpace('data.description')}
+                />
+              </Row>
 
-            <AddressForm
-              verticalLine
-              onGeocoderChange={noop}
-              {...formikProps}
-              disabled={editInfo.identification}
-              nameSpace="data.address"
-            />
-            <p className="break"></p>
-            <Row className="content-item">
-              <Label>PID/PIN</Label>
-              <span className="vl"></span>
-              <Input
-                displayErrorTooltips
-                className="input-small"
+              <AddressForm
+                onGeocoderChange={noop}
+                {...formikProps}
                 disabled={editInfo.identification}
-                field={
-                  (formikProps.values as any).data.pid
-                    ? withNameSpace('data.pid')
-                    : withNameSpace('data.pin')
-                }
+                nameSpace="data.address"
               />
-            </Row>
-            <Row className="content-item">
-              <Label>Lot Size</Label>
-              <span className="vl"></span>
+              <p className="break"></p>
+              <Row className="content-item">
+                <Label>PID/PIN</Label>
+                <Input
+                  displayErrorTooltips
+                  className="input-small"
+                  disabled={editInfo.identification}
+                  field={
+                    (formikProps.values as any).data.pid
+                      ? withNameSpace('data.pid')
+                      : withNameSpace('data.pin')
+                  }
+                />
+              </Row>
+              <Row className="content-item">
+                <Label>Lot Size</Label>
 
-              <InputGroup
-                displayErrorTooltips
-                fast={true}
-                disabled={editInfo.identification}
-                type="number"
-                field={withNameSpace('data.landArea')}
-                formikProps={formikProps}
-                postText="Hectares"
-              />
-            </Row>
-            <Row className="content-item">
-              <Label>Latitude</Label>
-              <span className="vl"></span>
-              <FastInput
-                className="input-medium"
-                displayErrorTooltips
-                // tooltip={latitudeTooltip}
-                formikProps={formikProps}
-                disabled={editInfo.identification}
-                type="number"
-                field={withNameSpace('data.latitude')}
-              />
-            </Row>
-            <Row className="content-item">
-              <Label>Longitude</Label>
-              <span className="vl"></span>
-              <FastInput
-                className="input-medium"
-                displayErrorTooltips
-                formikProps={formikProps}
-                disabled={editInfo.identification}
-                type="number"
-                field={withNameSpace('data.longitude')}
-              />
-            </Row>
-            <Row className="content-item">
-              <Label>SPP</Label>
-              <span className="vl"></span>
-              <FastInput
-                className="input-medium"
-                displayErrorTooltips
-                formikProps={formikProps}
-                disabled={editInfo.identification}
-                type="text"
-                field={withNameSpace('data.projectNumber')}
-              />
-            </Row>
-            <br></br>
-            <Row className="harmful">
-              <Label>Harmful info if released?</Label>
-              <Check
-                type="radio"
-                field={withNameSpace('data.isSensitive')}
-                radioLabelOne="Yes"
-                radioLabelTwo="No"
-                disabled={editInfo.identification}
-              />
-            </Row>
-          </div>
+                <InputGroup
+                  displayErrorTooltips
+                  fast={true}
+                  disabled={editInfo.identification}
+                  type="number"
+                  field={withNameSpace('data.landArea')}
+                  formikProps={formikProps}
+                  postText="Hectares"
+                />
+              </Row>
+              <Row className="content-item">
+                <Label>Latitude</Label>
+                <FastInput
+                  className="input-medium"
+                  displayErrorTooltips
+                  // tooltip={latitudeTooltip}
+                  formikProps={formikProps}
+                  disabled={editInfo.identification}
+                  type="number"
+                  field={withNameSpace('data.latitude')}
+                />
+              </Row>
+              <Row className="content-item">
+                <Label>Longitude</Label>
+                <FastInput
+                  className="input-medium"
+                  displayErrorTooltips
+                  formikProps={formikProps}
+                  disabled={editInfo.identification}
+                  type="number"
+                  field={withNameSpace('data.longitude')}
+                />
+              </Row>
+              <Row className="content-item">
+                <Label>SPP</Label>
+                <FastInput
+                  className="input-medium"
+                  displayErrorTooltips
+                  formikProps={formikProps}
+                  disabled={editInfo.identification}
+                  type="text"
+                  field={withNameSpace('data.projectNumber')}
+                />
+              </Row>
+              <br></br>
+              <Row className="harmful">
+                <Label>Harmful info if released?</Label>
+                <Check
+                  type="radio"
+                  field={withNameSpace('data.isSensitive')}
+                  radioLabelOne="Yes"
+                  radioLabelTwo="No"
+                  disabled={editInfo.identification}
+                />
+              </Row>
+            </div>
+          </Row>
         </Col>
-        <Col md={5}>
+        <Col md={6}>
           <Row>
             <div className="usage">
-              <Row className="usage-header">
-                <LandSvg className="svg" />
-                <h5>Usage</h5>
+              <Row className="section-header">
+                <span>
+                  <LandSvg className="svg" />
+                  <h5>Usage</h5>
+                </span>
                 <FaEdit
                   size={20}
                   className="edit"
                   onClick={() => setEditInfo({ ...defaultEditValues, usage: !editInfo.usage })}
                 />
               </Row>
-              <LandUsageForm
-                nameSpace="data"
-                disabled={editInfo.usage}
-                verticalLine
-                {...formikProps}
-                classifications={props.classifications}
-              />
+              <Row className="classification field-row">
+                <Label>Classification</Label>
+                <FastSelect
+                  formikProps={formikProps}
+                  disabled={editInfo.usage}
+                  type="number"
+                  placeholder="Must Select One"
+                  field={withNameSpace('classificationId')}
+                  options={props.classifications}
+                />
+              </Row>
+              <Row className="field-row">
+                <Label>Current Zoning</Label>
+                <FastInput
+                  formikProps={formikProps}
+                  disabled={editInfo.usage}
+                  field={withNameSpace('zoning')}
+                />
+              </Row>
+              <Row className="field-row">
+                <Label>Potential Zoning</Label>
+                <FastInput
+                  formikProps={formikProps}
+                  disabled={editInfo.usage}
+                  field={withNameSpace('zoningPotential')}
+                />
+              </Row>
             </div>
           </Row>
           <Row className="content-item">
             <div className="valuation">
-              <Row className="valuation-header">
-                <LandSvg className="svg" />
-                <h5>Valuation</h5>
+              <Row className="section-header">
+                <span>
+                  <LandSvg className="svg" />
+                  <h5>Valuation</h5>
+                </span>
                 <FaEdit
                   size={20}
                   className="edit"
@@ -214,7 +234,6 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
               </Row>
               <Row className="val-row">
                 <Label>Net Book Value</Label>
-                <span className="vl"></span>
                 <FastCurrencyInput
                   formikProps={formikProps}
                   field={withNameSpace('data.financials.0.netbook.value')}
@@ -223,7 +242,6 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
               </Row>
               <Row className="val-row">
                 <Label>Est'd Market Value</Label>
-                <span className="vl"></span>
                 <FastCurrencyInput
                   formikProps={formikProps}
                   field={withNameSpace('data.financials.0.estimated.value')}
@@ -232,7 +250,6 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
               </Row>
               <Row className="val-row">
                 <Label>Assessed Value</Label>
-                <span className="vl"></span>
                 <FastCurrencyInput
                   formikProps={formikProps}
                   field={withNameSpace('data.financials.0.assessed.value')}
@@ -241,7 +258,6 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
               </Row>
               <Row className="val-row">
                 <Label>Appraised Value</Label>
-                <span className="vl"></span>
                 <FastCurrencyInput
                   formikProps={formikProps}
                   field={withNameSpace('data.financials.0.appraised.value')}

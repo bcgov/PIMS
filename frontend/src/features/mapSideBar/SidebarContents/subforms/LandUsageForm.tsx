@@ -11,7 +11,6 @@ interface ILandUsageProps {
   nameSpace?: string;
   disabled?: boolean;
   classifications: any;
-  verticalLine?: boolean;
 }
 
 /**
@@ -42,12 +41,10 @@ export const LandUsageForm = <T extends any>(props: ILandUsageProps & FormikProp
       </Row>
       <Row className="field-row">
         <Label>Current Zoning</Label>
-        {props.verticalLine && <span className="vl"></span>}
         <FastInput formikProps={props} disabled={props.disabled} field={withNameSpace('zoning')} />
       </Row>
       <Row className="field-row">
         <Label>Potential Zoning</Label>
-        {props.verticalLine && <span className="vl"></span>}
         <FastInput
           formikProps={props}
           disabled={props.disabled}
