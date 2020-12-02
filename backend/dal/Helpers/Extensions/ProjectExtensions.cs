@@ -379,7 +379,7 @@ namespace Pims.Dal.Helpers.Extensions
         {
             // Update a project
             var agency = originalProject.Agency;
-            var originalMetadata = context.Deserialize<DisposalProjectMetadata>(originalProject.Metadata); // TODO: Need to test whether automatically overwriting the metadata is correct.
+            var originalMetadata = context.Deserialize<DisposalProjectMetadata>(originalProject.Metadata ?? "{}"); // TODO: Need to test whether automatically overwriting the metadata is correct.
 
             var createdById = originalProject.CreatedById;
             var updatedById = originalProject.UpdatedById;
