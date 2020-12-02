@@ -3,9 +3,12 @@ import { IStep } from 'components/common/Stepper';
 export interface IStepperFormContextProps {
   current: number;
   currentTab: number;
+  currentTabName: string;
+  getTabCurrentStep: (tab: number) => number;
   gotoStep: (step: number) => boolean;
   goBack: () => boolean;
   gotoNext: () => boolean;
+  gotoTab: (tab: number) => boolean;
 }
 
 export interface ISteppedFormValues<T extends object = {}> {
@@ -23,16 +26,16 @@ export interface IPersistProps {
   persistCallback: (values: any) => void;
 }
 
-export interface ISteppedFormProps {
+export interface ISteppedFormProps<T extends {}> {
   steps: IStep[];
-  getTabs?: () => string[];
+  getTabs?: (values: T) => string[];
   // set to true to make to the form persist to localstorage
   persistable?: boolean;
   // options to set persist component
   persistProps?: IPersistProps;
   formikRef?: any;
-  onAddTab?: () => void;
-  onRemoveTab?: (index: number) => void;
+  onAddTab?: (values: T) => void;
+  onRemoveTab?: (values: T, index: number) => void;
 }
 
 export interface IStepperFieldProps {

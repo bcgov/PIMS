@@ -1,6 +1,6 @@
 import { ISteppedFormValues, SteppedForm, useFormStepper } from 'components/common/form/StepForm';
-import { useFormikContext, yupToFormErrors } from 'formik';
-import { IGeocoderResponse, useApi } from 'hooks/useApi';
+import { useFormikContext } from 'formik';
+import { IGeocoderResponse } from 'hooks/useApi';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import useCodeLookups from 'hooks/useLookupCodes';
 import { noop } from 'lodash';
@@ -9,29 +9,16 @@ import { Button } from 'react-bootstrap';
 import styled from 'styled-components';
 import { InventoryPolicy } from '../components/InventoryPolicy';
 import * as API from 'constants/API';
-import { IBuilding } from 'actions/parcelsActions';
-import { ParcelDetailTabs } from 'features/properties/containers/ParcelDetailContainer';
+import { IBuilding, IParcel } from 'actions/parcelsActions';
 import { ParcelIdentificationForm } from './subforms/ParcelIdentificationForm';
 import { LandUsageForm } from './subforms/LandUsageForm';
-import { LandReviewPage } from './subforms/LandReviewPage';
-import {
-  filterEmptyFinancials,
-  IFinancial,
-  IFinancialYear,
-} from 'features/properties/components/forms/subforms/EvaluationForm';
-import { IFormParcel } from 'features/properties/containers/ParcelDetailFormContainer';
-import { EvaluationKeys } from 'constants/evaluationKeys';
-import { FiscalKeys } from 'constants/fiscalKeys';
-import _ from 'lodash';
-import { useDispatch } from 'react-redux';
-import { ParcelSchema } from 'utils/YupSchema';
-import { createParcel, updateParcel } from 'actionCreators/parcelsActionCreator';
 import { LandValuationForm } from './subforms/LandValuationForm';
 import { AssociatedLandSteps } from 'constants/propertySteps';
 import { LandOwnershipForm } from './subforms/LandOwnershipForm';
 import { defaultBuildingValues } from 'features/properties/components/forms/subforms/BuildingForm';
 import { getInitialValues as getInitialLandValues } from './LandForm';
 import useParcelLayerData from 'features/properties/hooks/useParcelLayerData';
+import { AssociatedLandReviewPage } from './subforms/AssociatedLandReviewPage';
 
 const Container = styled.div`
   background-color: #fff;
@@ -65,10 +52,13 @@ const FillRemainingSpace = styled.span`
   flex: 1 1 auto;
 `;
 
+interface IAssociatedLand extends IBuilding {
+  parcels: IParcel[];
+}
 /**
  * Create formiks initialValues by stitching together the default values provided by each subform.
  */
-export const getInitialValues = (): any => {
+export const getInitialValues = (): IAssociatedLand => {
   return {
     ...defaultBuildingValues,
     parcels: [{ ...getInitialLandValues() }],
@@ -79,22 +69,8 @@ export const getInitialValues = (): any => {
  * Do an in place conversion of all values to their expected API equivalents (eg. '' => undefined)
  * @param values the parcel value to convert.
  */
-export const valuesToApiFormat = (values: ISteppedFormValues<IFormParcel>): IFormParcel => {
-  values.data.pin = values?.data.pin ? values.data.pin : undefined;
-  values.data.pid = values?.data.pid ? values.data.pid : undefined;
-  const seperatedFinancials = (_.flatten(
-    values.data.financials?.map((financial: IFinancialYear) => _.values(financial)),
-  ) ?? []) as IFinancial[];
-  const allFinancials = filterEmptyFinancials(seperatedFinancials);
-
-  values.data.evaluations = _.filter(allFinancials, financial =>
-    Object.keys(EvaluationKeys).includes(financial.key),
-  );
-  values.data.fiscals = _.filter(allFinancials, financial =>
-    Object.keys(FiscalKeys).includes(financial.key),
-  );
-  values.data.landArea = +values.data.landArea;
-  values.data.financials = [];
+export const valuesToApiFormat = (values: ISteppedFormValues<IAssociatedLand>): IAssociatedLand => {
+  //TODO: fill in as necessary.
   return values.data;
 };
 
@@ -157,8 +133,8 @@ const Form: React.FC<IAssociatedLandForm> = ({
         return <LandValuationForm nameSpace={currentParcelNameSpace} title="Land Valuation" />;
       case AssociatedLandSteps.REVIEW:
         return (
-          <LandReviewPage
-            nameSpace={`data`}
+          <AssociatedLandReviewPage
+            nameSpace={`data.parcels`}
             classifications={classifications}
             agencies={agencies}
             handlePidChange={handlePidChange}
@@ -173,7 +149,7 @@ const Form: React.FC<IAssociatedLandForm> = ({
       <FormFooter>
         <InventoryPolicy />
         <FillRemainingSpace />
-        {stepper.current !== 3 && (
+        {stepper.current !== AssociatedLandSteps.REVIEW && (
           <Button
             type="button"
             onClick={() => {
@@ -184,11 +160,13 @@ const Form: React.FC<IAssociatedLandForm> = ({
             Continue
           </Button>
         )}
-        {formikProps.dirty && formikProps.isValid && stepper.current === 3 && (
-          <Button size="sm" type="submit">
-            Add associated land
-          </Button>
-        )}
+        {formikProps.dirty &&
+          formikProps.isValid &&
+          stepper.current === AssociatedLandSteps.REVIEW && (
+            <Button size="sm" type="submit">
+              Add associated land
+            </Button>
+          )}
       </FormFooter>
     </FormContentWrapper>
   );
@@ -215,15 +193,13 @@ interface IAssociatedLandForm {
 
 const AssociatedLandForm: React.FC<IAssociatedLandForm> = (props: IAssociatedLandForm) => {
   const keycloak = useKeycloakWrapper();
-  const dispatch = useDispatch();
-  const api = useApi();
   let initialValues = {
     activeStep: 0,
     activeTab: 0,
     data: getInitialValues(),
   };
 
-  initialValues.data.agencyId = keycloak.agencyId;
+  initialValues.data.agencyId = keycloak.agencyId ?? '';
 
   /**
    * Combines yup validation with manual validation of financial data for performance reasons.
@@ -231,57 +207,14 @@ const AssociatedLandForm: React.FC<IAssociatedLandForm> = (props: IAssociatedLan
    * This validation is significantly faster.
    * @param values formik form values to validate.
    */
-  const handleValidate = async (values: ISteppedFormValues<IFormParcel>) => {
-    const yupErrors: any = ParcelSchema.validate(values.data, { abortEarly: false }).then(
-      () => ({}),
-      (err: any) => yupToFormErrors(err),
-    );
-
-    let pidDuplicated = false;
-    if (values.data.pid && initialValues.data.pid !== values.data.pid) {
-      pidDuplicated = !(await isPidAvailable(values.data));
-    }
-
-    let pinDuplicated = false;
-    if (
-      values.data.pin &&
-      initialValues.data.pin !== values.data.pin &&
-      values.data.pin.toString().length < 10
-    ) {
-      pinDuplicated = !(await isPinAvailable(values.data));
-    }
-
-    let errors = await yupErrors;
-    const { buildings: buildingErrors, tabs, ...parcelErrors } = errors;
-    if (buildingErrors?.length) {
-      errors = { ...errors, tabs: [...(errors.tabs ?? []), ParcelDetailTabs.buildings] };
-    }
-    if (parcelErrors && Object.keys(parcelErrors).length) {
-      errors = { ...errors, tabs: [...(errors.tabs ?? []), ParcelDetailTabs.parcel] };
-    }
-    if (pidDuplicated) {
-      errors = { ...errors, pid: 'This PID is already in use.' };
-    }
-    if (pinDuplicated) {
-      errors = { ...errors, pin: 'This PIN is already in use.' };
-    }
-    return Promise.resolve(errors);
+  const handleValidate = async (values: ISteppedFormValues<IAssociatedLand>) => {
+    //TODO: fill in as necessary
+    return Promise.resolve({});
   };
-
-  const isPidAvailable = async (values: IFormParcel): Promise<boolean> => {
-    const response = await api.isPidAvailable(values.id, values.pid);
-    return response?.available;
-  };
-
-  const isPinAvailable = async (values: IFormParcel): Promise<boolean> => {
-    const response = await api.isPinAvailable(values.id, values.pin);
-    return response?.available;
-  };
-  const formikParcels = props.formikRef?.current?.values?.data?.parcels;
 
   return (
     <Container className="landForm">
-      <SteppedForm
+      <SteppedForm<IAssociatedLand>
         // Provide the steps
         steps={[
           { route: 'ownership', title: 'Land Ownership', completed: false, canGoToStep: true },
@@ -290,10 +223,10 @@ const AssociatedLandForm: React.FC<IAssociatedLandForm> = (props: IAssociatedLan
           { route: 'valuation', title: 'Valuation', completed: false, canGoToStep: true },
           { route: 'review', title: 'Review', completed: false, canGoToStep: true },
         ]}
-        getTabs={() => {
-          return (formikParcels ?? initialValues.data.parcels).map((p: any, index: number) =>
-            p.name?.length ? p.name : `Parcel ${index + 1}`,
-          );
+        getTabs={(values: IAssociatedLand) => {
+          return values.parcels.map((p: any, index: number) => {
+            return p.name?.length ? p.name : `Parcel ${index + 1}`;
+          });
         }}
         persistable={true}
         persistProps={{
@@ -301,27 +234,23 @@ const AssociatedLandForm: React.FC<IAssociatedLandForm> = (props: IAssociatedLan
           secret: keycloak.obj.subject,
           persistCallback: noop,
         }}
-        onAddTab={() => {
-          if (formikParcels !== undefined) {
-            formikParcels.push(getInitialLandValues());
+        onAddTab={(values: IAssociatedLand) => {
+          if (values.parcels !== undefined) {
+            values.parcels.push(getInitialLandValues());
           }
         }}
-        onRemoveTab={(tabIndex: number) => {
-          if (formikParcels?.length > tabIndex) {
-            formikParcels.splice(tabIndex, 1);
+        onRemoveTab={(values: IAssociatedLand, tabIndex: number) => {
+          if (values?.parcels.length > tabIndex) {
+            values.parcels.splice(tabIndex, 1);
           }
         }}
         initialValues={initialValues}
         validate={handleValidate}
         formikRef={props.formikRef}
         onSubmit={async (values, actions) => {
-          const apiValues = valuesToApiFormat(_.cloneDeep(values));
+          //const apiValues = valuesToApiFormat(_.cloneDeep(values));
           try {
-            if (!values.data.id) {
-              await createParcel(apiValues)(dispatch);
-            } else {
-              await updateParcel(apiValues)(dispatch);
-            }
+            //TODO: fill in api call logic using new add/update building apis.
           } catch (error) {
           } finally {
             actions.setSubmitting(false);

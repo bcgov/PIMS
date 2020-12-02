@@ -6,9 +6,12 @@ import { IStepperFormContextProps, IStepperFormProviderProps, ISteppedFormValues
 const StepperFormContext = React.createContext<IStepperFormContextProps>({
   current: 0,
   currentTab: 0,
+  currentTabName: '',
+  getTabCurrentStep: noop as any,
   gotoStep: noop as any,
   goBack: noop as any,
   gotoNext: noop as any,
+  gotoTab: noop as any,
 });
 
 /**
@@ -24,9 +27,25 @@ export const StepperFormProvider: React.FC<IStepperFormProviderProps> = ({
   if (!values.tabs) {
     setFieldValue(
       'tabs',
-      tabs.map(t => ({ activeStep: 0 })),
+      tabs.map(t => ({ activeStep: 0, name: t })),
     );
   }
+
+  const getTabCurrentStep = (index: number) => {
+    if (index >= 0 && values?.tabs && index < values.tabs.length) {
+      return values.tabs[index].activeStep;
+    }
+    return undefined;
+  };
+
+  const gotoTab = (index: number) => {
+    if (index >= 0 && index < tabs.length) {
+      setFieldValue(`activeTab`, index);
+      return true;
+    }
+
+    return false;
+  };
 
   const gotoStep = (index: number) => {
     if (index > 0 && index < steps.length) {
@@ -71,9 +90,12 @@ export const StepperFormProvider: React.FC<IStepperFormProviderProps> = ({
       value={{
         current: getIn(values, `tabs.${values.activeTab}.activeStep`),
         currentTab: values.activeTab,
+        currentTabName: getIn(values, `tabs.${values.activeTab}.name`),
+        getTabCurrentStep,
         gotoNext,
         goBack,
         gotoStep,
+        gotoTab,
       }}
     >
       {children}
