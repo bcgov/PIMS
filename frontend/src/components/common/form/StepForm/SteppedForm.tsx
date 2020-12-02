@@ -58,8 +58,14 @@ const TabbedForm = styled(Form)`
       }
     }
     border: 0;
+    .btn:disabled {
+      background-color: #003366;
+      cursor: default;
+    }
   }
 `;
+
+export const MAX_STEPPED_TABS = 5;
 
 /**
  * A formik form with a stepper. Use the ```useFormStepper``` hook to access and control the stepper in the form children
@@ -124,7 +130,11 @@ export const SteppedForm = function<T extends object = {}>({
               id="steppedform-tabs"
               className={!getTabs ? 'hideTabs' : ''}
               activeKey={values.activeTab}
-              onSelect={(tab: string) => setFieldValue('activeTab', +tab)}
+              onSelect={(tab: string) => {
+                if (tab !== '') {
+                  setFieldValue('activeTab', +tab);
+                }
+              }}
               unmountOnExit
             >
               {getFormikTabs(values.data).map((tab, index) => (
@@ -136,9 +146,11 @@ export const SteppedForm = function<T extends object = {}>({
                 </Tab>
               ))}
               <Tab
+                disabled={(values?.tabs?.length ?? 0) >= MAX_STEPPED_TABS}
                 eventKey=""
                 title={
                   <PlusButton
+                    disabled={(values?.tabs?.length ?? 0) >= MAX_STEPPED_TABS}
                     toolText="Add another associated Parcel"
                     toolId="add-associated-parcel"
                     onClick={() => {

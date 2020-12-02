@@ -89,7 +89,7 @@ export const useLayerQuery = (url: string, geometryName: string = 'SHAPE'): IUse
       }
       const data: FeatureCollection =
         parcelLayerData?.data?.PID === formattedPid ||
-        parcelLayerData?.data?.PID_NUMBER.toString() === formattedPid
+        parcelLayerData?.data?.PID_NUMBER?.toString() === formattedPid
           ? undefined
           : (await axios.get(`${baseUrl}&CQL_FILTER=PID_NUMBER=${+formattedPid}`)).data;
       return data;

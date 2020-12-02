@@ -147,7 +147,11 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
           </Row>
           <Row className="field-row">
             <Label>Lot Size</Label>
-            <TextArea disabled={false} field={withNameSpace('legalDescription')} />
+            <FastInput
+              disabled={false}
+              field={withNameSpace('landArea')}
+              formikProps={formikProps}
+            />
           </Row>
         </Col>
         <Col>
