@@ -85,7 +85,7 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
         </div>
         <div class=\\"form-row\\"><label class=\\"form-label\\">Longitude</label>
           <div class=\\"required form-group\\"><input name=\\"longitude\\" required=\\"\\" type=\\"number\\" id=\\"input-longitude\\" class=\\"input-medium form-control\\" value=\\"10\\"></div>
-        </div><button class=\\"sc-AxhUy jCfTQa\\">
+        </div><button class=\\"sc-fzokOt etZzsU\\">
           <p>Place Pin</p><svg>draft-parcel-icon.svg</svg>
         </button>
       </div>

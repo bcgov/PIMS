@@ -94,7 +94,7 @@ exports[`PagedBuildingForms functionality displays any pre-existing buildings 1`
       </div>
       <div class=\\"form-row\\"><label class=\\"form-label\\">Longitude</label>
         <div class=\\"required form-group\\"><input name=\\"buildings.0.longitude\\" required=\\"\\" type=\\"number\\" id=\\"input-buildings.0.longitude\\" class=\\"input-medium form-control\\" value=\\"10\\" disabled=\\"\\"></div>
-      </div><button class=\\"sc-AxhUy jCfTQa\\" disabled=\\"\\">
+      </div><button class=\\"sc-fzokOt etZzsU\\" disabled=\\"\\">
         <p>Place Pin</p><svg>draft-building-icon.svg</svg>
       </button>
     </div>
