@@ -46,11 +46,16 @@ namespace Pims.Dal.Helpers.Extensions
                 .Include(p => p.Notes)
                 .AsNoTracking();
 
-            if (filter.AssessWorkflow.HasValue && filter.AssessWorkflow.Value)
+            if (filter.AssessWorkflow == true)
             {
                 var statuses = context.Workflows.Where(w => options.AssessmentWorkflows.Contains(w.Code))
                     .SelectMany(w => w.Status).Select(x => x.StatusId).Distinct().ToArray();
                 query = query.Where(p => statuses.Contains(p.StatusId) || p.Status.Code.Equals("AS-I") || p.Status.Code.Equals("AS-EXE")); // TODO: Need optional Status paths within Workflows.
+            }
+
+            if (filter.SPLWorkflow == true)
+            {
+                query = query.Where(p => p.Workflow.Code == "SPL" && p.Status.Code != "CA");
             }
 
             if (!String.IsNullOrWhiteSpace(filter.ProjectNumber))
