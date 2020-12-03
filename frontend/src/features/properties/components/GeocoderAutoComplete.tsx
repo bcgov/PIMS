@@ -106,7 +106,6 @@ export const GeocoderAutoComplete: React.FC<IGeocoderAutoCompleteProps> = ({
           controlId={`input-${field}`}
           className={classNames(!!required ? 'required' : '', outerClassName)}
         >
-          {!!tooltip && <TooltipIcon toolTipId={`${field}-tooltip`} toolTip={tooltip} />}
           <TooltipWrapper toolTipId={`${field}-error-tooltip}`} toolTip={errorTooltip}>
             <InputControl
               autoComplete={autoSetting}
@@ -120,6 +119,7 @@ export const GeocoderAutoComplete: React.FC<IGeocoderAutoCompleteProps> = ({
               {...rest}
             />
           </TooltipWrapper>
+          {!!tooltip && <TooltipIcon toolTipId={`${field}-tooltip`} toolTip={tooltip} />}
           {renderSuggestions()}
           <DisplayError field={field} />
         </Form.Group>

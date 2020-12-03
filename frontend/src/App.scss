@@ -70,3 +70,7 @@ div.bootstrap-table {
 .form-check.required input {
   border: 1px solid $secondary-variant-color;
 }
+
+.form-group.required textarea {
+  border: 1px solid $secondary-variant-color;
+}

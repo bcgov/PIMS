@@ -11,7 +11,6 @@ import * as API from 'constants/API';
 import { ILookupCode } from 'actions/lookupActions';
 import * as reducerTypes from 'constants/reducerTypes';
 import { fireEvent, render, wait } from '@testing-library/react';
-import pretty from 'pretty';
 
 const mockStore = configureMockStore([thunk]);
 const history = createMemoryHistory();
@@ -52,7 +51,7 @@ const buildingForm = (
 describe('Building Form', () => {
   it('component renders correctly', () => {
     const { container } = render(buildingForm);
-    expect(pretty(container.innerHTML)).toMatchSnapshot();
+    expect(container.firstChild).toMatchSnapshot();
   });
 
   it('displays identification page on initial load', () => {

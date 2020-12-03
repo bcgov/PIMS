@@ -39,6 +39,7 @@ export const StepperFormProvider: React.FC<IStepperFormProviderProps> = ({
   };
 
   const gotoTab = (index: number) => {
+    debugger;
     if (index >= 0 && index < tabs.length) {
       setFieldValue(`activeTab`, index);
       return true;

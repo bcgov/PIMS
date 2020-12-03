@@ -170,11 +170,17 @@ export const SteppedForm = function<T extends object = {}>({
               title="Really Remove Associated Parcel?"
               message="Click OK to remove the association between this parcel and the current building."
               handleOk={() => {
-                if (onRemoveTab && tabToDeleteId !== undefined) {
+                if (values.tabs && onRemoveTab && tabToDeleteId !== undefined) {
+                  //remove the underlying data representing the tab
                   onRemoveTab(values.data, tabToDeleteId);
+                  //remove the tab itself.
                   const tabs = [...values.tabs];
                   tabs.splice(tabToDeleteId, 1);
                   setFieldValue('tabs', tabs);
+                  //If the user deletes the last tab, set the active tab to the previous tab.
+                  if (values.activeTab >= values.tabs.length - 1) {
+                    setFieldValue('activeTab', values.tabs.length - 2);
+                  }
                 }
               }}
               cancelButtonText="Cancel"

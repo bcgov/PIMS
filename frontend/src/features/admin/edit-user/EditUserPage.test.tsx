@@ -13,7 +13,6 @@ import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 import { ToastContainer } from 'react-toastify';
 import moment from 'moment-timezone';
-import pretty from 'pretty';
 
 const mockStore = configureMockStore([thunk]);
 const history = createMemoryHistory();
@@ -95,7 +94,7 @@ describe('Edit user page', () => {
         </Router>
       </Provider>,
     );
-    expect(pretty(container.innerHTML)).toMatchSnapshot();
+    expect(container.firstChild).toMatchSnapshot();
   });
 
   it('contains role options from lookup code + please select disabled option', () => {

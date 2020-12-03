@@ -9,7 +9,6 @@ import { Provider } from 'react-redux';
 import { useProjectSnapshotApi } from '../hooks/useProjectSnapshotApi';
 import { IReport, ISnapshot } from '../interfaces';
 import { formatApiDateTime } from 'utils';
-import pretty from 'pretty';
 import { act } from 'react-dom/test-utils';
 import { screen } from '@testing-library/dom';
 import { ToastContainer } from 'react-toastify';
@@ -107,7 +106,7 @@ describe('Spl Report Container', () => {
         mockApi().getProjectReportSnapshotsById.mockResolvedValue([defaultSnapshot]);
         const { findByText, container } = renderContainer();
         await findByText('20/21');
-        expect(pretty(container.innerHTML)).toMatchSnapshot();
+        expect(container.firstChild).toMatchSnapshot();
       });
     });
 
@@ -118,7 +117,7 @@ describe('Spl Report Container', () => {
         mockApi().getProjectReportSnapshotsById.mockResolvedValueOnce([]);
         const { container, findByText } = renderContainer();
         await findByText('No Reports Available');
-        expect(pretty(container.innerHTML)).toMatchSnapshot();
+        expect(container.firstChild).toMatchSnapshot();
       });
     });
 

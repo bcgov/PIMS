@@ -14,7 +14,6 @@ import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 import { useKeycloak } from '@react-keycloak/web';
 import Claims from 'constants/claims';
-import pretty from 'pretty';
 
 const mockAxios = new MockAdapter(axios);
 mockAxios.onAny().reply(200, {});
@@ -124,7 +123,7 @@ describe('Project list view tests', () => {
           </Router>
         </Provider>,
       );
-      expect(pretty(container.innerHTML)).toMatchSnapshot();
+      expect(container.firstChild).toMatchSnapshot();
     });
   });
 

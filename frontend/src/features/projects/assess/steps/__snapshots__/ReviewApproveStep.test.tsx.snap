@@ -1,172 +1,848 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Review Approve Step renders correctly 1`] = `
-"<div class=\\"ReviewApproveStep container-fluid\\">
-  <form class=\\"\\">
-    <h1>Project Application Review</h1>
-    <div class=\\"ProjectDraftForm container-fluid\\">
-      <div class=\\"form-row\\">
-        <h3 class=\\"col-md-8\\">Project Property Information</h3><span class=\\"col-md-4\\"></span>
+<div
+  class="ReviewApproveStep container-fluid"
+>
+  <form
+    class=""
+  >
+    <h1>
+      Project Application Review
+    </h1>
+    <div
+      class="ProjectDraftForm container-fluid"
+    >
+      <div
+        class="form-row"
+      >
+        <h3
+          class="col-md-8"
+        >
+          Project Property Information
+        </h3>
+        <span
+          class="col-md-4"
+        />
       </div>
-      <div class=\\"col-md-10 form-row\\"><label class=\\"col-md-2 form-label\\">Project No.</label>
-        <div class=\\"col-md-2 form-group\\"><input name=\\"projectNumber\\" disabled=\\"\\" placeholder=\\"SPP-XXXXXX\\" id=\\"input-projectNumber\\" class=\\"form-control\\" value=\\"test-01\\"></div>
+      <div
+        class="col-md-10 form-row"
+      >
+        <label
+          class="col-md-2 form-label"
+        >
+          Project No.
+        </label>
+        <div
+          class="col-md-2 form-group"
+        >
+          <input
+            class="form-control"
+            disabled=""
+            id="input-projectNumber"
+            name="projectNumber"
+            placeholder="SPP-XXXXXX"
+            value="test-01"
+          />
+        </div>
       </div>
-      <div class=\\"form-row\\">
-        <div class=\\"required col-md-10 form-group\\"><label class=\\"form-label\\" for=\\"input-name\\">Name</label><input name=\\"name\\" required=\\"\\" disabled=\\"\\" id=\\"input-name\\" class=\\"col-md-5 form-control\\" value=\\"my project\\"></div>
+      <div
+        class="form-row"
+      >
+        <div
+          class="required col-md-10 form-group"
+        >
+          <label
+            class="form-label"
+            for="input-name"
+          >
+            Name
+          </label>
+          <input
+            class="col-md-5 form-control"
+            disabled=""
+            id="input-name"
+            name="name"
+            required=""
+            value="my project"
+          />
+        </div>
       </div>
-      <div class=\\"form-row\\">
-        <div class=\\"col-md-10 form-group\\"><label class=\\"form-label\\" for=\\"input-description\\">Description</label><textarea name=\\"description\\" disabled=\\"\\" id=\\"input-description\\" class=\\"col-md-5 form-control\\">my project description</textarea></div>
+      <div
+        class="form-row"
+      >
+        <div
+          class="col-md-10 form-group"
+        >
+          <label
+            class="form-label"
+            for="input-description"
+          >
+            Description
+          </label>
+          <textarea
+            class="col-md-5 form-control"
+            disabled=""
+            id="input-description"
+            name="description"
+          >
+            my project description
+          </textarea>
+        </div>
       </div>
     </div>
-    <div class=\\"UpdateInfoForm container-fluid\\">
-      <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-2\\">Assign Tier&nbsp;</label>
-        <div class=\\"required col-md-2 form-group\\"><select name=\\"tierLevelId\\" required=\\"\\" disabled=\\"\\" id=\\"input-tierLevelId\\" class=\\"form-select form-control\\">
-            <option value=\\"\\">Must Select One</option>
-          </select></div>
-      </div>
-      <div class=\\"form-row\\"><small>Tier 1: Properties with a net value of less than $1M.</small></div>
-      <div class=\\"form-row\\"><small>Tier 2: Properties with a net value of $1M or more and less than $10M.</small></div>
-      <div class=\\"form-row\\"><small>Tier 3: Properties are single parcels with a net value of $10M or more.</small></div>
-      <div class=\\"form-row\\"><small>Tier 4: Properties are multiple parcels with a cumulative net value of $10M or more.</small></div>
-      <div class=\\"form-row\\" style=\\"align-items: unset;\\">
-        <h3 class=\\"col-md-8\\">Project Totals</h3>
-      </div>
-      <div class=\\"row\\">
-        <div class=\\"col-md-4\\">
-          <div class=\\"row\\"><label class=\\"form-label col-form-label col-md-4\\">Net Book Value</label>
-            <div class=\\"required form-group\\">
-              <div class=\\"input-tooltip-wrapper\\"><input name=\\"netBook\\" class=\\"form-control\\" disabled=\\"\\" placeholder=\\"\\" value=\\"\\"></div>
-            </div>
-          </div>
-          <div class=\\"row\\"><label class=\\"form-label col-form-label col-md-4\\">Estimated Market Value</label>
-            <div class=\\"required form-group\\">
-              <div class=\\"input-tooltip-wrapper\\"><input name=\\"market\\" class=\\"form-control\\" disabled=\\"\\" placeholder=\\"\\" value=\\"\\"></div>
-            </div>
-          </div>
-        </div>
-        <div class=\\"col-md-4\\">
-          <div class=\\"row\\"><label class=\\"form-label col-form-label col-md-4\\">Assessed Value</label>
-            <div class=\\"required form-group\\">
-              <div class=\\"input-tooltip-wrapper\\"><input name=\\"assessed\\" class=\\"form-control\\" disabled=\\"\\" placeholder=\\"\\" value=\\"\\"></div>
-            </div>
-          </div>
-          <div class=\\"row\\"><label class=\\"form-label col-form-label col-md-4\\">Appraised Value</label>
-            <div class=\\"form-group\\">
-              <div class=\\"input-tooltip-wrapper\\"><input name=\\"appraised\\" class=\\"form-control\\" disabled=\\"\\" placeholder=\\"\\" value=\\"\\"></div>
-            </div>
-          </div>
+    <div
+      class="UpdateInfoForm container-fluid"
+    >
+      
+      <div
+        class="form-row"
+      >
+        <label
+          class="form-label col-form-label col-md-2"
+        >
+          Assign Tier 
+        </label>
+        <div
+          class="required col-md-2 form-group"
+        >
+          <select
+            class="form-select form-control"
+            disabled=""
+            id="input-tierLevelId"
+            name="tierLevelId"
+            required=""
+          >
+            <option
+              value=""
+            >
+              Must Select One
+            </option>
+          </select>
         </div>
       </div>
-      <div class=\\"form-row\\">
-        <h6 class=\\"col-md-12\\" style=\\"margin: 1rem 0px;\\">Please make any necessary updates to the valuation information and the classification</h6>
-        <h2 class=\\"col-md-5\\">Properties in the Project</h2>
+      <div
+        class="form-row"
+      >
+        <small>
+          Tier 1: Properties with a net value of less than $1M.
+        </small>
       </div>
-      <div class=\\"container-fluid\\">
-        <div class=\\"ScrollContainer\\">
-          <div role=\\"table\\" class=\\"table\\">
-            <div class=\\"thead thead-light\\">
-              <div role=\\"row\\" style=\\"display: flex; flex: 1 0 auto; min-width: 645px;\\" class=\\"tr\\">
-                <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Agency</div>
-                <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Name</div>
-                <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Civic Address</div>
-                <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 140 0 auto; min-width: 30px; width: 140px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Classification</div>
-                <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Current Zoning Code</div>
-                <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Potential Zoning Code</div>
-                <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Net Book Value</div>
-                <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Market Value</div>
-                <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Assessed Value</div>
-                <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 60 0 auto; min-width: 30px; width: 60px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Type</div>
+      <div
+        class="form-row"
+      >
+        <small>
+          Tier 2: Properties with a net value of $1M or more and less than $10M.
+        </small>
+      </div>
+      <div
+        class="form-row"
+      >
+        <small>
+          Tier 3: Properties are single parcels with a net value of $10M or more.
+        </small>
+      </div>
+      <div
+        class="form-row"
+      >
+        <small>
+          Tier 4: Properties are multiple parcels with a cumulative net value of $10M or more.
+        </small>
+      </div>
+      <div
+        class="form-row"
+        style="align-items: unset;"
+      >
+        <h3
+          class="col-md-8"
+        >
+          Project Totals
+        </h3>
+      </div>
+      <div
+        class="row"
+      >
+        <div
+          class="col-md-4"
+        >
+          <div
+            class="row"
+          >
+            <label
+              class="form-label col-form-label col-md-4"
+            >
+              Net Book Value
+            </label>
+            <div
+              class="required form-group"
+            >
+              <div
+                class="input-tooltip-wrapper"
+              >
+                <input
+                  class="form-control"
+                  disabled=""
+                  name="netBook"
+                  placeholder=""
+                  value=""
+                />
               </div>
             </div>
-            <div role=\\"rowgroup\\" class=\\"tbody\\">
-              <div class=\\"tr-wrapper\\">
-                <div role=\\"row\\" style=\\"display: flex; flex: 1 0 auto; min-width: 645px;\\" class=\\"tr\\">
-                  <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"Click to view property details\\" class=\\"td clickable\\">TST</div>
-                  <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"Click to view property details\\" class=\\"td clickable\\">123-123-123</div>
-                  <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"Click to view property details\\" class=\\"td clickable\\">1234 Test St</div>
-                  <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 140 0 auto; min-width: 30px; width: 140px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"Click to view property details\\" class=\\"td clickable\\">Surplus Active</div>
-                  <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"Click to view property details\\" class=\\"td clickable\\"></div>
-                  <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"Click to view property details\\" class=\\"td clickable\\"></div>
-                  <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">$223</div>
-                  <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">$123</div>
-                  <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">$123</div>
-                  <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 60 0 auto; min-width: 30px; width: 60px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"Click to view property details\\" class=\\"td clickable\\"><svg title=\\"Land\\" class=\\"svg\\">icon-lot.svg</svg></div>
+          </div>
+          <div
+            class="row"
+          >
+            <label
+              class="form-label col-form-label col-md-4"
+            >
+              Estimated Market Value
+            </label>
+            <div
+              class="required form-group"
+            >
+              <div
+                class="input-tooltip-wrapper"
+              >
+                <input
+                  class="form-control"
+                  disabled=""
+                  name="market"
+                  placeholder=""
+                  value=""
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="col-md-4"
+        >
+          <div
+            class="row"
+          >
+            <label
+              class="form-label col-form-label col-md-4"
+            >
+              Assessed Value
+            </label>
+            <div
+              class="required form-group"
+            >
+              <div
+                class="input-tooltip-wrapper"
+              >
+                <input
+                  class="form-control"
+                  disabled=""
+                  name="assessed"
+                  placeholder=""
+                  value=""
+                />
+              </div>
+            </div>
+          </div>
+          <div
+            class="row"
+          >
+            <label
+              class="form-label col-form-label col-md-4"
+            >
+              Appraised Value
+            </label>
+            <div
+              class="form-group"
+            >
+              <div
+                class="input-tooltip-wrapper"
+              >
+                <input
+                  class="form-control"
+                  disabled=""
+                  name="appraised"
+                  placeholder=""
+                  value=""
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="form-row"
+      >
+        <h6
+          class="col-md-12"
+          style="margin: 1rem 0px;"
+        >
+          Please make any necessary updates to the valuation information and the classification
+        </h6>
+        <h2
+          class="col-md-5"
+        >
+          Properties in the Project
+        </h2>
+      </div>
+      <div
+        class="container-fluid"
+      >
+        <div
+          class="ScrollContainer"
+        >
+          <div
+            class="table"
+            role="table"
+          >
+            <div
+              class="thead thead-light"
+            >
+              <div
+                class="tr"
+                role="row"
+                style="display: flex; flex: 1 0 auto; min-width: 645px;"
+              >
+                <div
+                  class="th"
+                  colspan="1"
+                  role="columnheader"
+                  style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+                >
+                  Agency
+                </div>
+                <div
+                  class="th"
+                  colspan="1"
+                  role="columnheader"
+                  style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+                >
+                  Name
+                </div>
+                <div
+                  class="th"
+                  colspan="1"
+                  role="columnheader"
+                  style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+                >
+                  Civic Address
+                </div>
+                <div
+                  class="th"
+                  colspan="1"
+                  role="columnheader"
+                  style="box-sizing: border-box; flex: 140 0 auto; min-width: 30px; width: 140px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+                >
+                  Classification
+                </div>
+                <div
+                  class="th"
+                  colspan="1"
+                  role="columnheader"
+                  style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+                >
+                  Current Zoning Code
+                </div>
+                <div
+                  class="th"
+                  colspan="1"
+                  role="columnheader"
+                  style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+                >
+                  Potential Zoning Code
+                </div>
+                <div
+                  class="th"
+                  colspan="1"
+                  role="columnheader"
+                  style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+                >
+                  Net Book Value
+                </div>
+                <div
+                  class="th"
+                  colspan="1"
+                  role="columnheader"
+                  style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+                >
+                  Market Value
+                </div>
+                <div
+                  class="th"
+                  colspan="1"
+                  role="columnheader"
+                  style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+                >
+                  Assessed Value
+                </div>
+                <div
+                  class="th"
+                  colspan="1"
+                  role="columnheader"
+                  style="box-sizing: border-box; flex: 60 0 auto; min-width: 30px; width: 60px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+                >
+                  Type
                 </div>
               </div>
             </div>
-            <div class=\\"tfoot tfoot-light\\">
-              <div role=\\"row\\" style=\\"display: flex; flex: 1 0 auto; min-width: 645px;\\" class=\\"tr\\">
-                <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">&nbsp;</div>
-                <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">&nbsp;</div>
-                <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">&nbsp;</div>
-                <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 140 0 auto; min-width: 30px; width: 140px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">&nbsp;</div>
-                <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">&nbsp;</div>
-                <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">&nbsp;</div>
-                <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">&nbsp;</div>
-                <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">&nbsp;</div>
-                <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">&nbsp;</div>
-                <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 60 0 auto; min-width: 30px; width: 60px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">&nbsp;</div>
+            <div
+              class="tbody"
+              role="rowgroup"
+            >
+              <div
+                class="tr-wrapper"
+              >
+                <div
+                  class="tr"
+                  role="row"
+                  style="display: flex; flex: 1 0 auto; min-width: 645px;"
+                >
+                  <div
+                    class="td clickable"
+                    role="cell"
+                    style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
+                    title="Click to view property details"
+                  >
+                    TST
+                  </div>
+                  <div
+                    class="td clickable"
+                    role="cell"
+                    style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
+                    title="Click to view property details"
+                  >
+                    123-123-123
+                  </div>
+                  <div
+                    class="td clickable"
+                    role="cell"
+                    style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
+                    title="Click to view property details"
+                  >
+                    1234 Test St
+                  </div>
+                  <div
+                    class="td clickable"
+                    role="cell"
+                    style="box-sizing: border-box; flex: 140 0 auto; min-width: 30px; width: 140px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
+                    title="Click to view property details"
+                  >
+                    Surplus Active
+                  </div>
+                  <div
+                    class="td clickable"
+                    role="cell"
+                    style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
+                    title="Click to view property details"
+                  />
+                  <div
+                    class="td clickable"
+                    role="cell"
+                    style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
+                    title="Click to view property details"
+                  />
+                  <div
+                    class="td"
+                    role="cell"
+                    style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
+                    title=""
+                  >
+                    $223
+                  </div>
+                  <div
+                    class="td"
+                    role="cell"
+                    style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
+                    title=""
+                  >
+                    $123
+                  </div>
+                  <div
+                    class="td"
+                    role="cell"
+                    style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
+                    title=""
+                  >
+                    $123
+                  </div>
+                  <div
+                    class="td clickable"
+                    role="cell"
+                    style="box-sizing: border-box; flex: 60 0 auto; min-width: 30px; width: 60px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
+                    title="Click to view property details"
+                  >
+                    <svg
+                      class="svg"
+                      title="Land"
+                    >
+                      icon-lot.svg
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="tfoot tfoot-light"
+            >
+              <div
+                class="tr"
+                role="row"
+                style="display: flex; flex: 1 0 auto; min-width: 645px;"
+              >
+                <div
+                  class="th"
+                  colspan="1"
+                  role="columnheader"
+                  style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+                >
+                   
+                </div>
+                <div
+                  class="th"
+                  colspan="1"
+                  role="columnheader"
+                  style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+                >
+                   
+                </div>
+                <div
+                  class="th"
+                  colspan="1"
+                  role="columnheader"
+                  style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+                >
+                   
+                </div>
+                <div
+                  class="th"
+                  colspan="1"
+                  role="columnheader"
+                  style="box-sizing: border-box; flex: 140 0 auto; min-width: 30px; width: 140px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+                >
+                   
+                </div>
+                <div
+                  class="th"
+                  colspan="1"
+                  role="columnheader"
+                  style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+                >
+                   
+                </div>
+                <div
+                  class="th"
+                  colspan="1"
+                  role="columnheader"
+                  style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+                >
+                   
+                </div>
+                <div
+                  class="th"
+                  colspan="1"
+                  role="columnheader"
+                  style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+                >
+                   
+                </div>
+                <div
+                  class="th"
+                  colspan="1"
+                  role="columnheader"
+                  style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+                >
+                   
+                </div>
+                <div
+                  class="th"
+                  colspan="1"
+                  role="columnheader"
+                  style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+                >
+                   
+                </div>
+                <div
+                  class="th"
+                  colspan="1"
+                  role="columnheader"
+                  style="box-sizing: border-box; flex: 60 0 auto; min-width: 30px; width: 60px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+                >
+                   
+                </div>
               </div>
             </div>
           </div>
-          <div class=\\"table-toolbar\\"></div>
+          <div
+            class="table-toolbar"
+          />
         </div>
       </div>
     </div>
-    <h3>Enhanced Referral Process Exemption</h3>
-    <p><i>The agency has requested exemption with the below rationale:</i></p>
-    <div class=\\"ProjectExemptionRequestRationale form-row\\">
-      <div class=\\"col-md-10 form-group\\"><label class=\\"form-label\\" for=\\"input-exemptionRationale\\">Rationale</label><textarea name=\\"exemptionRationale\\" readonly=\\"\\" id=\\"input-exemptionRationale\\" class=\\"col-md-5 form-control\\">rationale</textarea></div>
+    <h3>
+      Enhanced Referral Process Exemption
+    </h3>
+    <p>
+      <i>
+        The agency has requested exemption with the below rationale:
+      </i>
+    </p>
+    <div
+      class="ProjectExemptionRequestRationale form-row"
+    >
+      <div
+        class="col-md-10 form-group"
+      >
+        <label
+          class="form-label"
+          for="input-exemptionRationale"
+        >
+          Rationale
+        </label>
+        <textarea
+          class="col-md-5 form-control"
+          id="input-exemptionRationale"
+          name="exemptionRationale"
+          readonly=""
+        >
+          rationale
+        </textarea>
+      </div>
     </div>
-    <h3>Documentation</h3>
-    <div class=\\"tasksForm reviewRequired form-row\\">
-      <div class=\\"required form-group\\">
-        <div class=\\"check-field\\">
-          <div class=\\"form-check\\"><input name=\\"tasks.1.isCompleted\\" required=\\"\\" type=\\"checkbox\\" disabled=\\"\\" id=\\"input-tasks.1.isCompleted\\" class=\\"form-check-input position-static\\" value=\\"true\\" checked=\\"\\"></div><label class=\\"form-label\\" for=\\"input-tasks.1.isCompleted\\">two</label>
+    <h3>
+      Documentation
+    </h3>
+    <div
+      class="tasksForm reviewRequired form-row"
+    >
+      <div
+        class="required form-group"
+      >
+        <div
+          class="check-field"
+        >
+          <div
+            class="form-check"
+          >
+            <input
+              checked=""
+              class="form-check-input position-static"
+              disabled=""
+              id="input-tasks.1.isCompleted"
+              name="tasks.1.isCompleted"
+              required=""
+              type="checkbox"
+              value="true"
+            />
+          </div>
+          <label
+            class="form-label"
+            for="input-tasks.1.isCompleted"
+          >
+            two
+          </label>
         </div>
       </div>
     </div>
-    <div class=\\"reviewRequired container-fluid\\">
-      <div class=\\"row\\">
-        <div class=\\"col\\">
-          <h3>Appraisal<svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 512 512\\" class=\\"tooltip-icon\\" height=\\"1em\\" width=\\"1em\\" xmlns=\\"http://www.w3.org/2000/svg\\">
-              <path d=\\"M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z\\"></path>
-            </svg></h3>
-          <div class=\\"ProjectNotes form-row\\">
-            <div class=\\"col-md-12 reviewRequired form-group\\"><label class=\\"form-label\\" for=\\"input-appraisedNote\\">Appraised Notes</label><textarea name=\\"appraisedNote\\" id=\\"input-appraisedNote\\" class=\\"col-md-5 form-control\\"></textarea></div>
+    <div
+      class="reviewRequired container-fluid"
+    >
+      <div
+        class="row"
+      >
+        <div
+          class="col"
+        >
+          <h3>
+            Appraisal
+            <svg
+              class="tooltip-icon"
+              fill="currentColor"
+              height="1em"
+              stroke="currentColor"
+              stroke-width="0"
+              viewBox="0 0 512 512"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"
+              />
+            </svg>
+          </h3>
+          <div
+            class="ProjectNotes form-row"
+          >
+            <div
+              class="col-md-12 reviewRequired form-group"
+            >
+              <label
+                class="form-label"
+                for="input-appraisedNote"
+              >
+                Appraised Notes
+              </label>
+              <textarea
+                class="col-md-5 form-control"
+                id="input-appraisedNote"
+                name="appraisedNote"
+              />
+            </div>
           </div>
         </div>
       </div>
     </div>
-    <div class=\\"reviewRequired container-fluid\\">
-      <h3>First Nations Consultation<svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 512 512\\" class=\\"tooltip-icon\\" height=\\"1em\\" width=\\"1em\\" xmlns=\\"http://www.w3.org/2000/svg\\">
-          <path d=\\"M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z\\"></path>
-        </svg></h3>
+    <div
+      class="reviewRequired container-fluid"
+    >
+      <h3>
+        First Nations Consultation
+        <svg
+          class="tooltip-icon"
+          fill="currentColor"
+          height="1em"
+          stroke="currentColor"
+          stroke-width="0"
+          viewBox="0 0 512 512"
+          width="1em"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"
+          />
+        </svg>
+      </h3>
     </div>
-    <h3>Approval</h3>
-    <div class=\\"form-row\\">
-      <div class=\\"required form-group\\">
-        <div class=\\"check-field\\">
-          <div class=\\"form-check\\"><input name=\\"confirmation\\" required=\\"\\" type=\\"checkbox\\" disabled=\\"\\" id=\\"input-confirmation\\" class=\\"form-check-input position-static\\" value=\\"true\\" checked=\\"\\"></div><label class=\\"form-label\\" for=\\"input-confirmation\\">I, Pims User, confirm by checking this box that I have received the approval
-            to request the property be submitted to the Enhanced Referral Program and marketed internally to other Ministry
-            and Broader Public Sector Agencies for 90 days before listing the property to be sold on the public commercial real estate market</label>
+    <h3>
+      Approval
+    </h3>
+    <div
+      class="form-row"
+    >
+      <div
+        class="required form-group"
+      >
+        <div
+          class="check-field"
+        >
+          <div
+            class="form-check"
+          >
+            <input
+              checked=""
+              class="form-check-input position-static"
+              disabled=""
+              id="input-confirmation"
+              name="confirmation"
+              required=""
+              type="checkbox"
+              value="true"
+            />
+          </div>
+          <label
+            class="form-label"
+            for="input-confirmation"
+          >
+            I, Pims User, confirm by checking this box that I have received the approval 
+  to request the property be submitted to the Enhanced Referral Program and marketed internally to other Ministry 
+  and Broader Public Sector Agencies for 90 days before listing the property to be sold on the public commercial real estate market
+          </label>
         </div>
       </div>
     </div>
-    <div class=\\"ProjectNotes form-row\\">
-      <div class=\\"col-md-12 reviewRequired form-group\\"><label class=\\"form-label\\" for=\\"input-note\\">Notes</label><textarea name=\\"note\\" disabled=\\"\\" id=\\"input-note\\" class=\\"col-md-5 form-control\\">my notes</textarea></div>
+    <div
+      class="ProjectNotes form-row"
+    >
+      <div
+        class="col-md-12 reviewRequired form-group"
+      >
+        <label
+          class="form-label"
+          for="input-note"
+        >
+          Notes
+        </label>
+        <textarea
+          class="col-md-5 form-control"
+          disabled=""
+          id="input-note"
+          name="note"
+        >
+          my notes
+        </textarea>
+      </div>
     </div>
-    <div class=\\"ProjectNotes form-row\\">
-      <div class=\\"col-md-12 reviewRequired form-group\\"><label class=\\"form-label\\" for=\\"input-publicNote\\">Shared Notes<svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 512 512\\" class=\\"tooltip-icon\\" height=\\"1em\\" width=\\"1em\\" xmlns=\\"http://www.w3.org/2000/svg\\">
-            <path d=\\"M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z\\"></path>
-          </svg></label><textarea name=\\"publicNote\\" disabled=\\"\\" id=\\"input-publicNote\\" class=\\"col-md-5 form-control\\">public note</textarea></div>
+    <div
+      class="ProjectNotes form-row"
+    >
+      <div
+        class="col-md-12 reviewRequired form-group"
+      >
+        <label
+          class="form-label"
+          for="input-publicNote"
+        >
+          Shared Notes
+          <svg
+            class="tooltip-icon"
+            fill="currentColor"
+            height="1em"
+            stroke="currentColor"
+            stroke-width="0"
+            viewBox="0 0 512 512"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"
+            />
+          </svg>
+        </label>
+        <textarea
+          class="col-md-5 form-control"
+          disabled=""
+          id="input-publicNote"
+          name="publicNote"
+        >
+          public note
+        </textarea>
+      </div>
     </div>
-    <div class=\\"ProjectNotes form-row\\">
-      <div class=\\"col-md-12 reviewRequired form-group\\"><label class=\\"form-label\\" for=\\"input-privateNote\\">Private Notes<svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 512 512\\" class=\\"tooltip-icon\\" height=\\"1em\\" width=\\"1em\\" xmlns=\\"http://www.w3.org/2000/svg\\">
-            <path d=\\"M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z\\"></path>
-          </svg></label><textarea name=\\"privateNote\\" disabled=\\"\\" id=\\"input-privateNote\\" class=\\"col-md-5 form-control\\">private note</textarea></div>
+    <div
+      class="ProjectNotes form-row"
+    >
+      <div
+        class="col-md-12 reviewRequired form-group"
+      >
+        <label
+          class="form-label"
+          for="input-privateNote"
+        >
+          Private Notes
+          <svg
+            class="tooltip-icon"
+            fill="currentColor"
+            height="1em"
+            stroke="currentColor"
+            stroke-width="0"
+            viewBox="0 0 512 512"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"
+            />
+          </svg>
+        </label>
+        <textarea
+          class="col-md-5 form-control"
+          disabled=""
+          id="input-privateNote"
+          name="privateNote"
+        >
+          private note
+        </textarea>
+      </div>
     </div>
-    <div style=\\"text-align: right;\\"></div>
+    <div
+      style="text-align: right;"
+    />
   </form>
-</div>"
+</div>
 `;

@@ -1,37 +1,314 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`SteppedForm component renders correctly 1`] = `
-"<form action=\\"#\\" class=\\"sc-fznzqM gbHeSM\\">
-  <nav class=\\"hideTabs nav nav-tabs\\" role=\\"tablist\\"><a href=\\"#\\" role=\\"tab\\" data-rb-event-key=\\"0\\" id=\\"steppedform-tabs-tab-0\\" aria-controls=\\"steppedform-tabs-tabpane-0\\" aria-selected=\\"true\\" class=\\"nav-item nav-link active\\">
-      <p>Tab 1</p><svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 512 512\\" size=\\"15\\" height=\\"15\\" width=\\"15\\" xmlns=\\"http://www.w3.org/2000/svg\\">
-        <path d=\\"M464 32H48C21.5 32 0 53.5 0 80v352c0 26.5 21.5 48 48 48h416c26.5 0 48-21.5 48-48V80c0-26.5-21.5-48-48-48zm-83.6 290.5c4.8 4.8 4.8 12.6 0 17.4l-40.5 40.5c-4.8 4.8-12.6 4.8-17.4 0L256 313.3l-66.5 67.1c-4.8 4.8-12.6 4.8-17.4 0l-40.5-40.5c-4.8-4.8-4.8-12.6 0-17.4l67.1-66.5-67.1-66.5c-4.8-4.8-4.8-12.6 0-17.4l40.5-40.5c4.8-4.8 12.6-4.8 17.4 0l66.5 67.1 66.5-67.1c4.8-4.8 12.6-4.8 17.4 0l40.5 40.5c4.8 4.8 4.8 12.6 0 17.4L313.3 256l67.1 66.5z\\"></path>
+.c0 .hideTabs a.nav-item {
+  background-color: white;
+  display: none;
+}
+
+.c0 .nav-tabs > .nav-item:last-child {
+  border: 0;
+  padding: 0;
+}
+
+.c0 .nav-tabs > .nav-item:last-child svg {
+  position: relative;
+  color: white;
+}
+
+.c0 .tab-content {
+  border: 0;
+  padding: 0;
+}
+
+.c0 .nav-tabs {
+  border: 0;
+}
+
+.c0 .nav-tabs .nav-item.active {
+  border: 0;
+  color: white;
+}
+
+.c0 .nav-tabs .nav-item.active svg {
+  background-color: #428bca;
+  color: white;
+}
+
+.c0 .nav-tabs .nav-item {
+  border: 1px solid black;
+  background-color: white;
+  color: black;
+  position: relative;
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  position: relative;
+}
+
+.c0 .nav-tabs .nav-item p {
+  margin: 0;
+}
+
+.c0 .nav-tabs .nav-item svg {
+  color: black;
+  position: absolute;
+  top: 1px;
+  right: 1px;
+}
+
+.c0 .nav-tabs .btn:disabled {
+  background-color: #003366;
+  cursor: default;
+}
+
+<form
+  action="#"
+  class="c0"
+>
+  <nav
+    class="hideTabs nav nav-tabs"
+    role="tablist"
+  >
+    <a
+      aria-controls="steppedform-tabs-tabpane-0"
+      aria-selected="true"
+      class="nav-item nav-link active"
+      data-rb-event-key="0"
+      href="#"
+      id="steppedform-tabs-tab-0"
+      role="tab"
+    >
+      <p>
+        Tab 1
+      </p>
+      <svg
+        fill="currentColor"
+        height="15"
+        size="15"
+        stroke="currentColor"
+        stroke-width="0"
+        viewBox="0 0 512 512"
+        width="15"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M464 32H48C21.5 32 0 53.5 0 80v352c0 26.5 21.5 48 48 48h416c26.5 0 48-21.5 48-48V80c0-26.5-21.5-48-48-48zm-83.6 290.5c4.8 4.8 4.8 12.6 0 17.4l-40.5 40.5c-4.8 4.8-12.6 4.8-17.4 0L256 313.3l-66.5 67.1c-4.8 4.8-12.6 4.8-17.4 0l-40.5-40.5c-4.8-4.8-4.8-12.6 0-17.4l67.1-66.5-67.1-66.5c-4.8-4.8-4.8-12.6 0-17.4l40.5-40.5c4.8-4.8 12.6-4.8 17.4 0l66.5 67.1 66.5-67.1c4.8-4.8 12.6-4.8 17.4 0l40.5 40.5c4.8 4.8 4.8 12.6 0 17.4L313.3 256l67.1 66.5z"
+        />
       </svg>
-    </a><a href=\\"#\\" role=\\"tab\\" data-rb-event-key=\\"\\" id=\\"steppedform-tabs-tab-\\" aria-controls=\\"steppedform-tabs-tabpane-\\" tabindex=\\"-1\\" aria-selected=\\"false\\" class=\\"nav-item nav-link\\"><button type=\\"button\\" class=\\"Button Button--icon-only primary btn btn-primary\\">
-        <div class=\\"Button__icon\\"><svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 448 512\\" size=\\"20\\" height=\\"20\\" width=\\"20\\" xmlns=\\"http://www.w3.org/2000/svg\\">
-            <path d=\\"M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z\\"></path>
-          </svg></div>
-      </button></a></nav>
-  <div class=\\"tab-content\\">
-    <div id=\\"steppedform-tabs-tabpane-0\\" aria-labelledby=\\"steppedform-tabs-tab-0\\" role=\\"tabpanel\\" aria-hidden=\\"false\\" class=\\"fade tab-pane active show\\">
-      <div class=\\"bs-stepper\\">
-        <div class=\\"bs-stepper-header\\">
-          <div class=\\"step\\" data-target=\\"stepper-0\\"><button type=\\"button\\" class=\\"step-trigger\\"><span class=\\"bs-stepper-circle\\">1</span><span class=\\"bs-stepper-label\\">Building ID</span></button></div>
-          <div class=\\"line\\"></div>
-          <div class=\\"step\\" data-target=\\"stepper-1\\"><button type=\\"button\\" class=\\"step-trigger\\"><span class=\\"bs-stepper-circle\\">2</span><span class=\\"bs-stepper-label\\">Tenancy</span></button></div>
-          <div class=\\"line\\"></div>
-          <div class=\\"step\\" data-target=\\"stepper-2\\"><button type=\\"button\\" class=\\"step-trigger\\"><span class=\\"bs-stepper-circle\\">3</span><span class=\\"bs-stepper-label\\">Valuation</span></button></div>
-          <div class=\\"line\\"></div>
-          <div class=\\"step\\" data-target=\\"stepper-3\\"><button type=\\"button\\" class=\\"step-trigger\\"><span class=\\"bs-stepper-circle\\">4</span><span class=\\"bs-stepper-label\\">Parcel</span></button></div>
-          <div class=\\"line\\"></div>
-          <div class=\\"step\\" data-target=\\"stepper-4\\"><button type=\\"button\\" class=\\"step-trigger\\"><span class=\\"bs-stepper-circle\\">5</span><span class=\\"bs-stepper-label\\">Review</span></button></div>
+    </a>
+    <a
+      aria-controls="steppedform-tabs-tabpane-"
+      aria-selected="false"
+      class="nav-item nav-link"
+      data-rb-event-key=""
+      href="#"
+      id="steppedform-tabs-tab-"
+      role="tab"
+      tabindex="-1"
+    >
+      <button
+        class="Button Button--icon-only primary btn btn-primary"
+        type="button"
+      >
+        <div
+          class="Button__icon"
+        >
+          <svg
+            fill="currentColor"
+            height="20"
+            size="20"
+            stroke="currentColor"
+            stroke-width="0"
+            viewBox="0 0 448 512"
+            width="20"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"
+            />
+          </svg>
+        </div>
+      </button>
+    </a>
+  </nav>
+  <div
+    class="tab-content"
+  >
+    <div
+      aria-hidden="false"
+      aria-labelledby="steppedform-tabs-tab-0"
+      class="fade tab-pane active show"
+      id="steppedform-tabs-tabpane-0"
+      role="tabpanel"
+    >
+      <div
+        class="bs-stepper"
+      >
+        <div
+          class="bs-stepper-header"
+        >
+          <div
+            class="step"
+            data-target="stepper-0"
+          >
+            <button
+              class="step-trigger"
+              type="button"
+            >
+              <span
+                class="bs-stepper-circle"
+              >
+                1
+              </span>
+              <span
+                class="bs-stepper-label"
+              >
+                Building ID
+              </span>
+            </button>
+          </div>
+          <div
+            class="line"
+          />
+          <div
+            class="step"
+            data-target="stepper-1"
+          >
+            <button
+              class="step-trigger"
+              type="button"
+            >
+              <span
+                class="bs-stepper-circle"
+              >
+                2
+              </span>
+              <span
+                class="bs-stepper-label"
+              >
+                Tenancy
+              </span>
+            </button>
+          </div>
+          <div
+            class="line"
+          />
+          <div
+            class="step"
+            data-target="stepper-2"
+          >
+            <button
+              class="step-trigger"
+              type="button"
+            >
+              <span
+                class="bs-stepper-circle"
+              >
+                3
+              </span>
+              <span
+                class="bs-stepper-label"
+              >
+                Valuation
+              </span>
+            </button>
+          </div>
+          <div
+            class="line"
+          />
+          <div
+            class="step"
+            data-target="stepper-3"
+          >
+            <button
+              class="step-trigger"
+              type="button"
+            >
+              <span
+                class="bs-stepper-circle"
+              >
+                4
+              </span>
+              <span
+                class="bs-stepper-label"
+              >
+                Parcel
+              </span>
+            </button>
+          </div>
+          <div
+            class="line"
+          />
+          <div
+            class="step"
+            data-target="stepper-4"
+          >
+            <button
+              class="step-trigger"
+              type="button"
+            >
+              <span
+                class="bs-stepper-circle"
+              >
+                5
+              </span>
+              <span
+                class="bs-stepper-label"
+              >
+                Review
+              </span>
+            </button>
+          </div>
         </div>
       </div>
-      <div class=\\"container\\">
-        <div class=\\"form-group\\"><input name=\\"data.name\\" placeholder=\\"Name\\" id=\\"input-data.name\\" class=\\"form-control\\" value=\\"Quartech HQ\\"></div>
-        <p>Form inputs and control button here</p><button type=\\"button\\" class=\\"btn btn-outline-info\\">Go to</button><button type=\\"button\\" class=\\"btn btn-outline-info\\">Back</button><button type=\\"button\\" class=\\"btn btn-outline-info\\">Next Step</button><button type=\\"submit\\" class=\\"btn btn-primary\\">Save</button>
+      <div
+        class="container"
+      >
+        <div
+          class="form-group"
+        >
+          <input
+            class="form-control"
+            id="input-data.name"
+            name="data.name"
+            placeholder="Name"
+            value="Quartech HQ"
+          />
+        </div>
+        <p>
+          Form inputs and control button here
+        </p>
+        <button
+          class="btn btn-outline-info"
+          type="button"
+        >
+          Go to
+        </button>
+        <button
+          class="btn btn-outline-info"
+          type="button"
+        >
+          Back
+        </button>
+        <button
+          class="btn btn-outline-info"
+          type="button"
+        >
+          Next Step
+        </button>
+        <button
+          class="btn btn-primary"
+          type="submit"
+        >
+          Save
+        </button>
       </div>
     </div>
   </div>
-  <div class=\\"container\\"></div>
-</form>"
+  <div
+    class="container"
+  />
+</form>
 `;

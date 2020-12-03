@@ -5,6 +5,7 @@ import { PidPinTooltip } from '../strings';
 import { useFormikContext, getIn } from 'formik';
 import { IParcel } from 'actions/parcelsActions';
 import debounce from 'lodash/debounce';
+import { Label } from 'components/common/Label';
 
 interface PidPinProps {
   handlePidChange: (pid: string, nameSpace?: string) => void;
@@ -56,9 +57,10 @@ const PidPinForm: FunctionComponent<PidPinProps> = (props: PidPinProps) => {
 
   return (
     <>
-      <Form.Row className="d-inline-flex flex-nowrap">
-        <Form.Label className="req">*</Form.Label>PID
+      <Form.Row className="flex-nowrap pid-pin">
+        <Label>PID</Label>
         <Input
+          required={true}
           displayErrorTooltips
           className="input-small"
           disabled={props.disabled}
@@ -71,12 +73,9 @@ const PidPinForm: FunctionComponent<PidPinProps> = (props: PidPinProps) => {
           }}
           field={withNameSpace('pid')}
         />
-        <Form.Label style={{ width: '35px', minWidth: '35px', paddingLeft: '5px' }}>
-          or
-          <br />
-          PIN&nbsp;
-        </Form.Label>
+        <Label style={{ paddingLeft: '5px' }}>PIN</Label>
         <Input
+          required={true}
           displayErrorTooltips
           className="input-small"
           tooltip={PidPinTooltip}

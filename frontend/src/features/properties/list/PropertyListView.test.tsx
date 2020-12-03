@@ -10,7 +10,6 @@ import * as API from 'constants/API';
 import { Provider } from 'react-redux';
 import * as reducerTypes from 'constants/reducerTypes';
 import service from '../service';
-import pretty from 'pretty';
 
 // Set all module functions to jest.fn
 jest.mock('../service');
@@ -65,7 +64,7 @@ describe('Property list view', () => {
           </Router>
         </Provider>,
       );
-      expect(pretty(container.innerHTML)).toMatchSnapshot();
+      expect(container.firstChild).toMatchSnapshot();
       await wait(async () => {
         expect(container.querySelector('span[class="spinner-border"]')).not.toBeInTheDocument();
       });
