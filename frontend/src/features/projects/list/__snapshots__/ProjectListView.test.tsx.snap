@@ -23,17 +23,45 @@ exports[`Project list view tests Matches snapshot 1`] = `
           <div
             class="form-group"
           >
-            <select
-              class="form-select form-control"
-              id="input-statusId"
-              name="statusId"
+            <div
+              class="rbt"
+              style="outline: none; position: relative;"
+              tabindex="-1"
             >
-              <option
-                value=""
+              <div
+                class="rbt-input-multi form-control rbt-input"
+                tabindex="-1"
               >
-                Select a project status
-              </option>
-            </select>
+                <div
+                  class="rbt-input-wrapper"
+                >
+                  <div
+                    style="display: flex; flex: 1; height: 100%; position: relative;"
+                  >
+                    <input
+                      aria-autocomplete="list"
+                      aria-haspopup="listbox"
+                      autocomplete="off"
+                      class="rbt-input-main"
+                      id="statusId-field"
+                      name="statusId"
+                      placeholder="Enter an Status"
+                      style="background-color: transparent; border: 0px; box-shadow: none; cursor: inherit; outline: none; padding: 0px; width: 100%; z-index: 1;"
+                      type="text"
+                      value=""
+                    />
+                    <input
+                      aria-hidden="true"
+                      class="rbt-input-hint"
+                      readonly=""
+                      style="background-color: transparent; border-color: transparent; box-shadow: none; color: rgba(0, 0, 0, 0.35); left: 0px; pointer-events: none; position: absolute; top: 0px; width: 100%;"
+                      tabindex="-1"
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
         <div
@@ -55,7 +83,7 @@ exports[`Project list view tests Matches snapshot 1`] = `
                   aria-expanded="false"
                   aria-haspopup="listbox"
                   autocomplete="off"
-                  class="rbt-input-main form-control rbt-input map-filter-typeahead"
+                  class="rbt-input-main form-control rbt-input"
                   id="agencies-field"
                   name="agencies"
                   placeholder="Enter an Agency"

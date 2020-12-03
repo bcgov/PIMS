@@ -18,21 +18,21 @@ INSERT INTO dbo.[Workflows] (
     , 0
 ), (
     2
-    , 'Access Surplus Property Process Project Request'
+    , 'Assess Surplus Property Process Project Request'
     , 'ASSESS-DISPOSAL'
     , 0
     , 'Assess a submitted Surplus Property Process Project to determine whether it will be approved or denied.'
     , 1
 ), (
     3
-    , 'Access Enhanced Referral Process Exemption'
+    , 'Assess Enhanced Referral Process Exemption'
     , 'ASSESS-EXEMPTION'
     , 0
     , 'Assess a requested ERP exemption.'
     , 2
 ), (
     4
-    , 'Access Enhanced Referral Process Exemption Project Request'
+    , 'Assess Enhanced Referral Process Exemption Project Request'
     , 'ASSESS-EX-DISPOSAL'
     , 0
     , 'Assess a submitted Surplus Property Process Project to determine whether it will be approved or denied.'

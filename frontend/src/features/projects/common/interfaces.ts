@@ -266,6 +266,7 @@ export interface IStatus {
   isOptional: boolean;
   toStatus?: IStatus[];
   isActive: boolean;
+  parentId?: number;
 }
 
 export interface IStepProps {

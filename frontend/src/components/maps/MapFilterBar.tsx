@@ -12,8 +12,8 @@ import { FilterBarSchema } from 'utils/YupSchema';
 import ResetButton from 'components/common/form/ResetButton';
 import SearchButton from 'components/common/form/SearchButton';
 import { BasePropertyFilter } from 'components/common/interfaces';
-import { ParentGroupedFilter } from 'components/SearchBar/ParentGroupedFilter';
 import { mapLookupCodeWithParentString } from 'utils';
+import { ParentSelect } from 'components/common/form/ParentSelect';
 
 const SearchBar: React.FC = () => {
   const state: { options: any[]; placeholders: Record<string, string> } = {
@@ -162,14 +162,13 @@ const MapFilterBar: React.FC<MapFilterProps> = ({
             <Col className="bar-item">
               <SearchBar />
             </Col>
-            <Col className="bar-item">
-              <ParentGroupedFilter
-                name="agencies"
+            <Col className="agency-item">
+              <ParentSelect
+                field="agencies"
                 options={agencies}
-                className="map-filter-typeahead"
                 filterBy={['code', 'label', 'parent']}
                 placeholder="Enter an Agency"
-                inputSize="large"
+                isFilter
               />
             </Col>
             <Col className="bar-item">
