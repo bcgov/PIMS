@@ -1,93 +1,479 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Manage Users Component Snapshot matches 1`] = `
-"<div class=\\"users-management-page\\">
-  <form novalidate=\\"\\" class=\\"\\">
-    <div class=\\"search-bar form-row\\">
-      <h3 class=\\"filterBarHeading\\"></h3>
-      <div class=\\"bar-item col\\">
-        <div class=\\"form-group\\"><input name=\\"username\\" placeholder=\\"IDIR/BCeID\\" id=\\"input-username\\" class=\\"form-control\\" value=\\"\\"></div>
+.c0 {
+  margin-top: 10px;
+  margin-bottom: 40px;
+}
+
+<div
+  class="users-management-page"
+>
+  <form
+    class=""
+    novalidate=""
+  >
+    <div
+      class="search-bar form-row"
+    >
+      <h3
+        class="filterBarHeading"
+      />
+      <div
+        class="bar-item col"
+      >
+        <div
+          class="form-group"
+        >
+          <input
+            class="form-control"
+            id="input-username"
+            name="username"
+            placeholder="IDIR/BCeID"
+            value=""
+          />
+        </div>
       </div>
-      <div class=\\"bar-item col\\">
-        <div class=\\"form-group\\"><input name=\\"firstName\\" placeholder=\\"First name\\" id=\\"input-firstName\\" class=\\"form-control\\" value=\\"\\"></div>
+      <div
+        class="bar-item col"
+      >
+        <div
+          class="form-group"
+        >
+          <input
+            class="form-control"
+            id="input-firstName"
+            name="firstName"
+            placeholder="First name"
+            value=""
+          />
+        </div>
       </div>
-      <div class=\\"bar-item col\\">
-        <div class=\\"form-group\\"><input name=\\"lastName\\" placeholder=\\"Last name\\" id=\\"input-lastName\\" class=\\"form-control\\" value=\\"\\"></div>
+      <div
+        class="bar-item col"
+      >
+        <div
+          class="form-group"
+        >
+          <input
+            class="form-control"
+            id="input-lastName"
+            name="lastName"
+            placeholder="Last name"
+            value=""
+          />
+        </div>
       </div>
-      <div class=\\"bar-item col\\">
-        <div class=\\"form-group\\"><input name=\\"email\\" placeholder=\\"Email\\" id=\\"input-email\\" class=\\"form-control\\" value=\\"\\"></div>
+      <div
+        class="bar-item col"
+      >
+        <div
+          class="form-group"
+        >
+          <input
+            class="form-control"
+            id="input-email"
+            name="email"
+            placeholder="Email"
+            value=""
+          />
+        </div>
       </div>
-      <div class=\\"bar-item col\\">
-        <div class=\\"form-group\\"><input name=\\"position\\" placeholder=\\"Position\\" id=\\"input-position\\" class=\\"form-control\\" value=\\"\\"></div>
+      <div
+        class="bar-item col"
+      >
+        <div
+          class="form-group"
+        >
+          <input
+            class="form-control"
+            id="input-position"
+            name="position"
+            placeholder="Position"
+            value=""
+          />
+        </div>
       </div>
-      <div class=\\"bar-item col\\">
-        <div class=\\"form-group\\">
-          <div class=\\"rbt\\" style=\\"outline: none; position: relative;\\" tabindex=\\"-1\\">
-            <div style=\\"display: flex; flex: 1; height: 100%; position: relative;\\"><input autocomplete=\\"off\\" placeholder=\\"Enter an Agency\\" type=\\"text\\" name=\\"agency\\" id=\\"agency-field\\" aria-autocomplete=\\"both\\" aria-expanded=\\"false\\" aria-haspopup=\\"listbox\\" role=\\"combobox\\" class=\\"rbt-input-main form-control rbt-input map-filter-typeahead\\" value=\\"\\"><input aria-hidden=\\"true\\" class=\\"rbt-input-hint\\" readonly=\\"\\" style=\\"background-color: transparent; border-color: transparent; box-shadow: none; color: rgba(0, 0, 0, 0.35); left: 0px; pointer-events: none; position: absolute; top: 0px; width: 100%;\\" tabindex=\\"-1\\" value=\\"\\"></div>
+      <div
+        class="bar-item col"
+      >
+        <div
+          class="form-group"
+        >
+          <div
+            class="rbt"
+            style="outline: none; position: relative;"
+            tabindex="-1"
+          >
+            <div
+              style="display: flex; flex: 1; height: 100%; position: relative;"
+            >
+              <input
+                aria-autocomplete="both"
+                aria-expanded="false"
+                aria-haspopup="listbox"
+                autocomplete="off"
+                class="rbt-input-main form-control rbt-input map-filter-typeahead"
+                id="agency-field"
+                name="agency"
+                placeholder="Enter an Agency"
+                role="combobox"
+                type="text"
+                value=""
+              />
+              <input
+                aria-hidden="true"
+                class="rbt-input-hint"
+                readonly=""
+                style="background-color: transparent; border-color: transparent; box-shadow: none; color: rgba(0, 0, 0, 0.35); left: 0px; pointer-events: none; position: absolute; top: 0px; width: 100%;"
+                tabindex="-1"
+                value=""
+              />
+            </div>
           </div>
         </div>
       </div>
-      <div class=\\"bar-item col\\">
-        <div class=\\"form-group\\"><select name=\\"role\\" id=\\"input-role\\" class=\\"form-select form-control\\">
-            <option value=\\"\\">Role</option>
-            <option value=\\"roleVal\\" class=\\"option\\">roleVal</option>
-          </select></div>
+      <div
+        class="bar-item col"
+      >
+        <div
+          class="form-group"
+        >
+          <select
+            class="form-select form-control"
+            id="input-role"
+            name="role"
+          >
+            <option
+              value=""
+            >
+              Role
+            </option>
+            <option
+              class="option"
+              value="roleVal"
+            >
+              roleVal
+            </option>
+          </select>
+        </div>
       </div>
-      <div class=\\"bar-item flex-grow-0 col\\"><button type=\\"submit\\" class=\\"Button Button--icon-only bg-warning btn btn-primary\\">
-          <div class=\\"Button__icon\\"><svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 512 512\\" size=\\"20\\" height=\\"20\\" width=\\"20\\" xmlns=\\"http://www.w3.org/2000/svg\\">
-              <path d=\\"M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z\\"></path>
-            </svg></div>
-        </button></div>
-      <div class=\\"bar-item flex-grow-0 col\\"><button type=\\"reset\\" class=\\"Button Button--icon-only btn btn-secondary\\">
-          <div class=\\"Button__icon\\"><svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 512 512\\" size=\\"20\\" height=\\"20\\" width=\\"20\\" xmlns=\\"http://www.w3.org/2000/svg\\">
-              <path d=\\"M212.333 224.333H12c-6.627 0-12-5.373-12-12V12C0 5.373 5.373 0 12 0h48c6.627 0 12 5.373 12 12v78.112C117.773 39.279 184.26 7.47 258.175 8.007c136.906.994 246.448 111.623 246.157 248.532C504.041 393.258 393.12 504 256.333 504c-64.089 0-122.496-24.313-166.51-64.215-5.099-4.622-5.334-12.554-.467-17.42l33.967-33.967c4.474-4.474 11.662-4.717 16.401-.525C170.76 415.336 211.58 432 256.333 432c97.268 0 176-78.716 176-176 0-97.267-78.716-176-176-176-58.496 0-110.28 28.476-142.274 72.333h98.274c6.627 0 12 5.373 12 12v48c0 6.627-5.373 12-12 12z\\"></path>
-            </svg></div>
-        </button></div>
+      <div
+        class="bar-item flex-grow-0 col"
+      >
+        <button
+          class="Button Button--icon-only bg-warning btn btn-primary"
+          type="submit"
+        >
+          <div
+            class="Button__icon"
+          >
+            <svg
+              fill="currentColor"
+              height="20"
+              size="20"
+              stroke="currentColor"
+              stroke-width="0"
+              viewBox="0 0 512 512"
+              width="20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"
+              />
+            </svg>
+          </div>
+        </button>
+      </div>
+      <div
+        class="bar-item flex-grow-0 col"
+      >
+        <button
+          class="Button Button--icon-only btn btn-secondary"
+          type="reset"
+        >
+          <div
+            class="Button__icon"
+          >
+            <svg
+              fill="currentColor"
+              height="20"
+              size="20"
+              stroke="currentColor"
+              stroke-width="0"
+              viewBox="0 0 512 512"
+              width="20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M212.333 224.333H12c-6.627 0-12-5.373-12-12V12C0 5.373 5.373 0 12 0h48c6.627 0 12 5.373 12 12v78.112C117.773 39.279 184.26 7.47 258.175 8.007c136.906.994 246.448 111.623 246.157 248.532C504.041 393.258 393.12 504 256.333 504c-64.089 0-122.496-24.313-166.51-64.215-5.099-4.622-5.334-12.554-.467-17.42l33.967-33.967c4.474-4.474 11.662-4.717 16.401-.525C170.76 415.336 211.58 432 256.333 432c97.268 0 176-78.716 176-176 0-97.267-78.716-176-176-176-58.496 0-110.28 28.476-142.274 72.333h98.274c6.627 0 12 5.373 12 12v48c0 6.627-5.373 12-12 12z"
+              />
+            </svg>
+          </div>
+        </button>
+      </div>
     </div>
   </form>
-  <div class=\\"sc-fzoydu kEdtJm container-fluid\\">
-    <div role=\\"table\\" class=\\"table\\">
-      <div class=\\"thead thead-light\\">
-        <div role=\\"row\\" style=\\"display: flex; flex: 1 0 auto; min-width: 880px;\\" class=\\"tr\\">
-          <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">IDIR/BCeID</div>
-          <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">First name</div>
-          <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Last name</div>
-          <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 200 0 auto; min-width: 200px; width: 200px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Email</div>
-          <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Position</div>
-          <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Active</div>
-          <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 200 0 auto; min-width: 200px; width: 200px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Agency</div>
-          <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 200 0 auto; min-width: 200px; width: 200px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Roles</div>
-          <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 100px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Last Login</div>
-          <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 75 0 auto; min-width: 30px; width: 75px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\"> </div>
+  <div
+    class="c0 container-fluid"
+  >
+    <div
+      class="table"
+      role="table"
+    >
+      <div
+        class="thead thead-light"
+      >
+        <div
+          class="tr"
+          role="row"
+          style="display: flex; flex: 1 0 auto; min-width: 880px;"
+        >
+          <div
+            class="th"
+            colspan="1"
+            role="columnheader"
+            style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+          >
+            IDIR/BCeID
+          </div>
+          <div
+            class="th"
+            colspan="1"
+            role="columnheader"
+            style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+          >
+            First name
+          </div>
+          <div
+            class="th"
+            colspan="1"
+            role="columnheader"
+            style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+          >
+            Last name
+          </div>
+          <div
+            class="th"
+            colspan="1"
+            role="columnheader"
+            style="box-sizing: border-box; flex: 200 0 auto; min-width: 200px; width: 200px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+          >
+            Email
+          </div>
+          <div
+            class="th"
+            colspan="1"
+            role="columnheader"
+            style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+          >
+            Position
+          </div>
+          <div
+            class="th"
+            colspan="1"
+            role="columnheader"
+            style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+          >
+            Active
+          </div>
+          <div
+            class="th"
+            colspan="1"
+            role="columnheader"
+            style="box-sizing: border-box; flex: 200 0 auto; min-width: 200px; width: 200px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+          >
+            Agency
+          </div>
+          <div
+            class="th"
+            colspan="1"
+            role="columnheader"
+            style="box-sizing: border-box; flex: 200 0 auto; min-width: 200px; width: 200px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+          >
+            Roles
+          </div>
+          <div
+            class="th"
+            colspan="1"
+            role="columnheader"
+            style="box-sizing: border-box; flex: 100 0 auto; min-width: 100px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+          >
+            Last Login
+          </div>
+          <div
+            class="th"
+            colspan="1"
+            role="columnheader"
+            style="box-sizing: border-box; flex: 75 0 auto; min-width: 30px; width: 75px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+          >
+             
+          </div>
         </div>
       </div>
-      <div role=\\"rowgroup\\" class=\\"tbody\\">
-        <div class=\\"tr-wrapper\\">
-          <div role=\\"row\\" style=\\"display: flex; flex: 1 0 auto; min-width: 880px;\\" class=\\"tr\\">
-            <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\"><a href=\\"/admin/user/1\\">testername1</a></div>
-            <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"Click IDIR/BCeID link to view User Information page\\" class=\\"td clickable\\">testUserFirst1</div>
-            <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"Click IDIR/BCeID link to view User Information page\\" class=\\"td clickable\\">testUserLast1</div>
-            <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 200 0 auto; min-width: 200px; width: 200px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"Click IDIR/BCeID link to view User Information page\\" class=\\"td clickable\\"></div>
-            <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"Click IDIR/BCeID link to view User Information page\\" class=\\"td clickable\\">tester position</div>
-            <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"Click IDIR/BCeID link to view User Information page\\" class=\\"td clickable\\"><svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 512 512\\" height=\\"1em\\" width=\\"1em\\" xmlns=\\"http://www.w3.org/2000/svg\\">
-                <path d=\\"M173.898 439.404l-166.4-166.4c-9.997-9.997-9.997-26.206 0-36.204l36.203-36.204c9.997-9.998 26.207-9.998 36.204 0L192 312.69 432.095 72.596c9.997-9.997 26.207-9.997 36.204 0l36.203 36.204c9.997 9.997 9.997 26.206 0 36.204l-294.4 294.401c-9.998 9.997-26.207 9.997-36.204-.001z\\"></path>
-              </svg></div>
-            <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 200 0 auto; min-width: 200px; width: 200px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"Click IDIR/BCeID link to view User Information page\\" class=\\"td clickable\\">HLTH</div>
-            <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 200 0 auto; min-width: 200px; width: 200px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"Click IDIR/BCeID link to view User Information page\\" class=\\"td clickable\\">admin</div>
-            <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 100px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"Click IDIR/BCeID link to view User Information page\\" class=\\"td clickable\\"></div>
-            <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 75 0 auto; min-width: 30px; width: 75px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">
+      <div
+        class="tbody"
+        role="rowgroup"
+      >
+        <div
+          class="tr-wrapper"
+        >
+          <div
+            class="tr"
+            role="row"
+            style="display: flex; flex: 1 0 auto; min-width: 880px;"
+          >
+            <div
+              class="td"
+              role="cell"
+              style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
+              title=""
+            >
+              <a
+                href="/admin/user/1"
+              >
+                testername1
+              </a>
+            </div>
+            <div
+              class="td clickable"
+              role="cell"
+              style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
+              title="Click IDIR/BCeID link to view User Information page"
+            >
+              testUserFirst1
+            </div>
+            <div
+              class="td clickable"
+              role="cell"
+              style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
+              title="Click IDIR/BCeID link to view User Information page"
+            >
+              testUserLast1
+            </div>
+            <div
+              class="td clickable"
+              role="cell"
+              style="box-sizing: border-box; flex: 200 0 auto; min-width: 200px; width: 200px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
+              title="Click IDIR/BCeID link to view User Information page"
+            >
+              
+            </div>
+            <div
+              class="td clickable"
+              role="cell"
+              style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
+              title="Click IDIR/BCeID link to view User Information page"
+            >
+              tester position
+            </div>
+            <div
+              class="td clickable"
+              role="cell"
+              style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
+              title="Click IDIR/BCeID link to view User Information page"
+            >
+              <svg
+                fill="currentColor"
+                height="1em"
+                stroke="currentColor"
+                stroke-width="0"
+                viewBox="0 0 512 512"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M173.898 439.404l-166.4-166.4c-9.997-9.997-9.997-26.206 0-36.204l36.203-36.204c9.997-9.998 26.207-9.998 36.204 0L192 312.69 432.095 72.596c9.997-9.997 26.207-9.997 36.204 0l36.203 36.204c9.997 9.997 9.997 26.206 0 36.204l-294.4 294.401c-9.998 9.997-26.207 9.997-36.204-.001z"
+                />
+              </svg>
+            </div>
+            <div
+              class="td clickable"
+              role="cell"
+              style="box-sizing: border-box; flex: 200 0 auto; min-width: 200px; width: 200px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
+              title="Click IDIR/BCeID link to view User Information page"
+            >
+              HLTH
+            </div>
+            <div
+              class="td clickable"
+              role="cell"
+              style="box-sizing: border-box; flex: 200 0 auto; min-width: 200px; width: 200px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
+              title="Click IDIR/BCeID link to view User Information page"
+            >
+              admin
+            </div>
+            <div
+              class="td clickable"
+              role="cell"
+              style="box-sizing: border-box; flex: 100 0 auto; min-width: 100px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
+              title="Click IDIR/BCeID link to view User Information page"
+            >
+              
+            </div>
+            <div
+              class="td"
+              role="cell"
+              style="box-sizing: border-box; flex: 75 0 auto; min-width: 30px; width: 75px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
+              title=""
+            >
               <div>
-                <div class=\\"Menu-root\\">
-                  <div class=\\"Menu-button\\"><svg stroke=\\"currentColor\\" fill=\\"none\\" stroke-width=\\"2\\" viewBox=\\"0 0 24 24\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" height=\\"1em\\" width=\\"1em\\" xmlns=\\"http://www.w3.org/2000/svg\\">
-                      <circle cx=\\"12\\" cy=\\"12\\" r=\\"1\\"></circle>
-                      <circle cx=\\"19\\" cy=\\"12\\" r=\\"1\\"></circle>
-                      <circle cx=\\"5\\" cy=\\"12\\" r=\\"1\\"></circle>
-                    </svg></div>
-                  <div class=\\"Menu-items\\" style=\\"width: 100px;\\">
-                    <div class=\\"Menu-options list-group\\">
-                      <div class=\\"Menu-item list-group-item disabled\\">Enable</div>
-                      <div class=\\"Menu-item list-group-item\\">Disable</div>
-                      <div class=\\"Menu-item list-group-item\\">Open</div>
+                <div
+                  class="Menu-root"
+                >
+                  <div
+                    class="Menu-button"
+                  >
+                    <svg
+                      fill="none"
+                      height="1em"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      width="1em"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <circle
+                        cx="12"
+                        cy="12"
+                        r="1"
+                      />
+                      <circle
+                        cx="19"
+                        cy="12"
+                        r="1"
+                      />
+                      <circle
+                        cx="5"
+                        cy="12"
+                        r="1"
+                      />
+                    </svg>
+                  </div>
+                  <div
+                    class="Menu-items"
+                    style="width: 100px;"
+                  >
+                    <div
+                      class="Menu-options list-group"
+                    >
+                      <div
+                        class="Menu-item list-group-item disabled"
+                      >
+                        Enable
+                      </div>
+                      <div
+                        class="Menu-item list-group-item"
+                      >
+                        Disable
+                      </div>
+                      <div
+                        class="Menu-item list-group-item"
+                      >
+                        Open
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -95,32 +481,165 @@ exports[`Manage Users Component Snapshot matches 1`] = `
             </div>
           </div>
         </div>
-        <div class=\\"tr-wrapper\\">
-          <div role=\\"row\\" style=\\"display: flex; flex: 1 0 auto; min-width: 880px;\\" class=\\"tr\\">
-            <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\"><a href=\\"/admin/user/2\\">testername2</a></div>
-            <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"Click IDIR/BCeID link to view User Information page\\" class=\\"td clickable\\">testUser</div>
-            <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"Click IDIR/BCeID link to view User Information page\\" class=\\"td clickable\\">testUser</div>
-            <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 200 0 auto; min-width: 200px; width: 200px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"Click IDIR/BCeID link to view User Information page\\" class=\\"td clickable\\"></div>
-            <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"Click IDIR/BCeID link to view User Information page\\" class=\\"td clickable\\">tester</div>
-            <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"Click IDIR/BCeID link to view User Information page\\" class=\\"td clickable\\"><svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 352 512\\" height=\\"1em\\" width=\\"1em\\" xmlns=\\"http://www.w3.org/2000/svg\\">
-                <path d=\\"M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.19 0 44.48l22.24 22.24c12.28 12.28 32.2 12.28 44.48 0L176 322.72l100.07 100.07c12.28 12.28 32.2 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z\\"></path>
-              </svg></div>
-            <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 200 0 auto; min-width: 200px; width: 200px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"Click IDIR/BCeID link to view User Information page\\" class=\\"td clickable\\">HLTH</div>
-            <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 200 0 auto; min-width: 200px; width: 200px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"Click IDIR/BCeID link to view User Information page\\" class=\\"td clickable\\">admin</div>
-            <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 100px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"Click IDIR/BCeID link to view User Information page\\" class=\\"td clickable\\"></div>
-            <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 75 0 auto; min-width: 30px; width: 75px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">
+        <div
+          class="tr-wrapper"
+        >
+          <div
+            class="tr"
+            role="row"
+            style="display: flex; flex: 1 0 auto; min-width: 880px;"
+          >
+            <div
+              class="td"
+              role="cell"
+              style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
+              title=""
+            >
+              <a
+                href="/admin/user/2"
+              >
+                testername2
+              </a>
+            </div>
+            <div
+              class="td clickable"
+              role="cell"
+              style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
+              title="Click IDIR/BCeID link to view User Information page"
+            >
+              testUser
+            </div>
+            <div
+              class="td clickable"
+              role="cell"
+              style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
+              title="Click IDIR/BCeID link to view User Information page"
+            >
+              testUser
+            </div>
+            <div
+              class="td clickable"
+              role="cell"
+              style="box-sizing: border-box; flex: 200 0 auto; min-width: 200px; width: 200px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
+              title="Click IDIR/BCeID link to view User Information page"
+            >
+              
+            </div>
+            <div
+              class="td clickable"
+              role="cell"
+              style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
+              title="Click IDIR/BCeID link to view User Information page"
+            >
+              tester
+            </div>
+            <div
+              class="td clickable"
+              role="cell"
+              style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
+              title="Click IDIR/BCeID link to view User Information page"
+            >
+              <svg
+                fill="currentColor"
+                height="1em"
+                stroke="currentColor"
+                stroke-width="0"
+                viewBox="0 0 352 512"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.19 0 44.48l22.24 22.24c12.28 12.28 32.2 12.28 44.48 0L176 322.72l100.07 100.07c12.28 12.28 32.2 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z"
+                />
+              </svg>
+            </div>
+            <div
+              class="td clickable"
+              role="cell"
+              style="box-sizing: border-box; flex: 200 0 auto; min-width: 200px; width: 200px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
+              title="Click IDIR/BCeID link to view User Information page"
+            >
+              HLTH
+            </div>
+            <div
+              class="td clickable"
+              role="cell"
+              style="box-sizing: border-box; flex: 200 0 auto; min-width: 200px; width: 200px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
+              title="Click IDIR/BCeID link to view User Information page"
+            >
+              admin
+            </div>
+            <div
+              class="td clickable"
+              role="cell"
+              style="box-sizing: border-box; flex: 100 0 auto; min-width: 100px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
+              title="Click IDIR/BCeID link to view User Information page"
+            >
+              
+            </div>
+            <div
+              class="td"
+              role="cell"
+              style="box-sizing: border-box; flex: 75 0 auto; min-width: 30px; width: 75px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
+              title=""
+            >
               <div>
-                <div class=\\"Menu-root\\">
-                  <div class=\\"Menu-button\\"><svg stroke=\\"currentColor\\" fill=\\"none\\" stroke-width=\\"2\\" viewBox=\\"0 0 24 24\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" height=\\"1em\\" width=\\"1em\\" xmlns=\\"http://www.w3.org/2000/svg\\">
-                      <circle cx=\\"12\\" cy=\\"12\\" r=\\"1\\"></circle>
-                      <circle cx=\\"19\\" cy=\\"12\\" r=\\"1\\"></circle>
-                      <circle cx=\\"5\\" cy=\\"12\\" r=\\"1\\"></circle>
-                    </svg></div>
-                  <div class=\\"Menu-items\\" style=\\"width: 100px;\\">
-                    <div class=\\"Menu-options list-group\\">
-                      <div class=\\"Menu-item list-group-item\\">Enable</div>
-                      <div class=\\"Menu-item list-group-item disabled\\">Disable</div>
-                      <div class=\\"Menu-item list-group-item\\">Open</div>
+                <div
+                  class="Menu-root"
+                >
+                  <div
+                    class="Menu-button"
+                  >
+                    <svg
+                      fill="none"
+                      height="1em"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      width="1em"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <circle
+                        cx="12"
+                        cy="12"
+                        r="1"
+                      />
+                      <circle
+                        cx="19"
+                        cy="12"
+                        r="1"
+                      />
+                      <circle
+                        cx="5"
+                        cy="12"
+                        r="1"
+                      />
+                    </svg>
+                  </div>
+                  <div
+                    class="Menu-items"
+                    style="width: 100px;"
+                  >
+                    <div
+                      class="Menu-options list-group"
+                    >
+                      <div
+                        class="Menu-item list-group-item"
+                      >
+                        Enable
+                      </div>
+                      <div
+                        class="Menu-item list-group-item disabled"
+                      >
+                        Disable
+                      </div>
+                      <div
+                        class="Menu-item list-group-item"
+                      >
+                        Open
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -130,29 +649,111 @@ exports[`Manage Users Component Snapshot matches 1`] = `
         </div>
       </div>
     </div>
-    <div class=\\"table-toolbar\\">
-      <ul class=\\"pagination\\">
-        <li class=\\"page-item disabled\\"><a class=\\"page-link\\" tabindex=\\"0\\" role=\\"button\\" aria-disabled=\\"true\\">&lt;</a></li>
-        <li class=\\"page-item active\\"><a role=\\"button\\" class=\\"page-link\\" tabindex=\\"0\\" aria-label=\\"Page 1 is your current page\\" aria-current=\\"page\\">1</a></li>
-        <li class=\\"page-item disabled\\"><a class=\\"page-link\\" tabindex=\\"0\\" role=\\"button\\" aria-disabled=\\"true\\">&gt;</a></li>
+    <div
+      class="table-toolbar"
+    >
+      <ul
+        class="pagination"
+      >
+        <li
+          class="page-item disabled"
+        >
+          <a
+            aria-disabled="true"
+            class="page-link"
+            role="button"
+            tabindex="0"
+          >
+            &lt;
+          </a>
+        </li>
+        <li
+          class="page-item active"
+        >
+          <a
+            aria-current="page"
+            aria-label="Page 1 is your current page"
+            class="page-link"
+            role="button"
+            tabindex="0"
+          >
+            1
+          </a>
+        </li>
+        <li
+          class="page-item disabled"
+        >
+          <a
+            aria-disabled="true"
+            class="page-link"
+            role="button"
+            tabindex="0"
+          >
+            &gt;
+          </a>
+        </li>
       </ul>
       <div>
-        <div class=\\"Menu-root\\">
-          <div class=\\"Menu-button\\">
-            <div style=\\"display: flex;\\"><span>Show</span><input style=\\"width: 50px; margin-left: 10px; margin-right: 10px;\\" type=\\"number\\" class=\\"form-control form-control-sm\\" value=\\"10\\"><span>Entries</span></div>
+        <div
+          class="Menu-root"
+        >
+          <div
+            class="Menu-button"
+          >
+            <div
+              style="display: flex;"
+            >
+              <span>
+                Show
+              </span>
+              <input
+                class="form-control form-control-sm"
+                style="width: 50px; margin-left: 10px; margin-right: 10px;"
+                type="number"
+                value="10"
+              />
+              <span>
+                Entries
+              </span>
+            </div>
           </div>
-          <div class=\\"Menu-items\\" style=\\"width: 60px;\\">
-            <div class=\\"Menu-options scrollable list-group\\">
-              <div class=\\"Menu-item list-group-item\\">5</div>
-              <div class=\\"Menu-item list-group-item\\">10</div>
-              <div class=\\"Menu-item list-group-item\\">20</div>
-              <div class=\\"Menu-item list-group-item\\">50</div>
-              <div class=\\"Menu-item list-group-item\\">100</div>
+          <div
+            class="Menu-items"
+            style="width: 60px;"
+          >
+            <div
+              class="Menu-options scrollable list-group"
+            >
+              <div
+                class="Menu-item list-group-item"
+              >
+                5
+              </div>
+              <div
+                class="Menu-item list-group-item"
+              >
+                10
+              </div>
+              <div
+                class="Menu-item list-group-item"
+              >
+                20
+              </div>
+              <div
+                class="Menu-item list-group-item"
+              >
+                50
+              </div>
+              <div
+                class="Menu-item list-group-item"
+              >
+                100
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-</div>"
+</div>
 `;
