@@ -61,7 +61,12 @@ namespace Pims.Api.Areas.Property.Mapping.Building
                 .Map(dest => dest.Parcels, src => src.Parcels)
                 .AfterMapping((src, dest) =>
                 {
-                    var metadata = JsonSerializer.Deserialize<IEnumerable<Entity.Models.LeasedLandMetadata>>(src.LeasedLandMetadata ?? "{[]}", _serializerOptions);
+                    if(src.LeasedLandMetadata == null)
+                    {
+                        dest.LeasedLandMetadata = null;
+                        return;
+                    }
+                    var metadata = JsonSerializer.Deserialize<IEnumerable<Entity.Models.LeasedLandMetadata>>(src.LeasedLandMetadata, _serializerOptions);
 
                     dest.LeasedLandMetadata = metadata.Select(l => new Model.LeasedLandMetadataModel { OwnershipNote = l.OwnershipNote, ParcelId = l.ParcelId });
                 })
