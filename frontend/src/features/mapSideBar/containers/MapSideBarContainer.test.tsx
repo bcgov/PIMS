@@ -5,7 +5,7 @@ import { render, cleanup, wait } from '@testing-library/react';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
-import pretty from 'pretty';
+
 import { act } from 'react-dom/test-utils';
 import { ToastContainer } from 'react-toastify';
 import MapSideBarContainer from './MapSideBarContainer';
@@ -80,7 +80,7 @@ describe('Parcel Detail MapSideBarContainer', () => {
     it('sidebar is hidden', async () => {
       await act(async () => {
         const { container } = renderContainer({});
-        expect(pretty(container.innerHTML)).toMatchSnapshot();
+        expect(container.firstChild).toMatchSnapshot();
       });
     });
 
@@ -88,7 +88,7 @@ describe('Parcel Detail MapSideBarContainer', () => {
       await act(async () => {
         history.push('/mapview?sidebar=true');
         const { container } = renderContainer({});
-        expect(pretty(container.innerHTML)).toMatchSnapshot();
+        expect(container.firstChild).toMatchSnapshot();
       });
     });
 
@@ -99,7 +99,7 @@ describe('Parcel Detail MapSideBarContainer', () => {
           store: getStore(mockDetails[0]),
         });
         await findByDisplayValue('000-000-000');
-        expect(pretty(container.innerHTML)).toMatchSnapshot();
+        expect(container.firstChild).toMatchSnapshot();
       });
     });
 

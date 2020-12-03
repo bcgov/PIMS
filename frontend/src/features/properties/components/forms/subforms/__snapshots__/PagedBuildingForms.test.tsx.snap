@@ -1,247 +1,69 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`PagedBuildingForms functionality displays any pre-existing buildings 1`] = `
-"<div class=\\"buildingPaginate\\"><button title=\\"Add Building\\" type=\\"button\\" class=\\"pagedBuildingButton page-link btn btn-link\\"><svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 448 512\\" size=\\"20\\" height=\\"20\\" width=\\"20\\" xmlns=\\"http://www.w3.org/2000/svg\\">
-      <path d=\\"M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z\\"></path>
-    </svg></button>
-  <div class=\\"mr-auto form-group\\"><select options=\\"[object Object],[object Object]\\" class=\\"ml-4 input-medium form-control\\">
-      <option value=\\"\\" class=\\"option\\">Choose a building to view</option>
-      <option value=\\"0\\" class=\\"option\\">name</option>
-    </select></div><button title=\\"Remove Building\\" type=\\"button\\" class=\\"delete-button page-link mr-4 btn btn-link\\"><svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 448 512\\" size=\\"20\\" height=\\"20\\" width=\\"20\\" xmlns=\\"http://www.w3.org/2000/svg\\">
-      <path d=\\"M432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16zM53.2 467a48 48 0 0 0 47.9 45h245.8a48 48 0 0 0 47.9-45L416 128H32z\\"></path>
-    </svg></button>
+<div
+  class="buildingPaginate"
+>
+  <button
+    class="pagedBuildingButton page-link btn btn-link"
+    title="Add Building"
+    type="button"
+  >
+    <svg
+      fill="currentColor"
+      height="20"
+      size="20"
+      stroke="currentColor"
+      stroke-width="0"
+      viewBox="0 0 448 512"
+      width="20"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"
+      />
+    </svg>
+  </button>
+  <div
+    class="mr-auto form-group"
+  >
+    <select
+      class="ml-4 input-medium form-control"
+      options="[object Object],[object Object]"
+    >
+      <option
+        class="option"
+        value=""
+      >
+        Choose a building to view
+      </option>
+      <option
+        class="option"
+        value="0"
+      >
+        name
+      </option>
+    </select>
+  </div>
+  <button
+    class="delete-button page-link mr-4 btn btn-link"
+    title="Remove Building"
+    type="button"
+  >
+    <svg
+      fill="currentColor"
+      height="20"
+      size="20"
+      stroke="currentColor"
+      stroke-width="0"
+      viewBox="0 0 448 512"
+      width="20"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16zM53.2 467a48 48 0 0 0 47.9 45h245.8a48 48 0 0 0 47.9-45L416 128H32z"
+      />
+    </svg>
+  </button>
 </div>
-<div style=\\"margin-bottom: 0px;\\" class=\\"buildingForm row no-gutters\\">
-  <div class=\\"col-md-6\\">
-    <div class=\\"form-row\\"><label class=\\"form-label\\">Project No.</label>
-      <div class=\\"form-group\\"><a href=\\"/projects/summary?projectNumber=projectNumber\\">projectNumber</a></div>
-    </div>
-    <div class=\\"form-row\\"><label class=\\"form-label\\">Name</label>
-      <div class=\\"form-group\\"><input name=\\"buildings.0.name\\" id=\\"input-buildings.0.name\\" class=\\"form-control\\" value=\\"name\\" disabled=\\"\\"></div>
-    </div>
-    <div class=\\"form-row\\"><label class=\\"form-label\\">Description</label>
-      <div class=\\"form-group\\"><textarea name=\\"buildings.0.description\\" id=\\"input-buildings.0.description\\" class=\\"form-control\\" disabled=\\"\\">description</textarea></div>
-    </div>
-    <div class=\\"form-row\\"><label class=\\"form-label\\">Classification</label>
-      <div class=\\"required form-group\\"><svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 512 512\\" class=\\"tooltip-icon\\" height=\\"1em\\" width=\\"1em\\" xmlns=\\"http://www.w3.org/2000/svg\\">
-          <path d=\\"M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z\\"></path>
-        </svg><select name=\\"buildings.0.classificationId\\" required=\\"\\" type=\\"number\\" id=\\"input-buildings.0.classificationId-fast\\" class=\\"form-control\\" disabled=\\"\\">
-          <option value=\\"\\">Must Select One</option>
-          <option value=\\"1\\">classification test</option>
-        </select></div>
-    </div>
-    <div class=\\"form-row\\"><label class=\\"form-label\\">Agency</label>
-      <div class=\\"AutoCompleteText\\">
-        <div class=\\"form-group\\">
-          <div class=\\"input-area\\"><input name=\\"buildings.0.agencyId\\" disabled=\\"\\" id=\\"input-buildings.0.agencyId\\" class=\\"form-control\\" value=\\"\\"></div>
-        </div>
-      </div>
-    </div>
-    <div class=\\"form-row\\"><label class=\\"form-label\\">Sub-Agency</label>
-      <div class=\\"AutoCompleteText\\">
-        <div class=\\"form-group\\">
-          <div class=\\"input-area\\"><input name=\\"buildings.0.agencyId\\" disabled=\\"\\" id=\\"input-buildings.0.agencyId\\" class=\\"form-control\\" value=\\"\\"></div>
-        </div>
-      </div>
-    </div>
-    <div class=\\"form-row\\"><label class=\\"form-label\\"></label>
-      <div class=\\"input-medium\\">
-        <p>Would this information be harmful if released?&nbsp;<br><svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 512 512\\" class=\\"tooltip-icon\\" height=\\"1em\\" width=\\"1em\\" xmlns=\\"http://www.w3.org/2000/svg\\">
-            <path d=\\"M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z\\"></path>
-          </svg><a target=\\"_blank\\" rel=\\"noopener noreferrer\\" href=\\"https://www2.gov.bc.ca/gov/content/governments/services-for-government/policies-procedures/foippa-manual/disclosure-harmful-individual-public-safety\\">Policy</a></p>
-        <div class=\\"form-group\\">
-          <div class=\\"check-field\\">
-            <div class=\\"form-check\\"><input name=\\"buildings.0.isSensitive\\" type=\\"radio\\" id=\\"input-buildings.0.isSensitive\\" class=\\"form-check-input\\" value=\\"false\\" disabled=\\"\\"><label title=\\"\\" for=\\"input-buildings.0.isSensitive\\" class=\\"form-check-label\\">Yes</label></div>
-            <div class=\\"form-check\\"><input name=\\"buildings.0.isSensitive\\" type=\\"radio\\" id=\\"input-buildings.0.isSensitive-2\\" class=\\"form-check-input\\" value=\\"true\\" checked=\\"\\" disabled=\\"\\"><label title=\\"\\" for=\\"input-buildings.0.isSensitive-2\\" class=\\"form-check-label\\">No</label></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class=\\"col-md-6\\">
-    <div class=\\"form-row\\"><label class=\\"form-label\\">Street Address</label>
-      <div class=\\"GeocoderAutoComplete\\">
-        <div>
-          <div class=\\"required form-group\\"><svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 512 512\\" class=\\"tooltip-icon\\" height=\\"1em\\" width=\\"1em\\" xmlns=\\"http://www.w3.org/2000/svg\\">
-              <path d=\\"M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z\\"></path>
-            </svg><input name=\\"buildings.0.address.line1\\" required=\\"\\" field=\\"buildings.0.address.line1\\" id=\\"input-buildings.0.address.line1\\" class=\\"form-control\\" value=\\"line1\\" disabled=\\"\\"></div>
-        </div>
-      </div>
-    </div>
-    <div class=\\"form-row\\"><label class=\\"form-label\\">Location</label>
-      <div class=\\"required form-group\\"><svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 512 512\\" class=\\"tooltip-icon\\" height=\\"1em\\" width=\\"1em\\" xmlns=\\"http://www.w3.org/2000/svg\\">
-          <path d=\\"M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z\\"></path>
-        </svg>
-        <div class=\\"rbt\\" style=\\"outline: none; position: relative;\\" tabindex=\\"-1\\">
-          <div style=\\"display: flex; flex: 1; height: 100%; position: relative;\\"><input autocomplete=\\"off\\" type=\\"text\\" name=\\"buildings.0.address.administrativeArea\\" id=\\"buildings.0.address.administrativeArea-field\\" aria-autocomplete=\\"both\\" aria-expanded=\\"false\\" aria-haspopup=\\"listbox\\" role=\\"combobox\\" class=\\"rbt-input-main form-control rbt-input\\" value=\\"administrativeArea\\" disabled=\\"\\"><input aria-hidden=\\"true\\" class=\\"rbt-input-hint\\" readonly=\\"\\" style=\\"background-color: transparent; border-color: transparent; box-shadow: none; color: rgba(0, 0, 0, 0.35); left: 0px; pointer-events: none; position: absolute; top: 0px; width: 100%; border-style: inset inset inset inset; border-width: 2px 2px 2px 2px; line-height: normal; padding: 1px 1px 1px 1px;\\" tabindex=\\"-1\\" value=\\"\\"></div>
-        </div>
-      </div>
-    </div>
-    <div class=\\"form-row\\"><label class=\\"form-label\\">Province</label>
-      <div class=\\"form-group\\"><select name=\\"buildings.0.address.provinceId\\" disabled=\\"\\" id=\\"input-buildings.0.address.provinceId\\" class=\\"form-select form-control\\">
-          <option value=\\"\\">Must Select One</option>
-          <option value=\\"2222\\" class=\\"option\\">test province</option>
-        </select></div>
-    </div>
-    <div class=\\"form-row\\"><label class=\\"form-label\\">Postal Code</label>
-      <div class=\\"form-group\\"><input name=\\"buildings.0.address.postal\\" id=\\"input-buildings.0.address.postal\\" class=\\"input-small form-control\\" value=\\"postal\\" disabled=\\"\\"></div>
-    </div>
-    <div style=\\"position: relative;\\">
-      <div class=\\"form-row\\"><label class=\\"form-label\\">Latitude</label>
-        <div class=\\"required form-group\\"><svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 512 512\\" class=\\"tooltip-icon\\" height=\\"1em\\" width=\\"1em\\" xmlns=\\"http://www.w3.org/2000/svg\\">
-            <path d=\\"M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z\\"></path>
-          </svg><input name=\\"buildings.0.latitude\\" required=\\"\\" type=\\"number\\" id=\\"input-buildings.0.latitude\\" class=\\"input-medium form-control\\" value=\\"9\\" disabled=\\"\\"></div>
-      </div>
-      <div class=\\"form-row\\"><label class=\\"form-label\\">Longitude</label>
-        <div class=\\"required form-group\\"><input name=\\"buildings.0.longitude\\" required=\\"\\" type=\\"number\\" id=\\"input-buildings.0.longitude\\" class=\\"input-medium form-control\\" value=\\"10\\" disabled=\\"\\"></div>
-      </div><button class=\\"sc-fzokOt etZzsU\\" disabled=\\"\\">
-        <p>Place Pin</p><svg>draft-building-icon.svg</svg>
-      </button>
-    </div>
-  </div>
-</div>
-<div class=\\"scroll\\">
-  <h4>Information</h4>
-  <div class=\\"row no-gutters\\">
-    <div class=\\"col-md-6\\">
-      <div class=\\"form-row\\"><label class=\\"form-label\\">Predominate Use</label>
-        <div class=\\"required form-group\\"><select name=\\"buildings.0.buildingPredominateUseId\\" required=\\"\\" type=\\"number\\" id=\\"input-buildings.0.buildingPredominateUseId-fast\\" class=\\"form-control\\" disabled=\\"\\">
-            <option value=\\"\\">Must Select One</option>
-            <option value=\\"1\\">predominate use test type</option>
-          </select></div>
-      </div>
-      <div class=\\"form-row\\"><label class=\\"form-label\\">Type of Construction</label>
-        <div class=\\"required form-group\\"><select name=\\"buildings.0.buildingConstructionTypeId\\" required=\\"\\" type=\\"number\\" id=\\"input-buildings.0.buildingConstructionTypeId-fast\\" class=\\"form-control\\" disabled=\\"\\">
-            <option value=\\"\\">Must Select One</option>
-            <option value=\\"1\\">construction test type</option>
-          </select></div>
-      </div>
-    </div>
-    <div class=\\"col-md-6\\">
-      <div class=\\"form-row\\"><label class=\\"form-label\\">Rentable Area</label>
-        <div class=\\"input-group required disabled\\">
-          <div class=\\"input-group-content\\">
-            <div class=\\"form-group\\"><input name=\\"buildings.0.rentableArea\\" type=\\"number\\" id=\\"input-buildings.0.rentableArea\\" class=\\"form-control\\" value=\\"12\\" disabled=\\"\\"></div>
-          </div>
-          <div class=\\"input-group-append\\"><span class=\\"input-group-text\\">Sq. Ft</span></div>
-        </div>
-      </div>
-      <div class=\\"form-row\\"><label class=\\"form-label\\">Number of Floors</label>
-        <div class=\\"form-group\\"><input name=\\"buildings.0.buildingFloorCount\\" type=\\"number\\" id=\\"input-buildings.0.buildingFloorCount\\" class=\\"input-small form-control\\" value=\\"5\\" disabled=\\"\\"></div>
-      </div>
-    </div>
-  </div>
-  <h4>Tenancy</h4>
-  <div class=\\"buildingTenancy row no-gutters\\">
-    <div class=\\"col-md-6\\">
-      <div class=\\"form-row\\"><label class=\\"form-label\\">Type of Current Occupant</label>
-        <div class=\\"required form-group\\"><select name=\\"buildings.0.buildingOccupantTypeId\\" required=\\"\\" type=\\"number\\" id=\\"input-buildings.0.buildingOccupantTypeId-fast\\" class=\\"form-control\\" disabled=\\"\\">
-            <option value=\\"\\">Must Select One</option>
-            <option value=\\"1\\">occupent type test</option>
-          </select></div>
-      </div>
-      <div class=\\"form-row\\"><label class=\\"form-label\\">Occupant Name</label>
-        <div class=\\"form-group\\"><input name=\\"buildings.0.occupantName\\" id=\\"input-buildings.0.occupantName\\" class=\\"form-control\\" value=\\"occupantName\\" disabled=\\"\\"></div>
-      </div>
-    </div>
-    <div class=\\"col-md-6\\">
-      <div class=\\"form-row\\"><label class=\\"form-label\\">Tenancy %</label>
-        <div class=\\"form-group\\"><input name=\\"buildings.0.buildingTenancy\\" id=\\"input-buildings.0.buildingTenancy\\" class=\\"form-control\\" value=\\"buildingTenancy\\" disabled=\\"\\"></div>
-      </div>
-      <div class=\\"form-row\\"><label class=\\"form-label\\">Date Lease Expires</label>
-        <div class=\\"form-group\\">
-          <div class=\\"react-datepicker-wrapper\\">
-            <div class=\\"react-datepicker__input-container\\"><input type=\\"text\\" id=\\"datepicker-buildings.0.leaseExpiry\\" name=\\"buildings.0.leaseExpiry\\" placeholder=\\"--/--/----\\" autocomplete=\\"off\\" class=\\"form-control date-picker\\" value=\\"01/01/2020\\" disabled=\\"\\"></div>
-          </div>
-        </div>
-        <div class=\\"form-group\\">
-          <div class=\\"check-field\\">
-            <div class=\\"form-check\\"><input name=\\"buildings.0.transferLeaseOnSale\\" type=\\"checkbox\\" id=\\"input-buildings.0.transferLeaseOnSale\\" class=\\"form-check-input position-static\\" value=\\"true\\" checked=\\"\\" disabled=\\"\\"></div><label class=\\"text-wrap form-label\\" for=\\"input-buildings.0.transferLeaseOnSale\\">Lease to be transferred with land</label>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class=\\"row no-gutters\\">
-    <div class=\\"col\\">
-      <h4>Building Valuation Information</h4>
-      <div>
-        <div role=\\"table\\" class=\\"table\\">
-          <div class=\\"thead thead-light\\">
-            <div role=\\"row\\" style=\\"display: flex; flex: 1 0 auto; min-width: 180px;\\" class=\\"tr\\">
-              <div colspan=\\"2\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 150 0 auto; min-width: 60px; width: 150px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Assessed</div>
-              <div colspan=\\"2\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 150 0 auto; min-width: 60px; width: 150px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Net Book Value</div>
-              <div colspan=\\"2\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 150 0 auto; min-width: 60px; width: 150px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Estimated Market Value</div>
-            </div>
-            <div role=\\"row\\" style=\\"display: flex; flex: 1 0 auto; min-width: 180px;\\" class=\\"tr\\">
-              <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Year</div>
-              <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Land</div>
-              <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Fiscal Year</div>
-              <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Value</div>
-              <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Fiscal Year</div>
-              <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Value</div>
-            </div>
-          </div>
-          <div role=\\"rowgroup\\" class=\\"tbody\\">
-            <div class=\\"tr-wrapper\\">
-              <div role=\\"row\\" style=\\"display: flex; flex: 1 0 auto; min-width: 180px;\\" class=\\"tr\\">
-                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">2021</div>
-                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">N/A</div>
-                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">20/21</div>
-                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">
-                  <div class=\\"form-group\\">
-                    <div class=\\"input-tooltip-wrapper\\"><input name=\\"buildings.0.financials.0.netbook.value\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
-                  </div>
-                </div>
-                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">20/21</div>
-                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">
-                  <div class=\\"form-group\\">
-                    <div class=\\"input-tooltip-wrapper\\"><input name=\\"buildings.0.financials.0.market.value\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class=\\"tr-wrapper\\">
-              <div role=\\"row\\" style=\\"display: flex; flex: 1 0 auto; min-width: 180px;\\" class=\\"tr\\">
-                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">2020</div>
-                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">
-                  <div class=\\"form-group\\">
-                    <div class=\\"input-tooltip-wrapper\\"><input name=\\"buildings.0.financials.1.assessed.value\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
-                  </div>
-                </div>
-                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">19/20</div>
-                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">
-                  <div class=\\"form-group\\">
-                    <div class=\\"input-tooltip-wrapper\\"><input name=\\"buildings.0.financials.1.netbook.value\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
-                  </div>
-                </div>
-                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">19/20</div>
-                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">
-                  <div class=\\"form-group\\">
-                    <div class=\\"input-tooltip-wrapper\\"><input name=\\"buildings.0.financials.1.market.value\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class=\\"table-toolbar\\">
-          <ul class=\\"pagination\\">
-            <li class=\\"page-item disabled\\"><a class=\\"page-link\\" tabindex=\\"0\\" role=\\"button\\" aria-disabled=\\"true\\">&lt;</a></li>
-            <li class=\\"page-item active\\"><a role=\\"button\\" class=\\"page-link\\" tabindex=\\"0\\" aria-label=\\"Page 1 is your current page\\" aria-current=\\"page\\">1</a></li>
-            <li class=\\"page-item\\"><a role=\\"button\\" class=\\"page-link\\" tabindex=\\"0\\" aria-label=\\"Page 2\\">2</a></li>
-            <li class=\\"page-item\\"><a role=\\"button\\" class=\\"page-link\\" tabindex=\\"0\\" aria-label=\\"Page 3\\">3</a></li>
-            <li class=\\"page-item\\"><a role=\\"button\\" class=\\"page-link\\" tabindex=\\"0\\" aria-label=\\"Page 4\\">4</a></li>
-            <li class=\\"page-item\\"><a role=\\"button\\" class=\\"page-link\\" tabindex=\\"0\\" aria-label=\\"Page 5\\">5</a></li>
-            <li class=\\"page-item\\"><a role=\\"button\\" class=\\"page-link\\" tabindex=\\"0\\" aria-label=\\"Page 6\\">6</a></li>
-            <li class=\\"page-item\\"><a class=\\"page-link\\" role=\\"button\\" tabindex=\\"0\\">...</a></li>
-            <li class=\\"page-item\\"><a role=\\"button\\" class=\\"page-link\\" tabindex=\\"0\\" aria-label=\\"Page 9\\">9</a></li>
-            <li class=\\"page-item\\"><a role=\\"button\\" class=\\"page-link\\" tabindex=\\"0\\" aria-label=\\"Page 10\\">10</a></li>
-            <li class=\\"page-item\\"><a class=\\"page-link\\" tabindex=\\"0\\" role=\\"button\\" aria-disabled=\\"false\\">&gt;</a></li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>"
 `;

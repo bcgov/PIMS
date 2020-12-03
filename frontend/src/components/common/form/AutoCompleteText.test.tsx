@@ -5,7 +5,7 @@ import { Formik, Form } from 'formik';
 import { noop } from 'lodash';
 import { AutoCompleteText } from './AutoCompleteText';
 import { SelectOption } from './Select';
-import pretty from 'pretty';
+
 import { render } from '@testing-library/react';
 
 Enzyme.configure({ adapter: new Adapter() });
@@ -28,6 +28,6 @@ describe('Auto Complete Text', () => {
         )}
       </Formik>,
     );
-    expect(pretty(container.innerHTML)).toMatchSnapshot();
+    expect(container.firstChild).toMatchSnapshot();
   });
 });

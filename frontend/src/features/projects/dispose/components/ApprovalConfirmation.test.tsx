@@ -4,7 +4,7 @@ import { Form } from 'react-bootstrap';
 import ApprovalConfirmationForm from '../../common/forms/ApprovalConfirmationForm';
 import { useKeycloak } from '@react-keycloak/web';
 import { noop } from 'lodash';
-import pretty from 'pretty';
+
 import { fireEvent } from '@testing-library/dom';
 import { render, act, wait } from '@testing-library/react';
 
@@ -38,7 +38,7 @@ describe('Approval Confirmation', () => {
   });
   it('Matches Snapshot', () => {
     const { container } = renderComponent(false);
-    expect(pretty(container.innerHTML)).toMatchSnapshot();
+    expect(container.firstChild).toMatchSnapshot();
   });
 
   it('Input is disabled if form is readonly', () => {
