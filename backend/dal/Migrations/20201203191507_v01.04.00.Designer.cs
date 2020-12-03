@@ -11,7 +11,7 @@ using Pims.Dal;
 namespace Pims.Dal.Migrations
 {
     [DbContext(typeof(PimsContext))]
-    [Migration("20201201010630_v01.04.00")]
+    [Migration("20201203191507_v01.04.00")]
     partial class v010400
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -422,6 +422,9 @@ namespace Pims.Dal.Migrations
 
                     b.Property<DateTime?>("LeaseExpiry")
                         .HasColumnType("DATETIME2");
+
+                    b.Property<string>("LeasedLandMetadata")
+                        .HasColumnType("NVARCHAR(MAX)");
 
                     b.Property<Point>("Location")
                         .IsRequired()
@@ -1127,9 +1130,6 @@ namespace Pims.Dal.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("DATETIME2")
                         .HasDefaultValueSql("GETUTCDATE()");
-
-                    b.Property<string>("LeasedLandMetadata")
-                        .HasColumnType("NVARCHAR(MAX)");
 
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()

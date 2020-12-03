@@ -33,6 +33,8 @@ namespace Pims.Api.Areas.Property.Models.Building
 
         public float RentableArea { get; set; }
 
+        public IEnumerable<LeasedLandMetadataModel> LeasedLandMetadata { get; set; } = new List<LeasedLandMetadataModel>();
+
         public IEnumerable<BuildingParcelModel> Parcels { get; set; } = new List<BuildingParcelModel>();
 
         public IEnumerable<BuildingEvaluationModel> Evaluations { get; set; } = new List<BuildingEvaluationModel>();

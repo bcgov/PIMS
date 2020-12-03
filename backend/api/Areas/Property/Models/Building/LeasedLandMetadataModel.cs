@@ -1,8 +1,11 @@
+using Pims.Api.Areas.Property.Models.Parcel;
+using Pims.Api.Models;
 using System;
+using System.Collections.Generic;
 
-namespace Pims.Dal.Entities.Models
+namespace Pims.Api.Areas.Property.Models.Building
 {
-    public class LeasedLandMetadata
+    public class LeasedLandMetadataModel : BaseModel
     {
         #region Properties
         /// <summary>

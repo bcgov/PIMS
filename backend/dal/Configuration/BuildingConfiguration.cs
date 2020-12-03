@@ -17,6 +17,8 @@ namespace Pims.Dal.Configuration
             builder.HasKey(m => m.Id);
             builder.Property(m => m.Id).ValueGeneratedOnAdd();
 
+            builder.Property(m => m.LeasedLandMetadata).HasColumnType("NVARCHAR(MAX)");
+
             builder.Property(m => m.BuildingFloorCount).IsRequired();
             builder.Property(m => m.BuildingTenancy).IsRequired();
             builder.Property(m => m.LeaseExpiry).HasColumnType("DATETIME2");

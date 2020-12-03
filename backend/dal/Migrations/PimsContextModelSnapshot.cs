@@ -421,6 +421,9 @@ namespace Pims.Dal.Migrations
                     b.Property<DateTime?>("LeaseExpiry")
                         .HasColumnType("DATETIME2");
 
+                    b.Property<string>("LeasedLandMetadata")
+                        .HasColumnType("NVARCHAR(MAX)");
+
                     b.Property<Point>("Location")
                         .IsRequired()
                         .HasColumnType("GEOGRAPHY");
@@ -1125,9 +1128,6 @@ namespace Pims.Dal.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("DATETIME2")
                         .HasDefaultValueSql("GETUTCDATE()");
-
-                    b.Property<string>("LeasedLandMetadata")
-                        .HasColumnType("NVARCHAR(MAX)");
 
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()

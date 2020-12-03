@@ -10,7 +10,7 @@ namespace Pims.Dal.Migrations
             PreUp(migrationBuilder);
             migrationBuilder.AddColumn<string>(
                 name: "LeasedLandMetadata",
-                table: "ParcelBuildings",
+                table: "Buildings",
                 type: "NVARCHAR(MAX)",
                 nullable: true);
             PostUp(migrationBuilder);
@@ -21,7 +21,7 @@ namespace Pims.Dal.Migrations
             PreDown(migrationBuilder);
             migrationBuilder.DropColumn(
                 name: "LeasedLandMetadata",
-                table: "ParcelBuildings");
+                table: "Buildings");
             PostDown(migrationBuilder);
         }
     }

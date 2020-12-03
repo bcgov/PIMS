@@ -52,12 +52,6 @@ namespace Pims.Api.Areas.Property.Mapping.Parcel
                 .Map(dest => dest.Buildings, src => src.Parcel.Buildings)
                 .Map(dest => dest.Evaluations, src => src.Parcel.Evaluations)
                 .Map(dest => dest.Fiscals, src => src.Parcel.Fiscals)
-                .AfterMapping((src, dest) =>
-                {
-                    var metadata = JsonSerializer.Deserialize<Entity.Models.LeasedLandMetadata>(src.LeasedLandMetadata ?? "{}", _serializerOptions);
-
-                    dest.OwnershipNote = metadata.OwnershipNote;
-                })
                 .Inherits<Entity.BaseEntity, BModel.BaseModel>();
 
             config.NewConfig<Model.BuildingParcelModel, Entity.Parcel>()
@@ -89,13 +83,6 @@ namespace Pims.Api.Areas.Property.Mapping.Parcel
                 .Map(dest => dest.ParcelId, src => src.Id)
                 .Map(dest => dest.Parcel, src => src)
                 .Map(dest => dest.BuildingId, src => src.BuildingId)
-                .AfterMapping((src, dest) => {
-                    var metadata = new Entity.Models.LeasedLandMetadata()
-                    {
-                        OwnershipNote = src.OwnershipNote
-                    };
-                    dest.LeasedLandMetadata = JsonSerializer.Serialize(metadata, _serializerOptions);
-                })
                 .Inherits<BModel.BaseModel, Entity.BaseEntity>();
 
             config.NewConfig<Model.ParcelModel, NetTopologySuite.Geometries.Point>()
