@@ -3,7 +3,6 @@ import './AssociatedLandReviewPage.scss';
 import {
   FastInput,
   Input,
-  TextArea,
   InputGroup,
   AutoCompleteText,
   FastCurrencyInput,
@@ -11,16 +10,16 @@ import {
   FastSelect,
 } from 'components/common/form';
 import React, { useCallback, useState } from 'react';
-import { Col, Container, Row, Button } from 'react-bootstrap';
+import { Col, Container, Row, Button, Form } from 'react-bootstrap';
 import { useFormikContext, getIn } from 'formik';
 import { Label } from 'components/common/Label';
 import { FaEdit } from 'react-icons/fa';
 import { LandSvg } from 'components/common/Icons';
 import AddressForm from 'features/properties/components/forms/subforms/AddressForm';
 import { noop } from 'lodash';
-import { LandUsageForm } from './LandUsageForm';
 import { useFormStepper } from 'components/common/form/StepForm';
 import { AssociatedLandSteps } from 'constants/propertySteps';
+import { formatMoney } from 'utils/numberFormatUtils';
 
 interface IReviewProps {
   nameSpace?: string;
@@ -265,15 +264,7 @@ export const AssociatedLandReviewPage: React.FC<any> = (props: IReviewProps) => 
                           />
                         </Row>
                         <Row className="val-row">
-                          <Label>Est'd Market Value</Label>
-                          <FastCurrencyInput
-                            formikProps={formikProps}
-                            field={withNameSpace('financials.0.estimated.value', index)}
-                            disabled={editInfo.valuation}
-                          />
-                        </Row>
-                        <Row className="val-row">
-                          <Label>Assessed Value</Label>
+                          <Label>Land value</Label>
                           <FastCurrencyInput
                             formikProps={formikProps}
                             field={withNameSpace('financials.0.assessed.value', index)}
@@ -281,11 +272,27 @@ export const AssociatedLandReviewPage: React.FC<any> = (props: IReviewProps) => 
                           />
                         </Row>
                         <Row className="val-row">
-                          <Label>Appraised Value</Label>
+                          <Label>Building Value</Label>
                           <FastCurrencyInput
                             formikProps={formikProps}
-                            field={withNameSpace('financials.0.appraised.value', index)}
+                            field={withNameSpace('financials.0.improvements.value', index)}
                             disabled={editInfo.valuation}
+                          />
+                        </Row>
+                        <Row className="val-row">
+                          <Label>Total Assessed Value</Label>
+                          <Form.Control
+                            value={formatMoney(
+                              (getIn(
+                                formikProps.values,
+                                withNameSpace('financials.0.improvements.value'),
+                              ) || 0) +
+                                (getIn(
+                                  formikProps.values,
+                                  withNameSpace('financials.0.assessed.value'),
+                                ) || 0),
+                            )}
+                            disabled={true}
                           />
                         </Row>
                       </div>

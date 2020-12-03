@@ -18,7 +18,6 @@ import { FaEdit } from 'react-icons/fa';
 import { LandSvg } from 'components/common/Icons';
 import AddressForm from 'features/properties/components/forms/subforms/AddressForm';
 import { noop } from 'lodash';
-import { LandUsageForm } from './LandUsageForm';
 
 interface IReviewProps {
   nameSpace?: string;

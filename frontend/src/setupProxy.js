@@ -4,7 +4,7 @@ module.exports = function(app) {
   app.use(
     '/api',
     proxy({
-      target: process.env.API_URL || 'http://backend:8080/',
+      target: 'http://localhost:5000/',
       changeOrigin: true,
       secure: false,
       // timeout: 2000,

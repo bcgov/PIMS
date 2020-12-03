@@ -1,6 +1,6 @@
 import { ISteppedFormValues, SteppedForm, useFormStepper } from 'components/common/form/StepForm';
-import { useFormikContext, yupToFormErrors } from 'formik';
-import { IGeocoderResponse, useApi } from 'hooks/useApi';
+import { useFormikContext } from 'formik';
+import { IGeocoderResponse } from 'hooks/useApi';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import useCodeLookups from 'hooks/useLookupCodes';
 import { noop } from 'lodash';
@@ -10,22 +10,8 @@ import styled from 'styled-components';
 import { InventoryPolicy } from '../components/InventoryPolicy';
 import * as API from 'constants/API';
 import { IBuilding, IParcel } from 'actions/parcelsActions';
-import { ParcelDetailTabs } from 'features/properties/containers/ParcelDetailContainer';
 import { ParcelIdentificationForm } from './subforms/ParcelIdentificationForm';
 import { LandUsageForm } from './subforms/LandUsageForm';
-import { LandReviewPage } from './subforms/LandReviewPage';
-import {
-  filterEmptyFinancials,
-  IFinancial,
-  IFinancialYear,
-} from 'features/properties/components/forms/subforms/EvaluationForm';
-import { IFormParcel } from 'features/properties/containers/ParcelDetailFormContainer';
-import { EvaluationKeys } from 'constants/evaluationKeys';
-import { FiscalKeys } from 'constants/fiscalKeys';
-import _ from 'lodash';
-import { useDispatch } from 'react-redux';
-import { ParcelSchema } from 'utils/YupSchema';
-import { createParcel, updateParcel } from 'actionCreators/parcelsActionCreator';
 import { LandValuationForm } from './subforms/LandValuationForm';
 import { AssociatedLandSteps } from 'constants/propertySteps';
 import { LandOwnershipForm } from './subforms/LandOwnershipForm';
@@ -207,8 +193,6 @@ interface IAssociatedLandForm {
 
 const AssociatedLandForm: React.FC<IAssociatedLandForm> = (props: IAssociatedLandForm) => {
   const keycloak = useKeycloakWrapper();
-  const dispatch = useDispatch();
-  const api = useApi();
   let initialValues = {
     activeStep: 0,
     activeTab: 0,
@@ -227,17 +211,6 @@ const AssociatedLandForm: React.FC<IAssociatedLandForm> = (props: IAssociatedLan
     //TODO: fill in as necessary
     return Promise.resolve({});
   };
-
-  const isPidAvailable = async (values: IFormParcel): Promise<boolean> => {
-    const response = await api.isPidAvailable(values.id, values.pid);
-    return response?.available;
-  };
-
-  const isPinAvailable = async (values: IFormParcel): Promise<boolean> => {
-    const response = await api.isPinAvailable(values.id, values.pin);
-    return response?.available;
-  };
-  const formikParcels = props.formikRef?.current?.values?.data?.parcels;
 
   return (
     <Container className="landForm">
@@ -275,7 +248,6 @@ const AssociatedLandForm: React.FC<IAssociatedLandForm> = (props: IAssociatedLan
         validate={handleValidate}
         formikRef={props.formikRef}
         onSubmit={async (values, actions) => {
-          const apiValues = valuesToApiFormat(_.cloneDeep(values));
           try {
             //TODO: fill in api call logic using new add/update building apis.
           } catch (error) {

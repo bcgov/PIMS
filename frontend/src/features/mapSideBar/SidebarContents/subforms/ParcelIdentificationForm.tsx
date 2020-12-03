@@ -10,7 +10,7 @@ import {
 import { Label } from 'components/common/Label';
 import AddressForm from 'features/properties/components/forms/subforms/AddressForm';
 import React from 'react';
-import { Col, Container, Row } from 'react-bootstrap';
+import { Col, Container, Row, Form } from 'react-bootstrap';
 import TooltipWrapper from 'components/common/TooltipWrapper';
 import {
   sensitiveTooltip,
@@ -23,6 +23,7 @@ import { IGeocoderResponse } from 'hooks/useApi';
 import styled from 'styled-components';
 import { GeocoderAutoComplete } from 'features/properties/components/GeocoderAutoComplete';
 import { ReactComponent as ParcelDraftIcon } from 'assets/images/draft-parcel-icon.svg';
+import classNames from 'classnames';
 
 interface IIdentificationProps {
   /** used for changign the agency - note that only select users will be able to edit this field */
@@ -43,7 +44,7 @@ interface IIdentificationProps {
   handlePinChange: (pin: string) => void;
 }
 
-const DraftMarkerButton = styled.button`
+const SearchMarkerButton = styled.button`
   // position: absolute;
   top: 20px;
   right: 20px;
@@ -73,16 +74,20 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
       <Row>
         <h4>Parcel Identification</h4>
       </Row>
-      <Row noGutters>
+      <Row noGutters className="section">
+        <Col md={12}>
+          <h5>Search for Parcel</h5>
+        </Col>
         <Col md={6}>
           <PidPinForm
             handlePidChange={handlePidChange}
             handlePinChange={handlePinChange}
             nameSpace={nameSpace}
           />
-          <Row className="field-row">
+          <Form.Row className="justify-content-end">
             <Label>Street Address</Label>
             <GeocoderAutoComplete
+              required={true}
               tooltip={streetAddressTooltip}
               value={getIn(formikProps.values, withNameSpace('address.line1'))}
               field={withNameSpace('address.line1')}
@@ -94,31 +99,44 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
               touch={getIn(formikProps.touched, withNameSpace('address.line1'))}
               displayErrorTooltips
             />
-          </Row>
+          </Form.Row>
         </Col>
         <Col md={1}>
-          <h1>OR</h1>
+          <h5>OR</h5>
         </Col>
-        <Col md={5}>
+        <Col md={5} className="instruction">
           <p>
             Click on the pin, and then click your desired location on the map to pull the parcel
             details.
           </p>
           <Row>
             <Col className="marker-svg">
-              <DraftMarkerButton
+              <SearchMarkerButton
                 onClick={(e: any) => {
                   setMovingPinNameSpace(nameSpace ?? '');
                   e.preventDefault();
                 }}
               >
                 <ParcelDraftIcon className="parcel-icon" />
-              </DraftMarkerButton>
+              </SearchMarkerButton>
             </Col>
           </Row>
         </Col>
       </Row>
-      <Row noGutters>
+      <Row
+        noGutters
+        className={classNames(
+          'section',
+          getIn(formikProps.values, withNameSpace('address.line1')) === '' &&
+            getIn(formikProps.values, withNameSpace('pid')) === '' &&
+            getIn(formikProps.values, withNameSpace('pin')) === ''
+            ? 'disabled'
+            : '',
+        )}
+      >
+        <Col md={12}>
+          <h5>Parcel Details</h5>
+        </Col>
         <Col md={6}>
           <AddressForm
             onGeocoderChange={handleGeocoderChanges}
@@ -127,33 +145,36 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
             nameSpace={withNameSpace('address')}
             hideStreetAddress
           />
-          <Row className="field-row">
+          <Form.Row>
             <Label>Agency</Label>
             <AutoCompleteText disabled field={withNameSpace('agencyId')} options={agencies} />
-          </Row>
+          </Form.Row>
         </Col>
         <Col md={6} className="form-container">
-          <Row className="field-row">
+          <Form.Row>
             <Label>Name</Label>
             <FastInput disabled={false} field={withNameSpace('name')} formikProps={formikProps} />
-          </Row>
-          <Row className="field-row">
+          </Form.Row>
+          <Form.Row>
             <Label>Description</Label>
             <TextArea disabled={false} field={withNameSpace('description')} />
-          </Row>
-          <Row className="field-row">
+          </Form.Row>
+          <Form.Row>
             <Label>Legal Description</Label>
-            <TextArea disabled={false} field={withNameSpace('legalDescription')} />
-          </Row>
-          <Row className="field-row">
+            <TextArea required={true} disabled={false} field={withNameSpace('legalDescription')} />
+          </Form.Row>
+          <Form.Row>
             <Label>Lot Size</Label>
             <FastInput
+              required={true}
               disabled={false}
               field={withNameSpace('landArea')}
               formikProps={formikProps}
             />
-          </Row>
+          </Form.Row>
         </Col>
+      </Row>
+      <Row>
         <Col>
           <div className="input-medium harmful">
             <p>

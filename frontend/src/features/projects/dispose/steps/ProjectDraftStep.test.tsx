@@ -13,7 +13,6 @@ import { fillInput } from 'utils/testUtils';
 import useStepper from '../hooks/useStepper';
 import { noop } from 'lodash';
 import { render, screen, cleanup, wait } from '@testing-library/react';
-import pretty from 'pretty';
 
 const mockAxios = new MockAdapter(axios);
 jest.mock('../hooks/useStepper');
@@ -51,7 +50,7 @@ describe('Project Draft Step', () => {
   });
   it('renders correctly', () => {
     const { container } = render(uiElement);
-    expect(pretty(container.innerHTML)).toMatchSnapshot();
+    expect(container.firstChild).toMatchSnapshot();
   });
 
   it('requires name', async () => {

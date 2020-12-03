@@ -12,7 +12,6 @@ import { render, cleanup, act } from '@testing-library/react';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 import { ToastContainer } from 'react-toastify';
-import pretty from 'pretty';
 
 const mockStore = configureMockStore([thunk]);
 const history = createMemoryHistory();
@@ -73,7 +72,7 @@ describe('Edit agency page', () => {
         </Router>
       </Provider>,
     );
-    expect(pretty(container.innerHTML)).toMatchSnapshot();
+    expect(container.firstChild).toMatchSnapshot();
   });
 
   describe('appropriate fields are autofilled', () => {

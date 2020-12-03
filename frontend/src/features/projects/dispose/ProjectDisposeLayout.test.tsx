@@ -14,7 +14,6 @@ import { render, fireEvent, wait } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
 import useProject from '../common/hooks/useProject';
 import { mockWorkflow } from './testUtils';
-import pretty from 'pretty';
 
 const mockStore = configureMockStore([thunk]);
 const history = createMemoryHistory();
@@ -93,7 +92,7 @@ describe('dispose project draft step display', () => {
   });
   it('stepper renders correctly based off of workflow', () => {
     const { container } = render(uiElement);
-    expect(pretty(container.innerHTML)).toMatchSnapshot();
+    expect(container.firstChild).toMatchSnapshot();
   });
 
   it('displays draft page at draft route', () => {

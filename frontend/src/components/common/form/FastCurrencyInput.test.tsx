@@ -5,7 +5,6 @@ import { Formik, Form } from 'formik';
 import { FastCurrencyInput } from './FastCurrencyInput';
 import { render } from '@testing-library/react';
 import { noop } from 'lodash';
-import pretty from 'pretty';
 
 Enzyme.configure({ adapter: new Adapter() });
 
@@ -20,7 +19,7 @@ describe('FastCurrencyInput', () => {
         )}
       </Formik>,
     );
-    expect(pretty(container.innerHTML)).toMatchSnapshot();
+    expect(container.firstChild).toMatchSnapshot();
   });
 
   it('fast currency input should not show tooltip', () => {

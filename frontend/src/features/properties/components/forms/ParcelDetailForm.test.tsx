@@ -32,7 +32,7 @@ import ParcelDetailContainer, {
 } from 'features/properties/containers/ParcelDetailContainer';
 import { noop } from 'lodash';
 import { ToastContainer } from 'react-toastify';
-import pretty from 'pretty';
+
 import { Roles } from 'constants/roles';
 import { useLayerQuery } from 'components/maps/leaflet/LayerPopup';
 
@@ -315,7 +315,7 @@ describe('ParcelDetail Functionality', () => {
             </Router>
           </Provider>,
         );
-        expect(pretty(container.innerHTML)).toMatchSnapshot();
+        expect(container.firstChild).toMatchSnapshot();
       });
     });
 
@@ -435,7 +435,7 @@ describe('ParcelDetail Functionality', () => {
   it('ParcelDetailForm renders view-only correctly', () => {
     const { container } = render(parcelDetailForm({ data: mockDetails[0] }));
 
-    expect(pretty(container.innerHTML)).toMatchSnapshot();
+    expect(container.firstChild).toMatchSnapshot();
   });
 
   it('loads click lat lng', () => {

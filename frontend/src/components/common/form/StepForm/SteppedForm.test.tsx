@@ -5,7 +5,6 @@ import { Container, Button } from 'react-bootstrap';
 import { SteppedForm, useFormStepper } from '.';
 import { Input } from '..';
 import { render } from '@testing-library/react';
-import pretty from 'pretty';
 
 Enzyme.configure({ adapter: new Adapter() });
 
@@ -60,6 +59,6 @@ const Component = () => {
 describe('SteppedForm', () => {
   it('component renders correctly', () => {
     const { container } = render(<Component />);
-    expect(pretty(container.innerHTML)).toMatchSnapshot();
+    expect(container.firstChild).toMatchSnapshot();
   });
 });
