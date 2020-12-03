@@ -174,18 +174,18 @@ exports[`Review Approve Step renders correctly 1`] = `
             <label
               class="form-label col-form-label col-md-4"
             >
-              Net Book Value
+              Assessed Value
             </label>
             <div
-              class="required form-group"
+              class="required form-group col-md-6"
             >
               <div
                 class="input-tooltip-wrapper"
               >
                 <input
-                  class="form-control"
+                  class="form-control input-number"
                   disabled=""
-                  name="netBook"
+                  name="assessed"
                   placeholder=""
                   required=""
                   value=""
@@ -199,18 +199,18 @@ exports[`Review Approve Step renders correctly 1`] = `
             <label
               class="form-label col-form-label col-md-4"
             >
-              Estimated Market Value
+              Net Book Value
             </label>
             <div
-              class="required form-group"
+              class="required form-group col-md-6"
             >
               <div
                 class="input-tooltip-wrapper"
               >
                 <input
-                  class="form-control"
+                  class="form-control input-number"
                   disabled=""
-                  name="market"
+                  name="netBook"
                   placeholder=""
                   required=""
                   value=""
@@ -228,18 +228,18 @@ exports[`Review Approve Step renders correctly 1`] = `
             <label
               class="form-label col-form-label col-md-4"
             >
-              Assessed Value
+              Estimated Market Value
             </label>
             <div
-              class="required form-group"
+              class="required form-group col-md-6"
             >
               <div
                 class="input-tooltip-wrapper"
               >
                 <input
-                  class="form-control"
+                  class="form-control input-number"
                   disabled=""
-                  name="assessed"
+                  name="market"
                   placeholder=""
                   required=""
                   value=""
@@ -256,13 +256,13 @@ exports[`Review Approve Step renders correctly 1`] = `
               Appraised Value
             </label>
             <div
-              class="form-group"
+              class="form-group col-md-6"
             >
               <div
                 class="input-tooltip-wrapper"
               >
                 <input
-                  class="form-control"
+                  class="form-control input-number"
                   disabled=""
                   name="appraised"
                   placeholder=""
@@ -284,13 +284,13 @@ exports[`Review Approve Step renders correctly 1`] = `
               Estimated Sales Costs
             </label>
             <div
-              class="form-group"
+              class="form-group col-md-6"
             >
               <div
                 class="input-tooltip-wrapper"
               >
                 <input
-                  class="form-control"
+                  class="form-control input-number"
                   disabled=""
                   name="salesCost"
                   placeholder=""
@@ -308,13 +308,13 @@ exports[`Review Approve Step renders correctly 1`] = `
               Estimated Program Recovery Fees
             </label>
             <div
-              class="form-group"
+              class="form-group col-md-6"
             >
               <div
                 class="input-tooltip-wrapper"
               >
                 <input
-                  class="form-control"
+                  class="form-control input-number"
                   disabled=""
                   name="programCost"
                   placeholder=""
@@ -728,7 +728,7 @@ exports[`Review Approve Step renders correctly 1`] = `
             class="ProjectNotes form-row"
           >
             <div
-              class="col-md-12 reviewRequired form-group"
+              class="col-md-12 reviewRequired form-group col"
             >
               <label
                 class="form-label"
@@ -808,7 +808,7 @@ exports[`Review Approve Step renders correctly 1`] = `
       class="ProjectNotes form-row"
     >
       <div
-        class="col-md-12 reviewRequired form-group"
+        class="col-md-12 reviewRequired form-group col"
       >
         <label
           class="form-label"
@@ -830,7 +830,7 @@ exports[`Review Approve Step renders correctly 1`] = `
       class="ProjectNotes form-row"
     >
       <div
-        class="col-md-12 reviewRequired form-group"
+        class="col-md-12 reviewRequired form-group col"
       >
         <label
           class="form-label"
@@ -866,7 +866,7 @@ exports[`Review Approve Step renders correctly 1`] = `
       class="ProjectNotes form-row"
     >
       <div
-        class="col-md-12 reviewRequired form-group"
+        class="col-md-12 reviewRequired form-group col"
       >
         <label
           class="form-label"

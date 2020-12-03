@@ -8,9 +8,11 @@ import {
   CloseOutSignaturesForm,
   CloseOutAdjustmentForm,
 } from '..';
-import { ProjectNotes, NoteTypes, projectComments } from 'features/projects/common';
-import { Container } from 'react-bootstrap';
+import { ProjectNotes, NoteTypes, projectComments, IProject } from 'features/projects/common';
+import { Col, Container, Form } from 'react-bootstrap';
 import './CloseOutFormTab.scss';
+import { FastCurrencyInput } from 'components/common/form';
+import { useFormikContext } from 'formik';
 
 interface ICloseOutFormTabProps {
   isReadOnly?: boolean;
@@ -23,6 +25,7 @@ interface ICloseOutFormTabProps {
 const CloseOutFormTab: React.FunctionComponent<ICloseOutFormTabProps> = ({
   isReadOnly,
 }: ICloseOutFormTabProps) => {
+  const formikProps = useFormikContext<IProject>();
   return (
     <Container fluid>
       <CloseOutSummaryForm isReadOnly={isReadOnly} />
@@ -30,17 +33,40 @@ const CloseOutFormTab: React.FunctionComponent<ICloseOutFormTabProps> = ({
       <CloseOutSaleInformationForm isReadOnly={isReadOnly} />
       <CloseOutFinancialSummaryForm isReadOnly={isReadOnly} />
       <CloseOutFinancialsForm isReadOnly={isReadOnly} />
-      <ProjectNotes
-        field={`notes[${NoteTypes.SalesHistory}].note`}
-        label="Sales History Notes"
-        outerClassName="col-md-12"
-      />
-      <ProjectNotes
-        field={`notes[${NoteTypes.Comments}].note`}
-        label="Project Comments"
-        outerClassName="col-md-12"
-        tooltip={projectComments}
-      />
+      <Form.Row>
+        <Col>
+          <ProjectNotes
+            field={`notes[${NoteTypes.SalesHistory}].note`}
+            label="Sales History Notes"
+            className="col-md-10"
+            outerClassName="col"
+            disabled={isReadOnly}
+          />
+        </Col>
+        <Col md={1}></Col>
+        <Col>
+          <ProjectNotes
+            field={`notes[${NoteTypes.Comments}].note`}
+            label="Project Comments"
+            className="col-md-10"
+            outerClassName="col"
+            tooltip={projectComments}
+            disabled={isReadOnly}
+          />
+        </Col>
+      </Form.Row>
+      <h3>OCG</h3>
+      <Form.Row className="col-md-12">
+        <Form.Label column md={2}>
+          OCG Gain / Loss
+        </Form.Label>
+        <FastCurrencyInput
+          formikProps={formikProps}
+          disabled={isReadOnly}
+          outerClassName="col-md-4"
+          field="ocgFinancialStatement"
+        />
+      </Form.Row>
       <CloseOutSignaturesForm isReadOnly={isReadOnly} />
       <CloseOutAdjustmentForm isReadOnly={isReadOnly} />
     </Container>

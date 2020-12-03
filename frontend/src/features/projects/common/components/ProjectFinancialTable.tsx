@@ -26,20 +26,6 @@ export const ProjectFinancialTable = ({ disabled, title }: IProjectFinacialTable
         <Col md={4}>
           <Form.Row>
             <Form.Label column md={4}>
-              Net Book Value
-            </Form.Label>
-            <FastCurrencyInput field="netBook" required formikProps={context} disabled={disabled} />
-          </Form.Row>
-          <Form.Row>
-            <Form.Label column md={4}>
-              Estimated Market Value
-            </Form.Label>
-            <FastCurrencyInput field="market" required formikProps={context} disabled={disabled} />
-          </Form.Row>
-        </Col>
-        <Col md={4}>
-          <Form.Row>
-            <Form.Label column md={4}>
               Assessed Value
             </Form.Label>
             <FastCurrencyInput
@@ -47,13 +33,40 @@ export const ProjectFinancialTable = ({ disabled, title }: IProjectFinacialTable
               required
               formikProps={context}
               disabled={disabled}
+              md={6}
+            />
+          </Form.Row>
+          <Form.Row>
+            <Form.Label column md={4}>
+              Net Book Value
+            </Form.Label>
+            <FastCurrencyInput
+              field="netBook"
+              required
+              formikProps={context}
+              disabled={disabled}
+              md={6}
+            />
+          </Form.Row>
+        </Col>
+        <Col md={4}>
+          <Form.Row>
+            <Form.Label column md={4}>
+              Estimated Market Value
+            </Form.Label>
+            <FastCurrencyInput
+              field="market"
+              required
+              formikProps={context}
+              disabled={disabled}
+              md={6}
             />
           </Form.Row>
           <Form.Row>
             <Form.Label column md={4}>
               Appraised Value
             </Form.Label>
-            <FastCurrencyInput field="appraised" formikProps={context} disabled={disabled} />
+            <FastCurrencyInput field="appraised" formikProps={context} disabled={disabled} md={6} />
           </Form.Row>
         </Col>
         <Col md={4}>
@@ -61,13 +74,18 @@ export const ProjectFinancialTable = ({ disabled, title }: IProjectFinacialTable
             <Form.Label column md={4}>
               Estimated Sales Costs
             </Form.Label>
-            <FastCurrencyInput field="salesCost" formikProps={context} disabled={disabled} />
+            <FastCurrencyInput field="salesCost" formikProps={context} disabled={disabled} md={6} />
           </Form.Row>
           <Form.Row>
             <Form.Label column md={4}>
               Estimated Program Recovery Fees
             </Form.Label>
-            <FastCurrencyInput field="programCost" formikProps={context} disabled={disabled} />
+            <FastCurrencyInput
+              field="programCost"
+              formikProps={context}
+              disabled={disabled}
+              md={6}
+            />
           </Form.Row>
         </Col>
       </Form.Row>

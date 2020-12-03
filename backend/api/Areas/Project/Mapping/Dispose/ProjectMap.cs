@@ -96,8 +96,7 @@ namespace Pims.Api.Areas.Project.Mapping.Dispose
                     dest.ProgramCost = metadata.ProgramCost;
                     dest.GainLoss = metadata.GainLoss;
                     dest.SppCapitalization = metadata.SppCapitalization;
-                    dest.GainBeforeSpp = metadata.GainBeforeSpp;
-                    dest.GainAfterSpp = metadata.GainAfterSpp;
+                    dest.GainBeforeSpl = metadata.GainBeforeSpl;
                     dest.OcgFinancialStatement = metadata.OcgFinancialStatement;
                     dest.OfferAmount = metadata.OfferAmount;
                     dest.SaleWithLeaseInPlace = metadata.SaleWithLeaseInPlace;
@@ -107,7 +106,6 @@ namespace Pims.Api.Areas.Project.Mapping.Dispose
                     dest.Realtor = metadata.Realtor;
                     dest.RealtorRate = metadata.RealtorRate;
                     dest.RealtorCommission = metadata.RealtorCommission;
-                    dest.Remediation = metadata.Remediation;
                     dest.PlannedFutureUse = metadata.PlannedFutureUse;
                     dest.PreliminaryFormSignedOn = metadata.PreliminaryFormSignedOn;
                     dest.PreliminaryFormSignedBy = metadata.PreliminaryFormSignedBy;
@@ -167,8 +165,7 @@ namespace Pims.Api.Areas.Project.Mapping.Dispose
                         ProgramCost = src.ProgramCost,
                         GainLoss = src.GainLoss,
                         SppCapitalization = src.SppCapitalization,
-                        GainBeforeSpp = src.GainBeforeSpp,
-                        GainAfterSpp = src.GainAfterSpp,
+                        GainBeforeSpl = src.GainBeforeSpl,
                         OcgFinancialStatement = src.OcgFinancialStatement,
                         OfferAmount = src.OfferAmount,
                         SaleWithLeaseInPlace = src.SaleWithLeaseInPlace,
@@ -178,7 +175,6 @@ namespace Pims.Api.Areas.Project.Mapping.Dispose
                         Realtor = src.Realtor,
                         RealtorRate = src.RealtorRate,
                         RealtorCommission = src.RealtorCommission,
-                        Remediation = src.Remediation,
                         PlannedFutureUse = src.PlannedFutureUse,
                         PreliminaryFormSignedOn = src.PreliminaryFormSignedOn,
                         PreliminaryFormSignedBy = src.PreliminaryFormSignedBy,

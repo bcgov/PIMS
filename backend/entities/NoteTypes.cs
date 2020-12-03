@@ -80,6 +80,10 @@ namespace Pims.Dal.Entities
         /// <summary>
         /// A purchaser has made an offer.
         /// </summary>
-        Offer = 18
+        Offer = 18,
+        /// <summary>
+        /// A disposed project remediation note.
+        /// </summary>
+        Remediation = 19
     }
 }
