@@ -4,9 +4,10 @@ import { FormikProps, getIn, ErrorMessage } from 'formik';
 import createNumberMask from 'text-mask-addons/dist/createNumberMask';
 import { formikFieldMemo, isPositiveNumberOrZero } from 'utils';
 import classNames from 'classnames';
-import Form from 'react-bootstrap/Form';
+import { ColProps, Form } from 'react-bootstrap';
 import TooltipIcon from '../TooltipIcon';
 import './FastCurrencyInput.scss';
+import { Col } from 'react-bootstrap';
 
 export const defaultMaskOptions = {
   prefix: '$',
@@ -41,11 +42,16 @@ type OptionalAttributes = {
   formikProps: FormikProps<any>;
   /** Whether the field is required. Makes the field border blue. */
   required?: boolean;
+  /** Whether negative numbers are allowed. */
+  allowNegative?: boolean;
 };
+
+export type CurrencyInputProps = RequiredAttributes &
+  OptionalAttributes & { placeholder?: string; tooltip?: string } & ColProps;
+
 /**
  * Formik-wrapped currency input providing a numeric mask over number fields
  * without changing the formik prop value to string.
- * @param param0
  */
 const CurrencyInput = ({
   field,
@@ -65,14 +71,16 @@ const CurrencyInput = ({
     registerField,
     unregisterField,
   },
-}: RequiredAttributes & OptionalAttributes & { placeholder?: string; tooltip?: string }) => {
+  ...rest
+}: CurrencyInputProps) => {
   const currencyMask = createNumberMask({
     ...defaultMaskOptions,
+    allowNegative: rest.allowNegative,
   });
   value = value ? value : getIn(values, field);
   const error = getIn(errors, field);
   const touch = getIn(touched, field);
-  if (!isPositiveNumberOrZero(value)) {
+  if (!rest.allowNegative && !isPositiveNumberOrZero(value)) {
     value = '';
   }
   useEffect(() => {
@@ -83,8 +91,13 @@ const CurrencyInput = ({
   }, [field, registerField, unregisterField]);
   const isInvalid = error && touch ? 'is-invalid ' : '';
   const isValid = !error && touch && value && !disabled ? 'is-valid ' : '';
+
   return (
-    <Form.Group className={classNames(!!required ? 'required' : '', outerClassName)}>
+    <Form.Group
+      className={classNames(!!required ? 'required' : '', outerClassName)}
+      as={Col}
+      md={rest.md}
+    >
       <div className="input-tooltip-wrapper">
         <MaskedInput
           value={value}
@@ -95,7 +108,7 @@ const CurrencyInput = ({
             setFieldValue(field, cleanValue ? parseFloat(cleanValue) : '');
           }}
           onBlur={handleBlur}
-          className={classNames('form-control', className, isInvalid, isValid)}
+          className={classNames('form-control input-number', className, isInvalid, isValid)}
           disabled={disabled}
           required={required}
           placeholder={placeholder || ''}
@@ -107,6 +120,10 @@ const CurrencyInput = ({
     </Form.Group>
   );
 };
+
+/**
+ * FastCurrencyInput component provides a Formik input that only accepts financial values.
+ */
 export const FastCurrencyInput = memo(
   CurrencyInput,
   (prevProps: any, currentProps: any) =>

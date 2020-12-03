@@ -17,7 +17,7 @@ exports[`ExemptionEnhancedReferralCompleteForm renders successfully 1`] = `
       className="ProjectNotes form-row"
     >
       <div
-        className="col-md-12 form-group"
+        className="col-md-12 form-group col"
       >
         <label
           className="form-label"

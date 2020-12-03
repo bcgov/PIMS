@@ -58,18 +58,16 @@ const EnhancedReferralCompleteForm = ({
           disabled={isReadOnly}
           field="onHoldNotificationSentOn"
         />
-        <div className="col-md-6">
-          <Button
-            disabled={
-              isReadOnly ||
-              !formikProps.values.onHoldNotificationSentOn ||
-              formikProps.values.statusCode === ReviewWorkflowStatus.OnHold
-            }
-            onClick={onClickOnHold}
-          >
-            Place Project On Hold
-          </Button>
-        </div>
+        {formikProps.values.statusCode === ReviewWorkflowStatus.InErp && (
+          <div className="col-md-6">
+            <Button
+              disabled={isReadOnly || !formikProps.values.onHoldNotificationSentOn}
+              onClick={onClickOnHold}
+            >
+              Place Project On Hold
+            </Button>
+          </div>
+        )}
       </Form.Row>
       <Form.Row>
         <Form.Label column md={4}>
@@ -85,14 +83,17 @@ const EnhancedReferralCompleteForm = ({
           disabled={isReadOnly}
           field="transferredWithinGreOn"
         />
-        <div className="col-md-6">
-          <Button
-            disabled={isReadOnly || !formikProps.values.transferredWithinGreOn}
-            onClick={onClickGreTransferred}
-          >
-            Update Property Information
-          </Button>
-        </div>
+        {(formikProps.values.statusCode === ReviewWorkflowStatus.InErp ||
+          formikProps.values.statusCode === ReviewWorkflowStatus.OnHold) && (
+          <div className="col-md-6">
+            <Button
+              disabled={isReadOnly || !formikProps.values.transferredWithinGreOn}
+              onClick={onClickGreTransferred}
+            >
+              Update Property Information
+            </Button>
+          </div>
+        )}
       </Form.Row>
       <OrText>OR</OrText>
       <Form.Row>

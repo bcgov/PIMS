@@ -54,7 +54,6 @@ export const SurplusPropertyInformationYupSchema = Yup.object().shape({
 export const CloseOutFormValidationSchema = Yup.object().shape({
   manager: Yup.string().max(150, 'Manager must be less then 150 characters'),
   plannedFutureUse: Yup.string().max(150, 'Planned Future Use must be less then 150 characters'),
-  remediation: Yup.string().max(150, 'Remediation must be less then 150 characters'),
   preliminaryFormSignedBy: Yup.string().max(
     150,
     'Preliminary Form Signed By must be less then 150 characters',
@@ -73,11 +72,11 @@ export const CloseOutFormValidationSchema = Yup.object().shape({
     .min(0, 'Sales Proceeds must be a positive number')
     .max(100000000000, 'Maximum value is $100,000,000,000'),
 
-  gainBeforeSpp: Yup.number()
-    .min(0, 'Gain Before Spp Cost must be a positive number')
+  gainBeforeSpl: Yup.number()
+    .min(-10000000000, 'Minimum value is `$10,000,000,000')
     .max(100000000000, 'Maximum value is $100,000,000,000'),
-  gainAfterSpp: Yup.number()
-    .min(0, 'Gain After Spp Cost must be a positive number')
+  netProceeds: Yup.number()
+    .min(-10000000000, 'Minimum value is `$10,000,000,000')
     .max(100000000000, 'Maximum value is $100,000,000,000'),
   programCost: Yup.number()
     .min(0, 'SPP Program Cost must be a positive number')

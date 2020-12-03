@@ -167,14 +167,13 @@ export interface IProject {
   manager?: string;
   actualFiscalYear?: string;
   plannedFutureUse?: string;
-  remediation?: string;
   preliminaryFormSignedBy?: string;
   finalFormSignedBy?: string;
   offerAmount?: number | '';
   interestComponent?: number | '';
   ocgFinancialStatement?: number | '';
   salesCost?: number | '';
-  gainBeforeSpp?: number | '';
+  gainBeforeSpl?: number | '';
   gainAfterSpp?: number | '';
   programCost?: number | '';
   priorYearAdjustmentAmount?: number | '';
@@ -198,6 +197,9 @@ export enum NoteTypes {
   SalesHistory = 14,
   CloseOut = 15,
   Comments = 16,
+  Appraisal = 17,
+  Offer = 18,
+  Remediation = 19,
 }
 
 export enum DisposalWorkflows {
@@ -326,13 +328,12 @@ export const initialValues: IProject = {
   manager: '',
   actualFiscalYear: '',
   plannedFutureUse: '',
-  remediation: '',
   preliminaryFormSignedBy: '',
   finalFormSignedBy: '',
   interestComponent: '',
   ocgFinancialStatement: '',
   salesCost: '',
-  gainBeforeSpp: '',
+  gainBeforeSpl: '',
   gainAfterSpp: '',
   programCost: '',
   priorYearAdjustmentAmount: '',

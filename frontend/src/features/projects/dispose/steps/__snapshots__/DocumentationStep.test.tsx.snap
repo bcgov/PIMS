@@ -82,7 +82,7 @@ exports[`Documentation Step renders correctly 1`] = `
       className="ProjectNotes form-row"
     >
       <div
-        className="col-md-10 form-group"
+        className="col-md-10 form-group col"
       >
         <label
           className="form-label"

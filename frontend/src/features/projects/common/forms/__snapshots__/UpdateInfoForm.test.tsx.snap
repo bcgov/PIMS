@@ -104,18 +104,18 @@ exports[`Update Info Form Matches Snapshot 1`] = `
           <label
             className="form-label col-form-label col-md-4"
           >
-            Net Book Value
+            Assessed Value
           </label>
           <div
-            className="required form-group"
+            className="required form-group col-md-6"
           >
             <div
               className="input-tooltip-wrapper"
             >
               <input
-                className="form-control"
+                className="form-control input-number"
                 disabled={false}
-                name="netBook"
+                name="assessed"
                 onBlur={[Function]}
                 onChange={[Function]}
                 placeholder=""
@@ -131,18 +131,18 @@ exports[`Update Info Form Matches Snapshot 1`] = `
           <label
             className="form-label col-form-label col-md-4"
           >
-            Estimated Market Value
+            Net Book Value
           </label>
           <div
-            className="required form-group"
+            className="required form-group col-md-6"
           >
             <div
               className="input-tooltip-wrapper"
             >
               <input
-                className="form-control"
+                className="form-control input-number"
                 disabled={false}
-                name="market"
+                name="netBook"
                 onBlur={[Function]}
                 onChange={[Function]}
                 placeholder=""
@@ -162,18 +162,18 @@ exports[`Update Info Form Matches Snapshot 1`] = `
           <label
             className="form-label col-form-label col-md-4"
           >
-            Assessed Value
+            Estimated Market Value
           </label>
           <div
-            className="required form-group"
+            className="required form-group col-md-6"
           >
             <div
               className="input-tooltip-wrapper"
             >
               <input
-                className="form-control"
+                className="form-control input-number"
                 disabled={false}
-                name="assessed"
+                name="market"
                 onBlur={[Function]}
                 onChange={[Function]}
                 placeholder=""
@@ -192,13 +192,13 @@ exports[`Update Info Form Matches Snapshot 1`] = `
             Appraised Value
           </label>
           <div
-            className="form-group"
+            className="form-group col-md-6"
           >
             <div
               className="input-tooltip-wrapper"
             >
               <input
-                className="form-control"
+                className="form-control input-number"
                 disabled={false}
                 name="appraised"
                 onBlur={[Function]}
@@ -222,13 +222,13 @@ exports[`Update Info Form Matches Snapshot 1`] = `
             Estimated Sales Costs
           </label>
           <div
-            className="form-group"
+            className="form-group col-md-6"
           >
             <div
               className="input-tooltip-wrapper"
             >
               <input
-                className="form-control"
+                className="form-control input-number"
                 disabled={false}
                 name="salesCost"
                 onBlur={[Function]}
@@ -248,13 +248,13 @@ exports[`Update Info Form Matches Snapshot 1`] = `
             Estimated Program Recovery Fees
           </label>
           <div
-            className="form-group"
+            className="form-group col-md-6"
           >
             <div
               className="input-tooltip-wrapper"
             >
               <input
-                className="form-control"
+                className="form-control input-number"
                 disabled={false}
                 name="programCost"
                 onBlur={[Function]}
@@ -797,7 +797,7 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                   title=""
                 >
                   <div
-                    className="form-group"
+                    className="form-group col"
                   >
                     <input
                       className="form-control"
@@ -828,7 +828,7 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                   title=""
                 >
                   <div
-                    className="form-group"
+                    className="form-group col"
                   >
                     <input
                       className="form-control"
@@ -859,13 +859,13 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                   title=""
                 >
                   <div
-                    className="form-group"
+                    className="form-group col"
                   >
                     <div
                       className="input-tooltip-wrapper"
                     >
                       <input
-                        className="form-control"
+                        className="form-control input-number"
                         name="properties.0.netBook"
                         onBlur={[Function]}
                         onChange={[Function]}
@@ -894,13 +894,13 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                   title=""
                 >
                   <div
-                    className="form-group"
+                    className="form-group col"
                   >
                     <div
                       className="input-tooltip-wrapper"
                     >
                       <input
-                        className="form-control"
+                        className="form-control input-number"
                         name="properties.0.market"
                         onBlur={[Function]}
                         onChange={[Function]}
@@ -929,13 +929,13 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                   title=""
                 >
                   <div
-                    className="form-group"
+                    className="form-group col"
                   >
                     <div
                       className="input-tooltip-wrapper"
                     >
                       <input
-                        className="form-control"
+                        className="form-control input-number"
                         name="properties.0.assessed"
                         onBlur={[Function]}
                         onChange={[Function]}
