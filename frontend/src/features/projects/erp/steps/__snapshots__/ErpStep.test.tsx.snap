@@ -151,7 +151,7 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
                   Project Number
                 </label>
                 <div
-                  class="col-md-8 form-group"
+                  class="col-md-8 form-group col"
                 >
                   <input
                     class="form-control"
@@ -171,7 +171,7 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
                   Agency
                 </label>
                 <div
-                  class="col-md-8 form-group"
+                  class="col-md-8 form-group col"
                 >
                   <input
                     class="form-control"
@@ -191,7 +191,7 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
                   Sub Agency
                 </label>
                 <div
-                  class="col-md-8 form-group"
+                  class="col-md-8 form-group col"
                 >
                   <input
                     class="form-control"
@@ -215,7 +215,7 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
                   Project Manager(s)
                 </label>
                 <div
-                  class="col-md-8 form-group"
+                  class="col-md-8 form-group col"
                 >
                   <input
                     class="form-control"
@@ -245,7 +245,7 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
                   Name of Purchaser
                 </label>
                 <div
-                  class="col-md-8 form-group"
+                  class="col-md-8 form-group col"
                 >
                   <input
                     class="form-control"
@@ -265,7 +265,7 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
                   Real Estate Agent
                 </label>
                 <div
-                  class="col-md-8 form-group"
+                  class="col-md-8 form-group col"
                 >
                   <input
                     class="form-control"
@@ -288,7 +288,7 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
                   Real Estate Agent Rate
                 </label>
                 <div
-                  class="col-md-8 form-group"
+                  class="col-md-8 form-group col"
                 >
                   <input
                     class="form-control"
@@ -307,13 +307,13 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
                   Real Estate Commission Paid
                 </label>
                 <div
-                  class="col-md-8 form-group"
+                  class="col-md-8 form-group col"
                 >
                   <div
                     class="input-tooltip-wrapper"
                   >
                     <input
-                      class="form-control"
+                      class="form-control input-number"
                       name="realtorCommission"
                       placeholder=""
                       value=""
@@ -424,7 +424,7 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
                   Best Information of Future Planned Use
                 </label>
                 <div
-                  class="col-md-8 form-group"
+                  class="col-md-8 form-group col"
                 >
                   <input
                     class="form-control"
@@ -550,24 +550,24 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
             class="form-row"
           >
             <div
-              class="col-md-6"
+              class="col"
             >
               <div
                 class="form-row"
               >
                 <label
-                  class="form-label col-form-label col-md-4"
+                  class="form-label col-form-label col-md-6"
                 >
-                  Sales Proceeds
+                  Sale Price
                 </label>
                 <div
-                  class="col-md-8 form-group"
+                  class="form-group col-md-6"
                 >
                   <div
                     class="input-tooltip-wrapper"
                   >
                     <input
-                      class="form-control"
+                      class="form-control input-number"
                       name="market"
                       placeholder=""
                       value=""
@@ -579,194 +579,18 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
                 class="form-row"
               >
                 <label
-                  class="form-label col-form-label col-md-4"
-                >
-                  Cost of Sales
-                </label>
-                <div
-                  class="col-md-8 form-group"
-                >
-                  <div
-                    class="input-tooltip-wrapper"
-                  >
-                    <input
-                      class="form-control"
-                      name="salesCost"
-                      placeholder=""
-                      value=""
-                    />
-                  </div>
-                </div>
-              </div>
-              <div
-                class="form-row"
-              >
-                <label
-                  class="form-label col-form-label col-md-4"
-                >
-                  Net Book Value
-                </label>
-                <div
-                  class="col-md-8 form-group"
-                >
-                  <div
-                    class="input-tooltip-wrapper"
-                  >
-                    <input
-                      class="form-control"
-                      name="netBook"
-                      placeholder=""
-                      value=""
-                    />
-                  </div>
-                </div>
-              </div>
-              <div
-                class="form-row"
-              >
-                <label
-                  class="form-label col-form-label col-md-4"
-                >
-                  Gain Before SPP Cost
-                </label>
-                <div
-                  class="col-md-8 form-group"
-                >
-                  <div
-                    class="input-tooltip-wrapper"
-                  >
-                    <input
-                      class="form-control"
-                      name="gainBeforeSpp"
-                      placeholder=""
-                      value=""
-                    />
-                  </div>
-                </div>
-              </div>
-              <div
-                class="form-row"
-              >
-                <label
-                  class="form-label col-form-label col-md-4"
-                >
-                  Remediation (Not funded throuch COS. TRAN only)
-                </label>
-                <div
-                  class="col-md-8 form-group"
-                >
-                  <input
-                    class="form-control"
-                    id="input-remediation"
-                    name="remediation"
-                    value=""
-                  />
-                </div>
-              </div>
-            </div>
-            <div
-              class="col-md-6"
-            >
-              <div
-                class="form-row"
-              >
-                <label
-                  class="form-label col-form-label col-md-4"
-                >
-                  SPP Cost
-                </label>
-                <div
-                  class="col-md-8 form-group"
-                >
-                  <div
-                    class="input-tooltip-wrapper"
-                  >
-                    <input
-                      class="form-control"
-                      name="programCost"
-                      placeholder=""
-                      value=""
-                    />
-                  </div>
-                </div>
-              </div>
-              <div
-                class="form-row"
-              >
-                <label
-                  class="form-label col-form-label col-md-4"
-                >
-                  SPP Cost Calculation Notes
-                </label>
-                <div
-                  class="col-md-8 form-group"
-                >
-                  <input
-                    class="form-control"
-                    id="input-notes[12].note"
-                    name="notes[12].note"
-                    value="sppcost"
-                  />
-                </div>
-              </div>
-              <div
-                class="form-row"
-              >
-                <label
-                  class="form-label col-form-label col-md-4"
-                >
-                  Gain after SPP Cost
-                </label>
-                <div
-                  class="col-md-8 form-group"
-                >
-                  <div
-                    class="input-tooltip-wrapper"
-                  >
-                    <input
-                      class="form-control"
-                      name="gainAfterSpp"
-                      placeholder=""
-                      value=""
-                    />
-                  </div>
-                </div>
-              </div>
-              <div
-                class="form-row"
-              >
-                <label
-                  class="form-label col-form-label col-md-4"
-                >
-                  Gain after SPP Cost Calculation Notes
-                </label>
-                <div
-                  class="col-md-8 form-group"
-                >
-                  <input
-                    class="form-control"
-                    id="input-notes[13].note"
-                    name="notes[13].note"
-                    value="sppgain"
-                  />
-                </div>
-              </div>
-              <div
-                class="form-row"
-              >
-                <label
-                  class="form-label col-form-label col-md-4"
+                  class="form-label col-form-label col-md-6"
                 >
                   Interest Component
                 </label>
                 <div
-                  class="col-md-8 form-group"
+                  class="form-group col-md-6"
                 >
                   <div
                     class="input-tooltip-wrapper"
                   >
                     <input
-                      class="form-control"
+                      class="form-control input-number"
                       name="interestComponent"
                       placeholder=""
                       value=""
@@ -778,18 +602,112 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
                 class="form-row"
               >
                 <label
-                  class="form-label col-form-label col-md-4"
+                  class="form-label col-form-label col-md-6"
                 >
-                  Net Proceeds
+                  Cost of Sale
                 </label>
                 <div
-                  class="col-md-8 form-group"
+                  class="form-group col-md-6"
                 >
                   <div
                     class="input-tooltip-wrapper"
                   >
                     <input
-                      class="form-control"
+                      class="form-control input-number"
+                      name="salesCost"
+                      placeholder=""
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                class="form-row"
+              >
+                <label
+                  class="form-label col-form-label col-md-6"
+                >
+                  Net Book Value
+                </label>
+                <div
+                  class="form-group col-md-6"
+                >
+                  <div
+                    class="input-tooltip-wrapper"
+                  >
+                    <input
+                      class="form-control input-number"
+                      name="netBook"
+                      placeholder=""
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                class="form-row"
+                style="border-top: 1px solid grey;"
+              >
+                <label
+                  class="form-label col-form-label col-md-6"
+                >
+                  Gain before SPL Cost
+                </label>
+                <div
+                  class="form-group col-md-6"
+                >
+                  <div
+                    class="input-tooltip-wrapper"
+                  >
+                    <input
+                      class="form-control input-number"
+                      name="gainBeforeSpl"
+                      placeholder=""
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                class="form-row"
+              >
+                <label
+                  class="form-label col-form-label col-md-6"
+                >
+                  SPL Cost
+                </label>
+                <div
+                  class="form-group col-md-6"
+                >
+                  <div
+                    class="input-tooltip-wrapper"
+                  >
+                    <input
+                      class="form-control input-number"
+                      name="programCost"
+                      placeholder=""
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                class="form-row"
+                style="border-top: 1px solid grey;"
+              >
+                <label
+                  class="form-label col-form-label col-md-6"
+                >
+                  Gain after SPL Cost
+                </label>
+                <div
+                  class="form-group col-md-6"
+                >
+                  <div
+                    class="input-tooltip-wrapper"
+                  >
+                    <input
+                      class="form-control input-number"
                       name="netProceeds"
                       placeholder=""
                       value=""
@@ -798,50 +716,206 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
                 </div>
               </div>
             </div>
+            <div
+              class="col-md-1"
+            >
+               
+            </div>
+            <div
+              class="col"
+            >
+              <div
+                class="ProjectNotes form-row"
+              >
+                <div
+                  class="col form-group col"
+                >
+                  <label
+                    class="form-label"
+                    for="input-notes[19].note"
+                  >
+                    Remediation (Not funded throuch COS. TRAN only)
+                  </label>
+                  <textarea
+                    class="col-md-10 form-control"
+                    id="input-notes[19].note"
+                    name="notes[19].note"
+                  />
+                </div>
+              </div>
+              <div
+                class="ProjectNotes form-row"
+              >
+                <div
+                  class="col form-group col"
+                >
+                  <label
+                    class="form-label"
+                    for="input-notes[12].note"
+                  >
+                    SPL Cost Calculation Notes
+                  </label>
+                  <textarea
+                    class="col-md-10 form-control"
+                    id="input-notes[12].note"
+                    name="notes[12].note"
+                  >
+                    sppcost
+                  </textarea>
+                </div>
+              </div>
+              <div
+                class="ProjectNotes form-row"
+              >
+                <div
+                  class="col form-group col"
+                >
+                  <label
+                    class="form-label"
+                    for="input-notes[13].note"
+                  >
+                    Gain after SPP Cost Calculation Notes
+                  </label>
+                  <textarea
+                    class="col-md-10 form-control"
+                    id="input-notes[13].note"
+                    name="notes[13].note"
+                  >
+                    sppgain
+                  </textarea>
+                </div>
+              </div>
+            </div>
           </div>
           <h3>
             Financing Information
           </h3>
           <div
-            class="ProjectNotes form-row"
+            class="form-row"
           >
             <div
-              class="col-md-12 form-group"
+              class="col"
             >
-              <label
-                class="form-label"
-                for="input-notes[10].note"
+              <div
+                class="ProjectNotes form-row"
               >
-                Loan Terms
-              </label>
-              <textarea
-                class="col-md-5 form-control"
-                id="input-notes[10].note"
-                name="notes[10].note"
+                <div
+                  class="col form-group col"
+                >
+                  <label
+                    class="form-label"
+                    for="input-notes[10].note"
+                  >
+                    Loan Terms
+                  </label>
+                  <textarea
+                    class="col-md-10 form-control"
+                    id="input-notes[10].note"
+                    name="notes[10].note"
+                  >
+                    loanterms
+                  </textarea>
+                </div>
+              </div>
+            </div>
+            <div
+              class="col-md-1"
+            />
+            <div
+              class="col"
+            >
+              <div
+                class="ProjectNotes form-row"
               >
-                loanterms
-              </textarea>
+                <div
+                  class="col form-group col"
+                >
+                  <label
+                    class="form-label"
+                    for="input-notes[15].note"
+                  >
+                    Close Out
+                  </label>
+                  <textarea
+                    class="col-md-10 form-control"
+                    id="input-notes[15].note"
+                    name="notes[15].note"
+                  >
+                    closeout
+                  </textarea>
+                </div>
+              </div>
             </div>
           </div>
           <div
-            class="ProjectNotes form-row"
+            class="form-row"
           >
             <div
-              class="col-md-12 form-group"
+              class="col"
             >
-              <label
-                class="form-label"
-                for="input-notes[15].note"
+              <div
+                class="ProjectNotes form-row"
               >
-                Close Out
-              </label>
-              <textarea
-                class="col-md-5 form-control"
-                id="input-notes[15].note"
-                name="notes[15].note"
+                <div
+                  class="col form-group col"
+                >
+                  <label
+                    class="form-label"
+                    for="input-notes[14].note"
+                  >
+                    Sales History Notes
+                  </label>
+                  <textarea
+                    class="col-md-10 form-control"
+                    id="input-notes[14].note"
+                    name="notes[14].note"
+                  >
+                    saleshistory
+                  </textarea>
+                </div>
+              </div>
+            </div>
+            <div
+              class="col-md-1"
+            />
+            <div
+              class="col"
+            >
+              <div
+                class="ProjectNotes form-row"
               >
-                closeout
-              </textarea>
+                <div
+                  class="col form-group col"
+                >
+                  <label
+                    class="form-label"
+                    for="input-notes[16].note"
+                  >
+                    Project Comments
+                    <svg
+                      class="tooltip-icon"
+                      fill="currentColor"
+                      height="1em"
+                      stroke="currentColor"
+                      stroke-width="0"
+                      viewBox="0 0 512 512"
+                      width="1em"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"
+                      />
+                    </svg>
+                  </label>
+                  <textarea
+                    class="col-md-10 form-control"
+                    id="input-notes[16].note"
+                    name="notes[16].note"
+                  >
+                    comments
+                  </textarea>
+                </div>
+              </div>
             </div>
           </div>
           <h3>
@@ -856,74 +930,18 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
               OCG Gain / Loss
             </label>
             <div
-              class="col-md-4 form-group"
+              class="col-md-4 form-group col"
             >
               <div
                 class="input-tooltip-wrapper"
               >
                 <input
-                  class="form-control"
+                  class="form-control input-number"
                   name="ocgFinancialStatement"
                   placeholder=""
                   value=""
                 />
               </div>
-            </div>
-          </div>
-          <div
-            class="ProjectNotes form-row"
-          >
-            <div
-              class="col-md-12 form-group"
-            >
-              <label
-                class="form-label"
-                for="input-notes[14].note"
-              >
-                Sales History Notes
-              </label>
-              <textarea
-                class="col-md-5 form-control"
-                id="input-notes[14].note"
-                name="notes[14].note"
-              >
-                saleshistory
-              </textarea>
-            </div>
-          </div>
-          <div
-            class="ProjectNotes form-row"
-          >
-            <div
-              class="col-md-12 form-group"
-            >
-              <label
-                class="form-label"
-                for="input-notes[16].note"
-              >
-                Project Comments
-                <svg
-                  class="tooltip-icon"
-                  fill="currentColor"
-                  height="1em"
-                  stroke="currentColor"
-                  stroke-width="0"
-                  viewBox="0 0 512 512"
-                  width="1em"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"
-                  />
-                </svg>
-              </label>
-              <textarea
-                class="col-md-5 form-control"
-                id="input-notes[16].note"
-                name="notes[16].note"
-              >
-                comments
-              </textarea>
             </div>
           </div>
           <h3>
@@ -944,7 +962,7 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
                   Preliminary Form Signed By
                 </label>
                 <div
-                  class="col-md-8 form-group"
+                  class="col-md-8 form-group col"
                 >
                   <input
                     class="form-control"
@@ -963,7 +981,7 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
                   Final Form Signed by
                 </label>
                 <div
-                  class="col-md-8 form-group"
+                  class="col-md-8 form-group col"
                 >
                   <input
                     class="form-control"
@@ -1057,13 +1075,13 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
                   Adjustment to Prior Year Sale Amount
                 </label>
                 <div
-                  class="col-md-8 form-group"
+                  class="col-md-8 form-group col"
                 >
                   <div
                     class="input-tooltip-wrapper"
                   >
                     <input
-                      class="form-control"
+                      class="form-control input-number"
                       name="priorYearAdjustmentAmount"
                       placeholder=""
                       value=""
@@ -1114,7 +1132,7 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
             class="ProjectNotes form-row"
           >
             <div
-              class="col-md-12 form-group"
+              class="col-md-12 form-group col"
             >
               <label
                 class="form-label"

@@ -148,14 +148,9 @@ namespace Pims.Dal.Entities.Models
         public decimal? SppCapitalization { get; set; }
 
         /// <summary>
-        /// get/set - The gain before SPP.
+        /// get/set - The gain before SPL.
         /// </summary>
-        public decimal? GainBeforeSpp { get; set; }
-
-        /// <summary>
-        /// get/set - The gain after SPP.
-        /// </summary>
-        public decimal? GainAfterSpp { get; set; }
+        public decimal? GainBeforeSpl { get; set; }
 
         /// <summary>
         /// get/set - OCG final statement.
@@ -166,11 +161,6 @@ namespace Pims.Dal.Entities.Models
         /// get/set - Record the interest component.
         /// </summary>
         public decimal? InterestComponent { get; set; }
-
-        /// <summary>
-        /// get/set - Remediation.
-        /// </summary>
-        public string Remediation { get; set; }
 
         /// <summary>
         /// get/set - Best information of planned future use.

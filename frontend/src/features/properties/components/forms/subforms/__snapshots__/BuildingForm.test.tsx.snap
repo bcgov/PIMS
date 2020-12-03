@@ -408,7 +408,7 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
           Postal Code
         </label>
         <div
-          class="form-group"
+          class="form-group col"
         >
           <input
             class="input-small form-control"
@@ -430,7 +430,7 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
             Latitude
           </label>
           <div
-            class="required form-group"
+            class="required form-group col"
           >
             <svg
               class="tooltip-icon"
@@ -465,7 +465,7 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
             Longitude
           </label>
           <div
-            class="required form-group"
+            class="required form-group col"
           >
             <input
               class="input-medium form-control"
@@ -583,7 +583,7 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
               class="input-group-content"
             >
               <div
-                class="form-group"
+                class="form-group col"
               >
                 <input
                   class="form-control"
@@ -614,7 +614,7 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
             Number of Floors
           </label>
           <div
-            class="form-group"
+            class="form-group col"
           >
             <input
               class="input-small form-control"
@@ -676,7 +676,7 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
             Occupant Name
           </label>
           <div
-            class="form-group"
+            class="form-group col"
           >
             <input
               class="form-control"
@@ -699,7 +699,7 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
             Tenancy %
           </label>
           <div
-            class="form-group"
+            class="form-group col"
           >
             <input
               class="form-control"
@@ -940,13 +940,13 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
                     title=""
                   >
                     <div
-                      class="form-group"
+                      class="form-group col"
                     >
                       <div
                         class="input-tooltip-wrapper"
                       >
                         <input
-                          class="form-control"
+                          class="form-control input-number"
                           name="financials.0.netbook.value"
                           placeholder=""
                           value=""
@@ -969,13 +969,13 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
                     title=""
                   >
                     <div
-                      class="form-group"
+                      class="form-group col"
                     >
                       <div
                         class="input-tooltip-wrapper"
                       >
                         <input
-                          class="form-control"
+                          class="form-control input-number"
                           name="financials.0.market.value"
                           placeholder=""
                           value=""
@@ -1008,13 +1008,13 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
                     title=""
                   >
                     <div
-                      class="form-group"
+                      class="form-group col"
                     >
                       <div
                         class="input-tooltip-wrapper"
                       >
                         <input
-                          class="form-control"
+                          class="form-control input-number"
                           name="financials.1.assessed.value"
                           placeholder=""
                           value=""
@@ -1049,13 +1049,13 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
                     title=""
                   >
                     <div
-                      class="form-group"
+                      class="form-group col"
                     >
                       <div
                         class="input-tooltip-wrapper"
                       >
                         <input
-                          class="form-control"
+                          class="form-control input-number"
                           name="financials.1.netbook.value"
                           placeholder=""
                           value=""
@@ -1078,13 +1078,13 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
                     title=""
                   >
                     <div
-                      class="form-group"
+                      class="form-group col"
                     >
                       <div
                         class="input-tooltip-wrapper"
                       >
                         <input
-                          class="form-control"
+                          class="form-control input-number"
                           name="financials.1.market.value"
                           placeholder=""
                           value=""

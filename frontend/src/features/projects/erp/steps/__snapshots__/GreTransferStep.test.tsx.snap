@@ -900,7 +900,7 @@ exports[`GRE Transfer Step renders correctly 1`] = `
       className="ProjectNotes form-row"
     >
       <div
-        className="col-md-12 form-group"
+        className="col-md-12 form-group col"
       >
         <label
           className="form-label"
@@ -923,7 +923,7 @@ exports[`GRE Transfer Step renders correctly 1`] = `
       className="ProjectNotes form-row"
     >
       <div
-        className="col-md-12 form-group"
+        className="col-md-12 form-group col"
       >
         <label
           className="form-label"
@@ -969,7 +969,7 @@ exports[`GRE Transfer Step renders correctly 1`] = `
       className="ProjectNotes form-row"
     >
       <div
-        className="col-md-12 form-group"
+        className="col-md-12 form-group col"
       >
         <label
           className="form-label"
