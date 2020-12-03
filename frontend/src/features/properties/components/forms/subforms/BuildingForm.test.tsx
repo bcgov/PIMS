@@ -14,7 +14,7 @@ import * as YupSchema from 'utils/YupSchema';
 import { Button } from 'components/common/form';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
-import pretty from 'pretty';
+
 import { noop } from 'lodash';
 import { createMemoryHistory } from 'history';
 import { Router } from 'react-router-dom';
@@ -135,7 +135,7 @@ describe('sub-form BuildingForm functionality', () => {
   it('loads initial building data', () => {
     const pagedBuildingForms = getBuildingForm(mockBuilding, () => {});
     const { container } = render(pagedBuildingForms);
-    expect(pretty(container.innerHTML)).toMatchSnapshot();
+    expect(container.firstChild).toMatchSnapshot();
   });
 
   it('renders EvaluationForm as expected', () => {

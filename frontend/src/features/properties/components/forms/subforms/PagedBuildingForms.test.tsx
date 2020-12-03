@@ -17,7 +17,6 @@ import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 import { createMemoryHistory } from 'history';
 import { Router } from 'react-router-dom';
-import pretty from 'pretty';
 
 const mockAxios = new MockAdapter(axios);
 mockAxios.onAny().reply(200, {});
@@ -128,7 +127,7 @@ describe('PagedBuildingForms functionality', () => {
     };
     const pagedBuildingForms = getPagedBuildingForms(initialValues, () => {});
     const { container } = render(pagedBuildingForms);
-    expect(pretty(container.innerHTML)).toMatchSnapshot();
+    expect(container.firstChild).toMatchSnapshot();
   });
 
   it('displays a page for each building', () => {

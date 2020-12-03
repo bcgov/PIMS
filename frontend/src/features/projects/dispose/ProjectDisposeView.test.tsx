@@ -12,7 +12,7 @@ import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 import useStepper from './hooks/useStepper';
 import { noop } from 'lodash';
-import pretty from 'pretty';
+
 import * as redux from 'react-redux';
 
 const useDispatchSpy = jest.spyOn(redux, 'useDispatch');
@@ -99,7 +99,7 @@ describe('Project Dispose View', () => {
   it('renders', () => {
     act(() => {
       const { container } = render(renderElement(store));
-      expect(pretty(container.innerHTML)).toMatchSnapshot();
+      expect(container.firstChild).toMatchSnapshot();
     });
   });
 

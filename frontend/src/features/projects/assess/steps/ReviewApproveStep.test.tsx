@@ -21,7 +21,6 @@ import { Button } from 'react-bootstrap';
 import GenericModal from 'components/common/GenericModal';
 import { IProperty } from 'features/properties/list/interfaces';
 import { act } from 'react-dom/test-utils';
-import pretty from 'pretty';
 
 Enzyme.configure({ adapter: new Adapter() });
 
@@ -184,7 +183,7 @@ describe('Review Approve Step', () => {
   it('renders correctly', () => {
     act(() => {
       const { container } = render(getReviewApproveStep());
-      expect(pretty(container.innerHTML)).toMatchSnapshot();
+      expect(container.firstChild).toMatchSnapshot();
     });
   });
   it('edit button is visible when user has correct claims', () => {

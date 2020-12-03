@@ -1,39 +1,220 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Edit agency page EditAgencyPage renders 1`] = `
-"<div>
-  <nav class=\\"navBar navbar navbar-expand-sm navbar-light bg-light\\"><span class=\\"navbar-brand\\"> <svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 512 512\\" size=\\"20\\" height=\\"20\\" width=\\"20\\" xmlns=\\"http://www.w3.org/2000/svg\\"><path d=\\"M256 504C119 504 8 393 8 256S119 8 256 8s248 111 248 248-111 248-248 248zm116-292H256v-70.9c0-10.7-13-16.1-20.5-8.5L121.2 247.5c-4.7 4.7-4.7 12.2 0 16.9l114.3 114.9c7.6 7.6 20.5 2.2 20.5-8.5V300h116c6.6 0 12-5.4 12-12v-64c0-6.6-5.4-12-12-12z\\"></path></svg></span>
-    <h4>Agency Information</h4>
+<div>
+  <nav
+    class="navBar navbar navbar-expand-sm navbar-light bg-light"
+  >
+    <span
+      class="navbar-brand"
+    >
+       
+      <svg
+        fill="currentColor"
+        height="20"
+        size="20"
+        stroke="currentColor"
+        stroke-width="0"
+        viewBox="0 0 512 512"
+        width="20"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M256 504C119 504 8 393 8 256S119 8 256 8s248 111 248 248-111 248-248 248zm116-292H256v-70.9c0-10.7-13-16.1-20.5-8.5L121.2 247.5c-4.7 4.7-4.7 12.2 0 16.9l114.3 114.9c7.6 7.6 20.5 2.2 20.5-8.5V300h116c6.6 0 12-5.4 12-12v-64c0-6.6-5.4-12-12-12z"
+        />
+      </svg>
+    </span>
+    <h4>
+      Agency Information
+    </h4>
   </nav>
-  <div class=\\"container-fluid\\">
-    <div class=\\"agency-edit-form-container row\\">
-      <form novalidate=\\"\\" class=\\"agencyInfo\\">
-        <div class=\\"required form-group\\"><label class=\\"form-label\\" for=\\"input-name\\">Agency</label><input name=\\"name\\" required=\\"\\" type=\\"text\\" id=\\"input-name\\" class=\\"form-control\\" value=\\"Test Agency\\"></div>
-        <div class=\\"required form-group\\"><label class=\\"form-label\\" for=\\"input-code\\">Short Name (Code)</label><input name=\\"code\\" required=\\"\\" type=\\"text\\" id=\\"input-code\\" class=\\"form-control\\" value=\\"TEST\\"></div>
-        <div class=\\"form-group\\"><label class=\\"form-label\\" for=\\"input-parentId\\">Parent Agency - If applicable</label><select name=\\"parentId\\" disabled=\\"\\" id=\\"input-parentId\\" class=\\"form-select form-control\\">
-            <option value=\\"\\">No parent</option>
-            <option value=\\"111\\" class=\\"option\\">Test Agency</option>
-          </select></div>
-        <div class=\\"form-group\\"><label class=\\"form-label\\" for=\\"input-description\\">Description</label><input name=\\"description\\" type=\\"text\\" id=\\"input-description\\" class=\\"form-control\\" value=\\"\\"></div>
-        <div class=\\"form-group\\"><label class=\\"form-label\\" for=\\"input-email\\">Agency e-mail address</label><input name=\\"email\\" type=\\"text\\" id=\\"input-email\\" class=\\"form-control\\" value=\\"test@email.com\\"></div>
-        <div class=\\"checkboxes form-group\\">
-          <div class=\\"form-group\\">
-            <div class=\\"check-field\\"><label class=\\"form-label\\" for=\\"input-isDisabled\\">Disable Agency?</label>
-              <div class=\\"form-check\\"><input name=\\"isDisabled\\" type=\\"checkbox\\" id=\\"input-isDisabled\\" class=\\"form-check-input position-static\\" value=\\"false\\"></div>
+  <div
+    class="container-fluid"
+  >
+    <div
+      class="agency-edit-form-container row"
+    >
+      <form
+        class="agencyInfo"
+        novalidate=""
+      >
+        <div
+          class="required form-group"
+        >
+          <label
+            class="form-label"
+            for="input-name"
+          >
+            Agency
+          </label>
+          <input
+            class="form-control"
+            id="input-name"
+            name="name"
+            required=""
+            type="text"
+            value="Test Agency"
+          />
+        </div>
+        <div
+          class="required form-group"
+        >
+          <label
+            class="form-label"
+            for="input-code"
+          >
+            Short Name (Code)
+          </label>
+          <input
+            class="form-control"
+            id="input-code"
+            name="code"
+            required=""
+            type="text"
+            value="TEST"
+          />
+        </div>
+        <div
+          class="form-group"
+        >
+          <label
+            class="form-label"
+            for="input-parentId"
+          >
+            Parent Agency - If applicable
+          </label>
+          <select
+            class="form-select form-control"
+            disabled=""
+            id="input-parentId"
+            name="parentId"
+          >
+            <option
+              value=""
+            >
+              No parent
+            </option>
+            <option
+              class="option"
+              value="111"
+            >
+              Test Agency
+            </option>
+          </select>
+        </div>
+        <div
+          class="form-group"
+        >
+          <label
+            class="form-label"
+            for="input-description"
+          >
+            Description
+          </label>
+          <input
+            class="form-control"
+            id="input-description"
+            name="description"
+            type="text"
+            value=""
+          />
+        </div>
+        <div
+          class="form-group"
+        >
+          <label
+            class="form-label"
+            for="input-email"
+          >
+            Agency e-mail address
+          </label>
+          <input
+            class="form-control"
+            id="input-email"
+            name="email"
+            type="text"
+            value="test@email.com"
+          />
+        </div>
+        <div
+          class="checkboxes form-group"
+        >
+          <div
+            class="form-group"
+          >
+            <div
+              class="check-field"
+            >
+              <label
+                class="form-label"
+                for="input-isDisabled"
+              >
+                Disable Agency?
+              </label>
+              <div
+                class="form-check"
+              >
+                <input
+                  class="form-check-input position-static"
+                  id="input-isDisabled"
+                  name="isDisabled"
+                  type="checkbox"
+                  value="false"
+                />
+              </div>
             </div>
           </div>
-          <div class=\\"form-group\\">
-            <div class=\\"check-field\\"><label class=\\"form-label\\" for=\\"input-sendEmail\\">Email Notifications?</label>
-              <div class=\\"form-check\\"><input name=\\"sendEmail\\" type=\\"checkbox\\" id=\\"input-sendEmail\\" class=\\"form-check-input position-static\\" value=\\"true\\" checked=\\"\\"></div>
+          <div
+            class="form-group"
+          >
+            <div
+              class="check-field"
+            >
+              <label
+                class="form-label"
+                for="input-sendEmail"
+              >
+                Email Notifications?
+              </label>
+              <div
+                class="form-check"
+              >
+                <input
+                  checked=""
+                  class="form-check-input position-static"
+                  id="input-sendEmail"
+                  name="sendEmail"
+                  type="checkbox"
+                  value="true"
+                />
+              </div>
             </div>
           </div>
         </div>
-        <hr>
-        <div class=\\"buttons row\\">
-          <div role=\\"toolbar\\" class=\\"cancelSave btn-toolbar\\"><button type=\\"button\\" class=\\"bg-danger mr-5 btn btn-primary\\">Delete Agency</button><button type=\\"submit\\" class=\\"mr-5 btn btn-primary\\">Save Changes</button></div>
+        <hr />
+        <div
+          class="buttons row"
+        >
+          <div
+            class="cancelSave btn-toolbar"
+            role="toolbar"
+          >
+            <button
+              class="bg-danger mr-5 btn btn-primary"
+              type="button"
+            >
+              Delete Agency
+            </button>
+            <button
+              class="mr-5 btn btn-primary"
+              type="submit"
+            >
+              Save Changes
+            </button>
+          </div>
         </div>
       </form>
     </div>
   </div>
-</div>,"
+</div>
 `;
