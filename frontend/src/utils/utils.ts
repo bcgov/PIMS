@@ -102,9 +102,27 @@ export const mapLookupCodeWithParentString = (
   parent: options.find((a: ILookupCode) => a.id.toString() === code.parentId?.toString())?.name,
 });
 
+const createParentWorkflow = (code: string) => {
+  if (/^DR/.test(code)) {
+    return { name: 'Draft Statuses', id: 1 };
+  } else if (/EXE/.test(code)) {
+    return { name: 'Exemption Statuses', id: 2 };
+  } else if (/^AS/.test(code)) {
+    return { name: 'Assessment Statuses', id: 3 };
+  } else if (/^ERP/.test(code) || /^AP-ERP$/.test(code)) {
+    return { name: 'ERP Statuses', id: 4 };
+  } else if (/^SPL/.test(code) || /^AP-SPL$/.test(code)) {
+    return { name: 'SPL Statuses', id: 5 };
+  } else {
+    return { name: 'General Statuses', id: 6 };
+  }
+};
+
 export const mapStatuses = (status: IStatus): SelectOption => ({
   label: status.name,
   value: status.id.toString(),
+  parent: createParentWorkflow(status.code).name,
+  parentId: createParentWorkflow(status.code).id,
 });
 
 type FormikMemoProps = {
