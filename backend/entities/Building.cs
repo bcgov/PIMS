@@ -70,6 +70,11 @@ namespace Pims.Dal.Entities
         public bool TransferLeaseOnSale { get; set; } = false;
 
         /// <summary>
+        /// get/set - Metadata related to the buildings leased status.
+        /// </summary>
+        public string LeasedLandMetadata { get; set; }
+
+        /// <summary>
         /// get - A collection of parcels this building is located on.
         /// </summary>
         public ICollection<ParcelBuilding> Parcels { get; } = new List<ParcelBuilding>();

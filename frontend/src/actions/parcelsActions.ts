@@ -61,6 +61,12 @@ export interface IAddress {
   postal: string;
 }
 
+export enum LeasedLand {
+  owned = 0,
+  leased = 1,
+  other = 2,
+}
+
 export interface IBuilding extends IProperty {
   parcelId: number;
   address: IAddress;
@@ -83,6 +89,9 @@ export interface IBuilding extends IProperty {
   agencyCode: string;
   evaluations: IEvaluation[];
   fiscals: IFiscal[];
+  leasedLand: {
+    type: LeasedLand;
+  };
 }
 
 export interface IFiscal {

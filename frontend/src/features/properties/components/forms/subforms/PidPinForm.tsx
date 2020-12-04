@@ -2,13 +2,13 @@ import { FunctionComponent, useCallback } from 'react';
 import React from 'react';
 import { Input, Form } from 'components/common/form';
 import { PidPinTooltip } from '../strings';
-import { useFormikContext } from 'formik';
+import { useFormikContext, getIn } from 'formik';
 import { IParcel } from 'actions/parcelsActions';
 import debounce from 'lodash/debounce';
 
 interface PidPinProps {
-  handlePidChange: (pid: string) => void;
-  handlePinChange: (pin: string) => void;
+  handlePidChange: (pid: string, nameSpace?: string) => void;
+  handlePinChange: (pin: string, nameSpace?: string) => void;
   nameSpace?: string;
   disabled?: boolean;
 }
@@ -42,7 +42,14 @@ const PidPinForm: FunctionComponent<PidPinProps> = (props: PidPinProps) => {
 
   const debouncedHandlePidChange = useCallback(
     debounce((pid: string) => {
-      props.handlePidChange(pid);
+      props.handlePidChange(pid, props.nameSpace);
+    }, 100),
+    [],
+  );
+
+  const debouncedHandlePinChange = useCallback(
+    debounce((pin: string) => {
+      props.handlePinChange(pin, props.nameSpace);
     }, 100),
     [],
   );
@@ -57,7 +64,7 @@ const PidPinForm: FunctionComponent<PidPinProps> = (props: PidPinProps) => {
           disabled={props.disabled}
           pattern={RegExp(/^[\d\- ]*$/)}
           onBlurFormatter={(pid: string) => {
-            if (pid && initialValues.pid !== pid) {
+            if (pid?.length > 0 && getIn(initialValues, withNameSpace('pid')) !== pid) {
               debouncedHandlePidChange(pid);
             }
             return pid.replace(pid, pidFormatter(pid));
@@ -75,9 +82,9 @@ const PidPinForm: FunctionComponent<PidPinProps> = (props: PidPinProps) => {
           tooltip={PidPinTooltip}
           disabled={props.disabled}
           field={withNameSpace('pin')}
-          onBlurFormatter={(pin: string) => {
-            if (pin && initialValues.pin !== pin) {
-              props.handlePinChange(pin);
+          onBlurFormatter={(pin: number) => {
+            if (pin > 0 && getIn(initialValues, withNameSpace('pin')) !== pin) {
+              debouncedHandlePinChange(pin.toString());
             }
             return pin;
           }}

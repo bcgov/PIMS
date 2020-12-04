@@ -1,15 +1,33 @@
 using Mapster;
 using Pims.Api.Mapping.Converters;
-using System.Collections.Generic;
 using Entity = Pims.Dal.Entities;
 using Model = Pims.Api.Areas.Property.Models.Building;
 using BModel = Pims.Api.Models;
 using Pims.Dal.Helpers.Extensions;
+using System.Text.Json;
+using Microsoft.Extensions.Options;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Pims.Api.Areas.Property.Mapping.Building
 {
     public class BuildingMap : IRegister
     {
+        #region Variables
+        private readonly JsonSerializerOptions _serializerOptions;
+        #endregion
+
+        #region Constructors
+        /// <summary>
+        /// Creates a new instance of a BuildingParcelMap, initializes with specified arguments.
+        /// </summary>
+        /// <param name="serializerOptions"></param>
+        public BuildingMap(IOptions<JsonSerializerOptions> serializerOptions)
+        {
+            _serializerOptions = serializerOptions.Value;
+        }
+        #endregion
+
         public void Register(TypeAdapterConfig config)
         {
             config.NewConfig<Entity.Building, Model.BuildingModel>()
@@ -40,11 +58,23 @@ namespace Pims.Api.Areas.Property.Mapping.Building
                 .Map(dest => dest.IsSensitive, src => src.IsSensitive)
                 .Map(dest => dest.Evaluations, src => src.Evaluations)
                 .Map(dest => dest.Fiscals, src => src.Fiscals)
+                .Map(dest => dest.Parcels, src => src.Parcels)
+                .AfterMapping((src, dest) =>
+                {
+                    if(src.LeasedLandMetadata == null)
+                    {
+                        dest.LeasedLandMetadata = null;
+                        return;
+                    }
+                    var metadata = JsonSerializer.Deserialize<IEnumerable<Entity.Models.LeasedLandMetadata>>(src.LeasedLandMetadata, _serializerOptions);
+
+                    dest.LeasedLandMetadata = metadata.Select(l => new Model.LeasedLandMetadataModel { OwnershipNote = l.OwnershipNote, ParcelId = l.ParcelId });
+                })
                 .Inherits<Entity.BaseEntity, BModel.BaseModel>();
 
             config.NewConfig<Model.BuildingModel, Entity.Building>()
                 .Map(dest => dest.Id, src => src.Id)
-                .Map(dest => dest.Parcels, src => new List<Entity.ParcelBuilding>() { new Entity.ParcelBuilding() { ParcelId = src.ParcelId, BuildingId = src.Id } })
+                .Map(dest => dest.Parcels, src => src.Parcels)
                 .Map(dest => dest.ProjectNumber, src => src.ProjectNumber)
                 .Map(dest => dest.ClassificationId, src => src.ClassificationId)
                 .Map(dest => dest.Classification, src => src.Classification)
@@ -65,6 +95,12 @@ namespace Pims.Api.Areas.Property.Mapping.Building
                 .Map(dest => dest.IsSensitive, src => src.IsSensitive)
                 .Map(dest => dest.Evaluations, src => src.Evaluations)
                 .Map(dest => dest.Fiscals, src => src.Fiscals)
+                .AfterMapping((src, dest) =>
+                {
+                    var metadata = JsonSerializer.Serialize<IEnumerable<Model.LeasedLandMetadataModel>>(src.LeasedLandMetadata, _serializerOptions);
+
+                    dest.LeasedLandMetadata = metadata;
+                })
                 .Inherits<BModel.BaseModel, Entity.BaseEntity>();
 
             config.NewConfig<Model.BuildingModel, NetTopologySuite.Geometries.Point>()

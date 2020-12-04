@@ -6,11 +6,11 @@ import { RootState } from 'reducers/rootReducer';
 import { IGenericNetworkAction } from 'actions/genericActions';
 import { IPropertyDetail, IParcel, IProperty } from 'actions/parcelsActions';
 import * as actionTypes from 'constants/actionTypes';
-import { fetchParcelDetail } from 'actionCreators/parcelsActionCreator';
+import { fetchParcelDetail, fetchParcelsDetail } from 'actionCreators/parcelsActionCreator';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
-import { BuildingForm, SubmitPropertySelector, LandForm } from '../SidebarContents';
+import { BuildingForm, SubmitPropertySelector } from '../SidebarContents';
 import { BuildingSvg, LandSvg } from 'components/common/Icons';
-import { FormikValues } from 'formik';
+import { FormikValues, setIn, getIn } from 'formik';
 import { useState } from 'react';
 import useGeocoder from 'features/properties/hooks/useGeocoder';
 import { isMouseEventRecent } from 'utils';
@@ -19,7 +19,10 @@ import {
   PARCELS_LAYER_URL,
   useLayerQuery,
 } from 'components/maps/leaflet/LayerPopup';
-import { LeafletMouseEvent } from 'leaflet';
+import { LeafletMouseEvent, LatLng } from 'leaflet';
+import AssociatedLandForm from '../SidebarContents/AssociatedLandForm';
+import { toast } from 'react-toastify';
+import _ from 'lodash';
 
 interface IMapSideBarContainerProps {
   refreshParcels: Function;
@@ -62,14 +65,67 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
   const { handleGeocoderChanges } = useGeocoder({ formikRef });
   const parcelsService = useLayerQuery(PARCELS_LAYER_URL);
 
-  const handlePidChange = (pid: string) => {
+  /** query pims for the given pid, set data within the form if match found. Fallback to querying the parcel data layer. */
+  const handlePidChange = (pid: string, nameSpace?: string) => {
     const formattedPid = pid.replace(/-/g, '');
-    const response = parcelsService.findByPid(formattedPid);
-    handleParcelDataLayerResponse(response, dispatch);
+    if (isNaN(+formattedPid)) {
+      return;
+    }
+    fetchParcelsDetail({ pid } as any)(dispatch).then(resp => {
+      const matchingParcel: any = resp?.data?.length ? _.first(resp?.data) : undefined;
+      if (!!nameSpace && !!formikRef?.current?.values && !!matchingParcel?.id) {
+        const { resetForm, values } = formikRef.current;
+        resetForm({ values: setIn(values, nameSpace, matchingParcel) });
+        toast.dark('Found matching parcel within PIMS. Form data will be pre-populated.', {
+          autoClose: 7000,
+        });
+      } else {
+        const response = parcelsService.findByPid(formattedPid);
+        handleParcelDataLayerResponse(response, dispatch);
+      }
+    });
   };
-  const handlePinChange = (pin: string) => {
-    const response = parcelsService.findByPin(pin);
-    handleParcelDataLayerResponse(response, dispatch);
+  /** make a parcel layer request by pid and store the response. */
+  const handlePinChange = (pin: string, nameSpace?: string) => {
+    fetchParcelsDetail({ pin } as any)(dispatch).then(resp => {
+      const matchingParcel: any = resp?.data?.length ? _.first(resp?.data) : undefined;
+      if (!!nameSpace && !!formikRef?.current?.values && !!matchingParcel?.id) {
+        const { resetForm, values } = formikRef.current;
+        resetForm({ values: setIn(values, nameSpace, matchingParcel) });
+        toast.dark('Found matching parcel within PIMS. Form data will be pre-populated.', {
+          autoClose: 7000,
+        });
+      } else {
+        const response = parcelsService.findByPin(pin);
+        handleParcelDataLayerResponse(response, dispatch);
+      }
+    });
+  };
+  const droppedMarkerSearch = (nameSpace: string, latLng?: LatLng) => {
+    if (latLng) {
+      parcelsService.findOneWhereContains(latLng).then(resp => {
+        const properties = getIn(resp, 'features.0.properties');
+        if (properties?.PIN || properties?.PID) {
+          const query: any = { pin: properties?.PIN, pid: properties.PID };
+          fetchParcelsDetail(query)(dispatch).then((resp: any) => {
+            const matchingParcel: any = resp?.data?.length ? _.first(resp?.data) : undefined;
+            if (!!nameSpace && !!formikRef?.current?.values && !!matchingParcel?.id) {
+              const { resetForm, values } = formikRef.current;
+              resetForm({ values: setIn(values, nameSpace, matchingParcel) });
+              toast.dark('Found matching parcel within PIMS. Form data will be pre-populated.', {
+                autoClose: 7000,
+              });
+            } else {
+              const response = properties.PID
+                ? parcelsService.findByPid(properties.PID)
+                : parcelsService.findByPin(properties.PIN);
+
+              handleParcelDataLayerResponse(response, dispatch);
+            }
+          });
+        }
+      });
+    }
   };
 
   React.useEffect(() => {
@@ -92,14 +148,12 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
     ) {
       let nameSpace = (movingPinNameSpace?.length ?? 0) > 0 ? `${movingPinNameSpace}.` : '';
       if (propertyType === 'land') {
+        formikRef.current.setFieldValue(`${nameSpace}latitude`, leafletMouseEvent?.latlng.lat || 0);
         formikRef.current.setFieldValue(
-          `${nameSpace}data.latitude`,
-          leafletMouseEvent?.latlng.lat || 0,
-        );
-        formikRef.current.setFieldValue(
-          `${nameSpace}data.longitude`,
+          `${nameSpace}longitude`,
           leafletMouseEvent?.latlng.lng || 0,
         );
+        droppedMarkerSearch(movingPinNameSpace, leafletMouseEvent?.latlng);
       } else {
         formikRef.current.setFieldValue(
           `data.buildings.0.latitude`,
@@ -183,7 +237,7 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
           setPropertyType('land');
         }
         return (
-          <LandForm
+          <AssociatedLandForm
             setMovingPinNameSpace={setMovingPinNameSpace}
             formikRef={formikRef}
             handleGeocoderChanges={handleGeocoderChanges}

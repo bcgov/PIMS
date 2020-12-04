@@ -9,6 +9,17 @@ export enum LandSteps {
 }
 
 /**
+ * Associated Land steps enum, provides a list of steps corresponding to submitting parcels associated to a building.
+ */
+export enum AssociatedLandSteps {
+  LAND_OWNERSHIP = 0,
+  IDENTIFICATION = 1,
+  USAGE = 2,
+  VALUATION = 3,
+  REVIEW = 4,
+}
+
+/**
  * Building steps enum, provides a list of steps corresponding to submittig a building.
  */
 export enum BuildingSteps {

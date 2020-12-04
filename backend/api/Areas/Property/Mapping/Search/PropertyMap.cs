@@ -50,8 +50,6 @@ namespace Pims.Api.Areas.Property.Mapping.Search
                 .Map(dest => dest.AssessedDate, src => src.Evaluations.OrderByDescending(f => f.Date).FirstOrDefault(f => f.Key == EvaluationKeys.Assessed) == null ? (DateTime?)null : src.Evaluations.OrderByDescending(f => f.Date).FirstOrDefault(f => f.Key == EvaluationKeys.Assessed).Date)
                 .Map(dest => dest.Appraised, src => src.Evaluations.OrderByDescending(f => f.Date).FirstOrDefault(f => f.Key == EvaluationKeys.Appraised) == null ? 0 : src.Evaluations.OrderByDescending(f => f.Date).FirstOrDefault(f => f.Key == EvaluationKeys.Appraised).Value)
                 .Map(dest => dest.AppraisedDate, src => src.Evaluations.OrderByDescending(f => f.Date).FirstOrDefault(f => f.Key == EvaluationKeys.Appraised) == null ? (DateTime?)null : src.Evaluations.OrderByDescending(f => f.Date).FirstOrDefault(f => f.Key == EvaluationKeys.Appraised).Date)
-                .Map(dest => dest.Improvements, src => src.Evaluations.OrderByDescending(f => f.Date).FirstOrDefault(f => f.Key == EvaluationKeys.Improvements) == null ? 0 : src.Evaluations.OrderByDescending(f => f.Date).FirstOrDefault(f => f.Key == EvaluationKeys.Improvements).Value)
-                .Map(dest => dest.ImprovementsDate, src => src.Evaluations.OrderByDescending(f => f.Date).FirstOrDefault(f => f.Key == EvaluationKeys.Improvements) == null ? (DateTime?)null : src.Evaluations.OrderByDescending(f => f.Date).FirstOrDefault(f => f.Key == EvaluationKeys.Improvements).Date)
 
                 .Map(dest => dest.ConstructionTypeId, src => 0)
                 .Map(dest => dest.PredominateUseId, src => 0)
@@ -98,8 +96,6 @@ namespace Pims.Api.Areas.Property.Mapping.Search
                 .Map(dest => dest.AssessedDate, src => src.Evaluations.OrderByDescending(f => f.Date).FirstOrDefault(f => f.Key == EvaluationKeys.Assessed) == null ? (DateTime?)null : src.Evaluations.OrderByDescending(f => f.Date).FirstOrDefault(f => f.Key == EvaluationKeys.Assessed).Date)
                 .Map(dest => dest.Appraised, src => src.Evaluations.OrderByDescending(f => f.Date).FirstOrDefault(f => f.Key == EvaluationKeys.Appraised) == null ? 0 : src.Evaluations.OrderByDescending(f => f.Date).FirstOrDefault(f => f.Key == EvaluationKeys.Appraised).Value)
                 .Map(dest => dest.AppraisedDate, src => src.Evaluations.OrderByDescending(f => f.Date).FirstOrDefault(f => f.Key == EvaluationKeys.Appraised) == null ? (DateTime?)null : src.Evaluations.OrderByDescending(f => f.Date).FirstOrDefault(f => f.Key == EvaluationKeys.Appraised).Date)
-                .Map(dest => dest.Improvements, src => src.Evaluations.OrderByDescending(f => f.Date).FirstOrDefault(f => f.Key == EvaluationKeys.Improvements) == null ? 0 : src.Evaluations.OrderByDescending(f => f.Date).FirstOrDefault(f => f.Key == EvaluationKeys.Improvements).Value)
-                .Map(dest => dest.ImprovementsDate, src => src.Evaluations.OrderByDescending(f => f.Date).FirstOrDefault(f => f.Key == EvaluationKeys.Improvements) == null ? (DateTime?)null : src.Evaluations.OrderByDescending(f => f.Date).FirstOrDefault(f => f.Key == EvaluationKeys.Improvements).Date)
 
                 .Map(dest => dest.ParcelId, src => src.GetParcelId())
                 .Map(dest => dest.ConstructionTypeId, src => src.BuildingConstructionTypeId)

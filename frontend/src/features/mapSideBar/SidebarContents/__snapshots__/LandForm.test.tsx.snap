@@ -1,131 +1,141 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Land Form component renders correctly 1`] = `
-"<div class=\\"sc-fzomuh iHipUC landForm\\">
-  <form action=\\"#\\">
-    <div class=\\"bs-stepper\\">
-      <div class=\\"bs-stepper-header\\">
-        <div class=\\"step active\\" data-target=\\"stepper-0\\"><button type=\\"button\\" class=\\"step-trigger\\"><span class=\\"bs-stepper-circle\\">1</span><span class=\\"bs-stepper-label\\">Parcel ID</span></button></div>
-        <div class=\\"line\\"></div>
-        <div class=\\"step\\" data-target=\\"stepper-1\\"><button type=\\"button\\" class=\\"step-trigger\\"><span class=\\"bs-stepper-circle\\">2</span><span class=\\"bs-stepper-label\\">Usage</span></button></div>
-        <div class=\\"line\\"></div>
-        <div class=\\"step\\" data-target=\\"stepper-2\\"><button type=\\"button\\" class=\\"step-trigger\\"><span class=\\"bs-stepper-circle\\">3</span><span class=\\"bs-stepper-label\\">Valuation</span></button></div>
-        <div class=\\"line\\"></div>
-        <div class=\\"step\\" data-target=\\"stepper-3\\"><button type=\\"button\\" class=\\"step-trigger\\"><span class=\\"bs-stepper-circle\\">4</span><span class=\\"bs-stepper-label\\">Review</span></button></div>
-      </div>
-    </div>
-    <div class=\\"sc-fzqAui hcvrID\\">
-      <div class=\\"sc-fzqMdD iOpgCN\\">
-        <div class=\\"parcel-identification\\">
-          <div class=\\"container\\">
-            <div class=\\"row\\">
-              <h4>Parcel Identification</h4>
-            </div>
-            <div class=\\"row no-gutters\\">
-              <div class=\\"form-container col-md-6\\">
-                <div class=\\"pid-pin row no-gutters\\">
-                  <div class=\\"d-inline-flex flex-nowrap form-row\\"><label class=\\"req form-label\\">*</label>PID<div class=\\"form-group\\"><input name=\\"data.pid\\" id=\\"input-data.pid\\" class=\\"input-small form-control\\" value=\\"\\"></div><label class=\\"form-label\\" style=\\"width: 35px; min-width: 35px; padding-left: 5px;\\">or<br>PIN&nbsp;</label>
-                    <div class=\\"form-group\\"><input name=\\"data.pin\\" type=\\"number\\" id=\\"input-data.pin\\" class=\\"input-small form-control\\" value=\\"\\"><svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 512 512\\" class=\\"tooltip-icon\\" height=\\"1em\\" width=\\"1em\\" xmlns=\\"http://www.w3.org/2000/svg\\">
-                        <path d=\\"M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z\\"></path>
-                      </svg></div>
-                  </div>
+"<div class=\\"sc-fznKkj hwARyp landForm\\">
+  <form action=\\"#\\" class=\\"sc-AxmLO haTFfH\\">
+    <nav class=\\"hideTabs nav nav-tabs\\" role=\\"tablist\\"><a href=\\"#\\" role=\\"tab\\" data-rb-event-key=\\"0\\" id=\\"steppedform-tabs-tab-0\\" aria-controls=\\"steppedform-tabs-tabpane-0\\" aria-selected=\\"true\\" class=\\"nav-item nav-link active\\">
+        <p>Tab 1</p><svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 512 512\\" size=\\"15\\" height=\\"15\\" width=\\"15\\" xmlns=\\"http://www.w3.org/2000/svg\\">
+          <path d=\\"M464 32H48C21.5 32 0 53.5 0 80v352c0 26.5 21.5 48 48 48h416c26.5 0 48-21.5 48-48V80c0-26.5-21.5-48-48-48zm-83.6 290.5c4.8 4.8 4.8 12.6 0 17.4l-40.5 40.5c-4.8 4.8-12.6 4.8-17.4 0L256 313.3l-66.5 67.1c-4.8 4.8-12.6 4.8-17.4 0l-40.5-40.5c-4.8-4.8-4.8-12.6 0-17.4l67.1-66.5-67.1-66.5c-4.8-4.8-4.8-12.6 0-17.4l40.5-40.5c4.8-4.8 12.6-4.8 17.4 0l66.5 67.1 66.5-67.1c4.8-4.8 12.6-4.8 17.4 0l40.5 40.5c4.8 4.8 4.8 12.6 0 17.4L313.3 256l67.1 66.5z\\"></path>
+        </svg>
+      </a><a href=\\"#\\" role=\\"tab\\" data-rb-event-key=\\"\\" id=\\"steppedform-tabs-tab-\\" aria-controls=\\"steppedform-tabs-tabpane-\\" tabindex=\\"-1\\" aria-selected=\\"false\\" class=\\"nav-item nav-link\\"><button type=\\"button\\" class=\\"Button Button--icon-only primary btn btn-primary\\">
+          <div class=\\"Button__icon\\"><svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 448 512\\" size=\\"20\\" height=\\"20\\" width=\\"20\\" xmlns=\\"http://www.w3.org/2000/svg\\">
+              <path d=\\"M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z\\"></path>
+            </svg></div>
+        </button></a></nav>
+    <div class=\\"tab-content\\">
+      <div id=\\"steppedform-tabs-tabpane-0\\" aria-labelledby=\\"steppedform-tabs-tab-0\\" role=\\"tabpanel\\" aria-hidden=\\"false\\" class=\\"fade tab-pane active show\\">
+        <div class=\\"bs-stepper\\">
+          <div class=\\"bs-stepper-header\\">
+            <div class=\\"step active\\" data-target=\\"stepper-0\\"><button type=\\"button\\" class=\\"step-trigger\\"><span class=\\"bs-stepper-circle\\">1</span><span class=\\"bs-stepper-label\\">Parcel ID</span></button></div>
+            <div class=\\"line\\"></div>
+            <div class=\\"step\\" data-target=\\"stepper-1\\"><button type=\\"button\\" class=\\"step-trigger\\"><span class=\\"bs-stepper-circle\\">2</span><span class=\\"bs-stepper-label\\">Usage</span></button></div>
+            <div class=\\"line\\"></div>
+            <div class=\\"step\\" data-target=\\"stepper-2\\"><button type=\\"button\\" class=\\"step-trigger\\"><span class=\\"bs-stepper-circle\\">3</span><span class=\\"bs-stepper-label\\">Valuation</span></button></div>
+            <div class=\\"line\\"></div>
+            <div class=\\"step\\" data-target=\\"stepper-3\\"><button type=\\"button\\" class=\\"step-trigger\\"><span class=\\"bs-stepper-circle\\">4</span><span class=\\"bs-stepper-label\\">Review</span></button></div>
+          </div>
+        </div>
+        <div class=\\"sc-fznZeY hePcYj\\">
+          <div class=\\"sc-fzokOt jWSBKu\\">
+            <div class=\\"parcel-identification\\">
+              <div class=\\"container\\">
+                <div class=\\"row\\">
+                  <h4>Parcel Identification</h4>
                 </div>
-                <div class=\\"field-row row\\">
-                  <p class=\\"label\\">Agency</p>
-                  <div class=\\"AutoCompleteText\\">
-                    <div class=\\"form-group\\">
-                      <div class=\\"input-area\\"><input name=\\"data.agencyId\\" disabled=\\"\\" id=\\"input-data.agencyId\\" class=\\"form-control\\" value=\\"\\"></div>
+                <div class=\\"row no-gutters\\">
+                  <div class=\\"col-md-6\\">
+                    <div class=\\"d-inline-flex flex-nowrap form-row\\"><label class=\\"req form-label\\">*</label>PID<div class=\\"form-group\\"><input name=\\"pid\\" id=\\"input-pid\\" class=\\"input-small form-control\\" value=\\"\\"></div><label class=\\"form-label\\" style=\\"width: 35px; min-width: 35px; padding-left: 5px;\\">or<br>PIN&nbsp;</label>
+                      <div class=\\"form-group\\"><input name=\\"pin\\" type=\\"number\\" id=\\"input-pin\\" class=\\"input-small form-control\\" value=\\"\\"><svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 512 512\\" class=\\"tooltip-icon\\" height=\\"1em\\" width=\\"1em\\" xmlns=\\"http://www.w3.org/2000/svg\\">
+                          <path d=\\"M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z\\"></path>
+                        </svg></div>
                     </div>
-                  </div>
-                </div>
-                <div class=\\"field-row row\\">
-                  <p class=\\"label\\">Name</p>
-                  <div class=\\"form-group\\"><input name=\\"data.name\\" id=\\"input-data.name\\" class=\\"form-control\\" value=\\"\\"></div>
-                </div>
-                <div class=\\"field-row row\\">
-                  <p class=\\"label\\">Description</p>
-                  <div class=\\"form-group\\"><textarea name=\\"data.description\\" id=\\"input-data.description\\" class=\\"form-control\\"></textarea></div>
-                </div>
-                <div class=\\"field-row row\\">
-                  <p class=\\"label\\"><span class=\\"req\\">*</span>Street Address</p>
-                  <div class=\\"GeocoderAutoComplete\\">
-                    <div>
-                      <div class=\\"form-group\\"><input name=\\"data.address.line1\\" field=\\"data.address.line1\\" id=\\"input-data.address.line1\\" class=\\"form-control\\" value=\\"\\"></div>
-                    </div>
-                  </div>
-                </div>
-                <div class=\\"field-row row\\">
-                  <p class=\\"label\\"><span class=\\"req\\">*</span>Location</p>
-                  <div class=\\"sc-AxjAm gLmrxD form-group\\">
-                    <div class=\\"rbt\\" style=\\"outline: none; position: relative;\\" tabindex=\\"-1\\">
-                      <div style=\\"display: flex; flex: 1; height: 100%; position: relative;\\"><input autocomplete=\\"off\\" type=\\"text\\" name=\\"data.address.administrativeArea\\" id=\\"data.address.administrativeArea-field\\" aria-autocomplete=\\"both\\" aria-expanded=\\"false\\" aria-haspopup=\\"listbox\\" role=\\"combobox\\" class=\\"rbt-input-main form-control rbt-input\\" value=\\"\\"><input aria-hidden=\\"true\\" class=\\"rbt-input-hint\\" readonly=\\"\\" style=\\"background-color: transparent; border-color: transparent; box-shadow: none; color: rgba(0, 0, 0, 0.35); left: 0px; pointer-events: none; position: absolute; top: 0px; width: 100%; border-style: inset inset inset inset; border-width: 2px 2px 2px 2px; line-height: normal; padding: 1px 1px 1px 1px;\\" tabindex=\\"-1\\" value=\\"\\"></div>
-                    </div>
-                  </div>
-                </div>
-                <div class=\\"field-row row\\">
-                  <p class=\\"label\\">Province</p>
-                  <div class=\\"form-group\\"><select name=\\"data.address.provinceId\\" disabled=\\"\\" id=\\"input-data.address.provinceId\\" class=\\"form-select form-control\\">
-                      <option value=\\"\\">Must Select One</option>
-                    </select></div>
-                </div>
-                <div class=\\"postal row\\">
-                  <p class=\\"label\\">Postal Code</p>
-                  <div class=\\"form-group\\"><input name=\\"data.address.postal\\" style=\\"width: 120px;\\" id=\\"input-data.address.postal\\" class=\\"input-small form-control\\" value=\\"\\"></div>
-                </div>
-              </div>
-              <div class=\\"col-md-6\\">
-                <div class=\\"lat-long\\" style=\\"position: relative;\\">
-                  <div class=\\"row\\">
-                    <div class=\\"col-md-9\\">
-                      <div class=\\"instruction\\">
-                        <p>Drag and drop the pin on the map to mark the location of this parcel, or if you already have the coordinates, you can enter them manually in the fields below.</p>
+                    <div class=\\"field-row row\\">
+                      <p class=\\"label\\">Street Address</p>
+                      <div class=\\"GeocoderAutoComplete\\">
+                        <div>
+                          <div class=\\"form-group\\"><svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 512 512\\" class=\\"tooltip-icon\\" height=\\"1em\\" width=\\"1em\\" xmlns=\\"http://www.w3.org/2000/svg\\">
+                              <path d=\\"M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z\\"></path>
+                            </svg><input name=\\"address.line1\\" field=\\"address.line1\\" id=\\"input-address.line1\\" class=\\"form-control\\" value=\\"\\"></div>
+                        </div>
                       </div>
                     </div>
-                    <div class=\\"marker-svg col\\"><button class=\\"sc-fzoydu iLXhOb\\"><svg class=\\"parcel-icon\\">draft-parcel-icon.svg</svg></button></div>
                   </div>
-                  <div class=\\"form-row\\">
-                    <p class=\\"label\\"><span class=\\"req\\">*</span>Latitude</p>
-                    <div class=\\"form-group\\"><input name=\\"data.latitude\\" type=\\"number\\" id=\\"input-data.latitude\\" class=\\"input-medium form-control\\" value=\\"\\"></div>
+                  <div class=\\"col-md-1\\">
+                    <h1>OR</h1>
                   </div>
-                  <div class=\\"form-row\\">
-                    <p class=\\"label\\"><span class=\\"req\\">*</span>Longitude</p>
-                    <div class=\\"form-group\\"><input name=\\"data.longitude\\" type=\\"number\\" id=\\"input-data.longitude\\" class=\\"input-medium form-control\\" value=\\"\\"></div>
-                  </div>
-                  <div class=\\"form-row\\">
-                    <div class=\\"input-group required\\">
-                      <p class=\\"label\\"><span class=\\"req\\">*</span>Lot Size</p>
-                      <div class=\\"input-group-content\\">
-                        <div class=\\"form-group\\"><input name=\\"data.landArea\\" type=\\"number\\" id=\\"input-data.landArea\\" class=\\"form-control\\" value=\\"\\"></div>
-                      </div>
-                      <div class=\\"input-group-append\\"><span class=\\"input-group-text\\">Hectares</span></div>
+                  <div class=\\"col-md-5\\">
+                    <p>Click on the pin, and then click your desired location on the map to pull the parcel details.</p>
+                    <div class=\\"row\\">
+                      <div class=\\"marker-svg col\\"><button class=\\"sc-fznyAO hwQpCV\\"><svg class=\\"parcel-icon\\">draft-parcel-icon.svg</svg></button></div>
                     </div>
                   </div>
                 </div>
-                <div class=\\"input-medium harmful\\">
-                  <p><span class=\\"req\\">*</span>Would this information be harmful if released?&nbsp;<a target=\\"_blank\\" rel=\\"noopener noreferrer\\" href=\\"https://www2.gov.bc.ca/gov/content/governments/services-for-government/policies-procedures/foippa-manual/disclosure-harmful-individual-public-safety\\">Policy</a></p>
-                  <div class=\\"form-group\\">
-                    <div class=\\"check-field\\">
-                      <div class=\\"form-check\\"><input name=\\"data.isSensitive\\" type=\\"radio\\" id=\\"input-data.isSensitive\\" class=\\"form-check-input\\" value=\\"false\\"><label title=\\"\\" for=\\"input-data.isSensitive\\" class=\\"form-check-label\\">Yes</label></div>
-                      <div class=\\"form-check\\"><input name=\\"data.isSensitive\\" type=\\"radio\\" id=\\"input-data.isSensitive-2\\" class=\\"form-check-input\\" value=\\"true\\" checked=\\"\\"><label title=\\"\\" for=\\"input-data.isSensitive-2\\" class=\\"form-check-label\\">No</label></div>
+                <div class=\\"row no-gutters\\">
+                  <div class=\\"col-md-6\\">
+                    <div class=\\"field-row row\\">
+                      <p class=\\"label\\"><span class=\\"req\\">*</span>Location</p>
+                      <div class=\\"sc-AxjAm gLmrxD form-group\\">
+                        <div class=\\"rbt\\" style=\\"outline: none; position: relative;\\" tabindex=\\"-1\\">
+                          <div style=\\"display: flex; flex: 1; height: 100%; position: relative;\\"><input autocomplete=\\"off\\" type=\\"text\\" name=\\"address.administrativeArea\\" id=\\"address.administrativeArea-field\\" aria-autocomplete=\\"both\\" aria-expanded=\\"false\\" aria-haspopup=\\"listbox\\" role=\\"combobox\\" class=\\"rbt-input-main form-control rbt-input\\" value=\\"\\"><input aria-hidden=\\"true\\" class=\\"rbt-input-hint\\" readonly=\\"\\" style=\\"background-color: transparent; border-color: transparent; box-shadow: none; color: rgba(0, 0, 0, 0.35); left: 0px; pointer-events: none; position: absolute; top: 0px; width: 100%; border-style: inset inset inset inset; border-width: 2px 2px 2px 2px; line-height: normal; padding: 1px 1px 1px 1px;\\" tabindex=\\"-1\\" value=\\"\\"></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class=\\"field-row row\\">
+                      <p class=\\"label\\">Province</p>
+                      <div class=\\"form-group\\"><select name=\\"address.provinceId\\" disabled=\\"\\" id=\\"input-address.provinceId\\" class=\\"form-select form-control\\">
+                          <option value=\\"\\">Must Select One</option>
+                        </select></div>
+                    </div>
+                    <div class=\\"postal row\\">
+                      <p class=\\"label\\">Postal Code</p>
+                      <div class=\\"form-group\\"><input name=\\"address.postal\\" style=\\"width: 120px;\\" id=\\"input-address.postal\\" class=\\"input-small form-control\\" value=\\"\\"></div>
+                    </div>
+                    <div class=\\"field-row row\\">
+                      <p class=\\"label\\">Agency</p>
+                      <div class=\\"AutoCompleteText\\">
+                        <div class=\\"form-group\\">
+                          <div class=\\"input-area\\"><input name=\\"agencyId\\" disabled=\\"\\" id=\\"input-agencyId\\" class=\\"form-control\\" value=\\"\\"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class=\\"form-container col-md-6\\">
+                    <div class=\\"field-row row\\">
+                      <p class=\\"label\\">Name</p>
+                      <div class=\\"form-group\\"><input name=\\"name\\" id=\\"input-name\\" class=\\"form-control\\" value=\\"\\"></div>
+                    </div>
+                    <div class=\\"field-row row\\">
+                      <p class=\\"label\\">Description</p>
+                      <div class=\\"form-group\\"><textarea name=\\"description\\" id=\\"input-description\\" class=\\"form-control\\"></textarea></div>
+                    </div>
+                    <div class=\\"field-row row\\">
+                      <p class=\\"label\\">Legal Description</p>
+                      <div class=\\"form-group\\"><textarea name=\\"legalDescription\\" id=\\"input-legalDescription\\" class=\\"form-control\\"></textarea></div>
+                    </div>
+                    <div class=\\"field-row row\\">
+                      <p class=\\"label\\">Lot Size</p>
+                      <div class=\\"form-group\\"><textarea name=\\"legalDescription\\" id=\\"input-legalDescription\\" class=\\"form-control\\"></textarea></div>
+                    </div>
+                  </div>
+                  <div class=\\"col\\">
+                    <div class=\\"input-medium harmful\\">
+                      <p><span class=\\"req\\">*</span>Would this information be harmful if released?&nbsp;<a target=\\"_blank\\" rel=\\"noopener noreferrer\\" href=\\"https://www2.gov.bc.ca/gov/content/governments/services-for-government/policies-procedures/foippa-manual/disclosure-harmful-individual-public-safety\\">Policy</a></p>
+                      <div class=\\"form-group\\">
+                        <div class=\\"check-field\\">
+                          <div class=\\"form-check\\"><input name=\\"data.isSensitive\\" type=\\"radio\\" id=\\"input-data.isSensitive\\" class=\\"form-check-input\\" value=\\"false\\"><label title=\\"\\" for=\\"input-data.isSensitive\\" class=\\"form-check-label\\">Yes</label></div>
+                          <div class=\\"form-check\\"><input name=\\"data.isSensitive\\" type=\\"radio\\" id=\\"input-data.isSensitive-2\\" class=\\"form-check-input\\" value=\\"true\\" checked=\\"\\"><label title=\\"\\" for=\\"input-data.isSensitive-2\\" class=\\"form-check-label\\">No</label></div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
+          <div class=\\"sc-fzqBZW fILbRw\\">
+            <div class=\\"sc-fznLPX iCxCof\\">
+              <div class=\\"SresManual\\">
+                <div><svg stroke=\\"currentColor\\" fill=\\"none\\" stroke-width=\\"2\\" viewBox=\\"0 0 24 24\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" size=\\"28\\" height=\\"28\\" width=\\"28\\" xmlns=\\"http://www.w3.org/2000/svg\\">
+                    <path d=\\"M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z\\"></path>
+                    <path d=\\"M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z\\"></path>
+                  </svg></div>
+              </div><small class=\\"sc-fzoaKM gTqYFc p-1 mr-2\\">Inventory Policy</small>
+            </div><span class=\\"sc-fzqNJr lhOkCA\\"></span><button type=\\"button\\" class=\\"btn btn-primary btn-sm\\">Continue</button>
+          </div>
         </div>
       </div>
-      <div class=\\"sc-fzowVh fMTegc\\">
-        <div class=\\"sc-fzqPZZ bTxoiw\\">
-          <div class=\\"SresManual\\">
-            <div><svg stroke=\\"currentColor\\" fill=\\"none\\" stroke-width=\\"2\\" viewBox=\\"0 0 24 24\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" size=\\"28\\" height=\\"28\\" width=\\"28\\" xmlns=\\"http://www.w3.org/2000/svg\\">
-                <path d=\\"M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z\\"></path>
-                <path d=\\"M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z\\"></path>
-              </svg></div>
-          </div><small class=\\"sc-fzoxKX aSybU p-1 mr-2\\">Inventory Policy</small>
-        </div><span class=\\"sc-fzoJus dMLkXA\\"></span><button type=\\"button\\" class=\\"btn btn-primary btn-sm\\">Continue</button>
-      </div>
     </div>
+    <div class=\\"container\\"></div>
   </form>
 </div>"
 `;
