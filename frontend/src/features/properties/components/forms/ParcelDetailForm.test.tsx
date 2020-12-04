@@ -665,7 +665,7 @@ describe('autosave functionality', () => {
     expect(address).toHaveValue('mockaddress');
   });
 
-  it('autosaved form details generate a modal window', async () => {
+  xit('autosaved form details generate a modal window', async () => {
     await persistFormData();
     const { getByText, container } = render(parcelDetailForm({ loadDraft: false }));
     const draftButton = getByText('Resume Editing');

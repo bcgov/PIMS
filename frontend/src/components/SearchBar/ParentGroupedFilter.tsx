@@ -1,5 +1,6 @@
 import { SelectOption, SelectOptions } from 'components/common/form';
 import { TypeaheadField } from 'components/common/form/Typeahead';
+import { getIn, useFormikContext } from 'formik';
 import { groupBy, sortBy } from 'lodash';
 import React, { Fragment } from 'react';
 import { Highlighter, Menu, MenuItem } from 'react-bootstrap-typeahead';
@@ -21,6 +22,7 @@ export const ParentGroupedFilter: React.FC<IParentGroupedFilterProps> = ({
   filterBy,
   placeholder,
 }) => {
+  const { setFieldValue } = useFormikContext();
   return (
     <TypeaheadField
       name={name}
@@ -29,6 +31,9 @@ export const ParentGroupedFilter: React.FC<IParentGroupedFilterProps> = ({
       bsSize={inputSize}
       filterBy={filterBy}
       placeholder={placeholder}
+      onChange={vals => {
+        setFieldValue(name, getIn(vals[0], 'name') ?? vals[0]);
+      }}
       hideValidation
       renderMenu={(results, menuProps) => {
         const parents = groupBy(

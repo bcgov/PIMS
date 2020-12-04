@@ -57,7 +57,7 @@ describe('Building Form', () => {
 
   it('displays identification page on initial load', () => {
     const { getByText } = render(buildingForm);
-    expect(getByText(/building identification/i)).toBeInTheDocument();
+    expect(getByText(/building information/i)).toBeInTheDocument();
   });
 
   it('goes to corresponding steps', async () => {

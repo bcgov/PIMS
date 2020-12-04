@@ -3,4 +3,5 @@ export enum CLASSIFICATIONS {
   CoreStrategic = 1,
   SurplusActive = 2,
   SurplusEncumbered = 3,
+  Disposed = 4,
 }

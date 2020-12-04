@@ -43,7 +43,8 @@ const LatLongForm = <T extends any>(props: LatLongFormProps & FormikProps<T>) =>
     <div className="lat-long" style={{ position: 'relative' }}>
       <Row>
         <Col md={9}>
-          <div className="instruction">
+          <div className="instruction" style={{ display: 'flex' }}>
+            <span style={{ color: 'red', marginRight: 5 }}>*</span>
             {props.building && (
               <p>
                 Drag and drop the pin on the map to mark the location of this building, or if you
@@ -75,11 +76,10 @@ const LatLongForm = <T extends any>(props: LatLongFormProps & FormikProps<T>) =>
         </Col>
       </Row>
       <Form.Row>
-        <Label required>Latitude</Label>
+        <Label>Latitude</Label>
         <FastInput
           className="input-medium"
           displayErrorTooltips
-          // tooltip={latitudeTooltip}
           formikProps={props}
           disabled={props.disabled}
           type="number"
@@ -87,7 +87,7 @@ const LatLongForm = <T extends any>(props: LatLongFormProps & FormikProps<T>) =>
         />
       </Form.Row>
       <Form.Row>
-        <Label required>Longitude</Label>
+        <Label>Longitude</Label>
         <FastInput
           className="input-medium"
           displayErrorTooltips

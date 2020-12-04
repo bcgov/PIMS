@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Building Form component renders correctly 1`] = `
-"<div class=\\"sc-fzqLLg iNEbhX buildingForm\\">
+"<div class=\\"sc-fzoxnE yjcTd buildingForm\\">
   <form action=\\"#\\" class=\\"sc-AxmLO haTFfH\\">
     <nav class=\\"hideTabs nav nav-tabs\\" role=\\"tablist\\"><a href=\\"#\\" role=\\"tab\\" data-rb-event-key=\\"0\\" id=\\"steppedform-tabs-tab-0\\" aria-controls=\\"steppedform-tabs-tabpane-0\\" aria-selected=\\"true\\" class=\\"nav-item nav-link active\\">
         <p>Tab 1</p><svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 512 512\\" size=\\"15\\" height=\\"15\\" width=\\"15\\" xmlns=\\"http://www.w3.org/2000/svg\\">
@@ -16,21 +16,21 @@ exports[`Building Form component renders correctly 1`] = `
       <div id=\\"steppedform-tabs-tabpane-0\\" aria-labelledby=\\"steppedform-tabs-tab-0\\" role=\\"tabpanel\\" aria-hidden=\\"false\\" class=\\"fade tab-pane active show\\">
         <div class=\\"bs-stepper\\">
           <div class=\\"bs-stepper-header\\">
-            <div class=\\"step active\\" data-target=\\"stepper-0\\"><button type=\\"button\\" class=\\"step-trigger\\"><span class=\\"bs-stepper-circle\\">1</span><span class=\\"bs-stepper-label\\">Building ID</span></button></div>
+            <div class=\\"step active\\" data-target=\\"stepper-0\\"><button type=\\"button\\" class=\\"step-trigger\\"><span class=\\"bs-stepper-circle\\">1</span><span class=\\"bs-stepper-label\\">Building Info</span></button></div>
             <div class=\\"line\\"></div>
-            <div class=\\"step\\" data-target=\\"stepper-1\\"><button type=\\"button\\" class=\\"step-trigger\\"><span class=\\"bs-stepper-circle\\">2</span><span class=\\"bs-stepper-label\\">Tenancy</span></button></div>
+            <div class=\\"step\\" data-target=\\"stepper-1\\"><button type=\\"button\\" class=\\"step-trigger\\"><span class=\\"bs-stepper-circle\\">2</span><span class=\\"bs-stepper-label\\">Occupancy</span></button></div>
             <div class=\\"line\\"></div>
             <div class=\\"step\\" data-target=\\"stepper-2\\"><button type=\\"button\\" class=\\"step-trigger\\"><span class=\\"bs-stepper-circle\\">3</span><span class=\\"bs-stepper-label\\">Valuation</span></button></div>
             <div class=\\"line\\"></div>
-            <div class=\\"step\\" data-target=\\"stepper-3\\"><button type=\\"button\\" class=\\"step-trigger\\"><span class=\\"bs-stepper-circle\\">4</span><span class=\\"bs-stepper-label\\">Review</span></button></div>
+            <div class=\\"step\\" data-target=\\"stepper-3\\"><button type=\\"button\\" class=\\"step-trigger\\"><span class=\\"bs-stepper-circle\\">4</span><span class=\\"bs-stepper-label\\">Review &amp; Submit</span></button></div>
           </div>
         </div>
-        <div class=\\"sc-fzoxnE eExRIn\\">
-          <div class=\\"sc-fzoMdx ddcylz\\">
+        <div class=\\"sc-fzoMdx kQKxZB\\">
+          <div class=\\"sc-fzoWqW dGYtGL\\">
             <div class=\\"identification\\">
               <div class=\\"container\\">
                 <div class=\\"row\\">
-                  <h4>Building Identification</h4>
+                  <h4>Building Information</h4>
                 </div>
                 <div class=\\"row\\">
                   <div class=\\"col\\">
@@ -41,9 +41,9 @@ exports[`Building Form component renders correctly 1`] = `
                       <div class=\\"form-group\\"><textarea name=\\"building.0.description\\" id=\\"input-building.0.description\\" class=\\"form-control\\"></textarea></div>
                     </div>
                     <div class=\\"form-row\\"><label class=\\"form-label\\">Agency</label>
-                      <div class=\\"AutoCompleteText\\">
-                        <div class=\\"form-group\\">
-                          <div class=\\"input-area\\"><input name=\\"building.0.agencyId\\" disabled=\\"\\" id=\\"input-building.0.agencyId\\" class=\\"form-control\\" value=\\"\\"></div>
+                      <div class=\\"sc-AxjAm gLmrxD form-group\\">
+                        <div class=\\"rbt\\" style=\\"outline: none; position: relative;\\" tabindex=\\"-1\\">
+                          <div style=\\"display: flex; flex: 1; height: 100%; position: relative;\\"><input autocomplete=\\"off\\" type=\\"text\\" name=\\"building.0.agencyId\\" id=\\"building.0.agencyId-field\\" disabled=\\"\\" aria-autocomplete=\\"both\\" aria-expanded=\\"false\\" aria-haspopup=\\"listbox\\" role=\\"combobox\\" class=\\"rbt-input-main form-control rbt-input\\" value=\\"\\"><input aria-hidden=\\"true\\" class=\\"rbt-input-hint\\" readonly=\\"\\" style=\\"background-color: transparent; border-color: transparent; box-shadow: none; color: rgba(0, 0, 0, 0.35); left: 0px; pointer-events: none; position: absolute; top: 0px; width: 100%; border-style: inset inset inset inset; border-width: 2px 2px 2px 2px; line-height: normal; padding: 1px 1px 1px 1px;\\" tabindex=\\"-1\\" value=\\"\\"></div>
                         </div>
                       </div>
                     </div>
@@ -81,7 +81,7 @@ exports[`Building Form component renders correctly 1`] = `
                 </div>
                 <hr>
                 <div class=\\"row\\">
-                  <h4 class=\\"sc-fznXWL hWuDMR\\">Strategic Real Estate Classification</h4>
+                  <h4 class=\\"sc-fzokvW jYcXVF\\">Strategic Real Estate Classification</h4>
                 </div>
                 <div class=\\"row\\">
                   <div class=\\"col-md-6\\">
@@ -90,18 +90,22 @@ exports[`Building Form component renders correctly 1`] = `
                       <div class=\\"form-group\\"><select name=\\"building.0.classificationId\\" style=\\"margin-top: 5px; display: flex;\\" type=\\"number\\" id=\\"input-building.0.classificationId-fast\\" class=\\"form-control\\">
                           <option value=\\"\\">Must Select One</option>
                         </select></div>
-                      <div style=\\"margin-top: 8px; margin-left: 20px;\\"><svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 512 512\\" class=\\"tooltip-icon\\" height=\\"1em\\" width=\\"1em\\" xmlns=\\"http://www.w3.org/2000/svg\\">
-                          <path d=\\"M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z\\"></path>
-                        </svg></div>
+                    </div>
+                    <div class=\\"row\\">
+                      <p class=\\"sc-fzqLLg jlVyTZ\\">A disposal project must be initiated in order to mark a property as \\"surplus active\\".</p>
                     </div>
                   </div>
-                  <div class=\\"col-md-6\\"></div>
+                  <div class=\\"col-md-6\\">
+                    <div class=\\"sc-fzqzlV iNpJjm\\">
+                      <p style=\\"font-size: 11px;\\">Select a classification from the dropdown list to show the definition here. For further information, see the Inventory Policy.</p>
+                    </div>
+                  </div>
                 </div>
                 <hr>
                 <div class=\\"row\\">
                   <h4>Location</h4>
                 </div>
-                <div class=\\"row\\">
+                <div style=\\"margin-bottom: 10px;\\" class=\\"row\\">
                   <div class=\\"col\\">
                     <div class=\\"field-row row\\">
                       <p class=\\"label\\"><span class=\\"req\\">*</span>Street Address</p>
@@ -134,18 +138,18 @@ exports[`Building Form component renders correctly 1`] = `
                     <div class=\\"lat-long\\" style=\\"position: relative;\\">
                       <div class=\\"row\\">
                         <div class=\\"col-md-9\\">
-                          <div class=\\"instruction\\">
+                          <div class=\\"instruction\\" style=\\"display: flex;\\"><span style=\\"color: red; margin-right: 5px;\\">*</span>
                             <p>Drag and drop the pin on the map to mark the location of this building, or if you already have the coordinates, you can enter them manually in the fields below.</p>
                           </div>
                         </div>
                         <div class=\\"marker-svg col\\"><button class=\\"sc-fzozJi bgKAHS\\"><svg>draft-building-icon.svg</svg></button></div>
                       </div>
                       <div class=\\"form-row\\">
-                        <p class=\\"label\\"><span class=\\"req\\">*</span>Latitude</p>
+                        <p class=\\"label\\">Latitude</p>
                         <div class=\\"form-group\\"><input name=\\"building.0.latitude\\" type=\\"number\\" id=\\"input-building.0.latitude\\" class=\\"input-medium form-control\\" value=\\"\\"></div>
                       </div>
                       <div class=\\"form-row\\">
-                        <p class=\\"label\\"><span class=\\"req\\">*</span>Longitude</p>
+                        <p class=\\"label\\">Longitude</p>
                         <div class=\\"form-group\\"><input name=\\"building.0.longitude\\" type=\\"number\\" id=\\"input-building.0.longitude\\" class=\\"input-medium form-control\\" value=\\"\\"></div>
                       </div>
                     </div>
@@ -154,7 +158,7 @@ exports[`Building Form component renders correctly 1`] = `
               </div>
             </div>
           </div>
-          <div class=\\"sc-fzoWqW ejZuQA\\">
+          <div class=\\"sc-fzplgP hdJLSW\\">
             <div class=\\"sc-fznLPX iCxCof\\">
               <div class=\\"SresManual\\">
                 <div><svg stroke=\\"currentColor\\" fill=\\"none\\" stroke-width=\\"2\\" viewBox=\\"0 0 24 24\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" size=\\"28\\" height=\\"28\\" width=\\"28\\" xmlns=\\"http://www.w3.org/2000/svg\\">
@@ -162,7 +166,7 @@ exports[`Building Form component renders correctly 1`] = `
                     <path d=\\"M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z\\"></path>
                   </svg></div>
               </div><small class=\\"sc-fzoaKM gTqYFc p-1 mr-2\\">Inventory Policy</small>
-            </div><span class=\\"sc-fzplgP kuPAoo\\"></span><button type=\\"button\\" class=\\"btn btn-primary btn-sm\\">Continue</button>
+            </div><span class=\\"sc-fznzqM dxQEfH\\"></span><button style=\\"margin-right: 10px;\\" type=\\"button\\" class=\\"btn btn-primary btn-sm\\">Continue</button>
           </div>
         </div>
       </div>

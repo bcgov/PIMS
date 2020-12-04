@@ -23,6 +23,7 @@ import { LeafletMouseEvent, LatLng } from 'leaflet';
 import AssociatedLandForm from '../SidebarContents/AssociatedLandForm';
 import { toast } from 'react-toastify';
 import _ from 'lodash';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 
 interface IMapSideBarContainerProps {
   refreshParcels: Function;
@@ -128,6 +129,8 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
     }
   };
 
+  const keycloak = useKeycloakWrapper();
+
   React.useEffect(() => {
     if (movingPinNameSpace !== undefined) {
       document.body.className = propertyType === 'building' ? 'building-cursor' : 'parcel-cursor';
@@ -230,6 +233,7 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
             setMovingPinNameSpace={setMovingPinNameSpace}
             nameSpace="data.buildings"
             index="0"
+            isAdmin={keycloak.isAdmin}
           />
         );
       case SidebarContextType.ADD_RAW_LAND:
