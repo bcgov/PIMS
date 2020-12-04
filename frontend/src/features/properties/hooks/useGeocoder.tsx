@@ -81,7 +81,7 @@ const useGeocoder = ({ formikRef }: IUseGeocoderProps) => {
         latitude: data.latitude,
         longitude: data.longitude,
         address: {
-          ...formikRef.current.values.address,
+          ...getIn(formikRef.current.values, nameSpace ?? '').address,
           line1: data.fullAddress,
         },
       };

@@ -125,7 +125,7 @@ export const FastInput: React.FC<FastInputProps> = memo(
             {...rest}
           />
         </TooltipWrapper>
-        <DisplayError field={field} />
+        {!displayErrorTooltips && <DisplayError field={field} />}
       </Form.Group>
     );
   },

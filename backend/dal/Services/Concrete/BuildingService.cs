@@ -200,10 +200,18 @@ namespace Pims.Dal.Services
             building.ThrowIfNotAllowedToEdit(nameof(building), this.User, new[] { Permissions.PropertyEdit, Permissions.AdminProperties });
             var isAdmin = this.User.HasPermission(Permissions.AdminProperties);
 
-            var existingBuilding = this.Context.Buildings.Find(building.Id) ?? throw new KeyNotFoundException();
+            var existingBuilding = this.Context.Buildings
+                .Include(b => b.Agency)
+                .Include(b => b.Address)
+                .Include(b => b.Evaluations)
+                .Include(b => b.Fiscals)
+                .Include(b => b.Parcels).ThenInclude(pb => pb.Parcel).ThenInclude(b => b.Evaluations)
+                .Include(b => b.Parcels).ThenInclude(pb => pb.Parcel).ThenInclude(b => b.Fiscals)
+                .Include(b => b.Parcels).ThenInclude(pb => pb.Parcel).ThenInclude(b => b.Address)
+                .FirstOrDefault(b => b.Id == building.Id) ?? throw new KeyNotFoundException();
             this.ThrowIfNotAllowedToUpdate(existingBuilding, _options.Project);
 
-            var userAgencies = this.User.GetAgenciesAsNullable(); ;
+            var userAgencies = this.User.GetAgenciesAsNullable();
             if (!isAdmin && !userAgencies.Contains(existingBuilding.AgencyId)) throw new NotAuthorizedException("User may not edit buildings outside of their agency.");
 
             // Do not allow switching agencies through this method.
@@ -215,10 +223,122 @@ namespace Pims.Dal.Services
             // Only administrators can dispose a property.
             if (building.ClassificationId == 4 && !isAdmin) throw new NotAuthorizedException("Building classification cannot be changed to disposed.");
 
+            var allowEdit = isAdmin || userAgencies.Contains(existingBuilding.AgencyId);
             // A building should have a unique name within the parcel it is located on.
             existingBuilding.Parcels.ForEach(pb => this.Context.ThrowIfNotUnique(pb.Parcel, building));
 
-            this.Context.Entry(existingBuilding).CurrentValues.SetValues(building);
+            if (allowEdit)
+            {
+                this.Context.Entry(existingBuilding.Address).CurrentValues.SetValues(building.Address);
+                this.Context.Entry(existingBuilding).CurrentValues.SetValues(building);
+                this.Context.SetOriginalRowVersion(existingBuilding);
+            }
+
+            foreach (var parcel in building.Parcels.Select(pb => pb.Parcel))
+            {
+                // Check if the building already exists.
+                var existingParcel = existingBuilding.Parcels
+                    .FirstOrDefault(pb => pb.ParcelId == parcel.Id)?.Parcel;
+
+                // Reset all relationships that are not changed through this update.
+                parcel.Address.Province = this.Context.Provinces.FirstOrDefault(p => p.Id == parcel.Address.ProvinceId);
+                parcel.Classification = this.Context.PropertyClassifications.FirstOrDefault(b => b.Id == parcel.ClassificationId);
+                parcel.Agency = this.Context.Agencies.FirstOrDefault(a => a.Id == building.AgencyId);
+
+                if (existingParcel == null)
+                {
+                    if (!allowEdit) throw new NotAuthorizedException("User may not add parcels to a property they don't own.");
+
+                    existingBuilding.Parcels.Add(new ParcelBuilding(parcel, building));
+                }
+                else
+                {
+                    _service.Parcel.PendingUpdate(parcel);
+                }
+            }
+
+            if (allowEdit)
+            {
+                foreach (var buildingEvaluation in building.Evaluations)
+                {
+                    var existingEvaluation = existingBuilding.Evaluations
+                        .FirstOrDefault(e => e.Date == buildingEvaluation.Date && e.Key == buildingEvaluation.Key);
+
+                    if (existingEvaluation == null)
+                    {
+                        existingBuilding.Evaluations.Add(buildingEvaluation);
+                    }
+                    else
+                    {
+                        this.Context.Entry(existingEvaluation).CurrentValues.SetValues(buildingEvaluation);
+                    }
+                }
+                foreach (var buildingFiscal in building.Fiscals)
+                {
+                    var originalBuildingFiscal = existingBuilding.Fiscals
+                        .FirstOrDefault(e => e.FiscalYear == buildingFiscal.FiscalYear && e.Key == buildingFiscal.Key);
+
+                    if (originalBuildingFiscal == null)
+                    {
+                        existingBuilding.Fiscals.Add(buildingFiscal);
+                    }
+                    else
+                    {
+                        this.Context.Entry(originalBuildingFiscal).CurrentValues.SetValues(buildingFiscal);
+                    }
+                }
+
+                // Go through the existing parcels and see if they have been deleted from the updated buildings.
+                foreach (var parcelBuilding in existingBuilding.Parcels)
+                {
+                    var updateParcel = building.Parcels.FirstOrDefault(pb => pb.ParcelId == parcelBuilding.ParcelId);
+                    if (updateParcel == null)
+                    {
+                        this.ThrowIfNotAllowedToUpdate(parcelBuilding.Building, _options.Project);
+
+                        var parcelBuildings = this.Context.ParcelBuildings.Where(pb => pb.ParcelId == parcelBuilding.ParcelId).ToArray();
+                        building.Parcels.Remove(parcelBuilding);
+                        this.Context.ParcelBuildings.Remove(parcelBuilding);
+
+                        continue;
+                    }
+
+                    // The building may have evaluations or fiscals that need to be deleted.
+                    foreach (var parcelEvaluation in parcelBuilding.Parcel.Evaluations)
+                    {
+                        // Delete the evaluations that have been removed.
+                        if (!updateParcel.Parcel.Evaluations.Any(e => (e.ParcelId == parcelEvaluation.ParcelId && e.Date == parcelEvaluation.Date && e.Key == parcelEvaluation.Key)))
+                        {
+                            this.Context.ParcelEvaluations.Remove(parcelEvaluation);
+                        }
+                    }
+                    foreach (var parcelFiscal in parcelBuilding.Parcel.Fiscals)
+                    {
+                        // Delete the fiscals that have been removed.
+                        if (!updateParcel.Parcel.Fiscals.Any(e => (e.ParcelId == parcelFiscal.ParcelId && e.FiscalYear == parcelFiscal.FiscalYear && e.Key == parcelFiscal.Key)))
+                        {
+                            this.Context.ParcelFiscals.Remove(parcelFiscal);
+                        }
+                    }
+                }
+
+                foreach (var buildingEvaluation in existingBuilding.Evaluations)
+                {
+                    // Delete the evaluations from the parcel that have been removed.
+                    if (!building.Evaluations.Any(e => (e.BuildingId == buildingEvaluation.BuildingId && e.Date == buildingEvaluation.Date && e.Key == buildingEvaluation.Key)))
+                    {
+                        this.Context.BuildingEvaluations.Remove(buildingEvaluation);
+                    }
+                }
+                foreach (var buildingFiscals in existingBuilding.Fiscals)
+                {
+                    // Delete the fiscals from the parcel that have been removed.
+                    if (!building.Fiscals.Any(e => (e.BuildingId == buildingFiscals.BuildingId && e.FiscalYear == buildingFiscals.FiscalYear && e.Key == buildingFiscals.Key)))
+                    {
+                        this.Context.BuildingFiscals.Remove(buildingFiscals);
+                    }
+                }
+            }
 
             this.Context.Buildings.Update(existingBuilding); // TODO: Must detach entity before returning it.
             this.Context.CommitTransaction();

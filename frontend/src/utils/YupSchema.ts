@@ -175,6 +175,7 @@ export const LandSchema = Yup.object().shape({
     .max(250, 'Zoning Potential must be less than 250 characters')
     .nullable(),
   landLegalDescription: Yup.string()
+    .required('Required')
     .max(500, 'Land Legal Description must be less than 500 characters')
     .nullable(),
   latitude: Yup.number()
@@ -207,7 +208,6 @@ export const ParcelSchema = Yup.object()
         is: val => val && /\d\d\d-\d\d\d-\d\d\d/.test(val),
         then: Yup.string().nullable(),
         otherwise: Yup.string()
-          .min(1)
           .nullable()
           .required('PID or PIN Required')
           .max(9, 'Please enter a valid PIN no longer than 9 digits.'),
@@ -220,6 +220,10 @@ export const ParcelSchema = Yup.object()
     [['pin', 'pid']],
   )
   .concat(LandSchema);
+
+export const AssociatedLandSchema = Yup.object().shape({
+  data: Yup.object().shape({ parcels: Yup.array().of(ParcelSchema) }),
+});
 
 export const FilterBarSchema = Yup.object().shape({
   minLotSize: Yup.number()
