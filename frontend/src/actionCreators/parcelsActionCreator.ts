@@ -26,6 +26,7 @@ export const fetchParcels = (parcelBounds: API.IPropertySearchParams | null) => 
         dispatch(success(actionTypes.GET_PARCELS));
         dispatch(parcelsActions.storeParcelsAction(response.data));
         dispatch(hideLoading());
+        return Promise.resolve(response);
       })
       .catch((axiosError: AxiosError) =>
         dispatch(error(actionTypes.GET_PARCELS, axiosError?.response?.status, axiosError)),
@@ -34,6 +35,26 @@ export const fetchParcels = (parcelBounds: API.IPropertySearchParams | null) => 
   }
 
   return Promise.resolve();
+};
+
+/**
+ * fetch parcels using search query parameters, such as pid or pin.
+ * @param params
+ */
+export const fetchParcelsDetail = (params: API.IPropertySearchParams) => (dispatch: Function) => {
+  dispatch(request(actionTypes.GET_PARCEL_DETAIL));
+  dispatch(showLoading());
+  return CustomAxios()
+    .get(ENVIRONMENT.apiUrl + API.PARCELS_DETAIL(params))
+    .then((response: AxiosResponse) => {
+      dispatch(success(actionTypes.GET_PARCEL_DETAIL));
+      dispatch(hideLoading());
+      return Promise.resolve(response);
+    })
+    .catch((axiosError: AxiosError) =>
+      dispatch(error(actionTypes.GET_PARCEL_DETAIL, axiosError?.response?.status, axiosError)),
+    )
+    .finally(() => dispatch(hideLoading()));
 };
 
 export const fetchParcelDetail = (params: API.IParcelDetailParams, position?: [number, number]) => (

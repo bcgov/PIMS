@@ -21,6 +21,7 @@ namespace Pims.Dal.Services
     {
         #region Variables
         private readonly PimsOptions _options;
+        private readonly IPimsService _service;
         #endregion
 
         #region Constructors
@@ -35,6 +36,7 @@ namespace Pims.Dal.Services
         public BuildingService(IOptions<PimsOptions> options, PimsContext dbContext, IPimsService service, ClaimsPrincipal user, ILogger<BuildingService> logger) : base(dbContext, user, service, logger)
         {
             _options = options.Value;
+            _service = service;
         }
         #endregion
 
@@ -161,7 +163,27 @@ namespace Pims.Dal.Services
 
             building.AgencyId = agency.Id;
             building.Agency = agency;
+            building.Address.Province = this.Context.Provinces.Find(building.Address.ProvinceId);
+            building.Classification = this.Context.PropertyClassifications.Find(building.ClassificationId);
             building.IsVisibleToOtherAgencies = false;
+
+            building.Parcels.ForEach(bp =>
+            {
+                bp.Building = building;
+                //The Parcel may already exist, if it does update the existing parcel.
+                if (bp.ParcelId > 0)
+                {
+                    _service.Parcel.PendingUpdate(bp.Parcel);
+                    bp.Parcel = null;
+                }
+                else
+                {
+                    bp.Parcel.Address.Province = this.Context.Provinces.Find(building.Address.ProvinceId);
+                    bp.Parcel.Classification = this.Context.PropertyClassifications.Find(building.ClassificationId);
+                    bp.Parcel.Address.AdministrativeArea = building.Address.AdministrativeArea;
+                }
+            });
+
             this.Context.Buildings.Add(building);
             this.Context.CommitTransaction();
             return building;

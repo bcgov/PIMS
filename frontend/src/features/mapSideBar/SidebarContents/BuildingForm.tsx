@@ -166,6 +166,7 @@ const BuidingForm: React.FC<IBuildingForm> = ({
   );
   let initialValues = {
     activeStep: 0,
+    activeTab: 0,
     data: { ...getInitialValues(), buildings: [{ ...defaultBuildingValues }] },
   };
 

@@ -51,6 +51,9 @@ export interface IPropertySearchParams {
 export const PROPERTIES = (params: IPropertySearchParams | null) =>
   `/properties/search?${params ? queryString.stringify(params) : ''}`; // get filtered properties or all if not specified.
 
+export const PARCELS_DETAIL = (params: IPropertySearchParams | null) => {
+  return `/properties/parcels?${params ? queryString.stringify(params) : ''}`; // get filtered properties or all if not specified.
+};
 export interface IParcelDetailParams {
   id: number;
 }

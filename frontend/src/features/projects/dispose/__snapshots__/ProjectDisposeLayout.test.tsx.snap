@@ -27,7 +27,7 @@ exports[`dispose project draft step display stepper renders correctly based off 
     </div>
   </div>
   <div class=\\"step-content container-fluid\\">
-    <div class=\\"sc-fzoJMP eMtMdo\\"><button style=\\"margin-left: 10px;\\" type=\\"button\\" class=\\"btn btn-primary\\">Next</button><button disabled=\\"\\" type=\\"button\\" class=\\"btn btn-secondary\\">Save</button></div>
+    <div class=\\"sc-fzqAui gxDJkM\\"><button style=\\"margin-left: 10px;\\" type=\\"button\\" class=\\"btn btn-primary\\">Next</button><button disabled=\\"\\" type=\\"button\\" class=\\"btn btn-secondary\\">Save</button></div>
   </div>
 </div>"
 `;

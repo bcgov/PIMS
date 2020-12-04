@@ -46,7 +46,13 @@ namespace Pims.Dal.Helpers.Extensions
             var isAdmin = user.HasPermission(Permissions.AdminProperties);
 
             // Users may only view sensitive properties if they have the `sensitive-view` claim and belong to the owning agency.
-            var query = context.Parcels.AsNoTracking();
+            var query = context.Parcels.Include(p => p.Classification)
+                .Include(p => p.Address)
+                .Include(p => p.Address.Province)
+                .Include(p => p.Agency)
+                .Include(p => p.Agency.Parent)
+                .Include(p => p.Evaluations)
+                .Include(p => p.Fiscals).AsNoTracking();
 
             if (!isAdmin)
             {
@@ -78,6 +84,18 @@ namespace Pims.Dal.Helpers.Extensions
                 var filterAgencies = filter.Agencies.Select(a => (int?)a);
                 var agencies = filterAgencies.Concat(context.Agencies.AsNoTracking().Where(a => filterAgencies.Contains(a.Id)).SelectMany(a => a.Children.Select(ac => (int?)ac.Id)).ToArray()).Distinct();
                 query = query.Where(p => agencies.Contains(p.AgencyId));
+            }
+            if (!String.IsNullOrWhiteSpace(filter.PID))
+            {
+                var pidValue = filter.PID.Replace("-", "").Trim();
+                if (Int32.TryParse(pidValue, out int pid))
+                    query = query.Where(p => p.PID == pid || p.PIN == pid);
+            }
+            if (!String.IsNullOrWhiteSpace(filter.PIN))
+            {
+                var pinValue = filter.PIN.Trim();
+                if (Int32.TryParse(pinValue, out int pin))
+                    query = query.Where(p => p.PIN == pin);
             }
             if (filter.ClassificationId.HasValue)
                 query = query.Where(p => p.ClassificationId == filter.ClassificationId);

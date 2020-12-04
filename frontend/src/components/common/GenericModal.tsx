@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Button, Container } from 'react-bootstrap';
 
-import { useHistory } from 'react-router-dom';
-
 interface ModalProps {
   /** Optional function to control behaviour of cancel button. Default is to close the modal. */
   handleCancel?: Function;
@@ -66,7 +64,6 @@ interface ModalProps {
  * @param props customize the component with custom text, and an operation to take when the component is closed.
  */
 const GenericModal = (props: ModalProps) => {
-  const history = useHistory();
   const [show, setShow] = useState(true);
   useEffect(() => {
     if (props.display !== undefined) {
@@ -86,7 +83,8 @@ const GenericModal = (props: ModalProps) => {
   const handleOk =
     props.handleOk ??
     (() => {
-      history.push('/');
+      props.setDisplay && props.setDisplay(false);
+      setShow(false);
     });
   const ok = () => {
     props.setDisplay && props.setDisplay(false);

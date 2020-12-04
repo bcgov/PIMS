@@ -1,5 +1,4 @@
 import { ISteppedFormValues, SteppedForm, useFormStepper } from 'components/common/form/StepForm';
-import { defaultInformationFormValues } from 'features/properties/components/forms/subforms/InformationForm';
 import { useFormikContext, yupToFormErrors } from 'formik';
 import { IGeocoderResponse, useApi } from 'hooks/useApi';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
@@ -10,16 +9,12 @@ import { Button } from 'react-bootstrap';
 import styled from 'styled-components';
 import { InventoryPolicy } from '../components/InventoryPolicy';
 import * as API from 'constants/API';
-import { IParcel } from 'actions/parcelsActions';
+import { IBuilding } from 'actions/parcelsActions';
 import { ParcelDetailTabs } from 'features/properties/containers/ParcelDetailContainer';
-import { defaultAddressValues } from 'features/properties/components/forms/subforms/AddressForm';
 import { ParcelIdentificationForm } from './subforms/ParcelIdentificationForm';
 import { LandUsageForm } from './subforms/LandUsageForm';
 import { LandReviewPage } from './subforms/LandReviewPage';
-import { defaultPidPinFormValues } from 'features/properties/components/forms/subforms/PidPinForm';
-import { defaultLandValues } from 'features/properties/components/forms/subforms/LandForm';
 import {
-  defaultFinancials,
   filterEmptyFinancials,
   IFinancial,
   IFinancialYear,
@@ -32,8 +27,11 @@ import { useDispatch } from 'react-redux';
 import { ParcelSchema } from 'utils/YupSchema';
 import { createParcel, updateParcel } from 'actionCreators/parcelsActionCreator';
 import { LandValuationForm } from './subforms/LandValuationForm';
-import { LandSteps } from 'constants/propertySteps';
-import useDraftMarkerSynchronizer from 'features/properties/hooks/useDraftMarkerSynchronizer';
+import { AssociatedLandSteps } from 'constants/propertySteps';
+import { LandOwnershipForm } from './subforms/LandOwnershipForm';
+import { defaultBuildingValues } from 'features/properties/components/forms/subforms/BuildingForm';
+import { getInitialValues as getInitialLandValues } from './LandForm';
+import useParcelLayerData from 'features/properties/hooks/useParcelLayerData';
 
 const Container = styled.div`
   background-color: #fff;
@@ -72,14 +70,8 @@ const FillRemainingSpace = styled.span`
  */
 export const getInitialValues = (): any => {
   return {
-    ...defaultPidPinFormValues,
-    ...defaultLandValues,
-    ...defaultInformationFormValues,
-    latitude: '',
-    longitude: '',
-    address: defaultAddressValues,
-    buildings: [],
-    financials: defaultFinancials,
+    ...defaultBuildingValues,
+    parcels: [{ ...getInitialLandValues() }],
   };
 };
 
@@ -106,28 +98,42 @@ export const valuesToApiFormat = (values: ISteppedFormValues<IFormParcel>): IFor
   return values.data;
 };
 
-const Form: React.FC<ILandForm> = ({
+const Form: React.FC<IAssociatedLandForm> = ({
   handleGeocoderChanges,
   setMovingPinNameSpace,
   handlePidChange,
   handlePinChange,
+  formikRef,
 }) => {
   // access the stepper to later split the form into segments
   const stepper = useFormStepper();
-  const formikProps = useFormikContext<IParcel>();
+  const formikProps = useFormikContext<IBuilding>();
 
   // lookup codes that will be used by subforms
   const { getOptionsByType } = useCodeLookups();
   const agencies = getOptionsByType(API.AGENCY_CODE_SET_NAME);
   const classifications = getOptionsByType(API.PROPERTY_CLASSIFICATION_CODE_SET_NAME);
-  useDraftMarkerSynchronizer();
+  const currentParcelNameSpace = `data.parcels.${stepper.currentTab}`;
+  useParcelLayerData({ formikRef, nameSpace: currentParcelNameSpace });
 
   const render = (): React.ReactNode => {
     switch (stepper.current) {
-      case LandSteps.IDENTIFICATION:
+      case AssociatedLandSteps.LAND_OWNERSHIP:
+        return (
+          <div className="land-ownership">
+            <LandOwnershipForm
+              nameSpace={currentParcelNameSpace}
+              setMovingPinNameSpace={setMovingPinNameSpace}
+              handleGeocoderChanges={handleGeocoderChanges}
+              handlePidChange={handlePidChange}
+            />
+          </div>
+        );
+      case AssociatedLandSteps.IDENTIFICATION:
         return (
           <div className="parcel-identification">
             <ParcelIdentificationForm
+              nameSpace={currentParcelNameSpace}
               agencies={agencies}
               classifications={classifications}
               handleGeocoderChanges={handleGeocoderChanges}
@@ -137,17 +143,22 @@ const Form: React.FC<ILandForm> = ({
             />
           </div>
         );
-      case LandSteps.USAGE:
+      case AssociatedLandSteps.USAGE:
         return (
           <div className="parcel-usage">
-            <LandUsageForm classifications={classifications} nameSpace="data" {...formikProps} />
+            <LandUsageForm
+              classifications={classifications}
+              nameSpace={currentParcelNameSpace}
+              {...formikProps}
+            />
           </div>
         );
-      case LandSteps.VALUATION:
-        return <LandValuationForm />;
-      case LandSteps.REVIEW:
+      case AssociatedLandSteps.VALUATION:
+        return <LandValuationForm nameSpace={currentParcelNameSpace} />;
+      case AssociatedLandSteps.REVIEW:
         return (
           <LandReviewPage
+            nameSpace={`data`}
             classifications={classifications}
             agencies={agencies}
             handlePidChange={handlePidChange}
@@ -183,7 +194,7 @@ const Form: React.FC<ILandForm> = ({
   );
 };
 
-interface ILandForm {
+interface IAssociatedLandForm {
   /** pass the formikRef on to other components */
   formikRef?: any;
   /** to autopopulate fields based on Geocoder information */
@@ -197,12 +208,12 @@ interface ILandForm {
 }
 
 /**
- * A component used for submitting bare land.
- * This form will appear after selecting 'Add Bare Land' after navigating to Manage Property > Submit Property in PIMS
+ * A component used for land associated to a building.
+ * This form will appear after a user enters a new building after navigating to Manage Property > Submit Property in PIMS
  * @component
  */
 
-const LandForm: React.FC<ILandForm> = (props: ILandForm) => {
+const AssociatedLandForm: React.FC<IAssociatedLandForm> = (props: IAssociatedLandForm) => {
   const keycloak = useKeycloakWrapper();
   const dispatch = useDispatch();
   const api = useApi();
@@ -266,22 +277,39 @@ const LandForm: React.FC<ILandForm> = (props: ILandForm) => {
     const response = await api.isPinAvailable(values.id, values.pin);
     return response?.available;
   };
+  const formikParcels = props.formikRef?.current?.values?.data?.parcels;
 
   return (
     <Container className="landForm">
       <SteppedForm
         // Provide the steps
         steps={[
+          { route: 'ownership', title: 'Land Ownership', completed: false, canGoToStep: true },
           { route: 'identification', title: 'Parcel ID', completed: false, canGoToStep: true },
           { route: 'usage', title: 'Usage', completed: false, canGoToStep: true },
           { route: 'valuation', title: 'Valuation', completed: false, canGoToStep: true },
           { route: 'review', title: 'Review', completed: false, canGoToStep: true },
         ]}
+        getTabs={() => {
+          return (formikParcels ?? initialValues.data.parcels).map((p: any, index: number) =>
+            p.name?.length ? p.name : `Parcel ${index + 1}`,
+          );
+        }}
         persistable={true}
         persistProps={{
           name: 'land',
           secret: keycloak.obj.subject,
           persistCallback: noop,
+        }}
+        onAddTab={() => {
+          if (formikParcels !== undefined) {
+            formikParcels.push(getInitialLandValues());
+          }
+        }}
+        onRemoveTab={(tabIndex: number) => {
+          if (formikParcels?.length > tabIndex) {
+            formikParcels.splice(tabIndex, 1);
+          }
         }}
         initialValues={initialValues}
         validate={handleValidate}
@@ -305,9 +333,10 @@ const LandForm: React.FC<ILandForm> = (props: ILandForm) => {
           handleGeocoderChanges={props.handleGeocoderChanges}
           handlePidChange={props.handlePidChange}
           handlePinChange={props.handlePinChange}
+          formikRef={props.formikRef}
         />
       </SteppedForm>
     </Container>
   );
 };
-export default LandForm;
+export default AssociatedLandForm;
