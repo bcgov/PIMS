@@ -1,10 +1,7 @@
-import { FunctionComponent, useCallback } from 'react';
+import { FunctionComponent } from 'react';
 import React from 'react';
 import { Input, Form } from 'components/common/form';
 import { PidPinTooltip } from '../strings';
-import { useFormikContext, getIn } from 'formik';
-import { IParcel } from 'actions/parcelsActions';
-import debounce from 'lodash/debounce';
 import { Label } from 'components/common/Label';
 
 interface PidPinProps {
@@ -26,6 +23,7 @@ export const defaultPidPinFormValues: {
  * @param {string} pid This is the target PID to be formatted
  */
 export const pidFormatter = (pid: string) => {
+  pid = pid.padStart(9, '0');
   const regex = /(\d\d\d)[\s-]?(\d\d\d)[\s-]?(\d\d\d)/;
   const format = pid.match(regex);
   if (format !== null && format.length === 4) {
@@ -39,21 +37,6 @@ const PidPinForm: FunctionComponent<PidPinProps> = (props: PidPinProps) => {
     const { nameSpace } = props;
     return nameSpace ? `${nameSpace}.${fieldName}` : fieldName;
   };
-  const { initialValues } = useFormikContext<IParcel>();
-
-  const debouncedHandlePidChange = useCallback(
-    debounce((pid: string) => {
-      props.handlePidChange(pid, props.nameSpace);
-    }, 100),
-    [],
-  );
-
-  const debouncedHandlePinChange = useCallback(
-    debounce((pin: string) => {
-      props.handlePinChange(pin, props.nameSpace);
-    }, 100),
-    [],
-  );
 
   return (
     <>
@@ -66,10 +49,10 @@ const PidPinForm: FunctionComponent<PidPinProps> = (props: PidPinProps) => {
           disabled={props.disabled}
           pattern={RegExp(/^[\d\- ]*$/)}
           onBlurFormatter={(pid: string) => {
-            if (pid?.length > 0 && getIn(initialValues, withNameSpace('pid')) !== pid) {
-              debouncedHandlePidChange(pid);
+            if (pid?.length > 0) {
+              return pid.replace(pid, pidFormatter(pid));
             }
-            return pid.replace(pid, pidFormatter(pid));
+            return '';
           }}
           field={withNameSpace('pid')}
         />
@@ -82,10 +65,10 @@ const PidPinForm: FunctionComponent<PidPinProps> = (props: PidPinProps) => {
           disabled={props.disabled}
           field={withNameSpace('pin')}
           onBlurFormatter={(pin: number) => {
-            if (pin > 0 && getIn(initialValues, withNameSpace('pin')) !== pin) {
-              debouncedHandlePinChange(pin.toString());
+            if (pin > 0) {
+              return pin;
             }
-            return pin;
+            return '';
           }}
           type="number"
         />

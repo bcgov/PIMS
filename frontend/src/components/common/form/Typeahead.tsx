@@ -5,6 +5,7 @@ import { getIn, useFormikContext } from 'formik';
 import styled from 'styled-components';
 import TooltipIcon from 'components/common/TooltipIcon';
 import { useRef } from 'react';
+import TooltipWrapper from '../TooltipWrapper';
 
 interface ITypeaheadFieldProps<T extends TypeaheadModel> extends TypeaheadProps<T> {
   name: string;
@@ -22,6 +23,8 @@ interface ITypeaheadFieldProps<T extends TypeaheadModel> extends TypeaheadProps<
   outerClassName?: string;
   /** clear menu on custom header click */
   clearMenu?: boolean;
+  /** Display errors in a tooltip instead of in a div */
+  displayErrorTooltips?: boolean;
 }
 
 const Feedback = styled(Form.Control.Feedback)`
@@ -38,11 +41,15 @@ export function TypeaheadField<T extends TypeaheadModel>({
   onChange,
   outerClassName,
   clearMenu,
+  displayErrorTooltips,
   ...rest
 }: ITypeaheadFieldProps<T>) {
   const { touched, values, errors, setFieldTouched, setFieldValue } = useFormikContext();
   const hasError = !!getIn(touched, name) && !!getIn(errors, name);
   const isValid = !!getIn(touched, name) && !getIn(errors, name);
+  const error = getIn(errors, name);
+  const touch = getIn(touched, name);
+  const errorTooltip = error && touch && displayErrorTooltips ? error : undefined;
   if (!getOptionByValue) {
     getOptionByValue = (value: T) => (!!value ? ([value] as T[]) : ([] as T[]));
   }
@@ -56,24 +63,28 @@ export function TypeaheadField<T extends TypeaheadModel>({
     <Form.Group className={classNames(!!required ? 'required' : '', outerClassName)}>
       {!!label && <Form.Label>{label}</Form.Label>}
       {!!tooltip && <TooltipIcon toolTipId="typeAhead-tip" toolTip={tooltip} />}
-      <Typeahead<T>
-        {...rest}
-        inputProps={{ ...rest.inputProps, name: name, id: `${name}-field` }}
-        isInvalid={hasError as any}
-        isValid={!hideValidation && isValid}
-        selected={getOptionByValue(getIn(values, name))}
-        ref={ref}
-        onChange={
-          onChange
-            ? onChange
-            : (newValues: T[]) => {
-                setFieldValue(name, getIn(newValues[0], 'value') ?? newValues[0]);
-              }
-        }
-        onBlur={() => setFieldTouched(name, true)}
-        id={`${name}-field`}
-      />
-      {hasError && <Feedback type="invalid">{getIn(errors, name)}</Feedback>}
+      <TooltipWrapper toolTipId={`${name}-error-tooltip}`} toolTip={errorTooltip}>
+        <Typeahead<T>
+          {...rest}
+          inputProps={{ ...rest.inputProps, name: name, id: `${name}-field` }}
+          isInvalid={hasError as any}
+          isValid={!hideValidation && isValid}
+          selected={getOptionByValue(getIn(values, name))}
+          ref={ref}
+          onChange={
+            onChange
+              ? onChange
+              : (newValues: T[]) => {
+                  setFieldValue(name, getIn(newValues[0], 'value') ?? newValues[0]);
+                }
+          }
+          onBlur={() => setFieldTouched(name, true)}
+          id={`${name}-field`}
+        />
+      </TooltipWrapper>
+      {hasError && !displayErrorTooltips && (
+        <Feedback type="invalid">{getIn(errors, name)}</Feedback>
+      )}
     </Form.Group>
   );
 }

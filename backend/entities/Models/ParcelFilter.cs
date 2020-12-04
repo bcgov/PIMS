@@ -16,7 +16,7 @@ namespace Pims.Dal.Entities.Models
         public string PID { get; set; }
 
         /// <summary>
-        /// get/set - The parcel PID.
+        /// get/set - The parcel PIN.
         /// </summary>
         public string PIN { get; set; }
 

@@ -87,7 +87,7 @@ namespace Pims.Api.Areas.Property.Controllers
         [HttpPut("{id}")]
         [HasPermission(Permissions.PropertyEdit)]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(Model.BuildingModel), 200)]
+        [ProducesResponseType(typeof(Model.BuildingModel), 201)]
         [SwaggerOperation(Tags = new[] { "building" })]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "To support standardized routes (/update/{id})")]
         public IActionResult UpdateBuilding(int id, [FromBody] Model.BuildingModel model)
@@ -95,9 +95,9 @@ namespace Pims.Api.Areas.Property.Controllers
             var entity = _mapper.Map<Entity.Building>(model);
 
             _pimsService.Building.Update(entity);
-            var parcel = _mapper.Map<Model.BuildingModel>(entity);
+            var building = _mapper.Map<Model.BuildingModel>(entity);
 
-            return new JsonResult(parcel);
+            return new JsonResult(building);
         }
 
         /// <summary>

@@ -63,17 +63,6 @@ exports[`Building Form component renders correctly 1`] = `
   cursor: default;
 }
 
-.c4 {
-  float: left;
-}
-
-.c5 {
-  margin-left: 152px;
-  font-size: 12px;
-  width: 250px;
-  text-align: left;
-}
-
 .c6 {
   top: 20px;
   right: 20px;
@@ -83,6 +72,17 @@ exports[`Building Form component renders correctly 1`] = `
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
+}
+
+.c4 {
+  float: left;
+}
+
+.c5 {
+  margin-left: 152px;
+  font-size: 12px;
+  width: 250px;
+  text-align: left;
 }
 
 .c8 {

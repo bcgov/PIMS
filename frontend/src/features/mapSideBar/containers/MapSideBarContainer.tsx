@@ -68,10 +68,6 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
 
   /** query pims for the given pid, set data within the form if match found. Fallback to querying the parcel data layer. */
   const handlePidChange = (pid: string, nameSpace?: string) => {
-    const formattedPid = pid.replace(/-/g, '');
-    if (isNaN(+formattedPid)) {
-      return;
-    }
     fetchParcelsDetail({ pid } as any)(dispatch).then(resp => {
       const matchingParcel: any = resp?.data?.length ? _.first(resp?.data) : undefined;
       if (!!nameSpace && !!formikRef?.current?.values && !!matchingParcel?.id) {
@@ -81,7 +77,7 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
           autoClose: 7000,
         });
       } else {
-        const response = parcelsService.findByPid(formattedPid);
+        const response = parcelsService.findByPid(pid);
         handleParcelDataLayerResponse(response, dispatch);
       }
     });

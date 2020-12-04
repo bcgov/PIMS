@@ -97,6 +97,7 @@ const AddressForm = <T extends any>(props: AddressProps & FormikProps<T>) => {
           disabled={props.disabled}
           paginate={false}
           required
+          displayErrorTooltips
         />
       </Form.Row>
       <Form.Row>
