@@ -5,6 +5,7 @@ import { SresManual } from 'features/projects/common';
 import { ReactComponent as CloseSquare } from 'assets/images/close-square.svg';
 import TooltipWrapper from 'components/common/TooltipWrapper';
 import VisibilitySensor from 'react-visibility-sensor';
+import { INVENTORY_POLICY_URL } from 'constants/strings';
 
 interface IMapSideBarLayoutProps {
   show: boolean;
@@ -37,7 +38,7 @@ const MapSideBarLayout: React.FunctionComponent<IMapSideBarLayoutProps> = ({
           <>
             <HeaderRow>
               <h2 className="mr-auto">Property Details</h2>
-              <SresManual hideText={true} />
+              <SresManual clickUrl={INVENTORY_POLICY_URL} hideText={true} />
               <small className="p-1 mr-2">Inventory Policy</small>
               <TooltipWrapper toolTipId="close-sidebar-tooltip" toolTip="Close Form">
                 <CloseSquare title="close" onClick={() => setShowSideBar(false)} />
