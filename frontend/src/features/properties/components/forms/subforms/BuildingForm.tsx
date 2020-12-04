@@ -202,7 +202,7 @@ const BuildingForm = (props: BuildingProps & FormikProps<any>) => {
           </Col>
           <Col md={6}>
             <Form.Row>
-              <Form.Label>Rentable Area</Form.Label>
+              <Form.Label>Net Rentable Area</Form.Label>
               <InputGroup
                 required
                 displayErrorTooltips
