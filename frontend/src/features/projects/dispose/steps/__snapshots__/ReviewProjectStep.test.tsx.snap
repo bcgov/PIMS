@@ -775,6 +775,16 @@ exports[`renders correctly 1`] = `
         />
       </div>
     </div>
+    <label
+      className="form-label"
+      style={
+        Object {
+          "float": "right",
+        }
+      }
+    >
+      Please contact your PIMS Real Estate Manager to submit the project on your behalf
+    </label>
   </form>
 </div>
 `;

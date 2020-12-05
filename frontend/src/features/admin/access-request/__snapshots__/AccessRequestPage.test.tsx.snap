@@ -178,12 +178,6 @@ exports[`AccessRequestPage functionality renders RequestAccessPage correctly 1`]
           <div
             className="required form-group"
           >
-            <label
-              className="form-label"
-              htmlFor="input-role"
-            >
-              Role
-            </label>
             <select
               className="form-select form-control"
               id="input-role"

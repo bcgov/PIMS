@@ -101,7 +101,6 @@ const AccessRequestPage = () => {
         toolTip="To select multiple roles, hold Ctrl and select options."
       >
         <Select
-          label="Role"
           field="role"
           required={true}
           options={selectRoles}
