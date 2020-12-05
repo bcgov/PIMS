@@ -49,7 +49,7 @@ interface ModalProps {
   /** Optional title to display - no default. */
   title?: string;
   /** Optional message to display - no default. */
-  message?: string;
+  message?: string | React.ReactNode;
   /** allows the parent component to control the display of this modal.
    * Default behaviour is to show this modal on creation and close it on button click. */
   display?: boolean;

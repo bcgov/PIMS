@@ -11,7 +11,6 @@ import styled from 'styled-components';
 import { InventoryPolicy } from '../components/InventoryPolicy';
 import * as API from 'constants/API';
 import { IParcel } from 'actions/parcelsActions';
-import { ParcelDetailTabs } from 'features/properties/containers/ParcelDetailContainer';
 import { defaultAddressValues } from 'features/properties/components/forms/subforms/AddressForm';
 import { ParcelIdentificationForm } from './subforms/ParcelIdentificationForm';
 import { LandUsageForm } from './subforms/LandUsageForm';
@@ -24,7 +23,6 @@ import {
   IFinancial,
   IFinancialYear,
 } from 'features/properties/components/forms/subforms/EvaluationForm';
-import { IFormParcel } from 'features/properties/containers/ParcelDetailFormContainer';
 import { EvaluationKeys } from 'constants/evaluationKeys';
 import { FiscalKeys } from 'constants/fiscalKeys';
 import _ from 'lodash';
@@ -34,6 +32,7 @@ import { createParcel, updateParcel } from 'actionCreators/parcelsActionCreator'
 import { LandValuationForm } from './subforms/LandValuationForm';
 import { LandSteps } from 'constants/propertySteps';
 import useDraftMarkerSynchronizer from 'features/properties/hooks/useDraftMarkerSynchronizer';
+import { IFormParcel } from '../containers/MapSideBarContainer';
 
 const Container = styled.div`
   background-color: #fff;
@@ -241,13 +240,6 @@ const LandForm: React.FC<ILandForm> = (props: ILandForm) => {
     }
 
     let errors = await yupErrors;
-    const { buildings: buildingErrors, tabs, ...parcelErrors } = errors;
-    if (buildingErrors?.length) {
-      errors = { ...errors, tabs: [...(errors.tabs ?? []), ParcelDetailTabs.buildings] };
-    }
-    if (parcelErrors && Object.keys(parcelErrors).length) {
-      errors = { ...errors, tabs: [...(errors.tabs ?? []), ParcelDetailTabs.parcel] };
-    }
     if (pidDuplicated) {
       errors = { ...errors, pid: 'This PID is already in use.' };
     }

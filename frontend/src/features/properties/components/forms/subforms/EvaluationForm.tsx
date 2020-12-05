@@ -29,6 +29,8 @@ export interface IFinancial extends IFiscal, IEvaluation {
   year?: number;
   rowVersion?: string;
   parcelId?: number;
+  createdOn?: string;
+  updatedOn?: string;
 }
 
 export interface IFinancialYear {
@@ -103,6 +105,11 @@ export const getMergedFinancials = (existingFinancials: IFinancial[]) => {
 
 export const filterEmptyFinancials = (evaluations: IFinancial[]) =>
   _.filter(evaluations, evaluation => {
+    evaluation.createdOn = undefined;
+    evaluation.updatedOn = undefined;
+    if (evaluation.date === '') {
+      evaluation.date = undefined;
+    }
     return (
       isPositiveNumberOrZero(evaluation.value) ||
       (evaluation.key === EvaluationKeys.Appraised && !!evaluation.date)
