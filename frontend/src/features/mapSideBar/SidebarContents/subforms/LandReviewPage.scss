@@ -16,6 +16,7 @@
   .form-row,
   .content-item,
   .val-row,
+  .val-item,
   .postal {
     height: 30px;
     line-height: 30px;
@@ -24,7 +25,8 @@
   .field-row .label:after,
   .form-row .label:after,
   .postal .label:after,
-  .val-row .label:after {
+  .val-row .label:after,
+  .val-item .label:after {
     border-right: 1px solid #666666;
     padding: 15px 20px 15px 0px;
     display: inline-flex;
@@ -81,6 +83,12 @@
       text-align: right;
       margin-right: 20px;
     }
+  }
+  .valuation .form-group {
+    input {
+      width: 100%;
+    }
+    width: 100px;
   }
   .section-header {
     display: inline-flex;
