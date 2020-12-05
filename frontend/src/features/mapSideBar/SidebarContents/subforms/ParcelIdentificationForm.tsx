@@ -119,31 +119,22 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
           />
           <Form.Row className="justify-content-end">
             <Label>Street Address</Label>
-            {pid === '' && (isNaN(+pin) || pin === '') ? (
-              <GeocoderAutoComplete
-                required={true}
-                tooltip={streetAddressTooltip}
-                value={getIn(formikProps.values, withNameSpace('address.line1'))}
-                field={withNameSpace('address.line1')}
-                onSelectionChanged={selection => {
-                  formikProps.setFieldValue(withNameSpace('address.line1'), selection.fullAddress);
-                  setGeocoderResponse(selection);
-                }}
-                onTextChange={value =>
-                  formikProps.setFieldValue(withNameSpace('address.line1'), value)
-                }
-                error={getIn(formikProps.errors, withNameSpace('address.line1'))}
-                touch={getIn(formikProps.touched, withNameSpace('address.line1'))}
-                displayErrorTooltips
-              />
-            ) : (
-              <FastInput
-                field={withNameSpace('address.line1')}
-                required={true}
-                displayErrorTooltips
-                formikProps={formikProps}
-              />
-            )}
+            <GeocoderAutoComplete
+              required={true}
+              tooltip={streetAddressTooltip}
+              value={getIn(formikProps.values, withNameSpace('address.line1'))}
+              field={withNameSpace('address.line1')}
+              onSelectionChanged={selection => {
+                formikProps.setFieldValue(withNameSpace('address.line1'), selection.fullAddress);
+                setGeocoderResponse(selection);
+              }}
+              onTextChange={value =>
+                formikProps.setFieldValue(withNameSpace('address.line1'), value)
+              }
+              error={getIn(formikProps.errors, withNameSpace('address.line1'))}
+              touch={getIn(formikProps.touched, withNameSpace('address.line1'))}
+              displayErrorTooltips
+            />
           </Form.Row>
         </Col>
         <Col md={1}>
