@@ -77,7 +77,6 @@ namespace Pims.Api.Areas.Property.Mapping.Building
                 .Map(dest => dest.Parcels, src => src.Parcels)
                 .Map(dest => dest.ProjectNumber, src => src.ProjectNumber)
                 .Map(dest => dest.ClassificationId, src => src.ClassificationId)
-                .Map(dest => dest.Classification, src => src.Classification)
                 .Map(dest => dest.AgencyId, src => src.AgencyId)
                 .Map(dest => dest.Name, src => src.Name)
                 .Map(dest => dest.Description, src => src.Description)

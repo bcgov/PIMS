@@ -63,17 +63,6 @@ exports[`Building Form component renders correctly 1`] = `
   cursor: default;
 }
 
-.c7 {
-  top: 20px;
-  right: 20px;
-  border: 0px;
-  background-color: none;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-}
-
 .c4 {
   float: left;
 }
@@ -90,6 +79,17 @@ exports[`Building Form component renders correctly 1`] = `
   font-size: 12px;
   width: 250px;
   text-align: left;
+}
+
+.c7 {
+  top: 20px;
+  right: 20px;
+  border: 0px;
+  background-color: none;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
 }
 
 .c9 {
@@ -392,8 +392,8 @@ exports[`Building Form component renders correctly 1`] = `
                       >
                         <input
                           class="form-control"
-                          id="input-building.0.name"
-                          name="building.0.name"
+                          id="input-building.name"
+                          name="building.name"
                           value=""
                         />
                       </div>
@@ -411,8 +411,8 @@ exports[`Building Form component renders correctly 1`] = `
                       >
                         <textarea
                           class="form-control"
-                          id="input-building.0.description"
-                          name="building.0.description"
+                          id="input-building.description"
+                          name="building.description"
                         />
                       </div>
                     </div>
@@ -442,8 +442,8 @@ exports[`Building Form component renders correctly 1`] = `
                               autocomplete="off"
                               class="rbt-input-main form-control rbt-input"
                               disabled=""
-                              id="building.0.agencyId-field"
-                              name="building.0.agencyId"
+                              id="building.agencyId-field"
+                              name="building.agencyId"
                               role="combobox"
                               type="text"
                               value=""
@@ -482,8 +482,8 @@ exports[`Building Form component renders correctly 1`] = `
                       >
                         <select
                           class="form-control"
-                          id="input-building.0.buildingPredominateUseId-fast"
-                          name="building.0.buildingPredominateUseId"
+                          id="input-building.buildingPredominateUseId-fast"
+                          name="building.buildingPredominateUseId"
                           type="number"
                         >
                           <option
@@ -512,8 +512,8 @@ exports[`Building Form component renders correctly 1`] = `
                       >
                         <select
                           class="form-control"
-                          id="input-building.0.buildingConstructionTypeId-fast"
-                          name="building.0.buildingConstructionTypeId"
+                          id="input-building.buildingConstructionTypeId-fast"
+                          name="building.buildingConstructionTypeId"
                           type="number"
                         >
                           <option
@@ -537,14 +537,15 @@ exports[`Building Form component renders correctly 1`] = `
                       >
                         <input
                           class="input-small form-control"
-                          id="input-building.0.buildingFloorCount"
-                          name="building.0.buildingFloorCount"
+                          id="input-building.buildingFloorCount"
+                          name="building.buildingFloorCount"
                           style="width: 100px;"
                           type="number"
                           value=""
                         />
                       </div>
                     </div>
+                    
                     <div
                       class="row"
                     >
@@ -580,14 +581,14 @@ exports[`Building Form component renders correctly 1`] = `
                             >
                               <input
                                 class="form-check-input"
-                                id="input-building.0.isSensitive"
-                                name="building.0.isSensitive"
+                                id="input-building.isSensitive"
+                                name="building.isSensitive"
                                 type="radio"
                                 value="false"
                               />
                               <label
                                 class="form-check-label"
-                                for="input-building.0.isSensitive"
+                                for="input-building.isSensitive"
                                 title=""
                               >
                                 Yes
@@ -599,14 +600,14 @@ exports[`Building Form component renders correctly 1`] = `
                               <input
                                 checked=""
                                 class="form-check-input"
-                                id="input-building.0.isSensitive-2"
-                                name="building.0.isSensitive"
+                                id="input-building.isSensitive-2"
+                                name="building.isSensitive"
                                 type="radio"
                                 value="true"
                               />
                               <label
                                 class="form-check-label"
-                                for="input-building.0.isSensitive-2"
+                                for="input-building.isSensitive-2"
                                 title=""
                               >
                                 No
@@ -654,8 +655,8 @@ exports[`Building Form component renders correctly 1`] = `
                       >
                         <select
                           class="form-control"
-                          id="input-building.0.classificationId-fast"
-                          name="building.0.classificationId"
+                          id="input-building.classificationId-fast"
+                          name="building.classificationId"
                           style="margin-top: 5px; display: flex;"
                           type="number"
                         >
@@ -723,9 +724,9 @@ exports[`Building Form component renders correctly 1`] = `
                           >
                             <input
                               class="form-control"
-                              field="building.0.address.line1"
-                              id="input-building.0.address.line1"
-                              name="building.0.address.line1"
+                              field="building.address.line1"
+                              id="input-building.address.line1"
+                              name="building.address.line1"
                               value=""
                             />
                           </div>
@@ -757,8 +758,8 @@ exports[`Building Form component renders correctly 1`] = `
                               aria-haspopup="listbox"
                               autocomplete="off"
                               class="rbt-input-main form-control rbt-input"
-                              id="building.0.address.administrativeArea-field"
-                              name="building.0.address.administrativeArea"
+                              id="building.address.administrativeArea-field"
+                              name="building.address.administrativeArea"
                               role="combobox"
                               type="text"
                               value=""
@@ -789,8 +790,8 @@ exports[`Building Form component renders correctly 1`] = `
                         <select
                           class="form-select form-control"
                           disabled=""
-                          id="input-building.0.address.provinceId"
-                          name="building.0.address.provinceId"
+                          id="input-building.address.provinceId"
+                          name="building.address.provinceId"
                         >
                           <option
                             value=""
@@ -813,8 +814,8 @@ exports[`Building Form component renders correctly 1`] = `
                       >
                         <input
                           class="input-small form-control"
-                          id="input-building.0.address.postal"
-                          name="building.0.address.postal"
+                          id="input-building.address.postal"
+                          name="building.address.postal"
                           style="width: 120px;"
                           value=""
                         />
@@ -873,8 +874,8 @@ exports[`Building Form component renders correctly 1`] = `
                         >
                           <input
                             class="input-medium form-control"
-                            id="input-building.0.latitude"
-                            name="building.0.latitude"
+                            id="input-building.latitude"
+                            name="building.latitude"
                             type="number"
                             value=""
                           />
@@ -893,8 +894,8 @@ exports[`Building Form component renders correctly 1`] = `
                         >
                           <input
                             class="input-medium form-control"
-                            id="input-building.0.longitude"
-                            name="building.0.longitude"
+                            id="input-building.longitude"
+                            name="building.longitude"
                             type="number"
                             value=""
                           />

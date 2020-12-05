@@ -4,14 +4,14 @@ import useParamSideBar, { SidebarContextType } from '../hooks/useQueryParamSideB
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from 'reducers/rootReducer';
 import { IGenericNetworkAction } from 'actions/genericActions';
-import { IPropertyDetail, IParcel, IProperty } from 'actions/parcelsActions';
+import { IPropertyDetail, IParcel, IProperty, IBuilding } from 'actions/parcelsActions';
 import * as actionTypes from 'constants/actionTypes';
 import { fetchParcelDetail, fetchParcelsDetail } from 'actionCreators/parcelsActionCreator';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
-import { BuildingForm, SubmitPropertySelector } from '../SidebarContents';
+import { BuildingForm, SubmitPropertySelector, LandForm } from '../SidebarContents';
 import { BuildingSvg, LandSvg } from 'components/common/Icons';
 import { FormikValues, setIn, getIn } from 'formik';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import useGeocoder from 'features/properties/hooks/useGeocoder';
 import { isMouseEventRecent } from 'utils';
 import {
@@ -24,12 +24,41 @@ import AssociatedLandForm from '../SidebarContents/AssociatedLandForm';
 import { toast } from 'react-toastify';
 import _ from 'lodash';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+import GenericModal from 'components/common/GenericModal';
+import { FaCheckCircle } from 'react-icons/fa';
+import styled from 'styled-components';
+import { IFinancialYear } from 'features/properties/components/forms/subforms/EvaluationForm';
 
 interface IMapSideBarContainerProps {
   refreshParcels: Function;
   properties: IProperty[];
   movingPinNameSpaceProp?: string;
 }
+
+export interface IFormBuilding extends IBuilding {
+  financials: IFinancialYear[];
+}
+export interface IFormParcel extends IParcel {
+  financials: IFinancialYear[];
+  buildings: IFormBuilding[];
+}
+
+const FloatCheck = styled(FaCheckCircle)`
+  margin: 1em;
+  color: #2e8540;
+  float: left;
+`;
+
+const SuccessText = styled.p`
+  color: #2e8540;
+  margin-bottom: 0;
+  font-size: 24px;
+`;
+
+const BoldText = styled.p`
+  font-size: 24px;
+  fontweight: 700;
+`;
 
 /**
  * container responsible for logic related to map sidebar display. Synchronizes the state of the parcel detail forms with the corresponding query parameters (push/pull).
@@ -45,6 +74,7 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
     size,
     addBuilding,
     addRawLand,
+    addAssociatedLand,
   } = useParamSideBar();
   const dispatch = useDispatch();
   const parcelDetailRequest = useSelector<RootState, IGenericNetworkAction>(
@@ -61,10 +91,18 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
   const leafletMouseEvent = useSelector<RootState, LeafletMouseEvent | null>(
     state => state.leafletClickEvent?.mapClickEvent,
   );
+  const [buildingToAssociateLand, setBuildingToAssociateLand] = useState<IBuilding | undefined>();
+  const [showAssociateLandModal, setShowAssociateLandModal] = useState(false);
   const [propertyType, setPropertyType] = useState('');
   const formikRef = React.useRef<FormikValues>();
   const { handleGeocoderChanges } = useGeocoder({ formikRef });
   const parcelsService = useLayerQuery(PARCELS_LAYER_URL);
+
+  useEffect(() => {
+    if (buildingToAssociateLand !== undefined) {
+      setShowAssociateLandModal(true);
+    }
+  }, [buildingToAssociateLand]);
 
   /** query pims for the given pid, set data within the form if match found. Fallback to querying the parcel data layer. */
   const handlePidChange = (pid: string, nameSpace?: string) => {
@@ -154,14 +192,8 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
         );
         droppedMarkerSearch(movingPinNameSpace, leafletMouseEvent?.latlng);
       } else {
-        formikRef.current.setFieldValue(
-          `data.buildings.0.latitude`,
-          leafletMouseEvent?.latlng.lat || 0,
-        );
-        formikRef.current.setFieldValue(
-          `data.buildings.0.longitude`,
-          leafletMouseEvent?.latlng.lng || 0,
-        );
+        formikRef.current.setFieldValue(`data.latitude`, leafletMouseEvent?.latlng.lat || 0);
+        formikRef.current.setFieldValue(`data.longitude`, leafletMouseEvent?.latlng.lng || 0);
       }
 
       setMovingPinNameSpace(undefined);
@@ -227,8 +259,8 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
           <BuildingForm
             formikRef={formikRef}
             setMovingPinNameSpace={setMovingPinNameSpace}
-            nameSpace="data.buildings"
-            index="0"
+            nameSpace="data"
+            setBuildingToAssociateLand={setBuildingToAssociateLand}
             isAdmin={keycloak.isAdmin}
           />
         );
@@ -237,12 +269,26 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
           setPropertyType('land');
         }
         return (
+          <LandForm
+            setMovingPinNameSpace={setMovingPinNameSpace}
+            formikRef={formikRef}
+            handleGeocoderChanges={handleGeocoderChanges}
+            handlePidChange={handlePidChange}
+            handlePinChange={handlePinChange}
+          />
+        );
+      case SidebarContextType.ADD_ASSOCIATED_LAND:
+        if (propertyType !== 'parcel') {
+          setPropertyType('parcel');
+        }
+        return (
           <AssociatedLandForm
             setMovingPinNameSpace={setMovingPinNameSpace}
             formikRef={formikRef}
             handleGeocoderChanges={handleGeocoderChanges}
             handlePidChange={handlePidChange}
             handlePinChange={handlePinChange}
+            initialValues={buildingToAssociateLand ?? ({} as any)}
           />
         );
       default:
@@ -259,6 +305,27 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
       hidePolicy={true}
     >
       {render()}
+      <GenericModal
+        message={
+          <>
+            <FloatCheck size={32}></FloatCheck>
+            <SuccessText>Success!</SuccessText>
+            <p>Your building has been added to the PIMS inventory</p>
+            <BoldText>Would you like to associate land to this building?</BoldText>
+          </>
+        }
+        display={showAssociateLandModal}
+        cancelButtonText="No, I'm done"
+        okButtonText="Yes, add land"
+        handleOk={() => {
+          addAssociatedLand();
+          setShowAssociateLandModal(false);
+        }}
+        handleCancel={() => {
+          setShowSideBar(false);
+          setShowAssociateLandModal(false);
+        }}
+      ></GenericModal>
     </MapSideBarLayout>
   );
 };

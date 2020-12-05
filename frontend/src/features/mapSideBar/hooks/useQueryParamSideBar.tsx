@@ -9,6 +9,7 @@ export enum SidebarContextType {
   ADD_PROPERTY_TYPE_SELECTOR = 'addPropertyTypeSelector',
   ADD_BUILDING = 'addBuilding',
   ADD_RAW_LAND = 'addRawLand',
+  ADD_ASSOCIATED_LAND = 'addAssociatedLand',
   VIEW_BUILDING = 'viewBuilding',
   VIEW_RAW_LAND = 'viewRawLand',
 }
@@ -19,6 +20,7 @@ interface IMapSideBar {
   overrideParcelId: (parcelId: number | undefined) => void;
   addBuilding: () => void;
   addRawLand: () => void;
+  addAssociatedLand: () => void;
   parcelId?: number;
   disabled?: boolean;
   loadDraft?: boolean;
@@ -79,6 +81,10 @@ const useQueryParamSideBar = (): IMapSideBar => {
     setShow(true, SidebarContextType.ADD_RAW_LAND, 'wide');
   };
 
+  const addAssociatedLand = () => {
+    setShow(true, SidebarContextType.ADD_ASSOCIATED_LAND, 'wide');
+  };
+
   return {
     showSideBar,
     context: contextName,
@@ -95,6 +101,7 @@ const useQueryParamSideBar = (): IMapSideBar => {
     newParcel: searchParams?.new === 'true',
     addBuilding,
     addRawLand,
+    addAssociatedLand,
   };
 };
 

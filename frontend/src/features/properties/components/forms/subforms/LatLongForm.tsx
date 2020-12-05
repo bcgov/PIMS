@@ -67,11 +67,7 @@ const LatLongForm = <T extends any>(props: LatLongFormProps & FormikProps<T>) =>
               e.preventDefault();
             }}
           >
-            {props?.nameSpace?.includes('building') === true ? (
-              <BuildingDraftIcon />
-            ) : (
-              <ParcelDraftIcon className="parcel-icon" />
-            )}
+            {props.building ? <BuildingDraftIcon /> : <ParcelDraftIcon className="parcel-icon" />}
           </DraftMarkerButton>
         </Col>
       </Row>

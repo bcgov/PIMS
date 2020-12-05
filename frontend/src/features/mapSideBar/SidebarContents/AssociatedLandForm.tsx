@@ -21,10 +21,10 @@ import { getInitialValues as getInitialLandValues } from './LandForm';
 import useParcelLayerData from 'features/properties/hooks/useParcelLayerData';
 import { AssociatedLandReviewPage } from './subforms/AssociatedLandReviewPage';
 import { AssociatedLandSchema } from 'utils/YupSchema';
-import { IFormParcel } from 'features/properties/containers/ParcelDetailFormContainer';
 import { useDispatch } from 'react-redux';
 import { useBuildingApi } from '../hooks/useBuildingApi';
 import _ from 'lodash';
+import { IFormParcel } from '../containers/MapSideBarContainer';
 
 const Container = styled.div`
   background-color: #fff;
@@ -232,6 +232,8 @@ interface IAssociatedLandForm {
   handlePidChange: (pid: string) => void;
   /** help with formatting of the pin */
   handlePinChange: (pin: string) => void;
+  /** The initial building values to add associated land to */
+  initialValues: IBuilding;
 }
 
 /**
@@ -248,8 +250,11 @@ const AssociatedLandForm: React.FC<IAssociatedLandForm> = (props: IAssociatedLan
   let initialValues = {
     activeStep: 0,
     activeTab: 0,
-    data: getInitialValues(),
+    data: { ...getInitialValues(), ...props.initialValues },
   };
+  if (initialValues.data.parcels.length === 0) {
+    initialValues.data.parcels.push(getInitialLandValues());
+  }
 
   initialValues.data.agencyId = keycloak.agencyId ?? '';
 
@@ -370,6 +375,7 @@ const AssociatedLandForm: React.FC<IAssociatedLandForm> = (props: IAssociatedLan
           handlePidChange={props.handlePidChange}
           handlePinChange={props.handlePinChange}
           formikRef={props.formikRef}
+          initialValues={props.initialValues}
         />
       </SteppedForm>
     </Container>
