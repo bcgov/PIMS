@@ -9,6 +9,11 @@ import { success, error, request } from 'actions/genericActions';
 import moment from 'moment-timezone';
 import { IStatus } from 'features/projects/common';
 
+/**
+ * Truncates the specified 'input' value to the 'maxLength'.
+ * @param input Text value you want to truncate.
+ * @param maxLength The maximum length of the new string value.
+ */
 export const truncate = (input: string, maxLength: number): string => {
   if (input && input.length > 1000) {
     return `${input.substr(0, maxLength)}...`;
@@ -16,22 +21,51 @@ export const truncate = (input: string, maxLength: number): string => {
   return input;
 };
 
+/**
+ * Convert the specified 'input' value into a decimal or undefined.
+ * @param input The string value to convert to a decimal.
+ */
 export const decimalOrUndefined = (input: string | ''): number | undefined => {
   return input !== '' ? parseInt(input, 10) : undefined;
 };
 
+/**
+ * Convert the specified 'input' value into a decimal or null.
+ * @param input The string value to convert to a decimal.
+ */
 export const decimalOrNull = (input: string): number | null => {
   return input !== '' ? parseInt(input, 10) : null;
 };
 
+/**
+ * Convert the specified 'input' value into a decimal or empty string.
+ * @param input The string value to convert to a decimal.
+ */
 export const decimalOrEmpty = (input: string): number | string => {
   return input !== '' ? parseInt(input, 10) : '';
 };
 
+/**
+ * Convert the specified 'input' value into a float or null.
+ * @param input The string value to convert to a float.
+ */
 export const floatOrNull = (input: string): number | null => {
   return input !== '' ? parseFloat(input) : null;
 };
 
+/**
+ * Convert the specified 'input' value into a float or undefined.
+ * @param input The string value to convert to a float.
+ */
+export const floatOrUndefined = (input: string | ''): number | undefined => {
+  return input !== '' ? parseFloat(input) : undefined;
+};
+
+/**
+ * Determine if the specified 'input' value is a positive number of zero.
+ * @param input The value to evaluate.
+ * @returns True if the value is a positive number or zero, false otherwise.
+ */
 export const isPositiveNumberOrZero = (input: string | number | undefined | null) => {
   if (isNull(input) || isUndefined(input)) {
     return false;

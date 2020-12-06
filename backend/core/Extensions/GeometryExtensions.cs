@@ -17,7 +17,7 @@ namespace Pims.Core.Extensions
             if (envelope != null && envelope.MinX <= envelope.MaxX && envelope.MinY <= envelope.MaxY)
             {
                 var pfactory = new GeometryFactory();
-                var bounds = new []
+                var bounds = new[]
                 {
                     new Coordinate(envelope.MinX, envelope.MinY),
                     new Coordinate(envelope.MaxX, envelope.MinY),
@@ -58,7 +58,7 @@ namespace Pims.Core.Extensions
                         new Coordinate(coords[0].X, coords[0].Y),
                     };
                 }
-                else if (coords[0].Equals(coords[^1]))
+                else if (!coords[0].Equals(coords[^1]))
                 {
                     // Make sure the ring is closed.
                     bounds = new Coordinate[coords.Length + 1];

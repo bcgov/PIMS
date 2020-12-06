@@ -218,7 +218,7 @@ namespace Pims.Core.Extensions
         }
 
         /// <summary>
-        /// Get the value from the dictionary for the specified 'key' and return it as an double.
+        /// Get the value from the dictionary for the specified 'key' and return it as an Envelope.
         /// </summary>
         /// <param name="dict"></param>
         /// <param name="key"></param>
