@@ -248,6 +248,6 @@ export const mockAgencyModel = {
   bounds: null,
   filter: {
     agencies: '1',
-    classificationId: null,
+    classificationId: undefined,
   },
 } as MapViewportChangeEvent;

@@ -21,7 +21,7 @@ import { Container, Row, Col } from 'react-bootstrap';
 import MapFilterBar, { MapFilterChangeEvent } from '../MapFilterBar';
 import { ILookupCode } from 'actions/lookupActions';
 import BasemapToggle, { BasemapToggleEvent, BaseLayer } from '../BasemapToggle';
-import { decimalOrNull, floatOrNull } from 'utils';
+import { decimalOrUndefined, floatOrUndefined } from 'utils';
 import { PopupView } from '../PopupView';
 import { useDispatch, useSelector } from 'react-redux';
 import { setMapViewZoom } from 'reducers/mapViewZoomSlice';
@@ -56,15 +56,15 @@ import { PointFeature } from '../types';
 export type MapViewportChangeEvent = {
   bounds: LatLngBounds | null;
   filter?: {
-    pid: string;
-    address: string;
-    administrativeArea: string;
-    projectNumber: string;
+    pid?: string;
+    address?: string;
+    administrativeArea?: string;
+    projectNumber?: string;
     /** comma-separated list of agencies to filter by */
-    agencies: string | null;
-    classificationId: number | null;
-    minLotSize: number | null;
-    maxLotSize: number | null;
+    agencies?: string;
+    classificationId?: number;
+    minLotSize?: number;
+    maxLotSize?: number;
     inSurplusPropertyProgram?: boolean;
     inEnhancedReferralProcess?: boolean;
   };
@@ -205,9 +205,9 @@ const Map: React.FC<MapProps> = ({
         administrativeArea,
         projectNumber,
         agencies: agencies,
-        classificationId: decimalOrNull(classificationId),
-        minLotSize: floatOrNull(minLotSize),
-        maxLotSize: floatOrNull(maxLotSize),
+        classificationId: decimalOrUndefined(classificationId),
+        minLotSize: floatOrUndefined(minLotSize),
+        maxLotSize: floatOrUndefined(maxLotSize),
         inSurplusPropertyProgram,
         inEnhancedReferralProcess,
       },
@@ -421,9 +421,16 @@ const Map: React.FC<MapProps> = ({
                     zoom={zoom}
                     onMarkerClick={onSingleMarkerClick}
                     filter={{
-                      ...mapFilter,
-                      minLandArea: mapFilter.minLotSize,
-                      maxLandArea: mapFilter.maxLotSize,
+                      pid: mapFilter.pid,
+                      address: mapFilter.address,
+                      administrativeArea: mapFilter.administrativeArea,
+                      projectNumber: mapFilter.projectNumber,
+                      classificationId: decimalOrUndefined(mapFilter.classificationId),
+                      agencies: mapFilter.agencies,
+                      minLandArea: floatOrUndefined(mapFilter.minLotSize),
+                      maxLandArea: floatOrUndefined(mapFilter.maxLotSize),
+                      inSurplusPropertyProgram: mapFilter.inSurplusPropertyProgram,
+                      inEnhancedReferralProcess: mapFilter.inEnhancedReferralProcess,
                     }}
                   ></InventoryLayer>
                 </ReactLeafletMap>

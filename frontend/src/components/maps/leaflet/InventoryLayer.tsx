@@ -6,6 +6,7 @@ import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { LatLngBounds } from 'leaflet';
 import React from 'react';
 import { useLeaflet } from 'react-leaflet';
+import { toast } from 'react-toastify';
 import { PointFeature } from '../types';
 import PointClusterer from './PointClusterer';
 
@@ -93,6 +94,11 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
       },
     })
       .then(async response => {
+        if (!response.ok) {
+          throw Error(
+            `${response.statusText}: An error occured while fetching properties in inventory.`,
+          );
+        }
         const data = (await response.json()) as Feature[];
         const points = data.map(f => {
           return {
@@ -102,7 +108,8 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
         setFeatures(points);
       })
       .catch(error => {
-        console.log(error);
+        toast.error((error as Error).message, { autoClose: 7000 });
+        console.error(error);
       });
   }, [url, bbox]);
 
