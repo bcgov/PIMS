@@ -1,5 +1,5 @@
 import { Icon, DivIcon, LatLngExpression, Layer, Marker, Map, GeoJSON } from 'leaflet';
-import { ICluster } from '../types';
+import { ICluster, PointFeature } from '../types';
 import { IProperty, PropertyTypes } from 'actions/parcelsActions';
 import Supercluster from 'supercluster';
 import { ReviewWorkflowStatus } from 'features/projects/common';
@@ -66,12 +66,6 @@ export const erpIcon = new Icon({
   shadowSize: [41, 41],
 });
 
-export type PointFeature = Supercluster.PointFeature<{
-  propertyId: number;
-  propertyTypeId: PropertyTypes;
-  name?: string;
-}>;
-
 /**
  * Creates map points (in GeoJSON format) for further clustering by `supercluster`
  * @param properties
@@ -81,12 +75,8 @@ export const createPoints = (properties: IProperty[]) =>
     return {
       type: 'Feature',
       properties: {
+        ...x,
         cluster: false,
-        propertyId: x.id,
-        propertyTypeId: x.propertyTypeId,
-        projectNumber: x.projectNumber,
-        projectStatus: x.projectStatus,
-        name: x.name,
       },
       geometry: {
         type: 'Point',
@@ -189,9 +179,10 @@ export const generateKey = (p: IProperty) =>
 
 /** Creates a IProperty object from a GeoJSON point */
 export const asProperty = (point: PointFeature): IProperty => {
-  const { propertyId: id, propertyTypeId, name } = point?.properties;
+  const { id, propertyTypeId, name } = point?.properties;
   const latlng = GeoJSON.coordsToLatLng(point?.geometry?.coordinates as [number, number]);
   return {
+    ...point.properties,
     id,
     propertyTypeId,
     latitude: latlng.lat,

@@ -59,17 +59,7 @@ namespace Pims.Dal.Helpers.Extensions
 
             if (filter.NELatitude.HasValue && filter.NELongitude.HasValue && filter.SWLatitude.HasValue && filter.SWLongitude.HasValue)
             {
-                var pfactory = new NetTopologySuite.Geometries.GeometryFactory();
-                var ring = new NetTopologySuite.Geometries.LinearRing(
-                    new[] {
-                        new NetTopologySuite.Geometries.Coordinate(filter.NELongitude.Value, filter.NELatitude.Value),
-                        new NetTopologySuite.Geometries.Coordinate(filter.SWLongitude.Value, filter.NELatitude.Value),
-                        new NetTopologySuite.Geometries.Coordinate(filter.SWLongitude.Value, filter.SWLatitude.Value),
-                        new NetTopologySuite.Geometries.Coordinate(filter.NELongitude.Value, filter.SWLatitude.Value),
-                        new NetTopologySuite.Geometries.Coordinate(filter.NELongitude.Value, filter.NELatitude.Value)
-                    });
-                var poly = pfactory.CreatePolygon(ring);
-                poly.SRID = 4326;
+                var poly = new NetTopologySuite.Geometries.Envelope(filter.NELongitude.Value, filter.SWLongitude.Value, filter.NELatitude.Value, filter.SWLatitude.Value).ToPolygon();
                 query = query.Where(p => poly.Contains(p.Location));
             }
 
