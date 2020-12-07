@@ -13,6 +13,11 @@
           margin: 0;
         }
       }
+      .agency-item {
+        .form-control {
+          width: 300px;
+        }
+      }
       .map-filter-typeahead {
         min-width: 350px;
       }
