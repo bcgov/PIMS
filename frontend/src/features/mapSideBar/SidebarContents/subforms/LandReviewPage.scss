@@ -1,19 +1,37 @@
 .review-section {
-  .field-row,
-  .content-item,
-  .val-row {
+  .row,
+  .col,
+  [class*='col-'] {
+    margin: 0px;
+    padding: 0px;
+  }
+  .tenancy .input-group .input-group-append {
     height: 30px;
   }
-  .break {
-    margin-bottom: 50px;
+  .parcel-content {
+    padding: 10px;
+  }
+  .field-row,
+  .content-item,
+  .val-row,
+  .postal {
+    height: 30px;
+    line-height: 30px;
+  }
+  .content-item .label:after,
+  .field-row .label:after,
+  .postal .label:after,
+  .val-row .label:after {
+    border-right: 1px solid #666666;
+    padding: 15px 20px 15px 0px;
+    display: inline-flex;
+    content: '';
+  }
+  .check-item {
+    line-height: 30px;
   }
   .harmful {
     justify-content: center;
-  }
-  .vl {
-    border-left: 1px solid #666666;
-    height: 45px;
-    margin-right: 15px;
   }
   .form-control:disabled {
     font-weight: bold;
@@ -30,75 +48,12 @@
   .review-steps {
     text-align: left;
   }
-  .valuation {
-    background-color: #f2f2f2;
-    margin-top: 10px;
-    border-radius: 10px;
-    padding: 20px;
-    margin-left: 30px;
-    font-size: small;
-    .valuation-header {
-      margin-left: 10px;
-      margin-bottom: 10px;
-      width: 400px;
-      .svg {
-        margin-right: 5px;
-      }
-      .edit {
-        margin-left: 250px;
-        cursor: pointer;
-        color: #1a5a96;
-      }
-    }
-    .val-row {
-      .label {
-        margin-right: 15px;
-        margin-top: 5px;
-        text-align: right;
-        width: 120px;
-      }
-      .form-control {
-        height: 30px;
-        font-size: small;
-        width: 200px;
-      }
-    }
-  }
-  .usage {
-    background-color: #f2f2f2;
-    border-radius: 10px;
-    padding: 20px;
-    margin-top: 10px;
-    margin-left: 30px;
-    font-size: small;
-    .form-control {
-      height: 30px;
-      font-size: small;
-      width: 200px;
-    }
-    .label {
-      text-align: right;
-      width: 100px;
-      clear: both;
-      float: left;
-      margin-right: 15px;
-      margin-top: 5px;
-    }
-    .usage-header {
-      margin-left: 10px;
-      margin-bottom: 10px;
-      width: 400px;
-      .svg {
-        margin-right: 5px;
-      }
-      .edit {
-        margin-left: 280px;
-        cursor: pointer;
-        color: #1a5a96;
-      }
-    }
-  }
-  .identification {
+  .valuation,
+  .identification,
+  .usage,
+  .tenancy {
+    margin: 10px;
+    width: 100%;
     padding: 20px;
     background-color: #f2f2f2;
     border-radius: 10px;
@@ -106,8 +61,9 @@
     .form-control,
     .GeocoderAutoComplete,
     .AutoCompleteText,
-    .input-group {
-      width: 200px;
+    .input-group,
+    .form-control {
+      width: 180px;
       height: 30px;
       font-size: small;
       padding: 0;
@@ -118,24 +74,24 @@
       }
     }
     .label {
-      display: inline-block;
-      margin-top: 5px;
-      width: 140px;
+      width: 150px;
       text-align: right;
       margin-right: 20px;
     }
-    .identification-header {
-      margin-left: 10px;
-      margin-top: 10px;
-      width: 400px;
-      .svg {
-        margin-right: 5px;
-      }
-      .edit {
-        margin-left: 150px;
-        cursor: pointer;
-        color: #1a5a96;
-      }
+  }
+  .section-header {
+    display: inline-flex;
+    width: 100%;
+    justify-content: space-between;
+    span {
+      display: inline-flex;
     }
+    .svg {
+      margin-right: 5px;
+    }
+  }
+  .edit {
+    cursor: pointer;
+    color: #1a5a96;
   }
 }

@@ -6,12 +6,14 @@
       .tbody {
         max-height: 200px;
         overflow-y: auto;
+        margin-right: -20px;
       }
     }
     &.assessed {
       .tbody {
         max-height: 150px;
         overflow-y: auto;
+        margin-right: -20px;
       }
       width: 520px;
     }
