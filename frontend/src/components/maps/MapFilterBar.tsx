@@ -168,7 +168,6 @@ const MapFilterBar: React.FC<MapFilterProps> = ({
                 options={agencies}
                 filterBy={['code', 'label', 'parent']}
                 placeholder="Enter an Agency"
-                isFilter
               />
             </Col>
             <Col className="bar-item">
