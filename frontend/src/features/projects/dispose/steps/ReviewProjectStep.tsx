@@ -15,9 +15,10 @@ import {
  */
 const ReviewProjectStep = ({ formikRef }: IStepProps) => {
   const { project } = useStepper();
-  const { onSubmit, canUserEditForm } = useStepForm();
+  const { onSubmit, canUserEditForm, canUserSubmitForm } = useStepForm();
   const initialValues = { ...project, confirmation: true };
   const canEdit = canUserEditForm(project.agencyId);
+  const canSubmit = canUserSubmitForm();
   return (
     <Container fluid className="ReviewProjectStep">
       <Formik
@@ -33,9 +34,13 @@ const ReviewProjectStep = ({ formikRef }: IStepProps) => {
           <ReviewProjectForm canEdit={canEdit} />
           <ProjectNotes disabled={true} />
           <PublicNotes disabled={!canEdit} />
-          {canEdit && (
+          {canSubmit ? (
             <Form.Label style={{ float: 'right' }}>
               Apply to the Surplus Property Program
+            </Form.Label>
+          ) : (
+            <Form.Label style={{ float: 'right' }}>
+              Please contact your PIMS Real Estate Manager to submit the project on your behalf
             </Form.Label>
           )}
         </Form>

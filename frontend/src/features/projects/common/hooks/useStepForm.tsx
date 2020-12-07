@@ -71,6 +71,10 @@ const useStepForm = () => {
     );
   };
 
+  const canUserSubmitForm = () => {
+    return keycloak.hasClaim(Claims.DISPOSE_REQUEST);
+  };
+
   const canUserApproveForm = () => {
     return keycloak.hasClaim(Claims.ADMIN_PROJECTS);
   };
@@ -112,6 +116,7 @@ const useStepForm = () => {
     onSubmit,
     canUserOverride,
     canUserEditForm,
+    canUserSubmitForm,
     canUserApproveForm,
     onSubmitReview,
     addOrUpdateProject,

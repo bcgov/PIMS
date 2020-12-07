@@ -77,6 +77,7 @@ describe('dispose project draft step display', () => {
     (useStepForm as jest.Mock).mockReturnValue({
       noFetchingProjectRequests: true,
       canUserEditForm: () => true,
+      canUserSubmitForm: () => true,
       onSubmit: onSubmit,
       onSave: onSave,
       addOrUpdateProject: () => ({
