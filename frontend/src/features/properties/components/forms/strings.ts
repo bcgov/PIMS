@@ -11,7 +11,7 @@ export const CoreStrategic =
   'include vacant or underutilized assets in appropriate circumstances.';
 
 export const SurplusEncumbered =
-  ' Surplus Encumbered – assets that are surplus and cannot readily be redeployed or \n' +
+  'Surplus Encumbered – assets that are surplus and cannot readily be redeployed or \n' +
   'disposed of due to one or more major obstacles such as significant First Nations \n' +
   'interests, environmental contamination, restrictions on title, etc';
 

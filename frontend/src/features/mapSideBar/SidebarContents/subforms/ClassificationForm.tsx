@@ -131,13 +131,6 @@ export const ClassificationForm: React.FC<IClassificationFormProps> = ({
         </Col>
         <Col md={6}>{renderInfo()}</Col>
       </Row>
-      {!disabled && (
-        <Row>
-          <FieldDescription>
-            A disposal project must be initiated in order to mark a property as "surplus active".
-          </FieldDescription>
-        </Row>
-      )}
     </>
   );
 };
