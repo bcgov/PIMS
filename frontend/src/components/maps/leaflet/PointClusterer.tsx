@@ -1,16 +1,20 @@
 import './PointClusterer.scss';
 
-import React, { useRef, useEffect } from 'react';
-import { LeafletMouseEvent, Marker } from 'leaflet';
-import { GeoJSON as GeoJsonLayer, useLeaflet } from 'react-leaflet';
+import React, { useRef, useEffect, useState, useCallback } from 'react';
+import { DivIcon } from 'leaflet';
+import { useLeaflet, Marker, Polyline, Popup } from 'react-leaflet';
 import { BBox } from 'geojson';
 import { Spiderfier } from './Spiderfier';
 import { ICluster, PointFeature } from '../types';
-import { pointToLayer, zoomToCluster } from './mapUtils';
+import { getMarkerIcon, pointToLayer, zoomToCluster } from './mapUtils';
 import useSupercluster from '../hooks/useSupercluster';
+import { PopupView } from '../PopupView';
+import { IPropertyDetail } from 'actions/parcelsActions';
+import SelectedPropertyMarker from './SelectedPropertyMarker/SelectedPropertyMarker';
 
 export type PointClustererProps = {
   points: Array<PointFeature>;
+  selected?: IPropertyDetail | null;
   bounds?: BBox;
   zoom: number;
   minZoom?: number;
@@ -29,14 +33,14 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
   onMarkerClick,
   minZoom,
   maxZoom,
+  selected,
   zoomToBoundsOnClick = true,
   spiderfyOnMaxZoom = true,
 }) => {
   // state and refs
-  const ref = useRef<GeoJsonLayer>(null);
   const spiderfierRef = useRef<Spiderfier>();
   const leaflet = useLeaflet();
-
+  const [spider, setSpider] = useState<any>({});
   if (!leaflet || !leaflet.map) {
     throw new Error('<PointClusterer /> must be used under a <Map> leaflet component');
   }
@@ -55,18 +59,8 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
     options: { radius: 60, extent: 256, minZoom, maxZoom },
   });
 
-  // reload the geojson layer when clusters change (usually due to zoom changes)
-  const reload = () => {
-    const geojsonLayer = ref.current?.leafletElement;
-    if (geojsonLayer) {
-      geojsonLayer.clearLayers();
-      geojsonLayer.addData(clusters as any);
-    }
-  };
-  useEffect(reload, [clusters]);
-
   // Register event handlers to shrink and expand clusters when map is interacted with
-  const componentDidMount = () => {
+  const componentDidMount = useCallback(() => {
     if (!spiderfierRef.current) {
       spiderfierRef.current = new Spiderfier(map, {
         getClusterId: cluster => cluster?.properties?.cluster_id as number,
@@ -89,47 +83,145 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
       map.off('clear', spiderfier.unspiderfy, spiderfier);
       spiderfierRef.current = undefined;
     };
-  };
-  useEffect(componentDidMount, [map, onMarkerClick, supercluster]);
+  }, [map, onMarkerClick, supercluster]);
+
+  useEffect(componentDidMount, [componentDidMount]);
 
   // on-click handler
-  const zoomOrSpiderfy = (cluster: ICluster) => {
-    if (!supercluster || !spiderfierRef.current || !cluster) {
-      return;
-    }
-    const { cluster_id } = cluster.properties;
-    const expansionZoom = Math.min(
-      supercluster.getClusterExpansionZoom(cluster_id as number),
-      maxZoom as number,
-    );
-    // already at maxZoom, need to spiderfy child markers
-    if (expansionZoom === maxZoom && spiderfyOnMaxZoom) {
-      spiderfierRef.current.spiderfy(cluster);
-    } else if (zoomToBoundsOnClick) {
-      zoomToCluster(cluster, expansionZoom, map);
-    }
-  };
-
-  const onLayerClick = (e: LeafletMouseEvent) => {
-    // the point may be either a cluster or a single map pin
-    const clusterOrPin = (e?.propagatedFrom as Marker)?.feature as ICluster;
-    const isCluster = clusterOrPin?.properties?.cluster;
-
-    // the user clicked on a cluster
-    if (!!isCluster) {
-      zoomOrSpiderfy(clusterOrPin);
-    } else {
-      onMarkerClick?.(clusterOrPin as PointFeature); // single pin
-    }
-  };
+  const zoomOrSpiderfy = useCallback(
+    (cluster: ICluster) => {
+      if (!supercluster || !spiderfierRef.current || !cluster) {
+        return;
+      }
+      const { cluster_id } = cluster.properties;
+      const expansionZoom = Math.min(
+        supercluster.getClusterExpansionZoom(cluster_id as number),
+        maxZoom as number,
+      );
+      // already at maxZoom, need to spiderfy child markers
+      if (expansionZoom === maxZoom && spiderfyOnMaxZoom) {
+        const res = spiderfierRef.current.spiderfy(cluster);
+        setSpider(res);
+      } else if (zoomToBoundsOnClick) {
+        zoomToCluster(cluster, expansionZoom, map);
+      }
+    },
+    [spiderfierRef, map, maxZoom, spiderfyOnMaxZoom, supercluster, zoomToBoundsOnClick],
+  );
 
   return (
-    <GeoJsonLayer
-      ref={ref}
-      data={clusters as any}
-      pointToLayer={pointToLayer}
-      onclick={onLayerClick}
-    ></GeoJsonLayer>
+    <>
+      {clusters.map((cluster, index) => {
+        // every cluster point has coordinates
+        const [longitude, latitude] = cluster.geometry.coordinates;
+
+        const {
+          cluster: isCluster,
+          point_count: pointCount,
+          point_count_abbreviated,
+        } = cluster.properties as any;
+        const size = pointCount < 100 ? 'small' : pointCount < 1000 ? 'medium' : 'large';
+
+        // we have a cluster to render
+        if (isCluster) {
+          return (
+            // render the cluster marker
+            <Marker
+              key={index}
+              position={[latitude, longitude]}
+              onclick={() => zoomOrSpiderfy(cluster)}
+              icon={
+                new DivIcon({
+                  html: `<div><span>${point_count_abbreviated}</span></div>`,
+                  className: `marker-cluster marker-cluster-${size}`,
+                  iconSize: [40, 40],
+                })
+              }
+            />
+          );
+        }
+
+        return (
+          // render single marker, not in a cluster
+          <Marker
+            {...(cluster.properties as any)}
+            key={index}
+            position={[latitude, longitude]}
+            icon={getMarkerIcon(cluster)}
+          >
+            <Popup>
+              <PopupView
+                propertyTypeId={cluster.properties.propertyTypeId}
+                propertyDetail={cluster.properties as any}
+                onLinkClick={() => {
+                  setSpider({});
+                  !!onMarkerClick && onMarkerClick(cluster as any);
+                }}
+              />
+            </Popup>
+          </Marker>
+        );
+      })}
+
+      {/**
+       * Render markers from a spiderfied cluster click
+       */}
+      {spider.markers?.map((m: any, index: number) => (
+        <Marker
+          {...(m.properties as any)}
+          key={index}
+          position={m.position}
+          icon={getMarkerIcon(m)}
+        >
+          <Popup>
+            <PopupView
+              propertyTypeId={m.properties.propertyTypeId}
+              propertyDetail={m.properties}
+              onLinkClick={() => {
+                setSpider({});
+                !!onMarkerClick && onMarkerClick(m as any);
+              }}
+            />
+          </Popup>
+        </Marker>
+      ))}
+      {/**
+       * Render lines/legs from a spiderfied cluster click
+       */}
+      {spider.lines?.map((m: any, index: number) => (
+        <Polyline key={index} positions={m.coords} {...m.options} />
+      ))}
+      {/**
+       * render selected property marker, auto opens the property popup
+       */}
+      {!!selected?.parcelDetail && (
+        <SelectedPropertyMarker
+          {...selected.parcelDetail}
+          icon={getMarkerIcon({ properties: selected } as any)}
+          position={[
+            selected.parcelDetail!.latitude as number,
+            selected.parcelDetail!.longitude as number,
+          ]}
+          map={leaflet.map}
+        >
+          <Popup>
+            <PopupView
+              propertyTypeId={selected.propertyTypeId}
+              propertyDetail={selected.parcelDetail}
+              zoomTo={() =>
+                leaflet.map?.flyTo(
+                  [
+                    selected.parcelDetail!.latitude as number,
+                    selected.parcelDetail!.longitude as number,
+                  ],
+                  14,
+                )
+              }
+            />
+          </Popup>
+        </SelectedPropertyMarker>
+      )}
+    </>
   );
 };
 

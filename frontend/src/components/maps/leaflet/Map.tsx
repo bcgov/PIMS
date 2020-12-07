@@ -16,13 +16,12 @@ import {
   Popup,
   Map as ReactLeafletMap,
 } from 'react-leaflet';
-import { IProperty, IPropertyDetail, storeParcelDetail } from 'actions/parcelsActions';
+import { IProperty, IPropertyDetail } from 'actions/parcelsActions';
 import { Container, Row, Col } from 'react-bootstrap';
 import MapFilterBar, { MapFilterChangeEvent } from '../MapFilterBar';
 import { ILookupCode } from 'actions/lookupActions';
 import BasemapToggle, { BasemapToggleEvent, BaseLayer } from '../BasemapToggle';
 import { decimalOrUndefined, floatOrUndefined } from 'utils';
-import { PopupView } from '../PopupView';
 import { useDispatch, useSelector } from 'react-redux';
 import { setMapViewZoom } from 'reducers/mapViewZoomSlice';
 import { RootState } from 'reducers/rootReducer';
@@ -137,7 +136,7 @@ const Map: React.FC<MapProps> = ({
 
   // load and prepare data
   const points = createPoints(properties);
-  const { setZoomProperty, onMarkerZoomEnd } = useMarkerZoom({
+  const { onMarkerZoomEnd } = useMarkerZoom({
     mapRef,
     points,
   });
@@ -223,7 +222,6 @@ const Map: React.FC<MapProps> = ({
   const closeMarkerPopup = (e: any) => {
     if (e.target._animateToZoom === mapRef.current?.leafletElement.getZoom()) {
       setLayerPopup(undefined);
-      dispatch(storeParcelDetail(null));
     }
   };
 
@@ -256,7 +254,7 @@ const Map: React.FC<MapProps> = ({
 
   useEffect(() => {
     // fetch GIS base layers configuration from /public folder
-    axios.get('/basemaps.json').then(result => {
+    axios.get('/basemaps.json')?.then(result => {
       setBaseLayers(result.data?.basemaps);
       setActiveBasemap(result.data?.basemaps?.[0]);
     });
@@ -269,32 +267,6 @@ const Map: React.FC<MapProps> = ({
     }
     setZoom(mapRef.current.leafletElement.getZoom());
   }, [mapRef]);
-
-  const renderPopup = (item: IPropertyDetail) => {
-    const { propertyTypeId, parcelDetail, position } = item;
-    if (!parcelDetail) {
-      return null;
-    }
-    // allow the caller to override the popup location on the map
-    // this is useful when showing "spiderfied" markers belonging to a cluster
-    const latlng = position ?? [parcelDetail.latitude as number, parcelDetail.longitude as number];
-    return (
-      <Popup
-        position={latlng}
-        offset={[0, -25]}
-        onClose={() => onMarkerPopupClose?.(item)}
-        closeButton={interactive}
-        autoPan={false} // fix for PIMS-2591: infinite loop crash
-      >
-        <PopupView
-          propertyTypeId={propertyTypeId}
-          propertyDetail={parcelDetail}
-          disabled={!interactive}
-          zoomTo={zoom < 14 ? () => setZoomProperty(selectedProperty) : undefined}
-        />
-      </Popup>
-    );
-  };
 
   const fitMapBounds = () => {
     if (mapRef.current) {
@@ -395,7 +367,6 @@ const Map: React.FC<MapProps> = ({
                       zIndex={0}
                     />
                   )}
-                  {selectedProperty && renderPopup(selectedProperty)}
                   {!!layerPopup && (
                     <Popup
                       position={layerPopup.latlng}
@@ -420,6 +391,7 @@ const Map: React.FC<MapProps> = ({
                   <InventoryLayer
                     zoom={zoom}
                     onMarkerClick={onSingleMarkerClick}
+                    selected={selectedProperty}
                     filter={{
                       pid: mapFilter.pid,
                       address: mapFilter.address,

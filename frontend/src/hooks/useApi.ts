@@ -6,6 +6,8 @@ import { ENVIRONMENT } from 'constants/environment';
 import * as _ from 'lodash';
 import { LatLngTuple } from 'leaflet';
 import { useCallback } from 'react';
+import { IGeoSearchParams } from 'constants/API';
+import queryString from 'query-string';
 
 export interface IGeocoderResponse {
   siteId: string;
@@ -35,6 +37,7 @@ export interface PimsAPI extends AxiosInstance {
   searchAddress: (text: string) => Promise<IGeocoderResponse[]>;
   getSitePids: (siteId: string) => Promise<IGeocoderPidsResponse>;
   getAdministrativeAreaLatLng: (city: string) => Promise<LatLngTuple | null>;
+  loadProperties: (params?: IGeoSearchParams) => Promise<any[]>;
 }
 
 export const useApi = (): PimsAPI => {
@@ -109,6 +112,13 @@ export const useApi = (): PimsAPI => {
   axios.getSitePids = async (siteId: string): Promise<IGeocoderPidsResponse> => {
     const { data } = await axios.get<IGeocoderPidsResponse>(
       `${ENVIRONMENT.apiUrl}/tools/geocoder/parcels/pids/${siteId}`,
+    );
+    return data;
+  };
+
+  axios.loadProperties = async (params?: IGeoSearchParams): Promise<any[]> => {
+    const { data } = await axios.get<any[]>(
+      `${ENVIRONMENT.apiUrl}/properties/search/wfs?${params ? queryString.stringify(params) : ''}`,
     );
     return data;
   };

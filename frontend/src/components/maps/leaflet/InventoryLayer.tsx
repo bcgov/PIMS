@@ -1,14 +1,14 @@
-import { GEO_PROPERTIES, IGeoSearchParams } from 'constants/API';
-import { ENVIRONMENT } from 'constants/environment';
+import { IPropertyDetail } from 'actions/parcelsActions';
+import { IGeoSearchParams } from 'constants/API';
 import { BBox, Feature } from 'geojson';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
-import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { LatLngBounds } from 'leaflet';
 import React from 'react';
 import { useLeaflet } from 'react-leaflet';
 import { toast } from 'react-toastify';
 import { PointFeature } from '../types';
 import PointClusterer from './PointClusterer';
+import { useApi } from 'hooks/useApi';
 
 export type InventoryLayerProps = {
   /** Latitude and Longitude boundary of the layer. */
@@ -23,6 +23,8 @@ export type InventoryLayerProps = {
   filter?: IGeoSearchParams;
   /** What to do when the point feature is clicked. */
   onMarkerClick?: (point: PointFeature, position?: [number, number]) => void;
+
+  selected?: IPropertyDetail | null;
 };
 
 /**
@@ -49,10 +51,11 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
   maxZoom,
   filter,
   onMarkerClick,
+  selected,
 }) => {
-  const keycloak = useKeycloakWrapper();
   const [features, setFeatures] = React.useState<Array<PointFeature>>([]);
   const { map } = useLeaflet();
+  const { loadProperties } = useApi();
 
   if (!map) {
     throw new Error('<InventoryLayer /> must be used under a <Map> leaflet component');
@@ -67,12 +70,16 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
       setBbox(getBbox(bounds));
     };
     map.on('moveend', rebound);
+
+    return () => {
+      map.off('moveend');
+    };
   }, [map]);
 
   minZoom = minZoom ?? 0;
   maxZoom = maxZoom ?? 18;
 
-  const url = `${ENVIRONMENT.apiUrl}${GEO_PROPERTIES({
+  const params = {
     bbox: (bounds ?? map.getBounds()).toBBoxString(),
     address: filter?.address,
     administrativeArea: filter?.administrativeArea,
@@ -84,34 +91,32 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
     maxLandArea: filter?.maxLandArea,
     inSurplusPropertyProgram: filter?.inSurplusPropertyProgram,
     inEnhancedReferralProcess: filter?.inEnhancedReferralProcess,
-  } as IGeoSearchParams)}`;
+  };
 
   // Fetch the geoJSON collection of properties.
   useDeepCompareEffect(() => {
-    fetch(url, {
-      headers: {
-        Authorization: `Bearer ${keycloak.obj.token}`,
-      },
-    })
-      .then(async response => {
-        if (!response.ok) {
-          throw Error(
-            `${response.statusText}: An error occured while fetching properties in inventory.`,
-          );
-        }
-        const data = (await response.json()) as Feature[];
-        const points = data.map(f => {
-          return {
-            ...f,
-          } as PointFeature;
-        });
+    loadProperties(params)
+      .then(async (data: Feature[]) => {
+        const points = data
+          .filter(feature => {
+            return !(
+              feature.properties!.propertyTypeId === selected?.propertyTypeId &&
+              feature.properties!.id === selected?.parcelDetail?.id
+            );
+          })
+          .map(f => {
+            return {
+              ...f,
+            } as PointFeature;
+          });
         setFeatures(points);
       })
       .catch(error => {
         toast.error((error as Error).message, { autoClose: 7000 });
         console.error(error);
       });
-  }, [url, bbox]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [params, bbox, selected]);
 
   return (
     <PointClusterer
@@ -121,6 +126,7 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
       onMarkerClick={onMarkerClick}
       zoomToBoundsOnClick={true}
       spiderfyOnMaxZoom={true}
+      selected={selected}
     />
   );
 };
