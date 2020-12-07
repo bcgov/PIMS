@@ -81,7 +81,7 @@ exports[`Building Form component renders correctly 1`] = `
                 </div>
                 <hr>
                 <div class=\\"row\\">
-                  <h4 class=\\"sc-fznKkj lhCwpU\\">Strategic Real Estate Classification</h4>
+                  <h4 class=\\"sc-fzoLsD kulclU\\">Strategic Real Estate Classification</h4>
                 </div>
                 <div class=\\"row\\">
                   <div class=\\"col-md-6\\">
@@ -92,17 +92,17 @@ exports[`Building Form component renders correctly 1`] = `
                         </select></div>
                     </div>
                     <div class=\\"row\\">
-                      <p class=\\"sc-fzokOt crFwtc\\">A disposal project must be initiated in order to mark a property as \\"surplus active\\".</p>
+                      <p class=\\"sc-fzplWN clReie\\">A disposal project must be initiated in order to mark a property as \\"surplus active\\".</p>
                     </div>
                   </div>
                   <div class=\\"col-md-6\\">
-                    <div class=\\"sc-fznZeY otjbf\\">
+                    <div class=\\"sc-fzpans cHDEiT\\">
                       <p style=\\"font-size: 11px;\\">Select a classification from the dropdown list to show the definition here. For further information, see the Inventory Policy.</p>
                     </div>
                   </div>
                 </div>
                 <div class=\\"row\\">
-                  <p class=\\"sc-fzokOt crFwtc\\">A disposal project must be initiated in order to mark a property as \\"surplus active\\".</p>
+                  <p class=\\"sc-fzplWN clReie\\">A disposal project must be initiated in order to mark a property as \\"surplus active\\".</p>
                 </div>
                 <hr>
                 <div class=\\"row\\">
@@ -145,7 +145,7 @@ exports[`Building Form component renders correctly 1`] = `
                             <p>Drag and drop the pin on the map to mark the location of this building, or if you already have the coordinates, you can enter them manually in the fields below.</p>
                           </div>
                         </div>
-                        <div class=\\"marker-svg col\\"><button class=\\"sc-fzozJi bgKAHS\\"><svg>draft-building-icon.svg</svg></button></div>
+                        <div class=\\"marker-svg col\\"><button class=\\"sc-fznyAO hwQpCV\\"><svg>draft-building-icon.svg</svg></button></div>
                       </div>
                       <div class=\\"form-row\\">
                         <p class=\\"label\\">Latitude</p>

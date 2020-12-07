@@ -22,7 +22,6 @@ interface AddressProps {
   disabled?: boolean;
   onGeocoderChange?: (data: IGeocoderResponse) => void;
   toolTips?: boolean;
-  verticalLine?: boolean;
   hideStreetAddress?: boolean;
 }
 
@@ -76,8 +75,7 @@ const AddressForm = <T extends any>(props: AddressProps & FormikProps<T>) => {
     <>
       {props.hideStreetAddress !== true && (
         <Row className="field-row">
-          <Label required={!props.verticalLine}>Street Address</Label>
-          {props.verticalLine && <span className="vl"></span>}
+          <Label required={true}>Street Address</Label>
           <GeocoderAutoComplete
             tooltip={props.toolTips ? streetAddressTooltip : undefined}
             value={getIn(props.values, withNameSpace('line1'))}
@@ -92,8 +90,7 @@ const AddressForm = <T extends any>(props: AddressProps & FormikProps<T>) => {
         </Row>
       )}
       <Row className="field-row">
-        <Label required={!props.verticalLine}>Location</Label>
-        {props.verticalLine && <span className="vl"></span>}
+        <Label required={true}>Location</Label>
         <TypeaheadField
           options={administrativeAreas.map(x => x.label)}
           name={withNameSpace('administrativeArea')}
@@ -104,7 +101,6 @@ const AddressForm = <T extends any>(props: AddressProps & FormikProps<T>) => {
       </Row>
       <Row className="field-row">
         <Label>Province</Label>
-        {props.verticalLine && <span className="vl"></span>}
         <Select
           disabled={true}
           placeholder="Must Select One"
@@ -114,7 +110,6 @@ const AddressForm = <T extends any>(props: AddressProps & FormikProps<T>) => {
       </Row>
       <Row className="postal">
         <Label>Postal Code</Label>
-        {props.verticalLine && <span className="vl"></span>}
         <FastInput
           className="input-small"
           formikProps={props}

@@ -56,7 +56,7 @@ exports[`Land Form component renders correctly 1`] = `
                   <div class=\\"col-md-5\\">
                     <p>Click on the pin, and then click your desired location on the map to pull the parcel details.</p>
                     <div class=\\"row\\">
-                      <div class=\\"marker-svg col\\"><button class=\\"sc-fznyAO hwQpCV\\"><svg class=\\"parcel-icon\\">draft-parcel-icon.svg</svg></button></div>
+                      <div class=\\"marker-svg col\\"><button class=\\"sc-fzozJi bgKAHS\\"><svg class=\\"parcel-icon\\">draft-parcel-icon.svg</svg></button></div>
                     </div>
                   </div>
                 </div>

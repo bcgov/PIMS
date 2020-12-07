@@ -77,7 +77,7 @@ export const SteppedForm = function<T extends object = {}>({
   onAddTab,
   onRemoveTab,
   ...rest
-}: ISteppedFormProps & FormikConfig<ISteppedFormValues<T>>) {
+}: ISteppedFormProps<T> & FormikConfig<ISteppedFormValues<T>>) {
   const [tabToDeleteId, setTabToDeleteId] = useState<number | undefined>();
   if (rest.persistable && !rest.persistProps) {
     throw new Error('SteppedForm: "persistProps" are required when "persistable" is true');
@@ -127,10 +127,10 @@ export const SteppedForm = function<T extends object = {}>({
               onSelect={(tab: string) => setFieldValue('activeTab', +tab)}
               unmountOnExit
             >
-              {getFormikTabs().map((tab, index) => (
+              {getFormikTabs(values.data).map((tab, index) => (
                 <Tab title={tabTitle(tab, index)} eventKey={index} key={`stepped-tab-${index}`}>
                   <StepperField name={`tabs.${values.activeTab}.activeStep`} steps={steps} />
-                  <StepperFormProvider steps={steps} tabs={getFormikTabs()}>
+                  <StepperFormProvider steps={steps} tabs={getFormikTabs(values.data)}>
                     {children}
                   </StepperFormProvider>
                 </Tab>
@@ -142,21 +142,24 @@ export const SteppedForm = function<T extends object = {}>({
                     toolText="Add another associated Parcel"
                     toolId="add-associated-parcel"
                     onClick={() => {
-                      onAddTab && onAddTab();
-                      setFieldValue('tabs', [...values.tabs, { activeStep: 0 }]);
+                      onAddTab && onAddTab(values.data);
+                      setFieldValue('tabs', [
+                        ...values.tabs,
+                        { activeStep: 0, name: `Parcel ${(values?.tabs?.length ?? 0) + 1}` },
+                      ]);
                     }}
                   />
                 }
               ></Tab>
             </Tabs>
             <GenericModal
-              display={!!tabToDeleteId}
+              display={tabToDeleteId !== undefined}
               setDisplay={() => setTabToDeleteId(undefined)}
               title="Really Remove Associated Parcel?"
               message="Click OK to remove the association between this parcel and the current building."
               handleOk={() => {
-                if (onRemoveTab && !!tabToDeleteId) {
-                  onRemoveTab(tabToDeleteId);
+                if (onRemoveTab && tabToDeleteId !== undefined) {
+                  onRemoveTab(values.data, tabToDeleteId);
                   const tabs = [...values.tabs];
                   tabs.splice(tabToDeleteId, 1);
                   setFieldValue('tabs', tabs);
