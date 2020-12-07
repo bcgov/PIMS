@@ -279,12 +279,11 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
               <ParentSelect
                 field={'statusId'}
                 options={statuses}
-                isFilter
                 clearSelected={clearSelected}
                 setClearSelected={setClearSelected}
                 enableMultiple
                 filterBy={['label', 'parent']}
-                placeholder="Enter an Status"
+                placeholder="Enter a Status"
               />
             </Col>
             <Col xs={2} className="bar-item">

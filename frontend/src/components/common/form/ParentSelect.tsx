@@ -21,8 +21,6 @@ interface IParentSelect {
   required?: boolean;
   /** determine whether this component is disabled or not */
   disabled?: boolean;
-  /** if this component is being used as a filter do not pre populate the value */
-  isFilter?: boolean;
   /** set this flag if the grouped parent select will be used to make multiple selection */
   enableMultiple?: boolean;
   /** check to see whether reset button has been called to clear multiple selected */
@@ -42,7 +40,6 @@ export const ParentSelect: React.FC<IParentSelect> = ({
   required,
   disabled,
   enableMultiple,
-  isFilter,
   clearSelected,
   setClearSelected,
   label,
@@ -59,8 +56,8 @@ export const ParentSelect: React.FC<IParentSelect> = ({
   const [multiSelections, setMultiSelections] = React.useState<any>([]);
 
   useEffect(() => {
-    if (value && !loaded && !isFilter) {
-      if (value.value) {
+    if (!loaded) {
+      if (value?.value) {
         setFieldValue(field, value);
       } else if (value && !value.value) {
         setFieldValue(field, option);
@@ -69,11 +66,10 @@ export const ParentSelect: React.FC<IParentSelect> = ({
         setLoaded(true);
       }
     }
-  }, [value, loaded, setFieldValue, isFilter, field, option]);
+  }, [value, loaded, setFieldValue, field, option]);
 
   /** wipe the selection from input on reset */
   useEffect(() => {
-    console.log('here');
     clearSelected && setMultiSelections([]);
     setClearSelected && setClearSelected(false);
   }, [clearSelected, setClearSelected]);
