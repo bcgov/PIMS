@@ -9,6 +9,7 @@ import { ENVIRONMENT } from 'constants/environment';
 import CustomAxios from 'customAxios';
 import { AxiosResponse, AxiosError } from 'axios';
 import * as pimsToasts from 'constants/toasts';
+import _ from 'lodash';
 
 export const fetchParcels = (parcelBounds: API.IPropertySearchParams | null) => (
   dispatch: Function,
@@ -47,6 +48,9 @@ export const fetchParcelsDetail = (params: API.IPropertySearchParams) => (dispat
   return CustomAxios()
     .get(ENVIRONMENT.apiUrl + API.PARCELS_DETAIL(params))
     .then((response: AxiosResponse) => {
+      if (response?.data !== undefined && response.data.length > 0) {
+        dispatch(parcelsActions.storeParcelDetail(_.first(response.data) as any));
+      }
       dispatch(success(actionTypes.GET_PARCEL_DETAIL));
       dispatch(hideLoading());
       return Promise.resolve(response);

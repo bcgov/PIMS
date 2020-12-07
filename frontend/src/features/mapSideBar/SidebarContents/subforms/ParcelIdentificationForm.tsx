@@ -108,9 +108,9 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
                 values: newValues,
               });
 
-              if (pid.length > 0) {
+              if (pid?.length > 0) {
                 handlePidChange(pid, nameSpace);
-              } else if (pin.length > 0) {
+              } else if (pin?.length > 0) {
                 handlePinChange(pin, nameSpace);
               } else if (geocoderResponse) {
                 handleGeocoderChanges(geocoderResponse, nameSpace);

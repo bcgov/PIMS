@@ -28,7 +28,7 @@ import { PopupView } from '../PopupView';
 import { useDispatch, useSelector } from 'react-redux';
 import { setMapViewZoom } from 'reducers/mapViewZoomSlice';
 import { RootState } from 'reducers/rootReducer';
-import { BBox, Feature } from 'geojson';
+import { BBox, Feature, GeoJsonObject } from 'geojson';
 import { createPoints, PointFeature, asProperty } from './mapUtils';
 import PointClusterer from './PointClusterer';
 import { LegendControl } from './Legend/LegendControl';
@@ -151,7 +151,10 @@ const Map: React.FC<MapProps> = ({
     lat = (mapRef.current.props.center as Array<number>)[0];
     lng = (mapRef.current.props.center as Array<number>)[1];
   }
-  useActiveFeatureLayer({ selectedProperty, layerPopup, mapRef });
+  const parcelLayerFeature = useSelector<RootState, GeoJsonObject | null>(
+    state => state.parcelLayerData?.parcelLayerFeature,
+  );
+  useActiveFeatureLayer({ selectedProperty, layerPopup, mapRef, parcelLayerFeature });
 
   const lastZoom = useSelector<RootState, number>(state => state.mapViewZoom) ?? zoomProp;
   useEffect(() => {
