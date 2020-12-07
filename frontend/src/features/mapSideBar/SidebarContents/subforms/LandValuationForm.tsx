@@ -5,26 +5,33 @@ import EvaluationForm from 'features/properties/components/forms/subforms/Evalua
 import { useFormikContext } from 'formik';
 
 interface ITenancyProps {
+  title: string;
   disabled?: boolean;
-  readOnly?: boolean;
   nameSpace?: string;
   index?: any;
 }
-
-export const LandValuationForm: React.FC<ITenancyProps> = () => {
+/**
+ * Display valuation tables for assessed and netbook values.
+ * @param {ITenancyProps} param0
+ */
+export const LandValuationForm: React.FC<ITenancyProps> = ({ title, disabled, nameSpace }) => {
+  const withNameSpace: Function = (fieldName: string) => {
+    return nameSpace ? `${nameSpace}.${fieldName}` : fieldName;
+  };
   const formikProps = useFormikContext();
   return (
     <Col className="land-valuation">
       <Row>
-        <h4>Raw Land Valuation</h4>
+        <h4>{title}</h4>
         <br></br>
       </Row>
       <Row className="val-table">
         <EvaluationForm
+          disabled={disabled}
           {...(formikProps as any)}
           isParcel={true}
           showAppraisal={false}
-          nameSpace="data.financials"
+          nameSpace={withNameSpace('financials')}
         />
       </Row>
     </Col>
