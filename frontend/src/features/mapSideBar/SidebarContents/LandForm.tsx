@@ -144,7 +144,7 @@ const Form: React.FC<ILandForm> = ({
           </div>
         );
       case LandSteps.VALUATION:
-        return <LandValuationForm />;
+        return <LandValuationForm title="Raw Land Valuation" />;
       case LandSteps.REVIEW:
         return (
           <LandReviewPage
