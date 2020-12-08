@@ -1,5 +1,5 @@
 import { Persist } from 'components/common/FormikPersist';
-import { Form, Formik, FormikConfig } from 'formik';
+import { Form, Formik, FormikConfig, setIn } from 'formik';
 import * as React from 'react';
 import { StepperFormProvider } from './context';
 import { StepperField } from './StepperField';
@@ -29,6 +29,7 @@ const TabbedForm = styled(Form)`
   }
   .tab-content {
     border: 0;
+    border-top: 1px solid #666666;
     padding: 0;
   }
   .nav-tabs {
@@ -91,6 +92,13 @@ export const SteppedForm = function<T extends object = {}>({
 
   if (!getTabs) {
     initialValues.tabs = [{ activeStep: initialValues.activeStep }];
+  }
+  if (!initialValues.tabs && !!getTabs) {
+    initialValues = setIn(
+      initialValues,
+      'tabs',
+      getTabs(initialValues.data).map(t => ({ activeStep: 0, name: t })),
+    );
   }
 
   const tabTitle = (title: string, index: number) => {

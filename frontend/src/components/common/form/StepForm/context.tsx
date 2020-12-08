@@ -24,12 +24,6 @@ export const StepperFormProvider: React.FC<IStepperFormProviderProps> = ({
   tabs,
 }) => {
   const { values, setFieldValue } = useFormikContext<ISteppedFormValues>();
-  if (!values.tabs) {
-    setFieldValue(
-      'tabs',
-      tabs.map(t => ({ activeStep: 0, name: t })),
-    );
-  }
 
   const getTabCurrentStep = (index: number) => {
     if (index >= 0 && values?.tabs && index < values.tabs.length) {

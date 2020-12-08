@@ -79,16 +79,14 @@ const PreAssociateSteps = styled.div`
     width 100px;
     margin: 0px 5px;
   }
-  .progress-bar {
-
-  }
 `;
 
 const ProgressBar = styled.div`
   max-width: 900px;
-  height: 20px;
+  height: 10px;
   border-radius: 5px;
   margin: 10px 0px;
+  background-color: #428bca;
 `;
 
 export interface IAssociatedLand extends IBuilding {
@@ -356,6 +354,7 @@ const AssociatedLandForm: React.FC<IAssociatedLandForm> = (props: IAssociatedLan
   const renderPreForm = (): React.ReactNode => {
     return (
       <>
+        <hr />
         <h4 style={{ textAlign: 'left' }}>Parcel inventory</h4>
         <PreAssociateSteps>
           <span>
@@ -397,9 +396,10 @@ const AssociatedLandForm: React.FC<IAssociatedLandForm> = (props: IAssociatedLan
           </span>
         </PreAssociateSteps>
         <ProgressBar
-          className="progress-bar progress-bar-striped progress-bar-animated"
+          className="progress-bar progress-bar-animated"
           style={{ width: `${progress * 10}%` }}
         ></ProgressBar>
+        <hr />
       </>
     );
   };
@@ -423,9 +423,9 @@ const AssociatedLandForm: React.FC<IAssociatedLandForm> = (props: IAssociatedLan
               return p.name?.length ? p.name : `Parcel ${index + 1}`;
             });
           }}
-          persistable={true}
+          persistable={false}
           persistProps={{
-            name: 'land',
+            name: 'associatedLand',
             secret: keycloak.obj.subject,
             persistCallback: noop,
           }}

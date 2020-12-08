@@ -240,6 +240,12 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
             <LandSvg className="svg" /> Submit Raw Land (to inventory)
           </>
         );
+      case SidebarContextType.ADD_ASSOCIATED_LAND:
+        return (
+          <>
+            <LandSvg className="svg" /> Add associated land
+          </>
+        );
       case SidebarContextType.VIEW_BUILDING:
         return 'Building Details';
       case SidebarContextType.VIEW_RAW_LAND:
