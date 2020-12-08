@@ -1,3 +1,4 @@
+@import '../../../../colors.scss';
 .identification {
   .req {
     color: red;
@@ -20,7 +21,7 @@
       width: 250px;
     }
     .harmful {
-      background-color: #fae1e7;
+      background-color: $light-danger-color;
       width: 400px;
       border-radius: 5px;
       margin-left: 14px;

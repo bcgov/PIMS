@@ -1,26 +1,114 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Project Draft Step renders correctly 1`] = `
-"<div class=\\"container-fluid\\">
-  <form novalidate=\\"\\" class=\\"ProjectDraftForm\\">
-    <div class=\\"ProjectDraftForm container-fluid\\">
-      <div class=\\"form-row\\">
-        <h3 class=\\"col-md-8\\">Review</h3><span class=\\"col-md-4\\"></span>
+<div
+  class="container-fluid"
+>
+  <form
+    class="ProjectDraftForm"
+    novalidate=""
+  >
+    <div
+      class="ProjectDraftForm container-fluid"
+    >
+      <div
+        class="form-row"
+      >
+        <h3
+          class="col-md-8"
+        >
+          Review
+        </h3>
+        <span
+          class="col-md-4"
+        />
       </div>
-      <div class=\\"col-md-10 form-row\\"><label class=\\"col-md-2 form-label\\">Project No.</label>
-        <div class=\\"col-md-2 form-group\\"><input name=\\"projectNumber\\" disabled=\\"\\" placeholder=\\"SPP-XXXXXX\\" id=\\"input-projectNumber\\" class=\\"form-control\\" value=\\"TEST-NUMBER\\"></div>
+      <div
+        class="col-md-10 form-row"
+      >
+        <label
+          class="col-md-2 form-label"
+        >
+          Project No.
+        </label>
+        <div
+          class="col-md-2 form-group"
+        >
+          <input
+            class="form-control"
+            disabled=""
+            id="input-projectNumber"
+            name="projectNumber"
+            placeholder="SPP-XXXXXX"
+            value="TEST-NUMBER"
+          />
+        </div>
       </div>
-      <div class=\\"form-row\\">
-        <div class=\\"required col-md-10 form-group\\"><label class=\\"form-label\\" for=\\"input-name\\">Name<span class=\\"required\\">*</span></label><input name=\\"name\\" required=\\"\\" disabled=\\"\\" id=\\"input-name\\" class=\\"col-md-5 form-control\\" value=\\"\\"></div>
+      <div
+        class="form-row"
+      >
+        <div
+          class="required col-md-10 form-group"
+        >
+          <label
+            class="form-label"
+            for="input-name"
+          >
+            Name
+          </label>
+          <input
+            class="col-md-5 form-control"
+            disabled=""
+            id="input-name"
+            name="name"
+            required=""
+            value=""
+          />
+        </div>
       </div>
-      <div class=\\"form-row\\">
-        <div class=\\"col-md-10 form-group\\"><label class=\\"form-label\\" for=\\"input-description\\">Description</label><textarea name=\\"description\\" disabled=\\"\\" id=\\"input-description\\" class=\\"col-md-5 form-control\\"></textarea></div>
+      <div
+        class="form-row"
+      >
+        <div
+          class="col-md-10 form-group"
+        >
+          <label
+            class="form-label"
+            for="input-description"
+          >
+            Description
+          </label>
+          <textarea
+            class="col-md-5 form-control"
+            disabled=""
+            id="input-description"
+            name="description"
+          />
+        </div>
       </div>
     </div>
-    <div class=\\"ProjectNotes form-row\\">
-      <div class=\\"col-md-10 form-group\\"><label class=\\"form-label\\" for=\\"input-note\\">Notes</label><textarea name=\\"note\\" id=\\"input-note\\" class=\\"col-md-5 form-control\\"></textarea></div>
+    <div
+      class="ProjectNotes form-row"
+    >
+      <div
+        class="col-md-10 form-group"
+      >
+        <label
+          class="form-label"
+          for="input-note"
+        >
+          Notes
+        </label>
+        <textarea
+          class="col-md-5 form-control"
+          id="input-note"
+          name="note"
+        />
+      </div>
     </div>
-    <div style=\\"text-align: right;\\"></div>
+    <div
+      style="text-align: right;"
+    />
   </form>
-</div>"
+</div>
 `;

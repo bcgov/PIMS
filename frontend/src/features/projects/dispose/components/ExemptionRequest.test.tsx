@@ -3,7 +3,6 @@ import ExemptionRequest from './ExemptionRequest';
 import { useFormikContext, getIn } from 'formik';
 import { render } from '@testing-library/react';
 import { noop } from 'lodash';
-import pretty from 'pretty';
 
 jest.mock('formik');
 (useFormikContext as jest.Mock).mockReturnValue({
@@ -43,7 +42,7 @@ describe('Exemption Request test', () => {
         submissionStep={true}
       />,
     );
-    expect(pretty(container.innerHTML)).toMatchSnapshot();
+    expect(container.firstChild).toMatchSnapshot();
   });
 
   it('does not display rationale box when checkbox is not checked', () => {

@@ -1,97 +1,65 @@
-.req {
-  color: red;
-  font-weight: bold;
-}
-
-.postal {
-  .form-group {
-    .form-control {
-      width: 120px;
-    }
-  }
-}
+@import '../../../../colors.scss';
 
 .parcel-identification {
+  max-width: 900px;
+  .GeocoderAutoComplete,
+  .AutoCompleteText {
+    width: 230px;
+  }
+  .form-group {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+  }
   h4 {
     margin-bottom: 20px;
     float: left;
   }
   .container {
-    .form-container {
-      .row {
-        .form-control {
-          width: 250px;
-        }
-        .form-row {
-          margin-left: 95px;
-          .form-label {
-            text-align: center;
-            margin-right: 10px;
-            margin-left: 10px;
-          }
-          .form-group {
-            display: flex;
-            .form-control {
-              max-width: 100px;
-              font-size: smaller;
-            }
-            .tooltip-icon {
-              margin-top: 8px;
-              margin-left: 5px;
-            }
-          }
-        }
-      }
+    .section.disabled {
+      pointer-events: none;
+      opacity: 0.4;
     }
     .label {
-      display: inline-block;
-      width: 140px;
       text-align: right;
-      margin-right: 20px;
+      margin-right: 10px;
+      width: 125px;
     }
     .harmful {
-      background-color: #fae1e7;
+      margin: 0px auto;
       width: 400px;
+      background-color: $light-danger-color;
       border-radius: 5px;
-      justify-content: left;
     }
-    .address,
-    .field-row {
-      .form-control {
-        width: 250px;
-      }
-    }
-    .lat-long {
-      padding: 20px;
-      .marker-svg {
-        margin-top: 20px;
+    .section {
+      padding: 10px 0px;
+      background-color: #f2f2f2;
+      border: 1px solid $light-variant-color;
+      border-radius: 5px;
+      margin-bottom: 20px;
+      h5 {
+        font-weight: 700;
+        padding-bottom: 20px;
       }
       .instruction {
         text-align: left;
-        .pracel-icon {
-          margin-top: 220px;
+        padding: 0 25px 25px;
+        .marker-svg {
+          display: flex;
+          justify-content: center;
         }
       }
-      background-color: #e9efea;
-      border-radius: 5px;
-      margin-bottom: 10px;
-      width: 400px;
-      .form-label {
-        margin-right: 20px;
-      }
-      .form-control {
-        width: 200px;
-      }
-      .input-group {
-        .form-label {
-          margin-right: 20px;
+      .form-row {
+        display: flex;
+        padding: 0px 20px;
+        input,
+        textarea {
+          width: 230px;
         }
+      }
+      .pid-pin {
         .form-control {
-          width: 100px;
-        }
-        .input-group-append {
-          font-size: smaller;
-          height: 38px;
+          width: 140px;
         }
       }
     }

@@ -1,6 +1,6 @@
 @import './colors.scss';
 .error {
-  color: red;
+  color: $danger-color;
 }
 
 ul.pagination li {
@@ -52,4 +52,25 @@ div.bootstrap-table {
 //React table global styling
 .table .tr .td {
   word-break: break-word;
+}
+
+//by default highlight required fields in blue.
+.form-group.required input {
+  border: 1px solid $secondary-variant-color;
+}
+
+.form-group.required select {
+  border: 1px solid $secondary-variant-color;
+}
+
+.input-group.required input {
+  border: 1px solid $secondary-variant-color;
+}
+
+.form-check.required input {
+  border: 1px solid $secondary-variant-color;
+}
+
+.form-group.required textarea {
+  border: 1px solid $secondary-variant-color;
 }

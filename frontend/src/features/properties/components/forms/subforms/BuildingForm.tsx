@@ -176,8 +176,9 @@ const BuildingForm = (props: BuildingProps & FormikProps<any>) => {
         <Row noGutters>
           <Col md={6}>
             <Form.Row>
-              <Form.Label className="required">Predominate Use</Form.Label>
+              <Form.Label>Predominate Use</Form.Label>
               <FastSelect
+                required
                 formikProps={props}
                 disabled={props.disabled || readonly}
                 placeholder="Must Select One"
@@ -187,8 +188,9 @@ const BuildingForm = (props: BuildingProps & FormikProps<any>) => {
               />
             </Form.Row>
             <Form.Row>
-              <Form.Label className="required">Type of Construction</Form.Label>
+              <Form.Label>Type of Construction</Form.Label>
               <FastSelect
+                required
                 formikProps={props}
                 disabled={props.disabled || readonly}
                 placeholder="Must Select One"
@@ -200,8 +202,9 @@ const BuildingForm = (props: BuildingProps & FormikProps<any>) => {
           </Col>
           <Col md={6}>
             <Form.Row>
-              <Form.Label className="required">Rentable Area</Form.Label>
+              <Form.Label>Rentable Area</Form.Label>
               <InputGroup
+                required
                 displayErrorTooltips
                 fast={true}
                 formikProps={props}
@@ -228,8 +231,9 @@ const BuildingForm = (props: BuildingProps & FormikProps<any>) => {
         <Row className="buildingTenancy" noGutters>
           <Col md={6}>
             <Form.Row>
-              <Form.Label className="required">Type of Current Occupant</Form.Label>
+              <Form.Label>Type of Current Occupant</Form.Label>
               <FastSelect
+                required
                 formikProps={props}
                 disabled={props.disabled || readonly}
                 placeholder="Must Select One"

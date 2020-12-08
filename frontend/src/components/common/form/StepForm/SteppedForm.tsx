@@ -58,8 +58,14 @@ const TabbedForm = styled(Form)`
       }
     }
     border: 0;
+    .btn:disabled {
+      background-color: #003366;
+      cursor: default;
+    }
   }
 `;
+
+export const MAX_STEPPED_TABS = 5;
 
 /**
  * A formik form with a stepper. Use the ```useFormStepper``` hook to access and control the stepper in the form children
@@ -124,7 +130,11 @@ export const SteppedForm = function<T extends object = {}>({
               id="steppedform-tabs"
               className={!getTabs ? 'hideTabs' : ''}
               activeKey={values.activeTab}
-              onSelect={(tab: string) => setFieldValue('activeTab', +tab)}
+              onSelect={(tab: string) => {
+                if (tab !== '') {
+                  setFieldValue('activeTab', +tab);
+                }
+              }}
               unmountOnExit
             >
               {getFormikTabs(values.data).map((tab, index) => (
@@ -136,9 +146,11 @@ export const SteppedForm = function<T extends object = {}>({
                 </Tab>
               ))}
               <Tab
+                disabled={(values?.tabs?.length ?? 0) >= MAX_STEPPED_TABS}
                 eventKey=""
                 title={
                   <PlusButton
+                    disabled={(values?.tabs?.length ?? 0) >= MAX_STEPPED_TABS}
                     toolText="Add another associated Parcel"
                     toolId="add-associated-parcel"
                     onClick={() => {
@@ -158,11 +170,17 @@ export const SteppedForm = function<T extends object = {}>({
               title="Really Remove Associated Parcel?"
               message="Click OK to remove the association between this parcel and the current building."
               handleOk={() => {
-                if (onRemoveTab && tabToDeleteId !== undefined) {
+                if (values.tabs && onRemoveTab && tabToDeleteId !== undefined) {
+                  //remove the underlying data representing the tab
                   onRemoveTab(values.data, tabToDeleteId);
+                  //remove the tab itself.
                   const tabs = [...values.tabs];
                   tabs.splice(tabToDeleteId, 1);
                   setFieldValue('tabs', tabs);
+                  //If the user deletes the last tab, set the active tab to the previous tab.
+                  if (values.activeTab >= values.tabs.length - 1) {
+                    setFieldValue('activeTab', values.tabs.length - 2);
+                  }
                 }
               }}
               cancelButtonText="Cancel"

@@ -1,156 +1,904 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Building Form component renders correctly 1`] = `
-"<div class=\\"sc-fzoxnE yjcTd buildingForm\\">
-  <form action=\\"#\\" class=\\"sc-AxmLO haTFfH\\">
-    <nav class=\\"hideTabs nav nav-tabs\\" role=\\"tablist\\"><a href=\\"#\\" role=\\"tab\\" data-rb-event-key=\\"0\\" id=\\"steppedform-tabs-tab-0\\" aria-controls=\\"steppedform-tabs-tabpane-0\\" aria-selected=\\"true\\" class=\\"nav-item nav-link active\\">
-        <p>Tab 1</p><svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 512 512\\" size=\\"15\\" height=\\"15\\" width=\\"15\\" xmlns=\\"http://www.w3.org/2000/svg\\">
-          <path d=\\"M464 32H48C21.5 32 0 53.5 0 80v352c0 26.5 21.5 48 48 48h416c26.5 0 48-21.5 48-48V80c0-26.5-21.5-48-48-48zm-83.6 290.5c4.8 4.8 4.8 12.6 0 17.4l-40.5 40.5c-4.8 4.8-12.6 4.8-17.4 0L256 313.3l-66.5 67.1c-4.8 4.8-12.6 4.8-17.4 0l-40.5-40.5c-4.8-4.8-4.8-12.6 0-17.4l67.1-66.5-67.1-66.5c-4.8-4.8-4.8-12.6 0-17.4l40.5-40.5c4.8-4.8 12.6-4.8 17.4 0l66.5 67.1 66.5-67.1c4.8-4.8 12.6-4.8 17.4 0l40.5 40.5c4.8 4.8 4.8 12.6 0 17.4L313.3 256l67.1 66.5z\\"></path>
+.c1 .hideTabs a.nav-item {
+  background-color: white;
+  display: none;
+}
+
+.c1 .nav-tabs > .nav-item:last-child {
+  border: 0;
+  padding: 0;
+}
+
+.c1 .nav-tabs > .nav-item:last-child svg {
+  position: relative;
+  color: white;
+}
+
+.c1 .tab-content {
+  border: 0;
+  padding: 0;
+}
+
+.c1 .nav-tabs {
+  border: 0;
+}
+
+.c1 .nav-tabs .nav-item.active {
+  border: 0;
+  color: white;
+}
+
+.c1 .nav-tabs .nav-item.active svg {
+  background-color: #428bca;
+  color: white;
+}
+
+.c1 .nav-tabs .nav-item {
+  border: 1px solid black;
+  background-color: white;
+  color: black;
+  position: relative;
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  position: relative;
+}
+
+.c1 .nav-tabs .nav-item p {
+  margin: 0;
+}
+
+.c1 .nav-tabs .nav-item svg {
+  color: black;
+  position: absolute;
+  top: 1px;
+  right: 1px;
+}
+
+.c1 .nav-tabs .btn:disabled {
+  background-color: #003366;
+  cursor: default;
+}
+
+.c4 {
+  float: left;
+}
+
+.c6 {
+  border: 1px solid #f2f2f2;
+  border-radius: 4px;
+  text-align: left;
+  padding: 8px 12px 10px;
+}
+
+.c5 {
+  margin-left: 154px;
+  font-size: 12px;
+  width: 250px;
+  text-align: left;
+}
+
+.c7 {
+  top: 20px;
+  right: 20px;
+  border: 0px;
+  background-color: none;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.c9 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-align-content: center;
+  -ms-flex-line-pack: center;
+  align-content: center;
+}
+
+.c10 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+.c0 {
+  background-color: #fff;
+  height: 100%;
+  width: 100%;
+  overflow-y: auto;
+}
+
+.c2 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  margin-bottom: 50px;
+}
+
+.c3 {
+  border-top: 1px solid #666666;
+  width: 100%;
+  min-height: 100px;
+}
+
+.c8 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  width: 100%;
+  height: 70px;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  position: -webkit-sticky;
+  position: sticky;
+  background-color: #f2f2f2;
+  bottom: 40px;
+}
+
+.c11 {
+  -webkit-flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+}
+
+<div
+  class="c0 buildingForm"
+>
+  <form
+    action="#"
+    class="c1"
+  >
+    <nav
+      class="hideTabs nav nav-tabs"
+      role="tablist"
+    >
+      <a
+        aria-controls="steppedform-tabs-tabpane-0"
+        aria-selected="true"
+        class="nav-item nav-link active"
+        data-rb-event-key="0"
+        href="#"
+        id="steppedform-tabs-tab-0"
+        role="tab"
+      >
+        <p>
+          Tab 1
+        </p>
+        <svg
+          fill="currentColor"
+          height="15"
+          size="15"
+          stroke="currentColor"
+          stroke-width="0"
+          viewBox="0 0 512 512"
+          width="15"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M464 32H48C21.5 32 0 53.5 0 80v352c0 26.5 21.5 48 48 48h416c26.5 0 48-21.5 48-48V80c0-26.5-21.5-48-48-48zm-83.6 290.5c4.8 4.8 4.8 12.6 0 17.4l-40.5 40.5c-4.8 4.8-12.6 4.8-17.4 0L256 313.3l-66.5 67.1c-4.8 4.8-12.6 4.8-17.4 0l-40.5-40.5c-4.8-4.8-4.8-12.6 0-17.4l67.1-66.5-67.1-66.5c-4.8-4.8-4.8-12.6 0-17.4l40.5-40.5c4.8-4.8 12.6-4.8 17.4 0l66.5 67.1 66.5-67.1c4.8-4.8 12.6-4.8 17.4 0l40.5 40.5c4.8 4.8 4.8 12.6 0 17.4L313.3 256l67.1 66.5z"
+          />
         </svg>
-      </a><a href=\\"#\\" role=\\"tab\\" data-rb-event-key=\\"\\" id=\\"steppedform-tabs-tab-\\" aria-controls=\\"steppedform-tabs-tabpane-\\" tabindex=\\"-1\\" aria-selected=\\"false\\" class=\\"nav-item nav-link\\"><button type=\\"button\\" class=\\"Button Button--icon-only primary btn btn-primary\\">
-          <div class=\\"Button__icon\\"><svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 448 512\\" size=\\"20\\" height=\\"20\\" width=\\"20\\" xmlns=\\"http://www.w3.org/2000/svg\\">
-              <path d=\\"M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z\\"></path>
-            </svg></div>
-        </button></a></nav>
-    <div class=\\"tab-content\\">
-      <div id=\\"steppedform-tabs-tabpane-0\\" aria-labelledby=\\"steppedform-tabs-tab-0\\" role=\\"tabpanel\\" aria-hidden=\\"false\\" class=\\"fade tab-pane active show\\">
-        <div class=\\"bs-stepper\\">
-          <div class=\\"bs-stepper-header\\">
-            <div class=\\"step active\\" data-target=\\"stepper-0\\"><button type=\\"button\\" class=\\"step-trigger\\"><span class=\\"bs-stepper-circle\\">1</span><span class=\\"bs-stepper-label\\">Building Info</span></button></div>
-            <div class=\\"line\\"></div>
-            <div class=\\"step\\" data-target=\\"stepper-1\\"><button type=\\"button\\" class=\\"step-trigger\\"><span class=\\"bs-stepper-circle\\">2</span><span class=\\"bs-stepper-label\\">Occupancy</span></button></div>
-            <div class=\\"line\\"></div>
-            <div class=\\"step\\" data-target=\\"stepper-2\\"><button type=\\"button\\" class=\\"step-trigger\\"><span class=\\"bs-stepper-circle\\">3</span><span class=\\"bs-stepper-label\\">Valuation</span></button></div>
-            <div class=\\"line\\"></div>
-            <div class=\\"step\\" data-target=\\"stepper-3\\"><button type=\\"button\\" class=\\"step-trigger\\"><span class=\\"bs-stepper-circle\\">4</span><span class=\\"bs-stepper-label\\">Review &amp; Submit</span></button></div>
+      </a>
+      <a
+        aria-controls="steppedform-tabs-tabpane-"
+        aria-selected="false"
+        class="nav-item nav-link"
+        data-rb-event-key=""
+        href="#"
+        id="steppedform-tabs-tab-"
+        role="tab"
+        tabindex="-1"
+      >
+        <button
+          class="Button Button--icon-only primary btn btn-primary"
+          type="button"
+        >
+          <div
+            class="Button__icon"
+          >
+            <svg
+              fill="currentColor"
+              height="20"
+              size="20"
+              stroke="currentColor"
+              stroke-width="0"
+              viewBox="0 0 448 512"
+              width="20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"
+              />
+            </svg>
+          </div>
+        </button>
+      </a>
+    </nav>
+    <div
+      class="tab-content"
+    >
+      <div
+        aria-hidden="false"
+        aria-labelledby="steppedform-tabs-tab-0"
+        class="fade tab-pane active show"
+        id="steppedform-tabs-tabpane-0"
+        role="tabpanel"
+      >
+        <div
+          class="bs-stepper"
+        >
+          <div
+            class="bs-stepper-header"
+          >
+            <div
+              class="step active"
+              data-target="stepper-0"
+            >
+              <button
+                class="step-trigger"
+                type="button"
+              >
+                <span
+                  class="bs-stepper-circle"
+                >
+                  1
+                </span>
+                <span
+                  class="bs-stepper-label"
+                >
+                  Building Info
+                </span>
+              </button>
+            </div>
+            <div
+              class="line"
+            />
+            <div
+              class="step"
+              data-target="stepper-1"
+            >
+              <button
+                class="step-trigger"
+                type="button"
+              >
+                <span
+                  class="bs-stepper-circle"
+                >
+                  2
+                </span>
+                <span
+                  class="bs-stepper-label"
+                >
+                  Occupancy
+                </span>
+              </button>
+            </div>
+            <div
+              class="line"
+            />
+            <div
+              class="step"
+              data-target="stepper-2"
+            >
+              <button
+                class="step-trigger"
+                type="button"
+              >
+                <span
+                  class="bs-stepper-circle"
+                >
+                  3
+                </span>
+                <span
+                  class="bs-stepper-label"
+                >
+                  Valuation
+                </span>
+              </button>
+            </div>
+            <div
+              class="line"
+            />
+            <div
+              class="step"
+              data-target="stepper-3"
+            >
+              <button
+                class="step-trigger"
+                type="button"
+              >
+                <span
+                  class="bs-stepper-circle"
+                >
+                  4
+                </span>
+                <span
+                  class="bs-stepper-label"
+                >
+                  Review & Submit
+                </span>
+              </button>
+            </div>
           </div>
         </div>
-        <div class=\\"sc-fzoMdx kQKxZB\\">
-          <div class=\\"sc-fzoWqW dGYtGL\\">
-            <div class=\\"identification\\">
-              <div class=\\"container\\">
-                <div class=\\"row\\">
-                  <h4>Building Information</h4>
+        <div
+          class="c2"
+        >
+          <div
+            class="c3"
+          >
+            <div
+              class="identification"
+            >
+              <div
+                class="container"
+              >
+                <div
+                  class="row"
+                >
+                  <h4>
+                    Building Information
+                  </h4>
                 </div>
-                <div class=\\"row\\">
-                  <div class=\\"col\\">
-                    <div class=\\"form-row\\"><label class=\\"form-label\\">Name</label>
-                      <div class=\\"form-group\\"><input name=\\"building.0.name\\" id=\\"input-building.0.name\\" class=\\"form-control\\" value=\\"\\"></div>
+                <div
+                  class="row"
+                >
+                  <div
+                    class="col"
+                  >
+                    <div
+                      class="form-row"
+                    >
+                      <label
+                        class="form-label"
+                      >
+                        Name
+                      </label>
+                      <div
+                        class="form-group"
+                      >
+                        <input
+                          class="form-control"
+                          id="input-building.0.name"
+                          name="building.0.name"
+                          value=""
+                        />
+                      </div>
                     </div>
-                    <div class=\\"form-row\\"><label class=\\"form-label\\">Description</label>
-                      <div class=\\"form-group\\"><textarea name=\\"building.0.description\\" id=\\"input-building.0.description\\" class=\\"form-control\\"></textarea></div>
+                    <div
+                      class="form-row"
+                    >
+                      <label
+                        class="form-label"
+                      >
+                        Description
+                      </label>
+                      <div
+                        class="form-group"
+                      >
+                        <textarea
+                          class="form-control"
+                          id="input-building.0.description"
+                          name="building.0.description"
+                        />
+                      </div>
                     </div>
-                    <div class=\\"form-row\\"><label class=\\"form-label\\">Agency</label>
-                      <div class=\\"sc-AxjAm gLmrxD form-group\\">
-                        <div class=\\"rbt\\" style=\\"outline: none; position: relative;\\" tabindex=\\"-1\\">
-                          <div style=\\"display: flex; flex: 1; height: 100%; position: relative;\\"><input autocomplete=\\"off\\" type=\\"text\\" name=\\"building.0.agencyId\\" id=\\"building.0.agencyId-field\\" disabled=\\"\\" aria-autocomplete=\\"both\\" aria-expanded=\\"false\\" aria-haspopup=\\"listbox\\" role=\\"combobox\\" class=\\"rbt-input-main form-control rbt-input\\" value=\\"\\"><input aria-hidden=\\"true\\" class=\\"rbt-input-hint\\" readonly=\\"\\" style=\\"background-color: transparent; border-color: transparent; box-shadow: none; color: rgba(0, 0, 0, 0.35); left: 0px; pointer-events: none; position: absolute; top: 0px; width: 100%; border-style: inset inset inset inset; border-width: 2px 2px 2px 2px; line-height: normal; padding: 1px 1px 1px 1px;\\" tabindex=\\"-1\\" value=\\"\\"></div>
+                    <div
+                      class="form-row"
+                    >
+                      <label
+                        class="form-label"
+                      >
+                        Agency
+                      </label>
+                      <div
+                        class="form-group"
+                      >
+                        <div
+                          class="rbt"
+                          style="outline: none; position: relative;"
+                          tabindex="-1"
+                        >
+                          <div
+                            style="display: flex; flex: 1; height: 100%; position: relative;"
+                          >
+                            <input
+                              aria-autocomplete="both"
+                              aria-expanded="false"
+                              aria-haspopup="listbox"
+                              autocomplete="off"
+                              class="rbt-input-main form-control rbt-input"
+                              disabled=""
+                              id="building.0.agencyId-field"
+                              name="building.0.agencyId"
+                              role="combobox"
+                              type="text"
+                              value=""
+                            />
+                            <input
+                              aria-hidden="true"
+                              class="rbt-input-hint"
+                              readonly=""
+                              style="background-color: transparent; border-color: transparent; box-shadow: none; color: rgba(0, 0, 0, 0.35); left: 0px; pointer-events: none; position: absolute; top: 0px; width: 100%; border-style: inset inset inset inset; border-width: 2px 2px 2px 2px; line-height: normal; padding: 1px 1px 1px 1px;"
+                              tabindex="-1"
+                              value=""
+                            />
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                  <div class=\\"col\\">
-                    <div class=\\"row\\">
-                      <p class=\\"label\\"><span class=\\"req\\">*</span>Main Usage</p>
-                      <div class=\\"form-group\\"><select name=\\"building.0.buildingPredominateUseId\\" type=\\"number\\" id=\\"input-building.0.buildingPredominateUseId-fast\\" class=\\"form-control\\">
-                          <option value=\\"\\">Must Select One</option>
-                        </select></div>
+                  <div
+                    class="col"
+                  >
+                    <div
+                      class="row"
+                    >
+                      <p
+                        class="label"
+                      >
+                        <span
+                          class="req"
+                        >
+                          *
+                        </span>
+                        Main Usage
+                      </p>
+                      <div
+                        class="form-group"
+                      >
+                        <select
+                          class="form-control"
+                          id="input-building.0.buildingPredominateUseId-fast"
+                          name="building.0.buildingPredominateUseId"
+                          type="number"
+                        >
+                          <option
+                            value=""
+                          >
+                            Must Select One
+                          </option>
+                        </select>
+                      </div>
                     </div>
-                    <div class=\\"row\\">
-                      <p class=\\"label\\"><span class=\\"req\\">*</span>Construction Type</p>
-                      <div class=\\"form-group\\"><select name=\\"building.0.buildingConstructionTypeId\\" type=\\"number\\" id=\\"input-building.0.buildingConstructionTypeId-fast\\" class=\\"form-control\\">
-                          <option value=\\"\\">Must Select One</option>
-                        </select></div>
+                    <div
+                      class="row"
+                    >
+                      <p
+                        class="label"
+                      >
+                        <span
+                          class="req"
+                        >
+                          *
+                        </span>
+                        Construction Type
+                      </p>
+                      <div
+                        class="form-group"
+                      >
+                        <select
+                          class="form-control"
+                          id="input-building.0.buildingConstructionTypeId-fast"
+                          name="building.0.buildingConstructionTypeId"
+                          type="number"
+                        >
+                          <option
+                            value=""
+                          >
+                            Must Select One
+                          </option>
+                        </select>
+                      </div>
                     </div>
-                    <div class=\\"row\\">
-                      <p class=\\"label\\">Number of Floors</p>
-                      <div class=\\"form-group\\"><input name=\\"building.0.buildingFloorCount\\" style=\\"width: 100px;\\" type=\\"number\\" id=\\"input-building.0.buildingFloorCount\\" class=\\"input-small form-control\\" value=\\"\\"></div>
+                    <div
+                      class="row"
+                    >
+                      <p
+                        class="label"
+                      >
+                        Number of Floors
+                      </p>
+                      <div
+                        class="form-group"
+                      >
+                        <input
+                          class="input-small form-control"
+                          id="input-building.0.buildingFloorCount"
+                          name="building.0.buildingFloorCount"
+                          style="width: 100px;"
+                          type="number"
+                          value=""
+                        />
+                      </div>
                     </div>
-                    <div class=\\"row\\">
-                      <p class=\\"label\\"></p>
-                      <div class=\\"input-medium harmful\\">
-                        <p><span class=\\"req\\">*</span>Would this information be harmful if released?&nbsp;<a target=\\"_blank\\" rel=\\"noopener noreferrer\\" href=\\"https://www2.gov.bc.ca/gov/content/governments/services-for-government/policies-procedures/foippa-manual/disclosure-harmful-individual-public-safety\\">Policy</a></p>
-                        <div class=\\"form-group\\">
-                          <div class=\\"check-field\\">
-                            <div class=\\"form-check\\"><input name=\\"building.0.isSensitive\\" type=\\"radio\\" id=\\"input-building.0.isSensitive\\" class=\\"form-check-input\\" value=\\"false\\"><label title=\\"\\" for=\\"input-building.0.isSensitive\\" class=\\"form-check-label\\">Yes</label></div>
-                            <div class=\\"form-check\\"><input name=\\"building.0.isSensitive\\" type=\\"radio\\" id=\\"input-building.0.isSensitive-2\\" class=\\"form-check-input\\" value=\\"true\\" checked=\\"\\"><label title=\\"\\" for=\\"input-building.0.isSensitive-2\\" class=\\"form-check-label\\">No</label></div>
+                    <div
+                      class="row"
+                    >
+                      <p
+                        class="label"
+                      />
+                      <div
+                        class="input-medium harmful"
+                      >
+                        <p>
+                          <span
+                            class="req"
+                          >
+                            *
+                          </span>
+                          Would this information be harmful if released? 
+                          <a
+                            href="https://www2.gov.bc.ca/gov/content/governments/services-for-government/policies-procedures/foippa-manual/disclosure-harmful-individual-public-safety"
+                            rel="noopener noreferrer"
+                            target="_blank"
+                          >
+                            Policy
+                          </a>
+                        </p>
+                        <div
+                          class="form-group"
+                        >
+                          <div
+                            class="check-field"
+                          >
+                            <div
+                              class="form-check"
+                            >
+                              <input
+                                class="form-check-input"
+                                id="input-building.0.isSensitive"
+                                name="building.0.isSensitive"
+                                type="radio"
+                                value="false"
+                              />
+                              <label
+                                class="form-check-label"
+                                for="input-building.0.isSensitive"
+                                title=""
+                              >
+                                Yes
+                              </label>
+                            </div>
+                            <div
+                              class="form-check"
+                            >
+                              <input
+                                checked=""
+                                class="form-check-input"
+                                id="input-building.0.isSensitive-2"
+                                name="building.0.isSensitive"
+                                type="radio"
+                                value="true"
+                              />
+                              <label
+                                class="form-check-label"
+                                for="input-building.0.isSensitive-2"
+                                title=""
+                              >
+                                No
+                              </label>
+                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
-                <hr>
-                <div class=\\"row\\">
-                  <h4 class=\\"sc-fzoLsD kulclU\\">Strategic Real Estate Classification</h4>
+                <hr />
+                <div
+                  class="row"
+                >
+                  <h4
+                    class="c4"
+                  >
+                    Strategic Real Estate Classification
+                  </h4>
                 </div>
-                <div class=\\"row\\">
-                  <div class=\\"col-md-6\\">
-                    <div style=\\"display: flex;\\" class=\\"row\\">
-                      <p style=\\"margin-bottom: 0px;\\" class=\\"label\\"><span class=\\"req\\">*</span>Building Classification</p>
-                      <div class=\\"form-group\\"><select name=\\"building.0.classificationId\\" style=\\"margin-top: 5px; display: flex;\\" type=\\"number\\" id=\\"input-building.0.classificationId-fast\\" class=\\"form-control\\">
-                          <option value=\\"\\">Must Select One</option>
-                        </select></div>
+                <div
+                  class="row"
+                >
+                  <div
+                    class="col-md-6"
+                  >
+                    <div
+                      class="row"
+                      style="display: flex;"
+                    >
+                      <p
+                        class="label"
+                        style="margin-bottom: 0px;"
+                      >
+                        <span
+                          class="req"
+                        >
+                          *
+                        </span>
+                        Building Classification
+                      </p>
+                      <div
+                        class="form-group"
+                      >
+                        <select
+                          class="form-control"
+                          id="input-building.0.classificationId-fast"
+                          name="building.0.classificationId"
+                          style="margin-top: 5px; display: flex;"
+                          type="number"
+                        >
+                          <option
+                            value=""
+                          >
+                            Must Select One
+                          </option>
+                        </select>
+                      </div>
                     </div>
-                    <div class=\\"row\\">
-                      <p class=\\"sc-fzplWN clReie\\">A disposal project must be initiated in order to mark a property as \\"surplus active\\".</p>
+                    <div
+                      class="row"
+                    >
+                      <p
+                        class="c5"
+                      >
+                        A disposal project must be initiated in order to mark a property as "surplus active".
+                      </p>
                     </div>
                   </div>
-                  <div class=\\"col-md-6\\">
-                    <div class=\\"sc-fzpans cHDEiT\\">
-                      <p style=\\"font-size: 11px;\\">Select a classification from the dropdown list to show the definition here. For further information, see the Inventory Policy.</p>
+                  <div
+                    class="col-md-6"
+                  >
+                    <div
+                      class="c6"
+                    >
+                      <p
+                        style="font-size: 11px;"
+                      >
+                        Select a classification from the dropdown list to show the definition here. For further information, see the Inventory Policy.
+                      </p>
                     </div>
                   </div>
                 </div>
-                <hr>
-                <div class=\\"row\\">
-                  <h4>Location</h4>
+                <hr />
+                <div
+                  class="row"
+                >
+                  <h4>
+                    Location
+                  </h4>
                 </div>
-                <div style=\\"margin-bottom: 10px;\\" class=\\"row\\">
-                  <div class=\\"col\\">
-                    <div class=\\"field-row row\\">
-                      <p class=\\"label\\"><span class=\\"req\\">*</span>Street Address</p>
-                      <div class=\\"GeocoderAutoComplete\\">
+                <div
+                  class="row"
+                  style="margin-bottom: 10px;"
+                >
+                  <div
+                    class="col"
+                  >
+                    <div
+                      class="form-row"
+                    >
+                      <p
+                        class="label"
+                      >
+                        Street Address
+                      </p>
+                      <div
+                        class="GeocoderAutoComplete"
+                      >
                         <div>
-                          <div class=\\"form-group\\"><input name=\\"building.0.address.line1\\" field=\\"building.0.address.line1\\" id=\\"input-building.0.address.line1\\" class=\\"form-control\\" value=\\"\\"></div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class=\\"field-row row\\">
-                      <p class=\\"label\\"><span class=\\"req\\">*</span>Location</p>
-                      <div class=\\"sc-AxjAm gLmrxD form-group\\">
-                        <div class=\\"rbt\\" style=\\"outline: none; position: relative;\\" tabindex=\\"-1\\">
-                          <div style=\\"display: flex; flex: 1; height: 100%; position: relative;\\"><input autocomplete=\\"off\\" type=\\"text\\" name=\\"building.0.address.administrativeArea\\" id=\\"building.0.address.administrativeArea-field\\" aria-autocomplete=\\"both\\" aria-expanded=\\"false\\" aria-haspopup=\\"listbox\\" role=\\"combobox\\" class=\\"rbt-input-main form-control rbt-input\\" value=\\"\\"><input aria-hidden=\\"true\\" class=\\"rbt-input-hint\\" readonly=\\"\\" style=\\"background-color: transparent; border-color: transparent; box-shadow: none; color: rgba(0, 0, 0, 0.35); left: 0px; pointer-events: none; position: absolute; top: 0px; width: 100%; border-style: inset inset inset inset; border-width: 2px 2px 2px 2px; line-height: normal; padding: 1px 1px 1px 1px;\\" tabindex=\\"-1\\" value=\\"\\"></div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class=\\"field-row row\\">
-                      <p class=\\"label\\">Province</p>
-                      <div class=\\"form-group\\"><select name=\\"building.0.address.provinceId\\" disabled=\\"\\" id=\\"input-building.0.address.provinceId\\" class=\\"form-select form-control\\">
-                          <option value=\\"\\">Must Select One</option>
-                        </select></div>
-                    </div>
-                    <div class=\\"postal row\\">
-                      <p class=\\"label\\">Postal Code</p>
-                      <div class=\\"form-group\\"><input name=\\"building.0.address.postal\\" style=\\"width: 120px;\\" id=\\"input-building.0.address.postal\\" class=\\"input-small form-control\\" value=\\"\\"></div>
-                    </div>
-                  </div>
-                  <div class=\\"col\\">
-                    <div class=\\"lat-long\\" style=\\"position: relative;\\">
-                      <div class=\\"row\\">
-                        <div class=\\"col-md-9\\">
-                          <div class=\\"instruction\\" style=\\"display: flex;\\"><span style=\\"color: red; margin-right: 5px;\\">*</span>
-                            <p>Drag and drop the pin on the map to mark the location of this building, or if you already have the coordinates, you can enter them manually in the fields below.</p>
+                          <div
+                            class="form-group"
+                          >
+                            <input
+                              class="form-control"
+                              field="building.0.address.line1"
+                              id="input-building.0.address.line1"
+                              name="building.0.address.line1"
+                              value=""
+                            />
                           </div>
                         </div>
-                        <div class=\\"marker-svg col\\"><button class=\\"sc-fznyAO hwQpCV\\"><svg>draft-building-icon.svg</svg></button></div>
                       </div>
-                      <div class=\\"form-row\\">
-                        <p class=\\"label\\">Latitude</p>
-                        <div class=\\"form-group\\"><input name=\\"building.0.latitude\\" type=\\"number\\" id=\\"input-building.0.latitude\\" class=\\"input-medium form-control\\" value=\\"\\"></div>
+                    </div>
+                    <div
+                      class="form-row"
+                    >
+                      <p
+                        class="label"
+                      >
+                        Location
+                      </p>
+                      <div
+                        class="required form-group"
+                      >
+                        <div
+                          class="rbt"
+                          style="outline: none; position: relative;"
+                          tabindex="-1"
+                        >
+                          <div
+                            style="display: flex; flex: 1; height: 100%; position: relative;"
+                          >
+                            <input
+                              aria-autocomplete="both"
+                              aria-expanded="false"
+                              aria-haspopup="listbox"
+                              autocomplete="off"
+                              class="rbt-input-main form-control rbt-input"
+                              id="building.0.address.administrativeArea-field"
+                              name="building.0.address.administrativeArea"
+                              role="combobox"
+                              type="text"
+                              value=""
+                            />
+                            <input
+                              aria-hidden="true"
+                              class="rbt-input-hint"
+                              readonly=""
+                              style="background-color: transparent; border-color: transparent; box-shadow: none; color: rgba(0, 0, 0, 0.35); left: 0px; pointer-events: none; position: absolute; top: 0px; width: 100%; border-style: inset inset inset inset; border-width: 2px 2px 2px 2px; line-height: normal; padding: 1px 1px 1px 1px;"
+                              tabindex="-1"
+                              value=""
+                            />
+                          </div>
+                        </div>
                       </div>
-                      <div class=\\"form-row\\">
-                        <p class=\\"label\\">Longitude</p>
-                        <div class=\\"form-group\\"><input name=\\"building.0.longitude\\" type=\\"number\\" id=\\"input-building.0.longitude\\" class=\\"input-medium form-control\\" value=\\"\\"></div>
+                    </div>
+                    <div
+                      class="form-row"
+                    >
+                      <p
+                        class="label"
+                      >
+                        Province
+                      </p>
+                      <div
+                        class="form-group"
+                      >
+                        <select
+                          class="form-select form-control"
+                          disabled=""
+                          id="input-building.0.address.provinceId"
+                          name="building.0.address.provinceId"
+                        >
+                          <option
+                            value=""
+                          >
+                            Must Select One
+                          </option>
+                        </select>
+                      </div>
+                    </div>
+                    <div
+                      class="postal form-row"
+                    >
+                      <p
+                        class="label"
+                      >
+                        Postal Code
+                      </p>
+                      <div
+                        class="form-group"
+                      >
+                        <input
+                          class="input-small form-control"
+                          id="input-building.0.address.postal"
+                          name="building.0.address.postal"
+                          style="width: 120px;"
+                          value=""
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="col"
+                  >
+                    <div
+                      class="lat-long"
+                      style="position: relative;"
+                    >
+                      <div
+                        class="row"
+                      >
+                        <div
+                          class="col-md-9"
+                        >
+                          <div
+                            class="instruction"
+                            style="display: flex;"
+                          >
+                            <span
+                              style="color: red; margin-right: 5px;"
+                            >
+                              *
+                            </span>
+                            <p>
+                              Drag and drop the pin on the map to mark the location of this building, or if you already have the coordinates, you can enter them manually in the fields below.
+                            </p>
+                          </div>
+                        </div>
+                        <div
+                          class="marker-svg col"
+                        >
+                          <button
+                            class="c7"
+                          >
+                            <svg>
+                              draft-building-icon.svg
+                            </svg>
+                          </button>
+                        </div>
+                      </div>
+                      <div
+                        class="form-row"
+                      >
+                        <p
+                          class="label"
+                        >
+                          Latitude
+                        </p>
+                        <div
+                          class="form-group"
+                        >
+                          <input
+                            class="input-medium form-control"
+                            id="input-building.0.latitude"
+                            name="building.0.latitude"
+                            type="number"
+                            value=""
+                          />
+                        </div>
+                      </div>
+                      <div
+                        class="form-row"
+                      >
+                        <p
+                          class="label"
+                        >
+                          Longitude
+                        </p>
+                        <div
+                          class="form-group"
+                        >
+                          <input
+                            class="input-medium form-control"
+                            id="input-building.0.longitude"
+                            name="building.0.longitude"
+                            type="number"
+                            value=""
+                          />
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -158,20 +906,60 @@ exports[`Building Form component renders correctly 1`] = `
               </div>
             </div>
           </div>
-          <div class=\\"sc-fzplgP hdJLSW\\">
-            <div class=\\"sc-fzqAui dmUimR\\">
-              <div class=\\"SresManual\\">
-                <div><svg stroke=\\"currentColor\\" fill=\\"none\\" stroke-width=\\"2\\" viewBox=\\"0 0 24 24\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" size=\\"28\\" height=\\"28\\" width=\\"28\\" xmlns=\\"http://www.w3.org/2000/svg\\">
-                    <path d=\\"M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z\\"></path>
-                    <path d=\\"M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z\\"></path>
-                  </svg></div>
-              </div><small class=\\"sc-fzqMdD jntMyA p-1 mr-2\\">Inventory Policy</small>
-            </div><span class=\\"sc-fznzqM dxQEfH\\"></span><button style=\\"margin-right: 10px;\\" type=\\"button\\" class=\\"btn btn-primary btn-sm\\">Continue</button>
+          <div
+            class="c8"
+          >
+            <div
+              class="c9"
+            >
+              <div
+                class="SresManual"
+              >
+                <div>
+                  <svg
+                    fill="none"
+                    height="28"
+                    size="28"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                    width="28"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"
+                    />
+                    <path
+                      d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"
+                    />
+                  </svg>
+                </div>
+              </div>
+              <small
+                class="c10 p-1 mr-2"
+              >
+                Inventory Policy
+              </small>
+            </div>
+            <span
+              class="c11"
+            />
+            <button
+              class="btn btn-primary btn-sm"
+              style="margin-right: 10px;"
+              type="button"
+            >
+              Continue
+            </button>
           </div>
         </div>
       </div>
     </div>
-    <div class=\\"container\\"></div>
+    <div
+      class="container"
+    />
   </form>
-</div>"
+</div>
 `;

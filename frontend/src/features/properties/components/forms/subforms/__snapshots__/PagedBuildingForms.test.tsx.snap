@@ -1,372 +1,69 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`PagedBuildingForms functionality displays any pre-existing buildings 1`] = `
-"<div class=\\"buildingPaginate\\"><button title=\\"Add Building\\" type=\\"button\\" class=\\"pagedBuildingButton page-link btn btn-link\\"><svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 448 512\\" size=\\"20\\" height=\\"20\\" width=\\"20\\" xmlns=\\"http://www.w3.org/2000/svg\\">
-      <path d=\\"M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z\\"></path>
-    </svg></button>
-  <div class=\\"mr-auto form-group\\"><select options=\\"[object Object],[object Object]\\" class=\\"ml-4 input-medium form-control\\">
-      <option value=\\"\\" class=\\"option\\">Choose a building to view</option>
-      <option value=\\"0\\" class=\\"option\\">name</option>
-    </select></div><button title=\\"Remove Building\\" type=\\"button\\" class=\\"delete-button page-link mr-4 btn btn-link\\"><svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 448 512\\" size=\\"20\\" height=\\"20\\" width=\\"20\\" xmlns=\\"http://www.w3.org/2000/svg\\">
-      <path d=\\"M432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16zM53.2 467a48 48 0 0 0 47.9 45h245.8a48 48 0 0 0 47.9-45L416 128H32z\\"></path>
-    </svg></button>
+<div
+  class="buildingPaginate"
+>
+  <button
+    class="pagedBuildingButton page-link btn btn-link"
+    title="Add Building"
+    type="button"
+  >
+    <svg
+      fill="currentColor"
+      height="20"
+      size="20"
+      stroke="currentColor"
+      stroke-width="0"
+      viewBox="0 0 448 512"
+      width="20"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"
+      />
+    </svg>
+  </button>
+  <div
+    class="mr-auto form-group"
+  >
+    <select
+      class="ml-4 input-medium form-control"
+      options="[object Object],[object Object]"
+    >
+      <option
+        class="option"
+        value=""
+      >
+        Choose a building to view
+      </option>
+      <option
+        class="option"
+        value="0"
+      >
+        name
+      </option>
+    </select>
+  </div>
+  <button
+    class="delete-button page-link mr-4 btn btn-link"
+    title="Remove Building"
+    type="button"
+  >
+    <svg
+      fill="currentColor"
+      height="20"
+      size="20"
+      stroke="currentColor"
+      stroke-width="0"
+      viewBox="0 0 448 512"
+      width="20"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16zM53.2 467a48 48 0 0 0 47.9 45h245.8a48 48 0 0 0 47.9-45L416 128H32z"
+      />
+    </svg>
+  </button>
 </div>
-<div style=\\"margin-bottom: 0px;\\" class=\\"buildingForm row no-gutters\\">
-  <div class=\\"col-md-6\\">
-    <div class=\\"form-row\\"><label class=\\"form-label\\">Name</label>
-      <div class=\\"form-group\\"><input name=\\"buildings.0.name\\" id=\\"input-buildings.0.name\\" class=\\"form-control\\" value=\\"name\\" disabled=\\"\\"></div>
-    </div>
-    <div class=\\"form-row\\"><label class=\\"form-label\\">Description</label>
-      <div class=\\"form-group\\"><textarea name=\\"buildings.0.description\\" id=\\"input-buildings.0.description\\" class=\\"form-control\\" disabled=\\"\\">description</textarea></div>
-    </div>
-    <div class=\\"form-row\\"><label class=\\"form-label\\">Classification</label>
-      <div class=\\"form-group\\"><select name=\\"buildings.0.classificationId\\" type=\\"number\\" id=\\"input-buildings.0.classificationId-fast\\" class=\\"form-control\\" disabled=\\"\\">
-          <option value=\\"\\">Must Select One</option>
-          <option value=\\"1\\">classification test</option>
-        </select></div>
-    </div>
-    <div class=\\"form-row\\"><label class=\\"form-label\\">Agency</label>
-      <div class=\\"sc-AxjAm gLmrxD form-group\\">
-        <div class=\\"rbt\\" style=\\"outline: none; position: relative;\\" tabindex=\\"-1\\">
-          <div style=\\"display: flex; flex: 1; height: 100%; position: relative;\\"><input autocomplete=\\"off\\" type=\\"text\\" name=\\"buildings.0.agencyId\\" id=\\"buildings.0.agencyId-field\\" disabled=\\"\\" aria-autocomplete=\\"both\\" aria-expanded=\\"false\\" aria-haspopup=\\"listbox\\" role=\\"combobox\\" class=\\"rbt-input-main form-control rbt-input\\" value=\\"\\"><input aria-hidden=\\"true\\" class=\\"rbt-input-hint\\" readonly=\\"\\" style=\\"background-color: transparent; border-color: transparent; box-shadow: none; color: rgba(0, 0, 0, 0.35); left: 0px; pointer-events: none; position: absolute; top: 0px; width: 100%; border-style: inset inset inset inset; border-width: 2px 2px 2px 2px; line-height: normal; padding: 1px 1px 1px 1px;\\" tabindex=\\"-1\\" value=\\"\\"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class=\\"col-md-6\\">
-    <div class=\\"field-row row\\">
-      <p class=\\"label\\"><span class=\\"req\\">*</span>Street Address</p>
-      <div class=\\"GeocoderAutoComplete\\">
-        <div>
-          <div class=\\"form-group\\"><input name=\\"buildings.0.address.line1\\" field=\\"buildings.0.address.line1\\" id=\\"input-buildings.0.address.line1\\" class=\\"form-control\\" value=\\"line1\\" disabled=\\"\\"></div>
-        </div>
-      </div>
-    </div>
-    <div class=\\"field-row row\\">
-      <p class=\\"label\\"><span class=\\"req\\">*</span>Location</p>
-      <div class=\\"sc-AxjAm gLmrxD form-group\\">
-        <div class=\\"rbt\\" style=\\"outline: none; position: relative;\\" tabindex=\\"-1\\">
-          <div style=\\"display: flex; flex: 1; height: 100%; position: relative;\\"><input autocomplete=\\"off\\" type=\\"text\\" name=\\"buildings.0.address.administrativeArea\\" id=\\"buildings.0.address.administrativeArea-field\\" aria-autocomplete=\\"both\\" aria-expanded=\\"false\\" aria-haspopup=\\"listbox\\" role=\\"combobox\\" class=\\"rbt-input-main form-control rbt-input\\" value=\\"administrativeArea\\" disabled=\\"\\"><input aria-hidden=\\"true\\" class=\\"rbt-input-hint\\" readonly=\\"\\" style=\\"background-color: transparent; border-color: transparent; box-shadow: none; color: rgba(0, 0, 0, 0.35); left: 0px; pointer-events: none; position: absolute; top: 0px; width: 100%; border-style: inset inset inset inset; border-width: 2px 2px 2px 2px; line-height: normal; padding: 1px 1px 1px 1px;\\" tabindex=\\"-1\\" value=\\"\\"></div>
-        </div>
-      </div>
-    </div>
-    <div class=\\"field-row row\\">
-      <p class=\\"label\\">Province</p>
-      <div class=\\"form-group\\"><select name=\\"buildings.0.address.provinceId\\" disabled=\\"\\" id=\\"input-buildings.0.address.provinceId\\" class=\\"form-select form-control\\">
-          <option value=\\"\\">Must Select One</option>
-          <option value=\\"2222\\" class=\\"option\\">test province</option>
-        </select></div>
-    </div>
-    <div class=\\"postal row\\">
-      <p class=\\"label\\">Postal Code</p>
-      <div class=\\"form-group\\"><input name=\\"buildings.0.address.postal\\" style=\\"width: 120px;\\" id=\\"input-buildings.0.address.postal\\" class=\\"input-small form-control\\" value=\\"postal\\" disabled=\\"\\"></div>
-    </div>
-    <div class=\\"lat-long\\" style=\\"position: relative;\\">
-      <div class=\\"row\\">
-        <div class=\\"col-md-9\\">
-          <div class=\\"instruction\\" style=\\"display: flex;\\"><span style=\\"color: red; margin-right: 5px;\\">*</span>
-            <p>Drag and drop the pin on the map to mark the location of this parcel, or if you already have the coordinates, you can enter them manually in the fields below.</p>
-          </div>
-        </div>
-        <div class=\\"marker-svg col\\"><button class=\\"sc-fzoXzr fxxQgr\\" disabled=\\"\\"><svg>draft-building-icon.svg</svg></button></div>
-      </div>
-      <div class=\\"form-row\\">
-        <p class=\\"label\\">Latitude</p>
-        <div class=\\"form-group\\"><input name=\\"buildings.0.latitude\\" type=\\"number\\" id=\\"input-buildings.0.latitude\\" class=\\"input-medium form-control\\" value=\\"9\\" disabled=\\"\\"></div>
-      </div>
-      <div class=\\"form-row\\">
-        <p class=\\"label\\">Longitude</p>
-        <div class=\\"form-group\\"><input name=\\"buildings.0.longitude\\" type=\\"number\\" id=\\"input-buildings.0.longitude\\" class=\\"input-medium form-control\\" value=\\"10\\" disabled=\\"\\"></div>
-      </div>
-    </div>
-  </div>
-</div>
-<div class=\\"scroll\\">
-  <h4>Information</h4>
-  <div class=\\"row no-gutters\\">
-    <div class=\\"col-md-6\\">
-      <div class=\\"form-row\\"><label class=\\"required form-label\\">Predominate Use</label>
-        <div class=\\"form-group\\"><select name=\\"buildings.0.buildingPredominateUseId\\" type=\\"number\\" id=\\"input-buildings.0.buildingPredominateUseId-fast\\" class=\\"form-control\\" disabled=\\"\\">
-            <option value=\\"\\">Must Select One</option>
-            <option value=\\"1\\">predominate use test type</option>
-          </select></div>
-      </div>
-      <div class=\\"form-row\\"><label class=\\"required form-label\\">Type of Construction</label>
-        <div class=\\"form-group\\"><select name=\\"buildings.0.buildingConstructionTypeId\\" type=\\"number\\" id=\\"input-buildings.0.buildingConstructionTypeId-fast\\" class=\\"form-control\\" disabled=\\"\\">
-            <option value=\\"\\">Must Select One</option>
-            <option value=\\"1\\">construction test type</option>
-          </select></div>
-      </div>
-    </div>
-    <div class=\\"col-md-6\\">
-      <div class=\\"form-row\\"><label class=\\"required form-label\\">Rentable Area</label>
-        <div class=\\"input-group disabled\\">
-          <div class=\\"input-group-content\\">
-            <div class=\\"form-group\\"><input name=\\"buildings.0.rentableArea\\" type=\\"number\\" id=\\"input-buildings.0.rentableArea\\" class=\\"form-control\\" value=\\"12\\" disabled=\\"\\"></div>
-          </div>
-          <div class=\\"input-group-append\\"><span class=\\"append-disabled input-group-text\\">Sq. Ft</span></div>
-        </div>
-      </div>
-      <div class=\\"form-row\\"><label class=\\"form-label\\">Number of Floors</label>
-        <div class=\\"form-group\\"><input name=\\"buildings.0.buildingFloorCount\\" type=\\"number\\" id=\\"input-buildings.0.buildingFloorCount\\" class=\\"input-small form-control\\" value=\\"5\\" disabled=\\"\\"></div>
-      </div>
-    </div>
-  </div>
-  <h4>Tenancy</h4>
-  <div class=\\"buildingTenancy row no-gutters\\">
-    <div class=\\"col-md-6\\">
-      <div class=\\"form-row\\"><label class=\\"required form-label\\">Type of Current Occupant</label>
-        <div class=\\"form-group\\"><select name=\\"buildings.0.buildingOccupantTypeId\\" type=\\"number\\" id=\\"input-buildings.0.buildingOccupantTypeId-fast\\" class=\\"form-control\\" disabled=\\"\\">
-            <option value=\\"\\">Must Select One</option>
-            <option value=\\"1\\">occupent type test</option>
-          </select></div>
-      </div>
-      <div class=\\"form-row\\"><label class=\\"form-label\\">Occupant Name</label>
-        <div class=\\"form-group\\"><input name=\\"buildings.0.occupantName\\" id=\\"input-buildings.0.occupantName\\" class=\\"form-control\\" value=\\"occupantName\\" disabled=\\"\\"></div>
-      </div>
-    </div>
-    <div class=\\"col-md-6\\">
-      <div class=\\"form-row\\"><label class=\\"form-label\\">Tenancy %</label>
-        <div class=\\"form-group\\"><input name=\\"buildings.0.buildingTenancy\\" id=\\"input-buildings.0.buildingTenancy\\" class=\\"form-control\\" value=\\"buildingTenancy\\" disabled=\\"\\"></div>
-      </div>
-      <div class=\\"form-row\\"><label class=\\"form-label\\">Date Lease Expires</label>
-        <div class=\\"form-group\\">
-          <div class=\\"react-datepicker-wrapper\\">
-            <div class=\\"react-datepicker__input-container\\"><input type=\\"text\\" id=\\"datepicker-buildings.0.leaseExpiry\\" name=\\"buildings.0.leaseExpiry\\" placeholder=\\"--/--/----\\" autocomplete=\\"off\\" class=\\"form-control date-picker\\" value=\\"01/01/2020\\" disabled=\\"\\"></div>
-          </div>
-        </div>
-        <div class=\\"form-group\\">
-          <div class=\\"check-field\\">
-            <div class=\\"form-check\\"><input name=\\"buildings.0.transferLeaseOnSale\\" type=\\"checkbox\\" id=\\"input-buildings.0.transferLeaseOnSale\\" class=\\"form-check-input position-static\\" value=\\"true\\" checked=\\"\\" disabled=\\"\\"></div><label class=\\"text-wrap form-label\\" for=\\"input-buildings.0.transferLeaseOnSale\\">Lease to be transferred with land</label>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class=\\"row no-gutters\\">
-    <div class=\\"col\\">
-      <h4>Building Valuation</h4>
-      <div>
-        <div role=\\"table\\" class=\\"table assessed\\">
-          <div class=\\"thead thead-light\\">
-            <div role=\\"row\\" style=\\"display: flex; flex: 1 0 auto; min-width: 60px;\\" class=\\"tr\\">
-              <div colspan=\\"2\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 150 0 auto; min-width: 60px; width: 150px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Assessed Value</div>
-            </div>
-            <div role=\\"row\\" style=\\"display: flex; flex: 1 0 auto; min-width: 60px;\\" class=\\"tr\\">
-              <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Assessment Year</div>
-              <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Assessed Building Value</div>
-            </div>
-          </div>
-          <div role=\\"rowgroup\\" class=\\"tbody\\">
-            <div class=\\"tr-wrapper\\">
-              <div role=\\"row\\" style=\\"display: flex; flex: 1 0 auto; min-width: 60px;\\" class=\\"tr\\">
-                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">2021</div>
-                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">
-                  <div class=\\"fast-currency-input form-group\\">
-                    <div class=\\"input-tooltip-wrapper\\"><input name=\\"buildings.0.financials.0.assessed.value\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class=\\"tr-wrapper\\">
-              <div role=\\"row\\" style=\\"display: flex; flex: 1 0 auto; min-width: 60px;\\" class=\\"tr\\">
-                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">2020</div>
-                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">
-                  <div class=\\"fast-currency-input form-group\\">
-                    <div class=\\"input-tooltip-wrapper\\"><input name=\\"buildings.0.financials.1.assessed.value\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class=\\"tr-wrapper\\">
-              <div role=\\"row\\" style=\\"display: flex; flex: 1 0 auto; min-width: 60px;\\" class=\\"tr\\">
-                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">2019</div>
-                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">
-                  <div class=\\"fast-currency-input form-group\\">
-                    <div class=\\"input-tooltip-wrapper\\"><input name=\\"buildings.0.financials.2.assessed.value\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class=\\"tr-wrapper\\">
-              <div role=\\"row\\" style=\\"display: flex; flex: 1 0 auto; min-width: 60px;\\" class=\\"tr\\">
-                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">2018</div>
-                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">
-                  <div class=\\"fast-currency-input form-group\\">
-                    <div class=\\"input-tooltip-wrapper\\"><input name=\\"buildings.0.financials.3.assessed.value\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class=\\"tr-wrapper\\">
-              <div role=\\"row\\" style=\\"display: flex; flex: 1 0 auto; min-width: 60px;\\" class=\\"tr\\">
-                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">2017</div>
-                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">
-                  <div class=\\"fast-currency-input form-group\\">
-                    <div class=\\"input-tooltip-wrapper\\"><input name=\\"buildings.0.financials.4.assessed.value\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class=\\"tr-wrapper\\">
-              <div role=\\"row\\" style=\\"display: flex; flex: 1 0 auto; min-width: 60px;\\" class=\\"tr\\">
-                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">2016</div>
-                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">
-                  <div class=\\"fast-currency-input form-group\\">
-                    <div class=\\"input-tooltip-wrapper\\"><input name=\\"buildings.0.financials.5.assessed.value\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class=\\"tr-wrapper\\">
-              <div role=\\"row\\" style=\\"display: flex; flex: 1 0 auto; min-width: 60px;\\" class=\\"tr\\">
-                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">2015</div>
-                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">
-                  <div class=\\"fast-currency-input form-group\\">
-                    <div class=\\"input-tooltip-wrapper\\"><input name=\\"buildings.0.financials.6.assessed.value\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class=\\"tr-wrapper\\">
-              <div role=\\"row\\" style=\\"display: flex; flex: 1 0 auto; min-width: 60px;\\" class=\\"tr\\">
-                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">2014</div>
-                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">
-                  <div class=\\"fast-currency-input form-group\\">
-                    <div class=\\"input-tooltip-wrapper\\"><input name=\\"buildings.0.financials.7.assessed.value\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class=\\"tr-wrapper\\">
-              <div role=\\"row\\" style=\\"display: flex; flex: 1 0 auto; min-width: 60px;\\" class=\\"tr\\">
-                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">2013</div>
-                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">
-                  <div class=\\"fast-currency-input form-group\\">
-                    <div class=\\"input-tooltip-wrapper\\"><input name=\\"buildings.0.financials.8.assessed.value\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class=\\"table-toolbar\\"></div>
-        <div role=\\"table\\" class=\\"table netbook\\">
-          <div class=\\"thead thead-light\\">
-            <div role=\\"row\\" style=\\"display: flex; flex: 1 0 auto; min-width: 90px;\\" class=\\"tr\\">
-              <div colspan=\\"3\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 250 0 auto; min-width: 90px; width: 250px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Net Book Value</div>
-            </div>
-            <div role=\\"row\\" style=\\"display: flex; flex: 1 0 auto; min-width: 90px;\\" class=\\"tr\\">
-              <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Fiscal Year</div>
-              <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Effective Date</div>
-              <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Net Book Value</div>
-            </div>
-          </div>
-          <div role=\\"rowgroup\\" class=\\"tbody\\">
-            <div class=\\"tr-wrapper\\">
-              <div role=\\"row\\" style=\\"display: flex; flex: 1 0 auto; min-width: 90px;\\" class=\\"tr\\">
-                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">20/21</div>
-                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\"></div>
-                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">
-                  <div class=\\"fast-currency-input form-group\\">
-                    <div class=\\"input-tooltip-wrapper\\"><input name=\\"buildings.0.financials.0.netbook.value\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class=\\"tr-wrapper\\">
-              <div role=\\"row\\" style=\\"display: flex; flex: 1 0 auto; min-width: 90px;\\" class=\\"tr\\">
-                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">19/20</div>
-                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\"></div>
-                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">
-                  <div class=\\"fast-currency-input form-group\\">
-                    <div class=\\"input-tooltip-wrapper\\"><input name=\\"buildings.0.financials.1.netbook.value\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class=\\"tr-wrapper\\">
-              <div role=\\"row\\" style=\\"display: flex; flex: 1 0 auto; min-width: 90px;\\" class=\\"tr\\">
-                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">18/19</div>
-                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\"></div>
-                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">
-                  <div class=\\"fast-currency-input form-group\\">
-                    <div class=\\"input-tooltip-wrapper\\"><input name=\\"buildings.0.financials.2.netbook.value\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class=\\"tr-wrapper\\">
-              <div role=\\"row\\" style=\\"display: flex; flex: 1 0 auto; min-width: 90px;\\" class=\\"tr\\">
-                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">17/18</div>
-                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\"></div>
-                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">
-                  <div class=\\"fast-currency-input form-group\\">
-                    <div class=\\"input-tooltip-wrapper\\"><input name=\\"buildings.0.financials.3.netbook.value\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class=\\"tr-wrapper\\">
-              <div role=\\"row\\" style=\\"display: flex; flex: 1 0 auto; min-width: 90px;\\" class=\\"tr\\">
-                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">16/17</div>
-                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\"></div>
-                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">
-                  <div class=\\"fast-currency-input form-group\\">
-                    <div class=\\"input-tooltip-wrapper\\"><input name=\\"buildings.0.financials.4.netbook.value\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class=\\"tr-wrapper\\">
-              <div role=\\"row\\" style=\\"display: flex; flex: 1 0 auto; min-width: 90px;\\" class=\\"tr\\">
-                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">15/16</div>
-                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\"></div>
-                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">
-                  <div class=\\"fast-currency-input form-group\\">
-                    <div class=\\"input-tooltip-wrapper\\"><input name=\\"buildings.0.financials.5.netbook.value\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class=\\"tr-wrapper\\">
-              <div role=\\"row\\" style=\\"display: flex; flex: 1 0 auto; min-width: 90px;\\" class=\\"tr\\">
-                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">14/15</div>
-                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\"></div>
-                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">
-                  <div class=\\"fast-currency-input form-group\\">
-                    <div class=\\"input-tooltip-wrapper\\"><input name=\\"buildings.0.financials.6.netbook.value\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class=\\"tr-wrapper\\">
-              <div role=\\"row\\" style=\\"display: flex; flex: 1 0 auto; min-width: 90px;\\" class=\\"tr\\">
-                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">13/14</div>
-                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\"></div>
-                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">
-                  <div class=\\"fast-currency-input form-group\\">
-                    <div class=\\"input-tooltip-wrapper\\"><input name=\\"buildings.0.financials.7.netbook.value\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class=\\"tr-wrapper\\">
-              <div role=\\"row\\" style=\\"display: flex; flex: 1 0 auto; min-width: 90px;\\" class=\\"tr\\">
-                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">12/13</div>
-                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\"></div>
-                <div role=\\"cell\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;\\" title=\\"\\" class=\\"td\\">
-                  <div class=\\"fast-currency-input form-group\\">
-                    <div class=\\"input-tooltip-wrapper\\"><input name=\\"buildings.0.financials.8.netbook.value\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class=\\"table-toolbar\\"></div>
-      </div>
-    </div>
-  </div>
-</div>"
 `;

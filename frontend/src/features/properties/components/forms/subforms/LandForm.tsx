@@ -25,8 +25,9 @@ const LandForm = <T extends any>(props: LandProps & FormikProps<T>) => {
   return (
     <>
       <Form.Row>
-        <Form.Label className="required">Lot Size</Form.Label>
+        <Form.Label>Lot Size</Form.Label>
         <InputGroup
+          required
           displayErrorTooltips
           fast={true}
           disabled={props.disabled}

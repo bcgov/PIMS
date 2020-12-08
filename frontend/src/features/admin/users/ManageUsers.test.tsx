@@ -11,7 +11,6 @@ import * as API from 'constants/API';
 import { ManageUsersPage } from './ManageUsersPage';
 import { fireEvent, render, wait } from '@testing-library/react';
 import moment from 'moment-timezone';
-import pretty from 'pretty';
 
 const history = createMemoryHistory();
 history.push('admin');
@@ -84,7 +83,7 @@ describe('Manage Users Component', () => {
 
   it('Snapshot matches', () => {
     const { container } = testRender(getStore());
-    expect(pretty(container.innerHTML)).toMatchSnapshot();
+    expect(container.firstChild).toMatchSnapshot();
   });
 
   it('Table row count is 2', () => {

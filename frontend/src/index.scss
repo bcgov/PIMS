@@ -1,3 +1,5 @@
+@import 'colors.scss';
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
@@ -16,8 +18,10 @@ input::-webkit-inner-spin-button {
   margin: 0;
 }
 
+//by default, invalid fields are outlined in red
 .form-row .form-control.is-invalid {
   background-image: none;
+  border-color: $danger-color;
 }
 
 .react-datepicker-wrapper,

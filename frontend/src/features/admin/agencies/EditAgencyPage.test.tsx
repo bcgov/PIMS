@@ -12,7 +12,6 @@ import { render, cleanup, act } from '@testing-library/react';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 import { ToastContainer } from 'react-toastify';
-import pretty from 'pretty';
 
 const mockStore = configureMockStore([thunk]);
 const history = createMemoryHistory();
@@ -73,7 +72,7 @@ describe('Edit agency page', () => {
         </Router>
       </Provider>,
     );
-    expect(pretty(container.innerHTML)).toMatchSnapshot();
+    expect(container.firstChild).toMatchSnapshot();
   });
 
   describe('appropriate fields are autofilled', () => {
@@ -82,8 +81,8 @@ describe('Edit agency page', () => {
       expect(getByLabelText(/agency e-mail address/i).getAttribute('value')).toEqual(
         'test@email.com',
       );
-      expect(getByLabelText('Agency*').getAttribute('value')).toEqual('Test Agency');
-      expect(getByLabelText('Short Name (Code)*').getAttribute('value')).toEqual('TEST');
+      expect(getByLabelText('Agency').getAttribute('value')).toEqual('Test Agency');
+      expect(getByLabelText('Short Name (Code)').getAttribute('value')).toEqual('TEST');
       expect(getByLabelText(/email notifications?/i).getAttribute('value')).toEqual('true');
     });
   });

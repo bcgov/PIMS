@@ -1,243 +1,1176 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
-"<div class=\\"erpStep container-fluid\\">
-  <form action=\\"#\\">
-    <div class=\\"sc-fzoaKM dvYxHZ default-status\\">
-      <h5 class=\\"sc-fzomuh ghgsiT\\">Approved for Surplus Property Program</h5><svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 512 512\\" size=\\"64\\" style=\\"color: rgb(32, 167, 77);\\" height=\\"64\\" width=\\"64\\" xmlns=\\"http://www.w3.org/2000/svg\\">
-        <path d=\\"M256 8C119.033 8 8 119.033 8 256s111.033 248 248 248 248-111.033 248-248S392.967 8 256 8zm0 48c110.532 0 200 89.451 200 200 0 110.532-89.451 200-200 200-110.532 0-200-89.451-200-200 0-110.532 89.451-200 200-200m140.204 130.267l-22.536-22.718c-4.667-4.705-12.265-4.736-16.97-.068L215.346 303.697l-59.792-60.277c-4.667-4.705-12.265-4.736-16.97-.069l-22.719 22.536c-4.705 4.667-4.736 12.265-.068 16.971l90.781 91.516c4.667 4.705 12.265 4.736 16.97.068l172.589-171.204c4.704-4.668 4.734-12.266.067-16.971z\\"></path>
+.c0 {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.c1 {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  font-family: 'BCSans',Fallback,sans-serif;
+}
+
+.c3 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row-reverse;
+  -ms-flex-direction: row-reverse;
+  flex-direction: row-reverse;
+  margin: 0.5rem 0;
+  text-align: right;
+}
+
+.c2 {
+  text-align: center;
+  font-family: 'BCSans-Bold';
+  margin-bottom: 1.5rem;
+}
+
+<div
+  class="erpStep container-fluid"
+>
+  <form
+    action="#"
+  >
+    <div
+      class="c0 default-status"
+    >
+      <h5
+        class="c1"
+      >
+        Approved for Surplus Property Program
+      </h5>
+      <svg
+        fill="currentColor"
+        height="64"
+        size="64"
+        stroke="currentColor"
+        stroke-width="0"
+        style="color: rgb(32, 167, 77);"
+        viewBox="0 0 512 512"
+        width="64"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M256 8C119.033 8 8 119.033 8 256s111.033 248 248 248 248-111.033 248-248S392.967 8 256 8zm0 48c110.532 0 200 89.451 200 200 0 110.532-89.451 200-200 200-110.532 0-200-89.451-200-200 0-110.532 89.451-200 200-200m140.204 130.267l-22.536-22.718c-4.667-4.705-12.265-4.736-16.97-.068L215.346 303.697l-59.792-60.277c-4.667-4.705-12.265-4.736-16.97-.069l-22.719 22.536c-4.705 4.667-4.736 12.265-.068 16.971l90.781 91.516c4.667 4.705 12.265 4.736 16.97.068l172.589-171.204c4.704-4.668 4.734-12.266.067-16.971z"
+        />
       </svg>
-      <h5 class=\\"sc-fzomuh ghgsiT\\">Approval Date </h5>
+      <h5
+        class="c1"
+      >
+        Approval Date 
+      </h5>
     </div>
-    <div class=\\"sc-fzqLLg xvecV\\">Approved for ERP</div>
-    <nav class=\\"nav nav-tabs\\" role=\\"tablist\\"><a href=\\"#\\" role=\\"tab\\" data-rb-event-key=\\"projectInformation\\" id=\\"approvalTabs-tab-projectInformation\\" aria-controls=\\"approvalTabs-tabpane-projectInformation\\" tabindex=\\"-1\\" aria-selected=\\"false\\" class=\\"nav-item nav-link\\">Project Information</a><a href=\\"#\\" role=\\"tab\\" data-rb-event-key=\\"documentation\\" id=\\"approvalTabs-tab-documentation\\" aria-controls=\\"approvalTabs-tabpane-documentation\\" tabindex=\\"-1\\" aria-selected=\\"false\\" class=\\"nav-item nav-link\\">Documentation</a><a href=\\"#\\" role=\\"tab\\" data-rb-event-key=\\"enhancedReferralProcess\\" id=\\"approvalTabs-tab-enhancedReferralProcess\\" aria-controls=\\"approvalTabs-tabpane-enhancedReferralProcess\\" tabindex=\\"-1\\" aria-selected=\\"false\\" class=\\"nav-item nav-link\\">Enhanced Referral Process</a><a href=\\"#\\" role=\\"tab\\" data-rb-event-key=\\"closeOutForm\\" id=\\"approvalTabs-tab-closeOutForm\\" aria-controls=\\"approvalTabs-tabpane-closeOutForm\\" aria-selected=\\"true\\" class=\\"nav-item nav-link active\\">Close Out Form</a></nav>
-    <div class=\\"tab-content\\">
-      <div id=\\"approvalTabs-tabpane-closeOutForm\\" aria-labelledby=\\"approvalTabs-tab-closeOutForm\\" role=\\"tabpanel\\" aria-hidden=\\"false\\" class=\\"fade tab-pane active show\\">
-        <div class=\\"container-fluid\\">
-          <div class=\\"form-row\\">
-            <div class=\\"col-md-6\\">
-              <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-4\\">Project Number</label>
-                <div class=\\"col-md-8 form-group\\"><input name=\\"projectNumber\\" disabled=\\"\\" id=\\"input-projectNumber\\" class=\\"form-control\\" value=\\"test-01\\"></div>
+    <div
+      class="c2"
+    >
+      Approved for ERP
+    </div>
+    <nav
+      class="nav nav-tabs"
+      role="tablist"
+    >
+      <a
+        aria-controls="approvalTabs-tabpane-projectInformation"
+        aria-selected="false"
+        class="nav-item nav-link"
+        data-rb-event-key="projectInformation"
+        href="#"
+        id="approvalTabs-tab-projectInformation"
+        role="tab"
+        tabindex="-1"
+      >
+        Project Information
+      </a>
+      <a
+        aria-controls="approvalTabs-tabpane-documentation"
+        aria-selected="false"
+        class="nav-item nav-link"
+        data-rb-event-key="documentation"
+        href="#"
+        id="approvalTabs-tab-documentation"
+        role="tab"
+        tabindex="-1"
+      >
+        Documentation
+      </a>
+      <a
+        aria-controls="approvalTabs-tabpane-enhancedReferralProcess"
+        aria-selected="false"
+        class="nav-item nav-link"
+        data-rb-event-key="enhancedReferralProcess"
+        href="#"
+        id="approvalTabs-tab-enhancedReferralProcess"
+        role="tab"
+        tabindex="-1"
+      >
+        Enhanced Referral Process
+      </a>
+      <a
+        aria-controls="approvalTabs-tabpane-closeOutForm"
+        aria-selected="true"
+        class="nav-item nav-link active"
+        data-rb-event-key="closeOutForm"
+        href="#"
+        id="approvalTabs-tab-closeOutForm"
+        role="tab"
+      >
+        Close Out Form
+      </a>
+    </nav>
+    <div
+      class="tab-content"
+    >
+      <div
+        aria-hidden="false"
+        aria-labelledby="approvalTabs-tab-closeOutForm"
+        class="fade tab-pane active show"
+        id="approvalTabs-tabpane-closeOutForm"
+        role="tabpanel"
+      >
+        <div
+          class="container-fluid"
+        >
+          <div
+            class="form-row"
+          >
+            <div
+              class="col-md-6"
+            >
+              <div
+                class="form-row"
+              >
+                <label
+                  class="form-label col-form-label col-md-4"
+                >
+                  Project Number
+                </label>
+                <div
+                  class="col-md-8 form-group"
+                >
+                  <input
+                    class="form-control"
+                    disabled=""
+                    id="input-projectNumber"
+                    name="projectNumber"
+                    value="test-01"
+                  />
+                </div>
               </div>
-              <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-4\\">Agency</label>
-                <div class=\\"col-md-8 form-group\\"><input name=\\"agency\\" disabled=\\"\\" id=\\"input-agency\\" class=\\"form-control\\" value=\\"\\"></div>
+              <div
+                class="form-row"
+              >
+                <label
+                  class="form-label col-form-label col-md-4"
+                >
+                  Agency
+                </label>
+                <div
+                  class="col-md-8 form-group"
+                >
+                  <input
+                    class="form-control"
+                    disabled=""
+                    id="input-agency"
+                    name="agency"
+                    value=""
+                  />
+                </div>
               </div>
-              <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-4\\">Sub Agency</label>
-                <div class=\\"col-md-8 form-group\\"><input name=\\"subAgency\\" disabled=\\"\\" id=\\"input-subAgency\\" class=\\"form-control\\" value=\\"\\"></div>
+              <div
+                class="form-row"
+              >
+                <label
+                  class="form-label col-form-label col-md-4"
+                >
+                  Sub Agency
+                </label>
+                <div
+                  class="col-md-8 form-group"
+                >
+                  <input
+                    class="form-control"
+                    disabled=""
+                    id="input-subAgency"
+                    name="subAgency"
+                    value=""
+                  />
+                </div>
               </div>
             </div>
-            <div class=\\"col-md-6\\">
-              <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-4\\">Project Manager(s)</label>
-                <div class=\\"col-md-8 form-group\\"><input name=\\"manager\\" id=\\"input-manager\\" class=\\"form-control\\" value=\\"\\"></div>
-              </div>
-            </div>
-          </div>
-          <h3>Purchase Information</h3>
-          <div class=\\"form-row\\">
-            <div class=\\"col-md-6\\">
-              <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-4\\">Name of Purchaser</label>
-                <div class=\\"col-md-8 form-group\\"><input name=\\"purchaser\\" disabled=\\"\\" id=\\"input-purchaser\\" class=\\"form-control\\" value=\\"purchaser\\"></div>
-              </div>
-              <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-4\\">Real Estate Agent</label>
-                <div class=\\"col-md-8 form-group\\"><input name=\\"realtor\\" id=\\"input-realtor\\" class=\\"form-control\\" value=\\"\\"></div>
-              </div>
-            </div>
-            <div class=\\"col-md-6\\">
-              <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-4\\">Real Estate Agent Rate</label>
-                <div class=\\"col-md-8 form-group\\"><input name=\\"realtorRate\\" id=\\"input-realtorRate\\" class=\\"form-control\\" value=\\"\\"></div>
-              </div>
-              <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-4\\">Real Estate Commission Paid</label>
-                <div class=\\"col-md-8 fast-currency-input form-group\\">
-                  <div class=\\"input-tooltip-wrapper\\"><input name=\\"realtorCommission\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
+            <div
+              class="col-md-6"
+            >
+              <div
+                class="form-row"
+              >
+                <label
+                  class="form-label col-form-label col-md-4"
+                >
+                  Project Manager(s)
+                </label>
+                <div
+                  class="col-md-8 form-group"
+                >
+                  <input
+                    class="form-control"
+                    id="input-manager"
+                    name="manager"
+                    value=""
+                  />
                 </div>
               </div>
             </div>
           </div>
-          <h3>Sale Information</h3>
-          <div class=\\"form-row\\">
-            <div class=\\"col-md-6\\">
-              <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-4\\">Sales Completion Date</label>
-                <div class=\\"col-md-8 form-group\\">
-                  <div class=\\"react-datepicker-wrapper\\">
-                    <div class=\\"react-datepicker__input-container\\"><input type=\\"text\\" id=\\"datepicker-disposedOn\\" name=\\"disposedOn\\" placeholder=\\"--/--/----\\" autocomplete=\\"off\\" class=\\"form-control date-picker\\" value=\\"01/01/2020\\"></div>
+          <h3>
+            Purchase Information
+          </h3>
+          <div
+            class="form-row"
+          >
+            <div
+              class="col-md-6"
+            >
+              <div
+                class="form-row"
+              >
+                <label
+                  class="form-label col-form-label col-md-4"
+                >
+                  Name of Purchaser
+                </label>
+                <div
+                  class="col-md-8 form-group"
+                >
+                  <input
+                    class="form-control"
+                    disabled=""
+                    id="input-purchaser"
+                    name="purchaser"
+                    value="purchaser"
+                  />
+                </div>
+              </div>
+              <div
+                class="form-row"
+              >
+                <label
+                  class="form-label col-form-label col-md-4"
+                >
+                  Real Estate Agent
+                </label>
+                <div
+                  class="col-md-8 form-group"
+                >
+                  <input
+                    class="form-control"
+                    id="input-realtor"
+                    name="realtor"
+                    value=""
+                  />
+                </div>
+              </div>
+            </div>
+            <div
+              class="col-md-6"
+            >
+              <div
+                class="form-row"
+              >
+                <label
+                  class="form-label col-form-label col-md-4"
+                >
+                  Real Estate Agent Rate
+                </label>
+                <div
+                  class="col-md-8 form-group"
+                >
+                  <input
+                    class="form-control"
+                    id="input-realtorRate"
+                    name="realtorRate"
+                    value=""
+                  />
+                </div>
+              </div>
+              <div
+                class="form-row"
+              >
+                <label
+                  class="form-label col-form-label col-md-4"
+                >
+                  Real Estate Commission Paid
+                </label>
+                <div
+                  class="col-md-8 form-group"
+                >
+                  <div
+                    class="input-tooltip-wrapper"
+                  >
+                    <input
+                      class="form-control"
+                      name="realtorCommission"
+                      placeholder=""
+                      value=""
+                    />
                   </div>
                 </div>
               </div>
-              <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-4\\">Sales Adjustment Date</label>
-                <div class=\\"col-md-8 form-group\\">
-                  <div class=\\"react-datepicker-wrapper\\">
-                    <div class=\\"react-datepicker__input-container\\"><input type=\\"text\\" id=\\"datepicker-adjustedOn\\" name=\\"adjustedOn\\" placeholder=\\"--/--/----\\" autocomplete=\\"off\\" class=\\"form-control date-picker\\" value=\\"\\"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class=\\"col-md-6\\">
-              <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-4\\">Actual Fiscal Year of Sale</label>
-                <div class=\\"col-md-8 form-group\\"><input name=\\"actualFiscalYear\\" class=\\"form-control\\" placeholder=\\"YYYY/YYYY\\" value=\\"\\"></div>
-              </div>
-              <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-4\\">Best Information of Future Planned Use</label>
-                <div class=\\"col-md-8 form-group\\"><input name=\\"plannedFutureUse\\" id=\\"input-plannedFutureUse\\" class=\\"form-control\\" value=\\"\\"></div>
-              </div>
             </div>
           </div>
-          <h3>Appraisal</h3>
-          <div class=\\"form-row\\">
-            <div class=\\"PropertyListView container-fluid\\">
-              <div class=\\"ScrollContainer\\">
-                <div role=\\"table\\" class=\\"table\\">
-                  <div class=\\"thead thead-light\\">
-                    <div role=\\"row\\" style=\\"display: flex; flex: 1 0 auto; min-width: 845px;\\" class=\\"tr\\">
-                      <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Property Name</div>
-                      <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Street Address</div>
-                      <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Location</div>
-                      <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 60 0 auto; min-width: 30px; width: 60px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Type</div>
-                      <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Appraised Value</div>
-                      <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Appraised Date</div>
-                      <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Appraisal Firm</div>
-                      <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Assessed Value</div>
-                      <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">Assessed Date</div>
+          <h3>
+            Sale Information
+          </h3>
+          <div
+            class="form-row"
+          >
+            <div
+              class="col-md-6"
+            >
+              <div
+                class="form-row"
+              >
+                <label
+                  class="form-label col-form-label col-md-4"
+                >
+                  Sales Completion Date
+                </label>
+                <div
+                  class="col-md-8 form-group"
+                >
+                  <div
+                    class="react-datepicker-wrapper"
+                  >
+                    <div
+                      class="react-datepicker__input-container"
+                    >
+                      <input
+                        autocomplete="off"
+                        class="form-control date-picker"
+                        id="datepicker-disposedOn"
+                        name="disposedOn"
+                        placeholder="--/--/----"
+                        type="text"
+                        value="01/01/2020"
+                      />
                     </div>
                   </div>
-                  <div class=\\"no-rows-message\\">No rows to display</div>
                 </div>
               </div>
-            </div>
-          </div>
-          <h3>Financial Summary</h3>
-          <div class=\\"form-row\\">
-            <div class=\\"col-md-6\\">
-              <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-4\\">Sales Proceeds</label>
-                <div class=\\"col-md-8 fast-currency-input form-group\\">
-                  <div class=\\"input-tooltip-wrapper\\"><input name=\\"market\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
-                </div>
-              </div>
-              <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-4\\">Cost of Sales</label>
-                <div class=\\"col-md-8 fast-currency-input form-group\\">
-                  <div class=\\"input-tooltip-wrapper\\"><input name=\\"salesCost\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
-                </div>
-              </div>
-              <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-4\\">Net Book Value</label>
-                <div class=\\"col-md-8 fast-currency-input form-group\\">
-                  <div class=\\"input-tooltip-wrapper\\"><input name=\\"netBook\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
-                </div>
-              </div>
-              <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-4\\">Gain Before SPP Cost</label>
-                <div class=\\"col-md-8 fast-currency-input form-group\\">
-                  <div class=\\"input-tooltip-wrapper\\"><input name=\\"gainBeforeSpp\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
-                </div>
-              </div>
-              <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-4\\">Remediation (Not funded throuch COS. TRAN only)</label>
-                <div class=\\"col-md-8 form-group\\"><input name=\\"remediation\\" id=\\"input-remediation\\" class=\\"form-control\\" value=\\"\\"></div>
-              </div>
-            </div>
-            <div class=\\"col-md-6\\">
-              <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-4\\">SPP Cost</label>
-                <div class=\\"col-md-8 fast-currency-input form-group\\">
-                  <div class=\\"input-tooltip-wrapper\\"><input name=\\"programCost\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
-                </div>
-              </div>
-              <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-4\\">SPP Cost Calculation Notes</label>
-                <div class=\\"col-md-8 form-group\\"><input name=\\"notes[12].note\\" id=\\"input-notes[12].note\\" class=\\"form-control\\" value=\\"sppcost\\"></div>
-              </div>
-              <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-4\\">Gain after SPP Cost</label>
-                <div class=\\"col-md-8 fast-currency-input form-group\\">
-                  <div class=\\"input-tooltip-wrapper\\"><input name=\\"gainAfterSpp\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
-                </div>
-              </div>
-              <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-4\\">Gain after SPP Cost Calculation Notes</label>
-                <div class=\\"col-md-8 form-group\\"><input name=\\"notes[13].note\\" id=\\"input-notes[13].note\\" class=\\"form-control\\" value=\\"sppgain\\"></div>
-              </div>
-              <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-4\\">Interest Component</label>
-                <div class=\\"col-md-8 fast-currency-input form-group\\">
-                  <div class=\\"input-tooltip-wrapper\\"><input name=\\"interestComponent\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
-                </div>
-              </div>
-              <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-4\\">Net Proceeds</label>
-                <div class=\\"col-md-8 fast-currency-input form-group\\">
-                  <div class=\\"input-tooltip-wrapper\\"><input name=\\"netProceeds\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <h3>Financing Information</h3>
-          <div class=\\"ProjectNotes form-row\\">
-            <div class=\\"col-md-12 form-group\\"><label class=\\"form-label\\" for=\\"input-notes[10].note\\">Loan Terms</label><textarea name=\\"notes[10].note\\" id=\\"input-notes[10].note\\" class=\\"col-md-5 form-control\\">loanterms</textarea></div>
-          </div>
-          <div class=\\"ProjectNotes form-row\\">
-            <div class=\\"col-md-12 form-group\\"><label class=\\"form-label\\" for=\\"input-notes[15].note\\">Notes</label><textarea name=\\"notes[15].note\\" id=\\"input-notes[15].note\\" class=\\"col-md-5 form-control\\">closeout</textarea></div>
-          </div>
-          <h3>OCG</h3>
-          <div class=\\"col-md-12 form-row\\"><label class=\\"form-label col-form-label col-md-2\\">OCG Gain / Loss</label>
-            <div class=\\"col-md-4 fast-currency-input form-group\\">
-              <div class=\\"input-tooltip-wrapper\\"><input name=\\"ocgFinancialStatement\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
-            </div>
-          </div>
-          <div class=\\"ProjectNotes form-row\\">
-            <div class=\\"col-md-12 form-group\\"><label class=\\"form-label\\" for=\\"input-notes[14].note\\">Sales History Notes</label><textarea name=\\"notes[14].note\\" id=\\"input-notes[14].note\\" class=\\"col-md-5 form-control\\">saleshistory</textarea></div>
-          </div>
-          <div class=\\"ProjectNotes form-row\\">
-            <div class=\\"col-md-12 form-group\\"><label class=\\"form-label\\" for=\\"input-notes[16].note\\">Project Comments<svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 512 512\\" class=\\"tooltip-icon\\" height=\\"1em\\" width=\\"1em\\" xmlns=\\"http://www.w3.org/2000/svg\\">
-                  <path d=\\"M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z\\"></path>
-                </svg></label><textarea name=\\"notes[16].note\\" id=\\"input-notes[16].note\\" class=\\"col-md-5 form-control\\">comments</textarea></div>
-          </div>
-          <h3>Signed by Chief Financial Officer</h3>
-          <div class=\\"form-row\\">
-            <div class=\\"col-md-6\\">
-              <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-4\\">Preliminary Form Signed By</label>
-                <div class=\\"col-md-8 form-group\\"><input name=\\"preliminaryFormSignedBy\\" id=\\"input-preliminaryFormSignedBy\\" class=\\"form-control\\" value=\\"\\"></div>
-              </div>
-              <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-4\\">Final Form Signed by</label>
-                <div class=\\"col-md-8 form-group\\"><input name=\\"finalFormSignedBy\\" id=\\"input-finalFormSignedBy\\" class=\\"form-control\\" value=\\"\\"></div>
-              </div>
-            </div>
-            <div class=\\"col-md-6\\">
-              <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-4\\">Signature Date</label>
-                <div class=\\"col-md-8 form-group\\">
-                  <div class=\\"react-datepicker-wrapper\\">
-                    <div class=\\"react-datepicker__input-container\\"><input type=\\"text\\" id=\\"datepicker-preliminaryFormSignedOn\\" name=\\"preliminaryFormSignedOn\\" placeholder=\\"--/--/----\\" autocomplete=\\"off\\" class=\\"form-control date-picker\\" value=\\"\\"></div>
-                  </div>
-                </div>
-              </div>
-              <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-4\\">Signature Date</label>
-                <div class=\\"col-md-8 form-group\\">
-                  <div class=\\"react-datepicker-wrapper\\">
-                    <div class=\\"react-datepicker__input-container\\"><input type=\\"text\\" id=\\"datepicker-finalFormSignedOn\\" name=\\"finalFormSignedOn\\" placeholder=\\"--/--/----\\" autocomplete=\\"off\\" class=\\"form-control date-picker\\" value=\\"\\"></div>
+              <div
+                class="form-row"
+              >
+                <label
+                  class="form-label col-form-label col-md-4"
+                >
+                  Sales Adjustment Date
+                </label>
+                <div
+                  class="col-md-8 form-group"
+                >
+                  <div
+                    class="react-datepicker-wrapper"
+                  >
+                    <div
+                      class="react-datepicker__input-container"
+                    >
+                      <input
+                        autocomplete="off"
+                        class="form-control date-picker"
+                        id="datepicker-adjustedOn"
+                        name="adjustedOn"
+                        placeholder="--/--/----"
+                        type="text"
+                        value=""
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-          <h3>Adjustment to Prior Year Sale</h3>
-          <div class=\\"form-row\\">
-            <div class=\\"col-md-6\\">
-              <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-4\\">Adjustment to Prior Year Sale Amount</label>
-                <div class=\\"col-md-8 fast-currency-input form-group\\">
-                  <div class=\\"input-tooltip-wrapper\\"><input name=\\"priorYearAdjustmentAmount\\" class=\\"form-control\\" placeholder=\\"\\" value=\\"\\"></div>
+            <div
+              class="col-md-6"
+            >
+              <div
+                class="form-row"
+              >
+                <label
+                  class="form-label col-form-label col-md-4"
+                >
+                  Actual Fiscal Year of Sale
+                </label>
+                <div
+                  class="col-md-8 form-group"
+                >
+                  <input
+                    class="form-control"
+                    name="actualFiscalYear"
+                    placeholder="YYYY/YYYY"
+                    value=""
+                  />
+                </div>
+              </div>
+              <div
+                class="form-row"
+              >
+                <label
+                  class="form-label col-form-label col-md-4"
+                >
+                  Best Information of Future Planned Use
+                </label>
+                <div
+                  class="col-md-8 form-group"
+                >
+                  <input
+                    class="form-control"
+                    id="input-plannedFutureUse"
+                    name="plannedFutureUse"
+                    value=""
+                  />
                 </div>
               </div>
             </div>
-            <div class=\\"col-md-6\\">
-              <div class=\\"form-row\\"></div>
-              <div class=\\"form-row\\"><label class=\\"form-label col-form-label col-md-4\\">Adjustment to Prior Year Sale Date</label>
-                <div class=\\"col-md-8 form-group\\">
-                  <div class=\\"react-datepicker-wrapper\\">
-                    <div class=\\"react-datepicker__input-container\\"><input type=\\"text\\" id=\\"datepicker-priorYearAdjustmentOn\\" name=\\"priorYearAdjustmentOn\\" placeholder=\\"--/--/----\\" autocomplete=\\"off\\" class=\\"form-control date-picker\\" value=\\"\\"></div>
+          </div>
+          <h3>
+            Appraisal
+          </h3>
+          <div
+            class="form-row"
+          >
+            <div
+              class="PropertyListView container-fluid"
+            >
+              <div
+                class="ScrollContainer"
+              >
+                <div
+                  class="table"
+                  role="table"
+                >
+                  <div
+                    class="thead thead-light"
+                  >
+                    <div
+                      class="tr"
+                      role="row"
+                      style="display: flex; flex: 1 0 auto; min-width: 845px;"
+                    >
+                      <div
+                        class="th"
+                        colspan="1"
+                        role="columnheader"
+                        style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+                      >
+                        Property Name
+                      </div>
+                      <div
+                        class="th"
+                        colspan="1"
+                        role="columnheader"
+                        style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+                      >
+                        Street Address
+                      </div>
+                      <div
+                        class="th"
+                        colspan="1"
+                        role="columnheader"
+                        style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+                      >
+                        Location
+                      </div>
+                      <div
+                        class="th"
+                        colspan="1"
+                        role="columnheader"
+                        style="box-sizing: border-box; flex: 60 0 auto; min-width: 30px; width: 60px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+                      >
+                        Type
+                      </div>
+                      <div
+                        class="th"
+                        colspan="1"
+                        role="columnheader"
+                        style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+                      >
+                        Appraised Value
+                      </div>
+                      <div
+                        class="th"
+                        colspan="1"
+                        role="columnheader"
+                        style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+                      >
+                        Appraised Date
+                      </div>
+                      <div
+                        class="th"
+                        colspan="1"
+                        role="columnheader"
+                        style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+                      >
+                        Appraisal Firm
+                      </div>
+                      <div
+                        class="th"
+                        colspan="1"
+                        role="columnheader"
+                        style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+                      >
+                        Assessed Value
+                      </div>
+                      <div
+                        class="th"
+                        colspan="1"
+                        role="columnheader"
+                        style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+                      >
+                        Assessed Date
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="no-rows-message"
+                  >
+                    No rows to display
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <div class=\\"ProjectNotes form-row\\">
-            <div class=\\"col-md-12 form-group\\"><label class=\\"form-label\\" for=\\"input-notes[11].note\\">Adjustment to Prior Year Sale Notes</label><textarea name=\\"notes[11].note\\" id=\\"input-notes[11].note\\" class=\\"col-md-5 form-control\\">adjustment</textarea></div>
+          <h3>
+            Financial Summary
+          </h3>
+          <div
+            class="form-row"
+          >
+            <div
+              class="col-md-6"
+            >
+              <div
+                class="form-row"
+              >
+                <label
+                  class="form-label col-form-label col-md-4"
+                >
+                  Sales Proceeds
+                </label>
+                <div
+                  class="col-md-8 form-group"
+                >
+                  <div
+                    class="input-tooltip-wrapper"
+                  >
+                    <input
+                      class="form-control"
+                      name="market"
+                      placeholder=""
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                class="form-row"
+              >
+                <label
+                  class="form-label col-form-label col-md-4"
+                >
+                  Cost of Sales
+                </label>
+                <div
+                  class="col-md-8 form-group"
+                >
+                  <div
+                    class="input-tooltip-wrapper"
+                  >
+                    <input
+                      class="form-control"
+                      name="salesCost"
+                      placeholder=""
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                class="form-row"
+              >
+                <label
+                  class="form-label col-form-label col-md-4"
+                >
+                  Net Book Value
+                </label>
+                <div
+                  class="col-md-8 form-group"
+                >
+                  <div
+                    class="input-tooltip-wrapper"
+                  >
+                    <input
+                      class="form-control"
+                      name="netBook"
+                      placeholder=""
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                class="form-row"
+              >
+                <label
+                  class="form-label col-form-label col-md-4"
+                >
+                  Gain Before SPP Cost
+                </label>
+                <div
+                  class="col-md-8 form-group"
+                >
+                  <div
+                    class="input-tooltip-wrapper"
+                  >
+                    <input
+                      class="form-control"
+                      name="gainBeforeSpp"
+                      placeholder=""
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                class="form-row"
+              >
+                <label
+                  class="form-label col-form-label col-md-4"
+                >
+                  Remediation (Not funded throuch COS. TRAN only)
+                </label>
+                <div
+                  class="col-md-8 form-group"
+                >
+                  <input
+                    class="form-control"
+                    id="input-remediation"
+                    name="remediation"
+                    value=""
+                  />
+                </div>
+              </div>
+            </div>
+            <div
+              class="col-md-6"
+            >
+              <div
+                class="form-row"
+              >
+                <label
+                  class="form-label col-form-label col-md-4"
+                >
+                  SPP Cost
+                </label>
+                <div
+                  class="col-md-8 form-group"
+                >
+                  <div
+                    class="input-tooltip-wrapper"
+                  >
+                    <input
+                      class="form-control"
+                      name="programCost"
+                      placeholder=""
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                class="form-row"
+              >
+                <label
+                  class="form-label col-form-label col-md-4"
+                >
+                  SPP Cost Calculation Notes
+                </label>
+                <div
+                  class="col-md-8 form-group"
+                >
+                  <input
+                    class="form-control"
+                    id="input-notes[12].note"
+                    name="notes[12].note"
+                    value="sppcost"
+                  />
+                </div>
+              </div>
+              <div
+                class="form-row"
+              >
+                <label
+                  class="form-label col-form-label col-md-4"
+                >
+                  Gain after SPP Cost
+                </label>
+                <div
+                  class="col-md-8 form-group"
+                >
+                  <div
+                    class="input-tooltip-wrapper"
+                  >
+                    <input
+                      class="form-control"
+                      name="gainAfterSpp"
+                      placeholder=""
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                class="form-row"
+              >
+                <label
+                  class="form-label col-form-label col-md-4"
+                >
+                  Gain after SPP Cost Calculation Notes
+                </label>
+                <div
+                  class="col-md-8 form-group"
+                >
+                  <input
+                    class="form-control"
+                    id="input-notes[13].note"
+                    name="notes[13].note"
+                    value="sppgain"
+                  />
+                </div>
+              </div>
+              <div
+                class="form-row"
+              >
+                <label
+                  class="form-label col-form-label col-md-4"
+                >
+                  Interest Component
+                </label>
+                <div
+                  class="col-md-8 form-group"
+                >
+                  <div
+                    class="input-tooltip-wrapper"
+                  >
+                    <input
+                      class="form-control"
+                      name="interestComponent"
+                      placeholder=""
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                class="form-row"
+              >
+                <label
+                  class="form-label col-form-label col-md-4"
+                >
+                  Net Proceeds
+                </label>
+                <div
+                  class="col-md-8 form-group"
+                >
+                  <div
+                    class="input-tooltip-wrapper"
+                  >
+                    <input
+                      class="form-control"
+                      name="netProceeds"
+                      placeholder=""
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <h3>
+            Financing Information
+          </h3>
+          <div
+            class="ProjectNotes form-row"
+          >
+            <div
+              class="col-md-12 form-group"
+            >
+              <label
+                class="form-label"
+                for="input-notes[10].note"
+              >
+                Loan Terms
+              </label>
+              <textarea
+                class="col-md-5 form-control"
+                id="input-notes[10].note"
+                name="notes[10].note"
+              >
+                loanterms
+              </textarea>
+            </div>
+          </div>
+          <div
+            class="ProjectNotes form-row"
+          >
+            <div
+              class="col-md-12 form-group"
+            >
+              <label
+                class="form-label"
+                for="input-notes[15].note"
+              >
+                Notes
+              </label>
+              <textarea
+                class="col-md-5 form-control"
+                id="input-notes[15].note"
+                name="notes[15].note"
+              >
+                closeout
+              </textarea>
+            </div>
+          </div>
+          <h3>
+            OCG
+          </h3>
+          <div
+            class="col-md-12 form-row"
+          >
+            <label
+              class="form-label col-form-label col-md-2"
+            >
+              OCG Gain / Loss
+            </label>
+            <div
+              class="col-md-4 form-group"
+            >
+              <div
+                class="input-tooltip-wrapper"
+              >
+                <input
+                  class="form-control"
+                  name="ocgFinancialStatement"
+                  placeholder=""
+                  value=""
+                />
+              </div>
+            </div>
+          </div>
+          <div
+            class="ProjectNotes form-row"
+          >
+            <div
+              class="col-md-12 form-group"
+            >
+              <label
+                class="form-label"
+                for="input-notes[14].note"
+              >
+                Sales History Notes
+              </label>
+              <textarea
+                class="col-md-5 form-control"
+                id="input-notes[14].note"
+                name="notes[14].note"
+              >
+                saleshistory
+              </textarea>
+            </div>
+          </div>
+          <div
+            class="ProjectNotes form-row"
+          >
+            <div
+              class="col-md-12 form-group"
+            >
+              <label
+                class="form-label"
+                for="input-notes[16].note"
+              >
+                Project Comments
+                <svg
+                  class="tooltip-icon"
+                  fill="currentColor"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 512 512"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"
+                  />
+                </svg>
+              </label>
+              <textarea
+                class="col-md-5 form-control"
+                id="input-notes[16].note"
+                name="notes[16].note"
+              >
+                comments
+              </textarea>
+            </div>
+          </div>
+          <h3>
+            Signed by Chief Financial Officer
+          </h3>
+          <div
+            class="form-row"
+          >
+            <div
+              class="col-md-6"
+            >
+              <div
+                class="form-row"
+              >
+                <label
+                  class="form-label col-form-label col-md-4"
+                >
+                  Preliminary Form Signed By
+                </label>
+                <div
+                  class="col-md-8 form-group"
+                >
+                  <input
+                    class="form-control"
+                    id="input-preliminaryFormSignedBy"
+                    name="preliminaryFormSignedBy"
+                    value=""
+                  />
+                </div>
+              </div>
+              <div
+                class="form-row"
+              >
+                <label
+                  class="form-label col-form-label col-md-4"
+                >
+                  Final Form Signed by
+                </label>
+                <div
+                  class="col-md-8 form-group"
+                >
+                  <input
+                    class="form-control"
+                    id="input-finalFormSignedBy"
+                    name="finalFormSignedBy"
+                    value=""
+                  />
+                </div>
+              </div>
+            </div>
+            <div
+              class="col-md-6"
+            >
+              <div
+                class="form-row"
+              >
+                <label
+                  class="form-label col-form-label col-md-4"
+                >
+                  Signature Date
+                </label>
+                <div
+                  class="col-md-8 form-group"
+                >
+                  <div
+                    class="react-datepicker-wrapper"
+                  >
+                    <div
+                      class="react-datepicker__input-container"
+                    >
+                      <input
+                        autocomplete="off"
+                        class="form-control date-picker"
+                        id="datepicker-preliminaryFormSignedOn"
+                        name="preliminaryFormSignedOn"
+                        placeholder="--/--/----"
+                        type="text"
+                        value=""
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="form-row"
+              >
+                <label
+                  class="form-label col-form-label col-md-4"
+                >
+                  Signature Date
+                </label>
+                <div
+                  class="col-md-8 form-group"
+                >
+                  <div
+                    class="react-datepicker-wrapper"
+                  >
+                    <div
+                      class="react-datepicker__input-container"
+                    >
+                      <input
+                        autocomplete="off"
+                        class="form-control date-picker"
+                        id="datepicker-finalFormSignedOn"
+                        name="finalFormSignedOn"
+                        placeholder="--/--/----"
+                        type="text"
+                        value=""
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <h3>
+            Adjustment to Prior Year Sale
+          </h3>
+          <div
+            class="form-row"
+          >
+            <div
+              class="col-md-6"
+            >
+              <div
+                class="form-row"
+              >
+                <label
+                  class="form-label col-form-label col-md-4"
+                >
+                  Adjustment to Prior Year Sale Amount
+                </label>
+                <div
+                  class="col-md-8 form-group"
+                >
+                  <div
+                    class="input-tooltip-wrapper"
+                  >
+                    <input
+                      class="form-control"
+                      name="priorYearAdjustmentAmount"
+                      placeholder=""
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="col-md-6"
+            >
+              <div
+                class="form-row"
+              />
+              <div
+                class="form-row"
+              >
+                <label
+                  class="form-label col-form-label col-md-4"
+                >
+                  Adjustment to Prior Year Sale Date
+                </label>
+                <div
+                  class="col-md-8 form-group"
+                >
+                  <div
+                    class="react-datepicker-wrapper"
+                  >
+                    <div
+                      class="react-datepicker__input-container"
+                    >
+                      <input
+                        autocomplete="off"
+                        class="form-control date-picker"
+                        id="datepicker-priorYearAdjustmentOn"
+                        name="priorYearAdjustmentOn"
+                        placeholder="--/--/----"
+                        type="text"
+                        value=""
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="ProjectNotes form-row"
+          >
+            <div
+              class="col-md-12 form-group"
+            >
+              <label
+                class="form-label"
+                for="input-notes[11].note"
+              >
+                Adjustment to Prior Year Sale Notes
+              </label>
+              <textarea
+                class="col-md-5 form-control"
+                id="input-notes[11].note"
+                name="notes[11].note"
+              >
+                adjustment
+              </textarea>
+            </div>
           </div>
         </div>
       </div>
     </div>
-    <div style=\\"text-align: right;\\"></div>
-    <div class=\\"sc-fzoJus bTrsVh\\"></div>
-    <div class=\\"sc-fzoJus bTrsVh\\"><span><button style=\\"margin-left: 10px;\\" type=\\"button\\" class=\\"Button btn btn-primary\\"><div class=\\"Button__value\\">Save</div></button></span><span><button type=\\"button\\" class=\\"Button btn btn-danger\\"><div class=\\"Button__value\\">Cancel Project</div></button></span></div>
+    <div
+      style="text-align: right;"
+    />
+    <div
+      class="c3"
+    />
+    <div
+      class="c3"
+    >
+      <span>
+        <button
+          class="Button btn btn-primary"
+          style="margin-left: 10px;"
+          type="button"
+        >
+          <div
+            class="Button__value"
+          >
+            Save
+          </div>
+        </button>
+      </span>
+      <span>
+        <button
+          class="Button btn btn-danger"
+          type="button"
+        >
+          <div
+            class="Button__value"
+          >
+            Cancel Project
+          </div>
+        </button>
+      </span>
+    </div>
   </form>
-</div>"
+</div>
 `;
 
 exports[`ERP Approval Step renders correctly 1`] = `

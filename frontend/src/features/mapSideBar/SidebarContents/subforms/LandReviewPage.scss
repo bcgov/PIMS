@@ -1,5 +1,6 @@
 .review-section {
   .row,
+  .form-row,
   .col,
   [class*='col-'] {
     margin: 0px;
@@ -12,6 +13,7 @@
     padding: 10px;
   }
   .field-row,
+  .form-row,
   .content-item,
   .val-row,
   .postal {
@@ -20,6 +22,7 @@
   }
   .content-item .label:after,
   .field-row .label:after,
+  .form-row .label:after,
   .postal .label:after,
   .val-row .label:after {
     border-right: 1px solid #666666;
