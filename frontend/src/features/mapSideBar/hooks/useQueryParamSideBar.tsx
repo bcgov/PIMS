@@ -2,6 +2,8 @@ import { useLocation, useHistory, useParams } from 'react-router-dom';
 import { useState } from 'react';
 import queryString from 'query-string';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
+import { useDispatch } from 'react-redux';
+import { storeParcelDetail } from 'actions/parcelsActions';
 
 interface IMapSideBar {
   showSideBar: boolean;
@@ -18,8 +20,9 @@ const useQueryParamSideBar = (): IMapSideBar => {
   const [showSideBar, setShowSideBar] = useState(false);
   const [parcelId, setParcelId] = useState<number | undefined>(undefined);
   const location = useLocation();
-  const { id } = useParams();
+  const { id } = useParams<any>();
   const history = useHistory();
+  const dispatch = useDispatch();
 
   const searchParams = queryString.parse(location.search);
   useDeepCompareEffect(() => {
@@ -38,6 +41,9 @@ const useQueryParamSideBar = (): IMapSideBar => {
   }, [id, searchParams, location.search]);
 
   const setShow = (show: boolean) => {
+    if (!show) {
+      dispatch(storeParcelDetail(null));
+    }
     const search = new URLSearchParams({ ...(searchParams as any), sidebar: show });
     history.push({ search: search.toString() });
   };

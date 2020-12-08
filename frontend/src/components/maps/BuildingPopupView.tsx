@@ -15,6 +15,7 @@ export interface IBuildingDetailProps {
   building: IBuilding | null;
   zoomTo?: () => void;
   disabled?: boolean;
+  onLinkClick?: () => void;
 }
 
 export const BuildingPopupView: React.FC<IBuildingDetailProps> = (props: IBuildingDetailProps) => {
@@ -80,6 +81,9 @@ export const BuildingPopupView: React.FC<IBuildingDetailProps> = (props: IBuildi
             <Row className="menu">
               <Col>
                 <Link
+                  onClick={() => {
+                    props?.onLinkClick && props.onLinkClick();
+                  }}
                   to={{
                     pathname: `/mapview/${buildingDetail?.parcelId}`,
                     search: queryString.stringify({
@@ -96,6 +100,9 @@ export const BuildingPopupView: React.FC<IBuildingDetailProps> = (props: IBuildi
                 {(keycloak.hasAgency(buildingDetail?.agencyId as number) ||
                   keycloak.hasClaim(Claims.ADMIN_PROPERTIES)) && (
                   <Link
+                    onClick={() => {
+                      props?.onLinkClick && props.onLinkClick();
+                    }}
                     to={{
                       pathname: `/mapview/${buildingDetail?.parcelId}`,
                       search: queryString.stringify({

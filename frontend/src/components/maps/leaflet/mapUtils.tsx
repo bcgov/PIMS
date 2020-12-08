@@ -101,34 +101,38 @@ export const pointToLayer = (feature: ICluster, latlng: LatLngExpression): Layer
 };
 
 /**
+ * Get an icon type for the specified cluster property details (type, draft, erp, spp etc)
+ */
+export const getMarkerIcon = (feature: ICluster) => {
+  const { propertyTypeId, projectNumber, projectStatus } = feature?.properties;
+  if (
+    [
+      ReviewWorkflowStatus.ERP,
+      ReviewWorkflowStatus.OnHold,
+      ReviewWorkflowStatus.ApprovedForErp,
+    ].includes(projectStatus)
+  ) {
+    return erpIcon;
+  } else if (projectNumber !== undefined) {
+    return sppIcon;
+  } else if (propertyTypeId === PropertyTypes.PARCEL) {
+    return parcelIcon;
+  } else if (propertyTypeId === PropertyTypes.DRAFT_PARCEL) {
+    return draftParcelIcon;
+  } else if (propertyTypeId === PropertyTypes.DRAFT_BUILDING) {
+    return draftBuildingIcon;
+  } else {
+    return buildingIcon;
+  }
+};
+
+/**
  * Creates a map pin for a single point; e.g. a parcel or a building
  * @param feature the geojson object
  * @param latlng the point position
  */
 export const createSingleMarker = (feature: ICluster, latlng: LatLngExpression): Layer => {
-  const { propertyTypeId, projectNumber, projectStatus } = feature?.properties;
-  const getIconType = () => {
-    if (
-      [
-        ReviewWorkflowStatus.ERP,
-        ReviewWorkflowStatus.OnHold,
-        ReviewWorkflowStatus.ApprovedForErp,
-      ].includes(projectStatus)
-    ) {
-      return erpIcon;
-    } else if (projectNumber !== undefined) {
-      return sppIcon;
-    } else if (propertyTypeId === PropertyTypes.PARCEL) {
-      return parcelIcon;
-    } else if (propertyTypeId === PropertyTypes.DRAFT_PARCEL) {
-      return draftParcelIcon;
-    } else if (propertyTypeId === PropertyTypes.DRAFT_BUILDING) {
-      return draftBuildingIcon;
-    } else {
-      return buildingIcon;
-    }
-  };
-  const icon = getIconType();
+  const icon = getMarkerIcon(feature);
   return new Marker(latlng, { icon });
 };
 
