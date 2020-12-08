@@ -269,7 +269,7 @@ namespace Pims.Dal.Services
 
             foreach (var building in parcel.Buildings.Select(pb => pb.Building))
             {
-                // Check if the buildig already exists.
+                // Check if the building already exists.
                 var existingBuilding = originalParcel.Buildings
                     .FirstOrDefault(pb => pb.BuildingId == building.Id)?.Building;
 

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Pims.Api.Areas.Property.Models.Building
 {
-    public class LeasedLandMetadataModel : BaseModel
+    public class LeasedLandMetadataModel
     {
         #region Properties
         /// <summary>

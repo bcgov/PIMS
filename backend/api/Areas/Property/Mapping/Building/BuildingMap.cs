@@ -63,7 +63,7 @@ namespace Pims.Api.Areas.Property.Mapping.Building
                 {
                     if(src.LeasedLandMetadata == null)
                     {
-                        dest.LeasedLandMetadata = null;
+                        dest.LeasedLandMetadata = new List<Model.LeasedLandMetadataModel>();
                         return;
                     }
                     var metadata = JsonSerializer.Deserialize<IEnumerable<Entity.Models.LeasedLandMetadata>>(src.LeasedLandMetadata, _serializerOptions);

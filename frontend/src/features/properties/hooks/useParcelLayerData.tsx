@@ -35,11 +35,11 @@ const isFormInStateToSetLayerData = (
 ) => {
   const formPid = getIn(formikRef?.current?.initialValues, `${nameSpace}.pid`)?.replace(/-/g, '');
   const formPin = getIn(formikRef?.current?.initialValues, `${nameSpace}.pin`);
+  const pid = +layerData?.data.PID || layerData?.data.PID_NUMBER;
   return (
     !!formikRef.current &&
     !!layerData?.data &&
-    ((+layerData.data.PID > 0 && +formPid !== +layerData.data.PID) ||
-      (+layerData.data.PIN > 0 && +formPin !== +layerData.data.PIN))
+    ((pid > 0 && +formPid !== pid) || (+layerData.data.PIN > 0 && +formPin !== +layerData.data.PIN))
   );
 };
 
@@ -64,11 +64,8 @@ const setParcelFieldsFromLayerData = (
     }
 
     const layerParcelData = layerData!.data;
-    newValues = setIn(
-      newValues,
-      `${nameSpace}.pid`,
-      !!layerParcelData.PID ? pidFormatter(layerParcelData.PID) : '',
-    );
+    const pid = layerData?.data.PID || layerData?.data.PID_NUMBER.toString();
+    newValues = setIn(newValues, `${nameSpace}.pid`, !!pid ? pidFormatter(pid) : '');
     newValues = setIn(newValues, `${nameSpace}.pin`, layerParcelData.PIN || '');
     newValues = setIn(
       newValues,
@@ -125,13 +122,9 @@ const useParcelLayerData = ({ formikRef, parcelId, nameSpace }: IUseParcelLayerD
   );
   const { getByType } = useCodeLookups();
   const [showOverwriteDialog, setShowOverwriteDialog] = useState(false);
+
   useDeepCompareEffect(() => {
-    if (
-      !!formikRef?.current &&
-      isMouseEventRecent(parcelLayerData?.e) &&
-      !!parcelLayerData?.data &&
-      !getIn(formikRef.current.values, `${nameSpace}.id`)
-    ) {
+    if (!!formikRef?.current && isMouseEventRecent(parcelLayerData?.e) && !!parcelLayerData?.data) {
       if (!parcelId) {
         setParcelFieldsFromLayerData(
           parcelLayerData,
