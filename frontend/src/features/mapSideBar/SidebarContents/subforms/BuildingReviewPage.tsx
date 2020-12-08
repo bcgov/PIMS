@@ -281,11 +281,11 @@ export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
                 <Label>Net Book Value</Label>
                 <FastCurrencyInput
                   formikProps={formikProps}
-                  field="data.buildings.0.financials.0.netbook.value"
+                  field="data.financials.0.netbook.value"
                   disabled={editInfo.valuation}
                 />
                 <Input
-                  field="data.buildings.0.financials.0.netbook.fiscalYear"
+                  field="data.financials.0.netbook.fiscalYear"
                   disabled
                   style={{ width: 50, fontSize: 11 }}
                 />
@@ -294,11 +294,11 @@ export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
                 <Label>Assessed Value</Label>
                 <FastCurrencyInput
                   formikProps={formikProps}
-                  field="data.buildings.0.financials.0.assessed.value"
+                  field="data.financials.0.assessed.value"
                   disabled={editInfo.valuation}
                 />
                 <Input
-                  field="data.buildings.0.financials.0.assessed.year"
+                  field="data.0.financials.0.assessed.year"
                   disabled
                   style={{ width: 50, fontSize: 11 }}
                 />

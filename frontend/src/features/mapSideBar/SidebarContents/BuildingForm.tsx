@@ -1,4 +1,4 @@
-import { SteppedForm, useFormStepper } from 'components/common/form/StepForm';
+import { SteppedForm, useFormStepper, ISteppedFormValues } from 'components/common/form/StepForm';
 import { useFormikContext } from 'formik';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import useCodeLookups from 'hooks/useLookupCodes';
@@ -8,18 +8,25 @@ import { Button } from 'react-bootstrap';
 import styled from 'styled-components';
 import { InventoryPolicy } from '../components/InventoryPolicy';
 import * as API from 'constants/API';
-import { IParcel } from 'actions/parcelsActions';
+import { IParcel, IBuilding } from 'actions/parcelsActions';
 import { TenancyForm } from './subforms/TenancyForm';
 import { IdentificationForm } from './subforms/IdentificationForm';
 import { BuildingReviewPage } from './subforms/BuildingReviewPage';
 import { BuildingValuationForm } from './subforms/BuildingValuationForm';
-import { getInitialValues, valuesToApiFormat } from './LandForm';
 import { defaultBuildingValues } from 'features/properties/components/forms/subforms/BuildingForm';
-import { createParcel, updateParcel } from 'actionCreators/parcelsActionCreator';
 import { useDispatch } from 'react-redux';
 import _ from 'lodash';
 import { BuildingSteps } from 'constants/propertySteps';
 import useDraftMarkerSynchronizer from 'features/properties/hooks/useDraftMarkerSynchronizer';
+import { useBuildingApi } from '../hooks/useBuildingApi';
+import { IFormBuilding } from '../containers/MapSideBarContainer';
+import {
+  IFinancialYear,
+  IFinancial,
+  filterEmptyFinancials,
+} from 'features/properties/components/forms/subforms/EvaluationForm';
+import { EvaluationKeys } from 'constants/evaluationKeys';
+import { FiscalKeys } from 'constants/fiscalKeys';
 
 const Container = styled.div`
   background-color: #fff;
@@ -149,36 +156,60 @@ interface IBuildingForm {
   setMovingPinNameSpace: (nameSpace: string) => void;
   /** to help determine the namespace of the field (eg. address.line1) */
   nameSpace: string;
-  /** to help with the nameSpace of fields for fields in list form (eg. financials, buildings) */
-  index: string;
+  /** Notify the parent that the building has been saved, potentially starting a new workflow. */
+  setBuildingToAssociateLand: (building: IBuilding) => void;
   /** to determine whether certain locked fields can be editable */
   isAdmin?: boolean;
 }
 
+/**
+ * Do an in place conversion of all values to their expected API equivalents (eg. '' => undefined)
+ * @param values the building value to convert.
+ */
+export const valuesToApiFormat = (values: ISteppedFormValues<IFormBuilding>): IFormBuilding => {
+  const apiValues = _.cloneDeep(values);
+  const seperatedFinancials = (_.flatten(
+    apiValues.data.financials?.map((financial: IFinancialYear) => _.values(financial)),
+  ) ?? []) as IFinancial[];
+  const allFinancials = filterEmptyFinancials(seperatedFinancials);
+
+  apiValues.data.evaluations = _.filter(allFinancials, financial =>
+    Object.keys(EvaluationKeys).includes(financial.key),
+  );
+  apiValues.data.fiscals = _.filter(allFinancials, financial =>
+    Object.keys(FiscalKeys).includes(financial.key),
+  );
+  apiValues.data.classificationId = +apiValues.data.classificationId;
+  apiValues.data.rentableArea = +apiValues.data.rentableArea;
+  apiValues.data.buildingFloorCount = +(apiValues.data.buildingFloorCount ?? 0);
+  if (apiValues.data.leaseExpiry === '') {
+    apiValues.data.leaseExpiry = undefined;
+  }
+  apiValues.data.financials = [];
+  return apiValues.data;
+};
+
 const BuidingForm: React.FC<IBuildingForm> = ({
   setMovingPinNameSpace,
   nameSpace,
-  index,
   isAdmin,
   formikRef,
+  setBuildingToAssociateLand,
 }) => {
   const keycloak = useKeycloakWrapper();
   const dispatch = useDispatch();
+  const { createBuilding, updateBuilding } = useBuildingApi();
   const withNameSpace: Function = React.useCallback(
     (name?: string) => {
-      return [nameSpace ?? '', `${index ?? ''}`, name].filter(x => x).join('.');
+      return [nameSpace ?? '', name].filter(x => x).join('.');
     },
-    [nameSpace, index],
+    [nameSpace],
   );
   let initialValues = {
     activeStep: 0,
     activeTab: 0,
-    data: { ...getInitialValues(), buildings: [{ ...defaultBuildingValues }] },
+    data: { ...defaultBuildingValues, agencyId: keycloak.agencyId },
   };
-
-  initialValues.data.buildings.forEach(
-    (x: { agencyId: number | undefined }) => (x.agencyId = keycloak.agencyId),
-  );
 
   return (
     <Container className="buildingForm">
@@ -203,18 +234,14 @@ const BuidingForm: React.FC<IBuildingForm> = ({
         onSubmit={async (values, actions) => {
           const apiValues = valuesToApiFormat(_.cloneDeep(values));
 
-          //temporary until we support buildings with no parcel
-          apiValues.latitude = apiValues.buildings[0].latitude;
-          apiValues.longitude = apiValues.buildings[0].longitude;
-          apiValues.agencyId = apiValues.buildings[0].agencyId;
-          apiValues.classificationId = apiValues.buildings[0].classificationId;
-
           try {
+            let building: IBuilding;
             if (!values.data.id) {
-              await createParcel(apiValues)(dispatch);
+              building = await createBuilding(apiValues)(dispatch);
             } else {
-              await updateParcel(apiValues)(dispatch);
+              building = await updateBuilding(apiValues)(dispatch);
             }
+            setBuildingToAssociateLand(building);
           } catch (error) {
           } finally {
             actions.setSubmitting(false);
