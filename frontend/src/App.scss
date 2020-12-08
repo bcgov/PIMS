@@ -71,6 +71,9 @@ div.bootstrap-table {
   border: 1px solid $secondary-variant-color;
 }
 
+.form-group.required textarea {
+  border: 1px solid $secondary-variant-color;
+  
 //by default, highlight dropdown options blue
 .dropdown-item {
   color: $text-color;

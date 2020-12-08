@@ -15,7 +15,7 @@ import { IGeocoderResponse } from 'hooks/useApi';
 import { TypeaheadField } from 'components/common/form/Typeahead';
 import { streetAddressTooltip } from '../strings';
 import { Label } from 'components/common/Label';
-import { Row } from 'react-bootstrap';
+import { Form } from 'react-bootstrap';
 
 interface AddressProps {
   nameSpace?: string;
@@ -74,8 +74,8 @@ const AddressForm = <T extends any>(props: AddressProps & FormikProps<T>) => {
   return (
     <>
       {props.hideStreetAddress !== true && (
-        <Row className="field-row">
-          <Label required={true}>Street Address</Label>
+        <Form.Row>
+          <Label>Street Address</Label>
           <GeocoderAutoComplete
             tooltip={props.toolTips ? streetAddressTooltip : undefined}
             value={getIn(props.values, withNameSpace('line1'))}
@@ -87,10 +87,10 @@ const AddressForm = <T extends any>(props: AddressProps & FormikProps<T>) => {
             touch={getIn(props.touched, withNameSpace('line1'))}
             displayErrorTooltips
           />
-        </Row>
+        </Form.Row>
       )}
-      <Row className="field-row">
-        <Label required={true}>Location</Label>
+      <Form.Row>
+        <Label>Location</Label>
         <TypeaheadField
           options={administrativeAreas.map(x => x.label)}
           name={withNameSpace('administrativeArea')}
@@ -98,8 +98,8 @@ const AddressForm = <T extends any>(props: AddressProps & FormikProps<T>) => {
           paginate={false}
           required
         />
-      </Row>
-      <Row className="field-row">
+      </Form.Row>
+      <Form.Row>
         <Label>Province</Label>
         <Select
           disabled={true}
@@ -107,8 +107,8 @@ const AddressForm = <T extends any>(props: AddressProps & FormikProps<T>) => {
           field={withNameSpace('provinceId')}
           options={provinces}
         />
-      </Row>
-      <Row className="postal">
+      </Form.Row>
+      <Form.Row className="postal">
         <Label>Postal Code</Label>
         <FastInput
           className="input-small"
@@ -119,7 +119,7 @@ const AddressForm = <T extends any>(props: AddressProps & FormikProps<T>) => {
           field={withNameSpace('postal')}
           displayErrorTooltips
         />
-      </Row>
+      </Form.Row>
     </>
   );
 };

@@ -11,7 +11,6 @@ import * as API from 'constants/API';
 import { ManageUsersPage } from './ManageUsersPage';
 import { fireEvent, render, wait } from '@testing-library/react';
 import moment from 'moment-timezone';
-import pretty from 'pretty';
 
 const history = createMemoryHistory();
 history.push('admin');

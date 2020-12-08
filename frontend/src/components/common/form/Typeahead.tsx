@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import TooltipIcon from 'components/common/TooltipIcon';
 import classNames from 'classnames';
 import { useRef } from 'react';
+import classNames from 'classnames';
 
 interface ITypeaheadFieldProps<T extends TypeaheadModel> extends TypeaheadProps<T> {
   name: string;

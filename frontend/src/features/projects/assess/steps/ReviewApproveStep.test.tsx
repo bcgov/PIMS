@@ -21,7 +21,6 @@ import { Button } from 'react-bootstrap';
 import GenericModal from 'components/common/GenericModal';
 import { IProperty } from 'features/properties/list/interfaces';
 import { act } from 'react-dom/test-utils';
-import pretty from 'pretty';
 
 Enzyme.configure({ adapter: new Adapter() });
 

@@ -13,7 +13,6 @@ import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 import { ToastContainer } from 'react-toastify';
 import moment from 'moment-timezone';
-import pretty from 'pretty';
 
 const mockStore = configureMockStore([thunk]);
 const history = createMemoryHistory();

@@ -1,42 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Parcel Detail MapSideBarContainer basic data loading and display Empty parcel sidebar matches snapshot 1`] = `
-"<div class=\\"Toastify\\"></div>
-<div class=\\"map-side-drawer close\\">
-  <div>
-    <div class=\\"sc-fzqBkg eJxuZW\\"><span class=\\"sc-fzoxKX ddavXc mr-auto\\">Submit a Property</span><svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 512 512\\" class=\\"sc-fzqPZZ eEQrNa\\" height=\\"1em\\" width=\\"1em\\" xmlns=\\"http://www.w3.org/2000/svg\\">
-        <title>close</title>
-        <path d=\\"M464 32H48C21.5 32 0 53.5 0 80v352c0 26.5 21.5 48 48 48h416c26.5 0 48-21.5 48-48V80c0-26.5-21.5-48-48-48zm-83.6 290.5c4.8 4.8 4.8 12.6 0 17.4l-40.5 40.5c-4.8 4.8-12.6 4.8-17.4 0L256 313.3l-66.5 67.1c-4.8 4.8-12.6 4.8-17.4 0l-40.5-40.5c-4.8-4.8-4.8-12.6 0-17.4l67.1-66.5-67.1-66.5c-4.8-4.8-4.8-12.6 0-17.4l40.5-40.5c4.8-4.8 12.6-4.8 17.4 0l66.5 67.1 66.5-67.1c4.8-4.8 12.6-4.8 17.4 0l40.5 40.5c4.8 4.8 4.8 12.6 0 17.4L313.3 256l67.1 66.5z\\"></path>
-      </svg></div>
-    <div class=\\"sc-fzoKki NVnHF\\">
-      <p>This will allow you to submit a property to the PIMS inventory. At any time during this process you can read the Inventory Policy by clicking on the icon that looks like this:</p>
-      <div class=\\"sc-fzoYkl hmaMdm\\">
-        <div class=\\"sc-fznWOq fpkFCq\\">
-          <div class=\\"SresManual\\">
-            <div><svg stroke=\\"currentColor\\" fill=\\"none\\" stroke-width=\\"2\\" viewBox=\\"0 0 24 24\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" size=\\"28\\" height=\\"28\\" width=\\"28\\" xmlns=\\"http://www.w3.org/2000/svg\\">
-                <path d=\\"M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z\\"></path>
-                <path d=\\"M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z\\"></path>
-              </svg></div>
-          </div><small class=\\"sc-fzolEj ivrFBE p-1 mr-2\\">Inventory Policy</small>
-        </div>
-      </div>
-      <p>To get started, choose the type of property to add to the PIMS inventory.</p>
-      <div class=\\"sc-fzpkJw bcWTAe\\">
-        <div class=\\"sc-fznzOf ggGisM\\"><svg class=\\"sc-fzoant MCQWC svg\\">icon-business.svg</svg>
-          <div class=\\"sc-fznMnq bpDgES\\">
-            <p class=\\"sc-fzqAbL dxivUc\\">Add a building</p>
-          </div>
-        </div>
-        <div class=\\"sc-fznzOf ggGisM\\"><svg class=\\"sc-fzomME gFGXOs svg\\">icon-lot.svg</svg>
-          <div class=\\"sc-fznMnq bpDgES\\">
-            <p class=\\"sc-fzqAbL dxivUc\\">Add Raw Land</p>
-            <p class=\\"sc-fzqMAW epWmcq\\">PID or PIN</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>"
+<div
+  class="Toastify"
+/>
 `;
 
 exports[`Parcel Detail MapSideBarContainer basic data loading and display parcel sidebar snapshot loads by id 1`] = `
@@ -267,4 +234,8 @@ exports[`Parcel Detail MapSideBarContainer basic data loading and display parcel
 </div>"
 `;
 
-exports[`Parcel Detail MapSideBarContainer basic data loading and display sidebar is hidden 1`] = `"<div class=\\"Toastify\\"></div>"`;
+exports[`Parcel Detail MapSideBarContainer basic data loading and display sidebar is hidden 1`] = `
+<div
+  class="Toastify"
+/>
+`;

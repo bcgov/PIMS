@@ -7,14 +7,13 @@ exports[`PidPin sub-form renders correctly 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="d-inline-flex flex-nowrap form-row"
+    className="flex-nowrap pid-pin form-row"
   >
-    <label
-      className="req form-label"
+    <p
+      className="label"
     >
-      *
-    </label>
-    PID
+      PID
+    </p>
     <div
       className="required form-group"
     >
@@ -28,20 +27,16 @@ exports[`PidPin sub-form renders correctly 1`] = `
         value=""
       />
     </div>
-    <label
-      className="form-label"
+    <p
+      className="label"
       style={
         Object {
-          "minWidth": "35px",
           "paddingLeft": "5px",
-          "width": "35px",
         }
       }
     >
-      or
-      <br />
-      PIN 
-    </label>
+      PIN
+    </p>
     <div
       className="required form-group"
     >
