@@ -1,11 +1,5 @@
 import * as React from 'react';
-import {
-  PropertyTypes,
-  IBuilding,
-  IParcel,
-  IProperty,
-  storeDraftParcelsAction,
-} from 'actions/parcelsActions';
+import { PropertyTypes, IProperty, storeDraftParcelsAction } from 'actions/parcelsActions';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
 import debounce from 'lodash/debounce';
 import { useFormikContext } from 'formik';
@@ -26,25 +20,17 @@ interface IDraftMarker {
  * As long as a parcel/building has both a lat and a lng it will be returned by this method.
  * @param values the current form values to extract lat/lngs from.
  */
-const getDraftMarkers = (values: IParcel) => {
-  const parcelMarkers: IDraftMarker[] = [
+const getDraftMarkers = (values: any) => {
+  const markers: IDraftMarker[] = [
     {
       latitude: values.latitude,
       longitude: values.longitude,
       name: values.name?.length ? values.name : 'New Parcel',
-      propertyTypeId: PropertyTypes.DRAFT_PARCEL,
+      propertyTypeId:
+        values.parcelId !== undefined ? PropertyTypes.DRAFT_BUILDING : PropertyTypes.DRAFT_PARCEL,
     },
   ];
-  const buildingMarkers =
-    values.buildings?.map((building: IBuilding, index: number) => ({
-      latitude: building.latitude,
-      longitude: building.longitude,
-      name: building.name?.length ? building.name : `Building #${index + 1}`,
-      propertyTypeId: PropertyTypes.DRAFT_BUILDING,
-    })) ?? [];
-  return [...parcelMarkers, ...buildingMarkers].filter(
-    marker => marker.latitude !== '' && marker.longitude !== '',
-  );
+  return markers.filter(marker => marker.latitude !== '' && marker.longitude !== '');
 };
 
 /**
