@@ -144,14 +144,16 @@ export interface IStoreParcelDetail {
 export const storeParcelDetail = (
   parcel: IParcel | null,
   position?: [number, number],
-): IStoreParcelDetail => ({
-  type: ActionTypes.STORE_PARCEL_DETAIL,
-  parcelDetail: {
-    propertyTypeId: 0,
-    parcelDetail: parcel,
-    position,
-  },
-});
+): IStoreParcelDetail => {
+  return {
+    type: ActionTypes.STORE_PARCEL_DETAIL,
+    parcelDetail: {
+      propertyTypeId: 0,
+      parcelDetail: parcel,
+      position,
+    },
+  };
+};
 
 export interface IStoreBuildingDetail {
   type: typeof ActionTypes.STORE_BUILDING_DETAIL;

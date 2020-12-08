@@ -5,11 +5,9 @@ import {
   Map,
   PolylineOptions,
   Point as LeafletPoint,
-  Polyline as LeafletPolyline,
   LatLng,
   LatLngExpression,
   GeoJSON,
-  LeafletMouseEvent,
 } from 'leaflet';
 import { AnyProps } from 'supercluster';
 import { ICluster, PointFeature } from '../types';
@@ -60,7 +58,6 @@ export class Spiderfier {
 
   constructor(public map: Map, options: Partial<SpiderfierOptions> = {}) {
     this.options = { ...defaultOptions, ...options };
-
     // check required values - throws an error if callbacks are null
     const { getClusterId, getClusterPoints, pointToLayer } = this.options;
     invariant(getClusterId, 'Must supply getClusterId callback');
@@ -69,12 +66,12 @@ export class Spiderfier {
   }
 
   // expand a cluster (spiderfy)
-  spiderfy(cluster: ICluster) {
+  spiderfy(cluster: ICluster): { lines?: any[]; markers?: any[] } {
     const { getClusterId, getClusterPoints } = this.options;
 
     // only one cluster expanded at a time
     if (this.cluster === cluster || cluster == null) {
-      return;
+      return {};
     }
     this.unspiderfy();
     this.cluster = cluster;
@@ -91,7 +88,7 @@ export class Spiderfier {
     }
 
     // add expanded cluster points to map
-    this.addToMap(centerXY, children, positions);
+    const results = this.addToMap(centerXY, children, positions);
 
     // dim cluster icon
     this.map.eachLayer(layer => {
@@ -102,53 +99,34 @@ export class Spiderfier {
         }
       }
     });
+
+    return results;
   }
 
   private addToMap(
     centerXY: LeafletPoint,
     points: Array<PointFeature>,
     positions: Array<LeafletPoint>,
-  ) {
+  ): { lines?: any[]; markers?: any[] } {
     const { spiderLegPolylineOptions: legOptions, pointToLayer } = this.options;
     const centerLatLng = this.map.layerPointToLatLng(centerXY);
 
     let newPos: LatLng;
-    let leg: LeafletPolyline & AnyProps;
     let geojson: PointFeature;
     let m: Marker & AnyProps; // the pins within an expanded cluster
-
+    const markers: any[] = [];
+    const lines: any[] = [];
     for (let i = 0; i < points.length; i++) {
       newPos = this.map.layerPointToLatLng(positions[i]);
       geojson = points[i];
 
       m = pointToLayer(geojson, newPos) as Marker;
       m.feature = GeoJSON.asFeature(geojson) as PointFeature;
-      m._spiderfied = true; // "mark" the pins and spider legs so they can be removed later
-      m.on('click', this.handleChildMarkerClick, this);
-
-      // add the leg before the marker, so that in case the latter is a circleMarker, the leg is behind it.
-      leg = new LeafletPolyline([centerLatLng, newPos], legOptions);
-      leg._spiderfied = true;
-      this.map.addLayer(leg);
-
-      // now add the marker.
-      if (m.setZIndexOffset) {
-        m.setZIndexOffset(1000000); // make these appear on top of EVERYTHING
-      }
-
-      this.map.addLayer(m);
+      markers.push({ ...geojson, position: newPos });
+      lines.push({ coords: [centerLatLng, newPos], options: legOptions });
     }
-  }
 
-  private handleChildMarkerClick(e: LeafletMouseEvent) {
-    e.originalEvent.stopPropagation();
-    const marker = e?.target as Marker;
-    const geojson = marker?.feature;
-    const newPos = marker?.getLatLng();
-    const { onMarkerClick } = this.options;
-    if (onMarkerClick && geojson && newPos) {
-      onMarkerClick(geojson, [newPos.lat, newPos.lng]);
-    }
+    return { lines, markers };
   }
 
   // shrink an expanded cluster (unspiderfy)
