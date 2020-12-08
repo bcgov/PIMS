@@ -70,3 +70,12 @@ div.bootstrap-table {
 .form-check.required input {
   border: 1px solid $secondary-variant-color;
 }
+
+//by default, highlight dropdown options blue
+.dropdown-item {
+  color: $text-color;
+  &:hover {
+    color: #fff;
+    background-color: $active-color;
+  }
+}
