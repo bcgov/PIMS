@@ -492,7 +492,7 @@ namespace Pims.Api.Areas.Tools.Helpers
         /// <returns></returns>
         private Entity.ProjectRisk GetRisk(string value)
         {
-            return _adminService.ProjectRisk.Get(_risks.FirstOrDefault(r => r.Name.ToLower() == value.ToLower())?.Id ?? throw new KeyNotFoundException($"Risk '{value}' does not exist."));
+            return _adminService.ProjectRisk.Get(_risks.FirstOrDefault(r => r.Name.ToLower() == value?.ToLower())?.Id ?? throw new KeyNotFoundException($"Risk '{value}' does not exist."));
         }
 
         /// <summary>

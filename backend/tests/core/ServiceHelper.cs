@@ -142,6 +142,46 @@ namespace Pims.Core.Test
 
             return service;
         }
+
+        /// <summary>
+        /// Creates an instance of an object of the specified 'T' type and initializes it with the specified arguments.
+        /// Will use any 'args' passed in instead of generating defaults.
+        /// This will add the new instance to the ServiceCollection, so that you can continue to configure your ServiceCollection before building it.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="helper"></param>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        public static T Add<T>(this TestHelper helper, params object[] args) where T : class
+        {
+            var types = helper.MockConstructorArguments<T>(args);
+            var con = typeof(T).GetConstructor(types.Keys.ToArray());
+            var values = types.Values.ToArray();
+            var result = (T)con.Invoke(values);
+            helper.AddSingleton(result);
+            return result;
+        }
+
+        /// <summary>
+        /// Creates an instance of an object of the specified 'T' type and initializes it with the specified arguments.
+        /// Will use any 'args' passed in instead of generating defaults.
+        /// This will add the new instance to the ServiceCollection, so that you can continue to configure your ServiceCollection before building it.
+        /// </summary>
+        /// <typeparam name="TService"></typeparam>
+        /// <typeparam name="TImplmentation"></typeparam>
+        /// <param name="helper"></param>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        public static TService Add<TService, TImplmentation>(this TestHelper helper, params object[] args)
+            where TService : class
+            where TImplmentation : class, TService
+        {
+            var types = helper.MockConstructorArguments<TImplmentation>(args);
+            var con = typeof(TImplmentation).GetConstructor(types.Keys.ToArray());
+            var result = (TImplmentation)con.Invoke(types.Values.ToArray());
+            helper.AddSingleton<TService, TImplmentation>(result);
+            return result;
+        }
         #endregion
     }
 }
