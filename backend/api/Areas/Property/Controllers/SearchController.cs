@@ -2,7 +2,6 @@ using MapsterMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
-using NetTopologySuite.IO;
 using Pims.Api.Areas.Property.Models.Search;
 using Pims.Api.Helpers.Exceptions;
 using Pims.Api.Helpers.Extensions;
@@ -60,7 +59,7 @@ namespace Pims.Api.Areas.Property.Controllers
         [Produces("application/json")]
         [ProducesResponseType(typeof(IEnumerable<PropertyModel>), 200)]
         [SwaggerOperation(Tags = new[] { "property" })]
-        [ResponseCache(Duration = 300, Location = ResponseCacheLocation.Any)]
+        [ResponseCache(Duration = 300, Location = ResponseCacheLocation.Client)]
         public IActionResult GetProperties()
         {
             var uri = new Uri(this.Request.GetDisplayUrl());
@@ -98,7 +97,7 @@ namespace Pims.Api.Areas.Property.Controllers
         [Produces("application/json")]
         [ProducesResponseType(typeof(IEnumerable<GeoJson<PropertyModel>>), 200)]
         [SwaggerOperation(Tags = new[] { "property" })]
-        [ResponseCache(Duration = 300, Location = ResponseCacheLocation.Any)]
+        [ResponseCache(Duration = 300, Location = ResponseCacheLocation.Client)]
         public IActionResult GetGeoJson()
         {
             var uri = new Uri(this.Request.GetDisplayUrl());
@@ -139,7 +138,7 @@ namespace Pims.Api.Areas.Property.Controllers
         [Produces("application/json")]
         [ProducesResponseType(typeof(BModel.PageModel<PropertyModel>), 200)]
         [SwaggerOperation(Tags = new[] { "property" })]
-        [ResponseCache(Duration = 300, Location = ResponseCacheLocation.Any)]
+        [ResponseCache(Duration = 300, Location = ResponseCacheLocation.Client)]
         public IActionResult GetPropertiesPage()
         {
             var uri = new Uri(this.Request.GetDisplayUrl());
