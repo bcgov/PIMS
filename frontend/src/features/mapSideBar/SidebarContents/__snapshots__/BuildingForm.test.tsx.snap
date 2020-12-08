@@ -617,6 +617,7 @@ exports[`Building Form component renders correctly 1`] = `
                       </div>
                     </div>
                   </div>
+                </div>
                 <hr />
                 <div
                   class="row"
@@ -689,15 +690,6 @@ exports[`Building Form component renders correctly 1`] = `
                       </p>
                     </div>
                   </div>
-                </div>
-                <div
-                  class="row"
-                >
-                  <p
-                    class="c5"
-                  >
-                    A disposal project must be initiated in order to mark a property as "surplus active".
-                  </p>
                 </div>
                 <hr />
                 <div
