@@ -20,6 +20,9 @@ const buildingUpdatingToasts: LifecycleToasts = {
 };
 
 export const useBuildingApi = () => {
+  /**
+   * Create the passed building, creating or updating all attached parcels as needed. Return a promise
+   */
   const createBuilding = (building: IBuilding) => async (dispatch: Function) => {
     dispatch(request(actionTypes.ADD_BUILDING));
     dispatch(showLoading());
@@ -38,6 +41,10 @@ export const useBuildingApi = () => {
     }
   };
 
+  /**
+   * update the passed building (requires an id and rowversions). Also create/update all associated parcels as needed.
+   * @param building
+   */
   const updateBuilding = (building: IBuilding) => async (dispatch: Function) => {
     dispatch(request(actionTypes.UPDATE_BUILDING));
     dispatch(showLoading());
