@@ -6,22 +6,12 @@ import { RadioButtonGroup } from 'components/common/form/RadioButtonGroup';
 import { LeasedLand } from 'actions/parcelsActions';
 import { useFormikContext, getIn } from 'formik';
 import LeasedLandOther from './LeasedLandOther';
-import { IGeocoderResponse } from 'hooks/useApi';
 
 interface IIdentificationProps {
   nameSpace?: any;
-  setMovingPinNameSpace: (nameSpace: string) => void;
-  /** to autopopulate fields based on Geocoder information */
-  handleGeocoderChanges: (data: IGeocoderResponse) => Promise<void>;
-  /** to autopopulate fields based on Geocoder information */
-  handlePidChange: (pid: string) => void;
 }
 
-export const LandOwnershipForm: React.FC<IIdentificationProps> = ({
-  nameSpace,
-  handleGeocoderChanges,
-  handlePidChange,
-}) => {
+export const LandOwnershipForm: React.FC<IIdentificationProps> = ({ nameSpace }) => {
   const { values } = useFormikContext();
   const withNameSpace: Function = useCallback(
     (fieldName: string) => {
@@ -29,14 +19,14 @@ export const LandOwnershipForm: React.FC<IIdentificationProps> = ({
     },
     [nameSpace],
   );
-  const leasedLandType = getIn(values, withNameSpace('leasedLand.type'));
+  const leasedLandType = getIn(values, withNameSpace('type'));
 
   const renderRadioOption = (radioValue: LeasedLand) => {
     switch (+radioValue) {
       case LeasedLand.owned:
         return <p>Click Continue to enter the details of this associated parcel</p>;
       case LeasedLand.other:
-        return <LeasedLandOther nameSpace={withNameSpace('leasedLand')} />;
+        return <LeasedLandOther nameSpace={nameSpace} />;
     }
   };
   return (
@@ -64,7 +54,7 @@ export const LandOwnershipForm: React.FC<IIdentificationProps> = ({
       </Row>
       <Row>
         <RadioButtonGroup
-          field={withNameSpace('leasedLand.type')}
+          field={withNameSpace('type')}
           options={[
             { label: 'This building is on land owned by my agency', value: LeasedLand.owned },
             { label: 'Other', value: LeasedLand.other },

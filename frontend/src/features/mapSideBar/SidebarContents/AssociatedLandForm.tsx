@@ -1,6 +1,6 @@
 import { ISteppedFormValues, SteppedForm, useFormStepper } from 'components/common/form/StepForm';
-import { useFormikContext } from 'formik';
-import { IGeocoderResponse } from 'hooks/useApi';
+import { useFormikContext, yupToFormErrors, getIn, setIn } from 'formik';
+import { IGeocoderResponse, useApi } from 'hooks/useApi';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import useCodeLookups from 'hooks/useLookupCodes';
 import { noop } from 'lodash';
@@ -9,9 +9,10 @@ import { Button } from 'react-bootstrap';
 import styled from 'styled-components';
 import { InventoryPolicy } from '../components/InventoryPolicy';
 import * as API from 'constants/API';
-import { IBuilding, IParcel } from 'actions/parcelsActions';
+import { IBuilding, IParcel, LeasedLand } from 'actions/parcelsActions';
 import { ParcelIdentificationForm } from './subforms/ParcelIdentificationForm';
 import { LandUsageForm } from './subforms/LandUsageForm';
+import { valuesToApiFormat as landValuesToApiFormat } from './LandForm';
 import { LandValuationForm } from './subforms/LandValuationForm';
 import { AssociatedLandSteps } from 'constants/propertySteps';
 import { LandOwnershipForm } from './subforms/LandOwnershipForm';
@@ -19,6 +20,11 @@ import { defaultBuildingValues } from 'features/properties/components/forms/subf
 import { getInitialValues as getInitialLandValues } from './LandForm';
 import useParcelLayerData from 'features/properties/hooks/useParcelLayerData';
 import { AssociatedLandReviewPage } from './subforms/AssociatedLandReviewPage';
+import { AssociatedLandSchema } from 'utils/YupSchema';
+import { IFormParcel } from 'features/properties/containers/ParcelDetailFormContainer';
+import { useDispatch } from 'react-redux';
+import { useBuildingApi } from '../hooks/useBuildingApi';
+import _ from 'lodash';
 
 const Container = styled.div`
   background-color: #fff;
@@ -52,8 +58,15 @@ const FillRemainingSpace = styled.span`
   flex: 1 1 auto;
 `;
 
-interface IAssociatedLand extends IBuilding {
+export interface IAssociatedLand extends IBuilding {
   parcels: IParcel[];
+  leasedLandMetadata: ILeasedLand[];
+}
+
+export interface ILeasedLand {
+  ownershipNote: string;
+  type: LeasedLand;
+  parcelId?: number;
 }
 /**
  * Create formiks initialValues by stitching together the default values provided by each subform.
@@ -61,7 +74,9 @@ interface IAssociatedLand extends IBuilding {
 export const getInitialValues = (): IAssociatedLand => {
   return {
     ...defaultBuildingValues,
+    leasedLandMetadata: [],
     parcels: [{ ...getInitialLandValues() }],
+    leaseExpiry: undefined,
   };
 };
 
@@ -69,9 +84,41 @@ export const getInitialValues = (): IAssociatedLand => {
  * Do an in place conversion of all values to their expected API equivalents (eg. '' => undefined)
  * @param values the parcel value to convert.
  */
-export const valuesToApiFormat = (values: ISteppedFormValues<IAssociatedLand>): IAssociatedLand => {
-  //TODO: fill in as necessary.
-  return values.data;
+export const valuesToApiFormat = (
+  values: ISteppedFormValues<IAssociatedLand>,
+  agencyId?: number,
+): IAssociatedLand => {
+  const apiValues = { ...values };
+  const ownedParcels: IParcel[] = getOwnedParcels(
+    values.data.leasedLandMetadata,
+    values.data.parcels,
+  );
+
+  values.data.parcels = ownedParcels.map((p: any) => {
+    const parcelApiValues = landValuesToApiFormat({ data: p } as any);
+    if (!!agencyId && p.agencyId === '') {
+      parcelApiValues.agencyId = agencyId;
+    }
+    return parcelApiValues;
+  });
+  return apiValues.data;
+};
+
+/**
+ * Get the list of parcels stored within formik that are listed as owned.
+ * @param leasedLand the array of leased land metadata which tracks which parcels are owned.
+ * @param parcels all of the parcels tracked by formik.
+ */
+const getOwnedParcels = (leasedLand: ILeasedLand[], parcels: IParcel[]): IParcel[] => {
+  const ownedParcels: IParcel[] = [];
+  leasedLand.forEach((ll: ILeasedLand, index: number) => {
+    if (ll.type === LeasedLand.owned) {
+      const associatedParcel = parcels[index];
+      ll.parcelId = associatedParcel.id === '' ? 0 : associatedParcel.id;
+      ownedParcels.push(parcels[index]);
+    }
+  });
+  return ownedParcels;
 };
 
 const Form: React.FC<IAssociatedLandForm> = ({
@@ -83,7 +130,7 @@ const Form: React.FC<IAssociatedLandForm> = ({
 }) => {
   // access the stepper to later split the form into segments
   const stepper = useFormStepper();
-  const formikProps = useFormikContext<IBuilding>();
+  const formikProps = useFormikContext<ISteppedFormValues<IAssociatedLand>>();
 
   // lookup codes that will be used by subforms
   const { getOptionsByType } = useCodeLookups();
@@ -97,12 +144,7 @@ const Form: React.FC<IAssociatedLandForm> = ({
       case AssociatedLandSteps.LAND_OWNERSHIP:
         return (
           <div className="land-ownership">
-            <LandOwnershipForm
-              nameSpace={currentParcelNameSpace}
-              setMovingPinNameSpace={setMovingPinNameSpace}
-              handleGeocoderChanges={handleGeocoderChanges}
-              handlePidChange={handlePidChange}
-            />
+            <LandOwnershipForm nameSpace={`data.leasedLandMetadata.${stepper.currentTab}`} />
           </div>
         );
       case AssociatedLandSteps.IDENTIFICATION:
@@ -153,7 +195,14 @@ const Form: React.FC<IAssociatedLandForm> = ({
           <Button
             type="button"
             onClick={() => {
-              stepper.gotoNext();
+              if (
+                getIn(formikProps.values.data, `leasedLandMetadata.${stepper.currentTab}.type`) ===
+                LeasedLand.other
+              ) {
+                stepper.gotoStep(AssociatedLandSteps.REVIEW);
+              } else {
+                stepper.gotoNext();
+              }
             }}
             size="sm"
           >
@@ -164,7 +213,7 @@ const Form: React.FC<IAssociatedLandForm> = ({
           formikProps.isValid &&
           stepper.current === AssociatedLandSteps.REVIEW && (
             <Button size="sm" type="submit">
-              Add associated land
+              Submit
             </Button>
           )}
       </FormFooter>
@@ -193,6 +242,9 @@ interface IAssociatedLandForm {
 
 const AssociatedLandForm: React.FC<IAssociatedLandForm> = (props: IAssociatedLandForm) => {
   const keycloak = useKeycloakWrapper();
+  const { createBuilding, updateBuilding } = useBuildingApi();
+  const dispatch = useDispatch();
+  const api = useApi();
   let initialValues = {
     activeStep: 0,
     activeTab: 0,
@@ -208,8 +260,59 @@ const AssociatedLandForm: React.FC<IAssociatedLandForm> = (props: IAssociatedLan
    * @param values formik form values to validate.
    */
   const handleValidate = async (values: ISteppedFormValues<IAssociatedLand>) => {
-    //TODO: fill in as necessary
-    return Promise.resolve({});
+    let validationValues = _.cloneDeep(values);
+    const ownedParcels: IParcel[] = getOwnedParcels(
+      validationValues.data.leasedLandMetadata,
+      values.data.parcels,
+    );
+    validationValues.data.parcels = ownedParcels;
+    const yupErrors: any = AssociatedLandSchema.validate(validationValues, {
+      abortEarly: false,
+    }).then(
+      () => ({}),
+      (err: any) => yupToFormErrors(err),
+    );
+    let errors = await yupErrors;
+    await ownedParcels.forEach(async (p: any, index: number) => {
+      let pidDuplicated = false;
+      if (p.pid && getIn(initialValues.data, `parcels.${index}.pid`) !== p.pid) {
+        pidDuplicated = !(await isPidAvailable(p));
+      }
+
+      let pinDuplicated = false;
+      if (
+        p.pin &&
+        getIn(initialValues.data, `parcels.${index}.pin`) !== p.pin &&
+        p.pin.toString().length < 10
+      ) {
+        pinDuplicated = !(await isPinAvailable(p));
+      }
+
+      let parcelErrors = getIn(errors, `parcels.${index}`) || {};
+      if (!parcelErrors) {
+        setIn(errors, `parcels.${index}`, parcelErrors);
+      }
+      if (pidDuplicated) {
+        parcelErrors = { ...parcelErrors, pid: 'This PID is already in use.' };
+      }
+      if (pinDuplicated) {
+        parcelErrors = { ...parcelErrors, pin: 'This PIN is already in use.' };
+      }
+      if (Object.keys(parcelErrors).length) {
+        errors = setIn(errors, `data.parcels.${index}`, parcelErrors);
+      }
+    });
+    return Promise.resolve(errors);
+  };
+
+  const isPidAvailable = async (values: IFormParcel): Promise<boolean> => {
+    const response = await api.isPidAvailable(values.id, values.pid);
+    return response?.available;
+  };
+
+  const isPinAvailable = async (values: IFormParcel): Promise<boolean> => {
+    const response = await api.isPinAvailable(values.id, values.pin);
+    return response?.available;
   };
 
   return (
@@ -248,9 +351,13 @@ const AssociatedLandForm: React.FC<IAssociatedLandForm> = (props: IAssociatedLan
         validate={handleValidate}
         formikRef={props.formikRef}
         onSubmit={async (values, actions) => {
-          //const apiValues = valuesToApiFormat(_.cloneDeep(values));
+          const apiValues = valuesToApiFormat(_.cloneDeep(values), keycloak.agencyId);
           try {
-            //TODO: fill in api call logic using new add/update building apis.
+            if (!values.data.id) {
+              await createBuilding(apiValues)(dispatch);
+            } else {
+              await updateBuilding(apiValues)(dispatch);
+            }
           } catch (error) {
           } finally {
             actions.setSubmitting(false);

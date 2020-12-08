@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import TooltipIcon from 'components/common/TooltipIcon';
 import classNames from 'classnames';
 import { useRef } from 'react';
+import TooltipWrapper from '../TooltipWrapper';
 import classNames from 'classnames';
 
 interface ITypeaheadFieldProps<T extends TypeaheadModel> extends TypeaheadProps<T> {
@@ -28,6 +29,8 @@ interface ITypeaheadFieldProps<T extends TypeaheadModel> extends TypeaheadProps<
   clearMenu?: boolean;
   /** controlling the selected inputs for multiple select enabled queries */
   multiSelections?: any;
+  /** Display errors in a tooltip instead of in a div */
+  displayErrorTooltips?: boolean;
   /** used to trigger ref.current.blur where applicable */
   clearSelected?: boolean;
   /** restet clear  state via this component */
@@ -52,11 +55,15 @@ export function TypeaheadField<T extends TypeaheadModel>({
   clearSelected,
   outerClassName,
   clearMenu,
+  displayErrorTooltips,
   ...rest
 }: ITypeaheadFieldProps<T>) {
   const { touched, values, errors, setFieldTouched, setFieldValue } = useFormikContext();
   const hasError = !!getIn(touched, name) && !!getIn(errors, name);
   const isValid = !!getIn(touched, name) && !getIn(errors, name);
+  const error = getIn(errors, name);
+  const touch = getIn(touched, name);
+  const errorTooltip = error && touch && displayErrorTooltips ? error : undefined;
   if (!getOptionByValue) {
     getOptionByValue = (value: T) => (!!value ? ([value] as T[]) : ([] as T[]));
   }
@@ -74,26 +81,30 @@ export function TypeaheadField<T extends TypeaheadModel>({
     <Form.Group className={classNames(!!required ? 'required' : '', outerClassName)}>
       {!!label && <Form.Label>{label}</Form.Label>}
       {!!tooltip && <TooltipIcon toolTipId="typeAhead-tip" toolTip={tooltip} />}
-      <Typeahead<T>
-        {...rest}
-        inputProps={{ ...rest.inputProps, name: name, id: `${name}-field` }}
-        isInvalid={hasError as any}
-        isValid={!hideValidation && isValid}
+      <TooltipWrapper toolTipId={`${name}-error-tooltip}`} toolTip={errorTooltip}>
+        <Typeahead<T>
+          {...rest}
+          inputProps={{ ...rest.inputProps, name: name, id: `${name}-field` }}
+          isInvalid={hasError as any}
+          isValid={!hideValidation && isValid}
         selected={
           multiSelections?.length > 0 ? multiSelections : getOptionByValue(getIn(values, name))
         }
-        ref={ref}
-        onChange={
-          onChange
-            ? onChange
-            : (newValues: T[]) => {
-                setFieldValue(name, getIn(newValues[0], 'value') ?? newValues[0]);
-              }
-        }
-        onBlur={() => setFieldTouched(name, true)}
-        id={`${name}-field`}
-      />
-      {hasError && <Feedback type="invalid">{getIn(errors, name)}</Feedback>}
+          ref={ref}
+          onChange={
+            onChange
+              ? onChange
+              : (newValues: T[]) => {
+                  setFieldValue(name, getIn(newValues[0], 'value') ?? newValues[0]);
+                }
+          }
+          onBlur={() => setFieldTouched(name, true)}
+          id={`${name}-field`}
+        />
+      </TooltipWrapper>
+      {hasError && !displayErrorTooltips && (
+        <Feedback type="invalid">{getIn(errors, name)}</Feedback>
+      )}
     </Form.Group>
   );
 }

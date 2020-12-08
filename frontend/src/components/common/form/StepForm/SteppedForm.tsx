@@ -154,11 +154,15 @@ export const SteppedForm = function<T extends object = {}>({
                     toolText="Add another associated Parcel"
                     toolId="add-associated-parcel"
                     onClick={() => {
+                      //update the data model that the tab represents
                       onAddTab && onAddTab(values.data);
+                      //add a new tab to the formik tab tracker.
                       setFieldValue('tabs', [
                         ...values.tabs,
                         { activeStep: 0, name: `Parcel ${(values?.tabs?.length ?? 0) + 1}` },
                       ]);
+                      //set the current tab to the newly added tab.
+                      setFieldValue('activeTab', values?.tabs?.length ?? 0);
                     }}
                   />
                 }

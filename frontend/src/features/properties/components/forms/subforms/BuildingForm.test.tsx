@@ -155,7 +155,7 @@ describe('sub-form BuildingForm functionality', () => {
       fireEvent.click(submit!);
     });
     const errors = await getAllByText('Required');
-    expect(errors).toHaveLength(9);
+    expect(errors).toHaveLength(6);
   });
 
   xit('submits all required field values', async done => {

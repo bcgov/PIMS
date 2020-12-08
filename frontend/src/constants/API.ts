@@ -77,6 +77,8 @@ export interface IParcelDetailParams {
 export const PARCEL_DETAIL = (params: IParcelDetailParams) => `/properties/parcels/${params.id}`;
 export const PARCEL_ROOT = `/properties/parcels`;
 
+export const BUILDING_ROOT = `/properties/buildings`;
+
 export interface IUserDetailParams {
   id: string;
 }

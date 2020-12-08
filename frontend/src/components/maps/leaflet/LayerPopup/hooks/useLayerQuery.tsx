@@ -2,13 +2,9 @@ import { FeatureCollection, Geometry, GeoJsonProperties } from 'geojson';
 import axios from 'axios';
 import { LatLng, geoJSON } from 'leaflet';
 import { useCallback, Dispatch } from 'react';
-import parcelLayerDataSlice, {
-  saveParcelLayerData,
-  IParcelLayerData,
-} from 'reducers/parcelLayerDataSlice';
+import parcelLayerDataSlice, { saveParcelLayerData } from 'reducers/parcelLayerDataSlice';
 import { error } from 'actions/genericActions';
-import { useSelector } from 'react-redux';
-import { RootState } from 'reducers/rootReducer';
+import { toast } from 'react-toastify';
 
 interface IUserLayerQuery {
   /**
@@ -52,6 +48,8 @@ export const handleParcelDataLayerResponse = (
             },
           }),
         );
+      } else {
+        toast.warning(`Failed to find PID/PIN. Ensure that the searched PID/PIN is valid`);
       }
     })
     .catch((axiosError: any) => {
@@ -65,9 +63,6 @@ export const handleParcelDataLayerResponse = (
  * @param geometry the name of the geometry in the feature collection
  */
 export const useLayerQuery = (url: string, geometryName: string = 'SHAPE'): IUserLayerQuery => {
-  const parcelLayerData = useSelector<RootState, IParcelLayerData | null>(
-    state => state.parcelLayerData?.parcelLayerData,
-  );
   const baseUrl = `${url}&srsName=EPSG:4326&count=1`;
   const findOneWhereContains = useCallback(
     async (latlng: LatLng): Promise<FeatureCollection> => {
@@ -87,14 +82,12 @@ export const useLayerQuery = (url: string, geometryName: string = 'SHAPE'): IUse
       if (isNaN(+formattedPid)) {
         return { features: [], type: 'FeatureCollection' };
       }
-      const data: FeatureCollection =
-        parcelLayerData?.data?.PID === formattedPid ||
-        parcelLayerData?.data?.PID_NUMBER?.toString() === formattedPid
-          ? undefined
-          : (await axios.get(`${baseUrl}&CQL_FILTER=PID_NUMBER=${+formattedPid}`)).data;
+      const data: FeatureCollection = (
+        await axios.get(`${baseUrl}&CQL_FILTER=PID_NUMBER=${+formattedPid}`)
+      ).data;
       return data;
     },
-    [baseUrl, parcelLayerData],
+    [baseUrl],
   );
   const findByPid = useCallback(
     async (pid: string): Promise<FeatureCollection> => {
@@ -113,13 +106,10 @@ export const useLayerQuery = (url: string, geometryName: string = 'SHAPE'): IUse
   const findByPin = useCallback(
     async (pin: string): Promise<FeatureCollection> => {
       //Do not make a request if we our currently cached response matches the requested pid.
-      const data: FeatureCollection =
-        parcelLayerData?.data?.PIN === pin
-          ? undefined
-          : (await axios.get(`${baseUrl}&CQL_FILTER=PIN=${pin}`)).data;
+      const data: FeatureCollection = (await axios.get(`${baseUrl}&CQL_FILTER=PIN=${pin}`)).data;
       return data;
     },
-    [baseUrl, parcelLayerData],
+    [baseUrl],
   );
 
   return { findOneWhereContains, findByPid, findByPin };
