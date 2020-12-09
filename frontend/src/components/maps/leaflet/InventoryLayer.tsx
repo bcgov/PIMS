@@ -9,6 +9,7 @@ import { toast } from 'react-toastify';
 import { PointFeature } from '../types';
 import PointClusterer from './PointClusterer';
 import { useApi } from 'hooks/useApi';
+import _ from 'lodash';
 
 export type InventoryLayerProps = {
   /** Latitude and Longitude boundary of the layer. */
@@ -93,28 +94,39 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
     inEnhancedReferralProcess: filter?.inEnhancedReferralProcess,
   };
 
+  const search = React.useCallback(
+    _.debounce(
+      () => {
+        loadProperties(params)
+          .then(async (data: Feature[]) => {
+            const points = data
+              .filter(feature => {
+                return !(
+                  feature.properties!.propertyTypeId === selected?.propertyTypeId &&
+                  feature.properties!.id === selected?.parcelDetail?.id
+                );
+              })
+              .map(f => {
+                return {
+                  ...f,
+                } as PointFeature;
+              });
+            setFeatures(points);
+          })
+          .catch(error => {
+            toast.error((error as Error).message, { autoClose: 7000 });
+            console.error(error);
+          });
+      },
+      500,
+      { leading: true },
+    ),
+    [],
+  );
+
   // Fetch the geoJSON collection of properties.
   useDeepCompareEffect(() => {
-    loadProperties(params)
-      .then(async (data: Feature[]) => {
-        const points = data
-          .filter(feature => {
-            return !(
-              feature.properties!.propertyTypeId === selected?.propertyTypeId &&
-              feature.properties!.id === selected?.parcelDetail?.id
-            );
-          })
-          .map(f => {
-            return {
-              ...f,
-            } as PointFeature;
-          });
-        setFeatures(points);
-      })
-      .catch(error => {
-        toast.error((error as Error).message, { autoClose: 7000 });
-        console.error(error);
-      });
+    search();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params, bbox, selected]);
 

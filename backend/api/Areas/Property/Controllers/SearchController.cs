@@ -122,7 +122,7 @@ namespace Pims.Api.Areas.Property.Controllers
 
             var pfilter = filter.CopyValues(new AllPropertyFilter());
 
-            var properties = _pimsService.Property.Get(pfilter).ToArray();
+            var properties = _pimsService.Property.Search(pfilter).ToArray();
             return new JsonResult(_mapper.Map<GeoJson<PropertyModel>[]>(properties).ToArray());
         }
 
