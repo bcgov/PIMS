@@ -40,9 +40,10 @@
   width: 400px;
   overflow: hidden;
   cursor: pointer;
-}
+  color: $text-color;
 
-.GeocoderAutoComplete option:hover {
-  background-color: $active-color;
-  color: #fff;
+  &:hover {
+    background-color: $active-color;
+    color: #fff;
+  }
 }

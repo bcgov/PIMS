@@ -120,9 +120,7 @@ exports[`AppNavBar AppNavBar snapshot test. 1`] = `
                     </NavItem>
                     <AdminDropdown />
                     <PropertyDropdown />
-                    <ViewProjects />
-                    <DisposeRequest />
-                    <ViewProjectApprovalRequests />
+                    <DisposeProjectsDropdown />
                     <ReportsDropdown />
                   </div>
                 </ForwardRef>
