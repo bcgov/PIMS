@@ -84,6 +84,39 @@ namespace Pims.Dal.Services
         }
 
         /// <summary>
+        /// Get an array of properties within the specified filters.
+        /// Will not return sensitive properties unless the user has the `sensitive-view` claim and belongs to the owning agency.
+        /// Note that the 'parcelFilter' will control the 'page' and 'quantity'.
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        public IEnumerable<ProjectProperty> Search(AllPropertyFilter filter)
+        {
+            this.User.ThrowIfNotAuthorized(Permissions.PropertyView);
+            filter.ThrowIfNull(nameof(filter));
+            if (!filter.IsValid()) throw new ArgumentException("Argument must have a valid filter", nameof(filter));
+
+            var parcelFilter = (ParcelFilter)filter;
+            var buildingFilter = (BuildingFilter)filter;
+
+            if (parcelFilter.IsValid() && !buildingFilter.IsValid())
+            {
+                filter.PropertyType = Entities.PropertyTypes.Land;
+            }
+            else if (!parcelFilter.IsValid())
+            {
+                filter.PropertyType = Entities.PropertyTypes.Building;
+            }
+
+            var query = this.Context.GenerateQuery(this.User, filter);
+            var properties = query.Select(x => new ProjectProperty(x)).ToArray();
+
+            // TODO: Add optional paging ability to query.
+
+            return properties;
+        }
+
+        /// <summary>
         /// Get a page with an array of properties within the specified filters.
         /// Will not return sensitive properties unless the user has the `sensitive-view` claim and belongs to the owning agency.
         /// Note that the 'parcelFilter' will control the 'page' and 'quantity'.
