@@ -643,7 +643,7 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
                   class="th"
                   colspan="2"
                   role="columnheader"
-                  style="box-sizing: border-box; flex: 150 0 auto; min-width: 60px; width: 150px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+                  style="box-sizing: border-box; flex: 190 0 auto; min-width: 60px; width: 190px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                 >
                   Assessed Value
                 </div>
@@ -657,7 +657,7 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
                   class="th"
                   colspan="1"
                   role="columnheader"
-                  style="box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+                  style="box-sizing: border-box; flex: 90 0 auto; min-width: 30px; width: 90px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                 >
                   Assessment Year
                 </div>
@@ -686,7 +686,7 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
                   <div
                     class="td"
                     role="cell"
-                    style="box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
+                    style="box-sizing: border-box; flex: 90 0 auto; min-width: 30px; width: 90px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
                     title=""
                   >
                     2021
@@ -725,7 +725,7 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
                   <div
                     class="td"
                     role="cell"
-                    style="box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
+                    style="box-sizing: border-box; flex: 90 0 auto; min-width: 30px; width: 90px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
                     title=""
                   >
                     2020
@@ -764,7 +764,7 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
                   <div
                     class="td"
                     role="cell"
-                    style="box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
+                    style="box-sizing: border-box; flex: 90 0 auto; min-width: 30px; width: 90px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
                     title=""
                   >
                     2019
@@ -803,7 +803,7 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
                   <div
                     class="td"
                     role="cell"
-                    style="box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
+                    style="box-sizing: border-box; flex: 90 0 auto; min-width: 30px; width: 90px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
                     title=""
                   >
                     2018
@@ -842,7 +842,7 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
                   <div
                     class="td"
                     role="cell"
-                    style="box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
+                    style="box-sizing: border-box; flex: 90 0 auto; min-width: 30px; width: 90px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
                     title=""
                   >
                     2017
@@ -881,7 +881,7 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
                   <div
                     class="td"
                     role="cell"
-                    style="box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
+                    style="box-sizing: border-box; flex: 90 0 auto; min-width: 30px; width: 90px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
                     title=""
                   >
                     2016
@@ -920,7 +920,7 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
                   <div
                     class="td"
                     role="cell"
-                    style="box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
+                    style="box-sizing: border-box; flex: 90 0 auto; min-width: 30px; width: 90px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
                     title=""
                   >
                     2015
@@ -959,7 +959,7 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
                   <div
                     class="td"
                     role="cell"
-                    style="box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
+                    style="box-sizing: border-box; flex: 90 0 auto; min-width: 30px; width: 90px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
                     title=""
                   >
                     2014
@@ -998,7 +998,7 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
                   <div
                     class="td"
                     role="cell"
-                    style="box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
+                    style="box-sizing: border-box; flex: 90 0 auto; min-width: 30px; width: 90px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
                     title=""
                   >
                     2013

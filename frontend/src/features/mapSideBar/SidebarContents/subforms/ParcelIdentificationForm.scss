@@ -52,7 +52,8 @@
       .form-row {
         display: flex;
         padding: 0px 20px;
-        input,
+        > input,
+        .input-group,
         textarea {
           width: 230px;
         }

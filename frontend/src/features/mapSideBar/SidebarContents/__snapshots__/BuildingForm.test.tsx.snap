@@ -18,6 +18,7 @@ exports[`Building Form component renders correctly 1`] = `
 
 .c1 .tab-content {
   border: 0;
+  border-top: 1px solid #666666;
   padding: 0;
 }
 
@@ -47,7 +48,8 @@ exports[`Building Form component renders correctly 1`] = `
   position: relative;
 }
 
-.c1 .nav-tabs .nav-item p {
+.c1 .nav-tabs .nav-item p,
+.c1 .nav-tabs .nav-item abbr {
   margin: 0;
 }
 
@@ -641,22 +643,18 @@ exports[`Building Form component renders correctly 1`] = `
                     >
                       <p
                         class="label"
-                        style="margin-bottom: 0px;"
+                        style="margin-bottom: 0px; text-align: right;"
                       >
-                        <span
-                          class="req"
-                        >
-                          *
-                        </span>
                         Building Classification
                       </p>
                       <div
-                        class="form-group"
+                        class="required form-group"
                       >
                         <select
                           class="form-control"
                           id="input-building.classificationId-fast"
                           name="building.classificationId"
+                          required=""
                           style="margin-top: 5px; display: flex;"
                           type="number"
                         >

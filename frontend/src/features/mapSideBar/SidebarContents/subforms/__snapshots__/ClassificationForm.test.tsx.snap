@@ -39,23 +39,19 @@ Array [
           style={
             Object {
               "marginBottom": "0",
+              "textAlign": "right",
             }
           }
-        >
-          <span
-            className="req"
-          >
-            *
-          </span>
-        </p>
+        />
         <div
-          className="form-group"
+          className="required form-group"
         >
           <select
             className="form-control"
             id="input-classificationId-fast"
             name="classificationId"
             onChange={[Function]}
+            required={true}
             style={
               Object {
                 "display": "flex",
