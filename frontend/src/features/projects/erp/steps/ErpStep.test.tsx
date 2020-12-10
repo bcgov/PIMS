@@ -10,7 +10,7 @@ import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 import _ from 'lodash';
 import { getStore, mockProject as defaultProject } from '../../dispose/testUtils';
-import { IProject, SPPApprovalTabs } from '../../common';
+import { DisposalWorkflows, IProject, SPPApprovalTabs } from '../../common';
 import { ErpStep } from '..';
 import Claims from 'constants/claims';
 import ReactDOM from 'react-dom';
@@ -33,6 +33,7 @@ const history = createMemoryHistory();
 const mockAxios = new MockAdapter(axios);
 const mockProject = _.cloneDeep(defaultProject);
 mockProject.statusCode = ReviewWorkflowStatus.ERP;
+mockProject.workflowCode = DisposalWorkflows.Erp;
 
 const getApprovalStep = (storeOverride?: any) => (
   <Provider store={storeOverride ?? getStore(mockProject)}>
@@ -170,12 +171,14 @@ describe('ERP Approval Step', () => {
     });
     it('Proceed to SPL button is disabled', () => {
       project.statusCode = ReviewWorkflowStatus.InErp;
+      project.workflowCode = DisposalWorkflows.Erp;
       const component = render(getApprovalStep(getStore(project)));
       const proceedToSplButton = component.queryByText(/Proceed to SPL/);
       expect(proceedToSplButton).toBeDisabled();
     });
     it('Not in SPL button is disabled', () => {
       project.statusCode = ReviewWorkflowStatus.InErp;
+      project.workflowCode = DisposalWorkflows.Erp;
       const component = render(getApprovalStep(getStore(project)));
       const proceedToSplButton = component.queryByText(/Not Included in the SPL/);
       expect(proceedToSplButton).toBeDisabled();
@@ -198,6 +201,7 @@ describe('ERP Approval Step', () => {
     });
     it('enables on hold button when on hold date entered', () => {
       const project = _.cloneDeep(mockProject);
+      project.workflowCode = DisposalWorkflows.Erp;
       project.onHoldNotificationSentOn = new Date();
 
       const { getByText } = render(getApprovalStep(getStore(project)));
@@ -206,6 +210,7 @@ describe('ERP Approval Step', () => {
     });
     it('enables proceed to SPL button when clearance date entered', () => {
       const project = _.cloneDeep(mockProject);
+      project.workflowCode = DisposalWorkflows.Erp;
       project.clearanceNotificationSentOn = new Date();
 
       const { getByText } = render(getApprovalStep(getStore(project)));
@@ -214,6 +219,7 @@ describe('ERP Approval Step', () => {
     });
     it('enables not in SPL button when clearance date entered', () => {
       const project = _.cloneDeep(mockProject);
+      project.workflowCode = DisposalWorkflows.Erp;
       project.clearanceNotificationSentOn = new Date();
 
       const { getByText } = render(getApprovalStep(getStore(project)));
@@ -232,8 +238,10 @@ describe('ERP Approval Step', () => {
     });
     it('displays modal when proceed to SPL button clicked', async (done: any) => {
       const project = _.cloneDeep(mockProject);
+      project.workflowCode = DisposalWorkflows.Erp;
       project.clearanceNotificationSentOn = new Date();
       project.requestForSplReceivedOn = new Date();
+      project.approvedForSplOn = new Date();
       project.assessed = 1;
       project.netBook = 2;
       project.market = 3;
@@ -249,6 +257,7 @@ describe('ERP Approval Step', () => {
     });
     it('displays modal when not in SPL button clicked', async (done: any) => {
       const project = _.cloneDeep(mockProject);
+      project.workflowCode = DisposalWorkflows.Erp;
       project.assessed = 1;
       project.netBook = 2;
       project.market = 3;
