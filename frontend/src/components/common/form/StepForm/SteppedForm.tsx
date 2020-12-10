@@ -1,5 +1,5 @@
 import { Persist } from 'components/common/FormikPersist';
-import { Form, Formik, FormikConfig } from 'formik';
+import { Form, Formik, FormikConfig, setIn } from 'formik';
 import * as React from 'react';
 import { StepperFormProvider } from './context';
 import { StepperField } from './StepperField';
@@ -29,6 +29,7 @@ const TabbedForm = styled(Form)`
   }
   .tab-content {
     border: 0;
+    border-top: 1px solid #666666;
     padding: 0;
   }
   .nav-tabs {
@@ -46,7 +47,8 @@ const TabbedForm = styled(Form)`
       color: black;
       position: relative;
       display: inline-flex;
-      p {
+      p,
+      abbr {
         margin: 0;
       }
       position: relative;
@@ -63,6 +65,11 @@ const TabbedForm = styled(Form)`
       cursor: default;
     }
   }
+`;
+
+const TabLineHeader = styled.h5`
+  float: left;
+  margin-right: 50px;
 `;
 
 export const MAX_STEPPED_TABS = 5;
@@ -92,11 +99,18 @@ export const SteppedForm = function<T extends object = {}>({
   if (!getTabs) {
     initialValues.tabs = [{ activeStep: initialValues.activeStep }];
   }
+  if (!initialValues.tabs && !!getTabs) {
+    initialValues = setIn(
+      initialValues,
+      'tabs',
+      getTabs(initialValues.data).map(t => ({ activeStep: 0, name: t })),
+    );
+  }
 
   const tabTitle = (title: string, index: number) => {
     return (
       <>
-        <p>{title}</p>
+        {title.length < 20 ? <p>{title}</p> : <abbr title={title}>{title.substr(0, 20)}</abbr>}
         <TooltipWrapper
           toolTipId="remove-associated-parcel"
           toolTip="Remove this associated parcel"
@@ -126,6 +140,7 @@ export const SteppedForm = function<T extends object = {}>({
       {({ values, setFieldValue }) => (
         <>
           <TabbedForm>
+            {!!getTabs && <TabLineHeader>Parcels:</TabLineHeader>}
             <Tabs
               id="steppedform-tabs"
               className={!getTabs ? 'hideTabs' : ''}

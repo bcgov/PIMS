@@ -42,7 +42,7 @@ export const getAssessedCols = (
     {
       Header: 'Assessment Year',
       accessor: 'assessed.year', // accessor is the "key" in the data
-      maxWidth: 50,
+      maxWidth: 90,
       align: 'left',
     },
     {

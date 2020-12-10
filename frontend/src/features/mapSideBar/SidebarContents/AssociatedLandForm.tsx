@@ -53,6 +53,9 @@ const FormFooter = styled.div`
   width: 100%;
   height: 70px;
   align-items: center;
+  position: sticky;
+  background-color: #f2f2f2;
+  bottom: 30px;
 `;
 
 const FillRemainingSpace = styled.span`
@@ -79,16 +82,14 @@ const PreAssociateSteps = styled.div`
     width 100px;
     margin: 0px 5px;
   }
-  .progress-bar {
-
-  }
 `;
 
 const ProgressBar = styled.div`
   max-width: 900px;
-  height: 20px;
+  height: 10px;
   border-radius: 5px;
   margin: 10px 0px;
+  background-color: #428bca;
 `;
 
 export interface IAssociatedLand extends IBuilding {
@@ -160,6 +161,7 @@ const Form: React.FC<IAssociatedLandForm> = ({
   handlePidChange,
   handlePinChange,
   formikRef,
+  isAdmin,
 }) => {
   // access the stepper to later split the form into segments
   const stepper = useFormStepper();
@@ -191,6 +193,7 @@ const Form: React.FC<IAssociatedLandForm> = ({
               setMovingPinNameSpace={setMovingPinNameSpace}
               handlePidChange={handlePidChange}
               handlePinChange={handlePinChange}
+              isAdmin={isAdmin}
             />
           </div>
         );
@@ -267,6 +270,8 @@ interface IAssociatedLandForm {
   handlePinChange: (pin: string) => void;
   /** The initial building values to add associated land to */
   initialValues: IBuilding;
+  /** Whether or not this user has admin privileges */
+  isAdmin: boolean;
 }
 
 /**
@@ -356,6 +361,7 @@ const AssociatedLandForm: React.FC<IAssociatedLandForm> = (props: IAssociatedLan
   const renderPreForm = (): React.ReactNode => {
     return (
       <>
+        <hr />
         <h4 style={{ textAlign: 'left' }}>Parcel inventory</h4>
         <PreAssociateSteps>
           <span>
@@ -385,7 +391,10 @@ const AssociatedLandForm: React.FC<IAssociatedLandForm> = (props: IAssociatedLan
                     if (currentProgess < 15) {
                       incrementProgress();
                     } else {
-                      const parcels = [...Array(numParcels)].map(n => getInitialLandValues());
+                      const parcels = [...Array(numParcels)].map(n => ({
+                        ...getInitialLandValues(),
+                        agencyId: keycloak.agencyId,
+                      }));
                       setInitialValues(setIn(initialValues, 'data.parcels', parcels));
                     }
                   }, 100);
@@ -397,9 +406,10 @@ const AssociatedLandForm: React.FC<IAssociatedLandForm> = (props: IAssociatedLan
           </span>
         </PreAssociateSteps>
         <ProgressBar
-          className="progress-bar progress-bar-striped progress-bar-animated"
+          className="progress-bar progress-bar-animated"
           style={{ width: `${progress * 10}%` }}
         ></ProgressBar>
+        <hr />
       </>
     );
   };
@@ -413,19 +423,24 @@ const AssociatedLandForm: React.FC<IAssociatedLandForm> = (props: IAssociatedLan
           // Provide the steps
           steps={[
             { route: 'ownership', title: 'Land Ownership', completed: false, canGoToStep: true },
-            { route: 'identification', title: 'Parcel ID', completed: false, canGoToStep: true },
+            {
+              route: 'identification',
+              title: 'Identification',
+              completed: false,
+              canGoToStep: true,
+            },
             { route: 'usage', title: 'Usage', completed: false, canGoToStep: true },
             { route: 'valuation', title: 'Valuation', completed: false, canGoToStep: true },
-            { route: 'review', title: 'Review', completed: false, canGoToStep: true },
+            { route: 'review', title: 'Review & Submit', completed: false, canGoToStep: true },
           ]}
           getTabs={(values: IAssociatedLand) => {
             return values.parcels.map((p: any, index: number) => {
               return p.name?.length ? p.name : `Parcel ${index + 1}`;
             });
           }}
-          persistable={true}
+          persistable={false}
           persistProps={{
-            name: 'land',
+            name: 'associatedLand',
             secret: keycloak.obj.subject,
             persistCallback: noop,
           }}
@@ -463,6 +478,7 @@ const AssociatedLandForm: React.FC<IAssociatedLandForm> = (props: IAssociatedLan
             handlePinChange={props.handlePinChange}
             formikRef={props.formikRef}
             initialValues={props.initialValues}
+            isAdmin={props.isAdmin}
           />
         </SteppedForm>
       )}

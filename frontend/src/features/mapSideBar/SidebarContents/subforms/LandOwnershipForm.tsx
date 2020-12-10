@@ -1,7 +1,7 @@
 import './LandOwnershipForm.scss';
 
 import React, { useCallback } from 'react';
-import { Col, Container, Row } from 'react-bootstrap';
+import { Container, Row } from 'react-bootstrap';
 import { RadioButtonGroup } from 'components/common/form/RadioButtonGroup';
 import { LeasedLand } from 'actions/parcelsActions';
 import { useFormikContext, getIn } from 'formik';
@@ -32,18 +32,13 @@ export const LandOwnershipForm: React.FC<IIdentificationProps> = ({ nameSpace })
   return (
     <Container>
       <Row>
-        <h4>Add associated land</h4>
-      </Row>
-      <Row>
-        <Col>
-          <h5>Land ownership</h5>
-        </Col>
+        <h4 style={{ padding: '10px 0px' }}>Land ownership</h4>
       </Row>
       <Row>
         <p>
-          This first section has to do with land ownership
+          This first section has to do with land ownership.
           <br />
-          In some cases, the land on which a building sits is owned by the same agency who owns the
+          In some cases, the land on which a building sits, is owned by the same agency who owns the
           building and in other cases it is not.
           <br />
           <br />

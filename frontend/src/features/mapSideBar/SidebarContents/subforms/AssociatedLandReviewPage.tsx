@@ -4,7 +4,6 @@ import {
   FastInput,
   Input,
   InputGroup,
-  AutoCompleteText,
   FastCurrencyInput,
   Check,
   FastSelect,
@@ -21,6 +20,8 @@ import { useFormStepper } from 'components/common/form/StepForm';
 import { AssociatedLandSteps } from 'constants/propertySteps';
 import { formatMoney } from 'utils/numberFormatUtils';
 import { LeasedLand } from 'actions/parcelsActions';
+import { formatFiscalYear } from 'utils';
+import { ParentSelect } from 'components/common/form/ParentSelect';
 
 interface IReviewProps {
   nameSpace?: string;
@@ -98,7 +99,7 @@ export const AssociatedLandReviewPage: React.FC<any> = (props: IReviewProps) => 
                   <Row className="section-header">
                     <span>
                       <LandSvg className="svg" />
-                      <h5>Parcel Identification</h5>
+                      <h5>Parcel identification</h5>
                     </span>
                     <FaEdit
                       size={20}
@@ -115,9 +116,10 @@ export const AssociatedLandReviewPage: React.FC<any> = (props: IReviewProps) => 
                 <Col md={6}>
                   <Row className="content-item">
                     <Label>Agency</Label>
-                    <AutoCompleteText
+                    <ParentSelect
                       field={withNameSpace('agencyId', index)}
                       options={props.agencies}
+                      filterBy={['code', 'label', 'parent']}
                       disabled={editInfo.identification}
                     />
                   </Row>
@@ -133,6 +135,14 @@ export const AssociatedLandReviewPage: React.FC<any> = (props: IReviewProps) => 
                     <FastInput
                       disabled={editInfo.identification}
                       field={withNameSpace('description', index)}
+                      formikProps={formikProps}
+                    />
+                  </Row>
+                  <Row className="content-item">
+                    <Label>Legal Description</Label>
+                    <FastInput
+                      disabled={editInfo.identification}
+                      field={withNameSpace('landLegalDescription', index)}
                       formikProps={formikProps}
                     />
                   </Row>
@@ -172,17 +182,19 @@ export const AssociatedLandReviewPage: React.FC<any> = (props: IReviewProps) => 
                       postText="Hectares"
                     />
                   </Row>
-                  <Row className="content-item">
-                    <Label>SPP</Label>
-                    <FastInput
-                      className="input-medium"
-                      displayErrorTooltips
-                      formikProps={formikProps}
-                      disabled={editInfo.identification}
-                      type="text"
-                      field={withNameSpace('projectNumber', index)}
-                    />
-                  </Row>
+                  {!!getIn(formikProps.values, withNameSpace('projectNumber', index)) && (
+                    <Row className="content-item">
+                      <Label>SPP</Label>
+                      <FastInput
+                        className="input-medium"
+                        displayErrorTooltips
+                        formikProps={formikProps}
+                        disabled={editInfo.identification}
+                        type="text"
+                        field={withNameSpace('projectNumber', index)}
+                      />
+                    </Row>
+                  )}
                   <br></br>
                   <Row className="harmful">
                     <Label>Harmful info if released?</Label>
@@ -266,6 +278,22 @@ export const AssociatedLandReviewPage: React.FC<any> = (props: IReviewProps) => 
                       field={withNameSpace('financials.0.netbook.value', index)}
                       disabled={editInfo.valuation}
                     />
+                    <p
+                      style={{
+                        width: 50,
+                        fontSize: 11,
+                        textAlign: 'left',
+                        fontWeight: 700,
+                        color: '#495057',
+                      }}
+                    >
+                      {formatFiscalYear(
+                        getIn(
+                          formikProps.values,
+                          withNameSpace('financials.0.netbook.fiscalYear', index),
+                        ),
+                      )}
+                    </p>
                   </Row>
                   <Row className="val-row">
                     <Label>Land value</Label>
@@ -274,6 +302,12 @@ export const AssociatedLandReviewPage: React.FC<any> = (props: IReviewProps) => 
                       field={withNameSpace('financials.0.assessed.value', index)}
                       disabled={editInfo.valuation}
                     />
+                    <FastInput
+                      formikProps={formikProps}
+                      field={withNameSpace('financials.0.netbook.year', index)}
+                      disabled
+                      style={{ width: 50, fontSize: 11 }}
+                    />
                   </Row>
                   <Row className="val-row">
                     <Label>Building Value</Label>
@@ -281,6 +315,12 @@ export const AssociatedLandReviewPage: React.FC<any> = (props: IReviewProps) => 
                       formikProps={formikProps}
                       field={withNameSpace('financials.0.improvements.value', index)}
                       disabled={editInfo.valuation}
+                    />
+                    <FastInput
+                      formikProps={formikProps}
+                      field={withNameSpace('financials.0.netbook.year', index)}
+                      disabled
+                      style={{ width: 50, fontSize: 11 }}
                     />
                   </Row>
                   <Row className="val-row">

@@ -7,6 +7,18 @@ ul.pagination li {
   cursor: pointer;
 }
 
+.modal-dialog.modal-xl {
+  max-width: 1000px;
+}
+
+.modal-dialog.modal-l {
+  max-width: 750px;
+}
+
+.modal-dialog.modal-s {
+  max-width: 400px;
+}
+
 div.bootstrap-table {
   .col {
     border-bottom-width: 2px;

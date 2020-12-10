@@ -3,7 +3,6 @@ import { OccupancyForm } from './OccupancyForm';
 import { fireEvent, render, wait } from '@testing-library/react';
 import { noop } from 'lodash';
 import { Formik } from 'formik';
-import pretty from 'pretty';
 import { SelectOptions } from 'components/common/form';
 
 const mockOccupancies: SelectOptions = [
@@ -20,7 +19,7 @@ const form = (
 
 it('renders correctly', () => {
   const { container } = render(form);
-  expect(pretty(container.innerHTML)).toMatchSnapshot();
+  expect(container.firstChild).toMatchSnapshot();
 });
 
 it('number input for rentable area', async () => {
