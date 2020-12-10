@@ -137,7 +137,7 @@ exports[`Review Summary View renders approved correctly 1`] = `
             Description
           </label>
           <textarea
-            className="col-md-5 form-control"
+            className="col-md-auto form-control"
             disabled={true}
             id="input-description"
             name="description"
@@ -1003,7 +1003,7 @@ exports[`Review Summary View renders denied correctly 1`] = `
             Description
           </label>
           <textarea
-            className="col-md-5 form-control"
+            className="col-md-auto form-control"
             disabled={true}
             id="input-description"
             name="description"
@@ -1869,7 +1869,7 @@ exports[`Review Summary View renders submitted correctly 1`] = `
             Description
           </label>
           <textarea
-            className="col-md-5 form-control"
+            className="col-md-auto form-control"
             disabled={true}
             id="input-description"
             name="description"

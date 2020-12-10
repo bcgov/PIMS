@@ -50,6 +50,7 @@ const CloseOutAdjustment = (props: CloseOutAdjustmentProps) => {
       <ProjectNotes
         label="Adjustment to Prior Year Sale Notes"
         field={`notes[${NoteTypes.Adjustment}].note`}
+        className="col-md-auto"
         outerClassName="col-md-12"
       />
     </Fragment>

@@ -32,8 +32,8 @@ const ReviewProjectStep = ({ formikRef }: IStepProps) => {
       >
         <Form>
           <ReviewProjectForm canEdit={canEdit} />
-          <ProjectNotes disabled={true} />
-          <PublicNotes disabled={!canEdit} />
+          <ProjectNotes className="col-md-auto" disabled={true} />
+          <PublicNotes className="col-md-auto" disabled={!canEdit} />
           {canSubmit ? (
             <Form.Label style={{ float: 'right' }}>
               Apply to the Surplus Property Program

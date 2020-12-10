@@ -1,7 +1,13 @@
 import * as React from 'react';
 import { Container } from 'react-bootstrap';
-import { ProjectNotes, ProjectDraftForm, UpdateInfoForm, useProject } from '../../common';
-import { PublicNotes, PrivateNotes } from '../../common';
+import {
+  ProjectNotes,
+  PublicNotes,
+  PrivateNotes,
+  ProjectDraftForm,
+  UpdateInfoForm,
+  useProject,
+} from '../../common';
 import AdditionalPropertyInformationForm from '../forms/AdditionalPropertyInformationForm';
 
 interface IProjectInformationTabProps {
@@ -25,14 +31,15 @@ const ProjectInformationTab: React.FunctionComponent<IProjectInformationTabProps
       />
 
       <h3>Notes</h3>
-      <ProjectNotes disabled={true} label="Agency Notes" />
-      <PublicNotes disabled={isReadOnly} />
-      <PrivateNotes disabled={isReadOnly} />
+      <ProjectNotes className="col-md-auto" disabled={true} label="Agency Notes" />
+      <PublicNotes className="col-md-auto" disabled={isReadOnly} />
+      <PrivateNotes className="col-md-auto" disabled={isReadOnly} />
       <ProjectNotes
         label="Reporting"
-        field="reportingNote"
-        disabled={isReadOnly}
         tooltip="Notes for Reporting"
+        field="reportingNote"
+        className="col-md-auto"
+        disabled={isReadOnly}
       />
     </Container>
   );

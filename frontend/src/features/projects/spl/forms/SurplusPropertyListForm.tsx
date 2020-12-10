@@ -213,6 +213,7 @@ const SurplusPropertyListForm = ({
         label="Offers Received"
         tooltip="Review required for offer(s) in Tier 3 & 4"
         field="offersNote"
+        className="col-md-auto"
         outerClassName="col-md-12"
         disabled={isReadOnly}
       />
