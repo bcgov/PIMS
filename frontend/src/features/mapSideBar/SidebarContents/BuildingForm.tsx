@@ -13,7 +13,6 @@ import { OccupancyForm } from './subforms/OccupancyForm';
 import { IdentificationForm } from './subforms/IdentificationForm';
 import { BuildingReviewPage } from './subforms/BuildingReviewPage';
 import { BuildingValuationForm } from './subforms/BuildingValuationForm';
-import { defaultBuildingValues } from 'features/properties/components/forms/subforms/BuildingForm';
 import { useDispatch } from 'react-redux';
 import _ from 'lodash';
 import { BuildingSteps } from 'constants/propertySteps';
@@ -24,9 +23,11 @@ import {
   IFinancialYear,
   IFinancial,
   filterEmptyFinancials,
+  defaultFinancials,
 } from 'features/properties/components/forms/subforms/EvaluationForm';
 import { EvaluationKeys } from 'constants/evaluationKeys';
 import { FiscalKeys } from 'constants/fiscalKeys';
+import { defaultAddressValues } from 'features/properties/components/forms/subforms/AddressForm';
 
 const Container = styled.div`
   background-color: #fff;
@@ -62,6 +63,35 @@ const FormFooter = styled.div`
 const FillRemainingSpace = styled.span`
   flex: 1 1 auto;
 `;
+
+export const defaultBuildingValues: any = {
+  id: undefined,
+  name: '',
+  projectNumber: '',
+  description: '',
+  address: defaultAddressValues,
+  latitude: '',
+  longitude: '',
+  agencyId: 0,
+  parcelId: 0,
+  rentableArea: '',
+  buildingFloorCount: '',
+  buildingConstructionType: undefined,
+  buildingConstructionTypeId: '',
+  buildingPredominateUse: undefined,
+  buildingPredominateUseId: '',
+  classificationId: '',
+  classification: undefined,
+  buildingOccupantType: undefined,
+  buildingOccupantTypeId: '',
+  transferLeaseOnSale: false,
+  occupantName: '',
+  leaseExpiry: '',
+  buildingTenancy: '',
+  evaluations: [],
+  fiscals: [],
+  financials: defaultFinancials,
+};
 
 /**
  * A component used for submitting standalone buildings or buildings grouped with land.

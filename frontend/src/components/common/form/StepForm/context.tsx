@@ -1,7 +1,10 @@
 import * as React from 'react';
-import { useFormikContext, getIn } from 'formik';
+import { useFormikContext, getIn, setIn, yupToFormErrors } from 'formik';
 import { noop } from 'lodash';
 import { IStepperFormContextProps, IStepperFormProviderProps, ISteppedFormValues } from './types';
+import _ from 'lodash';
+import { useCallback } from 'react';
+import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
 
 const StepperFormContext = React.createContext<IStepperFormContextProps>({
   current: 0,
@@ -12,6 +15,7 @@ const StepperFormContext = React.createContext<IStepperFormContextProps>({
   goBack: noop as any,
   gotoNext: noop as any,
   gotoTab: noop as any,
+  validateCurrentStep: noop as any,
 });
 
 /**
@@ -23,7 +27,77 @@ export const StepperFormProvider: React.FC<IStepperFormProviderProps> = ({
   steps,
   tabs,
 }) => {
-  const { values, setFieldValue } = useFormikContext<ISteppedFormValues>();
+  const { values, setFieldValue, setErrors, setTouched } = useFormikContext<ISteppedFormValues>();
+
+  const activeTab = values.activeTab;
+
+  /**
+   * Get the list of completed steps for this tab.
+   * @param tabIndex
+   */
+  const getCompletedTabSteps = useCallback(
+    (tabIndex: number) => {
+      return _.uniq(getIn(values, `tabs.${tabIndex}.completedSteps`) || []);
+    },
+    [values],
+  );
+
+  /**
+   * Whenever the tab changes, update the list of steps that have been completed and that are navigable.
+   */
+  useDeepCompareEffect(() => {
+    if (tabs.length > 1) {
+      const completedSteps = getCompletedTabSteps(activeTab);
+      steps.forEach((step, index) => {
+        step.completed = completedSteps.includes(index);
+        step.canGoToStep = completedSteps.includes(index - 1);
+      });
+      if (steps.length) {
+        steps[0].canGoToStep = true;
+      }
+    }
+  }, [activeTab, tabs.length, getCompletedTabSteps, steps]);
+
+  /**
+   * Set the step at the given stepIndex to be completed.
+   */
+  const completeStep = (index: number) => {
+    if (index >= 0 && index < steps.length) {
+      const currentStep = steps[index];
+      currentStep.completed = true;
+      setFieldValue(
+        `tabs.${values.activeTab}.completedSteps`,
+        _.uniq([...getCompletedTabSteps(values.activeTab), index]),
+      );
+      if (index + 1 < steps.length) {
+        steps[index + 1].canGoToStep = true;
+      }
+    }
+  };
+
+  /**
+   * Validate the current step, setting errors if present or completing the step if the step is valid.
+   * @param overrideNameSpace nameSpace to use instead of the original validation nameSpace provided for this step.
+   */
+  const validateCurrentStep = (overrideNameSpace?: string) => {
+    const index = getIn(values, `tabs.${values.activeTab}.activeStep`);
+    const currentStep = steps[index];
+    if (currentStep.validation) {
+      const nameSpace = overrideNameSpace || currentStep.validation.nameSpace(values.activeTab);
+      const schema = currentStep.validation.schema;
+      const validationValues = getIn(values, nameSpace);
+      try {
+        schema.validateSync(validationValues, { abortEarly: false });
+        completeStep(index);
+      } catch (e) {
+        const errors = setIn({}, nameSpace, yupToFormErrors(e));
+        setErrors(errors);
+        setTouched(errors);
+        return false;
+      }
+    }
+    return true;
+  };
 
   const getTabCurrentStep = (index: number) => {
     if (index >= 0 && values?.tabs && index < values.tabs.length) {
@@ -90,6 +164,7 @@ export const StepperFormProvider: React.FC<IStepperFormProviderProps> = ({
         goBack,
         gotoStep,
         gotoTab,
+        validateCurrentStep,
       }}
     >
       {children}

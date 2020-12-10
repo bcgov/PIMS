@@ -4,9 +4,8 @@ import React, { CSSProperties } from 'react';
 import { FormControlProps, InputGroup as BootstrapInputGroup } from 'react-bootstrap';
 import { Input } from './Input';
 import { FastInput } from './FastInput';
-import { FormikProps, getIn } from 'formik';
+import { FormikProps } from 'formik';
 import classNames from 'classnames';
-import TooltipWrapper from '../TooltipWrapper';
 import { Label } from '../Label';
 
 type RequiredAttributes = {
@@ -66,9 +65,6 @@ export const InputGroup: React.FC<InputGroupProps> = ({
   displayErrorTooltips,
   ...rest
 }) => {
-  const error = getIn(formikProps?.errors, field);
-  const touch = getIn(formikProps?.touched, field);
-  const errorTooltip = error && touch && displayErrorTooltips ? error : undefined;
   return (
     <div
       className={classNames(
@@ -90,28 +86,28 @@ export const InputGroup: React.FC<InputGroupProps> = ({
         <BootstrapInputGroup.Prepend>{PrependComponent}</BootstrapInputGroup.Prepend>
       )}
       <div className="input-group-content">
-        <TooltipWrapper toolTipId={`${field}-error-tooltip}`} toolTip={errorTooltip}>
-          {fast ? (
-            <FastInput
-              formikProps={formikProps}
-              disabled={disabled}
-              style={style}
-              field={field}
-              className={className}
-              placeholder={placeholder}
-              {...rest}
-            />
-          ) : (
-            <Input
-              disabled={disabled}
-              field={field}
-              className={className}
-              style={style}
-              placeholder={placeholder}
-              {...rest}
-            />
-          )}
-        </TooltipWrapper>
+        {fast ? (
+          <FastInput
+            formikProps={formikProps}
+            disabled={disabled}
+            style={style}
+            field={field}
+            className={className}
+            placeholder={placeholder}
+            displayErrorTooltips={displayErrorTooltips}
+            {...rest}
+          />
+        ) : (
+          <Input
+            disabled={disabled}
+            field={field}
+            className={className}
+            style={style}
+            placeholder={placeholder}
+            displayErrorTooltips={displayErrorTooltips}
+            {...rest}
+          />
+        )}
       </div>
       {postText && (
         <BootstrapInputGroup.Append>

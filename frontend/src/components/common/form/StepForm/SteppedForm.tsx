@@ -80,7 +80,7 @@ export const MAX_STEPPED_TABS = 5;
  * @example ./SteppedForm.md
  */
 export const SteppedForm = function<T extends object = {}>({
-  steps,
+  steps: formSteps,
   children,
   initialValues,
   validate,
@@ -89,9 +89,11 @@ export const SteppedForm = function<T extends object = {}>({
   getTabs,
   onAddTab,
   onRemoveTab,
+  tabLineHeader,
   ...rest
 }: ISteppedFormProps<T> & FormikConfig<ISteppedFormValues<T>>) {
   const [tabToDeleteId, setTabToDeleteId] = useState<number | undefined>();
+  const [steps] = useState(formSteps);
   if (rest.persistable && !rest.persistProps) {
     throw new Error('SteppedForm: "persistProps" are required when "persistable" is true');
   }
@@ -140,7 +142,7 @@ export const SteppedForm = function<T extends object = {}>({
       {({ values, setFieldValue }) => (
         <>
           <TabbedForm>
-            {!!getTabs && <TabLineHeader>Parcels:</TabLineHeader>}
+            {!!getTabs && tabLineHeader && <TabLineHeader>{tabLineHeader}</TabLineHeader>}
             <Tabs
               id="steppedform-tabs"
               className={!getTabs ? 'hideTabs' : ''}

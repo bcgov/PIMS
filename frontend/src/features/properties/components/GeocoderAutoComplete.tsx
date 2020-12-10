@@ -121,7 +121,7 @@ export const GeocoderAutoComplete: React.FC<IGeocoderAutoCompleteProps> = ({
           </TooltipWrapper>
           {!!tooltip && <TooltipIcon toolTipId={`${field}-tooltip`} toolTip={tooltip} />}
           {renderSuggestions()}
-          <DisplayError field={field} />
+          {!errorTooltip && <DisplayError field={field} />}
         </Form.Group>
       </ClickAwayListener>
     </div>

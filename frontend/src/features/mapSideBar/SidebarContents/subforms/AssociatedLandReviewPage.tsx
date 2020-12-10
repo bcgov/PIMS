@@ -7,6 +7,7 @@ import {
   FastCurrencyInput,
   Check,
   FastSelect,
+  TextArea,
 } from 'components/common/form';
 import React, { useCallback, useState } from 'react';
 import { Col, Container, Row, Button, Form } from 'react-bootstrap';
@@ -22,6 +23,7 @@ import { formatMoney } from 'utils/numberFormatUtils';
 import { LeasedLand } from 'actions/parcelsActions';
 import { formatFiscalYear } from 'utils';
 import { ParentSelect } from 'components/common/form/ParentSelect';
+import styled from 'styled-components';
 
 interface IReviewProps {
   nameSpace?: string;
@@ -62,6 +64,14 @@ const OtherParcel = ({ index }: any) => {
   );
 };
 
+const LinkButton = styled.span`
+  background: none;
+  border: none;
+  padding: 0;
+  color: #069;
+  text-decoration: underline;
+`;
+
 /**
  * The Review page that displays all parcels associate to the building.
  * Will display an empty box with a link if an owned parcel has not been completed.
@@ -85,6 +95,7 @@ export const AssociatedLandReviewPage: React.FC<any> = (props: IReviewProps) => 
   const formikProps = useFormikContext<any>();
 
   const getParcelContents = (index: number) => {
+    const projectNumber = getIn(formikProps.values, withNameSpace('projectNumber', index));
     if (getIn(formikProps.values.data, `leasedLandMetadata.${index}.type`) === LeasedLand.other) {
       return <OtherParcel index={index} />;
     } else if (stepper.getTabCurrentStep(index) !== AssociatedLandSteps.REVIEW) {
@@ -132,18 +143,18 @@ export const AssociatedLandReviewPage: React.FC<any> = (props: IReviewProps) => 
                   </Row>
                   <Row className="content-item">
                     <Label>Description</Label>
-                    <FastInput
+                    <TextArea
+                      fast={true}
                       disabled={editInfo.identification}
                       field={withNameSpace('description', index)}
-                      formikProps={formikProps}
                     />
                   </Row>
                   <Row className="content-item">
                     <Label>Legal Description</Label>
-                    <FastInput
+                    <TextArea
+                      fast={true}
                       disabled={editInfo.identification}
                       field={withNameSpace('landLegalDescription', index)}
-                      formikProps={formikProps}
                     />
                   </Row>
 
@@ -182,17 +193,14 @@ export const AssociatedLandReviewPage: React.FC<any> = (props: IReviewProps) => 
                       postText="Hectares"
                     />
                   </Row>
-                  {!!getIn(formikProps.values, withNameSpace('projectNumber', index)) && (
+                  {!!projectNumber && (
                     <Row className="content-item">
                       <Label>SPP</Label>
-                      <FastInput
-                        className="input-medium"
-                        displayErrorTooltips
-                        formikProps={formikProps}
-                        disabled={editInfo.identification}
-                        type="text"
-                        field={withNameSpace('projectNumber', index)}
-                      />
+                      <LinkButton>
+                        {
+                          projectNumber //TODO: make this a proper link when PA-1974 is fixed
+                        }
+                      </LinkButton>
                     </Row>
                   )}
                   <br></br>
