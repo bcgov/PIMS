@@ -3,7 +3,6 @@ import { BuildingValuationForm } from './BuildingValuationForm';
 import { render } from '@testing-library/react';
 import { noop } from 'lodash';
 import { Formik } from 'formik';
-import pretty from 'pretty';
 
 const form = (
   <Formik initialValues={{ assessed: '' }} onSubmit={noop}>
@@ -13,7 +12,7 @@ const form = (
 
 it('renders correctly', () => {
   const { container } = render(form);
-  expect(pretty(container.innerHTML)).toMatchSnapshot();
+  expect(container.firstChild).toMatchSnapshot();
 });
 
 it('renders two seperate tables for assessed value and net book value', () => {
