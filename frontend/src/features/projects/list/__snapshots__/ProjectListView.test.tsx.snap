@@ -23,6 +23,21 @@ exports[`Project list view tests Matches snapshot 1`] = `
           <div
             class="form-group"
           >
+            <input
+              class="form-control"
+              id="input-name"
+              name="name"
+              placeholder="Search by project name or number"
+              value=""
+            />
+          </div>
+        </div>
+        <div
+          class="bar-item col-2"
+        >
+          <div
+            class="form-group"
+          >
             <div
               class="rbt"
               style="outline: none; position: relative;"
@@ -101,21 +116,6 @@ exports[`Project list view tests Matches snapshot 1`] = `
                 />
               </div>
             </div>
-          </div>
-        </div>
-        <div
-          class="bar-item col-2"
-        >
-          <div
-            class="form-group"
-          >
-            <input
-              class="form-control"
-              id="input-name"
-              name="name"
-              placeholder="Search by project name or number"
-              value=""
-            />
           </div>
         </div>
         <div
