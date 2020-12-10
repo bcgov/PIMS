@@ -9,7 +9,7 @@ import styled from 'styled-components';
 import { InventoryPolicy } from '../components/InventoryPolicy';
 import * as API from 'constants/API';
 import { IParcel, IBuilding } from 'actions/parcelsActions';
-import { TenancyForm } from './subforms/TenancyForm';
+import { OccupancyForm } from './subforms/OccupancyForm';
 import { IdentificationForm } from './subforms/IdentificationForm';
 import { BuildingReviewPage } from './subforms/BuildingReviewPage';
 import { BuildingValuationForm } from './subforms/BuildingValuationForm';
@@ -108,7 +108,7 @@ const Form: React.FC<IFormProps> = ({ isAdmin, setMovingPinNameSpace, nameSpace 
         );
       case BuildingSteps.TENANCY:
         return (
-          <TenancyForm
+          <OccupancyForm
             formikProps={formikProps}
             occupantTypes={occupancyType}
             nameSpace={nameSpace}

@@ -1,0 +1,64 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+"<div class=\\"tenancy col\\">
+  <div class=\\"row\\">
+    <h4>Occupancy</h4>
+  </div>
+  <div class=\\"sc-fznOgF jJeAQc\\">
+    <div class=\\"row\\">
+      <p class=\\"label\\"><span class=\\"req\\">*</span>Total Square Footage</p>
+      <div class=\\"input-group\\">
+        <div class=\\"input-group-content\\">
+          <div class=\\"form-group\\"><input name=\\"squareFootage\\" type=\\"number\\" id=\\"input-squareFootage\\" class=\\"form-control\\" value=\\"\\"></div>
+        </div>
+        <div class=\\"input-group-append\\"><span class=\\"input-group-text\\">Sq. Ft</span></div>
+      </div>
+    </div>
+    <div class=\\"row\\">
+      <p class=\\"label\\"><span class=\\"req\\">*</span>Net Rentable Area</p>
+      <div class=\\"input-group\\">
+        <div class=\\"input-group-content\\">
+          <div class=\\"form-group\\"><input name=\\"rentableArea\\" type=\\"number\\" id=\\"input-rentableArea\\" class=\\"form-control\\" value=\\"\\"></div>
+        </div>
+        <div class=\\"input-group-append\\"><span class=\\"input-group-text\\">Sq. Ft</span></div>
+      </div>
+    </div>
+  </div>
+  <div class=\\"row\\">
+    <h4>Tenants</h4>
+  </div>
+  <div class=\\"sc-fznOgF jJeAQc\\">
+    <div class=\\"row\\">
+      <p class=\\"label\\">Tenancy %</p>
+      <div class=\\"form-group\\"><input name=\\"buildingTenancy\\" id=\\"input-buildingTenancy\\" class=\\"percentage form-control\\" value=\\"\\"></div>
+    </div>
+    <div class=\\"row\\">
+      <p class=\\"label\\"><span class=\\"req\\">*</span>Type of Current Occupant</p>
+      <div class=\\"form-group\\"><select name=\\"buildingOccupantTypeId\\" type=\\"number\\" id=\\"input-buildingOccupantTypeId-fast\\" class=\\"type-occupant form-control\\">
+          <option value=\\"\\">Must Select One</option>
+          <option value=\\"0\\">Occupancy Type 1</option>
+          <option value=\\"1\\">Occupancy Type 2</option>
+          <option value=\\"2\\">Occupancy Type 3</option>
+        </select></div>
+    </div>
+    <div class=\\"row\\">
+      <p class=\\"label\\">Occupant Name</p>
+      <div class=\\"form-group\\"><input name=\\"occupantName\\" id=\\"input-occupantName\\" class=\\"type-occupant form-control\\" value=\\"\\"></div>
+    </div>
+    <div style=\\"display: flex;\\" class=\\"row\\">
+      <p class=\\"label\\">Lease Expiry Date</p>
+      <div class=\\"form-group\\">
+        <div class=\\"react-datepicker-wrapper\\">
+          <div class=\\"react-datepicker__input-container\\"><input type=\\"text\\" id=\\"datepicker-leaseExpiry\\" name=\\"leaseExpiry\\" placeholder=\\"--/--/----\\" autocomplete=\\"off\\" class=\\"form-control date-picker\\" value=\\"\\"></div>
+        </div>
+      </div>
+      <div class=\\"form-group\\">
+        <div class=\\"check-field\\">
+          <div class=\\"form-check\\"><input name=\\"transferLeaseOnSale\\" type=\\"checkbox\\" id=\\"input-transferLeaseOnSale\\" class=\\"form-check-input position-static\\" value=\\"false\\"></div><label class=\\"text-wrap form-label\\" for=\\"input-transferLeaseOnSale\\">Transfer Lease with Land</label>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>"
+`;
