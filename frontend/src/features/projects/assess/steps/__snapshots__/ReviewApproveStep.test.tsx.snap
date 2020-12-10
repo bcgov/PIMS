@@ -81,7 +81,7 @@ exports[`Review Approve Step renders correctly 1`] = `
             Description
           </label>
           <textarea
-            class="col-md-5 form-control"
+            class="col-md-auto form-control"
             disabled=""
             id="input-description"
             name="description"
@@ -737,7 +737,7 @@ exports[`Review Approve Step renders correctly 1`] = `
                 Appraised Notes
               </label>
               <textarea
-                class="col-md-5 form-control"
+                class="col-md-auto form-control"
                 id="input-appraisedNote"
                 name="appraisedNote"
               />

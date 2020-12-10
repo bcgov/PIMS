@@ -34,6 +34,7 @@ const AppraisalCheckListForm: React.FunctionComponent<IAppraisalCheckListFormPro
           </h3>
           <TasksForm tasks={tasks} isReadOnly={props.isReadOnly} />
           <ProjectNotes
+            className="col-md-auto"
             outerClassName="col-md-12 reviewRequired"
             field="appraisedNote"
             label="Appraised Notes"

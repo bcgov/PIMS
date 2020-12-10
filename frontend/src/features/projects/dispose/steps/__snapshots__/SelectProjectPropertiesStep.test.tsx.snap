@@ -804,7 +804,7 @@ exports[`renders correctly 1`] = `
           Notes
         </label>
         <textarea
-          className="col-md-5 form-control"
+          className="col-md-auto form-control"
           id="input-note"
           name="note"
           onBlur={[Function]}

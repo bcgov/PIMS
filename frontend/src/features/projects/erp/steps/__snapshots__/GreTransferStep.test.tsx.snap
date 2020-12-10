@@ -137,7 +137,7 @@ exports[`GRE Transfer Step renders correctly 1`] = `
             Description
           </label>
           <textarea
-            className="col-md-5 form-control"
+            className="col-md-auto form-control"
             disabled={true}
             id="input-description"
             name="description"

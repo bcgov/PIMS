@@ -79,7 +79,7 @@ exports[`Project Draft Step renders correctly 1`] = `
             Description
           </label>
           <textarea
-            class="col-md-5 form-control"
+            class="col-md-auto form-control"
             disabled=""
             id="input-description"
             name="description"
@@ -100,7 +100,7 @@ exports[`Project Draft Step renders correctly 1`] = `
           Notes
         </label>
         <textarea
-          class="col-md-5 form-control"
+          class="col-md-auto form-control"
           id="input-note"
           name="note"
         />
