@@ -1,6 +1,15 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`renders correctly 1`] = `
+.c0 {
+  padding-left: 10px;
+}
+
+.c0 small {
+  padding-top: 20px;
+  vertical-align: middle;
+}
+
 <div
   className="ReviewProjectStep container-fluid"
 >
@@ -102,10 +111,10 @@ exports[`renders correctly 1`] = `
         <label
           className="form-label col-form-label col-md-2"
         >
-          Assign Tier 
+          Assign Tier
         </label>
         <div
-          className="required col-md-2 form-group"
+          className="required col-md-1 form-group"
         >
           <select
             className="form-select form-control"
@@ -124,36 +133,12 @@ exports[`renders correctly 1`] = `
             </option>
           </select>
         </div>
-      </div>
-      <div
-        className="form-row"
-      >
-        <label
-          className="form-label col-form-label col-md-2"
-        />
         <div
-          className="form-group"
+          className="c0"
         >
-          <div>
-            <small>
-              Tier 1: Properties with a net value of less than $1M.
-            </small>
-          </div>
-          <div>
-            <small>
-              Tier 2: Properties with a net value of $1M or more and less than $10M.
-            </small>
-          </div>
-          <div>
-            <small>
-              Tier 3: Properties are single parcels with a net value of $10M or more.
-            </small>
-          </div>
-          <div>
-            <small>
-              Tier 4: Properties are multiple parcels with a cumulative net value of $10M or more.
-            </small>
-          </div>
+          <small>
+            Tier 1: Properties with a net value less than $1M.
+          </small>
         </div>
       </div>
       <div

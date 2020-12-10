@@ -67,6 +67,15 @@ namespace Pims.Api.Mapping.Lookup
                 .Map(dest => dest.SortOrder, src => src.SortOrder)
                 .Map(dest => dest.Type, src => src.GetType().Name)
                 .Inherits<Entity.BaseEntity, Models.BaseModel>();
+
+
+            config.NewConfig<Entity.ProjectRisk, Models.LookupModel<int>>()
+                .Map(dest => dest.Id, src => src.Id)
+                .Map(dest => dest.Name, src => src.Name)
+                .Map(dest => dest.IsDisabled, src => src.IsDisabled)
+                .Map(dest => dest.SortOrder, src => src.SortOrder)
+                .Map(dest => dest.Type, src => src.GetType().Name)
+                .Inherits<Entity.BaseEntity, Models.BaseModel>();
         }
 
         private bool? Convert(Entity.PropertyClassification classification)
