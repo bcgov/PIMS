@@ -6,6 +6,7 @@ import { Container, Row } from 'react-bootstrap';
 import { FormikProps } from 'formik';
 import { Label } from 'components/common/Label';
 import { ClassificationForm } from './ClassificationForm';
+import { ClassificationSelectionText } from 'features/properties/components/forms/strings';
 
 interface ILandUsageProps {
   nameSpace?: string;
@@ -34,6 +35,7 @@ export const LandUsageForm = <T extends any>(props: ILandUsageProps & FormikProp
         title="Strategic Real Estate Classification"
         toolTip="Placeholder"
         disabled={props.disabled}
+        fieldDescription={ClassificationSelectionText}
       />
       <hr></hr>
       <Row>

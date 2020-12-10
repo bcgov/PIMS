@@ -1,12 +1,6 @@
 import './ParcelIdentificationForm.scss';
 
-import {
-  FastInput,
-  SelectOptions,
-  Check,
-  TextArea,
-  AutoCompleteText,
-} from 'components/common/form';
+import { FastInput, SelectOptions, Check, TextArea, InputGroup } from 'components/common/form';
 import { Label } from 'components/common/Label';
 import AddressForm from 'features/properties/components/forms/subforms/AddressForm';
 import React, { useState } from 'react';
@@ -28,6 +22,7 @@ import SearchButton from 'components/common/form/SearchButton';
 import { IAssociatedLand } from '../AssociatedLandForm';
 import { getInitialValues } from '../LandForm';
 import { ISteppedFormValues } from 'components/common/form/StepForm';
+import { ParentSelect } from 'components/common/form/ParentSelect';
 
 interface IIdentificationProps {
   /** used for changign the agency - note that only select users will be able to edit this field */
@@ -46,6 +41,8 @@ interface IIdentificationProps {
   handlePidChange: (pid: string, nameSpace?: string) => void;
   /** handle the pin formatting on change */
   handlePinChange: (pin: string, nameSpace?: string) => void;
+  /** whether or not this user is an admin and should have greater access to fields */
+  isAdmin: boolean;
 }
 
 const SearchMarkerButton = styled.button`
@@ -70,6 +67,7 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
   setMovingPinNameSpace,
   handlePidChange,
   handlePinChange,
+  isAdmin,
 }) => {
   const [geocoderResponse, setGeocoderResponse] = useState<IGeocoderResponse | undefined>();
   const formikProps = useFormikContext<ISteppedFormValues<IAssociatedLand>>();
@@ -81,6 +79,7 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
   );
   const pid = getIn(formikProps.values, withNameSpace('pid'));
   const pin = getIn(formikProps.values, withNameSpace('pin'));
+  const agency = getIn(formikProps.values, withNameSpace('agencyId'));
   return (
     <Container>
       <Row>
@@ -181,8 +180,25 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
             hideStreetAddress
           />
           <Form.Row>
-            <Label>Agency</Label>
-            <AutoCompleteText disabled field={withNameSpace('agencyId')} options={agencies} />
+            <Form.Label>{agency?.parent ? 'Sub Agency' : 'Agency'}</Form.Label>
+            <ParentSelect
+              field={withNameSpace('agencyId')}
+              options={agencies}
+              filterBy={['code', 'label', 'parent']}
+              disabled={!isAdmin}
+            />
+            {agency?.parent && (
+              <Form.Row>
+                <Form.Label>Agency</Form.Label>
+                <FastInput
+                  formikProps={formikProps}
+                  field="parent"
+                  disabled
+                  value={agency.parent}
+                  style={{ marginLeft: '5px' }}
+                />
+              </Form.Row>
+            )}
           </Form.Row>
         </Col>
         <Col md={6} className="form-container">
@@ -205,11 +221,15 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
           </Form.Row>
           <Form.Row>
             <Label>Lot Size</Label>
-            <FastInput
-              required={true}
+
+            <InputGroup
+              displayErrorTooltips
+              fast={true}
               disabled={false}
+              type="number"
               field={withNameSpace('landArea')}
               formikProps={formikProps}
+              postText="Hectares"
             />
           </Form.Row>
         </Col>
@@ -218,7 +238,6 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
         <Col>
           <div className="input-medium harmful">
             <p>
-              <span className="req">*</span>
               Would this information be harmful if released?&nbsp;
               <TooltipWrapper toolTipId="sensitive-harmful" toolTip={sensitiveTooltip}>
                 <a target="_blank" rel="noopener noreferrer" href={HARMFUL_DISCLOSURE_URL}>

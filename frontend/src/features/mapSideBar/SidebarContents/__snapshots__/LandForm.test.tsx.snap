@@ -18,6 +18,7 @@ exports[`Land Form component renders correctly 1`] = `
 
 .c1 .tab-content {
   border: 0;
+  border-top: 1px solid #666666;
   padding: 0;
 }
 
@@ -47,7 +48,8 @@ exports[`Land Form component renders correctly 1`] = `
   position: relative;
 }
 
-.c1 .nav-tabs .nav-item p {
+.c1 .nav-tabs .nav-item p,
+.c1 .nav-tabs .nav-item abbr {
   margin: 0;
 }
 
@@ -622,25 +624,41 @@ exports[`Land Form component renders correctly 1`] = `
                     <div
                       class="form-row"
                     >
-                      <p
-                        class="label"
+                      <label
+                        class="form-label"
                       >
                         Agency
-                      </p>
+                      </label>
                       <div
-                        class="AutoCompleteText"
+                        class="form-group"
                       >
                         <div
-                          class="form-group"
+                          class="rbt"
+                          style="outline: none; position: relative;"
+                          tabindex="-1"
                         >
                           <div
-                            class="input-area"
+                            style="display: flex; flex: 1; height: 100%; position: relative;"
                           >
                             <input
-                              class="form-control"
+                              aria-autocomplete="both"
+                              aria-expanded="false"
+                              aria-haspopup="listbox"
+                              autocomplete="off"
+                              class="rbt-input-main form-control rbt-input"
                               disabled=""
-                              id="input-agencyId"
+                              id="agencyId-field"
                               name="agencyId"
+                              role="combobox"
+                              type="text"
+                              value=""
+                            />
+                            <input
+                              aria-hidden="true"
+                              class="rbt-input-hint"
+                              readonly=""
+                              style="background-color: transparent; border-color: transparent; box-shadow: none; color: rgba(0, 0, 0, 0.35); left: 0px; pointer-events: none; position: absolute; top: 0px; width: 100%; border-style: inset inset inset inset; border-width: 2px 2px 2px 2px; line-height: normal; padding: 1px 1px 1px 1px;"
+                              tabindex="-1"
                               value=""
                             />
                           </div>
@@ -716,15 +734,32 @@ exports[`Land Form component renders correctly 1`] = `
                         Lot Size
                       </p>
                       <div
-                        class="required form-group"
+                        class="input-group"
                       >
-                        <input
-                          class="form-control"
-                          id="input-landArea"
-                          name="landArea"
-                          required=""
-                          value=""
-                        />
+                        <div
+                          class="input-group-content"
+                        >
+                          <div
+                            class="form-group"
+                          >
+                            <input
+                              class="form-control"
+                              id="input-landArea"
+                              name="landArea"
+                              type="number"
+                              value=""
+                            />
+                          </div>
+                        </div>
+                        <div
+                          class="input-group-append"
+                        >
+                          <span
+                            class="input-group-text"
+                          >
+                            Hectares
+                          </span>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -739,11 +774,6 @@ exports[`Land Form component renders correctly 1`] = `
                       class="input-medium harmful"
                     >
                       <p>
-                        <span
-                          class="req"
-                        >
-                          *
-                        </span>
                         Would this information be harmful if released? 
                         <a
                           href="https://www2.gov.bc.ca/gov/content/governments/services-for-government/policies-procedures/foippa-manual/disclosure-harmful-individual-public-safety"

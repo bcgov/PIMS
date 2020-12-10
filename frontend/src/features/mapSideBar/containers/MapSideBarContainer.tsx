@@ -24,7 +24,7 @@ import AssociatedLandForm from '../SidebarContents/AssociatedLandForm';
 import { toast } from 'react-toastify';
 import _ from 'lodash';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
-import GenericModal from 'components/common/GenericModal';
+import GenericModal, { ModalSize } from 'components/common/GenericModal';
 import { FaCheckCircle } from 'react-icons/fa';
 import styled from 'styled-components';
 import { IFinancialYear } from 'features/properties/components/forms/subforms/EvaluationForm';
@@ -240,6 +240,12 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
             <LandSvg className="svg" /> Submit Raw Land (to inventory)
           </>
         );
+      case SidebarContextType.ADD_ASSOCIATED_LAND:
+        return (
+          <>
+            <LandSvg className="svg" /> Add associated land
+          </>
+        );
       case SidebarContextType.VIEW_BUILDING:
         return 'Building Details';
       case SidebarContextType.VIEW_RAW_LAND:
@@ -275,6 +281,7 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
             handleGeocoderChanges={handleGeocoderChanges}
             handlePidChange={handlePidChange}
             handlePinChange={handlePinChange}
+            isAdmin={keycloak.isAdmin}
           />
         );
       case SidebarContextType.ADD_ASSOCIATED_LAND:
@@ -289,6 +296,7 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
             handlePidChange={handlePidChange}
             handlePinChange={handlePinChange}
             initialValues={buildingToAssociateLand ?? ({} as any)}
+            isAdmin={keycloak.isAdmin}
           />
         );
       default:
@@ -306,6 +314,7 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
     >
       {render()}
       <GenericModal
+        size={ModalSize.LARGE}
         message={
           <>
             <FloatCheck size={32}></FloatCheck>

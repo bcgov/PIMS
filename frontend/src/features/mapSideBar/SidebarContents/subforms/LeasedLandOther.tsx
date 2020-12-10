@@ -16,7 +16,7 @@ const LeasedLandOther: React.FunctionComponent<ILeasedLandOtherProps> = props =>
   };
   return (
     <>
-      <h6>Other</h6>
+      <h5>Other</h5>
       <p>Describe the land ownership situation for this parcel.</p>
       <i>(ie: This land is provided to our agency through a Crown grant)</i>
       <TextArea field={withNameSpace('ownershipNote')}></TextArea>

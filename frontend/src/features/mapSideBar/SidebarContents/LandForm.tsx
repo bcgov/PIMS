@@ -110,6 +110,7 @@ const Form: React.FC<ILandForm> = ({
   setMovingPinNameSpace,
   handlePidChange,
   handlePinChange,
+  isAdmin,
 }) => {
   // access the stepper to later split the form into segments
   const stepper = useFormStepper();
@@ -133,6 +134,7 @@ const Form: React.FC<ILandForm> = ({
               setMovingPinNameSpace={setMovingPinNameSpace}
               handlePidChange={handlePidChange}
               handlePinChange={handlePinChange}
+              isAdmin={isAdmin}
             />
           </div>
         );
@@ -193,6 +195,8 @@ interface ILandForm {
   handlePidChange: (pid: string) => void;
   /** help with formatting of the pin */
   handlePinChange: (pin: string) => void;
+  /** whether or not this user has admin priviledges */
+  isAdmin: boolean;
 }
 
 /**
@@ -297,6 +301,7 @@ const LandForm: React.FC<ILandForm> = (props: ILandForm) => {
           handleGeocoderChanges={props.handleGeocoderChanges}
           handlePidChange={props.handlePidChange}
           handlePinChange={props.handlePinChange}
+          isAdmin={props.isAdmin}
         />
       </SteppedForm>
     </Container>

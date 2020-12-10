@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Button, Container } from 'react-bootstrap';
+import classNames from 'classnames';
+
+export enum ModalSize {
+  EXTRA_LARGE = 'modal-xl',
+  LARGE = 'modal-l',
+  SMALL = 'modal-s',
+}
 
 interface ModalProps {
   /** Optional function to control behaviour of cancel button. Default is to close the modal. */
@@ -57,6 +64,8 @@ interface ModalProps {
   setDisplay?: (display: boolean) => void;
   /** optional override to control the x button in the top right of the modal. Default is to show. */
   closeButton?: boolean;
+  /** provide the size of the modal, default width is 500px */
+  size?: ModalSize;
 }
 
 /**
@@ -94,7 +103,7 @@ const GenericModal = (props: ModalProps) => {
 
   return (
     <Container>
-      <Modal show={show} onHide={close}>
+      <Modal show={show} onHide={close} dialogClassName={classNames(props.size)}>
         <Modal.Header closeButton={props.closeButton}>
           <Modal.Title>{props.title}</Modal.Title>
         </Modal.Header>

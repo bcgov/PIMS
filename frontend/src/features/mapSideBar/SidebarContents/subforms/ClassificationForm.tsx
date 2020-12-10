@@ -105,9 +105,7 @@ export const ClassificationForm: React.FC<IClassificationFormProps> = ({
       <Row>
         <Col md={6}>
           <Row style={{ display: 'flex' }}>
-            <Label required style={{ marginBottom: '0' }}>
-              {fieldLabel}
-            </Label>
+            <Label style={{ marginBottom: '0', textAlign: 'right' }}>{fieldLabel}</Label>
             <FastSelect
               formikProps={formikProps}
               type="number"
@@ -116,9 +114,10 @@ export const ClassificationForm: React.FC<IClassificationFormProps> = ({
               field={field}
               options={filteredClassifications}
               disabled={disabled}
+              required
             />
             {toolTip && (
-              <div style={{ marginTop: '8px', marginLeft: '20px' }}>
+              <div style={{ marginTop: '8px' }}>
                 <TooltipIcon toolTip={toolTip} toolTipId="classificationToolTip" />
               </div>
             )}
