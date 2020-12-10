@@ -165,7 +165,7 @@ export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
                   type="number"
                 />
               </Row>
-              {(formikProps.values as any).data.projectNumber && (
+              {(formikProps.values as any).data?.projectNumber && (
                 <Row>
                   <Label>SPP</Label>
                   <FastInput
@@ -206,7 +206,7 @@ export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
                 />
               </Row>
               <Row className="content-item">
-                <Label>Rentable Area</Label>
+                <Label>Net Rentable Area</Label>
                 <InputGroup
                   className="area"
                   displayErrorTooltips
@@ -298,7 +298,7 @@ export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
                   disabled={editInfo.valuation}
                 />
                 <Input
-                  field="data.0.financials.0.assessed.year"
+                  field="data.financials.0.assessed.year"
                   disabled
                   style={{ width: 50, fontSize: 11 }}
                 />
