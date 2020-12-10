@@ -2,7 +2,10 @@ import { FeatureCollection, Geometry, GeoJsonProperties } from 'geojson';
 import axios from 'axios';
 import { LatLng, geoJSON } from 'leaflet';
 import { useCallback, Dispatch } from 'react';
-import parcelLayerDataSlice, { saveParcelLayerData } from 'reducers/parcelLayerDataSlice';
+import parcelLayerDataSlice, {
+  saveParcelLayerData,
+  saveParcelLayerFeature,
+} from 'reducers/parcelLayerDataSlice';
 import { error } from 'actions/genericActions';
 import { toast } from 'react-toastify';
 
@@ -46,6 +49,12 @@ export const handleParcelDataLayerResponse = (
                 .getBounds()
                 .getCenter(),
             },
+          }),
+        );
+        //save the entire feature to redux for use within the map.
+        dispatch(
+          saveParcelLayerFeature({
+            ...resp.features[0],
           }),
         );
       } else {
