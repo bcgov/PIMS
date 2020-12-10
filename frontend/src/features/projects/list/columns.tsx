@@ -91,7 +91,7 @@ export const columns = (onDelete?: (id: string) => void): ColumnWithProps<IProje
       minWidth: 80,
     },
     {
-      Header: 'Net Book',
+      Header: 'Net Book Value',
       accessor: 'netBook',
       align: 'left',
       clickable: true,

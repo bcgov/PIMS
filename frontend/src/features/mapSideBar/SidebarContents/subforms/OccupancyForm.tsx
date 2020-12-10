@@ -13,7 +13,7 @@ import React from 'react';
 import { Col, Row } from 'react-bootstrap';
 import styled from 'styled-components';
 
-interface ITenancyProps {
+interface IOccupancyProps {
   formikProps: any;
   disabled?: boolean;
   readOnly?: boolean;
@@ -27,7 +27,7 @@ const InfoSection = styled.div`
   margin-bottom: 20px;
 `;
 
-export const TenancyForm: React.FC<ITenancyProps> = ({
+export const OccupancyForm: React.FC<IOccupancyProps> = ({
   formikProps,
   disabled,
   readOnly,
