@@ -26,7 +26,7 @@ namespace Pims.Core.Test
         /// <param name="args"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public static Dictionary<Type, object> MockConstructorArguments<T>(this TestHelper helper, params object[] args)
+        public static KeyValuePair<Type, object>[] MockConstructorArguments<T>(this TestHelper helper, params object[] args)
         {
             var type = typeof(T);
             var constructors = type.GetCachedConstructors();
@@ -34,7 +34,7 @@ namespace Pims.Core.Test
 
             var tempProvider = helper.Services.BuildServiceProvider();
 
-            var types = new Dictionary<Type, object>();
+            var types = new List<KeyValuePair<Type, object>>();
             var gmock = typeof(Mock<>);
             var cargs = ci.GetParameters();
             foreach (var carg in cargs)
@@ -42,7 +42,7 @@ namespace Pims.Core.Test
                 var exists = tempProvider.GetService(carg.ParameterType);// helper.Services.FirstOrDefault(sd => sd.ServiceType == carg.ParameterType);
                 if (exists != null)
                 {
-                    types.Add(carg.ParameterType, exists);
+                    types.Add(new KeyValuePair<Type, object>(carg.ParameterType, exists));
                     continue;
                 }
 
@@ -53,7 +53,7 @@ namespace Pims.Core.Test
                 {
                     // Add the supplied argument to services.
                     helper.AddSingleton(carg.ParameterType, arg);
-                    types.Add(carg.ParameterType, arg);
+                    types.Add(new KeyValuePair<Type, object>(carg.ParameterType, arg));
                     continue;
                 }
 
@@ -65,10 +65,10 @@ namespace Pims.Core.Test
                 var result = mockObjectProp.GetValue(mock);
                 helper.AddSingleton(gmake, mock);
                 helper.AddSingleton(carg.ParameterType, result);
-                types.Add(carg.ParameterType, result);
+                types.Add(new KeyValuePair<Type, object>(carg.ParameterType, result));
             }
 
-            return types;
+            return types.ToArray();
         }
         #endregion
     }
