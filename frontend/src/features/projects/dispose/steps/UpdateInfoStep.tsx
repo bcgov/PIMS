@@ -32,7 +32,7 @@ const UpdateInfoStep = ({ isReadOnly, formikRef }: IStepProps) => {
             isReadOnly={isReadOnly || !canUserEditForm(project.agencyId)}
             title="Project Information"
           />
-          <ProjectNotes />
+          <ProjectNotes className="col-md-auto" />
           <StepErrorSummary />
         </Form>
       </Formik>

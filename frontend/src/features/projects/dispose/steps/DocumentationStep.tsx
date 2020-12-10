@@ -62,7 +62,7 @@ const DocumentationStep = ({ isReadOnly, formikRef }: IStepProps) => {
               isReadOnly={isReadOnly || !canUserEditForm(project.agencyId)}
               tasks={tasks}
             />
-            {!isReadOnly && <ProjectNotes />}
+            {!isReadOnly && <ProjectNotes className="col-md-auto" />}
             <StepErrorSummary />
           </Form>
         )}

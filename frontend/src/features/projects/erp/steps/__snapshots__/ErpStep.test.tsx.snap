@@ -1141,7 +1141,7 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
                 Adjustment to Prior Year Sale Notes
               </label>
               <textarea
-                class="col-md-5 form-control"
+                class="col-md-auto form-control"
                 id="input-notes[11].note"
                 name="notes[11].note"
               >

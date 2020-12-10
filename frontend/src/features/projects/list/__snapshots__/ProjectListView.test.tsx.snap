@@ -280,7 +280,7 @@ exports[`Project list view tests Matches snapshot 1`] = `
             style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 3.5%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
             width="3.5%"
           >
-            Net Book
+            Net Book Value
           </div>
           <div
             class="th"
