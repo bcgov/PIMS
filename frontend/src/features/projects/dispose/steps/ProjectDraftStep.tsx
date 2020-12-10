@@ -41,7 +41,7 @@ const ProjectDraftStep = ({ isReadOnly, formikRef }: IStepProps) => {
             <ProjectDraftForm
               isReadOnly={isPreDraft() ? false : isReadOnly || !canUserEditForm(project.agencyId)}
             />
-            <ProjectNotes />
+            <ProjectNotes className="col-md-auto" />
             <StepErrorSummary />
           </Form>
         )}
