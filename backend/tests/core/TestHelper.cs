@@ -2,6 +2,7 @@ using Mapster;
 using MapsterMapper;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using Moq;
 using Pims.Dal.Configuration.Generators;
 using System;
 using System.Collections.Generic;
@@ -84,6 +85,18 @@ namespace Pims.Core.Test
         }
 
         /// <summary>
+        /// Add a singleton service to the provider, and include the mock.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        public Mock<T> AddSingletonWithMock<T>() where T : class
+        {
+            if (Provider != null) throw new InvalidOperationException("Cannot add to the service collection once the provider has been built.");
+            var mock = new Mock<T>();
+            Services.AddSingleton(mock.Object).AddSingleton(mock);
+            return mock;
+        }
+
+        /// <summary>
         /// Add a singleton service to the provider.
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -102,6 +115,20 @@ namespace Pims.Core.Test
         {
             if (Provider != null) throw new InvalidOperationException("Cannot add to the service collection once the provider has been built.");
             return Services.AddSingleton<T>(item);
+        }
+
+        /// <summary>
+        /// Add a singleton service to the provider.
+        /// </summary>
+        /// <param name="item"></param>
+        /// <typeparam name="TService"></typeparam>
+        /// <typeparam name="TImplementation"></typeparam>
+        public IServiceCollection AddSingleton<TService, TImplementation>(TImplementation item)
+            where TService : class
+            where TImplementation : class, TService
+        {
+            if (Provider != null) throw new InvalidOperationException("Cannot add to the service collection once the provider has been built.");
+            return Services.AddSingleton<TService, TImplementation>((p) => item);
         }
 
         /// <summary>

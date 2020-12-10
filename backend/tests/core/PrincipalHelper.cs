@@ -37,7 +37,21 @@ namespace Pims.Core.Test
         }
 
         /// <summary>
-        /// Create a ClaimsPrincipal for the specified permission.
+        /// Create a ClaimsPrincipal for the specified roles.
+        /// Add it to the service collection in the test helper.
+        /// </summary>
+        /// <param name="helper"></param>
+        /// <param name="role"></param>
+        /// <returns></returns>
+        public static ClaimsPrincipal CreateForRole(this TestHelper helper, params string[] role)
+        {
+            var user = CreateForRole(role);
+            helper.AddSingleton(user);
+            return user;
+        }
+
+        /// <summary>
+        /// Create a ClaimsPrincipal for the specified permissions.
         /// </summary>
         /// <param name="permission"></param>
         /// <returns></returns>
@@ -57,6 +71,20 @@ namespace Pims.Core.Test
             }
             var user = new ClaimsPrincipal(new ClaimsIdentity(claims, "mock"));
 
+            return user;
+        }
+
+        /// <summary>
+        /// Create a ClaimsPrincipal for the specified permission.
+        /// Add it to the service collection in the test helper.
+        /// </summary>
+        /// <param name="helper"></param>
+        /// <param name="permission"></param>
+        /// <returns></returns>
+        public static ClaimsPrincipal CreateForPermission(this TestHelper helper, params Permissions[] permission)
+        {
+            var user = CreateForPermission(permission);
+            helper.AddSingleton(user);
             return user;
         }
 
