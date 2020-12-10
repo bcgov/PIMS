@@ -5,7 +5,7 @@ import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import useCodeLookups from 'hooks/useLookupCodes';
 import { noop } from 'lodash';
 import * as React from 'react';
-import { Button } from 'react-bootstrap';
+import { Button, Form as BSForm } from 'react-bootstrap';
 import styled from 'styled-components';
 import { InventoryPolicy } from '../components/InventoryPolicy';
 import * as API from 'constants/API';
@@ -25,6 +25,7 @@ import { useDispatch } from 'react-redux';
 import { useBuildingApi } from '../hooks/useBuildingApi';
 import _ from 'lodash';
 import { IFormParcel } from '../containers/MapSideBarContainer';
+import { useState } from 'react';
 
 const Container = styled.div`
   background-color: #fff;
@@ -58,6 +59,38 @@ const FillRemainingSpace = styled.span`
   flex: 1 1 auto;
 `;
 
+const PreAssociateSteps = styled.div`
+  display: flex;
+  justify-content: space-between;
+  padding-right: 50px;
+  span {
+    display: flex;
+    align-items: center;
+  }
+  p {
+    border-radius: 25px;
+    border: 1px solid black;
+    height: 25px;
+    width: 25px;
+    display: block;
+    margin: 0px 5px;
+  }
+  select {
+    width 100px;
+    margin: 0px 5px;
+  }
+  .progress-bar {
+
+  }
+`;
+
+const ProgressBar = styled.div`
+  max-width: 900px;
+  height: 20px;
+  border-radius: 5px;
+  margin: 10px 0px;
+`;
+
 export interface IAssociatedLand extends IBuilding {
   parcels: IParcel[];
   leasedLandMetadata: ILeasedLand[];
@@ -75,7 +108,7 @@ export const getInitialValues = (): IAssociatedLand => {
   return {
     ...defaultBuildingValues,
     leasedLandMetadata: [],
-    parcels: [{ ...getInitialLandValues() }],
+    parcels: [],
     leaseExpiry: undefined,
   };
 };
@@ -112,7 +145,7 @@ export const valuesToApiFormat = (
 const getOwnedParcels = (leasedLand: ILeasedLand[], parcels: IParcel[]): IParcel[] => {
   const ownedParcels: IParcel[] = [];
   leasedLand.forEach((ll: ILeasedLand, index: number) => {
-    if (ll.type === LeasedLand.owned) {
+    if (ll?.type === LeasedLand.owned && parcels[index]) {
       const associatedParcel = parcels[index];
       ll.parcelId = associatedParcel.id === '' ? 0 : associatedParcel.id;
       ownedParcels.push(parcels[index]);
@@ -246,15 +279,14 @@ const AssociatedLandForm: React.FC<IAssociatedLandForm> = (props: IAssociatedLan
   const keycloak = useKeycloakWrapper();
   const { createBuilding, updateBuilding } = useBuildingApi();
   const dispatch = useDispatch();
-  const api = useApi();
-  let initialValues = {
+  const [numParcels, setNumParcels] = useState(1);
+  const [progress, setProgress] = useState(0);
+  const [initialValues, setInitialValues] = useState({
     activeStep: 0,
     activeTab: 0,
     data: { ...getInitialValues(), ...props.initialValues },
-  };
-  if (initialValues.data.parcels.length === 0) {
-    initialValues.data.parcels.push(getInitialLandValues());
-  }
+  });
+  const api = useApi();
 
   initialValues.data.agencyId = keycloak.agencyId ?? '';
 
@@ -270,6 +302,7 @@ const AssociatedLandForm: React.FC<IAssociatedLandForm> = (props: IAssociatedLan
       validationValues.data.leasedLandMetadata,
       values.data.parcels,
     );
+
     validationValues.data.parcels = ownedParcels;
     const yupErrors: any = AssociatedLandSchema.validate(validationValues, {
       abortEarly: false,
@@ -320,64 +353,119 @@ const AssociatedLandForm: React.FC<IAssociatedLandForm> = (props: IAssociatedLan
     return response?.available;
   };
 
+  const renderPreForm = (): React.ReactNode => {
+    return (
+      <>
+        <h4 style={{ textAlign: 'left' }}>Parcel inventory</h4>
+        <PreAssociateSteps>
+          <span>
+            <p>1</p>
+            <strong>How many parcels does this building straddle?</strong>
+            <BSForm.Control as="select" onChange={(e: any) => setNumParcels(+e.target.value)}>
+              <option>1</option>
+              <option>2</option>
+              <option>3</option>
+              <option>4</option>
+              <option>5</option>
+            </BSForm.Control>
+          </span>
+
+          <span>
+            <p>2</p>
+            <Button
+              onClick={() => {
+                const incrementProgress = () =>
+                  setTimeout(() => {
+                    let currentProgess = 0;
+                    setProgress(p => {
+                      currentProgess = p;
+                      return ++p;
+                    });
+                    //use 15 to get the progress bar to show as complete for a half second before continuing.
+                    if (currentProgess < 15) {
+                      incrementProgress();
+                    } else {
+                      const parcels = [...Array(numParcels)].map(n => getInitialLandValues());
+                      setInitialValues(setIn(initialValues, 'data.parcels', parcels));
+                    }
+                  }, 100);
+                incrementProgress();
+              }}
+            >
+              Create parcel templates
+            </Button>
+          </span>
+        </PreAssociateSteps>
+        <ProgressBar
+          className="progress-bar progress-bar-striped progress-bar-animated"
+          style={{ width: `${progress * 10}%` }}
+        ></ProgressBar>
+      </>
+    );
+  };
+
   return (
     <Container className="landForm">
-      <SteppedForm<IAssociatedLand>
-        // Provide the steps
-        steps={[
-          { route: 'ownership', title: 'Land Ownership', completed: false, canGoToStep: true },
-          { route: 'identification', title: 'Parcel ID', completed: false, canGoToStep: true },
-          { route: 'usage', title: 'Usage', completed: false, canGoToStep: true },
-          { route: 'valuation', title: 'Valuation', completed: false, canGoToStep: true },
-          { route: 'review', title: 'Review', completed: false, canGoToStep: true },
-        ]}
-        getTabs={(values: IAssociatedLand) => {
-          return values.parcels.map((p: any, index: number) => {
-            return p.name?.length ? p.name : `Parcel ${index + 1}`;
-          });
-        }}
-        persistable={true}
-        persistProps={{
-          name: 'land',
-          secret: keycloak.obj.subject,
-          persistCallback: noop,
-        }}
-        onAddTab={(values: IAssociatedLand) => {
-          if (values.parcels !== undefined) {
-            values.parcels.push(getInitialLandValues());
-          }
-        }}
-        onRemoveTab={(values: IAssociatedLand, tabIndex: number) => {
-          if (values?.parcels.length > tabIndex) {
-            values.parcels.splice(tabIndex, 1);
-          }
-        }}
-        initialValues={initialValues}
-        validate={handleValidate}
-        formikRef={props.formikRef}
-        onSubmit={async (values, actions) => {
-          const apiValues = valuesToApiFormat(_.cloneDeep(values), keycloak.agencyId);
-          try {
-            if (!values.data.id) {
-              await createBuilding(apiValues)(dispatch);
-            } else {
-              await updateBuilding(apiValues)(dispatch);
+      {!initialValues?.data?.parcels?.length ? (
+        renderPreForm()
+      ) : (
+        <SteppedForm<IAssociatedLand>
+          // Provide the steps
+          steps={[
+            { route: 'ownership', title: 'Land Ownership', completed: false, canGoToStep: true },
+            { route: 'identification', title: 'Parcel ID', completed: false, canGoToStep: true },
+            { route: 'usage', title: 'Usage', completed: false, canGoToStep: true },
+            { route: 'valuation', title: 'Valuation', completed: false, canGoToStep: true },
+            { route: 'review', title: 'Review', completed: false, canGoToStep: true },
+          ]}
+          getTabs={(values: IAssociatedLand) => {
+            return values.parcels.map((p: any, index: number) => {
+              return p.name?.length ? p.name : `Parcel ${index + 1}`;
+            });
+          }}
+          persistable={true}
+          persistProps={{
+            name: 'land',
+            secret: keycloak.obj.subject,
+            persistCallback: noop,
+          }}
+          onAddTab={(values: IAssociatedLand) => {
+            if (values.parcels !== undefined) {
+              values.parcels.push(getInitialLandValues());
             }
-          } catch (error) {
-          } finally {
-            actions.setSubmitting(false);
-          }
-        }}
-      >
-        <Form
-          setMovingPinNameSpace={props.setMovingPinNameSpace}
-          handleGeocoderChanges={props.handleGeocoderChanges}
-          handlePidChange={props.handlePidChange}
-          handlePinChange={props.handlePinChange}
+          }}
+          onRemoveTab={(values: IAssociatedLand, tabIndex: number) => {
+            if (values?.parcels.length > tabIndex) {
+              values.parcels.splice(tabIndex, 1);
+            }
+          }}
+          initialValues={initialValues}
+          validate={handleValidate}
           formikRef={props.formikRef}
-          initialValues={props.initialValues}
-        />
-      </SteppedForm>
+          onSubmit={async (values, actions) => {
+            const apiValues = valuesToApiFormat(_.cloneDeep(values), keycloak.agencyId);
+            try {
+              if (!values.data.id) {
+                await createBuilding(apiValues)(dispatch);
+              } else {
+                await updateBuilding(apiValues)(dispatch);
+              }
+            } catch (error) {
+            } finally {
+              actions.setSubmitting(false);
+            }
+          }}
+        >
+          <Form
+            setMovingPinNameSpace={props.setMovingPinNameSpace}
+            handleGeocoderChanges={props.handleGeocoderChanges}
+            handlePidChange={props.handlePidChange}
+            handlePinChange={props.handlePinChange}
+            formikRef={props.formikRef}
+            initialValues={props.initialValues}
+          />
+        </SteppedForm>
+      )}
     </Container>
   );
 };

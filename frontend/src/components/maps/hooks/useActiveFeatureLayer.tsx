@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { MapProps as LeafletMapProps, Map as ReactLeafletMap } from 'react-leaflet';
 import { useLayerQuery, PARCELS_LAYER_URL } from '../leaflet/LayerPopup';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
+import { GeoJsonObject } from 'geojson';
 
 interface IUseActiveParcelMapLayer {
   /** the current leaflet map reference. This hook will add layers to this map reference. */
@@ -13,6 +14,8 @@ interface IUseActiveParcelMapLayer {
   selectedProperty?: IPropertyDetail | null;
   /** the currently displayed layer popup information */
   layerPopup?: LayerPopupInformation;
+  /** the most recently searched for parcel layer feature */
+  parcelLayerFeature?: GeoJsonObject | null;
 }
 
 /**
@@ -23,9 +26,11 @@ const useActiveFeatureLayer = ({
   selectedProperty,
   mapRef,
   layerPopup,
+  parcelLayerFeature,
 }: IUseActiveParcelMapLayer) => {
   const [activeFeatureLayer, setActiveFeatureLayer] = useState<GeoJSON>();
   const parcelsService = useLayerQuery(PARCELS_LAYER_URL);
+
   if (!!mapRef.current && !activeFeatureLayer) {
     setActiveFeatureLayer(geoJSON().addTo(mapRef.current.leafletElement));
   }
@@ -38,6 +43,24 @@ const useActiveFeatureLayer = ({
       layerPopup?.feature && activeFeatureLayer.addData(layerPopup.feature);
     }
   }, [layerPopup]);
+
+  /**
+   * Other areas of the application may kick off parcel layer requests, if so, display the last request tracked in redux.
+   */
+  useDeepCompareEffect(() => {
+    if (!!activeFeatureLayer && !!parcelLayerFeature) {
+      activeFeatureLayer.clearLayers();
+      activeFeatureLayer.addData(parcelLayerFeature);
+      let coords = (parcelLayerFeature as any)?.geometry?.coordinates;
+      if (coords && coords.length === 1 && coords[0].length > 1 && coords[0][0].length > 1) {
+        mapRef.current?.leafletElement.panTo({
+          lat: (parcelLayerFeature as any)?.geometry?.coordinates[0][0][1],
+          lng: (parcelLayerFeature as any)?.geometry?.coordinates[0][0][0],
+        });
+      }
+    }
+  }, [parcelLayerFeature]);
+
   /**
    * If there is a selected property on the map, attempt to retrieve the corresponding parcel. If we find matching parcel data, use that to draw the active parcel.
    * Note: currently this is limited to finding one parent in the case of a building. in the future, we may need to find/display all matching parcels.

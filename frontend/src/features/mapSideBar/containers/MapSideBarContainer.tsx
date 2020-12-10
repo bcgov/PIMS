@@ -278,8 +278,8 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
           />
         );
       case SidebarContextType.ADD_ASSOCIATED_LAND:
-        if (propertyType !== 'parcel') {
-          setPropertyType('parcel');
+        if (propertyType !== 'land') {
+          setPropertyType('land');
         }
         return (
           <AssociatedLandForm
