@@ -48,7 +48,7 @@ namespace Pims.Dal.Services.Admin
         /// <returns></returns>
         public ProjectStatus Get(int id)
         {
-            return this.Context.ProjectStatus.Find(id) ?? throw new KeyNotFoundException();
+            return this.Context.ProjectStatus.Find(id) ?? throw new KeyNotFoundException("Project status does not exist.");
         }
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace Pims.Dal.Services.Admin
         {
             entity.ThrowIfNull(nameof(entity));
 
-            var project = this.Context.ProjectStatus.Find(entity.Id) ?? throw new KeyNotFoundException();
+            var project = Get(entity.Id);
 
             this.Context.Entry(project).CurrentValues.SetValues(entity);
             base.Update(project);
@@ -76,7 +76,7 @@ namespace Pims.Dal.Services.Admin
         {
             entity.ThrowIfNull(nameof(entity));
 
-            var project = this.Context.ProjectStatus.Find(entity.Id) ?? throw new KeyNotFoundException();
+            var project = Get(entity.Id);
 
             this.Context.Entry(project).CurrentValues.SetValues(entity);
             base.Remove(project);
