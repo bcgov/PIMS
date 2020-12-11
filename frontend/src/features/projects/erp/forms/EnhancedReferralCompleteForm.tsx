@@ -14,6 +14,7 @@ import {
   proceedToSplWarning,
   notInSplWarning,
   requestForSplReceivedOn,
+  approvedForSplOn,
 } from '../../common';
 import GenericModal from 'components/common/GenericModal';
 import { validateFormikWithCallback } from 'utils';
@@ -108,79 +109,100 @@ const EnhancedReferralCompleteForm = ({
           field="clearanceNotificationSentOn"
         />
       </Form.Row>
-      <Form.Row>
-        <Form.Label column md={4}>
-          Request for SPL Received On
-          <TooltipIcon toolTipId="requestForSplReceivedOn" toolTip={requestForSplReceivedOn} />
-        </Form.Label>
-        <FastDatePicker
-          outerClassName="col-md-2"
-          formikProps={formikProps}
-          disabled={isReadOnly}
-          field="requestForSplReceivedOn"
-        />
-        {(formikProps.values.statusCode === ReviewWorkflowStatus.ApprovedForErp ||
-          formikProps.values.statusCode === ReviewWorkflowStatus.InErp ||
-          formikProps.values.statusCode === ReviewWorkflowStatus.OnHold ||
-          formikProps.values.statusCode === ReviewWorkflowStatus.ApprovedForExemption ||
-          formikProps.values.statusCode === ReviewWorkflowStatus.NotInSpl) && (
-          <div className="col-md-6" style={{ display: 'flex' }}>
-            <Button
-              disabled={
-                isReadOnly ||
-                !formikProps.values.clearanceNotificationSentOn ||
-                !formikProps.values.requestForSplReceivedOn
-              }
-              onClick={() => validateFormikWithCallback(formikProps, () => setProceedToSpl(true))}
-            >
-              Proceed to SPL
-            </Button>
-            {formikProps.values.statusCode !== ReviewWorkflowStatus.NotInSpl && (
-              <>
-                <OrText>OR</OrText>
+      {formikProps.values.workflowCode === 'ERP' && (
+        <>
+          <Form.Row>
+            <Form.Label column md={4}>
+              Request for SPL Received On
+              <TooltipIcon toolTipId="requestForSplReceivedOn" toolTip={requestForSplReceivedOn} />
+            </Form.Label>
+            <FastDatePicker
+              outerClassName="col-md-2"
+              formikProps={formikProps}
+              disabled={isReadOnly}
+              field="requestForSplReceivedOn"
+            />
+          </Form.Row>
+          <Form.Row>
+            <Form.Label column md={4}>
+              SPL Addition Approved On
+              <TooltipIcon toolTipId="approvedForSplOn" toolTip={approvedForSplOn} />
+            </Form.Label>
+            <FastDatePicker
+              outerClassName="col-md-2"
+              formikProps={formikProps}
+              disabled={isReadOnly}
+              field="approvedForSplOn"
+            />
+            {(formikProps.values.statusCode === ReviewWorkflowStatus.ApprovedForErp ||
+              formikProps.values.statusCode === ReviewWorkflowStatus.InErp ||
+              formikProps.values.statusCode === ReviewWorkflowStatus.OnHold ||
+              formikProps.values.statusCode === ReviewWorkflowStatus.ApprovedForExemption ||
+              formikProps.values.statusCode === ReviewWorkflowStatus.NotInSpl) && (
+              <div className="col-md-6" style={{ display: 'flex' }}>
                 <Button
-                  disabled={isReadOnly || !formikProps.values.clearanceNotificationSentOn}
-                  onClick={() => validateFormikWithCallback(formikProps, () => setNotInSpl(true))}
+                  disabled={
+                    isReadOnly ||
+                    !formikProps.values.clearanceNotificationSentOn ||
+                    !formikProps.values.requestForSplReceivedOn ||
+                    !formikProps.values.approvedForSplOn
+                  }
+                  onClick={() =>
+                    validateFormikWithCallback(formikProps, () => setProceedToSpl(true))
+                  }
                 >
-                  Not Included in the SPL
+                  Proceed to SPL
                 </Button>
-              </>
+                {formikProps.values.statusCode !== ReviewWorkflowStatus.NotInSpl && (
+                  <>
+                    <OrText>OR</OrText>
+                    <Button
+                      disabled={isReadOnly || !formikProps.values.clearanceNotificationSentOn}
+                      onClick={() =>
+                        validateFormikWithCallback(formikProps, () => setNotInSpl(true))
+                      }
+                    >
+                      Not Included in the SPL
+                    </Button>
+                  </>
+                )}
+              </div>
             )}
-          </div>
-        )}
-        {notInSpl && (
-          <GenericModal
-            display={notInSpl}
-            cancelButtonText="Close"
-            okButtonText="Yes"
-            handleOk={(e: any) => {
-              onClickNotInSpl(e);
-              setNotInSpl(false);
-            }}
-            handleCancel={() => {
-              setNotInSpl(false);
-            }}
-            title="Really Not in SPL?"
-            message={notInSplWarning}
-          />
-        )}
-        {proceedToSpl && (
-          <GenericModal
-            display={proceedToSpl}
-            cancelButtonText="Close"
-            okButtonText="Proceed to SPL"
-            handleOk={(e: any) => {
-              onClickProceedToSpl(e);
-              setProceedToSpl(false);
-            }}
-            handleCancel={() => {
-              setProceedToSpl(false);
-            }}
-            title="Really Proceed to SPL?"
-            message={proceedToSplWarning}
-          />
-        )}
-      </Form.Row>
+            {notInSpl && (
+              <GenericModal
+                display={notInSpl}
+                cancelButtonText="Close"
+                okButtonText="Yes"
+                handleOk={(e: any) => {
+                  onClickNotInSpl(e);
+                  setNotInSpl(false);
+                }}
+                handleCancel={() => {
+                  setNotInSpl(false);
+                }}
+                title="Really Not in SPL?"
+                message={notInSplWarning}
+              />
+            )}
+            {proceedToSpl && (
+              <GenericModal
+                display={proceedToSpl}
+                cancelButtonText="Close"
+                okButtonText="Proceed to SPL"
+                handleOk={(e: any) => {
+                  onClickProceedToSpl(e);
+                  setProceedToSpl(false);
+                }}
+                handleCancel={() => {
+                  setProceedToSpl(false);
+                }}
+                title="Really Proceed to SPL?"
+                message={proceedToSplWarning}
+              />
+            )}
+          </Form.Row>
+        </>
+      )}
     </Container>
   );
 };

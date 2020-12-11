@@ -746,9 +746,9 @@ namespace Pims.Dal.Services
                 case ("AP-SPL"): // Approve for SPL
                     this.User.ThrowIfNotAuthorized(Permissions.DisposeApprove, "User does not have permission to approve project.");
                     if (metadata.ClearanceNotificationSentOn == null) throw new InvalidOperationException("Approved for SPL status requires Clearance Notification Sent date.");
-                    if (metadata.RequestForSplReceivedOn == null) throw new InvalidOperationException("Approved for SPL status requires a request for SPL received on date.");
+                    if (metadata.RequestForSplReceivedOn == null) throw new InvalidOperationException("Approved for SPL status requires the date when the request was received.");
+                    if (metadata.ApprovedForSplOn == null) throw new InvalidOperationException("Approved for SPL status requires the date when the request for SPL was approved on.");
                     originalProject.ApprovedOn = originalProject.ApprovedOn.HasValue ? originalProject.ApprovedOn : now; // Only set the date it hasn't been set yet.
-                    metadata.ApprovedForSplOn = now;
                     this.Context.SetProjectPropertiesVisiblity(originalProject, false);
                     originalProject.SubmittedOn = now;
                     break;
