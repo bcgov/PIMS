@@ -363,7 +363,7 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
                     >
                       <input
                         autocomplete="off"
-                        class="form-control date-picker"
+                        class="form-control date-picker is-valid "
                         id="datepicker-disposedOn"
                         name="disposedOn"
                         placeholder="--/--/----"
