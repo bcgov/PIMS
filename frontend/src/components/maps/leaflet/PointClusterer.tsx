@@ -1,8 +1,8 @@
 import './PointClusterer.scss';
 
 import React, { useRef, useEffect, useState, useCallback } from 'react';
-import { DivIcon } from 'leaflet';
-import { useLeaflet, Marker, Polyline, Popup } from 'react-leaflet';
+import { DivIcon, FeatureGroup as LeafletFeatureGroup } from 'leaflet';
+import { useLeaflet, Marker, Polyline, Popup, FeatureGroup } from 'react-leaflet';
 import { BBox } from 'geojson';
 import { Spiderfier } from './Spiderfier';
 import { ICluster, PointFeature } from '../types';
@@ -11,6 +11,9 @@ import useSupercluster from '../hooks/useSupercluster';
 import { PopupView } from '../PopupView';
 import { IPropertyDetail } from 'actions/parcelsActions';
 import SelectedPropertyMarker from './SelectedPropertyMarker/SelectedPropertyMarker';
+import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
+import { useFilterContext } from '../providers/FIlterProvider';
+import { isEqual } from 'lodash';
 
 export type PointClustererProps = {
   points: Array<PointFeature>;
@@ -39,6 +42,9 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
 }) => {
   // state and refs
   const spiderfierRef = useRef<Spiderfier>();
+  const featureGroupRef = useRef<any>();
+  const filterState = useFilterContext();
+
   const leaflet = useLeaflet();
   const [spider, setSpider] = useState<any>({});
   if (!leaflet || !leaflet.map) {
@@ -109,8 +115,23 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
     [spiderfierRef, map, maxZoom, spiderfyOnMaxZoom, supercluster, zoomToBoundsOnClick],
   );
 
+  useDeepCompareEffect(() => {
+    if (featureGroupRef.current) {
+      const group: LeafletFeatureGroup = featureGroupRef.current.leafletElement;
+      const groupBounds = group.getBounds();
+      if (
+        !isEqual(groupBounds.getSouthWest(), groupBounds.getNorthEast()) &&
+        group.getBounds().isValid() &&
+        filterState.changed
+      ) {
+        filterState.setChanged(false);
+        map.fitBounds(group.getBounds(), { maxZoom: 10 });
+      }
+    }
+  }, [featureGroupRef, map, clusters]);
+
   return (
-    <>
+    <FeatureGroup ref={featureGroupRef}>
       {clusters.map((cluster, index) => {
         // every cluster point has coordinates
         const [longitude, latitude] = cluster.geometry.coordinates;
@@ -221,7 +242,7 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
           </Popup>
         </SelectedPropertyMarker>
       )}
-    </>
+    </FeatureGroup>
   );
 };
 

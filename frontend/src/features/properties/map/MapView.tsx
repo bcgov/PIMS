@@ -20,6 +20,7 @@ import * as API from 'constants/API';
 import _ from 'lodash';
 import MapSideBarContainer from 'features/mapSideBar/containers/MapSideBarContainer';
 import classNames from 'classnames';
+import { FilterProvider } from 'components/maps/providers/FIlterProvider';
 
 /** rough center of bc Itcha Ilgachuz Provincial Park */
 const defaultLatLng = {
@@ -80,56 +81,58 @@ const MapView: React.FC<MapViewProps> = (props: MapViewProps) => {
         }}
         properties={properties}
       ></MapSideBarContainer>
-      <Map
-        lat={
-          (propertyDetail?.parcelDetail?.latitude as number) ??
-          selectedDraftProperty?.parcelDetail?.latitude ??
-          defaultLatLng.lat
-        }
-        lng={
-          (propertyDetail?.parcelDetail?.longitude as number) ??
-          selectedDraftProperty?.parcelDetail?.longitude ??
-          defaultLatLng.lng
-        }
-        properties={properties}
-        selectedProperty={
-          !!propertyDetail?.parcelDetail ? propertyDetail : (selectedDraftProperty as any)
-        }
-        agencies={agencies}
-        propertyClassifications={propertyClassifications}
-        lotSizes={lotSizes}
-        onMarkerClick={
-          props.onMarkerClick ??
-          ((p, position) => {
-            if (
-              p.propertyTypeId !== undefined &&
-              [PropertyTypes.BUILDING, PropertyTypes.PARCEL].includes(p.propertyTypeId)
-            ) {
-              p.id && dispatch(fetchPropertyDetail(p.id, p.propertyTypeId as any, position));
-            } else {
-              setSelectedDraftProperty({
-                propertyTypeId: p.propertyTypeId,
-                parcelDetail: { ...p },
-              } as any);
-            }
-          })
-        }
-        onMarkerPopupClose={() => {
-          setSelectedDraftProperty(null);
-          dispatch(storeParcelDetail(null));
-        }}
-        onViewportChanged={(mapFilterModel: MapViewportChangeEvent) => {
-          if (!loadedProperties) {
-            setLoadedProperties(true);
+      <FilterProvider>
+        <Map
+          lat={
+            (propertyDetail?.parcelDetail?.latitude as number) ??
+            selectedDraftProperty?.parcelDetail?.latitude ??
+            defaultLatLng.lat
           }
-        }}
-        onMapClick={saveLatLng}
-        disableMapFilterBar={props.disableMapFilterBar}
-        interactive={!props.disabled}
-        showParcelBoundaries={props.showParcelBoundaries ?? true}
-        zoom={6}
-        mapRef={mapRef}
-      />
+          lng={
+            (propertyDetail?.parcelDetail?.longitude as number) ??
+            selectedDraftProperty?.parcelDetail?.longitude ??
+            defaultLatLng.lng
+          }
+          properties={properties}
+          selectedProperty={
+            !!propertyDetail?.parcelDetail ? propertyDetail : (selectedDraftProperty as any)
+          }
+          agencies={agencies}
+          propertyClassifications={propertyClassifications}
+          lotSizes={lotSizes}
+          onMarkerClick={
+            props.onMarkerClick ??
+            ((p, position) => {
+              if (
+                p.propertyTypeId !== undefined &&
+                [PropertyTypes.BUILDING, PropertyTypes.PARCEL].includes(p.propertyTypeId)
+              ) {
+                p.id && dispatch(fetchPropertyDetail(p.id, p.propertyTypeId as any, position));
+              } else {
+                setSelectedDraftProperty({
+                  propertyTypeId: p.propertyTypeId,
+                  parcelDetail: { ...p },
+                } as any);
+              }
+            })
+          }
+          onMarkerPopupClose={() => {
+            setSelectedDraftProperty(null);
+            dispatch(storeParcelDetail(null));
+          }}
+          onViewportChanged={(mapFilterModel: MapViewportChangeEvent) => {
+            if (!loadedProperties) {
+              setLoadedProperties(true);
+            }
+          }}
+          onMapClick={saveLatLng}
+          disableMapFilterBar={props.disableMapFilterBar}
+          interactive={!props.disabled}
+          showParcelBoundaries={props.showParcelBoundaries ?? true}
+          zoom={6}
+          mapRef={mapRef}
+        />
+      </FilterProvider>
     </div>
   );
 };
