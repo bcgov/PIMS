@@ -276,6 +276,9 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
             onChange={handleFilterChange}
           >
             <Col xs={2} className="bar-item">
+              <Input field="name" placeholder="Search by project name or number" />
+            </Col>
+            <Col xs={2} className="bar-item">
               <ParentSelect
                 field={'statusId'}
                 options={statuses}
@@ -294,9 +297,6 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
                 placeholder="Enter an Agency"
               />
             </Col>
-            <Col xs={2} className="bar-item">
-              <Input field="name" placeholder="Search by project name or number" />
-            </Col>
           </FilterBar>
         )}
       </div>
@@ -314,13 +314,6 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
         )}
         <Container fluid className="TableToolbar">
           <h3 className="mr-4">{title}</h3>
-          {keycloak.hasClaim(Claims.REPORTS_SPL) && (
-            <TooltipWrapper toolTipId="spl-report" toolTip="View SPL Reports">
-              <Button className="mr-auto" onClick={() => history.push('/reports/spl')}>
-                SPL Report
-              </Button>
-            </TooltipWrapper>
-          )}
           {keycloak.hasClaim(Claims.REPORTS_VIEW) && (
             <>
               <TooltipWrapper toolTipId="export-to-excel" toolTip="Export to Excel">
