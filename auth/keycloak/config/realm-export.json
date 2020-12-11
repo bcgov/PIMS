@@ -246,6 +246,24 @@
         "clientRole": false,
         "containerId": "pims",
         "attributes": {}
+      },
+      {
+        "id": "090bc341-af0f-45c9-8e0a-6d99024b52c1",
+        "name": "reports-view",
+        "description": "Ability to view reports.",
+        "composite": false,
+        "clientRole": false,
+        "containerId": "pims",
+        "attributes": {}
+      },
+      {
+        "id": "e3394f24-d457-4b3b-9036-2f8e5dda4123",
+        "name": "reports-spl",
+        "description": "Ability to view SPL report.",
+        "composite": false,
+        "clientRole": false,
+        "containerId": "pims",
+        "attributes": {}
       }
     ],
     "client": {
@@ -671,6 +689,15 @@
       "subGroups": []
     },
     {
+      "id": "6238c23d-933e-4c4a-954e-48bae3ce2080",
+      "name": "SRES Financial Manager",
+      "path": "/SRES Financial Manager",
+      "attributes": {},
+      "realmRoles": ["reports-view", "reports-spl"],
+      "clientRoles": {},
+      "subGroups": []
+    },
+    {
       "id": "02c0f992-83ae-4823-9bf7-08cf6db03950",
       "name": "System Administrator",
       "path": "/System Administrator",
@@ -851,7 +878,7 @@
         "account": ["view-profile", "manage-account"]
       },
       "notBefore": 0,
-      "groups": ["/Real Estate Manager", "/SRES"]
+      "groups": ["/Real Estate Manager", "/SRES", "/SRES Financial Manager"]
     }
   ],
   "scopeMappings": [
