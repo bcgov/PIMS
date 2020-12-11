@@ -93,6 +93,29 @@ describe('Property list view', () => {
     expect(noResults).toBeInTheDocument();
   });
 
+  it('Displays export buttons', async () => {
+    mockedService.getPropertyList.mockResolvedValueOnce({
+      quantity: 0,
+      total: 0,
+      page: 1,
+      pageIndex: 0,
+      items: [],
+    });
+
+    await act(async () => {
+      const { getByTestId, container } = render(
+        <Provider store={store}>
+          <Router history={history}>
+            <PropertyListView />
+          </Router>
+        </Provider>,
+      );
+      expect(getByTestId('excel-icon')).toBeInTheDocument();
+      expect(getByTestId('csv-icon')).toBeInTheDocument();
+      expect(container.querySelector('span[class="spinner-border"]')).not.toBeInTheDocument();
+    });
+  });
+
   it('Displays link to property details page', async () => {
     const fakeId = 1;
     mockedService.getPropertyList.mockResolvedValueOnce({

@@ -103,7 +103,7 @@ exports[`Property list view Matches snapshot 1`] = `
                     aria-expanded="false"
                     aria-haspopup="listbox"
                     autocomplete="off"
-                    class="rbt-input-main form-control rbt-input map-filter-typeahead"
+                    class="rbt-input-main form-control rbt-input"
                     id="agencies-field"
                     name="agencies"
                     placeholder="Enter an Agency"
@@ -273,6 +273,7 @@ exports[`Property list view Matches snapshot 1`] = `
         type="button"
       >
         <svg
+          data-testid="excel-icon"
           fill="currentColor"
           height="36"
           size="36"
@@ -292,6 +293,7 @@ exports[`Property list view Matches snapshot 1`] = `
         type="button"
       >
         <svg
+          data-testid="csv-icon"
           fill="currentColor"
           height="36"
           size="36"

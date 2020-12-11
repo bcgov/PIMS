@@ -320,7 +320,7 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
                 <FileIcon>
                   <FaFileExcel
                     size={36}
-                    title="Export to Excel"
+                    data-testid="excel-icon"
                     onClick={() => fetch('excel', 'generic')}
                   />
                 </FileIcon>
@@ -329,7 +329,7 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
                 <FileIcon>
                   <FaFileAlt
                     size={36}
-                    title="Export to CSV"
+                    data-testid="csv-icon"
                     onClick={() => fetch('csv', 'generic')}
                   />
                 </FileIcon>
