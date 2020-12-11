@@ -153,14 +153,14 @@ const SplStep = ({ formikRef }: IStepProps) => {
       <Formik
         initialValues={initialValues}
         validateOnMount={true}
-        enableReinitialize={true}
-        onSubmit={(values: IProject) => {
+        onSubmit={(values: IProject, actions) => {
           return onSubmitReview(
             values,
             formikRef,
             submitStatusCode,
             getStatusTransitionWorkflow(submitStatusCode),
           ).then((project: IProject) => {
+            actions.setValues(project);
             if (
               project?.statusCode === ReviewWorkflowStatus.NotInSpl ||
               project?.statusCode === ReviewWorkflowStatus.ApprovedForSpl
@@ -182,7 +182,7 @@ const SplStep = ({ formikRef }: IStepProps) => {
             : Promise.resolve({})
         }
       >
-        {({ values, errors, touched }) => (
+        {({ values, errors, touched, setValues }) => (
           <Form>
             <StepStatusIcon
               preIconLabel="Approved for Surplus Property Program"
@@ -212,7 +212,9 @@ const SplStep = ({ formikRef }: IStepProps) => {
                       formikRef,
                       submitStatusCode,
                       getStatusTransitionWorkflow(submitStatusCode),
-                    );
+                    ).then((project: IProject) => {
+                      setValues(project);
+                    });
                   }
                 }}
               />
