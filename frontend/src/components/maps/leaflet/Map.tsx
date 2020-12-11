@@ -11,7 +11,7 @@ import {
 } from 'react-leaflet';
 import { IProperty, IPropertyDetail } from 'actions/parcelsActions';
 import { Container, Row, Col } from 'react-bootstrap';
-import MapFilterBar, { MapFilterChangeEvent } from '../MapFilterBar';
+import MapFilterBar, { IMapFilter } from '../MapFilterBar';
 import { ILookupCode } from 'actions/lookupActions';
 import BasemapToggle, { BasemapToggleEvent, BaseLayer } from '../BasemapToggle';
 import { decimalOrUndefined, floatOrUndefined } from 'utils';
@@ -43,23 +43,11 @@ import useActiveFeatureLayer from '../hooks/useActiveFeatureLayer';
 import LayersControl from './LayersControl';
 import { InventoryLayer } from './InventoryLayer';
 import { PointFeature } from '../types';
-import { useFilterContext } from '../providers/FIlterProvider';
+import { IGeoSearchParams } from 'constants/API';
 
 export type MapViewportChangeEvent = {
   bounds: LatLngBounds | null;
-  filter?: {
-    pid?: string;
-    address?: string;
-    administrativeArea?: string;
-    projectNumber?: string;
-    /** comma-separated list of agencies to filter by */
-    agencies?: string;
-    classificationId?: number;
-    minLotSize?: number;
-    maxLotSize?: number;
-    inSurplusPropertyProgram?: boolean;
-    inEnhancedReferralProcess?: boolean;
-  };
+  filter?: IMapFilter;
 };
 
 export type MapProps = {
@@ -90,6 +78,33 @@ export type LayerPopupInformation = PopupContentConfig & {
 
 const defaultBounds = new LatLngBounds([60.09114547, -119.49609429], [48.78370426, -139.35937554]);
 
+const defaultMapFilter = {
+  pid: '',
+  searchBy: 'address',
+  address: '',
+  administrativeArea: '',
+  projectNumber: '',
+  agencies: '',
+  classificationId: '',
+  minLotSize: '',
+  maxLotSize: '',
+} as IMapFilter;
+
+const getGeoFilter = (filter: IMapFilter) => {
+  return {
+    pid: filter.pid,
+    address: filter.address,
+    administrativeArea: filter.administrativeArea,
+    projectNumber: filter.projectNumber,
+    classificationId: decimalOrUndefined(filter.classificationId),
+    agencies: filter.agencies,
+    minLandArea: floatOrUndefined(filter.minLotSize),
+    maxLandArea: floatOrUndefined(filter.maxLotSize),
+    inSurplusPropertyProgram: filter.inSurplusPropertyProgram,
+    inEnhancedReferralProcess: filter.inEnhancedReferralProcess,
+  };
+};
+
 const Map: React.FC<MapProps> = ({
   lat,
   lng,
@@ -106,17 +121,8 @@ const Map: React.FC<MapProps> = ({
 }) => {
   // state and refs
   const dispatch = useDispatch();
-  const [mapFilter, setMapFilter] = useState<MapFilterChangeEvent>({
-    pid: '',
-    searchBy: 'address',
-    address: '',
-    administrativeArea: '',
-    projectNumber: '',
-    agencies: '',
-    classificationId: '',
-    minLotSize: '',
-    maxLotSize: '',
-  });
+  const [mapFilter, setMapFilter] = useState<IMapFilter>(defaultMapFilter);
+  const [geoFilter, setGeoFilter] = useState<IGeoSearchParams>(getGeoFilter(mapFilter));
   const [baseLayers, setBaseLayers] = useState<BaseLayer[]>([]);
   const [activeBasemap, setActiveBasemap] = useState<BaseLayer | null>(null);
   const smallScreen = useMediaQuery({ maxWidth: 1800 });
@@ -125,7 +131,6 @@ const Map: React.FC<MapProps> = ({
   useRouterFilter(mapFilter, setMapFilter, 'mapFilter');
   const municipalitiesService = useLayerQuery(MUNICIPALITY_LAYER_URL);
   const parcelsService = useLayerQuery(PARCELS_LAYER_URL);
-  const filterState = useFilterContext();
   const [bounds, setBounds] = useState<LatLngBounds>(defaultBounds);
 
   const [layerPopup, setLayerPopup] = useState<LayerPopupInformation>();
@@ -171,13 +176,13 @@ const Map: React.FC<MapProps> = ({
     }
   };
 
-  const handleMapFilterChange = async (e: MapFilterChangeEvent) => {
-    if (e.administrativeArea) {
-      await zoomToAdministrativeArea(e.administrativeArea);
+  const handleMapFilterChange = async (filter: IMapFilter) => {
+    if (filter.administrativeArea) {
+      await zoomToAdministrativeArea(filter.administrativeArea);
     }
 
-    setMapFilter(e);
-    filterState.setChanged(true);
+    setMapFilter(filter);
+    setGeoFilter(getGeoFilter(filter));
   };
 
   const handleBasemapToggle = (e: BasemapToggleEvent) => {
@@ -271,7 +276,7 @@ const Map: React.FC<MapProps> = ({
                     mapFilter={mapFilter}
                     onFilterChange={handleMapFilterChange}
                     onFilterReset={() => {
-                      filterState.setChanged(true);
+                      handleMapFilterChange(defaultMapFilter);
                     }}
                   />
                 </Container>
@@ -327,18 +332,7 @@ const Map: React.FC<MapProps> = ({
                     bounds={bounds}
                     onMarkerClick={onSingleMarkerClick}
                     selected={selectedProperty}
-                    filter={{
-                      pid: mapFilter.pid,
-                      address: mapFilter.address,
-                      administrativeArea: mapFilter.administrativeArea,
-                      projectNumber: mapFilter.projectNumber,
-                      classificationId: decimalOrUndefined(mapFilter.classificationId),
-                      agencies: mapFilter.agencies,
-                      minLandArea: floatOrUndefined(mapFilter.minLotSize),
-                      maxLandArea: floatOrUndefined(mapFilter.maxLotSize),
-                      inSurplusPropertyProgram: mapFilter.inSurplusPropertyProgram,
-                      inEnhancedReferralProcess: mapFilter.inEnhancedReferralProcess,
-                    }}
+                    filter={geoFilter}
                   ></InventoryLayer>
                 </ReactLeafletMap>
               </Col>
