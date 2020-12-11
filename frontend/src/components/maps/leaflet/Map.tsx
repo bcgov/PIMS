@@ -1,15 +1,8 @@
 import './Map.scss';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import {
-  LatLngBounds,
-  LeafletMouseEvent,
-  LeafletEvent,
-  LatLng,
-  Map as LeafletMap,
-  geoJSON,
-} from 'leaflet';
+import { LatLngBounds, LeafletMouseEvent, LatLng, Map as LeafletMap, geoJSON } from 'leaflet';
 import {
   MapProps as LeafletMapProps,
   TileLayer,
@@ -26,7 +19,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setMapViewZoom } from 'reducers/mapViewZoomSlice';
 import { RootState } from 'reducers/rootReducer';
 import { Feature } from 'geojson';
-import { createPoints, asProperty } from './mapUtils';
+import { asProperty } from './mapUtils';
 import { LegendControl } from './Legend/LegendControl';
 import { useMediaQuery } from 'react-responsive';
 import { useApi } from 'hooks/useApi';
@@ -38,7 +31,7 @@ import {
   parcelLayerPopupConfig,
   PARCELS_LAYER_URL,
 } from './LayerPopup/constants';
-import { isEmpty } from 'lodash';
+import { isEmpty, isEqual } from 'lodash';
 import {
   LayerPopupContent,
   LayerPopupTitle,
@@ -47,10 +40,10 @@ import {
 import { useLayerQuery } from './LayerPopup/hooks/useLayerQuery';
 import { saveParcelLayerData } from 'reducers/parcelLayerDataSlice';
 import useActiveFeatureLayer from '../hooks/useActiveFeatureLayer';
-import useMarkerZoom from '../hooks/useMarkerZoom';
 import LayersControl from './LayersControl';
 import { InventoryLayer } from './InventoryLayer';
 import { PointFeature } from '../types';
+import { useFilterContext } from '../providers/FIlterProvider';
 
 export type MapViewportChangeEvent = {
   bounds: LatLngBounds | null;
@@ -95,18 +88,17 @@ export type LayerPopupInformation = PopupContentConfig & {
   feature: Feature;
 };
 
+const defaultBounds = new LatLngBounds([60.09114547, -119.49609429], [48.78370426, -139.35937554]);
+
 const Map: React.FC<MapProps> = ({
   lat,
   lng,
   zoom: zoomProp,
-  properties,
   agencies,
   propertyClassifications,
   lotSizes,
   selectedProperty,
   onMarkerClick,
-  onMarkerPopupClose,
-  onViewportChanged,
   onMapClick,
   disableMapFilterBar,
   interactive = true,
@@ -133,13 +125,8 @@ const Map: React.FC<MapProps> = ({
   useRouterFilter(mapFilter, setMapFilter, 'mapFilter');
   const municipalitiesService = useLayerQuery(MUNICIPALITY_LAYER_URL);
   const parcelsService = useLayerQuery(PARCELS_LAYER_URL);
-
-  // load and prepare data
-  const points = createPoints(properties);
-  const { onMarkerZoomEnd } = useMarkerZoom({
-    mapRef,
-    points,
-  });
+  const filterState = useFilterContext();
+  const [bounds, setBounds] = useState<LatLngBounds>(defaultBounds);
 
   const [layerPopup, setLayerPopup] = useState<LayerPopupInformation>();
   if (mapRef.current && !selectedProperty?.parcelDetail) {
@@ -160,70 +147,22 @@ const Map: React.FC<MapProps> = ({
   // TODO: refactor various zoom settings
   const [zoom, setZoom] = useState(lastZoom);
 
-  if (!interactive) {
-    const map = mapRef.current?.leafletElement;
-    if (map) {
-      map.dragging.disable();
-      map.touchZoom.disable();
-      map.doubleClickZoom.disable();
-      map.scrollWheelZoom.disable();
-      map.boxZoom.disable();
-      map.keyboard.disable();
-      if (map.tap) {
-        map.tap.disable();
+  useEffect(() => {
+    if (!interactive) {
+      const map = mapRef.current?.leafletElement;
+      if (map) {
+        map.dragging.disable();
+        map.touchZoom.disable();
+        map.doubleClickZoom.disable();
+        map.scrollWheelZoom.disable();
+        map.boxZoom.disable();
+        map.keyboard.disable();
+        if (map.tap) {
+          map.tap.disable();
+        }
       }
     }
-  }
-  // --- Internal functions and event handlers
-  const getBounds = () => {
-    if (!mapRef.current) {
-      return null;
-    }
-    return mapRef.current?.leafletElement.getBounds();
-  };
-
-  const handleViewportChange = (filter: MapFilterChangeEvent) => {
-    const bounds = getBounds();
-    const {
-      pid,
-      address,
-      administrativeArea,
-      projectNumber,
-      agencies,
-      classificationId,
-      minLotSize,
-      maxLotSize,
-      inSurplusPropertyProgram,
-      inEnhancedReferralProcess,
-    } = filter;
-    const e: MapViewportChangeEvent = {
-      bounds,
-      filter: {
-        pid,
-        address,
-        administrativeArea,
-        projectNumber,
-        agencies: agencies,
-        classificationId: decimalOrUndefined(classificationId),
-        minLotSize: floatOrUndefined(minLotSize),
-        maxLotSize: floatOrUndefined(maxLotSize),
-        inSurplusPropertyProgram,
-        inEnhancedReferralProcess,
-      },
-    };
-    onViewportChanged?.(e);
-  };
-
-  const onZoomEnd = (event: LeafletEvent) => {
-    onMarkerZoomEnd();
-    dispatch(setMapViewZoom(event.target._zoom));
-  };
-
-  const closeMarkerPopup = (e: any) => {
-    if (e.target._animateToZoom === mapRef.current?.leafletElement.getZoom()) {
-      setLayerPopup(undefined);
-    }
-  };
+  }, [interactive, mapRef]);
 
   const zoomToAdministrativeArea = async (city: string) => {
     const center = await getAdministrativeAreaLatLng(city);
@@ -235,11 +174,10 @@ const Map: React.FC<MapProps> = ({
   const handleMapFilterChange = async (e: MapFilterChangeEvent) => {
     if (e.administrativeArea) {
       await zoomToAdministrativeArea(e.administrativeArea);
-    } else {
-      fitMapBounds();
     }
+
     setMapFilter(e);
-    handleViewportChange(e);
+    filterState.setChanged(true);
   };
 
   const handleBasemapToggle = (e: BasemapToggleEvent) => {
@@ -259,14 +197,6 @@ const Map: React.FC<MapProps> = ({
       setActiveBasemap(result.data?.basemaps?.[0]);
     });
   }, []);
-
-  // get map bounds
-  const updateMap = useCallback(() => {
-    if (!mapRef?.current) {
-      return;
-    }
-    setZoom(mapRef.current.leafletElement.getZoom());
-  }, [mapRef]);
 
   const fitMapBounds = () => {
     if (mapRef.current) {
@@ -317,6 +247,13 @@ const Map: React.FC<MapProps> = ({
     }
   };
 
+  const handleBounds = (e: any) => {
+    const boundsData: LatLngBounds = e.sourceTarget.getBounds();
+    if (!isEqual(boundsData.getNorthEast(), boundsData.getSouthWest())) {
+      setBounds(boundsData);
+    }
+  };
+
   // return map
   return (
     <ReactResizeDetector handleWidth>
@@ -333,7 +270,9 @@ const Map: React.FC<MapProps> = ({
                     lotSizes={lotSizes}
                     mapFilter={mapFilter}
                     onFilterChange={handleMapFilterChange}
-                    onFilterReset={fitMapBounds}
+                    onFilterReset={() => {
+                      filterState.setChanged(true);
+                    }}
                   />
                 </Container>
               </Container>
@@ -349,16 +288,11 @@ const Map: React.FC<MapProps> = ({
                   zoom={lastZoom}
                   whenReady={() => {
                     fitMapBounds();
-                    handleViewportChange(mapFilter);
-                  }}
-                  onViewportChanged={() => {
-                    handleViewportChange(mapFilter);
                   }}
                   onclick={showLocationDetails}
                   closePopupOnClick={interactive}
-                  onzoomend={onZoomEnd}
-                  onzoomstart={closeMarkerPopup}
-                  onmoveend={updateMap}
+                  onzoomend={e => setZoom(e.sourceTarget.getZoom())}
+                  onmoveend={handleBounds}
                 >
                   {activeBasemap && (
                     <TileLayer
@@ -390,6 +324,7 @@ const Map: React.FC<MapProps> = ({
                   <LayersControl />
                   <InventoryLayer
                     zoom={zoom}
+                    bounds={bounds}
                     onMarkerClick={onSingleMarkerClick}
                     selected={selectedProperty}
                     filter={{

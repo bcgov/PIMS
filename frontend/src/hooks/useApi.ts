@@ -49,7 +49,10 @@ export const useApi = (): PimsAPI => {
       dispatch(showLoading());
       return config;
     },
-    error => dispatch(hideLoading()),
+    error => {
+      dispatch(hideLoading());
+      return Promise.reject(error);
+    },
   );
 
   axios.interceptors.response.use(
@@ -57,7 +60,10 @@ export const useApi = (): PimsAPI => {
       dispatch(hideLoading());
       return config;
     },
-    error => dispatch(hideLoading()),
+    error => {
+      dispatch(hideLoading());
+      return Promise.reject(error);
+    },
   );
 
   axios.isPidAvailable = async (parcelId: number | '' | undefined, pid: string | undefined) => {
@@ -117,10 +123,18 @@ export const useApi = (): PimsAPI => {
   };
 
   axios.loadProperties = async (params?: IGeoSearchParams): Promise<any[]> => {
-    const { data } = await axios.get<any[]>(
-      `${ENVIRONMENT.apiUrl}/properties/search/wfs?${params ? queryString.stringify(params) : ''}`,
-    );
-    return data;
+    try {
+      const { data } = await axios.get<any[]>(
+        `${ENVIRONMENT.apiUrl}/properties/search/wfs?${
+          params ? queryString.stringify(params) : ''
+        }`,
+      );
+      return data;
+    } catch (error) {
+      throw new Error(
+        `${(error as any).message}: An error occured while fetching properties in inventory.`,
+      );
+    }
   };
 
   return axios;
