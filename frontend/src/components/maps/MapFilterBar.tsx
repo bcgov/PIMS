@@ -35,7 +35,7 @@ const SearchBar: React.FC = () => {
   const {
     values: { searchBy },
     setFieldValue,
-  } = useFormikContext<MapFilterChangeEvent>();
+  } = useFormikContext<IMapFilter>();
   const desc = state.placeholders[searchBy] || '';
 
   const reset = () => {
@@ -56,7 +56,7 @@ const SearchBar: React.FC = () => {
   );
 };
 
-export interface MapFilterChangeEvent extends BasePropertyFilter {
+export interface IMapFilter extends BasePropertyFilter {
   searchBy: string;
   pid: string;
   address: string;
@@ -75,12 +75,12 @@ type MapFilterProps = {
   agencyLookupCodes: ILookupCode[];
   propertyClassifications: ILookupCode[];
   lotSizes: number[];
-  mapFilter?: MapFilterChangeEvent;
-  onFilterChange: (e: MapFilterChangeEvent) => void;
+  mapFilter?: IMapFilter;
+  onFilterChange: (filter: IMapFilter) => void;
   onFilterReset?: () => void;
 };
 
-const defaultFilterValues: MapFilterChangeEvent = {
+const defaultFilterValues: IMapFilter = {
   searchBy: 'address',
   pid: '',
   address: '',
@@ -128,21 +128,21 @@ const MapFilterBar: React.FC<MapFilterProps> = ({
   }, [agencies, mapFilter]);
 
   const applyEnhancedReferralFilter = () => {
-    const values: MapFilterChangeEvent = { ...formikRef!.values };
+    const values: IMapFilter = { ...formikRef!.values };
     values.inEnhancedReferralProcess = true;
     values.inSurplusPropertyProgram = false;
     onFilterChange(values);
   };
 
   const applySurplusPropertyFilter = () => {
-    const values: MapFilterChangeEvent = { ...formikRef!.values };
+    const values: IMapFilter = { ...formikRef!.values };
     values.inSurplusPropertyProgram = true;
     values.inEnhancedReferralProcess = false;
     onFilterChange(values);
   };
 
   return (
-    <Formik<MapFilterChangeEvent>
+    <Formik<IMapFilter>
       initialValues={{ ...initialValues }}
       enableReinitialize
       validationSchema={FilterBarSchema}

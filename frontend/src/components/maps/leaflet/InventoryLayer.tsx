@@ -67,7 +67,7 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
   minZoom = minZoom ?? 0;
   maxZoom = maxZoom ?? 18;
 
-  const params = useMemo(
+  const params = useMemo<IGeoSearchParams>(
     () => ({
       bbox: (bounds ?? map.getBounds()).toBBoxString(),
       address: filter?.address,
@@ -86,8 +86,8 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
 
   const search = React.useCallback(
     _.debounce(
-      () => {
-        loadProperties(params)
+      (filter: IGeoSearchParams) => {
+        loadProperties(filter)
           .then(async (data: Feature[]) => {
             const points = data
               .filter(feature => {
@@ -116,7 +116,7 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
 
   // Fetch the geoJSON collection of properties.
   useDeepCompareEffect(() => {
-    search();
+    search(params);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params, bbox, selected, map]);
 
