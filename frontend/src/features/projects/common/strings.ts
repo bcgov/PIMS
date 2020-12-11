@@ -33,7 +33,8 @@ export const onTransferredWithinTheGreTooltip =
 export const clearanceNotifictionSent =
   'Enter Clearance Notification Sent date to be able to Proceed to SPL or Not Include in SPL.';
 export const requestForSplReceivedOn =
-  'Enter the data the request to be added to SPL was received on.';
+  'Enter the date of the request to be added to SPL was received on.';
+export const approvedForSplOn = 'Enter the date the request to be added to SPL was approved on.';
 export const updatePimsWarning =
   'Please ensure all the updated information is correct before clicking Update PIMS.';
 export const proceedToSplWarning = `Are you sure you want to approve this project for the Surplus Properties List?`;
