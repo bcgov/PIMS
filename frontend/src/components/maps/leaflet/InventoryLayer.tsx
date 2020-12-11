@@ -1,9 +1,9 @@
+import React, { useMemo } from 'react';
 import { IPropertyDetail } from 'actions/parcelsActions';
 import { IGeoSearchParams } from 'constants/API';
 import { BBox, Feature } from 'geojson';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
 import { LatLngBounds } from 'leaflet';
-import React from 'react';
 import { useLeaflet } from 'react-leaflet';
 import { toast } from 'react-toastify';
 import { PointFeature } from '../types';
@@ -13,7 +13,7 @@ import _ from 'lodash';
 
 export type InventoryLayerProps = {
   /** Latitude and Longitude boundary of the layer. */
-  bounds?: LatLngBounds;
+  bounds: LatLngBounds;
   /** Zoom level of the map. */
   zoom: number;
   /** Minimum zoom level allowed. */
@@ -46,7 +46,7 @@ const getBbox = (bounds: LatLngBounds): BBox => {
  * This component makes a request to the PIMS API properties search WFS endpoint.
  */
 export const InventoryLayer: React.FC<InventoryLayerProps> = ({
-  bounds = null,
+  bounds,
   zoom,
   minZoom,
   maxZoom,
@@ -62,37 +62,27 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
     throw new Error('<InventoryLayer /> must be used under a <Map> leaflet component');
   }
 
-  const [bbox, setBbox] = React.useState<BBox>(getBbox(bounds ?? map.getBounds()));
-
-  // Recreate the boundary box for the maps current position.
-  React.useEffect(() => {
-    const rebound = () => {
-      const bounds = map.getBounds();
-      setBbox(getBbox(bounds));
-    };
-    map.on('moveend', rebound);
-
-    return () => {
-      map.off('moveend');
-    };
-  }, [map]);
+  const bbox = getBbox(bounds);
 
   minZoom = minZoom ?? 0;
   maxZoom = maxZoom ?? 18;
 
-  const params = {
-    bbox: (bounds ?? map.getBounds()).toBBoxString(),
-    address: filter?.address,
-    administrativeArea: filter?.administrativeArea,
-    pid: filter?.pid,
-    projectNumber: filter?.projectNumber,
-    agencies: filter?.agencies,
-    classificationId: filter?.classificationId,
-    minLandArea: filter?.minLandArea,
-    maxLandArea: filter?.maxLandArea,
-    inSurplusPropertyProgram: filter?.inSurplusPropertyProgram,
-    inEnhancedReferralProcess: filter?.inEnhancedReferralProcess,
-  };
+  const params = useMemo(
+    () => ({
+      bbox: (bounds ?? map.getBounds()).toBBoxString(),
+      address: filter?.address,
+      administrativeArea: filter?.administrativeArea,
+      pid: filter?.pid,
+      projectNumber: filter?.projectNumber,
+      agencies: filter?.agencies,
+      classificationId: filter?.classificationId,
+      minLandArea: filter?.minLandArea,
+      maxLandArea: filter?.maxLandArea,
+      inSurplusPropertyProgram: filter?.inSurplusPropertyProgram,
+      inEnhancedReferralProcess: filter?.inEnhancedReferralProcess,
+    }),
+    [filter, map, bounds],
+  );
 
   const search = React.useCallback(
     _.debounce(
@@ -128,7 +118,7 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
   useDeepCompareEffect(() => {
     search();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [params, bbox, selected]);
+  }, [params, bbox, selected, map]);
 
   return (
     <PointClusterer
