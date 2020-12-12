@@ -349,7 +349,11 @@ exports[`Review Approve Step renders correctly 1`] = `
                   role="columnheader"
                   style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                 >
-                  Agency
+                  <div
+                    class="sortable-column"
+                  >
+                    Agency
+                  </div>
                 </div>
                 <div
                   class="th"
@@ -357,7 +361,11 @@ exports[`Review Approve Step renders correctly 1`] = `
                   role="columnheader"
                   style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                 >
-                  Name
+                  <div
+                    class="sortable-column"
+                  >
+                    Name
+                  </div>
                 </div>
                 <div
                   class="th"
@@ -365,7 +373,11 @@ exports[`Review Approve Step renders correctly 1`] = `
                   role="columnheader"
                   style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                 >
-                  Civic Address
+                  <div
+                    class="sortable-column"
+                  >
+                    Civic Address
+                  </div>
                 </div>
                 <div
                   class="th"
@@ -373,7 +385,11 @@ exports[`Review Approve Step renders correctly 1`] = `
                   role="columnheader"
                   style="box-sizing: border-box; flex: 140 0 auto; min-width: 30px; width: 140px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                 >
-                  Classification
+                  <div
+                    class="sortable-column"
+                  >
+                    Classification
+                  </div>
                 </div>
                 <div
                   class="th"
@@ -381,7 +397,11 @@ exports[`Review Approve Step renders correctly 1`] = `
                   role="columnheader"
                   style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                 >
-                  Current Zoning Code
+                  <div
+                    class="sortable-column"
+                  >
+                    Current Zoning Code
+                  </div>
                 </div>
                 <div
                   class="th"
@@ -389,7 +409,11 @@ exports[`Review Approve Step renders correctly 1`] = `
                   role="columnheader"
                   style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                 >
-                  Potential Zoning Code
+                  <div
+                    class="sortable-column"
+                  >
+                    Potential Zoning Code
+                  </div>
                 </div>
                 <div
                   class="th"
@@ -397,7 +421,11 @@ exports[`Review Approve Step renders correctly 1`] = `
                   role="columnheader"
                   style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                 >
-                  Net Book Value
+                  <div
+                    class="sortable-column"
+                  >
+                    Net Book Value
+                  </div>
                 </div>
                 <div
                   class="th"
@@ -405,7 +433,11 @@ exports[`Review Approve Step renders correctly 1`] = `
                   role="columnheader"
                   style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                 >
-                  Market Value
+                  <div
+                    class="sortable-column"
+                  >
+                    Market Value
+                  </div>
                 </div>
                 <div
                   class="th"
@@ -413,7 +445,11 @@ exports[`Review Approve Step renders correctly 1`] = `
                   role="columnheader"
                   style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                 >
-                  Assessed Value
+                  <div
+                    class="sortable-column"
+                  >
+                    Assessed Value
+                  </div>
                 </div>
                 <div
                   class="th"
@@ -421,7 +457,11 @@ exports[`Review Approve Step renders correctly 1`] = `
                   role="columnheader"
                   style="box-sizing: border-box; flex: 60 0 auto; min-width: 30px; width: 60px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                 >
-                  Type
+                  <div
+                    class="sortable-column"
+                  >
+                    Type
+                  </div>
                 </div>
               </div>
             </div>

@@ -24,7 +24,7 @@ const initialState: IUsersState = {
   pagedUsers: { page: 1, pageIndex: 0, total: 0, quantity: 0, items: [] },
   rowsPerPage: DEFAULT_PAGE_SIZE,
   filter: {},
-  sort: { column: 'username', direction: 'asc' },
+  sort: { username: 'asc' },
   pageIndex: 0,
 };
 

@@ -196,7 +196,6 @@ exports[`EnhancedReferralTab renders correctly 1`] = `
               <div
                 className="th"
                 colSpan={1}
-                onClick={[Function]}
                 role="columnheader"
                 style={
                   Object {
@@ -211,12 +210,15 @@ exports[`EnhancedReferralTab renders correctly 1`] = `
                   }
                 }
               >
-                Agency
+                <div
+                  className="sortable-column"
+                >
+                  Agency
+                </div>
               </div>
               <div
                 className="th"
                 colSpan={1}
-                onClick={[Function]}
                 role="columnheader"
                 style={
                   Object {
@@ -231,12 +233,15 @@ exports[`EnhancedReferralTab renders correctly 1`] = `
                   }
                 }
               >
-                Business Case Received Date
+                <div
+                  className="sortable-column"
+                >
+                  Business Case Received Date
+                </div>
               </div>
               <div
                 className="th"
                 colSpan={1}
-                onClick={[Function]}
                 role="columnheader"
                 style={
                   Object {
@@ -251,12 +256,15 @@ exports[`EnhancedReferralTab renders correctly 1`] = `
                   }
                 }
               >
-                Note
+                <div
+                  className="sortable-column"
+                >
+                  Note
+                </div>
               </div>
               <div
                 className="th"
                 colSpan={1}
-                onClick={[Function]}
                 role="columnheader"
                 style={
                   Object {
@@ -271,7 +279,11 @@ exports[`EnhancedReferralTab renders correctly 1`] = `
                   }
                 }
               >
-                Response
+                <div
+                  className="sortable-column"
+                >
+                  Response
+                </div>
               </div>
             </div>
           </div>

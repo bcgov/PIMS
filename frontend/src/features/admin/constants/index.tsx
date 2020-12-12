@@ -9,7 +9,6 @@ export const columnDefinitions: ColumnWithProps<IAgencyRecord>[] = [
     Header: 'Agency name',
     accessor: 'name',
     align: 'left',
-    sortable: true,
     clickable: true,
   },
   {
@@ -17,14 +16,12 @@ export const columnDefinitions: ColumnWithProps<IAgencyRecord>[] = [
     accessor: 'code',
     align: 'left',
     clickable: true,
-    sortable: true,
   },
   {
     Header: 'Description',
     accessor: 'description',
     align: 'left',
     clickable: true,
-    sortable: true,
   },
   {
     Header: 'Parent Agency',
@@ -36,6 +33,5 @@ export const columnDefinitions: ColumnWithProps<IAgencyRecord>[] = [
         <Link to={`/admin/agency/${props.row.original.parentId}`}>{props.row.original.parent}</Link>
       );
     },
-    sortable: true,
   },
 ];

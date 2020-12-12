@@ -478,7 +478,11 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
                         role="columnheader"
                         style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                       >
-                        Property Name
+                        <div
+                          class="sortable-column"
+                        >
+                          Property Name
+                        </div>
                       </div>
                       <div
                         class="th"
@@ -486,7 +490,11 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
                         role="columnheader"
                         style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                       >
-                        Street Address
+                        <div
+                          class="sortable-column"
+                        >
+                          Street Address
+                        </div>
                       </div>
                       <div
                         class="th"
@@ -494,7 +502,11 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
                         role="columnheader"
                         style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                       >
-                        Location
+                        <div
+                          class="sortable-column"
+                        >
+                          Location
+                        </div>
                       </div>
                       <div
                         class="th"
@@ -502,7 +514,11 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
                         role="columnheader"
                         style="box-sizing: border-box; flex: 60 0 auto; min-width: 30px; width: 60px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                       >
-                        Type
+                        <div
+                          class="sortable-column"
+                        >
+                          Type
+                        </div>
                       </div>
                       <div
                         class="th"
@@ -510,7 +526,11 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
                         role="columnheader"
                         style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                       >
-                        Appraised Value
+                        <div
+                          class="sortable-column"
+                        >
+                          Appraised Value
+                        </div>
                       </div>
                       <div
                         class="th"
@@ -518,7 +538,11 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
                         role="columnheader"
                         style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                       >
-                        Appraised Date
+                        <div
+                          class="sortable-column"
+                        >
+                          Appraised Date
+                        </div>
                       </div>
                       <div
                         class="th"
@@ -526,7 +550,11 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
                         role="columnheader"
                         style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                       >
-                        Appraisal Firm
+                        <div
+                          class="sortable-column"
+                        >
+                          Appraisal Firm
+                        </div>
                       </div>
                       <div
                         class="th"
@@ -534,7 +562,11 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
                         role="columnheader"
                         style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                       >
-                        Assessed Value
+                        <div
+                          class="sortable-column"
+                        >
+                          Assessed Value
+                        </div>
                       </div>
                       <div
                         class="th"
@@ -542,7 +574,11 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
                         role="columnheader"
                         style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                       >
-                        Assessed Date
+                        <div
+                          class="sortable-column"
+                        >
+                          Assessed Date
+                        </div>
                       </div>
                     </div>
                   </div>

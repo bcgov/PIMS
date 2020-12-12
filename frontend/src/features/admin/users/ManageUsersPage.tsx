@@ -21,9 +21,10 @@ import {
   getUsersPageIndexAction,
   setUsersPageSize,
 } from 'actions/adminActions';
-import { generateSortCriteria, formatApiDateTime } from 'utils';
+import { formatApiDateTime, generateMultiSortCriteria } from 'utils';
 import styled from 'styled-components';
 import useCodeLookups from 'hooks/useLookupCodes';
+import { isEmpty } from 'lodash';
 
 const TableContainer = styled(Container)`
   margin-top: 10px;
@@ -75,9 +76,7 @@ export const ManageUsersPage = () => {
         toFilteredApiPaginateParams<IUsersFilter>(
           pageIndex,
           pageSize,
-          sort && sort.column && sort.direction
-            ? [generateSortCriteria(sort.column, sort.direction)]
-            : undefined,
+          sort && !isEmpty(sort) ? generateMultiSortCriteria(sort) : undefined,
           filter,
         ),
       ),
@@ -123,9 +122,13 @@ export const ManageUsersPage = () => {
             pageCount={Math.ceil(pagedUsers.total / pageSize)}
             pageSize={pageSize}
             onRequestData={onRequestData}
-            onSortChange={(column, direction) =>
-              dispatch(getUsersSortAction({ column, direction }))
-            }
+            onSortChange={(column, direction) => {
+              if (!!direction) {
+                dispatch(getUsersSortAction({ [column]: direction }));
+              } else {
+                dispatch(getUsersSortAction({}));
+              }
+            }}
             sort={sort}
             onPageSizeChange={size => dispatch(setUsersPageSize(size))}
             loading={!(users && !users.isFetching)}

@@ -25,6 +25,7 @@ import { ReactComponent as LandSvg } from 'assets/images/icon-lot.svg';
 import { PropertyFilter } from '../filter';
 import { PropertyTypes } from '../../../constants/propertyTypes';
 import { IPropertyFilter } from '../filter/IPropertyFilter';
+import { SortDirection, TableSort } from 'components/Table/TableSort';
 
 const getPropertyReportUrl = (filter: IPropertyQueryParams) =>
   `${ENVIRONMENT.apiUrl}/reports/properties?${filter ? queryString.stringify(filter) : ''}`;
@@ -116,6 +117,7 @@ const PropertyListView: React.FC = () => {
 
   const agencyIds = useMemo(() => agencies.map(x => parseInt(x.id, 10)), [agencies]);
   const columns = useMemo(() => cols, []);
+  const [sorting, setSorting] = useState<TableSort<IProperty>>({ description: 'asc' });
 
   // We'll start our table without any data
   const [data, setData] = useState<IProperty[] | undefined>();
@@ -156,11 +158,13 @@ const PropertyListView: React.FC = () => {
       pageSize,
       filter,
       agencyIds,
+      sorting,
     }: {
       pageIndex: number;
       pageSize: number;
       filter: IPropertyFilter;
       agencyIds: number[];
+      sorting: TableSort<IProperty>;
     }) => {
       // Give this fetch an ID
       const fetchId = ++fetchIdRef.current;
@@ -172,7 +176,7 @@ const PropertyListView: React.FC = () => {
       if (agencyIds?.length > 0) {
         setData(undefined);
         const query = getServerQuery({ pageIndex, pageSize, filter, agencyIds });
-        const data = await service.getPropertyList(query);
+        const data = await service.getPropertyList(query, sorting);
         // The server could send back total page count.
         // For now we'll just calculate it.
         if (fetchId === fetchIdRef.current && data?.items) {
@@ -188,8 +192,8 @@ const PropertyListView: React.FC = () => {
 
   // Listen for changes in pagination and use the state to fetch our new data
   useEffect(() => {
-    fetchData({ pageIndex, pageSize, filter, agencyIds });
-  }, [fetchData, pageIndex, pageSize, filter, agencyIds]);
+    fetchData({ pageIndex, pageSize, filter, agencyIds, sorting });
+  }, [fetchData, pageIndex, pageSize, filter, agencyIds, sorting]);
 
   const dispatch = useDispatch();
 
@@ -247,6 +251,8 @@ const PropertyListView: React.FC = () => {
             agencyLookupCodes={agencies}
             propertyClassifications={propertyClassifications}
             onChange={handleFilterChange}
+            sort={sorting}
+            onSort={setSorting}
           />
         </Container>
       </Container>
@@ -298,9 +304,19 @@ const PropertyListView: React.FC = () => {
           columns={columns}
           data={data || []}
           loading={data === undefined}
+          sort={sorting}
           pageIndex={pageIndex}
           onRequestData={handleRequestData}
           pageCount={pageCount}
+          onSortChange={(column: string, direction: SortDirection) => {
+            if (!!direction) {
+              setSorting({ ...sorting, [column]: direction });
+            } else {
+              const data: any = { ...sorting };
+              delete data[column];
+              setSorting(data);
+            }
+          }}
           canRowExpand={(val: any) => {
             if (val.values.propertyTypeId === 0) {
               return true;
