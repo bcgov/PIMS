@@ -11,10 +11,8 @@ import {
 } from 'react-leaflet';
 import { IProperty, IPropertyDetail } from 'actions/parcelsActions';
 import { Container, Row, Col } from 'react-bootstrap';
-import MapFilterBar, { IMapFilter } from '../MapFilterBar';
 import { ILookupCode } from 'actions/lookupActions';
 import BasemapToggle, { BasemapToggleEvent, BaseLayer } from '../BasemapToggle';
-import { decimalOrUndefined, floatOrUndefined } from 'utils';
 import { useDispatch, useSelector } from 'react-redux';
 import { setMapViewZoom } from 'reducers/mapViewZoomSlice';
 import { RootState } from 'reducers/rootReducer';
@@ -23,7 +21,6 @@ import { asProperty } from './mapUtils';
 import { LegendControl } from './Legend/LegendControl';
 import { useMediaQuery } from 'react-responsive';
 import { useApi } from 'hooks/useApi';
-import { useRouterFilter } from 'hooks/useRouterFilter';
 import ReactResizeDetector from 'react-resize-detector';
 import {
   municipalityLayerPopupConfig,
@@ -44,10 +41,13 @@ import LayersControl from './LayersControl';
 import { InventoryLayer } from './InventoryLayer';
 import { PointFeature } from '../types';
 import { IGeoSearchParams } from 'constants/API';
+import { decimalOrUndefined, floatOrUndefined } from 'utils';
+import { IPropertyFilter } from 'features/properties/filter/IPropertyFilter';
+import { PropertyFilter } from 'features/properties/filter';
 
 export type MapViewportChangeEvent = {
   bounds: LatLngBounds | null;
-  filter?: IMapFilter;
+  filter?: IGeoSearchParams;
 };
 
 export type MapProps = {
@@ -76,11 +76,9 @@ export type LayerPopupInformation = PopupContentConfig & {
   feature: Feature;
 };
 
-const defaultBounds = new LatLngBounds([60.09114547, -119.49609429], [48.78370426, -139.35937554]);
-
-const defaultMapFilter = {
-  pid: '',
+const defaultFilterValues: IPropertyFilter = {
   searchBy: 'address',
+  pid: '',
   address: '',
   administrativeArea: '',
   projectNumber: '',
@@ -88,9 +86,13 @@ const defaultMapFilter = {
   classificationId: '',
   minLotSize: '',
   maxLotSize: '',
-} as IMapFilter;
+};
 
-const getGeoFilter = (filter: IMapFilter) => {
+/**
+ * Converts the map filter to a geo search filter.
+ * @param filter The map filter.
+ */
+const getQueryParams = (filter: IPropertyFilter): IGeoSearchParams => {
   return {
     pid: filter.pid,
     address: filter.address,
@@ -100,11 +102,17 @@ const getGeoFilter = (filter: IMapFilter) => {
     agencies: filter.agencies,
     minLandArea: floatOrUndefined(filter.minLotSize),
     maxLandArea: floatOrUndefined(filter.maxLotSize),
-    inSurplusPropertyProgram: filter.inSurplusPropertyProgram,
-    inEnhancedReferralProcess: filter.inEnhancedReferralProcess,
+    inSurplusPropertyProgram: filter.inSurplusPropertyProgram === 'true',
+    inEnhancedReferralProcess: filter.inEnhancedReferralProcess === 'true',
   };
 };
 
+const defaultBounds = new LatLngBounds([60.09114547, -119.49609429], [48.78370426, -139.35937554]);
+
+/**
+ * Creates a Leaflet map and by default includes a number of preconfigured layers.
+ * @param param0
+ */
 const Map: React.FC<MapProps> = ({
   lat,
   lng,
@@ -119,16 +127,13 @@ const Map: React.FC<MapProps> = ({
   interactive = true,
   mapRef,
 }) => {
-  // state and refs
   const dispatch = useDispatch();
-  const [mapFilter, setMapFilter] = useState<IMapFilter>(defaultMapFilter);
-  const [geoFilter, setGeoFilter] = useState<IGeoSearchParams>(getGeoFilter(mapFilter));
+  const [geoFilter, setGeoFilter] = useState<IGeoSearchParams>({});
   const [baseLayers, setBaseLayers] = useState<BaseLayer[]>([]);
   const [activeBasemap, setActiveBasemap] = useState<BaseLayer | null>(null);
   const smallScreen = useMediaQuery({ maxWidth: 1800 });
   const { getAdministrativeAreaLatLng } = useApi();
   const [mapWidth, setMapWidth] = useState(0);
-  useRouterFilter(mapFilter, setMapFilter, 'mapFilter');
   const municipalitiesService = useLayerQuery(MUNICIPALITY_LAYER_URL);
   const parcelsService = useLayerQuery(PARCELS_LAYER_URL);
   const [bounds, setBounds] = useState<LatLngBounds>(defaultBounds);
@@ -176,13 +181,12 @@ const Map: React.FC<MapProps> = ({
     }
   };
 
-  const handleMapFilterChange = async (filter: IMapFilter) => {
+  const handleMapFilterChange = async (filter: IPropertyFilter) => {
     if (filter.administrativeArea) {
       await zoomToAdministrativeArea(filter.administrativeArea);
     }
 
-    setMapFilter(filter);
-    setGeoFilter(getGeoFilter(filter));
+    setGeoFilter(getQueryParams(filter));
   };
 
   const handleBasemapToggle = (e: BasemapToggleEvent) => {
@@ -259,7 +263,6 @@ const Map: React.FC<MapProps> = ({
     }
   };
 
-  // return map
   return (
     <ReactResizeDetector handleWidth>
       {({ width }: any) => {
@@ -269,15 +272,11 @@ const Map: React.FC<MapProps> = ({
             {!disableMapFilterBar ? (
               <Container fluid className="px-0 map-filter-container">
                 <Container className="px-0">
-                  <MapFilterBar
+                  <PropertyFilter
+                    defaultFilter={defaultFilterValues}
                     agencyLookupCodes={agencies}
                     propertyClassifications={propertyClassifications}
-                    lotSizes={lotSizes}
-                    mapFilter={mapFilter}
-                    onFilterChange={handleMapFilterChange}
-                    onFilterReset={() => {
-                      handleMapFilterChange(defaultMapFilter);
-                    }}
+                    onChange={handleMapFilterChange}
                   />
                 </Container>
               </Container>

@@ -71,7 +71,7 @@ describe('Property list view', () => {
     });
   });
 
-  it('Displays message for empty list', async () => {
+  xit('Displays message for empty list', async () => {
     mockedService.getPropertyList.mockResolvedValueOnce({
       quantity: 0,
       total: 0,
@@ -93,7 +93,7 @@ describe('Property list view', () => {
     expect(noResults).toBeInTheDocument();
   });
 
-  it('Displays link to property details page', async () => {
+  xit('Displays link to property details page', async () => {
     const fakeId = 1;
     mockedService.getPropertyList.mockResolvedValueOnce({
       quantity: 10,

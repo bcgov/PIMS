@@ -1,7 +1,5 @@
 import { ILookupCode } from '../actions/lookupActions';
 import { IParcel, IProperty } from 'actions/parcelsActions';
-import { MapViewportChangeEvent } from 'components/maps/leaflet/Map';
-import { IMapFilter } from 'components/maps/MapFilterBar';
 
 export const SELECTEDCLASSIFICATION = {
   name: 'Core Operational',
@@ -244,20 +242,3 @@ export const ACTIVE = {
   buildings: [],
   agency: 'FIN',
 } as IParcel;
-
-export const mockAgencyModel = {
-  bounds: null,
-  filter: {
-    searchBy: 'address',
-    pid: '',
-    address: '',
-    administrativeArea: '',
-    projectNumber: '',
-    agencies: '1',
-    classificationId: '',
-    minLotSize: '',
-    maxLotSize: '',
-    inSurplusPropertyProgram: undefined,
-    inEnhancedReferralProcess: undefined,
-  } as IMapFilter,
-} as MapViewportChangeEvent;

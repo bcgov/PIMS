@@ -60,9 +60,9 @@ export interface IProperty {
 }
 
 /**
- * IPropertyFilter interface, provides a model for querying the API for properties.
+ * IPropertyQueryParams interface, provides a model for querying the API for properties.
  */
-export interface IPropertyFilter {
+export interface IPropertyQueryParams {
   page: number;
   quantity: number;
   pid?: string;
