@@ -21,7 +21,7 @@ exports[`Property list view Matches snapshot 1`] = `
         novalidate=""
       >
         <div
-          class="filter-bar form-row"
+          class="map-filter-bar align-items-start form-row"
         >
           <div
             class="bar-item col"
@@ -48,15 +48,15 @@ exports[`Property list view Matches snapshot 1`] = `
                     </option>
                     <option
                       class="option"
-                      value="pid"
-                    >
-                      PID/PIN
-                    </option>
-                    <option
-                      class="option"
                       value="administrativeArea"
                     >
                       Location
+                    </option>
+                    <option
+                      class="option"
+                      value="pid"
+                    >
+                      PID/PIN
                     </option>
                     <option
                       class="option"
@@ -77,7 +77,7 @@ exports[`Property list view Matches snapshot 1`] = `
                     class="form-control"
                     id="input-address"
                     name="address"
-                    placeholder="Enter an address or location"
+                    placeholder="Enter an address or city"
                     value=""
                   />
                 </div>
@@ -85,7 +85,7 @@ exports[`Property list view Matches snapshot 1`] = `
             </div>
           </div>
           <div
-            class="bar-item col"
+            class="agency-item col"
           >
             <div
               class="form-group"
@@ -103,7 +103,7 @@ exports[`Property list view Matches snapshot 1`] = `
                     aria-expanded="false"
                     aria-haspopup="listbox"
                     autocomplete="off"
-                    class="rbt-input-main form-control rbt-input map-filter-typeahead"
+                    class="rbt-input-main form-control rbt-input"
                     id="agencies-field"
                     name="agencies"
                     placeholder="Enter an Agency"
@@ -139,11 +139,17 @@ exports[`Property list view Matches snapshot 1`] = `
                 >
                   Classification
                 </option>
+                <option
+                  class="option"
+                  value="1"
+                >
+                  classificationVal
+                </option>
               </select>
             </div>
           </div>
           <div
-            class="bar-item d-flex align-items-center col"
+            class="bar-item d-flex align-items-start col"
           >
             <div
               class="form-group"
@@ -157,7 +163,7 @@ exports[`Property list view Matches snapshot 1`] = `
               />
             </div>
             <span
-              class="mx-2"
+              class="mx-2 align-self-center"
             >
               -
             </span>

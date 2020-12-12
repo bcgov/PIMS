@@ -11,21 +11,22 @@ import download from 'utils/download';
 import { RootState } from 'reducers/rootReducer';
 import { ILookupCode } from 'actions/lookupActions';
 import { ILookupCodeState } from 'reducers/lookupCodeReducer';
-import { IPropertyFilter, IProperty, FilterBar, IFilterBarState } from '.';
+import { IPropertyQueryParams, IProperty } from '.';
 import { columns as cols } from './columns';
 import { Table } from 'components/Table';
 import service from '../service';
 import { FaFolderOpen, FaFolder } from 'react-icons/fa';
 import { Buildings } from './buildings';
-import { useRouterFilter } from 'hooks/useRouterFilter';
 import { FaFileExcel, FaFileAlt } from 'react-icons/fa';
 import styled from 'styled-components';
 import TooltipWrapper from 'components/common/TooltipWrapper';
 import { ReactComponent as BuildingSvg } from 'assets/images/icon-business.svg';
 import { ReactComponent as LandSvg } from 'assets/images/icon-lot.svg';
-import { PropertyTypes } from './FilterBar';
+import { PropertyFilter } from '../filter';
+import { PropertyTypes } from '../../../constants/propertyTypes';
+import { IPropertyFilter } from '../filter/IPropertyFilter';
 
-const getPropertyReportUrl = (filter: IPropertyFilter) =>
+const getPropertyReportUrl = (filter: IPropertyQueryParams) =>
   `${ENVIRONMENT.apiUrl}/reports/properties?${filter ? queryString.stringify(filter) : ''}`;
 
 const FileIcon = styled(Button)`
@@ -34,16 +35,29 @@ const FileIcon = styled(Button)`
   padding: 6px 5px;
 `;
 
-const initialQuery: IPropertyFilter = {
+const initialQuery: IPropertyQueryParams = {
   page: 1,
   quantity: 10,
   agencies: [],
 };
 
+const defaultFilterValues: IPropertyFilter = {
+  searchBy: 'address',
+  pid: '',
+  address: '',
+  administrativeArea: '',
+  projectNumber: '',
+  agencies: '',
+  classificationId: '',
+  minLotSize: '',
+  maxLotSize: '',
+  propertyType: PropertyTypes.Land,
+};
+
 const getServerQuery = (state: {
   pageIndex: number;
   pageSize: number;
-  filter: IFilterBarState;
+  filter: IPropertyFilter;
   agencyIds: number[];
 }) => {
   const {
@@ -58,7 +72,6 @@ const getServerQuery = (state: {
       agencies,
       minLotSize,
       maxLotSize,
-      parcelId,
       propertyType,
     },
   } = state;
@@ -68,7 +81,7 @@ const getServerQuery = (state: {
     parsedAgencies = [parseInt(agencies, 10)];
   }
 
-  const query: IPropertyFilter = {
+  const query: IPropertyQueryParams = {
     ...initialQuery,
     address,
     pid,
@@ -80,7 +93,6 @@ const getServerQuery = (state: {
     maxLandArea: decimalOrUndefined(maxLotSize),
     page: pageIndex + 1,
     quantity: pageSize,
-    parcelId: parcelId ? decimalOrUndefined(parcelId) : undefined,
     propertyType,
   };
   return query;
@@ -111,18 +123,7 @@ const PropertyListView: React.FC = () => {
   const [expandData, setExpandData] = useState<any>({});
 
   // Filtering and pagination state
-  const [filter, setFilter] = useState<IFilterBarState>({
-    searchBy: 'address',
-    pid: '',
-    address: '',
-    administrativeArea: '',
-    projectNumber: '',
-    agencies: '',
-    classificationId: '',
-    minLotSize: '',
-    maxLotSize: '',
-    propertyType: PropertyTypes.Land,
-  });
+  const [filter, setFilter] = useState<IPropertyFilter>(defaultFilterValues);
 
   const [pageSize, setPageSize] = useState(10);
   const [pageIndex, setPageIndex] = useState(0);
@@ -133,7 +134,7 @@ const PropertyListView: React.FC = () => {
 
   // Update internal state whenever the filter bar state changes
   const handleFilterChange = useCallback(
-    async (value: IFilterBarState) => {
+    async (value: IPropertyFilter) => {
       setFilter({ ...value });
       setPageIndex(0); // Go to first page of results when filter changes
     },
@@ -158,7 +159,7 @@ const PropertyListView: React.FC = () => {
     }: {
       pageIndex: number;
       pageSize: number;
-      filter: IFilterBarState;
+      filter: IPropertyFilter;
       agencyIds: number[];
     }) => {
       // Give this fetch an ID
@@ -191,7 +192,6 @@ const PropertyListView: React.FC = () => {
   }, [fetchData, pageIndex, pageSize, filter, agencyIds]);
 
   const dispatch = useDispatch();
-  useRouterFilter(filter, setFilter, 'listFilter');
 
   const fetch = (accept: 'csv' | 'excel') => {
     const query = getServerQuery({ pageIndex, pageSize, filter, agencyIds });
@@ -242,10 +242,10 @@ const PropertyListView: React.FC = () => {
     <Container fluid className="PropertyListView">
       <Container fluid className="filter-container border-bottom">
         <Container className="px-0">
-          <FilterBar
+          <PropertyFilter
+            defaultFilter={defaultFilterValues}
             agencyLookupCodes={agencies}
             propertyClassifications={propertyClassifications}
-            filter={filter}
             onChange={handleFilterChange}
           />
         </Container>

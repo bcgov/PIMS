@@ -4,60 +4,73 @@ import React, { useState } from 'react';
 import { saveFilter } from 'reducers/filterSlice';
 import { RootState } from 'reducers/rootReducer';
 import _ from 'lodash';
-import { BasePropertyFilter } from 'components/common/interfaces';
 import queryString from 'query-string';
 
-const defaultFilter: BasePropertyFilter = {
-  searchBy: 'address',
-  pid: '',
-  address: '',
-  administrativeArea: '',
-  projectNumber: '',
-  agencies: '',
-  classificationId: '',
-  minLotSize: '',
-  maxLotSize: '',
+/**
+ * Extract the specified properties from the source object.
+ * Does not extract 'undefined' property values.
+ * @param props An array of property names.
+ * @param source The source object that the properties will be extracted from.
+ * @returns A new object composed of the extracted properties.
+ */
+const extractProps = (props: string[], source: any): any => {
+  var dest = {} as any;
+  props.forEach(p => {
+    if (source[p] !== undefined) dest[p] = source[p];
+  });
+  return dest;
 };
 
 /**
  * Control the state of the passed filter using url search params.
+ * The filter type of 'T' should be a flat object with properties that are only string.
  * NOTE: URLSearchParams not supported by IE.
  */
-export const useRouterFilter = <T extends BasePropertyFilter>(
+export const useRouterFilter = <T extends object>(
+  /** Initial filter that will be applied to the URL and stored in redux. */
   filter: T,
-  setFilter: (val: T) => void,
+  /** Change the state of the filter. */
+  setFilter: (filter: T) => void,
+  /** Redux key */
   key: string,
 ) => {
   const history = useHistory();
-  const [originalSearch] = useState(history.location.search);
   const reduxSearch = useSelector<RootState, any>(state => state.filter);
-  const [originalSearchRedux] = useState(reduxSearch);
+  const [savedFilter] = useState(reduxSearch);
   const dispatch = useDispatch();
 
-  //When this hook loads, override the value of the filter with the search params. Should run once as originalSearch should never change.
+  // Extract the query parameters to initialize the filter.
+  // This will only occur the first time the component loads to ensure the URL query parameters are applied.
   React.useEffect(() => {
-    const filterFromParams = queryString.parse(originalSearch);
-    if (
-      Object.keys(defaultFilter).length ===
-      _.intersection(Object.keys(filterFromParams), Object.keys(defaultFilter)).length
-    ) {
-      setFilter(filterFromParams as any);
-    } else if (originalSearchRedux?.hasOwnProperty(key) && !!originalSearchRedux[key]?.searchBy) {
-      setFilter(originalSearchRedux[key]);
+    const params = queryString.parse(history.location.search);
+    // Check if query contains filter params.
+    const filterProps = Object.keys(filter);
+    if (_.intersection(Object.keys(params), filterProps).length) {
+      let merged = extractProps(filterProps, params);
+      // Only change state if the query parameters are different than the default filter.
+      if (!_.isEqual(merged, filter)) setFilter(merged);
+    } else if (savedFilter?.hasOwnProperty(key)) {
+      let merged = extractProps(filterProps, savedFilter[key]);
+      // Only change state if the saved filter is different than the default filter.
+      if (!_.isEqual(merged, filter)) setFilter(merged);
     }
-  }, [key, originalSearch, originalSearchRedux, setFilter]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  //If the filter ever changes, push those changes to the search params
+  // If the 'filter' changes save it to redux store and update the URL.
   React.useEffect(() => {
     const filterParams = new URLSearchParams(filter as any);
     const allParams = {
       ...queryString.parse(history.location.search),
       ...queryString.parse(filterParams.toString()),
     };
-    history.push({ pathname: history.location.pathname, search: queryString.stringify(allParams) });
+    history.push({
+      pathname: history.location.pathname,
+      search: queryString.stringify(allParams, { skipEmptyString: true, skipNull: true }),
+    });
     const keyedFilter = { [key]: filter };
-    dispatch(saveFilter({ ...originalSearchRedux, ...keyedFilter }));
-  }, [history, filter, dispatch, key, originalSearchRedux]);
+    dispatch(saveFilter({ ...savedFilter, ...keyedFilter }));
+  }, [history, key, filter, savedFilter, dispatch]);
 
   return;
 };

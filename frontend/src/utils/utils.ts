@@ -26,7 +26,7 @@ export const truncate = (input: string, maxLength: number): string => {
  * @param input The string value to convert to a decimal.
  */
 export const decimalOrUndefined = (input: string | ''): number | undefined => {
-  return input !== '' ? parseInt(input, 10) : undefined;
+  return input !== '' && input !== undefined ? parseInt(input, 10) : undefined;
 };
 
 /**
@@ -34,7 +34,7 @@ export const decimalOrUndefined = (input: string | ''): number | undefined => {
  * @param input The string value to convert to a decimal.
  */
 export const decimalOrNull = (input: string): number | null => {
-  return input !== '' ? parseInt(input, 10) : null;
+  return input !== '' && input !== undefined ? parseInt(input, 10) : null;
 };
 
 /**
@@ -42,7 +42,7 @@ export const decimalOrNull = (input: string): number | null => {
  * @param input The string value to convert to a decimal.
  */
 export const decimalOrEmpty = (input: string): number | string => {
-  return input !== '' ? parseInt(input, 10) : '';
+  return input !== '' && input !== undefined ? parseInt(input, 10) : '';
 };
 
 /**
@@ -50,7 +50,7 @@ export const decimalOrEmpty = (input: string): number | string => {
  * @param input The string value to convert to a float.
  */
 export const floatOrNull = (input: string): number | null => {
-  return input !== '' ? parseFloat(input) : null;
+  return input !== '' && input !== undefined ? parseFloat(input) : null;
 };
 
 /**
@@ -58,7 +58,7 @@ export const floatOrNull = (input: string): number | null => {
  * @param input The string value to convert to a float.
  */
 export const floatOrUndefined = (input: string | ''): number | undefined => {
-  return input !== '' ? parseFloat(input) : undefined;
+  return input !== '' && input !== undefined ? parseFloat(input) : undefined;
 };
 
 /**

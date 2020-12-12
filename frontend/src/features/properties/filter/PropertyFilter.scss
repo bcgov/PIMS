@@ -1,5 +1,5 @@
-@import '../../fonts.scss';
-@import '../../variables';
+@import '../../../fonts.scss';
+@import '../../../variables';
 .container-fluid {
   &.map-filter-container {
     height: #{$mapfilter-height};
