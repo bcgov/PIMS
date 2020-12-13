@@ -1,3 +1,6 @@
+import { TrueFalse } from 'constants/trueFalse';
+import { PropertyTypes } from 'constants/propertyTypes';
+
 /**
  * Property filter options used by Formik.
  */
@@ -25,9 +28,9 @@ export interface IPropertyFilter {
   /** The maxium lot size of the property. */
   maxLotSize: string;
   /** Whether the property is in SPP. */
-  inSurplusPropertyProgram?: string;
+  inSurplusPropertyProgram?: TrueFalse;
   /** Whether the property is in ERP. */
-  inEnhancedReferralProcess?: string;
+  inEnhancedReferralProcess?: TrueFalse;
   /** Select on of the property types [Land, Building]. */
-  propertyType?: string;
+  propertyType?: PropertyTypes;
 }
