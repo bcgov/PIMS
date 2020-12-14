@@ -162,15 +162,15 @@ describe('Project list view tests', () => {
     });
 
     await act(async () => {
-      const { queryByTitle, container } = render(
+      const { queryByTestId, container } = render(
         <Provider store={store}>
           <Router history={history}>
             <ProjectListView />
           </Router>
         </Provider>,
       );
-      expect(queryByTitle('Export to Excel')).not.toBeInTheDocument();
-      expect(queryByTitle('Export to CSV')).not.toBeInTheDocument();
+      expect(queryByTestId('excel-icon')).not.toBeInTheDocument();
+      expect(queryByTestId('csv-icon')).not.toBeInTheDocument();
       expect(container.querySelector('span[class="spinner-border"]')).not.toBeInTheDocument();
     });
   });
@@ -186,15 +186,15 @@ describe('Project list view tests', () => {
     });
 
     await act(async () => {
-      const { queryByTitle, container } = render(
+      const { getByTestId, container } = render(
         <Provider store={store}>
           <Router history={history}>
             <ProjectListView />
           </Router>
         </Provider>,
       );
-      expect(queryByTitle('Export to Excel')).toBeInTheDocument();
-      expect(queryByTitle('Export to CSV')).toBeInTheDocument();
+      expect(getByTestId('excel-icon')).toBeInTheDocument();
+      expect(getByTestId('csv-icon')).toBeInTheDocument();
       expect(container.querySelector('span[class="spinner-border"]')).not.toBeInTheDocument();
     });
   });
