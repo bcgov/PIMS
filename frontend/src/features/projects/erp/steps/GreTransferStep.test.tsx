@@ -11,7 +11,7 @@ import axios from 'axios';
 import _ from 'lodash';
 import { cleanup } from '@testing-library/react-hooks';
 import { getStore, mockProject as project } from '../../dispose/testUtils';
-import { CLASSIFICATIONS } from 'constants/classifications';
+import { Classifications } from 'constants/classifications';
 import { IProject, ReviewWorkflowStatus } from '../../common';
 import { GreTransferStep } from '..';
 import { fillInput } from 'utils/testUtils';
@@ -22,40 +22,41 @@ const mockProject: IProject = {
   statusCode: ReviewWorkflowStatus.OnHold,
   properties: [
     {
+      id: 1,
+      pid: '213-221-321',
+      name: 'name',
+      description: '',
+      landLegalDescription: '',
       address: 'Test, Alert Bay',
       addressId: 1,
+      administrativeArea: 'Alert Bay',
+      province: 'British Columbia',
+      postal: '',
       agency: 'Ministry of Advanced Education, Skills & Training',
       agencyCode: 'AEST',
       agencyId: 1,
+      classification: 'Core Operational',
+      classificationId: Classifications.SurplusActive,
+      constructionTypeId: 0,
+      propertyTypeId: 0,
+      propertyType: '',
       appraised: 0,
       assessed: 1,
       assessedDate: '2020-01-01T00:00:00',
-      administrativeArea: 'Alert Bay',
-      classification: 'Core Operational',
-      classificationId: CLASSIFICATIONS.SurplusActive,
-      constructionTypeId: 0,
-      description: '',
       market: 0,
       floorCount: 0,
-      id: 1,
       isSensitive: false,
       landArea: 123,
-      landLegalDescription: '',
       latitude: 48.42538763146778,
       longitude: -123.39006198220181,
       netBook: 1,
       netBookFiscalYear: 2020,
       occupantTypeId: 0,
-      pid: '213-221-321',
-      postal: '',
       predominateUseId: 0,
-      propertyTypeId: 0,
-      province: 'British Columbia',
       rentableArea: 0,
       transferLeaseOnSale: false,
       zoning: '',
       zoningPotential: '',
-      propertyType: '',
     },
   ],
 };
@@ -168,7 +169,7 @@ describe('GRE Transfer Step', () => {
     });
     it('displays modal when Update PIMS button clicked', async () => {
       const project = _.cloneDeep(mockProject);
-      project.properties[0].classificationId = CLASSIFICATIONS.CoreOperational;
+      project.properties[0].classificationId = Classifications.CoreOperational;
       const { container } = render(getGreTransferStep(getStore(project)));
       const updateButton = screen.getByText(/Update Property Information Management System/);
       await fillInput(container, 'agencyId', 'BC Transit', 'typeahead');

@@ -810,7 +810,7 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
                     class="form-label"
                     for="input-notes[13].note"
                   >
-                    Gain after SPP Cost Calculation Notes
+                    Gain after SPL Cost Calculation Notes
                   </label>
                   <textarea
                     class="col-md-10 form-control"

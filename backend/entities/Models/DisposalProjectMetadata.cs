@@ -106,6 +106,18 @@ namespace Pims.Dal.Entities.Models
         public DateTime? DisposedOn { get; set; }
         #endregion
 
+        #region Remove from SPL
+        /// <summary>
+        /// get/set - When the request to be removed from SPL was.
+        /// </summary>
+        public DateTime? RemovalFromSplRequestOn { get; set; }
+
+        /// <summary>
+        /// get/set - When the request to be removed from SPL was approved on.
+        /// </summary>
+        public DateTime? RemovalFromSplApprovedOn { get; set; }
+        #endregion
+
         #region Financials
         /// <summary>
         /// get/set - When the project received an BC assessment.

@@ -33,6 +33,25 @@ interface ISurplusPropertyListFormProps {
 }
 
 /**
+ * Determine which button is the primary action for the current project status.
+ * @param status Project status code.
+ * @returns A code to identify the primary button.
+ */
+const primaryButton = (status?: string): string => {
+  switch (status) {
+    case ReviewWorkflowStatus.PreMarketing:
+      return 'M';
+    case ReviewWorkflowStatus.OnMarket:
+      return 'CIP';
+    case ReviewWorkflowStatus.ContractInPlaceConditional:
+    case ReviewWorkflowStatus.ContractInPlaceUnconditional:
+      return 'D';
+    default:
+      return 'PM';
+  }
+};
+
+/**
  * Form component of SurplusPropertyListForm. TODO: add button click functionality.
  * @param param0 isReadOnly disable editing
  */
@@ -54,19 +73,8 @@ const SurplusPropertyListForm = ({
   const cipUnconditionalTasks = _.filter(formikProps.values.tasks, {
     statusCode: ReviewWorkflowStatus.ContractInPlaceUnconditional,
   });
-  const mainBtn = (status => {
-    switch (status) {
-      case ReviewWorkflowStatus.PreMarketing:
-        return 'M';
-      case ReviewWorkflowStatus.OnMarket:
-        return 'CIP';
-      case ReviewWorkflowStatus.ContractInPlaceConditional:
-      case ReviewWorkflowStatus.ContractInPlaceUnconditional:
-        return 'D';
-      default:
-        return 'PM';
-    }
-  })(formikProps.values.statusCode);
+
+  const mainBtn = primaryButton(formikProps.values.statusCode);
 
   return (
     <Container fluid className="SurplusPropertyListForm">
@@ -198,7 +206,6 @@ const SurplusPropertyListForm = ({
           <TooltipIcon toolTipId="dateEnteredMarket" toolTip={dateEnteredMarket} />
         </Form.Label>
         <FastDatePicker
-          required
           outerClassName="col-md-2"
           formikProps={formikProps}
           disabled={isReadOnly}
@@ -222,7 +229,6 @@ const SurplusPropertyListForm = ({
           Date of Accepted Offer
         </Form.Label>
         <FastDatePicker
-          required
           outerClassName="col-md-2"
           formikProps={formikProps}
           disabled={isReadOnly}
@@ -234,7 +240,6 @@ const SurplusPropertyListForm = ({
           Purchaser
         </Form.Label>
         <FastInput
-          required
           field="purchaser"
           outerClassName="col-md-2"
           disabled={isReadOnly}
@@ -246,13 +251,11 @@ const SurplusPropertyListForm = ({
           Offer Amount
         </Form.Label>
         <FastCurrencyInput
-          required
           field="offerAmount"
           outerClassName="col-md-2"
           disabled={isReadOnly}
           formikProps={formikProps}
         />
-        <div className="col-md-6"></div>
       </Form.Row>
       <TasksForm tasks={cipConditionalTasks} />
       <TasksForm tasks={cipUnconditionalTasks} />
@@ -274,6 +277,43 @@ const SurplusPropertyListForm = ({
               field="disposedOn"
             />
           </Form.Row>
+        </>
+      )}
+
+      {formikProps.values.statusCode === ReviewWorkflowStatus.PreMarketing && (
+        <>
+          <Form.Row>
+            <h3>Remove from SPL</h3>
+          </Form.Row>
+          <Form.Row>
+            <Form.Label column md={3}>
+              Request for removal on
+            </Form.Label>
+            <FastDatePicker
+              outerClassName="col-md-2"
+              formikProps={formikProps}
+              disabled={isReadOnly}
+              field="removalFromSplRequestOn"
+            />
+          </Form.Row>
+          <Form.Row>
+            <Form.Label column md={3}>
+              Request for removal approved on
+            </Form.Label>
+            <FastDatePicker
+              outerClassName="col-md-2"
+              formikProps={formikProps}
+              disabled={isReadOnly}
+              field="removalFromSplApprovedOn"
+            />
+          </Form.Row>
+          <ProjectNotes
+            label="Rationale for removal"
+            field="removalFromSplRationale"
+            className="col-md-auto"
+            outerClassName="col-md-12"
+            disabled={isReadOnly}
+          />
         </>
       )}
     </Container>

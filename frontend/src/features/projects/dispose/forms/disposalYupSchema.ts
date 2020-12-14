@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { CLASSIFICATIONS } from 'constants/classifications';
+import { Classifications } from 'constants/classifications';
 
 export const ApprovalConfirmationStepSchema = Yup.object().shape({
   confirmation: Yup.boolean()
@@ -26,7 +26,7 @@ export const UpdateInfoStepYupSchema = Yup.object().shape({
         'is-valid',
         'Must select Surplus Active or Surplus Encumbered',
         (val: any) =>
-          val === CLASSIFICATIONS.SurplusActive || val === CLASSIFICATIONS.SurplusEncumbered,
+          val === Classifications.SurplusActive || val === Classifications.SurplusEncumbered,
       ),
     }),
   ),
@@ -39,7 +39,7 @@ export const GreTransferStepYupSchema = Yup.object().shape({
         'is-valid',
         'Must select Core Operational or Core Strategic',
         (val: any) =>
-          val === CLASSIFICATIONS.CoreOperational || val === CLASSIFICATIONS.CoreStrategic,
+          val === Classifications.CoreOperational || val === Classifications.CoreStrategic,
       ),
     }),
   ),

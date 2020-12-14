@@ -8,11 +8,12 @@ import {
   CloseOutSignaturesForm,
   CloseOutAdjustmentForm,
 } from '..';
-import { ProjectNotes, NoteTypes, projectComments, IProject } from 'features/projects/common';
+import { ProjectNotes, projectComments, IProject } from 'features/projects/common';
 import { Col, Container, Form } from 'react-bootstrap';
 import './CloseOutFormTab.scss';
 import { FastCurrencyInput } from 'components/common/form';
 import { useFormikContext } from 'formik';
+import { NoteTypes } from '../../../../constants';
 
 interface ICloseOutFormTabProps {
   isReadOnly?: boolean;
