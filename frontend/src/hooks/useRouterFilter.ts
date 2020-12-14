@@ -5,6 +5,8 @@ import { saveFilter } from 'reducers/filterSlice';
 import { RootState } from 'reducers/rootReducer';
 import _ from 'lodash';
 import queryString from 'query-string';
+import { TableSort } from 'components/Table/TableSort';
+import { generateMultiSortCriteria, resolveSortCriteriaFromUrl } from 'utils';
 
 /**
  * Extract the specified properties from the source object.
@@ -33,6 +35,8 @@ export const useRouterFilter = <T extends object>(
   setFilter: (filter: T) => void,
   /** Redux key */
   key: string,
+  sorting?: TableSort<any>,
+  setSorting?: (sorting: TableSort<any>) => void,
 ) => {
   const history = useHistory();
   const reduxSearch = useSelector<RootState, any>(state => state.filter);
@@ -54,15 +58,26 @@ export const useRouterFilter = <T extends object>(
       // Only change state if the saved filter is different than the default filter.
       if (!_.isEqual(merged, filter)) setFilter(merged);
     }
+
+    if (params.sort && setSorting) {
+      const sort = resolveSortCriteriaFromUrl(
+        typeof params.sort === 'string' ? [params.sort] : params.sort,
+      );
+      if (!_.isEmpty(sort)) {
+        setSorting(sort as any);
+      }
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // If the 'filter' changes save it to redux store and update the URL.
   React.useEffect(() => {
     const filterParams = new URLSearchParams(filter as any);
+    const sort = generateMultiSortCriteria(sorting!);
     const allParams = {
       ...queryString.parse(history.location.search),
       ...queryString.parse(filterParams.toString()),
+      sort,
     };
     history.push({
       pathname: history.location.pathname,
@@ -70,7 +85,7 @@ export const useRouterFilter = <T extends object>(
     });
     const keyedFilter = { [key]: filter };
     dispatch(saveFilter({ ...savedFilter, ...keyedFilter }));
-  }, [history, key, filter, savedFilter, dispatch]);
+  }, [history, key, filter, savedFilter, dispatch, sorting]);
 
   return;
 };
