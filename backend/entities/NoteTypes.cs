@@ -54,11 +54,11 @@ namespace Pims.Dal.Entities
         /// </summary>
         Adjustment = 11,
         /// <summary>
-        /// SPP program cost notes.
+        /// SPL program cost notes.
         /// </summary>
         SplCost = 12,
         /// <summary>
-        /// SPP gain or loss notes.
+        /// SPL gain or loss notes.
         /// </summary>
         SplGain = 13,
         /// <summary>

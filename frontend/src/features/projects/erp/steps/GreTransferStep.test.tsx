@@ -35,7 +35,7 @@ const mockProject: IProject = {
       agency: 'Ministry of Advanced Education, Skills & Training',
       agencyCode: 'AEST',
       agencyId: 1,
-      classification: 'Core Operational',
+      classification: 'Surplus Active',
       classificationId: Classifications.SurplusActive,
       constructionTypeId: 0,
       propertyTypeId: 0,

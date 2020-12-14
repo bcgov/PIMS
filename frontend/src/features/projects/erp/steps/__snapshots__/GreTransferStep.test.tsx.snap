@@ -584,7 +584,7 @@ exports[`GRE Transfer Step renders correctly 1`] = `
                   }
                   title="Click to view property details"
                 >
-                  Core Operational
+                  Surplus Active
                 </div>
                 <div
                   className="td clickable"

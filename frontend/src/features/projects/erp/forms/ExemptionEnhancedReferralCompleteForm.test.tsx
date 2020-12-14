@@ -63,7 +63,7 @@ const FormComponent: React.FC<{
 }> = props => (
   <Formik
     innerRef={instance => {
-      props.formRef && props.formRef.current === instance;
+      if (props.formRef && instance) props.formRef.current = instance;
     }}
     initialValues={props.values}
     onSubmit={values => {}}

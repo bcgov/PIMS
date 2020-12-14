@@ -28,7 +28,7 @@ export enum NoteTypes {
   Adjustment = 11,
   /** Surplus Property Program Cost. */
   SplCost = 12,
-  /** Surpluse Property Program Gain. */
+  /** Surplus Property Program Gain. */
   SplGain = 13,
   /** Sales history of property. */
   SalesHistory = 14,
