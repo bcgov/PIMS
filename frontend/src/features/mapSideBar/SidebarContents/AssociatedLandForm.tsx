@@ -31,6 +31,7 @@ import { useBuildingApi } from '../hooks/useBuildingApi';
 import _ from 'lodash';
 import { IFormParcel } from '../containers/MapSideBarContainer';
 import { useState } from 'react';
+import { Prompt } from 'react-router-dom';
 import { defaultBuildingValues } from './BuildingForm';
 
 const Container = styled.div`
@@ -138,6 +139,8 @@ export const valuesToApiFormat = (
     const parcelApiValues = landValuesToApiFormat({ data: p } as any);
     if (!!agencyId && p.agencyId === '') {
       parcelApiValues.agencyId = agencyId;
+    } else {
+      parcelApiValues.agencyId = +(parcelApiValues.agencyId as any).value;
     }
     return parcelApiValues;
   });
@@ -178,7 +181,11 @@ const Form: React.FC<IAssociatedLandForm> = ({
   const agencies = getOptionsByType(API.AGENCY_CODE_SET_NAME);
   const classifications = getOptionsByType(API.PROPERTY_CLASSIFICATION_CODE_SET_NAME);
   const currentParcelNameSpace = `data.parcels.${stepper.currentTab}`;
-  useParcelLayerData({ formikRef, nameSpace: currentParcelNameSpace });
+  useParcelLayerData({
+    formikRef,
+    nameSpace: currentParcelNameSpace,
+    agencyId: +formikProps.values.data.agencyId,
+  });
 
   const render = (): React.ReactNode => {
     switch (stepper.current) {
@@ -283,13 +290,19 @@ interface IAssociatedLandForm {
   isAdmin: boolean;
 }
 
+interface IAssociatedLandParentForm extends IAssociatedLandForm {
+  /** signal the parent that the associated land process has been completed. */
+  setAssociatedLandComplete: (show: boolean) => void;
+}
+
 /**
  * A component used for land associated to a building.
  * This form will appear after a user enters a new building after navigating to Manage Property > Submit Property in PIMS
  * @component
  */
-
-const AssociatedLandForm: React.FC<IAssociatedLandForm> = (props: IAssociatedLandForm) => {
+const AssociatedLandForm: React.FC<IAssociatedLandParentForm> = (
+  props: IAssociatedLandParentForm,
+) => {
   const keycloak = useKeycloakWrapper();
   const { createBuilding, updateBuilding } = useBuildingApi();
   const dispatch = useDispatch();
@@ -514,6 +527,7 @@ const AssociatedLandForm: React.FC<IAssociatedLandForm> = (props: IAssociatedLan
               } else {
                 await updateBuilding(apiValues)(dispatch);
               }
+              props.setAssociatedLandComplete(true);
             } catch (error) {
             } finally {
               actions.setSubmitting(false);
@@ -529,6 +543,10 @@ const AssociatedLandForm: React.FC<IAssociatedLandForm> = (props: IAssociatedLan
             formikRef={props.formikRef}
             initialValues={props.initialValues}
             isAdmin={props.isAdmin}
+          />
+          <Prompt
+            when={props.formikRef?.current?.dirty && !props.formikRef?.current?.isSubmitting}
+            message="You have unsaved changes, are you sure you want to leave? Your unsaved changes will be lost."
           />
         </SteppedForm>
       )}

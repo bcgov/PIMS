@@ -2,9 +2,14 @@
 
 .parcel-identification {
   max-width: 900px;
+  .suggestionList {
+    margin-top: 40px;
+    margin-left: 50px;
+  }
   .GeocoderAutoComplete,
   .AutoCompleteText {
     width: 230px;
+    align-items: center;
   }
   .form-group {
     display: flex;
@@ -14,6 +19,14 @@
   h4 {
     margin-bottom: 20px;
     float: left;
+  }
+  .bg-warning {
+    height: 38px;
+  }
+  input,
+  .form-group,
+  .GeocoderAutoComplete {
+    width: 200px;
   }
   .container {
     .form-check-input {
@@ -28,7 +41,8 @@
       pointer-events: none;
       opacity: 0.4;
     }
-    .label {
+    .label,
+    .form-label {
       text-align: right;
       margin-right: 10px;
       width: 125px;
@@ -60,7 +74,11 @@
           justify-content: center;
         }
       }
+      .form-group {
+        margin-bottom: 0px;
+      }
       .form-row {
+        margin-bottom: 1rem;
         display: flex;
         padding: 0px 20px;
         > input,
