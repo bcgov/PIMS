@@ -1,5 +1,6 @@
 import { getCurrentFiscalYear } from '../../../utils/utils';
 import { IBuilding, IAddress, IEvaluation, IFiscal } from 'actions/parcelsActions';
+import { NoteTypes } from '../../../constants';
 
 /**
  * IProperty interface represents the model used for searching properties.
@@ -99,6 +100,7 @@ export interface ITask {
   sortOrder: number;
   taskType: number;
 }
+
 export interface IProjectTask extends ITask {
   projectNumber: number;
   taskId: number;
@@ -112,6 +114,7 @@ export interface IProjectTask extends ITask {
   statusId: number;
   statusCode: string;
 }
+
 export interface IProject {
   id?: number;
   projectNumber: string;
@@ -177,29 +180,9 @@ export interface IProject {
   gainAfterSpp?: number | '';
   programCost?: number | '';
   priorYearAdjustmentAmount?: number | '';
-}
-
-export enum NoteTypes {
-  General = 0,
-  Public = 1,
-  Private = 2,
-  Exemption = 3,
-  AgencyInterest = 4,
-  Financial = 5,
-  PreMarketing = 6,
-  Marketing = 7,
-  ContractInPlace = 8,
-  Reporting = 9,
-  LoanTerms = 10,
-  Adjustment = 11,
-  SppCost = 12,
-  SppGain = 13,
-  SalesHistory = 14,
-  CloseOut = 15,
-  Comments = 16,
-  Appraisal = 17,
-  Offer = 18,
-  Remediation = 19,
+  removalFromSplRequestOn?: Date | string;
+  removalFromSplApprovedOn?: Date | string;
+  removalFromSplRationale?: string;
 }
 
 export enum DisposalWorkflows {
@@ -338,6 +321,9 @@ export const initialValues: IProject = {
   gainAfterSpp: '',
   programCost: '',
   priorYearAdjustmentAmount: '',
+  removalFromSplRequestOn: '',
+  removalFromSplApprovedOn: '',
+  removalFromSplRationale: '',
 };
 
 export interface IApiProject {

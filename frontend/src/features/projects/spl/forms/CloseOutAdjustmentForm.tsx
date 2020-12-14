@@ -3,7 +3,8 @@ import React from 'react';
 import { Col } from 'react-bootstrap';
 import { useFormikContext } from 'formik';
 import { Form, FastDatePicker, FastCurrencyInput } from 'components/common/form';
-import { ProjectNotes, NoteTypes } from 'features/projects/common';
+import { ProjectNotes } from 'features/projects/common';
+import { NoteTypes } from '../../../../constants';
 
 interface CloseOutAdjustmentProps {
   isReadOnly?: boolean;

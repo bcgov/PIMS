@@ -26,7 +26,7 @@ interface ISplTabsProps {
  * Tab based formik form for the SPL workflow.
  * @param param0 ISplTabsProps
  */
-const SplTabs: React.FunctionComponent<ISplTabsProps> = ({
+export const SplTabs: React.FunctionComponent<ISplTabsProps> = ({
   currentTab,
   setCurrentTab,
   isReadOnly,

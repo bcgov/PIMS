@@ -31,7 +31,7 @@ import {
   SurplusPropertyListContractInPlaceYupSchema,
   SurplusPropertyListDisposeYupSchema,
   CloseOutFormValidationSchema,
-  SurplusPropertyListNotInSplYupSchema,
+  RemoveFromSplYupSchema,
 } from '..';
 import { ApprovalActions } from 'features/projects/erp';
 import { DocumentationStepSchema } from 'features/projects/dispose';
@@ -83,8 +83,8 @@ const SplStep = ({ formikRef }: IStepProps) => {
       statusCode: DisposeWorkflowStatus.Draft,
     },
     {
-      schema: SurplusPropertyListNotInSplYupSchema,
-      tab: SPPApprovalTabs.erp,
+      schema: RemoveFromSplYupSchema,
+      tab: SPPApprovalTabs.spl,
       statusCode: ReviewWorkflowStatus.NotInSpl,
     },
     {
