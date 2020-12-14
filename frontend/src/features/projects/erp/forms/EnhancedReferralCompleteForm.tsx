@@ -119,7 +119,7 @@ const EnhancedReferralCompleteForm = ({
             <FastDatePicker
               outerClassName="col-md-2"
               formikProps={formikProps}
-              disabled={isReadOnly}
+              disabled={isReadOnly || !formikProps.values.clearanceNotificationSentOn}
               field="requestForSplReceivedOn"
             />
           </Form.Row>
@@ -131,7 +131,7 @@ const EnhancedReferralCompleteForm = ({
             <FastDatePicker
               outerClassName="col-md-2"
               formikProps={formikProps}
-              disabled={isReadOnly}
+              disabled={isReadOnly || !formikProps.values.clearanceNotificationSentOn}
               field="approvedForSplOn"
             />
             {(formikProps.values.statusCode === ReviewWorkflowStatus.ApprovedForErp ||

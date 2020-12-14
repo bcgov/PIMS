@@ -106,12 +106,24 @@ const ExemptionEnhancedReferralCompleteForm = ({
           disabled={isReadOnly || !formikProps.values.clearanceNotificationSentOn}
           field="requestForSplReceivedOn"
         />
+      </Form.Row>
+      <Form.Row>
+        <Form.Label column md={4}>
+          SPL Addition Approved On
+        </Form.Label>
+        <FastDatePicker
+          outerClassName="col-md-2"
+          formikProps={formikProps}
+          disabled={isReadOnly || !formikProps.values.clearanceNotificationSentOn}
+          field="approvedForSplOn"
+        />
         <div className="justify-content-center">
           <Button
             disabled={
               isReadOnly ||
               !formikProps.values.clearanceNotificationSentOn ||
-              !formikProps.values.requestForSplReceivedOn
+              !formikProps.values.requestForSplReceivedOn ||
+              !formikProps.values.approvedForSplOn
             }
             onClick={() => setProceedToSpl(true)}
           >

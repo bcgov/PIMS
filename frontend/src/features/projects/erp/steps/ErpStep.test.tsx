@@ -187,8 +187,16 @@ describe('ERP Approval Step', () => {
       const component = render(getApprovalStep(getStore(project)));
       const textboxes = component.queryAllByRole('textbox');
       textboxes.forEach(textbox => {
-        expect(textbox).toBeVisible();
-        expect(textbox).not.toBeDisabled();
+        if (
+          textbox.id === 'datepicker-requestForSplReceivedOn' ||
+          textbox.id === 'datepicker-approvedForSplOn'
+        ) {
+          expect(textbox).toBeVisible();
+          expect(textbox).toBeDisabled();
+        } else {
+          expect(textbox).toBeVisible();
+          expect(textbox).not.toBeDisabled();
+        }
       });
     });
   });
