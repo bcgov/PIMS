@@ -35,6 +35,7 @@ const defaultFilter = {
   maxLotSize: '8',
   parcelId: '9',
   propertyType: '10',
+  sort: '',
 };
 
 let filter: IPropertyFilter = defaultFilter;

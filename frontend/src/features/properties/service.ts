@@ -3,6 +3,9 @@ import CustomAxios from 'customAxios';
 import { IPagedItems } from 'interfaces';
 import { ENVIRONMENT } from 'constants/environment';
 import { IPropertyQueryParams, IProperty } from './list/interfaces';
+import { TableSort } from 'components/Table/TableSort';
+import { generateMultiSortCriteria } from 'utils';
+import { isEmpty } from 'lodash';
 
 const { apiUrl: basePath } = ENVIRONMENT;
 
@@ -13,9 +16,16 @@ const API_ENDPOINTS = {
     `${basePath}/reports/properties?${filter ? queryString.stringify(filter) : ''}`,
 };
 
-const getPropertyList = async (filter: IPropertyQueryParams): Promise<IPagedItems<IProperty>> => {
-  const url = API_ENDPOINTS.propertiesSearch(filter);
-  const response = await CustomAxios().get<IPagedItems<IProperty>>(url);
+const getPropertyList = async (
+  filter: IPropertyQueryParams,
+  sorting?: TableSort<any>,
+): Promise<IPagedItems<IProperty>> => {
+  let url = API_ENDPOINTS.propertiesSearch(filter);
+  const sort = generateMultiSortCriteria(sorting!);
+  if (!isEmpty(sort)) {
+    url = `${url}&sort=${sort}`;
+  }
+  const response = await CustomAxios().get<IPagedItems<IProperty>>(`${url}`);
   return response.data;
 };
 

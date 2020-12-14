@@ -16,12 +16,15 @@ import { ParentSelect } from 'components/common/form/ParentSelect';
 import { PropertyFilterOptions } from './';
 import { useRouterFilter } from 'hooks/useRouterFilter';
 import { IPropertyFilter } from './IPropertyFilter';
+import { TableSort } from 'components/Table/TableSort';
 
 export type PropertyFilterProps = {
   defaultFilter: IPropertyFilter;
   agencyLookupCodes: ILookupCode[];
   propertyClassifications: ILookupCode[];
   onChange: (filter: IPropertyFilter) => void;
+  sort?: TableSort<any>;
+  onSort?: (sort: TableSort<any>) => void;
 };
 
 /**
@@ -32,6 +35,8 @@ export const PropertyFilter: React.FC<PropertyFilterProps> = ({
   agencyLookupCodes,
   propertyClassifications,
   onChange,
+  sort,
+  onSort,
 }) => {
   const [propertyFilter, setPropertyFilter] = React.useState<IPropertyFilter>(defaultFilter);
   useRouterFilter(
@@ -41,6 +46,8 @@ export const PropertyFilter: React.FC<PropertyFilterProps> = ({
       setPropertyFilter(filter);
     },
     'propertyFilter',
+    sort,
+    onSort,
   );
   const mapLookupCode = (code: ILookupCode): SelectOption => ({
     label: code.name,

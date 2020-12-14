@@ -466,7 +466,11 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
                         role="columnheader"
                         style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                       >
-                        Property Name
+                        <div
+                          class="sortable-column"
+                        >
+                          Property Name
+                        </div>
                       </div>
                       <div
                         class="th"
@@ -474,7 +478,11 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
                         role="columnheader"
                         style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                       >
-                        Street Address
+                        <div
+                          class="sortable-column"
+                        >
+                          Street Address
+                        </div>
                       </div>
                       <div
                         class="th"
@@ -482,7 +490,11 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
                         role="columnheader"
                         style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                       >
-                        Location
+                        <div
+                          class="sortable-column"
+                        >
+                          Location
+                        </div>
                       </div>
                       <div
                         class="th"
@@ -490,7 +502,11 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
                         role="columnheader"
                         style="box-sizing: border-box; flex: 60 0 auto; min-width: 30px; width: 60px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                       >
-                        Type
+                        <div
+                          class="sortable-column"
+                        >
+                          Type
+                        </div>
                       </div>
                       <div
                         class="th"
@@ -498,7 +514,11 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
                         role="columnheader"
                         style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                       >
-                        Appraised Value
+                        <div
+                          class="sortable-column"
+                        >
+                          Appraised Value
+                        </div>
                       </div>
                       <div
                         class="th"
@@ -506,7 +526,11 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
                         role="columnheader"
                         style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                       >
-                        Appraised Date
+                        <div
+                          class="sortable-column"
+                        >
+                          Appraised Date
+                        </div>
                       </div>
                       <div
                         class="th"
@@ -514,7 +538,11 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
                         role="columnheader"
                         style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                       >
-                        Appraisal Firm
+                        <div
+                          class="sortable-column"
+                        >
+                          Appraisal Firm
+                        </div>
                       </div>
                       <div
                         class="th"
@@ -522,7 +550,11 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
                         role="columnheader"
                         style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                       >
-                        Assessed Value
+                        <div
+                          class="sortable-column"
+                        >
+                          Assessed Value
+                        </div>
                       </div>
                       <div
                         class="th"
@@ -530,7 +562,11 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
                         role="columnheader"
                         style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                       >
-                        Assessed Date
+                        <div
+                          class="sortable-column"
+                        >
+                          Assessed Date
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -774,7 +810,7 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
                     class="form-label"
                     for="input-notes[13].note"
                   >
-                    Gain after SPP Cost Calculation Notes
+                    Gain after SPL Cost Calculation Notes
                   </label>
                   <textarea
                     class="col-md-10 form-control"
@@ -1502,7 +1538,6 @@ exports[`ERP Approval Step renders correctly 1`] = `
                     <div
                       className="th"
                       colSpan={1}
-                      onClick={[Function]}
                       role="columnheader"
                       style={
                         Object {
@@ -1517,12 +1552,15 @@ exports[`ERP Approval Step renders correctly 1`] = `
                         }
                       }
                     >
-                      Agency
+                      <div
+                        className="sortable-column"
+                      >
+                        Agency
+                      </div>
                     </div>
                     <div
                       className="th"
                       colSpan={1}
-                      onClick={[Function]}
                       role="columnheader"
                       style={
                         Object {
@@ -1537,12 +1575,15 @@ exports[`ERP Approval Step renders correctly 1`] = `
                         }
                       }
                     >
-                      Business Case Received Date
+                      <div
+                        className="sortable-column"
+                      >
+                        Business Case Received Date
+                      </div>
                     </div>
                     <div
                       className="th"
                       colSpan={1}
-                      onClick={[Function]}
                       role="columnheader"
                       style={
                         Object {
@@ -1557,12 +1598,15 @@ exports[`ERP Approval Step renders correctly 1`] = `
                         }
                       }
                     >
-                      Note
+                      <div
+                        className="sortable-column"
+                      >
+                        Note
+                      </div>
                     </div>
                     <div
                       className="th"
                       colSpan={1}
-                      onClick={[Function]}
                       role="columnheader"
                       style={
                         Object {
@@ -1577,7 +1621,11 @@ exports[`ERP Approval Step renders correctly 1`] = `
                         }
                       }
                     >
-                      Response
+                      <div
+                        className="sortable-column"
+                      >
+                        Response
+                      </div>
                     </div>
                   </div>
                 </div>

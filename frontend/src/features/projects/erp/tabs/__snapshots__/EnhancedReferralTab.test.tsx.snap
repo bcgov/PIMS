@@ -196,7 +196,6 @@ exports[`EnhancedReferralTab renders correctly 1`] = `
               <div
                 className="th"
                 colSpan={1}
-                onClick={[Function]}
                 role="columnheader"
                 style={
                   Object {
@@ -211,12 +210,15 @@ exports[`EnhancedReferralTab renders correctly 1`] = `
                   }
                 }
               >
-                Agency
+                <div
+                  className="sortable-column"
+                >
+                  Agency
+                </div>
               </div>
               <div
                 className="th"
                 colSpan={1}
-                onClick={[Function]}
                 role="columnheader"
                 style={
                   Object {
@@ -231,12 +233,15 @@ exports[`EnhancedReferralTab renders correctly 1`] = `
                   }
                 }
               >
-                Business Case Received Date
+                <div
+                  className="sortable-column"
+                >
+                  Business Case Received Date
+                </div>
               </div>
               <div
                 className="th"
                 colSpan={1}
-                onClick={[Function]}
                 role="columnheader"
                 style={
                   Object {
@@ -251,12 +256,15 @@ exports[`EnhancedReferralTab renders correctly 1`] = `
                   }
                 }
               >
-                Note
+                <div
+                  className="sortable-column"
+                >
+                  Note
+                </div>
               </div>
               <div
                 className="th"
                 colSpan={1}
-                onClick={[Function]}
                 role="columnheader"
                 style={
                   Object {
@@ -271,7 +279,11 @@ exports[`EnhancedReferralTab renders correctly 1`] = `
                   }
                 }
               >
-                Response
+                <div
+                  className="sortable-column"
+                >
+                  Response
+                </div>
               </div>
             </div>
           </div>
@@ -653,6 +665,43 @@ exports[`EnhancedReferralTab renders correctly when approved for exemption 1`] =
               disabled={true}
               id="datepicker-requestForSplReceivedOn"
               name="requestForSplReceivedOn"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onClick={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              placeholder="--/--/----"
+              readOnly={false}
+              type="text"
+              value=""
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      className="form-row"
+    >
+      <label
+        className="form-label col-form-label col-md-4"
+      >
+        SPL Addition Approved On
+      </label>
+      <div
+        className="col-md-2 form-group"
+      >
+        <div
+          className="react-datepicker-wrapper"
+        >
+          <div
+            className="react-datepicker__input-container"
+          >
+            <input
+              autoComplete="off"
+              className="form-control date-picker"
+              disabled={true}
+              id="datepicker-approvedForSplOn"
+              name="approvedForSplOn"
               onBlur={[Function]}
               onChange={[Function]}
               onClick={[Function]}

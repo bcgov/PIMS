@@ -13,7 +13,7 @@ import { render, wait, fireEvent, cleanup } from '@testing-library/react';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 import { ProjectActions } from 'constants/actionTypes';
-import { CLASSIFICATIONS } from 'constants/classifications';
+import { Classifications } from 'constants/classifications';
 import { UpdateInfoStepYupSchema } from '../../dispose';
 
 const mockStore = configureMockStore([thunk]);
@@ -127,7 +127,7 @@ describe('Update Info Form', () => {
     await wait(() => {
       fireEvent.change(classificationId!, {
         target: {
-          value: CLASSIFICATIONS.CoreOperational,
+          value: Classifications.CoreOperational,
         },
       });
     });

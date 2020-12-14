@@ -478,7 +478,11 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
                         role="columnheader"
                         style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                       >
-                        Property Name
+                        <div
+                          class="sortable-column"
+                        >
+                          Property Name
+                        </div>
                       </div>
                       <div
                         class="th"
@@ -486,7 +490,11 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
                         role="columnheader"
                         style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                       >
-                        Street Address
+                        <div
+                          class="sortable-column"
+                        >
+                          Street Address
+                        </div>
                       </div>
                       <div
                         class="th"
@@ -494,7 +502,11 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
                         role="columnheader"
                         style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                       >
-                        Location
+                        <div
+                          class="sortable-column"
+                        >
+                          Location
+                        </div>
                       </div>
                       <div
                         class="th"
@@ -502,7 +514,11 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
                         role="columnheader"
                         style="box-sizing: border-box; flex: 60 0 auto; min-width: 30px; width: 60px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                       >
-                        Type
+                        <div
+                          class="sortable-column"
+                        >
+                          Type
+                        </div>
                       </div>
                       <div
                         class="th"
@@ -510,7 +526,11 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
                         role="columnheader"
                         style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                       >
-                        Appraised Value
+                        <div
+                          class="sortable-column"
+                        >
+                          Appraised Value
+                        </div>
                       </div>
                       <div
                         class="th"
@@ -518,7 +538,11 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
                         role="columnheader"
                         style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                       >
-                        Appraised Date
+                        <div
+                          class="sortable-column"
+                        >
+                          Appraised Date
+                        </div>
                       </div>
                       <div
                         class="th"
@@ -526,7 +550,11 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
                         role="columnheader"
                         style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                       >
-                        Appraisal Firm
+                        <div
+                          class="sortable-column"
+                        >
+                          Appraisal Firm
+                        </div>
                       </div>
                       <div
                         class="th"
@@ -534,7 +562,11 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
                         role="columnheader"
                         style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                       >
-                        Assessed Value
+                        <div
+                          class="sortable-column"
+                        >
+                          Assessed Value
+                        </div>
                       </div>
                       <div
                         class="th"
@@ -542,7 +574,11 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
                         role="columnheader"
                         style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                       >
-                        Assessed Date
+                        <div
+                          class="sortable-column"
+                        >
+                          Assessed Date
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -786,7 +822,7 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
                     class="form-label"
                     for="input-notes[13].note"
                   >
-                    Gain after SPP Cost Calculation Notes
+                    Gain after SPL Cost Calculation Notes
                   </label>
                   <textarea
                     class="col-md-10 form-control"
@@ -1476,7 +1512,7 @@ exports[`SPL Approval Step renders correctly 1`] = `
               </svg>
             </label>
             <div
-              class="required col-md-2 form-group"
+              class="col-md-2 form-group"
             >
               <div
                 class="react-datepicker-wrapper"
@@ -1491,7 +1527,6 @@ exports[`SPL Approval Step renders correctly 1`] = `
                     id="datepicker-marketedOn"
                     name="marketedOn"
                     placeholder="--/--/----"
-                    required=""
                     type="text"
                     value="01/01/2020"
                   />
@@ -1549,7 +1584,7 @@ exports[`SPL Approval Step renders correctly 1`] = `
               Date of Accepted Offer
             </label>
             <div
-              class="required col-md-2 form-group"
+              class="col-md-2 form-group"
             >
               <div
                 class="react-datepicker-wrapper"
@@ -1564,7 +1599,6 @@ exports[`SPL Approval Step renders correctly 1`] = `
                     id="datepicker-offerAcceptedOn"
                     name="offerAcceptedOn"
                     placeholder="--/--/----"
-                    required=""
                     type="text"
                     value="01/01/2020"
                   />
@@ -1581,14 +1615,13 @@ exports[`SPL Approval Step renders correctly 1`] = `
               Purchaser
             </label>
             <div
-              class="required col-md-2 form-group col"
+              class="col-md-2 form-group col"
             >
               <input
                 class="form-control"
                 disabled=""
                 id="input-purchaser"
                 name="purchaser"
-                required=""
                 value="purchaser"
               />
             </div>
@@ -1602,7 +1635,7 @@ exports[`SPL Approval Step renders correctly 1`] = `
               Offer Amount
             </label>
             <div
-              class="required col-md-2 form-group col"
+              class="col-md-2 form-group col"
             >
               <div
                 class="input-tooltip-wrapper"
@@ -1612,14 +1645,99 @@ exports[`SPL Approval Step renders correctly 1`] = `
                   disabled=""
                   name="offerAmount"
                   placeholder=""
-                  required=""
                   value="123"
                 />
               </div>
             </div>
+          </div>
+          <div
+            class="form-row"
+          >
+            <h3>
+              Remove from SPL
+            </h3>
+          </div>
+          <div
+            class="form-row"
+          >
+            <label
+              class="form-label col-form-label col-md-3"
+            >
+              Request for removal on
+            </label>
             <div
-              class="col-md-6"
-            />
+              class="col-md-2 form-group"
+            >
+              <div
+                class="react-datepicker-wrapper"
+              >
+                <div
+                  class="react-datepicker__input-container"
+                >
+                  <input
+                    autocomplete="off"
+                    class="form-control date-picker"
+                    disabled=""
+                    id="datepicker-removalFromSplRequestOn"
+                    name="removalFromSplRequestOn"
+                    placeholder="--/--/----"
+                    type="text"
+                    value=""
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="form-row"
+          >
+            <label
+              class="form-label col-form-label col-md-3"
+            >
+              Request for removal approved on
+            </label>
+            <div
+              class="col-md-2 form-group"
+            >
+              <div
+                class="react-datepicker-wrapper"
+              >
+                <div
+                  class="react-datepicker__input-container"
+                >
+                  <input
+                    autocomplete="off"
+                    class="form-control date-picker"
+                    disabled=""
+                    id="datepicker-removalFromSplApprovedOn"
+                    name="removalFromSplApprovedOn"
+                    placeholder="--/--/----"
+                    type="text"
+                    value=""
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="ProjectNotes form-row"
+          >
+            <div
+              class="col-md-12 form-group col"
+            >
+              <label
+                class="form-label"
+                for="input-removalFromSplRationale"
+              >
+                Rationale for removal
+              </label>
+              <textarea
+                class="col-md-auto form-control"
+                disabled=""
+                id="input-removalFromSplRationale"
+                name="removalFromSplRationale"
+              />
+            </div>
           </div>
         </div>
       </div>

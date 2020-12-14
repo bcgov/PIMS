@@ -237,7 +237,6 @@ exports[`Manage Agencies Component Snapshot matches 1`] = `
           <div
             className="th"
             colSpan={1}
-            onClick={[Function]}
             role="columnheader"
             style={
               Object {
@@ -252,12 +251,15 @@ exports[`Manage Agencies Component Snapshot matches 1`] = `
               }
             }
           >
-            Agency name
+            <div
+              className="sortable-column"
+            >
+              Agency name
+            </div>
           </div>
           <div
             className="th"
             colSpan={1}
-            onClick={[Function]}
             role="columnheader"
             style={
               Object {
@@ -272,12 +274,15 @@ exports[`Manage Agencies Component Snapshot matches 1`] = `
               }
             }
           >
-            Short name
+            <div
+              className="sortable-column"
+            >
+              Short name
+            </div>
           </div>
           <div
             className="th"
             colSpan={1}
-            onClick={[Function]}
             role="columnheader"
             style={
               Object {
@@ -292,12 +297,15 @@ exports[`Manage Agencies Component Snapshot matches 1`] = `
               }
             }
           >
-            Description
+            <div
+              className="sortable-column"
+            >
+              Description
+            </div>
           </div>
           <div
             className="th"
             colSpan={1}
-            onClick={[Function]}
             role="columnheader"
             style={
               Object {
@@ -312,7 +320,11 @@ exports[`Manage Agencies Component Snapshot matches 1`] = `
               }
             }
           >
-            Parent Agency
+            <div
+              className="sortable-column"
+            >
+              Parent Agency
+            </div>
           </div>
         </div>
       </div>
