@@ -9,6 +9,7 @@ export interface IStepperFormContextProps {
   goBack: () => boolean;
   gotoNext: () => boolean;
   gotoTab: (tab: number) => boolean;
+  validateCurrentStep: (overrideNameSpace?: string) => boolean;
 }
 
 export interface ISteppedFormValues<T extends object = {}> {
@@ -36,6 +37,7 @@ export interface ISteppedFormProps<T extends {}> {
   formikRef?: any;
   onAddTab?: (values: T) => void;
   onRemoveTab?: (values: T, index: number) => void;
+  tabLineHeader?: string;
 }
 
 export interface IStepperFieldProps {
@@ -50,5 +52,6 @@ export interface IStepperFormProviderProps {
 
 export interface IStepperTab {
   activeStep: number;
+  completedSteps: number[];
   name: string;
 }

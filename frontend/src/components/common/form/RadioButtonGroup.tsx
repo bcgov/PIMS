@@ -64,7 +64,7 @@ export const RadioButtonGroup: React.FC<RadioGroupProps> = ({
       controlId={`input-${field}`}
       className={classNames(outerClassName, !!required ? 'required' : '')}
     >
-      <div className="check-field">
+      <div>
         {!!label && (
           <Form.Label>
             {label}
@@ -90,8 +90,8 @@ export const RadioButtonGroup: React.FC<RadioGroupProps> = ({
             ></Form.Check>
           ))}
         </div>
+        <DisplayError field={field} />
       </div>
-      <DisplayError field={field} />
     </Form.Group>
   );
 };

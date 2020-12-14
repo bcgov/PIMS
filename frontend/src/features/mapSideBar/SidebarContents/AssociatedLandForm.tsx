@@ -16,16 +16,22 @@ import { valuesToApiFormat as landValuesToApiFormat } from './LandForm';
 import { LandValuationForm } from './subforms/LandValuationForm';
 import { AssociatedLandSteps } from 'constants/propertySteps';
 import { LandOwnershipForm } from './subforms/LandOwnershipForm';
-import { defaultBuildingValues } from 'features/properties/components/forms/subforms/BuildingForm';
 import { getInitialValues as getInitialLandValues } from './LandForm';
 import useParcelLayerData from 'features/properties/hooks/useParcelLayerData';
 import { AssociatedLandReviewPage } from './subforms/AssociatedLandReviewPage';
-import { AssociatedLandSchema } from 'utils/YupSchema';
+import {
+  AssociatedLandSchema,
+  AssociatedLandOwnershipSchema,
+  AssociatedLandIdentificationSchema,
+  AssociatedLandUsageSchema,
+  AssociatedLandValuationSchema,
+} from 'utils/YupSchema';
 import { useDispatch } from 'react-redux';
 import { useBuildingApi } from '../hooks/useBuildingApi';
 import _ from 'lodash';
 import { IFormParcel } from '../containers/MapSideBarContainer';
 import { useState } from 'react';
+import { defaultBuildingValues } from './BuildingForm';
 
 const Container = styled.div`
   background-color: #fff;
@@ -231,8 +237,11 @@ const Form: React.FC<IAssociatedLandForm> = ({
           <Button
             type="button"
             onClick={() => {
+              if (!stepper.validateCurrentStep()) {
+                return;
+              }
               if (
-                getIn(formikProps.values.data, `leasedLandMetadata.${stepper.currentTab}.type`) ===
+                getIn(formikProps.values, `data.leasedLandMetadata.${stepper.currentTab}.type`) ===
                 LeasedLand.other
               ) {
                 stepper.gotoStep(AssociatedLandSteps.REVIEW);
@@ -422,16 +431,56 @@ const AssociatedLandForm: React.FC<IAssociatedLandForm> = (props: IAssociatedLan
         <SteppedForm<IAssociatedLand>
           // Provide the steps
           steps={[
-            { route: 'ownership', title: 'Land Ownership', completed: false, canGoToStep: true },
+            {
+              route: 'ownership',
+              title: 'Land Ownership',
+              completed: false,
+              canGoToStep: true,
+              validation: {
+                schema: AssociatedLandOwnershipSchema,
+                nameSpace: (tabIndex: number) => `data.leasedLandMetadata.${tabIndex}`,
+              },
+            },
             {
               route: 'identification',
               title: 'Identification',
               completed: false,
-              canGoToStep: true,
+              canGoToStep: false,
+              validation: {
+                schema: AssociatedLandIdentificationSchema,
+                nameSpace: (tabIndex: number) => `data.parcels.${tabIndex}`,
+              },
             },
-            { route: 'usage', title: 'Usage', completed: false, canGoToStep: true },
-            { route: 'valuation', title: 'Valuation', completed: false, canGoToStep: true },
-            { route: 'review', title: 'Review & Submit', completed: false, canGoToStep: true },
+            {
+              route: 'usage',
+              title: 'Usage',
+              completed: false,
+              canGoToStep: false,
+              validation: {
+                schema: AssociatedLandUsageSchema,
+                nameSpace: (tabIndex: number) => `data.parcels.${tabIndex}`,
+              },
+            },
+            {
+              route: 'valuation',
+              title: 'Valuation',
+              completed: false,
+              canGoToStep: false,
+              validation: {
+                schema: AssociatedLandValuationSchema,
+                nameSpace: (tabIndex: number) => `data.parcels.${tabIndex}`,
+              },
+            },
+            {
+              route: 'review',
+              title: 'Review & Submit',
+              completed: false,
+              canGoToStep: false,
+              validation: {
+                schema: AssociatedLandSchema,
+                nameSpace: (tabIndex: number) => `data`,
+              },
+            },
           ]}
           getTabs={(values: IAssociatedLand) => {
             return values.parcels.map((p: any, index: number) => {
@@ -470,6 +519,7 @@ const AssociatedLandForm: React.FC<IAssociatedLandForm> = (props: IAssociatedLan
               actions.setSubmitting(false);
             }
           }}
+          tabLineHeader={'Parcels: '}
         >
           <Form
             setMovingPinNameSpace={props.setMovingPinNameSpace}

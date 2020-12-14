@@ -3,7 +3,7 @@ import { Modal, Button, Container } from 'react-bootstrap';
 import classNames from 'classnames';
 
 export enum ModalSize {
-  EXTRA_LARGE = 'modal-xl',
+  XLARGE = 'modal-xl',
   LARGE = 'modal-l',
   SMALL = 'modal-s',
 }

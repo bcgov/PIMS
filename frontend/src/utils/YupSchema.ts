@@ -221,10 +221,6 @@ export const ParcelSchema = Yup.object()
   )
   .concat(LandSchema);
 
-export const AssociatedLandSchema = Yup.object().shape({
-  data: Yup.object().shape({ parcels: Yup.array().of(ParcelSchema) }),
-});
-
 export const FilterBarSchema = Yup.object().shape({
   minLotSize: Yup.number()
     .typeError('Invalid')
@@ -236,4 +232,78 @@ export const FilterBarSchema = Yup.object().shape({
     .max(200000, 'Invalid')
     /* Reference minLotSize field in validating maxLotSize value */
     .moreThan(Yup.ref('minLotSize'), 'Must be greater than Min Lot Size'),
+});
+
+export const AssociatedLandOwnershipSchema = Yup.object().shape({
+  type: Yup.number().required('Choose an option'),
+});
+
+export const AssociatedLandUsageSchema = Yup.object().shape({
+  zoning: Yup.string()
+    .max(250, 'Zoning must be less than 250 characters')
+    .nullable(),
+  zoningPotential: Yup.string()
+    .max(250, 'Zoning Potential must be less than 250 characters')
+    .nullable(),
+  classificationId: Yup.string()
+    .required('Required')
+    .matches(/\d*/, 'Invalid Classification')
+    .nullable(),
+});
+
+export const AssociatedLandValuationSchema = Yup.object().shape({
+  financials: Yup.array()
+    .compact((financial: any) => financial.year !== currentYear)
+    .of(FinancialYear),
+});
+
+export const AssociatedLandIdentificationSchema = Yup.object().shape(
+  {
+    pid: Yup.string().when('pin', {
+      is: val => val && val.length > 0,
+      then: Yup.string().nullable(),
+      otherwise: Yup.string()
+        .matches(/\d\d\d[\s-]?\d\d\d[\s-]?\d\d\d/, 'PID must be in the format ###-###-###')
+        .required('PID or PIN Required'),
+    }),
+    pin: Yup.string().when('pid', {
+      is: val => val && /\d\d\d-\d\d\d-\d\d\d/.test(val),
+      then: Yup.string().nullable(),
+      otherwise: Yup.string()
+        .nullable()
+        .required('PID or PIN Required')
+        .max(9, 'Please enter a valid PIN no longer than 9 digits.'),
+    }),
+    address: Address.required(),
+    name: Yup.string()
+      .max(150, 'Name must be less then 150 characters')
+      .nullable(),
+    description: Yup.string()
+      .max(2000, 'Description must be less than 2000 characters')
+      .nullable(),
+    landLegalDescription: Yup.string()
+      .required('Required')
+      .max(500, 'Land Legal Description must be less than 500 characters')
+      .nullable(),
+    latitude: Yup.number()
+      .min(-90, 'Invalid Latitude')
+      .max(90, 'Invalid Latitude')
+      .transform(emptyStringToNull)
+      .required('Required'),
+    longitude: Yup.number()
+      .min(-180, 'Invalid Longitude')
+      .max(180, 'Invalid Longitude')
+      .transform(emptyStringToNull)
+      .required('Required'),
+    landArea: Yup.number()
+      .min(0, 'Land Area must be a positive number')
+      .transform(emptyStringToNull)
+      .required('Required')
+      .test('is-valid', 'Please enter a valid number', val => Number(val) < 200000),
+  },
+  [['pin', 'pid']],
+);
+
+export const AssociatedLandSchema = Yup.object().shape({
+  data: Yup.object().shape({ parcels: Yup.array().of(ParcelSchema) }),
 });
