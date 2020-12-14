@@ -16,6 +16,14 @@
     float: left;
   }
   .container {
+    .form-check-input {
+      position: relative;
+      width: auto;
+      margin: 0px 10px;
+    }
+    .check-field {
+      margin: auto;
+    }
     .section.disabled {
       pointer-events: none;
       opacity: 0.4;
@@ -30,6 +38,9 @@
       width: 400px;
       background-color: $light-danger-color;
       border-radius: 5px;
+      .form-group {
+        width: 100%;
+      }
     }
     .section {
       padding: 10px 0px;
