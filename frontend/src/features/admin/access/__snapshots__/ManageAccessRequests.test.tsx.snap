@@ -273,7 +273,6 @@ exports[`Manage access requests Snapshot matches 1`] = `
           <div
             className="th"
             colSpan={1}
-            onClick={[Function]}
             role="columnheader"
             style={
               Object {
@@ -288,12 +287,15 @@ exports[`Manage access requests Snapshot matches 1`] = `
               }
             }
           >
-            IDIR/BCeID
+            <div
+              className="sortable-column"
+            >
+              IDIR/BCeID
+            </div>
           </div>
           <div
             className="th"
             colSpan={1}
-            onClick={[Function]}
             role="columnheader"
             style={
               Object {
@@ -308,12 +310,15 @@ exports[`Manage access requests Snapshot matches 1`] = `
               }
             }
           >
-            First name
+            <div
+              className="sortable-column"
+            >
+              First name
+            </div>
           </div>
           <div
             className="th"
             colSpan={1}
-            onClick={[Function]}
             role="columnheader"
             style={
               Object {
@@ -328,12 +333,15 @@ exports[`Manage access requests Snapshot matches 1`] = `
               }
             }
           >
-            Last name
+            <div
+              className="sortable-column"
+            >
+              Last name
+            </div>
           </div>
           <div
             className="th"
             colSpan={1}
-            onClick={[Function]}
             role="columnheader"
             style={
               Object {
@@ -348,12 +356,15 @@ exports[`Manage access requests Snapshot matches 1`] = `
               }
             }
           >
-            Email
+            <div
+              className="sortable-column"
+            >
+              Email
+            </div>
           </div>
           <div
             className="th"
             colSpan={1}
-            onClick={[Function]}
             role="columnheader"
             style={
               Object {
@@ -368,12 +379,15 @@ exports[`Manage access requests Snapshot matches 1`] = `
               }
             }
           >
-            Position
+            <div
+              className="sortable-column"
+            >
+              Position
+            </div>
           </div>
           <div
             className="th"
             colSpan={1}
-            onClick={[Function]}
             role="columnheader"
             style={
               Object {
@@ -388,12 +402,15 @@ exports[`Manage access requests Snapshot matches 1`] = `
               }
             }
           >
-            Status
+            <div
+              className="sortable-column"
+            >
+              Status
+            </div>
           </div>
           <div
             className="th"
             colSpan={1}
-            onClick={[Function]}
             role="columnheader"
             style={
               Object {
@@ -408,12 +425,15 @@ exports[`Manage access requests Snapshot matches 1`] = `
               }
             }
           >
-            Agency
+            <div
+              className="sortable-column"
+            >
+              Agency
+            </div>
           </div>
           <div
             className="th"
             colSpan={1}
-            onClick={[Function]}
             role="columnheader"
             style={
               Object {
@@ -428,12 +448,15 @@ exports[`Manage access requests Snapshot matches 1`] = `
               }
             }
           >
-            Role
+            <div
+              className="sortable-column"
+            >
+              Role
+            </div>
           </div>
           <div
             className="th"
             colSpan={1}
-            onClick={[Function]}
             role="columnheader"
             style={
               Object {
@@ -448,7 +471,11 @@ exports[`Manage access requests Snapshot matches 1`] = `
               }
             }
           >
-             
+            <div
+              className="sortable-column"
+            >
+               
+            </div>
           </div>
         </div>
       </div>

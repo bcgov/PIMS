@@ -13,6 +13,7 @@
     .th {
       vertical-align: bottom;
       border-bottom: 2px solid $table-color;
+      cursor: pointer;
     }
   }
 
@@ -77,10 +78,7 @@
       width: 100%;
       height: 100%;
       align-items: center;
-
-      :nth-child(2) {
-        margin-left: 5px;
-      }
+      justify-content: space-evenly;
     }
   }
 }

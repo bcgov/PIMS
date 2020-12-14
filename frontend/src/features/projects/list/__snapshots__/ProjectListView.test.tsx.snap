@@ -226,7 +226,11 @@ exports[`Project list view tests Matches snapshot 1`] = `
             style="box-sizing: border-box; flex: 65 0 auto; min-width: 65px; width: 3.5%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
             width="3.5%"
           >
-            Project No.
+            <div
+              class="sortable-column"
+            >
+              Project No.
+            </div>
           </div>
           <div
             class="th"
@@ -235,7 +239,11 @@ exports[`Project list view tests Matches snapshot 1`] = `
             style="box-sizing: border-box; flex: 200 0 auto; min-width: 200px; width: 7%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
             width="7%"
           >
-            Name
+            <div
+              class="sortable-column"
+            >
+              Name
+            </div>
           </div>
           <div
             class="th"
@@ -244,7 +252,11 @@ exports[`Project list view tests Matches snapshot 1`] = `
             style="box-sizing: border-box; flex: 50 0 auto; min-width: 50px; width: 7%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
             width="7%"
           >
-            Status
+            <div
+              class="sortable-column"
+            >
+              Status
+            </div>
           </div>
           <div
             class="th"
@@ -253,7 +265,11 @@ exports[`Project list view tests Matches snapshot 1`] = `
             style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 7%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
             width="7%"
           >
-            Agency
+            <div
+              class="sortable-column"
+            >
+              Agency
+            </div>
           </div>
           <div
             class="th"
@@ -262,7 +278,11 @@ exports[`Project list view tests Matches snapshot 1`] = `
             style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 3.5%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
             width="3.5%"
           >
-            Zoning
+            <div
+              class="sortable-column"
+            >
+              Zoning
+            </div>
           </div>
           <div
             class="th"
@@ -271,7 +291,11 @@ exports[`Project list view tests Matches snapshot 1`] = `
             style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 3.5%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
             width="3.5%"
           >
-            Zoning Potential
+            <div
+              class="sortable-column"
+            >
+              Zoning Potential
+            </div>
           </div>
           <div
             class="th"
@@ -280,7 +304,11 @@ exports[`Project list view tests Matches snapshot 1`] = `
             style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 3.5%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
             width="3.5%"
           >
-            Net Book Value
+            <div
+              class="sortable-column"
+            >
+              Net Book Value
+            </div>
           </div>
           <div
             class="th"
@@ -289,7 +317,11 @@ exports[`Project list view tests Matches snapshot 1`] = `
             style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 3.5%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
             width="3.5%"
           >
-            Market Value
+            <div
+              class="sortable-column"
+            >
+              Market Value
+            </div>
           </div>
           <div
             class="th"
@@ -298,7 +330,11 @@ exports[`Project list view tests Matches snapshot 1`] = `
             style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 7%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
             width="7%"
           >
-            Updated On
+            <div
+              class="sortable-column"
+            >
+              Updated On
+            </div>
           </div>
           <div
             class="th"
@@ -307,7 +343,11 @@ exports[`Project list view tests Matches snapshot 1`] = `
             style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 7%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
             width="7%"
           >
-            Updated By
+            <div
+              class="sortable-column"
+            >
+              Updated By
+            </div>
           </div>
         </div>
       </div>

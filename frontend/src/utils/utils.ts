@@ -1,8 +1,8 @@
 import { ILookupCode } from 'actions/lookupActions';
-import { startCase, isNull, isUndefined, isEmpty } from 'lodash';
+import { startCase, isNull, isUndefined, isEmpty, lowerFirst, keys } from 'lodash';
 import { SelectOption } from 'components/common/form';
 import { FormikProps, getIn } from 'formik';
-import { SortDirection } from 'components/Table/TableSort';
+import { SortDirection, TableSort } from 'components/Table/TableSort';
 import { AxiosError } from 'axios';
 import { showLoading, hideLoading } from 'react-redux-loading-bar';
 import { success, error, request } from 'actions/genericActions';
@@ -195,6 +195,37 @@ export const generateSortCriteria = (column: string, direction: SortDirection) =
   }
 
   return `${startCase(column).replace(' ', '')} ${direction}`;
+};
+
+/**
+ * convert table sort config to api sort query
+ * {name: 'desc} = ['Name desc']
+ */
+export const generateMultiSortCriteria = (sort: TableSort<any>) => {
+  if (!sort) {
+    return '';
+  }
+
+  return keys(sort).map(key => `${startCase(key).replace(' ', '')} ${sort[key]}`);
+};
+
+/**
+ * Convert sort query string to TableSort config
+ * ['Name desc'] = {name: 'desc'}
+ */
+export const resolveSortCriteriaFromUrl = (input: string[]): TableSort<any> | {} => {
+  if (isEmpty(input)) {
+    return {};
+  }
+
+  return input.reduce((acc: any, sort: string) => {
+    const fields = sort.split(' ');
+    if (fields.length !== 2) {
+      return { ...acc };
+    }
+
+    return { ...acc, [lowerFirst(fields[0])]: fields[1] };
+  }, {});
 };
 
 /**
