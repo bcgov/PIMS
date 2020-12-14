@@ -272,6 +272,7 @@ exports[`Land Form component renders correctly 1`] = `
             >
               <button
                 class="step-trigger"
+                disabled=""
                 type="button"
               >
                 <span
@@ -295,6 +296,7 @@ exports[`Land Form component renders correctly 1`] = `
             >
               <button
                 class="step-trigger"
+                disabled=""
                 type="button"
               >
                 <span
@@ -318,6 +320,7 @@ exports[`Land Form component renders correctly 1`] = `
             >
               <button
                 class="step-trigger"
+                disabled=""
                 type="button"
               >
                 <span
@@ -379,8 +382,8 @@ exports[`Land Form component renders correctly 1`] = `
                       >
                         <input
                           class="input-small form-control"
-                          id="input-searchPid"
-                          name="searchPid"
+                          id="input-data.searchPid"
+                          name="data.searchPid"
                           value=""
                         />
                       </div>
@@ -421,8 +424,8 @@ exports[`Land Form component renders correctly 1`] = `
                       >
                         <input
                           class="input-small form-control"
-                          id="input-searchPin"
-                          name="searchPin"
+                          id="input-data.searchPin"
+                          name="data.searchPin"
                           type="number"
                           value=""
                         />
@@ -468,9 +471,9 @@ exports[`Land Form component renders correctly 1`] = `
                           >
                             <input
                               class="form-control"
-                              field="searchAddress"
-                              id="input-searchAddress"
-                              name="searchAddress"
+                              field="data.searchAddress"
+                              id="input-data.searchAddress"
+                              name="data.searchAddress"
                               value=""
                             />
                           </div>
@@ -534,7 +537,7 @@ exports[`Land Form component renders correctly 1`] = `
                   </div>
                 </div>
                 <div
-                  class="section row no-gutters"
+                  class="section disabled row no-gutters"
                 >
                   <div
                     class="col-md-12"
@@ -559,8 +562,8 @@ exports[`Land Form component renders correctly 1`] = `
                       >
                         <input
                           class="input-small form-control"
-                          id="input-pid"
-                          name="pid"
+                          id="input-data.pid"
+                          name="data.pid"
                           required=""
                           value=""
                         />
@@ -576,8 +579,8 @@ exports[`Land Form component renders correctly 1`] = `
                       >
                         <input
                           class="input-small form-control"
-                          id="input-pin"
-                          name="pin"
+                          id="input-data.pin"
+                          name="data.pin"
                           required=""
                           type="number"
                           value=""
@@ -615,9 +618,9 @@ exports[`Land Form component renders correctly 1`] = `
                           >
                             <input
                               class="form-control"
-                              field="address.line1"
-                              id="input-address.line1"
-                              name="address.line1"
+                              field="data.address.line1"
+                              id="input-data.address.line1"
+                              name="data.address.line1"
                               value=""
                             />
                           </div>
@@ -649,8 +652,8 @@ exports[`Land Form component renders correctly 1`] = `
                               aria-haspopup="listbox"
                               autocomplete="off"
                               class="rbt-input-main form-control rbt-input"
-                              id="address.administrativeArea-field"
-                              name="address.administrativeArea"
+                              id="data.address.administrativeArea-field"
+                              name="data.address.administrativeArea"
                               role="combobox"
                               type="text"
                               value=""
@@ -681,8 +684,8 @@ exports[`Land Form component renders correctly 1`] = `
                         <select
                           class="form-select form-control"
                           disabled=""
-                          id="input-address.provinceId"
-                          name="address.provinceId"
+                          id="input-data.address.provinceId"
+                          name="data.address.provinceId"
                         >
                           <option
                             value=""
@@ -705,8 +708,8 @@ exports[`Land Form component renders correctly 1`] = `
                       >
                         <input
                           class="input-small form-control"
-                          id="input-address.postal"
-                          name="address.postal"
+                          id="input-data.address.postal"
+                          name="data.address.postal"
                           style="width: 120px;"
                           value=""
                         />
@@ -737,12 +740,11 @@ exports[`Land Form component renders correctly 1`] = `
                               aria-haspopup="listbox"
                               autocomplete="off"
                               class="rbt-input-main form-control rbt-input"
-                              disabled=""
-                              id="agencyId-field"
-                              name="agencyId"
+                              id="data.agencyId-field"
+                              name="data.agencyId"
                               role="combobox"
                               type="text"
-                              value=""
+                              value="agencyVal"
                             />
                             <input
                               aria-hidden="true"
@@ -773,8 +775,8 @@ exports[`Land Form component renders correctly 1`] = `
                       >
                         <input
                           class="form-control"
-                          id="input-name"
-                          name="name"
+                          id="input-data.name"
+                          name="data.name"
                           value=""
                         />
                       </div>
@@ -792,8 +794,8 @@ exports[`Land Form component renders correctly 1`] = `
                       >
                         <textarea
                           class="form-control"
-                          id="input-description"
-                          name="description"
+                          id="input-data.description"
+                          name="data.description"
                         />
                       </div>
                     </div>
@@ -810,8 +812,8 @@ exports[`Land Form component renders correctly 1`] = `
                       >
                         <textarea
                           class="form-control"
-                          id="input-landLegalDescription"
-                          name="landLegalDescription"
+                          id="input-data.landLegalDescription"
+                          name="data.landLegalDescription"
                           required=""
                         />
                       </div>
@@ -835,8 +837,8 @@ exports[`Land Form component renders correctly 1`] = `
                           >
                             <input
                               class="form-control"
-                              id="input-landArea"
-                              name="landArea"
+                              id="input-data.landArea"
+                              name="data.landArea"
                               type="number"
                               value=""
                             />
@@ -885,14 +887,14 @@ exports[`Land Form component renders correctly 1`] = `
                           >
                             <input
                               class="form-check-input"
-                              id="input-isSensitive"
-                              name="isSensitive"
+                              id="input-data.isSensitive"
+                              name="data.isSensitive"
                               type="radio"
                               value="false"
                             />
                             <label
                               class="form-check-label"
-                              for="input-isSensitive"
+                              for="input-data.isSensitive"
                               title=""
                             >
                               Yes
@@ -904,14 +906,14 @@ exports[`Land Form component renders correctly 1`] = `
                             <input
                               checked=""
                               class="form-check-input"
-                              id="input-isSensitive-2"
-                              name="isSensitive"
+                              id="input-data.isSensitive-2"
+                              name="data.isSensitive"
                               type="radio"
                               value="true"
                             />
                             <label
                               class="form-check-label"
-                              for="input-isSensitive-2"
+                              for="input-data.isSensitive-2"
                               title=""
                             >
                               No

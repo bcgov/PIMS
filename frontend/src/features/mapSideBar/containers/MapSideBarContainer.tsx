@@ -27,7 +27,10 @@ import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import GenericModal, { ModalSize } from 'components/common/GenericModal';
 import { FaCheckCircle } from 'react-icons/fa';
 import styled from 'styled-components';
-import { IFinancialYear } from 'features/properties/components/forms/subforms/EvaluationForm';
+import {
+  IFinancialYear,
+  getMergedFinancials,
+} from 'features/properties/components/forms/subforms/EvaluationForm';
 
 interface IMapSideBarContainerProps {
   refreshParcels: Function;
@@ -94,7 +97,7 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
   const [buildingToAssociateLand, setBuildingToAssociateLand] = useState<IBuilding | undefined>();
   const [showAssociateLandModal, setShowAssociateLandModal] = useState(false);
   const [propertyType, setPropertyType] = useState('');
-  const [showAssociateLandCompleteModal, setShowAssociateLandCompleteModal] = useState(false);
+  const [showCompleteModal, setShowCompleteModal] = useState(false);
   const formikRef = React.useRef<FormikValues>();
   const parcelsService = useLayerQuery(PARCELS_LAYER_URL);
 
@@ -103,6 +106,10 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
       setShowAssociateLandModal(true);
     }
   }, [buildingToAssociateLand]);
+
+  const withNameSpace: Function = (fieldName: string, nameSpace?: string) => {
+    return nameSpace ? `${nameSpace}.${fieldName}` : fieldName;
+  };
 
   /**
    * Attempt to fetch the parcel within PIMS matching the passed pid or pin value. If that request fails, make another request to the parcel layer with the same data.
@@ -117,12 +124,16 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
   ) => {
     fetchParcelsDetail(pidOrPin)(dispatch).then(resp => {
       const matchingParcel: any = resp?.data?.length ? _.first(resp?.data) : undefined;
-      if (!!nameSpace && !!formikRef?.current?.values && !!matchingParcel?.id) {
+      if (!!formikRef?.current?.values && !!matchingParcel?.id) {
         const { resetForm, values } = formikRef.current;
-        matchingParcel.searchPid = getIn(values, `${nameSpace}.searchPid`);
-        matchingParcel.searchPin = getIn(values, `${nameSpace}.searchPin`);
-        matchingParcel.searchAddress = getIn(values, `${nameSpace}.searchAddress`);
-        resetForm({ values: setIn(values, nameSpace, matchingParcel) });
+        matchingParcel.searchPid = getIn(values, withNameSpace('searchPid', nameSpace));
+        matchingParcel.searchPin = getIn(values, withNameSpace('searchPin', nameSpace));
+        matchingParcel.searchAddress = getIn(values, withNameSpace('seachAddress', nameSpace));
+        matchingParcel.financials = getMergedFinancials([
+          ...matchingParcel.evaluations,
+          ...matchingParcel.fiscals,
+        ]);
+        resetForm({ values: setIn(values, nameSpace ?? '', matchingParcel) });
         toast.dark('Found matching parcel within PIMS. Form data will be pre-populated.', {
           autoClose: 7000,
         });
@@ -296,6 +307,7 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
             handlePidChange={handlePidChange}
             handlePinChange={handlePinChange}
             isAdmin={keycloak.isAdmin}
+            setLandComplete={setShowCompleteModal}
           />
         );
       case SidebarContextType.ADD_ASSOCIATED_LAND:
@@ -314,7 +326,7 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
             handlePinChange={handlePinChange}
             initialValues={buildingToAssociateLand ?? ({} as any)}
             isAdmin={keycloak.isAdmin}
-            setAssociatedLandComplete={setShowAssociateLandCompleteModal}
+            setAssociatedLandComplete={setShowCompleteModal}
           />
         );
       default:
@@ -363,16 +375,16 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
             <BoldText>Would you like to continue adding to the inventory?</BoldText>
           </>
         }
-        display={showAssociateLandCompleteModal}
+        display={showCompleteModal}
         cancelButtonText="No, I'm done"
         okButtonText="Yes"
         handleOk={() => {
           setShowSideBar(true, SidebarContextType.ADD_PROPERTY_TYPE_SELECTOR, 'narrow');
-          setShowAssociateLandCompleteModal(false);
+          setShowCompleteModal(false);
         }}
         handleCancel={() => {
           setShowSideBar(false);
-          setShowAssociateLandCompleteModal(false);
+          setShowCompleteModal(false);
         }}
       ></GenericModal>
     </MapSideBarLayout>

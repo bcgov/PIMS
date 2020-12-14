@@ -5,19 +5,20 @@ import {
   Input,
   TextArea,
   InputGroup,
-  AutoCompleteText,
   FastCurrencyInput,
   Check,
   FastSelect,
 } from 'components/common/form';
 import React, { useCallback, useState } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
-import { useFormikContext } from 'formik';
+import { useFormikContext, getIn } from 'formik';
 import { Label } from 'components/common/Label';
 import { FaEdit } from 'react-icons/fa';
 import { LandSvg } from 'components/common/Icons';
 import AddressForm from 'features/properties/components/forms/subforms/AddressForm';
 import { noop } from 'lodash';
+import styled from 'styled-components';
+import { ParentSelect } from 'components/common/form/ParentSelect';
 
 interface IReviewProps {
   nameSpace?: string;
@@ -29,6 +30,14 @@ interface IReviewProps {
   /** handle the pin formatting on change */
   handlePinChange: (pin: string) => void;
 }
+
+const LinkButton = styled.span`
+  background: none;
+  border: none;
+  padding: 0;
+  color: #069;
+  text-decoration: underline;
+`;
 
 export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
   const defaultEditValues = {
@@ -44,6 +53,7 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
     [props.nameSpace],
   );
   const formikProps = useFormikContext();
+  const projectNumber = getIn(formikProps.values, withNameSpace('projectNumber'));
 
   return (
     <Container className="review-section">
@@ -74,29 +84,27 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
               </Row>
               <Row className="content-item">
                 <Label>Agency</Label>
-                <AutoCompleteText
-                  field={withNameSpace('data.agencyId')}
+                <ParentSelect
+                  field={withNameSpace('agencyId')}
                   options={props.agencies}
+                  filterBy={['code', 'label', 'parent']}
                   disabled={editInfo.identification}
                 />
               </Row>
               <Row className="content-item">
                 <Label>Name</Label>
-                <Input disabled={editInfo.identification} field={withNameSpace('data.name')} />
+                <Input disabled={editInfo.identification} field={withNameSpace('name')} />
               </Row>
               <Row className="content-item">
                 <Label>Description</Label>
-                <TextArea
-                  disabled={editInfo.identification}
-                  field={withNameSpace('data.description')}
-                />
+                <TextArea disabled={editInfo.identification} field={withNameSpace('description')} />
               </Row>
 
               <AddressForm
                 onGeocoderChange={noop}
                 {...formikProps}
                 disabled={editInfo.identification}
-                nameSpace="data.address"
+                nameSpace={withNameSpace('address')}
               />
               <p className="break"></p>
               <Row className="content-item">
@@ -107,8 +115,8 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
                   disabled={editInfo.identification}
                   field={
                     (formikProps.values as any).data.pid
-                      ? withNameSpace('data.pid')
-                      : withNameSpace('data.pin')
+                      ? withNameSpace('pid')
+                      : withNameSpace('pin')
                   }
                 />
               </Row>
@@ -120,7 +128,7 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
                   fast={true}
                   disabled={editInfo.identification}
                   type="number"
-                  field={withNameSpace('data.landArea')}
+                  field={withNameSpace('landArea')}
                   formikProps={formikProps}
                   postText="Hectares"
                 />
@@ -134,7 +142,7 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
                   formikProps={formikProps}
                   disabled={editInfo.identification}
                   type="number"
-                  field={withNameSpace('data.latitude')}
+                  field={withNameSpace('latitude')}
                 />
               </Row>
               <Row className="content-item">
@@ -145,26 +153,25 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
                   formikProps={formikProps}
                   disabled={editInfo.identification}
                   type="number"
-                  field={withNameSpace('data.longitude')}
+                  field={withNameSpace('longitude')}
                 />
               </Row>
-              <Row className="content-item">
-                <Label>SPP</Label>
-                <FastInput
-                  className="input-medium"
-                  displayErrorTooltips
-                  formikProps={formikProps}
-                  disabled={editInfo.identification}
-                  type="text"
-                  field={withNameSpace('data.projectNumber')}
-                />
-              </Row>
+              {!!projectNumber && (
+                <Row className="content-item">
+                  <Label>SPP</Label>
+                  <LinkButton>
+                    {
+                      projectNumber //TODO: make this a proper link when PA-1974 is fixed
+                    }
+                  </LinkButton>
+                </Row>
+              )}
               <br></br>
               <Row className="harmful">
                 <Label>Harmful info if released?</Label>
                 <Check
                   type="radio"
-                  field={withNameSpace('data.isSensitive')}
+                  field={withNameSpace('isSensitive')}
                   radioLabelOne="Yes"
                   radioLabelTwo="No"
                   disabled={editInfo.identification}
@@ -235,15 +242,7 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
                 <Label>Net Book Value</Label>
                 <FastCurrencyInput
                   formikProps={formikProps}
-                  field={withNameSpace('data.financials.0.netbook.value')}
-                  disabled={editInfo.valuation}
-                />
-              </Row>
-              <Row className="val-row">
-                <Label>Est'd Market Value</Label>
-                <FastCurrencyInput
-                  formikProps={formikProps}
-                  field={withNameSpace('data.financials.0.estimated.value')}
+                  field={withNameSpace('financials.0.netbook.value')}
                   disabled={editInfo.valuation}
                 />
               </Row>
@@ -251,15 +250,7 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
                 <Label>Assessed Value</Label>
                 <FastCurrencyInput
                   formikProps={formikProps}
-                  field={withNameSpace('data.financials.0.assessed.value')}
-                  disabled={editInfo.valuation}
-                />
-              </Row>
-              <Row className="val-row">
-                <Label>Appraised Value</Label>
-                <FastCurrencyInput
-                  formikProps={formikProps}
-                  field={withNameSpace('data.financials.0.appraised.value')}
+                  field={withNameSpace('financials.0.assessed.value')}
                   disabled={editInfo.valuation}
                 />
               </Row>

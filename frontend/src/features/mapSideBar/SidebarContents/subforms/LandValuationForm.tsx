@@ -9,12 +9,18 @@ interface ITenancyProps {
   disabled?: boolean;
   nameSpace?: string;
   index?: any;
+  showImprovements?: boolean;
 }
 /**
  * Display valuation tables for assessed and netbook values.
  * @param {ITenancyProps} param0
  */
-export const LandValuationForm: React.FC<ITenancyProps> = ({ title, disabled, nameSpace }) => {
+export const LandValuationForm: React.FC<ITenancyProps> = ({
+  title,
+  disabled,
+  nameSpace,
+  showImprovements,
+}) => {
   const withNameSpace: Function = (fieldName: string) => {
     return nameSpace ? `${nameSpace}.${fieldName}` : fieldName;
   };
@@ -32,6 +38,7 @@ export const LandValuationForm: React.FC<ITenancyProps> = ({ title, disabled, na
           isParcel={true}
           showAppraisal={false}
           nameSpace={withNameSpace('financials')}
+          showImprovements={showImprovements}
         />
       </Row>
     </Col>

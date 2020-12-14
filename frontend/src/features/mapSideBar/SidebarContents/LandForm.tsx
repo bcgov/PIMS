@@ -10,7 +10,6 @@ import { Button } from 'react-bootstrap';
 import styled from 'styled-components';
 import { InventoryPolicy } from '../components/InventoryPolicy';
 import * as API from 'constants/API';
-import { IParcel } from 'actions/parcelsActions';
 import { defaultAddressValues } from 'features/properties/components/forms/subforms/AddressForm';
 import { ParcelIdentificationForm } from './subforms/ParcelIdentificationForm';
 import { LandUsageForm } from './subforms/LandUsageForm';
@@ -27,12 +26,18 @@ import { EvaluationKeys } from 'constants/evaluationKeys';
 import { FiscalKeys } from 'constants/fiscalKeys';
 import _ from 'lodash';
 import { useDispatch } from 'react-redux';
-import { ParcelSchema } from 'utils/YupSchema';
+import {
+  ParcelSchema,
+  LandIdentificationSchema,
+  LandUsageSchema,
+  LandValuationSchema,
+} from 'utils/YupSchema';
 import { createParcel, updateParcel } from 'actionCreators/parcelsActionCreator';
 import { LandValuationForm } from './subforms/LandValuationForm';
 import { LandSteps } from 'constants/propertySteps';
 import useDraftMarkerSynchronizer from 'features/properties/hooks/useDraftMarkerSynchronizer';
 import { IFormParcel } from '../containers/MapSideBarContainer';
+import useParcelLayerData from 'features/properties/hooks/useParcelLayerData';
 
 const Container = styled.div`
   background-color: #fff;
@@ -105,6 +110,9 @@ export const valuesToApiFormat = (values: ISteppedFormValues<IFormParcel>): IFor
   );
   values.data.landArea = +values.data.landArea;
   values.data.financials = [];
+  if ((values.data.agencyId as any)?.value) {
+    values.data.agencyId = +(values.data.agencyId as any).value;
+  }
   return values.data;
 };
 
@@ -113,11 +121,17 @@ const Form: React.FC<ILandForm> = ({
   setMovingPinNameSpace,
   handlePidChange,
   handlePinChange,
+  formikRef,
   isAdmin,
 }) => {
   // access the stepper to later split the form into segments
   const stepper = useFormStepper();
-  const formikProps = useFormikContext<IParcel>();
+  const formikProps = useFormikContext<ISteppedFormValues<IFormParcel>>();
+  useParcelLayerData({
+    formikRef,
+    nameSpace: 'data',
+    agencyId: +formikProps.values.data.agencyId,
+  });
 
   // lookup codes that will be used by subforms
   const { getOptionsByType } = useCodeLookups();
@@ -138,6 +152,7 @@ const Form: React.FC<ILandForm> = ({
               handlePidChange={handlePidChange}
               handlePinChange={handlePinChange}
               isAdmin={isAdmin}
+              nameSpace="data"
             />
           </div>
         );
@@ -148,7 +163,7 @@ const Form: React.FC<ILandForm> = ({
           </div>
         );
       case LandSteps.VALUATION:
-        return <LandValuationForm title="Bare Land Valuation" />;
+        return <LandValuationForm title="Bare Land Valuation" nameSpace="data" />;
       case LandSteps.REVIEW:
         return (
           <LandReviewPage
@@ -156,6 +171,7 @@ const Form: React.FC<ILandForm> = ({
             agencies={agencies}
             handlePidChange={handlePidChange}
             handlePinChange={handlePinChange}
+            nameSpace="data"
           />
         );
     }
@@ -170,6 +186,9 @@ const Form: React.FC<ILandForm> = ({
           <Button
             type="button"
             onClick={() => {
+              if (!stepper.validateCurrentStep()) {
+                return;
+              }
               stepper.gotoNext();
             }}
             size="sm"
@@ -202,13 +221,18 @@ interface ILandForm {
   isAdmin: boolean;
 }
 
+interface IParentLandForm extends ILandForm {
+  /** signal the parent that the associated land process has been completed. */
+  setLandComplete: (show: boolean) => void;
+}
+
 /**
  * A component used for submitting bare land.
  * This form will appear after selecting 'Add Bare Land' after navigating to Manage Property > Submit Property in PIMS
  * @component
  */
 
-const LandForm: React.FC<ILandForm> = (props: ILandForm) => {
+const LandForm: React.FC<IParentLandForm> = (props: IParentLandForm) => {
   const keycloak = useKeycloakWrapper();
   const dispatch = useDispatch();
   const api = useApi();
@@ -233,7 +257,7 @@ const LandForm: React.FC<ILandForm> = (props: ILandForm) => {
     );
 
     let pidDuplicated = false;
-    if (values.data.pid && initialValues.data.pid !== values.data.pid) {
+    if (values.data.pid && initialValues.data.pid !== values.data.pid && !values.data.id) {
       pidDuplicated = !(await isPidAvailable(values.data));
     }
 
@@ -241,7 +265,8 @@ const LandForm: React.FC<ILandForm> = (props: ILandForm) => {
     if (
       values.data.pin &&
       initialValues.data.pin !== values.data.pin &&
-      values.data.pin.toString().length < 10
+      values.data.pin.toString().length < 10 &&
+      !values.data.id
     ) {
       pinDuplicated = !(await isPinAvailable(values.data));
     }
@@ -271,10 +296,34 @@ const LandForm: React.FC<ILandForm> = (props: ILandForm) => {
       <SteppedForm
         // Provide the steps
         steps={[
-          { route: 'identification', title: 'Parcel ID', completed: false, canGoToStep: true },
-          { route: 'usage', title: 'Usage', completed: false, canGoToStep: true },
-          { route: 'valuation', title: 'Valuation', completed: false, canGoToStep: true },
-          { route: 'review', title: 'Review', completed: false, canGoToStep: true },
+          {
+            route: 'identification',
+            title: 'Parcel ID',
+            completed: false,
+            canGoToStep: true,
+            validation: { schema: LandIdentificationSchema, nameSpace: () => 'data' },
+          },
+          {
+            route: 'usage',
+            title: 'Usage',
+            completed: false,
+            canGoToStep: false,
+            validation: { schema: LandUsageSchema, nameSpace: () => 'data' },
+          },
+          {
+            route: 'valuation',
+            title: 'Valuation',
+            completed: false,
+            canGoToStep: false,
+            validation: { schema: LandValuationSchema, nameSpace: () => 'data' },
+          },
+          {
+            route: 'review',
+            title: 'Review',
+            completed: false,
+            canGoToStep: false,
+            validation: { schema: ParcelSchema, nameSpace: () => 'data' },
+          },
         ]}
         persistable={true}
         persistProps={{
@@ -293,6 +342,7 @@ const LandForm: React.FC<ILandForm> = (props: ILandForm) => {
             } else {
               await updateParcel(apiValues)(dispatch);
             }
+            props.setLandComplete(true);
           } catch (error) {
           } finally {
             actions.setSubmitting(false);
@@ -305,6 +355,7 @@ const LandForm: React.FC<ILandForm> = (props: ILandForm) => {
           handlePidChange={props.handlePidChange}
           handlePinChange={props.handlePinChange}
           isAdmin={props.isAdmin}
+          formikRef={props.formikRef}
         />
       </SteppedForm>
     </Container>

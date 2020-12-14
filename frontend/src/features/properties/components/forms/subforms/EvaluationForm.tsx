@@ -19,6 +19,8 @@ interface EvaluationProps {
   showAppraisal?: boolean;
   /** whether the form is being used on parcel or building */
   isParcel?: boolean;
+  /** if the improvements should be displayed */
+  showImprovements?: boolean;
 }
 
 /**
@@ -134,9 +136,9 @@ const EvaluationForm = <T extends any>(props: EvaluationProps & FormikProps<T>) 
         props.isParcel ? 'Land' : 'Assessed Building Value',
         props.disabled,
         props.nameSpace,
-        props.isParcel,
+        props.showImprovements,
       ),
-    [props.disabled, props.isParcel, props.nameSpace],
+    [props.disabled, props.isParcel, props.nameSpace, props.showImprovements],
   );
   const netbookCols: any = useMemo(() => getNetbookCols(props.disabled, props.nameSpace), [
     props.disabled,
@@ -158,7 +160,7 @@ const EvaluationForm = <T extends any>(props: EvaluationProps & FormikProps<T>) 
         <Table
           lockPageSize
           pageSize={-1}
-          name="evaluations"
+          name="fiscals"
           columns={netbookCols}
           data={defaultFinancials}
           manualPagination={false}

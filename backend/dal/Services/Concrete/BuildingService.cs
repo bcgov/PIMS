@@ -237,7 +237,7 @@ namespace Pims.Dal.Services
             foreach (var parcel in building.Parcels.Select(pb => pb.Parcel))
             {
                 // Check if the building already exists.
-                var existingParcel = existingBuilding.Parcels
+                var existingParcelBuilding = existingBuilding.Parcels
                     .FirstOrDefault(pb => pb.ParcelId == parcel.Id)?.Parcel;
 
                 // Reset all relationships that are not changed through this update.
@@ -245,11 +245,17 @@ namespace Pims.Dal.Services
                 parcel.Classification = this.Context.PropertyClassifications.FirstOrDefault(b => b.Id == parcel.ClassificationId);
                 parcel.Agency = this.Context.Agencies.FirstOrDefault(a => a.Id == building.AgencyId);
 
-                if (existingParcel == null)
+                if (existingParcelBuilding == null)
                 {
                     if (!allowEdit) throw new NotAuthorizedException("User may not add parcels to a property they don't own.");
+                    var existingParcel = this.Context.Parcels
+                    .FirstOrDefault(pb => pb.Id == parcel.Id);
+                    if(existingParcel != null)
+                    {
+                        _service.Parcel.PendingUpdate(parcel);
+                    }
 
-                    existingBuilding.Parcels.Add(new ParcelBuilding(parcel, building));
+                    existingBuilding.Parcels.Add(new ParcelBuilding(existingParcel ?? parcel, building));
                 }
                 else
                 {
@@ -303,7 +309,7 @@ namespace Pims.Dal.Services
                         continue;
                     }
 
-                    // The building may have evaluations or fiscals that need to be deleted.
+                    // The parcel may have evaluations or fiscals that need to be deleted.
                     foreach (var parcelEvaluation in parcelBuilding.Parcel.Evaluations)
                     {
                         // Delete the evaluations that have been removed.
