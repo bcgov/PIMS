@@ -12,7 +12,7 @@ import { useMount } from './useMount';
 /**
  * Extract the specified properties from the source object.
  * Does not extract 'undefined' property values.
- * This provides a consistent deconscrutor implementation.
+ * This provides a consistent deconstructor implementation.
  * For some reason the following will not work `const result: T = source;`.
  * @param props An array of property names.
  * @param source The source object that the properties will be extracted from.
