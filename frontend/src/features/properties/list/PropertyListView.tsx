@@ -54,12 +54,20 @@ const defaultFilterValues: IPropertyFilter = {
   propertyType: PropertyTypes.Land,
 };
 
-const getServerQuery = (state: {
-  pageIndex: number;
-  pageSize: number;
-  filter: IPropertyFilter;
-  agencyIds: number[];
-}) => {
+/**
+ * Get the server query
+ * @param ignorePropType - Whether to ignore the PropertyTypes (for doing excel export with all values)
+ * @param state - Table state
+ */
+const getServerQuery = (
+  ignorePropertyType: boolean,
+  state: {
+    pageIndex: number;
+    pageSize: number;
+    filter: IPropertyFilter;
+    agencyIds: number[];
+  },
+) => {
   const {
     pageIndex,
     pageSize,
@@ -93,7 +101,7 @@ const getServerQuery = (state: {
     maxLandArea: decimalOrUndefined(maxLotSize),
     page: pageIndex + 1,
     quantity: pageSize,
-    propertyType,
+    propertyType: ignorePropertyType ? undefined : propertyType,
   };
   return query;
 };
@@ -171,7 +179,7 @@ const PropertyListView: React.FC = () => {
       // Only update the data if this is the latest fetch
       if (agencyIds?.length > 0) {
         setData(undefined);
-        const query = getServerQuery({ pageIndex, pageSize, filter, agencyIds });
+        const query = getServerQuery(false, { pageIndex, pageSize, filter, agencyIds });
         const data = await service.getPropertyList(query);
         // The server could send back total page count.
         // For now we'll just calculate it.
@@ -194,7 +202,7 @@ const PropertyListView: React.FC = () => {
   const dispatch = useDispatch();
 
   const fetch = (accept: 'csv' | 'excel') => {
-    const query = getServerQuery({ pageIndex, pageSize, filter, agencyIds });
+    const query = getServerQuery(true, { pageIndex, pageSize, filter, agencyIds });
     return dispatch(
       download({
         url: getPropertyReportUrl({ ...query, all: true }),
@@ -283,12 +291,12 @@ const PropertyListView: React.FC = () => {
           </div>
           <TooltipWrapper toolTipId="export-to-excel" toolTip="Export to Excel">
             <FileIcon>
-              <FaFileExcel size={36} onClick={() => fetch('excel')} />
+              <FaFileExcel data-testid="excel-icon" size={36} onClick={() => fetch('excel')} />
             </FileIcon>
           </TooltipWrapper>
           <TooltipWrapper toolTipId="export-to-excel" toolTip="Export to CSV">
             <FileIcon>
-              <FaFileAlt size={36} onClick={() => fetch('csv')} />
+              <FaFileAlt data-testid="csv-icon" size={36} onClick={() => fetch('csv')} />
             </FileIcon>
           </TooltipWrapper>
         </Container>

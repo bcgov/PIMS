@@ -279,6 +279,7 @@ exports[`Property list view Matches snapshot 1`] = `
         type="button"
       >
         <svg
+          data-testid="excel-icon"
           fill="currentColor"
           height="36"
           size="36"
@@ -298,6 +299,7 @@ exports[`Property list view Matches snapshot 1`] = `
         type="button"
       >
         <svg
+          data-testid="csv-icon"
           fill="currentColor"
           height="36"
           size="36"
