@@ -383,6 +383,22 @@ namespace Pims.Api.Areas.Project.Models.Dispose
         public string FinalFormSignedBy { get; set; }
 
         /// <summary>
+        /// get/set - When the request to be removed from SPL was.
+        /// </summary>
+        public DateTime? RemovalFromSplRequestOn { get; set; }
+
+        /// <summary>
+        /// get/set - When the request to be removed from SPL was approved on.
+        /// </summary>
+        public DateTime? RemovalFromSplApprovedOn { get; set; }
+
+        /// <summary>
+        /// get/set - A note with the reason to remove the project from SPL.
+        /// </summary>
+        /// <value></value>
+        public string RemovalFromSplRationale { get; set; }
+
+        /// <summary>
         /// get/set - An array of project notes.
         /// </summary>
         public IEnumerable<ProjectNoteModel> Notes { get; set; } = new List<ProjectNoteModel>();

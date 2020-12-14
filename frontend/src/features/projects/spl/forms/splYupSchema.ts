@@ -1,7 +1,15 @@
 import * as Yup from 'yup';
 
-export const SurplusPropertyListNotInSplYupSchema = Yup.object().shape({
+export const NotInSplYupSchema = Yup.object().shape({
   clearanceNotificationSentOn: Yup.date().required('Required'),
+});
+
+export const RemoveFromSplYupSchema = Yup.object().shape({
+  removalFromSplRequestOn: Yup.date().required('Required'),
+  removalFromSplApprovedOn: Yup.date().required('Required'),
+  removalFromSplRationale: Yup.string()
+    .required('Required')
+    .max(2000, 'Rationale must be less then 2000 characters'),
 });
 
 export const SurplusPropertyListOnMarketYupSchema = Yup.object().shape({

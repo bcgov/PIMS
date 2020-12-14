@@ -678,6 +678,43 @@ exports[`EnhancedReferralTab renders correctly when approved for exemption 1`] =
           </div>
         </div>
       </div>
+    </div>
+    <div
+      className="form-row"
+    >
+      <label
+        className="form-label col-form-label col-md-4"
+      >
+        SPL Addition Approved On
+      </label>
+      <div
+        className="col-md-2 form-group"
+      >
+        <div
+          className="react-datepicker-wrapper"
+        >
+          <div
+            className="react-datepicker__input-container"
+          >
+            <input
+              autoComplete="off"
+              className="form-control date-picker"
+              disabled={true}
+              id="datepicker-approvedForSplOn"
+              name="approvedForSplOn"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onClick={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              placeholder="--/--/----"
+              readOnly={false}
+              type="text"
+              value=""
+            />
+          </div>
+        </div>
+      </div>
       <div
         className="justify-content-center"
       >

@@ -69,6 +69,7 @@ namespace Pims.Api.Areas.Project.Mapping.Dispose
                 .Map(dest => dest.AppraisedNote, src => src.GetNoteText(Entity.NoteTypes.Appraisal))
                 .Map(dest => dest.ExemptionRationale, src => src.GetNoteText(Entity.NoteTypes.Exemption))
                 .Map(dest => dest.ReportingNote, src => src.GetNoteText(Entity.NoteTypes.Reporting))
+                .Map(dest => dest.RemovalFromSplRationale, src => src.GetNoteText(Entity.NoteTypes.SplRemoval))
                 .Map(dest => dest.Notes, src => src.Notes)
                 .AfterMapping((src, dest) =>
                 {
@@ -111,6 +112,8 @@ namespace Pims.Api.Areas.Project.Mapping.Dispose
                     dest.PreliminaryFormSignedBy = metadata.PreliminaryFormSignedBy;
                     dest.FinalFormSignedOn = metadata.FinalFormSignedOn;
                     dest.FinalFormSignedBy = metadata.FinalFormSignedBy;
+                    dest.RemovalFromSplRequestOn = metadata.RemovalFromSplRequestOn;
+                    dest.RemovalFromSplApprovedOn = metadata.RemovalFromSplApprovedOn;
                 })
                 .Inherits<Entity.BaseEntity, Api.Models.BaseModel>();
 
@@ -179,7 +182,9 @@ namespace Pims.Api.Areas.Project.Mapping.Dispose
                         PreliminaryFormSignedOn = src.PreliminaryFormSignedOn,
                         PreliminaryFormSignedBy = src.PreliminaryFormSignedBy,
                         FinalFormSignedOn = src.FinalFormSignedOn,
-                        FinalFormSignedBy = src.FinalFormSignedBy
+                        FinalFormSignedBy = src.FinalFormSignedBy,
+                        RemovalFromSplRequestOn = src.RemovalFromSplRequestOn,
+                        RemovalFromSplApprovedOn = src.RemovalFromSplApprovedOn
                     };
                     dest.Metadata = JsonSerializer.Serialize(metadata, _serializerOptions);
                     dest.AddOrUpdateNote(Entity.NoteTypes.General, src.Note ?? "");
@@ -189,6 +194,7 @@ namespace Pims.Api.Areas.Project.Mapping.Dispose
                     dest.AddOrUpdateNote(Entity.NoteTypes.Offer, src.OffersNote ?? "");
                     dest.AddOrUpdateNote(Entity.NoteTypes.Exemption, src.ExemptionRationale ?? "");
                     dest.AddOrUpdateNote(Entity.NoteTypes.Reporting, src.ReportingNote ?? "");
+                    dest.AddOrUpdateNote(Entity.NoteTypes.SplRemoval, src.RemovalFromSplRationale ?? "");
                 })
                 .Inherits<Api.Models.BaseModel, Entity.BaseEntity>();
         }

@@ -1,8 +1,9 @@
 import { Fragment } from 'react';
 import React from 'react';
 import { Form } from 'components/common/form';
-import { ProjectNotes, NoteTypes } from 'features/projects/common';
+import { ProjectNotes } from 'features/projects/common';
 import { Col } from 'react-bootstrap';
+import { NoteTypes } from '../../../../constants';
 
 interface CloseOutFinancialsFormProps {
   isReadOnly?: boolean;
