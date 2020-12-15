@@ -88,6 +88,10 @@ namespace Pims.Dal.Entities
         /// <summary>
         /// Rational for being removed from SPL.
         /// </summary>
-        SplRemoval = 20
+        SplRemoval = 20,
+        /// <summary>
+        /// Notes related to the provided documentation.
+        /// </summary>
+        Documentation = 21
     }
 }
