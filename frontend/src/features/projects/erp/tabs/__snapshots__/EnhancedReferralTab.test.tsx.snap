@@ -533,10 +533,48 @@ exports[`EnhancedReferralTab renders correctly when approved for exemption 1`] =
       <label
         className="form-label col-form-label col-md-4"
       >
+        ADM Approved Exemption On
+      </label>
+      <div
+        className="required col-md-2 form-group"
+      >
+        <div
+          className="react-datepicker-wrapper"
+        >
+          <div
+            className="react-datepicker__input-container"
+          >
+            <input
+              autoComplete="off"
+              className="form-control date-picker"
+              disabled={false}
+              id="datepicker-exemptionApprovedOn"
+              name="exemptionApprovedOn"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onClick={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              placeholder="--/--/----"
+              readOnly={false}
+              required={true}
+              type="text"
+              value=""
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      className="form-row"
+    >
+      <label
+        className="form-label col-form-label col-md-4"
+      >
         Clearance Notification Sent
       </label>
       <div
-        className="col-md-2 form-group"
+        className="required col-md-2 form-group"
       >
         <div
           className="react-datepicker-wrapper"
@@ -557,6 +595,7 @@ exports[`EnhancedReferralTab renders correctly when approved for exemption 1`] =
               onKeyDown={[Function]}
               placeholder="--/--/----"
               readOnly={false}
+              required={true}
               type="text"
               value=""
             />

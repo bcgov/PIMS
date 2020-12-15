@@ -10,6 +10,11 @@ namespace Pims.Dal.Entities.Models
         /// get/set - Whether an exemption was requested for the ERP.
         /// </summary>
         public bool ExemptionRequested { get; set; }
+
+        /// <summary>
+        /// get/set - The date when the ADM approved the exemption on.
+        /// </summary>
+        public DateTime? ExemptionApprovedOn { get; set; }
         #endregion
 
         #region ERP

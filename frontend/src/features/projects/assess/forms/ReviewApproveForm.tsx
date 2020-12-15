@@ -13,11 +13,13 @@ import {
   PublicNotes,
   PrivateNotes,
   useProject,
+  IProject,
 } from '../../common';
 import TasksForm from '../../common/forms/TasksForm';
 import _ from 'lodash';
 import { useFormikContext } from 'formik';
 import ExemptionRequest from '../../dispose/components/ExemptionRequest';
+import { Form, FastDatePicker } from 'components/common/form';
 
 /**
  * Form component of ReviewApproveStep (currently a multi-step form).
@@ -31,7 +33,8 @@ const ReviewApproveForm = ({
   goToAddProperties: Function;
 }) => {
   const { project } = useProject();
-  const { errors } = useFormikContext();
+  const formikProps = useFormikContext<IProject>();
+  const { errors } = useFormikContext<IProject>();
   const [isReadOnly, setIsReadOnly] = useState(true);
   /** Enter edit mode if allowed and there are errors to display */
   useEffect(() => {
@@ -82,6 +85,17 @@ const ReviewApproveForm = ({
             rationaleInstruction="The agency has requested exemption with the below rationale:"
           />
           <TasksForm tasks={exemptionReviewTasks} className="reviewRequired" />
+          <Form.Row>
+            <Form.Label column md={2}>
+              ADM Approved Exemption On
+            </Form.Label>
+            <FastDatePicker
+              required
+              outerClassName="col-md-2"
+              formikProps={formikProps}
+              field="exemptionApprovedOn"
+            />
+          </Form.Row>
         </>
       )}
       <DocumentationForm tasks={documentationTasks} isReadOnly={true} showNote={true} />

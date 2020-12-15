@@ -2908,7 +2908,8 @@ namespace Pims.Dal.Test.Services
             project.StatusId = approve.Id; // Submit Status
             var metadata = new DisposalProjectMetadata()
             {
-                ClearanceNotificationSentOn = DateTime.UtcNow
+                ClearanceNotificationSentOn = DateTime.UtcNow,
+                ExemptionApprovedOn = DateTime.UtcNow
             };
             project.Metadata = JsonSerializer.Serialize(metadata);
 

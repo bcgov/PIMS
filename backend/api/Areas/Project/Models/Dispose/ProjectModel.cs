@@ -273,6 +273,11 @@ namespace Pims.Api.Areas.Project.Models.Dispose
         public string ExemptionRationale { get; set; }
 
         /// <summary>
+        /// get/set - The date the ADM approved the exemption.
+        /// </summary>
+        public DateTime? ExemptionApprovedOn { get; set; }
+
+        /// <summary>
         /// get/set - The netbook value which is the sum of the properties.
         /// </summary>
         public decimal NetBook { get; set; }
