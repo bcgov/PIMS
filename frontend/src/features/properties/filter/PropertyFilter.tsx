@@ -17,38 +17,49 @@ import { PropertyFilterOptions } from './';
 import { useRouterFilter } from 'hooks/useRouterFilter';
 import { IPropertyFilter } from './IPropertyFilter';
 import { TableSort } from 'components/Table/TableSort';
+import { TrueFalse } from 'constants/trueFalse';
 
-export type PropertyFilterProps = {
+/**
+ * PropertyFilter component properties.
+ */
+export interface IPropertyFilterProps {
+  /** The default filter to apply if a different one hasn't been set in the URL or stored in redux. */
   defaultFilter: IPropertyFilter;
+  /** An arry of agency lookup codes. */
   agencyLookupCodes: ILookupCode[];
+  /** An array of classification codes. */
   propertyClassifications: ILookupCode[];
+  /** Callback event when the filter is changed during Mount. */
   onChange: (filter: IPropertyFilter) => void;
+  /** Comma separated list of column names to sort by. */
   sort?: TableSort<any>;
-  onSort?: (sort: TableSort<any>) => void;
-};
+  /** Event fire when sorting changes. */
+  onSorting?: (sort: TableSort<any>) => void;
+}
 
 /**
  * Property filter bar to search for properties.
+ * Applied filter will be added to the URL query parameters and stored in a redux store.
  */
-export const PropertyFilter: React.FC<PropertyFilterProps> = ({
+export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
   defaultFilter,
   agencyLookupCodes,
   propertyClassifications,
   onChange,
   sort,
-  onSort,
+  onSorting,
 }) => {
   const [propertyFilter, setPropertyFilter] = React.useState<IPropertyFilter>(defaultFilter);
-  useRouterFilter(
-    propertyFilter,
-    filter => {
+  useRouterFilter({
+    filter: propertyFilter,
+    setFilter: filter => {
       onChange(filter);
       setPropertyFilter(filter);
     },
-    'propertyFilter',
-    sort,
-    onSort,
-  );
+    key: 'propertyFilter',
+    sort: sort,
+    setSorting: onSorting,
+  });
   const mapLookupCode = (code: ILookupCode): SelectOption => ({
     label: code.name,
     value: code.id.toString(),
@@ -75,15 +86,15 @@ export const PropertyFilter: React.FC<PropertyFilterProps> = ({
 
   const applyEnhancedReferralFilter = () => {
     const values: IPropertyFilter = { ...formikRef!.values };
-    values.inEnhancedReferralProcess = 'true';
-    values.inSurplusPropertyProgram = 'false';
+    values.inEnhancedReferralProcess = TrueFalse.True;
+    values.inSurplusPropertyProgram = TrueFalse.False;
     changeFilter(values);
   };
 
   const applySurplusPropertyFilter = () => {
     const values: IPropertyFilter = { ...formikRef!.values };
-    values.inSurplusPropertyProgram = 'true';
-    values.inEnhancedReferralProcess = 'false';
+    values.inSurplusPropertyProgram = TrueFalse.True;
+    values.inEnhancedReferralProcess = TrueFalse.False;
     changeFilter(values);
   };
 
@@ -140,8 +151,8 @@ export const PropertyFilter: React.FC<PropertyFilterProps> = ({
                 <SppButton
                   handleErpClick={applyEnhancedReferralFilter}
                   handleSppClick={applySurplusPropertyFilter}
-                  inEnhancedReferralProcess={values.inEnhancedReferralProcess === 'true'}
-                  inSurplusPropertyProgram={values.inSurplusPropertyProgram === 'true'}
+                  inEnhancedReferralProcess={values.inEnhancedReferralProcess === TrueFalse.True}
+                  inSurplusPropertyProgram={values.inSurplusPropertyProgram === TrueFalse.True}
                 />
               </Col>
             )}
@@ -157,5 +168,3 @@ export const PropertyFilter: React.FC<PropertyFilterProps> = ({
     </Formik>
   );
 };
-
-export default PropertyFilter;
