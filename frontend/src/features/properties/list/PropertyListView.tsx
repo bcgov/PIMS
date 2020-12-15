@@ -252,7 +252,7 @@ const PropertyListView: React.FC = () => {
             propertyClassifications={propertyClassifications}
             onChange={handleFilterChange}
             sort={sorting}
-            onSort={setSorting}
+            onSorting={setSorting}
           />
         </Container>
       </Container>
