@@ -44,4 +44,6 @@ export enum NoteTypes {
   Remediation = 19,
   /** Surplus Property List removal rationale. */
   SplRemoval = 20,
+  /** Notes related to the provided documentation. */
+  Documentation = 21,
 }

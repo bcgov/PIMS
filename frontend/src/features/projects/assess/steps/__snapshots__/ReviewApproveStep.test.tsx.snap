@@ -692,6 +692,25 @@ exports[`Review Approve Step renders correctly 1`] = `
       Documentation
     </h3>
     <div
+      class="ProjectNotes form-row"
+    >
+      <div
+        class="col-md-10 form-group col"
+      >
+        <label
+          class="form-label"
+          for="input-notes[21].note"
+        >
+          Note
+        </label>
+        <textarea
+          class="col-md-auto form-control"
+          id="input-notes[21].note"
+          name="notes[21].note"
+        />
+      </div>
+    </div>
+    <div
       class="tasksForm reviewRequired form-row"
     >
       <div

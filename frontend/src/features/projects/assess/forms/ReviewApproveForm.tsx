@@ -84,7 +84,7 @@ const ReviewApproveForm = ({
           <TasksForm tasks={exemptionReviewTasks} className="reviewRequired" />
         </>
       )}
-      <DocumentationForm tasks={documentationTasks} isReadOnly={true} />
+      <DocumentationForm tasks={documentationTasks} isReadOnly={true} showNote={true} />
       <TasksForm
         tasks={documentationReviewTasks}
         className="reviewRequired"
