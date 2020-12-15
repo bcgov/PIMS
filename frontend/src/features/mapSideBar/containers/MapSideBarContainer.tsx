@@ -94,8 +94,8 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
   const [buildingToAssociateLand, setBuildingToAssociateLand] = useState<IBuilding | undefined>();
   const [showAssociateLandModal, setShowAssociateLandModal] = useState(false);
   const [propertyType, setPropertyType] = useState('');
+  const [showAssociateLandCompleteModal, setShowAssociateLandCompleteModal] = useState(false);
   const formikRef = React.useRef<FormikValues>();
-  const { handleGeocoderChanges } = useGeocoder({ formikRef });
   const parcelsService = useLayerQuery(PARCELS_LAYER_URL);
 
   useEffect(() => {
@@ -104,37 +104,51 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
     }
   }, [buildingToAssociateLand]);
 
-  /** query pims for the given pid, set data within the form if match found. Fallback to querying the parcel data layer. */
-  const handlePidChange = (pid: string, nameSpace?: string) => {
-    fetchParcelsDetail({ pid } as any)(dispatch).then(resp => {
+  /**
+   * Attempt to fetch the parcel within PIMS matching the passed pid or pin value. If that request fails, make another request to the parcel layer with the same data.
+   * @param pidOrPin
+   * @param parcelLayerSearchCallback
+   * @param nameSpace
+   */
+  const fetchPimsOrLayerParcel = (
+    pidOrPin: any,
+    parcelLayerSearchCallback: () => void,
+    nameSpace?: string,
+  ) => {
+    fetchParcelsDetail(pidOrPin)(dispatch).then(resp => {
       const matchingParcel: any = resp?.data?.length ? _.first(resp?.data) : undefined;
       if (!!nameSpace && !!formikRef?.current?.values && !!matchingParcel?.id) {
         const { resetForm, values } = formikRef.current;
+        matchingParcel.searchPid = getIn(values, `${nameSpace}.searchPid`);
+        matchingParcel.searchPin = getIn(values, `${nameSpace}.searchPin`);
+        matchingParcel.searchAddress = getIn(values, `${nameSpace}.searchAddress`);
         resetForm({ values: setIn(values, nameSpace, matchingParcel) });
         toast.dark('Found matching parcel within PIMS. Form data will be pre-populated.', {
           autoClose: 7000,
         });
       } else {
-        const response = parcelsService.findByPid(pid);
-        handleParcelDataLayerResponse(response, dispatch);
+        parcelLayerSearchCallback();
       }
     });
   };
+  const { handleGeocoderChanges } = useGeocoder({ formikRef, fetchPimsOrLayerParcel });
+
+  /** query pims for the given pid, set data within the form if match found. Fallback to querying the parcel data layer. */
+  const handlePidChange = (pid: string, nameSpace?: string) => {
+    const parcelLayerSearchCallback = () => {
+      const response = parcelsService.findByPid(pid);
+      handleParcelDataLayerResponse(response, dispatch);
+    };
+    fetchPimsOrLayerParcel({ pid }, parcelLayerSearchCallback, nameSpace);
+  };
+
   /** make a parcel layer request by pid and store the response. */
   const handlePinChange = (pin: string, nameSpace?: string) => {
-    fetchParcelsDetail({ pin } as any)(dispatch).then(resp => {
-      const matchingParcel: any = resp?.data?.length ? _.first(resp?.data) : undefined;
-      if (!!nameSpace && !!formikRef?.current?.values && !!matchingParcel?.id) {
-        const { resetForm, values } = formikRef.current;
-        resetForm({ values: setIn(values, nameSpace, matchingParcel) });
-        toast.dark('Found matching parcel within PIMS. Form data will be pre-populated.', {
-          autoClose: 7000,
-        });
-      } else {
-        const response = parcelsService.findByPin(pin);
-        handleParcelDataLayerResponse(response, dispatch);
-      }
-    });
+    const parcelLayerSearchCallback = () => {
+      const response = parcelsService.findByPin(pin);
+      handleParcelDataLayerResponse(response, dispatch);
+    };
+    fetchPimsOrLayerParcel({ pin }, parcelLayerSearchCallback, nameSpace);
   };
   const droppedMarkerSearch = (nameSpace: string, latLng?: LatLng) => {
     if (latLng) {
@@ -287,6 +301,9 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
       case SidebarContextType.ADD_ASSOCIATED_LAND:
         if (propertyType !== 'land') {
           setPropertyType('land');
+        } else if (!buildingToAssociateLand?.id) {
+          //if the associated building doesn't have an id, we can't load it.
+          setShowSideBar(true, SidebarContextType.ADD_PROPERTY_TYPE_SELECTOR, 'narrow');
         }
         return (
           <AssociatedLandForm
@@ -297,6 +314,7 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
             handlePinChange={handlePinChange}
             initialValues={buildingToAssociateLand ?? ({} as any)}
             isAdmin={keycloak.isAdmin}
+            setAssociatedLandComplete={setShowAssociateLandCompleteModal}
           />
         );
       default:
@@ -333,6 +351,28 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
         handleCancel={() => {
           setShowSideBar(false);
           setShowAssociateLandModal(false);
+        }}
+      ></GenericModal>
+      <GenericModal
+        size={ModalSize.LARGE}
+        message={
+          <>
+            <FloatCheck size={32}></FloatCheck>
+            <SuccessText>Success!</SuccessText>
+            <p>Your land has been added to the PIMS inventory</p>
+            <BoldText>Would you like to continue adding to the inventory?</BoldText>
+          </>
+        }
+        display={showAssociateLandCompleteModal}
+        cancelButtonText="No, I'm done"
+        okButtonText="Yes"
+        handleOk={() => {
+          setShowSideBar(true, SidebarContextType.ADD_PROPERTY_TYPE_SELECTOR, 'narrow');
+          setShowAssociateLandCompleteModal(false);
+        }}
+        handleCancel={() => {
+          setShowSideBar(false);
+          setShowAssociateLandCompleteModal(false);
         }}
       ></GenericModal>
     </MapSideBarLayout>

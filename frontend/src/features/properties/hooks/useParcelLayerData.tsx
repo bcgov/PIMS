@@ -15,6 +15,7 @@ import { getInitialValues } from 'features/mapSideBar/SidebarContents/LandForm';
 
 interface IUseParcelLayerDataProps {
   formikRef: React.MutableRefObject<FormikValues | undefined>;
+  agencyId: number;
   parcelId?: number | '';
   nameSpace?: string;
 }
@@ -35,7 +36,7 @@ const isFormInStateToSetLayerData = (
 ) => {
   const formPid = getIn(formikRef?.current?.initialValues, `${nameSpace}.pid`)?.replace(/-/g, '');
   const formPin = getIn(formikRef?.current?.initialValues, `${nameSpace}.pin`);
-  const pid = +layerData?.data.PID || layerData?.data.PID_NUMBER;
+  const pid = +layerData?.data.PID || +layerData?.data?.PID_NUMBER;
   return (
     !!formikRef.current &&
     !!layerData?.data &&
@@ -54,6 +55,7 @@ const setParcelFieldsFromLayerData = (
   formikRef: React.MutableRefObject<FormikValues | undefined>,
   administrativeAreas: ILookupCode[],
   nameSpace: string,
+  agencyId: number,
 ) => {
   if (isFormInStateToSetLayerData(layerData, formikRef, nameSpace)) {
     toast.dark('Autofilling form utilizing BC Geographic Warehouse data.', { autoClose: 7000 });
@@ -83,10 +85,18 @@ const setParcelFieldsFromLayerData = (
         administrativeArea.name,
       );
     }
+    const searchAddress = getIn(values, `${nameSpace}.searchAddress`);
+    if (searchAddress && getIn(newValues, `${nameSpace}.address.line1`) === '') {
+      newValues = setIn(newValues, `${nameSpace}.address.line1`, searchAddress);
+    }
     if (!!layerParcelData.CENTER?.lat && !!layerParcelData.CENTER?.lng) {
       newValues = setIn(newValues, `${nameSpace}.latitude`, layerParcelData.CENTER.lat);
       newValues = setIn(newValues, `${nameSpace}.longitude`, layerParcelData.CENTER.lng);
     }
+    newValues = setIn(newValues, `${nameSpace}.agencyId`, agencyId);
+    newValues = setIn(newValues, `${nameSpace}.searchPin`, getIn(values, `${nameSpace}.searchPin`));
+    newValues = setIn(newValues, `${nameSpace}.searchPid`, getIn(values, `${nameSpace}.searchPid`));
+    newValues = setIn(newValues, `${nameSpace}.searchAddress`, searchAddress);
     resetForm({ values: newValues });
   }
 };
@@ -116,7 +126,12 @@ const getAdminAreaFromLayerData = (
 /**
  * hook providing methods to update the parcel detail form using parcel layer data.
  */
-const useParcelLayerData = ({ formikRef, parcelId, nameSpace }: IUseParcelLayerDataProps) => {
+const useParcelLayerData = ({
+  formikRef,
+  parcelId,
+  nameSpace,
+  agencyId,
+}: IUseParcelLayerDataProps) => {
   const parcelLayerData = useSelector<RootState, IParcelLayerData | null>(
     state => state.parcelLayerData?.parcelLayerData,
   );
@@ -131,6 +146,7 @@ const useParcelLayerData = ({ formikRef, parcelId, nameSpace }: IUseParcelLayerD
           formikRef,
           getByType(AMINISTRATIVE_AREA_CODE_SET_NAME),
           nameSpace ?? '',
+          agencyId,
         );
       } else {
         setShowOverwriteDialog(true);
@@ -147,6 +163,7 @@ const useParcelLayerData = ({ formikRef, parcelId, nameSpace }: IUseParcelLayerD
         formikRef,
         getByType(AMINISTRATIVE_AREA_CODE_SET_NAME),
         nameSpace ?? '',
+        agencyId,
       ),
   };
 };
