@@ -79,6 +79,9 @@ export const getInitialValues = (): any => {
     address: defaultAddressValues,
     buildings: [],
     financials: defaultFinancials,
+    searchPid: '',
+    searchPin: '',
+    searchAddress: '',
   };
 };
 

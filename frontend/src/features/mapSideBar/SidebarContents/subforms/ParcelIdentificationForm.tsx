@@ -1,18 +1,20 @@
 import './ParcelIdentificationForm.scss';
 
-import { FastInput, SelectOptions, Check, TextArea, InputGroup } from 'components/common/form';
+import {
+  FastInput,
+  SelectOptions,
+  Check,
+  TextArea,
+  InputGroup,
+  Input,
+} from 'components/common/form';
 import { Label } from 'components/common/Label';
 import AddressForm from 'features/properties/components/forms/subforms/AddressForm';
 import React, { useState } from 'react';
-import { Col, Container, Row, Form } from 'react-bootstrap';
-import TooltipWrapper from 'components/common/TooltipWrapper';
-import {
-  sensitiveTooltip,
-  streetAddressTooltip,
-} from '../../../../../src/features/properties/components/forms/strings';
+import { useFormikContext, getIn } from 'formik';
+import PidPinForm, { pidFormatter } from 'features/properties/components/forms/subforms/PidPinForm';
+import { sensitiveTooltip } from '../../../../../src/features/properties/components/forms/strings';
 import { HARMFUL_DISCLOSURE_URL } from 'constants/strings';
-import { useFormikContext, getIn, setIn } from 'formik';
-import PidPinForm from 'features/properties/components/forms/subforms/PidPinForm';
 import { IGeocoderResponse } from 'hooks/useApi';
 import styled from 'styled-components';
 import { GeocoderAutoComplete } from 'features/properties/components/GeocoderAutoComplete';
@@ -20,9 +22,11 @@ import { ReactComponent as ParcelDraftIcon } from 'assets/images/draft-parcel-ic
 import classNames from 'classnames';
 import SearchButton from 'components/common/form/SearchButton';
 import { IAssociatedLand } from '../AssociatedLandForm';
-import { getInitialValues } from '../LandForm';
 import { ISteppedFormValues } from 'components/common/form/StepForm';
 import { ParentSelect } from 'components/common/form/ParentSelect';
+import { noop } from 'lodash';
+import { Container, Row, Col, Form } from 'react-bootstrap';
+import TooltipWrapper from 'components/common/TooltipWrapper';
 
 interface IIdentificationProps {
   /** used for changign the agency - note that only select users will be able to edit this field */
@@ -54,11 +58,6 @@ const SearchMarkerButton = styled.button`
   display: flex;
 `;
 
-const CenteredSearchButton = styled(SearchButton)`
-  margin: auto;
-  margin-bottom: 20px;
-`;
-
 export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
   agencies,
   nameSpace,
@@ -77,8 +76,6 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
     },
     [nameSpace, index],
   );
-  const pid = getIn(formikProps.values, withNameSpace('pid'));
-  const pin = getIn(formikProps.values, withNameSpace('pin'));
   const agency = getIn(formikProps.values, withNameSpace('agencyId'));
   return (
     <Container>
@@ -90,49 +87,72 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
           <h5>Search for Parcel</h5>
         </Col>
         <Col md={6}>
-          <PidPinForm
-            handlePidChange={handlePidChange}
-            handlePinChange={handlePinChange}
-            nameSpace={nameSpace}
-          />
-          <CenteredSearchButton
-            onClick={(e: any) => {
-              e.preventDefault();
-              let newValues = {
-                ...formikProps.values,
-              };
-              newValues = setIn(newValues, nameSpace, getInitialValues());
-
-              formikProps.resetForm({
-                values: newValues,
-              });
-
-              if (pid?.length > 0) {
-                handlePidChange(pid, nameSpace);
-              } else if (pin?.length > 0) {
-                handlePinChange(pin, nameSpace);
-              } else if (geocoderResponse) {
-                handleGeocoderChanges(geocoderResponse, nameSpace);
-              }
-            }}
-          />
-          <Form.Row className="justify-content-end">
+          <Form.Row>
+            <Label>PID</Label>
+            <Input
+              displayErrorTooltips
+              className="input-small"
+              disabled={false}
+              pattern={RegExp(/^[\d\- ]*$/)}
+              onBlurFormatter={(pid: string) => {
+                if (pid?.length > 0) {
+                  return pid.replace(pid, pidFormatter(pid));
+                }
+                return '';
+              }}
+              field={withNameSpace('searchPid')}
+            />
+            <SearchButton
+              onClick={(e: any) => {
+                e.preventDefault();
+                handlePidChange(getIn(formikProps.values, withNameSpace('searchPid')), nameSpace);
+              }}
+            />
+          </Form.Row>
+          <Form.Row>
+            <Label>PIN</Label>
+            <FastInput
+              formikProps={formikProps}
+              displayErrorTooltips
+              className="input-small"
+              disabled={false}
+              field={withNameSpace('searchPin')}
+              onBlurFormatter={(pin: number) => {
+                if (pin > 0) {
+                  return pin;
+                }
+                return '';
+              }}
+              type="number"
+            />
+            <SearchButton
+              onClick={(e: any) => {
+                e.preventDefault();
+                handlePinChange(getIn(formikProps.values, withNameSpace('searchPin')), nameSpace);
+              }}
+            />
+          </Form.Row>
+          <Form.Row>
             <Label>Street Address</Label>
             <GeocoderAutoComplete
-              required={true}
-              tooltip={streetAddressTooltip}
-              value={getIn(formikProps.values, withNameSpace('address.line1'))}
-              field={withNameSpace('address.line1')}
+              value={getIn(formikProps.values, withNameSpace('searchAddress'))}
+              field={withNameSpace('searchAddress')}
               onSelectionChanged={selection => {
-                formikProps.setFieldValue(withNameSpace('address.line1'), selection.fullAddress);
+                formikProps.setFieldValue(withNameSpace('searchAddress'), selection.fullAddress);
                 setGeocoderResponse(selection);
               }}
               onTextChange={value =>
-                formikProps.setFieldValue(withNameSpace('address.line1'), value)
+                formikProps.setFieldValue(withNameSpace('searchAddress'), value)
               }
-              error={getIn(formikProps.errors, withNameSpace('address.line1'))}
-              touch={getIn(formikProps.touched, withNameSpace('address.line1'))}
+              error={getIn(formikProps.errors, withNameSpace('searchAddress'))}
+              touch={getIn(formikProps.touched, withNameSpace('searchAddress'))}
               displayErrorTooltips
+            />
+            <SearchButton
+              onClick={(e: any) => {
+                e.preventDefault();
+                geocoderResponse && handleGeocoderChanges(geocoderResponse, nameSpace);
+              }}
             />
           </Form.Row>
         </Col>
@@ -172,12 +192,17 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
           <h5>Parcel Details</h5>
         </Col>
         <Col md={6}>
+          <PidPinForm
+            nameSpace={nameSpace}
+            handlePidChange={noop}
+            handlePinChange={noop}
+            disabled={false}
+          />
           <AddressForm
             onGeocoderChange={handleGeocoderChanges}
             {...formikProps}
             disabled={false}
             nameSpace={withNameSpace('address')}
-            hideStreetAddress
           />
           <Form.Row>
             <Form.Label>{agency?.parent ? 'Sub Agency' : 'Agency'}</Form.Label>
