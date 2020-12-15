@@ -4,6 +4,7 @@ import TasksForm from './TasksForm';
 import _ from 'lodash';
 import TooltipIcon from 'components/common/TooltipIcon';
 import { useProject, ReviewWorkflowStatus, reviewFirstNationsTooltip } from '..';
+import classNames from 'classnames';
 
 interface IFirstNationsCheckListFormProps {
   className?: string;
@@ -19,7 +20,7 @@ const FirstNationsCheckListForm: React.FunctionComponent<IFirstNationsCheckListF
     statusCode: ReviewWorkflowStatus.FirstNationConsultation,
   });
   return (
-    <Row>
+    <Row className={classNames(props.className)}>
       <Col>
         <h3>
           First Nations Consultation

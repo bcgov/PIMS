@@ -743,7 +743,7 @@ exports[`Review Approve Step renders correctly 1`] = `
       </div>
     </div>
     <div
-      class="row"
+      class="reviewRequired row"
     >
       <div
         class="col"
@@ -787,7 +787,7 @@ exports[`Review Approve Step renders correctly 1`] = `
       </div>
     </div>
     <div
-      class="row"
+      class="reviewRequired row"
     >
       <div
         class="col"

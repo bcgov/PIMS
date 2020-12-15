@@ -5,6 +5,7 @@ import { ReviewWorkflowStatus, reviewAppraisalTooltip, useProject } from '../../
 import _ from 'lodash';
 import TooltipIcon from 'components/common/TooltipIcon';
 import ProjectNotes from '../components/ProjectNotes';
+import classNames from 'classnames';
 
 interface IAppraisalCheckListFormProps {
   className?: string;
@@ -21,7 +22,7 @@ const AppraisalCheckListForm: React.FunctionComponent<IAppraisalCheckListFormPro
     statusCode: props.taskStatusCode ?? ReviewWorkflowStatus.AppraisalReview,
   });
   return (
-    <Row>
+    <Row className={classNames(props.className)}>
       <Col>
         <h3>
           Appraisal
