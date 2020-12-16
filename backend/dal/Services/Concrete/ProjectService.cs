@@ -741,6 +741,7 @@ namespace Pims.Dal.Services
                     break;
                 case ("AP-EXE"): // Approve for ERP Exemption
                     this.User.ThrowIfNotAuthorized(Permissions.DisposeApprove, "User does not have permission to approve project.");
+                    if (metadata.ExemptionApprovedOn == null) throw new InvalidOperationException("ADM approved exemption on date is required before approving.");
                     originalProject.ApprovedOn = now;
                     break;
                 case ("AP-SPL"): // Approve for SPL

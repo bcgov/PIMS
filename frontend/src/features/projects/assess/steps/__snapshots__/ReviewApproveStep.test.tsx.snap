@@ -688,6 +688,37 @@ exports[`Review Approve Step renders correctly 1`] = `
         </textarea>
       </div>
     </div>
+    <div
+      class="form-row"
+    >
+      <label
+        class="form-label col-form-label col-md-2"
+      >
+        ADM Approved Exemption On
+      </label>
+      <div
+        class="required col-md-2 form-group"
+      >
+        <div
+          class="react-datepicker-wrapper"
+        >
+          <div
+            class="react-datepicker__input-container"
+          >
+            <input
+              autocomplete="off"
+              class="form-control date-picker"
+              id="datepicker-exemptionApprovedOn"
+              name="exemptionApprovedOn"
+              placeholder="--/--/----"
+              required=""
+              type="text"
+              value=""
+            />
+          </div>
+        </div>
+      </div>
+    </div>
     <h3>
       Documentation
     </h3>

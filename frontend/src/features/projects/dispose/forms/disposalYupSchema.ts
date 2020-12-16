@@ -32,6 +32,10 @@ export const UpdateInfoStepYupSchema = Yup.object().shape({
   ),
 });
 
+export const ApproveExemptionRequestSchema = Yup.object().shape({
+  exemptionApprovedOn: Yup.date().required('Required'),
+});
+
 export const GreTransferStepYupSchema = Yup.object().shape({
   properties: Yup.array().of(
     Yup.object().shape({

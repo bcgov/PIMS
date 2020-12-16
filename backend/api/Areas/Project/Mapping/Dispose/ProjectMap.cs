@@ -91,6 +91,7 @@ namespace Pims.Api.Areas.Project.Mapping.Dispose
                     dest.AdjustedOn = metadata.AdjustedOn;
                     dest.PriorYearAdjustmentOn = metadata.PriorYearAdjustmentOn;
                     dest.ExemptionRequested = metadata.ExemptionRequested;
+                    dest.ExemptionApprovedOn = metadata.ExemptionApprovedOn;
                     dest.DisposedOn = metadata.DisposedOn;
                     dest.SalesCost = metadata.SalesCost;
                     dest.NetProceeds = metadata.NetProceeds;
@@ -162,6 +163,7 @@ namespace Pims.Api.Areas.Project.Mapping.Dispose
                         AdjustedOn = src.AdjustedOn,
                         PriorYearAdjustmentOn = src.PriorYearAdjustmentOn,
                         ExemptionRequested = src.ExemptionRequested,
+                        ExemptionApprovedOn = src.ExemptionApprovedOn,
                         DisposedOn = src.DisposedOn,
                         SalesCost = src.SalesCost,
                         NetProceeds = src.NetProceeds,
