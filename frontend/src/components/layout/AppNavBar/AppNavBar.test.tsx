@@ -138,73 +138,46 @@ describe('AppNavBar', () => {
       });
     });
 
-    describe('AppNavBar Manage Property Dropdown', () => {
-      it('AppNavBar include Manage Property Dropdown', () => {
-        (useKeycloak as jest.Mock).mockReturnValue({
-          keycloak: {
-            subject: 'test',
-            userInfo: {
-              roles: [Claims.PROPERTY_ADD, Claims.PROPERTY_VIEW],
-            },
+    it('AppNavBar include Submit Property Link', () => {
+      (useKeycloak as jest.Mock).mockReturnValue({
+        keycloak: {
+          subject: 'test',
+          userInfo: {
+            roles: [Claims.PROPERTY_ADD, Claims.PROPERTY_VIEW],
           },
-        });
-        const { getByText } = render(
-          <Provider store={store}>
-            <Router history={history}>
-              <AppNavBar />
-            </Router>
-          </Provider>,
-        );
-        const element = getByText('Manage Property');
-
-        expect(element).toBeVisible();
+        },
       });
+      const { getByText } = render(
+        <Provider store={store}>
+          <Router history={history}>
+            <AppNavBar />
+          </Router>
+        </Provider>,
+      );
+      const link = getByText('Submit Property');
+      expect(link).toBeTruthy();
+    });
 
-      it('AppNavBar include Submit Property Link', () => {
-        (useKeycloak as jest.Mock).mockReturnValue({
-          keycloak: {
-            subject: 'test',
-            userInfo: {
-              roles: [Claims.PROPERTY_ADD, Claims.PROPERTY_VIEW],
-            },
+    it('AppNavBar include View Inventory Link', () => {
+      (useKeycloak as jest.Mock).mockReturnValue({
+        keycloak: {
+          subject: 'test',
+          userInfo: {
+            roles: [Claims.PROPERTY_ADD, Claims.PROPERTY_VIEW],
           },
-        });
-        const { getByText } = render(
-          <Provider store={store}>
-            <Router history={history}>
-              <AppNavBar />
-            </Router>
-          </Provider>,
-        );
-
-        fireEvent.click(getByText('Manage Property'));
-        const element = getByText('Submit Property');
-
-        expect(element).toBeVisible();
+        },
       });
+      const { getByText } = render(
+        <Provider store={store}>
+          <Router history={history}>
+            <AppNavBar />
+          </Router>
+        </Provider>,
+      );
 
-      it('AppNavBar include View Inventory Link', () => {
-        (useKeycloak as jest.Mock).mockReturnValue({
-          keycloak: {
-            subject: 'test',
-            userInfo: {
-              roles: [Claims.PROPERTY_ADD, Claims.PROPERTY_VIEW],
-            },
-          },
-        });
-        const { getByText } = render(
-          <Provider store={store}>
-            <Router history={history}>
-              <AppNavBar />
-            </Router>
-          </Provider>,
-        );
+      const link = getByText('View Inventory');
 
-        fireEvent.click(getByText('Manage Property'));
-        const element = getByText('View Inventory');
-
-        expect(element).toBeVisible();
-      });
+      expect(link).toBeTruthy();
     });
 
     describe('AppNavBar Disposal Projects dropdown', () => {
