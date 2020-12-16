@@ -8,6 +8,7 @@ import { LatLngTuple } from 'leaflet';
 import { useCallback } from 'react';
 import { IGeoSearchParams } from 'constants/API';
 import queryString from 'query-string';
+import { store } from 'App';
 
 export interface IGeocoderResponse {
   siteId: string;
@@ -46,6 +47,7 @@ export const useApi = (): PimsAPI => {
 
   axios.interceptors.request.use(
     config => {
+      config.headers.Authorization = `Bearer ${store.getState().jwt}`;
       dispatch(showLoading());
       return config;
     },
