@@ -4,9 +4,13 @@ import { ReactComponent as LandSvg } from 'assets/images/icon-lot.svg';
 import React from 'react';
 import { CellProps } from 'react-table';
 import { Link } from 'react-router-dom';
-import { formatMoney, formatNumber } from 'utils';
+import { formatMoney, formatNumber, mapLookupCode } from 'utils';
 import { IProperty } from '.';
 import { ColumnWithProps } from 'components/Table';
+import { ParentGroupedFilter } from 'components/SearchBar/ParentGroupedFilter';
+import { FastCurrencyInput, Input, Select, SelectOption } from 'components/common/form';
+import { TypeaheadField } from 'components/common/form/Typeahead';
+import { ILookupCode } from 'actions/lookupActions';
 
 const MoneyCell = ({ cell: { value } }: CellProps<IProperty, number>) => formatMoney(value);
 
@@ -29,15 +33,34 @@ const spacing = {
   xxlarge: unit * 8,
 };
 
-export const columns: ColumnWithProps<IProperty>[] = [
+export const columns = (
+  agencyOptions: SelectOption[],
+  subAgencies: SelectOption[],
+  municipalities: ILookupCode[],
+  propertyClassifications: ILookupCode[],
+): ColumnWithProps<IProperty>[] => [
   {
     Header: 'Agency',
     accessor: 'agencyCode', // accessor is the "key" in the data
     align: 'left',
     responsive: true,
     width: spacing.small,
-    minWidth: 65, // px
+    minWidth: 100, // px
     sortable: true,
+    filterable: true,
+    filter: {
+      component: ParentGroupedFilter,
+      props: {
+        className: 'agency-search',
+        name: 'agencies[0]',
+        options: agencyOptions.map(a => ({ ...a, parentId: a.value })),
+        inputSize: 'large',
+        placeholder: 'Filter by agency',
+        filterBy: ['code'],
+        hideParent: true,
+        clearButton: true,
+      },
+    },
   },
   {
     Header: 'Sub Agency',
@@ -47,6 +70,20 @@ export const columns: ColumnWithProps<IProperty>[] = [
     width: spacing.medium,
     minWidth: 80,
     sortable: true,
+    filterable: true,
+    filter: {
+      component: ParentGroupedFilter,
+      props: {
+        name: 'agencies[1]',
+        placeholder: 'Filter by sub agency',
+        className: 'agency-search',
+        options: subAgencies,
+        labelKey: (option: SelectOption) => {
+          console.log(option);
+          return `${option.label}`;
+        },
+      },
+    },
   },
   {
     Header: 'Property Name',
@@ -65,6 +102,17 @@ export const columns: ColumnWithProps<IProperty>[] = [
     width: spacing.medium,
     minWidth: 80,
     sortable: true,
+    filterable: true,
+    filter: {
+      component: Select,
+      props: {
+        field: 'classificationId',
+        name: 'classificationId',
+        placeholder: 'Filter by class',
+        className: 'location-search',
+        options: propertyClassifications.map(mapLookupCode),
+      },
+    },
   },
   {
     Header: 'Type',
@@ -93,6 +141,17 @@ export const columns: ColumnWithProps<IProperty>[] = [
     width: spacing.medium,
     minWidth: 80,
     sortable: true,
+    filterable: true,
+    filter: {
+      component: TypeaheadField,
+      props: {
+        name: 'administrativeArea',
+        placeholder: 'Filter by location',
+        className: 'location-search',
+        options: municipalities.map(mapLookupCode).map(x => x.label),
+        clearButton: true,
+      },
+    },
   },
   {
     Header: 'Assessed Value',
@@ -103,6 +162,17 @@ export const columns: ColumnWithProps<IProperty>[] = [
     width: spacing.medium,
     minWidth: 80,
     sortable: true,
+    filterable: true,
+    filter: {
+      component: FastCurrencyInput,
+      props: {
+        injectFormik: true,
+        field: 'maxAssessedValue',
+        name: 'maxAssessedValue',
+        placeholder: 'Filter by assessed',
+        className: 'filter-input-control',
+      },
+    },
   },
   {
     Header: 'Net Book Value',
@@ -113,6 +183,17 @@ export const columns: ColumnWithProps<IProperty>[] = [
     width: spacing.medium,
     minWidth: 80,
     sortable: true,
+    filterable: true,
+    filter: {
+      component: FastCurrencyInput,
+      props: {
+        injectFormik: true,
+        field: 'maxNetBookValue',
+        name: 'maxNetBookValue',
+        placeholder: 'Filter by Net Book',
+        className: 'filter-input-control',
+      },
+    },
   },
   {
     Header: 'Market Value',
@@ -123,6 +204,17 @@ export const columns: ColumnWithProps<IProperty>[] = [
     width: spacing.medium,
     minWidth: 80,
     sortable: true,
+    filterable: true,
+    filter: {
+      component: FastCurrencyInput,
+      props: {
+        injectFormik: true,
+        field: 'maxMarketValue',
+        name: 'maxMarketValue',
+        placeholder: 'Filter by Market Value',
+        className: 'filter-input-control',
+      },
+    },
   },
   {
     Header: 'Lot Size (in ha)',
@@ -131,8 +223,19 @@ export const columns: ColumnWithProps<IProperty>[] = [
     align: 'right',
     responsive: true,
     width: spacing.small,
-    minWidth: 65,
+    minWidth: 120,
     sortable: true,
+    filterable: true,
+    filter: {
+      component: Input,
+      props: {
+        field: 'maxLotSize',
+        name: 'maxLotSize',
+        placeholder: 'Filter by Lot Size',
+        className: 'filter-input-control',
+        type: 'number',
+      },
+    },
   },
   {
     Header: ' ',

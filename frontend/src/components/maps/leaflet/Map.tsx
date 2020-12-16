@@ -91,6 +91,9 @@ const defaultFilterValues: IPropertyFilter = {
   maxLotSize: '',
   rentableArea: '',
   name: '',
+  maxAssessedValue: '',
+  maxMarketValue: '',
+  maxNetBookValue: '',
 };
 
 /**

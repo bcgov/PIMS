@@ -680,6 +680,9 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
                 style="display: flex; flex: 1 0 auto; min-width: 240px;"
               >
                 <div
+                  class="th reset-filter svg-btn"
+                />
+                <div
                   class="th"
                   colspan="4"
                   role="columnheader"
@@ -721,6 +724,9 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
                 role="row"
                 style="display: flex; flex: 1 0 auto; min-width: 240px;"
               >
+                <div
+                  class="th reset-filter svg-btn"
+                />
                 <div
                   class="th"
                   colspan="1"
@@ -845,7 +851,20 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
                     style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
                     title=""
                   >
-                    N/A
+                    <div
+                      class="form-group col"
+                    >
+                      <div
+                        class="input-tooltip-wrapper"
+                      >
+                        <input
+                          class="form-control input-number"
+                          name="financials.0.assessed.value"
+                          placeholder=""
+                          value=""
+                        />
+                      </div>
+                    </div>
                   </div>
                   <div
                     class="td"

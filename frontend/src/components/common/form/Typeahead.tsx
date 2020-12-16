@@ -59,6 +59,7 @@ export function TypeaheadField<T extends TypeaheadModel>({
   if (!getOptionByValue) {
     getOptionByValue = (value: T) => (!!value ? ([value] as T[]) : ([] as T[]));
   }
+
   const ref = useRef<any>();
   React.useEffect(() => {
     if (clearSelected && ref.current?.clear) {

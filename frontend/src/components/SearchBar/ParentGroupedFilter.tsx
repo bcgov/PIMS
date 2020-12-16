@@ -12,6 +12,7 @@ interface IParentGroupedFilterProps {
   inputSize?: 'small' | 'large';
   filterBy?: string[];
   placeholder?: string;
+  hideParent?: boolean;
 }
 
 export const ParentGroupedFilter: React.FC<IParentGroupedFilterProps> = ({
@@ -21,10 +22,13 @@ export const ParentGroupedFilter: React.FC<IParentGroupedFilterProps> = ({
   inputSize,
   filterBy,
   placeholder,
+  hideParent,
+  ...rest
 }) => {
   const { setFieldValue } = useFormikContext();
   return (
     <TypeaheadField
+      {...rest}
       name={name}
       options={options}
       inputProps={{ className: className }}
@@ -49,7 +53,7 @@ export const ParentGroupedFilter: React.FC<IParentGroupedFilterProps> = ({
           .sort()
           .map(parent => (
             <Fragment key={parent}>
-              {!!results.find((x: SelectOption) => x.value === parent) && (
+              {!hideParent && !!results.find((x: SelectOption) => x.value === parent) && (
                 <Menu.Header>
                   <b>{results.find(x => x.value === parent)?.label}</b>
                 </Menu.Header>

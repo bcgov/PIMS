@@ -434,6 +434,9 @@ exports[`Review Summary View renders approved correctly 1`] = `
                 }
               >
                 <div
+                  className="th reset-filter svg-btn"
+                />
+                <div
                   className="th"
                   colSpan={1}
                   role="columnheader"
@@ -1315,6 +1318,9 @@ exports[`Review Summary View renders denied correctly 1`] = `
                 }
               >
                 <div
+                  className="th reset-filter svg-btn"
+                />
+                <div
                   className="th"
                   colSpan={1}
                   role="columnheader"
@@ -2195,6 +2201,9 @@ exports[`Review Summary View renders submitted correctly 1`] = `
                   }
                 }
               >
+                <div
+                  className="th reset-filter svg-btn"
+                />
                 <div
                   className="th"
                   colSpan={1}

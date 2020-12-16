@@ -80,6 +80,11 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
       if (agency) {
         values.agencies = agency;
       }
+    } else {
+      const agencies: any[] = values?.agencies || [];
+      if (agencies.length > 0) {
+        values.agencies = agencies[0] || (agencies.length === 2 ? agencies[1] : undefined);
+      }
     }
     return values;
   }, [agencies, propertyFilter, defaultFilter]);
