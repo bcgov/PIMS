@@ -116,6 +116,7 @@ const createParentWorkflow = (code: string) => {
   } else {
     return { name: 'General Statuses', id: 6 };
   }
+};
 
 /** used for inputs that need to display the string value of a parent agency agency */
 export const mapSelectOptionWithParent = (
@@ -130,8 +131,6 @@ export const mapSelectOptionWithParent = (
   parent: options.find((a: SelectOption) => a.value.toString() === code.parentId?.toString())
     ?.label,
 });
-
-};
 
 export const mapStatuses = (status: IStatus): SelectOption => ({
   label: status.name,

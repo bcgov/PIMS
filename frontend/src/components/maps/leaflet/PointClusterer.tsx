@@ -44,6 +44,11 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
   const featureGroupRef = useRef<any>();
   const filterState = useFilterContext();
 
+  const [currentSelected, setCurrentSelected] = useState(selected);
+  useDeepCompareEffect(() => {
+    setCurrentSelected(selected);
+  }, [selected, setCurrentSelected]);
+
   const leaflet = useLeaflet();
   const [spider, setSpider] = useState<any>({});
   if (!leaflet || !leaflet.map) {
@@ -211,16 +216,17 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
       {/**
        * render selected property marker, auto opens the property popup
        */}
-      {!!selected?.parcelDetail && (
-        <SelectedPropertyMarker
-          {...selected.parcelDetail}
-          icon={getMarkerIcon({ properties: selected } as any)}
-          position={[
-            selected.parcelDetail!.latitude as number,
-            selected.parcelDetail!.longitude as number,
-          ]}
-          map={leaflet.map}
-        >
+      {!!selected?.parcelDetail &&
+        selected?.parcelDetail?.id === currentSelected?.parcelDetail?.id && (
+          <SelectedPropertyMarker
+            {...selected.parcelDetail}
+            icon={getMarkerIcon({ properties: selected } as any)}
+            position={[
+              selected.parcelDetail!.latitude as number,
+              selected.parcelDetail!.longitude as number,
+            ]}
+            map={leaflet.map}
+          >
           <Popup autoPan={false}>
             <PopupView
               propertyTypeId={selected.propertyTypeId}

@@ -48,11 +48,6 @@ namespace Pims.Dal.Entities
         /// get - Collection of projects.
         /// </summary>
         public ICollection<Project> Projects { get; } = new List<Project>();
-
-        /// <summary>
-        /// get - Collection of projects.
-        /// </summary>
-        public ICollection<Project> Projects { get; } = new List<Project>();
         #endregion
 
         #region Constructors

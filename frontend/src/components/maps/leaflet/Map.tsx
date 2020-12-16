@@ -45,7 +45,6 @@ import classNames from 'classnames';
 import { useLayerQuery } from './LayerPopup/hooks/useLayerQuery';
 import { saveParcelLayerData } from 'reducers/parcelLayerDataSlice';
 import { SidebarSize } from 'features/mapSideBar/hooks/useQueryParamSideBar';
-import { saveParcelLayerData } from 'reducers/parcelLayerDataSlice';
 import useActiveFeatureLayer from '../hooks/useActiveFeatureLayer';
 import LayersControl from './LayersControl';
 import { InventoryLayer } from './InventoryLayer';
@@ -159,7 +158,13 @@ const Map: React.FC<MapProps> = ({
   const parcelLayerFeature = useSelector<RootState, GeoJsonObject | null>(
     state => state.parcelLayerData?.parcelLayerFeature,
   );
-  useActiveFeatureLayer({ selectedProperty, layerPopup, mapRef, parcelLayerFeature });
+  useActiveFeatureLayer({
+    selectedProperty,
+    layerPopup,
+    mapRef,
+    parcelLayerFeature,
+    setLayerPopup,
+  });
 
   const lastZoom = useSelector<RootState, number>(state => state.mapViewZoom) ?? zoomProp;
   useEffect(() => {

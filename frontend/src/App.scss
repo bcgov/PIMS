@@ -90,7 +90,8 @@ select.form-control.is-invalid {
 
 .form-group.required textarea:not(.is-invalid) {
   border: 1px solid $secondary-variant-color;
-  
+}
+
 //by default, highlight dropdown options blue
 .dropdown-item {
   color: $text-color;

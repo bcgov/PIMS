@@ -83,7 +83,7 @@ const MapView: React.FC<MapViewProps> = (props: MapViewProps) => {
       />
       <FilterProvider>
         <Map
-        sidebarSize={size}
+          sidebarSize={size}
           lat={
             (propertyDetail?.parcelDetail?.latitude as number) ??
             selectedDraftProperty?.parcelDetail?.latitude ??

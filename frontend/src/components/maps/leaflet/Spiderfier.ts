@@ -127,7 +127,6 @@ export class Spiderfier {
     }
 
     return { lines, markers };
-    e.originalEvent.stopPropagation();
   }
 
   // shrink an expanded cluster (unspiderfy)

@@ -58,14 +58,14 @@ export const ParentSelect: React.FC<IParentSelect> = ({
       let newValues = { ...values };
       if (!value.value) {
         if (dirty) {
-          setFieldValue(field, agency);
+          setFieldValue(field, option);
         } else {
-          newValues = setIn(newValues, field, agency);
+          newValues = setIn(newValues, field, option);
           resetForm({ values: newValues });
         }
       }
     }
-  }, [value, setFieldValue, isFilter, field, agency, dirty, resetForm, values]);
+  }, [value, setFieldValue, field, dirty, resetForm, values, option]);
   /** wipe the selection from input on reset */
   useEffect(() => {
     clearSelected && setMultiSelections([]);

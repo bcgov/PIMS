@@ -7,7 +7,6 @@ import TooltipIcon from 'components/common/TooltipIcon';
 import classNames from 'classnames';
 import { useRef } from 'react';
 import TooltipWrapper from '../TooltipWrapper';
-import classNames from 'classnames';
 
 interface ITypeaheadFieldProps<T extends TypeaheadModel> extends TypeaheadProps<T> {
   name: string;
@@ -87,9 +86,9 @@ export function TypeaheadField<T extends TypeaheadModel>({
           inputProps={{ ...rest.inputProps, name: name, id: `${name}-field` }}
           isInvalid={hasError as any}
           isValid={!hideValidation && isValid}
-        selected={
-          multiSelections?.length > 0 ? multiSelections : getOptionByValue(getIn(values, name))
-        }
+          selected={
+            multiSelections?.length > 0 ? multiSelections : getOptionByValue(getIn(values, name))
+          }
           ref={ref}
           onChange={
             onChange

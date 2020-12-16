@@ -1,7 +1,7 @@
 import { FastSelect, SelectOptions } from 'components/common/form';
 import { Label } from 'components/common/Label';
 import TooltipIcon from 'components/common/TooltipIcon';
-import { CLASSIFICATIONS } from 'constants/classifications';
+import { Classifications } from 'constants/classifications';
 import {
   CoreOperational,
   CoreStrategic,
@@ -78,17 +78,17 @@ export const ClassificationForm: React.FC<IClassificationFormProps> = ({
   /** users not allowed to select disposed or surplus active at this stage */
   const filteredClassifications = classifications.filter(
     c =>
-      Number(c.value) !== CLASSIFICATIONS.SurplusActive &&
-      Number(c.value) !== CLASSIFICATIONS.Disposed,
+      Number(c.value) !== Classifications.SurplusActive &&
+      Number(c.value) !== Classifications.Disposed,
   );
 
   const renderInfo = () => {
     switch (classId) {
-      case CLASSIFICATIONS.CoreOperational:
+      case Classifications.CoreOperational:
         return InfoBoxWithContent(CoreOperational);
-      case CLASSIFICATIONS.CoreStrategic:
+      case Classifications.CoreStrategic:
         return InfoBoxWithContent(CoreStrategic);
-      case CLASSIFICATIONS.SurplusEncumbered:
+      case Classifications.SurplusEncumbered:
         return InfoBoxWithContent(SurplusEncumbered);
       default:
         return InfoBoxWithContent(

@@ -1,6 +1,7 @@
 import React from 'react';
 
 import GenericModal from './GenericModal';
+import { useHistory } from 'react-router-dom';
 
 /**
  * This component is intended for use with React Error Boundaries.
@@ -12,7 +13,12 @@ import GenericModal from './GenericModal';
  */
 const ErrorModal = (props: any) => {
   return (
-    <GenericModal title="App Error" message={props.error.message} okButtonText="Ok"></GenericModal>
+    <GenericModal
+      title="App Error"
+      message={props.error.message}
+      okButtonText="Ok"
+      handleOk={() => window.location.reload()}
+    ></GenericModal>
   );
 };
 
