@@ -237,7 +237,7 @@ namespace Pims.Dal.Services
             foreach (var parcel in building.Parcels.Select(pb => pb.Parcel))
             {
                 // Check if the building already exists.
-                var existingParcelBuilding = existingBuilding.Parcels
+                var existingAssociatedParcel = existingBuilding.Parcels
                     .FirstOrDefault(pb => pb.ParcelId == parcel.Id)?.Parcel;
 
                 // Reset all relationships that are not changed through this update.
@@ -245,7 +245,7 @@ namespace Pims.Dal.Services
                 parcel.Classification = this.Context.PropertyClassifications.FirstOrDefault(b => b.Id == parcel.ClassificationId);
                 parcel.Agency = this.Context.Agencies.FirstOrDefault(a => a.Id == building.AgencyId);
 
-                if (existingParcelBuilding == null)
+                if (existingAssociatedParcel == null)
                 {
                     if (!allowEdit) throw new NotAuthorizedException("User may not add parcels to a property they don't own.");
                     var existingParcel = this.Context.Parcels
