@@ -1,4 +1,4 @@
-import { getIn, useFormikContext } from 'formik';
+import { getIn, useFormikContext, setIn } from 'formik';
 import { groupBy, sortBy } from 'lodash';
 import React, { Fragment, useEffect, useState } from 'react';
 import { Highlighter, Menu, MenuItem } from 'react-bootstrap-typeahead';
@@ -38,29 +38,28 @@ export const ParentSelect: React.FC<IParentSelect> = ({
   isFilter,
   label,
 }) => {
-  const { setFieldValue, values } = useFormikContext();
+  const { setFieldValue, values, resetForm, dirty } = useFormikContext<any>();
   const value = getIn(values, field);
   /** control the selection of the typeahead component */
   const [selected, setSelected] = useState<SelectOption[]>([]);
-  /** determine whether the initial value has been loaded into the component or not */
-  const [loaded, setLoaded] = useState(false);
   /** used to trigger onBlur so menu disappears on custom header click */
   const [clear, setClear] = useState(false);
   /** select appropriate agency to set the field value to when present */
   const agency = value ? options.find(x => x.value === value.toString()) : null;
 
   useEffect(() => {
-    if (value && !loaded && !isFilter) {
-      if (value.value) {
-        setFieldValue(field, value);
-      } else if (value && !value.value) {
-        setFieldValue(field, agency);
-      } else {
-        setFieldValue(field, agency);
-        setLoaded(true);
+    if (value && !isFilter) {
+      let newValues = { ...values };
+      if (!value.value) {
+        if (dirty) {
+          setFieldValue(field, agency);
+        } else {
+          newValues = setIn(newValues, field, agency);
+          resetForm({ values: newValues });
+        }
       }
     }
-  }, [value, loaded, setFieldValue, isFilter, field, agency]);
+  }, [value, setFieldValue, isFilter, field, agency, dirty, resetForm, values]);
 
   /** function that gets called when menu header is clicked */
   const handleMenuHeaderClick = (x: SelectOption) => {
