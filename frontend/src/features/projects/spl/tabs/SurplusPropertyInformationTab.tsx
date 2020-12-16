@@ -41,12 +41,6 @@ const SurplusPropertyInformationTab: React.FunctionComponent<ISurplusPropertyInf
         disabled={isReadOnly}
         tooltip="Notes for Reporting"
       />
-      <ProjectNotes
-        label="Reporting"
-        field="reportingNote"
-        disabled={isReadOnly}
-        tooltip="Notes for Reporting"
-      />
     </Container>
   );
 };

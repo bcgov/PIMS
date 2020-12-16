@@ -2,14 +2,7 @@ import './Map.scss';
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import {
-  LatLngBounds,
-  LeafletMouseEvent,
-  LeafletEvent,
-  LatLng,
-  Map as LeafletMap,
-  geoJSON,
-} from 'leaflet';
+import { LatLngBounds, LeafletMouseEvent, LatLng, Map as LeafletMap, geoJSON } from 'leaflet';
 import {
   MapProps as LeafletMapProps,
   TileLayer,
@@ -23,7 +16,7 @@ import BasemapToggle, { BasemapToggleEvent, BaseLayer } from '../BasemapToggle';
 import { useDispatch, useSelector } from 'react-redux';
 import { setMapViewZoom } from 'reducers/mapViewZoomSlice';
 import { RootState } from 'reducers/rootReducer';
-import { BBox, Feature, GeoJsonObject } from 'geojson';
+import { Feature, GeoJsonObject } from 'geojson';
 import { asProperty } from './mapUtils';
 import { LegendControl } from './Legend/LegendControl';
 import { useMediaQuery } from 'react-responsive';

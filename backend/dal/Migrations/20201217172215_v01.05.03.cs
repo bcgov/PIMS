@@ -3,7 +3,7 @@ using Pims.Dal.Helpers.Migrations;
 
 namespace Pims.Dal.Migrations
 {
-    public partial class v010400 : SeedMigration
+    public partial class v010503 : SeedMigration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

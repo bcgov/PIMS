@@ -60,13 +60,17 @@ const useActiveFeatureLayer = ({
           lat: (parcelLayerFeature as any)?.geometry?.coordinates[0][0][1],
           lng: (parcelLayerFeature as any)?.geometry?.coordinates[0][0][0],
         };
+        const center = geoJSON((parcelLayerFeature as any).geometry)
+          .getBounds()
+          .getCenter();
+
         mapRef.current?.leafletElement.panTo(latLng);
         setLayerPopup({
           title: 'Parcel Information',
           data: (parcelLayerFeature as any).properties,
           config: parcelLayerPopupConfig,
           latlng: latLng,
-          coords,
+          center,
           parcelLayerFeature,
         } as any);
       }

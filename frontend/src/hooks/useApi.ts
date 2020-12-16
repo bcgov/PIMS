@@ -1,5 +1,5 @@
 import CustomAxios from 'customAxios';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { showLoading, hideLoading } from 'react-redux-loading-bar';
 import { AxiosInstance } from 'axios';
 import { ENVIRONMENT } from 'constants/environment';
@@ -7,7 +7,6 @@ import * as _ from 'lodash';
 import { LatLngTuple } from 'leaflet';
 import { useCallback } from 'react';
 import { IGeoSearchParams } from 'constants/API';
-import { RootState } from 'reducers/rootReducer';
 import queryString from 'query-string';
 import { store } from 'App';
 

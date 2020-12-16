@@ -11,8 +11,8 @@ using Pims.Dal;
 namespace Pims.Dal.Migrations
 {
     [DbContext(typeof(PimsContext))]
-    [Migration("20201203191507_v01.04.00")]
-    partial class v010400
+    [Migration("20201217172215_v01.05.03")]
+    partial class v010503
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -1601,7 +1601,7 @@ namespace Pims.Dal.Migrations
                         .HasColumnType("nvarchar(250)")
                         .HasMaxLength(250);
 
-                    b.Property<int>("ReportTypeId")
+                    b.Property<int>("ReportType")
                         .HasColumnType("int");
 
                     b.Property<byte[]>("RowVersion")
@@ -2619,9 +2619,6 @@ namespace Pims.Dal.Migrations
                     b.Property<bool>("IsOptional")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("ProjectStatusId")
-                        .HasColumnType("int");
-
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate()
@@ -2636,20 +2633,13 @@ namespace Pims.Dal.Migrations
                     b.Property<DateTime?>("UpdatedOn")
                         .HasColumnType("DATETIME2");
 
-                    b.Property<int?>("WorkflowId1")
-                        .HasColumnType("int");
-
                     b.HasKey("WorkflowId", "StatusId");
 
                     b.HasIndex("CreatedById");
 
-                    b.HasIndex("ProjectStatusId");
-
                     b.HasIndex("StatusId");
 
                     b.HasIndex("UpdatedById");
-
-                    b.HasIndex("WorkflowId1");
 
                     b.ToTable("WorkflowProjectStatus");
                 });
@@ -3403,10 +3393,6 @@ namespace Pims.Dal.Migrations
                         .WithMany()
                         .HasForeignKey("CreatedById");
 
-                    b.HasOne("Pims.Dal.Entities.ProjectStatus", null)
-                        .WithMany("FromWorkflows")
-                        .HasForeignKey("ProjectStatusId");
-
                     b.HasOne("Pims.Dal.Entities.ProjectStatus", "Status")
                         .WithMany("Workflows")
                         .HasForeignKey("StatusId")
@@ -3422,10 +3408,6 @@ namespace Pims.Dal.Migrations
                         .HasForeignKey("WorkflowId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("Pims.Dal.Entities.Workflow", null)
-                        .WithMany("FromStatus")
-                        .HasForeignKey("WorkflowId1");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,7 +1,6 @@
 import React from 'react';
 
 import GenericModal from './GenericModal';
-import { useHistory } from 'react-router-dom';
 
 /**
  * This component is intended for use with React Error Boundaries.

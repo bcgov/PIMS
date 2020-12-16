@@ -41,12 +41,6 @@ const ProjectInformationTab: React.FunctionComponent<IProjectInformationTabProps
         className="col-md-auto"
         disabled={isReadOnly}
       />
-      <ProjectNotes
-        label="Reporting"
-        field="reportingNote"
-        disabled={isReadOnly}
-        tooltip="Notes for Reporting"
-      />
     </Container>
   );
 };

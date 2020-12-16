@@ -227,23 +227,23 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
             ]}
             map={leaflet.map}
           >
-          <Popup autoPan={false}>
-            <PopupView
-              propertyTypeId={selected.propertyTypeId}
-              propertyDetail={selected.parcelDetail}
-              zoomTo={() =>
-                leaflet.map?.flyTo(
-                  [
-                    selected.parcelDetail!.latitude as number,
-                    selected.parcelDetail!.longitude as number,
-                  ],
-                  14,
-                )
-              }
-            />
-          </Popup>
-        </SelectedPropertyMarker>
-      )}
+            <Popup autoPan={false}>
+              <PopupView
+                propertyTypeId={selected.propertyTypeId}
+                propertyDetail={selected.parcelDetail}
+                zoomTo={() =>
+                  leaflet.map?.flyTo(
+                    [
+                      selected.parcelDetail!.latitude as number,
+                      selected.parcelDetail!.longitude as number,
+                    ],
+                    14,
+                  )
+                }
+              />
+            </Popup>
+          </SelectedPropertyMarker>
+        )}
     </FeatureGroup>
   );
 };

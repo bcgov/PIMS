@@ -3,7 +3,6 @@ import classNames from 'classnames';
 import styled from 'styled-components';
 import TooltipWrapper from 'components/common/TooltipWrapper';
 import VisibilitySensor from 'react-visibility-sensor';
-import { INVENTORY_POLICY_URL } from 'constants/strings';
 import { InventoryPolicy } from './InventoryPolicy';
 import { SidebarSize } from '../hooks/useQueryParamSideBar';
 import { FaWindowClose } from 'react-icons/fa';
