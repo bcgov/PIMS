@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { Col, Container, Row } from 'react-bootstrap';
-import classNames from 'classnames';
+import { Col, Row } from 'react-bootstrap';
 import TasksForm from './TasksForm';
 import { ReviewWorkflowStatus, reviewAppraisalTooltip, useProject } from '../../common';
 import _ from 'lodash';
 import TooltipIcon from 'components/common/TooltipIcon';
 import ProjectNotes from '../components/ProjectNotes';
+import classNames from 'classnames';
 
 interface IAppraisalCheckListFormProps {
   className?: string;
@@ -22,26 +22,21 @@ const AppraisalCheckListForm: React.FunctionComponent<IAppraisalCheckListFormPro
     statusCode: props.taskStatusCode ?? ReviewWorkflowStatus.AppraisalReview,
   });
   return (
-    <Container fluid className={classNames(props.className)}>
-      <Row>
-        <Col>
-          <h3>
-            Appraisal
-            <TooltipIcon
-              toolTipId="review-appraisal"
-              toolTip={reviewAppraisalTooltip}
-            ></TooltipIcon>
-          </h3>
-          <TasksForm tasks={tasks} isReadOnly={props.isReadOnly} />
-          <ProjectNotes
-            className="col-md-auto"
-            outerClassName="col-md-12 reviewRequired"
-            field="appraisedNote"
-            label="Appraised Notes"
-          />
-        </Col>
-      </Row>
-    </Container>
+    <Row className={classNames(props.className)}>
+      <Col>
+        <h3>
+          Appraisal
+          <TooltipIcon toolTipId="review-appraisal" toolTip={reviewAppraisalTooltip}></TooltipIcon>
+        </h3>
+        <TasksForm tasks={tasks} isReadOnly={props.isReadOnly} />
+        <ProjectNotes
+          className="col-md-auto"
+          outerClassName="col-md-12 reviewRequired"
+          field="appraisedNote"
+          label="Note"
+        />
+      </Col>
+    </Row>
   );
 };
 

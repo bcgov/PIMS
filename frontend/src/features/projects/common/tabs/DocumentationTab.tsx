@@ -31,7 +31,7 @@ const DocumentationTab: React.FunctionComponent<IDocumentationTabProps> = ({
 
   return (
     <Container fluid>
-      <DocumentationForm tasks={documentationTasks} isReadOnly={!canOverride} />
+      <DocumentationForm tasks={documentationTasks} isReadOnly={!canOverride} showNote={true} />
       <AppraisalCheckListForm isReadOnly={isReadOnly} taskStatusCode={appraisalTaskStatusCode} />
       <FirstNationsCheckListForm isReadOnly={isReadOnly} />
     </Container>
