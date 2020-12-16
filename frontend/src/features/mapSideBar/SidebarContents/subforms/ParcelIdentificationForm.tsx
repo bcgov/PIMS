@@ -199,7 +199,7 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
             disabled={false}
           />
           <AddressForm
-            onGeocoderChange={handleGeocoderChanges}
+            onGeocoderChange={noop}
             {...formikProps}
             disabled={false}
             nameSpace={withNameSpace('address')}

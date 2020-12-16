@@ -1,4 +1,4 @@
-import { getIn, useFormikContext } from 'formik';
+import { getIn, useFormikContext, setIn } from 'formik';
 import { groupBy, sortBy } from 'lodash';
 import React, { Fragment, useEffect, useState } from 'react';
 import { Highlighter, Menu, MenuItem } from 'react-bootstrap-typeahead';
@@ -44,10 +44,8 @@ export const ParentSelect: React.FC<IParentSelect> = ({
   setClearSelected,
   label,
 }) => {
-  const { setFieldValue, values } = useFormikContext();
+  const { setFieldValue, values, resetForm, dirty } = useFormikContext<any>();
   const value = getIn(values, field);
-  /** determine whether the initial value has been loaded into the component or not */
-  const [loaded, setLoaded] = useState(false);
   /** used to trigger onBlur so menu disappears on custom header click */
   const [clear, setClear] = useState(false);
   /** select appropriate agency to set the field value to when present */
@@ -56,18 +54,18 @@ export const ParentSelect: React.FC<IParentSelect> = ({
   const [multiSelections, setMultiSelections] = React.useState<any>([]);
 
   useEffect(() => {
-    if (!loaded) {
-      if (value?.value) {
-        setFieldValue(field, value);
-      } else if (value && !value.value) {
-        setFieldValue(field, option);
-      } else {
-        setFieldValue(field, option);
-        setLoaded(true);
+    if (value) {
+      let newValues = { ...values };
+      if (!value.value) {
+        if (dirty) {
+          setFieldValue(field, agency);
+        } else {
+          newValues = setIn(newValues, field, agency);
+          resetForm({ values: newValues });
+        }
       }
     }
-  }, [value, loaded, setFieldValue, field, option]);
-
+  }, [value, setFieldValue, isFilter, field, agency, dirty, resetForm, values]);
   /** wipe the selection from input on reset */
   useEffect(() => {
     clearSelected && setMultiSelections([]);

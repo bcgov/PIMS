@@ -7,6 +7,7 @@ import {
   useLayerQuery,
   PARCELS_LAYER_URL,
   handleParcelDataLayerResponse,
+  saveParcelDataLayerResponse,
 } from 'components/maps/leaflet/LayerPopup';
 import { LatLng } from 'leaflet';
 import { useDispatch } from 'react-redux';
@@ -116,14 +117,28 @@ const useGeocoder = ({ formikRef, fetchPimsOrLayerParcel }: IUseGeocoderProps) =
             handleParcelDataLayerResponse(response, dispatch);
           };
           fetchPimsOrLayerParcel &&
-            fetchPimsOrLayerParcel(parcelPid, parcelLayerSearchCallback, nameSpace);
+            fetchPimsOrLayerParcel({ pid: parcelPid }, parcelLayerSearchCallback, nameSpace);
         } else {
           if (data.latitude && data.longitude) {
-            const parcelDataLayerResponse = parcelsService.findOneWhereContains({
-              lat: data.latitude,
-              lng: data.longitude,
-            } as LatLng);
-            handleParcelDataLayerResponse(parcelDataLayerResponse, dispatch);
+            parcelsService
+              .findOneWhereContains({
+                lat: data.latitude,
+                lng: data.longitude,
+              } as LatLng)
+              .then(response => {
+                const pid = getIn(response, 'features.0.properties.PID');
+                //it is possible the the geocoder will fail to get the pid but the parcel layer service request will succeed. In that case, double check that the pid doesn't exist within pims.
+                if (pid) {
+                  const parcelLayerSearchCallback = () => {
+                    const response = parcelsService.findByPid(pid);
+                    handleParcelDataLayerResponse(response, dispatch);
+                  };
+                  fetchPimsOrLayerParcel &&
+                    fetchPimsOrLayerParcel({ pid: pid }, parcelLayerSearchCallback, nameSpace);
+                } else {
+                  saveParcelDataLayerResponse(response, dispatch);
+                }
+              });
           }
         }
       }

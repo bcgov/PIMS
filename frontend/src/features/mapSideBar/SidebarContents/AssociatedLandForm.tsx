@@ -22,9 +22,9 @@ import { AssociatedLandReviewPage } from './subforms/AssociatedLandReviewPage';
 import {
   AssociatedLandSchema,
   AssociatedLandOwnershipSchema,
-  AssociatedLandIdentificationSchema,
-  AssociatedLandUsageSchema,
-  AssociatedLandValuationSchema,
+  LandIdentificationSchema,
+  LandUsageSchema,
+  LandValuationSchema,
 } from 'utils/YupSchema';
 import { useDispatch } from 'react-redux';
 import { useBuildingApi } from '../hooks/useBuildingApi';
@@ -139,7 +139,7 @@ export const valuesToApiFormat = (
     const parcelApiValues = landValuesToApiFormat({ data: p } as any);
     if (!!agencyId && p.agencyId === '') {
       parcelApiValues.agencyId = agencyId;
-    } else {
+    } else if ((parcelApiValues.agencyId as any).value) {
       parcelApiValues.agencyId = +(parcelApiValues.agencyId as any).value;
     }
     return parcelApiValues;
@@ -221,7 +221,13 @@ const Form: React.FC<IAssociatedLandForm> = ({
           </div>
         );
       case AssociatedLandSteps.VALUATION:
-        return <LandValuationForm nameSpace={currentParcelNameSpace} title="Land Valuation" />;
+        return (
+          <LandValuationForm
+            nameSpace={currentParcelNameSpace}
+            title="Land Valuation"
+            showImprovements={true}
+          />
+        );
       case AssociatedLandSteps.REVIEW:
         return (
           <AssociatedLandReviewPage
@@ -340,15 +346,20 @@ const AssociatedLandForm: React.FC<IAssociatedLandParentForm> = (
     let errors = await yupErrors;
     await ownedParcels.forEach(async (p: any, index: number) => {
       let pidDuplicated = false;
-      if (p.pid && getIn(initialValues.data, `parcels.${index}.pid`) !== p.pid) {
+      if (
+        p.pid &&
+        (getIn(initialValues.data, `parcels.${index}.pid`) !== p.pid ||
+          !getIn(initialValues.data, `parcels.${index}.id`))
+      ) {
         pidDuplicated = !(await isPidAvailable(p));
       }
 
       let pinDuplicated = false;
       if (
         p.pin &&
-        getIn(initialValues.data, `parcels.${index}.pin`) !== p.pin &&
-        p.pin.toString().length < 10
+        ((getIn(initialValues.data, `parcels.${index}.pin`) !== p.pin &&
+          p.pin.toString().length < 10) ||
+          !getIn(initialValues.data, `parcels.${index}.id`))
       ) {
         pinDuplicated = !(await isPinAvailable(p));
       }
@@ -460,7 +471,7 @@ const AssociatedLandForm: React.FC<IAssociatedLandParentForm> = (
               completed: false,
               canGoToStep: false,
               validation: {
-                schema: AssociatedLandIdentificationSchema,
+                schema: LandIdentificationSchema,
                 nameSpace: (tabIndex: number) => `data.parcels.${tabIndex}`,
               },
             },
@@ -470,7 +481,7 @@ const AssociatedLandForm: React.FC<IAssociatedLandParentForm> = (
               completed: false,
               canGoToStep: false,
               validation: {
-                schema: AssociatedLandUsageSchema,
+                schema: LandUsageSchema,
                 nameSpace: (tabIndex: number) => `data.parcels.${tabIndex}`,
               },
             },
@@ -480,7 +491,7 @@ const AssociatedLandForm: React.FC<IAssociatedLandParentForm> = (
               completed: false,
               canGoToStep: false,
               validation: {
-                schema: AssociatedLandValuationSchema,
+                schema: LandValuationSchema,
                 nameSpace: (tabIndex: number) => `data.parcels.${tabIndex}`,
               },
             },

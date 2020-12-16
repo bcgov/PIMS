@@ -238,7 +238,7 @@ export const AssociatedLandOwnershipSchema = Yup.object().shape({
   type: Yup.number().required('Choose an option'),
 });
 
-export const AssociatedLandUsageSchema = Yup.object().shape({
+export const LandUsageSchema = Yup.object().shape({
   zoning: Yup.string()
     .max(250, 'Zoning must be less than 250 characters')
     .nullable(),
@@ -251,13 +251,13 @@ export const AssociatedLandUsageSchema = Yup.object().shape({
     .nullable(),
 });
 
-export const AssociatedLandValuationSchema = Yup.object().shape({
+export const LandValuationSchema = Yup.object().shape({
   financials: Yup.array()
     .compact((financial: any) => financial.year !== currentYear)
     .of(FinancialYear),
 });
 
-export const AssociatedLandIdentificationSchema = Yup.object().shape(
+export const LandIdentificationSchema = Yup.object().shape(
   {
     pid: Yup.string().when('pin', {
       is: val => val && val.length > 0,

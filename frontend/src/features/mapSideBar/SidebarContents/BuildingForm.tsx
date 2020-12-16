@@ -212,7 +212,9 @@ export const valuesToApiFormat = (values: ISteppedFormValues<IFormBuilding>): IF
   apiValues.data.classificationId = +apiValues.data.classificationId;
   apiValues.data.rentableArea = +apiValues.data.rentableArea;
   apiValues.data.buildingFloorCount = +(apiValues.data.buildingFloorCount ?? 0);
-  apiValues.data.agencyId = +(apiValues.data.agencyId as any).value;
+  if ((values.data.agencyId as any)?.value) {
+    values.data.agencyId = +(values.data.agencyId as any).value;
+  }
   if (apiValues.data.leaseExpiry === '') {
     apiValues.data.leaseExpiry = undefined;
   }

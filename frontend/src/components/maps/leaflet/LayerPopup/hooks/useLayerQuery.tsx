@@ -28,6 +28,39 @@ interface IUserLayerQuery {
 }
 
 /**
+ * Save the parcel data layer response to redux for use within other components. Also save an entire copy of the feature for display on the map.
+ * @param resp
+ * @param dispatch
+ */
+export const saveParcelDataLayerResponse = (
+  resp: FeatureCollection<Geometry, GeoJsonProperties>,
+  dispatch: Dispatch<any>,
+) => {
+  if (resp?.features?.length > 0) {
+    //save with a synthetic event to timestamp the relevance of this data.
+    dispatch(
+      saveParcelLayerData({
+        e: { timeStamp: document?.timeline?.currentTime ?? 0 } as any,
+        data: {
+          ...resp.features[0].properties!,
+          CENTER: geoJSON(resp.features[0].geometry)
+            .getBounds()
+            .getCenter(),
+        },
+      }),
+    );
+    //save the entire feature to redux for use within the map.
+    dispatch(
+      saveParcelLayerFeature({
+        ...resp.features[0],
+      }),
+    );
+  } else {
+    toast.warning(`Failed to find PID/PIN. Ensure that the searched PID/PIN is valid`);
+  }
+};
+
+/**
  * Standard logic to handle a parcel layer data response, independent of whether this is a lat/lng or pid query response.
  * @param response axios response
  * @param dispatch redux store, required to save results.
@@ -38,28 +71,7 @@ export const handleParcelDataLayerResponse = (
 ) => {
   return response
     .then((resp: FeatureCollection<Geometry, GeoJsonProperties>) => {
-      if (resp?.features?.length > 0) {
-        //save with a synthetic event to timestamp the relevance of this data.
-        dispatch(
-          saveParcelLayerData({
-            e: { timeStamp: document?.timeline?.currentTime ?? 0 } as any,
-            data: {
-              ...resp.features[0].properties!,
-              CENTER: geoJSON(resp.features[0].geometry)
-                .getBounds()
-                .getCenter(),
-            },
-          }),
-        );
-        //save the entire feature to redux for use within the map.
-        dispatch(
-          saveParcelLayerFeature({
-            ...resp.features[0],
-          }),
-        );
-      } else {
-        toast.warning(`Failed to find PID/PIN. Ensure that the searched PID/PIN is valid`);
-      }
+      saveParcelDataLayerResponse(resp, dispatch);
     })
     .catch((axiosError: any) => {
       dispatch(error(parcelLayerDataSlice.reducer.name, axiosError?.response?.status, axiosError));
