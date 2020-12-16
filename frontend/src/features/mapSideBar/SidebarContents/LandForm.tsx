@@ -364,21 +364,25 @@ const LandForm: React.FC<IParentLandForm> = (props: IParentLandForm) => {
       title: 'Parcel ID',
       completed: false,
       canGoToStep: true,
-      validation: { schema: LandIdentificationSchema, nameSpace: () => 'data' },
+      validation: props.disabled
+        ? undefined
+        : { schema: LandIdentificationSchema, nameSpace: () => 'data' },
     },
     {
       route: 'usage',
       title: 'Usage',
       completed: false,
       canGoToStep: !!props.disabled,
-      validation: { schema: LandUsageSchema, nameSpace: () => 'data' },
+      validation: props.disabled ? undefined : { schema: LandUsageSchema, nameSpace: () => 'data' },
     },
     {
       route: 'valuation',
       title: 'Valuation',
       completed: false,
       canGoToStep: !!props.disabled,
-      validation: { schema: LandValuationSchema, nameSpace: () => 'data' },
+      validation: props.disabled
+        ? undefined
+        : { schema: LandValuationSchema, nameSpace: () => 'data' },
     },
   ];
 
@@ -395,7 +399,7 @@ const LandForm: React.FC<IParentLandForm> = (props: IParentLandForm) => {
     title: 'Review',
     completed: false,
     canGoToStep: !!props.disabled,
-    validation: { schema: ParcelSchema, nameSpace: () => 'data' },
+    validation: props.disabled ? undefined : { schema: ParcelSchema, nameSpace: () => 'data' },
   });
 
   return (

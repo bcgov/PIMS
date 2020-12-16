@@ -8,6 +8,7 @@ import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
 import { getPropertyColumns, getColumnsWithRemove } from './columns';
 import { useStepper } from 'features/projects/dispose';
+import queryString from 'query-string';
 
 type RequiredAttributes = {
   /** The field name */
@@ -101,11 +102,15 @@ export const PropertyListViewUpdate: React.FC<InputProps> = ({
           setSelectedRows={setSelectedRows}
           footer
           onRowClick={(row: IProperty) => {
-            history.push(
-              `/mapview/${
-                row.propertyTypeId === 0 ? row.id : row.parcelId
-              }?disabled=true&sidebar=true&loadDraft=false`,
-            );
+            history.push({
+              pathname: '/mapview',
+              search: queryString.stringify({
+                sidebar: true,
+                disabled: true,
+                loadDraft: false,
+                parcelId: row.propertyTypeId === 0 ? row.id : row.parcelId,
+              }),
+            });
           }}
         />
       </div>
