@@ -23,7 +23,7 @@ import { toast } from 'react-toastify';
 import _ from 'lodash';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import GenericModal, { ModalSize } from 'components/common/GenericModal';
-import { FaCheckCircle } from 'react-icons/fa';
+import { FaCheckCircle, FaEdit } from 'react-icons/fa';
 import styled from 'styled-components';
 import {
   IFinancialYear,
@@ -62,6 +62,12 @@ const BoldText = styled.p`
   fontweight: 700;
 `;
 
+const EditButton = styled(FaEdit)`
+  margin-left: 20px;
+  cursor: pointer;
+  color: #1a5a96;
+`;
+
 /**
  * container responsible for logic related to map sidebar display. Synchronizes the state of the parcel detail forms with the corresponding query parameters (push/pull).
  */
@@ -79,6 +85,7 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
     addAssociatedLand,
     addContext,
     disabled,
+    setDisabled,
   } = useParamSideBar();
   const dispatch = useDispatch();
   let activePropertyDetail = useSelector<RootState, IPropertyDetail>(
@@ -267,6 +274,14 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
     (activePropertyDetail?.parcelDetail as any)?.rowVersion,
   ]);
 
+  const ConditionalEditButton = () => (
+    <>
+      {disabled && (keycloak.isAdmin || keycloak.agencyId === cachedParcelDetail?.agencyId) && (
+        <EditButton onClick={() => setDisabled(false)} />
+      )}
+    </>
+  );
+
   const getSidebarTitle = (): React.ReactNode => {
     switch (context) {
       case SidebarContextType.ADD_BUILDING:
@@ -286,6 +301,7 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
         return (
           <>
             <LandSvg className="svg" /> View/Update bare land
+            <ConditionalEditButton />
           </>
         );
       case SidebarContextType.VIEW_DEVELOPED_LAND:
@@ -293,6 +309,7 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
         return (
           <>
             <LandSvg className="svg" /> View/Update developed land
+            <ConditionalEditButton />
           </>
         );
       case SidebarContextType.ADD_ASSOCIATED_LAND:

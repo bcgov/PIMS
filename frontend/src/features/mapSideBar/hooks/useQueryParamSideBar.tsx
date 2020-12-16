@@ -31,6 +31,7 @@ interface IMapSideBar {
   addRawLand: () => void;
   addAssociatedLand: () => void;
   addContext: (context: SidebarContextType) => void;
+  setDisabled: (disabled: boolean) => void;
   parcelId?: number;
   disabled?: boolean;
   loadDraft?: boolean;
@@ -113,8 +114,12 @@ const useQueryParamSideBar = (): IMapSideBar => {
     size: sideBarSize,
     parcelId,
     overrideParcelId: parcelId => {
-      const queryParams = { ...queryString.parse(location.search), loadDraft: true };
-      const pathName = !!parcelId ? `/mapview/${parcelId}` : '/mapview';
+      const queryParams = {
+        ...queryString.parse(location.search),
+        loadDraft: true,
+        parcelId: parcelId,
+      };
+      const pathName = '/mapview';
       history.replace({ pathname: pathName, search: queryString.stringify(queryParams) });
     },
     disabled: searchParams?.disabled === 'true',
@@ -124,6 +129,15 @@ const useQueryParamSideBar = (): IMapSideBar => {
     addRawLand,
     addAssociatedLand,
     addContext,
+    setDisabled: disabled => {
+      const queryParams = {
+        ...queryString.parse(location.search),
+        loadDraft: true,
+        disabled: disabled,
+      };
+      const pathName = '/mapview';
+      history.replace({ pathname: pathName, search: queryString.stringify(queryParams) });
+    },
   };
 };
 
