@@ -13,7 +13,6 @@ import { Col, Container, Form } from 'react-bootstrap';
 import './CloseOutFormTab.scss';
 import { FastCurrencyInput } from 'components/common/form';
 import { useFormikContext } from 'formik';
-import { NoteTypes } from '../../../../constants';
 
 interface ICloseOutFormTabProps {
   isReadOnly?: boolean;
@@ -37,7 +36,7 @@ const CloseOutFormTab: React.FunctionComponent<ICloseOutFormTabProps> = ({
       <Form.Row>
         <Col>
           <ProjectNotes
-            field={`notes[${NoteTypes.SalesHistory}].note`}
+            field="salesHistoryNote"
             label="Sales History Notes"
             className="col-md-10"
             outerClassName="col"
@@ -47,7 +46,7 @@ const CloseOutFormTab: React.FunctionComponent<ICloseOutFormTabProps> = ({
         <Col md={1}></Col>
         <Col>
           <ProjectNotes
-            field={`notes[${NoteTypes.Comments}].note`}
+            field="comments"
             label="Project Comments"
             className="col-md-10"
             outerClassName="col"

@@ -35,9 +35,12 @@ $contentheading-height: 60px;
 
   .TableToolbar {
     display: flex;
-    justify-content: flex-end;
     margin-left: auto;
     padding-bottom: 1rem;
+  }
+
+  .TableToolbar :nth-child(2) {
+    margin-left: auto;
   }
 
   .ScrollContainer {
