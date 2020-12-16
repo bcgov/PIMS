@@ -614,13 +614,14 @@ exports[`Land Form component renders correctly 1`] = `
                       >
                         <div>
                           <div
-                            class="form-group"
+                            class="required form-group"
                           >
                             <input
                               class="form-control"
                               field="data.address.line1"
                               id="input-data.address.line1"
                               name="data.address.line1"
+                              required=""
                               value=""
                             />
                           </div>

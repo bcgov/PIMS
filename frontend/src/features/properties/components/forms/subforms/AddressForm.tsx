@@ -86,6 +86,7 @@ const AddressForm = <T extends any>(props: AddressProps & FormikProps<T>) => {
             error={getIn(props.errors, withNameSpace('line1'))}
             touch={getIn(props.touched, withNameSpace('line1'))}
             displayErrorTooltips
+            required={true}
           />
         </Form.Row>
       )}

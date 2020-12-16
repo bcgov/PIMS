@@ -1,4 +1,9 @@
-import { ISteppedFormValues, SteppedForm, useFormStepper } from 'components/common/form/StepForm';
+import {
+  ISteppedFormValues,
+  SteppedForm,
+  useFormStepper,
+  IStepperTab,
+} from 'components/common/form/StepForm';
 import { defaultInformationFormValues } from 'features/properties/components/forms/subforms/InformationForm';
 import { useFormikContext, yupToFormErrors } from 'formik';
 import { IGeocoderResponse, useApi } from 'hooks/useApi';
@@ -38,6 +43,9 @@ import { LandSteps } from 'constants/propertySteps';
 import useDraftMarkerSynchronizer from 'features/properties/hooks/useDraftMarkerSynchronizer';
 import { IFormParcel } from '../containers/MapSideBarContainer';
 import useParcelLayerData from 'features/properties/hooks/useParcelLayerData';
+import { IStep } from 'components/common/Stepper';
+import { AssociatedBuildingListForm } from './subforms/AssociatedBuildingListForm';
+import { useState } from 'react';
 
 const Container = styled.div`
   background-color: #fff;
@@ -123,6 +131,8 @@ const Form: React.FC<ILandForm> = ({
   handlePinChange,
   formikRef,
   isAdmin,
+  initialValues,
+  disabled,
 }) => {
   // access the stepper to later split the form into segments
   const stepper = useFormStepper();
@@ -132,6 +142,8 @@ const Form: React.FC<ILandForm> = ({
     nameSpace: 'data',
     agencyId: +formikProps.values.data.agencyId,
   });
+  const isViewOrUpdate = !!initialValues.id;
+  const isBareLand = !initialValues?.buildings?.length;
 
   // lookup codes that will be used by subforms
   const { getOptionsByType } = useCodeLookups();
@@ -153,17 +165,39 @@ const Form: React.FC<ILandForm> = ({
               handlePinChange={handlePinChange}
               isAdmin={isAdmin}
               nameSpace="data"
+              isViewOrUpdate={isViewOrUpdate}
+              disabled={disabled}
             />
           </div>
         );
       case LandSteps.USAGE:
         return (
           <div className="parcel-usage">
-            <LandUsageForm classifications={classifications} nameSpace="data" {...formikProps} />
+            <LandUsageForm
+              classifications={classifications}
+              nameSpace="data"
+              {...formikProps}
+              disabled={disabled}
+            />
           </div>
         );
       case LandSteps.VALUATION:
-        return <LandValuationForm title="Bare Land Valuation" nameSpace="data" />;
+        return (
+          <LandValuationForm title="Bare Land Valuation" nameSpace="data" disabled={disabled} />
+        );
+      case LandSteps.ASSOCIATED_OR_REVIEW:
+        return !isBareLand ? (
+          <AssociatedBuildingListForm title="View Associated Buildings" nameSpace="data" />
+        ) : (
+          <LandReviewPage
+            classifications={classifications}
+            agencies={agencies}
+            handlePidChange={handlePidChange}
+            handlePinChange={handlePinChange}
+            nameSpace="data"
+            disabled={disabled}
+          />
+        );
       case LandSteps.REVIEW:
         return (
           <LandReviewPage
@@ -172,6 +206,7 @@ const Form: React.FC<ILandForm> = ({
             handlePidChange={handlePidChange}
             handlePinChange={handlePinChange}
             nameSpace="data"
+            disabled={disabled}
           />
         );
     }
@@ -182,13 +217,10 @@ const Form: React.FC<ILandForm> = ({
       <FormFooter>
         <InventoryPolicy />
         <FillRemainingSpace />
-        {stepper.current !== 3 && (
+        {!stepper.isSubmit(stepper.current) && (
           <Button
             type="button"
             onClick={() => {
-              if (!stepper.validateCurrentStep()) {
-                return;
-              }
               stepper.gotoNext();
             }}
             size="sm"
@@ -196,11 +228,14 @@ const Form: React.FC<ILandForm> = ({
             Continue
           </Button>
         )}
-        {formikProps.dirty && formikProps.isValid && stepper.current === 3 && (
-          <Button size="sm" type="submit">
-            Submit Raw Land
-          </Button>
-        )}
+        {formikProps.dirty &&
+          formikProps.isValid &&
+          !disabled &&
+          stepper.isSubmit(stepper.current) && (
+            <Button size="sm" type="submit">
+              Submit Raw Land
+            </Button>
+          )}
       </FormFooter>
     </FormContentWrapper>
   );
@@ -219,6 +254,10 @@ interface ILandForm {
   handlePinChange: (pin: string) => void;
   /** whether or not this user has admin priviledges */
   isAdmin: boolean;
+  /** initial values used to populate this form */
+  initialValues: IFormParcel;
+  /** whether this form can be interacted with */
+  disabled?: boolean;
 }
 
 interface IParentLandForm extends ILandForm {
@@ -227,22 +266,50 @@ interface IParentLandForm extends ILandForm {
 }
 
 /**
+ * A wrapper around the landform that provides all expected props for the landform to be used in read-only mode.
+ * This sets all the fields to disabled and disables all actions triggered by interacting with the forms.
+ * It also disables form validation and submission.
+ * @component
+ */
+export const ViewOnlyLandForm: React.FC<Partial<IParentLandForm>> = (props: {
+  formikRef?: any;
+  initialValues?: IFormParcel;
+}) => {
+  return (
+    <LandForm
+      setMovingPinNameSpace={noop}
+      formikRef={props.formikRef}
+      handleGeocoderChanges={async (response: IGeocoderResponse) => {}}
+      handlePidChange={noop}
+      handlePinChange={noop}
+      isAdmin={false}
+      setLandComplete={noop}
+      initialValues={props.initialValues ?? ({} as any)}
+      disabled={true}
+    />
+  );
+};
+
+/**
  * A component used for submitting bare land.
  * This form will appear after selecting 'Add Bare Land' after navigating to Manage Property > Submit Property in PIMS
  * @component
  */
-
 const LandForm: React.FC<IParentLandForm> = (props: IParentLandForm) => {
   const keycloak = useKeycloakWrapper();
   const dispatch = useDispatch();
   const api = useApi();
-  let initialValues = {
+  let initialValueProps = {
     activeStep: 0,
     activeTab: 0,
-    data: getInitialValues(),
+    tabs: [{ activeStep: 0 }],
+    data: { ...getInitialValues(), ...props.initialValues },
   };
+  const [initialValues, setInitialValues] = useState<ISteppedFormValues<IFormParcel>>(
+    initialValueProps,
+  );
 
-  initialValues.data.agencyId = keycloak.agencyId;
+  initialValues.data.agencyId = keycloak.agencyId ?? '';
 
   /**
    * Combines yup validation with manual validation of financial data for performance reasons.
@@ -278,7 +345,7 @@ const LandForm: React.FC<IParentLandForm> = (props: IParentLandForm) => {
     if (pinDuplicated) {
       errors = { ...errors, pin: 'This PIN is already in use.' };
     }
-    return Promise.resolve(errors);
+    return Object.keys(errors).length ? Promise.resolve({ data: errors }) : Promise.resolve({});
   };
 
   const isPidAvailable = async (values: IFormParcel): Promise<boolean> => {
@@ -291,45 +358,65 @@ const LandForm: React.FC<IParentLandForm> = (props: IParentLandForm) => {
     return response?.available;
   };
 
+  const steps: IStep[] = [
+    {
+      route: 'identification',
+      title: 'Parcel ID',
+      completed: false,
+      canGoToStep: true,
+      validation: { schema: LandIdentificationSchema, nameSpace: () => 'data' },
+    },
+    {
+      route: 'usage',
+      title: 'Usage',
+      completed: false,
+      canGoToStep: !!props.disabled,
+      validation: { schema: LandUsageSchema, nameSpace: () => 'data' },
+    },
+    {
+      route: 'valuation',
+      title: 'Valuation',
+      completed: false,
+      canGoToStep: !!props.disabled,
+      validation: { schema: LandValuationSchema, nameSpace: () => 'data' },
+    },
+  ];
+
+  if (!!props.initialValues?.buildings?.length) {
+    steps.push({
+      route: 'associatedLand',
+      title: 'View Associated Land',
+      completed: false,
+      canGoToStep: !!props.disabled,
+    });
+  }
+  steps.push({
+    route: 'review',
+    title: 'Review',
+    completed: false,
+    canGoToStep: !!props.disabled,
+    validation: { schema: ParcelSchema, nameSpace: () => 'data' },
+  });
+
   return (
     <Container className="landForm">
       <SteppedForm
         // Provide the steps
-        steps={[
-          {
-            route: 'identification',
-            title: 'Parcel ID',
-            completed: false,
-            canGoToStep: true,
-            validation: { schema: LandIdentificationSchema, nameSpace: () => 'data' },
-          },
-          {
-            route: 'usage',
-            title: 'Usage',
-            completed: false,
-            canGoToStep: false,
-            validation: { schema: LandUsageSchema, nameSpace: () => 'data' },
-          },
-          {
-            route: 'valuation',
-            title: 'Valuation',
-            completed: false,
-            canGoToStep: false,
-            validation: { schema: LandValuationSchema, nameSpace: () => 'data' },
-          },
-          {
-            route: 'review',
-            title: 'Review',
-            completed: false,
-            canGoToStep: false,
-            validation: { schema: ParcelSchema, nameSpace: () => 'data' },
-          },
-        ]}
-        persistable={true}
+        steps={steps}
+        persistable={!props.disabled}
         persistProps={{
           name: 'land',
           secret: keycloak.obj.subject,
-          persistCallback: noop,
+          persistCallback: (values: ISteppedFormValues<IFormParcel>) => {
+            const newValues: ISteppedFormValues<IFormParcel> = {
+              ...values,
+              activeStep: 0,
+              activeTab: 0,
+            };
+            newValues.tabs?.forEach((t: IStepperTab) => (t.activeStep = 0));
+            props.formikRef.current.resetForm({ values: newValues });
+            setInitialValues(newValues);
+          },
         }}
         initialValues={initialValues}
         validate={handleValidate}
@@ -356,6 +443,8 @@ const LandForm: React.FC<IParentLandForm> = (props: IParentLandForm) => {
           handlePinChange={props.handlePinChange}
           isAdmin={props.isAdmin}
           formikRef={props.formikRef}
+          initialValues={initialValues.data}
+          disabled={props.disabled}
         />
       </SteppedForm>
     </Container>

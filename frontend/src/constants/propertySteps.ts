@@ -5,7 +5,8 @@ export enum LandSteps {
   IDENTIFICATION = 0,
   USAGE = 1,
   VALUATION = 2,
-  REVIEW = 3,
+  ASSOCIATED_OR_REVIEW = 3,
+  REVIEW = 4,
 }
 
 /**

@@ -89,12 +89,13 @@ export const ParcelPopupView = (props: IParcelDetailProps | null) => {
                     props?.onLinkClick && props.onLinkClick();
                   }}
                   to={{
-                    pathname: `/mapview/${parcelDetail?.id}`,
+                    pathname: `/mapview`,
                     search: queryString.stringify({
                       ...queryString.parse(location.search),
                       sidebar: true,
                       disabled: true,
                       loadDraft: false,
+                      parcelId: parcelDetail?.id,
                     }),
                   }}
                 >
@@ -107,12 +108,13 @@ export const ParcelPopupView = (props: IParcelDetailProps | null) => {
                       props?.onLinkClick && props.onLinkClick();
                     }}
                     to={{
-                      pathname: `/mapview/${parcelDetail?.id}`,
+                      pathname: `/mapview`,
                       search: queryString.stringify({
                         ...queryString.parse(location.search),
                         sidebar: true,
                         disabled: false,
                         loadDraft: false,
+                        parcelId: parcelDetail?.id,
                       }),
                     }}
                   >

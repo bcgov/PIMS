@@ -156,9 +156,11 @@ export const SteppedForm = function<T extends object = {}>({
             >
               {getFormikTabs(values.data).map((tab, index) => (
                 <Tab title={tabTitle(tab, index)} eventKey={index} key={`stepped-tab-${index}`}>
-                  <StepperField name={`tabs.${values.activeTab}.activeStep`} steps={steps} />
                   <StepperFormProvider steps={steps} tabs={getFormikTabs(values.data)}>
-                    {children}
+                    <>
+                      <StepperField name={`tabs.${values.activeTab}.activeStep`} steps={steps} />
+                      {children}
+                    </>
                   </StepperFormProvider>
                 </Tab>
               ))}

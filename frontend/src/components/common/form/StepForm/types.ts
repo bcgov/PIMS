@@ -10,6 +10,7 @@ export interface IStepperFormContextProps {
   gotoNext: () => boolean;
   gotoTab: (tab: number) => boolean;
   validateCurrentStep: (overrideNameSpace?: string) => boolean;
+  isSubmit: (step: number) => boolean;
 }
 
 export interface ISteppedFormValues<T extends object = {}> {
