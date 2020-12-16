@@ -16,7 +16,7 @@ import { FaFolder, FaFolderOpen, FaFileExcel, FaFileAlt } from 'react-icons/fa';
 import { Properties } from './properties';
 import FilterBar from 'components/SearchBar/FilterBar';
 import { Col } from 'react-bootstrap';
-import { Input, Button } from 'components/common/form';
+import { Input, Button, Select } from 'components/common/form';
 import GenericModal from 'components/common/GenericModal';
 import { useHistory } from 'react-router-dom';
 import { ReviewWorkflowStatus, IStatus, fetchProjectStatuses } from '../common';
@@ -36,6 +36,7 @@ interface IProjectFilterState {
   agencyId?: string;
   assessWorkflow?: boolean;
   agencies?: number;
+  fiscalYaer?: number;
 }
 
 const initialValues = {
@@ -267,6 +268,16 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
     }
   };
 
+  const fiscalYears = React.useMemo(() => {
+    const startYear = new Date().getFullYear() - 10;
+    return Array.from(Array(12).keys())
+      .map(i => {
+        var year = startYear + i;
+        return { label: `${year - 1} / ${year}`, value: year };
+      })
+      .reverse();
+  }, []);
+
   return (
     <Container fluid className="ProjectListView">
       <div className="filter-container">
@@ -296,6 +307,9 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
                 filterBy={['code', 'label', 'parent']}
                 placeholder="Enter an Agency"
               />
+            </Col>
+            <Col xs={1} className="bar-item">
+              <Select field="fiscalYear" options={fiscalYears} placeholder="Fiscal Year" />
             </Col>
           </FilterBar>
         )}

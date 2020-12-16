@@ -68,6 +68,11 @@ namespace Pims.Dal.Helpers.Extensions
                 query = query.Where(p => p.CreatedById.Equals(user.GetUserId()));
             }
 
+            if (filter.FiscalYear.HasValue)
+            {
+                query = query.Where(p => p.ActualFiscalYear == filter.FiscalYear);
+            }
+
             if (filter.Active.HasValue && filter.Active.Value)
             {
                 query = query.Where(p => !p.Status.IsTerminal);
