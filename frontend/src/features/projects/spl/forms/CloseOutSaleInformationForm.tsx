@@ -3,8 +3,7 @@ import React from 'react';
 import { Col } from 'react-bootstrap';
 import { useFormikContext } from 'formik';
 import { Form, FastDatePicker, FastFiscalYearInput, FastInput } from 'components/common/form';
-import { FormikTable, IProject } from 'features/projects/common';
-import { getAppraisedColumns } from 'features/projects/common/components/columns';
+import { IProject } from 'features/projects/common';
 
 interface CloseOutSaleInformationProps {
   isReadOnly?: boolean;
@@ -68,14 +67,6 @@ const CloseOutSaleInformation = (props: CloseOutSaleInformationProps) => {
             />
           </Form.Row>
         </Col>
-      </Form.Row>
-      <h3>Appraisal</h3>
-      <Form.Row>
-        <FormikTable
-          field="properties"
-          name="properties"
-          columns={getAppraisedColumns(formikProps.values)}
-        />
       </Form.Row>
     </Fragment>
   );
