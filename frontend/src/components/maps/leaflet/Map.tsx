@@ -44,6 +44,7 @@ import { IGeoSearchParams } from 'constants/API';
 import { decimalOrUndefined, floatOrUndefined } from 'utils';
 import { IPropertyFilter } from 'features/properties/filter/IPropertyFilter';
 import { PropertyFilter } from 'features/properties/filter';
+import { useFilterContext } from '../providers/FIlterProvider';
 
 export type MapViewportChangeEvent = {
   bounds: LatLngBounds | null;
@@ -137,7 +138,7 @@ const Map: React.FC<MapProps> = ({
   const municipalitiesService = useLayerQuery(MUNICIPALITY_LAYER_URL);
   const parcelsService = useLayerQuery(PARCELS_LAYER_URL);
   const [bounds, setBounds] = useState<LatLngBounds>(defaultBounds);
-
+  const { setChanged } = useFilterContext();
   const [layerPopup, setLayerPopup] = useState<LayerPopupInformation>();
   if (mapRef.current && !selectedProperty?.parcelDetail) {
     lat = (mapRef.current.props.center as Array<number>)[0];
@@ -185,8 +186,8 @@ const Map: React.FC<MapProps> = ({
     if (filter.administrativeArea) {
       await zoomToAdministrativeArea(filter.administrativeArea);
     }
-
     setGeoFilter(getQueryParams(filter));
+    setChanged(true);
   };
 
   const handleBasemapToggle = (e: BasemapToggleEvent) => {
@@ -257,7 +258,7 @@ const Map: React.FC<MapProps> = ({
   };
 
   const handleBounds = (e: any) => {
-    const boundsData: LatLngBounds = e.sourceTarget.getBounds();
+    const boundsData: LatLngBounds = e.target.getBounds();
     if (!isEqual(boundsData.getNorthEast(), boundsData.getSouthWest())) {
       setBounds(boundsData);
     }
@@ -296,7 +297,7 @@ const Map: React.FC<MapProps> = ({
                   onclick={showLocationDetails}
                   closePopupOnClick={interactive}
                   onzoomend={e => setZoom(e.sourceTarget.getZoom())}
-                  onmoveend={handleBounds}
+                  ondragend={handleBounds}
                 >
                   {activeBasemap && (
                     <TileLayer
