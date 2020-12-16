@@ -2,6 +2,7 @@ import { FastCurrencyInput } from 'components/common/form';
 import React from 'react';
 import { useFormikContext } from 'formik';
 import { formatFiscalYear, formatApiDateTime } from 'utils';
+import { FaBuilding } from 'react-icons/fa';
 
 const getEditableMoneyCell = (disabled: boolean | undefined, namespace: string, type: string) => {
   return (cellInfo: any) => {
@@ -100,4 +101,41 @@ export const getNetbookCols = (disabled?: boolean, namespace = 'financials'): an
     },
   ];
   return netbookCols;
+};
+
+export const getAssociatedBuildingsCols = (): any => {
+  const associatedBuildingsCols = [
+    {
+      Header: 'Type',
+      accessor: '',
+      maxWidth: 50,
+      align: 'left',
+      Cell: () => <FaBuilding size={24}></FaBuilding>,
+    },
+    {
+      Header: 'Property Name',
+      accessor: 'name',
+      maxWidth: 140,
+      align: 'left',
+    },
+    {
+      Header: 'Classifications',
+      accessor: 'classification',
+      maxWidth: 140,
+      align: 'left',
+    },
+    {
+      Header: 'Street Address',
+      accessor: 'address.line1',
+      maxWidth: 140,
+      align: 'left',
+    },
+    {
+      Header: 'Location',
+      accessor: 'address.administrativeArea',
+      maxWidth: 140,
+      align: 'left',
+    },
+  ];
+  return associatedBuildingsCols;
 };

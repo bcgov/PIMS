@@ -16,6 +16,7 @@ const StepperFormContext = React.createContext<IStepperFormContextProps>({
   gotoNext: noop as any,
   gotoTab: noop as any,
   validateCurrentStep: noop as any,
+  isSubmit: noop as any,
 });
 
 /**
@@ -95,6 +96,8 @@ export const StepperFormProvider: React.FC<IStepperFormProviderProps> = ({
         setTouched(errors);
         return false;
       }
+    } else {
+      completeStep(index);
     }
     return true;
   };
@@ -116,7 +119,10 @@ export const StepperFormProvider: React.FC<IStepperFormProviderProps> = ({
   };
 
   const gotoStep = (index: number) => {
-    if (index > 0 && index < steps.length) {
+    if (!validateCurrentStep()) {
+      return false;
+    }
+    if (index >= 0 && index < steps.length) {
       const nextStep = steps[index];
       if (nextStep.canGoToStep) {
         setFieldValue(`tabs.${values.activeTab}.activeStep`, index);
@@ -128,6 +134,9 @@ export const StepperFormProvider: React.FC<IStepperFormProviderProps> = ({
   };
 
   const gotoNext = () => {
+    if (!validateCurrentStep()) {
+      return false;
+    }
     const index = getIn(values, `tabs.${values.activeTab}.activeStep`) + 1;
     if (index > 0 && index < steps.length) {
       const nextStep = steps[index];
@@ -153,6 +162,10 @@ export const StepperFormProvider: React.FC<IStepperFormProviderProps> = ({
     return false;
   };
 
+  const isSubmit = (index: number) => {
+    return index > 0 && index === steps.length - 1;
+  };
+
   return (
     <StepperFormContext.Provider
       value={{
@@ -165,6 +178,7 @@ export const StepperFormProvider: React.FC<IStepperFormProviderProps> = ({
         gotoStep,
         gotoTab,
         validateCurrentStep,
+        isSubmit,
       }}
     >
       {children}

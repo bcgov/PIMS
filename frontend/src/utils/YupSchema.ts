@@ -212,7 +212,7 @@ export const ParcelSchema = Yup.object()
           .required('PID or PIN Required')
           .max(9, 'Please enter a valid PIN no longer than 9 digits.'),
       }),
-      buildings: Yup.array().of(Building),
+      buildings: Yup.array(),
       financials: Yup.array()
         .compact((financial: any) => financial.year !== currentYear)
         .of(FinancialYear),

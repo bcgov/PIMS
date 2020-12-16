@@ -1,4 +1,4 @@
-import { useLocation, useHistory, useParams } from 'react-router-dom';
+import { useLocation, useHistory } from 'react-router-dom';
 import { useState } from 'react';
 import queryString from 'query-string';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
@@ -12,15 +12,25 @@ export enum SidebarContextType {
   ADD_ASSOCIATED_LAND = 'addAssociatedLand',
   VIEW_BUILDING = 'viewBuilding',
   VIEW_RAW_LAND = 'viewRawLand',
+  VIEW_DEVELOPED_LAND = 'viewDevelopedLand',
+  UPDATE_RAW_LAND = 'updateRawLand',
+  UPDATE_DEVELOPED_LAND = 'updateDevelopedLand',
+  LOADING = 'loading',
 }
 
 interface IMapSideBar {
   showSideBar: boolean;
-  setShowSideBar: (show: boolean, contextName?: SidebarContextType, size?: SidebarSize) => void;
+  setShowSideBar: (
+    show: boolean,
+    contextName?: SidebarContextType,
+    size?: SidebarSize,
+    resetParcelId?: boolean,
+  ) => void;
   overrideParcelId: (parcelId: number | undefined) => void;
   addBuilding: () => void;
   addRawLand: () => void;
   addAssociatedLand: () => void;
+  addContext: (context: SidebarContextType) => void;
   parcelId?: number;
   disabled?: boolean;
   loadDraft?: boolean;
@@ -38,28 +48,34 @@ const useQueryParamSideBar = (): IMapSideBar => {
   const [sideBarSize, setSideBarSize] = useState<SidebarSize>(undefined);
   const [parcelId, setParcelId] = useState<number | undefined>(undefined);
   const location = useLocation();
-  const { id } = useParams() as any;
   const history = useHistory();
 
   const searchParams = queryString.parse(location.search);
   useDeepCompareEffect(() => {
     setShowSideBar(searchParams.sidebar === 'true');
-    setParcelId(id ? parseInt(id) || undefined : undefined);
+    setParcelId(searchParams.parcelId ? +searchParams.parcelId || undefined : undefined);
     setSideBarSize(searchParams.sidebarSize as SidebarSize);
     setContextName(searchParams.sidebarContext as SidebarContextType);
     if (searchParams?.new === 'true') {
-      const queryParams = { ...searchParams, new: false };
+      const queryParams: any = { ...searchParams, new: false };
+      queryParams.parcelId = undefined;
       history.replace({ pathname: '/mapview', search: queryString.stringify(queryParams) });
     }
-    if (!!id && searchParams.sidebar === 'false') {
+    if (!!searchParams.parcelId && searchParams.sidebar === 'false') {
+      searchParams.parcelId = undefined;
       history.replace({
         pathname: '/mapview',
         search: queryString.stringify(searchParams),
       });
     }
-  }, [id, searchParams, location.search]);
+  }, [searchParams, location.search]);
 
-  const setShow = (show: boolean, contextName?: SidebarContextType, size?: SidebarSize) => {
+  const setShow = (
+    show: boolean,
+    contextName?: SidebarContextType,
+    size?: SidebarSize,
+    resetParcelId?: boolean,
+  ) => {
     if (show && !contextName) {
       throw new Error('"contextName" is required when "show" is true');
     }
@@ -69,6 +85,7 @@ const useQueryParamSideBar = (): IMapSideBar => {
       sidebar: show,
       sidebarSize: show ? size : undefined,
       sidebarContext: show ? contextName : undefined,
+      parcelId: resetParcelId ? undefined : parcelId,
     });
     history.push({ search: search.toString() });
   };
@@ -83,6 +100,10 @@ const useQueryParamSideBar = (): IMapSideBar => {
 
   const addAssociatedLand = () => {
     setShow(true, SidebarContextType.ADD_ASSOCIATED_LAND, 'wide');
+  };
+
+  const addContext = (context: SidebarContextType) => {
+    setShow(true, context, 'wide');
   };
 
   return {
@@ -102,6 +123,7 @@ const useQueryParamSideBar = (): IMapSideBar => {
     addBuilding,
     addRawLand,
     addAssociatedLand,
+    addContext,
   };
 };
 

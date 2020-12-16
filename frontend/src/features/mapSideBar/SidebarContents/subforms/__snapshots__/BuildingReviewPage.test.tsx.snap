@@ -33,7 +33,7 @@ exports[`renders correctly 1`] = `
             <p class=\\"label\\">Street Address</p>
             <div class=\\"GeocoderAutoComplete\\">
               <div>
-                <div class=\\"form-group\\"><input name=\\"address.line1\\" disabled=\\"\\" field=\\"address.line1\\" id=\\"input-address.line1\\" class=\\"form-control\\" value=\\"\\"></div>
+                <div class=\\"required form-group\\"><input name=\\"address.line1\\" disabled=\\"\\" required=\\"\\" field=\\"address.line1\\" id=\\"input-address.line1\\" class=\\"form-control\\" value=\\"\\"></div>
               </div>
             </div>
           </div>
