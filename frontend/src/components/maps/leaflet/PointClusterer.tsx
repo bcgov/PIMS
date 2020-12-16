@@ -13,7 +13,6 @@ import { IPropertyDetail } from 'actions/parcelsActions';
 import SelectedPropertyMarker from './SelectedPropertyMarker/SelectedPropertyMarker';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
 import { useFilterContext } from '../providers/FIlterProvider';
-import { isEqual } from 'lodash';
 
 export type PointClustererProps = {
   points: Array<PointFeature>;
@@ -119,11 +118,8 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
     if (featureGroupRef.current) {
       const group: LeafletFeatureGroup = featureGroupRef.current.leafletElement;
       const groupBounds = group.getBounds();
-      if (
-        !isEqual(groupBounds.getSouthWest(), groupBounds.getNorthEast()) &&
-        group.getBounds().isValid() &&
-        filterState.changed
-      ) {
+
+      if (groupBounds.isValid() && group.getBounds().isValid() && filterState.changed) {
         filterState.setChanged(false);
         map.fitBounds(group.getBounds(), { maxZoom: 10 });
       }
@@ -170,7 +166,7 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
             position={[latitude, longitude]}
             icon={getMarkerIcon(cluster)}
           >
-            <Popup>
+            <Popup autoPan={false}>
               <PopupView
                 propertyTypeId={cluster.properties.propertyTypeId}
                 propertyDetail={cluster.properties as any}
@@ -194,7 +190,7 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
           position={m.position}
           icon={getMarkerIcon(m)}
         >
-          <Popup>
+          <Popup autoPan={false}>
             <PopupView
               propertyTypeId={m.properties.propertyTypeId}
               propertyDetail={m.properties}
@@ -225,7 +221,7 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
           ]}
           map={leaflet.map}
         >
-          <Popup>
+          <Popup autoPan={false}>
             <PopupView
               propertyTypeId={selected.propertyTypeId}
               propertyDetail={selected.parcelDetail}
