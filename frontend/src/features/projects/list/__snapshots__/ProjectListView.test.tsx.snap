@@ -119,6 +119,97 @@ exports[`Project list view tests Matches snapshot 1`] = `
           </div>
         </div>
         <div
+          class="bar-item col-1"
+        >
+          <div
+            class="form-group"
+          >
+            <select
+              class="form-select form-control"
+              id="input-fiscalYear"
+              name="fiscalYear"
+            >
+              <option
+                value=""
+              >
+                Fiscal Year
+              </option>
+              <option
+                class="option"
+                value="2021"
+              >
+                2020 / 2021
+              </option>
+              <option
+                class="option"
+                value="2020"
+              >
+                2019 / 2020
+              </option>
+              <option
+                class="option"
+                value="2019"
+              >
+                2018 / 2019
+              </option>
+              <option
+                class="option"
+                value="2018"
+              >
+                2017 / 2018
+              </option>
+              <option
+                class="option"
+                value="2017"
+              >
+                2016 / 2017
+              </option>
+              <option
+                class="option"
+                value="2016"
+              >
+                2015 / 2016
+              </option>
+              <option
+                class="option"
+                value="2015"
+              >
+                2014 / 2015
+              </option>
+              <option
+                class="option"
+                value="2014"
+              >
+                2013 / 2014
+              </option>
+              <option
+                class="option"
+                value="2013"
+              >
+                2012 / 2013
+              </option>
+              <option
+                class="option"
+                value="2012"
+              >
+                2011 / 2012
+              </option>
+              <option
+                class="option"
+                value="2011"
+              >
+                2010 / 2011
+              </option>
+              <option
+                class="option"
+                value="2010"
+              >
+                2009 / 2010
+              </option>
+            </select>
+          </div>
+        </div>
+        <div
           class="bar-item flex-grow-0 col"
         >
           <button
