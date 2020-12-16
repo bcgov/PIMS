@@ -430,7 +430,6 @@ namespace Pims.Api.Areas.Tools.Helpers
                         "Weekly Review" => Entity.NoteTypes.Reporting,
                         _ => Entity.NoteTypes.General
                     };
-                    note = $"{noteType}{Environment.NewLine}{note}";
                 }
 
                 var projectNote = project.Notes.FirstOrDefault(n => n.NoteType == type);
@@ -441,7 +440,7 @@ namespace Pims.Api.Areas.Tools.Helpers
                 else
                 {
                     if (!String.IsNullOrWhiteSpace(projectNote.Note))
-                        projectNote.Note += $"{Environment.NewLine}{Environment.NewLine}{note}";
+                        projectNote.Note += $"{Environment.NewLine}{Environment.NewLine}{noteType}{Environment.NewLine}{note}";
                     else
                         projectNote.Note = note;
                 }

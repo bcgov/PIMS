@@ -658,7 +658,8 @@ namespace Pims.Api.Test.Controllers.Tools
             first.Notes.Should().HaveCount(2);
             first.Notes.First().NoteType.Should().Be(Entity.NoteTypes.Financial);
             first.PrivateNote.Should().Be(expectedResult.Notes.FirstOrDefault(n => n.Key == "Private").Value);
-            first.Notes.First().Note.Should().Be($"some note{Environment.NewLine}{Environment.NewLine}{expectedResult.Notes.FirstOrDefault(n => n.Key == "Financial").Value}");
+            var expectedFinancialNote = expectedResult.Notes.FirstOrDefault(n => n.Key == "Financial");
+            first.Notes.First().Note.Should().Be($"some note{Environment.NewLine}{Environment.NewLine}{expectedFinancialNote.Key}{Environment.NewLine}{expectedFinancialNote.Value}");
             first.Responses.Should().BeEmpty();
             project.Snapshots.Should().BeEmpty();
             project.Tasks.Should().BeEmpty();
