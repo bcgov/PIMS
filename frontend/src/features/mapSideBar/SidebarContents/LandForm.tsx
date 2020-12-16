@@ -233,7 +233,7 @@ const Form: React.FC<ILandForm> = ({
           !disabled &&
           stepper.isSubmit(stepper.current) && (
             <Button size="sm" type="submit">
-              Submit Raw Land
+              Submit Bare Land
             </Button>
           )}
       </FormFooter>
