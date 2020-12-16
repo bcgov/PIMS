@@ -57,9 +57,21 @@ const ExemptionEnhancedReferralCompleteForm = ({
       />
       <Form.Row>
         <Form.Label column md={4}>
+          ADM Approved Exemption On
+        </Form.Label>
+        <FastDatePicker
+          required
+          outerClassName="col-md-2"
+          formikProps={formikProps}
+          field="exemptionApprovedOn"
+        />
+      </Form.Row>
+      <Form.Row>
+        <Form.Label column md={4}>
           Clearance Notification Sent
         </Form.Label>
         <FastDatePicker
+          required
           outerClassName="col-md-2"
           formikProps={formikProps}
           disabled={isReadOnly}

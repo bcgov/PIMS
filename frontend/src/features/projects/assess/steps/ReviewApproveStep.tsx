@@ -6,6 +6,7 @@ import {
   UpdateInfoStepYupSchema,
   ProjectDraftStepYupSchema,
   SelectProjectPropertiesStepYupSchema,
+  ApproveExemptionRequestSchema,
 } from '../../dispose/forms/disposalYupSchema';
 import { fetchProjectTasks } from '../../common/projectsActionCreator';
 import _ from 'lodash';
@@ -17,6 +18,10 @@ import { useHistory } from 'react-router-dom';
 export const ReviewApproveStepSchema = UpdateInfoStepYupSchema.concat(
   ProjectDraftStepYupSchema,
 ).concat(SelectProjectPropertiesStepYupSchema);
+
+export const ReviewExemptionRequestSchema = ApproveExemptionRequestSchema.concat(
+  ReviewApproveStepSchema,
+);
 
 export const validateTasks = (project: IProject) => {
   const statusTasks = !project.exemptionRequested
@@ -65,7 +70,10 @@ const ReviewApproveStep = ({ formikRef }: IStepProps) => {
       return Promise.resolve({});
     }
     let taskErrors = validateTasks(values);
-    const yupErrors: any = validateYupSchema(values, ReviewApproveStepSchema).then(
+    const yupErrors: any = validateYupSchema(
+      values,
+      project.exemptionRequested ? ReviewExemptionRequestSchema : ReviewApproveStepSchema,
+    ).then(
       () => {
         return taskErrors;
       },

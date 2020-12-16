@@ -134,8 +134,9 @@ export interface IProject {
   subAgency?: string;
   statusId: number;
   status?: IStatus;
-  exemptionRationale?: string;
   exemptionRequested?: boolean;
+  exemptionRationale?: string;
+  exemptionApprovedOn?: Date | string;
   statusCode?: string;
   tierLevelId: number;
   tasks: IProjectTask[];
@@ -288,6 +289,9 @@ export const initialValues: IProject = {
   deniedOn: '',
   cancelledOn: '',
   submittedOn: '',
+  exemptionRequested: false,
+  exemptionRationale: '',
+  exemptionApprovedOn: '',
   initialNotificationSentOn: '',
   thirtyDayNotificationSentOn: '',
   sixtyDayNoficationSentOn: '',
@@ -342,8 +346,9 @@ export interface IApiProject {
   publicNote: string;
   privateNote: string;
   exemptionRequested?: boolean;
-  agencyResponseNote?: string;
   exemptionRationale?: string;
+  exemptionApprovedOn?: Date | string;
+  agencyResponseNote?: string;
   agencyId: number;
   statusId: number;
   statusCode?: string;
