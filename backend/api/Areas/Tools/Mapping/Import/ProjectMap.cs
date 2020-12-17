@@ -80,8 +80,9 @@ namespace Pims.Api.Areas.Tools.Mapping.Import
                     dest.SixtyDayNotificationSentOn = metadata.SixtyDayNotificationSentOn;
                     dest.NinetyDayNotificationSentOn = metadata.NinetyDayNotificationSentOn;
                     dest.OnHoldNotificationSentOn = metadata.OnHoldNotificationSentOn;
-                    dest.TransferredWithinGreOn = metadata.TransferredWithinGreOn;
+                    dest.InterestedReceivedOn = metadata.InterestedReceivedOn;
                     dest.ClearanceNotificationSentOn = metadata.ClearanceNotificationSentOn;
+                    dest.TransferredWithinGreOn = metadata.TransferredWithinGreOn;
                     dest.MarketedOn = metadata.MarketedOn;
                 })
                 .Inherits<Entity.BaseEntity, Api.Models.BaseModel>();

@@ -47,6 +47,7 @@ namespace Pims.Api.Areas.Reports.Mapping.Project
                 .Map(dest => dest.Manager, src => src.Manager)
                 .Map(dest => dest.ReportingNote, src => src.GetNoteText(Entity.NoteTypes.Reporting))
                 .Map(dest => dest.FinancialNote, src => src.GetNoteText(Entity.NoteTypes.Financial))
+                .Map(dest => dest.InterestFromEnhancedReferralNote, src => src.GetNoteText(Entity.NoteTypes.AgencyInterest))
                 .AfterMapping((src, dest) =>
                  {
                      var metadata = JsonSerializer.Deserialize<Entity.Models.DisposalProjectMetadata>(src.Metadata ?? "{}", _serializerOptions);
@@ -63,6 +64,7 @@ namespace Pims.Api.Areas.Reports.Mapping.Project
                      dest.InterestComponent = metadata.InterestComponent;
                      dest.Slip = metadata.SaleWithLeaseInPlace;
                      dest.MarketedOn = metadata.MarketedOn;
+                     dest.InterestedReceivedOn = metadata.InterestedReceivedOn;
                  });
         }
 

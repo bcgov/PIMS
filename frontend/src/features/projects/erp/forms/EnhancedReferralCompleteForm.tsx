@@ -1,6 +1,6 @@
 import './EnhancedReferralCompleteForm.scss';
 import React, { useState } from 'react';
-import { Container, Button } from 'react-bootstrap';
+import { Container, Button, Col } from 'react-bootstrap';
 import { Form, FastDatePicker } from 'components/common/form';
 import styled from 'styled-components';
 import { useFormikContext } from 'formik';
@@ -15,6 +15,7 @@ import {
   notInSplWarning,
   requestForSplReceivedOn,
   approvedForSplOn,
+  ProjectNotes,
 } from '../../common';
 import GenericModal from 'components/common/GenericModal';
 import { validateFormikWithCallback } from 'utils';
@@ -48,6 +49,28 @@ const EnhancedReferralCompleteForm = ({
   return (
     <Container fluid className="EnhancedReferralCompleteForm">
       <h3>Enhanced Referral Process Complete</h3>
+      <Form.Row>
+        <Form.Label column md={4}>
+          Interest Received On
+        </Form.Label>
+        <FastDatePicker
+          outerClassName="col-md-2"
+          formikProps={formikProps}
+          disabled={isReadOnly}
+          field="interestedReceivedOn"
+        />
+      </Form.Row>
+      <Form.Row>
+        <Col>
+          <ProjectNotes
+            field="interestFromEnhancedReferralNote"
+            label="Interest Note"
+            disabled={isReadOnly}
+            outerClassName="col"
+          />
+        </Col>
+      </Form.Row>
+
       <Form.Row>
         <Form.Label column md={4}>
           On Hold Notification Sent{' '}
