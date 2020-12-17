@@ -4,7 +4,6 @@ import { Col } from 'react-bootstrap';
 import { getIn, useFormikContext } from 'formik';
 import { Form, FastCurrencyInput } from 'components/common/form';
 import { IProject, ProjectNotes } from 'features/projects/common';
-import { NoteTypes } from '../../../../constants';
 
 interface CloseOutFinancialSummaryFormProps {
   /** Whether the form inputs will be readonly. */
@@ -124,21 +123,21 @@ const CloseOutFinancialSummaryForm = (props: CloseOutFinancialSummaryFormProps) 
         <Col md={1}>&nbsp;</Col>
         <Col>
           <ProjectNotes
-            field={`notes[${NoteTypes.Remediation}].note`}
+            field="remediationNote"
             label="Remediation (Not funded throuch COS. TRAN only)"
             disabled={props.isReadOnly}
             outerClassName="col"
             className="col-md-10"
           />
           <ProjectNotes
-            field={`notes[${NoteTypes.SplCost}].note`}
+            field="programCostNote"
             label="SPL Cost Calculation Notes"
             disabled={props.isReadOnly}
             outerClassName="col"
             className="col-md-10"
           />
           <ProjectNotes
-            field={`notes[${NoteTypes.SplGain}].note`}
+            field="gainNote"
             label="Gain after SPL Cost Calculation Notes"
             disabled={props.isReadOnly}
             outerClassName="col"

@@ -124,11 +124,11 @@ namespace Pims.Api.Areas.Reports.Models.Project
 
         [DisplayName("Interest from Enhanced Referral")]
         [CsvHelper.Configuration.Attributes.Name("Interest from Enhanced Referral")]
-        public string AgencyResponseNote { get; set; }
+        public string InterestFromEnhancedReferralNote { get; set; }
 
         [DisplayName("Date of Interest Rcvd")]
         [CsvHelper.Configuration.Attributes.Name("Date of Interest Rcvd")]
-        public DateTime? AgencyResponseDate { get; set; }
+        public DateTime? InterestedReceivedOn { get; set; }
         #endregion
     }
 }

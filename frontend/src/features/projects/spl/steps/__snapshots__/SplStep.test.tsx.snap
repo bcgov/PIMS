@@ -637,14 +637,14 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
                 >
                   <label
                     class="form-label"
-                    for="input-notes[19].note"
+                    for="input-remediationNote"
                   >
                     Remediation (Not funded throuch COS. TRAN only)
                   </label>
                   <textarea
                     class="col-md-10 form-control"
-                    id="input-notes[19].note"
-                    name="notes[19].note"
+                    id="input-remediationNote"
+                    name="remediationNote"
                   />
                 </div>
               </div>
@@ -656,17 +656,15 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
                 >
                   <label
                     class="form-label"
-                    for="input-notes[12].note"
+                    for="input-programCostNote"
                   >
                     SPL Cost Calculation Notes
                   </label>
                   <textarea
                     class="col-md-10 form-control"
-                    id="input-notes[12].note"
-                    name="notes[12].note"
-                  >
-                    sppcost
-                  </textarea>
+                    id="input-programCostNote"
+                    name="programCostNote"
+                  />
                 </div>
               </div>
               <div
@@ -677,17 +675,15 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
                 >
                   <label
                     class="form-label"
-                    for="input-notes[13].note"
+                    for="input-gainNote"
                   >
                     Gain after SPL Cost Calculation Notes
                   </label>
                   <textarea
                     class="col-md-10 form-control"
-                    id="input-notes[13].note"
-                    name="notes[13].note"
-                  >
-                    sppgain
-                  </textarea>
+                    id="input-gainNote"
+                    name="gainNote"
+                  />
                 </div>
               </div>
             </div>
@@ -709,17 +705,15 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
                 >
                   <label
                     class="form-label"
-                    for="input-notes[10].note"
+                    for="input-loanTermsNote"
                   >
                     Loan Terms
                   </label>
                   <textarea
                     class="col-md-10 form-control"
-                    id="input-notes[10].note"
-                    name="notes[10].note"
-                  >
-                    loanterms
-                  </textarea>
+                    id="input-loanTermsNote"
+                    name="loanTermsNote"
+                  />
                 </div>
               </div>
             </div>
@@ -737,17 +731,15 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
                 >
                   <label
                     class="form-label"
-                    for="input-notes[15].note"
+                    for="input-closeOutNote"
                   >
                     Close Out
                   </label>
                   <textarea
                     class="col-md-10 form-control"
-                    id="input-notes[15].note"
-                    name="notes[15].note"
-                  >
-                    closeout
-                  </textarea>
+                    id="input-closeOutNote"
+                    name="closeOutNote"
+                  />
                 </div>
               </div>
             </div>
@@ -766,17 +758,15 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
                 >
                   <label
                     class="form-label"
-                    for="input-notes[14].note"
+                    for="input-salesHistoryNote"
                   >
                     Sales History Notes
                   </label>
                   <textarea
                     class="col-md-10 form-control"
-                    id="input-notes[14].note"
-                    name="notes[14].note"
-                  >
-                    saleshistory
-                  </textarea>
+                    id="input-salesHistoryNote"
+                    name="salesHistoryNote"
+                  />
                 </div>
               </div>
             </div>
@@ -794,7 +784,7 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
                 >
                   <label
                     class="form-label"
-                    for="input-notes[16].note"
+                    for="input-comments"
                   >
                     Project Comments
                     <svg
@@ -814,11 +804,9 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
                   </label>
                   <textarea
                     class="col-md-10 form-control"
-                    id="input-notes[16].note"
-                    name="notes[16].note"
-                  >
-                    comments
-                  </textarea>
+                    id="input-comments"
+                    name="comments"
+                  />
                 </div>
               </div>
             </div>
@@ -1041,17 +1029,15 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
             >
               <label
                 class="form-label"
-                for="input-notes[11].note"
+                for="input-adjustmentNote"
               >
                 Adjustment to Prior Year Sale Notes
               </label>
               <textarea
                 class="col-md-auto form-control"
-                id="input-notes[11].note"
-                name="notes[11].note"
-              >
-                adjustment
-              </textarea>
+                id="input-adjustmentNote"
+                name="adjustmentNote"
+              />
             </div>
           </div>
         </div>

@@ -110,11 +110,11 @@ namespace Pims.Api.Areas.Tools.Models.Import
         /// get/set - Appraised note
         /// </summary>
         public string AppraisedNote { get; set; }
-        
+
         /// <summary>
         /// get/set - A private note for SRES only.
         /// </summary>
-        
+
         public string PrivateNote { get; set; }
 
         /// <summary>
@@ -124,9 +124,14 @@ namespace Pims.Api.Areas.Tools.Models.Import
 
         #region ERP
         /// <summary>
-        /// get/set - Note summerizing agency responses to notifications.
+        /// get/set - Interests from ERP note.
         /// </summary>
-        public string AgencyResponseNote { get; set; }
+        public string InterestFromEnhancedReferralNote { get; set; }
+
+        /// <summary>
+        /// get/set - The date interest was received.
+        /// </summary>
+        public DateTime? InterestedReceivedOn { get; set; }
         #endregion
 
         #region Dates

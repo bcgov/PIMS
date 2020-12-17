@@ -362,10 +362,10 @@ describe('SPL Approval Step', () => {
 
     it('displays close out notes', () => {
       const { getByText } = render(getSplStep(store));
-      expect(getByText('loanterms')).toBeVisible();
-      expect(getByText('adjustment')).toBeVisible();
-      expect(getByText('comments')).toBeVisible();
-      expect(getByText('saleshistory')).toBeVisible();
+      expect(getByText('Loan Terms')).toBeVisible();
+      expect(getByText('Adjustment to Prior Year Sale Notes')).toBeVisible();
+      expect(getByText('Project Comments')).toBeVisible();
+      expect(getByText('Sales History Notes')).toBeVisible();
     });
   });
 });

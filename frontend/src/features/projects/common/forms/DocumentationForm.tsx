@@ -1,4 +1,3 @@
-import { NoteTypes } from 'constants/noteTypes';
 import React, { Fragment } from 'react';
 import { ProjectNotes } from '..';
 import { IStepProps, IProjectTask } from '../interfaces';
@@ -18,13 +17,7 @@ const DocumentationForm = ({ isReadOnly, tasks, showNote = false }: IDocumentati
     <Fragment>
       <h3>Documentation</h3>
       <TasksForm tasks={tasks ?? []} isReadOnly={isReadOnly} />
-      {showNote && (
-        <ProjectNotes
-          label="Note"
-          field={`notes[${NoteTypes.Documentation}].note`}
-          className="col-md-auto"
-        />
-      )}
+      {showNote && <ProjectNotes label="Note" field="documentationNote" className="col-md-auto" />}
     </Fragment>
   );
 };
