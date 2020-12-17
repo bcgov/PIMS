@@ -78,122 +78,124 @@ const SurplusPropertyListForm = ({
 
   return (
     <Container fluid className="SurplusPropertyListForm">
-      {formikProps.values.statusCode !== ReviewWorkflowStatus.Disposed && (
-        <Form.Row>
-          <Form.Label column md={3}>
-            Change the Status
-          </Form.Label>
-          <Form.Group>
-            {formikProps.values.workflowCode === DisposalWorkflows.Erp && (
-              <Button
-                disabled={
-                  isReadOnly ||
-                  !formikProps.values.clearanceNotificationSentOn ||
-                  !formikProps.values.requestForSplReceivedOn
-                }
-                onClick={onClickProceedToSPL}
-              >
-                Return to SPL
-              </Button>
-            )}
-
-            {formikProps.values.statusCode === ReviewWorkflowStatus.PreMarketing && (
-              <Button
-                variant="secondary"
-                disabled={
-                  isReadOnly || formikProps.values.statusCode !== ReviewWorkflowStatus.PreMarketing
-                }
-                onClick={onClickRemoveFromSPL}
-              >
-                Remove from SPL
-              </Button>
-            )}
-            {formikProps.values.statusCode !== ReviewWorkflowStatus.PreMarketing &&
-              formikProps.values.workflowCode === DisposalWorkflows.Spl && (
+      {formikProps.values.statusCode !== ReviewWorkflowStatus.Cancelled &&
+        formikProps.values.statusCode !== ReviewWorkflowStatus.Disposed && (
+          <Form.Row>
+            <Form.Label column md={3}>
+              Change the Status
+            </Form.Label>
+            <Form.Group>
+              {formikProps.values.workflowCode === DisposalWorkflows.Erp && (
                 <Button
-                  variant={mainBtn === 'PM' ? 'primary' : 'secondary'}
-                  disabled={isReadOnly}
-                  onClick={onClickPreMarketing}
+                  disabled={
+                    isReadOnly ||
+                    !formikProps.values.clearanceNotificationSentOn ||
+                    !formikProps.values.requestForSplReceivedOn
+                  }
+                  onClick={onClickProceedToSPL}
                 >
-                  Pre-Marketing
+                  Return to SPL
                 </Button>
               )}
-            {formikProps.values.statusCode !== ReviewWorkflowStatus.OnMarket &&
-              formikProps.values.workflowCode === DisposalWorkflows.Spl && (
+
+              {formikProps.values.statusCode === ReviewWorkflowStatus.PreMarketing && (
                 <Button
-                  variant={mainBtn === 'M' ? 'primary' : 'secondary'}
-                  disabled={isReadOnly}
-                  onClick={onClickMarketedOn}
+                  variant="secondary"
+                  disabled={
+                    isReadOnly ||
+                    formikProps.values.statusCode !== ReviewWorkflowStatus.PreMarketing
+                  }
+                  onClick={onClickRemoveFromSPL}
                 >
-                  On the Market
+                  Remove from SPL
                 </Button>
               )}
-            {(formikProps.values.statusCode === ReviewWorkflowStatus.PreMarketing ||
-              formikProps.values.statusCode === ReviewWorkflowStatus.OnMarket) && (
-              <Button
-                variant={mainBtn === 'CIP' ? 'primary' : 'secondary'}
-                disabled={isReadOnly}
-                onClick={onClickContractInPlaceConditional}
-              >
-                Conditional
-              </Button>
-            )}
-
-            {(formikProps.values.statusCode === ReviewWorkflowStatus.PreMarketing ||
-              formikProps.values.statusCode === ReviewWorkflowStatus.OnMarket ||
-              formikProps.values.statusCode ===
-                ReviewWorkflowStatus.ContractInPlaceConditional) && (
-              <Button
-                variant={mainBtn === 'CIP' ? 'primary' : 'secondary'}
-                disabled={isReadOnly}
-                onClick={onClickContractInPlaceUnconditional}
-              >
-                Unconditional
-              </Button>
-            )}
-            {(formikProps.values.statusCode === ReviewWorkflowStatus.ContractInPlaceConditional ||
-              formikProps.values.statusCode ===
-                ReviewWorkflowStatus.ContractInPlaceUnconditional) && (
-              <Button
-                variant={mainBtn === 'D' ? 'primary' : 'secondary'}
-                disabled={
-                  isReadOnly ||
-                  (formikProps.values.statusCode ===
-                    ReviewWorkflowStatus.ContractInPlaceConditional &&
-                    _.filter(cipConditionalTasks, { isCompleted: false, isOptional: false })
-                      .length !== 0) ||
-                  (formikProps.values.statusCode ===
-                    ReviewWorkflowStatus.ContractInPlaceUnconditional &&
-                    _.filter(cipUnconditionalTasks, { isCompleted: false, isOptional: false })
-                      .length !== 0)
-                }
-                onClick={() => setDispose(true)}
-              >
-                Dispose
-              </Button>
-            )}
-
-            <div className="col-md-6">
-              {dispose && (
-                <GenericModal
-                  display={dispose}
-                  cancelButtonText="Close"
-                  okButtonText="Dispose Project"
-                  handleOk={(e: any) => {
-                    onClickDisposedExternally(e);
-                    setDispose(false);
-                  }}
-                  handleCancel={() => {
-                    setDispose(false);
-                  }}
-                  title="Really Dispose Project?"
-                  message={disposeWarning}
-                />
+              {formikProps.values.statusCode !== ReviewWorkflowStatus.PreMarketing &&
+                formikProps.values.workflowCode === DisposalWorkflows.Spl && (
+                  <Button
+                    variant={mainBtn === 'PM' ? 'primary' : 'secondary'}
+                    disabled={isReadOnly}
+                    onClick={onClickPreMarketing}
+                  >
+                    Pre-Marketing
+                  </Button>
+                )}
+              {formikProps.values.statusCode !== ReviewWorkflowStatus.OnMarket &&
+                formikProps.values.workflowCode === DisposalWorkflows.Spl && (
+                  <Button
+                    variant={mainBtn === 'M' ? 'primary' : 'secondary'}
+                    disabled={isReadOnly}
+                    onClick={onClickMarketedOn}
+                  >
+                    On the Market
+                  </Button>
+                )}
+              {(formikProps.values.statusCode === ReviewWorkflowStatus.PreMarketing ||
+                formikProps.values.statusCode === ReviewWorkflowStatus.OnMarket) && (
+                <Button
+                  variant={mainBtn === 'CIP' ? 'primary' : 'secondary'}
+                  disabled={isReadOnly}
+                  onClick={onClickContractInPlaceConditional}
+                >
+                  Conditional
+                </Button>
               )}
-            </div>
-          </Form.Group>
-        </Form.Row>
-      )}
+
+              {(formikProps.values.statusCode === ReviewWorkflowStatus.PreMarketing ||
+                formikProps.values.statusCode === ReviewWorkflowStatus.OnMarket ||
+                formikProps.values.statusCode ===
+                  ReviewWorkflowStatus.ContractInPlaceConditional) && (
+                <Button
+                  variant={mainBtn === 'CIP' ? 'primary' : 'secondary'}
+                  disabled={isReadOnly}
+                  onClick={onClickContractInPlaceUnconditional}
+                >
+                  Unconditional
+                </Button>
+              )}
+              {(formikProps.values.statusCode === ReviewWorkflowStatus.ContractInPlaceConditional ||
+                formikProps.values.statusCode ===
+                  ReviewWorkflowStatus.ContractInPlaceUnconditional) && (
+                <Button
+                  variant={mainBtn === 'D' ? 'primary' : 'secondary'}
+                  disabled={
+                    isReadOnly ||
+                    (formikProps.values.statusCode ===
+                      ReviewWorkflowStatus.ContractInPlaceConditional &&
+                      _.filter(cipConditionalTasks, { isCompleted: false, isOptional: false })
+                        .length !== 0) ||
+                    (formikProps.values.statusCode ===
+                      ReviewWorkflowStatus.ContractInPlaceUnconditional &&
+                      _.filter(cipUnconditionalTasks, { isCompleted: false, isOptional: false })
+                        .length !== 0)
+                  }
+                  onClick={() => setDispose(true)}
+                >
+                  Dispose
+                </Button>
+              )}
+
+              <div className="col-md-6">
+                {dispose && (
+                  <GenericModal
+                    display={dispose}
+                    cancelButtonText="Close"
+                    okButtonText="Dispose Project"
+                    handleOk={(e: any) => {
+                      onClickDisposedExternally(e);
+                      setDispose(false);
+                    }}
+                    handleCancel={() => {
+                      setDispose(false);
+                    }}
+                    title="Really Dispose Project?"
+                    message={disposeWarning}
+                  />
+                )}
+              </div>
+            </Form.Group>
+          </Form.Row>
+        )}
 
       <SurplusPropertyListApprovalForm isReadOnly={isReadOnly} />
 
