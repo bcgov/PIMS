@@ -4,7 +4,6 @@ import { BsXSquareFill } from 'react-icons/bs';
 import { FaSign } from 'react-icons/fa';
 import styled from 'styled-components';
 import FindMorePropertiesForm from 'components/SearchBar/FindMorePropertiesForm';
-import { useMediaQuery } from 'react-responsive';
 
 const ButtonContent = styled.div`
   display: flex;
@@ -37,8 +36,6 @@ interface IFindMorePropertiesButton {
 
 /** this component contains the trigger for additional filter options off the base filter */
 export const FindMorePropertiesButton: React.FC<IFindMorePropertiesButton> = ({ buttonText }) => {
-  const smallScreen = useMediaQuery({ maxWidth: 1800 });
-
   const TitleContent = () =>
     useMemo(
       () => (
@@ -72,7 +69,7 @@ export const FindMorePropertiesButton: React.FC<IFindMorePropertiesButton> = ({ 
       <Button style={{ height: 38 }}>
         <ButtonContent>
           <FaSign size={20} style={{ marginRight: 5, marginTop: 3 }} />
-          {!smallScreen && <p>Find available properties</p>}
+          <p>Find available properties</p>
         </ButtonContent>
       </Button>
     </OverlayTrigger>
