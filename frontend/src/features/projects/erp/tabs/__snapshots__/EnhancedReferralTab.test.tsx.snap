@@ -518,7 +518,7 @@ exports[`EnhancedReferralTab renders correctly when approved for exemption 1`] =
           Exemption Rationale
         </label>
         <textarea
-          className="col-md-5 form-control"
+          className="col-md-auto form-control"
           disabled={true}
           id="input-exemptionRationale"
           name="exemptionRationale"

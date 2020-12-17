@@ -64,7 +64,7 @@ export default function ExemptionRequest({
             <TextArea
               label={'Rationale'}
               field={rationaleField}
-              className="col-md-5"
+              className="col-md-auto"
               outerClassName="col-md-10"
               readOnly={submissionStep ? false : true}
             />
