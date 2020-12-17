@@ -54,6 +54,8 @@ export const LayerPopupContent: React.FC<IPopupContentProps> = ({
 }) => {
   const rows = React.useMemo(() => keys(config), [config]);
   const location = useLocation();
+  const urlParsed = queryString.parse(location.search);
+  const populateDetails = urlParsed.sidebar === 'true' ? true : false;
   return (
     <>
       <ListGroup>
@@ -63,7 +65,7 @@ export const LayerPopupContent: React.FC<IPopupContentProps> = ({
           </ListGroup.Item>
         ))}
       </ListGroup>
-      {data.PID !== undefined || data.PIN !== undefined ? (
+      {populateDetails && (data.PID !== undefined || data.PIN !== undefined) ? (
         <Link
           style={{ display: 'flex', justifyContent: 'center', paddingBottom: '10px' }}
           onClick={(e: any) => onAddToParcel(e, { ...data, CENTER: center })}
