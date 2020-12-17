@@ -319,7 +319,7 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
                   Real Estate Commission Paid
                 </label>
                 <div
-                  class="col-md-8 form-group col"
+                  class="col-md-4 form-group col"
                 >
                   <div
                     class="input-tooltip-wrapper"
@@ -327,6 +327,64 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
                     <input
                       class="form-control input-number"
                       name="realtorCommission"
+                      placeholder=""
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="form-row"
+          >
+            <div
+              class="col-md-6"
+            >
+              <div
+                class="form-row"
+              >
+                <label
+                  class="form-label col-form-label col-md-4"
+                >
+                  Assessed Value
+                </label>
+                <div
+                  class="col-md-4 form-group col"
+                >
+                  <div
+                    class="input-tooltip-wrapper"
+                  >
+                    <input
+                      class="form-control input-number"
+                      name="assessed"
+                      placeholder=""
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="col-md-6"
+            >
+              <div
+                class="form-row"
+              >
+                <label
+                  class="form-label col-form-label col-md-4"
+                >
+                  Appraised Value
+                </label>
+                <div
+                  class="col-md-4 form-group col"
+                >
+                  <div
+                    class="input-tooltip-wrapper"
+                  >
+                    <input
+                      class="form-control input-number"
+                      name="appraised"
                       placeholder=""
                       value=""
                     />
