@@ -718,13 +718,14 @@ exports[`Building Form component renders correctly 1`] = `
                       >
                         <div>
                           <div
-                            class="form-group"
+                            class="required form-group"
                           >
                             <input
                               class="form-control"
                               field="building.address.line1"
                               id="input-building.address.line1"
                               name="building.address.line1"
+                              required=""
                               value=""
                             />
                           </div>

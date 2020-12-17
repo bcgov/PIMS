@@ -1,11 +1,12 @@
 import CustomAxios from 'customAxios';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { showLoading, hideLoading } from 'react-redux-loading-bar';
 import { AxiosInstance } from 'axios';
 import { ENVIRONMENT } from 'constants/environment';
 import * as _ from 'lodash';
 import { LatLngTuple } from 'leaflet';
 import { useCallback } from 'react';
+import { RootState } from 'reducers/rootReducer';
 
 export interface IGeocoderResponse {
   siteId: string;
@@ -40,9 +41,11 @@ export interface PimsAPI extends AxiosInstance {
 export const useApi = (): PimsAPI => {
   const dispatch = useDispatch();
   const axios = CustomAxios() as PimsAPI;
+  const jwtToken = useSelector<RootState, any>(state => state.jwt);
 
   axios.interceptors.request.use(
     config => {
+      config.headers.Authorization = `Bearer ${jwtToken}`;
       dispatch(showLoading());
       return config;
     },

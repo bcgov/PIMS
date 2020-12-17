@@ -207,6 +207,7 @@ const Form: React.FC<IAssociatedLandForm> = ({
               handlePidChange={handlePidChange}
               handlePinChange={handlePinChange}
               isAdmin={isAdmin}
+              isViewOrUpdate={false}
             />
           </div>
         );
@@ -250,9 +251,6 @@ const Form: React.FC<IAssociatedLandForm> = ({
           <Button
             type="button"
             onClick={() => {
-              if (!stepper.validateCurrentStep()) {
-                return;
-              }
               if (
                 getIn(formikProps.values, `data.leasedLandMetadata.${stepper.currentTab}.type`) ===
                 LeasedLand.other

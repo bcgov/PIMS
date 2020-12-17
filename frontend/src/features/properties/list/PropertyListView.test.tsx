@@ -194,7 +194,7 @@ describe('Property list view', () => {
     expect(links).toHaveLength(2);
     expect(links[0]).toHaveAttribute(
       'href',
-      `/mapview/${fakeId}?disabled=true&sidebar=true&loadDraft=false`,
+      '/mapview?disabled=true&loadDraft=false&parcelId=1&sidebar=true',
     );
   });
 });

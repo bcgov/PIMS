@@ -149,6 +149,7 @@ namespace Pims.Dal.Services
                 .Include(p => p.Buildings).ThenInclude(pb => pb.Building).ThenInclude(b => b.BuildingOccupantType)
                 .Include(p => p.Buildings).ThenInclude(pb => pb.Building).ThenInclude(b => b.Evaluations)
                 .Include(p => p.Buildings).ThenInclude(pb => pb.Building).ThenInclude(b => b.Fiscals)
+                .Include(p => p.Buildings).ThenInclude(pb => pb.Building).ThenInclude(b => b.Classification)
                 .FirstOrDefault(p => p.Id == id
                     && (ownsABuilding || isAdmin || p.IsVisibleToOtherAgencies || !p.IsSensitive || (viewSensitive && userAgencies.Contains(p.AgencyId)))) ?? throw new KeyNotFoundException();
 
@@ -348,6 +349,7 @@ namespace Pims.Dal.Services
                     }
                     else
                     {
+                        parcelEvaluation.ParcelId = existingEvaluation.ParcelId; //Do not allow the parcel id to be changed.
                         this.Context.Entry(existingEvaluation).CurrentValues.SetValues(parcelEvaluation);
                     }
                 }

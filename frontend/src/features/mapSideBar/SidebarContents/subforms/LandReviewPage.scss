@@ -21,6 +21,9 @@
   .val-row,
   .val-item,
   .postal {
+    &.resizable {
+      height: auto;
+    }
     height: 30px;
     line-height: 30px;
   }
@@ -35,13 +38,16 @@
     display: inline-flex;
     content: '';
   }
+  div.invalid-feedback {
+    display: none;
+  }
   .check-item {
     line-height: 30px;
   }
   .harmful {
     justify-content: center;
   }
-  .form-control:disabled {
+  .form-group .form-control:disabled {
     font-weight: bold;
     border: none;
     background-color: transparent;
@@ -59,7 +65,9 @@
   .valuation,
   .identification,
   .usage,
-  .tenancy {
+  .tenancy,
+  .associated-buildings,
+  .PropertyListView.container-fluid {
     margin: 10px;
     width: 100%;
     padding: 20px;

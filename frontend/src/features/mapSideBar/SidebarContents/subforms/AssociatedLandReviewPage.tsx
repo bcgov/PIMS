@@ -9,7 +9,7 @@ import {
   FastSelect,
   TextArea,
 } from 'components/common/form';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useMemo } from 'react';
 import { Col, Container, Row, Button, Form } from 'react-bootstrap';
 import { useFormikContext, getIn } from 'formik';
 import { Label } from 'components/common/Label';
@@ -79,11 +79,15 @@ const LinkButton = styled.span`
  * @param {IReviewProps} props {IReviewProps}
  */
 export const AssociatedLandReviewPage: React.FC<any> = (props: IReviewProps) => {
-  const defaultEditValues = {
-    identification: true,
-    usage: true,
-    valuation: true,
-  };
+  const formikProps = useFormikContext<any>();
+  const defaultEditValues = useMemo(
+    () => ({
+      identification: true && formikProps.isValid,
+      usage: true && formikProps.isValid,
+      valuation: true && formikProps.isValid,
+    }),
+    [formikProps.isValid],
+  );
   const stepper = useFormStepper();
   const [editInfo, setEditInfo] = useState(defaultEditValues);
   const withNameSpace: Function = useCallback(
@@ -92,7 +96,6 @@ export const AssociatedLandReviewPage: React.FC<any> = (props: IReviewProps) => 
     },
     [props.nameSpace],
   );
-  const formikProps = useFormikContext<any>();
 
   const getParcelContents = (index: number) => {
     const projectNumber = getIn(formikProps.values, withNameSpace('projectNumber', index));
@@ -112,16 +115,18 @@ export const AssociatedLandReviewPage: React.FC<any> = (props: IReviewProps) => 
                       <LandSvg className="svg" />
                       <h5>Parcel identification</h5>
                     </span>
-                    <FaEdit
-                      size={20}
-                      className="edit"
-                      onClick={() =>
-                        setEditInfo({
-                          ...defaultEditValues,
-                          identification: !editInfo.identification,
-                        })
-                      }
-                    />
+                    {!props.disabled && (
+                      <FaEdit
+                        size={20}
+                        className="edit"
+                        onClick={() =>
+                          setEditInfo({
+                            ...defaultEditValues,
+                            identification: !editInfo.identification,
+                          })
+                        }
+                      />
+                    )}
                   </Row>
                 </Col>
                 <Col md={6}>
@@ -141,7 +146,7 @@ export const AssociatedLandReviewPage: React.FC<any> = (props: IReviewProps) => 
                       field={withNameSpace('name', index)}
                     />
                   </Row>
-                  <Row className="content-item">
+                  <Row className="content-item resizable">
                     <Label>Description</Label>
                     <TextArea
                       fast={true}
@@ -149,12 +154,13 @@ export const AssociatedLandReviewPage: React.FC<any> = (props: IReviewProps) => 
                       field={withNameSpace('description', index)}
                     />
                   </Row>
-                  <Row className="content-item">
+                  <Row className="content-item resizable">
                     <Label>Legal Description</Label>
                     <TextArea
                       fast={true}
                       disabled={editInfo.identification}
                       field={withNameSpace('landLegalDescription', index)}
+                      required={true}
                     />
                   </Row>
 
@@ -170,6 +176,7 @@ export const AssociatedLandReviewPage: React.FC<any> = (props: IReviewProps) => 
                   <Row className="content-item">
                     <Label>PID/PIN</Label>
                     <Input
+                      required={true}
                       displayErrorTooltips
                       className="input-small"
                       disabled={editInfo.identification}
@@ -227,11 +234,15 @@ export const AssociatedLandReviewPage: React.FC<any> = (props: IReviewProps) => 
                       <LandSvg className="svg" />
                       <h5>Usage</h5>
                     </span>
-                    <FaEdit
-                      size={20}
-                      className="edit"
-                      onClick={() => setEditInfo({ ...defaultEditValues, usage: !editInfo.usage })}
-                    />
+                    {!props.disabled && (
+                      <FaEdit
+                        size={20}
+                        className="edit"
+                        onClick={() =>
+                          setEditInfo({ ...defaultEditValues, usage: !editInfo.usage })
+                        }
+                      />
+                    )}
                   </Row>
                   <Row className="classification field-row">
                     <Label>Classification</Label>
@@ -242,6 +253,7 @@ export const AssociatedLandReviewPage: React.FC<any> = (props: IReviewProps) => 
                       placeholder="Must Select One"
                       field={withNameSpace('classificationId', index)}
                       options={props.classifications}
+                      required={true}
                     />
                   </Row>
                   <Row className="field-row">
@@ -271,13 +283,15 @@ export const AssociatedLandReviewPage: React.FC<any> = (props: IReviewProps) => 
                       <LandSvg className="svg" />
                       <h5>Valuation</h5>
                     </span>
-                    <FaEdit
-                      size={20}
-                      className="edit"
-                      onClick={() =>
-                        setEditInfo({ ...defaultEditValues, valuation: !editInfo.valuation })
-                      }
-                    />
+                    {!props.disabled && (
+                      <FaEdit
+                        size={20}
+                        className="edit"
+                        onClick={() =>
+                          setEditInfo({ ...defaultEditValues, valuation: !editInfo.valuation })
+                        }
+                      />
+                    )}
                   </Row>
                   <Row className="val-row">
                     <Label>Net Book Value</Label>
@@ -333,19 +347,21 @@ export const AssociatedLandReviewPage: React.FC<any> = (props: IReviewProps) => 
                   </Row>
                   <Row className="val-row">
                     <Label>Total Assessed Value</Label>
-                    <Form.Control
-                      value={formatMoney(
-                        (getIn(
-                          formikProps.values,
-                          withNameSpace('financials.0.improvements.value'),
-                        ) || 0) +
+                    <Form.Group>
+                      <Form.Control
+                        value={formatMoney(
                           (getIn(
                             formikProps.values,
-                            withNameSpace('financials.0.assessed.value'),
-                          ) || 0),
-                      )}
-                      disabled={true}
-                    />
+                            withNameSpace('financials.0.improvements.value', index),
+                          ) || 0) +
+                            (getIn(
+                              formikProps.values,
+                              withNameSpace('financials.0.assessed.value', index),
+                            ) || 0),
+                        )}
+                        disabled={true}
+                      />
+                    </Form.Group>
                   </Row>
                 </div>
               </Row>

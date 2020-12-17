@@ -3,9 +3,7 @@ import MapSideBarLayout from '../components/MapSideBarLayout';
 import useParamSideBar, { SidebarContextType } from '../hooks/useQueryParamSideBar';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from 'reducers/rootReducer';
-import { IGenericNetworkAction } from 'actions/genericActions';
 import { IPropertyDetail, IParcel, IProperty, IBuilding } from 'actions/parcelsActions';
-import * as actionTypes from 'constants/actionTypes';
 import { fetchParcelDetail, fetchParcelsDetail } from 'actionCreators/parcelsActionCreator';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
 import { BuildingForm, SubmitPropertySelector, LandForm } from '../SidebarContents';
@@ -25,12 +23,14 @@ import { toast } from 'react-toastify';
 import _ from 'lodash';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import GenericModal, { ModalSize } from 'components/common/GenericModal';
-import { FaCheckCircle } from 'react-icons/fa';
+import { FaCheckCircle, FaEdit } from 'react-icons/fa';
 import styled from 'styled-components';
 import {
   IFinancialYear,
   getMergedFinancials,
 } from 'features/properties/components/forms/subforms/EvaluationForm';
+import { Spinner } from 'react-bootstrap';
+import { ViewOnlyLandForm } from '../SidebarContents/LandForm';
 
 interface IMapSideBarContainerProps {
   refreshParcels: Function;
@@ -43,7 +43,6 @@ export interface IFormBuilding extends IBuilding {
 }
 export interface IFormParcel extends IParcel {
   financials: IFinancialYear[];
-  buildings: IFormBuilding[];
 }
 
 const FloatCheck = styled(FaCheckCircle)`
@@ -63,6 +62,12 @@ const BoldText = styled.p`
   fontweight: 700;
 `;
 
+const EditButton = styled(FaEdit)`
+  margin-left: 20px;
+  cursor: pointer;
+  color: #1a5a96;
+`;
+
 /**
  * container responsible for logic related to map sidebar display. Synchronizes the state of the parcel detail forms with the corresponding query parameters (push/pull).
  */
@@ -78,15 +83,15 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
     addBuilding,
     addRawLand,
     addAssociatedLand,
+    addContext,
+    disabled,
+    setDisabled,
   } = useParamSideBar();
   const dispatch = useDispatch();
-  const parcelDetailRequest = useSelector<RootState, IGenericNetworkAction>(
-    state => (state.network as any)[actionTypes.GET_PARCEL_DETAIL] as IGenericNetworkAction,
-  );
   let activePropertyDetail = useSelector<RootState, IPropertyDetail>(
     state => state.parcel?.parcelDetail as IPropertyDetail,
   );
-  const [cachedParcelDetail, setCachedParcelDetail] = React.useState<IParcel | null>(null);
+  const [cachedParcelDetail, setCachedParcelDetail] = React.useState<IFormParcel | null>(null);
 
   const [movingPinNameSpace, setMovingPinNameSpace] = useState<string | undefined>(
     movingPinNameSpaceProp,
@@ -215,7 +220,7 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
           `${nameSpace}longitude`,
           leafletMouseEvent?.latlng.lng || 0,
         );
-        droppedMarkerSearch(movingPinNameSpace, leafletMouseEvent?.latlng);
+        !parcelId && droppedMarkerSearch(movingPinNameSpace, leafletMouseEvent?.latlng);
       } else {
         formikRef.current.setFieldValue(`data.latitude`, leafletMouseEvent?.latlng.lat || 0);
         formikRef.current.setFieldValue(`data.longitude`, leafletMouseEvent?.latlng.lng || 0);
@@ -231,12 +236,30 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
         parcelId !== cachedParcelDetail?.id &&
         parcelId !== activePropertyDetail?.parcelDetail?.id
       ) {
+        addContext(SidebarContextType.LOADING);
         dispatch(fetchParcelDetail({ id: parcelId }));
       } else if (
         parcelId === activePropertyDetail?.parcelDetail?.id &&
         activePropertyDetail?.propertyTypeId === 0
       ) {
-        setCachedParcelDetail(activePropertyDetail?.parcelDetail);
+        setCachedParcelDetail({
+          ...activePropertyDetail?.parcelDetail,
+          financials: getMergedFinancials([
+            ...(activePropertyDetail?.parcelDetail?.evaluations ?? []),
+            ...(activePropertyDetail?.parcelDetail?.fiscals ?? []),
+          ]),
+        });
+        if (!!activePropertyDetail?.parcelDetail?.buildings?.length) {
+          addContext(
+            disabled
+              ? SidebarContextType.VIEW_DEVELOPED_LAND
+              : SidebarContextType.UPDATE_DEVELOPED_LAND,
+          );
+        } else {
+          addContext(
+            disabled ? SidebarContextType.VIEW_RAW_LAND : SidebarContextType.UPDATE_RAW_LAND,
+          );
+        }
       }
     } else if (showSideBar && !parcelId) {
       if (!!cachedParcelDetail) {
@@ -246,10 +269,18 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
   }, [
     dispatch,
     parcelId,
+    disabled,
     showSideBar,
-    parcelDetailRequest,
     (activePropertyDetail?.parcelDetail as any)?.rowVersion,
   ]);
+
+  const ConditionalEditButton = () => (
+    <>
+      {disabled && (keycloak.isAdmin || keycloak.agencyId === cachedParcelDetail?.agencyId) && (
+        <EditButton onClick={() => setDisabled(false)} />
+      )}
+    </>
+  );
 
   const getSidebarTitle = (): React.ReactNode => {
     switch (context) {
@@ -265,6 +296,22 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
             <LandSvg className="svg" /> Submit Raw Land (to inventory)
           </>
         );
+      case SidebarContextType.VIEW_RAW_LAND:
+      case SidebarContextType.UPDATE_RAW_LAND:
+        return (
+          <>
+            <LandSvg className="svg" /> View/Update bare land
+            <ConditionalEditButton />
+          </>
+        );
+      case SidebarContextType.VIEW_DEVELOPED_LAND:
+      case SidebarContextType.UPDATE_DEVELOPED_LAND:
+        return (
+          <>
+            <LandSvg className="svg" /> View/Update developed land
+            <ConditionalEditButton />
+          </>
+        );
       case SidebarContextType.ADD_ASSOCIATED_LAND:
         return (
           <>
@@ -273,8 +320,6 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
         );
       case SidebarContextType.VIEW_BUILDING:
         return 'Building Details';
-      case SidebarContextType.VIEW_RAW_LAND:
-        return 'Raw Land Details';
       default:
         return 'Submit a Property';
     }
@@ -296,10 +341,12 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
           />
         );
       case SidebarContextType.ADD_RAW_LAND:
+      case SidebarContextType.UPDATE_DEVELOPED_LAND:
+      case SidebarContextType.UPDATE_RAW_LAND:
         if (propertyType !== 'land') {
           setPropertyType('land');
         }
-        return (
+        return parcelId === cachedParcelDetail?.id ? (
           <LandForm
             setMovingPinNameSpace={setMovingPinNameSpace}
             formikRef={formikRef}
@@ -308,7 +355,23 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
             handlePinChange={handlePinChange}
             isAdmin={keycloak.isAdmin}
             setLandComplete={setShowCompleteModal}
+            initialValues={cachedParcelDetail ?? ({} as any)}
           />
+        ) : (
+          <Spinner animation="border"></Spinner>
+        );
+      case SidebarContextType.VIEW_RAW_LAND:
+      case SidebarContextType.VIEW_DEVELOPED_LAND:
+        if (propertyType !== 'land') {
+          setPropertyType('land');
+        }
+        return parcelId === cachedParcelDetail?.id ? (
+          <ViewOnlyLandForm
+            formikRef={formikRef}
+            initialValues={cachedParcelDetail ?? ({} as any)}
+          />
+        ) : (
+          <Spinner animation="border"></Spinner>
         );
       case SidebarContextType.ADD_ASSOCIATED_LAND:
         if (propertyType !== 'land') {
@@ -329,6 +392,8 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
             setAssociatedLandComplete={setShowCompleteModal}
           />
         );
+      case SidebarContextType.LOADING:
+        return <Spinner animation="border"></Spinner>;
       default:
         return <SubmitPropertySelector addBuilding={addBuilding} addRawLand={addRawLand} />;
     }
@@ -379,12 +444,14 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
         cancelButtonText="No, I'm done"
         okButtonText="Yes"
         handleOk={() => {
-          setShowSideBar(true, SidebarContextType.ADD_PROPERTY_TYPE_SELECTOR, 'narrow');
+          setShowSideBar(true, SidebarContextType.ADD_PROPERTY_TYPE_SELECTOR, 'narrow', true);
           setShowCompleteModal(false);
+          setCachedParcelDetail(null);
         }}
         handleCancel={() => {
           setShowSideBar(false);
           setShowCompleteModal(false);
+          setCachedParcelDetail(null);
         }}
       ></GenericModal>
     </MapSideBarLayout>
