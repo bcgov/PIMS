@@ -65,34 +65,6 @@ exports[`Update Info Form Matches Snapshot 1`] = `
     </div>
     <div
       className="form-row"
-    >
-      <small>
-        Tier 1: Properties with a net value of less than $1M.
-      </small>
-    </div>
-    <div
-      className="form-row"
-    >
-      <small>
-        Tier 2: Properties with a net value of $1M or more and less than $10M.
-      </small>
-    </div>
-    <div
-      className="form-row"
-    >
-      <small>
-        Tier 3: Properties are single parcels with a net value of $10M or more.
-      </small>
-    </div>
-    <div
-      className="form-row"
-    >
-      <small>
-        Tier 4: Properties are multiple parcels with a cumulative net value of $10M or more.
-      </small>
-    </div>
-    <div
-      className="form-row"
       style={
         Object {
           "alignItems": "unset",

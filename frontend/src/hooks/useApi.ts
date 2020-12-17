@@ -1,5 +1,5 @@
 import CustomAxios from 'customAxios';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { showLoading, hideLoading } from 'react-redux-loading-bar';
 import { AxiosInstance } from 'axios';
 import { ENVIRONMENT } from 'constants/environment';
@@ -44,7 +44,6 @@ export interface PimsAPI extends AxiosInstance {
 export const useApi = (): PimsAPI => {
   const dispatch = useDispatch();
   const axios = CustomAxios() as PimsAPI;
-  const jwtToken = useSelector<RootState, any>(state => state.jwt);
 
   axios.interceptors.request.use(
     config => {

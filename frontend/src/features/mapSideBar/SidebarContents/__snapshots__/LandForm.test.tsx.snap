@@ -420,7 +420,7 @@ exports[`Land Form component renders correctly 1`] = `
                         PIN
                       </p>
                       <div
-                        class="form-group"
+                        class="form-group col"
                       >
                         <input
                           class="input-small form-control"
@@ -705,7 +705,7 @@ exports[`Land Form component renders correctly 1`] = `
                         Postal Code
                       </p>
                       <div
-                        class="form-group"
+                        class="form-group col"
                       >
                         <input
                           class="input-small form-control"
@@ -772,7 +772,7 @@ exports[`Land Form component renders correctly 1`] = `
                         Name
                       </p>
                       <div
-                        class="form-group"
+                        class="form-group col"
                       >
                         <input
                           class="form-control"
@@ -834,7 +834,7 @@ exports[`Land Form component renders correctly 1`] = `
                           class="input-group-content"
                         >
                           <div
-                            class="form-group"
+                            class="form-group col"
                           >
                             <input
                               class="form-control"

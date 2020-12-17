@@ -34,7 +34,11 @@ exports[`renders correctly 1`] = `
               role="columnheader"
               style="box-sizing: border-box; flex: 190 0 auto; min-width: 60px; width: 190px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
             >
-              Assessed Value
+              <div
+                class="sortable-column"
+              >
+                Assessed Value
+              </div>
             </div>
           </div>
           <div
@@ -48,7 +52,11 @@ exports[`renders correctly 1`] = `
               role="columnheader"
               style="box-sizing: border-box; flex: 90 0 auto; min-width: 30px; width: 90px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
             >
-              Assessment Year
+              <div
+                class="sortable-column"
+              >
+                Assessment Year
+              </div>
             </div>
             <div
               class="th"
@@ -56,7 +64,11 @@ exports[`renders correctly 1`] = `
               role="columnheader"
               style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
             >
-              Assessed Building Value
+              <div
+                class="sortable-column"
+              >
+                Assessed Building Value
+              </div>
             </div>
           </div>
         </div>
@@ -87,13 +99,13 @@ exports[`renders correctly 1`] = `
                 title=""
               >
                 <div
-                  class="form-group"
+                  class="form-group col"
                 >
                   <div
                     class="input-tooltip-wrapper"
                   >
                     <input
-                      class="form-control"
+                      class="form-control input-number"
                       name="financials.0.assessed.value"
                       placeholder=""
                       value=""
@@ -126,13 +138,13 @@ exports[`renders correctly 1`] = `
                 title=""
               >
                 <div
-                  class="form-group"
+                  class="form-group col"
                 >
                   <div
                     class="input-tooltip-wrapper"
                   >
                     <input
-                      class="form-control"
+                      class="form-control input-number"
                       name="financials.1.assessed.value"
                       placeholder=""
                       value=""
@@ -165,13 +177,13 @@ exports[`renders correctly 1`] = `
                 title=""
               >
                 <div
-                  class="form-group"
+                  class="form-group col"
                 >
                   <div
                     class="input-tooltip-wrapper"
                   >
                     <input
-                      class="form-control"
+                      class="form-control input-number"
                       name="financials.2.assessed.value"
                       placeholder=""
                       value=""
@@ -204,13 +216,13 @@ exports[`renders correctly 1`] = `
                 title=""
               >
                 <div
-                  class="form-group"
+                  class="form-group col"
                 >
                   <div
                     class="input-tooltip-wrapper"
                   >
                     <input
-                      class="form-control"
+                      class="form-control input-number"
                       name="financials.3.assessed.value"
                       placeholder=""
                       value=""
@@ -243,13 +255,13 @@ exports[`renders correctly 1`] = `
                 title=""
               >
                 <div
-                  class="form-group"
+                  class="form-group col"
                 >
                   <div
                     class="input-tooltip-wrapper"
                   >
                     <input
-                      class="form-control"
+                      class="form-control input-number"
                       name="financials.4.assessed.value"
                       placeholder=""
                       value=""
@@ -282,13 +294,13 @@ exports[`renders correctly 1`] = `
                 title=""
               >
                 <div
-                  class="form-group"
+                  class="form-group col"
                 >
                   <div
                     class="input-tooltip-wrapper"
                   >
                     <input
-                      class="form-control"
+                      class="form-control input-number"
                       name="financials.5.assessed.value"
                       placeholder=""
                       value=""
@@ -321,13 +333,13 @@ exports[`renders correctly 1`] = `
                 title=""
               >
                 <div
-                  class="form-group"
+                  class="form-group col"
                 >
                   <div
                     class="input-tooltip-wrapper"
                   >
                     <input
-                      class="form-control"
+                      class="form-control input-number"
                       name="financials.6.assessed.value"
                       placeholder=""
                       value=""
@@ -360,13 +372,13 @@ exports[`renders correctly 1`] = `
                 title=""
               >
                 <div
-                  class="form-group"
+                  class="form-group col"
                 >
                   <div
                     class="input-tooltip-wrapper"
                   >
                     <input
-                      class="form-control"
+                      class="form-control input-number"
                       name="financials.7.assessed.value"
                       placeholder=""
                       value=""
@@ -399,13 +411,13 @@ exports[`renders correctly 1`] = `
                 title=""
               >
                 <div
-                  class="form-group"
+                  class="form-group col"
                 >
                   <div
                     class="input-tooltip-wrapper"
                   >
                     <input
-                      class="form-control"
+                      class="form-control input-number"
                       name="financials.8.assessed.value"
                       placeholder=""
                       value=""
@@ -438,7 +450,11 @@ exports[`renders correctly 1`] = `
               role="columnheader"
               style="box-sizing: border-box; flex: 250 0 auto; min-width: 90px; width: 250px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
             >
-              Net Book Value
+              <div
+                class="sortable-column"
+              >
+                Net Book Value
+              </div>
             </div>
           </div>
           <div
@@ -452,7 +468,11 @@ exports[`renders correctly 1`] = `
               role="columnheader"
               style="box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
             >
-              Fiscal Year
+              <div
+                class="sortable-column"
+              >
+                Fiscal Year
+              </div>
             </div>
             <div
               class="th"
@@ -460,7 +480,11 @@ exports[`renders correctly 1`] = `
               role="columnheader"
               style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
             >
-              Effective Date
+              <div
+                class="sortable-column"
+              >
+                Effective Date
+              </div>
             </div>
             <div
               class="th"
@@ -468,7 +492,11 @@ exports[`renders correctly 1`] = `
               role="columnheader"
               style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
             >
-              Net Book Value
+              <div
+                class="sortable-column"
+              >
+                Net Book Value
+              </div>
             </div>
           </div>
         </div>
@@ -507,13 +535,13 @@ exports[`renders correctly 1`] = `
                 title=""
               >
                 <div
-                  class="form-group"
+                  class="form-group col"
                 >
                   <div
                     class="input-tooltip-wrapper"
                   >
                     <input
-                      class="form-control"
+                      class="form-control input-number"
                       name="financials.0.netbook.value"
                       placeholder=""
                       value=""
@@ -554,13 +582,13 @@ exports[`renders correctly 1`] = `
                 title=""
               >
                 <div
-                  class="form-group"
+                  class="form-group col"
                 >
                   <div
                     class="input-tooltip-wrapper"
                   >
                     <input
-                      class="form-control"
+                      class="form-control input-number"
                       name="financials.1.netbook.value"
                       placeholder=""
                       value=""
@@ -601,13 +629,13 @@ exports[`renders correctly 1`] = `
                 title=""
               >
                 <div
-                  class="form-group"
+                  class="form-group col"
                 >
                   <div
                     class="input-tooltip-wrapper"
                   >
                     <input
-                      class="form-control"
+                      class="form-control input-number"
                       name="financials.2.netbook.value"
                       placeholder=""
                       value=""
@@ -648,13 +676,13 @@ exports[`renders correctly 1`] = `
                 title=""
               >
                 <div
-                  class="form-group"
+                  class="form-group col"
                 >
                   <div
                     class="input-tooltip-wrapper"
                   >
                     <input
-                      class="form-control"
+                      class="form-control input-number"
                       name="financials.3.netbook.value"
                       placeholder=""
                       value=""
@@ -695,13 +723,13 @@ exports[`renders correctly 1`] = `
                 title=""
               >
                 <div
-                  class="form-group"
+                  class="form-group col"
                 >
                   <div
                     class="input-tooltip-wrapper"
                   >
                     <input
-                      class="form-control"
+                      class="form-control input-number"
                       name="financials.4.netbook.value"
                       placeholder=""
                       value=""
@@ -742,13 +770,13 @@ exports[`renders correctly 1`] = `
                 title=""
               >
                 <div
-                  class="form-group"
+                  class="form-group col"
                 >
                   <div
                     class="input-tooltip-wrapper"
                   >
                     <input
-                      class="form-control"
+                      class="form-control input-number"
                       name="financials.5.netbook.value"
                       placeholder=""
                       value=""
@@ -789,13 +817,13 @@ exports[`renders correctly 1`] = `
                 title=""
               >
                 <div
-                  class="form-group"
+                  class="form-group col"
                 >
                   <div
                     class="input-tooltip-wrapper"
                   >
                     <input
-                      class="form-control"
+                      class="form-control input-number"
                       name="financials.6.netbook.value"
                       placeholder=""
                       value=""
@@ -836,13 +864,13 @@ exports[`renders correctly 1`] = `
                 title=""
               >
                 <div
-                  class="form-group"
+                  class="form-group col"
                 >
                   <div
                     class="input-tooltip-wrapper"
                   >
                     <input
-                      class="form-control"
+                      class="form-control input-number"
                       name="financials.7.netbook.value"
                       placeholder=""
                       value=""
@@ -883,13 +911,13 @@ exports[`renders correctly 1`] = `
                 title=""
               >
                 <div
-                  class="form-group"
+                  class="form-group col"
                 >
                   <div
                     class="input-tooltip-wrapper"
                   >
                     <input
-                      class="form-control"
+                      class="form-control input-number"
                       name="financials.8.netbook.value"
                       placeholder=""
                       value=""

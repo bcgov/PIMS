@@ -53,15 +53,15 @@ exports[`renders correctly 1`] = `
           </div>
           <div class=\\"postal form-row\\">
             <p class=\\"label\\">Postal Code</p>
-            <div class=\\"form-group\\"><input name=\\"address.postal\\" style=\\"width: 120px;\\" disabled=\\"\\" id=\\"input-address.postal\\" class=\\"input-small form-control\\" value=\\"\\"></div>
+            <div class=\\"form-group col\\"><input name=\\"address.postal\\" style=\\"width: 120px;\\" disabled=\\"\\" id=\\"input-address.postal\\" class=\\"input-small form-control\\" value=\\"\\"></div>
           </div><br>
           <div class=\\"content-item row\\">
             <p class=\\"label\\">Latitude</p>
-            <div class=\\"form-group\\"><input name=\\"latitude\\" disabled=\\"\\" type=\\"number\\" id=\\"input-latitude\\" class=\\"input-medium form-control\\" value=\\"\\"></div>
+            <div class=\\"form-group col\\"><input name=\\"latitude\\" disabled=\\"\\" type=\\"number\\" id=\\"input-latitude\\" class=\\"input-medium form-control\\" value=\\"\\"></div>
           </div>
           <div class=\\"content-item row\\">
             <p class=\\"label\\">Longitude</p>
-            <div class=\\"form-group\\"><input name=\\"longitude\\" disabled=\\"\\" type=\\"number\\" id=\\"input-longitude\\" class=\\"input-medium form-control\\" value=\\"\\"></div>
+            <div class=\\"form-group col\\"><input name=\\"longitude\\" disabled=\\"\\" type=\\"number\\" id=\\"input-longitude\\" class=\\"input-medium form-control\\" value=\\"\\"></div>
           </div><br>
           <div class=\\"content-item row\\">
             <p class=\\"label\\">SRES Classification</p><span class=\\"vl\\"></span>
@@ -83,7 +83,7 @@ exports[`renders correctly 1`] = `
           </div>
           <div class=\\"content-item row\\">
             <p class=\\"label\\">Number of Floors</p>
-            <div class=\\"form-group\\"><input name=\\"buildingFloorCount\\" disabled=\\"\\" type=\\"number\\" id=\\"input-buildingFloorCount\\" class=\\"input-small form-control\\" value=\\"\\"></div>
+            <div class=\\"form-group col\\"><input name=\\"buildingFloorCount\\" disabled=\\"\\" type=\\"number\\" id=\\"input-buildingFloorCount\\" class=\\"input-small form-control\\" value=\\"\\"></div>
           </div>
           <div class=\\"sensitive check-item row\\">
             <p class=\\"label\\">Harmful if info released?</p>
@@ -107,14 +107,14 @@ exports[`renders correctly 1`] = `
             <p class=\\"label\\">Net Rentable Area</p>
             <div class=\\"input-group disabled\\">
               <div class=\\"input-group-content\\">
-                <div class=\\"form-group\\"><input name=\\"rentableArea\\" style=\\"width: 100px;\\" disabled=\\"\\" type=\\"number\\" id=\\"input-rentableArea\\" class=\\"area form-control\\" value=\\"\\"></div>
+                <div class=\\"form-group col\\"><input name=\\"rentableArea\\" style=\\"width: 100px;\\" disabled=\\"\\" type=\\"number\\" id=\\"input-rentableArea\\" class=\\"area form-control\\" value=\\"\\"></div>
               </div>
               <div class=\\"input-group-append\\"><span class=\\"append-disabled input-group-text\\">Sq. Ft</span></div>
             </div>
           </div>
           <div class=\\"content-item row\\">
             <p class=\\"label\\">Tenancy</p>
-            <div class=\\"form-group\\"><input name=\\"buildingTenancy\\" disabled=\\"\\" id=\\"input-buildingTenancy\\" class=\\"form-control\\" value=\\"\\"></div>
+            <div class=\\"form-group col\\"><input name=\\"buildingTenancy\\" disabled=\\"\\" id=\\"input-buildingTenancy\\" class=\\"form-control\\" value=\\"\\"></div>
           </div>
           <div class=\\"content-item row\\">
             <p class=\\"label\\">Type of Occupant</p>
@@ -124,7 +124,7 @@ exports[`renders correctly 1`] = `
           </div>
           <div class=\\"content-item row\\">
             <p class=\\"label\\">Occupant Name</p>
-            <div class=\\"form-group\\"><input name=\\"occupantName\\" disabled=\\"\\" id=\\"input-occupantName\\" class=\\"form-control\\" value=\\"\\"></div>
+            <div class=\\"form-group col\\"><input name=\\"occupantName\\" disabled=\\"\\" id=\\"input-occupantName\\" class=\\"form-control\\" value=\\"\\"></div>
           </div>
           <div class=\\"content-item row\\">
             <p class=\\"label\\">Lease Expiry Date</p>
@@ -151,15 +151,15 @@ exports[`renders correctly 1`] = `
             </svg></div>
           <div style=\\"display: flex;\\" class=\\"val-item row\\">
             <p class=\\"label\\">Net Book Value</p>
-            <div class=\\"form-group\\">
-              <div class=\\"input-tooltip-wrapper\\"><input name=\\"data.financials.0.netbook.value\\" class=\\"form-control\\" disabled=\\"\\" placeholder=\\"\\" value=\\"\\"></div>
+            <div class=\\"form-group col\\">
+              <div class=\\"input-tooltip-wrapper\\"><input name=\\"data.financials.0.netbook.value\\" class=\\"form-control input-number\\" disabled=\\"\\" placeholder=\\"\\" value=\\"\\"></div>
             </div>
             <div class=\\"form-group\\"><input name=\\"data.financials.0.netbook.fiscalYear\\" style=\\"width: 50px; font-size: 11px;\\" disabled=\\"\\" id=\\"input-data.financials.0.netbook.fiscalYear\\" class=\\"form-control\\" value=\\"\\"></div>
           </div>
           <div style=\\"display: flex;\\" class=\\"val-item row\\">
             <p class=\\"label\\">Assessed Value</p>
-            <div class=\\"form-group\\">
-              <div class=\\"input-tooltip-wrapper\\"><input name=\\"data.financials.0.assessed.value\\" class=\\"form-control\\" disabled=\\"\\" placeholder=\\"\\" value=\\"\\"></div>
+            <div class=\\"form-group col\\">
+              <div class=\\"input-tooltip-wrapper\\"><input name=\\"data.financials.0.assessed.value\\" class=\\"form-control input-number\\" disabled=\\"\\" placeholder=\\"\\" value=\\"\\"></div>
             </div>
             <div class=\\"form-group\\"><input name=\\"data.financials.0.assessed.year\\" style=\\"width: 50px; font-size: 11px;\\" disabled=\\"\\" id=\\"input-data.financials.0.assessed.year\\" class=\\"form-control\\" value=\\"\\"></div>
           </div>
