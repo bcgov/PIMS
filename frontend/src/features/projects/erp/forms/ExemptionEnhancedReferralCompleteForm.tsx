@@ -53,6 +53,7 @@ const ExemptionEnhancedReferralCompleteForm = ({
         label="Exemption Rationale"
         field="exemptionRationale"
         disabled={true}
+        className="col-md-auto"
         outerClassName="col-md-12"
       />
       <Form.Row>

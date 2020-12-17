@@ -679,7 +679,7 @@ exports[`Review Approve Step renders correctly 1`] = `
           Rationale
         </label>
         <textarea
-          class="col-md-5 form-control"
+          class="col-md-auto form-control"
           id="input-exemptionRationale"
           name="exemptionRationale"
           readonly=""

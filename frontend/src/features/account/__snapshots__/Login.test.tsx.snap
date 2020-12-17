@@ -2,56 +2,60 @@
 
 exports[`login login renders correctly 1`] = `
 <div
-  className="unauth container-fluid"
+  className="login container-fluid"
 >
-  <h1>
-    Search and visualize government property information
-  </h1>
   <div
-    className="sign-in row"
+    className="unauth container-fluid"
   >
+    <h1>
+      Search and visualize government property information
+    </h1>
     <div
-      className="col-md-3 col-1"
-    />
-    <div
-      className="block col-md-6 col-16"
+      className="sign-in row"
     >
-      <h6>
-        PIMS enables you to search properties owned by the Government of British Columbia
-      </h6>
-      <p>
-        The data provided can assist your agency in making informed, timely, and strategic decisions on the optimal use of real property assets on behalf of the people and priorities of British Columbia.
-      </p>
-      <button
-        className="btn btn-primary"
-        disabled={false}
-        onClick={[Function]}
-        type="button"
-      >
-        Sign In
-      </button>
-      <p>
-        Sign into PIMS with your government issued IDIR or with your Business BCeID.
-      </p>
       <div
-        className="bceid row"
+        className="col-md-3 col-1"
+      />
+      <div
+        className="block col-md-6 col-16"
       >
+        <h6>
+          PIMS enables you to search properties owned by the Government of British Columbia
+        </h6>
+        <p>
+          The data provided can assist your agency in making informed, timely, and strategic decisions on the optimal use of real property assets on behalf of the people and priorities of British Columbia.
+        </p>
         <button
-          className="btn btn-link"
+          className="btn btn-primary"
           disabled={false}
           onClick={[Function]}
           type="button"
         >
-          Don't have a Business BCeID?
+          Sign In
         </button>
+        <p>
+          Sign into PIMS with your government issued IDIR or with your Business BCeID.
+        </p>
+        <div
+          className="bceid row"
+        >
+          <button
+            className="btn btn-link"
+            disabled={false}
+            onClick={[Function]}
+            type="button"
+          >
+            Don't have a Business BCeID?
+          </button>
+        </div>
+        <div
+          className="row"
+        />
       </div>
       <div
-        className="row"
+        className="col-md-3 col-1"
       />
     </div>
-    <div
-      className="col-md-3 col-1"
-    />
   </div>
 </div>
 `;
