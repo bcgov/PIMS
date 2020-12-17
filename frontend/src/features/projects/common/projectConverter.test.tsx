@@ -11,7 +11,7 @@ import { IEvaluation, IFiscal } from 'actions/parcelsActions';
 import { EvaluationKeys } from 'constants/evaluationKeys';
 import { FiscalKeys } from 'constants/fiscalKeys';
 import { mockApiProject, mockFlatProject } from '../dispose/testUtils';
-import { NoteTypes } from './interfaces';
+import { NoteTypes } from '../../../constants';
 
 const createAppraisal = (date: Moment): IEvaluation => {
   return {

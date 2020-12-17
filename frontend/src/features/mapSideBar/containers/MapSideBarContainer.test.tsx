@@ -118,5 +118,13 @@ describe('Parcel Detail MapSideBarContainer', () => {
       });
       wait(() => expect(history.location.pathname).toEqual('/mapview'));
     });
+
+    it('removes the parcel id when the sidebar is closed', () => {
+      history.push('/mapview/1?sidebar=false');
+      renderContainer({
+        store: getStore(mockDetails[0]),
+      });
+      wait(() => expect(history.location.pathname).toEqual('/mapview'));
+    });
   });
 });

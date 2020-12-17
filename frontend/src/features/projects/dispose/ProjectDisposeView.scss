@@ -75,7 +75,7 @@
   }
 
   label.form-label {
-    font-size: 12px;
+    font-size: 14px;
     margin-top: 10px;
     font-family: 'BCSans', Fallback, sans-serif;
   }
@@ -102,7 +102,6 @@
   }
 
   .form-row {
-    align-items: baseline;
     margin: 0;
   }
 
@@ -127,7 +126,14 @@
   }
 
   textarea {
-    height: 8rem;
+    min-height: 8rem;
+
+    &.col-md-auto {
+      resize: both;
+      min-width: 41.666667%; //match col-md-5 percentage
+      width: 41.666667%; //match col-md-5 percentage on load
+      max-width: 83.3%; //prevents box from moving labels around
+    }
   }
 
   input:disabled {

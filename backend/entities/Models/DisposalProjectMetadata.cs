@@ -10,6 +10,11 @@ namespace Pims.Dal.Entities.Models
         /// get/set - Whether an exemption was requested for the ERP.
         /// </summary>
         public bool ExemptionRequested { get; set; }
+
+        /// <summary>
+        /// get/set - The date when the ADM approved the exemption on.
+        /// </summary>
+        public DateTime? ExemptionApprovedOn { get; set; }
         #endregion
 
         #region ERP
@@ -76,11 +81,6 @@ namespace Pims.Dal.Entities.Models
         public string Purchaser { get; set; }
 
         /// <summary>
-        /// get/set - Whether or not the contract for the project is conditional
-        /// </summary>
-        public bool? IsContractConditional { get; set; }
-
-        /// <summary>
         /// get/set - When the offer was accepted on.
         /// </summary>
         public DateTime? OfferAcceptedOn { get; set; }
@@ -109,6 +109,18 @@ namespace Pims.Dal.Entities.Models
         /// get/set - When the project was disposed.
         /// </summary>
         public DateTime? DisposedOn { get; set; }
+        #endregion
+
+        #region Remove from SPL
+        /// <summary>
+        /// get/set - When the request to be removed from SPL was.
+        /// </summary>
+        public DateTime? RemovalFromSplRequestOn { get; set; }
+
+        /// <summary>
+        /// get/set - When the request to be removed from SPL was approved on.
+        /// </summary>
+        public DateTime? RemovalFromSplApprovedOn { get; set; }
         #endregion
 
         #region Financials
@@ -153,14 +165,9 @@ namespace Pims.Dal.Entities.Models
         public decimal? SppCapitalization { get; set; }
 
         /// <summary>
-        /// get/set - The gain before SPP.
+        /// get/set - The gain before SPL.
         /// </summary>
-        public decimal? GainBeforeSpp { get; set; }
-
-        /// <summary>
-        /// get/set - The gain after SPP.
-        /// </summary>
-        public decimal? GainAfterSpp { get; set; }
+        public decimal? GainBeforeSpl { get; set; }
 
         /// <summary>
         /// get/set - OCG final statement.
@@ -171,11 +178,6 @@ namespace Pims.Dal.Entities.Models
         /// get/set - Record the interest component.
         /// </summary>
         public decimal? InterestComponent { get; set; }
-
-        /// <summary>
-        /// get/set - Remediation.
-        /// </summary>
-        public string Remediation { get; set; }
 
         /// <summary>
         /// get/set - Best information of planned future use.

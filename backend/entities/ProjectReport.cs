@@ -36,7 +36,7 @@ namespace Pims.Dal.Entities
         /// <summary>
         /// get/set - The type of this report.
         /// </summary>
-        public ReportTypes ReportTypeId { get; set; }
+        public ReportTypes ReportType { get; set; }
 
         #endregion
 
@@ -54,7 +54,7 @@ namespace Pims.Dal.Entities
         /// <param name="to"></param>
         public ProjectReport(ReportTypes type, DateTime? from, DateTime? to)
         {
-            this.ReportTypeId = type;
+            this.ReportType = type;
             this.From = from;
             this.To = to;
         }

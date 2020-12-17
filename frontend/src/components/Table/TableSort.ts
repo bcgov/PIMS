@@ -1,8 +1,6 @@
-import { IdType } from 'react-table';
+export type SortDirection = 'desc' | 'asc' | undefined;
 
-export type SortDirection = 'desc' | 'asc';
-
-export type TableSort<T extends object> = {
-  column: IdType<T>;
-  direction: SortDirection;
+export type TableSort<T extends object = {}> = {
+  // key (properties from the data object), value = sort direction
+  [key in keyof T]?: SortDirection;
 };

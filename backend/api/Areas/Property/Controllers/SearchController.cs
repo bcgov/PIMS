@@ -6,6 +6,7 @@ using Pims.Api.Areas.Property.Models.Search;
 using Pims.Api.Helpers.Exceptions;
 using Pims.Api.Helpers.Extensions;
 using Pims.Api.Policies;
+using Pims.Core.Extensions;
 using Pims.Dal;
 using Pims.Dal.Entities.Models;
 using Pims.Dal.Security;
@@ -58,6 +59,7 @@ namespace Pims.Api.Areas.Property.Controllers
         [Produces("application/json")]
         [ProducesResponseType(typeof(IEnumerable<PropertyModel>), 200)]
         [SwaggerOperation(Tags = new[] { "property" })]
+        [ResponseCache(Duration = 300, Location = ResponseCacheLocation.Client)]
         public IActionResult GetProperties()
         {
             var uri = new Uri(this.Request.GetDisplayUrl());
@@ -75,7 +77,7 @@ namespace Pims.Api.Areas.Property.Controllers
         [Produces("application/json")]
         [ProducesResponseType(typeof(IEnumerable<PropertyModel>), 200)]
         [SwaggerOperation(Tags = new[] { "property" })]
-        public IActionResult GetProperties([FromBody]PropertyFilterModel filter)
+        public IActionResult GetProperties([FromBody] PropertyFilterModel filter)
         {
             filter.ThrowBadRequestIfNull($"The request must include a filter.");
             if (!filter.IsValid()) throw new BadRequestException("Property filter must contain valid values.");
@@ -83,6 +85,47 @@ namespace Pims.Api.Areas.Property.Controllers
             var properties = _pimsService.Property.Get((AllPropertyFilter)filter).ToArray();
             return new JsonResult(_mapper.Map<PropertyModel[]>(properties).ToArray());
         }
+        #endregion
+
+        #region GeoJSON
+        /// <summary>
+        /// Get all the properties that satisfy the filter parameters.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("wfs")]
+        [HasPermission(Permissions.PropertyView)]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(IEnumerable<GeoJson<PropertyModel>>), 200)]
+        [SwaggerOperation(Tags = new[] { "property" })]
+        [ResponseCache(Duration = 300, Location = ResponseCacheLocation.Client)]
+        public IActionResult GetGeoJson()
+        {
+            var uri = new Uri(this.Request.GetDisplayUrl());
+            var query = Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(uri.Query);
+            return GetGeoJson(new GeoJsonFilterModel(query));
+        }
+
+        /// <summary>
+        /// Get all the properties that satisfy the filter parameters.
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        [HttpPost("wfs/filter")]
+        [HasPermission(Permissions.PropertyView)]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(IEnumerable<GeoJson<PropertyModel>>), 200)]
+        [SwaggerOperation(Tags = new[] { "property" })]
+        public IActionResult GetGeoJson([FromBody] GeoJsonFilterModel filter)
+        {
+            filter.ThrowBadRequestIfNull($"The request must include a filter.");
+            if (!filter.IsValid()) throw new BadRequestException("Property filter must contain valid values.");
+
+            var pfilter = filter.CopyValues(new AllPropertyFilter());
+
+            var properties = _pimsService.Property.Search(pfilter).ToArray();
+            return new JsonResult(_mapper.Map<GeoJson<PropertyModel>[]>(properties).ToArray());
+        }
+
         #endregion
 
         #region Property Paging Endpoints
@@ -95,6 +138,7 @@ namespace Pims.Api.Areas.Property.Controllers
         [Produces("application/json")]
         [ProducesResponseType(typeof(BModel.PageModel<PropertyModel>), 200)]
         [SwaggerOperation(Tags = new[] { "property" })]
+        [ResponseCache(Duration = 300, Location = ResponseCacheLocation.Client)]
         public IActionResult GetPropertiesPage()
         {
             var uri = new Uri(this.Request.GetDisplayUrl());
@@ -112,7 +156,7 @@ namespace Pims.Api.Areas.Property.Controllers
         [Produces("application/json")]
         [ProducesResponseType(typeof(BModel.PageModel<PropertyModel>), 200)]
         [SwaggerOperation(Tags = new[] { "property" })]
-        public IActionResult GetPropertiesPage([FromBody]PropertyFilterModel filter)
+        public IActionResult GetPropertiesPage([FromBody] PropertyFilterModel filter)
         {
             filter.ThrowBadRequestIfNull($"The request must include a filter.");
             if (!filter.IsValid()) throw new BadRequestException("Property filter must contain valid values.");

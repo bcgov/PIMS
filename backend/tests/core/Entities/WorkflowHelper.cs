@@ -119,7 +119,7 @@ namespace Pims.Core.Test
             erpOnHold.AddTransition("Approve for SPL", aSpl);
             var SplPm = aSpl.AddTransition("Begin Pre-Marketing", spl, status.First(s => s.Code == "SPL-PM"), 2);
             var SplM = SplPm.AddTransition("Begin Marketing", spl, status.First(s => s.Code == "SPL-M"), 3);
-            var splContractInPlace = SplM.AddTransition("Contract in Place", spl, status.First(s => s.Code == "SPL-CIP"), 4);
+            var splContractInPlace = SplM.AddTransition("Contract in Place - Conditional", spl, status.First(s => s.Code == "SPL-CIP-C"), 4);
             splContractInPlace.AddTransition("Dispose Properties", spl, status.First(s => s.Code == "DIS"), 5);
             splContractInPlace.AddTransition("Cancel Project", spl, status.First(s => s.Code == "CA"), 6);
 

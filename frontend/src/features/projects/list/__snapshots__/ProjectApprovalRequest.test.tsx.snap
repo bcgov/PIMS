@@ -58,7 +58,11 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
             style="box-sizing: border-box; flex: 65 0 auto; min-width: 65px; width: 3.5%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
             width="3.5%"
           >
-            Project No.
+            <div
+              class="sortable-column"
+            >
+              Project No.
+            </div>
           </div>
           <div
             class="th"
@@ -67,7 +71,11 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
             style="box-sizing: border-box; flex: 200 0 auto; min-width: 200px; width: 7%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
             width="7%"
           >
-            Name
+            <div
+              class="sortable-column"
+            >
+              Name
+            </div>
           </div>
           <div
             class="th"
@@ -76,7 +84,11 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
             style="box-sizing: border-box; flex: 50 0 auto; min-width: 50px; width: 7%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
             width="7%"
           >
-            Status
+            <div
+              class="sortable-column"
+            >
+              Status
+            </div>
           </div>
           <div
             class="th"
@@ -85,7 +97,11 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
             style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 7%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
             width="7%"
           >
-            Agency
+            <div
+              class="sortable-column"
+            >
+              Agency
+            </div>
           </div>
           <div
             class="th"
@@ -94,7 +110,11 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
             style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 3.5%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
             width="3.5%"
           >
-            Zoning
+            <div
+              class="sortable-column"
+            >
+              Zoning
+            </div>
           </div>
           <div
             class="th"
@@ -103,7 +123,11 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
             style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 3.5%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
             width="3.5%"
           >
-            Zoning Potential
+            <div
+              class="sortable-column"
+            >
+              Zoning Potential
+            </div>
           </div>
           <div
             class="th"
@@ -112,7 +136,11 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
             style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 3.5%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
             width="3.5%"
           >
-            Net Book Value
+            <div
+              class="sortable-column"
+            >
+              Net Book Value
+            </div>
           </div>
           <div
             class="th"
@@ -121,7 +149,11 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
             style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 3.5%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
             width="3.5%"
           >
-            Market Value
+            <div
+              class="sortable-column"
+            >
+              Market Value
+            </div>
           </div>
           <div
             class="th"
@@ -130,7 +162,11 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
             style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 7%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
             width="7%"
           >
-            Updated On
+            <div
+              class="sortable-column"
+            >
+              Updated On
+            </div>
           </div>
           <div
             class="th"
@@ -139,7 +175,11 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
             style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 7%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
             width="7%"
           >
-            Updated By
+            <div
+              class="sortable-column"
+            >
+              Updated By
+            </div>
           </div>
         </div>
       </div>
@@ -293,7 +333,11 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
                     style="box-sizing: border-box; flex: 65 0 auto; min-width: 65px; width: 3.5%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                     width="3.5%"
                   >
-                    Agency
+                    <div
+                      class="sortable-column"
+                    >
+                      Agency
+                    </div>
                   </div>
                   <div
                     class="th"
@@ -302,7 +346,11 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
                     style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 7%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                     width="7%"
                   >
-                    Property Name
+                    <div
+                      class="sortable-column"
+                    >
+                      Property Name
+                    </div>
                   </div>
                   <div
                     class="th"
@@ -311,7 +359,11 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
                     style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 7%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                     width="7%"
                   >
-                    Classification
+                    <div
+                      class="sortable-column"
+                    >
+                      Classification
+                    </div>
                   </div>
                   <div
                     class="th"
@@ -320,7 +372,11 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
                     style="box-sizing: border-box; flex: 160 0 auto; min-width: 160px; width: 14%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                     width="14%"
                   >
-                    Street Address
+                    <div
+                      class="sortable-column"
+                    >
+                      Street Address
+                    </div>
                   </div>
                   <div
                     class="th"
@@ -329,7 +385,11 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
                     style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 3.5%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                     width="3.5%"
                   >
-                    Zoning
+                    <div
+                      class="sortable-column"
+                    >
+                      Zoning
+                    </div>
                   </div>
                   <div
                     class="th"
@@ -338,7 +398,11 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
                     style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 3.5%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                     width="3.5%"
                   >
-                    Zoning Potential
+                    <div
+                      class="sortable-column"
+                    >
+                      Zoning Potential
+                    </div>
                   </div>
                   <div
                     class="th"
@@ -347,7 +411,11 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
                     style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 7%; justify-content: flex-end; text-align: right; align-items: center; display: flex;"
                     width="7%"
                   >
-                    Assessed Value
+                    <div
+                      class="sortable-column"
+                    >
+                      Assessed Value
+                    </div>
                   </div>
                   <div
                     class="th"
@@ -356,7 +424,11 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
                     style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 7%; justify-content: flex-end; text-align: right; align-items: center; display: flex;"
                     width="7%"
                   >
-                    Net Book Value
+                    <div
+                      class="sortable-column"
+                    >
+                      Net Book Value
+                    </div>
                   </div>
                   <div
                     class="th"
@@ -365,7 +437,11 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
                     style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 7%; justify-content: flex-end; text-align: right; align-items: center; display: flex;"
                     width="7%"
                   >
-                    Market Value
+                    <div
+                      class="sortable-column"
+                    >
+                      Market Value
+                    </div>
                   </div>
                   <div
                     class="th"
@@ -374,7 +450,11 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
                     style="box-sizing: border-box; flex: 65 0 auto; min-width: 65px; width: 3.5%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                     width="3.5%"
                   >
-                    Type
+                    <div
+                      class="sortable-column"
+                    >
+                      Type
+                    </div>
                   </div>
                   <div
                     class="th"
@@ -383,7 +463,11 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
                     style="box-sizing: border-box; flex: 65 0 auto; min-width: 65px; width: 3.5%; justify-content: flex-end; text-align: right; align-items: center; display: flex;"
                     width="3.5%"
                   >
-                    Lot Size (in ha)
+                    <div
+                      class="sortable-column"
+                    >
+                      Lot Size (in ha)
+                    </div>
                   </div>
                   <div
                     class="th"
@@ -392,7 +476,11 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
                     style="box-sizing: border-box; flex: 65 0 auto; min-width: 65px; width: 3.5%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                     width="3.5%"
                   >
-                     
+                    <div
+                      class="sortable-column"
+                    >
+                       
+                    </div>
                   </div>
                 </div>
               </div>

@@ -125,9 +125,9 @@ namespace Pims.Api.Areas.Tools.Controllers
 
             var helper = new ImportProjectsHelper(_pimsService, _pimsAdminService, _serializerOptions, _logger);
             var entities = helper.AddUpdateProjects(models, stopOnError, fromSnapshot, defaults?.Split(";"));
-            var parcels = _mapper.Map<Model.ProjectModel[]>(entities);
+            var projects = _mapper.Map<Model.ProjectModel[]>(entities);
 
-            return new JsonResult(parcels);
+            return new JsonResult(projects);
         }
         #endregion
     }

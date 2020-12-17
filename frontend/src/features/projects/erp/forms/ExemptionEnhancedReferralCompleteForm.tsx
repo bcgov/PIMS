@@ -11,7 +11,6 @@ import {
   onTransferredWithinTheGreTooltip,
   proceedToSplWarning,
 } from '../../common';
-import { PrivateNotes, PublicNotes } from '../../common/components/ProjectNotes';
 import GenericModal from 'components/common/GenericModal';
 
 const OrText = styled.div`
@@ -50,11 +49,29 @@ const ExemptionEnhancedReferralCompleteForm = ({
 
   return (
     <Container fluid className="EnhancedReferralCompleteForm">
+      <ProjectNotes
+        label="Exemption Rationale"
+        field="exemptionRationale"
+        disabled={true}
+        outerClassName="col-md-12"
+      />
+      <Form.Row>
+        <Form.Label column md={4}>
+          ADM Approved Exemption On
+        </Form.Label>
+        <FastDatePicker
+          required
+          outerClassName="col-md-2"
+          formikProps={formikProps}
+          field="exemptionApprovedOn"
+        />
+      </Form.Row>
       <Form.Row>
         <Form.Label column md={4}>
           Clearance Notification Sent
         </Form.Label>
         <FastDatePicker
+          required
           outerClassName="col-md-2"
           formikProps={formikProps}
           disabled={isReadOnly}
@@ -92,9 +109,34 @@ const ExemptionEnhancedReferralCompleteForm = ({
       </Form.Row>
       <h3>Option 2: Proceed to Surplus Properties List</h3>
       <Form.Row>
+        <Form.Label column md={4}>
+          Request Received On
+        </Form.Label>
+        <FastDatePicker
+          outerClassName="col-md-2"
+          formikProps={formikProps}
+          disabled={isReadOnly || !formikProps.values.clearanceNotificationSentOn}
+          field="requestForSplReceivedOn"
+        />
+      </Form.Row>
+      <Form.Row>
+        <Form.Label column md={4}>
+          SPL Addition Approved On
+        </Form.Label>
+        <FastDatePicker
+          outerClassName="col-md-2"
+          formikProps={formikProps}
+          disabled={isReadOnly || !formikProps.values.clearanceNotificationSentOn}
+          field="approvedForSplOn"
+        />
         <div className="justify-content-center">
           <Button
-            disabled={isReadOnly || !formikProps.values.clearanceNotificationSentOn}
+            disabled={
+              isReadOnly ||
+              !formikProps.values.clearanceNotificationSentOn ||
+              !formikProps.values.requestForSplReceivedOn ||
+              !formikProps.values.approvedForSplOn
+            }
             onClick={() => setProceedToSpl(true)}
           >
             Proceed to SPL
@@ -135,9 +177,6 @@ const ExemptionEnhancedReferralCompleteForm = ({
           </Button>
         </div>
       </Form.Row>
-      <ProjectNotes outerClassName="col-md-12" disabled={true} />
-      <PublicNotes outerClassName="col-md-12" disabled={isReadOnly} />
-      <PrivateNotes outerClassName="col-md-12" disabled={isReadOnly} />
     </Container>
   );
 };

@@ -14,6 +14,7 @@ export interface IParcelDetailProps {
   parcel: IParcel | null;
   zoomTo?: () => void;
   disabled?: boolean;
+  onLinkClick?: () => void;
 }
 
 export const ParcelPopupView = (props: IParcelDetailProps | null) => {
@@ -84,6 +85,9 @@ export const ParcelPopupView = (props: IParcelDetailProps | null) => {
             <Row className="menu">
               <Col>
                 <Link
+                  onClick={() => {
+                    props?.onLinkClick && props.onLinkClick();
+                  }}
                   to={{
                     pathname: `/mapview`,
                     search: queryString.stringify({
@@ -100,6 +104,9 @@ export const ParcelPopupView = (props: IParcelDetailProps | null) => {
                 {(keycloak.hasAgency(parcelDetail?.agencyId as number) ||
                   keycloak.hasClaim(Claims.ADMIN_PROPERTIES)) && (
                   <Link
+                    onClick={() => {
+                      props?.onLinkClick && props.onLinkClick();
+                    }}
                     to={{
                       pathname: `/mapview`,
                       search: queryString.stringify({

@@ -673,7 +673,7 @@ namespace Pims.Dal.Services
 
             var userAgencies = this.User.GetAgencies();
             if (!isAdmin && !userAgencies.Contains(originalProject.AgencyId)) throw new NotAuthorizedException("User may not edit projects outside of their agency.");
-             
+
             // Only allow valid project status transitions.
             var fromStatusId = (int)this.Context.Entry(originalProject).OriginalValues[nameof(Project.StatusId)];
             var fromStatus = this.Context.WorkflowProjectStatus
@@ -713,8 +713,9 @@ namespace Pims.Dal.Services
             // If the note was changed generate a notification for it.
             var noteChanged = !String.IsNullOrWhiteSpace(project.GetNoteText(NoteTypes.Public)) && originalProject.GetNoteText(NoteTypes.Public) != project.GetNoteText(NoteTypes.Public);
 
-            var metadata = !String.IsNullOrWhiteSpace(project.Metadata) ? this.Context.Deserialize<DisposalProjectMetadata>(project.Metadata) : new DisposalProjectMetadata();
+            var metadata = !String.IsNullOrWhiteSpace(project.Metadata) ? this.Context.Deserialize<DisposalProjectMetadata>(project.Metadata ?? "{}") : new DisposalProjectMetadata();
             originalProject.Merge(project, this.Context);
+            var now = DateTime.UtcNow;
 
             // Hardcoded logic to handle milestone project status transitions.
             // This could be extracted at some point to a configurable layer, but not required presently.
@@ -726,31 +727,36 @@ namespace Pims.Dal.Services
                     // This must be done first because it requires its own transaction.
                     var projectNumber = this.Context.GenerateProjectNumber(_options.Project.NumberFormat);
                     this.Context.UpdateProjectNumber(originalProject, projectNumber);
-                    originalProject.SubmittedOn = DateTime.UtcNow;
+                    originalProject.SubmittedOn = now;
                     break;
                 case ("AP-ERP"): // Approve for ERP
-                case ("AP-EXE"): // Approve for ERP Exemption
                     this.User.ThrowIfNotAuthorized(Permissions.DisposeApprove, "User does not have permission to approve project.");
                     this.Context.SetProjectPropertiesVisiblity(originalProject, true);
-                    var now = DateTime.UtcNow;
-                    originalProject.ApprovedOn = now;
                     // Default notification dates.
                     metadata.InitialNotificationSentOn = now;
                     metadata.ThirtyDayNotificationSentOn = now.AddDays(30);
                     metadata.SixtyDayNotificationSentOn = now.AddDays(60);
                     metadata.NinetyDayNotificationSentOn = now.AddDays(90);
+                    originalProject.ApprovedOn = now;
+                    break;
+                case ("AP-EXE"): // Approve for ERP Exemption
+                    this.User.ThrowIfNotAuthorized(Permissions.DisposeApprove, "User does not have permission to approve project.");
+                    if (metadata.ExemptionApprovedOn == null) throw new InvalidOperationException("ADM approved exemption on date is required before approving.");
+                    originalProject.ApprovedOn = now;
                     break;
                 case ("AP-SPL"): // Approve for SPL
                     this.User.ThrowIfNotAuthorized(Permissions.DisposeApprove, "User does not have permission to approve project.");
                     if (metadata.ClearanceNotificationSentOn == null) throw new InvalidOperationException("Approved for SPL status requires Clearance Notification Sent date.");
-                    originalProject.ApprovedOn = DateTime.UtcNow;
+                    if (metadata.RequestForSplReceivedOn == null) throw new InvalidOperationException("Approved for SPL status requires the date when the request was received.");
+                    if (metadata.ApprovedForSplOn == null) throw new InvalidOperationException("Approved for SPL status requires the date when the request for SPL was approved on.");
+                    originalProject.ApprovedOn = originalProject.ApprovedOn.HasValue ? originalProject.ApprovedOn : now; // Only set the date it hasn't been set yet.
                     this.Context.SetProjectPropertiesVisiblity(originalProject, false);
-                    originalProject.SubmittedOn = DateTime.UtcNow;
+                    originalProject.SubmittedOn = now;
                     break;
                 case ("AP-!SPL"): // Not in SPL
-                    this.User.ThrowIfNotAuthorized(Permissions.DisposeApprove, "User does not have permission to approve project.");
+                    this.User.ThrowIfNotAuthorized(Permissions.DisposeApprove, "User does not have permission to approve project."); // TODO: Need to update permission claims to handle workflow better.
                     if (metadata.ClearanceNotificationSentOn == null) throw new InvalidOperationException("Not in SPL status requires Clearance Notification Sent date.");
-                    originalProject.ApprovedOn = DateTime.UtcNow;
+                    originalProject.ApprovedOn = originalProject.ApprovedOn.HasValue ? originalProject.ApprovedOn : now; // Only set the date it hasn't been set yet.
                     this.Context.SetProjectPropertiesVisiblity(originalProject, false);
                     break;
                 case ("SPL-M"): // Marketing
@@ -761,20 +767,20 @@ namespace Pims.Dal.Services
                     if (String.IsNullOrWhiteSpace(project.GetNoteText(NoteTypes.Public))) throw new InvalidOperationException("Shared note must contain a reason before denying project.");
                     // Remove ProjectNumber from properties.
                     this.Context.ReleaseProjectProperties(originalProject);
-                    originalProject.DeniedOn = DateTime.UtcNow;
+                    originalProject.DeniedOn = now;
                     break;
                 case ("CA"): // Cancel
                     this.Context.ReleaseProjectProperties(originalProject);
-                    originalProject.CancelledOn = DateTime.UtcNow;
+                    originalProject.CancelledOn = now;
 
                     // Cancel any pending notifications.
                     await CancelNotificationsAsync(originalProject.Id);
                     break;
                 case ("DIS"): // DISPOSED
-                    if (metadata.DisposedOn == null) throw new InvalidOperationException("Disposed status requires Disposed Notification Sent date.");
+                    if (metadata.DisposedOn == null) throw new InvalidOperationException("Disposed status requires date the project was disposed on.");
                     this.Context.DisposeProjectProperties(originalProject);
-                    metadata.DisposedOn = DateTime.UtcNow;
-                    originalProject.CompletedOn = DateTime.UtcNow;
+                    metadata.DisposedOn = now;
+                    originalProject.CompletedOn = now;
                     break;
                 case ("ERP-OH"): // OnHold
                     if (metadata.OnHoldNotificationSentOn == null) throw new InvalidOperationException("On Hold status requires On Hold Notification Sent date.");

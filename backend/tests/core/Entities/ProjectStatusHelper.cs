@@ -90,7 +90,8 @@ namespace Pims.Core.Test
 
                 new Entity.ProjectStatus("Pre-Marketing", "SPL-PM") { Id = 40, SortOrder = 18, Route = "{SPL}", RowVersion = new byte[] { 12, 13, 14 } },
                 new Entity.ProjectStatus("Marketing", "SPL-M") { Id = 41, SortOrder = 19, Route = "{SPL}", RowVersion = new byte[] { 12, 13, 14 } },
-                new Entity.ProjectStatus("Contract in Place", "SPL-CIP") { Id = 42, SortOrder = 20, Route = "{SPL}", RowVersion = new byte[] { 12, 13, 14 } }
+                new Entity.ProjectStatus("Contract in Place - Conditional", "SPL-CIP-C") { Id = 42, SortOrder = 20, Route = "{SPL}", RowVersion = new byte[] { 12, 13, 14 } },
+                new Entity.ProjectStatus("Contract in Place - Unconditional", "SPL-CIP-U") { Id = 43, SortOrder = 21, Route = "{SPL}", RowVersion = new byte[] { 12, 13, 14 } }
             };
         }
 

@@ -21,8 +21,12 @@ interface IParentSelect {
   required?: boolean;
   /** determine whether this component is disabled or not */
   disabled?: boolean;
-  /** if this component is being used as a filter do not pre populate the value */
-  isFilter?: boolean;
+  /** set this flag if the grouped parent select will be used to make multiple selection */
+  enableMultiple?: boolean;
+  /** check to see whether reset button has been called to clear multiple selected */
+  clearSelected?: boolean;
+  /** reset state of clear selected via this component */
+  setClearSelected?: Function;
 }
 
 /** Component used to group children items with their parent.
@@ -35,37 +39,53 @@ export const ParentSelect: React.FC<IParentSelect> = ({
   filterBy,
   required,
   disabled,
-  isFilter,
+  enableMultiple,
+  clearSelected,
+  setClearSelected,
   label,
 }) => {
   const { setFieldValue, values, resetForm, dirty } = useFormikContext<any>();
   const value = getIn(values, field);
-  /** control the selection of the typeahead component */
-  const [selected, setSelected] = useState<SelectOption[]>([]);
   /** used to trigger onBlur so menu disappears on custom header click */
   const [clear, setClear] = useState(false);
   /** select appropriate agency to set the field value to when present */
-  const agency = value ? options.find(x => x.value === value.toString()) : null;
+  const option = value ? options.find(x => x.value === value.toString()) : null;
+  /** controls the multi selections displayed to the user */
+  const [multiSelections, setMultiSelections] = React.useState<any>([]);
 
   useEffect(() => {
-    if (value && !isFilter) {
+    if (value) {
       let newValues = { ...values };
       if (!value.value) {
         if (dirty) {
-          setFieldValue(field, agency);
+          setFieldValue(field, option);
         } else {
-          newValues = setIn(newValues, field, agency);
+          newValues = setIn(newValues, field, option);
           resetForm({ values: newValues });
         }
       }
     }
-  }, [value, setFieldValue, isFilter, field, agency, dirty, resetForm, values]);
+  }, [value, setFieldValue, field, dirty, resetForm, values, option]);
+  /** wipe the selection from input on reset */
+  useEffect(() => {
+    clearSelected && setMultiSelections([]);
+    setClearSelected && setClearSelected(false);
+  }, [clearSelected, setClearSelected]);
 
   /** function that gets called when menu header is clicked */
   const handleMenuHeaderClick = (x: SelectOption) => {
     setFieldValue(field, x);
-    setSelected([x]);
     /** trigger ref in Typeahead to call onBlur so menu closes */
+    setClear(true);
+  };
+
+  /** fill the multiselect enabled input to all the corresponding values */
+  const handleMultiSelectHeaderClick = (x: any) => {
+    setMultiSelections(x);
+    setFieldValue(
+      field,
+      x.map((x: any) => x.value),
+    );
     setClear(true);
   };
 
@@ -75,16 +95,31 @@ export const ParentSelect: React.FC<IParentSelect> = ({
       <TypeaheadField
         disabled={disabled}
         clearMenu={clear}
+        setClear={setClear}
         name={field}
         labelKey={option => `${option.label}`}
-        onChange={vals => {
-          setSelected(vals);
-          setFieldValue(field, getIn(vals[0], 'name') ?? vals[0]);
+        onChange={(vals: any) => {
+          if (enableMultiple) {
+            setMultiSelections(vals);
+            setFieldValue(
+              field,
+              vals.map((x: any) => x.value),
+            );
+          } else {
+            setFieldValue(field, getIn(vals[0], 'name') ?? vals[0]);
+          }
         }}
-        selected={selected}
+        multiple={enableMultiple}
         options={options}
         bsSize={'large'}
         filterBy={filterBy}
+        getOptionByValue={
+          enableMultiple
+            ? (value: any) => value
+            : (value: any) => (!!value ? ([value] as any[]) : ([] as any[]))
+        }
+        multiSelections={multiSelections}
+        clearSelected={clearSelected}
         placeholder={placeholder}
         hideValidation
         renderMenu={(results, menuProps) => {
@@ -103,10 +138,18 @@ export const ParentSelect: React.FC<IParentSelect> = ({
               <Fragment key={parent}>
                 {!!results.find((x: SelectOption) => x.value === parent) && (
                   <Menu.Header
-                    onClick={() => handleMenuHeaderClick(results.find(x => x.value === parent)!)}
+                    onClick={() =>
+                      enableMultiple
+                        ? handleMultiSelectHeaderClick(
+                            results.filter(x => x.parentId?.toString() === parent),
+                          )
+                        : handleMenuHeaderClick(results.find(x => x.value === parent)!)
+                    }
                   >
                     <b style={{ cursor: 'pointer' }}>
-                      {results.find(x => x.value === parent)?.label}
+                      {field === 'statusId'
+                        ? results.find(x => x.parentId?.toString() === parent)?.parent
+                        : results.find(x => x.value === parent)?.label}
                     </b>
                   </Menu.Header>
                 )}

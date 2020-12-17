@@ -3,7 +3,8 @@ import React from 'react';
 import { Col } from 'react-bootstrap';
 import { useFormikContext } from 'formik';
 import { Form, FastDatePicker, FastCurrencyInput } from 'components/common/form';
-import { ProjectNotes, NoteTypes } from 'features/projects/common';
+import { ProjectNotes } from 'features/projects/common';
+import { NoteTypes } from '../../../../constants';
 
 interface CloseOutAdjustmentProps {
   isReadOnly?: boolean;
@@ -50,6 +51,7 @@ const CloseOutAdjustment = (props: CloseOutAdjustmentProps) => {
       <ProjectNotes
         label="Adjustment to Prior Year Sale Notes"
         field={`notes[${NoteTypes.Adjustment}].note`}
+        className="col-md-auto"
         outerClassName="col-md-12"
       />
     </Fragment>

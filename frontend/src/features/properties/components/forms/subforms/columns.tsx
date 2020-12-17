@@ -1,14 +1,15 @@
 import { FastCurrencyInput } from 'components/common/form';
 import React from 'react';
-import { useFormikContext } from 'formik';
-import { formatFiscalYear, formatApiDateTime } from 'utils';
+import { useFormikContext, getIn } from 'formik';
+import { formatFiscalYear, formatApiDateTime, formatMoney } from 'utils';
 import { FaBuilding } from 'react-icons/fa';
 
 const getEditableMoneyCell = (disabled: boolean | undefined, namespace: string, type: string) => {
   return (cellInfo: any) => {
     const context = useFormikContext();
     if (disabled) {
-      return cellInfo.value ?? null;
+      const value = getIn(context.values, `${namespace}.${cellInfo.row.index}.${type}.value`);
+      return typeof value === 'number' ? formatMoney(value) : null;
     }
     return (
       <FastCurrencyInput

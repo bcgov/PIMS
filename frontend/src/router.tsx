@@ -1,5 +1,5 @@
-import React from 'react';
-import { Switch, Redirect } from 'react-router-dom';
+import React, { useLayoutEffect } from 'react';
+import { Switch, Redirect, useLocation } from 'react-router-dom';
 import MapView from './features/properties/map/MapView';
 import AccessRequestPage from './features/admin/access-request/AccessRequestPage';
 import EditUserPage from './features/admin/edit-user/EditUserPage';
@@ -22,8 +22,13 @@ import { ProjectDisposeView } from 'features/projects/dispose';
 import SplReportContainer from 'features/splReports/containers/SplReportContainer';
 import ManageAgencies from 'features/admin/agencies/ManageAgencies';
 import EditAgencyPage from 'features/admin/agencies/EditAgencyPage';
+import { IENotSupportedPage } from 'features/account/IENotSupportedPage';
 
 const AppRouter: React.FC = () => {
+  const location = useLocation();
+  useLayoutEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
   const getTitle = (page: string) => {
     return `PIMS${' - ' + page}`;
   };
@@ -34,6 +39,12 @@ const AppRouter: React.FC = () => {
         path="/login"
         title={getTitle('Login')}
         component={Login}
+        layout={PublicLayout}
+      ></AppRoute>
+      <AppRoute
+        path="/ienotsupported"
+        title={getTitle('IE Not Supported')}
+        component={IENotSupportedPage}
         layout={PublicLayout}
       ></AppRoute>
       <AppRoute path="/logout" title={getTitle('Logout')} component={LogoutPage}></AppRoute>

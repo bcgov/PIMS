@@ -1,7 +1,13 @@
 import * as React from 'react';
 import { Container } from 'react-bootstrap';
-import { ProjectNotes, ProjectDraftForm, UpdateInfoForm, useProject } from '../../common';
-import { PublicNotes, PrivateNotes } from '../../common';
+import {
+  ProjectNotes,
+  PublicNotes,
+  PrivateNotes,
+  ProjectDraftForm,
+  UpdateInfoForm,
+  useProject,
+} from '../../common';
 import AdditionalPropertyInformationForm from '../forms/AdditionalPropertyInformationForm';
 
 interface IProjectInformationTabProps {
@@ -14,22 +20,26 @@ const ProjectInformationTab: React.FunctionComponent<IProjectInformationTabProps
   const { goToDisposePath } = useProject();
   return (
     <Container fluid>
-      <h3>Project Property Information</h3>
-      <AdditionalPropertyInformationForm isReadOnly={isReadOnly} />
       <ProjectDraftForm isReadOnly={isReadOnly} title="" />
+      <AdditionalPropertyInformationForm isReadOnly={isReadOnly} />
+
       <UpdateInfoForm
         isReadOnly={isReadOnly}
+        showRisk={true}
         goToAddProperties={() => goToDisposePath('assess/properties/update')}
-        title=""
+        title="Property Information"
       />
-      <ProjectNotes disabled={true} />
-      <PublicNotes disabled={isReadOnly} />
-      <PrivateNotes disabled={isReadOnly} />
+
+      <h3>Notes</h3>
+      <ProjectNotes className="col-md-auto" disabled={true} label="Agency Notes" />
+      <PublicNotes className="col-md-auto" disabled={isReadOnly} />
+      <PrivateNotes className="col-md-auto" disabled={isReadOnly} />
       <ProjectNotes
         label="Reporting"
-        field="reportingNote"
-        disabled={isReadOnly}
         tooltip="Notes for Reporting"
+        field="reportingNote"
+        className="col-md-auto"
+        disabled={isReadOnly}
       />
     </Container>
   );

@@ -11,11 +11,22 @@ import * as actionTypes from 'constants/actionTypes';
 import { useQuery } from 'hooks/use-query';
 import { FaExternalLinkAlt } from 'react-icons/fa';
 
+//check to see if user is using Internet Explorer
+//as their browser
+const usingIE = () => {
+  const userAgent = window.navigator.userAgent;
+  const isOldIE = userAgent.indexOf('MSIE '); //tag used for IE 10 or older
+  const isIE11 = userAgent.indexOf('Trident/'); //tag used for IE11
+  if (isOldIE > 0 || isIE11 > 0) return true;
+  return false;
+};
+
 const Login = () => {
   const { redirect } = useQuery();
   const [showInstruction, setShowInstruction] = useState(false);
   const keyCloakWrapper = useKeycloakWrapper();
   const keycloak = keyCloakWrapper.obj;
+  const isIE = usingIE();
   const activated = useSelector<RootState, IGenericNetworkAction>(
     state => (state.network as any)[actionTypes.ADD_ACTIVATE_USER] as IGenericNetworkAction,
   );
@@ -28,7 +39,9 @@ const Login = () => {
     }
     return <Redirect to={redirect || '/mapview'} />;
   }
-
+  if (isIE) {
+    return <Redirect to={{ pathname: '/ienotsupported' }} />;
+  }
   return (
     <Container className="unauth" fluid={true}>
       <h1>Search and visualize government property information</h1>

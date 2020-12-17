@@ -1,25 +1,54 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
 import { render, wait, fireEvent, cleanup } from '@testing-library/react';
-import MapFilterBar, { MapFilterChangeEvent } from './MapFilterBar';
+import { PropertyFilter } from './';
 import * as MOCK from 'mocks/filterDataMock';
 import Axios from 'axios';
 import { useKeycloak } from '@react-keycloak/web';
+import { IGeoSearchParams } from 'constants/API';
+import { createMemoryHistory } from 'history';
+import { IPropertyFilter } from './IPropertyFilter';
+import { Router } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import thunk from 'redux-thunk';
+import configureMockStore from 'redux-mock-store';
+import * as reducerTypes from 'constants/reducerTypes';
 
-const onFilterChange = jest.fn<void, [MapFilterChangeEvent]>();
+const onFilterChange = jest.fn<void, [IPropertyFilter]>();
 //prevent web calls from being made during tests.
 jest.mock('axios');
 jest.mock('@react-keycloak/web');
 const mockedAxios = Axios as jest.Mocked<typeof Axios>;
+const mockStore = configureMockStore([thunk]);
+const history = createMemoryHistory();
+const getStore = (filter: any) =>
+  mockStore({
+    [reducerTypes.FILTER]: filter,
+  });
 
-const getUiElement = (filter?: MapFilterChangeEvent) => (
-  <MapFilterBar
-    agencyLookupCodes={MOCK.AGENCIES}
-    propertyClassifications={MOCK.CLASSIFICATIONS}
-    mapFilter={filter}
-    lotSizes={[1, 2, 3]}
-    onFilterChange={onFilterChange}
-  />
+const defaultFilter: IPropertyFilter = {
+  searchBy: 'address',
+  pid: '',
+  address: '',
+  administrativeArea: '',
+  minLotSize: '',
+  maxLotSize: '',
+  classificationId: '',
+  agencies: '',
+  projectNumber: '',
+};
+
+const getUiElement = (filter: IPropertyFilter) => (
+  <Provider store={getStore(filter)}>
+    <Router history={history}>
+      <PropertyFilter
+        defaultFilter={filter}
+        agencyLookupCodes={MOCK.AGENCIES}
+        propertyClassifications={MOCK.CLASSIFICATIONS}
+        onChange={onFilterChange}
+      />
+    </Router>
+  </Provider>
 );
 
 describe('MapFilterBar', () => {
@@ -46,16 +75,7 @@ describe('MapFilterBar', () => {
       },
     });
     // Capture any changes
-    const tree = renderer
-      .create(
-        <MapFilterBar
-          agencyLookupCodes={MOCK.AGENCIES}
-          propertyClassifications={MOCK.CLASSIFICATIONS}
-          lotSizes={[1, 2, 3]}
-          onFilterChange={onFilterChange}
-        />,
-      )
-      .toJSON();
+    const tree = renderer.create(getUiElement(defaultFilter)).toJSON();
     expect(tree).toMatchSnapshot();
   });
 
@@ -71,7 +91,7 @@ describe('MapFilterBar', () => {
     });
     mockedAxios.get.mockImplementationOnce(() => Promise.resolve({}));
 
-    const { container } = render(getUiElement());
+    const { container } = render(getUiElement(defaultFilter));
     const address = container.querySelector('input[name="address"]');
     const agencies = container.querySelector('input[name="agencies"]');
     const classificationId = container.querySelector('select[name="classificationId"]');
@@ -133,22 +153,21 @@ describe('MapFilterBar', () => {
     });
 
     // Assert
-    expect(onFilterChange).toBeCalledWith<[MapFilterChangeEvent]>({
+    expect(onFilterChange).toBeCalledWith<[IGeoSearchParams]>({
       pid: 'mockPid',
-      searchBy: 'address',
       address: 'mockaddress',
       administrativeArea: 'mockAdministrativeArea',
       projectNumber: '',
       agencies: '2',
-      classificationId: '0',
-      minLotSize: '1',
-      maxLotSize: '3',
+      classificationId: 0,
+      minLandArea: 1,
+      maxLandArea: 3,
       inSurplusPropertyProgram: true,
     });
   });
 
   it('does not display SPP property filter for non-sres users', () => {
-    const { queryByText } = render(getUiElement());
+    const { queryByText } = render(getUiElement(defaultFilter));
     expect(queryByText('Properties in SPP')).toBeNull();
   });
 
@@ -163,7 +182,7 @@ describe('MapFilterBar', () => {
       classificationId: '0',
       minLotSize: '10',
       maxLotSize: '20',
-      inSurplusPropertyProgram: true,
+      inSurplusPropertyProgram: 'true',
     };
     const { getByText, getByPlaceholderText } = render(getUiElement(providedFilter));
     expect(getByText('Address')).toBeVisible();

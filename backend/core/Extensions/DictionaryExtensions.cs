@@ -218,6 +218,22 @@ namespace Pims.Core.Extensions
         }
 
         /// <summary>
+        /// Get the value from the dictionary for the specified 'key' and return it as an Envelope.
+        /// </summary>
+        /// <param name="dict"></param>
+        /// <param name="key"></param>
+        /// <param name="defaultValue"></param>
+        /// <returns></returns>
+        public static NetTopologySuite.Geometries.Envelope GetEnvelopNullValue(this IDictionary<string, Microsoft.Extensions.Primitives.StringValues> dict, string key, NetTopologySuite.Geometries.Envelope defaultValue = null)
+        {
+            if (!dict.TryGetValue(key, out Microsoft.Extensions.Primitives.StringValues value))
+                return defaultValue;
+
+            var values = value.ToString().Split(',');
+            return NetTopologySuite.Geometries.Envelope.Parse($"Env[{values[0]}:{values[1]},{values[2]}:{values[3]}]");
+        }
+
+        /// <summary>
         /// Get the value from the dictionary for the specified 'key' and return it as the specified type 'T'.
         /// If the value doesn't convert correctly it will return a default value of the specified type 'T'.
         /// </summary>

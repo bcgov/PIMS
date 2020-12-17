@@ -6,6 +6,10 @@
     margin: 0px;
     padding: 0px;
   }
+  .form-group.col {
+    flex-grow: 1;
+    flex-basis: 0;
+  }
   .input-group-text {
     font-size: small;
   }
@@ -83,6 +87,7 @@
       height: 30px;
       font-size: small;
       padding: 0;
+      text-align: left;
     }
     .input-group {
       .form-control {

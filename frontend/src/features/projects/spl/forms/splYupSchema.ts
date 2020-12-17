@@ -1,9 +1,23 @@
 import * as Yup from 'yup';
 
-export const SurplusPropertyListYupSchema = Yup.object().shape({
+export const NotInSplYupSchema = Yup.object().shape({
+  clearanceNotificationSentOn: Yup.date().required('Required'),
+});
+
+export const RemoveFromSplYupSchema = Yup.object().shape({
+  removalFromSplRequestOn: Yup.date().required('Required'),
+  removalFromSplApprovedOn: Yup.date().required('Required'),
+  removalFromSplRationale: Yup.string()
+    .required('Required')
+    .max(2000, 'Rationale must be less then 2000 characters'),
+});
+
+export const SurplusPropertyListOnMarketYupSchema = Yup.object().shape({
   marketedOn: Yup.date().required('Required'),
+});
+
+export const SurplusPropertyListContractInPlaceYupSchema = Yup.object().shape({
   offersReceived: Yup.string().max(2000, 'Offers received must be less then 2000 characters'),
-  isContractConditional: Yup.boolean().required('Required'),
   offerAcceptedOn: Yup.date().required('Required'),
   purchaser: Yup.string()
     .required('Required')
@@ -11,6 +25,9 @@ export const SurplusPropertyListYupSchema = Yup.object().shape({
   offerAmount: Yup.number()
     .min(1, 'Offer amount must be a positive number')
     .required('Required'),
+});
+
+export const SurplusPropertyListDisposeYupSchema = Yup.object().shape({
   disposedOn: Yup.date().required('Required'),
 });
 
@@ -45,7 +62,6 @@ export const SurplusPropertyInformationYupSchema = Yup.object().shape({
 export const CloseOutFormValidationSchema = Yup.object().shape({
   manager: Yup.string().max(150, 'Manager must be less then 150 characters'),
   plannedFutureUse: Yup.string().max(150, 'Planned Future Use must be less then 150 characters'),
-  remediation: Yup.string().max(150, 'Remediation must be less then 150 characters'),
   preliminaryFormSignedBy: Yup.string().max(
     150,
     'Preliminary Form Signed By must be less then 150 characters',
@@ -64,11 +80,11 @@ export const CloseOutFormValidationSchema = Yup.object().shape({
     .min(0, 'Sales Proceeds must be a positive number')
     .max(100000000000, 'Maximum value is $100,000,000,000'),
 
-  gainBeforeSpp: Yup.number()
-    .min(0, 'Gain Before Spp Cost must be a positive number')
+  gainBeforeSpl: Yup.number()
+    .min(-10000000000, 'Minimum value is `$10,000,000,000')
     .max(100000000000, 'Maximum value is $100,000,000,000'),
-  gainAfterSpp: Yup.number()
-    .min(0, 'Gain After Spp Cost must be a positive number')
+  netProceeds: Yup.number()
+    .min(-10000000000, 'Minimum value is `$10,000,000,000')
     .max(100000000000, 'Maximum value is $100,000,000,000'),
   programCost: Yup.number()
     .min(0, 'SPP Program Cost must be a positive number')

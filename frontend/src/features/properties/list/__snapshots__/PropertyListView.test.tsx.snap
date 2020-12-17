@@ -1,6 +1,25 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Property list view Matches snapshot 1`] = `
+.c1 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  justify-items: center;
+}
+
+.c2 {
+  color: #007bff;
+}
+
 .c0 {
   background-color: #fff !important;
   color: #003366 !important;
@@ -21,7 +40,7 @@ exports[`Property list view Matches snapshot 1`] = `
         novalidate=""
       >
         <div
-          class="filter-bar form-row"
+          class="map-filter-bar align-items-start form-row"
         >
           <div
             class="bar-item col"
@@ -48,15 +67,15 @@ exports[`Property list view Matches snapshot 1`] = `
                     </option>
                     <option
                       class="option"
-                      value="pid"
-                    >
-                      PID/PIN
-                    </option>
-                    <option
-                      class="option"
                       value="administrativeArea"
                     >
                       Location
+                    </option>
+                    <option
+                      class="option"
+                      value="pid"
+                    >
+                      PID/PIN
                     </option>
                     <option
                       class="option"
@@ -77,7 +96,7 @@ exports[`Property list view Matches snapshot 1`] = `
                     class="form-control"
                     id="input-address"
                     name="address"
-                    placeholder="Enter an address or location"
+                    placeholder="Enter an address or city"
                     value=""
                   />
                 </div>
@@ -85,7 +104,7 @@ exports[`Property list view Matches snapshot 1`] = `
             </div>
           </div>
           <div
-            class="bar-item col"
+            class="agency-item col"
           >
             <div
               class="form-group"
@@ -103,7 +122,7 @@ exports[`Property list view Matches snapshot 1`] = `
                     aria-expanded="false"
                     aria-haspopup="listbox"
                     autocomplete="off"
-                    class="rbt-input-main form-control rbt-input map-filter-typeahead"
+                    class="rbt-input-main form-control rbt-input"
                     id="agencies-field"
                     name="agencies"
                     placeholder="Enter an Agency"
@@ -139,11 +158,17 @@ exports[`Property list view Matches snapshot 1`] = `
                 >
                   Classification
                 </option>
+                <option
+                  class="option"
+                  value="1"
+                >
+                  classificationVal
+                </option>
               </select>
             </div>
           </div>
           <div
-            class="bar-item d-flex align-items-center col"
+            class="bar-item d-flex align-items-start col"
           >
             <div
               class="form-group"
@@ -157,7 +182,7 @@ exports[`Property list view Matches snapshot 1`] = `
               />
             </div>
             <span
-              class="mx-2"
+              class="mx-2 align-self-center"
             >
               -
             </span>
@@ -273,6 +298,7 @@ exports[`Property list view Matches snapshot 1`] = `
         type="button"
       >
         <svg
+          data-testid="excel-icon"
           fill="currentColor"
           height="36"
           size="36"
@@ -292,6 +318,7 @@ exports[`Property list view Matches snapshot 1`] = `
         type="button"
       >
         <svg
+          data-testid="csv-icon"
           fill="currentColor"
           height="36"
           size="36"
@@ -346,7 +373,42 @@ exports[`Property list view Matches snapshot 1`] = `
             style="box-sizing: border-box; flex: 65 0 auto; min-width: 65px; width: 3.5%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
             width="3.5%"
           >
-            Agency
+            <div
+              class="sortable-column"
+            >
+              Agency
+              <div
+                class="c1"
+              >
+                <svg
+                  fill="currentColor"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  style="margin-bottom: -5px;"
+                  viewBox="0 0 512 512"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M128 320l128-128 128 128z"
+                  />
+                </svg>
+                <svg
+                  fill="currentColor"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 512 512"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M128 192l128 128 128-128z"
+                  />
+                </svg>
+              </div>
+            </div>
           </div>
           <div
             class="th"
@@ -355,7 +417,73 @@ exports[`Property list view Matches snapshot 1`] = `
             style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 7%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
             width="7%"
           >
-            Sub Agency
+            <div
+              class="sortable-column"
+            >
+              Sub Agency
+              <div
+                class="c1"
+              >
+                <svg
+                  fill="currentColor"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  style="margin-bottom: -5px;"
+                  viewBox="0 0 512 512"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M128 320l128-128 128 128z"
+                  />
+                </svg>
+                <svg
+                  fill="currentColor"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 512 512"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M128 192l128 128 128-128z"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
+          <div
+            class="th sort-asc"
+            colspan="1"
+            role="columnheader"
+            style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 7%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+            width="7%"
+          >
+            <div
+              class="sortable-column"
+            >
+              Property Name
+              <div
+                class="c1"
+              >
+                <svg
+                  class="c2"
+                  fill="currentColor"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 512 512"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M128 320l128-128 128 128z"
+                  />
+                </svg>
+              </div>
+            </div>
           </div>
           <div
             class="th"
@@ -364,16 +492,42 @@ exports[`Property list view Matches snapshot 1`] = `
             style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 7%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
             width="7%"
           >
-            Property Name
-          </div>
-          <div
-            class="th"
-            colspan="1"
-            role="columnheader"
-            style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 7%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
-            width="7%"
-          >
-            Classification
+            <div
+              class="sortable-column"
+            >
+              Classification
+              <div
+                class="c1"
+              >
+                <svg
+                  fill="currentColor"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  style="margin-bottom: -5px;"
+                  viewBox="0 0 512 512"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M128 320l128-128 128 128z"
+                  />
+                </svg>
+                <svg
+                  fill="currentColor"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 512 512"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M128 192l128 128 128-128z"
+                  />
+                </svg>
+              </div>
+            </div>
           </div>
           <div
             class="th"
@@ -382,7 +536,11 @@ exports[`Property list view Matches snapshot 1`] = `
             style="box-sizing: border-box; flex: 65 0 auto; min-width: 65px; width: 3.5%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
             width="3.5%"
           >
-            Type
+            <div
+              class="sortable-column"
+            >
+              Type
+            </div>
           </div>
           <div
             class="th"
@@ -391,7 +549,42 @@ exports[`Property list view Matches snapshot 1`] = `
             style="box-sizing: border-box; flex: 160 0 auto; min-width: 160px; width: 14%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
             width="14%"
           >
-            Street Address
+            <div
+              class="sortable-column"
+            >
+              Street Address
+              <div
+                class="c1"
+              >
+                <svg
+                  fill="currentColor"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  style="margin-bottom: -5px;"
+                  viewBox="0 0 512 512"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M128 320l128-128 128 128z"
+                  />
+                </svg>
+                <svg
+                  fill="currentColor"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 512 512"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M128 192l128 128 128-128z"
+                  />
+                </svg>
+              </div>
+            </div>
           </div>
           <div
             class="th"
@@ -400,7 +593,42 @@ exports[`Property list view Matches snapshot 1`] = `
             style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 7%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
             width="7%"
           >
-            Location
+            <div
+              class="sortable-column"
+            >
+              Location
+              <div
+                class="c1"
+              >
+                <svg
+                  fill="currentColor"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  style="margin-bottom: -5px;"
+                  viewBox="0 0 512 512"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M128 320l128-128 128 128z"
+                  />
+                </svg>
+                <svg
+                  fill="currentColor"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 512 512"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M128 192l128 128 128-128z"
+                  />
+                </svg>
+              </div>
+            </div>
           </div>
           <div
             class="th"
@@ -409,7 +637,42 @@ exports[`Property list view Matches snapshot 1`] = `
             style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 7%; justify-content: flex-end; text-align: right; align-items: center; display: flex;"
             width="7%"
           >
-            Assessed Value
+            <div
+              class="sortable-column"
+            >
+              Assessed Value
+              <div
+                class="c1"
+              >
+                <svg
+                  fill="currentColor"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  style="margin-bottom: -5px;"
+                  viewBox="0 0 512 512"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M128 320l128-128 128 128z"
+                  />
+                </svg>
+                <svg
+                  fill="currentColor"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 512 512"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M128 192l128 128 128-128z"
+                  />
+                </svg>
+              </div>
+            </div>
           </div>
           <div
             class="th"
@@ -418,7 +681,42 @@ exports[`Property list view Matches snapshot 1`] = `
             style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 7%; justify-content: flex-end; text-align: right; align-items: center; display: flex;"
             width="7%"
           >
-            Net Book Value
+            <div
+              class="sortable-column"
+            >
+              Net Book Value
+              <div
+                class="c1"
+              >
+                <svg
+                  fill="currentColor"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  style="margin-bottom: -5px;"
+                  viewBox="0 0 512 512"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M128 320l128-128 128 128z"
+                  />
+                </svg>
+                <svg
+                  fill="currentColor"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 512 512"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M128 192l128 128 128-128z"
+                  />
+                </svg>
+              </div>
+            </div>
           </div>
           <div
             class="th"
@@ -427,7 +725,42 @@ exports[`Property list view Matches snapshot 1`] = `
             style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 7%; justify-content: flex-end; text-align: right; align-items: center; display: flex;"
             width="7%"
           >
-            Market Value
+            <div
+              class="sortable-column"
+            >
+              Market Value
+              <div
+                class="c1"
+              >
+                <svg
+                  fill="currentColor"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  style="margin-bottom: -5px;"
+                  viewBox="0 0 512 512"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M128 320l128-128 128 128z"
+                  />
+                </svg>
+                <svg
+                  fill="currentColor"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 512 512"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M128 192l128 128 128-128z"
+                  />
+                </svg>
+              </div>
+            </div>
           </div>
           <div
             class="th"
@@ -436,7 +769,42 @@ exports[`Property list view Matches snapshot 1`] = `
             style="box-sizing: border-box; flex: 65 0 auto; min-width: 65px; width: 3.5%; justify-content: flex-end; text-align: right; align-items: center; display: flex;"
             width="3.5%"
           >
-            Lot Size (in ha)
+            <div
+              class="sortable-column"
+            >
+              Lot Size (in ha)
+              <div
+                class="c1"
+              >
+                <svg
+                  fill="currentColor"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  style="margin-bottom: -5px;"
+                  viewBox="0 0 512 512"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M128 320l128-128 128 128z"
+                  />
+                </svg>
+                <svg
+                  fill="currentColor"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 512 512"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M128 192l128 128 128-128z"
+                  />
+                </svg>
+              </div>
+            </div>
           </div>
           <div
             class="th"
@@ -445,7 +813,11 @@ exports[`Property list view Matches snapshot 1`] = `
             style="box-sizing: border-box; flex: 65 0 auto; min-width: 65px; width: 3.5%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
             width="3.5%"
           >
-             
+            <div
+              class="sortable-column"
+            >
+               
+            </div>
           </div>
         </div>
       </div>

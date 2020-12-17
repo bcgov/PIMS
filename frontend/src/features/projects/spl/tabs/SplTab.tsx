@@ -11,20 +11,25 @@ interface ISplTabProps {
  * Enhanced Referral tab used to display project details for the ERP process.
  * @param param0 ISplTabProps
  */
-const SplTab: React.FunctionComponent<ISplTabProps> = ({
+export const SplTab: React.FunctionComponent<ISplTabProps> = ({
   isReadOnly,
   setSubmitStatusCode,
 }: ISplTabProps) => {
   return (
-    <>
-      <SurplusPropertyListForm
-        isReadOnly={isReadOnly}
-        onClickMarketedOn={() => setSubmitStatusCode(ReviewWorkflowStatus.OnMarket)}
-        onClickContractInPlace={() => setSubmitStatusCode(ReviewWorkflowStatus.ContractInPlace)}
-        onClickPreMarketing={() => setSubmitStatusCode(ReviewWorkflowStatus.PreMarketing)}
-        onClickDisposedExternally={() => setSubmitStatusCode(ReviewWorkflowStatus.Disposed)}
-      />
-    </>
+    <SurplusPropertyListForm
+      isReadOnly={isReadOnly}
+      onClickProceedToSPL={() => setSubmitStatusCode(ReviewWorkflowStatus.ApprovedForSpl)}
+      onClickRemoveFromSPL={() => setSubmitStatusCode(ReviewWorkflowStatus.NotInSpl)}
+      onClickPreMarketing={() => setSubmitStatusCode(ReviewWorkflowStatus.PreMarketing)}
+      onClickMarketedOn={() => setSubmitStatusCode(ReviewWorkflowStatus.OnMarket)}
+      onClickContractInPlaceConditional={() =>
+        setSubmitStatusCode(ReviewWorkflowStatus.ContractInPlaceConditional)
+      }
+      onClickContractInPlaceUnconditional={() =>
+        setSubmitStatusCode(ReviewWorkflowStatus.ContractInPlaceUnconditional)
+      }
+      onClickDisposedExternally={() => setSubmitStatusCode(ReviewWorkflowStatus.Disposed)}
+    />
   );
 };
 

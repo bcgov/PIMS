@@ -6,7 +6,9 @@ import { ENVIRONMENT } from 'constants/environment';
 import * as _ from 'lodash';
 import { LatLngTuple } from 'leaflet';
 import { useCallback } from 'react';
-import { RootState } from 'reducers/rootReducer';
+import { IGeoSearchParams } from 'constants/API';
+import queryString from 'query-string';
+import { store } from 'App';
 
 export interface IGeocoderResponse {
   siteId: string;
@@ -36,6 +38,7 @@ export interface PimsAPI extends AxiosInstance {
   searchAddress: (text: string) => Promise<IGeocoderResponse[]>;
   getSitePids: (siteId: string) => Promise<IGeocoderPidsResponse>;
   getAdministrativeAreaLatLng: (city: string) => Promise<LatLngTuple | null>;
+  loadProperties: (params?: IGeoSearchParams) => Promise<any[]>;
 }
 
 export const useApi = (): PimsAPI => {
@@ -45,11 +48,14 @@ export const useApi = (): PimsAPI => {
 
   axios.interceptors.request.use(
     config => {
-      config.headers.Authorization = `Bearer ${jwtToken}`;
+      config.headers.Authorization = `Bearer ${store.getState().jwt}`;
       dispatch(showLoading());
       return config;
     },
-    error => dispatch(hideLoading()),
+    error => {
+      dispatch(hideLoading());
+      return Promise.reject(error);
+    },
   );
 
   axios.interceptors.response.use(
@@ -57,7 +63,10 @@ export const useApi = (): PimsAPI => {
       dispatch(hideLoading());
       return config;
     },
-    error => dispatch(hideLoading()),
+    error => {
+      dispatch(hideLoading());
+      return Promise.reject(error);
+    },
   );
 
   axios.isPidAvailable = async (parcelId: number | '' | undefined, pid: string | undefined) => {
@@ -114,6 +123,21 @@ export const useApi = (): PimsAPI => {
       `${ENVIRONMENT.apiUrl}/tools/geocoder/parcels/pids/${siteId}`,
     );
     return data;
+  };
+
+  axios.loadProperties = async (params?: IGeoSearchParams): Promise<any[]> => {
+    try {
+      const { data } = await axios.get<any[]>(
+        `${ENVIRONMENT.apiUrl}/properties/search/wfs?${
+          params ? queryString.stringify(params) : ''
+        }`,
+      );
+      return data;
+    } catch (error) {
+      throw new Error(
+        `${(error as any).message}: An error occured while fetching properties in inventory.`,
+      );
+    }
   };
 
   return axios;

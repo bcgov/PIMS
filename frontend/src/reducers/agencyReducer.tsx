@@ -16,7 +16,7 @@ const initialState: IAgenciesState = {
   pagedAgencies: { page: 1, pageIndex: 0, total: 0, quantity: 0, items: [] },
   rowsPerPage: DEFAULT_PAGE_SIZE,
   filter: {},
-  sort: { column: 'name', direction: 'asc' },
+  sort: { name: 'asc' },
   pageIndex: 0,
 };
 

@@ -1,14 +1,19 @@
 import { ILookupCode } from 'actions/lookupActions';
-import { startCase, isNull, isUndefined, isEmpty } from 'lodash';
+import { startCase, isNull, isUndefined, isEmpty, lowerFirst, keys } from 'lodash';
 import { SelectOption } from 'components/common/form';
 import { FormikProps, getIn } from 'formik';
-import { SortDirection } from 'components/Table/TableSort';
+import { SortDirection, TableSort } from 'components/Table/TableSort';
 import { AxiosError } from 'axios';
 import { showLoading, hideLoading } from 'react-redux-loading-bar';
 import { success, error, request } from 'actions/genericActions';
 import moment from 'moment-timezone';
 import { IStatus } from 'features/projects/common';
 
+/**
+ * Truncates the specified 'input' value to the 'maxLength'.
+ * @param input Text value you want to truncate.
+ * @param maxLength The maximum length of the new string value.
+ */
 export const truncate = (input: string, maxLength: number): string => {
   if (input && input.length > 1000) {
     return `${input.substr(0, maxLength)}...`;
@@ -16,22 +21,51 @@ export const truncate = (input: string, maxLength: number): string => {
   return input;
 };
 
+/**
+ * Convert the specified 'input' value into a decimal or undefined.
+ * @param input The string value to convert to a decimal.
+ */
 export const decimalOrUndefined = (input: string | ''): number | undefined => {
-  return input !== '' ? parseInt(input, 10) : undefined;
+  return input !== '' && input !== undefined ? parseInt(input, 10) : undefined;
 };
 
+/**
+ * Convert the specified 'input' value into a decimal or null.
+ * @param input The string value to convert to a decimal.
+ */
 export const decimalOrNull = (input: string): number | null => {
-  return input !== '' ? parseInt(input, 10) : null;
+  return input !== '' && input !== undefined ? parseInt(input, 10) : null;
 };
 
+/**
+ * Convert the specified 'input' value into a decimal or empty string.
+ * @param input The string value to convert to a decimal.
+ */
 export const decimalOrEmpty = (input: string): number | string => {
-  return input !== '' ? parseInt(input, 10) : '';
+  return input !== '' && input !== undefined ? parseInt(input, 10) : '';
 };
 
+/**
+ * Convert the specified 'input' value into a float or null.
+ * @param input The string value to convert to a float.
+ */
 export const floatOrNull = (input: string): number | null => {
-  return input !== '' ? parseFloat(input) : null;
+  return input !== '' && input !== undefined ? parseFloat(input) : null;
 };
 
+/**
+ * Convert the specified 'input' value into a float or undefined.
+ * @param input The string value to convert to a float.
+ */
+export const floatOrUndefined = (input: string | ''): number | undefined => {
+  return input !== '' && input !== undefined ? parseFloat(input) : undefined;
+};
+
+/**
+ * Determine if the specified 'input' value is a positive number of zero.
+ * @param input The value to evaluate.
+ * @returns True if the value is a positive number or zero, false otherwise.
+ */
 export const isPositiveNumberOrZero = (input: string | number | undefined | null) => {
   if (isNull(input) || isUndefined(input)) {
     return false;
@@ -68,6 +102,22 @@ export const mapLookupCodeWithParentString = (
   parent: options.find((a: ILookupCode) => a.id.toString() === code.parentId?.toString())?.name,
 });
 
+const createParentWorkflow = (code: string) => {
+  if (/^DR/.test(code)) {
+    return { name: 'Draft Statuses', id: 1 };
+  } else if (/EXE/.test(code)) {
+    return { name: 'Exemption Statuses', id: 2 };
+  } else if (/^AS/.test(code)) {
+    return { name: 'Assessment Statuses', id: 3 };
+  } else if (/^ERP/.test(code) || /^AP-ERP$/.test(code)) {
+    return { name: 'ERP Statuses', id: 4 };
+  } else if (/^SPL/.test(code) || /^AP-SPL$/.test(code)) {
+    return { name: 'SPL Statuses', id: 5 };
+  } else {
+    return { name: 'General Statuses', id: 6 };
+  }
+};
+
 /** used for inputs that need to display the string value of a parent agency agency */
 export const mapSelectOptionWithParent = (
   code: SelectOption,
@@ -85,6 +135,8 @@ export const mapSelectOptionWithParent = (
 export const mapStatuses = (status: IStatus): SelectOption => ({
   label: status.name,
   value: status.id.toString(),
+  parent: createParentWorkflow(status.code).name,
+  parentId: createParentWorkflow(status.code).id,
 });
 
 type FormikMemoProps = {
@@ -157,6 +209,37 @@ export const generateSortCriteria = (column: string, direction: SortDirection) =
   }
 
   return `${startCase(column).replace(' ', '')} ${direction}`;
+};
+
+/**
+ * convert table sort config to api sort query
+ * {name: 'desc} = ['Name desc']
+ */
+export const generateMultiSortCriteria = (sort: TableSort<any>) => {
+  if (!sort) {
+    return '';
+  }
+
+  return keys(sort).map(key => `${startCase(key).replace(' ', '')} ${sort[key]}`);
+};
+
+/**
+ * Convert sort query string to TableSort config
+ * ['Name desc'] = {name: 'desc'}
+ */
+export const resolveSortCriteriaFromUrl = (input: string[]): TableSort<any> | {} => {
+  if (isEmpty(input)) {
+    return {};
+  }
+
+  return input.reduce((acc: any, sort: string) => {
+    const fields = sort.split(' ');
+    if (fields.length !== 2) {
+      return { ...acc };
+    }
+
+    return { ...acc, [lowerFirst(fields[0])]: fields[1] };
+  }, {});
 };
 
 /**

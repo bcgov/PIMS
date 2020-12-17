@@ -1,6 +1,15 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Review Approve Step renders correctly 1`] = `
+.c0 {
+  padding-left: 10px;
+}
+
+.c0 small {
+  padding-top: 20px;
+  vertical-align: middle;
+}
+
 <div
   class="ReviewApproveStep container-fluid"
 >
@@ -81,7 +90,7 @@ exports[`Review Approve Step renders correctly 1`] = `
             Description
           </label>
           <textarea
-            class="col-md-5 form-control"
+            class="col-md-auto form-control"
             disabled=""
             id="input-description"
             name="description"
@@ -101,10 +110,10 @@ exports[`Review Approve Step renders correctly 1`] = `
         <label
           class="form-label col-form-label col-md-2"
         >
-          Assign Tier 
+          Assign Tier
         </label>
         <div
-          class="required col-md-2 form-group"
+          class="required col-md-1 form-group"
         >
           <select
             class="form-select form-control"
@@ -120,34 +129,13 @@ exports[`Review Approve Step renders correctly 1`] = `
             </option>
           </select>
         </div>
-      </div>
-      <div
-        class="form-row"
-      >
-        <small>
-          Tier 1: Properties with a net value of less than $1M.
-        </small>
-      </div>
-      <div
-        class="form-row"
-      >
-        <small>
-          Tier 2: Properties with a net value of $1M or more and less than $10M.
-        </small>
-      </div>
-      <div
-        class="form-row"
-      >
-        <small>
-          Tier 3: Properties are single parcels with a net value of $10M or more.
-        </small>
-      </div>
-      <div
-        class="form-row"
-      >
-        <small>
-          Tier 4: Properties are multiple parcels with a cumulative net value of $10M or more.
-        </small>
+        <div
+          class="c0"
+        >
+          <small>
+            Tier 1: Properties with a net value less than $1M.
+          </small>
+        </div>
       </div>
       <div
         class="form-row"
@@ -156,17 +144,42 @@ exports[`Review Approve Step renders correctly 1`] = `
         <h3
           class="col-md-8"
         >
-          Project Totals
+          Financial Information
         </h3>
       </div>
       <div
-        class="row"
+        class="form-row"
       >
         <div
           class="col-md-4"
         >
           <div
-            class="row"
+            class="form-row"
+          >
+            <label
+              class="form-label col-form-label col-md-4"
+            >
+              Assessed Value
+            </label>
+            <div
+              class="required form-group col-md-6"
+            >
+              <div
+                class="input-tooltip-wrapper"
+              >
+                <input
+                  class="form-control input-number"
+                  disabled=""
+                  name="assessed"
+                  placeholder=""
+                  required=""
+                  value=""
+                />
+              </div>
+            </div>
+          </div>
+          <div
+            class="form-row"
           >
             <label
               class="form-label col-form-label col-md-4"
@@ -174,23 +187,28 @@ exports[`Review Approve Step renders correctly 1`] = `
               Net Book Value
             </label>
             <div
-              class="required form-group"
+              class="required form-group col-md-6"
             >
               <div
                 class="input-tooltip-wrapper"
               >
                 <input
-                  class="form-control"
+                  class="form-control input-number"
                   disabled=""
                   name="netBook"
                   placeholder=""
+                  required=""
                   value=""
                 />
               </div>
             </div>
           </div>
+        </div>
+        <div
+          class="col-md-4"
+        >
           <div
-            class="row"
+            class="form-row"
           >
             <label
               class="form-label col-form-label col-md-4"
@@ -198,15 +216,40 @@ exports[`Review Approve Step renders correctly 1`] = `
               Estimated Market Value
             </label>
             <div
-              class="required form-group"
+              class="required form-group col-md-6"
             >
               <div
                 class="input-tooltip-wrapper"
               >
                 <input
-                  class="form-control"
+                  class="form-control input-number"
                   disabled=""
                   name="market"
+                  placeholder=""
+                  required=""
+                  value=""
+                />
+              </div>
+            </div>
+          </div>
+          <div
+            class="form-row"
+          >
+            <label
+              class="form-label col-form-label col-md-4"
+            >
+              Appraised Value
+            </label>
+            <div
+              class="form-group col-md-6"
+            >
+              <div
+                class="input-tooltip-wrapper"
+              >
+                <input
+                  class="form-control input-number"
+                  disabled=""
+                  name="appraised"
                   placeholder=""
                   value=""
                 />
@@ -218,23 +261,23 @@ exports[`Review Approve Step renders correctly 1`] = `
           class="col-md-4"
         >
           <div
-            class="row"
+            class="form-row"
           >
             <label
               class="form-label col-form-label col-md-4"
             >
-              Assessed Value
+              Estimated Sales Costs
             </label>
             <div
-              class="required form-group"
+              class="form-group col-md-6"
             >
               <div
                 class="input-tooltip-wrapper"
               >
                 <input
-                  class="form-control"
+                  class="form-control input-number"
                   disabled=""
-                  name="assessed"
+                  name="salesCost"
                   placeholder=""
                   value=""
                 />
@@ -242,23 +285,23 @@ exports[`Review Approve Step renders correctly 1`] = `
             </div>
           </div>
           <div
-            class="row"
+            class="form-row"
           >
             <label
               class="form-label col-form-label col-md-4"
             >
-              Appraised Value
+              Estimated Program Recovery Fees
             </label>
             <div
-              class="form-group"
+              class="form-group col-md-6"
             >
               <div
                 class="input-tooltip-wrapper"
               >
                 <input
-                  class="form-control"
+                  class="form-control input-number"
                   disabled=""
-                  name="appraised"
+                  name="programCost"
                   placeholder=""
                   value=""
                 />
@@ -274,7 +317,7 @@ exports[`Review Approve Step renders correctly 1`] = `
           class="col-md-12"
           style="margin: 1rem 0px;"
         >
-          Please make any necessary updates to the valuation information and the classification
+          Please make any necessary updates to the valuation information and the classification.
         </h6>
         <h2
           class="col-md-5"
@@ -306,7 +349,11 @@ exports[`Review Approve Step renders correctly 1`] = `
                   role="columnheader"
                   style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                 >
-                  Agency
+                  <div
+                    class="sortable-column"
+                  >
+                    Agency
+                  </div>
                 </div>
                 <div
                   class="th"
@@ -314,7 +361,11 @@ exports[`Review Approve Step renders correctly 1`] = `
                   role="columnheader"
                   style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                 >
-                  Name
+                  <div
+                    class="sortable-column"
+                  >
+                    Name
+                  </div>
                 </div>
                 <div
                   class="th"
@@ -322,7 +373,11 @@ exports[`Review Approve Step renders correctly 1`] = `
                   role="columnheader"
                   style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                 >
-                  Civic Address
+                  <div
+                    class="sortable-column"
+                  >
+                    Civic Address
+                  </div>
                 </div>
                 <div
                   class="th"
@@ -330,7 +385,11 @@ exports[`Review Approve Step renders correctly 1`] = `
                   role="columnheader"
                   style="box-sizing: border-box; flex: 140 0 auto; min-width: 30px; width: 140px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                 >
-                  Classification
+                  <div
+                    class="sortable-column"
+                  >
+                    Classification
+                  </div>
                 </div>
                 <div
                   class="th"
@@ -338,7 +397,11 @@ exports[`Review Approve Step renders correctly 1`] = `
                   role="columnheader"
                   style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                 >
-                  Current Zoning Code
+                  <div
+                    class="sortable-column"
+                  >
+                    Current Zoning Code
+                  </div>
                 </div>
                 <div
                   class="th"
@@ -346,7 +409,11 @@ exports[`Review Approve Step renders correctly 1`] = `
                   role="columnheader"
                   style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                 >
-                  Potential Zoning Code
+                  <div
+                    class="sortable-column"
+                  >
+                    Potential Zoning Code
+                  </div>
                 </div>
                 <div
                   class="th"
@@ -354,7 +421,11 @@ exports[`Review Approve Step renders correctly 1`] = `
                   role="columnheader"
                   style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                 >
-                  Net Book Value
+                  <div
+                    class="sortable-column"
+                  >
+                    Net Book Value
+                  </div>
                 </div>
                 <div
                   class="th"
@@ -362,7 +433,11 @@ exports[`Review Approve Step renders correctly 1`] = `
                   role="columnheader"
                   style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                 >
-                  Market Value
+                  <div
+                    class="sortable-column"
+                  >
+                    Market Value
+                  </div>
                 </div>
                 <div
                   class="th"
@@ -370,7 +445,11 @@ exports[`Review Approve Step renders correctly 1`] = `
                   role="columnheader"
                   style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                 >
-                  Assessed Value
+                  <div
+                    class="sortable-column"
+                  >
+                    Assessed Value
+                  </div>
                 </div>
                 <div
                   class="th"
@@ -378,7 +457,11 @@ exports[`Review Approve Step renders correctly 1`] = `
                   role="columnheader"
                   style="box-sizing: border-box; flex: 60 0 auto; min-width: 30px; width: 60px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                 >
-                  Type
+                  <div
+                    class="sortable-column"
+                  >
+                    Type
+                  </div>
                 </div>
               </div>
             </div>
@@ -605,9 +688,59 @@ exports[`Review Approve Step renders correctly 1`] = `
         </textarea>
       </div>
     </div>
+    <div
+      class="form-row"
+    >
+      <label
+        class="form-label col-form-label col-md-2"
+      >
+        ADM Approved Exemption On
+      </label>
+      <div
+        class="required col-md-2 form-group"
+      >
+        <div
+          class="react-datepicker-wrapper"
+        >
+          <div
+            class="react-datepicker__input-container"
+          >
+            <input
+              autocomplete="off"
+              class="form-control date-picker"
+              id="datepicker-exemptionApprovedOn"
+              name="exemptionApprovedOn"
+              placeholder="--/--/----"
+              required=""
+              type="text"
+              value=""
+            />
+          </div>
+        </div>
+      </div>
+    </div>
     <h3>
       Documentation
     </h3>
+    <div
+      class="ProjectNotes form-row"
+    >
+      <div
+        class="col-md-10 form-group col"
+      >
+        <label
+          class="form-label"
+          for="input-notes[21].note"
+        >
+          Note
+        </label>
+        <textarea
+          class="col-md-auto form-control"
+          id="input-notes[21].note"
+          name="notes[21].note"
+        />
+      </div>
+    </div>
     <div
       class="tasksForm reviewRequired form-row"
     >
@@ -641,73 +774,73 @@ exports[`Review Approve Step renders correctly 1`] = `
       </div>
     </div>
     <div
-      class="reviewRequired container-fluid"
+      class="reviewRequired row"
     >
       <div
-        class="row"
+        class="col"
       >
-        <div
-          class="col"
-        >
-          <h3>
-            Appraisal
-            <svg
-              class="tooltip-icon"
-              fill="currentColor"
-              height="1em"
-              stroke="currentColor"
-              stroke-width="0"
-              viewBox="0 0 512 512"
-              width="1em"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"
-              />
-            </svg>
-          </h3>
-          <div
-            class="ProjectNotes form-row"
+        <h3>
+          Appraisal
+          <svg
+            class="tooltip-icon"
+            fill="currentColor"
+            height="1em"
+            stroke="currentColor"
+            stroke-width="0"
+            viewBox="0 0 512 512"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
           >
-            <div
-              class="col-md-12 reviewRequired form-group"
+            <path
+              d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"
+            />
+          </svg>
+        </h3>
+        <div
+          class="ProjectNotes form-row"
+        >
+          <div
+            class="col-md-12 reviewRequired form-group col"
+          >
+            <label
+              class="form-label"
+              for="input-appraisedNote"
             >
-              <label
-                class="form-label"
-                for="input-appraisedNote"
-              >
-                Appraised Notes
-              </label>
-              <textarea
-                class="col-md-5 form-control"
-                id="input-appraisedNote"
-                name="appraisedNote"
-              />
-            </div>
+              Note
+            </label>
+            <textarea
+              class="col-md-auto form-control"
+              id="input-appraisedNote"
+              name="appraisedNote"
+            />
           </div>
         </div>
       </div>
     </div>
     <div
-      class="reviewRequired container-fluid"
+      class="reviewRequired row"
     >
-      <h3>
-        First Nations Consultation
-        <svg
-          class="tooltip-icon"
-          fill="currentColor"
-          height="1em"
-          stroke="currentColor"
-          stroke-width="0"
-          viewBox="0 0 512 512"
-          width="1em"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"
-          />
-        </svg>
-      </h3>
+      <div
+        class="col"
+      >
+        <h3>
+          First Nations Consultation
+          <svg
+            class="tooltip-icon"
+            fill="currentColor"
+            height="1em"
+            stroke="currentColor"
+            stroke-width="0"
+            viewBox="0 0 512 512"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"
+            />
+          </svg>
+        </h3>
+      </div>
     </div>
     <h3>
       Approval
@@ -750,7 +883,7 @@ exports[`Review Approve Step renders correctly 1`] = `
       class="ProjectNotes form-row"
     >
       <div
-        class="col-md-12 reviewRequired form-group"
+        class="col-md-12 reviewRequired form-group col"
       >
         <label
           class="form-label"
@@ -772,7 +905,7 @@ exports[`Review Approve Step renders correctly 1`] = `
       class="ProjectNotes form-row"
     >
       <div
-        class="col-md-12 reviewRequired form-group"
+        class="col-md-12 reviewRequired form-group col"
       >
         <label
           class="form-label"
@@ -808,7 +941,7 @@ exports[`Review Approve Step renders correctly 1`] = `
       class="ProjectNotes form-row"
     >
       <div
-        class="col-md-12 reviewRequired form-group"
+        class="col-md-12 reviewRequired form-group col"
       >
         <label
           class="form-label"

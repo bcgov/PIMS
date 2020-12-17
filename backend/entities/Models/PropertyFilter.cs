@@ -1,6 +1,7 @@
 using Pims.Core.Extensions;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 
 namespace Pims.Dal.Entities.Models
@@ -11,6 +12,12 @@ namespace Pims.Dal.Entities.Models
     public abstract class PropertyFilter : PageFilter
     {
         #region Properties
+        /// <summary>
+        /// get/set - Defines a rectangle region of the 2D cordinate plane.
+        /// </summary>
+        [DisplayName("bbox")]
+        public NetTopologySuite.Geometries.Envelope Boundary { get; set; }
+
         /// <summary>
         /// get/set - North East Latitude.
         /// </summary>
@@ -172,6 +179,8 @@ namespace Pims.Dal.Entities.Models
         {
             // We want case-insensitive query parameter properties.
             var filter = new Dictionary<string, Microsoft.Extensions.Primitives.StringValues>(query, StringComparer.OrdinalIgnoreCase);
+
+            this.Boundary = filter.GetEnvelopNullValue("bbox");
             this.NELatitude = filter.GetDoubleNullValue(nameof(this.NELatitude));
             this.NELongitude = filter.GetDoubleNullValue(nameof(this.NELongitude));
             this.SWLatitude = filter.GetDoubleNullValue(nameof(this.SWLatitude));

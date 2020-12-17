@@ -1,29 +1,42 @@
 import React, { createRef } from 'react';
 import { createMemoryHistory } from 'history';
-import { Router, BrowserRouter } from 'react-router-dom';
+import { Router } from 'react-router-dom';
 import renderer from 'react-test-renderer';
 import { ParcelPopupView } from 'components/maps/ParcelPopupView';
 import { IProperty, IParcelDetail } from 'actions/parcelsActions';
 import Map from './Map';
-import { Marker, Map as LeafletMap } from 'react-leaflet';
+import { Map as LeafletMap } from 'leaflet';
+import { MapProps as LeafletMapProps, Marker, Map as ReactLeafletMap } from 'react-leaflet';
 import { mount } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import Enzyme from 'enzyme';
 import * as reducerTypes from 'constants/reducerTypes';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { render, act } from '@testing-library/react';
+import { render, wait } from '@testing-library/react';
 import { PopupView } from '../PopupView';
 import { Provider } from 'react-redux';
 import { useKeycloak } from '@react-keycloak/web';
-import Axios from 'axios';
+import { useApi, PimsAPI } from 'hooks/useApi';
+import { createPoints } from './mapUtils';
+import SelectedPropertyMarker from './SelectedPropertyMarker/SelectedPropertyMarker';
 
 jest.mock('axios');
 jest.mock('@react-keycloak/web');
 Enzyme.configure({ adapter: new Adapter() });
 const mockStore = configureMockStore([thunk]);
-const mockedAxios = Axios as jest.Mocked<typeof Axios>;
-mockedAxios.create = jest.fn(() => mockedAxios);
+jest.mock('hooks/useApi');
+
+// This mocks the parcels of land a user can see - should be able to see 2 markers
+const mockParcels = [
+  { id: 1, latitude: 48.455059, longitude: -123.496452, propertyTypeId: 1 },
+  { id: 2, latitude: 53.917065, longitude: -122.749672, propertyTypeId: 0 },
+] as IProperty[];
+((useApi as unknown) as jest.Mock<Partial<PimsAPI>>).mockReturnValue({
+  loadProperties: async () => {
+    return createPoints(mockParcels);
+  },
+});
 
 // This will spoof the active parcel (the one that will populate the popup details)
 const mockDetails: IParcelDetail = {
@@ -74,11 +87,6 @@ const store = mockStore({
 // To check for alert message
 const emptyDetails = null;
 
-// This mocks the parcels of land a user can see - should be able to see 2 markers
-const mockParcels = [
-  { id: 1, latitude: 48, longitude: 123 },
-  { id: 2, latitude: 50, longitude: 133 },
-] as IProperty[];
 const noParcels = [] as IProperty[];
 
 const history = createMemoryHistory();
@@ -107,11 +115,8 @@ describe('MapProperties View', () => {
     expect(tree).toMatchSnapshot();
   });
 
-  // TODO: Check that the markers have correct position given the mock parcel 1 above
-  xit('Renders the marker in correct position', async () => {
-    const promise = Promise.resolve(mockParcels);
-    mockedAxios.get.mockImplementationOnce(() => promise);
-    const mapRef = createRef<LeafletMap>();
+  it('Renders the marker in correct position', async () => {
+    const mapRef = createRef<ReactLeafletMap<LeafletMapProps, LeafletMap>>();
     const component = mount(
       <Provider store={store}>
         <Router history={history}>
@@ -130,16 +135,15 @@ describe('MapProperties View', () => {
         </Router>
       </Provider>,
     );
-    await act(() => (promise as unknown) as Promise<void>);
-    const marker = component.find(Marker).first();
-    expect(marker.prop('position')).toStrictEqual([48, 123]);
+    wait(() => expect(mapRef.current).toBeDefined(), { timeout: 500 });
+    const selectedMarkers = component.find(SelectedPropertyMarker);
+    expect(selectedMarkers.length).toEqual(1);
+    const markerProps = selectedMarkers.first().props();
+    expect(markerProps.position).toEqual([48, 123]);
   });
 
-  // TODO: Ensure no markers are rendered when there are no parcels
-  xit('Should render 0 markers when there are no parcels', async () => {
-    const promise = Promise.resolve(mockParcels);
-    mockedAxios.get.mockImplementationOnce(() => promise);
-    const mapRef = createRef<LeafletMap>();
+  it('Should render 0 markers when there are no parcels', async () => {
+    const mapRef = createRef<ReactLeafletMap<LeafletMapProps, LeafletMap>>();
     const component = mount(
       <Provider store={store}>
         <Router history={history}>
@@ -158,16 +162,16 @@ describe('MapProperties View', () => {
         </Router>
       </Provider>,
     );
-    await act(() => (promise as unknown) as Promise<void>);
+    wait(() => expect(mapRef.current).toBeDefined(), { timeout: 500 });
     const marker = component.find(Marker);
     expect(marker.length).toBe(0);
+    const selectedMarker = component.find(SelectedPropertyMarker);
+    expect(selectedMarker.length).toBe(0);
   });
 
-  // TODO: 2 parcels in mock data, check to see 2 markers are created
-  xit('Marker for each parcel is created', async () => {
-    const promise = Promise.resolve(mockParcels);
-    mockedAxios.get.mockImplementationOnce(() => promise);
-    const mapRef = createRef<LeafletMap>();
+  it('Renders the properties as cluster and on selected property', async () => {
+    const mapRef = createRef<ReactLeafletMap<LeafletMapProps, LeafletMap>>();
+
     const component = mount(
       <Provider store={store}>
         <Router history={history}>
@@ -182,49 +186,26 @@ describe('MapProperties View', () => {
             lotSizes={[]}
             onMarkerClick={jest.fn()}
             mapRef={mapRef}
+            onViewportChanged={jest.fn()}
           />
         </Router>
       </Provider>,
     );
-    await act(() => (promise as unknown) as Promise<void>);
-    const marker = component.find(Marker);
-    expect(marker.length).toBe(2);
-  });
 
-  // TODO: When marker is clicked function to load the details should be called
-  xit('Loads parcel details on click', async () => {
-    const promise = Promise.resolve(mockParcels);
-    mockedAxios.get.mockImplementationOnce(() => promise);
-    const mapRef = createRef<LeafletMap>();
-    const onParcelClick = jest.fn();
-    const component = mount(
-      <Provider store={store}>
-        <BrowserRouter>
-          <Map
-            lat={48.43}
-            lng={-123.37}
-            zoom={14}
-            properties={mockParcels}
-            selectedProperty={mockDetails}
-            agencies={[]}
-            propertyClassifications={[]}
-            lotSizes={[]}
-            onMarkerClick={onParcelClick}
-            mapRef={mapRef}
-          />
-        </BrowserRouter>
-      </Provider>,
+    await wait(() => expect(mapRef.current).toBeDefined(), { timeout: 500 });
+    const marker = component.find(Marker);
+    const selectedMarker = component.find(SelectedPropertyMarker).first();
+    expect(selectedMarker).toBeDefined();
+    await wait(
+      () => {
+        expect(marker.length).toBe(1);
+      },
+      { timeout: 500 },
     );
-    await act(() => (promise as unknown) as Promise<void>);
-    const marker = component.find(Marker).first();
-    marker.simulate('click', { stopPropagation: () => undefined });
-    expect(onParcelClick).toBeCalledTimes(1);
   });
 
   // Check that error message is displayed on null details
   it('Displays proper message when no details loaded', async () => {
-    const promise = Promise.resolve(mockParcels);
-    mockedAxios.get.mockImplementationOnce(() => promise);
     const { getByText } = render(
       <Provider store={store}>
         <Router history={history}>
@@ -232,14 +213,12 @@ describe('MapProperties View', () => {
         </Router>
       </Provider>,
     );
-    await act(() => (promise as unknown) as Promise<void>);
+
     const alert = getByText('Failed to load parcel details.');
     expect(alert).toBeTruthy();
   });
 
   it('ParcelPopupView renders correctly when the agencies matches the current user', async () => {
-    const promise = Promise.resolve(mockParcels);
-    mockedAxios.get.mockImplementationOnce(() => promise);
     const { getByText } = render(
       <Provider store={store}>
         <Router history={history}>
@@ -247,7 +226,7 @@ describe('MapProperties View', () => {
         </Router>
       </Provider>,
     );
-    await act(() => (promise as unknown) as Promise<void>);
+
     const update = getByText('Update');
     expect(update).toBeTruthy();
   });

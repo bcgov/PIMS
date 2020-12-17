@@ -94,6 +94,36 @@ export interface IBuilding extends IProperty {
   };
 }
 
+export interface IFlatBuilding extends IProperty {
+  parcelId: number;
+  address: string;
+  administrativeArea: string;
+  postal: string;
+  province: string;
+  buildingFloorCount?: number | '';
+  buildingConstructionType?: string;
+  buildingConstructionTypeId: number | '';
+  buildingPredominateUse?: string;
+  buildingPredominateUseId: number | '';
+  buildingOccupantType?: string;
+  buildingOccupantTypeId: number | '';
+  classificationId: number | '';
+  classification: string;
+  leaseExpiry?: string;
+  occupantName: string;
+  transferLeaseOnSale: boolean;
+  buildingTenancy: string;
+  rentableArea: number | '';
+  agencyId: number | '';
+  agency: string;
+  agencyCode: string;
+  assessed: number | '';
+  netBook: number | '';
+  leasedLand: {
+    type: LeasedLand;
+  };
+}
+
 export interface IFiscal {
   parcelId?: number;
   buildingId?: number;
@@ -131,6 +161,26 @@ export interface IParcel extends IProperty {
   fiscals: IFiscal[];
 }
 
+export interface IFlatParcel extends IProperty {
+  pid?: string;
+  pin?: number | '';
+  classification?: string;
+  classificationId: number | '';
+  address: string;
+  administrativeArea: string;
+  postal: string;
+  landArea: number | '';
+  landLegalDescription: string;
+  zoning: string;
+  zoningPotential: string;
+  agency?: string;
+  agencyId: number | '';
+  isSensitive: boolean;
+  buildings: IBuilding[];
+  assessed: number | '';
+  netBook: number | '';
+}
+
 export interface IParcelDetail {
   propertyTypeId: 0;
   parcelDetail: IParcel | null;
@@ -153,14 +203,16 @@ export interface IStoreParcelDetail {
 export const storeParcelDetail = (
   parcel: IParcel | null,
   position?: [number, number],
-): IStoreParcelDetail => ({
-  type: ActionTypes.STORE_PARCEL_DETAIL,
-  parcelDetail: {
-    propertyTypeId: 0,
-    parcelDetail: parcel,
-    position,
-  },
-});
+): IStoreParcelDetail => {
+  return {
+    type: ActionTypes.STORE_PARCEL_DETAIL,
+    parcelDetail: {
+      propertyTypeId: 0,
+      parcelDetail: parcel,
+      position,
+    },
+  };
+};
 
 export interface IStoreBuildingDetail {
   type: typeof ActionTypes.STORE_BUILDING_DETAIL;

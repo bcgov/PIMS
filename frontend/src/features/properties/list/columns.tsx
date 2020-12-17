@@ -38,6 +38,7 @@ export const columns: ColumnWithProps<IProperty>[] = [
     responsive: true,
     width: spacing.small,
     minWidth: 65, // px
+    sortable: true,
   },
   {
     Header: 'Sub Agency',
@@ -46,6 +47,7 @@ export const columns: ColumnWithProps<IProperty>[] = [
     responsive: true,
     width: spacing.medium,
     minWidth: 80,
+    sortable: true,
   },
   {
     Header: 'Property Name',
@@ -54,6 +56,7 @@ export const columns: ColumnWithProps<IProperty>[] = [
     responsive: true,
     width: spacing.medium,
     minWidth: 80,
+    sortable: true,
   },
   {
     Header: 'Classification',
@@ -62,6 +65,7 @@ export const columns: ColumnWithProps<IProperty>[] = [
     responsive: true,
     width: spacing.medium,
     minWidth: 80,
+    sortable: true,
   },
   {
     Header: 'Type',
@@ -80,6 +84,7 @@ export const columns: ColumnWithProps<IProperty>[] = [
     responsive: true,
     width: spacing.large,
     minWidth: 160,
+    sortable: true,
   },
   {
     Header: 'Location',
@@ -88,6 +93,7 @@ export const columns: ColumnWithProps<IProperty>[] = [
     responsive: true,
     width: spacing.medium,
     minWidth: 80,
+    sortable: true,
   },
   {
     Header: 'Assessed Value',
@@ -97,6 +103,7 @@ export const columns: ColumnWithProps<IProperty>[] = [
     responsive: true,
     width: spacing.medium,
     minWidth: 80,
+    sortable: true,
   },
   {
     Header: 'Net Book Value',
@@ -106,6 +113,7 @@ export const columns: ColumnWithProps<IProperty>[] = [
     responsive: true,
     width: spacing.medium,
     minWidth: 80,
+    sortable: true,
   },
   {
     Header: 'Market Value',
@@ -115,6 +123,7 @@ export const columns: ColumnWithProps<IProperty>[] = [
     responsive: true,
     width: spacing.medium,
     minWidth: 80,
+    sortable: true,
   },
   {
     Header: 'Lot Size (in ha)',
@@ -124,6 +133,7 @@ export const columns: ColumnWithProps<IProperty>[] = [
     responsive: true,
     width: spacing.small,
     minWidth: 65,
+    sortable: true,
   },
   {
     Header: ' ',

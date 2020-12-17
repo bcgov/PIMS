@@ -104,6 +104,15 @@ namespace Pims.Dal.Services
         {
             return this.Context.TierLevels.AsNoTracking().OrderBy(t => t.SortOrder).ThenBy(t => t.Name).ToArray();
         }
+
+        /// <summary>
+        /// Get all the project risks sorted by SortOrder and Name.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<ProjectRisk> GetProjectRisks()
+        {
+            return this.Context.ProjectRisks.AsNoTracking().OrderBy(t => t.SortOrder).ThenBy(t => t.Name).ToArray();
+        }
         #endregion
     }
 }

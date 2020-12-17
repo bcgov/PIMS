@@ -4,9 +4,9 @@ import { Form } from 'react-bootstrap';
 import { getIn, useFormikContext } from 'formik';
 import styled from 'styled-components';
 import TooltipIcon from 'components/common/TooltipIcon';
+import classNames from 'classnames';
 import { useRef } from 'react';
 import TooltipWrapper from '../TooltipWrapper';
-import classNames from 'classnames';
 
 interface ITypeaheadFieldProps<T extends TypeaheadModel> extends TypeaheadProps<T> {
   name: string;
@@ -20,12 +20,20 @@ interface ITypeaheadFieldProps<T extends TypeaheadModel> extends TypeaheadProps<
   getOptionByValue?: (value?: any) => T[];
   /** pass a custom onChange to the TypeaheadField */
   onChange?: (vals: any) => void;
+  /** pass a custom selection to the TypeaheadField */
+  selected?: any;
   /** Class name of the input wrapper */
   outerClassName?: string;
   /** clear menu on custom header click */
   clearMenu?: boolean;
+  /** controlling the selected inputs for multiple select enabled queries */
+  multiSelections?: any;
   /** Display errors in a tooltip instead of in a div */
   displayErrorTooltips?: boolean;
+  /** used to trigger ref.current.blur where applicable */
+  clearSelected?: boolean;
+  /** restet clear  state via this component */
+  setClear?: Function;
 }
 
 const Feedback = styled(Form.Control.Feedback)`
@@ -39,7 +47,11 @@ export function TypeaheadField<T extends TypeaheadModel>({
   hideValidation,
   tooltip,
   getOptionByValue,
+  multiSelections,
   onChange,
+  setClear,
+  selected,
+  clearSelected,
   outerClassName,
   clearMenu,
   displayErrorTooltips,
@@ -56,10 +68,14 @@ export function TypeaheadField<T extends TypeaheadModel>({
   }
   const ref = useRef<any>();
   React.useEffect(() => {
+    if (clearSelected && ref.current?.clear) {
+      ref.current.clear();
+    }
     if (clearMenu && ref.current?.blur) {
       ref.current.blur();
+      setClear && setClear(false);
     }
-  }, [clearMenu]);
+  }, [clearMenu, clearSelected, setClear]);
   return (
     <Form.Group className={classNames(!!required ? 'required' : '', outerClassName)}>
       {!!label && <Form.Label>{label}</Form.Label>}
@@ -70,7 +86,9 @@ export function TypeaheadField<T extends TypeaheadModel>({
           inputProps={{ ...rest.inputProps, name: name, id: `${name}-field` }}
           isInvalid={hasError as any}
           isValid={!hideValidation && isValid}
-          selected={getOptionByValue(getIn(values, name))}
+          selected={
+            multiSelections?.length > 0 ? multiSelections : getOptionByValue(getIn(values, name))
+          }
           ref={ref}
           onChange={
             onChange

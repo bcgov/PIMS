@@ -1,3 +1,5 @@
+import './SplStep.scss';
+
 import * as React from 'react';
 import { Formik, Form, getIn } from 'formik';
 import _ from 'lodash';
@@ -25,12 +27,15 @@ import {
   saveSplTab,
   SplTabs,
   SurplusPropertyInformationYupSchema,
-  SurplusPropertyListYupSchema,
+  SurplusPropertyListOnMarketYupSchema,
+  SurplusPropertyListContractInPlaceYupSchema,
+  SurplusPropertyListDisposeYupSchema,
   CloseOutFormValidationSchema,
+  RemoveFromSplYupSchema,
 } from '..';
 import { ApprovalActions } from 'features/projects/erp';
-import './SplStep.scss';
 import { DocumentationStepSchema } from 'features/projects/dispose';
+import { useHistory } from 'react-router-dom';
 
 const CenterBoldText = styled.div`
   text-align: center;
@@ -53,6 +58,11 @@ const copyAppraisalTasks = (project: IProject): IProject => {
   return initialValues;
 };
 
+/**
+ * Provides a form to manage a disposal project during SPL.
+ * @param {IStepProps} { formikRef }
+ * @returns SplStep component.
+ */
 const SplStep = ({ formikRef }: IStepProps) => {
   const { project, getStatusTransitionWorkflow } = useProject();
   const { onSubmitReview, canUserApproveForm, canUserOverride } = useStepForm();
@@ -63,20 +73,9 @@ const SplStep = ({ formikRef }: IStepProps) => {
       : SPPApprovalTabs.spl;
   const currentTab = useSelector<RootState, string | null>(state => state.splTab) ?? defaultTab;
   const dispatch = useDispatch();
+  const history = useHistory();
 
-  const canUserEdit =
-    canUserOverride() ||
-    (canUserApproveForm() &&
-      (project?.statusCode === ReviewWorkflowStatus.ApprovedForSpl ||
-        project?.statusCode === ReviewWorkflowStatus.PreMarketing ||
-        project?.statusCode === ReviewWorkflowStatus.OnMarket ||
-        project?.statusCode === ReviewWorkflowStatus.ContractInPlace ||
-        currentTab === SPPApprovalTabs.closeOutForm));
-  const setCurrentTab = (tabName: string) => {
-    dispatch(saveSplTab(tabName));
-  };
-  let initialValues = copyAppraisalTasks(project);
-
+  //** Different validation rules based on the status selected. */
   const splValidationGroups: ValidationGroup[] = [
     {
       schema: SurplusPropertyInformationYupSchema,
@@ -84,14 +83,39 @@ const SplStep = ({ formikRef }: IStepProps) => {
       statusCode: DisposeWorkflowStatus.Draft,
     },
     {
+      schema: RemoveFromSplYupSchema,
+      tab: SPPApprovalTabs.spl,
+      statusCode: ReviewWorkflowStatus.NotInSpl,
+    },
+    {
+      schema: SurplusPropertyListOnMarketYupSchema,
+      tab: SPPApprovalTabs.spl,
+      statusCode: ReviewWorkflowStatus.OnMarket,
+    },
+    {
+      schema: SurplusPropertyListContractInPlaceYupSchema,
+      tab: SPPApprovalTabs.spl,
+      statusCode: ReviewWorkflowStatus.ContractInPlaceConditional,
+    },
+    {
+      schema: SurplusPropertyListContractInPlaceYupSchema,
+      tab: SPPApprovalTabs.spl,
+      statusCode: ReviewWorkflowStatus.ContractInPlaceUnconditional,
+    },
+    {
       schema: DocumentationStepSchema,
       tab: SPPApprovalTabs.documentation,
       statusCode: ReviewWorkflowStatus.Disposed,
     },
     {
-      schema: SurplusPropertyListYupSchema,
+      schema: SurplusPropertyListContractInPlaceYupSchema,
       tab: SPPApprovalTabs.spl,
-      statusCode: ReviewWorkflowStatus.ContractInPlace,
+      statusCode: ReviewWorkflowStatus.Disposed,
+    },
+    {
+      schema: SurplusPropertyListDisposeYupSchema,
+      tab: SPPApprovalTabs.spl,
+      statusCode: ReviewWorkflowStatus.Disposed,
     },
     {
       schema: CloseOutFormValidationSchema,
@@ -99,41 +123,66 @@ const SplStep = ({ formikRef }: IStepProps) => {
       statusCode: ReviewWorkflowStatus.Disposed,
     },
   ];
+
+  /**
+   * Get the validation rules for the specified 'statusCode' or return them all.
+   * @param statusCode The status code for the desired status.
+   */
   const getValidationGroups = (statusCode?: string) => {
-    // Do not validate the close out form when transitioning statuses.
-    if (currentTab !== SPPApprovalTabs.closeOutForm) {
-      return splValidationGroups.slice(0, splValidationGroups.length - 1);
-    } else {
-      return splValidationGroups;
+    if (statusCode) {
+      return splValidationGroups.filter(g => g.statusCode === statusCode);
     }
+    return [];
   };
+
+  const canUserEdit =
+    canUserOverride() ||
+    (canUserApproveForm() &&
+      (project?.statusCode === ReviewWorkflowStatus.ApprovedForSpl ||
+        project?.statusCode === ReviewWorkflowStatus.PreMarketing ||
+        project?.statusCode === ReviewWorkflowStatus.OnMarket ||
+        project?.statusCode === ReviewWorkflowStatus.ContractInPlaceConditional ||
+        currentTab === SPPApprovalTabs.closeOutForm));
+  const setCurrentTab = (tabName: string) => {
+    dispatch(saveSplTab(tabName));
+  };
+  let initialValues = copyAppraisalTasks(project);
 
   return (
     <Container fluid className="splStep">
       <Formik
         initialValues={initialValues}
         validateOnMount={true}
-        enableReinitialize={true}
-        onSubmit={(values: IProject) => {
+        onSubmit={(values: IProject, actions) => {
           return onSubmitReview(
             values,
             formikRef,
             submitStatusCode,
             getStatusTransitionWorkflow(submitStatusCode),
           ).then((project: IProject) => {
-            if (project?.statusCode === ReviewWorkflowStatus.Disposed) {
+            actions.setValues(project);
+            if (
+              project?.statusCode === ReviewWorkflowStatus.NotInSpl ||
+              project?.statusCode === ReviewWorkflowStatus.ApprovedForSpl
+            ) {
+              history.go(0);
+            } else if (project?.statusCode === ReviewWorkflowStatus.Disposed) {
               setCurrentTab(SPPApprovalTabs.closeOutForm);
             }
           });
         }}
-        //only perform validation if the user is attempting to dispose the project.
         validate={(values: IProject) =>
-          submitStatusCode === ReviewWorkflowStatus.Disposed || submitStatusCode === undefined
+          submitStatusCode === undefined ||
+          submitStatusCode === ReviewWorkflowStatus.NotInSpl ||
+          submitStatusCode === ReviewWorkflowStatus.Disposed ||
+          submitStatusCode === ReviewWorkflowStatus.OnMarket ||
+          submitStatusCode === ReviewWorkflowStatus.ContractInPlaceConditional ||
+          submitStatusCode === ReviewWorkflowStatus.ContractInPlaceUnconditional
             ? handleValidate(values, getValidationGroups(submitStatusCode))
             : Promise.resolve({})
         }
       >
-        {({ values, errors, touched }) => (
+        {({ values, errors, touched, setValues }) => (
           <Form>
             <StepStatusIcon
               preIconLabel="Approved for Surplus Property Program"
@@ -163,7 +212,9 @@ const SplStep = ({ formikRef }: IStepProps) => {
                       formikRef,
                       submitStatusCode,
                       getStatusTransitionWorkflow(submitStatusCode),
-                    );
+                    ).then((project: IProject) => {
+                      setValues(project);
+                    });
                   }
                 }}
               />

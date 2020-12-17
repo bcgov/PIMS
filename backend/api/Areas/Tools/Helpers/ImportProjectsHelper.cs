@@ -257,13 +257,13 @@ namespace Pims.Api.Areas.Tools.Helpers
                 GainLoss = model.GainLoss,
                 SaleWithLeaseInPlace = model.SaleWithLeaseInPlace,
                 DisposedOn = model.DisposedOn ?? (project.Status.Code == "DIS" ? model.CompletedOn : null),
-                IsContractConditional = model.IsContractConditional, // Don't have a source for this information.
                 OfferAmount = project.Status.Code == "DIS" ? model.Market : (decimal?)null, // This value would only be accurate if the property is disposed.
                 OfferAcceptedOn = null// Don't have a source for this information.
             };
 
             // A prior net proceeds was provided, which means a prior snapshot needs to be generated.
-            if (model.PriorNetProceeds.HasValue)
+            // If the project already exists, don't add prior snapshots.
+            if (model.PriorNetProceeds.HasValue && project.Id == 0)
             {
                 AddSnapshot(project, model, metadata);
             }
@@ -430,7 +430,6 @@ namespace Pims.Api.Areas.Tools.Helpers
                         "Weekly Review" => Entity.NoteTypes.Reporting,
                         _ => Entity.NoteTypes.General
                     };
-                    note = $"{noteType}{Environment.NewLine}{note}";
                 }
 
                 var projectNote = project.Notes.FirstOrDefault(n => n.NoteType == type);
@@ -441,7 +440,7 @@ namespace Pims.Api.Areas.Tools.Helpers
                 else
                 {
                     if (!String.IsNullOrWhiteSpace(projectNote.Note))
-                        projectNote.Note += $"{Environment.NewLine}{Environment.NewLine}{note}";
+                        projectNote.Note += $"{Environment.NewLine}{Environment.NewLine}{noteType}{Environment.NewLine}{note}";
                     else
                         projectNote.Note = note;
                 }
@@ -492,7 +491,7 @@ namespace Pims.Api.Areas.Tools.Helpers
         /// <returns></returns>
         private Entity.ProjectRisk GetRisk(string value)
         {
-            return _adminService.ProjectRisk.Get(_risks.FirstOrDefault(r => r.Name.ToLower() == value.ToLower())?.Id ?? throw new KeyNotFoundException($"Risk '{value}' does not exist."));
+            return _adminService.ProjectRisk.Get(_risks.FirstOrDefault(r => r.Name.ToLower() == value?.ToLower())?.Id ?? throw new KeyNotFoundException($"Risk '{value}' does not exist."));
         }
 
         /// <summary>

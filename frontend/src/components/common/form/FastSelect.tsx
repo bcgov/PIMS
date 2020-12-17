@@ -108,7 +108,7 @@ export const FastSelect: React.FC<FastSelectProps> = memo(
         return null;
       }
       options.forEach((x: any) => {
-        if (x.value === value.toString()) {
+        if (x.value === value?.toString()) {
           prevLabel = x.label;
         }
       });

@@ -14,6 +14,11 @@
   .form-check-label {
     font-size: 12px;
     font-family: 'BCSans', Fallback, sans-serif;
-    padding-right: 1rem;
+    margin-right: 1rem;
+  }
+  textarea {
+    &.col-md-auto {
+      max-width: 75%; //prevents box from stretching off the side of the page
+    }
   }
 }

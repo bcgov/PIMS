@@ -246,6 +246,24 @@
         "clientRole": false,
         "containerId": "pims",
         "attributes": {}
+      },
+      {
+        "id": "090bc341-af0f-45c9-8e0a-6d99024b52c1",
+        "name": "reports-view",
+        "description": "Ability to view reports.",
+        "composite": false,
+        "clientRole": false,
+        "containerId": "pims",
+        "attributes": {}
+      },
+      {
+        "id": "e3394f24-d457-4b3b-9036-2f8e5dda4123",
+        "name": "reports-spl",
+        "description": "Ability to view SPL report.",
+        "composite": false,
+        "clientRole": false,
+        "containerId": "pims",
+        "attributes": {}
       }
     ],
     "client": {
@@ -671,6 +689,15 @@
       "subGroups": []
     },
     {
+      "id": "6238c23d-933e-4c4a-954e-48bae3ce2080",
+      "name": "SRES Financial Manager",
+      "path": "/SRES Financial Manager",
+      "attributes": {},
+      "realmRoles": ["reports-view", "reports-spl"],
+      "clientRoles": {},
+      "subGroups": []
+    },
+    {
       "id": "02c0f992-83ae-4823-9bf7-08cf6db03950",
       "name": "System Administrator",
       "path": "/System Administrator",
@@ -852,6 +879,38 @@
       },
       "notBefore": 0,
       "groups": ["/Real Estate Manager", "/SRES"]
+    },
+    {
+      "id": "6c384423-c113-46c5-b23a-14680f4e7b78",
+      "createdTimestamp": 1600787542788,
+      "username": "sresfm",
+      "enabled": true,
+      "totp": false,
+      "emailVerified": false,
+      "firstName": "SRES",
+      "lastName": "Financial Manager",
+      "email": "sresfm@test.com",
+      "attributes": {
+        "displayName": ["Financial Manager, SRES"],
+        "agencies": ["110"]
+      },
+      "credentials": [
+        {
+          "id": "3bd2277a-2c1d-4300-8b8c-a3b4c06d57a3",
+          "type": "password",
+          "createdDate": 1600787563095,
+          "secretData": "{\"value\":\"02MdIh5KlDbjtWM/1gOpdPTsjRVapPr0pJg7Gpkz+vRdQ36fglxnXSwjjoYw2uEExCS9PuD0HP3XI58lcp3vdQ==\",\"salt\":\"JnhiXLXTXG260+B4RUQbcQ==\"}",
+          "credentialData": "{\"hashIterations\":27500,\"algorithm\":\"pbkdf2-sha256\"}"
+        }
+      ],
+      "disableableCredentialTypes": [],
+      "requiredActions": [],
+      "realmRoles": ["offline_access", "uma_authorization"],
+      "clientRoles": {
+        "account": ["view-profile", "manage-account"]
+      },
+      "notBefore": 0,
+      "groups": ["/Real Estate Manager", "/SRES", "/SRES Financial Manager"]
     }
   ],
   "scopeMappings": [

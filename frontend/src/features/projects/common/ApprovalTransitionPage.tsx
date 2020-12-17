@@ -43,15 +43,17 @@ const ApprovalTransitionPage: React.FunctionComponent<IApprovalTransitionPagePro
       return;
     }
     if (project !== undefined && !isTransitioned) {
+      // Look for a possible transition within the same workflow.
+      const next = toStatus?.filter(s => s.workflowCode === project.workflowCode);
       if (
         project.statusCode === ReviewWorkflowStatus.ApprovedForExemption ||
         project.statusCode === ReviewWorkflowStatus.NotInSpl
       ) {
         history.replace(`erp?projectNumber=${project.projectNumber}`);
-      } else if (toStatus?.length !== 1) {
+      } else if (next?.length !== 1) {
         history.replace(`${project.status?.route}?projectNumber=${project.projectNumber}`);
       } else {
-        const toStatusCode = toStatus[0].code;
+        const toStatusCode = next[0].code;
         setIsTransitioned(true);
         transitionFunction(
           dispatch(updateWorkflowStatus(project, toStatusCode, project.workflowCode)),

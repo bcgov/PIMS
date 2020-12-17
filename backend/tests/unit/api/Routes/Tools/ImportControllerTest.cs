@@ -43,6 +43,7 @@ namespace Pims.Api.Test.Routes.Project
             type.HasApiVersion("1.0");
         }
 
+        #region Properties
         [Fact]
         public void ImportProperties_Route()
         {
@@ -57,6 +58,21 @@ namespace Pims.Api.Test.Routes.Project
         }
 
         [Fact]
+        public void ImportPropertyFinancials_Route()
+        {
+            // Arrange
+            var endpoint = typeof(ImportController).FindMethod(nameof(ImportController.ImportPropertyFinancials), typeof(Model.ImportPropertyModel[]));
+
+            // Act
+            // Assert
+            Assert.NotNull(endpoint);
+            endpoint.HasPost("properties/financials");
+            endpoint.HasPermissions(Permissions.SystemAdmin);
+        }
+        #endregion
+
+        #region Projects
+        [Fact]
         public void ImportProjects_Route()
         {
             // Arrange
@@ -68,6 +84,7 @@ namespace Pims.Api.Test.Routes.Project
             endpoint.HasPost("projects");
             endpoint.HasPermissions(Permissions.SystemAdmin);
         }
+        #endregion
         #endregion
     }
 }

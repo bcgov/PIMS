@@ -1,15 +1,15 @@
 import * as React from 'react';
-import { Container } from 'react-bootstrap';
+import { Container, Form } from 'react-bootstrap';
 import _ from 'lodash';
-import { PublicNotes, PrivateNotes } from '../../common/components/ProjectNotes';
 import {
   DocumentationForm,
   AppraisalCheckListForm,
-  ProjectNotes,
   DisposeWorkflowStatus,
   FirstNationsCheckListForm,
   useProject,
 } from '../../common';
+import { FastCurrencyInput } from 'components/common/form';
+import { useFormikContext } from 'formik';
 
 interface IDocumentationTabProps {
   canOverride?: boolean;
@@ -30,15 +30,20 @@ const DocumentationTab: React.FunctionComponent<IDocumentationTabProps> = ({
   const documentationTasks = _.filter(project.tasks, {
     statusCode: DisposeWorkflowStatus.RequiredDocumentation,
   });
+  const context = useFormikContext();
 
   return (
     <Container fluid>
-      <DocumentationForm tasks={documentationTasks} isReadOnly={!canOverride} />
+      <DocumentationForm tasks={documentationTasks} isReadOnly={!canOverride} showNote={true} />
       <AppraisalCheckListForm isReadOnly={isReadOnly} taskStatusCode={appraisalTaskStatusCode} />
+
+      <Form.Row>
+        <Form.Label column md={2}>
+          Appraised Value
+        </Form.Label>
+        <FastCurrencyInput field="appraised" formikProps={context} disabled={isReadOnly} md={2} />
+      </Form.Row>
       <FirstNationsCheckListForm isReadOnly={isReadOnly} />
-      <ProjectNotes disabled={true} />
-      <PublicNotes disabled={isReadOnly} />
-      <PrivateNotes disabled={isReadOnly} />
     </Container>
   );
 };
