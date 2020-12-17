@@ -70,7 +70,7 @@ namespace Pims.Dal.Entities.Models
         /// <param name="address"></param>
         /// <param name="agencyId"></param>
         /// <param name="constructionTypeId"></param>
-        /// <param name="predominantUseId"></param>
+        /// <param name="predominateUseId"></param>
         /// <param name="floorCount"></param>
         /// <param name="tenancy"></param>
         /// <param name="minRentableArea"></param>
@@ -81,11 +81,11 @@ namespace Pims.Dal.Entities.Models
         /// <param name="maxAssessedValue"></param>
         /// <param name="sort"></param>
         /// <returns></returns>
-        public BuildingFilter(string address, int? agencyId, int? constructionTypeId, int? predominantUseId, int? floorCount, string tenancy, float? minRentableArea, float? maxRentableArea, decimal? minMarketValue, decimal? maxMarketValue, decimal? minAssessedValue, decimal? maxAssessedValue, string[] sort)
+        public BuildingFilter(string address, int? agencyId, int? constructionTypeId, int? predominateUseId, int? floorCount, string tenancy, float? minRentableArea, float? maxRentableArea, decimal? minMarketValue, decimal? maxMarketValue, decimal? minAssessedValue, decimal? maxAssessedValue, string[] sort)
         {
             this.Address = address;
             this.ConstructionTypeId = constructionTypeId;
-            this.PredominateUseId = predominantUseId;
+            this.PredominateUseId = predominateUseId;
             this.FloorCount = floorCount;
             this.Tenancy = tenancy;
             this.MinRentableArea = minRentableArea;

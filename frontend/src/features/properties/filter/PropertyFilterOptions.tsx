@@ -9,16 +9,12 @@ import { IPropertyFilter } from './IPropertyFilter';
 export const PropertyFilterOptions: React.FC = () => {
   const state: { options: any[]; placeholders: Record<string, string> } = {
     options: [
+      { label: 'Property Name', value: 'name' },
       { label: 'Address', value: 'address' },
-      { label: 'Location', value: 'administrativeArea' },
-      { label: 'PID/PIN', value: 'pid' },
-      { label: 'RAEG or SPP No.', value: 'projectNumber' },
     ],
     placeholders: {
+      name: 'Enter a name',
       address: 'Enter an address or city',
-      administrativeArea: 'Enter a location name',
-      pid: 'Enter a PID or PIN',
-      projectNumber: 'Enter an SPP/RAEG number',
     },
   };
 
@@ -30,10 +26,8 @@ export const PropertyFilterOptions: React.FC = () => {
   const desc = state.placeholders[searchBy] || '';
 
   const reset = () => {
+    setFieldValue('name', '');
     setFieldValue('address', '');
-    setFieldValue('administrativeArea', '');
-    setFieldValue('projectNumber', '');
-    setFieldValue('city', '');
   };
 
   return (

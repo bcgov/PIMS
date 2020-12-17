@@ -87,6 +87,12 @@ namespace Pims.Api.Areas.Property.Models.Search
         public bool? InEnhancedReferralProcess { get; set; }
 
         /// <summary>
+        /// get/set - Value of the property name to be filtered.
+        /// </summary>
+        /// <value></value>
+        public string Name { get; set; }
+
+        /// <summary>
         /// get/set - A way to filter both Parcel.LandArea and the Building.BuildingRentableArea.
         /// </summary>
         /// <value></value>
@@ -162,16 +168,22 @@ namespace Pims.Api.Areas.Property.Models.Search
         public int? PredominateUseId { get; set; }
 
         /// <summary>
+        /// get/set - Bare land only flag
+        /// </summary>
+        /// <value></value>
+        public bool? BareLandOnly { get; set; }
+
+        /// <summary>
         /// get/set - Parent Parcel Id.
         /// </summary>
         /// <value></value>
-        public int? ParcelId {get; set;}
+        public int? ParcelId { get; set; }
 
         /// <summary>
         /// get/set - Parent Property Type Id.
         /// </summary>
         /// <value></value>
-        public PropertyTypes? PropertyType {get; set;}
+        public PropertyTypes? PropertyType { get; set; }
 
         /// <summary>
         /// get/set - Building floor count Id.
@@ -269,6 +281,7 @@ namespace Pims.Api.Areas.Property.Models.Search
         {
             // We want case-insensitive query parameter properties.
             var filter = new Dictionary<string, Microsoft.Extensions.Primitives.StringValues>(query, StringComparer.OrdinalIgnoreCase);
+            PropertyTypes propType;
 
             this.NELatitude = filter.GetDoubleNullValue(nameof(this.NELatitude));
             this.NELongitude = filter.GetDoubleNullValue(nameof(this.NELongitude));
@@ -280,7 +293,7 @@ namespace Pims.Api.Areas.Property.Models.Search
             this.StatusId = filter.GetIntNullValue(nameof(this.StatusId));
             this.ClassificationId = filter.GetIntNullValue(nameof(this.ClassificationId));
             this.ParcelId = filter.GetIntNullValue(nameof(this.ParcelId));
-            this.PropertyType = Enum.TryParse(typeof(PropertyTypes), filter.GetStringValue(nameof(this.PropertyType), null), out object propType) ? (PropertyTypes?)propType : null;
+            this.PropertyType = Enum.TryParse(filter.GetStringValue(nameof(this.PropertyType), null), out propType) ? (PropertyTypes?)propType : null;
             this.ProjectNumber = filter.GetStringValue(nameof(this.ProjectNumber));
             this.IgnorePropertiesInProjects = filter.GetBoolNullValue(nameof(this.IgnorePropertiesInProjects));
             this.InSurplusPropertyProgram = filter.GetBoolNullValue(nameof(this.InSurplusPropertyProgram));
@@ -290,11 +303,13 @@ namespace Pims.Api.Areas.Property.Models.Search
             this.MaxMarketValue = filter.GetDecimalNullValue(nameof(this.MaxMarketValue));
             this.MinAssessedValue = filter.GetDecimalNullValue(nameof(this.MinAssessedValue));
             this.MaxAssessedValue = filter.GetDecimalNullValue(nameof(this.MaxAssessedValue));
+            this.Name = filter.GetStringValue(nameof(this.Name));
 
             this.Agencies = filter.GetIntArrayValue(nameof(this.Agencies)).Where(a => a != 0).ToArray();
             this.Sort = filter.GetStringArrayValue(nameof(this.Sort));
 
             // Parcel filters.
+            this.BareLandOnly = filter.GetBoolNullValue(nameof(this.BareLandOnly));
             this.PID = filter.GetStringValue(nameof(this.PID));
             this.MinLandArea = filter.GetFloatNullValue(nameof(this.MinLandArea)) ?? filter.GetFloatNullValue(nameof(this.MinLotArea));
             this.MaxLandArea = filter.GetFloatNullValue(nameof(this.MaxLandArea)) ?? filter.GetFloatNullValue(nameof(this.MaxLotArea));
@@ -328,6 +343,7 @@ namespace Pims.Api.Areas.Property.Models.Search
 
                 ProjectNumber = model.ProjectNumber,
                 ClassificationId = model.ClassificationId,
+                PropertyType = model.PropertyType,
                 Address = model.Address,
                 AdministrativeArea = model.AdministrativeArea,
 
@@ -407,9 +423,11 @@ namespace Pims.Api.Areas.Property.Models.Search
                 SWLongitude = model.SWLongitude,
 
                 ProjectNumber = model.ProjectNumber,
+                BareLandOnly = model.BareLandOnly,
                 IgnorePropertiesInProjects = model.IgnorePropertiesInProjects,
                 InSurplusPropertyProgram = model.InSurplusPropertyProgram,
                 InEnhancedReferralProcess = model.InEnhancedReferralProcess,
+                Name = model.Name,
                 ParcelId = model.ParcelId,
                 PropertyType = model.PropertyType,
                 ClassificationId = model.ClassificationId,
@@ -458,17 +476,21 @@ namespace Pims.Api.Areas.Property.Models.Search
                 || this.MinMarketValue.HasValue
                 || this.MaxMarketValue.HasValue
                 || this.Agencies?.Any() == true
+                || this.BareLandOnly == true
                 || this.StatusId.HasValue
                 || this.ClassificationId.HasValue
                 || this.MinLandArea.HasValue
                 || this.MaxLandArea.HasValue
                 || this.ConstructionTypeId.HasValue
+                || this.PropertyType.HasValue
                 || this.PredominateUseId.HasValue
                 || this.FloorCount.HasValue
                 || this.MinRentableArea.HasValue
                 || this.MaxRentableArea.HasValue
                 || !String.IsNullOrWhiteSpace(this.PID)
-                || !String.IsNullOrWhiteSpace(this.Tenancy);
+                || !String.IsNullOrWhiteSpace(this.Tenancy)
+                || !String.IsNullOrWhiteSpace(this.Name);
+
         }
         #endregion
     }

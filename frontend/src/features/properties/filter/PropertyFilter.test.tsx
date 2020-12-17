@@ -13,6 +13,7 @@ import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureMockStore from 'redux-mock-store';
 import * as reducerTypes from 'constants/reducerTypes';
+import { TrueFalse } from 'constants/trueFalse';
 
 const onFilterChange = jest.fn<void, [IPropertyFilter]>();
 //prevent web calls from being made during tests.
@@ -172,7 +173,7 @@ describe('MapFilterBar', () => {
   });
 
   it('loads filter values if provided', () => {
-    const providedFilter = {
+    const providedFilter: IPropertyFilter = {
       pid: 'mockPid',
       searchBy: 'address',
       address: 'mockaddress',
@@ -182,12 +183,10 @@ describe('MapFilterBar', () => {
       classificationId: '0',
       minLotSize: '10',
       maxLotSize: '20',
-      inSurplusPropertyProgram: 'true',
+      inSurplusPropertyProgram: TrueFalse.True,
     };
-    const { getByText, getByPlaceholderText } = render(getUiElement(providedFilter));
+    const { getByText } = render(getUiElement(providedFilter));
     expect(getByText('Address')).toBeVisible();
     expect(getByText('Core Operational')).toBeVisible();
-    expect(getByPlaceholderText('Min Lot Size')).toHaveValue('10');
-    expect(getByPlaceholderText('Max Lot Size')).toHaveValue('20');
   });
 });

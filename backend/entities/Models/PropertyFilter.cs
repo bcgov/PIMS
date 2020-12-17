@@ -48,6 +48,11 @@ namespace Pims.Dal.Entities.Models
         public string ProjectNumber { get; set; }
 
         /// <summary>
+        /// get/set - The property type
+        /// </summary>
+        public PropertyTypes? PropertyType { get; set; }
+
+        /// <summary>
         /// get/set - Flag indicating properties in projects should be ignored.
         /// </summary>
         /// <value></value>
@@ -66,10 +71,16 @@ namespace Pims.Dal.Entities.Models
         public bool? InEnhancedReferralProcess { get; set; }
 
         /// <summary>
+        /// get/set - The value of the property name.
+        /// </summary>
+        /// <value></value>
+        public string Name { get; set; }
+
+        /// <summary>
         /// get/set - The parcelId for the property
         /// </summary>
         /// <value></value>
-        public int? ParcelId { get; set;}
+        public int? ParcelId { get; set; }
 
         /// <summary>
         /// get/set - Building classification Id.
@@ -98,6 +109,12 @@ namespace Pims.Dal.Entities.Models
         /// </summary>
         /// <value></value>
         public decimal? MinMarketValue { get; set; }
+
+        /// <summary>
+        /// get/set - Bare land only flag
+        /// </summary>
+        /// <value></value>
+        public bool? BareLandOnly { get; set; }
 
         /// <summary>
         /// get/set - Building maximum market value.
@@ -179,6 +196,7 @@ namespace Pims.Dal.Entities.Models
         {
             // We want case-insensitive query parameter properties.
             var filter = new Dictionary<string, Microsoft.Extensions.Primitives.StringValues>(query, StringComparer.OrdinalIgnoreCase);
+            PropertyTypes propType;
 
             this.Boundary = filter.GetEnvelopNullValue("bbox");
             this.NELatitude = filter.GetDoubleNullValue(nameof(this.NELatitude));
@@ -189,9 +207,11 @@ namespace Pims.Dal.Entities.Models
             this.ProjectNumber = filter.GetStringValue(nameof(this.ProjectNumber));
             this.IgnorePropertiesInProjects = filter.GetBoolNullValue(nameof(this.IgnorePropertiesInProjects));
             this.InSurplusPropertyProgram = filter.GetBoolNullValue(nameof(this.InSurplusPropertyProgram));
+            this.PropertyType = Enum.TryParse(filter.GetStringValue(nameof(this.PropertyType), null), out propType) ? (PropertyTypes?)propType : null;
             this.Address = filter.GetStringValue(nameof(this.Address));
             this.AdministrativeArea = filter.GetStringValue(nameof(this.AdministrativeArea));
 
+            this.BareLandOnly = filter.GetBoolNullValue(nameof(this.BareLandOnly));
             this.ClassificationId = filter.GetIntNullValue(nameof(this.ClassificationId));
             this.Description = filter.GetStringValue(nameof(this.Description));
             this.MinMarketValue = filter.GetDecimalNullValue(nameof(this.MinMarketValue));
@@ -225,7 +245,9 @@ namespace Pims.Dal.Entities.Models
                 || this.MinAssessedValue.HasValue
                 || this.MinMarketValue.HasValue
                 || this.MaxMarketValue.HasValue
+                || this.BareLandOnly == true
                 || this.Agencies?.Any() == true
+                || this.PropertyType.HasValue
                 || this.ClassificationId.HasValue;
         }
         #endregion
