@@ -1,12 +1,14 @@
-import { Fragment } from 'react';
+import { Fragment, useEffect } from 'react';
 import React from 'react';
 import { Col } from 'react-bootstrap';
-import { useFormikContext } from 'formik';
-import { Form, FastInput, FastCurrencyInput } from 'components/common/form';
-import { NoteTypes, IProject } from 'features/projects/common';
+import { getIn, useFormikContext } from 'formik';
+import { Form, FastCurrencyInput } from 'components/common/form';
+import { IProject, ProjectNotes } from 'features/projects/common';
+import { NoteTypes } from '../../../../constants';
 
 interface CloseOutFinancialSummaryFormProps {
-  isReadOnly?: boolean;
+  /** Whether the form inputs will be readonly. */
+  isReadOnly?: boolean; // TODO: Need to make `disabled` and `isReadonly` consistent.  Choose one throughout app.
 }
 
 /**
@@ -14,122 +16,108 @@ interface CloseOutFinancialSummaryFormProps {
  * @param props
  */
 const CloseOutFinancialSummaryForm = (props: CloseOutFinancialSummaryFormProps) => {
+  const { values, setFieldValue } = useFormikContext<IProject>();
+
+  const market = getIn(values, 'market');
+  const interestComponent = getIn(values, 'interestComponent');
+  const salesCost = getIn(values, 'salesCost');
+  const netBook = getIn(values, 'netBook');
+  useEffect(() => {
+    // Calculate the Gain before SPL.
+    setFieldValue('gainBeforeSpl', market - interestComponent - salesCost - netBook);
+  }, [market, interestComponent, salesCost, netBook, setFieldValue]);
+
+  const gainBeforeSpl = getIn(values, 'gainBeforeSpl');
+  const programCost = getIn(values, 'programCost');
+  useEffect(() => {
+    // Calculate the Gain after SPL.
+    setFieldValue('netProceeds', gainBeforeSpl - programCost);
+  }, [gainBeforeSpl, programCost, setFieldValue]);
+
   const formikProps = useFormikContext<IProject>();
+
   return (
     <Fragment>
       <h3>Financial Summary</h3>
       <Form.Row>
-        <Col md={6}>
+        <Col>
           <Form.Row>
-            <Form.Label column md={4}>
-              Sales Proceeds
+            <Form.Label column md={6}>
+              Sale Price
             </Form.Label>
             <FastCurrencyInput
               formikProps={formikProps}
               disabled={props.isReadOnly}
-              outerClassName="col-md-8"
               field="market"
+              md={6}
             />
           </Form.Row>
           <Form.Row>
-            <Form.Label column md={4}>
-              Cost of Sales
-            </Form.Label>
-            <FastCurrencyInput
-              formikProps={formikProps}
-              disabled={props.isReadOnly}
-              outerClassName="col-md-8"
-              field="salesCost"
-            />
-          </Form.Row>
-          <Form.Row>
-            <Form.Label column md={4}>
-              Net Book Value
-            </Form.Label>
-            <FastCurrencyInput
-              formikProps={formikProps}
-              disabled={props.isReadOnly}
-              outerClassName="col-md-8"
-              field="netBook"
-            />
-          </Form.Row>
-          <Form.Row>
-            <Form.Label column md={4}>
-              Gain Before SPP Cost
-            </Form.Label>
-            <FastCurrencyInput
-              formikProps={formikProps}
-              disabled={props.isReadOnly}
-              outerClassName="col-md-8"
-              field="gainBeforeSpp"
-            />
-          </Form.Row>
-          <Form.Row>
-            <Form.Label column md={4}>
-              Remediation (Not funded throuch COS. TRAN only)
-            </Form.Label>
-            <FastInput
-              formikProps={formikProps}
-              disabled={props.isReadOnly}
-              outerClassName="col-md-8"
-              field="remediation"
-            />
-          </Form.Row>
-        </Col>
-        <Col md={6}>
-          <Form.Row>
-            <Form.Label column md={4}>
-              SPP Cost
-            </Form.Label>
-            <FastCurrencyInput
-              formikProps={formikProps}
-              disabled={props.isReadOnly}
-              outerClassName="col-md-8"
-              field="programCost"
-            />
-          </Form.Row>
-          <Form.Row>
-            <Form.Label column md={4}>
-              SPP Cost Calculation Notes
-            </Form.Label>
-            <FastInput
-              formikProps={formikProps}
-              disabled={props.isReadOnly}
-              outerClassName="col-md-8"
-              field={`notes[${NoteTypes.SppCost}].note`}
-            />
-          </Form.Row>
-          <Form.Row>
-            <Form.Label column md={4}>
-              Gain after SPP Cost
-            </Form.Label>
-            <FastCurrencyInput
-              formikProps={formikProps}
-              disabled={props.isReadOnly}
-              outerClassName="col-md-8"
-              field="gainAfterSpp"
-            />
-          </Form.Row>
-          <Form.Row>
-            <Form.Label column md={4}>
-              Gain after SPP Cost Calculation Notes
-            </Form.Label>
-            <FastInput
-              formikProps={formikProps}
-              disabled={props.isReadOnly}
-              outerClassName="col-md-8"
-              field={`notes[${NoteTypes.SppGain}].note`}
-            />
-          </Form.Row>
-          <Form.Row>
-            <Form.Label column md={4}>
+            <Form.Label column md={6}>
               Interest Component
             </Form.Label>
             <FastCurrencyInput
               formikProps={formikProps}
               disabled={props.isReadOnly}
-              outerClassName="col-md-8"
               field="interestComponent"
+              md={6}
+            />
+          </Form.Row>
+          <Form.Row>
+            <Form.Label column md={6}>
+              Cost of Sale
+            </Form.Label>
+            <FastCurrencyInput
+              formikProps={formikProps}
+              disabled={props.isReadOnly}
+              field="salesCost"
+              md={6}
+            />
+          </Form.Row>
+          <Form.Row>
+            <Form.Label column md={6}>
+              Net Book Value
+            </Form.Label>
+            <FastCurrencyInput
+              formikProps={formikProps}
+              disabled={props.isReadOnly}
+              field="netBook"
+              md={6}
+            />
+          </Form.Row>
+          <Form.Row style={{ borderTop: 'solid 1px grey' }}>
+            <Form.Label column md={6}>
+              Gain before SPL Cost
+            </Form.Label>
+            <FastCurrencyInput
+              formikProps={formikProps}
+              disabled={props.isReadOnly}
+              field="gainBeforeSpl"
+              allowNegative={true}
+              md={6}
+            />
+          </Form.Row>
+          <Form.Row>
+            <Form.Label column md={6}>
+              SPL Cost
+            </Form.Label>
+            <FastCurrencyInput
+              formikProps={formikProps}
+              disabled={props.isReadOnly}
+              field="programCost"
+              md={6}
+            />
+          </Form.Row>
+          <Form.Row style={{ borderTop: 'solid 1px grey' }}>
+            <Form.Label column md={6}>
+              Gain after SPL Cost
+            </Form.Label>
+            <FastCurrencyInput
+              formikProps={formikProps}
+              disabled={props.isReadOnly}
+              field="netProceeds"
+              allowNegative={true}
+              md={6}
             />
           </Form.Row>
           <Form.Row>
@@ -143,6 +131,30 @@ const CloseOutFinancialSummaryForm = (props: CloseOutFinancialSummaryFormProps) 
               field="netProceeds"
             />
           </Form.Row>
+        </Col>
+        <Col md={1}>&nbsp;</Col>
+        <Col>
+          <ProjectNotes
+            field={`notes[${NoteTypes.Remediation}].note`}
+            label="Remediation (Not funded throuch COS. TRAN only)"
+            disabled={props.isReadOnly}
+            outerClassName="col"
+            className="col-md-10"
+          />
+          <ProjectNotes
+            field={`notes[${NoteTypes.SplCost}].note`}
+            label="SPL Cost Calculation Notes"
+            disabled={props.isReadOnly}
+            outerClassName="col"
+            className="col-md-10"
+          />
+          <ProjectNotes
+            field={`notes[${NoteTypes.SplGain}].note`}
+            label="Gain after SPL Cost Calculation Notes"
+            disabled={props.isReadOnly}
+            outerClassName="col"
+            className="col-md-10"
+          />
         </Col>
       </Form.Row>
     </Fragment>

@@ -59,7 +59,7 @@ const ProjectDraftForm = ({
           disabled={isReadOnly}
           field="description"
           label="Description"
-          className="col-md-5"
+          className="col-md-auto"
           outerClassName="col-md-10"
         />
       </Form.Row>

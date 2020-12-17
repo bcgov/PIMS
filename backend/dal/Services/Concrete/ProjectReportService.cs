@@ -92,7 +92,7 @@ namespace Pims.Dal.Services
             //This may occur if a user refreshes their report, and changes the 'From' date without saving.
             if (toSnapshots.Count() == 0)
             {
-                return GenerateSnapshots(report.From, (DateTime) report.To);
+                return GenerateSnapshots(report.From, (DateTime)report.To);
             }
 
             var fromSnapshots = currentSnapshots.Where(s => s.SnapshotOn == report.From).ToDictionary(s => (int?)s.ProjectId, s => s);
@@ -100,9 +100,9 @@ namespace Pims.Dal.Services
 
             foreach (ProjectSnapshot snapshot in toSnapshots)
             {
-                var metadata = !String.IsNullOrWhiteSpace(snapshot.Metadata) ? this.Context.Deserialize<DisposalProjectSnapshotMetadata>(snapshot.Metadata) : new DisposalProjectSnapshotMetadata();
+                var metadata = !String.IsNullOrWhiteSpace(snapshot.Metadata) ? this.Context.Deserialize<DisposalProjectSnapshotMetadata>(snapshot.Metadata ?? "{}") : new DisposalProjectSnapshotMetadata();
                 var prevSnapshot = fromSnapshots.GetValueOrDefault(snapshot.ProjectId);
-                var prevMetadata = prevSnapshot != null ? this.Context.Deserialize<DisposalProjectMetadata>(prevSnapshot.Metadata) : null;
+                var prevMetadata = prevSnapshot != null ? this.Context.Deserialize<DisposalProjectMetadata>(prevSnapshot.Metadata ?? "{}") : null;
                 metadata.BaselineIntegrity = (metadata?.NetProceeds ?? 0) - (prevMetadata?.NetProceeds ?? 0);
                 snapshot.Metadata = this.Context.Serialize(metadata);
             }
@@ -151,7 +151,7 @@ namespace Pims.Dal.Services
             if (report.From == null)
             {
                 var mostRecentReport = this.Context.ProjectReports
-                    .Where(r => r.ReportTypeId == ReportTypes.SPL)
+                    .Where(r => r.ReportType == ReportTypes.SPL)
                     .OrderByDescending(r => r.IsFinal)
                     .ThenByDescending(r => r.To)
                     .FirstOrDefault();
@@ -168,7 +168,7 @@ namespace Pims.Dal.Services
 
         /// <summary>
         /// Update the specified project report metadata in the datasource.
-        /// If the project 'To' date has changed, 
+        /// If the project 'To' date has changed,
         /// </summary>
         /// <param name="project"></param>
         /// <exception cref="ArgumentNullException">Argument 'report' is required.</exception>
@@ -254,10 +254,12 @@ namespace Pims.Dal.Services
         /// <returns></returns>
         private IEnumerable<ProjectSnapshot> GenerateSnapshots(DateTime? from, DateTime to, DateTime? originalTo = null)
         {
+            // Only fetch projects in SPL that have not been cancelled.
             var splProjects = this.Context.Projects
                 .Include(p => p.Agency)
                 .Include(p => p.Status)
-                .Where(p => p.Workflow.Code == "SPL");
+                .Where(p => p.Workflow.Code == "SPL" && p.Status.Code != "CA");
+            // TODO: Because project status codes could change in the future, this should be updated to not be magic strings.
 
             var fromSnapshots = new Dictionary<int, ProjectSnapshot>();
             if (from.HasValue)
@@ -279,9 +281,9 @@ namespace Pims.Dal.Services
 
             foreach (Project project in splProjects)
             {
-                var metadata = !String.IsNullOrWhiteSpace(project.Metadata) ? this.Context.Deserialize<DisposalProjectSnapshotMetadata>(project.Metadata) : new DisposalProjectSnapshotMetadata();
+                var metadata = !String.IsNullOrWhiteSpace(project.Metadata) ? this.Context.Deserialize<DisposalProjectSnapshotMetadata>(project.Metadata ?? "{}") : new DisposalProjectSnapshotMetadata();
                 var prevSnapshot = fromSnapshots.GetValueOrDefault(project.Id);
-                var prevMetadata = prevSnapshot != null ? this.Context.Deserialize<DisposalProjectSnapshotMetadata>(prevSnapshot.Metadata) : new DisposalProjectSnapshotMetadata();
+                var prevMetadata = prevSnapshot != null ? this.Context.Deserialize<DisposalProjectSnapshotMetadata>(prevSnapshot.Metadata ?? "{}") : new DisposalProjectSnapshotMetadata();
 
                 metadata.BaselineIntegrity = (metadata?.NetProceeds ?? 0) - (prevMetadata?.NetProceeds ?? 0);
 

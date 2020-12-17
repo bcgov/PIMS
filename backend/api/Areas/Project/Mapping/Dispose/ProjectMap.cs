@@ -69,6 +69,7 @@ namespace Pims.Api.Areas.Project.Mapping.Dispose
                 .Map(dest => dest.AppraisedNote, src => src.GetNoteText(Entity.NoteTypes.Appraisal))
                 .Map(dest => dest.ExemptionRationale, src => src.GetNoteText(Entity.NoteTypes.Exemption))
                 .Map(dest => dest.ReportingNote, src => src.GetNoteText(Entity.NoteTypes.Reporting))
+                .Map(dest => dest.RemovalFromSplRationale, src => src.GetNoteText(Entity.NoteTypes.SplRemoval))
                 .Map(dest => dest.Notes, src => src.Notes)
                 .AfterMapping((src, dest) =>
                 {
@@ -90,14 +91,14 @@ namespace Pims.Api.Areas.Project.Mapping.Dispose
                     dest.AdjustedOn = metadata.AdjustedOn;
                     dest.PriorYearAdjustmentOn = metadata.PriorYearAdjustmentOn;
                     dest.ExemptionRequested = metadata.ExemptionRequested;
+                    dest.ExemptionApprovedOn = metadata.ExemptionApprovedOn;
                     dest.DisposedOn = metadata.DisposedOn;
                     dest.SalesCost = metadata.SalesCost;
                     dest.NetProceeds = metadata.NetProceeds;
                     dest.ProgramCost = metadata.ProgramCost;
                     dest.GainLoss = metadata.GainLoss;
                     dest.SppCapitalization = metadata.SppCapitalization;
-                    dest.GainBeforeSpp = metadata.GainBeforeSpp;
-                    dest.GainAfterSpp = metadata.GainAfterSpp;
+                    dest.GainBeforeSpl = metadata.GainBeforeSpl;
                     dest.OcgFinancialStatement = metadata.OcgFinancialStatement;
                     dest.OfferAmount = metadata.OfferAmount;
                     dest.SaleWithLeaseInPlace = metadata.SaleWithLeaseInPlace;
@@ -107,13 +108,13 @@ namespace Pims.Api.Areas.Project.Mapping.Dispose
                     dest.Realtor = metadata.Realtor;
                     dest.RealtorRate = metadata.RealtorRate;
                     dest.RealtorCommission = metadata.RealtorCommission;
-                    dest.Remediation = metadata.Remediation;
                     dest.PlannedFutureUse = metadata.PlannedFutureUse;
-                    dest.IsContractConditional = metadata.IsContractConditional;
                     dest.PreliminaryFormSignedOn = metadata.PreliminaryFormSignedOn;
                     dest.PreliminaryFormSignedBy = metadata.PreliminaryFormSignedBy;
                     dest.FinalFormSignedOn = metadata.FinalFormSignedOn;
                     dest.FinalFormSignedBy = metadata.FinalFormSignedBy;
+                    dest.RemovalFromSplRequestOn = metadata.RemovalFromSplRequestOn;
+                    dest.RemovalFromSplApprovedOn = metadata.RemovalFromSplApprovedOn;
                 })
                 .Inherits<Entity.BaseEntity, Api.Models.BaseModel>();
 
@@ -142,7 +143,8 @@ namespace Pims.Api.Areas.Project.Mapping.Dispose
                 .Map(dest => dest.Tasks, src => src.Tasks)
                 .Map(dest => dest.Responses, src => src.ProjectAgencyResponses)
                 .Map(dest => dest.Notes, src => src.Notes)
-                .AfterMapping((src, dest) => {
+                .AfterMapping((src, dest) =>
+                {
                     var metadata = new Entity.Models.DisposalProjectMetadata()
                     {
                         Purchaser = src.Purchaser,
@@ -161,14 +163,14 @@ namespace Pims.Api.Areas.Project.Mapping.Dispose
                         AdjustedOn = src.AdjustedOn,
                         PriorYearAdjustmentOn = src.PriorYearAdjustmentOn,
                         ExemptionRequested = src.ExemptionRequested,
+                        ExemptionApprovedOn = src.ExemptionApprovedOn,
                         DisposedOn = src.DisposedOn,
                         SalesCost = src.SalesCost,
                         NetProceeds = src.NetProceeds,
                         ProgramCost = src.ProgramCost,
                         GainLoss = src.GainLoss,
                         SppCapitalization = src.SppCapitalization,
-                        GainBeforeSpp = src.GainBeforeSpp,
-                        GainAfterSpp = src.GainAfterSpp,
+                        GainBeforeSpl = src.GainBeforeSpl,
                         OcgFinancialStatement = src.OcgFinancialStatement,
                         OfferAmount = src.OfferAmount,
                         SaleWithLeaseInPlace = src.SaleWithLeaseInPlace,
@@ -178,13 +180,13 @@ namespace Pims.Api.Areas.Project.Mapping.Dispose
                         Realtor = src.Realtor,
                         RealtorRate = src.RealtorRate,
                         RealtorCommission = src.RealtorCommission,
-                        Remediation = src.Remediation,
                         PlannedFutureUse = src.PlannedFutureUse,
-                        IsContractConditional = src.IsContractConditional,
                         PreliminaryFormSignedOn = src.PreliminaryFormSignedOn,
                         PreliminaryFormSignedBy = src.PreliminaryFormSignedBy,
                         FinalFormSignedOn = src.FinalFormSignedOn,
-                        FinalFormSignedBy = src.FinalFormSignedBy
+                        FinalFormSignedBy = src.FinalFormSignedBy,
+                        RemovalFromSplRequestOn = src.RemovalFromSplRequestOn,
+                        RemovalFromSplApprovedOn = src.RemovalFromSplApprovedOn
                     };
                     dest.Metadata = JsonSerializer.Serialize(metadata, _serializerOptions);
                     dest.AddOrUpdateNote(Entity.NoteTypes.General, src.Note ?? "");
@@ -194,6 +196,7 @@ namespace Pims.Api.Areas.Project.Mapping.Dispose
                     dest.AddOrUpdateNote(Entity.NoteTypes.Offer, src.OffersNote ?? "");
                     dest.AddOrUpdateNote(Entity.NoteTypes.Exemption, src.ExemptionRationale ?? "");
                     dest.AddOrUpdateNote(Entity.NoteTypes.Reporting, src.ReportingNote ?? "");
+                    dest.AddOrUpdateNote(Entity.NoteTypes.SplRemoval, src.RemovalFromSplRationale ?? "");
                 })
                 .Inherits<Api.Models.BaseModel, Entity.BaseEntity>();
         }

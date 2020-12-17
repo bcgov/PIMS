@@ -79,7 +79,7 @@ namespace Pims.Api.Areas.Reports.Controllers
         [Produces(ContentTypes.CONTENT_TYPE_CSV, ContentTypes.CONTENT_TYPE_EXCELX)]
         [ProducesResponseType(200)]
         [SwaggerOperation(Tags = new[] { "project", "report" })]
-        public IActionResult ExportProjects([FromBody]ProjectFilter filter, bool all = false)
+        public IActionResult ExportProjects([FromBody] ProjectFilter filter, bool all = false)
         {
             filter.ThrowBadRequestIfNull($"The request must include a filter.");
             if (!filter.IsValid()) throw new BadRequestException("Project filter must contain valid values.");
@@ -131,7 +131,7 @@ namespace Pims.Api.Areas.Reports.Controllers
         [Produces(ContentTypes.CONTENT_TYPE_CSV, ContentTypes.CONTENT_TYPE_EXCELX)]
         [ProducesResponseType(200)]
         [SwaggerOperation(Tags = new[] { "project", "report" })]
-        public IActionResult SurplusPropertyList([FromBody]ProjectFilter filter)
+        public IActionResult SurplusPropertyList([FromBody] ProjectFilter filter)
         {
             filter.ThrowBadRequestIfNull($"The request must include a filter.");
             if (!filter.IsValid()) throw new BadRequestException("Project filter must contain valid values.");
@@ -140,7 +140,7 @@ namespace Pims.Api.Areas.Reports.Controllers
             if (accept != ContentTypes.CONTENT_TYPE_CSV && accept != ContentTypes.CONTENT_TYPE_EXCEL && accept != ContentTypes.CONTENT_TYPE_EXCELX)
                 throw new BadRequestException($"Invalid HTTP request header 'Accept:{accept}'.");
 
-            filter.Workflows = new[] { "SPL" };
+            filter.SPLWorkflow = true;
             filter.Quantity = _pimsService.Project.Count();
             var page = _pimsService.Project.GetPage(filter);
             var report = _mapper.Map<Api.Models.PageModel<SurplusPropertyListModel>>(page);

@@ -1,6 +1,6 @@
 import './Table.scss';
 
-import React, { PropsWithChildren, ReactElement, useEffect, ReactNode } from 'react';
+import React, { PropsWithChildren, ReactElement, useEffect, ReactNode, useMemo } from 'react';
 import {
   useTable,
   usePagination,
@@ -10,18 +10,19 @@ import {
   Cell,
   IdType,
   useRowSelect,
+  useSortBy,
 } from 'react-table';
 import classnames from 'classnames';
 import { TablePagination } from '.';
 import { CellWithProps, ColumnInstanceWithProps } from './types';
 import { TableSort, SortDirection } from './TableSort';
-import { FaLongArrowAltDown, FaLongArrowAltUp } from 'react-icons/fa';
 import { TablePageSizeSelector } from './PageSizeSelector';
 import { DEFAULT_PAGE_SIZE, DEFAULT_PAGE_SELECTOR_OPTIONS } from './constants';
-import _ from 'lodash';
+import _, { keys } from 'lodash';
 import { Spinner, Collapse } from 'react-bootstrap';
 import { FaAngleDown, FaAngleRight } from 'react-icons/fa';
 import TooltipWrapper from 'components/common/TooltipWrapper';
+import ColumnSort from './ColumnSort';
 import classNames from 'classnames';
 
 // these provide a way to inject custom CSS into table headers and cells
@@ -148,8 +149,12 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): React
     pageSize: pageSizeProp,
     pageIndex: pageIndexProp,
     manualPagination,
+    sort,
   } = props;
 
+  const sortBy = useMemo(() => {
+    return !!sort ? keys(sort).map(key => ({ id: key, desc: (sort as any)[key] === 'desc' })) : [];
+  }, [sort]);
   // Use the useTable hook to create your table configuration
   const instance = useTable(
     {
@@ -157,15 +162,17 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): React
       data,
       defaultColumn,
       initialState: pageSizeProp
-        ? { pageIndex: pageIndexProp ?? 0, pageSize: pageSizeProp }
-        : { pageIndex: pageIndexProp ?? 0 },
+        ? { sortBy, pageIndex: pageIndexProp ?? 0, pageSize: pageSizeProp }
+        : { sortBy, pageIndex: pageIndexProp ?? 0 },
       manualPagination: manualPagination ?? true, // Tell the usePagination hook
+      manualSortBy: false,
       // that we'll handle our own data fetching.
       // This means we'll also have to provide our own
       // pageCount.
       pageCount,
     },
     useFlexLayout,
+    useSortBy,
     usePagination,
     useRowSelect,
     hooks => {
@@ -204,6 +211,7 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): React
   const {
     getTableProps,
     getTableBodyProps,
+    toggleSortBy,
     headerGroups,
     footerGroups,
     prepareRow,
@@ -236,25 +244,31 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): React
   }, [data, setSelectedRows, page, selectedRowIds]);
 
   const getNextSortDirection = (column: ColumnInstanceWithProps<T>): SortDirection => {
-    if (!props.sort) return 'asc';
+    if (!(props.sort as any)[column.id]) return 'asc';
 
-    if (props.sort.column !== column.id || props.sort.direction === 'desc') {
-      return 'asc';
+    if ((props.sort as any)[column.id] === 'desc') {
+      return undefined;
     }
 
     return 'desc';
   };
 
   const renderHeaderCell = (column: ColumnInstanceWithProps<T>) => {
-    const isSorted = props.sort && props.sort.column === column.id;
-    if (!column.sortable || !isSorted) {
-      return column.render('Header');
-    }
-
     return (
       <div className="sortable-column">
         {column.render('Header')}
-        {props.sort?.direction === 'asc' ? <FaLongArrowAltUp /> : <FaLongArrowAltDown />}
+        <ColumnSort
+          onSort={() => {
+            const next = getNextSortDirection(column);
+            props.onSortChange!(column.id, next);
+            if (!!next) {
+              toggleSortBy(column.id, next === 'desc', true);
+            } else {
+              column.clearSortBy();
+            }
+          }}
+          column={column}
+        />
       </div>
     );
   };
@@ -440,11 +454,6 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): React
                   {...(props.hideHeaders
                     ? column.getHeaderProps(noHeaders)
                     : column.getHeaderProps(headerProps))}
-                  onClick={() =>
-                    props.onSortChange &&
-                    column.sortable &&
-                    props.onSortChange(column.id, getNextSortDirection(column))
-                  }
                   className={classnames(
                     'th',
                     column.isSorted ? (column.isSortedDesc ? 'sort-desc' : 'sort-asc') : '',

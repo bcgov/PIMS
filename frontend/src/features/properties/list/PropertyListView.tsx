@@ -11,21 +11,23 @@ import download from 'utils/download';
 import { RootState } from 'reducers/rootReducer';
 import { ILookupCode } from 'actions/lookupActions';
 import { ILookupCodeState } from 'reducers/lookupCodeReducer';
-import { IPropertyFilter, IProperty, FilterBar, IFilterBarState } from '.';
+import { IPropertyQueryParams, IProperty } from '.';
 import { columns as cols } from './columns';
 import { Table } from 'components/Table';
 import service from '../service';
 import { FaFolderOpen, FaFolder } from 'react-icons/fa';
 import { Buildings } from './buildings';
-import { useRouterFilter } from 'hooks/useRouterFilter';
 import { FaFileExcel, FaFileAlt } from 'react-icons/fa';
 import styled from 'styled-components';
 import TooltipWrapper from 'components/common/TooltipWrapper';
 import { ReactComponent as BuildingSvg } from 'assets/images/icon-business.svg';
 import { ReactComponent as LandSvg } from 'assets/images/icon-lot.svg';
-import { PropertyTypes } from './FilterBar';
+import { PropertyFilter } from '../filter';
+import { PropertyTypes } from '../../../constants/propertyTypes';
+import { IPropertyFilter } from '../filter/IPropertyFilter';
+import { SortDirection, TableSort } from 'components/Table/TableSort';
 
-const getPropertyReportUrl = (filter: IPropertyFilter) =>
+const getPropertyReportUrl = (filter: IPropertyQueryParams) =>
   `${ENVIRONMENT.apiUrl}/reports/properties?${filter ? queryString.stringify(filter) : ''}`;
 
 const FileIcon = styled(Button)`
@@ -34,18 +36,39 @@ const FileIcon = styled(Button)`
   padding: 6px 5px;
 `;
 
-const initialQuery: IPropertyFilter = {
+const initialQuery: IPropertyQueryParams = {
   page: 1,
   quantity: 10,
   agencies: [],
 };
 
-const getServerQuery = (state: {
-  pageIndex: number;
-  pageSize: number;
-  filter: IFilterBarState;
-  agencyIds: number[];
-}) => {
+const defaultFilterValues: IPropertyFilter = {
+  searchBy: 'address',
+  pid: '',
+  address: '',
+  administrativeArea: '',
+  projectNumber: '',
+  agencies: '',
+  classificationId: '',
+  minLotSize: '',
+  maxLotSize: '',
+  propertyType: PropertyTypes.Land,
+};
+
+/**
+ * Get the server query
+ * @param ignorePropType - Whether to ignore the PropertyTypes (for doing excel export with all values)
+ * @param state - Table state
+ */
+const getServerQuery = (
+  ignorePropertyType: boolean,
+  state: {
+    pageIndex: number;
+    pageSize: number;
+    filter: IPropertyFilter;
+    agencyIds: number[];
+  },
+) => {
   const {
     pageIndex,
     pageSize,
@@ -58,7 +81,6 @@ const getServerQuery = (state: {
       agencies,
       minLotSize,
       maxLotSize,
-      parcelId,
       propertyType,
     },
   } = state;
@@ -68,7 +90,7 @@ const getServerQuery = (state: {
     parsedAgencies = [parseInt(agencies, 10)];
   }
 
-  const query: IPropertyFilter = {
+  const query: IPropertyQueryParams = {
     ...initialQuery,
     address,
     pid,
@@ -80,8 +102,7 @@ const getServerQuery = (state: {
     maxLandArea: decimalOrUndefined(maxLotSize),
     page: pageIndex + 1,
     quantity: pageSize,
-    parcelId: parcelId ? decimalOrUndefined(parcelId) : undefined,
-    propertyType,
+    propertyType: ignorePropertyType ? undefined : propertyType,
   };
   return query;
 };
@@ -104,6 +125,7 @@ const PropertyListView: React.FC = () => {
 
   const agencyIds = useMemo(() => agencies.map(x => parseInt(x.id, 10)), [agencies]);
   const columns = useMemo(() => cols, []);
+  const [sorting, setSorting] = useState<TableSort<IProperty>>({ description: 'asc' });
 
   // We'll start our table without any data
   const [data, setData] = useState<IProperty[] | undefined>();
@@ -111,18 +133,7 @@ const PropertyListView: React.FC = () => {
   const [expandData, setExpandData] = useState<any>({});
 
   // Filtering and pagination state
-  const [filter, setFilter] = useState<IFilterBarState>({
-    searchBy: 'address',
-    pid: '',
-    address: '',
-    administrativeArea: '',
-    projectNumber: '',
-    agencies: '',
-    classificationId: '',
-    minLotSize: '',
-    maxLotSize: '',
-    propertyType: PropertyTypes.Land,
-  });
+  const [filter, setFilter] = useState<IPropertyFilter>(defaultFilterValues);
 
   const [pageSize, setPageSize] = useState(10);
   const [pageIndex, setPageIndex] = useState(0);
@@ -133,7 +144,7 @@ const PropertyListView: React.FC = () => {
 
   // Update internal state whenever the filter bar state changes
   const handleFilterChange = useCallback(
-    async (value: IFilterBarState) => {
+    async (value: IPropertyFilter) => {
       setFilter({ ...value });
       setPageIndex(0); // Go to first page of results when filter changes
     },
@@ -155,11 +166,13 @@ const PropertyListView: React.FC = () => {
       pageSize,
       filter,
       agencyIds,
+      sorting,
     }: {
       pageIndex: number;
       pageSize: number;
-      filter: IFilterBarState;
+      filter: IPropertyFilter;
       agencyIds: number[];
+      sorting: TableSort<IProperty>;
     }) => {
       // Give this fetch an ID
       const fetchId = ++fetchIdRef.current;
@@ -170,8 +183,9 @@ const PropertyListView: React.FC = () => {
       // Only update the data if this is the latest fetch
       if (agencyIds?.length > 0) {
         setData(undefined);
-        const query = getServerQuery({ pageIndex, pageSize, filter, agencyIds });
-        const data = await service.getPropertyList(query);
+        const query = getServerQuery(false, { pageIndex, pageSize, filter, agencyIds });
+        const data = await service.getPropertyList(query, sorting);
+
         // The server could send back total page count.
         // For now we'll just calculate it.
         if (fetchId === fetchIdRef.current && data?.items) {
@@ -187,14 +201,13 @@ const PropertyListView: React.FC = () => {
 
   // Listen for changes in pagination and use the state to fetch our new data
   useEffect(() => {
-    fetchData({ pageIndex, pageSize, filter, agencyIds });
-  }, [fetchData, pageIndex, pageSize, filter, agencyIds]);
+    fetchData({ pageIndex, pageSize, filter, agencyIds, sorting });
+  }, [fetchData, pageIndex, pageSize, filter, agencyIds, sorting]);
 
   const dispatch = useDispatch();
-  useRouterFilter(filter, setFilter, 'listFilter');
 
   const fetch = (accept: 'csv' | 'excel') => {
-    const query = getServerQuery({ pageIndex, pageSize, filter, agencyIds });
+    const query = getServerQuery(true, { pageIndex, pageSize, filter, agencyIds });
     return dispatch(
       download({
         url: getPropertyReportUrl({ ...query, all: true }),
@@ -242,11 +255,13 @@ const PropertyListView: React.FC = () => {
     <Container fluid className="PropertyListView">
       <Container fluid className="filter-container border-bottom">
         <Container className="px-0">
-          <FilterBar
+          <PropertyFilter
+            defaultFilter={defaultFilterValues}
             agencyLookupCodes={agencies}
             propertyClassifications={propertyClassifications}
-            filter={filter}
             onChange={handleFilterChange}
+            sort={sorting}
+            onSorting={setSorting}
           />
         </Container>
       </Container>
@@ -283,12 +298,12 @@ const PropertyListView: React.FC = () => {
           </div>
           <TooltipWrapper toolTipId="export-to-excel" toolTip="Export to Excel">
             <FileIcon>
-              <FaFileExcel size={36} onClick={() => fetch('excel')} />
+              <FaFileExcel data-testid="excel-icon" size={36} onClick={() => fetch('excel')} />
             </FileIcon>
           </TooltipWrapper>
           <TooltipWrapper toolTipId="export-to-excel" toolTip="Export to CSV">
             <FileIcon>
-              <FaFileAlt size={36} onClick={() => fetch('csv')} />
+              <FaFileAlt data-testid="csv-icon" size={36} onClick={() => fetch('csv')} />
             </FileIcon>
           </TooltipWrapper>
         </Container>
@@ -298,9 +313,19 @@ const PropertyListView: React.FC = () => {
           columns={columns}
           data={data || []}
           loading={data === undefined}
+          sort={sorting}
           pageIndex={pageIndex}
           onRequestData={handleRequestData}
           pageCount={pageCount}
+          onSortChange={(column: string, direction: SortDirection) => {
+            if (!!direction) {
+              setSorting({ ...sorting, [column]: direction });
+            } else {
+              const data: any = { ...sorting };
+              delete data[column];
+              setSorting(data);
+            }
+          }}
           canRowExpand={(val: any) => {
             if (val.values.propertyTypeId === 0) {
               return true;

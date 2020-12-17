@@ -793,7 +793,7 @@ namespace Pims.Dal.Test.Services
             Assert.Equal("A new description", result.Description);
             queueService.Verify(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), null, project.StatusId, true), Times.Never());
             queueService.Verify(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), true), Times.Once());
-        }        
+        }
 
         [Fact]
         public async void Update_Notes()
@@ -2222,7 +2222,9 @@ namespace Pims.Dal.Test.Services
             parcel.ProjectNumber = project.ProjectNumber;
             var metadata = new DisposalProjectMetadata()
             {
-                ClearanceNotificationSentOn = DateTime.UtcNow
+                ClearanceNotificationSentOn = DateTime.UtcNow,
+                RequestForSplReceivedOn = DateTime.UtcNow,
+                ApprovedForSplOn = DateTime.UtcNow
             };
             project.Metadata = JsonSerializer.Serialize(metadata);
             init.SaveChanges();
@@ -2513,7 +2515,7 @@ namespace Pims.Dal.Test.Services
             var workflows = init.CreateDefaultWorkflowsWithStatus();
             init.SaveChanges();
             var project = init.CreateProject(1, 1);
-            init.SetStatus(project, "SPL", "SPL-CIP");
+            init.SetStatus(project, "SPL", "SPL-CIP-C");
             var parcel = init.CreateParcel(1);
             project.AddProperty(parcel);
             parcel.ProjectNumber = project.ProjectNumber;
@@ -2526,7 +2528,7 @@ namespace Pims.Dal.Test.Services
             queueService.Setup(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()));
             queueService.Setup(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), It.IsAny<bool>()));
 
-            var contractInPlace = init.ProjectStatus.First(s => s.Code == "SPL-CIP");
+            var contractInPlace = init.ProjectStatus.First(s => s.Code == "SPL-CIP-C");
             project.StatusId = contractInPlace.Id; // Contract in Place status
 
             EntityHelper.CreateAgency(2);
@@ -2830,7 +2832,9 @@ namespace Pims.Dal.Test.Services
             project.StatusId = approve.Id; // Submit Status
             var metadata = new DisposalProjectMetadata()
             {
-                ClearanceNotificationSentOn = DateTime.UtcNow
+                ClearanceNotificationSentOn = DateTime.UtcNow,
+                RequestForSplReceivedOn = DateTime.UtcNow,
+                ApprovedForSplOn = DateTime.UtcNow
             };
             project.Metadata = JsonSerializer.Serialize(metadata);
 
@@ -2904,7 +2908,8 @@ namespace Pims.Dal.Test.Services
             project.StatusId = approve.Id; // Submit Status
             var metadata = new DisposalProjectMetadata()
             {
-                ClearanceNotificationSentOn = DateTime.UtcNow
+                ClearanceNotificationSentOn = DateTime.UtcNow,
+                ExemptionApprovedOn = DateTime.UtcNow
             };
             project.Metadata = JsonSerializer.Serialize(metadata);
 
@@ -2999,7 +3004,9 @@ namespace Pims.Dal.Test.Services
             project.StatusId = approve.Id; // Submit Status
             var metadata = new DisposalProjectMetadata()
             {
-                ClearanceNotificationSentOn = DateTime.UtcNow
+                ClearanceNotificationSentOn = DateTime.UtcNow,
+                RequestForSplReceivedOn = DateTime.UtcNow,
+                ApprovedForSplOn = DateTime.UtcNow
             };
             project.Metadata = JsonSerializer.Serialize(metadata);
 

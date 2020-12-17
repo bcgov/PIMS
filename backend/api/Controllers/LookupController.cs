@@ -95,6 +95,20 @@ namespace Pims.Api.Controllers
         }
 
         /// <summary>
+        /// Get all of the project risks.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("project/risks")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(IEnumerable<Models.LookupModel<int>>), 200)]
+        [SwaggerOperation(Tags = new[] { "lookup" })]
+        public IActionResult GetProjectRisks()
+        {
+            var risks = _mapper.Map<Models.LookupModel<int>[]>(_pimsService.Lookup.GetProjectRisks());
+            return new JsonResult(risks.ToArray());
+        }
+
+        /// <summary>
         /// Get all of the code values
         /// </summary>
         /// <returns></returns>
@@ -113,6 +127,7 @@ namespace Pims.Api.Controllers
             var predominateUseCodes = _mapper.Map<Models.LookupModel<int>[]>(_pimsService.Lookup.GetBuildingPredominateUses());
             var occupantTypeCodes = _mapper.Map<Models.LookupModel<int>[]>(_pimsService.Lookup.GetBuildingOccupantTypes());
             var tierLevelCodes = _mapper.Map<Models.LookupModel<int>[]>(_pimsService.Lookup.GetTierLevels());
+            var riskCodes = _mapper.Map<Models.LookupModel<int>[]>(_pimsService.Lookup.GetProjectRisks());
 
             var codes = new List<object>();
             codes.AddRange(roleCodes);
@@ -124,6 +139,7 @@ namespace Pims.Api.Controllers
             codes.AddRange(predominateUseCodes);
             codes.AddRange(occupantTypeCodes);
             codes.AddRange(tierLevelCodes);
+            codes.AddRange(riskCodes);
             return new JsonResult(codes);
         }
         #endregion

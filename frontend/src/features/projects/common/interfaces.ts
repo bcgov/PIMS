@@ -1,5 +1,6 @@
 import { getCurrentFiscalYear } from '../../../utils/utils';
 import { IBuilding, IAddress, IEvaluation, IFiscal } from 'actions/parcelsActions';
+import { NoteTypes } from '../../../constants';
 
 /**
  * IProperty interface represents the model used for searching properties.
@@ -99,6 +100,7 @@ export interface ITask {
   sortOrder: number;
   taskType: number;
 }
+
 export interface IProjectTask extends ITask {
   projectNumber: number;
   taskId: number;
@@ -112,6 +114,7 @@ export interface IProjectTask extends ITask {
   statusId: number;
   statusCode: string;
 }
+
 export interface IProject {
   id?: number;
   projectNumber: string;
@@ -131,8 +134,9 @@ export interface IProject {
   subAgency?: string;
   statusId: number;
   status?: IStatus;
-  exemptionRationale?: string;
   exemptionRequested?: boolean;
+  exemptionRationale?: string;
+  exemptionApprovedOn?: Date | string;
   statusCode?: string;
   tierLevelId: number;
   tasks: IProjectTask[];
@@ -149,6 +153,8 @@ export interface IProject {
   onHoldNotificationSentOn?: Date | string;
   transferredWithinGreOn?: Date | string;
   clearanceNotificationSentOn?: Date | string;
+  requestForSplReceivedOn?: Date | string;
+  approvedForSplOn?: Date | string;
   marketedOn?: Date | string;
   disposedOn?: Date | string;
   assessedOn?: Date | string;
@@ -161,42 +167,28 @@ export interface IProject {
   appraised?: number | '';
   market?: number | '';
   workflowCode?: string;
-  isContractConditional?: boolean;
   purchaser?: string;
   manager?: string;
   actualFiscalYear?: string;
   plannedFutureUse?: string;
-  remediation?: string;
   preliminaryFormSignedBy?: string;
   finalFormSignedBy?: string;
   offerAmount?: number | '';
   interestComponent?: number | '';
   ocgFinancialStatement?: number | '';
   salesCost?: number | '';
-  gainBeforeSpp?: number | '';
+  gainBeforeSpl?: number | '';
   gainAfterSpp?: number | '';
   programCost?: number | '';
   priorYearAdjustmentAmount?: number | '';
+  removalFromSplRequestOn?: Date | string;
+  removalFromSplApprovedOn?: Date | string;
+  removalFromSplRationale?: string;
 }
 
-export enum NoteTypes {
-  General = 0,
-  Public = 1,
-  Private = 2,
-  Exemption = 3,
-  AgencyInterest = 4,
-  Financial = 5,
-  PreMarketing = 6,
-  Marketing = 7,
-  ContractInPlace = 8,
-  Reporting = 9,
-  LoanTerms = 10,
-  Adjustment = 11,
-  SppCost = 12,
-  SppGain = 13,
-  SalesHistory = 14,
-  CloseOut = 15,
-  Comments = 16,
+export enum DisposalWorkflows {
+  Erp = 'ERP',
+  Spl = 'SPL',
 }
 
 export enum DisposeWorkflowStatus {
@@ -222,7 +214,8 @@ export enum ReviewWorkflowStatus {
   ApprovedForSpl = 'AP-SPL',
   PreMarketing = 'SPL-PM',
   OnMarket = 'SPL-M',
-  ContractInPlace = 'SPL-CIP',
+  ContractInPlaceConditional = 'SPL-CIP-C',
+  ContractInPlaceUnconditional = 'SPL-CIP-U',
   NotInSpl = 'AP-!SPL',
   ApprovedForExemption = 'AP-EXE',
   Denied = 'DE',
@@ -257,6 +250,7 @@ export interface IStatus {
   isOptional: boolean;
   toStatus?: IStatus[];
   isActive: boolean;
+  parentId?: number;
 }
 
 export interface IStepProps {
@@ -295,6 +289,9 @@ export const initialValues: IProject = {
   deniedOn: '',
   cancelledOn: '',
   submittedOn: '',
+  exemptionRequested: false,
+  exemptionRationale: '',
+  exemptionApprovedOn: '',
   initialNotificationSentOn: '',
   thirtyDayNotificationSentOn: '',
   sixtyDayNoficationSentOn: '',
@@ -315,21 +312,22 @@ export const initialValues: IProject = {
   market: '',
   workflowCode: '',
   offerAmount: '',
-  isContractConditional: undefined,
   purchaser: '',
   manager: '',
   actualFiscalYear: '',
   plannedFutureUse: '',
-  remediation: '',
   preliminaryFormSignedBy: '',
   finalFormSignedBy: '',
   interestComponent: '',
   ocgFinancialStatement: '',
   salesCost: '',
-  gainBeforeSpp: '',
+  gainBeforeSpl: '',
   gainAfterSpp: '',
   programCost: '',
   priorYearAdjustmentAmount: '',
+  removalFromSplRequestOn: '',
+  removalFromSplApprovedOn: '',
+  removalFromSplRationale: '',
 };
 
 export interface IApiProject {
@@ -348,8 +346,9 @@ export interface IApiProject {
   publicNote: string;
   privateNote: string;
   exemptionRequested?: boolean;
-  agencyResponseNote?: string;
   exemptionRationale?: string;
+  exemptionApprovedOn?: Date | string;
+  agencyResponseNote?: string;
   agencyId: number;
   statusId: number;
   statusCode?: string;

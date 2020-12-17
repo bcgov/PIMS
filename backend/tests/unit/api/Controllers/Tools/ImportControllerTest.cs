@@ -111,6 +111,7 @@ namespace Pims.Api.Test.Controllers.Tools
         #endregion
 
         #region ImportProjects
+        #region Bad Request
         [Fact]
         public void ImportProjects_BadRequest()
         {
@@ -127,6 +128,7 @@ namespace Pims.Api.Test.Controllers.Tools
             Assert.NotNull(result);
             var actionResult = Assert.IsType<BadRequestObjectResult>(result);
         }
+        #endregion
 
         #region Success
         [Fact]
@@ -656,7 +658,8 @@ namespace Pims.Api.Test.Controllers.Tools
             first.Notes.Should().HaveCount(2);
             first.Notes.First().NoteType.Should().Be(Entity.NoteTypes.Financial);
             first.PrivateNote.Should().Be(expectedResult.Notes.FirstOrDefault(n => n.Key == "Private").Value);
-            first.Notes.First().Note.Should().Be($"some note{Environment.NewLine}{Environment.NewLine}{expectedResult.Notes.FirstOrDefault(n => n.Key == "Financial").Value}");
+            var expectedFinancialNote = expectedResult.Notes.FirstOrDefault(n => n.Key == "Financial");
+            first.Notes.First().Note.Should().Be($"some note{Environment.NewLine}{Environment.NewLine}{expectedFinancialNote.Key}{Environment.NewLine}{expectedFinancialNote.Value}");
             first.Responses.Should().BeEmpty();
             project.Snapshots.Should().BeEmpty();
             project.Tasks.Should().BeEmpty();
@@ -758,6 +761,85 @@ namespace Pims.Api.Test.Controllers.Tools
             first.Responses.Should().BeEmpty();
             project.Snapshots.Should().BeEmpty();
             project.Tasks.Should().BeEmpty();
+        }
+
+
+        public static IEnumerable<object[]> ProjectActivity =>
+            new List<object[]>
+            {
+                new object[] { "Completed Deal", "SPL" },
+                new object[] { "Contract in Place", "SPL" },
+                new object[] { "On Market", "SPL" },
+                new object[] { "Pre-Market", "SPL" },
+                new object[] { "GET LAST ONE", "SPL" },
+                new object[] { "", "SPL" },
+                new object[] { null, "SPL" }
+            };
+
+        /// <summary>
+        /// Based on the specified 'Activity' determine the appropriate Workflow.
+        /// </summary>
+        /// <param name="activity"></param>
+        /// <param name="expectedWorkflow"></param>
+        [Theory]
+        [MemberData(nameof(ProjectActivity))]
+        public void ImportProjects_ActivityToWorkflow(string activity, string expectedWorkflow)
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = helper.CreateForPermission(Permissions.SystemAdmin, Permissions.PropertyAdd, Permissions.AdminProperties);
+            var controller = helper.CreateController<ImportController>(user);
+
+            var agency = EntityHelper.CreateAgency(1, "TEST");
+            var tier = EntityHelper.CreateTierLevel(1, "TIER");
+            var workflows = new[] { EntityHelper.CreateWorkflow(1, "ERP"), EntityHelper.CreateWorkflow(2, "SPL") };
+            workflows[0].SortOrder = 1;
+            workflows[1].SortOrder = 2;
+            var status = EntityHelper.CreateProjectStatus("STATUS", "TEST");
+            workflows[0].AddStatus(status, 1);
+            workflows[1].AddStatus(status, 2);
+            var risk = EntityHelper.CreateProjectRisk("Green", "GREEN", 0);
+
+            var model1 = new Model.ImportProjectModel()
+            {
+                ProjectNumber = "TEST-00001",
+                Description = "Model 1",
+                Agency = "TEST",
+                Activity = activity,
+                Status = "TEST",
+                Risk = "GREEN",
+                ReportedFiscalYear = 2020,
+            };
+
+            var adminServiceMock = helper.GetService<Mock<IPimsAdminService>>();
+            adminServiceMock.Setup(m => m.Workflow.GetAll()).Returns(workflows);
+            adminServiceMock.Setup(m => m.Workflow.Get(It.IsAny<int>())).Returns<int>(id => workflows.First(w => w.Id == id));
+            adminServiceMock.Setup(m => m.Workflow.GetForStatus(It.IsAny<string>())).Returns(workflows);
+            adminServiceMock.Setup(m => m.ProjectStatus.GetAll()).Returns(new[] { status });
+            adminServiceMock.Setup(m => m.ProjectStatus.Get(It.IsAny<int>())).Returns(status);
+            adminServiceMock.Setup(m => m.ProjectRisk.GetAll()).Returns(new[] { risk });
+            adminServiceMock.Setup(m => m.ProjectRisk.Get(It.IsAny<int>())).Returns(risk);
+            adminServiceMock.Setup(m => m.Agency.GetAll()).Returns(new[] { agency });
+            adminServiceMock.Setup(m => m.Agency.Get(It.IsAny<int>())).Returns(agency);
+            adminServiceMock.Setup(m => m.TierLevel.GetAll()).Returns(new[] { tier });
+            adminServiceMock.Setup(m => m.TierLevel.Get(It.IsAny<int>())).Returns(tier);
+            adminServiceMock.Setup(m => m.Project.Get(It.IsAny<string>())).Returns<Entity.Project>(null);
+
+            var serviceMock = helper.GetService<Mock<IPimsService>>();
+            serviceMock.Setup(m => m.Task).Returns(helper.GetService<Dal.Services.ITaskService>());
+            serviceMock.Setup(m => m.Task.GetForWorkflow(It.IsAny<string>())).Returns(new Entity.Task[0]);
+
+            // Act
+            var result = controller.ImportProjects(new[] { model1 }, false);
+
+            // Assert
+            Assert.NotNull(result);
+            var actionResult = Assert.IsType<JsonResult>(result);
+            var actualResult = Assert.IsAssignableFrom<Model.ProjectModel[]>(actionResult.Value);
+            actualResult.Should().HaveCount(1);
+            actualResult.First().WorkflowCode.Should().Be(expectedWorkflow);
+            adminServiceMock.Verify(m => m.Project.Add(It.IsAny<IEnumerable<Entity.Project>>()), Times.Once);
+            adminServiceMock.Verify(m => m.Project.Update(It.IsAny<IEnumerable<Entity.Project>>()), Times.Once);
         }
         #endregion
 
@@ -887,7 +969,7 @@ namespace Pims.Api.Test.Controllers.Tools
             var service = helper.GetService<Mock<IPimsAdminService>>();
             service.Setup(m => m.Project.Get(It.IsAny<string>())).Returns(project);
             service.Setup(m => m.Project.Add(It.IsAny<IEnumerable<Entity.Project>>()));
-            service.Setup(m => m.Workflow.GetAll()).Returns(new[] { new Entity.Workflow("NotFound", "NotFound") });
+            service.Setup(m => m.Workflow.GetAll()).Returns(new Entity.Workflow[0]);
             service.Setup(m => m.ProjectStatus.GetAll()).Returns(new[] { status });
             service.Setup(m => m.ProjectRisk.GetAll()).Returns(new[] { risk });
             service.Setup(m => m.Agency.GetAll()).Returns(new[] { agency });
@@ -953,7 +1035,7 @@ namespace Pims.Api.Test.Controllers.Tools
             var service = helper.GetService<Mock<IPimsAdminService>>();
             service.Setup(m => m.Project.Get(It.IsAny<string>())).Returns(project);
             service.Setup(m => m.Project.Add(It.IsAny<IEnumerable<Entity.Project>>()));
-            service.Setup(m => m.ProjectStatus.GetAll()).Returns(new[] { new Entity.ProjectStatus("NotFound", "NotFound") });
+            service.Setup(m => m.ProjectStatus.GetAll()).Returns(new Entity.ProjectStatus[0]);
             service.Setup(m => m.Workflow.GetAll()).Returns(new[] { workflow });
             service.Setup(m => m.ProjectRisk.GetAll()).Returns(new[] { risk });
             service.Setup(m => m.Agency.GetAll()).Returns(new[] { agency });
@@ -1022,7 +1104,7 @@ namespace Pims.Api.Test.Controllers.Tools
             service.Setup(m => m.Workflow.GetAll()).Returns(new[] { workflow });
             service.Setup(m => m.ProjectStatus.GetAll()).Returns(new[] { status });
             service.Setup(m => m.Agency.GetAll()).Returns(new[] { agency });
-            service.Setup(m => m.ProjectRisk.GetAll()).Returns(new[] { new Entity.ProjectRisk("NotFound", "NotFound", 1) });
+            service.Setup(m => m.ProjectRisk.GetAll()).Returns(new Entity.ProjectRisk[0]);
             service.Setup(m => m.TierLevel.GetAll()).Returns(new[] { tier });
             service.Setup(m => m.Agency.Get(It.IsAny<int>())).Returns(agency);
             service.Setup(m => m.TierLevel.Get(It.IsAny<int>())).Returns(tier);
@@ -1088,7 +1170,7 @@ namespace Pims.Api.Test.Controllers.Tools
             service.Setup(m => m.Workflow.GetAll()).Returns(new[] { workflow });
             service.Setup(m => m.ProjectStatus.GetAll()).Returns(new[] { status });
             service.Setup(m => m.ProjectRisk.GetAll()).Returns(new[] { risk });
-            service.Setup(m => m.Agency.GetAll()).Returns(new[] { new Entity.Agency("NotFound", "NotFound") });
+            service.Setup(m => m.Agency.GetAll()).Returns(new Entity.Agency[0]);
             service.Setup(m => m.TierLevel.GetAll()).Returns(new[] { tier });
             service.Setup(m => m.Agency.Get(It.IsAny<int>())).Returns(agency);
             service.Setup(m => m.TierLevel.Get(It.IsAny<int>())).Returns(tier);
@@ -1156,7 +1238,7 @@ namespace Pims.Api.Test.Controllers.Tools
             service.Setup(m => m.Workflow.GetAll()).Returns(new[] { workflow });
             service.Setup(m => m.ProjectStatus.GetAll()).Returns(new[] { status });
             service.Setup(m => m.Agency.GetAll()).Returns(new[] { agency });
-            service.Setup(m => m.ProjectRisk.GetAll()).Returns(new[] { new Entity.ProjectRisk("NotFound", "NotFound", 1) });
+            service.Setup(m => m.ProjectRisk.GetAll()).Returns(new Entity.ProjectRisk[0]);
             service.Setup(m => m.TierLevel.GetAll()).Returns(tiers);
             service.Setup(m => m.Agency.Get(It.IsAny<int>())).Returns(agency);
             service.Setup(m => m.TierLevel.Get(It.IsAny<int>())).Returns(tiers.Last());
@@ -1222,7 +1304,7 @@ namespace Pims.Api.Test.Controllers.Tools
             var service = helper.GetService<Mock<IPimsAdminService>>();
             service.Setup(m => m.Project.Get(It.IsAny<string>())).Returns(project);
             service.Setup(m => m.Project.Add(It.IsAny<IEnumerable<Entity.Project>>()));
-            service.Setup(m => m.ProjectStatus.GetAll()).Returns(new[] { new Entity.ProjectStatus("NotFound", "NotFound") });
+            service.Setup(m => m.ProjectStatus.GetAll()).Returns(new Entity.ProjectStatus[0]);
             service.Setup(m => m.Workflow.GetAll()).Returns(new[] { workflow });
             service.Setup(m => m.ProjectRisk.GetAll()).Returns(new[] { risk });
             service.Setup(m => m.Agency.GetAll()).Returns(new[] { agency });
@@ -1291,7 +1373,7 @@ namespace Pims.Api.Test.Controllers.Tools
             var service = helper.GetService<Mock<IPimsAdminService>>();
             service.Setup(m => m.Project.Get(It.IsAny<string>())).Returns(project);
             service.Setup(m => m.Project.Add(It.IsAny<IEnumerable<Entity.Project>>()));
-            service.Setup(m => m.Workflow.GetAll()).Returns(new[] { new Entity.Workflow("NotFound", "NotFound") });
+            service.Setup(m => m.Workflow.GetAll()).Returns(new Entity.Workflow[0]);
             service.Setup(m => m.ProjectStatus.GetAll()).Returns(new[] { status });
             service.Setup(m => m.ProjectRisk.GetAll()).Returns(new[] { risk });
             service.Setup(m => m.Agency.GetAll()).Returns(new[] { agency });
@@ -1363,7 +1445,7 @@ namespace Pims.Api.Test.Controllers.Tools
             service.Setup(m => m.Workflow.GetAll()).Returns(new[] { workflow });
             service.Setup(m => m.ProjectStatus.GetAll()).Returns(new[] { status });
             service.Setup(m => m.ProjectRisk.GetAll()).Returns(new[] { risk });
-            service.Setup(m => m.Agency.GetAll()).Returns(new[] { new Entity.Agency("NotFound", "NotFound") });
+            service.Setup(m => m.Agency.GetAll()).Returns(new Entity.Agency[0]);
             service.Setup(m => m.TierLevel.GetAll()).Returns(tiers);
             service.Setup(m => m.Agency.Get(It.IsAny<int>())).Returns(agency);
             service.Setup(m => m.TierLevel.Get(It.IsAny<int>())).Returns(tiers.Last());

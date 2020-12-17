@@ -1,7 +1,7 @@
 import { FastSelect, SelectOptions } from 'components/common/form';
 import { Label } from 'components/common/Label';
 import TooltipIcon from 'components/common/TooltipIcon';
-import { CLASSIFICATIONS } from 'constants/classifications';
+import { Classifications } from 'constants/classifications';
 import {
   CoreOperational,
   CoreStrategic,
@@ -75,20 +75,22 @@ export const ClassificationForm: React.FC<IClassificationFormProps> = ({
   /** classId based on current formik values to determine which classsification information box to display */
   let classId = getIn(formikProps.values, field);
 
-  /** users not allowed to select disposed or surplus active at this stage */
-  const filteredClassifications = classifications.filter(
+  let filteredClassifications = classifications;
+  /** users not allowed to select disposed or surplus active at this stage, but display these values if one of these classifications has already been selected. */
+  filteredClassifications = classifications.filter(
     c =>
-      Number(c.value) !== CLASSIFICATIONS.SurplusActive &&
-      Number(c.value) !== CLASSIFICATIONS.Disposed,
+      (Number(c.value) !== Classifications.SurplusActive &&
+        Number(c.value) !== Classifications.Disposed) ||
+      +c.value === +classId,
   );
 
   const renderInfo = () => {
     switch (classId) {
-      case CLASSIFICATIONS.CoreOperational:
+      case Classifications.CoreOperational:
         return InfoBoxWithContent(CoreOperational);
-      case CLASSIFICATIONS.CoreStrategic:
+      case Classifications.CoreStrategic:
         return InfoBoxWithContent(CoreStrategic);
-      case CLASSIFICATIONS.SurplusEncumbered:
+      case Classifications.SurplusEncumbered:
         return InfoBoxWithContent(SurplusEncumbered);
       default:
         return InfoBoxWithContent(

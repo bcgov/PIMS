@@ -33,6 +33,11 @@ namespace Pims.Dal.Entities.Models
         public int? TierLevelId { get; set; }
 
         /// <summary>
+        /// get/set - The actual or forecasted fiscal year of the project.
+        /// </summary>
+        public int? FiscalYear { get; set; }
+
+        /// <summary>
         /// get/set - Only limit to projects created by current user.
         /// </summary>
         /// <value></value>
@@ -43,6 +48,12 @@ namespace Pims.Dal.Entities.Models
         /// </summary>
         /// <value></value>
         public bool? AssessWorkflow { get; set; }
+
+        /// <summary>
+        /// get/set - Filter by workflow - SPL
+        /// </summary>
+        /// <value></value>
+        public bool? SPLWorkflow { get; set; }
 
         /// <summary>
         /// get/set - Only return active projects.
@@ -89,10 +100,12 @@ namespace Pims.Dal.Entities.Models
             this.TierLevelId = filter.GetIntNullValue(nameof(this.TierLevelId));
             this.CreatedByMe = filter.GetBoolNullValue(nameof(this.CreatedByMe));
             this.AssessWorkflow = filter.GetBoolNullValue(nameof(this.AssessWorkflow));
+            this.SPLWorkflow = filter.GetBoolNullValue(nameof(this.SPLWorkflow));
             this.Active = filter.GetBoolNullValue(nameof(this.Active));
             this.Agencies = filter.GetIntArrayValue(nameof(this.Agencies));
             this.Workflows = filter.GetStringArrayValue(nameof(this.Workflows));
             this.ReportId = filter.GetIntNullValue(nameof(this.ReportId));
+            this.FiscalYear = filter.GetIntNullValue(nameof(this.FiscalYear));
         }
         #endregion
 
@@ -109,7 +122,9 @@ namespace Pims.Dal.Entities.Models
                 || this.TierLevelId.HasValue
                 || this.Active.HasValue
                 || this.AssessWorkflow.HasValue
+                || this.SPLWorkflow.HasValue
                 || this.CreatedByMe.HasValue
+                || this.FiscalYear.HasValue
                 || (this.StatusId?.Any() ?? false)
                 || (this.Agencies?.Any() ?? false)
                 || (this.Workflows?.Any() ?? false);

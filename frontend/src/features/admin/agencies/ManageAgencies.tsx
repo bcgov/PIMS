@@ -12,11 +12,12 @@ import { toFilteredApiPaginateParams } from 'utils/CommonFunctions';
 import { TableSort } from 'components/Table/TableSort';
 import { IGenericNetworkAction } from 'actions/genericActions';
 import * as actionTypes from 'constants/actionTypes';
-import { generateSortCriteria } from 'utils';
+import { generateMultiSortCriteria } from 'utils';
 import { AgencyFilterBar } from './AgencyFilterBar';
 import useCodeLookups from 'hooks/useLookupCodes';
 import { useHistory } from 'react-router-dom';
 import { getFetchLookupCodeAction } from 'actionCreators/lookupCodeActionCreator';
+import { isEmpty } from 'lodash';
 
 const ManageAgencies: React.FC = () => {
   const columns = useMemo(() => columnDefinitions, []);
@@ -81,9 +82,7 @@ const ManageAgencies: React.FC = () => {
           toFilteredApiPaginateParams<IAgencyFilter>(
             filter?.id ? 0 : pageIndex,
             pageSize,
-            sort && sort.column && sort.direction
-              ? [generateSortCriteria(sort.column, sort.direction)]
-              : undefined,
+            sort && !isEmpty(sort) ? generateMultiSortCriteria(sort) : undefined,
             filter,
           ),
         ),

@@ -106,6 +106,18 @@ namespace Pims.Dal.Services.Admin
         }
 
         /// <summary>
+        /// Return all the snaphots for the specified 'projectId'.
+        /// </summary>
+        /// <param name="projectId"></param>
+        /// <returns></returns>
+        public IEnumerable<ProjectSnapshot> GetSnapshots(int projectId)
+        {
+            return this.Context.ProjectSnapshots
+                .Where(s => s.ProjectId == projectId)
+                .ToArray();
+        }
+
+        /// <summary>
         /// Generate a new project number.
         /// This does not apply the generated number to a project, this is up to you to do.
         /// </summary>
@@ -166,19 +178,22 @@ namespace Pims.Dal.Services.Admin
             projects.ThrowIfNull(nameof(projects));
             this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin, Permissions.AgencyAdmin);
 
-            projects.ForEach((project) =>
+            if (projects.Any())
             {
-                if (project == null) return;
-
-                if (String.IsNullOrWhiteSpace(project.ProjectNumber))
+                projects.ForEach((project) =>
                 {
-                    project.ProjectNumber = $"TEMP-{DateTime.UtcNow.Ticks:00000}";
-                }
+                    if (project == null) return;
 
-                this.Context.Projects.Add(project);
-            });
+                    if (String.IsNullOrWhiteSpace(project.ProjectNumber))
+                    {
+                        project.ProjectNumber = $"TEMP-{DateTime.UtcNow.Ticks:00000}";
+                    }
 
-            this.Context.CommitTransaction();
+                    this.Context.Projects.Add(project);
+                });
+
+                this.Context.CommitTransaction();
+            }
         }
 
         /// <summary>
@@ -210,30 +225,33 @@ namespace Pims.Dal.Services.Admin
             projects.ThrowIfNull(nameof(projects));
             this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin, Permissions.AgencyAdmin);
 
-            projects.ForEach((project) =>
+            if (projects.Any())
             {
-                if (project == null) throw new ArgumentNullException();
-
-                project.Workflow = project.Workflow != null ? this.Context.Workflows.Find(project.WorkflowId) : null;
-                project.Status = project.Status != null ? this.Context.ProjectStatus.Find(project.StatusId) : null;
-                project.Agency = project.Agency != null ? this.Context.Agencies.Find(project.AgencyId) : null;
-                project.TierLevel = project.TierLevel != null ? this.Context.TierLevels.Find(project.TierLevelId) : null;
-                project.Risk = project.Risk != null ? this.Context.ProjectRisks.Find(project.RiskId) : null;
-
-                project.Responses.ForEach(r =>
+                projects.ForEach((project) =>
                 {
-                    r.Agency = r.Agency != null ? this.Context.Agencies.Find(r.AgencyId) : null;
+                    if (project == null) throw new ArgumentNullException();
+
+                    project.Workflow = project.Workflow != null ? this.Context.Workflows.Find(project.WorkflowId) : null;
+                    project.Status = project.Status != null ? this.Context.ProjectStatus.Find(project.StatusId) : null;
+                    project.Agency = project.Agency != null ? this.Context.Agencies.Find(project.AgencyId) : null;
+                    project.TierLevel = project.TierLevel != null ? this.Context.TierLevels.Find(project.TierLevelId) : null;
+                    project.Risk = project.Risk != null ? this.Context.ProjectRisks.Find(project.RiskId) : null;
+
+                    project.Responses.ForEach(r =>
+                    {
+                        r.Agency = r.Agency != null ? this.Context.Agencies.Find(r.AgencyId) : null;
+                    });
+
+                    project.Tasks.ForEach(t =>
+                    {
+                        t.Task = t.Task != null ? this.Context.Tasks.Find(t.TaskId) : null;
+                    });
+
+                    this.Context.Projects.Update(project);
                 });
 
-                project.Tasks.ForEach(t =>
-                {
-                    t.Task = t.Task != null ? this.Context.Tasks.Find(t.TaskId) : null;
-                });
-
-                this.Context.Projects.Update(project);
-            });
-
-            this.Context.CommitTransaction();
+                this.Context.CommitTransaction();
+            }    
         }
 
         /// <summary>

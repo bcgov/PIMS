@@ -1,9 +1,8 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import Map, { MapViewportChangeEvent } from '../../../components/maps/leaflet/Map';
 import './MapView.scss';
 import { Map as LeafletMap } from 'react-leaflet';
-import { fetchParcels, fetchPropertyDetail } from 'actionCreators/parcelsActionCreator';
-import { IPropertySearchParams } from 'constants/API';
+import { fetchPropertyDetail } from 'actionCreators/parcelsActionCreator';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'reducers/rootReducer';
 import {
@@ -21,27 +20,12 @@ import * as API from 'constants/API';
 import _ from 'lodash';
 import MapSideBarContainer from 'features/mapSideBar/containers/MapSideBarContainer';
 import classNames from 'classnames';
+import { FilterProvider } from 'components/maps/providers/FIlterProvider';
 
 /** rough center of bc Itcha Ilgachuz Provincial Park */
 const defaultLatLng = {
   lat: 52.81604319154934,
   lng: -124.67285156250001,
-};
-
-const parcelBounds: IPropertySearchParams = {
-  pid: null,
-  neLatitude: defaultLatLng.lat,
-  neLongitude: defaultLatLng.lng,
-  swLatitude: defaultLatLng.lat,
-  swLongitude: defaultLatLng.lng,
-  address: null,
-  administrativeArea: null,
-  projectNumber: null,
-  agencies: null,
-  classificationId: null,
-  minLandArea: null,
-  maxLandArea: null,
-  inSurplusPropertyProgram: false,
 };
 
 // This could also come from the API, a local file, etc -OR- replacing the <select> fields with free text inputs.
@@ -82,120 +66,74 @@ const MapView: React.FC<MapViewProps> = (props: MapViewProps) => {
   const lotSizes = fetchLotSizes();
   const dispatch = useDispatch();
 
-  const getApiParams = (e: MapViewportChangeEvent): IPropertySearchParams | null => {
-    if (!e || !e.bounds) {
-      return null;
-    }
-    const {
-      pid,
-      address,
-      administrativeArea,
-      projectNumber,
-      agencies,
-      classificationId,
-      minLotSize,
-      maxLotSize,
-      inSurplusPropertyProgram,
-      inEnhancedReferralProcess,
-    } = e.filter ?? {};
-
-    const ne = e.bounds.getNorthEast();
-    const sw = e.bounds.getSouthWest();
-    const apiParams: IPropertySearchParams = {
-      pid: pid ?? null,
-      neLatitude: ne.lat,
-      neLongitude: ne.lng,
-      swLatitude: sw.lat,
-      swLongitude: sw.lng,
-      address: address ?? null,
-      administrativeArea: administrativeArea ?? null,
-      projectNumber: projectNumber ?? null,
-      agencies: agencies ?? null,
-      classificationId: classificationId ?? null,
-      minLandArea: minLotSize ?? null,
-      maxLandArea: maxLotSize ?? null,
-      inSurplusPropertyProgram: inSurplusPropertyProgram ?? null,
-      inEnhancedReferralProcess,
-    };
-    return apiParams;
-  };
   const saveLatLng = (e: LeafletMouseEvent) => {
     if (!props.disabled) {
       dispatch(saveLeafletMouseEvent(e));
     }
   };
 
-  const throttledFetch = useRef(
-    _.throttle<any>((parcelBounds: any) => dispatch(fetchParcels(parcelBounds)), 1000),
-  ).current;
-
-  useEffect(() => {
-    throttledFetch(parcelBounds);
-  }, [dispatch, throttledFetch]);
-
   const { showSideBar, size } = useParamSideBar();
   return (
     <div className={classNames(showSideBar ? 'side-bar' : '', 'd-flex')}>
       <MapSideBarContainer
         refreshParcels={() => {
-          throttledFetch(parcelBounds);
           mapRef.current?.leafletElement.fireEvent('clear');
         }}
         properties={properties}
       />
-      <Map
-        sidebarSize={size}
-        lat={
-          (propertyDetail?.parcelDetail?.latitude as number) ??
-          selectedDraftProperty?.parcelDetail?.latitude ??
-          defaultLatLng.lat
-        }
-        lng={
-          (propertyDetail?.parcelDetail?.longitude as number) ??
-          selectedDraftProperty?.parcelDetail?.longitude ??
-          defaultLatLng.lng
-        }
-        properties={properties}
-        selectedProperty={
-          !!propertyDetail?.parcelDetail ? propertyDetail : (selectedDraftProperty as any)
-        }
-        agencies={agencies}
-        propertyClassifications={propertyClassifications}
-        lotSizes={lotSizes}
-        onMarkerClick={
-          props.onMarkerClick ??
-          ((p, position) => {
-            if (
-              p.propertyTypeId !== undefined &&
-              [PropertyTypes.BUILDING, PropertyTypes.PARCEL].includes(p.propertyTypeId)
-            ) {
-              p.id && dispatch(fetchPropertyDetail(p.id, p.propertyTypeId as any, position));
-            } else {
-              setSelectedDraftProperty({
-                propertyTypeId: p.propertyTypeId,
-                parcelDetail: { ...p },
-              } as any);
-            }
-          })
-        }
-        onMarkerPopupClose={() => {
-          setSelectedDraftProperty(null);
-          dispatch(storeParcelDetail(null));
-        }}
-        onViewportChanged={(mapFilterModel: MapViewportChangeEvent) => {
-          if (!loadedProperties) {
-            setLoadedProperties(true);
+      <FilterProvider>
+        <Map
+          sidebarSize={size}
+          lat={
+            (propertyDetail?.parcelDetail?.latitude as number) ??
+            selectedDraftProperty?.parcelDetail?.latitude ??
+            defaultLatLng.lat
           }
-          const apiParams = getApiParams(mapFilterModel);
-          throttledFetch(apiParams);
-        }}
-        onMapClick={saveLatLng}
-        disableMapFilterBar={props.disableMapFilterBar}
-        interactive={!props.disabled}
-        showParcelBoundaries={props.showParcelBoundaries ?? true}
-        zoom={6}
-        mapRef={mapRef}
-      />
+          lng={
+            (propertyDetail?.parcelDetail?.longitude as number) ??
+            selectedDraftProperty?.parcelDetail?.longitude ??
+            defaultLatLng.lng
+          }
+          properties={properties}
+          selectedProperty={
+            !!propertyDetail?.parcelDetail ? propertyDetail : (selectedDraftProperty as any)
+          }
+          agencies={agencies}
+          propertyClassifications={propertyClassifications}
+          lotSizes={lotSizes}
+          onMarkerClick={
+            props.onMarkerClick ??
+            ((p, position) => {
+              if (
+                p.propertyTypeId !== undefined &&
+                [PropertyTypes.BUILDING, PropertyTypes.PARCEL].includes(p.propertyTypeId)
+              ) {
+                p.id && dispatch(fetchPropertyDetail(p.id, p.propertyTypeId as any, position));
+              } else {
+                setSelectedDraftProperty({
+                  propertyTypeId: p.propertyTypeId,
+                  parcelDetail: { ...p },
+                } as any);
+              }
+            })
+          }
+          onMarkerPopupClose={() => {
+            setSelectedDraftProperty(null);
+            dispatch(storeParcelDetail(null));
+          }}
+          onViewportChanged={(mapFilterModel: MapViewportChangeEvent) => {
+            if (!loadedProperties) {
+              setLoadedProperties(true);
+            }
+          }}
+          onMapClick={saveLatLng}
+          disableMapFilterBar={props.disableMapFilterBar}
+          interactive={!props.disabled}
+          showParcelBoundaries={props.showParcelBoundaries ?? true}
+          zoom={6}
+          mapRef={mapRef}
+        />
+      </FilterProvider>
     </div>
   );
 };

@@ -55,8 +55,9 @@ namespace Pims.Dal.Entities.Models
         {
             // We want case-insensitive query parameter properties.
             var filter = new Dictionary<string, Microsoft.Extensions.Primitives.StringValues>(query, StringComparer.OrdinalIgnoreCase);
-            this.Page = filter.GetIntValue(nameof(this.Page), 1);
-            this.Quantity = filter.GetIntValue(nameof(this.Quantity), 10);
+            this.Quantity = filter.GetIntValue(nameof(this.Quantity), filter.GetIntValue("count", 10));
+            var startIndex = filter.GetIntValue("startIndex", 0);
+            this.Page = filter.GetIntValue(nameof(this.Page), startIndex <= 0 ? 1 : CalcPage(startIndex, this.Quantity));
             this.Sort = filter.GetStringArrayValue(nameof(this.Sort));
         }
         #endregion
@@ -70,6 +71,19 @@ namespace Pims.Dal.Entities.Models
         {
             return this.Page > 0
                 && this.Quantity > 0;
+        }
+
+        /// <summary>
+        /// Convert a start index to a page for paging. // TODO: Should switch to using start index instead of paging because it has a little more control.
+        /// </summary>
+        /// <param name="startIndex"></param>
+        /// <param name="quantity"></param>
+        /// <returns></returns>
+        private int CalcPage(int startIndex, int quantity)
+        {
+            if (startIndex < quantity) return 1;
+
+            return startIndex / quantity;
         }
         #endregion
     }

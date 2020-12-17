@@ -535,7 +535,7 @@ exports[`Building Form component renders correctly 1`] = `
                         Number of Floors
                       </p>
                       <div
-                        class="form-group"
+                        class="form-group col"
                       >
                         <input
                           class="input-small form-control"
@@ -809,7 +809,7 @@ exports[`Building Form component renders correctly 1`] = `
                         Postal Code
                       </p>
                       <div
-                        class="form-group"
+                        class="form-group col"
                       >
                         <input
                           class="input-small form-control"
@@ -869,7 +869,7 @@ exports[`Building Form component renders correctly 1`] = `
                           Latitude
                         </p>
                         <div
-                          class="form-group"
+                          class="form-group col"
                         >
                           <input
                             class="input-medium form-control"
@@ -889,7 +889,7 @@ exports[`Building Form component renders correctly 1`] = `
                           Longitude
                         </p>
                         <div
-                          class="form-group"
+                          class="form-group col"
                         >
                           <input
                             class="input-medium form-control"

@@ -1,5 +1,5 @@
 import React, { CSSProperties, memo, useEffect } from 'react';
-import { Form, FormControlProps } from 'react-bootstrap';
+import { Col, Form, FormControlProps } from 'react-bootstrap';
 import { getIn, FormikProps } from 'formik';
 import { DisplayError } from './DisplayError';
 import { formikFieldMemo } from 'utils';
@@ -92,6 +92,7 @@ export const FastInput: React.FC<FastInputProps> = memo(
       <Form.Group
         controlId={`input-${field}`}
         className={classNames(!!required ? 'required' : '', outerClassName)}
+        as={Col}
       >
         {!!label && (
           <Form.Label>

@@ -1,4 +1,4 @@
-import { NoteTypes, IProjectNote } from 'features/projects/common';
+import { IProjectNote } from 'features/projects/common';
 import {
   IApiProject,
   IProjectProperty,
@@ -13,6 +13,7 @@ import { getCurrentFiscalYear, formatDate } from 'utils';
 import _ from 'lodash';
 import { EvaluationKeys } from 'constants/evaluationKeys';
 import moment from 'moment';
+import { NoteTypes } from '../../../constants';
 
 export const getCurrentFiscal = (fiscals: IFiscal[], key: FiscalKeys) => {
   const currentFiscal = getCurrentFiscalYear();

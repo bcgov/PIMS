@@ -12,7 +12,12 @@ import GenericModal from './GenericModal';
  */
 const ErrorModal = (props: any) => {
   return (
-    <GenericModal title="App Error" message={props.error.message} okButtonText="Ok"></GenericModal>
+    <GenericModal
+      title="App Error"
+      message={props.error.message}
+      okButtonText="Ok"
+      handleOk={() => window.location.reload()}
+    ></GenericModal>
   );
 };
 

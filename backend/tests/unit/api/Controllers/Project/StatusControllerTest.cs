@@ -47,7 +47,7 @@ namespace Pims.Api.Test.Controllers
             var actualResult = Assert.IsType<Model.ProjectStatusModel[]>(actionResult.Value);
             Assert.Null(actionResult.StatusCode);
             var expectedResult = mapper.Map<Model.ProjectStatusModel[]>(status);
-            actualResult.Should().HaveCount(25);
+            actualResult.Should().HaveCount(26);
             service.Verify(m => m.ProjectStatus.Get(), Times.Once());
         }
         #endregion

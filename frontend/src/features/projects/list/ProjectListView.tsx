@@ -25,10 +25,10 @@ import Claims from 'constants/claims';
 import { ENVIRONMENT } from 'constants/environment';
 import queryString from 'query-string';
 import download from 'utils/download';
-import { mapLookupCode, mapStatuses } from 'utils';
+import { mapLookupCodeWithParentString, mapStatuses } from 'utils';
 import styled from 'styled-components';
-import { ParentGroupedFilter } from 'components/SearchBar/ParentGroupedFilter';
 import TooltipWrapper from 'components/common/TooltipWrapper';
+import { ParentSelect } from 'components/common/form/ParentSelect';
 
 interface IProjectFilterState {
   name?: string;
@@ -36,6 +36,7 @@ interface IProjectFilterState {
   agencyId?: string;
   assessWorkflow?: boolean;
   agencies?: number;
+  fiscalYaer?: number;
 }
 
 const initialValues = {
@@ -107,7 +108,7 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
   const keycloak = useKeycloakWrapper();
   const [deleteId, setDeleteId] = React.useState<string | undefined>();
   const agencyIds = useMemo(() => agencies.map(x => parseInt(x.id, 10)), [agencies]);
-  const agencyOptions = (agencies ?? []).map(c => mapLookupCode(c, null));
+  const agencyOptions = (agencies ?? []).map(c => mapLookupCodeWithParentString(c, agencies));
   const statuses = (projectStatuses ?? []).map(c => mapStatuses(c));
   const columns = useMemo(() => cols, []);
 
@@ -116,6 +117,7 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
 
   // Filtering and pagination state
   const [filter, setFilter] = useState<IProjectFilterState>({});
+  const [clearSelected, setClearSelected] = useState(false);
   const [pageSize, setPageSize] = useState(10);
   const [pageIndex, setPageIndex] = useState(0);
   const [pageCount, setPageCount] = useState(0);
@@ -139,11 +141,16 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
       (value as any).agencies?.value
         ? setFilter({ ...value, agencies: (value as any)?.agencies.value })
         : setFilter({ ...value });
+      if ((value as any).statusId) {
+        setFilter({ ...value, statusId: (value as any).statusId?.map((x: any) => x) });
+      } else {
+        setFilter({ ...value });
+        setClearSelected(!clearSelected);
+      }
       setPageIndex(0); // Go to first page of results when filter changes
     },
-    [setFilter, setPageIndex],
+    [setFilter, setPageIndex, clearSelected],
   );
-
   const onPageSizeChanged = useCallback(size => {
     setPageSize(size);
   }, []);
@@ -261,6 +268,16 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
     }
   };
 
+  const fiscalYears = React.useMemo(() => {
+    const startYear = new Date().getFullYear() - 10;
+    return Array.from(Array(12).keys())
+      .map(i => {
+        var year = startYear + i;
+        return { label: `${year - 1} / ${year}`, value: year };
+      })
+      .reverse();
+  }, []);
+
   return (
     <Container fluid className="ProjectListView">
       <div className="filter-container">
@@ -270,20 +287,29 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
             onChange={handleFilterChange}
           >
             <Col xs={2} className="bar-item">
-              <Select field="statusId" options={statuses} placeholder="Select a project status" />
+              <Input field="name" placeholder="Search by project name or number" />
             </Col>
             <Col xs={2} className="bar-item">
-              <ParentGroupedFilter
-                name="agencies"
-                options={agencyOptions}
-                className="map-filter-typeahead"
-                filterBy={['code', 'label', 'parent']}
-                placeholder="Enter an Agency"
-                inputSize="large"
+              <ParentSelect
+                field={'statusId'}
+                options={statuses}
+                clearSelected={clearSelected}
+                setClearSelected={setClearSelected}
+                enableMultiple
+                filterBy={['label', 'parent']}
+                placeholder="Enter a Status"
               />
             </Col>
             <Col xs={2} className="bar-item">
-              <Input field="name" placeholder="Search by project name or number" />
+              <ParentSelect
+                field="agencies"
+                options={agencyOptions}
+                filterBy={['code', 'label', 'parent']}
+                placeholder="Enter an Agency"
+              />
+            </Col>
+            <Col xs={1} className="bar-item">
+              <Select field="fiscalYear" options={fiscalYears} placeholder="Fiscal Year" />
             </Col>
           </FilterBar>
         )}
@@ -302,20 +328,13 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
         )}
         <Container fluid className="TableToolbar">
           <h3 className="mr-4">{title}</h3>
-          {keycloak.hasClaim(Claims.REPORTS_SPL) && (
-            <TooltipWrapper toolTipId="spl-report" toolTip="View SPL Reports">
-              <Button className="mr-auto" onClick={() => history.push('/reports/spl')}>
-                SPL Report
-              </Button>
-            </TooltipWrapper>
-          )}
-          {keycloak.hasClaim(Claims.PROJECT_VIEW) && (
+          {keycloak.hasClaim(Claims.REPORTS_VIEW) && (
             <>
               <TooltipWrapper toolTipId="export-to-excel" toolTip="Export to Excel">
                 <FileIcon>
                   <FaFileExcel
                     size={36}
-                    title="Export to Excel"
+                    data-testid="excel-icon"
                     onClick={() => fetch('excel', 'generic')}
                   />
                 </FileIcon>
@@ -324,7 +343,7 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
                 <FileIcon>
                   <FaFileAlt
                     size={36}
-                    title="Export to CSV"
+                    data-testid="csv-icon"
                     onClick={() => fetch('csv', 'generic')}
                   />
                 </FileIcon>

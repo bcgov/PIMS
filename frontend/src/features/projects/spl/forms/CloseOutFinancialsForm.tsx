@@ -1,39 +1,38 @@
 import { Fragment } from 'react';
 import React from 'react';
-import { useFormikContext } from 'formik';
-import { Form, FastCurrencyInput } from 'components/common/form';
-import { ProjectNotes, NoteTypes, IProject } from 'features/projects/common';
+import { Form } from 'components/common/form';
+import { ProjectNotes } from 'features/projects/common';
+import { Col } from 'react-bootstrap';
+import { NoteTypes } from '../../../../constants';
 
 interface CloseOutFinancialsFormProps {
   isReadOnly?: boolean;
 }
 
 const CloseOutFinancialsForm = (props: CloseOutFinancialsFormProps) => {
-  const formikProps = useFormikContext<IProject>();
   return (
     <Fragment>
       <h3>Financing Information</h3>
-      <ProjectNotes
-        field={`notes[${NoteTypes.LoanTerms}].note`}
-        label="Loan Terms"
-        outerClassName="col-md-12"
-      />
-      <ProjectNotes
-        field={`notes[${NoteTypes.CloseOut}].note`}
-        label="Notes"
-        outerClassName="col-md-12"
-      />
-      <h3>OCG</h3>
-      <Form.Row className="col-md-12">
-        <Form.Label column md={2}>
-          OCG Gain / Loss
-        </Form.Label>
-        <FastCurrencyInput
-          formikProps={formikProps}
-          disabled={props.isReadOnly}
-          outerClassName="col-md-4"
-          field="ocgFinancialStatement"
-        />
+      <Form.Row>
+        <Col>
+          <ProjectNotes
+            field={`notes[${NoteTypes.LoanTerms}].note`}
+            label="Loan Terms"
+            className="col-md-10"
+            outerClassName="col"
+            disabled={props.isReadOnly}
+          />
+        </Col>
+        <Col md={1}></Col>
+        <Col>
+          <ProjectNotes
+            field={`notes[${NoteTypes.CloseOut}].note`}
+            label="Close Out"
+            className="col-md-10"
+            outerClassName="col"
+            disabled={props.isReadOnly}
+          />
+        </Col>
       </Form.Row>
     </Fragment>
   );

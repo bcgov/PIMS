@@ -38,8 +38,7 @@ namespace Pims.Api.Areas.Reports.Mapping.Project
                 .Map(dest => dest.Status, src => src.Status == null ? null : src.Status.Name)
                 .Map(dest => dest.Risk, src => src.Risk.Name)
                 .Map(dest => dest.TierLevel, src => src.TierLevel == null ? null : src.TierLevel.Name)
-                .Map(dest => dest.AgencyCode, src => AgencyConverter.ConvertAgency(src.Agency))
-                .Map(dest => dest.SubAgency, src => AgencyConverter.ConvertSubAgency(src.Agency))
+                .Map(dest => dest.AgencyCode, src => src.Agency.Code)
                 .Map(dest => dest.UpdatedOn, src => src.UpdatedOn)
                 .Map(dest => dest.UpdatedBy,
                     src => src.UpdatedById != null ? src.UpdatedBy.DisplayName : null)
@@ -94,7 +93,6 @@ namespace Pims.Api.Areas.Reports.Mapping.Project
                     dest.DisposedOn = metadata.DisposedOn;
                     dest.MarketedOn = metadata.MarketedOn;
                     dest.Purchaser = metadata.Purchaser;
-                    dest.IsContractConditional = metadata.IsContractConditional;
                 });
         }
         #endregion

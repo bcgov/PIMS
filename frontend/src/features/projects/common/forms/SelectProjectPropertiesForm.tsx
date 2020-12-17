@@ -27,7 +27,7 @@ const SelectProjectPropertiesForm = ({
         setPageIndex={setPageIndex}
         field="properties"
       />
-      <ProjectNotes />
+      <ProjectNotes className="col-md-auto" />
       <StepErrorSummary />
     </Form>
   );

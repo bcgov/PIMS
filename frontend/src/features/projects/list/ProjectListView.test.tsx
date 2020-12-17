@@ -2,7 +2,7 @@ import ProjectListView from './ProjectListView';
 import React from 'react';
 import { Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
-import { render, cleanup, act, wait } from '@testing-library/react';
+import { render, cleanup, act } from '@testing-library/react';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { ILookupCode } from 'actions/lookupActions';
@@ -162,16 +162,15 @@ describe('Project list view tests', () => {
     });
 
     await act(async () => {
-      const { queryByText, queryByTitle, container } = render(
+      const { queryByTestId, container } = render(
         <Provider store={store}>
           <Router history={history}>
             <ProjectListView />
           </Router>
         </Provider>,
       );
-      expect(queryByTitle('Export to Excel')).not.toBeInTheDocument();
-      expect(queryByTitle('Export to CSV')).not.toBeInTheDocument();
-      expect(queryByText('SPL Report')).not.toBeInTheDocument();
+      expect(queryByTestId('excel-icon')).not.toBeInTheDocument();
+      expect(queryByTestId('csv-icon')).not.toBeInTheDocument();
       expect(container.querySelector('span[class="spinner-border"]')).not.toBeInTheDocument();
     });
   });
@@ -187,41 +186,16 @@ describe('Project list view tests', () => {
     });
 
     await act(async () => {
-      const { queryByTitle, container } = render(
+      const { getByTestId, container } = render(
         <Provider store={store}>
           <Router history={history}>
             <ProjectListView />
           </Router>
         </Provider>,
       );
-      expect(queryByTitle('Export to Excel')).toBeInTheDocument();
-      expect(queryByTitle('Export to CSV')).toBeInTheDocument();
+      expect(getByTestId('excel-icon')).toBeInTheDocument();
+      expect(getByTestId('csv-icon')).toBeInTheDocument();
       expect(container.querySelector('span[class="spinner-border"]')).not.toBeInTheDocument();
-    });
-  });
-
-  it('Displays export buttons with spl reports permission', async () => {
-    mockKeycloak([Claims.REPORTS_SPL]);
-    mockedService.getProjectList.mockResolvedValueOnce({
-      quantity: 0,
-      total: 0,
-      page: 1,
-      pageIndex: 0,
-      items: [],
-    });
-
-    await act(async () => {
-      const { queryByText, container } = render(
-        <Provider store={store}>
-          <Router history={history}>
-            <ProjectListView />
-          </Router>
-        </Provider>,
-      );
-      expect(queryByText('SPL Report')).toBeVisible();
-      await wait(async () => {
-        expect(container.querySelector('span[class="spinner-border"]')).not.toBeInTheDocument();
-      });
     });
   });
 });

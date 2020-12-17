@@ -31,7 +31,6 @@ namespace Pims.Dal.Helpers.Extensions
 
             // Check if user has the ability to view sensitive properties.
             var userAgencies = user.GetAgencies();
-            var viewSensitive = user.HasPermission(Permissions.SensitiveView);
             var isAdmin = user.HasPermission(Permissions.AdminProjects);
 
             // Users may only view sensitive properties if they have the `sensitive-view` claim and belong to the owning agency.
@@ -46,11 +45,16 @@ namespace Pims.Dal.Helpers.Extensions
                 .Include(p => p.Notes)
                 .AsNoTracking();
 
-            if (filter.AssessWorkflow.HasValue && filter.AssessWorkflow.Value)
+            if (filter.AssessWorkflow == true)
             {
                 var statuses = context.Workflows.Where(w => options.AssessmentWorkflows.Contains(w.Code))
                     .SelectMany(w => w.Status).Select(x => x.StatusId).Distinct().ToArray();
                 query = query.Where(p => statuses.Contains(p.StatusId) || p.Status.Code.Equals("AS-I") || p.Status.Code.Equals("AS-EXE")); // TODO: Need optional Status paths within Workflows.
+            }
+
+            if (filter.SPLWorkflow == true)
+            {
+                query = query.Where(p => p.Workflow.Code == "SPL" && p.Status.Code != "CA");
             }
 
             if (!String.IsNullOrWhiteSpace(filter.ProjectNumber))
@@ -62,6 +66,11 @@ namespace Pims.Dal.Helpers.Extensions
             if (filter.CreatedByMe.HasValue && filter.CreatedByMe.Value)
             {
                 query = query.Where(p => p.CreatedById.Equals(user.GetUserId()));
+            }
+
+            if (filter.FiscalYear.HasValue)
+            {
+                query = query.Where(p => p.ActualFiscalYear == filter.FiscalYear);
             }
 
             if (filter.Active.HasValue && filter.Active.Value)
@@ -379,7 +388,7 @@ namespace Pims.Dal.Helpers.Extensions
         {
             // Update a project
             var agency = originalProject.Agency;
-            var originalMetadata = context.Deserialize<DisposalProjectMetadata>(originalProject.Metadata); // TODO: Need to test whether automatically overwriting the metadata is correct.
+            var originalMetadata = context.Deserialize<DisposalProjectMetadata>(originalProject.Metadata ?? "{}"); // TODO: Need to test whether automatically overwriting the metadata is correct.
 
             var createdById = originalProject.CreatedById;
             var updatedById = originalProject.UpdatedById;

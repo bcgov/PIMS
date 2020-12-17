@@ -1,5 +1,6 @@
 using ClosedXML.Excel;
 using Pims.Core.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -19,7 +20,14 @@ namespace Pims.Api.Test.Helpers
             new List<object[]>
             {
                 new object[] { new[] { new { Id = 1, Name = "test1" }, new { Id = 2, Name = "test2" } }, 2 },
-                new object[] { new[] { new Entity.TierLevel(1, "test1"), new Entity.TierLevel(2, "test2") }, 118 }
+                new object[]
+                {
+                    new[] {
+                        new Entity.TierLevel(1, "test1") { CreatedOn = DateTime.UtcNow },
+                        new Entity.TierLevel(2, "test2") { CreatedOn = DateTime.UtcNow }
+                    },
+                    9
+                }
             };
         #endregion
 

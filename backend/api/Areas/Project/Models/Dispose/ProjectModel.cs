@@ -13,7 +13,6 @@ namespace Pims.Api.Areas.Project.Models.Dispose
         /// get/set - The primary key to identify the project.
         /// </summary>
         public int Id { get; set; }
-
         /// <summary>
         /// get/set - A unique project number to identify the project.
         /// </summary>
@@ -28,7 +27,6 @@ namespace Pims.Api.Areas.Project.Models.Dispose
         /// get/set - The reported fiscal year this project.
         /// </summary>
         public int ReportedFiscalYear { get; set; }
-
         /// <summary>
         /// get/set - The actual or forecasted fiscal year.
         /// </summary>
@@ -275,6 +273,11 @@ namespace Pims.Api.Areas.Project.Models.Dispose
         public string ExemptionRationale { get; set; }
 
         /// <summary>
+        /// get/set - The date the ADM approved the exemption.
+        /// </summary>
+        public DateTime? ExemptionApprovedOn { get; set; }
+
+        /// <summary>
         /// get/set - The netbook value which is the sum of the properties.
         /// </summary>
         public decimal NetBook { get; set; }
@@ -320,14 +323,9 @@ namespace Pims.Api.Areas.Project.Models.Dispose
         public decimal? SppCapitalization { get; set; }
 
         /// <summary>
-        /// get/set - The gain before SPP.
+        /// get/set - The gain before SPL.
         /// </summary>
-        public decimal? GainBeforeSpp { get; set; }
-
-        /// <summary>
-        /// get/set - The gain after SPP.
-        /// </summary>
-        public decimal? GainAfterSpp { get; set; }
+        public decimal? GainBeforeSpl { get; set; }
 
         /// <summary>
         /// get/set - OCG final statement.
@@ -360,12 +358,7 @@ namespace Pims.Api.Areas.Project.Models.Dispose
         public decimal? PriorYearAdjustmentAmount { get; set; }
 
         /// <summary>
-        /// get/set - Remediation.
-        /// </summary>
-        public string Remediation { get; set; }
-
-        /// <summary>
-        /// get/set - Remediation.
+        /// get/set - Panned future user description.
         /// </summary>
         public string PlannedFutureUse { get; set; }
 
@@ -393,6 +386,22 @@ namespace Pims.Api.Areas.Project.Models.Dispose
         /// get/set - who signed the final form.
         /// </summary>
         public string FinalFormSignedBy { get; set; }
+
+        /// <summary>
+        /// get/set - When the request to be removed from SPL was.
+        /// </summary>
+        public DateTime? RemovalFromSplRequestOn { get; set; }
+
+        /// <summary>
+        /// get/set - When the request to be removed from SPL was approved on.
+        /// </summary>
+        public DateTime? RemovalFromSplApprovedOn { get; set; }
+
+        /// <summary>
+        /// get/set - A note with the reason to remove the project from SPL.
+        /// </summary>
+        /// <value></value>
+        public string RemovalFromSplRationale { get; set; }
 
         /// <summary>
         /// get/set - An array of project notes.

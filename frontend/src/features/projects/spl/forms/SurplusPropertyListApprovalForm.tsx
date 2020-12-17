@@ -25,7 +25,7 @@ const SurplusPropertyListApprovalForm = ({ isReadOnly }: ISurplusPropertyListApp
           outerClassName="col-md-2"
           formikProps={formikProps}
           disabled={isReadOnly}
-          field="submittedOn"
+          field="requestForSplReceivedOn"
         />
       </Form.Row>
       <Form.Row>
@@ -37,7 +37,7 @@ const SurplusPropertyListApprovalForm = ({ isReadOnly }: ISurplusPropertyListApp
           outerClassName="col-md-2"
           formikProps={formikProps}
           disabled={isReadOnly}
-          field="approvedOn"
+          field="approvedForSplOn"
         />
       </Form.Row>
     </Container>

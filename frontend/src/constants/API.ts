@@ -32,24 +32,40 @@ export interface IPaginateAccessRequests extends IPaginateParams {
 
 // Parcels
 export interface IPropertySearchParams {
-  pid?: string | null;
+  pid?: string;
   neLatitude: number;
   neLongitude: number;
   swLatitude: number;
   swLongitude: number;
-  address: string | null;
-  administrativeArea: string | null;
-  projectNumber: string | null;
+  address?: string;
+  administrativeArea?: string;
+  projectNumber?: string;
   /** comma-separated list of agencies to filter by */
-  agencies: string | null;
-  classificationId: number | null;
-  minLandArea: number | null;
-  maxLandArea: number | null;
-  inSurplusPropertyProgram: boolean | null;
+  agencies?: string;
+  classificationId?: number;
+  minLandArea?: number;
+  maxLandArea?: number;
+  inSurplusPropertyProgram?: boolean;
   inEnhancedReferralProcess?: boolean;
 }
 export const PROPERTIES = (params: IPropertySearchParams | null) =>
   `/properties/search?${params ? queryString.stringify(params) : ''}`; // get filtered properties or all if not specified.
+
+export interface IGeoSearchParams {
+  bbox?: string;
+  address?: string;
+  administrativeArea?: string;
+  pid?: string;
+  projectNumber?: string;
+  agencies?: string; // TODO: Switch to number[]
+  classificationId?: number;
+  minLandArea?: number;
+  maxLandArea?: number;
+  inSurplusPropertyProgram?: boolean;
+  inEnhancedReferralProcess?: boolean;
+}
+export const GEO_PROPERTIES = (params: IGeoSearchParams | null) =>
+  `/properties/search/wfs?${params ? queryString.stringify(params) : ''}`; // get filtered properties or all if not specified.
 
 export const PARCELS_DETAIL = (params: IPropertySearchParams | null) => {
   return `/properties/parcels?${params ? queryString.stringify(params) : ''}`; // get filtered properties or all if not specified.

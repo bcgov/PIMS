@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { ReviewWorkflowStatus } from '../../common';
+import { ProjectNotes, ReviewWorkflowStatus } from '../../common';
 import { EnhancedReferralCompleteForm, AgencyResponseForm } from '..';
 import { useFormikContext } from 'formik';
 import ExemptionEnhancedReferralCompleteForm from '../forms/ExemptionEnhancedReferralCompleteForm';
+import { Container } from 'react-bootstrap';
 
 interface IEnhancedReferralTabProps {
   isReadOnly?: boolean;
@@ -35,6 +36,16 @@ const EnhancedReferralTab: React.FunctionComponent<IEnhancedReferralTabProps> = 
 
   return (
     <>
+      {(values as any).exemptionRequested && (
+        <Container fluid className="AgencyResponseForm">
+          <ProjectNotes
+            label="Exemption Rationale"
+            field="exemptionRationale"
+            disabled={true}
+            outerClassName="col-md-12"
+          />
+        </Container>
+      )}
       <AgencyResponseForm isReadOnly={isReadOnly} />
       <EnhancedReferralCompleteForm
         isReadOnly={isReadOnly}

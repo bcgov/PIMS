@@ -2,14 +2,14 @@ import React from 'react';
 import { ClassificationForm } from './ClassificationForm';
 import renderer from 'react-test-renderer';
 import { Formik } from 'formik';
-import { CLASSIFICATIONS } from 'constants/classifications';
+import { Classifications } from 'constants/classifications';
 import { cleanup, fireEvent, render, wait } from '@testing-library/react';
 import { noop } from 'lodash';
 
 const mockClassifications = [
-  { value: CLASSIFICATIONS.CoreOperational, label: 'Core Operational' },
-  { value: CLASSIFICATIONS.CoreStrategic, label: 'Core Strategic' },
-  { value: CLASSIFICATIONS.SurplusEncumbered, label: 'Surplus Encumbered' },
+  { value: Classifications.CoreOperational, label: 'Core Operational' },
+  { value: Classifications.CoreStrategic, label: 'Core Strategic' },
+  { value: Classifications.SurplusEncumbered, label: 'Surplus Encumbered' },
 ];
 
 it('renders correctly', () => {
@@ -53,7 +53,7 @@ describe('renders definitions correctly', () => {
     await wait(() => {
       fireEvent.change(classificationId!, {
         target: {
-          value: CLASSIFICATIONS.CoreOperational,
+          value: Classifications.CoreOperational,
         },
       });
     });
@@ -65,7 +65,7 @@ describe('renders definitions correctly', () => {
     await wait(() => {
       fireEvent.change(classificationId!, {
         target: {
-          value: CLASSIFICATIONS.CoreStrategic,
+          value: Classifications.CoreStrategic,
         },
       });
     });
@@ -77,7 +77,7 @@ describe('renders definitions correctly', () => {
     await wait(() => {
       fireEvent.change(classificationId!, {
         target: {
-          value: CLASSIFICATIONS.SurplusEncumbered,
+          value: Classifications.SurplusEncumbered,
         },
       });
     });

@@ -8,6 +8,7 @@ export type IPopupViewProps = {
   propertyDetail: IParcel | IBuilding | null;
   zoomTo?: () => void;
   disabled?: boolean;
+  onLinkClick?: () => void;
 };
 
 export const PopupView: React.FC<IPopupViewProps> = ({
@@ -15,14 +16,26 @@ export const PopupView: React.FC<IPopupViewProps> = ({
   propertyDetail,
   disabled,
   zoomTo,
+  onLinkClick,
 }) => {
   if (propertyTypeId === PropertyTypes.PARCEL) {
     return (
-      <ParcelPopupView zoomTo={zoomTo} disabled={disabled} parcel={propertyDetail as IParcel} />
+      <ParcelPopupView
+        zoomTo={zoomTo}
+        disabled={disabled}
+        parcel={propertyDetail as IParcel}
+        onLinkClick={onLinkClick}
+      />
     );
   }
   if (propertyTypeId === PropertyTypes.BUILDING) {
-    return <BuildingPopupView zoomTo={zoomTo} building={propertyDetail as IBuilding} />;
+    return (
+      <BuildingPopupView
+        zoomTo={zoomTo}
+        building={propertyDetail as IBuilding}
+        onLinkClick={onLinkClick}
+      />
+    );
   }
   if (propertyTypeId === PropertyTypes.DRAFT_PARCEL) {
     return <p>This is a draft marker for parcel: {propertyDetail?.name ?? 'New Parcel'}</p>;
