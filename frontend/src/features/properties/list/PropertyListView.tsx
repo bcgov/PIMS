@@ -52,6 +52,7 @@ const defaultFilterValues: IPropertyFilter = {
   classificationId: '',
   minLotSize: '',
   maxLotSize: '',
+  rentableArea: '',
   propertyType: PropertyTypes.Land,
 };
 

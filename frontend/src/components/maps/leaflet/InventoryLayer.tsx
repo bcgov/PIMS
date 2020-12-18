@@ -80,6 +80,12 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
       maxLandArea: filter?.maxLandArea,
       inSurplusPropertyProgram: filter?.inSurplusPropertyProgram,
       inEnhancedReferralProcess: filter?.inEnhancedReferralProcess,
+      floorCount: filter?.floorCount,
+      predominateUseId: Number(filter?.predominateUseId),
+      constructionTypeId: filter?.constructionTypeId,
+      name: filter?.name,
+      bareLandOnly: filter?.bareLandOnly,
+      rentableArea: filter?.rentableArea,
     }),
     [filter, map, bounds],
   );

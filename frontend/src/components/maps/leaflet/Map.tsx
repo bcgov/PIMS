@@ -78,15 +78,18 @@ export type LayerPopupInformation = PopupContentConfig & {
 };
 
 const defaultFilterValues: IPropertyFilter = {
-  searchBy: 'address',
+  searchBy: 'name',
   pid: '',
   address: '',
   administrativeArea: '',
+  propertyType: '',
   projectNumber: '',
   agencies: '',
   classificationId: '',
   minLotSize: '',
   maxLotSize: '',
+  rentableArea: '',
+  name: '',
 };
 
 /**
@@ -103,8 +106,14 @@ const getQueryParams = (filter: IPropertyFilter): IGeoSearchParams => {
     agencies: filter.agencies,
     minLandArea: floatOrUndefined(filter.minLotSize),
     maxLandArea: floatOrUndefined(filter.maxLotSize),
+    rentableArea: floatOrUndefined(filter.rentableArea),
     inSurplusPropertyProgram: filter.inSurplusPropertyProgram === 'true',
     inEnhancedReferralProcess: filter.inEnhancedReferralProcess === 'true',
+    name: filter.name,
+    predominateUseId: parseInt(filter.predominateUseId!),
+    constructionTypeId: parseInt(filter.constructionTypeId!),
+    floorCount: parseInt(filter.floorCount!),
+    bareLandOnly: filter.bareLandOnly,
   };
 };
 

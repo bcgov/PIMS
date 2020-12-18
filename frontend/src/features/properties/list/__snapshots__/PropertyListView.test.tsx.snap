@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Property list view Matches snapshot 1`] = `
-.c1 {
+.c2 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -16,11 +16,22 @@ exports[`Property list view Matches snapshot 1`] = `
   justify-items: center;
 }
 
-.c2 {
+.c3 {
   color: #007bff;
 }
 
 .c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.c0 .p {
+  font-size: 16px;
+}
+
+.c1 {
   background-color: #fff !important;
   color: #003366 !important;
   padding: 6px 5px;
@@ -42,6 +53,37 @@ exports[`Property list view Matches snapshot 1`] = `
         <div
           class="map-filter-bar align-items-start form-row"
         >
+          <button
+            class="btn btn-primary"
+            style="height: 38px;"
+            type="button"
+          >
+            <div
+              class="c0"
+            >
+              <svg
+                fill="currentColor"
+                height="20"
+                size="20"
+                stroke="currentColor"
+                stroke-width="0"
+                style="margin-right: 5px; margin-top: 3px;"
+                viewBox="0 0 512 512"
+                width="20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M496 64H128V16c0-8.8-7.2-16-16-16H80c-8.8 0-16 7.2-16 16v48H16C7.2 64 0 71.2 0 80v32c0 8.8 7.2 16 16 16h48v368c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16V128h368c8.8 0 16-7.2 16-16V80c0-8.8-7.2-16-16-16zM160 384h320V160H160v224z"
+                />
+              </svg>
+              <p>
+                Find available properties
+              </p>
+            </div>
+          </button>
+          <div
+            class="vl"
+          />
           <div
             class="bar-item col"
           >
@@ -61,27 +103,15 @@ exports[`Property list view Matches snapshot 1`] = `
                   >
                     <option
                       class="option"
+                      value="name"
+                    >
+                      Property Name
+                    </option>
+                    <option
+                      class="option"
                       value="address"
                     >
                       Address
-                    </option>
-                    <option
-                      class="option"
-                      value="administrativeArea"
-                    >
-                      Location
-                    </option>
-                    <option
-                      class="option"
-                      value="pid"
-                    >
-                      PID/PIN
-                    </option>
-                    <option
-                      class="option"
-                      value="projectNumber"
-                    >
-                      RAEG or SPP No.
                     </option>
                   </select>
                 </div>
@@ -165,37 +195,6 @@ exports[`Property list view Matches snapshot 1`] = `
                   classificationVal
                 </option>
               </select>
-            </div>
-          </div>
-          <div
-            class="bar-item d-flex align-items-start col"
-          >
-            <div
-              class="form-group"
-            >
-              <input
-                class="form-control"
-                id="input-minLotSize"
-                name="minLotSize"
-                placeholder="Min Lot Size"
-                value=""
-              />
-            </div>
-            <span
-              class="mx-2 align-self-center"
-            >
-              -
-            </span>
-            <div
-              class="form-group"
-            >
-              <input
-                class="form-control"
-                id="input-maxLotSize"
-                name="maxLotSize"
-                placeholder="Max Lot Size"
-                value=""
-              />
             </div>
           </div>
           <div
@@ -294,7 +293,7 @@ exports[`Property list view Matches snapshot 1`] = `
         </div>
       </div>
       <button
-        class="c0 btn btn-primary"
+        class="c1 btn btn-primary"
         type="button"
       >
         <svg
@@ -314,7 +313,7 @@ exports[`Property list view Matches snapshot 1`] = `
         </svg>
       </button>
       <button
-        class="c0 btn btn-primary"
+        class="c1 btn btn-primary"
         type="button"
       >
         <svg
@@ -378,7 +377,7 @@ exports[`Property list view Matches snapshot 1`] = `
             >
               Agency
               <div
-                class="c1"
+                class="c2"
               >
                 <svg
                   fill="currentColor"
@@ -422,7 +421,7 @@ exports[`Property list view Matches snapshot 1`] = `
             >
               Sub Agency
               <div
-                class="c1"
+                class="c2"
               >
                 <svg
                   fill="currentColor"
@@ -466,10 +465,10 @@ exports[`Property list view Matches snapshot 1`] = `
             >
               Property Name
               <div
-                class="c1"
+                class="c2"
               >
                 <svg
-                  class="c2"
+                  class="c3"
                   fill="currentColor"
                   height="1em"
                   stroke="currentColor"
@@ -497,7 +496,7 @@ exports[`Property list view Matches snapshot 1`] = `
             >
               Classification
               <div
-                class="c1"
+                class="c2"
               >
                 <svg
                   fill="currentColor"
@@ -554,7 +553,7 @@ exports[`Property list view Matches snapshot 1`] = `
             >
               Street Address
               <div
-                class="c1"
+                class="c2"
               >
                 <svg
                   fill="currentColor"
@@ -598,7 +597,7 @@ exports[`Property list view Matches snapshot 1`] = `
             >
               Location
               <div
-                class="c1"
+                class="c2"
               >
                 <svg
                   fill="currentColor"
@@ -642,7 +641,7 @@ exports[`Property list view Matches snapshot 1`] = `
             >
               Assessed Value
               <div
-                class="c1"
+                class="c2"
               >
                 <svg
                   fill="currentColor"
@@ -686,7 +685,7 @@ exports[`Property list view Matches snapshot 1`] = `
             >
               Net Book Value
               <div
-                class="c1"
+                class="c2"
               >
                 <svg
                   fill="currentColor"
@@ -730,7 +729,7 @@ exports[`Property list view Matches snapshot 1`] = `
             >
               Market Value
               <div
-                class="c1"
+                class="c2"
               >
                 <svg
                   fill="currentColor"
@@ -774,7 +773,7 @@ exports[`Property list view Matches snapshot 1`] = `
             >
               Lot Size (in ha)
               <div
-                class="c1"
+                class="c2"
               >
                 <svg
                   fill="currentColor"

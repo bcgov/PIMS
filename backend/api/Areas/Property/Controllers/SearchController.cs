@@ -121,6 +121,7 @@ namespace Pims.Api.Areas.Property.Controllers
             if (!filter.IsValid()) throw new BadRequestException("Property filter must contain valid values.");
 
             var pfilter = filter.CopyValues(new AllPropertyFilter());
+            pfilter.PropertyType = filter.PropertyType;
 
             var properties = _pimsService.Property.Search(pfilter).ToArray();
             return new JsonResult(_mapper.Map<GeoJson<PropertyModel>[]>(properties).ToArray());
