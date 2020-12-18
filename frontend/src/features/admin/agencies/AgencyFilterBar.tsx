@@ -2,9 +2,9 @@ import * as React from 'react';
 import FilterBar from 'components/SearchBar/FilterBar';
 import { IAgencyFilter } from 'interfaces';
 import useCodeLookups from 'hooks/useLookupCodes';
-import { ParentGroupedFilter } from 'components/SearchBar/ParentGroupedFilter';
 import { Label } from 'components/common/Label';
 import { mapLookupCodeWithParentString } from 'utils';
+import { ParentSelect } from 'components/common/form/ParentSelect';
 
 interface IProps {
   value: IAgencyFilter;
@@ -34,13 +34,11 @@ export const AgencyFilterBar: React.FC<IProps> = ({ value, onChange, handleAdd }
       customResetField="id"
     >
       <Label>Search agency by name: </Label>
-      <ParentGroupedFilter
-        name="id"
+      <ParentSelect
+        field="id"
         options={agencyWithParent}
-        className="agency-search"
         placeholder="Enter an Agency"
         filterBy={['parent', 'code', 'name']}
-        inputSize="large"
       />
     </FilterBar>
   );
