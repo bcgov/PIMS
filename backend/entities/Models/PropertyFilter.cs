@@ -117,6 +117,12 @@ namespace Pims.Dal.Entities.Models
         public bool? BareLandOnly { get; set; }
 
         /// <summary>
+        /// get/set - Rentable Area
+        /// </summary>
+        /// <value></value>
+        public float? RentableArea { get; set; }
+
+        /// <summary>
         /// get/set - Building maximum market value.
         /// </summary>
         /// <value></value>

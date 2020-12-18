@@ -103,7 +103,7 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
       {({ isSubmitting, handleReset, handleSubmit, setFieldValue, values }) => (
         <Form>
           <Form.Row className="map-filter-bar align-items-start">
-            <FindMorePropertiesButton />
+            <FindMorePropertiesButton buttonText="Find available surplus properties" />
             <div className="vl"></div>
             <Col className="bar-item">
               <PropertyFilterOptions />

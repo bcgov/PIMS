@@ -205,6 +205,12 @@ namespace Pims.Api.Areas.Property.Models.Search
         public float? MinRentableArea { get; set; }
 
         /// <summary>
+        /// get/set - Building rentable area.
+        /// </summary>
+        /// <value></value>
+        public float? RentableArea { get; set; }
+
+        /// <summary>
         /// get/set - Building maximum rentable area.
         /// </summary>
         /// <value></value>
@@ -249,7 +255,8 @@ namespace Pims.Api.Areas.Property.Models.Search
                     || this.FloorCount.HasValue
                     || !String.IsNullOrWhiteSpace(this.Tenancy)
                     || this.MinRentableArea.HasValue
-                    || this.MaxRentableArea.HasValue;
+                    || this.MaxRentableArea.HasValue
+                    || this.RentableArea.HasValue;
             }
         }
         #endregion
@@ -318,6 +325,8 @@ namespace Pims.Api.Areas.Property.Models.Search
             this.Tenancy = filter.GetStringValue(nameof(this.Tenancy));
             this.MinRentableArea = filter.GetFloatNullValue(nameof(this.MinRentableArea)) ?? filter.GetFloatNullValue(nameof(this.MinLotArea));
             this.MaxRentableArea = filter.GetFloatNullValue(nameof(this.MaxRentableArea)) ?? filter.GetFloatNullValue(nameof(this.MaxLotArea));
+            this.RentableArea = filter.GetFloatNullValue(nameof(this.RentableArea)) ?? filter.GetFloatNullValue(nameof(this.RentableArea));
+
         }
         #endregion
 
@@ -389,6 +398,7 @@ namespace Pims.Api.Areas.Property.Models.Search
                 Tenancy = model.Tenancy,
                 MinRentableArea = model.MinRentableArea ?? model.MinLotArea,
                 MaxRentableArea = model.MaxRentableArea ?? model.MaxLotArea,
+                RentableArea = model.RentableArea ?? model.RentableArea,
 
                 MinMarketValue = model.MinMarketValue,
                 MaxMarketValue = model.MaxMarketValue,
@@ -440,7 +450,7 @@ namespace Pims.Api.Areas.Property.Models.Search
                 Tenancy = model.Tenancy,
                 MinRentableArea = model.MinRentableArea ?? model.MinLotArea,
                 MaxRentableArea = model.MaxRentableArea ?? model.MaxLotArea,
-
+                RentableArea = model.RentableArea ?? model.RentableArea,
                 MinMarketValue = model.MinMarketValue,
                 MaxMarketValue = model.MaxMarketValue,
                 MinAssessedValue = model.MinAssessedValue,
@@ -481,6 +491,7 @@ namespace Pims.Api.Areas.Property.Models.Search
                 || this.PredominateUseId.HasValue
                 || this.FloorCount.HasValue
                 || this.MinRentableArea.HasValue
+                || this.RentableArea.HasValue
                 || this.BareLandOnly == true
                 || this.MaxRentableArea.HasValue
                 || !String.IsNullOrWhiteSpace(this.PID)

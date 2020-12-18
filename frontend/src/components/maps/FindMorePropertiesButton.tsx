@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Button, OverlayTrigger, Popover } from 'react-bootstrap';
 import { BsXSquareFill } from 'react-icons/bs';
 import { FaSign } from 'react-icons/fa';
@@ -30,28 +30,41 @@ const TitleForSaleSign = styled(FaSign)`
   margin-right: 5px;
 `;
 
+interface IFindMorePropertiesButton {
+  /** the text to appear beside the sign icon on the FindMorePropertiesButton */
+  buttonText: string;
+}
+
 /** this component contains the trigger for additional filter options off the base filter */
-export const FindMorePropertiesButton: React.FC<any> = () => {
+export const FindMorePropertiesButton: React.FC<IFindMorePropertiesButton> = ({ buttonText }) => {
   const smallScreen = useMediaQuery({ maxWidth: 1800 });
-  const TitleContent = () => (
-    <div style={{ display: 'flex' }}>
-      <TitleForSaleSign size={42} />
-      <h3 style={{ color: '#003366' }}>Find available surplus properties</h3>
-      <CloseButton onClick={() => document.body.click()} />
-    </div>
-  );
+
+  const TitleContent = () =>
+    useMemo(
+      () => (
+        <div style={{ display: 'flex' }}>
+          <TitleForSaleSign size={42} />
+          <h3 style={{ color: '#003366' }}>{buttonText}</h3>
+          <CloseButton onClick={() => document.body.click()} />
+        </div>
+      ),
+      [],
+    );
 
   /** this provides a way to create a form with tooltip like behaviour in the overlay trigger */
-  const popover = (
-    <StyledPopover id="popover-basic">
-      <Popover.Title>
-        {' '}
-        <TitleContent />{' '}
-      </Popover.Title>
-      <Popover.Content>
-        <FindMorePropertiesForm />
-      </Popover.Content>
-    </StyledPopover>
+  const popover = useMemo(
+    () => (
+      <StyledPopover id="popover-basic">
+        <Popover.Title>
+          {' '}
+          <TitleContent />{' '}
+        </Popover.Title>
+        <Popover.Content>
+          <FindMorePropertiesForm />
+        </Popover.Content>
+      </StyledPopover>
+    ),
+    [],
   );
 
   return (

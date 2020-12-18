@@ -42,4 +42,6 @@ export interface IPropertyFilter {
   floorCount?: string;
   /** Flag for whether to include buildings */
   bareLandOnly?: boolean;
+  /** filter for building rentable area */
+  rentableArea: string;
 }

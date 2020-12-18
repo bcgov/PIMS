@@ -88,6 +88,7 @@ const defaultFilterValues: IPropertyFilter = {
   classificationId: '',
   minLotSize: '',
   maxLotSize: '',
+  rentableArea: '',
   name: '',
 };
 
@@ -105,6 +106,7 @@ const getQueryParams = (filter: IPropertyFilter): IGeoSearchParams => {
     agencies: filter.agencies,
     minLandArea: floatOrUndefined(filter.minLotSize),
     maxLandArea: floatOrUndefined(filter.maxLotSize),
+    rentableArea: floatOrUndefined(filter.rentableArea),
     inSurplusPropertyProgram: filter.inSurplusPropertyProgram === 'true',
     inEnhancedReferralProcess: filter.inEnhancedReferralProcess === 'true',
     name: filter.name,
