@@ -5,6 +5,7 @@ import { DisplayError } from './DisplayError';
 import classNames from 'classnames';
 import TooltipIcon from '../TooltipIcon';
 import TooltipWrapper from '../TooltipWrapper';
+import { CSSProperties } from 'styled-components';
 
 type RequiredAttributes = {
   /** The field name */
@@ -36,6 +37,8 @@ type OptionalAttributes = {
   tooltip?: string;
   /** Display errors in a tooltip instead of in a div */
   displayErrorTooltips?: boolean;
+  /** add inline style to the input component */
+  style?: CSSProperties;
 };
 
 // only "field" is required for <Input>, the rest are optional
@@ -52,6 +55,7 @@ export const Input: React.FC<InputProps> = ({
   className,
   outerClassName,
   pattern,
+  style,
   required,
   disabled,
   custom,
@@ -101,6 +105,7 @@ export const Input: React.FC<InputProps> = ({
           as={asElement}
           name={field}
           required={required}
+          style={style}
           disabled={disabled}
           custom={custom}
           isInvalid={!!touch && !!error}

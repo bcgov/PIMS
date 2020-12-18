@@ -1,5 +1,4 @@
 import { TrueFalse } from 'constants/trueFalse';
-import { PropertyTypes } from 'constants/propertyTypes';
 
 /**
  * Property filter options used by Formik.
@@ -32,5 +31,17 @@ export interface IPropertyFilter {
   /** Whether the property is in ERP. */
   inEnhancedReferralProcess?: TrueFalse;
   /** Select on of the property types [Land, Building]. */
-  propertyType?: PropertyTypes;
+  propertyType?: string;
+  /** The name of desired target */
+  name?: string;
+  /** The building construction type id */
+  constructionTypeId?: string;
+  /** The building predominant use id */
+  predominateUseId?: string;
+  /** The building number of floors */
+  floorCount?: string;
+  /** Flag for whether to include buildings */
+  bareLandOnly?: boolean;
+  /** filter for building rentable area */
+  rentableArea: string;
 }

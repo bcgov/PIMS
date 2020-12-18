@@ -43,7 +43,18 @@ namespace Pims.Dal.Helpers.Extensions
                 query = query.Where(p => !p.IsSensitive);
 
             if (filter.PropertyType.HasValue)
-                query = query.Where(p => p.PropertyTypeId == filter.PropertyType);
+                query = query.Where(p => p.PropertyTypeId == filter.PropertyType.Value);
+
+            if (filter.RentableArea.HasValue)
+                query = query.Where(p => p.RentableArea == filter.RentableArea);     
+
+            if (filter.BareLandOnly == true)
+                query = (from p in query
+                         join pb in context.ParcelBuildings
+                            on p.Id equals pb.ParcelId into ppbGroup
+                         from pb in ppbGroup.DefaultIfEmpty()
+                         where pb == null
+                         select p);
 
             if (filter.NELatitude.HasValue && filter.NELongitude.HasValue && filter.SWLatitude.HasValue && filter.SWLongitude.HasValue)
             {
@@ -58,7 +69,7 @@ namespace Pims.Dal.Helpers.Extensions
                 var agencies = filterAgencies.Concat(context.Agencies.AsNoTracking().Where(a => filterAgencies.Contains(a.Id)).SelectMany(a => a.Children.Select(ac => (int?)ac.Id)).ToArray()).Distinct();
                 query = query.Where(p => agencies.Contains(p.AgencyId));
             }
-            if(filter.ParcelId.HasValue)
+            if (filter.ParcelId.HasValue)
                 query = query.Where(p => p.ParcelId == filter.ParcelId);
             if (filter.ClassificationId.HasValue)
                 query = query.Where(p => p.ClassificationId == filter.ClassificationId);
@@ -70,6 +81,8 @@ namespace Pims.Dal.Helpers.Extensions
                 query = query.Where(p => !String.IsNullOrWhiteSpace(p.ProjectNumber));
             if (!String.IsNullOrWhiteSpace(filter.Description))
                 query = query.Where(p => EF.Functions.Like(p.Description, $"%{filter.Description}%"));
+            if (!String.IsNullOrWhiteSpace(filter.Name))
+                query = query.Where(p => EF.Functions.Like(p.Name, $"%{filter.Name}%"));
 
             if (!String.IsNullOrWhiteSpace(filter.PID))
             {

@@ -1,6 +1,17 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`MapFilterBar renders correctly 1`] = `
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.c0 .p {
+  font-size: 16px;
+}
+
 <form
   className=""
   noValidate={true}
@@ -9,6 +20,49 @@ exports[`MapFilterBar renders correctly 1`] = `
   <div
     className="map-filter-bar align-items-start form-row"
   >
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      onClick={[Function]}
+      style={
+        Object {
+          "height": 38,
+        }
+      }
+      type="button"
+    >
+      <div
+        className="c0"
+      >
+        <svg
+          fill="currentColor"
+          height={20}
+          size={20}
+          stroke="currentColor"
+          strokeWidth="0"
+          style={
+            Object {
+              "color": undefined,
+              "marginRight": 5,
+              "marginTop": 3,
+            }
+          }
+          viewBox="0 0 512 512"
+          width={20}
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M496 64H128V16c0-8.8-7.2-16-16-16H80c-8.8 0-16 7.2-16 16v48H16C7.2 64 0 71.2 0 80v32c0 8.8 7.2 16 16 16h48v368c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16V128h368c8.8 0 16-7.2 16-16V80c0-8.8-7.2-16-16-16zM160 384h320V160H160v224z"
+          />
+        </svg>
+        <p>
+          Find available properties
+        </p>
+      </div>
+    </button>
+    <div
+      className="vl"
+    />
     <div
       className="bar-item col"
     >
@@ -31,27 +85,15 @@ exports[`MapFilterBar renders correctly 1`] = `
             >
               <option
                 className="option"
+                value="name"
+              >
+                Property Name
+              </option>
+              <option
+                className="option"
                 value="address"
               >
                 Address
-              </option>
-              <option
-                className="option"
-                value="administrativeArea"
-              >
-                Location
-              </option>
-              <option
-                className="option"
-                value="pid"
-              >
-                PID/PIN
-              </option>
-              <option
-                className="option"
-                value="projectNumber"
-              >
-                RAEG or SPP No.
               </option>
             </select>
           </div>
@@ -193,41 +235,6 @@ exports[`MapFilterBar renders correctly 1`] = `
             Disposed
           </option>
         </select>
-      </div>
-    </div>
-    <div
-      className="bar-item d-flex align-items-start col"
-    >
-      <div
-        className="form-group"
-      >
-        <input
-          className="form-control"
-          id="input-minLotSize"
-          name="minLotSize"
-          onBlur={[Function]}
-          onChange={[Function]}
-          placeholder="Min Lot Size"
-          value=""
-        />
-      </div>
-      <span
-        className="mx-2 align-self-center"
-      >
-        -
-      </span>
-      <div
-        className="form-group"
-      >
-        <input
-          className="form-control"
-          id="input-maxLotSize"
-          name="maxLotSize"
-          onBlur={[Function]}
-          onChange={[Function]}
-          placeholder="Max Lot Size"
-          value=""
-        />
       </div>
     </div>
     <div

@@ -153,7 +153,7 @@ export const ParentSelect: React.FC<IParentSelect> = ({
                     <b style={{ cursor: 'pointer' }}>
                       {field === 'statusId'
                         ? results.find(x => x.parentId?.toString() === parent)?.parent
-                        : results.find(x => x.value === parent)?.label}
+                        : options.find(x => x.value === parent)?.label}
                     </b>
                   </Menu.Header>
                 )}

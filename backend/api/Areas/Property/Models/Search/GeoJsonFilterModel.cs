@@ -106,6 +106,12 @@ namespace Pims.Api.Areas.Property.Models.Search
         public decimal? MinMarketValue { get; set; }
 
         /// <summary>
+        /// get/set - Bare land only flag
+        /// </summary>
+        /// <value></value>
+        public bool? BareLandOnly { get; set; }
+
+        /// <summary>
         /// get/set - Building maximum market value.
         /// </summary>
         /// <value></value>
@@ -157,6 +163,12 @@ namespace Pims.Api.Areas.Property.Models.Search
         public int? ConstructionTypeId { get; set; }
 
         /// <summary>
+        /// get/set - Property name.
+        /// </summary>
+        /// <value></value>
+        public string Name { get; set; }
+
+        /// <summary>
         /// get/set - Building predominant use Id.
         /// </summary>
         /// <value></value>
@@ -191,6 +203,12 @@ namespace Pims.Api.Areas.Property.Models.Search
         /// </summary>
         /// <value></value>
         public float? MinRentableArea { get; set; }
+
+        /// <summary>
+        /// get/set - Building rentable area.
+        /// </summary>
+        /// <value></value>
+        public float? RentableArea { get; set; }
 
         /// <summary>
         /// get/set - Building maximum rentable area.
@@ -230,13 +248,15 @@ namespace Pims.Api.Areas.Property.Models.Search
                 return this.StatusId.HasValue
                     || this.ClassificationId.HasValue
                     || !String.IsNullOrWhiteSpace(this.ProjectNumber)
+                    || !String.IsNullOrWhiteSpace(this.Name)
                     || !String.IsNullOrWhiteSpace(this.AdministrativeArea)
                     || this.ConstructionTypeId.HasValue
                     || this.PredominateUseId.HasValue
                     || this.FloorCount.HasValue
                     || !String.IsNullOrWhiteSpace(this.Tenancy)
                     || this.MinRentableArea.HasValue
-                    || this.MaxRentableArea.HasValue;
+                    || this.MaxRentableArea.HasValue
+                    || this.RentableArea.HasValue;
             }
         }
         #endregion
@@ -264,6 +284,7 @@ namespace Pims.Api.Areas.Property.Models.Search
         {
             // We want case-insensitive query parameter properties.
             var filter = new Dictionary<string, Microsoft.Extensions.Primitives.StringValues>(query, StringComparer.OrdinalIgnoreCase);
+            PropertyTypes propType;
 
             this.Service = filter.GetStringValue(nameof(this.Service));
             this.Request = filter.GetStringValue(nameof(this.Request));
@@ -273,10 +294,11 @@ namespace Pims.Api.Areas.Property.Models.Search
             this.Address = filter.GetStringValue(nameof(this.Address));
             this.AdministrativeArea = filter.GetStringValue(nameof(this.AdministrativeArea));
 
+            this.BareLandOnly = filter.GetBoolNullValue(nameof(this.BareLandOnly));
             this.StatusId = filter.GetIntNullValue(nameof(this.StatusId));
             this.ClassificationId = filter.GetIntNullValue(nameof(this.ClassificationId));
             this.ParcelId = filter.GetIntNullValue(nameof(this.ParcelId));
-            this.PropertyType = Enum.TryParse(typeof(PropertyTypes), filter.GetStringValue(nameof(this.PropertyType), null), out object propType) ? (PropertyTypes?)propType : null;
+            this.PropertyType = Enum.TryParse(filter.GetStringValue(nameof(this.PropertyType), null), out propType) ? (PropertyTypes?)propType : null;
             this.ProjectNumber = filter.GetStringValue(nameof(this.ProjectNumber));
             this.IgnorePropertiesInProjects = filter.GetBoolNullValue(nameof(this.IgnorePropertiesInProjects));
             this.InSurplusPropertyProgram = filter.GetBoolNullValue(nameof(this.InSurplusPropertyProgram));
@@ -289,6 +311,7 @@ namespace Pims.Api.Areas.Property.Models.Search
 
             this.Agencies = filter.GetIntArrayValue(nameof(this.Agencies)).Where(a => a != 0).ToArray();
             this.Sort = filter.GetStringArrayValue(nameof(this.Sort));
+            this.Name = filter.GetStringValue(nameof(this.Name));
 
             // Parcel filters.
             this.PID = filter.GetStringValue(nameof(this.PID));
@@ -302,6 +325,8 @@ namespace Pims.Api.Areas.Property.Models.Search
             this.Tenancy = filter.GetStringValue(nameof(this.Tenancy));
             this.MinRentableArea = filter.GetFloatNullValue(nameof(this.MinRentableArea)) ?? filter.GetFloatNullValue(nameof(this.MinLotArea));
             this.MaxRentableArea = filter.GetFloatNullValue(nameof(this.MaxRentableArea)) ?? filter.GetFloatNullValue(nameof(this.MaxLotArea));
+            this.RentableArea = filter.GetFloatNullValue(nameof(this.RentableArea)) ?? filter.GetFloatNullValue(nameof(this.RentableArea));
+
         }
         #endregion
 
@@ -373,6 +398,7 @@ namespace Pims.Api.Areas.Property.Models.Search
                 Tenancy = model.Tenancy,
                 MinRentableArea = model.MinRentableArea ?? model.MinLotArea,
                 MaxRentableArea = model.MaxRentableArea ?? model.MaxLotArea,
+                RentableArea = model.RentableArea ?? model.RentableArea,
 
                 MinMarketValue = model.MinMarketValue,
                 MaxMarketValue = model.MaxMarketValue,
@@ -402,6 +428,8 @@ namespace Pims.Api.Areas.Property.Models.Search
                 NELongitude = model.Boundary.MaxX,
                 NELatitude = model.Boundary.MaxY,
 
+                BareLandOnly = model.BareLandOnly,
+                Name = model.Name,
                 ProjectNumber = model.ProjectNumber,
                 IgnorePropertiesInProjects = model.IgnorePropertiesInProjects,
                 InSurplusPropertyProgram = model.InSurplusPropertyProgram,
@@ -422,7 +450,7 @@ namespace Pims.Api.Areas.Property.Models.Search
                 Tenancy = model.Tenancy,
                 MinRentableArea = model.MinRentableArea ?? model.MinLotArea,
                 MaxRentableArea = model.MaxRentableArea ?? model.MaxLotArea,
-
+                RentableArea = model.RentableArea ?? model.RentableArea,
                 MinMarketValue = model.MinMarketValue,
                 MaxMarketValue = model.MaxMarketValue,
                 MinAssessedValue = model.MinAssessedValue,
@@ -454,6 +482,7 @@ namespace Pims.Api.Areas.Property.Models.Search
                 || this.MinMarketValue.HasValue
                 || this.MaxMarketValue.HasValue
                 || this.Agencies?.Any() == true
+                || this.PropertyType.HasValue
                 || this.StatusId.HasValue
                 || this.ClassificationId.HasValue
                 || this.MinLandArea.HasValue
@@ -462,9 +491,12 @@ namespace Pims.Api.Areas.Property.Models.Search
                 || this.PredominateUseId.HasValue
                 || this.FloorCount.HasValue
                 || this.MinRentableArea.HasValue
+                || this.RentableArea.HasValue
+                || this.BareLandOnly == true
                 || this.MaxRentableArea.HasValue
                 || !String.IsNullOrWhiteSpace(this.PID)
-                || !String.IsNullOrWhiteSpace(this.Tenancy);
+                || !String.IsNullOrWhiteSpace(this.Tenancy)
+                || !String.IsNullOrWhiteSpace(this.Name);
         }
         #endregion
     }
