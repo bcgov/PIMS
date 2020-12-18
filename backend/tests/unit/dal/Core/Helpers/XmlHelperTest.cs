@@ -37,7 +37,7 @@ namespace Pims.Api.Test.Helpers
         public void ConvertToXLWorkbook(IEnumerable<object> data, int expectedColumns)
         {
             // Arrange
-            var datatable = data.ConvertToDataTable();
+            var datatable = data.ConvertToDataTable("test");
 
             // Act
             var result = datatable.ConvertToXLWorkbook();

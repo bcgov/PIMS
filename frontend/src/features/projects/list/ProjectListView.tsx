@@ -209,7 +209,7 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
           reportType === 'generic'
             ? getProjectReportUrl({ ...query, all: true })
             : getProjectFinancialReportUrl({ ...query, all: true }),
-        fileName: `${reportType === 'spl' ? 'spl_report' : 'generic_project_report'}.${
+        fileName: `${reportType === 'spl' ? 'pims-spl-report' : 'pims-projects'}.${
           accept === 'csv' ? 'csv' : 'xlsx'
         }`,
         actionType: 'projects-report',
