@@ -57,13 +57,15 @@ export const ParentSelect: React.FC<IParentSelect> = ({
 
   useEffect(() => {
     if (!loaded) {
-      if (value?.value) {
-        setFieldValue(field, value);
-      } else if (value && !value.value) {
-        setFieldValue(field, option);
-      } else {
-        setFieldValue(field, option);
-        setLoaded(true);
+      if (value !== undefined) {
+        if (value?.value) {
+          setFieldValue(field, value);
+        } else if (value && !value.value) {
+          setFieldValue(field, option);
+        } else {
+          setFieldValue(field, option);
+          setLoaded(true);
+        }
       }
     }
   }, [value, loaded, setFieldValue, field, option]);

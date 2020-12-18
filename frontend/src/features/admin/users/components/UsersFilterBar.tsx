@@ -4,8 +4,8 @@ import { Col } from 'react-bootstrap';
 import { Input, SelectOption, Select } from 'components/common/form';
 import { ILookupCode } from 'actions/lookupActions';
 import { IUsersFilter } from 'interfaces';
-import { ParentGroupedFilter } from 'components/SearchBar/ParentGroupedFilter';
-import { mapLookupCode } from 'utils';
+import { mapLookupCodeWithParentString } from 'utils';
+import { ParentSelect } from 'components/common/form/ParentSelect';
 
 interface IProps {
   value: IUsersFilter;
@@ -20,7 +20,9 @@ export const UsersFilterBar: React.FC<IProps> = ({
   rolesLookups,
   onChange,
 }) => {
-  const agencyOptions = (agencyLookups ?? []).map(c => mapLookupCode(c, null));
+  const agencyOptions = (agencyLookups ?? []).map(c =>
+    mapLookupCodeWithParentString(c, agencyLookups),
+  );
   const roleOptions = rolesLookups.map(rl => ({ label: rl.name, value: rl.name } as SelectOption));
 
   return (
@@ -48,13 +50,11 @@ export const UsersFilterBar: React.FC<IProps> = ({
         <Input field="position" placeholder="Position" />
       </Col>
       <Col className="bar-item">
-        <ParentGroupedFilter
-          name="agency"
+        <ParentSelect
+          field="agency"
           options={agencyOptions}
-          className="map-filter-typeahead"
           filterBy={['code', 'label', 'parent']}
           placeholder="Enter an Agency"
-          inputSize="large"
         />
       </Col>
       <Col className="bar-item">
