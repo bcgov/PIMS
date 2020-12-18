@@ -1,0 +1,8 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Layer Popup Content Renders correctly 1`] = `
+<div
+  className="list-group"
+  onKeyDown={[Function]}
+/>
+`;
