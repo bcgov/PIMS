@@ -79,7 +79,7 @@ namespace Pims.Api.Areas.Reports.Controllers
         [Produces(ContentTypes.CONTENT_TYPE_CSV, ContentTypes.CONTENT_TYPE_EXCELX)]
         [ProducesResponseType(200)]
         [SwaggerOperation(Tags = new[] { "property", "report" })]
-        public IActionResult ExportProperties([FromBody]Property.Models.Search.PropertyFilterModel filter, bool all = false)
+        public IActionResult ExportProperties([FromBody] Property.Models.Search.PropertyFilterModel filter, bool all = false)
         {
             filter.ThrowBadRequestIfNull($"The request must include a filter.");
             if (!filter.IsValid()) throw new BadRequestException("Property filter must contain valid values.");
@@ -95,7 +95,7 @@ namespace Pims.Api.Areas.Reports.Controllers
             return accept.ToString() switch
             {
                 ContentTypes.CONTENT_TYPE_CSV => ReportHelper.GenerateCsv(report.Items),
-                _ => ReportHelper.GenerateExcel(report.Items)
+                _ => ReportHelper.GenerateExcel(report.Items, "PIMS")
             };
 
         }

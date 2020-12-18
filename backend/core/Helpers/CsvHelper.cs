@@ -9,7 +9,6 @@ using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Linq;
-using System.Runtime.CompilerServices;
 
 namespace Pims.Core.Helpers
 {
@@ -43,10 +42,14 @@ namespace Pims.Core.Helpers
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="data"></param>
+        /// <param name="tableName"></param>
         /// <returns></returns>
-        public static DataTable ConvertToDataTable<T>(this IEnumerable<T> data)
+        public static DataTable ConvertToDataTable<T>(this IEnumerable<T> data, string tableName)
         {
-            var dt = new DataTable();
+            var dt = new DataTable()
+            {
+                TableName = tableName
+            };
             var columns = new Dictionary<int, ExportColumn>();
             var index = 0;
             var type = typeof(T) == typeof(Object) ? data.GetType().GetItemType() : typeof(T);
@@ -80,14 +83,30 @@ namespace Pims.Core.Helpers
         }
     }
 
+    /// <summary>
+    /// ExportColumn private class, provides an object to maintain the original property and the column information.
+    /// This is only used in the CsvHelper.
+    /// </summary>
     class ExportColumn
     {
         #region Properties
+        /// <summary>
+        /// get/set - The original object property information.
+        /// </summary>
         public PropertyInfo PropertyInfo { get; set; }
+
+        /// <summary>
+        /// get/set - The column that will contain the property value.
+        /// </summary>
         public DataColumn Column { get; set; }
         #endregion
 
         #region Constructors
+        /// <summary>
+        /// Creates a new instance of a ExportColumn object, initializes it with specified arguments.
+        /// </summary>
+        /// <param name="member"></param>
+        /// <param name="column"></param>
         public ExportColumn(PropertyInfo member, DataColumn column)
         {
             this.PropertyInfo = member;
