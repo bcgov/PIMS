@@ -78,13 +78,14 @@ namespace Pims.Api.Test.Helpers
             var items = new[] { new { Id = 1, Name = "test1" }, new { Id = 2, Name = "test2" } };
 
             // Act
-            var result = items.ConvertToDataTable();
+            var result = items.ConvertToDataTable("test");
 
             // Assert
             Assert.NotNull(result);
             Assert.IsType<DataTable>(result);
             Assert.Equal(2, result.Columns.Count);
             Assert.Equal(2, result.Rows.Count);
+            Assert.Equal("test", result.TableName);
         }
 
         [Fact]
@@ -94,7 +95,7 @@ namespace Pims.Api.Test.Helpers
             var items = new[] { new { Id = 1, Name = "test1", Permission = Permissions.AdminProperties }, new { Id = 2, Name = "test2", Permission = Permissions.AdminRoles } };
 
             // Act
-            var result = items.ConvertToDataTable();
+            var result = items.ConvertToDataTable("test");
 
             // Assert
             Assert.NotNull(result);
@@ -112,7 +113,7 @@ namespace Pims.Api.Test.Helpers
             var items = new[] { new { Id = (int?)1, Name = "test1" }, new { Id = (int?)null, Name = "test2" } };
 
             // Act
-            var result = items.ConvertToDataTable();
+            var result = items.ConvertToDataTable("test");
 
             // Assert
             Assert.NotNull(result);

@@ -34,11 +34,12 @@ namespace Pims.Api.Helpers.Reporting
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="items"></param>
+        /// <param name="sheetName"></param>
         /// <returns></returns>
-        public static FileStreamResult GenerateExcel<T>(IEnumerable<T> items)
+        public static FileStreamResult GenerateExcel<T>(IEnumerable<T> items, string sheetName)
         {
-            var data = items.ConvertToDataTable();
-            var excel = data.ConvertToXLWorkbook("Properties");
+            var data = items.ConvertToDataTable(sheetName);
+            var excel = data.ConvertToXLWorkbook(sheetName);
             var stream = new MemoryStream();
             excel.SaveAs(stream);
             stream.Position = 0;
