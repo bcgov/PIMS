@@ -14,7 +14,7 @@ const Test = () => {
     dispatch(
       download({
         url: ENVIRONMENT.apiUrl + '/reports/properties?classificationId=1',
-        fileName: `properties.${accept === 'csv' ? 'csv' : 'xlsx'}`,
+        fileName: `pims-inventory.${accept === 'csv' ? 'csv' : 'xlsx'}`,
         actionType: 'properties-report',
         headers: {
           Accept: accept === 'csv' ? 'text/csv' : 'application/vnd.ms-excel',

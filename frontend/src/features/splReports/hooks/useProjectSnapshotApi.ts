@@ -154,7 +154,7 @@ export const useProjectSnapshotApi = () => {
     return dispatch(
       download({
         url: getProjectFinancialReportUrl({ ...query, all: true, reportId: report?.id }),
-        fileName: `spl_report.${accept === 'csv' ? 'csv' : 'xlsx'}`,
+        fileName: `pims-spl-report.${accept === 'csv' ? 'csv' : 'xlsx'}`,
         actionType: 'projects-report',
         headers: {
           Accept: accept === 'csv' ? 'text/csv' : 'application/vnd.ms-excel',
