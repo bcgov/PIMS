@@ -60,11 +60,14 @@ namespace Pims.Api.Areas.Reports.Models.Project
         public string Risk { get; set; }
 
         /// <summary>
-        /// get/set - The owning agency code.
+        /// get/set - The parent agency acronym.
         /// </summary>
-        [DisplayName("Agency")]
-        [CsvHelper.Configuration.Attributes.Name("Agency")]
-        public string AgencyCode { get; set; }
+        public string Ministry { get; set; }
+
+        /// <summary>
+        /// get/set - The owning agency full name.
+        /// </summary>
+        public string Agency { get; set; }
 
         /// <summary>
         /// get/set - User name
