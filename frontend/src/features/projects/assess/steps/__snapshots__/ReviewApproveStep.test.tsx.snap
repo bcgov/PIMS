@@ -730,14 +730,14 @@ exports[`Review Approve Step renders correctly 1`] = `
       >
         <label
           class="form-label"
-          for="input-notes[21].note"
+          for="input-documentationNote"
         >
           Note
         </label>
         <textarea
           class="col-md-auto form-control"
-          id="input-notes[21].note"
-          name="notes[21].note"
+          id="input-documentationNote"
+          name="documentationNote"
         />
       </div>
     </div>

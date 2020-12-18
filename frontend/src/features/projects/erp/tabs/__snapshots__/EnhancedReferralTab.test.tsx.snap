@@ -308,6 +308,72 @@ exports[`EnhancedReferralTab renders correctly 1`] = `
       <label
         className="form-label col-form-label col-md-4"
       >
+        Interest Received On
+      </label>
+      <div
+        className="col-md-2 form-group"
+      >
+        <div
+          className="react-datepicker-wrapper"
+        >
+          <div
+            className="react-datepicker__input-container"
+          >
+            <input
+              autoComplete="off"
+              className="form-control date-picker"
+              disabled={false}
+              id="datepicker-interestedReceivedOn"
+              name="interestedReceivedOn"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onClick={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              placeholder="--/--/----"
+              readOnly={false}
+              type="text"
+              value=""
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      className="form-row"
+    >
+      <div
+        className="col"
+      >
+        <div
+          className="ProjectNotes form-row"
+        >
+          <div
+            className="col form-group col"
+          >
+            <label
+              className="form-label"
+              htmlFor="input-interestFromEnhancedReferralNote"
+            >
+              Interest Note
+            </label>
+            <textarea
+              className="col-md-5 form-control"
+              id="input-interestFromEnhancedReferralNote"
+              name="interestFromEnhancedReferralNote"
+              onBlur={[Function]}
+              onChange={[Function]}
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      className="form-row"
+    >
+      <label
+        className="form-label col-form-label col-md-4"
+      >
         On Hold Notification Sent
          
         <svg

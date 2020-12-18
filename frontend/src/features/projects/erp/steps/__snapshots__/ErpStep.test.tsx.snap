@@ -307,7 +307,7 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
                   Real Estate Commission Paid
                 </label>
                 <div
-                  class="col-md-8 form-group col"
+                  class="col-md-4 form-group col"
                 >
                   <div
                     class="input-tooltip-wrapper"
@@ -315,6 +315,64 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
                     <input
                       class="form-control input-number"
                       name="realtorCommission"
+                      placeholder=""
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="form-row"
+          >
+            <div
+              class="col-md-6"
+            >
+              <div
+                class="form-row"
+              >
+                <label
+                  class="form-label col-form-label col-md-4"
+                >
+                  Assessed Value
+                </label>
+                <div
+                  class="col-md-4 form-group col"
+                >
+                  <div
+                    class="input-tooltip-wrapper"
+                  >
+                    <input
+                      class="form-control input-number"
+                      name="assessed"
+                      placeholder=""
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="col-md-6"
+            >
+              <div
+                class="form-row"
+              >
+                <label
+                  class="form-label col-form-label col-md-4"
+                >
+                  Appraised Value
+                </label>
+                <div
+                  class="col-md-4 form-group col"
+                >
+                  <div
+                    class="input-tooltip-wrapper"
+                  >
+                    <input
+                      class="form-control input-number"
+                      name="appraised"
                       placeholder=""
                       value=""
                     />
@@ -625,14 +683,14 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
                 >
                   <label
                     class="form-label"
-                    for="input-notes[19].note"
+                    for="input-remediationNote"
                   >
                     Remediation (Not funded throuch COS. TRAN only)
                   </label>
                   <textarea
                     class="col-md-10 form-control"
-                    id="input-notes[19].note"
-                    name="notes[19].note"
+                    id="input-remediationNote"
+                    name="remediationNote"
                   />
                 </div>
               </div>
@@ -644,17 +702,15 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
                 >
                   <label
                     class="form-label"
-                    for="input-notes[12].note"
+                    for="input-programCostNote"
                   >
                     SPL Cost Calculation Notes
                   </label>
                   <textarea
                     class="col-md-10 form-control"
-                    id="input-notes[12].note"
-                    name="notes[12].note"
-                  >
-                    sppcost
-                  </textarea>
+                    id="input-programCostNote"
+                    name="programCostNote"
+                  />
                 </div>
               </div>
               <div
@@ -665,17 +721,15 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
                 >
                   <label
                     class="form-label"
-                    for="input-notes[13].note"
+                    for="input-gainNote"
                   >
                     Gain after SPL Cost Calculation Notes
                   </label>
                   <textarea
                     class="col-md-10 form-control"
-                    id="input-notes[13].note"
-                    name="notes[13].note"
-                  >
-                    sppgain
-                  </textarea>
+                    id="input-gainNote"
+                    name="gainNote"
+                  />
                 </div>
               </div>
             </div>
@@ -697,17 +751,15 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
                 >
                   <label
                     class="form-label"
-                    for="input-notes[10].note"
+                    for="input-loanTermsNote"
                   >
                     Loan Terms
                   </label>
                   <textarea
                     class="col-md-10 form-control"
-                    id="input-notes[10].note"
-                    name="notes[10].note"
-                  >
-                    loanterms
-                  </textarea>
+                    id="input-loanTermsNote"
+                    name="loanTermsNote"
+                  />
                 </div>
               </div>
             </div>
@@ -725,17 +777,15 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
                 >
                   <label
                     class="form-label"
-                    for="input-notes[15].note"
+                    for="input-closeOutNote"
                   >
                     Close Out
                   </label>
                   <textarea
                     class="col-md-10 form-control"
-                    id="input-notes[15].note"
-                    name="notes[15].note"
-                  >
-                    closeout
-                  </textarea>
+                    id="input-closeOutNote"
+                    name="closeOutNote"
+                  />
                 </div>
               </div>
             </div>
@@ -754,17 +804,15 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
                 >
                   <label
                     class="form-label"
-                    for="input-notes[14].note"
+                    for="input-salesHistoryNote"
                   >
                     Sales History Notes
                   </label>
                   <textarea
                     class="col-md-10 form-control"
-                    id="input-notes[14].note"
-                    name="notes[14].note"
-                  >
-                    saleshistory
-                  </textarea>
+                    id="input-salesHistoryNote"
+                    name="salesHistoryNote"
+                  />
                 </div>
               </div>
             </div>
@@ -782,7 +830,7 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
                 >
                   <label
                     class="form-label"
-                    for="input-notes[16].note"
+                    for="input-comments"
                   >
                     Project Comments
                     <svg
@@ -802,11 +850,9 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
                   </label>
                   <textarea
                     class="col-md-10 form-control"
-                    id="input-notes[16].note"
-                    name="notes[16].note"
-                  >
-                    comments
-                  </textarea>
+                    id="input-comments"
+                    name="comments"
+                  />
                 </div>
               </div>
             </div>
@@ -1029,17 +1075,15 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
             >
               <label
                 class="form-label"
-                for="input-notes[11].note"
+                for="input-adjustmentNote"
               >
                 Adjustment to Prior Year Sale Notes
               </label>
               <textarea
                 class="col-md-auto form-control"
-                id="input-notes[11].note"
-                name="notes[11].note"
-              >
-                adjustment
-              </textarea>
+                id="input-adjustmentNote"
+                name="adjustmentNote"
+              />
             </div>
           </div>
         </div>
@@ -1687,6 +1731,73 @@ exports[`ERP Approval Step renders correctly 1`] = `
           <h3>
             Enhanced Referral Process Complete
           </h3>
+          <div
+            className="form-row"
+          >
+            <label
+              className="form-label col-form-label col-md-4"
+            >
+              Interest Received On
+            </label>
+            <div
+              className="col-md-2 form-group"
+            >
+              <div
+                className="react-datepicker-wrapper"
+              >
+                <div
+                  className="react-datepicker__input-container"
+                >
+                  <input
+                    autoComplete="off"
+                    className="form-control date-picker"
+                    disabled={true}
+                    id="datepicker-interestedReceivedOn"
+                    name="interestedReceivedOn"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onClick={[Function]}
+                    onFocus={[Function]}
+                    onKeyDown={[Function]}
+                    placeholder="--/--/----"
+                    readOnly={false}
+                    type="text"
+                    value=""
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            className="form-row"
+          >
+            <div
+              className="col"
+            >
+              <div
+                className="ProjectNotes form-row"
+              >
+                <div
+                  className="col form-group col"
+                >
+                  <label
+                    className="form-label"
+                    htmlFor="input-interestFromEnhancedReferralNote"
+                  >
+                    Interest Note
+                  </label>
+                  <textarea
+                    className="col-md-5 form-control"
+                    disabled={true}
+                    id="input-interestFromEnhancedReferralNote"
+                    name="interestFromEnhancedReferralNote"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
           <div
             className="form-row"
           >

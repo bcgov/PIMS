@@ -3,7 +3,6 @@ import React from 'react';
 import { Form } from 'components/common/form';
 import { ProjectNotes } from 'features/projects/common';
 import { Col } from 'react-bootstrap';
-import { NoteTypes } from '../../../../constants';
 
 interface CloseOutFinancialsFormProps {
   isReadOnly?: boolean;
@@ -16,7 +15,8 @@ const CloseOutFinancialsForm = (props: CloseOutFinancialsFormProps) => {
       <Form.Row>
         <Col>
           <ProjectNotes
-            field={`notes[${NoteTypes.LoanTerms}].note`}
+            data-testid="loanTermsNote"
+            field="loanTermsNote"
             label="Loan Terms"
             className="col-md-10"
             outerClassName="col"
@@ -26,7 +26,8 @@ const CloseOutFinancialsForm = (props: CloseOutFinancialsFormProps) => {
         <Col md={1}></Col>
         <Col>
           <ProjectNotes
-            field={`notes[${NoteTypes.CloseOut}].note`}
+            data-testid="closeOutNote"
+            field="closeOutNote"
             label="Close Out"
             className="col-md-10"
             outerClassName="col"
