@@ -12,7 +12,8 @@ namespace Pims.Api.Areas.Reports.Mapping.Property
                 .Map(dest => dest.Type, src => src.PropertyTypeId)
                 .Map(dest => dest.Classification, src => src.Classification)
                 .Map(dest => dest.Description, src => src.Description)
-                .Map(dest => dest.Agency, src => src.Agency)
+                .Map(dest => dest.Ministry, src => src.AgencyCode)
+                .Map(dest => dest.Agency, src => src.SubAgency)
                 .Map(dest => dest.Address, src => src.Address)
                 .Map(dest => dest.AdministrativeArea, src => src.AdministrativeArea)
                 .Map(dest => dest.Postal, src => src.Postal)
@@ -28,7 +29,6 @@ namespace Pims.Api.Areas.Reports.Mapping.Property
                 .Map(dest => dest.LandArea, src => src.LandArea)
                 .Map(dest => dest.LandLegalDescription, src => src.LandLegalDescription)
                 .Map(dest => dest.Zoning, src => src.Zoning)
-                .Map(dest => dest.ZoningPotential, src => src.ZoningPotential)
 
                 .Map(dest => dest.BuildingConstructionType, src => src.BuildingConstructionType)
                 .Map(dest => dest.BuildingPredominateUse, src => src.BuildingPredominateUse)
