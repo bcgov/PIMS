@@ -339,6 +339,13 @@ export const initialValues: IProject = {
   removalFromSplRequestOn: '',
   removalFromSplApprovedOn: '',
   removalFromSplRationale: '',
+  salesHistoryNote: '',
+  comments: '',
+  loanTermsNote: '',
+  closeOutNote: '',
+  remediationNote: '',
+  programCostNote: '',
+  gainNote: '',
 };
 
 export interface IApiProject {
