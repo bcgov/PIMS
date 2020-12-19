@@ -65,6 +65,7 @@ const SurplusPropertyListForm = ({
   onClickContractInPlaceUnconditional,
   onClickDisposedExternally,
 }: ISurplusPropertyListFormProps) => {
+  debugger;
   const formikProps = useFormikContext<IProject>();
   const [dispose, setDispose] = useState(false);
   const cipConditionalTasks = _.filter(formikProps.values.tasks, {

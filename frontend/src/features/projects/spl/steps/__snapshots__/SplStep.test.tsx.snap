@@ -624,9 +624,10 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
                   >
                     <input
                       class="form-control input-number"
+                      disabled=""
                       name="gainBeforeSpl"
                       placeholder=""
-                      value="NaN"
+                      value="0"
                     />
                   </div>
                 </div>
@@ -671,9 +672,10 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
                   >
                     <input
                       class="form-control input-number"
+                      disabled=""
                       name="netProceeds"
                       placeholder=""
-                      value="NaN"
+                      value="0"
                     />
                   </div>
                 </div>
