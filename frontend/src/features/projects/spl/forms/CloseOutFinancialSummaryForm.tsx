@@ -10,6 +10,11 @@ interface CloseOutFinancialSummaryFormProps {
   isReadOnly?: boolean; // TODO: Need to make `disabled` and `isReadonly` consistent.  Choose one throughout app.
 }
 
+const getValue = (value?: string | number) => {
+  const result = Number(value);
+  return isNaN(result) ? 0 : result;
+};
+
 /**
  * Close out form financial summary fields.
  * @param props
@@ -23,14 +28,17 @@ const CloseOutFinancialSummaryForm = (props: CloseOutFinancialSummaryFormProps) 
   const netBook = getIn(values, 'netBook');
   useEffect(() => {
     // Calculate the Gain before SPL.
-    setFieldValue('gainBeforeSpl', market - interestComponent - salesCost - netBook);
+    setFieldValue(
+      'gainBeforeSpl',
+      getValue(market) - getValue(interestComponent) - getValue(salesCost) - getValue(netBook),
+    );
   }, [market, interestComponent, salesCost, netBook, setFieldValue]);
 
   const gainBeforeSpl = getIn(values, 'gainBeforeSpl');
   const programCost = getIn(values, 'programCost');
   useEffect(() => {
     // Calculate the Gain after SPL.
-    setFieldValue('netProceeds', gainBeforeSpl - programCost);
+    setFieldValue('netProceeds', getValue(gainBeforeSpl) - getValue(programCost));
   }, [gainBeforeSpl, programCost, setFieldValue]);
 
   const formikProps = useFormikContext<IProject>();
@@ -90,7 +98,7 @@ const CloseOutFinancialSummaryForm = (props: CloseOutFinancialSummaryFormProps) 
             </Form.Label>
             <FastCurrencyInput
               formikProps={formikProps}
-              disabled={props.isReadOnly}
+              disabled={true}
               field="gainBeforeSpl"
               allowNegative={true}
               md={6}
@@ -113,7 +121,7 @@ const CloseOutFinancialSummaryForm = (props: CloseOutFinancialSummaryFormProps) 
             </Form.Label>
             <FastCurrencyInput
               formikProps={formikProps}
-              disabled={props.isReadOnly}
+              disabled={true}
               field="netProceeds"
               allowNegative={true}
               md={6}
