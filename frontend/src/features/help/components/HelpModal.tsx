@@ -37,6 +37,11 @@ const ModalHeader = styled(Modal.Header)`
   padding: 5px;
 `;
 
+const StyledTooltip = styled(TooltipIcon)`
+  margin-left: 5px;
+  margin-bottom: 5px;
+`;
+
 /**
  * Help Component used to display an interface with help text and the ability to create a mailto ticket.
  * @param props customize the component with custom text, and an operation to take when the component is closed.
@@ -66,7 +71,7 @@ const HelpModal: FunctionComponent<ModalProps> = ({ handleCancel, handleSubmit, 
         <ModalHeader closeButton>
           <DraggableTitle>
             Help Desk&nbsp;
-            <TooltipIcon toolTipId="help-toolTip" toolTip="Click and drag to move this popup" />
+            <StyledTooltip toolTipId="help-toolTip" toolTip="Click and drag to move this popup" />
           </DraggableTitle>
         </ModalHeader>
 
