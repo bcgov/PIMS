@@ -31,6 +31,7 @@ import _ from 'lodash';
 import './ErpStep.scss';
 import { ValidationGroup } from 'components/common/tabValidation';
 import { EnhancedReferralExemptionApprovedForSplSchema } from '../forms/erpYupSchema';
+import queryString from 'query-string';
 
 const CenterBoldText = styled.div`
   text-align: center;
@@ -63,7 +64,10 @@ const ErpStep = ({ formikRef }: IStepProps) => {
   };
   const goToGreTransferred = () =>
     history.push(`./gretransfer?projectNumber=${project?.projectNumber}`);
-  const goToSpl = () => history.push(`./approved?projectNumber=${project?.projectNumber}`);
+  const goToSpl = () =>
+    history.push(`./approved?projectNumber=${project?.projectNumber}&to=ERP-ON`);
+
+  const params = queryString.parse(history.location.search);
 
   const validationGroups: ValidationGroup[] = [
     {
@@ -112,6 +116,8 @@ const ErpStep = ({ formikRef }: IStepProps) => {
             getStatusTransitionWorkflow(submitStatusCode),
           ).then((project: IProject) => {
             if (project?.statusCode === ReviewWorkflowStatus.ApprovedForErp) {
+              params.to = 'ERP-ON';
+              history.push({ search: queryString.stringify(params) });
               history.go(0);
             } else if (project?.statusCode === ReviewWorkflowStatus.ApprovedForSpl) {
               goToSpl();
