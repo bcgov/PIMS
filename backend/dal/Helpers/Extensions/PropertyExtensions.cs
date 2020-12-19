@@ -46,15 +46,15 @@ namespace Pims.Dal.Helpers.Extensions
                 query = query.Where(p => p.PropertyTypeId == filter.PropertyType.Value);
 
             if (filter.RentableArea.HasValue)
-                query = query.Where(p => p.RentableArea == filter.RentableArea);     
+                query = query.Where(p => p.RentableArea == filter.RentableArea);
 
             if (filter.BareLandOnly == true)
                 query = (from p in query
                          join pb in context.ParcelBuildings
                             on p.Id equals pb.ParcelId into ppbGroup
-                         from pb in ppbGroup.DefaultIfEmpty()
-                         where pb == null
-                         select p);
+                      from pb in ppbGroup.DefaultIfEmpty()
+                      where pb == null && p.PropertyTypeId == Entity.PropertyTypes.Land
+                      select p);
 
             if (filter.NELatitude.HasValue && filter.NELongitude.HasValue && filter.SWLatitude.HasValue && filter.SWLongitude.HasValue)
             {
