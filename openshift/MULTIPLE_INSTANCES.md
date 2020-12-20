@@ -107,8 +107,8 @@ ASPNETCORE_ENVIRONMENT=Production
 ASPNETCORE_URLS=http://*:8080
 
 KEYCLOAK_AUDIENCE=pims-api
-KEYCLOAK_AUTHORITY=https://sso-{ENV_NAME}.pathfinder.gov.bc.ca/auth/realms/xz0xtue5
-KEYCLOAK_ADMIN_AUTHORITY=https://sso-{ENV_NAME}.pathfinder.gov.bc.ca/auth/admin/realms/xz0xtue5
+KEYCLOAK_AUTHORITY=https://{ENV_NAME}.oidc.gov.bc.ca/auth/realms/xz0xtue5
+KEYCLOAK_ADMIN_AUTHORITY=https://{ENV_NAME}.oidc.gov.bc.ca/auth/admin/realms/xz0xtue5
 KEYCLOAK_SECRET=
 KEYCLOAK_SERVICE_ACCOUNT_SECRET={KEYCLOAK SA SECRET}
 

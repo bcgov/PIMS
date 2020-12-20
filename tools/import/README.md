@@ -44,7 +44,7 @@ Create a `.env` file and populate it with the following;
 
 ```
 ASPNETCORE_ENVIRONMENT=Local
-Auth__OpenIdConnect__Token={URL to Keycloak token endpoint (i.e. https://sso-dev.pathfinder.gov.bc.ca/auth/realms/quartech/protocol/openid-connect/token)}
+Auth__OpenIdConnect__Token={URL to Keycloak token endpoint (i.e. https://dev.oidc.gov.bc.ca/auth/realms/quartech/protocol/openid-connect/token)}
 Auth__Keycloak__Client={Keycloak client ID (i.e. pims-service-account)}
 Auth__Keycloak__Secret={Keycloak client secret}
 Api__ImportUrl={URL to endpoint (i.e. http://pims-dev.pathfinder.gov.bc.ca/api/tools/import/properties)}
