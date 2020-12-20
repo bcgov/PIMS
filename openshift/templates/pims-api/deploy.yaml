@@ -417,11 +417,11 @@ parameters:
   - name: KEYCLOAK_AUTHORITY
     displayName: Keycloak SSO Authority
     description: The full URL to the SSO Keycloak Admin client
-      (i.e. https://sso-dev.pathfinder.gov.bc.ca/auth/realms/xz0xtue5)
+      (i.e. https://dev.oidc.gov.bc.ca/auth/realms/xz0xtue5)
   - name: KEYCLOAK_ADMIN_AUTHORITY
     displayName: Keycloak SSO Admin Authority
     description: The full URL to the SSO Keycloak Admin client
-      (i.e. https://sso-dev.pathfinder.gov.bc.ca/auth/admin/realms/xz0xtue5)
+      (i.e. https://dev.oidc.gov.bc.ca/auth/admin/realms/xz0xtue5)
   - name: KEYCLOAK_SECRET
     displayName: Keycloak client secret.
     description: The Keycloak SSO client secret.

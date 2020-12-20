@@ -254,7 +254,7 @@ parameters:
     displayName: Keycloak Authority URL
     description: The Keycloak authority URL.
     required: true
-    value: "https://sso-dev.pathfinder.gov.bc.ca/auth"
+    value: "https://dev.oidc.gov.bc.ca/auth"
 
   - name: REAL_IP_FROM
     description:
