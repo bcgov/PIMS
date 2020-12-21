@@ -175,7 +175,7 @@ describe('AppNavBar', () => {
         </Provider>,
       );
 
-      const link = getByText('View Inventory');
+      const link = getByText('View Property Inventory');
 
       expect(link).toBeTruthy();
     });
