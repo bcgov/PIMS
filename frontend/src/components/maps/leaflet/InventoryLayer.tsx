@@ -42,6 +42,19 @@ const getBbox = (bounds: LatLngBounds): BBox => {
 };
 
 /**
+ * Get a new instance of a BBox from the specified 'bounds'.
+ * @param bounds The latitude longitude boundary.
+ */
+const getApiBbox = (bounds: LatLngBounds): BBox => {
+  return [
+    bounds.getSouthWest().lng,
+    bounds.getNorthEast().lng,
+    bounds.getSouthWest().lat,
+    bounds.getNorthEast().lat,
+  ] as BBox;
+};
+
+/**
  * Displays the search results onto a layer with clustering.
  * This component makes a request to the PIMS API properties search WFS endpoint.
  */
@@ -69,7 +82,7 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
 
   const params = useMemo<IGeoSearchParams>(
     () => ({
-      bbox: (bounds ?? map.getBounds()).toBBoxString(),
+      bbox: getApiBbox(bounds ?? map.getBounds()).toString(),
       address: filter?.address,
       administrativeArea: filter?.administrativeArea,
       pid: filter?.pid,

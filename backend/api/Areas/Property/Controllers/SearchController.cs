@@ -120,7 +120,7 @@ namespace Pims.Api.Areas.Property.Controllers
             filter.ThrowBadRequestIfNull($"The request must include a filter.");
             if (!filter.IsValid()) throw new BadRequestException("Property filter must contain valid values.");
 
-            var pfilter = filter.CopyValues(new AllPropertyFilter());
+            var pfilter = filter.CopyValues(new AllPropertyFilter(filter.Boundary));
             pfilter.PropertyType = filter.PropertyType;
 
             var properties = _pimsService.Property.Search(pfilter).ToArray();
