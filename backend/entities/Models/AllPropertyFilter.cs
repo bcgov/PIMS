@@ -1,3 +1,4 @@
+using NetTopologySuite.Geometries;
 using Pims.Core.Extensions;
 using System;
 using System.Collections.Generic;
@@ -98,6 +99,18 @@ namespace Pims.Dal.Entities.Models
             this.NELongitude = neLong;
             this.SWLatitude = swLat;
             this.SWLongitude = swLong;
+        }
+
+        /// <summary>
+        /// Creates a new instance of a AllPropertyFilter class, initializes it with the specified arguments.
+        /// </summary>
+        /// <param name="boundary"></param>
+        public AllPropertyFilter(Envelope boundary)
+        {
+            this.NELatitude = boundary.MaxY;
+            this.NELongitude = boundary.MaxX;
+            this.SWLatitude = boundary.MinY;
+            this.SWLongitude = boundary.MinX;
         }
 
         /// <summary>
