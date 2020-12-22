@@ -1,4 +1,5 @@
 import * as ActionTypes from 'constants/actionTypes';
+import { PointFeature } from 'components/maps/types';
 
 //Parcel List API action
 
@@ -27,7 +28,7 @@ export interface IStoreParcelsAction {
 
 export interface IStoreDraftParcelsAction {
   type: typeof ActionTypes.STORE_DRAFT_PARCEL_RESULTS;
-  draftParcelList: IProperty[];
+  draftParcelList: PointFeature[];
 }
 
 export interface IStoreParcelAction {
@@ -35,7 +36,7 @@ export interface IStoreParcelAction {
   parcel: IProperty;
 }
 
-export const storeDraftParcelsAction = (parcelList: IProperty[]): IStoreDraftParcelsAction => ({
+export const storeDraftParcelsAction = (parcelList: PointFeature[]): IStoreDraftParcelsAction => ({
   type: ActionTypes.STORE_DRAFT_PARCEL_RESULTS,
   draftParcelList: parcelList,
 });

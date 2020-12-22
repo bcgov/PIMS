@@ -80,7 +80,7 @@ const mockDetails: IParcelDetail = {
 
 const store = mockStore({
   [reducerTypes.LOOKUP_CODE]: { lookupCodes: [] },
-  [reducerTypes.PARCEL]: { parcelDetail: mockDetails },
+  [reducerTypes.PARCEL]: { parcelDetail: mockDetails, draftParcels: [] },
   [reducerTypes.LEAFLET_CLICK_EVENT]: { parcelDetail: mockDetails },
 });
 

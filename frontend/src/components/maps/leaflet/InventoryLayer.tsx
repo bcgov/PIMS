@@ -10,6 +10,8 @@ import { PointFeature } from '../types';
 import PointClusterer from './PointClusterer';
 import { useApi } from 'hooks/useApi';
 import _ from 'lodash';
+import { useSelector } from 'react-redux';
+import { RootState } from 'reducers/rootReducer';
 
 export type InventoryLayerProps = {
   /** Latitude and Longitude boundary of the layer. */
@@ -57,6 +59,9 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
   const [features, setFeatures] = React.useState<Array<PointFeature>>([]);
   const { map } = useLeaflet();
   const { loadProperties } = useApi();
+  const draftProperties: PointFeature[] = useSelector<RootState, PointFeature[]>(
+    state => state.parcel.draftParcels,
+  );
 
   if (!map) {
     throw new Error('<InventoryLayer /> must be used under a <Map> leaflet component');
@@ -122,7 +127,7 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
 
   return (
     <PointClusterer
-      points={features}
+      points={[...features, ...draftProperties]}
       zoom={zoom}
       bounds={bbox}
       onMarkerClick={onMarkerClick}

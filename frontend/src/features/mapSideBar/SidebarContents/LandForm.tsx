@@ -118,9 +118,7 @@ export const valuesToApiFormat = (values: ISteppedFormValues<IFormParcel>): IFor
   );
   values.data.landArea = +values.data.landArea;
   values.data.financials = [];
-  if ((values.data.agencyId as any)?.value) {
-    values.data.agencyId = +(values.data.agencyId as any).value;
-  }
+  values.data.agencyId = +values.data.agencyId;
   return values.data;
 };
 
@@ -140,7 +138,9 @@ const Form: React.FC<ILandForm> = ({
   useParcelLayerData({
     formikRef,
     nameSpace: 'data',
-    agencyId: +formikProps.values.data.agencyId,
+    agencyId: +(formikProps.values.data.agencyId as any)?.value
+      ? +(formikProps.values.data.agencyId as any).value
+      : +formikProps.values.data.agencyId,
   });
   const isViewOrUpdate = !!initialValues.id;
   const isBareLand = !initialValues?.buildings?.length;
@@ -372,14 +372,14 @@ const LandForm: React.FC<IParentLandForm> = (props: IParentLandForm) => {
       route: 'usage',
       title: 'Usage',
       completed: false,
-      canGoToStep: !!props.disabled,
+      canGoToStep: !!initialValues?.data?.id,
       validation: props.disabled ? undefined : { schema: LandUsageSchema, nameSpace: () => 'data' },
     },
     {
       route: 'valuation',
       title: 'Valuation',
       completed: false,
-      canGoToStep: !!props.disabled,
+      canGoToStep: !!initialValues?.data?.id,
       validation: props.disabled
         ? undefined
         : { schema: LandValuationSchema, nameSpace: () => 'data' },
@@ -389,16 +389,16 @@ const LandForm: React.FC<IParentLandForm> = (props: IParentLandForm) => {
   if (!!props.initialValues?.buildings?.length) {
     steps.push({
       route: 'associatedLand',
-      title: 'View Associated Land',
+      title: 'View Buildings',
       completed: false,
-      canGoToStep: !!props.disabled,
+      canGoToStep: !!initialValues?.data?.id,
     });
   }
   steps.push({
     route: 'review',
     title: 'Review',
     completed: false,
-    canGoToStep: !!props.disabled,
+    canGoToStep: !!initialValues?.data?.id,
     validation: props.disabled ? undefined : { schema: ParcelSchema, nameSpace: () => 'data' },
   });
 

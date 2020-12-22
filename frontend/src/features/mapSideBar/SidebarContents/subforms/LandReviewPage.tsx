@@ -96,6 +96,7 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
               <Row className="content-item">
                 <Label>Agency</Label>
                 <ParentSelect
+                  required
                   field={withNameSpace('agencyId')}
                   options={props.agencies}
                   filterBy={['code', 'label', 'parent']}
@@ -115,7 +116,7 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
                 <TextArea
                   required={true}
                   disabled={editInfo.identification}
-                  field={withNameSpace('description')}
+                  field={withNameSpace('landLegalDescription')}
                 />
               </Row>
 

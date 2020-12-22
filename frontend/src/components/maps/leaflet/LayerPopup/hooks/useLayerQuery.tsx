@@ -8,6 +8,8 @@ import parcelLayerDataSlice, {
 } from 'reducers/parcelLayerDataSlice';
 import { error } from 'actions/genericActions';
 import { toast } from 'react-toastify';
+import { showLoading, hideLoading } from 'react-redux-loading-bar';
+import { useDispatch } from 'react-redux';
 
 interface IUserLayerQuery {
   /**
@@ -56,7 +58,7 @@ export const saveParcelDataLayerResponse = (
       }),
     );
   } else {
-    toast.warning(`Failed to find PID/PIN. Ensure that the searched PID/PIN is valid`);
+    toast.warning(`Failed to find parcel layer data. Ensure that the search criteria is valid`);
   }
 };
 
@@ -84,17 +86,44 @@ export const handleParcelDataLayerResponse = (
  * @param geometry the name of the geometry in the feature collection
  */
 export const useLayerQuery = (url: string, geometryName: string = 'SHAPE'): IUserLayerQuery => {
+  const instance = axios.create();
+  const dispatch = useDispatch();
+
+  instance &&
+    instance.interceptors.request.use(
+      config => {
+        dispatch(showLoading());
+        return config;
+      },
+      error => {
+        dispatch(hideLoading());
+        return Promise.reject(error);
+      },
+    );
+
+  instance &&
+    instance.interceptors.response.use(
+      config => {
+        dispatch(hideLoading());
+        return config;
+      },
+      error => {
+        dispatch(hideLoading());
+        return Promise.reject(error);
+      },
+    );
+
   const baseUrl = `${url}&srsName=EPSG:4326&count=1`;
   const findOneWhereContains = useCallback(
     async (latlng: LatLng): Promise<FeatureCollection> => {
       const data: FeatureCollection = (
-        await axios.get(
+        await instance.get(
           `${baseUrl}&cql_filter=CONTAINS(${geometryName},SRID=4326;POINT ( ${latlng.lng} ${latlng.lat}))`,
         )
       ).data;
       return data;
     },
-    [baseUrl, geometryName],
+    [baseUrl, geometryName, instance],
   );
   const findByPid = useCallback(
     async (pid: string): Promise<FeatureCollection> => {
@@ -104,20 +133,20 @@ export const useLayerQuery = (url: string, geometryName: string = 'SHAPE'): IUse
         return { features: [], type: 'FeatureCollection' };
       }
       const data: FeatureCollection = (
-        await axios.get(`${baseUrl}&CQL_FILTER=PID_NUMBER=${+formattedPid}`)
+        await instance.get(`${baseUrl}&CQL_FILTER=PID_NUMBER=${+formattedPid}`)
       ).data;
       return data;
     },
-    [baseUrl],
+    [baseUrl, instance],
   );
 
   const findByPin = useCallback(
     async (pin: string): Promise<FeatureCollection> => {
       //Do not make a request if we our currently cached response matches the requested pid.
-      const data: FeatureCollection = (await axios.get(`${baseUrl}&CQL_FILTER=PIN=${pin}`)).data;
+      const data: FeatureCollection = (await instance.get(`${baseUrl}&CQL_FILTER=PIN=${pin}`)).data;
       return data;
     },
-    [baseUrl],
+    [baseUrl, instance],
   );
 
   return { findOneWhereContains, findByPid, findByPin };

@@ -31,7 +31,6 @@ import { useBuildingApi } from '../hooks/useBuildingApi';
 import _ from 'lodash';
 import { IFormParcel } from '../containers/MapSideBarContainer';
 import { useState } from 'react';
-import { Prompt } from 'react-router-dom';
 import { defaultBuildingValues } from './BuildingForm';
 
 const Container = styled.div`
@@ -139,8 +138,8 @@ export const valuesToApiFormat = (
     const parcelApiValues = landValuesToApiFormat({ data: p } as any);
     if (!!agencyId && p.agencyId === '') {
       parcelApiValues.agencyId = agencyId;
-    } else if ((parcelApiValues.agencyId as any).value) {
-      parcelApiValues.agencyId = +(parcelApiValues.agencyId as any).value;
+    } else {
+      parcelApiValues.agencyId = +parcelApiValues.agencyId;
     }
     return parcelApiValues;
   });
@@ -552,10 +551,6 @@ const AssociatedLandForm: React.FC<IAssociatedLandParentForm> = (
             formikRef={props.formikRef}
             initialValues={props.initialValues}
             isAdmin={props.isAdmin}
-          />
-          <Prompt
-            when={props.formikRef?.current?.dirty && !props.formikRef?.current?.isSubmitting}
-            message="You have unsaved changes, are you sure you want to leave? Your unsaved changes will be lost."
           />
         </SteppedForm>
       )}

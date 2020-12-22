@@ -188,6 +188,8 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
               handleParcelDataLayerResponse(response, dispatch);
             }
           });
+        } else {
+          toast.warning('Unable to find any details for the clicked location.');
         }
       });
     }

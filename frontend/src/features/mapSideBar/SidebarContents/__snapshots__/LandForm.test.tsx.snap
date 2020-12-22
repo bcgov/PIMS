@@ -480,7 +480,8 @@ exports[`Land Form component renders correctly 1`] = `
                         </div>
                       </div>
                       <button
-                        class="Button Button--icon-only bg-warning btn btn-primary"
+                        class="Button Button--disabled Button--icon-only bg-warning btn btn-primary"
+                        disabled=""
                         type="submit"
                       >
                         <div
@@ -725,7 +726,7 @@ exports[`Land Form component renders correctly 1`] = `
                         Agency
                       </label>
                       <div
-                        class="form-group"
+                        class="required form-group"
                       >
                         <div
                           class="rbt"

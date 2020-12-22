@@ -43,10 +43,7 @@ interface MapViewProps {
 }
 
 const MapView: React.FC<MapViewProps> = (props: MapViewProps) => {
-  const properties = useSelector<RootState, IProperty[]>(state => [
-    ...state.parcel.parcels,
-    ...state.parcel.draftParcels,
-  ]);
+  const properties = useSelector<RootState, IProperty[]>(state => [...state.parcel.parcels]);
   const [loadedProperties, setLoadedProperties] = useState(false);
   const mapRef = useRef<LeafletMap>(null);
   const propertyDetail = useSelector<RootState, IPropertyDetail | null>(
