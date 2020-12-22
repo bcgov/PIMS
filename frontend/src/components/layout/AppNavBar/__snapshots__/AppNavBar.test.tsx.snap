@@ -119,7 +119,8 @@ exports[`AppNavBar AppNavBar snapshot test. 1`] = `
                       </div>
                     </NavItem>
                     <AdminDropdown />
-                    <PropertyDropdown />
+                    <SubmitProperty />
+                    <ViewInventory />
                     <DisposeProjectsDropdown />
                     <ReportsDropdown />
                   </div>
