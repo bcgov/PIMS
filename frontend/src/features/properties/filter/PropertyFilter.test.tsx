@@ -28,15 +28,18 @@ const getStore = (filter: any) =>
   });
 
 const defaultFilter: IPropertyFilter = {
-  searchBy: 'address',
+  searchBy: 'name',
   pid: '',
   address: '',
   administrativeArea: '',
+  propertyType: '',
+  projectNumber: '',
+  agencies: '',
+  classificationId: '',
   minLotSize: '',
   maxLotSize: '',
-  classificationId: '',
-  agencies: '',
-  projectNumber: '',
+  rentableArea: '',
+  name: '',
 };
 
 const getUiElement = (filter: IPropertyFilter) => (
@@ -45,6 +48,7 @@ const getUiElement = (filter: IPropertyFilter) => (
       <PropertyFilter
         defaultFilter={filter}
         agencyLookupCodes={MOCK.AGENCIES}
+        adminAreaLookupCodes={MOCK.ADMINISTRATIVEAREAS}
         propertyClassifications={MOCK.CLASSIFICATIONS}
         onChange={onFilterChange}
       />
@@ -184,6 +188,7 @@ describe('MapFilterBar', () => {
       minLotSize: '10',
       maxLotSize: '20',
       inSurplusPropertyProgram: TrueFalse.True,
+      rentableArea: '0',
     };
     const { getByText } = render(getUiElement(providedFilter));
     expect(getByText('Address')).toBeVisible();

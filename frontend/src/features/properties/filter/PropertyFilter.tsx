@@ -2,7 +2,7 @@ import './PropertyFilter.scss';
 
 import React, { useMemo } from 'react';
 import { Col } from 'react-bootstrap';
-import { Formik } from 'formik';
+import { Formik, getIn } from 'formik';
 import { ILookupCode } from 'actions/lookupActions';
 import { Form, Select, SelectOption } from '../../../components/common/form';
 import { FilterBarSchema } from 'utils/YupSchema';
@@ -15,6 +15,7 @@ import { useRouterFilter } from 'hooks/useRouterFilter';
 import { IPropertyFilter } from './IPropertyFilter';
 import { TableSort } from 'components/Table/TableSort';
 import { FindMorePropertiesButton } from 'components/maps/FindMorePropertiesButton';
+import { TypeaheadField } from 'components/common/form/Typeahead';
 
 /**
  * PropertyFilter component properties.
@@ -22,10 +23,12 @@ import { FindMorePropertiesButton } from 'components/maps/FindMorePropertiesButt
 export interface IPropertyFilterProps {
   /** The default filter to apply if a different one hasn't been set in the URL or stored in redux. */
   defaultFilter: IPropertyFilter;
-  /** An arry of agency lookup codes. */
+  /** An array of agency lookup codes. */
   agencyLookupCodes: ILookupCode[];
   /** An array of classification codes. */
   propertyClassifications: ILookupCode[];
+  /** An array of administrative area codes. */
+  adminAreaLookupCodes: ILookupCode[];
   /** Callback event when the filter is changed during Mount. */
   onChange: (filter: IPropertyFilter) => void;
   /** Comma separated list of column names to sort by. */
@@ -41,6 +44,7 @@ export interface IPropertyFilterProps {
 export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
   defaultFilter,
   agencyLookupCodes,
+  adminAreaLookupCodes,
   propertyClassifications,
   onChange,
   sort,
@@ -67,6 +71,7 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
     mapLookupCodeWithParentString(c, agencyLookupCodes),
   );
   const classifications = (propertyClassifications ?? []).map(c => mapLookupCode(c));
+  const adminAreas = (adminAreaLookupCodes ?? []).map(c => mapLookupCode(c));
 
   const initialValues = useMemo(() => {
     const values = { ...defaultFilter, ...propertyFilter };
@@ -107,6 +112,18 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
             <div className="vl"></div>
             <Col className="bar-item">
               <PropertyFilterOptions />
+            </Col>
+            <Col className="mapfilter-typeahead">
+              <TypeaheadField
+                name="administrativeArea"
+                placeholder="Enter a location"
+                paginate={false}
+                hideValidation={true}
+                options={adminAreas.map(x => x.label)}
+                onChange={(vals: any) => {
+                  setFieldValue('administrativeArea', getIn(vals[0], 'name') ?? vals[0]);
+                }}
+              />
             </Col>
             <Col className="agency-item">
               <ParentSelect
