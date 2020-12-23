@@ -1,10 +1,11 @@
-import { getIn, useFormikContext, setIn } from 'formik';
+import { getIn, useFormikContext } from 'formik';
 import { groupBy, sortBy } from 'lodash';
 import React, { Fragment, useEffect, useState } from 'react';
 import { Highlighter, Menu, MenuItem } from 'react-bootstrap-typeahead';
 import { Label } from '../Label';
 import { SelectOption, SelectOptions } from './Select';
 import { TypeaheadField } from './Typeahead';
+import _ from 'lodash';
 
 interface IParentSelect {
   /** specify the field that is being accessed */
@@ -44,28 +45,13 @@ export const ParentSelect: React.FC<IParentSelect> = ({
   setClearSelected,
   label,
 }) => {
-  const { setFieldValue, values, resetForm, dirty } = useFormikContext<any>();
-  const value = getIn(values, field);
+  const { setFieldValue } = useFormikContext<any>();
   /** used to trigger onBlur so menu disappears on custom header click */
   const [clear, setClear] = useState(false);
-  /** select appropriate agency to set the field value to when present */
-  const option = value ? options.find(x => x.value === value.toString()) : null;
+
   /** controls the multi selections displayed to the user */
   const [multiSelections, setMultiSelections] = React.useState<any>([]);
 
-  useEffect(() => {
-    if (value) {
-      let newValues = { ...values };
-      if (!value.value) {
-        if (dirty) {
-          setFieldValue(field, option);
-        } else {
-          newValues = setIn(newValues, field, option);
-          resetForm({ values: newValues });
-        }
-      }
-    }
-  }, [value, setFieldValue, field, dirty, resetForm, values, option]);
   /** wipe the selection from input on reset */
   useEffect(() => {
     clearSelected && setMultiSelections([]);
@@ -74,7 +60,7 @@ export const ParentSelect: React.FC<IParentSelect> = ({
 
   /** function that gets called when menu header is clicked */
   const handleMenuHeaderClick = (x: SelectOption) => {
-    setFieldValue(field, x);
+    setFieldValue(field, x.value);
     /** trigger ref in Typeahead to call onBlur so menu closes */
     setClear(true);
   };
@@ -87,6 +73,18 @@ export const ParentSelect: React.FC<IParentSelect> = ({
       x.map((x: any) => x.value),
     );
     setClear(true);
+  };
+
+  const getOptionByValue = (value: any) => {
+    if (value?.value) {
+      return [value];
+    }
+    if (value !== undefined && !_.isEmpty(value.toString())) {
+      /** select appropriate agency to set the field value to when present */
+      const option = options.find(x => x.value === value.toString() || x.value === value);
+      return option ? [option] : [];
+    }
+    return [];
   };
 
   return (
@@ -106,22 +104,19 @@ export const ParentSelect: React.FC<IParentSelect> = ({
               vals.map((x: any) => x.value),
             );
           } else {
-            setFieldValue(field, getIn(vals[0], 'name') ?? vals[0]);
+            setFieldValue(field, getIn(vals[0], 'value') ?? vals[0]);
           }
         }}
         multiple={enableMultiple}
         options={options}
         bsSize={'large'}
         filterBy={filterBy}
-        getOptionByValue={
-          enableMultiple
-            ? (value: any) => value
-            : (value: any) => (!!value ? ([value] as any[]) : ([] as any[]))
-        }
+        getOptionByValue={enableMultiple ? (value: any) => value : getOptionByValue}
         multiSelections={multiSelections}
         clearSelected={clearSelected}
         placeholder={placeholder}
         hideValidation
+        required={required}
         renderMenu={(results, menuProps) => {
           const parents = groupBy(
             results.map((x: SelectOption) => {

@@ -26,7 +26,6 @@ interface IMapSideBar {
     size?: SidebarSize,
     resetParcelId?: boolean,
   ) => void;
-  overrideParcelId: (parcelId: number | undefined) => void;
   addBuilding: () => void;
   addRawLand: () => void;
   addAssociatedLand: () => void;
@@ -69,7 +68,7 @@ const useQueryParamSideBar = (): IMapSideBar => {
         search: queryString.stringify(searchParams),
       });
     }
-  }, [searchParams, location.search]);
+  }, [searchParams]);
 
   const setShow = (
     show: boolean,
@@ -86,7 +85,7 @@ const useQueryParamSideBar = (): IMapSideBar => {
       sidebar: show,
       sidebarSize: show ? size : undefined,
       sidebarContext: show ? contextName : undefined,
-      parcelId: resetParcelId ? undefined : parcelId,
+      parcelId: resetParcelId ? undefined : searchParams.parcelId,
     });
     history.push({ search: search.toString() });
   };
@@ -113,15 +112,6 @@ const useQueryParamSideBar = (): IMapSideBar => {
     setShowSideBar: setShow,
     size: sideBarSize,
     parcelId,
-    overrideParcelId: parcelId => {
-      const queryParams = {
-        ...queryString.parse(location.search),
-        loadDraft: true,
-        parcelId: parcelId,
-      };
-      const pathName = '/mapview';
-      history.replace({ pathname: pathName, search: queryString.stringify(queryParams) });
-    },
     disabled: searchParams?.disabled === 'true',
     loadDraft: searchParams?.loadDraft === 'true',
     newParcel: searchParams?.new === 'true',

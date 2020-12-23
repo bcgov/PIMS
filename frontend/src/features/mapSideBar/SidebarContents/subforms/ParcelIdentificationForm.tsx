@@ -175,6 +175,7 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
             displayErrorTooltips
           />
           <SearchButton
+            disabled={!geocoderResponse}
             onClick={(e: any) => {
               e.preventDefault();
               geocoderResponse && handleGeocoderChanges(geocoderResponse, nameSpace);
@@ -245,6 +246,7 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
           <Form.Row>
             <Form.Label>{agency?.parent ? 'Sub Agency' : 'Agency'}</Form.Label>
             <ParentSelect
+              required
               field={withNameSpace('agencyId')}
               options={agencies}
               filterBy={['code', 'label', 'parent']}

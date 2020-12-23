@@ -14,7 +14,7 @@ import { Container, Row, Col } from 'react-bootstrap';
 import { ILookupCode } from 'actions/lookupActions';
 import BasemapToggle, { BasemapToggleEvent, BaseLayer } from '../BasemapToggle';
 import { useDispatch, useSelector } from 'react-redux';
-import { setMapViewZoom } from 'reducers/mapViewZoomSlice';
+import { setMapViewZoom, DEFAULT_MAP_ZOOM } from 'reducers/mapViewZoomSlice';
 import { RootState } from 'reducers/rootReducer';
 import { Feature, GeoJsonObject } from 'geojson';
 import { asProperty } from './mapUtils';
@@ -160,16 +160,20 @@ const Map: React.FC<MapProps> = ({
   });
 
   const lastZoom = useSelector<RootState, number>(state => state.mapViewZoom) ?? zoomProp;
+  const [zoom, setZoom] = useState(lastZoom);
   useEffect(() => {
-    dispatch(setMapViewZoom(smallScreen ? 4.9 : 5.5));
-  }, [dispatch, smallScreen]);
+    if (lastZoom === DEFAULT_MAP_ZOOM) {
+      dispatch(setMapViewZoom(smallScreen ? 4.9 : 5.5));
+    } else if (lastZoom !== zoom && zoom !== DEFAULT_MAP_ZOOM) {
+      dispatch(setMapViewZoom(zoom));
+    }
+  }, [dispatch, lastZoom, smallScreen, zoom]);
 
   useEffect(() => {
     mapRef.current?.leafletElement.invalidateSize();
   }, [mapRef, mapWidth]);
 
   // TODO: refactor various zoom settings
-  const [zoom, setZoom] = useState(lastZoom);
 
   useEffect(() => {
     if (!interactive) {

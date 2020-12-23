@@ -133,6 +133,7 @@ export const AssociatedLandReviewPage: React.FC<any> = (props: IReviewProps) => 
                   <Row className="content-item">
                     <Label>Agency</Label>
                     <ParentSelect
+                      required
                       field={withNameSpace('agencyId', index)}
                       options={props.agencies}
                       filterBy={['code', 'label', 'parent']}

@@ -216,6 +216,9 @@ export const ParcelSchema = Yup.object()
       financials: Yup.array()
         .compact((financial: any) => financial.year !== currentYear)
         .of(FinancialYear),
+      agencyId: Yup.number()
+        .transform(emptyStringToNull)
+        .required('Required'),
     },
     [['pin', 'pid']],
   )
@@ -300,6 +303,9 @@ export const LandIdentificationSchema = Yup.object().shape(
       .transform(emptyStringToNull)
       .required('Required')
       .test('is-valid', 'Please enter a valid number', val => Number(val) < 200000),
+    agencyId: Yup.number()
+      .transform(emptyStringToNull)
+      .required('Required'),
   },
   [['pin', 'pid']],
 );

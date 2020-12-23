@@ -66,7 +66,7 @@ const setParcelFieldsFromLayerData = (
     }
 
     const layerParcelData = layerData!.data;
-    const pid = layerData?.data.PID || layerData?.data.PID_NUMBER.toString();
+    const pid = layerData?.data?.PID || layerData?.data?.PID_NUMBER?.toString();
     newValues = setIn(newValues, `${nameSpace}.pid`, !!pid ? pidFormatter(pid) : '');
     newValues = setIn(newValues, `${nameSpace}.pin`, layerParcelData.PIN || '');
     newValues = setIn(
