@@ -21,6 +21,7 @@ import styled from 'styled-components';
 import { ParentSelect } from 'components/common/form/ParentSelect';
 import { FormikTable } from 'features/projects/common';
 import { getAssociatedBuildingsCols } from 'features/properties/components/forms/subforms/columns';
+import { Classifications } from 'constants/classifications';
 
 interface IReviewProps {
   nameSpace?: string;
@@ -57,6 +58,13 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
       return props.nameSpace ? `${props.nameSpace}.${fieldName}` : fieldName;
     },
     [props.nameSpace],
+  );
+  let classId = getIn(formikProps.values, withNameSpace('classificationId'));
+  const filteredClassifications = props.classifications.filter(
+    (c: any) =>
+      (Number(c.value) !== Classifications.SurplusActive &&
+        Number(c.value) !== Classifications.Disposed) ||
+      +c.value === +classId,
   );
 
   const projectNumber = getIn(formikProps.values, withNameSpace('projectNumber'));
@@ -225,7 +233,7 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
                   type="number"
                   placeholder="Must Select One"
                   field={withNameSpace('classificationId')}
-                  options={props.classifications}
+                  options={filteredClassifications}
                   required={true}
                 />
               </Row>
