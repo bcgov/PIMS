@@ -526,7 +526,27 @@ exports[`renders correctly 1`] = `
                 style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
                 title=""
               >
-                
+                <div
+                  class="form-group"
+                >
+                  <div
+                    class="react-datepicker-wrapper"
+                  >
+                    <div
+                      class="react-datepicker__input-container"
+                    >
+                      <input
+                        autocomplete="off"
+                        class="form-control date-picker"
+                        id="datepicker-financials.0.netbook.effectiveDate"
+                        name="financials.0.netbook.effectiveDate"
+                        placeholder="--/--/----"
+                        type="text"
+                        value=""
+                      />
+                    </div>
+                  </div>
+                </div>
               </div>
               <div
                 class="td"
@@ -573,7 +593,27 @@ exports[`renders correctly 1`] = `
                 style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
                 title=""
               >
-                
+                <div
+                  class="form-group"
+                >
+                  <div
+                    class="react-datepicker-wrapper"
+                  >
+                    <div
+                      class="react-datepicker__input-container"
+                    >
+                      <input
+                        autocomplete="off"
+                        class="form-control date-picker"
+                        id="datepicker-financials.1.netbook.effectiveDate"
+                        name="financials.1.netbook.effectiveDate"
+                        placeholder="--/--/----"
+                        type="text"
+                        value=""
+                      />
+                    </div>
+                  </div>
+                </div>
               </div>
               <div
                 class="td"
@@ -620,7 +660,27 @@ exports[`renders correctly 1`] = `
                 style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
                 title=""
               >
-                
+                <div
+                  class="form-group"
+                >
+                  <div
+                    class="react-datepicker-wrapper"
+                  >
+                    <div
+                      class="react-datepicker__input-container"
+                    >
+                      <input
+                        autocomplete="off"
+                        class="form-control date-picker"
+                        id="datepicker-financials.2.netbook.effectiveDate"
+                        name="financials.2.netbook.effectiveDate"
+                        placeholder="--/--/----"
+                        type="text"
+                        value=""
+                      />
+                    </div>
+                  </div>
+                </div>
               </div>
               <div
                 class="td"
@@ -667,7 +727,27 @@ exports[`renders correctly 1`] = `
                 style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
                 title=""
               >
-                
+                <div
+                  class="form-group"
+                >
+                  <div
+                    class="react-datepicker-wrapper"
+                  >
+                    <div
+                      class="react-datepicker__input-container"
+                    >
+                      <input
+                        autocomplete="off"
+                        class="form-control date-picker"
+                        id="datepicker-financials.3.netbook.effectiveDate"
+                        name="financials.3.netbook.effectiveDate"
+                        placeholder="--/--/----"
+                        type="text"
+                        value=""
+                      />
+                    </div>
+                  </div>
+                </div>
               </div>
               <div
                 class="td"
@@ -714,7 +794,27 @@ exports[`renders correctly 1`] = `
                 style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
                 title=""
               >
-                
+                <div
+                  class="form-group"
+                >
+                  <div
+                    class="react-datepicker-wrapper"
+                  >
+                    <div
+                      class="react-datepicker__input-container"
+                    >
+                      <input
+                        autocomplete="off"
+                        class="form-control date-picker"
+                        id="datepicker-financials.4.netbook.effectiveDate"
+                        name="financials.4.netbook.effectiveDate"
+                        placeholder="--/--/----"
+                        type="text"
+                        value=""
+                      />
+                    </div>
+                  </div>
+                </div>
               </div>
               <div
                 class="td"
@@ -761,7 +861,27 @@ exports[`renders correctly 1`] = `
                 style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
                 title=""
               >
-                
+                <div
+                  class="form-group"
+                >
+                  <div
+                    class="react-datepicker-wrapper"
+                  >
+                    <div
+                      class="react-datepicker__input-container"
+                    >
+                      <input
+                        autocomplete="off"
+                        class="form-control date-picker"
+                        id="datepicker-financials.5.netbook.effectiveDate"
+                        name="financials.5.netbook.effectiveDate"
+                        placeholder="--/--/----"
+                        type="text"
+                        value=""
+                      />
+                    </div>
+                  </div>
+                </div>
               </div>
               <div
                 class="td"
@@ -808,7 +928,27 @@ exports[`renders correctly 1`] = `
                 style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
                 title=""
               >
-                
+                <div
+                  class="form-group"
+                >
+                  <div
+                    class="react-datepicker-wrapper"
+                  >
+                    <div
+                      class="react-datepicker__input-container"
+                    >
+                      <input
+                        autocomplete="off"
+                        class="form-control date-picker"
+                        id="datepicker-financials.6.netbook.effectiveDate"
+                        name="financials.6.netbook.effectiveDate"
+                        placeholder="--/--/----"
+                        type="text"
+                        value=""
+                      />
+                    </div>
+                  </div>
+                </div>
               </div>
               <div
                 class="td"
@@ -855,7 +995,27 @@ exports[`renders correctly 1`] = `
                 style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
                 title=""
               >
-                
+                <div
+                  class="form-group"
+                >
+                  <div
+                    class="react-datepicker-wrapper"
+                  >
+                    <div
+                      class="react-datepicker__input-container"
+                    >
+                      <input
+                        autocomplete="off"
+                        class="form-control date-picker"
+                        id="datepicker-financials.7.netbook.effectiveDate"
+                        name="financials.7.netbook.effectiveDate"
+                        placeholder="--/--/----"
+                        type="text"
+                        value=""
+                      />
+                    </div>
+                  </div>
+                </div>
               </div>
               <div
                 class="td"
@@ -902,7 +1062,27 @@ exports[`renders correctly 1`] = `
                 style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
                 title=""
               >
-                
+                <div
+                  class="form-group"
+                >
+                  <div
+                    class="react-datepicker-wrapper"
+                  >
+                    <div
+                      class="react-datepicker__input-container"
+                    >
+                      <input
+                        autocomplete="off"
+                        class="form-control date-picker"
+                        id="datepicker-financials.8.netbook.effectiveDate"
+                        name="financials.8.netbook.effectiveDate"
+                        placeholder="--/--/----"
+                        type="text"
+                        value=""
+                      />
+                    </div>
+                  </div>
+                </div>
               </div>
               <div
                 class="td"

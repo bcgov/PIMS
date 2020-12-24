@@ -1,4 +1,4 @@
-import { FastSelect, SelectOptions } from 'components/common/form';
+import { FastSelect, SelectOptions, TextArea } from 'components/common/form';
 import { Label } from 'components/common/Label';
 import TooltipIcon from 'components/common/TooltipIcon';
 import { Classifications } from 'constants/classifications';
@@ -32,6 +32,18 @@ const FieldDescription = styled.p`
   text-align: left;
 `;
 
+const Encumberance = styled(Col)`
+  .form-label {
+    min-width: 140px;
+  }
+  .form-group {
+    display: flex;
+    textarea.form-control {
+      width: 100%;
+    }
+  }
+`;
+
 /** used to conditionally render the information display box with the desired content */
 const InfoBoxWithContent = (content: string) => {
   return (
@@ -52,6 +64,8 @@ interface IClassificationFormProps {
   field: string;
   /** pass a tooltip for the classification field */
   toolTip?: string;
+  /** reason for encumberance */
+  encumbranceField: string;
   /** enter a brief description if desired regarding the select options */
   fieldDescription?: string;
   /** disable form controls */
@@ -69,6 +83,7 @@ export const ClassificationForm: React.FC<IClassificationFormProps> = ({
   toolTip,
   fieldDescription,
   disabled,
+  encumbranceField,
 }) => {
   const formikProps = useFormikContext();
 
@@ -132,6 +147,13 @@ export const ClassificationForm: React.FC<IClassificationFormProps> = ({
         </Col>
         <Col md={6}>{renderInfo()}</Col>
       </Row>
+      {getIn(formikProps.values, field) === Classifications.SurplusEncumbered && (
+        <Row>
+          <Encumberance>
+            <TextArea field={encumbranceField} label="Reason for Encumbrance"></TextArea>
+          </Encumberance>
+        </Row>
+      )}
     </>
   );
 };

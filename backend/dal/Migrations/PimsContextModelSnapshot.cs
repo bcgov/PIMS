@@ -408,6 +408,9 @@ namespace Pims.Dal.Migrations
                         .HasColumnType("nvarchar(2000)")
                         .HasMaxLength(2000);
 
+                    b.Property<string>("EncumbranceReason")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("IsSensitive")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
@@ -603,6 +606,9 @@ namespace Pims.Dal.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("DATETIME2")
                         .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<DateTime>("EffectiveDate")
+                        .HasColumnType("DATE");
 
                     b.Property<string>("Note")
                         .HasColumnType("nvarchar(500)")
@@ -1031,6 +1037,9 @@ namespace Pims.Dal.Migrations
                         .HasColumnType("nvarchar(2000)")
                         .HasMaxLength(2000);
 
+                    b.Property<string>("EncumbranceReason")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("IsSensitive")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
@@ -1223,6 +1232,9 @@ namespace Pims.Dal.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("DATETIME2")
                         .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<DateTime?>("EffectiveDate")
+                        .HasColumnType("DATE");
 
                     b.Property<string>("Note")
                         .HasColumnType("nvarchar(500)")

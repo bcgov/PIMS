@@ -14,6 +14,10 @@ import {
 } from '../../../../../src/features/properties/components/forms/strings';
 import { HARMFUL_DISCLOSURE_URL } from 'constants/strings';
 import { ClassificationForm } from './ClassificationForm';
+import { IGeocoderResponse } from 'hooks/useApi';
+import { useFormikContext, getIn } from 'formik';
+import useCodeLookups from 'hooks/useLookupCodes';
+import * as API from 'constants/API';
 
 interface IIdentificationProps {
   /** passed down from parent to lock/unlock designated fields */
@@ -44,12 +48,14 @@ export const IdentificationForm: React.FC<IIdentificationProps> = ({
   setMovingPinNameSpace,
   isAdmin,
 }) => {
+  const { setFieldValue } = useFormikContext();
   const withNameSpace: Function = React.useCallback(
     (name?: string) => {
       return [nameSpace ?? '', name].filter(x => x).join('.');
     },
     [nameSpace],
   );
+  const { lookupCodes } = useCodeLookups();
   return (
     <Container>
       <Row>
@@ -129,6 +135,7 @@ export const IdentificationForm: React.FC<IIdentificationProps> = ({
       <hr></hr>
       <ClassificationForm
         field={withNameSpace('classificationId')}
+        encumbranceField={withNameSpace('encumbranceReason')}
         fieldLabel="Building Classification"
         classifications={classifications}
         title="Strategic Real Estate Classification"
@@ -140,7 +147,33 @@ export const IdentificationForm: React.FC<IIdentificationProps> = ({
       </Row>
       <Row style={{ marginBottom: 10 }}>
         <Col>
-          <AddressForm {...formikProps} nameSpace={withNameSpace('address')} />
+          <AddressForm
+            {...formikProps}
+            nameSpace={withNameSpace('address')}
+            onGeocoderChange={(selection: IGeocoderResponse) => {
+              const administrativeArea = selection.administrativeArea
+                ? lookupCodes.find(code => {
+                    return (
+                      code.type === API.AMINISTRATIVE_AREA_CODE_SET_NAME &&
+                      code.name === selection.administrativeArea
+                    );
+                  })
+                : undefined;
+              if (administrativeArea) {
+                selection.administrativeArea = administrativeArea.name;
+              }
+              setFieldValue(withNameSpace(''), {
+                ...getIn(formikProps.values, withNameSpace('')),
+                latitude: selection.latitude,
+                longitude: selection.longitude,
+                address: {
+                  ...getIn(formikProps.values, withNameSpace('address')),
+                  line1: selection.address1,
+                  administrativeArea: selection.administrativeArea,
+                },
+              });
+            }}
+          />
         </Col>
         <Col>
           <LatLongForm

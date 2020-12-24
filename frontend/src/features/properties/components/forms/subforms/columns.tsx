@@ -1,7 +1,7 @@
-import { FastCurrencyInput } from 'components/common/form';
+import { FastCurrencyInput, FastDatePicker } from 'components/common/form';
 import React from 'react';
 import { useFormikContext, getIn } from 'formik';
-import { formatFiscalYear, formatApiDateTime, formatMoney } from 'utils';
+import { formatFiscalYear, formatMoney } from 'utils';
 import { FaBuilding } from 'react-icons/fa';
 
 const getEditableMoneyCell = (disabled: boolean | undefined, namespace: string, type: string) => {
@@ -22,15 +22,28 @@ const getEditableMoneyCell = (disabled: boolean | undefined, namespace: string, 
   };
 };
 
+/**
+ * Create a formik date picker using the passed cellinfo to get the associated data.
+ * This information is only editable if this cell belongs to a parcel row.
+ * @param cellInfo provided by react table
+ * @param minDate restrict the minimum date that can be selected
+ * @param oldDateWarning warn if the user selects an old date
+ */
+const getEditableDatePickerCell = (namespace: string = 'properties', field: string) => (
+  cellInfo: any,
+) => {
+  const formikProps = useFormikContext();
+  return (
+    <FastDatePicker
+      formikProps={formikProps}
+      field={`${namespace}.${cellInfo.row.id}.${field}`}
+    ></FastDatePicker>
+  );
+};
+
 const getFiscalYear = (field: string) => {
   return (cellInfo: any) => {
     return formatFiscalYear(cellInfo.row.values[field]);
-  };
-};
-
-const getFormattedDate = (field: string) => {
-  return (cellInfo: any) => {
-    return formatApiDateTime(cellInfo.row.values[field]);
   };
 };
 
@@ -86,10 +99,10 @@ export const getNetbookCols = (disabled?: boolean, namespace = 'financials'): an
         },
         {
           Header: 'Effective Date',
-          accessor: 'netbook.updatedOn',
+          accessor: 'netbook.effectiveDate',
           maxWidth: 140,
           align: 'left',
-          Cell: getFormattedDate('netbook.updatedOn'),
+          Cell: getEditableDatePickerCell(namespace, `netbook.effectiveDate`),
         },
         {
           Header: 'Net Book Value',

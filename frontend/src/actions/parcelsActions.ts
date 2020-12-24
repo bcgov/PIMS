@@ -80,6 +80,7 @@ export interface IBuilding extends IProperty {
   buildingOccupantTypeId: number | '';
   classificationId: number | '';
   classification: string;
+  encumbranceReason: string;
   leaseExpiry?: string;
   occupantName: string;
   transferLeaseOnSale: boolean;
@@ -149,6 +150,7 @@ export interface IParcel extends IProperty {
   pin?: number | '';
   classification?: string;
   classificationId: number | '';
+  encumbranceReason: string;
   address?: IAddress;
   landArea: number | '';
   landLegalDescription: string;
