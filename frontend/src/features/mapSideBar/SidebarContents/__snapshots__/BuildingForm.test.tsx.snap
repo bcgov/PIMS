@@ -472,20 +472,16 @@ exports[`Building Form component renders correctly 1`] = `
                       <p
                         class="label"
                       >
-                        <span
-                          class="req"
-                        >
-                          *
-                        </span>
                         Main Usage
                       </p>
                       <div
-                        class="form-group"
+                        class="required form-group"
                       >
                         <select
                           class="form-control"
                           id="input-building.buildingPredominateUseId-fast"
                           name="building.buildingPredominateUseId"
+                          required=""
                           type="number"
                         >
                           <option
@@ -502,20 +498,16 @@ exports[`Building Form component renders correctly 1`] = `
                       <p
                         class="label"
                       >
-                        <span
-                          class="req"
-                        >
-                          *
-                        </span>
                         Construction Type
                       </p>
                       <div
-                        class="form-group"
+                        class="required form-group"
                       >
                         <select
                           class="form-control"
                           id="input-building.buildingConstructionTypeId-fast"
                           name="building.buildingConstructionTypeId"
+                          required=""
                           type="number"
                         >
                           <option
@@ -558,11 +550,6 @@ exports[`Building Form component renders correctly 1`] = `
                         class="input-medium harmful"
                       >
                         <p>
-                          <span
-                            class="req"
-                          >
-                            *
-                          </span>
                           Would this information be harmful if released? 
                           <a
                             href="https://www2.gov.bc.ca/gov/content/governments/services-for-government/policies-procedures/foippa-manual/disclosure-harmful-individual-public-safety"
@@ -838,11 +825,6 @@ exports[`Building Form component renders correctly 1`] = `
                             class="instruction"
                             style="display: flex;"
                           >
-                            <span
-                              style="color: red; margin-right: 5px;"
-                            >
-                              *
-                            </span>
                             <p>
                               Drag and drop the pin on the map to mark the location of this building, or if you already have the coordinates, you can enter them manually in the fields below.
                             </p>
@@ -869,12 +851,13 @@ exports[`Building Form component renders correctly 1`] = `
                           Latitude
                         </p>
                         <div
-                          class="form-group col"
+                          class="required form-group col"
                         >
                           <input
                             class="input-medium form-control"
                             id="input-building.latitude"
                             name="building.latitude"
+                            required=""
                             type="number"
                             value=""
                           />
@@ -889,12 +872,13 @@ exports[`Building Form component renders correctly 1`] = `
                           Longitude
                         </p>
                         <div
-                          class="form-group col"
+                          class="required form-group col"
                         >
                           <input
                             class="input-medium form-control"
                             id="input-building.longitude"
                             name="building.longitude"
+                            required=""
                             type="number"
                             value=""
                           />

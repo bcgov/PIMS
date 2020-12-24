@@ -25,15 +25,10 @@ exports[`renders correctly 1`] = `
       <p
         class="label"
       >
-        <span
-          class="req"
-        >
-          *
-        </span>
-        Total Square Footage
+        Total Area
       </p>
       <div
-        class="input-group"
+        class="input-group required"
       >
         <div
           class="input-group-content"
@@ -56,7 +51,7 @@ exports[`renders correctly 1`] = `
           <span
             class="input-group-text"
           >
-            Sq. Ft
+            Sq. M
           </span>
         </div>
       </div>
@@ -67,15 +62,10 @@ exports[`renders correctly 1`] = `
       <p
         class="label"
       >
-        <span
-          class="req"
-        >
-          *
-        </span>
         Net Rentable Area
       </p>
       <div
-        class="input-group"
+        class="input-group required"
       >
         <div
           class="input-group-content"
@@ -98,7 +88,7 @@ exports[`renders correctly 1`] = `
           <span
             class="input-group-text"
           >
-            Sq. Ft
+            Sq. M
           </span>
         </div>
       </div>
@@ -131,126 +121,6 @@ exports[`renders correctly 1`] = `
           name="buildingTenancy"
           value=""
         />
-      </div>
-    </div>
-    <div
-      class="row"
-    >
-      <p
-        class="label"
-      >
-        <span
-          class="req"
-        >
-          *
-        </span>
-        Type of Current Occupant
-      </p>
-      <div
-        class="form-group"
-      >
-        <select
-          class="type-occupant form-control"
-          id="input-buildingOccupantTypeId-fast"
-          name="buildingOccupantTypeId"
-          type="number"
-        >
-          <option
-            value=""
-          >
-            Must Select One
-          </option>
-          <option
-            value="0"
-          >
-            Occupancy Type 1
-          </option>
-          <option
-            value="1"
-          >
-            Occupancy Type 2
-          </option>
-          <option
-            value="2"
-          >
-            Occupancy Type 3
-          </option>
-        </select>
-      </div>
-    </div>
-    <div
-      class="row"
-    >
-      <p
-        class="label"
-      >
-        Occupant Name
-      </p>
-      <div
-        class="form-group col"
-      >
-        <input
-          class="type-occupant form-control"
-          id="input-occupantName"
-          name="occupantName"
-          value=""
-        />
-      </div>
-    </div>
-    <div
-      class="row"
-      style="display: flex;"
-    >
-      <p
-        class="label"
-      >
-        Lease Expiry Date
-      </p>
-      <div
-        class="form-group"
-      >
-        <div
-          class="react-datepicker-wrapper"
-        >
-          <div
-            class="react-datepicker__input-container"
-          >
-            <input
-              autocomplete="off"
-              class="form-control date-picker"
-              id="datepicker-leaseExpiry"
-              name="leaseExpiry"
-              placeholder="--/--/----"
-              type="text"
-              value=""
-            />
-          </div>
-        </div>
-      </div>
-      <div
-        class="form-group"
-      >
-        <div
-          class="check-field"
-        >
-          <div
-            class="form-check"
-          >
-            <input
-              class="form-check-input position-static"
-              id="input-transferLeaseOnSale"
-              name="transferLeaseOnSale"
-              type="checkbox"
-              value="false"
-            />
-          </div>
-          <label
-            class="text-wrap form-label"
-            for="input-transferLeaseOnSale"
-          >
-            Transfer Lease with Land
-          </label>
-        </div>
       </div>
     </div>
   </div>

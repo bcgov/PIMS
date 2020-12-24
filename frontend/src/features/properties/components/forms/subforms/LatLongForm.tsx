@@ -44,7 +44,6 @@ const LatLongForm = <T extends any>(props: LatLongFormProps & FormikProps<T>) =>
       <Row>
         <Col md={9}>
           <div className="instruction" style={{ display: 'flex' }}>
-            <span style={{ color: 'red', marginRight: 5 }}>*</span>
             {props.building && (
               <p>
                 Drag and drop the pin on the map to mark the location of this building, or if you
@@ -80,6 +79,7 @@ const LatLongForm = <T extends any>(props: LatLongFormProps & FormikProps<T>) =>
           disabled={props.disabled}
           type="number"
           field={props.showLandArea ? withNameSpace('data.latitude') : withNameSpace('latitude')}
+          required
         />
       </Form.Row>
       <Form.Row>
@@ -91,6 +91,7 @@ const LatLongForm = <T extends any>(props: LatLongFormProps & FormikProps<T>) =>
           disabled={props.disabled}
           type="number"
           field={props.showLandArea ? withNameSpace('data.longitude') : withNameSpace('longitude')}
+          required
         />
       </Form.Row>
       {props.showLandArea && (

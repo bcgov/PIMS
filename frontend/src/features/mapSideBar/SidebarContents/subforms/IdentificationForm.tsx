@@ -67,23 +67,25 @@ export const IdentificationForm: React.FC<IIdentificationProps> = ({
         </Col>
         <Col>
           <Row>
-            <Label required>Main Usage</Label>
+            <Label>Main Usage</Label>
             <FastSelect
               formikProps={formikProps}
               placeholder="Must Select One"
               field={withNameSpace('buildingPredominateUseId')}
               type="number"
               options={predominateUses}
+              required
             />
           </Row>
           <Row>
-            <Label required>Construction Type</Label>
+            <Label>Construction Type</Label>
             <FastSelect
               formikProps={formikProps}
               placeholder="Must Select One"
               field={withNameSpace('buildingConstructionTypeId')}
               type="number"
               options={constructionType}
+              required
             />
           </Row>
           <Row>
@@ -107,7 +109,6 @@ export const IdentificationForm: React.FC<IIdentificationProps> = ({
             <Label></Label>
             <div className="input-medium harmful">
               <p>
-                <span className="req">*</span>
                 Would this information be harmful if released?&nbsp;
                 <TooltipWrapper toolTipId="sensitive-harmful" toolTip={sensitiveTooltip}>
                   <a target="_blank" rel="noopener noreferrer" href={HARMFUL_DISCLOSURE_URL}>
