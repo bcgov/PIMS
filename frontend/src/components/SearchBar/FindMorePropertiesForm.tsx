@@ -35,10 +35,10 @@ const StyledSelect = styled(props => <Select {...props} />)`
 
 /** bar seperator for the inputs */
 const VerticalLine = styled.span`
-  border-left: 10px solid #666666;
+  border-left: 10px solid rgba(96, 96, 96, 0.2);
   height: 40px;
   margin-left: 20px;
-  border-width: 1px;
+  border-width: 2px;
 `;
 
 /** styled component used for project number */
@@ -81,7 +81,7 @@ const FindMorePropertiesForm = <T extends any>(props: any) => {
         (SPP)
       </p>
       <FormSection>
-        <Row style={{ marginLeft: 10 }}>
+        <Row style={{ marginLeft: 5, paddingTop: 10 }}>
           <h6>Search by</h6>
         </Row>
         <StyledRow style={{ marginLeft: 35 }}>
@@ -91,7 +91,7 @@ const FindMorePropertiesForm = <T extends any>(props: any) => {
         </StyledRow>
       </FormSection>
       <FormSection>
-        <Row style={{ marginLeft: 10 }}>
+        <Row style={{ marginLeft: 5, paddingTop: 10 }}>
           <h6>Building search criteria</h6>
         </Row>
         <StyledRow>
@@ -116,7 +116,7 @@ const FindMorePropertiesForm = <T extends any>(props: any) => {
         </StyledRow>
       </FormSection>
       <FormSection>
-        <Row style={{ marginLeft: 10 }}>
+        <Row style={{ marginLeft: 5, paddingTop: 10 }}>
           <h6>Land search criteria</h6>
         </Row>
         <StyledRow style={{ marginLeft: -13 }}>
