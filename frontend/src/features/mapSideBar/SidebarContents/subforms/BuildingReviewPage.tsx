@@ -223,7 +223,7 @@ export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
                 />
               </Row>
               <Row className="content-item">
-                <Label>Net Rentable Area</Label>
+                <Label>Net Usable Area</Label>
                 <InputGroup
                   className="area"
                   displayErrorTooltips

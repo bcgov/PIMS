@@ -113,7 +113,7 @@ exports[`renders correctly 1`] = `
             </div>
           </div>
           <div class=\\"content-item row\\">
-            <p class=\\"label\\">Net Rentable Area</p>
+            <p class=\\"label\\">Net Usable Area</p>
             <div class=\\"input-group required disabled\\">
               <div class=\\"input-group-content\\">
                 <div class=\\"form-group col\\"><input name=\\"rentableArea\\" style=\\"width: 100px;\\" disabled=\\"\\" type=\\"number\\" id=\\"input-rentableArea\\" class=\\"area form-control\\" value=\\"\\"></div>

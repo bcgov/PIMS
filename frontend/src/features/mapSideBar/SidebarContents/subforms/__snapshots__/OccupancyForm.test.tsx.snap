@@ -62,7 +62,7 @@ exports[`renders correctly 1`] = `
       <p
         class="label"
       >
-        Net Rentable Area
+        Net Usable Area
       </p>
       <div
         class="input-group required"
