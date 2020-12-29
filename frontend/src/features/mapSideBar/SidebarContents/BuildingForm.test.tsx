@@ -82,7 +82,7 @@ describe('Building Form', () => {
       fireEvent.click(getByText(/Review/i));
     });
     expect(getByText(/Building Identification/i)).toBeInTheDocument();
-    expect(getByText(/Transfer lease with land/i)).toBeInTheDocument();
+    expect(getByText(/Net Rentable Area/i)).toBeInTheDocument();
     expect(getByText(/Net Book Value/i)).toBeInTheDocument();
   });
 });

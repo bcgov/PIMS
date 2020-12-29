@@ -22,6 +22,19 @@ it('renders correctly', () => {
   expect(container.firstChild).toMatchSnapshot();
 });
 
+it('number input for total area/square footage', async () => {
+  const { container } = render(form);
+  const totalArea = container.querySelector('input[name="squareFootage"]');
+  await wait(() => {
+    fireEvent.change(totalArea!, {
+      target: {
+        value: 123,
+      },
+    });
+  });
+  expect(totalArea).toHaveValue(123);
+});
+
 it('number input for rentable area', async () => {
   const { container } = render(form);
   const rentableArea = container.querySelector('input[name="rentableArea"]');
@@ -35,23 +48,15 @@ it('number input for rentable area', async () => {
   expect(rentableArea).toHaveValue(123);
 });
 
-it('renders correct occupancies', async () => {
-  const { container, getAllByRole } = render(form);
-  const occupantType = container.querySelector('select[name="buildingOccupantTypeId"]');
-  const options = getAllByRole('option');
-  await wait(() => {
-    fireEvent.click(occupantType!);
-  });
-  // 4 because it counts 'Must Select One'
-  expect(options).toHaveLength(4);
-  // Renders props correctly
-  expect(options[1]).toHaveTextContent('Occupancy Type 1');
-  expect(options[2]).toHaveTextContent('Occupancy Type 2');
-  expect(options[3]).toHaveTextContent('Occupancy Type 3');
-});
-
-it('transfer lease on sale defaults to false', async () => {
+it('input for tenancy percentage', async () => {
   const { container } = render(form);
-  const transfer = container.querySelector('input[name="transferLeaseOnSale"]');
-  expect(transfer).not.toBeChecked();
+  const percentage = container.querySelector('input[name="buildingTenancy"]');
+  await wait(() => {
+    fireEvent.change(percentage!, {
+      target: {
+        value: '123',
+      },
+    });
+  });
+  expect(percentage).toHaveValue('123');
 });

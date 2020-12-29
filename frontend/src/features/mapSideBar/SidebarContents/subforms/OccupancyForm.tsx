@@ -1,13 +1,6 @@
 import './TenancyForm.scss';
 
-import {
-  Check,
-  FastDatePicker,
-  FastInput,
-  FastSelect,
-  InputGroup,
-  SelectOptions,
-} from 'components/common/form';
+import { FastInput, InputGroup, SelectOptions } from 'components/common/form';
 import { Label } from 'components/common/Label';
 import React from 'react';
 import { Col, Row } from 'react-bootstrap';
@@ -47,7 +40,7 @@ export const OccupancyForm: React.FC<IOccupancyProps> = ({
       </Row>
       <InfoSection>
         <Row>
-          <Label required>Total Square Footage</Label>
+          <Label>Total Area</Label>
           <InputGroup
             displayErrorTooltips
             fast={true}
@@ -55,11 +48,12 @@ export const OccupancyForm: React.FC<IOccupancyProps> = ({
             disabled={disabled || readOnly}
             type="number"
             field={withNameSpace('squareFootage')}
-            postText="Sq. Ft"
+            postText="Sq. M"
+            required
           />
         </Row>
         <Row>
-          <Label required>Net Rentable Area</Label>
+          <Label>Net Rentable Area</Label>
           <InputGroup
             displayErrorTooltips
             fast={true}
@@ -67,7 +61,8 @@ export const OccupancyForm: React.FC<IOccupancyProps> = ({
             disabled={disabled || readOnly}
             type="number"
             field={withNameSpace('rentableArea')}
-            postText="Sq. Ft"
+            postText="Sq. M"
+            required
           />
         </Row>
       </InfoSection>
@@ -83,41 +78,6 @@ export const OccupancyForm: React.FC<IOccupancyProps> = ({
             className="percentage"
             disabled={disabled || readOnly}
             field={withNameSpace('buildingTenancy')}
-          />
-        </Row>
-        <Row>
-          <Label required>Type of Current Occupant</Label>
-          <FastSelect
-            formikProps={formikProps}
-            className="type-occupant"
-            disabled={disabled || readOnly}
-            placeholder="Must Select One"
-            field={withNameSpace('buildingOccupantTypeId')}
-            type="number"
-            options={occupantTypes}
-          />
-        </Row>
-        <Row>
-          <Label>Occupant Name</Label>
-          <FastInput
-            displayErrorTooltips
-            className="type-occupant"
-            formikProps={formikProps}
-            disabled={disabled || readOnly}
-            field={withNameSpace('occupantName')}
-          />
-        </Row>
-        <Row style={{ display: 'flex' }}>
-          <Label>Lease Expiry Date</Label>
-          <FastDatePicker
-            formikProps={formikProps}
-            disabled={disabled || readOnly}
-            field={withNameSpace('leaseExpiry')}
-          />
-          <Check
-            postLabel="Transfer Lease with Land"
-            disabled={disabled || readOnly}
-            field={withNameSpace('transferLeaseOnSale')}
           />
         </Row>
       </InfoSection>
