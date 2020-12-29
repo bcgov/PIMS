@@ -9,6 +9,9 @@ import { EvaluationKeys } from '../../constants/evaluationKeys';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import Claims from 'constants/claims';
 import queryString from 'query-string';
+import { useDispatch } from 'react-redux';
+import { fetchProject, IProject } from 'features/projects/common';
+import { useEffect, useState } from 'react';
 
 export interface IParcelDetailProps {
   parcel: IParcel | null;
@@ -21,6 +24,18 @@ export const ParcelPopupView = (props: IParcelDetailProps | null) => {
   const parcelDetail: IParcel | null | undefined = props?.parcel;
   const keycloak = useKeycloakWrapper();
   const location = useLocation();
+  const dispatch = useDispatch();
+  const [projectRoute, setProjectRoute] = useState('');
+
+  useEffect(() => {
+    if (parcelDetail?.projectNumber) {
+      (dispatch(fetchProject(parcelDetail?.projectNumber as string)) as any).then(
+        (project: IProject) => {
+          setProjectRoute(project?.status?.route!);
+        },
+      );
+    }
+  }, [dispatch, parcelDetail]);
 
   return (
     <Container className="parcelPopup" fluid={true}>
@@ -60,9 +75,7 @@ export const ParcelPopupView = (props: IParcelDetailProps | null) => {
                 {parcelDetail?.projectNumber && (
                   <ListGroup.Item>
                     <Label>SPP:</Label>
-                    <Link
-                      to={`/dispose/projects/assess/properties?projectNumber=${parcelDetail?.projectNumber}`}
-                    >
+                    <Link to={`${projectRoute}?projectNumber=${parcelDetail?.projectNumber}`}>
                       {parcelDetail?.projectNumber}
                     </Link>
                   </ListGroup.Item>
