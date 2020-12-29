@@ -112,7 +112,7 @@ const FindMorePropertiesForm = <T extends any>(props: any) => {
             label="Construction type"
           />
           <VerticalLine />
-          <NumberInput label="Net rentable area" field="rentableArea" />
+          <NumberInput label="Net usable area" field="rentableArea" />
         </StyledRow>
       </FormSection>
       <FormSection>
