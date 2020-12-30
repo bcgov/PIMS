@@ -50,7 +50,7 @@ export const columns: ColumnWithProps<IProperty>[] = [
   },
   {
     Header: 'Property Name',
-    accessor: 'description',
+    accessor: 'name',
     align: 'left',
     responsive: true,
     width: spacing.medium,

@@ -24,6 +24,11 @@ namespace Pims.Api.Areas.Reports.Models.Property
         public string Classification { get; set; }
 
         /// <summary>
+        /// get/set - The name of the property.
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
         /// get/set - A description of the property.
         /// </summary>
         public string Description { get; set; }
