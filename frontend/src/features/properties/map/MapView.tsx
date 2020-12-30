@@ -21,6 +21,8 @@ import _ from 'lodash';
 import MapSideBarContainer from 'features/mapSideBar/containers/MapSideBarContainer';
 import classNames from 'classnames';
 import { FilterProvider } from 'components/maps/providers/FIlterProvider';
+import { useLocation } from 'react-router-dom';
+import queryString from 'query-string';
 
 /** rough center of bc Itcha Ilgachuz Provincial Park */
 const defaultLatLng = {
@@ -76,6 +78,10 @@ const MapView: React.FC<MapViewProps> = (props: MapViewProps) => {
   };
 
   const { showSideBar } = useParamSideBar();
+
+  const location = useLocation();
+  const urlParsed = queryString.parse(location.search);
+  const disableFilter = urlParsed.sidebar === 'true' ? true : false;
   return (
     <div className={classNames(showSideBar ? 'side-bar' : '', 'd-flex')}>
       <MapSideBarContainer
@@ -130,7 +136,7 @@ const MapView: React.FC<MapViewProps> = (props: MapViewProps) => {
             }
           }}
           onMapClick={saveLatLng}
-          disableMapFilterBar={props.disableMapFilterBar}
+          disableMapFilterBar={disableFilter}
           interactive={!props.disabled}
           showParcelBoundaries={props.showParcelBoundaries ?? true}
           zoom={6}
