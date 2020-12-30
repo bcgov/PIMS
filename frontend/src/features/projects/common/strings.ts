@@ -2,18 +2,19 @@ export const clickableTooltip = 'Click to view property details';
 export const updateInfoMessage =
   'Please make any necessary updates to the valuation information and the classification.';
 
-export const tier1Tooltip = 'Tier 1: Properties with a net value of less than $1M.';
-export const tier2Tooltip =
-  'Tier 2: Properties with a net value of $1M or more and less than $10M.';
-export const tier3Tooltip =
-  'Tier 3: Properties are single parcels with a net value of $10M or more.';
-export const tier4Tooltip =
-  'Tier 4: Properties are multiple parcels with a cumulative net value of $10M or more.';
+export const tierTooltips = {
+  tier1Tooltip: 'Tier 1: Properties with a net value less than $1M.',
+  tier2Tooltip: 'Tier 2: Properties with a net value of $1M or more and less than $10M.',
+  tier3Tooltip: 'Tier 3: Properties are single parcels with a net value of $10M or more.',
+  tier4Tooltip:
+    'Tier 4: Properties are multiple parcels with a cumulative net value of $10M or more.',
+};
 
-export const risk1Tooltip = 'Complete: 100% of the property value.';
-export const risk2Tooltip = 'Green: 90% of the property value.';
-export const risk3Tooltip = 'Yellow: 50% of the property value.';
-export const risk4Tooltip = 'Red: 0% of the property value';
+export const riskTooltips = {
+  risk1Tooltip: 'Green: 90-100% of the property value.',
+  risk2Tooltip: 'Yellow: 50% of the property value.',
+  risk3Tooltip: 'Red: 0% of the property value',
+};
 
 export const projectNoDescription =
   'This is a temporary number during draft state. A project number will be assigned when you submit this application.';
@@ -32,7 +33,8 @@ export const onTransferredWithinTheGreTooltip =
 export const clearanceNotifictionSent =
   'Enter Clearance Notification Sent date to be able to Proceed to SPL or Not Include in SPL.';
 export const requestForSplReceivedOn =
-  'Enter the data the request to be added to SPL was received on.';
+  'Enter the date of the request to be added to SPL was received on.';
+export const approvedForSplOn = 'Enter the date the request to be added to SPL was approved on.';
 export const updatePimsWarning =
   'Please ensure all the updated information is correct before clicking Update PIMS.';
 export const proceedToSplWarning = `Are you sure you want to approve this project for the Surplus Properties List?`;

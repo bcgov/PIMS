@@ -9,7 +9,7 @@ import * as actionTypes from 'constants/actionTypes';
 import * as reducerTypes from 'constants/reducerTypes';
 import * as API from 'constants/API';
 import { ManageUsersPage } from './ManageUsersPage';
-import { fireEvent, render, wait } from '@testing-library/react';
+import { cleanup, fireEvent, render, wait } from '@testing-library/react';
 import moment from 'moment-timezone';
 
 const history = createMemoryHistory();
@@ -72,6 +72,9 @@ const getStore = (includeDate?: boolean) =>
   });
 
 describe('Manage Users Component', () => {
+  afterEach(() => {
+    cleanup();
+  });
   const testRender = (store: any) =>
     render(
       <Provider store={store}>
@@ -92,8 +95,8 @@ describe('Manage Users Component', () => {
     expect(rows.length).toBe(2);
   });
 
-  it('displays enabled agencies via autocomplete', async () => {
-    const { getAllByRole, container } = testRender(getStore());
+  it('displays agencies dropdown', async () => {
+    const { getByRole, container } = testRender(getStore());
     const agency = container.querySelector('input[name="agency"]');
 
     await wait(() => {
@@ -103,12 +106,7 @@ describe('Manage Users Component', () => {
         },
       });
     });
-    expect(getAllByRole('option')[0]).toHaveTextContent('agencyVal');
-  });
-
-  it('Does not display disabled agencies', () => {
-    const { queryByText } = testRender(getStore());
-    expect(queryByText('disabledAgency')).toBeNull();
+    expect(getByRole('listbox')).toBeInTheDocument();
   });
 
   it('displays enabled roles', () => {

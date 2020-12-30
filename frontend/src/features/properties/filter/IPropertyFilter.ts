@@ -25,9 +25,21 @@ export interface IPropertyFilter {
   /** The maxium lot size of the property. */
   maxLotSize: string;
   /** Whether the property is in SPP. */
-  inSurplusPropertyProgram?: string;
+  inSurplusPropertyProgram?: boolean;
   /** Whether the property is in ERP. */
-  inEnhancedReferralProcess?: string;
+  inEnhancedReferralProcess?: boolean;
   /** Select on of the property types [Land, Building]. */
   propertyType?: string;
+  /** The name of desired target */
+  name?: string;
+  /** The building construction type id */
+  constructionTypeId?: string;
+  /** The building predominant use id */
+  predominateUseId?: string;
+  /** The building number of floors */
+  floorCount?: string;
+  /** Flag for whether to include buildings */
+  bareLandOnly?: boolean;
+  /** filter for building rentable area */
+  rentableArea: string;
 }

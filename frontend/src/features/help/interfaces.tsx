@@ -3,7 +3,9 @@ import { ReactNode } from 'react';
 export enum HelpPageKeys {
   LANDING_PAGE = '/mapview',
   INVENTORY_PAGE = '/properties/list',
-  PROPERTY_DETAIL_PAGE = '/mapview',
+  PROPERTY_DETAIL_PAGE = 'sidebar=true',
+  CREATE_PROJECT = '/dispose/projects',
+  ASSESS_PROJECT = '/projects/assess',
 }
 
 export interface IHelpPage {
@@ -26,4 +28,7 @@ export enum Topics {
   INVENTORY_NAVIGATION = 'Navigation',
   DETAIL_VIEW = 'View',
   DETAIL_NAVIGATION = 'Navigation',
+  CREATE_PROJECT_NAVIGATION = 'Navigation',
+  CREATE_PROJECT_STEPS = 'Steps',
+  ASSESS_PROJECT = 'Assess',
 }

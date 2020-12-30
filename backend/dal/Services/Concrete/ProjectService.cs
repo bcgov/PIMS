@@ -520,6 +520,7 @@ namespace Pims.Dal.Services
 
             // Determine if there are any response changes.
             var responses = project.GetResponseChanges(project);
+            originalProject.UpdateResponses(project);
 
             // If the note was changed generate a notification for it.
             var noteChanged = !String.IsNullOrWhiteSpace(project.GetNoteText(NoteTypes.Public)) && originalProject.GetNoteText(NoteTypes.Public) != project.GetNoteText(NoteTypes.Public);
@@ -709,6 +710,7 @@ namespace Pims.Dal.Services
 
             // Determine if there are any response changes.
             var responses = project.GetResponseChanges(project);
+            originalProject.UpdateResponses(project);
 
             // If the note was changed generate a notification for it.
             var noteChanged = !String.IsNullOrWhiteSpace(project.GetNoteText(NoteTypes.Public)) && originalProject.GetNoteText(NoteTypes.Public) != project.GetNoteText(NoteTypes.Public);
@@ -741,14 +743,15 @@ namespace Pims.Dal.Services
                     break;
                 case ("AP-EXE"): // Approve for ERP Exemption
                     this.User.ThrowIfNotAuthorized(Permissions.DisposeApprove, "User does not have permission to approve project.");
+                    if (metadata.ExemptionApprovedOn == null) throw new InvalidOperationException("ADM approved exemption on date is required before approving.");
                     originalProject.ApprovedOn = now;
                     break;
                 case ("AP-SPL"): // Approve for SPL
                     this.User.ThrowIfNotAuthorized(Permissions.DisposeApprove, "User does not have permission to approve project.");
                     if (metadata.ClearanceNotificationSentOn == null) throw new InvalidOperationException("Approved for SPL status requires Clearance Notification Sent date.");
-                    if (metadata.RequestForSplReceivedOn == null) throw new InvalidOperationException("Approved for SPL status requires a request for SPL received on date.");
+                    if (metadata.RequestForSplReceivedOn == null) throw new InvalidOperationException("Approved for SPL status requires the date when the request was received.");
+                    if (metadata.ApprovedForSplOn == null) throw new InvalidOperationException("Approved for SPL status requires the date when the request for SPL was approved on.");
                     originalProject.ApprovedOn = originalProject.ApprovedOn.HasValue ? originalProject.ApprovedOn : now; // Only set the date it hasn't been set yet.
-                    metadata.ApprovedForSplOn = now;
                     this.Context.SetProjectPropertiesVisiblity(originalProject, false);
                     originalProject.SubmittedOn = now;
                     break;

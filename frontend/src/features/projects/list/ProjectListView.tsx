@@ -16,7 +16,7 @@ import { FaFolder, FaFolderOpen, FaFileExcel, FaFileAlt } from 'react-icons/fa';
 import { Properties } from './properties';
 import FilterBar from 'components/SearchBar/FilterBar';
 import { Col } from 'react-bootstrap';
-import { Input, Button } from 'components/common/form';
+import { Input, Button, Select } from 'components/common/form';
 import GenericModal from 'components/common/GenericModal';
 import { useHistory } from 'react-router-dom';
 import { ReviewWorkflowStatus, IStatus, fetchProjectStatuses } from '../common';
@@ -36,6 +36,7 @@ interface IProjectFilterState {
   agencyId?: string;
   assessWorkflow?: boolean;
   agencies?: number;
+  fiscalYaer?: number;
 }
 
 const initialValues = {
@@ -208,7 +209,7 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
           reportType === 'generic'
             ? getProjectReportUrl({ ...query, all: true })
             : getProjectFinancialReportUrl({ ...query, all: true }),
-        fileName: `${reportType === 'spl' ? 'spl_report' : 'generic_project_report'}.${
+        fileName: `${reportType === 'spl' ? 'pims-spl-report' : 'pims-projects'}.${
           accept === 'csv' ? 'csv' : 'xlsx'
         }`,
         actionType: 'projects-report',
@@ -267,6 +268,16 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
     }
   };
 
+  const fiscalYears = React.useMemo(() => {
+    const startYear = new Date().getFullYear() - 10;
+    return Array.from(Array(12).keys())
+      .map(i => {
+        var year = startYear + i;
+        return { label: `${year - 1} / ${year}`, value: year };
+      })
+      .reverse();
+  }, []);
+
   return (
     <Container fluid className="ProjectListView">
       <div className="filter-container">
@@ -275,6 +286,9 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
             initialValues={initialValues}
             onChange={handleFilterChange}
           >
+            <Col xs={2} className="bar-item">
+              <Input field="name" placeholder="Search by project name or number" />
+            </Col>
             <Col xs={2} className="bar-item">
               <ParentSelect
                 field={'statusId'}
@@ -294,8 +308,8 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
                 placeholder="Enter an Agency"
               />
             </Col>
-            <Col xs={2} className="bar-item">
-              <Input field="name" placeholder="Search by project name or number" />
+            <Col xs={1} className="bar-item">
+              <Select field="fiscalYear" options={fiscalYears} placeholder="Fiscal Year" />
             </Col>
           </FilterBar>
         )}
@@ -314,20 +328,13 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
         )}
         <Container fluid className="TableToolbar">
           <h3 className="mr-4">{title}</h3>
-          {keycloak.hasClaim(Claims.REPORTS_SPL) && (
-            <TooltipWrapper toolTipId="spl-report" toolTip="View SPL Reports">
-              <Button className="mr-auto" onClick={() => history.push('/reports/spl')}>
-                SPL Report
-              </Button>
-            </TooltipWrapper>
-          )}
           {keycloak.hasClaim(Claims.REPORTS_VIEW) && (
             <>
               <TooltipWrapper toolTipId="export-to-excel" toolTip="Export to Excel">
                 <FileIcon>
                   <FaFileExcel
                     size={36}
-                    title="Export to Excel"
+                    data-testid="excel-icon"
                     onClick={() => fetch('excel', 'generic')}
                   />
                 </FileIcon>
@@ -336,7 +343,7 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
                 <FileIcon>
                   <FaFileAlt
                     size={36}
-                    title="Export to CSV"
+                    data-testid="csv-icon"
                     onClick={() => fetch('csv', 'generic')}
                   />
                 </FileIcon>

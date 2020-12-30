@@ -360,7 +360,7 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
                 aria-hidden="true"
                 class="rbt-input-hint"
                 readonly=""
-                style="background-color: transparent; border-color: transparent; box-shadow: none; color: rgba(0, 0, 0, 0.35); left: 0px; pointer-events: none; position: absolute; top: 0px; width: 100%; border-style: inset inset inset inset; border-width: 2px 2px 2px 2px; line-height: normal; padding: 1px 1px 1px 1px;"
+                style="background-color: transparent; border-color: transparent; box-shadow: none; color: rgba(0, 0, 0, 0.35); left: 0px; pointer-events: none; position: absolute; top: 0px; width: 100%;"
                 tabindex="-1"
                 value=""
               />
@@ -574,7 +574,7 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
           <label
             class="form-label"
           >
-            Net Rentable Area
+            Net Usable Area
           </label>
           <div
             class="input-group required"
@@ -600,7 +600,7 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
               <span
                 class="input-group-text"
               >
-                Sq. Ft
+                Sq. M
               </span>
             </div>
           </div>
@@ -642,60 +642,6 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
           <label
             class="form-label"
           >
-            Type of Current Occupant
-          </label>
-          <div
-            class="required form-group"
-          >
-            <select
-              class="form-control"
-              id="input-buildingOccupantTypeId-fast"
-              name="buildingOccupantTypeId"
-              required=""
-              type="number"
-            >
-              <option
-                value=""
-              >
-                Must Select One
-              </option>
-              <option
-                value="6"
-              >
-                occupent type test
-              </option>
-            </select>
-          </div>
-        </div>
-        <div
-          class="form-row"
-        >
-          <label
-            class="form-label"
-          >
-            Occupant Name
-          </label>
-          <div
-            class="form-group col"
-          >
-            <input
-              class="form-control"
-              id="input-occupantName"
-              name="occupantName"
-              value="occupantName"
-            />
-          </div>
-        </div>
-      </div>
-      <div
-        class="col-md-6"
-      >
-        <div
-          class="form-row"
-        >
-          <label
-            class="form-label"
-          >
             Tenancy %
           </label>
           <div
@@ -707,62 +653,6 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
               name="buildingTenancy"
               value="buildingTenancy"
             />
-          </div>
-        </div>
-        <div
-          class="form-row"
-        >
-          <label
-            class="form-label"
-          >
-            Date Lease Expires
-          </label>
-          <div
-            class="form-group"
-          >
-            <div
-              class="react-datepicker-wrapper"
-            >
-              <div
-                class="react-datepicker__input-container"
-              >
-                <input
-                  autocomplete="off"
-                  class="form-control date-picker is-valid "
-                  id="datepicker-leaseExpiry"
-                  name="leaseExpiry"
-                  placeholder="--/--/----"
-                  type="text"
-                  value="01/01/2020"
-                />
-              </div>
-            </div>
-          </div>
-          <div
-            class="form-group"
-          >
-            <div
-              class="check-field"
-            >
-              <div
-                class="form-check"
-              >
-                <input
-                  checked=""
-                  class="form-check-input position-static"
-                  id="input-transferLeaseOnSale"
-                  name="transferLeaseOnSale"
-                  type="checkbox"
-                  value="true"
-                />
-              </div>
-              <label
-                class="text-wrap form-label"
-                for="input-transferLeaseOnSale"
-              >
-                Lease to be transferred with land
-              </label>
-            </div>
           </div>
         </div>
       </div>
@@ -795,7 +685,11 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
                   role="columnheader"
                   style="box-sizing: border-box; flex: 350 0 auto; min-width: 120px; width: 350px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                 >
-                  Assessed
+                  <div
+                    class="sortable-column"
+                  >
+                    Assessed
+                  </div>
                 </div>
                 <div
                   class="th"
@@ -803,7 +697,11 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
                   role="columnheader"
                   style="box-sizing: border-box; flex: 150 0 auto; min-width: 60px; width: 150px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                 >
-                  Net Book Value
+                  <div
+                    class="sortable-column"
+                  >
+                    Net Book Value
+                  </div>
                 </div>
                 <div
                   class="th"
@@ -811,7 +709,11 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
                   role="columnheader"
                   style="box-sizing: border-box; flex: 150 0 auto; min-width: 60px; width: 150px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                 >
-                  Estimated Market Value
+                  <div
+                    class="sortable-column"
+                  >
+                    Estimated Market Value
+                  </div>
                 </div>
               </div>
               <div
@@ -825,7 +727,11 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
                   role="columnheader"
                   style="box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                 >
-                  Year
+                  <div
+                    class="sortable-column"
+                  >
+                    Year
+                  </div>
                 </div>
                 <div
                   class="th"
@@ -833,7 +739,11 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
                   role="columnheader"
                   style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                 >
-                  Land
+                  <div
+                    class="sortable-column"
+                  >
+                    Land
+                  </div>
                 </div>
                 <div
                   class="th"
@@ -841,7 +751,11 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
                   role="columnheader"
                   style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                 >
-                  Improvements
+                  <div
+                    class="sortable-column"
+                  >
+                    Improvements
+                  </div>
                 </div>
                 <div
                   class="th"
@@ -849,7 +763,11 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
                   role="columnheader"
                   style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                 >
-                  Total
+                  <div
+                    class="sortable-column"
+                  >
+                    Total
+                  </div>
                 </div>
                 <div
                   class="th"
@@ -857,7 +775,11 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
                   role="columnheader"
                   style="box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                 >
-                  Fiscal Year
+                  <div
+                    class="sortable-column"
+                  >
+                    Fiscal Year
+                  </div>
                 </div>
                 <div
                   class="th"
@@ -865,7 +787,11 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
                   role="columnheader"
                   style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                 >
-                  Value
+                  <div
+                    class="sortable-column"
+                  >
+                    Value
+                  </div>
                 </div>
                 <div
                   class="th"
@@ -873,7 +799,11 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
                   role="columnheader"
                   style="box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                 >
-                  Fiscal Year
+                  <div
+                    class="sortable-column"
+                  >
+                    Fiscal Year
+                  </div>
                 </div>
                 <div
                   class="th"
@@ -881,7 +811,11 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
                   role="columnheader"
                   style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                 >
-                  Value
+                  <div
+                    class="sortable-column"
+                  >
+                    Value
+                  </div>
                 </div>
               </div>
             </div>

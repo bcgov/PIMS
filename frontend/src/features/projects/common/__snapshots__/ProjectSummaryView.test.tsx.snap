@@ -12,7 +12,7 @@ exports[`Review Summary View renders approved correctly 1`] = `
   font-family: 'BCSans',Fallback,sans-serif;
 }
 
-.c2 {
+.c3 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -21,6 +21,15 @@ exports[`Review Summary View renders approved correctly 1`] = `
   -webkit-flex-direction: row-reverse;
   -ms-flex-direction: row-reverse;
   flex-direction: row-reverse;
+}
+
+.c2 {
+  padding-left: 10px;
+}
+
+.c2 small {
+  padding-top: 20px;
+  vertical-align: middle;
 }
 
 <div
@@ -157,10 +166,10 @@ exports[`Review Summary View renders approved correctly 1`] = `
         <label
           className="form-label col-form-label col-md-2"
         >
-          Assign Tier 
+          Assign Tier
         </label>
         <div
-          className="required col-md-2 form-group"
+          className="required col-md-1 form-group"
         >
           <select
             className="form-select form-control"
@@ -179,36 +188,12 @@ exports[`Review Summary View renders approved correctly 1`] = `
             </option>
           </select>
         </div>
-      </div>
-      <div
-        className="form-row"
-      >
-        <label
-          className="form-label col-form-label col-md-2"
-        />
         <div
-          className="form-group"
+          className="c2"
         >
-          <div>
-            <small>
-              Tier 1: Properties with a net value of less than $1M.
-            </small>
-          </div>
-          <div>
-            <small>
-              Tier 2: Properties with a net value of $1M or more and less than $10M.
-            </small>
-          </div>
-          <div>
-            <small>
-              Tier 3: Properties are single parcels with a net value of $10M or more.
-            </small>
-          </div>
-          <div>
-            <small>
-              Tier 4: Properties are multiple parcels with a cumulative net value of $10M or more.
-            </small>
-          </div>
+          <small>
+            Tier 1: Properties with a net value less than $1M.
+          </small>
         </div>
       </div>
       <div
@@ -451,7 +436,6 @@ exports[`Review Summary View renders approved correctly 1`] = `
                 <div
                   className="th"
                   colSpan={1}
-                  onClick={[Function]}
                   role="columnheader"
                   style={
                     Object {
@@ -466,12 +450,15 @@ exports[`Review Summary View renders approved correctly 1`] = `
                     }
                   }
                 >
-                  Agency
+                  <div
+                    className="sortable-column"
+                  >
+                    Agency
+                  </div>
                 </div>
                 <div
                   className="th"
                   colSpan={1}
-                  onClick={[Function]}
                   role="columnheader"
                   style={
                     Object {
@@ -486,12 +473,15 @@ exports[`Review Summary View renders approved correctly 1`] = `
                     }
                   }
                 >
-                  Name
+                  <div
+                    className="sortable-column"
+                  >
+                    Name
+                  </div>
                 </div>
                 <div
                   className="th"
                   colSpan={1}
-                  onClick={[Function]}
                   role="columnheader"
                   style={
                     Object {
@@ -506,12 +496,15 @@ exports[`Review Summary View renders approved correctly 1`] = `
                     }
                   }
                 >
-                  Civic Address
+                  <div
+                    className="sortable-column"
+                  >
+                    Civic Address
+                  </div>
                 </div>
                 <div
                   className="th"
                   colSpan={1}
-                  onClick={[Function]}
                   role="columnheader"
                   style={
                     Object {
@@ -526,12 +519,15 @@ exports[`Review Summary View renders approved correctly 1`] = `
                     }
                   }
                 >
-                  Classification
+                  <div
+                    className="sortable-column"
+                  >
+                    Classification
+                  </div>
                 </div>
                 <div
                   className="th"
                   colSpan={1}
-                  onClick={[Function]}
                   role="columnheader"
                   style={
                     Object {
@@ -546,12 +542,15 @@ exports[`Review Summary View renders approved correctly 1`] = `
                     }
                   }
                 >
-                  Current Zoning Code
+                  <div
+                    className="sortable-column"
+                  >
+                    Current Zoning Code
+                  </div>
                 </div>
                 <div
                   className="th"
                   colSpan={1}
-                  onClick={[Function]}
                   role="columnheader"
                   style={
                     Object {
@@ -566,12 +565,15 @@ exports[`Review Summary View renders approved correctly 1`] = `
                     }
                   }
                 >
-                  Potential Zoning Code
+                  <div
+                    className="sortable-column"
+                  >
+                    Potential Zoning Code
+                  </div>
                 </div>
                 <div
                   className="th"
                   colSpan={1}
-                  onClick={[Function]}
                   role="columnheader"
                   style={
                     Object {
@@ -586,12 +588,15 @@ exports[`Review Summary View renders approved correctly 1`] = `
                     }
                   }
                 >
-                  Net Book Value
+                  <div
+                    className="sortable-column"
+                  >
+                    Net Book Value
+                  </div>
                 </div>
                 <div
                   className="th"
                   colSpan={1}
-                  onClick={[Function]}
                   role="columnheader"
                   style={
                     Object {
@@ -606,12 +611,15 @@ exports[`Review Summary View renders approved correctly 1`] = `
                     }
                   }
                 >
-                  Market Value
+                  <div
+                    className="sortable-column"
+                  >
+                    Market Value
+                  </div>
                 </div>
                 <div
                   className="th"
                   colSpan={1}
-                  onClick={[Function]}
                   role="columnheader"
                   style={
                     Object {
@@ -626,12 +634,15 @@ exports[`Review Summary View renders approved correctly 1`] = `
                     }
                   }
                 >
-                  Assessed Value
+                  <div
+                    className="sortable-column"
+                  >
+                    Assessed Value
+                  </div>
                 </div>
                 <div
                   className="th"
                   colSpan={1}
-                  onClick={[Function]}
                   role="columnheader"
                   style={
                     Object {
@@ -646,7 +657,11 @@ exports[`Review Summary View renders approved correctly 1`] = `
                     }
                   }
                 >
-                  Type
+                  <div
+                    className="sortable-column"
+                  >
+                    Type
+                  </div>
                 </div>
               </div>
             </div>
@@ -838,7 +853,7 @@ exports[`Review Summary View renders approved correctly 1`] = `
       }
     />
     <div
-      className="c2"
+      className="c3"
     >
       <button
         className="btn btn-primary"
@@ -878,7 +893,7 @@ exports[`Review Summary View renders denied correctly 1`] = `
   font-family: 'BCSans',Fallback,sans-serif;
 }
 
-.c2 {
+.c3 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -887,6 +902,15 @@ exports[`Review Summary View renders denied correctly 1`] = `
   -webkit-flex-direction: row-reverse;
   -ms-flex-direction: row-reverse;
   flex-direction: row-reverse;
+}
+
+.c2 {
+  padding-left: 10px;
+}
+
+.c2 small {
+  padding-top: 20px;
+  vertical-align: middle;
 }
 
 <div
@@ -1023,10 +1047,10 @@ exports[`Review Summary View renders denied correctly 1`] = `
         <label
           className="form-label col-form-label col-md-2"
         >
-          Assign Tier 
+          Assign Tier
         </label>
         <div
-          className="required col-md-2 form-group"
+          className="required col-md-1 form-group"
         >
           <select
             className="form-select form-control"
@@ -1045,36 +1069,12 @@ exports[`Review Summary View renders denied correctly 1`] = `
             </option>
           </select>
         </div>
-      </div>
-      <div
-        className="form-row"
-      >
-        <label
-          className="form-label col-form-label col-md-2"
-        />
         <div
-          className="form-group"
+          className="c2"
         >
-          <div>
-            <small>
-              Tier 1: Properties with a net value of less than $1M.
-            </small>
-          </div>
-          <div>
-            <small>
-              Tier 2: Properties with a net value of $1M or more and less than $10M.
-            </small>
-          </div>
-          <div>
-            <small>
-              Tier 3: Properties are single parcels with a net value of $10M or more.
-            </small>
-          </div>
-          <div>
-            <small>
-              Tier 4: Properties are multiple parcels with a cumulative net value of $10M or more.
-            </small>
-          </div>
+          <small>
+            Tier 1: Properties with a net value less than $1M.
+          </small>
         </div>
       </div>
       <div
@@ -1317,7 +1317,6 @@ exports[`Review Summary View renders denied correctly 1`] = `
                 <div
                   className="th"
                   colSpan={1}
-                  onClick={[Function]}
                   role="columnheader"
                   style={
                     Object {
@@ -1332,12 +1331,15 @@ exports[`Review Summary View renders denied correctly 1`] = `
                     }
                   }
                 >
-                  Agency
+                  <div
+                    className="sortable-column"
+                  >
+                    Agency
+                  </div>
                 </div>
                 <div
                   className="th"
                   colSpan={1}
-                  onClick={[Function]}
                   role="columnheader"
                   style={
                     Object {
@@ -1352,12 +1354,15 @@ exports[`Review Summary View renders denied correctly 1`] = `
                     }
                   }
                 >
-                  Name
+                  <div
+                    className="sortable-column"
+                  >
+                    Name
+                  </div>
                 </div>
                 <div
                   className="th"
                   colSpan={1}
-                  onClick={[Function]}
                   role="columnheader"
                   style={
                     Object {
@@ -1372,12 +1377,15 @@ exports[`Review Summary View renders denied correctly 1`] = `
                     }
                   }
                 >
-                  Civic Address
+                  <div
+                    className="sortable-column"
+                  >
+                    Civic Address
+                  </div>
                 </div>
                 <div
                   className="th"
                   colSpan={1}
-                  onClick={[Function]}
                   role="columnheader"
                   style={
                     Object {
@@ -1392,12 +1400,15 @@ exports[`Review Summary View renders denied correctly 1`] = `
                     }
                   }
                 >
-                  Classification
+                  <div
+                    className="sortable-column"
+                  >
+                    Classification
+                  </div>
                 </div>
                 <div
                   className="th"
                   colSpan={1}
-                  onClick={[Function]}
                   role="columnheader"
                   style={
                     Object {
@@ -1412,12 +1423,15 @@ exports[`Review Summary View renders denied correctly 1`] = `
                     }
                   }
                 >
-                  Current Zoning Code
+                  <div
+                    className="sortable-column"
+                  >
+                    Current Zoning Code
+                  </div>
                 </div>
                 <div
                   className="th"
                   colSpan={1}
-                  onClick={[Function]}
                   role="columnheader"
                   style={
                     Object {
@@ -1432,12 +1446,15 @@ exports[`Review Summary View renders denied correctly 1`] = `
                     }
                   }
                 >
-                  Potential Zoning Code
+                  <div
+                    className="sortable-column"
+                  >
+                    Potential Zoning Code
+                  </div>
                 </div>
                 <div
                   className="th"
                   colSpan={1}
-                  onClick={[Function]}
                   role="columnheader"
                   style={
                     Object {
@@ -1452,12 +1469,15 @@ exports[`Review Summary View renders denied correctly 1`] = `
                     }
                   }
                 >
-                  Net Book Value
+                  <div
+                    className="sortable-column"
+                  >
+                    Net Book Value
+                  </div>
                 </div>
                 <div
                   className="th"
                   colSpan={1}
-                  onClick={[Function]}
                   role="columnheader"
                   style={
                     Object {
@@ -1472,12 +1492,15 @@ exports[`Review Summary View renders denied correctly 1`] = `
                     }
                   }
                 >
-                  Market Value
+                  <div
+                    className="sortable-column"
+                  >
+                    Market Value
+                  </div>
                 </div>
                 <div
                   className="th"
                   colSpan={1}
-                  onClick={[Function]}
                   role="columnheader"
                   style={
                     Object {
@@ -1492,12 +1515,15 @@ exports[`Review Summary View renders denied correctly 1`] = `
                     }
                   }
                 >
-                  Assessed Value
+                  <div
+                    className="sortable-column"
+                  >
+                    Assessed Value
+                  </div>
                 </div>
                 <div
                   className="th"
                   colSpan={1}
-                  onClick={[Function]}
                   role="columnheader"
                   style={
                     Object {
@@ -1512,7 +1538,11 @@ exports[`Review Summary View renders denied correctly 1`] = `
                     }
                   }
                 >
-                  Type
+                  <div
+                    className="sortable-column"
+                  >
+                    Type
+                  </div>
                 </div>
               </div>
             </div>
@@ -1704,7 +1734,7 @@ exports[`Review Summary View renders denied correctly 1`] = `
       }
     />
     <div
-      className="c2"
+      className="c3"
     >
       <button
         className="btn btn-primary"
@@ -1744,7 +1774,7 @@ exports[`Review Summary View renders submitted correctly 1`] = `
   font-family: 'BCSans',Fallback,sans-serif;
 }
 
-.c2 {
+.c3 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -1753,6 +1783,15 @@ exports[`Review Summary View renders submitted correctly 1`] = `
   -webkit-flex-direction: row-reverse;
   -ms-flex-direction: row-reverse;
   flex-direction: row-reverse;
+}
+
+.c2 {
+  padding-left: 10px;
+}
+
+.c2 small {
+  padding-top: 20px;
+  vertical-align: middle;
 }
 
 <div
@@ -1889,10 +1928,10 @@ exports[`Review Summary View renders submitted correctly 1`] = `
         <label
           className="form-label col-form-label col-md-2"
         >
-          Assign Tier 
+          Assign Tier
         </label>
         <div
-          className="required col-md-2 form-group"
+          className="required col-md-1 form-group"
         >
           <select
             className="form-select form-control"
@@ -1911,36 +1950,12 @@ exports[`Review Summary View renders submitted correctly 1`] = `
             </option>
           </select>
         </div>
-      </div>
-      <div
-        className="form-row"
-      >
-        <label
-          className="form-label col-form-label col-md-2"
-        />
         <div
-          className="form-group"
+          className="c2"
         >
-          <div>
-            <small>
-              Tier 1: Properties with a net value of less than $1M.
-            </small>
-          </div>
-          <div>
-            <small>
-              Tier 2: Properties with a net value of $1M or more and less than $10M.
-            </small>
-          </div>
-          <div>
-            <small>
-              Tier 3: Properties are single parcels with a net value of $10M or more.
-            </small>
-          </div>
-          <div>
-            <small>
-              Tier 4: Properties are multiple parcels with a cumulative net value of $10M or more.
-            </small>
-          </div>
+          <small>
+            Tier 1: Properties with a net value less than $1M.
+          </small>
         </div>
       </div>
       <div
@@ -2183,7 +2198,6 @@ exports[`Review Summary View renders submitted correctly 1`] = `
                 <div
                   className="th"
                   colSpan={1}
-                  onClick={[Function]}
                   role="columnheader"
                   style={
                     Object {
@@ -2198,12 +2212,15 @@ exports[`Review Summary View renders submitted correctly 1`] = `
                     }
                   }
                 >
-                  Agency
+                  <div
+                    className="sortable-column"
+                  >
+                    Agency
+                  </div>
                 </div>
                 <div
                   className="th"
                   colSpan={1}
-                  onClick={[Function]}
                   role="columnheader"
                   style={
                     Object {
@@ -2218,12 +2235,15 @@ exports[`Review Summary View renders submitted correctly 1`] = `
                     }
                   }
                 >
-                  Name
+                  <div
+                    className="sortable-column"
+                  >
+                    Name
+                  </div>
                 </div>
                 <div
                   className="th"
                   colSpan={1}
-                  onClick={[Function]}
                   role="columnheader"
                   style={
                     Object {
@@ -2238,12 +2258,15 @@ exports[`Review Summary View renders submitted correctly 1`] = `
                     }
                   }
                 >
-                  Civic Address
+                  <div
+                    className="sortable-column"
+                  >
+                    Civic Address
+                  </div>
                 </div>
                 <div
                   className="th"
                   colSpan={1}
-                  onClick={[Function]}
                   role="columnheader"
                   style={
                     Object {
@@ -2258,12 +2281,15 @@ exports[`Review Summary View renders submitted correctly 1`] = `
                     }
                   }
                 >
-                  Classification
+                  <div
+                    className="sortable-column"
+                  >
+                    Classification
+                  </div>
                 </div>
                 <div
                   className="th"
                   colSpan={1}
-                  onClick={[Function]}
                   role="columnheader"
                   style={
                     Object {
@@ -2278,12 +2304,15 @@ exports[`Review Summary View renders submitted correctly 1`] = `
                     }
                   }
                 >
-                  Current Zoning Code
+                  <div
+                    className="sortable-column"
+                  >
+                    Current Zoning Code
+                  </div>
                 </div>
                 <div
                   className="th"
                   colSpan={1}
-                  onClick={[Function]}
                   role="columnheader"
                   style={
                     Object {
@@ -2298,12 +2327,15 @@ exports[`Review Summary View renders submitted correctly 1`] = `
                     }
                   }
                 >
-                  Potential Zoning Code
+                  <div
+                    className="sortable-column"
+                  >
+                    Potential Zoning Code
+                  </div>
                 </div>
                 <div
                   className="th"
                   colSpan={1}
-                  onClick={[Function]}
                   role="columnheader"
                   style={
                     Object {
@@ -2318,12 +2350,15 @@ exports[`Review Summary View renders submitted correctly 1`] = `
                     }
                   }
                 >
-                  Net Book Value
+                  <div
+                    className="sortable-column"
+                  >
+                    Net Book Value
+                  </div>
                 </div>
                 <div
                   className="th"
                   colSpan={1}
-                  onClick={[Function]}
                   role="columnheader"
                   style={
                     Object {
@@ -2338,12 +2373,15 @@ exports[`Review Summary View renders submitted correctly 1`] = `
                     }
                   }
                 >
-                  Market Value
+                  <div
+                    className="sortable-column"
+                  >
+                    Market Value
+                  </div>
                 </div>
                 <div
                   className="th"
                   colSpan={1}
-                  onClick={[Function]}
                   role="columnheader"
                   style={
                     Object {
@@ -2358,12 +2396,15 @@ exports[`Review Summary View renders submitted correctly 1`] = `
                     }
                   }
                 >
-                  Assessed Value
+                  <div
+                    className="sortable-column"
+                  >
+                    Assessed Value
+                  </div>
                 </div>
                 <div
                   className="th"
                   colSpan={1}
-                  onClick={[Function]}
                   role="columnheader"
                   style={
                     Object {
@@ -2378,7 +2419,11 @@ exports[`Review Summary View renders submitted correctly 1`] = `
                     }
                   }
                 >
-                  Type
+                  <div
+                    className="sortable-column"
+                  >
+                    Type
+                  </div>
                 </div>
               </div>
             </div>
@@ -2570,7 +2615,7 @@ exports[`Review Summary View renders submitted correctly 1`] = `
       }
     />
     <div
-      className="c2"
+      className="c3"
     >
       <button
         className="btn btn-primary"

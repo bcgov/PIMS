@@ -177,7 +177,7 @@ namespace Pims.Api.Test.Controllers.Tools
                     Risk = "Risk",
                     Manager = "Manager",
                     Description = "Description",
-                    AgencyResponseDate = DateTime.UtcNow.AddDays(1),
+                    InterestedReceivedOn = DateTime.UtcNow.AddDays(1),
                     CompletedOn = DateTime.UtcNow.AddDays(2),
                     MarketedOn = DateTime.UtcNow.AddDays(3),
                     Notes = new [] { new KeyValuePair<string, string>("Private", "Note"), new KeyValuePair<string, string>("Financial", "Note") },
@@ -240,7 +240,7 @@ namespace Pims.Api.Test.Controllers.Tools
             first.Notes.Last().Note.Should().Be(expectedResult.Notes.FirstOrDefault(n => n.Key == "Financial").Value);
             first.Responses.Should().HaveCount(1);
             first.Responses.First().Response.Should().Be(Entity.NotificationResponses.Watch);
-            first.Responses.First().ReceivedOn.Should().Be(expectedResult.AgencyResponseDate.Value);
+            first.Responses.First().ReceivedOn.Should().Be(expectedResult.InterestedReceivedOn.Value);
             project.Snapshots.Should().HaveCount(1);
 
             var metadata = JsonSerializer.Deserialize<Entity.Models.DisposalProjectSnapshotMetadata>(project.Snapshots.First().Metadata);
@@ -294,7 +294,7 @@ namespace Pims.Api.Test.Controllers.Tools
                     Risk = "Risk",
                     Manager = "Manager",
                     Description = "Description",
-                    AgencyResponseDate = DateTime.UtcNow.AddDays(1),
+                    InterestedReceivedOn = DateTime.UtcNow.AddDays(1),
                     CompletedOn = DateTime.UtcNow.AddDays(2),
                     MarketedOn = DateTime.UtcNow.AddDays(3),
                     Notes = new [] { new KeyValuePair<string, string>("Financial", "Note"), new KeyValuePair<string, string>("Private", "Note") },
@@ -348,7 +348,7 @@ namespace Pims.Api.Test.Controllers.Tools
             first.Notes.First().Note.Should().Be(expectedResult.Notes.FirstOrDefault(n => n.Key == "Financial").Value);
             first.Responses.Should().HaveCount(1);
             first.Responses.First().Response.Should().Be(Entity.NotificationResponses.Watch);
-            first.Responses.First().ReceivedOn.Should().Be(expectedResult.AgencyResponseDate.Value);
+            first.Responses.First().ReceivedOn.Should().Be(expectedResult.InterestedReceivedOn.Value);
             project.Snapshots.Should().BeEmpty();
             project.Tasks.Should().BeEmpty();
         }
@@ -400,7 +400,7 @@ namespace Pims.Api.Test.Controllers.Tools
                     Risk = "Risk",
                     Manager = "Manager",
                     Description = "Description",
-                    AgencyResponseDate = DateTime.UtcNow.AddDays(1),
+                    InterestedReceivedOn = DateTime.UtcNow.AddDays(1),
                     CompletedOn = DateTime.UtcNow.AddDays(2),
                     MarketedOn = DateTime.UtcNow.AddDays(3),
                     Notes = new [] { new KeyValuePair<string, string>("Financial", "Note"), new KeyValuePair<string, string>("Private", "Note") },
@@ -454,7 +454,7 @@ namespace Pims.Api.Test.Controllers.Tools
             first.Notes.First().Note.Should().Be(expectedResult.Notes.FirstOrDefault(n => n.Key == "Financial").Value);
             first.Responses.Should().HaveCount(1);
             first.Responses.First().Response.Should().Be(Entity.NotificationResponses.Watch);
-            first.Responses.First().ReceivedOn.Should().Be(expectedResult.AgencyResponseDate.Value);
+            first.Responses.First().ReceivedOn.Should().Be(expectedResult.InterestedReceivedOn.Value);
             project.Snapshots.Should().BeEmpty();
             project.Tasks.Should().BeEmpty();
         }
@@ -658,7 +658,8 @@ namespace Pims.Api.Test.Controllers.Tools
             first.Notes.Should().HaveCount(2);
             first.Notes.First().NoteType.Should().Be(Entity.NoteTypes.Financial);
             first.PrivateNote.Should().Be(expectedResult.Notes.FirstOrDefault(n => n.Key == "Private").Value);
-            first.Notes.First().Note.Should().Be($"some note{Environment.NewLine}{Environment.NewLine}{expectedResult.Notes.FirstOrDefault(n => n.Key == "Financial").Value}");
+            var expectedFinancialNote = expectedResult.Notes.FirstOrDefault(n => n.Key == "Financial");
+            first.Notes.First().Note.Should().Be($"some note{Environment.NewLine}{Environment.NewLine}{expectedFinancialNote.Key}{Environment.NewLine}{expectedFinancialNote.Value}");
             first.Responses.Should().BeEmpty();
             project.Snapshots.Should().BeEmpty();
             project.Tasks.Should().BeEmpty();
@@ -886,7 +887,7 @@ namespace Pims.Api.Test.Controllers.Tools
                     ReportedFiscalYear = 2021,
                     Manager = "Manager",
                     Description = "Description",
-                    AgencyResponseDate = DateTime.UtcNow.AddDays(1),
+                    InterestedReceivedOn = DateTime.UtcNow.AddDays(1),
                     CompletedOn = DateTime.UtcNow.AddDays(2),
                     MarketedOn = DateTime.UtcNow.AddDays(3),
                     Notes = new [] { new KeyValuePair<string, string>("Financial", "Note"), new KeyValuePair<string, string>("Private", "Note") },
@@ -940,7 +941,7 @@ namespace Pims.Api.Test.Controllers.Tools
             first.Notes.First().Note.Should().Be(expectedResult.Notes.FirstOrDefault(n => n.Key == "Financial").Value);
             first.Responses.Should().HaveCount(1);
             first.Responses.First().Response.Should().Be(Entity.NotificationResponses.Watch);
-            first.Responses.First().ReceivedOn.Should().Be(expectedResult.AgencyResponseDate.Value);
+            first.Responses.First().ReceivedOn.Should().Be(expectedResult.InterestedReceivedOn.Value);
             project.Snapshots.Should().HaveCount(1);
 
             var metadata = JsonSerializer.Deserialize<Entity.Models.DisposalProjectSnapshotMetadata>(project.Snapshots.First().Metadata);
@@ -993,7 +994,7 @@ namespace Pims.Api.Test.Controllers.Tools
                     Risk = "Risk",
                     Manager = "Manager",
                     Description = "Description",
-                    AgencyResponseDate = DateTime.UtcNow.AddDays(1),
+                    InterestedReceivedOn = DateTime.UtcNow.AddDays(1),
                     CompletedOn = DateTime.UtcNow.AddDays(2),
                     MarketedOn = DateTime.UtcNow.AddDays(3),
                     Notes = new [] { new KeyValuePair<string, string>("Private", "Note"), new KeyValuePair<string, string>("Financial", "Note") },
@@ -1059,7 +1060,7 @@ namespace Pims.Api.Test.Controllers.Tools
                     Risk = "Risk",
                     Manager = "Manager",
                     Description = "Description",
-                    AgencyResponseDate = DateTime.UtcNow.AddDays(1),
+                    InterestedReceivedOn = DateTime.UtcNow.AddDays(1),
                     CompletedOn = DateTime.UtcNow.AddDays(2),
                     MarketedOn = DateTime.UtcNow.AddDays(3),
                     Notes = new [] { new KeyValuePair<string, string>("Private", "Note"), new KeyValuePair<string, string>("Financial", "Note") },
@@ -1125,7 +1126,7 @@ namespace Pims.Api.Test.Controllers.Tools
                     Risk = "Risk",
                     Manager = "Manager",
                     Description = "Description",
-                    AgencyResponseDate = DateTime.UtcNow.AddDays(1),
+                    InterestedReceivedOn = DateTime.UtcNow.AddDays(1),
                     CompletedOn = DateTime.UtcNow.AddDays(2),
                     MarketedOn = DateTime.UtcNow.AddDays(3),
                     Notes = new [] { new KeyValuePair<string, string>("Private", "Note"), new KeyValuePair<string, string>("Financial", "Note") },
@@ -1191,7 +1192,7 @@ namespace Pims.Api.Test.Controllers.Tools
                     Risk = "Risk",
                     Manager = "Manager",
                     Description = "Description",
-                    AgencyResponseDate = DateTime.UtcNow.AddDays(1),
+                    InterestedReceivedOn = DateTime.UtcNow.AddDays(1),
                     CompletedOn = DateTime.UtcNow.AddDays(2),
                     MarketedOn = DateTime.UtcNow.AddDays(3),
                     Notes = new [] { new KeyValuePair<string, string>("Private", "Note"), new KeyValuePair<string, string>("Financial", "Note") },

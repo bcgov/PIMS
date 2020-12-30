@@ -21,6 +21,8 @@ import _ from 'lodash';
 import MapSideBarContainer from 'features/mapSideBar/containers/MapSideBarContainer';
 import classNames from 'classnames';
 import { FilterProvider } from 'components/maps/providers/FIlterProvider';
+import { useLocation } from 'react-router-dom';
+import queryString from 'query-string';
 
 /** rough center of bc Itcha Ilgachuz Provincial Park */
 const defaultLatLng = {
@@ -61,6 +63,9 @@ const MapView: React.FC<MapViewProps> = (props: MapViewProps) => {
   const propertyClassifications = _.filter(lookupCodes, (lookupCode: ILookupCode) => {
     return lookupCode.type === API.PROPERTY_CLASSIFICATION_CODE_SET_NAME && !!lookupCode.isVisible;
   });
+  const administrativeAreas = _.filter(lookupCodes, (lookupCode: ILookupCode) => {
+    return lookupCode.type === API.AMINISTRATIVE_AREA_CODE_SET_NAME;
+  });
   const [selectedDraftProperty, setSelectedDraftProperty] = useState<IPropertyDetail | null>(null);
 
   const lotSizes = fetchLotSizes();
@@ -73,6 +78,10 @@ const MapView: React.FC<MapViewProps> = (props: MapViewProps) => {
   };
 
   const { showSideBar } = useParamSideBar();
+
+  const location = useLocation();
+  const urlParsed = queryString.parse(location.search);
+  const disableFilter = urlParsed.sidebar === 'true' ? true : false;
   return (
     <div className={classNames(showSideBar ? 'side-bar' : '', 'd-flex')}>
       <MapSideBarContainer
@@ -99,6 +108,7 @@ const MapView: React.FC<MapViewProps> = (props: MapViewProps) => {
           }
           agencies={agencies}
           propertyClassifications={propertyClassifications}
+          administrativeAreas={administrativeAreas}
           lotSizes={lotSizes}
           onMarkerClick={
             props.onMarkerClick ??
@@ -126,7 +136,7 @@ const MapView: React.FC<MapViewProps> = (props: MapViewProps) => {
             }
           }}
           onMapClick={saveLatLng}
-          disableMapFilterBar={props.disableMapFilterBar}
+          disableMapFilterBar={disableFilter}
           interactive={!props.disabled}
           showParcelBoundaries={props.showParcelBoundaries ?? true}
           zoom={6}

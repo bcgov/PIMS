@@ -2223,7 +2223,8 @@ namespace Pims.Dal.Test.Services
             var metadata = new DisposalProjectMetadata()
             {
                 ClearanceNotificationSentOn = DateTime.UtcNow,
-                RequestForSplReceivedOn = DateTime.UtcNow
+                RequestForSplReceivedOn = DateTime.UtcNow,
+                ApprovedForSplOn = DateTime.UtcNow
             };
             project.Metadata = JsonSerializer.Serialize(metadata);
             init.SaveChanges();
@@ -2832,7 +2833,8 @@ namespace Pims.Dal.Test.Services
             var metadata = new DisposalProjectMetadata()
             {
                 ClearanceNotificationSentOn = DateTime.UtcNow,
-                RequestForSplReceivedOn = DateTime.UtcNow
+                RequestForSplReceivedOn = DateTime.UtcNow,
+                ApprovedForSplOn = DateTime.UtcNow
             };
             project.Metadata = JsonSerializer.Serialize(metadata);
 
@@ -2906,7 +2908,8 @@ namespace Pims.Dal.Test.Services
             project.StatusId = approve.Id; // Submit Status
             var metadata = new DisposalProjectMetadata()
             {
-                ClearanceNotificationSentOn = DateTime.UtcNow
+                ClearanceNotificationSentOn = DateTime.UtcNow,
+                ExemptionApprovedOn = DateTime.UtcNow
             };
             project.Metadata = JsonSerializer.Serialize(metadata);
 
@@ -3002,7 +3005,8 @@ namespace Pims.Dal.Test.Services
             var metadata = new DisposalProjectMetadata()
             {
                 ClearanceNotificationSentOn = DateTime.UtcNow,
-                RequestForSplReceivedOn = DateTime.UtcNow
+                RequestForSplReceivedOn = DateTime.UtcNow,
+                ApprovedForSplOn = DateTime.UtcNow
             };
             project.Metadata = JsonSerializer.Serialize(metadata);
 

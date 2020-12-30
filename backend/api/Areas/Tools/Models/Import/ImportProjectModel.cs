@@ -86,7 +86,7 @@ namespace Pims.Api.Areas.Tools.Models.Import
         /// <summary>
         /// get/set - The date interest was received.
         /// </summary>
-        public DateTime? AgencyResponseDate { get; set; }
+        public DateTime? InterestedReceivedOn { get; set; }
 
         /// <summary>
         /// get/set - When a request to be added to SPL was received.

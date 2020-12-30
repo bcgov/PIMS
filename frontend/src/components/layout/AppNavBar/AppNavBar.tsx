@@ -31,7 +31,8 @@ function AppNavBar() {
             <FaHome size={20} />
           </Nav.Item>
           <AdminDropdown />
-          <PropertyDropdown />
+          <SubmitProperty />
+          <ViewInventory />
           <DisposeProjectsDropdown />
           <ReportsDropdown />
         </Nav>
@@ -59,11 +60,11 @@ function AppNavBar() {
 /**
  * Submit Property navigation dropdown item.
  */
-function SubmitPropertyNav() {
+function SubmitProperty() {
   const keycloak = useKeycloakWrapper();
   const history = useHistory();
   return keycloak.hasClaim(Claims.PROPERTY_ADD) ? (
-    <NavDropdown.Item
+    <Nav.Link
       onClick={() =>
         history.push({
           pathname: '/mapview',
@@ -78,33 +79,18 @@ function SubmitPropertyNav() {
       }
     >
       Submit Property
-    </NavDropdown.Item>
+    </Nav.Link>
   ) : null;
 }
 
 /**
- * Manage Property dropdown menu.
+ * View Inventory navigation item.
  */
-function PropertyDropdown() {
+function ViewInventory() {
   const keycloak = useKeycloakWrapper();
   const history = useHistory();
   return keycloak.hasClaim(Claims.PROPERTY_VIEW) ? (
-    <NavDropdown
-      className={
-        history.location.pathname.includes('mapview') ||
-        (history.location.pathname.includes('properties') &&
-          !history.location.pathname.includes('projects'))
-          ? 'active'
-          : 'idle'
-      }
-      title="Manage Property"
-      id="manage-property-dropdown"
-    >
-      <SubmitPropertyNav />
-      <NavDropdown.Item onClick={() => history.push('/properties/list')}>
-        View Inventory
-      </NavDropdown.Item>
-    </NavDropdown>
+    <Nav.Link onClick={() => history.push('/properties/list')}>View Property Inventory</Nav.Link>
   ) : null;
 }
 

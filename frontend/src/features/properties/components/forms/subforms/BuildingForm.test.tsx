@@ -62,7 +62,7 @@ const mockBuilding: IFormBuilding = {
 const lCodes = {
   lookupCodes: [
     {
-      name: 'test aDministrative area',
+      name: 'test administrative area',
       id: '1',
       isDisabled: false,
       type: API.AMINISTRATIVE_AREA_CODE_SET_NAME,
@@ -150,7 +150,7 @@ describe('sub-form BuildingForm functionality', () => {
       fireEvent.click(submit!);
     });
     const errors = await getAllByText('Required');
-    expect(errors).toHaveLength(9);
+    expect(errors).toHaveLength(8);
   });
 
   xit('submits all required field values', async done => {

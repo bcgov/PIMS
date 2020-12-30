@@ -63,6 +63,13 @@ export interface IGeoSearchParams {
   maxLandArea?: number;
   inSurplusPropertyProgram?: boolean;
   inEnhancedReferralProcess?: boolean;
+  name?: string;
+  bareLandOnly?: boolean;
+  constructionTypeId?: number;
+  predominateUseId?: number;
+  floorCount?: number;
+  rentableArea?: number;
+  propertyType?: string;
 }
 export const GEO_PROPERTIES = (params: IGeoSearchParams | null) =>
   `/properties/search/wfs?${params ? queryString.stringify(params) : ''}`; // get filtered properties or all if not specified.

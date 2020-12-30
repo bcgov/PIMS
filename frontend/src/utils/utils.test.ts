@@ -1,3 +1,4 @@
+import { generateMultiSortCriteria, resolveSortCriteriaFromUrl } from 'utils';
 import { isPositiveNumberOrZero } from './utils';
 
 describe('Is Positive or Zero', () => {
@@ -43,5 +44,29 @@ describe('Is Positive or Zero', () => {
 
   it('Should return true, zero', () => {
     expect(isPositiveNumberOrZero(0)).toBeTruthy();
+  });
+
+  it('Should resolve sort fields', () => {
+    // setup
+    const input = ['Name asc', 'Agency desc'];
+    const expectedOutput = { name: 'asc', agency: 'desc' };
+
+    // act
+    const output = resolveSortCriteriaFromUrl(input);
+
+    // assert
+    expect(output).toEqual(expectedOutput);
+  });
+
+  it('Should generate sort query', () => {
+    // setup
+    const input: any = { name: 'asc', agency: 'desc' };
+    const expectedOutput = ['Name asc', 'Agency desc'];
+
+    // act
+    const output = generateMultiSortCriteria(input);
+
+    // assert
+    expect(output).toEqual(expectedOutput);
   });
 });

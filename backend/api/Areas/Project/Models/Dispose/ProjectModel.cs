@@ -118,11 +118,6 @@ namespace Pims.Api.Areas.Project.Models.Dispose
         public string ReportingNote { get; set; }
 
         /// <summary>
-        /// get/set - Note for comments.
-        /// </summary>
-        public string Comments { get; set; }
-
-        /// <summary>
         /// get/set - Text field describing project purchaser.
         /// </summary>
         public string Purchaser { get; set; }
@@ -213,6 +208,16 @@ namespace Pims.Api.Areas.Project.Models.Dispose
         public DateTime? ClearanceNotificationSentOn { get; set; }
 
         /// <summary>
+        /// get/set - When interest within ERP was received on.
+        /// </summary>
+        public DateTime? InterestedReceivedOn { get; set; }
+
+        /// <summary>
+        /// get/set - A note to capture interest in the project during ERP.
+        /// </summary>
+        public string InterestFromEnhancedReferralNote { get; set; }
+
+        /// <summary>
         /// get/set - When a request to be added to SPL was received.
         /// </summary>
         public DateTime? RequestForSplReceivedOn { get; set; }
@@ -273,6 +278,11 @@ namespace Pims.Api.Areas.Project.Models.Dispose
         public string ExemptionRationale { get; set; }
 
         /// <summary>
+        /// get/set - The date the ADM approved the exemption.
+        /// </summary>
+        public DateTime? ExemptionApprovedOn { get; set; }
+
+        /// <summary>
         /// get/set - The netbook value which is the sum of the properties.
         /// </summary>
         public decimal NetBook { get; set; }
@@ -303,14 +313,24 @@ namespace Pims.Api.Areas.Project.Models.Dispose
         public decimal? NetProceeds { get; set; }
 
         /// <summary>
-        /// get/set - The program cost.
+        /// get/set - The SPL program cost.
         /// </summary>
         public decimal? ProgramCost { get; set; }
+
+        /// <summary>
+        /// get/set - A note about the SPL program cost.
+        /// </summary>
+        public string ProgramCostNote { get; set; }
 
         /// <summary>
         /// get/set - The gain or loss from selling the properties.
         /// </summary>
         public decimal? GainLoss { get; set; }
+
+        /// <summary>
+        /// get/set - A note about the gain or loss from selling the properties.
+        /// </summary>
+        public string GainNote { get; set; }
 
         /// <summary>
         /// get/set - The SPP Capitalization value.
@@ -333,6 +353,11 @@ namespace Pims.Api.Areas.Project.Models.Dispose
         public decimal? InterestComponent { get; set; }
 
         /// <summary>
+        /// get/set - A note about the loan terms.
+        /// </summary>
+        public string LoanTermsNote { get; set; }
+
+        /// <summary>
         /// get/set - Amount offered during SPL
         /// </summary>
         public decimal? OfferAmount { get; set; }
@@ -351,6 +376,21 @@ namespace Pims.Api.Areas.Project.Models.Dispose
         /// get/set - Whether an adjustment to prior year sale is required.
         /// </summary>
         public decimal? PriorYearAdjustmentAmount { get; set; }
+
+        /// <summary>
+        /// get/set - A note about the adjustment.
+        /// </summary>
+        public string AdjustmentNote { get; set; }
+
+        /// <summary>
+        /// get/set - A note about remediation.
+        /// </summary>
+        public string RemediationNote { get; set; }
+
+        /// <summary>
+        /// get/set - Note to capture final close out comments.
+        /// </summary>
+        public string CloseOutNote { get; set; }
 
         /// <summary>
         /// get/set - Panned future user description.
@@ -381,6 +421,36 @@ namespace Pims.Api.Areas.Project.Models.Dispose
         /// get/set - who signed the final form.
         /// </summary>
         public string FinalFormSignedBy { get; set; }
+
+        /// <summary>
+        /// get/set - When the request to be removed from SPL was.
+        /// </summary>
+        public DateTime? RemovalFromSplRequestOn { get; set; }
+
+        /// <summary>
+        /// get/set - When the request to be removed from SPL was approved on.
+        /// </summary>
+        public DateTime? RemovalFromSplApprovedOn { get; set; }
+
+        /// <summary>
+        /// get/set - A note with the reason to remove the project from SPL.
+        /// </summary>
+        public string RemovalFromSplRationale { get; set; }
+
+        /// <summary>
+        /// get/set - A note related to the received documentation.
+        /// </summary>
+        public string DocumentationNote { get; set; }
+
+        /// <summary>
+        /// get/set - Sales history of the properties.
+        /// </summary>
+        public string SalesHistoryNote { get; set; }
+
+        /// <summary>
+        /// get/set - Project general comments.
+        /// </summary>
+        public string Comments { get; set; }
 
         /// <summary>
         /// get/set - An array of project notes.

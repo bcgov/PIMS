@@ -1,5 +1,6 @@
 import { getCurrentFiscalYear } from '../../../utils/utils';
 import { IBuilding, IAddress, IEvaluation, IFiscal } from 'actions/parcelsActions';
+import { NoteTypes } from '../../../constants';
 
 /**
  * IProperty interface represents the model used for searching properties.
@@ -99,6 +100,7 @@ export interface ITask {
   sortOrder: number;
   taskType: number;
 }
+
 export interface IProjectTask extends ITask {
   projectNumber: number;
   taskId: number;
@@ -112,6 +114,7 @@ export interface IProjectTask extends ITask {
   statusId: number;
   statusCode: string;
 }
+
 export interface IProject {
   id?: number;
   projectNumber: string;
@@ -124,15 +127,15 @@ export interface IProject {
   notes: IProjectNote[];
   publicNote: string;
   privateNote: string;
-  agencyResponseNote?: string;
   offersNote?: string;
   agencyId: number;
   agency?: string;
   subAgency?: string;
   statusId: number;
   status?: IStatus;
-  exemptionRationale?: string;
   exemptionRequested?: boolean;
+  exemptionRationale?: string;
+  exemptionApprovedOn?: Date | string;
   statusCode?: string;
   tierLevelId: number;
   tasks: IProjectTask[];
@@ -142,11 +145,14 @@ export interface IProject {
   deniedOn?: Date | string;
   cancelledOn?: Date | string;
   submittedOn?: Date | string;
+  documentationNote?: string;
   initialNotificationSentOn?: Date | string;
   thirtyDayNotificationSentOn?: Date | string;
   sixtyDayNoficationSentOn?: Date | string;
   ninetyDayNotificationSentOn?: Date | string;
   onHoldNotificationSentOn?: Date | string;
+  interestedReceivedOn?: Date | string;
+  interestFromEnhancedReferralNote?: string;
   transferredWithinGreOn?: Date | string;
   clearanceNotificationSentOn?: Date | string;
   requestForSplReceivedOn?: Date | string;
@@ -171,35 +177,23 @@ export interface IProject {
   finalFormSignedBy?: string;
   offerAmount?: number | '';
   interestComponent?: number | '';
+  loanTermsNote?: string;
   ocgFinancialStatement?: number | '';
   salesCost?: number | '';
   gainBeforeSpl?: number | '';
-  gainAfterSpp?: number | '';
+  netProceeds?: number | '';
+  gainNote?: string;
   programCost?: number | '';
+  programCostNote?: string;
   priorYearAdjustmentAmount?: number | '';
-}
-
-export enum NoteTypes {
-  General = 0,
-  Public = 1,
-  Private = 2,
-  Exemption = 3,
-  AgencyInterest = 4,
-  Financial = 5,
-  PreMarketing = 6,
-  Marketing = 7,
-  ContractInPlace = 8,
-  Reporting = 9,
-  LoanTerms = 10,
-  Adjustment = 11,
-  SppCost = 12,
-  SppGain = 13,
-  SalesHistory = 14,
-  CloseOut = 15,
-  Comments = 16,
-  Appraisal = 17,
-  Offer = 18,
-  Remediation = 19,
+  remediationNote?: string;
+  adjustmentNote?: string;
+  closeOutNote?: string;
+  salesHistoryNote?: string;
+  comments?: string;
+  removalFromSplRequestOn?: Date | string;
+  removalFromSplApprovedOn?: Date | string;
+  removalFromSplRationale?: string;
 }
 
 export enum DisposalWorkflows {
@@ -305,18 +299,26 @@ export const initialValues: IProject = {
   deniedOn: '',
   cancelledOn: '',
   submittedOn: '',
+  exemptionRequested: false,
+  exemptionRationale: '',
+  exemptionApprovedOn: '',
   initialNotificationSentOn: '',
   thirtyDayNotificationSentOn: '',
   sixtyDayNoficationSentOn: '',
   ninetyDayNotificationSentOn: '',
   onHoldNotificationSentOn: '',
+  interestedReceivedOn: '',
+  interestFromEnhancedReferralNote: '',
   transferredWithinGreOn: '',
   clearanceNotificationSentOn: '',
+  requestForSplReceivedOn: '',
+  approvedForSplOn: '',
   marketedOn: '',
   disposedOn: '',
   offerAcceptedOn: '',
   assessedOn: '',
   adjustedOn: '',
+  offersNote: '',
   preliminaryFormSignedOn: '',
   finalFormSignedOn: '',
   netBook: '',
@@ -335,9 +337,21 @@ export const initialValues: IProject = {
   ocgFinancialStatement: '',
   salesCost: '',
   gainBeforeSpl: '',
-  gainAfterSpp: '',
+  netProceeds: '',
   programCost: '',
   priorYearAdjustmentAmount: '',
+  removalFromSplRequestOn: '',
+  removalFromSplApprovedOn: '',
+  removalFromSplRationale: '',
+  documentationNote: '',
+  salesHistoryNote: '',
+  comments: '',
+  loanTermsNote: '',
+  closeOutNote: '',
+  remediationNote: '',
+  programCostNote: '',
+  gainNote: '',
+  adjustmentNote: '',
 };
 
 export interface IApiProject {
@@ -356,8 +370,9 @@ export interface IApiProject {
   publicNote: string;
   privateNote: string;
   exemptionRequested?: boolean;
-  agencyResponseNote?: string;
   exemptionRationale?: string;
+  exemptionApprovedOn?: Date | string;
+  interestFromEnhancedReferralNote?: string;
   agencyId: number;
   statusId: number;
   statusCode?: string;

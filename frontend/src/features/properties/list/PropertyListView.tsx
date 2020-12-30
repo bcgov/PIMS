@@ -25,6 +25,7 @@ import { ReactComponent as LandSvg } from 'assets/images/icon-lot.svg';
 import { PropertyFilter } from '../filter';
 import { PropertyTypes } from '../../../constants/propertyTypes';
 import { IPropertyFilter } from '../filter/IPropertyFilter';
+import { SortDirection, TableSort } from 'components/Table/TableSort';
 
 const getPropertyReportUrl = (filter: IPropertyQueryParams) =>
   `${ENVIRONMENT.apiUrl}/reports/properties?${filter ? queryString.stringify(filter) : ''}`;
@@ -51,15 +52,24 @@ const defaultFilterValues: IPropertyFilter = {
   classificationId: '',
   minLotSize: '',
   maxLotSize: '',
+  rentableArea: '',
   propertyType: PropertyTypes.Land,
 };
 
-const getServerQuery = (state: {
-  pageIndex: number;
-  pageSize: number;
-  filter: IPropertyFilter;
-  agencyIds: number[];
-}) => {
+/**
+ * Get the server query
+ * @param ignorePropType - Whether to ignore the PropertyTypes (for doing excel export with all values)
+ * @param state - Table state
+ */
+const getServerQuery = (
+  ignorePropertyType: boolean,
+  state: {
+    pageIndex: number;
+    pageSize: number;
+    filter: IPropertyFilter;
+    agencyIds: number[];
+  },
+) => {
   const {
     pageIndex,
     pageSize,
@@ -93,7 +103,7 @@ const getServerQuery = (state: {
     maxLandArea: decimalOrUndefined(maxLotSize),
     page: pageIndex + 1,
     quantity: pageSize,
-    propertyType,
+    propertyType: ignorePropertyType ? undefined : propertyType,
   };
   return query;
 };
@@ -113,9 +123,13 @@ const PropertyListView: React.FC = () => {
   const propertyClassifications = _.filter(lookupCodes, (lookupCode: ILookupCode) => {
     return lookupCode.type === API.PROPERTY_CLASSIFICATION_CODE_SET_NAME;
   });
+  const administrativeAreas = _.filter(lookupCodes, (lookupCode: ILookupCode) => {
+    return lookupCode.type === API.AMINISTRATIVE_AREA_CODE_SET_NAME;
+  });
 
   const agencyIds = useMemo(() => agencies.map(x => parseInt(x.id, 10)), [agencies]);
   const columns = useMemo(() => cols, []);
+  const [sorting, setSorting] = useState<TableSort<IProperty>>({ description: 'asc' });
 
   // We'll start our table without any data
   const [data, setData] = useState<IProperty[] | undefined>();
@@ -156,11 +170,13 @@ const PropertyListView: React.FC = () => {
       pageSize,
       filter,
       agencyIds,
+      sorting,
     }: {
       pageIndex: number;
       pageSize: number;
       filter: IPropertyFilter;
       agencyIds: number[];
+      sorting: TableSort<IProperty>;
     }) => {
       // Give this fetch an ID
       const fetchId = ++fetchIdRef.current;
@@ -171,8 +187,8 @@ const PropertyListView: React.FC = () => {
       // Only update the data if this is the latest fetch
       if (agencyIds?.length > 0) {
         setData(undefined);
-        const query = getServerQuery({ pageIndex, pageSize, filter, agencyIds });
-        const data = await service.getPropertyList(query);
+        const query = getServerQuery(false, { pageIndex, pageSize, filter, agencyIds });
+        const data = await service.getPropertyList(query, sorting);
         // The server could send back total page count.
         // For now we'll just calculate it.
         if (fetchId === fetchIdRef.current && data?.items) {
@@ -188,17 +204,17 @@ const PropertyListView: React.FC = () => {
 
   // Listen for changes in pagination and use the state to fetch our new data
   useEffect(() => {
-    fetchData({ pageIndex, pageSize, filter, agencyIds });
-  }, [fetchData, pageIndex, pageSize, filter, agencyIds]);
+    fetchData({ pageIndex, pageSize, filter, agencyIds, sorting });
+  }, [fetchData, pageIndex, pageSize, filter, agencyIds, sorting]);
 
   const dispatch = useDispatch();
 
   const fetch = (accept: 'csv' | 'excel') => {
-    const query = getServerQuery({ pageIndex, pageSize, filter, agencyIds });
+    const query = getServerQuery(true, { pageIndex, pageSize, filter, agencyIds });
     return dispatch(
       download({
         url: getPropertyReportUrl({ ...query, all: true }),
-        fileName: `properties.${accept === 'csv' ? 'csv' : 'xlsx'}`,
+        fileName: `pims-inventory.${accept === 'csv' ? 'csv' : 'xlsx'}`,
         actionType: 'properties-report',
         headers: {
           Accept: accept === 'csv' ? 'text/csv' : 'application/vnd.ms-excel',
@@ -246,7 +262,10 @@ const PropertyListView: React.FC = () => {
             defaultFilter={defaultFilterValues}
             agencyLookupCodes={agencies}
             propertyClassifications={propertyClassifications}
+            adminAreaLookupCodes={administrativeAreas}
             onChange={handleFilterChange}
+            sort={sorting}
+            onSorting={setSorting}
           />
         </Container>
       </Container>
@@ -283,12 +302,12 @@ const PropertyListView: React.FC = () => {
           </div>
           <TooltipWrapper toolTipId="export-to-excel" toolTip="Export to Excel">
             <FileIcon>
-              <FaFileExcel size={36} onClick={() => fetch('excel')} />
+              <FaFileExcel data-testid="excel-icon" size={36} onClick={() => fetch('excel')} />
             </FileIcon>
           </TooltipWrapper>
           <TooltipWrapper toolTipId="export-to-excel" toolTip="Export to CSV">
             <FileIcon>
-              <FaFileAlt size={36} onClick={() => fetch('csv')} />
+              <FaFileAlt data-testid="csv-icon" size={36} onClick={() => fetch('csv')} />
             </FileIcon>
           </TooltipWrapper>
         </Container>
@@ -298,9 +317,19 @@ const PropertyListView: React.FC = () => {
           columns={columns}
           data={data || []}
           loading={data === undefined}
+          sort={sorting}
           pageIndex={pageIndex}
           onRequestData={handleRequestData}
           pageCount={pageCount}
+          onSortChange={(column: string, direction: SortDirection) => {
+            if (!!direction) {
+              setSorting({ ...sorting, [column]: direction });
+            } else {
+              const data: any = { ...sorting };
+              delete data[column];
+              setSorting(data);
+            }
+          }}
           canRowExpand={(val: any) => {
             if (val.values.propertyTypeId === 0) {
               return true;

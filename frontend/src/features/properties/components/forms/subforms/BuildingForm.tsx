@@ -9,8 +9,7 @@ import { RootState } from 'reducers/rootReducer';
 import { ILookupCode } from 'actions/lookupActions';
 import { ILookupCodeState } from 'reducers/lookupCodeReducer';
 import _ from 'lodash';
-import { Form, FastDatePicker, FastSelect, InputGroup, FastInput } from 'components/common/form';
-import { Check } from 'components/common/form/Check';
+import { Form, FastSelect, InputGroup, FastInput } from 'components/common/form';
 import { mapLookupCode, formikFieldMemo } from 'utils';
 import * as API from 'constants/API';
 import { IBuilding } from 'actions/parcelsActions';
@@ -74,9 +73,6 @@ const BuildingForm = (props: BuildingProps & FormikProps<any>) => {
   }).map(mapLookupCode);
   const predominateUses = _.filter(lookupCodes, (lookupCode: ILookupCode) => {
     return lookupCode.type === API.PREDOMINATE_USE_CODE_SET_NAME;
-  }).map(mapLookupCode);
-  const occupantTypes = _.filter(lookupCodes, (lookupCode: ILookupCode) => {
-    return lookupCode.type === API.OCCUPANT_TYPE_CODE_SET_NAME;
   }).map(mapLookupCode);
   const agencies = _.filter(lookupCodes, (lookupCode: ILookupCode) => {
     return lookupCode.type === API.AGENCY_CODE_SET_NAME;
@@ -202,7 +198,7 @@ const BuildingForm = (props: BuildingProps & FormikProps<any>) => {
           </Col>
           <Col md={6}>
             <Form.Row>
-              <Form.Label>Net Rentable Area</Form.Label>
+              <Form.Label>Net Usable Area</Form.Label>
               <InputGroup
                 required
                 displayErrorTooltips
@@ -211,7 +207,7 @@ const BuildingForm = (props: BuildingProps & FormikProps<any>) => {
                 disabled={props.disabled || readonly}
                 type="number"
                 field={withNameSpace('rentableArea')}
-                postText="Sq. Ft"
+                postText="Sq. M"
               />
             </Form.Row>
             <Form.Row>
@@ -231,48 +227,12 @@ const BuildingForm = (props: BuildingProps & FormikProps<any>) => {
         <Row className="buildingTenancy" noGutters>
           <Col md={6}>
             <Form.Row>
-              <Form.Label>Type of Current Occupant</Form.Label>
-              <FastSelect
-                required
-                formikProps={props}
-                disabled={props.disabled || readonly}
-                placeholder="Must Select One"
-                field={withNameSpace('buildingOccupantTypeId')}
-                type="number"
-                options={occupantTypes}
-              />
-            </Form.Row>
-            <Form.Row>
-              <Form.Label>Occupant Name</Form.Label>
-              <FastInput
-                displayErrorTooltips
-                formikProps={props}
-                disabled={props.disabled || readonly}
-                field={withNameSpace('occupantName')}
-              />
-            </Form.Row>
-          </Col>
-          <Col md={6}>
-            <Form.Row>
               <Form.Label>Tenancy %</Form.Label>
               <FastInput
                 displayErrorTooltips
                 formikProps={props}
                 disabled={props.disabled || readonly}
                 field={withNameSpace('buildingTenancy')}
-              />
-            </Form.Row>
-            <Form.Row>
-              <Form.Label>Date Lease Expires</Form.Label>
-              <FastDatePicker
-                formikProps={props}
-                disabled={props.disabled || readonly}
-                field={withNameSpace('leaseExpiry')}
-              />
-              <Check
-                postLabel="Lease to be transferred with land"
-                disabled={props.disabled || readonly}
-                field={withNameSpace('transferLeaseOnSale')}
               />
             </Form.Row>
           </Col>

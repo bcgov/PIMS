@@ -3,6 +3,7 @@ import { ICluster, PointFeature } from '../types';
 import { IProperty, PropertyTypes } from 'actions/parcelsActions';
 import Supercluster from 'supercluster';
 import { ReviewWorkflowStatus } from 'features/projects/common';
+import { Classifications } from 'constants/classifications';
 
 // parcel icon (green)
 export const parcelIcon = new Icon({
@@ -104,7 +105,7 @@ export const pointToLayer = (feature: ICluster, latlng: LatLngExpression): Layer
  * Get an icon type for the specified cluster property details (type, draft, erp, spp etc)
  */
 export const getMarkerIcon = (feature: ICluster) => {
-  const { propertyTypeId, projectNumber, projectStatus } = feature?.properties;
+  const { propertyTypeId, projectStatus, classificationId } = feature?.properties;
   if (
     [
       ReviewWorkflowStatus.ERP,
@@ -113,7 +114,10 @@ export const getMarkerIcon = (feature: ICluster) => {
     ].includes(projectStatus)
   ) {
     return erpIcon;
-  } else if (projectNumber !== undefined) {
+  } else if (
+    classificationId === Classifications.SurplusActive ||
+    classificationId === Classifications.SurplusEncumbered
+  ) {
     return sppIcon;
   } else if (propertyTypeId === PropertyTypes.PARCEL) {
     return parcelIcon;

@@ -1,6 +1,21 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Manage Users Component Snapshot matches 1`] = `
+.c1 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  justify-items: center;
+}
+
 .c0 {
   margin-top: 10px;
   margin-bottom: 40px;
@@ -113,7 +128,7 @@ exports[`Manage Users Component Snapshot matches 1`] = `
                 aria-expanded="false"
                 aria-haspopup="listbox"
                 autocomplete="off"
-                class="rbt-input-main form-control rbt-input map-filter-typeahead"
+                class="rbt-input-main form-control rbt-input"
                 id="agency-field"
                 name="agency"
                 placeholder="Enter an Agency"
@@ -235,7 +250,42 @@ exports[`Manage Users Component Snapshot matches 1`] = `
             role="columnheader"
             style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
           >
-            IDIR/BCeID
+            <div
+              class="sortable-column"
+            >
+              IDIR/BCeID
+              <div
+                class="c1"
+              >
+                <svg
+                  fill="currentColor"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  style="margin-bottom: -5px;"
+                  viewBox="0 0 512 512"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M128 320l128-128 128 128z"
+                  />
+                </svg>
+                <svg
+                  fill="currentColor"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 512 512"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M128 192l128 128 128-128z"
+                  />
+                </svg>
+              </div>
+            </div>
           </div>
           <div
             class="th"
@@ -243,7 +293,42 @@ exports[`Manage Users Component Snapshot matches 1`] = `
             role="columnheader"
             style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
           >
-            First name
+            <div
+              class="sortable-column"
+            >
+              First name
+              <div
+                class="c1"
+              >
+                <svg
+                  fill="currentColor"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  style="margin-bottom: -5px;"
+                  viewBox="0 0 512 512"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M128 320l128-128 128 128z"
+                  />
+                </svg>
+                <svg
+                  fill="currentColor"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 512 512"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M128 192l128 128 128-128z"
+                  />
+                </svg>
+              </div>
+            </div>
           </div>
           <div
             class="th"
@@ -251,7 +336,42 @@ exports[`Manage Users Component Snapshot matches 1`] = `
             role="columnheader"
             style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
           >
-            Last name
+            <div
+              class="sortable-column"
+            >
+              Last name
+              <div
+                class="c1"
+              >
+                <svg
+                  fill="currentColor"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  style="margin-bottom: -5px;"
+                  viewBox="0 0 512 512"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M128 320l128-128 128 128z"
+                  />
+                </svg>
+                <svg
+                  fill="currentColor"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 512 512"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M128 192l128 128 128-128z"
+                  />
+                </svg>
+              </div>
+            </div>
           </div>
           <div
             class="th"
@@ -259,7 +379,42 @@ exports[`Manage Users Component Snapshot matches 1`] = `
             role="columnheader"
             style="box-sizing: border-box; flex: 200 0 auto; min-width: 200px; width: 200px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
           >
-            Email
+            <div
+              class="sortable-column"
+            >
+              Email
+              <div
+                class="c1"
+              >
+                <svg
+                  fill="currentColor"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  style="margin-bottom: -5px;"
+                  viewBox="0 0 512 512"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M128 320l128-128 128 128z"
+                  />
+                </svg>
+                <svg
+                  fill="currentColor"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 512 512"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M128 192l128 128 128-128z"
+                  />
+                </svg>
+              </div>
+            </div>
           </div>
           <div
             class="th"
@@ -267,7 +422,42 @@ exports[`Manage Users Component Snapshot matches 1`] = `
             role="columnheader"
             style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
           >
-            Position
+            <div
+              class="sortable-column"
+            >
+              Position
+              <div
+                class="c1"
+              >
+                <svg
+                  fill="currentColor"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  style="margin-bottom: -5px;"
+                  viewBox="0 0 512 512"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M128 320l128-128 128 128z"
+                  />
+                </svg>
+                <svg
+                  fill="currentColor"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 512 512"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M128 192l128 128 128-128z"
+                  />
+                </svg>
+              </div>
+            </div>
           </div>
           <div
             class="th"
@@ -275,7 +465,42 @@ exports[`Manage Users Component Snapshot matches 1`] = `
             role="columnheader"
             style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
           >
-            Active
+            <div
+              class="sortable-column"
+            >
+              Active
+              <div
+                class="c1"
+              >
+                <svg
+                  fill="currentColor"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  style="margin-bottom: -5px;"
+                  viewBox="0 0 512 512"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M128 320l128-128 128 128z"
+                  />
+                </svg>
+                <svg
+                  fill="currentColor"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 512 512"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M128 192l128 128 128-128z"
+                  />
+                </svg>
+              </div>
+            </div>
           </div>
           <div
             class="th"
@@ -283,7 +508,11 @@ exports[`Manage Users Component Snapshot matches 1`] = `
             role="columnheader"
             style="box-sizing: border-box; flex: 200 0 auto; min-width: 200px; width: 200px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
           >
-            Agency
+            <div
+              class="sortable-column"
+            >
+              Agency
+            </div>
           </div>
           <div
             class="th"
@@ -291,7 +520,11 @@ exports[`Manage Users Component Snapshot matches 1`] = `
             role="columnheader"
             style="box-sizing: border-box; flex: 200 0 auto; min-width: 200px; width: 200px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
           >
-            Roles
+            <div
+              class="sortable-column"
+            >
+              Roles
+            </div>
           </div>
           <div
             class="th"
@@ -299,7 +532,11 @@ exports[`Manage Users Component Snapshot matches 1`] = `
             role="columnheader"
             style="box-sizing: border-box; flex: 100 0 auto; min-width: 100px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
           >
-            Last Login
+            <div
+              class="sortable-column"
+            >
+              Last Login
+            </div>
           </div>
           <div
             class="th"
@@ -307,7 +544,11 @@ exports[`Manage Users Component Snapshot matches 1`] = `
             role="columnheader"
             style="box-sizing: border-box; flex: 75 0 auto; min-width: 30px; width: 75px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
           >
-             
+            <div
+              class="sortable-column"
+            >
+               
+            </div>
           </div>
         </div>
       </div>

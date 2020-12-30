@@ -259,7 +259,6 @@ exports[`GRE Transfer Step renders correctly 1`] = `
               <div
                 className="th"
                 colSpan={1}
-                onClick={[Function]}
                 role="columnheader"
                 style={
                   Object {
@@ -274,12 +273,15 @@ exports[`GRE Transfer Step renders correctly 1`] = `
                   }
                 }
               >
-                Agency
+                <div
+                  className="sortable-column"
+                >
+                  Agency
+                </div>
               </div>
               <div
                 className="th"
                 colSpan={1}
-                onClick={[Function]}
                 role="columnheader"
                 style={
                   Object {
@@ -294,12 +296,15 @@ exports[`GRE Transfer Step renders correctly 1`] = `
                   }
                 }
               >
-                Name
+                <div
+                  className="sortable-column"
+                >
+                  Name
+                </div>
               </div>
               <div
                 className="th"
                 colSpan={1}
-                onClick={[Function]}
                 role="columnheader"
                 style={
                   Object {
@@ -314,12 +319,15 @@ exports[`GRE Transfer Step renders correctly 1`] = `
                   }
                 }
               >
-                Civic Address
+                <div
+                  className="sortable-column"
+                >
+                  Civic Address
+                </div>
               </div>
               <div
                 className="th"
                 colSpan={1}
-                onClick={[Function]}
                 role="columnheader"
                 style={
                   Object {
@@ -334,12 +342,15 @@ exports[`GRE Transfer Step renders correctly 1`] = `
                   }
                 }
               >
-                Classification
+                <div
+                  className="sortable-column"
+                >
+                  Classification
+                </div>
               </div>
               <div
                 className="th"
                 colSpan={1}
-                onClick={[Function]}
                 role="columnheader"
                 style={
                   Object {
@@ -354,12 +365,15 @@ exports[`GRE Transfer Step renders correctly 1`] = `
                   }
                 }
               >
-                Current Zoning Code
+                <div
+                  className="sortable-column"
+                >
+                  Current Zoning Code
+                </div>
               </div>
               <div
                 className="th"
                 colSpan={1}
-                onClick={[Function]}
                 role="columnheader"
                 style={
                   Object {
@@ -374,12 +388,15 @@ exports[`GRE Transfer Step renders correctly 1`] = `
                   }
                 }
               >
-                Potential Zoning Code
+                <div
+                  className="sortable-column"
+                >
+                  Potential Zoning Code
+                </div>
               </div>
               <div
                 className="th"
                 colSpan={1}
-                onClick={[Function]}
                 role="columnheader"
                 style={
                   Object {
@@ -394,12 +411,15 @@ exports[`GRE Transfer Step renders correctly 1`] = `
                   }
                 }
               >
-                Net Book Value
+                <div
+                  className="sortable-column"
+                >
+                  Net Book Value
+                </div>
               </div>
               <div
                 className="th"
                 colSpan={1}
-                onClick={[Function]}
                 role="columnheader"
                 style={
                   Object {
@@ -414,12 +434,15 @@ exports[`GRE Transfer Step renders correctly 1`] = `
                   }
                 }
               >
-                Market Value
+                <div
+                  className="sortable-column"
+                >
+                  Market Value
+                </div>
               </div>
               <div
                 className="th"
                 colSpan={1}
-                onClick={[Function]}
                 role="columnheader"
                 style={
                   Object {
@@ -434,12 +457,15 @@ exports[`GRE Transfer Step renders correctly 1`] = `
                   }
                 }
               >
-                Assessed Value
+                <div
+                  className="sortable-column"
+                >
+                  Assessed Value
+                </div>
               </div>
               <div
                 className="th"
                 colSpan={1}
-                onClick={[Function]}
                 role="columnheader"
                 style={
                   Object {
@@ -454,7 +480,11 @@ exports[`GRE Transfer Step renders correctly 1`] = `
                   }
                 }
               >
-                Type
+                <div
+                  className="sortable-column"
+                >
+                  Type
+                </div>
               </div>
             </div>
           </div>
@@ -514,7 +544,7 @@ exports[`GRE Transfer Step renders correctly 1`] = `
                   }
                   title="Click to view property details"
                 >
-                  213-221-321
+                  name
                 </div>
                 <div
                   className="td clickable"
@@ -554,7 +584,7 @@ exports[`GRE Transfer Step renders correctly 1`] = `
                   }
                   title="Click to view property details"
                 >
-                  Core Operational
+                  Surplus Active
                 </div>
                 <div
                   className="td clickable"

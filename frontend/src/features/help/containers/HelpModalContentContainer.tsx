@@ -1,9 +1,14 @@
 import * as React from 'react';
-import { helpPages, TicketTypes, getTopics } from '../constants/HelpText';
+import {
+  helpPages,
+  TicketTypes,
+  getTopics,
+  PropertyDetailViewHelpPage,
+} from '../constants/HelpText';
 import HelpBox from '../components/HelpBox';
 import HelpSubmitBox from '../components/HelpSubmitBox';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
-import { Topics, IHelpPage } from '../interfaces';
+import { Topics, IHelpPage, HelpPageKeys } from '../interfaces';
 import { useLocation } from 'react-router-dom';
 
 interface IHelpModalContentContainerProps {
@@ -18,6 +23,10 @@ interface IHelpModalContentContainerProps {
 const getHelpPageByLocation = (location: any): IHelpPage | undefined => {
   let helpPage: IHelpPage | undefined = undefined;
   helpPages.forEach((page, path) => {
+    /** need to check paramaters here outside of the pathname as mapview and parcel detail form now share same pathname */
+    if (location.search.includes(HelpPageKeys.PROPERTY_DETAIL_PAGE)) {
+      helpPage = PropertyDetailViewHelpPage;
+    }
     if (location.pathname.startsWith(path)) {
       helpPage = page;
     }

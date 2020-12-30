@@ -58,6 +58,7 @@ export type MapProps = {
   properties: IProperty[];
   agencies: ILookupCode[];
   propertyClassifications: ILookupCode[];
+  administrativeAreas: ILookupCode[];
   lotSizes: number[];
   mapRef: React.RefObject<ReactLeafletMap<LeafletMapProps, LeafletMap>>;
   selectedProperty?: IPropertyDetail | null;
@@ -78,15 +79,18 @@ export type LayerPopupInformation = PopupContentConfig & {
 };
 
 const defaultFilterValues: IPropertyFilter = {
-  searchBy: 'address',
+  searchBy: 'name',
   pid: '',
   address: '',
   administrativeArea: '',
+  propertyType: '',
   projectNumber: '',
   agencies: '',
   classificationId: '',
   minLotSize: '',
   maxLotSize: '',
+  rentableArea: '',
+  name: '',
 };
 
 /**
@@ -103,8 +107,14 @@ const getQueryParams = (filter: IPropertyFilter): IGeoSearchParams => {
     agencies: filter.agencies,
     minLandArea: floatOrUndefined(filter.minLotSize),
     maxLandArea: floatOrUndefined(filter.maxLotSize),
-    inSurplusPropertyProgram: filter.inSurplusPropertyProgram === 'true',
-    inEnhancedReferralProcess: filter.inEnhancedReferralProcess === 'true',
+    rentableArea: floatOrUndefined(filter.rentableArea),
+    inSurplusPropertyProgram: filter.inSurplusPropertyProgram,
+    inEnhancedReferralProcess: filter.inEnhancedReferralProcess,
+    name: filter.name,
+    predominateUseId: parseInt(filter.predominateUseId!),
+    constructionTypeId: parseInt(filter.constructionTypeId!),
+    floorCount: parseInt(filter.floorCount!),
+    bareLandOnly: filter.bareLandOnly,
   };
 };
 
@@ -120,6 +130,7 @@ const Map: React.FC<MapProps> = ({
   zoom: zoomProp,
   agencies,
   propertyClassifications,
+  administrativeAreas,
   lotSizes,
   selectedProperty,
   onMarkerClick,
@@ -276,6 +287,7 @@ const Map: React.FC<MapProps> = ({
                   <PropertyFilter
                     defaultFilter={defaultFilterValues}
                     agencyLookupCodes={agencies}
+                    adminAreaLookupCodes={administrativeAreas}
                     propertyClassifications={propertyClassifications}
                     onChange={handleMapFilterChange}
                   />

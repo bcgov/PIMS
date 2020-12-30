@@ -69,6 +69,17 @@ namespace Pims.Api.Areas.Project.Mapping.Dispose
                 .Map(dest => dest.AppraisedNote, src => src.GetNoteText(Entity.NoteTypes.Appraisal))
                 .Map(dest => dest.ExemptionRationale, src => src.GetNoteText(Entity.NoteTypes.Exemption))
                 .Map(dest => dest.ReportingNote, src => src.GetNoteText(Entity.NoteTypes.Reporting))
+                .Map(dest => dest.RemovalFromSplRationale, src => src.GetNoteText(Entity.NoteTypes.SplRemoval))
+                .Map(dest => dest.InterestFromEnhancedReferralNote, src => src.GetNoteText(Entity.NoteTypes.AgencyInterest))
+                .Map(dest => dest.DocumentationNote, src => src.GetNoteText(Entity.NoteTypes.Documentation))
+                .Map(dest => dest.AdjustmentNote, src => src.GetNoteText(Entity.NoteTypes.Adjustment))
+                .Map(dest => dest.LoanTermsNote, src => src.GetNoteText(Entity.NoteTypes.LoanTerms))
+                .Map(dest => dest.CloseOutNote, src => src.GetNoteText(Entity.NoteTypes.CloseOut))
+                .Map(dest => dest.RemediationNote, src => src.GetNoteText(Entity.NoteTypes.Remediation))
+                .Map(dest => dest.ProgramCostNote, src => src.GetNoteText(Entity.NoteTypes.SplCost))
+                .Map(dest => dest.GainNote, src => src.GetNoteText(Entity.NoteTypes.SplGain))
+                .Map(dest => dest.SalesHistoryNote, src => src.GetNoteText(Entity.NoteTypes.SalesHistory))
+                .Map(dest => dest.Comments, src => src.GetNoteText(Entity.NoteTypes.Comments))
                 .Map(dest => dest.Notes, src => src.Notes)
                 .AfterMapping((src, dest) =>
                 {
@@ -82,6 +93,7 @@ namespace Pims.Api.Areas.Project.Mapping.Dispose
                     dest.OnHoldNotificationSentOn = metadata.OnHoldNotificationSentOn;
                     dest.ClearanceNotificationSentOn = metadata.ClearanceNotificationSentOn;
                     dest.TransferredWithinGreOn = metadata.TransferredWithinGreOn;
+                    dest.InterestedReceivedOn = metadata.InterestedReceivedOn;
                     dest.RequestForSplReceivedOn = metadata.RequestForSplReceivedOn;
                     dest.ApprovedForSplOn = metadata.ApprovedForSplOn;
                     dest.MarketedOn = metadata.MarketedOn;
@@ -90,6 +102,7 @@ namespace Pims.Api.Areas.Project.Mapping.Dispose
                     dest.AdjustedOn = metadata.AdjustedOn;
                     dest.PriorYearAdjustmentOn = metadata.PriorYearAdjustmentOn;
                     dest.ExemptionRequested = metadata.ExemptionRequested;
+                    dest.ExemptionApprovedOn = metadata.ExemptionApprovedOn;
                     dest.DisposedOn = metadata.DisposedOn;
                     dest.SalesCost = metadata.SalesCost;
                     dest.NetProceeds = metadata.NetProceeds;
@@ -111,6 +124,8 @@ namespace Pims.Api.Areas.Project.Mapping.Dispose
                     dest.PreliminaryFormSignedBy = metadata.PreliminaryFormSignedBy;
                     dest.FinalFormSignedOn = metadata.FinalFormSignedOn;
                     dest.FinalFormSignedBy = metadata.FinalFormSignedBy;
+                    dest.RemovalFromSplRequestOn = metadata.RemovalFromSplRequestOn;
+                    dest.RemovalFromSplApprovedOn = metadata.RemovalFromSplApprovedOn;
                 })
                 .Inherits<Entity.BaseEntity, Api.Models.BaseModel>();
 
@@ -150,6 +165,7 @@ namespace Pims.Api.Areas.Project.Mapping.Dispose
                         NinetyDayNotificationSentOn = src.NinetyDayNotificationSentOn,
                         OnHoldNotificationSentOn = src.OnHoldNotificationSentOn,
                         ClearanceNotificationSentOn = src.ClearanceNotificationSentOn,
+                        InterestedReceivedOn = src.InterestedReceivedOn,
                         TransferredWithinGreOn = src.TransferredWithinGreOn,
                         RequestForSplReceivedOn = src.RequestForSplReceivedOn,
                         ApprovedForSplOn = src.ApprovedForSplOn,
@@ -159,6 +175,7 @@ namespace Pims.Api.Areas.Project.Mapping.Dispose
                         AdjustedOn = src.AdjustedOn,
                         PriorYearAdjustmentOn = src.PriorYearAdjustmentOn,
                         ExemptionRequested = src.ExemptionRequested,
+                        ExemptionApprovedOn = src.ExemptionApprovedOn,
                         DisposedOn = src.DisposedOn,
                         SalesCost = src.SalesCost,
                         NetProceeds = src.NetProceeds,
@@ -179,7 +196,9 @@ namespace Pims.Api.Areas.Project.Mapping.Dispose
                         PreliminaryFormSignedOn = src.PreliminaryFormSignedOn,
                         PreliminaryFormSignedBy = src.PreliminaryFormSignedBy,
                         FinalFormSignedOn = src.FinalFormSignedOn,
-                        FinalFormSignedBy = src.FinalFormSignedBy
+                        FinalFormSignedBy = src.FinalFormSignedBy,
+                        RemovalFromSplRequestOn = src.RemovalFromSplRequestOn,
+                        RemovalFromSplApprovedOn = src.RemovalFromSplApprovedOn
                     };
                     dest.Metadata = JsonSerializer.Serialize(metadata, _serializerOptions);
                     dest.AddOrUpdateNote(Entity.NoteTypes.General, src.Note ?? "");
@@ -189,6 +208,17 @@ namespace Pims.Api.Areas.Project.Mapping.Dispose
                     dest.AddOrUpdateNote(Entity.NoteTypes.Offer, src.OffersNote ?? "");
                     dest.AddOrUpdateNote(Entity.NoteTypes.Exemption, src.ExemptionRationale ?? "");
                     dest.AddOrUpdateNote(Entity.NoteTypes.Reporting, src.ReportingNote ?? "");
+                    dest.AddOrUpdateNote(Entity.NoteTypes.SplRemoval, src.RemovalFromSplRationale ?? "");
+                    dest.AddOrUpdateNote(Entity.NoteTypes.AgencyInterest, src.InterestFromEnhancedReferralNote ?? "");
+                    dest.AddOrUpdateNote(Entity.NoteTypes.Documentation, src.DocumentationNote ?? "");
+                    dest.AddOrUpdateNote(Entity.NoteTypes.Adjustment, src.AdjustmentNote ?? "");
+                    dest.AddOrUpdateNote(Entity.NoteTypes.LoanTerms, src.LoanTermsNote ?? "");
+                    dest.AddOrUpdateNote(Entity.NoteTypes.CloseOut, src.CloseOutNote ?? "");
+                    dest.AddOrUpdateNote(Entity.NoteTypes.Remediation, src.RemediationNote ?? "");
+                    dest.AddOrUpdateNote(Entity.NoteTypes.SplCost, src.ProgramCostNote ?? "");
+                    dest.AddOrUpdateNote(Entity.NoteTypes.SplGain, src.GainNote ?? "");
+                    dest.AddOrUpdateNote(Entity.NoteTypes.SalesHistory, src.SalesHistoryNote ?? "");
+                    dest.AddOrUpdateNote(Entity.NoteTypes.Comments, src.Comments ?? "");
                 })
                 .Inherits<Api.Models.BaseModel, Entity.BaseEntity>();
         }

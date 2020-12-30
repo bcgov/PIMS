@@ -11,18 +11,14 @@ import {
   DisposeWorkflowStatus,
   useProject,
   updateInfoMessage,
-  tier1Tooltip,
-  tier2Tooltip,
-  tier3Tooltip,
-  tier4Tooltip,
-  risk1Tooltip,
-  risk2Tooltip,
-  risk3Tooltip,
-  risk4Tooltip,
+  tierTooltips,
+  riskTooltips,
+  IProject,
 } from '../../common';
 import { PropertyListViewUpdate } from '../components/PropertyListViewUpdate';
 import { Container } from 'react-bootstrap';
 import ProjectFinancialTable from '../components/ProjectFinancialTable';
+import styled from 'styled-components';
 
 interface IUpdateInfoFormProps {
   title?: string;
@@ -31,6 +27,52 @@ interface IUpdateInfoFormProps {
 }
 
 const classificationLimitLabels = ['Surplus Active', 'Surplus Encumbered'];
+
+const Tooltip = styled.div`
+  padding-left: 10px;
+  small {
+    padding-top: 20px;
+    vertical-align: middle;
+  }
+`;
+
+/**
+ * Return a friendly tooltip for the specified tier level.
+ * @param riskId The primary key 'id' of the tier level.
+ * @returns A tooltip string.
+ */
+const getTierLevelTooltip = (riskId: number | string) => {
+  switch (parseInt(`${riskId}`)) {
+    case 1:
+      return tierTooltips.tier1Tooltip;
+    case 2:
+      return tierTooltips.tier2Tooltip;
+    case 3:
+      return tierTooltips.tier3Tooltip;
+    case 4:
+      return tierTooltips.tier4Tooltip;
+    default:
+      return null;
+  }
+};
+
+/**
+ * Return a friendly tooltip for the specified project risk.
+ * @param riskId The primary key 'id' of the project risk.
+ * @returns A tooltip string.
+ */
+const getRiskTooltip = (riskId: number | string) => {
+  switch (parseInt(`${riskId}`)) {
+    case 1:
+      return riskTooltips.risk1Tooltip;
+    case 2:
+      return riskTooltips.risk2Tooltip;
+    case 3:
+      return riskTooltips.risk3Tooltip;
+    default:
+      return null;
+  }
+};
 
 /**
  * Form component of UpdateInfoForm.
@@ -44,13 +86,12 @@ const UpdateInfoForm = ({
 }: IStepProps & IUpdateInfoFormProps) => {
   const codeLookups = useCodeLookups();
   const tierCodes = codeLookups.getByType('TierLevel').map(mapLookupCode);
+  const riskCodes = codeLookups.getByType('ProjectRisk').map(mapLookupCode);
   const [selectedProperties, setSelectedProperties] = useState([]);
-  const risks = [
-    { value: 1, label: 'Complete' },
-    { value: 2, label: 'Green' },
-    { value: 3, label: 'Yellow' },
-    { value: 4, label: 'Red' },
-  ];
+
+  const { values } = useFormikContext<IProject>();
+  const tierLevelTooltip = getTierLevelTooltip(getIn(values, 'tierLevelId'));
+  const riskTooltip = getRiskTooltip(getIn(values, 'riskId'));
 
   return (
     <Container fluid className="UpdateInfoForm">
@@ -61,34 +102,20 @@ const UpdateInfoForm = ({
       )}
       <Form.Row>
         <Form.Label column md={2}>
-          Assign Tier&nbsp;
+          Assign Tier
         </Form.Label>
         <Select
           disabled={isReadOnly}
-          outerClassName="col-md-2"
+          outerClassName="col-md-1"
           placeholder="Must Select One"
           field="tierLevelId"
           type="number"
           options={tierCodes}
           required
         />
-      </Form.Row>
-      <Form.Row>
-        <Form.Label column md={2}></Form.Label>
-        <Form.Group>
-          <div>
-            <small>{tier1Tooltip}</small>
-          </div>
-          <div>
-            <small>{tier2Tooltip}</small>
-          </div>
-          <div>
-            <small>{tier3Tooltip}</small>
-          </div>
-          <div>
-            <small>{tier4Tooltip}</small>
-          </div>
-        </Form.Group>
+        <Tooltip>
+          <small>{tierLevelTooltip}</small>
+        </Tooltip>
       </Form.Row>
 
       {showRisk && (
@@ -99,28 +126,14 @@ const UpdateInfoForm = ({
             </Form.Label>
             <Select
               disabled={isReadOnly}
-              outerClassName="col-md-2"
+              outerClassName="col-md-1"
               field="riskId"
               type="number"
-              options={risks}
+              options={riskCodes}
             />
-          </Form.Row>
-          <Form.Row>
-            <Form.Label column md={2}></Form.Label>
-            <Form.Group>
-              <div>
-                <small>{risk1Tooltip}</small>
-              </div>
-              <div>
-                <small>{risk2Tooltip}</small>
-              </div>
-              <div>
-                <small>{risk3Tooltip}</small>
-              </div>
-              <div>
-                <small>{risk4Tooltip}</small>
-              </div>
-            </Form.Group>
+            <Tooltip>
+              <small>{riskTooltip}</small>
+            </Tooltip>
           </Form.Row>
         </>
       )}

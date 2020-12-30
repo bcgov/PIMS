@@ -241,7 +241,7 @@ namespace Pims.Api.Areas.Tools.Helpers
                 SixtyDayNotificationSentOn = null, // Don't have a source for this information.
                 NinetyDayNotificationSentOn = null, // Don't have a source for this information.
                 OnHoldNotificationSentOn = null, // Don't have a source for this information.
-                InterestedReceivedOn = null, // Don't have a source for this information.
+                InterestedReceivedOn = model.InterestedReceivedOn,
                 TransferredWithinGreOn = null, // Don't have a source for this information.
                 ClearanceNotificationSentOn = null, // Don't have a source for this information.
                 RequestForSplReceivedOn = model.RequestForSplReceivedOn, // Don't have a source for this information.
@@ -271,17 +271,17 @@ namespace Pims.Api.Areas.Tools.Helpers
             project.Metadata = JsonSerializer.Serialize(metadata, _serializerOptions);
 
             // The data doesn't provide the purchasing agency information so the response will be the current owning agency.
-            if (model.AgencyResponseDate.HasValue)
+            if (model.InterestedReceivedOn.HasValue)
             {
                 var response = project.Responses.FirstOrDefault(r => r.AgencyId == project.AgencyId);
                 if (response == null)
                 {
-                    project.Responses.Add(new Entity.ProjectAgencyResponse(project, project.Agency, Entity.NotificationResponses.Watch, model.AgencyResponseDate));
+                    project.Responses.Add(new Entity.ProjectAgencyResponse(project, project.Agency, Entity.NotificationResponses.Watch, model.InterestedReceivedOn));
                 }
                 else
                 {
                     response.Response = Entity.NotificationResponses.Watch;
-                    response.ReceivedOn = model.AgencyResponseDate ?? response.ReceivedOn;
+                    response.ReceivedOn = model.InterestedReceivedOn ?? response.ReceivedOn;
                 }
             }
 
@@ -430,7 +430,6 @@ namespace Pims.Api.Areas.Tools.Helpers
                         "Weekly Review" => Entity.NoteTypes.Reporting,
                         _ => Entity.NoteTypes.General
                     };
-                    note = $"{noteType}{Environment.NewLine}{note}";
                 }
 
                 var projectNote = project.Notes.FirstOrDefault(n => n.NoteType == type);
@@ -441,7 +440,7 @@ namespace Pims.Api.Areas.Tools.Helpers
                 else
                 {
                     if (!String.IsNullOrWhiteSpace(projectNote.Note))
-                        projectNote.Note += $"{Environment.NewLine}{Environment.NewLine}{note}";
+                        projectNote.Note += $"{Environment.NewLine}{Environment.NewLine}{noteType}{Environment.NewLine}{note}";
                     else
                         projectNote.Note = note;
                 }

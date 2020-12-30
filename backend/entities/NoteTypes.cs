@@ -54,13 +54,13 @@ namespace Pims.Dal.Entities
         /// </summary>
         Adjustment = 11,
         /// <summary>
-        /// SPP program cost notes.
+        /// SPL program cost notes.
         /// </summary>
-        SppCost = 12,
+        SplCost = 12,
         /// <summary>
-        /// SPP gain or loss notes.
+        /// SPL gain or loss notes.
         /// </summary>
-        SppGain = 13,
+        SplGain = 13,
         /// <summary>
         /// Sales history notes.
         /// </summary>
@@ -84,6 +84,14 @@ namespace Pims.Dal.Entities
         /// <summary>
         /// A disposed project remediation note.
         /// </summary>
-        Remediation = 19
+        Remediation = 19,
+        /// <summary>
+        /// Rational for being removed from SPL.
+        /// </summary>
+        SplRemoval = 20,
+        /// <summary>
+        /// Notes related to the provided documentation.
+        /// </summary>
+        Documentation = 21
     }
 }

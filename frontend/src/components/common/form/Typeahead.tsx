@@ -7,13 +7,13 @@ import TooltipIcon from 'components/common/TooltipIcon';
 import classNames from 'classnames';
 import { useRef } from 'react';
 
-interface ITypeaheadFieldProps<T extends TypeaheadModel> extends TypeaheadProps<T> {
+export interface ITypeaheadFieldProps<T extends TypeaheadModel> extends TypeaheadProps<T> {
   name: string;
   label?: string;
   required?: boolean;
   /** whether or not this component should show the validation checkmark */
   hideValidation?: boolean;
-  /**Tooltip text */
+  /** Tooltip text */
   tooltip?: string;
   /** A function that takes in the value stored in formik and returns the corresponding label for that value. */
   getOptionByValue?: (value?: any) => T[];

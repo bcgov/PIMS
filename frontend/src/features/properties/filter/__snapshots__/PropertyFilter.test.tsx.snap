@@ -1,14 +1,65 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`MapFilterBar renders correctly 1`] = `
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.c0 .p {
+  font-size: 16px;
+}
+
 <form
   className=""
   noValidate={true}
   onSubmit={[Function]}
 >
   <div
-    className="map-filter-bar align-items-start form-row"
+    className="map-filter-bar form-row"
   >
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      onClick={[Function]}
+      style={
+        Object {
+          "height": 38,
+        }
+      }
+      type="button"
+    >
+      <div
+        className="c0"
+      >
+        <svg
+          fill="currentColor"
+          height={20}
+          size={20}
+          stroke="currentColor"
+          strokeWidth="0"
+          style={
+            Object {
+              "color": undefined,
+              "marginRight": 2,
+              "marginTop": 3,
+            }
+          }
+          viewBox="0 0 512 512"
+          width={20}
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M496 64H128V16c0-8.8-7.2-16-16-16H80c-8.8 0-16 7.2-16 16v48H16C7.2 64 0 71.2 0 80v32c0 8.8 7.2 16 16 16h48v368c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16V128h368c8.8 0 16-7.2 16-16V80c0-8.8-7.2-16-16-16zM160 384h320V160H160v224z"
+          />
+        </svg>
+      </div>
+    </button>
+    <div
+      className="vl"
+    />
     <div
       className="bar-item col"
     >
@@ -27,31 +78,19 @@ exports[`MapFilterBar renders correctly 1`] = `
               name="searchBy"
               onBlur={[Function]}
               onChange={[Function]}
-              value="address"
+              value="name"
             >
+              <option
+                className="option"
+                value="name"
+              >
+                Property Name
+              </option>
               <option
                 className="option"
                 value="address"
               >
                 Address
-              </option>
-              <option
-                className="option"
-                value="administrativeArea"
-              >
-                Location
-              </option>
-              <option
-                className="option"
-                value="pid"
-              >
-                PID/PIN
-              </option>
-              <option
-                className="option"
-                value="projectNumber"
-              >
-                RAEG or SPP No.
               </option>
             </select>
           </div>
@@ -64,11 +103,79 @@ exports[`MapFilterBar renders correctly 1`] = `
           >
             <input
               className="form-control"
-              id="input-address"
-              name="address"
+              id="input-name"
+              name="name"
               onBlur={[Function]}
               onChange={[Function]}
-              placeholder="Enter an address or city"
+              placeholder="Enter a name"
+              value=""
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      className="map-filter-typeahead col"
+    >
+      <div
+        className="form-group"
+      >
+        <div
+          className="rbt"
+          style={
+            Object {
+              "outline": "none",
+              "position": "relative",
+            }
+          }
+          tabIndex={-1}
+        >
+          <div
+            style={
+              Object {
+                "display": "flex",
+                "flex": 1,
+                "height": "100%",
+                "position": "relative",
+              }
+            }
+          >
+            <input
+              aria-autocomplete="both"
+              aria-expanded={false}
+              aria-haspopup="listbox"
+              autoComplete="off"
+              className="rbt-input-main form-control rbt-input"
+              id="administrativeArea-field"
+              name="administrativeArea"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onClick={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              placeholder="Enter a location"
+              role="combobox"
+              type="text"
+              value=""
+            />
+            <input
+              aria-hidden={true}
+              className="rbt-input-hint"
+              readOnly={true}
+              style={
+                Object {
+                  "backgroundColor": "transparent",
+                  "borderColor": "transparent",
+                  "boxShadow": "none",
+                  "color": "rgba(0, 0, 0, 0.35)",
+                  "left": 0,
+                  "pointerEvents": "none",
+                  "position": "absolute",
+                  "top": 0,
+                  "width": "100%",
+                }
+              }
+              tabIndex={-1}
               value=""
             />
           </div>
@@ -193,41 +300,6 @@ exports[`MapFilterBar renders correctly 1`] = `
             Disposed
           </option>
         </select>
-      </div>
-    </div>
-    <div
-      className="bar-item d-flex align-items-start col"
-    >
-      <div
-        className="form-group"
-      >
-        <input
-          className="form-control"
-          id="input-minLotSize"
-          name="minLotSize"
-          onBlur={[Function]}
-          onChange={[Function]}
-          placeholder="Min Lot Size"
-          value=""
-        />
-      </div>
-      <span
-        className="mx-2 align-self-center"
-      >
-        -
-      </span>
-      <div
-        className="form-group"
-      >
-        <input
-          className="form-control"
-          id="input-maxLotSize"
-          name="maxLotSize"
-          onBlur={[Function]}
-          onChange={[Function]}
-          placeholder="Max Lot Size"
-          value=""
-        />
       </div>
     </div>
     <div

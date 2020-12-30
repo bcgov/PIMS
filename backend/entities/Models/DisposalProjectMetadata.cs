@@ -10,6 +10,11 @@ namespace Pims.Dal.Entities.Models
         /// get/set - Whether an exemption was requested for the ERP.
         /// </summary>
         public bool ExemptionRequested { get; set; }
+
+        /// <summary>
+        /// get/set - The date when the ADM approved the exemption on.
+        /// </summary>
+        public DateTime? ExemptionApprovedOn { get; set; }
         #endregion
 
         #region ERP
@@ -104,6 +109,18 @@ namespace Pims.Dal.Entities.Models
         /// get/set - When the project was disposed.
         /// </summary>
         public DateTime? DisposedOn { get; set; }
+        #endregion
+
+        #region Remove from SPL
+        /// <summary>
+        /// get/set - When the request to be removed from SPL was.
+        /// </summary>
+        public DateTime? RemovalFromSplRequestOn { get; set; }
+
+        /// <summary>
+        /// get/set - When the request to be removed from SPL was approved on.
+        /// </summary>
+        public DateTime? RemovalFromSplApprovedOn { get; set; }
         #endregion
 
         #region Financials

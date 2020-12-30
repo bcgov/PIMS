@@ -7,6 +7,7 @@ export interface IProperty {
   propertyTypeId: number;
   pid: string;
   pin?: number;
+  name?: string;
   classificationId: number;
   classification: string;
   description: string;

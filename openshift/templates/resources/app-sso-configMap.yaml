@@ -18,7 +18,7 @@ objects:
     data:
       keycloak.json: '{
         "realm": "${KEYCLOAK_REALM}",
-        "auth-server-url": "https://sso-${ENV_NAME}.pathfinder.gov.bc.ca/auth",
+        "auth-server-url": "https://${ENV_NAME}.oidc.gov.bc.ca/auth",
         "ssl-required": "external",
         "resource": "${APP_NAME}-${COMP_NAME}",
         "public-client": true,

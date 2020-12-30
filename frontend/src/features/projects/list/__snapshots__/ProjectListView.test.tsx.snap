@@ -23,6 +23,21 @@ exports[`Project list view tests Matches snapshot 1`] = `
           <div
             class="form-group"
           >
+            <input
+              class="form-control"
+              id="input-name"
+              name="name"
+              placeholder="Search by project name or number"
+              value=""
+            />
+          </div>
+        </div>
+        <div
+          class="bar-item col-2"
+        >
+          <div
+            class="form-group"
+          >
             <div
               class="rbt"
               style="outline: none; position: relative;"
@@ -104,18 +119,94 @@ exports[`Project list view tests Matches snapshot 1`] = `
           </div>
         </div>
         <div
-          class="bar-item col-2"
+          class="bar-item col-1"
         >
           <div
             class="form-group"
           >
-            <input
-              class="form-control"
-              id="input-name"
-              name="name"
-              placeholder="Search by project name or number"
-              value=""
-            />
+            <select
+              class="form-select form-control"
+              id="input-fiscalYear"
+              name="fiscalYear"
+            >
+              <option
+                value=""
+              >
+                Fiscal Year
+              </option>
+              <option
+                class="option"
+                value="2021"
+              >
+                2020 / 2021
+              </option>
+              <option
+                class="option"
+                value="2020"
+              >
+                2019 / 2020
+              </option>
+              <option
+                class="option"
+                value="2019"
+              >
+                2018 / 2019
+              </option>
+              <option
+                class="option"
+                value="2018"
+              >
+                2017 / 2018
+              </option>
+              <option
+                class="option"
+                value="2017"
+              >
+                2016 / 2017
+              </option>
+              <option
+                class="option"
+                value="2016"
+              >
+                2015 / 2016
+              </option>
+              <option
+                class="option"
+                value="2015"
+              >
+                2014 / 2015
+              </option>
+              <option
+                class="option"
+                value="2014"
+              >
+                2013 / 2014
+              </option>
+              <option
+                class="option"
+                value="2013"
+              >
+                2012 / 2013
+              </option>
+              <option
+                class="option"
+                value="2012"
+              >
+                2011 / 2012
+              </option>
+              <option
+                class="option"
+                value="2011"
+              >
+                2010 / 2011
+              </option>
+              <option
+                class="option"
+                value="2010"
+              >
+                2009 / 2010
+              </option>
+            </select>
           </div>
         </div>
         <div
@@ -226,7 +317,11 @@ exports[`Project list view tests Matches snapshot 1`] = `
             style="box-sizing: border-box; flex: 65 0 auto; min-width: 65px; width: 3.5%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
             width="3.5%"
           >
-            Project No.
+            <div
+              class="sortable-column"
+            >
+              Project No.
+            </div>
           </div>
           <div
             class="th"
@@ -235,7 +330,11 @@ exports[`Project list view tests Matches snapshot 1`] = `
             style="box-sizing: border-box; flex: 200 0 auto; min-width: 200px; width: 7%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
             width="7%"
           >
-            Name
+            <div
+              class="sortable-column"
+            >
+              Name
+            </div>
           </div>
           <div
             class="th"
@@ -244,7 +343,11 @@ exports[`Project list view tests Matches snapshot 1`] = `
             style="box-sizing: border-box; flex: 50 0 auto; min-width: 50px; width: 7%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
             width="7%"
           >
-            Status
+            <div
+              class="sortable-column"
+            >
+              Status
+            </div>
           </div>
           <div
             class="th"
@@ -253,7 +356,11 @@ exports[`Project list view tests Matches snapshot 1`] = `
             style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 7%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
             width="7%"
           >
-            Agency
+            <div
+              class="sortable-column"
+            >
+              Agency
+            </div>
           </div>
           <div
             class="th"
@@ -262,7 +369,11 @@ exports[`Project list view tests Matches snapshot 1`] = `
             style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 3.5%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
             width="3.5%"
           >
-            Zoning
+            <div
+              class="sortable-column"
+            >
+              Zoning
+            </div>
           </div>
           <div
             class="th"
@@ -271,7 +382,11 @@ exports[`Project list view tests Matches snapshot 1`] = `
             style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 3.5%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
             width="3.5%"
           >
-            Zoning Potential
+            <div
+              class="sortable-column"
+            >
+              Zoning Potential
+            </div>
           </div>
           <div
             class="th"
@@ -280,7 +395,11 @@ exports[`Project list view tests Matches snapshot 1`] = `
             style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 3.5%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
             width="3.5%"
           >
-            Net Book Value
+            <div
+              class="sortable-column"
+            >
+              Net Book Value
+            </div>
           </div>
           <div
             class="th"
@@ -289,7 +408,11 @@ exports[`Project list view tests Matches snapshot 1`] = `
             style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 3.5%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
             width="3.5%"
           >
-            Market Value
+            <div
+              class="sortable-column"
+            >
+              Market Value
+            </div>
           </div>
           <div
             class="th"
@@ -298,7 +421,11 @@ exports[`Project list view tests Matches snapshot 1`] = `
             style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 7%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
             width="7%"
           >
-            Updated On
+            <div
+              class="sortable-column"
+            >
+              Updated On
+            </div>
           </div>
           <div
             class="th"
@@ -307,7 +434,11 @@ exports[`Project list view tests Matches snapshot 1`] = `
             style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 7%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
             width="7%"
           >
-            Updated By
+            <div
+              class="sortable-column"
+            >
+              Updated By
+            </div>
           </div>
         </div>
       </div>
