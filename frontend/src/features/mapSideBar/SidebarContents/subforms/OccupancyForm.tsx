@@ -53,7 +53,7 @@ export const OccupancyForm: React.FC<IOccupancyProps> = ({
           />
         </Row>
         <Row>
-          <Label>Net Rentable Area</Label>
+          <Label>Net Usable Area</Label>
           <InputGroup
             displayErrorTooltips
             fast={true}
