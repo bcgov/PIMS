@@ -574,7 +574,7 @@ exports[`sub-form BuildingForm functionality loads initial building data 1`] = `
           <label
             class="form-label"
           >
-            Net Rentable Area
+            Net Usable Area
           </label>
           <div
             class="input-group required"
