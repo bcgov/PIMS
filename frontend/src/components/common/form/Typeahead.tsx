@@ -13,7 +13,7 @@ interface ITypeaheadFieldProps<T extends TypeaheadModel> extends TypeaheadProps<
   required?: boolean;
   /** whether or not this component should show the validation checkmark */
   hideValidation?: boolean;
-  /**Tooltip text */
+  /** Tooltip text */
   tooltip?: string;
   /** A function that takes in the value stored in formik and returns the corresponding label for that value. */
   getOptionByValue?: (value?: any) => T[];

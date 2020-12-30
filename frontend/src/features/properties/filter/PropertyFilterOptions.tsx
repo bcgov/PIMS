@@ -14,7 +14,7 @@ export const PropertyFilterOptions: React.FC = () => {
     ],
     placeholders: {
       name: 'Enter a name',
-      address: 'Enter an address or city',
+      address: 'Enter an address',
     },
   };
 
