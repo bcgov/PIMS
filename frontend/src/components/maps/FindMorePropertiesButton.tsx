@@ -68,8 +68,7 @@ export const FindMorePropertiesButton: React.FC<IFindMorePropertiesButton> = ({ 
     <OverlayTrigger trigger="click" rootClose transition overlay={popover} placement="bottom">
       <Button style={{ height: 38 }}>
         <ButtonContent>
-          <FaSign size={20} style={{ marginRight: 5, marginTop: 3 }} />
-          <p>Find available properties</p>
+          <FaSign size={20} style={{ marginRight: 2, marginTop: 3 }} />
         </ButtonContent>
       </Button>
     </OverlayTrigger>

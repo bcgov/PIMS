@@ -81,6 +81,13 @@ const FindMorePropertiesForm = <T extends any>(props: any) => {
         (SPP)
       </p>
       <FormSection>
+        <StyledRow style={{ marginLeft: 140, paddingTop: 10 }}>
+          <Check label="ERP Properties" field="inEnhancedReferralProcess" />
+          <VerticalLine />
+          <Check label="SPP Properties" field="inSurplusPropertyProgram" />
+        </StyledRow>
+      </FormSection>
+      <FormSection>
         <Row style={{ marginLeft: 10 }}>
           <h6>Search by</h6>
         </Row>
