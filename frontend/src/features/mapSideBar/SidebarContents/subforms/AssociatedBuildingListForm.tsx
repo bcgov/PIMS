@@ -27,8 +27,8 @@ export const AssociatedBuildingListForm: React.FC<ITenancyProps> = ({ title, nam
         <p>
           The following building(s) are associated in PIMS with this land.
           <br />
-          You will have an opportunity to associate another building (if required) after the Review
-          & Update step.{' '}
+          To associate more buildings, find/create the building(s) within PIMS and go to the
+          Associated Land step.{' '}
         </p>
       </Row>
       <Row>
