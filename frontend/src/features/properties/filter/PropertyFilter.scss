@@ -1,7 +1,6 @@
 @import '../../../fonts.scss';
 @import '../../../variables';
 @import '../../../colors';
-
 .container-fluid {
   &.map-filter-container {
     height: auto;
@@ -35,12 +34,6 @@
         .form-group {
           padding: 0;
           margin: 0;
-        }
-      }
-      .agency-item {
-        .form-control {
-          width: 230px;
-          max-width: 250px;
         }
       }
       .map-filter-typeahead {
