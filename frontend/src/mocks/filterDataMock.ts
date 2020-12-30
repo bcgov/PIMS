@@ -66,6 +66,23 @@ export const CLASSIFICATIONS = [
   },
 ] as ILookupCode[];
 
+export const ADMINISTRATIVEAREAS = [
+  {
+    code: '0',
+    name: 'Victoria',
+    id: '0',
+    isDisabled: false,
+    type: 'AdministrativeArea',
+  },
+  {
+    code: '1',
+    name: 'Royal Oak',
+    id: '1',
+    isDisabled: false,
+    type: 'AdministrativeArea',
+  },
+] as ILookupCode[];
+
 export const AGENCIES = [
   {
     code: 'AEST',

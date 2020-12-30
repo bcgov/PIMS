@@ -58,6 +58,7 @@ export type MapProps = {
   properties: IProperty[];
   agencies: ILookupCode[];
   propertyClassifications: ILookupCode[];
+  administrativeAreas: ILookupCode[];
   lotSizes: number[];
   mapRef: React.RefObject<ReactLeafletMap<LeafletMapProps, LeafletMap>>;
   selectedProperty?: IPropertyDetail | null;
@@ -107,8 +108,8 @@ const getQueryParams = (filter: IPropertyFilter): IGeoSearchParams => {
     minLandArea: floatOrUndefined(filter.minLotSize),
     maxLandArea: floatOrUndefined(filter.maxLotSize),
     rentableArea: floatOrUndefined(filter.rentableArea),
-    inSurplusPropertyProgram: filter.inSurplusPropertyProgram === 'true',
-    inEnhancedReferralProcess: filter.inEnhancedReferralProcess === 'true',
+    inSurplusPropertyProgram: filter.inSurplusPropertyProgram,
+    inEnhancedReferralProcess: filter.inEnhancedReferralProcess,
     name: filter.name,
     predominateUseId: parseInt(filter.predominateUseId!),
     constructionTypeId: parseInt(filter.constructionTypeId!),
@@ -129,6 +130,7 @@ const Map: React.FC<MapProps> = ({
   zoom: zoomProp,
   agencies,
   propertyClassifications,
+  administrativeAreas,
   lotSizes,
   selectedProperty,
   onMarkerClick,
@@ -285,6 +287,7 @@ const Map: React.FC<MapProps> = ({
                   <PropertyFilter
                     defaultFilter={defaultFilterValues}
                     agencyLookupCodes={agencies}
+                    adminAreaLookupCodes={administrativeAreas}
                     propertyClassifications={propertyClassifications}
                     onChange={handleMapFilterChange}
                   />

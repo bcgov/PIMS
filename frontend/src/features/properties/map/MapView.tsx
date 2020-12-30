@@ -61,6 +61,9 @@ const MapView: React.FC<MapViewProps> = (props: MapViewProps) => {
   const propertyClassifications = _.filter(lookupCodes, (lookupCode: ILookupCode) => {
     return lookupCode.type === API.PROPERTY_CLASSIFICATION_CODE_SET_NAME && !!lookupCode.isVisible;
   });
+  const administrativeAreas = _.filter(lookupCodes, (lookupCode: ILookupCode) => {
+    return lookupCode.type === API.AMINISTRATIVE_AREA_CODE_SET_NAME;
+  });
   const [selectedDraftProperty, setSelectedDraftProperty] = useState<IPropertyDetail | null>(null);
 
   const lotSizes = fetchLotSizes();
@@ -99,6 +102,7 @@ const MapView: React.FC<MapViewProps> = (props: MapViewProps) => {
           }
           agencies={agencies}
           propertyClassifications={propertyClassifications}
+          administrativeAreas={administrativeAreas}
           lotSizes={lotSizes}
           onMarkerClick={
             props.onMarkerClick ??

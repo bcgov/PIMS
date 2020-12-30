@@ -67,7 +67,7 @@ exports[`Property list view Matches snapshot 1`] = `
                 size="20"
                 stroke="currentColor"
                 stroke-width="0"
-                style="margin-right: 5px; margin-top: 3px;"
+                style="margin-right: 2px; margin-top: 3px;"
                 viewBox="0 0 512 512"
                 width="20"
                 xmlns="http://www.w3.org/2000/svg"
@@ -76,9 +76,6 @@ exports[`Property list view Matches snapshot 1`] = `
                   d="M496 64H128V16c0-8.8-7.2-16-16-16H80c-8.8 0-16 7.2-16 16v48H16C7.2 64 0 71.2 0 80v32c0 8.8 7.2 16 16 16h48v368c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16V128h368c8.8 0 16-7.2 16-16V80c0-8.8-7.2-16-16-16zM160 384h320V160H160v224z"
                 />
               </svg>
-              <p>
-                Find available properties
-              </p>
             </div>
           </button>
           <div
@@ -126,7 +123,46 @@ exports[`Property list view Matches snapshot 1`] = `
                     class="form-control"
                     id="input-address"
                     name="address"
-                    placeholder="Enter an address or city"
+                    placeholder="Enter an address"
+                    value=""
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="mapfilter-typeahead col"
+          >
+            <div
+              class="form-group"
+            >
+              <div
+                class="rbt"
+                style="outline: none; position: relative;"
+                tabindex="-1"
+              >
+                <div
+                  style="display: flex; flex: 1; height: 100%; position: relative;"
+                >
+                  <input
+                    aria-autocomplete="both"
+                    aria-expanded="false"
+                    aria-haspopup="listbox"
+                    autocomplete="off"
+                    class="rbt-input-main form-control rbt-input"
+                    id="administrativeArea-field"
+                    name="administrativeArea"
+                    placeholder="Enter a location"
+                    role="combobox"
+                    type="text"
+                    value=""
+                  />
+                  <input
+                    aria-hidden="true"
+                    class="rbt-input-hint"
+                    readonly=""
+                    style="background-color: transparent; border-color: transparent; box-shadow: none; color: rgba(0, 0, 0, 0.35); left: 0px; pointer-events: none; position: absolute; top: 0px; width: 100%;"
+                    tabindex="-1"
                     value=""
                   />
                 </div>
