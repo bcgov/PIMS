@@ -88,7 +88,7 @@ const FindMorePropertiesForm = <T extends any>(props: any) => {
         </StyledRow>
       </FormSection>
       <FormSection>
-        <Row style={{ marginLeft: 5, paddingTop:10 }}>
+        <Row style={{ marginLeft: 5, paddingTop: 10 }}>
           <h6>Search by</h6>
         </Row>
         <StyledRow style={{ marginLeft: 35 }}>
