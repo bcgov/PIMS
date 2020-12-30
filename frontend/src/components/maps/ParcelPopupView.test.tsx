@@ -7,8 +7,13 @@ import { render, cleanup } from '@testing-library/react';
 import { useKeycloak } from '@react-keycloak/web';
 import { IAddress, IParcel } from 'actions/parcelsActions';
 import { Claims } from 'constants/claims';
+import configureMockStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
+import * as reducerTypes from 'constants/reducerTypes';
+import { Provider } from 'react-redux';
 
 const history = createMemoryHistory();
+const mockStore = configureMockStore([thunk]);
 
 jest.mock('@react-keycloak/web');
 (useKeycloak as jest.Mock).mockReturnValue({
@@ -18,6 +23,10 @@ jest.mock('@react-keycloak/web');
     },
     subject: 'test',
   },
+});
+
+const store = mockStore({
+  [reducerTypes.ProjectReducers.PROJECT]: { status: { route: `/projects/erp` } },
 });
 
 const mockParcel = (agencyId: number, projectNumber?: string) => {
@@ -66,9 +75,11 @@ describe('Parcel popup view', () => {
   it('renders correctly', () => {
     const tree = renderer
       .create(
-        <Router history={history}>
-          <ParcelPopupView parcel={mockParcel(1)} />
-        </Router>,
+        <Provider store={store}>
+          <Router history={history}>
+            <ParcelPopupView parcel={mockParcel(1)} />
+          </Router>
+        </Provider>,
       )
       .toJSON();
     expect(tree).toMatchSnapshot();
@@ -76,18 +87,22 @@ describe('Parcel popup view', () => {
 
   it('displays update option when user belongs to buildings agency', () => {
     const { getByText } = render(
-      <Router history={history}>
-        <ParcelPopupView parcel={mockParcel(1)} />
-      </Router>,
+      <Provider store={store}>
+        <Router history={history}>
+          <ParcelPopupView parcel={mockParcel(1)} />
+        </Router>
+      </Provider>,
     );
     expect(getByText(/Update/i)).toBeInTheDocument();
   });
 
   it('displays only view option when user not in properties agency', () => {
     const { getByText, queryByText } = render(
-      <Router history={history}>
-        <ParcelPopupView parcel={mockParcel(2)} />
-      </Router>,
+      <Provider store={store}>
+        <Router history={history}>
+          <ParcelPopupView parcel={mockParcel(2)} />
+        </Router>
+      </Provider>,
     );
     expect(getByText(/View/i)).toBeInTheDocument();
     expect(queryByText(/Update/i)).toBeNull();
@@ -104,18 +119,22 @@ describe('Parcel popup view', () => {
       },
     });
     const { getByText } = render(
-      <Router history={history}>
-        <ParcelPopupView parcel={mockParcel(2)} />
-      </Router>,
+      <Provider store={store}>
+        <Router history={history}>
+          <ParcelPopupView parcel={mockParcel(2)} />
+        </Router>
+      </Provider>,
     );
     expect(getByText(/Update/i)).toBeInTheDocument();
   });
 
   it('displays clickable project number when the property belongs to a project', () => {
     const { getByText } = render(
-      <Router history={history}>
-        <ParcelPopupView parcel={mockParcel(1, 'Test-Project-Number')} />
-      </Router>,
+      <Provider store={store}>
+        <Router history={history}>
+          <ParcelPopupView parcel={mockParcel(1, 'Test-Project-Number')} />
+        </Router>
+      </Provider>,
     );
     const projectNum = getByText(/Test-Project-Number/);
     expect(getByText(/SPP/)).toBeInTheDocument();
@@ -124,9 +143,11 @@ describe('Parcel popup view', () => {
 
   it('does not display project number field when none present', () => {
     const { queryByText } = render(
-      <Router history={history}>
-        <ParcelPopupView parcel={mockParcel(1)} />
-      </Router>,
+      <Provider store={store}>
+        <Router history={history}>
+          <ParcelPopupView parcel={mockParcel(1)} />
+        </Router>
+      </Provider>,
     );
     expect(queryByText(/SPP/)).toBeNull();
   });
