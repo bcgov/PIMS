@@ -21,7 +21,7 @@ const FormikTable: React.FC<IFormikTableProps> = ({
   disabled,
 }: IFormikTableProps) => {
   const { values } = useFormikContext();
-  const data = getIn(values, field);
+  const data = getIn(values, field) ?? [];
 
   return (
     <Container fluid className="PropertyListView">
@@ -37,6 +37,7 @@ const FormikTable: React.FC<IFormikTableProps> = ({
               footer
             />
           ),
+          // TODO: This is almost guaranteed to be an invalid list of dependencies for this Memo.
           // eslint-disable-next-line react-hooks/exhaustive-deps
           [data.length, name],
         )}

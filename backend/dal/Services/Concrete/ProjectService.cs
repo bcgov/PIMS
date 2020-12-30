@@ -520,6 +520,7 @@ namespace Pims.Dal.Services
 
             // Determine if there are any response changes.
             var responses = project.GetResponseChanges(project);
+            originalProject.UpdateResponses(project);
 
             // If the note was changed generate a notification for it.
             var noteChanged = !String.IsNullOrWhiteSpace(project.GetNoteText(NoteTypes.Public)) && originalProject.GetNoteText(NoteTypes.Public) != project.GetNoteText(NoteTypes.Public);
@@ -709,6 +710,7 @@ namespace Pims.Dal.Services
 
             // Determine if there are any response changes.
             var responses = project.GetResponseChanges(project);
+            originalProject.UpdateResponses(project);
 
             // If the note was changed generate a notification for it.
             var noteChanged = !String.IsNullOrWhiteSpace(project.GetNoteText(NoteTypes.Public)) && originalProject.GetNoteText(NoteTypes.Public) != project.GetNoteText(NoteTypes.Public);
