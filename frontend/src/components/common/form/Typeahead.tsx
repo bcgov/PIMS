@@ -7,7 +7,7 @@ import TooltipIcon from 'components/common/TooltipIcon';
 import classNames from 'classnames';
 import { useRef } from 'react';
 
-interface ITypeaheadFieldProps<T extends TypeaheadModel> extends TypeaheadProps<T> {
+export interface ITypeaheadFieldProps<T extends TypeaheadModel> extends TypeaheadProps<T> {
   name: string;
   label?: string;
   required?: boolean;

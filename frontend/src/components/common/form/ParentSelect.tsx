@@ -27,6 +27,8 @@ interface IParentSelect {
   clearSelected?: boolean;
   /** reset state of clear selected via this component */
   setClearSelected?: Function;
+  /** Event occurs when the selection changes. */
+  onChange?: (vals: any) => void;
 }
 
 /** Component used to group children items with their parent.
@@ -43,6 +45,7 @@ export const ParentSelect: React.FC<IParentSelect> = ({
   clearSelected,
   setClearSelected,
   label,
+  onChange,
 }) => {
   const { setFieldValue, values } = useFormikContext();
   const value = getIn(values, field);
@@ -77,20 +80,22 @@ export const ParentSelect: React.FC<IParentSelect> = ({
   }, [clearSelected, setClearSelected]);
 
   /** function that gets called when menu header is clicked */
-  const handleMenuHeaderClick = (x: SelectOption) => {
-    setFieldValue(field, x);
+  const handleMenuHeaderClick = (vals: SelectOption) => {
+    setFieldValue(field, vals);
     /** trigger ref in Typeahead to call onBlur so menu closes */
     setClear(true);
+    onChange?.([vals]);
   };
 
   /** fill the multiselect enabled input to all the corresponding values */
-  const handleMultiSelectHeaderClick = (x: any) => {
-    setMultiSelections(x);
+  const handleMultiSelectHeaderClick = (vals: any) => {
+    setMultiSelections(vals);
     setFieldValue(
       field,
-      x.map((x: any) => x.value),
+      vals.map((x: any) => x.value),
     );
     setClear(true);
+    onChange?.(vals);
   };
 
   return (
@@ -112,6 +117,7 @@ export const ParentSelect: React.FC<IParentSelect> = ({
           } else {
             setFieldValue(field, getIn(vals[0], 'name') ?? vals[0]);
           }
+          onChange?.(vals);
         }}
         multiple={enableMultiple}
         options={options}

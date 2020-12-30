@@ -671,7 +671,29 @@ namespace Pims.Dal.Helpers.Extensions
                     responses.Add(response);
                 }
             }
+
+            // Any responses that were deleted should now be ignored.
+            foreach (var response in originalProject.Responses.Except(responses))
+            {
+                response.Response = NotificationResponses.Ignore;
+                responses.Add(response);
+            }
             return responses;
+        }
+
+        /// <summary>
+        /// Removes any responses from the original project that have been removed from the updated project.
+        /// </summary>
+        /// <param name="originalProject"></param>
+        /// <param name="updatedProject"></param>
+        public static void UpdateResponses(this Entity.Project originalProject, Entity.Project updatedProject)
+        {
+            var responseIds = updatedProject.Responses.Select(r => r.AgencyId).ToArray();
+            var removeResponses = originalProject.Responses.Where(r => !responseIds.Contains(r.AgencyId)).ToArray();
+            foreach (var response in removeResponses)
+            {
+                originalProject.Responses.Remove(response);
+            }
         }
     }
 }

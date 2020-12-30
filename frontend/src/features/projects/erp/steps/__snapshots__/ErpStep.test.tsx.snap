@@ -1410,316 +1410,222 @@ exports[`ERP Approval Step renders correctly 1`] = `
             Agency Interest
           </h3>
           <div
-            className="PropertyListView container-fluid"
+            className="row"
           >
             <div
-              className="ScrollContainer"
+              className="col-md-5"
             >
               <div
-                className="table"
-                role="table"
-                style={
-                  Object {
-                    "minWidth": undefined,
-                  }
-                }
+                className="form-group"
               >
                 <div
-                  className="thead thead-light"
+                  className="rbt"
+                  style={
+                    Object {
+                      "outline": "none",
+                      "position": "relative",
+                    }
+                  }
+                  tabIndex={-1}
                 >
                   <div
-                    className="tr"
-                    role="row"
                     style={
                       Object {
                         "display": "flex",
-                        "flex": "1 0 auto",
-                        "minWidth": "120px",
+                        "flex": 1,
+                        "height": "100%",
+                        "position": "relative",
+                      }
+                    }
+                  >
+                    <input
+                      aria-autocomplete="both"
+                      aria-expanded={false}
+                      aria-haspopup="listbox"
+                      autoComplete="off"
+                      className="rbt-input-main form-control rbt-input"
+                      id="addAgencyResponse-field"
+                      name="addAgencyResponse"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onClick={[Function]}
+                      onFocus={[Function]}
+                      onKeyDown={[Function]}
+                      placeholder="Enter an Agency"
+                      role="combobox"
+                      type="text"
+                      value=""
+                    />
+                    <input
+                      aria-hidden={true}
+                      className="rbt-input-hint"
+                      readOnly={true}
+                      style={
+                        Object {
+                          "backgroundColor": "transparent",
+                          "borderColor": "transparent",
+                          "boxShadow": "none",
+                          "color": "rgba(0, 0, 0, 0.35)",
+                          "left": 0,
+                          "pointerEvents": "none",
+                          "position": "absolute",
+                          "top": 0,
+                          "width": "100%",
+                        }
+                      }
+                      tabIndex={-1}
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              className="col"
+            >
+              <button
+                className="btn btn-primary"
+                disabled={true}
+                onClick={[Function]}
+                type="button"
+              >
+                Add
+              </button>
+            </div>
+          </div>
+          <div
+            className="row"
+          >
+            <div
+              className="col"
+            >
+              <div
+                className="PropertyListView container-fluid"
+              >
+                <div
+                  className="ScrollContainer"
+                >
+                  <div
+                    className="table"
+                    role="table"
+                    style={
+                      Object {
+                        "minWidth": undefined,
                       }
                     }
                   >
                     <div
-                      className="th"
-                      colSpan={1}
-                      role="columnheader"
-                      style={
-                        Object {
-                          "alignItems": "center",
-                          "boxSizing": "border-box",
-                          "display": "flex",
-                          "flex": "100 0 auto",
-                          "justifyContent": "flex-start",
-                          "minWidth": "30px",
-                          "textAlign": "left",
-                          "width": "100px",
-                        }
-                      }
+                      className="thead thead-light"
                     >
                       <div
-                        className="sortable-column"
-                      >
-                        Agency
-                      </div>
-                    </div>
-                    <div
-                      className="th"
-                      colSpan={1}
-                      role="columnheader"
-                      style={
-                        Object {
-                          "alignItems": "center",
-                          "boxSizing": "border-box",
-                          "display": "flex",
-                          "flex": "60 0 auto",
-                          "justifyContent": "flex-start",
-                          "minWidth": "30px",
-                          "textAlign": "left",
-                          "width": "60px",
-                        }
-                      }
-                    >
-                      <div
-                        className="sortable-column"
-                      >
-                        Business Case Received Date
-                      </div>
-                    </div>
-                    <div
-                      className="th"
-                      colSpan={1}
-                      role="columnheader"
-                      style={
-                        Object {
-                          "alignItems": "center",
-                          "boxSizing": "border-box",
-                          "display": "flex",
-                          "flex": "100 0 auto",
-                          "justifyContent": "flex-start",
-                          "minWidth": "30px",
-                          "textAlign": "left",
-                          "width": "100px",
-                        }
-                      }
-                    >
-                      <div
-                        className="sortable-column"
-                      >
-                        Note
-                      </div>
-                    </div>
-                    <div
-                      className="th"
-                      colSpan={1}
-                      role="columnheader"
-                      style={
-                        Object {
-                          "alignItems": "center",
-                          "boxSizing": "border-box",
-                          "display": "flex",
-                          "flex": "60 0 auto",
-                          "justifyContent": "flex-start",
-                          "minWidth": "30px",
-                          "textAlign": "left",
-                          "width": "60px",
-                        }
-                      }
-                    >
-                      <div
-                        className="sortable-column"
-                      >
-                        Response
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div
-                  className="tbody"
-                  role="rowgroup"
-                >
-                  <div
-                    className="tr-wrapper"
-                  >
-                    <div
-                      className="tr"
-                      role="row"
-                      style={
-                        Object {
-                          "display": "flex",
-                          "flex": "1 0 auto",
-                          "minWidth": "120px",
-                        }
-                      }
-                    >
-                      <div
-                        className="td"
-                        onClick={[Function]}
-                        role="cell"
+                        className="tr"
+                        role="row"
                         style={
                           Object {
-                            "alignItems": "flex-start",
-                            "boxSizing": "border-box",
                             "display": "flex",
-                            "flex": "100 0 auto",
-                            "justifyContent": "flex-start",
-                            "minWidth": "30px",
-                            "textAlign": "left",
-                            "width": "100px",
+                            "flex": "1 0 auto",
+                            "minWidth": "120px",
                           }
                         }
-                        title=""
                       >
-                        BC Transit
-                      </div>
-                      <div
-                        className="td"
-                        onClick={[Function]}
-                        role="cell"
-                        style={
-                          Object {
-                            "alignItems": "flex-start",
-                            "boxSizing": "border-box",
-                            "display": "flex",
-                            "flex": "60 0 auto",
-                            "justifyContent": "flex-start",
-                            "minWidth": "30px",
-                            "textAlign": "left",
-                            "width": "60px",
+                        <div
+                          className="th"
+                          colSpan={1}
+                          role="columnheader"
+                          style={
+                            Object {
+                              "alignItems": "center",
+                              "boxSizing": "border-box",
+                              "display": "flex",
+                              "flex": "100 0 auto",
+                              "justifyContent": "flex-start",
+                              "minWidth": "30px",
+                              "textAlign": "left",
+                              "width": "100px",
+                            }
                           }
-                        }
-                        title=""
-                      >
-                        
-                      </div>
-                      <div
-                        className="td"
-                        onClick={[Function]}
-                        role="cell"
-                        style={
-                          Object {
-                            "alignItems": "flex-start",
-                            "boxSizing": "border-box",
-                            "display": "flex",
-                            "flex": "100 0 auto",
-                            "justifyContent": "flex-start",
-                            "minWidth": "30px",
-                            "textAlign": "left",
-                            "width": "100px",
+                        >
+                          <div
+                            className="sortable-column"
+                          >
+                            Agency
+                          </div>
+                        </div>
+                        <div
+                          className="th"
+                          colSpan={1}
+                          role="columnheader"
+                          style={
+                            Object {
+                              "alignItems": "center",
+                              "boxSizing": "border-box",
+                              "display": "flex",
+                              "flex": "60 0 auto",
+                              "justifyContent": "flex-start",
+                              "minWidth": "30px",
+                              "textAlign": "left",
+                              "width": "60px",
+                            }
                           }
-                        }
-                        title=""
-                      />
-                      <div
-                        className="td"
-                        onClick={[Function]}
-                        role="cell"
-                        style={
-                          Object {
-                            "alignItems": "flex-start",
-                            "boxSizing": "border-box",
-                            "display": "flex",
-                            "flex": "60 0 auto",
-                            "justifyContent": "flex-start",
-                            "minWidth": "30px",
-                            "textAlign": "left",
-                            "width": "60px",
+                        >
+                          <div
+                            className="sortable-column"
+                          >
+                            Business Case Received Date
+                          </div>
+                        </div>
+                        <div
+                          className="th"
+                          colSpan={1}
+                          role="columnheader"
+                          style={
+                            Object {
+                              "alignItems": "center",
+                              "boxSizing": "border-box",
+                              "display": "flex",
+                              "flex": "100 0 auto",
+                              "justifyContent": "flex-start",
+                              "minWidth": "30px",
+                              "textAlign": "left",
+                              "width": "100px",
+                            }
                           }
-                        }
-                        title=""
-                      >
-                        Ignore
+                        >
+                          <div
+                            className="sortable-column"
+                          >
+                            Note
+                          </div>
+                        </div>
+                        <div
+                          className="th"
+                          colSpan={1}
+                          role="columnheader"
+                          style={
+                            Object {
+                              "alignItems": "center",
+                              "boxSizing": "border-box",
+                              "display": "flex",
+                              "flex": "80 0 auto",
+                              "justifyContent": "flex-start",
+                              "minWidth": "30px",
+                              "textAlign": "left",
+                              "width": "80px",
+                            }
+                          }
+                        >
+                          <div
+                            className="sortable-column"
+                          >
+                            Response
+                          </div>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </div>
-                <div
-                  className="tfoot tfoot-light"
-                >
-                  <div
-                    className="tr"
-                    role="row"
-                    style={
-                      Object {
-                        "display": "flex",
-                        "flex": "1 0 auto",
-                        "minWidth": "120px",
-                      }
-                    }
-                  >
                     <div
-                      className="th"
-                      colSpan={1}
-                      role="columnheader"
-                      style={
-                        Object {
-                          "alignItems": "center",
-                          "boxSizing": "border-box",
-                          "display": "flex",
-                          "flex": "100 0 auto",
-                          "justifyContent": "flex-start",
-                          "minWidth": "30px",
-                          "textAlign": "left",
-                          "width": "100px",
-                        }
-                      }
+                      className="no-rows-message"
                     >
-                       
-                    </div>
-                    <div
-                      className="th"
-                      colSpan={1}
-                      role="columnheader"
-                      style={
-                        Object {
-                          "alignItems": "center",
-                          "boxSizing": "border-box",
-                          "display": "flex",
-                          "flex": "60 0 auto",
-                          "justifyContent": "flex-start",
-                          "minWidth": "30px",
-                          "textAlign": "left",
-                          "width": "60px",
-                        }
-                      }
-                    >
-                       
-                    </div>
-                    <div
-                      className="th"
-                      colSpan={1}
-                      role="columnheader"
-                      style={
-                        Object {
-                          "alignItems": "center",
-                          "boxSizing": "border-box",
-                          "display": "flex",
-                          "flex": "100 0 auto",
-                          "justifyContent": "flex-start",
-                          "minWidth": "30px",
-                          "textAlign": "left",
-                          "width": "100px",
-                        }
-                      }
-                    >
-                       
-                    </div>
-                    <div
-                      className="th"
-                      colSpan={1}
-                      role="columnheader"
-                      style={
-                        Object {
-                          "alignItems": "center",
-                          "boxSizing": "border-box",
-                          "display": "flex",
-                          "flex": "60 0 auto",
-                          "justifyContent": "flex-start",
-                          "minWidth": "30px",
-                          "textAlign": "left",
-                          "width": "60px",
-                        }
-                      }
-                    >
-                       
+                      No rows to display
                     </div>
                   </div>
                 </div>
