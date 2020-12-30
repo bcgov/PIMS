@@ -18,7 +18,7 @@ exports[`MapFilterBar renders correctly 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="map-filter-bar align-items-start form-row"
+    className="map-filter-bar form-row"
   >
     <button
       className="btn btn-primary"
@@ -115,7 +115,7 @@ exports[`MapFilterBar renders correctly 1`] = `
       </div>
     </div>
     <div
-      className="mapfilter-typeahead col"
+      className="map-filter-typeahead col"
     >
       <div
         className="form-group"
