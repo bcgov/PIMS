@@ -7,7 +7,6 @@ import {
   TextArea,
   InputGroup,
   SelectOptions,
-  FastDatePicker,
   Check,
   FastCurrencyInput,
 } from 'components/common/form';
@@ -106,6 +105,7 @@ export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
                   disabled={editInfo.identification}
                   type="number"
                   field={withNameSpace('latitude')}
+                  required
                 />
               </Row>
               <Row className="content-item">
@@ -117,6 +117,7 @@ export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
                   disabled={editInfo.identification}
                   type="number"
                   field={withNameSpace('longitude')}
+                  required
                 />
               </Row>
               <br></br>
@@ -130,6 +131,7 @@ export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
                   field={withNameSpace('classificationId')}
                   type="number"
                   options={props.classifications}
+                  required
                 />
               </Row>
               <Row className="content-item">
@@ -141,6 +143,7 @@ export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
                   field={withNameSpace('buildingPredominateUseId')}
                   type="number"
                   options={props.predominateUses}
+                  required
                 />
               </Row>
               <Row className="content-item">
@@ -152,6 +155,7 @@ export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
                   field={withNameSpace('buildingConstructionTypeId')}
                   type="number"
                   options={props.constructionType}
+                  required
                 />
               </Row>
               <Row className="content-item">
@@ -206,7 +210,20 @@ export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
                 />
               </Row>
               <Row className="content-item">
-                <Label>Net Rentable Area</Label>
+                <Label>Total Area</Label>
+                <InputGroup
+                  displayErrorTooltips
+                  fast={true}
+                  formikProps={formikProps}
+                  disabled={editInfo.tenancy}
+                  type="number"
+                  field={withNameSpace('squareFootage')}
+                  postText="Sq. M"
+                  required
+                />
+              </Row>
+              <Row className="content-item">
+                <Label>Net Usable Area</Label>
                 <InputGroup
                   className="area"
                   displayErrorTooltips
@@ -216,49 +233,18 @@ export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
                   disabled={editInfo.tenancy}
                   type="number"
                   field={withNameSpace('rentableArea')}
-                  postText="Sq. Ft"
+                  postText="Sq. M"
+                  required
                 />
               </Row>
               <Row className="content-item">
-                <Label>Tenancy</Label>
+                <Label>Tenancy %</Label>
                 <FastInput
                   displayErrorTooltips
                   formikProps={formikProps}
                   disabled={editInfo.tenancy}
                   field={withNameSpace('buildingTenancy')}
                 />
-              </Row>
-              <Row className="content-item">
-                <Label>Type of Occupant</Label>
-                <FastSelect
-                  formikProps={formikProps}
-                  disabled={editInfo.tenancy}
-                  placeholder="Must Select One"
-                  field={withNameSpace('buildingOccupantTypeId')}
-                  type="number"
-                  options={props.occupantTypes}
-                />
-              </Row>
-              <Row className="content-item">
-                <Label>Occupant Name</Label>
-                <FastInput
-                  displayErrorTooltips
-                  formikProps={formikProps}
-                  disabled={editInfo.tenancy}
-                  field={withNameSpace('occupantName')}
-                />
-              </Row>
-              <Row className="content-item">
-                <Label>Lease Expiry Date</Label>
-                <FastDatePicker
-                  formikProps={formikProps}
-                  disabled={editInfo.tenancy}
-                  field={withNameSpace('leaseExpiry')}
-                />
-              </Row>
-              <Row className="check-item">
-                <Label>Transfer lease with land?</Label>
-                <Check disabled={editInfo.tenancy} field={withNameSpace('transferLeaseOnSale')} />
               </Row>
             </div>
           </Row>

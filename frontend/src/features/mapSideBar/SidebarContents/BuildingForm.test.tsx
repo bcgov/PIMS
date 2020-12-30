@@ -64,7 +64,7 @@ describe('Building Form', () => {
     await wait(() => {
       fireEvent.click(getByText(/continue/i));
     });
-    expect(getByText(/Rentable Area/i)).toBeInTheDocument();
+    expect(getByText(/Net Usable Area/i)).toBeInTheDocument();
     await wait(() => {
       fireEvent.click(getByText(/Continue/i));
     });
@@ -82,7 +82,7 @@ describe('Building Form', () => {
       fireEvent.click(getByText(/Review/i));
     });
     expect(getByText(/Building Identification/i)).toBeInTheDocument();
-    expect(getByText(/Transfer lease with land/i)).toBeInTheDocument();
+    expect(getByText(/Net Usable Area/i)).toBeInTheDocument();
     expect(getByText(/Net Book Value/i)).toBeInTheDocument();
   });
 });

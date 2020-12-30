@@ -57,27 +57,27 @@ exports[`renders correctly 1`] = `
           </div><br>
           <div class=\\"content-item row\\">
             <p class=\\"label\\">Latitude</p>
-            <div class=\\"form-group col\\"><input name=\\"latitude\\" disabled=\\"\\" type=\\"number\\" id=\\"input-latitude\\" class=\\"input-medium form-control\\" value=\\"\\"></div>
+            <div class=\\"required form-group col\\"><input name=\\"latitude\\" required=\\"\\" disabled=\\"\\" type=\\"number\\" id=\\"input-latitude\\" class=\\"input-medium form-control\\" value=\\"\\"></div>
           </div>
           <div class=\\"content-item row\\">
             <p class=\\"label\\">Longitude</p>
-            <div class=\\"form-group col\\"><input name=\\"longitude\\" disabled=\\"\\" type=\\"number\\" id=\\"input-longitude\\" class=\\"input-medium form-control\\" value=\\"\\"></div>
+            <div class=\\"required form-group col\\"><input name=\\"longitude\\" required=\\"\\" disabled=\\"\\" type=\\"number\\" id=\\"input-longitude\\" class=\\"input-medium form-control\\" value=\\"\\"></div>
           </div><br>
           <div class=\\"content-item row\\">
             <p class=\\"label\\">SRES Classification</p><span class=\\"vl\\"></span>
-            <div class=\\"form-group\\"><select name=\\"classificationId\\" disabled=\\"\\" type=\\"number\\" id=\\"input-classificationId-fast\\" class=\\"form-control\\">
+            <div class=\\"required form-group\\"><select name=\\"classificationId\\" required=\\"\\" disabled=\\"\\" type=\\"number\\" id=\\"input-classificationId-fast\\" class=\\"form-control\\">
                 <option value=\\"\\">Must Select One</option>
               </select></div>
           </div>
           <div class=\\"content-item row\\">
             <p class=\\"label\\">Main Usage</p>
-            <div class=\\"form-group\\"><select name=\\"buildingPredominateUseId\\" disabled=\\"\\" type=\\"number\\" id=\\"input-buildingPredominateUseId-fast\\" class=\\"form-control\\">
+            <div class=\\"required form-group\\"><select name=\\"buildingPredominateUseId\\" required=\\"\\" disabled=\\"\\" type=\\"number\\" id=\\"input-buildingPredominateUseId-fast\\" class=\\"form-control\\">
                 <option value=\\"\\">Must Select One</option>
               </select></div>
           </div>
           <div class=\\"content-item row\\">
             <p class=\\"label\\">Type of Construction</p>
-            <div class=\\"form-group\\"><select name=\\"buildingConstructionTypeId\\" disabled=\\"\\" type=\\"number\\" id=\\"input-buildingConstructionTypeId-fast\\" class=\\"form-control\\">
+            <div class=\\"required form-group\\"><select name=\\"buildingConstructionTypeId\\" required=\\"\\" disabled=\\"\\" type=\\"number\\" id=\\"input-buildingConstructionTypeId-fast\\" class=\\"form-control\\">
                 <option value=\\"\\">Must Select One</option>
               </select></div>
           </div>
@@ -104,43 +104,26 @@ exports[`renders correctly 1`] = `
               <path d=\\"M402.6 83.2l90.2 90.2c3.8 3.8 3.8 10 0 13.8L274.4 405.6l-92.8 10.3c-12.4 1.4-22.9-9.1-21.5-21.5l10.3-92.8L388.8 83.2c3.8-3.8 10-3.8 13.8 0zm162-22.9l-48.8-48.8c-15.2-15.2-39.9-15.2-55.2 0l-35.4 35.4c-3.8 3.8-3.8 10 0 13.8l90.2 90.2c3.8 3.8 10 3.8 13.8 0l35.4-35.4c15.2-15.3 15.2-40 0-55.2zM384 346.2V448H64V128h229.8c3.2 0 6.2-1.3 8.5-3.5l40-40c7.6-7.6 2.2-20.5-8.5-20.5H48C21.5 64 0 85.5 0 112v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V306.2c0-10.7-12.9-16-20.5-8.5l-40 40c-2.2 2.3-3.5 5.3-3.5 8.5z\\"></path>
             </svg></div>
           <div class=\\"content-item row\\">
-            <p class=\\"label\\">Net Rentable Area</p>
-            <div class=\\"input-group disabled\\">
+            <p class=\\"label\\">Total Area</p>
+            <div class=\\"input-group required disabled\\">
+              <div class=\\"input-group-content\\">
+                <div class=\\"form-group col\\"><input name=\\"squareFootage\\" disabled=\\"\\" type=\\"number\\" id=\\"input-squareFootage\\" class=\\"form-control\\" value=\\"\\"></div>
+              </div>
+              <div class=\\"input-group-append\\"><span class=\\"append-disabled input-group-text\\">Sq. M</span></div>
+            </div>
+          </div>
+          <div class=\\"content-item row\\">
+            <p class=\\"label\\">Net Usable Area</p>
+            <div class=\\"input-group required disabled\\">
               <div class=\\"input-group-content\\">
                 <div class=\\"form-group col\\"><input name=\\"rentableArea\\" style=\\"width: 100px;\\" disabled=\\"\\" type=\\"number\\" id=\\"input-rentableArea\\" class=\\"area form-control\\" value=\\"\\"></div>
               </div>
-              <div class=\\"input-group-append\\"><span class=\\"append-disabled input-group-text\\">Sq. Ft</span></div>
+              <div class=\\"input-group-append\\"><span class=\\"append-disabled input-group-text\\">Sq. M</span></div>
             </div>
           </div>
           <div class=\\"content-item row\\">
-            <p class=\\"label\\">Tenancy</p>
+            <p class=\\"label\\">Tenancy %</p>
             <div class=\\"form-group col\\"><input name=\\"buildingTenancy\\" disabled=\\"\\" id=\\"input-buildingTenancy\\" class=\\"form-control\\" value=\\"\\"></div>
-          </div>
-          <div class=\\"content-item row\\">
-            <p class=\\"label\\">Type of Occupant</p>
-            <div class=\\"form-group\\"><select name=\\"buildingOccupantTypeId\\" disabled=\\"\\" type=\\"number\\" id=\\"input-buildingOccupantTypeId-fast\\" class=\\"form-control\\">
-                <option value=\\"\\">Must Select One</option>
-              </select></div>
-          </div>
-          <div class=\\"content-item row\\">
-            <p class=\\"label\\">Occupant Name</p>
-            <div class=\\"form-group col\\"><input name=\\"occupantName\\" disabled=\\"\\" id=\\"input-occupantName\\" class=\\"form-control\\" value=\\"\\"></div>
-          </div>
-          <div class=\\"content-item row\\">
-            <p class=\\"label\\">Lease Expiry Date</p>
-            <div class=\\"form-group\\">
-              <div class=\\"react-datepicker-wrapper\\">
-                <div class=\\"react-datepicker__input-container\\"><input type=\\"text\\" id=\\"datepicker-leaseExpiry\\" name=\\"leaseExpiry\\" placeholder=\\"--/--/----\\" disabled=\\"\\" autocomplete=\\"off\\" class=\\"form-control date-picker\\" value=\\"\\"></div>
-              </div>
-            </div>
-          </div>
-          <div class=\\"check-item row\\">
-            <p class=\\"label\\">Transfer lease with land?</p>
-            <div class=\\"form-group\\">
-              <div class=\\"check-field\\">
-                <div class=\\"form-check\\"><input name=\\"transferLeaseOnSale\\" type=\\"checkbox\\" disabled=\\"\\" id=\\"input-transferLeaseOnSale\\" class=\\"form-check-input position-static\\" value=\\"false\\"></div>
-              </div>
-            </div>
           </div>
         </div>
       </div>

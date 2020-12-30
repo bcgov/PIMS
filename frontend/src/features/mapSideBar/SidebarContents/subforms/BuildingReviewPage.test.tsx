@@ -106,36 +106,28 @@ it('identification section editable after click', () => {
 it('occupancy fields disabled by default', () => {
   const { container } = render(form);
 
+  const totalArea = container.querySelector('input[name="squareFootage"]');
   const rentableArea = container.querySelector('input[name="rentableArea"]');
   const tenancy = container.querySelector('input[name="buildingTenancy"]');
-  const occupantType = container.querySelector('select[name="buildingOccupantTypeId"]');
-  const expiry = container.querySelector('input[name="leaseExpiry"]');
-  const transferLease = container.querySelector('input[name="transferLeaseOnSale"]');
 
+  expect(totalArea).toBeDisabled();
   expect(rentableArea).toBeDisabled();
   expect(tenancy).toBeDisabled();
-  expect(occupantType).toBeDisabled();
-  expect(expiry).toBeDisabled();
-  expect(transferLease).toBeDisabled();
 });
 
 it('occupancy fields editable after click', () => {
   const { container } = render(form);
 
+  const totalArea = container.querySelector('input[name="squareFootage"]');
   const rentableArea = container.querySelector('input[name="rentableArea"]');
   const tenancy = container.querySelector('input[name="buildingTenancy"]');
-  const occupantType = container.querySelector('select[name="buildingOccupantTypeId"]');
-  const expiry = container.querySelector('input[name="leaseExpiry"]');
-  const transferLease = container.querySelector('input[name="transferLeaseOnSale"]');
 
   const edit = container.querySelectorAll('svg[class="edit"]');
   fireEvent.click(edit[1]!);
 
+  expect(totalArea).not.toBeDisabled();
   expect(rentableArea).not.toBeDisabled();
   expect(tenancy).not.toBeDisabled();
-  expect(occupantType).not.toBeDisabled();
-  expect(expiry).not.toBeDisabled();
-  expect(transferLease).not.toBeDisabled();
 });
 
 it('valuation fields disabled by default', () => {
