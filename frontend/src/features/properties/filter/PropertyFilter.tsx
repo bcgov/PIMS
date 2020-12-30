@@ -107,13 +107,13 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
     >
       {({ isSubmitting, handleReset, handleSubmit, setFieldValue, values }) => (
         <Form>
-          <Form.Row className="map-filter-bar align-items-start">
+          <Form.Row className="map-filter-bar">
             <FindMorePropertiesButton buttonText="Find available surplus properties" />
             <div className="vl"></div>
             <Col className="bar-item">
               <PropertyFilterOptions />
             </Col>
-            <Col className="mapfilter-typeahead">
+            <Col className="map-filter-typeahead">
               <TypeaheadField
                 name="administrativeArea"
                 placeholder="Enter a location"
