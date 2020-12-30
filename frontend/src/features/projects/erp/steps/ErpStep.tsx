@@ -18,7 +18,6 @@ import {
   useProject,
   handleValidate,
   DisposeWorkflowStatus,
-  useAgencyResponseTable,
 } from '../../common';
 import { saveErpTab, ErpTabs, ApprovalActions } from '..';
 import {
@@ -50,8 +49,7 @@ const ErpStep = ({ formikRef }: IStepProps) => {
   const currentTab = useSelector<RootState, string | null>(state => state.erpTab) ?? defaultTab;
   const dispatch = useDispatch();
   const history = useHistory();
-  const { projectAgencyResponses } = useAgencyResponseTable();
-  const initialValues: IProject = { ...project, projectAgencyResponses: projectAgencyResponses };
+  const initialValues: IProject = { ...project };
   const canUserEdit =
     canUserOverride() ||
     (canUserApproveForm() &&

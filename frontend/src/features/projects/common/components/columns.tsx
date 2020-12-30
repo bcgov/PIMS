@@ -90,7 +90,7 @@ const EditableInputCell = (cellInfo: any) => {
  * This information is only editable if this cell belongs to a parcel row.
  * @param cellInfo provided by react table
  */
-const getEditableTextAreaCell = (namespace: string = 'properties') => (cellInfo: any) => {
+export const getEditableTextAreaCell = (namespace: string = 'properties') => (cellInfo: any) => {
   return <TextArea fast field={`${namespace}.${cellInfo.row.id}.${cellInfo.column.id}`}></TextArea>;
 };
 
@@ -101,7 +101,7 @@ const getEditableTextAreaCell = (namespace: string = 'properties') => (cellInfo:
  * @param minDate restrict the minimum date that can be selected
  * @param oldDateWarning warn if the user selects an old date
  */
-const getEditableDatePickerCell = (
+export const getEditableDatePickerCell = (
   namespace: string = 'properties',
   minDate: boolean = false,
   oldDateWarning?: boolean,
@@ -122,11 +122,11 @@ const getEditableDatePickerCell = (
 };
 
 const responseOptions: SelectOption[] = [
-  { label: AgencyResponses.Ignore, value: AgencyResponses.Ignore },
-  { label: AgencyResponses.Watch, value: AgencyResponses.Watch },
+  { label: 'Not Interested', value: AgencyResponses.Ignore },
+  { label: 'Interested', value: AgencyResponses.Watch },
 ];
 
-const getEditableSelectCell = (namespace: string = 'properties') => (cellInfo: any) => {
+export const getEditableSelectCell = (namespace: string = 'properties') => (cellInfo: any) => {
   return (
     <Select
       options={responseOptions}
