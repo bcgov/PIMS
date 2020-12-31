@@ -15,6 +15,9 @@ import { HARMFUL_DISCLOSURE_URL } from 'constants/strings';
 import { IProperty } from 'actions/parcelsActions';
 import { Link } from 'react-router-dom';
 import { classificationTip, sensitiveTooltip } from '../strings';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+import Claims from 'constants/claims';
+import { Classifications } from 'constants/classifications';
 
 interface InformationFormProps {
   nameSpace?: string;
@@ -39,6 +42,12 @@ const InformationForm: FunctionComponent<InformationFormProps> = (props: Informa
   const formikProps = useFormikContext();
   const { values } = useFormikContext<IProperty>();
   const projectNumber = getIn(values, withNameSpace('projectNumber'));
+  const keycloak = useKeycloakWrapper();
+
+  /** only SRES can change to Disposed  */
+  const classifications = keycloak.hasClaim(Claims.ADMIN_PROPERTIES)
+    ? props.classifications
+    : props.classifications.filter(x => x.value !== Classifications.Disposed);
 
   return (
     <>
@@ -67,7 +76,7 @@ const InformationForm: FunctionComponent<InformationFormProps> = (props: Informa
           type="number"
           placeholder="Must Select One"
           field={withNameSpace('classificationId')}
-          options={props.classifications}
+          options={classifications}
           tooltip={classificationTip}
         />
       </Form.Row>
