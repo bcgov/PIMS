@@ -8,7 +8,7 @@ import StepStatusIcon from '../common/components/StepStatusIcon';
 /**
  * Display success message after all project disposal steps are completed successfully.
  */
-export const ProjectDisposalSubmitted = () => {
+export const ProjectDisposalExemptionSubmitted = () => {
   const keycloak = useKeycloakWrapper();
   return (
     <Container className="ProjectDisposalSubmitted">
@@ -17,7 +17,7 @@ export const ProjectDisposalSubmitted = () => {
         postIconLabel={'Application Successfully Submitted'}
       />
       <p>
-        We have received your application to the Surplus Property Program to be added to the
+        We have received your application to the Surplus Property Program to be exempted from the
         Enhanced Referral Program. Once your application is reviewed Strategic Real Estate Services
         will notify you of the results or request for more information. If any details of the
         application change please contact Strategic Real Estate Services directly at&nbsp;
