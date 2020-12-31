@@ -127,10 +127,6 @@ export const Building = Yup.object().shape({
     .matches(/\d*/, 'Invalid Building Predominate Use')
     .required('Required')
     .nullable(),
-  buildingOccupantTypeId: Yup.string()
-    .matches(/\d*/, 'Invalid Building Occupant Type')
-    .required('Required')
-    .nullable(),
   classificationId: Yup.string()
     .matches(/\d*/, 'Invalid Building Classification Id')
     .required('Required')
