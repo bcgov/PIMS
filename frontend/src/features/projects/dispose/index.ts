@@ -17,6 +17,8 @@ export { default as ProjectDraftStep } from './steps/ProjectDraftStep';
 export { default as ReviewProjectStep } from './steps/ReviewProjectStep';
 
 export { default as ReviewProjectForm } from './forms/ReviewProjectForm';
+export { ProjectDisposalSubmitted } from './ProjectDisposalSubmitted';
+export { ProjectDisposalExemptionSubmitted } from './ProjectDisposalExemptionSubmitted';
 
 export { default as useStepper } from './hooks/useStepper';
 export * from './hooks/stepperContext';
