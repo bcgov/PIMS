@@ -76,7 +76,8 @@ export const valuesToApiFormat = (values: IFormParcel): IFormParcel => {
   values.financials = [];
   values.buildings.forEach(building => {
     building.agencyId = building?.agencyId ? building.agencyId : values.agencyId;
-
+    /** TODO: We will no longer need this after the backend is updated */
+    building.buildingOccupantTypeId = 1;
     if (!building.leaseExpiry || !building.leaseExpiry.length) {
       building.leaseExpiry = undefined;
     }
