@@ -108,7 +108,8 @@ export const PropertyListViewUpdate: React.FC<InputProps> = ({
                 sidebar: true,
                 disabled: true,
                 loadDraft: false,
-                parcelId: row.propertyTypeId === 0 ? row.id : row.parcelId,
+                parcelId: row.propertyTypeId === 0 ? row.id : undefined,
+                buildingId: row.propertyTypeId === 1 ? row.id : undefined,
               }),
             });
           }}

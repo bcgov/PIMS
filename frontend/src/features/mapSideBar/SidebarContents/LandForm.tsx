@@ -35,7 +35,7 @@ import {
   ParcelSchema,
   LandIdentificationSchema,
   LandUsageSchema,
-  LandValuationSchema,
+  ValuationSchema,
 } from 'utils/YupSchema';
 import { createParcel, updateParcel } from 'actionCreators/parcelsActionCreator';
 import { LandValuationForm } from './subforms/LandValuationForm';
@@ -45,7 +45,6 @@ import { IFormParcel } from '../containers/MapSideBarContainer';
 import useParcelLayerData from 'features/properties/hooks/useParcelLayerData';
 import { IStep } from 'components/common/Stepper';
 import { AssociatedBuildingListForm } from './subforms/AssociatedBuildingListForm';
-import { useState } from 'react';
 
 const Container = styled.div`
   background-color: #fff;
@@ -299,15 +298,13 @@ const LandForm: React.FC<IParentLandForm> = (props: IParentLandForm) => {
   const keycloak = useKeycloakWrapper();
   const dispatch = useDispatch();
   const api = useApi();
-  let initialValueProps = {
+  let initialValues = {
     activeStep: 0,
     activeTab: 0,
     tabs: [{ activeStep: 0 }],
     data: { ...getInitialValues(), ...props.initialValues },
   };
-  const [initialValues, setInitialValues] = useState<ISteppedFormValues<IFormParcel>>(
-    initialValueProps,
-  );
+  const isViewOrUpdate = !!initialValues?.data?.id;
 
   initialValues.data.agencyId = keycloak.agencyId ?? '';
 
@@ -372,17 +369,15 @@ const LandForm: React.FC<IParentLandForm> = (props: IParentLandForm) => {
       route: 'usage',
       title: 'Usage',
       completed: false,
-      canGoToStep: !!initialValues?.data?.id,
+      canGoToStep: !!initialValues?.data?.id || !!props.disabled,
       validation: props.disabled ? undefined : { schema: LandUsageSchema, nameSpace: () => 'data' },
     },
     {
       route: 'valuation',
       title: 'Valuation',
       completed: false,
-      canGoToStep: !!initialValues?.data?.id,
-      validation: props.disabled
-        ? undefined
-        : { schema: LandValuationSchema, nameSpace: () => 'data' },
+      canGoToStep: !!initialValues?.data?.id || !!props.disabled,
+      validation: props.disabled ? undefined : { schema: ValuationSchema, nameSpace: () => 'data' },
     },
   ];
 
@@ -391,14 +386,14 @@ const LandForm: React.FC<IParentLandForm> = (props: IParentLandForm) => {
       route: 'associatedLand',
       title: 'View Buildings',
       completed: false,
-      canGoToStep: !!initialValues?.data?.id,
+      canGoToStep: !!initialValues?.data?.id || !!props.disabled,
     });
   }
   steps.push({
     route: 'review',
     title: 'Review',
     completed: false,
-    canGoToStep: !!initialValues?.data?.id,
+    canGoToStep: !!initialValues?.data?.id || !!props.disabled,
     validation: props.disabled ? undefined : { schema: ParcelSchema, nameSpace: () => 'data' },
   });
 
@@ -409,7 +404,7 @@ const LandForm: React.FC<IParentLandForm> = (props: IParentLandForm) => {
         steps={steps}
         persistable={!props.disabled}
         persistProps={{
-          name: 'land',
+          name: isViewOrUpdate ? 'update-land' : 'land',
           secret: keycloak.obj.subject,
           persistCallback: (values: ISteppedFormValues<IFormParcel>) => {
             const newValues: ISteppedFormValues<IFormParcel> = {
@@ -419,7 +414,6 @@ const LandForm: React.FC<IParentLandForm> = (props: IParentLandForm) => {
             };
             newValues.tabs?.forEach((t: IStepperTab) => (t.activeStep = 0));
             props.formikRef.current.resetForm({ values: newValues });
-            setInitialValues(newValues);
           },
         }}
         initialValues={initialValues}

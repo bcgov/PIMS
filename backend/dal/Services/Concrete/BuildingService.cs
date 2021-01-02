@@ -127,7 +127,10 @@ namespace Pims.Dal.Services
             var isAdmin = this.User.HasPermission(Permissions.AdminProperties);
 
             var building = this.Context.Buildings
-                .Include(p => p.Parcels).ThenInclude(pb => pb.Parcel)
+                .Include(b => b.Parcels).ThenInclude(pb => pb.Parcel).ThenInclude(b => b.Evaluations)
+                .Include(b => b.Parcels).ThenInclude(pb => pb.Parcel).ThenInclude(b => b.Fiscals)
+                .Include(b => b.Parcels).ThenInclude(pb => pb.Parcel).ThenInclude(b => b.Address).ThenInclude(a => a.Province)
+                .Include(b => b.Parcels).ThenInclude(pb => pb.Parcel).ThenInclude(b => b.Classification)
                 .Include(p => p.BuildingPredominateUse)
                 .Include(p => p.BuildingConstructionType)
                 .Include(p => p.BuildingOccupantType)
@@ -186,7 +189,7 @@ namespace Pims.Dal.Services
 
             this.Context.Buildings.Add(building);
             this.Context.CommitTransaction();
-            return building;
+            return Get(building.Id);
         }
 
         /// <summary>
@@ -202,12 +205,13 @@ namespace Pims.Dal.Services
 
             var existingBuilding = this.Context.Buildings
                 .Include(b => b.Agency)
-                .Include(b => b.Address)
+                .Include(b => b.Address).ThenInclude(a => a.Province)
                 .Include(b => b.Evaluations)
                 .Include(b => b.Fiscals)
                 .Include(b => b.Parcels).ThenInclude(pb => pb.Parcel).ThenInclude(b => b.Evaluations)
+                .Include(b => b.Parcels).ThenInclude(pb => pb.Parcel).ThenInclude(b => b.Classification)
                 .Include(b => b.Parcels).ThenInclude(pb => pb.Parcel).ThenInclude(b => b.Fiscals)
-                .Include(b => b.Parcels).ThenInclude(pb => pb.Parcel).ThenInclude(b => b.Address)
+                .Include(b => b.Parcels).ThenInclude(pb => pb.Parcel).ThenInclude(b => b.Address).ThenInclude(a => a.Province)
                 .FirstOrDefault(b => b.Id == building.Id) ?? throw new KeyNotFoundException();
             this.ThrowIfNotAllowedToUpdate(existingBuilding, _options.Project);
 
@@ -226,13 +230,6 @@ namespace Pims.Dal.Services
             var allowEdit = isAdmin || userAgencies.Contains(existingBuilding.AgencyId);
             // A building should have a unique name within the parcel it is located on.
             existingBuilding.Parcels.ForEach(pb => this.Context.ThrowIfNotUnique(pb.Parcel, building));
-
-            if (allowEdit)
-            {
-                this.Context.Entry(existingBuilding.Address).CurrentValues.SetValues(building.Address);
-                this.Context.Entry(existingBuilding).CurrentValues.SetValues(building);
-                this.Context.SetOriginalRowVersion(existingBuilding);
-            }
 
             foreach (var parcel in building.Parcels.Select(pb => pb.Parcel))
             {
@@ -261,6 +258,13 @@ namespace Pims.Dal.Services
                 {
                     _service.Parcel.PendingUpdate(parcel);
                 }
+            }
+
+            if (allowEdit)
+            {
+                this.Context.Entry(existingBuilding.Address).CurrentValues.SetValues(building.Address);
+                this.Context.Entry(existingBuilding).CurrentValues.SetValues(building);
+                this.Context.SetOriginalRowVersion(existingBuilding);
             }
 
             if (allowEdit)
@@ -345,10 +349,10 @@ namespace Pims.Dal.Services
                     }
                 }
             }
-
+            existingBuilding.LeasedLandMetadata = building.LeasedLandMetadata;
             this.Context.Buildings.Update(existingBuilding); // TODO: Must detach entity before returning it.
             this.Context.CommitTransaction();
-            return existingBuilding;
+            return Get(existingBuilding.Id);
         }
 
         /// <summary>

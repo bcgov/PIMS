@@ -139,7 +139,9 @@ export const columns: ColumnWithProps<IProperty>[] = [
               sidebar: true,
               disabled: true,
               loadDraft: false,
-              parcelId: props.row.original.parcelId,
+              parcelId: props.row.original.propertyTypeId === 0 ? props.row.original.id : undefined,
+              buildingId:
+                props.row.original.propertyTypeId === 1 ? props.row.original.id : undefined,
             }),
           }}
         >

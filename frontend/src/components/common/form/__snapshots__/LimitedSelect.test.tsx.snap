@@ -8,7 +8,11 @@ exports[`limited fast select renders correctly 1`] = `
     className="form-control"
     id="input-TestField-fast"
     name="TestField"
+    onBlur={[Function]}
     onChange={[Function]}
+    onFocus={[Function]}
+    onMouseOut={[Function]}
+    onMouseOver={[Function]}
     type="number"
     value={0}
   >

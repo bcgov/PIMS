@@ -132,6 +132,7 @@ export const ClassificationForm: React.FC<IClassificationFormProps> = ({
               options={filteredClassifications}
               disabled={disabled}
               required
+              displayErrorTooltips
             />
             {toolTip && (
               <div style={{ marginTop: '8px' }}>

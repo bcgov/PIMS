@@ -21,7 +21,7 @@ const FormikTable: React.FC<IFormikTableProps> = ({
   disabled,
 }: IFormikTableProps) => {
   const { values } = useFormikContext();
-  const data = getIn(values, field);
+  const data = getIn(values, field) ?? [];
 
   return (
     <Container fluid className="PropertyListView">

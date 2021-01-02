@@ -1,5 +1,10 @@
-import { SteppedForm, useFormStepper, ISteppedFormValues } from 'components/common/form/StepForm';
-import { useFormikContext } from 'formik';
+import {
+  SteppedForm,
+  useFormStepper,
+  ISteppedFormValues,
+  IStepperTab,
+} from 'components/common/form/StepForm';
+import { useFormikContext, yupToFormErrors } from 'formik';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import useCodeLookups from 'hooks/useLookupCodes';
 import { noop } from 'lodash';
@@ -8,7 +13,7 @@ import { Button } from 'react-bootstrap';
 import styled from 'styled-components';
 import { InventoryPolicy } from '../components/InventoryPolicy';
 import * as API from 'constants/API';
-import { IParcel, IBuilding } from 'actions/parcelsActions';
+import { IBuilding } from 'actions/parcelsActions';
 import { OccupancyForm } from './subforms/OccupancyForm';
 import { IdentificationForm } from './subforms/IdentificationForm';
 import { BuildingReviewPage } from './subforms/BuildingReviewPage';
@@ -28,6 +33,15 @@ import {
 import { EvaluationKeys } from 'constants/evaluationKeys';
 import { FiscalKeys } from 'constants/fiscalKeys';
 import { defaultAddressValues } from 'features/properties/components/forms/subforms/AddressForm';
+import { BuildingForm } from '.';
+import TooltipWrapper from 'components/common/TooltipWrapper';
+import {
+  BuildingSchema,
+  OccupancySchema,
+  ValuationSchema,
+  BuildingInformationSchema,
+} from 'utils/YupSchema';
+import { AssociatedLandListForm } from './subforms/AssociatedLandListForm';
 
 const Container = styled.div`
   background-color: #fff;
@@ -75,6 +89,7 @@ export const defaultBuildingValues: any = {
   agencyId: 0,
   parcelId: 0,
   rentableArea: '',
+  squareFootage: '',
   buildingFloorCount: '',
   buildingConstructionType: undefined,
   buildingConstructionTypeId: '',
@@ -99,19 +114,18 @@ export const defaultBuildingValues: any = {
  * @component
  */
 
-interface IFormProps {
-  /** determine whether certain fields are editable */
-  isAdmin?: boolean;
-  /** to change the user's cursor when adding a marker */
-  setMovingPinNameSpace: (nameSpace: string) => void;
-  /** to help determine the namespace of the field (eg. address.line1) */
-  nameSpace: string;
-}
-const Form: React.FC<IFormProps> = ({ isAdmin, setMovingPinNameSpace, nameSpace }) => {
+const Form: React.FC<IBuildingForm> = ({
+  isAdmin,
+  setMovingPinNameSpace,
+  nameSpace,
+  disabled,
+  goToAssociatedLand,
+}) => {
   const stepper = useFormStepper();
   useDraftMarkerSynchronizer();
-  const formikProps = useFormikContext<IParcel>();
+  const formikProps = useFormikContext<ISteppedFormValues<IFormBuilding>>();
   const { getOptionsByType } = useCodeLookups();
+  const isViewOrUpdate = !!formikProps.values?.data?.id;
 
   const agencies = getOptionsByType(API.AGENCY_CODE_SET_NAME);
   const classifications = getOptionsByType(API.PROPERTY_CLASSIFICATION_CODE_SET_NAME);
@@ -133,6 +147,7 @@ const Form: React.FC<IFormProps> = ({ isAdmin, setMovingPinNameSpace, nameSpace 
               setMovingPinNameSpace={setMovingPinNameSpace}
               nameSpace={nameSpace}
               isAdmin={isAdmin}
+              disabled={disabled}
             />
           </div>
         );
@@ -142,10 +157,19 @@ const Form: React.FC<IFormProps> = ({ isAdmin, setMovingPinNameSpace, nameSpace 
             formikProps={formikProps}
             occupantTypes={occupancyType}
             nameSpace={nameSpace}
+            disabled={disabled}
           />
         );
       case BuildingSteps.VALUATION:
-        return <BuildingValuationForm nameSpace={nameSpace} formikProps={formikProps} />;
+        return (
+          <BuildingValuationForm
+            nameSpace={nameSpace}
+            formikProps={formikProps}
+            disabled={disabled}
+          />
+        );
+      case BuildingSteps.ASSOCIATED:
+        return <AssociatedLandListForm title="View Associated Buildings" nameSpace="data" />;
       case BuildingSteps.REVIEW:
         return (
           <BuildingReviewPage
@@ -155,6 +179,7 @@ const Form: React.FC<IFormProps> = ({ isAdmin, setMovingPinNameSpace, nameSpace 
             predominateUses={predominateUses}
             constructionType={constructionType}
             nameSpace={nameSpace}
+            disabled={disabled}
           />
         );
     }
@@ -166,13 +191,38 @@ const Form: React.FC<IFormProps> = ({ isAdmin, setMovingPinNameSpace, nameSpace 
       <FormFooter>
         <InventoryPolicy />
         <FillRemainingSpace />
-        {stepper.current !== 3 && (
+        {!stepper.isSubmit(stepper.current) && (
           <Button style={{ marginRight: 10 }} size="sm" onClick={() => stepper.gotoNext()}>
             Continue
           </Button>
         )}
-        {formikProps.dirty && stepper.current === 3 && (
-          <Button type="submit">Submit to Inventory</Button>
+        {formikProps.dirty && stepper.isSubmit(stepper.current) && !disabled && (
+          <>
+            {isViewOrUpdate ? (
+              <>
+                <TooltipWrapper
+                  toolTipId="modify-associated-land-tooltip"
+                  toolTip="Add/Remove or Edit land associated to this building"
+                >
+                  <Button
+                    variant="secondary"
+                    className="mr-2"
+                    onClick={() => goToAssociatedLand(formikProps.values.data)}
+                  >
+                    Modify Associated Land
+                  </Button>
+                </TooltipWrapper>
+                <TooltipWrapper
+                  toolTipId="submit-building-to-inventory-tooltip"
+                  toolTip="Save any changes you've made"
+                >
+                  <Button type="submit">Save Updates</Button>
+                </TooltipWrapper>
+              </>
+            ) : (
+              <Button type="submit">Submit to Inventory</Button>
+            )}
+          </>
         )}
       </FormFooter>
     </FormContentWrapper>
@@ -186,11 +236,44 @@ interface IBuildingForm {
   setMovingPinNameSpace: (nameSpace: string) => void;
   /** to help determine the namespace of the field (eg. address.line1) */
   nameSpace: string;
-  /** Notify the parent that the building has been saved, potentially starting a new workflow. */
-  setBuildingToAssociateLand: (building: IBuilding) => void;
+  /** Go to the associated land form directly */
+  goToAssociatedLand: (building: IBuilding) => void;
   /** to determine whether certain locked fields can be editable */
   isAdmin?: boolean;
+  /** whether this form can be interacted with */
+  disabled?: boolean;
 }
+
+interface IParentBuildingForm extends IBuildingForm {
+  /** the initial values of this form, as loaded from the api */
+  initialValues?: IFormBuilding;
+  /** Notify the parent that the building has been saved, potentially starting a new workflow. */
+  setBuildingToAssociateLand: (building: IBuilding) => void;
+}
+
+/**
+ * A wrapper around the landform that provides all expected props for the landform to be used in read-only mode.
+ * This sets all the fields to disabled and disables all actions triggered by interacting with the forms.
+ * It also disables form validation and submission.
+ * @component
+ */
+export const ViewOnlyBuildingForm: React.FC<Partial<IParentBuildingForm>> = (props: {
+  formikRef?: any;
+  initialValues?: IFormBuilding;
+}) => {
+  return (
+    <BuildingForm
+      setMovingPinNameSpace={noop}
+      goToAssociatedLand={noop}
+      formikRef={props.formikRef}
+      isAdmin={false}
+      setBuildingToAssociateLand={noop}
+      initialValues={props.initialValues ?? ({} as any)}
+      disabled={true}
+      nameSpace="data"
+    />
+  );
+};
 
 /**
  * Do an in place conversion of all values to their expected API equivalents (eg. '' => undefined)
@@ -210,6 +293,7 @@ export const valuesToApiFormat = (values: ISteppedFormValues<IFormBuilding>): IF
     Object.keys(FiscalKeys).includes(financial.key),
   );
   apiValues.data.classificationId = +apiValues.data.classificationId;
+  apiValues.data.buildingOccupantTypeId = undefined as any;
   apiValues.data.rentableArea = +apiValues.data.rentableArea;
   apiValues.data.buildingFloorCount = +(apiValues.data.buildingFloorCount ?? 0);
   apiValues.data.agencyId = +values.data.agencyId;
@@ -220,12 +304,15 @@ export const valuesToApiFormat = (values: ISteppedFormValues<IFormBuilding>): IF
   return apiValues.data;
 };
 
-const BuidingForm: React.FC<IBuildingForm> = ({
+const BuidingForm: React.FC<IParentBuildingForm> = ({
   setMovingPinNameSpace,
   nameSpace,
   isAdmin,
   formikRef,
   setBuildingToAssociateLand,
+  goToAssociatedLand,
+  disabled,
+  ...rest
 }) => {
   const keycloak = useKeycloakWrapper();
   const dispatch = useDispatch();
@@ -239,7 +326,24 @@ const BuidingForm: React.FC<IBuildingForm> = ({
   let initialValues = {
     activeStep: 0,
     activeTab: 0,
-    data: { ...defaultBuildingValues, agencyId: keycloak.agencyId },
+    data: { ...defaultBuildingValues, agencyId: keycloak.agencyId, ...rest.initialValues },
+  };
+  const isViewOrUpdate = !!initialValues?.data?.id;
+
+  /**
+   * Combines yup validation with manual validation of financial data for performance reasons.
+   * Large forms can take 3-4 seconds to validate with an all-yup validation schema.
+   * This validation is significantly faster.
+   * @param values formik form values to validate.
+   */
+  const handleValidate = async (values: ISteppedFormValues<IFormBuilding>) => {
+    const yupErrors: any = BuildingSchema.validate(values.data, { abortEarly: false }).then(
+      () => ({}),
+      (err: any) => yupToFormErrors(err),
+    );
+
+    let errors = await yupErrors;
+    return Object.keys(errors).length ? Promise.resolve({ data: errors }) : Promise.resolve({});
   };
 
   return (
@@ -247,20 +351,61 @@ const BuidingForm: React.FC<IBuildingForm> = ({
       <SteppedForm
         // Provide the steps
         steps={[
-          { route: 'building-id', title: 'Building Info', completed: false, canGoToStep: true },
-          { route: 'tenancy', title: 'Occupancy', completed: false, canGoToStep: true },
-          { route: 'valuation', title: 'Valuation', completed: false, canGoToStep: true },
-          { route: 'review', title: 'Review & Submit', completed: false, canGoToStep: true },
+          {
+            route: 'building-id',
+            title: 'Building Info',
+            completed: false,
+            canGoToStep: true,
+            validation: disabled
+              ? undefined
+              : { schema: BuildingInformationSchema, nameSpace: () => 'data' },
+          },
+          {
+            route: 'tenancy',
+            title: 'Occupancy',
+            completed: false,
+            canGoToStep: isViewOrUpdate || !!disabled,
+            validation: disabled ? undefined : { schema: OccupancySchema, nameSpace: () => 'data' },
+          },
+          {
+            route: 'valuation',
+            title: 'Valuation',
+            completed: false,
+            canGoToStep: isViewOrUpdate || !!disabled,
+            validation: disabled ? undefined : { schema: ValuationSchema, nameSpace: () => 'data' },
+          },
+          {
+            route: 'associated',
+            title: 'Associated Land',
+            completed: false,
+            canGoToStep: isViewOrUpdate || !!disabled,
+          },
+          {
+            route: 'review',
+            title: 'Review & Submit',
+            completed: false,
+            canGoToStep: isViewOrUpdate || !!disabled,
+            validation: disabled ? undefined : { schema: BuildingSchema, nameSpace: () => 'data' },
+          },
         ]}
-        persistable={true}
+        persistable={!disabled}
         persistProps={{
-          name: 'building',
+          name: isViewOrUpdate ? 'updated-building' : 'building',
           secret: keycloak.obj.subject,
-          persistCallback: noop,
+          persistCallback: (values: ISteppedFormValues<IFormBuilding>) => {
+            const newValues: ISteppedFormValues<IFormBuilding> = {
+              ...values,
+              activeStep: 0,
+              activeTab: 0,
+            };
+            newValues.tabs?.forEach((t: IStepperTab) => (t.activeStep = 0));
+            formikRef.current.resetForm({ values: newValues });
+          },
         }}
         // provide initial building props
         initialValues={initialValues}
         formikRef={formikRef}
+        validate={handleValidate}
         // Provide onSubmit
         onSubmit={async (values, actions) => {
           const apiValues = valuesToApiFormat(_.cloneDeep(values));
@@ -272,6 +417,7 @@ const BuidingForm: React.FC<IBuildingForm> = ({
             } else {
               building = await updateBuilding(apiValues)(dispatch);
             }
+            actions.resetForm({ values: { ...values, ...{ data: building as any } } });
             setBuildingToAssociateLand(building);
           } catch (error) {
           } finally {
@@ -283,6 +429,8 @@ const BuidingForm: React.FC<IBuildingForm> = ({
           isAdmin={isAdmin}
           setMovingPinNameSpace={setMovingPinNameSpace}
           nameSpace={withNameSpace('')}
+          disabled={disabled}
+          goToAssociatedLand={goToAssociatedLand}
         />
       </SteppedForm>
     </Container>

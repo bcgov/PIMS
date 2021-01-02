@@ -3,6 +3,7 @@ import React from 'react';
 import { useFormikContext, getIn } from 'formik';
 import { formatFiscalYear, formatMoney } from 'utils';
 import { FaBuilding } from 'react-icons/fa';
+import { LandSvg } from 'components/common/Icons';
 
 const getEditableMoneyCell = (disabled: boolean | undefined, namespace: string, type: string) => {
   return (cellInfo: any) => {
@@ -115,6 +116,49 @@ export const getNetbookCols = (disabled?: boolean, namespace = 'financials'): an
     },
   ];
   return netbookCols;
+};
+
+export const getAssociatedLandCols = (): any => {
+  const associatedLandCols = [
+    {
+      Header: 'Type',
+      accessor: '',
+      maxWidth: 50,
+      align: 'left',
+      Cell: () => <LandSvg className="svg" />,
+    },
+    {
+      Header: 'Property Name',
+      accessor: 'name',
+      maxWidth: 140,
+      align: 'left',
+    },
+    {
+      Header: 'Classification',
+      accessor: 'classification',
+      maxWidth: 140,
+      align: 'left',
+    },
+    {
+      Header: 'Street Address',
+      accessor: 'address.line1',
+      maxWidth: 140,
+      align: 'left',
+    },
+    {
+      Header: 'Lot Size(ha)',
+      accessor: 'landArea',
+      maxWidth: 140,
+      align: 'left',
+    },
+    {
+      Header: 'Location',
+      accessor: 'address.administrativeArea',
+      maxWidth: 140,
+      align: 'left',
+    },
+  ];
+  return associatedLandCols;
 };
 
 export const getAssociatedBuildingsCols = (): any => {

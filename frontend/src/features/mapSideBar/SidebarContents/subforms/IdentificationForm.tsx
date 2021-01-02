@@ -36,6 +36,8 @@ interface IIdentificationProps {
   nameSpace?: any;
   /** used to determine which marker to set the cursor to when adding a new property */
   setMovingPinNameSpace: (nameSpace: string) => void;
+  /** whether the form fields on this page can be edited */
+  disabled?: boolean;
 }
 
 export const IdentificationForm: React.FC<IIdentificationProps> = ({
@@ -47,6 +49,7 @@ export const IdentificationForm: React.FC<IIdentificationProps> = ({
   nameSpace,
   setMovingPinNameSpace,
   isAdmin,
+  disabled,
 }) => {
   const { setFieldValue } = useFormikContext();
   const withNameSpace: Function = React.useCallback(
@@ -69,6 +72,7 @@ export const IdentificationForm: React.FC<IIdentificationProps> = ({
             agencies={agencies}
             classifications={classifications}
             nameSpace={withNameSpace('')}
+            disabled={disabled}
           />
         </Col>
         <Col>
@@ -80,7 +84,9 @@ export const IdentificationForm: React.FC<IIdentificationProps> = ({
               field={withNameSpace('buildingPredominateUseId')}
               type="number"
               options={predominateUses}
+              disabled={disabled}
               required
+              displayErrorTooltips
             />
           </Row>
           <Row>
@@ -91,7 +97,9 @@ export const IdentificationForm: React.FC<IIdentificationProps> = ({
               field={withNameSpace('buildingConstructionTypeId')}
               type="number"
               options={constructionType}
+              disabled={disabled}
               required
+              displayErrorTooltips
             />
           </Row>
           <Row>
@@ -103,6 +111,7 @@ export const IdentificationForm: React.FC<IIdentificationProps> = ({
               formikProps={formikProps}
               field={withNameSpace('buildingFloorCount')}
               type="number"
+              disabled={disabled}
             />
           </Row>
           {(formikProps.values as any).data.projectNumber && (
@@ -127,6 +136,7 @@ export const IdentificationForm: React.FC<IIdentificationProps> = ({
                 field={withNameSpace('isSensitive')}
                 radioLabelOne="Yes"
                 radioLabelTwo="No"
+                disabled={disabled}
               />
             </div>
           </Row>
@@ -140,6 +150,7 @@ export const IdentificationForm: React.FC<IIdentificationProps> = ({
         classifications={classifications}
         title="Strategic Real Estate Classification"
         fieldDescription={ClassificationSelectionText}
+        disabled={disabled}
       />
       <hr></hr>
       <Row>
@@ -150,6 +161,7 @@ export const IdentificationForm: React.FC<IIdentificationProps> = ({
           <AddressForm
             {...formikProps}
             nameSpace={withNameSpace('address')}
+            disabled={disabled}
             onGeocoderChange={(selection: IGeocoderResponse) => {
               const administrativeArea = selection.administrativeArea
                 ? lookupCodes.find(code => {
@@ -177,6 +189,7 @@ export const IdentificationForm: React.FC<IIdentificationProps> = ({
         </Col>
         <Col>
           <LatLongForm
+            disabled={disabled}
             {...formikProps}
             building
             setMovingPinNameSpace={setMovingPinNameSpace}

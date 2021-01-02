@@ -104,6 +104,9 @@ exports[`Review Summary View renders approved correctly 1`] = `
             name="projectNumber"
             onBlur={[Function]}
             onChange={[Function]}
+            onFocus={[Function]}
+            onMouseOut={[Function]}
+            onMouseOver={[Function]}
             placeholder="SPP-XXXXXX"
             value="test-01"
           />
@@ -128,6 +131,9 @@ exports[`Review Summary View renders approved correctly 1`] = `
             name="name"
             onBlur={[Function]}
             onChange={[Function]}
+            onFocus={[Function]}
+            onMouseOut={[Function]}
+            onMouseOver={[Function]}
             required={true}
             value="my project"
           />
@@ -152,6 +158,9 @@ exports[`Review Summary View renders approved correctly 1`] = `
             name="description"
             onBlur={[Function]}
             onChange={[Function]}
+            onFocus={[Function]}
+            onMouseOut={[Function]}
+            onMouseOver={[Function]}
             value="my project description"
           />
         </div>
@@ -795,6 +804,9 @@ exports[`Review Summary View renders approved correctly 1`] = `
           name="note"
           onBlur={[Function]}
           onChange={[Function]}
+          onFocus={[Function]}
+          onMouseOut={[Function]}
+          onMouseOver={[Function]}
           value="my notes"
         />
       </div>
@@ -841,6 +853,9 @@ exports[`Review Summary View renders approved correctly 1`] = `
           name="publicNote"
           onBlur={[Function]}
           onChange={[Function]}
+          onFocus={[Function]}
+          onMouseOut={[Function]}
+          onMouseOver={[Function]}
           value=""
         />
       </div>
@@ -985,6 +1000,9 @@ exports[`Review Summary View renders denied correctly 1`] = `
             name="projectNumber"
             onBlur={[Function]}
             onChange={[Function]}
+            onFocus={[Function]}
+            onMouseOut={[Function]}
+            onMouseOver={[Function]}
             placeholder="SPP-XXXXXX"
             value="test-01"
           />
@@ -1009,6 +1027,9 @@ exports[`Review Summary View renders denied correctly 1`] = `
             name="name"
             onBlur={[Function]}
             onChange={[Function]}
+            onFocus={[Function]}
+            onMouseOut={[Function]}
+            onMouseOver={[Function]}
             required={true}
             value="my project"
           />
@@ -1033,6 +1054,9 @@ exports[`Review Summary View renders denied correctly 1`] = `
             name="description"
             onBlur={[Function]}
             onChange={[Function]}
+            onFocus={[Function]}
+            onMouseOut={[Function]}
+            onMouseOver={[Function]}
             value="my project description"
           />
         </div>
@@ -1676,6 +1700,9 @@ exports[`Review Summary View renders denied correctly 1`] = `
           name="note"
           onBlur={[Function]}
           onChange={[Function]}
+          onFocus={[Function]}
+          onMouseOut={[Function]}
+          onMouseOver={[Function]}
           value="my notes"
         />
       </div>
@@ -1722,6 +1749,9 @@ exports[`Review Summary View renders denied correctly 1`] = `
           name="publicNote"
           onBlur={[Function]}
           onChange={[Function]}
+          onFocus={[Function]}
+          onMouseOut={[Function]}
+          onMouseOver={[Function]}
           value=""
         />
       </div>
@@ -1866,6 +1896,9 @@ exports[`Review Summary View renders submitted correctly 1`] = `
             name="projectNumber"
             onBlur={[Function]}
             onChange={[Function]}
+            onFocus={[Function]}
+            onMouseOut={[Function]}
+            onMouseOver={[Function]}
             placeholder="SPP-XXXXXX"
             value="test-01"
           />
@@ -1890,6 +1923,9 @@ exports[`Review Summary View renders submitted correctly 1`] = `
             name="name"
             onBlur={[Function]}
             onChange={[Function]}
+            onFocus={[Function]}
+            onMouseOut={[Function]}
+            onMouseOver={[Function]}
             required={true}
             value="my project"
           />
@@ -1914,6 +1950,9 @@ exports[`Review Summary View renders submitted correctly 1`] = `
             name="description"
             onBlur={[Function]}
             onChange={[Function]}
+            onFocus={[Function]}
+            onMouseOut={[Function]}
+            onMouseOver={[Function]}
             value="my project description"
           />
         </div>
@@ -2557,6 +2596,9 @@ exports[`Review Summary View renders submitted correctly 1`] = `
           name="note"
           onBlur={[Function]}
           onChange={[Function]}
+          onFocus={[Function]}
+          onMouseOut={[Function]}
+          onMouseOver={[Function]}
           value="my notes"
         />
       </div>
@@ -2603,6 +2645,9 @@ exports[`Review Summary View renders submitted correctly 1`] = `
           name="publicNote"
           onBlur={[Function]}
           onChange={[Function]}
+          onFocus={[Function]}
+          onMouseOut={[Function]}
+          onMouseOver={[Function]}
           value=""
         />
       </div>

@@ -68,6 +68,9 @@ exports[`MapFilterBar renders correctly 1`] = `
               name="address"
               onBlur={[Function]}
               onChange={[Function]}
+              onFocus={[Function]}
+              onMouseOut={[Function]}
+              onMouseOver={[Function]}
               placeholder="Enter an address or city"
               value=""
             />
@@ -207,6 +210,9 @@ exports[`MapFilterBar renders correctly 1`] = `
           name="minLotSize"
           onBlur={[Function]}
           onChange={[Function]}
+          onFocus={[Function]}
+          onMouseOut={[Function]}
+          onMouseOver={[Function]}
           placeholder="Min Lot Size"
           value=""
         />
@@ -225,6 +231,9 @@ exports[`MapFilterBar renders correctly 1`] = `
           name="maxLotSize"
           onBlur={[Function]}
           onChange={[Function]}
+          onFocus={[Function]}
+          onMouseOut={[Function]}
+          onMouseOver={[Function]}
           placeholder="Max Lot Size"
           value=""
         />

@@ -72,6 +72,7 @@ export const fetchParcelDetail = (params: API.IParcelDetailParams, position?: [n
       dispatch(success(actionTypes.GET_PARCEL_DETAIL));
       dispatch(parcelsActions.storeParcelDetail(response.data, position));
       dispatch(hideLoading());
+      return response.data;
     })
     .catch((axiosError: AxiosError) =>
       dispatch(error(actionTypes.GET_PARCEL_DETAIL, axiosError?.response?.status, axiosError)),
@@ -91,6 +92,7 @@ export const fetchBuildingDetail = (
       dispatch(success(actionTypes.GET_PARCEL_DETAIL));
       dispatch(parcelsActions.storeBuildingDetail(response.data, position));
       dispatch(hideLoading());
+      return response.data;
     })
     .catch((axiosError: AxiosError) =>
       dispatch(error(actionTypes.GET_PARCEL_DETAIL, axiosError?.response?.status, axiosError)),

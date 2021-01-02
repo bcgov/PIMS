@@ -11,7 +11,11 @@ interface ITenancyProps {
   nameSpace?: string;
 }
 
-export const BuildingValuationForm: React.FC<ITenancyProps> = ({ formikProps, nameSpace }) => {
+export const BuildingValuationForm: React.FC<ITenancyProps> = ({
+  formikProps,
+  nameSpace,
+  disabled,
+}) => {
   const withNameSpace: Function = React.useCallback(
     (name?: string) => {
       return [nameSpace ?? '', name].filter(x => x).join('.');
@@ -26,7 +30,11 @@ export const BuildingValuationForm: React.FC<ITenancyProps> = ({ formikProps, na
         <br></br>
       </Row>
       <Row className="val-table">
-        <EvaluationForm {...formikProps} nameSpace={withNameSpace('financials')} />
+        <EvaluationForm
+          {...formikProps}
+          nameSpace={withNameSpace('financials')}
+          disabled={disabled}
+        />
       </Row>
     </Col>
   );

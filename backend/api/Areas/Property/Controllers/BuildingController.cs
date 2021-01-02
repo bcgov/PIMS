@@ -72,8 +72,8 @@ namespace Pims.Api.Areas.Property.Controllers
         {
             var entity = _mapper.Map<Entity.Building>(model);
 
-            _pimsService.Building.Add(entity);
-            var parcel = _mapper.Map<Model.BuildingModel>(entity);
+            var addedEntity = _pimsService.Building.Add(entity);
+            var parcel = _mapper.Map<Model.BuildingModel>(addedEntity);
 
             return CreatedAtAction(nameof(GetBuilding), new { id = parcel.Id }, parcel);
         }
@@ -94,8 +94,8 @@ namespace Pims.Api.Areas.Property.Controllers
         {
             var entity = _mapper.Map<Entity.Building>(model);
 
-            _pimsService.Building.Update(entity);
-            var building = _mapper.Map<Model.BuildingModel>(entity);
+            var updatedEntity = _pimsService.Building.Update(entity);
+            var building = _mapper.Map<Model.BuildingModel>(updatedEntity);
 
             return new JsonResult(building);
         }

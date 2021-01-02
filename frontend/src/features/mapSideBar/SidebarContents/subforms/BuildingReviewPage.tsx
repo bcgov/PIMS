@@ -27,6 +27,7 @@ interface IReviewProps {
   constructionType: SelectOptions;
   occupantTypes: SelectOptions;
   agencies: any;
+  disabled: boolean;
 }
 
 export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
@@ -63,13 +64,18 @@ export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
                   <BuildingSvg className="svg" />
                   <h5>Building Identification</h5>
                 </span>
-                <FaEdit
-                  size={20}
-                  className="edit"
-                  onClick={() =>
-                    setEditInfo({ ...defaultEditValues, identification: !editInfo.identification })
-                  }
-                />
+                {!props.disabled && (
+                  <FaEdit
+                    size={20}
+                    className="edit"
+                    onClick={() =>
+                      setEditInfo({
+                        ...defaultEditValues,
+                        identification: !editInfo.identification,
+                      })
+                    }
+                  />
+                )}
               </Row>
               <Row className="content-item">
                 <Label>Agency</Label>
@@ -203,11 +209,15 @@ export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
                   <BuildingSvg className="svg" />
                   <h5>Occupancy</h5>
                 </span>
-                <FaEdit
-                  size={20}
-                  className="edit"
-                  onClick={() => setEditInfo({ ...defaultEditValues, tenancy: !editInfo.tenancy })}
-                />
+                {!props.disabled && (
+                  <FaEdit
+                    size={20}
+                    className="edit"
+                    onClick={() =>
+                      setEditInfo({ ...defaultEditValues, tenancy: !editInfo.tenancy })
+                    }
+                  />
+                )}
               </Row>
               <Row className="content-item">
                 <Label>Total Area</Label>
@@ -255,13 +265,15 @@ export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
                   <BuildingSvg className="svg" />
                   <h5>Valuation</h5>
                 </span>
-                <FaEdit
-                  size={20}
-                  className="edit"
-                  onClick={() =>
-                    setEditInfo({ ...defaultEditValues, valuation: !editInfo.valuation })
-                  }
-                />
+                {!props.disabled && (
+                  <FaEdit
+                    size={20}
+                    className="edit"
+                    onClick={() =>
+                      setEditInfo({ ...defaultEditValues, valuation: !editInfo.valuation })
+                    }
+                  />
+                )}
               </Row>
               <Row className="val-item" style={{ display: 'flex' }}>
                 <Label>Net Book Value</Label>
