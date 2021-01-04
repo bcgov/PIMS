@@ -1,6 +1,13 @@
 import './Table.scss';
 
-import React, { PropsWithChildren, ReactElement, useEffect, ReactNode, useMemo } from 'react';
+import React, {
+  PropsWithChildren,
+  ReactElement,
+  useEffect,
+  ReactNode,
+  useMemo,
+  useRef,
+} from 'react';
 import {
   useTable,
   usePagination,
@@ -20,9 +27,12 @@ import { TablePageSizeSelector } from './PageSizeSelector';
 import { DEFAULT_PAGE_SIZE, DEFAULT_PAGE_SELECTOR_OPTIONS } from './constants';
 import _, { keys } from 'lodash';
 import { Spinner, Collapse } from 'react-bootstrap';
-import { FaAngleDown, FaAngleRight } from 'react-icons/fa';
+import { FaAngleDown, FaAngleRight, FaUndo } from 'react-icons/fa';
 import TooltipWrapper from 'components/common/TooltipWrapper';
 import ColumnSort from './ColumnSort';
+import ColumnFilter from './ColumnFilter';
+import { Formik, FormikProps } from 'formik';
+import { Button } from 'components/common/form/Button';
 
 // these provide a way to inject custom CSS into table headers and cells
 const headerProps = <T extends object>(
@@ -102,6 +112,9 @@ export interface TableProps<T extends object = {}> extends TableOptions<T> {
   manualPagination?: boolean;
   // Limit where you would like an expansion button to appear based off this props criteria
   canRowExpand?: (val: any) => boolean;
+  filterable?: boolean;
+  filter?: { [key in keyof T]?: any };
+  onFilterChange?: (values: any) => void;
 }
 
 const IndeterminateCheckbox = React.forwardRef(({ indeterminate, ...rest }: any, ref) => {
@@ -126,6 +139,7 @@ const IndeterminateCheckbox = React.forwardRef(({ indeterminate, ...rest }: any,
  * Uses `react-table` to handle table logic.
  */
 const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): ReactElement => {
+  const filterFormRef = useRef<FormikProps<any>>();
   const [expandedRows, setExpandedRows] = React.useState<T[]>([]);
   const defaultColumn = React.useMemo(
     () => ({
@@ -148,7 +162,14 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): React
     pageIndex: pageIndexProp,
     manualPagination,
     sort,
+    filterable,
   } = props;
+
+  React.useEffect(() => {
+    if (filterFormRef.current) {
+      filterFormRef.current.setValues(props.filter);
+    }
+  }, [filterFormRef, props.filter]);
 
   const sortBy = useMemo(() => {
     return !!sort ? keys(sort).map(key => ({ id: key, desc: (sort as any)[key] === 'desc' })) : [];
@@ -254,7 +275,16 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): React
   const renderHeaderCell = (column: ColumnInstanceWithProps<T>) => {
     return (
       <div className="sortable-column">
-        {column.render('Header')}
+        <ColumnFilter
+          onFilter={values => {
+            if (filterFormRef.current?.dirty) {
+              filterFormRef.current.submitForm();
+            }
+          }}
+          column={column}
+        >
+          {column.render('Header')}
+        </ColumnFilter>
         <ColumnSort
           onSort={() => {
             const next = getNextSortDirection(column);
@@ -399,15 +429,6 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): React
     );
   };
 
-  const handleExpandAll = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    e.preventDefault();
-    let expanded = expandedRows.length !== props.data.length ? props.data : [];
-    setExpandedRows(expanded);
-    if (props.detailsPanel && props.detailsPanel.onExpand && expanded.length > 0) {
-      props.detailsPanel.onExpand(expanded);
-    }
-  };
-
   const renderFooter = () => {
     if (!footer || !page?.length) {
       return null;
@@ -439,24 +460,63 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): React
         <div className="thead thead-light">
           {headerGroups.map(headerGroup => (
             <div {...headerGroup.getHeaderGroupProps()} className="tr">
-              {renderExpandRowStateButton(
-                expandedRows.length === props.data.length,
-                'th expander',
-                handleExpandAll,
-              )}
-              {headerGroup.headers.map((column: ColumnInstanceWithProps<T>) => (
-                <div
-                  {...(props.hideHeaders
-                    ? column.getHeaderProps(noHeaders)
-                    : column.getHeaderProps(headerProps))}
-                  className={classnames(
-                    'th',
-                    column.isSorted ? (column.isSortedDesc ? 'sort-desc' : 'sort-asc') : '',
-                  )}
-                >
-                  {renderHeaderCell(column)}
-                </div>
-              ))}
+              <Formik
+                initialValues={props.filter || {}}
+                onSubmit={values => {
+                  if (!!props.onFilterChange) {
+                    props.onFilterChange(values);
+                  }
+                }}
+                innerRef={filterFormRef as any}
+              >
+                {actions => (
+                  <>
+                    <div className={'th reset-filter svg-btn'}>
+                      {filterable && (
+                        <TooltipWrapper
+                          toolTipId="properties-list-filter-reset-tooltip"
+                          toolTip="Reset Filter"
+                        >
+                          <Button
+                            onClick={() => {
+                              const nextState: any = { ...props.filter };
+                              const fields = keys(props.filter || {});
+                              for (const key of fields) {
+                                if (Array.isArray(nextState[key])) {
+                                  nextState[key] = [];
+                                } else {
+                                  nextState[key] = '';
+                                }
+                              }
+
+                              actions.resetForm(nextState);
+                              if (!!props.onFilterChange) {
+                                props.onFilterChange(nextState);
+                              }
+                            }}
+                            variant="secondary"
+                            style={{ width: 20, height: 20 }}
+                            icon={<FaUndo size={10} />}
+                          ></Button>
+                        </TooltipWrapper>
+                      )}
+                    </div>
+                    {headerGroup.headers.map((column: ColumnInstanceWithProps<T>) => (
+                      <div
+                        {...(props.hideHeaders
+                          ? column.getHeaderProps(noHeaders)
+                          : column.getHeaderProps(headerProps))}
+                        className={classnames(
+                          'th',
+                          column.isSorted ? (column.isSortedDesc ? 'sort-desc' : 'sort-asc') : '',
+                        )}
+                      >
+                        {renderHeaderCell(column)}
+                      </div>
+                    ))}
+                  </>
+                )}
+              </Formik>
             </div>
           ))}
         </div>

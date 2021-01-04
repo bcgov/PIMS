@@ -42,4 +42,10 @@ export interface IPropertyFilter {
   bareLandOnly?: boolean;
   /** filter for building rentable area */
   rentableArea: string;
+  /** The maximum Assesses Value for a property */
+  maxAssessedValue?: string;
+  /** The maximum Net book Value for a property */
+  maxNetBookValue?: '';
+  /** The maximum Market Value for a property */
+  maxMarketValue?: '';
 }

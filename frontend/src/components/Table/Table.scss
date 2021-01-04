@@ -14,6 +14,7 @@
       vertical-align: bottom;
       border-bottom: 2px solid $table-color;
       cursor: pointer;
+      font-size: 11px;
     }
   }
 
@@ -60,7 +61,13 @@
       fill: $accent-color;
     }
 
-    &.expander {
+    &.svg-btn.reset-filter:hover,
+    &.svg-btn.reset-filter:hover svg {
+      fill: $accent-color;
+    }
+
+    &.expander,
+    &.reset-filter {
       display: flex;
       align-items: center;
     }
@@ -79,6 +86,12 @@
       height: 100%;
       align-items: center;
       justify-content: space-evenly;
+    }
+
+    .filter-wrapper {
+      &.active {
+        color: #007bff;
+      }
     }
   }
 }

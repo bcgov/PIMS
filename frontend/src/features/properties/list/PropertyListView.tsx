@@ -6,7 +6,7 @@ import queryString from 'query-string';
 import _ from 'lodash';
 import * as API from 'constants/API';
 import { ENVIRONMENT } from 'constants/environment';
-import { decimalOrUndefined } from 'utils';
+import { decimalOrUndefined, mapLookupCode } from 'utils';
 import download from 'utils/download';
 import { RootState } from 'reducers/rootReducer';
 import { ILookupCode } from 'actions/lookupActions';
@@ -26,6 +26,8 @@ import { PropertyFilter } from '../filter';
 import { PropertyTypes } from '../../../constants/propertyTypes';
 import { IPropertyFilter } from '../filter/IPropertyFilter';
 import { SortDirection, TableSort } from 'components/Table/TableSort';
+import useCodeLookups from 'hooks/useLookupCodes';
+import { useRouterFilter } from 'hooks/useRouterFilter';
 
 const getPropertyReportUrl = (filter: IPropertyQueryParams) =>
   `${ENVIRONMENT.apiUrl}/reports/properties?${filter ? queryString.stringify(filter) : ''}`;
@@ -54,6 +56,9 @@ const defaultFilterValues: IPropertyFilter = {
   maxLotSize: '',
   rentableArea: '',
   propertyType: PropertyTypes.Land,
+  maxAssessedValue: '',
+  maxNetBookValue: '',
+  maxMarketValue: '',
 };
 
 /**
@@ -88,7 +93,11 @@ const getServerQuery = (
 
   let parsedAgencies: number[] = [];
   if (agencies !== null && agencies !== undefined && agencies !== '') {
-    parsedAgencies = [parseInt(agencies, 10)];
+    parsedAgencies = Array.isArray(agencies)
+      ? (agencies as any).map((a: any) => {
+          return parseInt(a.value, 10);
+        })
+      : [parseInt(agencies, 10)];
   }
 
   const query: IPropertyQueryParams = {
@@ -113,6 +122,14 @@ const PropertyListView: React.FC = () => {
   const lookupCodes = useSelector<RootState, ILookupCode[]>(
     state => (state.lookupCode as ILookupCodeState).lookupCodes,
   );
+  const municipalities = useMemo(
+    () =>
+      _.filter(lookupCodes, (lookupCode: ILookupCode) => {
+        return lookupCode.type === API.AMINISTRATIVE_AREA_CODE_SET_NAME;
+      }),
+    [lookupCodes],
+  );
+
   const agencies = useMemo(
     () =>
       _.filter(lookupCodes, (lookupCode: ILookupCode) => {
@@ -120,6 +137,13 @@ const PropertyListView: React.FC = () => {
       }),
     [lookupCodes],
   );
+
+  const { getByType } = useCodeLookups();
+  const agencyOptions = getByType('Agency');
+
+  const agenciesList = agencyOptions.filter(a => !a.parentId).map(mapLookupCode);
+  const subAgencies = agencyOptions.filter(a => !!a.parentId).map(mapLookupCode);
+
   const propertyClassifications = _.filter(lookupCodes, (lookupCode: ILookupCode) => {
     return lookupCode.type === API.PROPERTY_CLASSIFICATION_CODE_SET_NAME;
   });
@@ -128,7 +152,10 @@ const PropertyListView: React.FC = () => {
   });
 
   const agencyIds = useMemo(() => agencies.map(x => parseInt(x.id, 10)), [agencies]);
-  const columns = useMemo(() => cols, []);
+  const columns = useMemo(
+    () => cols(agenciesList, subAgencies, municipalities, propertyClassifications),
+    [subAgencies, agenciesList, municipalities, propertyClassifications],
+  );
   const [sorting, setSorting] = useState<TableSort<IProperty>>({ description: 'asc' });
 
   // We'll start our table without any data
@@ -145,6 +172,21 @@ const PropertyListView: React.FC = () => {
 
   // const [loading, setLoading] = useState(false);
   const fetchIdRef = useRef(0);
+
+  const parsedFilter = useMemo(() => {
+    const data = { ...filter };
+    if (data.agencies) {
+      data.agencies = Array.isArray(data.agencies)
+        ? (data.agencies as any).map((a: any) => {
+            return parseInt(a.value, 10);
+          })
+        : [parseInt(data.agencies, 10)];
+    }
+
+    return data;
+  }, [filter]);
+
+  useRouterFilter({ filter: parsedFilter, setFilter: null, key: 'propertyFilter' });
 
   // Update internal state whenever the filter bar state changes
   const handleFilterChange = useCallback(
@@ -254,12 +296,20 @@ const PropertyListView: React.FC = () => {
     });
   };
 
+  const appliedFilter = { ...filter };
+  if (appliedFilter.agencies && typeof appliedFilter.agencies === 'string') {
+    const agencySelections = agencies.map(mapLookupCode);
+    appliedFilter.agencies = filter.agencies
+      .split(',')
+      .map(value => agencySelections.find(agency => agency.value === value) || '') as any;
+  }
+
   return (
     <Container fluid className="PropertyListView">
       <Container fluid className="filter-container border-bottom">
         <Container className="px-0">
           <PropertyFilter
-            defaultFilter={defaultFilterValues}
+            defaultFilter={filter}
             agencyLookupCodes={agencies}
             propertyClassifications={propertyClassifications}
             adminAreaLookupCodes={administrativeAreas}
@@ -317,6 +367,7 @@ const PropertyListView: React.FC = () => {
           columns={columns}
           data={data || []}
           loading={data === undefined}
+          filterable
           sort={sorting}
           pageIndex={pageIndex}
           onRequestData={handleRequestData}
@@ -350,6 +401,10 @@ const PropertyListView: React.FC = () => {
             checkExpanded: (row, state) => !!state.find(x => checkExpanded(x, row)),
             onExpand: loadBuildings,
             getRowId: row => row.id,
+          }}
+          filter={appliedFilter}
+          onFilterChange={values => {
+            setFilter({ ...filter, ...values });
           }}
         />
       </div>
