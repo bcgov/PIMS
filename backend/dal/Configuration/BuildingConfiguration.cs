@@ -24,6 +24,7 @@ namespace Pims.Dal.Configuration
             builder.Property(m => m.LeaseExpiry).HasColumnType("DATETIME2");
             builder.Property(m => m.TransferLeaseOnSale).HasDefaultValue(false);
             builder.Property(m => m.OccupantName).HasMaxLength(100);
+            builder.Property(m => m.EncumbranceReason).HasMaxLength(500);
 
             builder.HasOne(m => m.Agency).WithMany(m => m.Buildings).HasForeignKey(m => m.AgencyId).OnDelete(DeleteBehavior.ClientSetNull);
             builder.HasOne(m => m.BuildingConstructionType).WithMany().HasForeignKey(m => m.BuildingConstructionTypeId).OnDelete(DeleteBehavior.ClientSetNull);
