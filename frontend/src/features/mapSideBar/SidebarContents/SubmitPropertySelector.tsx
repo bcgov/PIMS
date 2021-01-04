@@ -59,7 +59,7 @@ const BuildingIcon = styled(BuildingSvg)`
   margin-right: 16px;
 `;
 
-const RawLandIcon = styled(LandSvg)`
+const BareLandIcon = styled(LandSvg)`
   color: #494949;
   height: 47px;
   width: 47px;
@@ -79,12 +79,12 @@ const ActionSecondaryText = styled.p`
 
 interface ISubmitPropertySelectorProps {
   addBuilding: () => void;
-  addRawLand: () => void;
+  addBareLand: () => void;
 }
 
 const SubmitPropertySelector: React.FC<ISubmitPropertySelectorProps> = ({
   addBuilding,
-  addRawLand,
+  addBareLand,
 }) => {
   return (
     <SidebarContent>
@@ -103,10 +103,10 @@ const SubmitPropertySelector: React.FC<ISubmitPropertySelectorProps> = ({
             <ActionPrimaryText>Add a building</ActionPrimaryText>
           </ActionLabelWrapper>
         </Action>
-        <Action onClick={addRawLand}>
-          <RawLandIcon className="svg" />
+        <Action onClick={addBareLand}>
+          <BareLandIcon className="svg" />
           <ActionLabelWrapper>
-            <ActionPrimaryText>Add Raw Land</ActionPrimaryText>
+            <ActionPrimaryText>Add Bare Land</ActionPrimaryText>
             <ActionSecondaryText>PID or PIN</ActionSecondaryText>
           </ActionLabelWrapper>
         </Action>

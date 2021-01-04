@@ -85,7 +85,7 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
     context,
     size,
     addBuilding,
-    addRawLand,
+    addBareLand,
     addAssociatedLand,
     addContext,
     disabled,
@@ -257,14 +257,14 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
             <BuildingSvg className="svg" /> Submit a Building (to inventory)
           </>
         );
-      case SidebarContextType.ADD_RAW_LAND:
+      case SidebarContextType.ADD_BARE_LAND:
         return (
           <>
-            <LandSvg className="svg" /> Submit Raw Land (to inventory)
+            <LandSvg className="svg" /> Submit Bare Land (to inventory)
           </>
         );
-      case SidebarContextType.VIEW_RAW_LAND:
-      case SidebarContextType.UPDATE_RAW_LAND:
+      case SidebarContextType.VIEW_BARE_LAND:
+      case SidebarContextType.UPDATE_BARE_LAND:
         return (
           <>
             <LandSvg className="svg" /> View/Update bare land
@@ -336,9 +336,9 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
         ) : (
           <Spinner animation="border"></Spinner>
         );
-      case SidebarContextType.ADD_RAW_LAND:
+      case SidebarContextType.ADD_BARE_LAND:
       case SidebarContextType.UPDATE_DEVELOPED_LAND:
-      case SidebarContextType.UPDATE_RAW_LAND:
+      case SidebarContextType.UPDATE_BARE_LAND:
         if (propertyType !== 'land') {
           setPropertyType('land');
         }
@@ -356,7 +356,7 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
         ) : (
           <Spinner animation="border"></Spinner>
         );
-      case SidebarContextType.VIEW_RAW_LAND:
+      case SidebarContextType.VIEW_BARE_LAND:
       case SidebarContextType.VIEW_DEVELOPED_LAND:
         if (propertyType !== 'land') {
           setPropertyType('land');
@@ -388,7 +388,7 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
       case SidebarContextType.LOADING:
         return <Spinner animation="border"></Spinner>;
       default:
-        return <SubmitPropertySelector addBuilding={addBuilding} addRawLand={addRawLand} />;
+        return <SubmitPropertySelector addBuilding={addBuilding} addBareLand={addBareLand} />;
     }
   };
 

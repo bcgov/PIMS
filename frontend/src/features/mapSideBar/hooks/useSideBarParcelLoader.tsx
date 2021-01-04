@@ -47,7 +47,7 @@ const useSideBarParcelLoader = ({
           );
         } else {
           setSideBarContext(
-            disabled ? SidebarContextType.VIEW_RAW_LAND : SidebarContextType.UPDATE_RAW_LAND,
+            disabled ? SidebarContextType.VIEW_BARE_LAND : SidebarContextType.UPDATE_BARE_LAND,
           );
         }
       }
@@ -68,13 +68,13 @@ const useSideBarParcelLoader = ({
     if (!!parcelId && cachedParcelDetail?.id === parcelId) {
       if (disabled) {
         setSideBarContext(
-          hasBuildings ? SidebarContextType.VIEW_DEVELOPED_LAND : SidebarContextType.VIEW_RAW_LAND,
+          hasBuildings ? SidebarContextType.VIEW_DEVELOPED_LAND : SidebarContextType.VIEW_BARE_LAND,
         );
       } else {
         setSideBarContext(
           hasBuildings
             ? SidebarContextType.UPDATE_DEVELOPED_LAND
-            : SidebarContextType.UPDATE_RAW_LAND,
+            : SidebarContextType.UPDATE_BARE_LAND,
         );
       }
     }

@@ -8,13 +8,13 @@ export type SidebarSize = 'narrow' | 'wide' | undefined;
 export enum SidebarContextType {
   ADD_PROPERTY_TYPE_SELECTOR = 'addPropertyTypeSelector',
   ADD_BUILDING = 'addBuilding',
-  ADD_RAW_LAND = 'addRawLand',
+  ADD_BARE_LAND = 'addBareLand',
   ADD_ASSOCIATED_LAND = 'addAssociatedLand',
   VIEW_BUILDING = 'viewBuilding',
-  VIEW_RAW_LAND = 'viewRawLand',
+  VIEW_BARE_LAND = 'viewBareLand',
   VIEW_DEVELOPED_LAND = 'viewDevelopedLand',
   UPDATE_BUILDING = 'updateBuilding',
-  UPDATE_RAW_LAND = 'updateRawLand',
+  UPDATE_BARE_LAND = 'updateBareLand',
   UPDATE_DEVELOPED_LAND = 'updateDevelopedLand',
   LOADING = 'loading',
 }
@@ -28,7 +28,7 @@ interface IMapSideBar {
     resetParcelId?: boolean,
   ) => void;
   addBuilding: () => void;
-  addRawLand: () => void;
+  addBareLand: () => void;
   addAssociatedLand: () => void;
   addContext: (context: SidebarContextType) => void;
   setDisabled: (disabled: boolean) => void;
@@ -99,8 +99,8 @@ const useQueryParamSideBar = (): IMapSideBar => {
     setShow(true, SidebarContextType.ADD_BUILDING, 'wide');
   };
 
-  const addRawLand = () => {
-    setShow(true, SidebarContextType.ADD_RAW_LAND, 'wide');
+  const addBareLand = () => {
+    setShow(true, SidebarContextType.ADD_BARE_LAND, 'wide');
   };
 
   const addAssociatedLand = () => {
@@ -125,7 +125,7 @@ const useQueryParamSideBar = (): IMapSideBar => {
     loadDraft: searchParams?.loadDraft === 'true',
     newParcel: searchParams?.new === 'true',
     addBuilding,
-    addRawLand,
+    addBareLand,
     addAssociatedLand,
     addContext,
     setDisabled: disabled => {
