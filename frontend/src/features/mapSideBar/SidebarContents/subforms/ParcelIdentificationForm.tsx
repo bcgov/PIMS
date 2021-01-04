@@ -27,6 +27,8 @@ import { ParentSelect } from 'components/common/form/ParentSelect';
 import { noop } from 'lodash';
 import { Container, Row, Col, Form } from 'react-bootstrap';
 import TooltipWrapper from 'components/common/TooltipWrapper';
+import * as API from 'constants/API';
+import useCodeLookups from 'hooks/useLookupCodes';
 
 interface IIdentificationProps {
   /** used for changign the agency - note that only select users will be able to edit this field */
@@ -83,6 +85,7 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
     [nameSpace, index],
   );
   const agency = getIn(formikProps.values, withNameSpace('agencyId'));
+  const { lookupCodes } = useCodeLookups();
 
   const MovePinComponent = () => (
     <>
@@ -238,7 +241,27 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
             disabled={disabled}
           />
           <AddressForm
-            onGeocoderChange={noop}
+            onGeocoderChange={(selection: IGeocoderResponse) => {
+              const administrativeArea = selection.administrativeArea
+                ? lookupCodes.find(code => {
+                    return (
+                      code.type === API.AMINISTRATIVE_AREA_CODE_SET_NAME &&
+                      code.name === selection.administrativeArea
+                    );
+                  })
+                : undefined;
+              if (administrativeArea) {
+                selection.administrativeArea = administrativeArea.name;
+              }
+              formikProps.setFieldValue(withNameSpace(''), {
+                ...getIn(formikProps.values, withNameSpace('')),
+                address: {
+                  ...getIn(formikProps.values, withNameSpace('address')),
+                  line1: selection.address1,
+                  administrativeArea: selection.administrativeArea,
+                },
+              });
+            }}
             {...formikProps}
             disabled={disabled}
             nameSpace={withNameSpace('address')}
@@ -299,6 +322,7 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
               field={withNameSpace('landArea')}
               formikProps={formikProps}
               postText="Hectares"
+              required
             />
           </Form.Row>
         </Col>

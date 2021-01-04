@@ -24,7 +24,7 @@ import {
   AssociatedLandOwnershipSchema,
   LandIdentificationSchema,
   LandUsageSchema,
-  LandValuationSchema,
+  ValuationSchema,
 } from 'utils/YupSchema';
 import { useDispatch } from 'react-redux';
 import { useBuildingApi } from '../hooks/useBuildingApi';
@@ -129,6 +129,7 @@ export const valuesToApiFormat = (
   agencyId?: number,
 ): IAssociatedLand => {
   const apiValues = { ...values };
+  apiValues.data.leaseExpiry = undefined;
   const ownedParcels: IParcel[] = getOwnedParcels(
     values.data.leasedLandMetadata,
     values.data.parcels,
@@ -254,7 +255,7 @@ const Form: React.FC<IAssociatedLandForm> = ({
                 getIn(formikProps.values, `data.leasedLandMetadata.${stepper.currentTab}.type`) ===
                 LeasedLand.other
               ) {
-                stepper.gotoStep(AssociatedLandSteps.REVIEW);
+                stepper.gotoStep(AssociatedLandSteps.REVIEW, true);
               } else {
                 stepper.gotoNext();
               }
@@ -319,6 +320,7 @@ const AssociatedLandForm: React.FC<IAssociatedLandParentForm> = (
   const api = useApi();
 
   initialValues.data.agencyId = keycloak.agencyId ?? '';
+  const isViewOrUpdate = !!(props.initialValues as any).leasedLandMetadata;
 
   /**
    * Combines yup validation with manual validation of financial data for performance reasons.
@@ -466,7 +468,7 @@ const AssociatedLandForm: React.FC<IAssociatedLandParentForm> = (
               route: 'identification',
               title: 'Identification',
               completed: false,
-              canGoToStep: false,
+              canGoToStep: isViewOrUpdate,
               validation: {
                 schema: LandIdentificationSchema,
                 nameSpace: (tabIndex: number) => `data.parcels.${tabIndex}`,
@@ -476,7 +478,7 @@ const AssociatedLandForm: React.FC<IAssociatedLandParentForm> = (
               route: 'usage',
               title: 'Usage',
               completed: false,
-              canGoToStep: false,
+              canGoToStep: isViewOrUpdate,
               validation: {
                 schema: LandUsageSchema,
                 nameSpace: (tabIndex: number) => `data.parcels.${tabIndex}`,
@@ -486,9 +488,9 @@ const AssociatedLandForm: React.FC<IAssociatedLandParentForm> = (
               route: 'valuation',
               title: 'Valuation',
               completed: false,
-              canGoToStep: false,
+              canGoToStep: isViewOrUpdate,
               validation: {
-                schema: LandValuationSchema,
+                schema: ValuationSchema,
                 nameSpace: (tabIndex: number) => `data.parcels.${tabIndex}`,
               },
             },
@@ -496,7 +498,7 @@ const AssociatedLandForm: React.FC<IAssociatedLandParentForm> = (
               route: 'review',
               title: 'Review & Submit',
               completed: false,
-              canGoToStep: false,
+              canGoToStep: isViewOrUpdate,
               validation: {
                 schema: AssociatedLandSchema,
                 nameSpace: (tabIndex: number) => `data`,

@@ -5,7 +5,7 @@ export interface IStepperFormContextProps {
   currentTab: number;
   currentTabName: string;
   getTabCurrentStep: (tab: number) => number;
-  gotoStep: (step: number) => boolean;
+  gotoStep: (step: number, override?: boolean) => boolean;
   goBack: () => boolean;
   gotoNext: () => boolean;
   gotoTab: (tab: number) => boolean;

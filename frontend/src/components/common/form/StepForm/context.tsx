@@ -118,14 +118,14 @@ export const StepperFormProvider: React.FC<IStepperFormProviderProps> = ({
     return false;
   };
 
-  const gotoStep = (index: number) => {
+  const gotoStep = (index: number, override: boolean = false) => {
     if (index >= 0 && index < steps.length) {
       const currentIndex = getIn(values, `tabs.${values.activeTab}.activeStep`);
       if (!validateCurrentStep() && index > currentIndex) {
         return false;
       }
       const nextStep = steps[index];
-      if (nextStep.canGoToStep) {
+      if (override || nextStep.canGoToStep) {
         setFieldValue(`tabs.${values.activeTab}.activeStep`, index);
         return true;
       }

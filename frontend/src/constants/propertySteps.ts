@@ -27,5 +27,6 @@ export enum BuildingSteps {
   IDENTIFICATION = 0,
   TENANCY = 1,
   VALUATION = 2,
-  REVIEW = 3,
+  ASSOCIATED = 3,
+  REVIEW = 4,
 }

@@ -16,6 +16,11 @@ namespace Pims.Api.Areas.Property.Models.Building
         /// get/set - An id used to associate this metadata with a parcel.
         /// </summary>
         public string ParcelId { get; set; }
+
+        /// <summary>
+        /// get/set - the lease type
+        /// </summary>
+        public int type { get; set; }
         #endregion
     }
 }

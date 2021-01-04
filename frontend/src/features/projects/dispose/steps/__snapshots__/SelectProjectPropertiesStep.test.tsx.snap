@@ -35,6 +35,9 @@ exports[`renders correctly 1`] = `
                 name="pid"
                 onBlur={[Function]}
                 onChange={[Function]}
+                onFocus={[Function]}
+                onMouseOut={[Function]}
+                onMouseOver={[Function]}
                 placeholder="Enter PID or PIN"
                 value=""
               />
@@ -58,6 +61,9 @@ exports[`renders correctly 1`] = `
                     name="address"
                     onBlur={[Function]}
                     onChange={[Function]}
+                    onFocus={[Function]}
+                    onMouseOut={[Function]}
+                    onMouseOver={[Function]}
                     placeholder="Enter an address or city"
                     value=""
                   />
@@ -878,6 +884,9 @@ exports[`renders correctly 1`] = `
           name="note"
           onBlur={[Function]}
           onChange={[Function]}
+          onFocus={[Function]}
+          onMouseOut={[Function]}
+          onMouseOver={[Function]}
         />
       </div>
     </div>

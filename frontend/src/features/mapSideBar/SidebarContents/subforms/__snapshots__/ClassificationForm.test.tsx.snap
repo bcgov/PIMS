@@ -50,7 +50,11 @@ Array [
             className="form-control"
             id="input-classificationId-fast"
             name="classificationId"
+            onBlur={[Function]}
             onChange={[Function]}
+            onFocus={[Function]}
+            onMouseOut={[Function]}
+            onMouseOver={[Function]}
             required={true}
             style={
               Object {

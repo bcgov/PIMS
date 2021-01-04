@@ -106,7 +106,7 @@ it('identification section editable after click', () => {
 it('occupancy fields disabled by default', () => {
   const { container } = render(form);
 
-  const totalArea = container.querySelector('input[name="squareFootage"]');
+  const totalArea = container.querySelector('input[name="totalArea"]');
   const rentableArea = container.querySelector('input[name="rentableArea"]');
   const tenancy = container.querySelector('input[name="buildingTenancy"]');
 
@@ -118,7 +118,7 @@ it('occupancy fields disabled by default', () => {
 it('occupancy fields editable after click', () => {
   const { container } = render(form);
 
-  const totalArea = container.querySelector('input[name="squareFootage"]');
+  const totalArea = container.querySelector('input[name="totalArea"]');
   const rentableArea = container.querySelector('input[name="rentableArea"]');
   const tenancy = container.querySelector('input[name="buildingTenancy"]');
 

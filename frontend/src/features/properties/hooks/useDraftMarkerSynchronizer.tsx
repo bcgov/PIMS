@@ -14,8 +14,12 @@ import { PointFeature } from 'components/maps/types';
  * As long as a parcel/building has both a lat and a lng it will be returned by this method.
  * @param values the current form values to extract lat/lngs from.
  */
-const getDraftMarkers = (values: any) => {
-  if (values.latitude === '' || values.longitude === '') {
+const getDraftMarkers = (values: any, initialValues: any) => {
+  if (
+    values.latitude === '' ||
+    values.longitude === '' ||
+    (values.latitude === initialValues.latitude && values.longitude === initialValues.longitude)
+  ) {
     return [];
   }
   return [
@@ -40,7 +44,7 @@ const getDraftMarkers = (values: any) => {
  * @param param0 The currently displayed list of properties on the map.
  */
 const useDraftMarkerSynchronizer = () => {
-  const { values } = useFormikContext();
+  const { values, initialValues } = useFormikContext();
   const properties = useSelector<RootState, PointFeature[]>(state => [
     ...state.parcel.draftParcels,
   ]);
@@ -68,16 +72,20 @@ const useDraftMarkerSynchronizer = () => {
    * @param values the current form values
    * @param dbProperties the currently displayed list of (DB) map properties.
    */
-  const synchronizeMarkers = (values: any, dbProperties: PointFeature[]) => {
-    const draftMarkers = values.data ? getDraftMarkers(values.data) : getDraftMarkers(values);
+  const synchronizeMarkers = (values: any, initialValues: any, dbProperties: PointFeature[]) => {
+    const draftMarkers = values.data
+      ? getDraftMarkers(values.data, initialValues.data)
+      : getDraftMarkers(values, initialValues);
     if (draftMarkers.length) {
       const newDraftMarkers = _.filter(
         draftMarkers,
         (draftMarker: PointFeature) =>
-          _.find(dbProperties, {
-            latitude: draftMarker.geometry.coordinates[0],
-            longitude: draftMarker.geometry.coordinates[1],
-          }) === undefined,
+          _.find(
+            dbProperties,
+            dbProperty =>
+              dbProperty.geometry.coordinates[0] === draftMarker.geometry.coordinates[0] &&
+              dbProperty.geometry.coordinates[1] === draftMarker.geometry.coordinates[1],
+          ) === undefined,
       );
       dispatch(storeDraftParcelsAction(newDraftMarkers as PointFeature[]));
     } else {
@@ -86,15 +94,15 @@ const useDraftMarkerSynchronizer = () => {
   };
 
   const synchronize = useCallback(
-    debounce((values: any, properties: PointFeature[]) => {
-      synchronizeMarkers(values, properties);
+    debounce((values: any, initialValues: any, properties: PointFeature[]) => {
+      synchronizeMarkers(values, initialValues, properties);
     }, 400),
     [],
   );
 
   useDeepCompareEffect(() => {
-    synchronize(values, nonDraftProperties);
-  }, [values, nonDraftProperties, synchronize]);
+    synchronize(values, initialValues, nonDraftProperties);
+  }, [values, initialValues, nonDraftProperties, synchronize]);
 
   return;
 };

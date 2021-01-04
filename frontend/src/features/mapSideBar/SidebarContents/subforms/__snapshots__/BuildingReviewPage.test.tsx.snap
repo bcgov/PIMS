@@ -107,7 +107,7 @@ exports[`renders correctly 1`] = `
             <p class=\\"label\\">Total Area</p>
             <div class=\\"input-group required disabled\\">
               <div class=\\"input-group-content\\">
-                <div class=\\"form-group col\\"><input name=\\"squareFootage\\" disabled=\\"\\" type=\\"number\\" id=\\"input-squareFootage\\" class=\\"form-control\\" value=\\"\\"></div>
+                <div class=\\"form-group col\\"><input name=\\"totalArea\\" disabled=\\"\\" type=\\"number\\" id=\\"input-totalArea\\" class=\\"form-control\\" value=\\"\\"></div>
               </div>
               <div class=\\"input-group-append\\"><span class=\\"append-disabled input-group-text\\">Sq. M</span></div>
             </div>
@@ -116,7 +116,7 @@ exports[`renders correctly 1`] = `
             <p class=\\"label\\">Net Usable Area</p>
             <div class=\\"input-group required disabled\\">
               <div class=\\"input-group-content\\">
-                <div class=\\"form-group col\\"><input name=\\"rentableArea\\" style=\\"width: 100px;\\" disabled=\\"\\" type=\\"number\\" id=\\"input-rentableArea\\" class=\\"area form-control\\" value=\\"\\"></div>
+                <div class=\\"form-group col\\"><input name=\\"rentableArea\\" disabled=\\"\\" type=\\"number\\" id=\\"input-rentableArea\\" class=\\"form-control\\" value=\\"\\"></div>
               </div>
               <div class=\\"input-group-append\\"><span class=\\"append-disabled input-group-text\\">Sq. M</span></div>
             </div>

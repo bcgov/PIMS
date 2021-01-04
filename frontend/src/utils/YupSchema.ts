@@ -101,14 +101,14 @@ export const FinancialYear = Yup.object().shape({
   market: Financial.required(),
 });
 
-export const Building = Yup.object().shape({
+export const BuildingSchema = Yup.object().shape({
   name: Yup.string()
     .max(150, 'Name must be less then 150 characters')
     .nullable(),
   description: Yup.string()
     .max(2000, 'Description must be less than 2000 characters')
     .nullable(),
-  address: Address.nullable(),
+  address: Address.required(),
   latitude: Yup.number()
     .min(-90, 'Invalid Latitude')
     .max(90, 'Invalid Latitude')
@@ -125,10 +125,6 @@ export const Building = Yup.object().shape({
     .nullable(),
   buildingPredominateUseId: Yup.string()
     .matches(/\d*/, 'Invalid Building Predominate Use')
-    .required('Required')
-    .nullable(),
-  buildingOccupantTypeId: Yup.string()
-    .matches(/\d*/, 'Invalid Building Occupant Type')
     .required('Required')
     .nullable(),
   classificationId: Yup.string()
@@ -153,6 +149,58 @@ export const Building = Yup.object().shape({
     .compact((financial: any) => financial.year !== currentYear)
     .of(FinancialYear),
 });
+
+export const BuildingInformationSchema = Yup.object().shape({
+  name: Yup.string()
+    .max(150, 'Name must be less then 150 characters')
+    .nullable(),
+  description: Yup.string()
+    .max(2000, 'Description must be less than 2000 characters')
+    .nullable(),
+  latitude: Yup.number()
+    .min(-90, 'Invalid Latitude')
+    .max(90, 'Invalid Latitude')
+    .transform(emptyStringToNull)
+    .required('Required'),
+  longitude: Yup.number()
+    .min(-180, 'Invalid Longitude')
+    .max(180, 'Invalid Longitude')
+    .transform(emptyStringToNull)
+    .required('Required'),
+  buildingConstructionTypeId: Yup.string()
+    .matches(/\d*/, 'Invalid Building Construction Type')
+    .required('Required')
+    .nullable(),
+  buildingPredominateUseId: Yup.string()
+    .matches(/\d*/, 'Invalid Building Predominate Use')
+    .required('Required')
+    .nullable(),
+  classificationId: Yup.string()
+    .matches(/\d*/, 'Invalid Building Classification Id')
+    .required('Required')
+    .nullable(),
+  buildingFloorCount: Yup.number()
+    .min(0, 'Floor Count must be a valid number')
+    .transform(emptyStringToNull),
+
+  address: Address.required(),
+  agencyId: Yup.number()
+    .transform(emptyStringToNull)
+    .required('Required'),
+  isSensitive: Yup.boolean(),
+});
+
+export const OccupancySchema = Yup.object().shape({
+  rentableArea: Yup.number()
+    .min(0, 'Rentable Area must be a valid number')
+    .transform(emptyStringToNull)
+    .required('Required'),
+  totalArea: Yup.number()
+    .min(0, 'Total Area must be a valid number')
+    .transform(emptyStringToNull)
+    .required('Required'),
+});
+
 export const LandSchema = Yup.object().shape({
   classificationId: Yup.string()
     .required('Required')
@@ -254,7 +302,7 @@ export const LandUsageSchema = Yup.object().shape({
     .nullable(),
 });
 
-export const LandValuationSchema = Yup.object().shape({
+export const ValuationSchema = Yup.object().shape({
   financials: Yup.array()
     .compact((financial: any) => financial.year !== currentYear)
     .of(FinancialYear),

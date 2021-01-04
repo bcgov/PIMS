@@ -3,13 +3,13 @@ import MapSideBarLayout from '../components/MapSideBarLayout';
 import useParamSideBar, { SidebarContextType } from '../hooks/useQueryParamSideBar';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from 'reducers/rootReducer';
-import { IPropertyDetail, IParcel, IProperty, IBuilding } from 'actions/parcelsActions';
-import { fetchParcelDetail, fetchParcelsDetail } from 'actionCreators/parcelsActionCreator';
+import { IParcel, IProperty, IBuilding } from 'actions/parcelsActions';
+import { fetchParcelsDetail } from 'actionCreators/parcelsActionCreator';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
 import { BuildingForm, SubmitPropertySelector, LandForm } from '../SidebarContents';
 import { BuildingSvg, LandSvg } from 'components/common/Icons';
 import { FormikValues, setIn, getIn } from 'formik';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import useGeocoder from 'features/properties/hooks/useGeocoder';
 import { isMouseEventRecent } from 'utils';
 import {
@@ -31,6 +31,9 @@ import {
 } from 'features/properties/components/forms/subforms/EvaluationForm';
 import { Spinner } from 'react-bootstrap';
 import { ViewOnlyLandForm } from '../SidebarContents/LandForm';
+import useSideBarParcelLoader from '../hooks/useSideBarParcelLoader';
+import useSideBarBuildingLoader from '../hooks/useSideBarBuildingLoader';
+import { ViewOnlyBuildingForm } from '../SidebarContents/BuildingForm';
 
 interface IMapSideBarContainerProps {
   refreshParcels: Function;
@@ -78,6 +81,7 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
     showSideBar,
     setShowSideBar,
     parcelId,
+    buildingId,
     context,
     size,
     addBuilding,
@@ -87,12 +91,20 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
     disabled,
     setDisabled,
   } = useParamSideBar();
+  const { parcelDetail } = useSideBarParcelLoader({
+    parcelId,
+    setSideBarContext: addContext,
+    showSideBar,
+    disabled,
+  });
+  const { buildingDetail } = useSideBarBuildingLoader({
+    buildingId,
+    sideBarContext: context,
+    setSideBarContext: addContext,
+    showSideBar,
+    disabled,
+  });
   const dispatch = useDispatch();
-  let activePropertyDetail = useSelector<RootState, IPropertyDetail>(
-    state => state.parcel?.parcelDetail as IPropertyDetail,
-  );
-  const [cachedParcelDetail, setCachedParcelDetail] = React.useState<IFormParcel | null>(null);
-
   const [movingPinNameSpace, setMovingPinNameSpace] = useState<string | undefined>(
     movingPinNameSpaceProp,
   );
@@ -104,13 +116,7 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
   const [propertyType, setPropertyType] = useState('');
   const [showCompleteModal, setShowCompleteModal] = useState(false);
   const formikRef = React.useRef<FormikValues>();
-  const parcelsService = useLayerQuery(PARCELS_LAYER_URL);
-
-  useEffect(() => {
-    if (buildingToAssociateLand !== undefined) {
-      setShowAssociateLandModal(true);
-    }
-  }, [buildingToAssociateLand]);
+  const parcelLayerService = useLayerQuery(PARCELS_LAYER_URL);
 
   const withNameSpace: Function = (fieldName: string, nameSpace?: string) => {
     return nameSpace ? `${nameSpace}.${fieldName}` : fieldName;
@@ -152,7 +158,7 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
   /** query pims for the given pid, set data within the form if match found. Fallback to querying the parcel data layer. */
   const handlePidChange = (pid: string, nameSpace?: string) => {
     const parcelLayerSearchCallback = () => {
-      const response = parcelsService.findByPid(pid);
+      const response = parcelLayerService.findByPid(pid);
       handleParcelDataLayerResponse(response, dispatch);
     };
     fetchPimsOrLayerParcel({ pid }, parcelLayerSearchCallback, nameSpace);
@@ -161,14 +167,14 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
   /** make a parcel layer request by pid and store the response. */
   const handlePinChange = (pin: string, nameSpace?: string) => {
     const parcelLayerSearchCallback = () => {
-      const response = parcelsService.findByPin(pin);
+      const response = parcelLayerService.findByPin(pin);
       handleParcelDataLayerResponse(response, dispatch);
     };
     fetchPimsOrLayerParcel({ pin }, parcelLayerSearchCallback, nameSpace);
   };
   const droppedMarkerSearch = (nameSpace: string, latLng?: LatLng) => {
     if (latLng) {
-      parcelsService.findOneWhereContains(latLng).then(resp => {
+      parcelLayerService.findOneWhereContains(latLng).then(resp => {
         const properties = getIn(resp, 'features.0.properties');
         if (properties?.PIN || properties?.PID) {
           const query: any = { pin: properties?.PIN, pid: properties.PID };
@@ -182,8 +188,8 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
               });
             } else {
               const response = properties.PID
-                ? parcelsService.findByPid(properties.PID)
-                : parcelsService.findByPin(properties.PIN);
+                ? parcelLayerService.findByPid(properties.PID)
+                : parcelLayerService.findByPin(properties.PIN);
 
               handleParcelDataLayerResponse(response, dispatch);
             }
@@ -232,55 +238,14 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
     }
   }, [dispatch, leafletMouseEvent]);
 
-  useDeepCompareEffect(() => {
-    if (showSideBar && parcelId) {
-      if (
-        parcelId !== cachedParcelDetail?.id &&
-        parcelId !== activePropertyDetail?.parcelDetail?.id
-      ) {
-        addContext(SidebarContextType.LOADING);
-        dispatch(fetchParcelDetail({ id: parcelId }));
-      } else if (
-        parcelId === activePropertyDetail?.parcelDetail?.id &&
-        activePropertyDetail?.propertyTypeId === 0
-      ) {
-        setCachedParcelDetail({
-          ...activePropertyDetail?.parcelDetail,
-          financials: getMergedFinancials([
-            ...(activePropertyDetail?.parcelDetail?.evaluations ?? []),
-            ...(activePropertyDetail?.parcelDetail?.fiscals ?? []),
-          ]),
-        });
-        if (!!activePropertyDetail?.parcelDetail?.buildings?.length) {
-          addContext(
-            disabled
-              ? SidebarContextType.VIEW_DEVELOPED_LAND
-              : SidebarContextType.UPDATE_DEVELOPED_LAND,
-          );
-        } else {
-          addContext(
-            disabled ? SidebarContextType.VIEW_RAW_LAND : SidebarContextType.UPDATE_RAW_LAND,
-          );
-        }
-      }
-    } else if (showSideBar && !parcelId) {
-      if (!!cachedParcelDetail) {
-        setCachedParcelDetail(null);
-      }
-    }
-  }, [
-    dispatch,
-    parcelId,
-    disabled,
-    showSideBar,
-    (activePropertyDetail?.parcelDetail as any)?.rowVersion,
-  ]);
-
   const ConditionalEditButton = () => (
     <>
-      {disabled && (keycloak.isAdmin || keycloak.agencyId === cachedParcelDetail?.agencyId) && (
-        <EditButton onClick={() => setDisabled(false)} />
-      )}
+      {disabled &&
+        (keycloak.isAdmin ||
+          keycloak.agencyId === parcelDetail?.agencyId ||
+          keycloak.agencyId === buildingDetail?.agencyId) && (
+          <EditButton onClick={() => setDisabled(false)} />
+        )}
     </>
   );
 
@@ -321,7 +286,13 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
           </>
         );
       case SidebarContextType.VIEW_BUILDING:
-        return 'Building Details';
+      case SidebarContextType.UPDATE_BUILDING:
+        return (
+          <>
+            <BuildingSvg className="svg" /> Building Details
+            <ConditionalEditButton />
+          </>
+        );
       default:
         return 'Submit a Property';
     }
@@ -330,17 +301,40 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
   const render = (): React.ReactNode => {
     switch (context) {
       case SidebarContextType.ADD_BUILDING:
+      case SidebarContextType.UPDATE_BUILDING:
         if (propertyType !== 'building') {
           setPropertyType('building');
         }
-        return (
+        return buildingId === buildingDetail?.id ? (
           <BuildingForm
             formikRef={formikRef}
             setMovingPinNameSpace={setMovingPinNameSpace}
             nameSpace="data"
-            setBuildingToAssociateLand={setBuildingToAssociateLand}
+            setBuildingToAssociateLand={(building: IBuilding) => {
+              setBuildingToAssociateLand(building);
+              setShowAssociateLandModal(true);
+            }}
+            goToAssociatedLand={(building: IBuilding) => {
+              setBuildingToAssociateLand(building);
+              addAssociatedLand();
+            }}
             isAdmin={keycloak.isAdmin}
+            initialValues={buildingDetail ?? ({} as any)}
           />
+        ) : (
+          <Spinner animation="border"></Spinner>
+        );
+      case SidebarContextType.VIEW_BUILDING:
+        if (propertyType !== 'building') {
+          setPropertyType('building');
+        }
+        return buildingId === buildingDetail?.id ? (
+          <ViewOnlyBuildingForm
+            formikRef={formikRef}
+            initialValues={buildingDetail ?? ({} as any)}
+          />
+        ) : (
+          <Spinner animation="border"></Spinner>
         );
       case SidebarContextType.ADD_RAW_LAND:
       case SidebarContextType.UPDATE_DEVELOPED_LAND:
@@ -348,7 +342,7 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
         if (propertyType !== 'land') {
           setPropertyType('land');
         }
-        return parcelId === cachedParcelDetail?.id ? (
+        return parcelId === parcelDetail?.id ? (
           <LandForm
             setMovingPinNameSpace={setMovingPinNameSpace}
             formikRef={formikRef}
@@ -357,7 +351,7 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
             handlePinChange={handlePinChange}
             isAdmin={keycloak.isAdmin}
             setLandComplete={setShowCompleteModal}
-            initialValues={cachedParcelDetail ?? ({} as any)}
+            initialValues={parcelDetail ?? ({} as any)}
           />
         ) : (
           <Spinner animation="border"></Spinner>
@@ -367,11 +361,8 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
         if (propertyType !== 'land') {
           setPropertyType('land');
         }
-        return parcelId === cachedParcelDetail?.id ? (
-          <ViewOnlyLandForm
-            formikRef={formikRef}
-            initialValues={cachedParcelDetail ?? ({} as any)}
-          />
+        return parcelId === parcelDetail?.id ? (
+          <ViewOnlyLandForm formikRef={formikRef} initialValues={parcelDetail ?? ({} as any)} />
         ) : (
           <Spinner animation="border"></Spinner>
         );
@@ -448,12 +439,10 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
         handleOk={() => {
           setShowSideBar(true, SidebarContextType.ADD_PROPERTY_TYPE_SELECTOR, 'narrow', true);
           setShowCompleteModal(false);
-          setCachedParcelDetail(null);
         }}
         handleCancel={() => {
-          setShowSideBar(false);
+          setShowSideBar(false, undefined, undefined, true);
           setShowCompleteModal(false);
-          setCachedParcelDetail(null);
         }}
       ></GenericModal>
     </MapSideBarLayout>

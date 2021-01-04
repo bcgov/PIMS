@@ -788,7 +788,11 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                       className="form-control"
                       id="input-properties.0.classificationId-fast"
                       name="properties.0.classificationId"
+                      onBlur={[Function]}
                       onChange={[Function]}
+                      onFocus={[Function]}
+                      onMouseOut={[Function]}
+                      onMouseOver={[Function]}
                       type="number"
                       value={0}
                     >
@@ -826,6 +830,9 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                       name="properties.0.zoning"
                       onBlur={[Function]}
                       onChange={[Function]}
+                      onFocus={[Function]}
+                      onMouseOut={[Function]}
+                      onMouseOver={[Function]}
                       value=""
                     />
                   </div>
@@ -857,6 +864,9 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                       name="properties.0.zoningPotential"
                       onBlur={[Function]}
                       onChange={[Function]}
+                      onFocus={[Function]}
+                      onMouseOut={[Function]}
+                      onMouseOver={[Function]}
                       value=""
                     />
                   </div>

@@ -524,6 +524,9 @@ exports[`EnhancedReferralTab renders correctly when approved for exemption 1`] =
           name="exemptionRationale"
           onBlur={[Function]}
           onChange={[Function]}
+          onFocus={[Function]}
+          onMouseOut={[Function]}
+          onMouseOver={[Function]}
         />
       </div>
     </div>

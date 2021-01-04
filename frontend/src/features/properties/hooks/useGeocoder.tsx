@@ -1,6 +1,6 @@
 import * as API from 'constants/API';
 import { IGeocoderResponse, useApi } from 'hooks/useApi';
-import { FormikValues, getIn } from 'formik';
+import { FormikValues, getIn, setIn } from 'formik';
 import { useState } from 'react';
 import useCodeLookups from 'hooks/useLookupCodes';
 import {
@@ -98,48 +98,42 @@ const useGeocoder = ({ formikRef, fetchPimsOrLayerParcel }: IUseGeocoderProps) =
           console.error('Failed to get pids');
         }
       }
-      if (
-        formikRef.current.values.pid &&
-        parcelPid !== '' &&
-        formikRef.current.values.pid !== parcelPid
-      ) {
-        setPidSelection({
-          showPopup: true,
-          geoPID: parcelPid.replace(/(\d{3})(\d{3})(\d{3})/, '$1-$2-$3'),
-        });
-      } else if (formikRef.current.values.pid && parcelPid === '') {
-        newValues.pid = formikRef.current.values.pid;
+      if (parcelPid?.length) {
+        newValues.pid = parcelPid;
+        const parcelLayerSearchCallback = () => {
+          const response = parcelsService.findByPid(parcelPid);
+          handleParcelDataLayerResponse(response, dispatch);
+        };
+        fetchPimsOrLayerParcel &&
+          fetchPimsOrLayerParcel({ pid: parcelPid }, parcelLayerSearchCallback, nameSpace);
       } else {
-        if (parcelPid?.length) {
-          newValues.pid = parcelPid;
-          const parcelLayerSearchCallback = () => {
-            const response = parcelsService.findByPid(parcelPid);
-            handleParcelDataLayerResponse(response, dispatch);
-          };
-          fetchPimsOrLayerParcel &&
-            fetchPimsOrLayerParcel({ pid: parcelPid }, parcelLayerSearchCallback, nameSpace);
-        } else {
-          if (data.latitude && data.longitude) {
-            parcelsService
-              .findOneWhereContains({
-                lat: data.latitude,
-                lng: data.longitude,
-              } as LatLng)
-              .then(response => {
-                const pid = getIn(response, 'features.0.properties.PID');
-                //it is possible the the geocoder will fail to get the pid but the parcel layer service request will succeed. In that case, double check that the pid doesn't exist within pims.
-                if (pid) {
-                  const parcelLayerSearchCallback = () => {
-                    const response = parcelsService.findByPid(pid);
-                    handleParcelDataLayerResponse(response, dispatch);
-                  };
-                  fetchPimsOrLayerParcel &&
-                    fetchPimsOrLayerParcel({ pid: pid }, parcelLayerSearchCallback, nameSpace);
-                } else {
-                  saveParcelDataLayerResponse(response, dispatch);
-                }
-              });
-          }
+        if (data.latitude && data.longitude) {
+          parcelsService
+            .findOneWhereContains({
+              lat: data.latitude,
+              lng: data.longitude,
+            } as LatLng)
+            .then(response => {
+              const pid = getIn(response, 'features.0.properties.PID');
+              //it is possible the geocoder will fail to get the pid but the parcel layer service request will succeed. In that case, double check that the pid doesn't exist within pims.
+              if (pid) {
+                const parcelLayerSearchCallback = () => {
+                  const response = parcelsService.findByPid(pid);
+                  handleParcelDataLayerResponse(response, dispatch);
+                };
+                fetchPimsOrLayerParcel &&
+                  fetchPimsOrLayerParcel({ pid: pid }, parcelLayerSearchCallback, nameSpace);
+              } else if (response?.features?.length > 0) {
+                saveParcelDataLayerResponse(response, dispatch);
+              } else {
+                const updatedValues = setIn(
+                  formikRef?.current?.values ?? {},
+                  nameSpace || '',
+                  newValues,
+                );
+                formikRef.current && formikRef.current.resetForm({ values: updatedValues });
+              }
+            });
         }
       }
     }

@@ -1,8 +1,9 @@
-import { FastCurrencyInput } from 'components/common/form';
+import { FastCurrencyInput, FastDatePicker } from 'components/common/form';
 import React from 'react';
 import { useFormikContext, getIn } from 'formik';
-import { formatFiscalYear, formatApiDateTime, formatMoney } from 'utils';
+import { formatFiscalYear, formatMoney } from 'utils';
 import { FaBuilding } from 'react-icons/fa';
+import { LandSvg } from 'components/common/Icons';
 
 const getEditableMoneyCell = (disabled: boolean | undefined, namespace: string, type: string) => {
   return (cellInfo: any) => {
@@ -22,15 +23,26 @@ const getEditableMoneyCell = (disabled: boolean | undefined, namespace: string, 
   };
 };
 
+/**
+ * Create a formik date picker using the passed cellinfo to get the associated data.
+ * This information is only editable if this cell belongs to a parcel row.
+ * @param cellInfo provided by react table
+ */
+const getEditableDatePickerCell = (namespace: string = 'properties', field: string) => (
+  cellInfo: any,
+) => {
+  const formikProps = useFormikContext();
+  return (
+    <FastDatePicker
+      formikProps={formikProps}
+      field={`${namespace}.${cellInfo.row.id}.${field}`}
+    ></FastDatePicker>
+  );
+};
+
 const getFiscalYear = (field: string) => {
   return (cellInfo: any) => {
     return formatFiscalYear(cellInfo.row.values[field]);
-  };
-};
-
-const getFormattedDate = (field: string) => {
-  return (cellInfo: any) => {
-    return formatApiDateTime(cellInfo.row.values[field]);
   };
 };
 
@@ -86,10 +98,10 @@ export const getNetbookCols = (disabled?: boolean, namespace = 'financials'): an
         },
         {
           Header: 'Effective Date',
-          accessor: 'netbook.updatedOn',
+          accessor: 'netbook.effectiveDate',
           maxWidth: 140,
           align: 'left',
-          Cell: getFormattedDate('netbook.updatedOn'),
+          Cell: getEditableDatePickerCell(namespace, `netbook.effectiveDate`),
         },
         {
           Header: 'Net Book Value',
@@ -102,6 +114,49 @@ export const getNetbookCols = (disabled?: boolean, namespace = 'financials'): an
     },
   ];
   return netbookCols;
+};
+
+export const getAssociatedLandCols = (): any => {
+  const associatedLandCols = [
+    {
+      Header: 'Type',
+      accessor: '',
+      maxWidth: 50,
+      align: 'left',
+      Cell: () => <LandSvg className="svg" />,
+    },
+    {
+      Header: 'Property Name',
+      accessor: 'name',
+      maxWidth: 140,
+      align: 'left',
+    },
+    {
+      Header: 'Classification',
+      accessor: 'classification',
+      maxWidth: 140,
+      align: 'left',
+    },
+    {
+      Header: 'Street Address',
+      accessor: 'address.line1',
+      maxWidth: 140,
+      align: 'left',
+    },
+    {
+      Header: 'Lot Size(ha)',
+      accessor: 'landArea',
+      maxWidth: 140,
+      align: 'left',
+    },
+    {
+      Header: 'Location',
+      accessor: 'address.administrativeArea',
+      maxWidth: 140,
+      align: 'left',
+    },
+  ];
+  return associatedLandCols;
 };
 
 export const getAssociatedBuildingsCols = (): any => {

@@ -5,6 +5,7 @@ using System.Text.Json;
 using Entity = Pims.Dal.Entities;
 using Model = Pims.Api.Areas.Property.Models.Parcel;
 using BModel = Pims.Api.Models;
+using System;
 
 namespace Pims.Api.Areas.Property.Mapping.Parcel
 {
@@ -52,7 +53,10 @@ namespace Pims.Api.Areas.Property.Mapping.Parcel
                 .Map(dest => dest.Buildings, src => src.Parcel.Buildings)
                 .Map(dest => dest.Evaluations, src => src.Parcel.Evaluations)
                 .Map(dest => dest.Fiscals, src => src.Parcel.Fiscals)
+                .Map(dest => dest.RowVersion, src => src.Parcel.RowVersion == null ? null : Convert.ToBase64String(src.Parcel.RowVersion))
                 .Inherits<Entity.BaseEntity, BModel.BaseModel>();
+                
+                
 
             config.NewConfig<Model.BuildingParcelModel, Entity.Parcel>()
                 .EnableNonPublicMembers(true)

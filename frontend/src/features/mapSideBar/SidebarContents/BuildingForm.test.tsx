@@ -40,10 +40,20 @@ jest.mock('@react-keycloak/web');
   },
 });
 
+const getBuildingForm = disabled => {
+  return (
+    <Provider store={store}>
+      <Router history={history}>
+        <BuildingForm setMovingPinNameSpace={noop} nameSpace="building" disabled={disabled} />
+      </Router>
+    </Provider>
+  );
+};
+
 const buildingForm = (
   <Provider store={store}>
     <Router history={history}>
-      <BuildingForm setMovingPinNameSpace={noop} nameSpace="building" index="0" />
+      <BuildingForm setMovingPinNameSpace={noop} nameSpace="building" />
     </Router>
   </Provider>
 );
@@ -59,8 +69,8 @@ describe('Building Form', () => {
     expect(getByText(/building information/i)).toBeInTheDocument();
   });
 
-  it('goes to corresponding steps', async () => {
-    const { getByText } = render(buildingForm);
+  it('building form goes to corresponding steps', async () => {
+    const { getByText, getAllByText } = render(getBuildingForm(true));
     await wait(() => {
       fireEvent.click(getByText(/continue/i));
     });
@@ -72,12 +82,15 @@ describe('Building Form', () => {
     await wait(() => {
       fireEvent.click(getByText(/Continue/i));
     });
+    expect(getAllByText(/Associated Land/i)).toHaveLength(2);
+    await wait(() => {
+      fireEvent.click(getByText(/Continue/i));
+    });
     expect(getByText(/Review your building info/i)).toBeInTheDocument();
-    expect(getByText(/Submit to inventory/i)).toBeInTheDocument();
   });
 
-  it('review has appropriate subforms', async () => {
-    const { getByText } = render(buildingForm);
+  it('building review has appropriate subforms', async () => {
+    const { getByText } = render(getBuildingForm(true));
     await wait(() => {
       fireEvent.click(getByText(/Review/i));
     });

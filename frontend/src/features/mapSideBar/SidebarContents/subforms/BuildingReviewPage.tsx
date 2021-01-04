@@ -10,7 +10,7 @@ import {
   Check,
   FastCurrencyInput,
 } from 'components/common/form';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useMemo } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
 import { useFormikContext } from 'formik';
 import { Label } from 'components/common/Label';
@@ -27,14 +27,19 @@ interface IReviewProps {
   constructionType: SelectOptions;
   occupantTypes: SelectOptions;
   agencies: any;
+  disabled: boolean;
 }
 
 export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
-  const defaultEditValues = {
-    identification: true,
-    tenancy: true,
-    valuation: true,
-  };
+  const formikProps = useFormikContext();
+  const defaultEditValues = useMemo(
+    () => ({
+      identification: props.disabled || formikProps.isValid,
+      tenancy: props.disabled || formikProps.isValid,
+      valuation: props.disabled || formikProps.isValid,
+    }),
+    [formikProps.isValid, props.disabled],
+  );
   const [editInfo, setEditInfo] = useState(defaultEditValues);
   const withNameSpace: Function = useCallback(
     (fieldName: string) => {
@@ -42,7 +47,6 @@ export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
     },
     [props.nameSpace],
   );
-  const formikProps = useFormikContext();
 
   return (
     <Container className="review-section">
@@ -63,13 +67,18 @@ export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
                   <BuildingSvg className="svg" />
                   <h5>Building Identification</h5>
                 </span>
-                <FaEdit
-                  size={20}
-                  className="edit"
-                  onClick={() =>
-                    setEditInfo({ ...defaultEditValues, identification: !editInfo.identification })
-                  }
-                />
+                {!props.disabled && (
+                  <FaEdit
+                    size={20}
+                    className="edit"
+                    onClick={() =>
+                      setEditInfo({
+                        ...defaultEditValues,
+                        identification: !editInfo.identification,
+                      })
+                    }
+                  />
+                )}
               </Row>
               <Row className="content-item">
                 <Label>Agency</Label>
@@ -203,11 +212,15 @@ export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
                   <BuildingSvg className="svg" />
                   <h5>Occupancy</h5>
                 </span>
-                <FaEdit
-                  size={20}
-                  className="edit"
-                  onClick={() => setEditInfo({ ...defaultEditValues, tenancy: !editInfo.tenancy })}
-                />
+                {!props.disabled && (
+                  <FaEdit
+                    size={20}
+                    className="edit"
+                    onClick={() =>
+                      setEditInfo({ ...defaultEditValues, tenancy: !editInfo.tenancy })
+                    }
+                  />
+                )}
               </Row>
               <Row className="content-item">
                 <Label>Total Area</Label>
@@ -217,7 +230,7 @@ export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
                   formikProps={formikProps}
                   disabled={editInfo.tenancy}
                   type="number"
-                  field={withNameSpace('squareFootage')}
+                  field={withNameSpace('totalArea')}
                   postText="Sq. M"
                   required
                 />
@@ -225,9 +238,7 @@ export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
               <Row className="content-item">
                 <Label>Net Usable Area</Label>
                 <InputGroup
-                  className="area"
                   displayErrorTooltips
-                  style={{ width: '100px' }}
                   fast={true}
                   formikProps={formikProps}
                   disabled={editInfo.tenancy}
@@ -255,13 +266,15 @@ export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
                   <BuildingSvg className="svg" />
                   <h5>Valuation</h5>
                 </span>
-                <FaEdit
-                  size={20}
-                  className="edit"
-                  onClick={() =>
-                    setEditInfo({ ...defaultEditValues, valuation: !editInfo.valuation })
-                  }
-                />
+                {!props.disabled && (
+                  <FaEdit
+                    size={20}
+                    className="edit"
+                    onClick={() =>
+                      setEditInfo({ ...defaultEditValues, valuation: !editInfo.valuation })
+                    }
+                  />
+                )}
               </Row>
               <Row className="val-item" style={{ display: 'flex' }}>
                 <Label>Net Book Value</Label>

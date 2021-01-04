@@ -30,6 +30,7 @@ export const LandUsageForm = <T extends any>(props: ILandUsageProps & FormikProp
     <Container>
       <ClassificationForm
         field={withNameSpace('classificationId')}
+        encumbranceField={withNameSpace('encumbranceReason')}
         fieldLabel="Parcel Classification"
         classifications={props.classifications}
         title="Strategic Real Estate Classification"
