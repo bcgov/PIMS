@@ -47,7 +47,7 @@ export const OccupancyForm: React.FC<IOccupancyProps> = ({
             formikProps={formikProps}
             disabled={disabled || readOnly}
             type="number"
-            field={withNameSpace('squareFootage')}
+            field={withNameSpace('totalArea')}
             postText="Sq. M"
             required
           />

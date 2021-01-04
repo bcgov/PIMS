@@ -89,7 +89,7 @@ export const defaultBuildingValues: any = {
   agencyId: 0,
   parcelId: 0,
   rentableArea: '',
-  squareFootage: '',
+  totalArea: '',
   buildingFloorCount: '',
   buildingConstructionType: undefined,
   buildingConstructionTypeId: '',

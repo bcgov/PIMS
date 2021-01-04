@@ -45,6 +45,11 @@ namespace Pims.Dal.Entities
         public float RentableArea { get; set; }
 
         /// <summary>
+        /// get/set - The building total area.
+        /// </summary>
+        public float TotalArea { get; set; }
+
+        /// <summary>
         /// get/set - The foreign key to the building occupant type.
         /// </summary>
         public int BuildingOccupantTypeId { get; set; }

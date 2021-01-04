@@ -195,7 +195,7 @@ export const OccupancySchema = Yup.object().shape({
     .min(0, 'Rentable Area must be a valid number')
     .transform(emptyStringToNull)
     .required('Required'),
-  squareFootage: Yup.number()
+  totalArea: Yup.number()
     .min(0, 'Total Area must be a valid number')
     .transform(emptyStringToNull)
     .required('Required'),

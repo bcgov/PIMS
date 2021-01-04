@@ -451,6 +451,9 @@ namespace Pims.Dal.Migrations
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("rowversion");
 
+                    b.Property<float>("TotalArea")
+                        .HasColumnType("real");
+
                     b.Property<bool>("TransferLeaseOnSale")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")

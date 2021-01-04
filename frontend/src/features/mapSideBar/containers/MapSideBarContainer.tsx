@@ -240,9 +240,12 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
 
   const ConditionalEditButton = () => (
     <>
-      {disabled && (keycloak.isAdmin || keycloak.agencyId === parcelDetail?.agencyId) && (
-        <EditButton onClick={() => setDisabled(false)} />
-      )}
+      {disabled &&
+        (keycloak.isAdmin ||
+          keycloak.agencyId === parcelDetail?.agencyId ||
+          keycloak.agencyId === buildingDetail?.agencyId) && (
+          <EditButton onClick={() => setDisabled(false)} />
+        )}
     </>
   );
 
@@ -284,7 +287,12 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
         );
       case SidebarContextType.VIEW_BUILDING:
       case SidebarContextType.UPDATE_BUILDING:
-        return 'Building Details';
+        return (
+          <>
+            <BuildingSvg className="svg" /> Building Details
+            <ConditionalEditButton />
+          </>
+        );
       default:
         return 'Submit a Property';
     }

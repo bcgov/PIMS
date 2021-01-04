@@ -24,7 +24,7 @@ it('renders correctly', () => {
 
 it('number input for total area/square footage', async () => {
   const { container } = render(form);
-  const totalArea = container.querySelector('input[name="squareFootage"]');
+  const totalArea = container.querySelector('input[name="totalArea"]');
   await wait(() => {
     fireEvent.change(totalArea!, {
       target: {

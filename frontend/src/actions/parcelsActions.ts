@@ -86,7 +86,7 @@ export interface IBuilding extends IProperty {
   transferLeaseOnSale: boolean;
   buildingTenancy: string;
   rentableArea: number | '';
-  squareFootage: number | '';
+  totalArea: number | '';
   agencyId: number | '';
   agency: string;
   agencyCode: string;

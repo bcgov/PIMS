@@ -26,6 +26,12 @@ namespace Pims.Dal.Migrations
                 table: "Buildings",
                 nullable: true);
 
+            migrationBuilder.AddColumn<float>(
+                name: "TotalArea",
+                table: "Buildings",
+                nullable: false,
+                defaultValue: 0f);
+
             migrationBuilder.AddColumn<DateTime>(
                 name: "EffectiveDate",
                 table: "BuildingFiscals",
@@ -48,6 +54,10 @@ namespace Pims.Dal.Migrations
 
             migrationBuilder.DropColumn(
                 name: "EncumbranceReason",
+                table: "Buildings");
+
+            migrationBuilder.DropColumn(
+                name: "TotalArea",
                 table: "Buildings");
 
             migrationBuilder.DropColumn(

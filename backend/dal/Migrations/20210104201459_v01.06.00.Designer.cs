@@ -11,7 +11,7 @@ using Pims.Dal;
 namespace Pims.Dal.Migrations
 {
     [DbContext(typeof(PimsContext))]
-    [Migration("20210104171010_v01.06.00")]
+    [Migration("20210104201459_v01.06.00")]
     partial class v010600
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -452,6 +452,9 @@ namespace Pims.Dal.Migrations
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("rowversion");
+
+                    b.Property<float>("TotalArea")
+                        .HasColumnType("real");
 
                     b.Property<bool>("TransferLeaseOnSale")
                         .ValueGeneratedOnAdd()

@@ -227,7 +227,7 @@ export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
                   formikProps={formikProps}
                   disabled={editInfo.tenancy}
                   type="number"
-                  field={withNameSpace('squareFootage')}
+                  field={withNameSpace('totalArea')}
                   postText="Sq. M"
                   required
                 />
@@ -235,17 +235,23 @@ export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
               <Row className="content-item">
                 <Label>Net Usable Area</Label>
                 <InputGroup
-                  className="area"
                   displayErrorTooltips
-                  style={{ width: '100px' }}
                   fast={true}
                   formikProps={formikProps}
                   disabled={editInfo.tenancy}
                   type="number"
                   field={withNameSpace('rentableArea')}
-                  postText="Sq. M"
+                  postText="Sq. Ft"
                   required
                 />
+              </Row>
+              <Row className="content-item">
+                displayErrorTooltips style={{ width: '100px' }}
+                fast={true}
+                formikProps={formikProps}
+                disabled={editInfo.tenancy}
+                type="number" field={withNameSpace('rentableArea')}
+                postText="Sq. M" required />
               </Row>
               <Row className="content-item">
                 <Label>Tenancy %</Label>
