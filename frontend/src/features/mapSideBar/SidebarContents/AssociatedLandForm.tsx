@@ -255,7 +255,7 @@ const Form: React.FC<IAssociatedLandForm> = ({
                 getIn(formikProps.values, `data.leasedLandMetadata.${stepper.currentTab}.type`) ===
                 LeasedLand.other
               ) {
-                stepper.gotoStep(AssociatedLandSteps.REVIEW);
+                stepper.gotoStep(AssociatedLandSteps.REVIEW, true);
               } else {
                 stepper.gotoNext();
               }

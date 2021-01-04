@@ -38,8 +38,8 @@ exports[`renders correctly 1`] = `
           >
             <input
               class="form-control"
-              id="input-squareFootage"
-              name="squareFootage"
+              id="input-totalArea"
+              name="totalArea"
               type="number"
               value=""
             />

@@ -69,8 +69,8 @@ describe('Building Form', () => {
     expect(getByText(/building information/i)).toBeInTheDocument();
   });
 
-  it('goes to corresponding steps', async () => {
-    const { getByText } = render(getBuildingForm(true));
+  it('building form goes to corresponding steps', async () => {
+    const { getByText, getAllByText } = render(getBuildingForm(true));
     await wait(() => {
       fireEvent.click(getByText(/continue/i));
     });
@@ -82,7 +82,7 @@ describe('Building Form', () => {
     await wait(() => {
       fireEvent.click(getByText(/Continue/i));
     });
-    expect(getByText(/Associated Land/i)).toBeInTheDocument();
+    expect(getAllByText(/Associated Land/i)).toHaveLength(2);
     await wait(() => {
       fireEvent.click(getByText(/Continue/i));
     });

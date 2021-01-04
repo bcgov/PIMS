@@ -322,6 +322,7 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
               field={withNameSpace('landArea')}
               formikProps={formikProps}
               postText="Hectares"
+              required
             />
           </Form.Row>
         </Col>

@@ -829,7 +829,7 @@ exports[`Land Form component renders correctly 1`] = `
                         Lot Size
                       </p>
                       <div
-                        class="input-group"
+                        class="input-group required"
                       >
                         <div
                           class="input-group-content"
