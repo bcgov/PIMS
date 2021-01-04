@@ -323,7 +323,7 @@ const BuidingForm: React.FC<IParentBuildingForm> = ({
     },
     [nameSpace],
   );
-  let initialValues = {
+  const initialValues = {
     activeStep: 0,
     activeTab: 0,
     data: { ...defaultBuildingValues, agencyId: keycloak.agencyId, ...rest.initialValues },

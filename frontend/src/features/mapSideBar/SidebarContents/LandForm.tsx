@@ -298,7 +298,7 @@ const LandForm: React.FC<IParentLandForm> = (props: IParentLandForm) => {
   const keycloak = useKeycloakWrapper();
   const dispatch = useDispatch();
   const api = useApi();
-  let initialValues = {
+  const initialValues = {
     activeStep: 0,
     activeTab: 0,
     tabs: [{ activeStep: 0 }],
