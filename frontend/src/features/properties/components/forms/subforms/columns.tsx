@@ -27,8 +27,6 @@ const getEditableMoneyCell = (disabled: boolean | undefined, namespace: string, 
  * Create a formik date picker using the passed cellinfo to get the associated data.
  * This information is only editable if this cell belongs to a parcel row.
  * @param cellInfo provided by react table
- * @param minDate restrict the minimum date that can be selected
- * @param oldDateWarning warn if the user selects an old date
  */
 const getEditableDatePickerCell = (namespace: string = 'properties', field: string) => (
   cellInfo: any,

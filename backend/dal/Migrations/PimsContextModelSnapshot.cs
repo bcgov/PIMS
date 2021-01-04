@@ -1038,7 +1038,8 @@ namespace Pims.Dal.Migrations
                         .HasMaxLength(2000);
 
                     b.Property<string>("EncumbranceReason")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(500)")
+                        .HasMaxLength(500);
 
                     b.Property<bool>("IsSensitive")
                         .ValueGeneratedOnAdd()

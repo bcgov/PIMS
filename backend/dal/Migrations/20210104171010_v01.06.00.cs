@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Pims.Dal.Migrations
 {
-    public partial class _010600 : SeedMigration
+    public partial class v010600 : SeedMigration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -12,6 +12,7 @@ namespace Pims.Dal.Migrations
             migrationBuilder.AddColumn<string>(
                 name: "EncumbranceReason",
                 table: "Parcels",
+                maxLength: 500,
                 nullable: true);
 
             migrationBuilder.AddColumn<DateTime>(

@@ -11,8 +11,8 @@ using Pims.Dal;
 namespace Pims.Dal.Migrations
 {
     [DbContext(typeof(PimsContext))]
-    [Migration("20201223235542_01.06.00")]
-    partial class _010600
+    [Migration("20210104171010_v01.06.00")]
+    partial class v010600
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -1040,7 +1040,8 @@ namespace Pims.Dal.Migrations
                         .HasMaxLength(2000);
 
                     b.Property<string>("EncumbranceReason")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(500)")
+                        .HasMaxLength(500);
 
                     b.Property<bool>("IsSensitive")
                         .ValueGeneratedOnAdd()
