@@ -54,7 +54,7 @@ const useSideBarParcelLoader = ({
     };
     if (showSideBar && parcelId && parcelId !== cachedParcelDetail?.id) {
       loadParcel();
-    } else if (showSideBar && !parcelId) {
+    } else if (!parcelId) {
       if (!!cachedParcelDetail) {
         setCachedParcelDetail(null);
       }

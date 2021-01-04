@@ -82,11 +82,11 @@ export const AssociatedLandReviewPage: React.FC<any> = (props: IReviewProps) => 
   const formikProps = useFormikContext<any>();
   const defaultEditValues = useMemo(
     () => ({
-      identification: true && formikProps.isValid,
-      usage: true && formikProps.isValid,
-      valuation: true && formikProps.isValid,
+      identification: props.disabled || formikProps.isValid,
+      usage: props.disabled || formikProps.isValid,
+      valuation: props.disabled || formikProps.isValid,
     }),
-    [formikProps.isValid],
+    [formikProps.isValid, props.disabled],
   );
   const stepper = useFormStepper();
   const [editInfo, setEditInfo] = useState(defaultEditValues);

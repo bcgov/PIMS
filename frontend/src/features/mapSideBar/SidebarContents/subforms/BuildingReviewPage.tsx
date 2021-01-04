@@ -10,7 +10,7 @@ import {
   Check,
   FastCurrencyInput,
 } from 'components/common/form';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useMemo } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
 import { useFormikContext } from 'formik';
 import { Label } from 'components/common/Label';
@@ -31,11 +31,15 @@ interface IReviewProps {
 }
 
 export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
-  const defaultEditValues = {
-    identification: true,
-    tenancy: true,
-    valuation: true,
-  };
+  const formikProps = useFormikContext();
+  const defaultEditValues = useMemo(
+    () => ({
+      identification: props.disabled || formikProps.isValid,
+      tenancy: props.disabled || formikProps.isValid,
+      valuation: props.disabled || formikProps.isValid,
+    }),
+    [formikProps.isValid, props.disabled],
+  );
   const [editInfo, setEditInfo] = useState(defaultEditValues);
   const withNameSpace: Function = useCallback(
     (fieldName: string) => {
@@ -43,7 +47,6 @@ export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
     },
     [props.nameSpace],
   );
-  const formikProps = useFormikContext();
 
   return (
     <Container className="review-section">

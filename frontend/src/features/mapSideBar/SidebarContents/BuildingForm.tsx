@@ -169,7 +169,7 @@ const Form: React.FC<IBuildingForm> = ({
           />
         );
       case BuildingSteps.ASSOCIATED:
-        return <AssociatedLandListForm title="View Associated Buildings" nameSpace="data" />;
+        return <AssociatedLandListForm title="View Associated Land" nameSpace="data" />;
       case BuildingSteps.REVIEW:
         return (
           <BuildingReviewPage
