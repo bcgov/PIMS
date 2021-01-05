@@ -263,8 +263,10 @@ interface ILandForm {
 }
 
 interface IParentLandForm extends ILandForm {
-  /** signal the parent that the associated land process has been completed. */
+  /** signal the parent that the land creation process has been completed. */
   setLandComplete: (show: boolean) => void;
+  /** signal the parent that the land update process has been completed. */
+  setLandUpdateComplete: (show: boolean) => void;
 }
 
 /**
@@ -286,6 +288,7 @@ export const ViewOnlyLandForm: React.FC<Partial<IParentLandForm>> = (props: {
       handlePinChange={noop}
       isPropertyAdmin={false}
       setLandComplete={noop}
+      setLandUpdateComplete={noop}
       initialValues={props.initialValues ?? ({} as any)}
       disabled={true}
     />
@@ -427,10 +430,11 @@ const LandForm: React.FC<IParentLandForm> = (props: IParentLandForm) => {
           try {
             if (!values.data.id) {
               await createParcel(apiValues)(dispatch);
+              props.setLandComplete(true);
             } else {
               await updateParcel(apiValues)(dispatch);
+              props.setLandUpdateComplete(true);
             }
-            props.setLandComplete(true);
           } catch (error) {
           } finally {
             actions.setSubmitting(false);

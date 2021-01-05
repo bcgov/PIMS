@@ -118,6 +118,7 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
   const [showAssociateLandModal, setShowAssociateLandModal] = useState(false);
   const [propertyType, setPropertyType] = useState('');
   const [showCompleteModal, setShowCompleteModal] = useState(false);
+  const [showUpdatedModal, setShowUpdatedModal] = useState(false);
   const formikRef = React.useRef<FormikValues>();
   const parcelLayerService = useLayerQuery(PARCELS_LAYER_URL);
 
@@ -354,6 +355,7 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
             handlePinChange={handlePinChange}
             isPropertyAdmin={keycloak.hasClaim(Claims.ADMIN_PROPERTIES)}
             setLandComplete={setShowCompleteModal}
+            setLandUpdateComplete={setShowUpdatedModal}
             initialValues={parcelDetail ?? ({} as any)}
           />
         ) : (
@@ -446,6 +448,22 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
         handleCancel={() => {
           setShowSideBar(false, undefined, undefined, true);
           setShowCompleteModal(false);
+        }}
+      ></GenericModal>
+      <GenericModal
+        size={ModalSize.LARGE}
+        message={
+          <>
+            <FloatCheck size={32}></FloatCheck>
+            <SuccessText>Success!</SuccessText>
+            <p>PIMS has been updated with all of your changes</p>
+          </>
+        }
+        display={showUpdatedModal}
+        okButtonText="Close"
+        handleOk={() => {
+          setShowSideBar(false, undefined, undefined, true);
+          setShowUpdatedModal(false);
         }}
       ></GenericModal>
     </MapSideBarLayout>
