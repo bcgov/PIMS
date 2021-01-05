@@ -343,6 +343,7 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
               field={withNameSpace('isSensitive')}
               radioLabelOne="Yes"
               radioLabelTwo="No"
+              disabled={disabled}
             />
           </div>
         </Col>
