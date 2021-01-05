@@ -21,7 +21,7 @@ import * as API from 'constants/API';
 
 interface IIdentificationProps {
   /** passed down from parent to lock/unlock designated fields */
-  isAdmin?: boolean;
+  isPropertyAdmin?: boolean;
   /** the agencies for the form to use */
   agencies: SelectOptions;
   /** the classification for the form to use */
@@ -48,7 +48,7 @@ export const IdentificationForm: React.FC<IIdentificationProps> = ({
   constructionType,
   nameSpace,
   setMovingPinNameSpace,
-  isAdmin,
+  isPropertyAdmin,
   disabled,
 }) => {
   const { setFieldValue } = useFormikContext();
@@ -67,7 +67,7 @@ export const IdentificationForm: React.FC<IIdentificationProps> = ({
       <Row>
         <Col>
           <InformationForm
-            isAdmin={!!isAdmin}
+            isPropertyAdmin={!!isPropertyAdmin}
             wizard
             agencies={agencies}
             classifications={classifications}
