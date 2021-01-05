@@ -34,6 +34,7 @@ import { ViewOnlyLandForm } from '../SidebarContents/LandForm';
 import useSideBarParcelLoader from '../hooks/useSideBarParcelLoader';
 import useSideBarBuildingLoader from '../hooks/useSideBarBuildingLoader';
 import { ViewOnlyBuildingForm } from '../SidebarContents/BuildingForm';
+import { Claims } from 'constants/claims';
 
 interface IMapSideBarContainerProps {
   refreshParcels: Function;
@@ -243,7 +244,7 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
   const ConditionalEditButton = () => (
     <>
       {disabled &&
-        (keycloak.isAdmin ||
+        (keycloak.hasClaim(Claims.ADMIN_PROPERTIES) ||
           keycloak.agencyId === parcelDetail?.agencyId ||
           keycloak.agencyId === buildingDetail?.agencyId) && (
           <EditButton onClick={() => setDisabled(false)} />
@@ -320,7 +321,7 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
               setBuildingToAssociateLand(building);
               addAssociatedLand();
             }}
-            isAdmin={keycloak.isAdmin}
+            isPropertyAdmin={keycloak.hasClaim(Claims.ADMIN_PROPERTIES)}
             initialValues={buildingDetail ?? ({} as any)}
           />
         ) : (
@@ -351,7 +352,7 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
             handleGeocoderChanges={handleGeocoderChanges}
             handlePidChange={handlePidChange}
             handlePinChange={handlePinChange}
-            isAdmin={keycloak.isAdmin}
+            isPropertyAdmin={keycloak.hasClaim(Claims.ADMIN_PROPERTIES)}
             setLandComplete={setShowCompleteModal}
             initialValues={parcelDetail ?? ({} as any)}
           />
@@ -383,7 +384,7 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
             handlePidChange={handlePidChange}
             handlePinChange={handlePinChange}
             initialValues={buildingToAssociateLand ?? ({} as any)}
-            isAdmin={keycloak.isAdmin}
+            isPropertyAdmin={keycloak.hasClaim(Claims.ADMIN_PROPERTIES)}
             setAssociatedLandComplete={setShowCompleteModal}
           />
         );

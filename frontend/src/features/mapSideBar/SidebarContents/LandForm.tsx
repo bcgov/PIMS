@@ -72,6 +72,9 @@ const FormFooter = styled.div`
   width: 100%;
   height: 70px;
   align-items: center;
+  position: sticky;
+  background-color: #f2f2f2;
+  bottom: 40px;
 `;
 
 const FillRemainingSpace = styled.span`
@@ -127,7 +130,7 @@ const Form: React.FC<ILandForm> = ({
   handlePidChange,
   handlePinChange,
   formikRef,
-  isAdmin,
+  isPropertyAdmin,
   initialValues,
   disabled,
 }) => {
@@ -162,7 +165,7 @@ const Form: React.FC<ILandForm> = ({
               setMovingPinNameSpace={setMovingPinNameSpace}
               handlePidChange={handlePidChange}
               handlePinChange={handlePinChange}
-              isAdmin={isAdmin}
+              isPropertyAdmin={isPropertyAdmin}
               nameSpace="data"
               isViewOrUpdate={isViewOrUpdate}
               disabled={disabled}
@@ -251,8 +254,8 @@ interface ILandForm {
   handlePidChange: (pid: string) => void;
   /** help with formatting of the pin */
   handlePinChange: (pin: string) => void;
-  /** whether or not this user has admin priviledges */
-  isAdmin: boolean;
+  /** whether or not this user has property admin priviledges */
+  isPropertyAdmin: boolean;
   /** initial values used to populate this form */
   initialValues: IFormParcel;
   /** whether this form can be interacted with */
@@ -281,7 +284,7 @@ export const ViewOnlyLandForm: React.FC<Partial<IParentLandForm>> = (props: {
       handleGeocoderChanges={async (response: IGeocoderResponse) => {}}
       handlePidChange={noop}
       handlePinChange={noop}
-      isAdmin={false}
+      isPropertyAdmin={false}
       setLandComplete={noop}
       initialValues={props.initialValues ?? ({} as any)}
       disabled={true}
@@ -439,7 +442,7 @@ const LandForm: React.FC<IParentLandForm> = (props: IParentLandForm) => {
           handleGeocoderChanges={props.handleGeocoderChanges}
           handlePidChange={props.handlePidChange}
           handlePinChange={props.handlePinChange}
-          isAdmin={props.isAdmin}
+          isPropertyAdmin={props.isPropertyAdmin}
           formikRef={props.formikRef}
           initialValues={initialValues.data}
           disabled={props.disabled}

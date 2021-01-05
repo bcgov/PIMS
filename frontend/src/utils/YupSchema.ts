@@ -139,6 +139,10 @@ export const BuildingSchema = Yup.object().shape({
     .min(0, 'Rentable Area must be a valid number')
     .transform(emptyStringToNull)
     .required('Required'),
+  totalArea: Yup.number()
+    .min(0, 'Total Area must be a valid number')
+    .transform(emptyStringToNull)
+    .required('Required'),
   agencyId: Yup.number()
     .transform(emptyStringToNull)
     .required('Required'),
@@ -241,6 +245,7 @@ export const LandSchema = Yup.object().shape({
     .transform(emptyStringToNull)
     .required('Required')
     .test('is-valid', 'Please enter a valid number', val => Number(val) < 200000),
+  lotSize: Yup.number(),
 });
 export const ParcelSchema = Yup.object()
   .shape(
@@ -354,6 +359,7 @@ export const LandIdentificationSchema = Yup.object().shape(
     agencyId: Yup.number()
       .transform(emptyStringToNull)
       .required('Required'),
+    lotSize: Yup.number(),
   },
   [['pin', 'pid']],
 );
