@@ -34,6 +34,8 @@ const CloseIcon = styled(FaWindowClose)`
 const Title = styled.span`
   font-size: 24px;
   font-weight: 700;
+  width: 100%;
+  text-align: left;
 `;
 
 /**

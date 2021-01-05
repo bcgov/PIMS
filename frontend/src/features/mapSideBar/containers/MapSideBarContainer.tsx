@@ -66,9 +66,11 @@ const BoldText = styled.p`
 `;
 
 const EditButton = styled(FaEdit)`
-  margin-left: 20px;
+  margin-right: 10px;
+  margin-top: 5px;
   cursor: pointer;
   color: #1a5a96;
+  float: right;
 `;
 
 /**
