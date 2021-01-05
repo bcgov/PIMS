@@ -746,6 +746,7 @@ exports[`Land Form component renders correctly 1`] = `
                               aria-haspopup="listbox"
                               autocomplete="off"
                               class="rbt-input-main form-control rbt-input"
+                              disabled=""
                               id="data.agencyId-field"
                               name="data.agencyId"
                               role="combobox"
