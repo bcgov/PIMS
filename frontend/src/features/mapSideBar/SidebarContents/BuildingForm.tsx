@@ -115,7 +115,7 @@ export const defaultBuildingValues: any = {
  */
 
 const Form: React.FC<IBuildingForm> = ({
-  isAdmin,
+  isSres,
   setMovingPinNameSpace,
   nameSpace,
   disabled,
@@ -146,7 +146,7 @@ const Form: React.FC<IBuildingForm> = ({
               agencies={agencies}
               setMovingPinNameSpace={setMovingPinNameSpace}
               nameSpace={nameSpace}
-              isAdmin={isAdmin}
+              isSres={isSres}
               disabled={disabled}
             />
           </div>
@@ -239,7 +239,7 @@ interface IBuildingForm {
   /** Go to the associated land form directly */
   goToAssociatedLand: (building: IBuilding) => void;
   /** to determine whether certain locked fields can be editable */
-  isAdmin?: boolean;
+  isSres?: boolean;
   /** whether this form can be interacted with */
   disabled?: boolean;
 }
@@ -266,7 +266,7 @@ export const ViewOnlyBuildingForm: React.FC<Partial<IParentBuildingForm>> = (pro
       setMovingPinNameSpace={noop}
       goToAssociatedLand={noop}
       formikRef={props.formikRef}
-      isAdmin={false}
+      isSres={false}
       setBuildingToAssociateLand={noop}
       initialValues={props.initialValues ?? ({} as any)}
       disabled={true}
@@ -307,7 +307,7 @@ export const valuesToApiFormat = (values: ISteppedFormValues<IFormBuilding>): IF
 const BuidingForm: React.FC<IParentBuildingForm> = ({
   setMovingPinNameSpace,
   nameSpace,
-  isAdmin,
+  isSres,
   formikRef,
   setBuildingToAssociateLand,
   goToAssociatedLand,
@@ -426,7 +426,7 @@ const BuidingForm: React.FC<IParentBuildingForm> = ({
         }}
       >
         <Form
-          isAdmin={isAdmin}
+          isSres={isSres}
           setMovingPinNameSpace={setMovingPinNameSpace}
           nameSpace={withNameSpace('')}
           disabled={disabled}
