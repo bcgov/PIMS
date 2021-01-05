@@ -170,7 +170,7 @@ const Form: React.FC<IAssociatedLandForm> = ({
   handlePidChange,
   handlePinChange,
   formikRef,
-  isSres,
+  isPropertyAdmin,
 }) => {
   // access the stepper to later split the form into segments
   const stepper = useFormStepper();
@@ -206,7 +206,7 @@ const Form: React.FC<IAssociatedLandForm> = ({
               setMovingPinNameSpace={setMovingPinNameSpace}
               handlePidChange={handlePidChange}
               handlePinChange={handlePinChange}
-              isSres={isSres}
+              isPropertyAdmin={isPropertyAdmin}
               isViewOrUpdate={false}
             />
           </div>
@@ -290,8 +290,8 @@ interface IAssociatedLandForm {
   handlePinChange: (pin: string) => void;
   /** The initial building values to add associated land to */
   initialValues: IBuilding;
-  /** Whether or not this user has admin privileges */
-  isSres: boolean;
+  /** Whether or not this user has property admin priviledges */
+  isPropertyAdmin: boolean;
 }
 
 interface IAssociatedLandParentForm extends IAssociatedLandForm {
@@ -552,7 +552,7 @@ const AssociatedLandForm: React.FC<IAssociatedLandParentForm> = (
             handlePinChange={props.handlePinChange}
             formikRef={props.formikRef}
             initialValues={props.initialValues}
-            isSres={props.isSres}
+            isPropertyAdmin={props.isPropertyAdmin}
           />
         </SteppedForm>
       )}

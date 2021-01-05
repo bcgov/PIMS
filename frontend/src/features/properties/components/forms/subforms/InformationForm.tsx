@@ -10,7 +10,7 @@ interface InformationFormProps {
   disabled?: boolean;
   classifications: SelectOption[];
   agencies: SelectOption[];
-  isSres: boolean;
+  isPropertyAdmin: boolean;
   wizard?: boolean;
 }
 export const defaultInformationFormValues = {
@@ -59,7 +59,7 @@ const InformationForm: FunctionComponent<InformationFormProps> = (props: Informa
           field={withNameSpace('agencyId')}
           options={agencies}
           filterBy={['code', 'label', 'parent']}
-          disabled={!props.isSres}
+          disabled={!props.isPropertyAdmin}
         />
         {agency?.parent && (
           <Form.Row>

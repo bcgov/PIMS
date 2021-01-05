@@ -47,8 +47,8 @@ interface IIdentificationProps {
   handlePidChange: (pid: string, nameSpace?: string) => void;
   /** handle the pin formatting on change */
   handlePinChange: (pin: string, nameSpace?: string) => void;
-  /** whether or not this user is a SRES user and should have greater access to fields */
-  isSres: boolean;
+  /** whether or not this user has property admin priviledges */
+  isPropertyAdmin: boolean;
   /** whether or not this form is being displayed as part of a view or update */
   isViewOrUpdate: boolean;
   /** whether or not the fields on this form can be interacted with */
@@ -72,7 +72,7 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
   setMovingPinNameSpace,
   handlePidChange,
   handlePinChange,
-  isSres,
+  isPropertyAdmin,
   isViewOrUpdate,
   disabled,
 }) => {
@@ -273,7 +273,7 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
               field={withNameSpace('agencyId')}
               options={agencies}
               filterBy={['code', 'label', 'parent']}
-              disabled={!isSres || disabled}
+              disabled={!isPropertyAdmin || disabled}
             />
             {agency?.parent && (
               <Form.Row>

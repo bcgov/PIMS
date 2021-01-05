@@ -319,7 +319,7 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
               setBuildingToAssociateLand(building);
               addAssociatedLand();
             }}
-            isSres={keycloak.hasClaim(Claims.ADMIN_PROPERTIES)}
+            isPropertyAdmin={keycloak.hasClaim(Claims.ADMIN_PROPERTIES)}
             initialValues={buildingDetail ?? ({} as any)}
           />
         ) : (
@@ -350,7 +350,7 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
             handleGeocoderChanges={handleGeocoderChanges}
             handlePidChange={handlePidChange}
             handlePinChange={handlePinChange}
-            isSres={keycloak.hasClaim(Claims.ADMIN_PROPERTIES)}
+            isPropertyAdmin={keycloak.hasClaim(Claims.ADMIN_PROPERTIES)}
             setLandComplete={setShowCompleteModal}
             initialValues={parcelDetail ?? ({} as any)}
           />
@@ -382,7 +382,7 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
             handlePidChange={handlePidChange}
             handlePinChange={handlePinChange}
             initialValues={buildingToAssociateLand ?? ({} as any)}
-            isSres={keycloak.hasClaim(Claims.ADMIN_PROPERTIES)}
+            isPropertyAdmin={keycloak.hasClaim(Claims.ADMIN_PROPERTIES)}
             setAssociatedLandComplete={setShowCompleteModal}
           />
         );
