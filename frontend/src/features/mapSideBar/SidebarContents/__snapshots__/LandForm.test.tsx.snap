@@ -113,6 +113,10 @@ exports[`Land Form component renders correctly 1`] = `
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
+  position: -webkit-sticky;
+  position: sticky;
+  background-color: #f2f2f2;
+  bottom: 40px;
 }
 
 .c8 {
