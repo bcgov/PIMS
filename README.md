@@ -5,6 +5,7 @@
 [![codecov](https://codecov.io/gh/bcgov/PIMS/branch/dev/graph/badge.svg)](https://codecov.io/gh/bcgov/PIMS)
 
 ![Uptime Robot status](https://img.shields.io/uptimerobot/status/m784832378-1d844c019bc2900c17c826cb)
+[![img](https://img.shields.io/badge/Lifecycle-Stable-97ca00)](https://github.com/bcgov/repomountie/blob/master/doc/lifecycle-badges.md)
 
 # PIMS
 
