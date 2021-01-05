@@ -81,6 +81,7 @@ export const FastSelect: React.FC<FastSelectProps> = memo(
       handleChange,
       handleBlur,
       setFieldValue,
+      setFieldTouched,
       registerField,
       unregisterField,
     },
@@ -177,6 +178,7 @@ export const FastSelect: React.FC<FastSelectProps> = memo(
                       value = parseInt(value);
                     }
                     setFieldValue(field, value);
+                    setFieldTouched(field);
                   }
             }
             type={type}
