@@ -71,6 +71,15 @@ $contentheading-height: 60px;
     }
   }
 
+  .agency-search,
+  .location-search {
+    min-width: 250px;
+  }
+
+  .filter-input-control {
+    min-width: 150px;
+  }
+
   .TableToolbar {
     display: flex;
     flex-direction: row;

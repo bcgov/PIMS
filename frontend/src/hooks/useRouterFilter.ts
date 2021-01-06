@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { saveFilter } from 'reducers/filterSlice';
 import { RootState } from 'reducers/rootReducer';
 import _ from 'lodash';
@@ -33,7 +33,7 @@ export interface IRouterFilterProps<T> {
   /** Initial filter that will be applied to the URL and stored in redux. */
   filter: T;
   /** Change the state of the filter. */
-  setFilter: (filter: T) => void;
+  setFilter: null | ((filter: T) => void);
   /** Redux key */
   key: string;
   sort?: TableSort<any>;
@@ -63,28 +63,29 @@ export const useRouterFilter = <T extends object>({
   // Extract the query parameters to initialize the filter.
   // This will only occur the first time the component loads to ensure the URL query parameters are applied.
   useMount(() => {
-    const params = queryString.parse(history.location.search);
-    // Check if query contains filter params.
-    const filterProps = Object.keys(filter);
-    if (_.intersection(Object.keys(params), filterProps).length) {
-      let merged = extractProps(filterProps, params);
-      // Only change state if the query parameters are different than the default filter.
-      if (!_.isEqual(merged, filter)) setFilter(merged);
-    } else if (savedFilter?.hasOwnProperty(key)) {
-      let merged = extractProps(filterProps, savedFilter[key]);
-      // Only change state if the saved filter is different than the default filter.
-      if (!_.isEqual(merged, filter)) setFilter(merged);
-    }
+    if (setFilter) {
+      const params = queryString.parse(history.location.search);
+      // Check if query contains filter params.
+      const filterProps = Object.keys(filter);
+      if (_.intersection(Object.keys(params), filterProps).length) {
+        let merged = extractProps(filterProps, params);
+        // Only change state if the query parameters are different than the default filter.
+        if (!_.isEqual(merged, filter)) setFilter(merged);
+      } else if (savedFilter?.hasOwnProperty(key)) {
+        let merged = extractProps(filterProps, savedFilter[key]);
+        // Only change state if the saved filter is different than the default filter.
+        if (!_.isEqual(merged, filter)) setFilter(merged);
+      }
 
-    if (params.sort && setSorting) {
-      const sort = resolveSortCriteriaFromUrl(
-        typeof params.sort === 'string' ? [params.sort] : params.sort,
-      );
-      if (!_.isEmpty(sort)) {
-        setSorting(sort as any);
+      if (params.sorting && setSorting) {
+        const sort = resolveSortCriteriaFromUrl(
+          typeof params.sorting === 'string' ? [params.sorting] : params.sorting,
+        );
+        if (!_.isEmpty(sort)) {
+          setSorting(sort as any);
+        }
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   });
 
   // If the 'filter' changes save it to redux store and update the URL.
@@ -104,5 +105,26 @@ export const useRouterFilter = <T extends object>({
     dispatch(saveFilter({ ...savedFilter, ...keyedFilter }));
   }, [history, key, filter, savedFilter, dispatch, sort]);
 
-  return;
+  const updateSearch = useCallback(
+    (newFilter: T) => {
+      const filterParams = new URLSearchParams(newFilter as any);
+      const sorting = generateMultiSortCriteria(sort!);
+      const allParams = {
+        ...queryString.parse(history.location.search),
+        ...queryString.parse(filterParams.toString()),
+        sort: sorting,
+      };
+      history.push({
+        pathname: history.location.pathname,
+        search: queryString.stringify(allParams, { skipEmptyString: true, skipNull: true }),
+      });
+      const keyedFilter = { [key]: newFilter };
+      dispatch(saveFilter({ ...savedFilter, ...keyedFilter }));
+    },
+    [history, key, savedFilter, dispatch, sort],
+  );
+
+  return {
+    updateSearch,
+  };
 };

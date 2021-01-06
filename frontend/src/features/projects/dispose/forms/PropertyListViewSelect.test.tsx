@@ -10,15 +10,11 @@ import * as API from 'constants/API';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 import { IFilterBarState } from '../../common/components/FilterBar';
-import { useFormikContext, getIn } from 'formik';
+import { Formik } from 'formik';
 import { PropertyListViewSelect } from '../../common/components/PropertyListViewSelect';
 import { useKeycloak } from '@react-keycloak/web';
 import { render, fireEvent, cleanup, wait, act } from '@testing-library/react';
-
-jest.mock('formik');
-(useFormikContext as jest.Mock).mockReturnValue({
-  setFieldValue: jest.fn(),
-});
+import { noop } from 'lodash';
 
 jest.mock('@react-keycloak/web');
 (useKeycloak as jest.Mock).mockReturnValue({
@@ -85,8 +81,6 @@ const testData = {
   total: 1,
 };
 
-(getIn as jest.Mock).mockReturnValue(testData.items);
-
 mockAxios.onGet().reply(200, testData);
 
 const mockStore = configureMockStore([thunk]);
@@ -123,12 +117,14 @@ const getComponent = () => {
   return (
     <Provider store={store}>
       <Router history={history}>
-        <PropertyListViewSelect
-          setPageIndex={setPageIndex}
-          pageIndex={0}
-          filter={filter}
-          field="properties"
-        />
+        <Formik initialValues={{ properties: testData.items }} onSubmit={noop}>
+          <PropertyListViewSelect
+            setPageIndex={setPageIndex}
+            pageIndex={0}
+            filter={filter}
+            field="properties"
+          />
+        </Formik>
       </Router>
     </Provider>
   );

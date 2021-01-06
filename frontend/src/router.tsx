@@ -14,7 +14,10 @@ import AuthLayout from 'layouts/AuthLayout';
 import Test from 'pages/Test.ignore';
 import { PropertyListView } from 'features/properties/list';
 import { NotFoundPage } from 'pages/404/NotFoundPage';
-import ProjectDisposalSubmitted from 'features/projects/dispose/ProjectDisposalSubmitted';
+import {
+  ProjectDisposalSubmitted,
+  ProjectDisposalExemptionSubmitted,
+} from 'features/projects/dispose';
 import { ProjectListView, ProjectApprovalRequestListView } from 'features/projects/list';
 import { LogoutPage } from 'features/account/Logout';
 import { ProjectRouter } from 'features/projects/common';
@@ -139,11 +142,19 @@ const AppRouter: React.FC = () => {
       />
       <AppRoute
         protected
-        path="/project/completed"
+        path="/project/submitted"
         component={ProjectDisposalSubmitted}
         layout={AuthLayout}
         claim={Claims.PROJECT_VIEW}
-        title={getTitle('Dispose Property Complete')}
+        title={getTitle('Dispose Property Submitted')}
+      />
+      <AppRoute
+        protected
+        path="/project/exemption/submitted"
+        component={ProjectDisposalExemptionSubmitted}
+        layout={AuthLayout}
+        claim={Claims.PROJECT_VIEW}
+        title={getTitle('Dispose Property Submitted')}
       />
       <AppRoute
         protected

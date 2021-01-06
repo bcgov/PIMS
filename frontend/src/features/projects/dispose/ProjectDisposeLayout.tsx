@@ -53,7 +53,11 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
       return dispatch(updateWorkflowStatus(project, nextStepCode, workflowStatusCode) as any)
         .then((project: IProject) => {
           if (goToNextStep(project) === undefined) {
-            history.push('/project/completed');
+            if (project.statusCode === 'AS-EXE') {
+              history.push('/project/exemption/submitted');
+            } else {
+              history.push('/project/submitted');
+            }
           }
           return project;
         })
