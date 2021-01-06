@@ -22,6 +22,7 @@ namespace Pims.Dal.Configuration
             builder.Property(m => m.BuildingFloorCount).IsRequired();
             builder.Property(m => m.BuildingTenancy).IsRequired();
             builder.Property(m => m.LeaseExpiry).HasColumnType("DATETIME2");
+            builder.Property(m => m.BuildingTenancyUpdatedOn).HasColumnType("DATETIME2");
             builder.Property(m => m.TransferLeaseOnSale).HasDefaultValue(false);
             builder.Property(m => m.OccupantName).HasMaxLength(100);
             builder.Property(m => m.EncumbranceReason).HasMaxLength(500);

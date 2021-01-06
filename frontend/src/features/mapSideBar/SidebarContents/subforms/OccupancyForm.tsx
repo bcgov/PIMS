@@ -1,10 +1,12 @@
 import './TenancyForm.scss';
 
-import { FastInput, InputGroup, SelectOptions } from 'components/common/form';
+import { FastInput, InputGroup, FastDatePicker } from 'components/common/form';
 import { Label } from 'components/common/Label';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Col, Row } from 'react-bootstrap';
 import styled from 'styled-components';
+import { getIn } from 'formik';
+import moment from 'moment';
 
 interface IOccupancyProps {
   formikProps: any;
@@ -12,7 +14,6 @@ interface IOccupancyProps {
   readOnly?: boolean;
   nameSpace?: string;
   index?: any;
-  occupantTypes: SelectOptions;
 }
 
 const InfoSection = styled.div`
@@ -24,7 +25,6 @@ export const OccupancyForm: React.FC<IOccupancyProps> = ({
   formikProps,
   disabled,
   readOnly,
-  occupantTypes,
   nameSpace,
 }) => {
   const withNameSpace: Function = React.useCallback(
@@ -33,6 +33,20 @@ export const OccupancyForm: React.FC<IOccupancyProps> = ({
     },
     [nameSpace],
   );
+  const { touched, values, setFieldValue } = formikProps;
+
+  //if the building tenancy is modified, automatically update the buildingTenancyUpdatedOn.
+  const buildingTenancyTouched = getIn(touched, withNameSpace('buildingTenancy'));
+  const buildingTenancy = getIn(values, withNameSpace('buildingTenancy'));
+  useEffect(() => {
+    if (buildingTenancyTouched && buildingTenancy) {
+      setFieldValue(
+        withNameSpace('buildingTenancyUpdatedOn'),
+        moment(new Date()).format('YYYY-MM-DD'),
+      );
+    }
+  }, [buildingTenancy, buildingTenancyTouched, setFieldValue, withNameSpace]);
+
   return (
     <Col className="tenancy">
       <Row>
@@ -78,6 +92,12 @@ export const OccupancyForm: React.FC<IOccupancyProps> = ({
             className="percentage"
             disabled={disabled || readOnly}
             field={withNameSpace('buildingTenancy')}
+          />
+          <Label>Updated On</Label>
+          <FastDatePicker
+            formikProps={formikProps}
+            disabled={disabled || readOnly}
+            field={withNameSpace('buildingTenancyUpdatedOn')}
           />
         </Row>
       </InfoSection>

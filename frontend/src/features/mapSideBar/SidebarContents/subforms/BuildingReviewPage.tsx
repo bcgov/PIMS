@@ -9,6 +9,7 @@ import {
   SelectOptions,
   Check,
   FastCurrencyInput,
+  FastDatePicker,
 } from 'components/common/form';
 import React, { useCallback, useState, useMemo } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
@@ -250,12 +251,19 @@ export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
               </Row>
               <Row className="content-item">
                 <Label>Tenancy %</Label>
-                <FastInput
-                  displayErrorTooltips
-                  formikProps={formikProps}
-                  disabled={editInfo.tenancy}
-                  field={withNameSpace('buildingTenancy')}
-                />
+                <span className="tenancy-fields">
+                  <FastInput
+                    displayErrorTooltips
+                    formikProps={formikProps}
+                    disabled={editInfo.tenancy}
+                    field={withNameSpace('buildingTenancy')}
+                  />
+                  <FastDatePicker
+                    formikProps={formikProps}
+                    disabled={editInfo.tenancy}
+                    field={withNameSpace('buildingTenancyUpdatedOn')}
+                  />
+                </span>
               </Row>
             </div>
           </Row>
