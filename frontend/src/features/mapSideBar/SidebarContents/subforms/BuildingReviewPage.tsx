@@ -12,13 +12,14 @@ import {
 } from 'components/common/form';
 import React, { useCallback, useState, useMemo } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
-import { useFormikContext } from 'formik';
+import { getIn, useFormikContext } from 'formik';
 import { Label } from 'components/common/Label';
 import { FaEdit } from 'react-icons/fa';
 import { BuildingSvg } from 'components/common/Icons';
 import AddressForm from 'features/properties/components/forms/subforms/AddressForm';
 import { noop } from 'lodash';
 import { ParentSelect } from 'components/common/form/ParentSelect';
+import { formatFiscalYear } from 'utils';
 
 interface IReviewProps {
   nameSpace?: string;
@@ -32,6 +33,13 @@ interface IReviewProps {
 
 export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
   const formikProps = useFormikContext();
+  const withNameSpace: Function = useCallback(
+    (fieldName: string) => {
+      return props.nameSpace ? `${props.nameSpace}.${fieldName}` : fieldName;
+    },
+    [props.nameSpace],
+  );
+  const netBookYear = getIn(formikProps.values, withNameSpace('financials.0.netbook.fiscalYear'));
   const defaultEditValues = useMemo(
     () => ({
       identification: props.disabled || formikProps.isValid,
@@ -41,12 +49,6 @@ export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
     [formikProps.isValid, props.disabled],
   );
   const [editInfo, setEditInfo] = useState(defaultEditValues);
-  const withNameSpace: Function = useCallback(
-    (fieldName: string) => {
-      return props.nameSpace ? `${props.nameSpace}.${fieldName}` : fieldName;
-    },
-    [props.nameSpace],
-  );
 
   return (
     <Container className="review-section">
@@ -103,6 +105,7 @@ export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
                 {...formikProps}
                 disabled={editInfo.identification}
                 nameSpace={withNameSpace('address')}
+                disableCheckmark
               />
               <br></br>
               <Row className="content-item">
@@ -284,7 +287,8 @@ export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
                   disabled={editInfo.valuation}
                 />
                 <Input
-                  field="data.financials.0.netbook.fiscalYear"
+                  field="netbookYearDisplay"
+                  value={formatFiscalYear(netBookYear)}
                   disabled
                   style={{ width: 50, fontSize: 11 }}
                 />
