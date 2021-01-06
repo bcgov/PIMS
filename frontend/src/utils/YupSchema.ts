@@ -135,7 +135,11 @@ export const BuildingSchema = Yup.object().shape({
     .min(0, 'Floor Count must be a valid number')
     .transform(emptyStringToNull),
   buildingTenancy: Yup.string().max(100, 'Tenancy must be less then 100 characters'),
-  buildingTenancyUpdatedOn: Yup.string().required('Required'),
+  buildingTenancyUpdatedOn: Yup.string().when('buildingTenancy', {
+    is: val => val && val.length > 0,
+    then: Yup.string().required('Required'),
+    otherwise: Yup.string().nullable(),
+  }),
   rentableArea: Yup.number()
     .min(0, 'Rentable Area must be a valid number')
     .transform(emptyStringToNull)
