@@ -136,17 +136,23 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
               />
               <p className="break"></p>
               <Row className="content-item">
-                <Label>PID/PIN</Label>
+                <Label>PID</Label>
                 <Input
                   displayErrorTooltips
                   className="input-small"
                   disabled={editInfo.identification}
                   required={true}
-                  field={
-                    (formikProps.values as any).data.pid
-                      ? withNameSpace('pid')
-                      : withNameSpace('pin')
-                  }
+                  field={withNameSpace('pid')}
+                />
+              </Row>
+              <Row className="content-item">
+                <Label>PIN</Label>
+                <Input
+                  displayErrorTooltips
+                  className="input-small"
+                  disabled={editInfo.identification}
+                  required={true}
+                  field={withNameSpace('pin')}
                 />
               </Row>
               <Row className="content-item">
