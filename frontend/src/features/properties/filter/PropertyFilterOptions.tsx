@@ -11,10 +11,12 @@ export const PropertyFilterOptions: React.FC = () => {
     options: [
       { label: 'Name', value: 'name' },
       { label: 'Address', value: 'address' },
+      { label: 'PID/PIN', value: 'pid' },
     ],
     placeholders: {
       name: 'Enter property name',
       address: 'Enter an address',
+      pid: 'Enter a PID or PIN',
     },
   };
 
