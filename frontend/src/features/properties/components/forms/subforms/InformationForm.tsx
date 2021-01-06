@@ -47,7 +47,11 @@ const InformationForm: FunctionComponent<InformationFormProps> = (props: Informa
   /** only SRES can change to Disposed  */
   const classifications = keycloak.hasClaim(Claims.ADMIN_PROPERTIES)
     ? props.classifications
-    : props.classifications.filter(x => Number(x.value) !== Classifications.Disposed);
+    : props.classifications.filter(
+        x =>
+          Number(x.value) !== Classifications.Disposed &&
+          Number(x.value) !== Classifications.SurplusActive,
+      );
 
   return (
     <>
