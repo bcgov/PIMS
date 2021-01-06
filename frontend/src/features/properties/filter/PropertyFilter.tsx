@@ -135,7 +135,7 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
                 field="agencies"
                 options={agencies}
                 filterBy={['code', 'label', 'parent']}
-                placeholder="Enter an Agency"
+                placeholder="Agency"
               />
             </Col>
             <Col className="bar-item">

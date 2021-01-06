@@ -54,7 +54,7 @@ exports[`Filter Bar Snapshot matches 1`] = `
         className="bar-item flex-grow-0 col"
       >
         <button
-          className="Button Button--icon-only btn btn-secondary"
+          className="Button Button--icon-only btn btn-info"
           disabled={false}
           onBlur={[Function]}
           onClick={[Function]}

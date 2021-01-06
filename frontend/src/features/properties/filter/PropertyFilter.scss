@@ -22,12 +22,12 @@
         .input-group {
           .input-group-prepend {
             .form-group {
-              width: 155px;
+              width: 110px;
             }
           }
           .input-group-content {
             .form-group {
-              width: 200px;
+              width: 180px;
             }
           }
         }
@@ -37,7 +37,7 @@
         }
       }
       .map-filter-typeahead {
-        min-width: 230px;
+        min-width: 200px;
         max-width: 250px;
       }
       .btn-warning {
@@ -46,7 +46,7 @@
       }
       .form-control {
         border-radius: 0;
-        max-width: 250px;
+        max-width: 200px;
       }
     }
     .form-group {
