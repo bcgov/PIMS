@@ -101,6 +101,12 @@ exports[`MapFilterBar renders correctly 1`] = `
               >
                 Address
               </option>
+              <option
+                className="option"
+                value="pid"
+              >
+                PID/PIN
+              </option>
             </select>
           </div>
         </div>
