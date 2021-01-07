@@ -31,6 +31,8 @@ namespace Pims.Api.Areas.Property.Models.Building
 
         public string BuildingTenancy { get; set; }
 
+        public DateTime? BuildingTenancyUpdatedOn { get; set; }
+
         public float RentableArea { get; set; }
 
         public float TotalArea { get; set; }

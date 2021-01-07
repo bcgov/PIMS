@@ -103,6 +103,7 @@ export const defaultBuildingValues: any = {
   occupantName: '',
   leaseExpiry: '',
   buildingTenancy: '',
+  buildingTenancyUpdatedOn: '',
   evaluations: [],
   fiscals: [],
   financials: defaultFinancials,
@@ -153,12 +154,7 @@ const Form: React.FC<IBuildingForm> = ({
         );
       case BuildingSteps.TENANCY:
         return (
-          <OccupancyForm
-            formikProps={formikProps}
-            occupantTypes={occupancyType}
-            nameSpace={nameSpace}
-            disabled={disabled}
-          />
+          <OccupancyForm formikProps={formikProps} nameSpace={nameSpace} disabled={disabled} />
         );
       case BuildingSteps.VALUATION:
         return (
