@@ -38,7 +38,7 @@ namespace Pims.Core.Test
             return new List<Entity.BuildingConstructionType>()
             {
                 new Entity.BuildingConstructionType(0, "Concrete") { RowVersion = new byte[] { 12, 13, 14 } },
-                new Entity.BuildingConstructionType(1, "Masonary") { RowVersion = new byte[] { 12, 13, 14 } },
+                new Entity.BuildingConstructionType(1, "Masonry") { RowVersion = new byte[] { 12, 13, 14 } },
                 new Entity.BuildingConstructionType(2, "Mixed") { RowVersion = new byte[] { 12, 13, 14 } },
                 new Entity.BuildingConstructionType(3, "Steel") { RowVersion = new byte[] { 12, 13, 14 } },
                 new Entity.BuildingConstructionType(4, "Wood") { RowVersion = new byte[] { 12, 13, 14 } }
