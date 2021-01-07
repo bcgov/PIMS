@@ -51,6 +51,9 @@
   .harmful {
     justify-content: center;
   }
+  .form-control {
+    background-image: unset;
+  }
   .form-group .form-control:disabled {
     font-weight: bold;
     border: none;
@@ -98,6 +101,19 @@
       width: 150px;
       text-align: right;
       margin-right: 20px;
+    }
+  }
+  .tenancy-fields {
+    display: flex;
+    max-width: 200px;
+    .form-control {
+      width: 100px;
+    }
+    .react-datepicker-wrapper {
+      max-width: fit-content;
+      & :disabled {
+        padding: 0px 5px;
+      }
     }
   }
   .valuation .form-group {

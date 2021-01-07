@@ -122,8 +122,7 @@ exports[`renders correctly 1`] = `
             </div>
           </div>
           <div class=\\"content-item row\\">
-            <p class=\\"label\\">Tenancy %</p>
-            <div class=\\"form-group col\\"><input name=\\"buildingTenancy\\" disabled=\\"\\" id=\\"input-buildingTenancy\\" class=\\"form-control\\" value=\\"\\"></div>
+            <p class=\\"label\\">Tenancy %</p><span class=\\"tenancy-fields\\"><div class=\\"form-group col\\"><input name=\\"buildingTenancy\\" disabled=\\"\\" id=\\"input-buildingTenancy\\" class=\\"form-control\\" value=\\"\\"></div><div class=\\"form-group\\"><div class=\\"react-datepicker-wrapper\\"><div class=\\"react-datepicker__input-container\\"><input type=\\"text\\" id=\\"datepicker-buildingTenancyUpdatedOn\\" name=\\"buildingTenancyUpdatedOn\\" placeholder=\\"--/--/----\\" disabled=\\"\\" autocomplete=\\"off\\" class=\\"form-control date-picker\\" value=\\"\\"></div></div></div></span>
           </div>
         </div>
       </div>
@@ -137,7 +136,7 @@ exports[`renders correctly 1`] = `
             <div class=\\"form-group col\\">
               <div class=\\"input-tooltip-wrapper\\"><input name=\\"data.financials.0.netbook.value\\" class=\\"form-control input-number\\" disabled=\\"\\" placeholder=\\"\\" value=\\"\\"></div>
             </div>
-            <div class=\\"form-group\\"><input name=\\"data.financials.0.netbook.fiscalYear\\" style=\\"width: 50px; font-size: 11px;\\" disabled=\\"\\" id=\\"input-data.financials.0.netbook.fiscalYear\\" class=\\"form-control\\" value=\\"\\"></div>
+            <div class=\\"form-group\\"><input name=\\"netbookYearDisplay\\" style=\\"width: 50px; font-size: 11px;\\" disabled=\\"\\" id=\\"input-netbookYearDisplay\\" class=\\"form-control\\" value=\\"\\"></div>
           </div>
           <div style=\\"display: flex;\\" class=\\"val-item row\\">
             <p class=\\"label\\">Assessed Value</p>

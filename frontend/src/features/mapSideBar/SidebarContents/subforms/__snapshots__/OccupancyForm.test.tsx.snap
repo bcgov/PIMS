@@ -122,6 +122,32 @@ exports[`renders correctly 1`] = `
           value=""
         />
       </div>
+      <p
+        class="label"
+      >
+        Updated On
+      </p>
+      <div
+        class="form-group"
+      >
+        <div
+          class="react-datepicker-wrapper"
+        >
+          <div
+            class="react-datepicker__input-container"
+          >
+            <input
+              autocomplete="off"
+              class="form-control date-picker"
+              id="datepicker-buildingTenancyUpdatedOn"
+              name="buildingTenancyUpdatedOn"
+              placeholder="--/--/----"
+              type="text"
+              value=""
+            />
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

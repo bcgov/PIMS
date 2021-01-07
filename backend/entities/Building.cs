@@ -40,6 +40,11 @@ namespace Pims.Dal.Entities
         public string BuildingTenancy { get; set; }
 
         /// <summary>
+        /// get/set - The date the building tenancy was last updated.
+        /// </summary>
+        public DateTime? BuildingTenancyUpdatedOn { get; set; }
+
+        /// <summary>
         /// get/set - The building rentable area.
         /// </summary>
         public float RentableArea { get; set; }
