@@ -22,6 +22,7 @@ import { ParentSelect } from 'components/common/form/ParentSelect';
 import { FormikTable } from 'features/projects/common';
 import { getAssociatedBuildingsCols } from 'features/properties/components/forms/subforms/columns';
 import { Classifications } from 'constants/classifications';
+import { formatFiscalYear } from 'utils';
 
 interface IReviewProps {
   nameSpace?: string;
@@ -43,7 +44,14 @@ const LinkButton = styled.span`
 `;
 
 export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
+  const withNameSpace: Function = useCallback(
+    (fieldName: string) => {
+      return props.nameSpace ? `${props.nameSpace}.${fieldName}` : fieldName;
+    },
+    [props.nameSpace],
+  );
   const formikProps = useFormikContext<any>();
+  const netBookYear = getIn(formikProps.values, withNameSpace('financials.0.netbook.year'));
   const defaultEditValues = useMemo(
     () => ({
       identification: props.disabled || formikProps.isValid,
@@ -53,12 +61,7 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
     [formikProps.isValid, props.disabled],
   );
   const [editInfo, setEditInfo] = useState(defaultEditValues);
-  const withNameSpace: Function = useCallback(
-    (fieldName: string) => {
-      return props.nameSpace ? `${props.nameSpace}.${fieldName}` : fieldName;
-    },
-    [props.nameSpace],
-  );
+
   let classId = getIn(formikProps.values, withNameSpace('classificationId'));
   const filteredClassifications = props.classifications.filter(
     (c: any) =>
@@ -133,20 +136,27 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
                 {...formikProps}
                 disabled={editInfo.identification}
                 nameSpace={withNameSpace('address')}
+                disableCheckmark
               />
               <p className="break"></p>
               <Row className="content-item">
-                <Label>PID/PIN</Label>
+                <Label>PID</Label>
                 <Input
                   displayErrorTooltips
                   className="input-small"
                   disabled={editInfo.identification}
                   required={true}
-                  field={
-                    (formikProps.values as any).data.pid
-                      ? withNameSpace('pid')
-                      : withNameSpace('pin')
-                  }
+                  field={withNameSpace('pid')}
+                />
+              </Row>
+              <Row className="content-item">
+                <Label>PIN</Label>
+                <Input
+                  displayErrorTooltips
+                  className="input-small"
+                  disabled={editInfo.identification}
+                  required={true}
+                  field={withNameSpace('pin')}
                 />
               </Row>
               <Row className="content-item">
@@ -281,7 +291,8 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
                 />
                 <FastInput
                   formikProps={formikProps}
-                  field={withNameSpace('financials.0.netbook.year')}
+                  field="netBookYearDisplay"
+                  value={formatFiscalYear(netBookYear)}
                   disabled
                   style={{ width: 50, fontSize: 11 }}
                 />

@@ -23,6 +23,8 @@ interface AddressProps {
   onGeocoderChange?: (data: IGeocoderResponse) => void;
   toolTips?: boolean;
   hideStreetAddress?: boolean;
+  /** disable the green checkmark that appears beside the input on valid entry */
+  disableCheckmark?: boolean;
 }
 
 export const defaultAddressValues: IAddress = {
@@ -96,6 +98,7 @@ const AddressForm = <T extends any>(props: AddressProps & FormikProps<T>) => {
           options={administrativeAreas.map(x => x.label)}
           name={withNameSpace('administrativeArea')}
           disabled={props.disabled}
+          hideValidation={props.disableCheckmark}
           paginate={false}
           required
           displayErrorTooltips
