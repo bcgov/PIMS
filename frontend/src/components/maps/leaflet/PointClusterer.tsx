@@ -151,7 +151,10 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
             <Marker
               key={index}
               position={[latitude, longitude]}
-              onclick={() => zoomOrSpiderfy(cluster)}
+              onclick={(e: any) => {
+                zoomOrSpiderfy(cluster);
+                e.target.closePopup();
+              }}
               icon={
                 new DivIcon({
                   html: `<div><span>${point_count_abbreviated}</span></div>`,
