@@ -125,6 +125,12 @@ exports[`Property list view Matches snapshot 1`] = `
                     >
                       Address
                     </option>
+                    <option
+                      class="option"
+                      value="pid"
+                    >
+                      PID/PIN
+                    </option>
                   </select>
                 </div>
               </div>
