@@ -240,7 +240,7 @@ exports[`Project list view tests Matches snapshot 1`] = `
           class="bar-item flex-grow-0 col"
         >
           <button
-            class="Button Button--icon-only btn btn-secondary"
+            class="Button Button--icon-only btn btn-info"
             type="reset"
           >
             <div

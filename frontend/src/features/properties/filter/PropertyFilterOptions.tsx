@@ -9,12 +9,14 @@ import { IPropertyFilter } from './IPropertyFilter';
 export const PropertyFilterOptions: React.FC = () => {
   const state: { options: any[]; placeholders: Record<string, string> } = {
     options: [
-      { label: 'Property Name', value: 'name' },
+      { label: 'Name', value: 'name' },
       { label: 'Address', value: 'address' },
+      { label: 'PID/PIN', value: 'pid' },
     ],
     placeholders: {
-      name: 'Enter a name',
+      name: 'Enter property name',
       address: 'Enter an address',
+      pid: 'Enter a PID or PIN',
     },
   };
 

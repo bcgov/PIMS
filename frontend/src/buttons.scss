@@ -102,6 +102,22 @@
   color: $secondary-variant-color;
 }
 
+.btn.btn-info {
+  color: #909090;
+  background-color: $filter-background-color;
+  border: none;
+  border-radius: 4px;
+  padding-left: 6px;
+  padding-right: 6px;
+}
+
+.btn.btn.btn-info:hover {
+  color: $sres-icon-color;
+}
+.btn.btn.btn-info:focus {
+  color: $sres-icon-color;
+}
+
 .btn.btn-light {
   background-color: $light-variant-color;
   font-family: 'BCSans', Fallback, sans-serif;

@@ -64,12 +64,14 @@ export function TypeaheadField<T extends TypeaheadModel>({
   React.useEffect(() => {
     if (clearSelected && ref.current?.clear) {
       ref.current.clear();
+      setFieldValue(name, '');
+      setClear && setClear(false);
     }
     if (clearMenu && ref.current?.blur) {
       ref.current.blur();
       setClear && setClear(false);
     }
-  }, [clearMenu, clearSelected, setClear]);
+  }, [clearMenu, clearSelected, setClear, name, setFieldValue]);
   return (
     <Form.Group className={classNames(!!required ? 'required' : '', outerClassName)}>
       {!!label && <Form.Label>{label}</Form.Label>}

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from 'reducers/rootReducer';
 import { ILookupCode } from 'actions/lookupActions';
@@ -6,16 +6,17 @@ import { ILookupCodeState } from 'reducers/lookupCodeReducer';
 import { mapLookupCode } from 'utils';
 import * as API from 'constants/API';
 import styled from 'styled-components';
-import { Container, Row } from 'react-bootstrap';
+import { Container, Form, Row } from 'react-bootstrap';
 import { Button, Check, Input, Select } from 'components/common/form';
 import _ from 'lodash';
-import { useFormikContext } from 'formik';
+import { getIn, useFormikContext } from 'formik';
+import { TypeaheadField } from 'components/common/form/Typeahead';
 
 const StyledRow = styled(Row)`
   .form-group {
     display: flex;
     .form-label {
-      margin-top: 5px;
+      margin-top: 0.5rem;
       margin-right: 10px;
       width: 150px;
       text-align: right;
@@ -59,11 +60,18 @@ const SearchButton = styled(props => <Button {...props} />)`
   margin-left: 665px;
 `;
 
+const StyledLocation = styled(props => <TypeaheadField {...props} />)`
+  width: 250px;
+  margin-left: 60px;
+`;
 /** This form is triggered by the FindMorePropertiesButton and contains additional filter fields for the PropertiesFilter */
 const FindMorePropertiesForm = <T extends any>(props: any) => {
   const lookupCodes = useSelector<RootState, ILookupCode[]>(
     state => (state.lookupCode as ILookupCodeState).lookupCodes,
   );
+
+  const { setFieldValue } = useFormikContext<any>();
+  const [clear, setClear] = useState(false);
 
   const constructionType = _.filter(lookupCodes, (lookupCode: ILookupCode) => {
     return lookupCode.type === API.CONSTRUCTION_CODE_SET_NAME;
@@ -71,6 +79,10 @@ const FindMorePropertiesForm = <T extends any>(props: any) => {
   const predominateUses = _.filter(lookupCodes, (lookupCode: ILookupCode) => {
     return lookupCode.type === API.PREDOMINATE_USE_CODE_SET_NAME;
   }).map(mapLookupCode);
+  const administrativeAreas = _.filter(lookupCodes, (lookupCode: ILookupCode) => {
+    return lookupCode.type === API.AMINISTRATIVE_AREA_CODE_SET_NAME;
+  });
+  const adminAreas = (administrativeAreas ?? []).map(c => mapLookupCode(c, null));
 
   const { handleSubmit } = useFormikContext();
 
@@ -92,7 +104,19 @@ const FindMorePropertiesForm = <T extends any>(props: any) => {
           <h6>Search by</h6>
         </Row>
         <StyledRow style={{ marginLeft: 35 }}>
-          <Input field="administrativeArea" label="Location" />
+          <Form.Label style={{ marginTop: '.5rem' }}>Location</Form.Label>
+          <StyledLocation
+            name="administrativeArea"
+            placeholder="Enter a location"
+            paginate={false}
+            hideValidation={true}
+            options={adminAreas.map((x: any) => x.label)}
+            onChange={(vals: any) => {
+              setFieldValue('administrativeArea', getIn(vals[0], 'name') ?? vals[0]);
+            }}
+            clearSelected={clear}
+            setClear={setClear}
+          />
           <VerticalLine />
           <ProjectNumber field="projectNumber" label="Project number" placeholder="SPP #" />
         </StyledRow>
