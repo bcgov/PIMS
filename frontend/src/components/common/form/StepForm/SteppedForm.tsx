@@ -139,7 +139,7 @@ export const SteppedForm = function<T extends object = {}>({
       innerRef={formikRef}
       {...rest}
     >
-      {({ values, setFieldValue }) => (
+      {({ values, setFieldValue, submitForm }) => (
         <>
           <TabbedForm>
             {!!getTabs && tabLineHeader && <TabLineHeader>{tabLineHeader}</TabLineHeader>}
@@ -203,6 +203,10 @@ export const SteppedForm = function<T extends object = {}>({
                   //If the user deletes the last tab, set the active tab to the previous tab.
                   if (values.activeTab >= values.tabs.length - 1) {
                     setFieldValue('activeTab', values.tabs.length - 2);
+                  }
+                  //if the user deletes ALL associated land, save that to the database.
+                  if (tabs.length === 0) {
+                    submitForm();
                   }
                 }
               }}

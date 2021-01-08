@@ -2,6 +2,8 @@ import { useLocation, useHistory } from 'react-router-dom';
 import { useState, useCallback, useMemo } from 'react';
 import queryString from 'query-string';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
+import * as H from 'history';
+import dequal from 'dequal';
 
 export type SidebarSize = 'narrow' | 'wide' | undefined;
 
@@ -39,10 +41,13 @@ interface IMapSideBar {
   newParcel?: boolean;
   size?: SidebarSize;
   context: SidebarContextType;
+  handleLocationChange:
+    | string
+    | ((location: H.Location, action: 'PUSH' | 'POP' | 'REPLACE') => string | boolean);
 }
 
 /** control the state of the side bar via query params. */
-const useQueryParamSideBar = (): IMapSideBar => {
+const useQueryParamSideBar = (formikRef?: any): IMapSideBar => {
   const [showSideBar, setShowSideBar] = useState(false);
   const [contextName, setContextName] = useState<SidebarContextType>(
     SidebarContextType.ADD_PROPERTY_TYPE_SELECTOR,
@@ -66,7 +71,11 @@ const useQueryParamSideBar = (): IMapSideBar => {
       queryParams.buildingId = undefined;
       queryParams.sidebarContext = SidebarContextType.ADD_PROPERTY_TYPE_SELECTOR;
       history.replace({ pathname: '/mapview', search: queryString.stringify(queryParams) });
-    } else if (!!searchParams.parcelId && searchParams.sidebar === 'false') {
+    } else if (
+      !!searchParams.parcelId &&
+      searchParams.sidebar === 'false' &&
+      (searchParams.parcelId || searchParams.buildingId)
+    ) {
       searchParams.parcelId = undefined;
       searchParams.buildingId = undefined;
       history.replace({
@@ -82,15 +91,15 @@ const useQueryParamSideBar = (): IMapSideBar => {
         throw new Error('"contextName" is required when "show" is true');
       }
 
-      const search = new URLSearchParams({
+      const search = {
         ...(searchParams as any),
         sidebar: show,
         sidebarSize: show ? size : undefined,
         sidebarContext: show ? contextName : undefined,
         parcelId: resetIds ? undefined : searchParams.parcelId,
         buildingId: resetIds ? undefined : searchParams.buildingId,
-      });
-      history.push({ search: search.toString() });
+      };
+      history.push({ search: queryString.stringify(search) });
     },
     [history, searchParams],
   );
@@ -113,6 +122,17 @@ const useQueryParamSideBar = (): IMapSideBar => {
     },
     [setShow, showSideBar],
   );
+
+  const handleLocationChange = (location: H.Location, action: 'PUSH' | 'POP' | 'REPLACE') => {
+    const parsedChangedLocation = queryString.parse(location.search);
+    return (searchParams.sidebarContext !== parsedChangedLocation.sidebarContext ||
+      searchParams.parcelId !== parsedChangedLocation.parcelId ||
+      searchParams.buildingId !== parsedChangedLocation.buildingId ||
+      searchParams.sideBar !== parsedChangedLocation.sideBar) &&
+      !dequal(formikRef?.current?.initialValues?.data, formikRef?.current?.values?.data)
+      ? 'Are you sure you want to leave this page? You have unsaved changes.'
+      : true;
+  };
 
   return {
     showSideBar,
@@ -137,6 +157,7 @@ const useQueryParamSideBar = (): IMapSideBar => {
       const pathName = '/mapview';
       history.replace({ pathname: pathName, search: queryString.stringify(queryParams) });
     },
+    handleLocationChange,
   };
 };
 

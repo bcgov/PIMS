@@ -532,12 +532,16 @@ const AssociatedLandForm: React.FC<IAssociatedLandParentForm> = (
           onSubmit={async (values, actions) => {
             const apiValues = valuesToApiFormat(_.cloneDeep(values), keycloak.agencyId);
             try {
+              let land;
               if (!values.data.id) {
-                await createBuilding(apiValues)(dispatch);
+                land = await createBuilding(apiValues)(dispatch);
               } else {
-                await updateBuilding(apiValues)(dispatch);
+                land = await updateBuilding(apiValues)(dispatch);
               }
-              props.setAssociatedLandComplete(true);
+              actions.resetForm({ values: { ...values, data: land } });
+              if (apiValues.parcels.length > 0) {
+                props.setAssociatedLandComplete(true);
+              }
             } catch (error) {
             } finally {
               actions.setSubmitting(false);

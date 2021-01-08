@@ -73,6 +73,8 @@ function SubmitPropertyNav() {
             sidebar: true,
             disabled: false,
             loadDraft: false,
+            parcelId: undefined,
+            buildingId: undefined,
             new: true,
             sidebarContext: SidebarContextType.ADD_PROPERTY_TYPE_SELECTOR,
             sidebarSize: 'narrow',

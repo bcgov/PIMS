@@ -35,6 +35,7 @@ import useSideBarParcelLoader from '../hooks/useSideBarParcelLoader';
 import useSideBarBuildingLoader from '../hooks/useSideBarBuildingLoader';
 import { ViewOnlyBuildingForm } from '../SidebarContents/BuildingForm';
 import { Claims } from 'constants/claims';
+import { Prompt } from 'react-router-dom';
 
 interface IMapSideBarContainerProps {
   refreshParcels: Function;
@@ -80,6 +81,7 @@ const EditButton = styled(FaEdit)`
 const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = ({
   movingPinNameSpaceProp,
 }) => {
+  const formikRef = React.useRef<FormikValues>();
   const {
     showSideBar,
     setShowSideBar,
@@ -93,7 +95,8 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
     addContext,
     disabled,
     setDisabled,
-  } = useParamSideBar();
+    handleLocationChange,
+  } = useParamSideBar(formikRef);
   const { parcelDetail } = useSideBarParcelLoader({
     parcelId,
     setSideBarContext: addContext,
@@ -119,7 +122,7 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
   const [propertyType, setPropertyType] = useState('');
   const [showCompleteModal, setShowCompleteModal] = useState(false);
   const [showUpdatedModal, setShowUpdatedModal] = useState(false);
-  const formikRef = React.useRef<FormikValues>();
+
   const parcelLayerService = useLayerQuery(PARCELS_LAYER_URL);
 
   const withNameSpace: Function = (fieldName: string, nameSpace?: string) => {
@@ -406,6 +409,7 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
       hidePolicy={true}
     >
       {render()}
+      <Prompt message={handleLocationChange}></Prompt>
       <GenericModal
         size={ModalSize.LARGE}
         message={
