@@ -96,6 +96,7 @@ export const ParcelPopupView = (props: IParcelDetailProps | null) => {
                       disabled: true,
                       loadDraft: false,
                       parcelId: parcelDetail?.id,
+                      buildingId: undefined,
                     }),
                   }}
                 >
@@ -115,6 +116,7 @@ export const ParcelPopupView = (props: IParcelDetailProps | null) => {
                         disabled: false,
                         loadDraft: false,
                         parcelId: parcelDetail?.id,
+                        buildingId: undefined,
                       }),
                     }}
                   >

@@ -5,8 +5,8 @@ import { Label } from 'components/common/Label';
 import AddressForm from 'features/properties/components/forms/subforms/AddressForm';
 import InformationForm from 'features/properties/components/forms/subforms/InformationForm';
 import LatLongForm from 'features/properties/components/forms/subforms/LatLongForm';
-import React from 'react';
-import { Col, Container, Row } from 'react-bootstrap';
+import React, { useState } from 'react';
+import { Col, Container, Row, ListGroup } from 'react-bootstrap';
 import TooltipWrapper from 'components/common/TooltipWrapper';
 import {
   ClassificationSelectionText,
@@ -18,6 +18,8 @@ import { IGeocoderResponse } from 'hooks/useApi';
 import { useFormikContext, getIn } from 'formik';
 import useCodeLookups from 'hooks/useLookupCodes';
 import * as API from 'constants/API';
+import GenericModal from 'components/common/GenericModal';
+import { IFormBuilding } from 'features/mapSideBar/containers/MapSideBarContainer';
 
 interface IIdentificationProps {
   /** passed down from parent to lock/unlock designated fields */
@@ -52,6 +54,7 @@ export const IdentificationForm: React.FC<IIdentificationProps> = ({
   disabled,
 }) => {
   const { setFieldValue } = useFormikContext();
+  const [overrideData, setOverrideData] = useState<IFormBuilding>();
   const withNameSpace: Function = React.useCallback(
     (name?: string) => {
       return [nameSpace ?? '', name].filter(x => x).join('.');
@@ -174,7 +177,7 @@ export const IdentificationForm: React.FC<IIdentificationProps> = ({
               if (administrativeArea) {
                 selection.administrativeArea = administrativeArea.name;
               }
-              setFieldValue(withNameSpace(''), {
+              const updatedPropertyDetail = {
                 ...getIn(formikProps.values, withNameSpace('')),
                 latitude: selection.latitude,
                 longitude: selection.longitude,
@@ -183,7 +186,12 @@ export const IdentificationForm: React.FC<IIdentificationProps> = ({
                   line1: selection.address1,
                   administrativeArea: selection.administrativeArea,
                 },
-              });
+              };
+              if (!getIn(formikProps.values, withNameSpace('latitude'))) {
+                setFieldValue(withNameSpace(''), updatedPropertyDetail);
+              } else {
+                setOverrideData(updatedPropertyDetail);
+              }
             }}
           />
         </Col>
@@ -197,6 +205,33 @@ export const IdentificationForm: React.FC<IIdentificationProps> = ({
           />
         </Col>
       </Row>
+      <GenericModal
+        display={!!overrideData}
+        title="Update Form Details"
+        okButtonText="Update"
+        cancelButtonText="Cancel"
+        handleOk={() => {
+          formikProps.setFieldValue(withNameSpace(''), overrideData);
+          setOverrideData(undefined);
+        }}
+        handleCancel={() => {
+          setOverrideData(undefined);
+        }}
+        message={
+          <>
+            <p>
+              Would you like to update this form using the Geocoder data for the updated address?
+            </p>
+            <h5>New Values:</h5>
+            <ListGroup>
+              <ListGroup.Item>Latitude: {overrideData?.latitude}</ListGroup.Item>
+              <ListGroup.Item>Longitude: {overrideData?.longitude}</ListGroup.Item>
+              <ListGroup.Item>Address: {overrideData?.address?.line1}</ListGroup.Item>
+              <ListGroup.Item>Location: {overrideData?.address?.administrativeArea}</ListGroup.Item>
+            </ListGroup>
+          </>
+        }
+      />
     </Container>
   );
 };

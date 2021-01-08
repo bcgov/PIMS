@@ -25,10 +25,12 @@ import { IAssociatedLand } from '../AssociatedLandForm';
 import { ISteppedFormValues } from 'components/common/form/StepForm';
 import { ParentSelect } from 'components/common/form/ParentSelect';
 import { noop } from 'lodash';
-import { Container, Row, Col, Form } from 'react-bootstrap';
+import { Container, Row, Col, Form, ListGroup } from 'react-bootstrap';
 import TooltipWrapper from 'components/common/TooltipWrapper';
 import * as API from 'constants/API';
 import useCodeLookups from 'hooks/useLookupCodes';
+import GenericModal from 'components/common/GenericModal';
+import { IFormParcel } from 'features/mapSideBar/containers/MapSideBarContainer';
 
 interface IIdentificationProps {
   /** used for changign the agency - note that only select users will be able to edit this field */
@@ -77,6 +79,7 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
   disabled,
 }) => {
   const [geocoderResponse, setGeocoderResponse] = useState<IGeocoderResponse | undefined>();
+  const [overrideData, setOverrideData] = useState<IFormParcel>();
   const formikProps = useFormikContext<ISteppedFormValues<IAssociatedLand>>();
   const withNameSpace: Function = React.useCallback(
     (name?: string) => {
@@ -253,14 +256,21 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
               if (administrativeArea) {
                 selection.administrativeArea = administrativeArea.name;
               }
-              formikProps.setFieldValue(withNameSpace(''), {
+              const updatedPropertyDetail = {
                 ...getIn(formikProps.values, withNameSpace('')),
+                latitude: selection.latitude,
+                longitude: selection.longitude,
                 address: {
                   ...getIn(formikProps.values, withNameSpace('address')),
                   line1: selection.address1,
                   administrativeArea: selection.administrativeArea,
                 },
-              });
+              };
+              if (!getIn(formikProps.values, withNameSpace('latitude'))) {
+                formikProps.setFieldValue(withNameSpace(''), updatedPropertyDetail);
+              } else {
+                setOverrideData(updatedPropertyDetail);
+              }
             }}
             {...formikProps}
             disabled={disabled}
@@ -348,6 +358,33 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
           </div>
         </Col>
       </Row>
+      <GenericModal
+        display={!!overrideData}
+        title="Update Form Details"
+        okButtonText="Update"
+        cancelButtonText="Cancel"
+        handleOk={() => {
+          formikProps.setFieldValue(withNameSpace(''), overrideData);
+          setOverrideData(undefined);
+        }}
+        handleCancel={() => {
+          setOverrideData(undefined);
+        }}
+        message={
+          <>
+            <p>
+              Would you like to update this form using the Geocoder data for the updated address?
+            </p>
+            <h5>New Values:</h5>
+            <ListGroup>
+              <ListGroup.Item>Latitude: {overrideData?.latitude}</ListGroup.Item>
+              <ListGroup.Item>Longitude: {overrideData?.longitude}</ListGroup.Item>
+              <ListGroup.Item>Address: {overrideData?.address?.line1}</ListGroup.Item>
+              <ListGroup.Item>Location: {overrideData?.address?.administrativeArea}</ListGroup.Item>
+            </ListGroup>
+          </>
+        }
+      />
     </Container>
   );
 };

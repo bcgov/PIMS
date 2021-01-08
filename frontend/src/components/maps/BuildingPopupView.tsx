@@ -92,6 +92,7 @@ export const BuildingPopupView: React.FC<IBuildingDetailProps> = (props: IBuildi
                       disabled: true,
                       loadDraft: false,
                       buildingId: buildingDetail?.id,
+                      parcelId: undefined,
                     }),
                   }}
                 >
@@ -112,6 +113,7 @@ export const BuildingPopupView: React.FC<IBuildingDetailProps> = (props: IBuildi
                         sidebar: true,
                         loadDraft: false,
                         buildingId: buildingDetail?.id,
+                        parcelId: undefined,
                       }),
                     }}
                   >

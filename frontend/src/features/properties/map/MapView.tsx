@@ -2,15 +2,9 @@ import React, { useState, useRef } from 'react';
 import Map, { MapViewportChangeEvent } from '../../../components/maps/leaflet/Map';
 import './MapView.scss';
 import { Map as LeafletMap } from 'react-leaflet';
-import { fetchPropertyDetail } from 'actionCreators/parcelsActionCreator';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'reducers/rootReducer';
-import {
-  IProperty,
-  storeParcelDetail,
-  IPropertyDetail,
-  PropertyTypes,
-} from 'actions/parcelsActions';
+import { IProperty, storeParcelDetail, IPropertyDetail } from 'actions/parcelsActions';
 import { ILookupCodeState } from 'reducers/lookupCodeReducer';
 import { ILookupCode } from 'actions/lookupActions';
 import { LeafletMouseEvent } from 'leaflet';
@@ -58,7 +52,6 @@ const MapView: React.FC<MapViewProps> = (props: MapViewProps) => {
   const propertyClassifications = _.filter(lookupCodes, (lookupCode: ILookupCode) => {
     return lookupCode.type === API.PROPERTY_CLASSIFICATION_CODE_SET_NAME && !!lookupCode.isVisible;
   });
-  const [selectedDraftProperty, setSelectedDraftProperty] = useState<IPropertyDetail | null>(null);
 
   const lotSizes = fetchLotSizes();
   const dispatch = useDispatch();
@@ -81,41 +74,14 @@ const MapView: React.FC<MapViewProps> = (props: MapViewProps) => {
       <FilterProvider>
         <Map
           sidebarSize={size}
-          lat={
-            (propertyDetail?.parcelDetail?.latitude as number) ??
-            selectedDraftProperty?.parcelDetail?.latitude ??
-            defaultLatLng.lat
-          }
-          lng={
-            (propertyDetail?.parcelDetail?.longitude as number) ??
-            selectedDraftProperty?.parcelDetail?.longitude ??
-            defaultLatLng.lng
-          }
+          lat={defaultLatLng.lat}
+          lng={defaultLatLng.lng}
           properties={properties}
-          selectedProperty={
-            !!propertyDetail?.parcelDetail ? propertyDetail : (selectedDraftProperty as any)
-          }
+          selectedProperty={propertyDetail}
           agencies={agencies}
           propertyClassifications={propertyClassifications}
           lotSizes={lotSizes}
-          onMarkerClick={
-            props.onMarkerClick ??
-            ((p, position) => {
-              if (
-                p.propertyTypeId !== undefined &&
-                [PropertyTypes.BUILDING, PropertyTypes.PARCEL].includes(p.propertyTypeId)
-              ) {
-                p.id && dispatch(fetchPropertyDetail(p.id, p.propertyTypeId as any, position));
-              } else {
-                setSelectedDraftProperty({
-                  propertyTypeId: p.propertyTypeId,
-                  parcelDetail: { ...p },
-                } as any);
-              }
-            })
-          }
           onMarkerPopupClose={() => {
-            setSelectedDraftProperty(null);
             dispatch(storeParcelDetail(null));
           }}
           onViewportChanged={(mapFilterModel: MapViewportChangeEvent) => {

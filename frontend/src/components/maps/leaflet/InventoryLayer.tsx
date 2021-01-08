@@ -94,18 +94,11 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
       (filter: IGeoSearchParams) => {
         loadProperties(filter)
           .then(async (data: Feature[]) => {
-            const points = data
-              .filter(feature => {
-                return !(
-                  feature.properties!.propertyTypeId === selected?.propertyTypeId &&
-                  feature.properties!.id === selected?.parcelDetail?.id
-                );
-              })
-              .map(f => {
-                return {
-                  ...f,
-                } as PointFeature;
-              });
+            const points = data.map(f => {
+              return {
+                ...f,
+              } as PointFeature;
+            });
             setFeatures(points);
           })
           .catch(error => {
@@ -127,7 +120,8 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
 
   return (
     <PointClusterer
-      points={[...features, ...draftProperties]}
+      points={features}
+      draftPoints={draftProperties}
       zoom={zoom}
       bounds={bbox}
       onMarkerClick={onMarkerClick}
