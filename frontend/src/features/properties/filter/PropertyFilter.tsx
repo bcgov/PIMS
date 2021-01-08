@@ -1,6 +1,6 @@
 import './PropertyFilter.scss';
 
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Col } from 'react-bootstrap';
 import { Formik, getIn } from 'formik';
 import { ILookupCode } from 'actions/lookupActions';
@@ -72,6 +72,7 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
   );
   const classifications = (propertyClassifications ?? []).map(c => mapLookupCode(c));
   const adminAreas = (adminAreaLookupCodes ?? []).map(c => mapLookupCode(c));
+  const [clear, setClear] = useState(false);
 
   const initialValues = useMemo(() => {
     const values = { ...defaultFilter, ...propertyFilter };
@@ -97,6 +98,7 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
 
   const resetFilter = () => {
     changeFilter(defaultFilter);
+    setClear(true);
   };
 
   return (
@@ -128,6 +130,8 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
                 onChange={(vals: any) => {
                   setFieldValue('administrativeArea', getIn(vals[0], 'name') ?? vals[0]);
                 }}
+                clearSelected={clear}
+                setClear={setClear}
               />
             </Col>
             <Col className="agency-item">
