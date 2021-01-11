@@ -249,6 +249,7 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
     <>
       {disabled &&
         (keycloak.hasClaim(Claims.ADMIN_PROPERTIES) ||
+          keycloak.hasClaim(Claims.PROPERTY_EDIT) ||
           keycloak.agencyId === parcelDetail?.agencyId ||
           keycloak.agencyId === buildingDetail?.agencyId) && (
           <EditButton onClick={() => setDisabled(false)} />

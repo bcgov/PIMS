@@ -42,6 +42,8 @@ import {
   BuildingInformationSchema,
 } from 'utils/YupSchema';
 import { AssociatedLandListForm } from './subforms/AssociatedLandListForm';
+import { emptyStringToNull, stringToNull } from 'utils';
+import useParcelLayerData from 'features/properties/hooks/useParcelLayerData';
 
 const Container = styled.div`
   background-color: #fff;
@@ -121,10 +123,18 @@ const Form: React.FC<IBuildingForm> = ({
   nameSpace,
   disabled,
   goToAssociatedLand,
+  formikRef,
 }) => {
   const stepper = useFormStepper();
   useDraftMarkerSynchronizer();
   const formikProps = useFormikContext<ISteppedFormValues<IFormBuilding>>();
+  useParcelLayerData({
+    formikRef,
+    nameSpace: 'data',
+    agencyId: +(formikProps.values.data.agencyId as any)?.value
+      ? +(formikProps.values.data.agencyId as any).value
+      : +formikProps.values.data.agencyId,
+  });
   const { getOptionsByType } = useCodeLookups();
   const isViewOrUpdate = !!formikProps.values?.data?.id;
 
@@ -293,10 +303,9 @@ export const valuesToApiFormat = (values: ISteppedFormValues<IFormBuilding>): IF
   apiValues.data.rentableArea = +apiValues.data.rentableArea;
   apiValues.data.buildingFloorCount = +(apiValues.data.buildingFloorCount ?? 0);
   apiValues.data.agencyId = +values.data.agencyId;
-  if (apiValues.data.leaseExpiry === '') {
-    apiValues.data.leaseExpiry = undefined;
-  }
+  apiValues.data.leaseExpiry = stringToNull(apiValues.data.leaseExpiry);
   apiValues.data.financials = [];
+  apiValues.data.buildingTenancyUpdatedOn = stringToNull(apiValues.data.buildingTenancyUpdatedOn);
   return apiValues.data;
 };
 
@@ -427,6 +436,7 @@ const BuidingForm: React.FC<IParentBuildingForm> = ({
           nameSpace={withNameSpace('')}
           disabled={disabled}
           goToAssociatedLand={goToAssociatedLand}
+          formikRef={formikRef}
         />
       </SteppedForm>
     </Container>

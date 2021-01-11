@@ -315,3 +315,14 @@ export const isMouseEventRecent = (e?: MouseEvent | null) =>
  * @param squareMeters
  */
 export const squareMetersToHectares = (squareMeters: number) => (squareMeters / 10000).toFixed(2);
+
+export function stringToNull(value: any) {
+  return emptyStringToNull(value, value);
+}
+
+export function emptyStringToNull(value: any, originalValue: any) {
+  if (typeof originalValue === 'string' && originalValue === '') {
+    return undefined;
+  }
+  return value;
+}

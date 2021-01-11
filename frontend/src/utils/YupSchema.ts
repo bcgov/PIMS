@@ -1,5 +1,6 @@
 import * as Yup from 'yup';
 import moment from 'moment';
+import { emptyStringToNull } from 'utils';
 
 Yup.addMethod(Yup.string, 'optional', function optional() {
   return this.transform(value => {
@@ -10,13 +11,6 @@ Yup.addMethod(Yup.string, 'optional', function optional() {
       : value;
   });
 });
-
-function emptyStringToNull(value: any, originalValue: any) {
-  if (typeof originalValue === 'string' && originalValue === '') {
-    return undefined;
-  }
-  return value;
-}
 
 export const AccessRequestSchema = Yup.object().shape({
   agency: Yup.number()
