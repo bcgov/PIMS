@@ -45,7 +45,6 @@ import { IFormParcel } from '../containers/MapSideBarContainer';
 import useParcelLayerData from 'features/properties/hooks/useParcelLayerData';
 import { IStep } from 'components/common/Stepper';
 import { AssociatedBuildingListForm } from './subforms/AssociatedBuildingListForm';
-
 const Container = styled.div`
   background-color: #fff;
   height: 100%;
@@ -427,14 +426,16 @@ const LandForm: React.FC<IParentLandForm> = (props: IParentLandForm) => {
         formikRef={props.formikRef}
         onSubmit={async (values, actions) => {
           const apiValues = valuesToApiFormat(_.cloneDeep(values));
+          let response;
           try {
             if (!values.data.id) {
-              await createParcel(apiValues)(dispatch);
+              response = await createParcel(apiValues)(dispatch);
               props.setLandComplete(true);
             } else {
-              await updateParcel(apiValues)(dispatch);
+              response = await updateParcel(apiValues)(dispatch);
               props.setLandUpdateComplete(true);
             }
+            actions.resetForm({ values: { ...values, data: response as any } });
           } catch (error) {
           } finally {
             actions.setSubmitting(false);
