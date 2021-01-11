@@ -7,6 +7,7 @@ objects:
     apiVersion: security.devops.gov.bc.ca/v1alpha1
     metadata:
       name: project-to-k8s-api-${ENV_NAME}
+      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
     spec:
       description: Allow pods to talk to the internal K8S api
       source:
@@ -14,72 +15,12 @@ objects:
       destination:
         - - int:network=internal-cluster-api-endpoint
 
-  # Allow service accounts to run builds/deployments.
-  - kind: NetworkSecurityPolicy
-    apiVersion: security.devops.gov.bc.ca/v1alpha1
-    metadata:
-      name: service-account-to-k8s-api-${ENV_NAME}
-    spec:
-      description: Allow service accounts to run builds/deployments.
-      source:
-        - - $namespace=${PROJECT_NAMESPACE}-${ENV_NAME}
-          - "@app:k8s:serviceaccountname=builder"
-        - - $namespace=${PROJECT_NAMESPACE}-${ENV_NAME}
-          - "@app:k8s:serviceaccountname=deployer"
-      destination:
-        - - int:network=internal-cluster-api-endpoint
-        - - ext:network=any
-
-  # Create an external network that opens up specific ports
-  - kind: ExternalNetwork
-    apiVersion: security.devops.gov.bc.ca/v1alpha1
-    metadata:
-      name: external-network-interface-${NAME}-${ENV_NAME}
-      labels:
-        app: ${NAME}
-        role: "nic"
-        env: ${ENV_NAME}
-    spec:
-      description: Defines the ports that are externally available for internet to project communication.
-      entries:
-        - 0.0.0.0/0
-      servicePorts:
-        - "tcp:/80"
-        - "tcp:/433"
-
-  # Allow the internet to make requests to the web application.
-  - kind: NetworkSecurityPolicy
-    apiVersion: security.devops.gov.bc.ca/v1alpha1
-    metadata:
-      name: external-ingress-${NAME}-${WEB_ROLE}
-    spec:
-      description: Allow the web application to receive connections from the Internet.
-      source:
-        - - ext:name=external-network-interface-${NAME}-${ENV_NAME}
-      destination:
-        - - app=${NAME}
-          - role=${WEB_ROLE}
-          - env=${ENV_NAME}
-
-  # Allow the internet to make requests to the api.
-  - kind: NetworkSecurityPolicy
-    apiVersion: security.devops.gov.bc.ca/v1alpha1
-    metadata:
-      name: external-ingress-${NAME}-${API_ROLE}
-    spec:
-      description: Allow the api to receive connections from the Internet.
-      source:
-        - - ext:name=external-network-interface-${NAME}-${ENV_NAME}
-      destination:
-        - - app=${NAME}
-          - role=${API_ROLE}
-          - env=${ENV_NAME}
-
   # Allow the api to make requests to the internet.
   - kind: NetworkSecurityPolicy
     apiVersion: security.devops.gov.bc.ca/v1alpha1
     metadata:
       name: internal-ingress-${NAME}-${API_ROLE}
+      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
     spec:
       description: Allow api to open connections to the Internet.
       source:
@@ -94,6 +35,7 @@ objects:
     apiVersion: security.devops.gov.bc.ca/v1alpha1
     metadata:
       name: pod-to-pod-permit-${NAME}-${API_ROLE}-${DB_ROLE}
+      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
     spec:
       description: Allow api to communicate to the database.
       source:

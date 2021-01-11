@@ -5,22 +5,21 @@ metadata:
   annotations:
     openshift.io/display-name: Microsoft SQL Server
     description: Relational database management system developed by Microsoft.
-    tags: pims-db
+    tags: pims,db
 objects:
   # Add a resource secret for the database password.  By default this is generated.
   - kind: Secret
     apiVersion: v1
     metadata:
-      name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}${INSTANCE}-secret
+      name: ${APP_NAME}-${ROLE_NAME}-${ENV_NAME}${INSTANCE}-secret
       namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
       annotations:
         description: "Database passwords"
       labels:
-        name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}${INSTANCE}-secret
+        name: ${APP_NAME}-${ROLE_NAME}-${ENV_NAME}${INSTANCE}-secret
         app: ${APP_NAME}
-        component: ${COMP_NAME}
+        role: ${ROLE_NAME}
         env: ${ENV_NAME}
-        role: database
     type: Opaque
     stringData:
       MSSQL_SA_PASSWORD: ${MSSQL_SA_PASSWORD}
@@ -31,15 +30,14 @@ objects:
   - kind: Service
     apiVersion: v1
     metadata:
-      name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}${INSTANCE}
+      name: ${APP_NAME}-${ROLE_NAME}-${ENV_NAME}${INSTANCE}
       namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
       annotations:
         description: Exposes the database server
       labels:
         app: ${APP_NAME}
-        component: ${COMP_NAME}
+        role: ${ROLE_NAME}
         env: ${ENV_NAME}
-        role: database
     spec:
       ports:
         - name: ${MSSQL_PORT}-tcp
@@ -47,7 +45,7 @@ objects:
           port: ${{MSSQL_PORT}}
           targetPort: ${{MSSQL_PORT}}
       selector:
-        name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}${INSTANCE}
+        name: ${APP_NAME}-${ROLE_NAME}-${ENV_NAME}${INSTANCE}
       type: ClusterIP
       sessionAffinity: None
 
@@ -55,15 +53,14 @@ objects:
   - kind: DeploymentConfig
     apiVersion: v1
     metadata:
-      name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}${INSTANCE}
+      name: ${APP_NAME}-${ROLE_NAME}-${ENV_NAME}${INSTANCE}
       namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
       annotations:
         description: Defines how to deploy the database server
       labels:
         app: ${APP_NAME}
-        component: ${COMP_NAME}
+        role: ${ROLE_NAME}
         env: ${ENV_NAME}
-        role: database
     spec:
       strategy:
         type: Rolling
@@ -73,30 +70,29 @@ objects:
           imageChangeParams:
             automatic: true
             containerNames:
-              - ${APP_NAME}-${COMP_NAME}-${ENV_NAME}${INSTANCE}
+              - ${APP_NAME}-${ROLE_NAME}-${ENV_NAME}${INSTANCE}
             from:
               kind: ImageStreamTag
               namespace: "${PROJECT_NAMESPACE}-tools"
-              name: ${APP_NAME}-${COMP_NAME}:${IMAGE_TAG}
+              name: ${APP_NAME}-${ROLE_NAME}:${IMAGE_TAG}
       replicas: 1
       selector:
-        name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}${INSTANCE}
+        name: ${APP_NAME}-${ROLE_NAME}-${ENV_NAME}${INSTANCE}
       template:
         metadata:
-          name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}${INSTANCE}
+          name: ${APP_NAME}-${ROLE_NAME}-${ENV_NAME}${INSTANCE}
           labels:
-            name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}${INSTANCE}
+            name: ${APP_NAME}-${ROLE_NAME}-${ENV_NAME}${INSTANCE}
             app: ${APP_NAME}
-            component: ${COMP_NAME}
+            role: ${ROLE_NAME}
             env: ${ENV_NAME}
-            role: database
         spec:
           volumes:
             - name: mssql-data
               persistentVolumeClaim:
                 claimName: ${PVC_NAME}${INSTANCE}
           containers:
-            - name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}${INSTANCE}
+            - name: ${APP_NAME}-${ROLE_NAME}-${ENV_NAME}${INSTANCE}
               image: ""
               ports:
                 - containerPort: ${{MSSQL_PORT}}
@@ -111,19 +107,19 @@ objects:
                 - name: MSSQL_SA_PASSWORD
                   valueFrom:
                     secretKeyRef:
-                      name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}${INSTANCE}-secret
+                      name: ${APP_NAME}-${ROLE_NAME}-${ENV_NAME}${INSTANCE}-secret
                       key: MSSQL_SA_PASSWORD
                 - name: DB_NAME
                   value: ${DB_NAME}
                 - name: DB_USER
                   valueFrom:
                     secretKeyRef:
-                      name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}${INSTANCE}-secret
+                      name: ${APP_NAME}-${ROLE_NAME}-${ENV_NAME}${INSTANCE}-secret
                       key: DB_USER
                 - name: DB_PASSWORD
                   valueFrom:
                     secretKeyRef:
-                      name: ${APP_NAME}-${COMP_NAME}-${ENV_NAME}${INSTANCE}-secret
+                      name: ${APP_NAME}-${ROLE_NAME}-${ENV_NAME}${INSTANCE}-secret
                       key: DB_PASSWORD
               resources:
                 limits:
@@ -141,11 +137,11 @@ parameters:
     description: "The name of the application (grouped)."
     required: true
     value: "pims"
-  - name: COMP_NAME
-    displayName: "Component Name"
-    description: "The name of the application component [app, api, db]"
+  - name: ROLE_NAME
+    displayName: "Component Role Name"
+    description: "The name of the application component role [app, api, database]"
     required: true
-    value: "db"
+    value: "database"
   - name: ENV_NAME
     displayName: "Environment name"
     description: "The name for this environment [dev, test, prod]"
