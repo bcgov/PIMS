@@ -20,6 +20,7 @@
 - [Custom Network Security Policy Development](https://developer.gov.bc.ca/Custom-Network-Security-Policy-Development)
 - [Docker & Artifactory Implementation Details](https://github.com/BCDevOps/OpenShift4-Migration/issues/51)
 - [Artifact Respositories](https://developer.gov.bc.ca/Artifact-Repositories)
+- [OpenShift Project Tools](https://github.com/BCDevOps/openshift-developer-tools)
 
 When using template parameters you can use the following syntax to control the output.
 
@@ -123,7 +124,7 @@ Also remember to delete any NSP that are no longer relevant.
 **Example**
 
 ```bash
-oc delete networksecuritypolicy {name}
+oc delete nsp {name}
 ```
 
 ### Import Images
@@ -199,7 +200,7 @@ The PIMS database is a MS SQL Server linux container.
 
 Go to - `/pims/openshift/4.0/templates/database`
 
-Create a build configuration file here - `build.dev.ev`
+Create a build configuration file here - `build.dev.env`
 Update the configuration file and set the appropriate parameters.
 
 **Example**
@@ -220,7 +221,7 @@ oc project 354028-tools
 oc process -f mssql-build.yaml --param-file=build.dev.env | oc create --save-config=true -f -
 ```
 
-Create a deployment configuration file here - `deploy.dev.ev`
+Create a deployment configuration file here - `deploy.dev.env`
 Update the configuration file and set the appropriate parameters.
 
 **Example**
@@ -242,4 +243,145 @@ Create the database deploy and save the template.
 
 ```bash
 oc process -f mssql-deploy.yaml --param-file=deploy.dev.env | oc create --save-config=true -f -
+```
+
+### Configure Elasticsearch
+
+Go to - `/pims/openshift/4.0/templates/logging`
+
+Create a deployment configuration file here - `deploy-elasticsearch.env`
+Update the configuration file and set the appropriate parameters.
+
+**Example**
+
+```conf
+ELASTICSEARCH_DOMAIN=pims-elastic.apps.silver.devops.gov.bc.ca
+ELASTIC_PASSWORD={SECRET}
+```
+
+Create the api build and save the template.
+
+```bash
+oc project 354028-tools
+
+oc process -f deploy-elasticsearch.yaml --param-file=deploy.elasticsearch.env | oc create --save-config=true -f -
+```
+
+Once the pod is up you can test by going to the url [pims-elastic.apps.silver.devops.gov.bc.ca](https://pims-elastic.apps.silver.devops.gov.bc.ca) and entering the username `elastic` and password you configured.
+
+### Configure Kibana
+
+Go to - `/pims/openshift/4.0/templates/logging`
+
+Create a deployment configuration file here - `deploy-kibana.env`
+Update the configuration file and set the appropriate parameters.
+
+**Example**
+
+```conf
+ELASTICSEARCH_DOMAIN=pims-elastic.apps.silver.devops.gov.bc.ca
+KIBANA_DOMAIN=pims-kibana.apps.silver.devops.gov.bc.ca
+ELASTIC_PASSWORD={SECRET}
+```
+
+Create the api build and save the template.
+
+```bash
+oc project 354028-tools
+
+oc process -f deploy-kibana.yaml --param-file=deploy.kibana.env | oc create --save-config=true -f -
+```
+
+Once the pod is up you can test by going to the url [pims-kibana.apps.silver.devops.gov.bc.ca](https://pims-kibana.apps.silver.devops.gov.bc.ca) and entering the username and password you configured.
+
+### Configure API
+
+Configure **two** build configurations; one for DEV builds and one for PROD builds. The development build should target the **`dev`** branch in GitHub, while the production build should target the **`master`** branch. Make sure you have `.env` files setup for each configuration.
+
+Go to - `/pims/openshift/4.0/templates/api`
+
+Create a build configuration file here - `build.dev.env`
+Update the configuration file and set the appropriate parameters.
+
+**Example**
+
+```conf
+GIT_REF=dev
+DOTNET_CONFIGURATION=Release
+OUTPUT_IMAGE_TAG=latest
+CPU_LIMIT=1
+MEMORY_LIMIT=2Gi
+```
+
+Create the api build and save the template.
+
+```bash
+oc project 354028-tools
+
+oc process -f build.yaml --param-file=build.dev.env | oc create --save-config=true -f -
+```
+
+Tag the image so that the appropriate environment can pull the image.
+
+```bash
+oc tag pims-api:latest pims-api:dev
+```
+
+Create a deployment configuration file here - `deploy.dev.env`
+Update the configuration file and set the appropriate parameters.
+
+**Example**
+
+```conf
+ENV_NAME=dev
+IMAGE_TAG=dev
+APP_DOMAIN=pims-dev.app.developer.gov.bc.ca
+APP_PORT=8080
+ASPNETCORE_ENVIRONMENT=Development
+ASPNETCORE_URLS=http://*:8080
+CONNECTION_STRINGS_PIMS={Connection String}
+KEYCLOAK_AUDIENCE=pims-api
+KEYCLOAK_AUTHORITY=https://dev.oidc.gov.bc.ca/auth/realms/xz0xtue5
+KEYCLOAK_ADMIN_AUTHORITY=https://dev.oidc.gov.bc.ca/auth/admin/realms/xz0xtue5
+KEYCLOAK_SECRET={SECRET} # This isn't currently a required value for the api configuration.
+KEYCLOAK_SERVICE_ACCOUNT_SECRET={SECRET} # Log into Keycloak and get the pims-service-account secret.
+CHES_USERNAME={SECRET} # Make a request to the CHES team for the username.
+CHES_PASSWORD={SECRET} # Make a request to the CHES team for the password.
+GEOCODER_KEY={SECRET} # Make a request to BC Data Wharehouse for the secret.
+ELASTIC_PASSWORD={SECRET} # Look at the secret configured for Elasticsearch.
+HEALTH_SCHEME=HTTP
+LIVENESS_PATH=/health/live
+READINESS_PATH=/health/ready
+CPU_REQUEST=100m
+CPU_LIMIT=1
+MEMORY_REQUEST=500Mi
+MEMORY_LIMIT=4Gi
+```
+
+Create the api deployment and save the template.
+
+```bash
+oc project 354028-dev
+
+oc process -f deploy.yaml --param-file=deploy.dev.env | oc create --save-config=true -f -
+```
+
+Create a deployment configuration file here - `deploy-swagger.dev.env`
+Update the configuration file and set the appropriate parameters.
+
+The reason this is a separate configuration is because the order routes are created is important, but you can't control the order within a single template.
+If a route has the same domain name, but the path is different, then you need to be careful what order you create the routes.
+
+**Example**
+
+```conf
+ENV_NAME=dev
+APP_DOMAIN=pims-dev.apps.silver.devops.gov.bc.ca
+APP_PORT=8080
+```
+
+Create the swagger route deployment and save the template.
+
+```bash
+oc process -f deploy-swagger.yaml --param-file=deploy-swagger.dev.env | oc create --save-config=true -f -
 ```

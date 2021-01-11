@@ -1,0 +1,195 @@
+kind: Template
+apiVersion: v1
+metadata:
+  name: elasticsearch-deploy
+  annotations:
+    openshift.io/display-name: Elasticsearch
+    description: Deployment template for Elasticsearch
+    tags: elasticsearch,logging
+objects:
+  # Elasticsearch Password.
+  - kind: Secret
+    apiVersion: v1
+    metadata:
+      name: ${APP_NAME}-secret
+      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
+      annotations:
+        description: "Elasticsearch bootstrap password"
+      labels:
+        name: ${APP_NAME}-secret
+        app: ${APP_NAME}
+        role: ${ROLE_NAME}
+        env: ${ENV_NAME}
+    type: Opaque
+    stringData:
+      ELASTIC_PASSWORD: ${ELASTIC_PASSWORD}
+
+  # Elasticsearch configuration settings.
+  - apiVersion: v1
+    kind: ConfigMap
+    metadata:
+      name: ${APP_NAME}-config
+      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
+      labels:
+        name: ${APP_NAME}-config
+        app: ${APP_NAME}
+        role: ${ROLE_NAME}
+        env: ${ENV_NAME}
+    data:
+      elasticsearch.yml: |-
+        xpack.security.enabled: true
+
+  # Elasticsearch pod port configuration.
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      name: ${APP_NAME}-service
+      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
+      labels:
+        name: ${APP_NAME}-service
+        app: ${APP_NAME}
+        role: ${ROLE_NAME}
+        env: ${ENV_NAME}
+    spec:
+      ports:
+        - port: 9200
+          name: client
+        - port: 9300
+          name: transport
+      selector:
+        app: ${APP_NAME}
+        role: ${ROLE_NAME}
+
+  # Elasticsearch network route to pod.
+  - kind: Route
+    apiVersion: v1
+    metadata:
+      name: ${APP_NAME}-route
+      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
+      labels:
+        name: ${APP_NAME}-route
+        app: ${APP_NAME}
+        role: ${ROLE_NAME}
+        env: ${ENV_NAME}
+    spec:
+      host: ${ELASTICSEARCH_DOMAIN}
+      to:
+        name: ${APP_NAME}-service
+        kind: Service
+        weight: 100
+      tls:
+        termination: edge
+
+  # Elasticsearch persistent volume claim.
+  - kind: "PersistentVolumeClaim"
+    apiVersion: v1
+    metadata:
+      name: ${APP_NAME}-block-storage
+      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
+      labels:
+        name: ${APP_NAME}-block-storage
+        app: ${APP_NAME}
+        role: ${ROLE_NAME}
+        env: ${ENV_NAME}
+    spec:
+      storageClassName: netapp-block-standard
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: 16Gi
+    volumeName: ${APP_NAME}-block-storage
+
+  # How the pod will be deployed.
+  - apiVersion: v1
+    kind: DeploymentConfig
+    metadata:
+      name: ${APP_NAME}
+      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
+      labels:
+        name: ${APP_NAME}
+        app: ${APP_NAME}
+        role: ${ROLE_NAME}
+        env: ${ENV_NAME}
+    spec:
+      replicas: 1
+      selector:
+        app: ${APP_NAME}
+        role: ${ROLE_NAME}
+        env: ${ENV_NAME}
+      template:
+        metadata:
+          labels:
+            app: ${APP_NAME}
+            role: ${ROLE_NAME}
+            env: ${ENV_NAME}
+        spec:
+          containers:
+            - name: ${APP_NAME}
+              image: docker.elastic.co/elasticsearch/elasticsearch:7.9.3
+              env:
+                - name: discovery.type
+                  value: single-node
+                - name: network.host
+                  value: "0.0.0.0"
+                - name: "ES_JAVA_OPTS"
+                  value: "-Xms256m -Xmx256m"
+                - name: ELASTIC_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: ${APP_NAME}-secret
+                      key: ELASTIC_PASSWORD
+              resources:
+                limits:
+                  memory: "1000Mi"
+              ports:
+                - containerPort: 9300
+                  name: transport
+                - containerPort: 9200
+                  name: client
+              volumeMounts:
+                - name: config-volume
+                  mountPath: /usr/share/elasticsearch/config/elasticsearch.yml
+                  readOnly: true
+                  subPath: elasticsearch.yml
+                - name: ${APP_NAME}-volume
+                  mountPath: /usr/share/elasticsearch/data
+          volumes:
+            - name: config-volume
+              configMap:
+                name: ${APP_NAME}-config
+            - name: ${APP_NAME}-volume
+              persistentVolumeClaim:
+                claimName: ${APP_NAME}-block-storage
+parameters:
+  - name: APP_NAME
+    displayName: "App Name"
+    description: "The name of the application (grouped)."
+    required: true
+    value: "elasticsearch"
+  - name: ROLE_NAME
+    displayName: "Component Role Name"
+    description: "The name of the application component role (e.g web, api, database)."
+    required: true
+    value: "logging"
+  - name: ENV_NAME
+    displayName: "Environment name"
+    description: "The name for this environment [dev, test, prod, tools]"
+    required: true
+    value: "tools"
+  - name: PROJECT_NAMESPACE
+    displayName: "OpenShift Project Namespace"
+    description: "The namespace of the OpenShift project containing the application."
+    required: true
+    value: "354028"
+
+  - name: ELASTICSEARCH_DOMAIN
+    displayName: "Elasticsearch Domain"
+    description: "Elastic search domain"
+    required: true
+    value: "pims-elastic.silver.devops.gov.bc.ca"
+  - name: ELASTIC_PASSWORD
+    displayName: "Elasticsearch Password"
+    description: "Elastic search bootstrap password"
+    from: '[\w]{5}_[\w]{15}_1aB!'
+    generate: expression

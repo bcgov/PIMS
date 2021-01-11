@@ -14,25 +14,23 @@ objects:
   - kind: ImageStream
     apiVersion: v1
     metadata:
-      name: ${APP_NAME}-${COMP_NAME}
+      name: ${APP_NAME}-${ROLE_NAME}
       annotations:
         description: Keeps track of changes in the database image
       labels:
         app: ${APP_NAME}
-        component: ${COMP_NAME}
-        role: database
+        role: ${ROLE_NAME}
   # The build config that will be created will be named for the branch you created it for.
   - kind: BuildConfig
     apiVersion: v1
     metadata:
-      name: ${APP_NAME}-${COMP_NAME}-${GIT_REF}
+      name: ${APP_NAME}-${ROLE_NAME}-${GIT_REF}
       annotations:
         description: Defines how to build the database image
       labels:
-        name: ${APP_NAME}-${COMP_NAME}-${GIT_REF}
+        name: ${APP_NAME}-${ROLE_NAME}-${GIT_REF}
         app: ${APP_NAME}
-        component: ${COMP_NAME}
-        role: database
+        role: ${ROLE_NAME}
         branch: ${GIT_REF}
     spec:
       completionDeadlineSeconds: 1800
@@ -66,7 +64,7 @@ objects:
       output:
         to:
           kind: ImageStreamTag
-          name: ${APP_NAME}-${COMP_NAME}:${OUTPUT_IMAGE_TAG}
+          name: ${APP_NAME}-${ROLE_NAME}:${OUTPUT_IMAGE_TAG}
       resources:
         limits:
           cpu: ${CPU_LIMIT}
@@ -77,11 +75,11 @@ parameters:
     description: "The name of the application (grouped)."
     required: true
     value: "pims"
-  - name: COMP_NAME
-    displayName: "Component Name"
+  - name: ROLE_NAME
+    displayName: "Component Role Name"
     description: "The name of the application component (e.g api, app, db)."
     required: true
-    value: "db"
+    value: "database"
   - name: PROJECT_NAMESPACE
     displayName: "OpenShift Project Namespace"
     description: "The namespace of the OpenShift project containing the application."
