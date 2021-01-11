@@ -6,6 +6,38 @@ metadata:
     openshift.io/display-name: Elasticsearch
     description: Deployment template for Elasticsearch
     tags: elasticsearch,logging
+parameters:
+  - name: APP_NAME
+    displayName: "App Name"
+    description: "The name of the application (grouped)."
+    required: true
+    value: "elasticsearch"
+  - name: ROLE_NAME
+    displayName: "Component Role Name"
+    description: "The name of the application component role (e.g web, api, database)."
+    required: true
+    value: "logging"
+  - name: ENV_NAME
+    displayName: "Environment name"
+    description: "The name for this environment [dev, test, prod, tools]"
+    required: true
+    value: "tools"
+  - name: PROJECT_NAMESPACE
+    displayName: "OpenShift Project Namespace"
+    description: "The namespace of the OpenShift project containing the application."
+    required: true
+    value: "354028"
+
+  - name: ELASTICSEARCH_DOMAIN
+    displayName: "Elasticsearch Domain"
+    description: "Elastic search domain"
+    required: true
+    value: "pims-elastic.silver.devops.gov.bc.ca"
+  - name: ELASTIC_PASSWORD
+    displayName: "Elasticsearch Password"
+    description: "Elastic search bootstrap password"
+    from: '[\w]{5}_[\w]{15}_1aB!'
+    generate: expression
 objects:
   # Elasticsearch Password.
   - kind: Secret
@@ -161,35 +193,3 @@ objects:
             - name: ${APP_NAME}-volume
               persistentVolumeClaim:
                 claimName: ${APP_NAME}-block-storage
-parameters:
-  - name: APP_NAME
-    displayName: "App Name"
-    description: "The name of the application (grouped)."
-    required: true
-    value: "elasticsearch"
-  - name: ROLE_NAME
-    displayName: "Component Role Name"
-    description: "The name of the application component role (e.g web, api, database)."
-    required: true
-    value: "logging"
-  - name: ENV_NAME
-    displayName: "Environment name"
-    description: "The name for this environment [dev, test, prod, tools]"
-    required: true
-    value: "tools"
-  - name: PROJECT_NAMESPACE
-    displayName: "OpenShift Project Namespace"
-    description: "The namespace of the OpenShift project containing the application."
-    required: true
-    value: "354028"
-
-  - name: ELASTICSEARCH_DOMAIN
-    displayName: "Elasticsearch Domain"
-    description: "Elastic search domain"
-    required: true
-    value: "pims-elastic.silver.devops.gov.bc.ca"
-  - name: ELASTIC_PASSWORD
-    displayName: "Elasticsearch Password"
-    description: "Elastic search bootstrap password"
-    from: '[\w]{5}_[\w]{15}_1aB!'
-    generate: expression

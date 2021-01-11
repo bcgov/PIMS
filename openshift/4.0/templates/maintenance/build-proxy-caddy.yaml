@@ -1,0 +1,81 @@
+---
+kind: Template
+apiVersion: v1
+metadata:
+  name: proxy-caddy-build-config
+parameters:
+  - name: NAME
+    displayName: "Maintenance Caddy Name"
+    description: "The name displayed for this build in openshift"
+    required: false
+    value: proxy-caddy
+  - name: GIT_REPO
+    displayName: "GIT Repository URL"
+    description: "URL to GitHub repo with static maintenance page content"
+    required: false
+    value: "https://github.com/bcgov/pims.git"
+  - name: GIT_REF
+    displayName: "Branch Name"
+    description:
+      "Set this to a branch name, tag or other ref of your repository if you
+      are not using the default branch."
+    required: false
+    value: "dev"
+  - name: IMG_SRC_NAMESPACE
+    displayName: "Source Image Name"
+    description: "Name of the source image"
+    required: false
+    value: "openshift"
+  - name: IMG_SRC
+    displayName: "Source Image Name"
+    description: "Name of the source image"
+    required: false
+    value: "bcgov-s2i-caddy"
+objects:
+  - kind: ImageStream
+    apiVersion: v1
+    metadata:
+      name: ${NAME}
+      creationTimestamp:
+      labels:
+        app: ${NAME}
+    spec:
+      lookupPolicy:
+        local: false
+    status:
+      dockerImageRepository: ""
+  - kind: BuildConfig
+    apiVersion: v1
+    metadata:
+      name: ${NAME}
+      creationTimestamp:
+      labels:
+        app: ${NAME}
+    spec:
+      triggers:
+        - type: ConfigChange
+        - type: ImageChange
+          imageChange: {}
+      runPolicy: SerialLatestOnly
+      source:
+        type: Git
+        contextDir: maintenance
+        git:
+          uri: ${GIT_REPO}
+          ref: ${GIT_REF}
+      strategy:
+        type: Source
+        sourceStrategy:
+          from:
+            kind: ImageStreamTag
+            namespace: ${IMG_SRC_NAMESPACE}
+            name: "${IMG_SRC}:latest"
+      output:
+        to:
+          kind: ImageStreamTag
+          name: "${NAME}:latest"
+      resources: {}
+      postCommit: {}
+      nodeSelector:
+      successfulBuildsHistoryLimit: 5
+      failedBuildsHistoryLimit: 5
