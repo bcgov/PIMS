@@ -102,8 +102,12 @@ const ParcelDetailContainer: React.FunctionComponent<IParcelDetailContainerProps
   }, [dispatch, leafletMouseEvent, props.parcelDetail]);
 
   const isAdmin = keycloak.hasClaim(Claims.ADMIN_PROPERTIES);
+  const canEdit = keycloak.hasClaim(Claims.PROPERTY_EDIT);
   let allowEdit =
-    isAdmin || !props.parcelDetail || keycloak.hasAgency(props.parcelDetail?.agencyId as number);
+    canEdit ||
+    isAdmin ||
+    !props.parcelDetail ||
+    keycloak.hasAgency(props.parcelDetail?.agencyId as number);
 
   return (
     <ParcelDetailFormContainer

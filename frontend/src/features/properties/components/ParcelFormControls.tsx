@@ -116,7 +116,7 @@ const EditButton = ({ disabled, setEditing, editing }: any) => {
 
 const CancelButton = ({ disabled, setEditing, editing }: any) => {
   return disabled && editing ? (
-    <TooltipWrapper toolTipId="cancel-button-tooltip" toolTip="Cancel eediting this property">
+    <TooltipWrapper toolTipId="cancel-button-tooltip" toolTip="Cancel editing this property">
       <Button
         variant="secondary"
         onClick={(e: any) => {
