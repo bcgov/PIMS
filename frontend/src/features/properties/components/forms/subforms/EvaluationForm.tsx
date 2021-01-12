@@ -6,7 +6,7 @@ import { EvaluationKeys } from 'constants/evaluationKeys';
 import { FiscalKeys } from 'constants/fiscalKeys';
 import moment from 'moment';
 import _ from 'lodash';
-import { formikFieldMemo, isPositiveNumberOrZero } from 'utils';
+import { isPositiveNumberOrZero } from 'utils';
 import PaginatedFormErrors from './PaginatedFormErrors';
 import { Table } from 'components/Table';
 import { getEvaluationCols } from './columns';
@@ -167,8 +167,4 @@ const EvaluationForm = <T extends any>(props: EvaluationProps & FormikProps<T>) 
   );
 };
 
-export default React.memo(EvaluationForm, (prevProps, currentProps) => {
-  const prev = { formikProps: prevProps, field: prevProps.nameSpace };
-  const curr = { formikProps: currentProps, field: currentProps.nameSpace };
-  return formikFieldMemo(prev, curr);
-});
+export default EvaluationForm;

@@ -10,7 +10,7 @@ import { ILookupCode } from 'actions/lookupActions';
 import { ILookupCodeState } from 'reducers/lookupCodeReducer';
 import _ from 'lodash';
 import { Form, FastSelect, InputGroup, FastInput } from 'components/common/form';
-import { mapLookupCode, formikFieldMemo } from 'utils';
+import { mapLookupCode } from 'utils';
 import * as API from 'constants/API';
 import { IBuilding } from 'actions/parcelsActions';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
@@ -252,8 +252,4 @@ const BuildingForm = (props: BuildingProps & FormikProps<any>) => {
   );
 };
 
-export default React.memo(BuildingForm, (prevProps, currentProps) => {
-  const prev = { formikProps: prevProps, field: prevProps.nameSpace };
-  const curr = { formikProps: currentProps, field: currentProps.nameSpace };
-  return formikFieldMemo(prev, curr) && prevProps.disabled !== currentProps.disabled;
-});
+export default BuildingForm;
