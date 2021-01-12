@@ -59,8 +59,8 @@ pipeline {
       steps {
         script {
           // load supporting functions from external script files
-          commonPipeline = load "openshift/pipelines/scripts/common.groovy"
-          notify = load "openshift/pipelines/scripts/notify.groovy"
+          commonPipeline = load "openshift/3.11/pipelines/scripts/common.groovy"
+          notify = load "openshift/3.11/pipelines/scripts/notify.groovy"
 
           // ensure required secrets and credentials are available in the CI environment
           // [add more secrets here if needed...]
