@@ -64,8 +64,8 @@ pipeline {
       steps {
         script {
           // load supporting functions from external script files
-          commonPipeline = load "${DEVOPS_DIRECTORY}/pipelines/scripts/common.groovy"
-          notify = load "${DEVOPS_DIRECTORY}/pipelines/scripts/notify.groovy"
+          commonPipeline = load "openshift/3.11/pipelines/scripts/common.groovy"
+          notify = load "openshift/3.11/pipelines/scripts/notify.groovy"
 
           // Cancel any running builds in progress
           timeout(time: 10, unit: 'MINUTES') {
