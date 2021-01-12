@@ -198,7 +198,7 @@ GITHUB_WEBHOOK_SECRET=
 GENERIC_WEBHOOK_SECRET=
 GIT_URL=https://github.com/{REPO NAME}/PIMS.git
 GIT_REF={BRANCH NAME}
-JENKINSFILE_PATH=openshift/pipelines/Jenkinsfile.cicd
+JENKINSFILE_PATH=openshift/3.11/pipelines/Jenkinsfile.cicd
 
 APP_URI=https://pims-{ENV_NAME}{INSTANCE IDENTITY}.pathfinder.gov.bc.ca/
 ENV_NAME={ENV_NAME}
