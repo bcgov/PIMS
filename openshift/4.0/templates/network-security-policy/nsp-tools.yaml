@@ -1,0 +1,56 @@
+kind: Template
+apiVersion: v1
+name: pims-tools-network-security-policy
+parameters:
+  - name: PROJECT_NAMESPACE
+    displayName: "OpenShift Project Namespace"
+    description: "The namespace of the OpenShift project containing the application."
+    required: true
+    value: "354028"
+  - name: ENV_NAME
+    displayName: "Environment name"
+    description: "The name for this environment [dev, test, prod, tools]"
+    required: true
+    value: "tools"
+objects:
+  # Allow project namespace to communicate with k8s cluster api.
+  - kind: NetworkSecurityPolicy
+    apiVersion: security.devops.gov.bc.ca/v1alpha1
+    metadata:
+      name: project-to-k8s-api-${ENV_NAME}
+    spec:
+      description: Allow pods to talk to the internal K8S api
+      source:
+        - - $namespace=${PROJECT_NAMESPACE}-${ENV_NAME}
+      destination:
+        - - int:network=internal-cluster-api-endpoint
+
+  # Allow tools project to communicate with dev, test, and prod.
+  - kind: NetworkSecurityPolicy
+    apiVersion: security.devops.gov.bc.ca/v1alpha1
+    metadata:
+      name: project-to-project-permit-${ENV_NAME}-all
+    spec:
+      description: Allow project to communicate to another project.
+      source:
+        - - $namespace=${PROJECT_NAMESPACE}-${ENV_NAME}
+      destination:
+        - - $namespace=${PROJECT_NAMESPACE}-dev
+        - - $namespace=${PROJECT_NAMESPACE}-test
+        - - $namespace=${PROJECT_NAMESPACE}-prod
+
+  # Allow service accounts to run builds/deployments.
+  - kind: NetworkSecurityPolicy
+    apiVersion: security.devops.gov.bc.ca/v1alpha1
+    metadata:
+      name: service-account-to-k8s-api-${ENV_NAME}
+    spec:
+      description: Allow service accounts to run builds/deployments.
+      source:
+        - - $namespace=${PROJECT_NAMESPACE}-${ENV_NAME}
+          - "@app:k8s:serviceaccountname=builder"
+        - - $namespace=${PROJECT_NAMESPACE}-${ENV_NAME}
+          - "@app:k8s:serviceaccountname=deployer"
+      destination:
+        - - int:network=internal-cluster-api-endpoint
+        - - ext:network=any

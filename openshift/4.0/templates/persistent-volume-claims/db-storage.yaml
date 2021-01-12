@@ -16,7 +16,7 @@ objects:
       pv.kubernetes.io/bind-completed: "yes"
       pv.kubernetes.io/bound-by-controller: "yes"
       volume.beta.kubernetes.io/storage-provisioner: csi.trident.netapp.io
-      description: Database storiage volume
+      description: Database storage volume
     finalizers:
       - kubernetes.io/pvc-protection
     spec:
@@ -24,7 +24,7 @@ objects:
         - ReadWriteMany
       resources:
         requests:
-          storage: 3Gi
+          storage: ${VOLUME_CAPACITY}
       storageClassName: netapp-file-standard
       volumeMode: Filesystem
 parameters:
@@ -32,7 +32,7 @@ parameters:
     displayName: "The Object Name"
     description: "The name of the storage object."
     required: true
-    value: "pims-db-storage"
+    value: "pims-db-file-storage"
   - name: PROJECT_NAMESPACE
     displayName: "OpenShift Project Namespace"
     description: "The namespace of the OpenShift project containing the application."
@@ -47,3 +47,8 @@ parameters:
     displayName: "Unique Instance Idendification"
     description: "A unique identifier to allow for multiple instances (i.e. '-01')."
     value: ""
+  - name: VOLUME_CAPACITY
+    displayName: Persistent Volume Capacity
+    description: Volume space available for data, e.g. 512Mi, 2Gi.
+    required: true
+    value: "5Gi"

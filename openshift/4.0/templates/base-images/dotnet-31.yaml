@@ -1,0 +1,61 @@
+kind: Template
+apiVersion: v1
+metadata:
+  name: dotnet-image-streams
+  annotations:
+    openshift.io/display-name: .NET Core 3.1 base images
+    description: ImageStream definitions for .NET Core 3.1 on RHEL 7
+parameters:
+  - name: IMAGE_NAME
+    displayName: The name of this base image
+    required: true
+    value: dotnet-31-rhel7
+objects:
+  - kind: ImageStream
+    apiVersion: v1
+    metadata:
+      name: ${IMAGE_NAME}
+      annotations:
+        openshift.io/display-name: .NET Core
+    spec:
+      tags:
+        - name: "3.1"
+          annotations:
+            openshift.io/display-name: .NET Core 3.1
+            description: >-
+              Build and run .NET Core 3.1 applications on RHEL 7. For more information
+              about using this builder image, including OpenShift considerations, see
+              https://github.com/redhat-developer/s2i-dotnetcore/tree/master/3.1/build/README.md
+            iconClass: icon-dotnet
+            tags: "builder,.net,dotnet,dotnetcore,rh-dotnet31"
+            supports: "dotnet:3.1,dotnet"
+            version: "3.1"
+          from:
+            kind: DockerImage
+            name: "registry.redhat.io/dotnet/dotnet-31-rhel7:3.1"
+          referencePolicy:
+            type: Local
+  - kind: ImageStream
+    apiVersion: v1
+    metadata:
+      name: ${IMAGE_NAME}-runtime
+      annotations:
+        openshift.io/display-name: .NET Core Runtime
+    spec:
+      tags:
+        - name: "3.1"
+          annotations:
+            openshift.io/display-name: .NET Core 3.1
+            description: >-
+              Run .NET Core applications on RHEL 7. For more information
+              about using this image, including OpenShift considerations, see
+              https://github.com/redhat-developer/s2i-dotnetcore/tree/master/3.1/runtime/README.md
+            iconClass: icon-dotnet
+            tags: "runtime,.net-runtime,dotnet-runtime,dotnetcore-runtime"
+            supports: "dotnet-runtime"
+            version: "3.1"
+          from:
+            kind: DockerImage
+            name: "registry.redhat.io/dotnet/dotnet-31-runtime-rhel7:3.1"
+          referencePolicy:
+            type: Local
