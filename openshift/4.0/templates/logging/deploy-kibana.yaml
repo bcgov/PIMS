@@ -6,6 +6,44 @@ metadata:
     openshift.io/display-name: PIMS Kibana
     description: Deployment template for Kibana
     tags: kibana,logging
+parameters:
+  - name: APP_NAME
+    displayName: "App Name"
+    description: "The name of the application (grouped)."
+    required: true
+    value: "kibana"
+  - name: ROLE_NAME
+    displayName: "Component Role Name"
+    description: "The name of the application component role (e.g web, api, database)."
+    required: true
+    value: "logging"
+  - name: ENV_NAME
+    displayName: "Environment name"
+    description: "The name for this environment [dev, test, prod, tools]"
+    required: true
+    value: "tools"
+  - name: PROJECT_NAMESPACE
+    displayName: "OpenShift Project Namespace"
+    description: "The namespace of the OpenShift project containing the application."
+    required: true
+    value: "354028"
+
+  - name: KIBANA_DOMAIN
+    displayName: "Kibana Domain Name"
+    description: "Kibana domain name to access pod"
+    required: true
+    value: "pims-kibana.apps.silver.devops.gov.bc.ca"
+
+  - name: ELASTICSEARCH_DOMAIN
+    displayName: "Elasticsearch Service Domain Name"
+    description: "Elasticsearch service Domain Name"
+    required: true
+    value: "pims-elastic.apps.silver.devops.gov.bc.ca"
+  - name: ELASTIC_PASSWORD
+    displayName: "Elasticsearch Password"
+    description: "Elastic search bootstrap password"
+    required: true
+    # Regrettably this appears to be required as I am not certain how to extract the password from a secret for the yaml configuration.
 objects:
   # Kibana configuration settings.
   - apiVersion: v1
@@ -114,41 +152,3 @@ objects:
             - name: config
               configMap:
                 name: ${APP_NAME}-config
-parameters:
-  - name: APP_NAME
-    displayName: "App Name"
-    description: "The name of the application (grouped)."
-    required: true
-    value: "kibana"
-  - name: ROLE_NAME
-    displayName: "Component Role Name"
-    description: "The name of the application component role (e.g web, api, database)."
-    required: true
-    value: "logging"
-  - name: ENV_NAME
-    displayName: "Environment name"
-    description: "The name for this environment [dev, test, prod, tools]"
-    required: true
-    value: "tools"
-  - name: PROJECT_NAMESPACE
-    displayName: "OpenShift Project Namespace"
-    description: "The namespace of the OpenShift project containing the application."
-    required: true
-    value: "354028"
-
-  - name: KIBANA_DOMAIN
-    displayName: "Kibana Domain Name"
-    description: "Kibana domain name to access pod"
-    required: true
-    value: "pims-kibana.apps.silver.devops.gov.bc.ca"
-
-  - name: ELASTICSEARCH_DOMAIN
-    displayName: "Elasticsearch Service Domain Name"
-    description: "Elasticsearch service Domain Name"
-    required: true
-    value: "pims-elastic.apps.silver.devops.gov.bc.ca"
-  - name: ELASTIC_PASSWORD
-    displayName: "Elasticsearch Password"
-    description: "Elastic search bootstrap password"
-    required: true
-    # Regrettably this appears to be required as I am not certain how to extract the password from a secret for the yaml configuration.

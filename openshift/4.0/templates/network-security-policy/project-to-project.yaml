@@ -1,19 +1,6 @@
 kind: Template
 apiVersion: v1
 name: project-to-project-config
-objects:
-  - kind: NetworkSecurityPolicy
-    apiVersion: security.devops.gov.bc.ca/v1alpha1
-    metadata:
-      name: project-to-project-permit-${SOURCE_ENV_NAME}-${DESTINATION_ENV_NAME}
-    spec:
-      description: Allow project to communicate to another project.
-      source:
-        - - $namespace=${PROJECT_NAMESPACE}-${DESTINATION_ENV_NAME}
-        - - $namespace=${PROJECT_NAMESPACE}-${SOURCE_ENV_NAME}
-      destination:
-        - - $namespace=${PROJECT_NAMESPACE}-${SOURCE_ENV_NAME}
-        - - $namespace=${PROJECT_NAMESPACE}-${DESTINATION_ENV_NAME}
 parameters:
   - name: PROJECT_NAMESPACE
     displayName: "OpenShift Project Namespace"
@@ -30,3 +17,16 @@ parameters:
     description: "The name for destination environment [dev, test, prod, tools]"
     required: true
     value: "dev"
+objects:
+  - kind: NetworkSecurityPolicy
+    apiVersion: security.devops.gov.bc.ca/v1alpha1
+    metadata:
+      name: project-to-project-permit-${SOURCE_ENV_NAME}-${DESTINATION_ENV_NAME}
+    spec:
+      description: Allow project to communicate to another project.
+      source:
+        - - $namespace=${PROJECT_NAMESPACE}-${DESTINATION_ENV_NAME}
+        - - $namespace=${PROJECT_NAMESPACE}-${SOURCE_ENV_NAME}
+      destination:
+        - - $namespace=${PROJECT_NAMESPACE}-${SOURCE_ENV_NAME}
+        - - $namespace=${PROJECT_NAMESPACE}-${DESTINATION_ENV_NAME}

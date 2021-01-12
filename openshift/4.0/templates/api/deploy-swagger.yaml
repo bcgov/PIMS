@@ -6,30 +6,6 @@ metadata:
     openshift.io/display-name: .NET Core 3.1 Deployment Template
     description: Deployment template for a .NET Core 3.1 application.
     tags: pims-api,netcore,api
-objects:
-  # The route for Swagger.
-  - kind: Route
-    apiVersion: v1
-    metadata:
-      name: ${APP_NAME}-${ROLE_NAME}-${ENV_NAME}${INSTANCE}-docs
-      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
-      labels:
-        name: ${APP_NAME}-${ROLE_NAME}-${ENV_NAME}${INSTANCE}-docs
-        app: ${APP_NAME}
-        role: ${ROLE_NAME}
-        env: ${ENV_NAME}
-    spec:
-      host: ${APP_DOMAIN}
-      path: ${API_DOCS_PATH}
-      to:
-        kind: Service
-        name: ${APP_NAME}-${ROLE_NAME}-${ENV_NAME}${INSTANCE}
-        weight: 100
-      port:
-        targetPort: ${APP_PORT}-tcp
-      tls:
-        insecureEdgeTerminationPolicy: Redirect
-        termination: edge
 parameters:
   - name: APP_NAME
     displayName: "App Name"
@@ -68,3 +44,27 @@ parameters:
     displayName: "API Swagger URL path"
     description: "The URL path to the swagger documentation"
     value: "/api-docs"
+objects:
+  # The route for Swagger.
+  - kind: Route
+    apiVersion: v1
+    metadata:
+      name: ${APP_NAME}-${ROLE_NAME}-${ENV_NAME}${INSTANCE}-docs
+      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
+      labels:
+        name: ${APP_NAME}-${ROLE_NAME}-${ENV_NAME}${INSTANCE}-docs
+        app: ${APP_NAME}
+        role: ${ROLE_NAME}
+        env: ${ENV_NAME}
+    spec:
+      host: ${APP_DOMAIN}
+      path: ${API_DOCS_PATH}
+      to:
+        kind: Service
+        name: ${APP_NAME}-${ROLE_NAME}-${ENV_NAME}${INSTANCE}
+        weight: 100
+      port:
+        targetPort: ${APP_PORT}-tcp
+      tls:
+        insecureEdgeTerminationPolicy: Redirect
+        termination: edge

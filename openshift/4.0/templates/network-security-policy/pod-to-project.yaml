@@ -1,22 +1,6 @@
 kind: Template
 apiVersion: v1
 name: pod-to-project-config
-objects:
-  - kind: NetworkSecurityPolicy
-    apiVersion: security.devops.gov.bc.ca/v1alpha1
-    metadata:
-      name: pod-to-project-permit-${NAME}-${SOURCE_ROLE}
-    spec:
-      description: Allow project to communicate to other pod(s) in another project.
-      source:
-        - - app=${NAME}
-          - role=${SOURCE_ROLE}
-          - env=${ENV_NAME}
-      destination:
-        - - app=${NAME}
-          - role=${DESTINATION_ROLE}
-          - env=${ENV_NAME}
-          - $namespace=${PROJECT_NAMESPACE}-${ENV_NAME}
 parameters:
   - name: NAME
     displayName: "The Application Name"
@@ -43,3 +27,19 @@ parameters:
     description: "The destination role/pod that will receive a request from the source role/pod."
     required: true
     value: "api"
+objects:
+  - kind: NetworkSecurityPolicy
+    apiVersion: security.devops.gov.bc.ca/v1alpha1
+    metadata:
+      name: pod-to-project-permit-${NAME}-${SOURCE_ROLE}
+    spec:
+      description: Allow project to communicate to other pod(s) in another project.
+      source:
+        - - app=${NAME}
+          - role=${SOURCE_ROLE}
+          - env=${ENV_NAME}
+      destination:
+        - - app=${NAME}
+          - role=${DESTINATION_ROLE}
+          - env=${ENV_NAME}
+          - $namespace=${PROJECT_NAMESPACE}-${ENV_NAME}

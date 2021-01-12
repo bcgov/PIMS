@@ -9,66 +9,6 @@ metadata:
     openshift.io/display-name: Microsoft SQL Server
     description: Relational database management system developed by Microsoft.
     tags: pims-db
-objects:
-  # The final build image.
-  - kind: ImageStream
-    apiVersion: v1
-    metadata:
-      name: ${APP_NAME}-${ROLE_NAME}
-      annotations:
-        description: Keeps track of changes in the database image
-      labels:
-        app: ${APP_NAME}
-        role: ${ROLE_NAME}
-  # The build config that will be created will be named for the branch you created it for.
-  - kind: BuildConfig
-    apiVersion: v1
-    metadata:
-      name: ${APP_NAME}-${ROLE_NAME}-${GIT_REF}
-      annotations:
-        description: Defines how to build the database image
-      labels:
-        name: ${APP_NAME}-${ROLE_NAME}-${GIT_REF}
-        app: ${APP_NAME}
-        role: ${ROLE_NAME}
-        branch: ${GIT_REF}
-    spec:
-      completionDeadlineSeconds: 1800
-      triggers:
-        - type: ImageChange
-        - type: ConfigChange
-      runPolicy: Serial
-      source:
-        git:
-          uri: ${GIT_URL}
-          ref: ${GIT_REF}
-        contextDir: ${CONTEXT_DIR}
-        dockerfile: |-
-          FROM ${MSSQL_IMAGE}:${MSSQL_IMAGE_TAG}
-          RUN mkdir -p /usr/config
-          WORKDIR /usr/config
-          COPY . /usr/config
-          USER root
-          RUN chmod -R g=u /etc/passwd
-          USER 10001
-          ENTRYPOINT ["./entrypoint.sh"]
-          EXPOSE 1433
-          VOLUME ["/var/opt/mssql"]
-      strategy:
-        dockerStrategy:
-          from:
-            kind: ImageStreamTag
-            namespace: "${PROJECT_NAMESPACE}-tools"
-            name: ${MSSQL_IMAGE}:${MSSQL_IMAGE_TAG}
-        type: Docker
-      output:
-        to:
-          kind: ImageStreamTag
-          name: ${APP_NAME}-${ROLE_NAME}:${OUTPUT_IMAGE_TAG}
-      resources:
-        limits:
-          cpu: ${CPU_LIMIT}
-          memory: ${MEMORY_LIMIT}
 parameters:
   - name: APP_NAME
     displayName: "App Name"
@@ -129,3 +69,63 @@ parameters:
     description: "Maximum amount of memory the container can use."
     required: true
     value: "6Gi"
+objects:
+  # The final build image.
+  - kind: ImageStream
+    apiVersion: v1
+    metadata:
+      name: ${APP_NAME}-${ROLE_NAME}
+      annotations:
+        description: Keeps track of changes in the database image
+      labels:
+        app: ${APP_NAME}
+        role: ${ROLE_NAME}
+  # The build config that will be created will be named for the branch you created it for.
+  - kind: BuildConfig
+    apiVersion: v1
+    metadata:
+      name: ${APP_NAME}-${ROLE_NAME}-${GIT_REF}
+      annotations:
+        description: Defines how to build the database image
+      labels:
+        name: ${APP_NAME}-${ROLE_NAME}-${GIT_REF}
+        app: ${APP_NAME}
+        role: ${ROLE_NAME}
+        branch: ${GIT_REF}
+    spec:
+      completionDeadlineSeconds: 1800
+      triggers:
+        - type: ImageChange
+        - type: ConfigChange
+      runPolicy: Serial
+      source:
+        git:
+          uri: ${GIT_URL}
+          ref: ${GIT_REF}
+        contextDir: ${CONTEXT_DIR}
+        dockerfile: |-
+          FROM ${MSSQL_IMAGE}:${MSSQL_IMAGE_TAG}
+          RUN mkdir -p /usr/config
+          WORKDIR /usr/config
+          COPY . /usr/config
+          USER root
+          RUN chmod -R g=u /etc/passwd
+          USER 10001
+          ENTRYPOINT ["./entrypoint.sh"]
+          EXPOSE 1433
+          VOLUME ["/var/opt/mssql"]
+      strategy:
+        dockerStrategy:
+          from:
+            kind: ImageStreamTag
+            namespace: "${PROJECT_NAMESPACE}-tools"
+            name: ${MSSQL_IMAGE}:${MSSQL_IMAGE_TAG}
+        type: Docker
+      output:
+        to:
+          kind: ImageStreamTag
+          name: ${APP_NAME}-${ROLE_NAME}:${OUTPUT_IMAGE_TAG}
+      resources:
+        limits:
+          cpu: ${CPU_LIMIT}
+          memory: ${MEMORY_LIMIT}

@@ -9,67 +9,6 @@ metadata:
     openshift.io/display-name: .NET Core 3.1 Build Template
     description: Build template for a .NET Core 3.1 application.
     tags: pims-api
-objects:
-  # Image stream for the built image.
-  - kind: ImageStream
-    apiVersion: v1
-    metadata:
-      name: ${APP_NAME}-${ROLE_NAME}
-      annotations:
-        description: Keeps track of changes in the application image
-      labels:
-        app: ${APP_NAME}
-        role: ${ROLE_NAME}
-
-  # The build config that will be created will be named for the branch you created it for.
-  - kind: BuildConfig
-    apiVersion: v1
-    metadata:
-      name: ${APP_NAME}-${ROLE_NAME}-${GIT_REF}
-      annotations:
-        description: Defines how to build the application
-      labels:
-        name: ${APP_NAME}-${ROLE_NAME}-${GIT_REF}
-        app: ${APP_NAME}
-        role: ${ROLE_NAME}
-        branch: ${GIT_REF}
-    spec:
-      triggers:
-        - type: ImageChange
-        - type: ConfigChange
-      runPolicy: Serial
-      source:
-        type: Git
-        git:
-          uri: ${GIT_URL}
-          ref: ${GIT_REF}
-        contextDir: ${SOURCE_CONTEXT_DIR}
-      strategy:
-        type: Source
-        sourceStrategy:
-          from:
-            kind: ImageStreamTag
-            name: ${DOTNET_BUILDER_IMAGE}:${DOTNET_BUILDER_TAG}
-          # scripts: https://raw.githubusercontent.com/bcgov/PIMS/dev/.s2i/bin
-          env:
-            - name: DOTNET_CONFIGURATION
-              value: ${DOTNET_CONFIGURATION}
-            - name: DOTNET_STARTUP_PROJECT
-              value: ${DOTNET_STARTUP_PROJECT}
-            - name: DOTNET_PUBLISH_READYTORUN
-              value: ${DOTNET_PUBLISH_READYTORUN}
-            - name: DOTNET_TEST_PROJECTS
-              value: ${DOTNET_TEST_PROJECTS}
-            - name: DOTNET_TOOLS
-              value: ${DOTNET_TOOLS}
-      output:
-        to:
-          kind: ImageStreamTag
-          name: ${APP_NAME}-${ROLE_NAME}:${OUTPUT_IMAGE_TAG}
-      resources:
-        limits:
-          cpu: ${CPU_LIMIT}
-          memory: ${MEMORY_LIMIT}
 parameters:
   - name: APP_NAME
     displayName: App Name
@@ -149,3 +88,64 @@ parameters:
     description: Maximum amount of memory the container can use.
     required: true
     value: 6Gi
+objects:
+  # Image stream for the built image.
+  - kind: ImageStream
+    apiVersion: v1
+    metadata:
+      name: ${APP_NAME}-${ROLE_NAME}
+      annotations:
+        description: Keeps track of changes in the application image
+      labels:
+        app: ${APP_NAME}
+        role: ${ROLE_NAME}
+
+  # The build config that will be created and be named for the branch you created it for.
+  - kind: BuildConfig
+    apiVersion: v1
+    metadata:
+      name: ${APP_NAME}-${ROLE_NAME}-${GIT_REF}
+      annotations:
+        description: Defines how to build the application
+      labels:
+        name: ${APP_NAME}-${ROLE_NAME}-${GIT_REF}
+        app: ${APP_NAME}
+        role: ${ROLE_NAME}
+        branch: ${GIT_REF}
+    spec:
+      triggers:
+        - type: ImageChange
+        - type: ConfigChange
+      runPolicy: Serial
+      source:
+        type: Git
+        git:
+          uri: ${GIT_URL}
+          ref: ${GIT_REF}
+        contextDir: ${SOURCE_CONTEXT_DIR}
+      strategy:
+        type: Source
+        sourceStrategy:
+          from:
+            kind: ImageStreamTag
+            name: ${DOTNET_BUILDER_IMAGE}:${DOTNET_BUILDER_TAG}
+          # scripts: https://raw.githubusercontent.com/bcgov/PIMS/dev/.s2i/bin
+          env:
+            - name: DOTNET_CONFIGURATION
+              value: ${DOTNET_CONFIGURATION}
+            - name: DOTNET_STARTUP_PROJECT
+              value: ${DOTNET_STARTUP_PROJECT}
+            - name: DOTNET_PUBLISH_READYTORUN
+              value: ${DOTNET_PUBLISH_READYTORUN}
+            - name: DOTNET_TEST_PROJECTS
+              value: ${DOTNET_TEST_PROJECTS}
+            - name: DOTNET_TOOLS
+              value: ${DOTNET_TOOLS}
+      output:
+        to:
+          kind: ImageStreamTag
+          name: ${APP_NAME}-${ROLE_NAME}:${OUTPUT_IMAGE_TAG}
+      resources:
+        limits:
+          cpu: ${CPU_LIMIT}
+          memory: ${MEMORY_LIMIT}
