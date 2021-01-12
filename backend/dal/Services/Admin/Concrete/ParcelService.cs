@@ -409,8 +409,16 @@ namespace Pims.Dal.Services.Admin
             parcel.ThrowIfNotAllowedToEdit(nameof(parcel), this.User, new[] { Permissions.SystemAdmin, Permissions.AgencyAdmin });
 
             var originalParcel = this.Context.Parcels.Find(parcel.Id) ?? throw new KeyNotFoundException();
+            this.Context.Entry(originalParcel).Collection(p => p.Buildings).Load();
+            this.Context.Entry(originalParcel).Collection(p => p.Evaluations).Load();
+            this.Context.Entry(originalParcel).Collection(p => p.Fiscals).Load();
+            this.Context.Entry(originalParcel).Collection(p => p.Projects).Load();
 
             this.Context.Entry(originalParcel).CurrentValues.SetValues(parcel);
+            originalParcel.Buildings.Clear();
+            originalParcel.Evaluations.Clear();
+            originalParcel.Fiscals.Clear();
+            originalParcel.Projects.Clear();
             base.Remove(originalParcel);
         }
         #endregion
