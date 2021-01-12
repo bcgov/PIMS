@@ -6,6 +6,105 @@ metadata:
     openshift.io/display-name: Microsoft SQL Server
     description: Relational database management system developed by Microsoft.
     tags: pims,db
+parameters:
+  - name: APP_NAME
+    displayName: "App Name"
+    description: "The name of the application (grouped)."
+    required: true
+    value: "pims"
+  - name: ROLE_NAME
+    displayName: "Component Role Name"
+    description: "The name of the application component role [app, api, database]"
+    required: true
+    value: "database"
+  - name: ENV_NAME
+    displayName: "Environment name"
+    description: "The name for this environment [dev, test, prod]"
+    required: true
+    value: "dev"
+  - name: PROJECT_NAMESPACE
+    displayName: "OpenShift Project Namespace"
+    description: "The namespace of the OpenShift project containing the application."
+    required: true
+    value: "354028"
+  - name: INSTANCE
+    displayName: "Unique Identifier"
+    description: "A unique identifier to allow for multiple instances (i.e. '-01')."
+    value: ""
+
+  - name: IMAGE_TAG
+    displayName: "Source Image Tag"
+    description: "The tag given to the built image that will be deployed."
+    required: true
+    value: "latest"
+
+  - name: MSSQL_PID
+    displayName: "The Microsoft SQL Server Edition"
+    description: "The edition of the database to run [Developer|Express|Standard|Enterprise|EnterpriseCore]"
+    required: true
+    value: "Developer"
+  - name: MSSQL_SA_PASSWORD
+    displayName: "Microsoft SQL Server Password"
+    description: "Microsoft SQL Server sa password"
+    from: '[\w]{5}_[\w]{15}_1aB!'
+    generate: expression
+  - name: MSSQL_PORT
+    displayName: "The Database Port Number"
+    description: "The Port that will be openned to the database (defaults to 1433)."
+    required: true
+    value: "1433"
+  - name: TIMEZONE
+    displayName: "Timezone"
+    description: "The Timezone to run the database in (i.e. America/Los_Angeles)."
+    required: true
+    value: "America/Los_Angeles"
+  - name: DB_NAME
+    displayName: "Database Name"
+    description: "The name of the PIMS database that will be created."
+    required: true
+    value: "pims"
+  - name: DB_USER
+    displayName: "Database Username"
+    description: "The username to access the database from PIMS that will be created."
+    required: true
+    value: "admin"
+  - name: DB_PASSWORD
+    displayName: "Microsoft SQL Server Password"
+    description: "Microsoft SQL Server sa password."
+    from: '[\w]{12}_1Ab!'
+    generate: expression
+
+  - name: PVC_NAME
+    displayName: "Persistent Volume Claim Name"
+    description: "The name of the persistent volume claim (pvc) that the database will use."
+    value: "pims-db-file-storage"
+    required: true
+
+  # - name: "BACKUP_VOLUME_NAME"
+  #   displayName: "Backup Volume Name"
+  #   description: The name of the persistent volume used to store the backups.  Please note, when using the recommended nfs-backup storage class the name of the pvc MUST be taken from the manually provisioned claim; nfs-backup storage MUST be provisioned manually.
+  #   required: true
+
+  - name: CPU_REQUEST
+    displayName: "Requested Minimum Resources CPU Limit"
+    description: "The requested minimum resources CPU limit (in cores) for this build."
+    required: true
+    value: "100m"
+  - name: CPU_LIMIT
+    displayName: "Resources CPU Limit"
+    description: "The resources CPU limit (in cores) for this build."
+    required: true
+    value: "2"
+  - name: MEMORY_REQUEST
+    displayName: "Requested Minimum Memory Limit"
+    description: "Minimum requested amount of memory the container can use."
+    required: true
+    value: "500Mi"
+  - name: MEMORY_LIMIT
+    displayName: "Memory Limit"
+    description: "Maximum amount of memory the container can use."
+    required: true
+    value: "4Gi"
 objects:
   # Add a resource secret for the database password.  By default this is generated.
   - kind: Secret
@@ -91,6 +190,9 @@ objects:
             - name: mssql-data
               persistentVolumeClaim:
                 claimName: ${PVC_NAME}${INSTANCE}
+            # - name: backup
+            #   persistentVolumeClaim:
+            #     claimName: "${BACKUP_VOLUME_NAME}"
           containers:
             - name: ${APP_NAME}-${ROLE_NAME}-${ENV_NAME}${INSTANCE}
               image: ""
@@ -131,97 +233,3 @@ objects:
               volumeMounts:
                 - mountPath: /var/opt/mssql
                   name: mssql-data
-parameters:
-  - name: APP_NAME
-    displayName: "App Name"
-    description: "The name of the application (grouped)."
-    required: true
-    value: "pims"
-  - name: ROLE_NAME
-    displayName: "Component Role Name"
-    description: "The name of the application component role [app, api, database]"
-    required: true
-    value: "database"
-  - name: ENV_NAME
-    displayName: "Environment name"
-    description: "The name for this environment [dev, test, prod]"
-    required: true
-    value: "dev"
-  - name: PROJECT_NAMESPACE
-    displayName: "OpenShift Project Namespace"
-    description: "The namespace of the OpenShift project containing the application."
-    required: true
-    value: "354028"
-  - name: INSTANCE
-    displayName: "Unique Identifier"
-    description: "A unique identifier to allow for multiple instances (i.e. '-01')."
-    value: ""
-
-  - name: IMAGE_TAG
-    displayName: "Source Image Tag"
-    description: "The tag given to the built image that will be deployed."
-    required: true
-    value: "latest"
-
-  - name: MSSQL_PID
-    displayName: "The Microsoft SQL Server Edition"
-    description: "The edition of the database to run [Developer|Express|Standard|Enterprise|EnterpriseCore]"
-    required: true
-    value: "Developer"
-  - name: MSSQL_SA_PASSWORD
-    displayName: "Microsoft SQL Server Password"
-    description: "Microsoft SQL Server sa password"
-    from: '[\w]{5}_[\w]{15}_1aB!'
-    generate: expression
-  - name: MSSQL_PORT
-    displayName: "The Database Port Number"
-    description: "The Port that will be openned to the database (defaults to 1433)."
-    required: true
-    value: "1433"
-  - name: TIMEZONE
-    displayName: "Timezone"
-    description: "The Timezone to run the database in (i.e. America/Los_Angeles)."
-    required: true
-    value: "America/Los_Angeles"
-  - name: DB_NAME
-    displayName: "Database Name"
-    description: "The name of the PIMS database that will be created."
-    required: true
-    value: "pims"
-  - name: DB_USER
-    displayName: "Database Username"
-    description: "The username to access the database from PIMS that will be created."
-    required: true
-    value: "admin"
-  - name: DB_PASSWORD
-    displayName: "Microsoft SQL Server Password"
-    description: "Microsoft SQL Server sa password."
-    from: '[\w]{12}_1Ab!'
-    generate: expression
-
-  - name: PVC_NAME
-    displayName: "Persistent Volume Claim Name"
-    description: "The name of the persistent volume claim (pvc) that the database will use."
-    value: "pims-db-file-storage"
-    required: true
-
-  - name: CPU_REQUEST
-    displayName: "Requested Minimum Resources CPU Limit"
-    description: "The requested minimum resources CPU limit (in cores) for this build."
-    required: true
-    value: "100m"
-  - name: CPU_LIMIT
-    displayName: "Resources CPU Limit"
-    description: "The resources CPU limit (in cores) for this build."
-    required: true
-    value: "2"
-  - name: MEMORY_REQUEST
-    displayName: "Requested Minimum Memory Limit"
-    description: "Minimum requested amount of memory the container can use."
-    required: true
-    value: "500Mi"
-  - name: MEMORY_LIMIT
-    displayName: "Memory Limit"
-    description: "Maximum amount of memory the container can use."
-    required: true
-    value: "4Gi"

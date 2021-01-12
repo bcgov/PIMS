@@ -2,24 +2,6 @@ kind: Template
 apiVersion: v1
 metadata:
   name: docker-respository-config
-objects:
-  # Add a resource secret to connect to remote Docker repository.
-  - kind: Secret
-    apiVersion: v1
-    metadata:
-      name: docker-authentication-${ENV_NAME}-secret
-      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
-      annotations:
-        description: "Docker repository configuration"
-      labels:
-        name: docker-authentication-${ENV_NAME}-secret
-        env: ${ENV_NAME}
-    type: Opaque
-    stringData:
-      docker-server: ${DOCKER_SERVER}
-      docker-username: ${DOCKER_USERNAME}
-      docker-password: ${DOCKER_PASSWORD}
-      docker-email: ${DOCKER_EMAIL}
 parameters:
   - name: PROJECT_NAMESPACE
     displayName: "OpenShift Project Namespace"
@@ -49,3 +31,21 @@ parameters:
     displayName: "Docker Email"
     description: "The email address for your docker account (not required)"
     value: ""
+objects:
+  # Add a resource secret to connect to remote Docker repository.
+  - kind: Secret
+    apiVersion: v1
+    metadata:
+      name: docker-authentication-${ENV_NAME}-secret
+      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
+      annotations:
+        description: "Docker repository configuration"
+      labels:
+        name: docker-authentication-${ENV_NAME}-secret
+        env: ${ENV_NAME}
+    type: Opaque
+    stringData:
+      docker-server: ${DOCKER_SERVER}
+      docker-username: ${DOCKER_USERNAME}
+      docker-password: ${DOCKER_PASSWORD}
+      docker-email: ${DOCKER_EMAIL}
