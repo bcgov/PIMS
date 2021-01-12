@@ -281,7 +281,7 @@ pipeline {
 
           dir(DEVOPS_DIRECTORY) {
             sh "RELEASE_TAG=${RELEASE_VERSION} ./player.sh deploy api ${DESTINATION} -apply"
-            sh "RELEASE_TAG=${RELEASE_VERSION} ./layer.sh deploy app ${DESTINATION} -apply"
+            sh "RELEASE_TAG=${RELEASE_VERSION} ./player.sh deploy app ${DESTINATION} -apply"
           }
         }
       }
