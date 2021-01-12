@@ -1,6 +1,17 @@
 kind: Template
 apiVersion: v1
 name: pims-tools-network-security-policy
+parameters:
+  - name: PROJECT_NAMESPACE
+    displayName: "OpenShift Project Namespace"
+    description: "The namespace of the OpenShift project containing the application."
+    required: true
+    value: "354028"
+  - name: ENV_NAME
+    displayName: "Environment name"
+    description: "The name for this environment [dev, test, prod, tools]"
+    required: true
+    value: "tools"
 objects:
   # Allow project namespace to communicate with k8s cluster api.
   - kind: NetworkSecurityPolicy
@@ -43,14 +54,3 @@ objects:
       destination:
         - - int:network=internal-cluster-api-endpoint
         - - ext:network=any
-parameters:
-  - name: PROJECT_NAMESPACE
-    displayName: "OpenShift Project Namespace"
-    description: "The namespace of the OpenShift project containing the application."
-    required: true
-    value: "354028"
-  - name: ENV_NAME
-    displayName: "Environment name"
-    description: "The name for this environment [dev, test, prod, tools]"
-    required: true
-    value: "tools"

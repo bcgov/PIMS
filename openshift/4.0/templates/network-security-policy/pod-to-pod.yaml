@@ -1,21 +1,6 @@
 kind: Template
 apiVersion: v1
 name: pod-to-pod-config
-objects:
-  - kind: NetworkSecurityPolicy
-    apiVersion: security.devops.gov.bc.ca/v1alpha1
-    metadata:
-      name: pod-to-pod-permit-${NAME}-${SOURCE_ROLE}-${DESTINATION_ROLE}
-    spec:
-      description: Allow pod(s) to communicate to other pod(s).
-      source:
-        - - app=${NAME}
-          - role=${SOURCE_ROLE}
-          - env=${ENV_NAME}
-      destination:
-        - - app=${NAME}
-          - role=${DESTINATION_ROLE}
-          - env=${ENV_NAME}
 parameters:
   - name: NAME
     displayName: "The Application Name"
@@ -42,3 +27,18 @@ parameters:
     description: "The destination role/pod that will receive a request from the source role/pod."
     required: true
     value: "api"
+objects:
+  - kind: NetworkSecurityPolicy
+    apiVersion: security.devops.gov.bc.ca/v1alpha1
+    metadata:
+      name: pod-to-pod-permit-${NAME}-${SOURCE_ROLE}-${DESTINATION_ROLE}
+    spec:
+      description: Allow pod(s) to communicate to other pod(s).
+      source:
+        - - app=${NAME}
+          - role=${SOURCE_ROLE}
+          - env=${ENV_NAME}
+      destination:
+        - - app=${NAME}
+          - role=${DESTINATION_ROLE}
+          - env=${ENV_NAME}

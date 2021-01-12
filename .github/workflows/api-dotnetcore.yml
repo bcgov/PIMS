@@ -23,7 +23,7 @@ jobs:
         run: dotnet restore
         working-directory: ${{env.working-directory}}
       - name: Install coverlet for code coverage
-        run: dotnet tool install -g coverlet.console
+        run: dotnet tool install -g coverlet.console --version 1.7.2
         working-directory: ${{env.working-directory}}
       - name: Build
         run: dotnet build --configuration Release --no-restore

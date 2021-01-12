@@ -5,9 +5,14 @@ metadata:
   annotations:
     openshift.io/display-name: .NET Core 3.1 base images
     description: ImageStream definitions for .NET Core 3.1 on RHEL 7
+parameters:
+  - name: IMAGE_NAME
+    displayName: The name of this base image
+    required: true
+    value: dotnet-31-rhel7
 objects:
-  - apiVersion: v1
-    kind: ImageStream
+  - kind: ImageStream
+    apiVersion: v1
     metadata:
       name: ${IMAGE_NAME}
       annotations:
@@ -30,8 +35,8 @@ objects:
             name: "registry.redhat.io/dotnet/dotnet-31-rhel7:3.1"
           referencePolicy:
             type: Local
-  - apiVersion: v1
-    kind: ImageStream
+  - kind: ImageStream
+    apiVersion: v1
     metadata:
       name: ${IMAGE_NAME}-runtime
       annotations:
@@ -54,8 +59,3 @@ objects:
             name: "registry.redhat.io/dotnet/dotnet-31-runtime-rhel7:3.1"
           referencePolicy:
             type: Local
-parameters:
-  - name: IMAGE_NAME
-    displayName: The name of this base image
-    required: true
-    value: dotnet-31-rhel7
