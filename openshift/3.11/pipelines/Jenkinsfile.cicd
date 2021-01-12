@@ -189,9 +189,10 @@ pipeline {
 
               commonPipeline.runFrontendTests()
 
-              dir(DEVOPS_DIRECTORY) {
-                sh "SONAR_URL=${SONARQUBE_URL_INT} ZAP_REPORT=${WORKSPACE}/zap-output/zap-report.xml ./player.sh scan ${OC_JOB_NAME} -apply"
-              }
+              sh """
+                cd openshift
+                SONAR_URL=${SONARQUBE_URL_INT} ZAP_REPORT=${WORKSPACE}/zap-output/zap-report.xml ./3.11/player.sh scan ${OC_JOB_NAME} -apply
+              """
               echo 'Frontend lint checks and tests passed'
             }
           }
@@ -205,9 +206,10 @@ pipeline {
           agent { label 'jenkins-slave-dotnet' }
           steps {
             script {
-              dir(DEVOPS_DIRECTORY) {
-                sh "SONAR_URL=${SONARQUBE_URL_INT} ./player.sh scan-dotnet ${OC_JOB_NAME} -apply"
-              }
+              sh """
+                cd openshift
+                SONAR_URL=${SONARQUBE_URL_INT} ./3.11/player.sh scan-dotnet ${OC_JOB_NAME} -apply
+              """
               echo 'Backend tests passed'
             }
           }
@@ -230,18 +232,20 @@ pipeline {
         stage("Build Frontend") {
           steps {
             script {
-              dir(DEVOPS_DIRECTORY) {
-                sh "OC_JOB_NAME=${OC_JOB_NAME} ./player.sh build app-base -apply"
-                sh "OC_JOB_NAME=${OC_JOB_NAME} ./player.sh build app -apply"
-              }
+              sh """
+                cd openshift
+                OC_JOB_NAME=${OC_JOB_NAME} ./3.11/player.sh build app-base -apply
+                OC_JOB_NAME=${OC_JOB_NAME} ./3.11/player.sh build app -apply
+              """
             }
           }
         }
         stage("Build Backend") {
           steps {
-            dir(DEVOPS_DIRECTORY) {
-              sh "OC_JOB_NAME=${OC_JOB_NAME} ./player.sh build api -apply"
-            }
+            sh """
+              cd openshift
+              OC_JOB_NAME=${OC_JOB_NAME} ./3.11/player.sh build api -apply
+            """
           }
         }
       }
@@ -280,8 +284,8 @@ pipeline {
           }
 
           dir(DEVOPS_DIRECTORY) {
-            sh "RELEASE_TAG=${RELEASE_VERSION} ./player.sh deploy api ${DESTINATION} -apply"
-            sh "RELEASE_TAG=${RELEASE_VERSION} ./player.sh deploy app ${DESTINATION} -apply"
+            sh "RELEASE_TAG=${RELEASE_VERSION} ./3.11/player.sh deploy api ${DESTINATION} -apply"
+            sh "RELEASE_TAG=${RELEASE_VERSION} ./3.11/player.sh deploy app ${DESTINATION} -apply"
           }
         }
       }
