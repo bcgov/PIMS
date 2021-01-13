@@ -38,7 +38,7 @@ import { useLayerQuery } from './LayerPopup/hooks/useLayerQuery';
 import { saveParcelLayerData } from 'reducers/parcelLayerDataSlice';
 import useActiveFeatureLayer from '../hooks/useActiveFeatureLayer';
 import LayersControl from './LayersControl';
-import { InventoryLayer } from './InventoryLayer';
+import { defaultBounds, InventoryLayer } from './InventoryLayer';
 import { PointFeature } from '../types';
 import { IGeoSearchParams } from 'constants/API';
 import { decimalOrUndefined, floatOrUndefined } from 'utils';
@@ -120,8 +120,6 @@ const getQueryParams = (filter: IPropertyFilter): IGeoSearchParams => {
     bareLandOnly: filter.bareLandOnly,
   };
 };
-
-const defaultBounds = new LatLngBounds([60.09114547, -119.49609429], [48.78370426, -139.35937554]);
 
 /**
  * Creates a Leaflet map and by default includes a number of preconfigured layers.
@@ -309,6 +307,7 @@ const Map: React.FC<MapProps> = ({
                   whenReady={() => {
                     fitMapBounds();
                   }}
+                  minZoom={5}
                   onclick={showLocationDetails}
                   closePopupOnClick={interactive}
                   onzoomend={e => setZoom(e.sourceTarget.getZoom())}
