@@ -45,7 +45,7 @@ const initialQuery: IPropertyQueryParams = {
 };
 
 const defaultFilterValues: IPropertyFilter = {
-  searchBy: 'address',
+  searchBy: 'name',
   pid: '',
   address: '',
   administrativeArea: '',
@@ -63,18 +63,14 @@ const defaultFilterValues: IPropertyFilter = {
 
 /**
  * Get the server query
- * @param ignorePropType - Whether to ignore the PropertyTypes (for doing excel export with all values)
  * @param state - Table state
  */
-const getServerQuery = (
-  ignorePropertyType: boolean,
-  state: {
-    pageIndex: number;
-    pageSize: number;
-    filter: IPropertyFilter;
-    agencyIds: number[];
-  },
-) => {
+const getServerQuery = (state: {
+  pageIndex: number;
+  pageSize: number;
+  filter: IPropertyFilter;
+  agencyIds: number[];
+}) => {
   const {
     pageIndex,
     pageSize,
@@ -112,7 +108,7 @@ const getServerQuery = (
     maxLandArea: decimalOrUndefined(maxLotSize),
     page: pageIndex + 1,
     quantity: pageSize,
-    propertyType: ignorePropertyType ? undefined : propertyType,
+    propertyType: propertyType,
   };
   return query;
 };
@@ -129,7 +125,6 @@ const PropertyListView: React.FC = () => {
       }),
     [lookupCodes],
   );
-
   const agencies = useMemo(
     () =>
       _.filter(lookupCodes, (lookupCode: ILookupCode) => {
@@ -229,7 +224,7 @@ const PropertyListView: React.FC = () => {
       // Only update the data if this is the latest fetch
       if (agencyIds?.length > 0) {
         setData(undefined);
-        const query = getServerQuery(false, { pageIndex, pageSize, filter, agencyIds });
+        const query = getServerQuery({ pageIndex, pageSize, filter, agencyIds });
         const data = await service.getPropertyList(query, sorting);
         // The server could send back total page count.
         // For now we'll just calculate it.
@@ -252,10 +247,10 @@ const PropertyListView: React.FC = () => {
   const dispatch = useDispatch();
 
   const fetch = (accept: 'csv' | 'excel') => {
-    const query = getServerQuery(true, { pageIndex, pageSize, filter, agencyIds });
+    const query = getServerQuery({ pageIndex, pageSize, filter, agencyIds });
     return dispatch(
       download({
-        url: getPropertyReportUrl({ ...query, all: true }),
+        url: getPropertyReportUrl({ ...query, all: true, propertyType: undefined }),
         fileName: `pims-inventory.${accept === 'csv' ? 'csv' : 'xlsx'}`,
         actionType: 'properties-report',
         headers: {
