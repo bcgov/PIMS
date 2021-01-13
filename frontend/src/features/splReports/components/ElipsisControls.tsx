@@ -3,6 +3,8 @@ import { FaEllipsisH } from 'react-icons/fa';
 import { Dropdown, DropdownButton } from 'react-bootstrap';
 import { IReport } from '../interfaces';
 import './ElipsisControls.scss';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+import { Claims } from '../../../constants/';
 
 interface IElipsisControlsProps {
   /** The underlying report that this control is mapped to. */
@@ -24,6 +26,9 @@ const ElipsisControls: React.FunctionComponent<IElipsisControlsProps> = ({
   onFinal,
   onDelete,
 }) => {
+  const keycloak = useKeycloakWrapper();
+  const isSPLAdmin = keycloak.hasClaim(Claims.REPORTS_SPL_ADMIN);
+
   return (
     <DropdownButton
       id={`${report.id}-elipsis-controls`}
@@ -34,12 +39,16 @@ const ElipsisControls: React.FunctionComponent<IElipsisControlsProps> = ({
       <Dropdown.Item eventKey="1" onClick={() => onOpen(report)}>
         Open
       </Dropdown.Item>
-      <Dropdown.Item eventKey="2" onClick={() => onFinal(report)}>
-        {report.isFinal ? 'Remove Final' : 'Mark as Final'}
-      </Dropdown.Item>
-      <Dropdown.Item className="danger" eventKey="3" onClick={() => onDelete(report)}>
-        Delete
-      </Dropdown.Item>
+      {isSPLAdmin && (
+        <Dropdown.Item eventKey="2" onClick={() => onFinal(report)}>
+          {report.isFinal ? 'Remove Final' : 'Mark as Final'}
+        </Dropdown.Item>
+      )}
+      {((!isSPLAdmin && !report.isFinal) || isSPLAdmin) && (
+        <Dropdown.Item className="danger" eventKey="3" onClick={() => onDelete(report)}>
+          Delete
+        </Dropdown.Item>
+      )}
     </DropdownButton>
   );
 };
