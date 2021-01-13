@@ -131,7 +131,7 @@ const useGeocoder = ({ formikRef, fetchPimsOrLayerParcel }: IUseGeocoderProps) =
                   nameSpace || '',
                   newValues,
                 );
-                formikRef.current && formikRef.current.resetForm({ values: updatedValues });
+                formikRef.current && formikRef.current.setValues(updatedValues);
               }
             });
         }

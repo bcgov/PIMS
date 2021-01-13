@@ -9,11 +9,13 @@ import { ICluster, PointFeature } from '../types';
 import { getMarkerIcon, pointToLayer, zoomToCluster } from './mapUtils';
 import useSupercluster from '../hooks/useSupercluster';
 import { PopupView } from '../PopupView';
-import { IPropertyDetail } from 'actions/parcelsActions';
+import { IPropertyDetail, storeParcelDetail, storeBuildingDetail } from 'actions/parcelsActions';
 import SelectedPropertyMarker from './SelectedPropertyMarker/SelectedPropertyMarker';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
 import { useFilterContext } from '../providers/FIlterProvider';
 import Supercluster from 'supercluster';
+import { useDispatch } from 'react-redux';
+import { PropertyTypes } from 'actions/parcelsActions';
 
 export type PointClustererProps = {
   points: Array<PointFeature>;
@@ -47,6 +49,7 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
   const featureGroupRef = useRef<any>();
   const draftFeatureGroupRef = useRef<any>();
   const filterState = useFilterContext();
+  const dispatch = useDispatch();
 
   const [currentSelected, setCurrentSelected] = useState(selected);
 
@@ -77,8 +80,13 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
     if (!currentCluster?.properties?.cluster_id) {
       return [];
     }
-    const points = supercluster?.getLeaves(currentCluster?.properties?.cluster_id, Infinity) ?? [];
-    return points.map(p => p.properties.id);
+    try {
+      const points =
+        supercluster?.getLeaves(currentCluster?.properties?.cluster_id, Infinity) ?? [];
+      return points.map(p => p.properties.id);
+    } catch (error) {
+      return [];
+    }
   }, [currentCluster, supercluster]);
 
   //Optionally create a new pin to represent the active property if not already displayed in a spiderfied cluster.
@@ -151,7 +159,7 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
 
       if (groupBounds.isValid() && group.getBounds().isValid() && isDraft) {
         filterState.setChanged(false);
-        map.fitBounds(group.getBounds(), { maxZoom: 14 });
+        map.fitBounds(group.getBounds(), { maxZoom: 16 });
       }
     }
   }, [draftFeatureGroupRef, map, draftPoints]);
@@ -298,6 +306,12 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
                 selected.parcelDetail!.longitude as number,
               ]}
               map={leaflet.map}
+              onpopupclose={() => {
+                selected.propertyTypeId === PropertyTypes.BUILDING &&
+                  dispatch(storeBuildingDetail(null));
+                selected.propertyTypeId === PropertyTypes.PARCEL &&
+                  dispatch(storeParcelDetail(null));
+              }}
             >
               <Popup autoPan={false}>
                 <PopupView

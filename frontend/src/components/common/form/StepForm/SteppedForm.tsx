@@ -1,5 +1,5 @@
 import { Persist } from 'components/common/FormikPersist';
-import { Form, Formik, FormikConfig, setIn } from 'formik';
+import { Form, Formik, FormikConfig, setIn, getIn, useFormikContext } from 'formik';
 import * as React from 'react';
 import { StepperFormProvider } from './context';
 import { StepperField } from './StepperField';
@@ -11,6 +11,11 @@ import { FaWindowClose } from 'react-icons/fa';
 import TooltipWrapper from 'components/common/TooltipWrapper';
 import { useState } from 'react';
 import GenericModal from 'components/common/GenericModal';
+import { toast } from 'react-toastify';
+import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
+import _ from 'lodash';
+import { IStep } from 'components/common/Stepper';
+import { ILeasedLand } from 'features/mapSideBar/SidebarContents/AssociatedLandForm';
 
 const TabbedForm = styled(Form)`
   .hideTabs {
@@ -89,58 +94,39 @@ export const SteppedForm = function<T extends object = {}>({
   getTabs,
   onAddTab,
   onRemoveTab,
+  onChangeTab,
   tabLineHeader,
   ...rest
 }: ISteppedFormProps<T> & FormikConfig<ISteppedFormValues<T>>) {
   const [tabToDeleteId, setTabToDeleteId] = useState<number | undefined>();
-  const [steps] = useState(formSteps);
+  const [steps, setSteps] = useState([...formSteps]);
   if (rest.persistable && !rest.persistProps) {
     throw new Error('SteppedForm: "persistProps" are required when "persistable" is true');
   }
 
+  let stepperValues = { ...initialValues };
   if (!getTabs) {
-    initialValues.tabs = [{ activeStep: initialValues.activeStep }];
-  }
-  if (!initialValues.tabs && !!getTabs) {
-    initialValues = setIn(
-      initialValues,
+    stepperValues.tabs = [{ activeStep: stepperValues.activeStep }];
+  } else {
+    stepperValues = setIn(
+      stepperValues,
       'tabs',
-      getTabs(initialValues.data).map(t => ({ activeStep: 0, name: t })),
+      getTabs(stepperValues.data).map(t => ({ activeStep: 0, name: t })),
     );
   }
-
-  const tabTitle = (title: string, index: number) => {
-    return (
-      <>
-        {title.length < 20 ? <p>{title}</p> : <abbr title={title}>{title.substr(0, 20)}</abbr>}
-        <TooltipWrapper
-          toolTipId="remove-associated-parcel"
-          toolTip="Remove this associated parcel"
-        >
-          <FaWindowClose
-            size={15}
-            onClick={(e: any) => {
-              e.preventDefault();
-              e.stopPropagation();
-              setTabToDeleteId(index);
-            }}
-          ></FaWindowClose>
-        </TooltipWrapper>
-      </>
-    );
-  };
   const getFormikTabs = getTabs ? getTabs : () => ['Tab 1'];
 
   return (
     <Formik<ISteppedFormValues<T>>
-      initialValues={initialValues}
+      initialValues={stepperValues}
       onSubmit={onSubmit}
       validate={validate}
       innerRef={formikRef}
       {...rest}
     >
-      {({ values, setFieldValue, submitForm }) => (
+      {({ values, setFieldValue, validateForm, initialValues: initalFormValues }) => (
         <>
+          <StepChanger setSteps={setSteps} onChangeTab={onChangeTab}></StepChanger>
           <TabbedForm>
             {!!getTabs && tabLineHeader && <TabLineHeader>{tabLineHeader}</TabLineHeader>}
             <Tabs
@@ -150,12 +136,17 @@ export const SteppedForm = function<T extends object = {}>({
               onSelect={(tab: string) => {
                 if (tab !== '') {
                   setFieldValue('activeTab', +tab);
+                  onChangeTab && setSteps(onChangeTab(+tab));
                 }
               }}
               unmountOnExit
             >
               {getFormikTabs(values.data).map((tab, index) => (
-                <Tab title={tabTitle(tab, index)} eventKey={index} key={`stepped-tab-${index}`}>
+                <Tab
+                  title={tabTitle(tab, index, setTabToDeleteId)}
+                  eventKey={index}
+                  key={`stepped-tab-${index}`}
+                >
                   <StepperFormProvider steps={steps} tabs={getFormikTabs(values.data)}>
                     <>
                       <StepperField name={`tabs.${values.activeTab}.activeStep`} steps={steps} />
@@ -182,32 +173,44 @@ export const SteppedForm = function<T extends object = {}>({
                       ]);
                       //set the current tab to the newly added tab.
                       setFieldValue('activeTab', values?.tabs?.length ?? 0);
+                      onChangeTab && setSteps(_.cloneDeep(onChangeTab(values?.tabs?.length ?? 0)));
                     }}
                   />
                 }
               ></Tab>
             </Tabs>
+            {getFormikTabs(values.data).length === 0 && (
+              <p>No Associated Land. Press the '+' icon to add Associated Land</p>
+            )}
             <GenericModal
               display={tabToDeleteId !== undefined}
               setDisplay={() => setTabToDeleteId(undefined)}
               title="Really Remove Associated Parcel?"
               message="Click OK to remove the association between this parcel and the current building."
-              handleOk={() => {
+              handleOk={async () => {
+                const hasLeasedLand = !!getIn(
+                  initalFormValues.data,
+                  `leasedLandMetadata.${tabToDeleteId}`,
+                );
+                if (hasLeasedLand) {
+                  const errors = await validateForm();
+                  if (Object.keys(errors).length !== 0) {
+                    toast.error(
+                      'Unable to remove associated land, as one or more other associated land(s) is in error. Please correct all errors and then retry.',
+                      { autoClose: 10000 },
+                    );
+                    return;
+                  }
+                }
                 if (values.tabs && onRemoveTab && tabToDeleteId !== undefined) {
-                  //remove the underlying data representing the tab
-                  onRemoveTab(values.data, tabToDeleteId);
                   //remove the tab itself.
-                  const tabs = [...values.tabs];
-                  tabs.splice(tabToDeleteId, 1);
-                  setFieldValue('tabs', tabs);
+                  values.tabs.splice(tabToDeleteId, 1);
                   //If the user deletes the last tab, set the active tab to the previous tab.
-                  if (values.activeTab >= values.tabs.length - 1) {
-                    setFieldValue('activeTab', values.tabs.length - 2);
+                  if (values.tabs.length > 0) {
+                    values.activeTab = values.tabs.length - 1;
                   }
-                  //if the user deletes ALL associated land, save that to the database.
-                  if (tabs.length === 0) {
-                    submitForm();
-                  }
+                  //remove the underlying data representing the tab
+                  onRemoveTab({ ...values }, tabToDeleteId, hasLeasedLand);
                 }
               }}
               cancelButtonText="Cancel"
@@ -218,6 +221,45 @@ export const SteppedForm = function<T extends object = {}>({
       )}
     </Formik>
   );
+};
+
+const tabTitle = (title: string, index: number, setTabToDeleteId: (index: number) => void) => {
+  return (
+    <>
+      {title.length < 20 ? <p>{title}</p> : <abbr title={title}>{title.substr(0, 20)}</abbr>}
+      <TooltipWrapper toolTipId="remove-associated-parcel" toolTip="Remove this associated parcel">
+        <FaWindowClose
+          size={15}
+          onClick={(e: any) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setTabToDeleteId(index);
+          }}
+        ></FaWindowClose>
+      </TooltipWrapper>
+    </>
+  );
+};
+
+/** Simple Formik component that fetches new steps whenever the leasedLandMetadata changes */
+const StepChanger = ({
+  setSteps,
+  onChangeTab,
+}: {
+  setSteps: any;
+  onChangeTab?: (tabIndex: number) => IStep[];
+}) => {
+  const { values } = useFormikContext<any>();
+  let currentLeasedLandMetadata: ILeasedLand | undefined;
+  if (values.data) {
+    currentLeasedLandMetadata = getIn(values.data.leasedLandMetadata, values.activeTab);
+  }
+  useDeepCompareEffect(() => {
+    if (!!onChangeTab && currentLeasedLandMetadata) {
+      setSteps(onChangeTab(values.activeTab));
+    }
+  }, [currentLeasedLandMetadata, setSteps]);
+  return null;
 };
 
 export default SteppedForm;

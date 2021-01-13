@@ -25,6 +25,7 @@ import {
   LandIdentificationSchema,
   LandUsageSchema,
   ValuationSchema,
+  LandSchema,
 } from 'utils/YupSchema';
 import { useDispatch } from 'react-redux';
 import { useBuildingApi } from '../hooks/useBuildingApi';
@@ -32,6 +33,9 @@ import _ from 'lodash';
 import { IFormParcel } from '../containers/MapSideBarContainer';
 import { useState } from 'react';
 import { defaultBuildingValues } from './BuildingForm';
+import { stringToNull } from 'utils';
+import { IStep } from 'components/common/Stepper';
+import useDraftMarkerSynchronizer from 'features/properties/hooks/useDraftMarkerSynchronizer';
 
 const Container = styled.div`
   background-color: #fff;
@@ -129,7 +133,8 @@ export const valuesToApiFormat = (
   agencyId?: number,
 ): IAssociatedLand => {
   const apiValues = { ...values };
-  apiValues.data.leaseExpiry = undefined;
+  apiValues.data.leaseExpiry = stringToNull(apiValues.data.leaseExpiry);
+  apiValues.data.buildingTenancyUpdatedOn = stringToNull(apiValues.data.buildingTenancyUpdatedOn);
   const ownedParcels: IParcel[] = getOwnedParcels(
     values.data.leasedLandMetadata,
     values.data.parcels,
@@ -154,11 +159,13 @@ export const valuesToApiFormat = (
  */
 const getOwnedParcels = (leasedLand: ILeasedLand[], parcels: IParcel[]): IParcel[] => {
   const ownedParcels: IParcel[] = [];
-  leasedLand.forEach((ll: ILeasedLand, index: number) => {
-    if (ll?.type === LeasedLand.owned && parcels[index]) {
-      const associatedParcel = parcels[index];
-      ll.parcelId = associatedParcel.id === '' ? 0 : associatedParcel.id;
-      ownedParcels.push(parcels[index]);
+  parcels.forEach((parcel: IParcel, index: number) => {
+    const ll = getIn(leasedLand, index.toString());
+    if (ll?.type !== LeasedLand.other) {
+      if (ll !== undefined) {
+        ll.parcelId = parcel.id === '' ? 0 : parcel.id;
+      }
+      ownedParcels.push(parcel);
     }
   });
   return ownedParcels;
@@ -181,6 +188,7 @@ const Form: React.FC<IAssociatedLandForm> = ({
   const agencies = getOptionsByType(API.AGENCY_CODE_SET_NAME);
   const classifications = getOptionsByType(API.PROPERTY_CLASSIFICATION_CODE_SET_NAME);
   const currentParcelNameSpace = `data.parcels.${stepper.currentTab}`;
+  useDraftMarkerSynchronizer(`data.parcels.${stepper.currentTab}`);
   useParcelLayerData({
     formikRef,
     nameSpace: currentParcelNameSpace,
@@ -195,8 +203,9 @@ const Form: React.FC<IAssociatedLandForm> = ({
             <LandOwnershipForm nameSpace={`data.leasedLandMetadata.${stepper.currentTab}`} />
           </div>
         );
-      case AssociatedLandSteps.IDENTIFICATION:
-        return (
+      case AssociatedLandSteps.IDENTIFICATION_OR_REVIEW:
+        return getIn(formikProps.values, `data.leasedLandMetadata.${stepper.currentTab}.type`) ===
+          LeasedLand.owned ? (
           <div className="parcel-identification">
             <ParcelIdentificationForm
               nameSpace={currentParcelNameSpace}
@@ -210,6 +219,14 @@ const Form: React.FC<IAssociatedLandForm> = ({
               isViewOrUpdate={false}
             />
           </div>
+        ) : (
+          <AssociatedLandReviewPage
+            nameSpace={`data.parcels`}
+            classifications={classifications}
+            agencies={agencies}
+            handlePidChange={handlePidChange}
+            handlePinChange={handlePinChange}
+          />
         );
       case AssociatedLandSteps.USAGE:
         return (
@@ -247,31 +264,22 @@ const Form: React.FC<IAssociatedLandForm> = ({
       <FormFooter>
         <InventoryPolicy />
         <FillRemainingSpace />
-        {stepper.current !== AssociatedLandSteps.REVIEW && (
+        {!stepper.isSubmit(stepper.current) && (
           <Button
             type="button"
             onClick={() => {
-              if (
-                getIn(formikProps.values, `data.leasedLandMetadata.${stepper.currentTab}.type`) ===
-                LeasedLand.other
-              ) {
-                stepper.gotoStep(AssociatedLandSteps.REVIEW, true);
-              } else {
-                stepper.gotoNext();
-              }
+              stepper.gotoNext();
             }}
             size="sm"
           >
             Continue
           </Button>
         )}
-        {formikProps.dirty &&
-          formikProps.isValid &&
-          stepper.current === AssociatedLandSteps.REVIEW && (
-            <Button size="sm" type="submit">
-              Submit
-            </Button>
-          )}
+        {formikProps.dirty && formikProps.isValid && stepper.isSubmit(stepper.current) && (
+          <Button size="sm" type="submit">
+            Submit
+          </Button>
+        )}
       </FormFooter>
     </FormContentWrapper>
   );
@@ -289,7 +297,7 @@ interface IAssociatedLandForm {
   /** help with formatting of the pin */
   handlePinChange: (pin: string) => void;
   /** The initial building values to add associated land to */
-  initialValues: IBuilding;
+  initialValues: IAssociatedLand;
   /** Whether or not this user has property admin priviledges */
   isPropertyAdmin: boolean;
 }
@@ -298,6 +306,82 @@ interface IAssociatedLandParentForm extends IAssociatedLandForm {
   /** signal the parent that the associated land process has been completed. */
   setAssociatedLandComplete: (show: boolean) => void;
 }
+
+const getSteps = (formikRef: any, tab: number) => {
+  let leasedLandMetadata: ILeasedLand | undefined = undefined;
+  if (formikRef.current) {
+    const { values } = formikRef.current;
+    leasedLandMetadata = getIn(values.data.leasedLandMetadata, tab.toString());
+  }
+  const ownedSteps: IStep[] = [
+    {
+      route: 'identification',
+      title: 'Identification',
+      completed: false,
+      canGoToStep: !!leasedLandMetadata && leasedLandMetadata.type === LeasedLand.owned,
+      validation: {
+        schema: LandIdentificationSchema,
+        nameSpace: (tabIndex: number) => `data.parcels.${tabIndex}`,
+      },
+    },
+    {
+      route: 'usage',
+      title: 'Usage',
+      completed: false,
+      canGoToStep: !!leasedLandMetadata && leasedLandMetadata.type === LeasedLand.owned,
+      validation: {
+        schema: LandUsageSchema,
+        nameSpace: (tabIndex: number) => `data.parcels.${tabIndex}`,
+      },
+    },
+    {
+      route: 'valuation',
+      title: 'Valuation',
+      completed: false,
+      canGoToStep: !!leasedLandMetadata && leasedLandMetadata.type === LeasedLand.owned,
+      validation: {
+        schema: ValuationSchema,
+        nameSpace: (tabIndex: number) => `data.parcels.${tabIndex}`,
+      },
+    },
+  ];
+  return [
+    {
+      route: 'ownership',
+      title: 'Land Ownership',
+      completed: false,
+      canGoToStep: true,
+      validation: {
+        schema: AssociatedLandOwnershipSchema,
+        nameSpace: (tabIndex: number) => `data.leasedLandMetadata.${tabIndex}`,
+      },
+    },
+    ...(leasedLandMetadata?.type !== LeasedLand.other ? ownedSteps : []),
+    {
+      route: 'review',
+      title: 'Review & Submit',
+      completed: false,
+      canGoToStep: !!leasedLandMetadata,
+      validation: {
+        schema: AssociatedLandSchema,
+        nameSpace: (tabIndex: number) => `data`,
+      },
+    },
+  ];
+};
+
+const getParcels = (initialValues: IAssociatedLand) => {
+  const parcels: IParcel[] = [];
+  let parcelIndex = 0;
+  initialValues.leasedLandMetadata?.forEach(llm => {
+    if (llm.type === LeasedLand.owned && parcelIndex < initialValues.parcels.length) {
+      parcels.push(initialValues.parcels[parcelIndex++]);
+    } else {
+      parcels.push(getInitialLandValues());
+    }
+  });
+  return parcels;
+};
 
 /**
  * A component used for land associated to a building.
@@ -308,19 +392,22 @@ const AssociatedLandForm: React.FC<IAssociatedLandParentForm> = (
   props: IAssociatedLandParentForm,
 ) => {
   const keycloak = useKeycloakWrapper();
-  const { createBuilding, updateBuilding } = useBuildingApi();
+  const { updateBuilding } = useBuildingApi();
   const dispatch = useDispatch();
   const [numParcels, setNumParcels] = useState(1);
   const [progress, setProgress] = useState(0);
   const [initialValues, setInitialValues] = useState({
     activeStep: 0,
     activeTab: 0,
-    data: { ...getInitialValues(), ...props.initialValues },
+    data: {
+      ...getInitialValues(),
+      ...props.initialValues,
+      parcels: getParcels(props.initialValues as any),
+    },
   });
   const api = useApi();
 
   initialValues.data.agencyId = keycloak.agencyId ?? '';
-  const isViewOrUpdate = !!(props.initialValues as any).leasedLandMetadata;
 
   /**
    * Combines yup validation with manual validation of financial data for performance reasons.
@@ -330,53 +417,56 @@ const AssociatedLandForm: React.FC<IAssociatedLandParentForm> = (
    */
   const handleValidate = async (values: ISteppedFormValues<IAssociatedLand>) => {
     let validationValues = _.cloneDeep(values);
+
     const ownedParcels: IParcel[] = getOwnedParcels(
       validationValues.data.leasedLandMetadata,
       values.data.parcels,
     );
 
-    validationValues.data.parcels = ownedParcels;
-    const yupErrors: any = AssociatedLandSchema.validate(validationValues, {
-      abortEarly: false,
-    }).then(
-      () => ({}),
-      (err: any) => yupToFormErrors(err),
+    let errors = {};
+    await Promise.all(
+      ownedParcels.map(async (p: any) => {
+        const index = values.data.parcels.indexOf(p);
+        const yupErrors: any = await LandSchema.validate(p, {
+          abortEarly: false,
+        }).then(
+          () => ({}),
+          (err: any) => yupToFormErrors(err),
+        );
+        if (Object.keys(yupErrors).length > 0) {
+          errors = setIn(errors, `data.parcels.${index}`, yupErrors);
+        }
+
+        let pidDuplicated = false;
+        if (p.pid && getIn(initialValues.data, `parcels.${index}.pid`) !== p.pid && !p.id) {
+          pidDuplicated = !(await isPidAvailable(p));
+        }
+
+        let pinDuplicated = false;
+        if (
+          p.pin &&
+          getIn(initialValues.data, `parcels.${index}.pin`) !== p.pin &&
+          p.pin.toString().length < 10 &&
+          !p.id
+        ) {
+          pinDuplicated = !(await isPinAvailable(p));
+        }
+
+        let parcelErrors = getIn(errors, `parcels.${index}`) || {};
+        if (!parcelErrors) {
+          setIn(errors, `parcels.${index}`, parcelErrors);
+        }
+        if (pidDuplicated) {
+          parcelErrors = { ...parcelErrors, pid: 'This PID is already in use.' };
+        }
+        if (pinDuplicated) {
+          parcelErrors = { ...parcelErrors, pin: 'This PIN is already in use.' };
+        }
+        if (Object.keys(parcelErrors).length) {
+          errors = setIn(errors, `data.parcels.${index}`, parcelErrors);
+        }
+      }),
     );
-    let errors = await yupErrors;
-    await ownedParcels.forEach(async (p: any, index: number) => {
-      let pidDuplicated = false;
-      if (
-        p.pid &&
-        (getIn(initialValues.data, `parcels.${index}.pid`) !== p.pid ||
-          !getIn(initialValues.data, `parcels.${index}.id`))
-      ) {
-        pidDuplicated = !(await isPidAvailable(p));
-      }
-
-      let pinDuplicated = false;
-      if (
-        p.pin &&
-        ((getIn(initialValues.data, `parcels.${index}.pin`) !== p.pin &&
-          p.pin.toString().length < 10) ||
-          !getIn(initialValues.data, `parcels.${index}.id`))
-      ) {
-        pinDuplicated = !(await isPinAvailable(p));
-      }
-
-      let parcelErrors = getIn(errors, `parcels.${index}`) || {};
-      if (!parcelErrors) {
-        setIn(errors, `parcels.${index}`, parcelErrors);
-      }
-      if (pidDuplicated) {
-        parcelErrors = { ...parcelErrors, pid: 'This PID is already in use.' };
-      }
-      if (pinDuplicated) {
-        parcelErrors = { ...parcelErrors, pin: 'This PIN is already in use.' };
-      }
-      if (Object.keys(parcelErrors).length) {
-        errors = setIn(errors, `data.parcels.${index}`, parcelErrors);
-      }
-    });
     return Promise.resolve(errors);
   };
 
@@ -389,6 +479,28 @@ const AssociatedLandForm: React.FC<IAssociatedLandParentForm> = (
     const response = await api.isPinAvailable(values.id, values.pin);
     return response?.available;
   };
+
+  const submit = async (newValues: ISteppedFormValues<IAssociatedLand>, isSubmit = false) => {
+    const { resetForm, setSubmitting } = props.formikRef.current;
+    const apiValues = valuesToApiFormat(_.cloneDeep(newValues), keycloak.agencyId);
+    try {
+      const building = await updateBuilding(apiValues)(dispatch);
+      const actualBuilding = { ...building, parcels: getParcels(building) };
+      if (isSubmit) {
+        props.setAssociatedLandComplete(true);
+      }
+      const updatedValues = { ...newValues, data: actualBuilding };
+      resetForm({
+        values: updatedValues,
+      });
+    } catch (error) {
+    } finally {
+      setSubmitting(false);
+      //TODO: remove any drafts for updated buildings as saving associated land also saves the building, which invalidates any drafts.
+      window.localStorage.removeItem('updated-building');
+    }
+  };
+  const maxProgress = 15;
 
   const renderPreForm = (): React.ReactNode => {
     return (
@@ -412,6 +524,11 @@ const AssociatedLandForm: React.FC<IAssociatedLandParentForm> = (
             <p>2</p>
             <Button
               onClick={() => {
+                const parcels = [...Array(numParcels)].map(n => ({
+                  ...getInitialLandValues(),
+                  agencyId: keycloak.agencyId,
+                }));
+                setInitialValues(setIn(initialValues, 'data.parcels', parcels));
                 const incrementProgress = () =>
                   setTimeout(() => {
                     let currentProgess = 0;
@@ -420,14 +537,8 @@ const AssociatedLandForm: React.FC<IAssociatedLandParentForm> = (
                       return ++p;
                     });
                     //use 15 to get the progress bar to show as complete for a half second before continuing.
-                    if (currentProgess < 15) {
+                    if (currentProgess < maxProgress) {
                       incrementProgress();
-                    } else {
-                      const parcels = [...Array(numParcels)].map(n => ({
-                        ...getInitialLandValues(),
-                        agencyId: keycloak.agencyId,
-                      }));
-                      setInitialValues(setIn(initialValues, 'data.parcels', parcels));
                     }
                   }, 100);
                 incrementProgress();
@@ -448,63 +559,12 @@ const AssociatedLandForm: React.FC<IAssociatedLandParentForm> = (
 
   return (
     <Container className="landForm">
-      {!initialValues?.data?.parcels?.length ? (
+      {!props.initialValues?.leasedLandMetadata?.length && progress < maxProgress ? (
         renderPreForm()
       ) : (
         <SteppedForm<IAssociatedLand>
           // Provide the steps
-          steps={[
-            {
-              route: 'ownership',
-              title: 'Land Ownership',
-              completed: false,
-              canGoToStep: true,
-              validation: {
-                schema: AssociatedLandOwnershipSchema,
-                nameSpace: (tabIndex: number) => `data.leasedLandMetadata.${tabIndex}`,
-              },
-            },
-            {
-              route: 'identification',
-              title: 'Identification',
-              completed: false,
-              canGoToStep: isViewOrUpdate,
-              validation: {
-                schema: LandIdentificationSchema,
-                nameSpace: (tabIndex: number) => `data.parcels.${tabIndex}`,
-              },
-            },
-            {
-              route: 'usage',
-              title: 'Usage',
-              completed: false,
-              canGoToStep: isViewOrUpdate,
-              validation: {
-                schema: LandUsageSchema,
-                nameSpace: (tabIndex: number) => `data.parcels.${tabIndex}`,
-              },
-            },
-            {
-              route: 'valuation',
-              title: 'Valuation',
-              completed: false,
-              canGoToStep: isViewOrUpdate,
-              validation: {
-                schema: ValuationSchema,
-                nameSpace: (tabIndex: number) => `data.parcels.${tabIndex}`,
-              },
-            },
-            {
-              route: 'review',
-              title: 'Review & Submit',
-              completed: false,
-              canGoToStep: isViewOrUpdate,
-              validation: {
-                schema: AssociatedLandSchema,
-                nameSpace: (tabIndex: number) => `data`,
-              },
-            },
-          ]}
+          steps={getSteps(props.formikRef, 0)}
           getTabs={(values: IAssociatedLand) => {
             return values.parcels.map((p: any, index: number) => {
               return p.name?.length ? p.name : `Parcel ${index + 1}`;
@@ -518,34 +578,49 @@ const AssociatedLandForm: React.FC<IAssociatedLandParentForm> = (
           }}
           onAddTab={(values: IAssociatedLand) => {
             if (values.parcels !== undefined) {
-              values.parcels.push(getInitialLandValues());
+              props.formikRef.current.setFieldValue('data.parcels', [
+                ...values.parcels,
+                getInitialLandValues(),
+              ]);
             }
           }}
-          onRemoveTab={(values: IAssociatedLand, tabIndex: number) => {
-            if (values?.parcels.length > tabIndex) {
-              values.parcels.splice(tabIndex, 1);
+          onRemoveTab={(
+            formValues: ISteppedFormValues<IAssociatedLand>,
+            tabIndex: number,
+            shouldSubmit: boolean,
+          ) => {
+            if (formValues?.data?.parcels.length > tabIndex) {
+              const { setValues } = props.formikRef.current;
+              const newValues = {
+                ...formValues,
+                data: {
+                  ...formValues.data,
+                  parcels: [
+                    ...formValues.data.parcels.slice(0, tabIndex),
+                    ...formValues.data.parcels.slice(tabIndex + 1),
+                  ],
+                  leasedLandMetadata: [
+                    ...formValues.data.leasedLandMetadata.slice(0, tabIndex),
+                    ...formValues.data.leasedLandMetadata.slice(tabIndex + 1),
+                  ],
+                },
+              };
+
+              if (shouldSubmit) {
+                submit(newValues);
+              } else {
+                setValues(newValues);
+              }
             }
+          }}
+          onChangeTab={(tab: number) => {
+            return getSteps(props.formikRef, tab);
           }}
           initialValues={initialValues}
           validate={handleValidate}
           formikRef={props.formikRef}
           onSubmit={async (values, actions) => {
-            const apiValues = valuesToApiFormat(_.cloneDeep(values), keycloak.agencyId);
-            try {
-              let land;
-              if (!values.data.id) {
-                land = await createBuilding(apiValues)(dispatch);
-              } else {
-                land = await updateBuilding(apiValues)(dispatch);
-              }
-              actions.resetForm({ values: { ...values, data: land } });
-              if (apiValues.parcels.length > 0) {
-                props.setAssociatedLandComplete(true);
-              }
-            } catch (error) {
-            } finally {
-              actions.setSubmitting(false);
-            }
+            submit(values, true);
           }}
           tabLineHeader={'Parcels: '}
         >

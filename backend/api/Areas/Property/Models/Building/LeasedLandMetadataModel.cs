@@ -20,7 +20,7 @@ namespace Pims.Api.Areas.Property.Models.Building
         /// <summary>
         /// get/set - the lease type
         /// </summary>
-        public int type { get; set; }
+        public int Type { get; set; }
         #endregion
     }
 }

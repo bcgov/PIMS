@@ -42,7 +42,7 @@ import {
   BuildingInformationSchema,
 } from 'utils/YupSchema';
 import { AssociatedLandListForm } from './subforms/AssociatedLandListForm';
-import { emptyStringToNull, stringToNull } from 'utils';
+import { stringToNull } from 'utils';
 import useParcelLayerData from 'features/properties/hooks/useParcelLayerData';
 
 const Container = styled.div`
@@ -126,7 +126,7 @@ const Form: React.FC<IBuildingForm> = ({
   formikRef,
 }) => {
   const stepper = useFormStepper();
-  useDraftMarkerSynchronizer();
+  useDraftMarkerSynchronizer('data');
   const formikProps = useFormikContext<ISteppedFormValues<IFormBuilding>>();
   useParcelLayerData({
     formikRef,

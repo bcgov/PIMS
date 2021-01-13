@@ -24,6 +24,7 @@ import { LeasedLand } from 'actions/parcelsActions';
 import { formatFiscalYear } from 'utils';
 import { ParentSelect } from 'components/common/form/ParentSelect';
 import styled from 'styled-components';
+import { LandSchema } from 'utils/YupSchema';
 
 interface IReviewProps {
   nameSpace?: string;
@@ -98,6 +99,19 @@ export const AssociatedLandReviewPage: React.FC<any> = (props: IReviewProps) => 
   );
 
   const getParcelContents = (index: number) => {
+    const leasedLandMetadataType = getIn(
+      formikProps.values.data,
+      `leasedLandMetadata.${index}.type`,
+    );
+    const isParcelValid =
+      leasedLandMetadataType === LeasedLand.other ||
+      (leasedLandMetadataType === LeasedLand.owned &&
+        LandSchema.isValidSync(getIn(formikProps.values.data, `parcels.${index}`)));
+    const parcelEditInfo = {
+      identification: editInfo.identification && isParcelValid,
+      usage: editInfo.usage && isParcelValid,
+      valuation: editInfo.valuation && isParcelValid,
+    };
     const projectNumber = getIn(formikProps.values, withNameSpace('projectNumber', index));
     if (getIn(formikProps.values.data, `leasedLandMetadata.${index}.type`) === LeasedLand.other) {
       return <OtherParcel index={index} />;
@@ -122,7 +136,7 @@ export const AssociatedLandReviewPage: React.FC<any> = (props: IReviewProps) => 
                         onClick={() =>
                           setEditInfo({
                             ...defaultEditValues,
-                            identification: !editInfo.identification,
+                            identification: isParcelValid && !parcelEditInfo.identification,
                           })
                         }
                       />
@@ -137,13 +151,13 @@ export const AssociatedLandReviewPage: React.FC<any> = (props: IReviewProps) => 
                       field={withNameSpace('agencyId', index)}
                       options={props.agencies}
                       filterBy={['code', 'label', 'parent']}
-                      disabled={editInfo.identification}
+                      disabled={parcelEditInfo.identification}
                     />
                   </Row>
                   <Row className="content-item">
                     <Label>Land Name</Label>
                     <Input
-                      disabled={editInfo.identification}
+                      disabled={parcelEditInfo.identification}
                       field={withNameSpace('name', index)}
                     />
                   </Row>
@@ -151,7 +165,7 @@ export const AssociatedLandReviewPage: React.FC<any> = (props: IReviewProps) => 
                     <Label>Description</Label>
                     <TextArea
                       fast={true}
-                      disabled={editInfo.identification}
+                      disabled={parcelEditInfo.identification}
                       field={withNameSpace('description', index)}
                     />
                   </Row>
@@ -159,7 +173,7 @@ export const AssociatedLandReviewPage: React.FC<any> = (props: IReviewProps) => 
                     <Label>Legal Description</Label>
                     <TextArea
                       fast={true}
-                      disabled={editInfo.identification}
+                      disabled={parcelEditInfo.identification}
                       field={withNameSpace('landLegalDescription', index)}
                       required={true}
                     />
@@ -168,7 +182,7 @@ export const AssociatedLandReviewPage: React.FC<any> = (props: IReviewProps) => 
                   <AddressForm
                     onGeocoderChange={noop}
                     {...formikProps}
-                    disabled={editInfo.identification}
+                    disabled={parcelEditInfo.identification}
                     nameSpace={withNameSpace('address', index)}
                   />
                 </Col>
@@ -180,7 +194,7 @@ export const AssociatedLandReviewPage: React.FC<any> = (props: IReviewProps) => 
                       required={true}
                       displayErrorTooltips
                       className="input-small"
-                      disabled={editInfo.identification}
+                      disabled={parcelEditInfo.identification}
                       field={
                         getIn(formikProps.values, withNameSpace('pid', index))
                           ? withNameSpace('pid', index)
@@ -194,7 +208,7 @@ export const AssociatedLandReviewPage: React.FC<any> = (props: IReviewProps) => 
                     <InputGroup
                       displayErrorTooltips
                       fast={true}
-                      disabled={editInfo.identification}
+                      disabled={parcelEditInfo.identification}
                       type="number"
                       field={withNameSpace('landArea', index)}
                       formikProps={formikProps}
@@ -219,7 +233,7 @@ export const AssociatedLandReviewPage: React.FC<any> = (props: IReviewProps) => 
                       field={withNameSpace('isSensitive', index)}
                       radioLabelOne="Yes"
                       radioLabelTwo="No"
-                      disabled={editInfo.identification}
+                      disabled={parcelEditInfo.identification}
                     />
                   </Row>
                 </Col>
@@ -240,7 +254,10 @@ export const AssociatedLandReviewPage: React.FC<any> = (props: IReviewProps) => 
                         size={20}
                         className="edit"
                         onClick={() =>
-                          setEditInfo({ ...defaultEditValues, usage: !editInfo.usage })
+                          setEditInfo({
+                            ...defaultEditValues,
+                            usage: isParcelValid && !parcelEditInfo.usage,
+                          })
                         }
                       />
                     )}
@@ -249,7 +266,7 @@ export const AssociatedLandReviewPage: React.FC<any> = (props: IReviewProps) => 
                     <Label>Classification</Label>
                     <FastSelect
                       formikProps={formikProps}
-                      disabled={editInfo.usage}
+                      disabled={parcelEditInfo.usage}
                       type="number"
                       placeholder="Must Select One"
                       field={withNameSpace('classificationId', index)}
@@ -261,7 +278,7 @@ export const AssociatedLandReviewPage: React.FC<any> = (props: IReviewProps) => 
                     <Label>Current Zoning</Label>
                     <FastInput
                       formikProps={formikProps}
-                      disabled={editInfo.usage}
+                      disabled={parcelEditInfo.usage}
                       field={withNameSpace('zoning', index)}
                     />
                   </Row>
@@ -269,7 +286,7 @@ export const AssociatedLandReviewPage: React.FC<any> = (props: IReviewProps) => 
                     <Label>Potential Zoning</Label>
                     <FastInput
                       formikProps={formikProps}
-                      disabled={editInfo.usage}
+                      disabled={parcelEditInfo.usage}
                       field={withNameSpace('zoningPotential', index)}
                     />
                   </Row>
@@ -289,7 +306,10 @@ export const AssociatedLandReviewPage: React.FC<any> = (props: IReviewProps) => 
                         size={20}
                         className="edit"
                         onClick={() =>
-                          setEditInfo({ ...defaultEditValues, valuation: !editInfo.valuation })
+                          setEditInfo({
+                            ...defaultEditValues,
+                            valuation: isParcelValid && !parcelEditInfo.valuation,
+                          })
                         }
                       />
                     )}
@@ -299,7 +319,7 @@ export const AssociatedLandReviewPage: React.FC<any> = (props: IReviewProps) => 
                     <FastCurrencyInput
                       formikProps={formikProps}
                       field={withNameSpace('financials.0.netbook.value', index)}
-                      disabled={editInfo.valuation}
+                      disabled={parcelEditInfo.valuation}
                     />
                     <p
                       style={{
@@ -323,7 +343,7 @@ export const AssociatedLandReviewPage: React.FC<any> = (props: IReviewProps) => 
                     <FastCurrencyInput
                       formikProps={formikProps}
                       field={withNameSpace('financials.0.assessed.value', index)}
-                      disabled={editInfo.valuation}
+                      disabled={parcelEditInfo.valuation}
                     />
                     <FastInput
                       formikProps={formikProps}
@@ -337,7 +357,7 @@ export const AssociatedLandReviewPage: React.FC<any> = (props: IReviewProps) => 
                     <FastCurrencyInput
                       formikProps={formikProps}
                       field={withNameSpace('financials.0.improvements.value', index)}
-                      disabled={editInfo.valuation}
+                      disabled={parcelEditInfo.valuation}
                     />
                     <FastInput
                       formikProps={formikProps}

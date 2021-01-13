@@ -169,6 +169,7 @@ export const FastSelect: React.FC<FastSelectProps> = memo(
             isValid={false}
             value={getIn(values, field)}
             multiple={multiple}
+            onBlur={handleBlur}
             onChange={
               multiple
                 ? handleMultipleChange
@@ -178,7 +179,6 @@ export const FastSelect: React.FC<FastSelectProps> = memo(
                       value = parseInt(value);
                     }
                     setFieldValue(field, value);
-                    setFieldTouched(field);
                   }
             }
             type={type}

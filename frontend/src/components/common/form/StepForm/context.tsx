@@ -164,7 +164,7 @@ export const StepperFormProvider: React.FC<IStepperFormProviderProps> = ({
   };
 
   const isSubmit = (index: number) => {
-    return index > 0 && index === steps.length - 1;
+    return index >= 0 && index === steps.length - 1;
   };
 
   return (

@@ -123,7 +123,7 @@
     "test": "react-scripts test --env=jsdom-fourteen --ci --watchAll=false --runInBand",
     "test:watch": "react-scripts test --env=jsdom-fourteen",
     "coverage": "react-scripts test --ci --coverage --testResultsProcessor jest-sonar-reporter --env=jsdom-fourteen --watchAll=false --runInBand",
-    "update-snapshots": "react-scripts test -- --updateSnapshot",
+    "update-snapshots": "react-scripts test --env=jsdom-fourteen --updateSnapshot",
     "eject": "react-scripts eject",
     "lint": "eslint src/ --ext .jsx,.js,.ts,.tsx --max-warnings 0",
     "lint:fix": "npm run lint -- --fix",

@@ -1,6 +1,6 @@
 import './LandOwnershipForm.scss';
 
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { Container, Row } from 'react-bootstrap';
 import { RadioButtonGroup } from 'components/common/form/RadioButtonGroup';
 import { LeasedLand } from 'actions/parcelsActions';
@@ -12,7 +12,7 @@ interface IIdentificationProps {
 }
 
 export const LandOwnershipForm: React.FC<IIdentificationProps> = ({ nameSpace }) => {
-  const { values } = useFormikContext();
+  const { values, setFieldValue } = useFormikContext<any>();
   const withNameSpace: Function = useCallback(
     (fieldName: string) => {
       return nameSpace ? `${nameSpace}.${fieldName}` : fieldName;
@@ -20,6 +20,11 @@ export const LandOwnershipForm: React.FC<IIdentificationProps> = ({ nameSpace })
     [nameSpace],
   );
   const leasedLandType = getIn(values, withNameSpace('type'));
+  useEffect(() => {
+    if (leasedLandType) {
+      setFieldValue(`tabs.${values.activeTab}.completedSteps`, []);
+    }
+  }, [leasedLandType, setFieldValue, values.activeTab]);
 
   const renderRadioOption = (radioValue: LeasedLand) => {
     switch (+radioValue) {

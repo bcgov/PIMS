@@ -2,7 +2,7 @@ import * as React from 'react';
 import { PropertyTypes, storeDraftParcelsAction } from 'actions/parcelsActions';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
 import debounce from 'lodash/debounce';
-import { useFormikContext } from 'formik';
+import { useFormikContext, getIn } from 'formik';
 import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import _ from 'lodash';
@@ -13,12 +13,16 @@ import { PointFeature } from 'components/maps/types';
  * Get a list of draft markers from the current form values.
  * As long as a parcel/building has both a lat and a lng it will be returned by this method.
  * @param values the current form values to extract lat/lngs from.
+ * @param initialValues the original form values, used to exclude unchanged lat/lngs
+ * @param nameSpace path within above objects to extract lat/lngs
  */
-const getDraftMarkers = (values: any, initialValues: any) => {
+const getDraftMarkers = (values: any, initialValues: any, nameSpace: string) => {
+  values = getIn(values, nameSpace);
+  initialValues = getIn(initialValues, nameSpace);
   if (
-    values.latitude === '' ||
-    values.longitude === '' ||
-    (values.latitude === initialValues.latitude && values.longitude === initialValues.longitude)
+    values?.latitude === '' ||
+    values?.longitude === '' ||
+    (values?.latitude === initialValues?.latitude && values?.longitude === initialValues?.longitude)
   ) {
     return [];
   }
@@ -43,7 +47,7 @@ const getDraftMarkers = (values: any, initialValues: any) => {
  * A hook that automatically syncs any updates to the lat/lngs of the parcel form with the map.
  * @param param0 The currently displayed list of properties on the map.
  */
-const useDraftMarkerSynchronizer = () => {
+const useDraftMarkerSynchronizer = (nameSpace: string) => {
   const { values, initialValues } = useFormikContext();
   const properties = useSelector<RootState, PointFeature[]>(state => [
     ...state.parcel.draftParcels,
@@ -70,12 +74,17 @@ const useDraftMarkerSynchronizer = () => {
   /**
    * Synchronize the markers that have been updated in the parcel form with the map, adding all new markers as drafts.
    * @param values the current form values
+   * @param initialValues the initial form values
    * @param dbProperties the currently displayed list of (DB) map properties.
+   * @param nameSpace the path to extract lat/lng values from
    */
-  const synchronizeMarkers = (values: any, initialValues: any, dbProperties: PointFeature[]) => {
-    const draftMarkers = values.data
-      ? getDraftMarkers(values.data, initialValues.data)
-      : getDraftMarkers(values, initialValues);
+  const synchronizeMarkers = (
+    values: any,
+    initialValues: any,
+    dbProperties: PointFeature[],
+    nameSpace: string,
+  ) => {
+    const draftMarkers = getDraftMarkers(values, initialValues, nameSpace);
     if (draftMarkers.length) {
       const newDraftMarkers = _.filter(
         draftMarkers,
@@ -94,15 +103,15 @@ const useDraftMarkerSynchronizer = () => {
   };
 
   const synchronize = useCallback(
-    debounce((values: any, initialValues: any, properties: PointFeature[]) => {
-      synchronizeMarkers(values, initialValues, properties);
+    debounce((values: any, initialValues: any, properties: PointFeature[], nameSpace: string) => {
+      synchronizeMarkers(values, initialValues, properties, nameSpace);
     }, 400),
     [],
   );
 
   useDeepCompareEffect(() => {
-    synchronize(values, initialValues, nonDraftProperties);
-  }, [values, initialValues, nonDraftProperties, synchronize]);
+    synchronize(values, initialValues, nonDraftProperties, nameSpace);
+  }, [values, initialValues, nonDraftProperties, synchronize, nameSpace]);
 
   return;
 };

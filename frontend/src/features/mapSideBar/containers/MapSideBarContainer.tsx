@@ -143,7 +143,7 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
     fetchParcelsDetail(pidOrPin)(dispatch).then(resp => {
       const matchingParcel: any = resp?.data?.length ? _.first(resp?.data) : undefined;
       if (!!formikRef?.current?.values && !!matchingParcel?.id) {
-        const { resetForm, values } = formikRef.current;
+        const { setValues, values } = formikRef.current;
         matchingParcel.searchPid = getIn(values, withNameSpace('searchPid', nameSpace));
         matchingParcel.searchPin = getIn(values, withNameSpace('searchPin', nameSpace));
         matchingParcel.searchAddress = getIn(values, withNameSpace('seachAddress', nameSpace));
@@ -151,7 +151,7 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
           ...matchingParcel.evaluations,
           ...matchingParcel.fiscals,
         ]);
-        resetForm({ values: setIn(values, nameSpace ?? '', matchingParcel) });
+        setValues(setIn(values, nameSpace ?? '', matchingParcel));
         toast.dark('Found matching parcel within PIMS. Form data will be pre-populated.', {
           autoClose: 7000,
         });
@@ -198,7 +198,7 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
                 ? parcelLayerService.findByPid(properties.PID)
                 : parcelLayerService.findByPin(properties.PIN);
 
-              handleParcelDataLayerResponse(response, dispatch);
+              handleParcelDataLayerResponse(response, dispatch, latLng);
             }
           });
         } else {

@@ -37,7 +37,8 @@ export interface ISteppedFormProps<T extends {}> {
   persistProps?: IPersistProps;
   formikRef?: any;
   onAddTab?: (values: T) => void;
-  onRemoveTab?: (values: T, index: number) => void;
+  onRemoveTab?: (values: ISteppedFormValues<T>, index: number, shouldSubmit: boolean) => void;
+  onChangeTab?: (tabIndex: number) => IStep[];
   tabLineHeader?: string;
 }
 

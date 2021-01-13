@@ -150,7 +150,7 @@ const Form: React.FC<ILandForm> = ({
   const { getOptionsByType } = useCodeLookups();
   const agencies = getOptionsByType(API.AGENCY_CODE_SET_NAME);
   const classifications = getOptionsByType(API.PROPERTY_CLASSIFICATION_CODE_SET_NAME);
-  useDraftMarkerSynchronizer();
+  useDraftMarkerSynchronizer('data');
 
   const render = (): React.ReactNode => {
     switch (stepper.current) {

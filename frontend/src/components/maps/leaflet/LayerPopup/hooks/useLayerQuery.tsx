@@ -34,6 +34,7 @@ interface IUserLayerQuery {
 export const saveParcelDataLayerResponse = (
   resp: FeatureCollection<Geometry, GeoJsonProperties>,
   dispatch: Dispatch<any>,
+  latLng?: LatLng,
 ) => {
   if (resp?.features?.length > 0) {
     //save with a synthetic event to timestamp the relevance of this data.
@@ -42,9 +43,11 @@ export const saveParcelDataLayerResponse = (
         e: { timeStamp: document?.timeline?.currentTime ?? 0 } as any,
         data: {
           ...resp.features[0].properties!,
-          CENTER: geoJSON(resp.features[0].geometry)
-            .getBounds()
-            .getCenter(),
+          CENTER:
+            latLng ??
+            geoJSON(resp.features[0].geometry)
+              .getBounds()
+              .getCenter(),
         },
       }),
     );
@@ -61,10 +64,11 @@ export const saveParcelDataLayerResponse = (
 export const handleParcelDataLayerResponse = (
   response: Promise<FeatureCollection<Geometry, GeoJsonProperties>>,
   dispatch: Dispatch<any>,
+  latLng?: LatLng,
 ) => {
   return response
     .then((resp: FeatureCollection<Geometry, GeoJsonProperties>) => {
-      saveParcelDataLayerResponse(resp, dispatch);
+      saveParcelDataLayerResponse(resp, dispatch, latLng);
     })
     .catch((axiosError: any) => {
       dispatch(error(parcelLayerDataSlice.reducer.name, axiosError?.response?.status, axiosError));

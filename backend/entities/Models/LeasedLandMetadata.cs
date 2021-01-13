@@ -13,6 +13,10 @@ namespace Pims.Dal.Entities.Models
         /// get/set - An id used to associate this metadata with a parcel.
         /// </summary>
         public string ParcelId { get; set; }
+        /// <summary>
+        /// get/set - the lease type
+        /// </summary>
+        public int Type { get; set; }
         #endregion
     }
 }

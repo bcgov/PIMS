@@ -14,7 +14,7 @@ export enum LandSteps {
  */
 export enum AssociatedLandSteps {
   LAND_OWNERSHIP = 0,
-  IDENTIFICATION = 1,
+  IDENTIFICATION_OR_REVIEW = 1,
   USAGE = 2,
   VALUATION = 3,
   REVIEW = 4,

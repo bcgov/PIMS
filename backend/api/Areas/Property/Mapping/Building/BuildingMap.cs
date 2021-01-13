@@ -71,7 +71,7 @@ namespace Pims.Api.Areas.Property.Mapping.Building
                     }
                     var metadata = JsonSerializer.Deserialize<IEnumerable<Entity.Models.LeasedLandMetadata>>(src.LeasedLandMetadata, _serializerOptions);
 
-                    dest.LeasedLandMetadata = metadata.Select(l => new Model.LeasedLandMetadataModel { OwnershipNote = l.OwnershipNote, ParcelId = l.ParcelId });
+                    dest.LeasedLandMetadata = metadata.Where(m => m != null).Select(l => new Model.LeasedLandMetadataModel { OwnershipNote = l.OwnershipNote, ParcelId = l.ParcelId, Type = l.Type });
                 })
                 .Inherits<Entity.BaseEntity, BModel.BaseModel>();
 
