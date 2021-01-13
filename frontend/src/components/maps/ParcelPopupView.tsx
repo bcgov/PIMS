@@ -12,6 +12,7 @@ import queryString from 'query-string';
 import { useDispatch } from 'react-redux';
 import { fetchProject, IProject } from 'features/projects/common';
 import { useEffect, useState } from 'react';
+import { useLeaflet } from 'react-leaflet';
 
 export interface IParcelDetailProps {
   parcel: IParcel | null;
@@ -26,6 +27,13 @@ export const ParcelPopupView = (props: IParcelDetailProps | null) => {
   const location = useLocation();
   const dispatch = useDispatch();
   const [projectRoute, setProjectRoute] = useState('');
+
+  const leaflet = useLeaflet();
+  const defaultZoom = () =>
+    leaflet.map?.flyTo([parcelDetail!.latitude as number, parcelDetail!.longitude as number], 14);
+
+  const whichZoom = props?.zoomTo ?? defaultZoom;
+  const curZoom = leaflet.map?.getZoom();
 
   useEffect(() => {
     if (parcelDetail?.projectNumber) {
@@ -132,8 +140,8 @@ export const ParcelPopupView = (props: IParcelDetailProps | null) => {
                     Update
                   </Link>
                 )}
-                {props?.zoomTo && (
-                  <Link to={{ ...location }} onClick={props?.zoomTo}>
+                {curZoom! < 14 && (
+                  <Link to={{ ...location }} onClick={whichZoom}>
                     Zoom
                   </Link>
                 )}

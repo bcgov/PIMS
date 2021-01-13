@@ -10,6 +10,7 @@ import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { Link, useLocation } from 'react-router-dom';
 import Claims from 'constants/claims';
 import queryString from 'query-string';
+import { useLeaflet } from 'react-leaflet';
 
 export interface IBuildingDetailProps {
   building: IBuilding | null;
@@ -22,6 +23,16 @@ export const BuildingPopupView: React.FC<IBuildingDetailProps> = (props: IBuildi
   const keycloak = useKeycloakWrapper();
   const buildingDetail: IBuilding | null | undefined = props?.building;
   const location = useLocation();
+
+  const leaflet = useLeaflet();
+  const defaultZoom = () =>
+    leaflet.map?.flyTo(
+      [buildingDetail!.latitude as number, buildingDetail!.longitude as number],
+      14,
+    );
+
+  const whichZoom = props?.zoomTo ?? defaultZoom;
+  const curZoom = leaflet.map?.getZoom();
 
   return (
     <Container className="buildingPopup" fluid={true}>
@@ -116,8 +127,8 @@ export const BuildingPopupView: React.FC<IBuildingDetailProps> = (props: IBuildi
                     Update
                   </Link>
                 )}
-                {props.zoomTo && (
-                  <Link to={{ ...location }} onClick={props.zoomTo}>
+                {curZoom! < 14 && (
+                  <Link to={{ ...location }} onClick={whichZoom}>
                     Zoom
                   </Link>
                 )}
