@@ -11,14 +11,23 @@ import { Link, useLocation } from 'react-router-dom';
 import Claims from 'constants/claims';
 import queryString from 'query-string';
 
-export interface IBuildingDetailProps {
+export interface IBuildingPopupViewProps {
   building: IBuilding | null;
+  /** Zoom level that the map should zoom to. */
   zoomTo?: () => void;
+  /** Whether the Popup action menu is disabled. */
   disabled?: boolean;
+  /** Event is fired when a link on the popup is clicked. */
   onLinkClick?: () => void;
 }
 
-export const BuildingPopupView: React.FC<IBuildingDetailProps> = (props: IBuildingDetailProps) => {
+/**
+ * Display the specified property information.
+ * @param props BuildingPopupView properties.
+ */
+export const BuildingPopupView: React.FC<IBuildingPopupViewProps> = (
+  props: IBuildingPopupViewProps,
+) => {
   const keycloak = useKeycloakWrapper();
   const buildingDetail: IBuilding | null | undefined = props?.building;
   const location = useLocation();
@@ -26,7 +35,7 @@ export const BuildingPopupView: React.FC<IBuildingDetailProps> = (props: IBuildi
   return (
     <Container className="buildingPopup" fluid={true}>
       {!buildingDetail ? (
-        <Alert variant="danger">Failed to load building details.</Alert>
+        <Alert variant="warning">Property details loading.</Alert>
       ) : (
         <>
           <Row>
@@ -39,20 +48,24 @@ export const BuildingPopupView: React.FC<IBuildingDetailProps> = (props: IBuildi
               </ListGroup>
               <ListGroup>
                 <ListGroup.Item>
-                  <Label>Assessed Value:</Label>$
-                  {buildingDetail?.evaluations
-                    ?.find(e => e.key === EvaluationKeys.Assessed)
-                    ?.value?.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                  <Label>Assessed Value:</Label>
+                  {buildingDetail?.evaluations?.length &&
+                    '$' +
+                      buildingDetail?.evaluations
+                        ?.find(e => e.key === EvaluationKeys.Assessed)
+                        ?.value?.toLocaleString('en-US', { minimumFractionDigits: 2 })}
                 </ListGroup.Item>
-              </ListGroup>
-              <ListGroup>
-                <ListGroup.Item>
-                  <div>{buildingDetail?.address?.line1}</div>
-                  <div>
-                    {buildingDetail?.address?.administrativeArea},{' '}
-                    {buildingDetail?.address?.province} {buildingDetail?.address?.postal}
-                  </div>
-                </ListGroup.Item>
+                {buildingDetail?.address && (
+                  <ListGroup.Item>
+                    <div>{buildingDetail?.address?.line1}</div>
+                    <div>
+                      {buildingDetail?.address?.administrativeArea}
+                      {buildingDetail?.address?.province &&
+                        ', ' + buildingDetail?.address?.province}
+                      {buildingDetail?.address?.postal && ' ' + buildingDetail?.address?.postal}
+                    </div>
+                  </ListGroup.Item>
+                )}
               </ListGroup>
               <ListGroup>
                 <ListGroup.Item>

@@ -3,7 +3,7 @@ import { createMemoryHistory } from 'history';
 import { Router } from 'react-router-dom';
 import renderer from 'react-test-renderer';
 import { ParcelPopupView } from 'components/maps/ParcelPopupView';
-import { IProperty, IParcelDetail } from 'actions/parcelsActions';
+import { IProperty, IParcelDetail, IParcel } from 'actions/parcelsActions';
 import Map from './Map';
 import { Map as LeafletMap } from 'leaflet';
 import { MapProps as LeafletMapProps, Marker, Map as ReactLeafletMap } from 'react-leaflet';
@@ -35,6 +35,9 @@ const mockParcels = [
 ((useApi as unknown) as jest.Mock<Partial<PimsAPI>>).mockReturnValue({
   loadProperties: async () => {
     return createPoints(mockParcels);
+  },
+  getParcel: async () => {
+    return {} as IParcel;
   },
 });
 
@@ -214,7 +217,7 @@ describe('MapProperties View', () => {
       </Provider>,
     );
 
-    const alert = getByText('Failed to load parcel details.');
+    const alert = getByText('Property details loading.');
     expect(alert).toBeTruthy();
   });
 
