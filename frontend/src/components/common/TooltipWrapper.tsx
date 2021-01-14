@@ -30,16 +30,19 @@ interface ITooltipWrapperProps extends Partial<OverlayTriggerProps> {
 const TooltipWrapper: React.FunctionComponent<ITooltipWrapperProps> = props => {
   return (
     <>
-      {props.toolTip?.length ? (
-        <OverlayTrigger
-          {...props}
-          overlay={<Tooltip id={props.toolTipId}>{props.toolTip}</Tooltip>}
-        >
-          {props.children}
-        </OverlayTrigger>
-      ) : (
-        props.children
-      )}
+      <OverlayTrigger
+        {...props}
+        overlay={
+          <Tooltip
+            style={{ visibility: !props.toolTip?.length ? 'hidden' : 'visible' }}
+            id={props.toolTipId}
+          >
+            {props.toolTip}
+          </Tooltip>
+        }
+      >
+        {props.children}
+      </OverlayTrigger>
     </>
   );
 };

@@ -24,7 +24,11 @@ namespace Pims.Dal.Helpers.Extensions
         /// <exception type="DbUpdateException">The name within a parcel should be unique.</exception>
         public static void ThrowIfNotUnique(this PimsContext context, Entity.Parcel parcel, Entity.Building building)
         {
-            var parcelBuildings = context.Parcels.Where(p => p.Id == parcel.Id).SelectMany(p => p.Buildings.Select(b => b.Building.Name)).Distinct().ToArray();
+            if(parcel == null || String.IsNullOrEmpty(building.Name))
+            {
+                return;
+            }
+            var parcelBuildings = context.Parcels.Where(p => p.Id == parcel.Id).SelectMany(p => p.Buildings).Where(b => b.BuildingId != building.Id).Select(b => b.Building.Name).Distinct().ToArray();
             var alreadyExists = parcelBuildings.Contains(building.Name);
             if (alreadyExists) throw new DbUpdateException("A building name must be unique on the parcel.");
         }

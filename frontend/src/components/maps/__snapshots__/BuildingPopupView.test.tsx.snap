@@ -110,13 +110,13 @@ exports[`building popup view renders correctly 1`] = `
       className="col"
     >
       <a
-        href="/mapview/1?disabled=true&loadDraft=false&sidebar=true"
+        href="/mapview?buildingId=1&disabled=true&loadDraft=false&sidebar=true"
         onClick={[Function]}
       >
         View
       </a>
       <a
-        href="/mapview/1?disabled=false&loadDraft=false&sidebar=true"
+        href="/mapview?buildingId=1&disabled=false&loadDraft=false&sidebar=true"
         onClick={[Function]}
       >
         Update

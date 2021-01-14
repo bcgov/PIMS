@@ -75,12 +75,17 @@ export interface IGeoSearchParams {
 export const GEO_PROPERTIES = (params: IGeoSearchParams | null) =>
   `/properties/search/wfs?${params ? queryString.stringify(params) : ''}`; // get filtered properties or all if not specified.
 
+export const PARCELS_DETAIL = (params: IPropertySearchParams | null) => {
+  return `/properties/parcels?${params ? queryString.stringify(params) : ''}`; // get filtered properties or all if not specified.
+};
 export interface IParcelDetailParams {
   id: number;
 }
 
 export const PARCEL_DETAIL = (params: IParcelDetailParams) => `/properties/parcels/${params.id}`;
 export const PARCEL_ROOT = `/properties/parcels`;
+
+export const BUILDING_ROOT = `/properties/buildings`;
 
 export interface IUserDetailParams {
   id: string;

@@ -22,6 +22,8 @@ namespace Pims.Dal.Configuration
             builder.Property(m => m.FiscalYear).IsRequired();
             builder.Property(m => m.FiscalYear).ValueGeneratedNever();
 
+            builder.Property(m => m.EffectiveDate).HasColumnType("DATE");
+
             builder.Property(m => m.Key).IsRequired();
 
             builder.Property(m => m.Value).HasColumnType("MONEY");

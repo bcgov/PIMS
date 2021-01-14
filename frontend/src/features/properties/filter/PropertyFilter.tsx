@@ -91,7 +91,7 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
   }, [agencies, propertyFilter, defaultFilter]);
 
   const changeFilter = (values: IPropertyFilter) => {
-    const agencyIds = (values.agencies as any)?.value ?? '';
+    const agencyIds = values.agencies;
     setPropertyFilter({ ...values, agencies: agencyIds });
     onChange?.({ ...values, agencies: agencyIds });
   };

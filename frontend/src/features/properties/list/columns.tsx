@@ -11,6 +11,7 @@ import { ParentGroupedFilter } from 'components/SearchBar/ParentGroupedFilter';
 import { FastCurrencyInput, Input, Select, SelectOption } from 'components/common/form';
 import { TypeaheadField } from 'components/common/form/Typeahead';
 import { ILookupCode } from 'actions/lookupActions';
+import queryString from 'query-string';
 
 const MoneyCell = ({ cell: { value } }: CellProps<IProperty, number>) => formatMoney(value);
 
@@ -79,7 +80,6 @@ export const columns = (
         className: 'agency-search',
         options: subAgencies,
         labelKey: (option: SelectOption) => {
-          console.log(option);
           return `${option.label}`;
         },
       },
@@ -246,16 +246,26 @@ export const columns = (
     accessor: row => {
       // Return the parcel ID associated with this row.
       // For buildings we need the parent `parcelId` property
-      const id = row.propertyTypeId === 0 ? row.id : row.parcelId;
-      return id ?? -1;
+      return row.id ?? -1;
     },
-    Cell: ({ cell: { value } }: CellProps<IProperty, number>) => {
-      if (value > 0) {
-        return (
-          <Link to={`/mapview/${value}?disabled=true&sidebar=true&loadDraft=false`}>View</Link>
-        );
-      }
-      return null;
+    Cell: (props: CellProps<IProperty, number>) => {
+      return (
+        <Link
+          to={{
+            pathname: `/mapview`,
+            search: queryString.stringify({
+              sidebar: true,
+              disabled: true,
+              loadDraft: false,
+              parcelId: props.row.original.propertyTypeId === 0 ? props.row.original.id : undefined,
+              buildingId:
+                props.row.original.propertyTypeId === 1 ? props.row.original.id : undefined,
+            }),
+          }}
+        >
+          View
+        </Link>
+      );
     },
   },
 ];

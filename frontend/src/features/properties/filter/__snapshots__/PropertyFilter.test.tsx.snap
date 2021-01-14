@@ -122,6 +122,9 @@ exports[`MapFilterBar renders correctly 1`] = `
               name="name"
               onBlur={[Function]}
               onChange={[Function]}
+              onFocus={[Function]}
+              onMouseOut={[Function]}
+              onMouseOver={[Function]}
               placeholder="Enter property name"
               value=""
             />

@@ -127,6 +127,17 @@ const CloseOutFinancialSummaryForm = (props: CloseOutFinancialSummaryFormProps) 
               md={6}
             />
           </Form.Row>
+          <Form.Row>
+            <Form.Label column md={4}>
+              Net Proceeds
+            </Form.Label>
+            <FastCurrencyInput
+              formikProps={formikProps}
+              disabled={props.isReadOnly}
+              outerClassName="col-md-8"
+              field="netProceeds"
+            />
+          </Form.Row>
         </Col>
         <Col md={1}>&nbsp;</Col>
         <Col>
