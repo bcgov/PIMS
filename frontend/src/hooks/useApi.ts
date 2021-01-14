@@ -5,7 +5,7 @@ import { AxiosInstance } from 'axios';
 import { ENVIRONMENT } from 'constants/environment';
 import * as _ from 'lodash';
 import { LatLngTuple } from 'leaflet';
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { IGeoSearchParams } from 'constants/API';
 import queryString from 'query-string';
 import { IBuilding, IParcel } from 'actions/parcelsActions';
@@ -46,29 +46,66 @@ export interface PimsAPI extends AxiosInstance {
 
 export const useApi = (): PimsAPI => {
   const dispatch = useDispatch();
-  const axios = CustomAxios() as PimsAPI;
+  const keycloak = useKeycloakWrapper();
+  const axios = useMemo(() => {
+    const instance = CustomAxios() as PimsAPI;
 
-  axios.interceptors.request.use(
-    config => {
-      config.headers.Authorization = `Bearer ${store.getState().jwt}`;
-      dispatch(showLoading());
-      return config;
+    instance.interceptors.request.use(
+      config => {
+        config.headers.Authorization = `Bearer ${keycloak.obj.idToken}`;
+        dispatch(showLoading());
+        return config;
+      },
+      error => {
+        dispatch(hideLoading());
+        return Promise.reject(error);
+      },
+    );
+
+    instance.interceptors.response.use(
+      config => {
+        dispatch(hideLoading());
+        return config;
+      },
+      error => {
+        dispatch(hideLoading());
+        return Promise.reject(error);
+      },
+    );
+
+    return instance;
+  }, [dispatch, keycloak.obj]);
+
+  axios.isPidAvailable = useCallback(
+    async (parcelId: number | '' | undefined, pid: string | undefined) => {
+      const pidParam = `pid=${Number(
+        pid
+          ?.split('-')
+          .join('')
+          .split(',')
+          .join(''),
+      )}`;
+      let params = parcelId ? `${pidParam}&parcelId=${parcelId}` : pidParam;
+      const { data } = await axios.get(
+        `${ENVIRONMENT.apiUrl}/properties/parcels/check/pid-available?${params}`,
+      );
+      return data;
     },
-    error => {
-      dispatch(hideLoading());
-      return Promise.reject(error);
-    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
   );
 
-  axios.interceptors.response.use(
-    config => {
-      dispatch(hideLoading());
-      return config;
+  axios.isPinAvailable = useCallback(
+    async (parcelId: number | '' | undefined, pin: number | '' | undefined) => {
+      const pinParam = `pin=${Number(pin)}`;
+      let params = parcelId ? `${pinParam}&parcelId=${parcelId}` : pinParam;
+      const { data } = await axios.get(
+        `${ENVIRONMENT.apiUrl}/properties/parcels/check/pin-available?${params}`,
+      );
+      return data;
     },
-    error => {
-      dispatch(hideLoading());
-      return Promise.reject(error);
-    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
   );
 
   axios.isPidAvailable = useCallback(
