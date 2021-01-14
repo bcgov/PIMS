@@ -104,6 +104,29 @@ namespace Pims.Api.Areas.Tools.Controllers
         }
 
         /// <summary>
+        /// DELETE - An array of properties to delete from the datasource.
+        /// </summary>
+        /// <param name="models">An array of property models.</param>
+        /// <param name="updatedBefore">Only allow deletes to properties updated before this date.</param>
+        /// <returns>The properties added.</returns>
+        [HttpDelete("properties")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(IEnumerable<Model.ParcelModel>), 200)]
+        [ProducesResponseType(typeof(Pims.Api.Models.ErrorResponseModel), 400)]
+        [SwaggerOperation(Tags = new[] { "tools-import" })]
+        [HasPermission(Permissions.SystemAdmin)]
+        public IActionResult DeleteProperties([FromBody] Model.ImportPropertyModel[] models, DateTime? updatedBefore = null)
+        {
+            if (models.Count() > 100) return BadRequest("Must not submit more than 100 properties in a single request.");
+
+            var helper = new ImportPropertiesHelper(_pimsAdminService, _logger);
+            var entities = helper.DeleteProperties(models, updatedBefore);
+            var parcels = _mapper.Map<Model.PropertyModel[]>(entities);
+
+            return new JsonResult(parcels);
+        }
+
+        /// <summary>
         /// POST - Add an array of new properties to the datasource.
         /// Determines if the property is a parcel or a building and then adds or updates appropriately.
         /// This will also add new lookup items to the following; cities, agencies, building construction types, building predominate uses.

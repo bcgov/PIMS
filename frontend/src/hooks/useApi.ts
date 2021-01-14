@@ -5,10 +5,11 @@ import { AxiosInstance } from 'axios';
 import { ENVIRONMENT } from 'constants/environment';
 import * as _ from 'lodash';
 import { LatLngTuple } from 'leaflet';
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { IGeoSearchParams } from 'constants/API';
 import queryString from 'query-string';
-import { store } from 'App';
+import { IBuilding, IParcel } from 'actions/parcelsActions';
+import useKeycloakWrapper from './useKeycloakWrapper';
 
 export interface IGeocoderResponse {
   siteId: string;
@@ -39,68 +40,84 @@ export interface PimsAPI extends AxiosInstance {
   getSitePids: (siteId: string) => Promise<IGeocoderPidsResponse>;
   getAdministrativeAreaLatLng: (city: string) => Promise<LatLngTuple | null>;
   loadProperties: (params?: IGeoSearchParams) => Promise<any[]>;
+  getBuilding: (id: number) => Promise<IBuilding>;
+  getParcel: (id: number) => Promise<IParcel>;
 }
 
 export const useApi = (): PimsAPI => {
   const dispatch = useDispatch();
-  const axios = CustomAxios() as PimsAPI;
+  const keycloak = useKeycloakWrapper();
+  const axios = useMemo(() => {
+    const instance = CustomAxios() as PimsAPI;
 
-  axios.interceptors.request.use(
-    config => {
-      config.headers.Authorization = `Bearer ${store.getState().jwt}`;
-      dispatch(showLoading());
-      return config;
+    instance.interceptors.request.use(
+      config => {
+        config.headers.Authorization = `Bearer ${keycloak.obj.idToken}`;
+        dispatch(showLoading());
+        return config;
+      },
+      error => {
+        dispatch(hideLoading());
+        return Promise.reject(error);
+      },
+    );
+
+    instance.interceptors.response.use(
+      config => {
+        dispatch(hideLoading());
+        return config;
+      },
+      error => {
+        dispatch(hideLoading());
+        return Promise.reject(error);
+      },
+    );
+
+    return instance;
+  }, [dispatch, keycloak.obj]);
+
+  axios.isPidAvailable = useCallback(
+    async (parcelId: number | '' | undefined, pid: string | undefined) => {
+      const pidParam = `pid=${Number(
+        pid
+          ?.split('-')
+          .join('')
+          .split(',')
+          .join(''),
+      )}`;
+      let params = parcelId ? `${pidParam}&parcelId=${parcelId}` : pidParam;
+      const { data } = await axios.get(
+        `${ENVIRONMENT.apiUrl}/properties/parcels/check/pid-available?${params}`,
+      );
+      return data;
     },
-    error => {
-      dispatch(hideLoading());
-      return Promise.reject(error);
-    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
   );
 
-  axios.interceptors.response.use(
-    config => {
-      dispatch(hideLoading());
-      return config;
+  axios.isPinAvailable = useCallback(
+    async (parcelId: number | '' | undefined, pin: number | '' | undefined) => {
+      const pinParam = `pin=${Number(pin)}`;
+      let params = parcelId ? `${pinParam}&parcelId=${parcelId}` : pinParam;
+      const { data } = await axios.get(
+        `${ENVIRONMENT.apiUrl}/properties/parcels/check/pin-available?${params}`,
+      );
+      return data;
     },
-    error => {
-      dispatch(hideLoading());
-      return Promise.reject(error);
-    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
   );
 
-  axios.isPidAvailable = async (parcelId: number | '' | undefined, pid: string | undefined) => {
-    const pidParam = `pid=${Number(
-      pid
-        ?.split('-')
-        .join('')
-        .split(',')
-        .join(''),
-    )}`;
-    let params = parcelId ? `${pidParam}&parcelId=${parcelId}` : pidParam;
-    const { data } = await axios.get(
-      `${ENVIRONMENT.apiUrl}/properties/parcels/check/pid-available?${params}`,
-    );
-    return data;
-  };
-
-  axios.isPinAvailable = async (
-    parcelId: number | '' | undefined,
-    pin: number | '' | undefined,
-  ) => {
-    const pinParam = `pin=${Number(pin)}`;
-    let params = parcelId ? `${pinParam}&parcelId=${parcelId}` : pinParam;
-    const { data } = await axios.get(
-      `${ENVIRONMENT.apiUrl}/properties/parcels/check/pin-available?${params}`,
-    );
-    return data;
-  };
-
-  axios.searchAddress = async (address: string): Promise<IGeocoderResponse[]> => {
-    const { data } = await axios.get<IGeocoderResponse[]>(
-      `${ENVIRONMENT.apiUrl}/tools/geocoder/addresses?address=${address}+BC`,
-    );
-    return _.orderBy(data, (r: IGeocoderResponse) => r.score, ['desc']);
-  };
+  axios.searchAddress = useCallback(
+    async (address: string): Promise<IGeocoderResponse[]> => {
+      const { data } = await axios.get<IGeocoderResponse[]>(
+        `${ENVIRONMENT.apiUrl}/tools/geocoder/addresses?address=${address}+BC`,
+      );
+      return _.orderBy(data, (r: IGeocoderResponse) => r.score, ['desc']);
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
+  );
 
   axios.getAdministrativeAreaLatLng = useCallback(
     async (address: string): Promise<LatLngTuple | null> => {
@@ -114,30 +131,69 @@ export const useApi = (): PimsAPI => {
       const highestMatch = _.orderBy(data, (r: IGeocoderResponse) => r.score, ['desc'])[0];
       return [highestMatch.latitude, highestMatch.longitude];
     },
-    [axios],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
   );
 
-  axios.getSitePids = async (siteId: string): Promise<IGeocoderPidsResponse> => {
-    const { data } = await axios.get<IGeocoderPidsResponse>(
-      `${ENVIRONMENT.apiUrl}/tools/geocoder/parcels/pids/${siteId}`,
-    );
-    return data;
-  };
-
-  axios.loadProperties = async (params?: IGeoSearchParams): Promise<any[]> => {
-    try {
-      const { data } = await axios.get<any[]>(
-        `${ENVIRONMENT.apiUrl}/properties/search/wfs?${
-          params ? queryString.stringify(params) : ''
-        }`,
+  axios.getSitePids = useCallback(
+    async (siteId: string): Promise<IGeocoderPidsResponse> => {
+      const { data } = await axios.get<IGeocoderPidsResponse>(
+        `${ENVIRONMENT.apiUrl}/tools/geocoder/parcels/pids/${siteId}`,
       );
       return data;
-    } catch (error) {
-      throw new Error(
-        `${(error as any).message}: An error occured while fetching properties in inventory.`,
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
+  );
+
+  axios.loadProperties = useCallback(
+    async (params?: IGeoSearchParams): Promise<any[]> => {
+      try {
+        const { data } = await axios.get<any[]>(
+          `${ENVIRONMENT.apiUrl}/properties/search/wfs?${
+            params ? queryString.stringify(params) : ''
+          }`,
+        );
+        return data;
+      } catch (error) {
+        throw new Error(
+          `${(error as any).message}: An error occured while fetching properties in inventory.`,
+        );
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
+  );
+
+  /**
+   * Make an AJAX request to fetch the specified building.
+   * @param id The building primary key 'id' value.
+   * @returns A promise containing the building.
+   */
+  axios.getBuilding = useCallback(
+    async (id: number) => {
+      const { data } = await axios.get<IBuilding>(
+        `${ENVIRONMENT.apiUrl}/properties/buildings/${id}`,
       );
-    }
-  };
+      return data;
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
+  );
+
+  /**
+   * Make an AJAX request to fetch the specified parcel.
+   * @param id The parcel primary key 'id' value.
+   * @returns A promise containing the parcel.
+   */
+  axios.getParcel = useCallback(
+    async (id: number) => {
+      const { data } = await axios.get<IParcel>(`${ENVIRONMENT.apiUrl}/properties/parcels/${id}`);
+      return data;
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
+  );
 
   return axios;
 };

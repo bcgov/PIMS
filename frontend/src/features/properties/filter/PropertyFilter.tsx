@@ -124,6 +124,7 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
               <TypeaheadField
                 name="administrativeArea"
                 placeholder="Enter a location"
+                selectClosest
                 paginate={false}
                 hideValidation={true}
                 options={adminAreas.map(x => x.label)}
@@ -140,6 +141,7 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
                 options={agencies}
                 filterBy={['code', 'label', 'parent']}
                 placeholder="Agency"
+                selectClosest
               />
             </Col>
             <Col className="bar-item">
