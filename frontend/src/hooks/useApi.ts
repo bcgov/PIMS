@@ -1,5 +1,5 @@
 import CustomAxios from 'customAxios';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { showLoading, hideLoading } from 'react-redux-loading-bar';
 import { AxiosInstance } from 'axios';
 import { ENVIRONMENT } from 'constants/environment';
@@ -9,7 +9,7 @@ import { useCallback, useMemo } from 'react';
 import { IGeoSearchParams } from 'constants/API';
 import queryString from 'query-string';
 import { IBuilding, IParcel } from 'actions/parcelsActions';
-import { store } from 'App';
+import { RootState } from 'reducers/rootReducer';
 
 export interface IGeocoderResponse {
   siteId: string;
@@ -46,13 +46,14 @@ export interface PimsAPI extends AxiosInstance {
 
 export const useApi = (): PimsAPI => {
   const dispatch = useDispatch();
-  const keycloak = useKeycloakWrapper();
+  const token = useSelector<RootState, string>(state => state.jwt);
+
   const axios = useMemo(() => {
     const instance = CustomAxios() as PimsAPI;
 
     instance.interceptors.request.use(
       config => {
-        config.headers.Authorization = `Bearer ${keycloak.obj.idToken}`;
+        config.headers.Authorization = `Bearer ${token}`;
         dispatch(showLoading());
         return config;
       },
@@ -74,7 +75,7 @@ export const useApi = (): PimsAPI => {
     );
 
     return instance;
-  }, [dispatch, keycloak.obj]);
+  }, [dispatch, token]);
 
   axios.isPidAvailable = useCallback(
     async (parcelId: number | '' | undefined, pid: string | undefined) => {
@@ -194,7 +195,7 @@ export const useApi = (): PimsAPI => {
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [],
+    [axios],
   );
 
   /**

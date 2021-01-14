@@ -149,7 +149,6 @@ namespace Pims.Dal.Services
                 .Include(p => p.Buildings).ThenInclude(pb => pb.Building).ThenInclude(b => b.BuildingOccupantType)
                 .Include(p => p.Buildings).ThenInclude(pb => pb.Building).ThenInclude(b => b.Evaluations)
                 .Include(p => p.Buildings).ThenInclude(pb => pb.Building).ThenInclude(b => b.Fiscals)
-                .Include(p => p.Buildings).ThenInclude(pb => pb.Building).ThenInclude(b => b.Classification)
                 .FirstOrDefault(p => p.Id == id
                     && (ownsABuilding || isAdmin || p.IsVisibleToOtherAgencies || !p.IsSensitive || (viewSensitive && userAgencies.Contains(p.AgencyId)))) ?? throw new KeyNotFoundException();
 
@@ -214,20 +213,6 @@ namespace Pims.Dal.Services
         /// <returns></returns>
         public Parcel Update(Parcel parcel)
         {
-            parcel = PendingUpdate(parcel);
-            this.Context.SaveChanges();
-            this.Context.CommitTransaction();
-            return parcel;
-        }
-
-        /// <summary>
-        /// Update the specified parcel in the datasource, but do not commit the transaction.
-        /// </summary>
-        /// <param name="parcel"></param>
-        /// <exception type="KeyNotFoundException">Entity does not exist in the datasource.</exception>
-        /// <returns></returns>
-        public Parcel PendingUpdate(Parcel parcel)
-        {
             parcel.ThrowIfNotAllowedToEdit(nameof(parcel), this.User, new[] { Permissions.PropertyEdit, Permissions.AdminProperties });
             var isAdmin = this.User.HasPermission(Permissions.AdminProperties);
 
@@ -261,14 +246,14 @@ namespace Pims.Dal.Services
             // Users who don't own the parcel, but only own a building cannot update the parcel.
             if (allowEdit)
             {
-                this.Context.Entry(originalParcel.Address).CurrentValues.SetValues(parcel.Address);
                 this.Context.Entry(originalParcel).CurrentValues.SetValues(parcel);
+                this.Context.Entry(originalParcel.Address).CurrentValues.SetValues(parcel.Address);
                 this.Context.SetOriginalRowVersion(originalParcel);
             }
 
             foreach (var building in parcel.Buildings.Select(pb => pb.Building))
             {
-                // Check if the building already exists.
+                // Check if the buildig already exists.
                 var existingBuilding = originalParcel.Buildings
                     .FirstOrDefault(pb => pb.BuildingId == building.Id)?.Building;
 
@@ -349,14 +334,9 @@ namespace Pims.Dal.Services
                     }
                     else
                     {
-<<<<<<< HEAD
                         originalEvaluation.Note = parcelEvaluation.Note;
                         originalEvaluation.Value = parcelEvaluation.Value;
                         originalEvaluation.Firm = parcelEvaluation.Firm;
-=======
-                        parcelEvaluation.ParcelId = existingEvaluation.ParcelId; //Do not allow the parcel id to be changed.
-                        this.Context.Entry(existingEvaluation).CurrentValues.SetValues(parcelEvaluation);
->>>>>>> 6d752e37... merge dev-alpha into dev. (#781)
                     }
                 }
                 foreach (var parcelFiscal in parcel.Fiscals)

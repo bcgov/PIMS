@@ -333,7 +333,7 @@ const Map: React.FC<MapProps> = ({
                   onclick={showLocationDetails}
                   closePopupOnClick={interactive}
                   onzoomend={e => setZoom(e.sourceTarget.getZoom())}
-                  ondragend={handleBounds}
+                  onmoveend={handleBounds}
                 >
                   {activeBasemap && (
                     <TileLayer

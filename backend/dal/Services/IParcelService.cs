@@ -14,7 +14,6 @@ namespace Pims.Dal.Services
         Paged<Parcel> GetPage(ParcelFilter filter);
         Parcel Get(int id);
         Parcel Add(Parcel parcel);
-        Parcel PendingUpdate(Parcel parcel);
         Parcel Update(Parcel parcel);
         void Remove(Parcel parcel);
         bool IsPidAvailable(int parcelId, int PID);
