@@ -83,6 +83,7 @@ exports[`MapFilterBar renders correctly 1`] = `
           >
             <select
               className="form-select form-control"
+              disabled={false}
               id="input-searchBy"
               name="searchBy"
               onBlur={[Function]}
@@ -118,6 +119,7 @@ exports[`MapFilterBar renders correctly 1`] = `
           >
             <input
               className="form-control"
+              disabled={false}
               id="input-name"
               name="name"
               onBlur={[Function]}
@@ -161,6 +163,7 @@ exports[`MapFilterBar renders correctly 1`] = `
               aria-haspopup="listbox"
               autoComplete="off"
               className="rbt-input-main form-control rbt-input"
+              disabled={false}
               id="administrativeArea-field"
               name="administrativeArea"
               onBlur={[Function]}
@@ -229,6 +232,7 @@ exports[`MapFilterBar renders correctly 1`] = `
               aria-haspopup="listbox"
               autoComplete="off"
               className="rbt-input-main form-control rbt-input"
+              disabled={false}
               id="agencies-field"
               name="agencies"
               onBlur={[Function]}
@@ -273,6 +277,7 @@ exports[`MapFilterBar renders correctly 1`] = `
       >
         <select
           className="form-select form-control"
+          disabled={false}
           id="input-classificationId"
           name="classificationId"
           onBlur={[Function]}
