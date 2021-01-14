@@ -15,8 +15,6 @@ import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
 import { useFilterContext } from '../providers/FIlterProvider';
 
 export type PointClustererProps = {
-  // if all tiles data loading has finished
-  tilesLoaded: boolean;
   points: Array<PointFeature>;
   selected?: IPropertyDetail | null;
   bounds?: BBox;
@@ -40,7 +38,6 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
   selected,
   zoomToBoundsOnClick = true,
   spiderfyOnMaxZoom = true,
-  tilesLoaded,
 }) => {
   // state and refs
   const spiderfierRef = useRef<Spiderfier>();
@@ -122,18 +119,14 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
       const group: LeafletFeatureGroup = featureGroupRef.current.leafletElement;
       const groupBounds = group.getBounds();
 
-      if (
-        groupBounds.isValid() &&
-        group.getBounds().isValid() &&
-        filterState.changed &&
-        tilesLoaded
-      ) {
+      if (groupBounds.isValid() && group.getBounds().isValid() && filterState.changed) {
         filterState.setChanged(false);
         map.fitBounds(group.getBounds(), { maxZoom: 10 });
-        setSpider({});
       }
+      setSpider({});
+      spiderfierRef.current?.unspiderfy();
     }
-  }, [featureGroupRef, map, clusters, tilesLoaded]);
+  }, [featureGroupRef, map, clusters]);
 
   return (
     <FeatureGroup ref={featureGroupRef}>
@@ -163,7 +156,7 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
                   iconSize: [40, 40],
                 })
               }
-            />
+            ></Marker>
           );
         }
 
