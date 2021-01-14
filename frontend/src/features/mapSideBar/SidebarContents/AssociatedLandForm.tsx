@@ -36,6 +36,7 @@ import { defaultBuildingValues } from './BuildingForm';
 import { stringToNull } from 'utils';
 import { IStep } from 'components/common/Stepper';
 import useDraftMarkerSynchronizer from 'features/properties/hooks/useDraftMarkerSynchronizer';
+import DebouncedValidation from 'features/properties/components/forms/subforms/DebouncedValidation';
 
 const Container = styled.div`
   background-color: #fff;
@@ -260,6 +261,7 @@ const Form: React.FC<IAssociatedLandForm> = ({
   };
   return (
     <FormContentWrapper>
+      <DebouncedValidation formikProps={formikProps}></DebouncedValidation>
       <FormContent>{render()}</FormContent>
       <FormFooter>
         <InventoryPolicy />
@@ -620,6 +622,8 @@ const AssociatedLandForm: React.FC<IAssociatedLandParentForm> = (
           }}
           initialValues={initialValues}
           validate={handleValidate}
+          validateOnChange={false}
+          validateOnBlur={true}
           formikRef={props.formikRef}
           onSubmit={async (values, actions) => {
             submit(values, true);

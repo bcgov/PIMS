@@ -44,6 +44,7 @@ import {
 import { AssociatedLandListForm } from './subforms/AssociatedLandListForm';
 import { stringToNull } from 'utils';
 import useParcelLayerData from 'features/properties/hooks/useParcelLayerData';
+import DebouncedValidation from 'features/properties/components/forms/subforms/DebouncedValidation';
 
 const Container = styled.div`
   background-color: #fff;
@@ -193,6 +194,7 @@ const Form: React.FC<IBuildingForm> = ({
 
   return (
     <FormContentWrapper>
+      <DebouncedValidation formikProps={formikProps}></DebouncedValidation>
       <FormContent>{render()}</FormContent>
       <FormFooter>
         <InventoryPolicy />
@@ -411,6 +413,8 @@ const BuidingForm: React.FC<IParentBuildingForm> = ({
         initialValues={initialValues}
         formikRef={formikRef}
         validate={handleValidate}
+        validateOnChange={false}
+        validateOnBlur={true}
         // Provide onSubmit
         onSubmit={async (values, actions) => {
           const apiValues = valuesToApiFormat(_.cloneDeep(values));

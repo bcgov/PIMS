@@ -36,12 +36,10 @@ export const PopupView: React.FC<IPopupViewProps> = ({
   React.useEffect(() => {
     if (propertyTypeId === PropertyTypes.PARCEL) {
       getParcel(id as number).then(parcel => {
-        console.log(parcel.name);
         setProperty(parcel);
       });
     } else if (propertyTypeId === PropertyTypes.BUILDING) {
       getBuilding(id as number).then(building => {
-        console.log(building.name);
         setProperty(building);
       });
     }

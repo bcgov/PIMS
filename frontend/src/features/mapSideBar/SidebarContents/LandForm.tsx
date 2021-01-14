@@ -45,6 +45,7 @@ import { IFormParcel } from '../containers/MapSideBarContainer';
 import useParcelLayerData from 'features/properties/hooks/useParcelLayerData';
 import { IStep } from 'components/common/Stepper';
 import { AssociatedBuildingListForm } from './subforms/AssociatedBuildingListForm';
+import DebouncedValidation from 'features/properties/components/forms/subforms/DebouncedValidation';
 const Container = styled.div`
   background-color: #fff;
   height: 100%;
@@ -214,6 +215,7 @@ const Form: React.FC<ILandForm> = ({
   };
   return (
     <FormContentWrapper>
+      <DebouncedValidation formikProps={formikProps}></DebouncedValidation>
       <FormContent>{render()}</FormContent>
       <FormFooter>
         <InventoryPolicy />
@@ -423,6 +425,8 @@ const LandForm: React.FC<IParentLandForm> = (props: IParentLandForm) => {
         }}
         initialValues={initialValues}
         validate={handleValidate}
+        validateOnBlur={true}
+        validateOnChange={false}
         formikRef={props.formikRef}
         onSubmit={async (values, actions) => {
           const apiValues = valuesToApiFormat(_.cloneDeep(values));
