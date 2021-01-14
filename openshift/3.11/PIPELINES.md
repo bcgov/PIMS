@@ -10,7 +10,7 @@ This project makes use of several pipelines. For each one, use the generic pipel
 2. Create a **`.env`** file that contains the values for the parameters within the template
    ```
    NAME=cicd
-   JENKINSFILE_PATH=openshift/pipelines/Jenkinsfile.cicd
+   JENKINSFILE_PATH=openshift/3.11/pipelines/Jenkinsfile.cicd
    ```
 3. Create the pipeline objects `oc process --param-file=[.env] -f openshift/templates/jenkins/generic-pipeline.yaml | oc create -f -`
 
