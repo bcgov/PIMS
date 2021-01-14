@@ -85,6 +85,7 @@ namespace Pims.Dal.Services
             var currentSnapshots = this.Context.ProjectSnapshots
                 .Include(s => s.Project).ThenInclude(p => p.Agency)
                 .Include(s => s.Project).ThenInclude(p => p.Status)
+                .Include(s => s.Project).ThenInclude(p => p.Risk)
                 .Where(s => s.SnapshotOn == report.From || s.SnapshotOn == report.To)
                 .ToArray();
             var toSnapshots = currentSnapshots.Where(s => s.SnapshotOn == report.To);
@@ -128,6 +129,7 @@ namespace Pims.Dal.Services
             return this.Context.ProjectSnapshots
                 .Include(s => s.Project).ThenInclude(p => p.Agency)
                 .Include(s => s.Project).ThenInclude(p => p.Status)
+                .Include(s => s.Project).ThenInclude(p => p.Risk)
                 .Where(s => s.SnapshotOn == report.To)
                 .ToArray();
         }
@@ -258,6 +260,7 @@ namespace Pims.Dal.Services
             var splProjects = this.Context.Projects
                 .Include(p => p.Agency)
                 .Include(p => p.Status)
+                .Include(p => p.Risk)
                 .Where(p => p.Workflow.Code == "SPL" && p.Status.Code != "CA");
             // TODO: Because project status codes could change in the future, this should be updated to not be magic strings.
 

@@ -54,6 +54,22 @@ export const columns: any[] = [
     minWidth: 80,
   },
   {
+    Header: 'Risk',
+    accessor: 'project.risk',
+    align: 'left',
+    responsive: true,
+    width: spacing.xsmall,
+    minWidth: 55,
+  },
+  {
+    Header: 'Status',
+    accessor: 'project.status.name',
+    align: 'left',
+    responsive: true,
+    width: spacing.small,
+    minWidth: 80,
+  },
+  {
     Header: 'CMV',
     accessor: 'market',
     align: 'right',
