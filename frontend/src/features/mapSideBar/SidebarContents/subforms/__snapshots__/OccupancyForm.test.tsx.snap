@@ -1,0 +1,154 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+.c0 {
+  margin-left: 20px;
+  margin-bottom: 20px;
+}
+
+<div
+  class="tenancy col"
+>
+  <div
+    class="row"
+  >
+    <h4>
+      Occupancy
+    </h4>
+  </div>
+  <div
+    class="c0"
+  >
+    <div
+      class="row"
+    >
+      <p
+        class="label"
+      >
+        Total Area
+      </p>
+      <div
+        class="input-group required"
+      >
+        <div
+          class="input-group-content"
+        >
+          <div
+            class="form-group col"
+          >
+            <input
+              class="form-control"
+              id="input-totalArea"
+              name="totalArea"
+              type="number"
+              value=""
+            />
+          </div>
+        </div>
+        <div
+          class="input-group-append"
+        >
+          <span
+            class="input-group-text"
+          >
+            Sq. M
+          </span>
+        </div>
+      </div>
+    </div>
+    <div
+      class="row"
+    >
+      <p
+        class="label"
+      >
+        Net Usable Area
+      </p>
+      <div
+        class="input-group required"
+      >
+        <div
+          class="input-group-content"
+        >
+          <div
+            class="form-group col"
+          >
+            <input
+              class="form-control"
+              id="input-rentableArea"
+              name="rentableArea"
+              type="number"
+              value=""
+            />
+          </div>
+        </div>
+        <div
+          class="input-group-append"
+        >
+          <span
+            class="input-group-text"
+          >
+            Sq. M
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="row"
+  >
+    <h4>
+      Tenants
+    </h4>
+  </div>
+  <div
+    class="c0"
+  >
+    <div
+      class="row"
+    >
+      <p
+        class="label"
+      >
+        Tenancy %
+      </p>
+      <div
+        class="form-group col"
+      >
+        <input
+          class="percentage form-control"
+          id="input-buildingTenancy"
+          name="buildingTenancy"
+          value=""
+        />
+      </div>
+      <p
+        class="label"
+      >
+        Updated On
+      </p>
+      <div
+        class="form-group"
+      >
+        <div
+          class="react-datepicker-wrapper"
+        >
+          <div
+            class="react-datepicker__input-container"
+          >
+            <input
+              autocomplete="off"
+              class="form-control date-picker"
+              id="datepicker-buildingTenancyUpdatedOn"
+              name="buildingTenancyUpdatedOn"
+              placeholder="--/--/----"
+              type="text"
+              value=""
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

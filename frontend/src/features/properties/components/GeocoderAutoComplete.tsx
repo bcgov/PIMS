@@ -9,6 +9,7 @@ import TooltipIcon from 'components/common/TooltipIcon';
 import TooltipWrapper from 'components/common/TooltipWrapper';
 import { useCallback } from 'react';
 import classNames from 'classnames';
+import { useFormikContext } from 'formik';
 
 interface IGeocoderAutoCompleteProps {
   field: string;
@@ -47,6 +48,7 @@ export const GeocoderAutoComplete: React.FC<IGeocoderAutoCompleteProps> = ({
 }) => {
   const [options, setOptions] = React.useState<IGeocoderResponse[]>([]);
   const api = useApi();
+  const { setFieldTouched } = useFormikContext<any>();
   const errorTooltip = error && touch && displayErrorTooltips ? error : undefined;
 
   const search = useCallback(
@@ -61,6 +63,7 @@ export const GeocoderAutoComplete: React.FC<IGeocoderAutoCompleteProps> = ({
 
   const onTextChanged = async (val?: string) => {
     onTextChange && onTextChange(val);
+    setFieldTouched(field);
     if (val && val.length >= 5 && val !== value) {
       await search(val, false);
     } else {
@@ -106,7 +109,6 @@ export const GeocoderAutoComplete: React.FC<IGeocoderAutoCompleteProps> = ({
           controlId={`input-${field}`}
           className={classNames(!!required ? 'required' : '', outerClassName)}
         >
-          {!!tooltip && <TooltipIcon toolTipId={`${field}-tooltip`} toolTip={tooltip} />}
           <TooltipWrapper toolTipId={`${field}-error-tooltip}`} toolTip={errorTooltip}>
             <InputControl
               autoComplete={autoSetting}
@@ -120,8 +122,9 @@ export const GeocoderAutoComplete: React.FC<IGeocoderAutoCompleteProps> = ({
               {...rest}
             />
           </TooltipWrapper>
+          {!!tooltip && <TooltipIcon toolTipId={`${field}-tooltip`} toolTip={tooltip} />}
           {renderSuggestions()}
-          <DisplayError field={field} />
+          {!errorTooltip && <DisplayError field={field} />}
         </Form.Group>
       </ClickAwayListener>
     </div>

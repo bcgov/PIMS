@@ -51,6 +51,8 @@ namespace Pims.Api.Areas.Admin.Models.Parcel
 
         public float RentableArea { get; set; }
 
+        public float TotalArea { get; set; }
+
         public bool IsSensitive { get; set; }
 
         public IEnumerable<BuildingEvaluationModel> Evaluations { get; set; } = new List<BuildingEvaluationModel>();

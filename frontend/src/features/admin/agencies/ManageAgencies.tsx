@@ -101,8 +101,8 @@ const ManageAgencies: React.FC = () => {
         <AgencyFilterBar
           value={{ ...initialValues }}
           onChange={value => {
-            if ((value as any).id?.value) {
-              setFilter({ ...filter, id: Number((value as any).id.value) });
+            if ((value as any).id) {
+              setFilter({ ...filter, id: Number((value as any).id) });
             } else {
               setFilter({ ...initialValues, id: undefined });
             }

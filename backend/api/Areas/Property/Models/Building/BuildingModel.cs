@@ -31,7 +31,15 @@ namespace Pims.Api.Areas.Property.Models.Building
 
         public string BuildingTenancy { get; set; }
 
+        public DateTime? BuildingTenancyUpdatedOn { get; set; }
+
         public float RentableArea { get; set; }
+
+        public float TotalArea { get; set; }
+
+        public IEnumerable<LeasedLandMetadataModel> LeasedLandMetadata { get; set; } = new List<LeasedLandMetadataModel>();
+
+        public IEnumerable<BuildingParcelModel> Parcels { get; set; } = new List<BuildingParcelModel>();
 
         public IEnumerable<BuildingEvaluationModel> Evaluations { get; set; } = new List<BuildingEvaluationModel>();
 
