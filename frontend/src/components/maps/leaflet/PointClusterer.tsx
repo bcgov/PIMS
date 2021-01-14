@@ -30,6 +30,7 @@ export type PointClustererProps = {
   /** When you click a cluster at the bottom zoom level we spiderfy it so you can see all of its markers. Default: true */
   spiderfyOnMaxZoom?: boolean;
   onMarkerClick?: (point: PointFeature, position?: [number, number]) => void;
+  tilesLoaded: boolean;
 };
 
 export const PointClusterer: React.FC<PointClustererProps> = ({
@@ -43,6 +44,7 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
   selected,
   zoomToBoundsOnClick = true,
   spiderfyOnMaxZoom = true,
+  tilesLoaded,
 }) => {
   // state and refs
   const spiderfierRef = useRef<Spiderfier>();
@@ -137,6 +139,7 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
         supercluster.getClusterExpansionZoom(cluster_id as number),
         maxZoom as number,
       );
+
       // already at maxZoom, need to spiderfy child markers
       if (expansionZoom === maxZoom && spiderfyOnMaxZoom) {
         const res = spiderfierRef.current.spiderfy(cluster);
@@ -176,7 +179,8 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
         groupBounds.isValid() &&
         group.getBounds().isValid() &&
         filterState.changed &&
-        !selected
+        !selected &&
+        tilesLoaded
       ) {
         filterState.setChanged(false);
         map.fitBounds(group.getBounds(), { maxZoom: 10 });

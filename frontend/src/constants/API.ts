@@ -70,7 +70,6 @@ export interface IGeoSearchParams {
   floorCount?: number;
   rentableArea?: number;
   propertyType?: string;
-  tileKey?: string;
 }
 export const GEO_PROPERTIES = (params: IGeoSearchParams | null) =>
   `/properties/search/wfs?${params ? queryString.stringify(params) : ''}`; // get filtered properties or all if not specified.
