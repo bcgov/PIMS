@@ -19,6 +19,8 @@ import * as API from 'constants/API';
 import * as reducerTypes from 'constants/reducerTypes';
 import { render, fireEvent, wait } from '@testing-library/react';
 import { fillInput } from 'utils/testUtils';
+import axios from 'axios';
+import MockAdapter from 'axios-mock-adapter';
 
 Enzyme.configure({ adapter: new Adapter() });
 
@@ -46,6 +48,8 @@ const requestAccess = {
 
 const mockStore = configureMockStore([thunk]);
 const history = createMemoryHistory();
+const mockAxios = new MockAdapter(axios);
+mockAxios.onAny().reply(200, {});
 
 // Simulating a succesful submit
 const successStore = mockStore({

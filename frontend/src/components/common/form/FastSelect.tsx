@@ -1,4 +1,4 @@
-import React, { memo, useEffect } from 'react';
+import React, { CSSProperties, memo, useEffect } from 'react';
 import { Form, FormControlProps } from 'react-bootstrap';
 import { getIn, FormikProps } from 'formik';
 import { DisplayError } from './DisplayError';
@@ -6,6 +6,7 @@ import { SelectOption } from './Select';
 import { formikFieldMemo } from 'utils';
 import classNames from 'classnames';
 import TooltipIcon from 'components/common/TooltipIcon';
+import TooltipWrapper from '../TooltipWrapper';
 
 type RequiredAttributes = {
   /** The field name */
@@ -41,6 +42,10 @@ type OptionalAttributes = {
   errorPrompt?: boolean;
   /** Tooltip text */
   tooltip?: string;
+  /** add style to the select input */
+  style?: CSSProperties;
+  /** Display errors in a tooltip instead of in a div */
+  displayErrorTooltips?: boolean;
 };
 
 // only "field" and "options" are required for <Select>, the rest are optional
@@ -67,6 +72,8 @@ export const FastSelect: React.FC<FastSelectProps> = memo(
     type,
     errorPrompt,
     tooltip,
+    displayErrorTooltips,
+    style,
     formikProps: {
       values,
       errors,
@@ -74,6 +81,7 @@ export const FastSelect: React.FC<FastSelectProps> = memo(
       handleChange,
       handleBlur,
       setFieldValue,
+      setFieldTouched,
       registerField,
       unregisterField,
     },
@@ -82,6 +90,7 @@ export const FastSelect: React.FC<FastSelectProps> = memo(
     const error = getIn(errors, field);
     const touch = getIn(touched, field);
     const value = getIn(values, field);
+    const errorTooltip = error && touch && displayErrorTooltips ? error : undefined;
     const asElement: any = is || 'select';
 
     const handleMultipleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -147,36 +156,40 @@ export const FastSelect: React.FC<FastSelectProps> = memo(
       >
         {!!label && <Form.Label>{label}</Form.Label>}
         {!!tooltip && <TooltipIcon toolTipId="fastSelect-tip" toolTip={tooltip} />}
-        <Form.Control
-          as={asElement}
-          name={field}
-          className={className}
-          required={required}
-          disabled={disabled}
-          custom={custom}
-          isInvalid={!!touch && !!error}
-          isValid={false}
-          value={getIn(values, field)}
-          multiple={multiple}
-          onChange={
-            multiple
-              ? handleMultipleChange
-              : (e: any) => {
-                  let value = e.currentTarget.value;
-                  if (type === 'number' && !isNaN(parseInt(value))) {
-                    value = parseInt(value);
+        <TooltipWrapper toolTipId={`${field}-error-tooltip}`} toolTip={errorTooltip}>
+          <Form.Control
+            as={asElement}
+            name={field}
+            className={className}
+            required={required}
+            disabled={disabled}
+            style={style}
+            custom={custom}
+            isInvalid={!!touch && !!error}
+            isValid={false}
+            value={getIn(values, field)}
+            multiple={multiple}
+            onBlur={handleBlur}
+            onChange={
+              multiple
+                ? handleMultipleChange
+                : (e: any) => {
+                    let value = e.currentTarget.value;
+                    if (type === 'number' && !isNaN(parseInt(value))) {
+                      value = parseInt(value);
+                    }
+                    setFieldValue(field, value);
                   }
-                  setFieldValue(field, value);
-                }
-          }
-          type={type}
-          {...rest}
-        >
-          <Placeholder />
-          <PreviousValue />
-          {renderOptions()}
-        </Form.Control>
-        <DisplayError field={field} errorPrompt={errorPrompt} />
+            }
+            type={type}
+            {...rest}
+          >
+            <Placeholder />
+            <PreviousValue />
+            {renderOptions()}
+          </Form.Control>
+        </TooltipWrapper>
+        {!displayErrorTooltips && <DisplayError field={field} />}
       </Form.Group>
     );
   },

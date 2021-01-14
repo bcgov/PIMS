@@ -17,6 +17,8 @@ namespace Pims.Api.Areas.Property.Models.Parcel
 
         public string Classification { get; set; }
 
+        public string EncumbranceReason { get; set; }
+
         public int AgencyId { get; set; }
 
         public virtual string SubAgency { get; set; }

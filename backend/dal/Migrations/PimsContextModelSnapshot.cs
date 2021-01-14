@@ -393,6 +393,9 @@ namespace Pims.Dal.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<DateTime?>("BuildingTenancyUpdatedOn")
+                        .HasColumnType("DATETIME2");
+
                     b.Property<int>("ClassificationId")
                         .HasColumnType("int");
 
@@ -408,6 +411,10 @@ namespace Pims.Dal.Migrations
                         .HasColumnType("nvarchar(2000)")
                         .HasMaxLength(2000);
 
+                    b.Property<string>("EncumbranceReason")
+                        .HasColumnType("nvarchar(500)")
+                        .HasMaxLength(500);
+
                     b.Property<bool>("IsSensitive")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
@@ -420,6 +427,9 @@ namespace Pims.Dal.Migrations
 
                     b.Property<DateTime?>("LeaseExpiry")
                         .HasColumnType("DATETIME2");
+
+                    b.Property<string>("LeasedLandMetadata")
+                        .HasColumnType("NVARCHAR(MAX)");
 
                     b.Property<Point>("Location")
                         .IsRequired()
@@ -444,6 +454,9 @@ namespace Pims.Dal.Migrations
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("rowversion");
+
+                    b.Property<float>("TotalArea")
+                        .HasColumnType("real");
 
                     b.Property<bool>("TransferLeaseOnSale")
                         .ValueGeneratedOnAdd()
@@ -600,6 +613,9 @@ namespace Pims.Dal.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("DATETIME2")
                         .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<DateTime?>("EffectiveDate")
+                        .HasColumnType("DATE");
 
                     b.Property<string>("Note")
                         .HasColumnType("nvarchar(500)")
@@ -1028,6 +1044,10 @@ namespace Pims.Dal.Migrations
                         .HasColumnType("nvarchar(2000)")
                         .HasMaxLength(2000);
 
+                    b.Property<string>("EncumbranceReason")
+                        .HasColumnType("nvarchar(500)")
+                        .HasMaxLength(500);
+
                     b.Property<bool>("IsSensitive")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
@@ -1220,6 +1240,9 @@ namespace Pims.Dal.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("DATETIME2")
                         .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<DateTime?>("EffectiveDate")
+                        .HasColumnType("DATE");
 
                     b.Property<string>("Note")
                         .HasColumnType("nvarchar(500)")

@@ -16,7 +16,10 @@ export const STORE_PARCEL_SEARCH_PARAMS = 'STORE_PARCEL_SEARCH_PARAMS';
 export const GET_PARCELS = 'parcels';
 export const GET_PARCEL_DETAIL = 'GET_PARCEL_DETAIL';
 export const ADD_PARCEL = 'ADD_PARCEL';
+export const ADD_BUILDING = 'ADD_BUILDING';
+export const GET_BUILDING_DETAIL = 'GET_BUILDING_DETAIL';
 export const UPDATE_PARCEL = 'UPDATE_PARCEL';
+export const UPDATE_BUILDING = 'UPDATE_BUILDING';
 export const DELETE_PARCEL = 'DELETE_PARCEL';
 
 // Lookup codes

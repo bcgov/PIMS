@@ -138,8 +138,8 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
   // Update internal state whenever the filter bar state changes
   const handleFilterChange = useCallback(
     (value: IProjectFilterState) => {
-      (value as any).agencies?.value
-        ? setFilter({ ...value, agencies: (value as any)?.agencies.value })
+      (value as any).agencies
+        ? setFilter({ ...value, agencies: (value as any)?.agencies })
         : setFilter({ ...value });
       if ((value as any).statusId) {
         setFilter({ ...value, statusId: (value as any).statusId?.map((x: any) => x) });

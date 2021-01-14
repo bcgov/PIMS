@@ -7,6 +7,18 @@ ul.pagination li {
   cursor: pointer;
 }
 
+.modal-dialog.modal-xl {
+  max-width: 1000px;
+}
+
+.modal-dialog.modal-l {
+  max-width: 750px;
+}
+
+.modal-dialog.modal-s {
+  max-width: 400px;
+}
+
 div.bootstrap-table {
   .col {
     border-bottom-width: 2px;
@@ -54,20 +66,29 @@ div.bootstrap-table {
   word-break: break-word;
 }
 
+select.form-control.is-invalid {
+  background-image: none;
+  padding-right: 12px;
+}
+
 //by default highlight required fields in blue.
-.form-group.required input {
+.form-group.required input:not(.is-invalid) {
   border: 1px solid $secondary-variant-color;
 }
 
-.form-group.required select {
+.form-group.required select:not(.is-invalid) {
   border: 1px solid $secondary-variant-color;
 }
 
-.input-group.required input {
+.input-group.required input:not(.is-invalid) {
   border: 1px solid $secondary-variant-color;
 }
 
-.form-check.required input {
+.form-check.required input:not(.is-invalid) {
+  border: 1px solid $secondary-variant-color;
+}
+
+.form-group.required textarea:not(.is-invalid) {
   border: 1px solid $secondary-variant-color;
 }
 

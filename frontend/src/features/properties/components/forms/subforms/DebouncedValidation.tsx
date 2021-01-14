@@ -13,7 +13,7 @@ interface IDebouncedValidationProps {
  * Another possible solution would be to enable field level validation on all fields, but this was implemented due to time constraints.
  * */
 const DebouncedValidation = (props: IDebouncedValidationProps) => {
-  const { validateForm } = useFormikContext();
+  const { validateForm, values } = useFormikContext();
   const validation = useCallback(
     _.debounce((abort: boolean) => {
       if (!abort) {
@@ -28,7 +28,7 @@ const DebouncedValidation = (props: IDebouncedValidationProps) => {
     return () => {
       validation(true);
     };
-  }, [props.formikProps.values, validation]);
+  }, [values, validation]);
 
   return <></>;
 };
