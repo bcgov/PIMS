@@ -1,16 +1,27 @@
 import * as React from 'react';
-import { IBuilding, IParcel, PropertyTypes } from 'actions/parcelsActions';
+import { IBuilding, IParcel, IProperty, PropertyTypes } from 'actions/parcelsActions';
 import { ParcelPopupView } from './ParcelPopupView';
 import { BuildingPopupView } from './BuildingPopupView';
+import { useApi } from 'hooks/useApi';
 
 export type IPopupViewProps = {
-  propertyTypeId: PropertyTypes; // 0 = Parcel, 1 = Building
+  /** The property type [Parcel, Building] */
+  propertyTypeId: PropertyTypes;
+  /** The property selected */
   propertyDetail: IParcel | IBuilding | null;
+  /** Zoom level that the map should zoom to. */
   zoomTo?: () => void;
+  /** Whether the Popup action menu is disabled. */
   disabled?: boolean;
+  /** Event is fired when a link on the popup is clicked. */
   onLinkClick?: () => void;
 };
 
+/**
+ * Displays a popup that describes the selected property.
+ * Makes an ajax request to fetch the property information.
+ * @param param0 PopupView properties.
+ */
 export const PopupView: React.FC<IPopupViewProps> = ({
   propertyTypeId,
   propertyDetail,
@@ -18,21 +29,39 @@ export const PopupView: React.FC<IPopupViewProps> = ({
   zoomTo,
   onLinkClick,
 }) => {
-  if (propertyTypeId === PropertyTypes.PARCEL) {
+  const { getParcel, getBuilding } = useApi();
+  const [property, setProperty] = React.useState<IProperty | null>(propertyDetail);
+  const id = propertyDetail?.id;
+
+  React.useEffect(() => {
+    if (propertyTypeId === PropertyTypes.PARCEL) {
+      getParcel(id as number).then(parcel => {
+        console.log(parcel.name);
+        setProperty(parcel);
+      });
+    } else if (propertyTypeId === PropertyTypes.BUILDING) {
+      getBuilding(id as number).then(building => {
+        console.log(building.name);
+        setProperty(building);
+      });
+    }
+  }, [getParcel, getBuilding, propertyTypeId, id]);
+
+  if (propertyDetail && propertyTypeId === PropertyTypes.PARCEL) {
     return (
       <ParcelPopupView
         zoomTo={zoomTo}
         disabled={disabled}
-        parcel={propertyDetail as IParcel}
+        parcel={property as IParcel}
         onLinkClick={onLinkClick}
       />
     );
   }
-  if (propertyTypeId === PropertyTypes.BUILDING) {
+  if (propertyDetail && propertyTypeId === PropertyTypes.BUILDING) {
     return (
       <BuildingPopupView
         zoomTo={zoomTo}
-        building={propertyDetail as IBuilding}
+        building={property as IBuilding}
         onLinkClick={onLinkClick}
       />
     );
@@ -43,5 +72,5 @@ export const PopupView: React.FC<IPopupViewProps> = ({
   if (propertyTypeId === PropertyTypes.DRAFT_BUILDING) {
     return <p>This is a draft marker for building: {propertyDetail?.name ?? 'New Building'}</p>;
   }
-  return null;
+  return <></>;
 };

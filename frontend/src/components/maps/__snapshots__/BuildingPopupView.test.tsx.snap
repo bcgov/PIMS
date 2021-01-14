@@ -46,13 +46,8 @@ exports[`building popup view renders correctly 1`] = `
           >
             Assessed Value:
           </p>
-          $
+          0
         </div>
-      </div>
-      <div
-        className="list-group"
-        onKeyDown={[Function]}
-      >
         <div
           className="list-group-item"
           data-rb-event-key={null}
@@ -60,11 +55,7 @@ exports[`building popup view renders correctly 1`] = `
           onClick={[Function]}
         >
           <div />
-          <div>
-            ,
-             
-             
-          </div>
+          <div />
         </div>
       </div>
       <div
