@@ -1,24 +1,20 @@
 @import '../../../variables';
 @import '../../../colors';
 $contentheading-height: 60px;
-
 .PropertyListView {
   background-color: #fff;
   display: flex;
   flex-direction: column;
   padding: 0;
-
   .filter-container {
     padding: 0;
     background-color: $filter-background-color;
     .container {
-      max-width: 1160px;
+      max-width: 1360px;
     }
-
     .map-filter-bar {
       align-items: center;
       padding: 1rem 0;
-
       .vl {
         border-left: 6px solid rgba(96, 96, 96, 0.2);
         height: 40px;
@@ -26,7 +22,6 @@ $contentheading-height: 60px;
         margin-right: 1%;
         border-width: 2px;
       }
-
       .bar-item {
         .input-group {
           .input-group-prepend {
@@ -49,12 +44,10 @@ $contentheading-height: 60px;
         min-width: 200px;
         max-width: 250px;
       }
-
       .btn-warning {
         color: white;
         font-weight: bold;
       }
-
       .form-control {
         border-radius: 0;
         max-width: 200px;
@@ -64,13 +57,11 @@ $contentheading-height: 60px;
       margin-bottom: 0rem;
     }
   }
-
   .TableToolbar {
     display: flex;
     flex-direction: row;
     padding-bottom: 1rem;
   }
-
   .TableToolbar .menu {
     display: flex;
     flex-direction: row;
@@ -78,18 +69,15 @@ $contentheading-height: 60px;
     margin-top: auto;
     margin-right: auto;
   }
-
   .TableToolbar .menu div {
     margin-left: 10px;
   }
-
   .ScrollContainer {
     padding: 1rem 2rem;
     max-height: calc(
       100vh - #{$header-height} - #{$navbar-height} - #{$mapfilter-height} - #{$footer-height}
     );
     overflow-y: scroll;
-
     table {
       background-color: #fff;
     }
