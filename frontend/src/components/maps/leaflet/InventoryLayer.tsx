@@ -8,12 +8,12 @@ import { useLeaflet } from 'react-leaflet';
 import { toast } from 'react-toastify';
 import { PointFeature } from '../types';
 import PointClusterer from './PointClusterer';
-import { useApi } from 'hooks/useApi';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'reducers/rootReducer';
 import { flatten, uniqBy } from 'lodash';
 import { tilesInBbox } from 'tiles-in-bbox';
 import { useFilterContext } from '../providers/FIlterProvider';
+import { loadProperties } from 'actionCreators/parcelsActionCreator';
 
 export type InventoryLayerProps = {
   /** Latitude and Longitude boundary of the layer. */
@@ -135,9 +135,9 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
   selected,
 }) => {
   const { map } = useLeaflet();
+  const dispatch = useDispatch();
   const [features, setFeatures] = useState<PointFeature[]>([]);
   const [loadingTiles, setLoadingTiles] = useState(false);
-  const { loadProperties } = useApi();
   const { changed: filterChanged } = useFilterContext();
   const draftProperties: PointFeature[] = useSelector<RootState, PointFeature[]>(
     state => state.parcel.draftParcels,
@@ -182,7 +182,7 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
   }, [filter]);
 
   const loadTile = async (filter: IGeoSearchParams) => {
-    return loadProperties(filter);
+    return loadProperties(filter)(dispatch);
   };
 
   const search = async (filters: IGeoSearchParams[]) => {
