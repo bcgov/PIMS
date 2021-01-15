@@ -1,14 +1,24 @@
 import * as React from 'react';
-import { ListGroup } from 'react-bootstrap';
+import { Col, ListGroup, Row } from 'react-bootstrap';
 import { keys } from 'lodash';
 import styled from 'styled-components';
-import { LatLng } from 'react-leaflet';
+import { LatLng, useLeaflet } from 'react-leaflet';
 import { Link, useLocation } from 'react-router-dom';
 import queryString from 'query-string';
+import { LatLngBounds } from 'leaflet';
 
 export const LayerPopupTitle = styled('div')`
   padding: 16px;
   font-weight: 800;
+`;
+
+export const MenuRow = styled(Row)`
+  text-align: center;
+  padding-bottom: 10px;
+`;
+
+export const StyledLink = styled(Link)`
+  padding: 0 4px;
 `;
 
 export type PopupContentConfig = {
@@ -40,6 +50,7 @@ export interface IPopupContentProps {
   config: PopupContentConfig;
   center?: LatLng;
   onAddToParcel: (e: MouseEvent, data: { [key: string]: any }) => void;
+  bounds?: LatLngBounds;
 }
 
 /**
@@ -51,11 +62,17 @@ export const LayerPopupContent: React.FC<IPopupContentProps> = ({
   config,
   center,
   onAddToParcel,
+  bounds,
 }) => {
   const rows = React.useMemo(() => keys(config), [config]);
   const location = useLocation();
   const urlParsed = queryString.parse(location.search);
   const populateDetails = urlParsed.sidebar === 'true' ? true : false;
+
+  const leaflet = useLeaflet();
+  const curZoom = leaflet.map?.getZoom();
+  const boundZoom = leaflet.map?.getBoundsZoom(bounds!);
+
   return (
     <>
       <ListGroup>
@@ -65,22 +82,30 @@ export const LayerPopupContent: React.FC<IPopupContentProps> = ({
           </ListGroup.Item>
         ))}
       </ListGroup>
-      {populateDetails && (data.PID !== undefined || data.PIN !== undefined) ? (
-        <Link
-          style={{ display: 'flex', justifyContent: 'center', paddingBottom: '10px' }}
-          onClick={(e: any) => onAddToParcel(e, { ...data, CENTER: center })}
-          to={{
-            search: queryString.stringify({
-              ...queryString.parse(location.search),
-              sidebar: true,
-              disabled: false,
-              loadDraft: false,
-            }),
-          }}
-        >
-          Populate property details
-        </Link>
-      ) : null}
+      <MenuRow>
+        <Col>
+          {populateDetails && (data.PID !== undefined || data.PIN !== undefined) ? (
+            <StyledLink
+              onClick={(e: any) => onAddToParcel(e, { ...data, CENTER: center })}
+              to={{
+                search: queryString.stringify({
+                  ...queryString.parse(location.search),
+                  sidebar: true,
+                  disabled: false,
+                  loadDraft: false,
+                }),
+              }}
+            >
+              Populate property details
+            </StyledLink>
+          ) : null}
+          {bounds && curZoom! !== boundZoom ? (
+            <StyledLink to={{ ...location }} onClick={() => leaflet.map?.flyToBounds(bounds)}>
+              Zoom
+            </StyledLink>
+          ) : null}
+        </Col>
+      </MenuRow>
     </>
   );
 };

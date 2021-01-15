@@ -5,9 +5,14 @@ import { render, cleanup } from '@testing-library/react';
 import { IPopupContentProps, LayerPopupContent } from './LayerPopupContent';
 import { Router } from 'react-router-dom';
 import queryString from 'query-string';
+import { LatLng, LatLngBounds } from 'leaflet';
 
 const history = createMemoryHistory();
 jest.mock('hooks/useApi');
+
+const northEast = new LatLng(50.5, -120.7);
+const southWest = new LatLng(50.3, -121.2);
+const bounds = new LatLngBounds(southWest, northEast);
 
 const mockLayer: IPopupContentProps = {
   config: {},
@@ -30,6 +35,7 @@ const mockLayer: IPopupContentProps = {
     when_updated: '2020-01-01',
   },
   onAddToParcel: jest.fn(),
+  bounds: bounds,
 };
 describe('Layer Popup Content', () => {
   afterEach(() => {
@@ -82,5 +88,19 @@ describe('Layer Popup Content', () => {
     );
     const link = getByText(/Populate property details/i);
     expect(link).toBeInTheDocument();
+  });
+
+  it('Zoom link does not appear without bounds', () => {
+    const { queryByText } = render(
+      <Router history={history}>
+        <LayerPopupContent
+          data={mockLayer.data}
+          config={mockLayer.config}
+          onAddToParcel={mockLayer.onAddToParcel}
+        />
+      </Router>,
+    );
+    const link = queryByText(/Zoom/i);
+    expect(link).toBeNull();
   });
 });
