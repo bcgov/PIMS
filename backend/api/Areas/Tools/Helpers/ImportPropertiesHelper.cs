@@ -317,7 +317,7 @@ namespace Pims.Api.Areas.Tools.Helpers
         /// <returns></returns>
         private Entity.Parcel AddUpdateParcel(Model.ImportPropertyModel property, int pid, Entity.Agency agency)
         {
-            var p_e = ExceptionHelper.HandleKeyNotFoundWithDefault(() => _pimsAdminService.Parcel.GetByPid(pid));
+            var p_e = ExceptionHelper.HandleKeyNotFoundWithDefault(() => _pimsAdminService.Parcel.GetByPidWithoutTracking(pid));
             var fiscalYear = property.FiscalYear;
             var evaluationDate = new DateTime(fiscalYear, 1, 1); // Defaulting to Jan 1st because SIS data doesn't have the actual date.
 
@@ -413,10 +413,10 @@ namespace Pims.Api.Areas.Tools.Helpers
         {
             var name = GenerateName(property.Name, property.Description, property.LocalId);
             // Multiple buildings could be returned for the PID and Name.
-            var b_e = ExceptionHelper.HandleKeyNotFoundWithDefault(() => _pimsAdminService.Building.GetByPid(pid, name).FirstOrDefault(n => n.Name == name) ?? throw new KeyNotFoundException());
+            var b_e = ExceptionHelper.HandleKeyNotFoundWithDefault(() => _pimsAdminService.Building.GetByPidWithoutTracking(pid, name).FirstOrDefault(n => n.Name == name) ?? throw new KeyNotFoundException());
             var evaluationDate = new DateTime(property.FiscalYear, 1, 1); // Defaulting to Jan 1st because SIS data doesn't have the actual date.
             // Find parcel
-            var parcel = ExceptionHelper.HandleKeyNotFound(() => _pimsAdminService.Parcel.GetByPid(pid));
+            var parcel = ExceptionHelper.HandleKeyNotFound(() => _pimsAdminService.Parcel.GetByPidWithoutTracking(pid));
 
             // Determine if the last evaluation or fiscal values are older than the one currently being imported.
             var fiscalNetBook = b_e.Fiscals.OrderByDescending(f => f.FiscalYear).FirstOrDefault(f => f.Key == Entity.FiscalKeys.NetBook && f.FiscalYear > property.FiscalYear);
