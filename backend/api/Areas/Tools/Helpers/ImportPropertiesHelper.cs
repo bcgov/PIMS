@@ -413,7 +413,7 @@ namespace Pims.Api.Areas.Tools.Helpers
         {
             var name = GenerateName(property.Name, property.Description, property.LocalId);
             // Multiple buildings could be returned for the PID and Name.
-            var b_e = ExceptionHelper.HandleKeyNotFoundWithDefault(() => _pimsAdminService.Building.GetByPid(pid, name).FirstOrDefault(n => n.Name == name) ?? throw new KeyNotFoundException());
+            var b_e = ExceptionHelper.HandleKeyNotFoundWithDefault(() => _pimsAdminService.Building.GetByPidWithoutTracking(pid, name).FirstOrDefault(n => n.Name == name) ?? throw new KeyNotFoundException());
             var evaluationDate = new DateTime(property.FiscalYear, 1, 1); // Defaulting to Jan 1st because SIS data doesn't have the actual date.
 
             // Find parcel
