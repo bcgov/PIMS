@@ -1,8 +1,22 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Layer Popup Content Renders correctly 1`] = `
+Array [
+  <div
+    className="list-group"
+    onKeyDown={[Function]}
+  />,
+  .c0 {
+  text-align: center;
+  padding-bottom: 10px;
+}
+
 <div
-  className="list-group"
-  onKeyDown={[Function]}
-/>
+    className="c0 row"
+  >
+    <div
+      className="col"
+    />
+  </div>,
+]
 `;
