@@ -168,7 +168,7 @@ namespace Pims.Dal.Services.Admin
                 .Include(p => p.Buildings).ThenInclude(pb => pb.Building).ThenInclude(b => b.BuildingConstructionType)
                 .Include(p => p.Buildings).ThenInclude(pb => pb.Building).ThenInclude(b => b.BuildingPredominateUse)
                 .Include(p => p.Buildings).ThenInclude(pb => pb.Building).ThenInclude(b => b.BuildingOccupantType)
-                .AsNoTracking().Where(p => p.PID == pid);
+                .Where(p => p.PID == pid);
 
             if (!parcels.Any()) throw new KeyNotFoundException();
             if (parcels.Count() == 1) return parcels.First();
