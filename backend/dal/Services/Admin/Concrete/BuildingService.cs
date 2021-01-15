@@ -94,6 +94,26 @@ namespace Pims.Dal.Services.Admin
         }
 
         /// <summary>
+        /// Get the building for the specified 'pid' and 'name'.
+        /// This searched for a name that begins the same.
+        /// </summary>
+        /// <param name="pid"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public IEnumerable<Building> GetByPidWithoutTracking(int pid, string name = null)
+        {
+            this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin, Permissions.AgencyAdmin);
+
+            return this.Context.Buildings
+                .Include(p => p.BuildingConstructionType)
+                .Include(p => p.BuildingPredominateUse)
+                .Include(p => p.BuildingOccupantType)
+                .Include(p => p.Address).ThenInclude(a => a.Province)
+                .Include(p => p.Agency).ThenInclude(a => a.Parent)
+                .AsNoTracking().Where(b => b.Parcels.Any(pb => pb.Parcel.PID == pid) && (name == null || EF.Functions.Like(b.Name, $"{name}%")));
+        }
+
+        /// <summary>
         /// Get the building for the specified 'name'.
         /// </summary>
         /// <param name="name"></param>
@@ -109,6 +129,24 @@ namespace Pims.Dal.Services.Admin
                 .Include(p => p.Address).ThenInclude(a => a.Province)
                 .Include(p => p.Agency).ThenInclude(a => a.Parent)
                 .Where(b => b.Name == name) ?? throw new KeyNotFoundException();
+        }
+
+        /// <summary>
+        /// Get the building for the specified 'name'.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public IEnumerable<Building> GetByNameWithoutTracking(string name)
+        {
+            this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin, Permissions.AgencyAdmin);
+
+            return this.Context.Buildings
+                .Include(p => p.BuildingConstructionType)
+                .Include(p => p.BuildingPredominateUse)
+                .Include(p => p.BuildingOccupantType)
+                .Include(p => p.Address).ThenInclude(a => a.Province)
+                .Include(p => p.Agency).ThenInclude(a => a.Parent)
+                .AsNoTracking().Where(b => b.Name == name) ?? throw new KeyNotFoundException();
         }
 
         /// <summary>

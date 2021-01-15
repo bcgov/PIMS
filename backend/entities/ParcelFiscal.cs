@@ -27,6 +27,12 @@ namespace Pims.Dal.Entities
         public int FiscalYear { get; set; }
 
         /// <summary>
+        /// get/set - The effective date of this fiscal value
+        /// </summary>
+        /// <value></value>
+        public DateTime? EffectiveDate { get; set; }
+
+        /// <summary>
         /// get/set - The key for this fiscal value.
         /// </summary>
         /// <value></value>

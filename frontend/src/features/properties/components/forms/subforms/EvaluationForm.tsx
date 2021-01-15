@@ -1,15 +1,14 @@
-import { Fragment, useMemo, useRef } from 'react';
+import { Fragment, useMemo } from 'react';
 import React from 'react';
-import { FormikProps, getIn } from 'formik';
+import { FormikProps } from 'formik';
 import { IEvaluation, IFiscal } from 'actions/parcelsActions';
 import { EvaluationKeys } from 'constants/evaluationKeys';
 import { FiscalKeys } from 'constants/fiscalKeys';
 import moment from 'moment';
 import _ from 'lodash';
 import { isPositiveNumberOrZero } from 'utils';
-import PaginatedFormErrors from './PaginatedFormErrors';
 import { Table } from 'components/Table';
-import { getEvaluationCols } from './columns';
+import { getNetbookCols, getAssessedCols } from './columns';
 
 interface EvaluationProps {
   /** the formik tracked namespace of this component */
@@ -20,6 +19,8 @@ interface EvaluationProps {
   showAppraisal?: boolean;
   /** whether the form is being used on parcel or building */
   isParcel?: boolean;
+  /** if the improvements should be displayed */
+  showImprovements?: boolean;
 }
 
 /**
@@ -30,6 +31,8 @@ export interface IFinancial extends IFiscal, IEvaluation {
   year?: number;
   rowVersion?: string;
   parcelId?: number;
+  createdOn?: string;
+  updatedOn?: string;
 }
 
 export interface IFinancialYear {
@@ -37,9 +40,9 @@ export interface IFinancialYear {
   appraised: IFinancial;
   netbook: IFinancial;
   market: IFinancial;
+  improvements: IFinancial;
 }
-const NUMBER_OF_EVALUATIONS_PER_PAGE = 2;
-const NUMBER_OF_GENERATED_EVALUATIONS = 20;
+const NUMBER_OF_GENERATED_EVALUATIONS = 10;
 const currentYear = moment().year();
 const adjustedFiscalYear = moment().month() >= 3 ? currentYear + 1 : currentYear;
 const yearsArray = _.range(
@@ -72,6 +75,8 @@ export const defaultFinancials: any = yearsArray.map(year => {
       [type.toLocaleLowerCase()]: {
         date: type === EvaluationKeys.Assessed ? moment(year, 'YYYY').format('YYYY-MM-DD') : '',
         year: year,
+        createdOn: '',
+        updatedOn: '',
         fiscalYear: year,
         key: type,
         value: '',
@@ -102,6 +107,11 @@ export const getMergedFinancials = (existingFinancials: IFinancial[]) => {
 
 export const filterEmptyFinancials = (evaluations: IFinancial[]) =>
   _.filter(evaluations, evaluation => {
+    evaluation.createdOn = undefined;
+    evaluation.updatedOn = undefined;
+    if (evaluation.date === '') {
+      evaluation.date = undefined;
+    }
     return (
       isPositiveNumberOrZero(evaluation.value) ||
       (evaluation.key === EvaluationKeys.Appraised && !!evaluation.date)
@@ -115,52 +125,46 @@ export const filterFutureAssessedValues = (evaluations: IFinancial[]) =>
       (evaluation.key === EvaluationKeys.Assessed && evaluation.year! <= moment().year())
     );
   });
-/**
- * Get the paginated page numbers that contain errors.
- */
-const getPageErrors = (errors: any, nameSpace: any) => {
-  const evaluationErrors = getIn(errors, nameSpace);
-  const errorsPerPage = Object.keys(keyTypes).length * NUMBER_OF_EVALUATIONS_PER_PAGE;
-  return _.uniq(
-    _.reduce(
-      evaluationErrors,
-      (acc: number[], error, index) => {
-        if (error) {
-          acc.push(Math.ceil((parseInt(index) + 1) / errorsPerPage));
-        }
-        return acc;
-      },
-      [],
-    ),
-  );
-};
 
 /**
  * Subform Component intended to be embedded in a higher level formik component.
  */
 const EvaluationForm = <T extends any>(props: EvaluationProps & FormikProps<T>) => {
-  const financials: IFinancialYear[] = getIn(props.values, props.nameSpace);
-  const pagingRef: any = useRef();
-  const cols: any = useMemo(
-    () => getEvaluationCols(props.disabled, props.nameSpace, props.nameSpace === 'financials'),
-    [props.disabled, props.nameSpace],
+  const assessedCols: any = useMemo(
+    () =>
+      getAssessedCols(
+        props.isParcel ? 'Land' : 'Assessed Building Value',
+        props.disabled,
+        props.nameSpace,
+        props.showImprovements,
+      ),
+    [props.disabled, props.isParcel, props.nameSpace, props.showImprovements],
   );
+  const netbookCols: any = useMemo(() => getNetbookCols(props.disabled, props.nameSpace), [
+    props.disabled,
+    props.nameSpace,
+  ]);
 
   return (
     <Fragment>
-      <PaginatedFormErrors
-        errors={getPageErrors(props.errors, props.nameSpace)}
-        pagingRef={pagingRef}
-      />
-      <div ref={pagingRef}>
+      <div>
         <Table
           lockPageSize
-          pageSize={NUMBER_OF_EVALUATIONS_PER_PAGE}
-          pageCount={financials?.length ?? 0 / NUMBER_OF_EVALUATIONS_PER_PAGE}
+          pageSize={-1}
           name="evaluations"
-          columns={cols}
+          columns={assessedCols}
           data={defaultFinancials}
           manualPagination={false}
+          className="assessed"
+        />
+        <Table
+          lockPageSize
+          pageSize={-1}
+          name="fiscals"
+          columns={netbookCols}
+          data={defaultFinancials}
+          manualPagination={false}
+          className="netbook"
         />
       </div>
     </Fragment>

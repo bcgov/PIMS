@@ -32,6 +32,9 @@ exports[`ExemptionEnhancedReferralCompleteForm renders successfully 1`] = `
           name="exemptionRationale"
           onBlur={[Function]}
           onChange={[Function]}
+          onFocus={[Function]}
+          onMouseOut={[Function]}
+          onMouseOver={[Function]}
         />
       </div>
     </div>

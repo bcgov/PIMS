@@ -1,6 +1,6 @@
 import './PointClusterer.scss';
 
-import React, { useRef, useEffect, useState, useCallback } from 'react';
+import React, { useRef, useEffect, useState, useCallback, useMemo } from 'react';
 import { DivIcon, FeatureGroup as LeafletFeatureGroup } from 'leaflet';
 import { useLeaflet, Marker, Polyline, Popup, FeatureGroup } from 'react-leaflet';
 import { BBox } from 'geojson';
@@ -9,15 +9,17 @@ import { ICluster, PointFeature } from '../types';
 import { getMarkerIcon, pointToLayer, zoomToCluster } from './mapUtils';
 import useSupercluster from '../hooks/useSupercluster';
 import { PopupView } from '../PopupView';
-import { IPropertyDetail } from 'actions/parcelsActions';
+import { IPropertyDetail, storeParcelDetail, storeBuildingDetail } from 'actions/parcelsActions';
 import SelectedPropertyMarker from './SelectedPropertyMarker/SelectedPropertyMarker';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
 import { useFilterContext } from '../providers/FIlterProvider';
+import Supercluster from 'supercluster';
+import { useDispatch } from 'react-redux';
+import { PropertyTypes } from 'actions/parcelsActions';
 
 export type PointClustererProps = {
-  // if all tiles data loading has finished
-  tilesLoaded: boolean;
   points: Array<PointFeature>;
+  draftPoints: Array<PointFeature>;
   selected?: IPropertyDetail | null;
   bounds?: BBox;
   zoom: number;
@@ -32,6 +34,7 @@ export type PointClustererProps = {
 
 export const PointClusterer: React.FC<PointClustererProps> = ({
   points,
+  draftPoints,
   bounds,
   zoom,
   onMarkerClick,
@@ -40,12 +43,19 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
   selected,
   zoomToBoundsOnClick = true,
   spiderfyOnMaxZoom = true,
-  tilesLoaded,
 }) => {
   // state and refs
   const spiderfierRef = useRef<Spiderfier>();
   const featureGroupRef = useRef<any>();
+  const draftFeatureGroupRef = useRef<any>();
   const filterState = useFilterContext();
+  const dispatch = useDispatch();
+
+  const [currentSelected, setCurrentSelected] = useState(selected);
+
+  const [currentCluster, setCurrentCluster] = useState<
+    ICluster<any, Supercluster.AnyProps> | undefined
+  >(undefined);
 
   const leaflet = useLeaflet();
   const [spider, setSpider] = useState<any>({});
@@ -66,6 +76,27 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
     zoom,
     options: { radius: 60, extent: 256, minZoom, maxZoom },
   });
+  const currentClusterIds = useMemo(() => {
+    if (!currentCluster?.properties?.cluster_id) {
+      return [];
+    }
+    try {
+      const points =
+        supercluster?.getLeaves(currentCluster?.properties?.cluster_id, Infinity) ?? [];
+      return points.map(p => p.properties.id);
+    } catch (error) {
+      return [];
+    }
+  }, [currentCluster, supercluster]);
+
+  //Optionally create a new pin to represent the active property if not already displayed in a spiderfied cluster.
+  useDeepCompareEffect(() => {
+    if (!currentClusterIds.includes(+(selected?.parcelDetail?.id ?? 0))) {
+      setCurrentSelected(selected);
+    } else {
+      setCurrentSelected(undefined);
+    }
+  }, [selected, setCurrentSelected]);
 
   // Register event handlers to shrink and expand clusters when map is interacted with
   const componentDidMount = useCallback(() => {
@@ -117,6 +148,25 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
     [spiderfierRef, map, maxZoom, spiderfyOnMaxZoom, supercluster, zoomToBoundsOnClick],
   );
 
+  /**
+   * Update the map bounds and zoom to make all draft properties visible.
+   */
+  useDeepCompareEffect(() => {
+    const isDraft = draftPoints.length > 0;
+    if (draftFeatureGroupRef.current && isDraft) {
+      const group: LeafletFeatureGroup = draftFeatureGroupRef.current.leafletElement;
+      const groupBounds = group.getBounds();
+
+      if (groupBounds.isValid() && group.getBounds().isValid() && isDraft) {
+        filterState.setChanged(false);
+        map.fitBounds(group.getBounds(), { maxZoom: 16 });
+      }
+    }
+  }, [draftFeatureGroupRef, map, draftPoints]);
+
+  /**
+   * Update the map bounds and zoom to make all property clusters visible.
+   */
   useDeepCompareEffect(() => {
     if (featureGroupRef.current) {
       const group: LeafletFeatureGroup = featureGroupRef.current.leafletElement;
@@ -126,128 +176,166 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
         groupBounds.isValid() &&
         group.getBounds().isValid() &&
         filterState.changed &&
-        tilesLoaded
+        !selected
       ) {
         filterState.setChanged(false);
         map.fitBounds(group.getBounds(), { maxZoom: 10 });
-        setSpider({});
       }
+      setSpider({});
+      spiderfierRef.current?.unspiderfy();
     }
-  }, [featureGroupRef, map, clusters, tilesLoaded]);
-
+  }, [featureGroupRef, map, clusters]);
   return (
-    <FeatureGroup ref={featureGroupRef}>
-      {clusters.map((cluster, index) => {
-        // every cluster point has coordinates
-        const [longitude, latitude] = cluster.geometry.coordinates;
-
-        const {
-          cluster: isCluster,
-          point_count: pointCount,
-          point_count_abbreviated,
-        } = cluster.properties as any;
-        const size = pointCount < 100 ? 'small' : pointCount < 1000 ? 'medium' : 'large';
-
-        // we have a cluster to render
-        if (isCluster) {
+    <>
+      <FeatureGroup ref={draftFeatureGroupRef}>
+        {draftPoints.map((draftPoint, index) => {
+          //render all of the unclustered draft markers.
+          const [longitude, latitude] = draftPoint.geometry.coordinates;
           return (
-            // render the cluster marker
             <Marker
+              {...(draftPoint.properties as any)}
               key={index}
               position={[latitude, longitude]}
-              onclick={() => zoomOrSpiderfy(cluster)}
-              icon={
-                new DivIcon({
-                  html: `<div><span>${point_count_abbreviated}</span></div>`,
-                  className: `marker-cluster marker-cluster-${size}`,
-                  iconSize: [40, 40],
-                })
-              }
-            />
+              icon={getMarkerIcon(draftPoint)}
+            >
+              <Popup autoPan={false}>
+                <PopupView
+                  propertyTypeId={draftPoint.properties.propertyTypeId}
+                  propertyDetail={draftPoint.properties as any}
+                  onLinkClick={() => {
+                    !!onMarkerClick && onMarkerClick(draftPoint as any);
+                  }}
+                />
+              </Popup>
+            </Marker>
           );
-        }
+        })}
+      </FeatureGroup>
+      <FeatureGroup ref={featureGroupRef}>
+        {clusters.map((cluster, index) => {
+          // every cluster point has coordinates
+          const [longitude, latitude] = cluster.geometry.coordinates;
 
-        return (
-          // render single marker, not in a cluster
+          const {
+            cluster: isCluster,
+            point_count: pointCount,
+            point_count_abbreviated,
+          } = cluster.properties as any;
+          const size = pointCount < 100 ? 'small' : pointCount < 1000 ? 'medium' : 'large';
+
+          // we have a cluster to render
+          if (isCluster) {
+            return (
+              // render the cluster marker
+              <Marker
+                key={index}
+                position={[latitude, longitude]}
+                onclick={(e: any) => {
+                  zoomOrSpiderfy(cluster);
+                  setCurrentCluster(cluster);
+                  e.target.closePopup();
+                }}
+                icon={
+                  new DivIcon({
+                    html: `<div><span>${point_count_abbreviated}</span></div>`,
+                    className: `marker-cluster marker-cluster-${size}`,
+                    iconSize: [40, 40],
+                  })
+                }
+              ></Marker>
+            );
+          }
+
+          return (
+            // render single marker, not in a cluster
+            <Marker
+              {...(cluster.properties as any)}
+              key={index}
+              position={[latitude, longitude]}
+              icon={getMarkerIcon(cluster)}
+            >
+              <Popup autoPan={false}>
+                <PopupView
+                  propertyTypeId={cluster.properties.propertyTypeId}
+                  propertyDetail={cluster.properties as any}
+                  onLinkClick={() => {
+                    !!onMarkerClick && onMarkerClick(cluster as any);
+                  }}
+                  zoomTo={() => leaflet.map?.flyTo([latitude, longitude], 14)}
+                />
+              </Popup>
+            </Marker>
+          );
+        })}
+
+        {/**
+         * Render markers from a spiderfied cluster click
+         */}
+        {spider.markers?.map((m: any, index: number) => (
           <Marker
-            {...(cluster.properties as any)}
+            {...(m.properties as any)}
             key={index}
-            position={[latitude, longitude]}
-            icon={getMarkerIcon(cluster)}
+            position={m.position}
+            icon={getMarkerIcon(m)}
           >
             <Popup autoPan={false}>
               <PopupView
-                propertyTypeId={cluster.properties.propertyTypeId}
-                propertyDetail={cluster.properties as any}
+                propertyTypeId={m.properties.propertyTypeId}
+                propertyDetail={m.properties}
                 onLinkClick={() => {
-                  setSpider({});
-                  !!onMarkerClick && onMarkerClick(cluster as any);
+                  !!onMarkerClick && onMarkerClick(m as any);
                 }}
+                zoomTo={() => leaflet.map?.flyTo(m.position, 14)}
               />
             </Popup>
           </Marker>
-        );
-      })}
-
-      {/**
-       * Render markers from a spiderfied cluster click
-       */}
-      {spider.markers?.map((m: any, index: number) => (
-        <Marker
-          {...(m.properties as any)}
-          key={index}
-          position={m.position}
-          icon={getMarkerIcon(m)}
-        >
-          <Popup autoPan={false}>
-            <PopupView
-              propertyTypeId={m.properties.propertyTypeId}
-              propertyDetail={m.properties}
-              onLinkClick={() => {
-                setSpider({});
-                !!onMarkerClick && onMarkerClick(m as any);
+        ))}
+        {/**
+         * Render lines/legs from a spiderfied cluster click
+         */}
+        {spider.lines?.map((m: any, index: number) => (
+          <Polyline key={index} positions={m.coords} {...m.options} />
+        ))}
+        {/**
+         * render selected property marker, auto opens the property popup
+         */}
+        {!!selected?.parcelDetail &&
+          selected?.parcelDetail?.id === currentSelected?.parcelDetail?.id &&
+          !currentClusterIds.includes(+selected?.parcelDetail?.id) && (
+            <SelectedPropertyMarker
+              {...selected.parcelDetail}
+              icon={getMarkerIcon({ properties: selected } as any)}
+              position={[
+                selected.parcelDetail!.latitude as number,
+                selected.parcelDetail!.longitude as number,
+              ]}
+              map={leaflet.map}
+              onpopupclose={() => {
+                selected.propertyTypeId === PropertyTypes.BUILDING &&
+                  dispatch(storeBuildingDetail(null));
+                selected.propertyTypeId === PropertyTypes.PARCEL &&
+                  dispatch(storeParcelDetail(null));
               }}
-            />
-          </Popup>
-        </Marker>
-      ))}
-      {/**
-       * Render lines/legs from a spiderfied cluster click
-       */}
-      {spider.lines?.map((m: any, index: number) => (
-        <Polyline key={index} positions={m.coords} {...m.options} />
-      ))}
-      {/**
-       * render selected property marker, auto opens the property popup
-       */}
-      {!!selected?.parcelDetail && (
-        <SelectedPropertyMarker
-          {...selected.parcelDetail}
-          icon={getMarkerIcon({ properties: selected } as any)}
-          position={[
-            selected.parcelDetail!.latitude as number,
-            selected.parcelDetail!.longitude as number,
-          ]}
-          map={leaflet.map}
-        >
-          <Popup autoPan={false}>
-            <PopupView
-              propertyTypeId={selected.propertyTypeId}
-              propertyDetail={selected.parcelDetail}
-              zoomTo={() =>
-                leaflet.map?.flyTo(
-                  [
-                    selected.parcelDetail!.latitude as number,
-                    selected.parcelDetail!.longitude as number,
-                  ],
-                  14,
-                )
-              }
-            />
-          </Popup>
-        </SelectedPropertyMarker>
-      )}
-    </FeatureGroup>
+            >
+              <Popup autoPan={false}>
+                <PopupView
+                  propertyTypeId={selected.propertyTypeId}
+                  propertyDetail={selected.parcelDetail}
+                  zoomTo={() =>
+                    leaflet.map?.flyTo(
+                      [
+                        selected.parcelDetail!.latitude as number,
+                        selected.parcelDetail!.longitude as number,
+                      ],
+                      14,
+                    )
+                  }
+                />
+              </Popup>
+            </SelectedPropertyMarker>
+          )}
+      </FeatureGroup>
+    </>
   );
 };
 

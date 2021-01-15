@@ -14,9 +14,9 @@ import { Container, Row, Col } from 'react-bootstrap';
 import { ILookupCode } from 'actions/lookupActions';
 import BasemapToggle, { BasemapToggleEvent, BaseLayer } from '../BasemapToggle';
 import { useDispatch, useSelector } from 'react-redux';
-import { setMapViewZoom } from 'reducers/mapViewZoomSlice';
+import { setMapViewZoom, DEFAULT_MAP_ZOOM } from 'reducers/mapViewZoomSlice';
 import { RootState } from 'reducers/rootReducer';
-import { Feature } from 'geojson';
+import { Feature, GeoJsonObject } from 'geojson';
 import { asProperty } from './mapUtils';
 import { LegendControl } from './Legend/LegendControl';
 import { useMediaQuery } from 'react-responsive';
@@ -34,8 +34,10 @@ import {
   LayerPopupTitle,
   PopupContentConfig,
 } from './LayerPopup/LayerPopupContent';
+import classNames from 'classnames';
 import { useLayerQuery } from './LayerPopup/hooks/useLayerQuery';
 import { saveParcelLayerData } from 'reducers/parcelLayerDataSlice';
+import { SidebarSize } from 'features/mapSideBar/hooks/useQueryParamSideBar';
 import useActiveFeatureLayer from '../hooks/useActiveFeatureLayer';
 import LayersControl from './LayersControl';
 import { defaultBounds, InventoryLayer } from './InventoryLayer';
@@ -69,6 +71,7 @@ export type MapProps = {
   disableMapFilterBar?: boolean;
   interactive?: boolean;
   showParcelBoundaries?: boolean;
+  sidebarSize?: SidebarSize;
 };
 
 export type LayerPopupInformation = PopupContentConfig & {
@@ -140,6 +143,7 @@ const Map: React.FC<MapProps> = ({
   disableMapFilterBar,
   interactive = true,
   mapRef,
+  sidebarSize,
 }) => {
   const dispatch = useDispatch();
   const [geoFilter, setGeoFilter] = useState<IGeoSearchParams>({});
@@ -157,19 +161,32 @@ const Map: React.FC<MapProps> = ({
     lat = (mapRef.current.props.center as Array<number>)[0];
     lng = (mapRef.current.props.center as Array<number>)[1];
   }
-  useActiveFeatureLayer({ selectedProperty, layerPopup, mapRef });
+  const parcelLayerFeature = useSelector<RootState, GeoJsonObject | null>(
+    state => state.parcelLayerData?.parcelLayerFeature,
+  );
+  useActiveFeatureLayer({
+    selectedProperty,
+    layerPopup,
+    mapRef,
+    parcelLayerFeature,
+    setLayerPopup,
+  });
 
   const lastZoom = useSelector<RootState, number>(state => state.mapViewZoom) ?? zoomProp;
+  const [zoom, setZoom] = useState(lastZoom);
   useEffect(() => {
-    dispatch(setMapViewZoom(smallScreen ? 4.9 : 5.5));
-  }, [dispatch, smallScreen]);
+    if (lastZoom === DEFAULT_MAP_ZOOM) {
+      dispatch(setMapViewZoom(smallScreen ? 4.9 : 5.5));
+    } else if (lastZoom !== zoom && zoom !== DEFAULT_MAP_ZOOM) {
+      dispatch(setMapViewZoom(zoom));
+    }
+  }, [dispatch, lastZoom, smallScreen, zoom]);
 
   useEffect(() => {
     mapRef.current?.leafletElement.invalidateSize();
   }, [mapRef, mapWidth]);
 
   // TODO: refactor various zoom settings
-  const [zoom, setZoom] = useState(lastZoom);
 
   useEffect(() => {
     if (!interactive) {
@@ -286,7 +303,7 @@ const Map: React.FC<MapProps> = ({
       {({ width }: any) => {
         setMapWidth(width);
         return (
-          <Container fluid className="px-0 map">
+          <Container fluid className={classNames('px-0 map', { narrow: sidebarSize === 'narrow' })}>
             {!disableMapFilterBar ? (
               <Container fluid className="px-0 map-filter-container">
                 <Container className="px-0">
