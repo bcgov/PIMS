@@ -5,11 +5,11 @@ import { AxiosInstance } from 'axios';
 import { ENVIRONMENT } from 'constants/environment';
 import * as _ from 'lodash';
 import { LatLngTuple } from 'leaflet';
-import { useCallback, useMemo } from 'react';
+import { useCallback } from 'react';
 import { IGeoSearchParams } from 'constants/API';
 import queryString from 'query-string';
 import { IBuilding, IParcel } from 'actions/parcelsActions';
-import useKeycloakWrapper from './useKeycloakWrapper';
+import { store } from 'App';
 
 export interface IGeocoderResponse {
   siteId: string;
@@ -46,35 +46,30 @@ export interface PimsAPI extends AxiosInstance {
 
 export const useApi = (): PimsAPI => {
   const dispatch = useDispatch();
-  const keycloak = useKeycloakWrapper();
-  const axios = useMemo(() => {
-    const instance = CustomAxios() as PimsAPI;
+  const axios = CustomAxios() as PimsAPI;
 
-    instance.interceptors.request.use(
-      config => {
-        config.headers.Authorization = `Bearer ${keycloak.obj.idToken}`;
-        dispatch(showLoading());
-        return config;
-      },
-      error => {
-        dispatch(hideLoading());
-        return Promise.reject(error);
-      },
-    );
+  axios.interceptors.request.use(
+    config => {
+      config.headers.Authorization = `Bearer ${store.getState().jwt}`;
+      dispatch(showLoading());
+      return config;
+    },
+    error => {
+      dispatch(hideLoading());
+      return Promise.reject(error);
+    },
+  );
 
-    instance.interceptors.response.use(
-      config => {
-        dispatch(hideLoading());
-        return config;
-      },
-      error => {
-        dispatch(hideLoading());
-        return Promise.reject(error);
-      },
-    );
-
-    return instance;
-  }, [dispatch, keycloak.obj]);
+  axios.interceptors.response.use(
+    config => {
+      dispatch(hideLoading());
+      return config;
+    },
+    error => {
+      dispatch(hideLoading());
+      return Promise.reject(error);
+    },
+  );
 
   axios.isPidAvailable = useCallback(
     async (parcelId: number | '' | undefined, pid: string | undefined) => {
