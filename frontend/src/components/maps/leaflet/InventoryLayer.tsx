@@ -8,10 +8,11 @@ import { useLeaflet } from 'react-leaflet';
 import { toast } from 'react-toastify';
 import { PointFeature } from '../types';
 import PointClusterer from './PointClusterer';
-import { useApi } from 'hooks/useApi';
-import _ from 'lodash';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'reducers/rootReducer';
+import { debounce } from 'lodash';
+import { loadProperties } from 'actionCreators/parcelsActionCreator';
+import { useState } from 'react';
 
 export type InventoryLayerProps = {
   /** Latitude and Longitude boundary of the layer. */
@@ -74,9 +75,9 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
   onMarkerClick,
   selected,
 }) => {
-  const [features, setFeatures] = React.useState<Array<PointFeature>>([]);
   const { map } = useLeaflet();
-  const { loadProperties } = useApi();
+  const dispatch = useDispatch();
+  const [features, setFeatures] = useState<PointFeature[]>([]);
   const draftProperties: PointFeature[] = useSelector<RootState, PointFeature[]>(
     state => state.parcel.draftParcels,
   );
@@ -114,9 +115,9 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
   );
 
   const search = React.useCallback(
-    _.debounce(
+    debounce(
       (filter: IGeoSearchParams) => {
-        loadProperties(filter)
+        loadProperties(filter)(dispatch)
           .then(async (data: Feature[]) => {
             const points = data
               .filter(feature => {

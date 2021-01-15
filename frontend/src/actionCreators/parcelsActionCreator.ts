@@ -61,6 +61,24 @@ export const fetchParcelsDetail = (params: API.IPropertySearchParams) => (dispat
     .finally(() => dispatch(hideLoading()));
 };
 
+/**
+ * fetch wfs properties
+ * @param params
+ */
+export const loadProperties = (params: API.IGeoSearchParams) => (dispatch: Function) => {
+  dispatch(request(actionTypes.GET_PARCELS));
+  dispatch(showLoading());
+  return CustomAxios()
+    .get(ENVIRONMENT.apiUrl + API.GEO_PROPERTIES(params))
+    .then((response: AxiosResponse) => {
+      return Promise.resolve(response.data);
+    })
+    .catch((axiosError: AxiosError) => {
+      dispatch(error(actionTypes.GET_PARCEL_DETAIL, axiosError?.response?.status, axiosError));
+    })
+    .finally(() => dispatch(hideLoading()));
+};
+
 export const fetchParcelDetail = (params: API.IParcelDetailParams, position?: [number, number]) => (
   dispatch: Function,
 ) => {
