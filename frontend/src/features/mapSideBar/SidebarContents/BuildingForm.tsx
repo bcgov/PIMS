@@ -333,9 +333,12 @@ const BuidingForm: React.FC<IParentBuildingForm> = ({
   const initialValues = {
     activeStep: 0,
     activeTab: 0,
-    data: { ...defaultBuildingValues, agencyId: keycloak.agencyId, ...rest.initialValues },
+    data: { ...defaultBuildingValues, ...rest.initialValues },
   };
   const isViewOrUpdate = !!initialValues?.data?.id;
+  if (!initialValues.data.agencyId || initialValues.data.agencyId === '') {
+    initialValues.data.agencyId = keycloak.agencyId ?? '';
+  }
 
   /**
    * Combines yup validation with manual validation of financial data for performance reasons.
