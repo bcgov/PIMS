@@ -130,10 +130,8 @@ namespace Pims.Api.Areas.Property.Controllers
         {
             var entity = _mapper.Map<Entity.Parcel>(model);
 
-            _pimsService.Parcel.Update(entity); // TODO: Update related properties (i.e. Address).
-            var parcel = _mapper.Map<Model.ParcelModel>(entity);
-
-            return new JsonResult(parcel);
+            var parcel = _pimsService.Parcel.Update(entity);
+            return new JsonResult(_mapper.Map<Model.ParcelModel>(parcel));
         }
 
         /// <summary>

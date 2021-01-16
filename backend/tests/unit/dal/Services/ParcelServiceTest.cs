@@ -754,7 +754,7 @@ namespace Pims.Dal.Test.Services
         {
             // Arrange
             var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.AdminProperties).AddAgency(1);
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.AdminProperties).AddAgency(1);
             var init = helper.InitializeDatabase(user);
             var parcel = init.CreateParcel(1);
             init.SaveChanges();
@@ -1013,7 +1013,7 @@ namespace Pims.Dal.Test.Services
             Assert.False(result);
         }
         #endregion
-        
+
         #region Check PIN available
 
         /// <summary>

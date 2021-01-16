@@ -194,8 +194,10 @@ const ParcelDetailForm: React.FunctionComponent<IParcelPropertyProps> = ({
               if (!values.id) {
                 const data = await createParcel(apiValues)(dispatch);
                 persistCallback(data);
+                values.rowVersion = data.rowVersion;
               } else {
-                await updateParcel(apiValues)(dispatch);
+                const data = await updateParcel(apiValues)(dispatch);
+                values.rowVersion = data.rowVersion;
               }
             } catch (error) {
               //TODO: For now, swallow the exception.
