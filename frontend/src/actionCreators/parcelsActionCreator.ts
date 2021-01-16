@@ -123,7 +123,6 @@ export const updateParcel = (parcel: IParcel) => async (dispatch: Function) => {
       parcel,
     );
     dispatch(success(actionTypes.UPDATE_PARCEL, status));
-    dispatch(fetchParcelDetail(data));
     dispatch(hideLoading());
     return data;
   } catch (axiosError) {

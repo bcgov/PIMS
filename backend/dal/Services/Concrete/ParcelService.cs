@@ -409,7 +409,7 @@ namespace Pims.Dal.Services
 
             this.Context.SaveChanges();
             this.Context.CommitTransaction();
-            return parcel;
+            return Get(parcel.Id);
         }
 
         /// <summary>
