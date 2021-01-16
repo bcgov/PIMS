@@ -120,6 +120,7 @@ export interface IParcel extends IProperty {
   buildings: IBuilding[];
   evaluations: IEvaluation[];
   fiscals: IFiscal[];
+  rowVersion?: string;
 }
 
 export interface IParcelDetail {
