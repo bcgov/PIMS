@@ -3,10 +3,14 @@ import React from 'react';
 import { Select, InputGroup } from '../../../components/common/form';
 import { IPropertyFilter } from './IPropertyFilter';
 
+interface IPropertyFilterOptions {
+  disabled?: boolean;
+}
+
 /**
  * Provides a dropdown with list of search options for properties.
  */
-export const PropertyFilterOptions: React.FC = () => {
+export const PropertyFilterOptions: React.FC<IPropertyFilterOptions> = ({ disabled }) => {
   const state: { options: any[]; placeholders: Record<string, string> } = {
     options: [
       { label: 'Name', value: 'name' },
@@ -36,9 +40,12 @@ export const PropertyFilterOptions: React.FC = () => {
     <InputGroup
       fast={false}
       formikProps={null as any}
-      prepend={<Select field="searchBy" options={state.options} onChange={reset} />}
+      prepend={
+        <Select field="searchBy" options={state.options} onChange={reset} disabled={disabled} />
+      }
       field={searchBy}
       placeholder={desc}
+      disabled={disabled}
     ></InputGroup>
   );
 };

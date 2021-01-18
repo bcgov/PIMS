@@ -13,7 +13,6 @@ import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureMockStore from 'redux-mock-store';
 import * as reducerTypes from 'constants/reducerTypes';
-import { TrueFalse } from 'constants/trueFalse';
 
 const onFilterChange = jest.fn<void, [IPropertyFilter]>();
 //prevent web calls from being made during tests.
@@ -171,11 +170,6 @@ describe('MapFilterBar', () => {
     });
   });
 
-  it('does not display SPP property filter for non-sres users', () => {
-    const { queryByText } = render(getUiElement(defaultFilter));
-    expect(queryByText('Properties in SPP')).toBeNull();
-  });
-
   it('loads filter values if provided', () => {
     const providedFilter: IPropertyFilter = {
       pid: 'mockPid',
@@ -187,7 +181,7 @@ describe('MapFilterBar', () => {
       classificationId: '0',
       minLotSize: '10',
       maxLotSize: '20',
-      inSurplusPropertyProgram: TrueFalse.True,
+      inSurplusPropertyProgram: true,
       rentableArea: '0',
     };
     const { getByText } = render(getUiElement(providedFilter));

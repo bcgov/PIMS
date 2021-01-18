@@ -101,6 +101,8 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
     setClear(true);
   };
 
+  const [findMoreOpen, setFindMoreOpen] = useState(false);
+
   return (
     <Formik<IPropertyFilter>
       initialValues={{ ...initialValues }}
@@ -115,10 +117,14 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
       {({ isSubmitting, handleReset, handleSubmit, setFieldValue, values }) => (
         <Form>
           <Form.Row className="map-filter-bar">
-            <FindMorePropertiesButton buttonText="Find available surplus properties" />
+            <FindMorePropertiesButton
+              buttonText="Find available surplus properties"
+              onEnter={() => setFindMoreOpen(true)}
+              onExit={() => setFindMoreOpen(false)}
+            />
             <div className="vl"></div>
             <Col className="bar-item">
-              <PropertyFilterOptions />
+              <PropertyFilterOptions disabled={findMoreOpen} />
             </Col>
             <Col className="map-filter-typeahead">
               <TypeaheadField
@@ -133,6 +139,7 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
                 }}
                 clearSelected={clear}
                 setClear={setClear}
+                disabled={findMoreOpen}
               />
             </Col>
             <Col className="agency-item">
@@ -142,6 +149,7 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
                 filterBy={['code', 'label', 'parent']}
                 placeholder="Agency"
                 selectClosest
+                disabled={findMoreOpen}
               />
             </Col>
             <Col className="bar-item">
@@ -149,13 +157,14 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
                 field="classificationId"
                 placeholder="Classification"
                 options={classifications}
+                disabled={findMoreOpen}
               />
             </Col>
             <Col className="bar-item flex-grow-0">
-              <SearchButton disabled={isSubmitting} />
+              <SearchButton disabled={isSubmitting || findMoreOpen} />
             </Col>
             <Col className="bar-item flex-grow-0">
-              <ResetButton disabled={isSubmitting} onClick={resetFilter} />
+              <ResetButton disabled={isSubmitting || findMoreOpen} onClick={resetFilter} />
             </Col>
           </Form.Row>
         </Form>
