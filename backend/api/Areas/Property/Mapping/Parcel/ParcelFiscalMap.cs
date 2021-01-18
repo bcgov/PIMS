@@ -18,7 +18,6 @@ namespace Pims.Api.Areas.Property.Mapping.Parcel
                 .Map(dest => dest.Note, src => src.Note)
                 .Inherits<Entity.BaseEntity, BModel.BaseModel>();
 
-
             config.NewConfig<Model.ParcelFiscalModel, Entity.ParcelFiscal>()
                 .EnumMappingStrategy(EnumMappingStrategy.ByName)
                 .Map(dest => dest.ParcelId, src => src.ParcelId)
