@@ -310,7 +310,7 @@ const PropertyListView: React.FC = () => {
       <Container fluid className="filter-container border-bottom">
         <Container className="px-0">
           <PropertyFilter
-            defaultFilter={filter}
+            defaultFilter={defaultFilterValues}
             agencyLookupCodes={agencies}
             propertyClassifications={propertyClassifications}
             adminAreaLookupCodes={administrativeAreas}
