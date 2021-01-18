@@ -66,7 +66,9 @@ export function TypeaheadField<T extends TypeaheadModel>({
       const matchedItem = rest.options.find((x: any) =>
         x.label ? x.label.match(regex) : x.match(regex),
       );
-      setFieldValue(name, (matchedItem as any).value ? (matchedItem as any).value : matchedItem);
+      setFieldValue(name, matchedItem);
+      /** TODO: change back to below when Devin's changes are re-implemented */
+      // setFieldValue(name, (matchedItem as any).value ? (matchedItem as any).value : matchedItem);
     }
   };
   if (!getOptionByValue) {
