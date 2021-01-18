@@ -63,7 +63,13 @@ const getTotal = () => {
   };
 };
 
+const getType = (isParcel: boolean) => {
+  if (isParcel) return 'Land';
+  return 'Building';
+};
+
 export const getEvaluationCols = (
+  isParcel: boolean,
   disabled?: boolean,
   namespace = 'financials',
   includeSums?: boolean,
@@ -76,7 +82,7 @@ export const getEvaluationCols = (
       align: 'left',
     },
     {
-      Header: 'Land',
+      Header: getType(isParcel),
       accessor: 'assessed.value',
       maxWidth: 140,
       align: 'left',

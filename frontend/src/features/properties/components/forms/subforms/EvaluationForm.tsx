@@ -19,7 +19,7 @@ interface EvaluationProps {
   /** whether to show the appraisal value on the form or not*/
   showAppraisal?: boolean;
   /** whether the form is being used on parcel or building */
-  isParcel?: boolean;
+  isParcel: boolean;
 }
 
 /**
@@ -142,8 +142,14 @@ const EvaluationForm = <T extends any>(props: EvaluationProps & FormikProps<T>) 
   const financials: IFinancialYear[] = getIn(props.values, props.nameSpace);
   const pagingRef: any = useRef();
   const cols: any = useMemo(
-    () => getEvaluationCols(props.disabled, props.nameSpace, props.nameSpace === 'financials'),
-    [props.disabled, props.nameSpace],
+    () =>
+      getEvaluationCols(
+        props.isParcel,
+        props.disabled,
+        props.nameSpace,
+        props.nameSpace === 'financials',
+      ),
+    [props.isParcel, props.disabled, props.nameSpace],
   );
 
   return (
