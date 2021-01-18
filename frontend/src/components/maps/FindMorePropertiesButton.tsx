@@ -32,10 +32,18 @@ const TitleForSaleSign = styled(FaSign)`
 interface IFindMorePropertiesButton {
   /** the text to appear beside the sign icon on the FindMorePropertiesButton */
   buttonText: string;
+  /** behaviour for when the popover is opened */
+  onEnter?: () => void;
+  /** behaviour for when the popover is closed */
+  onExit?: () => void;
 }
 
 /** this component contains the trigger for additional filter options off the base filter */
-export const FindMorePropertiesButton: React.FC<IFindMorePropertiesButton> = ({ buttonText }) => {
+export const FindMorePropertiesButton: React.FC<IFindMorePropertiesButton> = ({
+  buttonText,
+  onEnter,
+  onExit,
+}) => {
   const TitleContent = () =>
     useMemo(
       () => (
@@ -65,7 +73,15 @@ export const FindMorePropertiesButton: React.FC<IFindMorePropertiesButton> = ({ 
   );
 
   return (
-    <OverlayTrigger trigger="click" rootClose transition overlay={popover} placement="bottom">
+    <OverlayTrigger
+      trigger="click"
+      rootClose
+      transition
+      onExit={onExit}
+      onEnter={onEnter}
+      overlay={popover}
+      placement="bottom"
+    >
       <Button style={{ height: 38 }}>
         <ButtonContent>
           <FaSign size={20} style={{ marginRight: 5, marginTop: 2 }} />
