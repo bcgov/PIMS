@@ -1,15 +1,18 @@
-0.0.0.0:2015
-
-root /var/www/html
-
-log stdout
-
-errors stdout
-
-rewrite / {
-  regexp .*
-  to /maintenance.html
+{
+    storage file_system {
+        root /var/www/html
+        http_port 2016
+        https_port 2015
+    }
 }
+
+:2015
+root * /var/www/html
+file_server {
+  index maintenance.html
+}
+
+log
 
 header / {
   Cache-Control "no-cache, no-store, must-revalidate"
