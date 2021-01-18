@@ -41,18 +41,20 @@ namespace Pims.Core.Test
                 new Entity.BuildingPredominateUse(1, "Research & Development Facility") { RowVersion = new byte[] { 12, 13, 14 } },
                 new Entity.BuildingPredominateUse(2, "Residential Detached") { RowVersion = new byte[] { 12, 13, 14 } },
                 new Entity.BuildingPredominateUse(3, "Residential Multi") { RowVersion = new byte[] { 12, 13, 14 } },
-                new Entity.BuildingPredominateUse(4, "Senior Housing (Assisted Living / Skilled Nursing)") { RowVersion = new byte[] { 12, 13, 14 } },
-                new Entity.BuildingPredominateUse(5, "Shelters / Orphanages / Children’s Homes / Halfway Homes") { RowVersion = new byte[] { 12, 13, 14 } },
-                new Entity.BuildingPredominateUse(6, "Social Assistance Housing") { RowVersion = new byte[] { 12, 13, 14 } },
-                new Entity.BuildingPredominateUse(7, "Storage") { RowVersion = new byte[] { 12, 13, 14 } },
-                new Entity.BuildingPredominateUse(8, "Storage Vehicle") { RowVersion = new byte[] { 12, 13, 14 } },
-                new Entity.BuildingPredominateUse(9, "Trailer Office") { RowVersion = new byte[] { 12, 13, 14 } },
-                new Entity.BuildingPredominateUse(10, "Trailer Other") { RowVersion = new byte[] { 12, 13, 14 } },
-                new Entity.BuildingPredominateUse(11, "Training Center") { RowVersion = new byte[] { 12, 13, 14 } },
-                new Entity.BuildingPredominateUse(12, "Transportation (Airport / Rail / Bus station)") { RowVersion = new byte[] { 12, 13, 14 } },
-                new Entity.BuildingPredominateUse(13, "University / Collect") { RowVersion = new byte[] { 12, 13, 14 } },
-                new Entity.BuildingPredominateUse(14, "Warehouse") { RowVersion = new byte[] { 12, 13, 14 } },
-                new Entity.BuildingPredominateUse(15, "Weigh Station") { RowVersion = new byte[] { 12, 13, 14 } }
+                new Entity.BuildingPredominateUse(4, "Retail") { RowVersion = new byte[] { 12, 13, 14 } },
+                new Entity.BuildingPredominateUse(5, "Senior Housing (Assisted Living / Skilled Nursing)") { RowVersion = new byte[] { 12, 13, 14 } },
+                new Entity.BuildingPredominateUse(6, "Shelters / Orphanages / Children’s Homes / Halfway Homes") { RowVersion = new byte[] { 12, 13, 14 } },
+                new Entity.BuildingPredominateUse(7, "Social Assistance Housing") { RowVersion = new byte[] { 12, 13, 14 } },
+                new Entity.BuildingPredominateUse(8, "Storage") { RowVersion = new byte[] { 12, 13, 14 } },
+                new Entity.BuildingPredominateUse(9, "Storage Vehicle") { RowVersion = new byte[] { 12, 13, 14 } },
+                new Entity.BuildingPredominateUse(10, "Trailer Office") { RowVersion = new byte[] { 12, 13, 14 } },
+                new Entity.BuildingPredominateUse(11, "Trailer Other") { RowVersion = new byte[] { 12, 13, 14 } },
+                new Entity.BuildingPredominateUse(12, "Training Center") { RowVersion = new byte[] { 12, 13, 14 } },
+                new Entity.BuildingPredominateUse(13, "Transportation (Airport / Rail / Bus station)") { RowVersion = new byte[] { 12, 13, 14 } },
+                new Entity.BuildingPredominateUse(14, "University / Collect") { RowVersion = new byte[] { 12, 13, 14 } },
+                new Entity.BuildingPredominateUse(15, "Warehouse") { RowVersion = new byte[] { 12, 13, 14 } },
+                new Entity.BuildingPredominateUse(16, "Weigh Station") { RowVersion = new byte[] { 12, 13, 14 } },
+                new Entity.BuildingPredominateUse(17, "Marina") { RowVersion = new byte[] { 12, 13, 14 } }
             };
         }
     }
