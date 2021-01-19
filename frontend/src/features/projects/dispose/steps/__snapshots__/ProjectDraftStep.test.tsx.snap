@@ -61,7 +61,6 @@ exports[`Project Draft Step renders correctly 1`] = `
             disabled=""
             id="input-name"
             name="name"
-            required=""
             value=""
           />
         </div>

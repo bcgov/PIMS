@@ -9,6 +9,7 @@ import parcelLayerDataSlice, {
 import { error } from 'actions/genericActions';
 import { useSelector } from 'react-redux';
 import { RootState } from 'reducers/rootReducer';
+import { toast } from 'react-toastify';
 
 interface IUserLayerQuery {
   /**
@@ -29,6 +30,36 @@ interface IUserLayerQuery {
 }
 
 /**
+ * Save the parcel data layer response to redux for use within other components. Also save an entire copy of the feature for display on the map.
+ * @param resp
+ * @param dispatch
+ */
+export const saveParcelDataLayerResponse = (
+  resp: FeatureCollection<Geometry, GeoJsonProperties>,
+  dispatch: Dispatch<any>,
+  latLng?: LatLng,
+) => {
+  if (resp?.features?.length > 0) {
+    //save with a synthetic event to timestamp the relevance of this data.
+    dispatch(
+      saveParcelLayerData({
+        e: { timeStamp: document?.timeline?.currentTime ?? 0 } as any,
+        data: {
+          ...resp.features[0].properties!,
+          CENTER:
+            latLng ??
+            geoJSON(resp.features[0].geometry)
+              .getBounds()
+              .getCenter(),
+        },
+      }),
+    );
+  } else {
+    toast.warning(`Failed to find parcel layer data. Ensure that the search criteria is valid`);
+  }
+};
+
+/**
  * Standard logic to handle a parcel layer data response, independent of whether this is a lat/lng or pid query response.
  * @param response axios response
  * @param dispatch redux store, required to save results.
@@ -36,23 +67,11 @@ interface IUserLayerQuery {
 export const handleParcelDataLayerResponse = (
   response: Promise<FeatureCollection<Geometry, GeoJsonProperties>>,
   dispatch: Dispatch<any>,
+  latLng?: LatLng,
 ) => {
   return response
     .then((resp: FeatureCollection<Geometry, GeoJsonProperties>) => {
-      if (resp?.features?.length > 0) {
-        //save with a synthetic event to timestamp the relevance of this data.
-        dispatch(
-          saveParcelLayerData({
-            e: { timeStamp: document?.timeline?.currentTime ?? 0 } as any,
-            data: {
-              ...resp.features[0].properties!,
-              CENTER: geoJSON(resp.features[0].geometry)
-                .getBounds()
-                .getCenter(),
-            },
-          }),
-        );
-      }
+      saveParcelDataLayerResponse(resp, dispatch, latLng);
     })
     .catch((axiosError: any) => {
       dispatch(error(parcelLayerDataSlice.reducer.name, axiosError?.response?.status, axiosError));

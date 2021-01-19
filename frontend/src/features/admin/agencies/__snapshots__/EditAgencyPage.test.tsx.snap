@@ -51,7 +51,6 @@ exports[`Edit agency page EditAgencyPage renders 1`] = `
             class="form-control"
             id="input-name"
             name="name"
-            required=""
             type="text"
             value="Test Agency"
           />
@@ -69,7 +68,6 @@ exports[`Edit agency page EditAgencyPage renders 1`] = `
             class="form-control"
             id="input-code"
             name="code"
-            required=""
             type="text"
             value="TEST"
           />

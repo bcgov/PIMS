@@ -18,7 +18,7 @@ const successSpy = jest.spyOn(genericActions, 'success');
 const errorSpy = jest.spyOn(genericActions, 'error');
 const mockAxios = new MockAdapter(axios);
 
-beforeEach(() => {
+afterEach(() => {
   mockAxios.reset();
   dispatch.mockClear();
   requestSpy.mockClear();

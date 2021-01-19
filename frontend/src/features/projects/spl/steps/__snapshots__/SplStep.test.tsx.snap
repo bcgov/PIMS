@@ -680,6 +680,29 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
                   </div>
                 </div>
               </div>
+              <div
+                class="form-row"
+              >
+                <label
+                  class="form-label col-form-label col-md-4"
+                >
+                  Net Proceeds
+                </label>
+                <div
+                  class="col-md-8 form-group col"
+                >
+                  <div
+                    class="input-tooltip-wrapper"
+                  >
+                    <input
+                      class="form-control input-number"
+                      name="netProceeds"
+                      placeholder=""
+                      value="0"
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
             <div
               class="col-md-1"
@@ -1415,7 +1438,7 @@ exports[`SPL Approval Step renders correctly 1`] = `
               </svg>
             </label>
             <div
-              class="col-md-2 form-group"
+              class="required col-md-2 form-group"
             >
               <div
                 class="react-datepicker-wrapper"
@@ -1430,6 +1453,7 @@ exports[`SPL Approval Step renders correctly 1`] = `
                     id="datepicker-marketedOn"
                     name="marketedOn"
                     placeholder="--/--/----"
+                    required=""
                     type="text"
                     value="01/01/2020"
                   />
@@ -1487,7 +1511,7 @@ exports[`SPL Approval Step renders correctly 1`] = `
               Date of Accepted Offer
             </label>
             <div
-              class="col-md-2 form-group"
+              class="required col-md-2 form-group"
             >
               <div
                 class="react-datepicker-wrapper"
@@ -1502,6 +1526,7 @@ exports[`SPL Approval Step renders correctly 1`] = `
                     id="datepicker-offerAcceptedOn"
                     name="offerAcceptedOn"
                     placeholder="--/--/----"
+                    required=""
                     type="text"
                     value="01/01/2020"
                   />
@@ -1518,7 +1543,7 @@ exports[`SPL Approval Step renders correctly 1`] = `
               Purchaser
             </label>
             <div
-              class="col-md-2 form-group col"
+              class="required col-md-2 form-group col"
             >
               <input
                 class="form-control"
@@ -1538,7 +1563,7 @@ exports[`SPL Approval Step renders correctly 1`] = `
               Offer Amount
             </label>
             <div
-              class="col-md-2 form-group col"
+              class="required col-md-2 form-group col"
             >
               <div
                 class="input-tooltip-wrapper"
@@ -1548,6 +1573,7 @@ exports[`SPL Approval Step renders correctly 1`] = `
                   disabled=""
                   name="offerAmount"
                   placeholder=""
+                  required=""
                   value="123"
                 />
               </div>

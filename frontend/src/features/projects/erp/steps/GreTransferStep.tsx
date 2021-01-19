@@ -81,7 +81,7 @@ const GreTransferStep = ({ formikRef }: IStepProps) => {
           onSubmitReview(values, formikRef, ReviewWorkflowStatus.TransferredGRE);
         }}
       >
-        {({ isSubmitting, submitForm, values, validateForm }) => (
+        {({ isSubmitting, submitForm, values, validateForm, setTouched }) => (
           <Form>
             <StepStatusIcon
               preIconLabel={
@@ -111,6 +111,8 @@ const GreTransferStep = ({ formikRef }: IStepProps) => {
                     validateForm().then((errors: any) => {
                       if (Object.keys(errors).length === 0) {
                         setUpdatePims(true);
+                      } else {
+                        setTouched(errors);
                       }
                     })
                   }

@@ -7,6 +7,7 @@ import { Highlighter, Menu, MenuItem } from 'react-bootstrap-typeahead';
 import { Label } from '../Label';
 import { SelectOption, SelectOptions } from './Select';
 import { TypeaheadField } from './Typeahead';
+import _ from 'lodash';
 
 interface IParentSelect {
   /** specify the field that is being accessed */
@@ -52,31 +53,11 @@ export const ParentSelect: React.FC<IParentSelect> = ({
   onChange,
   selectClosest,
 }) => {
-  const { setFieldValue, values } = useFormikContext();
-  const value = getIn(values, field);
-  /** determine whether the initial value has been loaded into the component or not */
-  const [loaded, setLoaded] = useState(false);
+  const { setFieldValue } = useFormikContext();
   /** used to trigger onBlur so menu disappears on custom header click */
   const [clear, setClear] = useState(false);
-  /** select appropriate agency to set the field value to when present */
-  const option = value ? options.find(x => x.value === value.toString()) : null;
   /** controls the multi selections displayed to the user */
   const [multiSelections, setMultiSelections] = React.useState<any>([]);
-
-  useEffect(() => {
-    if (!loaded) {
-      if (value !== undefined) {
-        if (value?.value) {
-          setFieldValue(field, value);
-        } else if (value && !value.value) {
-          setFieldValue(field, option);
-        } else {
-          setFieldValue(field, option);
-          setLoaded(true);
-        }
-      }
-    }
-  }, [value, loaded, setFieldValue, field, option]);
 
   /** wipe the selection from input on reset */
   useEffect(() => {
@@ -86,7 +67,7 @@ export const ParentSelect: React.FC<IParentSelect> = ({
 
   /** function that gets called when menu header is clicked */
   const handleMenuHeaderClick = (vals: SelectOption) => {
-    setFieldValue(field, vals);
+    setFieldValue(field, vals.value);
     /** trigger ref in Typeahead to call onBlur so menu closes */
     setClear(true);
     onChange?.([vals]);
@@ -101,6 +82,18 @@ export const ParentSelect: React.FC<IParentSelect> = ({
     );
     setClear(true);
     onChange?.(vals);
+  };
+
+  const getOptionByValue = (value: any) => {
+    if (value?.value) {
+      return [value];
+    }
+    if (value !== undefined && !_.isEmpty(value.toString())) {
+      /** select appropriate agency to set the field value to when present */
+      const option = options.find(x => x.value === value.toString() || x.value === value);
+      return option ? [option] : [];
+    }
+    return [];
   };
 
   return (
@@ -121,7 +114,7 @@ export const ParentSelect: React.FC<IParentSelect> = ({
               vals.map((x: any) => x.value),
             );
           } else {
-            setFieldValue(field, getIn(vals[0], 'name') ?? vals[0]);
+            setFieldValue(field, getIn(vals[0], 'value') ?? vals[0]);
           }
           onChange?.(vals);
         }}
@@ -129,15 +122,12 @@ export const ParentSelect: React.FC<IParentSelect> = ({
         options={options}
         bsSize={'large'}
         filterBy={filterBy}
-        getOptionByValue={
-          enableMultiple
-            ? (value: any) => value
-            : (value: any) => (!!value ? ([value] as any[]) : ([] as any[]))
-        }
+        getOptionByValue={enableMultiple ? (value: any) => value : getOptionByValue}
         multiSelections={multiSelections}
         clearSelected={clearSelected}
         placeholder={placeholder}
         hideValidation
+        required={required}
         renderMenu={(results, menuProps) => {
           const parents = groupBy(
             results.map((x: SelectOption) => {
@@ -165,7 +155,7 @@ export const ParentSelect: React.FC<IParentSelect> = ({
                     <b style={{ cursor: 'pointer' }}>
                       {field === 'statusId'
                         ? results.find(x => x.parentId?.toString() === parent)?.parent
-                        : options.find(x => x.value === parent)?.label}
+                        : results.find(x => x.value === parent)?.label}
                     </b>
                   </Menu.Header>
                 )}
