@@ -83,6 +83,37 @@ namespace Pims.Dal.Services
             return properties;
         }
 
+
+        /// <summary>
+        /// Get an array of property names within the specified filters.
+        /// Will not return sensitive properties unless the user has the `sensitive-view` claim and belongs to the owning agency.
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        public IEnumerable<string> GetNames(AllPropertyFilter filter)
+        {
+            this.User.ThrowIfNotAuthorized(Permissions.PropertyView);
+            filter.ThrowIfNull(nameof(filter));
+            if (!filter.IsValid()) throw new ArgumentException("Argument must have a valid filter", nameof(filter));
+
+            var parcelFilter = (ParcelFilter)filter;
+            var buildingFilter = (BuildingFilter)filter;
+
+            if (parcelFilter.IsValid() && !buildingFilter.IsValid())
+            {
+                filter.PropertyType = Entities.PropertyTypes.Land;
+            }
+            else if (!parcelFilter.IsValid())
+            {
+                filter.PropertyType = Entities.PropertyTypes.Building;
+            }
+
+            var query = this.Context.GenerateQuery(this.User, filter);
+            var properties = query.Where(x=> !string.IsNullOrWhiteSpace(x.Name)).Select(x => x.Name).ToArray();
+
+            return properties;
+        }
+
         /// <summary>
         /// Get an array of properties within the specified filters.
         /// Will not return sensitive properties unless the user has the `sensitive-view` claim and belongs to the owning agency.

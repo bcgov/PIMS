@@ -68,6 +68,7 @@ export interface IPropertyQueryParams {
   quantity: number;
   pid?: string;
   address?: string;
+  name?: string;
   administrativeArea?: string;
   projectNumber?: string;
   classificationId?: number;

@@ -80,7 +80,7 @@ export type LayerPopupInformation = PopupContentConfig & {
 };
 
 const defaultFilterValues: IPropertyFilter = {
-  searchBy: 'name',
+  searchBy: 'address',
   pid: '',
   address: '',
   administrativeArea: '',

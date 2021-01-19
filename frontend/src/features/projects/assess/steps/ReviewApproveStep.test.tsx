@@ -40,6 +40,7 @@ const mockKeycloak = (claims: string[]) => {
 const mockStore = configureMockStore([thunk]);
 const history = createMemoryHistory();
 const mockAxios = new MockAdapter(axios);
+mockAxios.onAny().reply(200, {});
 
 const mockTasks: IProjectTask[] = [
   {

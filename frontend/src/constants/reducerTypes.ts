@@ -47,3 +47,6 @@ export enum ProjectReducers {
   TASKS = 'tasks',
   STATUSES = 'statuses',
 }
+
+// Properties
+export const PROPERTY_NAMES = 'propertyNames';

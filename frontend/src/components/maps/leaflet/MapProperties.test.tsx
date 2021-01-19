@@ -20,12 +20,16 @@ import { useKeycloak } from '@react-keycloak/web';
 import { useApi, PimsAPI } from 'hooks/useApi';
 import { createPoints } from './mapUtils';
 import SelectedPropertyMarker from './SelectedPropertyMarker/SelectedPropertyMarker';
+import { fetchPropertyNames } from 'actionCreators/propertyActionCreator';
 
 jest.mock('axios');
 jest.mock('@react-keycloak/web');
 Enzyme.configure({ adapter: new Adapter() });
 const mockStore = configureMockStore([thunk]);
 jest.mock('hooks/useApi');
+jest.mock('actionCreators/propertyActionCreator');
+
+(fetchPropertyNames as any).mockImplementation(jest.fn(() => () => ['test']));
 
 // This mocks the parcels of land a user can see - should be able to see 2 markers
 const mockParcels = [

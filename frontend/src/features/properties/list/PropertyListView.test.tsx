@@ -1,3 +1,4 @@
+import MockAdapter from 'axios-mock-adapter';
 import PropertyListView from './PropertyListView';
 import React from 'react';
 import { Router } from 'react-router-dom';
@@ -10,9 +11,13 @@ import * as API from 'constants/API';
 import { Provider } from 'react-redux';
 import * as reducerTypes from 'constants/reducerTypes';
 import service from '../service';
+import { useKeycloak } from '@react-keycloak/web';
+import axios from 'axios';
 
 // Set all module functions to jest.fn
 jest.mock('../service');
+jest.mock('@react-keycloak/web');
+
 const mockedService = service as jest.Mocked<typeof service>;
 
 const mockStore = configureMockStore([thunk]);
@@ -34,6 +39,8 @@ const store = mockStore({
 });
 
 const history = createMemoryHistory();
+const mockAxios = new MockAdapter(axios);
+mockAxios.onAny().reply(200, {});
 
 describe('Property list view', () => {
   // clear mocks before each test
@@ -54,6 +61,15 @@ describe('Property list view', () => {
       page: 1,
       pageIndex: 0,
       items: [],
+    });
+    (useKeycloak as jest.Mock).mockReturnValue({
+      keycloak: {
+        subject: 'test',
+        userInfo: {
+          roles: ['property-view'],
+          agencies: ['1'],
+        },
+      },
     });
 
     await act(async () => {
@@ -100,6 +116,15 @@ describe('Property list view', () => {
       page: 1,
       pageIndex: 0,
       items: [],
+    });
+    (useKeycloak as jest.Mock).mockReturnValue({
+      keycloak: {
+        subject: 'test',
+        userInfo: {
+          roles: ['property-view'],
+          agencies: ['1'],
+        },
+      },
     });
 
     await act(async () => {

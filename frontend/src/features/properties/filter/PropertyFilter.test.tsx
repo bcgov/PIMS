@@ -3,7 +3,7 @@ import renderer from 'react-test-renderer';
 import { render, wait, fireEvent, cleanup } from '@testing-library/react';
 import { PropertyFilter } from './';
 import * as MOCK from 'mocks/filterDataMock';
-import Axios from 'axios';
+import axios from 'axios';
 import { useKeycloak } from '@react-keycloak/web';
 import { IGeoSearchParams } from 'constants/API';
 import { createMemoryHistory } from 'history';
@@ -13,17 +13,24 @@ import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureMockStore from 'redux-mock-store';
 import * as reducerTypes from 'constants/reducerTypes';
+import { fetchPropertyNames } from 'actionCreators/propertyActionCreator';
 
 const onFilterChange = jest.fn<void, [IPropertyFilter]>();
 //prevent web calls from being made during tests.
 jest.mock('axios');
 jest.mock('@react-keycloak/web');
-const mockedAxios = Axios as jest.Mocked<typeof Axios>;
+jest.mock('actionCreators/propertyActionCreator');
+
+(fetchPropertyNames as any).mockImplementation(jest.fn(() => () => ['test']));
+
+const mockedAxios = axios as jest.Mocked<typeof axios>;
 const mockStore = configureMockStore([thunk]);
 const history = createMemoryHistory();
+
 const getStore = (filter: any) =>
   mockStore({
     [reducerTypes.FILTER]: filter,
+    [reducerTypes.PROPERTY_NAMES]: ['test'],
   });
 
 const defaultFilter: IPropertyFilter = {
@@ -59,12 +66,16 @@ describe('MapFilterBar', () => {
   afterEach(() => {
     cleanup();
   });
+
+  mockedAxios.get.mockImplementationOnce(() => Promise.resolve({}));
+
   beforeEach(() => {
     (useKeycloak as jest.Mock).mockReturnValue({
       keycloak: {
         subject: 'test',
         userInfo: {
           roles: ['property-view'],
+          agencies: ['1'],
         },
       },
     });
@@ -93,7 +104,6 @@ describe('MapFilterBar', () => {
         },
       },
     });
-    mockedAxios.get.mockImplementationOnce(() => Promise.resolve({}));
 
     const { container } = render(getUiElement(defaultFilter));
     const address = container.querySelector('input[name="address"]');
