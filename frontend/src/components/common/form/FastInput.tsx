@@ -107,7 +107,6 @@ export const FastInput: React.FC<FastInputProps> = memo(
             as={asElement}
             name={field}
             className={className}
-            required={required}
             style={style!}
             disabled={disabled}
             custom={custom}
