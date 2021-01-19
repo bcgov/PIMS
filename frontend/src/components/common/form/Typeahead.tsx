@@ -68,14 +68,31 @@ export function TypeaheadField<T extends TypeaheadModel>({
   const errorTooltip = error && touch && displayErrorTooltips ? error : undefined;
   const customBlur = (val: string) => {
     setFieldTouched(name, true);
-    if (!getIn(name, 'value') && val !== '') {
+    if (
+      (!getIn(name, 'value') && val !== '' && getIn(values, name) === '') ||
+      getIn(values, name) === null
+    ) {
       const regex = new RegExp(val, 'i');
+      const exact = new RegExp(`^${val}$`, 'i');
+
+      /** check for exact match before returning closest fit, will return undefined if failure */
+      const checkExactMatch = rest.options.find((x: any) =>
+        x.label ? x.label.match(exact) : x.match(exact),
+      );
+
+      /** returns item with the closest matching text, used if exact match is not found */
       const matchedItem = rest.options.find((x: any) =>
         x.label ? x.label.match(regex) : x.match(regex),
       );
-      setFieldValue(name, matchedItem);
-      /** TODO: change back to below when Devin's changes are re-implemented */
-      // setFieldValue(name, (matchedItem as any).value ? (matchedItem as any).value : matchedItem);
+
+      if ((checkExactMatch as any)?.value || (matchedItem as any)?.value) {
+        setFieldValue(
+          name,
+          checkExactMatch ? (checkExactMatch as any).value : (matchedItem as any).value,
+        );
+      } else {
+        setFieldValue(name, checkExactMatch ? checkExactMatch : matchedItem);
+      }
     }
   };
   if (!getOptionByValue) {
