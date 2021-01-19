@@ -1,0 +1,25 @@
+kind: Template
+apiVersion: v1
+name: internal-k8s-cluster-api-config
+parameters:
+  - name: PROJECT_NAMESPACE
+    displayName: "OpenShift Project Namespace"
+    description: "The namespace of the OpenShift project containing the application."
+    required: true
+    value: "354028"
+  - name: ENV_NAME
+    displayName: "Environment name"
+    description: "The name for this environment [dev, test, prod, tools]"
+    required: true
+    value: "dev"
+objects:
+  - kind: NetworkSecurityPolicy
+    apiVersion: security.devops.gov.bc.ca/v1alpha1
+    metadata:
+      name: project-to-k8s-api-${ENV_NAME}
+    spec:
+      description: Allow pods to talk to the internal K8S api
+      source:
+        - - $namespace=${PROJECT_NAMESPACE}-${ENV_NAME}
+      destination:
+        - - int:network=internal-cluster-api-endpoint

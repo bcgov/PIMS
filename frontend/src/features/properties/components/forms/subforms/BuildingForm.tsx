@@ -242,6 +242,7 @@ const BuildingForm = (props: BuildingProps & FormikProps<any>) => {
             <h4>Building Valuation Information</h4>
             <EvaluationForm
               {...props}
+              isParcel={false}
               nameSpace={withNameSpace('financials')}
               disabled={props.disabled || readonly}
             />

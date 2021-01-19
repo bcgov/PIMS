@@ -1,0 +1,70 @@
+kind: Template
+apiVersion: v1
+metadata:
+  name: pims-api-deploy
+  annotations:
+    openshift.io/display-name: .NET Core 3.1 Deployment Template
+    description: Deployment template for a .NET Core 3.1 application.
+    tags: pims-api,netcore,api
+parameters:
+  - name: APP_NAME
+    displayName: "App Name"
+    description: "The name of the application (grouped)."
+    required: true
+    value: "pims"
+  - name: ROLE_NAME
+    displayName: "Component Role Name"
+    description: "The name of the application component role (e.g web, api, database)."
+    required: true
+    value: "api"
+  - name: ENV_NAME
+    displayName: "Environment name"
+    description: "The name for this environment [dev, test, prod, tools]"
+    required: true
+    value: "dev"
+  - name: INSTANCE
+    displayName: "Unique Identifier"
+    description: "A unique identifier to allow for multiple instances (i.e. '-01')."
+    value: ""
+  - name: PROJECT_NAMESPACE
+    displayName: "OpenShift Project Namespace"
+    description: "The namespace of the OpenShift project containing the application."
+    required: true
+    value: "354028"
+
+  - name: APP_DOMAIN
+    displayName: "Application Hostname"
+    description: "The exposed hostname that will route to the the .NET Core service, if left blank a value will be defaulted."
+    value: "pims-dev.apps.silver.devops.gov.bc.ca"
+  - name: APP_PORT
+    displayName: "Application Port"
+    description: "The port used to communicate with the Pod"
+    value: "8080"
+  - name: API_DOCS_PATH
+    displayName: "API Swagger URL path"
+    description: "The URL path to the swagger documentation"
+    value: "/api-docs"
+objects:
+  # The route for Swagger.
+  - kind: Route
+    apiVersion: v1
+    metadata:
+      name: ${APP_NAME}-${ROLE_NAME}-${ENV_NAME}${INSTANCE}-docs
+      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
+      labels:
+        name: ${APP_NAME}-${ROLE_NAME}-${ENV_NAME}${INSTANCE}-docs
+        app: ${APP_NAME}
+        role: ${ROLE_NAME}
+        env: ${ENV_NAME}
+    spec:
+      host: ${APP_DOMAIN}
+      path: ${API_DOCS_PATH}
+      to:
+        kind: Service
+        name: ${APP_NAME}-${ROLE_NAME}-${ENV_NAME}${INSTANCE}
+        weight: 100
+      port:
+        targetPort: ${APP_PORT}-tcp
+      tls:
+        insecureEdgeTerminationPolicy: Redirect
+        termination: edge

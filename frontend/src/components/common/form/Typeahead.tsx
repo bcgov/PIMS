@@ -31,6 +31,8 @@ export interface ITypeaheadFieldProps<T extends TypeaheadModel> extends Typeahea
   clearSelected?: boolean;
   /** restet clear  state via this component */
   setClear?: Function;
+  /** get the component to select the item with closest label match to the input provided */
+  selectClosest?: boolean;
 }
 
 const Feedback = styled(Form.Control.Feedback)`
@@ -50,12 +52,25 @@ export function TypeaheadField<T extends TypeaheadModel>({
   selected,
   clearSelected,
   outerClassName,
+  selectClosest,
   clearMenu,
   ...rest
 }: ITypeaheadFieldProps<T>) {
   const { touched, values, errors, setFieldTouched, setFieldValue } = useFormikContext();
   const hasError = !!getIn(touched, name) && !!getIn(errors, name);
   const isValid = !!getIn(touched, name) && !getIn(errors, name);
+  const customBlur = (val: string) => {
+    setFieldTouched(name, true);
+    if (!getIn(name, 'value') && val !== '') {
+      const regex = new RegExp(val, 'i');
+      const matchedItem = rest.options.find((x: any) =>
+        x.label ? x.label.match(regex) : x.match(regex),
+      );
+      setFieldValue(name, matchedItem);
+      /** TODO: change back to below when Devin's changes are re-implemented */
+      // setFieldValue(name, (matchedItem as any).value ? (matchedItem as any).value : matchedItem);
+    }
+  };
   if (!getOptionByValue) {
     getOptionByValue = (value: T) => (!!value ? ([value] as T[]) : ([] as T[]));
   }
@@ -80,6 +95,7 @@ export function TypeaheadField<T extends TypeaheadModel>({
         {...rest}
         inputProps={{ ...rest.inputProps, name: name, id: `${name}-field` }}
         isInvalid={hasError as any}
+        highlightOnlyResult
         isValid={!hideValidation && isValid}
         selected={
           multiSelections?.length > 0 ? multiSelections : getOptionByValue(getIn(values, name))
@@ -92,7 +108,9 @@ export function TypeaheadField<T extends TypeaheadModel>({
                 setFieldValue(name, getIn(newValues[0], 'value') ?? newValues[0]);
               }
         }
-        onBlur={() => setFieldTouched(name, true)}
+        onBlur={
+          selectClosest ? (e: any) => customBlur(e.target.value) : () => setFieldTouched(name, true)
+        }
         id={`${name}-field`}
       />
       {hasError && <Feedback type="invalid">{getIn(errors, name)}</Feedback>}

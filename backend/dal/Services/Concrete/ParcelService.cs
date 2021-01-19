@@ -239,13 +239,11 @@ namespace Pims.Dal.Services
             if (originalParcel.IsVisibleToOtherAgencies != parcel.IsVisibleToOtherAgencies) throw new InvalidOperationException("Parcel cannot be made visible to other agencies through this service.");
 
             // Only administrators can dispose a property.
-            if (!isAdmin && parcel.ClassificationId == 4) throw new NotAuthorizedException("Parcel classification cannot be changed to disposed.");
+            if (!isAdmin && parcel.ClassificationId == 4) throw new NotAuthorizedException("Parcel classification cannot be changed to disposed."); // TODO: Classification '4' should be a config settings.
 
-            // Update a parcel and all child collections
             this.ThrowIfNotAllowedToUpdate(originalParcel, _options.Project);
 
             // Users who don't own the parcel, but only own a building cannot update the parcel.
-
             if (allowEdit)
             {
                 this.Context.Entry(originalParcel).CurrentValues.SetValues(parcel);
@@ -296,7 +294,8 @@ namespace Pims.Dal.Services
                         }
                         else if (updateEvaluation)
                         {
-                            this.Context.Entry(existingBuildingEvaluation).CurrentValues.SetValues(buildingEvaluation);
+                            existingBuildingEvaluation.Note = buildingEvaluation.Note;
+                            existingBuildingEvaluation.Value = buildingEvaluation.Value;
                         }
                     }
                     foreach (var buildingFiscal in building.Fiscals)
@@ -315,7 +314,8 @@ namespace Pims.Dal.Services
                         }
                         else if (updateFiscal)
                         {
-                            this.Context.Entry(existingBuildingFiscal).CurrentValues.SetValues(buildingFiscal);
+                            existingBuildingFiscal.Note = buildingFiscal.Note;
+                            existingBuildingFiscal.Value = buildingFiscal.Value;
                         }
                     }
                 }
@@ -325,16 +325,18 @@ namespace Pims.Dal.Services
             {
                 foreach (var parcelEvaluation in parcel.Evaluations)
                 {
-                    var existingEvaluation = originalParcel.Evaluations
+                    var originalEvaluation = originalParcel.Evaluations
                         .FirstOrDefault(e => e.Date == parcelEvaluation.Date && e.Key == parcelEvaluation.Key);
 
-                    if (existingEvaluation == null)
+                    if (originalEvaluation == null)
                     {
                         originalParcel.Evaluations.Add(parcelEvaluation);
                     }
                     else
                     {
-                        this.Context.Entry(existingEvaluation).CurrentValues.SetValues(parcelEvaluation);
+                        originalEvaluation.Note = parcelEvaluation.Note;
+                        originalEvaluation.Value = parcelEvaluation.Value;
+                        originalEvaluation.Firm = parcelEvaluation.Firm;
                     }
                 }
                 foreach (var parcelFiscal in parcel.Fiscals)
@@ -348,7 +350,8 @@ namespace Pims.Dal.Services
                     }
                     else
                     {
-                        this.Context.Entry(originalParcelFiscal).CurrentValues.SetValues(parcelFiscal);
+                        originalParcelFiscal.Note = parcelFiscal.Note;
+                        originalParcelFiscal.Value = parcelFiscal.Value;
                     }
                 }
 
@@ -409,7 +412,7 @@ namespace Pims.Dal.Services
 
             this.Context.SaveChanges();
             this.Context.CommitTransaction();
-            return parcel;
+            return Get(parcel.Id);
         }
 
         /// <summary>

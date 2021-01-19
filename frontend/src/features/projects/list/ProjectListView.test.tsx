@@ -97,7 +97,7 @@ const lCodes = {
 const store = mockStore({
   [reducerTypes.LOOKUP_CODE]: lCodes,
 });
-
+mockAxios.onAny().reply(200, {});
 const history = createMemoryHistory();
 
 describe('Project list view tests', () => {
@@ -114,6 +114,7 @@ describe('Project list view tests', () => {
 
   it('Matches snapshot', async () => {
     mockedService.getProjectList.mockResolvedValueOnce(testData as any);
+    mockAxios.onAny().reply(200, {});
 
     await act(async () => {
       const { container } = render(

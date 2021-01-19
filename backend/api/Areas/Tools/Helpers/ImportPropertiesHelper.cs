@@ -47,6 +47,82 @@ namespace Pims.Api.Areas.Tools.Helpers
 
         #region Methods
         /// <summary>
+        /// Parse the value to extract the PID number.
+        /// If it's invalid it will return -1.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        private int ParsePid(string value)
+        {
+            if (int.TryParse(value?.Replace("-", ""), out int pid))
+                return pid;
+
+            return -1;
+        }
+
+        /// <summary>
+        /// Delete properties from inventory that match the parcel PID or building name.
+        /// </summary>
+        /// <param name="properties"></param>
+        /// <param name="updatedBefore">Only allow deletes to properties updated before this date.</param>
+        /// <returns></returns>
+        public IEnumerable<Entity.Property> DeleteProperties(IEnumerable<Model.ImportPropertyModel> properties, DateTime? updatedBefore = null)
+        {
+            if (properties == null) throw new ArgumentNullException(nameof(properties));
+
+            var results = new List<Entity.Property>();
+            foreach (var property in properties)
+            {
+                var pid = ParsePid(property.ParcelId ?? property.PID);
+                _logger.LogDebug($"Requesting to remove property pid:{pid}, type:{property.PropertyType}, local:{property.LocalId}");
+
+                // Ignore invalid PID values or '000-000-000'.
+                if (pid < 1) continue;
+
+                switch (property.PropertyType?.ToLower())
+                {
+                    case "parcel":
+                    case "land":
+                        var parcel = ExceptionHelper.HandleKeyNotFound(() => _pimsAdminService.Parcel.GetByPid(pid));
+                        // Only delete the parcel if it exists in inventory.
+                        if (parcel != null && (updatedBefore == null || parcel.UpdatedOn == null || parcel.UpdatedOn < updatedBefore))
+                        {
+                            _pimsAdminService.Parcel.Remove(parcel);
+                            results.Add(parcel);
+                            _logger.LogInformation($"Deleting parcel pid:{pid}");
+                        }
+                        break;
+                    case "building":
+                        var name = $"{(String.IsNullOrWhiteSpace(property.LocalId) ? "" : $"{property.LocalId} ")}{property.Description}";
+                        // Searching for a name may result in multiple matches.
+                        //
+                        var buildings = ExceptionHelper.HandleKeyNotFound(() => _pimsAdminService.Building.GetByName(name));
+
+                        foreach (var building in buildings.ToArray())
+                        {
+                            _pimsAdminService.Building.LoadParcelsFor(building);
+                            // Only delete the building if it exists in inventory
+                            // If it hasn't been updated after the 'updatedBefore' date
+                            // If the building exists on the specified 'pid' or the building address matches
+                            if ((updatedBefore == null || building.UpdatedOn == null || building.UpdatedOn < updatedBefore)
+                                && ((building.Parcels.Count() == 0
+                                    && building.Address.Address1 == property.CivicAddress
+                                    && building.Address.AdministrativeArea == property.City)
+                                || building.Parcels.Any(p => p.Parcel.PID == pid)))
+                            {
+                                _pimsAdminService.Building.Remove(building);
+                                results.Add(building);
+                                _logger.LogInformation($"Deleting building pid:{pid} name:{name}");
+                            }
+                        }
+                        break;
+                }
+            }
+
+            return results;
+        }
+
+        /// <summary>
         /// Update the specified property financials only.
         /// This will only add new financial year values to existing properties.
         /// All other property metadata will remain unchanged.
@@ -241,7 +317,7 @@ namespace Pims.Api.Areas.Tools.Helpers
         /// <returns></returns>
         private Entity.Parcel AddUpdateParcel(Model.ImportPropertyModel property, int pid, Entity.Agency agency)
         {
-            var p_e = ExceptionHelper.HandleKeyNotFoundWithDefault(() => _pimsAdminService.Parcel.GetByPid(pid));
+            var p_e = ExceptionHelper.HandleKeyNotFoundWithDefault(() => _pimsAdminService.Parcel.GetByPidWithoutTracking(pid));
             var fiscalYear = property.FiscalYear;
             var evaluationDate = new DateTime(fiscalYear, 1, 1); // Defaulting to Jan 1st because SIS data doesn't have the actual date.
 
@@ -337,11 +413,11 @@ namespace Pims.Api.Areas.Tools.Helpers
         {
             var name = GenerateName(property.Name, property.Description, property.LocalId);
             // Multiple buildings could be returned for the PID and Name.
-            var b_e = ExceptionHelper.HandleKeyNotFoundWithDefault(() => _pimsAdminService.Building.GetByPid(pid, name).FirstOrDefault(n => n.Name == name) ?? throw new KeyNotFoundException());
+            var b_e = ExceptionHelper.HandleKeyNotFoundWithDefault(() => _pimsAdminService.Building.GetByPidWithoutTracking(pid, name).FirstOrDefault(n => n.Name == name) ?? throw new KeyNotFoundException());
             var evaluationDate = new DateTime(property.FiscalYear, 1, 1); // Defaulting to Jan 1st because SIS data doesn't have the actual date.
 
             // Find parcel
-            var parcel = ExceptionHelper.HandleKeyNotFound(() => _pimsAdminService.Parcel.GetByPid(pid));
+            var parcel = ExceptionHelper.HandleKeyNotFound(() => _pimsAdminService.Parcel.GetByPidWithoutTracking(pid));
 
             // Determine if the last evaluation or fiscal values are older than the one currently being imported.
             var fiscalNetBook = b_e.Fiscals.OrderByDescending(f => f.FiscalYear).FirstOrDefault(f => f.Key == Entity.FiscalKeys.NetBook && f.FiscalYear > property.FiscalYear);

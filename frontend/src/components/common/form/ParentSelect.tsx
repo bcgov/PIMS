@@ -31,6 +31,8 @@ interface IParentSelect {
   setClearSelected?: Function;
   /** Event occurs when the selection changes. */
   onChange?: (vals: any) => void;
+  /** get the component to select the item with closest label match to the input provided */
+  selectClosest?: boolean;
 }
 
 /** Component used to group children items with their parent.
@@ -48,6 +50,7 @@ export const ParentSelect: React.FC<IParentSelect> = ({
   setClearSelected,
   label,
   onChange,
+  selectClosest,
 }) => {
   const { setFieldValue, values } = useFormikContext();
   const value = getIn(values, field);
@@ -106,6 +109,7 @@ export const ParentSelect: React.FC<IParentSelect> = ({
       <TypeaheadField
         disabled={disabled}
         clearMenu={clear}
+        selectClosest={selectClosest}
         setClear={setClear}
         name={field}
         labelKey={option => `${option.label}`}

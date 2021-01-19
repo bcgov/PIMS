@@ -1,0 +1,45 @@
+kind: Template
+apiVersion: v1
+name: pod-to-project-config
+parameters:
+  - name: NAME
+    displayName: "The Application Name"
+    description: "The name of the application."
+    required: true
+    value: "pims"
+  - name: PROJECT_NAMESPACE
+    displayName: "OpenShift Project Namespace"
+    description: "The namespace of the OpenShift project containing the application."
+    required: true
+    value: "354028"
+  - name: ENV_NAME
+    displayName: "Environment name"
+    description: "The name for this environment [dev, test, prod, tools]"
+    required: true
+    value: "dev"
+  - name: SOURCE_ROLE
+    displayName: "The Source Role"
+    description: "The source role/pod that will make a request to the destination role/pod."
+    required: true
+    value: "web"
+  - name: DESTINATION_ROLE
+    displayName: "The Destination Role"
+    description: "The destination role/pod that will receive a request from the source role/pod."
+    required: true
+    value: "api"
+objects:
+  - kind: NetworkSecurityPolicy
+    apiVersion: security.devops.gov.bc.ca/v1alpha1
+    metadata:
+      name: pod-to-project-permit-${NAME}-${SOURCE_ROLE}
+    spec:
+      description: Allow project to communicate to other pod(s) in another project.
+      source:
+        - - app=${NAME}
+          - role=${SOURCE_ROLE}
+          - env=${ENV_NAME}
+      destination:
+        - - app=${NAME}
+          - role=${DESTINATION_ROLE}
+          - env=${ENV_NAME}
+          - $namespace=${PROJECT_NAMESPACE}-${ENV_NAME}

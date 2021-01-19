@@ -72,8 +72,4 @@ INSERT INTO dbo.[BuildingPredominateUses] (
     16
     , 'Weigh Station'
     , 0
-), (
-    17
-    , 'ZEBRA FEEDING STATION'
-    , 0
 )

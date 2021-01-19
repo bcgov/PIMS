@@ -1,0 +1,25 @@
+kind: Template
+apiVersion: v1
+metadata:
+  name: mssql-image-streams
+  annotations:
+    openshift.io/display-name: Microsoft SQL Server
+    description: ImageStream definitions for Microsoft SQL Server on RHEL
+parameters:
+  - name: IMAGE_NAME
+    displayName: The name of this base image
+    required: true
+    value: mssql-rhel-server
+objects:
+  - kind: ImageStream
+    apiVersion: v1
+    metadata:
+      name: ${IMAGE_NAME}
+    spec:
+      tags:
+        - name: "2019-latest"
+          from:
+            kind: DockerImage
+            name: "mcr.microsoft.com/mssql/rhel/server:2019-latest"
+          referencePolicy:
+            type: Local

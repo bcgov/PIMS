@@ -19,6 +19,7 @@ import ProjectWorkflowTasksSlice from 'features/projects/common/slices/projectWo
 import erpTabSlice from 'features/projects/erp/slices/erpTabSlice';
 import splTabSlice from 'features/projects/spl/slices/splTabSlice';
 import projectStatusesSlice from 'features/projects/common/slices/projectStatusesSlice';
+import propertyNameSlice from 'features/properties/common/slices/propertyNameSlice';
 import filterSlice from './filterSlice';
 import agencyReducer from './agencyReducer';
 import agencyDetailReducer from './agencyDetailReducer';
@@ -47,6 +48,7 @@ export const reducerObject = {
   [ProjectReducers.SPL_TAB]: splTabSlice.reducer,
   [reducerTypes.KEYCLOAK_READY]: keycloakReadySlice.reducer,
   [reducerTypes.MAP_VIEW_ZOOM]: mapViewZoomSlice.reducer,
+  [reducerTypes.PROPERTY_NAMES]: propertyNameSlice.reducer,
 };
 
 export const rootReducer = combineReducers(reducerObject);

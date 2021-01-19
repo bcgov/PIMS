@@ -3,7 +3,7 @@ import { createMemoryHistory } from 'history';
 import { Router } from 'react-router-dom';
 import renderer from 'react-test-renderer';
 import { ParcelPopupView } from 'components/maps/ParcelPopupView';
-import { IProperty, IParcelDetail } from 'actions/parcelsActions';
+import { IProperty, IParcelDetail, IParcel } from 'actions/parcelsActions';
 import Map from './Map';
 import { Map as LeafletMap } from 'leaflet';
 import { MapProps as LeafletMapProps, Marker, Map as ReactLeafletMap } from 'react-leaflet';
@@ -20,12 +20,16 @@ import { useKeycloak } from '@react-keycloak/web';
 import { useApi, PimsAPI } from 'hooks/useApi';
 import { createPoints } from './mapUtils';
 import SelectedPropertyMarker from './SelectedPropertyMarker/SelectedPropertyMarker';
+import { fetchPropertyNames } from 'actionCreators/propertyActionCreator';
 
 jest.mock('axios');
 jest.mock('@react-keycloak/web');
 Enzyme.configure({ adapter: new Adapter() });
 const mockStore = configureMockStore([thunk]);
 jest.mock('hooks/useApi');
+jest.mock('actionCreators/propertyActionCreator');
+
+(fetchPropertyNames as any).mockImplementation(jest.fn(() => () => ['test']));
 
 // This mocks the parcels of land a user can see - should be able to see 2 markers
 const mockParcels = [
@@ -35,6 +39,9 @@ const mockParcels = [
 ((useApi as unknown) as jest.Mock<Partial<PimsAPI>>).mockReturnValue({
   loadProperties: async () => {
     return createPoints(mockParcels);
+  },
+  getParcel: async () => {
+    return {} as IParcel;
   },
 });
 
@@ -214,7 +221,7 @@ describe('MapProperties View', () => {
       </Provider>,
     );
 
-    const alert = getByText('Failed to load parcel details.');
+    const alert = getByText('Property details loading.');
     expect(alert).toBeTruthy();
   });
 

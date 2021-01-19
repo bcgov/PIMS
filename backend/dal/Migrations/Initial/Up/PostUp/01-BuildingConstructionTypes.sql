@@ -10,7 +10,7 @@ INSERT INTO dbo.[BuildingConstructionTypes] (
     , 0
 ), (
     1
-    , 'Masonary'
+    , 'Masonry'
     , 0
 ), (
     2

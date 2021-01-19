@@ -12,20 +12,36 @@ import queryString from 'query-string';
 import { useDispatch } from 'react-redux';
 import { fetchProject, IProject } from 'features/projects/common';
 import { useEffect, useState } from 'react';
+import { useLeaflet } from 'react-leaflet';
 
-export interface IParcelDetailProps {
+export interface IParcelPopupViewProps {
+  /** The property to display */
   parcel: IParcel | null;
+  /** Zoom level that the map should zoom to. */
   zoomTo?: () => void;
+  /** Whether the Popup action menu is disabled. */
   disabled?: boolean;
+  /** Event is fired when a link on the popup is clicked. */
   onLinkClick?: () => void;
 }
 
-export const ParcelPopupView = (props: IParcelDetailProps | null) => {
+/**
+ * Display the specified property information.
+ * @param props ParcelPopupView properties.
+ */
+export const ParcelPopupView = (props: IParcelPopupViewProps | null) => {
   const parcelDetail: IParcel | null | undefined = props?.parcel;
   const keycloak = useKeycloakWrapper();
   const location = useLocation();
   const dispatch = useDispatch();
   const [projectRoute, setProjectRoute] = useState('');
+
+  const leaflet = useLeaflet();
+  const defaultZoom = () =>
+    leaflet.map?.flyTo([parcelDetail!.latitude as number, parcelDetail!.longitude as number], 14);
+
+  const whichZoom = props?.zoomTo ?? defaultZoom;
+  const curZoom = leaflet.map?.getZoom();
 
   useEffect(() => {
     if (parcelDetail?.projectNumber) {
@@ -40,7 +56,7 @@ export const ParcelPopupView = (props: IParcelDetailProps | null) => {
   return (
     <Container className="parcelPopup" fluid={true}>
       {!parcelDetail ? (
-        <Alert variant="danger">Failed to load parcel details.</Alert>
+        <Alert variant="warning">Property details loading.</Alert>
       ) : (
         <>
           <Row>
@@ -132,8 +148,8 @@ export const ParcelPopupView = (props: IParcelDetailProps | null) => {
                     Update
                   </Link>
                 )}
-                {props?.zoomTo && (
-                  <Link to={{ ...location }} onClick={props?.zoomTo}>
+                {curZoom! < 14 && (
+                  <Link to={{ ...location }} onClick={whichZoom}>
                     Zoom
                   </Link>
                 )}

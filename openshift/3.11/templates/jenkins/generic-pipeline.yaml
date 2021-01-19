@@ -1,0 +1,96 @@
+# This is a generic pipeline template
+# that supports a Jenkinsfile for configuration.
+# Simply point it to the source control repo Jenkinsfile and it will run.
+kind: "Template"
+apiVersion: "v1"
+metadata:
+  name: "pims-pipeline"
+  creationTimestamp: null
+objects:
+  - kind: "BuildConfig"
+    apiVersion: "v1"
+    metadata:
+      name: "${NAME}"
+      creationTimestamp: null
+      labels:
+        name: "${NAME}"
+        role: "pipeline"
+    spec:
+      triggers:
+        - type: "GitHub"
+          github:
+            secret: "${GITHUB_WEBHOOK_SECRET}"
+        - type: "Generic"
+          generic:
+            secret: "${GENERIC_WEBHOOK_SECRET}"
+      runPolicy: "Parallel"
+      source:
+        type: "Git"
+        git:
+          uri: ${GIT_URL}
+          ref: ${GIT_REF}
+      strategy:
+        type: "JenkinsPipeline"
+        jenkinsPipelineStrategy:
+          env:
+            - name: VANITY_URL
+              value: ${APP_URI}
+            - name: OC_JOB_NAME
+              value: ${OC_JOB_NAME}
+            - name: DESTINATION
+              value: ${ENV_NAME}
+            - name: ENABLE_VERSION_PROMPT
+              value: ${ENABLE_VERSION_PROMPT}
+          jenkinsfilePath: "${JENKINSFILE_PATH}"
+      output: {}
+      resources: {}
+      postCommit: {}
+    status:
+      lastVersion: 0
+parameters:
+  - name: NAME
+    displayName: "Pipeline Name"
+    description: "Name of the pipeline, e.g cicd, promote-to-test, sonarqube. A -pipeline suffix will be appended to the name provided."
+    required: true
+  - name: GITHUB_WEBHOOK_SECRET
+    displayName: "GitHub Webhook Secret"
+    description: "A secret string used to configure the GitHub webhook."
+    generate: "expression"
+    from: "[a-zA-Z0-9]{40}"
+  - name: GENERIC_WEBHOOK_SECRET
+    displayName: "Generic Webhook Secret"
+    description: "A secret string used to configure the Generic webhook."
+    generate: "expression"
+    from: "[a-zA-Z0-9]{40}"
+  - name: GIT_URL
+    displayName: "Git Repository URL"
+    description: "The URL of the repository containing the Jenkinsfile the pipeline buildconfig will use."
+    value: https://github.com/bcgov/PIMS.git
+    required: true
+  - name: GIT_REF
+    displayName: "Git Reference"
+    description: "Set this to a branch name, tag or other ref of your repository if you are not using the default branch."
+    value: "dev"
+  - name: JENKINSFILE_PATH
+    displayName: "Jenkinsfile path"
+    description: "Set this to the path to your Jenkinsfile (include the filename), relative to the contextDir."
+    value: "openshift/3.11/pipelines/Jenkinsfile"
+  - name: APP_URI
+    displayName: "Application URI"
+    description: "The URI to the application being deployed."
+    required: true
+    value: "https://pims-dev.pathfinder.gov.bc.ca/"
+  - name: ENV_NAME
+    displayName: "Environment name"
+    description: "The name for the environment that the build will be deployed to [dev, test, prod]"
+    required: true
+    value: "dev"
+  - name: OC_JOB_NAME
+    displayName: "Job Branch Name"
+    description: "Job identifier (i.e. 'pr-5' OR 'dev' OR 'master')"
+    required: true
+    value: "dev"
+  - name: ENABLE_VERSION_PROMPT
+    displayName: "Enable Version Prompt"
+    description: "To force asking for a release version before running the pipeline, set to 'true'"
+    value: "false"

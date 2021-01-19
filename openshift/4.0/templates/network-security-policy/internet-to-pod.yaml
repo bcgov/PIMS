@@ -1,0 +1,32 @@
+kind: Template
+apiVersion: v1
+name: internet-to-pod-config
+parameters:
+  - name: NAME
+    displayName: "The Application Name"
+    description: "The name of the application."
+    required: true
+    value: "pims"
+  - name: ENV_NAME
+    displayName: "Environment name"
+    description: "The name for this environment [dev, test, prod, tools]"
+    required: true
+    value: "dev"
+  - name: ROLE
+    displayName: "The Role"
+    description: "The role/pod that will receive a request from the internet."
+    required: true
+    value: "web"
+objects:
+  - kind: NetworkSecurityPolicy
+    apiVersion: security.devops.gov.bc.ca/v1alpha1
+    metadata:
+      name: external-ingress-${NAME}-${ROLE}
+    spec:
+      description: Allow the pod to receive connections from the Internet.
+      source:
+        - - ext:network=any
+      destination:
+        - - app=${NAME}
+          - role=${ROLE}
+          - env=${ENV_NAME}

@@ -63,6 +63,7 @@ const defaultSnapshot: ISnapshot = {
   snapshotOn: '2020-10-14T17:45:39.7381599',
   project: {
     actualFiscalYear: '2021',
+    risk: 'Green',
   } as any,
 };
 
@@ -99,14 +100,18 @@ describe('Spl Report Container', () => {
   describe('basic data loading and display', () => {
     it('Displays project snapshot data', async () => {
       await act(async () => {
-        // API "returns" no results
         mockApi().getProjectReports.mockResolvedValue([
           { ...defaultReport, to: undefined },
           { ...defaultReport, to: undefined, name: 'report 2' },
         ]);
         mockApi().getProjectReportSnapshotsById.mockResolvedValue([defaultSnapshot]);
         const { findByText, container } = renderContainer();
-        await findByText('20/21');
+        const fiscalYear = await findByText('20/21');
+        const market = await findByText('$3');
+        const risk = await findByText('Green');
+        expect(fiscalYear).toBeVisible();
+        expect(market).toBeVisible();
+        expect(risk).toBeVisible();
         expect(container.firstChild).toMatchSnapshot();
       });
     });
@@ -119,17 +124,6 @@ describe('Spl Report Container', () => {
         const { container, findByText } = renderContainer();
         await findByText('No Reports Available');
         expect(container.firstChild).toMatchSnapshot();
-      });
-    });
-
-    it('Displays correct message when there are no snapshots', async () => {
-      await act(async () => {
-        // API "returns" no results
-        mockApi().getProjectReports.mockResolvedValueOnce([]);
-        mockApi().getProjectReportSnapshotsById.mockResolvedValueOnce([]);
-        const { findByText } = renderContainer();
-        const text = await findByText('No Reports Available');
-        expect(text).toBeVisible();
       });
     });
 

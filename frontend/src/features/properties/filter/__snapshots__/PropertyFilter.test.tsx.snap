@@ -83,18 +83,13 @@ exports[`MapFilterBar renders correctly 1`] = `
           >
             <select
               className="form-select form-control"
+              disabled={false}
               id="input-searchBy"
               name="searchBy"
               onBlur={[Function]}
               onChange={[Function]}
               value="name"
             >
-              <option
-                className="option"
-                value="name"
-              >
-                Name
-              </option>
               <option
                 className="option"
                 value="address"
@@ -118,14 +113,77 @@ exports[`MapFilterBar renders correctly 1`] = `
           >
             <input
               className="form-control"
+              disabled={false}
               id="input-name"
               name="name"
               onBlur={[Function]}
               onChange={[Function]}
-              placeholder="Enter property name"
+              placeholder=""
               value=""
             />
           </div>
+        </div>
+      </div>
+    </div>
+    <div
+      className="map-filter-typeahead col"
+    >
+      <div
+        className="rbt"
+        style={
+          Object {
+            "outline": "none",
+            "position": "relative",
+          }
+        }
+        tabIndex={-1}
+      >
+        <div
+          style={
+            Object {
+              "display": "flex",
+              "flex": 1,
+              "height": "100%",
+              "position": "relative",
+            }
+          }
+        >
+          <input
+            aria-autocomplete="both"
+            aria-expanded={false}
+            aria-haspopup="listbox"
+            autoComplete="off"
+            className="rbt-input-main form-control rbt-input"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            placeholder="Enter a name"
+            role="combobox"
+            type="text"
+            value=""
+          />
+          <input
+            aria-hidden={true}
+            className="rbt-input-hint"
+            readOnly={true}
+            style={
+              Object {
+                "backgroundColor": "transparent",
+                "borderColor": "transparent",
+                "boxShadow": "none",
+                "color": "rgba(0, 0, 0, 0.35)",
+                "left": 0,
+                "pointerEvents": "none",
+                "position": "absolute",
+                "top": 0,
+                "width": "100%",
+              }
+            }
+            tabIndex={-1}
+            value=""
+          />
         </div>
       </div>
     </div>
@@ -161,6 +219,7 @@ exports[`MapFilterBar renders correctly 1`] = `
               aria-haspopup="listbox"
               autoComplete="off"
               className="rbt-input-main form-control rbt-input"
+              disabled={false}
               id="administrativeArea-field"
               name="administrativeArea"
               onBlur={[Function]}
@@ -229,6 +288,7 @@ exports[`MapFilterBar renders correctly 1`] = `
               aria-haspopup="listbox"
               autoComplete="off"
               className="rbt-input-main form-control rbt-input"
+              disabled={false}
               id="agencies-field"
               name="agencies"
               onBlur={[Function]}
@@ -273,6 +333,7 @@ exports[`MapFilterBar renders correctly 1`] = `
       >
         <select
           className="form-select form-control"
+          disabled={false}
           id="input-classificationId"
           name="classificationId"
           onBlur={[Function]}

@@ -28,6 +28,7 @@ import { IPropertyFilter } from '../filter/IPropertyFilter';
 import { SortDirection, TableSort } from 'components/Table/TableSort';
 import useCodeLookups from 'hooks/useLookupCodes';
 import { useRouterFilter } from 'hooks/useRouterFilter';
+import { useLocation } from 'react-router-dom';
 
 const getPropertyReportUrl = (filter: IPropertyQueryParams) =>
   `${ENVIRONMENT.apiUrl}/reports/properties?${filter ? queryString.stringify(filter) : ''}`;
@@ -49,6 +50,7 @@ const defaultFilterValues: IPropertyFilter = {
   pid: '',
   address: '',
   administrativeArea: '',
+  name: '',
   projectNumber: '',
   agencies: '',
   classificationId: '',
@@ -63,18 +65,14 @@ const defaultFilterValues: IPropertyFilter = {
 
 /**
  * Get the server query
- * @param ignorePropType - Whether to ignore the PropertyTypes (for doing excel export with all values)
  * @param state - Table state
  */
-const getServerQuery = (
-  ignorePropertyType: boolean,
-  state: {
-    pageIndex: number;
-    pageSize: number;
-    filter: IPropertyFilter;
-    agencyIds: number[];
-  },
-) => {
+const getServerQuery = (state: {
+  pageIndex: number;
+  pageSize: number;
+  filter: IPropertyFilter;
+  agencyIds: number[];
+}) => {
   const {
     pageIndex,
     pageSize,
@@ -84,6 +82,7 @@ const getServerQuery = (
       administrativeArea,
       projectNumber,
       classificationId,
+      name,
       agencies,
       minLotSize,
       maxLotSize,
@@ -112,7 +111,8 @@ const getServerQuery = (
     maxLandArea: decimalOrUndefined(maxLotSize),
     page: pageIndex + 1,
     quantity: pageSize,
-    propertyType: ignorePropertyType ? undefined : propertyType,
+    propertyType: propertyType,
+    name: name,
   };
   return query;
 };
@@ -122,6 +122,7 @@ const PropertyListView: React.FC = () => {
   const lookupCodes = useSelector<RootState, ILookupCode[]>(
     state => (state.lookupCode as ILookupCodeState).lookupCodes,
   );
+  const location = useLocation();
   const municipalities = useMemo(
     () =>
       _.filter(lookupCodes, (lookupCode: ILookupCode) => {
@@ -129,7 +130,6 @@ const PropertyListView: React.FC = () => {
       }),
     [lookupCodes],
   );
-
   const agencies = useMemo(
     () =>
       _.filter(lookupCodes, (lookupCode: ILookupCode) => {
@@ -196,7 +196,11 @@ const PropertyListView: React.FC = () => {
     },
     [setFilter, setPageIndex],
   );
-
+  useEffect(() => {
+    if (!location.search.includes('propertyType')) {
+      setFilter({ ...filter, propertyType: PropertyTypes.Land });
+    }
+  }, [filter, location.search]);
   // This will get called when the table needs new data
   const handleRequestData = useCallback(
     async ({ pageIndex, pageSize }: { pageIndex: number; pageSize: number }) => {
@@ -229,7 +233,7 @@ const PropertyListView: React.FC = () => {
       // Only update the data if this is the latest fetch
       if (agencyIds?.length > 0) {
         setData(undefined);
-        const query = getServerQuery(false, { pageIndex, pageSize, filter, agencyIds });
+        const query = getServerQuery({ pageIndex, pageSize, filter, agencyIds });
         const data = await service.getPropertyList(query, sorting);
         // The server could send back total page count.
         // For now we'll just calculate it.
@@ -252,10 +256,10 @@ const PropertyListView: React.FC = () => {
   const dispatch = useDispatch();
 
   const fetch = (accept: 'csv' | 'excel') => {
-    const query = getServerQuery(true, { pageIndex, pageSize, filter, agencyIds });
+    const query = getServerQuery({ pageIndex, pageSize, filter, agencyIds });
     return dispatch(
       download({
-        url: getPropertyReportUrl({ ...query, all: true }),
+        url: getPropertyReportUrl({ ...query, all: true, propertyType: undefined }),
         fileName: `pims-inventory.${accept === 'csv' ? 'csv' : 'xlsx'}`,
         actionType: 'properties-report',
         headers: {
@@ -309,7 +313,7 @@ const PropertyListView: React.FC = () => {
       <Container fluid className="filter-container border-bottom">
         <Container className="px-0">
           <PropertyFilter
-            defaultFilter={filter}
+            defaultFilter={defaultFilterValues}
             agencyLookupCodes={agencies}
             propertyClassifications={propertyClassifications}
             adminAreaLookupCodes={administrativeAreas}

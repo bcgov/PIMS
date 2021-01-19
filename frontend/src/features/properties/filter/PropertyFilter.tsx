@@ -1,6 +1,6 @@
 import './PropertyFilter.scss';
 
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import { Col } from 'react-bootstrap';
 import { Formik, getIn } from 'formik';
 import { ILookupCode } from 'actions/lookupActions';
@@ -16,6 +16,10 @@ import { IPropertyFilter } from './IPropertyFilter';
 import { TableSort } from 'components/Table/TableSort';
 import { FindMorePropertiesButton } from 'components/maps/FindMorePropertiesButton';
 import { TypeaheadField } from 'components/common/form/Typeahead';
+import { useDispatch } from 'react-redux';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+import { fetchPropertyNames } from 'actionCreators/propertyActionCreator';
+import { AsyncTypeahead } from 'react-bootstrap-typeahead';
 
 /**
  * PropertyFilter component properties.
@@ -51,6 +55,9 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
   onSorting,
 }) => {
   const [propertyFilter, setPropertyFilter] = React.useState<IPropertyFilter>(defaultFilter);
+  const dispatch = useDispatch();
+  const keycloak = useKeycloakWrapper();
+  const [initialLoad, setInitialLoad] = useState(false);
   useRouterFilter({
     filter: propertyFilter,
     setFilter: filter => {
@@ -73,6 +80,7 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
   const classifications = (propertyClassifications ?? []).map(c => mapLookupCode(c));
   const adminAreas = (adminAreaLookupCodes ?? []).map(c => mapLookupCode(c));
   const [clear, setClear] = useState(false);
+  const [options, setOptions] = useState([]);
 
   const initialValues = useMemo(() => {
     const values = { ...defaultFilter, ...propertyFilter };
@@ -97,9 +105,13 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
   };
 
   const resetFilter = () => {
+    ref.current.clear();
     changeFilter(defaultFilter);
     setClear(true);
   };
+
+  const [findMoreOpen, setFindMoreOpen] = useState(false);
+  const ref = useRef<any>();
 
   return (
     <Formik<IPropertyFilter>
@@ -115,15 +127,42 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
       {({ isSubmitting, handleReset, handleSubmit, setFieldValue, values }) => (
         <Form>
           <Form.Row className="map-filter-bar">
-            <FindMorePropertiesButton buttonText="Find available surplus properties" />
+            <FindMorePropertiesButton
+              buttonText="Find available surplus properties"
+              onEnter={() => setFindMoreOpen(true)}
+              onExit={() => setFindMoreOpen(false)}
+            />
             <div className="vl"></div>
             <Col className="bar-item">
-              <PropertyFilterOptions />
+              <PropertyFilterOptions disabled={findMoreOpen} />
+            </Col>
+            <Col className="map-filter-typeahead">
+              <AsyncTypeahead
+                isLoading={initialLoad}
+                id={`name-field`}
+                placeholder="Enter a name"
+                onSearch={() => {
+                  setInitialLoad(true);
+                  fetchPropertyNames(keycloak.agencyId!)(dispatch).then(results => {
+                    setOptions(results);
+                    setInitialLoad(false);
+                  });
+                }}
+                options={options}
+                onChange={(newValues: string[]) => {
+                  setFieldValue('name', getIn(newValues[0], 'value') ?? newValues[0]);
+                }}
+                ref={ref}
+                onBlur={(e: any) =>
+                  getIn(values, 'name') === '' && setFieldValue('name', e.target.value)
+                }
+              />
             </Col>
             <Col className="map-filter-typeahead">
               <TypeaheadField
                 name="administrativeArea"
                 placeholder="Enter a location"
+                selectClosest
                 paginate={false}
                 hideValidation={true}
                 options={adminAreas.map(x => x.label)}
@@ -132,6 +171,7 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
                 }}
                 clearSelected={clear}
                 setClear={setClear}
+                disabled={findMoreOpen}
               />
             </Col>
             <Col className="agency-item">
@@ -140,6 +180,8 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
                 options={agencies}
                 filterBy={['code', 'label', 'parent']}
                 placeholder="Agency"
+                selectClosest
+                disabled={findMoreOpen}
               />
             </Col>
             <Col className="bar-item">
@@ -147,13 +189,14 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
                 field="classificationId"
                 placeholder="Classification"
                 options={classifications}
+                disabled={findMoreOpen}
               />
             </Col>
             <Col className="bar-item flex-grow-0">
-              <SearchButton disabled={isSubmitting} />
+              <SearchButton disabled={isSubmitting || findMoreOpen} />
             </Col>
             <Col className="bar-item flex-grow-0">
-              <ResetButton disabled={isSubmitting} onClick={resetFilter} />
+              <ResetButton disabled={isSubmitting || findMoreOpen} onClick={resetFilter} />
             </Col>
           </Form.Row>
         </Form>

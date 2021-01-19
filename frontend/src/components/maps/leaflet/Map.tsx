@@ -75,11 +75,12 @@ export type LayerPopupInformation = PopupContentConfig & {
   latlng: LatLng;
   title: string;
   center?: LatLng;
+  bounds?: LatLngBounds;
   feature: Feature;
 };
 
 const defaultFilterValues: IPropertyFilter = {
-  searchBy: 'name',
+  searchBy: 'address',
   pid: '',
   address: '',
   administrativeArea: '',
@@ -238,6 +239,7 @@ const Map: React.FC<MapProps> = ({
 
     let properties = {};
     let center: LatLng | undefined;
+    let bounds: LatLngBounds | undefined;
     let displayConfig = {};
     let title = 'Municipality Information';
     let feature = {};
@@ -245,17 +247,19 @@ const Map: React.FC<MapProps> = ({
       properties = municipality.features[0].properties!;
       displayConfig = municipalityLayerPopupConfig;
       feature = municipality.features[0];
+      bounds = municipality.features[0]?.geometry
+        ? geoJSON(municipality.features[0].geometry).getBounds()
+        : undefined;
     }
 
     if (parcel.features.length === 1) {
       title = 'Parcel Information';
       properties = parcel.features[0].properties!;
       displayConfig = parcelLayerPopupConfig;
-      center = parcel.features[0]?.geometry
-        ? geoJSON(parcel.features[0].geometry)
-            .getBounds()
-            .getCenter()
+      bounds = parcel.features[0]?.geometry
+        ? geoJSON(parcel.features[0].geometry).getBounds()
         : undefined;
+      center = bounds?.getCenter();
       feature = parcel.features[0];
     }
 
@@ -266,6 +270,7 @@ const Map: React.FC<MapProps> = ({
         config: displayConfig as any,
         latlng: event.latlng,
         center,
+        bounds,
         feature,
       } as any);
     }
@@ -337,6 +342,7 @@ const Map: React.FC<MapProps> = ({
                         onAddToParcel={(e: MouseEvent, data: { [key: string]: string }) => {
                           dispatch(saveParcelLayerData({ e, data }));
                         }}
+                        bounds={layerPopup.bounds}
                       />
                     </Popup>
                   )}

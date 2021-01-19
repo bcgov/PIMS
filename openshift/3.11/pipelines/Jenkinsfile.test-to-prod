@@ -1,0 +1,184 @@
+#!groovy
+
+// ------------------
+// Pipeline Variables
+// ------------------
+def cli
+def notify
+def RELEASE_VERSION
+
+// --------------------
+// Declarative Pipeline
+// --------------------
+pipeline {
+  agent any
+  options {
+    disableResume()
+    buildDiscarder(logRotator(numToKeepStr: "5")) // keep 5 builds only
+  }
+  environment {
+    CI = "true"
+    PATHFINDER_URL = "pathfinder.gov.bc.ca"
+
+    // The name of your application
+    APP_NAME = "pims"
+
+    // The name of the project namespace(s).
+    NAME_SPACE = "jcxjin"
+
+    // This should match your monorepo folder structure
+    API_DIRECTORY = "backend"
+    FRONTEND_DIRECTORY = "frontend"
+    MAINTENANCE_DIRECTORY = "maintenance"
+    DEVOPS_DIRECTORY = "openshift/3.11"
+
+    // Environment Variables that should be set in OpenShift
+    // -----------------------------------------------------
+    // The job identifier (i.e 'pr-5' OR 'dev' OR 'master')
+    // OC_JOB_NAME = "dev"
+
+    // Which environment to deploy to ('dev' OR 'test' OR 'prod').
+    // DESTINATION = "dev"
+
+    // Which instance ID to deploy to (if using multiple instances per environment). Leave empty for default.
+    // INSTANCE_ID = ""
+
+    // The URI to the application being deployed.
+    // VANITY_URL="https://pims-prod.pathfinder.gov.bc.ca/"
+
+    ENABLE_VERSION_PROMPT = true // ignored - version prompt always enabled in the PROD pipeline
+    OC_JOB_NAME = sh(script: 'echo "${OC_JOB_NAME:-master}"', returnStdout: true).trim()
+    DESTINATION = sh(script: 'echo "${DESTINATION:-prod}"', returnStdout: true).trim()
+    VANITY_URL = sh(script: 'echo "${VANITY_URL:-https://pims.gov.bc.ca/}"', returnStdout: true).trim()
+
+    // To enable pipeline verbose debug output set to "true"
+    DEBUG_OUTPUT = sh(script: 'echo "${DEBUG_OUTPUT:-false}"', returnStdout: true).trim()
+  }
+  stages {
+    stage("Initialize") {
+      steps {
+        script {
+          // load supporting functions from external script files
+          commonPipeline = load "openshift/3.11/pipelines/scripts/common.groovy"
+          notify = load "openshift/3.11/pipelines/scripts/notify.groovy"
+
+          // ensure required secrets and credentials are available in the CI environment
+          // [add more secrets here if needed...]
+          sh "oc extract secret/rocket-chat-secrets --to=${env.WORKSPACE} --confirm"
+
+          // initialize CI environment values
+          env.ROCKET_DEPLOY_WEBHOOK = readFile("rocket-deploy-webhook").trim()
+
+          if (new Boolean(DEBUG_OUTPUT)) {
+            // Force OpenShift Plugin directives to be verbose
+            openshift.logLevel(1)
+
+            // Print all environment variables
+            echo 'DEBUG - All pipeline environment variables:'
+            echo sh(returnStdout: true, script: 'env')
+          }
+        }
+      }
+    }
+
+    stage("Approval Prompt") {
+      options { timeout(time: 1, unit: "HOURS") }
+      input {
+        message "Deploy to PROD?"
+        ok "Yes, go ahead"
+      }
+      steps {
+        echo "*** Promotion from TEST to PROD was approved. Proceeding... ***"
+      }
+    }
+
+    stage("Version Prompt") {
+      steps {
+        script {
+          timeout(time: 10, unit: "MINUTES") {
+            def version = input(message: "Enter the desired version to release to PRODUCTION", parameters: [
+              string(name: "RELEASE VERSION", defaultValue: "", description: "Release Version")
+            ])
+            if (version != "") {
+              RELEASE_VERSION = version
+            } else {
+              error "***  No release version specified. Aborting pipeline.  ***"
+            }
+          }
+        }
+      }
+    }
+
+    stage("Maintenance mode ON") {
+      environment {
+        APPLICATION_ROUTE = "pims-gov-bc-ca" // PROD route to direct to maintenance page
+      }
+      steps {
+        script {
+          commonPipeline.maintenancePageOn("${DESTINATION}")
+        }
+      }
+    }
+
+    stage("Database backup") {
+      options { timeout(time: 10, unit: "MINUTES") }
+      steps {
+        dir(DEVOPS_DIRECTORY) {
+          sh "./player.sh backup ${DESTINATION} -apply"
+        }
+      }
+    }
+
+    stage("Database migration") {
+      options { timeout(time: 15, unit: "MINUTES") }
+      environment {
+        DB_PASSWORD = sh(script: "oc -n jcxjin-prod get secret pims-db-prod-secret -o jsonpath='{.data.DB_PASSWORD}' | base64 -d", returnStdout: true).trim()
+        DB_CONNECTION_STRING = sh(script: "oc -n jcxjin-prod get cm pims-api-prod-db-client -o jsonpath='{.data.CONNECTION_STRINGS_PIMS}'", returnStdout: true).trim()
+      }
+      steps {
+        dir(DEVOPS_DIRECTORY) {
+          sh "MIGRATION_TAG=${OC_JOB_NAME} ./player.sh migrate ${DESTINATION} -apply"
+        }
+      }
+    }
+
+    stage("Promote to PROD") {
+      options { timeout(time: 10, unit: "MINUTES") }
+      steps {
+        dir(DEVOPS_DIRECTORY) {
+          sh "RELEASE_TAG=${RELEASE_VERSION} ./player.sh deploy api ${DESTINATION} -apply"
+          sh "RELEASE_TAG=${RELEASE_VERSION} ./player.sh deploy app ${DESTINATION} -apply"
+        }
+      }
+    }
+
+    stage("Maintenance mode OFF") {
+      environment {
+        APPLICATION_ROUTE = "pims-gov-bc-ca" // PROD route to direct to maintenance page
+      }
+      steps {
+        script {
+          commonPipeline.maintenancePageOff("${DESTINATION}")
+        }
+      }
+    }
+
+    stage("DONE") {
+      steps {
+        echo "PRODUCTION deployment complete!"
+      }
+    }
+  } // stages
+  post {
+    success {
+      script {
+        notify.success(APP_NAME.toUpperCase(), RELEASE_VERSION, DESTINATION.toUpperCase(), ROCKET_DEPLOY_WEBHOOK)
+      }
+    }
+    failure {
+      script {
+        notify.failure(APP_NAME.toUpperCase(), RELEASE_VERSION, DESTINATION.toUpperCase(), ROCKET_DEPLOY_WEBHOOK)
+      }
+    }
+  } // post-stages
+} // pipeline
