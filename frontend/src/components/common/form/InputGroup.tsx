@@ -7,7 +7,6 @@ import { FastInput } from './FastInput';
 import { FormikProps } from 'formik';
 import classNames from 'classnames';
 import { Label } from '../Label';
-import { CSSProperties } from 'react';
 
 type RequiredAttributes = {
   /** The field name */

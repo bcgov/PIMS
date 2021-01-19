@@ -48,11 +48,6 @@ const getFiscalYear = (field: string) => {
 
 export const getAssessedCols = (
   title: string,
-const getType = (isParcel: boolean) => {
-  if (isParcel) return 'Land';
-  return 'Building';
-};
-
   isParcel: boolean,
   disabled?: boolean,
   namespace = 'financials',

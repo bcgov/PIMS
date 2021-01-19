@@ -134,13 +134,12 @@ const EvaluationForm = <T extends any>(props: EvaluationProps & FormikProps<T>) 
     () =>
       getAssessedCols(
         props.isParcel ? 'Land' : 'Assessed Building Value',
+        props.isParcel,
         props.disabled,
         props.nameSpace,
         props.showImprovements,
       ),
     [props.disabled, props.isParcel, props.nameSpace, props.showImprovements],
-      ),
-    [props.isParcel, props.disabled, props.nameSpace],
   );
   const netbookCols: any = useMemo(() => getNetbookCols(props.disabled, props.nameSpace), [
     props.disabled,
