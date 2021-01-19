@@ -70,7 +70,7 @@ export function TypeaheadField<T extends TypeaheadModel>({
     setFieldTouched(name, true);
     if (
       (!getIn(name, 'value') && val !== '' && getIn(values, name) === '') ||
-      getIn(values, name) === null
+      (!getIn(values, name) && getIn(values, name) !== '')
     ) {
       const regex = new RegExp(val, 'i');
       const exact = new RegExp(`^${val}$`, 'i');
