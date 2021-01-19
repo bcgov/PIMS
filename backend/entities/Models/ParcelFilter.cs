@@ -16,6 +16,11 @@ namespace Pims.Dal.Entities.Models
         public string PID { get; set; }
 
         /// <summary>
+        /// get/set - The parcel PIN.
+        /// </summary>
+        public string PIN { get; set; }
+
+        /// <summary>
         /// get/set - The parcel zoning.
         /// </summary>
         public string Zoning { get; set; }
@@ -65,6 +70,7 @@ namespace Pims.Dal.Entities.Models
             // We want case-insensitive query parameter properties.
             var filter = new Dictionary<string, Microsoft.Extensions.Primitives.StringValues>(query, StringComparer.OrdinalIgnoreCase);
             this.PID = filter.GetStringValue(nameof(this.PID));
+            this.PIN = filter.GetStringValue(nameof(this.PIN));
             this.Zoning = filter.GetStringValue(nameof(this.Zoning));
             this.ZoningPotential = filter.GetStringValue(nameof(this.ZoningPotential));
             this.MinLandArea = filter.GetFloatNullValue(nameof(this.MinLandArea));

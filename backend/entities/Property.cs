@@ -40,6 +40,11 @@ namespace Pims.Dal.Entities
         public PropertyClassification Classification { get; set; }
 
         /// <summary>
+        /// get/set - The encumbrance reason for this property.
+        /// </summary>
+        public string EncumbranceReason { get; set; }
+
+        /// <summary>
         /// get/set - The foreign key to the agency that owns this property.
         /// </summary>
         public int? AgencyId { get; set; }

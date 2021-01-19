@@ -6,6 +6,7 @@ namespace Pims.Dal.Entities
     public enum EvaluationKeys
     {
         Assessed,
-        Appraised
+        Appraised,
+        Improvements
     }
 }

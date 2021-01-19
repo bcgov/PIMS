@@ -101,7 +101,7 @@ export const BuildingPopupView: React.FC<IBuildingPopupViewProps> = (
             </Col>
           </Row>
 
-          {buildingDetail?.parcelId && !props?.disabled && (
+          {!props?.disabled && (
             <Row className="menu">
               <Col>
                 <Link
@@ -109,12 +109,14 @@ export const BuildingPopupView: React.FC<IBuildingPopupViewProps> = (
                     props?.onLinkClick && props.onLinkClick();
                   }}
                   to={{
-                    pathname: `/mapview/${buildingDetail?.parcelId}`,
+                    pathname: `/mapview`,
                     search: queryString.stringify({
                       ...queryString.parse(location.search),
                       sidebar: true,
                       disabled: true,
                       loadDraft: false,
+                      buildingId: buildingDetail?.id,
+                      parcelId: undefined,
                     }),
                   }}
                 >
@@ -128,12 +130,14 @@ export const BuildingPopupView: React.FC<IBuildingPopupViewProps> = (
                       props?.onLinkClick && props.onLinkClick();
                     }}
                     to={{
-                      pathname: `/mapview/${buildingDetail?.parcelId}`,
+                      pathname: `/mapview`,
                       search: queryString.stringify({
                         ...queryString.parse(location.search),
                         disabled: false,
                         sidebar: true,
                         loadDraft: false,
+                        buildingId: buildingDetail?.id,
+                        parcelId: undefined,
                       }),
                     }}
                   >

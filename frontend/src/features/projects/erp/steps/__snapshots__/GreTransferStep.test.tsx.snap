@@ -95,6 +95,9 @@ exports[`GRE Transfer Step renders correctly 1`] = `
             name="projectNumber"
             onBlur={[Function]}
             onChange={[Function]}
+            onFocus={[Function]}
+            onMouseOut={[Function]}
+            onMouseOver={[Function]}
             placeholder="SPP-XXXXXX"
             value="test-01"
           />
@@ -119,7 +122,9 @@ exports[`GRE Transfer Step renders correctly 1`] = `
             name="name"
             onBlur={[Function]}
             onChange={[Function]}
-            required={true}
+            onFocus={[Function]}
+            onMouseOut={[Function]}
+            onMouseOver={[Function]}
             value="my project"
           />
         </div>
@@ -143,6 +148,9 @@ exports[`GRE Transfer Step renders correctly 1`] = `
             name="description"
             onBlur={[Function]}
             onChange={[Function]}
+            onFocus={[Function]}
+            onMouseOut={[Function]}
+            onMouseOver={[Function]}
             value="my project description"
           />
         </div>
@@ -948,6 +956,9 @@ exports[`GRE Transfer Step renders correctly 1`] = `
           name="note"
           onBlur={[Function]}
           onChange={[Function]}
+          onFocus={[Function]}
+          onMouseOut={[Function]}
+          onMouseOver={[Function]}
           value="my notes"
         />
       </div>
@@ -994,6 +1005,9 @@ exports[`GRE Transfer Step renders correctly 1`] = `
           name="publicNote"
           onBlur={[Function]}
           onChange={[Function]}
+          onFocus={[Function]}
+          onMouseOut={[Function]}
+          onMouseOver={[Function]}
           value="public note"
         />
       </div>
@@ -1040,6 +1054,9 @@ exports[`GRE Transfer Step renders correctly 1`] = `
           name="privateNote"
           onBlur={[Function]}
           onChange={[Function]}
+          onFocus={[Function]}
+          onMouseOut={[Function]}
+          onMouseOver={[Function]}
           value="private note"
         />
       </div>

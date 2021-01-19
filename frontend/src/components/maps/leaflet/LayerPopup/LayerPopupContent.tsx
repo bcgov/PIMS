@@ -6,6 +6,7 @@ import { LatLng, useLeaflet } from 'react-leaflet';
 import { Link, useLocation } from 'react-router-dom';
 import queryString from 'query-string';
 import { LatLngBounds } from 'leaflet';
+import { SidebarContextType } from 'features/mapSideBar/hooks/useQueryParamSideBar';
 
 export const LayerPopupTitle = styled('div')`
   padding: 16px;
@@ -67,7 +68,15 @@ export const LayerPopupContent: React.FC<IPopupContentProps> = ({
   const rows = React.useMemo(() => keys(config), [config]);
   const location = useLocation();
   const urlParsed = queryString.parse(location.search);
-  const populateDetails = urlParsed.sidebar === 'true' ? true : false;
+  const isEditing = [
+    SidebarContextType.ADD_BUILDING,
+    SidebarContextType.UPDATE_BUILDING,
+    SidebarContextType.ADD_ASSOCIATED_LAND,
+    SidebarContextType.ADD_BARE_LAND,
+    SidebarContextType.UPDATE_BARE_LAND,
+    SidebarContextType.UPDATE_DEVELOPED_LAND,
+  ].includes(urlParsed.sidebarContext as any);
+  const populateDetails = urlParsed.sidebar === 'true' && isEditing ? true : false;
 
   const leaflet = useLeaflet();
   const curZoom = leaflet.map?.getZoom();

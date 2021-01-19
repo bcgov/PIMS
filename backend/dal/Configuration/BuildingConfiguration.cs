@@ -17,11 +17,15 @@ namespace Pims.Dal.Configuration
             builder.HasKey(m => m.Id);
             builder.Property(m => m.Id).ValueGeneratedOnAdd();
 
+            builder.Property(m => m.LeasedLandMetadata).HasColumnType("NVARCHAR(MAX)");
+
             builder.Property(m => m.BuildingFloorCount).IsRequired();
             builder.Property(m => m.BuildingTenancy).IsRequired();
             builder.Property(m => m.LeaseExpiry).HasColumnType("DATETIME2");
+            builder.Property(m => m.BuildingTenancyUpdatedOn).HasColumnType("DATETIME2");
             builder.Property(m => m.TransferLeaseOnSale).HasDefaultValue(false);
             builder.Property(m => m.OccupantName).HasMaxLength(100);
+            builder.Property(m => m.EncumbranceReason).HasMaxLength(500);
 
             builder.HasOne(m => m.Agency).WithMany(m => m.Buildings).HasForeignKey(m => m.AgencyId).OnDelete(DeleteBehavior.ClientSetNull);
             builder.HasOne(m => m.BuildingConstructionType).WithMany().HasForeignKey(m => m.BuildingConstructionTypeId).OnDelete(DeleteBehavior.ClientSetNull);

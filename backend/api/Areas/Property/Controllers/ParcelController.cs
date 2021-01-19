@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using MapsterMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -8,6 +10,12 @@ using Pims.Dal.Security;
 using Swashbuckle.AspNetCore.Annotations;
 using Entity = Pims.Dal.Entities;
 using Model = Pims.Api.Areas.Property.Models.Parcel;
+using Microsoft.AspNetCore.Http.Extensions;
+using Pims.Api.Areas.Admin.Models.Parcel;
+using Pims.Api.Helpers.Extensions;
+using Pims.Api.Helpers.Exceptions;
+using Pims.Dal.Entities.Models;
+using System.Linq;
 
 namespace Pims.Api.Areas.Property.Controllers
 {
@@ -60,6 +68,41 @@ namespace Pims.Api.Areas.Property.Controllers
             var parcel = _mapper.Map<Model.ParcelModel>(entity);
 
             return new JsonResult(parcel);
+        }
+
+        /// <summary>
+        /// Get all the properties that satisfy the filter parameters.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [HasPermission(Permissions.PropertyView)]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(IEnumerable<ParcelModel>), 200)]
+        [SwaggerOperation(Tags = new[] { "parcel" })]
+        public IActionResult GetParcels()
+        {
+            var uri = new Uri(this.Request.GetDisplayUrl());
+            var query = Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(uri.Query);
+            return GetParcels(new ParcelFilter(query));
+        }
+
+        /// <summary>
+        /// Get all the properties that satisfy the filter parameters.
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        [HttpPost("filter")]
+        [HasPermission(Permissions.PropertyView)]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(IEnumerable<PropertyModel>), 200)]
+        [SwaggerOperation(Tags = new[] { "parcel" })]
+        public IActionResult GetParcels([FromBody]ParcelFilter filter)
+        {
+            filter.ThrowBadRequestIfNull($"The request must include a filter.");
+            if (!filter.IsValid()) throw new BadRequestException("Parcel filter must contain valid values.");
+
+            var parcels = _pimsService.Parcel.Get((ParcelFilter)filter).ToArray();
+            return new JsonResult(_mapper.Map<Model.ParcelModel[]>(parcels).ToArray());
         }
 
         /// <summary>

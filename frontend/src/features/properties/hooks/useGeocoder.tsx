@@ -1,19 +1,27 @@
 import * as API from 'constants/API';
 import { IGeocoderResponse, useApi } from 'hooks/useApi';
-import { FormikValues } from 'formik';
+import { FormikValues, getIn, setIn } from 'formik';
 import { useState } from 'react';
 import useCodeLookups from 'hooks/useLookupCodes';
 import {
   useLayerQuery,
   PARCELS_LAYER_URL,
   handleParcelDataLayerResponse,
+  saveParcelDataLayerResponse,
 } from 'components/maps/leaflet/LayerPopup';
 import { LatLng } from 'leaflet';
 import { useDispatch } from 'react-redux';
-import { FeatureCollection, Geometry, GeoJsonProperties } from 'geojson';
 
 interface IUseGeocoderProps {
   formikRef: React.MutableRefObject<FormikValues | undefined>;
+  /**
+   * function to call to lookup pid or pin data with pims and the parcel layer.
+   */
+  fetchPimsOrLayerParcel?: (
+    pidOrPin: any,
+    parcelLayerSearchCallback: () => void,
+    nameSpace?: string | undefined,
+  ) => void;
 }
 
 export interface IPidSelection {
@@ -32,30 +40,24 @@ export interface IPidSelection {
  * The parcel data layer may be searched based on the response latitude/longitude.
  * @param param0
  */
-const useGeocoder = ({ formikRef }: IUseGeocoderProps) => {
+const useGeocoder = ({ formikRef, fetchPimsOrLayerParcel }: IUseGeocoderProps) => {
   const { lookupCodes } = useCodeLookups();
   const parcelsService = useLayerQuery(PARCELS_LAYER_URL);
   const [pidSelection, setPidSelection] = useState<IPidSelection>({ showPopup: false, geoPID: '' });
   const api = useApi();
   const dispatch = useDispatch();
-  const handleGeocoderChanges = async (data: IGeocoderResponse) => {
-    let parcelDataLayerResponse:
-      | Promise<FeatureCollection<Geometry, GeoJsonProperties>>
-      | undefined;
-    if (data.latitude && data.longitude) {
-      parcelDataLayerResponse = parcelsService.findOneWhereContains({
-        lat: data.latitude,
-        lng: data.longitude,
-      } as LatLng);
-      handleParcelDataLayerResponse(parcelDataLayerResponse, dispatch);
-    }
+
+  const handleGeocoderChanges = async (data: IGeocoderResponse, nameSpace?: string) => {
     if (!!formikRef?.current && data) {
+      const currentValues = !!nameSpace
+        ? { ...getIn(formikRef.current.values, nameSpace) }
+        : { ...formikRef.current.values };
       const newValues = {
-        ...formikRef.current.values,
+        ...currentValues,
         latitude: data.latitude,
         longitude: data.longitude,
         address: {
-          ...formikRef.current.values.address,
+          ...getIn(formikRef.current.values, nameSpace ?? '').address,
           line1: data.fullAddress,
         },
       };
@@ -96,28 +98,44 @@ const useGeocoder = ({ formikRef }: IUseGeocoderProps) => {
           console.error('Failed to get pids');
         }
       }
-      if (
-        formikRef.current.values.pid &&
-        parcelPid !== '' &&
-        formikRef.current.values.pid !== parcelPid
-      ) {
-        setPidSelection({
-          showPopup: true,
-          geoPID: parcelPid.replace(/(\d{3})(\d{3})(\d{3})/, '$1-$2-$3'),
-        });
-      } else if (formikRef.current.values.pid && parcelPid === '') {
-        newValues.pid = formikRef.current.values.pid;
-      } else {
+      if (parcelPid?.length) {
         newValues.pid = parcelPid;
-        // Only populate the form with the parcel data layer if the parcelPid is being set and we don't already have the data layer response using the lat/lng.
-        if (!parcelDataLayerResponse) {
-          parcelDataLayerResponse = parcelsService.findByPid(parcelPid);
-          handleParcelDataLayerResponse(parcelDataLayerResponse, dispatch);
+        const parcelLayerSearchCallback = () => {
+          const response = parcelsService.findByPid(parcelPid);
+          handleParcelDataLayerResponse(response, dispatch);
+        };
+        fetchPimsOrLayerParcel &&
+          fetchPimsOrLayerParcel({ pid: parcelPid }, parcelLayerSearchCallback, nameSpace);
+      } else {
+        if (data.latitude && data.longitude) {
+          parcelsService
+            .findOneWhereContains({
+              lat: data.latitude,
+              lng: data.longitude,
+            } as LatLng)
+            .then(response => {
+              const pid = getIn(response, 'features.0.properties.PID');
+              //it is possible the geocoder will fail to get the pid but the parcel layer service request will succeed. In that case, double check that the pid doesn't exist within pims.
+              if (pid) {
+                const parcelLayerSearchCallback = () => {
+                  const response = parcelsService.findByPid(pid);
+                  handleParcelDataLayerResponse(response, dispatch);
+                };
+                fetchPimsOrLayerParcel &&
+                  fetchPimsOrLayerParcel({ pid: pid }, parcelLayerSearchCallback, nameSpace);
+              } else if (response?.features?.length > 0) {
+                saveParcelDataLayerResponse(response, dispatch);
+              } else {
+                const updatedValues = setIn(
+                  formikRef?.current?.values ?? {},
+                  nameSpace || '',
+                  newValues,
+                );
+                formikRef.current && formikRef.current.setValues(updatedValues);
+              }
+            });
         }
       }
-
-      // update form with values returned from geocoder
-      formikRef.current.setValues(newValues);
     }
   };
   return { handleGeocoderChanges, pidSelection, setPidSelection };

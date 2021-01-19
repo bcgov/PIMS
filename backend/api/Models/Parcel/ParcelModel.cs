@@ -21,7 +21,7 @@ namespace Pims.Api.Models.Parcel
 
         public IEnumerable<ParcelFiscalModel> Fiscals { get; set; } = new List<ParcelFiscalModel>();
 
-        public IEnumerable<ParcelBuildingModel> Buildings { get; set; } = new List<ParcelBuildingModel>();
+        public virtual IEnumerable<ParcelBuildingModel> Buildings { get; set; } = new List<ParcelBuildingModel>();
         #endregion
     }
 }

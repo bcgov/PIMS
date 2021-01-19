@@ -8,10 +8,11 @@ import {
   IStoreDraftParcelsAction,
 } from 'actions/parcelsActions';
 import { IProperty } from 'actions/parcelsActions';
+import { PointFeature } from 'components/maps/types';
 
 export interface IParcelState {
   parcels: IProperty[];
-  draftParcels: IProperty[];
+  draftParcels: PointFeature[];
   parcelDetail: IPropertyDetail | null;
   pid: number;
 }

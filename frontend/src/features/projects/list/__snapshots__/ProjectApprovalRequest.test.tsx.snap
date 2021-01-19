@@ -593,7 +593,7 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
                       width="3.5%"
                     >
                       <a
-                        href="/mapview/undefined?disabled=true&sidebar=true&loadDraft=false"
+                        href="/mapview?buildingId=1&disabled=true&loadDraft=false&sidebar=true"
                       >
                         View
                       </a>

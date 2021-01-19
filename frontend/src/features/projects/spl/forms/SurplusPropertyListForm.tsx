@@ -209,6 +209,7 @@ const SurplusPropertyListForm = ({
           <TooltipIcon toolTipId="dateEnteredMarket" toolTip={dateEnteredMarket} />
         </Form.Label>
         <FastDatePicker
+          required
           outerClassName="col-md-2"
           formikProps={formikProps}
           disabled={isReadOnly}
@@ -232,6 +233,7 @@ const SurplusPropertyListForm = ({
           Date of Accepted Offer
         </Form.Label>
         <FastDatePicker
+          required
           outerClassName="col-md-2"
           formikProps={formikProps}
           disabled={isReadOnly}
@@ -243,6 +245,7 @@ const SurplusPropertyListForm = ({
           Purchaser
         </Form.Label>
         <FastInput
+          required
           field="purchaser"
           outerClassName="col-md-2"
           disabled={isReadOnly}
@@ -254,6 +257,7 @@ const SurplusPropertyListForm = ({
           Offer Amount
         </Form.Label>
         <FastCurrencyInput
+          required
           field="offerAmount"
           outerClassName="col-md-2"
           disabled={isReadOnly}

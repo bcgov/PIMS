@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import { formatMoney, formatNumber } from 'utils';
 import { ColumnWithProps } from 'components/Table';
 import { IProperty } from './IProperty';
+import queryString from 'query-string';
 
 const MoneyCell = ({ cell: { value } }: CellProps<IProperty, number>) => formatMoney(value);
 const NumberCell = ({ cell: { value } }: CellProps<IProperty, number>) => formatNumber(value);
@@ -132,7 +133,17 @@ export const columns: ColumnWithProps<IProperty>[] = [
     Cell: (props: CellProps<IProperty, number>) => {
       return (
         <Link
-          to={`/mapview/${props.row.original.parcelId}?disabled=true&sidebar=true&loadDraft=false`}
+          to={{
+            pathname: `/mapview`,
+            search: queryString.stringify({
+              sidebar: true,
+              disabled: true,
+              loadDraft: false,
+              parcelId: props.row.original.propertyTypeId === 0 ? props.row.original.id : undefined,
+              buildingId:
+                props.row.original.propertyTypeId === 1 ? props.row.original.id : undefined,
+            }),
+          }}
         >
           View
         </Link>
