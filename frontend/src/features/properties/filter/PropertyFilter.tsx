@@ -163,7 +163,6 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
                 name="administrativeArea"
                 placeholder="Enter a location"
                 selectClosest
-                paginate={false}
                 hideValidation={true}
                 options={adminAreas.map(x => x.label)}
                 onChange={(vals: any) => {
