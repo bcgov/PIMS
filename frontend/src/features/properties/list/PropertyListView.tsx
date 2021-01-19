@@ -46,10 +46,11 @@ const initialQuery: IPropertyQueryParams = {
 };
 
 const defaultFilterValues: IPropertyFilter = {
-  searchBy: 'name',
+  searchBy: 'address',
   pid: '',
   address: '',
   administrativeArea: '',
+  name: '',
   projectNumber: '',
   agencies: '',
   classificationId: '',
@@ -81,6 +82,7 @@ const getServerQuery = (state: {
       administrativeArea,
       projectNumber,
       classificationId,
+      name,
       agencies,
       minLotSize,
       maxLotSize,
@@ -110,6 +112,7 @@ const getServerQuery = (state: {
     page: pageIndex + 1,
     quantity: pageSize,
     propertyType: propertyType,
+    name: name,
   };
   return query;
 };

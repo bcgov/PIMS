@@ -87,6 +87,25 @@ namespace Pims.Api.Areas.Property.Controllers
         }
         #endregion
 
+        /// <summary>
+        /// Get all the property names that satisfy the filter paramaters.
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        [HttpGet("names")]
+        [HasPermission(Permissions.PropertyView)]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(IEnumerable<PropertyModel>), 200)]
+        [SwaggerOperation(Tags = new[] { "property" })]
+        public IActionResult GetPropertyNames([FromQuery] PropertyFilterModel filter)
+        {
+            filter.ThrowBadRequestIfNull($"The request must include a filter.");
+            if (!filter.IsValid()) throw new BadRequestException("Property filter must contain valid values.");
+
+            var propertyNames = _pimsService.Property.GetNames((AllPropertyFilter)filter);
+            return new JsonResult(propertyNames);
+        }
+
         #region GeoJSON
         /// <summary>
         /// Get all the properties that satisfy the filter parameters.

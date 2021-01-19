@@ -7,6 +7,7 @@ import { FastInput } from './FastInput';
 import { FormikProps, getIn } from 'formik';
 import classNames from 'classnames';
 import TooltipWrapper from '../TooltipWrapper';
+import { CSSProperties } from 'react';
 
 type RequiredAttributes = {
   /** The field name */
@@ -36,6 +37,12 @@ type OptionalAttributes = {
   fast?: boolean;
   outerClassName?: string;
   displayErrorTooltips?: boolean;
+  /** style to pass down to the FastInput or Input */
+  style?: CSSProperties;
+  /** pass options for typeahead component */
+  options?: string[];
+  /** autocomplete flag to determine whether to use typeahed or not */
+  autoComplete?: boolean;
 };
 
 // only "field" is required for <Input>, the rest are optional
@@ -59,6 +66,8 @@ export const InputGroup: React.FC<InputGroupProps> = ({
   className,
   fast,
   formikProps,
+  options,
+  autoComplete,
   displayErrorTooltips,
   ...rest
 }) => {
