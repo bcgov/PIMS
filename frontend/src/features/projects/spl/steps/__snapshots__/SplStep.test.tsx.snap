@@ -1550,7 +1550,6 @@ exports[`SPL Approval Step renders correctly 1`] = `
                 disabled=""
                 id="input-purchaser"
                 name="purchaser"
-                required=""
                 value="purchaser"
               />
             </div>

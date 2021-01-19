@@ -134,7 +134,6 @@ exports[`Review Summary View renders approved correctly 1`] = `
             onFocus={[Function]}
             onMouseOut={[Function]}
             onMouseOver={[Function]}
-            required={true}
             value="my project"
           />
         </div>
@@ -1033,7 +1032,6 @@ exports[`Review Summary View renders denied correctly 1`] = `
             onFocus={[Function]}
             onMouseOut={[Function]}
             onMouseOver={[Function]}
-            required={true}
             value="my project"
           />
         </div>
@@ -1932,7 +1930,6 @@ exports[`Review Summary View renders submitted correctly 1`] = `
             onFocus={[Function]}
             onMouseOut={[Function]}
             onMouseOver={[Function]}
-            required={true}
             value="my project"
           />
         </div>

@@ -125,7 +125,6 @@ exports[`GRE Transfer Step renders correctly 1`] = `
             onFocus={[Function]}
             onMouseOut={[Function]}
             onMouseOver={[Function]}
-            required={true}
             value="my project"
           />
         </div>

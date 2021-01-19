@@ -569,7 +569,6 @@ exports[`Land Form component renders correctly 1`] = `
                           class="input-small form-control"
                           id="input-data.pid"
                           name="data.pid"
-                          required=""
                           value=""
                         />
                       </div>
@@ -600,7 +599,6 @@ exports[`Land Form component renders correctly 1`] = `
                           class="input-small form-control"
                           id="input-data.pin"
                           name="data.pin"
-                          required=""
                           type="number"
                           value=""
                         />
@@ -815,13 +813,12 @@ exports[`Land Form component renders correctly 1`] = `
                         Legal Description
                       </p>
                       <div
-                        class="required form-group"
+                        class="form-group"
                       >
                         <textarea
                           class="form-control"
                           id="input-data.landLegalDescription"
                           name="data.landLegalDescription"
-                          required=""
                         />
                       </div>
                     </div>

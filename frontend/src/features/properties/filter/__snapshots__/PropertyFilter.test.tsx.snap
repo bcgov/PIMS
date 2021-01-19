@@ -118,10 +118,10 @@ exports[`MapFilterBar renders correctly 1`] = `
               name="name"
               onBlur={[Function]}
               onChange={[Function]}
-              placeholder=""
               onFocus={[Function]}
               onMouseOut={[Function]}
               onMouseOver={[Function]}
+              placeholder=""
               value=""
             />
           </div>

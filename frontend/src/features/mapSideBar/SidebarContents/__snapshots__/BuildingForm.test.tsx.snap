@@ -884,7 +884,6 @@ exports[`Building Form component renders correctly 1`] = `
                             class="input-medium form-control"
                             id="input-building.latitude"
                             name="building.latitude"
-                            required=""
                             type="number"
                             value=""
                           />
@@ -905,7 +904,6 @@ exports[`Building Form component renders correctly 1`] = `
                             class="input-medium form-control"
                             id="input-building.longitude"
                             name="building.longitude"
-                            required=""
                             type="number"
                             value=""
                           />

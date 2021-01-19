@@ -26,7 +26,6 @@ exports[`PidPin sub-form renders correctly 1`] = `
         onFocus={[Function]}
         onMouseOut={[Function]}
         onMouseOver={[Function]}
-        required={true}
         value=""
       />
     </div>
@@ -75,7 +74,6 @@ exports[`PidPin sub-form renders correctly 1`] = `
         onFocus={[Function]}
         onMouseOut={[Function]}
         onMouseOver={[Function]}
-        required={true}
         type="number"
         value=""
       />

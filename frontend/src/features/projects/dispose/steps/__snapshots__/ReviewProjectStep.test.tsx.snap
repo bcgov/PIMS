@@ -79,7 +79,6 @@ exports[`renders correctly 1`] = `
             onFocus={[Function]}
             onMouseOut={[Function]}
             onMouseOver={[Function]}
-            required={true}
             value=""
           />
         </div>

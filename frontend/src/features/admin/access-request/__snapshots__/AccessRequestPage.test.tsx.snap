@@ -237,7 +237,6 @@ exports[`AccessRequestPage functionality renders RequestAccessPage correctly 1`]
             onMouseOut={[Function]}
             onMouseOver={[Function]}
             placeholder="Please specify why you need access to PIMS and include your manager's name."
-            required={true}
             value=""
           />
         </div>

@@ -57,11 +57,11 @@ exports[`renders correctly 1`] = `
           </div><br>
           <div class=\\"content-item row\\">
             <p class=\\"label\\">Latitude</p>
-            <div class=\\"required form-group col\\"><input name=\\"latitude\\" required=\\"\\" disabled=\\"\\" type=\\"number\\" id=\\"input-latitude\\" class=\\"input-medium form-control\\" value=\\"\\"></div>
+            <div class=\\"required form-group col\\"><input name=\\"latitude\\" disabled=\\"\\" type=\\"number\\" id=\\"input-latitude\\" class=\\"input-medium form-control\\" value=\\"\\"></div>
           </div>
           <div class=\\"content-item row\\">
             <p class=\\"label\\">Longitude</p>
-            <div class=\\"required form-group col\\"><input name=\\"longitude\\" required=\\"\\" disabled=\\"\\" type=\\"number\\" id=\\"input-longitude\\" class=\\"input-medium form-control\\" value=\\"\\"></div>
+            <div class=\\"required form-group col\\"><input name=\\"longitude\\" disabled=\\"\\" type=\\"number\\" id=\\"input-longitude\\" class=\\"input-medium form-control\\" value=\\"\\"></div>
           </div><br>
           <div class=\\"content-item row\\">
             <p class=\\"label\\">SRES Classification</p><span class=\\"vl\\"></span>
