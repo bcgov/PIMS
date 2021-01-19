@@ -172,16 +172,6 @@ export const AssociatedLandReviewPage: React.FC<any> = (props: IReviewProps) => 
                       fast={true}
                       disabled={parcelEditInfo.identification}
                       field={withNameSpace('landLegalDescription', index)}
-                      required={true}
-                    />
-                  </Row>
-                  <Row className="content-item">
-                    <Label>Legal Description</Label>
-                    <TextArea
-                      fast={true}
-                      disabled={editInfo.identification}
-                      field={withNameSpace('landLegalDescription', index)}
-                      required={true}
                     />
                   </Row>
 

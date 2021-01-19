@@ -125,7 +125,6 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
               <Row className="content-item resizable">
                 <Label>Legal Description</Label>
                 <TextArea
-                  required={true}
                   disabled={editInfo.identification}
                   field={withNameSpace('landLegalDescription')}
                 />

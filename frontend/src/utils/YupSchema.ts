@@ -231,7 +231,6 @@ export const LandSchema = Yup.object().shape({
     .max(250, 'Zoning Potential must be less than 250 characters')
     .nullable(),
   landLegalDescription: Yup.string()
-    .required('Required')
     .max(500, 'Land Legal Description must be less than 500 characters')
     .nullable(),
   latitude: Yup.number()
@@ -342,7 +341,6 @@ export const LandIdentificationSchema = Yup.object().shape(
       .max(2000, 'Description must be less than 2000 characters')
       .nullable(),
     landLegalDescription: Yup.string()
-      .required('Required')
       .max(500, 'Land Legal Description must be less than 500 characters')
       .nullable(),
     latitude: Yup.number()

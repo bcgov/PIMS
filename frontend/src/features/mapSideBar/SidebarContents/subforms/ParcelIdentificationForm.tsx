@@ -315,7 +315,6 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
           <Form.Row>
             <Label>Legal Description</Label>
             <TextArea
-              required={true}
               disabled={disabled}
               field={withNameSpace('landLegalDescription')}
               displayErrorTooltips
