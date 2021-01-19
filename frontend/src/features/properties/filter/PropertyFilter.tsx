@@ -99,7 +99,9 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
   }, [agencies, propertyFilter, defaultFilter]);
 
   const changeFilter = (values: IPropertyFilter) => {
-    const agencyIds = (values.agencies as any)?.value ?? '';
+    const agencyIds = (values.agencies as any).value
+      ? (values.agencies as any).value
+      : values.agencies;
     setPropertyFilter({ ...values, agencies: agencyIds });
     onChange?.({ ...values, agencies: agencyIds });
   };
@@ -154,7 +156,7 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
                 }}
                 ref={ref}
                 onBlur={(e: any) =>
-                  getIn(values, 'name') === '' && setFieldValue('name', e.target.value)
+                  getIn(values, 'name') !== e.target.value && setFieldValue('name', e.target.value)
                 }
               />
             </Col>
