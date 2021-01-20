@@ -734,7 +734,7 @@ exports[`Review Approve Step renders correctly 1`] = `
           class="form-label"
           for="input-documentationNote"
         >
-          Note
+          Documentation Notes
         </label>
         <textarea
           class="col-md-auto form-control"
@@ -808,7 +808,7 @@ exports[`Review Approve Step renders correctly 1`] = `
               class="form-label"
               for="input-appraisedNote"
             >
-              Note
+              Appraisal Notes
             </label>
             <textarea
               class="col-md-auto form-control"

@@ -2,7 +2,6 @@ import * as React from 'react';
 import { Container } from 'react-bootstrap';
 import {
   ProjectNotes,
-  PublicNotes,
   PrivateNotes,
   ProjectDraftForm,
   UpdateInfoForm,
@@ -32,7 +31,6 @@ const ProjectInformationTab: React.FunctionComponent<IProjectInformationTabProps
 
       <h3>Notes</h3>
       <ProjectNotes className="col-md-auto" disabled={true} label="Agency Notes" />
-      <PublicNotes className="col-md-auto" disabled={isReadOnly} />
       <PrivateNotes className="col-md-auto" disabled={isReadOnly} />
       <ProjectNotes
         label="Reporting"
