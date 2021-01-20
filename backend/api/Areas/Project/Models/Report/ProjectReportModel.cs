@@ -1,5 +1,6 @@
 using Pims.Dal.Entities;
 using System;
+using System.Collections.Generic;
 
 namespace Pims.Api.Areas.Project.Models.Report
 {
@@ -38,6 +39,11 @@ namespace Pims.Api.Areas.Project.Models.Report
         /// get/set - The type of this report.
         /// </summary>
         public ReportTypes ReportType { get; set; }
+
+        /// <summary>
+        /// get/set - An array of snapshots for the project.
+        /// </summary>
+        public IEnumerable<ProjectSnapshotModel> Snapshots { get; set; } = new List<ProjectSnapshotModel>();
         #endregion
     }
 }
