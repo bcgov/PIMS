@@ -771,9 +771,6 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
               </div>
             </div>
           </div>
-          <h3>
-            Financing Information
-          </h3>
           <div
             class="form-row"
           >
@@ -784,86 +781,7 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
                 class="ProjectNotes form-row"
               >
                 <div
-                  class="col form-group col"
-                >
-                  <label
-                    class="form-label"
-                    for="input-loanTermsNote"
-                  >
-                    Loan Terms
-                  </label>
-                  <textarea
-                    class="col-md-10 form-control"
-                    id="input-loanTermsNote"
-                    name="loanTermsNote"
-                  />
-                </div>
-              </div>
-            </div>
-            <div
-              class="col-md-1"
-            />
-            <div
-              class="col"
-            >
-              <div
-                class="ProjectNotes form-row"
-              >
-                <div
-                  class="col form-group col"
-                >
-                  <label
-                    class="form-label"
-                    for="input-closeOutNote"
-                  >
-                    Close Out
-                  </label>
-                  <textarea
-                    class="col-md-10 form-control"
-                    id="input-closeOutNote"
-                    name="closeOutNote"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
-            class="form-row"
-          >
-            <div
-              class="col"
-            >
-              <div
-                class="ProjectNotes form-row"
-              >
-                <div
-                  class="col form-group col"
-                >
-                  <label
-                    class="form-label"
-                    for="input-salesHistoryNote"
-                  >
-                    Sales History Notes
-                  </label>
-                  <textarea
-                    class="col-md-10 form-control"
-                    id="input-salesHistoryNote"
-                    name="salesHistoryNote"
-                  />
-                </div>
-              </div>
-            </div>
-            <div
-              class="col-md-1"
-            />
-            <div
-              class="col"
-            >
-              <div
-                class="ProjectNotes form-row"
-              >
-                <div
-                  class="col form-group col"
+                  class="col-md-11 form-group col"
                 >
                   <label
                     class="form-label"
@@ -886,9 +804,39 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
                     </svg>
                   </label>
                   <textarea
-                    class="col-md-10 form-control"
+                    class="col-md-auto form-control"
                     id="input-comments"
                     name="comments"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <h3>
+            Financing Information
+          </h3>
+          <div
+            class="form-row"
+          >
+            <div
+              class="col"
+            >
+              <div
+                class="ProjectNotes form-row"
+              >
+                <div
+                  class="col-md-11 form-group col"
+                >
+                  <label
+                    class="form-label"
+                    for="input-closeOutNote"
+                  >
+                    Close Out
+                  </label>
+                  <textarea
+                    class="col-md-auto form-control"
+                    id="input-closeOutNote"
+                    name="closeOutNote"
                   />
                 </div>
               </div>
@@ -898,25 +846,66 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
             OCG
           </h3>
           <div
-            class="col-md-12 form-row"
+            class="form-row"
           >
-            <label
-              class="form-label col-form-label col-md-2"
-            >
-              OCG Gain / Loss
-            </label>
             <div
-              class="col-md-4 form-group col"
+              class="col"
             >
               <div
-                class="input-tooltip-wrapper"
+                class="form-row"
               >
-                <input
-                  class="form-control input-number"
-                  name="ocgFinancialStatement"
-                  placeholder=""
-                  value=""
-                />
+                <label
+                  class="form-label col-form-label col-md-2"
+                >
+                  OCG Gain / Loss
+                </label>
+                <div
+                  class="col-md-4 form-group col"
+                >
+                  <div
+                    class="input-tooltip-wrapper"
+                  >
+                    <input
+                      class="form-control input-number"
+                      name="ocgFinancialStatement"
+                      placeholder=""
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                class="ProjectNotes form-row"
+              >
+                <div
+                  class="col-md-11 form-group col"
+                >
+                  <label
+                    class="form-label"
+                    for="input-salesHistoryNote"
+                  >
+                    OCG Variance Notes
+                    <svg
+                      class="tooltip-icon"
+                      fill="currentColor"
+                      height="1em"
+                      stroke="currentColor"
+                      stroke-width="0"
+                      viewBox="0 0 512 512"
+                      width="1em"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"
+                      />
+                    </svg>
+                  </label>
+                  <textarea
+                    class="col-md-auto form-control"
+                    id="input-salesHistoryNote"
+                    name="salesHistoryNote"
+                  />
+                </div>
               </div>
             </div>
           </div>

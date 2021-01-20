@@ -145,7 +145,7 @@ export const BuildingSchema = Yup.object().shape({
   agencyId: Yup.number()
     .transform(emptyStringToNull)
     .required('Required'),
-  isSensitive: Yup.boolean(),
+  isSensitive: Yup.boolean().required('Required'),
   transferLeaseOnSale: Yup.boolean(),
   leaseExpiry: Yup.string().nullable(),
   financials: Yup.array()
@@ -189,7 +189,7 @@ export const BuildingInformationSchema = Yup.object().shape({
   agencyId: Yup.number()
     .transform(emptyStringToNull)
     .required('Required'),
-  isSensitive: Yup.boolean(),
+  isSensitive: Yup.boolean().required('Required'),
 });
 
 export const OccupancySchema = Yup.object().shape({
@@ -249,6 +249,7 @@ export const LandSchema = Yup.object().shape({
     .required('Required')
     .test('is-valid', 'Please enter a valid number', val => Number(val) < 200000),
   lotSize: Yup.number(),
+  isSensitive: Yup.boolean().required('Required'),
 });
 export const ParcelSchema = Yup.object()
   .shape(
@@ -362,6 +363,7 @@ export const LandIdentificationSchema = Yup.object().shape(
       .transform(emptyStringToNull)
       .required('Required'),
     lotSize: Yup.number(),
+    isSensitive: Yup.boolean().required('Required'),
   },
   [['pin', 'pid']],
 );

@@ -15,22 +15,11 @@ const CloseOutFinancialsForm = (props: CloseOutFinancialsFormProps) => {
       <Form.Row>
         <Col>
           <ProjectNotes
-            data-testid="loanTermsNote"
-            field="loanTermsNote"
-            label="Loan Terms"
-            className="col-md-10"
-            outerClassName="col"
-            disabled={props.isReadOnly}
-          />
-        </Col>
-        <Col md={1}></Col>
-        <Col>
-          <ProjectNotes
             data-testid="closeOutNote"
             field="closeOutNote"
             label="Close Out"
-            className="col-md-10"
-            outerClassName="col"
+            outerClassName="col-md-11"
+            className="col-md-auto"
             disabled={props.isReadOnly}
           />
         </Col>

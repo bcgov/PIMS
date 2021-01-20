@@ -73,9 +73,6 @@ const FindMorePropertiesForm = <T extends any>(props: any) => {
   const { setFieldValue } = useFormikContext<any>();
   const [clear, setClear] = useState(false);
 
-  const constructionType = _.filter(lookupCodes, (lookupCode: ILookupCode) => {
-    return lookupCode.type === API.CONSTRUCTION_CODE_SET_NAME;
-  }).map(mapLookupCode);
   const predominateUses = _.filter(lookupCodes, (lookupCode: ILookupCode) => {
     return lookupCode.type === API.PREDOMINATE_USE_CODE_SET_NAME;
   }).map(mapLookupCode);
@@ -89,14 +86,25 @@ const FindMorePropertiesForm = <T extends any>(props: any) => {
   return (
     <>
       <p>
-        Search for properties within the Enhanced Referral Process (ERP) or Surplus Property Program
-        (SPP)
+        Search for properties within the Enhanced Referral Process (ERP) or Surplus Property List
+        (SPL)
+      </p>
+      <p>
+        <strong>Note: </strong> The search results will
+        <strong>
+          &nbsp;only include properties in projects that have been identified as Tier 2, 3, or 4
+        </strong>
+        <br></br> in the disposal process. For properties included in Tier 1, please contact
+        <em> Strategic Real Estate Services</em> at<br></br>
+        <a href="mailto:RealPropertyDivision.Disposals@gov.bc.ca">
+          RealPropertyDivision.Disposals@gov.bc.ca
+        </a>
       </p>
       <FormSection>
         <StyledRow style={{ marginLeft: 140, paddingTop: 10 }}>
           <Check label="ERP Properties" field="inEnhancedReferralProcess" />
           <VerticalLine />
-          <Check label="SPP Properties" field="inSurplusPropertyProgram" />
+          <Check label="SPL Properties" field="inSurplusPropertyProgram" />
         </StyledRow>
       </FormSection>
       <FormSection>
@@ -123,6 +131,18 @@ const FindMorePropertiesForm = <T extends any>(props: any) => {
       </FormSection>
       <FormSection>
         <Row style={{ marginLeft: 5, paddingTop: 10 }}>
+          <h6>Land search criteria</h6>
+        </Row>
+        <StyledRow style={{ marginLeft: -13 }}>
+          <NumberInput label="Lot size" field="minLotSize" placeholder="min" />
+          <span style={{ marginTop: 5, marginLeft: 5, marginRight: 5 }}>-</span>
+          <NumberInput field="maxLotSize" placeholder="max" />
+          <VerticalLine />
+          <Check label="Bare land only" field="bareLandOnly" />
+        </StyledRow>
+      </FormSection>
+      <FormSection>
+        <Row style={{ marginLeft: 5, paddingTop: 10 }}>
           <h6>Building search criteria</h6>
         </Row>
         <StyledRow>
@@ -133,29 +153,7 @@ const FindMorePropertiesForm = <T extends any>(props: any) => {
             label="Predominate use"
           />
           <VerticalLine />
-          <NumberInput label="Number of floors" field="floorCount" />
-        </StyledRow>
-        <StyledRow>
-          <StyledSelect
-            field="constructionTypeId"
-            placeholder="Any"
-            options={constructionType}
-            label="Construction type"
-          />
-          <VerticalLine />
           <NumberInput label="Net usable area" field="rentableArea" />
-        </StyledRow>
-      </FormSection>
-      <FormSection>
-        <Row style={{ marginLeft: 5, paddingTop: 10 }}>
-          <h6>Land search criteria</h6>
-        </Row>
-        <StyledRow style={{ marginLeft: -13 }}>
-          <NumberInput label="Lot size" field="minLotSize" placeholder="min" />
-          <span style={{ marginTop: 5, marginLeft: 5, marginRight: 5 }}>-</span>
-          <NumberInput field="maxLotSize" placeholder="max" />
-          <VerticalLine />
-          <Check label="Bare land only" field="bareLandOnly" />
         </StyledRow>
       </FormSection>
       <Row>
