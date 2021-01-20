@@ -74,7 +74,7 @@ const FormFooter = styled.div`
   align-items: center;
   position: sticky;
   background-color: #f2f2f2;
-  bottom: 40px;
+  bottom: 25px;
 `;
 
 const FillRemainingSpace = styled.span`
