@@ -17,7 +17,13 @@ const DocumentationForm = ({ isReadOnly, tasks, showNote = false }: IDocumentati
     <Fragment>
       <h3>Documentation</h3>
       <TasksForm tasks={tasks ?? []} isReadOnly={isReadOnly} />
-      {showNote && <ProjectNotes label="Note" field="documentationNote" className="col-md-auto" />}
+      {showNote && (
+        <ProjectNotes
+          label="Documentation Notes"
+          field="documentationNote"
+          className="col-md-auto"
+        />
+      )}
     </Fragment>
   );
 };

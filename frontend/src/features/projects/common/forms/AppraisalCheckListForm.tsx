@@ -33,7 +33,7 @@ const AppraisalCheckListForm: React.FunctionComponent<IAppraisalCheckListFormPro
           className="col-md-auto"
           outerClassName="col-md-12 reviewRequired"
           field="appraisedNote"
-          label="Note"
+          label="Appraisal Notes"
         />
       </Col>
     </Row>

@@ -3,7 +3,7 @@ import React from 'react';
 import { Col } from 'react-bootstrap';
 import { getIn, useFormikContext } from 'formik';
 import { Form, FastCurrencyInput } from 'components/common/form';
-import { IProject, ProjectNotes } from 'features/projects/common';
+import { IProject, projectComments, ProjectNotes } from 'features/projects/common';
 
 interface CloseOutFinancialSummaryFormProps {
   /** Whether the form inputs will be readonly. */
@@ -161,6 +161,18 @@ const CloseOutFinancialSummaryForm = (props: CloseOutFinancialSummaryFormProps) 
             disabled={props.isReadOnly}
             outerClassName="col"
             className="col-md-10"
+          />
+        </Col>
+      </Form.Row>
+      <Form.Row>
+        <Col>
+          <ProjectNotes
+            field="comments"
+            label="Project Comments"
+            outerClassName="col-md-11"
+            className="col-md-auto"
+            tooltip={projectComments}
+            disabled={props.isReadOnly}
           />
         </Col>
       </Form.Row>
