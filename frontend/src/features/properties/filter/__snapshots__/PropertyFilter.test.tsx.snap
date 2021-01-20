@@ -157,6 +157,7 @@ exports[`MapFilterBar renders correctly 1`] = `
             aria-haspopup="listbox"
             autoComplete="off"
             className="rbt-input-main form-control rbt-input"
+            disabled={false}
             onBlur={[Function]}
             onChange={[Function]}
             onClick={[Function]}
