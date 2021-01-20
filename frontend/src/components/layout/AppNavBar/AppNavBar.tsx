@@ -66,6 +66,12 @@ function SubmitProperty() {
   const history = useHistory();
   return keycloak.hasClaim(Claims.PROPERTY_ADD) ? (
     <Nav.Link
+      className={
+        history.location.pathname.includes('mapview') &&
+        queryString.parse(history.location.search).sidebar === 'true'
+          ? 'active'
+          : 'idle'
+      }
       onClick={() =>
         history.push({
           pathname: '/mapview',
@@ -95,7 +101,12 @@ function ViewInventory() {
   const keycloak = useKeycloakWrapper();
   const history = useHistory();
   return keycloak.hasClaim(Claims.PROPERTY_VIEW) ? (
-    <Nav.Link onClick={() => history.push('/properties/list')}>View Property Inventory</Nav.Link>
+    <Nav.Link
+      className={history.location.pathname.includes('properties/list') ? 'active' : 'idle'}
+      onClick={() => history.push('/properties/list')}
+    >
+      View Property Inventory
+    </Nav.Link>
   ) : null;
 }
 
