@@ -10,7 +10,10 @@ import { useKeycloak } from '@react-keycloak/web';
 import * as API from 'constants/API';
 import { ILookupCode } from 'actions/lookupActions';
 import * as reducerTypes from 'constants/reducerTypes';
-import { fireEvent, render, wait } from '@testing-library/react';
+import { fireEvent, render, wait, screen } from '@testing-library/react';
+import { IFormParcel } from '../containers/MapSideBarContainer';
+import { Classifications } from 'constants/classifications';
+import { fillInput } from 'utils/testUtils';
 
 const mockStore = configureMockStore([thunk]);
 const history = createMemoryHistory();
@@ -21,6 +24,36 @@ const lCodes = {
     { name: 'disabledAgency', id: '2', isDisabled: true, type: API.AGENCY_CODE_SET_NAME },
     { name: 'roleVal', id: '1', isDisabled: false, type: API.ROLE_CODE_SET_NAME },
     { name: 'disabledRole', id: '2', isDisabled: true, type: API.ROLE_CODE_SET_NAME },
+    {
+      name: 'Core Operational',
+      id: '0',
+      isDisabled: false,
+      type: API.PROPERTY_CLASSIFICATION_CODE_SET_NAME,
+    },
+    {
+      name: 'Core Strategic',
+      id: '1',
+      isDisabled: false,
+      type: API.PROPERTY_CLASSIFICATION_CODE_SET_NAME,
+    },
+    {
+      name: 'Surplus Active',
+      id: '2',
+      isDisabled: false,
+      type: API.PROPERTY_CLASSIFICATION_CODE_SET_NAME,
+    },
+    {
+      name: 'Surplus Encumbered',
+      id: '3',
+      isDisabled: false,
+      type: API.PROPERTY_CLASSIFICATION_CODE_SET_NAME,
+    },
+    {
+      name: 'Disposed',
+      id: '4',
+      isDisabled: false,
+      type: API.PROPERTY_CLASSIFICATION_CODE_SET_NAME,
+    },
   ] as ILookupCode[],
 };
 
@@ -42,7 +75,34 @@ jest.mock('@react-keycloak/web');
   },
 });
 
-const landForm = (
+const defaultInitialValues: IFormParcel = {
+  id: 1,
+  pid: '111-111-111',
+  pin: '',
+  classificationId: Classifications.CoreOperational,
+  encumbranceReason: '',
+  landArea: 123,
+  landLegalDescription: 'legal',
+  zoning: 'zoning',
+  zoningPotential: 'zoningPotential',
+  agencyId: 1,
+  isSensitive: false,
+  buildings: [],
+  evaluations: [],
+  fiscals: [],
+  financials: [],
+  rowVersion: '',
+  latitude: 51,
+  longitude: -122,
+  address: {
+    line1: 'address line 1',
+    administrativeArea: 'Victoria',
+    postal: 'V8T3X8',
+    provinceId: 'BC',
+  },
+};
+
+const getLandForm = (disabled?: boolean, initialValues?: IFormParcel) => (
   <Provider store={store}>
     <Router history={history}>
       <LandForm
@@ -50,7 +110,11 @@ const landForm = (
         setMovingPinNameSpace={noop}
         handlePidChange={noop}
         handlePinChange={noop}
-        isAdmin={true}
+        isPropertyAdmin={true}
+        disabled={disabled}
+        initialValues={initialValues as any}
+        setLandComplete={noop}
+        setLandUpdateComplete={noop}
       />
     </Router>
   </Provider>
@@ -58,18 +122,17 @@ const landForm = (
 
 describe('Land Form', () => {
   it('component renders correctly', () => {
-    const { container } = render(landForm);
+    const { container } = render(getLandForm());
     expect(container.firstChild).toMatchSnapshot();
   });
 
   it('displays identification page on initial load', () => {
-    const { getByText } = render(landForm);
+    const { getByText } = render(getLandForm());
     expect(getByText(/parcel identification/i)).toBeInTheDocument();
   });
 
-  //TODO: this test fails because validation has been added. Will need to re-write test such that validation passes.
-  xit('goes to corresponding steps', async () => {
-    const { getByText, queryByText, getAllByText } = render(landForm);
+  it('goes to corresponding steps', async () => {
+    const { getByText, queryByText, getAllByText } = render(getLandForm(true));
     await wait(() => {
       fireEvent.click(getByText(/continue/i));
     });
@@ -85,8 +148,32 @@ describe('Land Form', () => {
     expect(queryByText(/continue/i)).toBeNull();
   });
 
+  it('Displays a reminder on the classification form if the classification is changed and there is at least one building', async () => {
+    const { getByText, container } = render(
+      getLandForm(false, { ...defaultInitialValues, buildings: [{} as any] }),
+    );
+    await wait(() => {
+      fireEvent.click(getByText(/continue/i));
+    });
+    expect(getByText(/Strategic Real Estate Classification/i)).toBeInTheDocument();
+    await fillInput(container, 'data.classificationId', '1', 'select');
+    screen.getByText('Land Classification Changed');
+  });
+
+  it('Does not display a reminder on the classification form if the classification is changed and there are no buildings', async () => {
+    const { getByText, container } = render(
+      getLandForm(false, { ...defaultInitialValues, buildings: [] }),
+    );
+    await wait(() => {
+      fireEvent.click(getByText(/continue/i));
+    });
+    expect(getByText(/Strategic Real Estate Classification/i)).toBeInTheDocument();
+    await fillInput(container, 'data.classificationId', '1', 'select');
+    expect(screen.queryByText('Land Classification Changed')).toBeNull();
+  });
+
   it('review has appropriate subforms', async () => {
-    const { getByText } = render(landForm);
+    const { getByText } = render(getLandForm());
     await wait(() => {
       fireEvent.click(getByText(/Review/i));
     });
