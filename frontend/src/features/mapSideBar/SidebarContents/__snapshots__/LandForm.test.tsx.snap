@@ -908,12 +908,11 @@ exports[`Land Form component renders correctly 1`] = `
                             class="form-check"
                           >
                             <input
-                              checked=""
                               class="form-check-input"
                               id="input-data.isSensitive-2"
                               name="data.isSensitive"
                               type="radio"
-                              value="true"
+                              value="false"
                             />
                             <label
                               class="form-check-label"

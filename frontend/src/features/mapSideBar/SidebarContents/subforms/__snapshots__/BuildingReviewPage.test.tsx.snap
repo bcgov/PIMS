@@ -90,7 +90,7 @@ exports[`renders correctly 1`] = `
             <div class=\\"form-group\\">
               <div class=\\"check-field\\">
                 <div class=\\"form-check\\"><input name=\\"isSensitive\\" type=\\"radio\\" disabled=\\"\\" id=\\"input-isSensitive\\" class=\\"form-check-input\\" value=\\"false\\"><label title=\\"\\" for=\\"input-isSensitive\\" class=\\"form-check-label\\">Yes</label></div>
-                <div class=\\"form-check\\"><input name=\\"isSensitive\\" type=\\"radio\\" disabled=\\"\\" id=\\"input-isSensitive-2\\" class=\\"form-check-input\\" value=\\"true\\" checked=\\"\\"><label title=\\"\\" for=\\"input-isSensitive-2\\" class=\\"form-check-label\\">No</label></div>
+                <div class=\\"form-check\\"><input name=\\"isSensitive\\" type=\\"radio\\" disabled=\\"\\" id=\\"input-isSensitive-2\\" class=\\"form-check-input\\" value=\\"false\\"><label title=\\"\\" for=\\"input-isSensitive-2\\" class=\\"form-check-label\\">No</label></div>
               </div>
             </div>
           </div>
