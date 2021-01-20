@@ -614,12 +614,11 @@ exports[`Building Form component renders correctly 1`] = `
                               class="form-check"
                             >
                               <input
-                                checked=""
                                 class="form-check-input"
                                 id="input-building.isSensitive-2"
                                 name="building.isSensitive"
                                 type="radio"
-                                value="true"
+                                value="false"
                               />
                               <label
                                 class="form-check-label"

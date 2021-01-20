@@ -19,7 +19,7 @@ export const defaultInformationFormValues = {
   landLegalDescription: '',
   classificationId: '',
   agencyId: '',
-  isSensitive: false,
+  isSensitive: '',
 };
 const InformationForm: FunctionComponent<InformationFormProps> = (props: InformationFormProps) => {
   const withNameSpace: Function = (fieldName: string) => {
