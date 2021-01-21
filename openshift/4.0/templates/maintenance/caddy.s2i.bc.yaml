@@ -1,0 +1,94 @@
+kind: Template
+apiVersion: v1
+metadata:
+  name: s2i-caddy
+  creationTimestamp: null
+objects:
+  - kind: ImageStream
+    apiVersion: v1
+    metadata:
+      name: alpine-caddy
+      creationTimestamp: null
+      labels:
+        shared: "true"
+    spec:
+      tags:
+        - name: v2
+          from:
+            kind: DockerImage
+            name: "caddy:2.0.0-rc.3-alpine"
+          generation: null
+          importPolicy: {}
+    status:
+      dockerImageRepository: ""
+  - kind: ImageStream
+    apiVersion: v1
+    metadata:
+      name: "${NAME}"
+      creationTimestamp: null
+      labels:
+        shared: "true"
+    spec: {}
+    status:
+      dockerImageRepository: ""
+  - kind: BuildConfig
+    apiVersion: v1
+    metadata:
+      name: "${NAME}"
+      creationTimestamp: null
+    spec:
+      triggers:
+        - type: ConfigChange
+        - type: ImageChange
+          imageChange: {}
+      source:
+        type: Git
+        git:
+          uri: "${GIT_REPO}"
+          ref: "${GIT_REF}"
+      strategy:
+        type: Docker
+        dockerStrategy:
+          from:
+            kind: ImageStreamTag
+            name: "alpine-caddy:v2"
+      output:
+        to:
+          kind: ImageStreamTag
+          name: "${NAME}:${OUTPUT_IMAGE_TAG}"
+      resources:
+        requests:
+          cpu: "1"
+          memory: 2Gi
+        limits:
+          cpu: "2"
+          memory: 3Gi
+      postCommit: {}
+      completionDeadlineSeconds: 1200
+      failedBuildsHistoryLimit: 2
+      successfulBuildsHistoryLimit: 5
+    status:
+      lastVersion: 0
+parameters:
+  - name: NAME
+    displayName: Name
+    description: The name assigned to all objects.
+    required: true
+    value: s2i-caddy
+  - name: GIT_REPO
+    displayName: Git Repo URL
+    description: >-
+      The URL to your GIT repo, don't use the this default unless your just
+      experimenting.
+    required: true
+    value: "https://github.com/BCDevOps/s2i-caddy.git"
+  - name: GIT_REF
+    displayName: Git Reference
+    description: The git reference or branch.
+    required: true
+    value: master
+  - name: OUTPUT_IMAGE_TAG
+    displayName: Output Image Tag
+    description: The tag given to the built image.
+    required: true
+    value: latest
