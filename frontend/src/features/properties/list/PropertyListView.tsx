@@ -28,7 +28,6 @@ import { IPropertyFilter } from '../filter/IPropertyFilter';
 import { SortDirection, TableSort } from 'components/Table/TableSort';
 import useCodeLookups from 'hooks/useLookupCodes';
 import { useRouterFilter } from 'hooks/useRouterFilter';
-import { useLocation } from 'react-router-dom';
 
 const getPropertyReportUrl = (filter: IPropertyQueryParams) =>
   `${ENVIRONMENT.apiUrl}/reports/properties?${filter ? queryString.stringify(filter) : ''}`;
@@ -122,7 +121,6 @@ const PropertyListView: React.FC = () => {
   const lookupCodes = useSelector<RootState, ILookupCode[]>(
     state => (state.lookupCode as ILookupCodeState).lookupCodes,
   );
-  const location = useLocation();
   const municipalities = useMemo(
     () =>
       _.filter(lookupCodes, (lookupCode: ILookupCode) => {
@@ -196,11 +194,6 @@ const PropertyListView: React.FC = () => {
     },
     [setFilter, setPageIndex],
   );
-  useEffect(() => {
-    if (!location.search.includes('propertyType')) {
-      setFilter({ ...filter, propertyType: PropertyTypes.Land });
-    }
-  }, [filter, location.search]);
   // This will get called when the table needs new data
   const handleRequestData = useCallback(
     async ({ pageIndex, pageSize }: { pageIndex: number; pageSize: number }) => {
