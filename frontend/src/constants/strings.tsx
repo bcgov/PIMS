@@ -27,6 +27,9 @@ export const DEFAULT_LONG = -127.6476;
 export const DEFAULT_ZOOM = 6;
 export const HIGH_ZOOM = 14;
 
+// max zoom level when clicking on parcel/building pins
+export const MAX_ZOOM = 16;
+
 // default url values
 export const DEFAULT_PAGE = '1';
 export const DEFAULT_PER_PAGE = '25';

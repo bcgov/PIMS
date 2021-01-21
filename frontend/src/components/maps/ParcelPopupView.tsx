@@ -13,6 +13,7 @@ import { useDispatch } from 'react-redux';
 import { fetchProject, IProject } from 'features/projects/common';
 import { useEffect, useState } from 'react';
 import { useLeaflet } from 'react-leaflet';
+import { MAX_ZOOM } from 'constants/strings';
 
 export interface IParcelPopupViewProps {
   /** The property to display */
@@ -38,8 +39,15 @@ export const ParcelPopupView = (props: IParcelPopupViewProps | null) => {
 
   const leaflet = useLeaflet();
   const defaultZoom = () =>
-    leaflet.map?.flyTo([parcelDetail!.latitude as number, parcelDetail!.longitude as number], 14);
-
+    leaflet.map?.flyTo(
+      [parcelDetail!.latitude as number, parcelDetail!.longitude as number],
+      MAX_ZOOM,
+    );
+  const jumpToView = () =>
+    leaflet.map?.setView(
+      [parcelDetail!.latitude as number, parcelDetail!.longitude as number],
+      MAX_ZOOM,
+    );
   const whichZoom = props?.zoomTo ?? defaultZoom;
   const curZoom = leaflet.map?.getZoom();
 
@@ -115,6 +123,7 @@ export const ParcelPopupView = (props: IParcelPopupViewProps | null) => {
               <Col>
                 <Link
                   onClick={() => {
+                    if (curZoom! < MAX_ZOOM) jumpToView();
                     props?.onLinkClick && props.onLinkClick();
                   }}
                   to={{
@@ -135,6 +144,7 @@ export const ParcelPopupView = (props: IParcelPopupViewProps | null) => {
                   keycloak.hasClaim(Claims.ADMIN_PROPERTIES)) && (
                   <Link
                     onClick={() => {
+                      if (curZoom! < MAX_ZOOM) jumpToView();
                       props?.onLinkClick && props.onLinkClick();
                     }}
                     to={{
@@ -152,7 +162,7 @@ export const ParcelPopupView = (props: IParcelPopupViewProps | null) => {
                     Update
                   </Link>
                 )}
-                {curZoom! < 14 && (
+                {curZoom! < MAX_ZOOM && (
                   <Link to={{ ...location }} onClick={whichZoom}>
                     Zoom
                   </Link>
