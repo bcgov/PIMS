@@ -58,19 +58,6 @@ nav.map-nav {
         }
       }
     }
-    &.profile {
-      flex-direction: row;
-      .profile-icon {
-        color: #fff;
-        img {
-          width: 29px;
-          height: 29px;
-        }
-      }
-      .nav-link {
-        padding-left: 0.5rem;
-      }
-    }
   }
   // mobile (small) view
   .navbar-collapse {
