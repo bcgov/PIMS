@@ -12,6 +12,7 @@ $narrowSidebarSize: 700px;
   margin-left: -930px;
   background-color: #fff;
   position: absolute;
+  max-width: 930px;
   &.close {
     z-index: -1;
     max-width: $narrowSidebarSize;
