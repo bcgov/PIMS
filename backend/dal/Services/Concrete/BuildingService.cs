@@ -208,6 +208,7 @@ namespace Pims.Dal.Services
                 .Include(b => b.Address).ThenInclude(a => a.Province)
                 .Include(b => b.Evaluations)
                 .Include(b => b.Fiscals)
+                .Include(b => b.Parcels).ThenInclude(pb => pb.Parcel).ThenInclude(b => b.Buildings)
                 .Include(b => b.Parcels).ThenInclude(pb => pb.Parcel).ThenInclude(b => b.Evaluations)
                 .Include(b => b.Parcels).ThenInclude(pb => pb.Parcel).ThenInclude(b => b.Classification)
                 .Include(b => b.Parcels).ThenInclude(pb => pb.Parcel).ThenInclude(b => b.Fiscals)
@@ -233,7 +234,7 @@ namespace Pims.Dal.Services
 
             foreach (var parcel in building.Parcels.Select(pb => pb.Parcel))
             {
-                // Check if the building already exists.
+                // Check if the parcel already exists.
                 var existingAssociatedParcel = existingBuilding.Parcels
                     .FirstOrDefault(pb => pb.ParcelId == parcel.Id)?.Parcel;
 
@@ -246,9 +247,12 @@ namespace Pims.Dal.Services
                 {
                     if (!allowEdit) throw new NotAuthorizedException("User may not add parcels to a property they don't own.");
                     var existingParcel = this.Context.Parcels
+                    .Include(p => p.Buildings)
                     .FirstOrDefault(pb => pb.Id == parcel.Id);
                     if(existingParcel != null)
                     {
+                        parcel.Buildings.Clear(); // Do not modify the list of buildings associated to parcels when performing building updates.
+                        existingParcel.Buildings.ForEach(building => parcel.Buildings.Add(building));
                         _service.Parcel.PendingUpdate(parcel);
                     }
 
@@ -256,6 +260,8 @@ namespace Pims.Dal.Services
                 }
                 else
                 {
+                    parcel.Buildings.Clear(); // Do not modify the list of buildings associated to parcels when performing building updates.
+                    existingAssociatedParcel.Buildings.ForEach(building => parcel.Buildings.Add(building));
                     _service.Parcel.PendingUpdate(parcel);
                 }
             }

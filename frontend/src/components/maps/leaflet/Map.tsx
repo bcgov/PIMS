@@ -20,7 +20,6 @@ import { Feature, GeoJsonObject } from 'geojson';
 import { asProperty } from './mapUtils';
 import { LegendControl } from './Legend/LegendControl';
 import { useMediaQuery } from 'react-responsive';
-import { useApi } from 'hooks/useApi';
 import ReactResizeDetector from 'react-resize-detector';
 import {
   municipalityLayerPopupConfig,
@@ -152,7 +151,6 @@ const Map: React.FC<MapProps> = ({
   const [baseLayers, setBaseLayers] = useState<BaseLayer[]>([]);
   const [activeBasemap, setActiveBasemap] = useState<BaseLayer | null>(null);
   const smallScreen = useMediaQuery({ maxWidth: 1800 });
-  const { getAdministrativeAreaLatLng } = useApi();
   const [mapWidth, setMapWidth] = useState(0);
   const municipalitiesService = useLayerQuery(MUNICIPALITY_LAYER_URL);
   const parcelsService = useLayerQuery(PARCELS_LAYER_URL);
@@ -207,17 +205,7 @@ const Map: React.FC<MapProps> = ({
     }
   }, [interactive, mapRef]);
 
-  const zoomToAdministrativeArea = async (city: string) => {
-    const center = await getAdministrativeAreaLatLng(city);
-    if (center) {
-      mapRef.current?.leafletElement.setZoomAround(center, 11);
-    }
-  };
-
   const handleMapFilterChange = async (filter: IPropertyFilter) => {
-    if (filter.administrativeArea) {
-      await zoomToAdministrativeArea(filter.administrativeArea);
-    }
     setGeoFilter(getQueryParams(filter));
     setChanged(true);
   };

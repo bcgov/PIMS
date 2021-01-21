@@ -1,4 +1,4 @@
-import { FeatureCollection, Geometry, GeoJsonProperties } from 'geojson';
+import { FeatureCollection, Geometry, GeoJsonProperties, Feature } from 'geojson';
 import axios from 'axios';
 import { LatLng, geoJSON } from 'leaflet';
 import { useCallback, Dispatch } from 'react';
@@ -27,6 +27,11 @@ interface IUserLayerQuery {
    * @param pin
    */
   findByPin: (pin: string) => Promise<FeatureCollection>;
+  /**
+   * function to find GeoJSON shape matching the passed administrative area.
+   * @param city
+   */
+  findByAdministrative: (city: string) => Promise<Feature | null>;
 }
 
 /**
@@ -99,6 +104,28 @@ export const useLayerQuery = (url: string, geometryName: string = 'SHAPE'): IUse
     },
     [baseUrl, geometryName],
   );
+
+  const findByAdministrative = useCallback(
+    async (city: string): Promise<Feature | null> => {
+      try {
+        const data: any = (
+          await axios.get(
+            `${baseUrl}&cql_filter=ADMIN_AREA_NAME='${city}' OR ADMIN_AREA_ABBREVIATION='${city}'&outputformat=json`,
+          )
+        ).data;
+
+        if (data.totalFeatures === 0) {
+          return null;
+        }
+        return data.features[0];
+      } catch (error) {
+        console.log('Failed to find municipality feature', error);
+        return null;
+      }
+    },
+    [baseUrl],
+  );
+
   const findByPid = useCallback(
     async (pid: string): Promise<FeatureCollection> => {
       //Do not make a request if we our currently cached response matches the requested pid.
@@ -125,5 +152,5 @@ export const useLayerQuery = (url: string, geometryName: string = 'SHAPE'): IUse
     [baseUrl, parcelLayerData],
   );
 
-  return { findOneWhereContains, findByPid, findByPin };
+  return { findOneWhereContains, findByPid, findByPin, findByAdministrative };
 };
