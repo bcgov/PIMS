@@ -3,7 +3,7 @@ import { IPropertyDetail } from 'actions/parcelsActions';
 import { IGeoSearchParams } from 'constants/API';
 import { BBox } from 'geojson';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
-import { LatLngBounds } from 'leaflet';
+import { GeoJSON, LatLngBounds } from 'leaflet';
 import { useLeaflet } from 'react-leaflet';
 import { toast } from 'react-toastify';
 import { PointFeature } from '../types';
@@ -14,6 +14,7 @@ import { RootState } from 'reducers/rootReducer';
 import { flatten, uniqBy } from 'lodash';
 import { tilesInBbox } from 'tiles-in-bbox';
 import { useFilterContext } from '../providers/FIlterProvider';
+import { MUNICIPALITY_LAYER_URL, useLayerQuery } from './LayerPopup';
 
 export type InventoryLayerProps = {
   /** Latitude and Longitude boundary of the layer. */
@@ -139,6 +140,8 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
   const [loadingTiles, setLoadingTiles] = useState(false);
   const { loadProperties } = useApi();
   const { changed: filterChanged } = useFilterContext();
+  const municipalitiesService = useLayerQuery(MUNICIPALITY_LAYER_URL);
+
   const draftProperties: PointFeature[] = useSelector<RootState, PointFeature[]>(
     state => state.parcel.draftParcels,
   );
@@ -149,10 +152,14 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
 
   const bbox = useMemo(() => getBbox(bounds), [bounds]);
   useEffect(() => {
-    if (filterChanged) {
-      map.fitBounds(defaultBounds, { maxZoom: 5 });
-    }
-  }, [map, filterChanged]);
+    const fit = async () => {
+      if (filterChanged) {
+        map.fitBounds(defaultBounds, { maxZoom: 5 });
+      }
+    };
+
+    fit();
+  }, [map, filter, filterChanged]);
 
   minZoom = minZoom ?? 0;
   maxZoom = maxZoom ?? 18;
@@ -212,11 +219,19 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
         );
       };
 
-      setFeatures(
-        items.filter(({ properties }: any) => {
-          return properties.propertyTypeId === 1 || !hasBuildings(properties);
-        }) as any,
-      );
+      const results = items.filter(({ properties }: any) => {
+        return properties.propertyTypeId === 1 || !hasBuildings(properties);
+      }) as any;
+
+      const administrativeArea = filter?.administrativeArea;
+      if (results.length === 0 && !!administrativeArea) {
+        const municipality = await municipalitiesService.findByAdministrative(administrativeArea);
+        if (municipality) {
+          // Fit to municipality bounds
+          map.fitBounds((GeoJSON.geometryToLayer(municipality) as any)._bounds, { maxZoom: 11 });
+        }
+      }
+      setFeatures(results);
       setLoadingTiles(false);
     } catch (error) {
       toast.error((error as Error).message, { autoClose: 7000 });
