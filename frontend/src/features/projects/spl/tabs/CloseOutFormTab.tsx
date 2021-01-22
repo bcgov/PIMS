@@ -1,6 +1,5 @@
 import * as React from 'react';
 import {
-  CloseOutFinancialsForm,
   CloseOutSummaryForm,
   CloseOutPurchaseInformationForm,
   CloseOutSaleInformationForm,
@@ -32,7 +31,6 @@ const CloseOutFormTab: React.FunctionComponent<ICloseOutFormTabProps> = ({
       <CloseOutPurchaseInformationForm isReadOnly={isReadOnly} />
       <CloseOutSaleInformationForm isReadOnly={isReadOnly} />
       <CloseOutFinancialSummaryForm isReadOnly={isReadOnly} />
-      <CloseOutFinancialsForm isReadOnly={isReadOnly} />
       <h3>OCG</h3>
       <Form.Row>
         <Col>

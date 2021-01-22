@@ -11,6 +11,7 @@ import { Link, useLocation } from 'react-router-dom';
 import Claims from 'constants/claims';
 import queryString from 'query-string';
 import { useLeaflet } from 'react-leaflet';
+import { MAX_ZOOM } from 'constants/strings';
 
 export interface IBuildingPopupViewProps {
   building: IBuilding | null;
@@ -37,12 +38,17 @@ export const BuildingPopupView: React.FC<IBuildingPopupViewProps> = (
   const defaultZoom = () =>
     leaflet.map?.flyTo(
       [buildingDetail!.latitude as number, buildingDetail!.longitude as number],
-      14,
+      MAX_ZOOM,
+    );
+
+  const jumpToView = () =>
+    leaflet.map?.setView(
+      [buildingDetail!.latitude as number, buildingDetail!.longitude as number],
+      MAX_ZOOM,
     );
 
   const whichZoom = props?.zoomTo ?? defaultZoom;
   const curZoom = leaflet.map?.getZoom();
-
   return (
     <Container className="buildingPopup" fluid={true}>
       {!buildingDetail ? (
@@ -106,6 +112,7 @@ export const BuildingPopupView: React.FC<IBuildingPopupViewProps> = (
               <Col>
                 <Link
                   onClick={() => {
+                    if (curZoom! < MAX_ZOOM) jumpToView();
                     props?.onLinkClick && props.onLinkClick();
                   }}
                   to={{
@@ -127,6 +134,7 @@ export const BuildingPopupView: React.FC<IBuildingPopupViewProps> = (
                   keycloak.hasClaim(Claims.ADMIN_PROPERTIES)) && (
                   <Link
                     onClick={() => {
+                      if (curZoom! < MAX_ZOOM) jumpToView();
                       props?.onLinkClick && props.onLinkClick();
                     }}
                     to={{
@@ -144,7 +152,7 @@ export const BuildingPopupView: React.FC<IBuildingPopupViewProps> = (
                     Update
                   </Link>
                 )}
-                {curZoom! < 14 && (
+                {curZoom! < MAX_ZOOM && (
                   <Link to={{ ...location }} onClick={whichZoom}>
                     Zoom
                   </Link>
