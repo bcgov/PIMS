@@ -50,6 +50,7 @@ exports[`SubmitPropertySelector component renders correctly 1`] = `
   align-items: flex-start;
   text-align: left;
   padding: 16px;
+  overflow-y: scroll;
 }
 
 .c1 {

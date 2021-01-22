@@ -134,7 +134,7 @@ exports[`Building Form component renders correctly 1`] = `
   position: -webkit-sticky;
   position: sticky;
   background-color: #f2f2f2;
-  bottom: 40px;
+  bottom: 25px;
 }
 
 .c11 {
