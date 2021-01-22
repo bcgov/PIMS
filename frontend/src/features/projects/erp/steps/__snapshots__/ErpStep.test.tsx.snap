@@ -801,36 +801,6 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
             </div>
           </div>
           <h3>
-            Financing Information
-          </h3>
-          <div
-            class="form-row"
-          >
-            <div
-              class="col"
-            >
-              <div
-                class="ProjectNotes form-row"
-              >
-                <div
-                  class="col-md-11 form-group col"
-                >
-                  <label
-                    class="form-label"
-                    for="input-closeOutNote"
-                  >
-                    Close Out
-                  </label>
-                  <textarea
-                    class="col-md-auto form-control"
-                    id="input-closeOutNote"
-                    name="closeOutNote"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-          <h3>
             OCG
           </h3>
           <div

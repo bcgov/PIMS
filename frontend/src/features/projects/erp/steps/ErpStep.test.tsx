@@ -350,12 +350,12 @@ describe('ERP Approval Step', () => {
 
     it('displays close out form tab by default if project not in spl', () => {
       const { getByText } = render(getApprovalStep(store));
-      expect(getByText('Financing Information')).toBeVisible();
+      expect(getByText('Financial Summary')).toBeVisible();
     });
 
     it('hides close out form tab otherwise', () => {
       const { queryByText } = render(getApprovalStep(getStore(mockProject)));
-      expect(queryByText('Financing Information')).toBeNull();
+      expect(queryByText('Financial Summary')).toBeNull();
     });
   });
 });
