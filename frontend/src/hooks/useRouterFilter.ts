@@ -91,14 +91,16 @@ export const useRouterFilter = <T extends object>({
           merged = { ...merged, propertyType: PropertyTypes.Land };
         }
         // Only change state if the query parameters are different than the default filter.
-        if (!_.isEqual(merged, filter)) setFilter(merged);
+        if (!_.isEqual(_.omit(merged, 'propertyType'), _.omit(filter, 'propertyType')))
+          setFilter(merged);
       } else if (savedFilter?.hasOwnProperty(key)) {
         let merged = { ...defaultFilter, ...extractProps(filterProps, savedFilter[key]) };
         if (!merged.propertyType) {
           merged = { ...merged, propertyType: PropertyTypes.Land };
         }
         // Only change state if the saved filter is different than the default filter.
-        if (!_.isEqual(merged, filter)) setFilter(merged);
+        if (!_.isEqual(_.omit(merged, 'propertyType'), _.omit(filter, 'propertyType')))
+          setFilter(merged);
       }
 
       if (params.sorting && setSorting) {
