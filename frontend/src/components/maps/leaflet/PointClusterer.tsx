@@ -16,6 +16,7 @@ import { useFilterContext } from '../providers/FIlterProvider';
 import Supercluster from 'supercluster';
 import { useDispatch } from 'react-redux';
 import { PropertyTypes } from 'actions/parcelsActions';
+import { MAX_ZOOM } from 'constants/strings';
 
 export type PointClustererProps = {
   points: Array<PointFeature>;
@@ -265,7 +266,7 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
                   onLinkClick={() => {
                     !!onMarkerClick && onMarkerClick(cluster as any);
                   }}
-                  zoomTo={() => leaflet.map?.flyTo([latitude, longitude], 14)}
+                  zoomTo={() => leaflet.map?.flyTo([latitude, longitude], MAX_ZOOM)}
                 />
               </Popup>
             </Marker>
@@ -289,7 +290,7 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
                 onLinkClick={() => {
                   !!onMarkerClick && onMarkerClick(m as any);
                 }}
-                zoomTo={() => leaflet.map?.flyTo(m.position, 14)}
+                zoomTo={() => leaflet.map?.flyTo(m.position, MAX_ZOOM)}
               />
             </Popup>
           </Marker>
@@ -331,7 +332,7 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
                         selected.parcelDetail!.latitude as number,
                         selected.parcelDetail!.longitude as number,
                       ],
-                      14,
+                      MAX_ZOOM,
                     )
                   }
                 />
