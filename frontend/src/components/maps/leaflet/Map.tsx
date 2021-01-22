@@ -46,6 +46,7 @@ import { decimalOrUndefined, floatOrUndefined } from 'utils';
 import { IPropertyFilter } from 'features/properties/filter/IPropertyFilter';
 import { PropertyFilter } from 'features/properties/filter';
 import { useFilterContext } from '../providers/FIlterProvider';
+import { ZoomOutButton } from './ZoomOut/ZoomOutButton';
 
 export type MapViewportChangeEvent = {
   bounds: LatLngBounds | null;
@@ -352,6 +353,7 @@ const Map: React.FC<MapProps> = ({
                     </Popup>
                   )}
                   <LegendControl />
+                  <ZoomOutButton map={mapRef} bounds={defaultBounds} />
                   <LayersControl />
                   <InventoryLayer
                     zoom={zoom}
