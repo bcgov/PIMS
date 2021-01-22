@@ -6,6 +6,7 @@ import ClickAwayListener from 'react-click-away-listener';
 import { Legend } from './Legend';
 import styled from 'styled-components';
 import { FiMapPin } from 'react-icons/fi';
+import TooltipWrapper from 'components/common/TooltipWrapper';
 
 const LegendButton = styled(Button)`
   background-color: #ffffff !important;
@@ -24,9 +25,11 @@ export const LegendControl: React.FC = () => {
   return (
     <Control position="topleft">
       <ClickAwayListener onClickAway={() => setVisible(false)}>
-        <LegendButton ref={target} onClick={() => setVisible(!visible)}>
-          <FiMapPin />
-        </LegendButton>
+        <TooltipWrapper toolTipId="marker-legendId" toolTip="Marker legend">
+          <LegendButton ref={target} onClick={() => setVisible(!visible)}>
+            <FiMapPin />
+          </LegendButton>
+        </TooltipWrapper>
         <Overlay target={target.current!} show={visible} placement="right">
           {(props: any) => {
             return (
