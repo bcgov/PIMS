@@ -1,12 +1,13 @@
 import './LandUsageForm.scss';
 
 import { FastInput } from 'components/common/form';
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Container, Row } from 'react-bootstrap';
-import { FormikProps } from 'formik';
+import { FormikProps, useFormikContext, getIn } from 'formik';
 import { Label } from 'components/common/Label';
 import { ClassificationForm } from './ClassificationForm';
 import { ClassificationSelectionText } from 'features/properties/components/forms/strings';
+import GenericModal from 'components/common/GenericModal';
 
 interface ILandUsageProps {
   nameSpace?: string;
@@ -19,12 +20,23 @@ interface ILandUsageProps {
  * @param {ILandUsageProps} props
  */
 export const LandUsageForm = <T extends any>(props: ILandUsageProps & FormikProps<T>) => {
+  const { values, initialValues } = useFormikContext();
+  const [showSurplusActiveWarning, setShowSurplusActiveWarning] = useState(false);
   const withNameSpace: Function = useCallback(
     (fieldName: string) => {
       return props.nameSpace ? `${props.nameSpace}.${fieldName}` : fieldName;
     },
     [props.nameSpace],
   );
+
+  const classificationId = getIn(values, withNameSpace('classificationId'));
+  const initialClassificationId = getIn(initialValues, withNameSpace('classificationId'));
+  const buildings = getIn(values, withNameSpace('buildings'));
+  useEffect(() => {
+    if (initialClassificationId !== classificationId && buildings.length > 0) {
+      setShowSurplusActiveWarning(true);
+    }
+  }, [buildings.length, classificationId, initialClassificationId]);
 
   return (
     <Container>
@@ -54,6 +66,15 @@ export const LandUsageForm = <T extends any>(props: ILandUsageProps & FormikProp
           field={withNameSpace('zoningPotential')}
         />
       </Row>
+      <GenericModal
+        title="Land Classification Changed"
+        message="Remember to update any buildings to this new classification as well."
+        display={showSurplusActiveWarning}
+        setDisplay={setShowSurplusActiveWarning}
+        okButtonText="Ok"
+        handleOk={() => setShowSurplusActiveWarning(false)}
+        handleCancel={() => setShowSurplusActiveWarning(false)}
+      />
     </Container>
   );
 };
