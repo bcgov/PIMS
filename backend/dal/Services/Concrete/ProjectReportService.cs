@@ -241,10 +241,51 @@ namespace Pims.Dal.Services
                 .SingleOrDefault(p => p.Id == report.Id) ?? throw new KeyNotFoundException();
             if (originalReport.IsFinal) throw new InvalidOperationException($"Unable to delete FINAL project reports.");
 
+            // Remove all snapshots associated with this report.
+            var snapshots = this.Context.ProjectSnapshots.Where(s => s.SnapshotOn == originalReport.To.Value).ToArray();
+
+            this.Context.ProjectSnapshots.RemoveRange(snapshots);
             this.Context.ProjectReports.Remove(originalReport);
             this.Context.CommitTransaction();
         }
 
+        /// <summary>
+        /// Add a project and snapshots to the datasource.
+        /// This provides a way to manually generate snapshots with specific projects and historical values.
+        /// Requires a valid 'report.To' date.
+        /// </summary>
+        /// <param name="report"></param>
+        /// <param name="snapshots"></param>
+        public ProjectReport Add(ProjectReport report, IEnumerable<ProjectSnapshot> snapshots)
+        {
+            this.User.ThrowIfNotAuthorized(Permissions.ReportsSpl);
+            if (!report.To.HasValue) throw new InvalidOperationException("Argument 'report.To' must have a valid date.");
+            if (report.From.HasValue && report.From > report.To) throw new InvalidOperationException("Argument 'report.From' must be equal to or greater than 'report.To'.");
+
+            foreach (var snapshot in snapshots)
+            {
+                // All the snapshot dates must match the reported 'to' date.
+                // Regrettably I had to manually recreate this from the mapped objects because EF is attempting to set the primary key with the mapped objects.
+                var snap = new ProjectSnapshot()
+                {
+                    ProjectId = snapshot.ProjectId,
+                    SnapshotOn = report.To.Value,
+                    Assessed = snapshot.Assessed,
+                    Appraised = snapshot.Appraised,
+                    Market = snapshot.Market,
+                    NetBook = snapshot.NetBook,
+                    Metadata = snapshot.Metadata
+                };
+                this.Context.ProjectSnapshots.Add(snap);
+            }
+
+            this.Context.Add(report);
+            this.Context.CommitTransaction();
+
+            return report;
+        }
+
+        #region Helpers
         /// <summary>
         /// Generate snapshots for all SPL projects.
         /// To compare prior snapshots use the specified 'from' date.
@@ -297,6 +338,7 @@ namespace Pims.Dal.Services
             }
             return projectSnapshots.AsEnumerable();
         }
+        #endregion
         #endregion
     }
 }
