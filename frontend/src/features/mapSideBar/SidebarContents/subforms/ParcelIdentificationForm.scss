@@ -105,6 +105,9 @@
           width: 200px;
           max-width: 280px;
           resize: both;
+          .input-group-text {
+            padding: 5px;
+          }
         }
       }
       .pid-pin {

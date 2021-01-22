@@ -11,6 +11,7 @@ const SidebarContent = styled.div`
   align-items: flex-start;
   text-align: left;
   padding: 16px;
+  overflow-y: scroll;
 `;
 
 const InventoryPolicyWrapper = styled.div`
