@@ -105,7 +105,7 @@ export const getInitialValues = (): any => {
  * @param values the parcel value to convert.
  */
 export const valuesToApiFormat = (values: ISteppedFormValues<IFormParcel>): IFormParcel => {
-  values.data.pin = values?.data.pin ? values.data.pin : undefined;
+  values.data.pin = values?.data.pin ? +values.data.pin : undefined;
   values.data.pid = values?.data.pid ? values.data.pid : undefined;
   const seperatedFinancials = (_.flatten(
     values.data.financials?.map((financial: IFinancialYear) => _.values(financial)),
