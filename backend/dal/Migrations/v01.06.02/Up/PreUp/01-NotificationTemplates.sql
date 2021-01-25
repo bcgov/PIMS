@@ -25,8 +25,8 @@ SET [Body] = '
         <li>
             @if (property.PropertyType == PropertyTypes.Land)
             {
-                var appraised = property.Parcel.Evaluations.OrderByDescending(e => e.Date).FirstOrDefault(e => e.Key == EvaluationKeys.Appraised);
-                var assessed = property.Parcel.Evaluations.OrderByDescending(e => e.Date).FirstOrDefault(e => e.Key == EvaluationKeys.Assessed);
+                var appraised = @Model.Project.Appraised;
+                var assessed = @Model.Project.Assessed;
 
                 <span>
                     Site Address: @property.Parcel.Address.ToString()<br>
@@ -38,18 +38,18 @@ SET [Body] = '
                     Current Holder of the Property: @property.Parcel.Agency.Name<br>
                     @if (appraised != null && appraised.Value > 0)
                     {
-                        <span>Appraised Value: @appraised.Value.ToString("C", new CultureInfo("en-US")) (@appraised.Date.Year BC Assessment)</span>
+                        <span>Appraised Value: @appraised.Value.ToString("C", new CultureInfo("en-US"))</span>
                     }
                     else if (assessed != null && assessed.Value > 0)
                     {
-                        <span>Assessed Value: @assessed.Value.ToString("C", new CultureInfo("en-US")) (@assessed.Date.Year)</span>
+                        <span>Assessed Value: @assessed.Value.ToString("C", new CultureInfo("en-US"))</span>
                     }
                 </span>
             }
             else
             {
-                var appraised = property.Building.Evaluations.OrderByDescending(e => e.Date).FirstOrDefault(e => e.Key == EvaluationKeys.Appraised);
-                var assessed = property.Building.Evaluations.OrderByDescending(e => e.Date).FirstOrDefault(e => e.Key == EvaluationKeys.Assessed);
+                var appraised = @Model.Project.Appraised;
+                var assessed = @Model.Project.Assessed;
 
                 <span>
                     Site Address: @property.Building.Address<br>
@@ -61,11 +61,11 @@ SET [Body] = '
                     Current Holder of the Property: @property.Building.Agency.Name<br>
                     @if (appraised != null && appraised.Value > 0)
                     {
-                        <span>Appraised Value: @appraised.Value.ToString("C", new CultureInfo("en-US")) (@appraised.Date.Year BC Assessment)</span>
+                        <span>Appraised Value: @appraised.Value.ToString("C", new CultureInfo("en-US"))</span>
                     }
                     else if (assessed != null && assessed.Value > 0)
                     {
-                        <span>Assessed Value: @assessed.Value.ToString("C", new CultureInfo("en-US")) (@assessed.Date.Year)</span>
+                        <span>Assessed Value: @assessed.Value.ToString("C", new CultureInfo("en-US"))</span>
                     }
                 </span>
             }
@@ -98,8 +98,8 @@ SET [Body] =  '
         <li>
             @if (property.PropertyType == PropertyTypes.Land)
             {
-                var appraised = property.Parcel.Evaluations.OrderByDescending(e => e.Date).FirstOrDefault(e => e.Key == EvaluationKeys.Appraised);
-                var assessed = property.Parcel.Evaluations.OrderByDescending(e => e.Date).FirstOrDefault(e => e.Key == EvaluationKeys.Assessed);
+                var appraised = @Model.Project.Appraised;
+                var assessed = @Model.Project.Assessed;
 
                 <span>
                     Site Address: @property.Parcel.Address.ToString()<br>
@@ -111,18 +111,18 @@ SET [Body] =  '
                     Current Holder of the Property: @property.Parcel.Agency.Name<br>
                     @if (appraised != null && appraised.Value > 0)
                     {
-                        <span>Appraised Value: @appraised.Value.ToString("C", new CultureInfo("en-US")) (@appraised.Date.Year BC Assessment)</span>
+                        <span>Appraised Value: @appraised.Value.ToString("C", new CultureInfo("en-US"))</span>
                     }
                     else if (assessed != null && assessed.Value > 0)
                     {
-                        <span>Assessed Value: @assessed.Value.ToString("C", new CultureInfo("en-US")) (@assessed.Date.Year)</span>
+                        <span>Assessed Value: @assessed.Value.ToString("C", new CultureInfo("en-US"))</span>
                     }
                 </span>
             }
             else
             {
-                var appraised = property.Building.Evaluations.OrderByDescending(e => e.Date).FirstOrDefault(e => e.Key == EvaluationKeys.Appraised);
-                var assessed = property.Building.Evaluations.OrderByDescending(e => e.Date).FirstOrDefault(e => e.Key == EvaluationKeys.Assessed);
+                var appraised = @Model.Project.Appraised;
+                var assessed = @Model.Project.Assessed;
 
                 <span>
                     Site Address: @property.Building.Address<br>
@@ -134,11 +134,11 @@ SET [Body] =  '
                     Current Holder of the Property: @property.Building.Agency.Name<br>
                     @if (appraised != null && appraised.Value > 0)
                     {
-                        <span>Appraised Value: @appraised.Value.ToString("C", new CultureInfo("en-US")) (@appraised.Date.Year BC Assessment)</span>
+                        <span>Appraised Value: @appraised.Value.ToString("C", new CultureInfo("en-US"))</span>
                     }
                     else if (assessed != null && assessed.Value > 0)
                     {
-                        <span>Assessed Value: @assessed.Value.ToString("C", new CultureInfo("en-US")) (@assessed.Date.Year)</span>
+                        <span>Assessed Value: @assessed.Value.ToString("C", new CultureInfo("en-US"))</span>
                     }
                 </span>
             }
@@ -170,8 +170,8 @@ SET [Body] = '
         <li>
             @if (property.PropertyType == PropertyTypes.Land)
             {
-                var appraised = property.Parcel.Evaluations.OrderByDescending(e => e.Date).FirstOrDefault(e => e.Key == EvaluationKeys.Appraised);
-                var assessed = property.Parcel.Evaluations.OrderByDescending(e => e.Date).FirstOrDefault(e => e.Key == EvaluationKeys.Assessed);
+                var appraised = @Model.Project.Appraised;
+                var assessed = @Model.Project.Assessed;
 
                 <span>
                     Site Address: @property.Parcel.Address.ToString()<br>
@@ -183,18 +183,18 @@ SET [Body] = '
                     Current Holder of the Property: @property.Parcel.Agency.Name<br>
                     @if (appraised != null && appraised.Value > 0)
                     {
-                        <span>Appraised Value: @appraised.Value.ToString("C", new CultureInfo("en-US")) (@appraised.Date.Year BC Assessment)</span>
+                        <span>Appraised Value: @appraised.Value.ToString("C", new CultureInfo("en-US"))</span>
                     }
                     else if (assessed != null && assessed.Value > 0)
                     {
-                        <span>Assessed Value: @assessed.Value.ToString("C", new CultureInfo("en-US")) (@assessed.Date.Year)</span>
+                        <span>Assessed Value: @assessed.Value.ToString("C", new CultureInfo("en-US"))</span>
                     }
                 </span>
             }
             else
             {
-                var appraised = property.Building.Evaluations.OrderByDescending(e => e.Date).FirstOrDefault(e => e.Key == EvaluationKeys.Appraised);
-                var assessed = property.Building.Evaluations.OrderByDescending(e => e.Date).FirstOrDefault(e => e.Key == EvaluationKeys.Assessed);
+                var appraised = @Model.Project.Appraised;
+                var assessed = @Model.Project.Assessed;
 
                 <span>
                     Site Address: @property.Building.Address<br>
@@ -206,11 +206,11 @@ SET [Body] = '
                     Current Holder of the Property: @property.Building.Agency.Name<br>
                     @if (appraised != null && appraised.Value > 0)
                     {
-                        <span>Appraised Value: @appraised.Value.ToString("C", new CultureInfo("en-US")) (@appraised.Date.Year BC Assessment)</span>
+                        <span>Appraised Value: @appraised.Value.ToString("C", new CultureInfo("en-US"))</span>
                     }
                     else if (assessed != null && assessed.Value > 0)
                     {
-                        <span>Assessed Value: @assessed.Value.ToString("C", new CultureInfo("en-US")) (@assessed.Date.Year)</span>
+                        <span>Assessed Value: @assessed.Value.ToString("C", new CultureInfo("en-US"))</span>
                     }
                 </span>
             }
@@ -242,8 +242,8 @@ SET [Body] = '
         <li>
             @if (property.PropertyType == PropertyTypes.Land)
             {
-                var appraised = property.Parcel.Evaluations.OrderByDescending(e => e.Date).FirstOrDefault(e => e.Key == EvaluationKeys.Appraised);
-                var assessed = property.Parcel.Evaluations.OrderByDescending(e => e.Date).FirstOrDefault(e => e.Key == EvaluationKeys.Assessed);
+                var appraised = @Model.Project.Appraised;
+                var assessed = @Model.Project.Assessed;
 
                 <span>
                     Site Address: @property.Parcel.Address.ToString()<br>
@@ -255,18 +255,18 @@ SET [Body] = '
                     Current Holder of the Property: @property.Parcel.Agency.Name<br>
                     @if (appraised != null && appraised.Value > 0)
                     {
-                        <span>Appraised Value: @appraised.Value.ToString("C", new CultureInfo("en-US")) (@appraised.Date.Year BC Assessment)</span>
+                        <span>Appraised Value: @appraised.Value.ToString("C", new CultureInfo("en-US"))</span>
                     }
                     else if (assessed != null && assessed.Value > 0)
                     {
-                        <span>Assessed Value: @assessed.Value.ToString("C", new CultureInfo("en-US")) (@assessed.Date.Year)</span>
+                        <span>Assessed Value: @assessed.Value.ToString("C", new CultureInfo("en-US"))</span>
                     }
                 </span>
             }
             else
             {
-                var appraised = property.Building.Evaluations.OrderByDescending(e => e.Date).FirstOrDefault(e => e.Key == EvaluationKeys.Appraised);
-                var assessed = property.Building.Evaluations.OrderByDescending(e => e.Date).FirstOrDefault(e => e.Key == EvaluationKeys.Assessed);
+                var appraised = @Model.Project.Appraised;
+                var assessed = @Model.Project.Assessed;
 
                 <span>
                     Site Address: @property.Building.Address<br>
@@ -278,11 +278,11 @@ SET [Body] = '
                     Current Holder of the Property: @property.Building.Agency.Name<br>
                     @if (appraised != null && appraised.Value > 0)
                     {
-                        <span>Appraised Value: @appraised.Value.ToString("C", new CultureInfo("en-US")) (@appraised.Date.Year BC Assessment)</span>
+                        <span>Appraised Value: @appraised.Value.ToString("C", new CultureInfo("en-US"))</span>
                     }
                     else if (assessed != null && assessed.Value > 0)
                     {
-                        <span>Assessed Value: @assessed.Value.ToString("C", new CultureInfo("en-US")) (@assessed.Date.Year)</span>
+                        <span>Assessed Value: @assessed.Value.ToString("C", new CultureInfo("en-US"))</span>
                     }
                 </span>
             }
@@ -316,8 +316,8 @@ SET [Body] = '
         <li>
             @if (property.PropertyType == PropertyTypes.Land)
             {
-                var appraised = property.Parcel.Evaluations.OrderByDescending(e => e.Date).FirstOrDefault(e => e.Key == EvaluationKeys.Appraised);
-                var assessed = property.Parcel.Evaluations.OrderByDescending(e => e.Date).FirstOrDefault(e => e.Key == EvaluationKeys.Assessed);
+                var appraised = @Model.Project.Appraised;
+                var assessed = @Model.Project.Assessed;
 
                 <span>
                     Site Address: @property.Parcel.Address.ToString()<br>
@@ -329,18 +329,18 @@ SET [Body] = '
                     Current Holder of the Property: @property.Parcel.Agency.Name<br>
                     @if (appraised != null && appraised.Value > 0)
                     {
-                        <span>Appraised Value: @appraised.Value.ToString("C", new CultureInfo("en-US")) (@appraised.Date.Year BC Assessment)</span>
+                        <span>Appraised Value: @appraised.Value.ToString("C", new CultureInfo("en-US"))</span>
                     }
                     else if (assessed != null && assessed.Value > 0)
                     {
-                        <span>Assessed Value: @assessed.Value.ToString("C", new CultureInfo("en-US")) (@assessed.Date.Year)</span>
+                        <span>Assessed Value: @assessed.Value.ToString("C", new CultureInfo("en-US"))</span>
                     }
                 </span>
             }
             else
             {
-                var appraised = property.Building.Evaluations.OrderByDescending(e => e.Date).FirstOrDefault(e => e.Key == EvaluationKeys.Appraised);
-                var assessed = property.Building.Evaluations.OrderByDescending(e => e.Date).FirstOrDefault(e => e.Key == EvaluationKeys.Assessed);
+                var appraised = @Model.Project.Appraised;
+                var assessed = @Model.Project.Assessed;
 
                 <span>
                     Site Address: @property.Building.Address<br>
@@ -352,11 +352,11 @@ SET [Body] = '
                     Current Holder of the Property: @property.Building.Agency.Name<br>
                     @if (appraised != null && appraised.Value > 0)
                     {
-                        <span>Appraised Value: @appraised.Value.ToString("C", new CultureInfo("en-US")) (@appraised.Date.Year BC Assessment)</span>
+                        <span>Appraised Value: @appraised.Value.ToString("C", new CultureInfo("en-US"))</span>
                     }
                     else if (assessed != null && assessed.Value > 0)
                     {
-                        <span>Assessed Value: @assessed.Value.ToString("C", new CultureInfo("en-US")) (@assessed.Date.Year)</span>
+                        <span>Assessed Value: @assessed.Value.ToString("C", new CultureInfo("en-US"))</span>
                     }
                 </span>
             }
@@ -391,8 +391,8 @@ SET [Body] = '
         <li>
             @if (property.PropertyType == PropertyTypes.Land)
             {
-                var appraised = property.Parcel.Evaluations.OrderByDescending(e => e.Date).FirstOrDefault(e => e.Key == EvaluationKeys.Appraised);
-                var assessed = property.Parcel.Evaluations.OrderByDescending(e => e.Date).FirstOrDefault(e => e.Key == EvaluationKeys.Assessed);
+                var appraised = @Model.Project.Appraised;
+                var assessed = @Model.Project.Assessed;
 
                 <span>
                     Site Address: @property.Parcel.Address.ToString()<br>
@@ -404,18 +404,18 @@ SET [Body] = '
                     Current Holder of the Property: @property.Parcel.Agency.Name<br>
                     @if (appraised != null && appraised.Value > 0)
                     {
-                        <span>Appraised Value: @appraised.Value.ToString("C", new CultureInfo("en-US")) (@appraised.Date.Year BC Assessment)</span>
+                        <span>Appraised Value: @appraised.Value.ToString("C", new CultureInfo("en-US"))</span>
                     }
                     else if (assessed != null && assessed.Value > 0)
                     {
-                        <span>Assessed Value: @assessed.Value.ToString("C", new CultureInfo("en-US")) (@assessed.Date.Year)</span>
+                        <span>Assessed Value: @assessed.Value.ToString("C", new CultureInfo("en-US"))</span>
                     }
                 </span>
             }
             else
             {
-                var appraised = property.Building.Evaluations.OrderByDescending(e => e.Date).FirstOrDefault(e => e.Key == EvaluationKeys.Appraised);
-                var assessed = property.Building.Evaluations.OrderByDescending(e => e.Date).FirstOrDefault(e => e.Key == EvaluationKeys.Assessed);
+                var appraised = @Model.Project.Appraised;
+                var assessed = @Model.Project.Assessed;
 
                 <span>
                     Site Address: @property.Building.Address<br>
@@ -427,11 +427,11 @@ SET [Body] = '
                     Current Holder of the Property: @property.Building.Agency.Name<br>
                     @if (appraised != null && appraised.Value > 0)
                     {
-                        <span>Appraised Value: @appraised.Value.ToString("C", new CultureInfo("en-US")) (@appraised.Date.Year BC Assessment)</span>
+                        <span>Appraised Value: @appraised.Value.ToString("C", new CultureInfo("en-US"))</span>
                     }
                     else if (assessed != null && assessed.Value > 0)
                     {
-                        <span>Assessed Value: @assessed.Value.ToString("C", new CultureInfo("en-US")) (@assessed.Date.Year)</span>
+                        <span>Assessed Value: @assessed.Value.ToString("C", new CultureInfo("en-US"))</span>
                     }
                 </span>
             }
@@ -466,8 +466,8 @@ SET [Body] = '
         <li>
             @if (property.PropertyType == PropertyTypes.Land)
             {
-                var appraised = property.Parcel.Evaluations.OrderByDescending(e => e.Date).FirstOrDefault(e => e.Key == EvaluationKeys.Appraised);
-                var assessed = property.Parcel.Evaluations.OrderByDescending(e => e.Date).FirstOrDefault(e => e.Key == EvaluationKeys.Assessed);
+                var appraised = @Model.Project.Appraised;
+                var assessed = @Model.Project.Assessed;
 
                 <span>
                     Site Address: @property.Parcel.Address.ToString()<br>
@@ -479,18 +479,18 @@ SET [Body] = '
                     Current Holder of the Property: @property.Parcel.Agency.Name<br>
                     @if (appraised != null && appraised.Value > 0)
                     {
-                        <span>Appraised Value: @appraised.Value.ToString("C", new CultureInfo("en-US")) (@appraised.Date.Year BC Assessment)</span>
+                        <span>Appraised Value: @appraised.Value.ToString("C", new CultureInfo("en-US"))</span>
                     }
                     else if (assessed != null && assessed.Value > 0)
                     {
-                        <span>Assessed Value: @assessed.Value.ToString("C", new CultureInfo("en-US")) (@assessed.Date.Year)</span>
+                        <span>Assessed Value: @assessed.Value.ToString("C", new CultureInfo("en-US"))</span>
                     }
                 </span>
             }
             else
             {
-                var appraised = property.Building.Evaluations.OrderByDescending(e => e.Date).FirstOrDefault(e => e.Key == EvaluationKeys.Appraised);
-                var assessed = property.Building.Evaluations.OrderByDescending(e => e.Date).FirstOrDefault(e => e.Key == EvaluationKeys.Assessed);
+                var appraised = @Model.Project.Appraised;
+                var assessed = @Model.Project.Assessed;
 
                 <span>
                     Site Address: @property.Building.Address<br>
@@ -502,11 +502,11 @@ SET [Body] = '
                     Current Holder of the Property: @property.Building.Agency.Name<br>
                     @if (appraised != null && appraised.Value > 0)
                     {
-                        <span>Appraised Value: @appraised.Value.ToString("C", new CultureInfo("en-US")) (@appraised.Date.Year BC Assessment)</span>
+                        <span>Appraised Value: @appraised.Value.ToString("C", new CultureInfo("en-US"))</span>
                     }
                     else if (assessed != null && assessed.Value > 0)
                     {
-                        <span>Assessed Value: @assessed.Value.ToString("C", new CultureInfo("en-US")) (@assessed.Date.Year)</span>
+                        <span>Assessed Value: @assessed.Value.ToString("C", new CultureInfo("en-US"))</span>
                     }
                 </span>
             }
@@ -539,8 +539,8 @@ SET [Body] = '
         <li>
             @if (property.PropertyType == PropertyTypes.Land)
             {
-                var appraised = property.Parcel.Evaluations.OrderByDescending(e => e.Date).FirstOrDefault(e => e.Key == EvaluationKeys.Appraised);
-                var assessed = property.Parcel.Evaluations.OrderByDescending(e => e.Date).FirstOrDefault(e => e.Key == EvaluationKeys.Assessed);
+                var appraised = @Model.Project.Appraised;
+                var assessed = @Model.Project.Assessed;
 
                 <span>
                     Site Address: @property.Parcel.Address.ToString()<br>
@@ -552,18 +552,18 @@ SET [Body] = '
                     Current Holder of the Property: @property.Parcel.Agency.Name<br>
                     @if (appraised != null && appraised.Value > 0)
                     {
-                        <span>Appraised Value: @appraised.Value.ToString("C", new CultureInfo("en-US")) (@appraised.Date.Year BC Assessment)</span>
+                        <span>Appraised Value: @appraised.Value.ToString("C", new CultureInfo("en-US"))</span>
                     }
                     else if (assessed != null && assessed.Value > 0)
                     {
-                        <span>Assessed Value: @assessed.Value.ToString("C", new CultureInfo("en-US")) (@assessed.Date.Year)</span>
+                        <span>Assessed Value: @assessed.Value.ToString("C", new CultureInfo("en-US"))</span>
                     }
                 </span>
             }
             else
             {
-                var appraised = property.Building.Evaluations.OrderByDescending(e => e.Date).FirstOrDefault(e => e.Key == EvaluationKeys.Appraised);
-                var assessed = property.Building.Evaluations.OrderByDescending(e => e.Date).FirstOrDefault(e => e.Key == EvaluationKeys.Assessed);
+                var appraised = @Model.Project.Appraised;
+                var assessed = @Model.Project.Assessed;
 
                 <span>
                     Site Address: @property.Building.Address<br>
@@ -575,11 +575,11 @@ SET [Body] = '
                     Current Holder of the Property: @property.Building.Agency.Name<br>
                     @if (appraised != null && appraised.Value > 0)
                     {
-                        <span>Appraised Value: @appraised.Value.ToString("C", new CultureInfo("en-US")) (@appraised.Date.Year BC Assessment)</span>
+                        <span>Appraised Value: @appraised.Value.ToString("C", new CultureInfo("en-US"))</span>
                     }
                     else if (assessed != null && assessed.Value > 0)
                     {
-                        <span>Assessed Value: @assessed.Value.ToString("C", new CultureInfo("en-US")) (@assessed.Date.Year)</span>
+                        <span>Assessed Value: @assessed.Value.ToString("C", new CultureInfo("en-US"))</span>
                     }
                 </span>
             }
@@ -612,8 +612,8 @@ SET [Body] = '
         <li>
             @if (property.PropertyType == PropertyTypes.Land)
             {
-                var appraised = property.Parcel.Evaluations.OrderByDescending(e => e.Date).FirstOrDefault(e => e.Key == EvaluationKeys.Appraised);
-                var assessed = property.Parcel.Evaluations.OrderByDescending(e => e.Date).FirstOrDefault(e => e.Key == EvaluationKeys.Assessed);
+                var appraised = @Model.Project.Appraised;
+                var assessed = @Model.Project.Assessed;
 
                 <span>
                     Site Address: @property.Parcel.Address.ToString()<br>
@@ -625,18 +625,18 @@ SET [Body] = '
                     Current Holder of the Property: @property.Parcel.Agency.Name<br>
                     @if (appraised != null && appraised.Value > 0)
                     {
-                        <span>Appraised Value: @appraised.Value.ToString("C", new CultureInfo("en-US")) (@appraised.Date.Year BC Assessment)</span>
+                        <span>Appraised Value: @appraised.Value.ToString("C", new CultureInfo("en-US"))</span>
                     }
                     else if (assessed != null && assessed.Value > 0)
                     {
-                        <span>Assessed Value: @assessed.Value.ToString("C", new CultureInfo("en-US")) (@assessed.Date.Year)</span>
+                        <span>Assessed Value: @assessed.Value.ToString("C", new CultureInfo("en-US"))</span>
                     }
                 </span>
             }
             else
             {
-                var appraised = property.Building.Evaluations.OrderByDescending(e => e.Date).FirstOrDefault(e => e.Key == EvaluationKeys.Appraised);
-                var assessed = property.Building.Evaluations.OrderByDescending(e => e.Date).FirstOrDefault(e => e.Key == EvaluationKeys.Assessed);
+                var appraised = @Model.Project.Appraised;
+                var assessed = @Model.Project.Assessed;
 
                 <span>
                     Site Address: @property.Building.Address<br>
@@ -648,11 +648,11 @@ SET [Body] = '
                     Current Holder of the Property: @property.Building.Agency.Name<br>
                     @if (appraised != null && appraised.Value > 0)
                     {
-                        <span>Appraised Value: @appraised.Value.ToString("C", new CultureInfo("en-US")) (@appraised.Date.Year BC Assessment)</span>
+                        <span>Appraised Value: @appraised.Value.ToString("C", new CultureInfo("en-US"))</span>
                     }
                     else if (assessed != null && assessed.Value > 0)
                     {
-                        <span>Assessed Value: @assessed.Value.ToString("C", new CultureInfo("en-US")) (@assessed.Date.Year)</span>
+                        <span>Assessed Value: @assessed.Value.ToString("C", new CultureInfo("en-US"))</span>
                     }
                 </span>
             }
@@ -685,8 +685,8 @@ SET [Body] = '
         <li>
             @if (property.PropertyType == PropertyTypes.Land)
             {
-                var appraised = property.Parcel.Evaluations.OrderByDescending(e => e.Date).FirstOrDefault(e => e.Key == EvaluationKeys.Appraised);
-                var assessed = property.Parcel.Evaluations.OrderByDescending(e => e.Date).FirstOrDefault(e => e.Key == EvaluationKeys.Assessed);
+                var appraised = @Model.Project.Appraised;
+                var assessed = @Model.Project.Assessed;
 
                 <span>
                     Site Address: @property.Parcel.Address.ToString()<br>
@@ -698,18 +698,18 @@ SET [Body] = '
                     Current Holder of the Property: @property.Parcel.Agency.Name<br>
                     @if (appraised != null && appraised.Value > 0)
                     {
-                        <span>Appraised Value: @appraised.Value.ToString("C", new CultureInfo("en-US")) (@appraised.Date.Year BC Assessment)</span>
+                        <span>Appraised Value: @appraised.Value.ToString("C", new CultureInfo("en-US"))</span>
                     }
                     else if (assessed != null && assessed.Value > 0)
                     {
-                        <span>Assessed Value: @assessed.Value.ToString("C", new CultureInfo("en-US")) (@assessed.Date.Year)</span>
+                        <span>Assessed Value: @assessed.Value.ToString("C", new CultureInfo("en-US"))</span>
                     }
                 </span>
             }
             else
             {
-                var appraised = property.Building.Evaluations.OrderByDescending(e => e.Date).FirstOrDefault(e => e.Key == EvaluationKeys.Appraised);
-                var assessed = property.Building.Evaluations.OrderByDescending(e => e.Date).FirstOrDefault(e => e.Key == EvaluationKeys.Assessed);
+                var appraised = @Model.Project.Appraised;
+                var assessed = @Model.Project.Assessed;
 
                 <span>
                     Site Address: @property.Building.Address<br>
@@ -721,11 +721,11 @@ SET [Body] = '
                     Current Holder of the Property: @property.Building.Agency.Name<br>
                     @if (appraised != null && appraised.Value > 0)
                     {
-                        <span>Appraised Value: @appraised.Value.ToString("C", new CultureInfo("en-US")) (@appraised.Date.Year BC Assessment)</span>
+                        <span>Appraised Value: @appraised.Value.ToString("C", new CultureInfo("en-US"))</span>
                     }
                     else if (assessed != null && assessed.Value > 0)
                     {
-                        <span>Assessed Value: @assessed.Value.ToString("C", new CultureInfo("en-US")) (@assessed.Date.Year)</span>
+                        <span>Assessed Value: @assessed.Value.ToString("C", new CultureInfo("en-US"))</span>
                     }
                 </span>
             }
