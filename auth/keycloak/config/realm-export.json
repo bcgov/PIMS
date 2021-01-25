@@ -259,7 +259,16 @@
       {
         "id": "e3394f24-d457-4b3b-9036-2f8e5dda4123",
         "name": "reports-spl",
-        "description": "Ability to view SPL report.",
+        "description": "Ability to view, create and modify non-final SPL reports.",
+        "composite": false,
+        "clientRole": false,
+        "containerId": "pims",
+        "attributes": {}
+      },
+      {
+        "id": "81ded21c-ed32-4694-8f33-79ef17833f2b",
+        "name": "reports-spl-admin",
+        "description": "Ability to view, create, modify and delete SPL reports.",
         "composite": false,
         "clientRole": false,
         "containerId": "pims",
@@ -692,6 +701,15 @@
       "id": "6238c23d-933e-4c4a-954e-48bae3ce2080",
       "name": "SRES Financial Manager",
       "path": "/SRES Financial Manager",
+      "attributes": {},
+      "realmRoles": ["reports-view", "reports-spl", "reports-spl-admin"],
+      "clientRoles": {},
+      "subGroups": []
+    },
+    {
+      "id": "5c6cea5b-9b7c-47e8-852c-693e90ed815e",
+      "name": "SRES Financial Reporter",
+      "path": "/SRES Financial Reporter",
       "attributes": {},
       "realmRoles": ["reports-view", "reports-spl"],
       "clientRoles": {},

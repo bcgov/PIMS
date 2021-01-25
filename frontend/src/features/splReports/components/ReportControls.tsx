@@ -10,6 +10,8 @@ import styled from 'styled-components';
 import { Prompt } from 'react-router-dom';
 import TooltipWrapper from 'components/common/TooltipWrapper';
 import AddReportControl from './AddReportControl';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+import { Claims } from '../../../constants/';
 
 interface IReportControlsProps {
   /** the active report being displayed, snapshot data is displayed based on this report */
@@ -88,6 +90,9 @@ const ReportControls: React.FunctionComponent<IReportControlsProps> = ({
   let reportOn = formatApiDateTime(currentReport?.to);
   const fromId = _.find(reports, { to: currentReport?.from })?.id;
   const originalReport = _.find(reports, { id: currentReport?.id });
+  const keycloak = useKeycloakWrapper();
+  const isSPLAdmin = keycloak.hasClaim(Claims.REPORTS_SPL_ADMIN);
+
   return (
     <>
       <Formik
@@ -146,7 +151,7 @@ const ReportControls: React.FunctionComponent<IReportControlsProps> = ({
                   toolTipId="is-final"
                   toolTip="Mark report as final, no more changes to be made."
                 >
-                  <Check label="Is Final:" field="isFinal" />
+                  <Check label="Is Final:" field="isFinal" disabled={!isSPLAdmin} />
                 </TooltipWrapper>
                 <Button
                   className="h-75 mr-auto"
