@@ -181,10 +181,12 @@ namespace Pims.Dal.Services
         public ProjectReport Update(ProjectReport report)
         {
             this.User.ThrowIfNotAuthorized(Permissions.ReportsSpl);
+            var isSPLAdmin = this.User.HasPermission(Permissions.ReportsSplAdmin);
 
             var originalReport = this.Context.ProjectReports
                 .SingleOrDefault(p => p.Id == report.Id) ?? throw new KeyNotFoundException();
-
+            
+            if ((!originalReport.IsFinal && report.IsFinal && !isSPLAdmin) || (originalReport.IsFinal && !report.IsFinal && !isSPLAdmin)) throw new NotAuthorizedException ($"You do not have permissions to update the Is Final option.");
             if (report.To == null) throw new ArgumentNullException(nameof(report.To));
             if (originalReport.IsFinal && report.IsFinal) throw new InvalidOperationException($"Unable to update FINAL project reports.");
             if (report.From == report.To) throw new InvalidOperationException($"Project report start and end dates cannot be the same.");
@@ -234,6 +236,7 @@ namespace Pims.Dal.Services
         /// <returns></returns>
         public void Remove(ProjectReport report)
         {
+            if (report.IsFinal) this.User.ThrowIfNotAuthorized(Permissions.ReportsSplAdmin);
             this.User.ThrowIfNotAuthorized(Permissions.ReportsSpl);
             if (report?.Id == null) throw new ArgumentNullException();
 
