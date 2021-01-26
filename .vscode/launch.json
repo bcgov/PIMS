@@ -13,29 +13,23 @@
       "program": "${workspaceRoot}/tools/converters/excel/bin/Debug/netcoreapp3.1/Pims.Tools.Converters.ExcelConverter.dll",
       "cwd": "${workspaceRoot}/tools/converters/excel",
       "stopAtEntry": false
-    },
-    {
+    }, {
       "name": ".NET Core Launch (api)",
       "type": "coreclr",
       "request": "launch",
       "preLaunchTask": "build",
-      // If you have changed target frameworks, make sure to update the program path.
-      "program": "${workspaceFolder}/backend/bin/Debug/netcoreapp3.1/Pims.Api.dll",
+      "program": "${workspaceFolder}/backend/api/bin/Debug/netcoreapp3.1/Pims.Api.dll",
       "args": [],
-      "cwd": "${workspaceFolder}",
+      "cwd": "${workspaceFolder}/backend/api",
       "stopAtEntry": false,
-      // Enable launching a web browser when ASP.NET Core starts. For more information: https://aka.ms/VSCode-CS-LaunchJson-WebBrowser
-      "serverReadyAction": {
-        "action": "openExternally",
-        "pattern": "^\\s*Now listening on:\\s+(https?://\\S+)"
-      },
       "env": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+          "ASPNETCORE_ENVIRONMENT": "Local",
+          "ASPNETCORE_URLS": "http://*:5000;https://*:433"
       },
       "sourceFileMap": {
-        "/Views": "${workspaceFolder}/backend/Views"
+          "/Views": "${workspaceFolder}/backend/Views"
       }
-    },
+  },
     {
       "name": ".NET Core Attach",
       "type": "coreclr",

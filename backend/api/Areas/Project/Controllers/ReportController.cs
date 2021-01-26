@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using MapsterMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -126,7 +128,16 @@ namespace Pims.Api.Areas.Project.Controllers
         [SwaggerOperation(Tags = new[] { "project" })]
         public IActionResult AddProjectReport(ProjectReportModel model)
         {
-            var report = _pimsService.ProjectReport.Add(_mapper.Map<Entity.ProjectReport>(model));
+            Entity.ProjectReport report;
+
+            if (model.Snapshots?.Any() == true)
+            {
+                report = _pimsService.ProjectReport.Add(_mapper.Map<Entity.ProjectReport>(model), _mapper.Map<IEnumerable<Entity.ProjectSnapshot>>(model.Snapshots));
+            }
+            else
+            {
+                report = _pimsService.ProjectReport.Add(_mapper.Map<Entity.ProjectReport>(model));
+            }
             return CreatedAtAction(nameof(GetProjectReport), new { id = report.Id }, _mapper.Map<ProjectReportModel>(report));
         }
 

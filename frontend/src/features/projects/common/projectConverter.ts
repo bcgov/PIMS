@@ -9,7 +9,7 @@ import {
 import { IProject, IProperty } from '.';
 import { IFiscal, IEvaluation } from 'actions/parcelsActions';
 import { FiscalKeys } from 'constants/fiscalKeys';
-import { getCurrentFiscalYear, formatDate } from 'utils';
+import { getCurrentFiscalYear, formatDate, stringToNull } from 'utils';
 import _ from 'lodash';
 import { EvaluationKeys } from 'constants/evaluationKeys';
 import moment from 'moment';
@@ -242,10 +242,10 @@ export const toApiProject = (project: IProject) => {
     projectAgencyResponses: projectAgencyResponses,
     exemptionRationale: project.exemptionRationale,
     exemptionRequested: project.exemptionRequested,
-    netBook: Number(project.netBook),
-    market: Number(project.market),
-    assessed: Number(project.assessed),
-    appraised: project.appraised,
+    netBook: stringToNull(project.netBook),
+    market: stringToNull(project.market),
+    assessed: stringToNull(project.assessed),
+    appraised: stringToNull(project.appraised),
     notes: project.notes.filter(note => note.id || note.note),
   };
   // convert all empty strings (required by formik) to undefined

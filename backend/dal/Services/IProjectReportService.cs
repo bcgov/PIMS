@@ -13,6 +13,7 @@ namespace Pims.Dal.Services
         IEnumerable<ProjectSnapshot> GetSnapshots(int reportId);
         IEnumerable<ProjectSnapshot> GetSnapshots(ProjectReport report);
         ProjectReport Add(ProjectReport report);
+        ProjectReport Add(ProjectReport report, IEnumerable<ProjectSnapshot> snapshots);
         ProjectReport Update(ProjectReport report);
         IEnumerable<ProjectSnapshot> Refresh(int id);
         void Remove(ProjectReport report);

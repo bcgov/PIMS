@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using Pims.Dal;
@@ -10,9 +11,10 @@ using Pims.Dal;
 namespace Pims.Dal.Migrations
 {
     [DbContext(typeof(PimsContext))]
-    partial class PimsContextModelSnapshot : ModelSnapshot
+    [Migration("20210123002728_v01.06.02")]
+    partial class v010602
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1294,7 +1296,7 @@ namespace Pims.Dal.Migrations
                     b.Property<DateTime?>("ApprovedOn")
                         .HasColumnType("DATETIME2");
 
-                    b.Property<decimal?>("Assessed")
+                    b.Property<decimal>("Assessed")
                         .HasColumnType("MONEY");
 
                     b.Property<DateTime?>("CancelledOn")
@@ -1322,7 +1324,7 @@ namespace Pims.Dal.Migrations
                         .HasColumnType("nvarchar(150)")
                         .HasMaxLength(150);
 
-                    b.Property<decimal?>("Market")
+                    b.Property<decimal>("Market")
                         .HasColumnType("MONEY");
 
                     b.Property<string>("Metadata")
@@ -1333,7 +1335,7 @@ namespace Pims.Dal.Migrations
                         .HasColumnType("nvarchar(100)")
                         .HasMaxLength(100);
 
-                    b.Property<decimal?>("NetBook")
+                    b.Property<decimal>("NetBook")
                         .HasColumnType("MONEY");
 
                     b.Property<string>("ProjectNumber")
@@ -1722,7 +1724,7 @@ namespace Pims.Dal.Migrations
                     b.Property<decimal?>("Appraised")
                         .HasColumnType("MONEY");
 
-                    b.Property<decimal?>("Assessed")
+                    b.Property<decimal>("Assessed")
                         .HasColumnType("MONEY");
 
                     b.Property<Guid?>("CreatedById")
@@ -1733,13 +1735,13 @@ namespace Pims.Dal.Migrations
                         .HasColumnType("DATETIME2")
                         .HasDefaultValueSql("GETUTCDATE()");
 
-                    b.Property<decimal?>("Market")
+                    b.Property<decimal>("Market")
                         .HasColumnType("MONEY");
 
                     b.Property<string>("Metadata")
                         .HasColumnType("NVARCHAR(MAX)");
 
-                    b.Property<decimal?>("NetBook")
+                    b.Property<decimal>("NetBook")
                         .HasColumnType("MONEY");
 
                     b.Property<int>("ProjectId")
