@@ -90,7 +90,7 @@ it('identification section editable after click', () => {
   const edit = container.querySelectorAll('svg[class="edit"]');
   fireEvent.click(edit[0]!);
 
-  expect(agency).not.toBeDisabled();
+  expect(agency).toBeDisabled();
   expect(name).not.toBeDisabled();
   expect(addr).not.toBeDisabled();
   expect(loc).not.toBeDisabled();

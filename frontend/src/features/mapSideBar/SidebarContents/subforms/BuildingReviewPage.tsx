@@ -30,6 +30,7 @@ interface IReviewProps {
   occupantTypes: SelectOptions;
   agencies: any;
   disabled: boolean;
+  isPropertyAdmin: boolean;
 }
 
 export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
@@ -89,7 +90,7 @@ export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
                   field={withNameSpace('agencyId')}
                   options={props.agencies}
                   filterBy={['code', 'label', 'parent']}
-                  disabled={editInfo.identification}
+                  disabled={editInfo.identification || !props.isPropertyAdmin}
                 />
               </Row>
               <Row className="content-item">
