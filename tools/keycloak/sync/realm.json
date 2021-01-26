@@ -91,7 +91,12 @@
       },
       {
         "Name": "reports-spl",
-        "Description": "Ability to view SPL report.",
+        "Description": "Ability to view, create, and modify SPL non-final reports.",
+        "Composite": false
+      },
+      {
+        "Name": "reports-spl-admin",
+        "Description": "Ability to view, create, and delete Final reports.",
         "Composite": false
       },
       {
@@ -212,6 +217,10 @@
       },
       {
         "Name": "SRES Financial Manager",
+        "RealmRoles": ["reports-view", "reports-spl", "reports-spl-admin"]
+      },
+      {
+        "Name": "SRES Financial Reporter",
         "RealmRoles": ["reports-view", "reports-spl"]
       }
     ],
@@ -444,7 +453,11 @@
         "BaseUrl": "/",
         "WebOrigins": ["*"],
         "ServiceAccount": {
-          "RealmRoles": ["system-administrator", "reports-spl"],
+          "RealmRoles": [
+            "system-administrator",
+            "reports-spl",
+            "reports-spl-admin"
+          ],
           "ClientRoles": [
             {
               "ClientId": "realm-management",

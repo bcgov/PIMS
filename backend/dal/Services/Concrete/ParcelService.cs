@@ -377,12 +377,10 @@ namespace Pims.Dal.Services
                     var updateBuilding = parcel.Buildings.FirstOrDefault(pb => pb.BuildingId == parcelBuilding.BuildingId);
                     if (updateBuilding == null)
                     {
-                        // TODO: This will delete the building from the datasource.  This isn't entirely ideal as it may be related to multiple parcels.
                         this.ThrowIfNotAllowedToUpdate(parcelBuilding.Building, _options.Project);
 
                         var parcelBuildings = this.Context.ParcelBuildings.Where(pb => pb.BuildingId == parcelBuilding.BuildingId).ToArray();
                         parcelBuildings.ForEach(pb => this.Context.ParcelBuildings.Remove(pb)); // Remove all relationships from other parcels to this building.
-                        this.Context.Buildings.Remove(parcelBuilding.Building);
                         parcel.Buildings.Remove(parcelBuilding);
 
                         continue;
@@ -464,7 +462,6 @@ namespace Pims.Dal.Services
                 this.Context.ParcelBuildings.Remove(b);
                 this.Context.BuildingEvaluations.RemoveRange(b.Building.Evaluations);
                 this.Context.BuildingFiscals.RemoveRange(b.Building.Fiscals);
-                this.Context.Buildings.Remove(b.Building);
             });
             this.Context.ParcelEvaluations.RemoveRange(originalParcel.Evaluations);
             this.Context.ParcelFiscals.RemoveRange(originalParcel.Fiscals);

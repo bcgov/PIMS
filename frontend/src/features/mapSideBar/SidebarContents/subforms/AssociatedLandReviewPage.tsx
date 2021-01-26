@@ -35,6 +35,7 @@ interface IReviewProps {
   handlePidChange: (pid: string) => void;
   /** handle the pin formatting on change */
   handlePinChange: (pin: string) => void;
+  isPropertyAdmin: boolean;
 }
 
 /**
@@ -148,7 +149,7 @@ export const AssociatedLandReviewPage: React.FC<any> = (props: IReviewProps) => 
                       field={withNameSpace('agencyId', index)}
                       options={props.agencies}
                       filterBy={['code', 'label', 'parent']}
-                      disabled={parcelEditInfo.identification}
+                      disabled={parcelEditInfo.identification || !props.isPropertyAdmin}
                     />
                   </Row>
                   <Row className="content-item">

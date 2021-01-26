@@ -66,7 +66,7 @@ const FormFooter = styled.div`
   align-items: center;
   position: sticky;
   background-color: #f2f2f2;
-  bottom: 30px;
+  bottom: 25px;
 `;
 
 const FillRemainingSpace = styled.span`
@@ -227,6 +227,7 @@ const Form: React.FC<IAssociatedLandForm> = ({
             agencies={agencies}
             handlePidChange={handlePidChange}
             handlePinChange={handlePinChange}
+            isPropertyAdmin={isPropertyAdmin}
           />
         );
       case AssociatedLandSteps.USAGE:
@@ -255,6 +256,7 @@ const Form: React.FC<IAssociatedLandForm> = ({
             agencies={agencies}
             handlePidChange={handlePidChange}
             handlePinChange={handlePinChange}
+            isPropertyAdmin={isPropertyAdmin}
           />
         );
     }
