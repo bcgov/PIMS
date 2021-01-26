@@ -1,3 +1,4 @@
-DELETE FROM dbo.[RoleClaims] where RoleId IN ('6238c23d-933e-4c4a-954e-48bae3ce2080', '5C6CEA5B-9B7C-47E8-852C-693E90ED815E', '090bc341-af0f-45c9-8e0a-6d99024b52c1');
-DELETE FROM dbo.[Roles] where Id = '5C6CEA5B-9B7C-47E8-852C-693E90ED815E';
-DELETE FROM dbo.[Claims] where Id = '81DED21C-ED32-4694-8F33-79EF17833F2B';
+DELETE FROM dbo.[RoleClaims] where RoleId = '5c6cea5b-9b7c-47e8-852c-693e90ed815e';
+DELETE FROM dbo.[RoleClaims] where ClaimId = '81ded21c-ed32-4694-8f33-79ef17833f2b';
+DELETE FROM dbo.[Roles] where Id = '5c6cea5b-9b7c-47e8-852c-693e90ed815e';
+DELETE FROM dbo.[Claims] where Id = '81ded21c-ed32-4694-8f33-79ef17833f2b';
