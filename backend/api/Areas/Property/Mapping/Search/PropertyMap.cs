@@ -132,6 +132,7 @@ namespace Pims.Api.Areas.Property.Mapping.Search
             config.NewConfig<Entity.Views.Property, Model.PropertyModel>()
                 .Map(dest => dest.PropertyTypeId, src => src.PropertyTypeId)
                 .Map(dest => dest.Id, src => src.Id)
+                .Map(dest => dest.RowVersion, src => src.RowVersion == null ? null : Convert.ToBase64String(src.RowVersion))
                 .Map(dest => dest.PID, src => src.ParcelIdentity)
                 .Map(dest => dest.PIN, src => src.PIN)
                 .Map(dest => dest.ClassificationId, src => src.ClassificationId)

@@ -178,6 +178,26 @@ namespace Pims.Api.Areas.Property.Controllers
         }
 
         /// <summary>
+        /// Update the specified parcel financials values in the datasource if the user is allowed.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPut("{id}/financials")]
+        [HasPermission(Permissions.PropertyEdit)]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Model.ParcelModel), 200)]
+        [SwaggerOperation(Tags = new[] { "parcel" })]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "To support standardized routes (/update/{id})")]
+        public IActionResult UpdateParcelFinancials(int id, [FromBody] Model.ParcelModel model)
+        {
+            var entity = _mapper.Map<Entity.Parcel>(model);
+
+            var parcel = _pimsService.Parcel.UpdateFinancials(entity);
+            return new JsonResult(_mapper.Map<Model.ParcelModel>(parcel));
+        }
+
+        /// <summary>
         /// Delete the specified parcel from the datasource if the user is allowed.
         /// </summary>
         /// <param name="id"></param>

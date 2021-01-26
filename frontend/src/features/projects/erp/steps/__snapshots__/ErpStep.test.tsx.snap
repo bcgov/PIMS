@@ -1534,6 +1534,13 @@ exports[`ERP Approval Step renders correctly 1`] = `
                             className="sortable-column"
                           >
                             Agency
+                            <span
+                              style={
+                                Object {
+                                  "flex": "1 1 auto",
+                                }
+                              }
+                            />
                           </div>
                         </div>
                         <div
@@ -1557,6 +1564,13 @@ exports[`ERP Approval Step renders correctly 1`] = `
                             className="sortable-column"
                           >
                             Business Case Received Date
+                            <span
+                              style={
+                                Object {
+                                  "flex": "1 1 auto",
+                                }
+                              }
+                            />
                           </div>
                         </div>
                         <div
@@ -1580,6 +1594,13 @@ exports[`ERP Approval Step renders correctly 1`] = `
                             className="sortable-column"
                           >
                             Note
+                            <span
+                              style={
+                                Object {
+                                  "flex": "1 1 auto",
+                                }
+                              }
+                            />
                           </div>
                         </div>
                         <div
@@ -1603,6 +1624,13 @@ exports[`ERP Approval Step renders correctly 1`] = `
                             className="sortable-column"
                           >
                             Response
+                            <span
+                              style={
+                                Object {
+                                  "flex": "1 1 auto",
+                                }
+                              }
+                            />
                           </div>
                         </div>
                       </div>

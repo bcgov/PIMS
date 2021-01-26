@@ -304,6 +304,9 @@ exports[`Project list view tests Matches snapshot 1`] = `
               class="sortable-column"
             >
               Project No.
+              <span
+                style="flex: 1 1 auto;"
+              />
             </div>
           </div>
           <div
@@ -317,6 +320,9 @@ exports[`Project list view tests Matches snapshot 1`] = `
               class="sortable-column"
             >
               Name
+              <span
+                style="flex: 1 1 auto;"
+              />
             </div>
           </div>
           <div
@@ -330,6 +336,9 @@ exports[`Project list view tests Matches snapshot 1`] = `
               class="sortable-column"
             >
               Status
+              <span
+                style="flex: 1 1 auto;"
+              />
             </div>
           </div>
           <div
@@ -343,6 +352,9 @@ exports[`Project list view tests Matches snapshot 1`] = `
               class="sortable-column"
             >
               Agency
+              <span
+                style="flex: 1 1 auto;"
+              />
             </div>
           </div>
           <div
@@ -356,6 +368,9 @@ exports[`Project list view tests Matches snapshot 1`] = `
               class="sortable-column"
             >
               Zoning
+              <span
+                style="flex: 1 1 auto;"
+              />
             </div>
           </div>
           <div
@@ -369,6 +384,9 @@ exports[`Project list view tests Matches snapshot 1`] = `
               class="sortable-column"
             >
               Zoning Potential
+              <span
+                style="flex: 1 1 auto;"
+              />
             </div>
           </div>
           <div
@@ -382,6 +400,9 @@ exports[`Project list view tests Matches snapshot 1`] = `
               class="sortable-column"
             >
               Net Book Value
+              <span
+                style="flex: 1 1 auto;"
+              />
             </div>
           </div>
           <div
@@ -395,6 +416,9 @@ exports[`Project list view tests Matches snapshot 1`] = `
               class="sortable-column"
             >
               Market Value
+              <span
+                style="flex: 1 1 auto;"
+              />
             </div>
           </div>
           <div
@@ -408,6 +432,9 @@ exports[`Project list view tests Matches snapshot 1`] = `
               class="sortable-column"
             >
               Updated On
+              <span
+                style="flex: 1 1 auto;"
+              />
             </div>
           </div>
           <div
@@ -421,6 +448,9 @@ exports[`Project list view tests Matches snapshot 1`] = `
               class="sortable-column"
             >
               Updated By
+              <span
+                style="flex: 1 1 auto;"
+              />
             </div>
           </div>
         </div>

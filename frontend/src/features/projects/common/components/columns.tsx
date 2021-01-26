@@ -7,7 +7,6 @@ import { formatMoney, formatNumber, formatDate } from 'utils';
 import { IProperty, IProject, DisposeWorkflowStatus, AgencyResponses } from '../interfaces';
 import { useFormikContext, getIn } from 'formik';
 import {
-  FastCurrencyInput,
   FastSelect,
   SelectOption,
   FastInput,
@@ -20,6 +19,7 @@ import _ from 'lodash';
 import { IAgencyResponseColumns } from 'features/projects/erp/forms/AgencyResponseForm';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { EditableMoneyCell, MoneyCell } from 'components/Table/MoneyCell';
 
 const ColumnDiv = styled.div`
   display: flex;
@@ -29,18 +29,6 @@ const ColumnDiv = styled.div`
 const sumFinancialRows = (properties: IProperty[], key: string): string => {
   const sum = formatNumber(_.reduce(_.map(properties, key), (acc, val) => acc + val) ?? 0);
   return sum === 'NaN' ? '$0' : `$${sum}`;
-};
-
-const MoneyCell = ({ cell: { value } }: CellProps<IProperty, number>) => formatMoney(value);
-
-const getEditableMoneyCell = (namespace: string = 'properties') => (cellInfo: any) => {
-  const context = useFormikContext();
-  return (
-    <FastCurrencyInput
-      formikProps={context}
-      field={`${namespace}.${cellInfo.row.id}.${cellInfo.column.id}`}
-    ></FastCurrencyInput>
-  );
 };
 
 const getEditableClassificationCell = (limitLabels?: string[]) => (cellInfo: any) => {
@@ -252,21 +240,21 @@ export const getPropertyColumns = ({
     {
       Header: 'Net Book Value',
       accessor: 'netBook',
-      Cell: editableFinancials ? getEditableMoneyCell() : MoneyCell,
+      Cell: editableFinancials ? EditableMoneyCell : MoneyCell,
       minWidth: 145,
       align: 'left',
     },
     {
       Header: 'Market Value',
       accessor: 'market',
-      Cell: editableFinancials ? getEditableMoneyCell() : MoneyCell,
+      Cell: editableFinancials ? EditableMoneyCell : MoneyCell,
       minWidth: 145,
       align: 'left',
     },
     {
       Header: 'Assessed Value',
       accessor: 'assessed',
-      Cell: editableFinancials ? getEditableMoneyCell() : MoneyCell,
+      Cell: editableFinancials ? EditableMoneyCell : MoneyCell,
       minWidth: 145,
       align: 'left',
     },
@@ -321,7 +309,7 @@ export const getAppraisedColumns = (project: IProject): any[] => [
   {
     Header: 'Appraised Value',
     accessor: 'appraised',
-    Cell: getEditableMoneyCell(),
+    Cell: EditableMoneyCell,
     minWidth: 145,
     align: 'left',
     Footer: ({ properties }: { properties: IProperty[] }) => (
@@ -349,7 +337,7 @@ export const getAppraisedColumns = (project: IProject): any[] => [
   {
     Header: 'Assessed Value',
     accessor: 'assessed',
-    Cell: getEditableMoneyCell(),
+    Cell: EditableMoneyCell,
     minWidth: 145,
     align: 'left',
     Footer: ({ properties }: { properties: IProperty[] }) => (
@@ -414,7 +402,7 @@ export const getProjectAgencyResponseColumns = ({
       maxWidth: 60,
       align: 'left',
       Cell: offerAmount
-        ? getEditableMoneyCell('projectAgencyResponses')
+        ? (props: any) => <EditableMoneyCell {...props} namespace="projectAgencyResponses" />
         : (cellInfo: any) => cellInfo.value ?? null,
     });
   }

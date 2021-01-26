@@ -221,6 +221,34 @@ namespace Pims.Dal.Services
         }
 
         /// <summary>
+        /// Update the specified parcel financial values in the datasource.
+        /// </summary>
+        /// <param name="parcel"></param>
+        /// <exception type="KeyNotFoundException">Entity does not exist in the datasource.</exception>
+        /// <returns></returns>
+        public Parcel UpdateFinancials(Parcel parcel)
+        {
+            parcel.ThrowIfNotAllowedToEdit(nameof(parcel), this.User, new[] { Permissions.PropertyEdit, Permissions.AdminProperties });
+            var isAdmin = this.User.HasPermission(Permissions.AdminProperties);
+
+            var originalParcel = this.Context.Parcels
+                .Include(p => p.Evaluations)
+                .Include(p => p.Fiscals)
+                .SingleOrDefault(p => p.Id == parcel.Id) ?? throw new KeyNotFoundException();
+
+            var userAgencies = this.User.GetAgencies();
+            var originalAgencyId = (int)this.Context.Entry(originalParcel).OriginalValues[nameof(Parcel.AgencyId)];
+            var allowEdit = isAdmin || userAgencies.Contains(originalAgencyId);
+            if (!allowEdit) throw new NotAuthorizedException("User may not edit parcels outside of their agency.");
+
+            this.Context.UpdateParcelFinancials(originalParcel, parcel.Evaluations, parcel.Fiscals);
+
+            this.Context.SetOriginalRowVersion(originalParcel);
+            this.Context.CommitTransaction();
+            return Get(parcel.Id);
+        }
+
+        /// <summary>
         /// Update the specified parcel in the datasource, but do not commit the transaction.
         /// </summary>
         /// <param name="parcel"></param>
@@ -293,80 +321,13 @@ namespace Pims.Dal.Services
 
                     this.Context.Entry(existingBuilding).CurrentValues.SetValues(building);
                     this.Context.Entry(existingBuilding.Address).CurrentValues.SetValues(building.Address);
-                    var updateProject = false;
-                    foreach (var buildingEvaluation in building.Evaluations)
-                    {
-                        var existingBuildingEvaluation = existingBuilding.Evaluations
-                            .FirstOrDefault(e => e.Date == buildingEvaluation.Date && e.Key == buildingEvaluation.Key);
-
-                        var updateEvaluation = existingBuildingEvaluation?.Value != buildingEvaluation.Value;
-                        updateProject = updateProject || updateEvaluation;
-                        if (existingBuildingEvaluation == null)
-                        {
-                            existingBuilding.Evaluations.Add(buildingEvaluation);
-                        }
-                        else if (updateEvaluation)
-                        {
-                            existingBuildingEvaluation.Note = buildingEvaluation.Note;
-                            existingBuildingEvaluation.Value = buildingEvaluation.Value;
-                        }
-                    }
-                    foreach (var buildingFiscal in building.Fiscals)
-                    {
-                        this.Context.Entry(existingBuilding).CurrentValues.SetValues(building);
-                        this.Context.Entry(existingBuilding.Address).CurrentValues.SetValues(building.Address);
-
-                        var existingBuildingFiscal = existingBuilding.Fiscals
-                            .FirstOrDefault(e => e.FiscalYear == buildingFiscal.FiscalYear && e.Key == buildingFiscal.Key);
-
-                        var updateFiscal = existingBuildingFiscal?.Value != buildingFiscal.Value;
-                        updateProject = updateProject || updateFiscal;
-                        if (existingBuildingFiscal == null)
-                        {
-                            existingBuilding.Fiscals.Add(buildingFiscal);
-                        }
-                        else if (updateFiscal)
-                        {
-                            existingBuildingFiscal.Note = buildingFiscal.Note;
-                            existingBuildingFiscal.Value = buildingFiscal.Value;
-                        }
-                    }
+                    this.Context.UpdateBuildingFinancials(existingBuilding, building.Evaluations, building.Fiscals);
                 }
             }
 
             if (allowEdit)
             {
-                foreach (var parcelEvaluation in parcel.Evaluations)
-                {
-                    var originalEvaluation = originalParcel.Evaluations
-                        .FirstOrDefault(e => e.Date == parcelEvaluation.Date && e.Key == parcelEvaluation.Key);
-
-                    if (originalEvaluation == null)
-                    {
-                        originalParcel.Evaluations.Add(parcelEvaluation);
-                    }
-                    else
-                    {
-                        originalEvaluation.Note = parcelEvaluation.Note;
-                        originalEvaluation.Value = parcelEvaluation.Value;
-                        originalEvaluation.Firm = parcelEvaluation.Firm;
-                    }
-                }
-                foreach (var parcelFiscal in parcel.Fiscals)
-                {
-                    var originalParcelFiscal = originalParcel.Fiscals
-                        .FirstOrDefault(e => e.FiscalYear == parcelFiscal.FiscalYear && e.Key == parcelFiscal.Key);
-
-                    if (originalParcelFiscal == null)
-                    {
-                        originalParcel.Fiscals.Add(parcelFiscal);
-                    }
-                    else
-                    {
-                        originalParcelFiscal.Note = parcelFiscal.Note;
-                        originalParcelFiscal.Value = parcelFiscal.Value;
-                    }
-                }
+                this.Context.UpdateParcelFinancials(originalParcel, parcel.Evaluations, parcel.Fiscals);
 
                 // Go through the existing buildings and see if they have been deleted from the updated parcel.
                 // If they have been removed, delete them from the datasource.
