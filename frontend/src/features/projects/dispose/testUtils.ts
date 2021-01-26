@@ -976,6 +976,13 @@ export const mockFlatProject = {
       projectId: 1007,
       rowVersion: undefined,
     },
+    {
+      id: undefined,
+      note: '',
+      noteType: NoteTypes.ErpNotification,
+      projectId: 1007,
+      rowVersion: undefined,
+    },
   ],
   description: 'desc',
   properties: [
