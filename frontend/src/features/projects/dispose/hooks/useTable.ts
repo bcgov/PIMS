@@ -47,7 +47,7 @@ const getServerQuery = (state: {
     address,
     administrativeArea,
     projectNumber,
-    ignorePropertiesInProjects: true,
+    ignorePropertiesInProjects: false,
     classificationId: decimalOrUndefined(classificationId),
     agencies: parsedAgencies,
     minLandArea: decimalOrUndefined(minLotSize),

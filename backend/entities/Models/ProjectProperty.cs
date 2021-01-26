@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Pims.Dal.Entities.Models
 {
     public class ProjectProperty :  Pims.Dal.Entities.Views.Property
@@ -14,7 +16,6 @@ namespace Pims.Dal.Entities.Models
         {
             Id = property.Id;
             PropertyTypeId = property.PropertyTypeId;
-            ProjectNumber = property.ProjectNumber;
             Name = property.Name;
             Description = property.Description;
             ClassificationId = property.ClassificationId;

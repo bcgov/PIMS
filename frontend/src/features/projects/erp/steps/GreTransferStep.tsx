@@ -75,6 +75,8 @@ const GreTransferStep = ({ formikRef }: IStepProps) => {
         innerRef={formikRef}
         validationSchema={GreTransferStepYupSchema}
         enableReinitialize={true}
+        validateOnBlur={true}
+        validateOnChange={false}
         onSubmit={(values: IProject) => {
           values.agencyId = +values.agencyId;
           values.properties?.forEach(p => (p.agencyId = +p.agencyId));

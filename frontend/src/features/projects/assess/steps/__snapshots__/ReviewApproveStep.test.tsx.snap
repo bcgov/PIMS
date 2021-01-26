@@ -1,6 +1,16 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Review Approve Step renders correctly 1`] = `
+.c1 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-flow: column;
+  -ms-flex-flow: column;
+  flex-flow: column;
+}
+
 .c0 {
   padding-left: 10px;
 }
@@ -414,7 +424,7 @@ exports[`Review Approve Step renders correctly 1`] = `
                   <div
                     class="sortable-column"
                   >
-                    Potential Zoning Code
+                    Other Projects
                   </div>
                 </div>
                 <div
@@ -518,11 +528,15 @@ exports[`Review Approve Step renders correctly 1`] = `
                     title="Click to view property details"
                   />
                   <div
-                    class="td clickable"
+                    class="td"
                     role="cell"
                     style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
-                    title="Click to view property details"
-                  />
+                    title=""
+                  >
+                    <div
+                      class="c1"
+                    />
+                  </div>
                   <div
                     class="td"
                     role="cell"

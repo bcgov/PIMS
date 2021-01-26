@@ -637,7 +637,7 @@ namespace Pims.Dal.Test.Services
         #region Update Building
 
         [Fact]
-        public void Update_Building_LinkedToProject_NotAuthorized()
+        public void Update_Building_LinkedToProject_Allowed()
         {
             // Arrange
             var helper = new TestHelper();
@@ -645,10 +645,8 @@ namespace Pims.Dal.Test.Services
             var init = helper.InitializeDatabase(user);
             var project = init.CreateProject(1);
             project.ReportedFiscalYear = 2020;
-            var parcel = init.CreateParcel(1);
-            var building = init.CreateBuilding(parcel, 2);
+            var building = init.CreateBuilding(null, 2, agency: project.Agency);
             var fiscal = init.CreateFiscal(building, 2020, Entity.FiscalKeys.NetBook, 10);
-            project.AddProperty(parcel);
             project.AddProperty(building);
             init.SaveChanges();
 
@@ -658,8 +656,8 @@ namespace Pims.Dal.Test.Services
             // Act
             building.Name = "change";
 
-            // Assert
-            Assert.Throws<NotAuthorizedException>(() => service.Update(building));
+            // Assert, updating a building in a project should not throw an exception.
+            service.Update(building);
         }
         #endregion
         #endregion

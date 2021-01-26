@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Pims.Api.Models.Parcel
 {
     public class PropertyModel : BaseModel
@@ -5,7 +7,7 @@ namespace Pims.Api.Models.Parcel
         #region Properties
         public int Id { get; set; }
 
-        public string ProjectNumber { get; set; }
+        public IEnumerable<string> ProjectNumbers { get; set; }
 
         public string Name { get; set; }
 

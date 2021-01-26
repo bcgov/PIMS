@@ -74,11 +74,11 @@ namespace Pims.Dal.Helpers.Extensions
             if (filter.ClassificationId.HasValue)
                 query = query.Where(p => p.ClassificationId == filter.ClassificationId);
             if (!String.IsNullOrWhiteSpace(filter.ProjectNumber))
-                query = query.Where(p => EF.Functions.Like(p.ProjectNumber, $"{filter.ProjectNumber}%"));
+                query = query.Where(p => p.ProjectNumbers.Contains(filter.ProjectNumber));
             if (filter.IgnorePropertiesInProjects == true)
-                query = query.Where(p => p.ProjectNumber == null);
+                query = query.Where(p => p.ProjectNumbers == null || p.ProjectNumbers == "[]");
             if (filter.InSurplusPropertyProgram == true)
-                query = query.Where(p => !String.IsNullOrWhiteSpace(p.ProjectNumber));
+                query = query.Where(p => !String.IsNullOrWhiteSpace(p.ProjectNumbers) && p.ProjectNumbers != "[]");
             if (!String.IsNullOrWhiteSpace(filter.Description))
                 query = query.Where(p => EF.Functions.Like(p.Description, $"%{filter.Description}%"));
             if (!String.IsNullOrWhiteSpace(filter.Name))
@@ -138,7 +138,7 @@ namespace Pims.Dal.Helpers.Extensions
                 query = query.Where(property =>
                     context.Projects.Any(project =>
                         statuses.Any(st => st == project.StatusId)
-                            && project.ProjectNumber == property.ProjectNumber));
+                            && property.ProjectNumbers.Contains(project.ProjectNumber)));
             }
 
             if (filter.Sort?.Any() == true)
@@ -175,14 +175,14 @@ namespace Pims.Dal.Helpers.Extensions
             {
                 DateTime? mostRecentDate = null;
                 DateTime? date = null;
-                if (property is Entity.Parcel)
+                if (property is Entity.Parcel parcel)
                 {
-                    mostRecentDate = ((Entity.Parcel)property).Evaluations.Where(d => d.Key == key).OrderByDescending(d => d.Date).FirstOrDefault()?.Date;
+                    mostRecentDate = parcel.Evaluations.Where(d => d.Key == key).OrderByDescending(d => d.Date).FirstOrDefault()?.Date;
                     date = ((Entity.Parcel)updatedProperty).Evaluations.FirstOrDefault(e => e.Key == key)?.Date;
                 }
-                else if (property is Entity.Building)
+                else if (property is Entity.Building building)
                 {
-                    mostRecentDate = ((Entity.Building)property).Evaluations.Where(d => d.Key == key).OrderByDescending(d => d.Date).FirstOrDefault()?.Date;
+                    mostRecentDate = building.Evaluations.Where(d => d.Key == key).OrderByDescending(d => d.Date).FirstOrDefault()?.Date;
                     date = ((Entity.Building)updatedProperty).Evaluations.FirstOrDefault(e => e.Key == key)?.Date;
                 }
                 //If the date passed in is the most recent, we don't need to do any removal logic.
@@ -191,9 +191,9 @@ namespace Pims.Dal.Helpers.Extensions
                     continue;
                 }
                 var maxDate = (disposedOn ?? date)?.AddYears(1);
-                if (property is Entity.Parcel)
+                if (property is Entity.Parcel parcel1)
                 {
-                    ((Entity.Parcel)property).Evaluations.RemoveAll(e => e.Date > date && e.Date < maxDate && key == e.Key);
+                    parcel1.Evaluations.RemoveAll(e => e.Date > date && e.Date < maxDate && key == e.Key);
                 }
                 else if (property is Entity.Building)
                 {

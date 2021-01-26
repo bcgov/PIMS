@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useCallback } from 'react';
 import { FormControlProps, Container } from 'react-bootstrap';
 import { useFormikContext, getIn } from 'formik';
 import { IProperty, clickableTooltip } from '../../common';
@@ -89,6 +89,22 @@ export const PropertyListViewUpdate: React.FC<InputProps> = ({
     ],
   );
 
+  const onRowClick = useCallback(
+    (row: IProperty) => {
+      history.push({
+        pathname: '/mapview',
+        search: queryString.stringify({
+          sidebar: true,
+          disabled: true,
+          loadDraft: false,
+          parcelId: row.propertyTypeId === 0 ? row.id : undefined,
+          buildingId: row.propertyTypeId === 1 ? row.id : undefined,
+        }),
+      });
+    },
+    [history],
+  );
+
   return (
     <Container fluid>
       <div className={classNames('ScrollContainer', outerClassName)}>
@@ -101,18 +117,7 @@ export const PropertyListViewUpdate: React.FC<InputProps> = ({
           lockPageSize
           setSelectedRows={setSelectedRows}
           footer
-          onRowClick={(row: IProperty) => {
-            history.push({
-              pathname: '/mapview',
-              search: queryString.stringify({
-                sidebar: true,
-                disabled: true,
-                loadDraft: false,
-                parcelId: row.propertyTypeId === 0 ? row.id : undefined,
-                buildingId: row.propertyTypeId === 1 ? row.id : undefined,
-              }),
-            });
-          }}
+          onRowClick={onRowClick}
         />
       </div>
       <DisplayError field={field} />

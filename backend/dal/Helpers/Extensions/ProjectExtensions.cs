@@ -7,6 +7,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Text.Json;
+using System.Text.RegularExpressions;
 using Entity = Pims.Dal.Entities;
 
 namespace Pims.Dal.Helpers.Extensions
@@ -44,6 +46,7 @@ namespace Pims.Dal.Helpers.Extensions
                 .Include(p => p.Agency).ThenInclude(a => a.Parent)
                 .Include(p => p.Notes)
                 .AsNoTracking();
+
 
             if (filter.AssessWorkflow == true)
             {
@@ -207,29 +210,6 @@ namespace Pims.Dal.Helpers.Extensions
         }
 
         /// <summary>
-        /// Update the property.ProjectNumber with the specified 'projectNumber'.
-        /// </summary>
-        /// <param name="property"></param>
-        /// <param name="projectNumber"></param>
-        /// <returns></returns>
-        public static Entity.Property UpdateProjectNumber(this Entity.ProjectProperty property, string projectNumber)
-        {
-            switch (property.PropertyType)
-            {
-                case (Entity.PropertyTypes.Land):
-                    if (property.Parcel == null) throw new InvalidOperationException("Unable to update parcel project number.");
-                    property.Parcel.ProjectNumber = projectNumber;
-                    return property.Parcel;
-                case (Entity.PropertyTypes.Building):
-                    if (property.Building == null) throw new InvalidOperationException("Unable to update building project number.");
-                    property.Building.ProjectNumber = projectNumber;
-                    return property.Building;
-            }
-
-            return null;
-        }
-
-        /// <summary>
         /// Update the originalProperty.agencyId and originalProperty.classificationId using the specified property.
         /// </summary>
         /// <param name="originalProperty"></param>
@@ -243,13 +223,13 @@ namespace Pims.Dal.Helpers.Extensions
                     if (originalProperty.Parcel == null || property.Parcel == null) throw new InvalidOperationException("Unable to transfer parcel.");
                     originalProperty.Parcel.AgencyId = property.Parcel.AgencyId;
                     originalProperty.Parcel.ClassificationId = property.Parcel.ClassificationId;
-                    originalProperty.Parcel.ProjectNumber = null;
+                    originalProperty.Parcel.ProjectNumbers = "[]";
                     return originalProperty.Parcel;
                 case (Entity.PropertyTypes.Building):
                     if (originalProperty.Building == null || property.Building == null) throw new InvalidOperationException("Unable to transfer building.");
                     originalProperty.Building.AgencyId = property.Building.AgencyId;
                     originalProperty.Building.ClassificationId = property.Building.ClassificationId;
-                    originalProperty.Building.ProjectNumber = null;
+                    originalProperty.Building.ProjectNumbers = "[]";
                     return originalProperty.Building;
             }
 
@@ -296,7 +276,7 @@ namespace Pims.Dal.Helpers.Extensions
         {
             project.Properties.ForEach(p =>
             {
-                context.Update(p.UpdateProjectNumber(null));
+                context.Update(p.RemoveProjectNumber(project.ProjectNumber));
             });
         }
 
@@ -427,8 +407,7 @@ namespace Pims.Dal.Helpers.Extensions
                                 .Include(p => p.Fiscals)
                                 .FirstOrDefault(p => p.Id == property.ParcelId);
                             existingParcel.ThrowIfPropertyNotInProjectAgency(agencies);
-                            if (existingParcel.ProjectNumber != null) throw new InvalidOperationException("Parcels in a Project cannot be added to another Project.");
-                            existingParcel.ProjectNumber = updatedProject.ProjectNumber;
+                            existingParcel.UpdateProjectNumbers(updatedProject.ProjectNumber);
                         }
                         else
                         {
@@ -438,8 +417,7 @@ namespace Pims.Dal.Helpers.Extensions
                                 .Include(p => p.Fiscals)
                                 .FirstOrDefault(p => p.Id == property.BuildingId);
                             existingBuilding.ThrowIfPropertyNotInProjectAgency(agencies);
-                            if (existingBuilding.ProjectNumber != null) throw new InvalidOperationException("Buildings in a Project cannot be added to another Project.");
-                            existingBuilding.ProjectNumber = updatedProject.ProjectNumber;
+                            existingBuilding.UpdateProjectNumbers(updatedProject.ProjectNumber);
                         }
                         originalProject.AddProperty(eproperty);
                     }
@@ -449,7 +427,7 @@ namespace Pims.Dal.Helpers.Extensions
                     if (property.PropertyType == Entity.PropertyTypes.Land)
                     {
                         // Only allow editing the classification and evaluations/fiscals for now
-                        existingProperty.Parcel.ProjectNumber = updatedProject.ProjectNumber;
+                        existingProperty.UpdateProjectNumbers(updatedProject.ProjectNumber);
                         if (property.Parcel != null)
                         {
                             context.Entry(existingProperty.Parcel).Collection(p => p.Evaluations).Load();
@@ -494,7 +472,7 @@ namespace Pims.Dal.Helpers.Extensions
                     {
                         // Only allow editing the classification and evaluations/fiscals for now
                         context.Entry(existingProperty.Building).Collection(p => p.Evaluations).Load();
-                        existingProperty.Building.ProjectNumber = updatedProject.ProjectNumber;
+                        existingProperty.UpdateProjectNumbers(updatedProject.ProjectNumber);
                         if (property.Building != null)
                         {
                             existingProperty.Building.ClassificationId = property.Building.ClassificationId;
@@ -542,7 +520,7 @@ namespace Pims.Dal.Helpers.Extensions
             var removeParcels = context.Parcels.Where(p => removeParcelIds.Contains(p.Id));
             removeParcels.ForEach(p =>
             {
-                p.ProjectNumber = null;
+                p.RemoveProjectNumber(updatedProject.ProjectNumber);
                 context.Parcels.Update(p);
             });
 
@@ -550,7 +528,7 @@ namespace Pims.Dal.Helpers.Extensions
             var removeBuildings = context.Buildings.Where(p => removeBuildingIds.Contains(p.Id));
             removeBuildings.ForEach(b =>
             {
-                b.ProjectNumber = null;
+                b.RemoveProjectNumber(updatedProject.ProjectNumber);
                 context.Buildings.Update(b);
             });
 
