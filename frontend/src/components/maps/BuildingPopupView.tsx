@@ -57,21 +57,27 @@ export const BuildingPopupView: React.FC<IBuildingPopupViewProps> = (
         <>
           <Row>
             <Col>
+              {(buildingDetail.name || buildingDetail.description) && (
+                <ListGroup>
+                  {buildingDetail?.name && (
+                    <ListGroup.Item className="name">{buildingDetail?.name}</ListGroup.Item>
+                  )}
+                  {buildingDetail?.description ? (
+                    <ListGroup.Item>{buildingDetail?.description}</ListGroup.Item>
+                  ) : null}
+                </ListGroup>
+              )}
               <ListGroup>
-                <ListGroup.Item className="name">{buildingDetail?.name}</ListGroup.Item>
-                {buildingDetail?.name !== buildingDetail?.description ? (
-                  <ListGroup.Item>{buildingDetail?.description}</ListGroup.Item>
-                ) : null}
-              </ListGroup>
-              <ListGroup>
-                <ListGroup.Item>
-                  <Label>Assessed Value:</Label>
-                  {buildingDetail?.evaluations?.length &&
-                    '$' +
-                      buildingDetail?.evaluations
-                        ?.find(e => e.key === EvaluationKeys.Assessed)
-                        ?.value?.toLocaleString('en-US', { minimumFractionDigits: 2 })}
-                </ListGroup.Item>
+                {buildingDetail?.evaluations?.length && (
+                  <ListGroup.Item>
+                    <Label>Assessed Value:</Label>
+                    {buildingDetail?.evaluations?.length &&
+                      '$' +
+                        buildingDetail?.evaluations
+                          ?.find(e => e.key === EvaluationKeys.Assessed)
+                          ?.value?.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                  </ListGroup.Item>
+                )}
                 {buildingDetail?.address && (
                   <ListGroup.Item>
                     <div>{buildingDetail?.address?.line1}</div>
@@ -84,51 +90,64 @@ export const BuildingPopupView: React.FC<IBuildingPopupViewProps> = (
                   </ListGroup.Item>
                 )}
               </ListGroup>
-              <ListGroup>
-                <ListGroup.Item>
-                  <Label>Agency:</Label>
-                  {buildingDetail?.agency}
-                </ListGroup.Item>
-                <ListGroup.Item>
-                  <Label>Floor Count:</Label>
-                  {buildingDetail?.buildingFloorCount}
-                </ListGroup.Item>
-                <ListGroup.Item>
-                  <Label>Predominate Use:</Label>
-                  {buildingDetail?.buildingPredominateUse}
-                </ListGroup.Item>
-                {buildingDetail?.projectNumber && (
-                  <ListGroup.Item>
-                    <Label>SPP:</Label>
-                    {buildingDetail?.projectNumber}
-                  </ListGroup.Item>
-                )}
-              </ListGroup>
+              {(buildingDetail?.agency ||
+                buildingDetail?.buildingFloorCount ||
+                buildingDetail?.buildingPredominateUse ||
+                buildingDetail?.projectNumber) && (
+                <ListGroup>
+                  {buildingDetail?.agency && (
+                    <ListGroup.Item>
+                      <Label>Agency:</Label>
+                      {buildingDetail?.agency}
+                    </ListGroup.Item>
+                  )}
+                  {buildingDetail?.buildingFloorCount && (
+                    <ListGroup.Item>
+                      <Label>Floor Count:</Label>
+                      {buildingDetail?.buildingFloorCount}
+                    </ListGroup.Item>
+                  )}
+                  {buildingDetail?.buildingPredominateUse && (
+                    <ListGroup.Item>
+                      <Label>Predominate Use:</Label>
+                      {buildingDetail?.buildingPredominateUse}
+                    </ListGroup.Item>
+                  )}
+                  {buildingDetail?.projectNumber && (
+                    <ListGroup.Item>
+                      <Label>SPP:</Label>
+                      {buildingDetail?.projectNumber}
+                    </ListGroup.Item>
+                  )}
+                </ListGroup>
+              )}
             </Col>
           </Row>
 
           {!props?.disabled && (
             <Row className="menu">
               <Col>
-                <Link
-                  onClick={() => {
-                    if (curZoom! < MAX_ZOOM) jumpToView();
-                    props?.onLinkClick && props.onLinkClick();
-                  }}
-                  to={{
-                    pathname: `/mapview`,
-                    search: queryString.stringify({
-                      ...queryString.parse(location.search),
-                      sidebar: true,
-                      disabled: true,
-                      loadDraft: false,
-                      buildingId: buildingDetail?.id,
-                      parcelId: undefined,
-                    }),
-                  }}
-                >
-                  View
-                </Link>
+                {buildingDetail?.agencyId > 0 && (
+                  <Link
+                    onClick={() => {
+                      if (curZoom! < MAX_ZOOM) jumpToView();
+                      props?.onLinkClick && props.onLinkClick();
+                    }}
+                    to={{
+                      pathname: `/mapview`,
+                      search: queryString.stringify({
+                        ...queryString.parse(location.search),
+                        sidebar: true,
+                        disabled: true,
+                        loadDraft: false,
+                        buildingId: buildingDetail?.id,
+                        parcelId: undefined,
+                      }),
+                    }}
+                  >
+                    View
+                  </Link>
+                )}
 
                 {(keycloak.hasAgency(buildingDetail?.agencyId as number) ||
                   keycloak.hasClaim(Claims.ADMIN_PROPERTIES)) && (

@@ -115,7 +115,7 @@ const EditAgencyPage = (props: IEditAgencyPageProps) => {
                         email: values.email,
                         isDisabled: values.isDisabled,
                         sendEmail: values.sendEmail,
-                        parentId: Number(values.parentId),
+                        parentId: values.parentId ? Number(values.parentId) : undefined,
                         description: values.description,
                         rowVersion: values.rowVersion,
                       },

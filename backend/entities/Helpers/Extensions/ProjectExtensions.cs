@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
-using System.Text.RegularExpressions;
 using Entity = Pims.Dal.Entities;
 
 namespace Pims.Dal.Helpers.Extensions
@@ -20,7 +19,8 @@ namespace Pims.Dal.Helpers.Extensions
         /// <returns></returns>
         private static List<string> AddProjectNumber(IEnumerable<string> projectNumbers, string projectNumber)
         {
-            if (projectNumber == null) {
+            if (projectNumber == null)
+            {
                 return projectNumbers.ToList();
             }
 

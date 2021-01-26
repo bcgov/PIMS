@@ -9,7 +9,14 @@ import { ICluster, PointFeature } from '../types';
 import { getMarkerIcon, pointToLayer, zoomToCluster } from './mapUtils';
 import useSupercluster from '../hooks/useSupercluster';
 import { PopupView } from '../PopupView';
-import { IPropertyDetail, storeParcelDetail, storeBuildingDetail } from 'actions/parcelsActions';
+import {
+  IBuilding,
+  IParcel,
+  IPropertyDetail,
+  storeParcelDetail,
+  storeBuildingDetail,
+  IAddress,
+} from 'actions/parcelsActions';
 import SelectedPropertyMarker from './SelectedPropertyMarker/SelectedPropertyMarker';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
 import { useFilterContext } from '../providers/FIlterProvider';
@@ -34,6 +41,40 @@ export type PointClustererProps = {
   tilesLoaded: boolean;
 };
 
+/**
+ * Converts the flat list of properties into the correct type of inventory property.
+ * @param property A flat list of property values (from a Feature).
+ */
+export const convertToProperty = (property: any): IParcel | IBuilding | null => {
+  if (property.propertyTypeId === PropertyTypes.PARCEL) {
+    return {
+      ...property,
+      address: {
+        line1: property.address,
+        administrativeArea: property.administrativeArea,
+        province: property.province,
+        postal: property.postal,
+      } as IAddress,
+    } as IParcel;
+  } else if (property.propertyTypeId === PropertyTypes.BUILDING) {
+    return {
+      ...property,
+      address: {
+        line1: property.address,
+        administrativeArea: property.administrativeArea,
+        province: property.province,
+        postal: property.postal,
+      } as IAddress,
+    } as IBuilding;
+  }
+
+  return null;
+};
+
+/**
+ * Clusters pins that are close together geographically based on the zoom level into a single clustered object.
+ * @param param0 Point cluster properties.
+ */
 export const PointClusterer: React.FC<PointClustererProps> = ({
   points,
   draftPoints,
@@ -237,8 +278,7 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
             >
               <Popup autoPan={false}>
                 <PopupView
-                  propertyTypeId={cluster.properties.propertyTypeId}
-                  propertyDetail={cluster.properties as any}
+                  propertyDetail={convertToProperty(cluster.properties)}
                   onLinkClick={() => {
                     !!onMarkerClick && onMarkerClick(cluster as any);
                   }}
@@ -261,8 +301,7 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
           >
             <Popup autoPan={false}>
               <PopupView
-                propertyTypeId={m.properties.propertyTypeId}
-                propertyDetail={m.properties}
+                propertyDetail={convertToProperty(m.properties)}
                 onLinkClick={() => {
                   !!onMarkerClick && onMarkerClick(m as any);
                 }}
@@ -300,8 +339,7 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
             >
               <Popup autoPan={false}>
                 <PopupView
-                  propertyTypeId={selected.propertyTypeId}
-                  propertyDetail={selected.parcelDetail}
+                  propertyDetail={convertToProperty(selected.parcelDetail)}
                   zoomTo={() =>
                     leaflet.map?.flyTo(
                       [
@@ -330,8 +368,7 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
             >
               <Popup autoPan={false}>
                 <PopupView
-                  propertyTypeId={draftPoint.properties.propertyTypeId}
-                  propertyDetail={draftPoint.properties as any}
+                  propertyDetail={convertToProperty(draftPoint.properties)}
                   onLinkClick={() => {
                     !!onMarkerClick && onMarkerClick(draftPoint as any);
                   }}

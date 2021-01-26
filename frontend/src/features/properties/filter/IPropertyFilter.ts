@@ -48,4 +48,6 @@ export interface IPropertyFilter {
   maxNetBookValue?: '';
   /** The maximum Market Value for a property */
   maxMarketValue?: '';
+  /** Whether to return properties owned by other agencies. */
+  includeAllProperties?: boolean;
 }
