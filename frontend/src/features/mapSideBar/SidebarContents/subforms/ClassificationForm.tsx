@@ -91,12 +91,9 @@ export const ClassificationForm: React.FC<IClassificationFormProps> = ({
   let classId = getIn(formikProps.values, field);
 
   let filteredClassifications = classifications;
-  /** users not allowed to select disposed or surplus active at this stage, but display these values if one of these classifications has already been selected. */
+  /** users not allowed to select disposed, but display these values if one of these classifications has already been selected. */
   filteredClassifications = classifications.filter(
-    c =>
-      (Number(c.value) !== Classifications.SurplusActive &&
-        Number(c.value) !== Classifications.Disposed) ||
-      +c.value === +classId,
+    c => Number(c.value) !== Classifications.Disposed || +c.value === +classId,
   );
 
   const renderInfo = () => {

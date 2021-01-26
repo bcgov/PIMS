@@ -55,6 +55,7 @@ namespace Pims.Api.Areas.Tools.Controllers
         #endregion
 
         #region Endpoints
+        #region Properties
         /// <summary>
         /// POST - Add an array of new properties to the datasource.
         /// Determines if the property is a parcel or a building and then adds or updates appropriately.
@@ -125,7 +126,9 @@ namespace Pims.Api.Areas.Tools.Controllers
 
             return new JsonResult(parcels);
         }
+        #endregion
 
+        #region Projects
         /// <summary>
         /// POST - Add an array of new properties to the datasource.
         /// Determines if the property is a parcel or a building and then adds or updates appropriately.
@@ -152,6 +155,7 @@ namespace Pims.Api.Areas.Tools.Controllers
 
             return new JsonResult(projects);
         }
+        #endregion
         #endregion
     }
 }

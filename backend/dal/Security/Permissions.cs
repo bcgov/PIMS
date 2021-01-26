@@ -69,7 +69,10 @@ namespace Pims.Dal.Security
         [Display(GroupName = "project", Name = "reports-view", Description = "Can view project reports.")]
         ReportsView = 34,
 
-        [Display(GroupName = "project", Name = "reports-spl", Description = "Can view/modify/generated project spl reports.")]
-        ReportsSpl = 35
+        [Display(GroupName = "project", Name = "reports-spl", Description = "Can view, create and modify non-final SPL reports.")]
+        ReportsSpl = 35,
+
+        [Display(GroupName = "project", Name = "reports-spl-admin", Description = "Can view, create, modify and delete all SPL reports.")]
+        ReportsSplAdmin = 36
     }
 }

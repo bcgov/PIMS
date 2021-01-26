@@ -82,3 +82,8 @@ $narrowSidebarSize: 700px;
 .building-cursor .map .leaflet-container.leaflet-grab .leaflet-interactive {
   cursor: url('../../../assets/images/marker-icon-1x-blue.png') 12.5 41, default;
 }
+
+.map .leaflet-marker-icon.leaflet-interactive div,
+.map .leaflet-marker-icon.leaflet-interactive span {
+  pointer-events: none;
+}

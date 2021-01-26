@@ -15,7 +15,6 @@ namespace Pims.Dal.Configuration
             builder.ToTable("ProjectSnapshots");
 
             builder.HasKey(m => m.Id);
-            builder.Property(m => m.Id).IsRequired();
             builder.Property(m => m.Id).ValueGeneratedOnAdd();
 
             builder.Property(m => m.ProjectId).IsRequired();

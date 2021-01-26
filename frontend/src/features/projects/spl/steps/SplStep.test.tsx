@@ -357,7 +357,7 @@ describe('SPL Approval Step', () => {
       const project = _.cloneDeep(mockProject);
       project.statusCode = ReviewWorkflowStatus.Disposed;
       const { getByText } = render(getSplStep(getStore(project)));
-      expect(getByText('Financing Information')).toBeVisible();
+      expect(getByText('Financial Summary')).toBeVisible();
     });
 
     it('displays close out notes', () => {

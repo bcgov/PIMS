@@ -142,6 +142,7 @@ namespace Pims.Api.Test.Controllers.Tools
 
             var pimsService = helper.GetService<Mock<IPimsService>>();
             pimsService.Setup(m => m.Task.GetForWorkflow(It.IsAny<string>())).Returns(new Entity.Task[0]);
+            pimsService.Setup(m => m.ProjectReport.GetAll()).Returns(Array.Empty<Entity.ProjectReport>().ToArray());
 
             var agency = new Entity.Agency("Agency", "Agency");
             var tier = new Entity.TierLevel(1, "TierLevel");
@@ -196,7 +197,7 @@ namespace Pims.Api.Test.Controllers.Tools
             };
 
             // Act
-            var result = controller.ImportProjects(projects, false);
+            var result = controller.ImportProjects(projects, false, DateTime.UtcNow);
 
             // Assert
             Assert.NotNull(result);
@@ -855,6 +856,7 @@ namespace Pims.Api.Test.Controllers.Tools
 
             var pimsService = helper.GetService<Mock<IPimsService>>();
             pimsService.Setup(m => m.Task.GetForWorkflow(It.IsAny<string>())).Returns(new[] { new Entity.Task("test") });
+            pimsService.Setup(m => m.ProjectReport.GetAll()).Returns(Array.Empty<Entity.ProjectReport>().ToArray());
 
             var agency = new Entity.Agency("Agency", "Agency");
             var tier = new Entity.TierLevel(1, "TierLevel");
@@ -905,7 +907,7 @@ namespace Pims.Api.Test.Controllers.Tools
             };
 
             // Act
-            var result = controller.ImportProjects(projects, false, null, "Risk=Risk;Status=Status;Workflow=Workflow;Agency=Agency;Market=100000");
+            var result = controller.ImportProjects(projects, false, DateTime.UtcNow, "Risk=Risk;Status=Status;Workflow=Workflow;Agency=Agency;Market=100000");
 
             // Assert
             Assert.NotNull(result);
