@@ -23,7 +23,7 @@ import { useFilterContext } from '../providers/FIlterProvider';
 import Supercluster from 'supercluster';
 import { useDispatch } from 'react-redux';
 import { PropertyTypes } from 'actions/parcelsActions';
-import { MAX_ZOOM } from 'constants/strings';
+import { PropertyPopUpContext } from '../providers/PropertyPopUpProvider';
 
 export type PointClustererProps = {
   points: Array<PointFeature>;
@@ -37,7 +37,8 @@ export type PointClustererProps = {
   zoomToBoundsOnClick?: boolean;
   /** When you click a cluster at the bottom zoom level we spiderfy it so you can see all of its markers. Default: true */
   spiderfyOnMaxZoom?: boolean;
-  onMarkerClick?: (point: PointFeature, position?: [number, number]) => void;
+  /** Action when a marker is clicked */
+  onMarkerClick: () => void;
   tilesLoaded: boolean;
 };
 
@@ -149,7 +150,6 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
         getClusterId: cluster => cluster?.properties?.cluster_id as number,
         getClusterPoints: clusterId => supercluster?.getLeaves(clusterId, Infinity) ?? [],
         pointToLayer: pointToLayer,
-        onMarkerClick: onMarkerClick,
       });
     }
 
@@ -166,7 +166,7 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
       map.off('clear', spiderfier.unspiderfy, spiderfier);
       spiderfierRef.current = undefined;
     };
-  }, [map, onMarkerClick, supercluster]);
+  }, [map, supercluster]);
 
   useEffect(componentDidMount, [componentDidMount]);
 
@@ -231,6 +231,8 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
       spiderfierRef.current?.unspiderfy();
     }
   }, [featureGroupRef, map, clusters, tilesLoaded]);
+
+  const popUpContext = React.useContext(PropertyPopUpContext);
   return (
     <>
       <FeatureGroup ref={featureGroupRef}>
@@ -275,17 +277,12 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
               key={index}
               position={[latitude, longitude]}
               icon={getMarkerIcon(cluster)}
-            >
-              <Popup autoPan={false}>
-                <PopupView
-                  propertyDetail={convertToProperty(cluster.properties)}
-                  onLinkClick={() => {
-                    !!onMarkerClick && onMarkerClick(cluster as any);
-                  }}
-                  zoomTo={() => leaflet.map?.flyTo([latitude, longitude], MAX_ZOOM)}
-                />
-              </Popup>
-            </Marker>
+              onclick={() => {
+                onMarkerClick(); //open information slideout
+                popUpContext.setPropertyInfo(convertToProperty(cluster.properties));
+                popUpContext.setPropertyTypeID(cluster.properties.propertyTypeId);
+              }}
+            />
           );
         })}
 
@@ -298,17 +295,12 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
             key={index}
             position={m.position}
             icon={getMarkerIcon(m)}
-          >
-            <Popup autoPan={false}>
-              <PopupView
-                propertyDetail={convertToProperty(m.properties)}
-                onLinkClick={() => {
-                  !!onMarkerClick && onMarkerClick(m as any);
-                }}
-                zoomTo={() => leaflet.map?.flyTo(m.position, MAX_ZOOM)}
-              />
-            </Popup>
-          </Marker>
+            onclick={() => {
+              onMarkerClick(); //open information slideout
+              popUpContext.setPropertyInfo(convertToProperty(m.properties));
+              popUpContext.setPropertyTypeID(m.properties.propertyTypeId);
+            }}
+          />
         ))}
         {/**
          * Render lines/legs from a spiderfied cluster click
@@ -336,22 +328,12 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
                 selected.propertyTypeId === PropertyTypes.PARCEL &&
                   dispatch(storeParcelDetail(null));
               }}
-            >
-              <Popup autoPan={false}>
-                <PopupView
-                  propertyDetail={convertToProperty(selected.parcelDetail)}
-                  zoomTo={() =>
-                    leaflet.map?.flyTo(
-                      [
-                        selected.parcelDetail!.latitude as number,
-                        selected.parcelDetail!.longitude as number,
-                      ],
-                      MAX_ZOOM,
-                    )
-                  }
-                />
-              </Popup>
-            </SelectedPropertyMarker>
+              onclick={() => {
+                popUpContext.setPropertyInfo(selected.parcelDetail);
+                popUpContext.setPropertyTypeID(selected.propertyTypeId);
+                onMarkerClick();
+              }}
+            />
           )}
       </FeatureGroup>
       <FeatureGroup ref={draftFeatureGroupRef}>
@@ -369,9 +351,6 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
               <Popup autoPan={false}>
                 <PopupView
                   propertyDetail={convertToProperty(draftPoint.properties)}
-                  onLinkClick={() => {
-                    !!onMarkerClick && onMarkerClick(draftPoint as any);
-                  }}
                 />
               </Popup>
             </Marker>

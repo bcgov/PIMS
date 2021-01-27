@@ -7,6 +7,7 @@ import clsx from 'classnames';
 import LayersTree from './LayersTree';
 import * as L from 'leaflet';
 import { useEffect } from 'react';
+import TooltipWrapper from 'components/common/TooltipWrapper';
 
 const LayersContainer = styled.div`
   margin-right: -10px;
@@ -79,13 +80,18 @@ const ControlButton = styled(Button)`
   }
 `;
 
+export type ILayersControl = {
+  /** whether the slide out is open or closed */
+  open: boolean;
+  /** set the slide out as open or closed */
+  setOpen: () => void;
+};
+
 /**
  * Component to display the layers control on the map
  * @example ./LayersControl.md
  */
-const LayersControl: React.FC = () => {
-  const [open, setOpen] = React.useState<boolean>(false);
-
+const LayersControl: React.FC<ILayersControl> = ({ open, setOpen }) => {
   useEffect(() => {
     const elem = L.DomUtil.get('layersContainer');
     if (elem) {
@@ -102,14 +108,16 @@ const LayersControl: React.FC = () => {
             <Title>Layers</Title>
           </LayersHeader>
         )}
-        <ControlButton
-          id="layersControlButton"
-          variant="outline-secondary"
-          onClick={() => setOpen(!open)}
-          className={clsx({ open })}
-        >
-          <LayersIcon />
-        </ControlButton>
+        <TooltipWrapper toolTipId="layer-control-id" toolTip="Layer Controls">
+          <ControlButton
+            id="layersControlButton"
+            variant="outline-secondary"
+            onClick={setOpen}
+            className={clsx({ open })}
+          >
+            <LayersIcon />
+          </ControlButton>
+        </TooltipWrapper>
         <LayersContent className={clsx({ open })}>
           <LayersTree />
         </LayersContent>
