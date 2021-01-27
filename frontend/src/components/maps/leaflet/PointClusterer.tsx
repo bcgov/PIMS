@@ -192,30 +192,6 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
   }, [featureGroupRef, map, clusters, tilesLoaded]);
   return (
     <>
-      <FeatureGroup ref={draftFeatureGroupRef}>
-        {draftPoints.map((draftPoint, index) => {
-          //render all of the unclustered draft markers.
-          const [longitude, latitude] = draftPoint.geometry.coordinates;
-          return (
-            <Marker
-              {...(draftPoint.properties as any)}
-              key={index}
-              position={[latitude, longitude]}
-              icon={getMarkerIcon(draftPoint)}
-            >
-              <Popup autoPan={false}>
-                <PopupView
-                  propertyTypeId={draftPoint.properties.propertyTypeId}
-                  propertyDetail={draftPoint.properties as any}
-                  onLinkClick={() => {
-                    !!onMarkerClick && onMarkerClick(draftPoint as any);
-                  }}
-                />
-              </Popup>
-            </Marker>
-          );
-        })}
-      </FeatureGroup>
       <FeatureGroup ref={featureGroupRef}>
         {clusters.map((cluster, index) => {
           // every cluster point has coordinates
@@ -339,6 +315,31 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
               </Popup>
             </SelectedPropertyMarker>
           )}
+      </FeatureGroup>
+      <FeatureGroup ref={draftFeatureGroupRef}>
+        {draftPoints.map((draftPoint, index) => {
+          //render all of the unclustered draft markers.
+          const [longitude, latitude] = draftPoint.geometry.coordinates;
+          return (
+            <Marker
+              {...(draftPoint.properties as any)}
+              key={index}
+              position={[latitude, longitude]}
+              icon={getMarkerIcon(draftPoint)}
+              zIndexOffset={500}
+            >
+              <Popup autoPan={false}>
+                <PopupView
+                  propertyTypeId={draftPoint.properties.propertyTypeId}
+                  propertyDetail={draftPoint.properties as any}
+                  onLinkClick={() => {
+                    !!onMarkerClick && onMarkerClick(draftPoint as any);
+                  }}
+                />
+              </Popup>
+            </Marker>
+          );
+        })}
       </FeatureGroup>
     </>
   );
