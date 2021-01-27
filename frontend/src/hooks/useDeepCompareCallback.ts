@@ -6,7 +6,7 @@ import { useDeepCompareMemoize } from './useDeepCompareMemoize';
  * only changes if one of the `deps` has changed.
  *
  * Usage note: only use this if `deps` are objects or arrays that contain
- * objects. Otherwise you should just use React.useEffect.
+ * objects. Otherwise you should just use React.useCallback.
  *
  */
 function useDeepCompareCallback<T extends (...args: any[]) => any>(
