@@ -133,7 +133,7 @@ export const AssociatedLandReviewPage: React.FC<any> = (props: IReviewProps) => 
                         className="edit"
                         onClick={() =>
                           setEditInfo({
-                            ...defaultEditValues,
+                            ...editInfo,
                             identification: isParcelValid && !parcelEditInfo.identification,
                           })
                         }
@@ -252,7 +252,7 @@ export const AssociatedLandReviewPage: React.FC<any> = (props: IReviewProps) => 
                         className="edit"
                         onClick={() =>
                           setEditInfo({
-                            ...defaultEditValues,
+                            ...editInfo,
                             usage: isParcelValid && !parcelEditInfo.usage,
                           })
                         }
@@ -304,7 +304,7 @@ export const AssociatedLandReviewPage: React.FC<any> = (props: IReviewProps) => 
                         className="edit"
                         onClick={() =>
                           setEditInfo({
-                            ...defaultEditValues,
+                            ...editInfo,
                             valuation: isParcelValid && !parcelEditInfo.valuation,
                           })
                         }
