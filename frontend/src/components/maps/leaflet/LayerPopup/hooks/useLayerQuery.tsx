@@ -99,7 +99,7 @@ export const useLayerQuery = (url: string, geometryName: string = 'SHAPE'): IUse
         await axios.get(
           `${baseUrl}&cql_filter=CONTAINS(${geometryName},SRID=4326;POINT ( ${latlng.lng} ${latlng.lat}))`,
         )
-      ).data;
+      )?.data;
       return data;
     },
     [baseUrl, geometryName],
@@ -112,7 +112,7 @@ export const useLayerQuery = (url: string, geometryName: string = 'SHAPE'): IUse
           await axios.get(
             `${baseUrl}&cql_filter=ADMIN_AREA_NAME='${city}' OR ADMIN_AREA_ABBREVIATION='${city}'&outputformat=json`,
           )
-        ).data;
+        )?.data;
 
         if (data.totalFeatures === 0) {
           return null;
