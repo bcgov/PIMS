@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace Pims.Api.Areas.Property.Models.Search
 {
@@ -69,9 +70,9 @@ namespace Pims.Api.Areas.Property.Models.Search
         public string Description { get; set; }
 
         /// <summary>
-        /// get/set - The property project number.
+        /// get/set - The property project numbers.
         /// </summary>
-        public string ProjectNumber { get; set; }
+        public IEnumerable<string> ProjectNumbers { get; set; }
 
         /// <summary>
         /// get/set - The property project status.

@@ -6,6 +6,8 @@ using Entity = Pims.Dal.Entities;
 using Model = Pims.Api.Areas.Property.Models.Parcel;
 using BModel = Pims.Api.Models;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Pims.Api.Areas.Property.Mapping.Parcel
 {
@@ -33,7 +35,7 @@ namespace Pims.Api.Areas.Property.Mapping.Parcel
                 .Map(dest => dest.Id, src => src.Parcel.Id)
                 .Map(dest => dest.PID, src => src.Parcel.ParcelIdentity)
                 .Map(dest => dest.PIN, src => src.Parcel.PIN)
-                .Map(dest => dest.ProjectNumber, src => src.Parcel.ProjectNumber)
+                .Map(dest => dest.ProjectNumbers, src => JsonSerializer.Deserialize<IEnumerable<string>>(src.Parcel.ProjectNumbers ?? "[]", _serializerOptions))
                 .Map(dest => dest.Name, src => src.Parcel.Name)
                 .Map(dest => dest.Description, src => src.Parcel.Description)
                 .Map(dest => dest.ClassificationId, src => src.Parcel.ClassificationId)
@@ -63,7 +65,7 @@ namespace Pims.Api.Areas.Property.Mapping.Parcel
                 .Map(dest => dest.Id, src => src.Id)
                 .Map(dest => dest.PID, src => ParcelConverter.ConvertPID(src.PID))
                 .Map(dest => dest.PIN, src => src.PIN)
-                .Map(dest => dest.ProjectNumber, src => src.ProjectNumber == "" ? null : src.ProjectNumber)
+                .Map(dest => dest.ProjectNumbers, src => JsonSerializer.Serialize<IEnumerable<string>>(src.ProjectNumbers ?? Enumerable.Empty<string>(), _serializerOptions))
                 .Map(dest => dest.ClassificationId, src => src.ClassificationId)
                 .Map(dest => dest.Name, src => src.Name)
                 .Map(dest => dest.Description, src => src.Description)

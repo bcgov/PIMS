@@ -24,7 +24,7 @@ namespace Pims.Dal.Entities.Views
         /// <summary>
         /// get/set - The RAEG/SPP project number.
         /// </summary>
-        public string ProjectNumber { get; set; }
+        public string ProjectNumbers { get; set; }
 
         /// <summary>
         /// get/set - The foreign key to the property classification.
@@ -284,7 +284,7 @@ namespace Pims.Dal.Entities.Views
         public Property(Entities.Property property)
         {
             this.Id = property.Id;
-            this.ProjectNumber = property.ProjectNumber;
+            this.ProjectNumbers = property.ProjectNumbers;
             this.ClassificationId = property.ClassificationId;
             this.Classification = property.Classification?.Name;
 

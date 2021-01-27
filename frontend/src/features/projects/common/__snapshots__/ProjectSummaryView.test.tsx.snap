@@ -579,7 +579,7 @@ exports[`Review Summary View renders approved correctly 1`] = `
                   <div
                     className="sortable-column"
                   >
-                    Potential Zoning Code
+                    Other Projects
                   </div>
                 </div>
                 <div
@@ -1477,7 +1477,7 @@ exports[`Review Summary View renders denied correctly 1`] = `
                   <div
                     className="sortable-column"
                   >
-                    Potential Zoning Code
+                    Other Projects
                   </div>
                 </div>
                 <div
@@ -2375,7 +2375,7 @@ exports[`Review Summary View renders submitted correctly 1`] = `
                   <div
                     className="sortable-column"
                   >
-                    Potential Zoning Code
+                    Other Projects
                   </div>
                 </div>
                 <div

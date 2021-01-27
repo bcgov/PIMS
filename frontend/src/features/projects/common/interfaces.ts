@@ -16,7 +16,7 @@ export interface IProperty {
   classification: string;
   name: string;
   description: string;
-  projectNumber?: string;
+  projectNumbers?: string[];
   latitude: number;
   longitude: number;
   isSensitive: boolean;
@@ -408,7 +408,7 @@ export interface IApiProperty {
   buildingId?: number;
   pid?: string;
   pin?: number | '';
-  projectNumber: string;
+  projectNumbers: string[];
   latitude: number;
   longitude: number;
   classification?: string;

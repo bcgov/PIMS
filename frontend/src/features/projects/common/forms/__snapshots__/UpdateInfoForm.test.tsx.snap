@@ -1,6 +1,16 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Update Info Form Matches Snapshot 1`] = `
+.c1 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-flow: column;
+  -ms-flex-flow: column;
+  flex-flow: column;
+}
+
 .c0 {
   padding-left: 10px;
 }
@@ -516,7 +526,7 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                 <div
                   className="sortable-column"
                 >
-                  Potential Zoning Code
+                  Other Projects
                 </div>
               </div>
               <div
@@ -859,20 +869,8 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                   title=""
                 >
                   <div
-                    className="form-group col"
-                  >
-                    <input
-                      className="form-control"
-                      id="input-properties.0.zoningPotential"
-                      name="properties.0.zoningPotential"
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      onFocus={[Function]}
-                      onMouseOut={[Function]}
-                      onMouseOver={[Function]}
-                      value=""
-                    />
-                  </div>
+                    className="c1"
+                  />
                 </div>
                 <div
                   className="td"

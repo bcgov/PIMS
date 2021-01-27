@@ -346,13 +346,13 @@ namespace Pims.Api.Areas.Tools.Helpers
                     if (projectProperty.PropertyType == Entity.PropertyTypes.Land)
                     {
                         var parcel = _adminService.Parcel.Find(projectProperty.ParcelId);
-                        parcel.ProjectNumber = project.ProjectNumber;
+                        parcel.UpdateProjectNumbers(project.ProjectNumber);
                         _adminService.Parcel.Update(parcel);
                     }
                     else
                     {
                         var building = _adminService.Building.Find(projectProperty.BuildingId);
-                        building.ProjectNumber = project.ProjectNumber;
+                        building.UpdateProjectNumbers(project.ProjectNumber);
                         _adminService.Building.Update(building);
                     }
                 }

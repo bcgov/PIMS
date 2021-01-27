@@ -116,6 +116,22 @@ export const PropertyListViewSelect: React.FC<InputProps> = ({
     setFieldValue(field, properties);
   }, [properties, setFieldValue, field]);
 
+  const onRowClick = useCallback(
+    (row: IProperty) => {
+      history.push({
+        pathname: '/mapview',
+        search: queryString.stringify({
+          sidebar: true,
+          disabled: true,
+          loadDraft: false,
+          parcelId: row.propertyTypeId === 0 ? row.id : undefined,
+          buildingId: row.propertyTypeId === 1 ? row.id : undefined,
+        }),
+      });
+    },
+    [history],
+  );
+
   return (
     <Container className="col-md-12 PropertyListViewSelect">
       {!disabled && (
@@ -146,18 +162,7 @@ export const PropertyListViewSelect: React.FC<InputProps> = ({
             pageIndex={pageIndex}
             setSelectedRows={setSelectedProperties}
             clickableTooltip={clickableTooltip}
-            onRowClick={(row: IProperty) => {
-              history.push({
-                pathname: '/mapview',
-                search: queryString.stringify({
-                  sidebar: true,
-                  disabled: true,
-                  loadDraft: false,
-                  parcelId: row.propertyTypeId === 0 ? row.id : undefined,
-                  buildingId: row.propertyTypeId === 1 ? row.id : undefined,
-                }),
-              });
-            }}
+            onRowClick={onRowClick}
           />
         </div>
       )}

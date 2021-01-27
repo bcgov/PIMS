@@ -12,6 +12,16 @@ exports[`GRE Transfer Step renders correctly 1`] = `
   font-family: 'BCSans',Fallback,sans-serif;
 }
 
+.c3 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-flow: column;
+  -ms-flex-flow: column;
+  flex-flow: column;
+}
+
 .c2 {
   text-align: center;
   font-family: 'BCSans-Bold';
@@ -402,7 +412,7 @@ exports[`GRE Transfer Step renders correctly 1`] = `
                 <div
                   className="sortable-column"
                 >
-                  Potential Zoning Code
+                  Other Projects
                 </div>
               </div>
               <div
@@ -618,7 +628,7 @@ exports[`GRE Transfer Step renders correctly 1`] = `
                   
                 </div>
                 <div
-                  className="td clickable"
+                  className="td"
                   onClick={[Function]}
                   role="cell"
                   style={
@@ -633,9 +643,11 @@ exports[`GRE Transfer Step renders correctly 1`] = `
                       "width": "100px",
                     }
                   }
-                  title="Click to view property details"
+                  title=""
                 >
-                  
+                  <div
+                    className="c3"
+                  />
                 </div>
                 <div
                   className="td"

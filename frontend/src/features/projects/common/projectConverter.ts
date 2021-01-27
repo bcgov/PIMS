@@ -81,6 +81,7 @@ export const toFlatProject = (project?: IApiProject) => {
     const market = getCurrentFiscal(apiProperty.fiscals, FiscalKeys.Market);
     const property: IProperty = {
       id: apiProperty.id,
+      projectNumbers: apiProperty.projectNumbers,
       projectPropertyId: pp.id,
       parcelId: apiProperty.parcelId ?? apiProperty.id,
       pid: apiProperty.pid ?? '',
@@ -166,7 +167,7 @@ const toApiProperty = (property: IProperty): IApiProperty => {
     buildingId: property.propertyTypeId === 1 ? property.id : undefined,
     pid: property.pid,
     pin: Number(property.pin),
-    projectNumber: property.projectNumber ?? '',
+    projectNumbers: property.projectNumbers ?? [],
     latitude: property.latitude,
     longitude: property.longitude,
     classificationId: property.classificationId,

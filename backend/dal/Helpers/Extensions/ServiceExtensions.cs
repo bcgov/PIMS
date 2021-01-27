@@ -20,11 +20,11 @@ namespace Pims.Dal.Helpers.Extensions
         /// <returns></returns>
         public static void ThrowIfNotAllowedToUpdate(this BaseService service, Entity.Parcel parcel, ProjectOptions options)
         {
-            if (parcel.ProjectNumber != null)
+            if (parcel.ProjectNumbers != null)
             {
                 var project = service.GetContext().Projects
                     .Include(p => p.Workflow)
-                    .FirstOrDefault(p => p.ProjectNumber == parcel.ProjectNumber);
+                    .FirstOrDefault(p => parcel.ProjectNumbers.Contains(p.ProjectNumber));
                 if (project != null && !project.IsProjectEditable(service.GetUser(), options))
                 {
                     throw new NotAuthorizedException("Cannot update or delete a parcel that is within an active project.");
@@ -44,11 +44,11 @@ namespace Pims.Dal.Helpers.Extensions
             var context = service.GetContext();
             bool changed() => context.Entry(building).State == EntityState.Modified ||
                             context.Entry(building).State == EntityState.Deleted;
-            if (building.ProjectNumber != null && changed())
+            if (building.ProjectNumbers != null && changed())
             {
                 var project = context.Projects
                     .Include(p => p.Workflow)
-                    .FirstOrDefault(p => p.ProjectNumber == building.ProjectNumber);
+                    .FirstOrDefault(p => building.ProjectNumbers.Contains(p.ProjectNumber));
                 if (project != null && !project.IsProjectEditable(service.GetUser(), options))
                 {
                     throw new NotAuthorizedException("Cannot update or delete a building that is within an active project.");

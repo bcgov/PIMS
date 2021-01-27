@@ -256,8 +256,6 @@ namespace Pims.Dal.Services
             // Only administrators can dispose a property.
             if (!isAdmin && parcel.ClassificationId == 4) throw new NotAuthorizedException("Parcel classification cannot be changed to disposed."); // TODO: Classification '4' should be a config settings.
 
-            this.ThrowIfNotAllowedToUpdate(originalParcel, _options.Project);
-
             // Users who don't own the parcel, but only own a building cannot update the parcel.
             if (allowEdit)
             {

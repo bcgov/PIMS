@@ -1,8 +1,11 @@
 using Mapster;
+using Microsoft.Extensions.Options;
 using Pims.Dal.Entities;
 using Pims.Dal.Helpers.Extensions;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using Entity = Pims.Dal.Entities;
 using Model = Pims.Api.Areas.Property.Models.Search;
 
@@ -10,6 +13,20 @@ namespace Pims.Api.Areas.Property.Mapping.Search
 {
     public class PropertyMap : IRegister
     {
+        #region Variables
+        private readonly JsonSerializerOptions _serializerOptions;
+        #endregion
+
+        #region Constructors
+        /// <summary>
+        /// Creates a new instance of a ProjectMap, initializes with specified arguments.
+        /// </summary>
+        /// <param name="serializerOptions"></param>
+        public PropertyMap(IOptions<JsonSerializerOptions> serializerOptions)
+        {
+            _serializerOptions = serializerOptions.Value;
+        }
+        #endregion
         public void Register(TypeAdapterConfig config)
         {
             config.NewConfig<Entity.Parcel, Model.PropertyModel>()
@@ -21,7 +38,7 @@ namespace Pims.Api.Areas.Property.Mapping.Search
                 .Map(dest => dest.Classification, src => src.Classification == null ? null : src.Classification.Name)
                 .Map(dest => dest.Name, src => src.Name)
                 .Map(dest => dest.Description, src => src.Description)
-                .Map(dest => dest.ProjectNumber, src => src.ProjectNumber)
+                .Map(dest => dest.ProjectNumbers, src => JsonSerializer.Deserialize<IEnumerable<string>>(src.ProjectNumbers ?? "[]", _serializerOptions))
                 .Map(dest => dest.IsSensitive, src => src.IsSensitive)
 
                 .Map(dest => dest.AgencyId, src => src.AgencyId)
@@ -67,7 +84,7 @@ namespace Pims.Api.Areas.Property.Mapping.Search
                 .Map(dest => dest.Classification, src => src.Classification == null ? null : src.Classification.Name)
                 .Map(dest => dest.Name, src => src.Name)
                 .Map(dest => dest.Description, src => src.Description)
-                .Map(dest => dest.ProjectNumber, src => src.ProjectNumber)
+                .Map(dest => dest.ProjectNumbers, src => JsonSerializer.Deserialize<IEnumerable<string>>(src.ProjectNumbers ?? "[]", _serializerOptions))
                 .Map(dest => dest.IsSensitive, src => src.IsSensitive)
 
                 .Map(dest => dest.AgencyId, src => src.AgencyId)
@@ -123,7 +140,7 @@ namespace Pims.Api.Areas.Property.Mapping.Search
                 .Map(dest => dest.Description, src => src.Description)
                 .Map(dest => dest.Latitude, src => src.Location.Y)
                 .Map(dest => dest.Longitude, src => src.Location.X)
-                .Map(dest => dest.ProjectNumber, src => src.ProjectNumber)
+                .Map(dest => dest.ProjectNumbers, src => JsonSerializer.Deserialize<IEnumerable<string>>(src.ProjectNumbers ?? "[]", _serializerOptions))
                 .Map(dest => dest.IsSensitive, src => src.IsSensitive)
 
                 .Map(dest => dest.AgencyId, src => src.AgencyId)
@@ -177,7 +194,7 @@ namespace Pims.Api.Areas.Property.Mapping.Search
                 .Map(dest => dest.Description, src => src.Description)
                 .Map(dest => dest.Latitude, src => src.Location.Y)
                 .Map(dest => dest.Longitude, src => src.Location.X)
-                .Map(dest => dest.ProjectNumber, src => src.ProjectNumber)
+                .Map(dest => dest.ProjectNumbers, src => JsonSerializer.Deserialize<IEnumerable<string>>(src.ProjectNumbers ?? "[]", _serializerOptions))
                 .Map(dest => dest.ProjectStatus, src => src.ProjectStatus)
                 .Map(dest => dest.IsSensitive, src => src.IsSensitive)
 

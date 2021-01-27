@@ -39,6 +39,7 @@ namespace Pims.Dal.Helpers.Extensions
         /// <param name="projectNumber"></param>
         public static void UpdateProjectNumber(this PimsContext context, Project project, string projectNumber)
         {
+            var originalProjectNumber = project.ProjectNumber;
             project.ProjectNumber = projectNumber;
             context.Update(project);
 
@@ -49,7 +50,8 @@ namespace Pims.Dal.Helpers.Extensions
                 else if (p.PropertyType == PropertyTypes.Building && p.Building == null)
                     p.Building = context.Buildings.Find(p.BuildingId);
 
-                context.Update(p.UpdateProjectNumber(projectNumber));
+                context.Update(p.UpdateProjectNumbers(projectNumber));
+                context.Update(p.RemoveProjectNumber(originalProjectNumber));
             });
         }
     }

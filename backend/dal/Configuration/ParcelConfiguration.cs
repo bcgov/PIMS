@@ -28,7 +28,7 @@ namespace Pims.Dal.Configuration
 
             builder.HasIndex(m => new { m.PID, m.PIN }).IsUnique(); // This will allow for Crown Land to set ParcelId=0 and PIN=#######.
             builder.HasIndex(m => new { m.Id, m.AgencyId, m.IsSensitive, m.AddressId });
-            builder.HasIndex(m => new { m.Id, m.IsSensitive, m.AgencyId, m.ClassificationId, m.PID, m.PIN, m.AddressId, m.ProjectNumber, m.LandArea, m.Zoning, m.ZoningPotential });
+            builder.HasIndex(m => new { m.Id, m.IsSensitive, m.AgencyId, m.ClassificationId, m.PID, m.PIN, m.AddressId, m.ProjectNumbers, m.LandArea, m.Zoning, m.ZoningPotential });
 
             base.Configure(builder);
         }
