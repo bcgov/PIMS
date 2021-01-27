@@ -191,9 +191,9 @@ namespace Pims.Dal.Helpers.Extensions
                     continue;
                 }
                 var maxDate = (disposedOn ?? date)?.AddYears(1);
-                if (property is Entity.Parcel parcel1)
+                if (property is Entity.Parcel parcelProperty)
                 {
-                    parcel1.Evaluations.RemoveAll(e => e.Date > date && e.Date < maxDate && key == e.Key);
+                    parcelProperty.Evaluations.RemoveAll(e => e.Date > date && e.Date < maxDate && key == e.Key);
                 }
                 else if (property is Entity.Building)
                 {
