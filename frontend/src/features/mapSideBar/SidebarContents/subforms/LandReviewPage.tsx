@@ -33,6 +33,7 @@ interface IReviewProps {
   handlePidChange: (pid: string) => void;
   /** handle the pin formatting on change */
   handlePinChange: (pin: string) => void;
+  isPropertyAdmin: boolean;
 }
 
 const LinkButton = styled.span`
@@ -97,8 +98,8 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
                     className="edit"
                     onClick={() =>
                       setEditInfo({
-                        ...defaultEditValues,
-                        identification: !editInfo.identification,
+                        ...editInfo,
+                        identification: formikProps.isValid && !editInfo.identification,
                       })
                     }
                   />
@@ -111,7 +112,7 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
                   field={withNameSpace('agencyId')}
                   options={props.agencies}
                   filterBy={['code', 'label', 'parent']}
-                  disabled={editInfo.identification}
+                  disabled={editInfo.identification || !props.isPropertyAdmin}
                 />
               </Row>
               <Row className="content-item">
@@ -230,7 +231,12 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
                   <FaEdit
                     size={20}
                     className="edit"
-                    onClick={() => setEditInfo({ ...defaultEditValues, usage: !editInfo.usage })}
+                    onClick={() =>
+                      setEditInfo({
+                        ...editInfo,
+                        usage: formikProps.isValid && !editInfo.usage,
+                      })
+                    }
                   />
                 )}
               </Row>
@@ -276,7 +282,10 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
                     size={20}
                     className="edit"
                     onClick={() =>
-                      setEditInfo({ ...defaultEditValues, valuation: !editInfo.valuation })
+                      setEditInfo({
+                        ...editInfo,
+                        valuation: formikProps.isValid && !editInfo.valuation,
+                      })
                     }
                   />
                 )}

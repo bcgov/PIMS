@@ -227,6 +227,7 @@ const Form: React.FC<IAssociatedLandForm> = ({
             agencies={agencies}
             handlePidChange={handlePidChange}
             handlePinChange={handlePinChange}
+            isPropertyAdmin={isPropertyAdmin}
           />
         );
       case AssociatedLandSteps.USAGE:
@@ -255,6 +256,7 @@ const Form: React.FC<IAssociatedLandForm> = ({
             agencies={agencies}
             handlePidChange={handlePidChange}
             handlePinChange={handlePinChange}
+            isPropertyAdmin={isPropertyAdmin}
           />
         );
     }

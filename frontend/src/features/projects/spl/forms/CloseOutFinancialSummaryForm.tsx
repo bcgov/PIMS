@@ -5,15 +5,45 @@ import { getIn, useFormikContext } from 'formik';
 import { Form, FastCurrencyInput } from 'components/common/form';
 import { IProject, projectComments, ProjectNotes } from 'features/projects/common';
 
+/**
+ * Calculate the gain before SPL.
+ * @param market The estimated or current market value.
+ * @param interestComponent The interest component value.
+ * @param salesCost The sales cost value.
+ * @param netBook The net book value.
+ */
+export const calcGainBeforeSpl = (
+  market: number,
+  interestComponent: number,
+  salesCost: number,
+  netBook: number,
+) => {
+  return market - interestComponent - salesCost - netBook;
+};
+
+/**
+ * Calculate the net proceeds.
+ * @param gainBeforeSpl The gain before SPL value.
+ * @param programCost The program cost value.
+ */
+export const calcNetProceeds = (gainBeforeSpl: number, programCost: number) => {
+  return gainBeforeSpl - programCost;
+};
+
+/**
+ * Return a numeric value.
+ * If the specified 'value' is NaN then return 0.
+ * @param value A value that will be parsed.
+ */
+export const getNumber = (value?: string | number) => {
+  const result = Number(value);
+  return isNaN(result) ? 0 : result;
+};
+
 interface CloseOutFinancialSummaryFormProps {
   /** Whether the form inputs will be readonly. */
   isReadOnly?: boolean; // TODO: Need to make `disabled` and `isReadonly` consistent.  Choose one throughout app.
 }
-
-const getValue = (value?: string | number) => {
-  const result = Number(value);
-  return isNaN(result) ? 0 : result;
-};
 
 /**
  * Close out form financial summary fields.
@@ -30,7 +60,12 @@ const CloseOutFinancialSummaryForm = (props: CloseOutFinancialSummaryFormProps) 
     // Calculate the Gain before SPL.
     setFieldValue(
       'gainBeforeSpl',
-      getValue(market) - getValue(interestComponent) - getValue(salesCost) - getValue(netBook),
+      calcGainBeforeSpl(
+        getNumber(market),
+        getNumber(interestComponent),
+        getNumber(salesCost),
+        getNumber(netBook),
+      ),
     );
   }, [market, interestComponent, salesCost, netBook, setFieldValue]);
 
@@ -38,7 +73,7 @@ const CloseOutFinancialSummaryForm = (props: CloseOutFinancialSummaryFormProps) 
   const programCost = getIn(values, 'programCost');
   useEffect(() => {
     // Calculate the Gain after SPL.
-    setFieldValue('netProceeds', getValue(gainBeforeSpl) - getValue(programCost));
+    setFieldValue('netProceeds', calcNetProceeds(getNumber(gainBeforeSpl), getNumber(programCost)));
   }, [gainBeforeSpl, programCost, setFieldValue]);
 
   const formikProps = useFormikContext<IProject>();

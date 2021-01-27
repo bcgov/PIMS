@@ -37,17 +37,17 @@ namespace Pims.Dal.Entities
         /// <summary>
         /// get/set - The net book value.
         /// </summary>
-        public decimal NetBook { get; set; }
+        public decimal? NetBook { get; set; }
 
         /// <summary>
         /// get/set - The market value.
         /// </summary>
-        public decimal Market { get; set; }
+        public decimal? Market { get; set; }
 
         /// <summary>
         /// get/set - The assessed value.
         /// </summary>
-        public decimal Assessed { get; set; }
+        public decimal? Assessed { get; set; }
 
         /// <summary>
         /// get/set - The appraised value.

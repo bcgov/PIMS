@@ -285,22 +285,22 @@ namespace Pims.Api.Areas.Project.Models.Dispose
         /// <summary>
         /// get/set - The netbook value which is the sum of the properties.
         /// </summary>
-        public decimal NetBook { get; set; }
+        public decimal? NetBook { get; set; }
 
         /// <summary>
         /// get/set - The market value.
         /// </summary>
-        public decimal Market { get; set; }
+        public decimal? Market { get; set; }
 
         /// <summary>
         /// get/set - The appraised value.
         /// </summary>
-        public decimal Appraised { get; set; }
+        public decimal? Appraised { get; set; }
 
         /// <summary>
         /// get/set - The assessed value.
         /// </summary>
-        public decimal Assessed { get; set; }
+        public decimal? Assessed { get; set; }
 
         /// <summary>
         /// get/set - The sales cost.

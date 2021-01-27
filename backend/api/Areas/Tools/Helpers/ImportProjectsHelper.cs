@@ -258,12 +258,13 @@ namespace Pims.Api.Areas.Tools.Helpers
                 SaleWithLeaseInPlace = model.SaleWithLeaseInPlace,
                 DisposedOn = model.DisposedOn ?? (project.Status.Code == "DIS" ? model.CompletedOn : null),
                 OfferAmount = project.Status.Code == "DIS" ? model.Market : (decimal?)null, // This value would only be accurate if the property is disposed.
-                OfferAcceptedOn = null// Don't have a source for this information.
+                OfferAcceptedOn = null // Don't have a source for this information.
             };
 
             // A prior net proceeds was provided, which means a prior snapshot needs to be generated.
             // If the project already exists, don't add prior snapshots.
-            if (model.PriorNetProceeds.HasValue && project.Id == 0)
+            // Only create snapshots if a `snapshotOn` date has been provided.
+            if (model.PriorNetProceeds.HasValue && project.Id == 0 && model.SnapshotOn.HasValue)
             {
                 AddSnapshot(project, model, metadata);
             }
