@@ -98,8 +98,8 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
                     className="edit"
                     onClick={() =>
                       setEditInfo({
-                        ...defaultEditValues,
-                        identification: !editInfo.identification,
+                        ...editInfo,
+                        identification: formikProps.isValid && !editInfo.identification,
                       })
                     }
                   />
@@ -231,7 +231,12 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
                   <FaEdit
                     size={20}
                     className="edit"
-                    onClick={() => setEditInfo({ ...defaultEditValues, usage: !editInfo.usage })}
+                    onClick={() =>
+                      setEditInfo({
+                        ...editInfo,
+                        usage: formikProps.isValid && !editInfo.usage,
+                      })
+                    }
                   />
                 )}
               </Row>
@@ -277,7 +282,10 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
                     size={20}
                     className="edit"
                     onClick={() =>
-                      setEditInfo({ ...defaultEditValues, valuation: !editInfo.valuation })
+                      setEditInfo({
+                        ...editInfo,
+                        valuation: formikProps.isValid && !editInfo.valuation,
+                      })
                     }
                   />
                 )}
