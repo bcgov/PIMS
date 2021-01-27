@@ -39,7 +39,6 @@ const useActiveFeatureLayer = ({
   const draftProperties: PointFeature[] = useSelector<RootState, PointFeature[]>(
     state => state.parcel.draftParcels,
   );
-
   if (!!mapRef.current && !activeFeatureLayer) {
     setActiveFeatureLayer(geoJSON().addTo(mapRef.current.leafletElement));
   }
@@ -51,7 +50,7 @@ const useActiveFeatureLayer = ({
       activeFeatureLayer.clearLayers();
       layerPopup?.feature && activeFeatureLayer.addData(layerPopup.feature);
     }
-  }, [layerPopup]);
+  }, [layerPopup, activeFeatureLayer]);
 
   /**
    * Other areas of the application may kick off parcel layer requests, if so, display the last request tracked in redux.
@@ -81,7 +80,7 @@ const useActiveFeatureLayer = ({
         } as any);
       }
     }
-  }, [parcelLayerFeature]);
+  }, [parcelLayerFeature, activeFeatureLayer]);
 
   /**
    * If there is a selected property on the map, attempt to retrieve the corresponding parcel. If we find matching parcel data, use that to draw the active parcel.
@@ -97,19 +96,19 @@ const useActiveFeatureLayer = ({
         activeFeatureLayer?.addData(parcelLayerData.features[0]);
       }
     };
-    if (!!activeFeatureLayer) {
+    if (!!activeFeatureLayer && !!selectedProperty) {
       activeFeatureLayer.clearLayers();
       highlightSelectedProperty();
     }
-  }, [selectedProperty]);
+  }, [selectedProperty, activeFeatureLayer]);
 
   /**
    * If there is a draft property on the map, attempt to retrieve the corresponding parcel. If we find matching parcel data, use that to draw the active parcel.
    * Note: currently this is limited to finding one parent in the case of a building. in the future, we may need to find/display all matching parcels.
    */
   useDeepCompareEffect(() => {
-    const draftProperty = draftProperties[0];
     const highlightSelectedProperty = async () => {
+      const draftProperty = draftProperties[0];
       const parcelLayerData = await parcelsService.findOneWhereContains({
         lat: draftProperty.geometry.coordinates[1] || 0,
         lng: draftProperty.geometry.coordinates[0] || 0,
@@ -118,11 +117,11 @@ const useActiveFeatureLayer = ({
         activeFeatureLayer?.addData(parcelLayerData.features[0]);
       }
     };
-    if (!!activeFeatureLayer) {
+    if (!!activeFeatureLayer && draftProperties.length) {
       activeFeatureLayer.clearLayers();
       highlightSelectedProperty();
     }
-  }, [draftProperties]);
+  }, [draftProperties, activeFeatureLayer]);
 
   return { activeFeatureLayer };
 };
