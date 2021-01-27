@@ -198,6 +198,7 @@ const Form: React.FC<ILandForm> = ({
             handlePinChange={handlePinChange}
             nameSpace="data"
             disabled={disabled}
+            isPropertyAdmin={isPropertyAdmin}
           />
         );
       case LandSteps.REVIEW:
@@ -209,6 +210,7 @@ const Form: React.FC<ILandForm> = ({
             handlePinChange={handlePinChange}
             nameSpace="data"
             disabled={disabled}
+            isPropertyAdmin={isPropertyAdmin}
           />
         );
     }

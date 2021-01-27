@@ -134,7 +134,11 @@ const getAdminAreaFromLayerData = (
     const splitLayerMunicipality = layerMunicipality.split(',');
     if (splitLayerMunicipality.length === 2) {
       const formattedLayerMunicipality = `${splitLayerMunicipality[1].trim()} ${splitLayerMunicipality[0].trim()}`;
-      return _.find(administrativeAreas, { name: formattedLayerMunicipality });
+      let match = _.find(administrativeAreas, { name: formattedLayerMunicipality });
+      if (!match) {
+        match = _.find(administrativeAreas, { name: splitLayerMunicipality[0].trim() });
+      }
+      return match;
     }
   }
 };

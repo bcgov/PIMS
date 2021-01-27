@@ -187,6 +187,7 @@ const Form: React.FC<IBuildingForm> = ({
             constructionType={constructionType}
             nameSpace={nameSpace}
             disabled={disabled}
+            isPropertyAdmin={isPropertyAdmin}
           />
         );
     }
