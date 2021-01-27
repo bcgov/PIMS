@@ -399,13 +399,13 @@ namespace Pims.Dal.Services
             if (parcelIds.Any())
             {
                 var parcels = this.Context.Parcels.Where(p => parcelIds.Contains(p.Id));
-                parcels.ForEach(p => p.ProjectNumber = project.ProjectNumber);
+                parcels.ForEach(p => p.UpdateProjectNumbers(project.ProjectNumber));
             }
             var buildingIds = project.Properties.Where(b => b.BuildingId != null).Select(b => b.BuildingId.Value).ToArray();
             if (buildingIds.Any())
             {
                 var buildings = this.Context.Buildings.Where(b => buildingIds.Contains(b.Id));
-                buildings.ForEach(b => b.ProjectNumber = project.ProjectNumber);
+                buildings.ForEach(b => b.UpdateProjectNumbers(project.ProjectNumber));
             }
 
             this.Context.Projects.Update(project);
@@ -586,7 +586,7 @@ namespace Pims.Dal.Services
             });
             originalProject.Properties.ForEach(p =>
             {
-                this.Context.Update(p.UpdateProjectNumber(null));
+                this.Context.Update(p.RemoveProjectNumber(project.ProjectNumber));
 
                 this.Context.ProjectProperties.Remove(p);
             });

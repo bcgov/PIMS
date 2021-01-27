@@ -772,7 +772,7 @@ namespace Pims.Dal.Test.Services
         }
 
         [Fact]
-        public void Update_Parcel_LinkedToProject_NotAuthorized()
+        public void Update_Parcel_LinkedToProject()
         {
             // Arrange
             var helper = new TestHelper();
@@ -788,8 +788,8 @@ namespace Pims.Dal.Test.Services
             var service = helper.CreateService<ParcelService>(user, options);
 
             // Act
-            // Assert
-            Assert.Throws<NotAuthorizedException>(() => service.Update(parcel));
+            // Assert, parcels linked to projects can now be updated as multiple associations are allowed.
+            service.Update(parcel);
         }
         #endregion
 

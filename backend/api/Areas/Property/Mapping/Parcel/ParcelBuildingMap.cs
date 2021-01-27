@@ -5,11 +5,27 @@ using Entity = Pims.Dal.Entities;
 using Model = Pims.Api.Areas.Property.Models.Parcel;
 using BModel = Pims.Api.Models;
 using Pims.Dal.Helpers.Extensions;
+using System.Text.Json;
+using Microsoft.Extensions.Options;
 
 namespace Pims.Api.Areas.Property.Mapping.Parcel
 {
     public class ParcelBuildingMap : IRegister
     {
+        #region Variables
+        private readonly JsonSerializerOptions _serializerOptions;
+        #endregion
+
+        #region Constructors
+        /// <summary>
+        /// Creates a new instance of a BuildingParcelMap, initializes with specified arguments.
+        /// </summary>
+        /// <param name="serializerOptions"></param>
+        public ParcelBuildingMap(IOptions<JsonSerializerOptions> serializerOptions)
+        {
+            _serializerOptions = serializerOptions.Value;
+        }
+        #endregion
 
         public void Register(TypeAdapterConfig config)
         {
@@ -17,7 +33,7 @@ namespace Pims.Api.Areas.Property.Mapping.Parcel
                 .EnableNonPublicMembers(true)
                 .Map(dest => dest.Id, src => src.Id)
                 .Map(dest => dest.ParcelId, src => src.GetParcelId())
-                .Map(dest => dest.ProjectNumber, src => src.ProjectNumber)
+                .Map(dest => dest.ProjectNumbers, src => JsonSerializer.Deserialize<IEnumerable<string>>(src.ProjectNumbers ?? "[]", _serializerOptions))
                 .Map(dest => dest.Name, src => src.Name)
                 .Map(dest => dest.Description, src => src.Description)
                 .Map(dest => dest.AgencyId, src => src.AgencyId)
@@ -74,7 +90,7 @@ namespace Pims.Api.Areas.Property.Mapping.Parcel
                 .EnableNonPublicMembers(true)
                 .Map(dest => dest.Id, src => src.BuildingId)
                 .Map(dest => dest.ParcelId, src => src.ParcelId)
-                .Map(dest => dest.ProjectNumber, src => src.Building.ProjectNumber)
+                .Map(dest => dest.ProjectNumbers, src => JsonSerializer.Deserialize<IEnumerable<string>>(src.Building.ProjectNumbers ?? "[]", _serializerOptions))
                 .Map(dest => dest.Name, src => src.Building.Name)
                 .Map(dest => dest.Description, src => src.Building.Description)
                 .Map(dest => dest.AgencyId, src => src.Building.AgencyId)

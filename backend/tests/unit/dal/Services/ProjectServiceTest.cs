@@ -1060,14 +1060,14 @@ namespace Pims.Dal.Test.Services
             var projectToUpdate = EntityHelper.CreateProject(1);
             projectToUpdate.ProjectNumber = project.ProjectNumber;
             projectToUpdate.AddProperty(parcel);
-            parcel.ProjectNumber = null;
+            parcel.ProjectNumbers = null;
             await service.UpdateAsync(projectToUpdate);
             var result = service.Get(project.ProjectNumber);
 
             // Assert
             Assert.NotNull(result);
             Assert.Single(result.Properties);
-            Assert.Equal(projectToUpdate.ProjectNumber, result.Properties.FirstOrDefault().Parcel.ProjectNumber);
+            Assert.Contains(projectToUpdate.ProjectNumber, result.Properties.FirstOrDefault().Parcel.ProjectNumbers);
             Assert.Equal(Entity.PropertyTypes.Land, result.Properties.First().PropertyType);
             queueService.Verify(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), null, project.StatusId, true), Times.Never());
             queueService.Verify(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), true), Times.Once());
@@ -1220,14 +1220,14 @@ namespace Pims.Dal.Test.Services
             var projectToUpdate = EntityHelper.CreateProject(1);
             projectToUpdate.ProjectNumber = project.ProjectNumber;
             projectToUpdate.AddProperty(building);
-            building.ProjectNumber = null;
+            building.ProjectNumbers = null;
             await service.UpdateAsync(projectToUpdate);
             var result = service.Get(project.ProjectNumber);
 
             // Assert
             Assert.NotNull(result);
             result.Properties.Should().HaveCount(1);
-            Assert.Equal(projectToUpdate.ProjectNumber, result.Properties.FirstOrDefault().Building.ProjectNumber);
+            Assert.Contains(projectToUpdate.ProjectNumber, result.Properties.FirstOrDefault().Building.ProjectNumbers);
             result.Properties.First().PropertyType.Should().Be(Entity.PropertyTypes.Building);
             queueService.Verify(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), null, project.StatusId, true), Times.Never());
             queueService.Verify(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), true), Times.Once());
@@ -1465,7 +1465,7 @@ namespace Pims.Dal.Test.Services
         }
 
         [Fact]
-        public async void Update_ParcelInProject_Throws_BusinessException()
+        public async void Update_ParcelInProject_Allowed()
         {
             // Arrange
             var helper = new TestHelper();
@@ -1478,7 +1478,7 @@ namespace Pims.Dal.Test.Services
             var project = init.CreateProject(1);
             var newProject = init.CreateProject(2, project.Agency);
             var parcel = init.CreateParcel(1, project.Agency);
-            parcel.ProjectNumber = project.ProjectNumber;
+            parcel.UpdateProjectNumbers(project.ProjectNumber);
             project.AddProperty(parcel);
             init.SaveChanges();
 
@@ -1491,11 +1491,11 @@ namespace Pims.Dal.Test.Services
             projectToUpdate.AddProperty(parcel);
 
             // Assert
-            await Assert.ThrowsAsync<InvalidOperationException>(async () => await service.UpdateAsync(projectToUpdate));
+            await service.UpdateAsync(projectToUpdate);
         }
 
         [Fact]
-        public async void Update_BuildingInProject_Throws_BusinessException()
+        public async void Update_BuildingInProject_Allowed()
         {
             // Arrange
             var helper = new TestHelper();
@@ -1509,7 +1509,7 @@ namespace Pims.Dal.Test.Services
             var newProject = init.CreateProject(2, project.Agency);
             var parcel = init.CreateParcel(1, project.Agency);
             var building = init.CreateBuilding(parcel, 2, agency: project.Agency);
-            building.ProjectNumber = project.ProjectNumber;
+            building.UpdateProjectNumbers(project.ProjectNumber);
             project.AddProperty(parcel);
             init.SaveChanges();
 
@@ -1521,8 +1521,8 @@ namespace Pims.Dal.Test.Services
             var projectToUpdate = service.Get(newProject.ProjectNumber);
             projectToUpdate.AddProperty(building);
 
-            // Assert
-            await Assert.ThrowsAsync<InvalidOperationException>(async () => await service.UpdateAsync(projectToUpdate));
+            // updating a building already in a project should not throw an exception.
+            await service.UpdateAsync(projectToUpdate);
         }
         #endregion
 
@@ -1983,7 +1983,7 @@ namespace Pims.Dal.Test.Services
             init.SetStatus(project, "ASSESS-DISPOSAL", "AS-FNC");
             var parcel = init.CreateParcel(1);
             project.AddProperty(parcel);
-            parcel.ProjectNumber = project.ProjectNumber;
+            parcel.UpdateProjectNumbers(project.ProjectNumber);
             init.SaveChanges();
 
             var options = ControllerHelper.CreateDefaultPimsOptions();
@@ -2005,7 +2005,7 @@ namespace Pims.Dal.Test.Services
             result.StatusId.Should().Be(deny.Id);
             result.Status.Should().Be(deny);
             result.DeniedOn.Should().NotBeNull();
-            parcel.ProjectNumber.Should().BeNull();
+            parcel.ProjectNumbers.Should().NotContain(project.ProjectNumber);
             queueService.Verify(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), null, project.StatusId, true), Times.Never());
             queueService.Verify(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), true), Times.Once());
         }
@@ -2024,7 +2024,7 @@ namespace Pims.Dal.Test.Services
             init.SetStatus(project, "ERP", "ERP-ON");
             var parcel = init.CreateParcel(1);
             project.AddProperty(parcel);
-            parcel.ProjectNumber = project.ProjectNumber;
+            parcel.UpdateProjectNumbers(project.ProjectNumber);
             init.SaveChanges();
 
             var options = ControllerHelper.CreateDefaultPimsOptions();
@@ -2047,7 +2047,7 @@ namespace Pims.Dal.Test.Services
             result.StatusId.Should().Be(cancel.Id);
             result.Status.Should().Be(cancel);
             result.CancelledOn.Should().NotBeNull();
-            parcel.ProjectNumber.Should().BeNull();
+            parcel.ProjectNumbers.Should().NotContain(project.ProjectNumber);
             notifyService.Verify(m => m.CancelAsync(It.IsAny<IEnumerable<Entity.NotificationQueue>>()), Times.Once);
             queueService.Verify(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), null, project.StatusId, true), Times.Never());
             queueService.Verify(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), true), Times.Once());
@@ -2067,7 +2067,7 @@ namespace Pims.Dal.Test.Services
             init.SetStatus(project, "ERP", "ERP-ON");
             var parcel = init.CreateParcel(1);
             project.AddProperty(parcel);
-            parcel.ProjectNumber = project.ProjectNumber;
+            parcel.UpdateProjectNumbers(project.ProjectNumber);
             var metadata = new DisposalProjectMetadata()
             {
                 OnHoldNotificationSentOn = DateTime.UtcNow
@@ -2111,7 +2111,7 @@ namespace Pims.Dal.Test.Services
             init.SetStatus(project, "ERP", "ERP-ON");
             var parcel = init.CreateParcel(1);
             project.AddProperty(parcel);
-            parcel.ProjectNumber = project.ProjectNumber;
+            parcel.UpdateProjectNumbers(project.ProjectNumber);
             init.SaveChanges();
 
             var options = ControllerHelper.CreateDefaultPimsOptions();
@@ -2138,7 +2138,7 @@ namespace Pims.Dal.Test.Services
             init.SetStatus(project, "ERP", "ERP-ON");
             var parcel = init.CreateParcel(1);
             project.AddProperty(parcel);
-            parcel.ProjectNumber = project.ProjectNumber;
+            parcel.UpdateProjectNumbers(project.ProjectNumber);
             var metadata = new DisposalProjectMetadata()
             {
                 TransferredWithinGreOn = DateTime.UtcNow
@@ -2171,7 +2171,7 @@ namespace Pims.Dal.Test.Services
             result.Status.Should().Be(transferredWithinGre);
             JsonSerializer.Deserialize<DisposalProjectMetadata>(result.Metadata).TransferredWithinGreOn.Should().NotBeNull();
             var property = result.Properties.First().Parcel;
-            property.ProjectNumber.Should().BeNull();
+            property.ProjectNumbers.Should().Be("[]");
             property.AgencyId.Should().Be(2);
             property.ClassificationId.Should().Be(2);
             queueService.Verify(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), null, project.StatusId, true), Times.Never());
@@ -2192,7 +2192,7 @@ namespace Pims.Dal.Test.Services
             init.SetStatus(project, "ERP", "ERP-ON");
             var parcel = init.CreateParcel(1);
             project.AddProperty(parcel);
-            parcel.ProjectNumber = project.ProjectNumber;
+            parcel.UpdateProjectNumbers(project.ProjectNumber);
             init.SaveChanges();
 
             var options = ControllerHelper.CreateDefaultPimsOptions();
@@ -2219,7 +2219,7 @@ namespace Pims.Dal.Test.Services
             init.SetStatus(project, "SPL", "AP-SPL");
             var parcel = init.CreateParcel(1);
             project.AddProperty(parcel);
-            parcel.ProjectNumber = project.ProjectNumber;
+            parcel.UpdateProjectNumbers(project.ProjectNumber);
             var metadata = new DisposalProjectMetadata()
             {
                 ClearanceNotificationSentOn = DateTime.UtcNow,
@@ -2275,7 +2275,7 @@ namespace Pims.Dal.Test.Services
             init.SetStatus(project, "SPL", "AP-SPL");
             var parcel = init.CreateParcel(1);
             project.AddProperty(parcel);
-            parcel.ProjectNumber = project.ProjectNumber;
+            parcel.UpdateProjectNumbers(project.ProjectNumber);
             init.SaveChanges();
 
             var options = ControllerHelper.CreateDefaultPimsOptions();
@@ -2302,7 +2302,7 @@ namespace Pims.Dal.Test.Services
             init.SetStatus(project, "ERP", "AP-!SPL");
             var parcel = init.CreateParcel(1);
             project.AddProperty(parcel);
-            parcel.ProjectNumber = project.ProjectNumber;
+            parcel.UpdateProjectNumbers(project.ProjectNumber);
             var metadata = new DisposalProjectMetadata()
             {
                 ClearanceNotificationSentOn = DateTime.UtcNow
@@ -2356,7 +2356,7 @@ namespace Pims.Dal.Test.Services
             init.SetStatus(project, "ERP", "AP-!SPL");
             var parcel = init.CreateParcel(1);
             project.AddProperty(parcel);
-            parcel.ProjectNumber = project.ProjectNumber;
+            parcel.UpdateProjectNumbers(project.ProjectNumber);
             init.SaveChanges();
 
             var options = ControllerHelper.CreateDefaultPimsOptions();
@@ -2383,7 +2383,7 @@ namespace Pims.Dal.Test.Services
             init.SetStatus(project, "ERP", "AP-!SPL");
             var parcel = init.CreateParcel(1);
             project.AddProperty(parcel);
-            parcel.ProjectNumber = project.ProjectNumber;
+            parcel.UpdateProjectNumbers(project.ProjectNumber);
             var metadata = new DisposalProjectMetadata()
             {
                 ClearanceNotificationSentOn = DateTime.UtcNow
@@ -2437,7 +2437,7 @@ namespace Pims.Dal.Test.Services
             init.SetStatus(project, "SPL", "SPL-M");
             var parcel = init.CreateParcel(1);
             project.AddProperty(parcel);
-            parcel.ProjectNumber = project.ProjectNumber;
+            parcel.UpdateProjectNumbers(project.ProjectNumber);
             var metadata = new DisposalProjectMetadata()
             {
                 MarketedOn = DateTime.UtcNow
@@ -2491,7 +2491,7 @@ namespace Pims.Dal.Test.Services
             init.SetStatus(project, "SPL", "SPL-M");
             var parcel = init.CreateParcel(1);
             project.AddProperty(parcel);
-            parcel.ProjectNumber = project.ProjectNumber;
+            parcel.UpdateProjectNumbers(project.ProjectNumber);
             init.SaveChanges();
 
             var options = ControllerHelper.CreateDefaultPimsOptions();
@@ -2518,7 +2518,7 @@ namespace Pims.Dal.Test.Services
             init.SetStatus(project, "SPL", "SPL-CIP-C");
             var parcel = init.CreateParcel(1);
             project.AddProperty(parcel);
-            parcel.ProjectNumber = project.ProjectNumber;
+            parcel.UpdateProjectNumbers(project.ProjectNumber);
             init.SaveChanges();
 
             var options = ControllerHelper.CreateDefaultPimsOptions();
@@ -2566,7 +2566,7 @@ namespace Pims.Dal.Test.Services
             init.SetStatus(project, "SPL", "DIS");
             var parcel = init.CreateParcel(1);
             project.AddProperty(parcel);
-            parcel.ProjectNumber = project.ProjectNumber;
+            parcel.UpdateProjectNumbers(project.ProjectNumber);
             var metadata = new DisposalProjectMetadata()
             {
                 DisposedOn = DateTime.UtcNow
@@ -2620,7 +2620,7 @@ namespace Pims.Dal.Test.Services
             init.SetStatus(project, "SPL", "DIS");
             var parcel = init.CreateParcel(1);
             project.AddProperty(parcel);
-            parcel.ProjectNumber = project.ProjectNumber;
+            parcel.UpdateProjectNumbers(project.ProjectNumber);
             init.SaveChanges();
 
             var options = ControllerHelper.CreateDefaultPimsOptions();
@@ -2649,7 +2649,7 @@ namespace Pims.Dal.Test.Services
             project.Status = erp;
             var parcel = init.CreateParcel(1);
             project.AddProperty(parcel);
-            parcel.ProjectNumber = project.ProjectNumber;
+            parcel.UpdateProjectNumbers(project.ProjectNumber);
             init.SaveChanges();
 
             var options = ControllerHelper.CreateDefaultPimsOptions();
@@ -2701,8 +2701,7 @@ namespace Pims.Dal.Test.Services
             result.Status.Should().Be(submit);
             result.DeniedOn.Should().BeNull();
             result.SubmittedOn.Should().NotBeNull();
-            result.ProjectNumber.Should().StartWith("SPP-");
-            parcel.ProjectNumber.Should().Be(project.ProjectNumber);
+            Assert.Contains(project.ProjectNumber, parcel.ProjectNumbers);
             queueService.Verify(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), null, project.StatusId, true), Times.Never());
             queueService.Verify(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), true), Times.Once());
         }
@@ -2721,7 +2720,7 @@ namespace Pims.Dal.Test.Services
             init.SetStatus(project, "ASSESS-DISPOSAL", "AS-FNC");
             var parcel = init.CreateParcel(1);
             project.AddProperty(parcel);
-            parcel.ProjectNumber = project.ProjectNumber;
+            parcel.UpdateProjectNumbers(project.ProjectNumber);
             init.SaveChanges();
 
             var options = ControllerHelper.CreateDefaultPimsOptions();
@@ -2790,7 +2789,7 @@ namespace Pims.Dal.Test.Services
             init.SetStatus(project, "ERP", "ERP-OH");
             var parcel = init.CreateParcel(1);
             project.AddProperty(parcel);
-            parcel.ProjectNumber = project.ProjectNumber;
+            parcel.UpdateProjectNumbers(project.ProjectNumber);
             init.SaveChanges();
 
             var options = ControllerHelper.CreateDefaultPimsOptions();
@@ -2866,7 +2865,7 @@ namespace Pims.Dal.Test.Services
             init.SetStatus(project, "ASSESS-EXEMPTION", "AS-EXP");
             var parcel = init.CreateParcel(1);
             project.AddProperty(parcel);
-            parcel.ProjectNumber = project.ProjectNumber;
+            parcel.UpdateProjectNumbers(project.ProjectNumber);
             init.SaveChanges();
 
             var options = ControllerHelper.CreateDefaultPimsOptions();

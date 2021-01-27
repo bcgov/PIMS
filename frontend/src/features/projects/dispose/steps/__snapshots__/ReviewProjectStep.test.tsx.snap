@@ -524,7 +524,7 @@ exports[`renders correctly 1`] = `
                   <div
                     className="sortable-column"
                   >
-                    Potential Zoning Code
+                    Other Projects
                   </div>
                 </div>
                 <div
