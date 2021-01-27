@@ -73,6 +73,7 @@ export interface IBuilding extends IProperty {
   parcelId: number;
   pid: number;
   address: IAddress;
+  administrativeArea: string;
   buildingFloorCount?: number | '';
   buildingConstructionType?: string;
   buildingConstructionTypeId: number | '';
@@ -158,6 +159,7 @@ export interface IParcel extends IProperty {
   classificationId: number | '';
   encumbranceReason: string;
   address?: IAddress;
+  administrativeArea: string;
   landArea: number | '';
   landLegalDescription: string;
   zoning: string;
