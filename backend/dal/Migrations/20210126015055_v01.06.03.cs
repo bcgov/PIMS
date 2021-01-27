@@ -16,6 +16,10 @@ namespace Pims.Dal.Migrations
                 name: "IX_Buildings_Id_IsSensitive_AgencyId_ClassificationId_AddressId_ProjectNumber_BuildingConstructionTypeId_BuildingPredominateUse~",
                 table: "Buildings");
 
+            migrationBuilder.DropIndex(
+                name: "IX_Buildings_Id_IsSensitive_AgencyId_ClassificationId_AddressId_ProjectNumber_BuildingPredominateUseId_BuildingConstructionType~",
+                table: "Buildings");
+
             migrationBuilder.DropColumn(
                 name: "ProjectNumber",
                 table: "Parcels");
@@ -42,9 +46,14 @@ namespace Pims.Dal.Migrations
                 columns: new[] { "Id", "IsSensitive", "AgencyId", "ClassificationId", "PID", "PIN", "AddressId", "LandArea", "Zoning", "ZoningPotential" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Buildings_Id_IsSensitive_AgencyId_ClassificationId_AddressId_ProjectNumbers_BuildingConstructionTypeId_BuildingPredominateUs~",
+                name: "IX_Buildings_Id_IsSensitive_AgencyId_ClassificationId_AddressId_ProjectNumber_BuildingConstructionTypeId_BuildingPredominateUse~",
                 table: "Buildings",
                 columns: new[] { "Id", "IsSensitive", "AgencyId", "ClassificationId", "AddressId", "ProjectNumbers", "BuildingConstructionTypeId", "BuildingPredominateUseId", "BuildingOccupantTypeId", "BuildingFloorCount", "BuildingTenancy" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Buildings_Id_IsSensitive_AgencyId_ClassificationId_AddressId_ProjectNumber_BuildingPredominateUseId_BuildingConstructionType~",
+                table: "Buildings",
+                columns: new[] { "Id", "IsSensitive", "AgencyId", "ClassificationId", "AddressId", "ProjectNumbers", "BuildingPredominateUseId", "BuildingConstructionTypeId", "BuildingOccupantTypeId", "BuildingFloorCount", "BuildingTenancy" });
             PostUp(migrationBuilder);
         }
 
@@ -56,7 +65,11 @@ namespace Pims.Dal.Migrations
                 table: "Parcels");
 
             migrationBuilder.DropIndex(
-                name: "IX_Buildings_Id_IsSensitive_AgencyId_ClassificationId_AddressId_ProjectNumbers_BuildingConstructionTypeId_BuildingPredominateUs~",
+                name: "IX_Buildings_Id_IsSensitive_AgencyId_ClassificationId_AddressId_ProjectNumber_BuildingConstructionTypeId_BuildingPredominateUse~",
+                table: "Buildings");
+
+            migrationBuilder.DropIndex(
+                name: "IX_Buildings_Id_IsSensitive_AgencyId_ClassificationId_AddressId_ProjectNumber_BuildingPredominateUseId_BuildingConstructionType~",
                 table: "Buildings");
 
             migrationBuilder.DropColumn(
@@ -90,6 +103,11 @@ namespace Pims.Dal.Migrations
                 name: "IX_Buildings_Id_IsSensitive_AgencyId_ClassificationId_AddressId_ProjectNumber_BuildingConstructionTypeId_BuildingPredominateUse~",
                 table: "Buildings",
                 columns: new[] { "Id", "IsSensitive", "AgencyId", "ClassificationId", "AddressId", "ProjectNumber", "BuildingConstructionTypeId", "BuildingPredominateUseId", "BuildingOccupantTypeId", "BuildingFloorCount", "BuildingTenancy" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Buildings_Id_IsSensitive_AgencyId_ClassificationId_AddressId_ProjectNumber_BuildingPredominateUseId_BuildingConstructionType~",
+                table: "Buildings",
+                columns: new[] { "Id", "IsSensitive", "AgencyId", "ClassificationId", "AddressId", "ProjectNumber", "BuildingPredominateUseId", "BuildingConstructionTypeId", "BuildingOccupantTypeId", "BuildingFloorCount", "BuildingTenancy" });
             PostDown(migrationBuilder);
         }
     }
