@@ -15,11 +15,12 @@ Enzyme.configure({ adapter: new Adapter() });
 let mapRef: React.RefObject<ReactLeafletMap<MapProps, LeafletMap>> | undefined;
 
 const MapComponent = () => {
+  const [open, setOpen] = React.useState(false);
   mapRef = React.useRef<any>();
   return (
     <div id="mapid" style={{ width: 500, height: 500 }}>
       <ReactLeafletMap ref={mapRef} center={[48.423078, -123.360956]} zoom={18}>
-        <LayersControl />
+        <LayersControl open={open} setOpen={() => setOpen(!open)} />
       </ReactLeafletMap>
     </div>
   );
