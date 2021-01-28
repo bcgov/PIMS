@@ -105,7 +105,8 @@ namespace Pims.Dal.Entities.Models
             var userAgencies = user.GetAgenciesAsNullable();
 
             // The property belongs to the user's agency or sub-agency, so include these properties.
-            if (userAgencies.Contains(property.AgencyId))
+            // TODO: Shuffle code around so that this can use the user.HasPermission(Permissions.AdminProperties).
+            if (userAgencies.Contains(property.AgencyId) || user.HasClaim(c => c.Value == "admin-properties"))
             {
                 this.LeaseExpiry = property.LeaseExpiry;
                 this.OccupantName = property.OccupantName;
