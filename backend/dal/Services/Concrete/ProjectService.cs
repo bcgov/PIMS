@@ -563,6 +563,7 @@ namespace Pims.Dal.Services
                 .Include(p => p.Status)
                 .Include(p => p.Properties)
                 .ThenInclude(p => p.Parcel)
+                .Include(p => p.Notes)
                 .Include(p => p.Properties)
                 .ThenInclude(p => p.Building)
                 .Include(p => p.Tasks)
@@ -595,8 +596,6 @@ namespace Pims.Dal.Services
 
             originalProject.Notifications.ForEach(n => this.Context.NotificationQueue.Remove(n));
             originalProject.Notifications.Clear(); // TODO: Need to test this to determine if it'll let us delete a project with existing notifications.
-            originalProject.Notes.ForEach(n => this.Context.ProjectNotes.Remove(n));
-            originalProject.Notes.Clear();
             this.Context.Projects.Remove(originalProject);
             this.Context.CommitTransaction();
         }

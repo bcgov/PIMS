@@ -223,6 +223,7 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
   const handleDelete = async () => {
     const project = data?.find(p => p.projectNumber === deleteId);
     if (project) {
+      project.status = projectStatuses.find((x: any) => x.name === project.status)!;
       await service.deleteProject(project);
       setData(data?.filter(p => p.projectNumber !== project.projectNumber));
     }
