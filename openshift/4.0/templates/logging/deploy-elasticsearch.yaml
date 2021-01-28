@@ -1,7 +1,7 @@
 kind: Template
 apiVersion: v1
 metadata:
-  name: elasticsearch-deploy
+  name: elasticsearch
   annotations:
     openshift.io/display-name: Elasticsearch
     description: Deployment template for Elasticsearch
@@ -43,12 +43,12 @@ objects:
   - kind: Secret
     apiVersion: v1
     metadata:
-      name: ${APP_NAME}-secret
+      name: ${APP_NAME}
       namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
       annotations:
         description: "Elasticsearch bootstrap password"
       labels:
-        name: ${APP_NAME}-secret
+        name: ${APP_NAME}
         app: ${APP_NAME}
         role: ${ROLE_NAME}
         env: ${ENV_NAME}
@@ -60,10 +60,10 @@ objects:
   - apiVersion: v1
     kind: ConfigMap
     metadata:
-      name: ${APP_NAME}-config
+      name: ${APP_NAME}
       namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
       labels:
-        name: ${APP_NAME}-config
+        name: ${APP_NAME}
         app: ${APP_NAME}
         role: ${ROLE_NAME}
         env: ${ENV_NAME}
@@ -75,10 +75,10 @@ objects:
   - apiVersion: v1
     kind: Service
     metadata:
-      name: ${APP_NAME}-service
+      name: ${APP_NAME}
       namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
       labels:
-        name: ${APP_NAME}-service
+        name: ${APP_NAME}
         app: ${APP_NAME}
         role: ${ROLE_NAME}
         env: ${ENV_NAME}
@@ -96,17 +96,17 @@ objects:
   - kind: Route
     apiVersion: v1
     metadata:
-      name: ${APP_NAME}-route
+      name: ${APP_NAME}
       namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
       labels:
-        name: ${APP_NAME}-route
+        name: ${APP_NAME}
         app: ${APP_NAME}
         role: ${ROLE_NAME}
         env: ${ENV_NAME}
     spec:
       host: ${ELASTICSEARCH_DOMAIN}
       to:
-        name: ${APP_NAME}-service
+        name: ${APP_NAME}
         kind: Service
         weight: 100
       tls:
@@ -116,10 +116,10 @@ objects:
   - kind: "PersistentVolumeClaim"
     apiVersion: v1
     metadata:
-      name: ${APP_NAME}-block-storage
+      name: ${APP_NAME}
       namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
       labels:
-        name: ${APP_NAME}-block-storage
+        name: ${APP_NAME}
         app: ${APP_NAME}
         role: ${ROLE_NAME}
         env: ${ENV_NAME}
@@ -130,7 +130,7 @@ objects:
       resources:
         requests:
           storage: 16Gi
-    volumeName: ${APP_NAME}-block-storage
+    volumeName: ${APP_NAME}
 
   # How the pod will be deployed.
   - apiVersion: v1
@@ -169,7 +169,7 @@ objects:
                 - name: ELASTIC_PASSWORD
                   valueFrom:
                     secretKeyRef:
-                      name: ${APP_NAME}-secret
+                      name: ${APP_NAME}
                       key: ELASTIC_PASSWORD
               resources:
                 limits:
@@ -184,12 +184,12 @@ objects:
                   mountPath: /usr/share/elasticsearch/config/elasticsearch.yml
                   readOnly: true
                   subPath: elasticsearch.yml
-                - name: ${APP_NAME}-volume
+                - name: ${APP_NAME}
                   mountPath: /usr/share/elasticsearch/data
           volumes:
             - name: config-volume
               configMap:
-                name: ${APP_NAME}-config
-            - name: ${APP_NAME}-volume
+                name: ${APP_NAME}
+            - name: ${APP_NAME}
               persistentVolumeClaim:
-                claimName: ${APP_NAME}-block-storage
+                claimName: ${APP_NAME}
