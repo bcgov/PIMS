@@ -18,7 +18,7 @@ export const ParcelAttributes: React.FC<IParcelAttributes> = ({ parcelInfo }) =>
   let formatAssessed;
   if (parcelInfo?.assessed) {
     formatAssessed = formatMoney(parcelInfo?.assessed);
-  } else if (parcelInfo?.evaluations[0].value) {
+  } else if (parcelInfo?.evaluations?.length >= 1) {
     formatAssessed = formatMoney(parcelInfo?.evaluations[0].value);
   } else {
     formatAssessed = '$0';

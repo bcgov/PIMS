@@ -18,7 +18,7 @@ export const BuildingAttributes: React.FC<IBuildingAttributes> = ({ buildingInfo
   let formatAssessed;
   if (buildingInfo?.assessed) {
     formatAssessed = formatMoney(buildingInfo?.assessed);
-  } else if (buildingInfo?.evaluations[0].value) {
+  } else if (buildingInfo?.evaluations?.length >= 1) {
     formatAssessed = formatMoney(buildingInfo?.evaluations[0].value);
   } else {
     formatAssessed = '$0';

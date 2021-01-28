@@ -349,9 +349,7 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
               zIndexOffset={500}
             >
               <Popup autoPan={false}>
-                <PopupView
-                  propertyDetail={convertToProperty(draftPoint.properties)}
-                />
+                <PopupView propertyDetail={convertToProperty(draftPoint.properties)} />
               </Popup>
             </Marker>
           );
