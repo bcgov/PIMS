@@ -13,6 +13,7 @@ export enum PropertyTypes {
 export interface IProperty {
   id: number | '';
   propertyTypeId?: PropertyTypes;
+  agencyId?: number | '';
   latitude: number | '';
   longitude: number | '';
   name?: string;

@@ -110,7 +110,7 @@ namespace Pims.Dal.Services
             }
 
             var query = this.Context.GenerateQuery(this.User, filter);
-            var properties = query.Where(x=> !string.IsNullOrWhiteSpace(x.Name)).Select(x => x.Name).ToArray();
+            var properties = query.Where(x => !string.IsNullOrWhiteSpace(x.Name)).Select(x => x.Name).ToArray();
 
             return properties;
         }
@@ -122,7 +122,7 @@ namespace Pims.Dal.Services
         /// </summary>
         /// <param name="filter"></param>
         /// <returns></returns>
-        public IEnumerable<ProjectProperty> Search(AllPropertyFilter filter)
+        public IEnumerable<PropertyModel> Search(AllPropertyFilter filter)
         {
             this.User.ThrowIfNotAuthorized(Permissions.PropertyView);
             filter.ThrowIfNull(nameof(filter));
@@ -140,8 +140,8 @@ namespace Pims.Dal.Services
                 filter.PropertyType = Entities.PropertyTypes.Building;
             }
 
-            var query = this.Context.GenerateQuery(this.User, filter);
-            var properties = query.Select(x => new ProjectProperty(x)).ToArray();
+            var query = this.Context.GenerateAllPropertyQuery(this.User, filter);
+            var properties = query.Select(p => p.PropertyTypeId == Entities.PropertyTypes.Land ? new ParcelModel(p, this.User) as PropertyModel : new BuildingModel(p, this.User)).ToArray();
 
             // TODO: Add optional paging ability to query.
 

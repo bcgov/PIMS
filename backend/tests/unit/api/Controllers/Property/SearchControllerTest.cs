@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Pims.Api.Areas.Property.Controllers;
-using Pims.Api.Areas.Property.Models.Search;
+using SModel = Pims.Api.Areas.Property.Models.Search;
 using Pims.Api.Helpers.Exceptions;
 using Pims.Core.Comparers;
 using Pims.Core.Extensions;
@@ -29,34 +29,34 @@ namespace Pims.Api.Test.Controllers.Property
         #region Variables
         public static IEnumerable<object[]> AllPropertiesFilters = new List<object[]>()
         {
-            new object [] { new PropertyFilterModel(100, 0, 0, 0), false, false },
-            new object [] { new PropertyFilterModel(0, 100, 0, 0), false, false },
-            new object [] { new PropertyFilterModel(0, 0, 10, 0), false, false },
-            new object [] { new PropertyFilterModel(0, 0, 0, 10), false, false },
-            new object [] { new PropertyFilterModel(0, 0, 0, 10) { Address = "Address" }, false, false },
-            new object [] { new PropertyFilterModel(0, 0, 0, 10) { Agencies = new [] { 1 } }, false, false },
-            new object [] { new PropertyFilterModel(0, 0, 0, 10) { StatusId = 1 }, true, true },
-            new object [] { new PropertyFilterModel(0, 0, 0, 10) { ClassificationId = 1 }, true, true },
-            new object [] { new PropertyFilterModel(0, 0, 0, 10) { ProjectNumber = "ProjectNumber" }, true, true },
-            new object [] { new PropertyFilterModel(0, 0, 0, 10) { AdministrativeArea = "AdministrativeArea" }, true, true }
+            new object [] { new SModel.PropertyFilterModel(100, 0, 0, 0), false, false },
+            new object [] { new SModel.PropertyFilterModel(0, 100, 0, 0), false, false },
+            new object [] { new SModel.PropertyFilterModel(0, 0, 10, 0), false, false },
+            new object [] { new SModel.PropertyFilterModel(0, 0, 0, 10), false, false },
+            new object [] { new SModel.PropertyFilterModel(0, 0, 0, 10) { Address = "Address" }, false, false },
+            new object [] { new SModel.PropertyFilterModel(0, 0, 0, 10) { Agencies = new [] { 1 } }, false, false },
+            new object [] { new SModel.PropertyFilterModel(0, 0, 0, 10) { StatusId = 1 }, true, true },
+            new object [] { new SModel.PropertyFilterModel(0, 0, 0, 10) { ClassificationId = 1 }, true, true },
+            new object [] { new SModel.PropertyFilterModel(0, 0, 0, 10) { ProjectNumber = "ProjectNumber" }, true, true },
+            new object [] { new SModel.PropertyFilterModel(0, 0, 0, 10) { AdministrativeArea = "AdministrativeArea" }, true, true }
         };
 
         public static IEnumerable<object[]> ParcelOnlyFilters = new List<object[]>()
         {
-            new [] { new PropertyFilterModel(100, 100, 0, 0) { MinLotArea = 1 } },
-            new [] { new PropertyFilterModel(100, 100, 0, 0) { MaxLotArea = 1 } },
-            new [] { new PropertyFilterModel(100, 100, 0, 0) { MinLandArea = 1 } },
-            new [] { new PropertyFilterModel(100, 100, 0, 0) { MaxLandArea = 1 } }
+            new [] { new SModel.PropertyFilterModel(100, 100, 0, 0) { MinLotArea = 1 } },
+            new [] { new SModel.PropertyFilterModel(100, 100, 0, 0) { MaxLotArea = 1 } },
+            new [] { new SModel.PropertyFilterModel(100, 100, 0, 0) { MinLandArea = 1 } },
+            new [] { new SModel.PropertyFilterModel(100, 100, 0, 0) { MaxLandArea = 1 } }
         };
 
         public static IEnumerable<object[]> BuildingOnlyFilters = new List<object[]>()
         {
-            new [] { new PropertyFilterModel(100, 100, 0, 0) { ConstructionTypeId = 1 } },
-            new [] { new PropertyFilterModel(100, 100, 0, 0) { PredominateUseId = 1 } },
-            new [] { new PropertyFilterModel(100, 100, 0, 0) { FloorCount = 1 } },
-            new [] { new PropertyFilterModel(100, 100, 0, 0) { Tenancy = "Tenancy" } },
-            new [] { new PropertyFilterModel(100, 100, 0, 0) { MinRentableArea = 1 } },
-            new [] { new PropertyFilterModel(100, 100, 0, 0) { MaxRentableArea = 1 } }
+            new [] { new SModel.PropertyFilterModel(100, 100, 0, 0) { ConstructionTypeId = 1 } },
+            new [] { new SModel.PropertyFilterModel(100, 100, 0, 0) { PredominateUseId = 1 } },
+            new [] { new SModel.PropertyFilterModel(100, 100, 0, 0) { FloorCount = 1 } },
+            new [] { new SModel.PropertyFilterModel(100, 100, 0, 0) { Tenancy = "Tenancy" } },
+            new [] { new SModel.PropertyFilterModel(100, 100, 0, 0) { MinRentableArea = 1 } },
+            new [] { new SModel.PropertyFilterModel(100, 100, 0, 0) { MaxRentableArea = 1 } }
         };
 
         public static IEnumerable<object[]> PropertyQueryFilters = new List<object[]>()
@@ -93,7 +93,7 @@ namespace Pims.Api.Test.Controllers.Property
         /// </summary>
         [Theory]
         [MemberData(nameof(AllPropertiesFilters))]
-        public void GetProperties_All_Success(PropertyFilterModel filter, bool includeParcels, bool includeBuildings)
+        public void GetProperties_All_Success(SModel.PropertyFilterModel filter, bool includeParcels, bool includeBuildings)
         {
             // Arrange
             var helper = new TestHelper();
@@ -116,8 +116,8 @@ namespace Pims.Api.Test.Controllers.Property
 
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
-            var actualResult = Assert.IsType<PropertyModel[]>(actionResult.Value);
-            var expectedResult = mapper.Map<PropertyModel[]>(parcels).Concat(mapper.Map<PropertyModel[]>(buildings));
+            var actualResult = Assert.IsType<SModel.PropertyModel[]>(actionResult.Value);
+            var expectedResult = mapper.Map<SModel.PropertyModel[]>(parcels).Concat(mapper.Map<SModel.PropertyModel[]>(buildings));
             Assert.Equal(expectedResult, actualResult, new DeepPropertyCompare());
             service.Verify(m => m.Property.Get(It.IsAny<AllPropertyFilter>()), Times.Once());
             Assert.Equal(includeParcels, filter.IncludeParcels);
@@ -129,7 +129,7 @@ namespace Pims.Api.Test.Controllers.Property
         /// </summary>
         [Theory]
         [MemberData(nameof(ParcelOnlyFilters))]
-        public void GetProperties_OnlyParcels_Success(PropertyFilterModel filter)
+        public void GetProperties_OnlyParcels_Success(SModel.PropertyFilterModel filter)
         {
             // Arrange
             var helper = new TestHelper();
@@ -150,8 +150,8 @@ namespace Pims.Api.Test.Controllers.Property
 
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
-            var actualResult = Assert.IsType<PropertyModel[]>(actionResult.Value);
-            var expectedResult = mapper.Map<PropertyModel[]>(parcels);
+            var actualResult = Assert.IsType<SModel.PropertyModel[]>(actionResult.Value);
+            var expectedResult = mapper.Map<SModel.PropertyModel[]>(parcels);
             Assert.Equal(expectedResult, actualResult, new DeepPropertyCompare());
             service.Verify(m => m.Property.Get(It.IsAny<AllPropertyFilter>()), Times.Once());
         }
@@ -161,7 +161,7 @@ namespace Pims.Api.Test.Controllers.Property
         /// </summary>
         [Theory]
         [MemberData(nameof(BuildingOnlyFilters))]
-        public void GetProperties_OnlyBuildings_Success(PropertyFilterModel filter)
+        public void GetProperties_OnlyBuildings_Success(SModel.PropertyFilterModel filter)
         {
             // Arrange
             var helper = new TestHelper();
@@ -182,8 +182,8 @@ namespace Pims.Api.Test.Controllers.Property
 
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
-            var actualResult = Assert.IsType<PropertyModel[]>(actionResult.Value);
-            var expectedResult = mapper.Map<PropertyModel[]>(buildings);
+            var actualResult = Assert.IsType<SModel.PropertyModel[]>(actionResult.Value);
+            var expectedResult = mapper.Map<SModel.PropertyModel[]>(buildings);
             Assert.Equal(expectedResult, actualResult, new DeepPropertyCompare());
             service.Verify(m => m.Property.Get(It.IsAny<AllPropertyFilter>()), Times.Once());
         }
@@ -221,8 +221,8 @@ namespace Pims.Api.Test.Controllers.Property
 
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
-            var actualResult = Assert.IsType<PropertyModel[]>(actionResult.Value);
-            var expectedResult = mapper.Map<PropertyModel[]>(items);
+            var actualResult = Assert.IsType<SModel.PropertyModel[]>(actionResult.Value);
+            var expectedResult = mapper.Map<SModel.PropertyModel[]>(items);
             Assert.Equal(expectedResult, actualResult, new DeepPropertyCompare());
             service.Verify(m => m.Property.Get(It.IsAny<AllPropertyFilter>()), Times.Once());
         }
@@ -276,7 +276,7 @@ namespace Pims.Api.Test.Controllers.Property
         [MemberData(nameof(AllPropertiesFilters))]
         [SuppressMessage("Usage", "xUnit1026:Theory methods should use all of their parameters", Justification = "Not Required")]
         [SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "Not Required")]
-        public void GetPropertiesPage_Success(PropertyFilterModel filter, bool includeParcels, bool includeBuildings)
+        public void GetPropertiesPage_Success(SModel.PropertyFilterModel filter, bool includeParcels, bool includeBuildings)
         {
             // Arrange
             var helper = new TestHelper();
@@ -298,8 +298,8 @@ namespace Pims.Api.Test.Controllers.Property
 
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
-            var actualResult = Assert.IsType<Api.Models.PageModel<PropertyModel>>(actionResult.Value);
-            var expectedResult = mapper.Map<PropertyModel[]>(parcels).JoinAll(mapper.Map<PropertyModel[]>(buildings));
+            var actualResult = Assert.IsType<Api.Models.PageModel<SModel.PropertyModel>>(actionResult.Value);
+            var expectedResult = mapper.Map<SModel.PropertyModel[]>(parcels).JoinAll(mapper.Map<SModel.PropertyModel[]>(buildings));
             Assert.Equal(expectedResult, actualResult.Items, new ShallowPropertyCompare());
             service.Verify(m => m.Property.GetPage(It.IsAny<Entity.Models.AllPropertyFilter>()), Times.Once());
         }
@@ -332,8 +332,8 @@ namespace Pims.Api.Test.Controllers.Property
 
             // Assert
             var actionResult = Assert.IsType<JsonResult>(result);
-            var actualResult = Assert.IsType<Api.Models.PageModel<PropertyModel>>(actionResult.Value);
-            var expectedResult = mapper.Map<PropertyModel[]>(parcels);
+            var actualResult = Assert.IsType<Api.Models.PageModel<SModel.PropertyModel>>(actionResult.Value);
+            var expectedResult = mapper.Map<SModel.PropertyModel[]>(parcels);
             Assert.Equal(expectedResult, actualResult.Items, new ShallowPropertyCompare());
             service.Verify(m => m.Property.GetPage(It.IsAny<Entity.Models.AllPropertyFilter>()), Times.Once());
         }

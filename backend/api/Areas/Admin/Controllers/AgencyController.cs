@@ -7,6 +7,9 @@ using Swashbuckle.AspNetCore.Annotations;
 using Entity = Pims.Dal.Entities;
 using Model = Pims.Api.Areas.Admin.Models.Agency;
 using EModel = Pims.Dal.Entities.Models;
+using Pims.Dal.Keycloak;
+using Pims.Core.Extensions;
+using System.Threading.Tasks;
 
 namespace Pims.Api.Areas.Admin.Controllers
 {
@@ -23,6 +26,7 @@ namespace Pims.Api.Areas.Admin.Controllers
     {
         #region Variables
         private readonly IPimsAdminService _pimsAdminService;
+        private readonly IPimsKeycloakService _pimsKeycloakService;
         private readonly IMapper _mapper;
         #endregion
 
@@ -31,10 +35,12 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// Creates a new instance of a AgencyController class.
         /// </summary>
         /// <param name="pimsAdminService"></param>
+        /// <param name="keycloakService"></param>
         /// <param name="mapper"></param>
-        public AgencyController(IPimsAdminService pimsAdminService, IMapper mapper)
+        public AgencyController(IPimsAdminService pimsAdminService, IPimsKeycloakService keycloakService, IMapper mapper)
         {
             _pimsAdminService = pimsAdminService;
+            _pimsKeycloakService = keycloakService;
             _mapper = mapper;
         }
         #endregion
@@ -98,10 +104,17 @@ namespace Pims.Api.Areas.Admin.Controllers
         [ProducesResponseType(typeof(Model.AgencyModel), 201)]
         [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]
         [SwaggerOperation(Tags = new[] { "admin-agency" })]
-        public IActionResult AddAgency([FromBody] Model.AgencyModel model)
+        public async Task<IActionResult> AddAgencyAsync([FromBody] Model.AgencyModel model)
         {
             var entity = _mapper.Map<Entity.Agency>(model);
             _pimsAdminService.Agency.Add(entity);
+
+            // TODO: This isn't ideal as the db update may be successful but this request may not.
+            await entity.Users.ForEachAsync(async u =>
+            {
+                var user = _pimsAdminService.User.Get(u.UserId);
+                await _pimsKeycloakService.UpdateUserAsync(user);
+            });
 
             var agency = _mapper.Map<Model.AgencyModel>(entity);
 
@@ -118,10 +131,17 @@ namespace Pims.Api.Areas.Admin.Controllers
         [ProducesResponseType(typeof(Model.AgencyModel), 200)]
         [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]
         [SwaggerOperation(Tags = new[] { "admin-agency" })]
-        public IActionResult UpdateAgency([FromBody] Model.AgencyModel model)
+        public async Task<IActionResult> UpdateAgencyAsync([FromBody] Model.AgencyModel model)
         {
             var entity = _mapper.Map<Entity.Agency>(model);
             _pimsAdminService.Agency.Update(entity);
+
+            // TODO: This isn't ideal as the db update may be successful but this request may not.
+            await entity.Users.ForEachAsync(async u =>
+            {
+                var user = _pimsAdminService.User.Get(u.UserId);
+                await _pimsKeycloakService.UpdateUserAsync(user);
+            });
 
             var agency = _mapper.Map<Model.AgencyModel>(entity);
             return new JsonResult(agency);
@@ -137,10 +157,17 @@ namespace Pims.Api.Areas.Admin.Controllers
         [ProducesResponseType(typeof(Model.AgencyModel), 200)]
         [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]
         [SwaggerOperation(Tags = new[] { "admin-agency" })]
-        public IActionResult DeleteAgency([FromBody] Model.AgencyModel model)
+        public async Task<IActionResult> DeleteAgencyAsync([FromBody] Model.AgencyModel model)
         {
             var entity = _mapper.Map<Entity.Agency>(model);
             _pimsAdminService.Agency.Remove(entity);
+
+            // TODO: This isn't ideal as the db update may be successful but this request may not.
+            await entity.Users.ForEachAsync(async u =>
+            {
+                var user = _pimsAdminService.User.Get(u.UserId);
+                await _pimsKeycloakService.UpdateUserAsync(user);
+            });
 
             return new JsonResult(model);
         }
