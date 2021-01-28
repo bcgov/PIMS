@@ -57,7 +57,7 @@ namespace Pims.Api.Areas.Property.Controllers
         [HttpGet]
         [HasPermission(Permissions.PropertyView)]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(IEnumerable<PropertyModel>), 200)]
+        [ProducesResponseType(typeof(IEnumerable<Models.Search.PropertyModel>), 200)]
         [SwaggerOperation(Tags = new[] { "property" })]
         [ResponseCache(Duration = 300, Location = ResponseCacheLocation.Client)]
         public IActionResult GetProperties()
@@ -75,7 +75,7 @@ namespace Pims.Api.Areas.Property.Controllers
         [HttpPost("filter")]
         [HasPermission(Permissions.PropertyView)]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(IEnumerable<PropertyModel>), 200)]
+        [ProducesResponseType(typeof(IEnumerable<Models.Search.PropertyModel>), 200)]
         [SwaggerOperation(Tags = new[] { "property" })]
         public IActionResult GetProperties([FromBody] PropertyFilterModel filter)
         {
@@ -83,7 +83,7 @@ namespace Pims.Api.Areas.Property.Controllers
             if (!filter.IsValid()) throw new BadRequestException("Property filter must contain valid values.");
 
             var properties = _pimsService.Property.Get((AllPropertyFilter)filter).ToArray();
-            return new JsonResult(_mapper.Map<PropertyModel[]>(properties).ToArray());
+            return new JsonResult(_mapper.Map<Models.Search.PropertyModel[]>(properties).ToArray());
         }
         #endregion
 
@@ -95,7 +95,7 @@ namespace Pims.Api.Areas.Property.Controllers
         [HttpGet("names")]
         [HasPermission(Permissions.PropertyView)]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(IEnumerable<PropertyModel>), 200)]
+        [ProducesResponseType(typeof(IEnumerable<Models.Search.PropertyModel>), 200)]
         [SwaggerOperation(Tags = new[] { "property" })]
         public IActionResult GetPropertyNames([FromQuery] PropertyFilterModel filter)
         {
@@ -114,7 +114,7 @@ namespace Pims.Api.Areas.Property.Controllers
         [HttpGet("wfs")]
         [HasPermission(Permissions.PropertyView)]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(IEnumerable<GeoJson<PropertyModel>>), 200)]
+        [ProducesResponseType(typeof(IEnumerable<GeoJson<Models.Search.PropertyModel>>), 200)]
         [SwaggerOperation(Tags = new[] { "property" })]
         [ResponseCache(Duration = 300, Location = ResponseCacheLocation.Client)]
         public IActionResult GetGeoJson()
@@ -132,7 +132,7 @@ namespace Pims.Api.Areas.Property.Controllers
         [HttpPost("wfs/filter")]
         [HasPermission(Permissions.PropertyView)]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(IEnumerable<GeoJson<PropertyModel>>), 200)]
+        [ProducesResponseType(typeof(IEnumerable<GeoJson<Models.Search.PropertyModel>>), 200)]
         [SwaggerOperation(Tags = new[] { "property" })]
         public IActionResult GetGeoJson([FromBody] GeoJsonFilterModel filter)
         {
@@ -143,7 +143,8 @@ namespace Pims.Api.Areas.Property.Controllers
             pfilter.PropertyType = filter.PropertyType;
 
             var properties = _pimsService.Property.Search(pfilter).ToArray();
-            return new JsonResult(_mapper.Map<GeoJson<PropertyModel>[]>(properties).ToArray());
+            var results = _mapper.Map<GeoJson<Models.Search.PropertyModel>[]>(properties).ToArray();
+            return new JsonResult(results);
         }
 
         #endregion
@@ -156,7 +157,7 @@ namespace Pims.Api.Areas.Property.Controllers
         [HttpGet("page")]
         [HasPermission(Permissions.PropertyView)]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(BModel.PageModel<PropertyModel>), 200)]
+        [ProducesResponseType(typeof(BModel.PageModel<Models.Search.PropertyModel>), 200)]
         [SwaggerOperation(Tags = new[] { "property" })]
         [ResponseCache(Duration = 300, Location = ResponseCacheLocation.Client)]
         public IActionResult GetPropertiesPage()
@@ -174,7 +175,7 @@ namespace Pims.Api.Areas.Property.Controllers
         [HttpPost("page/filter")]
         [HasPermission(Permissions.PropertyView)]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(BModel.PageModel<PropertyModel>), 200)]
+        [ProducesResponseType(typeof(BModel.PageModel<Models.Search.PropertyModel>), 200)]
         [SwaggerOperation(Tags = new[] { "property" })]
         public IActionResult GetPropertiesPage([FromBody] PropertyFilterModel filter)
         {
@@ -182,7 +183,7 @@ namespace Pims.Api.Areas.Property.Controllers
             if (!filter.IsValid()) throw new BadRequestException("Property filter must contain valid values.");
 
             var page = _pimsService.Property.GetPage((AllPropertyFilter)filter);
-            var result = _mapper.Map<BModel.PageModel<PropertyModel>>(page);
+            var result = _mapper.Map<BModel.PageModel<Models.Search.PropertyModel>>(page);
             return new JsonResult(result);
         }
         #endregion

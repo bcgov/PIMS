@@ -12,7 +12,7 @@ namespace Pims.Dal.Services
         int Count();
         IEnumerable<ProjectProperty> Get(AllPropertyFilter filter);
         IEnumerable<string> GetNames(AllPropertyFilter filter);
-        IEnumerable<ProjectProperty> Search(AllPropertyFilter filter);
+        IEnumerable<PropertyModel> Search(AllPropertyFilter filter);
         Paged<Property> GetPage(AllPropertyFilter filter);
     }
 }

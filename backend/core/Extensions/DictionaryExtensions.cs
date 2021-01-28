@@ -58,6 +58,18 @@ namespace Pims.Core.Extensions
         }
 
         /// <summary>
+        /// Get the value from the dictionary for the specified 'key' and return it as an boolean.
+        /// </summary>
+        /// <param name="dict"></param>
+        /// <param name="key"></param>
+        /// <param name="defaultValue"></param>
+        /// <returns></returns>
+        public static bool GetBoolValue(this IDictionary<string, Microsoft.Extensions.Primitives.StringValues> dict, string key, bool defaultValue = false)
+        {
+            return dict.TryGetValue(key, out Microsoft.Extensions.Primitives.StringValues dValue) && bool.TryParse(dValue, out bool value) ? value : defaultValue;
+        }
+
+        /// <summary>
         /// Get the value from the dictionary for the specified 'key' and return it as an float.
         /// </summary>
         /// <param name="dict"></param>

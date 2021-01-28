@@ -29,31 +29,26 @@ namespace Pims.Api.Areas.Property.Models.Search
         /// <summary>
         /// get/set - The request name.
         /// </summary>
-        /// <value></value>
         public string Request { get; set; }
 
         /// <summary>
         /// get/set - The layers that should be returned.
         /// </summary>
-        /// <value></value>
         public string Layers { get; set; }
 
         /// <summary>
         /// get/set - Parcel classification Id.
         /// </summary>
-        /// <value></value>
         public int? ClassificationId { get; set; }
 
         /// <summary>
         /// get/set - Parcel status Id.
         /// </summary>
-        /// <value></value>
         public int? StatusId { get; set; }
 
         /// <summary>
         /// get/set - The property address.
         /// </summary>
-        /// <value></value>
         public string Address { get; set; }
 
         /// <summary>
@@ -65,75 +60,67 @@ namespace Pims.Api.Areas.Property.Models.Search
         /// <summary>
         /// get/set - The SPP/RAEG project number.
         /// </summary>
-        /// <value></value>
         public string ProjectNumber { get; set; }
 
         /// <summary>
         /// get/set - Flag indicating properties in projects should be ignored.
         /// </summary>
-        /// <value></value>
         public bool? IgnorePropertiesInProjects { get; set; }
 
         /// <summary>
         /// get/set - Flag indicating to show only properties that belong to a project.
         /// </summary>
-        /// <value></value>
-
         public bool? InSurplusPropertyProgram { get; set; }
 
         /// <summary>
         /// get/set - Flag indicating to show only properties in enhanced referral process.
         /// </summary>
-        /// <value></value>
         public bool? InEnhancedReferralProcess { get; set; }
 
         /// <summary>
         /// get/set - A way to filter both Parcel.LandArea and the Building.BuildingRentableArea.
         /// </summary>
-        /// <value></value>
         public float? MinLotArea { get; set; }
 
         /// <summary>
         /// get/set - A way to filter both Parcel.LandArea and the Building.BuildingRentableArea.
         /// </summary>
-        /// <value></value>
         public float? MaxLotArea { get; set; }
 
         /// <summary>
         /// get/set - Building minimum market value.
         /// </summary>
-        /// <value></value>
         public decimal? MinMarketValue { get; set; }
 
         /// <summary>
         /// get/set - Bare land only flag
         /// </summary>
-        /// <value></value>
         public bool? BareLandOnly { get; set; }
 
         /// <summary>
         /// get/set - Building maximum market value.
         /// </summary>
-        /// <value></value>
         public decimal? MaxMarketValue { get; set; }
 
         /// <summary>
         /// get/set - Parcel minimum assessed value.
         /// </summary>
-        /// <value></value>
         public decimal? MinAssessedValue { get; set; }
 
         /// <summary>
         /// get/set - Parcel maximum assessed value.
         /// </summary>
-        /// <value></value>
         public decimal? MaxAssessedValue { get; set; }
 
         /// <summary>
         /// get/set - An array of agencies.
         /// </summary>
-        /// <value></value>
         public int[] Agencies { get; set; }
+
+        /// <summary>
+        /// get/set - Whether to include properties not owned by user's agency when searching.
+        /// </summary>
+        public bool IncludeAllProperties { get; set; }
 
         #region Parcel Filters
         /// <summary>
@@ -144,13 +131,11 @@ namespace Pims.Api.Areas.Property.Models.Search
         /// <summary>
         /// get/set - Parcel minimum land area.
         /// </summary>
-        /// <value></value>
         public float? MinLandArea { get; set; }
 
         /// <summary>
         /// get/set - Parcel maximum land area.
         /// </summary>
-        /// <value></value>
         public float? MaxLandArea { get; set; }
         #endregion
 
@@ -159,7 +144,6 @@ namespace Pims.Api.Areas.Property.Models.Search
         /// <summary>
         /// get/set - Building construction type Id.
         /// </summary>
-        /// <value></value>
         public int? ConstructionTypeId { get; set; }
 
         /// <summary>
@@ -171,56 +155,47 @@ namespace Pims.Api.Areas.Property.Models.Search
         /// <summary>
         /// get/set - Building predominant use Id.
         /// </summary>
-        /// <value></value>
         public int? PredominateUseId { get; set; }
 
         /// <summary>
         /// get/set - Parent Parcel Id.
         /// </summary>
-        /// <value></value>
         public int? ParcelId { get; set; }
 
         /// <summary>
         /// get/set - Parent Property Type Id.
         /// </summary>
-        /// <value></value>
         public PropertyTypes? PropertyType { get; set; }
 
         /// <summary>
         /// get/set - Building floor count Id.
         /// </summary>
-        /// <value></value>
         public int? FloorCount { get; set; }
 
         /// <summary>
         /// get/set - Building tenancy.
         /// </summary>
-        /// <value></value>
         public string Tenancy { get; set; }
 
         /// <summary>
         /// get/set - Building minimum rentable area.
         /// </summary>
-        /// <value></value>
         public float? MinRentableArea { get; set; }
 
         /// <summary>
         /// get/set - Building rentable area.
         /// </summary>
-        /// <value></value>
         public float? RentableArea { get; set; }
 
         /// <summary>
         /// get/set - Building maximum rentable area.
         /// </summary>
-        /// <value></value>
         public float? MaxRentableArea { get; set; }
         #endregion
 
         /// <summary>
         /// get - Determine if the filter should include parcels.
         /// </summary>
-        /// <value></value>
         public bool IncludeParcels
         {
             get
@@ -240,7 +215,6 @@ namespace Pims.Api.Areas.Property.Models.Search
         /// <summary>
         /// get - Determine if the filter should include buildings.
         /// </summary>
-        /// <value></value>
         public bool IncludeBuildings
         {
             get
@@ -290,6 +264,8 @@ namespace Pims.Api.Areas.Property.Models.Search
             this.Request = filter.GetStringValue(nameof(this.Request));
             this.Layers = filter.GetStringValue(nameof(this.Layers));
             this.Boundary = filter.GetEnvelopNullValue("bbox");
+
+            this.IncludeAllProperties = filter.GetBoolValue(nameof(this.IncludeAllProperties));
 
             this.Address = filter.GetStringValue(nameof(this.Address));
             this.AdministrativeArea = filter.GetStringValue(nameof(this.AdministrativeArea));

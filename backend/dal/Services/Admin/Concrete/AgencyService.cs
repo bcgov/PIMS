@@ -31,7 +31,7 @@ namespace Pims.Dal.Services.Admin
         #endregion
 
         #region Methods
-        
+
         /// <summary>
         /// Get a page of agencies from the datasource.
         /// </summary>
@@ -101,34 +101,144 @@ namespace Pims.Dal.Services.Admin
         }
 
         /// <summary>
-        /// Updates the specified agency in the datasource.
+        /// Add a new agency to the datasource.
+        /// The returned agency will contain all users who are affected by the update.
+        /// You will need to update Keycloak with this list.
         /// </summary>
-        /// <param name="entity"></param>
-        /// <exception type="KeyNotFoundException">Entity does not exist in the datasource.</exception>
-        /// <returns></returns>
-        public override void Update(Agency entity)
+        /// <param name="agency"></param>
+        public override void Add(Agency agency)
         {
-            entity.ThrowIfNull(nameof(entity));
+            agency.ThrowIfNull(nameof(agency));
 
-            var agency = this.Context.Agencies.Find(entity.Id) ?? throw new KeyNotFoundException();
+            base.Add(agency);
+            this.Context.Entry(agency).State = EntityState.Detached;
 
-            this.Context.Entry(agency).CurrentValues.SetValues(entity);
-            base.Update(agency);
+            // If the agency has been added as a sub-agency, then all users who are associated with the parent agency need to be updated.
+            // Currently in PIMS we only link a user to a single agency (although the DB supports one-to-many).
+            // This means that a user linked to a parent-agency will only have a single agency in the DB.
+            // However throughout the solution we also give access to all sub-agencies.
+            // Keycloak keeps a list of all the agencies that the user is allowed access to (parent + sub-agencies).
+            // This means we need to return a list of users that need to be updated in Keycloak.
+            if (agency.ParentId.HasValue)
+            {
+                var users = this.Context.Users.AsNoTracking().Where(u => u.Agencies.Any(a => a.AgencyId == agency.ParentId)).ToArray();
+                users.ForEach(u => agency.Users.Add(new UserAgency(u, agency)));
+            }
+        }
+
+        /// <summary>
+        /// Updates the specified agency in the datasource.
+        /// The returned agency will contain all users who are affected by the update.
+        /// You will need to update Keycloak with this list.
+        /// </summary>
+        /// <param name="agency"></param>
+        /// <exception type="KeyNotFoundException">agency does not exist in the datasource.</exception>
+        /// <returns></returns>
+        public override void Update(Agency agency)
+        {
+            agency.ThrowIfNull(nameof(agency));
+
+            var original = this.Context.Agencies.Find(agency.Id) ?? throw new KeyNotFoundException();
+            var updatedUsers = new List<User>();
+
+            // If the agency has become a sub-agency, or a parent-agency then users will need to be updated.
+            // Currently in PIMS we only link a user to a single agency (although the DB supports one-to-many).
+            // This means that a user linked to a parent-agency will only have a single agency in the DB.
+            // However throughout the solution we also give access to all sub-agencies.
+            // Keycloak keeps a list of all the agencies that the user is allowed access to (parent + sub-agencies).
+            // This means we need to return a list of users that need to be updated in Keycloak.
+            if (original.ParentId.HasValue && !agency.ParentId.HasValue)
+            {
+                // This agency has become a parent agency, all users associated with it through a parent-agency need to be removed.
+                updatedUsers.AddRange(this.Context.Users.Where(u => u.Agencies.Any(a => a.AgencyId == original.ParentId)));
+            }
+            else if (!original.ParentId.HasValue && agency.ParentId.HasValue)
+            {
+                // This agency has become a sub-agency, all original users need their list of agencies reduced to only this agency.
+                updatedUsers.AddRange(this.Context.Users.Include(u => u.Agencies).Where(u => u.Agencies.Any(a => a.AgencyId == agency.ParentId)));
+            }
+            else if (original.ParentId != agency.ParentId)
+            {
+                // Remove the sub-agency from currently linked users and add it to the users who belong to the new parent agency.
+                updatedUsers.AddRange(this.Context.Users.Where(u => u.Agencies.Any(a => a.AgencyId == original.ParentId)));
+                updatedUsers.AddRange(this.Context.Users.Where(u => u.Agencies.Any(a => a.AgencyId == agency.ParentId)));
+            }
+
+            if (original.IsDisabled != agency.IsDisabled)
+            {
+                if ((agency.ParentId.HasValue && agency.IsDisabled)
+                    || (agency.ParentId.HasValue && !agency.IsDisabled))
+                {
+                    // Remove the sub-agency from users.
+                    // Or add the sub-agency to users who are associated with the parent.
+                    updatedUsers.AddRange(this.Context.Users.Where(u => u.Agencies.Any(a => a.AgencyId == agency.ParentId)));
+                }
+                else if (!agency.ParentId.HasValue && agency.IsDisabled)
+                {
+                    // Remove the agency from the users.
+                    // This will result in the user not belonging to an agency.
+                    var users = this.Context.Users.Include(u => u.Agencies).Where(u => u.Agencies.Any(a => a.AgencyId == agency.Id));
+                    users.ForEach(u => u.Agencies.Clear());
+                    updatedUsers.AddRange(users);
+                    this.Context.UpdateRange(users);
+                }
+            }
+
+            this.Context.Entry(original).CurrentValues.SetValues(agency);
+            base.Update(original);
+
+            // Mutate original entity.
+            this.Context.Entry(agency).CurrentValues.SetValues(original);
+            updatedUsers.Distinct().ForEach(u =>
+            {
+                this.Context.Entry(u).State = EntityState.Detached;
+                agency.Users.Add(new UserAgency(u, agency));
+            });
         }
 
         /// <summary>
         /// Remove the specified agency from the datasource.
+        /// The returned agency will contain all users who are affected by the update.
+        /// You will need to update Keycloak with this list.
         /// </summary>
         /// <exception type="KeyNotFoundException">Entity does not exist in the datasource.</exception>
-        /// <param name="entity"></param>
-        public override void Remove(Agency entity)
+        /// <param name="agency"></param>
+        public override void Remove(Agency agency)
         {
-            entity.ThrowIfNull(nameof(entity));
+            agency.ThrowIfNull(nameof(agency));
 
-            var agency = this.Context.Agencies.Find(entity.Id) ?? throw new KeyNotFoundException();
+            var original = this.Context.Agencies.Find(agency.Id) ?? throw new KeyNotFoundException();
+            var updateUsers = new List<User>();
 
-            this.Context.Entry(agency).CurrentValues.SetValues(entity);
-            base.Remove(agency);
+            // Any user associated with this agency needs to be updated.
+            // Currently in PIMS we only link a user to a single agency (although the DB supports one-to-many).
+            // This means that a user linked to a parent-agency will only have a single agency in the DB.
+            // However throughout the solution we also give access to all sub-agencies.
+            // Keycloak keeps a list of all the agencies that the user is allowed access to (parent + sub-agencies).
+            // This means we need to return a list of users that need to be updated in Keycloak.
+            if (original.ParentId.HasValue)
+            {
+                var users = this.Context.Users.Include(u => u.Agencies).Where(u => u.Agencies.Any(a => a.AgencyId == agency.ParentId));
+                updateUsers.AddRange(users);
+            }
+            else
+            {
+                var users = this.Context.Users.Include(u => u.Agencies).Where(u => u.Agencies.Any(a => a.AgencyId == agency.Id));
+                users.ForEach(u => u.Agencies.Clear());
+                this.Context.Users.UpdateRange(users);
+                updateUsers.AddRange(users);
+            }
+
+            this.Context.Entry(original).CurrentValues.SetValues(agency);
+            base.Remove(original);
+
+            // Mutate original entity.
+            this.Context.Entry(agency).CurrentValues.SetValues(original);
+            updateUsers.ForEach(u =>
+            {
+                this.Context.Entry(u).State = EntityState.Detached;
+                agency.Users.Add(new UserAgency(u, agency));
+            });
         }
         #endregion
     }
