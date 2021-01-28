@@ -63,6 +63,9 @@ exports[`Property List View Select renders correctly 1`] = `
                   type="checkbox"
                 />
               </div>
+              <span
+                style="flex: 1 1 auto;"
+              />
             </div>
           </div>
           <div
@@ -75,6 +78,9 @@ exports[`Property List View Select renders correctly 1`] = `
               class="sortable-column"
             >
               Agency
+              <span
+                style="flex: 1 1 auto;"
+              />
             </div>
           </div>
           <div
@@ -87,6 +93,9 @@ exports[`Property List View Select renders correctly 1`] = `
               class="sortable-column"
             >
               Name
+              <span
+                style="flex: 1 1 auto;"
+              />
             </div>
           </div>
           <div
@@ -99,6 +108,9 @@ exports[`Property List View Select renders correctly 1`] = `
               class="sortable-column"
             >
               Civic Address
+              <span
+                style="flex: 1 1 auto;"
+              />
             </div>
           </div>
           <div
@@ -111,6 +123,9 @@ exports[`Property List View Select renders correctly 1`] = `
               class="sortable-column"
             >
               Classification
+              <span
+                style="flex: 1 1 auto;"
+              />
             </div>
           </div>
           <div
@@ -123,6 +138,9 @@ exports[`Property List View Select renders correctly 1`] = `
               class="sortable-column"
             >
               Current Zoning Code
+              <span
+                style="flex: 1 1 auto;"
+              />
             </div>
           </div>
           <div
@@ -135,6 +153,9 @@ exports[`Property List View Select renders correctly 1`] = `
               class="sortable-column"
             >
               Other Projects
+              <span
+                style="flex: 1 1 auto;"
+              />
             </div>
           </div>
           <div
@@ -147,6 +168,9 @@ exports[`Property List View Select renders correctly 1`] = `
               class="sortable-column"
             >
               Net Book Value
+              <span
+                style="flex: 1 1 auto;"
+              />
             </div>
           </div>
           <div
@@ -159,6 +183,9 @@ exports[`Property List View Select renders correctly 1`] = `
               class="sortable-column"
             >
               Market Value
+              <span
+                style="flex: 1 1 auto;"
+              />
             </div>
           </div>
           <div
@@ -171,6 +198,9 @@ exports[`Property List View Select renders correctly 1`] = `
               class="sortable-column"
             >
               Assessed Value
+              <span
+                style="flex: 1 1 auto;"
+              />
             </div>
           </div>
           <div
@@ -183,6 +213,9 @@ exports[`Property List View Select renders correctly 1`] = `
               class="sortable-column"
             >
               Type
+              <span
+                style="flex: 1 1 auto;"
+              />
             </div>
           </div>
         </div>
@@ -246,6 +279,9 @@ exports[`Property List View Select renders correctly 1`] = `
                   type="checkbox"
                 />
               </div>
+              <span
+                style="flex: 1 1 auto;"
+              />
             </div>
           </div>
           <div
@@ -258,6 +294,9 @@ exports[`Property List View Select renders correctly 1`] = `
               class="sortable-column"
             >
               
+              <span
+                style="flex: 1 1 auto;"
+              />
             </div>
           </div>
           <div
@@ -270,6 +309,9 @@ exports[`Property List View Select renders correctly 1`] = `
               class="sortable-column"
             >
               Agency
+              <span
+                style="flex: 1 1 auto;"
+              />
             </div>
           </div>
           <div
@@ -282,6 +324,9 @@ exports[`Property List View Select renders correctly 1`] = `
               class="sortable-column"
             >
               Name
+              <span
+                style="flex: 1 1 auto;"
+              />
             </div>
           </div>
           <div
@@ -294,6 +339,9 @@ exports[`Property List View Select renders correctly 1`] = `
               class="sortable-column"
             >
               Civic Address
+              <span
+                style="flex: 1 1 auto;"
+              />
             </div>
           </div>
           <div
@@ -306,6 +354,9 @@ exports[`Property List View Select renders correctly 1`] = `
               class="sortable-column"
             >
               Classification
+              <span
+                style="flex: 1 1 auto;"
+              />
             </div>
           </div>
           <div
@@ -318,6 +369,9 @@ exports[`Property List View Select renders correctly 1`] = `
               class="sortable-column"
             >
               Current Zoning Code
+              <span
+                style="flex: 1 1 auto;"
+              />
             </div>
           </div>
           <div
@@ -330,6 +384,9 @@ exports[`Property List View Select renders correctly 1`] = `
               class="sortable-column"
             >
               Other Projects
+              <span
+                style="flex: 1 1 auto;"
+              />
             </div>
           </div>
           <div
@@ -342,6 +399,9 @@ exports[`Property List View Select renders correctly 1`] = `
               class="sortable-column"
             >
               Net Book Value
+              <span
+                style="flex: 1 1 auto;"
+              />
             </div>
           </div>
           <div
@@ -354,6 +414,9 @@ exports[`Property List View Select renders correctly 1`] = `
               class="sortable-column"
             >
               Market Value
+              <span
+                style="flex: 1 1 auto;"
+              />
             </div>
           </div>
           <div
@@ -366,6 +429,9 @@ exports[`Property List View Select renders correctly 1`] = `
               class="sortable-column"
             >
               Assessed Value
+              <span
+                style="flex: 1 1 auto;"
+              />
             </div>
           </div>
           <div
@@ -378,6 +444,9 @@ exports[`Property List View Select renders correctly 1`] = `
               class="sortable-column"
             >
               Type
+              <span
+                style="flex: 1 1 auto;"
+              />
             </div>
           </div>
         </div>

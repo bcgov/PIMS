@@ -294,6 +294,13 @@ exports[`Manage access requests Snapshot matches 1`] = `
               className="sortable-column"
             >
               IDIR/BCeID
+              <span
+                style={
+                  Object {
+                    "flex": "1 1 auto",
+                  }
+                }
+              />
             </div>
           </div>
           <div
@@ -317,6 +324,13 @@ exports[`Manage access requests Snapshot matches 1`] = `
               className="sortable-column"
             >
               First name
+              <span
+                style={
+                  Object {
+                    "flex": "1 1 auto",
+                  }
+                }
+              />
             </div>
           </div>
           <div
@@ -340,6 +354,13 @@ exports[`Manage access requests Snapshot matches 1`] = `
               className="sortable-column"
             >
               Last name
+              <span
+                style={
+                  Object {
+                    "flex": "1 1 auto",
+                  }
+                }
+              />
             </div>
           </div>
           <div
@@ -363,6 +384,13 @@ exports[`Manage access requests Snapshot matches 1`] = `
               className="sortable-column"
             >
               Email
+              <span
+                style={
+                  Object {
+                    "flex": "1 1 auto",
+                  }
+                }
+              />
             </div>
           </div>
           <div
@@ -386,6 +414,13 @@ exports[`Manage access requests Snapshot matches 1`] = `
               className="sortable-column"
             >
               Position
+              <span
+                style={
+                  Object {
+                    "flex": "1 1 auto",
+                  }
+                }
+              />
             </div>
           </div>
           <div
@@ -409,6 +444,13 @@ exports[`Manage access requests Snapshot matches 1`] = `
               className="sortable-column"
             >
               Status
+              <span
+                style={
+                  Object {
+                    "flex": "1 1 auto",
+                  }
+                }
+              />
             </div>
           </div>
           <div
@@ -432,6 +474,13 @@ exports[`Manage access requests Snapshot matches 1`] = `
               className="sortable-column"
             >
               Agency
+              <span
+                style={
+                  Object {
+                    "flex": "1 1 auto",
+                  }
+                }
+              />
             </div>
           </div>
           <div
@@ -455,6 +504,13 @@ exports[`Manage access requests Snapshot matches 1`] = `
               className="sortable-column"
             >
               Role
+              <span
+                style={
+                  Object {
+                    "flex": "1 1 auto",
+                  }
+                }
+              />
             </div>
           </div>
           <div
@@ -478,6 +534,13 @@ exports[`Manage access requests Snapshot matches 1`] = `
               className="sortable-column"
             >
                
+              <span
+                style={
+                  Object {
+                    "flex": "1 1 auto",
+                  }
+                }
+              />
             </div>
           </div>
         </div>

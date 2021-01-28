@@ -258,6 +258,13 @@ exports[`Manage Agencies Component Snapshot matches 1`] = `
               className="sortable-column"
             >
               Agency name
+              <span
+                style={
+                  Object {
+                    "flex": "1 1 auto",
+                  }
+                }
+              />
             </div>
           </div>
           <div
@@ -281,6 +288,13 @@ exports[`Manage Agencies Component Snapshot matches 1`] = `
               className="sortable-column"
             >
               Short name
+              <span
+                style={
+                  Object {
+                    "flex": "1 1 auto",
+                  }
+                }
+              />
             </div>
           </div>
           <div
@@ -304,6 +318,13 @@ exports[`Manage Agencies Component Snapshot matches 1`] = `
               className="sortable-column"
             >
               Description
+              <span
+                style={
+                  Object {
+                    "flex": "1 1 auto",
+                  }
+                }
+              />
             </div>
           </div>
           <div
@@ -327,6 +348,13 @@ exports[`Manage Agencies Component Snapshot matches 1`] = `
               className="sortable-column"
             >
               Parent Agency
+              <span
+                style={
+                  Object {
+                    "flex": "1 1 auto",
+                  }
+                }
+              />
             </div>
           </div>
         </div>

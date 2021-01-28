@@ -15,6 +15,12 @@ namespace Pims.Api.Areas.Property.Models.Search
         public int Id { get; set; }
 
         /// <summary>
+        /// get/set - The concurrency row version.
+        /// </summary>
+        /// <value></value>
+        public string RowVersion { get; set; }
+
+        /// <summary>
         /// get/set - The foreign key to the property type [Land, Building].
         /// </summary>
         public int PropertyTypeId { get; set; }
