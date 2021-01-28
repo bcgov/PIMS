@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Http.Extensions;
 using Pims.Api.Areas.Admin.Models.Parcel;
 using Pims.Api.Helpers.Extensions;
 using Pims.Api.Helpers.Exceptions;
-using Pims.Dal.Entities.Models;
+using EModel = Pims.Dal.Entities.Models;
 using System.Linq;
 
 namespace Pims.Api.Areas.Property.Controllers
@@ -77,13 +77,13 @@ namespace Pims.Api.Areas.Property.Controllers
         [HttpGet]
         [HasPermission(Permissions.PropertyView)]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(IEnumerable<ParcelModel>), 200)]
+        [ProducesResponseType(typeof(IEnumerable<Model.ParcelModel>), 200)]
         [SwaggerOperation(Tags = new[] { "parcel" })]
         public IActionResult GetParcels()
         {
             var uri = new Uri(this.Request.GetDisplayUrl());
             var query = Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(uri.Query);
-            return GetParcels(new ParcelFilter(query));
+            return GetParcels(new EModel.ParcelFilter(query));
         }
 
         /// <summary>
@@ -94,14 +94,14 @@ namespace Pims.Api.Areas.Property.Controllers
         [HttpPost("filter")]
         [HasPermission(Permissions.PropertyView)]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(IEnumerable<PropertyModel>), 200)]
+        [ProducesResponseType(typeof(IEnumerable<Model.PropertyModel>), 200)]
         [SwaggerOperation(Tags = new[] { "parcel" })]
-        public IActionResult GetParcels([FromBody]ParcelFilter filter)
+        public IActionResult GetParcels([FromBody] EModel.ParcelFilter filter)
         {
             filter.ThrowBadRequestIfNull($"The request must include a filter.");
             if (!filter.IsValid()) throw new BadRequestException("Parcel filter must contain valid values.");
 
-            var parcels = _pimsService.Parcel.Get((ParcelFilter)filter).ToArray();
+            var parcels = _pimsService.Parcel.Get((EModel.ParcelFilter)filter).ToArray();
             return new JsonResult(_mapper.Map<Model.ParcelModel[]>(parcels).ToArray());
         }
 
@@ -174,6 +174,26 @@ namespace Pims.Api.Areas.Property.Controllers
             var entity = _mapper.Map<Entity.Parcel>(model);
 
             var parcel = _pimsService.Parcel.Update(entity);
+            return new JsonResult(_mapper.Map<Model.ParcelModel>(parcel));
+        }
+
+        /// <summary>
+        /// Update the specified parcel financials values in the datasource if the user is allowed.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPut("{id}/financials")]
+        [HasPermission(Permissions.PropertyEdit)]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Model.ParcelModel), 200)]
+        [SwaggerOperation(Tags = new[] { "parcel" })]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "To support standardized routes (/update/{id})")]
+        public IActionResult UpdateParcelFinancials(int id, [FromBody] Model.ParcelModel model)
+        {
+            var entity = _mapper.Map<Entity.Parcel>(model);
+
+            var parcel = _pimsService.Parcel.UpdateFinancials(entity);
             return new JsonResult(_mapper.Map<Model.ParcelModel>(parcel));
         }
 

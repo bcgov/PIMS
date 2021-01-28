@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Pims.Core.Extensions
 {
@@ -37,6 +38,30 @@ namespace Pims.Core.Extensions
             {
                 action.Invoke(item, i++);
             }
+        }
+
+        /// <summary>
+        /// Iterates through the enumerable collection and performs the specified action.
+        /// </summary>
+        /// <param name="items"></param>
+        /// <param name="action"></param>
+        /// <typeparam name="T"></typeparam>
+        public static async Task ForEachAsync<T>(this IEnumerable<T> items, Func<T, Task> action)
+        {
+            await Task.WhenAll(items.Select(i => action.Invoke(i)).ToArray());
+        }
+
+        /// <summary>
+        /// Iterates through the enumerable collection and performs the specified action.
+        /// Increments the index and passes it to the action.
+        /// </summary>
+        /// <param name="items"></param>
+        /// <param name="action"></param>
+        /// <typeparam name="T"></typeparam>
+        public static async Task ForEachAsync<T>(this IEnumerable<T> items, Func<T, int, Task> action)
+        {
+            var index = 0;
+            await Task.WhenAll(items.Select(i => action.Invoke(i, index++)).ToArray());
         }
 
         /// <summary>

@@ -310,9 +310,8 @@ Update the configuration file and set the appropriate parameters.
 **Example**
 
 ```conf
-ELASTICSEARCH_DOMAIN=pims-elastic.apps.silver.devops.gov.bc.ca
+ELASTICSEARCH_NAME=elasticsearch
 KIBANA_DOMAIN=pims-kibana.apps.silver.devops.gov.bc.ca
-ELASTIC_PASSWORD={SECRET}
 ```
 
 Create the api build and save the template.
@@ -323,7 +322,7 @@ oc project 354028-tools
 oc process -f deploy-kibana.yaml --param-file=deploy.kibana.env | oc create --save-config=true -f -
 ```
 
-Once the pod is up you can test by going to the url [pims-kibana.apps.silver.devops.gov.bc.ca](https://pims-kibana.apps.silver.devops.gov.bc.ca) and entering the username and password you configured.
+Once the pod is up you can test by going to the url [pims-kibana.apps.silver.devops.gov.bc.ca](https://pims-kibana.apps.silver.devops.gov.bc.ca) and entering the username `elastic` and password you configured for elasticsearch.
 
 ### Configure API
 

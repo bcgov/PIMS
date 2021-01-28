@@ -106,6 +106,30 @@ namespace Pims.Api.Areas.Property.Controllers
         }
 
         /// <summary>
+        /// Update the specified building financial values in the datasource if the user is allowed.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPut("{id}/financials")]
+        [HasPermission(Permissions.PropertyEdit)]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Model.BuildingModel), 200)]
+        [ProducesResponseType(typeof(ApiModels.ErrorResponseModel), 400)]
+        [ProducesResponseType(typeof(ApiModels.ErrorResponseModel), 403)]
+        [SwaggerOperation(Tags = new[] { "building" })]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "To support standardized routes (/update/{id})")]
+        public IActionResult UpdateBuildingFinancials(int id, [FromBody] Model.BuildingModel model)
+        {
+            var entity = _mapper.Map<Entity.Building>(model);
+
+            var updatedEntity = _pimsService.Building.UpdateFinancials(entity);
+            var building = _mapper.Map<Model.BuildingModel>(updatedEntity);
+
+            return new JsonResult(building);
+        }
+
+        /// <summary>
         /// Delete the specified building from the datasource if the user is allowed.
         /// </summary>
         /// <param name="id"></param>

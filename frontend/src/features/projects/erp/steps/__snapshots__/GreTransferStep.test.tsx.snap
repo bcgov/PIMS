@@ -298,6 +298,13 @@ exports[`GRE Transfer Step renders correctly 1`] = `
                   className="sortable-column"
                 >
                   Agency
+                  <span
+                    style={
+                      Object {
+                        "flex": "1 1 auto",
+                      }
+                    }
+                  />
                 </div>
               </div>
               <div
@@ -321,6 +328,13 @@ exports[`GRE Transfer Step renders correctly 1`] = `
                   className="sortable-column"
                 >
                   Name
+                  <span
+                    style={
+                      Object {
+                        "flex": "1 1 auto",
+                      }
+                    }
+                  />
                 </div>
               </div>
               <div
@@ -344,6 +358,13 @@ exports[`GRE Transfer Step renders correctly 1`] = `
                   className="sortable-column"
                 >
                   Civic Address
+                  <span
+                    style={
+                      Object {
+                        "flex": "1 1 auto",
+                      }
+                    }
+                  />
                 </div>
               </div>
               <div
@@ -367,6 +388,13 @@ exports[`GRE Transfer Step renders correctly 1`] = `
                   className="sortable-column"
                 >
                   Classification
+                  <span
+                    style={
+                      Object {
+                        "flex": "1 1 auto",
+                      }
+                    }
+                  />
                 </div>
               </div>
               <div
@@ -390,6 +418,13 @@ exports[`GRE Transfer Step renders correctly 1`] = `
                   className="sortable-column"
                 >
                   Current Zoning Code
+                  <span
+                    style={
+                      Object {
+                        "flex": "1 1 auto",
+                      }
+                    }
+                  />
                 </div>
               </div>
               <div
@@ -413,6 +448,13 @@ exports[`GRE Transfer Step renders correctly 1`] = `
                   className="sortable-column"
                 >
                   Other Projects
+                  <span
+                    style={
+                      Object {
+                        "flex": "1 1 auto",
+                      }
+                    }
+                  />
                 </div>
               </div>
               <div
@@ -436,6 +478,13 @@ exports[`GRE Transfer Step renders correctly 1`] = `
                   className="sortable-column"
                 >
                   Net Book Value
+                  <span
+                    style={
+                      Object {
+                        "flex": "1 1 auto",
+                      }
+                    }
+                  />
                 </div>
               </div>
               <div
@@ -459,6 +508,13 @@ exports[`GRE Transfer Step renders correctly 1`] = `
                   className="sortable-column"
                 >
                   Market Value
+                  <span
+                    style={
+                      Object {
+                        "flex": "1 1 auto",
+                      }
+                    }
+                  />
                 </div>
               </div>
               <div
@@ -482,6 +538,13 @@ exports[`GRE Transfer Step renders correctly 1`] = `
                   className="sortable-column"
                 >
                   Assessed Value
+                  <span
+                    style={
+                      Object {
+                        "flex": "1 1 auto",
+                      }
+                    }
+                  />
                 </div>
               </div>
               <div
@@ -505,6 +568,13 @@ exports[`GRE Transfer Step renders correctly 1`] = `
                   className="sortable-column"
                 >
                   Type
+                  <span
+                    style={
+                      Object {
+                        "flex": "1 1 auto",
+                      }
+                    }
+                  />
                 </div>
               </div>
             </div>

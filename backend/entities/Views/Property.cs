@@ -17,6 +17,12 @@ namespace Pims.Dal.Entities.Views
         public int Id { get; set; }
 
         /// <summary>
+        /// get/set - The concurrency row version.
+        /// </summary>
+        /// <value></value>
+        public byte[] RowVersion { get; set; }
+
+        /// <summary>
         /// get/set - The property type [0=Parcel, 1=Building].
         /// </summary>
         public PropertyTypes PropertyTypeId { get; set; }
@@ -121,7 +127,7 @@ namespace Pims.Dal.Entities.Views
         /// get/set - The most recent market value.
         /// </summary>
         [Column(TypeName = "MONEY")]
-        public decimal Market { get; set; }
+        public decimal? Market { get; set; }
 
         /// <summary>
         /// get/set - The fiscal year for the market value.
@@ -132,7 +138,7 @@ namespace Pims.Dal.Entities.Views
         /// get/set - The most recent netbook value.
         /// </summary>
         [Column(TypeName = "MONEY")]
-        public decimal NetBook { get; set; }
+        public decimal? NetBook { get; set; }
 
         /// <summary>
         /// get/set - The fiscal year netbook value.
@@ -143,7 +149,7 @@ namespace Pims.Dal.Entities.Views
         /// get/set - The most recent assessment.
         /// </summary>
         [Column(TypeName = "MONEY")]
-        public decimal Assessed { get; set; }
+        public decimal? Assessed { get; set; }
 
         /// <summary>
         /// get/set - When the assessment was completed.
@@ -154,7 +160,7 @@ namespace Pims.Dal.Entities.Views
         /// get/set - The most recent appraisal.
         /// </summary>
         [Column(TypeName = "MONEY")]
-        public decimal Appraised { get; set; }
+        public decimal? Appraised { get; set; }
 
         /// <summary>
         /// get/set - When the appraisal was completed.
@@ -209,7 +215,7 @@ namespace Pims.Dal.Entities.Views
         /// <summary>
         /// get/set - The foreign key to the property building construction type.
         /// </summary>
-        public int BuildingConstructionTypeId { get; set; }
+        public int? BuildingConstructionTypeId { get; set; }
 
         /// <summary>
         /// get/set - The building construction type for this property.
@@ -219,12 +225,12 @@ namespace Pims.Dal.Entities.Views
         /// <summary>
         /// get/set - The number of floors in the building.
         /// </summary>
-        public int BuildingFloorCount { get; set; }
+        public int? BuildingFloorCount { get; set; }
 
         /// <summary>
         /// get/set - The foreign key to the building predominant use.
         /// </summary>
-        public int BuildingPredominateUseId { get; set; }
+        public int? BuildingPredominateUseId { get; set; }
 
         /// <summary>
         /// get/set - The building predominant use for this building.
@@ -239,12 +245,12 @@ namespace Pims.Dal.Entities.Views
         /// <summary>
         /// get/set - The building rentable area.
         /// </summary>
-        public float RentableArea { get; set; }
+        public float? RentableArea { get; set; }
 
         /// <summary>
         /// get/set - The foreign key to the building occupant type.
         /// </summary>
-        public int BuildingOccupantTypeId { get; set; }
+        public int? BuildingOccupantTypeId { get; set; }
 
         /// <summary>
         /// get/set - The type of occupant for this building.
@@ -264,7 +270,7 @@ namespace Pims.Dal.Entities.Views
         /// <summary>
         /// get/set - Whether the lease on this building would be transferred if the building is sold.
         /// </summary>
-        public bool TransferLeaseOnSale { get; set; } = false;
+        public bool? TransferLeaseOnSale { get; set; }
         #endregion
         #endregion
 

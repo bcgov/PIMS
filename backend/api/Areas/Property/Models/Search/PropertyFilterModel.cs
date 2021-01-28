@@ -287,7 +287,6 @@ namespace Pims.Api.Areas.Property.Models.Search
         {
             // We want case-insensitive query parameter properties.
             var filter = new Dictionary<string, Microsoft.Extensions.Primitives.StringValues>(query, StringComparer.OrdinalIgnoreCase);
-            PropertyTypes propType;
 
             this.NELatitude = filter.GetDoubleNullValue(nameof(this.NELatitude));
             this.NELongitude = filter.GetDoubleNullValue(nameof(this.NELongitude));
@@ -299,7 +298,7 @@ namespace Pims.Api.Areas.Property.Models.Search
             this.StatusId = filter.GetIntNullValue(nameof(this.StatusId));
             this.ClassificationId = filter.GetIntNullValue(nameof(this.ClassificationId));
             this.ParcelId = filter.GetIntNullValue(nameof(this.ParcelId));
-            this.PropertyType = Enum.TryParse(filter.GetStringValue(nameof(this.PropertyType), null), out propType) ? (PropertyTypes?)propType : null;
+            this.PropertyType = Enum.TryParse(filter.GetStringValue(nameof(this.PropertyType), null), out PropertyTypes propType) ? (PropertyTypes?)propType : null;
             this.ProjectNumber = filter.GetStringValue(nameof(this.ProjectNumber));
             this.IgnorePropertiesInProjects = filter.GetBoolNullValue(nameof(this.IgnorePropertiesInProjects));
             this.InSurplusPropertyProgram = filter.GetBoolNullValue(nameof(this.InSurplusPropertyProgram));
@@ -328,8 +327,6 @@ namespace Pims.Api.Areas.Property.Models.Search
             this.MinRentableArea = filter.GetFloatNullValue(nameof(this.MinRentableArea)) ?? filter.GetFloatNullValue(nameof(this.MinLotArea));
             this.MaxRentableArea = filter.GetFloatNullValue(nameof(this.MaxRentableArea)) ?? filter.GetFloatNullValue(nameof(this.MaxLotArea));
             this.RentableArea = filter.GetFloatNullValue(nameof(this.RentableArea)) ?? filter.GetFloatNullValue(nameof(this.RentableArea));
-
-
         }
         #endregion
 

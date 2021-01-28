@@ -90,7 +90,7 @@ namespace Pims.Api.Areas.Reports.Controllers
 
             filter.Quantity = all ? _pimsService.Property.Count() : filter.Quantity;
             var page = _pimsService.Property.GetPage((AllPropertyFilter)filter);
-            var report = _mapper.Map<Api.Models.PageModel<PropertyModel>>(page);
+            var report = _mapper.Map<Api.Models.PageModel<Models.Property.PropertyModel>>(page);
 
             return accept.ToString() switch
             {

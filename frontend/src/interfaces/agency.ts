@@ -1,5 +1,5 @@
 export interface IAgency {
-  parentId: any;
+  parentId?: any;
   code: string;
   id: number;
   name: string;
@@ -10,7 +10,7 @@ export interface IAgency {
 
 /** for use in editing and viewing agency details */
 export interface IAgencyDetail {
-  parentId: number;
+  parentId?: number;
   email: string;
   id: number;
   name: string;

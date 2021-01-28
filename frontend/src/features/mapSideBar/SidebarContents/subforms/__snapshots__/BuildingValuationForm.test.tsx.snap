@@ -41,6 +41,9 @@ exports[`renders correctly 1`] = `
                 class="sortable-column"
               >
                 Assessed Value
+                <span
+                  style="flex: 1 1 auto;"
+                />
               </div>
             </div>
           </div>
@@ -62,6 +65,9 @@ exports[`renders correctly 1`] = `
                 class="sortable-column"
               >
                 Assessment Year
+                <span
+                  style="flex: 1 1 auto;"
+                />
               </div>
             </div>
             <div
@@ -74,6 +80,9 @@ exports[`renders correctly 1`] = `
                 class="sortable-column"
               >
                 Assessed Building Value
+                <span
+                  style="flex: 1 1 auto;"
+                />
               </div>
             </div>
           </div>
@@ -463,6 +472,9 @@ exports[`renders correctly 1`] = `
                 class="sortable-column"
               >
                 Net Book Value
+                <span
+                  style="flex: 1 1 auto;"
+                />
               </div>
             </div>
           </div>
@@ -484,6 +496,9 @@ exports[`renders correctly 1`] = `
                 class="sortable-column"
               >
                 Fiscal Year
+                <span
+                  style="flex: 1 1 auto;"
+                />
               </div>
             </div>
             <div
@@ -496,6 +511,9 @@ exports[`renders correctly 1`] = `
                 class="sortable-column"
               >
                 Effective Date
+                <span
+                  style="flex: 1 1 auto;"
+                />
               </div>
             </div>
             <div
@@ -508,6 +526,9 @@ exports[`renders correctly 1`] = `
                 class="sortable-column"
               >
                 Net Book Value
+                <span
+                  style="flex: 1 1 auto;"
+                />
               </div>
             </div>
           </div>

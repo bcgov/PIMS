@@ -9,25 +9,22 @@ namespace Pims.Api.Areas.Property.Models.Search
     public class PropertyModel
     {
         #region Properties
+        #region Identification
         /// <summary>
         /// get/set - The primary key to identify the property.
         /// </summary>
         public int Id { get; set; }
 
         /// <summary>
+        /// get/set - The concurrency row version.
+        /// </summary>
+        /// <value></value>
+        public string RowVersion { get; set; }
+
+        /// <summary>
         /// get/set - The foreign key to the property type [Land, Building].
         /// </summary>
         public int PropertyTypeId { get; set; }
-
-        /// <summary>
-        /// get/set - A unique identifier for the titled parcel.
-        /// </summary>
-        public string PID { get; set; }
-
-        /// <summary>
-        /// get/set - A unique identifier for an untitled parcel.
-        /// </summary>
-        public string PIN { get; set; }
 
         /// <summary>
         /// get/set - The foreign key to the property status.
@@ -52,12 +49,12 @@ namespace Pims.Api.Areas.Property.Models.Search
         /// <summary>
         /// get/set - The GIS latitude location of the property.
         /// </summary>
-        public double Latitude { get; set; }
+        public double? Latitude { get; set; }
 
         /// <summary>
         /// get/set - The GIS latitude location of the property.
         /// </summary>
-        public double Longitude { get; set; }
+        public double? Longitude { get; set; }
 
         /// <summary>
         /// get/set - The property name.
@@ -83,11 +80,13 @@ namespace Pims.Api.Areas.Property.Models.Search
         /// get/set - Whether the property is sensitive data.
         /// </summary>
         public bool IsSensitive { get; set; }
+        #endregion
 
+        #region Agency
         /// <summary>
         /// get/set - The foreign key to the owning agency.
         /// </summary>
-        public int AgencyId { get; set; }
+        public int? AgencyId { get; set; }
 
         /// <summary>
         /// get/set - The owning agency name.
@@ -108,7 +107,9 @@ namespace Pims.Api.Areas.Property.Models.Search
         /// get/set - The owning subagency code.
         /// </summary>
         public string SubAgencyCode { get; set; }
+        #endregion
 
+        #region Address
         /// <summary>
         /// get/set - The foreign key to the address.
         /// </summary>
@@ -133,52 +134,23 @@ namespace Pims.Api.Areas.Property.Models.Search
         /// get/set - The postal code.
         /// </summary>
         public string Postal { get; set; }
-
-        /// <summary>
-        /// get/set - The property market value.
-        /// </summary>
-        public decimal Market { get; set; }
-
-        /// <summary>
-        /// get/set - The fiscal year of the market value.
-        /// </summary>
-        public int? MarketFiscalYear { get; set; }
-
-        /// <summary>
-        /// get/set - The property netbook value.
-        /// </summary>
-        public decimal NetBook { get; set; }
-
-        /// <summary>
-        /// get/set - The fiscal year of the netbook value.
-        /// </summary>
-        public int? NetBookFiscalYear { get; set; }
-
-        /// <summary>
-        /// get/set - The property assessed value.
-        /// </summary>
-        public decimal Assessed { get; set; }
-
-        /// <summary>
-        /// get/set - The date when the assessment occured.
-        /// </summary>
-        public DateTime? AssessedDate { get; set; }
-
-        /// <summary>
-        /// get/set - The property appraised value.
-        /// </summary>
-        public decimal Appraised { get; set; }
-
-        /// <summary>
-        /// get/set - the date when the appraisal occured.
-        /// </summary>
-        public DateTime? AppraisedDate { get; set; }
+        #endregion
 
         #region Parcel Properties
         /// <summary>
+        /// get/set - A unique identifier for the titled parcel.
+        /// </summary>
+        public string PID { get; set; }
+
+        /// <summary>
+        /// get/set - A unique identifier for an untitled parcel.
+        /// </summary>
+        public string PIN { get; set; }
+
+        /// <summary>
         /// get/set - The land area of the parcel.
         /// </summary>
-        public float LandArea { get; set; }
+        public float? LandArea { get; set; }
 
         /// <summary>
         /// get/set - The land legal description of the parcel.
@@ -197,11 +169,6 @@ namespace Pims.Api.Areas.Property.Models.Search
         #endregion
 
         #region Building Properties
-        /// <summary>
-        /// get/set - The parent parcel Id.
-        /// </summary>
-        public int? ParcelId { get; set; }
-
         /// <summary>
         /// get/set - Foreign key to the construction type.
         /// </summary>
@@ -261,6 +228,48 @@ namespace Pims.Api.Areas.Property.Models.Search
         /// get/set - The square feet of rentable area in the building.
         /// </summary>
         public float? RentableArea { get; set; }
+        #endregion
+
+        #region Financials
+        /// <summary>
+        /// get/set - The property market value.
+        /// </summary>
+        public decimal? Market { get; set; }
+
+        /// <summary>
+        /// get/set - The fiscal year of the market value.
+        /// </summary>
+        public int? MarketFiscalYear { get; set; }
+
+        /// <summary>
+        /// get/set - The property netbook value.
+        /// </summary>
+        public decimal? NetBook { get; set; }
+
+        /// <summary>
+        /// get/set - The fiscal year of the netbook value.
+        /// </summary>
+        public int? NetBookFiscalYear { get; set; }
+
+        /// <summary>
+        /// get/set - The property assessed value.
+        /// </summary>
+        public decimal? AssessedLand { get; set; }
+
+        /// <summary>
+        /// get/set - The date when the assessment occured.
+        /// </summary>
+        public DateTime? AssessedLandDate { get; set; }
+
+        /// <summary>
+        /// get/set - The property appraised value.
+        /// </summary>
+        public decimal? AssessedBuilding { get; set; }
+
+        /// <summary>
+        /// get/set - the date when the appraisal occured.
+        /// </summary>
+        public DateTime? AssessedBuildingDate { get; set; }
         #endregion
         #endregion
     }

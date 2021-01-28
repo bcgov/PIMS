@@ -160,7 +160,7 @@ const getApiEvaluations = (property: IProperty): IEvaluation[] => {
   return evaluations;
 };
 
-const toApiProperty = (property: IProperty): IApiProperty => {
+export const toApiProperty = (property: IProperty): IApiProperty => {
   const apiProperty: IApiProperty = {
     id: property.id,
     parcelId: property.propertyTypeId === 0 ? property.id : undefined,
