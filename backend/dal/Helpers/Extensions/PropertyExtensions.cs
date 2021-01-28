@@ -165,7 +165,6 @@ namespace Pims.Dal.Helpers.Extensions
             filter.ThrowIfNull(nameof(filter));
             filter.ThrowIfNull(nameof(user));
 
-            // Check if user has the ability to view sensitive properties.
             var userAgencies = user.GetAgenciesAsNullable();
             var isAdmin = user.HasPermission(Permissions.AdminProperties);
             var viewSensitive = user.HasPermission(Permissions.SensitiveView);

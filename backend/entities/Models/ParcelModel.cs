@@ -100,6 +100,7 @@ namespace Pims.Dal.Entities.Models
                 this.Zoning = property.Zoning;
                 this.ZoningPotential = property.ZoningPotential;
 
+                // TODO: Fixed assessed values.
                 // this.AssessedLand = property.AssessedLand;
                 // this.AssessedLandDate = property.AssessedLandDate;
                 // this.AssessedBuilding = property.AssessedBuilding;

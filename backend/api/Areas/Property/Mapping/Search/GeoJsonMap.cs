@@ -11,7 +11,7 @@ namespace Pims.Api.Areas.Property.Mapping.Search
         {
             config.NewConfig<Entity.Models.PropertyModel, Model.GeoJson<Model.PropertyModel>>()
                 .Map(dest => dest.Type, src => "Feature")
-                .Map(dest => dest.Geometry.Type, src => src.Location.GeometryType)
+                .Map(dest => dest.Geometry.Type, src => src.Location != null ? src.Location.GeometryType : "Point")
                 .Map(dest => dest.Geometry.Coordinates, src => src.Location)
                 .Map(dest => dest.Properties, src => src);
 

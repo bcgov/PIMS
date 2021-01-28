@@ -48,10 +48,7 @@ namespace Pims.Core.Extensions
         /// <typeparam name="T"></typeparam>
         public static async Task ForEachAsync<T>(this IEnumerable<T> items, Func<T, Task> action)
         {
-            foreach (var item in items)
-            {
-                await action.Invoke(item);
-            }
+            await Task.WhenAll(items.Select(i => action.Invoke(i)).ToArray());
         }
 
         /// <summary>
@@ -63,11 +60,8 @@ namespace Pims.Core.Extensions
         /// <typeparam name="T"></typeparam>
         public static async Task ForEachAsync<T>(this IEnumerable<T> items, Func<T, int, Task> action)
         {
-            var i = 0;
-            foreach (var item in items)
-            {
-                await action.Invoke(item, i++);
-            }
+            var index = 0;
+            await Task.WhenAll(items.Select(i => action.Invoke(i, index++)).ToArray());
         }
 
         /// <summary>
