@@ -289,6 +289,7 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): React
         >
           {column.render('Header')}
         </ColumnFilter>
+        <span style={{ flex: '1 1 auto' }} />
         <ColumnSort
           onSort={() => {
             const next = getNextSortDirection(column);

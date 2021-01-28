@@ -750,6 +750,32 @@ namespace Pims.Dal.Test.Services
         }
 
         [Fact]
+        public void Update_ParcelFinancials()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.PropertyEdit).AddAgency(1);
+            var init = helper.InitializeDatabase(user);
+            var parcel = init.CreateParcel(1);
+            init.SaveChanges();
+
+            var options = ControllerHelper.CreateDefaultPimsOptions();
+            var service = helper.CreateService<ParcelService>(user, options);
+
+            // Act
+            parcel.Evaluations.Add(new Entity.ParcelEvaluation(parcel, DateTime.Now, Entity.EvaluationKeys.Assessed, 1000));
+            parcel.Fiscals.Add(new Entity.ParcelFiscal(parcel, 2021, Entity.FiscalKeys.Market, 1000));
+            parcel.Fiscals.Add(new Entity.ParcelFiscal(parcel, 2021, Entity.FiscalKeys.NetBook, 2000));
+            var result = service.UpdateFinancials(parcel);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.Contains(result.Evaluations, e => e.Key == Entity.EvaluationKeys.Assessed && e.Value == 1000);
+            Assert.Contains(result.Fiscals, e => e.Key == Entity.FiscalKeys.Market && e.Value == 1000);
+            Assert.Contains(result.Fiscals, e => e.Key == Entity.FiscalKeys.NetBook && e.Value == 2000);
+        }
+
+        [Fact]
         public void Update_Parcel_UpdateAgencyAsAdmin()
         {
             // Arrange

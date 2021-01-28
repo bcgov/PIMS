@@ -17,6 +17,12 @@ namespace Pims.Dal.Entities.Views
         public int Id { get; set; }
 
         /// <summary>
+        /// get/set - The concurrency row version.
+        /// </summary>
+        /// <value></value>
+        public byte[] RowVersion { get; set; }
+
+        /// <summary>
         /// get/set - The property type [0=Parcel, 1=Building].
         /// </summary>
         public PropertyTypes PropertyTypeId { get; set; }

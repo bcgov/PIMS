@@ -3,7 +3,7 @@ import PropertyListView from './PropertyListView';
 import React from 'react';
 import { Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
-import { render, cleanup, act, wait } from '@testing-library/react';
+import { render, cleanup, act, wait, fireEvent } from '@testing-library/react';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { ILookupCode } from 'actions/lookupActions';
@@ -42,6 +42,26 @@ const history = createMemoryHistory();
 const mockAxios = new MockAdapter(axios);
 mockAxios.onAny().reply(200, {});
 
+const setupTests = () => {
+  // API "returns" no results
+  mockedService.getPropertyList.mockResolvedValueOnce({
+    quantity: 0,
+    total: 0,
+    page: 1,
+    pageIndex: 0,
+    items: [],
+  });
+  (useKeycloak as jest.Mock).mockReturnValue({
+    keycloak: {
+      subject: 'test',
+      userInfo: {
+        roles: ['property-view'],
+        agencies: ['1'],
+      },
+    },
+  });
+};
+
 describe('Property list view', () => {
   // clear mocks before each test
   beforeEach(() => {
@@ -54,23 +74,7 @@ describe('Property list view', () => {
   });
 
   it('Matches snapshot', async () => {
-    // API "returns" no results
-    mockedService.getPropertyList.mockResolvedValueOnce({
-      quantity: 0,
-      total: 0,
-      page: 1,
-      pageIndex: 0,
-      items: [],
-    });
-    (useKeycloak as jest.Mock).mockReturnValue({
-      keycloak: {
-        subject: 'test',
-        userInfo: {
-          roles: ['property-view'],
-          agencies: ['1'],
-        },
-      },
-    });
+    setupTests();
 
     await act(async () => {
       const { container } = render(
@@ -110,22 +114,7 @@ describe('Property list view', () => {
   });
 
   it('Displays export buttons', async () => {
-    mockedService.getPropertyList.mockResolvedValueOnce({
-      quantity: 0,
-      total: 0,
-      page: 1,
-      pageIndex: 0,
-      items: [],
-    });
-    (useKeycloak as jest.Mock).mockReturnValue({
-      keycloak: {
-        subject: 'test',
-        userInfo: {
-          roles: ['property-view'],
-          agencies: ['1'],
-        },
-      },
-    });
+    setupTests();
 
     await act(async () => {
       const { getByTestId, container } = render(
@@ -138,6 +127,41 @@ describe('Property list view', () => {
       expect(getByTestId('excel-icon')).toBeInTheDocument();
       expect(getByTestId('csv-icon')).toBeInTheDocument();
       expect(container.querySelector('span[class="spinner-border"]')).not.toBeInTheDocument();
+    });
+  });
+
+  it('Displays edit button', async () => {
+    setupTests();
+
+    await act(async () => {
+      const { getByTestId } = render(
+        <Provider store={store}>
+          <Router history={history}>
+            <PropertyListView />
+          </Router>
+        </Provider>,
+      );
+      expect(getByTestId('edit-icon')).toBeInTheDocument();
+    });
+  });
+
+  it('Displays save edit button, when edit is enabled', async () => {
+    setupTests();
+
+    await act(async () => {
+      const { getByTestId } = render(
+        <Provider store={store}>
+          <Router history={history}>
+            <PropertyListView />
+          </Router>
+        </Provider>,
+      );
+      expect(getByTestId('edit-icon')).toBeInTheDocument();
+      fireEvent(
+        getByTestId('edit-icon'),
+        new MouseEvent('click', { bubbles: true, cancelable: true }),
+      );
+      await wait(() => expect(getByTestId('save-changes')).toBeInTheDocument(), { timeout: 500 });
     });
   });
 
