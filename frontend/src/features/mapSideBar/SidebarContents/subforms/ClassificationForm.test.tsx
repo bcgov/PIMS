@@ -23,21 +23,6 @@ const form = (
   </Formik>
 );
 
-describe('field definition conditional render', () => {
-  it('renders definition when provided', () => {
-    const { getByText } = render(
-      <Formik onSubmit={noop} initialValues={{ classificationId: '' }}>
-        <ClassificationForm
-          classifications={mockClassifications}
-          field="classificationId"
-          fieldDescription="test description"
-        />
-      </Formik>,
-    );
-    expect(getByText('test description')).toBeInTheDocument();
-  });
-});
-
 describe('renders definitions correctly', () => {
   afterEach(() => {
     cleanup();
