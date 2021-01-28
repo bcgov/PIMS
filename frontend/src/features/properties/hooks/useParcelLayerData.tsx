@@ -2,11 +2,11 @@ import { FormikValues, getIn, setIn } from 'formik';
 import { isMouseEventRecent, squareMetersToHectares } from 'utils';
 import { AMINISTRATIVE_AREA_CODE_SET_NAME } from 'constants/API';
 import { useState } from 'react';
-import { IParcelLayerData } from 'reducers/parcelLayerDataSlice';
+import { IParcelLayerData, clearParcelLayerData } from 'reducers/parcelLayerDataSlice';
 import { ILookupCode } from 'actions/lookupActions';
 import { pidFormatter } from '../components/forms/subforms/PidPinForm';
 import _ from 'lodash';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from 'reducers/rootReducer';
 import useCodeLookups from 'hooks/useLookupCodes';
 import { toast } from 'react-toastify';
@@ -134,7 +134,11 @@ const getAdminAreaFromLayerData = (
     const splitLayerMunicipality = layerMunicipality.split(',');
     if (splitLayerMunicipality.length === 2) {
       const formattedLayerMunicipality = `${splitLayerMunicipality[1].trim()} ${splitLayerMunicipality[0].trim()}`;
-      return _.find(administrativeAreas, { name: formattedLayerMunicipality });
+      let match = _.find(administrativeAreas, { name: formattedLayerMunicipality });
+      if (!match) {
+        match = _.find(administrativeAreas, { name: splitLayerMunicipality[0].trim() });
+      }
+      return match;
     }
   }
 };
@@ -153,6 +157,7 @@ const useParcelLayerData = ({
   );
   const { getByType } = useCodeLookups();
   const [showOverwriteDialog, setShowOverwriteDialog] = useState(false);
+  const dispatch = useDispatch();
 
   useDeepCompareEffect(() => {
     if (!!formikRef?.current && isMouseEventRecent(parcelLayerData?.e) && !!parcelLayerData?.data) {
@@ -164,6 +169,7 @@ const useParcelLayerData = ({
           nameSpace ?? '',
           agencyId,
         );
+        dispatch(clearParcelLayerData());
       } else {
         setShowOverwriteDialog(true);
       }

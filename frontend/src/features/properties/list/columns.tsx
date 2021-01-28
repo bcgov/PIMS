@@ -4,7 +4,7 @@ import { ReactComponent as LandSvg } from 'assets/images/icon-lot.svg';
 import React from 'react';
 import { CellProps } from 'react-table';
 import { Link } from 'react-router-dom';
-import { formatMoney, formatNumber, mapLookupCode } from 'utils';
+import { formatNumber, mapLookupCode } from 'utils';
 import { IProperty } from '.';
 import { ColumnWithProps } from 'components/Table';
 import { ParentGroupedFilter } from 'components/SearchBar/ParentGroupedFilter';
@@ -12,8 +12,7 @@ import { FastCurrencyInput, Input, Select, SelectOption } from 'components/commo
 import { TypeaheadField } from 'components/common/form/Typeahead';
 import { ILookupCode } from 'actions/lookupActions';
 import queryString from 'query-string';
-
-const MoneyCell = ({ cell: { value } }: CellProps<IProperty, number>) => formatMoney(value);
+import { EditableMoneyCell, MoneyCell } from 'components/Table/MoneyCell';
 
 const NumberCell = ({ cell: { value } }: CellProps<IProperty, number>) => formatNumber(value);
 
@@ -39,6 +38,7 @@ export const columns = (
   subAgencies: SelectOption[],
   municipalities: ILookupCode[],
   propertyClassifications: ILookupCode[],
+  editable?: boolean,
 ): ColumnWithProps<IProperty>[] => [
   {
     Header: 'Agency',
@@ -156,7 +156,9 @@ export const columns = (
   {
     Header: 'Assessed Value',
     accessor: 'assessed',
-    Cell: MoneyCell,
+    Cell: !editable
+      ? MoneyCell
+      : (props: any) => <EditableMoneyCell {...props} suppressValidation />,
     align: 'right',
     responsive: true,
     width: spacing.medium,
@@ -177,7 +179,9 @@ export const columns = (
   {
     Header: 'Net Book Value',
     accessor: 'netBook',
-    Cell: MoneyCell,
+    Cell: !editable
+      ? MoneyCell
+      : (props: any) => <EditableMoneyCell {...props} suppressValidation />,
     align: 'right',
     responsive: true,
     width: spacing.medium,
@@ -198,7 +202,9 @@ export const columns = (
   {
     Header: 'Market Value',
     accessor: 'market',
-    Cell: MoneyCell,
+    Cell: !editable
+      ? MoneyCell
+      : (props: any) => <EditableMoneyCell {...props} suppressValidation />,
     align: 'right',
     responsive: true,
     width: spacing.medium,

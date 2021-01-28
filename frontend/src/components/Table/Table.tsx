@@ -34,6 +34,8 @@ import ColumnFilter from './ColumnFilter';
 import { Formik, FormikProps } from 'formik';
 import { Button } from 'components/common/form/Button';
 import classNames from 'classnames';
+import useDeepCompareMemo from 'hooks/useDeepCompareMemo';
+import useDeepCompareCallback from 'hooks/useDeepCompareCallback';
 
 // these provide a way to inject custom CSS into table headers and cells
 const headerProps = <T extends object>(
@@ -287,6 +289,7 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): React
         >
           {column.render('Header')}
         </ColumnFilter>
+        <span style={{ flex: '1 1 auto' }} />
         <ColumnSort
           onSort={() => {
             const next = getNextSortDirection(column);
@@ -315,7 +318,65 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): React
     );
   };
 
-  const renderBody = () => {
+  const renderExpandRowStateButton = useDeepCompareCallback(
+    (
+      open?: boolean,
+      className?: string,
+      onClick?: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void,
+    ) => {
+      const detailsClosedIcon =
+        props.detailsPanel && props.detailsPanel.icons?.closed ? (
+          props.detailsPanel.icons?.closed
+        ) : (
+          <FaAngleRight />
+        );
+      const detailsOpenedIcon =
+        props.detailsPanel && props.detailsPanel.icons?.open ? (
+          props.detailsPanel.icons?.open
+        ) : (
+          <FaAngleDown />
+        );
+      return (
+        props.detailsPanel && (
+          <TooltipWrapper
+            toolTipId="expand-all-rows"
+            toolTip={open ? 'Collapse Row' : 'Expand Row'}
+          >
+            <div className={className + ' svg-btn'} onClick={onClick}>
+              {open ? detailsOpenedIcon : detailsClosedIcon}
+            </div>
+          </TooltipWrapper>
+        )
+      );
+    },
+    [props.detailsPanel],
+  );
+
+  const renderFooter = () => {
+    if (!footer || !page?.length) {
+      return null;
+    }
+    if (props.loading) {
+      return renderLoading();
+    }
+    return (
+      <div className="tfoot tfoot-light">
+        {footerGroups.map(footerGroup => (
+          <div {...footerGroup.getHeaderGroupProps()} className="tr">
+            {footerGroup.headers.map(
+              (column: ColumnInstanceWithProps<T> & { Footer?: Function }) => (
+                <div {...column.getHeaderProps(headerProps)} className="th">
+                  {column.Footer ? <column.Footer properties={_.map(page, 'original')} /> : null}
+                </div>
+              ),
+            )}
+          </div>
+        ))}
+      </div>
+    );
+  };
+
+  const renderBody = useDeepCompareMemo(() => {
     if (props.loading) {
       return renderLoading();
     }
@@ -401,59 +462,19 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): React
         })}
       </div>
     );
-  };
-
-  const renderExpandRowStateButton = (
-    open?: boolean,
-    className?: string,
-    onClick?: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void,
-  ) => {
-    const detailsClosedIcon =
-      props.detailsPanel && props.detailsPanel.icons?.closed ? (
-        props.detailsPanel.icons?.closed
-      ) : (
-        <FaAngleRight />
-      );
-    const detailsOpenedIcon =
-      props.detailsPanel && props.detailsPanel.icons?.open ? (
-        props.detailsPanel.icons?.open
-      ) : (
-        <FaAngleDown />
-      );
-    return (
-      props.detailsPanel && (
-        <TooltipWrapper toolTipId="expand-all-rows" toolTip={open ? 'Collapse Row' : 'Expand Row'}>
-          <div className={className + ' svg-btn'} onClick={onClick}>
-            {open ? detailsOpenedIcon : detailsClosedIcon}
-          </div>
-        </TooltipWrapper>
-      )
-    );
-  };
-
-  const renderFooter = () => {
-    if (!footer || !page?.length) {
-      return null;
-    }
-    if (props.loading) {
-      return renderLoading();
-    }
-    return (
-      <div className="tfoot tfoot-light">
-        {footerGroups.map(footerGroup => (
-          <div {...footerGroup.getHeaderGroupProps()} className="tr">
-            {footerGroup.headers.map(
-              (column: ColumnInstanceWithProps<T> & { Footer?: Function }) => (
-                <div {...column.getHeaderProps(headerProps)} className="th">
-                  {column.Footer ? <column.Footer properties={_.map(page, 'original')} /> : null}
-                </div>
-              ),
-            )}
-          </div>
-        ))}
-      </div>
-    );
-  };
+  }, [
+    props.loading,
+    props.detailsPanel,
+    props.data,
+    props.canRowExpand,
+    props.onRowClick,
+    props.noRowsMessage,
+    renderExpandRowStateButton,
+    cellProps,
+    expandedRows,
+    clickableTooltip,
+    selectedRowIds,
+  ]);
 
   // Render the UI for your table
   return (
@@ -525,7 +546,7 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): React
             </div>
           ))}
         </div>
-        {renderBody()}
+        {renderBody}
         {renderFooter()}
       </div>
       {!props.hideToolbar && (

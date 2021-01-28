@@ -60,6 +60,7 @@ export const columnDefinitions: ColumnWithProps<IUserRecord>[] = [
     accessor: 'agency',
     align: 'left',
     clickable: true,
+    sortable: true,
     minWidth: 200,
   },
   {

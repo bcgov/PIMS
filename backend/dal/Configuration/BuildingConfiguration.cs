@@ -32,7 +32,7 @@ namespace Pims.Dal.Configuration
             builder.HasOne(m => m.BuildingPredominateUse).WithMany().HasForeignKey(m => m.BuildingPredominateUseId).OnDelete(DeleteBehavior.ClientSetNull);
             builder.HasOne(m => m.BuildingOccupantType).WithMany().HasForeignKey(m => m.BuildingOccupantTypeId).OnDelete(DeleteBehavior.ClientSetNull);
 
-            builder.HasIndex(m => new { m.Id, m.IsSensitive, m.AgencyId, m.ClassificationId, m.AddressId, m.ProjectNumber, m.BuildingConstructionTypeId, m.BuildingPredominateUseId, m.BuildingOccupantTypeId, m.BuildingFloorCount, m.BuildingTenancy });
+            builder.HasIndex(m => new { m.Id, m.IsSensitive, m.AgencyId, m.ClassificationId, m.AddressId, m.ProjectNumbers, m.BuildingConstructionTypeId, m.BuildingPredominateUseId, m.BuildingOccupantTypeId, m.BuildingFloorCount, m.BuildingTenancy });
 
             base.Configure(builder);
         }

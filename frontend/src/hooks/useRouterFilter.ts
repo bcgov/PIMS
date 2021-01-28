@@ -26,6 +26,24 @@ const extractProps = (props: string[], source: any): any => {
   return dest;
 };
 
+const defaultFilter = {
+  address: '',
+  administrativeArea: '',
+  agencies: '',
+  classificationId: '',
+  maxAssessedValue: '',
+  maxLotSize: '',
+  maxMarketValue: '',
+  maxNetBookValue: '',
+  minLotSize: '',
+  name: '',
+  pid: '',
+  projectNumber: '',
+  propertyType: '',
+  rentableArea: '',
+  searchBy: 'address',
+};
+
 /**
  * RouterFilter hook properties.
  */
@@ -68,19 +86,21 @@ export const useRouterFilter = <T extends object>({
       // Check if query contains filter params.
       const filterProps = Object.keys(filter);
       if (_.intersection(Object.keys(params), filterProps).length) {
-        let merged = extractProps(filterProps, params);
+        let merged = { ...defaultFilter, ...extractProps(filterProps, params) };
         if (!merged.propertyType) {
           merged = { ...merged, propertyType: PropertyTypes.Land };
         }
         // Only change state if the query parameters are different than the default filter.
-        if (!_.isEqual(merged, filter)) setFilter(merged);
+        if (!_.isEqual(_.omit(merged, 'propertyType'), _.omit(filter, 'propertyType')))
+          setFilter(merged);
       } else if (savedFilter?.hasOwnProperty(key)) {
-        let merged = extractProps(filterProps, savedFilter[key]);
+        let merged = { ...defaultFilter, ...extractProps(filterProps, savedFilter[key]) };
         if (!merged.propertyType) {
           merged = { ...merged, propertyType: PropertyTypes.Land };
         }
         // Only change state if the saved filter is different than the default filter.
-        if (!_.isEqual(merged, filter)) setFilter(merged);
+        if (!_.isEqual(_.omit(merged, 'propertyType'), _.omit(filter, 'propertyType')))
+          setFilter(merged);
       }
 
       if (params.sorting && setSorting) {

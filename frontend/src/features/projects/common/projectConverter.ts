@@ -9,7 +9,7 @@ import {
 import { IProject, IProperty } from '.';
 import { IFiscal, IEvaluation } from 'actions/parcelsActions';
 import { FiscalKeys } from 'constants/fiscalKeys';
-import { getCurrentFiscalYear, formatDate } from 'utils';
+import { getCurrentFiscalYear, formatDate, stringToNull } from 'utils';
 import _ from 'lodash';
 import { EvaluationKeys } from 'constants/evaluationKeys';
 import moment from 'moment';
@@ -81,6 +81,7 @@ export const toFlatProject = (project?: IApiProject) => {
     const market = getCurrentFiscal(apiProperty.fiscals, FiscalKeys.Market);
     const property: IProperty = {
       id: apiProperty.id,
+      projectNumbers: apiProperty.projectNumbers,
       projectPropertyId: pp.id,
       parcelId: apiProperty.parcelId ?? apiProperty.id,
       pid: apiProperty.pid ?? '',
@@ -159,14 +160,14 @@ const getApiEvaluations = (property: IProperty): IEvaluation[] => {
   return evaluations;
 };
 
-const toApiProperty = (property: IProperty): IApiProperty => {
+export const toApiProperty = (property: IProperty): IApiProperty => {
   const apiProperty: IApiProperty = {
     id: property.id,
     parcelId: property.propertyTypeId === 0 ? property.id : undefined,
     buildingId: property.propertyTypeId === 1 ? property.id : undefined,
     pid: property.pid,
     pin: Number(property.pin),
-    projectNumber: property.projectNumber ?? '',
+    projectNumbers: property.projectNumbers ?? [],
     latitude: property.latitude,
     longitude: property.longitude,
     classificationId: property.classificationId,
@@ -242,10 +243,10 @@ export const toApiProject = (project: IProject) => {
     projectAgencyResponses: projectAgencyResponses,
     exemptionRationale: project.exemptionRationale,
     exemptionRequested: project.exemptionRequested,
-    netBook: Number(project.netBook),
-    market: Number(project.market),
-    assessed: Number(project.assessed),
-    appraised: project.appraised,
+    netBook: stringToNull(project.netBook),
+    market: stringToNull(project.market),
+    assessed: stringToNull(project.assessed),
+    appraised: stringToNull(project.appraised),
     notes: project.notes.filter(note => note.id || note.note),
   };
   // convert all empty strings (required by formik) to undefined

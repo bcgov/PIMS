@@ -1,6 +1,8 @@
+using System.Collections.Generic;
+
 namespace Pims.Dal.Entities.Models
 {
-    public class ProjectProperty :  Pims.Dal.Entities.Views.Property
+    public class ProjectProperty : Pims.Dal.Entities.Views.Property
     {
         #region Properties
         /// <summary>
@@ -14,24 +16,27 @@ namespace Pims.Dal.Entities.Models
         {
             Id = property.Id;
             PropertyTypeId = property.PropertyTypeId;
-            ProjectNumber = property.ProjectNumber;
             Name = property.Name;
             Description = property.Description;
             ClassificationId = property.ClassificationId;
             Classification = property.Classification;
+
             Agency = property.Agency;
             AgencyId = property.AgencyId;
             AgencyCode = property.AgencyCode;
             SubAgencyCode = property.SubAgencyCode;
             SubAgency = property.SubAgency;
+
+            IsSensitive = property.IsSensitive;
+            IsVisibleToOtherAgencies = property.IsVisibleToOtherAgencies;
+
             AddressId = property.AddressId;
             Address = property.Address;
             AdministrativeArea = property.AdministrativeArea;
-            Postal = property.Postal;
             Province = Province;
+            Postal = property.Postal;
             Location = property.Location;
-            IsSensitive = property.IsSensitive;
-            IsVisibleToOtherAgencies = property.IsVisibleToOtherAgencies;
+
             Market = property.Market;
             MarketFiscalYear = property.MarketFiscalYear;
             NetBook = property.NetBook;
@@ -39,14 +44,15 @@ namespace Pims.Dal.Entities.Models
             Assessed = property.Assessed;
             AssessedDate = property.AssessedDate;
             AppraisedDate = property.AppraisedDate;
+
             PID = property.PID;
             PIN = property.PIN;
             LandArea = property.LandArea;
             LandLegalDescription = property.LandLegalDescription;
-            AdministrativeArea = property.AdministrativeArea;
             Zoning = property.Zoning;
             ZoningPotential = property.ZoningPotential;
             ParcelId = property.ParcelId;
+
             BuildingConstructionTypeId = property.BuildingConstructionTypeId;
             BuildingConstructionType = property.BuildingConstructionType;
             BuildingFloorCount = property.BuildingFloorCount;

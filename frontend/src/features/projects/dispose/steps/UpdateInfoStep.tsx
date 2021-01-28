@@ -23,6 +23,8 @@ const UpdateInfoStep = ({ isReadOnly, formikRef }: IStepProps) => {
       <Formik
         initialValues={project}
         validationSchema={UpdateInfoStepYupSchema}
+        validateOnBlur={true}
+        validateOnChange={false}
         innerRef={formikRef}
         onSubmit={onSubmit}
         enableReinitialize={true}

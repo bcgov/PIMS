@@ -92,6 +92,10 @@ namespace Pims.Dal.Entities
         /// <summary>
         /// Notes related to the provided documentation.
         /// </summary>
-        Documentation = 21
+        Documentation = 21,
+        /// <summary>
+        /// Notes displayed on ERP notifications.
+        /// </summary>
+        ErpNotification = 22
     }
 }

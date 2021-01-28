@@ -35,7 +35,7 @@ namespace Pims.Core.Test
             return new Entity.Building(parcel, lat, lng)
             {
                 Id = id,
-                ProjectNumber = projectNumber,
+                ProjectNumbers = $"[\"{projectNumber}\"]",
                 AgencyId = agency.Id,
                 Agency = agency,
                 Name = name,
@@ -90,8 +90,9 @@ namespace Pims.Core.Test
         public static Entity.Building CreateBuilding(this PimsContext context, Entity.Parcel parcel, int id, string projectNumber = null, string name = null, int lat = 0, int lng = 0, Entity.Agency agency = null)
         {
             name ??= $"l{id}";
-            agency ??= parcel.Agency;
-            var address = EntityHelper.CreateAddress(id, parcel.Address.Address1, parcel.Address.Address2, parcel.Address.AdministrativeArea, parcel.Address.Province, parcel.Address.Postal);
+            agency ??= parcel.Agency ?? EntityHelper.CreateAgency(id);
+            var address = (parcel == null ? EntityHelper.CreateAddress(context, id, "1234 Street", null, "V9C9C9") :
+                EntityHelper.CreateAddress(id, parcel.Address.Address1, parcel.Address.Address2, parcel.Address.AdministrativeArea, parcel.Address.Province, parcel.Address.Postal));
             var predominateUse = context.BuildingPredominateUses.FirstOrDefault(b => b.Id == 1) ?? EntityHelper.CreateBuildingPredominateUse("use"); ;
             var constructionType = context.BuildingConstructionTypes.FirstOrDefault(b => b.Id == 1) ?? EntityHelper.CreateBuildingConstructionType("type");
             var occupantType = context.BuildingOccupantTypes.FirstOrDefault(b => b.Id == 1) ?? EntityHelper.CreateBuildingOccupantType("occupant");
@@ -101,7 +102,7 @@ namespace Pims.Core.Test
             {
                 Id = id,
                 Name = name,
-                ProjectNumber = projectNumber,
+                ProjectNumbers = projectNumber,
                 AgencyId = agency.Id,
                 Agency = agency,
                 AddressId = address.Id,
@@ -121,7 +122,10 @@ namespace Pims.Core.Test
                 UpdatedOn = DateTime.UtcNow,
                 RowVersion = new byte[] { 12, 13, 14 }
             };
-            var parcelBuilding = new Entity.ParcelBuilding(parcel, building);
+            if (parcel != null)
+            {
+                var parcelBuilding = new Entity.ParcelBuilding(parcel, building);
+            }
             context.Buildings.Add(building);
             return building;
         }

@@ -1,6 +1,16 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Property List View Select renders correctly 1`] = `
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-flow: column;
+  -ms-flex-flow: column;
+  flex-flow: column;
+}
+
 <div
   class="col-md-12 PropertyListViewSelect container"
 >
@@ -53,6 +63,9 @@ exports[`Property List View Select renders correctly 1`] = `
                   type="checkbox"
                 />
               </div>
+              <span
+                style="flex: 1 1 auto;"
+              />
             </div>
           </div>
           <div
@@ -65,6 +78,9 @@ exports[`Property List View Select renders correctly 1`] = `
               class="sortable-column"
             >
               Agency
+              <span
+                style="flex: 1 1 auto;"
+              />
             </div>
           </div>
           <div
@@ -77,6 +93,9 @@ exports[`Property List View Select renders correctly 1`] = `
               class="sortable-column"
             >
               Name
+              <span
+                style="flex: 1 1 auto;"
+              />
             </div>
           </div>
           <div
@@ -89,6 +108,9 @@ exports[`Property List View Select renders correctly 1`] = `
               class="sortable-column"
             >
               Civic Address
+              <span
+                style="flex: 1 1 auto;"
+              />
             </div>
           </div>
           <div
@@ -101,6 +123,9 @@ exports[`Property List View Select renders correctly 1`] = `
               class="sortable-column"
             >
               Classification
+              <span
+                style="flex: 1 1 auto;"
+              />
             </div>
           </div>
           <div
@@ -113,6 +138,9 @@ exports[`Property List View Select renders correctly 1`] = `
               class="sortable-column"
             >
               Current Zoning Code
+              <span
+                style="flex: 1 1 auto;"
+              />
             </div>
           </div>
           <div
@@ -124,7 +152,10 @@ exports[`Property List View Select renders correctly 1`] = `
             <div
               class="sortable-column"
             >
-              Potential Zoning Code
+              Other Projects
+              <span
+                style="flex: 1 1 auto;"
+              />
             </div>
           </div>
           <div
@@ -137,6 +168,9 @@ exports[`Property List View Select renders correctly 1`] = `
               class="sortable-column"
             >
               Net Book Value
+              <span
+                style="flex: 1 1 auto;"
+              />
             </div>
           </div>
           <div
@@ -149,6 +183,9 @@ exports[`Property List View Select renders correctly 1`] = `
               class="sortable-column"
             >
               Market Value
+              <span
+                style="flex: 1 1 auto;"
+              />
             </div>
           </div>
           <div
@@ -161,6 +198,9 @@ exports[`Property List View Select renders correctly 1`] = `
               class="sortable-column"
             >
               Assessed Value
+              <span
+                style="flex: 1 1 auto;"
+              />
             </div>
           </div>
           <div
@@ -173,6 +213,9 @@ exports[`Property List View Select renders correctly 1`] = `
               class="sortable-column"
             >
               Type
+              <span
+                style="flex: 1 1 auto;"
+              />
             </div>
           </div>
         </div>
@@ -236,6 +279,9 @@ exports[`Property List View Select renders correctly 1`] = `
                   type="checkbox"
                 />
               </div>
+              <span
+                style="flex: 1 1 auto;"
+              />
             </div>
           </div>
           <div
@@ -248,6 +294,9 @@ exports[`Property List View Select renders correctly 1`] = `
               class="sortable-column"
             >
               
+              <span
+                style="flex: 1 1 auto;"
+              />
             </div>
           </div>
           <div
@@ -260,6 +309,9 @@ exports[`Property List View Select renders correctly 1`] = `
               class="sortable-column"
             >
               Agency
+              <span
+                style="flex: 1 1 auto;"
+              />
             </div>
           </div>
           <div
@@ -272,6 +324,9 @@ exports[`Property List View Select renders correctly 1`] = `
               class="sortable-column"
             >
               Name
+              <span
+                style="flex: 1 1 auto;"
+              />
             </div>
           </div>
           <div
@@ -284,6 +339,9 @@ exports[`Property List View Select renders correctly 1`] = `
               class="sortable-column"
             >
               Civic Address
+              <span
+                style="flex: 1 1 auto;"
+              />
             </div>
           </div>
           <div
@@ -296,6 +354,9 @@ exports[`Property List View Select renders correctly 1`] = `
               class="sortable-column"
             >
               Classification
+              <span
+                style="flex: 1 1 auto;"
+              />
             </div>
           </div>
           <div
@@ -308,6 +369,9 @@ exports[`Property List View Select renders correctly 1`] = `
               class="sortable-column"
             >
               Current Zoning Code
+              <span
+                style="flex: 1 1 auto;"
+              />
             </div>
           </div>
           <div
@@ -319,7 +383,10 @@ exports[`Property List View Select renders correctly 1`] = `
             <div
               class="sortable-column"
             >
-              Potential Zoning Code
+              Other Projects
+              <span
+                style="flex: 1 1 auto;"
+              />
             </div>
           </div>
           <div
@@ -332,6 +399,9 @@ exports[`Property List View Select renders correctly 1`] = `
               class="sortable-column"
             >
               Net Book Value
+              <span
+                style="flex: 1 1 auto;"
+              />
             </div>
           </div>
           <div
@@ -344,6 +414,9 @@ exports[`Property List View Select renders correctly 1`] = `
               class="sortable-column"
             >
               Market Value
+              <span
+                style="flex: 1 1 auto;"
+              />
             </div>
           </div>
           <div
@@ -356,6 +429,9 @@ exports[`Property List View Select renders correctly 1`] = `
               class="sortable-column"
             >
               Assessed Value
+              <span
+                style="flex: 1 1 auto;"
+              />
             </div>
           </div>
           <div
@@ -368,6 +444,9 @@ exports[`Property List View Select renders correctly 1`] = `
               class="sortable-column"
             >
               Type
+              <span
+                style="flex: 1 1 auto;"
+              />
             </div>
           </div>
         </div>
@@ -464,12 +543,14 @@ exports[`Property List View Select renders correctly 1`] = `
               
             </div>
             <div
-              class="td clickable"
+              class="td"
               role="cell"
               style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
-              title="Click to view property details"
+              title=""
             >
-              
+              <div
+                class="c0"
+              />
             </div>
             <div
               class="td"

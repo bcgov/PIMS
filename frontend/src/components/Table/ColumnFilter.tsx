@@ -27,6 +27,7 @@ const InputContainer = styled('div')`
   bottom: -55px;
   left: 0;
   z-index: 1;
+  min-width: 200px;
 
   .form-control {
     border-radius: 0;

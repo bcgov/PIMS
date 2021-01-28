@@ -1,7 +1,10 @@
 using Mapster;
+using Microsoft.Extensions.Options;
 using Pims.Api.Models;
 using Pims.Dal.Helpers.Extensions;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using Entity = Pims.Dal.Entities;
 using Model = Pims.Api.Areas.Project.Models.Dispose;
 
@@ -9,12 +12,26 @@ namespace Pims.Api.Areas.Project.Mapping.Dispose
 {
     public class BuildingMap : IRegister
     {
+        #region Variables
+        private readonly JsonSerializerOptions _serializerOptions;
+        #endregion
+
+        #region Constructors
+        /// <summary>
+        /// Creates a new instance of a ProjectMap, initializes with specified arguments.
+        /// </summary>
+        /// <param name="serializerOptions"></param>
+        public BuildingMap(IOptions<JsonSerializerOptions> serializerOptions)
+        {
+            _serializerOptions = serializerOptions.Value;
+        }
+        #endregion
         public void Register(TypeAdapterConfig config)
         {
             config.NewConfig<Entity.Building, Model.BuildingModel>()
                 .Map(dest => dest.Id, src => src.Id)
                 .Map(dest => dest.ParcelId, src => src.GetParcelId())
-                .Map(dest => dest.ProjectNumber, src => src.ProjectNumber)
+                .Map(dest => dest.ProjectNumbers, src => JsonSerializer.Deserialize<IEnumerable<string>>(src.ProjectNumbers ?? "[]", _serializerOptions))
                 .Map(dest => dest.ClassificationId, src => src.ClassificationId)
                 .Map(dest => dest.Classification, src => src.Classification.Name)
                 .Map(dest => dest.AgencyId, src => src.AgencyId)
@@ -46,7 +63,7 @@ namespace Pims.Api.Areas.Project.Mapping.Dispose
             config.NewConfig<Model.BuildingModel, Entity.Building>()
                 .Map(dest => dest.Id, src => src.Id)
                 .Map(dest => dest.Parcels, src => new[] { new Entity.ParcelBuilding() { ParcelId = src.ParcelId, BuildingId = src.Id } })
-                .Map(dest => dest.ProjectNumber, src => src.ProjectNumber)
+                .Map(dest => dest.ProjectNumbers, src => JsonSerializer.Serialize<IEnumerable<string>>(src.ProjectNumbers ?? Enumerable.Empty<string>(), _serializerOptions))
                 .Map(dest => dest.ClassificationId, src => src.ClassificationId)
                 .Map(dest => dest.Classification, src => src.Classification)
                 .Map(dest => dest.AgencyId, src => src.AgencyId)

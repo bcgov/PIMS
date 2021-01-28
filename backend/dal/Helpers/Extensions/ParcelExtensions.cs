@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Pims.Core.Extensions;
 using Pims.Dal.Security;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using Entity = Pims.Dal.Entities;
@@ -90,7 +91,7 @@ namespace Pims.Dal.Helpers.Extensions
             if (filter.ClassificationId.HasValue)
                 query = query.Where(p => p.ClassificationId == filter.ClassificationId);
             if (!String.IsNullOrWhiteSpace(filter.ProjectNumber))
-                query = query.Where(p => EF.Functions.Like(p.ProjectNumber, $"{filter.ProjectNumber}%"));
+                query = query.Where(p => p.ProjectNumbers.Contains(filter.ProjectNumber));
             if (!String.IsNullOrWhiteSpace(filter.Description))
                 query = query.Where(p => EF.Functions.Like(p.Description, $"%{filter.Description}%"));
             if (!String.IsNullOrWhiteSpace(filter.AdministrativeArea))
@@ -157,6 +158,50 @@ namespace Pims.Dal.Helpers.Extensions
         public static int? GetId(this Entity.Parcel parcel)
         {
             return parcel?.Id;
+        }
+
+        /// <summary>
+        /// Update parcel financials
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="parcel"></param>
+        /// <param name="parcelEvaluations"></param>
+        /// <param name="parcelFiscals"></param>
+        public static void UpdateParcelFinancials(this PimsContext context,  Entity.Parcel parcel,
+            ICollection<Entity.ParcelEvaluation> parcelEvaluations, ICollection<Entity.ParcelFiscal> parcelFiscals)
+        {
+            foreach (var parcelEvaluation in parcelEvaluations)
+            {
+                var originalEvaluation = parcel.Evaluations
+                    .FirstOrDefault(e => e.Date == parcelEvaluation.Date && e.Key == parcelEvaluation.Key);
+
+                if (originalEvaluation == null)
+                {
+                    parcel.Evaluations.Add(parcelEvaluation);
+                }
+                else
+                {
+                    originalEvaluation.Note = parcelEvaluation.Note;
+                    originalEvaluation.Value = parcelEvaluation.Value;
+                    originalEvaluation.Firm = parcelEvaluation.Firm;
+                }
+            }
+
+            foreach (var parcelFiscal in parcelFiscals)
+            {
+                var originalParcelFiscal = parcel.Fiscals
+                    .FirstOrDefault(e => e.FiscalYear == parcelFiscal.FiscalYear && e.Key == parcelFiscal.Key);
+
+                if (originalParcelFiscal == null)
+                {
+                    parcel.Fiscals.Add(parcelFiscal);
+                }
+                else
+                {
+                    originalParcelFiscal.Note = parcelFiscal.Note;
+                    originalParcelFiscal.Value = parcelFiscal.Value;
+                }
+            }
         }
     }
 }

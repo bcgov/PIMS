@@ -9,13 +9,21 @@ import { ICluster, PointFeature } from '../types';
 import { getMarkerIcon, pointToLayer, zoomToCluster } from './mapUtils';
 import useSupercluster from '../hooks/useSupercluster';
 import { PopupView } from '../PopupView';
-import { IPropertyDetail, storeParcelDetail, storeBuildingDetail } from 'actions/parcelsActions';
+import {
+  IBuilding,
+  IParcel,
+  IPropertyDetail,
+  storeParcelDetail,
+  storeBuildingDetail,
+  IAddress,
+} from 'actions/parcelsActions';
 import SelectedPropertyMarker from './SelectedPropertyMarker/SelectedPropertyMarker';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
 import { useFilterContext } from '../providers/FIlterProvider';
 import Supercluster from 'supercluster';
 import { useDispatch } from 'react-redux';
 import { PropertyTypes } from 'actions/parcelsActions';
+import { MAX_ZOOM } from 'constants/strings';
 
 export type PointClustererProps = {
   points: Array<PointFeature>;
@@ -33,6 +41,40 @@ export type PointClustererProps = {
   tilesLoaded: boolean;
 };
 
+/**
+ * Converts the flat list of properties into the correct type of inventory property.
+ * @param property A flat list of property values (from a Feature).
+ */
+export const convertToProperty = (property: any): IParcel | IBuilding | null => {
+  if (property.propertyTypeId === PropertyTypes.PARCEL) {
+    return {
+      ...property,
+      address: {
+        line1: property.address,
+        administrativeArea: property.administrativeArea,
+        province: property.province,
+        postal: property.postal,
+      } as IAddress,
+    } as IParcel;
+  } else if (property.propertyTypeId === PropertyTypes.BUILDING) {
+    return {
+      ...property,
+      address: {
+        line1: property.address,
+        administrativeArea: property.administrativeArea,
+        province: property.province,
+        postal: property.postal,
+      } as IAddress,
+    } as IBuilding;
+  }
+
+  return null;
+};
+
+/**
+ * Clusters pins that are close together geographically based on the zoom level into a single clustered object.
+ * @param param0 Point cluster properties.
+ */
 export const PointClusterer: React.FC<PointClustererProps> = ({
   points,
   draftPoints,
@@ -191,30 +233,6 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
   }, [featureGroupRef, map, clusters, tilesLoaded]);
   return (
     <>
-      <FeatureGroup ref={draftFeatureGroupRef}>
-        {draftPoints.map((draftPoint, index) => {
-          //render all of the unclustered draft markers.
-          const [longitude, latitude] = draftPoint.geometry.coordinates;
-          return (
-            <Marker
-              {...(draftPoint.properties as any)}
-              key={index}
-              position={[latitude, longitude]}
-              icon={getMarkerIcon(draftPoint)}
-            >
-              <Popup autoPan={false}>
-                <PopupView
-                  propertyTypeId={draftPoint.properties.propertyTypeId}
-                  propertyDetail={draftPoint.properties as any}
-                  onLinkClick={() => {
-                    !!onMarkerClick && onMarkerClick(draftPoint as any);
-                  }}
-                />
-              </Popup>
-            </Marker>
-          );
-        })}
-      </FeatureGroup>
       <FeatureGroup ref={featureGroupRef}>
         {clusters.map((cluster, index) => {
           // every cluster point has coordinates
@@ -260,12 +278,11 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
             >
               <Popup autoPan={false}>
                 <PopupView
-                  propertyTypeId={cluster.properties.propertyTypeId}
-                  propertyDetail={cluster.properties as any}
+                  propertyDetail={convertToProperty(cluster.properties)}
                   onLinkClick={() => {
                     !!onMarkerClick && onMarkerClick(cluster as any);
                   }}
-                  zoomTo={() => leaflet.map?.flyTo([latitude, longitude], 14)}
+                  zoomTo={() => leaflet.map?.flyTo([latitude, longitude], MAX_ZOOM)}
                 />
               </Popup>
             </Marker>
@@ -284,12 +301,11 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
           >
             <Popup autoPan={false}>
               <PopupView
-                propertyTypeId={m.properties.propertyTypeId}
-                propertyDetail={m.properties}
+                propertyDetail={convertToProperty(m.properties)}
                 onLinkClick={() => {
                   !!onMarkerClick && onMarkerClick(m as any);
                 }}
-                zoomTo={() => leaflet.map?.flyTo(m.position, 14)}
+                zoomTo={() => leaflet.map?.flyTo(m.position, MAX_ZOOM)}
               />
             </Popup>
           </Marker>
@@ -323,21 +339,44 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
             >
               <Popup autoPan={false}>
                 <PopupView
-                  propertyTypeId={selected.propertyTypeId}
-                  propertyDetail={selected.parcelDetail}
+                  propertyDetail={convertToProperty(selected.parcelDetail)}
                   zoomTo={() =>
                     leaflet.map?.flyTo(
                       [
                         selected.parcelDetail!.latitude as number,
                         selected.parcelDetail!.longitude as number,
                       ],
-                      14,
+                      MAX_ZOOM,
                     )
                   }
                 />
               </Popup>
             </SelectedPropertyMarker>
           )}
+      </FeatureGroup>
+      <FeatureGroup ref={draftFeatureGroupRef}>
+        {draftPoints.map((draftPoint, index) => {
+          //render all of the unclustered draft markers.
+          const [longitude, latitude] = draftPoint.geometry.coordinates;
+          return (
+            <Marker
+              {...(draftPoint.properties as any)}
+              key={index}
+              position={[latitude, longitude]}
+              icon={getMarkerIcon(draftPoint)}
+              zIndexOffset={500}
+            >
+              <Popup autoPan={false}>
+                <PopupView
+                  propertyDetail={convertToProperty(draftPoint.properties)}
+                  onLinkClick={() => {
+                    !!onMarkerClick && onMarkerClick(draftPoint as any);
+                  }}
+                />
+              </Popup>
+            </Marker>
+          );
+        })}
       </FeatureGroup>
     </>
   );

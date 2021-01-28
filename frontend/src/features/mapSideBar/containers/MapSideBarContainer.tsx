@@ -229,17 +229,9 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
       isMouseEventRecent(leafletMouseEvent?.originalEvent)
     ) {
       let nameSpace = (movingPinNameSpace?.length ?? 0) > 0 ? `${movingPinNameSpace}.` : '';
-      if (propertyType === 'land') {
-        formikRef.current.setFieldValue(`${nameSpace}latitude`, leafletMouseEvent?.latlng.lat || 0);
-        formikRef.current.setFieldValue(
-          `${nameSpace}longitude`,
-          leafletMouseEvent?.latlng.lng || 0,
-        );
-        !parcelId && droppedMarkerSearch(movingPinNameSpace, leafletMouseEvent?.latlng);
-      } else {
-        formikRef.current.setFieldValue(`data.latitude`, leafletMouseEvent?.latlng.lat || 0);
-        formikRef.current.setFieldValue(`data.longitude`, leafletMouseEvent?.latlng.lng || 0);
-      }
+      formikRef.current.setFieldValue(`${nameSpace}latitude`, leafletMouseEvent?.latlng.lat || 0);
+      formikRef.current.setFieldValue(`${nameSpace}longitude`, leafletMouseEvent?.latlng.lng || 0);
+      droppedMarkerSearch(movingPinNameSpace, leafletMouseEvent?.latlng);
 
       setMovingPinNameSpace(undefined);
     }

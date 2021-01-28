@@ -185,6 +185,7 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
       name: filter?.name,
       bareLandOnly: filter?.bareLandOnly,
       rentableArea: filter?.rentableArea,
+      includeAllProperties: filter?.includeAllProperties,
     }));
   }, [filter]);
 

@@ -46,6 +46,9 @@ import { decimalOrUndefined, floatOrUndefined } from 'utils';
 import { IPropertyFilter } from 'features/properties/filter/IPropertyFilter';
 import { PropertyFilter } from 'features/properties/filter';
 import { useFilterContext } from '../providers/FIlterProvider';
+import { ZoomOutButton } from './ZoomOut/ZoomOutButton';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+import { Claims } from '../../../constants';
 
 export type MapViewportChangeEvent = {
   bounds: LatLngBounds | null;
@@ -97,6 +100,7 @@ const defaultFilterValues: IPropertyFilter = {
   maxAssessedValue: '',
   maxMarketValue: '',
   maxNetBookValue: '',
+  includeAllProperties: false,
 };
 
 /**
@@ -121,6 +125,7 @@ const getQueryParams = (filter: IPropertyFilter): IGeoSearchParams => {
     constructionTypeId: parseInt(filter.constructionTypeId!),
     floorCount: parseInt(filter.floorCount!),
     bareLandOnly: filter.bareLandOnly,
+    includeAllProperties: filter.includeAllProperties,
   };
 };
 
@@ -146,6 +151,7 @@ const Map: React.FC<MapProps> = ({
   mapRef,
   sidebarSize,
 }) => {
+  const keycloak = useKeycloakWrapper();
   const dispatch = useDispatch();
   const [geoFilter, setGeoFilter] = useState<IGeoSearchParams>({});
   const [baseLayers, setBaseLayers] = useState<BaseLayer[]>([]);
@@ -298,7 +304,10 @@ const Map: React.FC<MapProps> = ({
               <Container fluid className="px-0 map-filter-container">
                 <Container className="px-0">
                   <PropertyFilter
-                    defaultFilter={defaultFilterValues}
+                    defaultFilter={{
+                      ...defaultFilterValues,
+                      includeAllProperties: keycloak.hasClaim(Claims.ADMIN_PROPERTIES),
+                    }}
                     agencyLookupCodes={agencies}
                     adminAreaLookupCodes={administrativeAreas}
                     propertyClassifications={propertyClassifications}
@@ -352,6 +361,7 @@ const Map: React.FC<MapProps> = ({
                     </Popup>
                   )}
                   <LegendControl />
+                  <ZoomOutButton map={mapRef} bounds={defaultBounds} />
                   <LayersControl />
                   <InventoryLayer
                     zoom={zoom}

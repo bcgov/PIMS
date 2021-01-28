@@ -30,6 +30,7 @@ interface IReviewProps {
   occupantTypes: SelectOptions;
   agencies: any;
   disabled: boolean;
+  isPropertyAdmin: boolean;
 }
 
 export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
@@ -76,8 +77,8 @@ export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
                     className="edit"
                     onClick={() =>
                       setEditInfo({
-                        ...defaultEditValues,
-                        identification: !editInfo.identification,
+                        ...editInfo,
+                        identification: formikProps.isValid && !editInfo.identification,
                       })
                     }
                   />
@@ -89,7 +90,7 @@ export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
                   field={withNameSpace('agencyId')}
                   options={props.agencies}
                   filterBy={['code', 'label', 'parent']}
-                  disabled={editInfo.identification}
+                  disabled={editInfo.identification || !props.isPropertyAdmin}
                 />
               </Row>
               <Row className="content-item">
@@ -221,7 +222,10 @@ export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
                     size={20}
                     className="edit"
                     onClick={() =>
-                      setEditInfo({ ...defaultEditValues, tenancy: !editInfo.tenancy })
+                      setEditInfo({
+                        ...editInfo,
+                        tenancy: formikProps.isValid && !editInfo.tenancy,
+                      })
                     }
                   />
                 )}
@@ -265,6 +269,13 @@ export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
                     formikProps={formikProps}
                     disabled={editInfo.tenancy}
                     field={withNameSpace('buildingTenancyUpdatedOn')}
+                    popperModifiers={{
+                      preventOverflow: {
+                        enabled: true,
+                        escapeWithReference: false,
+                        boundariesElement: 'scrollParent',
+                      },
+                    }}
                   />
                 </span>
               </Row>
@@ -282,7 +293,10 @@ export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
                     size={20}
                     className="edit"
                     onClick={() =>
-                      setEditInfo({ ...defaultEditValues, valuation: !editInfo.valuation })
+                      setEditInfo({
+                        ...editInfo,
+                        valuation: formikProps.isValid && !editInfo.valuation,
+                      })
                     }
                   />
                 )}

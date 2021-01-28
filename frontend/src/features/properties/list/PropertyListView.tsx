@@ -3,7 +3,7 @@ import React, { useState, useMemo, useRef, useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { Container, Button } from 'react-bootstrap';
 import queryString from 'query-string';
-import _ from 'lodash';
+import _, { isEmpty } from 'lodash';
 import * as API from 'constants/API';
 import { ENVIRONMENT } from 'constants/environment';
 import { decimalOrUndefined, mapLookupCode } from 'utils';
@@ -15,7 +15,7 @@ import { IPropertyQueryParams, IProperty } from '.';
 import { columns as cols } from './columns';
 import { Table } from 'components/Table';
 import service from '../service';
-import { FaFolderOpen, FaFolder } from 'react-icons/fa';
+import { FaFolderOpen, FaFolder, FaEdit } from 'react-icons/fa';
 import { Buildings } from './buildings';
 import { FaFileExcel, FaFileAlt } from 'react-icons/fa';
 import styled from 'styled-components';
@@ -28,6 +28,17 @@ import { IPropertyFilter } from '../filter/IPropertyFilter';
 import { SortDirection, TableSort } from 'components/Table/TableSort';
 import useCodeLookups from 'hooks/useLookupCodes';
 import { useRouterFilter } from 'hooks/useRouterFilter';
+import { Form, Formik, FormikProps, getIn, useFormikContext } from 'formik';
+import {
+  getCurrentFiscal,
+  getMostRecentEvaluation,
+  toApiProperty,
+} from 'features/projects/common/projectConverter';
+import { useApi } from 'hooks/useApi';
+import { toast } from 'react-toastify';
+import { IApiProperty } from 'features/projects/common';
+import { EvaluationKeys } from 'constants/evaluationKeys';
+import { FiscalKeys } from 'constants/fiscalKeys';
 
 const getPropertyReportUrl = (filter: IPropertyQueryParams) =>
   `${ENVIRONMENT.apiUrl}/reports/properties?${filter ? queryString.stringify(filter) : ''}`;
@@ -36,6 +47,18 @@ const FileIcon = styled(Button)`
   background-color: #fff !important;
   color: #003366 !important;
   padding: 6px 5px;
+`;
+
+const EditIconButton = styled(FileIcon)`
+  margin-right: 12px;
+`;
+
+const VerticalDivider = styled.div`
+  border-left: 6px solid rgba(96, 96, 96, 0.2);
+  height: 40px;
+  margin-left: 1%;
+  margin-right: 1%;
+  border-width: 2px;
 `;
 
 const initialQuery: IPropertyQueryParams = {
@@ -60,6 +83,50 @@ const defaultFilterValues: IPropertyFilter = {
   maxAssessedValue: '',
   maxNetBookValue: '',
   maxMarketValue: '',
+};
+
+export const flattenProperty = (apiProperty: IApiProperty): IProperty => {
+  const assessed = getMostRecentEvaluation(apiProperty.evaluations, EvaluationKeys.Assessed);
+  const netBook = getCurrentFiscal(apiProperty.fiscals, FiscalKeys.NetBook);
+  const market = getCurrentFiscal(apiProperty.fiscals, FiscalKeys.Market);
+  const property: any = {
+    id: apiProperty.id,
+    parcelId: apiProperty.parcelId ?? apiProperty.id,
+    pid: apiProperty.pid ?? '',
+    name: apiProperty.name,
+    description: apiProperty.description,
+    landLegalDescription: apiProperty.landLegalDescription,
+    zoning: apiProperty.zoning,
+    zoningPotential: apiProperty.zoningPotential,
+    isSensitive: apiProperty.isSensitive,
+    latitude: apiProperty.latitude,
+    longitude: apiProperty.longitude,
+    agencyId: apiProperty.agencyId,
+    agency: apiProperty.agency ?? '',
+    agencyCode: apiProperty.agency ?? '',
+    subAgency: apiProperty.subAgency,
+    classification: apiProperty.classification ?? '',
+    classificationId: apiProperty.classificationId,
+    addressId: apiProperty.address?.id as number,
+    address: `${apiProperty.address?.line1 ?? ''} , ${apiProperty.address?.administrativeArea ??
+      ''}`,
+    administrativeArea: apiProperty.address?.administrativeArea ?? '',
+    province: apiProperty.address?.province ?? '',
+    postal: apiProperty.address?.postal ?? '',
+    assessed: (assessed?.value as number) ?? 0,
+    assessedDate: assessed?.date,
+    assessedFirm: assessed?.firm,
+    assessedRowVersion: assessed?.rowVersion,
+    netBook: (netBook?.value as number) ?? 0,
+    netBookFiscalYear: netBook?.fiscalYear as number,
+    netBookRowVersion: netBook?.rowVersion,
+    market: (market?.value as number) ?? 0,
+    marketFiscalYear: market?.fiscalYear as number,
+    marketRowVersion: market?.rowVersion,
+    rowVersion: apiProperty.rowVersion,
+    landArea: apiProperty.landArea,
+  };
+  return property;
 };
 
 /**
@@ -116,7 +183,40 @@ const getServerQuery = (state: {
   return query;
 };
 
+interface IChangedRow {
+  rowId: number;
+  assessed?: boolean;
+  netBook?: boolean;
+  market?: boolean;
+}
+
+/**
+ *  Component to track edited rows in the formik table
+ * @param param0 {setDirtyRows: event listener for changed rows}
+ */
+const DirtyRowsTracker: React.FC<{ setDirtyRows: (changes: IChangedRow[]) => void }> = ({
+  setDirtyRows,
+}) => {
+  const { touched, isSubmitting } = useFormikContext();
+
+  React.useEffect(() => {
+    if (!!touched && !isEmpty(touched) && !isSubmitting) {
+      const changed = Object.keys(getIn(touched, 'properties')).map(key => ({
+        rowId: Number(key),
+        ...getIn(touched, 'properties')[key],
+      }));
+      setDirtyRows(changed);
+    }
+  }, [touched, setDirtyRows, isSubmitting]);
+
+  return null;
+};
+
 const PropertyListView: React.FC = () => {
+  const { updateBuilding, updateParcel } = useApi();
+  const [editable, setEditable] = useState(false);
+  const tableFormRef = useRef<FormikProps<{ properties: IProperty[] }> | undefined>();
+  const [dirtyRows, setDirtyRows] = useState<IChangedRow[]>([]);
   // lookup codes, etc
   const lookupCodes = useSelector<RootState, ILookupCode[]>(
     state => (state.lookupCode as ILookupCodeState).lookupCodes,
@@ -151,8 +251,8 @@ const PropertyListView: React.FC = () => {
 
   const agencyIds = useMemo(() => agencies.map(x => parseInt(x.id, 10)), [agencies]);
   const columns = useMemo(
-    () => cols(agenciesList, subAgencies, municipalities, propertyClassifications),
-    [subAgencies, agenciesList, municipalities, propertyClassifications],
+    () => cols(agenciesList, subAgencies, municipalities, propertyClassifications, editable),
+    [subAgencies, agenciesList, municipalities, propertyClassifications, editable],
   );
   const [sorting, setSorting] = useState<TableSort<IProperty>>({ description: 'asc' });
 
@@ -357,53 +457,111 @@ const PropertyListView: React.FC = () => {
               <FaFileAlt data-testid="csv-icon" size={36} onClick={() => fetch('csv')} />
             </FileIcon>
           </TooltipWrapper>
+          <VerticalDivider />
+
+          <TooltipWrapper toolTipId="edit-financial-values" toolTip={'Edit financial values'}>
+            <EditIconButton>
+              <FaEdit data-testid="edit-icon" size={36} onClick={() => setEditable(!editable)} />
+            </EditIconButton>
+          </TooltipWrapper>
+          {editable && (
+            <TooltipWrapper
+              toolTipId="save-edited-financial-values"
+              toolTip={'Save financial values'}
+            >
+              <Button
+                data-testid="save-changes"
+                disabled={dirtyRows.length === 0}
+                onClick={() => {
+                  if (tableFormRef.current?.dirty) {
+                    tableFormRef.current.submitForm();
+                  }
+                }}
+              >
+                Save edits
+              </Button>
+            </TooltipWrapper>
+          )}
         </Container>
-        <Table<IProperty>
-          name="propertiesTable"
-          lockPageSize={true}
-          columns={columns}
-          data={data || []}
-          loading={data === undefined}
-          filterable
-          sort={sorting}
-          pageIndex={pageIndex}
-          onRequestData={handleRequestData}
-          pageCount={pageCount}
-          onSortChange={(column: string, direction: SortDirection) => {
-            if (!!direction) {
-              setSorting({ ...sorting, [column]: direction });
-            } else {
-              const data: any = { ...sorting };
-              delete data[column];
-              setSorting(data);
-            }
-          }}
-          canRowExpand={(val: any) => {
-            if (val.values.propertyTypeId === 0) {
-              return true;
-            } else {
-              return false;
-            }
-          }}
-          detailsPanel={{
-            render: val => {
-              if (expandData[val.id]) {
-                return <Buildings hideHeaders={true} data={expandData[val.id]} />;
+        <Formik
+          innerRef={tableFormRef as any}
+          initialValues={{ properties: data || [] }}
+          enableReinitialize
+          onSubmit={async values => {
+            let nextProperties = [...values.properties];
+            const changedRows = dirtyRows.map(change => {
+              const data = { ...values.properties![change.rowId] };
+
+              return { rowId: change.rowId, data } as any;
+            });
+            if (changedRows.length > 0) {
+              for (const change of changedRows) {
+                const apiProperty = toApiProperty(change.data as any);
+                const callApi = apiProperty.parcelId ? updateParcel : updateBuilding;
+                const response: any = await callApi(apiProperty.id, apiProperty);
+                nextProperties = nextProperties.map((item, index: number) => {
+                  if (index === change.rowId) {
+                    item = { ...item, ...flattenProperty(response) } as any;
+                  }
+                  return item;
+                });
               }
-            },
-            icons: {
-              open: <FaFolderOpen color="black" size={20} />,
-              closed: <FaFolder color="black" size={20} />,
-            },
-            checkExpanded: (row, state) => !!state.find(x => checkExpanded(x, row)),
-            onExpand: loadBuildings,
-            getRowId: row => row.id,
+              toast.info('Successfully saved changes!!');
+              setDirtyRows([]);
+              setData(nextProperties);
+            }
           }}
-          filter={appliedFilter}
-          onFilterChange={values => {
-            setFilter({ ...filter, ...values });
-          }}
-        />
+        >
+          <Form>
+            <DirtyRowsTracker setDirtyRows={setDirtyRows} />
+            <Table<IProperty>
+              name="propertiesTable"
+              lockPageSize={true}
+              columns={columns}
+              data={data || []}
+              loading={data === undefined}
+              filterable
+              sort={sorting}
+              pageIndex={pageIndex}
+              onRequestData={handleRequestData}
+              pageCount={pageCount}
+              onSortChange={(column: string, direction: SortDirection) => {
+                if (!!direction) {
+                  setSorting({ ...sorting, [column]: direction });
+                } else {
+                  const data: any = { ...sorting };
+                  delete data[column];
+                  setSorting(data);
+                }
+              }}
+              canRowExpand={(val: any) => {
+                if (val.values.propertyTypeId === 0) {
+                  return true;
+                } else {
+                  return false;
+                }
+              }}
+              detailsPanel={{
+                render: val => {
+                  if (expandData[val.id]) {
+                    return <Buildings hideHeaders={true} data={expandData[val.id]} />;
+                  }
+                },
+                icons: {
+                  open: <FaFolderOpen color="black" size={20} />,
+                  closed: <FaFolder color="black" size={20} />,
+                },
+                checkExpanded: (row, state) => !!state.find(x => checkExpanded(x, row)),
+                onExpand: loadBuildings,
+                getRowId: row => row.id,
+              }}
+              filter={appliedFilter}
+              onFilterChange={values => {
+                setFilter({ ...filter, ...values });
+              }}
+            />
+          </Form>
+        </Formik>
       </div>
     </Container>
   );

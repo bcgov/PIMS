@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore.Internal;
 using Pims.Core.Extensions;
 using Pims.Dal.Security;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using Entity = Pims.Dal.Entities;
@@ -77,7 +79,7 @@ namespace Pims.Dal.Helpers.Extensions
             if (filter.ClassificationId.HasValue)
                 query = query.Where(p => p.ClassificationId == filter.ClassificationId);
             if (!String.IsNullOrWhiteSpace(filter.ProjectNumber))
-                query = query.Where(p => EF.Functions.Like(p.ProjectNumber, $"{filter.ProjectNumber}%"));
+                query = query.Where(p => p.ProjectNumbers.Contains(filter.ProjectNumber));
             if (!String.IsNullOrWhiteSpace(filter.Description))
                 query = query.Where(p => EF.Functions.Like(p.Description, $"%{filter.Description}%"));
             if (filter.ConstructionTypeId.HasValue)
@@ -202,6 +204,49 @@ namespace Pims.Dal.Helpers.Extensions
         public static int? GetParcelId(this Entity.Building building)
         {
             return building.Parcels.FirstOrDefault()?.ParcelId;
+        }
+
+        /// <summary>
+        /// Update building financials
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="building"></param>
+        /// <param name="buildingEvaluations"></param>
+        /// <param name="buildingFiscals"></param>
+        public static void UpdateBuildingFinancials(this PimsContext context,  Entity.Building building,
+            ICollection<Entity.BuildingEvaluation> buildingEvaluations, ICollection<Entity.BuildingFiscal> buildingFiscals)
+        {
+
+            foreach (var buildingEvaluation in buildingEvaluations)
+            {
+                var existingEvaluation = building.Evaluations
+                    .FirstOrDefault(e => e.Date == buildingEvaluation.Date && e.Key == buildingEvaluation.Key);
+                var updateEvaluation = existingEvaluation?.Value != buildingEvaluation.Value;
+
+                if (existingEvaluation == null)
+                {
+                    building.Evaluations.Add(buildingEvaluation);
+                }
+                else if (updateEvaluation)
+                {
+                    context.Entry(existingEvaluation).CurrentValues.SetValues(buildingEvaluation);
+                }
+            }
+            foreach (var buildingFiscal in buildingFiscals)
+            {
+                var originalBuildingFiscal = building.Fiscals
+                    .FirstOrDefault(e => e.FiscalYear == buildingFiscal.FiscalYear && e.Key == buildingFiscal.Key);
+
+                var updateFiscal = originalBuildingFiscal?.Value != buildingFiscal.Value;
+                if (originalBuildingFiscal == null)
+                {
+                    building.Fiscals.Add(buildingFiscal);
+                }
+                else if (updateFiscal)
+                {
+                    context.Entry(originalBuildingFiscal).CurrentValues.SetValues(buildingFiscal);
+                }
+            }
         }
     }
 }

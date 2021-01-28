@@ -208,12 +208,12 @@ namespace Pims.Dal.Services
                 .Include(b => b.Address).ThenInclude(a => a.Province)
                 .Include(b => b.Evaluations)
                 .Include(b => b.Fiscals)
+                .Include(b => b.Parcels).ThenInclude(pb => pb.Parcel).ThenInclude(b => b.Buildings)
                 .Include(b => b.Parcels).ThenInclude(pb => pb.Parcel).ThenInclude(b => b.Evaluations)
                 .Include(b => b.Parcels).ThenInclude(pb => pb.Parcel).ThenInclude(b => b.Classification)
                 .Include(b => b.Parcels).ThenInclude(pb => pb.Parcel).ThenInclude(b => b.Fiscals)
                 .Include(b => b.Parcels).ThenInclude(pb => pb.Parcel).ThenInclude(b => b.Address).ThenInclude(a => a.Province)
                 .FirstOrDefault(b => b.Id == building.Id) ?? throw new KeyNotFoundException();
-            this.ThrowIfNotAllowedToUpdate(existingBuilding, _options.Project);
 
             var userAgencies = this.User.GetAgenciesAsNullable();
             if (!isAdmin && !userAgencies.Contains(existingBuilding.AgencyId)) throw new NotAuthorizedException("User may not edit buildings outside of their agency.");
@@ -233,7 +233,7 @@ namespace Pims.Dal.Services
 
             foreach (var parcel in building.Parcels.Select(pb => pb.Parcel))
             {
-                // Check if the building already exists.
+                // Check if the parcel already exists.
                 var existingAssociatedParcel = existingBuilding.Parcels
                     .FirstOrDefault(pb => pb.ParcelId == parcel.Id)?.Parcel;
 
@@ -246,9 +246,12 @@ namespace Pims.Dal.Services
                 {
                     if (!allowEdit) throw new NotAuthorizedException("User may not add parcels to a property they don't own.");
                     var existingParcel = this.Context.Parcels
+                    .Include(p => p.Buildings)
                     .FirstOrDefault(pb => pb.Id == parcel.Id);
                     if(existingParcel != null)
                     {
+                        parcel.Buildings.Clear(); // Do not modify the list of buildings associated to parcels when performing building updates.
+                        existingParcel.Buildings.ForEach(building => parcel.Buildings.Add(building));
                         _service.Parcel.PendingUpdate(parcel);
                     }
 
@@ -256,6 +259,8 @@ namespace Pims.Dal.Services
                 }
                 else
                 {
+                    parcel.Buildings.Clear(); // Do not modify the list of buildings associated to parcels when performing building updates.
+                    existingAssociatedParcel.Buildings.ForEach(building => parcel.Buildings.Add(building));
                     _service.Parcel.PendingUpdate(parcel);
                 }
             }
@@ -265,35 +270,7 @@ namespace Pims.Dal.Services
                 this.Context.Entry(existingBuilding.Address).CurrentValues.SetValues(building.Address);
                 this.Context.Entry(existingBuilding).CurrentValues.SetValues(building);
                 this.Context.SetOriginalRowVersion(existingBuilding);
-
-                foreach (var buildingEvaluation in building.Evaluations)
-                {
-                    var existingEvaluation = existingBuilding.Evaluations
-                        .FirstOrDefault(e => e.Date == buildingEvaluation.Date && e.Key == buildingEvaluation.Key);
-
-                    if (existingEvaluation == null)
-                    {
-                        existingBuilding.Evaluations.Add(buildingEvaluation);
-                    }
-                    else
-                    {
-                        this.Context.Entry(existingEvaluation).CurrentValues.SetValues(buildingEvaluation);
-                    }
-                }
-                foreach (var buildingFiscal in building.Fiscals)
-                {
-                    var originalBuildingFiscal = existingBuilding.Fiscals
-                        .FirstOrDefault(e => e.FiscalYear == buildingFiscal.FiscalYear && e.Key == buildingFiscal.Key);
-
-                    if (originalBuildingFiscal == null)
-                    {
-                        existingBuilding.Fiscals.Add(buildingFiscal);
-                    }
-                    else
-                    {
-                        this.Context.Entry(originalBuildingFiscal).CurrentValues.SetValues(buildingFiscal);
-                    }
-                }
+                this.Context.UpdateBuildingFinancials(existingBuilding, building.Evaluations, building.Fiscals);
 
                 // Go through the existing parcels and see if they have been deleted from the updated buildings.
                 foreach (var parcelBuilding in existingBuilding.Parcels)
@@ -348,6 +325,40 @@ namespace Pims.Dal.Services
             }
             existingBuilding.LeasedLandMetadata = building.LeasedLandMetadata;
             this.Context.Buildings.Update(existingBuilding); // TODO: Must detach entity before returning it.
+            this.Context.CommitTransaction();
+            return Get(existingBuilding.Id);
+        }
+
+        /// <summary>
+        /// Update the specified building financials in the datasource.
+        /// </summary>
+        /// <param name="building"></param>
+        /// <exception type="KeyNotFoundException">Entity does not exist in the datasource.</exception>
+        /// <returns></returns>
+        public Building UpdateFinancials(Building building)
+        {
+            building.ThrowIfNotAllowedToEdit(nameof(building), this.User,
+                new[] {Permissions.PropertyEdit, Permissions.AdminProperties});
+            var isAdmin = this.User.HasPermission(Permissions.AdminProperties);
+
+            var existingBuilding = this.Context.Buildings
+                .Include(b => b.Evaluations)
+                .Include(b => b.Fiscals)
+                .FirstOrDefault(b => b.Id == building.Id) ?? throw new KeyNotFoundException();
+            this.ThrowIfNotAllowedToUpdate(existingBuilding, _options.Project);
+
+            var userAgencies = this.User.GetAgenciesAsNullable();
+            if (!isAdmin && !userAgencies.Contains(existingBuilding.AgencyId))
+                throw new NotAuthorizedException("User may not edit buildings outside of their agency.");
+
+            var allowEdit = isAdmin || userAgencies.Contains(existingBuilding.AgencyId);
+            if (allowEdit)
+            {
+                this.Context.SetOriginalRowVersion(existingBuilding);
+                this.Context.UpdateBuildingFinancials(existingBuilding, building.Evaluations, building.Fiscals);
+            }
+
+            this.Context.SaveChanges();
             this.Context.CommitTransaction();
             return Get(existingBuilding.Id);
         }

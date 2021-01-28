@@ -1,7 +1,9 @@
 using Mapster;
+using Microsoft.Extensions.Options;
 using Pims.Api.Mapping.Converters;
 using Pims.Dal.Helpers.Extensions;
 using System.Collections.Generic;
+using System.Text.Json;
 using Entity = Pims.Dal.Entities;
 using Model = Pims.Api.Models.Parcel;
 
@@ -9,6 +11,20 @@ namespace Pims.Api.Mapping.Parcel
 {
     public class ParcelBuildingMap : IRegister
     {
+        #region Variables
+        private readonly JsonSerializerOptions _serializerOptions;
+        #endregion
+
+        #region Constructors
+        /// <summary>
+        /// Creates a new instance of a BuildingParcelMap, initializes with specified arguments.
+        /// </summary>
+        /// <param name="serializerOptions"></param>
+        public ParcelBuildingMap(IOptions<JsonSerializerOptions> serializerOptions)
+        {
+            _serializerOptions = serializerOptions.Value;
+        }
+        #endregion
 
         public void Register(TypeAdapterConfig config)
         {
@@ -16,7 +32,7 @@ namespace Pims.Api.Mapping.Parcel
                 .EnableNonPublicMembers(true)
                 .Map(dest => dest.Id, src => src.Id)
                 .Map(dest => dest.ParcelId, src => src.GetParcelId())
-                .Map(dest => dest.ProjectNumber, src => src.ProjectNumber)
+                .Map(dest => dest.ProjectNumbers, src => JsonSerializer.Deserialize<IEnumerable<string>>(src.ProjectNumbers ?? "[]", _serializerOptions))
                 .Map(dest => dest.Name, src => src.Name)
                 .Map(dest => dest.Description, src => src.Description)
                 .Map(dest => dest.AgencyId, src => src.AgencyId)

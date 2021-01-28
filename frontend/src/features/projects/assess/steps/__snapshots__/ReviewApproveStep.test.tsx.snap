@@ -1,6 +1,16 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Review Approve Step renders correctly 1`] = `
+.c1 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-flow: column;
+  -ms-flex-flow: column;
+  flex-flow: column;
+}
+
 .c0 {
   padding-left: 10px;
 }
@@ -355,6 +365,9 @@ exports[`Review Approve Step renders correctly 1`] = `
                     class="sortable-column"
                   >
                     Agency
+                    <span
+                      style="flex: 1 1 auto;"
+                    />
                   </div>
                 </div>
                 <div
@@ -367,6 +380,9 @@ exports[`Review Approve Step renders correctly 1`] = `
                     class="sortable-column"
                   >
                     Name
+                    <span
+                      style="flex: 1 1 auto;"
+                    />
                   </div>
                 </div>
                 <div
@@ -379,6 +395,9 @@ exports[`Review Approve Step renders correctly 1`] = `
                     class="sortable-column"
                   >
                     Civic Address
+                    <span
+                      style="flex: 1 1 auto;"
+                    />
                   </div>
                 </div>
                 <div
@@ -391,6 +410,9 @@ exports[`Review Approve Step renders correctly 1`] = `
                     class="sortable-column"
                   >
                     Classification
+                    <span
+                      style="flex: 1 1 auto;"
+                    />
                   </div>
                 </div>
                 <div
@@ -403,6 +425,9 @@ exports[`Review Approve Step renders correctly 1`] = `
                     class="sortable-column"
                   >
                     Current Zoning Code
+                    <span
+                      style="flex: 1 1 auto;"
+                    />
                   </div>
                 </div>
                 <div
@@ -414,7 +439,10 @@ exports[`Review Approve Step renders correctly 1`] = `
                   <div
                     class="sortable-column"
                   >
-                    Potential Zoning Code
+                    Other Projects
+                    <span
+                      style="flex: 1 1 auto;"
+                    />
                   </div>
                 </div>
                 <div
@@ -427,6 +455,9 @@ exports[`Review Approve Step renders correctly 1`] = `
                     class="sortable-column"
                   >
                     Net Book Value
+                    <span
+                      style="flex: 1 1 auto;"
+                    />
                   </div>
                 </div>
                 <div
@@ -439,6 +470,9 @@ exports[`Review Approve Step renders correctly 1`] = `
                     class="sortable-column"
                   >
                     Market Value
+                    <span
+                      style="flex: 1 1 auto;"
+                    />
                   </div>
                 </div>
                 <div
@@ -451,6 +485,9 @@ exports[`Review Approve Step renders correctly 1`] = `
                     class="sortable-column"
                   >
                     Assessed Value
+                    <span
+                      style="flex: 1 1 auto;"
+                    />
                   </div>
                 </div>
                 <div
@@ -463,6 +500,9 @@ exports[`Review Approve Step renders correctly 1`] = `
                     class="sortable-column"
                   >
                     Type
+                    <span
+                      style="flex: 1 1 auto;"
+                    />
                   </div>
                 </div>
               </div>
@@ -518,11 +558,15 @@ exports[`Review Approve Step renders correctly 1`] = `
                     title="Click to view property details"
                   />
                   <div
-                    class="td clickable"
+                    class="td"
                     role="cell"
                     style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
-                    title="Click to view property details"
-                  />
+                    title=""
+                  >
+                    <div
+                      class="c1"
+                    />
+                  </div>
                   <div
                     class="td"
                     role="cell"
@@ -973,6 +1017,40 @@ exports[`Review Approve Step renders correctly 1`] = `
         >
           private note
         </textarea>
+      </div>
+    </div>
+    <div
+      class="ProjectNotes form-row"
+    >
+      <div
+        class="col-md-12 reviewRequired form-group col"
+      >
+        <label
+          class="form-label"
+          for="input-notes[22].note"
+        >
+          Add the following text to the ERP Notification Email
+          <svg
+            class="tooltip-icon"
+            fill="currentColor"
+            height="1em"
+            stroke="currentColor"
+            stroke-width="0"
+            viewBox="0 0 512 512"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"
+            />
+          </svg>
+        </label>
+        <textarea
+          class="col-md-5 form-control"
+          disabled=""
+          id="input-notes[22].note"
+          name="notes[22].note"
+        />
       </div>
     </div>
     <div

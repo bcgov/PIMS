@@ -5,7 +5,7 @@ metadata:
   annotations:
     openshift.io/display-name: PIMS Kibana
     description: Deployment template for Kibana
-    tags: kibana,logging
+    tags: "kibana,logging"
 parameters:
   - name: APP_NAME
     displayName: "App Name"
@@ -34,25 +34,36 @@ parameters:
     required: true
     value: "pims-kibana.apps.silver.devops.gov.bc.ca"
 
-  - name: ELASTICSEARCH_DOMAIN
-    displayName: "Elasticsearch Service Domain Name"
-    description: "Elasticsearch service Domain Name"
+  - name: ELASTICSEARCH_NAME
+    displayName: "Elasticsearch Service Name"
+    description: "The Elasticsearch service name specified in the deployment configuration."
     required: true
-    value: "pims-elastic.apps.silver.devops.gov.bc.ca"
-  - name: ELASTIC_PASSWORD
-    displayName: "Elasticsearch Password"
-    description: "Elastic search bootstrap password"
-    required: true
-    # Regrettably this appears to be required as I am not certain how to extract the password from a secret for the yaml configuration.
+    value: "elasticsearch"
 objects:
-  # Kibana configuration settings.
-  - apiVersion: v1
-    kind: ConfigMap
+  # Allow kibana to communicate with elasticsearch
+  - kind: NetworkSecurityPolicy
+    apiVersion: security.devops.gov.bc.ca/v1alpha1
     metadata:
-      name: ${APP_NAME}-config
+      name: pod-to-pod-permit-${APP_NAME}-${ELASTICSEARCH_NAME}
+    spec:
+      description: Allow pod(s) to communicate to other pod(s).
+      source:
+        - - app=${APP_NAME}
+          - role=${ROLE_NAME}
+          - env=${ENV_NAME}
+      destination:
+        - - app=${ELASTICSEARCH_NAME}
+          - role=${ROLE_NAME}
+          - env=${ENV_NAME}
+
+  # Kibana configuration settings.
+  - kind: ConfigMap
+    apiVersion: v1
+    metadata:
+      name: ${APP_NAME}
       namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
       labels:
-        name: ${APP_NAME}-config
+        name: ${APP_NAME}
         app: ${APP_NAME}
         role: logging
         env: ${ENV_NAME}
@@ -61,18 +72,18 @@ objects:
         server.host: "0"
         server.name: ${APP_NAME}
 
-        elasticsearch.hosts: ["http://${ELASTICSEARCH_DOMAIN}:9200"]
+        elasticsearch.hosts: [http://${ELASTICSEARCH_NAME}.354028-tools.svc.cluster.local:9200]
         elasticsearch.username: elastic
-        elasticsearch.password: ${ELASTIC_PASSWORD}
+        elasticsearch.password: ${ELASTICSEARCH_PASSWORD}
 
   # Expose ports on pod.
   - kind: Service
     apiVersion: v1
     metadata:
-      name: ${APP_NAME}-service
+      name: ${APP_NAME}
       namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
       labels:
-        name: ${APP_NAME}-service
+        name: ${APP_NAME}
         app: ${APP_NAME}
         role: logging
         env: ${ENV_NAME}
@@ -90,25 +101,25 @@ objects:
   - kind: Route
     apiVersion: v1
     metadata:
-      name: ${APP_NAME}-route
+      name: ${APP_NAME}
       namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
       labels:
-        name: ${APP_NAME}-route
+        name: ${APP_NAME}
         app: ${APP_NAME}
         role: logging
         env: ${ENV_NAME}
     spec:
       host: ${KIBANA_DOMAIN}
       to:
-        name: ${APP_NAME}-service
+        name: ${APP_NAME}
         kind: Service
         weight: 100
       tls:
         termination: edge
 
   # How the pod will be deployed.
-  - apiVersion: v1
-    kind: DeploymentConfig
+  - kind: DeploymentConfig
+    apiVersion: v1
     metadata:
       name: ${APP_NAME}
       namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
@@ -138,7 +149,7 @@ objects:
                 - name: ELASTICSEARCH_PASSWORD
                   valueFrom:
                     secretKeyRef:
-                      name: elasticsearch-secret
+                      name: elasticsearch
                       key: ELASTIC_PASSWORD
               ports:
                 - containerPort: 5601
@@ -151,4 +162,4 @@ objects:
           volumes:
             - name: config
               configMap:
-                name: ${APP_NAME}-config
+                name: ${APP_NAME}

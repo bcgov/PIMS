@@ -1,6 +1,16 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Update Info Form Matches Snapshot 1`] = `
+.c1 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-flow: column;
+  -ms-flex-flow: column;
+  flex-flow: column;
+}
+
 .c0 {
   padding-left: 10px;
 }
@@ -356,6 +366,13 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                       type="checkbox"
                     />
                   </div>
+                  <span
+                    style={
+                      Object {
+                        "flex": "1 1 auto",
+                      }
+                    }
+                  />
                 </div>
               </div>
               <div
@@ -379,6 +396,13 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                   className="sortable-column"
                 >
                   
+                  <span
+                    style={
+                      Object {
+                        "flex": "1 1 auto",
+                      }
+                    }
+                  />
                 </div>
               </div>
               <div
@@ -402,6 +426,13 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                   className="sortable-column"
                 >
                   Agency
+                  <span
+                    style={
+                      Object {
+                        "flex": "1 1 auto",
+                      }
+                    }
+                  />
                 </div>
               </div>
               <div
@@ -425,6 +456,13 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                   className="sortable-column"
                 >
                   Name
+                  <span
+                    style={
+                      Object {
+                        "flex": "1 1 auto",
+                      }
+                    }
+                  />
                 </div>
               </div>
               <div
@@ -448,6 +486,13 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                   className="sortable-column"
                 >
                   Civic Address
+                  <span
+                    style={
+                      Object {
+                        "flex": "1 1 auto",
+                      }
+                    }
+                  />
                 </div>
               </div>
               <div
@@ -471,6 +516,13 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                   className="sortable-column"
                 >
                   Classification
+                  <span
+                    style={
+                      Object {
+                        "flex": "1 1 auto",
+                      }
+                    }
+                  />
                 </div>
               </div>
               <div
@@ -494,6 +546,13 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                   className="sortable-column"
                 >
                   Current Zoning Code
+                  <span
+                    style={
+                      Object {
+                        "flex": "1 1 auto",
+                      }
+                    }
+                  />
                 </div>
               </div>
               <div
@@ -516,7 +575,14 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                 <div
                   className="sortable-column"
                 >
-                  Potential Zoning Code
+                  Other Projects
+                  <span
+                    style={
+                      Object {
+                        "flex": "1 1 auto",
+                      }
+                    }
+                  />
                 </div>
               </div>
               <div
@@ -540,6 +606,13 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                   className="sortable-column"
                 >
                   Net Book Value
+                  <span
+                    style={
+                      Object {
+                        "flex": "1 1 auto",
+                      }
+                    }
+                  />
                 </div>
               </div>
               <div
@@ -563,6 +636,13 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                   className="sortable-column"
                 >
                   Market Value
+                  <span
+                    style={
+                      Object {
+                        "flex": "1 1 auto",
+                      }
+                    }
+                  />
                 </div>
               </div>
               <div
@@ -586,6 +666,13 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                   className="sortable-column"
                 >
                   Assessed Value
+                  <span
+                    style={
+                      Object {
+                        "flex": "1 1 auto",
+                      }
+                    }
+                  />
                 </div>
               </div>
               <div
@@ -609,6 +696,13 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                   className="sortable-column"
                 >
                   Type
+                  <span
+                    style={
+                      Object {
+                        "flex": "1 1 auto",
+                      }
+                    }
+                  />
                 </div>
               </div>
             </div>
@@ -859,20 +953,8 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                   title=""
                 >
                   <div
-                    className="form-group col"
-                  >
-                    <input
-                      className="form-control"
-                      id="input-properties.0.zoningPotential"
-                      name="properties.0.zoningPotential"
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      onFocus={[Function]}
-                      onMouseOut={[Function]}
-                      onMouseOver={[Function]}
-                      value=""
-                    />
-                  </div>
+                    className="c1"
+                  />
                 </div>
                 <div
                   className="td"

@@ -65,7 +65,7 @@ namespace Pims.Dal.Test.Services.Admin
             buildings.Next(1).AgencyId = 3;
             buildings.Next(2).ClassificationId = 2;
             buildings.Next(3).Description = "-DescriptionTest-";
-            buildings.Next(5).ProjectNumber = "ProjectNumber";
+            buildings.Next(5).ProjectNumbers = "[\"ProjectNumber\"]";
             init.SaveChanges();
 
             var service = helper.CreateService<BuildingService>(user);
