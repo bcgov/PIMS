@@ -343,7 +343,8 @@ namespace Pims.Dal.Helpers.Extensions
         /// <returns></returns>
         public static bool IsProjectInDraft(this Entity.Project project, ProjectOptions options)
         {
-            return options.DraftWorkflows.Contains(project.Workflow?.Code);
+            if (project.Workflow == null) throw new ArgumentNullException(nameof(project), "The 'Workflow' cannot be null.");
+            return options.DraftWorkflows.Contains(project.Workflow.Code);
         }
 
         /// <summary>
