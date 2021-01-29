@@ -125,16 +125,13 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
               </Row>
               <Row className="content-item resizable">
                 <Label>Legal Description</Label>
-                <TextArea
-                  disabled={editInfo.identification}
-                  field={withNameSpace('landLegalDescription')}
-                />
+                <TextArea disabled={true} field={withNameSpace('landLegalDescription')} />
               </Row>
 
               <AddressForm
                 onGeocoderChange={noop}
                 {...formikProps}
-                disabled={editInfo.identification}
+                disabled={true}
                 nameSpace={withNameSpace('address')}
                 disableCheckmark
                 disableStreetAddress
@@ -145,7 +142,7 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
                 <Input
                   displayErrorTooltips
                   className="input-small"
-                  disabled={editInfo.identification}
+                  disabled={true}
                   required={true}
                   field={withNameSpace('pid')}
                 />
@@ -155,7 +152,7 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
                 <Input
                   displayErrorTooltips
                   className="input-small"
-                  disabled={editInfo.identification}
+                  disabled={true}
                   required={true}
                   field={withNameSpace('pin')}
                 />
@@ -166,7 +163,7 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
                 <InputGroup
                   displayErrorTooltips
                   fast={true}
-                  disabled={editInfo.identification}
+                  disabled={true}
                   type="number"
                   field={withNameSpace('landArea')}
                   formikProps={formikProps}
@@ -180,7 +177,7 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
                   displayErrorTooltips
                   // tooltip={latitudeTooltip}
                   formikProps={formikProps}
-                  disabled={editInfo.identification}
+                  disabled={true}
                   type="number"
                   field={withNameSpace('latitude')}
                 />
@@ -191,7 +188,7 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
                   className="input-medium"
                   displayErrorTooltips
                   formikProps={formikProps}
-                  disabled={editInfo.identification}
+                  disabled={true}
                   type="number"
                   field={withNameSpace('longitude')}
                 />

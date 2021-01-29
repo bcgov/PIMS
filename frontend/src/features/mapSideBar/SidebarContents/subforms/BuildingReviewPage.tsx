@@ -105,7 +105,7 @@ export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
               <AddressForm
                 onGeocoderChange={noop}
                 {...formikProps}
-                disabled={editInfo.identification}
+                disabled={true}
                 nameSpace={withNameSpace('address')}
                 disableCheckmark
                 disableStreetAddress
@@ -117,7 +117,7 @@ export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
                   className="input-medium"
                   displayErrorTooltips
                   formikProps={formikProps}
-                  disabled={editInfo.identification}
+                  disabled={true}
                   type="number"
                   field={withNameSpace('latitude')}
                   required
@@ -129,7 +129,7 @@ export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
                   className="input-medium"
                   displayErrorTooltips
                   formikProps={formikProps}
-                  disabled={editInfo.identification}
+                  disabled={true}
                   type="number"
                   field={withNameSpace('longitude')}
                   required
