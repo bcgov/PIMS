@@ -244,7 +244,7 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
   useDeepCompareEffect(() => {
     setLoadingTiles(true);
     search(params);
-  }, [params]);
+  }, [params, selected]);
 
   return (
     <PointClusterer
