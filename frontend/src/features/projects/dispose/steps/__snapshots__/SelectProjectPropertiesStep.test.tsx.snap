@@ -1,6 +1,11 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`renders correctly 1`] = `
+.c0 {
+  margin-left: 0.5rem;
+  margin-bottom: 0.2rem;
+}
+
 <div
   className="SelectProjectProperties container-fluid"
 >
@@ -193,6 +198,39 @@ exports[`renders correctly 1`] = `
         </div>
       </form>
     </div>
+  </div>
+  <div
+    className="small-filter"
+  >
+    <p
+      style={
+        Object {
+          "float": "right",
+        }
+      }
+    >
+      Show
+       
+      <button
+        className="c0 btn btn-link"
+        disabled={false}
+        onClick={[Function]}
+        type="button"
+      >
+        Surplus Active
+      </button>
+       
+      |
+       
+      <button
+        className="c0 btn btn-link"
+        disabled={false}
+        onClick={[Function]}
+        type="button"
+      >
+        All
+      </button>
+    </p>
   </div>
   <form
     className=""
