@@ -8,12 +8,15 @@ import './InfoSlideOut.scss';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import Claims from 'constants/claims';
 import BuildingAttributes from './BuildingAttributes';
+import { ReactElement } from 'react';
 
 interface IInfoContent {
   /** the selected property information */
   propertyInfo: IParcel | IBuilding | null;
   /** The property type [Parcel, Building] */
   propertyTypeId: PropertyTypes | null;
+  /** ReactElement used to display a link for adding an associated building */
+  addAssociatedBuildingLink: ReactElement;
 }
 
 /**
@@ -22,7 +25,11 @@ interface IInfoContent {
  * @param {IInfoContent} propertyInfo the selected property
  * @param {IInfoContent} propertyTypeId the property type [Parcel, Building]
  */
-export const InfoContent: React.FC<IInfoContent> = ({ propertyInfo, propertyTypeId }) => {
+export const InfoContent: React.FC<IInfoContent> = ({
+  propertyInfo,
+  propertyTypeId,
+  addAssociatedBuildingLink,
+}) => {
   const keycloak = useKeycloakWrapper();
   return (
     <>
@@ -80,7 +87,10 @@ export const InfoContent: React.FC<IInfoContent> = ({ propertyInfo, propertyType
         keycloak.hasClaim(Claims.ADMIN_PROPERTIES)) && (
         <>
           {propertyTypeId === PropertyTypes.PARCEL && (
-            <ParcelAttributes parcelInfo={propertyInfo as IParcel} />
+            <ParcelAttributes
+              addAssociatedBuildingLink={addAssociatedBuildingLink}
+              parcelInfo={propertyInfo as IParcel}
+            />
           )}
           {propertyTypeId === PropertyTypes.BUILDING && (
             <BuildingAttributes buildingInfo={propertyInfo as IBuilding} />

@@ -1,5 +1,8 @@
 using Mapster;
+using Microsoft.Extensions.Options;
 using NetTopologySuite.Geometries;
+using System.Collections.Generic;
+using System.Text.Json;
 using Entity = Pims.Dal.Entities;
 using Model = Pims.Api.Areas.Property.Models.Search;
 
@@ -7,6 +10,20 @@ namespace Pims.Api.Areas.Property.Mapping.Search
 {
     public class GeoJsonMap : IRegister
     {
+        #region Variables
+        private readonly JsonSerializerOptions _serializerOptions;
+        #endregion
+
+        #region Constructors
+        /// <summary>
+        /// Creates a new instance of a BuildingMap, initializes with specified arguments.
+        /// </summary>
+        /// <param name="serializerOptions"></param>
+        public GeoJsonMap(IOptions<JsonSerializerOptions> serializerOptions)
+        {
+            _serializerOptions = serializerOptions.Value;
+        }
+        #endregion
         public void Register(TypeAdapterConfig config)
         {
             config.NewConfig<Entity.Models.PropertyModel, Model.GeoJson<Model.PropertyModel>>()
@@ -22,7 +39,7 @@ namespace Pims.Api.Areas.Property.Mapping.Search
                 .Map(dest => dest.PropertyTypeId, src => src.PropertyTypeId)
                 .Map(dest => dest.Name, src => src.Name)
                 .Map(dest => dest.Description, src => src.Description)
-                .Map(dest => dest.ProjectNumbers, src => src.ProjectNumbers)
+                .Map(dest => dest.ProjectNumbers, src => JsonSerializer.Deserialize<IEnumerable<string>>(src.ProjectNumbers ?? "[]", _serializerOptions))
                 .Map(dest => dest.AddressId, src => src.AddressId)
                 .Map(dest => dest.Address, src => src.Address)
                 .Map(dest => dest.AdministrativeArea, src => src.AdministrativeArea)

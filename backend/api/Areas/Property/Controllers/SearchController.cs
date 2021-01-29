@@ -59,7 +59,6 @@ namespace Pims.Api.Areas.Property.Controllers
         [Produces("application/json")]
         [ProducesResponseType(typeof(IEnumerable<Models.Search.PropertyModel>), 200)]
         [SwaggerOperation(Tags = new[] { "property" })]
-        [ResponseCache(Duration = 300, Location = ResponseCacheLocation.Client)]
         public IActionResult GetProperties()
         {
             var uri = new Uri(this.Request.GetDisplayUrl());
@@ -116,7 +115,6 @@ namespace Pims.Api.Areas.Property.Controllers
         [Produces("application/json")]
         [ProducesResponseType(typeof(IEnumerable<GeoJson<Models.Search.PropertyModel>>), 200)]
         [SwaggerOperation(Tags = new[] { "property" })]
-        [ResponseCache(Duration = 300, Location = ResponseCacheLocation.Client)]
         public IActionResult GetGeoJson()
         {
             var uri = new Uri(this.Request.GetDisplayUrl());
@@ -159,7 +157,6 @@ namespace Pims.Api.Areas.Property.Controllers
         [Produces("application/json")]
         [ProducesResponseType(typeof(BModel.PageModel<Models.Search.PropertyModel>), 200)]
         [SwaggerOperation(Tags = new[] { "property" })]
-        [ResponseCache(Duration = 300, Location = ResponseCacheLocation.Client)]
         public IActionResult GetPropertiesPage()
         {
             var uri = new Uri(this.Request.GetDisplayUrl());

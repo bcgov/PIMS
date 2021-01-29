@@ -279,7 +279,14 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
               icon={getMarkerIcon(cluster)}
               onclick={() => {
                 onMarkerClick(); //open information slideout
-                popUpContext.setPropertyInfo(convertToProperty(cluster.properties));
+                const [longitude, latitude] = cluster.geometry.coordinates;
+                popUpContext.setPropertyInfo(
+                  convertToProperty({
+                    ...cluster.properties,
+                    latitude: latitude,
+                    longitude: longitude,
+                  }),
+                );
                 popUpContext.setPropertyTypeID(cluster.properties.propertyTypeId);
               }}
             />
@@ -297,7 +304,14 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
             icon={getMarkerIcon(m)}
             onclick={() => {
               onMarkerClick(); //open information slideout
-              popUpContext.setPropertyInfo(convertToProperty(m.properties));
+              const [longitude, latitude] = m.geometry.coordinates;
+              popUpContext.setPropertyInfo(
+                convertToProperty({
+                  ...m.properties,
+                  latitude,
+                  longitude,
+                }),
+              );
               popUpContext.setPropertyTypeID(m.properties.propertyTypeId);
             }}
           />
