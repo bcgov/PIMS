@@ -71,6 +71,7 @@ export enum LeasedLand {
 
 export interface IBuilding extends IProperty {
   parcelId: number;
+  pid: number;
   address: IAddress;
   buildingFloorCount?: number | '';
   buildingConstructionType?: string;
@@ -92,6 +93,8 @@ export interface IBuilding extends IProperty {
   agencyId: number | '';
   agency: string;
   agencyCode: string;
+  subAgency?: string;
+  assessed: number | '';
   evaluations: IEvaluation[];
   fiscals: IFiscal[];
   leasedLand: {
@@ -160,9 +163,11 @@ export interface IParcel extends IProperty {
   zoning: string;
   zoningPotential: string;
   agency?: string;
+  subAgency?: string;
   agencyId: number | '';
   isSensitive: boolean;
   buildings: IBuilding[];
+  assessed: number | '';
   evaluations: IEvaluation[];
   fiscals: IFiscal[];
   rowVersion?: string;

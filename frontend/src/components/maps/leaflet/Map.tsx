@@ -17,7 +17,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setMapViewZoom, DEFAULT_MAP_ZOOM } from 'reducers/mapViewZoomSlice';
 import { RootState } from 'reducers/rootReducer';
 import { Feature, GeoJsonObject } from 'geojson';
-import { asProperty } from './mapUtils';
 import { LegendControl } from './Legend/LegendControl';
 import { useMediaQuery } from 'react-responsive';
 import ReactResizeDetector from 'react-resize-detector';
@@ -40,7 +39,6 @@ import { SidebarSize } from 'features/mapSideBar/hooks/useQueryParamSideBar';
 import useActiveFeatureLayer from '../hooks/useActiveFeatureLayer';
 import LayersControl from './LayersControl';
 import { InventoryLayer } from './InventoryLayer';
-import { PointFeature } from '../types';
 import { IGeoSearchParams } from 'constants/API';
 import { decimalOrUndefined, floatOrUndefined } from 'utils';
 import { IPropertyFilter } from 'features/properties/filter/IPropertyFilter';
@@ -49,6 +47,8 @@ import { useFilterContext } from '../providers/FIlterProvider';
 import { ZoomOutButton } from './ZoomOut/ZoomOutButton';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { Claims } from '../../../constants';
+import InfoSlideOut from './InfoSlideOut/InfoSlideOut';
+import { PropertyPopUpContextProvider } from '../providers/PropertyPopUpProvider';
 
 export type MapViewportChangeEvent = {
   bounds: LatLngBounds | null;
@@ -177,7 +177,6 @@ const Map: React.FC<MapProps> = ({
     parcelLayerFeature,
     setLayerPopup,
   });
-
   const lastZoom = useSelector<RootState, number>(state => state.mapViewZoom) ?? zoomProp;
   const [zoom, setZoom] = useState(lastZoom);
   useEffect(() => {
@@ -220,10 +219,6 @@ const Map: React.FC<MapProps> = ({
     const { previous, current } = e;
     setBaseLayers([current, previous]);
     setActiveBasemap(current);
-  };
-
-  const onSingleMarkerClick = (point: PointFeature, position?: [number, number]) => {
-    onMarkerClick?.(asProperty(point), position);
   };
 
   useEffect(() => {
@@ -294,6 +289,9 @@ const Map: React.FC<MapProps> = ({
     }
   };
 
+  const [infoOpen, setInfoOpen] = React.useState(false);
+  const [layersOpen, setLayersOpen] = React.useState(false);
+
   return (
     <ReactResizeDetector handleWidth>
       {({ width }: any) => {
@@ -321,56 +319,79 @@ const Map: React.FC<MapProps> = ({
                 {baseLayers?.length > 0 && (
                   <BasemapToggle baseLayers={baseLayers} onToggle={handleBasemapToggle} />
                 )}
-                <ReactLeafletMap
-                  ref={mapRef}
-                  center={[lat, lng]}
-                  zoom={lastZoom}
-                  whenReady={() => {
-                    fitMapBounds();
-                  }}
-                  onclick={showLocationDetails}
-                  closePopupOnClick={interactive}
-                  onzoomend={e => setZoom(e.sourceTarget.getZoom())}
-                  onmoveend={handleBounds}
-                >
-                  {activeBasemap && (
-                    <TileLayer
-                      attribution={activeBasemap.attribution}
-                      url={activeBasemap.url}
-                      zIndex={0}
-                    />
-                  )}
-                  {!!layerPopup && (
-                    <Popup
-                      position={layerPopup.latlng}
-                      offset={[0, -25]}
-                      onClose={() => setLayerPopup(undefined)}
-                      closeButton={interactive}
-                      autoPan={false}
-                    >
-                      <LayerPopupTitle>{layerPopup.title}</LayerPopupTitle>
-                      <LayerPopupContent
-                        data={layerPopup.data as any}
-                        config={layerPopup.config as any}
-                        center={layerPopup.center}
-                        onAddToParcel={(e: MouseEvent, data: { [key: string]: string }) => {
-                          dispatch(saveParcelLayerData({ e, data }));
-                        }}
-                        bounds={layerPopup.bounds}
+                <PropertyPopUpContextProvider>
+                  <ReactLeafletMap
+                    ref={mapRef}
+                    center={[lat, lng]}
+                    zoom={lastZoom}
+                    whenReady={() => {
+                      fitMapBounds();
+                    }}
+                    onclick={showLocationDetails}
+                    closePopupOnClick={interactive}
+                    onzoomend={e => setZoom(e.sourceTarget.getZoom())}
+                    onmoveend={handleBounds}
+                  >
+                    {activeBasemap && (
+                      <TileLayer
+                        attribution={activeBasemap.attribution}
+                        url={activeBasemap.url}
+                        zIndex={0}
                       />
-                    </Popup>
-                  )}
-                  <LegendControl />
-                  <ZoomOutButton map={mapRef} bounds={defaultBounds} />
-                  <LayersControl />
-                  <InventoryLayer
-                    zoom={zoom}
-                    bounds={bounds}
-                    onMarkerClick={onSingleMarkerClick}
-                    selected={selectedProperty}
-                    filter={geoFilter}
-                  ></InventoryLayer>
-                </ReactLeafletMap>
+                    )}
+                    {!!layerPopup && (
+                      <Popup
+                        position={layerPopup.latlng}
+                        offset={[0, -25]}
+                        onClose={() => setLayerPopup(undefined)}
+                        closeButton={interactive}
+                        autoPan={false}
+                      >
+                        <LayerPopupTitle>{layerPopup.title}</LayerPopupTitle>
+                        <LayerPopupContent
+                          data={layerPopup.data as any}
+                          config={layerPopup.config as any}
+                          center={layerPopup.center}
+                          onAddToParcel={(e: MouseEvent, data: { [key: string]: string }) => {
+                            dispatch(saveParcelLayerData({ e, data }));
+                          }}
+                          bounds={layerPopup.bounds}
+                        />
+                      </Popup>
+                    )}
+                    <LegendControl />
+                    <ZoomOutButton map={mapRef} bounds={defaultBounds} />
+                    <LayersControl
+                      open={layersOpen}
+                      setOpen={() => {
+                        setLayersOpen(!layersOpen);
+                        setInfoOpen(false);
+                      }}
+                    />
+                    <InfoSlideOut
+                      open={infoOpen}
+                      setOpen={() => {
+                        setInfoOpen(!infoOpen);
+                        setLayersOpen(false);
+                      }}
+                      onHeaderActionClick={() => {
+                        setInfoOpen(false);
+                      }}
+                    />
+                    <InventoryLayer
+                      zoom={zoom}
+                      bounds={bounds}
+                      onMarkerClick={() => {
+                        if (!infoOpen) {
+                          setLayersOpen(false);
+                          setInfoOpen(true);
+                        }
+                      }}
+                      selected={selectedProperty}
+                      filter={geoFilter}
+                    ></InventoryLayer>
+                  </ReactLeafletMap>
+                </PropertyPopUpContextProvider>
               </Col>
             </Row>
           </Container>

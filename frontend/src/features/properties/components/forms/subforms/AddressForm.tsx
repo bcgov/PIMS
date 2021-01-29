@@ -23,6 +23,7 @@ interface AddressProps {
   onGeocoderChange?: (data: IGeocoderResponse) => void;
   toolTips?: boolean;
   hideStreetAddress?: boolean;
+  disableStreetAddress?: boolean;
   /** disable the green checkmark that appears beside the input on valid entry */
   disableCheckmark?: boolean;
 }
@@ -81,7 +82,7 @@ const AddressForm = <T extends any>(props: AddressProps & FormikProps<T>) => {
           <GeocoderAutoComplete
             tooltip={props.toolTips ? streetAddressTooltip : undefined}
             value={getIn(props.values, withNameSpace('line1'))}
-            disabled={props.disabled}
+            disabled={props.disableStreetAddress || props.disabled}
             field={withNameSpace('line1')}
             onSelectionChanged={handleGeocoderChanges}
             onTextChange={value => props.setFieldValue(withNameSpace('line1'), value)}

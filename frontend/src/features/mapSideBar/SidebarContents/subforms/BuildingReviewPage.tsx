@@ -108,6 +108,7 @@ export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
                 disabled={editInfo.identification}
                 nameSpace={withNameSpace('address')}
                 disableCheckmark
+                disableStreetAddress
               />
               <br></br>
               <Row className="content-item">

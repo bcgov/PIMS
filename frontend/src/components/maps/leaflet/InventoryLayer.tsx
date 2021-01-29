@@ -27,8 +27,8 @@ export type InventoryLayerProps = {
   maxZoom?: number;
   /** Search filter to apply to properties. */
   filter?: IGeoSearchParams;
-  /** What to do when the point feature is clicked. */
-  onMarkerClick?: (point: PointFeature, position?: [number, number]) => void;
+  /** What to do when the marker is clicked. */
+  onMarkerClick: () => void;
 
   selected?: IPropertyDetail | null;
 };
