@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Button } from 'react-bootstrap';
-import { FaInfo } from 'react-icons/fa';
+import { FaInfo, FaPlusSquare } from 'react-icons/fa';
 import Control from 'react-leaflet-control';
 import styled from 'styled-components';
 import clsx from 'classnames';
@@ -10,6 +10,15 @@ import HeaderActions from './HeaderActions';
 import { InfoContent } from './InfoContent';
 import TooltipWrapper from 'components/common/TooltipWrapper';
 import { PropertyPopUpContext } from 'components/maps/providers/PropertyPopUpProvider';
+import { IParcel, storeAssociatedBuilding } from 'actions/parcelsActions';
+import { useLeaflet } from 'react-leaflet';
+import { MAX_ZOOM } from 'constants/strings';
+import { Link, useLocation, useHistory } from 'react-router-dom';
+import queryString from 'query-string';
+import { useDispatch } from 'react-redux';
+import { defaultBuildingValues } from 'features/mapSideBar/SidebarContents/BuildingForm';
+import { useApi } from 'hooks/useApi';
+import { toast } from 'react-toastify';
 
 const InfoContainer = styled.div`
   margin-right: -10px;
@@ -98,6 +107,22 @@ export type InfoControlProps = {
  */
 const InfoControl: React.FC<InfoControlProps> = ({ open, setOpen, onHeaderActionClick }) => {
   const popUpContext = React.useContext(PropertyPopUpContext);
+  const leaflet = useLeaflet();
+  const propertyInfo = popUpContext.propertyInfo;
+  const location = useLocation();
+  const history = useHistory();
+  const dispatch = useDispatch();
+  const { getParcel } = useApi();
+  const jumpToView = () =>
+    leaflet.map?.setView(
+      [propertyInfo?.latitude as number, propertyInfo?.longitude as number],
+      MAX_ZOOM,
+    );
+  const zoomToView = () =>
+    leaflet.map?.flyTo(
+      [propertyInfo?.latitude as number, propertyInfo?.longitude as number],
+      MAX_ZOOM,
+    );
 
   useEffect(() => {
     const elem = L.DomUtil.get('infoContainer');
@@ -105,6 +130,49 @@ const InfoControl: React.FC<InfoControlProps> = ({ open, setOpen, onHeaderAction
       L.DomEvent.on(elem!, 'mousewheel', L.DomEvent.stopPropagation);
     }
   });
+  const addAssociatedBuildingLink = (
+    <>
+      <FaPlusSquare color="#1a5a96" className="mr-1" />
+      <Link
+        to={{
+          pathname: `/mapview`,
+          search: queryString.stringify({
+            ...queryString.parse(location.search),
+          }),
+        }}
+        onClick={() => {
+          toast.dark('Creating new associated building...');
+          getParcel(propertyInfo?.id as number)
+            .then((parcel: IParcel) => {
+              jumpToView();
+              dispatch(
+                storeAssociatedBuilding({
+                  ...defaultBuildingValues,
+                  parcelId: parcel?.id,
+                  parcels: [{ ...parcel }],
+                }),
+              );
+              history.replace({
+                pathname: `/mapview`,
+                search: queryString.stringify({
+                  ...queryString.parse(location.search),
+                  sidebar: true,
+                  disabled: true,
+                  loadDraft: false,
+                  buildingId: 0,
+                  parcelId: undefined,
+                }),
+              });
+            })
+            .catch(() => {
+              toast.error('Failed to create associated building.');
+            });
+        }}
+      >
+        Add a Building
+      </Link>
+    </>
+  );
 
   return (
     <Control position="topright">
@@ -131,10 +199,13 @@ const InfoControl: React.FC<InfoControlProps> = ({ open, setOpen, onHeaderAction
                 propertyInfo={popUpContext.propertyInfo}
                 propertyTypeId={popUpContext.propertyTypeID}
                 onLinkClick={onHeaderActionClick}
+                jumpToView={jumpToView}
+                zoomToView={zoomToView}
               />
               <InfoContent
                 propertyInfo={popUpContext.propertyInfo}
                 propertyTypeId={popUpContext.propertyTypeID}
+                addAssociatedBuildingLink={addAssociatedBuildingLink}
               />
             </>
           ) : (

@@ -45,6 +45,7 @@ import { AssociatedLandListForm } from './subforms/AssociatedLandListForm';
 import { stringToNull } from 'utils';
 import useParcelLayerData from 'features/properties/hooks/useParcelLayerData';
 import DebouncedValidation from 'features/properties/components/forms/subforms/DebouncedValidation';
+import { valuesToApiFormat as landValuesToApiFormat } from './LandForm';
 
 const Container = styled.div`
   background-color: #fff;
@@ -109,6 +110,7 @@ export const defaultBuildingValues: any = {
   buildingTenancyUpdatedOn: '',
   evaluations: [],
   fiscals: [],
+  parcels: [],
   financials: defaultFinancials,
 };
 
@@ -290,6 +292,9 @@ export const ViewOnlyBuildingForm: React.FC<Partial<IParentBuildingForm>> = (pro
  */
 export const valuesToApiFormat = (values: ISteppedFormValues<IFormBuilding>): IFormBuilding => {
   const apiValues = _.cloneDeep(values);
+  apiValues.data.parcels = values.data.parcels.map(formParcel =>
+    landValuesToApiFormat({ data: formParcel } as any),
+  );
   const seperatedFinancials = (_.flatten(
     apiValues.data.financials?.map((financial: IFinancialYear) => _.values(financial)),
   ) ?? []) as IFinancial[];

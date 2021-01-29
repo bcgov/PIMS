@@ -187,7 +187,6 @@ export const mockDetails = [
     latitude: 50,
     longitude: 133,
     classification: 'Core Operational',
-    administrativeArea: 'Victoria',
     name: 'test name',
     description: 'test',
     assessed: 10000,

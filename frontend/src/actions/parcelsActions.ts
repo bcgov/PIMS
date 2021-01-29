@@ -73,7 +73,6 @@ export interface IBuilding extends IProperty {
   parcelId: number;
   pid: number;
   address: IAddress;
-  administrativeArea: string;
   buildingFloorCount?: number | '';
   buildingConstructionType?: string;
   buildingConstructionTypeId: number | '';
@@ -98,6 +97,7 @@ export interface IBuilding extends IProperty {
   assessed: number | '';
   evaluations: IEvaluation[];
   fiscals: IFiscal[];
+  parcels: IParcel[];
   leasedLand: {
     type: LeasedLand;
   };
@@ -159,7 +159,6 @@ export interface IParcel extends IProperty {
   classificationId: number | '';
   encumbranceReason: string;
   address?: IAddress;
-  administrativeArea: string;
   landArea: number | '';
   landLegalDescription: string;
   zoning: string;
@@ -239,6 +238,23 @@ export const storeBuildingDetail = (
 ): IStoreBuildingDetail => ({
   type: ActionTypes.STORE_BUILDING_DETAIL,
   parcelDetail: {
+    propertyTypeId: 1,
+    parcelDetail: building,
+    position,
+  },
+});
+
+export interface IStoreAssociatedBuildingDetail {
+  type: typeof ActionTypes.STORE_ASSOCIATED_BUILDING_DETAIL;
+  associatedBuildingDetail: IBuildingDetail;
+}
+
+export const storeAssociatedBuilding = (
+  building: IBuilding | null,
+  position?: [number, number],
+): IStoreAssociatedBuildingDetail => ({
+  type: ActionTypes.STORE_ASSOCIATED_BUILDING_DETAIL,
+  associatedBuildingDetail: {
     propertyTypeId: 1,
     parcelDetail: building,
     position,

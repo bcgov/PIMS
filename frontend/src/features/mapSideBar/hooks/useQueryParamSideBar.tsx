@@ -62,7 +62,11 @@ const useQueryParamSideBar = (formikRef?: any): IMapSideBar => {
   useDeepCompareEffect(() => {
     setShowSideBar(searchParams.sidebar === 'true');
     setParcelId(searchParams.parcelId ? +searchParams.parcelId || undefined : undefined);
-    setBuildingId(searchParams.buildingId ? +searchParams.buildingId || undefined : undefined);
+    setBuildingId(
+      searchParams.buildingId !== undefined && searchParams.buildingId !== null
+        ? +searchParams.buildingId
+        : undefined,
+    );
     setSideBarSize(searchParams.sidebarSize as SidebarSize);
     setContextName(searchParams.sidebarContext as SidebarContextType);
     if (searchParams?.new === 'true') {

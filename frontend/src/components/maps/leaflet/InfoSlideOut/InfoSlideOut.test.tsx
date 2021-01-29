@@ -8,9 +8,16 @@ import InfoSlideOut from './InfoSlideOut';
 import 'leaflet/dist/leaflet.css';
 import { waitFor } from '@testing-library/dom';
 import { Button } from 'react-bootstrap';
+import { createMemoryHistory } from 'history';
+import { Router } from 'react-router-dom';
+import thunk from 'redux-thunk';
+import configureMockStore from 'redux-mock-store';
+import { Provider } from 'react-redux';
 
-jest.mock('axios');
 Enzyme.configure({ adapter: new Adapter() });
+const history = createMemoryHistory();
+const mockStore = configureMockStore([thunk]);
+const store = mockStore({});
 
 let mapRef: React.RefObject<ReactLeafletMap<MapProps, LeafletMap>> | undefined;
 
@@ -18,11 +25,15 @@ const MapComponent = () => {
   const [open, setOpen] = React.useState(false);
   mapRef = React.useRef<any>();
   return (
-    <div id="mapid" style={{ width: 500, height: 500 }}>
-      <ReactLeafletMap ref={mapRef} center={[48.423078, -123.360956]} zoom={18}>
-        <InfoSlideOut open={open} setOpen={() => setOpen(!open)} />
-      </ReactLeafletMap>
-    </div>
+    <Provider store={store}>
+      <Router history={history}>
+        <div id="mapid" style={{ width: 500, height: 500 }}>
+          <ReactLeafletMap ref={mapRef} center={[48.423078, -123.360956]} zoom={18}>
+            <InfoSlideOut open={open} setOpen={() => setOpen(!open)} />
+          </ReactLeafletMap>
+        </div>
+      </Router>
+    </Provider>
   );
 };
 
