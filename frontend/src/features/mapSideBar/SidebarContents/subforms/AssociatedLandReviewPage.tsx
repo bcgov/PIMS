@@ -181,6 +181,7 @@ export const AssociatedLandReviewPage: React.FC<any> = (props: IReviewProps) => 
                     {...formikProps}
                     disabled={parcelEditInfo.identification}
                     nameSpace={withNameSpace('address', index)}
+                    disableStreetAddress
                   />
                 </Col>
                 <Col md={6}>
