@@ -96,6 +96,7 @@ export const ManageUsersPage = () => {
       agency: u.agencies && u.agencies.length > 0 ? u.agencies[0].name : '',
       position: u.position ?? '',
       lastLogin: formatApiDateTime(u.lastLogin),
+      createdOn: formatApiDateTime(u.createdOn),
     }),
   );
 

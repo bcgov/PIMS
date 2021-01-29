@@ -41,7 +41,11 @@ export interface IProperty {
   netBookRowVersion?: string;
 
   assessed: number;
+  assessedLand?: number;
+  assessedBuilding?: number;
   assessedDate?: Date | string;
+  assessedLandDate?: Date | string;
+  assessedBuildingDate?: Date | string;
   assessedFirm?: string;
   assessedRowVersion?: string;
   appraised: number;

@@ -38,6 +38,7 @@ export const columns = (
   subAgencies: SelectOption[],
   municipalities: ILookupCode[],
   propertyClassifications: ILookupCode[],
+  propertyType: number,
   editable?: boolean,
 ): ColumnWithProps<IProperty>[] => [
   {
@@ -155,7 +156,7 @@ export const columns = (
   },
   {
     Header: 'Assessed Value',
-    accessor: 'assessed',
+    accessor: propertyType === 0 ? 'assessedLand' : 'assessedBuilding',
     Cell: !editable
       ? MoneyCell
       : (props: any) => <EditableMoneyCell {...props} suppressValidation />,
