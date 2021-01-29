@@ -29,9 +29,6 @@ const CustomAxios = ({
   let loadingToastId: React.ReactText | undefined = undefined;
   const instance = axios.create({
     headers: {
-      'Cache-Control': 'no-cache',
-      Pragma: 'no-cache',
-      Expires: '0',
       'Access-Control-Allow-Origin': '*',
       Authorization: `Bearer ${store.getState().jwt}`,
     },
