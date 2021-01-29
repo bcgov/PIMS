@@ -195,18 +195,11 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
 
   const search = async (filters: IGeoSearchParams[]) => {
     try {
-      const data = flatten(await Promise.all(filters.map(x => loadTile(x))))
-        .filter(feature => {
-          return !(
-            feature?.properties!.propertyTypeId === selected?.propertyTypeId &&
-            feature?.properties!.id === selected?.parcelDetail?.id
-          );
-        })
-        .map(f => {
-          return {
-            ...f,
-          } as PointFeature;
-        });
+      const data = flatten(await Promise.all(filters.map(x => loadTile(x)))).map(f => {
+        return {
+          ...f,
+        } as PointFeature;
+      });
 
       const items = uniqBy(
         data,
