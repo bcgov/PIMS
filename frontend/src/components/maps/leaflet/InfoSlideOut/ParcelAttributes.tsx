@@ -4,17 +4,22 @@ import { IParcel } from 'actions/parcelsActions';
 import { Label } from 'components/common/Label';
 import './InfoSlideOut.scss';
 import { formatMoney } from 'utils/numberFormatUtils';
+import { ReactElement } from 'react';
 
 interface IParcelAttributes {
   /** the selected parcel information */
   parcelInfo: IParcel;
+  addAssociatedBuildingLink: ReactElement;
 }
 
 /**
  * Displays parcel specific information needed on the information slide out
  * @param parcelInfo the selected parcel data
  */
-export const ParcelAttributes: React.FC<IParcelAttributes> = ({ parcelInfo }) => {
+export const ParcelAttributes: React.FC<IParcelAttributes> = ({
+  parcelInfo,
+  addAssociatedBuildingLink,
+}) => {
   let formatAssessed;
   if (parcelInfo?.assessed) {
     formatAssessed = formatMoney(parcelInfo?.assessed);
@@ -62,6 +67,9 @@ export const ParcelAttributes: React.FC<IParcelAttributes> = ({ parcelInfo }) =>
           )}
         </ListGroup>
       )}
+      <ListGroup>
+        <ListGroup.Item>{addAssociatedBuildingLink}</ListGroup.Item>
+      </ListGroup>
     </>
   );
 };

@@ -2,9 +2,11 @@ import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
 import { SidebarContextType } from './useQueryParamSideBar';
 import { fetchBuildingDetail } from 'actionCreators/parcelsActionCreator';
 import { getMergedFinancials } from 'features/properties/components/forms/subforms/EvaluationForm';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import React from 'react';
-import { IFormParcel } from '../containers/MapSideBarContainer';
+import { IFormBuilding } from '../containers/MapSideBarContainer';
+import { RootState } from 'reducers/rootReducer';
+import { IPropertyDetail } from 'actions/parcelsActions';
 
 interface IUseSideBarBuildingLoader {
   /** whether or not the sidebar should be displayed */
@@ -27,8 +29,13 @@ const useSideBarBuildingLoader = ({
   buildingId,
   disabled,
 }: IUseSideBarBuildingLoader) => {
-  const [cachedBuildingDetail, setCachedBuildingDetail] = React.useState<IFormParcel | null>(null);
+  const [cachedBuildingDetail, setCachedBuildingDetail] = React.useState<IFormBuilding | null>(
+    null,
+  );
   const dispatch = useDispatch();
+  const associatedBuildingDetail = useSelector<RootState, IPropertyDetail | null>(
+    state => state.parcel.associatedBuildingDetail,
+  );
   useDeepCompareEffect(() => {
     const loadBuilding = async () => {
       setSideBarContext(SidebarContextType.LOADING);
@@ -44,12 +51,16 @@ const useSideBarBuildingLoader = ({
         disabled ? SidebarContextType.VIEW_BUILDING : SidebarContextType.UPDATE_BUILDING,
       );
     };
-    if (showSideBar && buildingId && buildingId !== cachedBuildingDetail?.id) {
+    if (showSideBar && !!buildingId && buildingId !== cachedBuildingDetail?.id) {
       loadBuilding();
-    } else if (!buildingId) {
-      if (!!cachedBuildingDetail) {
-        setCachedBuildingDetail(null);
-      }
+    } else if (!buildingId && buildingId !== 0 && !!cachedBuildingDetail) {
+      setCachedBuildingDetail(null);
+    } else if (!buildingId && associatedBuildingDetail) {
+      setCachedBuildingDetail({
+        ...associatedBuildingDetail.parcelDetail,
+        id: 0,
+        financials: [],
+      } as any);
     }
   }, [dispatch, buildingId, disabled, showSideBar]);
 
@@ -57,17 +68,19 @@ const useSideBarBuildingLoader = ({
    * Handle the user swapping between view and update of the same property.
    */
   useDeepCompareEffect(() => {
-    if (
-      !!buildingId &&
-      cachedBuildingDetail?.id === buildingId &&
-      [SidebarContextType.VIEW_BUILDING, SidebarContextType.UPDATE_BUILDING].includes(
-        sideBarContext,
-      )
-    ) {
-      const newContext = disabled
-        ? SidebarContextType.VIEW_BUILDING
-        : SidebarContextType.UPDATE_BUILDING;
-      newContext !== sideBarContext && setSideBarContext(newContext);
+    if (!!buildingId && cachedBuildingDetail?.id === buildingId) {
+      if (
+        [SidebarContextType.VIEW_BUILDING, SidebarContextType.UPDATE_BUILDING].includes(
+          sideBarContext,
+        )
+      ) {
+        const newContext = disabled
+          ? SidebarContextType.VIEW_BUILDING
+          : SidebarContextType.UPDATE_BUILDING;
+        newContext !== sideBarContext && setSideBarContext(newContext);
+      }
+    } else if (!!cachedBuildingDetail && !cachedBuildingDetail?.id) {
+      setSideBarContext(SidebarContextType.ADD_BUILDING);
     }
   }, [buildingId, cachedBuildingDetail, disabled, sideBarContext]);
 

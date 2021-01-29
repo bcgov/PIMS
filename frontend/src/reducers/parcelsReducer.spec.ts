@@ -10,6 +10,7 @@ import * as ActionTypes from 'constants/actionTypes';
 import { cloneDeep } from 'lodash';
 
 const baseExpectedValue: IParcelState = {
+  associatedBuildingDetail: null,
   parcels: [],
   draftParcels: [],
   parcelDetail: null,
