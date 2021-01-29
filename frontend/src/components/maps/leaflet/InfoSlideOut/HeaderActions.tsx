@@ -2,8 +2,6 @@ import styled from 'styled-components';
 import * as React from 'react';
 import { Row } from 'react-bootstrap';
 import { IBuilding, IParcel, PropertyTypes } from 'actions/parcelsActions';
-import { useLeaflet } from 'react-leaflet';
-import { MAX_ZOOM } from 'constants/strings';
 import { Link, useLocation } from 'react-router-dom';
 import queryString from 'query-string';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
@@ -32,6 +30,8 @@ interface IHeaderActions {
   propertyInfo: IParcel | IBuilding | null;
   /** the selected property type */
   propertyTypeId: PropertyTypes | null;
+  jumpToView: () => void;
+  zoomToView: () => void;
   /** additional action to be taken when a link in the menu is clicked */
   onLinkClick?: () => void;
 }
@@ -42,20 +42,15 @@ interface IHeaderActions {
  * @param propertyTypeId the selected property type
  * @param onLinkClick additional action on menu item click
  */
-const HeaderActions: React.FC<IHeaderActions> = ({ propertyInfo, propertyTypeId, onLinkClick }) => {
-  const leaflet = useLeaflet();
+const HeaderActions: React.FC<IHeaderActions> = ({
+  propertyInfo,
+  propertyTypeId,
+  onLinkClick,
+  jumpToView,
+  zoomToView,
+}) => {
   const location = useLocation();
   const keycloak = useKeycloakWrapper();
-  const jumpToView = () =>
-    leaflet.map?.setView(
-      [propertyInfo?.latitude as number, propertyInfo?.longitude as number],
-      MAX_ZOOM,
-    );
-  const zoomToView = () =>
-    leaflet.map?.flyTo(
-      [propertyInfo?.latitude as number, propertyInfo?.longitude as number],
-      MAX_ZOOM,
-    );
 
   const buildingId = propertyTypeId === PropertyTypes.BUILDING ? propertyInfo?.id : undefined;
   const parcelId = propertyTypeId === PropertyTypes.PARCEL ? propertyInfo?.id : undefined;

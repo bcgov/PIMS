@@ -24,6 +24,7 @@ import Supercluster from 'supercluster';
 import { useDispatch } from 'react-redux';
 import { PropertyTypes } from 'actions/parcelsActions';
 import { PropertyPopUpContext } from '../providers/PropertyPopUpProvider';
+import { MAX_ZOOM } from 'constants/strings';
 
 export type PointClustererProps = {
   points: Array<PointFeature>;
@@ -67,6 +68,10 @@ export const convertToProperty = (property: any): IParcel | IBuilding | null => 
         postal: property.postal,
       } as IAddress,
     } as IBuilding;
+  } else if (
+    [PropertyTypes.DRAFT_BUILDING, PropertyTypes.DRAFT_PARCEL].includes(property.propertyTypeId)
+  ) {
+    return property;
   }
 
   return null;
@@ -204,7 +209,7 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
 
       if (groupBounds.isValid() && group.getBounds().isValid() && isDraft) {
         filterState.setChanged(false);
-        map.fitBounds(group.getBounds(), { maxZoom: 16 });
+        map.fitBounds(group.getBounds(), { maxZoom: zoom > MAX_ZOOM ? zoom : MAX_ZOOM });
       }
     }
   }, [draftFeatureGroupRef, map, draftPoints]);
@@ -225,7 +230,7 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
         tilesLoaded
       ) {
         filterState.setChanged(false);
-        map.fitBounds(group.getBounds(), { maxZoom: 10 });
+        map.fitBounds(group.getBounds(), { maxZoom: zoom > MAX_ZOOM ? zoom : MAX_ZOOM });
       }
       setSpider({});
       spiderfierRef.current?.unspiderfy();
@@ -279,7 +284,14 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
               icon={getMarkerIcon(cluster)}
               onclick={() => {
                 onMarkerClick(); //open information slideout
-                popUpContext.setPropertyInfo(convertToProperty(cluster.properties));
+                const [longitude, latitude] = cluster.geometry.coordinates;
+                popUpContext.setPropertyInfo(
+                  convertToProperty({
+                    ...cluster.properties,
+                    latitude: latitude,
+                    longitude: longitude,
+                  }),
+                );
                 popUpContext.setPropertyTypeID(cluster.properties.propertyTypeId);
               }}
             />
@@ -297,7 +309,14 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
             icon={getMarkerIcon(m)}
             onclick={() => {
               onMarkerClick(); //open information slideout
-              popUpContext.setPropertyInfo(convertToProperty(m.properties));
+              const [longitude, latitude] = m.geometry.coordinates;
+              popUpContext.setPropertyInfo(
+                convertToProperty({
+                  ...m.properties,
+                  latitude,
+                  longitude,
+                }),
+              );
               popUpContext.setPropertyTypeID(m.properties.propertyTypeId);
             }}
           />

@@ -6,6 +6,7 @@ import {
   CoreOperational,
   CoreStrategic,
   SurplusEncumbered,
+  SurplusEncumberedOrActive,
 } from 'features/properties/components/forms/strings';
 import { getIn, useFormikContext } from 'formik';
 import React from 'react';
@@ -22,13 +23,14 @@ const InfoBox = styled.div`
   border-radius: 4px;
   text-align: left;
   padding: 8px 12px 10px;
+  margin-bottom: 10px;
 `;
 
 /** formatted field description that will appear underneath the select input */
 const FieldDescription = styled.p`
-  margin-left: 154px;
+  margin-left: 166px;
+  margin-top: 10px;
   font-size: 12px;
-  width: 250px;
   text-align: left;
 `;
 
@@ -66,8 +68,6 @@ interface IClassificationFormProps {
   toolTip?: string;
   /** reason for encumberance */
   encumbranceField: string;
-  /** enter a brief description if desired regarding the select options */
-  fieldDescription?: string;
   /** disable form controls */
   disabled?: boolean;
 }
@@ -81,11 +81,13 @@ export const ClassificationForm: React.FC<IClassificationFormProps> = ({
   fieldLabel,
   field,
   toolTip,
-  fieldDescription,
   disabled,
   encumbranceField,
 }) => {
   const formikProps = useFormikContext();
+  let surplusActiveOrEncumbered =
+    getIn(formikProps.values, field) === Classifications.SurplusEncumbered ||
+    getIn(formikProps.values, field) === Classifications.SurplusActive;
 
   /** classId based on current formik values to determine which classsification information box to display */
   let classId = getIn(formikProps.values, field);
@@ -137,11 +139,6 @@ export const ClassificationForm: React.FC<IClassificationFormProps> = ({
               </div>
             )}
           </Row>
-          {fieldDescription && (
-            <Row>
-              <FieldDescription>{fieldDescription}</FieldDescription>
-            </Row>
-          )}
         </Col>
         <Col md={6}>{renderInfo()}</Col>
       </Row>
@@ -151,6 +148,9 @@ export const ClassificationForm: React.FC<IClassificationFormProps> = ({
             <TextArea field={encumbranceField} label="Reason for Encumbrance"></TextArea>
           </Encumberance>
         </Row>
+      )}
+      {surplusActiveOrEncumbered && (
+        <FieldDescription>{SurplusEncumberedOrActive}</FieldDescription>
       )}
     </>
   );

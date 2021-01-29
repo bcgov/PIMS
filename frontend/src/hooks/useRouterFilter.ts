@@ -21,7 +21,15 @@ import { PropertyTypes } from 'constants/propertyTypes';
 const extractProps = (props: string[], source: any): any => {
   var dest = {} as any;
   props.forEach(p => {
-    if (source[p] !== undefined) dest[p] = source[p];
+    if (source[p] !== undefined) {
+      if (source[p] === 'true') {
+        dest[p] = true;
+      } else if (source[p] === 'false') {
+        dest[p] = false;
+      } else {
+        dest[p] = source[p];
+      }
+    }
   });
   return dest;
 };
@@ -31,6 +39,7 @@ const defaultFilter = {
   administrativeArea: '',
   agencies: '',
   classificationId: '',
+  includeAllProperties: '',
   maxAssessedValue: '',
   maxLotSize: '',
   maxMarketValue: '',
