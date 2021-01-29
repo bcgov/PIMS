@@ -9,7 +9,7 @@ import {
   Popup,
   Map as ReactLeafletMap,
 } from 'react-leaflet';
-import { IProperty, IPropertyDetail } from 'actions/parcelsActions';
+import { IProperty, IPropertyDetail, storeParcelDetail } from 'actions/parcelsActions';
 import { Container, Row, Col } from 'react-bootstrap';
 import { ILookupCode } from 'actions/lookupActions';
 import BasemapToggle, { BasemapToggleEvent, BaseLayer } from '../BasemapToggle';
@@ -346,7 +346,10 @@ const Map: React.FC<MapProps> = ({
                       <Popup
                         position={layerPopup.latlng}
                         offset={[0, -25]}
-                        onClose={() => setLayerPopup(undefined)}
+                        onClose={() => {
+                          setLayerPopup(undefined);
+                          dispatch(storeParcelDetail(null));
+                        }}
                         closeButton={interactive}
                         autoPan={false}
                       >
