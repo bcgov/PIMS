@@ -179,11 +179,11 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
     };
     fetchPimsOrLayerParcel({ pin }, parcelLayerSearchCallback, nameSpace);
   };
-  const droppedMarkerSearch = (nameSpace: string, latLng?: LatLng) => {
+  const droppedMarkerSearch = (nameSpace: string, latLng?: LatLng, isParcel?: boolean) => {
     if (latLng) {
       parcelLayerService.findOneWhereContains(latLng).then(resp => {
         const properties = getIn(resp, 'features.0.properties');
-        if (properties?.PIN || properties?.PID) {
+        if ((properties?.PIN || properties?.PID) && isParcel) {
           const query: any = { pin: properties?.PIN, pid: properties.PID };
           fetchParcelsDetail(query)(dispatch).then((resp: any) => {
             const matchingParcel: any = resp?.data?.length ? _.first(resp?.data) : undefined;
@@ -231,7 +231,14 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
       let nameSpace = (movingPinNameSpace?.length ?? 0) > 0 ? `${movingPinNameSpace}.` : '';
       formikRef.current.setFieldValue(`${nameSpace}latitude`, leafletMouseEvent?.latlng.lat || 0);
       formikRef.current.setFieldValue(`${nameSpace}longitude`, leafletMouseEvent?.latlng.lng || 0);
-      droppedMarkerSearch(movingPinNameSpace, leafletMouseEvent?.latlng);
+      const isParcel = [
+        SidebarContextType.VIEW_BARE_LAND,
+        SidebarContextType.UPDATE_DEVELOPED_LAND,
+        SidebarContextType.VIEW_DEVELOPED_LAND,
+        SidebarContextType.ADD_ASSOCIATED_LAND,
+        SidebarContextType.ADD_BARE_LAND,
+      ].includes(context);
+      droppedMarkerSearch(movingPinNameSpace, leafletMouseEvent?.latlng, isParcel);
 
       setMovingPinNameSpace(undefined);
     }
