@@ -92,7 +92,7 @@ it('identification section editable after click', () => {
 
   expect(agency).toBeDisabled();
   expect(name).not.toBeDisabled();
-  expect(addr).not.toBeDisabled();
+  expect(addr).toBeDisabled();
   expect(loc).not.toBeDisabled();
   expect(lat).not.toBeDisabled();
   expect(long).not.toBeDisabled();
