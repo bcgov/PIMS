@@ -65,7 +65,7 @@ exports[`Building Form component renders correctly 1`] = `
   cursor: default;
 }
 
-.c7 {
+.c6 {
   top: 20px;
   right: 20px;
   border: 0px;
@@ -80,18 +80,12 @@ exports[`Building Form component renders correctly 1`] = `
   float: left;
 }
 
-.c6 {
+.c5 {
   border: 1px solid #f2f2f2;
   border-radius: 4px;
   text-align: left;
   padding: 8px 12px 10px;
-}
-
-.c5 {
-  margin-left: 154px;
-  font-size: 12px;
-  width: 250px;
-  text-align: left;
+  margin-bottom: 10px;
 }
 
 .c0 {
@@ -120,7 +114,7 @@ exports[`Building Form component renders correctly 1`] = `
   min-height: 100px;
 }
 
-.c8 {
+.c7 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -137,13 +131,13 @@ exports[`Building Form component renders correctly 1`] = `
   bottom: 25px;
 }
 
-.c11 {
+.c10 {
   -webkit-flex: 1 1 auto;
   -ms-flex: 1 1 auto;
   flex: 1 1 auto;
 }
 
-.c9 {
+.c8 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -157,7 +151,7 @@ exports[`Building Form component renders correctly 1`] = `
   align-content: center;
 }
 
-.c10 {
+.c9 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -679,21 +673,12 @@ exports[`Building Form component renders correctly 1`] = `
                         </select>
                       </div>
                     </div>
-                    <div
-                      class="row"
-                    >
-                      <p
-                        class="c5"
-                      >
-                        A disposal project must be initiated in order to mark a property as "surplus active".
-                      </p>
-                    </div>
                   </div>
                   <div
                     class="col-md-6"
                   >
                     <div
-                      class="c6"
+                      class="c5"
                     >
                       <p
                         style="font-size: 11px;"
@@ -860,7 +845,7 @@ exports[`Building Form component renders correctly 1`] = `
                           class="marker-svg col"
                         >
                           <button
-                            class="c7"
+                            class="c6"
                           >
                             <svg>
                               draft-building-icon.svg
@@ -918,10 +903,10 @@ exports[`Building Form component renders correctly 1`] = `
             </div>
           </div>
           <div
-            class="c8"
+            class="c7"
           >
             <div
-              class="c9"
+              class="c8"
             >
               <div
                 class="SresManual"
@@ -949,13 +934,13 @@ exports[`Building Form component renders correctly 1`] = `
                 </div>
               </div>
               <small
-                class="c10 p-1 mr-2"
+                class="c9 p-1 mr-2"
               >
                 Inventory Policy
               </small>
             </div>
             <span
-              class="c11"
+              class="c10"
             />
             <button
               class="btn btn-primary btn-sm"

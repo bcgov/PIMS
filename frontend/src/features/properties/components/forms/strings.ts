@@ -10,6 +10,10 @@ export const CoreStrategic =
   'delivery needs that could not reasonably be met by available alternatives. This may \n' +
   'include vacant or underutilized assets in appropriate circumstances.';
 
+export const SurplusEncumberedOrActive =
+  'Marking a property as surplus active or surplus encumbered will not automatically initiate the disposal process. \n' +
+  'To dispose of surplus properties you will need to create a disposal project.';
+
 export const SurplusEncumbered =
   'Surplus Encumbered – assets that are surplus and cannot readily be redeployed or \n' +
   'disposed of due to one or more major obstacles such as significant First Nations \n' +
