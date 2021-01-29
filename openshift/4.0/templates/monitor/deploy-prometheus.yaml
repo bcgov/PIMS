@@ -1,0 +1,290 @@
+kind: Template
+apiVersion: v1
+metadata:
+  name: prometheus
+  annotations:
+    openshift.io/display-name: Prometheus
+    description: Deployment template for Prometheus
+    tags: prometheus,monitor
+parameters:
+  - name: APP_NAME
+    displayName: "App Name"
+    description: "The name of the application."
+    required: true
+    value: "prometheus"
+  - name: ROLE_NAME
+    displayName: "Component Role Name"
+    description: "The name of the application component role (e.g web, api, database)."
+    required: true
+    value: "monitor"
+  - name: ENV_NAME
+    displayName: "Environment name"
+    description: "The name for this environment [dev, test, prod, tools]"
+    required: true
+    value: "tools"
+  - name: PROJECT_NAMESPACE
+    displayName: "OpenShift Project Namespace"
+    description: "The namespace of the OpenShift project containing the application."
+    required: true
+    value: "354028"
+
+  - name: IMAGE
+    displayName: "Source Image URL"
+    description: "The URL and tag given to the built image that will be deployed."
+    required: true
+    value: "docker.io/prom/prometheus:v2.9.2"
+  - name: PROMETHEUS_DOMAIN
+    displayName: Domain Name
+    description: Prometheus route domain name
+    required: true
+    value: "pims-prometheus.apps.silver.devops.gov.bc.ca"
+
+  - name: PIMS_DEV_API_URL
+    displayName: PIMS Dev API URL
+    description: PIMS Dev API URL
+    required: true
+    value: pims-dev.apps.silver.devops.gov.bc.ca
+  - name: PIMS_TEST_API_URL
+    displayName: PIMS Test API URL
+    description: PIMS Test API URL
+    required: true
+    value: pims-test.apps.silver.devops.gov.bc.ca
+  - name: PIMS_PROD_API_URL
+    displayName: PIMS Prod API URL
+    description: PIMS Prod API URL
+    required: true
+    value: pims.gov.bc.ca
+
+  - name: VOLUME_CAPACITY
+    displayName: Persistent Volume Capacity
+    description: Volume space available for data, e.g. 512Mi, 2Gi.
+    required: true
+    value: "5Gi"
+
+  - name: CPU_REQUEST
+    displayName: "CPU Request"
+    description: "Starting amount of CPU the container can use."
+    value: "100m"
+  - name: CPU_LIMIT
+    displayName: "CPU Limit"
+    description: "Maximum amount of CPU the container can use."
+    value: "1"
+  - name: MEMORY_REQUEST
+    displayName: "Memory Request"
+    description: "Starting amount of memory the container can use."
+    value: "500Mi"
+  - name: MEMORY_LIMIT
+    displayName: "Memory Limit"
+    description: "Maximum amount of memory the container can use."
+    value: "4Gi"
+
+objects:
+  # Configure storage.
+  - kind: "PersistentVolumeClaim"
+    apiVersion: v1
+    metadata:
+      name: ${APP_NAME}-block-standard
+      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
+      labels:
+        name: ${APP_NAME}-block-standard
+        app: ${APP_NAME}
+        role: ${ROLE_NAME}
+        env: ${ENV_NAME}
+    spec:
+      storageClassName: netapp-block-standard
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: ${VOLUME_CAPACITY}
+    volumeName: ${APP_NAME}
+
+  # Configuration settings to connect sources.
+  - kind: ConfigMap
+    apiVersion: v1
+    metadata:
+      name: ${APP_NAME}
+      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
+      annotations:
+        description: Prometheus scraping configuration
+      labels:
+        name: ${APP_NAME}
+        app: ${APP_NAME}
+        role: ${ROLE_NAME}
+        env: ${ENV_NAME}
+    type: Opaque
+    data:
+      prometheus.yml: |-
+        global:
+          scrape_interval: 10s
+        scrape_configs:
+        - job_name: 'pims-prometheus-dev'
+          scheme: https
+          static_configs:
+          - targets:
+            - ${PIMS_DEV_API_URL}
+        - job_name: 'pims-prometheus-test'
+          scheme: https
+          static_configs:
+          - targets:
+            - ${PIMS_TEST_API_URL}
+        - job_name: 'pims-prometheus-prod'
+          scheme: https
+          static_configs:
+          - targets:
+            - ${PIMS_PROD_API_URL}
+
+  # Service account
+  - kind: ServiceAccount
+    apiVersion: v1
+    metadata:
+      name: ${APP_NAME}
+      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
+      labels:
+        name: ${APP_NAME}
+        app: ${APP_NAME}
+        role: ${ROLE_NAME}
+        env: ${ENV_NAME}
+
+  # Route to service.
+  - kind: Route
+    apiVersion: v1
+    metadata:
+      name: ${APP_NAME}
+      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
+      labels:
+        name: ${APP_NAME}
+        app: ${APP_NAME}
+        role: ${ROLE_NAME}
+        env: ${ENV_NAME}
+    spec:
+      host: ${PROMETHEUS_DOMAIN}
+      to:
+        name: ${APP_NAME}
+        kind: Service
+        weight: 100
+      tls:
+        termination: edge
+
+  # Service to pod.
+  - kind: Service
+    apiVersion: v1
+    metadata:
+      name: ${APP_NAME}
+      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/scheme: http
+      labels:
+        name: ${APP_NAME}
+        app: ${APP_NAME}
+        role: ${ROLE_NAME}
+        env: ${ENV_NAME}
+    spec:
+      ports:
+        - name: ${APP_NAME}
+          port: 80
+          protocol: TCP
+          targetPort: 9090
+      selector:
+        app: ${APP_NAME}
+
+  # How to deploy prometheus.
+  - kind: DeploymentConfig
+    apiVersion: v1
+    metadata:
+      name: ${APP_NAME}
+      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
+      annotations:
+        description: "Defines how to deploy pims prometheus"
+      labels:
+        name: ${APP_NAME}
+        app: ${APP_NAME}
+        role: ${ROLE_NAME}
+        env: ${ENV_NAME}
+    spec:
+      replicas: 1
+      selector:
+        name: ${APP_NAME}
+        app: ${APP_NAME}
+        role: ${ROLE_NAME}
+        env: ${ENV_NAME}
+      strategy:
+        rollingParams:
+          intervalSeconds: 1
+          maxSurge: 25%
+          maxUnavailable: 25%
+          timeoutSeconds: 600
+          updatePeriodSeconds: 1
+        type: Rolling
+      template:
+        metadata:
+          name: ${APP_NAME}
+          labels:
+            name: ${APP_NAME}
+            app: ${APP_NAME}
+            role: ${ROLE_NAME}
+            env: ${ENV_NAME}
+        spec:
+          serviceAccountName: ${APP_NAME}
+          volumes:
+            - name: ${APP_NAME}-config
+              configMap:
+                name: ${APP_NAME}
+                items:
+                  - key: ${APP_NAME}.yml
+                    path: ${APP_NAME}.yml
+            - name: ${APP_NAME}-data
+              persistentVolumeClaim:
+                claimName: ${APP_NAME}-block-standard
+          containers:
+            - name: ${APP_NAME}
+              image: ${IMAGE}
+              imagePullPolicy: Always
+              ports:
+                - containerPort: 9090
+                  protocol: TCP
+              resources:
+                requests:
+                  cpu: ${CPU_REQUEST}
+                  memory: ${MEMORY_REQUEST}
+                limits:
+                  cpu: ${CPU_LIMIT}
+                  memory: ${MEMORY_LIMIT}
+              volumeMounts:
+                - name: ${APP_NAME}-config
+                  mountPath: /etc/prometheus/prometheus.yml
+                  subPath: ${APP_NAME}.yml
+                - mountPath: /data
+                  name: ${APP_NAME}-data
+              args:
+                - "--config.file=/etc/prometheus/prometheus.yml"
+                - "--storage.tsdb.path=/data"
+                - "--web.console.libraries=/etc/prometheus/console_libraries"
+                - "--web.console.templates=/etc/prometheus/consoles"
+                - "--web.enable-lifecycle"
+              livenessProbe:
+                httpGet:
+                  path: "/-/healthy"
+                  port: 9090
+                  scheme: HTTP
+                initialDelaySeconds: 30
+                timeoutSeconds: 60
+                periodSeconds: 10
+                successThreshold: 1
+                failureThreshold: 3
+              readinessProbe:
+                httpGet:
+                  path: "/-/ready"
+                  port: 9090
+                  scheme: HTTP
+                initialDelaySeconds: 20
+                timeoutSeconds: 60
+                periodSeconds: 20
+                successThreshold: 1
+                failureThreshold: 5
+          dnsPolicy: ClusterFirst
+          restartPolicy: Always
+          securityContext: {}
+          terminationGracePeriodSeconds: 30
+      test: false
