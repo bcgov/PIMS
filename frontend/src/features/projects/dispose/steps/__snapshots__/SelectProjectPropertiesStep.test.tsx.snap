@@ -217,7 +217,7 @@ exports[`renders correctly 1`] = `
         onClick={[Function]}
         type="button"
       >
-        Surplus Only
+        Surplus Active
       </button>
        
       |

@@ -131,7 +131,7 @@ const SelectProjectPropertiesStep = ({ isReadOnly, formikRef }: IStepProps) => {
                 variant="link"
                 style={checkSelected('Surplus Only') && { color: '#1a5a96' }}
               >
-                Surplus Only
+                Surplus Active
               </LinkButton>{' '}
               |{' '}
               <LinkButton
