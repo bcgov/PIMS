@@ -14,7 +14,7 @@ const StyleDropDown = styled(NavDropdown)`
   font-size: 14px;
   .dropdown-menu {
     width: 300px;
-    height: 120px;
+    height: 150px;
   }
   .nav-link {
     color: #fff;
