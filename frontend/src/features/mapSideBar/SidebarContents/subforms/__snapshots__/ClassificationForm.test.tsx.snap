@@ -18,6 +18,7 @@ Array [
   border-radius: 4px;
   text-align: left;
   padding: 8px 12px 10px;
+  margin-bottom: 10px;
 }
 
 <div

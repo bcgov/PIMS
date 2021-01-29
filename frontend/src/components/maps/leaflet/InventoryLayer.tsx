@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { IPropertyDetail } from 'actions/parcelsActions';
+import { IBuilding, IParcel, IPropertyDetail } from 'actions/parcelsActions';
 import { IGeoSearchParams } from 'constants/API';
 import { BBox } from 'geojson';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
@@ -195,30 +195,22 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
 
   const search = async (filters: IGeoSearchParams[]) => {
     try {
-      const data = flatten(await Promise.all(filters.map(x => loadTile(x))))
-        .filter(feature => {
-          return !(
-            feature?.properties!.propertyTypeId === selected?.propertyTypeId &&
-            feature?.properties!.id === selected?.parcelDetail?.id
-          );
-        })
-        .map(f => {
-          return {
-            ...f,
-          } as PointFeature;
-        });
+      const data = flatten(await Promise.all(filters.map(x => loadTile(x)))).map(f => {
+        return {
+          ...f,
+        } as PointFeature;
+      });
 
       const items = uniqBy(
         data,
         point => `${point?.properties.id}-${point?.properties.propertyTypeId}`,
       );
 
-      const hasBuildings = (property: any) => {
-        return items.find(
-          ({ properties }: any) =>
-            properties.propertyTypeId === 1 && properties.parcelId === property.parcelId,
-        );
-      };
+      /**
+       * Whether the land has buildings on it.
+       * @param property PIMS property
+       */
+      const hasBuildings = (property: IParcel | IBuilding) => false;
 
       const results = items.filter(({ properties }: any) => {
         return properties.propertyTypeId === 1 || !hasBuildings(properties);
@@ -244,7 +236,7 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
   useDeepCompareEffect(() => {
     setLoadingTiles(true);
     search(params);
-  }, [params]);
+  }, [params, selected]);
 
   return (
     <PointClusterer

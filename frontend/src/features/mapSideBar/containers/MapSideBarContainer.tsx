@@ -305,7 +305,7 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
         if (propertyType !== 'building') {
           setPropertyType('building');
         }
-        return buildingId === buildingDetail?.id ? (
+        return buildingId === undefined || buildingId === buildingDetail?.id ? (
           <BuildingForm
             formikRef={formikRef}
             setMovingPinNameSpace={setMovingPinNameSpace}
