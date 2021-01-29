@@ -153,7 +153,10 @@ const Map: React.FC<MapProps> = ({
 }) => {
   const keycloak = useKeycloakWrapper();
   const dispatch = useDispatch();
-  const [geoFilter, setGeoFilter] = useState<IGeoSearchParams>({});
+  const [geoFilter, setGeoFilter] = useState<IGeoSearchParams>({
+    ...defaultFilterValues,
+    includeAllProperties: keycloak.hasClaim(Claims.ADMIN_PROPERTIES),
+  } as any);
   const [baseLayers, setBaseLayers] = useState<BaseLayer[]>([]);
   const [activeBasemap, setActiveBasemap] = useState<BaseLayer | null>(null);
   const smallScreen = useMediaQuery({ maxWidth: 1800 });
