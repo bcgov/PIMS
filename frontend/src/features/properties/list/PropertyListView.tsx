@@ -250,10 +250,6 @@ const PropertyListView: React.FC = () => {
   });
 
   const agencyIds = useMemo(() => agencies.map(x => parseInt(x.id, 10)), [agencies]);
-  const columns = useMemo(
-    () => cols(agenciesList, subAgencies, municipalities, propertyClassifications, editable),
-    [subAgencies, agenciesList, municipalities, propertyClassifications, editable],
-  );
   const [sorting, setSorting] = useState<TableSort<IProperty>>({ description: 'asc' });
 
   // We'll start our table without any data
@@ -263,6 +259,18 @@ const PropertyListView: React.FC = () => {
 
   // Filtering and pagination state
   const [filter, setFilter] = useState<IPropertyFilter>(defaultFilterValues);
+  const columns = useMemo(
+    () =>
+      cols(
+        agenciesList,
+        subAgencies,
+        municipalities,
+        propertyClassifications,
+        !filter || filter.propertyType === 'Land' ? 0 : 1,
+        editable,
+      ),
+    [subAgencies, agenciesList, municipalities, propertyClassifications, editable, filter],
+  );
 
   const [pageSize, setPageSize] = useState(10);
   const [pageIndex, setPageIndex] = useState(0);
@@ -501,11 +509,15 @@ const PropertyListView: React.FC = () => {
                 const response: any = await callApi(apiProperty.id, apiProperty);
                 nextProperties = nextProperties.map((item, index: number) => {
                   if (index === change.rowId) {
-                    item = { ...item, ...flattenProperty(response) } as any;
+                    item = {
+                      ...item,
+                      ...flattenProperty(response),
+                    } as any;
                   }
                   return item;
                 });
               }
+
               toast.info('Successfully saved changes!!');
               setDirtyRows([]);
               setData(nextProperties);
