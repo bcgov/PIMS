@@ -4,19 +4,13 @@ exports[`login error page login error page renders correctly 1`] = `
 <div
   className="unauth container-fluid"
 >
+  <br />
   <h1>
     PIMS does not support Internet Explorer
   </h1>
-  <div
-    className="sign-in row"
-  >
-    <div
-      className="block col-md-6 col-16"
-    >
-      <h6>
-        Please use a supported internet browser such as Chrome, Firefox or Edge.
-      </h6>
-    </div>
-  </div>
+  <br />
+  <h6>
+    Please use a supported internet browser such as Chrome, Firefox or Edge.
+  </h6>
 </div>
 `;

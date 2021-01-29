@@ -1,5 +1,5 @@
 import React from 'react';
-import { Col, Container, Row } from 'react-bootstrap';
+import { Container } from 'react-bootstrap';
 
 /**
  * The IENotSupportedPage prevents users from entering PIMS
@@ -9,12 +9,10 @@ import { Col, Container, Row } from 'react-bootstrap';
 export const IENotSupportedPage: React.FC = () => {
   return (
     <Container className="unauth" fluid={true}>
+      <br></br>
       <h1>PIMS does not support Internet Explorer</h1>
-      <Row className="sign-in">
-        <Col xs={16} md={6} className="block">
-          <h6>Please use a supported internet browser such as Chrome, Firefox or Edge.</h6>
-        </Col>
-      </Row>
+      <br></br>
+      <h6>Please use a supported internet browser such as Chrome, Firefox or Edge.</h6>
     </Container>
   );
 };
