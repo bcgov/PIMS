@@ -97,11 +97,11 @@ export const FinancialYear = Yup.object().shape({
 
 export const OccupancySchema = Yup.object().shape({
   rentableArea: Yup.number()
-    .min(0, 'Rentable Area must be a valid number')
+    .max(Yup.ref('totalArea'), 'Net Usable Area cannot be larger than Total Area')
     .transform(emptyStringToNull)
     .required('Required'),
   totalArea: Yup.number()
-    .min(0, 'Total Area must be a valid number')
+    .min(Yup.ref('rentableArea'), 'Total Area must not be smaller than Net Usable Area')
     .transform(emptyStringToNull)
     .required('Required'),
   buildingTenancy: Yup.string().max(100, 'Tenancy must be less then 100 characters'),
