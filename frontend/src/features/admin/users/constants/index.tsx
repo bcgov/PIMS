@@ -59,8 +59,8 @@ export const columnDefinitions: ColumnWithProps<IUserRecord>[] = [
     Header: 'Agency',
     accessor: 'agency',
     align: 'left',
-    clickable: true,
     sortable: true,
+    clickable: true,
     minWidth: 200,
   },
   {
@@ -75,6 +75,14 @@ export const columnDefinitions: ColumnWithProps<IUserRecord>[] = [
     accessor: 'lastLogin',
     align: 'left',
     clickable: true,
+    minWidth: 100,
+  },
+  {
+    Header: 'Created On',
+    accessor: 'createdOn',
+    align: 'left',
+    clickable: true,
+    sortable: true,
     minWidth: 100,
   },
   {

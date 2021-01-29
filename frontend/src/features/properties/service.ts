@@ -25,6 +25,7 @@ const getPropertyList = async (
   if (!isEmpty(sort)) {
     url = `${url}&sort=${sort}`;
   }
+
   const response = await CustomAxios().get<IPagedItems<IProperty>>(`${url}`);
   return response.data;
 };
