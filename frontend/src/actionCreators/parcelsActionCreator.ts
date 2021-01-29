@@ -1,3 +1,4 @@
+import { storeParcelDetail } from './../actions/parcelsActions';
 import { LifecycleToasts } from './../customAxios';
 import { showLoading, hideLoading } from 'react-redux-loading-bar';
 import { request, success, error } from 'actions/genericActions';
@@ -125,7 +126,7 @@ export const createParcel = (parcel: IParcel) => async (dispatch: Function) => {
       parcel,
     );
     dispatch(success(actionTypes.ADD_PARCEL, status));
-    dispatch(fetchParcelDetail(data));
+    dispatch(storeParcelDetail(data));
     dispatch(hideLoading());
     return data;
   } catch (axiosError) {
@@ -150,6 +151,7 @@ export const updateParcel = (parcel: IParcel) => async (dispatch: Function) => {
       parcel,
     );
     dispatch(success(actionTypes.UPDATE_PARCEL, status));
+    dispatch(storeParcelDetail(data));
     dispatch(hideLoading());
     return data;
   } catch (axiosError) {
