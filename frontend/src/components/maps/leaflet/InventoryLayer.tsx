@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { IPropertyDetail } from 'actions/parcelsActions';
+import { IBuilding, IParcel, IPropertyDetail } from 'actions/parcelsActions';
 import { IGeoSearchParams } from 'constants/API';
 import { BBox } from 'geojson';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
@@ -213,12 +213,11 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
         point => `${point?.properties.id}-${point?.properties.propertyTypeId}`,
       );
 
-      const hasBuildings = (property: any) => {
-        return items.find(
-          ({ properties }: any) =>
-            properties.propertyTypeId === 1 && properties.parcelId === property.parcelId,
-        );
-      };
+      /**
+       * Whether the land has buildings on it.
+       * @param property PIMS property
+       */
+      const hasBuildings = (property: IParcel | IBuilding) => false;
 
       const results = items.filter(({ properties }: any) => {
         return properties.propertyTypeId === 1 || !hasBuildings(properties);
