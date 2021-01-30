@@ -15,4 +15,5 @@ export interface IUser {
   agencies?: IAgency[];
   isDisabled?: boolean;
   lastLogin?: string;
+  createdOn?: string;
 }

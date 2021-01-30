@@ -150,8 +150,12 @@ const getApiEvaluations = (property: IProperty): IEvaluation[] => {
   evaluations.push({
     parcelId: property.propertyTypeId === 0 ? property.id : undefined,
     buildingId: property.propertyTypeId === 1 ? property.id : undefined,
-    value: property.assessed,
-    date: property.assessedDate ?? formatDate(new Date()),
+    value:
+      property.propertyTypeId === 0 ? property.assessedLand || 0 : property.assessedBuilding || 0,
+    date:
+      property.propertyTypeId === 0
+        ? property.assessedLandDate ?? formatDate(new Date())
+        : property.assessedBuildingDate ?? formatDate(new Date()),
     rowVersion: property.assessedRowVersion,
     key: EvaluationKeys.Assessed,
     firm: property.assessedFirm ?? '',
