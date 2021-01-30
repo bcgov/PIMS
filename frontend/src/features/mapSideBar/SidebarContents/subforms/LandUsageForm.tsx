@@ -45,7 +45,6 @@ export const LandUsageForm = <T extends any>(props: ILandUsageProps & FormikProp
         fieldLabel="Parcel Classification"
         classifications={props.classifications}
         title="Strategic Real Estate Classification"
-        toolTip="Placeholder"
         disabled={props.disabled}
       />
       <hr></hr>
