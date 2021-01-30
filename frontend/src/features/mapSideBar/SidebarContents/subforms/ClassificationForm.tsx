@@ -5,6 +5,7 @@ import { Classifications } from 'constants/classifications';
 import {
   CoreOperational,
   CoreStrategic,
+  SurplusActive,
   SurplusEncumbered,
   SurplusEncumberedOrActive,
 } from 'features/properties/components/forms/strings';
@@ -106,6 +107,8 @@ export const ClassificationForm: React.FC<IClassificationFormProps> = ({
         return InfoBoxWithContent(CoreStrategic);
       case Classifications.SurplusEncumbered:
         return InfoBoxWithContent(SurplusEncumbered);
+      case Classifications.SurplusActive:
+        return InfoBoxWithContent(SurplusActive);
       default:
         return InfoBoxWithContent(
           'Select a classification from the dropdown list to show the definition here. For further information, see the Inventory Policy.',
