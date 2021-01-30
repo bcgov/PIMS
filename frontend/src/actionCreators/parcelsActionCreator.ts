@@ -167,17 +167,23 @@ const parcelDeletingToasts: LifecycleToasts = {
   errorToast: pimsToasts.parcel.PARCEL_DELETING_ERROR,
 };
 
-export const deleteParcel = (parcel: IParcel) => (dispatch: Function) => {
+/**
+ * Make an AJAX request to delete the specified 'parcel' from inventory.
+ * @param parcel IParcel object to delete from inventory.
+ */
+export const deleteParcel = (parcel: IParcel) => async (dispatch: Function) => {
   dispatch(request(actionTypes.DELETE_PARCEL));
   dispatch(showLoading());
-  return CustomAxios({ lifecycleToasts: parcelDeletingToasts })
-    .delete(ENVIRONMENT.apiUrl + API.PARCEL_ROOT + `/${parcel.id}`, { data: parcel })
-    .then((response: AxiosResponse) => {
-      dispatch(success(actionTypes.DELETE_PARCEL, response.status));
-      dispatch(hideLoading());
-    })
-    .catch((axiosError: AxiosError) => {
-      dispatch(error(actionTypes.DELETE_PARCEL, axiosError?.response?.status, axiosError));
-    })
-    .finally(() => dispatch(hideLoading()));
+  try {
+    const { data, status } = await CustomAxios({
+      lifecycleToasts: parcelDeletingToasts,
+    }).delete(ENVIRONMENT.apiUrl + API.PARCEL_ROOT + `/${parcel.id}`, { data: parcel });
+    dispatch(success(actionTypes.DELETE_PARCEL, status));
+    dispatch(hideLoading());
+    return data;
+  } catch (axiosError) {
+    dispatch(error(actionTypes.DELETE_PARCEL, axiosError.response?.status, axiosError));
+    dispatch(hideLoading());
+    throw Error(axiosError.response?.data.details);
+  }
 };

@@ -90,6 +90,16 @@ const BUILDING_UPDATED = () =>
 const BUILDING_UPDATING_ERROR_TOAST_ID = 'BUILDING_UPDATING_ERROR';
 const BUILDING_UPDATING_ERROR = () =>
   toast.error('Failed to update Building.', { toastId: BUILDING_UPDATING_ERROR_TOAST_ID });
+//deleting
+const BUILDING_DELETING_TOAST_ID = 'DELETING_BUILDING';
+const BUILDING_DELETING = () =>
+  toast.dark('Deleting Building...', { toastId: BUILDING_DELETING_TOAST_ID });
+const BUILDING_DELETED_TOAST_ID = 'DELETED_BUILDING';
+const BUILDING_DELETED = () =>
+  toast.dark('Building deleted.', { toastId: BUILDING_DELETED_TOAST_ID });
+const BUILDING_DELETING_ERROR_TOAST_ID = 'BUILDING_DELETING_ERROR';
+const BUILDING_DELETING_ERROR = () =>
+  toast.error('Failed to delete Building.', { toastId: BUILDING_DELETING_ERROR_TOAST_ID });
 export const building = {
   BUILDING_CREATING_TOAST_ID,
   BUILDING_CREATING,
@@ -103,6 +113,12 @@ export const building = {
   BUILDING_UPDATED,
   BUILDING_UPDATING_ERROR_TOAST_ID,
   BUILDING_UPDATING_ERROR,
+  BUILDING_DELETING_TOAST_ID,
+  BUILDING_DELETING,
+  BUILDING_DELETED_TOAST_ID,
+  BUILDING_DELETED,
+  BUILDING_DELETING_ERROR_TOAST_ID,
+  BUILDING_DELETING_ERROR,
 };
 
 /** These toasts are used by the update agency api */
