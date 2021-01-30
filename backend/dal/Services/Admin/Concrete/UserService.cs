@@ -99,7 +99,21 @@ namespace Pims.Dal.Services.Admin
                         EF.Functions.Like(a.Agency.Name, $"%{filter.Agency}")));
 
                 if (filter.Sort.Any())
-                    query = query.OrderByProperty(filter.Sort);
+                {
+                    if (filter.Sort[0].StartsWith("Agency"))
+                    {
+                        var direction = filter.Sort[0].Split(" ")[1];
+                        query = direction == "asc" ?
+                            query.OrderBy(u => u.Agencies.Any() ? u.Agencies.FirstOrDefault().Agency.Name : null)
+                            : query.OrderByDescending(u => u.Agencies.Any() ? u.Agencies.FirstOrDefault().Agency.Name : null);
+                    }
+                    else
+                    {
+                        query = query.OrderByProperty(filter.Sort);
+
+                    }
+
+                }
             }
             var users = query.Skip((filter.Page - 1) * filter.Quantity).Take(filter.Quantity);
             return new Paged<User>(users.ToArray(), filter.Page, filter.Quantity, query.Count());
