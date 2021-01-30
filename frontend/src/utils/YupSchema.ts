@@ -95,62 +95,21 @@ export const FinancialYear = Yup.object().shape({
   market: Financial.required(),
 });
 
-export const BuildingSchema = Yup.object().shape({
-  name: Yup.string()
-    .max(150, 'Name must be less then 150 characters')
-    .nullable(),
-  description: Yup.string()
-    .max(2000, 'Description must be less than 2000 characters')
-    .nullable(),
-  address: Address.required(),
-  latitude: Yup.number()
-    .min(-90, 'Invalid Latitude')
-    .max(90, 'Invalid Latitude')
+export const OccupancySchema = Yup.object().shape({
+  rentableArea: Yup.number()
+    .max(Yup.ref('totalArea'), 'Net Usable Area cannot be larger than Total Area')
     .transform(emptyStringToNull)
     .required('Required'),
-  longitude: Yup.number()
-    .min(-180, 'Invalid Longitude')
-    .max(180, 'Invalid Longitude')
+  totalArea: Yup.number()
+    .min(Yup.ref('rentableArea'), 'Total Area must not be smaller than Net Usable Area')
     .transform(emptyStringToNull)
     .required('Required'),
-  buildingConstructionTypeId: Yup.string()
-    .matches(/\d*/, 'Invalid Building Construction Type')
-    .required('Required')
-    .nullable(),
-  buildingPredominateUseId: Yup.string()
-    .matches(/\d*/, 'Invalid Building Predominate Use')
-    .required('Required')
-    .nullable(),
-  classificationId: Yup.string()
-    .matches(/\d*/, 'Invalid Building Classification Id')
-    .required('Required')
-    .nullable(),
-  buildingFloorCount: Yup.number()
-    .min(0, 'Floor Count must be a valid number')
-    .transform(emptyStringToNull),
   buildingTenancy: Yup.string().max(100, 'Tenancy must be less then 100 characters'),
   buildingTenancyUpdatedOn: Yup.string().when('buildingTenancy', {
     is: val => val && val.length > 0,
     then: Yup.string().required('Required'),
     otherwise: Yup.string().nullable(),
   }),
-  rentableArea: Yup.number()
-    .min(0, 'Rentable Area must be a valid number')
-    .transform(emptyStringToNull)
-    .required('Required'),
-  totalArea: Yup.number()
-    .min(0, 'Total Area must be a valid number')
-    .transform(emptyStringToNull)
-    .required('Required'),
-  agencyId: Yup.number()
-    .transform(emptyStringToNull)
-    .required('Required'),
-  isSensitive: Yup.boolean().required('Required'),
-  transferLeaseOnSale: Yup.boolean(),
-  leaseExpiry: Yup.string().nullable(),
-  financials: Yup.array()
-    .compact((financial: any) => financial.year !== currentYear)
-    .of(FinancialYear),
 });
 
 export const BuildingInformationSchema = Yup.object().shape({
@@ -189,25 +148,22 @@ export const BuildingInformationSchema = Yup.object().shape({
   agencyId: Yup.number()
     .transform(emptyStringToNull)
     .required('Required'),
-  isSensitive: Yup.boolean().required('Required'),
+  isSensitive: Yup.boolean()
+    .nullable()
+    .transform(emptyStringToNull)
+    .required('Required'),
 });
 
-export const OccupancySchema = Yup.object().shape({
-  rentableArea: Yup.number()
-    .min(0, 'Rentable Area must be a valid number')
-    .transform(emptyStringToNull)
-    .required('Required'),
-  totalArea: Yup.number()
-    .min(0, 'Total Area must be a valid number')
-    .transform(emptyStringToNull)
-    .required('Required'),
-  buildingTenancy: Yup.string().max(100, 'Tenancy must be less then 100 characters'),
-  buildingTenancyUpdatedOn: Yup.string().when('buildingTenancy', {
-    is: val => val && val.length > 0,
-    then: Yup.string().required('Required'),
-    otherwise: Yup.string().nullable(),
-  }),
-});
+export const BuildingSchema = Yup.object()
+  .shape({
+    transferLeaseOnSale: Yup.boolean(),
+    leaseExpiry: Yup.string().nullable(),
+    financials: Yup.array()
+      .compact((financial: any) => financial.year !== currentYear)
+      .of(FinancialYear),
+  })
+  .concat(OccupancySchema)
+  .concat(BuildingInformationSchema);
 
 export const LandSchema = Yup.object().shape({
   classificationId: Yup.string()
@@ -363,7 +319,10 @@ export const LandIdentificationSchema = Yup.object().shape(
       .transform(emptyStringToNull)
       .required('Required'),
     lotSize: Yup.number(),
-    isSensitive: Yup.boolean().required('Required'),
+    isSensitive: Yup.boolean()
+      .nullable()
+      .transform(emptyStringToNull)
+      .required('Required'),
   },
   [['pin', 'pid']],
 );

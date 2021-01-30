@@ -29,6 +29,10 @@
       width: 400px;
       border-radius: 5px;
       margin-left: 14px;
+      .invalid-feedback {
+        display: block;
+        font-size: 16px;
+      }
     }
     .lat-long {
       width: 400px;
