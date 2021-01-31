@@ -146,26 +146,26 @@ namespace Pims.Dal.Entities.Views
         public int? NetBookFiscalYear { get; set; }
 
         /// <summary>
-        /// get/set - The most recent assessment.
+        /// get/set - The most recent assessment for the land.
         /// </summary>
         [Column(TypeName = "MONEY")]
-        public decimal? Assessed { get; set; }
+        public decimal? AssessedLand { get; set; }
 
         /// <summary>
-        /// get/set - When the assessment was completed.
+        /// get/set - When the most recent assessment was taken.
         /// </summary>
-        public DateTime? AssessedDate { get; set; }
+        public DateTime? AssessedLandDate { get; set; }
 
         /// <summary>
-        /// get/set - The most recent appraisal.
+        /// get/set - The most recent assessment for the building and improvements.
         /// </summary>
         [Column(TypeName = "MONEY")]
-        public decimal? Appraised { get; set; }
+        public decimal? AssessedBuilding { get; set; }
 
         /// <summary>
-        /// get/set - When the appraisal was completed.
+        /// get/set - When the most recent assessment was taken.
         /// </summary>
-        public DateTime? AppraisedDate { get; set; }
+        public DateTime? AssessedBuildingDate { get; set; }
         #endregion
 
         #region Parcel Properties
@@ -325,6 +325,14 @@ namespace Pims.Dal.Entities.Views
             this.LandLegalDescription = parcel.LandLegalDescription;
             this.Zoning = parcel.Zoning;
             this.ZoningPotential = parcel.ZoningPotential;
+
+            var assessed = parcel.Evaluations.OrderByDescending(e => e.Date).FirstOrDefault(e => e.Key == EvaluationKeys.Assessed);
+            this.AssessedLand = assessed?.Value;
+            this.AssessedLandDate = assessed?.Date;
+
+            var improvements = parcel.Evaluations.OrderByDescending(e => e.Date).FirstOrDefault(e => e.Key == EvaluationKeys.Improvements);
+            this.AssessedBuilding = improvements?.Value;
+            this.AssessedBuildingDate = improvements?.Date;
         }
 
         /// <summary>
@@ -349,6 +357,10 @@ namespace Pims.Dal.Entities.Views
             this.LeaseExpiry = building.LeaseExpiry;
             this.OccupantName = building.OccupantName;
             this.TransferLeaseOnSale = building.TransferLeaseOnSale;
+
+            var improvements = building.Evaluations.OrderByDescending(e => e.Date).FirstOrDefault(e => e.Key == EvaluationKeys.Assessed);
+            this.AssessedBuilding = improvements?.Value;
+            this.AssessedBuildingDate = improvements?.Date;
         }
         #endregion
     }

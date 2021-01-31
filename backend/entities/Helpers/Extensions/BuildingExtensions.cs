@@ -1,10 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json;
-using Pims.Dal.Entities;
-
-namespace Pims.Dal.Helpers.Extensions
+namespace Pims.Dal.Entities.Helpers.Extensions
 {
     /// <summary>
     /// BuildingExtensions static class, provides extension methods for buildings.

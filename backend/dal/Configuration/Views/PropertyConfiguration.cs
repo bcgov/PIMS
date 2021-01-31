@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Pims.Dal.Entities;
-using System;
 using System.Linq;
+using System;
 
 namespace Pims.Dal.Configuration.Views
 {
@@ -65,14 +65,14 @@ namespace Pims.Dal.Configuration.Views
                             SubAgency = b.Agency.ParentId.HasValue ? null : b.Agency.Name,
                             SubAgencyCode = b.Agency.ParentId.HasValue ? null : b.Agency.Code,
 
-                            Market = b.Fiscals.Any(f => f.Key == FiscalKeys.Market) ? b.Fiscals.OrderByDescending(f => f.FiscalYear).FirstOrDefault(f => f.Key == FiscalKeys.Market).Value : 0,
+                            Market = b.Fiscals.Any(f => f.Key == FiscalKeys.Market) ? b.Fiscals.OrderByDescending(f => f.FiscalYear).FirstOrDefault(f => f.Key == FiscalKeys.Market).Value : (decimal?)null,
                             MarketFiscalYear = b.Fiscals.Any(f => f.Key == FiscalKeys.Market) ? b.Fiscals.OrderByDescending(f => f.FiscalYear).FirstOrDefault(f => f.Key == FiscalKeys.Market).FiscalYear : (int?)null,
-                            NetBook = b.Fiscals.Any(f => f.Key == FiscalKeys.NetBook) ? b.Fiscals.OrderByDescending(f => f.FiscalYear).FirstOrDefault(f => f.Key == FiscalKeys.NetBook).Value : 0,
+                            NetBook = b.Fiscals.Any(f => f.Key == FiscalKeys.NetBook) ? b.Fiscals.OrderByDescending(f => f.FiscalYear).FirstOrDefault(f => f.Key == FiscalKeys.NetBook).Value : (decimal?)null,
                             NetBookFiscalYear = b.Fiscals.Any(f => f.Key == FiscalKeys.NetBook) ? b.Fiscals.OrderByDescending(f => f.FiscalYear).FirstOrDefault(f => f.Key == FiscalKeys.NetBook).FiscalYear : (int?)null,
-                            Assessed = b.Evaluations.Any(f => f.Key == EvaluationKeys.Assessed) ? b.Evaluations.OrderByDescending(f => f.Date).FirstOrDefault(f => f.Key == EvaluationKeys.Assessed).Value : 0,
-                            AssessedDate = b.Evaluations.Any(f => f.Key == EvaluationKeys.Assessed) ? b.Evaluations.OrderByDescending(f => f.Date).FirstOrDefault(f => f.Key == EvaluationKeys.Assessed).Date : (DateTime?)null,
-                            Appraised = b.Evaluations.Any(f => f.Key == EvaluationKeys.Appraised) ? b.Evaluations.OrderByDescending(f => f.Date).FirstOrDefault(f => f.Key == EvaluationKeys.Appraised).Value : 0,
-                            AppraisedDate = b.Evaluations.Any(f => f.Key == EvaluationKeys.Appraised) ? b.Evaluations.OrderByDescending(f => f.Date).FirstOrDefault(f => f.Key == EvaluationKeys.Appraised).Date : (DateTime?)null,
+                            AssessedLand = b.Evaluations.Any(f => f.Key == EvaluationKeys.Assessed) ? b.Evaluations.OrderByDescending(f => f.Date).FirstOrDefault(f => f.Key == EvaluationKeys.Assessed).Value : (decimal?)null,
+                            AssessedLandDate = b.Evaluations.Any(f => f.Key == EvaluationKeys.Assessed) ? b.Evaluations.OrderByDescending(f => f.Date).FirstOrDefault(f => f.Key == EvaluationKeys.Assessed).Date : (DateTime?)null,
+                            AssessedBuilding = b.Evaluations.Any(f => f.Key == EvaluationKeys.Improvements) ? b.Evaluations.OrderByDescending(f => f.Date).FirstOrDefault(f => f.Key == EvaluationKeys.Improvements).Value : (decimal?)null,
+                            AssessedBuildingDate = b.Evaluations.Any(f => f.Key == EvaluationKeys.Improvements) ? b.Evaluations.OrderByDescending(f => f.Date).FirstOrDefault(f => f.Key == EvaluationKeys.Improvements).Date : (DateTime?)null,
 
                             RentableArea = b.RentableArea,
                             BuildingFloorCount = b.BuildingFloorCount,
@@ -117,14 +117,14 @@ namespace Pims.Dal.Configuration.Views
                                 SubAgency = p.Agency.ParentId.HasValue ? null : p.Agency.Name,
                                 SubAgencyCode = p.Agency.ParentId.HasValue ? null : p.Agency.Code,
 
-                                Market = p.Fiscals.Any(f => f.Key == FiscalKeys.Market) ? p.Fiscals.OrderByDescending(f => f.FiscalYear).FirstOrDefault(f => f.Key == FiscalKeys.Market).Value : 0,
+                                Market = p.Fiscals.Any(f => f.Key == FiscalKeys.Market) ? p.Fiscals.OrderByDescending(f => f.FiscalYear).FirstOrDefault(f => f.Key == FiscalKeys.Market).Value : (decimal?)null,
                                 MarketFiscalYear = p.Fiscals.Any(f => f.Key == FiscalKeys.Market) ? p.Fiscals.OrderByDescending(f => f.FiscalYear).FirstOrDefault(f => f.Key == FiscalKeys.Market).FiscalYear : (int?)null,
-                                NetBook = p.Fiscals.Any(f => f.Key == FiscalKeys.NetBook) ? p.Fiscals.OrderByDescending(f => f.FiscalYear).FirstOrDefault(f => f.Key == FiscalKeys.NetBook).Value : 0,
+                                NetBook = p.Fiscals.Any(f => f.Key == FiscalKeys.NetBook) ? p.Fiscals.OrderByDescending(f => f.FiscalYear).FirstOrDefault(f => f.Key == FiscalKeys.NetBook).Value : (decimal?)null,
                                 NetBookFiscalYear = p.Fiscals.Any(f => f.Key == FiscalKeys.NetBook) ? p.Fiscals.OrderByDescending(f => f.FiscalYear).FirstOrDefault(f => f.Key == FiscalKeys.NetBook).FiscalYear : (int?)null,
-                                Assessed = p.Evaluations.Any(f => f.Key == EvaluationKeys.Assessed) ? p.Evaluations.OrderByDescending(f => f.Date).FirstOrDefault(f => f.Key == EvaluationKeys.Assessed).Value : 0,
-                                AssessedDate = p.Evaluations.Any(f => f.Key == EvaluationKeys.Assessed) ? p.Evaluations.OrderByDescending(f => f.Date).FirstOrDefault(f => f.Key == EvaluationKeys.Assessed).Date : (DateTime?)null,
-                                Appraised = p.Evaluations.Any(f => f.Key == EvaluationKeys.Appraised) ? p.Evaluations.OrderByDescending(f => f.Date).FirstOrDefault(f => f.Key == EvaluationKeys.Appraised).Value : 0,
-                                AppraisedDate = p.Evaluations.Any(f => f.Key == EvaluationKeys.Appraised) ? p.Evaluations.OrderByDescending(f => f.Date).FirstOrDefault(f => f.Key == EvaluationKeys.Appraised).Date : (DateTime?)null,
+                                AssessedLand = p.Evaluations.Any(f => f.Key == EvaluationKeys.Assessed) ? p.Evaluations.OrderByDescending(f => f.Date).FirstOrDefault(f => f.Key == EvaluationKeys.Assessed).Value : (decimal?)null,
+                                AssessedLandDate = p.Evaluations.Any(f => f.Key == EvaluationKeys.Assessed) ? p.Evaluations.OrderByDescending(f => f.Date).FirstOrDefault(f => f.Key == EvaluationKeys.Assessed).Date : (DateTime?)null,
+                                AssessedBuilding = p.Evaluations.Any(f => f.Key == EvaluationKeys.Improvements) ? p.Evaluations.OrderByDescending(f => f.Date).FirstOrDefault(f => f.Key == EvaluationKeys.Improvements).Value : (decimal?)null,
+                                AssessedBuildingDate = p.Evaluations.Any(f => f.Key == EvaluationKeys.Improvements) ? p.Evaluations.OrderByDescending(f => f.Date).FirstOrDefault(f => f.Key == EvaluationKeys.Improvements).Date : (DateTime?)null,
 
                                 RentableArea = 0,
                                 BuildingFloorCount = 0,

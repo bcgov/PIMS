@@ -195,8 +195,8 @@ describe('Property list view', () => {
           postal: 'V1K1R1',
           market: 0.0,
           netBook: 0.0,
-          assessed: 958000.0,
-          assessedDate: '2018-01-01T00:00:00',
+          assessedLand: 958000.0,
+          assessedLandDate: '2018-01-01T00:00:00',
           appraised: 0.0,
           landArea: 26.9,
           landLegalDescription:
@@ -231,8 +231,8 @@ describe('Property list view', () => {
           postal: 'V1K1R1',
           market: 0.0,
           netBook: 0.0,
-          assessed: 958000.0,
-          assessedDate: '2018-01-01T00:00:00',
+          assessedLand: 958000.0,
+          assessedLandDate: '2018-01-01T00:00:00',
           appraised: 0.0,
           landArea: 26.9,
           landLegalDescription:

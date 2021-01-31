@@ -4,6 +4,7 @@ import { IBuilding } from 'actions/parcelsActions';
 import { Label } from 'components/common/Label';
 import './InfoSlideOut.scss';
 import { formatMoney } from 'utils/numberFormatUtils';
+import { compareDate } from './InfoContent';
 
 interface IBuildingAttributes {
   /** the selected building information */
@@ -16,12 +17,14 @@ interface IBuildingAttributes {
  */
 export const BuildingAttributes: React.FC<IBuildingAttributes> = ({ buildingInfo }) => {
   let formatAssessed;
-  if (buildingInfo?.assessed) {
-    formatAssessed = formatMoney(buildingInfo?.assessed);
+  if (buildingInfo?.assessedBuilding) {
+    formatAssessed = formatMoney(buildingInfo?.assessedBuilding);
   } else if (buildingInfo?.evaluations?.length >= 1) {
-    formatAssessed = formatMoney(buildingInfo?.evaluations[0].value);
+    formatAssessed = formatMoney(
+      buildingInfo?.evaluations.sort((a, b) => compareDate(a.date, b.date)).reverse()[0].value,
+    );
   } else {
-    formatAssessed = '$0';
+    formatAssessed = '';
   }
 
   return (

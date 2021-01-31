@@ -26,7 +26,7 @@ namespace Pims.Dal.Helpers.Extensions
         /// <exception type="DbUpdateException">The name within a parcel should be unique.</exception>
         public static void ThrowIfNotUnique(this PimsContext context, Entity.Parcel parcel, Entity.Building building)
         {
-            if(parcel == null || String.IsNullOrEmpty(building.Name))
+            if (parcel == null || String.IsNullOrEmpty(building.Name))
             {
                 return;
             }
@@ -213,7 +213,7 @@ namespace Pims.Dal.Helpers.Extensions
         /// <param name="building"></param>
         /// <param name="buildingEvaluations"></param>
         /// <param name="buildingFiscals"></param>
-        public static void UpdateBuildingFinancials(this PimsContext context,  Entity.Building building,
+        public static void UpdateBuildingFinancials(this PimsContext context, Entity.Building building,
             ICollection<Entity.BuildingEvaluation> buildingEvaluations, ICollection<Entity.BuildingFiscal> buildingFiscals)
         {
 

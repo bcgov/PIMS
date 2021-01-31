@@ -126,9 +126,9 @@ namespace Pims.Dal.Helpers.Extensions
                 query = query.Where(p => p.Market <= filter.MaxMarketValue);
 
             if (filter.MinAssessedValue.HasValue)
-                query = query.Where(p => p.Assessed >= filter.MinAssessedValue);
+                query = query.Where(p => p.AssessedLand >= filter.MinAssessedValue || p.AssessedBuilding >= filter.MinAssessedValue);
             if (filter.MaxAssessedValue.HasValue)
-                query = query.Where(p => p.Assessed <= filter.MaxAssessedValue);
+                query = query.Where(p => p.AssessedLand <= filter.MaxAssessedValue || p.AssessedBuilding <= filter.MaxAssessedValue);
 
             if (filter.InEnhancedReferralProcess.HasValue && filter.InEnhancedReferralProcess.Value)
             {
@@ -266,9 +266,9 @@ namespace Pims.Dal.Helpers.Extensions
                 query = query.Where(p => p.Market <= filter.MaxMarketValue);
 
             if (filter.MinAssessedValue.HasValue)
-                query = query.Where(p => p.Assessed >= filter.MinAssessedValue);
+                query = query.Where(p => p.AssessedLand >= filter.MinAssessedValue || p.AssessedBuilding >= filter.MinAssessedValue);
             if (filter.MaxAssessedValue.HasValue)
-                query = query.Where(p => p.Assessed <= filter.MaxAssessedValue);
+                query = query.Where(p => p.AssessedLand <= filter.MaxAssessedValue || p.AssessedBuilding <= filter.MaxAssessedValue);
 
             if (filter.InEnhancedReferralProcess.HasValue && filter.InEnhancedReferralProcess.Value)
             {
@@ -335,9 +335,9 @@ namespace Pims.Dal.Helpers.Extensions
                 {
                     parcelProperty.Evaluations.RemoveAll(e => e.Date > date && e.Date < maxDate && key == e.Key);
                 }
-                else if (property is Entity.Building)
+                else if (property is Entity.Building building)
                 {
-                    ((Entity.Building)property).Evaluations.RemoveAll(e => e.Date > date && e.Date < maxDate && key == e.Key);
+                    building.Evaluations.RemoveAll(e => e.Date > date && e.Date < maxDate && key == e.Key);
                 }
             }
         }

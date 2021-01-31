@@ -1052,11 +1052,11 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                     >
                       <input
                         className="form-control input-number"
-                        name="properties.0.assessed"
+                        name="properties.0.Assessed Value"
                         onBlur={[Function]}
                         onChange={[Function]}
                         placeholder=""
-                        value={1}
+                        value=""
                       />
                     </div>
                   </div>

@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using System.Security.Claims;
-using NetTopologySuite.Geometries;
 using Pims.Core.Extensions;
 
 namespace Pims.Dal.Entities.Models
@@ -75,6 +74,15 @@ namespace Pims.Dal.Entities.Models
         #endregion
 
         #region Financials
+        /// <summary>
+        /// get/set - The most recent assessment for the buildings and improvements.
+        /// </summary>
+        public decimal? Assessed { get; set; }
+
+        /// <summary>
+        /// get/set - When the assessment was completed.
+        /// </summary>
+        public DateTime? AssessedDate { get; set; }
         #endregion
         #endregion
 
@@ -111,6 +119,8 @@ namespace Pims.Dal.Entities.Models
                 this.LeaseExpiry = property.LeaseExpiry;
                 this.OccupantName = property.OccupantName;
                 this.TransferLeaseOnSale = property.TransferLeaseOnSale;
+                this.Assessed = property.AssessedBuilding;
+                this.AssessedDate = property.AssessedBuildingDate;
             }
         }
         #endregion

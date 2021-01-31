@@ -1,10 +1,10 @@
 using Mapster;
 using Microsoft.Extensions.Options;
 using Pims.Dal.Entities;
+using Pims.Dal.Entities.Helpers.Extensions;
 using Pims.Dal.Helpers.Extensions;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json;
 using Entity = Pims.Dal.Entities;
 using Model = Pims.Api.Areas.Property.Models.Search;
@@ -96,7 +96,9 @@ namespace Pims.Api.Areas.Property.Mapping.Search
                 .Map(dest => dest.Market, src => src.GetFiscal(FiscalKeys.Market))
                 .Map(dest => dest.MarketFiscalYear, src => src.GetFiscalYear(FiscalKeys.Market))
                 .Map(dest => dest.NetBook, src => src.GetFiscal(FiscalKeys.NetBook))
-                .Map(dest => dest.NetBookFiscalYear, src => src.GetFiscalYear(FiscalKeys.NetBook));
+                .Map(dest => dest.NetBookFiscalYear, src => src.GetFiscalYear(FiscalKeys.NetBook))
+                .Map(dest => dest.AssessedBuilding, src => src.GetEvaluation(EvaluationKeys.Assessed))
+                .Map(dest => dest.AssessedBuildingDate, src => src.GetEvaluationDate(EvaluationKeys.Assessed));
 
             config.NewConfig<Entity.Views.Property, Model.PropertyModel>()
                 .Map(dest => dest.PropertyTypeId, src => src.PropertyTypeId)
@@ -148,10 +150,10 @@ namespace Pims.Api.Areas.Property.Mapping.Search
                 .Map(dest => dest.NetBook, src => src.NetBook)
                 .Map(dest => dest.NetBookFiscalYear, src => src.NetBookFiscalYear)
 
-                .Map(dest => dest.AssessedLand, src => src.Assessed)
-                .Map(dest => dest.AssessedLandDate, src => src.AssessedDate)
-                .Map(dest => dest.AssessedBuilding, src => src.Assessed) // TODO: Fix
-                .Map(dest => dest.AssessedBuildingDate, src => src.AssessedDate); // TODO: Fix
+                .Map(dest => dest.AssessedLand, src => src.AssessedLand)
+                .Map(dest => dest.AssessedLandDate, src => src.AssessedLandDate)
+                .Map(dest => dest.AssessedBuilding, src => src.AssessedBuilding)
+                .Map(dest => dest.AssessedBuildingDate, src => src.AssessedBuildingDate);
 
             config.NewConfig<Entity.Models.ProjectProperty, Model.PropertyModel>()
                 .Map(dest => dest.PropertyTypeId, src => src.PropertyTypeId)
@@ -203,11 +205,10 @@ namespace Pims.Api.Areas.Property.Mapping.Search
                 .Map(dest => dest.NetBook, src => src.NetBook)
                 .Map(dest => dest.NetBookFiscalYear, src => src.NetBookFiscalYear)
 
-                // TODO: Fix assessment values.
-                .Map(dest => dest.AssessedLand, src => src.Assessed)
-                .Map(dest => dest.AssessedLandDate, src => src.AssessedDate)
-                .Map(dest => dest.AssessedBuilding, src => src.Assessed)
-                .Map(dest => dest.AssessedBuildingDate, src => src.AssessedDate);
+                .Map(dest => dest.AssessedLand, src => src.AssessedLand)
+                .Map(dest => dest.AssessedLandDate, src => src.AssessedLandDate)
+                .Map(dest => dest.AssessedBuilding, src => src.AssessedBuilding)
+                .Map(dest => dest.AssessedBuildingDate, src => src.AssessedBuildingDate);
         }
     }
 }
