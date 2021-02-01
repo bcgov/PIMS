@@ -144,7 +144,8 @@ export const mockDetails = [
     classification: 'Core Operational',
     name: 'test name',
     description: 'test',
-    assessed: 10000,
+    assessedLand: 10000,
+    assessedBuilding: 10000,
     evaluations: [
       {
         date: new Date(),
@@ -189,7 +190,8 @@ export const mockDetails = [
     classification: 'Core Operational',
     name: 'test name',
     description: 'test',
-    assessed: 10000,
+    assessedLand: 10000,
+    assessedBuilding: 10000,
     address: {
       id: 1,
       line1: '1234 mock Street',
@@ -236,7 +238,8 @@ export const ACTIVE = {
   classification: 'Core Operational',
   name: 'test name',
   description: 'test',
-  assessed: 10000,
+  assessedLand: 10000,
+  assessedBuilding: 10000,
   evaluations: [
     {
       date: new Date(),

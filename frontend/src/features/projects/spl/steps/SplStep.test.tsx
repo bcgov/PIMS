@@ -292,7 +292,7 @@ describe('SPL Approval Step', () => {
           } else {
             done.fail('projectAgencyResponses was not equal to []');
           }
-          return [200, Promise.resolve({})];
+          return [200, Promise.resolve({ properties: [] })];
         })
         .onAny()
         .reply((config: any) => {

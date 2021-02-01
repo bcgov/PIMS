@@ -7,9 +7,10 @@ import { ReactComponent as ParcelDraftIcon } from 'assets/images/draft-parcel-ic
 import styled from 'styled-components';
 import { Label } from 'components/common/Label';
 import { Col, Row } from 'react-bootstrap';
+import ClickAwayListener from 'react-click-away-listener';
 
 interface LatLongFormProps {
-  setMovingPinNameSpace: (nameSpace: string) => void;
+  setMovingPinNameSpace: (nameSpace?: string) => void;
   nameSpace?: string;
   disabled?: boolean;
   showLandArea?: boolean;
@@ -59,15 +60,21 @@ const LatLongForm = <T extends any>(props: LatLongFormProps & FormikProps<T>) =>
           </div>
         </Col>
         <Col className="marker-svg">
-          <DraftMarkerButton
-            disabled={props.disabled}
-            onClick={(e: any) => {
-              props.setMovingPinNameSpace(props.nameSpace ?? '');
-              e.preventDefault();
+          <ClickAwayListener
+            onClickAway={() => {
+              props.setMovingPinNameSpace(undefined);
             }}
           >
-            {props.building ? <BuildingDraftIcon /> : <ParcelDraftIcon className="parcel-icon" />}
-          </DraftMarkerButton>
+            <DraftMarkerButton
+              disabled={props.disabled}
+              onClick={(e: any) => {
+                props.setMovingPinNameSpace(props.nameSpace ?? '');
+                e.preventDefault();
+              }}
+            >
+              {props.building ? <BuildingDraftIcon /> : <ParcelDraftIcon className="parcel-icon" />}
+            </DraftMarkerButton>
+          </ClickAwayListener>
         </Col>
       </Row>
       <Form.Row>

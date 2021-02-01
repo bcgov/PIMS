@@ -5,6 +5,7 @@ import { Label } from 'components/common/Label';
 import './InfoSlideOut.scss';
 import { formatMoney } from 'utils/numberFormatUtils';
 import { ReactElement } from 'react';
+import { compareDate } from './InfoContent';
 
 interface IParcelAttributes {
   /** the selected parcel information */
@@ -21,12 +22,14 @@ export const ParcelAttributes: React.FC<IParcelAttributes> = ({
   addAssociatedBuildingLink,
 }) => {
   let formatAssessed;
-  if (parcelInfo?.assessed) {
-    formatAssessed = formatMoney(parcelInfo?.assessed);
+  if (parcelInfo?.assessedLand) {
+    formatAssessed = formatMoney(parcelInfo?.assessedLand);
   } else if (parcelInfo?.evaluations?.length >= 1) {
-    formatAssessed = formatMoney(parcelInfo?.evaluations[0].value);
+    formatAssessed = formatMoney(
+      parcelInfo?.evaluations.sort((a, b) => compareDate(a.date, b.date)).reverse()[0].value,
+    );
   } else {
-    formatAssessed = '$0';
+    formatAssessed = '';
   }
 
   const newLength = parcelInfo.buildings?.length > 3 ? 3 : parcelInfo.buildings?.length;

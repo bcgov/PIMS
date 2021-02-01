@@ -4,7 +4,7 @@ import useParamSideBar, { SidebarContextType } from '../hooks/useQueryParamSideB
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from 'reducers/rootReducer';
 import { IParcel, IProperty, IBuilding } from 'actions/parcelsActions';
-import { fetchParcelsDetail } from 'actionCreators/parcelsActionCreator';
+import { deleteParcel, fetchParcelsDetail } from 'actionCreators/parcelsActionCreator';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
 import { BuildingForm, SubmitPropertySelector, LandForm } from '../SidebarContents';
 import { BuildingSvg, LandSvg } from 'components/common/Icons';
@@ -36,6 +36,8 @@ import useSideBarBuildingLoader from '../hooks/useSideBarBuildingLoader';
 import { ViewOnlyBuildingForm } from '../SidebarContents/BuildingForm';
 import { Claims } from 'constants/claims';
 import { Prompt } from 'react-router-dom';
+import { FaTrash } from 'react-icons/fa';
+import { deleteBuilding } from 'actionCreators/buildingActionCreator';
 
 interface IMapSideBarContainerProps {
   refreshParcels: Function;
@@ -75,12 +77,21 @@ const EditButton = styled(FaEdit)`
   float: right;
 `;
 
+const DeleteButton = styled(FaTrash)`
+  margin-right: 10px;
+  margin-top: 5px;
+  cursor: pointer;
+  color: #de350b;
+  float: right;
+`;
+
 /**
  * container responsible for logic related to map sidebar display. Synchronizes the state of the parcel detail forms with the corresponding query parameters (push/pull).
  */
 const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = ({
   movingPinNameSpaceProp,
 }) => {
+  const keycloak = useKeycloakWrapper();
   const formikRef = React.useRef<FormikValues>();
   const {
     showSideBar,
@@ -122,6 +133,7 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
   const [propertyType, setPropertyType] = useState('');
   const [showCompleteModal, setShowCompleteModal] = useState(false);
   const [showUpdatedModal, setShowUpdatedModal] = useState(false);
+  const [showDelete, setShowDelete] = useState(false);
 
   const parcelLayerService = useLayerQuery(PARCELS_LAYER_URL);
 
@@ -179,28 +191,29 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
     };
     fetchPimsOrLayerParcel({ pin }, parcelLayerSearchCallback, nameSpace);
   };
-  const droppedMarkerSearch = (nameSpace: string, latLng?: LatLng) => {
+
+  const droppedMarkerSearch = (nameSpace: string, latLng?: LatLng, isParcel?: boolean) => {
     if (latLng) {
       parcelLayerService.findOneWhereContains(latLng).then(resp => {
         const properties = getIn(resp, 'features.0.properties');
         if (properties?.PIN || properties?.PID) {
-          const query: any = { pin: properties?.PIN, pid: properties.PID };
-          fetchParcelsDetail(query)(dispatch).then((resp: any) => {
-            const matchingParcel: any = resp?.data?.length ? _.first(resp?.data) : undefined;
-            if (!!nameSpace && !!formikRef?.current?.values && !!matchingParcel?.id) {
-              const { resetForm, values } = formikRef.current;
-              resetForm({ values: setIn(values, nameSpace, matchingParcel) });
-              toast.dark('Found matching parcel within PIMS. Form data will be pre-populated.', {
-                autoClose: 7000,
-              });
-            } else {
-              const response = properties.PID
-                ? parcelLayerService.findByPid(properties.PID)
-                : parcelLayerService.findByPin(properties.PIN);
-
-              handleParcelDataLayerResponse(response, dispatch, latLng);
-            }
-          });
+          if (isParcel) {
+            const query: any = { pin: properties?.PIN, pid: properties.PID };
+            fetchParcelsDetail(query)(dispatch).then((resp: any) => {
+              const matchingParcel: any = resp?.data?.length ? _.first(resp?.data) : undefined;
+              if (!!nameSpace && !!formikRef?.current?.values && !!matchingParcel?.id && isParcel) {
+                const { resetForm, values } = formikRef.current;
+                resetForm({ values: setIn(values, nameSpace, matchingParcel) });
+                toast.dark('Found matching parcel within PIMS. Form data will be pre-populated.', {
+                  autoClose: 7000,
+                });
+              } else {
+                parcelLayerSearch(properties, latLng);
+              }
+            });
+          } else {
+            parcelLayerSearch(properties, latLng);
+          }
         } else {
           toast.warning('Unable to find any details for the clicked location.');
         }
@@ -208,7 +221,13 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
     }
   };
 
-  const keycloak = useKeycloakWrapper();
+  const parcelLayerSearch = (properties: any, latLng?: LatLng) => {
+    const response = properties.PID
+      ? parcelLayerService.findByPid(properties.PID)
+      : parcelLayerService.findByPin(properties.PIN);
+
+    handleParcelDataLayerResponse(response, dispatch, latLng);
+  };
 
   React.useEffect(() => {
     if (movingPinNameSpace !== undefined) {
@@ -231,21 +250,45 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
       let nameSpace = (movingPinNameSpace?.length ?? 0) > 0 ? `${movingPinNameSpace}.` : '';
       formikRef.current.setFieldValue(`${nameSpace}latitude`, leafletMouseEvent?.latlng.lat || 0);
       formikRef.current.setFieldValue(`${nameSpace}longitude`, leafletMouseEvent?.latlng.lng || 0);
-      droppedMarkerSearch(movingPinNameSpace, leafletMouseEvent?.latlng);
-
+      const isParcel = [
+        SidebarContextType.VIEW_BARE_LAND,
+        SidebarContextType.UPDATE_DEVELOPED_LAND,
+        SidebarContextType.VIEW_DEVELOPED_LAND,
+        SidebarContextType.ADD_ASSOCIATED_LAND,
+        SidebarContextType.ADD_BARE_LAND,
+      ].includes(context);
+      droppedMarkerSearch(movingPinNameSpace, leafletMouseEvent?.latlng, isParcel);
       setMovingPinNameSpace(undefined);
     }
-  }, [dispatch, leafletMouseEvent]);
+  }, [dispatch, leafletMouseEvent, showSideBar]);
 
+  /**
+   * Only display the edit button if the user has the correct claim and the property is owned by their agency.
+   */
   const ConditionalEditButton = () => (
     <>
       {disabled &&
         (keycloak.hasClaim(Claims.ADMIN_PROPERTIES) ||
-          keycloak.hasClaim(Claims.PROPERTY_EDIT) ||
-          keycloak.agencyId === parcelDetail?.agencyId ||
-          keycloak.agencyId === buildingDetail?.agencyId) && (
-          <EditButton onClick={() => setDisabled(false)} />
-        )}
+          (keycloak.hasClaim(Claims.PROPERTY_EDIT) &&
+            ((parcelDetail?.agencyId && keycloak.agencyIds.includes(parcelDetail.agencyId)) ||
+              (buildingDetail?.agencyId &&
+                keycloak.agencyIds.includes(buildingDetail.agencyId))) && (
+              <EditButton onClick={() => setDisabled(false)} />
+            )))}
+    </>
+  );
+
+  /**
+   * Only display the delete button if the user has the correct claim and the property is owned by their agency.
+   */
+  const ConditionalDeleteButton = () => (
+    <>
+      {keycloak.hasClaim(Claims.ADMIN_PROPERTIES) ||
+        (keycloak.hasClaim(Claims.PROPERTY_DELETE) &&
+          ((parcelDetail?.agencyId && keycloak.agencyIds.includes(parcelDetail.agencyId)) ||
+            (buildingDetail?.agencyId && keycloak.agencyIds.includes(buildingDetail.agencyId))) && (
+            <DeleteButton onClick={() => setShowDelete(true)} title="Delete Property" />
+          ))}
     </>
   );
 
@@ -269,6 +312,7 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
           <>
             <LandSvg className="svg" /> View/Update bare land
             <ConditionalEditButton />
+            <ConditionalDeleteButton />
           </>
         );
       case SidebarContextType.VIEW_DEVELOPED_LAND:
@@ -277,6 +321,7 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
           <>
             <LandSvg className="svg" /> View/Update developed land
             <ConditionalEditButton />
+            <ConditionalDeleteButton />
           </>
         );
       case SidebarContextType.ADD_ASSOCIATED_LAND:
@@ -291,6 +336,7 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
           <>
             <BuildingSvg className="svg" /> Building Details
             <ConditionalEditButton />
+            <ConditionalDeleteButton />
           </>
         );
       default:
@@ -403,6 +449,33 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
     >
       {render()}
       <Prompt message={handleLocationChange}></Prompt>
+      <GenericModal
+        message="Are you sure you want to permanently delete the property from inventory?"
+        size={ModalSize.SMALL}
+        cancelButtonText="Cancel"
+        okButtonText="Delete"
+        display={showDelete}
+        setDisplay={setShowDelete}
+        handleOk={async () => {
+          try {
+            switch (context) {
+              case SidebarContextType.UPDATE_BUILDING:
+              case SidebarContextType.VIEW_BUILDING:
+                await deleteBuilding(buildingDetail as IBuilding)(dispatch);
+                break;
+              default:
+                await deleteParcel(parcelDetail as IParcel)(dispatch);
+                break;
+            }
+            setShowSideBar(false, undefined, undefined, true);
+          } catch (error) {
+            // TODO: The error is always undefined...  Need to handle concurrency and other errors better.
+          }
+        }}
+        handleCancel={() => {
+          setShowDelete(false);
+        }}
+      />
       <GenericModal
         size={ModalSize.LARGE}
         message={

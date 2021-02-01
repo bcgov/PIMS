@@ -37,6 +37,7 @@ import { stringToNull } from 'utils';
 import { IStep } from 'components/common/Stepper';
 import useDraftMarkerSynchronizer from 'features/properties/hooks/useDraftMarkerSynchronizer';
 import DebouncedValidation from 'features/properties/components/forms/subforms/DebouncedValidation';
+import { getMergedFinancials } from 'features/properties/components/forms/subforms/EvaluationForm';
 
 const Container = styled.div`
   background-color: #fff;
@@ -141,7 +142,7 @@ export const valuesToApiFormat = (
     values.data.parcels,
   );
 
-  values.data.parcels = ownedParcels.map((p: any) => {
+  apiValues.data.parcels = ownedParcels.map((p: any) => {
     const parcelApiValues = landValuesToApiFormat({ data: p } as any);
     if (!!agencyId && p.agencyId === '') {
       parcelApiValues.agencyId = agencyId;
@@ -295,7 +296,7 @@ interface IAssociatedLandForm {
   /** to autopopulate fields based on Geocoder information */
   handleGeocoderChanges: (data: IGeocoderResponse) => Promise<void>;
   /** to change the user's cursor when adding a marker */
-  setMovingPinNameSpace: (nameSpace: string) => void;
+  setMovingPinNameSpace: (nameSpace?: string) => void;
   /** to autopopulate fields based on Geocoder information */
   handlePidChange: (pid: string) => void;
   /** help with formatting of the pin */
@@ -410,13 +411,18 @@ const AssociatedLandForm: React.FC<IAssociatedLandParentForm> = (
   const dispatch = useDispatch();
   const [numParcels, setNumParcels] = useState(1);
   const [progress, setProgress] = useState(0);
+  const parcels =
+    getParcels(props.initialValues as any)?.map(p => ({
+      ...p,
+      financials: getMergedFinancials([...(p?.evaluations ?? []), ...(p?.fiscals ?? [])]),
+    })) ?? [];
   const [initialValues, setInitialValues] = useState({
     activeStep: 0,
     activeTab: 0,
     data: {
       ...getInitialValues(),
       ...props.initialValues,
-      parcels: getParcels(props.initialValues as any),
+      parcels,
     },
   });
   const api = useApi();

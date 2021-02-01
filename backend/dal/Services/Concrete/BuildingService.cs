@@ -163,9 +163,13 @@ namespace Pims.Dal.Services
 
             // A building should have a unique name within the parcel it is located on.
             building.Parcels.ForEach(pb => this.Context.ThrowIfNotUnique(pb.Parcel, building));
+            // SRES users allowed to overwrite
+            if (!this.User.HasPermission(Permissions.AdminProperties))
+            {
+                building.AgencyId = agency.Id;
+                building.Agency = agency;
+            }
 
-            building.AgencyId = agency.Id;
-            building.Agency = agency;
             building.Address.Province = this.Context.Provinces.Find(building.Address.ProvinceId);
             building.Classification = this.Context.PropertyClassifications.Find(building.ClassificationId);
             building.IsVisibleToOtherAgencies = false;
@@ -248,7 +252,7 @@ namespace Pims.Dal.Services
                     var existingParcel = this.Context.Parcels
                     .Include(p => p.Buildings)
                     .FirstOrDefault(pb => pb.Id == parcel.Id);
-                    if(existingParcel != null)
+                    if (existingParcel != null)
                     {
                         parcel.Buildings.Clear(); // Do not modify the list of buildings associated to parcels when performing building updates.
                         existingParcel.Buildings.ForEach(building => parcel.Buildings.Add(building));
@@ -338,7 +342,7 @@ namespace Pims.Dal.Services
         public Building UpdateFinancials(Building building)
         {
             building.ThrowIfNotAllowedToEdit(nameof(building), this.User,
-                new[] {Permissions.PropertyEdit, Permissions.AdminProperties});
+                new[] { Permissions.PropertyEdit, Permissions.AdminProperties });
             var isAdmin = this.User.HasPermission(Permissions.AdminProperties);
 
             var existingBuilding = this.Context.Buildings
@@ -371,17 +375,22 @@ namespace Pims.Dal.Services
         /// <returns></returns>
         public void Remove(Building building)
         {
-            building.ThrowIfNotAllowedToEdit(nameof(building), this.User, new[] { Permissions.PropertyEdit, Permissions.AdminProperties });
+            building.ThrowIfNotAllowedToEdit(nameof(building), this.User, new[] { Permissions.PropertyDelete, Permissions.AdminProperties });
             var isAdmin = this.User.HasPermission(Permissions.AdminProperties);
 
-            var existingBuilding = this.Context.Buildings.Find(building.Id) ?? throw new KeyNotFoundException();
+            var existingBuilding = this.Context.Buildings.Include(b => b.Evaluations).Include(b => b.Fiscals).Include(b => b.Parcels).FirstOrDefault(b => b.Id == building.Id) ?? throw new KeyNotFoundException();
 
             var agency_ids = this.User.GetAgenciesAsNullable(); ;
             if (!isAdmin && !agency_ids.Contains(existingBuilding.AgencyId)) throw new NotAuthorizedException("User may not remove buildings outside of their agency.");
 
-            this.Context.Entry(existingBuilding).CurrentValues.SetValues(building);
+            existingBuilding.RowVersion = building.RowVersion;
+            this.Context.SetOriginalRowVersion(existingBuilding);
 
-            this.Context.Buildings.Remove(existingBuilding); // TODO: Shouldn't be allowed to permanently delete buildings entirely.
+            existingBuilding.Parcels.Clear();
+            existingBuilding.Evaluations.Clear();
+            existingBuilding.Fiscals.Clear();
+
+            this.Context.Buildings.Remove(existingBuilding); // TODO: Should track deletion of property through archiveing or logging.
             this.Context.CommitTransaction();
         }
         #endregion

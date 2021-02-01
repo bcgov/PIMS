@@ -46,6 +46,7 @@ import useParcelLayerData from 'features/properties/hooks/useParcelLayerData';
 import { IStep } from 'components/common/Stepper';
 import { AssociatedBuildingListForm } from './subforms/AssociatedBuildingListForm';
 import DebouncedValidation from 'features/properties/components/forms/subforms/DebouncedValidation';
+
 const Container = styled.div`
   background-color: #fff;
   height: 100%;
@@ -252,7 +253,7 @@ interface ILandForm {
   /** to autopopulate fields based on Geocoder information */
   handleGeocoderChanges: (data: IGeocoderResponse) => Promise<void>;
   /** to change the user's cursor when adding a marker */
-  setMovingPinNameSpace: (nameSpace: string) => void;
+  setMovingPinNameSpace: (nameSpace?: string) => void;
   /** to autopopulate fields based on Geocoder information */
   handlePidChange: (pid: string) => void;
   /** help with formatting of the pin */
@@ -314,8 +315,9 @@ const LandForm: React.FC<IParentLandForm> = (props: IParentLandForm) => {
     data: { ...getInitialValues(), ...props.initialValues },
   };
   const isViewOrUpdate = !!initialValues?.data?.id;
-
-  initialValues.data.agencyId = keycloak.agencyId ?? '';
+  initialValues.data.agencyId = initialValues.data.agencyId
+    ? initialValues.data.agencyId
+    : keycloak.agencyId;
 
   /**
    * Combines yup validation with manual validation of financial data for performance reasons.

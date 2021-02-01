@@ -2,6 +2,7 @@ using Mapster;
 using Pims.Api.Areas.Reports.Models.Project;
 using Pims.Api.Models;
 using Pims.Dal.Entities;
+using Pims.Dal.Entities.Helpers.Extensions;
 using Pims.Dal.Helpers.Extensions;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,16 +29,16 @@ namespace Pims.Api.Areas.Reports.Mapping.Project
                     src => src.Building != null ? src.Building.Address.AdministrativeArea : src.Parcel.Address.AdministrativeArea)
                 .Map(dest => dest.Assessed,
                     src => src.Building != null
-                        ? GetBuildingAssessedValue(src.Building.Evaluations)
-                        : GetParcelAssessedValue(src.Parcel.Evaluations))
+                        ? src.Building.GetEvaluation(EvaluationKeys.Assessed)
+                        : src.Parcel.GetEvaluation(EvaluationKeys.Assessed))
                 .Map(dest => dest.NetBook,
                     src => src.Building != null
-                        ? GetBuildingNetBookValue(src.Building.Fiscals)
-                        : GetParcelNetBookValue(src.Parcel.Fiscals))
+                        ? src.Building.GetFiscal(FiscalKeys.NetBook)
+                        : src.Parcel.GetFiscal(FiscalKeys.NetBook))
                 .Map(dest => dest.Market,
                     src => src.Building != null
-                        ? GetBuildingMarketValue(src.Building.Fiscals)
-                        : GetParcelMarketValue(src.Parcel.Fiscals))
+                        ? src.Building.GetFiscal(FiscalKeys.Market)
+                        : src.Parcel.GetFiscal(FiscalKeys.Market))
                 .Map(dest => dest.Zoning, src => src.Building != null ? src.Building.GetZoning().First() : src.Parcel.Zoning)
                 .Map(dest => dest.ZoningPotential, src => src.Building != null ? src.Building.GetZoningPotential().First() : src.Parcel.ZoningPotential)
 
@@ -65,42 +66,6 @@ namespace Pims.Api.Areas.Reports.Mapping.Project
         private string GetAgencyName(Agency agency)
         {
             return agency != null ? agency.Name : "";
-        }
-
-        private decimal GetBuildingAssessedValue(ICollection<BuildingEvaluation> evaluations)
-        {
-            var evaluation = evaluations.OrderByDescending(f => f.Date).FirstOrDefault(f => f.Key == EvaluationKeys.Assessed);
-            return evaluation?.Value ?? 0;
-        }
-
-        private decimal GetParcelAssessedValue(ICollection<ParcelEvaluation> evaluations)
-        {
-            var parcelEvaluation = evaluations.OrderByDescending(f => f.Date).FirstOrDefault(f => f.Key == EvaluationKeys.Assessed);
-            return parcelEvaluation?.Value ?? 0;
-        }
-
-        private decimal GetBuildingNetBookValue(ICollection<BuildingFiscal> fiscals)
-        {
-            var buildingFiscal = fiscals.OrderByDescending(f => f.FiscalYear).FirstOrDefault(f => f.Key == FiscalKeys.NetBook);
-            return buildingFiscal?.Value ?? 0;
-        }
-
-        private decimal GetBuildingMarketValue(ICollection<BuildingFiscal> fiscals)
-        {
-            var buildingFiscal = fiscals.OrderByDescending(f => f.FiscalYear).FirstOrDefault(f => f.Key == FiscalKeys.Market);
-            return buildingFiscal?.Value ?? 0;
-        }
-
-        private decimal GetParcelNetBookValue(ICollection<ParcelFiscal> fiscals)
-        {
-            var parcelFiscal = fiscals.OrderByDescending(f => f.FiscalYear).FirstOrDefault(f => f.Key == FiscalKeys.NetBook);
-            return parcelFiscal?.Value ?? 0;
-        }
-
-        private decimal GetParcelMarketValue(ICollection<ParcelFiscal> fiscals)
-        {
-            var parcelFiscal = fiscals.OrderByDescending(f => f.FiscalYear).FirstOrDefault(f => f.Key == FiscalKeys.Market);
-            return parcelFiscal?.Value ?? 0;
         }
 
     }

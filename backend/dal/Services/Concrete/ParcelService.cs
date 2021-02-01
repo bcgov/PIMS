@@ -182,9 +182,12 @@ namespace Pims.Dal.Services
                 throw new NotAuthorizedException("User must belong to an agency before adding parcels.");
 
             this.Context.Parcels.ThrowIfNotUnique(parcel);
-
-            parcel.AgencyId = agency.Id;
-            parcel.Agency = agency;
+            // SRES users allowed to overwrite
+            if (!this.User.HasPermission(Permissions.AdminProperties))
+            {
+                parcel.AgencyId = agency.Id;
+                parcel.Agency = agency;
+            }
             parcel.Address.Province = this.Context.Provinces.Find(parcel.Address.ProvinceId);
             parcel.Classification = this.Context.PropertyClassifications.Find(parcel.ClassificationId);
             parcel.IsVisibleToOtherAgencies = false;

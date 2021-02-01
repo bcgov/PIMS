@@ -20,6 +20,7 @@ import { IAgencyResponseColumns } from 'features/projects/erp/forms/AgencyRespon
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { EditableMoneyCell, MoneyCell } from 'components/Table/MoneyCell';
+import { PropertyTypes } from 'actions/parcelsActions';
 
 const ColumnDiv = styled.div`
   display: flex;
@@ -253,7 +254,8 @@ export const getPropertyColumns = ({
     },
     {
       Header: 'Assessed Value',
-      accessor: 'assessed',
+      accessor: (row: IProperty) =>
+        row.propertyTypeId === PropertyTypes.PARCEL ? row.assessedLand : row.assessedBuilding,
       Cell: editableFinancials ? EditableMoneyCell : MoneyCell,
       minWidth: 145,
       align: 'left',

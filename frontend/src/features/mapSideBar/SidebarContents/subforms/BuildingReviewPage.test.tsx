@@ -24,7 +24,7 @@ const store = mockStore({
 });
 
 const form = (
-  <Formik initialValues={{ projectNumber: 'test', assessed: '' }} onSubmit={noop}>
+  <Formik initialValues={{ projectNumber: 'test', assessedLand: '' }} onSubmit={noop}>
     {(props: any) => (
       <Provider store={store}>
         <BuildingReviewPage
@@ -93,9 +93,9 @@ it('identification section editable after click', () => {
   expect(agency).toBeDisabled();
   expect(name).not.toBeDisabled();
   expect(addr).toBeDisabled();
-  expect(loc).not.toBeDisabled();
-  expect(lat).not.toBeDisabled();
-  expect(long).not.toBeDisabled();
+  expect(loc).toBeDisabled();
+  expect(lat).toBeDisabled();
+  expect(long).toBeDisabled();
   expect(classificationId).not.toBeDisabled();
   expect(usage).not.toBeDisabled();
   expect(constructionType).not.toBeDisabled();
@@ -134,21 +134,25 @@ it('valuation fields disabled by default', () => {
   const { container } = render(form);
 
   const netbook = container.querySelector('input[name="data.financials.0.netbook.value"]');
-  const assessed = container.querySelector('input[name="data.financials.0.assessed.value"]');
+  const assessedLand = container.querySelector(
+    'input[name="data.financials.0.assessedLand.value"]',
+  );
 
   expect(netbook).toBeDisabled();
-  expect(assessed).toBeDisabled();
+  expect(assessedLand).toBeDisabled();
 });
 
 it('valuation fields editable after click', () => {
   const { container } = render(form);
 
   const netbook = container.querySelector('input[name="data.financials.0.netbook.value"]');
-  const assessed = container.querySelector('input[name="data.financials.0.assessed.value"]');
+  const assessedLand = container.querySelector(
+    'input[name="data.financials.0.assessedLand.value"]',
+  );
 
   const edit = container.querySelectorAll('svg[class="edit"]');
   fireEvent.click(edit[2]!);
 
   expect(netbook).not.toBeDisabled();
-  expect(assessed).not.toBeDisabled();
+  expect(assessedLand).not.toBeDisabled();
 });

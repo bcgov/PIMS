@@ -66,12 +66,12 @@ namespace Pims.Api.Areas.Property.Mapping.Search
                 .Map(dest => dest.LandLegalDescription, src => src.LandLegalDescription)
                 .Map(dest => dest.LandArea, src => src.LandArea)
                 .Map(dest => dest.Zoning, src => src.Zoning)
-                .Map(dest => dest.ZoningPotential, src => src.ZoningPotential);
-            // TODO: Fix assessment values.
-            // .Map(dest => dest.AssessedLand, src => src.AssessedLand)
-            // .Map(dest => dest.AssessedLandDate, src => src.AssessedLandDate)
-            // .Map(dest => dest.AssessedBuilding, src => src.AssessedBuilding)
-            // .Map(dest => dest.AssessedBuildingDate, src => src.AssessedBuildingDate);
+                .Map(dest => dest.ZoningPotential, src => src.ZoningPotential)
+
+                .Map(dest => dest.AssessedLand, src => src.AssessedLand)
+                .Map(dest => dest.AssessedLandDate, src => src.AssessedLandDate)
+                .Map(dest => dest.AssessedBuilding, src => src.AssessedBuilding)
+                .Map(dest => dest.AssessedBuildingDate, src => src.AssessedBuildingDate);
 
             config.NewConfig<Entity.Models.BuildingModel, Model.PropertyModel>()
                 .Inherits<Entity.Models.PropertyModel, Model.PropertyModel>()
@@ -86,7 +86,10 @@ namespace Pims.Api.Areas.Property.Mapping.Search
                 .Map(dest => dest.OccupantType, src => src.BuildingOccupantType)
                 .Map(dest => dest.LeaseExpiry, src => src.LeaseExpiry)
                 .Map(dest => dest.OccupantName, src => src.OccupantName)
-                .Map(dest => dest.TransferLeaseOnSale, src => src.TransferLeaseOnSale);
+                .Map(dest => dest.TransferLeaseOnSale, src => src.TransferLeaseOnSale)
+
+                .Map(dest => dest.AssessedBuilding, src => src.Assessed)
+                .Map(dest => dest.AssessedBuildingDate, src => src.AssessedDate);
 
             config.NewConfig<Entity.Models.ProjectProperty, Model.GeoJson<Model.PropertyModel>>()
                 .Map(dest => dest.Type, src => "Feature")

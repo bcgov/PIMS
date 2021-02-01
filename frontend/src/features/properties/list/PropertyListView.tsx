@@ -86,7 +86,10 @@ const defaultFilterValues: IPropertyFilter = {
 };
 
 export const flattenProperty = (apiProperty: IApiProperty): IProperty => {
-  const assessed = getMostRecentEvaluation(apiProperty.evaluations, EvaluationKeys.Assessed);
+  const assessedLand = getMostRecentEvaluation(apiProperty.evaluations, EvaluationKeys.Assessed);
+  const assessedBuilding = apiProperty.parcelId
+    ? getMostRecentEvaluation(apiProperty.evaluations, EvaluationKeys.Improvements)
+    : getMostRecentEvaluation(apiProperty.evaluations, EvaluationKeys.Assessed);
   const netBook = getCurrentFiscal(apiProperty.fiscals, FiscalKeys.NetBook);
   const market = getCurrentFiscal(apiProperty.fiscals, FiscalKeys.Market);
   const property: any = {
@@ -113,10 +116,12 @@ export const flattenProperty = (apiProperty: IApiProperty): IProperty => {
     administrativeArea: apiProperty.address?.administrativeArea ?? '',
     province: apiProperty.address?.province ?? '',
     postal: apiProperty.address?.postal ?? '',
-    assessed: (assessed?.value as number) ?? 0,
-    assessedDate: assessed?.date,
-    assessedFirm: assessed?.firm,
-    assessedRowVersion: assessed?.rowVersion,
+    assessedLand: (assessedLand?.value as number) ?? 0,
+    assessedLandDate: assessedLand?.date,
+    assessedBuilding: (assessedBuilding?.value as number) ?? 0,
+    assessedBuildingDate: assessedBuilding?.date,
+    assessedFirm: assessedLand?.firm,
+    assessedRowVersion: assessedLand?.rowVersion,
     netBook: (netBook?.value as number) ?? 0,
     netBookFiscalYear: netBook?.fiscalYear as number,
     netBookRowVersion: netBook?.rowVersion,
@@ -185,7 +190,8 @@ const getServerQuery = (state: {
 
 interface IChangedRow {
   rowId: number;
-  assessed?: boolean;
+  assessedLand?: boolean;
+  assessedBuilding?: boolean;
   netBook?: boolean;
   market?: boolean;
 }

@@ -10,6 +10,22 @@ import Claims from 'constants/claims';
 import BuildingAttributes from './BuildingAttributes';
 import { ReactElement } from 'react';
 
+/**
+ * Compare two dates to evaluation which is earlier.
+ * This should handle 'undefined' values by treating them as earlier.
+ * @param a First date to compare.
+ * @param b Second date to compare.
+ * @returns A negative number indicating ealier, 0 as equal, positive number as later.
+ */
+export const compareDate = (a: Date | string | undefined, b: Date | string | undefined): number => {
+  if (a === undefined && b === undefined) return 0;
+  if (a === undefined && b !== undefined) return -1;
+  if (a !== undefined && b === undefined) return 1;
+  const aDate = typeof a === 'string' ? new Date(a) : (a as Date);
+  const bDate = typeof b === 'string' ? new Date(b) : (b as Date);
+  return aDate.valueOf() - bDate.valueOf();
+};
+
 interface IInfoContent {
   /** the selected property information */
   propertyInfo: IParcel | IBuilding | null;

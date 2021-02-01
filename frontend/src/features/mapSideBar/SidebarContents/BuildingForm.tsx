@@ -244,7 +244,7 @@ interface IBuildingForm {
   /** to pass the formik ref */
   formikRef?: any;
   /** to change the user's cursor when adding a marker */
-  setMovingPinNameSpace: (nameSpace: string) => void;
+  setMovingPinNameSpace: (nameSpace?: string) => void;
   /** to help determine the namespace of the field (eg. address.line1) */
   nameSpace: string;
   /** Go to the associated land form directly */
@@ -339,8 +339,11 @@ const BuidingForm: React.FC<IParentBuildingForm> = ({
   const initialValues = {
     activeStep: 0,
     activeTab: 0,
-    data: { ...defaultBuildingValues, agencyId: keycloak.agencyId, ...rest.initialValues },
+    data: { ...defaultBuildingValues, ...rest.initialValues },
   };
+  initialValues.data.agencyId = initialValues.data.agencyId
+    ? initialValues.data.agencyId
+    : keycloak.agencyId;
   const isViewOrUpdate = !!initialValues?.data?.id;
 
   /**

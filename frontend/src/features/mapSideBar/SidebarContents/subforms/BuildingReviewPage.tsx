@@ -105,7 +105,7 @@ export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
               <AddressForm
                 onGeocoderChange={noop}
                 {...formikProps}
-                disabled={editInfo.identification}
+                disabled={true}
                 nameSpace={withNameSpace('address')}
                 disableCheckmark
                 disableStreetAddress
@@ -117,7 +117,7 @@ export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
                   className="input-medium"
                   displayErrorTooltips
                   formikProps={formikProps}
-                  disabled={editInfo.identification}
+                  disabled={true}
                   type="number"
                   field={withNameSpace('latitude')}
                   required
@@ -129,7 +129,7 @@ export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
                   className="input-medium"
                   displayErrorTooltips
                   formikProps={formikProps}
-                  disabled={editInfo.identification}
+                  disabled={true}
                   type="number"
                   field={withNameSpace('longitude')}
                   required
@@ -320,11 +320,11 @@ export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
                 <Label>Assessed Value</Label>
                 <FastCurrencyInput
                   formikProps={formikProps}
-                  field="data.financials.0.assessed.value"
+                  field="data.financials.0.assessedLand.value"
                   disabled={editInfo.valuation}
                 />
                 <Input
-                  field="data.financials.0.assessed.year"
+                  field="data.financials.0.assessedLand.year"
                   disabled
                   style={{ width: 50, fontSize: 11 }}
                 />
