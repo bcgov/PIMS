@@ -12,7 +12,7 @@ const mockOccupancies: SelectOptions = [
 ];
 
 const form = (
-  <Formik initialValues={{ assessed: '' }} onSubmit={noop}>
+  <Formik initialValues={{ assessedLand: '' }} onSubmit={noop}>
     {(props: any) => <OccupancyForm formikProps={props} occupantTypes={mockOccupancies} />}
   </Formik>
 );

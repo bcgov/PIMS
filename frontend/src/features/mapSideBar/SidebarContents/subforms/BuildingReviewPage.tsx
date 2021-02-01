@@ -320,11 +320,11 @@ export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
                 <Label>Assessed Value</Label>
                 <FastCurrencyInput
                   formikProps={formikProps}
-                  field="data.financials.0.assessed.value"
+                  field="data.financials.0.assessedLand.value"
                   disabled={editInfo.valuation}
                 />
                 <Input
-                  field="data.financials.0.assessed.year"
+                  field="data.financials.0.assessedLand.year"
                   disabled
                   style={{ width: 50, fontSize: 11 }}
                 />
