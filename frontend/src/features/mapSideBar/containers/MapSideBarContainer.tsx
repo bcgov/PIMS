@@ -196,29 +196,37 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
     if (latLng) {
       parcelLayerService.findOneWhereContains(latLng).then(resp => {
         const properties = getIn(resp, 'features.0.properties');
-        if ((properties?.PIN || properties?.PID) && isParcel) {
-          const query: any = { pin: properties?.PIN, pid: properties.PID };
-          fetchParcelsDetail(query)(dispatch).then((resp: any) => {
-            const matchingParcel: any = resp?.data?.length ? _.first(resp?.data) : undefined;
-            if (!!nameSpace && !!formikRef?.current?.values && !!matchingParcel?.id) {
-              const { resetForm, values } = formikRef.current;
-              resetForm({ values: setIn(values, nameSpace, matchingParcel) });
-              toast.dark('Found matching parcel within PIMS. Form data will be pre-populated.', {
-                autoClose: 7000,
-              });
-            } else {
-              const response = properties.PID
-                ? parcelLayerService.findByPid(properties.PID)
-                : parcelLayerService.findByPin(properties.PIN);
-
-              handleParcelDataLayerResponse(response, dispatch, latLng);
-            }
-          });
+        if (properties?.PIN || properties?.PID) {
+          if (isParcel) {
+            const query: any = { pin: properties?.PIN, pid: properties.PID };
+            fetchParcelsDetail(query)(dispatch).then((resp: any) => {
+              const matchingParcel: any = resp?.data?.length ? _.first(resp?.data) : undefined;
+              if (!!nameSpace && !!formikRef?.current?.values && !!matchingParcel?.id && isParcel) {
+                const { resetForm, values } = formikRef.current;
+                resetForm({ values: setIn(values, nameSpace, matchingParcel) });
+                toast.dark('Found matching parcel within PIMS. Form data will be pre-populated.', {
+                  autoClose: 7000,
+                });
+              } else {
+                parcelLayerSearch(properties, latLng);
+              }
+            });
+          } else {
+            parcelLayerSearch(properties, latLng);
+          }
         } else {
           toast.warning('Unable to find any details for the clicked location.');
         }
       });
     }
+  };
+
+  const parcelLayerSearch = (properties: any, latLng?: LatLng) => {
+    const response = properties.PID
+      ? parcelLayerService.findByPid(properties.PID)
+      : parcelLayerService.findByPin(properties.PIN);
+
+    handleParcelDataLayerResponse(response, dispatch, latLng);
   };
 
   React.useEffect(() => {
@@ -250,10 +258,9 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
         SidebarContextType.ADD_BARE_LAND,
       ].includes(context);
       droppedMarkerSearch(movingPinNameSpace, leafletMouseEvent?.latlng, isParcel);
-
       setMovingPinNameSpace(undefined);
     }
-  }, [dispatch, leafletMouseEvent]);
+  }, [dispatch, leafletMouseEvent, showSideBar]);
 
   /**
    * Only display the edit button if the user has the correct claim and the property is owned by their agency.

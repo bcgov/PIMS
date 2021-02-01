@@ -31,6 +31,7 @@ import * as API from 'constants/API';
 import useCodeLookups from 'hooks/useLookupCodes';
 import GenericModal from 'components/common/GenericModal';
 import { IFormParcel } from 'features/mapSideBar/containers/MapSideBarContainer';
+import ClickAwayListener from 'react-click-away-listener';
 
 interface IIdentificationProps {
   /** used for changign the agency - note that only select users will be able to edit this field */
@@ -44,7 +45,7 @@ interface IIdentificationProps {
   /** handle the population of Geocoder information */
   handleGeocoderChanges: (data: IGeocoderResponse, nameSpace?: string) => Promise<void>;
   /** help set the cursor type when click the add marker button */
-  setMovingPinNameSpace: (nameSpace: string) => void;
+  setMovingPinNameSpace: (nameSpace?: string) => void;
   /** handle the pid formatting on change */
   handlePidChange: (pid: string, nameSpace?: string) => void;
   /** handle the pin formatting on change */
@@ -101,14 +102,16 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
         </p>
         <Row>
           <Col className="marker-svg">
-            <SearchMarkerButton
-              onClick={(e: any) => {
-                setMovingPinNameSpace(nameSpace ?? '');
-                e.preventDefault();
-              }}
-            >
-              <ParcelDraftIcon className="parcel-icon" />
-            </SearchMarkerButton>
+            <ClickAwayListener onClickAway={() => setMovingPinNameSpace(undefined)}>
+              <SearchMarkerButton
+                onClick={(e: any) => {
+                  setMovingPinNameSpace(nameSpace ?? '');
+                  e.preventDefault();
+                }}
+              >
+                <ParcelDraftIcon className="parcel-icon" />
+              </SearchMarkerButton>
+            </ClickAwayListener>
           </Col>
         </Row>
       </Col>
