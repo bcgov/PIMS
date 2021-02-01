@@ -81,7 +81,7 @@ export const columns: ColumnWithProps<IProperty>[] = [
   },
   {
     Header: 'Assessed Value',
-    accessor: 'assessed',
+    accessor: 'assessedLand',
     Cell: MoneyCell,
     align: 'right',
     responsive: true,

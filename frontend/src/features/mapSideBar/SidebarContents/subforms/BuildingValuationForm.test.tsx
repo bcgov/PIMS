@@ -5,7 +5,7 @@ import { noop } from 'lodash';
 import { Formik } from 'formik';
 
 const form = (
-  <Formik initialValues={{ assessed: '' }} onSubmit={noop}>
+  <Formik initialValues={{ assessedLand: '' }} onSubmit={noop}>
     {(props: any) => <BuildingValuationForm formikProps={props} />}
   </Formik>
 );

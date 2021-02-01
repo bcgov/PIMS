@@ -112,10 +112,10 @@ namespace Pims.Dal.Entities.Models
         /// <param name="boundary"></param>
         public AllPropertyFilter(Envelope boundary)
         {
-            this.NELatitude = boundary.MaxY;
-            this.NELongitude = boundary.MaxX;
-            this.SWLatitude = boundary.MinY;
-            this.SWLongitude = boundary.MinX;
+            this.NELatitude = boundary?.MaxY;
+            this.NELongitude = boundary?.MaxX;
+            this.SWLatitude = boundary?.MinY;
+            this.SWLongitude = boundary?.MinX;
         }
 
         /// <summary>

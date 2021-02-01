@@ -25,7 +25,8 @@ describe('sub-form SumFinancialsForm functionality', () => {
     const financials: IFinancialYear[] = [
       {
         assessed: { key: EvaluationKeys.Assessed, value: 100, year: 2020 },
-        appraised: { key: EvaluationKeys.Appraised, value: 100, year: 2020 },
+        improvements: { key: EvaluationKeys.Improvements, value: 101, year: 2020 },
+        appraised: { key: EvaluationKeys.Appraised, value: 102, year: 2020 },
         market: { key: FiscalKeys.Market, value: 10000, year: 2020 },
         netbook: { key: FiscalKeys.NetBook, value: 100000, year: 2020 },
       },
@@ -41,15 +42,17 @@ describe('sub-form SumFinancialsForm functionality', () => {
     const financials: IFinancialYear[] = [
       {
         assessed: { key: EvaluationKeys.Assessed, value: 100, year: 2020 },
-        appraised: { key: EvaluationKeys.Appraised, value: 101, year: 2020 },
-        market: { key: FiscalKeys.Market, value: 102, year: 2020 },
-        netbook: { key: FiscalKeys.NetBook, value: 103, year: 2020 },
+        improvements: { key: EvaluationKeys.Improvements, value: 101, year: 2020 },
+        appraised: { key: EvaluationKeys.Appraised, value: 102, year: 2020 },
+        market: { key: FiscalKeys.Market, value: 103, year: 2020 },
+        netbook: { key: FiscalKeys.NetBook, value: 104, year: 2020 },
       },
       {
         assessed: { key: EvaluationKeys.Assessed, value: 100, year: 2019 },
-        appraised: { key: EvaluationKeys.Appraised, value: 101, year: 2019 },
-        market: { key: FiscalKeys.Market, value: 102, year: 2019 },
-        netbook: { key: FiscalKeys.NetBook, value: 103, year: 2019 },
+        improvements: { key: EvaluationKeys.Improvements, value: 101, year: 2019 },
+        appraised: { key: EvaluationKeys.Appraised, value: 102, year: 2019 },
+        market: { key: FiscalKeys.Market, value: 103, year: 2019 },
+        netbook: { key: FiscalKeys.NetBook, value: 104, year: 2019 },
       },
     ];
     const sumFinancialsForm = getSumFinancialsForm({ financials: financials });
@@ -62,9 +65,10 @@ describe('sub-form SumFinancialsForm functionality', () => {
       financials: [
         {
           assessed: { key: EvaluationKeys.Assessed, value: 100, year: 2020 },
-          appraised: { key: EvaluationKeys.Appraised, value: 101, year: 2020 },
-          market: { key: FiscalKeys.Market, value: 102, year: 2020 },
-          netbook: { key: FiscalKeys.NetBook, value: 103, year: 2020 },
+          improvements: { key: EvaluationKeys.Improvements, value: 101, year: 2020 },
+          appraised: { key: EvaluationKeys.Appraised, value: 102, year: 2020 },
+          market: { key: FiscalKeys.Market, value: 103, year: 2020 },
+          netbook: { key: FiscalKeys.NetBook, value: 104, year: 2020 },
         },
       ],
       buildings: [
@@ -72,9 +76,10 @@ describe('sub-form SumFinancialsForm functionality', () => {
           financials: [
             {
               assessed: { key: EvaluationKeys.Assessed, value: 100, year: 2020 },
-              appraised: { key: EvaluationKeys.Appraised, value: 101, year: 2020 },
-              market: { key: FiscalKeys.Market, value: 102, year: 2020 },
-              netbook: { key: FiscalKeys.NetBook, value: 103, year: 2020 },
+              improvements: { key: EvaluationKeys.Improvements, value: 101, year: 2020 },
+              appraised: { key: EvaluationKeys.Appraised, value: 102, year: 2020 },
+              market: { key: FiscalKeys.Market, value: 103, year: 2020 },
+              netbook: { key: FiscalKeys.NetBook, value: 104, year: 2020 },
             },
           ],
         },
@@ -90,9 +95,10 @@ describe('sub-form SumFinancialsForm functionality', () => {
       financials: [
         {
           assessed: { key: EvaluationKeys.Assessed, value: 100, year: 2020 },
-          appraised: { key: EvaluationKeys.Appraised, value: 101, year: 2020 },
-          market: { key: FiscalKeys.Market, value: 102, year: 2020 },
-          netbook: { key: FiscalKeys.NetBook, value: 103, year: 2020 },
+          improvements: { key: EvaluationKeys.Improvements, value: 101, year: 2020 },
+          appraised: { key: EvaluationKeys.Appraised, value: 102, year: 2020 },
+          market: { key: FiscalKeys.Market, value: 103, year: 2020 },
+          netbook: { key: FiscalKeys.NetBook, value: 104, year: 2020 },
         },
       ],
       buildings: [
@@ -100,9 +106,10 @@ describe('sub-form SumFinancialsForm functionality', () => {
           financials: [
             {
               assessed: { key: EvaluationKeys.Assessed, value: 100, year: 2019 },
-              appraised: { key: EvaluationKeys.Appraised, value: 101, year: 2019 },
-              market: { key: FiscalKeys.Market, value: 102, year: 2019 },
-              netbook: { key: FiscalKeys.NetBook, value: 103, year: 2019 },
+              improvements: { key: EvaluationKeys.Improvements, value: 101, year: 2019 },
+              appraised: { key: EvaluationKeys.Appraised, value: 102, year: 2019 },
+              market: { key: FiscalKeys.Market, value: 103, year: 2019 },
+              netbook: { key: FiscalKeys.NetBook, value: 104, year: 2019 },
             },
           ],
         },

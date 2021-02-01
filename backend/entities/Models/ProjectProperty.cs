@@ -1,8 +1,6 @@
-using System.Collections.Generic;
-
 namespace Pims.Dal.Entities.Models
 {
-    public class ProjectProperty : Pims.Dal.Entities.Views.Property
+    public class ProjectProperty : Views.Property
     {
         #region Properties
         /// <summary>
@@ -12,7 +10,7 @@ namespace Pims.Dal.Entities.Models
         #endregion
 
         #region Constructors
-        public ProjectProperty(Pims.Dal.Entities.Views.Property property)
+        public ProjectProperty(Views.Property property)
         {
             Id = property.Id;
             PropertyTypeId = property.PropertyTypeId;
@@ -41,9 +39,10 @@ namespace Pims.Dal.Entities.Models
             MarketFiscalYear = property.MarketFiscalYear;
             NetBook = property.NetBook;
             NetBookFiscalYear = property.NetBookFiscalYear;
-            Assessed = property.Assessed;
-            AssessedDate = property.AssessedDate;
-            AppraisedDate = property.AppraisedDate;
+            AssessedLand = property.AssessedLand;
+            AssessedLandDate = property.AssessedLandDate;
+            AssessedBuilding = property.AssessedBuilding;
+            AssessedBuildingDate = property.AssessedBuildingDate;
 
             PID = property.PID;
             PIN = property.PIN;

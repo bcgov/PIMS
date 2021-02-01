@@ -75,8 +75,13 @@ export const toFlatProject = (project?: IApiProject) => {
   }
   const flatProperties = project.properties.map(pp => {
     const apiProperty: IApiProperty = (pp.building ?? pp.parcel) as IApiProperty;
-    const assessed = getMostRecentEvaluation(apiProperty.evaluations, EvaluationKeys.Assessed);
-    const appraised = getMostRecentAppraisal(apiProperty.evaluations, project.disposedOn);
+    const assessedLand = pp.parcel
+      ? getMostRecentEvaluation(apiProperty.evaluations, EvaluationKeys.Assessed)
+      : null;
+    const assessedBuilding = getMostRecentEvaluation(
+      apiProperty.evaluations,
+      EvaluationKeys.Improvements,
+    );
     const netBook = getCurrentFiscal(apiProperty.fiscals, FiscalKeys.NetBook);
     const market = getCurrentFiscal(apiProperty.fiscals, FiscalKeys.Market);
     const property: IProperty = {
@@ -105,14 +110,14 @@ export const toFlatProject = (project?: IApiProject) => {
       administrativeArea: apiProperty.address?.administrativeArea ?? '',
       province: apiProperty.address?.province ?? '',
       postal: apiProperty.address?.postal ?? '',
-      assessed: (assessed?.value as number) ?? 0,
-      assessedDate: assessed?.date,
-      assessedFirm: assessed?.firm,
-      assessedRowVersion: assessed?.rowVersion,
-      appraised: (appraised?.value as number) ?? 0,
-      appraisedDate: appraised?.date,
-      appraisedFirm: appraised?.firm,
-      appraisedRowVersion: appraised?.rowVersion,
+      assessedLand: (assessedLand?.value as number) ?? 0,
+      assessedLandDate: assessedLand?.date,
+      assessedLandFirm: assessedLand?.firm,
+      assessedLandRowVersion: assessedLand?.rowVersion,
+      assessedBuilding: (assessedBuilding?.value as number) ?? 0,
+      assessedBuildingDate: assessedBuilding?.date,
+      assessedBuildingFirm: assessedBuilding?.firm,
+      assessedBuildingRowVersion: assessedBuilding?.rowVersion,
       netBook: (netBook?.value as number) ?? 0,
       netBookFiscalYear: netBook?.fiscalYear as number,
       netBookRowVersion: netBook?.rowVersion,
@@ -141,11 +146,15 @@ const getApiEvaluations = (property: IProperty): IEvaluation[] => {
   evaluations.push({
     parcelId: property.propertyTypeId === 0 ? property.id : undefined,
     buildingId: property.propertyTypeId === 1 ? property.id : undefined,
-    value: property.appraised,
-    date: property.appraisedDate ?? formatDate(new Date()),
-    rowVersion: property.appraisedRowVersion,
-    key: EvaluationKeys.Appraised,
-    firm: property.appraisedFirm ?? '',
+    value:
+      property.propertyTypeId === 0 ? property.assessedLand || 0 : property.assessedBuilding || 0,
+    date:
+      property.propertyTypeId === 0
+        ? property.assessedLandDate ?? formatDate(new Date())
+        : property.assessedBuildingDate ?? formatDate(new Date()),
+    rowVersion: property.assessedLandRowVersion,
+    key: EvaluationKeys.Assessed,
+    firm: property.assessedLandFirm ?? '',
   });
   evaluations.push({
     parcelId: property.propertyTypeId === 0 ? property.id : undefined,
@@ -156,9 +165,9 @@ const getApiEvaluations = (property: IProperty): IEvaluation[] => {
       property.propertyTypeId === 0
         ? property.assessedLandDate ?? formatDate(new Date())
         : property.assessedBuildingDate ?? formatDate(new Date()),
-    rowVersion: property.assessedRowVersion,
-    key: EvaluationKeys.Assessed,
-    firm: property.assessedFirm ?? '',
+    rowVersion: property.assessedLandRowVersion,
+    key: EvaluationKeys.Improvements,
+    firm: property.assessedLandFirm ?? '',
   });
 
   return evaluations;

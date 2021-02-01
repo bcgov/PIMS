@@ -340,7 +340,7 @@ export const AssociatedLandReviewPage: React.FC<any> = (props: IReviewProps) => 
                     <Label>Land value</Label>
                     <FastCurrencyInput
                       formikProps={formikProps}
-                      field={withNameSpace('financials.0.assessed.value', index)}
+                      field={withNameSpace('financials.0.assessedLand.value', index)}
                       disabled={parcelEditInfo.valuation}
                     />
                     <FastInput
@@ -375,7 +375,7 @@ export const AssociatedLandReviewPage: React.FC<any> = (props: IReviewProps) => 
                           ) || 0) +
                             (getIn(
                               formikProps.values,
-                              withNameSpace('financials.0.assessed.value', index),
+                              withNameSpace('financials.0.assessedLand.value', index),
                             ) || 0),
                         )}
                         disabled={true}

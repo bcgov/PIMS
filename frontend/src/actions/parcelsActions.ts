@@ -94,7 +94,8 @@ export interface IBuilding extends IProperty {
   agency: string;
   agencyCode: string;
   subAgency?: string;
-  assessed: number | '';
+  assessedLand: number | '';
+  assessedBuilding: number | '';
   evaluations: IEvaluation[];
   fiscals: IFiscal[];
   parcels: IParcel[];
@@ -126,7 +127,8 @@ export interface IFlatBuilding extends IProperty {
   agencyId: number | '';
   agency: string;
   agencyCode: string;
-  assessed: number | '';
+  assessedLand: number | '';
+  assessedBuilding: number | '';
   netBook: number | '';
   leasedLand: {
     type: LeasedLand;
@@ -168,7 +170,8 @@ export interface IParcel extends IProperty {
   agencyId: number | '';
   isSensitive: boolean;
   buildings: IBuilding[];
-  assessed: number | '';
+  assessedLand: number | '';
+  assessedBuilding: number | '';
   evaluations: IEvaluation[];
   fiscals: IFiscal[];
   rowVersion?: string;
@@ -190,7 +193,8 @@ export interface IFlatParcel extends IProperty {
   agencyId: number | '';
   isSensitive: boolean;
   buildings: IBuilding[];
-  assessed: number | '';
+  assessedLand: number | '';
+  assessedBuilding: number | '';
   netBook: number | '';
 }
 

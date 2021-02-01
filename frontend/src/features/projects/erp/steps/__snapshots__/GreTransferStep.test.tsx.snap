@@ -777,7 +777,7 @@ exports[`GRE Transfer Step renders correctly 1`] = `
                   }
                   title=""
                 >
-                  $1
+                  $0
                 </div>
                 <div
                   className="td clickable"
