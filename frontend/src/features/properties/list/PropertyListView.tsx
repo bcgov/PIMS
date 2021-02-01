@@ -510,7 +510,7 @@ const PropertyListView: React.FC = () => {
             });
             if (changedRows.length > 0) {
               for (const change of changedRows) {
-                const apiProperty = toApiProperty(change.data as any);
+                const apiProperty = toApiProperty(change.data as any, true);
                 const callApi = apiProperty.parcelId ? updateParcel : updateBuilding;
                 const response: any = await callApi(apiProperty.id, apiProperty);
                 nextProperties = nextProperties.map((item, index: number) => {
