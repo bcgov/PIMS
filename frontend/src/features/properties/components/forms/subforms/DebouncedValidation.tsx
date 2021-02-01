@@ -15,11 +15,15 @@ interface IDebouncedValidationProps {
 const DebouncedValidation = (props: IDebouncedValidationProps) => {
   const { validateForm, values } = useFormikContext();
   const validation = useCallback(
-    _.debounce((abort: boolean) => {
-      if (!abort) {
-        validateForm();
-      }
-    }, 400),
+    _.debounce(
+      (abort: boolean) => {
+        if (!abort) {
+          validateForm();
+        }
+      },
+      400,
+      { trailing: true },
+    ),
     [],
   );
 
