@@ -1,6 +1,32 @@
 kind: Template
 apiVersion: v1
 name: pims-storage-template
+parameters:
+  - name: NAME
+    displayName: "The Object Name"
+    description: "The name of the storage object."
+    required: true
+    value: "pims-db-file-storage"
+  - name: PROJECT_NAMESPACE
+    displayName: "OpenShift Project Namespace"
+    description: "The namespace of the OpenShift project containing the application."
+    required: true
+    value: "354028"
+  - name: ENV_NAME
+    displayName: "Environment name"
+    description: "The name for this environment [dev, test, prod]"
+    required: true
+    value: "dev"
+  - name: INSTANCE
+    displayName: "Unique Instance Idendification"
+    description: "A unique identifier to allow for multiple instances (i.e. '-01')."
+    value: ""
+  - name: VOLUME_CAPACITY
+    displayName: Persistent Volume Capacity
+    description: Volume space available for data, e.g. 512Mi, 2Gi.
+    required: true
+    value: "5Gi"
+
 objects:
   - kind: PersistentVolumeClaim
     apiVersion: v1
@@ -27,28 +53,3 @@ objects:
           storage: ${VOLUME_CAPACITY}
       storageClassName: netapp-file-standard
       volumeMode: Filesystem
-parameters:
-  - name: NAME
-    displayName: "The Object Name"
-    description: "The name of the storage object."
-    required: true
-    value: "pims-db-file-storage"
-  - name: PROJECT_NAMESPACE
-    displayName: "OpenShift Project Namespace"
-    description: "The namespace of the OpenShift project containing the application."
-    required: true
-    value: "354028"
-  - name: ENV_NAME
-    displayName: "Environment name"
-    description: "The name for this environment [dev, test, prod]"
-    required: true
-    value: "dev"
-  - name: INSTANCE
-    displayName: "Unique Instance Idendification"
-    description: "A unique identifier to allow for multiple instances (i.e. '-01')."
-    value: ""
-  - name: VOLUME_CAPACITY
-    displayName: Persistent Volume Capacity
-    description: Volume space available for data, e.g. 512Mi, 2Gi.
-    required: true
-    value: "5Gi"
