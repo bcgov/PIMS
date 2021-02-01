@@ -43,6 +43,7 @@ namespace Pims.Api.Areas.Property.Mapping.Search
                 .Map(dest => dest.AddressId, src => src.AddressId)
                 .Map(dest => dest.Address, src => src.Address)
                 .Map(dest => dest.AdministrativeArea, src => src.AdministrativeArea)
+                .Map(dest => dest.Classification, src => src.Classification)
                 .Map(dest => dest.Province, src => src.Province)
                 .Map(dest => dest.Postal, src => src.Postal)
                 .Map(dest => dest.IsSensitive, src => src.IsSensitive)
