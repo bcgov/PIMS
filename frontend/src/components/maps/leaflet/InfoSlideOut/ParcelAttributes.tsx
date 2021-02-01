@@ -44,10 +44,12 @@ export const ParcelAttributes: React.FC<IParcelAttributes> = ({
           {parcelInfo?.landArea + ' hectares'}
         </ListGroup.Item>
       </ListGroup>
-      <ListGroup>
-        <Label className="header">Legal description</Label>
-        <ListGroup.Item>{parcelInfo?.landLegalDescription}</ListGroup.Item>
-      </ListGroup>
+      {parcelInfo?.landLegalDescription && (
+        <ListGroup>
+          <Label className="header">Legal description</Label>
+          <ListGroup.Item>{parcelInfo?.landLegalDescription}</ListGroup.Item>
+        </ListGroup>
+      )}
       <ListGroup>
         <Label className="header">Valuation</Label>
         <ListGroup.Item>

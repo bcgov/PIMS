@@ -50,7 +50,11 @@ export const InfoContent: React.FC<IInfoContent> = ({
   return (
     <>
       <ListGroup>
-        <Label className="header">Parcel Identification</Label>
+        {propertyTypeId === PropertyTypes.PARCEL ? (
+          <Label className="header">Parcel Identification</Label>
+        ) : (
+          <Label className="header">Building Identification</Label>
+        )}
         {propertyTypeId === PropertyTypes.PARCEL && (
           <ParcelPIDPIN parcelInfo={propertyInfo as IParcel} />
         )}
