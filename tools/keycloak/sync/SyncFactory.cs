@@ -302,8 +302,20 @@ namespace Pims.Tools.Keycloak.Sync
             // This is useful when the database has been refreshed.
             var kusers = await _client.HandleGetAsync<KModel.UserModel[]>(_client.AdminRoute($"users"));
 
-            var users = await _client.HandleRequestAsync<PageModel<UserModel>>(HttpMethod.Get, $"{_options.Api.Uri}/admin/users?page=1&quantity=50"); // TODO: Handle paging.
-            foreach (var user in users?.Items)
+            var page = 1;
+            var quantity = 50;
+            var users = new List<UserModel>();
+            var pageOfUsers = await _client.HandleRequestAsync<PageModel<UserModel>>(HttpMethod.Get, $"{_options.Api.Uri}/admin/users?page={page}&quantity={quantity}"); // TODO: Replace paging with specific requests for a user.
+            users.AddRange(pageOfUsers.Items);
+
+            // Keep asking for pages of users until we have them all.
+            while (pageOfUsers.Items.Count() == quantity)
+            {
+                pageOfUsers = await _client.HandleRequestAsync<PageModel<UserModel>>(HttpMethod.Get, $"{_options.Api.Uri}/admin/users?page={++page}&quantity={quantity}");
+                users.AddRange(pageOfUsers.Items);
+            }
+
+            foreach (var user in users)
             {
                 var kuser = await GetUserAsync(user);
 
@@ -337,7 +349,7 @@ namespace Pims.Tools.Keycloak.Sync
 
             // Add keycloak users to PIMS.
             // Only add users who don't exist.
-            foreach (var kuser in kusers.Where(u => !users.Items.Any(pu => pu.Username == u.Username)))
+            foreach (var kuser in kusers.Where(u => !users.Any(pu => pu.Username == u.Username)))
             {
                 if (String.IsNullOrWhiteSpace(kuser.Email) || String.IsNullOrWhiteSpace(kuser.FirstName) || String.IsNullOrWhiteSpace(kuser.LastName))
                 {

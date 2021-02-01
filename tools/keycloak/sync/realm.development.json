@@ -17,7 +17,10 @@
         "Protocol": "openid-connect",
         "BearerOnly": true,
         "AuthorizationServicesEnabled": false,
-        "RedirectUris": ["https://pims-dev.pathfinder.gov.bc.ca/api/*"],
+        "RedirectUris": [
+          "https://pims-dev.pathfinder.gov.bc.ca/api/*",
+          "https://pims-dev.apps.silver.devops.gov.bc.ca/*"
+        ],
         "WebOrigins": ["*"],
         "Attributes": {
           "login_theme": "bcgov-v2"
@@ -40,12 +43,14 @@
         "RootUrl": "https://pims-dev.pathfinder.gov.bc.ca",
         "RedirectUris": [
           "https://pims-dev.pathfinder.gov.bc.ca/*",
-          "https://pims-dev-01.pathfinder.gov.bc.ca/*"
+          "https://pims-dev-01.pathfinder.gov.bc.ca/*",
+          "https://pims-dev.apps.silver.devops.gov.bc.ca/*"
         ],
         "BaseUrl": "/",
         "WebOrigins": [
           "https://pims-dev.pathfinder.gov.bc.ca",
-          "https://pims-dev-01.pathfinder.gov.bc.ca"
+          "https://pims-dev-01.pathfinder.gov.bc.ca",
+          "https://pims-dev.apps.silver.devops.gov.bc.ca"
         ],
         "ProtocolMappers": [
           {
@@ -234,7 +239,10 @@
         "ServiceAccountsEnabled": true,
         "AuthorizationServicesEnabled": false,
         "RootUrl": "https://pims-dev.pathfinder.gov.bc.ca/api",
-        "RedirectUris": ["https://pims-dev.pathfinder.gov.bc.ca/api/*"],
+        "RedirectUris": [
+          "https://pims-dev.pathfinder.gov.bc.ca/api/*",
+          "https://pims-dev.apps.silver.devops.gov.bc.ca/api/*"
+        ],
         "BaseUrl": "/",
         "WebOrigins": ["*"],
         "ServiceAccount": {
@@ -266,7 +274,10 @@
         "ServiceAccountsEnabled": true,
         "AuthorizationServicesEnabled": true,
         "RootUrl": "https://pims-dev.pathfinder.gov.bc.ca/api",
-        "RedirectUris": ["https://pims-dev.pathfinder.gov.bc.ca/api/*"],
+        "RedirectUris": [
+          "https://pims-dev.pathfinder.gov.bc.ca/api/*",
+          "https://pims-dev.apps.silver.devops.gov.bc.ca/api/*"
+        ],
         "BaseUrl": "/",
         "WebOrigins": ["*"],
         "ProtocolMappers": [
