@@ -163,9 +163,13 @@ namespace Pims.Dal.Services
 
             // A building should have a unique name within the parcel it is located on.
             building.Parcels.ForEach(pb => this.Context.ThrowIfNotUnique(pb.Parcel, building));
+            // SRES users allowed to overwrite
+            if (!this.User.HasPermission(Permissions.AdminProperties))
+            {
+                building.AgencyId = agency.Id;
+                building.Agency = agency;
+            }
 
-            building.AgencyId = agency.Id;
-            building.Agency = agency;
             building.Address.Province = this.Context.Provinces.Find(building.Address.ProvinceId);
             building.Classification = this.Context.PropertyClassifications.Find(building.ClassificationId);
             building.IsVisibleToOtherAgencies = false;
