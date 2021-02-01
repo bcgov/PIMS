@@ -253,7 +253,7 @@ interface ILandForm {
   /** to autopopulate fields based on Geocoder information */
   handleGeocoderChanges: (data: IGeocoderResponse) => Promise<void>;
   /** to change the user's cursor when adding a marker */
-  setMovingPinNameSpace: (nameSpace: string) => void;
+  setMovingPinNameSpace: (nameSpace?: string) => void;
   /** to autopopulate fields based on Geocoder information */
   handlePidChange: (pid: string) => void;
   /** help with formatting of the pin */

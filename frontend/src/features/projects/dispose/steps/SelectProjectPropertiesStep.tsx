@@ -87,7 +87,6 @@ const SelectProjectPropertiesStep = ({ isReadOnly, formikRef }: IStepProps) => {
   // Update filter to only show Surplus Active when clicked
   const handleShowSurplusClick = () => {
     setFilter({ ...filter, classificationId: Classifications.SurplusActive.toString() });
-    console.log(filter);
   };
 
   // Update filter to clear the classificationId when clicked

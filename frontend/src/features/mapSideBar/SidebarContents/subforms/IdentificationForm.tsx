@@ -34,7 +34,7 @@ interface IIdentificationProps {
   /** nameSpace passed down to access desired field */
   nameSpace?: any;
   /** used to determine which marker to set the cursor to when adding a new property */
-  setMovingPinNameSpace: (nameSpace: string) => void;
+  setMovingPinNameSpace: (nameSpace?: string) => void;
   /** whether the form fields on this page can be edited */
   disabled?: boolean;
 }
