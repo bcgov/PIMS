@@ -314,8 +314,9 @@ const LandForm: React.FC<IParentLandForm> = (props: IParentLandForm) => {
     data: { ...getInitialValues(), ...props.initialValues },
   };
   const isViewOrUpdate = !!initialValues?.data?.id;
-
-  initialValues.data.agencyId = keycloak.agencyId ?? '';
+  initialValues.data.agencyId = initialValues.data.agencyId
+    ? initialValues.data.agencyId
+    : keycloak.agencyId;
 
   /**
    * Combines yup validation with manual validation of financial data for performance reasons.
