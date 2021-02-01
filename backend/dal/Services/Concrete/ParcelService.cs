@@ -183,7 +183,7 @@ namespace Pims.Dal.Services
 
             this.Context.Parcels.ThrowIfNotUnique(parcel);
             // SRES users allowed to overwrite
-            if(!this.User.HasPermission(Permissions.AdminProperties))
+            if (!this.User.HasPermission(Permissions.AdminProperties))
             {
                 parcel.AgencyId = agency.Id;
                 parcel.Agency = agency;

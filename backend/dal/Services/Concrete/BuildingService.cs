@@ -375,7 +375,7 @@ namespace Pims.Dal.Services
         /// <returns></returns>
         public void Remove(Building building)
         {
-            building.ThrowIfNotAllowedToEdit(nameof(building), this.User, new[] { Permissions.PropertyEdit, Permissions.AdminProperties });
+            building.ThrowIfNotAllowedToEdit(nameof(building), this.User, new[] { Permissions.PropertyDelete, Permissions.AdminProperties });
             var isAdmin = this.User.HasPermission(Permissions.AdminProperties);
 
             var existingBuilding = this.Context.Buildings.Include(b => b.Evaluations).Include(b => b.Fiscals).Include(b => b.Parcels).FirstOrDefault(b => b.Id == building.Id) ?? throw new KeyNotFoundException();

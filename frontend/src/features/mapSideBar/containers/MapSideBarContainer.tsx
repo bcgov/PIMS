@@ -270,8 +270,9 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
       {disabled &&
         (keycloak.hasClaim(Claims.ADMIN_PROPERTIES) ||
           (keycloak.hasClaim(Claims.PROPERTY_EDIT) &&
-            (keycloak.agencyId === parcelDetail?.agencyId ||
-              keycloak.agencyId === buildingDetail?.agencyId) && (
+            ((parcelDetail?.agencyId && keycloak.agencyIds.includes(parcelDetail.agencyId)) ||
+              (buildingDetail?.agencyId &&
+                keycloak.agencyIds.includes(buildingDetail.agencyId))) && (
               <EditButton onClick={() => setDisabled(false)} />
             )))}
     </>
@@ -282,13 +283,12 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
    */
   const ConditionalDeleteButton = () => (
     <>
-      {disabled &&
-        (keycloak.hasClaim(Claims.ADMIN_PROPERTIES) ||
-          (keycloak.hasClaim(Claims.PROPERTY_DELETE) &&
-            (keycloak.agencyId === parcelDetail?.agencyId ||
-              keycloak.agencyId === buildingDetail?.agencyId) && (
-              <DeleteButton onClick={() => setShowDelete(true)} title="Delete Property" />
-            )))}
+      {keycloak.hasClaim(Claims.ADMIN_PROPERTIES) ||
+        (keycloak.hasClaim(Claims.PROPERTY_DELETE) &&
+          ((parcelDetail?.agencyId && keycloak.agencyIds.includes(parcelDetail.agencyId)) ||
+            (buildingDetail?.agencyId && keycloak.agencyIds.includes(buildingDetail.agencyId))) && (
+            <DeleteButton onClick={() => setShowDelete(true)} title="Delete Property" />
+          ))}
     </>
   );
 
