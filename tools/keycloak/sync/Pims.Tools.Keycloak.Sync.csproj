@@ -7,6 +7,7 @@
     <Version>0.1.0.0-alpha</Version>
     <AssemblyVersion>0.1.0.0</AssemblyVersion>
     <ProjectGuid>951EEA85-8BCA-4D88-9CA5-0453F447DFC5</ProjectGuid>
+    <Configurations>Debug;Release</Configurations>
   </PropertyGroup>
 
   <ItemGroup>
@@ -21,6 +22,7 @@
     <None Remove="appsettings.json" />
     <None Remove="appsettings.local.json" />
     <None Remove="appsettings.test.json" />
+    <None Remove="realm.development.json" />
     <None Remove="realm.json" />
     <None Remove="realm.local.json" />
     <None Remove="realm.test.json" />
@@ -48,6 +50,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="appsettings.test.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="realm.development.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="realm.json">

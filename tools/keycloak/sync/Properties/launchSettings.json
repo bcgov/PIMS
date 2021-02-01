@@ -1,0 +1,7 @@
+{
+  "profiles": {
+    "Pims.Tools.Keycloak.Sync": {
+      "commandName": "Project"
+    }
+  }
+}
