@@ -11,7 +11,6 @@ using Swashbuckle.AspNetCore.Annotations;
 using Entity = Pims.Dal.Entities;
 using Model = Pims.Api.Areas.Property.Models.Parcel;
 using Microsoft.AspNetCore.Http.Extensions;
-using Pims.Api.Areas.Admin.Models.Parcel;
 using Pims.Api.Helpers.Extensions;
 using Pims.Api.Helpers.Exceptions;
 using EModel = Pims.Dal.Entities.Models;
