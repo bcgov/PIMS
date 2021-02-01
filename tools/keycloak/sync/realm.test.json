@@ -17,7 +17,10 @@
         "Protocol": "openid-connect",
         "BearerOnly": true,
         "AuthorizationServicesEnabled": false,
-        "RedirectUris": ["https://pims-test.pathfinder.gov.bc.ca/api/*"],
+        "RedirectUris": [
+          "https://pims-test.pathfinder.gov.bc.ca/api/*",
+          "https://pims-test.apps.silver.devops.gov.bc.ca/*"
+        ],
         "WebOrigins": ["*"],
         "Attributes": {
           "login_theme": "bcgov-v2"
@@ -38,9 +41,15 @@
         "DirectAccessGrantsEnabled": true,
         "AuthorizationServicesEnabled": false,
         "RootUrl": "https://pims-test.pathfinder.gov.bc.ca",
-        "RedirectUris": ["https://pims-test.pathfinder.gov.bc.ca/*"],
+        "RedirectUris": [
+          "https://pims-test.pathfinder.gov.bc.ca/*",
+          "https://pims-test.apps.silver.devops.gov.bc.ca/*"
+        ],
         "BaseUrl": "/",
-        "WebOrigins": ["https://pims-test.pathfinder.gov.bc.ca"],
+        "WebOrigins": [
+          "https://pims-test.pathfinder.gov.bc.ca",
+          "https://pims-test.apps.silver.devops.gov.bc.ca"
+        ],
         "ProtocolMappers": [
           {
             "Name": "agencies",
@@ -228,7 +237,10 @@
         "ServiceAccountsEnabled": true,
         "AuthorizationServicesEnabled": false,
         "RootUrl": "https://pims-test.pathfinder.gov.bc.ca/api",
-        "RedirectUris": ["https://pims-test.pathfinder.gov.bc.ca/api/*"],
+        "RedirectUris": [
+          "https://pims-test.pathfinder.gov.bc.ca/api/*",
+          "https://pims-test.apps.silver.devops.gov.bc.ca/api/*"
+        ],
         "BaseUrl": "/",
         "WebOrigins": ["*"],
         "ServiceAccount": {
@@ -260,7 +272,10 @@
         "ServiceAccountsEnabled": true,
         "AuthorizationServicesEnabled": true,
         "RootUrl": "https://pims-test.pathfinder.gov.bc.ca/api",
-        "RedirectUris": ["https://pims-test.pathfinder.gov.bc.ca/api/*"],
+        "RedirectUris": [
+          "https://pims-test.pathfinder.gov.bc.ca/api/*",
+          "https://pims-test.apps.silver.devops.gov.bc.ca/api/*"
+        ],
         "BaseUrl": "/",
         "WebOrigins": ["*"],
         "ProtocolMappers": [

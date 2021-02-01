@@ -95,7 +95,7 @@ namespace Pims.Core.Http
         public async Task<string> RequestAccessToken()
         {
             HttpResponseMessage response;
-            if (_accessToken == null || String.IsNullOrWhiteSpace(_accessToken.AccessToken) || _tokenHandler.ReadJwtToken(_accessToken.RefreshToken).ValidTo <= DateTime.UtcNow)
+            if (_accessToken == null || String.IsNullOrWhiteSpace(_accessToken.AccessToken) || (!String.IsNullOrWhiteSpace(_accessToken.RefreshToken) && _tokenHandler.ReadJwtToken(_accessToken.RefreshToken).ValidTo <= DateTime.UtcNow))
             {
                 // If there is no access token, or the refresh token has expired.
                 response = await RequestToken();

@@ -6,6 +6,7 @@
     <Version>0.1.0.0-alpha</Version>
     <AssemblyVersion>0.1.0.0</AssemblyVersion>
     <ProjectGuid>AC8F04FF-3164-41FB-9EDF-E468B8B77837</ProjectGuid>
+    <Configurations>Debug;Release</Configurations>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="ClosedXML" Version="0.95.3" />
