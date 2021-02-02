@@ -82,9 +82,9 @@ const FillRemainingSpace = styled.span`
 `;
 
 export interface ISearchFields {
-  searchPid: string | '';
-  searchPin: string | '';
-  searchAddress: string | '';
+  searchPid: string;
+  searchPin: string;
+  searchAddress: string;
 }
 
 /**

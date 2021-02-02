@@ -25,7 +25,7 @@ export const truncate = (input: string, maxLength: number): string => {
  * Convert the specified 'input' value into a decimal or undefined.
  * @param input The string value to convert to a decimal.
  */
-export const decimalOrUndefined = (input: string | ''): number | undefined => {
+export const decimalOrUndefined = (input: string): number | undefined => {
   return input !== '' && input !== undefined ? parseInt(input, 10) : undefined;
 };
 
@@ -57,7 +57,7 @@ export const floatOrNull = (input: string): number | null => {
  * Convert the specified 'input' value into a float or undefined.
  * @param input The string value to convert to a float.
  */
-export const floatOrUndefined = (input: string | ''): number | undefined => {
+export const floatOrUndefined = (input: string): number | undefined => {
   return input !== '' && input !== undefined ? parseFloat(input) : undefined;
 };
 
