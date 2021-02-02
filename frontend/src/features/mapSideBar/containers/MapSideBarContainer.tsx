@@ -155,7 +155,7 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
   ) => {
     fetchParcelsDetail(pidOrPin)(dispatch).then(resp => {
       const matchingParcel: (IParcel & ISearchFields) | undefined = resp?.data?.length
-        ? _.first(resp?.data)
+        ? _.first(resp.data)
         : undefined;
       if (!!formikRef?.current?.values && !!matchingParcel?.id) {
         const { setValues, values } = formikRef.current;
