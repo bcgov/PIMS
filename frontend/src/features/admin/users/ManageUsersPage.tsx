@@ -25,6 +25,7 @@ import { formatApiDateTime, generateMultiSortCriteria } from 'utils';
 import styled from 'styled-components';
 import useCodeLookups from 'hooks/useLookupCodes';
 import { isEmpty } from 'lodash';
+import _ from 'lodash';
 
 const TableContainer = styled(Container)`
   margin-top: 10px;
@@ -95,6 +96,7 @@ export const ManageUsersPage = () => {
       agency: u.agencies && u.agencies.length > 0 ? u.agencies[0].name : '',
       position: u.position ?? '',
       lastLogin: formatApiDateTime(u.lastLogin),
+      createdOn: formatApiDateTime(u.createdOn),
     }),
   );
 
@@ -105,8 +107,13 @@ export const ManageUsersPage = () => {
         agencyLookups={agencies}
         rolesLookups={roles}
         onChange={value => {
-          (value as any)?.agency?.label
-            ? dispatch(getUsersFilterAction({ ...value, agency: (value as any).agency.label }))
+          (value as any)?.agency
+            ? dispatch(
+                getUsersFilterAction({
+                  ...value,
+                  agency: (_.find(agencies, { id: +(value as any)?.agency }) as any)?.name,
+                }),
+              )
             : dispatch(getUsersFilterAction({ ...value, agency: '' }));
           dispatch(getUsersPageIndexAction(0));
         }}

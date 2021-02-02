@@ -1,16 +1,21 @@
 import { useCallback } from 'react';
 import React from 'react';
 import { FormikProps } from 'formik';
-import { Form, FastInput } from 'components/common/form';
-import { latitudeTooltip } from '../strings';
+import { Form, FastInput, InputGroup } from 'components/common/form';
 import { ReactComponent as BuildingDraftIcon } from 'assets/images/draft-building-icon.svg';
 import { ReactComponent as ParcelDraftIcon } from 'assets/images/draft-parcel-icon.svg';
 import styled from 'styled-components';
+import { Label } from 'components/common/Label';
+import { Col, Row } from 'react-bootstrap';
+import ClickAwayListener from 'react-click-away-listener';
 
 interface LatLongFormProps {
-  setMovingPinNameSpace: (nameSpace: string) => void;
+  setMovingPinNameSpace: (nameSpace?: string) => void;
   nameSpace?: string;
   disabled?: boolean;
+  showLandArea?: boolean;
+  /** determine the text for the lat long for depending on where it is being called */
+  building?: boolean;
 }
 
 export const defaultLatLongValues: any = {
@@ -19,15 +24,12 @@ export const defaultLatLongValues: any = {
 };
 
 const DraftMarkerButton = styled.button`
-  position: absolute;
+  // position: absolute;
   top: 20px;
   right: 20px;
   border: 0px;
+  background-color: none;
   display: flex;
-  p {
-    width: 35px;
-    margin: 0;
-  }
 `;
 
 const LatLongForm = <T extends any>(props: LatLongFormProps & FormikProps<T>) => {
@@ -39,46 +41,81 @@ const LatLongForm = <T extends any>(props: LatLongFormProps & FormikProps<T>) =>
   );
 
   return (
-    <div style={{ position: 'relative' }}>
+    <div className="lat-long" style={{ position: 'relative' }}>
+      <Row>
+        <Col md={9}>
+          <div className="instruction" style={{ display: 'flex' }}>
+            {props.building && (
+              <p>
+                Drag and drop the pin on the map to mark the location of this building, or if you
+                already have the coordinates, you can enter them manually in the fields below.
+              </p>
+            )}
+            {!props.building && (
+              <p>
+                Drag and drop the pin on the map to mark the location of this parcel, or if you
+                already have the coordinates, you can enter them manually in the fields below.
+              </p>
+            )}
+          </div>
+        </Col>
+        <Col className="marker-svg">
+          <ClickAwayListener
+            onClickAway={() => {
+              props.setMovingPinNameSpace(undefined);
+            }}
+          >
+            <DraftMarkerButton
+              disabled={props.disabled}
+              onClick={(e: any) => {
+                props.setMovingPinNameSpace(props.nameSpace ?? '');
+                e.preventDefault();
+              }}
+            >
+              {props.building ? <BuildingDraftIcon /> : <ParcelDraftIcon className="parcel-icon" />}
+            </DraftMarkerButton>
+          </ClickAwayListener>
+        </Col>
+      </Row>
       <Form.Row>
-        <Form.Label>Latitude</Form.Label>
+        <Label>Latitude</Label>
         <FastInput
-          required
           className="input-medium"
           displayErrorTooltips
-          tooltip={latitudeTooltip}
           formikProps={props}
           disabled={props.disabled}
           type="number"
-          field={withNameSpace('latitude')}
+          field={props.showLandArea ? withNameSpace('data.latitude') : withNameSpace('latitude')}
+          required
         />
       </Form.Row>
       <Form.Row>
-        <Form.Label>Longitude</Form.Label>
+        <Label>Longitude</Label>
         <FastInput
-          required
           className="input-medium"
           displayErrorTooltips
           formikProps={props}
           disabled={props.disabled}
           type="number"
-          field={withNameSpace('longitude')}
+          field={props.showLandArea ? withNameSpace('data.longitude') : withNameSpace('longitude')}
+          required
         />
       </Form.Row>
-      <DraftMarkerButton
-        disabled={props.disabled}
-        onClick={(e: any) => {
-          props.setMovingPinNameSpace(props.nameSpace ?? '');
-          e.preventDefault();
-        }}
-      >
-        <p>Place Pin</p>
-        {props?.nameSpace?.includes('building') === true ? (
-          <BuildingDraftIcon />
-        ) : (
-          <ParcelDraftIcon />
-        )}
-      </DraftMarkerButton>
+      {props.showLandArea && (
+        <Form.Row>
+          <InputGroup
+            displayErrorTooltips
+            fast={true}
+            disabled={props.disabled}
+            label="Lot Size"
+            required
+            type="number"
+            field={withNameSpace('data.landArea')}
+            formikProps={props}
+            postText="Hectares"
+          />
+        </Form.Row>
+      )}
     </div>
   );
 };

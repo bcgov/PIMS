@@ -242,7 +242,7 @@ exports[`Manage Users Component Snapshot matches 1`] = `
         <div
           class="tr"
           role="row"
-          style="display: flex; flex: 1 0 auto; min-width: 880px;"
+          style="display: flex; flex: 1 0 auto; min-width: 980px;"
         >
           <div
             class="th reset-filter svg-btn"
@@ -257,6 +257,9 @@ exports[`Manage Users Component Snapshot matches 1`] = `
               class="sortable-column"
             >
               IDIR/BCeID
+              <span
+                style="flex: 1 1 auto;"
+              />
               <div
                 class="c1"
               >
@@ -300,6 +303,9 @@ exports[`Manage Users Component Snapshot matches 1`] = `
               class="sortable-column"
             >
               First name
+              <span
+                style="flex: 1 1 auto;"
+              />
               <div
                 class="c1"
               >
@@ -343,6 +349,9 @@ exports[`Manage Users Component Snapshot matches 1`] = `
               class="sortable-column"
             >
               Last name
+              <span
+                style="flex: 1 1 auto;"
+              />
               <div
                 class="c1"
               >
@@ -386,6 +395,9 @@ exports[`Manage Users Component Snapshot matches 1`] = `
               class="sortable-column"
             >
               Email
+              <span
+                style="flex: 1 1 auto;"
+              />
               <div
                 class="c1"
               >
@@ -429,6 +441,9 @@ exports[`Manage Users Component Snapshot matches 1`] = `
               class="sortable-column"
             >
               Position
+              <span
+                style="flex: 1 1 auto;"
+              />
               <div
                 class="c1"
               >
@@ -472,6 +487,9 @@ exports[`Manage Users Component Snapshot matches 1`] = `
               class="sortable-column"
             >
               Active
+              <span
+                style="flex: 1 1 auto;"
+              />
               <div
                 class="c1"
               >
@@ -515,6 +533,40 @@ exports[`Manage Users Component Snapshot matches 1`] = `
               class="sortable-column"
             >
               Agency
+              <span
+                style="flex: 1 1 auto;"
+              />
+              <div
+                class="c1"
+              >
+                <svg
+                  fill="currentColor"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  style="margin-bottom: -5px;"
+                  viewBox="0 0 512 512"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M128 320l128-128 128 128z"
+                  />
+                </svg>
+                <svg
+                  fill="currentColor"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 512 512"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M128 192l128 128 128-128z"
+                  />
+                </svg>
+              </div>
             </div>
           </div>
           <div
@@ -527,6 +579,9 @@ exports[`Manage Users Component Snapshot matches 1`] = `
               class="sortable-column"
             >
               Roles
+              <span
+                style="flex: 1 1 auto;"
+              />
             </div>
           </div>
           <div
@@ -539,6 +594,55 @@ exports[`Manage Users Component Snapshot matches 1`] = `
               class="sortable-column"
             >
               Last Login
+              <span
+                style="flex: 1 1 auto;"
+              />
+            </div>
+          </div>
+          <div
+            class="th"
+            colspan="1"
+            role="columnheader"
+            style="box-sizing: border-box; flex: 100 0 auto; min-width: 100px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+          >
+            <div
+              class="sortable-column"
+            >
+              Created On
+              <span
+                style="flex: 1 1 auto;"
+              />
+              <div
+                class="c1"
+              >
+                <svg
+                  fill="currentColor"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  style="margin-bottom: -5px;"
+                  viewBox="0 0 512 512"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M128 320l128-128 128 128z"
+                  />
+                </svg>
+                <svg
+                  fill="currentColor"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 512 512"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M128 192l128 128 128-128z"
+                  />
+                </svg>
+              </div>
             </div>
           </div>
           <div
@@ -551,6 +655,9 @@ exports[`Manage Users Component Snapshot matches 1`] = `
               class="sortable-column"
             >
                
+              <span
+                style="flex: 1 1 auto;"
+              />
             </div>
           </div>
         </div>
@@ -565,7 +672,7 @@ exports[`Manage Users Component Snapshot matches 1`] = `
           <div
             class="tr"
             role="row"
-            style="display: flex; flex: 1 0 auto; min-width: 880px;"
+            style="display: flex; flex: 1 0 auto; min-width: 980px;"
           >
             <div
               class="td"
@@ -656,6 +763,14 @@ exports[`Manage Users Component Snapshot matches 1`] = `
               
             </div>
             <div
+              class="td clickable"
+              role="cell"
+              style="box-sizing: border-box; flex: 100 0 auto; min-width: 100px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
+              title="Click IDIR/BCeID link to view User Information page"
+            >
+              
+            </div>
+            <div
               class="td"
               role="cell"
               style="box-sizing: border-box; flex: 75 0 auto; min-width: 30px; width: 75px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
@@ -731,7 +846,7 @@ exports[`Manage Users Component Snapshot matches 1`] = `
           <div
             class="tr"
             role="row"
-            style="display: flex; flex: 1 0 auto; min-width: 880px;"
+            style="display: flex; flex: 1 0 auto; min-width: 980px;"
           >
             <div
               class="td"
@@ -812,6 +927,14 @@ exports[`Manage Users Component Snapshot matches 1`] = `
               title="Click IDIR/BCeID link to view User Information page"
             >
               admin
+            </div>
+            <div
+              class="td clickable"
+              role="cell"
+              style="box-sizing: border-box; flex: 100 0 auto; min-width: 100px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
+              title="Click IDIR/BCeID link to view User Information page"
+            >
+              
             </div>
             <div
               class="td clickable"

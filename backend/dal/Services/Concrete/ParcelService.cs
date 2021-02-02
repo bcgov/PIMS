@@ -149,6 +149,7 @@ namespace Pims.Dal.Services
                 .Include(p => p.Buildings).ThenInclude(pb => pb.Building).ThenInclude(b => b.BuildingOccupantType)
                 .Include(p => p.Buildings).ThenInclude(pb => pb.Building).ThenInclude(b => b.Evaluations)
                 .Include(p => p.Buildings).ThenInclude(pb => pb.Building).ThenInclude(b => b.Fiscals)
+                .Include(p => p.Buildings).ThenInclude(pb => pb.Building).ThenInclude(b => b.Classification)
                 .FirstOrDefault(p => p.Id == id
                     && (ownsABuilding || isAdmin || p.IsVisibleToOtherAgencies || !p.IsSensitive || (viewSensitive && userAgencies.Contains(p.AgencyId)))) ?? throw new KeyNotFoundException();
 
@@ -181,9 +182,12 @@ namespace Pims.Dal.Services
                 throw new NotAuthorizedException("User must belong to an agency before adding parcels.");
 
             this.Context.Parcels.ThrowIfNotUnique(parcel);
-
-            parcel.AgencyId = agency.Id;
-            parcel.Agency = agency;
+            // SRES users allowed to overwrite
+            if (!this.User.HasPermission(Permissions.AdminProperties))
+            {
+                parcel.AgencyId = agency.Id;
+                parcel.Agency = agency;
+            }
             parcel.Address.Province = this.Context.Provinces.Find(parcel.Address.ProvinceId);
             parcel.Classification = this.Context.PropertyClassifications.Find(parcel.ClassificationId);
             parcel.IsVisibleToOtherAgencies = false;
@@ -213,6 +217,48 @@ namespace Pims.Dal.Services
         /// <returns></returns>
         public Parcel Update(Parcel parcel)
         {
+            PendingUpdate(parcel);
+            this.Context.SaveChanges();
+            this.Context.CommitTransaction();
+            return Get(parcel.Id);
+        }
+
+        /// <summary>
+        /// Update the specified parcel financial values in the datasource.
+        /// </summary>
+        /// <param name="parcel"></param>
+        /// <exception type="KeyNotFoundException">Entity does not exist in the datasource.</exception>
+        /// <returns></returns>
+        public Parcel UpdateFinancials(Parcel parcel)
+        {
+            parcel.ThrowIfNotAllowedToEdit(nameof(parcel), this.User, new[] { Permissions.PropertyEdit, Permissions.AdminProperties });
+            var isAdmin = this.User.HasPermission(Permissions.AdminProperties);
+
+            var originalParcel = this.Context.Parcels
+                .Include(p => p.Evaluations)
+                .Include(p => p.Fiscals)
+                .SingleOrDefault(p => p.Id == parcel.Id) ?? throw new KeyNotFoundException();
+
+            var userAgencies = this.User.GetAgencies();
+            var originalAgencyId = (int)this.Context.Entry(originalParcel).OriginalValues[nameof(Parcel.AgencyId)];
+            var allowEdit = isAdmin || userAgencies.Contains(originalAgencyId);
+            if (!allowEdit) throw new NotAuthorizedException("User may not edit parcels outside of their agency.");
+
+            this.Context.UpdateParcelFinancials(originalParcel, parcel.Evaluations, parcel.Fiscals);
+
+            this.Context.SetOriginalRowVersion(originalParcel);
+            this.Context.CommitTransaction();
+            return Get(parcel.Id);
+        }
+
+        /// <summary>
+        /// Update the specified parcel in the datasource, but do not commit the transaction.
+        /// </summary>
+        /// <param name="parcel"></param>
+        /// <exception type="KeyNotFoundException">Entity does not exist in the datasource.</exception>
+        /// <returns></returns>
+        public Parcel PendingUpdate(Parcel parcel)
+        {
             parcel.ThrowIfNotAllowedToEdit(nameof(parcel), this.User, new[] { Permissions.PropertyEdit, Permissions.AdminProperties });
             var isAdmin = this.User.HasPermission(Permissions.AdminProperties);
 
@@ -241,19 +287,17 @@ namespace Pims.Dal.Services
             // Only administrators can dispose a property.
             if (!isAdmin && parcel.ClassificationId == 4) throw new NotAuthorizedException("Parcel classification cannot be changed to disposed."); // TODO: Classification '4' should be a config settings.
 
-            this.ThrowIfNotAllowedToUpdate(originalParcel, _options.Project);
-
             // Users who don't own the parcel, but only own a building cannot update the parcel.
             if (allowEdit)
             {
-                this.Context.Entry(originalParcel).CurrentValues.SetValues(parcel);
                 this.Context.Entry(originalParcel.Address).CurrentValues.SetValues(parcel.Address);
+                this.Context.Entry(originalParcel).CurrentValues.SetValues(parcel);
                 this.Context.SetOriginalRowVersion(originalParcel);
             }
 
             foreach (var building in parcel.Buildings.Select(pb => pb.Building))
             {
-                // Check if the buildig already exists.
+                // Check if the building already exists.
                 var existingBuilding = originalParcel.Buildings
                     .FirstOrDefault(pb => pb.BuildingId == building.Id)?.Building;
 
@@ -280,80 +324,13 @@ namespace Pims.Dal.Services
 
                     this.Context.Entry(existingBuilding).CurrentValues.SetValues(building);
                     this.Context.Entry(existingBuilding.Address).CurrentValues.SetValues(building.Address);
-                    var updateProject = false;
-                    foreach (var buildingEvaluation in building.Evaluations)
-                    {
-                        var existingBuildingEvaluation = existingBuilding.Evaluations
-                            .FirstOrDefault(e => e.Date == buildingEvaluation.Date && e.Key == buildingEvaluation.Key);
-
-                        var updateEvaluation = existingBuildingEvaluation?.Value != buildingEvaluation.Value;
-                        updateProject = updateProject || updateEvaluation;
-                        if (existingBuildingEvaluation == null)
-                        {
-                            existingBuilding.Evaluations.Add(buildingEvaluation);
-                        }
-                        else if (updateEvaluation)
-                        {
-                            existingBuildingEvaluation.Note = buildingEvaluation.Note;
-                            existingBuildingEvaluation.Value = buildingEvaluation.Value;
-                        }
-                    }
-                    foreach (var buildingFiscal in building.Fiscals)
-                    {
-                        this.Context.Entry(existingBuilding).CurrentValues.SetValues(building);
-                        this.Context.Entry(existingBuilding.Address).CurrentValues.SetValues(building.Address);
-
-                        var existingBuildingFiscal = existingBuilding.Fiscals
-                            .FirstOrDefault(e => e.FiscalYear == buildingFiscal.FiscalYear && e.Key == buildingFiscal.Key);
-
-                        var updateFiscal = existingBuildingFiscal?.Value != buildingFiscal.Value;
-                        updateProject = updateProject || updateFiscal;
-                        if (existingBuildingFiscal == null)
-                        {
-                            existingBuilding.Fiscals.Add(buildingFiscal);
-                        }
-                        else if (updateFiscal)
-                        {
-                            existingBuildingFiscal.Note = buildingFiscal.Note;
-                            existingBuildingFiscal.Value = buildingFiscal.Value;
-                        }
-                    }
+                    this.Context.UpdateBuildingFinancials(existingBuilding, building.Evaluations, building.Fiscals);
                 }
             }
 
             if (allowEdit)
             {
-                foreach (var parcelEvaluation in parcel.Evaluations)
-                {
-                    var originalEvaluation = originalParcel.Evaluations
-                        .FirstOrDefault(e => e.Date == parcelEvaluation.Date && e.Key == parcelEvaluation.Key);
-
-                    if (originalEvaluation == null)
-                    {
-                        originalParcel.Evaluations.Add(parcelEvaluation);
-                    }
-                    else
-                    {
-                        originalEvaluation.Note = parcelEvaluation.Note;
-                        originalEvaluation.Value = parcelEvaluation.Value;
-                        originalEvaluation.Firm = parcelEvaluation.Firm;
-                    }
-                }
-                foreach (var parcelFiscal in parcel.Fiscals)
-                {
-                    var originalParcelFiscal = originalParcel.Fiscals
-                        .FirstOrDefault(e => e.FiscalYear == parcelFiscal.FiscalYear && e.Key == parcelFiscal.Key);
-
-                    if (originalParcelFiscal == null)
-                    {
-                        originalParcel.Fiscals.Add(parcelFiscal);
-                    }
-                    else
-                    {
-                        originalParcelFiscal.Note = parcelFiscal.Note;
-                        originalParcelFiscal.Value = parcelFiscal.Value;
-                    }
-                }
+                this.Context.UpdateParcelFinancials(originalParcel, parcel.Evaluations, parcel.Fiscals);
 
                 // Go through the existing buildings and see if they have been deleted from the updated parcel.
                 // If they have been removed, delete them from the datasource.
@@ -362,12 +339,10 @@ namespace Pims.Dal.Services
                     var updateBuilding = parcel.Buildings.FirstOrDefault(pb => pb.BuildingId == parcelBuilding.BuildingId);
                     if (updateBuilding == null)
                     {
-                        // TODO: This will delete the building from the datasource.  This isn't entirely ideal as it may be related to multiple parcels.
                         this.ThrowIfNotAllowedToUpdate(parcelBuilding.Building, _options.Project);
 
                         var parcelBuildings = this.Context.ParcelBuildings.Where(pb => pb.BuildingId == parcelBuilding.BuildingId).ToArray();
                         parcelBuildings.ForEach(pb => this.Context.ParcelBuildings.Remove(pb)); // Remove all relationships from other parcels to this building.
-                        this.Context.Buildings.Remove(parcelBuilding.Building);
                         parcel.Buildings.Remove(parcelBuilding);
 
                         continue;
@@ -410,8 +385,6 @@ namespace Pims.Dal.Services
                 }
             }
 
-            this.Context.SaveChanges();
-            this.Context.CommitTransaction();
             return Get(parcel.Id);
         }
 
@@ -451,7 +424,6 @@ namespace Pims.Dal.Services
                 this.Context.ParcelBuildings.Remove(b);
                 this.Context.BuildingEvaluations.RemoveRange(b.Building.Evaluations);
                 this.Context.BuildingFiscals.RemoveRange(b.Building.Fiscals);
-                this.Context.Buildings.Remove(b.Building);
             });
             this.Context.ParcelEvaluations.RemoveRange(originalParcel.Evaluations);
             this.Context.ParcelFiscals.RemoveRange(originalParcel.Fiscals);

@@ -20,4 +20,5 @@ export interface IUserRecord {
   roles?: string;
   position?: string;
   lastLogin?: string;
+  createdOn?: string;
 }

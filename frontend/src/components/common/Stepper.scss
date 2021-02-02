@@ -115,7 +115,7 @@ h6 {
   background-color: $completed-color;
 }
 
-.active .bs-stepper-circle {
+.active > button > .bs-stepper-circle {
   background-color: $active-color;
   width: 2.5em;
   height: 2.5em;

@@ -11,10 +11,10 @@ Enzyme.configure({ adapter: new Adapter() });
 describe('FastCurrencyInput', () => {
   it('fast currency input renders correctly', () => {
     const { container } = render(
-      <Formik initialValues={{ assessed: '' }} onSubmit={noop}>
+      <Formik initialValues={{ assessedLand: '' }} onSubmit={noop}>
         {props => (
           <Form>
-            <FastCurrencyInput formikProps={props} field={'assessed'} tooltip={'Tooltip'} />
+            <FastCurrencyInput formikProps={props} field={'assessedLand'} tooltip={'Tooltip'} />
           </Form>
         )}
       </Formik>,
@@ -24,10 +24,10 @@ describe('FastCurrencyInput', () => {
 
   it('fast currency input should not show tooltip', () => {
     const { container } = render(
-      <Formik initialValues={{ assessed: '' }} onSubmit={noop}>
+      <Formik initialValues={{ assessedLand: '' }} onSubmit={noop}>
         {props => (
           <Form>
-            <FastCurrencyInput formikProps={props} field={'assessed'} />
+            <FastCurrencyInput formikProps={props} field={'assessedLand'} />
           </Form>
         )}
       </Formik>,
@@ -38,10 +38,10 @@ describe('FastCurrencyInput', () => {
 
   it('fast currency input should show tooltip', () => {
     const { container } = render(
-      <Formik initialValues={{ assessed: '' }} onSubmit={noop}>
+      <Formik initialValues={{ assessedLand: '' }} onSubmit={noop}>
         {props => (
           <Form>
-            <FastCurrencyInput formikProps={props} field={'assessed'} tooltip="Test tooltip" />
+            <FastCurrencyInput formikProps={props} field={'assessedLand'} tooltip="Test tooltip" />
           </Form>
         )}
       </Formik>,
@@ -52,12 +52,12 @@ describe('FastCurrencyInput', () => {
 
   it('fast currency input custom placeholder', () => {
     const component = render(
-      <Formik initialValues={{ assessed: '' }} onSubmit={noop}>
+      <Formik initialValues={{ assessedLand: '' }} onSubmit={noop}>
         {props => (
           <Form>
             <FastCurrencyInput
               formikProps={props}
-              field={'assessed'}
+              field={'assessedLand'}
               tooltip="Test tooltip"
               placeholder="custom placeholder"
             />

@@ -637,7 +637,7 @@ namespace Pims.Dal.Test.Services
         #region Update Building
 
         [Fact]
-        public void Update_Building_LinkedToProject_NotAuthorized()
+        public void Update_Building_LinkedToProject_Allowed()
         {
             // Arrange
             var helper = new TestHelper();
@@ -645,10 +645,8 @@ namespace Pims.Dal.Test.Services
             var init = helper.InitializeDatabase(user);
             var project = init.CreateProject(1);
             project.ReportedFiscalYear = 2020;
-            var parcel = init.CreateParcel(1);
-            var building = init.CreateBuilding(parcel, 2);
+            var building = init.CreateBuilding(null, 2, agency: project.Agency);
             var fiscal = init.CreateFiscal(building, 2020, Entity.FiscalKeys.NetBook, 10);
-            project.AddProperty(parcel);
             project.AddProperty(building);
             init.SaveChanges();
 
@@ -658,8 +656,35 @@ namespace Pims.Dal.Test.Services
             // Act
             building.Name = "change";
 
+            // Assert, updating a building in a project should not throw an exception.
+            service.Update(building);
+        }
+
+        [Fact]
+        public void Update_BuildingFinancials()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.PropertyEdit).AddAgency(1);
+            var init = helper.InitializeDatabase(user);
+            var parcel = init.CreateParcel(3);
+            var building = init.CreateBuilding(parcel, 4);
+            init.SaveChanges();
+
+            var options = ControllerHelper.CreateDefaultPimsOptions();
+            var service = helper.CreateService<BuildingService>(user, options);
+
+            // Act
+            building.Evaluations.Add(new Entity.BuildingEvaluation(building, DateTime.Now, Entity.EvaluationKeys.Assessed, 1000));
+            building.Fiscals.Add(new Entity.BuildingFiscal(building, 2021, Entity.FiscalKeys.Market, 1000));
+            building.Fiscals.Add(new Entity.BuildingFiscal(building, 2021, Entity.FiscalKeys.NetBook, 2000));
+            var result = service.UpdateFinancials(building);
+
             // Assert
-            Assert.Throws<NotAuthorizedException>(() => service.Update(building));
+            Assert.NotNull(result);
+            Assert.Contains(result.Evaluations, e => e.Key == Entity.EvaluationKeys.Assessed && e.Value == 1000);
+            Assert.Contains(result.Fiscals, e => e.Key == Entity.FiscalKeys.Market && e.Value == 1000);
+            Assert.Contains(result.Fiscals, e => e.Key == Entity.FiscalKeys.NetBook && e.Value == 2000);
         }
         #endregion
         #endregion

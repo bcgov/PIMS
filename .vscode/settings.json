@@ -1,5 +1,5 @@
 {
-  "dotnet-test-explorer.testProjectPath": "./test/BackendApi.Test",
+  "dotnet-test-explorer.testProjectPath": "./backend",
   "csharpfixformat.style.braces.onSameLine": false,
   "sqltools.connections": [
     {

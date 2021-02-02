@@ -1,153 +1,225 @@
-import moment from 'moment';
-import { FastCurrencyInput } from 'components/common/form';
+import { FastCurrencyInput, FastDatePicker } from 'components/common/form';
 import React from 'react';
-import { useFormikContext } from 'formik';
-import _ from 'lodash';
-import { sumFinancials } from './SumFinancialsForm';
-import { IFinancialYear } from './EvaluationForm';
-import { formatMoney, formatFiscalYear } from 'utils';
+import { useFormikContext, getIn } from 'formik';
+import { formatFiscalYear, formatMoney } from 'utils';
+import { FaBuilding } from 'react-icons/fa';
+import { LandSvg } from 'components/common/Icons';
+import moment from 'moment';
+import { indexOfFinancial } from './EvaluationForm';
+import { EvaluationKeys } from 'constants/evaluationKeys';
+import { FiscalKeys } from 'constants/fiscalKeys';
+const currentMoment = moment();
+const currentYear = currentMoment.year();
 
 const getEditableMoneyCell = (disabled: boolean | undefined, namespace: string, type: string) => {
   return (cellInfo: any) => {
+    //get the desired year using the current year - the offset
+    const desiredYear = currentYear - cellInfo.row.index;
     const context = useFormikContext();
-    if (disabled) {
-      return cellInfo.value ?? null;
+    const { values } = context;
+    const data = getIn(values, namespace);
+    let financialIndex = indexOfFinancial(data, type, desiredYear);
+
+    if (disabled && financialIndex >= 0) {
+      const value = getIn(values, `${namespace}.${financialIndex}.value`);
+      return typeof value === 'number' ? formatMoney(value) : null;
     }
-    return type === 'assessed' && cellInfo.row.values['assessed.year'] > moment().year() ? (
-      'N/A'
-    ) : (
+    return (
       <FastCurrencyInput
-        key={`${namespace}.${cellInfo.row.index}.${type}.value`}
+        key={`${namespace}.${financialIndex}.value`}
         formikProps={context}
-        field={`${namespace}.${cellInfo.row.index}.${type}.value`}
+        field={`${namespace}.${financialIndex}.value`}
         disabled={disabled}
       />
     );
   };
 };
 
-const getSummedAssessed = (year: number, context: any, financials: IFinancialYear[]) => {
-  return sumFinancials(
-    financials.map(x => x.assessed),
-    year,
-  ).Assessed;
+/**
+ * Create a formik date picker using the passed cellinfo to get the associated data.
+ * This information is only editable if this cell belongs to a parcel row.
+ * @param cellInfo provided by react table
+ */
+const getEditableDatePickerCell = (
+  namespace: string = 'properties',
+  field: string,
+  type: string,
+  disabled?: boolean,
+) => (cellInfo: any) => {
+  //get the desired year using the current year - the offset
+  const desiredYear = currentYear - cellInfo.row.index;
+  const context = useFormikContext();
+  const { values } = context;
+  const data = getIn(values, namespace);
+  let financialIndex = indexOfFinancial(data, type, desiredYear);
+  return (
+    <FastDatePicker
+      formikProps={context}
+      disabled={disabled}
+      field={`${namespace}.${financialIndex}.${field}`}
+    ></FastDatePicker>
+  );
 };
 
-const getImprovements = () => {
+const getFiscalYear = () => {
   return (cellInfo: any) => {
-    const context = useFormikContext<any>();
-    const year = cellInfo.row.values['assessed.year'];
-    const allFinancials = [..._.flatten(_.map(context.values?.buildings ?? [], 'financials'))];
-    const total = getSummedAssessed(year, context, allFinancials);
-    const improvement = total - cellInfo.row.values['assessed.value'];
-    return improvement > 0 ? formatMoney(improvement) : null;
+    const desiredYear = currentYear - cellInfo.row.index;
+    return formatFiscalYear(desiredYear);
   };
 };
 
-const getFiscalYear = (field: string) => {
-  return (cellInfo: any) => {
-    return formatFiscalYear(cellInfo.row.values[field]);
-  };
-};
-
-const getTotal = () => {
-  return (cellInfo: any) => {
-    const context = useFormikContext<any>();
-    const year = cellInfo.row.values['assessed.year'];
-    const allFinancials = [
-      ...(context.values?.financials ?? []),
-      ..._.flatten(_.map(context.values?.buildings ?? [], 'financials')),
-    ];
-    const total = getSummedAssessed(year, context, allFinancials);
-    return total > 0 ? formatMoney(total) : null;
-  };
-};
-
-const getType = (isParcel: boolean) => {
-  if (isParcel) return 'Land';
-  return 'Building';
-};
-
-export const getEvaluationCols = (
+export const getAssessedCols = (
+  title: string,
   isParcel: boolean,
   disabled?: boolean,
   namespace = 'financials',
-  includeSums?: boolean,
+  includeImprovements?: boolean,
 ): any => {
   const basicAssessed = [
     {
-      Header: 'Year',
-      accessor: 'assessed.year', // accessor is the "key" in the data
-      maxWidth: 50,
+      Header: 'Assessment Year',
+      accessor: 'year', // accessor is the "key" in the data
+      maxWidth: 90,
       align: 'left',
     },
     {
-      Header: getType(isParcel),
+      Header: title,
       accessor: 'assessed.value',
       maxWidth: 140,
       align: 'left',
-      Cell: getEditableMoneyCell(disabled, namespace, 'assessed'),
+      Cell: getEditableMoneyCell(disabled, `${namespace}.evaluations`, EvaluationKeys.Assessed),
     },
   ];
-  const sumAssessed = [
+  const improvements = [
     {
-      Header: 'Improvements',
-      accessor: 'assessed.improvements',
+      Header: 'Buildings',
+      accessor: 'improvements.value',
       maxWidth: 140,
       align: 'left',
-      Cell: getImprovements(),
-    },
-    {
-      Header: 'Total',
-      accessor: 'assessed.total',
-      maxWidth: 140,
-      align: 'left',
-      Cell: getTotal(),
+      Cell: getEditableMoneyCell(disabled, `${namespace}.evaluations`, EvaluationKeys.Improvements),
     },
   ];
-  const otherColumns = [
+  if (includeImprovements) {
+    return [{ Header: 'Assessed Value', columns: [...basicAssessed, ...improvements] }];
+  } else {
+    return [{ Header: 'Assessed Value', columns: [...basicAssessed] }];
+  }
+};
+
+export const getNetbookCols = (disabled?: boolean, namespace = 'financials'): any => {
+  const netbookCols = [
     {
       Header: 'Net Book Value',
       columns: [
         {
           Header: 'Fiscal Year',
+          className: 'year',
           accessor: 'netbook.fiscalYear',
           maxWidth: 50,
           align: 'left',
-          Cell: getFiscalYear('netbook.fiscalYear'),
+          Cell: getFiscalYear(),
         },
         {
-          Header: 'Value',
+          Header: 'Effective Date',
+          accessor: 'netbook.effectiveDate',
+          maxWidth: 140,
+          align: 'left',
+          Cell: getEditableDatePickerCell(
+            `${namespace}.fiscals`,
+            `effectiveDate`,
+            FiscalKeys.NetBook,
+            disabled,
+          ),
+        },
+        {
+          Header: 'Net Book Value',
           accessor: 'netbook.value',
           maxWidth: 140,
           align: 'left',
-          Cell: getEditableMoneyCell(disabled, namespace, 'netbook'),
-        },
-      ],
-    },
-    {
-      Header: 'Estimated Market Value',
-      columns: [
-        {
-          Header: 'Fiscal Year',
-          accessor: 'market.fiscalYear',
-          maxWidth: 50,
-          align: 'left',
-          Cell: getFiscalYear('market.fiscalYear'),
-        },
-        {
-          Header: 'Value',
-          accessor: 'market.value',
-          maxWidth: 140,
-          align: 'left',
-          Cell: getEditableMoneyCell(disabled, namespace, 'market'),
+          Cell: getEditableMoneyCell(disabled, `${namespace}.fiscals`, FiscalKeys.NetBook),
         },
       ],
     },
   ];
-  if (includeSums) {
-    return [{ Header: 'Assessed', columns: [...basicAssessed, ...sumAssessed] }, ...otherColumns];
-  } else {
-    return [{ Header: 'Assessed', columns: [...basicAssessed] }, ...otherColumns];
-  }
+  return netbookCols;
+};
+
+export const getAssociatedLandCols = (): any => {
+  const associatedLandCols = [
+    {
+      Header: 'Type',
+      accessor: '',
+      maxWidth: 50,
+      align: 'left',
+      Cell: () => <LandSvg className="svg" />,
+    },
+    {
+      Header: 'Property Name',
+      accessor: 'name',
+      maxWidth: 140,
+      align: 'left',
+    },
+    {
+      Header: 'Classification',
+      accessor: 'classification',
+      maxWidth: 140,
+      align: 'left',
+    },
+    {
+      Header: 'Street Address',
+      accessor: 'address.line1',
+      maxWidth: 140,
+      align: 'left',
+    },
+    {
+      Header: 'Lot Size(ha)',
+      accessor: 'landArea',
+      maxWidth: 140,
+      align: 'left',
+    },
+    {
+      Header: 'Location',
+      accessor: 'address.administrativeArea',
+      maxWidth: 140,
+      align: 'left',
+    },
+  ];
+  return associatedLandCols;
+};
+
+export const getAssociatedBuildingsCols = (): any => {
+  const associatedBuildingsCols = [
+    {
+      Header: 'Type',
+      accessor: '',
+      maxWidth: 50,
+      align: 'left',
+      Cell: () => <FaBuilding size={24}></FaBuilding>,
+    },
+    {
+      Header: 'Property Name',
+      accessor: 'name',
+      maxWidth: 140,
+      align: 'left',
+    },
+    {
+      Header: 'Classifications',
+      accessor: 'classification',
+      maxWidth: 140,
+      align: 'left',
+    },
+    {
+      Header: 'Street Address',
+      accessor: 'address.line1',
+      maxWidth: 140,
+      align: 'left',
+    },
+    {
+      Header: 'Location',
+      accessor: 'address.administrativeArea',
+      maxWidth: 140,
+      align: 'left',
+    },
+  ];
+  return associatedBuildingsCols;
 };

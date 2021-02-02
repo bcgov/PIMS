@@ -1,4 +1,4 @@
-import React, { memo, useEffect } from 'react';
+import React, { CSSProperties, memo, useEffect } from 'react';
 import { Col, Form, FormControlProps } from 'react-bootstrap';
 import { getIn, FormikProps } from 'formik';
 import { DisplayError } from './DisplayError';
@@ -37,6 +37,8 @@ type OptionalAttributes = {
   tooltip?: string;
   /** Display errors in a tooltip instead of in a div */
   displayErrorTooltips?: boolean;
+  /** Determine style of input if needed */
+  style?: CSSProperties;
 };
 
 // only "field" is required for <Input>, the rest are optional
@@ -61,6 +63,7 @@ export const FastInput: React.FC<FastInputProps> = memo(
     onBlurFormatter,
     tooltip,
     displayErrorTooltips,
+    style,
     formikProps: {
       values,
       errors,
@@ -104,7 +107,7 @@ export const FastInput: React.FC<FastInputProps> = memo(
             as={asElement}
             name={field}
             className={className}
-            required={required}
+            style={style!}
             disabled={disabled}
             custom={custom}
             isInvalid={!!touch && !!error}
@@ -122,7 +125,7 @@ export const FastInput: React.FC<FastInputProps> = memo(
             {...rest}
           />
         </TooltipWrapper>
-        <DisplayError field={field} />
+        {!displayErrorTooltips && <DisplayError field={field} />}
       </Form.Group>
     );
   },

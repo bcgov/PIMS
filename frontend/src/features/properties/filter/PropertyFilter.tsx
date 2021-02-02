@@ -140,6 +140,7 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
             </Col>
             <Col className="map-filter-typeahead">
               <AsyncTypeahead
+                disabled={findMoreOpen}
                 isLoading={initialLoad}
                 id={`name-field`}
                 placeholder="Enter a name"

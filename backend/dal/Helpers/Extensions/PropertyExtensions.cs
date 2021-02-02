@@ -16,6 +16,7 @@ namespace Pims.Dal.Helpers.Extensions
     {
         /// <summary>
         /// Generate a query for the specified 'filter'.
+        /// Only includes properties that belong to the user's agency or sub-agencies.
         /// </summary>
         /// <param name="context"></param>
         /// <param name="user"></param>
@@ -52,9 +53,9 @@ namespace Pims.Dal.Helpers.Extensions
                 query = (from p in query
                          join pb in context.ParcelBuildings
                             on p.Id equals pb.ParcelId into ppbGroup
-                      from pb in ppbGroup.DefaultIfEmpty()
-                      where pb == null && p.PropertyTypeId == Entity.PropertyTypes.Land
-                      select p);
+                         from pb in ppbGroup.DefaultIfEmpty()
+                         where pb == null && p.PropertyTypeId == Entity.PropertyTypes.Land
+                         select p);
 
             if (filter.NELatitude.HasValue && filter.NELongitude.HasValue && filter.SWLatitude.HasValue && filter.SWLongitude.HasValue)
             {
@@ -74,11 +75,11 @@ namespace Pims.Dal.Helpers.Extensions
             if (filter.ClassificationId.HasValue)
                 query = query.Where(p => p.ClassificationId == filter.ClassificationId);
             if (!String.IsNullOrWhiteSpace(filter.ProjectNumber))
-                query = query.Where(p => EF.Functions.Like(p.ProjectNumber, $"{filter.ProjectNumber}%"));
+                query = query.Where(p => p.ProjectNumbers.Contains(filter.ProjectNumber));
             if (filter.IgnorePropertiesInProjects == true)
-                query = query.Where(p => p.ProjectNumber == null);
+                query = query.Where(p => p.ProjectNumbers == null || p.ProjectNumbers == "[]");
             if (filter.InSurplusPropertyProgram == true)
-                query = query.Where(p => !String.IsNullOrWhiteSpace(p.ProjectNumber));
+                query = query.Where(p => !String.IsNullOrWhiteSpace(p.ProjectNumbers) && p.ProjectNumbers != "[]");
             if (!String.IsNullOrWhiteSpace(filter.Description))
                 query = query.Where(p => EF.Functions.Like(p.Description, $"%{filter.Description}%"));
             if (!String.IsNullOrWhiteSpace(filter.Name))
@@ -125,9 +126,9 @@ namespace Pims.Dal.Helpers.Extensions
                 query = query.Where(p => p.Market <= filter.MaxMarketValue);
 
             if (filter.MinAssessedValue.HasValue)
-                query = query.Where(p => p.Assessed >= filter.MinAssessedValue);
+                query = query.Where(p => p.AssessedLand >= filter.MinAssessedValue || p.AssessedBuilding >= filter.MinAssessedValue);
             if (filter.MaxAssessedValue.HasValue)
-                query = query.Where(p => p.Assessed <= filter.MaxAssessedValue);
+                query = query.Where(p => p.AssessedLand <= filter.MaxAssessedValue || p.AssessedBuilding <= filter.MaxAssessedValue);
 
             if (filter.InEnhancedReferralProcess.HasValue && filter.InEnhancedReferralProcess.Value)
             {
@@ -138,7 +139,7 @@ namespace Pims.Dal.Helpers.Extensions
                 query = query.Where(property =>
                     context.Projects.Any(project =>
                         statuses.Any(st => st == project.StatusId)
-                            && project.ProjectNumber == property.ProjectNumber));
+                            && property.ProjectNumbers.Contains(project.ProjectNumber)));
             }
 
             if (filter.Sort?.Any() == true)
@@ -146,6 +147,145 @@ namespace Pims.Dal.Helpers.Extensions
             else
                 query = query.OrderBy(p => p.AgencyCode).ThenBy(p => p.PID).ThenBy(p => p.PIN).ThenBy(p => p.PropertyTypeId);
 
+            return query;
+        }
+
+
+        /// <summary>
+        /// Generate a query for the specified 'filter'.
+        /// Returns all properties, even properties that don't belong to the user's agency or sub-agencies.
+        /// The results of this query must be 'cleaned' so that only appropriate data is returned to API.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="user"></param>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        public static IQueryable<Entity.Views.Property> GenerateAllPropertyQuery(this PimsContext context, ClaimsPrincipal user, Entity.Models.AllPropertyFilter filter)
+        {
+            filter.ThrowIfNull(nameof(filter));
+            filter.ThrowIfNull(nameof(user));
+
+            var userAgencies = user.GetAgenciesAsNullable();
+            var isAdmin = user.HasPermission(Permissions.AdminProperties);
+            var viewSensitive = user.HasPermission(Permissions.SensitiveView);
+
+            // Users may only view sensitive properties if they have the `sensitive-view` claim and belong to the owning agency.
+            var query = context.Properties
+                .AsNoTracking()
+                .Where(p => p.ClassificationId != 4); // Disposed properties are not visible.
+
+            // Users are not allowed to view sensitive properties outside of their agency or sub-agencies.
+            if (!isAdmin)
+                query = query.Where(p => !p.IsSensitive || (p.IsSensitive && userAgencies.Contains(p.AgencyId)));
+
+            // Only return properties owned by user's agency or sub-agencies.
+            if (!filter.IncludeAllProperties)
+                query = query.Where(p => userAgencies.Contains(p.AgencyId));
+
+            if (filter.PropertyType.HasValue)
+                query = query.Where(p => p.PropertyTypeId == filter.PropertyType.Value);
+
+            if (filter.RentableArea.HasValue)
+                query = query.Where(p => p.RentableArea == filter.RentableArea);
+
+            if (filter.BareLandOnly == true)
+                query = (from p in query
+                         join pb in context.ParcelBuildings
+                            on p.Id equals pb.ParcelId into ppbGroup
+                         from pb in ppbGroup.DefaultIfEmpty()
+                         where pb == null && p.PropertyTypeId == Entity.PropertyTypes.Land
+                         select p);
+
+            if (filter.NELatitude.HasValue && filter.NELongitude.HasValue && filter.SWLatitude.HasValue && filter.SWLongitude.HasValue)
+            {
+                var poly = new NetTopologySuite.Geometries.Envelope(filter.NELongitude.Value, filter.SWLongitude.Value, filter.NELatitude.Value, filter.SWLatitude.Value).ToPolygon();
+                query = query.Where(p => poly.Contains(p.Location));
+            }
+
+            if (filter.Agencies?.Any() == true)
+            {
+                // TODO: Ideally this list would be provided by the frontend, as it is expensive to do it here.
+                // Get list of sub-agencies for any agency selected in the filter.
+                var filterAgencies = filter.Agencies.Select(a => (int?)a);
+                var agencies = filterAgencies.Concat(context.Agencies.AsNoTracking().Where(a => filterAgencies.Contains(a.Id)).SelectMany(a => a.Children.Select(ac => (int?)ac.Id)).ToArray()).Distinct();
+                query = query.Where(p => agencies.Contains(p.AgencyId));
+            }
+            if (filter.ParcelId.HasValue)
+                query = query.Where(p => p.ParcelId == filter.ParcelId);
+            if (filter.ClassificationId.HasValue)
+                query = query.Where(p => p.ClassificationId == filter.ClassificationId);
+            if (!String.IsNullOrWhiteSpace(filter.ProjectNumber))
+                query = query.Where(p => EF.Functions.Like(p.ProjectNumbers, $"{filter.ProjectNumber}%"));
+            if (filter.IgnorePropertiesInProjects == true)
+                query = query.Where(p => p.ProjectNumbers == null);
+            if (filter.InSurplusPropertyProgram == true)
+                query = query.Where(p => !String.IsNullOrWhiteSpace(p.ProjectNumbers));
+            if (!String.IsNullOrWhiteSpace(filter.Description))
+                query = query.Where(p => EF.Functions.Like(p.Description, $"%{filter.Description}%"));
+            if (!String.IsNullOrWhiteSpace(filter.Name))
+                query = query.Where(p => EF.Functions.Like(p.Name, $"%{filter.Name}%"));
+
+            if (!String.IsNullOrWhiteSpace(filter.PID))
+            {
+                var pidValue = filter.PID.Replace("-", "").Trim();
+                if (Int32.TryParse(pidValue, out int pid))
+                    query = query.Where(p => p.PID == pid || p.PIN == pid);
+            }
+            if (!String.IsNullOrWhiteSpace(filter.AdministrativeArea))
+                query = query.Where(p => EF.Functions.Like(p.AdministrativeArea, $"%{filter.AdministrativeArea}%"));
+            if (!String.IsNullOrWhiteSpace(filter.Zoning))
+                query = query.Where(p => EF.Functions.Like(p.Zoning, $"%{filter.Zoning}%"));
+            if (!String.IsNullOrWhiteSpace(filter.ZoningPotential))
+                query = query.Where(p => EF.Functions.Like(p.ZoningPotential, $"%{filter.ZoningPotential}%"));
+
+            if (filter.ConstructionTypeId.HasValue)
+                query = query.Where(p => p.BuildingConstructionTypeId == filter.ConstructionTypeId);
+            if (filter.PredominateUseId.HasValue)
+                query = query.Where(p => p.BuildingPredominateUseId == filter.PredominateUseId);
+            if (filter.FloorCount.HasValue)
+                query = query.Where(p => p.BuildingFloorCount == filter.FloorCount);
+            if (!String.IsNullOrWhiteSpace(filter.Tenancy))
+                query = query.Where(p => EF.Functions.Like(p.BuildingTenancy, $"%{filter.Tenancy}%"));
+
+            if (!String.IsNullOrWhiteSpace(filter.Address))
+                query = query.Where(p => EF.Functions.Like(p.Address, $"%{filter.Address}%") || EF.Functions.Like(p.AdministrativeArea, $"%{filter.Address}%"));
+
+            if (filter.MinLandArea.HasValue)
+                query = query.Where(p => p.LandArea >= filter.MinLandArea);
+            if (filter.MaxLandArea.HasValue)
+                query = query.Where(b => b.LandArea <= filter.MaxLandArea);
+
+            if (filter.MinRentableArea.HasValue)
+                query = query.Where(p => p.RentableArea >= filter.MinRentableArea);
+            if (filter.MaxRentableArea.HasValue)
+                query = query.Where(b => b.RentableArea <= filter.MaxRentableArea);
+
+            if (filter.MinMarketValue.HasValue)
+                query = query.Where(p => p.Market >= filter.MinMarketValue);
+            if (filter.MaxMarketValue.HasValue)
+                query = query.Where(p => p.Market <= filter.MaxMarketValue);
+
+            if (filter.MinAssessedValue.HasValue)
+                query = query.Where(p => p.AssessedLand >= filter.MinAssessedValue || p.AssessedBuilding >= filter.MinAssessedValue);
+            if (filter.MaxAssessedValue.HasValue)
+                query = query.Where(p => p.AssessedLand <= filter.MaxAssessedValue || p.AssessedBuilding <= filter.MaxAssessedValue);
+
+            if (filter.InEnhancedReferralProcess.HasValue && filter.InEnhancedReferralProcess.Value)
+            {
+                var statuses = context.Workflows.Where(w => w.Code == "ERP")
+                    .SelectMany(w => w.Status).Where(x => !x.Status.IsTerminal)
+                    .Select(x => x.StatusId).Distinct().ToArray();
+
+                query = query.Where(property =>
+                    context.Projects.Any(project =>
+                        statuses.Any(st => st == project.StatusId)
+                            && property.ProjectNumbers.Contains(project.ProjectNumber)));
+            }
+
+            if (filter.Sort?.Any() == true)
+                query = query.OrderByProperty(filter.Sort);
+            else
+                query = query.OrderBy(p => p.AgencyCode).ThenBy(p => p.PID).ThenBy(p => p.PIN).ThenBy(p => p.PropertyTypeId);
 
             return query;
         }
@@ -175,14 +315,14 @@ namespace Pims.Dal.Helpers.Extensions
             {
                 DateTime? mostRecentDate = null;
                 DateTime? date = null;
-                if (property is Entity.Parcel)
+                if (property is Entity.Parcel parcel)
                 {
-                    mostRecentDate = ((Entity.Parcel)property).Evaluations.Where(d => d.Key == key).OrderByDescending(d => d.Date).FirstOrDefault()?.Date;
+                    mostRecentDate = parcel.Evaluations.Where(d => d.Key == key).OrderByDescending(d => d.Date).FirstOrDefault()?.Date;
                     date = ((Entity.Parcel)updatedProperty).Evaluations.FirstOrDefault(e => e.Key == key)?.Date;
                 }
-                else if (property is Entity.Building)
+                else if (property is Entity.Building building)
                 {
-                    mostRecentDate = ((Entity.Building)property).Evaluations.Where(d => d.Key == key).OrderByDescending(d => d.Date).FirstOrDefault()?.Date;
+                    mostRecentDate = building.Evaluations.Where(d => d.Key == key).OrderByDescending(d => d.Date).FirstOrDefault()?.Date;
                     date = ((Entity.Building)updatedProperty).Evaluations.FirstOrDefault(e => e.Key == key)?.Date;
                 }
                 //If the date passed in is the most recent, we don't need to do any removal logic.
@@ -191,13 +331,13 @@ namespace Pims.Dal.Helpers.Extensions
                     continue;
                 }
                 var maxDate = (disposedOn ?? date)?.AddYears(1);
-                if (property is Entity.Parcel)
+                if (property is Entity.Parcel parcelProperty)
                 {
-                    ((Entity.Parcel)property).Evaluations.RemoveAll(e => e.Date > date && e.Date < maxDate && key == e.Key);
+                    parcelProperty.Evaluations.RemoveAll(e => e.Date > date && e.Date < maxDate && key == e.Key);
                 }
-                else if (property is Entity.Building)
+                else if (property is Entity.Building building)
                 {
-                    ((Entity.Building)property).Evaluations.RemoveAll(e => e.Date > date && e.Date < maxDate && key == e.Key);
+                    building.Evaluations.RemoveAll(e => e.Date > date && e.Date < maxDate && key == e.Key);
                 }
             }
         }

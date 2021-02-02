@@ -1,7 +1,7 @@
 kind: Template
 apiVersion: v1
 metadata:
-  name: elasticsearch-deploy
+  name: elasticsearch
   annotations:
     openshift.io/display-name: Elasticsearch
     description: Deployment template for Elasticsearch
@@ -28,27 +28,55 @@ parameters:
     required: true
     value: "354028"
 
+  - name: IMAGE
+    displayName: "Source Image URL"
+    description: "The URL and tag given to the built image that will be deployed."
+    required: true
+    value: "docker.elastic.co/elasticsearch/elasticsearch:7.9.3"
   - name: ELASTICSEARCH_DOMAIN
     displayName: "Elasticsearch Domain"
     description: "Elastic search domain"
     required: true
-    value: "pims-elastic.silver.devops.gov.bc.ca"
+    value: "pims-elastic.apps.silver.devops.gov.bc.ca"
   - name: ELASTIC_PASSWORD
     displayName: "Elasticsearch Password"
     description: "Elastic search bootstrap password"
     from: '[\w]{5}_[\w]{15}_1aB!'
     generate: expression
+
+  - name: VOLUME_CAPACITY
+    displayName: Persistent Volume Capacity
+    description: Volume space available for data, e.g. 512Mi, 2Gi.
+    required: true
+    value: "5Gi"
+
+  - name: CPU_REQUEST
+    displayName: "CPU Request"
+    description: "Starting amount of CPU the container can use."
+    value: "100m"
+  - name: CPU_LIMIT
+    displayName: "CPU Limit"
+    description: "Maximum amount of CPU the container can use."
+    value: "1"
+  - name: MEMORY_REQUEST
+    displayName: "Memory Request"
+    description: "Starting amount of memory the container can use."
+    value: "500Mi"
+  - name: MEMORY_LIMIT
+    displayName: "Memory Limit"
+    description: "Maximum amount of memory the container can use."
+    value: "4Gi"
 objects:
   # Elasticsearch Password.
   - kind: Secret
     apiVersion: v1
     metadata:
-      name: ${APP_NAME}-secret
+      name: ${APP_NAME}
       namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
       annotations:
         description: "Elasticsearch bootstrap password"
       labels:
-        name: ${APP_NAME}-secret
+        name: ${APP_NAME}
         app: ${APP_NAME}
         role: ${ROLE_NAME}
         env: ${ENV_NAME}
@@ -57,13 +85,13 @@ objects:
       ELASTIC_PASSWORD: ${ELASTIC_PASSWORD}
 
   # Elasticsearch configuration settings.
-  - apiVersion: v1
-    kind: ConfigMap
+  - kind: ConfigMap
+    apiVersion: v1
     metadata:
-      name: ${APP_NAME}-config
+      name: ${APP_NAME}
       namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
       labels:
-        name: ${APP_NAME}-config
+        name: ${APP_NAME}
         app: ${APP_NAME}
         role: ${ROLE_NAME}
         env: ${ENV_NAME}
@@ -72,13 +100,13 @@ objects:
         xpack.security.enabled: true
 
   # Elasticsearch pod port configuration.
-  - apiVersion: v1
-    kind: Service
+  - kind: Service
+    apiVersion: v1
     metadata:
-      name: ${APP_NAME}-service
+      name: ${APP_NAME}
       namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
       labels:
-        name: ${APP_NAME}-service
+        name: ${APP_NAME}
         app: ${APP_NAME}
         role: ${ROLE_NAME}
         env: ${ENV_NAME}
@@ -96,17 +124,17 @@ objects:
   - kind: Route
     apiVersion: v1
     metadata:
-      name: ${APP_NAME}-route
+      name: ${APP_NAME}
       namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
       labels:
-        name: ${APP_NAME}-route
+        name: ${APP_NAME}
         app: ${APP_NAME}
         role: ${ROLE_NAME}
         env: ${ENV_NAME}
     spec:
       host: ${ELASTICSEARCH_DOMAIN}
       to:
-        name: ${APP_NAME}-service
+        name: ${APP_NAME}
         kind: Service
         weight: 100
       tls:
@@ -116,10 +144,10 @@ objects:
   - kind: "PersistentVolumeClaim"
     apiVersion: v1
     metadata:
-      name: ${APP_NAME}-block-storage
+      name: ${APP_NAME}
       namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
       labels:
-        name: ${APP_NAME}-block-storage
+        name: ${APP_NAME}
         app: ${APP_NAME}
         role: ${ROLE_NAME}
         env: ${ENV_NAME}
@@ -129,12 +157,12 @@ objects:
         - ReadWriteOnce
       resources:
         requests:
-          storage: 16Gi
-    volumeName: ${APP_NAME}-block-storage
+          storage: ${VOLUME_CAPACITY}
+    volumeName: ${APP_NAME}
 
   # How the pod will be deployed.
-  - apiVersion: v1
-    kind: DeploymentConfig
+  - kind: DeploymentConfig
+    apiVersion: v1
     metadata:
       name: ${APP_NAME}
       namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
@@ -158,7 +186,7 @@ objects:
         spec:
           containers:
             - name: ${APP_NAME}
-              image: docker.elastic.co/elasticsearch/elasticsearch:7.9.3
+              image: ${IMAGE}
               env:
                 - name: discovery.type
                   value: single-node
@@ -169,27 +197,31 @@ objects:
                 - name: ELASTIC_PASSWORD
                   valueFrom:
                     secretKeyRef:
-                      name: ${APP_NAME}-secret
+                      name: ${APP_NAME}
                       key: ELASTIC_PASSWORD
-              resources:
-                limits:
-                  memory: "1000Mi"
               ports:
                 - containerPort: 9300
                   name: transport
                 - containerPort: 9200
                   name: client
+              resources:
+                requests:
+                  cpu: ${CPU_REQUEST}
+                  memory: ${MEMORY_REQUEST}
+                limits:
+                  cpu: ${CPU_LIMIT}
+                  memory: ${MEMORY_LIMIT}
               volumeMounts:
                 - name: config-volume
                   mountPath: /usr/share/elasticsearch/config/elasticsearch.yml
                   readOnly: true
                   subPath: elasticsearch.yml
-                - name: ${APP_NAME}-volume
+                - name: ${APP_NAME}
                   mountPath: /usr/share/elasticsearch/data
           volumes:
             - name: config-volume
               configMap:
-                name: ${APP_NAME}-config
-            - name: ${APP_NAME}-volume
+                name: ${APP_NAME}
+            - name: ${APP_NAME}
               persistentVolumeClaim:
-                claimName: ${APP_NAME}-block-storage
+                claimName: ${APP_NAME}

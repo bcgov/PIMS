@@ -1,0 +1,1298 @@
+kind: Template
+apiVersion: v1
+metadata:
+  name: grafana
+  annotations:
+    openshift.io/display-name: Grafana
+    description: Deployment template for Grafana
+    tags: grafana,monitor
+parameters:
+  - name: APP_NAME
+    displayName: "App Name"
+    description: "The name of the application."
+    required: true
+    value: "grafana"
+  - name: ROLE_NAME
+    displayName: "Component Role Name"
+    description: "The name of the application component role (e.g web, api, database)."
+    required: true
+    value: "monitor"
+  - name: ENV_NAME
+    displayName: "Environment name"
+    description: "The name for this environment [dev, test, prod, tools]"
+    required: true
+    value: "tools"
+  - name: PROJECT_NAMESPACE
+    displayName: "OpenShift Project Namespace"
+    description: "The namespace of the OpenShift project containing the application."
+    required: true
+    value: "354028"
+
+  - name: IMAGE
+    displayName: "Source Image URL"
+    description: "The URL and tag given to the built image that will be deployed."
+    required: true
+    value: "grafana/grafana"
+  - name: GRAFANA_DOMAIN
+    displayName: Domain Name
+    description: Prometheus route domain name
+    required: true
+    value: "pims-grafana.apps.silver.devops.gov.bc.ca"
+  - name: GF_USERS_AUTO_ASSIGN_ORG_ROLE
+    displayName: Grafana Default User Role
+    description: Grafana Default User Role
+    required: true
+    value: "Admin"
+
+  - name: PROMETHEUS_URL
+    displayName: Prometheus URL
+    description: Prometheus datasource URL
+    required: true
+    value: "https://pims-prometheus.apps.silver.devops.gov.bc.ca"
+
+  - name: CPU_REQUEST
+    displayName: "CPU Request"
+    description: "Starting amount of CPU the container can use."
+    value: "100m"
+  - name: CPU_LIMIT
+    displayName: "CPU Limit"
+    description: "Maximum amount of CPU the container can use."
+    value: "1"
+  - name: MEMORY_REQUEST
+    displayName: "Memory Request"
+    description: "Starting amount of memory the container can use."
+    value: "500Mi"
+  - name: MEMORY_LIMIT
+    displayName: "Memory Limit"
+    description: "Maximum amount of memory the container can use."
+    value: "4Gi"
+
+objects:
+  # Configuration settings.
+  - kind: ConfigMap
+    apiVersion: v1
+    metadata:
+      name: ${APP_NAME}-dashboards
+      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
+      labels:
+        name: ${APP_NAME}-dashboards
+        app: ${APP_NAME}
+        role: ${ROLE_NAME}
+        env: ${ENV_NAME}
+    data:
+      dashboards-provider.yaml: |-
+        apiVersion: 1
+        providers:
+          #  an unique provider name
+          - name: 'pims-dashboards'
+            #  org id. will default to orgId 1 if not specified
+            orgId: 1
+            #  name of the dashboard folder. Required
+            folder: ''
+            #  folder UID. will be automatically generated if not specified
+            folderUid: ''
+            #  provider type. Required
+            type: file
+            #  disable dashboard deletion
+            disableDeletion: false
+            #  enable dashboard editing
+            editable: true
+            #  how often Grafana will scan for changed dashboards
+            updateIntervalSeconds: 10
+            #  allow updating provisioned dashboards from the UI
+            allowUiUpdates: true
+            options:
+              #  path to dashboard files on disk. Required
+              path: /dashboards
+
+  # Configuration settings for datasources.
+  - kind: ConfigMap
+    apiVersion: v1
+    metadata:
+      name: ${APP_NAME}-sources
+      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
+      annotations:
+        description: Grafana datasource configuration
+      labels:
+        name: ${APP_NAME}-sources
+        app: ${APP_NAME}
+        role: ${ROLE_NAME}
+        env: ${ENV_NAME}
+    type: Opaque
+    data:
+      datasources.yml: |-
+        apiVersion: 1
+        datasources:
+        - name: Prometheus
+          type: prometheus
+          access: proxy
+          url: ${PROMETHEUS_URL}
+
+  - kind: ConfigMap
+    apiVersion: v1
+    metadata:
+      name: ${APP_NAME}-predefined-dashboards
+      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
+      labels:
+        name: ${APP_NAME}-predefined-dashboards
+        app: ${APP_NAME}
+        role: ${ROLE_NAME}
+        env: ${ENV_NAME}
+    data:
+      pimsalldashboard.json: |-
+        {
+          "annotations": {
+            "list": [
+              {
+                "builtIn": 1,
+                "datasource": "-- Grafana --",
+                "enable": true,
+                "hide": true,
+                "iconColor": "rgba(0, 211, 255, 1)",
+                "name": "Annotations & Alerts",
+                "type": "dashboard"
+              }
+            ]
+          },
+          "editable": true,
+          "gnetId": 10427,
+          "graphTooltip": 0,
+          "id": 1,
+          "iteration": 1603819073413,
+          "links": [],
+          "panels": [
+            {
+              "aliasColors": {},
+              "bars": false,
+              "dashLength": 10,
+              "dashes": false,
+              "datasource": "Prometheus",
+              "description": "",
+              "fieldConfig": {
+                "defaults": {
+                  "custom": {},
+                  "links": []
+                },
+                "overrides": []
+              },
+              "fill": 1,
+              "fillGradient": 0,
+              "gridPos": {
+                "h": 6,
+                "w": 14,
+                "x": 0,
+                "y": 0
+              },
+              "hiddenSeries": false,
+              "id": 20,
+              "legend": {
+                "avg": false,
+                "current": false,
+                "max": false,
+                "min": false,
+                "show": true,
+                "total": false,
+                "values": false
+              },
+              "lines": true,
+              "linewidth": 1,
+              "links": [],
+              "nullPointMode": "connected",
+              "options": {
+                "alertThreshold": true
+              },
+              "percentage": false,
+              "pluginVersion": "7.2.2",
+              "pointradius": 2,
+              "points": false,
+              "renderer": "flot",
+              "seriesOverrides": [],
+              "spaceLength": 10,
+              "stack": false,
+              "steppedLine": false,
+              "targets": [
+                {
+                  "expr": "sum(increase(http_request_duration_seconds_bucket[$interval])) by (le)",
+                  "format": "heatmap",
+                  "interval": "",
+                  "intervalFactor": 1,
+                  "legendFormat": "{{le}}",
+                  "refId": "A"
+                }
+              ],
+              "thresholds": [],
+              "timeFrom": null,
+              "timeRegions": [],
+              "timeShift": null,
+              "title": "The duration of HTTP requests",
+              "tooltip": {
+                "shared": true,
+                "sort": 0,
+                "value_type": "individual"
+              },
+              "type": "graph",
+              "xaxis": {
+                "buckets": null,
+                "mode": "time",
+                "name": null,
+                "show": true,
+                "values": []
+              },
+              "yaxes": [
+                {
+                  "format": "short",
+                  "label": null,
+                  "logBase": 1,
+                  "max": null,
+                  "min": null,
+                  "show": true
+                },
+                {
+                  "format": "short",
+                  "label": null,
+                  "logBase": 1,
+                  "max": null,
+                  "min": null,
+                  "show": true
+                }
+              ],
+              "yaxis": {
+                "align": false,
+                "alignLevel": null
+              }
+            },
+            {
+              "aliasColors": {},
+              "bars": false,
+              "cacheTimeout": null,
+              "dashLength": 10,
+              "dashes": false,
+              "datasource": "Prometheus",
+              "decimals": null,
+              "description": "",
+              "fieldConfig": {
+                "defaults": {
+                  "custom": {},
+                  "links": []
+                },
+                "overrides": []
+              },
+              "fill": 1,
+              "fillGradient": 0,
+              "gridPos": {
+                "h": 6,
+                "w": 6,
+                "x": 14,
+                "y": 0
+              },
+              "hiddenSeries": false,
+              "id": 6,
+              "interval": "",
+              "legend": {
+                "alignAsTable": true,
+                "avg": false,
+                "current": true,
+                "max": true,
+                "min": false,
+                "show": true,
+                "total": false,
+                "values": true
+              },
+              "lines": true,
+              "linewidth": 1,
+              "links": [],
+              "nullPointMode": "connected",
+              "options": {
+                "alertThreshold": true
+              },
+              "percentage": false,
+              "pluginVersion": "7.2.2",
+              "pointradius": 2,
+              "points": false,
+              "renderer": "flot",
+              "seriesOverrides": [],
+              "spaceLength": 10,
+              "stack": false,
+              "steppedLine": false,
+              "targets": [
+                {
+                  "expr": "http_requests_in_progress",
+                  "format": "time_series",
+                  "intervalFactor": 1,
+                  "legendFormat": "{{job}}",
+                  "refId": "A"
+                }
+              ],
+              "thresholds": [],
+              "timeFrom": null,
+              "timeRegions": [],
+              "timeShift": null,
+              "title": "Requests currently in progress",
+              "tooltip": {
+                "shared": true,
+                "sort": 0,
+                "value_type": "individual"
+              },
+              "type": "graph",
+              "xaxis": {
+                "buckets": null,
+                "mode": "time",
+                "name": null,
+                "show": true,
+                "values": []
+              },
+              "yaxes": [
+                {
+                  "decimals": 0,
+                  "format": "short",
+                  "label": "",
+                  "logBase": 1,
+                  "max": null,
+                  "min": "0",
+                  "show": true
+                },
+                {
+                  "format": "short",
+                  "label": "",
+                  "logBase": 1,
+                  "max": null,
+                  "min": null,
+                  "show": true
+                }
+              ],
+              "yaxis": {
+                "align": false,
+                "alignLevel": null
+              }
+            },
+            {
+              "cacheTimeout": null,
+              "colorBackground": false,
+              "colorValue": false,
+              "colors": [
+                "#299c46",
+                "rgba(237, 129, 40, 0.89)",
+                "#d44a3a"
+              ],
+              "datasource": "Prometheus",
+              "decimals": null,
+              "description": "",
+              "fieldConfig": {
+                "defaults": {
+                  "custom": {}
+                },
+                "overrides": []
+              },
+              "format": "dateTimeAsIso",
+              "gauge": {
+                "maxValue": 100,
+                "minValue": 0,
+                "show": false,
+                "thresholdLabels": false,
+                "thresholdMarkers": true
+              },
+              "gridPos": {
+                "h": 6,
+                "w": 4,
+                "x": 20,
+                "y": 0
+              },
+              "id": 2,
+              "interval": "",
+              "links": [],
+              "mappingType": 1,
+              "mappingTypes": [
+                {
+                  "name": "value to text",
+                  "value": 1
+                },
+                {
+                  "name": "range to text",
+                  "value": 2
+                }
+              ],
+              "maxDataPoints": 100,
+              "nullPointMode": "connected",
+              "nullText": null,
+              "pluginVersion": "6.2.2",
+              "postfix": "",
+              "postfixFontSize": "50%",
+              "prefix": "",
+              "prefixFontSize": "50%",
+              "rangeMaps": [
+                {
+                  "from": "null",
+                  "text": "N/A",
+                  "to": "null"
+                }
+              ],
+              "sparkline": {
+                "fillColor": "rgba(31, 118, 189, 0.18)",
+                "full": false,
+                "lineColor": "rgb(31, 120, 193)",
+                "show": false
+              },
+              "tableColumn": "",
+              "targets": [
+                {
+                  "expr": "process_start_time_seconds{instance =~ \"$instances\"} * 1000",
+                  "format": "time_series",
+                  "intervalFactor": 1,
+                  "legendFormat": "",
+                  "refId": "A"
+                }
+              ],
+              "thresholds": "",
+              "timeFrom": null,
+              "timeShift": null,
+              "title": "Start time of the process",
+              "type": "singlestat",
+              "valueFontSize": "80%",
+              "valueMaps": [
+                {
+                  "op": "=",
+                  "text": "Error",
+                  "value": "null"
+                }
+              ],
+              "valueName": "current"
+            },
+            {
+              "aliasColors": {},
+              "bars": false,
+              "dashLength": 10,
+              "dashes": false,
+              "datasource": "Prometheus",
+              "fieldConfig": {
+                "defaults": {
+                  "custom": {},
+                  "links": []
+                },
+                "overrides": []
+              },
+              "fill": 1,
+              "fillGradient": 0,
+              "gridPos": {
+                "h": 7,
+                "w": 8,
+                "x": 0,
+                "y": 6
+              },
+              "hiddenSeries": false,
+              "id": 18,
+              "interval": "",
+              "legend": {
+                "alignAsTable": false,
+                "avg": false,
+                "current": true,
+                "max": true,
+                "min": false,
+                "show": true,
+                "total": false,
+                "values": true
+              },
+              "lines": true,
+              "linewidth": 1,
+              "links": [],
+              "nullPointMode": "connected",
+              "options": {
+                "alertThreshold": true
+              },
+              "percentage": false,
+              "pluginVersion": "7.2.2",
+              "pointradius": 2,
+              "points": false,
+              "renderer": "flot",
+              "seriesOverrides": [],
+              "spaceLength": 10,
+              "stack": false,
+              "steppedLine": false,
+              "targets": [
+                {
+                  "expr": "increase(dotnet_collection_count_total[$interval])",
+                  "format": "time_series",
+                  "intervalFactor": 1,
+                  "legendFormat": "Generation-{{generation}}",
+                  "refId": "A"
+                }
+              ],
+              "thresholds": [],
+              "timeFrom": null,
+              "timeRegions": [],
+              "timeShift": null,
+              "title": "GC collection count",
+              "tooltip": {
+                "shared": true,
+                "sort": 0,
+                "value_type": "individual"
+              },
+              "type": "graph",
+              "xaxis": {
+                "buckets": null,
+                "mode": "time",
+                "name": null,
+                "show": true,
+                "values": []
+              },
+              "yaxes": [
+                {
+                  "decimals": 0,
+                  "format": "short",
+                  "label": null,
+                  "logBase": 1,
+                  "max": null,
+                  "min": null,
+                  "show": true
+                },
+                {
+                  "format": "short",
+                  "label": null,
+                  "logBase": 1,
+                  "max": null,
+                  "min": null,
+                  "show": true
+                }
+              ],
+              "yaxis": {
+                "align": false,
+                "alignLevel": null
+              }
+            },
+            {
+              "aliasColors": {},
+              "bars": false,
+              "cacheTimeout": null,
+              "dashLength": 10,
+              "dashes": false,
+              "datasource": "Prometheus",
+              "decimals": 0,
+              "fieldConfig": {
+                "defaults": {
+                  "custom": {},
+                  "links": []
+                },
+                "overrides": []
+              },
+              "fill": 1,
+              "fillGradient": 0,
+              "gridPos": {
+                "h": 7,
+                "w": 9,
+                "x": 8,
+                "y": 6
+              },
+              "hiddenSeries": false,
+              "id": 8,
+              "legend": {
+                "alignAsTable": true,
+                "avg": true,
+                "current": true,
+                "max": true,
+                "min": false,
+                "show": true,
+                "total": false,
+                "values": true
+              },
+              "lines": true,
+              "linewidth": 1,
+              "links": [],
+              "nullPointMode": "connected",
+              "options": {
+                "alertThreshold": true
+              },
+              "percentage": false,
+              "pluginVersion": "7.2.2",
+              "pointradius": 2,
+              "points": false,
+              "renderer": "flot",
+              "seriesOverrides": [],
+              "spaceLength": 10,
+              "stack": false,
+              "steppedLine": false,
+              "targets": [
+                {
+                  "expr": "dotnet_total_memory_bytes /1024/1024",
+                  "format": "time_series",
+                  "intervalFactor": 1,
+                  "legendFormat": "{{job}}",
+                  "refId": "A"
+                }
+              ],
+              "thresholds": [],
+              "timeFrom": null,
+              "timeRegions": [],
+              "timeShift": null,
+              "title": "Total known allocated memory",
+              "tooltip": {
+                "shared": true,
+                "sort": 0,
+                "value_type": "individual"
+              },
+              "type": "graph",
+              "xaxis": {
+                "buckets": null,
+                "mode": "time",
+                "name": null,
+                "show": true,
+                "values": []
+              },
+              "yaxes": [
+                {
+                  "decimals": 0,
+                  "format": "short",
+                  "label": "",
+                  "logBase": 1,
+                  "max": null,
+                  "min": null,
+                  "show": true
+                },
+                {
+                  "format": "short",
+                  "label": "",
+                  "logBase": 1,
+                  "max": null,
+                  "min": null,
+                  "show": true
+                }
+              ],
+              "yaxis": {
+                "align": false,
+                "alignLevel": null
+              }
+            },
+            {
+              "aliasColors": {},
+              "bars": false,
+              "dashLength": 10,
+              "dashes": false,
+              "datasource": "Prometheus",
+              "decimals": 0,
+              "description": "",
+              "fieldConfig": {
+                "defaults": {
+                  "custom": {},
+                  "links": []
+                },
+                "overrides": []
+              },
+              "fill": 1,
+              "fillGradient": 0,
+              "gridPos": {
+                "h": 7,
+                "w": 7,
+                "x": 17,
+                "y": 6
+              },
+              "hiddenSeries": false,
+              "id": 12,
+              "legend": {
+                "alignAsTable": true,
+                "avg": true,
+                "current": true,
+                "max": true,
+                "min": false,
+                "show": true,
+                "total": false,
+                "values": true
+              },
+              "lines": true,
+              "linewidth": 1,
+              "links": [],
+              "nullPointMode": "connected",
+              "options": {
+                "alertThreshold": true
+              },
+              "percentage": false,
+              "pluginVersion": "7.2.2",
+              "pointradius": 2,
+              "points": false,
+              "renderer": "flot",
+              "seriesOverrides": [],
+              "spaceLength": 10,
+              "stack": false,
+              "steppedLine": false,
+              "targets": [
+                {
+                  "expr": "process_num_threads",
+                  "format": "time_series",
+                  "intervalFactor": 1,
+                  "legendFormat": "{{job}}",
+                  "refId": "A"
+                }
+              ],
+              "thresholds": [],
+              "timeFrom": null,
+              "timeRegions": [],
+              "timeShift": null,
+              "title": "Total number of threads",
+              "tooltip": {
+                "shared": true,
+                "sort": 0,
+                "value_type": "individual"
+              },
+              "type": "graph",
+              "xaxis": {
+                "buckets": null,
+                "mode": "time",
+                "name": null,
+                "show": true,
+                "values": []
+              },
+              "yaxes": [
+                {
+                  "decimals": 0,
+                  "format": "short",
+                  "label": null,
+                  "logBase": 1,
+                  "max": null,
+                  "min": null,
+                  "show": true
+                },
+                {
+                  "format": "short",
+                  "label": null,
+                  "logBase": 1,
+                  "max": null,
+                  "min": null,
+                  "show": true
+                }
+              ],
+              "yaxis": {
+                "align": false,
+                "alignLevel": null
+              }
+            },
+            {
+              "aliasColors": {},
+              "bars": false,
+              "dashLength": 10,
+              "dashes": false,
+              "datasource": "Prometheus",
+              "decimals": 0,
+              "description": "",
+              "fieldConfig": {
+                "defaults": {
+                  "custom": {},
+                  "links": []
+                },
+                "overrides": []
+              },
+              "fill": 1,
+              "fillGradient": 0,
+              "gridPos": {
+                "h": 8,
+                "w": 8,
+                "x": 0,
+                "y": 13
+              },
+              "hiddenSeries": false,
+              "id": 14,
+              "interval": "",
+              "legend": {
+                "alignAsTable": true,
+                "avg": true,
+                "current": true,
+                "max": true,
+                "min": false,
+                "show": true,
+                "total": false,
+                "values": true
+              },
+              "lines": true,
+              "linewidth": 1,
+              "links": [],
+              "nullPointMode": "connected",
+              "options": {
+                "alertThreshold": true
+              },
+              "percentage": false,
+              "pluginVersion": "7.2.2",
+              "pointradius": 2,
+              "points": false,
+              "renderer": "flot",
+              "seriesOverrides": [],
+              "spaceLength": 10,
+              "stack": false,
+              "steppedLine": false,
+              "targets": [
+                {
+                  "expr": "process_open_handles",
+                  "format": "time_series",
+                  "interval": "",
+                  "intervalFactor": 1,
+                  "legendFormat": "{{job}}",
+                  "refId": "A"
+                }
+              ],
+              "thresholds": [],
+              "timeFrom": null,
+              "timeRegions": [],
+              "timeShift": null,
+              "title": "Number of open handles",
+              "tooltip": {
+                "shared": true,
+                "sort": 0,
+                "value_type": "individual"
+              },
+              "type": "graph",
+              "xaxis": {
+                "buckets": null,
+                "mode": "time",
+                "name": null,
+                "show": true,
+                "values": []
+              },
+              "yaxes": [
+                {
+                  "decimals": 0,
+                  "format": "short",
+                  "label": null,
+                  "logBase": 1,
+                  "max": null,
+                  "min": null,
+                  "show": true
+                },
+                {
+                  "format": "short",
+                  "label": null,
+                  "logBase": 1,
+                  "max": null,
+                  "min": null,
+                  "show": true
+                }
+              ],
+              "yaxis": {
+                "align": false,
+                "alignLevel": null
+              }
+            },
+            {
+              "aliasColors": {},
+              "bars": false,
+              "cacheTimeout": null,
+              "dashLength": 10,
+              "dashes": false,
+              "datasource": "Prometheus",
+              "decimals": 0,
+              "fieldConfig": {
+                "defaults": {
+                  "custom": {},
+                  "links": []
+                },
+                "overrides": []
+              },
+              "fill": 1,
+              "fillGradient": 0,
+              "gridPos": {
+                "h": 8,
+                "w": 9,
+                "x": 8,
+                "y": 13
+              },
+              "hiddenSeries": false,
+              "id": 10,
+              "legend": {
+                "alignAsTable": true,
+                "avg": true,
+                "current": true,
+                "max": true,
+                "min": false,
+                "show": true,
+                "total": false,
+                "values": true
+              },
+              "lines": true,
+              "linewidth": 1,
+              "links": [],
+              "nullPointMode": "connected",
+              "options": {
+                "alertThreshold": true
+              },
+              "percentage": false,
+              "pluginVersion": "7.2.2",
+              "pointradius": 2,
+              "points": false,
+              "renderer": "flot",
+              "seriesOverrides": [],
+              "spaceLength": 10,
+              "stack": false,
+              "steppedLine": false,
+              "targets": [
+                {
+                  "expr": "process_working_set_bytes /1024/1024",
+                  "format": "time_series",
+                  "interval": "",
+                  "intervalFactor": 1,
+                  "legendFormat": "{{job}}",
+                  "refId": "A"
+                }
+              ],
+              "thresholds": [],
+              "timeFrom": null,
+              "timeRegions": [],
+              "timeShift": null,
+              "title": "Process working set",
+              "tooltip": {
+                "shared": true,
+                "sort": 0,
+                "value_type": "individual"
+              },
+              "type": "graph",
+              "xaxis": {
+                "buckets": null,
+                "mode": "time",
+                "name": null,
+                "show": true,
+                "values": []
+              },
+              "yaxes": [
+                {
+                  "decimals": 0,
+                  "format": "short",
+                  "label": "",
+                  "logBase": 1,
+                  "max": null,
+                  "min": null,
+                  "show": true
+                },
+                {
+                  "decimals": null,
+                  "format": "short",
+                  "label": "",
+                  "logBase": 1,
+                  "max": null,
+                  "min": null,
+                  "show": true
+                }
+              ],
+              "yaxis": {
+                "align": false,
+                "alignLevel": null
+              }
+            }
+          ],
+          "refresh": "5s",
+          "schemaVersion": 26,
+          "style": "dark",
+          "tags": [
+            "prometheus-net",
+            "net",
+            "prometheus",
+            ".net",
+            ".net core"
+          ],
+          "templating": {
+            "list": [
+              {
+                "auto": false,
+                "auto_count": 30,
+                "auto_min": "10s",
+                "current": {
+                  "selected": false,
+                  "text": "1m",
+                  "value": "1m"
+                },
+                "hide": 0,
+                "label": null,
+                "name": "interval",
+                "options": [
+                  {
+                    "selected": true,
+                    "text": "1m",
+                    "value": "1m"
+                  },
+                  {
+                    "selected": false,
+                    "text": "5m",
+                    "value": "5m"
+                  },
+                  {
+                    "selected": false,
+                    "text": "10m",
+                    "value": "10m"
+                  },
+                  {
+                    "selected": false,
+                    "text": "30m",
+                    "value": "30m"
+                  },
+                  {
+                    "selected": false,
+                    "text": "1h",
+                    "value": "1h"
+                  },
+                  {
+                    "selected": false,
+                    "text": "6h",
+                    "value": "6h"
+                  },
+                  {
+                    "selected": false,
+                    "text": "12h",
+                    "value": "12h"
+                  },
+                  {
+                    "selected": false,
+                    "text": "1d",
+                    "value": "1d"
+                  },
+                  {
+                    "selected": false,
+                    "text": "7d",
+                    "value": "7d"
+                  },
+                  {
+                    "selected": false,
+                    "text": "14d",
+                    "value": "14d"
+                  },
+                  {
+                    "selected": false,
+                    "text": "30d",
+                    "value": "30d"
+                  }
+                ],
+                "query": "1m,5m,10m,30m,1h,6h,12h,1d,7d,14d,30d",
+                "refresh": 2,
+                "skipUrlSync": false,
+                "type": "interval"
+              },
+              {
+                "allValue": null,
+                "current": {
+                  "selected": false,
+                  "text": "All",
+                  "value": "$__all"
+                },
+                "datasource": "Prometheus",
+                "definition": "label_values(http_requests_received_total, instance)",
+                "hide": 0,
+                "includeAll": true,
+                "label": "instances",
+                "multi": true,
+                "name": "instances",
+                "options": [],
+                "query": "label_values(http_requests_received_total, instance)",
+                "refresh": 1,
+                "regex": "",
+                "skipUrlSync": false,
+                "sort": 1,
+                "tagValuesQuery": "",
+                "tags": [],
+                "tagsQuery": "",
+                "type": "query",
+                "useTags": false
+              }
+            ]
+          },
+          "time": {
+            "from": "now-6h",
+            "to": "now"
+          },
+          "timepicker": {
+            "refresh_intervals": [
+              "5s",
+              "10s",
+              "30s",
+              "1m",
+              "5m",
+              "15m",
+              "30m",
+              "1h",
+              "2h",
+              "1d"
+            ],
+            "time_options": [
+              "5m",
+              "15m",
+              "1h",
+              "6h",
+              "12h",
+              "24h",
+              "2d",
+              "7d",
+              "30d"
+            ]
+          },
+          "timezone": "",
+          "title": "ALL",
+          "uid": "zyAf4i4Zz",
+          "version": 2
+        }
+
+  # Service account grafana will run under.
+  - kind: ServiceAccount
+    apiVersion: v1
+    metadata:
+      name: ${APP_NAME}
+      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
+      labels:
+        name: ${APP_NAME}
+        app: ${APP_NAME}
+        role: ${ROLE_NAME}
+        env: ${ENV_NAME}
+      annotations:
+        serviceaccounts.openshift.io/oauth-redirectreference.primary: '{"kind":"OAuthRedirectReference","apiVersion":"v1","reference":{"kind":"Route","name":"${APP_NAME}"}}'
+
+  # Route to access service.
+  - kind: Route
+    apiVersion: v1
+    metadata:
+      name: ${APP_NAME}
+      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
+      labels:
+        name: ${APP_NAME}
+        app: ${APP_NAME}
+        role: ${ROLE_NAME}
+        env: ${ENV_NAME}
+    spec:
+      host: ${GRAFANA_DOMAIN}
+      to:
+        name: ${APP_NAME}
+        kind: Service
+        weight: 100
+      tls:
+        termination: Reencrypt
+
+  # Service account to run under.
+  - kind: Service
+    apiVersion: v1
+    metadata:
+      name: ${APP_NAME}
+      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
+      labels:
+        name: ${APP_NAME}
+        app: ${APP_NAME}
+        role: ${ROLE_NAME}
+        env: ${ENV_NAME}
+      annotations:
+        service.alpha.openshift.io/serving-cert-secret-name: ${APP_NAME}-tls
+    spec:
+      ports:
+        - name: ${APP_NAME}
+          port: 443
+          targetPort: 8443
+      selector:
+        app: ${APP_NAME}
+
+  # How to deploy grafana.
+  - kind: DeploymentConfig
+    apiVersion: v1
+    metadata:
+      name: ${APP_NAME}
+      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
+      annotations:
+        description: "Defines how to deploy grafana pims-monitoring"
+      labels:
+        name: ${APP_NAME}
+        app: ${APP_NAME}
+        role: ${ROLE_NAME}
+        env: ${ENV_NAME}
+    spec:
+      replicas: 1
+      selector:
+        name: ${APP_NAME}
+        app: ${APP_NAME}
+        role: ${ROLE_NAME}
+        env: ${ENV_NAME}
+      strategy:
+        rollingParams:
+          intervalSeconds: 1
+          maxSurge: 25%
+          maxUnavailable: 25%
+          timeoutSeconds: 600
+          updatePeriodSeconds: 1
+        type: Recreate
+      template:
+        metadata:
+          name: ${APP_NAME}
+          labels:
+            name: ${APP_NAME}
+            app: ${APP_NAME}
+            role: ${ROLE_NAME}
+            env: ${ENV_NAME}
+        spec:
+          serviceAccountName: ${APP_NAME}
+          containers:
+            - name: oauth-proxy
+              image: openshift/oauth-proxy:v1.0.0
+              imagePullPolicy: IfNotPresent
+              ports:
+                - containerPort: 8443
+                  name: public
+              args:
+                - --https-address=:8443
+                - --provider=openshift
+                - --openshift-service-account=${APP_NAME}
+                - --upstream=http://localhost:3000
+                - --tls-cert=/etc/tls/private/tls.crt
+                - --tls-key=/etc/tls/private/tls.key
+                - --cookie-secret=SECRET
+                - --pass-basic-auth=false
+              volumeMounts:
+                - name: ${APP_NAME}-tls
+                  mountPath: /etc/tls/private
+            - name: grafana
+              image: ${IMAGE}
+              imagePullPolicy: Always
+              env:
+                - name: GF_AUTH_BASIC_ENABLED
+                  value: "true"
+                - name: GF_AUTH_PROXY_ENABLED
+                  value: "true"
+                - name: GF_AUTH_PROXY_HEADER_NAME
+                  value: "X-Forwarded-User"
+                - name: GF_AUTH_PROXY_HEADER_PROPERTY
+                  value: "username"
+                - name: GF_AUTH_PROXY_AUTO_SIGN_UP
+                  value: "true"
+                - name: GF_AUTH_DISABLE_LOGIN_FORM
+                  value: "false"
+                - name: GF_USERS_ALLOW_SIGN_UP
+                  value: "false"
+                - name: GF_USERS_AUTO_ASSIGN_ORG
+                  value: "true"
+                - name: GF_USERS_AUTO_ASSIGN_ORG_ROLE
+                  value: "${GF_USERS_AUTO_ASSIGN_ORG_ROLE}"
+              ports:
+                - containerPort: 3000
+                  name: http
+                  protocol: TCP
+              resources:
+                requests:
+                  cpu: ${CPU_REQUEST}
+                  memory: ${MEMORY_REQUEST}
+                limits:
+                  cpu: ${CPU_LIMIT}
+                  memory: ${MEMORY_LIMIT}
+              volumeMounts:
+                - name: ${APP_NAME}-sources
+                  mountPath: /etc/grafana/provisioning/datasources
+                - name: ${APP_NAME}-dashboards
+                  mountPath: /etc/grafana/provisioning/dashboards
+                - name: ${APP_NAME}-predefined-dashboards
+                  mountPath: /dashboards
+              securityContext: {}
+              terminationMessagePath: /dev/termination-log
+              terminationMessagePolicy: File
+          volumes:
+            - name: ${APP_NAME}-sources
+              configMap:
+                name: ${APP_NAME}-sources
+            - name: grafana-tls
+              secret:
+                secretName: grafana-tls
+            - name: ${APP_NAME}-dashboards
+              configMap:
+                defaultMode: 420
+                name: ${APP_NAME}-dashboards
+            - name: ${APP_NAME}-predefined-dashboards
+              configMap:
+                defaultMode: 420
+                name: ${APP_NAME}-predefined-dashboards
+          dnsPolicy: ClusterFirst
+          restartPolicy: Always
+          schedulerName: default-scheduler
+          securityContext: {}
+          terminationGracePeriodSeconds: 60
+      test: false

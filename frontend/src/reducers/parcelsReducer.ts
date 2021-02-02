@@ -1,3 +1,4 @@
+import { IStoreAssociatedBuildingDetail } from './../actions/parcelsActions';
 import * as actionTypes from 'constants/actionTypes';
 import {
   IStoreParcelsAction,
@@ -8,11 +9,13 @@ import {
   IStoreDraftParcelsAction,
 } from 'actions/parcelsActions';
 import { IProperty } from 'actions/parcelsActions';
+import { PointFeature } from 'components/maps/types';
 
 export interface IParcelState {
   parcels: IProperty[];
-  draftParcels: IProperty[];
+  draftParcels: PointFeature[];
   parcelDetail: IPropertyDetail | null;
+  associatedBuildingDetail: IPropertyDetail | null;
   pid: number;
 }
 
@@ -20,6 +23,7 @@ const initialState: IParcelState = {
   parcels: [],
   draftParcels: [],
   parcelDetail: null,
+  associatedBuildingDetail: null,
   pid: 0,
 };
 
@@ -30,7 +34,8 @@ const parcelsReducer = (
     | IStoreDraftParcelsAction
     | IStoreParcelDetail
     | IStoreBuildingDetail
-    | IStoreParcelAction,
+    | IStoreParcelAction
+    | IStoreAssociatedBuildingDetail,
 ) => {
   switch (action.type) {
     case actionTypes.STORE_PARCEL_RESULTS:
@@ -57,6 +62,11 @@ const parcelsReducer = (
       return {
         ...state,
         parcelDetail: action.parcelDetail,
+      };
+    case actionTypes.STORE_ASSOCIATED_BUILDING_DETAIL:
+      return {
+        ...state,
+        associatedBuildingDetail: action.associatedBuildingDetail,
       };
     default:
       return state;

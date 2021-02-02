@@ -1,15 +1,20 @@
-import React, { useMemo } from 'react';
-import { IPropertyDetail } from 'actions/parcelsActions';
+import React, { useEffect, useMemo, useState } from 'react';
+import { IBuilding, IParcel, IPropertyDetail } from 'actions/parcelsActions';
 import { IGeoSearchParams } from 'constants/API';
-import { BBox, Feature } from 'geojson';
+import { BBox } from 'geojson';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
-import { LatLngBounds } from 'leaflet';
+import { GeoJSON, LatLngBounds } from 'leaflet';
 import { useLeaflet } from 'react-leaflet';
 import { toast } from 'react-toastify';
 import { PointFeature } from '../types';
 import PointClusterer from './PointClusterer';
 import { useApi } from 'hooks/useApi';
-import _ from 'lodash';
+import { useSelector } from 'react-redux';
+import { RootState } from 'reducers/rootReducer';
+import { flatten, uniqBy } from 'lodash';
+import { tilesInBbox } from 'tiles-in-bbox';
+import { useFilterContext } from '../providers/FIlterProvider';
+import { MUNICIPALITY_LAYER_URL, useLayerQuery } from './LayerPopup';
 
 export type InventoryLayerProps = {
   /** Latitude and Longitude boundary of the layer. */
@@ -22,8 +27,8 @@ export type InventoryLayerProps = {
   maxZoom?: number;
   /** Search filter to apply to properties. */
   filter?: IGeoSearchParams;
-  /** What to do when the point feature is clicked. */
-  onMarkerClick?: (point: PointFeature, position?: [number, number]) => void;
+  /** What to do when the marker is clicked. */
+  onMarkerClick: () => void;
 
   selected?: IPropertyDetail | null;
 };
@@ -41,18 +46,81 @@ const getBbox = (bounds: LatLngBounds): BBox => {
   ] as BBox;
 };
 
+interface ITilePoint {
+  // x axis of the tile
+  x: number;
+  // y axis of the tile
+  y: number;
+  // zoom state of the tile
+  z: number;
+}
+
+interface ITile {
+  // Tile point {x, y, z}
+  point: ITilePoint;
+  // unique id of the file
+  key: string;
+  // bbox of the tile
+  bbox: string;
+  // tile data status
+  processed?: boolean;
+  // tile data, a list of properties in the tile
+  datum?: PointFeature[];
+  // tile bounds
+  latlngBounds: LatLngBounds;
+}
+
 /**
- * Get a new instance of a BBox from the specified 'bounds'.
- * @param bounds The latitude longitude boundary.
+ * Generate tiles for current bounds and zoom
+ * @param bounds
+ * @param zoom
  */
-const getApiBbox = (bounds: LatLngBounds): BBox => {
-  return [
-    bounds.getSouthWest().lng,
-    bounds.getNorthEast().lng,
-    bounds.getSouthWest().lat,
-    bounds.getNorthEast().lat,
-  ] as BBox;
+export const getTiles = (bounds: LatLngBounds, zoom: number): ITile[] => {
+  const bbox = {
+    bottom: bounds.getSouth(),
+    left: bounds.getWest(),
+    top: bounds.getNorth(),
+    right: bounds.getEast(),
+  };
+
+  const tiles = tilesInBbox(bbox, zoom);
+
+  // convert tile x axis to longitude
+  const tileToLong = (x: number, z: number) => {
+    return (x / Math.pow(2, z)) * 360 - 180;
+  };
+
+  // convert tile y axis to longitude
+  const tileToLat = (y: number, z: number) => {
+    const n = Math.PI - (2 * Math.PI * y) / Math.pow(2, z);
+
+    return (180 / Math.PI) * Math.atan(0.5 * (Math.exp(n) - Math.exp(-n)));
+  };
+
+  return tiles.map(({ x, y, z }) => {
+    const SW_long = tileToLong(x, z);
+
+    const SW_lat = tileToLat(y + 1, z);
+
+    const NE_long = tileToLong(x + 1, z);
+
+    const NE_lat = tileToLat(y, z);
+
+    return {
+      key: `${x}:${y}:${z}`,
+      bbox: SW_long + ',' + NE_long + ',' + SW_lat + ',' + NE_lat,
+      point: { x, y, z },
+      datum: [],
+      latlngBounds: new LatLngBounds({ lat: SW_lat, lng: SW_long }, { lat: NE_lat, lng: NE_long }),
+    };
+  });
 };
+
+// default BC map bounds
+export const defaultBounds = new LatLngBounds(
+  [60.09114547, -119.49609429],
+  [48.78370426, -139.35937554],
+);
 
 /**
  * Displays the search results onto a layer with clustering.
@@ -67,22 +135,40 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
   onMarkerClick,
   selected,
 }) => {
-  const [features, setFeatures] = React.useState<Array<PointFeature>>([]);
   const { map } = useLeaflet();
+  const [features, setFeatures] = useState<PointFeature[]>([]);
+  const [loadingTiles, setLoadingTiles] = useState(false);
   const { loadProperties } = useApi();
+  const { changed: filterChanged } = useFilterContext();
+  const municipalitiesService = useLayerQuery(MUNICIPALITY_LAYER_URL);
+
+  const draftProperties: PointFeature[] = useSelector<RootState, PointFeature[]>(
+    state => state.parcel.draftParcels,
+  );
 
   if (!map) {
     throw new Error('<InventoryLayer /> must be used under a <Map> leaflet component');
   }
 
-  const bbox = getBbox(bounds);
+  const bbox = useMemo(() => getBbox(bounds), [bounds]);
+  useEffect(() => {
+    const fit = async () => {
+      if (filterChanged) {
+        map.fitBounds(defaultBounds, { maxZoom: 5 });
+      }
+    };
+
+    fit();
+  }, [map, filter, filterChanged]);
 
   minZoom = minZoom ?? 0;
   maxZoom = maxZoom ?? 18;
 
-  const params = useMemo<IGeoSearchParams>(
-    () => ({
-      bbox: getApiBbox(bounds ?? map.getBounds()).toString(),
+  const params = useMemo((): any => {
+    const tiles = getTiles(defaultBounds, 5);
+
+    return tiles.map(tile => ({
+      bbox: tile.bbox,
       address: filter?.address,
       administrativeArea: filter?.administrativeArea,
       pid: filter?.pid,
@@ -99,55 +185,70 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
       name: filter?.name,
       bareLandOnly: filter?.bareLandOnly,
       rentableArea: filter?.rentableArea,
-    }),
-    [filter, map, bounds],
-  );
+      includeAllProperties: filter?.includeAllProperties,
+    }));
+  }, [filter]);
 
-  const search = React.useCallback(
-    _.debounce(
-      (filter: IGeoSearchParams) => {
-        loadProperties(filter)
-          .then(async (data: Feature[]) => {
-            const points = data
-              .filter(feature => {
-                return !(
-                  feature.properties!.propertyTypeId === selected?.propertyTypeId &&
-                  feature.properties!.id === selected?.parcelDetail?.id
-                );
-              })
-              .map(f => {
-                return {
-                  ...f,
-                } as PointFeature;
-              });
-            setFeatures(points);
-          })
-          .catch(error => {
-            toast.error((error as Error).message, { autoClose: 7000 });
-            console.error(error);
-          });
-      },
-      500,
-      { leading: true },
-    ),
-    [],
-  );
+  const loadTile = async (filter: IGeoSearchParams) => {
+    return loadProperties(filter);
+  };
+
+  const search = async (filters: IGeoSearchParams[]) => {
+    try {
+      const data = flatten(await Promise.all(filters.map(x => loadTile(x)))).map(f => {
+        return {
+          ...f,
+        } as PointFeature;
+      });
+
+      const items = uniqBy(
+        data,
+        point => `${point?.properties.id}-${point?.properties.propertyTypeId}`,
+      );
+
+      /**
+       * Whether the land has buildings on it.
+       * @param property PIMS property
+       */
+      const hasBuildings = (property: IParcel | IBuilding) => false;
+
+      const results = items.filter(({ properties }: any) => {
+        return properties.propertyTypeId === 1 || !hasBuildings(properties);
+      }) as any;
+
+      const administrativeArea = filter?.administrativeArea;
+      if (results.length === 0 && !!administrativeArea) {
+        const municipality = await municipalitiesService.findByAdministrative(administrativeArea);
+        if (municipality) {
+          // Fit to municipality bounds
+          map.fitBounds((GeoJSON.geometryToLayer(municipality) as any)._bounds, { maxZoom: 11 });
+        }
+      }
+      setFeatures(results);
+      setLoadingTiles(false);
+    } catch (error) {
+      toast.error((error as Error).message, { autoClose: 7000 });
+      console.error(error);
+    }
+  };
 
   // Fetch the geoJSON collection of properties.
   useDeepCompareEffect(() => {
+    setLoadingTiles(true);
     search(params);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [params, bbox, selected, map]);
+  }, [params, selected]);
 
   return (
     <PointClusterer
       points={features}
+      draftPoints={draftProperties}
       zoom={zoom}
       bounds={bbox}
       onMarkerClick={onMarkerClick}
       zoomToBoundsOnClick={true}
       spiderfyOnMaxZoom={true}
       selected={selected}
+      tilesLoaded={!loadingTiles}
     />
   );
 };

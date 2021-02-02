@@ -25,7 +25,7 @@ export const truncate = (input: string, maxLength: number): string => {
  * Convert the specified 'input' value into a decimal or undefined.
  * @param input The string value to convert to a decimal.
  */
-export const decimalOrUndefined = (input: string | ''): number | undefined => {
+export const decimalOrUndefined = (input: string): number | undefined => {
   return input !== '' && input !== undefined ? parseInt(input, 10) : undefined;
 };
 
@@ -57,7 +57,7 @@ export const floatOrNull = (input: string): number | null => {
  * Convert the specified 'input' value into a float or undefined.
  * @param input The string value to convert to a float.
  */
-export const floatOrUndefined = (input: string | ''): number | undefined => {
+export const floatOrUndefined = (input: string): number | undefined => {
   return input !== '' && input !== undefined ? parseFloat(input) : undefined;
 };
 
@@ -118,6 +118,20 @@ const createParentWorkflow = (code: string) => {
   }
 };
 
+/** used for inputs that need to display the string value of a parent agency agency */
+export const mapSelectOptionWithParent = (
+  code: SelectOption,
+  /** the list of lookup codes to look for parent */
+  options: SelectOption[],
+): SelectOption => ({
+  label: code.label,
+  value: code.value.toString(),
+  code: code.code,
+  parentId: code.parentId,
+  parent: options.find((a: SelectOption) => a.value.toString() === code.parentId?.toString())
+    ?.label,
+});
+
 export const mapStatuses = (status: IStatus): SelectOption => ({
   label: status.name,
   value: status.id.toString(),
@@ -129,6 +143,7 @@ type FormikMemoProps = {
   formikProps: FormikProps<any>;
   field: string;
   disabled?: boolean;
+  options?: SelectOption[];
 } & any;
 /**
  * Common use memo function prevents renders unless associated field data has been changed.
@@ -138,12 +153,23 @@ type FormikMemoProps = {
  * @param param1 params from current render
  */
 export const formikFieldMemo = (
-  { formikProps: currentProps, field: currField, disabled: currentDisabled }: FormikMemoProps,
-  { formikProps: prevProps, field: prevField, disabled: prevDisabled }: FormikMemoProps,
+  {
+    formikProps: currentProps,
+    field: currField,
+    disabled: currentDisabled,
+    options: currentOptions,
+  }: FormikMemoProps,
+  {
+    formikProps: prevProps,
+    field: prevField,
+    disabled: prevDisabled,
+    options: prevOptions,
+  }: FormikMemoProps,
 ) => {
   return !(
     currField !== prevField ||
     currentDisabled !== prevDisabled ||
+    currentOptions !== prevOptions ||
     getIn(currentProps.values, prevField) !== getIn(prevProps.values, prevField) ||
     getIn(currentProps.errors, prevField) !== getIn(prevProps.errors, prevField) ||
     getIn(currentProps.touched, prevField) !== getIn(prevProps.touched, prevField) ||
@@ -301,3 +327,14 @@ export const isMouseEventRecent = (e?: MouseEvent | null) =>
  * @param squareMeters
  */
 export const squareMetersToHectares = (squareMeters: number) => (squareMeters / 10000).toFixed(2);
+
+export function stringToNull(value: any) {
+  return emptyStringToNull(value, value);
+}
+
+export function emptyStringToNull(value: any, originalValue: any) {
+  if (typeof originalValue === 'string' && originalValue === '') {
+    return undefined;
+  }
+  return value;
+}

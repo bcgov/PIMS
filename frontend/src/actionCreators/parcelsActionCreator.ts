@@ -1,3 +1,4 @@
+import { storeParcelDetail } from './../actions/parcelsActions';
 import { LifecycleToasts } from './../customAxios';
 import { showLoading, hideLoading } from 'react-redux-loading-bar';
 import { request, success, error } from 'actions/genericActions';
@@ -9,6 +10,7 @@ import { ENVIRONMENT } from 'constants/environment';
 import CustomAxios from 'customAxios';
 import { AxiosResponse, AxiosError } from 'axios';
 import * as pimsToasts from 'constants/toasts';
+import _ from 'lodash';
 
 export const fetchParcels = (parcelBounds: API.IPropertySearchParams | null) => (
   dispatch: Function,
@@ -26,6 +28,7 @@ export const fetchParcels = (parcelBounds: API.IPropertySearchParams | null) => 
         dispatch(success(actionTypes.GET_PARCELS));
         dispatch(parcelsActions.storeParcelsAction(response.data));
         dispatch(hideLoading());
+        return Promise.resolve(response);
       })
       .catch((axiosError: AxiosError) =>
         dispatch(error(actionTypes.GET_PARCELS, axiosError?.response?.status, axiosError)),
@@ -34,6 +37,29 @@ export const fetchParcels = (parcelBounds: API.IPropertySearchParams | null) => 
   }
 
   return Promise.resolve();
+};
+
+/**
+ * fetch parcels using search query parameters, such as pid or pin.
+ * @param params
+ */
+export const fetchParcelsDetail = (params: API.IPropertySearchParams) => (dispatch: Function) => {
+  dispatch(request(actionTypes.GET_PARCEL_DETAIL));
+  dispatch(showLoading());
+  return CustomAxios()
+    .get(ENVIRONMENT.apiUrl + API.PARCELS_DETAIL(params))
+    .then((response: AxiosResponse) => {
+      if (response?.data !== undefined && response.data.length > 0) {
+        dispatch(parcelsActions.storeParcelDetail(_.first(response.data) as any));
+      }
+      dispatch(success(actionTypes.GET_PARCEL_DETAIL));
+      dispatch(hideLoading());
+      return Promise.resolve(response);
+    })
+    .catch((axiosError: AxiosError) =>
+      dispatch(error(actionTypes.GET_PARCEL_DETAIL, axiosError?.response?.status, axiosError)),
+    )
+    .finally(() => dispatch(hideLoading()));
 };
 
 export const fetchParcelDetail = (params: API.IParcelDetailParams, position?: [number, number]) => (
@@ -47,6 +73,7 @@ export const fetchParcelDetail = (params: API.IParcelDetailParams, position?: [n
       dispatch(success(actionTypes.GET_PARCEL_DETAIL));
       dispatch(parcelsActions.storeParcelDetail(response.data, position));
       dispatch(hideLoading());
+      return response.data;
     })
     .catch((axiosError: AxiosError) =>
       dispatch(error(actionTypes.GET_PARCEL_DETAIL, axiosError?.response?.status, axiosError)),
@@ -66,6 +93,7 @@ export const fetchBuildingDetail = (
       dispatch(success(actionTypes.GET_PARCEL_DETAIL));
       dispatch(parcelsActions.storeBuildingDetail(response.data, position));
       dispatch(hideLoading());
+      return response.data;
     })
     .catch((axiosError: AxiosError) =>
       dispatch(error(actionTypes.GET_PARCEL_DETAIL, axiosError?.response?.status, axiosError)),
@@ -98,7 +126,7 @@ export const createParcel = (parcel: IParcel) => async (dispatch: Function) => {
       parcel,
     );
     dispatch(success(actionTypes.ADD_PARCEL, status));
-    dispatch(fetchParcelDetail(data));
+    dispatch(storeParcelDetail(data));
     dispatch(hideLoading());
     return data;
   } catch (axiosError) {
@@ -123,6 +151,7 @@ export const updateParcel = (parcel: IParcel) => async (dispatch: Function) => {
       parcel,
     );
     dispatch(success(actionTypes.UPDATE_PARCEL, status));
+    dispatch(storeParcelDetail(data));
     dispatch(hideLoading());
     return data;
   } catch (axiosError) {
@@ -138,17 +167,23 @@ const parcelDeletingToasts: LifecycleToasts = {
   errorToast: pimsToasts.parcel.PARCEL_DELETING_ERROR,
 };
 
-export const deleteParcel = (parcel: IParcel) => (dispatch: Function) => {
+/**
+ * Make an AJAX request to delete the specified 'parcel' from inventory.
+ * @param parcel IParcel object to delete from inventory.
+ */
+export const deleteParcel = (parcel: IParcel) => async (dispatch: Function) => {
   dispatch(request(actionTypes.DELETE_PARCEL));
   dispatch(showLoading());
-  return CustomAxios({ lifecycleToasts: parcelDeletingToasts })
-    .delete(ENVIRONMENT.apiUrl + API.PARCEL_ROOT + `/${parcel.id}`, { data: parcel })
-    .then((response: AxiosResponse) => {
-      dispatch(success(actionTypes.DELETE_PARCEL, response.status));
-      dispatch(hideLoading());
-    })
-    .catch((axiosError: AxiosError) => {
-      dispatch(error(actionTypes.DELETE_PARCEL, axiosError?.response?.status, axiosError));
-    })
-    .finally(() => dispatch(hideLoading()));
+  try {
+    const { data, status } = await CustomAxios({
+      lifecycleToasts: parcelDeletingToasts,
+    }).delete(ENVIRONMENT.apiUrl + API.PARCEL_ROOT + `/${parcel.id}`, { data: parcel });
+    dispatch(success(actionTypes.DELETE_PARCEL, status));
+    dispatch(hideLoading());
+    return data;
+  } catch (axiosError) {
+    dispatch(error(actionTypes.DELETE_PARCEL, axiosError.response?.status, axiosError));
+    dispatch(hideLoading());
+    throw Error(axiosError.response?.data.details);
+  }
 };

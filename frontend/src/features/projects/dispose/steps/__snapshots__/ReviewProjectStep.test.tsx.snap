@@ -49,6 +49,9 @@ exports[`renders correctly 1`] = `
             name="projectNumber"
             onBlur={[Function]}
             onChange={[Function]}
+            onFocus={[Function]}
+            onMouseOut={[Function]}
+            onMouseOver={[Function]}
             placeholder="SPP-XXXXXX"
             value=""
           />
@@ -73,7 +76,9 @@ exports[`renders correctly 1`] = `
             name="name"
             onBlur={[Function]}
             onChange={[Function]}
-            required={true}
+            onFocus={[Function]}
+            onMouseOut={[Function]}
+            onMouseOver={[Function]}
             value=""
           />
         </div>
@@ -97,6 +102,9 @@ exports[`renders correctly 1`] = `
             name="description"
             onBlur={[Function]}
             onChange={[Function]}
+            onFocus={[Function]}
+            onMouseOut={[Function]}
+            onMouseOver={[Function]}
             value=""
           />
         </div>
@@ -402,6 +410,13 @@ exports[`renders correctly 1`] = `
                     className="sortable-column"
                   >
                     Agency
+                    <span
+                      style={
+                        Object {
+                          "flex": "1 1 auto",
+                        }
+                      }
+                    />
                   </div>
                 </div>
                 <div
@@ -425,6 +440,13 @@ exports[`renders correctly 1`] = `
                     className="sortable-column"
                   >
                     Name
+                    <span
+                      style={
+                        Object {
+                          "flex": "1 1 auto",
+                        }
+                      }
+                    />
                   </div>
                 </div>
                 <div
@@ -448,6 +470,13 @@ exports[`renders correctly 1`] = `
                     className="sortable-column"
                   >
                     Civic Address
+                    <span
+                      style={
+                        Object {
+                          "flex": "1 1 auto",
+                        }
+                      }
+                    />
                   </div>
                 </div>
                 <div
@@ -471,6 +500,13 @@ exports[`renders correctly 1`] = `
                     className="sortable-column"
                   >
                     Classification
+                    <span
+                      style={
+                        Object {
+                          "flex": "1 1 auto",
+                        }
+                      }
+                    />
                   </div>
                 </div>
                 <div
@@ -494,6 +530,13 @@ exports[`renders correctly 1`] = `
                     className="sortable-column"
                   >
                     Current Zoning Code
+                    <span
+                      style={
+                        Object {
+                          "flex": "1 1 auto",
+                        }
+                      }
+                    />
                   </div>
                 </div>
                 <div
@@ -516,7 +559,14 @@ exports[`renders correctly 1`] = `
                   <div
                     className="sortable-column"
                   >
-                    Potential Zoning Code
+                    Other Projects
+                    <span
+                      style={
+                        Object {
+                          "flex": "1 1 auto",
+                        }
+                      }
+                    />
                   </div>
                 </div>
                 <div
@@ -540,6 +590,13 @@ exports[`renders correctly 1`] = `
                     className="sortable-column"
                   >
                     Net Book Value
+                    <span
+                      style={
+                        Object {
+                          "flex": "1 1 auto",
+                        }
+                      }
+                    />
                   </div>
                 </div>
                 <div
@@ -563,6 +620,13 @@ exports[`renders correctly 1`] = `
                     className="sortable-column"
                   >
                     Market Value
+                    <span
+                      style={
+                        Object {
+                          "flex": "1 1 auto",
+                        }
+                      }
+                    />
                   </div>
                 </div>
                 <div
@@ -586,6 +650,13 @@ exports[`renders correctly 1`] = `
                     className="sortable-column"
                   >
                     Assessed Value
+                    <span
+                      style={
+                        Object {
+                          "flex": "1 1 auto",
+                        }
+                      }
+                    />
                   </div>
                 </div>
                 <div
@@ -609,6 +680,13 @@ exports[`renders correctly 1`] = `
                     className="sortable-column"
                   >
                     Type
+                    <span
+                      style={
+                        Object {
+                          "flex": "1 1 auto",
+                        }
+                      }
+                    />
                   </div>
                 </div>
               </div>
@@ -649,6 +727,7 @@ exports[`renders correctly 1`] = `
               disabled={true}
               id="input-confirmation"
               name="confirmation"
+              onBlur={[Function]}
               onChange={[Function]}
               required={true}
               type="checkbox"
@@ -710,6 +789,7 @@ exports[`renders correctly 1`] = `
               disabled={true}
               id="input-exemptionRequested"
               name="exemptionRequested"
+              onBlur={[Function]}
               onChange={[Function]}
               type="checkbox"
               value={false}
@@ -743,6 +823,9 @@ exports[`renders correctly 1`] = `
           name="note"
           onBlur={[Function]}
           onChange={[Function]}
+          onFocus={[Function]}
+          onMouseOut={[Function]}
+          onMouseOver={[Function]}
           value=""
         />
       </div>
@@ -789,6 +872,9 @@ exports[`renders correctly 1`] = `
           name="publicNote"
           onBlur={[Function]}
           onChange={[Function]}
+          onFocus={[Function]}
+          onMouseOut={[Function]}
+          onMouseOver={[Function]}
           value=""
         />
       </div>

@@ -1,4 +1,5 @@
 import * as ActionTypes from 'constants/actionTypes';
+import { PointFeature } from 'components/maps/types';
 
 //Parcel List API action
 
@@ -12,12 +13,14 @@ export enum PropertyTypes {
 export interface IProperty {
   id: number | '';
   propertyTypeId?: PropertyTypes;
+  agencyId?: number | '';
   latitude: number | '';
   longitude: number | '';
   name?: string;
   description?: string;
   projectNumber?: string;
   projectStatus?: string;
+  isSensitive: boolean | '';
 }
 
 export interface IStoreParcelsAction {
@@ -27,7 +30,7 @@ export interface IStoreParcelsAction {
 
 export interface IStoreDraftParcelsAction {
   type: typeof ActionTypes.STORE_DRAFT_PARCEL_RESULTS;
-  draftParcelList: IProperty[];
+  draftParcelList: PointFeature[];
 }
 
 export interface IStoreParcelAction {
@@ -35,7 +38,7 @@ export interface IStoreParcelAction {
   parcel: IProperty;
 }
 
-export const storeDraftParcelsAction = (parcelList: IProperty[]): IStoreDraftParcelsAction => ({
+export const storeDraftParcelsAction = (parcelList: PointFeature[]): IStoreDraftParcelsAction => ({
   type: ActionTypes.STORE_DRAFT_PARCEL_RESULTS,
   draftParcelList: parcelList,
 });
@@ -61,9 +64,50 @@ export interface IAddress {
   postal: string;
 }
 
+export enum LeasedLand {
+  owned = 0,
+  leased = 1,
+  other = 2,
+}
+
 export interface IBuilding extends IProperty {
-  parcelId: number;
+  parcelId: number | '';
+  pid: number | '';
   address: IAddress;
+  buildingFloorCount?: number | '';
+  buildingConstructionType?: string;
+  buildingConstructionTypeId: number | '';
+  buildingPredominateUse?: string;
+  buildingPredominateUseId: number | '';
+  buildingOccupantType?: string;
+  buildingOccupantTypeId: number | '';
+  classificationId: number | '';
+  classification: string;
+  encumbranceReason: string;
+  leaseExpiry?: string;
+  occupantName: string;
+  transferLeaseOnSale: boolean;
+  buildingTenancy: string;
+  buildingTenancyUpdatedOn?: string;
+  rentableArea: number | '';
+  totalArea: number | '';
+  agencyId: number | '';
+  agency: string;
+  agencyCode: string;
+  subAgency?: string;
+  assessedLand: number | '';
+  assessedBuilding: number | '';
+  evaluations: IEvaluation[];
+  fiscals: IFiscal[];
+  parcels: IParcel[];
+}
+
+export interface IFlatBuilding extends IProperty {
+  parcelId: number;
+  address: string;
+  administrativeArea: string;
+  postal: string;
+  province: string;
   buildingFloorCount?: number | '';
   buildingConstructionType?: string;
   buildingConstructionTypeId: number | '';
@@ -81,8 +125,12 @@ export interface IBuilding extends IProperty {
   agencyId: number | '';
   agency: string;
   agencyCode: string;
-  evaluations: IEvaluation[];
-  fiscals: IFiscal[];
+  assessedLand: number | '';
+  assessedBuilding: number | '';
+  netBook: number | '';
+  leasedLand: {
+    type: LeasedLand;
+  };
 }
 
 export interface IFiscal {
@@ -109,7 +157,31 @@ export interface IParcel extends IProperty {
   pin?: number | '';
   classification?: string;
   classificationId: number | '';
+  encumbranceReason: string;
   address?: IAddress;
+  landArea: number | '';
+  landLegalDescription: string;
+  zoning: string;
+  zoningPotential: string;
+  agency?: string;
+  subAgency?: string;
+  agencyId: number | '';
+  buildings: IBuilding[];
+  assessedLand: number | '';
+  assessedBuilding: number | '';
+  evaluations: IEvaluation[];
+  fiscals: IFiscal[];
+  rowVersion?: string;
+}
+
+export interface IFlatParcel extends IProperty {
+  pid?: string;
+  pin?: number | '';
+  classification?: string;
+  classificationId: number | '';
+  address: string;
+  administrativeArea: string;
+  postal: string;
   landArea: number | '';
   landLegalDescription: string;
   zoning: string;
@@ -118,9 +190,9 @@ export interface IParcel extends IProperty {
   agencyId: number | '';
   isSensitive: boolean;
   buildings: IBuilding[];
-  evaluations: IEvaluation[];
-  fiscals: IFiscal[];
-  rowVersion?: string;
+  assessedLand: number | '';
+  assessedBuilding: number | '';
+  netBook: number | '';
 }
 
 export interface IParcelDetail {
@@ -167,6 +239,23 @@ export const storeBuildingDetail = (
 ): IStoreBuildingDetail => ({
   type: ActionTypes.STORE_BUILDING_DETAIL,
   parcelDetail: {
+    propertyTypeId: 1,
+    parcelDetail: building,
+    position,
+  },
+});
+
+export interface IStoreAssociatedBuildingDetail {
+  type: typeof ActionTypes.STORE_ASSOCIATED_BUILDING_DETAIL;
+  associatedBuildingDetail: IBuildingDetail;
+}
+
+export const storeAssociatedBuilding = (
+  building: IBuilding | null,
+  position?: [number, number],
+): IStoreAssociatedBuildingDetail => ({
+  type: ActionTypes.STORE_ASSOCIATED_BUILDING_DETAIL,
+  associatedBuildingDetail: {
     propertyTypeId: 1,
     parcelDetail: building,
     position,

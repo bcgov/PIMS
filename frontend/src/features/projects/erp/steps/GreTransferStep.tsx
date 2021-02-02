@@ -75,13 +75,15 @@ const GreTransferStep = ({ formikRef }: IStepProps) => {
         innerRef={formikRef}
         validationSchema={GreTransferStepYupSchema}
         enableReinitialize={true}
+        validateOnBlur={true}
+        validateOnChange={false}
         onSubmit={(values: IProject) => {
           values.agencyId = +values.agencyId;
           values.properties?.forEach(p => (p.agencyId = +p.agencyId));
           onSubmitReview(values, formikRef, ReviewWorkflowStatus.TransferredGRE);
         }}
       >
-        {({ isSubmitting, submitForm, values, validateForm }) => (
+        {({ isSubmitting, submitForm, values, validateForm, setTouched }) => (
           <Form>
             <StepStatusIcon
               preIconLabel={
@@ -111,6 +113,8 @@ const GreTransferStep = ({ formikRef }: IStepProps) => {
                     validateForm().then((errors: any) => {
                       if (Object.keys(errors).length === 0) {
                         setUpdatePims(true);
+                      } else {
+                        setTouched(errors);
                       }
                     })
                   }

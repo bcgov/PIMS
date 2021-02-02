@@ -1,0 +1,124 @@
+@import '../../../../colors.scss';
+
+.parcel-identification {
+  max-width: 900px;
+  .suggestionList {
+    margin-top: 40px;
+    margin-left: 50px;
+  }
+  .GeocoderAutoComplete,
+  .AutoCompleteText {
+    width: 230px;
+    align-items: center;
+  }
+  .form-group {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+  }
+}
+
+.parcel-identification {
+  max-width: 900px;
+  .suggestionList {
+    margin-top: 40px;
+    margin-left: 50px;
+  }
+  .GeocoderAutoComplete,
+  .AutoCompleteText {
+    width: 230px;
+    align-items: center;
+  }
+  .form-group {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+  }
+  h4 {
+    margin-bottom: 20px;
+    float: left;
+  }
+  .bg-warning {
+    height: 38px;
+  }
+  input,
+  select,
+  .GeocoderAutoComplete {
+    width: 200px;
+  }
+  .container {
+    .form-check-input {
+      position: relative;
+      width: auto;
+      margin: 0px 10px;
+    }
+    .check-field {
+      margin: auto;
+    }
+    .section.disabled {
+      pointer-events: none;
+      opacity: 0.4;
+    }
+    .label,
+    .form-label {
+      text-align: right;
+      margin-right: 10px;
+      width: 125px;
+    }
+    .harmful {
+      margin: 0px auto;
+      width: 400px;
+      background-color: $light-danger-color;
+      border-radius: 5px;
+      .form-group {
+        width: 100%;
+      }
+      .invalid-feedback {
+        display: block;
+        font-size: 16px;
+      }
+    }
+    .section {
+      padding: 10px 0px;
+      background-color: #f2f2f2;
+      border: 1px solid $light-variant-color;
+      border-radius: 5px;
+      margin-bottom: 20px;
+      h5 {
+        font-weight: 700;
+        padding-bottom: 20px;
+      }
+      .instruction {
+        text-align: left;
+        padding: 0 25px 25px;
+        .marker-svg {
+          display: flex;
+          justify-content: center;
+        }
+      }
+      .form-group {
+        margin-bottom: 0px;
+      }
+      .form-row {
+        margin-bottom: 1rem;
+        display: flex;
+        padding: 0px 20px;
+        > input,
+        .input-group,
+        textarea {
+          width: 200px;
+          max-width: 280px;
+          resize: both;
+          .input-group-text {
+            padding: 5px;
+          }
+        }
+      }
+      .pid-pin {
+        .form-control {
+          width: 140px;
+        }
+      }
+    }
+  }
+}

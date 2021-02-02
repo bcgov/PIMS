@@ -245,9 +245,13 @@ namespace Pims.Dal.Services
         /// <returns></returns>
         public IEnumerable<int> GetAgencies(Guid userId)
         {
-            var user = this.Context.Users.Include(u => u.Agencies).ThenInclude(a => a.Agency).ThenInclude(a => a.Children).Single(u => u.Id == userId) ?? throw new KeyNotFoundException();
+            var user = this.Context.Users
+                .Include(u => u.Agencies)
+                .ThenInclude(a => a.Agency)
+                .ThenInclude(a => a.Children)
+                .Single(u => u.Id == userId) ?? throw new KeyNotFoundException();
             var agencies = user.Agencies.Select(a => a.AgencyId).ToList();
-            agencies.AddRange(user.Agencies.SelectMany(a => a.Agency?.Children).Select(a => a.Id));
+            agencies.AddRange(user.Agencies.SelectMany(a => a.Agency?.Children.Where(ac => !ac.IsDisabled)).Select(a => a.Id));
 
             return agencies.ToArray();
         }

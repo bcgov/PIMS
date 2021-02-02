@@ -9,7 +9,7 @@ import {
 import { IProject, IProperty } from '.';
 import { IFiscal, IEvaluation } from 'actions/parcelsActions';
 import { FiscalKeys } from 'constants/fiscalKeys';
-import { getCurrentFiscalYear, formatDate } from 'utils';
+import { getCurrentFiscalYear, formatDate, stringToNull } from 'utils';
 import _ from 'lodash';
 import { EvaluationKeys } from 'constants/evaluationKeys';
 import moment from 'moment';
@@ -75,12 +75,18 @@ export const toFlatProject = (project?: IApiProject) => {
   }
   const flatProperties = project.properties.map(pp => {
     const apiProperty: IApiProperty = (pp.building ?? pp.parcel) as IApiProperty;
-    const assessed = getMostRecentEvaluation(apiProperty.evaluations, EvaluationKeys.Assessed);
-    const appraised = getMostRecentAppraisal(apiProperty.evaluations, project.disposedOn);
+    const assessedLand = pp.parcel
+      ? getMostRecentEvaluation(apiProperty.evaluations, EvaluationKeys.Assessed)
+      : null;
+    const assessedBuilding = getMostRecentEvaluation(
+      apiProperty.evaluations,
+      EvaluationKeys.Improvements,
+    );
     const netBook = getCurrentFiscal(apiProperty.fiscals, FiscalKeys.NetBook);
     const market = getCurrentFiscal(apiProperty.fiscals, FiscalKeys.Market);
     const property: IProperty = {
       id: apiProperty.id,
+      projectNumbers: apiProperty.projectNumbers,
       projectPropertyId: pp.id,
       parcelId: apiProperty.parcelId ?? apiProperty.id,
       pid: apiProperty.pid ?? '',
@@ -104,14 +110,14 @@ export const toFlatProject = (project?: IApiProject) => {
       administrativeArea: apiProperty.address?.administrativeArea ?? '',
       province: apiProperty.address?.province ?? '',
       postal: apiProperty.address?.postal ?? '',
-      assessed: (assessed?.value as number) ?? 0,
-      assessedDate: assessed?.date,
-      assessedFirm: assessed?.firm,
-      assessedRowVersion: assessed?.rowVersion,
-      appraised: (appraised?.value as number) ?? 0,
-      appraisedDate: appraised?.date,
-      appraisedFirm: appraised?.firm,
-      appraisedRowVersion: appraised?.rowVersion,
+      assessedLand: (assessedLand?.value as number) ?? 0,
+      assessedLandDate: assessedLand?.date,
+      assessedLandFirm: assessedLand?.firm,
+      assessedLandRowVersion: assessedLand?.rowVersion,
+      assessedBuilding: (assessedBuilding?.value as number) ?? 0,
+      assessedBuildingDate: assessedBuilding?.date,
+      assessedBuildingFirm: assessedBuilding?.firm,
+      assessedBuildingRowVersion: assessedBuilding?.rowVersion,
       netBook: (netBook?.value as number) ?? 0,
       netBookFiscalYear: netBook?.fiscalYear as number,
       netBookRowVersion: netBook?.rowVersion,
@@ -140,33 +146,44 @@ const getApiEvaluations = (property: IProperty): IEvaluation[] => {
   evaluations.push({
     parcelId: property.propertyTypeId === 0 ? property.id : undefined,
     buildingId: property.propertyTypeId === 1 ? property.id : undefined,
-    value: property.appraised,
-    date: property.appraisedDate ?? formatDate(new Date()),
-    rowVersion: property.appraisedRowVersion,
-    key: EvaluationKeys.Appraised,
-    firm: property.appraisedFirm ?? '',
+    value:
+      property.propertyTypeId === 0 ? property.assessedLand || 0 : property.assessedBuilding || 0,
+    date:
+      property.propertyTypeId === 0
+        ? property.assessedLandDate ?? formatDate(new Date())
+        : property.assessedBuildingDate ?? formatDate(new Date()),
+    rowVersion: property.assessedLandRowVersion,
+    key: EvaluationKeys.Assessed,
+    firm: property.assessedLandFirm ?? '',
   });
   evaluations.push({
     parcelId: property.propertyTypeId === 0 ? property.id : undefined,
     buildingId: property.propertyTypeId === 1 ? property.id : undefined,
-    value: property.assessed,
-    date: property.assessedDate ?? formatDate(new Date()),
-    rowVersion: property.assessedRowVersion,
-    key: EvaluationKeys.Assessed,
-    firm: property.assessedFirm ?? '',
+    value:
+      property.propertyTypeId === 0 ? property.assessedLand || 0 : property.assessedBuilding || 0,
+    date:
+      property.propertyTypeId === 0
+        ? property.assessedLandDate ?? formatDate(new Date())
+        : property.assessedBuildingDate ?? formatDate(new Date()),
+    rowVersion: property.assessedLandRowVersion,
+    key: EvaluationKeys.Improvements,
+    firm: property.assessedLandFirm ?? '',
   });
 
   return evaluations;
 };
 
-const toApiProperty = (property: IProperty): IApiProperty => {
+export const toApiProperty = (
+  property: IProperty,
+  useCurrentFiscal: boolean = false,
+): IApiProperty => {
   const apiProperty: IApiProperty = {
     id: property.id,
     parcelId: property.propertyTypeId === 0 ? property.id : undefined,
     buildingId: property.propertyTypeId === 1 ? property.id : undefined,
     pid: property.pid,
     pin: Number(property.pin),
-    projectNumber: property.projectNumber ?? '',
+    projectNumbers: property.projectNumbers ?? [],
     latitude: property.latitude,
     longitude: property.longitude,
     classificationId: property.classificationId,
@@ -194,7 +211,9 @@ const toApiProperty = (property: IProperty): IApiProperty => {
         parcelId: property.propertyTypeId === 0 ? property.id : undefined,
         buildingId: property.propertyTypeId === 1 ? property.id : undefined,
         value: property.netBook,
-        fiscalYear: property.netBookFiscalYear ?? getCurrentFiscalYear(),
+        fiscalYear: !useCurrentFiscal
+          ? property.netBookFiscalYear ?? getCurrentFiscalYear()
+          : getCurrentFiscalYear(),
         rowVersion: property.netBookRowVersion,
         key: FiscalKeys.NetBook,
       },
@@ -202,7 +221,9 @@ const toApiProperty = (property: IProperty): IApiProperty => {
         parcelId: property.propertyTypeId === 0 ? property.id : undefined,
         buildingId: property.propertyTypeId === 1 ? property.id : undefined,
         value: property.market,
-        fiscalYear: property.marketFiscalYear ?? getCurrentFiscalYear(),
+        fiscalYear: !useCurrentFiscal
+          ? property.marketFiscalYear ?? getCurrentFiscalYear()
+          : getCurrentFiscalYear(),
         rowVersion: property.marketRowVersion,
         key: FiscalKeys.Market,
       },
@@ -242,10 +263,10 @@ export const toApiProject = (project: IProject) => {
     projectAgencyResponses: projectAgencyResponses,
     exemptionRationale: project.exemptionRationale,
     exemptionRequested: project.exemptionRequested,
-    netBook: Number(project.netBook),
-    market: Number(project.market),
-    assessed: Number(project.assessed),
-    appraised: project.appraised,
+    netBook: stringToNull(project.netBook),
+    market: stringToNull(project.market),
+    assessed: stringToNull(project.assessed),
+    appraised: stringToNull(project.appraised),
     notes: project.notes.filter(note => note.id || note.note),
   };
   // convert all empty strings (required by formik) to undefined

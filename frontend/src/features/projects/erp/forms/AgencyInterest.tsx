@@ -36,9 +36,7 @@ export const AgencyInterest = ({ disabled = false }: IAgencyInterestProps) => {
   const onAddAgency = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => {
     event.preventDefault();
     const selectedAgency = getIn(values, 'addAgencyResponse');
-    const agency = agencies.find(
-      a => ((a.id as unknown) as number) === parseInt(selectedAgency?.value),
-    );
+    const agency = agencies.find(a => ((a.id as unknown) as number) === parseInt(selectedAgency));
     if (agency !== undefined) {
       const project = addAgency({
         project: values,

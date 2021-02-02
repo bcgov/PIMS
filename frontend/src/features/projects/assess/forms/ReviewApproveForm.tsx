@@ -20,6 +20,7 @@ import _ from 'lodash';
 import { useFormikContext } from 'formik';
 import ExemptionRequest from '../../dispose/components/ExemptionRequest';
 import { Form, FastDatePicker } from 'components/common/form';
+import { ErpNotificationNotes } from 'features/projects/common/components/ProjectNotes';
 
 /**
  * Form component of ReviewApproveStep (currently a multi-step form).
@@ -110,6 +111,7 @@ const ReviewApproveForm = ({
       <ProjectNotes outerClassName="col-md-12 reviewRequired" disabled={true} />
       <PublicNotes outerClassName="col-md-12 reviewRequired" disabled={!canEdit} />
       <PrivateNotes outerClassName="col-md-12 reviewRequired" disabled={!canEdit} />
+      <ErpNotificationNotes outerClassName="col-md-12 reviewRequired" disabled={!canEdit} />
     </Fragment>
   );
 };

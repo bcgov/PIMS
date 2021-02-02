@@ -35,19 +35,7 @@ exports[`building popup view renders correctly 1`] = `
         className="list-group"
         onKeyDown={[Function]}
       >
-        <div
-          className="list-group-item"
-          data-rb-event-key={null}
-          disabled={false}
-          onClick={[Function]}
-        >
-          <p
-            className="label"
-          >
-            Assessed Value:
-          </p>
-          0
-        </div>
+        0
         <div
           className="list-group-item"
           data-rb-event-key={null}
@@ -88,18 +76,6 @@ exports[`building popup view renders correctly 1`] = `
           </p>
           3
         </div>
-        <div
-          className="list-group-item"
-          data-rb-event-key={null}
-          disabled={false}
-          onClick={[Function]}
-        >
-          <p
-            className="label"
-          >
-            Predominate Use:
-          </p>
-        </div>
       </div>
     </div>
   </div>
@@ -110,13 +86,13 @@ exports[`building popup view renders correctly 1`] = `
       className="col"
     >
       <a
-        href="/mapview/1?disabled=true&loadDraft=false&sidebar=true"
+        href="/mapview?buildingId=1&disabled=true&loadDraft=false&sidebar=true"
         onClick={[Function]}
       >
         View
       </a>
       <a
-        href="/mapview/1?disabled=false&loadDraft=false&sidebar=true"
+        href="/mapview?buildingId=1&disabled=false&loadDraft=false&sidebar=true"
         onClick={[Function]}
       >
         Update

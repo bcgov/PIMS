@@ -6,6 +6,7 @@
     <Version>0.1.0.0-alpha</Version>
     <AssemblyVersion>0.1.0.0</AssemblyVersion>
     <ProjectGuid>561C2601-E1DB-44DE-B772-518A6FEA63D9</ProjectGuid>
+    <Configurations>Debug;Release</Configurations>
   </PropertyGroup>
 
   <ItemGroup>

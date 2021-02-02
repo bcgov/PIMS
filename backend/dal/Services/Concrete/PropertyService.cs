@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Text.Json;
 
 namespace Pims.Dal.Services
 {
@@ -65,14 +66,14 @@ namespace Pims.Dal.Services
             var query = this.Context.GenerateQuery(this.User, filter);
             var properties = query.Select(x => new ProjectProperty(x)).ToArray();
 
-            var projectNumbers = properties.Select(p => p.ProjectNumber).Distinct().ToArray();
+            var projectNumbers = properties.SelectMany(p => JsonSerializer.Deserialize<IEnumerable<string>>(p.ProjectNumbers ?? "[]")).Distinct().ToArray();
             var statuses = from p in this.Context.ProjectProperties
                            where projectNumbers.Contains(p.Project.ProjectNumber)
                            select new { p.Project.ProjectNumber, p.Project.Status };
 
             foreach (var status in statuses)
             {
-                foreach (var projectProperty in properties.Where(property => property.ProjectNumber == status.ProjectNumber))
+                foreach (var projectProperty in properties.Where(property => property.ProjectNumbers.Contains(status.ProjectNumber)))
                 {
                     projectProperty.ProjectStatus = status.Status.Code;
                 }
@@ -109,7 +110,7 @@ namespace Pims.Dal.Services
             }
 
             var query = this.Context.GenerateQuery(this.User, filter);
-            var properties = query.Where(x=> !string.IsNullOrWhiteSpace(x.Name)).Select(x => x.Name).ToArray();
+            var properties = query.Where(x => !string.IsNullOrWhiteSpace(x.Name)).Select(x => x.Name).ToArray();
 
             return properties;
         }
@@ -121,7 +122,7 @@ namespace Pims.Dal.Services
         /// </summary>
         /// <param name="filter"></param>
         /// <returns></returns>
-        public IEnumerable<ProjectProperty> Search(AllPropertyFilter filter)
+        public IEnumerable<PropertyModel> Search(AllPropertyFilter filter)
         {
             this.User.ThrowIfNotAuthorized(Permissions.PropertyView);
             filter.ThrowIfNull(nameof(filter));
@@ -139,8 +140,8 @@ namespace Pims.Dal.Services
                 filter.PropertyType = Entities.PropertyTypes.Building;
             }
 
-            var query = this.Context.GenerateQuery(this.User, filter);
-            var properties = query.Select(x => new ProjectProperty(x)).ToArray();
+            var query = this.Context.GenerateAllPropertyQuery(this.User, filter);
+            var properties = query.Select(p => p.PropertyTypeId == Entities.PropertyTypes.Land ? new ParcelModel(p, this.User) as PropertyModel : new BuildingModel(p, this.User)).ToArray();
 
             // TODO: Add optional paging ability to query.
 

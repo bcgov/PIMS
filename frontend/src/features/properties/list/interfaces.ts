@@ -33,10 +33,10 @@ export interface IProperty {
   netBook: number;
   netBookFiscalYear?: number;
 
-  assessed: number;
-  assessedDate?: Date | string;
-  appraised: number;
-  appraisedDate?: Date | string;
+  assessedLand?: number;
+  assessedLandDate?: Date | string;
+  assessedBuilding?: number;
+  assessedBuildingDate?: Date | string;
 
   // Parcel Properties
   landArea: number;

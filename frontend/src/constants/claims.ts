@@ -18,6 +18,7 @@ export enum Claims {
   PROJECT_DELETE = 'project-delete',
   REPORTS_VIEW = 'reports-view',
   REPORTS_SPL = 'reports-spl',
+  REPORTS_SPL_ADMIN = 'reports-spl-admin',
 }
 
 export default Claims;

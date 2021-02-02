@@ -44,6 +44,8 @@ type OptionalAttributes = {
   required?: boolean;
   /** Whether negative numbers are allowed. */
   allowNegative?: boolean;
+  /** Suppress validation on submit */
+  suppressValidation?: boolean;
 };
 
 export type CurrencyInputProps = RequiredAttributes &
@@ -62,6 +64,7 @@ const CurrencyInput = ({
   placeholder,
   tooltip,
   required,
+  suppressValidation,
   formikProps: {
     handleBlur,
     values,
@@ -70,6 +73,7 @@ const CurrencyInput = ({
     touched,
     registerField,
     unregisterField,
+    isSubmitting,
   },
   ...rest
 }: CurrencyInputProps) => {
@@ -79,10 +83,15 @@ const CurrencyInput = ({
   });
   value = value ? value : getIn(values, field);
   const error = getIn(errors, field);
-  const touch = getIn(touched, field);
+  let touch = getIn(touched, field);
+  if (isSubmitting && suppressValidation) {
+    touch = false;
+  }
+
   if (!rest.allowNegative && !isPositiveNumberOrZero(value)) {
     value = '';
   }
+
   useEffect(() => {
     registerField(field, {});
     return () => {

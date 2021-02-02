@@ -58,17 +58,17 @@ namespace Pims.Api.Areas.Reports.Models.Project
         /// <summary>
         /// get/set - The property netbook value.
         /// </summary>
-        public decimal NetBook { get; set; }
+        public decimal? NetBook { get; set; }
 
         /// <summary>
         /// get/set - The property assessed value.
         /// </summary>
-        public decimal Assessed { get; set; }
+        public decimal? Assessed { get; set; }
 
         /// <summary>
         /// get/set - The property market value.
         /// </summary>
-        public decimal Market { get; set; }
+        public decimal? Market { get; set; }
 
         /// <summary>
         /// get/set - The land area of the parcel.

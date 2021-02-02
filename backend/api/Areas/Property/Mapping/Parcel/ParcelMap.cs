@@ -3,11 +3,29 @@ using Pims.Api.Mapping.Converters;
 using Entity = Pims.Dal.Entities;
 using Model = Pims.Api.Areas.Property.Models.Parcel;
 using BModel = Pims.Api.Models;
+using System.Text.Json;
+using System.Collections.Generic;
+using Microsoft.Extensions.Options;
+using System.Linq;
 
 namespace Pims.Api.Areas.Property.Mapping.Parcel
 {
     public class ParcelMap : IRegister
     {
+        #region Variables
+        private readonly JsonSerializerOptions _serializerOptions;
+        #endregion
+
+        #region Constructors
+        /// <summary>
+        /// Creates a new instance of a ProjectMap, initializes with specified arguments.
+        /// </summary>
+        /// <param name="serializerOptions"></param>
+        public ParcelMap(IOptions<JsonSerializerOptions> serializerOptions)
+        {
+            _serializerOptions = serializerOptions.Value;
+        }
+        #endregion
 
         public void Register(TypeAdapterConfig config)
         {
@@ -16,11 +34,12 @@ namespace Pims.Api.Areas.Property.Mapping.Parcel
                 .Map(dest => dest.Id, src => src.Id)
                 .Map(dest => dest.PID, src => src.ParcelIdentity)
                 .Map(dest => dest.PIN, src => src.PIN)
-                .Map(dest => dest.ProjectNumber, src => src.ProjectNumber)
+                .Map(dest => dest.ProjectNumbers, src => JsonSerializer.Deserialize<IEnumerable<string>>(src.ProjectNumbers ?? "[]", _serializerOptions))
                 .Map(dest => dest.Name, src => src.Name)
                 .Map(dest => dest.Description, src => src.Description)
                 .Map(dest => dest.ClassificationId, src => src.ClassificationId)
                 .Map(dest => dest.Classification, src => src.Classification.Name)
+                .Map(dest => dest.EncumbranceReason, src => src.EncumbranceReason)
                 .Map(dest => dest.AgencyId, src => src.AgencyId)
                 .Map(dest => dest.Agency, src => AgencyConverter.ConvertAgency(src.Agency))
                 .Map(dest => dest.SubAgency, src => AgencyConverter.ConvertSubAgency(src.Agency))
@@ -43,8 +62,9 @@ namespace Pims.Api.Areas.Property.Mapping.Parcel
                 .Map(dest => dest.Id, src => src.Id)
                 .Map(dest => dest.PID, src => ParcelConverter.ConvertPID(src.PID))
                 .Map(dest => dest.PIN, src => src.PIN)
-                .Map(dest => dest.ProjectNumber, src => src.ProjectNumber == "" ? null : src.ProjectNumber)
+                .Map(dest => dest.ProjectNumbers, src => JsonSerializer.Serialize<IEnumerable<string>>(src.ProjectNumbers ?? Enumerable.Empty<string>(), _serializerOptions))
                 .Map(dest => dest.ClassificationId, src => src.ClassificationId)
+                .Map(dest => dest.EncumbranceReason, src => src.EncumbranceReason)
                 .Map(dest => dest.Name, src => src.Name)
                 .Map(dest => dest.Description, src => src.Description)
                 .Map(dest => dest.AgencyId, src => src.AgencyId)

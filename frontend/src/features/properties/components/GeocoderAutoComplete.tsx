@@ -9,6 +9,7 @@ import TooltipIcon from 'components/common/TooltipIcon';
 import TooltipWrapper from 'components/common/TooltipWrapper';
 import { useCallback } from 'react';
 import classNames from 'classnames';
+import { useFormikContext } from 'formik';
 
 interface IGeocoderAutoCompleteProps {
   field: string;
@@ -47,6 +48,7 @@ export const GeocoderAutoComplete: React.FC<IGeocoderAutoCompleteProps> = ({
 }) => {
   const [options, setOptions] = React.useState<IGeocoderResponse[]>([]);
   const api = useApi();
+  const { handleBlur } = useFormikContext<any>();
   const errorTooltip = error && touch && displayErrorTooltips ? error : undefined;
 
   const search = useCallback(
@@ -106,7 +108,6 @@ export const GeocoderAutoComplete: React.FC<IGeocoderAutoCompleteProps> = ({
           controlId={`input-${field}`}
           className={classNames(!!required ? 'required' : '', outerClassName)}
         >
-          {!!tooltip && <TooltipIcon toolTipId={`${field}-tooltip`} toolTip={tooltip} />}
           <TooltipWrapper toolTipId={`${field}-error-tooltip}`} toolTip={errorTooltip}>
             <InputControl
               autoComplete={autoSetting}
@@ -117,11 +118,13 @@ export const GeocoderAutoComplete: React.FC<IGeocoderAutoCompleteProps> = ({
               placeholder={placeholder}
               disabled={disabled}
               required={required}
+              onBlur={handleBlur}
               {...rest}
             />
           </TooltipWrapper>
+          {!!tooltip && <TooltipIcon toolTipId={`${field}-tooltip`} toolTip={tooltip} />}
           {renderSuggestions()}
-          <DisplayError field={field} />
+          {!errorTooltip && <DisplayError field={field} />}
         </Form.Group>
       </ClickAwayListener>
     </div>
@@ -135,6 +138,10 @@ interface IDebounceInputProps extends FormControlProps {
   placeholder?: string;
   isInvalid?: boolean;
   onTextChange: (value?: string) => void;
+  onBlur: {
+    (e: React.FocusEvent<any>): void;
+    <T = any>(fieldOrEvent: T): T extends string ? (e: any) => void : void;
+  };
 }
 
 const InputControl: React.FC<IDebounceInputProps> = ({ onTextChange, ...props }) => {

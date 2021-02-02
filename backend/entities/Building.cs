@@ -40,9 +40,19 @@ namespace Pims.Dal.Entities
         public string BuildingTenancy { get; set; }
 
         /// <summary>
+        /// get/set - The date the building tenancy was last updated.
+        /// </summary>
+        public DateTime? BuildingTenancyUpdatedOn { get; set; }
+
+        /// <summary>
         /// get/set - The building rentable area.
         /// </summary>
         public float RentableArea { get; set; }
+
+        /// <summary>
+        /// get/set - The building total area.
+        /// </summary>
+        public float TotalArea { get; set; }
 
         /// <summary>
         /// get/set - The foreign key to the building occupant type.
@@ -68,6 +78,11 @@ namespace Pims.Dal.Entities
         /// get/set - Whether the lease on this building would be transferred if the building is sold.
         /// </summary>
         public bool TransferLeaseOnSale { get; set; } = false;
+
+        /// <summary>
+        /// get/set - Metadata related to the buildings leased status.
+        /// </summary>
+        public string LeasedLandMetadata { get; set; }
 
         /// <summary>
         /// get - A collection of parcels this building is located on.
@@ -106,8 +121,10 @@ namespace Pims.Dal.Entities
         /// <param name="longitude"></param>
         public Building(Parcel parcel, double latitude, double longitude) : base(latitude, longitude)
         {
-            var pb = new ParcelBuilding(parcel, this);
-            this.Parcels.Add(pb);
+            if (parcel != null) {
+                var pb = new ParcelBuilding(parcel, this);
+                this.Parcels.Add(pb);
+            }
         }
         #endregion
     }

@@ -1,4 +1,9 @@
+using Pims.Dal.Helpers.Extensions;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.Json;
+using System.Text.RegularExpressions;
 
 namespace Pims.Dal.Entities
 {
@@ -95,6 +100,7 @@ namespace Pims.Dal.Entities
             this.Project = project;
 
             this.PropertyType = property.GetType() == typeof(Parcel) ? PropertyTypes.Land : PropertyTypes.Building;
+            property.UpdateProjectNumbers(project.ProjectNumber);
 
             switch (this.PropertyType)
             {
@@ -102,13 +108,11 @@ namespace Pims.Dal.Entities
                     this.ParcelId = property?.Id ??
                         throw new ArgumentNullException(nameof(property));
                     this.Parcel = property as Parcel;
-                    this.Parcel.ProjectNumber = project.ProjectNumber;
                     break;
                 case (PropertyTypes.Building):
                     this.BuildingId = property?.Id ??
                         throw new ArgumentNullException(nameof(property));
                     this.Building = property as Building;
-                    this.Building.ProjectNumber = project.ProjectNumber;
                     break;
                 default:
                     throw new ArgumentException("A property must be a parcel or a building.", nameof(property));

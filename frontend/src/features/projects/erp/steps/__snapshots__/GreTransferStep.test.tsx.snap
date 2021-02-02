@@ -12,6 +12,16 @@ exports[`GRE Transfer Step renders correctly 1`] = `
   font-family: 'BCSans',Fallback,sans-serif;
 }
 
+.c3 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-flow: column;
+  -ms-flex-flow: column;
+  flex-flow: column;
+}
+
 .c2 {
   text-align: center;
   font-family: 'BCSans-Bold';
@@ -95,6 +105,9 @@ exports[`GRE Transfer Step renders correctly 1`] = `
             name="projectNumber"
             onBlur={[Function]}
             onChange={[Function]}
+            onFocus={[Function]}
+            onMouseOut={[Function]}
+            onMouseOver={[Function]}
             placeholder="SPP-XXXXXX"
             value="test-01"
           />
@@ -119,7 +132,9 @@ exports[`GRE Transfer Step renders correctly 1`] = `
             name="name"
             onBlur={[Function]}
             onChange={[Function]}
-            required={true}
+            onFocus={[Function]}
+            onMouseOut={[Function]}
+            onMouseOver={[Function]}
             value="my project"
           />
         </div>
@@ -143,6 +158,9 @@ exports[`GRE Transfer Step renders correctly 1`] = `
             name="description"
             onBlur={[Function]}
             onChange={[Function]}
+            onFocus={[Function]}
+            onMouseOut={[Function]}
+            onMouseOver={[Function]}
             value="my project description"
           />
         </div>
@@ -280,6 +298,13 @@ exports[`GRE Transfer Step renders correctly 1`] = `
                   className="sortable-column"
                 >
                   Agency
+                  <span
+                    style={
+                      Object {
+                        "flex": "1 1 auto",
+                      }
+                    }
+                  />
                 </div>
               </div>
               <div
@@ -303,6 +328,13 @@ exports[`GRE Transfer Step renders correctly 1`] = `
                   className="sortable-column"
                 >
                   Name
+                  <span
+                    style={
+                      Object {
+                        "flex": "1 1 auto",
+                      }
+                    }
+                  />
                 </div>
               </div>
               <div
@@ -326,6 +358,13 @@ exports[`GRE Transfer Step renders correctly 1`] = `
                   className="sortable-column"
                 >
                   Civic Address
+                  <span
+                    style={
+                      Object {
+                        "flex": "1 1 auto",
+                      }
+                    }
+                  />
                 </div>
               </div>
               <div
@@ -349,6 +388,13 @@ exports[`GRE Transfer Step renders correctly 1`] = `
                   className="sortable-column"
                 >
                   Classification
+                  <span
+                    style={
+                      Object {
+                        "flex": "1 1 auto",
+                      }
+                    }
+                  />
                 </div>
               </div>
               <div
@@ -372,6 +418,13 @@ exports[`GRE Transfer Step renders correctly 1`] = `
                   className="sortable-column"
                 >
                   Current Zoning Code
+                  <span
+                    style={
+                      Object {
+                        "flex": "1 1 auto",
+                      }
+                    }
+                  />
                 </div>
               </div>
               <div
@@ -394,7 +447,14 @@ exports[`GRE Transfer Step renders correctly 1`] = `
                 <div
                   className="sortable-column"
                 >
-                  Potential Zoning Code
+                  Other Projects
+                  <span
+                    style={
+                      Object {
+                        "flex": "1 1 auto",
+                      }
+                    }
+                  />
                 </div>
               </div>
               <div
@@ -418,6 +478,13 @@ exports[`GRE Transfer Step renders correctly 1`] = `
                   className="sortable-column"
                 >
                   Net Book Value
+                  <span
+                    style={
+                      Object {
+                        "flex": "1 1 auto",
+                      }
+                    }
+                  />
                 </div>
               </div>
               <div
@@ -441,6 +508,13 @@ exports[`GRE Transfer Step renders correctly 1`] = `
                   className="sortable-column"
                 >
                   Market Value
+                  <span
+                    style={
+                      Object {
+                        "flex": "1 1 auto",
+                      }
+                    }
+                  />
                 </div>
               </div>
               <div
@@ -464,6 +538,13 @@ exports[`GRE Transfer Step renders correctly 1`] = `
                   className="sortable-column"
                 >
                   Assessed Value
+                  <span
+                    style={
+                      Object {
+                        "flex": "1 1 auto",
+                      }
+                    }
+                  />
                 </div>
               </div>
               <div
@@ -487,6 +568,13 @@ exports[`GRE Transfer Step renders correctly 1`] = `
                   className="sortable-column"
                 >
                   Type
+                  <span
+                    style={
+                      Object {
+                        "flex": "1 1 auto",
+                      }
+                    }
+                  />
                 </div>
               </div>
             </div>
@@ -610,7 +698,7 @@ exports[`GRE Transfer Step renders correctly 1`] = `
                   
                 </div>
                 <div
-                  className="td clickable"
+                  className="td"
                   onClick={[Function]}
                   role="cell"
                   style={
@@ -625,9 +713,11 @@ exports[`GRE Transfer Step renders correctly 1`] = `
                       "width": "100px",
                     }
                   }
-                  title="Click to view property details"
+                  title=""
                 >
-                  
+                  <div
+                    className="c3"
+                  />
                 </div>
                 <div
                   className="td"
@@ -687,7 +777,7 @@ exports[`GRE Transfer Step renders correctly 1`] = `
                   }
                   title=""
                 >
-                  $1
+                  $0
                 </div>
                 <div
                   className="td clickable"
@@ -948,6 +1038,9 @@ exports[`GRE Transfer Step renders correctly 1`] = `
           name="note"
           onBlur={[Function]}
           onChange={[Function]}
+          onFocus={[Function]}
+          onMouseOut={[Function]}
+          onMouseOver={[Function]}
           value="my notes"
         />
       </div>
@@ -994,6 +1087,9 @@ exports[`GRE Transfer Step renders correctly 1`] = `
           name="publicNote"
           onBlur={[Function]}
           onChange={[Function]}
+          onFocus={[Function]}
+          onMouseOut={[Function]}
+          onMouseOver={[Function]}
           value="public note"
         />
       </div>
@@ -1040,6 +1136,9 @@ exports[`GRE Transfer Step renders correctly 1`] = `
           name="privateNote"
           onBlur={[Function]}
           onChange={[Function]}
+          onFocus={[Function]}
+          onMouseOut={[Function]}
+          onMouseOver={[Function]}
           value="private note"
         />
       </div>

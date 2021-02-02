@@ -1,0 +1,22 @@
+.map-side-drawer {
+  h4 {
+    padding: 10px;
+  }
+  .container {
+    padding: 0;
+  }
+  .row {
+    margin: 0;
+  }
+  .form-group.col {
+    max-width: unset;
+    padding: 0px;
+    flex-grow: inherit;
+  }
+  .form-row > .col {
+    padding: 0px;
+  }
+  .th.sortable-column {
+    justify-content: flex-start;
+  }
+}

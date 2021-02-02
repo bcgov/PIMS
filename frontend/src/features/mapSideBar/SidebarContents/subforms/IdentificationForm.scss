@@ -1,0 +1,53 @@
+@import '../../../../colors.scss';
+.identification {
+  .req {
+    color: red;
+    font-weight: bold;
+  }
+  .container {
+    .suggestionList {
+      margin-top: 40px;
+      margin-left: 50px;
+    }
+    h4 {
+      margin-bottom: 20px;
+    }
+    width: 900px;
+    .form-label,
+    .label {
+      display: inline-block;
+      width: 140px;
+      text-align: right;
+      margin-right: 10px;
+    }
+    .form-control,
+    .AutoCompleteText {
+      width: 250px;
+    }
+    .harmful {
+      background-color: $light-danger-color;
+      width: 400px;
+      border-radius: 5px;
+      margin-left: 14px;
+      .invalid-feedback {
+        display: block;
+        font-size: 16px;
+      }
+    }
+    .lat-long {
+      width: 400px;
+      .marker-svg {
+        margin-top: 20px;
+      }
+      .form-group {
+        .form-control {
+          width: 200px;
+        }
+      }
+      text-align: left;
+      padding: 15px;
+      background-color: #e9ecef;
+      border-radius: 5px;
+    }
+  }
+}

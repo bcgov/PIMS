@@ -1,19 +1,17 @@
-import { FunctionComponent, useCallback } from 'react';
+import { FunctionComponent } from 'react';
 import React from 'react';
 import { Input, Form } from 'components/common/form';
-import { PidTooltip, PinTooltip } from '../strings';
-import { useFormikContext } from 'formik';
-import { IParcel } from 'actions/parcelsActions';
-import debounce from 'lodash/debounce';
+import { PidPinTooltip } from '../strings';
+import { Label } from 'components/common/Label';
 
 interface PidPinProps {
-  handlePidChange: (pid: string) => void;
-  handlePinChange: (pin: string) => void;
+  handlePidChange: (pid: string, nameSpace?: string) => void;
+  handlePinChange: (pin: string, nameSpace?: string) => void;
   nameSpace?: string;
   disabled?: boolean;
 }
 export const defaultPidPinFormValues: {
-  pid: number | '';
+  pid: string;
   pin: number | '';
 } = {
   pid: '',
@@ -25,6 +23,7 @@ export const defaultPidPinFormValues: {
  * @param {string} pid This is the target PID to be formatted
  */
 export const pidFormatter = (pid: string) => {
+  pid = pid.padStart(9, '0');
   const regex = /(\d\d\d)[\s-]?(\d\d\d)[\s-]?(\d\d\d)/;
   const format = pid.match(regex);
   if (format !== null && format.length === 4) {
@@ -38,51 +37,38 @@ const PidPinForm: FunctionComponent<PidPinProps> = (props: PidPinProps) => {
     const { nameSpace } = props;
     return nameSpace ? `${nameSpace}.${fieldName}` : fieldName;
   };
-  const { initialValues } = useFormikContext<IParcel>();
-
-  const debouncedHandlePidChange = useCallback(
-    debounce((pid: string) => {
-      props.handlePidChange(pid);
-    }, 100),
-    [],
-  );
 
   return (
     <>
-      <Form.Row className="d-inline-flex flex-nowrap">
-        <Form.Label>PID</Form.Label>
+      <Form.Row className="flex-nowrap pid-pin">
+        <Label>PID</Label>
         <Input
-          required
+          required={true}
           displayErrorTooltips
           className="input-small"
-          tooltip={PidTooltip}
           disabled={props.disabled}
           pattern={RegExp(/^[\d\- ]*$/)}
           onBlurFormatter={(pid: string) => {
-            if (pid && initialValues.pid !== pid) {
-              debouncedHandlePidChange(pid);
+            if (pid?.length > 0) {
+              return pid.replace(pid, pidFormatter(pid));
             }
-            return pid.replace(pid, pidFormatter(pid));
+            return '';
           }}
           field={withNameSpace('pid')}
         />
-        <Form.Label style={{ width: '35px', minWidth: '35px', paddingLeft: '5px' }}>
-          or
-          <br />
-          PIN&nbsp;
-        </Form.Label>
+        <Label style={{ paddingLeft: '5px' }}>PIN</Label>
         <Input
-          required
+          required={true}
           displayErrorTooltips
           className="input-small"
-          tooltip={PinTooltip}
+          tooltip={PidPinTooltip}
           disabled={props.disabled}
           field={withNameSpace('pin')}
-          onBlurFormatter={(pin: string) => {
-            if (pin && initialValues.pin !== pin) {
-              props.handlePinChange(pin);
+          onBlurFormatter={(pin: number) => {
+            if (pin > 0) {
+              return pin;
             }
-            return pin;
+            return '';
           }}
           type="number"
         />

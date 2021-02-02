@@ -135,6 +135,7 @@ export const mockDetails = [
     zoning: '',
     zoningPotential: '',
     classificationId: 1,
+    encumbranceReason: '',
     agencyId: 1,
     isSensitive: false,
     latitude: 48,
@@ -143,6 +144,8 @@ export const mockDetails = [
     classification: 'Core Operational',
     name: 'test name',
     description: 'test',
+    assessedLand: 10000,
+    assessedBuilding: 10000,
     evaluations: [
       {
         date: new Date(),
@@ -179,6 +182,7 @@ export const mockDetails = [
     zoning: '',
     zoningPotential: '',
     classificationId: 1,
+    encumbranceReason: '',
     agencyId: 2,
     isSensitive: false,
     latitude: 50,
@@ -186,6 +190,8 @@ export const mockDetails = [
     classification: 'Core Operational',
     name: 'test name',
     description: 'test',
+    assessedLand: 10000,
+    assessedBuilding: 10000,
     address: {
       id: 1,
       line1: '1234 mock Street',
@@ -224,6 +230,7 @@ export const ACTIVE = {
   zoning: '',
   zoningPotential: '',
   classificationId: 1,
+  encumbranceReason: '',
   agencyId: '',
   isSensitive: false,
   latitude: 48,
@@ -231,6 +238,8 @@ export const ACTIVE = {
   classification: 'Core Operational',
   name: 'test name',
   description: 'test',
+  assessedLand: 10000,
+  assessedBuilding: 10000,
   evaluations: [
     {
       date: new Date(),

@@ -292,7 +292,7 @@ describe('SPL Approval Step', () => {
           } else {
             done.fail('projectAgencyResponses was not equal to []');
           }
-          return [200, Promise.resolve({})];
+          return [200, Promise.resolve({ properties: [] })];
         })
         .onAny()
         .reply((config: any) => {
@@ -357,15 +357,14 @@ describe('SPL Approval Step', () => {
       const project = _.cloneDeep(mockProject);
       project.statusCode = ReviewWorkflowStatus.Disposed;
       const { getByText } = render(getSplStep(getStore(project)));
-      expect(getByText('Financing Information')).toBeVisible();
+      expect(getByText('Financial Summary')).toBeVisible();
     });
 
     it('displays close out notes', () => {
       const { getByText } = render(getSplStep(store));
-      expect(getByText('Loan Terms')).toBeVisible();
       expect(getByText('Adjustment to Prior Year Sale Notes')).toBeVisible();
       expect(getByText('Project Comments')).toBeVisible();
-      expect(getByText('Sales History Notes')).toBeVisible();
+      expect(getByText('OCG Variance Notes')).toBeVisible();
     });
   });
 });

@@ -1,13 +1,13 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { saveFilter } from 'reducers/filterSlice';
 import { RootState } from 'reducers/rootReducer';
 import _ from 'lodash';
 import queryString from 'query-string';
 import { TableSort } from 'components/Table/TableSort';
 import { generateMultiSortCriteria, resolveSortCriteriaFromUrl } from 'utils';
-import { useMount } from './useMount';
+import { PropertyTypes } from 'constants/propertyTypes';
 
 /**
  * Extract the specified properties from the source object.
@@ -21,9 +21,36 @@ import { useMount } from './useMount';
 const extractProps = (props: string[], source: any): any => {
   var dest = {} as any;
   props.forEach(p => {
-    if (source[p] !== undefined) dest[p] = source[p];
+    if (source[p] !== undefined) {
+      if (source[p] === 'true') {
+        dest[p] = true;
+      } else if (source[p] === 'false') {
+        dest[p] = false;
+      } else {
+        dest[p] = source[p];
+      }
+    }
   });
   return dest;
+};
+
+const defaultFilter = {
+  address: '',
+  administrativeArea: '',
+  agencies: '',
+  classificationId: '',
+  includeAllProperties: '',
+  maxAssessedValue: '',
+  maxLotSize: '',
+  maxMarketValue: '',
+  maxNetBookValue: '',
+  minLotSize: '',
+  name: '',
+  pid: '',
+  projectNumber: '',
+  propertyType: '',
+  rentableArea: '',
+  searchBy: 'address',
 };
 
 /**
@@ -62,19 +89,27 @@ export const useRouterFilter = <T extends object>({
 
   // Extract the query parameters to initialize the filter.
   // This will only occur the first time the component loads to ensure the URL query parameters are applied.
-  useMount(() => {
+  useEffect(() => {
     if (setFilter) {
       const params = queryString.parse(history.location.search);
       // Check if query contains filter params.
       const filterProps = Object.keys(filter);
       if (_.intersection(Object.keys(params), filterProps).length) {
-        let merged = extractProps(filterProps, params);
+        let merged = { ...defaultFilter, ...extractProps(filterProps, params) };
+        if (!merged.propertyType) {
+          merged = { ...merged, propertyType: PropertyTypes.Land };
+        }
         // Only change state if the query parameters are different than the default filter.
-        if (!_.isEqual(merged, filter)) setFilter(merged);
+        if (!_.isEqual(_.omit(merged, 'propertyType'), _.omit(filter, 'propertyType')))
+          setFilter(merged);
       } else if (savedFilter?.hasOwnProperty(key)) {
-        let merged = extractProps(filterProps, savedFilter[key]);
+        let merged = { ...defaultFilter, ...extractProps(filterProps, savedFilter[key]) };
+        if (!merged.propertyType) {
+          merged = { ...merged, propertyType: PropertyTypes.Land };
+        }
         // Only change state if the saved filter is different than the default filter.
-        if (!_.isEqual(merged, filter)) setFilter(merged);
+        if (!_.isEqual(_.omit(merged, 'propertyType'), _.omit(filter, 'propertyType')))
+          setFilter(merged);
       }
 
       if (params.sorting && setSorting) {
@@ -86,7 +121,8 @@ export const useRouterFilter = <T extends object>({
         }
       }
     }
-  });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [history.location.pathname]);
 
   // If the 'filter' changes save it to redux store and update the URL.
   React.useEffect(() => {

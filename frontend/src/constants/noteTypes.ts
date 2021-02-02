@@ -46,4 +46,6 @@ export enum NoteTypes {
   SplRemoval = 20,
   /** Notes related to the provided documentation. */
   Documentation = 21,
+  /** Notes displayed on ERP notifications. */
+  ErpNotification = 22,
 }

@@ -99,7 +99,7 @@ namespace Pims.Tools.Keycloak.Sync
         private static IConfigurationBuilder Configure(string[] args)
         {
             DotNetEnv.Env.Load();
-            string environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+            string environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT").ToLower();
 
             return new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())

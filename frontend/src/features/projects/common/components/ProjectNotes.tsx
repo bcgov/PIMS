@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Form } from 'react-bootstrap';
 import { TextArea } from 'components/common/form';
 import './ProjectNotes.scss';
+import { NoteTypes } from 'constants/noteTypes';
 
 export interface IProjectNotesProps {
   /** The formik field name by default this is notes */
@@ -79,6 +80,29 @@ export const PublicNotes = ({
       tooltip={tooltip ?? 'Visible to SRES and project agency'}
       label={label ?? 'Shared Notes'}
       field={field ?? 'publicNote'}
+      className={className}
+      outerClassName={outerClassName}
+    />
+  );
+};
+
+export const ErpNotificationNotes = ({
+  label,
+  tooltip,
+  field,
+  className,
+  outerClassName,
+  disabled,
+}: IProjectNotesProps) => {
+  return (
+    <ProjectNotes
+      disabled={disabled}
+      tooltip={
+        tooltip ??
+        'The contents of this note will be included in email notifications for this project related to the ERP process.'
+      }
+      label={label ?? 'Add the following text to the ERP Notification Email'}
+      field={`notes[${NoteTypes.ErpNotification}].note`}
       className={className}
       outerClassName={outerClassName}
     />

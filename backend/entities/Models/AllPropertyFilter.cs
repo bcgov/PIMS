@@ -77,6 +77,11 @@ namespace Pims.Dal.Entities.Models
         /// </summary>
         /// <value></value>
         public float? MaxRentableArea { get; set; }
+
+        /// <summary>
+        /// get/set - Whether to include properties not owned by user's agency when searching.
+        /// </summary>
+        public bool IncludeAllProperties { get; set; }
         #endregion
         #endregion
 
@@ -107,10 +112,10 @@ namespace Pims.Dal.Entities.Models
         /// <param name="boundary"></param>
         public AllPropertyFilter(Envelope boundary)
         {
-            this.NELatitude = boundary.MaxY;
-            this.NELongitude = boundary.MaxX;
-            this.SWLatitude = boundary.MinY;
-            this.SWLongitude = boundary.MinX;
+            this.NELatitude = boundary?.MaxY;
+            this.NELongitude = boundary?.MaxX;
+            this.SWLatitude = boundary?.MinY;
+            this.SWLongitude = boundary?.MinX;
         }
 
         /// <summary>
@@ -122,7 +127,6 @@ namespace Pims.Dal.Entities.Models
         {
             // We want case-insensitive query parameter properties.
             var filter = new Dictionary<string, Microsoft.Extensions.Primitives.StringValues>(query, StringComparer.OrdinalIgnoreCase);
-            PropertyTypes propType;
 
             this.PID = filter.GetStringValue(nameof(this.PID));
             this.Zoning = filter.GetStringValue(nameof(this.Zoning));
@@ -130,13 +134,14 @@ namespace Pims.Dal.Entities.Models
             this.MinLandArea = filter.GetFloatNullValue(nameof(this.MinLandArea));
             this.MaxLandArea = filter.GetFloatNullValue(nameof(this.MaxLandArea));
 
-            this.PropertyType = Enum.TryParse(filter.GetStringValue(nameof(this.PropertyType), null), out propType) ? (PropertyTypes?)propType : null;
+            this.PropertyType = Enum.TryParse(filter.GetStringValue(nameof(this.PropertyType), null), out PropertyTypes propType) ? (PropertyTypes?)propType : null;
             this.ConstructionTypeId = filter.GetIntNullValue(nameof(this.ConstructionTypeId));
             this.PredominateUseId = filter.GetIntNullValue(nameof(this.PredominateUseId));
             this.FloorCount = filter.GetIntNullValue(nameof(this.FloorCount));
             this.Tenancy = filter.GetStringValue(nameof(this.Tenancy));
             this.MinRentableArea = filter.GetFloatNullValue(nameof(this.MinRentableArea));
             this.MaxRentableArea = filter.GetFloatNullValue(nameof(this.MaxRentableArea));
+            this.IncludeAllProperties = filter.GetBoolValue(nameof(this.IncludeAllProperties));
         }
         #endregion
 

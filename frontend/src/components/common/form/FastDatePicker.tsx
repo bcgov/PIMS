@@ -7,6 +7,8 @@ import { formikFieldMemo } from 'utils';
 import classNames from 'classnames';
 import GenericModal from '../GenericModal';
 import { appraisalDateWarning } from 'features/projects/common';
+import * as Popper from 'popper.js';
+import dequal from 'dequal';
 
 type RequiredAttributes = {
   /** The field name */
@@ -28,6 +30,8 @@ type OptionalAttributes = {
   label?: string;
   /** Whether the field is required. Makes the field border blue. */
   required?: boolean;
+  /** optional popper modifiers to pass to the datepicker */
+  popperModifiers?: Popper.Modifiers | undefined;
 };
 
 export type FastDatePickerProps = FormControlProps &
@@ -47,6 +51,7 @@ const FormikDatePicker: FunctionComponent<FastDatePickerProps> = ({
   oldDateWarning,
   label,
   required,
+  popperModifiers,
   formikProps: {
     values,
     initialValues,
@@ -70,7 +75,7 @@ const FormikDatePicker: FunctionComponent<FastDatePickerProps> = ({
   if (typeof value === 'string') {
     value = moment(value, 'YYYY-MM-DD').toDate();
   }
-  if (value && value !== initialValue) {
+  if (value && dequal(moment(initialValue, 'YYYY-MM-DD'), moment(value, 'YYYY-MM-DD'))) {
     setFieldTouched(field);
   }
   useEffect(() => {
@@ -103,6 +108,7 @@ const FormikDatePicker: FunctionComponent<FastDatePickerProps> = ({
         disabled={disabled}
         minDate={minDate ? moment(minDate, 'YYYY-MM-DD').toDate() : undefined}
         {...rest}
+        popperModifiers={popperModifiers}
         onBlur={() => {
           if (oldDateWarning && initialValue && moment(initialValue).isAfter(moment(value))) {
             setOldDate(value);

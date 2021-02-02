@@ -104,7 +104,6 @@ export const Input: React.FC<InputProps> = ({
           className={className}
           as={asElement}
           name={field}
-          required={required}
           style={style}
           disabled={disabled}
           custom={custom}

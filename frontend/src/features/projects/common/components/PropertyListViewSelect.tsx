@@ -14,6 +14,7 @@ import useTable from '../../dispose/hooks/useTable';
 import { useHistory } from 'react-router-dom';
 import { getPropertyColumns, getColumnsWithRemove } from './columns';
 import useCodeLookups from 'hooks/useLookupCodes';
+import queryString from 'query-string';
 
 type RequiredAttributes = {
   /** The field name */
@@ -115,6 +116,22 @@ export const PropertyListViewSelect: React.FC<InputProps> = ({
     setFieldValue(field, properties);
   }, [properties, setFieldValue, field]);
 
+  const onRowClick = useCallback(
+    (row: IProperty) => {
+      history.push({
+        pathname: '/mapview',
+        search: queryString.stringify({
+          sidebar: true,
+          disabled: true,
+          loadDraft: false,
+          parcelId: row.propertyTypeId === 0 ? row.id : undefined,
+          buildingId: row.propertyTypeId === 1 ? row.id : undefined,
+        }),
+      });
+    },
+    [history],
+  );
+
   return (
     <Container className="col-md-12 PropertyListViewSelect">
       {!disabled && (
@@ -145,13 +162,7 @@ export const PropertyListViewSelect: React.FC<InputProps> = ({
             pageIndex={pageIndex}
             setSelectedRows={setSelectedProperties}
             clickableTooltip={clickableTooltip}
-            onRowClick={(row: IProperty) => {
-              history.push(
-                `/mapview/${
-                  row.propertyTypeId === 0 ? row.id : row.parcelId
-                }?disabled=true&sidebar=true&loadDraft=false`,
-              );
-            }}
+            onRowClick={onRowClick}
           />
         </div>
       )}

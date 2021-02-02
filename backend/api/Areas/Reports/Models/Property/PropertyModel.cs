@@ -78,11 +78,18 @@ namespace Pims.Api.Areas.Reports.Models.Property
         public bool IsSensitive { get; set; }
 
         /// <summary>
-        /// get/set - The most recent assessed value.
+        /// get/set - The most recent assessed land value.
         /// </summary>
-        [DisplayName("Assessed Value")]
-        [CsvHelper.Configuration.Attributes.Name("Assessed Value")]
-        public decimal Assessed { get; set; }
+        [DisplayName("Assessed Land Value")]
+        [CsvHelper.Configuration.Attributes.Name("Assessed Land Value")]
+        public decimal? AssessedLand { get; set; }
+
+        /// <summary>
+        /// get/set - The most recent assessed building value.
+        /// </summary>
+        [DisplayName("Assessed Building Value")]
+        [CsvHelper.Configuration.Attributes.Name("Assessed Building Value")]
+        public decimal? AssessedBuilding { get; set; }
 
         /// <summary>
         /// get/set - The most recent market value.

@@ -66,7 +66,7 @@ export const Check: React.FC<CheckProps> = ({
   toolTipId,
   ...rest
 }) => {
-  const { values, setFieldValue, errors, touched, setFieldTouched } = useFormikContext();
+  const { values, setFieldValue, errors, touched, handleBlur } = useFormikContext();
   const touch = getIn(touched, field);
   const checked = getIn(values, field);
   const error = getIn(errors, field);
@@ -95,13 +95,17 @@ export const Check: React.FC<CheckProps> = ({
             isInvalid={!!touch && !!error}
             type={type}
             {...rest}
-            value={!!checked}
+            value={checked === true}
             placeholder={placeholder}
-            checked={!!checked}
+            checked={checked === true}
             onChange={() => {
-              setFieldTouched(field);
-              setFieldValue(field, !checked);
+              if (type !== 'radio') {
+                setFieldValue(field, !checked);
+              } else {
+                setFieldValue(field, true);
+              }
             }}
+            onBlur={handleBlur}
           />
           {type === 'radio' && (
             <Form.Check
@@ -116,13 +120,13 @@ export const Check: React.FC<CheckProps> = ({
               type={type}
               id={`input-${field}-2`}
               {...rest}
-              value={!checked}
+              value={checked === false}
               placeholder={placeholder}
-              checked={!checked}
+              checked={checked === false}
               onChange={(e: any) => {
-                setFieldTouched(field);
-                setFieldValue(field, !checked);
+                setFieldValue(field, false);
               }}
+              onBlur={handleBlur}
             />
           )}
         </>

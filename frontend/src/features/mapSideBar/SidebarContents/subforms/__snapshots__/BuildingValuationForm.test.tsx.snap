@@ -1,0 +1,197 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<div
+  class="building-valuation col"
+>
+  <div
+    class="row"
+  >
+    <h4>
+      Building Valuation
+    </h4>
+    <br />
+  </div>
+  <div
+    class="val-table row"
+  >
+    <div>
+      <div
+        class="table assessed"
+        role="table"
+      >
+        <div
+          class="thead thead-light"
+        >
+          <div
+            class="tr"
+            role="row"
+            style="display: flex; flex: 1 0 auto; min-width: 60px;"
+          >
+            <div
+              class="th reset-filter svg-btn"
+            />
+            <div
+              class="th"
+              colspan="2"
+              role="columnheader"
+              style="box-sizing: border-box; flex: 190 0 auto; min-width: 60px; width: 190px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+            >
+              <div
+                class="sortable-column"
+              >
+                Assessed Value
+                <span
+                  style="flex: 1 1 auto;"
+                />
+              </div>
+            </div>
+          </div>
+          <div
+            class="tr"
+            role="row"
+            style="display: flex; flex: 1 0 auto; min-width: 60px;"
+          >
+            <div
+              class="th reset-filter svg-btn"
+            />
+            <div
+              class="th"
+              colspan="1"
+              role="columnheader"
+              style="box-sizing: border-box; flex: 90 0 auto; min-width: 30px; width: 90px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+            >
+              <div
+                class="sortable-column"
+              >
+                Assessment Year
+                <span
+                  style="flex: 1 1 auto;"
+                />
+              </div>
+            </div>
+            <div
+              class="th"
+              colspan="1"
+              role="columnheader"
+              style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+            >
+              <div
+                class="sortable-column"
+              >
+                Assessed Building Value
+                <span
+                  style="flex: 1 1 auto;"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="no-rows-message"
+        >
+          No rows to display
+        </div>
+      </div>
+      <div
+        class="table-toolbar"
+      />
+      <div
+        class="table netbook"
+        role="table"
+      >
+        <div
+          class="thead thead-light"
+        >
+          <div
+            class="tr"
+            role="row"
+            style="display: flex; flex: 1 0 auto; min-width: 90px;"
+          >
+            <div
+              class="th reset-filter svg-btn"
+            />
+            <div
+              class="th"
+              colspan="3"
+              role="columnheader"
+              style="box-sizing: border-box; flex: 250 0 auto; min-width: 90px; width: 250px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+            >
+              <div
+                class="sortable-column"
+              >
+                Net Book Value
+                <span
+                  style="flex: 1 1 auto;"
+                />
+              </div>
+            </div>
+          </div>
+          <div
+            class="tr"
+            role="row"
+            style="display: flex; flex: 1 0 auto; min-width: 90px;"
+          >
+            <div
+              class="th reset-filter svg-btn"
+            />
+            <div
+              class="th"
+              colspan="1"
+              role="columnheader"
+              style="box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+            >
+              <div
+                class="sortable-column"
+              >
+                Fiscal Year
+                <span
+                  style="flex: 1 1 auto;"
+                />
+              </div>
+            </div>
+            <div
+              class="th"
+              colspan="1"
+              role="columnheader"
+              style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+            >
+              <div
+                class="sortable-column"
+              >
+                Effective Date
+                <span
+                  style="flex: 1 1 auto;"
+                />
+              </div>
+            </div>
+            <div
+              class="th"
+              colspan="1"
+              role="columnheader"
+              style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+            >
+              <div
+                class="sortable-column"
+              >
+                Net Book Value
+                <span
+                  style="flex: 1 1 auto;"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="no-rows-message"
+        >
+          No rows to display
+        </div>
+      </div>
+      <div
+        class="table-toolbar"
+      />
+    </div>
+  </div>
+</div>
+`;

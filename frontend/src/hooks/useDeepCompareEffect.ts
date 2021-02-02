@@ -1,17 +1,15 @@
-import { useRef, useEffect, EffectCallback, DependencyList } from 'react';
-import deepEqual from 'dequal';
+import { useEffect, EffectCallback, DependencyList } from 'react';
+import { useDeepCompareMemoize } from './useDeepCompareMemoize';
 
-const useDeepCompareMemoize = (value: any) => {
-  const ref = useRef();
-
-  if (!deepEqual(value, ref.current)) {
-    ref.current = value;
-  }
-
-  return ref.current;
-};
-
-const useDeepCompareEffect = (callback: EffectCallback, dependencies?: DependencyList) => {
+/**
+ * `useDeepCompareEffect` will return a memoized version of the callback that
+ * only runs if one of the `deps` has changed.
+ *
+ * Usage note: only use this if `deps` are objects or arrays that contain
+ * objects. Otherwise you should just use React.useEffect.
+ *
+ */
+const useDeepCompareEffect = (callback: EffectCallback, dependencies: DependencyList) => {
   useEffect(callback, useDeepCompareMemoize(dependencies));
 };
 

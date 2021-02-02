@@ -1,15 +1,14 @@
-import { Fragment, useMemo, useRef } from 'react';
+import { Fragment, useMemo } from 'react';
 import React from 'react';
-import { FormikProps, getIn } from 'formik';
+import { FormikProps, useFormikContext, getIn } from 'formik';
 import { IEvaluation, IFiscal } from 'actions/parcelsActions';
 import { EvaluationKeys } from 'constants/evaluationKeys';
 import { FiscalKeys } from 'constants/fiscalKeys';
 import moment from 'moment';
 import _ from 'lodash';
 import { isPositiveNumberOrZero } from 'utils';
-import PaginatedFormErrors from './PaginatedFormErrors';
 import { Table } from 'components/Table';
-import { getEvaluationCols } from './columns';
+import { getNetbookCols, getAssessedCols } from './columns';
 
 interface EvaluationProps {
   /** the formik tracked namespace of this component */
@@ -20,6 +19,8 @@ interface EvaluationProps {
   showAppraisal?: boolean;
   /** whether the form is being used on parcel or building */
   isParcel: boolean;
+  /** if the improvements should be displayed */
+  showImprovements?: boolean;
 }
 
 /**
@@ -30,16 +31,11 @@ export interface IFinancial extends IFiscal, IEvaluation {
   year?: number;
   rowVersion?: string;
   parcelId?: number;
+  createdOn?: string;
+  updatedOn?: string;
 }
 
-export interface IFinancialYear {
-  assessed: IFinancial;
-  appraised: IFinancial;
-  netbook: IFinancial;
-  market: IFinancial;
-}
-const NUMBER_OF_EVALUATIONS_PER_PAGE = 2;
-const NUMBER_OF_GENERATED_EVALUATIONS = 20;
+const NUMBER_OF_GENERATED_EVALUATIONS = 10;
 const currentYear = moment().year();
 const adjustedFiscalYear = moment().month() >= 3 ? currentYear + 1 : currentYear;
 const yearsArray = _.range(
@@ -49,43 +45,57 @@ const yearsArray = _.range(
 );
 const keyTypes = { ...EvaluationKeys, ...FiscalKeys };
 
-const findMatchingFinancial = (financials: IFinancial[], type: string, year?: number) => {
-  return financials?.find((financialsForYear: any) => {
-    const financial = financialsForYear[type.toLocaleLowerCase()];
+export const findMatchingFinancial = (financials: IFinancial[], type: string, year?: number) => {
+  return financials?.find((financialsForYear: IFinancial) => {
     return (
-      ((financial.date !== undefined && moment(financial.date).year() === year) ||
-        financial.fiscalYear === year) &&
-      financial.key === type
+      ((financialsForYear.date !== undefined && moment(financialsForYear.date).year() === year) ||
+        financialsForYear.fiscalYear === year ||
+        financialsForYear.year === year) &&
+      financialsForYear.key === type
     );
   });
 };
-const indexOfFinancial = (financials: IFinancial[], type: string, year?: number) =>
+export const indexOfFinancial = (financials: IFinancial[], type: string, year?: number) =>
   _.indexOf(financials, findMatchingFinancial(financials, type, year));
 /**
  * get a list of defaultEvaluations, generating one for NUMBER_OF_GENERATED_EVALUATIONS
  */
-export const defaultFinancials: any = yearsArray.map(year => {
-  return _.reduce(
-    Object.values(keyTypes) as string[],
-    (acc, type) => ({
-      ...acc,
-      [type.toLocaleLowerCase()]: {
-        date: type === EvaluationKeys.Assessed ? moment(year, 'YYYY').format('YYYY-MM-DD') : '',
-        year: year,
-        fiscalYear: year,
-        key: type,
-        value: '',
-      },
-    }),
-    {} as IFinancialYear[],
-  );
-});
+export const defaultFinancials: any = _.flatten(
+  yearsArray.map(year => {
+    return _.reduce(
+      Object.values(keyTypes) as string[],
+      (acc, type) => [
+        ...acc,
+        {
+          date:
+            type === EvaluationKeys.Assessed || type === EvaluationKeys.Improvements
+              ? moment(year, 'YYYY').format('YYYY-MM-DD')
+              : '',
+          year: year,
+          createdOn: '',
+          updatedOn: '',
+          fiscalYear: year,
+          key: type,
+          value: '',
+        } as IFinancial,
+      ],
+      [] as IFinancial[],
+    );
+  }),
+);
 /**
  * Merge the passed list of evaluations with this components defaultEvaluations.
  * @param existingFinancials
  */
-export const getMergedFinancials = (existingFinancials: IFinancial[]) => {
-  const placeholderFinancials = _.cloneDeep(defaultFinancials);
+export const getMergedFinancials = (
+  existingFinancials: IFinancial[],
+  types: EvaluationKeys[] | FiscalKeys[],
+) => {
+  const placeholderFinancials = _.cloneDeep(
+    defaultFinancials.filter((financial: IFinancial) =>
+      Object.values(types).includes(financial.key),
+    ),
+  );
   existingFinancials.forEach((evaluation: IFinancial) => {
     const index = indexOfFinancial(
       placeholderFinancials,
@@ -94,14 +104,19 @@ export const getMergedFinancials = (existingFinancials: IFinancial[]) => {
     );
     if (index >= 0) {
       evaluation.year = (evaluation.fiscalYear as number) ?? moment(evaluation.date).year();
-      placeholderFinancials[index][evaluation.key.toLocaleLowerCase()] = evaluation;
+      placeholderFinancials[index] = evaluation;
     }
   });
-  return placeholderFinancials;
+  return _.orderBy(placeholderFinancials, 'year', 'desc');
 };
 
 export const filterEmptyFinancials = (evaluations: IFinancial[]) =>
   _.filter(evaluations, evaluation => {
+    evaluation.createdOn = undefined;
+    evaluation.updatedOn = undefined;
+    if (evaluation.date === '') {
+      evaluation.date = undefined;
+    }
     return (
       isPositiveNumberOrZero(evaluation.value) ||
       (evaluation.key === EvaluationKeys.Appraised && !!evaluation.date)
@@ -115,58 +130,56 @@ export const filterFutureAssessedValues = (evaluations: IFinancial[]) =>
       (evaluation.key === EvaluationKeys.Assessed && evaluation.year! <= moment().year())
     );
   });
-/**
- * Get the paginated page numbers that contain errors.
- */
-const getPageErrors = (errors: any, nameSpace: any) => {
-  const evaluationErrors = getIn(errors, nameSpace);
-  const errorsPerPage = Object.keys(keyTypes).length * NUMBER_OF_EVALUATIONS_PER_PAGE;
-  return _.uniq(
-    _.reduce(
-      evaluationErrors,
-      (acc: number[], error, index) => {
-        if (error) {
-          acc.push(Math.ceil((parseInt(index) + 1) / errorsPerPage));
-        }
-        return acc;
-      },
-      [],
-    ),
-  );
-};
 
 /**
  * Subform Component intended to be embedded in a higher level formik component.
  */
 const EvaluationForm = <T extends any>(props: EvaluationProps & FormikProps<T>) => {
-  const financials: IFinancialYear[] = getIn(props.values, props.nameSpace);
-  const pagingRef: any = useRef();
-  const cols: any = useMemo(
+  const assessedCols: any = useMemo(
     () =>
-      getEvaluationCols(
+      getAssessedCols(
+        props.isParcel ? 'Land' : 'Assessed Building Value',
         props.isParcel,
         props.disabled,
         props.nameSpace,
-        props.nameSpace === 'financials',
+        props.showImprovements,
       ),
-    [props.isParcel, props.disabled, props.nameSpace],
+    [props.disabled, props.isParcel, props.nameSpace, props.showImprovements],
   );
+  const netbookCols: any = useMemo(() => getNetbookCols(props.disabled, props.nameSpace), [
+    props.disabled,
+    props.nameSpace,
+  ]);
+  const { values } = useFormikContext();
+  const assessedEvaluations =
+    getIn(values, `${props.nameSpace}.evaluations`)?.filter(
+      (evaluation: IFinancial) => evaluation?.key === EvaluationKeys.Assessed,
+    ) ?? [];
+  const netBookFiscals =
+    getIn(values, `${props.nameSpace}.fiscals`)?.filter(
+      (evaluation: IFinancial) => evaluation?.key === FiscalKeys.NetBook,
+    ) ?? [];
 
   return (
     <Fragment>
-      <PaginatedFormErrors
-        errors={getPageErrors(props.errors, props.nameSpace)}
-        pagingRef={pagingRef}
-      />
-      <div ref={pagingRef}>
+      <div>
         <Table
           lockPageSize
-          pageSize={NUMBER_OF_EVALUATIONS_PER_PAGE}
-          pageCount={financials?.length ?? 0 / NUMBER_OF_EVALUATIONS_PER_PAGE}
+          pageSize={-1}
           name="evaluations"
-          columns={cols}
-          data={defaultFinancials}
+          columns={assessedCols}
+          data={assessedEvaluations}
           manualPagination={false}
+          className="assessed"
+        />
+        <Table
+          lockPageSize
+          pageSize={-1}
+          name="fiscals"
+          columns={netbookCols}
+          data={netBookFiscals}
+          manualPagination={false}
+          className="netbook"
         />
       </div>
     </Fragment>

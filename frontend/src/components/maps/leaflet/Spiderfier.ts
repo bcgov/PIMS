@@ -71,6 +71,8 @@ export class Spiderfier {
 
     // only one cluster expanded at a time
     if (this.cluster === cluster || cluster == null) {
+      this.cluster = null;
+      this.unspiderfy();
       return {};
     }
     this.unspiderfy();
@@ -108,20 +110,16 @@ export class Spiderfier {
     points: Array<PointFeature>,
     positions: Array<LeafletPoint>,
   ): { lines?: any[]; markers?: any[] } {
-    const { spiderLegPolylineOptions: legOptions, pointToLayer } = this.options;
+    const { spiderLegPolylineOptions: legOptions } = this.options;
     const centerLatLng = this.map.layerPointToLatLng(centerXY);
 
     let newPos: LatLng;
     let geojson: PointFeature;
-    let m: Marker & AnyProps; // the pins within an expanded cluster
     const markers: any[] = [];
     const lines: any[] = [];
     for (let i = 0; i < points.length; i++) {
       newPos = this.map.layerPointToLatLng(positions[i]);
       geojson = points[i];
-
-      m = pointToLayer(geojson, newPos) as Marker;
-      m.feature = GeoJSON.asFeature(geojson) as PointFeature;
       markers.push({ ...geojson, position: newPos });
       lines.push({ coords: [centerLatLng, newPos], options: legOptions });
     }

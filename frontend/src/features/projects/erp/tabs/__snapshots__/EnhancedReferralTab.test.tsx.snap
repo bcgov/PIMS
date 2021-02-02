@@ -307,6 +307,13 @@ exports[`EnhancedReferralTab renders correctly 1`] = `
                       className="sortable-column"
                     >
                       Agency
+                      <span
+                        style={
+                          Object {
+                            "flex": "1 1 auto",
+                          }
+                        }
+                      />
                     </div>
                   </div>
                   <div
@@ -330,6 +337,13 @@ exports[`EnhancedReferralTab renders correctly 1`] = `
                       className="sortable-column"
                     >
                       Business Case Received Date
+                      <span
+                        style={
+                          Object {
+                            "flex": "1 1 auto",
+                          }
+                        }
+                      />
                     </div>
                   </div>
                   <div
@@ -353,6 +367,13 @@ exports[`EnhancedReferralTab renders correctly 1`] = `
                       className="sortable-column"
                     >
                       Note
+                      <span
+                        style={
+                          Object {
+                            "flex": "1 1 auto",
+                          }
+                        }
+                      />
                     </div>
                   </div>
                   <div
@@ -376,6 +397,13 @@ exports[`EnhancedReferralTab renders correctly 1`] = `
                       className="sortable-column"
                     >
                       Response
+                      <span
+                        style={
+                          Object {
+                            "flex": "1 1 auto",
+                          }
+                        }
+                      />
                     </div>
                   </div>
                 </div>
@@ -458,6 +486,9 @@ exports[`EnhancedReferralTab renders correctly 1`] = `
               name="interestFromEnhancedReferralNote"
               onBlur={[Function]}
               onChange={[Function]}
+              onFocus={[Function]}
+              onMouseOut={[Function]}
+              onMouseOver={[Function]}
             />
           </div>
         </div>
@@ -685,6 +716,9 @@ exports[`EnhancedReferralTab renders correctly when approved for exemption 1`] =
           name="exemptionRationale"
           onBlur={[Function]}
           onChange={[Function]}
+          onFocus={[Function]}
+          onMouseOut={[Function]}
+          onMouseOver={[Function]}
         />
       </div>
     </div>

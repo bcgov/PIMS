@@ -118,6 +118,9 @@ exports[`MapFilterBar renders correctly 1`] = `
               name="name"
               onBlur={[Function]}
               onChange={[Function]}
+              onFocus={[Function]}
+              onMouseOut={[Function]}
+              onMouseOver={[Function]}
               placeholder=""
               value=""
             />
@@ -154,6 +157,7 @@ exports[`MapFilterBar renders correctly 1`] = `
             aria-haspopup="listbox"
             autoComplete="off"
             className="rbt-input-main form-control rbt-input"
+            disabled={false}
             onBlur={[Function]}
             onChange={[Function]}
             onClick={[Function]}

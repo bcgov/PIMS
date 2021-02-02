@@ -13,7 +13,7 @@ namespace Pims.Dal.Configuration
         #region Methods
         public override void Configure(EntityTypeBuilder<TBase> builder)
         {
-            builder.Property(m => m.ProjectNumber).HasMaxLength(50);
+            builder.Property(m => m.ProjectNumbers).HasMaxLength(2000);
             builder.Property(m => m.Name).HasMaxLength(250);
             builder.Property(m => m.Description).HasMaxLength(2000);
             builder.Property(m => m.Location).HasColumnType("GEOGRAPHY").IsRequired();

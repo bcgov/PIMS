@@ -7,18 +7,25 @@ import { ILookupCode } from 'actions/lookupActions';
 import { ILookupCodeState } from 'reducers/lookupCodeReducer';
 import _ from 'lodash';
 import * as API from 'constants/API';
-import { Form, FastInput, Select } from 'components/common/form';
+import { FastInput, Select } from 'components/common/form';
 import { mapLookupCode } from 'utils';
 import { IAddress } from 'actions/parcelsActions';
 import { GeocoderAutoComplete } from '../../GeocoderAutoComplete';
 import { IGeocoderResponse } from 'hooks/useApi';
 import { TypeaheadField } from 'components/common/form/Typeahead';
-import { streetAddressTooltip, locationTip } from '../strings';
+import { streetAddressTooltip } from '../strings';
+import { Label } from 'components/common/Label';
+import { Form } from 'react-bootstrap';
 
 interface AddressProps {
   nameSpace?: string;
   disabled?: boolean;
   onGeocoderChange?: (data: IGeocoderResponse) => void;
+  toolTips?: boolean;
+  hideStreetAddress?: boolean;
+  disableStreetAddress?: boolean;
+  /** disable the green checkmark that appears beside the input on valid entry */
+  disableCheckmark?: boolean;
 }
 
 export const defaultAddressValues: IAddress = {
@@ -69,34 +76,37 @@ const AddressForm = <T extends any>(props: AddressProps & FormikProps<T>) => {
 
   return (
     <>
+      {props.hideStreetAddress !== true && (
+        <Form.Row>
+          <Label>Street Address</Label>
+          <GeocoderAutoComplete
+            tooltip={props.toolTips ? streetAddressTooltip : undefined}
+            value={getIn(props.values, withNameSpace('line1'))}
+            disabled={props.disableStreetAddress || props.disabled}
+            field={withNameSpace('line1')}
+            onSelectionChanged={handleGeocoderChanges}
+            onTextChange={value => props.setFieldValue(withNameSpace('line1'), value)}
+            error={getIn(props.errors, withNameSpace('line1'))}
+            touch={getIn(props.touched, withNameSpace('line1'))}
+            displayErrorTooltips
+            required={true}
+          />
+        </Form.Row>
+      )}
       <Form.Row>
-        <Form.Label>Street Address</Form.Label>
-        <GeocoderAutoComplete
-          required
-          tooltip={streetAddressTooltip}
-          value={getIn(props.values, withNameSpace('line1'))}
-          disabled={props.disabled}
-          field={withNameSpace('line1')}
-          onSelectionChanged={handleGeocoderChanges}
-          onTextChange={value => props.setFieldValue(withNameSpace('line1'), value)}
-          error={getIn(props.errors, withNameSpace('line1'))}
-          touch={getIn(props.touched, withNameSpace('line1'))}
-          displayErrorTooltips
-        />
-      </Form.Row>
-      <Form.Row>
-        <Form.Label>Location</Form.Label>
+        <Label>Location</Label>
         <TypeaheadField
           options={administrativeAreas.map(x => x.label)}
           name={withNameSpace('administrativeArea')}
           disabled={props.disabled}
+          hideValidation={props.disableCheckmark}
           paginate={false}
           required
-          tooltip={locationTip}
+          displayErrorTooltips
         />
       </Form.Row>
       <Form.Row>
-        <Form.Label>Province</Form.Label>
+        <Label>Province</Label>
         <Select
           disabled={true}
           placeholder="Must Select One"
@@ -104,11 +114,12 @@ const AddressForm = <T extends any>(props: AddressProps & FormikProps<T>) => {
           options={provinces}
         />
       </Form.Row>
-      <Form.Row>
-        <Form.Label>Postal Code</Form.Label>
+      <Form.Row className="postal">
+        <Label>Postal Code</Label>
         <FastInput
           className="input-small"
           formikProps={props}
+          style={{ width: '120px' }}
           disabled={props.disabled}
           onBlurFormatter={(postal: string) => postal.replace(postal, postalCodeFormatter(postal))}
           field={withNameSpace('postal')}

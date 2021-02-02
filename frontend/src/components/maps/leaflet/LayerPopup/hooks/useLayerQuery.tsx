@@ -1,4 +1,4 @@
-import { FeatureCollection, Geometry, GeoJsonProperties } from 'geojson';
+import { FeatureCollection, Geometry, GeoJsonProperties, Feature } from 'geojson';
 import axios from 'axios';
 import { LatLng, geoJSON } from 'leaflet';
 import { useCallback, Dispatch } from 'react';
@@ -9,6 +9,7 @@ import parcelLayerDataSlice, {
 import { error } from 'actions/genericActions';
 import { useSelector } from 'react-redux';
 import { RootState } from 'reducers/rootReducer';
+import { toast } from 'react-toastify';
 
 interface IUserLayerQuery {
   /**
@@ -26,7 +27,42 @@ interface IUserLayerQuery {
    * @param pin
    */
   findByPin: (pin: string) => Promise<FeatureCollection>;
+  /**
+   * function to find GeoJSON shape matching the passed administrative area.
+   * @param city
+   */
+  findByAdministrative: (city: string) => Promise<Feature | null>;
 }
+
+/**
+ * Save the parcel data layer response to redux for use within other components. Also save an entire copy of the feature for display on the map.
+ * @param resp
+ * @param dispatch
+ */
+export const saveParcelDataLayerResponse = (
+  resp: FeatureCollection<Geometry, GeoJsonProperties>,
+  dispatch: Dispatch<any>,
+  latLng?: LatLng,
+) => {
+  if (resp?.features?.length > 0) {
+    //save with a synthetic event to timestamp the relevance of this data.
+    dispatch(
+      saveParcelLayerData({
+        e: { timeStamp: document?.timeline?.currentTime ?? 0 } as any,
+        data: {
+          ...resp.features[0].properties!,
+          CENTER:
+            latLng ??
+            geoJSON(resp.features[0].geometry)
+              .getBounds()
+              .getCenter(),
+        },
+      }),
+    );
+  } else {
+    toast.warning(`Failed to find parcel layer data. Ensure that the search criteria is valid`);
+  }
+};
 
 /**
  * Standard logic to handle a parcel layer data response, independent of whether this is a lat/lng or pid query response.
@@ -36,23 +72,11 @@ interface IUserLayerQuery {
 export const handleParcelDataLayerResponse = (
   response: Promise<FeatureCollection<Geometry, GeoJsonProperties>>,
   dispatch: Dispatch<any>,
+  latLng?: LatLng,
 ) => {
   return response
     .then((resp: FeatureCollection<Geometry, GeoJsonProperties>) => {
-      if (resp?.features?.length > 0) {
-        //save with a synthetic event to timestamp the relevance of this data.
-        dispatch(
-          saveParcelLayerData({
-            e: { timeStamp: document?.timeline?.currentTime ?? 0 } as any,
-            data: {
-              ...resp.features[0].properties!,
-              CENTER: geoJSON(resp.features[0].geometry)
-                .getBounds()
-                .getCenter(),
-            },
-          }),
-        );
-      }
+      saveParcelDataLayerResponse(resp, dispatch, latLng);
     })
     .catch((axiosError: any) => {
       dispatch(error(parcelLayerDataSlice.reducer.name, axiosError?.response?.status, axiosError));
@@ -75,11 +99,33 @@ export const useLayerQuery = (url: string, geometryName: string = 'SHAPE'): IUse
         await axios.get(
           `${baseUrl}&cql_filter=CONTAINS(${geometryName},SRID=4326;POINT ( ${latlng.lng} ${latlng.lat}))`,
         )
-      ).data;
+      )?.data;
       return data;
     },
     [baseUrl, geometryName],
   );
+
+  const findByAdministrative = useCallback(
+    async (city: string): Promise<Feature | null> => {
+      try {
+        const data: any = (
+          await axios.get(
+            `${baseUrl}&cql_filter=ADMIN_AREA_NAME='${city}' OR ADMIN_AREA_ABBREVIATION='${city}'&outputformat=json`,
+          )
+        )?.data;
+
+        if (data.totalFeatures === 0) {
+          return null;
+        }
+        return data.features[0];
+      } catch (error) {
+        console.log('Failed to find municipality feature', error);
+        return null;
+      }
+    },
+    [baseUrl],
+  );
+
   const findByPid = useCallback(
     async (pid: string): Promise<FeatureCollection> => {
       //Do not make a request if we our currently cached response matches the requested pid.
@@ -106,5 +152,5 @@ export const useLayerQuery = (url: string, geometryName: string = 'SHAPE'): IUse
     [baseUrl, parcelLayerData],
   );
 
-  return { findOneWhereContains, findByPid, findByPin };
+  return { findOneWhereContains, findByPid, findByPin, findByAdministrative };
 };

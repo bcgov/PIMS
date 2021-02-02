@@ -1,4 +1,5 @@
 using NetTopologySuite.Geometries;
+using System.Collections.Generic;
 
 namespace Pims.Dal.Entities
 {
@@ -15,9 +16,9 @@ namespace Pims.Dal.Entities
         public int Id { get; set; }
 
         /// <summary>
-        /// get/set - The RAEG/SPP project number.
+        /// get/set - The RAEG/SPP project numbers.
         /// </summary>
-        public string ProjectNumber { get; set; }
+        public string ProjectNumbers { get; set; }
 
         /// <summary>
         /// get/set - The property name.
@@ -38,6 +39,11 @@ namespace Pims.Dal.Entities
         /// get/set - The classification for this property.
         /// </summary>
         public PropertyClassification Classification { get; set; }
+
+        /// <summary>
+        /// get/set - The encumbrance reason for this property.
+        /// </summary>
+        public string EncumbranceReason { get; set; }
 
         /// <summary>
         /// get/set - The foreign key to the agency that owns this property.

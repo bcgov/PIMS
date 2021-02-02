@@ -30,6 +30,7 @@ exports[`Documentation Step renders correctly 1`] = `
               disabled={true}
               id="input-tasks.0.isCompleted"
               name="tasks.0.isCompleted"
+              onBlur={[Function]}
               onChange={[Function]}
               required={true}
               type="checkbox"
@@ -63,6 +64,7 @@ exports[`Documentation Step renders correctly 1`] = `
               disabled={true}
               id="input-tasks.1.isCompleted"
               name="tasks.1.isCompleted"
+              onBlur={[Function]}
               onChange={[Function]}
               required={true}
               type="checkbox"
@@ -96,6 +98,9 @@ exports[`Documentation Step renders correctly 1`] = `
           name="note"
           onBlur={[Function]}
           onChange={[Function]}
+          onFocus={[Function]}
+          onMouseOut={[Function]}
+          onMouseOver={[Function]}
         />
       </div>
     </div>

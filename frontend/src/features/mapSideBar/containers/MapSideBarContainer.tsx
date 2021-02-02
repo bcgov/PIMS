@@ -1,98 +1,564 @@
 import * as React from 'react';
 import MapSideBarLayout from '../components/MapSideBarLayout';
-import useParamSideBar from '../hooks/useQueryParamSideBar';
-import ParcelDetailContainer from 'features/properties/containers/ParcelDetailContainer';
+import useParamSideBar, { SidebarContextType } from '../hooks/useQueryParamSideBar';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from 'reducers/rootReducer';
-import { IGenericNetworkAction } from 'actions/genericActions';
-import { IPropertyDetail, IParcel, IProperty } from 'actions/parcelsActions';
-import * as actionTypes from 'constants/actionTypes';
-import { fetchParcelDetail } from 'actionCreators/parcelsActionCreator';
-import { Spinner } from 'react-bootstrap';
+import { IParcel, IProperty, IBuilding } from 'actions/parcelsActions';
+import { deleteParcel, fetchParcelsDetail } from 'actionCreators/parcelsActionCreator';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
-import * as parcelsActions from 'actions/parcelsActions';
+import { BuildingForm, SubmitPropertySelector, LandForm } from '../SidebarContents';
+import { BuildingSvg, LandSvg } from 'components/common/Icons';
+import { FormikValues, setIn, getIn } from 'formik';
+import { useState } from 'react';
+import useGeocoder from 'features/properties/hooks/useGeocoder';
+import { isMouseEventRecent } from 'utils';
+import {
+  handleParcelDataLayerResponse,
+  PARCELS_LAYER_URL,
+  useLayerQuery,
+} from 'components/maps/leaflet/LayerPopup';
+import { LeafletMouseEvent, LatLng } from 'leaflet';
+import AssociatedLandForm from '../SidebarContents/AssociatedLandForm';
+import { toast } from 'react-toastify';
+import _ from 'lodash';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+import GenericModal, { ModalSize } from 'components/common/GenericModal';
+import { FaCheckCircle, FaEdit } from 'react-icons/fa';
+import styled from 'styled-components';
+import { getMergedFinancials } from 'features/properties/components/forms/subforms/EvaluationForm';
+import { Spinner } from 'react-bootstrap';
+import { ViewOnlyLandForm, ISearchFields } from '../SidebarContents/LandForm';
+import useSideBarParcelLoader from '../hooks/useSideBarParcelLoader';
+import useSideBarBuildingLoader from '../hooks/useSideBarBuildingLoader';
+import { ViewOnlyBuildingForm } from '../SidebarContents/BuildingForm';
+import { Claims } from 'constants/claims';
+import { Prompt } from 'react-router-dom';
+import { FaTrash } from 'react-icons/fa';
+import { deleteBuilding } from 'actionCreators/buildingActionCreator';
+import useSideBarBuildingWithParcelLoader from '../hooks/useSideBarBuildingWithParcelLoader';
+import { EvaluationKeys } from 'constants/evaluationKeys';
+import { FiscalKeys } from 'constants/fiscalKeys';
 
 interface IMapSideBarContainerProps {
   refreshParcels: Function;
   properties: IProperty[];
+  movingPinNameSpaceProp?: string;
 }
+
+const FloatCheck = styled(FaCheckCircle)`
+  margin: 1em;
+  color: #2e8540;
+  float: left;
+`;
+
+const SuccessText = styled.p`
+  color: #2e8540;
+  margin-bottom: 0;
+  font-size: 24px;
+`;
+
+const BoldText = styled.p`
+  font-size: 24px;
+  fontweight: 700;
+`;
+
+const EditButton = styled(FaEdit)`
+  margin-right: 10px;
+  margin-top: 5px;
+  cursor: pointer;
+  color: #1a5a96;
+  float: right;
+`;
+
+const DeleteButton = styled(FaTrash)`
+  margin-right: 10px;
+  margin-top: 5px;
+  cursor: pointer;
+  color: #de350b;
+  float: right;
+`;
 
 /**
  * container responsible for logic related to map sidebar display. Synchronizes the state of the parcel detail forms with the corresponding query parameters (push/pull).
  */
 const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = ({
-  refreshParcels,
-  properties,
+  movingPinNameSpaceProp,
 }) => {
+  const keycloak = useKeycloakWrapper();
+  const formikRef = React.useRef<FormikValues>();
   const {
     showSideBar,
     setShowSideBar,
     parcelId,
-    overrideParcelId,
+    buildingId,
+    associatedParcelId,
+    context,
+    size,
+    addBuilding,
+    addBareLand,
+    addAssociatedLand,
+    addContext,
     disabled,
-    loadDraft,
-    newParcel,
-  } = useParamSideBar();
-  const dispatch = useDispatch();
-  const parcelDetailRequest = useSelector<RootState, IGenericNetworkAction>(
-    state => (state.network as any)[actionTypes.GET_PARCEL_DETAIL] as IGenericNetworkAction,
-  );
-  let activePropertyDetail = useSelector<RootState, IPropertyDetail>(
-    state => state.parcel?.parcelDetail as IPropertyDetail,
-  );
-  const [cachedParcelDetail, setCachedParcelDetail] = React.useState<IParcel | null>(null);
+    setDisabled,
+    handleLocationChange,
+  } = useParamSideBar(formikRef);
 
-  useDeepCompareEffect(() => {
-    if (showSideBar && parcelId) {
-      if (
-        parcelId !== cachedParcelDetail?.id &&
-        parcelId !== activePropertyDetail?.parcelDetail?.id
-      ) {
-        dispatch(fetchParcelDetail({ id: parcelId }));
-      } else if (
-        parcelId === activePropertyDetail?.parcelDetail?.id &&
-        activePropertyDetail?.propertyTypeId === 0
-      ) {
-        setCachedParcelDetail(activePropertyDetail?.parcelDetail);
-      }
-    } else if (showSideBar && !parcelId) {
-      if (!!cachedParcelDetail) {
-        setCachedParcelDetail(null);
-      }
-    }
-  }, [
-    dispatch,
+  const { parcelDetail } = useSideBarParcelLoader({
     parcelId,
+    setSideBarContext: addContext,
     showSideBar,
-    parcelDetailRequest,
-    (activePropertyDetail?.parcelDetail as any)?.rowVersion,
-  ]);
+    disabled,
+  });
+  const { buildingDetail } = useSideBarBuildingLoader({
+    buildingId,
+    sideBarContext: context,
+    setSideBarContext: addContext,
+    showSideBar,
+    disabled,
+  });
+  const { buildingWithParcelDetail } = useSideBarBuildingWithParcelLoader({
+    associatedParcelId,
+    setSideBarContext: addContext,
+    showSideBar,
+    disabled,
+  });
+  const dispatch = useDispatch();
+  const [movingPinNameSpace, setMovingPinNameSpace] = useState<string | undefined>(
+    movingPinNameSpaceProp,
+  );
+  const leafletMouseEvent = useSelector<RootState, LeafletMouseEvent | null>(
+    state => state.leafletClickEvent?.mapClickEvent,
+  );
+  const [buildingToAssociateLand, setBuildingToAssociateLand] = useState<IBuilding | undefined>();
+  const [showAssociateLandModal, setShowAssociateLandModal] = useState(false);
+  const [propertyType, setPropertyType] = useState('');
+  const [showCompleteModal, setShowCompleteModal] = useState(false);
+  const [showUpdatedModal, setShowUpdatedModal] = useState(false);
+  const [showDelete, setShowDelete] = useState(false);
+
+  const parcelLayerService = useLayerQuery(PARCELS_LAYER_URL);
+
+  const withNameSpace: Function = (fieldName: string, nameSpace?: string) => {
+    return nameSpace ? `${nameSpace}.${fieldName}` : fieldName;
+  };
+
+  /**
+   * Attempt to fetch the parcel within PIMS matching the passed pid or pin value. If that request fails, make another request to the parcel layer with the same data.
+   * @param pidOrPin
+   * @param parcelLayerSearchCallback
+   * @param nameSpace
+   */
+  const fetchPimsOrLayerParcel = (
+    pidOrPin: any,
+    parcelLayerSearchCallback: () => void,
+    nameSpace?: string,
+  ) => {
+    fetchParcelsDetail(pidOrPin)(dispatch).then(resp => {
+      const matchingParcel: (IParcel & ISearchFields) | undefined = resp?.data?.length
+        ? _.first(resp.data)
+        : undefined;
+      if (!!formikRef?.current?.values && !!matchingParcel?.id) {
+        const { setValues, values } = formikRef.current;
+        matchingParcel.searchPid = getIn(values, withNameSpace('searchPid', nameSpace));
+        matchingParcel.searchPin = getIn(values, withNameSpace('searchPin', nameSpace));
+        matchingParcel.searchAddress = getIn(values, withNameSpace('seachAddress', nameSpace));
+        matchingParcel.evaluations = getMergedFinancials(
+          matchingParcel.evaluations,
+          Object.values(EvaluationKeys),
+        );
+        matchingParcel.fiscals = getMergedFinancials(
+          matchingParcel.fiscals,
+          Object.values(FiscalKeys),
+        );
+        setValues(setIn(values, nameSpace ?? '', matchingParcel));
+        toast.dark('Found matching parcel within PIMS. Form data will be pre-populated.', {
+          autoClose: 7000,
+        });
+      } else {
+        parcelLayerSearchCallback();
+      }
+    });
+  };
+  const { handleGeocoderChanges } = useGeocoder({ formikRef, fetchPimsOrLayerParcel });
+
+  /** query pims for the given pid, set data within the form if match found. Fallback to querying the parcel data layer. */
+  const handlePidChange = (pid: string, nameSpace?: string) => {
+    const parcelLayerSearchCallback = () => {
+      const response = parcelLayerService.findByPid(pid);
+      handleParcelDataLayerResponse(response, dispatch);
+    };
+    fetchPimsOrLayerParcel({ pid }, parcelLayerSearchCallback, nameSpace);
+  };
+
+  /** make a parcel layer request by pid and store the response. */
+  const handlePinChange = (pin: string, nameSpace?: string) => {
+    const parcelLayerSearchCallback = () => {
+      const response = parcelLayerService.findByPin(pin);
+      handleParcelDataLayerResponse(response, dispatch);
+    };
+    fetchPimsOrLayerParcel({ pin }, parcelLayerSearchCallback, nameSpace);
+  };
+
+  const droppedMarkerSearch = (nameSpace: string, latLng?: LatLng, isParcel?: boolean) => {
+    if (latLng) {
+      parcelLayerService.findOneWhereContains(latLng).then(resp => {
+        const properties = getIn(resp, 'features.0.properties');
+        if (properties?.PIN || properties?.PID) {
+          if (isParcel) {
+            const query: any = { pin: properties?.PIN, pid: properties.PID };
+            fetchParcelsDetail(query)(dispatch).then((resp: any) => {
+              const matchingParcel: any = resp?.data?.length ? _.first(resp?.data) : undefined;
+              if (!!nameSpace && !!formikRef?.current?.values && !!matchingParcel?.id && isParcel) {
+                const { resetForm, values } = formikRef.current;
+                matchingParcel.evaluations = getMergedFinancials(
+                  matchingParcel.evaluations,
+                  Object.values(EvaluationKeys),
+                );
+                matchingParcel.fiscals = getMergedFinancials(
+                  matchingParcel.fiscals,
+                  Object.values(FiscalKeys),
+                );
+                resetForm({ values: setIn(values, nameSpace, matchingParcel) });
+                toast.dark('Found matching parcel within PIMS. Form data will be pre-populated.', {
+                  autoClose: 7000,
+                });
+              } else {
+                parcelLayerSearch(properties, latLng);
+              }
+            });
+          } else {
+            parcelLayerSearch(properties, latLng);
+          }
+        } else {
+          toast.warning('Unable to find any details for the clicked location.');
+        }
+      });
+    }
+  };
+
+  const parcelLayerSearch = (properties: any, latLng?: LatLng) => {
+    const response = properties.PID
+      ? parcelLayerService.findByPid(properties.PID)
+      : parcelLayerService.findByPin(properties.PIN);
+
+    handleParcelDataLayerResponse(response, dispatch, latLng);
+  };
+
+  React.useEffect(() => {
+    if (movingPinNameSpace !== undefined) {
+      document.body.className = propertyType === 'building' ? 'building-cursor' : 'parcel-cursor';
+    }
+    return () => {
+      //make sure to reset the cursor when this component is disposed.
+      document.body.className = '';
+    };
+  }, [propertyType, movingPinNameSpace]);
+
+  //Add a pin to the map where the user has clicked.
+  useDeepCompareEffect(() => {
+    //If we click on the map, create a new pin at the click location.
+    if (
+      movingPinNameSpace !== undefined &&
+      !!formikRef?.current &&
+      isMouseEventRecent(leafletMouseEvent?.originalEvent)
+    ) {
+      let nameSpace = (movingPinNameSpace?.length ?? 0) > 0 ? `${movingPinNameSpace}.` : '';
+      formikRef.current.setFieldValue(`${nameSpace}latitude`, leafletMouseEvent?.latlng.lat || 0);
+      formikRef.current.setFieldValue(`${nameSpace}longitude`, leafletMouseEvent?.latlng.lng || 0);
+      const isParcel = [
+        SidebarContextType.VIEW_BARE_LAND,
+        SidebarContextType.UPDATE_DEVELOPED_LAND,
+        SidebarContextType.VIEW_DEVELOPED_LAND,
+        SidebarContextType.ADD_ASSOCIATED_LAND,
+        SidebarContextType.ADD_BARE_LAND,
+      ].includes(context);
+      droppedMarkerSearch(movingPinNameSpace, leafletMouseEvent?.latlng, isParcel);
+      setMovingPinNameSpace(undefined);
+    }
+  }, [dispatch, leafletMouseEvent, showSideBar]);
+
+  /**
+   * Only display the edit button if the user has the correct claim and the property is owned by their agency.
+   */
+  const ConditionalEditButton = () => (
+    <>
+      {disabled &&
+        (keycloak.hasClaim(Claims.ADMIN_PROPERTIES) ||
+          (keycloak.hasClaim(Claims.PROPERTY_EDIT) &&
+            ((parcelDetail?.agencyId && keycloak.agencyIds.includes(parcelDetail.agencyId)) ||
+              (buildingDetail?.agencyId &&
+                keycloak.agencyIds.includes(buildingDetail.agencyId))) && (
+              <EditButton onClick={() => setDisabled(false)} />
+            )))}
+    </>
+  );
+
+  /**
+   * Only display the delete button if the user has the correct claim and the property is owned by their agency.
+   */
+  const ConditionalDeleteButton = () => (
+    <>
+      {keycloak.hasClaim(Claims.ADMIN_PROPERTIES) ||
+        (keycloak.hasClaim(Claims.PROPERTY_DELETE) &&
+          ((parcelDetail?.agencyId && keycloak.agencyIds.includes(parcelDetail.agencyId)) ||
+            (buildingDetail?.agencyId && keycloak.agencyIds.includes(buildingDetail.agencyId))) && (
+            <DeleteButton onClick={() => setShowDelete(true)} title="Delete Property" />
+          ))}
+    </>
+  );
+
+  const getSidebarTitle = (): React.ReactNode => {
+    switch (context) {
+      case SidebarContextType.ADD_BUILDING:
+        return (
+          <>
+            <BuildingSvg className="svg" /> Submit a Building (to inventory)
+          </>
+        );
+      case SidebarContextType.ADD_BARE_LAND:
+        return (
+          <>
+            <LandSvg className="svg" /> Submit Bare Land (to inventory)
+          </>
+        );
+      case SidebarContextType.VIEW_BARE_LAND:
+      case SidebarContextType.UPDATE_BARE_LAND:
+        return (
+          <>
+            <LandSvg className="svg" /> View/Update bare land
+            <ConditionalEditButton />
+            <ConditionalDeleteButton />
+          </>
+        );
+      case SidebarContextType.VIEW_DEVELOPED_LAND:
+      case SidebarContextType.UPDATE_DEVELOPED_LAND:
+        return (
+          <>
+            <LandSvg className="svg" /> View/Update developed land
+            <ConditionalEditButton />
+            <ConditionalDeleteButton />
+          </>
+        );
+      case SidebarContextType.ADD_ASSOCIATED_LAND:
+        return (
+          <>
+            <LandSvg className="svg" /> Add associated land
+          </>
+        );
+      case SidebarContextType.VIEW_BUILDING:
+      case SidebarContextType.UPDATE_BUILDING:
+        return (
+          <>
+            <BuildingSvg className="svg" /> Building Details
+            <ConditionalEditButton />
+            <ConditionalDeleteButton />
+          </>
+        );
+      default:
+        return 'Submit a Property';
+    }
+  };
+
+  const render = (): React.ReactNode => {
+    switch (context) {
+      case SidebarContextType.ADD_BUILDING:
+      case SidebarContextType.UPDATE_BUILDING:
+        if (propertyType !== 'building') {
+          setPropertyType('building');
+        }
+        return buildingId === buildingDetail?.id ||
+          (buildingId === 0 && associatedParcelId === buildingWithParcelDetail?.parcelId) ? (
+          <BuildingForm
+            formikRef={formikRef}
+            setMovingPinNameSpace={setMovingPinNameSpace}
+            nameSpace="data"
+            setBuildingToAssociateLand={(building: IBuilding) => {
+              setBuildingToAssociateLand(building);
+              setShowAssociateLandModal(true);
+            }}
+            goToAssociatedLand={(building: IBuilding) => {
+              setBuildingToAssociateLand(building);
+              addAssociatedLand();
+            }}
+            isPropertyAdmin={keycloak.hasClaim(Claims.ADMIN_PROPERTIES)}
+            initialValues={buildingDetail ?? buildingWithParcelDetail ?? ({} as any)}
+          />
+        ) : (
+          <Spinner animation="border"></Spinner>
+        );
+      case SidebarContextType.VIEW_BUILDING:
+        if (propertyType !== 'building') {
+          setPropertyType('building');
+        }
+        return buildingId === buildingDetail?.id ? (
+          <ViewOnlyBuildingForm
+            formikRef={formikRef}
+            initialValues={buildingDetail ?? ({} as any)}
+          />
+        ) : (
+          <Spinner animation="border"></Spinner>
+        );
+      case SidebarContextType.ADD_BARE_LAND:
+      case SidebarContextType.UPDATE_DEVELOPED_LAND:
+      case SidebarContextType.UPDATE_BARE_LAND:
+        if (propertyType !== 'land') {
+          setPropertyType('land');
+        }
+        return parcelId === parcelDetail?.id ? (
+          <LandForm
+            setMovingPinNameSpace={setMovingPinNameSpace}
+            formikRef={formikRef}
+            handleGeocoderChanges={handleGeocoderChanges}
+            handlePidChange={handlePidChange}
+            handlePinChange={handlePinChange}
+            isPropertyAdmin={keycloak.hasClaim(Claims.ADMIN_PROPERTIES)}
+            setLandComplete={setShowCompleteModal}
+            setLandUpdateComplete={setShowUpdatedModal}
+            initialValues={parcelDetail ?? ({} as any)}
+          />
+        ) : (
+          <Spinner animation="border"></Spinner>
+        );
+      case SidebarContextType.VIEW_BARE_LAND:
+      case SidebarContextType.VIEW_DEVELOPED_LAND:
+        if (propertyType !== 'land') {
+          setPropertyType('land');
+        }
+        return parcelId === parcelDetail?.id ? (
+          <ViewOnlyLandForm formikRef={formikRef} initialValues={parcelDetail ?? ({} as any)} />
+        ) : (
+          <Spinner animation="border"></Spinner>
+        );
+      case SidebarContextType.ADD_ASSOCIATED_LAND:
+        if (propertyType !== 'land') {
+          setPropertyType('land');
+        } else if (!buildingToAssociateLand?.id) {
+          //if the associated building doesn't have an id, we can't load it.
+          setShowSideBar(true, SidebarContextType.ADD_PROPERTY_TYPE_SELECTOR, 'narrow');
+        }
+        return (
+          <AssociatedLandForm
+            setMovingPinNameSpace={setMovingPinNameSpace}
+            formikRef={formikRef}
+            handleGeocoderChanges={handleGeocoderChanges}
+            handlePidChange={handlePidChange}
+            handlePinChange={handlePinChange}
+            initialValues={buildingToAssociateLand ?? ({} as any)}
+            isPropertyAdmin={keycloak.hasClaim(Claims.ADMIN_PROPERTIES)}
+            setAssociatedLandComplete={setShowCompleteModal}
+          />
+        );
+      case SidebarContextType.LOADING:
+        return <Spinner animation="border"></Spinner>;
+      default:
+        return <SubmitPropertySelector addBuilding={addBuilding} addBareLand={addBareLand} />;
+    }
+  };
 
   return (
-    <MapSideBarLayout show={showSideBar} setShowSideBar={setShowSideBar}>
-      {parcelId !== cachedParcelDetail?.id || newParcel ? (
-        <>
-          <Spinner animation="border"></Spinner>
-        </>
-      ) : (
-        <ParcelDetailContainer
-          persistCallback={(data: IParcel) => {
-            if (!showSideBar) {
-              setShowSideBar(true);
+    <MapSideBarLayout
+      title={getSidebarTitle()}
+      show={showSideBar}
+      setShowSideBar={setShowSideBar}
+      size={size}
+      hidePolicy={true}
+    >
+      {render()}
+      <Prompt message={handleLocationChange}></Prompt>
+      <GenericModal
+        message="Are you sure you want to permanently delete the property from inventory?"
+        size={ModalSize.SMALL}
+        cancelButtonText="Cancel"
+        okButtonText="Delete"
+        display={showDelete}
+        setDisplay={setShowDelete}
+        handleOk={async () => {
+          try {
+            switch (context) {
+              case SidebarContextType.UPDATE_BUILDING:
+              case SidebarContextType.VIEW_BUILDING:
+                await deleteBuilding(buildingDetail as IBuilding)(dispatch);
+                break;
+              default:
+                await deleteParcel(parcelDetail as IParcel)(dispatch);
+                break;
             }
-            overrideParcelId(data?.id === '' ? undefined : data?.id);
-          }}
-          onDelete={() => {
-            dispatch(parcelsActions.storeParcelDetail(null));
-            refreshParcels();
-            setShowSideBar(false);
-          }}
-          parcelDetail={cachedParcelDetail}
-          disabled={disabled}
-          loadDraft={loadDraft}
-          properties={properties}
-        />
-      )}
+            setShowSideBar(false, undefined, undefined, true);
+          } catch (error) {
+            // TODO: The error is always undefined...  Need to handle concurrency and other errors better.
+          }
+        }}
+        handleCancel={() => {
+          setShowDelete(false);
+        }}
+      />
+      <GenericModal
+        size={ModalSize.LARGE}
+        message={
+          <>
+            <FloatCheck size={32}></FloatCheck>
+            <SuccessText>Success!</SuccessText>
+            <p>Your building has been added to the PIMS inventory</p>
+            <BoldText>Would you like to associate land to this building?</BoldText>
+          </>
+        }
+        display={showAssociateLandModal}
+        setDisplay={setShowAssociateLandModal}
+        cancelButtonText="No, I'm done"
+        okButtonText="Yes, add land"
+        handleOk={() => {
+          addAssociatedLand();
+          setShowAssociateLandModal(false);
+        }}
+        handleCancel={() => {
+          setShowSideBar(false, undefined, undefined, true);
+          setShowAssociateLandModal(false);
+        }}
+      ></GenericModal>
+      <GenericModal
+        size={ModalSize.LARGE}
+        message={
+          <>
+            <FloatCheck size={32}></FloatCheck>
+            <SuccessText>Success!</SuccessText>
+            <p>Your land has been added to the PIMS inventory</p>
+            <BoldText>Would you like to continue adding to the inventory?</BoldText>
+          </>
+        }
+        display={showCompleteModal}
+        setDisplay={setShowCompleteModal}
+        cancelButtonText="No, I'm done"
+        okButtonText="Yes"
+        handleOk={() => {
+          setShowSideBar(true, SidebarContextType.ADD_PROPERTY_TYPE_SELECTOR, 'narrow', true);
+          setShowCompleteModal(false);
+        }}
+        handleCancel={() => {
+          setShowSideBar(false, undefined, undefined, true);
+          setShowCompleteModal(false);
+        }}
+      ></GenericModal>
+      <GenericModal
+        size={ModalSize.LARGE}
+        message={
+          <>
+            <FloatCheck size={32}></FloatCheck>
+            <SuccessText>Success!</SuccessText>
+            <p>PIMS has been updated with all of your changes</p>
+          </>
+        }
+        display={showUpdatedModal}
+        setDisplay={setShowUpdatedModal}
+        okButtonText="Close"
+        handleCancel={() => {
+          setShowSideBar(false, undefined, undefined, true);
+          setShowUpdatedModal(false);
+        }}
+        handleOk={() => {
+          setShowSideBar(false, undefined, undefined, true);
+          setShowUpdatedModal(false);
+        }}
+      ></GenericModal>
     </MapSideBarLayout>
   );
 };

@@ -5,8 +5,6 @@ import { BuildingPopupView } from './BuildingPopupView';
 import { useApi } from 'hooks/useApi';
 
 export type IPopupViewProps = {
-  /** The property type [Parcel, Building] */
-  propertyTypeId: PropertyTypes;
   /** The property selected */
   propertyDetail: IParcel | IBuilding | null;
   /** Zoom level that the map should zoom to. */
@@ -23,7 +21,6 @@ export type IPopupViewProps = {
  * @param param0 PopupView properties.
  */
 export const PopupView: React.FC<IPopupViewProps> = ({
-  propertyTypeId,
   propertyDetail,
   disabled,
   zoomTo,
@@ -32,20 +29,22 @@ export const PopupView: React.FC<IPopupViewProps> = ({
   const { getParcel, getBuilding } = useApi();
   const [property, setProperty] = React.useState<IProperty | null>(propertyDetail);
   const id = propertyDetail?.id;
+  const agencyId = propertyDetail?.agencyId;
+  const propertyTypeId = propertyDetail?.propertyTypeId;
 
   React.useEffect(() => {
-    if (propertyTypeId === PropertyTypes.PARCEL) {
-      getParcel(id as number).then(parcel => {
-        console.log(parcel.name);
-        setProperty(parcel);
-      });
-    } else if (propertyTypeId === PropertyTypes.BUILDING) {
-      getBuilding(id as number).then(building => {
-        console.log(building.name);
-        setProperty(building);
-      });
+    if ((agencyId as number) > 0) {
+      if (propertyTypeId === PropertyTypes.PARCEL) {
+        getParcel(id as number).then(parcel => {
+          setProperty(parcel);
+        });
+      } else if (propertyTypeId === PropertyTypes.BUILDING) {
+        getBuilding(id as number).then(building => {
+          setProperty(building);
+        });
+      }
     }
-  }, [getParcel, getBuilding, propertyTypeId, id]);
+  }, [getParcel, getBuilding, agencyId, propertyTypeId, id]);
 
   if (propertyDetail && propertyTypeId === PropertyTypes.PARCEL) {
     return (

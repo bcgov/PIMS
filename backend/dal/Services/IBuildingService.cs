@@ -15,6 +15,7 @@ namespace Pims.Dal.Services
         Building Get(int id);
         Building Add(Building parcel);
         Building Update(Building parcel);
+        Building UpdateFinancials(Building parcel);
         void Remove(Building parcel);
     }
 }

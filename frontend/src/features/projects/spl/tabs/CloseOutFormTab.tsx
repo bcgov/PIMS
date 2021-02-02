@@ -1,6 +1,5 @@
 import * as React from 'react';
 import {
-  CloseOutFinancialsForm,
   CloseOutSummaryForm,
   CloseOutPurchaseInformationForm,
   CloseOutSaleInformationForm,
@@ -8,7 +7,7 @@ import {
   CloseOutSignaturesForm,
   CloseOutAdjustmentForm,
 } from '..';
-import { ProjectNotes, projectComments, IProject } from 'features/projects/common';
+import { ProjectNotes, IProject, ocgVarianceNote } from 'features/projects/common';
 import { Col, Container, Form } from 'react-bootstrap';
 import './CloseOutFormTab.scss';
 import { FastCurrencyInput } from 'components/common/form';
@@ -32,40 +31,29 @@ const CloseOutFormTab: React.FunctionComponent<ICloseOutFormTabProps> = ({
       <CloseOutPurchaseInformationForm isReadOnly={isReadOnly} />
       <CloseOutSaleInformationForm isReadOnly={isReadOnly} />
       <CloseOutFinancialSummaryForm isReadOnly={isReadOnly} />
-      <CloseOutFinancialsForm isReadOnly={isReadOnly} />
+      <h3>OCG</h3>
       <Form.Row>
         <Col>
+          <Form.Row>
+            <Form.Label column md={2}>
+              OCG Gain / Loss
+            </Form.Label>
+            <FastCurrencyInput
+              formikProps={formikProps}
+              disabled={isReadOnly}
+              outerClassName="col-md-4"
+              field="ocgFinancialStatement"
+            />
+          </Form.Row>
           <ProjectNotes
             field="salesHistoryNote"
-            label="Sales History Notes"
-            className="col-md-10"
-            outerClassName="col"
+            label="OCG Variance Notes"
+            outerClassName="col-md-11"
+            className="col-md-auto"
             disabled={isReadOnly}
+            tooltip={ocgVarianceNote}
           />
         </Col>
-        <Col md={1}></Col>
-        <Col>
-          <ProjectNotes
-            field="comments"
-            label="Project Comments"
-            className="col-md-10"
-            outerClassName="col"
-            tooltip={projectComments}
-            disabled={isReadOnly}
-          />
-        </Col>
-      </Form.Row>
-      <h3>OCG</h3>
-      <Form.Row className="col-md-12">
-        <Form.Label column md={2}>
-          OCG Gain / Loss
-        </Form.Label>
-        <FastCurrencyInput
-          formikProps={formikProps}
-          disabled={isReadOnly}
-          outerClassName="col-md-4"
-          field="ocgFinancialStatement"
-        />
       </Form.Row>
       <CloseOutSignaturesForm isReadOnly={isReadOnly} />
       <CloseOutAdjustmentForm isReadOnly={isReadOnly} />

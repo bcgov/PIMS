@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Pims.Core.Extensions;
 using Pims.Dal.Security;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using Entity = Pims.Dal.Entities;
@@ -46,7 +47,13 @@ namespace Pims.Dal.Helpers.Extensions
             var isAdmin = user.HasPermission(Permissions.AdminProperties);
 
             // Users may only view sensitive properties if they have the `sensitive-view` claim and belong to the owning agency.
-            var query = context.Parcels.AsNoTracking();
+            var query = context.Parcels.Include(p => p.Classification)
+                .Include(p => p.Address)
+                .Include(p => p.Address.Province)
+                .Include(p => p.Agency)
+                .Include(p => p.Agency.Parent)
+                .Include(p => p.Evaluations)
+                .Include(p => p.Fiscals).AsNoTracking();
 
             if (!isAdmin)
             {
@@ -69,10 +76,22 @@ namespace Pims.Dal.Helpers.Extensions
                 var agencies = filterAgencies.Concat(context.Agencies.AsNoTracking().Where(a => filterAgencies.Contains(a.Id)).SelectMany(a => a.Children.Select(ac => (int?)ac.Id)).ToArray()).Distinct();
                 query = query.Where(p => agencies.Contains(p.AgencyId));
             }
+            if (!String.IsNullOrWhiteSpace(filter.PID))
+            {
+                var pidValue = filter.PID.Replace("-", "").Trim();
+                if (Int32.TryParse(pidValue, out int pid))
+                    query = query.Where(p => p.PID == pid || p.PIN == pid);
+            }
+            if (!String.IsNullOrWhiteSpace(filter.PIN))
+            {
+                var pinValue = filter.PIN.Trim();
+                if (Int32.TryParse(pinValue, out int pin))
+                    query = query.Where(p => p.PIN == pin);
+            }
             if (filter.ClassificationId.HasValue)
                 query = query.Where(p => p.ClassificationId == filter.ClassificationId);
             if (!String.IsNullOrWhiteSpace(filter.ProjectNumber))
-                query = query.Where(p => EF.Functions.Like(p.ProjectNumber, $"{filter.ProjectNumber}%"));
+                query = query.Where(p => p.ProjectNumbers.Contains(filter.ProjectNumber));
             if (!String.IsNullOrWhiteSpace(filter.Description))
                 query = query.Where(p => EF.Functions.Like(p.Description, $"%{filter.Description}%"));
             if (!String.IsNullOrWhiteSpace(filter.AdministrativeArea))
@@ -139,6 +158,51 @@ namespace Pims.Dal.Helpers.Extensions
         public static int? GetId(this Entity.Parcel parcel)
         {
             return parcel?.Id;
+        }
+
+        /// <summary>
+        /// Update parcel financials
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="parcel"></param>
+        /// <param name="parcelEvaluations"></param>
+        /// <param name="parcelFiscals"></param>
+        public static void UpdateParcelFinancials(this PimsContext context,  Entity.Parcel parcel,
+            ICollection<Entity.ParcelEvaluation> parcelEvaluations, ICollection<Entity.ParcelFiscal> parcelFiscals)
+        {
+            foreach (var parcelEvaluation in parcelEvaluations)
+            {
+                var originalEvaluation = parcel.Evaluations
+                    .FirstOrDefault(e => e.Date == parcelEvaluation.Date && e.Key == parcelEvaluation.Key);
+
+                if (originalEvaluation == null)
+                {
+                    parcel.Evaluations.Add(parcelEvaluation);
+                }
+                else
+                {
+                    originalEvaluation.Note = parcelEvaluation.Note;
+                    originalEvaluation.Value = parcelEvaluation.Value;
+                    originalEvaluation.Firm = parcelEvaluation.Firm;
+                }
+            }
+
+            foreach (var parcelFiscal in parcelFiscals)
+            {
+                var originalParcelFiscal = parcel.Fiscals
+                    .FirstOrDefault(e => e.FiscalYear == parcelFiscal.FiscalYear && e.Key == parcelFiscal.Key);
+
+                if (originalParcelFiscal == null)
+                {
+                    parcel.Fiscals.Add(parcelFiscal);
+                }
+                else
+                {
+                    originalParcelFiscal.Note = parcelFiscal.Note;
+                    originalParcelFiscal.Value = parcelFiscal.Value;
+                    originalParcelFiscal.EffectiveDate = parcelFiscal.EffectiveDate;
+                }
+            }
         }
     }
 }

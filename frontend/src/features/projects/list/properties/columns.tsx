@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import { formatMoney, formatNumber } from 'utils';
 import { ColumnWithProps } from 'components/Table';
 import { IProperty } from '../../common/interfaces';
+import queryString from 'query-string';
 
 const MoneyCell = ({ cell: { value } }: CellProps<IProperty, number>) => formatMoney(value);
 
@@ -80,7 +81,7 @@ export const columns: ColumnWithProps<IProperty>[] = [
   },
   {
     Header: 'Assessed Value',
-    accessor: 'assessed',
+    accessor: 'assessedLand',
     Cell: MoneyCell,
     align: 'right',
     responsive: true,
@@ -133,7 +134,17 @@ export const columns: ColumnWithProps<IProperty>[] = [
     Cell: (props: CellProps<IProperty, number>) => {
       return (
         <Link
-          to={`/mapview/${props.row.original.parcelId}?disabled=true&sidebar=true&loadDraft=false`}
+          to={{
+            pathname: `/mapview`,
+            search: queryString.stringify({
+              sidebar: true,
+              disabled: true,
+              loadDraft: false,
+              parcelId: props.row.original.propertyTypeId === 0 ? props.row.original.id : undefined,
+              buildingId:
+                props.row.original.propertyTypeId === 1 ? props.row.original.id : undefined,
+            }),
+          }}
         >
           View
         </Link>

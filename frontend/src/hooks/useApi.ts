@@ -10,6 +10,7 @@ import { IGeoSearchParams } from 'constants/API';
 import queryString from 'query-string';
 import { IBuilding, IParcel } from 'actions/parcelsActions';
 import { store } from 'App';
+import { IApiProperty } from 'features/projects/common';
 
 export interface IGeocoderResponse {
   siteId: string;
@@ -42,6 +43,8 @@ export interface PimsAPI extends AxiosInstance {
   loadProperties: (params?: IGeoSearchParams) => Promise<any[]>;
   getBuilding: (id: number) => Promise<IBuilding>;
   getParcel: (id: number) => Promise<IParcel>;
+  updateBuilding: (id: number, data: IApiProperty) => Promise<IBuilding>;
+  updateParcel: (id: number, data: IApiProperty) => Promise<IParcel>;
 }
 
 export const useApi = (): PimsAPI => {
@@ -184,6 +187,42 @@ export const useApi = (): PimsAPI => {
   axios.getParcel = useCallback(
     async (id: number) => {
       const { data } = await axios.get<IParcel>(`${ENVIRONMENT.apiUrl}/properties/parcels/${id}`);
+      return data;
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
+  );
+
+  /**
+   * Make an AJAX request to update the specified parcel financials.
+   * @param id The parcel primary key 'id' value.
+   * @param parcel - the parcel data to be update
+   * @returns A promise containing the parcel.
+   */
+  axios.updateParcel = useCallback(
+    async (id: number, parcel: IApiProperty) => {
+      const { data } = await axios.put<IParcel>(
+        `${ENVIRONMENT.apiUrl}/properties/parcels/${id}/financials`,
+        parcel,
+      );
+      return data;
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
+  );
+
+  /**
+   * Make an AJAX request to update the specified building financials.
+   * @param id The building primary key 'id' value.
+   * @param building - the building data to be update
+   * @returns A promise containing the building.
+   */
+  axios.updateBuilding = useCallback(
+    async (id: number, building: IApiProperty) => {
+      const { data } = await axios.put<IBuilding>(
+        `${ENVIRONMENT.apiUrl}/properties/buildings/${id}/financials`,
+        building,
+      );
       return data;
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
