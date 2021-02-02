@@ -22,13 +22,9 @@ import { LandReviewPage } from './subforms/LandReviewPage';
 import { defaultPidPinFormValues } from 'features/properties/components/forms/subforms/PidPinForm';
 import { defaultLandValues } from 'features/properties/components/forms/subforms/LandForm';
 import {
-  defaultFinancials,
   filterEmptyFinancials,
-  IFinancial,
-  IFinancialYear,
+  getMergedFinancials,
 } from 'features/properties/components/forms/subforms/EvaluationForm';
-import { EvaluationKeys } from 'constants/evaluationKeys';
-import { FiscalKeys } from 'constants/fiscalKeys';
 import _ from 'lodash';
 import { useDispatch } from 'react-redux';
 import {
@@ -41,11 +37,14 @@ import { createParcel, updateParcel } from 'actionCreators/parcelsActionCreator'
 import { LandValuationForm } from './subforms/LandValuationForm';
 import { LandSteps } from 'constants/propertySteps';
 import useDraftMarkerSynchronizer from 'features/properties/hooks/useDraftMarkerSynchronizer';
-import { IFormParcel } from '../containers/MapSideBarContainer';
 import useParcelLayerData from 'features/properties/hooks/useParcelLayerData';
 import { IStep } from 'components/common/Stepper';
 import { AssociatedBuildingListForm } from './subforms/AssociatedBuildingListForm';
 import DebouncedValidation from 'features/properties/components/forms/subforms/DebouncedValidation';
+import { IParcel } from 'actions/parcelsActions';
+import { EvaluationKeys } from 'constants/evaluationKeys';
+import { FiscalKeys } from 'constants/fiscalKeys';
+import { stringToNull } from 'utils';
 
 const Container = styled.div`
   background-color: #fff;
@@ -82,10 +81,16 @@ const FillRemainingSpace = styled.span`
   flex: 1 1 auto;
 `;
 
+export interface ISearchFields {
+  searchPid: string;
+  searchPin: string;
+  searchAddress: string;
+}
+
 /**
  * Create formiks initialValues by stitching together the default values provided by each subform.
  */
-export const getInitialValues = (): any => {
+export const getInitialValues = (): IParcel & ISearchFields => {
   return {
     ...defaultPidPinFormValues,
     ...defaultLandValues,
@@ -94,10 +99,15 @@ export const getInitialValues = (): any => {
     longitude: '',
     address: defaultAddressValues,
     buildings: [],
-    financials: defaultFinancials,
     searchPid: '',
     searchPin: '',
     searchAddress: '',
+    encumbranceReason: '',
+    assessedBuilding: '',
+    assessedLand: '',
+    evaluations: getMergedFinancials([], Object.values(EvaluationKeys)),
+    fiscals: getMergedFinancials([], Object.values(FiscalKeys)),
+    id: '',
   };
 };
 
@@ -105,24 +115,16 @@ export const getInitialValues = (): any => {
  * Do an in place conversion of all values to their expected API equivalents (eg. '' => undefined)
  * @param values the parcel value to convert.
  */
-export const valuesToApiFormat = (values: ISteppedFormValues<IFormParcel>): IFormParcel => {
-  values.data.pin = values?.data.pin ? +values.data.pin : undefined;
-  values.data.pid = values?.data.pid ? values.data.pid : undefined;
-  const seperatedFinancials = (_.flatten(
-    values.data.financials?.map((financial: IFinancialYear) => _.values(financial)),
-  ) ?? []) as IFinancial[];
-  const allFinancials = filterEmptyFinancials(seperatedFinancials);
-
-  values.data.evaluations = _.filter(allFinancials, financial =>
-    Object.keys(EvaluationKeys).includes(financial.key),
-  );
-  values.data.fiscals = _.filter(allFinancials, financial =>
-    Object.keys(FiscalKeys).includes(financial.key),
-  );
-  values.data.landArea = +values.data.landArea;
-  values.data.financials = [];
-  values.data.agencyId = +values.data.agencyId;
-  return values.data;
+export const valuesToApiFormat = (values: ISteppedFormValues<IParcel>): IParcel => {
+  const apiValues = _.cloneDeep(values);
+  apiValues.data.pin = apiValues?.data.pin ? +apiValues.data.pin : undefined;
+  apiValues.data.pid = apiValues?.data.pid ? apiValues.data.pid : undefined;
+  apiValues.data.evaluations = filterEmptyFinancials(apiValues.data.evaluations);
+  apiValues.data.fiscals = filterEmptyFinancials(apiValues.data.fiscals);
+  apiValues.data.landArea = +apiValues.data.landArea;
+  apiValues.data.agencyId = +apiValues.data.agencyId;
+  apiValues.data.id = stringToNull(apiValues.data.id);
+  return apiValues.data;
 };
 
 const Form: React.FC<ILandForm> = ({
@@ -137,7 +139,7 @@ const Form: React.FC<ILandForm> = ({
 }) => {
   // access the stepper to later split the form into segments
   const stepper = useFormStepper();
-  const formikProps = useFormikContext<ISteppedFormValues<IFormParcel>>();
+  const formikProps = useFormikContext<ISteppedFormValues<IParcel>>();
   useParcelLayerData({
     formikRef,
     nameSpace: 'data',
@@ -261,7 +263,7 @@ interface ILandForm {
   /** whether or not this user has property admin priviledges */
   isPropertyAdmin: boolean;
   /** initial values used to populate this form */
-  initialValues: IFormParcel;
+  initialValues: IParcel;
   /** whether this form can be interacted with */
   disabled?: boolean;
 }
@@ -281,13 +283,13 @@ interface IParentLandForm extends ILandForm {
  */
 export const ViewOnlyLandForm: React.FC<Partial<IParentLandForm>> = (props: {
   formikRef?: any;
-  initialValues?: IFormParcel;
+  initialValues?: IParcel;
 }) => {
   return (
     <LandForm
       setMovingPinNameSpace={noop}
       formikRef={props.formikRef}
-      handleGeocoderChanges={async (response: IGeocoderResponse) => {}}
+      handleGeocoderChanges={async () => {}}
       handlePidChange={noop}
       handlePinChange={noop}
       isPropertyAdmin={false}
@@ -312,12 +314,20 @@ const LandForm: React.FC<IParentLandForm> = (props: IParentLandForm) => {
     activeStep: 0,
     activeTab: 0,
     tabs: [{ activeStep: 0 }],
-    data: { ...getInitialValues(), ...props.initialValues },
+    data: {
+      ...getInitialValues(),
+      ...props.initialValues,
+      evaluations: getMergedFinancials(
+        props.initialValues?.evaluations ?? [],
+        Object.values(EvaluationKeys),
+      ),
+      fiscals: getMergedFinancials(props.initialValues?.fiscals ?? [], Object.values(FiscalKeys)),
+    },
   };
   const isViewOrUpdate = !!initialValues?.data?.id;
   initialValues.data.agencyId = initialValues.data.agencyId
     ? initialValues.data.agencyId
-    : keycloak.agencyId;
+    : keycloak.agencyId ?? '';
 
   /**
    * Combines yup validation with manual validation of financial data for performance reasons.
@@ -325,7 +335,7 @@ const LandForm: React.FC<IParentLandForm> = (props: IParentLandForm) => {
    * This validation is significantly faster.
    * @param values formik form values to validate.
    */
-  const handleValidate = async (values: ISteppedFormValues<IFormParcel>) => {
+  const handleValidate = async (values: ISteppedFormValues<IParcel>) => {
     const yupErrors: any = ParcelSchema.validate(values.data, { abortEarly: false }).then(
       () => ({}),
       (err: any) => yupToFormErrors(err),
@@ -356,12 +366,12 @@ const LandForm: React.FC<IParentLandForm> = (props: IParentLandForm) => {
     return Object.keys(errors).length ? Promise.resolve({ data: errors }) : Promise.resolve({});
   };
 
-  const isPidAvailable = async (values: IFormParcel): Promise<boolean> => {
+  const isPidAvailable = async (values: IParcel): Promise<boolean> => {
     const response = await api.isPidAvailable(values.id, values.pid);
     return response?.available;
   };
 
-  const isPinAvailable = async (values: IFormParcel): Promise<boolean> => {
+  const isPinAvailable = async (values: IParcel): Promise<boolean> => {
     const response = await api.isPinAvailable(values.id, values.pin);
     return response?.available;
   };
@@ -417,8 +427,8 @@ const LandForm: React.FC<IParentLandForm> = (props: IParentLandForm) => {
         persistProps={{
           name: isViewOrUpdate ? 'update-land' : 'land',
           secret: keycloak.obj.subject,
-          persistCallback: (values: ISteppedFormValues<IFormParcel>) => {
-            const newValues: ISteppedFormValues<IFormParcel> = {
+          persistCallback: (values: ISteppedFormValues<IParcel>) => {
+            const newValues: ISteppedFormValues<IParcel> = {
               ...values,
               activeStep: 0,
               activeTab: 0,

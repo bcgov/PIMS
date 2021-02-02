@@ -23,15 +23,10 @@ import _ from 'lodash';
 import { BuildingSteps } from 'constants/propertySteps';
 import useDraftMarkerSynchronizer from 'features/properties/hooks/useDraftMarkerSynchronizer';
 import { useBuildingApi } from '../hooks/useBuildingApi';
-import { IFormBuilding } from '../containers/MapSideBarContainer';
 import {
-  IFinancialYear,
-  IFinancial,
   filterEmptyFinancials,
-  defaultFinancials,
+  getMergedFinancials,
 } from 'features/properties/components/forms/subforms/EvaluationForm';
-import { EvaluationKeys } from 'constants/evaluationKeys';
-import { FiscalKeys } from 'constants/fiscalKeys';
 import { defaultAddressValues } from 'features/properties/components/forms/subforms/AddressForm';
 import { BuildingForm } from '.';
 import TooltipWrapper from 'components/common/TooltipWrapper';
@@ -46,6 +41,8 @@ import { stringToNull } from 'utils';
 import useParcelLayerData from 'features/properties/hooks/useParcelLayerData';
 import DebouncedValidation from 'features/properties/components/forms/subforms/DebouncedValidation';
 import { valuesToApiFormat as landValuesToApiFormat } from './LandForm';
+import { EvaluationKeys } from 'constants/evaluationKeys';
+import { FiscalKeys } from 'constants/fiscalKeys';
 
 const Container = styled.div`
   background-color: #fff;
@@ -82,8 +79,9 @@ const FillRemainingSpace = styled.span`
   flex: 1 1 auto;
 `;
 
-export const defaultBuildingValues: any = {
-  id: undefined,
+export const defaultBuildingValues: IBuilding = {
+  id: '',
+  isSensitive: '',
   name: '',
   projectNumber: '',
   description: '',
@@ -100,7 +98,7 @@ export const defaultBuildingValues: any = {
   buildingPredominateUse: undefined,
   buildingPredominateUseId: '',
   classificationId: '',
-  classification: undefined,
+  classification: '',
   buildingOccupantType: undefined,
   buildingOccupantTypeId: '',
   transferLeaseOnSale: false,
@@ -111,7 +109,12 @@ export const defaultBuildingValues: any = {
   evaluations: [],
   fiscals: [],
   parcels: [],
-  financials: defaultFinancials,
+  pid: '',
+  encumbranceReason: '',
+  agency: '',
+  agencyCode: '',
+  assessedBuilding: '',
+  assessedLand: '',
 };
 
 /**
@@ -130,7 +133,7 @@ const Form: React.FC<IBuildingForm> = ({
 }) => {
   const stepper = useFormStepper();
   useDraftMarkerSynchronizer('data');
-  const formikProps = useFormikContext<ISteppedFormValues<IFormBuilding>>();
+  const formikProps = useFormikContext<ISteppedFormValues<IBuilding>>();
   useParcelLayerData({
     formikRef,
     nameSpace: 'data',
@@ -257,7 +260,7 @@ interface IBuildingForm {
 
 interface IParentBuildingForm extends IBuildingForm {
   /** the initial values of this form, as loaded from the api */
-  initialValues?: IFormBuilding;
+  initialValues?: IBuilding;
   /** Notify the parent that the building has been saved, potentially starting a new workflow. */
   setBuildingToAssociateLand: (building: IBuilding) => void;
 }
@@ -270,7 +273,7 @@ interface IParentBuildingForm extends IBuildingForm {
  */
 export const ViewOnlyBuildingForm: React.FC<Partial<IParentBuildingForm>> = (props: {
   formikRef?: any;
-  initialValues?: IFormBuilding;
+  initialValues?: IBuilding;
 }) => {
   return (
     <BuildingForm
@@ -290,30 +293,21 @@ export const ViewOnlyBuildingForm: React.FC<Partial<IParentBuildingForm>> = (pro
  * Do an in place conversion of all values to their expected API equivalents (eg. '' => undefined)
  * @param values the building value to convert.
  */
-export const valuesToApiFormat = (values: ISteppedFormValues<IFormBuilding>): IFormBuilding => {
+export const valuesToApiFormat = (values: ISteppedFormValues<IBuilding>): IBuilding => {
   const apiValues = _.cloneDeep(values);
   apiValues.data.parcels = values.data.parcels.map(formParcel =>
     landValuesToApiFormat({ data: formParcel } as any),
   );
-  const seperatedFinancials = (_.flatten(
-    apiValues.data.financials?.map((financial: IFinancialYear) => _.values(financial)),
-  ) ?? []) as IFinancial[];
-  const allFinancials = filterEmptyFinancials(seperatedFinancials);
-
-  apiValues.data.evaluations = _.filter(allFinancials, financial =>
-    Object.keys(EvaluationKeys).includes(financial.key),
-  );
-  apiValues.data.fiscals = _.filter(allFinancials, financial =>
-    Object.keys(FiscalKeys).includes(financial.key),
-  );
+  apiValues.data.evaluations = filterEmptyFinancials(apiValues.data.evaluations);
+  apiValues.data.fiscals = filterEmptyFinancials(apiValues.data.fiscals);
   apiValues.data.classificationId = +apiValues.data.classificationId;
   apiValues.data.buildingOccupantTypeId = undefined as any;
   apiValues.data.rentableArea = +apiValues.data.rentableArea;
   apiValues.data.buildingFloorCount = +(apiValues.data.buildingFloorCount ?? 0);
   apiValues.data.agencyId = +values.data.agencyId;
   apiValues.data.leaseExpiry = stringToNull(apiValues.data.leaseExpiry);
-  apiValues.data.financials = [];
   apiValues.data.buildingTenancyUpdatedOn = stringToNull(apiValues.data.buildingTenancyUpdatedOn);
+  apiValues.data.id = stringToNull(apiValues.data.id);
   return apiValues.data;
 };
 
@@ -339,11 +333,19 @@ const BuidingForm: React.FC<IParentBuildingForm> = ({
   const initialValues = {
     activeStep: 0,
     activeTab: 0,
-    data: { ...defaultBuildingValues, ...rest.initialValues },
+    data: {
+      ...defaultBuildingValues,
+      ...rest.initialValues,
+      evaluations: getMergedFinancials(
+        rest.initialValues?.evaluations ?? [],
+        Object.values(EvaluationKeys),
+      ),
+      fiscals: getMergedFinancials(rest.initialValues?.fiscals ?? [], Object.values(FiscalKeys)),
+    },
   };
   initialValues.data.agencyId = initialValues.data.agencyId
     ? initialValues.data.agencyId
-    : keycloak.agencyId;
+    : keycloak.agencyId ?? '';
   const isViewOrUpdate = !!initialValues?.data?.id;
 
   /**
@@ -352,7 +354,7 @@ const BuidingForm: React.FC<IParentBuildingForm> = ({
    * This validation is significantly faster.
    * @param values formik form values to validate.
    */
-  const handleValidate = async (values: ISteppedFormValues<IFormBuilding>) => {
+  const handleValidate = async (values: ISteppedFormValues<IBuilding>) => {
     const yupErrors: any = BuildingSchema.validate(values.data, { abortEarly: false }).then(
       () => ({}),
       (err: any) => yupToFormErrors(err),
@@ -408,8 +410,8 @@ const BuidingForm: React.FC<IParentBuildingForm> = ({
         persistProps={{
           name: isViewOrUpdate ? 'updated-building' : 'building',
           secret: keycloak.obj.subject,
-          persistCallback: (values: ISteppedFormValues<IFormBuilding>) => {
-            const newValues: ISteppedFormValues<IFormBuilding> = {
+          persistCallback: (values: ISteppedFormValues<IBuilding>) => {
+            const newValues: ISteppedFormValues<IBuilding> = {
               ...values,
               activeStep: 0,
               activeTab: 0,

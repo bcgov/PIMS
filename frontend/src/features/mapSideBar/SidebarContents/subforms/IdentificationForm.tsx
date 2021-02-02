@@ -16,7 +16,7 @@ import { useFormikContext, getIn } from 'formik';
 import useCodeLookups from 'hooks/useLookupCodes';
 import * as API from 'constants/API';
 import GenericModal from 'components/common/GenericModal';
-import { IFormBuilding } from 'features/mapSideBar/containers/MapSideBarContainer';
+import { IBuilding } from 'actions/parcelsActions';
 
 interface IIdentificationProps {
   /** passed down from parent to lock/unlock designated fields */
@@ -51,7 +51,7 @@ export const IdentificationForm: React.FC<IIdentificationProps> = ({
   disabled,
 }) => {
   const { setFieldValue } = useFormikContext();
-  const [overrideData, setOverrideData] = useState<IFormBuilding>();
+  const [overrideData, setOverrideData] = useState<IBuilding>();
   const withNameSpace: Function = React.useCallback(
     (name?: string) => {
       return [nameSpace ?? '', name].filter(x => x).join('.');

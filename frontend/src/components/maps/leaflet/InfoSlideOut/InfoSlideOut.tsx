@@ -10,15 +10,10 @@ import HeaderActions from './HeaderActions';
 import { InfoContent } from './InfoContent';
 import TooltipWrapper from 'components/common/TooltipWrapper';
 import { PropertyPopUpContext } from 'components/maps/providers/PropertyPopUpProvider';
-import { IParcel, storeAssociatedBuilding } from 'actions/parcelsActions';
 import { useLeaflet } from 'react-leaflet';
 import { MAX_ZOOM } from 'constants/strings';
-import { Link, useLocation, useHistory } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import queryString from 'query-string';
-import { useDispatch } from 'react-redux';
-import { defaultBuildingValues } from 'features/mapSideBar/SidebarContents/BuildingForm';
-import { useApi } from 'hooks/useApi';
-import { toast } from 'react-toastify';
 
 const InfoContainer = styled.div`
   margin-right: -10px;
@@ -110,9 +105,6 @@ const InfoControl: React.FC<InfoControlProps> = ({ open, setOpen, onHeaderAction
   const leaflet = useLeaflet();
   const propertyInfo = popUpContext.propertyInfo;
   const location = useLocation();
-  const history = useHistory();
-  const dispatch = useDispatch();
-  const { getParcel } = useApi();
   const jumpToView = () =>
     leaflet.map?.setView(
       [propertyInfo?.latitude as number, propertyInfo?.longitude as number],
@@ -138,35 +130,13 @@ const InfoControl: React.FC<InfoControlProps> = ({ open, setOpen, onHeaderAction
           pathname: `/mapview`,
           search: queryString.stringify({
             ...queryString.parse(location.search),
+            sidebar: true,
+            disabled: true,
+            loadDraft: false,
+            buildingId: 0,
+            associatedParcelId: propertyInfo?.id,
+            parcelId: undefined,
           }),
-        }}
-        onClick={() => {
-          toast.dark('Creating new associated building...');
-          getParcel(propertyInfo?.id as number)
-            .then((parcel: IParcel) => {
-              jumpToView();
-              dispatch(
-                storeAssociatedBuilding({
-                  ...defaultBuildingValues,
-                  parcelId: parcel?.id,
-                  parcels: [{ ...parcel }],
-                }),
-              );
-              history.replace({
-                pathname: `/mapview`,
-                search: queryString.stringify({
-                  ...queryString.parse(location.search),
-                  sidebar: true,
-                  disabled: true,
-                  loadDraft: false,
-                  buildingId: 0,
-                  parcelId: undefined,
-                }),
-              });
-            })
-            .catch(() => {
-              toast.error('Failed to create associated building.');
-            });
         }}
       >
         Add a Building

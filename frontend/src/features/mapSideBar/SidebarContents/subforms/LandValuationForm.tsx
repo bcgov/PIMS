@@ -18,12 +18,9 @@ interface ITenancyProps {
 export const LandValuationForm: React.FC<ITenancyProps> = ({
   title,
   disabled,
-  nameSpace,
+  nameSpace = '',
   showImprovements,
 }) => {
-  const withNameSpace: Function = (fieldName: string) => {
-    return nameSpace ? `${nameSpace}.${fieldName}` : fieldName;
-  };
   const formikProps = useFormikContext();
   return (
     <Col className="land-valuation">
@@ -37,7 +34,7 @@ export const LandValuationForm: React.FC<ITenancyProps> = ({
           {...(formikProps as any)}
           isParcel={true}
           showAppraisal={false}
-          nameSpace={withNameSpace('financials')}
+          nameSpace={nameSpace}
           showImprovements={showImprovements}
         />
       </Row>

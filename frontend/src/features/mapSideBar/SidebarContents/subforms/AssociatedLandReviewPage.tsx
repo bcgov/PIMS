@@ -25,6 +25,10 @@ import { formatFiscalYear } from 'utils';
 import { ParentSelect } from 'components/common/form/ParentSelect';
 import styled from 'styled-components';
 import { LandSchema } from 'utils/YupSchema';
+import { indexOfFinancial } from 'features/properties/components/forms/subforms/EvaluationForm';
+import { EvaluationKeys } from 'constants/evaluationKeys';
+import { FiscalKeys } from 'constants/fiscalKeys';
+import moment from 'moment';
 
 interface IReviewProps {
   nameSpace?: string;
@@ -110,6 +114,23 @@ export const AssociatedLandReviewPage: React.FC<any> = (props: IReviewProps) => 
       usage: editInfo.usage && isParcelValid,
       valuation: editInfo.valuation && isParcelValid,
     };
+    const currentYear = moment().year();
+    const assessedIndex = indexOfFinancial(
+      getIn(formikProps.values, withNameSpace('evaluations', index)),
+      EvaluationKeys.Assessed,
+      currentYear,
+    );
+    const improvementsIndex = indexOfFinancial(
+      getIn(formikProps.values, withNameSpace('evaluations', index)),
+      EvaluationKeys.Improvements,
+      currentYear,
+    );
+    const fiscalIndex = indexOfFinancial(
+      getIn(formikProps.values, withNameSpace('fiscals', index)),
+      FiscalKeys.NetBook,
+      currentYear,
+    );
+
     const projectNumber = getIn(formikProps.values, withNameSpace('projectNumber', index));
     if (getIn(formikProps.values.data, `leasedLandMetadata.${index}.type`) === LeasedLand.other) {
       return <OtherParcel index={index} />;
@@ -316,7 +337,7 @@ export const AssociatedLandReviewPage: React.FC<any> = (props: IReviewProps) => 
                     <Label>Net Book Value</Label>
                     <FastCurrencyInput
                       formikProps={formikProps}
-                      field={withNameSpace('financials.0.netbook.value', index)}
+                      field={withNameSpace(`fiscals.${fiscalIndex}.value`, index)}
                       disabled={parcelEditInfo.valuation}
                     />
                     <p
@@ -331,7 +352,7 @@ export const AssociatedLandReviewPage: React.FC<any> = (props: IReviewProps) => 
                       {formatFiscalYear(
                         getIn(
                           formikProps.values,
-                          withNameSpace('financials.0.netbook.fiscalYear', index),
+                          withNameSpace(`fiscals.${fiscalIndex}.fiscalYear`, index),
                         ),
                       )}
                     </p>
@@ -340,12 +361,12 @@ export const AssociatedLandReviewPage: React.FC<any> = (props: IReviewProps) => 
                     <Label>Land value</Label>
                     <FastCurrencyInput
                       formikProps={formikProps}
-                      field={withNameSpace('financials.0.assessedLand.value', index)}
+                      field={withNameSpace(`evaluations.${assessedIndex}.value`, index)}
                       disabled={parcelEditInfo.valuation}
                     />
                     <FastInput
                       formikProps={formikProps}
-                      field={withNameSpace('financials.0.netbook.year', index)}
+                      field={withNameSpace(`evaluations.${assessedIndex}.year`, index)}
                       disabled
                       style={{ width: 50, fontSize: 11 }}
                     />
@@ -354,12 +375,12 @@ export const AssociatedLandReviewPage: React.FC<any> = (props: IReviewProps) => 
                     <Label>Building Value</Label>
                     <FastCurrencyInput
                       formikProps={formikProps}
-                      field={withNameSpace('financials.0.improvements.value', index)}
+                      field={withNameSpace(`evaluations.${improvementsIndex}.value`, index)}
                       disabled={parcelEditInfo.valuation}
                     />
                     <FastInput
                       formikProps={formikProps}
-                      field={withNameSpace('financials.0.netbook.year', index)}
+                      field={withNameSpace(`evaluations.${improvementsIndex}.year`, index)}
                       disabled
                       style={{ width: 50, fontSize: 11 }}
                     />
@@ -371,11 +392,11 @@ export const AssociatedLandReviewPage: React.FC<any> = (props: IReviewProps) => 
                         value={formatMoney(
                           (getIn(
                             formikProps.values,
-                            withNameSpace('financials.0.improvements.value', index),
+                            withNameSpace(`evaluations.${improvementsIndex}.value`, index),
                           ) || 0) +
                             (getIn(
                               formikProps.values,
-                              withNameSpace('financials.0.assessedLand.value', index),
+                              withNameSpace(`evaluations.${assessedIndex}.value`, index),
                             ) || 0),
                         )}
                         disabled={true}

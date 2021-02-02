@@ -134,16 +134,16 @@ exports[`renders correctly 1`] = `
           <div style=\\"display: flex;\\" class=\\"val-item row\\">
             <p class=\\"label\\">Net Book Value</p>
             <div class=\\"form-group col\\">
-              <div class=\\"input-tooltip-wrapper\\"><input name=\\"data.financials.0.netbook.value\\" class=\\"form-control input-number\\" disabled=\\"\\" placeholder=\\"\\" value=\\"\\"></div>
+              <div class=\\"input-tooltip-wrapper\\"><input name=\\"data.fiscals.0.value\\" class=\\"form-control input-number\\" disabled=\\"\\" placeholder=\\"\\" value=\\"\\"></div>
             </div>
             <div class=\\"form-group\\"><input name=\\"netbookYearDisplay\\" style=\\"width: 50px; font-size: 11px;\\" disabled=\\"\\" id=\\"input-netbookYearDisplay\\" class=\\"form-control\\" value=\\"\\"></div>
           </div>
           <div style=\\"display: flex;\\" class=\\"val-item row\\">
             <p class=\\"label\\">Assessed Value</p>
             <div class=\\"form-group col\\">
-              <div class=\\"input-tooltip-wrapper\\"><input name=\\"data.financials.0.assessedLand.value\\" class=\\"form-control input-number\\" disabled=\\"\\" placeholder=\\"\\" value=\\"\\"></div>
+              <div class=\\"input-tooltip-wrapper\\"><input name=\\"data.evaluations.0.value\\" class=\\"form-control input-number\\" disabled=\\"\\" placeholder=\\"\\" value=\\"\\"></div>
             </div>
-            <div class=\\"form-group\\"><input name=\\"data.financials.0.assessedLand.year\\" style=\\"width: 50px; font-size: 11px;\\" disabled=\\"\\" id=\\"input-data.financials.0.assessedLand.year\\" class=\\"form-control\\" value=\\"\\"></div>
+            <div class=\\"form-group\\"><input name=\\"data.evaluations.0.year\\" style=\\"width: 50px; font-size: 11px;\\" disabled=\\"\\" id=\\"input-data.evaluations.0.year\\" class=\\"form-control\\" value=\\"\\"></div>
           </div>
         </div>
       </div>

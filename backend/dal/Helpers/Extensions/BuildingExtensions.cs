@@ -237,7 +237,7 @@ namespace Pims.Dal.Helpers.Extensions
                 var originalBuildingFiscal = building.Fiscals
                     .FirstOrDefault(e => e.FiscalYear == buildingFiscal.FiscalYear && e.Key == buildingFiscal.Key);
 
-                var updateFiscal = originalBuildingFiscal?.Value != buildingFiscal.Value;
+                var updateFiscal = originalBuildingFiscal?.Value != buildingFiscal.Value || originalBuildingFiscal?.EffectiveDate != buildingFiscal.EffectiveDate;
                 if (originalBuildingFiscal == null)
                 {
                     building.Fiscals.Add(buildingFiscal);
