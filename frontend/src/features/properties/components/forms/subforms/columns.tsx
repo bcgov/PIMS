@@ -4,19 +4,31 @@ import { useFormikContext, getIn } from 'formik';
 import { formatFiscalYear, formatMoney } from 'utils';
 import { FaBuilding } from 'react-icons/fa';
 import { LandSvg } from 'components/common/Icons';
+import moment from 'moment';
+import { indexOfFinancial } from './EvaluationForm';
+import { EvaluationKeys } from 'constants/evaluationKeys';
+import { FiscalKeys } from 'constants/fiscalKeys';
+const currentMoment = moment();
+const currentYear = currentMoment.year();
 
 const getEditableMoneyCell = (disabled: boolean | undefined, namespace: string, type: string) => {
   return (cellInfo: any) => {
+    //get the desired year using the current year - the offset
+    const desiredYear = currentYear - cellInfo.row.index;
     const context = useFormikContext();
-    if (disabled) {
-      const value = getIn(context.values, `${namespace}.${cellInfo.row.index}.${type}.value`);
+    const { values } = context;
+    const data = getIn(values, namespace);
+    let financialIndex = indexOfFinancial(data, type, desiredYear);
+
+    if (disabled && financialIndex >= 0) {
+      const value = getIn(values, `${namespace}.${financialIndex}.value`);
       return typeof value === 'number' ? formatMoney(value) : null;
     }
     return (
       <FastCurrencyInput
-        key={`${namespace}.${cellInfo.row.index}.${type}.value`}
+        key={`${namespace}.${financialIndex}.value`}
         formikProps={context}
-        field={`${namespace}.${cellInfo.row.index}.${type}.value`}
+        field={`${namespace}.${financialIndex}.value`}
         disabled={disabled}
       />
     );
@@ -28,21 +40,31 @@ const getEditableMoneyCell = (disabled: boolean | undefined, namespace: string, 
  * This information is only editable if this cell belongs to a parcel row.
  * @param cellInfo provided by react table
  */
-const getEditableDatePickerCell = (namespace: string = 'properties', field: string) => (
-  cellInfo: any,
-) => {
-  const formikProps = useFormikContext();
+const getEditableDatePickerCell = (
+  namespace: string = 'properties',
+  field: string,
+  type: string,
+  disabled?: boolean,
+) => (cellInfo: any) => {
+  //get the desired year using the current year - the offset
+  const desiredYear = currentYear - cellInfo.row.index;
+  const context = useFormikContext();
+  const { values } = context;
+  const data = getIn(values, namespace);
+  let financialIndex = indexOfFinancial(data, type, desiredYear);
   return (
     <FastDatePicker
-      formikProps={formikProps}
-      field={`${namespace}.${cellInfo.row.id}.${field}`}
+      formikProps={context}
+      disabled={disabled}
+      field={`${namespace}.${financialIndex}.${field}`}
     ></FastDatePicker>
   );
 };
 
-const getFiscalYear = (field: string) => {
+const getFiscalYear = () => {
   return (cellInfo: any) => {
-    return formatFiscalYear(cellInfo.row.values[field]);
+    const desiredYear = currentYear - cellInfo.row.index;
+    return formatFiscalYear(desiredYear);
   };
 };
 
@@ -56,7 +78,7 @@ export const getAssessedCols = (
   const basicAssessed = [
     {
       Header: 'Assessment Year',
-      accessor: 'assessed.year', // accessor is the "key" in the data
+      accessor: 'year', // accessor is the "key" in the data
       maxWidth: 90,
       align: 'left',
     },
@@ -65,7 +87,7 @@ export const getAssessedCols = (
       accessor: 'assessed.value',
       maxWidth: 140,
       align: 'left',
-      Cell: getEditableMoneyCell(disabled, namespace, 'assessed'),
+      Cell: getEditableMoneyCell(disabled, `${namespace}.evaluations`, EvaluationKeys.Assessed),
     },
   ];
   const improvements = [
@@ -74,7 +96,7 @@ export const getAssessedCols = (
       accessor: 'improvements.value',
       maxWidth: 140,
       align: 'left',
-      Cell: getEditableMoneyCell(disabled, namespace, 'improvements'),
+      Cell: getEditableMoneyCell(disabled, `${namespace}.evaluations`, EvaluationKeys.Improvements),
     },
   ];
   if (includeImprovements) {
@@ -95,21 +117,26 @@ export const getNetbookCols = (disabled?: boolean, namespace = 'financials'): an
           accessor: 'netbook.fiscalYear',
           maxWidth: 50,
           align: 'left',
-          Cell: getFiscalYear('netbook.fiscalYear'),
+          Cell: getFiscalYear(),
         },
         {
           Header: 'Effective Date',
           accessor: 'netbook.effectiveDate',
           maxWidth: 140,
           align: 'left',
-          Cell: getEditableDatePickerCell(namespace, `netbook.effectiveDate`),
+          Cell: getEditableDatePickerCell(
+            `${namespace}.fiscals`,
+            `effectiveDate`,
+            FiscalKeys.NetBook,
+            disabled,
+          ),
         },
         {
           Header: 'Net Book Value',
           accessor: 'netbook.value',
           maxWidth: 140,
           align: 'left',
-          Cell: getEditableMoneyCell(disabled, namespace, 'netbook'),
+          Cell: getEditableMoneyCell(disabled, `${namespace}.fiscals`, FiscalKeys.NetBook),
         },
       ],
     },

@@ -1,6 +1,6 @@
 import { Fragment, useMemo } from 'react';
 import React from 'react';
-import { FormikProps } from 'formik';
+import { FormikProps, useFormikContext, getIn } from 'formik';
 import { IEvaluation, IFiscal } from 'actions/parcelsActions';
 import { EvaluationKeys } from 'constants/evaluationKeys';
 import { FiscalKeys } from 'constants/fiscalKeys';
@@ -35,13 +35,6 @@ export interface IFinancial extends IFiscal, IEvaluation {
   updatedOn?: string;
 }
 
-export interface IFinancialYear {
-  assessed: IFinancial;
-  appraised: IFinancial;
-  netbook: IFinancial;
-  market: IFinancial;
-  improvements: IFinancial;
-}
 const NUMBER_OF_GENERATED_EVALUATIONS = 10;
 const currentYear = moment().year();
 const adjustedFiscalYear = moment().month() >= 3 ? currentYear + 1 : currentYear;
@@ -52,45 +45,57 @@ const yearsArray = _.range(
 );
 const keyTypes = { ...EvaluationKeys, ...FiscalKeys };
 
-const findMatchingFinancial = (financials: IFinancial[], type: string, year?: number) => {
-  return financials?.find((financialsForYear: any) => {
-    const financial = financialsForYear[type.toLocaleLowerCase()];
+export const findMatchingFinancial = (financials: IFinancial[], type: string, year?: number) => {
+  return financials?.find((financialsForYear: IFinancial) => {
     return (
-      ((financial.date !== undefined && moment(financial.date).year() === year) ||
-        financial.fiscalYear === year) &&
-      financial.key === type
+      ((financialsForYear.date !== undefined && moment(financialsForYear.date).year() === year) ||
+        financialsForYear.fiscalYear === year ||
+        financialsForYear.year === year) &&
+      financialsForYear.key === type
     );
   });
 };
-const indexOfFinancial = (financials: IFinancial[], type: string, year?: number) =>
+export const indexOfFinancial = (financials: IFinancial[], type: string, year?: number) =>
   _.indexOf(financials, findMatchingFinancial(financials, type, year));
 /**
  * get a list of defaultEvaluations, generating one for NUMBER_OF_GENERATED_EVALUATIONS
  */
-export const defaultFinancials: any = yearsArray.map(year => {
-  return _.reduce(
-    Object.values(keyTypes) as string[],
-    (acc, type) => ({
-      ...acc,
-      [type.toLocaleLowerCase()]: {
-        date: type === EvaluationKeys.Assessed ? moment(year, 'YYYY').format('YYYY-MM-DD') : '',
-        year: year,
-        createdOn: '',
-        updatedOn: '',
-        fiscalYear: year,
-        key: type,
-        value: '',
-      },
-    }),
-    {} as IFinancialYear[],
-  );
-});
+export const defaultFinancials: any = _.flatten(
+  yearsArray.map(year => {
+    return _.reduce(
+      Object.values(keyTypes) as string[],
+      (acc, type) => [
+        ...acc,
+        {
+          date:
+            type === EvaluationKeys.Assessed || type === EvaluationKeys.Improvements
+              ? moment(year, 'YYYY').format('YYYY-MM-DD')
+              : '',
+          year: year,
+          createdOn: '',
+          updatedOn: '',
+          fiscalYear: year,
+          key: type,
+          value: '',
+        } as IFinancial,
+      ],
+      [] as IFinancial[],
+    );
+  }),
+);
 /**
  * Merge the passed list of evaluations with this components defaultEvaluations.
  * @param existingFinancials
  */
-export const getMergedFinancials = (existingFinancials: IFinancial[]) => {
-  const placeholderFinancials = _.cloneDeep(defaultFinancials);
+export const getMergedFinancials = (
+  existingFinancials: IFinancial[],
+  types: EvaluationKeys[] | FiscalKeys[],
+) => {
+  const placeholderFinancials = _.cloneDeep(
+    defaultFinancials.filter((financial: IFinancial) =>
+      Object.values(types).includes(financial.key),
+    ),
+  );
   existingFinancials.forEach((evaluation: IFinancial) => {
     const index = indexOfFinancial(
       placeholderFinancials,
@@ -99,10 +104,10 @@ export const getMergedFinancials = (existingFinancials: IFinancial[]) => {
     );
     if (index >= 0) {
       evaluation.year = (evaluation.fiscalYear as number) ?? moment(evaluation.date).year();
-      placeholderFinancials[index][evaluation.key.toLocaleLowerCase()] = evaluation;
+      placeholderFinancials[index] = evaluation;
     }
   });
-  return placeholderFinancials;
+  return _.orderBy(placeholderFinancials, 'year', 'desc');
 };
 
 export const filterEmptyFinancials = (evaluations: IFinancial[]) =>
@@ -145,6 +150,15 @@ const EvaluationForm = <T extends any>(props: EvaluationProps & FormikProps<T>) 
     props.disabled,
     props.nameSpace,
   ]);
+  const { values } = useFormikContext();
+  const assessedEvaluations =
+    getIn(values, `${props.nameSpace}.evaluations`)?.filter(
+      (evaluation: IFinancial) => evaluation?.key === EvaluationKeys.Assessed,
+    ) ?? [];
+  const netBookFiscals =
+    getIn(values, `${props.nameSpace}.fiscals`)?.filter(
+      (evaluation: IFinancial) => evaluation?.key === FiscalKeys.NetBook,
+    ) ?? [];
 
   return (
     <Fragment>
@@ -154,7 +168,7 @@ const EvaluationForm = <T extends any>(props: EvaluationProps & FormikProps<T>) 
           pageSize={-1}
           name="evaluations"
           columns={assessedCols}
-          data={defaultFinancials}
+          data={assessedEvaluations}
           manualPagination={false}
           className="assessed"
         />
@@ -163,7 +177,7 @@ const EvaluationForm = <T extends any>(props: EvaluationProps & FormikProps<T>) 
           pageSize={-1}
           name="fiscals"
           columns={netbookCols}
-          data={defaultFinancials}
+          data={netBookFiscals}
           manualPagination={false}
           className="netbook"
         />

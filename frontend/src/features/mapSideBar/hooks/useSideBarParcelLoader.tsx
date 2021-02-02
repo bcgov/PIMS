@@ -1,10 +1,9 @@
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
 import { SidebarContextType } from './useQueryParamSideBar';
 import { fetchParcelDetail } from 'actionCreators/parcelsActionCreator';
-import { getMergedFinancials } from 'features/properties/components/forms/subforms/EvaluationForm';
 import { useDispatch } from 'react-redux';
 import React from 'react';
-import { IFormParcel } from '../containers/MapSideBarContainer';
+import { IParcel } from 'actions/parcelsActions';
 
 interface IUseSideBarParcelLoader {
   /** whether or not the sidebar should be displayed */
@@ -24,7 +23,7 @@ const useSideBarParcelLoader = ({
   parcelId,
   disabled,
 }: IUseSideBarParcelLoader) => {
-  const [cachedParcelDetail, setCachedParcelDetail] = React.useState<IFormParcel | null>(null);
+  const [cachedParcelDetail, setCachedParcelDetail] = React.useState<IParcel | null>(null);
   const dispatch = useDispatch();
   const hasBuildings = !!cachedParcelDetail?.buildings?.length;
   useDeepCompareEffect(() => {
@@ -34,10 +33,6 @@ const useSideBarParcelLoader = ({
         const response: any = await dispatch(fetchParcelDetail({ id: parcelId as number }));
         setCachedParcelDetail({
           ...response,
-          financials: getMergedFinancials([
-            ...(response?.evaluations ?? []),
-            ...(response?.fiscals ?? []),
-          ]),
         });
         if (!!response?.parcelDetail?.buildings?.length) {
           setSideBarContext(

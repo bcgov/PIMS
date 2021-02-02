@@ -21,6 +21,10 @@ import AddressForm from 'features/properties/components/forms/subforms/AddressFo
 import { noop } from 'lodash';
 import { ParentSelect } from 'components/common/form/ParentSelect';
 import { formatFiscalYear } from 'utils';
+import { indexOfFinancial } from 'features/properties/components/forms/subforms/EvaluationForm';
+import { EvaluationKeys } from 'constants/evaluationKeys';
+import { FiscalKeys } from 'constants/fiscalKeys';
+import moment from 'moment';
 
 interface IReviewProps {
   nameSpace?: string;
@@ -51,6 +55,17 @@ export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
     [formikProps.isValid, props.disabled],
   );
   const [editInfo, setEditInfo] = useState(defaultEditValues);
+  const currentYear = moment().year();
+  const evaluationIndex = indexOfFinancial(
+    getIn(formikProps.values, withNameSpace('evaluations')),
+    EvaluationKeys.Assessed,
+    currentYear,
+  );
+  const fiscalIndex = indexOfFinancial(
+    getIn(formikProps.values, withNameSpace('fiscals')),
+    FiscalKeys.NetBook,
+    currentYear,
+  );
 
   return (
     <Container className="review-section">
@@ -306,7 +321,7 @@ export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
                 <Label>Net Book Value</Label>
                 <FastCurrencyInput
                   formikProps={formikProps}
-                  field="data.financials.0.netbook.value"
+                  field={`data.fiscals.${fiscalIndex}.value`}
                   disabled={editInfo.valuation}
                 />
                 <Input
@@ -320,11 +335,11 @@ export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
                 <Label>Assessed Value</Label>
                 <FastCurrencyInput
                   formikProps={formikProps}
-                  field="data.financials.0.assessedLand.value"
+                  field={`data.evaluations.${evaluationIndex}.value`}
                   disabled={editInfo.valuation}
                 />
                 <Input
-                  field="data.financials.0.assessedLand.year"
+                  field={`data.evaluations.${evaluationIndex}.year`}
                   disabled
                   style={{ width: 50, fontSize: 11 }}
                 />

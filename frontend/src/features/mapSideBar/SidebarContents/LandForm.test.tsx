@@ -11,7 +11,7 @@ import * as API from 'constants/API';
 import { ILookupCode } from 'actions/lookupActions';
 import * as reducerTypes from 'constants/reducerTypes';
 import { fireEvent, render, wait, screen } from '@testing-library/react';
-import { IFormParcel } from '../containers/MapSideBarContainer';
+import { IParcel } from '../containers/MapSideBarContainer';
 import { Classifications } from 'constants/classifications';
 import { fillInput } from 'utils/testUtils';
 
@@ -75,7 +75,7 @@ jest.mock('@react-keycloak/web');
   },
 });
 
-const defaultInitialValues: IFormParcel = {
+const defaultInitialValues: IParcel = {
   id: 1,
   pid: '111-111-111',
   pin: '',
@@ -102,7 +102,7 @@ const defaultInitialValues: IFormParcel = {
   },
 };
 
-const getLandForm = (disabled?: boolean, initialValues?: IFormParcel) => (
+const getLandForm = (disabled?: boolean, initialValues?: IParcel) => (
   <Provider store={store}>
     <Router history={history}>
       <LandForm

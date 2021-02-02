@@ -205,7 +205,9 @@ export const LandSchema = Yup.object().shape({
     .required('Required')
     .test('is-valid', 'Please enter a valid number', val => Number(val) < 200000),
   lotSize: Yup.number(),
-  isSensitive: Yup.boolean().required('Required'),
+  isSensitive: Yup.boolean()
+    .transform(emptyStringToNull)
+    .required('Required'),
 });
 export const ParcelSchema = Yup.object()
   .shape(

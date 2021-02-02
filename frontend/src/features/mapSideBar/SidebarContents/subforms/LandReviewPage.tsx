@@ -23,6 +23,10 @@ import { FormikTable } from 'features/projects/common';
 import { getAssociatedBuildingsCols } from 'features/properties/components/forms/subforms/columns';
 import { Classifications } from 'constants/classifications';
 import { formatFiscalYear } from 'utils';
+import { indexOfFinancial } from 'features/properties/components/forms/subforms/EvaluationForm';
+import { EvaluationKeys } from 'constants/evaluationKeys';
+import { FiscalKeys } from 'constants/fiscalKeys';
+import moment from 'moment';
 
 interface IReviewProps {
   nameSpace?: string;
@@ -72,6 +76,17 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
   );
 
   const projectNumber = getIn(formikProps.values, withNameSpace('projectNumber'));
+  const currentYear = moment().year();
+  const evaluationIndex = indexOfFinancial(
+    getIn(formikProps.values, withNameSpace('evaluations')),
+    EvaluationKeys.Assessed,
+    currentYear,
+  );
+  const fiscalIndex = indexOfFinancial(
+    getIn(formikProps.values, withNameSpace('fiscals')),
+    FiscalKeys.NetBook,
+    currentYear,
+  );
 
   return (
     <Container className="review-section">
@@ -292,7 +307,7 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
                 <Label>Net Book Value</Label>
                 <FastCurrencyInput
                   formikProps={formikProps}
-                  field={withNameSpace('financials.0.netbook.value')}
+                  field={withNameSpace(`fiscals.${fiscalIndex}.value`)}
                   disabled={editInfo.valuation}
                 />
                 <FastInput
@@ -307,12 +322,12 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
                 <Label>Assessed Value</Label>
                 <FastCurrencyInput
                   formikProps={formikProps}
-                  field={withNameSpace('financials.0.assessedLand.value')}
+                  field={withNameSpace(`evaluations.${evaluationIndex}.value`)}
                   disabled={editInfo.valuation}
                 />
                 <FastInput
                   formikProps={formikProps}
-                  field={withNameSpace('financials.0.assessedLand.year')}
+                  field={withNameSpace(`evaluations.${evaluationIndex}.year`)}
                   disabled
                   style={{ width: 50, fontSize: 11 }}
                 />

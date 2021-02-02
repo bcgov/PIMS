@@ -48,7 +48,7 @@ export const GeocoderAutoComplete: React.FC<IGeocoderAutoCompleteProps> = ({
 }) => {
   const [options, setOptions] = React.useState<IGeocoderResponse[]>([]);
   const api = useApi();
-  const { setFieldTouched } = useFormikContext<any>();
+  const { handleBlur } = useFormikContext<any>();
   const errorTooltip = error && touch && displayErrorTooltips ? error : undefined;
 
   const search = useCallback(
@@ -63,7 +63,6 @@ export const GeocoderAutoComplete: React.FC<IGeocoderAutoCompleteProps> = ({
 
   const onTextChanged = async (val?: string) => {
     onTextChange && onTextChange(val);
-    setFieldTouched(field);
     if (val && val.length >= 5 && val !== value) {
       await search(val, false);
     } else {
@@ -119,6 +118,7 @@ export const GeocoderAutoComplete: React.FC<IGeocoderAutoCompleteProps> = ({
               placeholder={placeholder}
               disabled={disabled}
               required={required}
+              onBlur={handleBlur}
               {...rest}
             />
           </TooltipWrapper>
@@ -138,6 +138,10 @@ interface IDebounceInputProps extends FormControlProps {
   placeholder?: string;
   isInvalid?: boolean;
   onTextChange: (value?: string) => void;
+  onBlur: {
+    (e: React.FocusEvent<any>): void;
+    <T = any>(fieldOrEvent: T): T extends string ? (e: any) => void : void;
+  };
 }
 
 const InputControl: React.FC<IDebounceInputProps> = ({ onTextChange, ...props }) => {

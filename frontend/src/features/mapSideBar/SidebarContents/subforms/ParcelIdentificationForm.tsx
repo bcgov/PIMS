@@ -30,8 +30,8 @@ import TooltipWrapper from 'components/common/TooltipWrapper';
 import * as API from 'constants/API';
 import useCodeLookups from 'hooks/useLookupCodes';
 import GenericModal from 'components/common/GenericModal';
-import { IFormParcel } from 'features/mapSideBar/containers/MapSideBarContainer';
 import ClickAwayListener from 'react-click-away-listener';
+import { IParcel } from 'actions/parcelsActions';
 
 interface IIdentificationProps {
   /** used for changign the agency - note that only select users will be able to edit this field */
@@ -80,7 +80,7 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
   disabled,
 }) => {
   const [geocoderResponse, setGeocoderResponse] = useState<IGeocoderResponse | undefined>();
-  const [overrideData, setOverrideData] = useState<IFormParcel>();
+  const [overrideData, setOverrideData] = useState<IParcel>();
   const formikProps = useFormikContext<ISteppedFormValues<IAssociatedLand>>();
   const withNameSpace: Function = React.useCallback(
     (name?: string) => {

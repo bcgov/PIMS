@@ -20,6 +20,7 @@ export interface IProperty {
   description?: string;
   projectNumber?: string;
   projectStatus?: string;
+  isSensitive: boolean | '';
 }
 
 export interface IStoreParcelsAction {
@@ -70,8 +71,8 @@ export enum LeasedLand {
 }
 
 export interface IBuilding extends IProperty {
-  parcelId: number;
-  pid: number;
+  parcelId: number | '';
+  pid: number | '';
   address: IAddress;
   buildingFloorCount?: number | '';
   buildingConstructionType?: string;
@@ -99,9 +100,6 @@ export interface IBuilding extends IProperty {
   evaluations: IEvaluation[];
   fiscals: IFiscal[];
   parcels: IParcel[];
-  leasedLand: {
-    type: LeasedLand;
-  };
 }
 
 export interface IFlatBuilding extends IProperty {
@@ -168,7 +166,6 @@ export interface IParcel extends IProperty {
   agency?: string;
   subAgency?: string;
   agencyId: number | '';
-  isSensitive: boolean;
   buildings: IBuilding[];
   assessedLand: number | '';
   assessedBuilding: number | '';
