@@ -20,7 +20,6 @@ const InfoContainer = styled.div`
   width: 341px;
   min-height: 52px;
   height: auto;
-  max-height: 500px;
   background-color: #fff;
   position: relative;
   border-radius: 4px;
@@ -48,12 +47,12 @@ const InfoHeader = styled.div`
 
 const InfoMain = styled.div`
   width: 100%;
-  max-height: 420px;
   padding-left: 10px;
   padding: 0px 10px 5px 10px;
 
   &.open {
     overflow-y: scroll;
+    max-height: calc(100vh - 380px);
   }
 `;
 

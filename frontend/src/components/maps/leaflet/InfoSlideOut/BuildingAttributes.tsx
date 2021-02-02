@@ -4,7 +4,8 @@ import { IBuilding } from 'actions/parcelsActions';
 import { Label } from 'components/common/Label';
 import './InfoSlideOut.scss';
 import { formatMoney } from 'utils/numberFormatUtils';
-import { compareDate } from './InfoContent';
+import { compareDate, OuterRow } from './InfoContent';
+import { ThreeColumnItem } from './ThreeColumnItem';
 
 interface IBuildingAttributes {
   /** the selected building information */
@@ -31,17 +32,18 @@ export const BuildingAttributes: React.FC<IBuildingAttributes> = ({ buildingInfo
     <>
       <ListGroup>
         <Label className="header">Valuation</Label>
-        <ListGroup.Item>
-          <Label>Assessed value:</Label>
-          {formatAssessed}
-        </ListGroup.Item>
+        <OuterRow>
+          <ThreeColumnItem leftSideLabel={'Assessed value:'} rightSideItem={formatAssessed} />
+        </OuterRow>
       </ListGroup>
       {buildingInfo?.pid && (
         <ListGroup>
           <Label className="header">Associated Land</Label>
-          <ListGroup.Item>
-            <Label>{buildingInfo.pid}</Label>
-          </ListGroup.Item>
+          <OuterRow>
+            <ListGroup.Item>
+              <Label>{buildingInfo.pid}</Label>
+            </ListGroup.Item>
+          </OuterRow>
         </ListGroup>
       )}
     </>

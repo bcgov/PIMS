@@ -5,7 +5,8 @@ import { Label } from 'components/common/Label';
 import './InfoSlideOut.scss';
 import { formatMoney } from 'utils/numberFormatUtils';
 import { ReactElement } from 'react';
-import { compareDate } from './InfoContent';
+import { compareDate, OuterRow } from './InfoContent';
+import { ThreeColumnItem } from './ThreeColumnItem';
 
 interface IParcelAttributes {
   /** the selected parcel information */
@@ -39,23 +40,26 @@ export const ParcelAttributes: React.FC<IParcelAttributes> = ({
     <>
       <ListGroup>
         <Label className="header">Parcel attributes</Label>
-        <ListGroup.Item>
-          <Label>Lot size:</Label>
-          {parcelInfo?.landArea + ' hectares'}
-        </ListGroup.Item>
+        <OuterRow>
+          <ThreeColumnItem
+            leftSideLabel={'Lot size:'}
+            rightSideItem={parcelInfo?.landArea + ' hectares'}
+          />
+        </OuterRow>
       </ListGroup>
       {parcelInfo?.landLegalDescription && (
         <ListGroup>
           <Label className="header">Legal description</Label>
-          <ListGroup.Item>{parcelInfo?.landLegalDescription}</ListGroup.Item>
+          <OuterRow>
+            <ListGroup.Item className="legal">{parcelInfo?.landLegalDescription}</ListGroup.Item>
+          </OuterRow>
         </ListGroup>
       )}
       <ListGroup>
         <Label className="header">Valuation</Label>
-        <ListGroup.Item>
-          <Label>Assessed value:</Label>
-          {formatAssessed}
-        </ListGroup.Item>
+        <OuterRow>
+          <ThreeColumnItem leftSideLabel={'Assessed value:'} rightSideItem={formatAssessed} />
+        </OuterRow>
       </ListGroup>
       {parcelInfo?.buildings && (
         <ListGroup>
