@@ -8,7 +8,13 @@ interface LandProps {
   disabled?: boolean;
 }
 
-export const defaultLandValues = {
+interface ILandFormValues {
+  landArea: number | '';
+  zoning: string;
+  zoningPotential: string;
+}
+
+export const defaultLandValues: ILandFormValues = {
   landArea: '',
   zoning: '',
   zoningPotential: '',

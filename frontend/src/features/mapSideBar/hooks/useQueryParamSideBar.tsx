@@ -36,6 +36,7 @@ interface IMapSideBar {
   setDisabled: (disabled: boolean) => void;
   parcelId?: number;
   buildingId?: number;
+  associatedParcelId?: number;
   disabled?: boolean;
   loadDraft?: boolean;
   newParcel?: boolean;
@@ -55,6 +56,7 @@ const useQueryParamSideBar = (formikRef?: any): IMapSideBar => {
   const [sideBarSize, setSideBarSize] = useState<SidebarSize>(undefined);
   const [parcelId, setParcelId] = useState<number | undefined>(undefined);
   const [buildingId, setBuildingId] = useState<number | undefined>(undefined);
+  const [associatedParcelId, setAssociatedParcelId] = useState<number | undefined>(undefined);
   const location = useLocation();
   const history = useHistory();
 
@@ -67,6 +69,9 @@ const useQueryParamSideBar = (formikRef?: any): IMapSideBar => {
         ? +searchParams.buildingId
         : undefined,
     );
+    setAssociatedParcelId(
+      searchParams.associatedParcelId ? +searchParams.associatedParcelId || undefined : undefined,
+    );
     setSideBarSize(searchParams.sidebarSize as SidebarSize);
     setContextName(searchParams.sidebarContext as SidebarContextType);
     if (searchParams?.new === 'true') {
@@ -76,12 +81,12 @@ const useQueryParamSideBar = (formikRef?: any): IMapSideBar => {
       queryParams.sidebarContext = SidebarContextType.ADD_PROPERTY_TYPE_SELECTOR;
       history.replace({ pathname: '/mapview', search: queryString.stringify(queryParams) });
     } else if (
-      !!searchParams.parcelId &&
       searchParams.sidebar === 'false' &&
-      (searchParams.parcelId || searchParams.buildingId)
+      (searchParams.parcelId || searchParams.buildingId || searchParams.associatedParcelId)
     ) {
       searchParams.parcelId = undefined;
       searchParams.buildingId = undefined;
+      searchParams.associatedParcelId = undefined;
       history.replace({
         pathname: '/mapview',
         search: queryString.stringify(searchParams),
@@ -145,6 +150,7 @@ const useQueryParamSideBar = (formikRef?: any): IMapSideBar => {
     size: sideBarSize,
     parcelId,
     buildingId,
+    associatedParcelId,
     disabled: searchParams?.disabled === 'true',
     loadDraft: searchParams?.loadDraft === 'true',
     newParcel: searchParams?.new === 'true',

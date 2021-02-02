@@ -1,12 +1,9 @@
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
 import { SidebarContextType } from './useQueryParamSideBar';
 import { fetchBuildingDetail } from 'actionCreators/parcelsActionCreator';
-import { getMergedFinancials } from 'features/properties/components/forms/subforms/EvaluationForm';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import React from 'react';
-import { IFormBuilding } from '../containers/MapSideBarContainer';
-import { RootState } from 'reducers/rootReducer';
-import { IPropertyDetail } from 'actions/parcelsActions';
+import { IBuilding } from 'actions/parcelsActions';
 
 interface IUseSideBarBuildingLoader {
   /** whether or not the sidebar should be displayed */
@@ -29,23 +26,15 @@ const useSideBarBuildingLoader = ({
   buildingId,
   disabled,
 }: IUseSideBarBuildingLoader) => {
-  const [cachedBuildingDetail, setCachedBuildingDetail] = React.useState<IFormBuilding | null>(
-    null,
-  );
+  const [cachedBuildingDetail, setCachedBuildingDetail] = React.useState<IBuilding | null>(null);
   const dispatch = useDispatch();
-  const associatedBuildingDetail = useSelector<RootState, IPropertyDetail | null>(
-    state => state.parcel.associatedBuildingDetail,
-  );
+
   useDeepCompareEffect(() => {
     const loadBuilding = async () => {
       setSideBarContext(SidebarContextType.LOADING);
       const response: any = await dispatch(fetchBuildingDetail({ id: buildingId as number }));
       setCachedBuildingDetail({
         ...response,
-        financials: getMergedFinancials([
-          ...(response?.evaluations ?? []),
-          ...(response?.fiscals ?? []),
-        ]),
       });
       setSideBarContext(
         disabled ? SidebarContextType.VIEW_BUILDING : SidebarContextType.UPDATE_BUILDING,
@@ -55,12 +44,6 @@ const useSideBarBuildingLoader = ({
       loadBuilding();
     } else if (!buildingId && buildingId !== 0 && !!cachedBuildingDetail) {
       setCachedBuildingDetail(null);
-    } else if (!buildingId && associatedBuildingDetail) {
-      setCachedBuildingDetail({
-        ...associatedBuildingDetail.parcelDetail,
-        id: 0,
-        financials: [],
-      } as any);
     }
   }, [dispatch, buildingId, disabled, showSideBar]);
 

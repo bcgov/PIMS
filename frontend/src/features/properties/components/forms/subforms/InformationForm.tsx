@@ -13,7 +13,16 @@ interface InformationFormProps {
   isPropertyAdmin: boolean;
   wizard?: boolean;
 }
-export const defaultInformationFormValues = {
+interface IInformationForm {
+  name: string;
+  description: string;
+  landLegalDescription: string;
+  classificationId: number | '';
+  agencyId: number | '';
+  isSensitive: boolean | '';
+}
+
+export const defaultInformationFormValues: IInformationForm = {
   name: '',
   description: '',
   landLegalDescription: '',

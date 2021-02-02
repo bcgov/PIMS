@@ -30,14 +30,18 @@ import {
 import { useDispatch } from 'react-redux';
 import { useBuildingApi } from '../hooks/useBuildingApi';
 import _ from 'lodash';
-import { IFormParcel } from '../containers/MapSideBarContainer';
 import { useState } from 'react';
 import { defaultBuildingValues } from './BuildingForm';
 import { stringToNull } from 'utils';
 import { IStep } from 'components/common/Stepper';
 import useDraftMarkerSynchronizer from 'features/properties/hooks/useDraftMarkerSynchronizer';
 import DebouncedValidation from 'features/properties/components/forms/subforms/DebouncedValidation';
-import { getMergedFinancials } from 'features/properties/components/forms/subforms/EvaluationForm';
+import {
+  filterEmptyFinancials,
+  getMergedFinancials,
+} from 'features/properties/components/forms/subforms/EvaluationForm';
+import { EvaluationKeys } from 'constants/evaluationKeys';
+import { FiscalKeys } from 'constants/fiscalKeys';
 
 const Container = styled.div`
   background-color: #fff;
@@ -137,6 +141,8 @@ export const valuesToApiFormat = (
   const apiValues = { ...values };
   apiValues.data.leaseExpiry = stringToNull(apiValues.data.leaseExpiry);
   apiValues.data.buildingTenancyUpdatedOn = stringToNull(apiValues.data.buildingTenancyUpdatedOn);
+  apiValues.data.evaluations = filterEmptyFinancials(apiValues.data.evaluations);
+  apiValues.data.fiscals = filterEmptyFinancials(apiValues.data.fiscals);
   const ownedParcels: IParcel[] = getOwnedParcels(
     values.data.leasedLandMetadata,
     values.data.parcels,
@@ -414,7 +420,8 @@ const AssociatedLandForm: React.FC<IAssociatedLandParentForm> = (
   const parcels =
     getParcels(props.initialValues as any)?.map(p => ({
       ...p,
-      financials: getMergedFinancials([...(p?.evaluations ?? []), ...(p?.fiscals ?? [])]),
+      fiscals: getMergedFinancials(p?.fiscals ?? [], Object.values(FiscalKeys)),
+      evaluations: getMergedFinancials(p?.evaluations ?? [], Object.values(EvaluationKeys)),
     })) ?? [];
   const [initialValues, setInitialValues] = useState({
     activeStep: 0,
@@ -490,12 +497,12 @@ const AssociatedLandForm: React.FC<IAssociatedLandParentForm> = (
     return Promise.resolve(errors);
   };
 
-  const isPidAvailable = async (values: IFormParcel): Promise<boolean> => {
+  const isPidAvailable = async (values: IParcel): Promise<boolean> => {
     const response = await api.isPidAvailable(values.id, values.pid);
     return response?.available;
   };
 
-  const isPinAvailable = async (values: IFormParcel): Promise<boolean> => {
+  const isPinAvailable = async (values: IParcel): Promise<boolean> => {
     const response = await api.isPinAvailable(values.id, values.pin);
     return response?.available;
   };

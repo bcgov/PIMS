@@ -11,7 +11,7 @@ interface PidPinProps {
   disabled?: boolean;
 }
 export const defaultPidPinFormValues: {
-  pid: number | '';
+  pid: string;
   pin: number | '';
 } = {
   pid: '',

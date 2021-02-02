@@ -10,6 +10,9 @@ import { ILookupCode } from 'actions/lookupActions';
 import * as API from 'constants/API';
 import * as reducerTypes from 'constants/reducerTypes';
 import { Provider } from 'react-redux';
+import moment from 'moment';
+import { EvaluationKeys } from 'constants/evaluationKeys';
+import { FiscalKeys } from 'constants/fiscalKeys';
 
 const mockStore = configureMockStore([thunk]);
 const lCodes = {
@@ -24,7 +27,15 @@ const store = mockStore({
 });
 
 const form = (
-  <Formik initialValues={{ projectNumber: 'test', assessedLand: '' }} onSubmit={noop}>
+  <Formik
+    initialValues={{
+      projectNumber: 'test',
+      assessedLand: '',
+      evaluations: [{ year: moment().year(), key: EvaluationKeys.Assessed }],
+      fiscals: [{ year: moment().year(), key: FiscalKeys.NetBook }],
+    }}
+    onSubmit={noop}
+  >
     {(props: any) => (
       <Provider store={store}>
         <BuildingReviewPage
@@ -133,10 +144,8 @@ it('occupancy fields editable after click', () => {
 it('valuation fields disabled by default', () => {
   const { container } = render(form);
 
-  const netbook = container.querySelector('input[name="data.financials.0.netbook.value"]');
-  const assessedLand = container.querySelector(
-    'input[name="data.financials.0.assessedLand.value"]',
-  );
+  const netbook = container.querySelector('input[name="data.fiscals.0.value"]');
+  const assessedLand = container.querySelector('input[name="data.evaluations.0.value"]');
 
   expect(netbook).toBeDisabled();
   expect(assessedLand).toBeDisabled();
@@ -145,10 +154,8 @@ it('valuation fields disabled by default', () => {
 it('valuation fields editable after click', () => {
   const { container } = render(form);
 
-  const netbook = container.querySelector('input[name="data.financials.0.netbook.value"]');
-  const assessedLand = container.querySelector(
-    'input[name="data.financials.0.assessedLand.value"]',
-  );
+  const netbook = container.querySelector('input[name="data.fiscals.0.value"]');
+  const assessedLand = container.querySelector('input[name="data.evaluations.0.value"]');
 
   const edit = container.querySelectorAll('svg[class="edit"]');
   fireEvent.click(edit[2]!);

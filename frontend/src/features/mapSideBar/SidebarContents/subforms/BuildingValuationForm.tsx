@@ -30,11 +30,7 @@ export const BuildingValuationForm: React.FC<ITenancyProps> = ({
         <br></br>
       </Row>
       <Row className="val-table">
-        <EvaluationForm
-          {...formikProps}
-          nameSpace={withNameSpace('financials')}
-          disabled={disabled}
-        />
+        <EvaluationForm {...formikProps} nameSpace={withNameSpace('')} disabled={disabled} />
       </Row>
     </Col>
   );

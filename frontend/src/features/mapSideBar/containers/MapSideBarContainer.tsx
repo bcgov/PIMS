@@ -25,12 +25,9 @@ import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import GenericModal, { ModalSize } from 'components/common/GenericModal';
 import { FaCheckCircle, FaEdit } from 'react-icons/fa';
 import styled from 'styled-components';
-import {
-  IFinancialYear,
-  getMergedFinancials,
-} from 'features/properties/components/forms/subforms/EvaluationForm';
+import { getMergedFinancials } from 'features/properties/components/forms/subforms/EvaluationForm';
 import { Spinner } from 'react-bootstrap';
-import { ViewOnlyLandForm } from '../SidebarContents/LandForm';
+import { ViewOnlyLandForm, ISearchFields } from '../SidebarContents/LandForm';
 import useSideBarParcelLoader from '../hooks/useSideBarParcelLoader';
 import useSideBarBuildingLoader from '../hooks/useSideBarBuildingLoader';
 import { ViewOnlyBuildingForm } from '../SidebarContents/BuildingForm';
@@ -38,18 +35,14 @@ import { Claims } from 'constants/claims';
 import { Prompt } from 'react-router-dom';
 import { FaTrash } from 'react-icons/fa';
 import { deleteBuilding } from 'actionCreators/buildingActionCreator';
+import useSideBarBuildingWithParcelLoader from '../hooks/useSideBarBuildingWithParcelLoader';
+import { EvaluationKeys } from 'constants/evaluationKeys';
+import { FiscalKeys } from 'constants/fiscalKeys';
 
 interface IMapSideBarContainerProps {
   refreshParcels: Function;
   properties: IProperty[];
   movingPinNameSpaceProp?: string;
-}
-
-export interface IFormBuilding extends IBuilding {
-  financials: IFinancialYear[];
-}
-export interface IFormParcel extends IParcel {
-  financials: IFinancialYear[];
 }
 
 const FloatCheck = styled(FaCheckCircle)`
@@ -98,6 +91,7 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
     setShowSideBar,
     parcelId,
     buildingId,
+    associatedParcelId,
     context,
     size,
     addBuilding,
@@ -108,6 +102,7 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
     setDisabled,
     handleLocationChange,
   } = useParamSideBar(formikRef);
+
   const { parcelDetail } = useSideBarParcelLoader({
     parcelId,
     setSideBarContext: addContext,
@@ -117,6 +112,12 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
   const { buildingDetail } = useSideBarBuildingLoader({
     buildingId,
     sideBarContext: context,
+    setSideBarContext: addContext,
+    showSideBar,
+    disabled,
+  });
+  const { buildingWithParcelDetail } = useSideBarBuildingWithParcelLoader({
+    associatedParcelId,
     setSideBarContext: addContext,
     showSideBar,
     disabled,
@@ -153,16 +154,22 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
     nameSpace?: string,
   ) => {
     fetchParcelsDetail(pidOrPin)(dispatch).then(resp => {
-      const matchingParcel: any = resp?.data?.length ? _.first(resp?.data) : undefined;
+      const matchingParcel: (IParcel & ISearchFields) | undefined = resp?.data?.length
+        ? _.first(resp.data)
+        : undefined;
       if (!!formikRef?.current?.values && !!matchingParcel?.id) {
         const { setValues, values } = formikRef.current;
         matchingParcel.searchPid = getIn(values, withNameSpace('searchPid', nameSpace));
         matchingParcel.searchPin = getIn(values, withNameSpace('searchPin', nameSpace));
         matchingParcel.searchAddress = getIn(values, withNameSpace('seachAddress', nameSpace));
-        matchingParcel.financials = getMergedFinancials([
-          ...matchingParcel.evaluations,
-          ...matchingParcel.fiscals,
-        ]);
+        matchingParcel.evaluations = getMergedFinancials(
+          matchingParcel.evaluations,
+          Object.values(EvaluationKeys),
+        );
+        matchingParcel.fiscals = getMergedFinancials(
+          matchingParcel.fiscals,
+          Object.values(FiscalKeys),
+        );
         setValues(setIn(values, nameSpace ?? '', matchingParcel));
         toast.dark('Found matching parcel within PIMS. Form data will be pre-populated.', {
           autoClose: 7000,
@@ -203,6 +210,14 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
               const matchingParcel: any = resp?.data?.length ? _.first(resp?.data) : undefined;
               if (!!nameSpace && !!formikRef?.current?.values && !!matchingParcel?.id && isParcel) {
                 const { resetForm, values } = formikRef.current;
+                matchingParcel.evaluations = getMergedFinancials(
+                  matchingParcel.evaluations,
+                  Object.values(EvaluationKeys),
+                );
+                matchingParcel.fiscals = getMergedFinancials(
+                  matchingParcel.fiscals,
+                  Object.values(FiscalKeys),
+                );
                 resetForm({ values: setIn(values, nameSpace, matchingParcel) });
                 toast.dark('Found matching parcel within PIMS. Form data will be pre-populated.', {
                   autoClose: 7000,
@@ -351,7 +366,8 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
         if (propertyType !== 'building') {
           setPropertyType('building');
         }
-        return buildingId === undefined || buildingId === buildingDetail?.id ? (
+        return buildingId === buildingDetail?.id ||
+          (buildingId === 0 && associatedParcelId === buildingWithParcelDetail?.parcelId) ? (
           <BuildingForm
             formikRef={formikRef}
             setMovingPinNameSpace={setMovingPinNameSpace}
@@ -365,7 +381,7 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
               addAssociatedLand();
             }}
             isPropertyAdmin={keycloak.hasClaim(Claims.ADMIN_PROPERTIES)}
-            initialValues={buildingDetail ?? ({} as any)}
+            initialValues={buildingDetail ?? buildingWithParcelDetail ?? ({} as any)}
           />
         ) : (
           <Spinner animation="border"></Spinner>

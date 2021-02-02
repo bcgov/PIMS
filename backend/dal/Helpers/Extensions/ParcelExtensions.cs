@@ -200,6 +200,7 @@ namespace Pims.Dal.Helpers.Extensions
                 {
                     originalParcelFiscal.Note = parcelFiscal.Note;
                     originalParcelFiscal.Value = parcelFiscal.Value;
+                    originalParcelFiscal.EffectiveDate = parcelFiscal.EffectiveDate;
                 }
             }
         }
