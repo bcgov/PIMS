@@ -210,6 +210,14 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
               const matchingParcel: any = resp?.data?.length ? _.first(resp?.data) : undefined;
               if (!!nameSpace && !!formikRef?.current?.values && !!matchingParcel?.id && isParcel) {
                 const { resetForm, values } = formikRef.current;
+                matchingParcel.evaluations = getMergedFinancials(
+                  matchingParcel.evaluations,
+                  Object.values(EvaluationKeys),
+                );
+                matchingParcel.fiscals = getMergedFinancials(
+                  matchingParcel.fiscals,
+                  Object.values(FiscalKeys),
+                );
                 resetForm({ values: setIn(values, nameSpace, matchingParcel) });
                 toast.dark('Found matching parcel within PIMS. Form data will be pre-populated.', {
                   autoClose: 7000,
