@@ -445,9 +445,9 @@ namespace Pims.Dal.Migrations
                         .HasColumnType("nvarchar(100)")
                         .HasMaxLength(100);
 
-                    b.Property<string>("ProjectNumber")
-                        .HasColumnType("nvarchar(50)")
-                        .HasMaxLength(50);
+                    b.Property<string>("ProjectNumbers")
+                        .HasColumnType("nvarchar(2000)")
+                        .HasMaxLength(2000);
 
                     b.Property<float>("RentableArea")
                         .HasColumnType("real");
@@ -489,7 +489,7 @@ namespace Pims.Dal.Migrations
 
                     b.HasIndex("UpdatedById");
 
-                    b.HasIndex("Id", "IsSensitive", "AgencyId", "ClassificationId", "AddressId", "ProjectNumber", "BuildingConstructionTypeId", "BuildingPredominateUseId", "BuildingOccupantTypeId", "BuildingFloorCount", "BuildingTenancy");
+                    b.HasIndex("Id", "IsSensitive", "AgencyId", "ClassificationId", "AddressId", "ProjectNumbers", "BuildingConstructionTypeId", "BuildingPredominateUseId", "BuildingOccupantTypeId", "BuildingFloorCount", "BuildingTenancy");
 
                     b.ToTable("Buildings");
                 });
@@ -1086,9 +1086,9 @@ namespace Pims.Dal.Migrations
                     b.Property<int?>("PIN")
                         .HasColumnType("int");
 
-                    b.Property<string>("ProjectNumber")
-                        .HasColumnType("nvarchar(50)")
-                        .HasMaxLength(50);
+                    b.Property<string>("ProjectNumbers")
+                        .HasColumnType("nvarchar(2000)")
+                        .HasMaxLength(2000);
 
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
@@ -1127,7 +1127,7 @@ namespace Pims.Dal.Migrations
 
                     b.HasIndex("Id", "AgencyId", "IsSensitive", "AddressId");
 
-                    b.HasIndex("Id", "IsSensitive", "AgencyId", "ClassificationId", "PID", "PIN", "AddressId", "ProjectNumber", "LandArea", "Zoning", "ZoningPotential");
+                    b.HasIndex("Id", "IsSensitive", "AgencyId", "ClassificationId", "PID", "PIN", "AddressId", "ProjectNumbers", "LandArea", "Zoning", "ZoningPotential");
 
                     b.ToTable("Parcels");
                 });
@@ -1296,7 +1296,7 @@ namespace Pims.Dal.Migrations
                     b.Property<DateTime?>("ApprovedOn")
                         .HasColumnType("DATETIME2");
 
-                    b.Property<decimal>("Assessed")
+                    b.Property<decimal?>("Assessed")
                         .HasColumnType("MONEY");
 
                     b.Property<DateTime?>("CancelledOn")
@@ -1324,7 +1324,7 @@ namespace Pims.Dal.Migrations
                         .HasColumnType("nvarchar(150)")
                         .HasMaxLength(150);
 
-                    b.Property<decimal>("Market")
+                    b.Property<decimal?>("Market")
                         .HasColumnType("MONEY");
 
                     b.Property<string>("Metadata")
@@ -1335,7 +1335,7 @@ namespace Pims.Dal.Migrations
                         .HasColumnType("nvarchar(100)")
                         .HasMaxLength(100);
 
-                    b.Property<decimal>("NetBook")
+                    b.Property<decimal?>("NetBook")
                         .HasColumnType("MONEY");
 
                     b.Property<string>("ProjectNumber")
@@ -1724,7 +1724,7 @@ namespace Pims.Dal.Migrations
                     b.Property<decimal?>("Appraised")
                         .HasColumnType("MONEY");
 
-                    b.Property<decimal>("Assessed")
+                    b.Property<decimal?>("Assessed")
                         .HasColumnType("MONEY");
 
                     b.Property<Guid?>("CreatedById")
@@ -1735,13 +1735,13 @@ namespace Pims.Dal.Migrations
                         .HasColumnType("DATETIME2")
                         .HasDefaultValueSql("GETUTCDATE()");
 
-                    b.Property<decimal>("Market")
+                    b.Property<decimal?>("Market")
                         .HasColumnType("MONEY");
 
                     b.Property<string>("Metadata")
                         .HasColumnType("NVARCHAR(MAX)");
 
-                    b.Property<decimal>("NetBook")
+                    b.Property<decimal?>("NetBook")
                         .HasColumnType("MONEY");
 
                     b.Property<int>("ProjectId")
