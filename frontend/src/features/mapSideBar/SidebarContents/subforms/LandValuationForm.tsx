@@ -21,9 +21,6 @@ export const LandValuationForm: React.FC<ITenancyProps> = ({
   nameSpace = '',
   showImprovements,
 }) => {
-    },
-    [nameSpace],
-  );
   const formikProps = useFormikContext();
   return (
     <Col className="land-valuation">
