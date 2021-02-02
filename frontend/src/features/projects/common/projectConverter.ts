@@ -173,7 +173,10 @@ const getApiEvaluations = (property: IProperty): IEvaluation[] => {
   return evaluations;
 };
 
-export const toApiProperty = (property: IProperty): IApiProperty => {
+export const toApiProperty = (
+  property: IProperty,
+  useCurrentFiscal: boolean = false,
+): IApiProperty => {
   const apiProperty: IApiProperty = {
     id: property.id,
     parcelId: property.propertyTypeId === 0 ? property.id : undefined,
@@ -208,7 +211,9 @@ export const toApiProperty = (property: IProperty): IApiProperty => {
         parcelId: property.propertyTypeId === 0 ? property.id : undefined,
         buildingId: property.propertyTypeId === 1 ? property.id : undefined,
         value: property.netBook,
-        fiscalYear: property.netBookFiscalYear ?? getCurrentFiscalYear(),
+        fiscalYear: !useCurrentFiscal
+          ? property.netBookFiscalYear ?? getCurrentFiscalYear()
+          : getCurrentFiscalYear(),
         rowVersion: property.netBookRowVersion,
         key: FiscalKeys.NetBook,
       },
@@ -216,7 +221,9 @@ export const toApiProperty = (property: IProperty): IApiProperty => {
         parcelId: property.propertyTypeId === 0 ? property.id : undefined,
         buildingId: property.propertyTypeId === 1 ? property.id : undefined,
         value: property.market,
-        fiscalYear: property.marketFiscalYear ?? getCurrentFiscalYear(),
+        fiscalYear: !useCurrentFiscal
+          ? property.marketFiscalYear ?? getCurrentFiscalYear()
+          : getCurrentFiscalYear(),
         rowVersion: property.marketRowVersion,
         key: FiscalKeys.Market,
       },
