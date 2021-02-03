@@ -25,6 +25,7 @@ import { useDispatch } from 'react-redux';
 import { PropertyTypes } from 'actions/parcelsActions';
 import { PropertyPopUpContext } from '../providers/PropertyPopUpProvider';
 import { MAX_ZOOM } from 'constants/strings';
+import { useApi } from 'hooks/useApi';
 
 export type PointClustererProps = {
   points: Array<PointFeature>;
@@ -238,6 +239,23 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
   }, [featureGroupRef, map, clusters, tilesLoaded]);
 
   const popUpContext = React.useContext(PropertyPopUpContext);
+
+  const { getParcel, getBuilding } = useApi();
+  const fetchProperty = React.useCallback(
+    (propertyTypeId: number, id: number) => {
+      if (propertyTypeId === PropertyTypes.PARCEL) {
+        getParcel(id as number).then(parcel => {
+          popUpContext.setPropertyInfo(parcel);
+        });
+      } else if (propertyTypeId === PropertyTypes.BUILDING) {
+        getBuilding(id as number).then(building => {
+          popUpContext.setPropertyInfo(building);
+        });
+      }
+    },
+    [getParcel, getBuilding, popUpContext],
+  );
+
   return (
     <>
       <FeatureGroup ref={featureGroupRef}>
@@ -284,14 +302,7 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
               icon={getMarkerIcon(cluster)}
               onclick={() => {
                 onMarkerClick(); //open information slideout
-                const [longitude, latitude] = cluster.geometry.coordinates;
-                popUpContext.setPropertyInfo(
-                  convertToProperty({
-                    ...cluster.properties,
-                    latitude: latitude,
-                    longitude: longitude,
-                  }),
-                );
+                fetchProperty(cluster.properties.propertyTypeId, cluster.properties.id);
                 popUpContext.setPropertyTypeID(cluster.properties.propertyTypeId);
               }}
             />
@@ -309,14 +320,7 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
             icon={getMarkerIcon(m)}
             onclick={() => {
               onMarkerClick(); //open information slideout
-              const [longitude, latitude] = m.geometry.coordinates;
-              popUpContext.setPropertyInfo(
-                convertToProperty({
-                  ...m.properties,
-                  latitude,
-                  longitude,
-                }),
-              );
+              fetchProperty(m.properties.propertyTypeId, m.properties.id);
               popUpContext.setPropertyTypeID(m.properties.propertyTypeId);
             }}
           />

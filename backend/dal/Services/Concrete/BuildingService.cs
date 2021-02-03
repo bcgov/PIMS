@@ -131,6 +131,7 @@ namespace Pims.Dal.Services
                 .Include(b => b.Parcels).ThenInclude(pb => pb.Parcel).ThenInclude(b => b.Fiscals)
                 .Include(b => b.Parcels).ThenInclude(pb => pb.Parcel).ThenInclude(b => b.Address).ThenInclude(a => a.Province)
                 .Include(b => b.Parcels).ThenInclude(pb => pb.Parcel).ThenInclude(b => b.Classification)
+                .Include(b => b.Classification)
                 .Include(p => p.BuildingPredominateUse)
                 .Include(p => p.BuildingConstructionType)
                 .Include(p => p.BuildingOccupantType)

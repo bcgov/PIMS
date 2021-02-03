@@ -28,6 +28,9 @@ export const BuildingAttributes: React.FC<IBuildingAttributes> = ({ buildingInfo
     formatAssessed = '';
   }
 
+  const newLength = buildingInfo.parcels?.length > 3 ? 3 : buildingInfo.parcels?.length;
+  const parcelsCopy = buildingInfo.parcels?.slice(0, newLength);
+
   return (
     <>
       <ListGroup>
@@ -36,14 +39,19 @@ export const BuildingAttributes: React.FC<IBuildingAttributes> = ({ buildingInfo
           <ThreeColumnItem leftSideLabel={'Assessed value:'} rightSideItem={formatAssessed} />
         </OuterRow>
       </ListGroup>
-      {buildingInfo?.pid && (
+      {buildingInfo.parcels?.length >= 1 && (
         <ListGroup>
           <Label className="header">Associated Land</Label>
-          <OuterRow>
-            <ListGroup.Item>
-              <Label>{buildingInfo.pid}</Label>
+          {parcelsCopy.map((parcel, parcelId) => (
+            <ListGroup.Item key={parcelId}>
+              {parcel.pid ? <Label>{parcel.pid}</Label> : <Label>{parcel.pin}</Label>}
             </ListGroup.Item>
-          </OuterRow>
+          ))}
+          {buildingInfo.parcels.length > 3 && (
+            <ListGroup.Item>
+              <Label>+ {buildingInfo.parcels.length - 3} more</Label>
+            </ListGroup.Item>
+          )}
         </ListGroup>
       )}
     </>
