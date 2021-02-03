@@ -226,7 +226,7 @@ namespace Pims.Api.Test.Controllers.Tools
             first.Name.Should().Be(expectedResult.Description);
             first.Description.Should().Be(expectedResult.Description);
             first.CompletedOn.Should().Be(expectedResult.CompletedOn);
-            first.MarketedOn.Should().Be(expectedResult.MarketedOn);
+            first.MarketedOn.Should().Be(null);
             first.NetBook.Should().Be(expectedResult.NetBook);
             first.Market.Should().Be(expectedResult.Market);
             first.ProgramCost.Should().Be(expectedResult.ProgramCost);
@@ -334,7 +334,7 @@ namespace Pims.Api.Test.Controllers.Tools
             first.Name.Should().Be(expectedResult.Description);
             first.Description.Should().Be(expectedResult.Description);
             first.CompletedOn.Should().Be(expectedResult.CompletedOn);
-            first.MarketedOn.Should().Be(expectedResult.MarketedOn);
+            first.MarketedOn.Should().Be(null);
             first.NetBook.Should().Be(expectedResult.NetBook);
             first.Market.Should().Be(expectedResult.Market);
             first.ProgramCost.Should().Be(expectedResult.ProgramCost);
@@ -440,7 +440,7 @@ namespace Pims.Api.Test.Controllers.Tools
             first.Name.Should().Be(expectedResult.Description);
             first.Description.Should().Be(expectedResult.Description);
             first.CompletedOn.Should().Be(expectedResult.CompletedOn);
-            first.MarketedOn.Should().Be(expectedResult.MarketedOn);
+            first.MarketedOn.Should().Be(null);
             first.NetBook.Should().Be(expectedResult.NetBook);
             first.Market.Should().Be(expectedResult.Market);
             first.ProgramCost.Should().Be(expectedResult.ProgramCost);
@@ -544,7 +544,7 @@ namespace Pims.Api.Test.Controllers.Tools
             first.Name.Should().Be(expectedResult.Description);
             first.Description.Should().Be(expectedResult.Description);
             first.CompletedOn.Should().Be(expectedResult.CompletedOn);
-            first.MarketedOn.Should().Be(expectedResult.MarketedOn);
+            first.MarketedOn.Should().Be(null);
             first.NetBook.Should().Be(expectedResult.NetBook);
             first.Market.Should().Be(expectedResult.Market);
             first.ProgramCost.Should().Be(expectedResult.ProgramCost);
@@ -647,7 +647,7 @@ namespace Pims.Api.Test.Controllers.Tools
             first.Name.Should().Be(expectedResult.Description);
             first.Description.Should().Be(expectedResult.Description);
             first.CompletedOn.Should().Be(expectedResult.CompletedOn);
-            first.MarketedOn.Should().Be(expectedResult.MarketedOn);
+            first.MarketedOn.Should().Be(null);
             first.NetBook.Should().Be(expectedResult.NetBook);
             first.Market.Should().Be(expectedResult.Market);
             first.ProgramCost.Should().Be(expectedResult.ProgramCost);
@@ -749,7 +749,7 @@ namespace Pims.Api.Test.Controllers.Tools
             first.Name.Should().Be(expectedResult.Description);
             first.Description.Should().Be(expectedResult.Description);
             first.CompletedOn.Should().Be(expectedResult.CompletedOn);
-            first.MarketedOn.Should().Be(expectedResult.MarketedOn);
+            first.MarketedOn.Should().Be(null);
             first.NetBook.Should().Be(expectedResult.NetBook);
             first.Market.Should().Be(expectedResult.Market);
             first.ProgramCost.Should().Be(expectedResult.ProgramCost);
@@ -928,7 +928,7 @@ namespace Pims.Api.Test.Controllers.Tools
             first.Name.Should().Be(expectedResult.Description);
             first.Description.Should().Be(expectedResult.Description);
             first.CompletedOn.Should().Be(expectedResult.CompletedOn);
-            first.MarketedOn.Should().Be(expectedResult.MarketedOn);
+            first.MarketedOn.Should().Be(null);
             first.NetBook.Should().Be(expectedResult.NetBook);
             first.Market.Should().Be(expectedResult.Market);
             first.ProgramCost.Should().Be(expectedResult.ProgramCost);
