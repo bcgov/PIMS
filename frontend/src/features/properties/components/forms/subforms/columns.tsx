@@ -2,8 +2,7 @@ import { FastCurrencyInput, FastDatePicker } from 'components/common/form';
 import React from 'react';
 import { useFormikContext, getIn } from 'formik';
 import { formatFiscalYear, formatMoney } from 'utils';
-import { FaBuilding } from 'react-icons/fa';
-import { LandSvg } from 'components/common/Icons';
+import { BuildingSvg, LandSvg } from 'components/common/Icons';
 import moment from 'moment';
 import { indexOfFinancial } from './EvaluationForm';
 import { EvaluationKeys } from 'constants/evaluationKeys';
@@ -194,7 +193,7 @@ export const getAssociatedBuildingsCols = (): any => {
       accessor: '',
       maxWidth: 50,
       align: 'left',
-      Cell: () => <FaBuilding size={24}></FaBuilding>,
+      Cell: () => <BuildingSvg className="svg" />,
     },
     {
       Header: 'Property Name',

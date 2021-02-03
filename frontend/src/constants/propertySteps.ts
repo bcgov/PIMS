@@ -5,8 +5,7 @@ export enum LandSteps {
   IDENTIFICATION = 0,
   USAGE = 1,
   VALUATION = 2,
-  ASSOCIATED_OR_REVIEW = 3,
-  REVIEW = 4,
+  REVIEW = 3,
 }
 
 /**
@@ -27,6 +26,5 @@ export enum BuildingSteps {
   IDENTIFICATION = 0,
   TENANCY = 1,
   VALUATION = 2,
-  ASSOCIATED = 3,
-  REVIEW = 4,
+  REVIEW = 3,
 }

@@ -13,6 +13,8 @@ import { Provider } from 'react-redux';
 import moment from 'moment';
 import { EvaluationKeys } from 'constants/evaluationKeys';
 import { FiscalKeys } from 'constants/fiscalKeys';
+import { IParcel } from 'actions/parcelsActions';
+import { Classifications } from 'constants/classifications';
 
 const mockStore = configureMockStore([thunk]);
 const lCodes = {
@@ -22,8 +24,37 @@ const lCodes = {
   ] as ILookupCode[],
 };
 
+const defaultParcel: IParcel = {
+  id: 1,
+  pid: '111-111-111',
+  pin: '',
+  classificationId: Classifications.CoreOperational,
+  encumbranceReason: '',
+  landArea: 123,
+  landLegalDescription: 'legal',
+  zoning: 'zoning',
+  zoningPotential: 'zoningPotential',
+  agencyId: 1,
+  isSensitive: false,
+  buildings: [],
+  evaluations: [],
+  fiscals: [],
+  assessedLand: '',
+  assessedBuilding: '',
+  rowVersion: '',
+  latitude: 51,
+  longitude: -122,
+  address: {
+    line1: 'address line 1',
+    administrativeArea: 'Victoria',
+    postal: 'V8T3X8',
+    provinceId: 'BC',
+  },
+};
+
 const store = mockStore({
   [reducerTypes.LOOKUP_CODE]: lCodes,
+  [reducerTypes.PARCEL]: { parcels: [] },
 });
 
 const form = (
@@ -33,6 +64,7 @@ const form = (
       assessedLand: '',
       evaluations: [{ year: moment().year(), key: EvaluationKeys.Assessed }],
       fiscals: [{ year: moment().year(), key: FiscalKeys.NetBook }],
+      parcels: [defaultParcel],
     }}
     onSubmit={noop}
   >
