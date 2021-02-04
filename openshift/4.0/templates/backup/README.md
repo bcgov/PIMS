@@ -65,6 +65,8 @@ Expected usage within PIMS is primarily to use the cron daily backups. This allo
 mssql=pims-database:1433/pims
 ```
 
+## Build Configuration
+
 Go to - `/pims/openshift/4.0/templates/backup`
 
 You may need to update the configuration template **ConfigMap** to reflect your backup schedule and database service name, port and database name.
@@ -86,9 +88,11 @@ OUTPUT_IMAGE_TAG=latest
 Create the build and save the template.
 
 ```bash
-oc project 354028-dev
+oc project 354028-tools
 oc process -f build.yaml --param-file=build.dev.env | oc create --save-config=true -f -
 ```
+
+## Deploy Configuration
 
 Create a deployment configuration file here - `deploy.dev.env`
 Update the configuration file and set the appropriate parameters.
@@ -133,6 +137,11 @@ MEMORY_LIMIT=1Gi
 ```
 
 Create the deployment and save the template.
+
+```bash
+oc project 354028-dev
+oc process -f deploy.yaml --param-file=deploy.dev.env | oc create --save-config=true -f -
+```
 
 ## OpenShift CronJobs
 

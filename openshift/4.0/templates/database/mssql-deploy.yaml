@@ -268,7 +268,7 @@ objects:
                 claimName: ${APP_NAME}-${ROLE_NAME}${INSTANCE}
             - name: backup
               persistentVolumeClaim:
-                claimName: ${APP_NAME}-${ROLE_NAME}-backup
+                claimName: ${APP_NAME}-${ROLE_NAME}-${BACKUP_ROLE_NAME}
           containers:
             - name: ${APP_NAME}-${ROLE_NAME}${INSTANCE}
               image: ""
@@ -307,5 +307,7 @@ objects:
                   cpu: "${CPU_REQUEST}"
                   memory: "${MEMORY_REQUEST}"
               volumeMounts:
-                - mountPath: /var/opt/mssql
-                  name: mssql-data
+                - name: mssql-data
+                  mountPath: /var/opt/mssql
+                - name: backup
+                  mountPath: /backups

@@ -4,6 +4,8 @@ The PIMS database is a MS SQL Server linux container.
 
 Go to - `/pims/openshift/4.0/templates/database`
 
+## Build Configuration
+
 Create a build configuration file here - `build.dev.env`
 Update the configuration file and set the appropriate parameters.
 For the **TEST** and **PROD** environments you should change `GIT_REF=master` and `OUTPUT_IMAGE_TAG={test|prod}`.
@@ -25,6 +27,8 @@ oc project 354028-tools
 
 oc process -f mssql-build.yaml --param-file=build.dev.env | oc create --save-config=true -f -
 ```
+
+## Deploy Configuration
 
 Create a deployment configuration file here - `deploy.dev.env`
 Update the configuration file and set the appropriate parameters.
