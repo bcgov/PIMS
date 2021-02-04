@@ -637,7 +637,7 @@ namespace Pims.Dal.Test.Services
         #region Update Building
 
         [Fact]
-        public void Update_Building_LinkedToProject_Allowed()
+        public void Update_Building_LinkedToProject_NotAllowed()
         {
             // Arrange
             var helper = new TestHelper();
@@ -657,7 +657,8 @@ namespace Pims.Dal.Test.Services
             building.Name = "change";
 
             // Assert, updating a building in a project should not throw an exception.
-            service.Update(building);
+            Assert.Throws<NotAuthorizedException>(() =>
+                service.Update(building));
         }
 
         [Fact]
