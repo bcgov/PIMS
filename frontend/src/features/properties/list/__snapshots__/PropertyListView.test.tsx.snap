@@ -468,7 +468,7 @@ exports[`Property list view Matches snapshot 1`] = `
           <div
             class="tr"
             role="row"
-            style="display: flex; flex: 1 0 auto; min-width: 1070px;"
+            style="display: flex; flex: 1 0 auto; min-width: 1160px;"
           >
             <div
               class="th reset-filter svg-btn"
@@ -502,8 +502,8 @@ exports[`Property list view Matches snapshot 1`] = `
               class="th"
               colspan="1"
               role="columnheader"
-              style="box-sizing: border-box; flex: 100 0 auto; min-width: 100px; width: 3.5%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
-              width="3.5%"
+              style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 1.75%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+              width="1.75%"
             >
               <div
                 class="sortable-column"
@@ -640,8 +640,8 @@ exports[`Property list view Matches snapshot 1`] = `
               class="th"
               colspan="1"
               role="columnheader"
-              style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 7%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
-              width="7%"
+              style="box-sizing: border-box; flex: 120 0 auto; min-width: 120px; width: 14%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+              width="14%"
             >
               <div
                 class="sortable-column"
@@ -687,8 +687,8 @@ exports[`Property list view Matches snapshot 1`] = `
               class="th"
               colspan="1"
               role="columnheader"
-              style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 7%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
-              width="7%"
+              style="box-sizing: border-box; flex: 90 0 auto; min-width: 90px; width: 3.5%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+              width="3.5%"
             >
               <div
                 class="sortable-column"
@@ -756,8 +756,8 @@ exports[`Property list view Matches snapshot 1`] = `
               class="th"
               colspan="1"
               role="columnheader"
-              style="box-sizing: border-box; flex: 65 0 auto; min-width: 65px; width: 3.5%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
-              width="3.5%"
+              style="box-sizing: border-box; flex: 60 0 auto; min-width: 60px; width: 1.75%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+              width="1.75%"
             >
               <div
                 class="sortable-column"
@@ -772,8 +772,8 @@ exports[`Property list view Matches snapshot 1`] = `
               class="th"
               colspan="1"
               role="columnheader"
-              style="box-sizing: border-box; flex: 160 0 auto; min-width: 160px; width: 14%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
-              width="14%"
+              style="box-sizing: border-box; flex: 100 0 auto; min-width: 100px; width: 7%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+              width="7%"
             >
               <div
                 class="sortable-column"
@@ -888,8 +888,8 @@ exports[`Property list view Matches snapshot 1`] = `
               class="th"
               colspan="1"
               role="columnheader"
-              style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 7%; justify-content: flex-end; text-align: right; align-items: center; display: flex;"
-              width="7%"
+              style="box-sizing: border-box; flex: 100 0 auto; min-width: 100px; width: 3.5%; justify-content: flex-end; text-align: right; align-items: center; display: flex;"
+              width="3.5%"
             >
               <div
                 class="sortable-column"
@@ -957,8 +957,8 @@ exports[`Property list view Matches snapshot 1`] = `
               class="th"
               colspan="1"
               role="columnheader"
-              style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 7%; justify-content: flex-end; text-align: right; align-items: center; display: flex;"
-              width="7%"
+              style="box-sizing: border-box; flex: 100 0 auto; min-width: 100px; width: 3.5%; justify-content: flex-end; text-align: right; align-items: center; display: flex;"
+              width="3.5%"
             >
               <div
                 class="sortable-column"
@@ -1026,8 +1026,8 @@ exports[`Property list view Matches snapshot 1`] = `
               class="th"
               colspan="1"
               role="columnheader"
-              style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 7%; justify-content: flex-end; text-align: right; align-items: center; display: flex;"
-              width="7%"
+              style="box-sizing: border-box; flex: 100 0 auto; min-width: 100px; width: 3.5%; justify-content: flex-end; text-align: right; align-items: center; display: flex;"
+              width="3.5%"
             >
               <div
                 class="sortable-column"
@@ -1158,6 +1158,21 @@ exports[`Property list view Matches snapshot 1`] = `
                     />
                   </svg>
                 </div>
+              </div>
+            </div>
+            <div
+              class="th"
+              colspan="1"
+              role="columnheader"
+              style="box-sizing: border-box; flex: 65 0 auto; min-width: 65px; width: 65px; justify-content: flex-end; text-align: right; align-items: center; display: flex;"
+            >
+              <div
+                class="sortable-column"
+              >
+                Project #
+                <span
+                  style="flex: 1 1 auto;"
+                />
               </div>
             </div>
             <div
