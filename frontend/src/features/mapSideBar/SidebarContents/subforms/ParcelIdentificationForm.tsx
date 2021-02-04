@@ -32,6 +32,7 @@ import useCodeLookups from 'hooks/useLookupCodes';
 import GenericModal from 'components/common/GenericModal';
 import ClickAwayListener from 'react-click-away-listener';
 import { IParcel } from 'actions/parcelsActions';
+import { mapSelectOptionWithParent } from 'utils';
 
 interface IIdentificationProps {
   /** used for changign the agency - note that only select users will be able to edit this field */
@@ -68,7 +69,6 @@ const SearchMarkerButton = styled.button`
 `;
 
 export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
-  agencies,
   nameSpace,
   index,
   handleGeocoderChanges,
@@ -78,6 +78,7 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
   isPropertyAdmin,
   isViewOrUpdate,
   disabled,
+  ...props
 }) => {
   const [geocoderResponse, setGeocoderResponse] = useState<IGeocoderResponse | undefined>();
   const [overrideData, setOverrideData] = useState<IParcel>();
@@ -90,6 +91,7 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
   );
   const agency = getIn(formikProps.values, withNameSpace('agencyId'));
   const { lookupCodes } = useCodeLookups();
+  const agencies = (props.agencies ?? []).map(c => mapSelectOptionWithParent(c, props.agencies));
 
   const MovePinComponent = () => (
     <>
@@ -102,7 +104,11 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
         </p>
         <Row>
           <Col className="marker-svg">
-            <ClickAwayListener onClickAway={() => setMovingPinNameSpace(undefined)}>
+            <ClickAwayListener
+              onClickAway={() => {
+                setMovingPinNameSpace(undefined);
+              }}
+            >
               <SearchMarkerButton
                 onClick={(e: any) => {
                   setMovingPinNameSpace(nameSpace ?? '');
@@ -202,14 +208,20 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
         </p>
         <Row>
           <Col className="marker-svg">
-            <SearchMarkerButton
-              onClick={(e: any) => {
-                setMovingPinNameSpace(nameSpace ?? '');
-                e.preventDefault();
+            <ClickAwayListener
+              onClickAway={() => {
+                setMovingPinNameSpace(undefined);
               }}
             >
-              <ParcelDraftIcon className="parcel-icon" />
-            </SearchMarkerButton>
+              <SearchMarkerButton
+                onClick={(e: any) => {
+                  setMovingPinNameSpace(nameSpace ?? '');
+                  e.preventDefault();
+                }}
+              >
+                <ParcelDraftIcon className="parcel-icon" />
+              </SearchMarkerButton>
+            </ClickAwayListener>
           </Col>
         </Row>
       </Col>
