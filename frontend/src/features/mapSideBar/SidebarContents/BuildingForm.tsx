@@ -36,7 +36,6 @@ import {
   ValuationSchema,
   BuildingInformationSchema,
 } from 'utils/YupSchema';
-import { AssociatedLandListForm } from './subforms/AssociatedLandListForm';
 import { stringToNull } from 'utils';
 import useParcelLayerData from 'features/properties/hooks/useParcelLayerData';
 import DebouncedValidation from 'features/properties/components/forms/subforms/DebouncedValidation';
@@ -180,8 +179,6 @@ const Form: React.FC<IBuildingForm> = ({
             disabled={disabled}
           />
         );
-      case BuildingSteps.ASSOCIATED:
-        return <AssociatedLandListForm title="View Associated Land" nameSpace="data" />;
       case BuildingSteps.REVIEW:
         return (
           <BuildingReviewPage
@@ -391,12 +388,6 @@ const BuidingForm: React.FC<IParentBuildingForm> = ({
             completed: false,
             canGoToStep: isViewOrUpdate || !!disabled,
             validation: disabled ? undefined : { schema: ValuationSchema, nameSpace: () => 'data' },
-          },
-          {
-            route: 'associated',
-            title: 'Associated Land',
-            completed: false,
-            canGoToStep: isViewOrUpdate || !!disabled,
           },
           {
             route: 'review',
