@@ -187,44 +187,6 @@ oc process -f dotnet-31.yaml | oc replace -f -
 oc process -f msssql-2019.yaml | oc replace -f -
 ```
 
-### Configure Storage
-
-The PIMS database requires persistent storage. Within OpenShift you will need to create a Persistent Volume Claim (PVC). There are two primary classes of storage, `file` and `block`. Presently the recommendation is to use `netapp-file-standard`.
-If you choose `file` you can select the **Access Mode** to be `Shared Access (RWX)`, however if you choose `block` you must select `Singel User (RWO)`.
-The data requirements for PIMS is fairly minimum presently, the size can be less than or equal to 3GB.
-
-Go to - `/pims/openshift/4.0/templates/persistent-volume-claims`
-
-Create a configuration file here - `dev.env`
-
-View required and/or available parameters.
-
-```bash
-oc process --parameters -f db-storage.yaml
-```
-
-Update the configuration file and set the appropriate parameters.
-
-**Example**
-
-```conf
-ENV_NAME=dev
-```
-
-Review the generated template with the applied parameters.
-
-```bash
-oc process -f pims-db-storage.yaml --param-file=dev.env
-```
-
-Create the persistent volume claim and save the template.
-
-```bash
-oc project 354028-dev
-
-oc process -f pims-db-storage.yaml --param-file=dev.env | oc create --save-config=true -f -
-```
-
 ### API Database
 
 Setup the MSSQL database for the API - [README](./templates/database/README.md)
