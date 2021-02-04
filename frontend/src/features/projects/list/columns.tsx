@@ -37,7 +37,10 @@ export const columns = (onDelete?: (id: string) => void): ColumnWithProps<IProje
             {!!onDelete && (
               <FaTrash
                 style={{ marginRight: 10, cursor: 'pointer' }}
-                onClick={() => onDelete(props.row.original.projectNumber)}
+                onClick={(e: any) => {
+                  e.stopPropagation();
+                  onDelete(props.row.original.projectNumber);
+                }}
               />
             )}
             <span>{props.row.original.projectNumber}</span>
