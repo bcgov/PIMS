@@ -40,7 +40,7 @@ interface IReviewProps {
 }
 
 export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
-  const formikProps = useFormikContext<any>();
+  const formikProps = useFormikContext();
   const withNameSpace: Function = useCallback(
     (fieldName: string) => {
       return props.nameSpace ? `${props.nameSpace}.${fieldName}` : fieldName;
