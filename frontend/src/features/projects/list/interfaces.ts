@@ -1,4 +1,4 @@
-import { IProperty } from '../common';
+import { IProperty, IStatus } from '../common';
 
 /**
  * IProject interface represents the model used for searching projects.
@@ -9,7 +9,7 @@ export interface IProject {
   name: string;
   statusId: number;
   statusCode: string;
-  status: string;
+  status: IStatus;
   statusRoute: string;
   tierLevelId: number;
   tierLevel: string;
