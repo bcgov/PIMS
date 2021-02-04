@@ -350,7 +350,7 @@ export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
             </div>
           </Row>
         </Col>
-        {!!parcels && (
+        {parcels?.length > 0 && (
           <Col md={12}>
             <Row>
               <div className="associated-land">

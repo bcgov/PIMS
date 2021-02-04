@@ -336,7 +336,7 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
             </div>
           </Row>
         </Col>
-        {!!buildings && (
+        {buildings?.length > 0 && (
           <Col md={12}>
             <Row>
               <div className="associated-buildings">
