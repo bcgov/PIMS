@@ -6,6 +6,7 @@ Go to - `/pims/openshift/4.0/templates/database`
 
 Create a build configuration file here - `build.dev.env`
 Update the configuration file and set the appropriate parameters.
+For the **TEST** and **PROD** environments you should change `GIT_REF=master` and `OUTPUT_IMAGE_TAG={test|prod}`.
 
 **Example**
 
@@ -27,6 +28,8 @@ oc process -f mssql-build.yaml --param-file=build.dev.env | oc create --save-con
 
 Create a deployment configuration file here - `deploy.dev.env`
 Update the configuration file and set the appropriate parameters.
+For the **TEST** and **PROD** environments you should change `IMAGE_TAG={test|prod}`.
+For **PROD** environment you should change `STORAGE_CLASS_NAME=netapp-file-backup`.
 
 **Example**
 
@@ -36,7 +39,9 @@ IMAGE_TAG=latest
 MSSQL_PID=Developer
 DB_NAME=pims
 DB_USER=admin
-PVC_NAME=pims-db-file-storage
+STORAGE_CLASS_NAME=netapp-file-standard
+ACCESS_MODE=ReadWriteMany
+VOLUME_CAPACITY=5Gi
 CPU_REQUEST=100m
 CPU_LIMIT=2c
 MEMORY_REQUEST=500MiB

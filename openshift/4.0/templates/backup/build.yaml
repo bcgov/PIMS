@@ -9,6 +9,16 @@ parameters:
     description: A unique name to identify the backup image
     required: true
     value: mssql
+  - name: ENV_NAME
+    displayName: Environment name
+    description: The name for this environment [dev, test, prod, tools]
+    required: true
+    value: "tools"
+  - name: PROJECT_NAMESPACE
+    displayName: OpenShift Project Namespace
+    description: The namespace of the OpenShift project containing the deployed application.
+    required: true
+    value: "354028"
 
   - name: GIT_URL
     displayName: Git Repo URL
@@ -41,14 +51,19 @@ parameters:
     required: true
     value: latest
 objects:
+  # Destination of built image.
   - kind: ImageStream
     apiVersion: v1
     metadata:
       name: backup-${NAME}
+      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
+
+  # How to build the image.
   - kind: BuildConfig
     apiVersion: v1
     metadata:
       name: backup-${NAME}
+      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
       labels:
         app: backup-${NAME}
     spec:
