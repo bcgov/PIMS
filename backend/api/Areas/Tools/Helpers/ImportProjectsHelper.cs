@@ -29,6 +29,12 @@ namespace Pims.Api.Areas.Tools.Helpers
         private readonly IList<Entity.Agency> _agencies;
         private readonly IList<Entity.TierLevel> _tiers;
         private readonly JsonSerializerOptions _serializerOptions;
+
+        /// <summary>
+        /// An array of project status for marketed and beyond.
+        /// </summary>
+        /// <value></value>
+        private static readonly string[] marketed = new[] { "SPL-M", "SPL-CIP-U", "SPL-CIP-C", "DIS" };
         #endregion
 
         #region Constructors
@@ -246,7 +252,7 @@ namespace Pims.Api.Areas.Tools.Helpers
                 ClearanceNotificationSentOn = null, // Don't have a source for this information.
                 RequestForSplReceivedOn = model.RequestForSplReceivedOn, // Don't have a source for this information.
                 ApprovedForSplOn = model.ApprovedForSplOn,
-                MarketedOn = model.MarketedOn,
+                MarketedOn = marketed.Contains(project.Status.Code) ? model.MarketedOn : null, // Only assign the marketed on date if the project is in an appropriate status.
                 Purchaser = model.Purchaser,
                 OcgFinancialStatement = model.OcgFinancialStatement,
                 AppraisedBy = model.AppraisedBy,
