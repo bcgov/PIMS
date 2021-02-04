@@ -11,9 +11,9 @@ import * as API from 'constants/API';
 import { ILookupCode } from 'actions/lookupActions';
 import * as reducerTypes from 'constants/reducerTypes';
 import { fireEvent, render, wait, screen } from '@testing-library/react';
-import { IParcel } from '../containers/MapSideBarContainer';
 import { Classifications } from 'constants/classifications';
 import { fillInput } from 'utils/testUtils';
+import { IParcel } from 'actions/parcelsActions';
 
 const mockStore = configureMockStore([thunk]);
 const history = createMemoryHistory();
@@ -90,10 +90,11 @@ const defaultInitialValues: IParcel = {
   buildings: [],
   evaluations: [],
   fiscals: [],
-  financials: [],
   rowVersion: '',
   latitude: 51,
   longitude: -122,
+  assessedLand: '',
+  assessedBuilding: '',
   address: {
     line1: 'address line 1',
     administrativeArea: 'Victoria',

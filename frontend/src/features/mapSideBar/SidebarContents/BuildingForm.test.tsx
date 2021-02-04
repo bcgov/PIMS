@@ -40,11 +40,17 @@ jest.mock('@react-keycloak/web');
   },
 });
 
-const getBuildingForm = disabled => {
+const getBuildingForm = (disabled: boolean) => {
   return (
     <Provider store={store}>
       <Router history={history}>
-        <BuildingForm setMovingPinNameSpace={noop} nameSpace="building" disabled={disabled} />
+        <BuildingForm
+          setBuildingToAssociateLand={noop}
+          goToAssociatedLand={noop}
+          setMovingPinNameSpace={noop}
+          nameSpace="building"
+          disabled={disabled}
+        />
       </Router>
     </Provider>
   );
@@ -53,7 +59,12 @@ const getBuildingForm = disabled => {
 const buildingForm = (
   <Provider store={store}>
     <Router history={history}>
-      <BuildingForm setMovingPinNameSpace={noop} nameSpace="building" />
+      <BuildingForm
+        setBuildingToAssociateLand={noop}
+        goToAssociatedLand={noop}
+        setMovingPinNameSpace={noop}
+        nameSpace="building"
+      />
     </Router>
   </Provider>
 );
@@ -70,7 +81,7 @@ describe('Building Form', () => {
   });
 
   it('building form goes to corresponding steps', async () => {
-    const { getByText, getAllByText } = render(getBuildingForm(true));
+    const { getByText } = render(getBuildingForm(true));
     await wait(() => {
       fireEvent.click(getByText(/continue/i));
     });
@@ -79,10 +90,6 @@ describe('Building Form', () => {
       fireEvent.click(getByText(/Continue/i));
     });
     expect(getByText(/Building Valuation/i)).toBeInTheDocument();
-    await wait(() => {
-      fireEvent.click(getByText(/Continue/i));
-    });
-    expect(getAllByText(/Associated Land/i)).toHaveLength(2);
     await wait(() => {
       fireEvent.click(getByText(/Continue/i));
     });

@@ -347,30 +347,6 @@ exports[`Building Form component renders correctly 1`] = `
                 <span
                   class="bs-stepper-label"
                 >
-                  Associated Land
-                </span>
-              </button>
-            </div>
-            <div
-              class="line"
-            />
-            <div
-              class="step"
-              data-target="stepper-4"
-            >
-              <button
-                class="step-trigger"
-                disabled=""
-                type="button"
-              >
-                <span
-                  class="bs-stepper-circle"
-                >
-                  5
-                </span>
-                <span
-                  class="bs-stepper-label"
-                >
                   Review & Submit
                 </span>
               </button>

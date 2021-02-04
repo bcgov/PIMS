@@ -13,6 +13,7 @@ import { Provider } from 'react-redux';
 import moment from 'moment';
 import { EvaluationKeys } from 'constants/evaluationKeys';
 import { FiscalKeys } from 'constants/fiscalKeys';
+import { mockDetails } from 'mocks/filterDataMock';
 
 const mockStore = configureMockStore([thunk]);
 const lCodes = {
@@ -24,6 +25,7 @@ const lCodes = {
 
 const store = mockStore({
   [reducerTypes.LOOKUP_CODE]: lCodes,
+  [reducerTypes.PARCEL]: { parcels: [] },
 });
 
 const form = (
@@ -33,6 +35,7 @@ const form = (
       assessedLand: '',
       evaluations: [{ year: moment().year(), key: EvaluationKeys.Assessed }],
       fiscals: [{ year: moment().year(), key: FiscalKeys.NetBook }],
+      parcels: mockDetails,
     }}
     onSubmit={noop}
   >

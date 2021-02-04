@@ -39,7 +39,6 @@ import { LandSteps } from 'constants/propertySteps';
 import useDraftMarkerSynchronizer from 'features/properties/hooks/useDraftMarkerSynchronizer';
 import useParcelLayerData from 'features/properties/hooks/useParcelLayerData';
 import { IStep } from 'components/common/Stepper';
-import { AssociatedBuildingListForm } from './subforms/AssociatedBuildingListForm';
 import DebouncedValidation from 'features/properties/components/forms/subforms/DebouncedValidation';
 import { IParcel } from 'actions/parcelsActions';
 import { EvaluationKeys } from 'constants/evaluationKeys';
@@ -148,7 +147,6 @@ const Form: React.FC<ILandForm> = ({
       : +formikProps.values.data.agencyId,
   });
   const isViewOrUpdate = !!initialValues.id;
-  const isBareLand = !initialValues?.buildings?.length;
 
   // lookup codes that will be used by subforms
   const { getOptionsByType } = useCodeLookups();
@@ -189,20 +187,6 @@ const Form: React.FC<ILandForm> = ({
       case LandSteps.VALUATION:
         return (
           <LandValuationForm title="Bare Land Valuation" nameSpace="data" disabled={disabled} />
-        );
-      case LandSteps.ASSOCIATED_OR_REVIEW:
-        return !isBareLand ? (
-          <AssociatedBuildingListForm title="View Associated Buildings" nameSpace="data" />
-        ) : (
-          <LandReviewPage
-            classifications={classifications}
-            agencies={agencies}
-            handlePidChange={handlePidChange}
-            handlePinChange={handlePinChange}
-            nameSpace="data"
-            disabled={disabled}
-            isPropertyAdmin={isPropertyAdmin}
-          />
         );
       case LandSteps.REVIEW:
         return (
@@ -401,15 +385,6 @@ const LandForm: React.FC<IParentLandForm> = (props: IParentLandForm) => {
       validation: props.disabled ? undefined : { schema: ValuationSchema, nameSpace: () => 'data' },
     },
   ];
-
-  if (!!props.initialValues?.buildings?.length) {
-    steps.push({
-      route: 'associatedLand',
-      title: 'View Buildings',
-      completed: false,
-      canGoToStep: !!initialValues?.data?.id || !!props.disabled,
-    });
-  }
   steps.push({
     route: 'review',
     title: 'Review',
