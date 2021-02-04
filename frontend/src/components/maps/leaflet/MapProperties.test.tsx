@@ -1,8 +1,6 @@
 import React, { createRef } from 'react';
 import { createMemoryHistory } from 'history';
 import { Router } from 'react-router-dom';
-import renderer from 'react-test-renderer';
-import { ParcelPopupView } from 'components/maps/ParcelPopupView';
 import { IProperty, IParcelDetail, IParcel } from 'actions/parcelsActions';
 import Map from './Map';
 import { Map as LeafletMap } from 'leaflet';
@@ -13,8 +11,7 @@ import Enzyme from 'enzyme';
 import * as reducerTypes from 'constants/reducerTypes';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { render, wait } from '@testing-library/react';
-import { PopupView } from '../PopupView';
+import { wait } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { useKeycloak } from '@react-keycloak/web';
 import { useApi, PimsAPI } from 'hooks/useApi';
@@ -106,22 +103,6 @@ describe('MapProperties View', () => {
     },
   });
 
-  it('ParcelPopupView renders correctly', () => {
-    const tree = renderer
-      .create(
-        <Provider store={store}>
-          <Router history={history}>
-            <PopupView
-              propertyTypeId={mockDetails.propertyTypeId}
-              propertyDetail={mockDetails.parcelDetail}
-            />
-          </Router>
-        </Provider>,
-      )
-      .toJSON();
-    expect(tree).toMatchSnapshot();
-  });
-
   it('Renders the marker in correct position', async () => {
     const mapRef = createRef<ReactLeafletMap<LeafletMapProps, LeafletMap>>();
     const component = mount(
@@ -209,32 +190,5 @@ describe('MapProperties View', () => {
       },
       { timeout: 500 },
     );
-  });
-
-  // Check that error message is displayed on null details
-  it('Displays proper message when no details loaded', async () => {
-    const { getByText } = render(
-      <Provider store={store}>
-        <Router history={history}>
-          <ParcelPopupView parcel={emptyDetails} />
-        </Router>
-      </Provider>,
-    );
-
-    const alert = getByText('Property details loading.');
-    expect(alert).toBeTruthy();
-  });
-
-  it('ParcelPopupView renders correctly when the agencies matches the current user', async () => {
-    const { getByText } = render(
-      <Provider store={store}>
-        <Router history={history}>
-          <ParcelPopupView parcel={mockDetails.parcelDetail} />
-        </Router>
-      </Provider>,
-    );
-
-    const update = getByText('Update');
-    expect(update).toBeTruthy();
   });
 });

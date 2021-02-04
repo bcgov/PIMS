@@ -708,6 +708,27 @@ namespace Pims.Dal.Test.Services
         }
 
         [Fact]
+        public void Update_Parcel_InProject_NotAuthorized()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.PropertyEdit);
+            var init = helper.InitializeDatabase(user);
+            var parcel = init.CreateParcel(1);
+            init.SaveChanges();
+            parcel.ProjectNumbers = "[SPP-10000]";
+            init.Update(parcel);
+            init.SaveChanges();
+
+
+            var service = helper.CreateService<ParcelService>();
+
+            // Assert
+            Assert.Throws<NotAuthorizedException>(() =>
+                service.Update(parcel));
+        }
+
+        [Fact]
         public void Update_Parcel_ChangeAgency_NotAuthorized()
         {
             // Arrange
@@ -851,6 +872,27 @@ namespace Pims.Dal.Test.Services
             var helper = new TestHelper();
             var user = PrincipalHelper.CreateForPermission();
             var parcel = EntityHelper.CreateParcel(1, 1, 1, 1);
+            helper.CreatePimsContext(user, true).AddAndSaveChanges(parcel);
+
+            var service = helper.CreateService<ParcelService>(user);
+
+            // Act
+            // Assert
+            Assert.Throws<NotAuthorizedException>(() =>
+                service.Remove(parcel));
+        }
+
+        /// <summary>
+        /// Building is in an active project
+        /// </summary>
+        [Fact]
+        public void Remove_NotAuthorized_InProject()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyDelete).AddAgency(1);
+            var parcel = EntityHelper.CreateParcel(1, 1, 1, 1);
+            parcel.ProjectNumbers = "[SPP-10000]";
             helper.CreatePimsContext(user, true).AddAndSaveChanges(parcel);
 
             var service = helper.CreateService<ParcelService>(user);

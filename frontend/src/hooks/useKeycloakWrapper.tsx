@@ -1,5 +1,8 @@
 import { useKeycloak } from '@react-keycloak/web';
 import { Roles } from 'constants/roles';
+import { Claims } from 'constants/claims';
+import { IProperty } from 'actions/parcelsActions';
+import _ from 'lodash';
 
 /**
  * IUserInfo interface, represents the userinfo provided by keycloak.
@@ -38,6 +41,7 @@ export interface IKeycloak {
   hasClaim(claim?: string | Array<string>): boolean;
   hasAgency(agency?: number): boolean;
   agencyIds: number[];
+  canUserEditProperty: (property: IProperty | null) => boolean;
 }
 
 /**
@@ -124,6 +128,20 @@ function useKeycloakWrapper(): IKeycloak {
   const email = (): string | undefined => {
     return userInfo?.email;
   };
+  /**
+   * Return true if the user has permissions to edit this property
+   * NOTE: this function will be true for MOST of PIMS, but there may be exceptions for certain cases.
+   */
+  const canUserEditProperty = (property: IProperty | null): boolean => {
+    return (
+      !!property &&
+      (hasClaim(Claims.ADMIN_PROPERTIES) ||
+        (hasClaim(Claims.PROPERTY_EDIT) &&
+          !!property?.agencyId &&
+          hasAgency(property.agencyId) &&
+          !_.some(property?.projectNumbers ?? '', _.method('includes', 'SPP'))))
+    );
+  };
 
   return {
     obj: keycloak,
@@ -139,6 +157,7 @@ function useKeycloakWrapper(): IKeycloak {
     hasClaim: hasClaim,
     hasAgency: hasAgency,
     agencyIds: userInfo?.agencies,
+    canUserEditProperty: canUserEditProperty,
   };
 }
 

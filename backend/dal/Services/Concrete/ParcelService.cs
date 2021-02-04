@@ -244,6 +244,8 @@ namespace Pims.Dal.Services
             var allowEdit = isAdmin || userAgencies.Contains(originalAgencyId);
             if (!allowEdit) throw new NotAuthorizedException("User may not edit parcels outside of their agency.");
 
+            if (!isAdmin && !originalParcel.ProjectNumbers.Contains("SPP")) throw new NotAuthorizedException("User may not edit parcels that are in a SPP Project.");
+
             this.Context.UpdateParcelFinancials(originalParcel, parcel.Evaluations, parcel.Fiscals);
 
             this.Context.SetOriginalRowVersion(originalParcel);
@@ -277,6 +279,8 @@ namespace Pims.Dal.Services
             var allowEdit = isAdmin || userAgencies.Contains(originalAgencyId);
             var ownsABuilding = originalParcel.Buildings.Any(pb => userAgencies.Contains(pb.Building.AgencyId.Value));
             if (!allowEdit && !ownsABuilding) throw new NotAuthorizedException("User may not edit parcels outside of their agency.");
+
+            if (!isAdmin && originalParcel?.ProjectNumbers?.Contains("SPP") == true) throw new NotAuthorizedException("User may not edit parcels that are in a SPP Project.");
 
             // Do not allow switching agencies through this method.
             if (!isAdmin && originalAgencyId != parcel.AgencyId) throw new NotAuthorizedException("Parcel cannot be transferred to the specified agency.");
@@ -413,6 +417,8 @@ namespace Pims.Dal.Services
 
             if (!isAdmin && (!userAgencies.Contains(originalParcel.AgencyId) || originalParcel.IsSensitive && !viewSensitive))
                 throw new NotAuthorizedException("User does not have permission to delete.");
+
+            if (!isAdmin && originalParcel?.ProjectNumbers?.Contains("SPP") == true) throw new NotAuthorizedException("User may not remove parcels that are in a SPP Project.");
 
             this.ThrowIfNotAllowedToUpdate(originalParcel, _options.Project);
             this.Context.Entry(originalParcel).CurrentValues.SetValues(parcel);

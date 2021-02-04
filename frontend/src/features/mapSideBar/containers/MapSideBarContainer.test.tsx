@@ -16,6 +16,9 @@ import { IParcel } from 'actions/parcelsActions';
 import { mockDetails } from 'mocks/filterDataMock';
 import VisibilitySensor from 'react-visibility-sensor';
 import { useKeycloak } from '@react-keycloak/web';
+import axios from 'axios';
+import MockAdapter from 'axios-mock-adapter';
+import { Claims } from 'constants/claims';
 
 jest.mock(
   'react-visibility-sensor',
@@ -23,17 +26,9 @@ jest.mock(
     <div {...rest}>{typeof children === 'function' ? children({ isVisible: true }) : children}</div>
   ),
 );
+const mockAxios = new MockAdapter(axios);
 
 jest.mock('@react-keycloak/web');
-(useKeycloak as jest.Mock).mockReturnValue({
-  keycloak: {
-    userInfo: {
-      agencies: ['1'],
-      roles: ['admin-properties'],
-    },
-    subject: 'test',
-  },
-});
 
 const mockStore = configureMockStore([thunk]);
 const getStore = (parcelDetail?: IParcel) =>
@@ -78,7 +73,19 @@ const renderContainer = ({ store }: any) =>
 
 describe('Parcel Detail MapSideBarContainer', () => {
   // clear mocks before each test
-  beforeEach(() => {});
+  beforeEach(() => {
+    jest.resetAllMocks();
+    (useKeycloak as jest.Mock).mockReturnValue({
+      keycloak: {
+        userInfo: {
+          agencies: [1],
+          roles: [Claims.PROPERTY_EDIT],
+        },
+        subject: 'test',
+      },
+    });
+    mockAxios.onAny().reply(200, {});
+  });
   afterEach(() => {
     history.push({ search: '' });
     cleanup();
@@ -100,31 +107,124 @@ describe('Parcel Detail MapSideBarContainer', () => {
       });
     });
 
-    xit('parcel sidebar snapshot loads by id', async () => {
+    it('parcel sidebar snapshot loads by id', async () => {
       await act(async () => {
-        history.push('/mapview/1?sidebar=true');
-        const { container, findByDisplayValue } = renderContainer({
-          store: getStore(mockDetails[0]),
-        });
+        history.push('/mapview/?sidebar=true&parcelId=1');
+        const { container, findByDisplayValue } = renderContainer({});
+        mockAxios.reset();
+        mockAxios.onGet().reply(200, mockDetails[0]);
         await findByDisplayValue('000-000-000');
         expect(container.firstChild).toMatchSnapshot();
       });
     });
 
     it('removes the parcel id when the sidebar is closed', () => {
-      history.push('/mapview/1?sidebar=false');
+      history.push('/mapview/?sidebar=false&parcelId=1');
       renderContainer({
         store: getStore(mockDetails[0]),
       });
       wait(() => expect(history.location.pathname).toEqual('/mapview'));
     });
-
-    it('removes the parcel id when the sidebar is closed', () => {
-      history.push('/mapview/1?sidebar=false');
-      renderContainer({
-        store: getStore(mockDetails[0]),
+  });
+  describe('edit button display as rem', () => {
+    beforeEach(() => {
+      jest.resetAllMocks();
+      (useKeycloak as jest.Mock).mockReturnValue({
+        keycloak: {
+          userInfo: {
+            agencies: [1],
+            roles: [Claims.PROPERTY_EDIT],
+          },
+          subject: 'test',
+        },
       });
-      wait(() => expect(history.location.pathname).toEqual('/mapview'));
+      mockAxios.reset();
+    });
+
+    it('edit button displayed in view mode if user belongs to same agency as property', async () => {
+      await act(async () => {
+        history.push('/mapview/?sidebar=true&parcelId=1&disabled=true');
+        mockAxios.onGet().reply(200, mockDetails[0]);
+        const { findByTestId } = renderContainer({});
+
+        await wait(async () => {
+          const editButton = await findByTestId('edit');
+          expect(editButton).toBeInTheDOM();
+        });
+      });
+    });
+
+    it('edit button not displayed if user does not belong to same agency as property', async () => {
+      await act(async () => {
+        history.push('/mapview/?sidebar=true&parcelId=1&disabled=true');
+        const parcel = { ...mockDetails[0], agencyId: 2 };
+        mockAxios.onGet().reply(200, parcel);
+        const { queryByTestId } = renderContainer({});
+
+        const editButton = await queryByTestId('edit');
+        expect(editButton).not.toBeInTheDOM();
+      });
+    });
+
+    it('edit button not displayed if property in SPP project', async () => {
+      await act(async () => {
+        history.push('/mapview/?sidebar=true&parcelId=1&disabled=true');
+        const parcel = { ...mockDetails[0], projectNumbers: ['SPP-10000'] };
+        mockAxios.onGet().reply(200, parcel);
+        const { queryByTestId } = renderContainer({});
+
+        const editButton = await queryByTestId('edit');
+        expect(editButton).not.toBeInTheDOM();
+      });
+    });
+  });
+  describe('edit button display as admin', () => {
+    beforeEach(() => {
+      jest.resetAllMocks();
+      (useKeycloak as jest.Mock).mockReturnValue({
+        keycloak: {
+          userInfo: {
+            agencies: [1],
+            roles: [Claims.ADMIN_PROPERTIES],
+          },
+          subject: 'test',
+        },
+      });
+    });
+
+    it('edit button displayed in view mode if admin belongs to same agency as property', async () => {
+      await act(async () => {
+        history.push('/mapview/?sidebar=true&parcelId=1&disabled=true');
+        mockAxios.onGet().reply(200, mockDetails[0]);
+        const { findByTestId } = renderContainer({});
+
+        const editButton = await findByTestId('edit');
+        expect(editButton).toBeInTheDocument();
+      });
+    });
+
+    it('edit button displayed if admin does not belong to same agency as property', async () => {
+      await act(async () => {
+        history.push('/mapview/?sidebar=true&parcelId=1&disabled=true');
+        const parcel = { ...mockDetails[0], agencyId: 2 };
+        mockAxios.onGet().reply(200, parcel);
+        const { findByTestId } = renderContainer({});
+
+        const editButton = await findByTestId('edit');
+        expect(editButton).toBeInTheDocument();
+      });
+    });
+
+    it('edit button displayed if property in SPP project and user is admin', async () => {
+      await act(async () => {
+        history.push('/mapview/?sidebar=true&parcelId=1&disabled=true');
+        const parcel = { ...mockDetails[0], projectNumbers: ['SPP-10000'] };
+        mockAxios.onGet().reply(200, parcel);
+        const { findByTestId } = renderContainer({});
+
+        const editButton = await findByTestId('edit');
+        expect(editButton).toBeInTheDocument();
+      });
     });
   });
 });

@@ -1,5 +1,6 @@
 import { ILookupCode } from '../actions/lookupActions';
 import { IParcel, IProperty } from 'actions/parcelsActions';
+import { IProperty as IFlatProperty } from 'features/properties/list';
 
 export const SELECTEDCLASSIFICATION = {
   name: 'Core Operational',
@@ -221,6 +222,33 @@ export const mockDetails = [
     agency: 'HLTH',
   },
 ] as IParcel[];
+
+export const mockFlatProperty: IFlatProperty = {
+  id: 0,
+  propertyTypeId: 0,
+  propertyType: 'Land',
+  latitude: 23,
+  longitude: 23,
+  pid: '123-123-123',
+  classificationId: 2,
+  classification: 'Surplus Active',
+  description: 'test',
+  isSensitive: false,
+  agencyId: 1,
+  agency: 'test',
+  agencyCode: 'TST',
+  address: '1234 Test St',
+  addressId: 1,
+  administrativeArea: 'Victoria',
+  province: 'BC',
+  postal: 'A1A 1A1',
+  market: 123,
+  netBook: 223,
+  assessedLand: 123,
+  appraised: 1000,
+  landArea: 123,
+  landLegalDescription: 'test',
+} as IFlatProperty;
 
 export const ACTIVE = {
   id: 1,
