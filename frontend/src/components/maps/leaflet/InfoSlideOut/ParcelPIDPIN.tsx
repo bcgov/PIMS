@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { ListGroup } from 'react-bootstrap';
 import { IParcel } from 'actions/parcelsActions';
-import { Label } from 'components/common/Label';
+import { OuterRow } from './InfoContent';
+import { ThreeColumnItem } from './ThreeColumnItem';
 
 interface IParcelPIDPIN {
   /** the selected parcel information */
@@ -14,20 +14,10 @@ interface IParcelPIDPIN {
  */
 export const ParcelPIDPIN: React.FC<IParcelPIDPIN> = ({ parcelInfo }) => {
   return (
-    <ListGroup>
-      {parcelInfo?.pid && (
-        <ListGroup.Item>
-          <Label>PID:</Label>
-          {parcelInfo?.pid}
-        </ListGroup.Item>
-      )}
-      {parcelInfo?.pin && (
-        <ListGroup.Item>
-          <Label>PIN:</Label>
-          {parcelInfo?.pin}
-        </ListGroup.Item>
-      )}
-    </ListGroup>
+    <OuterRow>
+      {parcelInfo?.pid && <ThreeColumnItem leftSideLabel={'PID'} rightSideItem={parcelInfo?.pid} />}
+      {parcelInfo?.pin && <ThreeColumnItem leftSideLabel={'PIN'} rightSideItem={parcelInfo?.pin} />}
+    </OuterRow>
   );
 };
 

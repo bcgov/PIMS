@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ListGroup } from 'react-bootstrap';
+import { ListGroup, Row } from 'react-bootstrap';
 import { IBuilding, IParcel, PropertyTypes } from 'actions/parcelsActions';
 import { Label } from 'components/common/Label';
 import { ParcelPIDPIN } from './ParcelPIDPIN';
@@ -9,6 +9,8 @@ import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import Claims from 'constants/claims';
 import BuildingAttributes from './BuildingAttributes';
 import { ReactElement } from 'react';
+import styled from 'styled-components';
+import { ThreeColumnItem } from './ThreeColumnItem';
 
 /**
  * Compare two dates to evaluation which is earlier.
@@ -35,6 +37,10 @@ interface IInfoContent {
   addAssociatedBuildingLink: ReactElement;
 }
 
+export const OuterRow = styled(Row)`
+  margin: 0px 0px 10px 0px;
+`;
+
 /**
  * Component that displays the appropriate information about the selected property
  * in the property info slideout
@@ -58,50 +64,54 @@ export const InfoContent: React.FC<IInfoContent> = ({
         {propertyTypeId === PropertyTypes.PARCEL && (
           <ParcelPIDPIN parcelInfo={propertyInfo as IParcel} />
         )}
-        {(keycloak.hasAgency(propertyInfo?.agencyId as number) ||
-          keycloak.hasClaim(Claims.ADMIN_PROPERTIES)) && (
-          <>
-            {propertyInfo?.name && (
-              <ListGroup.Item>
-                <Label>Name:</Label>
-                {propertyInfo?.name}
-              </ListGroup.Item>
-            )}
-            <ListGroup.Item>
-              <Label>Owning Agency:</Label>
-              {propertyInfo?.agency}
-            </ListGroup.Item>
-            {propertyInfo?.subAgency && (
-              <ListGroup.Item>
-                <Label>Sub-agency:</Label>
-                {propertyInfo.subAgency}
-              </ListGroup.Item>
-            )}
-          </>
-        )}
-        <ListGroup.Item>
-          <Label>Classification:</Label>
-          {propertyInfo?.classification}
-        </ListGroup.Item>
+        <OuterRow>
+          {(keycloak.hasAgency(propertyInfo?.agencyId as number) ||
+            keycloak.hasClaim(Claims.ADMIN_PROPERTIES)) && (
+            <>
+              {propertyInfo?.name && (
+                <ThreeColumnItem leftSideLabel={'Name'} rightSideItem={propertyInfo?.name} />
+              )}
+              {propertyInfo?.subAgency ? (
+                <>
+                  <ThreeColumnItem
+                    leftSideLabel={'Ministry'}
+                    rightSideItem={propertyInfo?.agency}
+                  />
+                  <ThreeColumnItem
+                    leftSideLabel={'Owning agency'}
+                    rightSideItem={propertyInfo.subAgency}
+                  />
+                </>
+              ) : (
+                <ThreeColumnItem
+                  leftSideLabel={'Owning ministry'}
+                  rightSideItem={propertyInfo?.agency}
+                />
+              )}
+            </>
+          )}
+          <ThreeColumnItem
+            leftSideLabel={'Classification'}
+            rightSideItem={propertyInfo?.classification}
+          />
+        </OuterRow>
       </ListGroup>
       <ListGroup>
         <Label className="header">Location data</Label>
-        <ListGroup.Item>
-          <Label>Civic Address:</Label>
-          {propertyInfo?.address?.line1}
-        </ListGroup.Item>
-        <ListGroup.Item>
-          <Label>Location:</Label>
-          {propertyInfo?.address?.administrativeArea}
-        </ListGroup.Item>
-        <ListGroup.Item>
-          <Label>Latitude:</Label>
-          {propertyInfo?.latitude}
-        </ListGroup.Item>
-        <ListGroup.Item>
-          <Label>Longitude:</Label>
-          {propertyInfo?.longitude}
-        </ListGroup.Item>
+        <OuterRow>
+          <ThreeColumnItem
+            leftSideLabel={'Civic address'}
+            rightSideItem={propertyInfo?.address?.line1}
+          />
+          <ThreeColumnItem
+            leftSideLabel={'Location'}
+            rightSideItem={propertyInfo?.address?.administrativeArea}
+          />
+        </OuterRow>
+        <OuterRow>
+          <ThreeColumnItem leftSideLabel={'Latitude'} rightSideItem={propertyInfo?.latitude} />
+          <ThreeColumnItem leftSideLabel={'Longitude'} rightSideItem={propertyInfo?.longitude} />
+        </OuterRow>
       </ListGroup>
       {(keycloak.hasAgency(propertyInfo?.agencyId as number) ||
         keycloak.hasClaim(Claims.ADMIN_PROPERTIES)) && (
