@@ -71,14 +71,21 @@ export const InfoContent: React.FC<IInfoContent> = ({
               {propertyInfo?.name && (
                 <ThreeColumnItem leftSideLabel={'Name'} rightSideItem={propertyInfo?.name} />
               )}
-              <ThreeColumnItem
-                leftSideLabel={'Owning Agency'}
-                rightSideItem={propertyInfo?.agency}
-              />
-              {propertyInfo?.subAgency && (
+              {propertyInfo?.subAgency ? (
+                <>
+                  <ThreeColumnItem
+                    leftSideLabel={'Ministry'}
+                    rightSideItem={propertyInfo?.agency}
+                  />
+                  <ThreeColumnItem
+                    leftSideLabel={'Owning agency'}
+                    rightSideItem={propertyInfo.subAgency}
+                  />
+                </>
+              ) : (
                 <ThreeColumnItem
-                  leftSideLabel={'Sub-agency'}
-                  rightSideItem={propertyInfo.subAgency}
+                  leftSideLabel={'Owning ministry'}
+                  rightSideItem={propertyInfo?.agency}
                 />
               )}
             </>
