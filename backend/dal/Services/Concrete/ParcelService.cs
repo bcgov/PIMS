@@ -244,7 +244,7 @@ namespace Pims.Dal.Services
             var allowEdit = isAdmin || userAgencies.Contains(originalAgencyId);
             if (!allowEdit) throw new NotAuthorizedException("User may not edit parcels outside of their agency.");
 
-            if (!isAdmin && !originalParcel.ProjectNumbers.Contains("SPP")) throw new NotAuthorizedException("User may not edit parcels that are in a SPP Project.");
+            if (!isAdmin && originalParcel?.ProjectNumbers?.Contains("SPP") == true) throw new NotAuthorizedException("User may not edit parcels that are in a SPP Project.");
 
             this.Context.UpdateParcelFinancials(originalParcel, parcel.Evaluations, parcel.Fiscals);
 
