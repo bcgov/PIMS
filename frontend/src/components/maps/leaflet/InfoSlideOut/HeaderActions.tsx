@@ -11,7 +11,7 @@ const LinkMenu = styled(Row)`
   background-color: #f2f2f2;
   height: 35px;
   width: 322px;
-  margin-left: -10px;
+  margin: 0px 0px 5px -10px;
   font-size: 14px;
   padding: 10px;
   a {

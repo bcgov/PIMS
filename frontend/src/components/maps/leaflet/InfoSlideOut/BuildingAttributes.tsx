@@ -4,7 +4,8 @@ import { IBuilding } from 'actions/parcelsActions';
 import { Label } from 'components/common/Label';
 import './InfoSlideOut.scss';
 import { formatMoney } from 'utils/numberFormatUtils';
-import { compareDate } from './InfoContent';
+import { compareDate, OuterRow } from './InfoContent';
+import { ThreeColumnItem } from './ThreeColumnItem';
 
 interface IBuildingAttributes {
   /** the selected building information */
@@ -27,21 +28,30 @@ export const BuildingAttributes: React.FC<IBuildingAttributes> = ({ buildingInfo
     formatAssessed = '';
   }
 
+  const newLength = buildingInfo.parcels?.length > 3 ? 3 : buildingInfo.parcels?.length;
+  const parcelsCopy = buildingInfo.parcels?.slice(0, newLength);
+
   return (
     <>
       <ListGroup>
         <Label className="header">Valuation</Label>
-        <ListGroup.Item>
-          <Label>Assessed value:</Label>
-          {formatAssessed}
-        </ListGroup.Item>
+        <OuterRow>
+          <ThreeColumnItem leftSideLabel={'Assessed value:'} rightSideItem={formatAssessed} />
+        </OuterRow>
       </ListGroup>
-      {buildingInfo?.pid && (
+      {buildingInfo.parcels?.length >= 1 && (
         <ListGroup>
           <Label className="header">Associated Land</Label>
-          <ListGroup.Item>
-            <Label>{buildingInfo.pid}</Label>
-          </ListGroup.Item>
+          {parcelsCopy.map((parcel, parcelId) => (
+            <ListGroup.Item key={parcelId}>
+              {parcel.pid ? <Label>{parcel.pid}</Label> : <Label>{parcel.pin}</Label>}
+            </ListGroup.Item>
+          ))}
+          {buildingInfo.parcels.length > 3 && (
+            <ListGroup.Item>
+              <Label>+ {buildingInfo.parcels.length - 3} more</Label>
+            </ListGroup.Item>
+          )}
         </ListGroup>
       )}
     </>
