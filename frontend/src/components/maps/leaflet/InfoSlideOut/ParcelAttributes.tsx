@@ -12,6 +12,8 @@ interface IParcelAttributes {
   /** the selected parcel information */
   parcelInfo: IParcel;
   addAssociatedBuildingLink: ReactElement;
+  /** whether the user has the correct agency/permissions to view all the details */
+  canViewDetails: boolean;
 }
 
 /**
@@ -21,6 +23,7 @@ interface IParcelAttributes {
 export const ParcelAttributes: React.FC<IParcelAttributes> = ({
   parcelInfo,
   addAssociatedBuildingLink,
+  canViewDetails,
 }) => {
   let formatAssessed;
   if (parcelInfo?.assessedLand) {
@@ -47,38 +50,44 @@ export const ParcelAttributes: React.FC<IParcelAttributes> = ({
           />
         </OuterRow>
       </ListGroup>
-      {parcelInfo?.landLegalDescription && (
-        <ListGroup>
-          <Label className="header">Legal description</Label>
-          <OuterRow>
-            <ListGroup.Item className="legal">{parcelInfo?.landLegalDescription}</ListGroup.Item>
-          </OuterRow>
-        </ListGroup>
-      )}
-      <ListGroup>
-        <Label className="header">Valuation</Label>
-        <OuterRow>
-          <ThreeColumnItem leftSideLabel={'Assessed value:'} rightSideItem={formatAssessed} />
-        </OuterRow>
-      </ListGroup>
-      {parcelInfo?.buildings && (
-        <ListGroup>
-          <Label className="header">Associated Buildings</Label>
-          {buildingsCopy.map((building, buildingId) => (
-            <ListGroup.Item key={buildingId}>
-              <Label>{building.name}</Label>
-            </ListGroup.Item>
-          ))}
-          {parcelInfo.buildings.length > 3 && (
-            <ListGroup.Item>
-              <Label>+ {parcelInfo.buildings.length - 3} more</Label>
-            </ListGroup.Item>
+      {canViewDetails && (
+        <>
+          {parcelInfo?.landLegalDescription && (
+            <ListGroup>
+              <Label className="header">Legal description</Label>
+              <OuterRow>
+                <ListGroup.Item className="legal">
+                  {parcelInfo?.landLegalDescription}
+                </ListGroup.Item>
+              </OuterRow>
+            </ListGroup>
           )}
-        </ListGroup>
+          <ListGroup>
+            <Label className="header">Valuation</Label>
+            <OuterRow>
+              <ThreeColumnItem leftSideLabel={'Assessed value:'} rightSideItem={formatAssessed} />
+            </OuterRow>
+          </ListGroup>
+          {parcelInfo?.buildings && (
+            <ListGroup>
+              <Label className="header">Associated Buildings</Label>
+              {buildingsCopy.map((building, buildingId) => (
+                <ListGroup.Item key={buildingId}>
+                  <Label>{building.name}</Label>
+                </ListGroup.Item>
+              ))}
+              {parcelInfo.buildings.length > 3 && (
+                <ListGroup.Item>
+                  <Label>+ {parcelInfo.buildings.length - 3} more</Label>
+                </ListGroup.Item>
+              )}
+            </ListGroup>
+          )}
+          <ListGroup>
+            <ListGroup.Item>{addAssociatedBuildingLink}</ListGroup.Item>
+          </ListGroup>
+        </>
       )}
-      <ListGroup>
-        <ListGroup.Item>{addAssociatedBuildingLink}</ListGroup.Item>
-      </ListGroup>
     </>
   );
 };

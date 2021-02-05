@@ -41,6 +41,20 @@ export const OuterRow = styled(Row)`
   margin: 0px 0px 10px 0px;
 `;
 
+const ContactSres = styled(Row)`
+  background-color: #deefff;
+  padding: 5px 15px;
+  margin: 0px 1px 5px 1px;
+
+  em {
+    color: #121212;
+  }
+
+  a {
+    color: #1a5a96;
+  }
+`;
+
 /**
  * Component that displays the appropriate information about the selected property
  * in the property info slideout
@@ -53,6 +67,10 @@ export const InfoContent: React.FC<IInfoContent> = ({
   addAssociatedBuildingLink,
 }) => {
   const keycloak = useKeycloakWrapper();
+
+  const canViewProperty =
+    keycloak.hasAgency(propertyInfo?.agencyId as number) ||
+    keycloak.hasClaim(Claims.ADMIN_PROPERTIES);
   return (
     <>
       <ListGroup>
@@ -65,8 +83,7 @@ export const InfoContent: React.FC<IInfoContent> = ({
           <ParcelPIDPIN parcelInfo={propertyInfo as IParcel} />
         )}
         <OuterRow>
-          {(keycloak.hasAgency(propertyInfo?.agencyId as number) ||
-            keycloak.hasClaim(Claims.ADMIN_PROPERTIES)) && (
+          {canViewProperty && (
             <>
               {propertyInfo?.name && (
                 <ThreeColumnItem leftSideLabel={'Name'} rightSideItem={propertyInfo?.name} />
@@ -95,6 +112,16 @@ export const InfoContent: React.FC<IInfoContent> = ({
             rightSideItem={propertyInfo?.classification}
           />
         </OuterRow>
+        {!canViewProperty && (
+          <ContactSres>
+            <em>
+              For more information on this property, contact{' '}
+              <a href="mailto:RealPropertyDivision.Disposals@gov.bc.ca">
+                Strategic Real Estate Services (SRES)
+              </a>
+            </em>
+          </ContactSres>
+        )}
       </ListGroup>
       <ListGroup>
         <Label className="header">Location data</Label>
@@ -113,19 +140,15 @@ export const InfoContent: React.FC<IInfoContent> = ({
           <ThreeColumnItem leftSideLabel={'Longitude'} rightSideItem={propertyInfo?.longitude} />
         </OuterRow>
       </ListGroup>
-      {(keycloak.hasAgency(propertyInfo?.agencyId as number) ||
-        keycloak.hasClaim(Claims.ADMIN_PROPERTIES)) && (
-        <>
-          {propertyTypeId === PropertyTypes.PARCEL && (
-            <ParcelAttributes
-              addAssociatedBuildingLink={addAssociatedBuildingLink}
-              parcelInfo={propertyInfo as IParcel}
-            />
-          )}
-          {propertyTypeId === PropertyTypes.BUILDING && (
-            <BuildingAttributes buildingInfo={propertyInfo as IBuilding} />
-          )}
-        </>
+      {propertyTypeId === PropertyTypes.PARCEL && (
+        <ParcelAttributes
+          addAssociatedBuildingLink={addAssociatedBuildingLink}
+          parcelInfo={propertyInfo as IParcel}
+          canViewDetails={canViewProperty}
+        />
+      )}
+      {propertyTypeId === PropertyTypes.BUILDING && (
+        <BuildingAttributes buildingInfo={propertyInfo as IBuilding} />
       )}
     </>
   );
