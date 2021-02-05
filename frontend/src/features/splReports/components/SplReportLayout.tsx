@@ -53,7 +53,7 @@ const SplReportLayout: React.FunctionComponent<ISplReportLayoutProps> = ({
             ></ReportList>
           </span>
           <button onClick={() => setShowSidebar(!showSidebar)}>
-            {showSidebar ? <FaChevronLeft></FaChevronLeft> : <FaChevronRight></FaChevronRight>}
+            {showSidebar ? <FaChevronLeft /> : <FaChevronRight />}
           </button>
         </div>
       </ClickAwayListener>
