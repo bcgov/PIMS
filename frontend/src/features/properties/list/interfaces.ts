@@ -11,7 +11,7 @@ export interface IProperty {
   classificationId: number;
   classification: string;
   description: string;
-  projectNumber?: string;
+  projectNumbers?: string[];
   latitude: number;
   longitude: number;
   isSensitive: boolean;

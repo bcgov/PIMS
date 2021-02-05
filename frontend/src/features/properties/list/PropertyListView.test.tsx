@@ -197,7 +197,6 @@ describe('Property list view', () => {
           netBook: 0.0,
           assessedLand: 958000.0,
           assessedLandDate: '2018-01-01T00:00:00',
-          appraised: 0.0,
           landArea: 26.9,
           landLegalDescription:
             'LOT A SECTION 22 TOWNSHIP 91 KAMLOOPS DIVISION YALE DISTRICT PLAN EPP50042',
@@ -233,7 +232,6 @@ describe('Property list view', () => {
           netBook: 0.0,
           assessedLand: 958000.0,
           assessedLandDate: '2018-01-01T00:00:00',
-          appraised: 0.0,
           landArea: 26.9,
           landLegalDescription:
             'LOT A SECTION 22 TOWNSHIP 91 KAMLOOPS DIVISION YALE DISTRICT PLAN EPP50042',
