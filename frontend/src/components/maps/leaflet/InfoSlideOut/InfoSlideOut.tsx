@@ -16,6 +16,7 @@ import { Link, useLocation } from 'react-router-dom';
 import queryString from 'query-string';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import Claims from 'constants/claims';
+import { PropertyTypes } from 'actions/parcelsActions';
 
 const InfoContainer = styled.div`
   margin-right: -10px;
@@ -159,7 +160,11 @@ const InfoControl: React.FC<InfoControlProps> = ({ open, setOpen, onHeaderAction
       <InfoContainer id="infoContainer" className={clsx({ closed: !open })}>
         {open && (
           <InfoHeader>
-            <Title>Property Info</Title>
+            {popUpContext.propertyTypeID === PropertyTypes.BUILDING ? (
+              <Title>Building Info</Title>
+            ) : (
+              <Title>Property Info</Title>
+            )}
           </InfoHeader>
         )}
         <TooltipWrapper toolTipId="info-slideout-id" toolTip="Property Information">

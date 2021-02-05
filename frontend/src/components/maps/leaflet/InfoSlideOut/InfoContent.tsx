@@ -153,7 +153,6 @@ export const InfoContent: React.FC<IInfoContent> = ({
         <BuildingAttributes
           buildingInfo={propertyInfo as IBuilding}
           canViewDetails={canViewDetails}
-          canEditDetails={canEditDetails}
         />
       )}
     </>
