@@ -15,6 +15,7 @@ import {
   storeParcelDetail,
   storeBuildingDetail,
   IAddress,
+  IProperty,
 } from 'actions/parcelsActions';
 import SelectedPropertyMarker from './SelectedPropertyMarker/SelectedPropertyMarker';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
@@ -25,6 +26,7 @@ import { PropertyTypes } from 'actions/parcelsActions';
 import { PropertyPopUpContext } from '../providers/PropertyPopUpProvider';
 import { MAX_ZOOM } from 'constants/strings';
 import { useApi } from 'hooks/useApi';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 
 export type PointClustererProps = {
   points: Array<PointFeature>;
@@ -47,10 +49,16 @@ export type PointClustererProps = {
  * Converts the flat list of properties into the correct type of inventory property.
  * @param property A flat list of property values (from a Feature).
  */
-export const convertToProperty = (property: any): IParcel | IBuilding | null => {
+export const convertToProperty = (
+  property: any,
+  latitude?: number,
+  longitude?: number,
+): IParcel | IBuilding | null => {
   if (property.propertyTypeId === PropertyTypes.PARCEL) {
     return {
       ...property,
+      latitude: latitude,
+      longitude: longitude,
       address: {
         line1: property.address,
         administrativeArea: property.administrativeArea,
@@ -61,6 +69,9 @@ export const convertToProperty = (property: any): IParcel | IBuilding | null => 
   } else if (property.propertyTypeId === PropertyTypes.BUILDING) {
     return {
       ...property,
+      totalArea: property.totalArea ?? 0,
+      latitude: latitude,
+      longitude: longitude,
       address: {
         line1: property.address,
         administrativeArea: property.administrativeArea,
@@ -254,7 +265,7 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
     },
     [getParcel, getBuilding, popUpContext],
   );
-
+  const keycloak = useKeycloakWrapper();
   return (
     <>
       <FeatureGroup ref={featureGroupRef}>
@@ -301,7 +312,13 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
               icon={getMarkerIcon(cluster)}
               onclick={() => {
                 onMarkerClick(); //open information slideout
-                fetchProperty(cluster.properties.propertyTypeId, cluster.properties.id);
+                if (keycloak.canUserViewProperty(cluster.properties as IProperty)) {
+                  fetchProperty(cluster.properties.propertyTypeId, cluster.properties.id);
+                } else {
+                  popUpContext.setPropertyInfo(
+                    convertToProperty(cluster.properties, latitude, longitude),
+                  );
+                }
                 popUpContext.setPropertyTypeID(cluster.properties.propertyTypeId);
               }}
             />
@@ -319,7 +336,13 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
             icon={getMarkerIcon(m)}
             onclick={() => {
               onMarkerClick(); //open information slideout
-              fetchProperty(m.properties.propertyTypeId, m.properties.id);
+              if (keycloak.canUserViewProperty(m.properties as IProperty)) {
+                fetchProperty(m.properties.propertyTypeId, m.properties.id);
+              } else {
+                popUpContext.setPropertyInfo(
+                  convertToProperty(m.properties, m.position.lat, m.position.lng),
+                );
+              }
               popUpContext.setPropertyTypeID(m.properties.propertyTypeId);
             }}
           />
@@ -369,7 +392,7 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
               position={[latitude, longitude]}
               icon={getMarkerIcon(draftPoint)}
               zIndexOffset={500}
-            ></Marker>
+            />
           );
         })}
       </FeatureGroup>

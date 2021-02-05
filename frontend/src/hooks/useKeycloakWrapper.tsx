@@ -1,7 +1,7 @@
 import { useKeycloak } from '@react-keycloak/web';
+import { IProperty } from 'actions/parcelsActions';
 import { Roles } from 'constants/roles';
 import { Claims } from 'constants/claims';
-import { IProperty } from 'actions/parcelsActions';
 import _ from 'lodash';
 
 /**

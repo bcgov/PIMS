@@ -50,7 +50,10 @@ const mockDetails: IParcelDetail = {
     name: 'test name',
     pid: '000-000-000',
     pin: '',
-    projectNumber: '',
+    encumbranceReason: '',
+    assessedBuilding: 0,
+    assessedLand: 0,
+    projectNumbers: [],
     classificationId: 0,
     zoning: '',
     zoningPotential: '',
@@ -79,9 +82,6 @@ const mockDetails: IParcelDetail = {
     landLegalDescription: 'test',
     buildings: [],
     agency: 'FIN',
-    encumbranceReason: '',
-    assessedLand: '',
-    assessedBuilding: '',
   },
 };
 

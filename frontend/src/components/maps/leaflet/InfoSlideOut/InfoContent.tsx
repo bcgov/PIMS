@@ -5,8 +5,6 @@ import { Label } from 'components/common/Label';
 import { ParcelPIDPIN } from './ParcelPIDPIN';
 import ParcelAttributes from './ParcelAttributes';
 import './InfoSlideOut.scss';
-import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
-import Claims from 'constants/claims';
 import BuildingAttributes from './BuildingAttributes';
 import { ReactElement } from 'react';
 import styled from 'styled-components';
@@ -35,10 +33,28 @@ interface IInfoContent {
   propertyTypeId: PropertyTypes | null;
   /** ReactElement used to display a link for adding an associated building */
   addAssociatedBuildingLink: ReactElement;
+  /** whether the user has the correct agency/permissions to view all the details */
+  canViewDetails: boolean;
+  /** whether the user has the correct agency/permissions to edit property details */
+  canEditDetails: boolean;
 }
 
 export const OuterRow = styled(Row)`
   margin: 0px 0px 10px 0px;
+`;
+
+const ContactSres = styled(Row)`
+  background-color: #deefff;
+  padding: 5px 15px;
+  margin: 0px 1px 5px 1px;
+
+  em {
+    color: #121212;
+  }
+
+  a {
+    color: #1a5a96;
+  }
 `;
 
 /**
@@ -46,13 +62,16 @@ export const OuterRow = styled(Row)`
  * in the property info slideout
  * @param {IInfoContent} propertyInfo the selected property
  * @param {IInfoContent} propertyTypeId the property type [Parcel, Building]
+ * @param canViewDetails user can view all property details
+ * @param canEditDetails user can edit property details
  */
 export const InfoContent: React.FC<IInfoContent> = ({
   propertyInfo,
   propertyTypeId,
   addAssociatedBuildingLink,
+  canViewDetails,
+  canEditDetails,
 }) => {
-  const keycloak = useKeycloakWrapper();
   return (
     <>
       <ListGroup>
@@ -65,8 +84,7 @@ export const InfoContent: React.FC<IInfoContent> = ({
           <ParcelPIDPIN parcelInfo={propertyInfo as IParcel} />
         )}
         <OuterRow>
-          {(keycloak.hasAgency(propertyInfo?.agencyId as number) ||
-            keycloak.hasClaim(Claims.ADMIN_PROPERTIES)) && (
+          {canViewDetails && (
             <>
               {propertyInfo?.name && (
                 <ThreeColumnItem leftSideLabel={'Name'} rightSideItem={propertyInfo?.name} />
@@ -95,6 +113,16 @@ export const InfoContent: React.FC<IInfoContent> = ({
             rightSideItem={propertyInfo?.classification}
           />
         </OuterRow>
+        {!canViewDetails && (
+          <ContactSres>
+            <em>
+              For more information on this property, contact{' '}
+              <a href="mailto:RealPropertyDivision.Disposals@gov.bc.ca">
+                Strategic Real Estate Services (SRES)
+              </a>
+            </em>
+          </ContactSres>
+        )}
       </ListGroup>
       <ListGroup>
         <Label className="header">Location data</Label>
@@ -113,19 +141,19 @@ export const InfoContent: React.FC<IInfoContent> = ({
           <ThreeColumnItem leftSideLabel={'Longitude'} rightSideItem={propertyInfo?.longitude} />
         </OuterRow>
       </ListGroup>
-      {(keycloak.hasAgency(propertyInfo?.agencyId as number) ||
-        keycloak.hasClaim(Claims.ADMIN_PROPERTIES)) && (
-        <>
-          {propertyTypeId === PropertyTypes.PARCEL && (
-            <ParcelAttributes
-              addAssociatedBuildingLink={addAssociatedBuildingLink}
-              parcelInfo={propertyInfo as IParcel}
-            />
-          )}
-          {propertyTypeId === PropertyTypes.BUILDING && (
-            <BuildingAttributes buildingInfo={propertyInfo as IBuilding} />
-          )}
-        </>
+      {propertyTypeId === PropertyTypes.PARCEL && (
+        <ParcelAttributes
+          addAssociatedBuildingLink={addAssociatedBuildingLink}
+          parcelInfo={propertyInfo as IParcel}
+          canViewDetails={canViewDetails}
+          canEditDetails={canEditDetails}
+        />
+      )}
+      {propertyTypeId === PropertyTypes.BUILDING && (
+        <BuildingAttributes
+          buildingInfo={propertyInfo as IBuilding}
+          canViewDetails={canViewDetails}
+        />
       )}
     </>
   );

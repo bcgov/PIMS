@@ -4,8 +4,6 @@ import { Row } from 'react-bootstrap';
 import { IBuilding, IParcel, PropertyTypes } from 'actions/parcelsActions';
 import { Link, useLocation } from 'react-router-dom';
 import queryString from 'query-string';
-import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
-import Claims from 'constants/claims';
 
 const LinkMenu = styled(Row)`
   background-color: #f2f2f2;
@@ -34,6 +32,10 @@ interface IHeaderActions {
   zoomToView: () => void;
   /** additional action to be taken when a link in the menu is clicked */
   onLinkClick?: () => void;
+  /** whether the user has the correct agency/permissions to view all the details */
+  canViewDetails: boolean;
+  /** whether the user has the correct agency/permissions to edit property details */
+  canEditDetails: boolean;
 }
 
 /**
@@ -41,6 +43,8 @@ interface IHeaderActions {
  * @param propertyInfo the selected property information
  * @param propertyTypeId the selected property type
  * @param onLinkClick additional action on menu item click
+ * @param canViewDetails user can view all property details
+ * @param canEditDetails user can edit property details
  */
 const HeaderActions: React.FC<IHeaderActions> = ({
   propertyInfo,
@@ -48,18 +52,17 @@ const HeaderActions: React.FC<IHeaderActions> = ({
   onLinkClick,
   jumpToView,
   zoomToView,
+  canViewDetails,
+  canEditDetails,
 }) => {
   const location = useLocation();
-  const keycloak = useKeycloakWrapper();
 
   const buildingId = propertyTypeId === PropertyTypes.BUILDING ? propertyInfo?.id : undefined;
   const parcelId = propertyTypeId === PropertyTypes.PARCEL ? propertyInfo?.id : undefined;
-  const canEdit = keycloak.canUserEditProperty(propertyInfo);
   return (
     <LinkMenu>
       Actions:
-      {(keycloak.hasAgency(propertyInfo?.agencyId as number) ||
-        keycloak.hasClaim(Claims.ADMIN_PROPERTIES)) && (
+      {canViewDetails && (
         <>
           <Link
             onClick={() => {
@@ -80,9 +83,9 @@ const HeaderActions: React.FC<IHeaderActions> = ({
           >
             View details
           </Link>
-          {canEdit && (
+          <VerticalBar />
+          {canEditDetails && (
             <>
-              <VerticalBar />
               <Link
                 onClick={() => {
                   jumpToView();
@@ -102,9 +105,9 @@ const HeaderActions: React.FC<IHeaderActions> = ({
               >
                 Update
               </Link>
+              <VerticalBar />
             </>
           )}
-          <VerticalBar />
         </>
       )}
       <Link to={{ ...location }} onClick={zoomToView}>
