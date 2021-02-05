@@ -47,7 +47,6 @@ export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
     },
     [props.nameSpace],
   );
-  const netBookYear = getIn(formikProps.values, withNameSpace('financials.0.netbook.fiscalYear'));
   const defaultEditValues = useMemo(
     () => ({
       identification: props.disabled || formikProps.isValid,
@@ -68,6 +67,7 @@ export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
     FiscalKeys.NetBook,
     currentYear,
   );
+  const netBookYear = getIn(formikProps.values, withNameSpace(`fiscals.${fiscalIndex}.fiscalYear`));
 
   const parcels = getIn(formikProps.values, withNameSpace('parcels'));
   return (
