@@ -74,16 +74,42 @@ parameters:
     from: '[\w]{12}_1Ab!'
     generate: expression
 
-  - name: PVC_NAME
-    displayName: "Persistent Volume Claim Name"
-    description: "The name of the persistent volume claim (pvc) that the database will use."
-    value: "pims-db-file-storage"
+  - name: STORAGE_CLASS_NAME
+    displayName: "The Storage Class Name"
+    description: "The storage class name is the type of storage [netapp-file-standard, netapp-file-extended, netapp-file-backup, netapp-block-standard, netapp-block-extended]"
     required: true
+    value: "netapp-file-standard"
+  - name: ACCESS_MODE
+    displayName: "The Storage Access Mode"
+    description: "The storage access mode [ReadWriteOnce, ReadWriteMany]"
+    required: true
+    value: "ReadWriteMany"
+  - name: VOLUME_CAPACITY
+    displayName: "Persistent Volume Capacity"
+    description: "Volume space available for data, e.g. 512Mi, 2Gi."
+    required: true
+    value: "5Gi"
 
-  # - name: "BACKUP_VOLUME_NAME"
-  #   displayName: "Backup Volume Name"
-  #   description: The name of the persistent volume used to store the backups.  Please note, when using the recommended nfs-backup storage class the name of the pvc MUST be taken from the manually provisioned claim; nfs-backup storage MUST be provisioned manually.
-  #   required: true
+  - name: BACKUP_ROLE_NAME
+    displayName: "Backup Service Role Name"
+    description: "The name of the application component role [app, api, database, backup]"
+    required: true
+    value: "backup"
+  - name: BACKUP_STORAGE_CLASS_NAME
+    displayName: "The Backup Storage Class Name"
+    description: "The backup storage class name is the type of storage [netapp-file-standard, netapp-file-extended, netapp-file-backup, netapp-block-standard, netapp-block-extended]"
+    required: true
+    value: "netapp-file-backup"
+  - name: BACKUP_ACCESS_MODE
+    displayName: "The Backup Storage Access Mode"
+    description: "The backup storage access mode [ReadWriteOnce, ReadWriteMany]"
+    required: true
+    value: "ReadWriteMany"
+  - name: BACKUP_VOLUME_CAPACITY
+    displayName: "Backup persistent Volume Capacity"
+    description: "Backup bolume space available for data, e.g. 512Mi, 2Gi."
+    required: true
+    value: "5Gi"
 
   - name: CPU_REQUEST
     displayName: "Requested Minimum Resources CPU Limit"
@@ -106,16 +132,64 @@ parameters:
     required: true
     value: "4Gi"
 objects:
+  # Persistent storage for the database.
+  - kind: PersistentVolumeClaim
+    apiVersion: v1
+    metadata:
+      name: ${APP_NAME}-${ROLE_NAME}${INSTANCE}
+      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
+      labels:
+        name: ${APP_NAME}-database${INSTANCE}
+        app: ${APP_NAME}
+        env: ${ENV_NAME}
+        role: ${ROLE_NAME}
+    resourceVersion: "250191500"
+    selfLink: /api/v1/namespaces/${PROJECT_NAMESPACE}-${ENV_NAME}/persistentvolumeclaims/${APP_NAME}-${ROLE_NAME}${INSTANCE}
+    annotations:
+      pv.kubernetes.io/bind-completed: "yes"
+      pv.kubernetes.io/bound-by-controller: "yes"
+      volume.beta.kubernetes.io/storage-provisioner: csi.trident.netapp.io
+      description: "${APP_NAME} Database storage volume"
+    finalizers:
+      - kubernetes.io/pvc-protection
+    spec:
+      accessModes:
+        - ${ACCESS_MODE}
+      resources:
+        requests:
+          storage: ${VOLUME_CAPACITY}
+      storageClassName: ${STORAGE_CLASS_NAME}
+      volumeMode: Filesystem
+
+  # Storage for backup.
+  - kind: PersistentVolumeClaim
+    apiVersion: v1
+    metadata:
+      name: ${APP_NAME}-${ROLE_NAME}-${BACKUP_ROLE_NAME}
+      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
+      labels:
+        name: ${APP_NAME}-${ROLE_NAME}-${BACKUP_ROLE_NAME}
+        app: ${APP_NAME}
+        role: ${BACKUP_ROLE_NAME}
+        env: ${ENV_NAME}
+    spec:
+      storageClassName: ${BACKUP_STORAGE_CLASS_NAME}
+      accessModes:
+        - ${BACKUP_ACCESS_MODE}
+      resources:
+        requests:
+          storage: ${BACKUP_VOLUME_CAPACITY}
+
   # Add a resource secret for the database password.  By default this is generated.
   - kind: Secret
     apiVersion: v1
     metadata:
-      name: ${APP_NAME}-${ROLE_NAME}-${ENV_NAME}${INSTANCE}-secret
+      name: ${APP_NAME}-${ROLE_NAME}${INSTANCE}
       namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
       annotations:
         description: "Database passwords"
       labels:
-        name: ${APP_NAME}-${ROLE_NAME}-${ENV_NAME}${INSTANCE}-secret
+        name: ${APP_NAME}-${ROLE_NAME}${INSTANCE}
         app: ${APP_NAME}
         role: ${ROLE_NAME}
         env: ${ENV_NAME}
@@ -129,11 +203,12 @@ objects:
   - kind: Service
     apiVersion: v1
     metadata:
-      name: ${APP_NAME}-${ROLE_NAME}-${ENV_NAME}${INSTANCE}
+      name: ${APP_NAME}-${ROLE_NAME}${INSTANCE}
       namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
       annotations:
         description: Exposes the database server
       labels:
+        name: ${APP_NAME}-${ROLE_NAME}${INSTANCE}
         app: ${APP_NAME}
         role: ${ROLE_NAME}
         env: ${ENV_NAME}
@@ -144,7 +219,7 @@ objects:
           port: ${{MSSQL_PORT}}
           targetPort: ${{MSSQL_PORT}}
       selector:
-        name: ${APP_NAME}-${ROLE_NAME}-${ENV_NAME}${INSTANCE}
+        name: ${APP_NAME}-${ROLE_NAME}${INSTANCE}
       type: ClusterIP
       sessionAffinity: None
 
@@ -152,11 +227,12 @@ objects:
   - kind: DeploymentConfig
     apiVersion: v1
     metadata:
-      name: ${APP_NAME}-${ROLE_NAME}-${ENV_NAME}${INSTANCE}
+      name: ${APP_NAME}-${ROLE_NAME}${INSTANCE}
       namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
       annotations:
         description: Defines how to deploy the database server
       labels:
+        name: ${APP_NAME}-${ROLE_NAME}${INSTANCE}
         app: ${APP_NAME}
         role: ${ROLE_NAME}
         env: ${ENV_NAME}
@@ -169,19 +245,19 @@ objects:
           imageChangeParams:
             automatic: true
             containerNames:
-              - ${APP_NAME}-${ROLE_NAME}-${ENV_NAME}${INSTANCE}
+              - ${APP_NAME}-${ROLE_NAME}${INSTANCE}
             from:
               kind: ImageStreamTag
               namespace: "${PROJECT_NAMESPACE}-tools"
               name: ${APP_NAME}-${ROLE_NAME}:${IMAGE_TAG}
       replicas: 1
       selector:
-        name: ${APP_NAME}-${ROLE_NAME}-${ENV_NAME}${INSTANCE}
+        name: ${APP_NAME}-${ROLE_NAME}${INSTANCE}
       template:
         metadata:
-          name: ${APP_NAME}-${ROLE_NAME}-${ENV_NAME}${INSTANCE}
+          name: ${APP_NAME}-${ROLE_NAME}${INSTANCE}
           labels:
-            name: ${APP_NAME}-${ROLE_NAME}-${ENV_NAME}${INSTANCE}
+            name: ${APP_NAME}-${ROLE_NAME}${INSTANCE}
             app: ${APP_NAME}
             role: ${ROLE_NAME}
             env: ${ENV_NAME}
@@ -189,12 +265,12 @@ objects:
           volumes:
             - name: mssql-data
               persistentVolumeClaim:
-                claimName: ${PVC_NAME}${INSTANCE}
-            # - name: backup
-            #   persistentVolumeClaim:
-            #     claimName: "${BACKUP_VOLUME_NAME}"
+                claimName: ${APP_NAME}-${ROLE_NAME}${INSTANCE}
+            - name: backup
+              persistentVolumeClaim:
+                claimName: ${APP_NAME}-${ROLE_NAME}-${BACKUP_ROLE_NAME}
           containers:
-            - name: ${APP_NAME}-${ROLE_NAME}-${ENV_NAME}${INSTANCE}
+            - name: ${APP_NAME}-${ROLE_NAME}${INSTANCE}
               image: ""
               ports:
                 - containerPort: ${{MSSQL_PORT}}
@@ -209,19 +285,19 @@ objects:
                 - name: MSSQL_SA_PASSWORD
                   valueFrom:
                     secretKeyRef:
-                      name: ${APP_NAME}-${ROLE_NAME}-${ENV_NAME}${INSTANCE}-secret
+                      name: ${APP_NAME}-${ROLE_NAME}${INSTANCE}
                       key: MSSQL_SA_PASSWORD
                 - name: DB_NAME
                   value: ${DB_NAME}
                 - name: DB_USER
                   valueFrom:
                     secretKeyRef:
-                      name: ${APP_NAME}-${ROLE_NAME}-${ENV_NAME}${INSTANCE}-secret
+                      name: ${APP_NAME}-${ROLE_NAME}${INSTANCE}
                       key: DB_USER
                 - name: DB_PASSWORD
                   valueFrom:
                     secretKeyRef:
-                      name: ${APP_NAME}-${ROLE_NAME}-${ENV_NAME}${INSTANCE}-secret
+                      name: ${APP_NAME}-${ROLE_NAME}${INSTANCE}
                       key: DB_PASSWORD
               resources:
                 limits:
@@ -231,5 +307,7 @@ objects:
                   cpu: "${CPU_REQUEST}"
                   memory: "${MEMORY_REQUEST}"
               volumeMounts:
-                - mountPath: /var/opt/mssql
-                  name: mssql-data
+                - name: mssql-data
+                  mountPath: /var/opt/mssql
+                - name: backup
+                  mountPath: /backups

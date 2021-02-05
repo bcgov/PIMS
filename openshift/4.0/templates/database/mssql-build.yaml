@@ -4,11 +4,11 @@
 kind: Template
 apiVersion: v1
 metadata:
-  name: pims-db-build
+  name: pims-database-build
   annotations:
     openshift.io/display-name: Microsoft SQL Server
     description: Relational database management system developed by Microsoft.
-    tags: pims-db
+    tags: pims,database
 parameters:
   - name: APP_NAME
     displayName: "App Name"
@@ -25,6 +25,11 @@ parameters:
     description: "The namespace of the OpenShift project containing the application."
     required: true
     value: "354028"
+  - name: ENV_NAME
+    displayName: "Environment name"
+    description: "The name for this environment [dev, test, prod, tools]"
+    required: true
+    value: "tools"
 
   - name: GIT_URL
     displayName: "Git Repository URL"
@@ -75,20 +80,23 @@ objects:
     apiVersion: v1
     metadata:
       name: ${APP_NAME}-${ROLE_NAME}
+      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
       annotations:
         description: Keeps track of changes in the database image
       labels:
         app: ${APP_NAME}
         role: ${ROLE_NAME}
+
   # The build config that will be created will be named for the branch you created it for.
   - kind: BuildConfig
     apiVersion: v1
     metadata:
-      name: ${APP_NAME}-${ROLE_NAME}-${GIT_REF}
+      name: ${APP_NAME}-${ROLE_NAME}.${GIT_REF}
+      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
       annotations:
         description: Defines how to build the database image
       labels:
-        name: ${APP_NAME}-${ROLE_NAME}-${GIT_REF}
+        name: ${APP_NAME}-${ROLE_NAME}.${GIT_REF}
         app: ${APP_NAME}
         role: ${ROLE_NAME}
         branch: ${GIT_REF}

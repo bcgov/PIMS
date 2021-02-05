@@ -55,8 +55,8 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
     },
     [props.nameSpace],
   );
-  const formikProps = useFormikContext<any>();
-  const netBookYear = getIn(formikProps.values, withNameSpace('financials.0.netbook.year'));
+  const formikProps = useFormikContext();
+
   const defaultEditValues = useMemo(
     () => ({
       identification: props.disabled || formikProps.isValid,
@@ -87,7 +87,9 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
     FiscalKeys.NetBook,
     currentYear,
   );
+  const netBookYear = getIn(formikProps.values, withNameSpace(`fiscals.${fiscalIndex}.fiscalYear`));
 
+  const buildings = getIn(formikProps.values, withNameSpace('buildings'));
   return (
     <Container className="review-section">
       <Row className="review-steps">
@@ -335,7 +337,7 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
             </div>
           </Row>
         </Col>
-        {!!formikProps.values.data.buildings.length && (
+        {buildings?.length > 0 && (
           <Col md={12}>
             <Row>
               <div className="associated-buildings">
