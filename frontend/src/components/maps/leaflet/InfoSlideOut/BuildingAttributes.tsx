@@ -10,13 +10,23 @@ import { ThreeColumnItem } from './ThreeColumnItem';
 interface IBuildingAttributes {
   /** the selected building information */
   buildingInfo: IBuilding;
+  /** whether the user has the correct agency/permissions to view all the details */
+  canViewDetails: boolean;
+  /** whether the user has the correct agency/permissions to edit property details */
+  canEditDetails: boolean;
 }
 
 /**
  * Displays Building specific information needed on the information slide out
  * @param buildingInfo the selected parcel data
+ * @param canViewDetails user can view all property details
+ * @param canEditDetails user can edit property details
  */
-export const BuildingAttributes: React.FC<IBuildingAttributes> = ({ buildingInfo }) => {
+export const BuildingAttributes: React.FC<IBuildingAttributes> = ({
+  buildingInfo,
+  canViewDetails,
+  canEditDetails,
+}) => {
   let formatAssessed;
   if (buildingInfo?.assessedBuilding) {
     formatAssessed = formatMoney(buildingInfo?.assessedBuilding);

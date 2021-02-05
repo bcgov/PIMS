@@ -5,8 +5,6 @@ import { Label } from 'components/common/Label';
 import { ParcelPIDPIN } from './ParcelPIDPIN';
 import ParcelAttributes from './ParcelAttributes';
 import './InfoSlideOut.scss';
-import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
-import Claims from 'constants/claims';
 import BuildingAttributes from './BuildingAttributes';
 import { ReactElement } from 'react';
 import styled from 'styled-components';
@@ -35,6 +33,10 @@ interface IInfoContent {
   propertyTypeId: PropertyTypes | null;
   /** ReactElement used to display a link for adding an associated building */
   addAssociatedBuildingLink: ReactElement;
+  /** whether the user has the correct agency/permissions to view all the details */
+  canViewDetails: boolean;
+  /** whether the user has the correct agency/permissions to edit property details */
+  canEditDetails: boolean;
 }
 
 export const OuterRow = styled(Row)`
@@ -60,17 +62,16 @@ const ContactSres = styled(Row)`
  * in the property info slideout
  * @param {IInfoContent} propertyInfo the selected property
  * @param {IInfoContent} propertyTypeId the property type [Parcel, Building]
+ * @param canViewDetails user can view all property details
+ * @param canEditDetails user can edit property details
  */
 export const InfoContent: React.FC<IInfoContent> = ({
   propertyInfo,
   propertyTypeId,
   addAssociatedBuildingLink,
+  canViewDetails,
+  canEditDetails,
 }) => {
-  const keycloak = useKeycloakWrapper();
-
-  const canViewProperty =
-    keycloak.hasAgency(propertyInfo?.agencyId as number) ||
-    keycloak.hasClaim(Claims.ADMIN_PROPERTIES);
   return (
     <>
       <ListGroup>
@@ -83,7 +84,7 @@ export const InfoContent: React.FC<IInfoContent> = ({
           <ParcelPIDPIN parcelInfo={propertyInfo as IParcel} />
         )}
         <OuterRow>
-          {canViewProperty && (
+          {canViewDetails && (
             <>
               {propertyInfo?.name && (
                 <ThreeColumnItem leftSideLabel={'Name'} rightSideItem={propertyInfo?.name} />
@@ -112,7 +113,7 @@ export const InfoContent: React.FC<IInfoContent> = ({
             rightSideItem={propertyInfo?.classification}
           />
         </OuterRow>
-        {!canViewProperty && (
+        {!canViewDetails && (
           <ContactSres>
             <em>
               For more information on this property, contact{' '}
@@ -144,11 +145,16 @@ export const InfoContent: React.FC<IInfoContent> = ({
         <ParcelAttributes
           addAssociatedBuildingLink={addAssociatedBuildingLink}
           parcelInfo={propertyInfo as IParcel}
-          canViewDetails={canViewProperty}
+          canViewDetails={canViewDetails}
+          canEditDetails={canEditDetails}
         />
       )}
       {propertyTypeId === PropertyTypes.BUILDING && (
-        <BuildingAttributes buildingInfo={propertyInfo as IBuilding} />
+        <BuildingAttributes
+          buildingInfo={propertyInfo as IBuilding}
+          canViewDetails={canViewDetails}
+          canEditDetails={canEditDetails}
+        />
       )}
     </>
   );
