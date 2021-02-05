@@ -20,6 +20,16 @@ parameters:
     description: The name of the application component role (e.g ui, web, api, database).
     required: true
     value: api
+  - name: PROJECT_NAMESPACE
+    displayName: "OpenShift Project Namespace"
+    description: "The namespace of the OpenShift project containing the application."
+    required: true
+    value: "354028"
+  - name: ENV_NAME
+    displayName: "Environment name"
+    description: "The name for this environment [dev, test, prod, tools]"
+    required: true
+    value: "tools"
 
   - name: GIT_URL
     displayName: Git Repository URL
@@ -94,23 +104,28 @@ objects:
     apiVersion: v1
     metadata:
       name: ${APP_NAME}-${ROLE_NAME}
+      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
       annotations:
         description: Keeps track of changes in the application image
       labels:
+        name: ${APP_NAME}-${ROLE_NAME}
         app: ${APP_NAME}
         role: ${ROLE_NAME}
+        env: ${ENV_NAME}
 
   # The build config that will be created and be named for the branch you created it for.
   - kind: BuildConfig
     apiVersion: v1
     metadata:
-      name: ${APP_NAME}-${ROLE_NAME}-${GIT_REF}
+      name: ${APP_NAME}-${ROLE_NAME}.${GIT_REF}
+      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
       annotations:
         description: Defines how to build the application
       labels:
-        name: ${APP_NAME}-${ROLE_NAME}-${GIT_REF}
+        name: ${APP_NAME}-${ROLE_NAME}.${GIT_REF}
         app: ${APP_NAME}
         role: ${ROLE_NAME}
+        env: ${ENV_NAME}
         branch: ${GIT_REF}
     spec:
       triggers:

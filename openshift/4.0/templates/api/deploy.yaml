@@ -63,7 +63,7 @@ parameters:
   - name: CONNECTION_STRINGS_PIMS
     displayName: "PIMS API Database Connection String"
     description: "The PIMS API database connection string."
-    value: "Server=pims-database-dev,1433;User ID=admin;Database=pims"
+    value: "Server=pims-database,1433;User ID=admin;Database=pims"
 
   - name: KEYCLOAK_AUDIENCE
     displayName: "Keycloak SSO audience"
@@ -384,7 +384,7 @@ objects:
                 - name: DB_PASSWORD
                   valueFrom:
                     secretKeyRef:
-                      name: ${APP_NAME}-database-${ENV_NAME}${INSTANCE}-secret
+                      name: ${APP_NAME}-database${INSTANCE}
                       key: DB_PASSWORD
                 - name: Keycloak__Audience
                   valueFrom:
