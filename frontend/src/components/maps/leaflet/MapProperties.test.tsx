@@ -79,6 +79,9 @@ const mockDetails: IParcelDetail = {
     landLegalDescription: 'test',
     buildings: [],
     agency: 'FIN',
+    encumbranceReason: '',
+    assessedLand: '',
+    assessedBuilding: '',
   },
 };
 
@@ -119,6 +122,7 @@ describe('MapProperties View', () => {
             lotSizes={[]}
             onMarkerClick={jest.fn()}
             mapRef={mapRef}
+            administrativeAreas={[]}
           />
         </Router>
       </Provider>,
@@ -146,6 +150,7 @@ describe('MapProperties View', () => {
             lotSizes={[]}
             onMarkerClick={jest.fn()}
             mapRef={mapRef}
+            administrativeAreas={[]}
           />
         </Router>
       </Provider>,
@@ -175,6 +180,7 @@ describe('MapProperties View', () => {
             onMarkerClick={jest.fn()}
             mapRef={mapRef}
             onViewportChanged={jest.fn()}
+            administrativeAreas={[]}
           />
         </Router>
       </Provider>,

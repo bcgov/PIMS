@@ -1,5 +1,3 @@
-import './ParentSelect.scss';
-
 import { getIn, useFormikContext } from 'formik';
 import { groupBy, sortBy } from 'lodash';
 import React, { Fragment, useEffect, useState } from 'react';
