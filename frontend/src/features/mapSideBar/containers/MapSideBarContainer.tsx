@@ -501,13 +501,13 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
             <FloatCheck size={32}></FloatCheck>
             <SuccessText>Success!</SuccessText>
             <p>Your building has been added to the PIMS inventory</p>
-            <BoldText>Would you like to associate land to this building?</BoldText>
+            <BoldText>Would you like to modify or add associated land to this building?</BoldText>
           </>
         }
         display={showAssociateLandModal}
         setDisplay={setShowAssociateLandModal}
         cancelButtonText="No, I'm done"
-        okButtonText="Yes, add land"
+        okButtonText="Yes, modify/add land"
         handleOk={() => {
           addAssociatedLand();
           setShowAssociateLandModal(false);
