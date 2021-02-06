@@ -662,6 +662,44 @@ namespace Pims.Dal.Test.Services
         }
 
         [Fact]
+        public void Update_Building_NoPermission_NotAuthorized()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView);
+            var init = helper.InitializeDatabase(user);
+            var building = init.CreateBuilding(1);
+            init.SaveChanges();
+
+            var service = helper.CreateService<BuildingService>();
+
+            // Act
+            // Assert
+            Assert.Throws<NotAuthorizedException>(() =>
+                service.Update(building));
+        }
+
+        [Fact]
+        public void Update_Building_WrongAgency_NotAuthorized()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.PropertyEdit);
+            var init = helper.InitializeDatabase(user);
+            var building = init.CreateBuilding(1);
+            init.SaveChanges();
+
+            var service = helper.CreateService<BuildingService>();
+
+            // Act
+            building.Description = "a new description.";
+
+            // Assert
+            Assert.Throws<NotAuthorizedException>(() =>
+                service.Update(building));
+        }
+
+        [Fact]
         public void Update_BuildingFinancials()
         {
             // Arrange
