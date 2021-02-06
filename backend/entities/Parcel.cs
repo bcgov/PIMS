@@ -73,6 +73,18 @@ namespace Pims.Dal.Entities
         /// get - A collection of projects this parcel is assocated to.
         /// </summary>
         public ICollection<ProjectProperty> Projects { get; } = new List<ProjectProperty>();
+
+        /// <summary>
+        /// get/set - A collection of parcels associated to this subdivision (empty if this parcel is not a subdivision).
+        /// </summary>
+        /// <typeparam name="ParcelParcels"></typeparam>
+        public ICollection<ParcelParcel> Parcels { get; } = new List<ParcelParcel>();
+
+        /// <summary>
+        /// get/set - A collection of subdivisions associated to this parcel (empty if this parcel is not subdivided).
+        /// </summary>
+        /// <typeparam name="ParcelParcels"></typeparam>
+        public ICollection<ParcelParcel> Subdivisions { get; } = new List<ParcelParcel>();
         #endregion
 
         #region Constructors

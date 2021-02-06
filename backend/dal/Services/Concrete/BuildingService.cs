@@ -287,7 +287,6 @@ namespace Pims.Dal.Services
                     {
                         this.ThrowIfNotAllowedToUpdate(parcelBuilding.Building, _options.Project);
 
-                        var parcelBuildings = this.Context.ParcelBuildings.Where(pb => pb.ParcelId == parcelBuilding.ParcelId).ToArray();
                         building.Parcels.Remove(parcelBuilding);
                         this.Context.ParcelBuildings.Remove(parcelBuilding);
 

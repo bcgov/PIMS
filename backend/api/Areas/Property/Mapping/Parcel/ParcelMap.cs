@@ -55,6 +55,8 @@ namespace Pims.Api.Areas.Property.Mapping.Parcel
                 .Map(dest => dest.Buildings, src => src.Buildings)
                 .Map(dest => dest.Evaluations, src => src.Evaluations)
                 .Map(dest => dest.Fiscals, src => src.Fiscals)
+                .Map(dest => dest.Parcels, src => src.Parcels)
+                .Map(dest => dest.Subdivisions, src => src.Subdivisions)
                 .Inherits<Entity.BaseEntity, BModel.BaseModel>();
 
             config.NewConfig<Model.ParcelModel, Entity.Parcel>()
@@ -80,6 +82,8 @@ namespace Pims.Api.Areas.Property.Mapping.Parcel
                 .Map(dest => dest.Buildings, src => src.Buildings)
                 .Map(dest => dest.Evaluations, src => src.Evaluations)
                 .Map(dest => dest.Fiscals, src => src.Fiscals)
+                .Map(dest => dest.Parcels, src => src.Parcels)
+                .Map(dest => dest.Subdivisions, src => src.Subdivisions)
                 .Inherits<BModel.BaseModel, Entity.BaseEntity>();
 
             config.NewConfig<Model.ParcelModel, NetTopologySuite.Geometries.Point>()
