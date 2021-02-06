@@ -700,6 +700,27 @@ namespace Pims.Dal.Test.Services
         }
 
         [Fact]
+        public void Update_Building_InProject_NotAuthorized()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.PropertyEdit);
+            var init = helper.InitializeDatabase(user);
+            var parcel = init.CreateBuilding(1);
+            init.SaveChanges();
+            parcel.ProjectNumbers = "[SPP-10000]";
+            init.Update(parcel);
+            init.SaveChanges();
+
+
+            var service = helper.CreateService<BuildingService>();
+
+            // Assert
+            Assert.Throws<NotAuthorizedException>(() =>
+                service.Update(parcel));
+        }
+
+        [Fact]
         public void Update_BuildingFinancials()
         {
             // Arrange
