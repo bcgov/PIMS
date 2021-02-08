@@ -4,6 +4,7 @@ import { Select, SelectOption } from '../../../components/common/form';
 import { IPropertyFilter } from './IPropertyFilter';
 import { ParentSelect } from 'components/common/form/ParentSelect';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+import { Claims } from 'constants/claims';
 
 interface IPropertyFilterAgencyOptions {
   disabled?: boolean;
@@ -56,7 +57,7 @@ export const PropertyFilterAgencyOptions: React.FC<IPropertyFilterAgencyOptions>
         filterBy={['code', 'label', 'parent']}
         placeholder={includeAllProperties ? '' : 'Agency'}
         selectClosest
-        disabled={disabled || includeAllProperties}
+        disabled={(disabled || includeAllProperties) && !keycloak.hasClaim(Claims.ADMIN_PROPERTIES)}
       />
     </>
   );

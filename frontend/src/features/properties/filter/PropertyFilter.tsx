@@ -22,6 +22,7 @@ import { AsyncTypeahead } from 'react-bootstrap-typeahead';
 import { PropertyFilterAgencyOptions } from './PropertyFilterAgencyOptions';
 import styled from 'styled-components';
 import { ParentSelect } from 'components/common/form/ParentSelect';
+import Claims from 'constants/claims';
 
 /**
  * PropertyFilter component properties.
@@ -172,7 +173,10 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
             </AgencyCol>
             <Col className="map-filter-typeahead">
               <AsyncTypeahead
-                disabled={findMoreOpen || values.includeAllProperties === true}
+                disabled={
+                  (findMoreOpen || values.includeAllProperties === true) &&
+                  !keycloak.hasClaim(Claims.ADMIN_PROPERTIES)
+                }
                 isLoading={initialLoad}
                 id={`name-field`}
                 placeholder="Property name"
