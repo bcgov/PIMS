@@ -10,13 +10,19 @@ import { ThreeColumnItem } from './ThreeColumnItem';
 interface IBuildingAttributes {
   /** the selected building information */
   buildingInfo: IBuilding;
+  /** whether the user has the correct agency/permissions to view all the details */
+  canViewDetails: boolean;
 }
 
 /**
  * Displays Building specific information needed on the information slide out
  * @param buildingInfo the selected parcel data
+ * @param canViewDetails user can view all property details
  */
-export const BuildingAttributes: React.FC<IBuildingAttributes> = ({ buildingInfo }) => {
+export const BuildingAttributes: React.FC<IBuildingAttributes> = ({
+  buildingInfo,
+  canViewDetails,
+}) => {
   let formatAssessed;
   if (buildingInfo?.assessedBuilding) {
     formatAssessed = formatMoney(buildingInfo?.assessedBuilding);
@@ -34,11 +40,46 @@ export const BuildingAttributes: React.FC<IBuildingAttributes> = ({ buildingInfo
   return (
     <>
       <ListGroup>
-        <Label className="header">Valuation</Label>
+        <Label className="header">Building Attributes</Label>
         <OuterRow>
-          <ThreeColumnItem leftSideLabel={'Assessed value:'} rightSideItem={formatAssessed} />
+          {canViewDetails && (
+            <>
+              <ThreeColumnItem
+                leftSideLabel={'Predominate Use'}
+                rightSideItem={buildingInfo.buildingPredominateUse}
+              />
+              {buildingInfo.description && (
+                <ThreeColumnItem
+                  leftSideLabel={'Description'}
+                  rightSideItem={buildingInfo.description}
+                />
+              )}
+            </>
+          )}
+          <ThreeColumnItem
+            leftSideLabel={'Total area'}
+            rightSideItem={buildingInfo.totalArea + ' sq. metres'}
+          />
+          <ThreeColumnItem
+            leftSideLabel={'Net usable area'}
+            rightSideItem={buildingInfo.rentableArea + ' sq. metres'}
+          />
+          {canViewDetails && (
+            <ThreeColumnItem
+              leftSideLabel={'Tenancy %'}
+              rightSideItem={buildingInfo.buildingTenancy}
+            />
+          )}
         </OuterRow>
       </ListGroup>
+      {canViewDetails && (
+        <ListGroup>
+          <Label className="header">Valuation</Label>
+          <OuterRow>
+            <ThreeColumnItem leftSideLabel={'Assessed value:'} rightSideItem={formatAssessed} />
+          </OuterRow>
+        </ListGroup>
+      )}
       {buildingInfo.parcels?.length >= 1 && (
         <ListGroup>
           <Label className="header">Associated Land</Label>
