@@ -39,13 +39,14 @@ import { toast } from 'react-toastify';
 import { IApiProperty } from 'features/projects/common';
 import { EvaluationKeys } from 'constants/evaluationKeys';
 import { FiscalKeys } from 'constants/fiscalKeys';
+import variables from '_variables.module.scss';
 
 const getPropertyReportUrl = (filter: IPropertyQueryParams) =>
   `${ENVIRONMENT.apiUrl}/reports/properties?${filter ? queryString.stringify(filter) : ''}`;
 
 const FileIcon = styled(Button)`
   background-color: #fff !important;
-  color: #003366 !important;
+  color: ${variables.primaryColor} !important;
   padding: 6px 5px;
 `;
 

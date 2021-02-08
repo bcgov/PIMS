@@ -5,6 +5,7 @@ import Draggable from 'react-draggable';
 import styled from 'styled-components';
 import TooltipIcon from 'components/common/TooltipIcon';
 import HelpModalContentContainer from '../containers/HelpModalContentContainer';
+import variables from '_variables.module.scss';
 
 interface ModalProps {
   /** Function to be executed when the cancel button is clicked  */
@@ -33,7 +34,7 @@ const DraggableTitle = styled(Modal.Title)`
 `;
 
 const ModalHeader = styled(Modal.Header)`
-  background-color: #003366;
+  background-color: ${variables.primaryColor};
   padding: 5px;
 `;
 
