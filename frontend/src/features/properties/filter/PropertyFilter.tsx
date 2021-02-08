@@ -9,7 +9,6 @@ import { FilterBarSchema } from 'utils/YupSchema';
 import ResetButton from 'components/common/form/ResetButton';
 import SearchButton from 'components/common/form/SearchButton';
 import { mapLookupCodeWithParentString } from 'utils';
-import { ParentSelect } from 'components/common/form/ParentSelect';
 import { PropertyFilterOptions } from './';
 import { useRouterFilter } from 'hooks/useRouterFilter';
 import { IPropertyFilter } from './IPropertyFilter';
@@ -20,6 +19,10 @@ import { useDispatch } from 'react-redux';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { fetchPropertyNames } from 'actionCreators/propertyActionCreator';
 import { AsyncTypeahead } from 'react-bootstrap-typeahead';
+import { PropertyFilterAgencyOptions } from './PropertyFilterAgencyOptions';
+import styled from 'styled-components';
+import { ParentSelect } from 'components/common/form/ParentSelect';
+import Claims from 'constants/claims';
 
 /**
  * PropertyFilter component properties.
@@ -39,7 +42,24 @@ export interface IPropertyFilterProps {
   sort?: TableSort<any>;
   /** Event fire when sorting changes. */
   onSorting?: (sort: TableSort<any>) => void;
+  /** Show select with my agencies/All Government dropdown */
+  showAllAgencySelect?: boolean;
 }
+
+const AgencyCol = styled(Col)`
+  display: flex;
+  .form-control {
+    width: 165px;
+    height: 35px;
+  }
+  .form-group {
+    .rbt {
+      .rbt-menu {
+        width: 370px !important;
+      }
+    }
+  }
+`;
 
 /**
  * Property filter bar to search for properties.
@@ -53,6 +73,7 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
   onChange,
   sort,
   onSorting,
+  showAllAgencySelect,
 }) => {
   const [propertyFilter, setPropertyFilter] = React.useState<IPropertyFilter>(defaultFilter);
   const dispatch = useDispatch();
@@ -96,7 +117,7 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
       }
     }
     return values;
-  }, [agencies, propertyFilter, defaultFilter]);
+  }, [defaultFilter, propertyFilter, agencies]);
 
   const changeFilter = (values: IPropertyFilter) => {
     const agencyIds = (values.agencies as any).value
@@ -112,7 +133,7 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
     setClear(true);
   };
 
-  const [findMoreOpen, setFindMoreOpen] = useState(false);
+  const [findMoreOpen, setFindMoreOpen] = useState<boolean>(false);
   const ref = useRef<any>();
 
   return (
@@ -135,15 +156,30 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
               onExit={() => setFindMoreOpen(false)}
             />
             <div className="vl"></div>
-            <Col className="bar-item">
-              <PropertyFilterOptions disabled={findMoreOpen} />
-            </Col>
+
+            <AgencyCol>
+              {showAllAgencySelect ? (
+                <PropertyFilterAgencyOptions disabled={findMoreOpen} agencies={agencies} />
+              ) : (
+                <ParentSelect
+                  field="agencies"
+                  options={agencies}
+                  filterBy={['code', 'label', 'parent']}
+                  placeholder="Agency"
+                  selectClosest
+                  disabled={findMoreOpen}
+                />
+              )}
+            </AgencyCol>
             <Col className="map-filter-typeahead">
               <AsyncTypeahead
-                disabled={findMoreOpen}
+                disabled={
+                  (findMoreOpen || values.includeAllProperties === true) &&
+                  !keycloak.hasClaim(Claims.ADMIN_PROPERTIES)
+                }
                 isLoading={initialLoad}
                 id={`name-field`}
-                placeholder="Enter a name"
+                placeholder="Property name"
                 onSearch={() => {
                   setInitialLoad(true);
                   fetchPropertyNames(keycloak.agencyId!)(dispatch).then(results => {
@@ -164,7 +200,7 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
             <Col className="map-filter-typeahead">
               <TypeaheadField
                 name="administrativeArea"
-                placeholder="Enter a location"
+                placeholder="Location"
                 selectClosest
                 hideValidation={true}
                 options={adminAreas.map(x => x.label)}
@@ -176,15 +212,8 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
                 disabled={findMoreOpen}
               />
             </Col>
-            <Col className="agency-item">
-              <ParentSelect
-                field="agencies"
-                options={agencies}
-                filterBy={['code', 'label', 'parent']}
-                placeholder="Agency"
-                selectClosest
-                disabled={findMoreOpen}
-              />
+            <Col className="bar-item">
+              <PropertyFilterOptions disabled={findMoreOpen} />
             </Col>
             <Col className="bar-item">
               <Select
