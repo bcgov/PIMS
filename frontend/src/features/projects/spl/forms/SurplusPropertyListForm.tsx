@@ -10,6 +10,7 @@ import {
   disposeWarning,
   dateEnteredMarket,
   DisposalWorkflows,
+  onTransferredWithinTheGreTooltip,
 } from '../../common';
 import './SurplusPropertyListForm.scss';
 import _ from 'lodash';
@@ -30,6 +31,7 @@ interface ISurplusPropertyListFormProps {
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
   ) => void;
   onClickDisposedExternally: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+  onClickGreTransferred: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
 }
 
 /**
@@ -64,6 +66,7 @@ const SurplusPropertyListForm = ({
   onClickContractInPlaceConditional,
   onClickContractInPlaceUnconditional,
   onClickDisposedExternally,
+  onClickGreTransferred,
 }: ISurplusPropertyListFormProps) => {
   const formikProps = useFormikContext<IProject>();
   const [dispose, setDispose] = useState(false);
@@ -322,6 +325,33 @@ const SurplusPropertyListForm = ({
           />
         </>
       )}
+
+      <Form.Row>
+        <h3>Transfer within GRE</h3>
+      </Form.Row>
+      <Form.Row>
+        <Form.Label column md={3}>
+          Date Transferred within the GRE
+          <TooltipIcon
+            toolTipId="onDateTransferredWithinGre"
+            toolTip={onTransferredWithinTheGreTooltip}
+          />
+        </Form.Label>
+        <FastDatePicker
+          outerClassName="col-md-2"
+          formikProps={formikProps}
+          disabled={isReadOnly}
+          field="transferredWithinGreOn"
+        />
+        <div className="col-md-6">
+          <Button
+            disabled={isReadOnly || !formikProps.values.transferredWithinGreOn}
+            onClick={onClickGreTransferred}
+          >
+            Update Property Information
+          </Button>
+        </div>
+      </Form.Row>
     </Container>
   );
 };

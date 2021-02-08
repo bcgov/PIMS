@@ -22,9 +22,9 @@ import PrivateRoute from 'utils/PrivateRoute';
 import Claims from 'constants/claims';
 import { FormikValues } from 'formik';
 import ProjectLayout from './ProjectLayout';
-import { GreTransferStep, ErpStep } from '../erp';
+import { GreTransferStep as ErpToGre, ErpStep } from '../erp';
 import AppRoute from 'utils/AppRoute';
-import { SplStep } from '../spl';
+import { GreTransferStep as SplToGre, SplStep } from '../spl';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
 import { ReviewWorkflowStatus } from '../common';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
@@ -102,8 +102,15 @@ const ProjectRouter = ({ location }: { match: Match; location: Location }) => {
           <PrivateRoute
             layout={ProjectLayout}
             claim={Claims.ADMIN_PROJECTS}
-            path="/projects/gretransfer"
-            component={GreTransferStep}
+            path="/projects/erp/gretransfer"
+            component={ErpToGre}
+            componentProps={{ formikRef }}
+          />
+          <PrivateRoute
+            layout={ProjectLayout}
+            claim={Claims.ADMIN_PROJECTS}
+            path="/projects/spl/gretransfer"
+            component={SplToGre}
             componentProps={{ formikRef }}
           />
           <PrivateRoute
