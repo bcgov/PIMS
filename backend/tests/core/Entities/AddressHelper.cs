@@ -36,9 +36,12 @@ namespace Pims.Core.Test
         /// <param name="address2"></param>
         /// <param name="postal"></param>
         /// <returns></returns>
-        public static Entity.Address CreateAddress(int id, string address1, string address2, string postal)
+        public static Entity.Address CreateAddress(int id, string address1, string address2, string postal, Entity.Province province = null)
         {
-            var province = EntityHelper.CreateProvince("BC", "British Columbia");
+            if (province == null)
+            {
+                province = EntityHelper.CreateProvince("BC", "British Columbia");
+            }
             return new Entity.Address(address1, address2, "Victoria", province, postal)
             {
                 Id = id,

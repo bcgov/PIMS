@@ -54,6 +54,7 @@ const HeaderActions: React.FC<IHeaderActions> = ({
 
   const buildingId = propertyTypeId === PropertyTypes.BUILDING ? propertyInfo?.id : undefined;
   const parcelId = propertyTypeId === PropertyTypes.PARCEL ? propertyInfo?.id : undefined;
+  const canEdit = keycloak.canUserEditProperty(propertyInfo);
   return (
     <LinkMenu>
       Actions:
@@ -79,26 +80,30 @@ const HeaderActions: React.FC<IHeaderActions> = ({
           >
             View details
           </Link>
-          <VerticalBar />
-          <Link
-            onClick={() => {
-              jumpToView();
-              if (onLinkClick) onLinkClick();
-            }}
-            to={{
-              pathname: `/mapview`,
-              search: queryString.stringify({
-                ...queryString.parse(location.search),
-                disabled: false,
-                sidebar: true,
-                loadDraft: false,
-                buildingId: buildingId,
-                parcelId: parcelId,
-              }),
-            }}
-          >
-            Update
-          </Link>
+          {canEdit && (
+            <>
+              <VerticalBar />
+              <Link
+                onClick={() => {
+                  jumpToView();
+                  if (onLinkClick) onLinkClick();
+                }}
+                to={{
+                  pathname: `/mapview`,
+                  search: queryString.stringify({
+                    ...queryString.parse(location.search),
+                    disabled: false,
+                    sidebar: true,
+                    loadDraft: false,
+                    buildingId: buildingId,
+                    parcelId: parcelId,
+                  }),
+                }}
+              >
+                Update
+              </Link>
+            </>
+          )}
           <VerticalBar />
         </>
       )}
