@@ -25,7 +25,7 @@ jest.mock('actionCreators/propertyActionCreator');
 
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 const mockStore = configureMockStore([thunk]);
-const history = createMemoryHistory();
+let history = createMemoryHistory();
 
 const getStore = (filter: any) =>
   mockStore({
@@ -57,6 +57,7 @@ const getUiElement = (filter: IPropertyFilter) => (
         adminAreaLookupCodes={MOCK.ADMINISTRATIVEAREAS}
         propertyClassifications={MOCK.CLASSIFICATIONS}
         onChange={onFilterChange}
+        showAllAgencySelect={true}
       />
     </Router>
   </Provider>
@@ -70,6 +71,7 @@ describe('MapFilterBar', () => {
   mockedAxios.get.mockImplementationOnce(() => Promise.resolve({}));
 
   beforeEach(() => {
+    history = createMemoryHistory();
     (useKeycloak as jest.Mock).mockReturnValue({
       keycloak: {
         subject: 'test',
@@ -197,5 +199,21 @@ describe('MapFilterBar', () => {
     const { getByText } = render(getUiElement(providedFilter));
     expect(getByText('Address')).toBeVisible();
     expect(getByText('Core Operational')).toBeVisible();
+  });
+
+  it('disables the property name and agencies fields when All Government is selected', () => {
+    const { container, getByPlaceholderText } = render(
+      getUiElement({ ...defaultFilter, includeAllProperties: true }),
+    );
+    expect(getByPlaceholderText('Property name')).toBeDisabled();
+    expect(container.querySelector('input[name="agencies"]')).toBeDisabled();
+  });
+
+  it('enables the property name and agencies fields when My Agencies is selected', () => {
+    const { container, getByPlaceholderText } = render(
+      getUiElement({ ...defaultFilter, includeAllProperties: false }),
+    );
+    expect(getByPlaceholderText('Property name')).not.toBeDisabled();
+    expect(container.querySelector('input[name="agencies"]')).not.toBeDisabled();
   });
 });

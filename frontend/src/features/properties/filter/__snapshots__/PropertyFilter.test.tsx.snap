@@ -12,6 +12,22 @@ exports[`MapFilterBar renders correctly 1`] = `
   font-size: 16px;
 }
 
+.c1 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.c1 .form-control {
+  width: 165px;
+  height: 35px;
+}
+
+.c1 .form-group .rbt .rbt-menu {
+  width: 370px !important;
+}
+
 <form
   className=""
   noValidate={true}
@@ -70,58 +86,92 @@ exports[`MapFilterBar renders correctly 1`] = `
       className="vl"
     />
     <div
-      className="bar-item col"
+      className="c1 col"
     >
       <div
-        className="input-group"
+        className="form-group"
+      >
+        <select
+          className="form-select form-control"
+          disabled={false}
+          id="input-includeAllProperties"
+          name="includeAllProperties"
+          onBlur={[Function]}
+          onChange={[Function]}
+        >
+          <option
+            className="option"
+            value={false}
+          >
+            My Agencies
+          </option>
+          <option
+            className="option"
+            value={true}
+          >
+            All Government
+          </option>
+        </select>
+      </div>
+      <div
+        className="form-group"
       >
         <div
-          className="input-group-prepend"
+          className="rbt"
+          style={
+            Object {
+              "outline": "none",
+              "position": "relative",
+            }
+          }
+          tabIndex={-1}
         >
           <div
-            className="form-group"
-          >
-            <select
-              className="form-select form-control"
-              disabled={false}
-              id="input-searchBy"
-              name="searchBy"
-              onBlur={[Function]}
-              onChange={[Function]}
-              value="name"
-            >
-              <option
-                className="option"
-                value="address"
-              >
-                Address
-              </option>
-              <option
-                className="option"
-                value="pid"
-              >
-                PID/PIN
-              </option>
-            </select>
-          </div>
-        </div>
-        <div
-          className="input-group-content"
-        >
-          <div
-            className="form-group"
+            style={
+              Object {
+                "display": "flex",
+                "flex": 1,
+                "height": "100%",
+                "position": "relative",
+              }
+            }
           >
             <input
-              className="form-control"
-              disabled={false}
-              id="input-name"
-              name="name"
+              aria-autocomplete="both"
+              aria-expanded={false}
+              aria-haspopup="listbox"
+              autoComplete="off"
+              className="rbt-input-main form-control rbt-input"
+              id="agencies-field"
+              name="agencies"
               onBlur={[Function]}
               onChange={[Function]}
+              onClick={[Function]}
               onFocus={[Function]}
-              onMouseOut={[Function]}
-              onMouseOver={[Function]}
-              placeholder=""
+              onKeyDown={[Function]}
+              placeholder="Agency"
+              role="combobox"
+              type="text"
+              value=""
+            />
+            <input
+              aria-hidden={true}
+              className="rbt-input-hint"
+              readOnly={true}
+              style={
+                Object {
+                  "backgroundColor": "transparent",
+                  "borderColor": "transparent",
+                  "boxShadow": "none",
+                  "color": "rgba(0, 0, 0, 0.35)",
+                  "left": 0,
+                  "pointerEvents": "none",
+                  "position": "absolute",
+                  "top": 0,
+                  "width": "100%",
+                }
+              }
+              tabIndex={-1}
               value=""
             />
           </div>
@@ -163,7 +213,7 @@ exports[`MapFilterBar renders correctly 1`] = `
             onClick={[Function]}
             onFocus={[Function]}
             onKeyDown={[Function]}
-            placeholder="Enter a name"
+            placeholder="Property name"
             role="combobox"
             type="text"
             value=""
@@ -231,7 +281,7 @@ exports[`MapFilterBar renders correctly 1`] = `
               onClick={[Function]}
               onFocus={[Function]}
               onKeyDown={[Function]}
-              placeholder="Enter a location"
+              placeholder="Location"
               role="combobox"
               type="text"
               value=""
@@ -261,68 +311,58 @@ exports[`MapFilterBar renders correctly 1`] = `
       </div>
     </div>
     <div
-      className="agency-item col"
+      className="bar-item col"
     >
       <div
-        className="form-group"
+        className="input-group"
       >
         <div
-          className="rbt"
-          style={
-            Object {
-              "outline": "none",
-              "position": "relative",
-            }
-          }
-          tabIndex={-1}
+          className="input-group-prepend"
         >
           <div
-            style={
-              Object {
-                "display": "flex",
-                "flex": 1,
-                "height": "100%",
-                "position": "relative",
-              }
-            }
+            className="form-group"
           >
-            <input
-              aria-autocomplete="both"
-              aria-expanded={false}
-              aria-haspopup="listbox"
-              autoComplete="off"
-              className="rbt-input-main form-control rbt-input"
+            <select
+              className="form-select form-control"
               disabled={false}
-              id="agencies-field"
-              name="agencies"
+              id="input-searchBy"
+              name="searchBy"
               onBlur={[Function]}
               onChange={[Function]}
-              onClick={[Function]}
-              onFocus={[Function]}
-              onKeyDown={[Function]}
-              placeholder="Agency"
-              role="combobox"
-              type="text"
-              value=""
-            />
+              value="name"
+            >
+              <option
+                className="option"
+                value="address"
+              >
+                Address
+              </option>
+              <option
+                className="option"
+                value="pid"
+              >
+                PID/PIN
+              </option>
+            </select>
+          </div>
+        </div>
+        <div
+          className="input-group-content"
+        >
+          <div
+            className="form-group"
+          >
             <input
-              aria-hidden={true}
-              className="rbt-input-hint"
-              readOnly={true}
-              style={
-                Object {
-                  "backgroundColor": "transparent",
-                  "borderColor": "transparent",
-                  "boxShadow": "none",
-                  "color": "rgba(0, 0, 0, 0.35)",
-                  "left": 0,
-                  "pointerEvents": "none",
-                  "position": "absolute",
-                  "top": 0,
-                  "width": "100%",
-                }
-              }
-              tabIndex={-1}
+              className="form-control"
+              disabled={false}
+              id="input-name"
+              name="name"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              onMouseOut={[Function]}
+              onMouseOver={[Function]}
+              placeholder=""
               value=""
             />
           </div>
