@@ -293,7 +293,7 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
    */
   const ConditionalDeleteButton = () => (
     <>
-      {disabled && keycloak.canUserEditProperty(buildingDetail ?? parcelDetail) && (
+      {disabled && keycloak.canUserDeleteProperty(buildingDetail ?? parcelDetail) && (
         <DeleteButton
           data-testid="delete"
           onClick={() => setShowDelete(true)}

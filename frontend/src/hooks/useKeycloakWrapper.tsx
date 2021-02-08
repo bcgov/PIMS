@@ -42,6 +42,8 @@ export interface IKeycloak {
   hasAgency(agency?: number): boolean;
   agencyIds: number[];
   canUserEditProperty: (property: IProperty | null) => boolean;
+  canUserViewProperty: (property: IProperty | null) => boolean;
+  canUserDeleteProperty: (property: IProperty | null) => boolean;
 }
 
 /**
@@ -143,6 +145,33 @@ function useKeycloakWrapper(): IKeycloak {
     );
   };
 
+  /**
+   * Return true if the user has permissions to delete this property
+   * NOTE: this function will be true for MOST of PIMS, but there may be exceptions for certain cases.
+   */
+  const canUserDeleteProperty = (property: IProperty | null): boolean => {
+    return (
+      !!property &&
+      (hasClaim(Claims.ADMIN_PROPERTIES) ||
+        (hasClaim(Claims.PROPERTY_EDIT) &&
+          !!property?.agencyId &&
+          hasAgency(property.agencyId) &&
+          !_.some(property?.projectNumbers ?? '', _.method('includes', 'SPP'))))
+    );
+  };
+
+  /**
+   * Return true if the user has permissions to edit this property
+   * NOTE: this function will be true for MOST of PIMS, but there may be exceptions for certain cases.
+   */
+  const canUserViewProperty = (property: IProperty | null): boolean => {
+    return (
+      !!property &&
+      (hasClaim(Claims.ADMIN_PROPERTIES) ||
+        (hasClaim(Claims.PROPERTY_VIEW) && !!property?.agencyId && hasAgency(property.agencyId)))
+    );
+  };
+
   return {
     obj: keycloak,
     username: username(),
@@ -157,7 +186,9 @@ function useKeycloakWrapper(): IKeycloak {
     hasClaim: hasClaim,
     hasAgency: hasAgency,
     agencyIds: userInfo?.agencies,
-    canUserEditProperty: canUserEditProperty,
+    canUserEditProperty,
+    canUserDeleteProperty,
+    canUserViewProperty,
   };
 }
 
