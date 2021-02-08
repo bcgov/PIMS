@@ -43,13 +43,13 @@ exports[`Property list view Matches snapshot 1`] = `
 
 .c1 {
   background-color: #fff !important;
-  color: #003366 !important;
+  color: primaryColor !important;
   padding: 6px 5px;
 }
 
 .c3 {
   background-color: #fff !important;
-  color: #003366 !important;
+  color: primaryColor !important;
   padding: 6px 5px;
   margin-right: 12px;
 }
