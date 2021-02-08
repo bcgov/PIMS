@@ -14,6 +14,8 @@ import { useLeaflet } from 'react-leaflet';
 import { MAX_ZOOM } from 'constants/strings';
 import { Link, useLocation } from 'react-router-dom';
 import queryString from 'query-string';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+import { PropertyTypes } from 'actions/parcelsActions';
 
 const InfoContainer = styled.div`
   margin-right: -10px;
@@ -143,12 +145,20 @@ const InfoControl: React.FC<InfoControlProps> = ({ open, setOpen, onHeaderAction
     </>
   );
 
+  const keycloak = useKeycloakWrapper();
+  const canViewProperty = keycloak.canUserViewProperty(propertyInfo);
+  const canEditProperty = keycloak.canUserEditProperty(propertyInfo);
+
   return (
     <Control position="topright">
       <InfoContainer id="infoContainer" className={clsx({ closed: !open })}>
         {open && (
           <InfoHeader>
-            <Title>Property Info</Title>
+            {popUpContext.propertyTypeID === PropertyTypes.BUILDING ? (
+              <Title>Building Info</Title>
+            ) : (
+              <Title>Property Info</Title>
+            )}
           </InfoHeader>
         )}
         <TooltipWrapper toolTipId="info-slideout-id" toolTip="Property Information">
@@ -170,11 +180,15 @@ const InfoControl: React.FC<InfoControlProps> = ({ open, setOpen, onHeaderAction
                 onLinkClick={onHeaderActionClick}
                 jumpToView={jumpToView}
                 zoomToView={zoomToView}
+                canViewDetails={canViewProperty}
+                canEditDetails={canEditProperty}
               />
               <InfoContent
                 propertyInfo={popUpContext.propertyInfo}
                 propertyTypeId={popUpContext.propertyTypeID}
                 addAssociatedBuildingLink={addAssociatedBuildingLink}
+                canViewDetails={canViewProperty}
+                canEditDetails={canEditProperty}
               />
             </>
           ) : (
