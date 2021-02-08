@@ -178,12 +178,12 @@ namespace Pims.Dal.Services
         public Parcel Add(Parcel parcel)
         {
             parcel.ThrowIfNull(nameof(parcel));
-            parcel.ThrowIfNotAllowedToEdit(nameof(parcel), this.User, new[] { Permissions.PropertyAdd, Permissions.AdminProperties });
+            this.User.ThrowIfNotAuthorized(new[] { Permissions.PropertyAdd, Permissions.AdminProperties });
 
             var agency = this.User.GetAgency(this.Context) ??
                 throw new NotAuthorizedException("User must belong to an agency before adding parcels.");
 
-            if (parcel.Parcels.Count() > 0 && parcel.Subdivisions.Count() > 0) throw new InvalidOperationException("Parcel may only have assocatiated parcels or subdivisions, not both.");
+            if (parcel.Parcels.Count() > 0 && parcel.Subdivisions.Count() > 0) throw new InvalidOperationException("Parcel may only have associated parcels or subdivisions, not both.");
 
             this.Context.Parcels.ThrowIfNotUnique(parcel);
             // SRES users allowed to overwrite
@@ -308,7 +308,9 @@ namespace Pims.Dal.Services
             // Only administrators can dispose a property.
             if (!isAdmin && parcel.ClassificationId == 4) throw new NotAuthorizedException("Parcel classification cannot be changed to disposed."); // TODO: Classification '4' should be a config settings.
 
-            if (parcel.Parcels.Count() > 0 && parcel.Subdivisions.Count() > 0) throw new InvalidOperationException("Parcel may only have assocatiated parcels or subdivisions, not both.");
+            if ((parcel.Parcels.Count > 0 && parcel.Subdivisions.Count > 0)
+                || (originalParcel.Parcels.Count > 0 && parcel.Subdivisions.Count > 0)
+                || (originalParcel.Subdivisions.Count > 0 && parcel.Parcels.Count > 0)) throw new InvalidOperationException("Parcel may only have assocatiated parcels or subdivisions, not both.");
 
             // Users who don't own the parcel, but only own a building cannot update the parcel.
             if (allowEdit)
@@ -351,57 +353,62 @@ namespace Pims.Dal.Services
                 }
             }
 
-            #region ParcelSubdivisions
-            foreach (var subdivisionId in parcel.Subdivisions.Select(pb => pb.SubdivisionId))
+            // This property is a divided parcel with child subdivision parcels.
+            if (parcel.Subdivisions.Count > 0 || originalParcel.Subdivisions.Count > 0)
             {
-                // Check if the subdivision already exists.
-                var existingSubdivision = originalParcel.Subdivisions
-                    .FirstOrDefault(pb => pb.SubdivisionId == subdivisionId)?.Subdivision;
-
-                //Just add any new subdivisions, users cannot edit a subdivision within a parent parcel.
-                if (existingSubdivision == null)
+                // loop through all passed in subdivisions, add any new subdivisions and remove any missing subdivisions from the current divided parcel.
+                foreach (var subdivisionId in parcel.Subdivisions.Select(pb => pb.SubdivisionId))
                 {
-                    if (!allowEdit) throw new NotAuthorizedException("User may not add subdivisions to a parcel they don't own.");
-                    var pp = new ParcelParcel() { SubdivisionId = subdivisionId, ParcelId = parcel.Id };
+                    // Check if the subdivision already exists.
+                    var existingSubdivision = originalParcel.Subdivisions
+                        .FirstOrDefault(pb => pb.SubdivisionId == subdivisionId)?.Subdivision;
 
-                    originalParcel.Subdivisions.Add(pp);
+                    //Just add any new subdivisions, users cannot edit a subdivision within a parent parcel.
+                    if (existingSubdivision == null)
+                    {
+                        if (!allowEdit) throw new NotAuthorizedException("User may not add subdivisions to a parcel they don't own.");
+                        // This parcel is a divided parent parcel with one or more subdivisions. Therefore, add the current parcel id as the parent divided ParcelId with a ParcelParcel relationship to the new subdivisionId.
+                        var pp = new ParcelParcel() { SubdivisionId = subdivisionId, ParcelId = parcel.Id };
+
+                        originalParcel.Subdivisions.Add(pp);
+                    }
+                }
+                foreach (var subdivision in originalParcel.Subdivisions)
+                {
+                    // Delete the subdivisions that have been removed from this parent divided parcel.
+                    if (!parcel.Subdivisions.Any(e => (e.SubdivisionId == subdivision.SubdivisionId)))
+                    {
+                        this.Context.ParcelParcels.Remove(subdivision);
+                    }
+                }
+            } else {
+                // This property is a Subdivision with parent divided parcels.
+                // loop through all passed in owning divided parcels, adding any new divided parcels and removing any missing divided parcels from the current subdivision.
+                foreach (var dividedParcelId in parcel.Parcels.Select(pb => pb.ParcelId))
+                {
+                    // Check if the subdivided parcel already exists.
+                    var existingDividedParcel = originalParcel.Parcels
+                        .FirstOrDefault(pb => pb.ParcelId == dividedParcelId)?.Parcel;
+
+                    //Just add any new divided parcels, users cannot edit a parcel within a subdivision.
+                    if (existingDividedParcel == null)
+                    {
+                        if (!allowEdit) throw new NotAuthorizedException("User may not add divided parcels to a subdivision they don't own.");
+                        // This parcel is a subdivision with one or more parent divided parcels. Therefore, add the current parcel id as the SubdivisionId with a ParcelParcel relationship to the new dividedParcelId.
+                        var pp = new ParcelParcel() { SubdivisionId = parcel.Id, ParcelId = dividedParcelId };
+
+                        originalParcel.Parcels.Add(pp);
+                    }
+                }
+                foreach (var dividedParcel in originalParcel.Parcels)
+                {
+                    // Delete the divided parcels that have been removed from this subdivision parcel.
+                    if (!parcel.Parcels.Any(e => (e.ParcelId == dividedParcel.ParcelId)))
+                    {
+                        this.Context.ParcelParcels.Remove(dividedParcel);
+                    }
                 }
             }
-            foreach (var subdivision in originalParcel.Subdivisions)
-            {
-                // Delete the subdivisions from the divided parcel that have been removed.
-                if (!parcel.Subdivisions.Any(e => (e.SubdivisionId == subdivision.SubdivisionId)))
-                {
-                    this.Context.ParcelParcels.Remove(subdivision);
-                }
-            }
-            #endregion
-
-            #region SubdivisionParcels
-            foreach (var dividedParcelId in parcel.Parcels.Select(pb => pb.ParcelId))
-            {
-                // Check if the subdivided parcel already exists.
-                var existingDividedParcel = originalParcel.Parcels
-                    .FirstOrDefault(pb => pb.ParcelId == dividedParcelId)?.Parcel;
-
-                //Just add any new divided parcels, users cannot edit a parcel within a subdivision.
-                if (existingDividedParcel == null)
-                {
-                    if (!allowEdit) throw new NotAuthorizedException("User may not add divided parcels to a subdivision they don't own.");
-                    var pp = new ParcelParcel() { SubdivisionId = parcel.Id, ParcelId = dividedParcelId };
-
-                    originalParcel.Parcels.Add(pp);
-                }
-            }
-            foreach (var dividedParcel in originalParcel.Parcels)
-            {
-                // Delete the divided parcels from the subdivision that have been removed.
-                if (!parcel.Parcels.Any(e => (e.ParcelId == dividedParcel.ParcelId)))
-                {
-                    this.Context.ParcelParcels.Remove(dividedParcel);
-                }
-            }
-            #endregion
 
             if (allowEdit)
             {

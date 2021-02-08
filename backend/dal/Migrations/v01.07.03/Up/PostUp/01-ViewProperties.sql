@@ -6,7 +6,7 @@ CREATE OR ALTER VIEW dbo.[View_Properties] AS
 SELECT
     p.[Id]
     , p.[RowVersion]
-    , [PropertyTypeId] =  (SELECT CASE WHEN sp.[ParcelId] IS NOT NULL THEN 2 ELSE 0 END)
+    , [PropertyTypeId] =  (SELECT CASE WHEN sp.[SubdivisionId] IS NOT NULL THEN 2 ELSE 0 END)
     , p.[ClassificationId]
     , [Classification] = c.[Name]
     , p.[AgencyId]
@@ -67,7 +67,7 @@ SELECT
     , [NetBook] = ISNULL(fn.[Value], 0)
     , [NetBookFiscalYear] = fn.[FiscalYear]
 FROM dbo.[Parcels] p
-LEFT JOIN dbo.[ParcelParcels] sp ON p.[Id] = sp.[ParcelId]
+LEFT JOIN (SELECT DISTINCT SubdivisionId FROM dbo.[ParcelParcels]) sp ON p.[Id] = sp.[SubdivisionId]
 JOIN dbo.[PropertyClassifications] c ON p.[ClassificationId] = c.[Id]
 JOIN dbo.[Agencies] a ON p.[AgencyId] = a.[Id]
 LEFT JOIN dbo.[Agencies] pa ON a.[ParentId] = pa.[Id]
