@@ -223,6 +223,8 @@ namespace Pims.Dal.Services
             var userAgencies = this.User.GetAgenciesAsNullable();
             if (!isAdmin && !userAgencies.Contains(existingBuilding.AgencyId)) throw new NotAuthorizedException("User may not edit buildings outside of their agency.");
 
+            existingBuilding.ThrowIfPropertyInSppProject(this.User);
+
             // Do not allow switching agencies through this method.
             if (existingBuilding.AgencyId != building.AgencyId && !isAdmin) throw new NotAuthorizedException("Building cannot be transferred to the specified agency.");
 
@@ -356,6 +358,8 @@ namespace Pims.Dal.Services
             if (!isAdmin && !userAgencies.Contains(existingBuilding.AgencyId))
                 throw new NotAuthorizedException("User may not edit buildings outside of their agency.");
 
+            existingBuilding.ThrowIfPropertyInSppProject(this.User);
+
             var allowEdit = isAdmin || userAgencies.Contains(existingBuilding.AgencyId);
             if (allowEdit)
             {
@@ -383,6 +387,8 @@ namespace Pims.Dal.Services
 
             var agency_ids = this.User.GetAgenciesAsNullable(); ;
             if (!isAdmin && !agency_ids.Contains(existingBuilding.AgencyId)) throw new NotAuthorizedException("User may not remove buildings outside of their agency.");
+
+            existingBuilding.ThrowIfPropertyInSppProject(this.User);
 
             existingBuilding.RowVersion = building.RowVersion;
             this.Context.SetOriginalRowVersion(existingBuilding);

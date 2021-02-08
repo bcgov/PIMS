@@ -18,7 +18,7 @@ export interface IProperty {
   longitude: number | '';
   name?: string;
   description?: string;
-  projectNumber?: string;
+  projectNumbers?: string[];
   projectStatus?: string;
   isSensitive: boolean | '';
 }

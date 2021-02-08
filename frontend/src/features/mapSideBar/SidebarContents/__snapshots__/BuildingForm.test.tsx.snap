@@ -536,7 +536,6 @@ exports[`Building Form component renders correctly 1`] = `
                         />
                       </div>
                     </div>
-                    
                     <div
                       class="row"
                     >

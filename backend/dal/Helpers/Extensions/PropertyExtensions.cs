@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Pims.Core.Extensions;
+using Pims.Dal.Exceptions;
 using Pims.Dal.Security;
 using System;
 using System.Collections.Generic;
@@ -301,6 +302,18 @@ namespace Pims.Dal.Helpers.Extensions
             // properties may be in the same agency or sub-agency of a project. A parcel in a parent agency may not be added to a sub-agency project.
             if (!parcel.AgencyId.HasValue || !projectAgencyIds.Contains(parcel.AgencyId.Value))
                 throw new InvalidOperationException("Properties may not be added to Projects with a different agency.");
+        }
+
+        /// <summary>
+        /// Throw an exception if the passed property is in an SPP project that is in a non-draft status.
+        /// </summary>
+        /// <param name="property"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public static void ThrowIfPropertyInSppProject(this Entity.Property property, ClaimsPrincipal user)
+        {
+            var isAdmin = user.HasPermission(Permissions.AdminProperties);
+            if (!isAdmin && property?.ProjectNumbers?.Contains("SPP") == true) throw new NotAuthorizedException("User may not remove buildings that are in a SPP Project.");
         }
 
         /// <summary>

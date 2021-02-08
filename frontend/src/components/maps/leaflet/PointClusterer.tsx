@@ -2,13 +2,12 @@ import './PointClusterer.scss';
 
 import React, { useRef, useEffect, useState, useCallback, useMemo } from 'react';
 import { DivIcon, FeatureGroup as LeafletFeatureGroup } from 'leaflet';
-import { useLeaflet, Marker, Polyline, Popup, FeatureGroup } from 'react-leaflet';
+import { useLeaflet, Marker, Polyline, FeatureGroup } from 'react-leaflet';
 import { BBox } from 'geojson';
 import { Spiderfier } from './Spiderfier';
 import { ICluster, PointFeature } from '../types';
 import { getMarkerIcon, pointToLayer, zoomToCluster } from './mapUtils';
 import useSupercluster from '../hooks/useSupercluster';
-import { PopupView } from '../PopupView';
 import {
   IBuilding,
   IParcel,
@@ -370,11 +369,7 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
               position={[latitude, longitude]}
               icon={getMarkerIcon(draftPoint)}
               zIndexOffset={500}
-            >
-              <Popup autoPan={false}>
-                <PopupView propertyDetail={convertToProperty(draftPoint.properties)} />
-              </Popup>
-            </Marker>
+            ></Marker>
           );
         })}
       </FeatureGroup>
