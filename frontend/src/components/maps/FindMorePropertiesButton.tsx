@@ -4,6 +4,7 @@ import { BsXSquareFill } from 'react-icons/bs';
 import { FaSign } from 'react-icons/fa';
 import styled from 'styled-components';
 import FindMorePropertiesForm from 'components/SearchBar/FindMorePropertiesForm';
+import variables from '_variables.module.scss';
 
 const ButtonContent = styled.div`
   display: flex;
@@ -25,7 +26,7 @@ const CloseButton = styled(BsXSquareFill)`
 
 /** icon for sign used within component, styled blue */
 const TitleForSaleSign = styled(FaSign)`
-  fill: #003366;
+  fill: ${variables.primaryColor};
   margin-right: 5px;
 `;
 
@@ -49,7 +50,7 @@ export const FindMorePropertiesButton: React.FC<IFindMorePropertiesButton> = ({
       () => (
         <div style={{ display: 'flex' }}>
           <TitleForSaleSign size={42} />
-          <h3 style={{ color: '#003366' }}>{buttonText}</h3>
+          <h3 style={{ color: variables.primaryColor }}>{buttonText}</h3>
           <CloseButton onClick={() => document.body.click()} />
         </div>
       ),

@@ -33,10 +33,13 @@ namespace Pims.Core.Test
         /// <param name="lng"></param>
         /// <param name="agency"></param>
         /// <returns></returns>
-        public static Entity.Parcel CreateParcel(int pid, double lat, double lng, Entity.Agency agency)
+        public static Entity.Parcel CreateParcel(int pid, double lat, double lng, Entity.Agency agency, Entity.Address address = null)
         {
             agency ??= EntityHelper.CreateAgency(pid);
-            var address = EntityHelper.CreateAddress(pid, "1234 Street", null, "V9C9C9");
+            if (address == null)
+            {
+                address = EntityHelper.CreateAddress(pid, "1234 Street", null, "V9C9C9");
+            }
             var classification = EntityHelper.CreatePropertyClassification("classification");
 
             return new Entity.Parcel(pid, lat, lng)

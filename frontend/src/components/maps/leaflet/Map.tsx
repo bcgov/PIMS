@@ -313,6 +313,7 @@ const Map: React.FC<MapProps> = ({
                     adminAreaLookupCodes={administrativeAreas}
                     propertyClassifications={propertyClassifications}
                     onChange={handleMapFilterChange}
+                    showAllAgencySelect={true}
                   />
                 </Container>
               </Container>

@@ -13,6 +13,8 @@ import * as reducerTypes from 'constants/reducerTypes';
 import service from '../service';
 import { useKeycloak } from '@react-keycloak/web';
 import axios from 'axios';
+import { mockFlatProperty } from 'mocks/filterDataMock';
+import { IProperty } from '.';
 
 // Set all module functions to jest.fn
 jest.mock('../service');
@@ -42,21 +44,21 @@ const history = createMemoryHistory();
 const mockAxios = new MockAdapter(axios);
 mockAxios.onAny().reply(200, {});
 
-const setupTests = () => {
+const setupTests = (items?: IProperty[]) => {
   // API "returns" no results
   mockedService.getPropertyList.mockResolvedValueOnce({
     quantity: 0,
     total: 0,
     page: 1,
     pageIndex: 0,
-    items: [],
+    items: items ?? [],
   });
   (useKeycloak as jest.Mock).mockReturnValue({
     keycloak: {
       subject: 'test',
       userInfo: {
-        roles: ['property-view'],
-        agencies: ['1'],
+        roles: ['property-edit', 'property-view'],
+        agencies: [1],
       },
     },
   });
@@ -162,6 +164,104 @@ describe('Property list view', () => {
         new MouseEvent('click', { bubbles: true, cancelable: true }),
       );
       await wait(() => expect(getByTestId('save-changes')).toBeInTheDocument(), { timeout: 500 });
+    });
+  });
+
+  it('Displays save edit button, when edit is enabled', async () => {
+    setupTests();
+
+    await act(async () => {
+      const { getByTestId } = render(
+        <Provider store={store}>
+          <Router history={history}>
+            <PropertyListView />
+          </Router>
+        </Provider>,
+      );
+      expect(getByTestId('edit-icon')).toBeInTheDocument();
+      fireEvent(
+        getByTestId('edit-icon'),
+        new MouseEvent('click', { bubbles: true, cancelable: true }),
+      );
+      await wait(() => expect(getByTestId('save-changes')).toBeInTheDocument(), { timeout: 500 });
+    });
+  });
+
+  it('Enables edit on property rows that the user has the same agency as the property', async () => {
+    setupTests([{ ...mockFlatProperty }]);
+
+    await act(async () => {
+      const { getByTestId, container } = render(
+        <Provider store={store}>
+          <Router history={history}>
+            <PropertyListView />
+          </Router>
+        </Provider>,
+      );
+      expect(getByTestId('edit-icon')).toBeInTheDocument();
+      fireEvent(
+        getByTestId('edit-icon'),
+        new MouseEvent('click', { bubbles: true, cancelable: true }),
+      );
+      await wait(
+        () => {
+          expect(getByTestId('save-changes')).toBeInTheDocument();
+          expect(container.querySelector(`input[name="properties.0.market"]`)).not.toBeNull();
+        },
+        { timeout: 500 },
+      );
+    });
+  });
+
+  it('Disables property rows that the user does not have edit permissions for', async () => {
+    setupTests([{ ...mockFlatProperty, agencyId: 2 }]);
+
+    await act(async () => {
+      const { getByTestId, container } = render(
+        <Provider store={store}>
+          <Router history={history}>
+            <PropertyListView />
+          </Router>
+        </Provider>,
+      );
+      expect(getByTestId('edit-icon')).toBeInTheDocument();
+      fireEvent(
+        getByTestId('edit-icon'),
+        new MouseEvent('click', { bubbles: true, cancelable: true }),
+      );
+      await wait(
+        () => {
+          expect(getByTestId('save-changes')).toBeInTheDocument();
+          expect(container.querySelector(`input[name="properties.0.market"]`)).toBeNull();
+        },
+        { timeout: 500 },
+      );
+    });
+  });
+
+  it('Disables property rows that are in an active project', async () => {
+    setupTests([{ ...mockFlatProperty, projectNumbers: ['SPP-10000'] }]);
+
+    await act(async () => {
+      const { container, getByTestId } = render(
+        <Provider store={store}>
+          <Router history={history}>
+            <PropertyListView />
+          </Router>
+        </Provider>,
+      );
+      expect(getByTestId('edit-icon')).toBeInTheDocument();
+      fireEvent(
+        getByTestId('edit-icon'),
+        new MouseEvent('click', { bubbles: true, cancelable: true }),
+      );
+      await wait(
+        () => {
+          expect(getByTestId('save-changes')).toBeInTheDocument();
+          expect(container.querySelector(`input[name="properties.0.market"]`)).toBeNull();
+        },
+        { timeout: 500 },
+      );
     });
   });
 

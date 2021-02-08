@@ -82,7 +82,7 @@ export const defaultBuildingValues: IBuilding = {
   id: '',
   isSensitive: '',
   name: '',
-  projectNumber: '',
+  projectNumbers: [],
   description: '',
   address: defaultAddressValues,
   latitude: '',

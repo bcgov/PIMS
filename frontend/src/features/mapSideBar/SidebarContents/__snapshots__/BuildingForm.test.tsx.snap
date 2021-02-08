@@ -61,7 +61,7 @@ exports[`Building Form component renders correctly 1`] = `
 }
 
 .c1 .nav-tabs .btn:disabled {
-  background-color: #003366;
+  background-color: primaryColor;
   cursor: default;
 }
 
@@ -536,7 +536,6 @@ exports[`Building Form component renders correctly 1`] = `
                         />
                       </div>
                     </div>
-                    
                     <div
                       class="row"
                     >
