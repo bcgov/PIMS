@@ -10,6 +10,14 @@ SET AdministrativeArea = REPLACE(AdministrativeArea, 'City of ', '')
 where AdministrativeArea like 'City of %';
 
 UPDATE dbo.[Addresses]
+SET AdministrativeArea = REPLACE(AdministrativeArea, 'Town of ', '')
+where AdministrativeArea like 'Town of %';
+
+UPDATE dbo.[Addresses]
+SET AdministrativeArea = REPLACE(AdministrativeArea, 'Village of ', '')
+where AdministrativeArea like 'Village of %';
+
+UPDATE dbo.[Addresses]
 SET AdministrativeArea = REPLACE(AdministrativeArea, 'The Corporation of the District of ', '')
 where AdministrativeArea like 'The Corporation of the District of %';
 
@@ -18,62 +26,9 @@ UPDATE [dbo].[Addresses]
 SET AdministrativeArea = 'Spallumcheen' 
 WHERE AdministrativeArea = 'The Corporation of the Township of Spallumcheen';
 
-UPDATE [dbo].[Addresses]
-SET AdministrativeArea = 'Lake Country' 
-WHERE AdministrativeArea = 'District Of Lake Country';
-
-UPDATE [dbo].[Addresses]
-SET AdministrativeArea = 'Port Edward' 
-WHERE AdministrativeArea = 'District of Port Edward';
-
-UPDATE [dbo].[Addresses]
-SET AdministrativeArea = 'Highlands' 
-WHERE AdministrativeArea = 'District of Highlands';
-
-UPDATE [dbo].[Addresses]
-SET AdministrativeArea = 'Belcarra' 
-WHERE AdministrativeArea = 'Village of Belcarra';
-
-UPDATE [dbo].[Addresses]
-SET AdministrativeArea = 'Slocan' 
-WHERE AdministrativeArea = 'Village of Slocan';
-
-UPDATE [dbo].[Addresses]
-SET AdministrativeArea = 'Anmore' 
-WHERE AdministrativeArea = 'Village of Anmore';
-
-UPDATE [dbo].[Addresses]
-SET AdministrativeArea = 'Warfield' 
-WHERE AdministrativeArea = 'Village of Warfield';
-
-UPDATE [dbo].[Addresses]
-SET AdministrativeArea = 'Canal Flats' 
-WHERE AdministrativeArea = 'Village of Canal Flats';
-
-UPDATE [dbo].[Addresses]
-SET AdministrativeArea = 'Radium Hot Springs' 
-WHERE AdministrativeArea = 'Village of Radium Hot Springs';
-
-UPDATE [dbo].[Addresses]
-SET AdministrativeArea = 'North Cowichan' 
-WHERE AdministrativeArea = 'The Corporation of the District of North Cowichan';
-
-UPDATE [dbo].[Addresses]
-SET AdministrativeArea = 'Coldstream' 
-WHERE AdministrativeArea = 'The Corporation of the District of Coldstream';
-
-UPDATE [dbo].[Addresses]
-SET AdministrativeArea = 'Lake Cowichan' 
-WHERE AdministrativeArea = 'Town of Lake Cowichan';
-
-UPDATE [dbo].[Addresses]
-SET AdministrativeArea = 'Kent' 
-WHERE AdministrativeArea = 'District of Kent';
-
-
 PRINT 'Updating AdministrativeAreas table'
 
--- Then update AdministrativeAreas table to fix the Abbreviation field in order to get correct join when doing a batch update later on
+-- Then update AdministrativeAreas table to fix the spelling of the Abbreviation field in order to get correct join on the Name field when doing a batch update later on
 UPDATE [dbo].[AdministrativeAreas]
 SET Abbreviation = 'Valemount' 
 WHERE Name = 'Village of Valemount' AND Abbreviation = 'Valemont';
@@ -151,7 +106,7 @@ UPDATE [dbo].[AdministrativeAreas]
 SET Name = 'Kent' 
 WHERE Name = 'District of Kent';
 
--- Then update GroupName field for existing locations whose name is the same as the Abbreviation field (records from BC Data) before deleting the records from BC Data
+-- copy the GroupName from the AdministrativeArea that has a Name = Abbreviation
 UPDATE t1
 SET t1.GroupName = t2.GroupName
 FROM AdministrativeAreas t1
