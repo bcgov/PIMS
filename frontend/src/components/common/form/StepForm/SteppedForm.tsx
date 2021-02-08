@@ -16,6 +16,7 @@ import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
 import _ from 'lodash';
 import { IStep } from 'components/common/Stepper';
 import { ILeasedLand } from 'features/mapSideBar/SidebarContents/AssociatedLandForm';
+import variables from '_variables.module.scss';
 
 const TabbedForm = styled(Form)`
   .hideTabs {
@@ -66,7 +67,7 @@ const TabbedForm = styled(Form)`
     }
     border: 0;
     .btn:disabled {
-      background-color: #003366;
+      background-color: ${variables.primaryColor};
       cursor: default;
     }
   }
