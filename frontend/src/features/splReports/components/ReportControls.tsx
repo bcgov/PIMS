@@ -12,6 +12,7 @@ import TooltipWrapper from 'components/common/TooltipWrapper';
 import AddReportControl from './AddReportControl';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { Claims } from '../../../constants/';
+import variables from '_variables.module.scss';
 
 interface IReportControlsProps {
   /** the active report being displayed, snapshot data is displayed based on this report */
@@ -50,7 +51,7 @@ const getOtherOlderReports = (reports: IReport[], currentReport?: IReport) => {
 
 const FileIcon = styled(Button)`
   background-color: white !important;
-  color: #003366 !important;
+  color: ${variables.primaryColor} !important;
   padding: 6px 5px;
 `;
 
