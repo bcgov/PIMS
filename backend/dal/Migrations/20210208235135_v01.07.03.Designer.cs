@@ -11,8 +11,8 @@ using Pims.Dal;
 namespace Pims.Dal.Migrations
 {
     [DbContext(typeof(PimsContext))]
-    [Migration("20210204233951_v01.07.02")]
-    partial class v010702
+    [Migration("20210208235135_v01.07.03")]
+    partial class v010703
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
