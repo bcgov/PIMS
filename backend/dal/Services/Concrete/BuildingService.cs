@@ -171,7 +171,7 @@ namespace Pims.Dal.Services
                 building.Agency = agency;
             }
 
-            building.propertyTypeId = PropertyTypes.Building;
+            building.PropertyTypeId = (int)PropertyTypes.Building;
             building.Address.Province = this.Context.Provinces.Find(building.Address.ProvinceId);
             building.Classification = this.Context.PropertyClassifications.Find(building.ClassificationId);
             building.IsVisibleToOtherAgencies = false;

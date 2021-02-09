@@ -1,1 +1,0 @@
-UPDATE dbo.[Buildings] set PropertyTypeId = 1;

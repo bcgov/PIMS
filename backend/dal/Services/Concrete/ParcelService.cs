@@ -192,7 +192,7 @@ namespace Pims.Dal.Services
                 parcel.AgencyId = agency.Id;
                 parcel.Agency = agency;
             }
-            parcel.propertyTypeId = parcel.Parcels.Count > 0 ? PropertyTypes.Subdivision : PropertyTypes.Land;
+            parcel.PropertyTypeId = (int)(parcel.Parcels.Count > 0 ? PropertyTypes.Subdivision : PropertyTypes.Land);
             parcel.Address.Province = this.Context.Provinces.Find(parcel.Address.ProvinceId);
             parcel.Classification = this.Context.PropertyClassifications.Find(parcel.ClassificationId);
             parcel.IsVisibleToOtherAgencies = false;

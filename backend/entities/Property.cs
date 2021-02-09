@@ -18,7 +18,12 @@ namespace Pims.Dal.Entities
         /// <summary>
         /// get/set - The type of the property. Type is managed by business logic.
         /// </summary>
-        public PropertyTypes propertyTypeId { get; set; }
+        public PropertyType PropertyType { get; set; }
+
+        /// <summary>
+        /// get/set - The id referencing the type of the property. Type is managed by business logic.
+        /// </summary>
+        public int PropertyTypeId { get; set; }
 
         /// <summary>
         /// get/set - The RAEG/SPP project numbers.

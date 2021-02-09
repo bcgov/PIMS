@@ -10,16 +10,16 @@ namespace Pims.Dal.Migrations
         {
             PreUp(migrationBuilder);
             migrationBuilder.AddColumn<int>(
-                name: "propertyTypeId",
+                name: "PropertyTypeId",
                 table: "Parcels",
                 nullable: false,
                 defaultValue: 0);
 
             migrationBuilder.AddColumn<int>(
-                name: "propertyTypeId",
+                name: "PropertyTypeId",
                 table: "Buildings",
                 nullable: false,
-                defaultValue: 0);
+                defaultValue: 1);
 
             migrationBuilder.CreateTable(
                 name: "ParcelParcels",
@@ -63,6 +63,16 @@ namespace Pims.Dal.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Parcels_PropertyTypeId",
+                table: "Parcels",
+                column: "PropertyTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Buildings_PropertyTypeId",
+                table: "Buildings",
+                column: "PropertyTypeId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ParcelParcels_CreatedById",
                 table: "ParcelParcels",
                 column: "CreatedById");
@@ -76,21 +86,51 @@ namespace Pims.Dal.Migrations
                 name: "IX_ParcelParcels_UpdatedById",
                 table: "ParcelParcels",
                 column: "UpdatedById");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Buildings_PropertyTypes_PropertyTypeId",
+                table: "Buildings",
+                column: "PropertyTypeId",
+                principalTable: "PropertyTypes",
+                principalColumn: "Id");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Parcels_PropertyTypes_PropertyTypeId",
+                table: "Parcels",
+                column: "PropertyTypeId",
+                principalTable: "PropertyTypes",
+                principalColumn: "Id");
             PostUp(migrationBuilder);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             PreDown(migrationBuilder);
+            migrationBuilder.DropForeignKey(
+                name: "FK_Buildings_PropertyTypes_PropertyTypeId",
+                table: "Buildings");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_Parcels_PropertyTypes_PropertyTypeId",
+                table: "Parcels");
+
             migrationBuilder.DropTable(
                 name: "ParcelParcels");
 
+            migrationBuilder.DropIndex(
+                name: "IX_Parcels_PropertyTypeId",
+                table: "Parcels");
+
+            migrationBuilder.DropIndex(
+                name: "IX_Buildings_PropertyTypeId",
+                table: "Buildings");
+
             migrationBuilder.DropColumn(
-                name: "propertyTypeId",
+                name: "PropertyTypeId",
                 table: "Parcels");
 
             migrationBuilder.DropColumn(
-                name: "propertyTypeId",
+                name: "PropertyTypeId",
                 table: "Buildings");
             PostDown(migrationBuilder);
         }

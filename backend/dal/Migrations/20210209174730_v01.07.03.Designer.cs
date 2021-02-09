@@ -11,7 +11,7 @@ using Pims.Dal;
 namespace Pims.Dal.Migrations
 {
     [DbContext(typeof(PimsContext))]
-    [Migration("20210209065005_v01.07.03")]
+    [Migration("20210209174730_v01.07.03")]
     partial class v010703
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -449,6 +449,9 @@ namespace Pims.Dal.Migrations
                         .HasColumnType("nvarchar(2000)")
                         .HasMaxLength(2000);
 
+                    b.Property<int>("PropertyTypeId")
+                        .HasColumnType("int");
+
                     b.Property<float>("RentableArea")
                         .HasColumnType("real");
 
@@ -471,9 +474,6 @@ namespace Pims.Dal.Migrations
                     b.Property<DateTime?>("UpdatedOn")
                         .HasColumnType("DATETIME2");
 
-                    b.Property<int>("propertyTypeId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("AddressId");
@@ -489,6 +489,8 @@ namespace Pims.Dal.Migrations
                     b.HasIndex("ClassificationId");
 
                     b.HasIndex("CreatedById");
+
+                    b.HasIndex("PropertyTypeId");
 
                     b.HasIndex("UpdatedById");
 
@@ -1093,6 +1095,9 @@ namespace Pims.Dal.Migrations
                         .HasColumnType("nvarchar(2000)")
                         .HasMaxLength(2000);
 
+                    b.Property<int>("PropertyTypeId")
+                        .HasColumnType("int");
+
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate()
@@ -1112,9 +1117,6 @@ namespace Pims.Dal.Migrations
                         .HasColumnType("nvarchar(50)")
                         .HasMaxLength(50);
 
-                    b.Property<int>("propertyTypeId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("AddressId");
@@ -1124,6 +1126,8 @@ namespace Pims.Dal.Migrations
                     b.HasIndex("ClassificationId");
 
                     b.HasIndex("CreatedById");
+
+                    b.HasIndex("PropertyTypeId");
 
                     b.HasIndex("UpdatedById");
 
@@ -2847,6 +2851,12 @@ namespace Pims.Dal.Migrations
                         .WithMany()
                         .HasForeignKey("CreatedById");
 
+                    b.HasOne("Pims.Dal.Entities.PropertyType", "PropertyType")
+                        .WithOne()
+                        .HasForeignKey("Pims.Dal.Entities.Building", "PropertyTypeId")
+                        .OnDelete(DeleteBehavior.ClientNoAction)
+                        .IsRequired();
+
                     b.HasOne("Pims.Dal.Entities.User", "UpdatedBy")
                         .WithMany()
                         .HasForeignKey("UpdatedById");
@@ -2983,6 +2993,12 @@ namespace Pims.Dal.Migrations
                     b.HasOne("Pims.Dal.Entities.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
+
+                    b.HasOne("Pims.Dal.Entities.PropertyType", "PropertyType")
+                        .WithOne()
+                        .HasForeignKey("Pims.Dal.Entities.Parcel", "PropertyTypeId")
+                        .OnDelete(DeleteBehavior.ClientNoAction)
+                        .IsRequired();
 
                     b.HasOne("Pims.Dal.Entities.User", "UpdatedBy")
                         .WithMany()

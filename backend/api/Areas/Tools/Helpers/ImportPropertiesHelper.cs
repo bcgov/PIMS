@@ -318,7 +318,7 @@ namespace Pims.Api.Areas.Tools.Helpers
         private Entity.Parcel AddUpdateParcel(Model.ImportPropertyModel property, int pid, Entity.Agency agency)
         {
             var p_e = ExceptionHelper.HandleKeyNotFoundWithDefault(() => _pimsAdminService.Parcel.GetByPidWithoutTracking(pid));
-            p_e.propertyTypeId = Entity.PropertyTypes.Land;
+            p_e.PropertyTypeId = (int)Entity.PropertyTypes.Land;
             var fiscalYear = property.FiscalYear;
             var evaluationDate = new DateTime(fiscalYear, 1, 1); // Defaulting to Jan 1st because SIS data doesn't have the actual date.
 
@@ -434,7 +434,7 @@ namespace Pims.Api.Areas.Tools.Helpers
             if (b_e.Id == 0 || fiscalNetBook == null || evaluationAssessed == null)
             {
                 // Copy properties over to entity.
-                b_e.propertyTypeId = Entity.PropertyTypes.Building;
+                b_e.PropertyTypeId = (int)Entity.PropertyTypes.Building;
                 b_e.AgencyId = agency?.Id ?? throw new KeyNotFoundException($"Agency '{property.Agency}' does not exist.");
                 b_e.Agency = agency;
                 if (!b_e.Parcels.Any(pb => pb.ParcelId == parcel.Id))
