@@ -17,6 +17,11 @@ parameters:
     description: "The name of the application component role (e.g web, api, database)."
     required: true
     value: "api"
+  - name: PROJECT_NAMESPACE
+    displayName: "OpenShift Project Namespace"
+    description: "The namespace of the OpenShift project containing the application."
+    required: true
+    value: "354028"
   - name: ENV_NAME
     displayName: "Environment name"
     description: "The name for this environment [dev, test, prod, tools]"
@@ -26,11 +31,6 @@ parameters:
     displayName: "Unique Identifier"
     description: "A unique identifier to allow for multiple instances (i.e. '-01')."
     value: ""
-  - name: PROJECT_NAMESPACE
-    displayName: "OpenShift Project Namespace"
-    description: "The namespace of the OpenShift project containing the application."
-    required: true
-    value: "354028"
   - name: IMAGE_TAG
     displayName: "Image Tag Name"
     description: "The image tag that will be used for this deployment.
@@ -46,9 +46,13 @@ parameters:
     description: "The port used to communicate with the Pod"
     value: "8080"
   - name: API_PATH
-    displayName: "API URL path"
+    displayName: "API URL Path"
     description: "The URL path to the API"
     value: "/api"
+  - name: API_DOCS_PATH
+    displayName: "Swagger Path"
+    description: "The URL path to the API Swagger endpoint"
+    value: "/api-docs"
 
   - name: ASPNETCORE_ENVIRONMENT
     displayName: "AspNetCore Environment"
@@ -60,6 +64,11 @@ parameters:
     description: "The ASP Net Core URLs that the service will listen to (i.e. http://*:8080)."
     value: "http://*:8080"
 
+  - name: DATABASE_ROLE_NAME
+    displayName: "Database Component Role Name"
+    description: "The database name of the application component role (e.g web, api, database)."
+    required: true
+    value: "database"
   - name: CONNECTION_STRINGS_PIMS
     displayName: "PIMS API Database Connection String"
     description: "The PIMS API database connection string."
@@ -130,16 +139,48 @@ parameters:
     description: "Maximum amount of memory the container can use."
     value: "4Gi"
 objects:
+  # Allow the api to make requests to the internet.
+  - kind: NetworkSecurityPolicy
+    apiVersion: security.devops.gov.bc.ca/v1alpha1
+    metadata:
+      name: internal-ingress-${APP_NAME}-${ROLE_NAME}
+      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
+    spec:
+      description: Allow api to open connections to the Internet.
+      source:
+        - - app=${APP_NAME}
+          - role=${ROLE_NAME}
+          - env=${ENV_NAME}
+      destination:
+        - - ext:network=any
+
+  # Allow the api to communicate with the database.
+  - kind: NetworkSecurityPolicy
+    apiVersion: security.devops.gov.bc.ca/v1alpha1
+    metadata:
+      name: pod-to-pod-permit-${APP_NAME}-${ROLE_NAME}-${DATABASE_ROLE_NAME}
+      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
+    spec:
+      description: Allow api to communicate to the database.
+      source:
+        - - app=${APP_NAME}
+          - role=${ROLE_NAME}
+          - env=${ENV_NAME}
+      destination:
+        - - app=${APP_NAME}
+          - role=${DATABASE_ROLE_NAME}
+          - env=${ENV_NAME}
+
   # Open up ports to communicate with the api.
   - kind: Service
     apiVersion: v1
     metadata:
-      name: ${APP_NAME}-${ROLE_NAME}-${ENV_NAME}${INSTANCE}
+      name: ${APP_NAME}-${ROLE_NAME}${INSTANCE}
       namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
       annotations:
         description: Exposes and load balances the application pods.
       labels:
-        name: ${APP_NAME}-${ROLE_NAME}-${ENV_NAME}${INSTANCE}
+        name: ${APP_NAME}-${ROLE_NAME}${INSTANCE}
         app: ${APP_NAME}
         role: ${ROLE_NAME}
         env: ${ENV_NAME}
@@ -161,10 +202,10 @@ objects:
   - kind: Route
     apiVersion: v1
     metadata:
-      name: ${APP_NAME}-${ROLE_NAME}-${ENV_NAME}${INSTANCE}
+      name: ${APP_NAME}-${ROLE_NAME}${INSTANCE}
       namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
       labels:
-        name: ${APP_NAME}-${ROLE_NAME}-${ENV_NAME}${INSTANCE}
+        name: ${APP_NAME}-${ROLE_NAME}${INSTANCE}
         app: ${APP_NAME}
         role: ${ROLE_NAME}
         env: ${ENV_NAME}
@@ -173,7 +214,7 @@ objects:
       path: ${API_PATH}
       to:
         kind: Service
-        name: ${APP_NAME}-${ROLE_NAME}-${ENV_NAME}${INSTANCE}
+        name: ${APP_NAME}-${ROLE_NAME}${INSTANCE}
         weight: 100
       port:
         targetPort: ${APP_PORT}-tcp
@@ -185,10 +226,10 @@ objects:
   - kind: Route
     apiVersion: v1
     metadata:
-      name: ${APP_NAME}-${ROLE_NAME}-${ENV_NAME}${INSTANCE}-docs
+      name: ${APP_NAME}-${ROLE_NAME}-swagger${INSTANCE}
       namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
       labels:
-        name: ${APP_NAME}-${ROLE_NAME}-${ENV_NAME}${INSTANCE}-docs
+        name: ${APP_NAME}-${ROLE_NAME}-swagger${INSTANCE}
         app: ${APP_NAME}
         role: ${ROLE_NAME}
         env: ${ENV_NAME}
@@ -197,7 +238,7 @@ objects:
       path: ${API_DOCS_PATH}
       to:
         kind: Service
-        name: ${APP_NAME}-${ROLE_NAME}-${ENV_NAME}${INSTANCE}
+        name: ${APP_NAME}-${ROLE_NAME}${INSTANCE}
         weight: 100
       port:
         targetPort: ${APP_PORT}-tcp
@@ -209,12 +250,12 @@ objects:
   - kind: Secret
     apiVersion: v1
     metadata:
-      name: ${APP_NAME}-${ENV_NAME}${INSTANCE}-sso-secret
+      name: ${APP_NAME}-${ROLE_NAME}-sso${INSTANCE}
       namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
       annotations:
         description: "Keycloak SSO client secrets"
       labels:
-        name: ${APP_NAME}-${ENV_NAME}${INSTANCE}-sso-secret
+        name: ${APP_NAME}-${ROLE_NAME}-sso${INSTANCE}
         app: ${APP_NAME}
         role: ${ROLE_NAME}
         env: ${ENV_NAME}
@@ -227,12 +268,12 @@ objects:
   - kind: ConfigMap
     apiVersion: v1
     metadata:
-      name: ${APP_NAME}-${ENV_NAME}${INSTANCE}-sso-client
+      name: ${APP_NAME}-${ROLE_NAME}-sso${INSTANCE}
       namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
       annotations:
         description: "Keycloak SSO client configuration"
       labels:
-        name: ${APP_NAME}-${ENV_NAME}${INSTANCE}-sso-client
+        name: ${APP_NAME}-${ROLE_NAME}-sso${INSTANCE}
         app: ${APP_NAME}
         role: ${ROLE_NAME}
         env: ${ENV_NAME}
@@ -246,12 +287,12 @@ objects:
   - kind: Secret
     apiVersion: v1
     metadata:
-      name: ${APP_NAME}-${ENV_NAME}${INSTANCE}-ches-secret
+      name: ${APP_NAME}-${ROLE_NAME}-ches${INSTANCE}
       namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
       annotations:
         description: "CHES client secrets"
       labels:
-        name: ${APP_NAME}-${ENV_NAME}${INSTANCE}-ches-secret
+        name: ${APP_NAME}-${ROLE_NAME}-ches${INSTANCE}
         app: ${APP_NAME}
         role: ${ROLE_NAME}
         env: ${ENV_NAME}
@@ -264,12 +305,12 @@ objects:
   - kind: Secret
     apiVersion: v1
     metadata:
-      name: ${APP_NAME}-${ENV_NAME}${INSTANCE}-geocoder-secret
+      name: ${APP_NAME}-${ROLE_NAME}-geocoder${INSTANCE}
       namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
       annotations:
         description: "Geocoder client secrets"
       labels:
-        name: ${APP_NAME}-${ENV_NAME}${INSTANCE}-geocoder-secret
+        name: ${APP_NAME}-${ROLE_NAME}-geocoder${INSTANCE}
         app: ${APP_NAME}
         role: ${ROLE_NAME}
         env: ${ENV_NAME}
@@ -281,12 +322,12 @@ objects:
   - kind: Secret
     apiVersion: v1
     metadata:
-      name: ${APP_NAME}-${ENV_NAME}${INSTANCE}-elasticsearch-secret
+      name: ${APP_NAME}-${ROLE_NAME}-elasticsearch${INSTANCE}
       namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
       annotations:
         description: "Elastic search password"
       labels:
-        name: ${APP_NAME}-${ENV_NAME}${INSTANCE}-elasticsearch-secret
+        name: ${APP_NAME}-${ROLE_NAME}-elasticsearch${INSTANCE}
         app: ${APP_NAME}
         role: ${ROLE_NAME}
         env: ${ENV_NAME}
@@ -298,12 +339,12 @@ objects:
   - kind: ConfigMap
     apiVersion: v1
     metadata:
-      name: ${APP_NAME}-${ROLE_NAME}-${ENV_NAME}${INSTANCE}-database-client
+      name: ${APP_NAME}-${ROLE_NAME}-database${INSTANCE}
       namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
       annotations:
         description: "Database client configuration"
       labels:
-        name: ${APP_NAME}-${ROLE_NAME}-${ENV_NAME}${INSTANCE}-database-client
+        name: ${APP_NAME}-${ROLE_NAME}-database${INSTANCE}
         app: ${APP_NAME}
         role: ${ROLE_NAME}
         env: ${ENV_NAME}
@@ -315,12 +356,12 @@ objects:
   - kind: DeploymentConfig
     apiVersion: v1
     metadata:
-      name: ${APP_NAME}-${ROLE_NAME}-${ENV_NAME}${INSTANCE}
+      name: ${APP_NAME}-${ROLE_NAME}${INSTANCE}
       namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
       annotations:
         description: "Defines how to deploy ${APP_NAME}-${ROLE_NAME}"
       labels:
-        name: ${APP_NAME}-${ROLE_NAME}-${ENV_NAME}${INSTANCE}
+        name: ${APP_NAME}-${ROLE_NAME}${INSTANCE}
         app: ${APP_NAME}
         role: ${ROLE_NAME}
         env: ${ENV_NAME}
@@ -340,7 +381,7 @@ objects:
           imageChangeParams:
             automatic: true
             containerNames:
-              - ${APP_NAME}-${ROLE_NAME}-${ENV_NAME}${INSTANCE}
+              - ${APP_NAME}-${ROLE_NAME}${INSTANCE}
             from:
               kind: ImageStreamTag
               namespace: "${PROJECT_NAMESPACE}-tools"
@@ -353,16 +394,16 @@ objects:
         instance: ${INSTANCE}
       template:
         metadata:
-          name: ${APP_NAME}-${ROLE_NAME}-${ENV_NAME}${INSTANCE}
+          name: ${APP_NAME}-${ROLE_NAME}${INSTANCE}
           labels:
-            name: ${APP_NAME}-${ROLE_NAME}-${ENV_NAME}${INSTANCE}
+            name: ${APP_NAME}-${ROLE_NAME}${INSTANCE}
             app: ${APP_NAME}
             role: ${ROLE_NAME}
             env: ${ENV_NAME}
             instance: ${INSTANCE}
         spec:
           containers:
-            - name: ${APP_NAME}-${ROLE_NAME}-${ENV_NAME}${INSTANCE}
+            - name: ${APP_NAME}-${ROLE_NAME}${INSTANCE}
               image: ""
               ports:
                 - containerPort: ${{APP_PORT}}
@@ -379,57 +420,62 @@ objects:
                 - name: ConnectionStrings__PIMS
                   valueFrom:
                     configMapKeyRef:
-                      name: ${APP_NAME}-${ROLE_NAME}-${ENV_NAME}${INSTANCE}-database-client
+                      name: ${APP_NAME}-${ROLE_NAME}-database${INSTANCE}
                       key: CONNECTION_STRINGS_PIMS
+                - name: DB_USER
+                  valueFrom:
+                    secretKeyRef:
+                      name: ${APP_NAME}-${DATABASE_ROLE_NAME}${INSTANCE}
+                      key: DB_USER
                 - name: DB_PASSWORD
                   valueFrom:
                     secretKeyRef:
-                      name: ${APP_NAME}-database${INSTANCE}
+                      name: ${APP_NAME}-${DATABASE_ROLE_NAME}${INSTANCE}
                       key: DB_PASSWORD
                 - name: Keycloak__Audience
                   valueFrom:
                     configMapKeyRef:
-                      name: ${APP_NAME}-${ENV_NAME}${INSTANCE}-sso-client
+                      name: ${APP_NAME}-${ROLE_NAME}-sso${INSTANCE}
                       key: KEYCLOAK_AUDIENCE
                 - name: Keycloak__Authority
                   valueFrom:
                     configMapKeyRef:
-                      name: ${APP_NAME}-${ENV_NAME}${INSTANCE}-sso-client
+                      name: ${APP_NAME}-${ROLE_NAME}-sso${INSTANCE}
                       key: KEYCLOAK_AUTHORITY
                 - name: Keycloak__Admin__Authority
                   valueFrom:
                     configMapKeyRef:
-                      name: ${APP_NAME}-${ENV_NAME}${INSTANCE}-sso-client
+                      name: ${APP_NAME}-${ROLE_NAME}-sso${INSTANCE}
                       key: KEYCLOAK_ADMIN_AUTHORITY
                 - name: Keycloak__Secret
                   valueFrom:
                     secretKeyRef:
-                      name: ${APP_NAME}-${ENV_NAME}${INSTANCE}-sso-secret
+                      name: ${APP_NAME}-${ROLE_NAME}-sso${INSTANCE}
                       key: KEYCLOAK_SECRET
                 - name: Keycloak__ServiceAccount__Secret
                   valueFrom:
                     secretKeyRef:
-                      name: ${APP_NAME}-${ENV_NAME}${INSTANCE}-sso-secret
+                      name: ${APP_NAME}-${ROLE_NAME}-sso${INSTANCE}
                       key: KEYCLOAK_SERVICE_ACCOUNT_SECRET
                 - name: Ches__Username
                   valueFrom:
                     secretKeyRef:
-                      name: ${APP_NAME}-${ENV_NAME}${INSTANCE}-ches-secret
+                      name: ${APP_NAME}-${ROLE_NAME}-ches${INSTANCE}
                       key: CHES_USERNAME
                 - name: Ches__Password
                   valueFrom:
                     secretKeyRef:
-                      name: ${APP_NAME}-${ENV_NAME}${INSTANCE}-ches-secret
+                      name: ${APP_NAME}-${ROLE_NAME}-ches${INSTANCE}
                       key: CHES_PASSWORD
                 - name: Geocoder__Key
                   valueFrom:
                     secretKeyRef:
-                      name: ${APP_NAME}-${ENV_NAME}${INSTANCE}-geocoder-secret
+                      name: ${APP_NAME}-${ROLE_NAME}-geocoder${INSTANCE}
                       key: GEOCODER_KEY
                 - name: ElasticConfiguration__Password
                   valueFrom:
                     secretKeyRef:
-                      name: ${APP_NAME}-${ENV_NAME}${INSTANCE}-elasticsearch-secret
+                      name: ${APP_NAME}-${ROLE_NAME}-elasticsearch${INSTANCE}
                       key: ELASTIC_PASSWORD
               resources:
                 requests:
