@@ -45,6 +45,7 @@ import { EvaluationKeys } from 'constants/evaluationKeys';
 import { FiscalKeys } from 'constants/fiscalKeys';
 import { stringToNull } from 'utils';
 import variables from '_variables.module.scss';
+import LastUpdatedBy from 'features/properties/components/LastUpdatedBy';
 
 const Container = styled.div`
   background-color: #fff;
@@ -209,6 +210,12 @@ const Form: React.FC<ILandForm> = ({
       <FormContent>{render()}</FormContent>
       <FormFooter>
         <InventoryPolicy />
+        <LastUpdatedBy
+          createdOn={initialValues?.createdOn}
+          updatedOn={initialValues?.updatedOn}
+          updatedByName={initialValues?.updatedByName}
+          updatedByEmail={initialValues?.updatedByEmail}
+        />
         <FillRemainingSpace />
         {!stepper.isSubmit(stepper.current) && (
           <Button

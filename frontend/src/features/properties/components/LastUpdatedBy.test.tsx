@@ -45,26 +45,11 @@ describe('Last Updated By Component', () => {
     expect(getByText(user)).toBeVisible();
   });
 
-  it('Displays unknown if no user available', () => {
-    const { getByText } = render(getLastUpdatedBy(undefined, date, undefined, email));
-    expect(getByText('unknown')).toBeVisible();
-  });
-
   it('Displays the email of the user that performed the update', async done => {
     const { findByText, getByText } = render(getLastUpdatedBy(undefined, date, user, email));
     await act(async () => {
       fireEvent.mouseOver(getByText(user));
       const tooltip = await findByText(email);
-      expect(tooltip).toBeInTheDocument();
-    });
-    done();
-  });
-
-  it('Displays unknown if no email available', async done => {
-    const { findByText, getByText } = render(getLastUpdatedBy(undefined, date, user, undefined));
-    await act(async () => {
-      fireEvent.mouseOver(getByText(user));
-      const tooltip = await findByText('unknown');
       expect(tooltip).toBeInTheDocument();
     });
     done();

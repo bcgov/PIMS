@@ -140,6 +140,7 @@ namespace Pims.Dal.Services
                 .Include(p => p.Agency).ThenInclude(a => a.Parent)
                 .Include(p => p.Evaluations)
                 .Include(p => p.Fiscals)
+                .Include(p => p.UpdatedBy)
                 .AsNoTracking()
                 .FirstOrDefault(b => b.Id == id
                     && (isAdmin
