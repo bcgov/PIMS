@@ -469,6 +469,9 @@ namespace Pims.Dal.Migrations
                     b.Property<DateTime?>("UpdatedOn")
                         .HasColumnType("DATETIME2");
 
+                    b.Property<int>("propertyTypeId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("AddressId");
@@ -1106,6 +1109,9 @@ namespace Pims.Dal.Migrations
                     b.Property<string>("ZoningPotential")
                         .HasColumnType("nvarchar(50)")
                         .HasMaxLength(50);
+
+                    b.Property<int>("propertyTypeId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 

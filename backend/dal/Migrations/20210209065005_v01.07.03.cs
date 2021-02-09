@@ -9,6 +9,18 @@ namespace Pims.Dal.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             PreUp(migrationBuilder);
+            migrationBuilder.AddColumn<int>(
+                name: "propertyTypeId",
+                table: "Parcels",
+                nullable: false,
+                defaultValue: 0);
+
+            migrationBuilder.AddColumn<int>(
+                name: "propertyTypeId",
+                table: "Buildings",
+                nullable: false,
+                defaultValue: 0);
+
             migrationBuilder.CreateTable(
                 name: "ParcelParcels",
                 columns: table => new
@@ -72,6 +84,14 @@ namespace Pims.Dal.Migrations
             PreDown(migrationBuilder);
             migrationBuilder.DropTable(
                 name: "ParcelParcels");
+
+            migrationBuilder.DropColumn(
+                name: "propertyTypeId",
+                table: "Parcels");
+
+            migrationBuilder.DropColumn(
+                name: "propertyTypeId",
+                table: "Buildings");
             PostDown(migrationBuilder);
         }
     }

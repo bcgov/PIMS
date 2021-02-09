@@ -6,7 +6,7 @@ CREATE OR ALTER VIEW dbo.[View_Properties] AS
 SELECT
     p.[Id]
     , p.[RowVersion]
-    , [PropertyTypeId] =  (SELECT CASE WHEN sp.[SubdivisionId] IS NOT NULL THEN 2 ELSE 0 END)
+    , p.[PropertyTypeId]
     , p.[ClassificationId]
     , [Classification] = c.[Name]
     , p.[AgencyId]
@@ -113,7 +113,7 @@ UNION ALL
 SELECT
     b.[Id]
     , b.[RowVersion]
-    , [PropertyTypeId] = 1
+    , b.[PropertyTypeId]
     , b.[ClassificationId]
     , [Classification] = c.[Name]
     , b.[AgencyId]

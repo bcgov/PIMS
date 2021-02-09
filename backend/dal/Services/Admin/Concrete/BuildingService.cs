@@ -189,6 +189,7 @@ namespace Pims.Dal.Services.Admin
             if (building.BuildingOccupantType != null && !this.Context.BuildingOccupantTypes.Local.Any(a => a.Id == building.BuildingOccupantTypeId))
                 this.Context.Entry(building.BuildingOccupantType).State = EntityState.Unchanged;
 
+            building.propertyTypeId = PropertyTypes.Building;
             building.Agency = this.Context.Agencies.Local.FirstOrDefault(a => a.Id == building.AgencyId);
             building.Classification = this.Context.PropertyClassifications.Local.FirstOrDefault(a => a.Id == building.ClassificationId);
             building.BuildingConstructionType = this.Context.BuildingConstructionTypes.Local.FirstOrDefault(a => a.Id == building.BuildingConstructionTypeId);
@@ -220,6 +221,7 @@ namespace Pims.Dal.Services.Admin
             var userId = this.User.GetUserId();
             buildings.ForEach((building) =>
             {
+                building.propertyTypeId = PropertyTypes.Building;
                 if (building.Agency != null && !this.Context.Agencies.Local.Any(a => a.Id == building.BuildingOccupantTypeId))
                     this.Context.Entry(building.Agency).State = EntityState.Unchanged;
                 if (building.Classification != null && !this.Context.PropertyClassifications.Local.Any(a => a.Id == building.ClassificationId))

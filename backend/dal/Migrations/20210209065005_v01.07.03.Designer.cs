@@ -11,7 +11,7 @@ using Pims.Dal;
 namespace Pims.Dal.Migrations
 {
     [DbContext(typeof(PimsContext))]
-    [Migration("20210208174335_v01.07.03")]
+    [Migration("20210209065005_v01.07.03")]
     partial class v010703
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -470,6 +470,9 @@ namespace Pims.Dal.Migrations
 
                     b.Property<DateTime?>("UpdatedOn")
                         .HasColumnType("DATETIME2");
+
+                    b.Property<int>("propertyTypeId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -1108,6 +1111,9 @@ namespace Pims.Dal.Migrations
                     b.Property<string>("ZoningPotential")
                         .HasColumnType("nvarchar(50)")
                         .HasMaxLength(50);
+
+                    b.Property<int>("propertyTypeId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
