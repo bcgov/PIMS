@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using Entity = Pims.Dal.Entities;
+using Pims.Dal.Helpers.Constants;
 
 namespace Pims.Dal.Helpers.Extensions
 {
@@ -36,7 +37,7 @@ namespace Pims.Dal.Helpers.Extensions
             // Users may only view sensitive properties if they have the `sensitive-view` claim and belong to the owning agency.
             var query = context.Properties
                 .AsNoTracking()
-                .Where(p => p.ClassificationId != 4 && p.ClassificationId != 5 && p.ClassificationId != 6); // Disposed and subdivided/demolished properties are not visible.
+                .Where(p => p.ClassificationId != (int)ClassificationTypes.Classifications.Disposed && p.ClassificationId != (int)ClassificationTypes.Classifications.Demolished && p.ClassificationId != (int)ClassificationTypes.Classifications.Subdivided); // Disposed and subdivided/demolished properties are not visible.
 
             // Only allowed to see user's own agency properties.
             if (!isAdmin)
@@ -173,7 +174,7 @@ namespace Pims.Dal.Helpers.Extensions
             // Users may only view sensitive properties if they have the `sensitive-view` claim and belong to the owning agency.
             var query = context.Properties
                 .AsNoTracking()
-                .Where(p => p.ClassificationId != 4 && p.ClassificationId != 5 && p.ClassificationId != 6); // Disposed/subdivided/demolished properties are not visible.
+                .Where(p => p.ClassificationId != (int)ClassificationTypes.Classifications.Disposed && p.ClassificationId != (int)ClassificationTypes.Classifications.Demolished && p.ClassificationId != (int)ClassificationTypes.Classifications.Subdivided); // Disposed and subdivided/demolished properties are not visible.
 
             // Users are not allowed to view sensitive properties outside of their agency or sub-agencies.
             if (!isAdmin)
