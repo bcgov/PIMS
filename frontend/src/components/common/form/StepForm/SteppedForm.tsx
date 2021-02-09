@@ -43,7 +43,7 @@ const TabbedForm = styled(Form)`
       border: 0;
       color: white;
       svg {
-        background-color: #428bca;
+        background-color: ${variables.secondaryVariantColor};
         color: white;
       }
     }

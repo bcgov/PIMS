@@ -11,6 +11,7 @@ import { Button, Check, Input, Select } from 'components/common/form';
 import _ from 'lodash';
 import { getIn, useFormikContext } from 'formik';
 import { TypeaheadField } from 'components/common/form/Typeahead';
+import variables from '_variables.module.scss';
 
 const StyledRow = styled(Row)`
   .form-group {
@@ -51,7 +52,7 @@ const ProjectNumber = styled(props => <Input {...props} />)`
 /** styled container with grey background to contain form contents */
 const FormSection = styled(props => <Container {...props} />)`
   margin-top: 20px;
-  background-color: #e9ecef;
+  background-color: ${variables.tableHeaderColor};
   border-radius: 5px;
 `;
 

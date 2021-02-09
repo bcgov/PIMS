@@ -15,7 +15,10 @@ import { MAX_ZOOM } from 'constants/strings';
 import { Link, useLocation } from 'react-router-dom';
 import queryString from 'query-string';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
-import { PropertyTypes } from 'actions/parcelsActions';
+import { IParcel, PropertyTypes } from 'actions/parcelsActions';
+import { ReactComponent as BuildingSvg } from 'assets/images/icon-business.svg';
+import { AssociatedBuildingsList } from './AssociatedBuildingsList';
+import variables from '_variables.module.scss';
 
 const InfoContainer = styled.div`
   margin-right: -10px;
@@ -36,7 +39,7 @@ const InfoContainer = styled.div`
 const InfoHeader = styled.div`
   width: 100%;
   height: 52px;
-  background-color: #1a5a96;
+  background-color: ${variables.slideOutBlue};
   color: #fff;
   display: flex;
   flex-direction: column;
@@ -68,13 +71,36 @@ const InfoButton = styled(Button)`
   position: absolute;
   left: -51px;
   background-color: #fff;
-  color: #1a5a96;
-  border-color: #1a5a96;
+  color: ${variables.slideOutBlue};
+  border-color: ${variables.slideOutBlue};
   box-shadow: -2px 1px 4px rgba(0, 0, 0, 0.2);
   &.open {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
     top: 0px;
+  }
+`;
+
+const BuildingsButton = styled(Button)`
+  width: 40px;
+  height: 40px;
+  position: absolute;
+  left: -40px;
+  background-color: #fff;
+  color: ${variables.slideOutBlue};
+  border-color: ${variables.slideOutBlue};
+  box-shadow: -2px 1px 4px rgba(0, 0, 0, 0.2);
+  &.open {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    top: 55px;
+  }
+  .svg {
+    stroke: ${variables.slideOutBlue};
+    margin-left: -8px;
+    :hover {
+      stroke: #fff;
+    }
   }
 `;
 
@@ -123,10 +149,17 @@ const InfoControl: React.FC<InfoControlProps> = ({ open, setOpen, onHeaderAction
       L.DomEvent.on(elem!, 'mousewheel', L.DomEvent.stopPropagation);
     }
   });
+
+  //whether the associated buildings info is open
+  const [buildingsOpen, setBuildingsOpen] = React.useState<boolean>(false);
+  //whether the general parcel info is open
+  const [parcelInfoOpen, setParcelInfoOpen] = React.useState<boolean>(true);
+
   const addAssociatedBuildingLink = (
     <>
       <FaPlusSquare color="#1a5a96" className="mr-1" />
       <Link
+        style={{ color: '#1a5a96' }}
         to={{
           pathname: `/mapview`,
           search: queryString.stringify({
@@ -149,6 +182,43 @@ const InfoControl: React.FC<InfoControlProps> = ({ open, setOpen, onHeaderAction
   const canViewProperty = keycloak.canUserViewProperty(propertyInfo);
   const canEditProperty = keycloak.canUserEditProperty(propertyInfo);
 
+  const renderContent = () => {
+    if (popUpContext.propertyInfo) {
+      if (parcelInfoOpen) {
+        return (
+          <>
+            <HeaderActions
+              propertyInfo={popUpContext.propertyInfo}
+              propertyTypeId={popUpContext.propertyTypeID}
+              onLinkClick={onHeaderActionClick}
+              jumpToView={jumpToView}
+              zoomToView={zoomToView}
+              canViewDetails={canViewProperty}
+              canEditDetails={canEditProperty}
+            />
+            <InfoContent
+              propertyInfo={popUpContext.propertyInfo}
+              propertyTypeId={popUpContext.propertyTypeID}
+              addAssociatedBuildingLink={addAssociatedBuildingLink}
+              canViewDetails={canViewProperty}
+              canEditDetails={canEditProperty}
+            />
+          </>
+        );
+      } else if (buildingsOpen && canViewProperty) {
+        return (
+          <AssociatedBuildingsList
+            propertyInfo={popUpContext.propertyInfo as IParcel}
+            addAssociatedBuildingLink={addAssociatedBuildingLink}
+            canEditDetails={canEditProperty}
+          />
+        );
+      }
+    } else {
+      return <p>Click a pin to view the property details</p>;
+    }
+  };
+
   return (
     <Control position="topright">
       <InfoContainer id="infoContainer" className={clsx({ closed: !open })}>
@@ -165,36 +235,42 @@ const InfoControl: React.FC<InfoControlProps> = ({ open, setOpen, onHeaderAction
           <InfoButton
             id="slideOutInfoButton"
             variant="outline-secondary"
-            onClick={setOpen}
+            onClick={() => {
+              if (!open) {
+                setOpen();
+                setParcelInfoOpen(true);
+                setBuildingsOpen(false);
+              } else if (open && !parcelInfoOpen) {
+                setParcelInfoOpen(true);
+                setBuildingsOpen(false);
+              } else {
+                setOpen(); //close the slide out
+              }
+            }}
             className={clsx({ open })}
           >
             <InfoIcon />
           </InfoButton>
         </TooltipWrapper>
-        <InfoMain className={clsx({ open })}>
-          {popUpContext.propertyInfo ? (
-            <>
-              <HeaderActions
-                propertyInfo={popUpContext.propertyInfo}
-                propertyTypeId={popUpContext.propertyTypeID}
-                onLinkClick={onHeaderActionClick}
-                jumpToView={jumpToView}
-                zoomToView={zoomToView}
-                canViewDetails={canViewProperty}
-                canEditDetails={canEditProperty}
-              />
-              <InfoContent
-                propertyInfo={popUpContext.propertyInfo}
-                propertyTypeId={popUpContext.propertyTypeID}
-                addAssociatedBuildingLink={addAssociatedBuildingLink}
-                canViewDetails={canViewProperty}
-                canEditDetails={canEditProperty}
-              />
-            </>
-          ) : (
-            <p>Click a pin to view the property details</p>
+        {open &&
+          popUpContext.propertyInfo &&
+          canViewProperty &&
+          popUpContext.propertyTypeID === PropertyTypes.PARCEL && (
+            <TooltipWrapper toolTipId="associated-buildings-id" toolTip="Associated Buildings">
+              <BuildingsButton
+                id="slideOutBuildings"
+                variant="outline-secondary"
+                className={clsx({ open })}
+                onClick={() => {
+                  setBuildingsOpen(true);
+                  setParcelInfoOpen(false);
+                }}
+              >
+                <BuildingSvg className="svg" />
+              </BuildingsButton>
+            </TooltipWrapper>
           )}
-        </InfoMain>
+        <InfoMain className={clsx({ open })}>{renderContent()}</InfoMain>
       </InfoContainer>
     </Control>
   );

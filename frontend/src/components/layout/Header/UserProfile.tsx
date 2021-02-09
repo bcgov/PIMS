@@ -8,6 +8,7 @@ import styled from 'styled-components';
 import { FaSignOutAlt } from 'react-icons/fa';
 import * as API from 'constants/API';
 import { ILookupCode } from 'actions/lookupActions';
+import variables from '_variables.module.scss';
 
 /** the styling for the dropdown menu that appears after clicking the user's name */
 const StyleDropDown = styled(NavDropdown)`
@@ -21,14 +22,14 @@ const StyleDropDown = styled(NavDropdown)`
     padding: 1px;
   }
   .dropdown-item {
-    background-color: #38598a;
-    border-top: 2px solid #fcba19;
+    background-color: ${variables.primaryLightColor};
+    border-top: 2px solid ${variables.accentColor};
   }
 `;
 
 /** shaded box the users system roles will be displayed in */
 const RolesBox = styled.div`
-  background-color: #f2f2f2;
+  background-color: ${variables.filterBackgroundColor};
   margin: 5px;
 `;
 

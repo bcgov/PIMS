@@ -42,6 +42,7 @@ import {
 } from 'features/properties/components/forms/subforms/EvaluationForm';
 import { EvaluationKeys } from 'constants/evaluationKeys';
 import { FiscalKeys } from 'constants/fiscalKeys';
+import variables from '_variables.module.scss';
 
 const Container = styled.div`
   background-color: #fff;
@@ -70,7 +71,7 @@ const FormFooter = styled.div`
   height: 70px;
   align-items: center;
   position: sticky;
-  background-color: #f2f2f2;
+  background-color: ${variables.filterBackgroundColor};
   bottom: 25px;
 `;
 
@@ -105,7 +106,7 @@ const ProgressBar = styled.div`
   height: 10px;
   border-radius: 5px;
   margin: 10px 0px;
-  background-color: #428bca;
+  background-color: ${variables.secondaryVariantColor};
 `;
 
 export interface IAssociatedLand extends IBuilding {

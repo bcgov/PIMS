@@ -13,6 +13,7 @@ import { getIn, useFormikContext } from 'formik';
 import React from 'react';
 import { Col, Row } from 'react-bootstrap';
 import styled from 'styled-components';
+import variables from '_variables.module.scss';
 
 const Title = styled.h4`
   float: left;
@@ -20,7 +21,7 @@ const Title = styled.h4`
 
 /** formated information box to display the classification definitions to the right of the select */
 const InfoBox = styled.div`
-  border: 1px solid #f2f2f2;
+  border: 1px solid ${variables.filterBackgroundColor};
   border-radius: 4px;
   text-align: left;
   padding: 8px 12px 10px;

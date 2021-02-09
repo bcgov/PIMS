@@ -32,7 +32,7 @@ exports[`Land Form component renders correctly 1`] = `
 }
 
 .c1 .nav-tabs .nav-item.active svg {
-  background-color: #428bca;
+  background-color: secondaryVariantColor;
   color: white;
 }
 
@@ -115,7 +115,7 @@ exports[`Land Form component renders correctly 1`] = `
   align-items: center;
   position: -webkit-sticky;
   position: sticky;
-  background-color: #f2f2f2;
+  background-color: filterBackgroundColor;
   bottom: 40px;
 }
 

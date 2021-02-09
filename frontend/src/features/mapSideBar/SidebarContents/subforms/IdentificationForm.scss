@@ -1,7 +1,7 @@
 @import '../../../../colors.scss';
 .identification {
   .req {
-    color: red;
+    color: $danger-color;
     font-weight: bold;
   }
   .container {
@@ -46,7 +46,7 @@
       }
       text-align: left;
       padding: 15px;
-      background-color: #e9ecef;
+      background-color: $table-header-color;
       border-radius: 5px;
     }
   }

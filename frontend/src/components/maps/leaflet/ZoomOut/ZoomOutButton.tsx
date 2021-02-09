@@ -6,10 +6,11 @@ import styled from 'styled-components';
 import { FaExpandArrowsAlt } from 'react-icons/fa';
 import { LatLngBounds, Map as LeafletMap } from 'leaflet';
 import { MapProps as LeafletMapProps, Map as ReactLeafletMap } from 'react-leaflet';
+import variables from '_variables.module.scss';
 
 const ZoomButton = styled(Button)`
   background-color: #ffffff !important;
-  color: #121212 !important;
+  color: ${variables.darkVariantColor} !important;
   width: 40px;
   height: 40px;
 `;

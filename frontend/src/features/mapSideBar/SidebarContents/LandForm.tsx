@@ -44,6 +44,7 @@ import { IParcel } from 'actions/parcelsActions';
 import { EvaluationKeys } from 'constants/evaluationKeys';
 import { FiscalKeys } from 'constants/fiscalKeys';
 import { stringToNull } from 'utils';
+import variables from '_variables.module.scss';
 
 const Container = styled.div`
   background-color: #fff;
@@ -72,7 +73,7 @@ const FormFooter = styled.div`
   height: 70px;
   align-items: center;
   position: sticky;
-  background-color: #f2f2f2;
+  background-color: ${variables.filterBackgroundColor};
   bottom: 40px;
 `;
 
