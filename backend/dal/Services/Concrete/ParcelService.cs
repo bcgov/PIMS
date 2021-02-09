@@ -316,6 +316,7 @@ namespace Pims.Dal.Services
             // Users who don't own the parcel, but only own a building cannot update the parcel.
             if (allowEdit)
             {
+                parcel.PropertyTypeId = originalParcel.PropertyTypeId;
                 this.Context.Entry(originalParcel.Address).CurrentValues.SetValues(parcel.Address);
                 this.Context.Entry(originalParcel).CurrentValues.SetValues(parcel);
                 this.Context.SetOriginalRowVersion(originalParcel);
@@ -342,6 +343,7 @@ namespace Pims.Dal.Services
                 }
                 else
                 {
+                    building.PropertyTypeId = existingBuilding.PropertyTypeId;
                     this.ThrowIfNotAllowedToUpdate(existingBuilding, _options.Project);
 
                     if (!allowEdit && !userAgencies.Contains(existingBuilding.AgencyId.Value)) throw new NotAuthorizedException("User may not update a property they don't own.");

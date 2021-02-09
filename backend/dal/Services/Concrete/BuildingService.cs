@@ -275,6 +275,7 @@ namespace Pims.Dal.Services
 
             if (allowEdit)
             {
+                building.PropertyTypeId = existingBuilding.PropertyTypeId;
                 this.Context.Entry(existingBuilding.Address).CurrentValues.SetValues(building.Address);
                 this.Context.Entry(existingBuilding).CurrentValues.SetValues(building);
                 this.Context.SetOriginalRowVersion(existingBuilding);

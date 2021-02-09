@@ -262,6 +262,7 @@ namespace Pims.Dal.Services.Admin
                 .FirstOrDefault(b => b.Id == building.Id) ?? throw new KeyNotFoundException();
             this.ThrowIfNotAllowedToUpdate(originalBuilding, _options.Project);
 
+            building.PropertyTypeId = originalBuilding.PropertyTypeId;
             var entry = this.Context.Entry(originalBuilding);
             entry.CurrentValues.SetValues(building);
             entry.Collection(p => p.Evaluations).Load();

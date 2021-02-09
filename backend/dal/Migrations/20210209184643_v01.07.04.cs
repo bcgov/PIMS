@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Pims.Dal.Migrations
 {
-    public partial class v010703 : SeedMigration
+    public partial class v010704 : SeedMigration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

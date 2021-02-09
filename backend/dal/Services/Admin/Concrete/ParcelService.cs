@@ -359,6 +359,7 @@ namespace Pims.Dal.Services.Admin
             parcel.ThrowIfNotAllowedToEdit(nameof(parcel), this.User, new[] { Permissions.SystemAdmin, Permissions.AgencyAdmin });
 
             var originalParcel = this.Context.Parcels.Find(parcel.Id) ?? throw new KeyNotFoundException();
+            parcel.PropertyTypeId = originalParcel.PropertyTypeId;
 
             var entry = this.Context.Entry(originalParcel);
             entry.CurrentValues.SetValues(parcel);
