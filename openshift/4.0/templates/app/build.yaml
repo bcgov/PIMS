@@ -17,6 +17,16 @@ parameters:
     description: "The name of the application role."
     required: true
     value: "app"
+  - name: PROJECT_NAMESPACE
+    displayName: "OpenShift Project Namespace"
+    description: "The namespace of the OpenShift project containing the application."
+    required: true
+    value: "354028"
+  - name: ENV_NAME
+    displayName: "Environment name"
+    description: "The name for this environment [dev, test, prod, tools]"
+    required: true
+    value: "tools"
 
   - name: BUILDIMAGE_NAME
     displayName: "Source Image Name"
@@ -72,24 +82,28 @@ objects:
     apiVersion: v1
     metadata:
       name: ${APP_NAME}-${ROLE_NAME}-base
+      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
       annotations:
         description: Keeps track of changes to the intermediate frontend artifacts image
     labels:
       name: ${APP_NAME}-${ROLE_NAME}-base
       app: ${APP_NAME}
       role: ${ROLE_NAME}
+      env: ${ENV_NAME}
 
   # The build config that will be created and be named for the branch you created it for.
   - kind: BuildConfig
     apiVersion: v1
     metadata:
-      name: ${APP_NAME}-${ROLE_NAME}-base-${GIT_REF}
+      name: ${APP_NAME}-${ROLE_NAME}-base.${GIT_REF}
+      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
       annotations:
         description: Intermediate build that generates the frontend artifacts (html, javascript, images, etc)
     labels:
-      name: ${APP_NAME}-${ROLE_NAME}-base-${GIT_REF}
+      name: ${APP_NAME}-${ROLE_NAME}-base.${GIT_REF}
       app: ${APP_NAME}
       role: ${ROLE_NAME}
+      env: ${ENV_NAME}
     spec:
       runPolicy: Parallel
       completionDeadlineSeconds: 1800
@@ -123,24 +137,28 @@ objects:
     apiVersion: v1
     metadata:
       name: ${APP_NAME}-${ROLE_NAME}
+      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
       annotations:
         description: Keeps track of changes to the final frontend image (embedded in nginx)
     labels:
       name: ${APP_NAME}-${ROLE_NAME}
       app: ${APP_NAME}
       role: ${ROLE_NAME}
+      env: ${ENV_NAME}
 
   # The build config that will be created and be named for the branch you created it for.
   - kind: BuildConfig
     apiVersion: v1
     metadata:
-      name: ${APP_NAME}-${ROLE_NAME}-${GIT_REF}
+      name: ${APP_NAME}-${ROLE_NAME}.${GIT_REF}
+      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
       annotations:
         description: This (final) build takes the generated frontend artifacts and serves them through a static web server (nginx)
     labels:
-      name: ${APP_NAME}-${ROLE_NAME}-${GIT_REF}
+      name: ${APP_NAME}-${ROLE_NAME}.${GIT_REF}
       app: ${APP_NAME}
       role: ${ROLE_NAME}
+      env: ${ENV_NAME}
     spec:
       runPolicy: Parallel
       completionDeadlineSeconds: 1800
