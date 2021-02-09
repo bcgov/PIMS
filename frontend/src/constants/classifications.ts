@@ -12,4 +12,8 @@ export enum Classifications {
   SurplusEncumbered = 3,
   /** The property has been disposed. */
   Disposed = 4,
+  /** The property has been demolished */
+  Demolished = 5,
+  /** The property has been subdivided */
+  Subdivided = 6,
 }

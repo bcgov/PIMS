@@ -291,6 +291,12 @@ namespace Pims.Dal.Services
             // Only administrators can dispose a property.
             if (!isAdmin && parcel.ClassificationId == 4) throw new NotAuthorizedException("Parcel classification cannot be changed to disposed."); // TODO: Classification '4' should be a config settings.
 
+            // Only administrators can set parcel to subdivided
+            if(!isAdmin && parcel.ClassificationId == 6) throw new NotAuthorizedException("Parcel classification cannot be changed to subdivided.");
+
+            // Only buildings can be set to demolished
+            if(!isAdmin && parcel.ClassificationId == 5) throw new NotAuthorizedException("Only buildings may be set to demolished.");
+
             // Users who don't own the parcel, but only own a building cannot update the parcel.
             if (allowEdit)
             {
