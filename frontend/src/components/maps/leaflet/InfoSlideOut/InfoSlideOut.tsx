@@ -115,8 +115,8 @@ const Title = styled.p`
 export type InfoControlProps = {
   /** whether the slide out is open or closed */
   open: boolean;
-  /** set the slide out as open or closed */
-  setOpen: () => void;
+  /** set the slide out as open or closed*/
+  setOpen: (state: boolean) => void;
   /** additional action for when a link is clicked */
   onHeaderActionClick?: () => void;
 };
@@ -159,7 +159,7 @@ const InfoControl: React.FC<InfoControlProps> = ({ open, setOpen, onHeaderAction
     <>
       <FaPlusSquare color="#1a5a96" className="mr-1" />
       <Link
-        style={{ color: '#1a5a96' }}
+        style={{ color: variables.slideOutBlue }}
         to={{
           pathname: `/mapview`,
           search: queryString.stringify({
@@ -237,14 +237,14 @@ const InfoControl: React.FC<InfoControlProps> = ({ open, setOpen, onHeaderAction
             variant="outline-secondary"
             onClick={() => {
               if (!open) {
-                setOpen();
+                setOpen(true);
                 setParcelInfoOpen(true);
                 setBuildingsOpen(false);
               } else if (open && !parcelInfoOpen) {
                 setParcelInfoOpen(true);
                 setBuildingsOpen(false);
               } else {
-                setOpen(); //close the slide out
+                setOpen(false); //close the slide out
               }
             }}
             className={clsx({ open })}

@@ -377,8 +377,8 @@ const Map: React.FC<MapProps> = ({
                     />
                     <InfoSlideOut
                       open={infoOpen}
-                      setOpen={() => {
-                        setInfoOpen(!infoOpen);
+                      setOpen={(state: boolean) => {
+                        setInfoOpen(state);
                         setLayersOpen(false);
                       }}
                       onHeaderActionClick={() => {
