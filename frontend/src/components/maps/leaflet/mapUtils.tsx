@@ -2,12 +2,12 @@ import { Icon, DivIcon, LatLngExpression, Layer, Marker, Map, GeoJSON } from 'le
 import { ICluster, PointFeature } from '../types';
 import { IProperty, PropertyTypes } from 'actions/parcelsActions';
 import Supercluster from 'supercluster';
-import { ReviewWorkflowStatus } from 'features/projects/common';
 import { Classifications } from 'constants/classifications';
+import { Workflows } from 'constants/workflows';
 
 // parcel icon (green)
 export const parcelIcon = new Icon({
-  iconUrl: require('assets/images/marker-icon-2x-green.png'),
+  iconUrl: require('assets/images/land-reg.png'),
   shadowUrl: require('assets/images/marker-shadow.png'),
   iconSize: [25, 41],
   iconAnchor: [12, 41],
@@ -17,7 +17,17 @@ export const parcelIcon = new Icon({
 
 // building icon (blue)
 export const buildingIcon = new Icon({
-  iconUrl: require('assets/images/marker-icon-2x-blue.png'),
+  iconUrl: require('assets/images/building-reg.png'),
+  shadowUrl: require('assets/images/marker-shadow.png'),
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41],
+});
+
+// subdivision icon (green)
+export const subdivisionIcon = new Icon({
+  iconUrl: require('assets/images/subdiv-reg.png'),
   shadowUrl: require('assets/images/marker-shadow.png'),
   iconSize: [25, 41],
   iconAnchor: [12, 41],
@@ -48,8 +58,8 @@ export const draftBuildingIcon = new Icon({
 });
 
 // spp icon (purple)
-export const sppIcon = new Icon({
-  iconUrl: require('assets/images/marker-icon-2x-violet.png'),
+export const landSppIcon = new Icon({
+  iconUrl: require('assets/images/land-spl.png'),
   shadowUrl: require('assets/images/marker-shadow.png'),
   iconSize: [25, 41],
   iconAnchor: [12, 41],
@@ -58,8 +68,48 @@ export const sppIcon = new Icon({
 });
 
 // erp icon (red)
-export const erpIcon = new Icon({
-  iconUrl: require('assets/images/marker-icon-2x-red.png'),
+export const landErpIcon = new Icon({
+  iconUrl: require('assets/images/land-erp.png'),
+  shadowUrl: require('assets/images/marker-shadow.png'),
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41],
+});
+
+// spp icon (purple)
+export const buildingSppIcon = new Icon({
+  iconUrl: require('assets/images/building-spl.png'),
+  shadowUrl: require('assets/images/marker-shadow.png'),
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41],
+});
+
+// erp icon (red)
+export const buildingErpIcon = new Icon({
+  iconUrl: require('assets/images/building-erp.png'),
+  shadowUrl: require('assets/images/marker-shadow.png'),
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41],
+});
+
+// spp icon (purple)
+export const subdivisionSppIcon = new Icon({
+  iconUrl: require('assets/images/subdiv-spl.png'),
+  shadowUrl: require('assets/images/marker-shadow.png'),
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41],
+});
+
+// erp icon (red)
+export const subdivisionErpIcon = new Icon({
+  iconUrl: require('assets/images/subdiv-erp.png'),
   shadowUrl: require('assets/images/marker-shadow.png'),
   iconSize: [25, 41],
   iconAnchor: [12, 41],
@@ -105,22 +155,32 @@ export const pointToLayer = (feature: ICluster, latlng: LatLngExpression): Layer
  * Get an icon type for the specified cluster property details (type, draft, erp, spp etc)
  */
 export const getMarkerIcon = (feature: ICluster) => {
-  const { propertyTypeId, projectStatus, classificationId } = feature?.properties;
-  if (
-    [
-      ReviewWorkflowStatus.ERP,
-      ReviewWorkflowStatus.OnHold,
-      ReviewWorkflowStatus.ApprovedForErp,
-    ].includes(projectStatus)
-  ) {
-    return erpIcon;
+  const { propertyTypeId, projectWorkflow, classificationId } = feature?.properties;
+  if (projectWorkflow === Workflows.ERP) {
+    switch (propertyTypeId) {
+      case PropertyTypes.PARCEL:
+        return landErpIcon;
+      case PropertyTypes.BUILDING:
+        return buildingErpIcon;
+      case PropertyTypes.SUBDIVISION:
+        return subdivisionErpIcon;
+    }
   } else if (
     classificationId === Classifications.SurplusActive ||
     classificationId === Classifications.SurplusEncumbered
   ) {
-    return sppIcon;
+    switch (propertyTypeId) {
+      case PropertyTypes.PARCEL:
+        return landSppIcon;
+      case PropertyTypes.BUILDING:
+        return buildingSppIcon;
+      case PropertyTypes.SUBDIVISION:
+        return subdivisionSppIcon;
+    }
   } else if (propertyTypeId === PropertyTypes.PARCEL) {
     return parcelIcon;
+  } else if (propertyTypeId === PropertyTypes.SUBDIVISION) {
+    return subdivisionIcon;
   } else if (propertyTypeId === PropertyTypes.DRAFT_PARCEL) {
     return draftParcelIcon;
   } else if (propertyTypeId === PropertyTypes.DRAFT_BUILDING) {

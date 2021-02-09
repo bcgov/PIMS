@@ -39,14 +39,16 @@ namespace Pims.Dal.Helpers.Extensions
                 .AsNoTracking()
                 .Where(p => p.ClassificationId != (int)ClassificationTypes.Classifications.Disposed && p.ClassificationId != (int)ClassificationTypes.Classifications.Demolished && p.ClassificationId != (int)ClassificationTypes.Classifications.Subdivided); // Disposed and subdivided/demolished properties are not visible.
 
+
             // Only allowed to see user's own agency properties.
             if (!isAdmin)
                 query = query.Where(p => p.IsVisibleToOtherAgencies || userAgencies.Contains(p.AgencyId));
             if (!viewSensitive)
                 query = query.Where(p => !p.IsSensitive);
 
+            //for now, if the user filters by land they will also see subdivisions.
             if (filter.PropertyType.HasValue)
-                query = query.Where(p => p.PropertyTypeId == filter.PropertyType.Value);
+                query = query.Where(p => p.PropertyTypeId == filter.PropertyType.Value || (filter.PropertyType == Entity.PropertyTypes.Land && p.PropertyTypeId == Entity.PropertyTypes.Subdivision));
 
             if (filter.RentableArea.HasValue)
                 query = query.Where(p => p.RentableArea == filter.RentableArea);
@@ -174,7 +176,9 @@ namespace Pims.Dal.Helpers.Extensions
             // Users may only view sensitive properties if they have the `sensitive-view` claim and belong to the owning agency.
             var query = context.Properties
                 .AsNoTracking()
-                .Where(p => p.ClassificationId != (int)ClassificationTypes.Classifications.Disposed && p.ClassificationId != (int)ClassificationTypes.Classifications.Demolished && p.ClassificationId != (int)ClassificationTypes.Classifications.Subdivided); // Disposed and subdivided/demolished properties are not visible.
+                .Where(p => p.ClassificationId != (int)ClassificationTypes.Classifications.Disposed && p.ClassificationId != (int)ClassificationTypes.Classifications.Demolished && p.ClassificationId != (int)ClassificationTypes.Classifications.Subdivided // Disposed and subdivided/demolished properties are not visible.
+                && (p.PropertyTypeId != Entity.PropertyTypes.Subdivision
+                || (p.PropertyTypeId == Entity.PropertyTypes.Subdivision && (p.IsVisibleToOtherAgencies || userAgencies.Contains(p.AgencyId) || isAdmin))));
 
             // Users are not allowed to view sensitive properties outside of their agency or sub-agencies.
             if (!isAdmin)
@@ -185,7 +189,7 @@ namespace Pims.Dal.Helpers.Extensions
                 query = query.Where(p => userAgencies.Contains(p.AgencyId));
 
             if (filter.PropertyType.HasValue)
-                query = query.Where(p => p.PropertyTypeId == filter.PropertyType.Value);
+                query = query.Where(p => p.PropertyTypeId == filter.PropertyType.Value || (filter.PropertyType == Entity.PropertyTypes.Land && p.PropertyTypeId == Entity.PropertyTypes.Subdivision));
 
             if (filter.RentableArea.HasValue)
                 query = query.Where(p => p.RentableArea == filter.RentableArea);

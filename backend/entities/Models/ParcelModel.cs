@@ -85,7 +85,7 @@ namespace Pims.Dal.Entities.Models
         /// <param name="user"></param>
         public ParcelModel(Views.Property property, ClaimsPrincipal user) : base(property, user)
         {
-            this.PropertyTypeId = PropertyTypes.Land;
+            this.PropertyTypeId = property.PropertyTypeId;
             this.PID = property.PID;
             this.PIN = property.PIN;
             this.LandLegalDescription = property.LandLegalDescription;
