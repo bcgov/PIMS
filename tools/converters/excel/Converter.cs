@@ -407,6 +407,7 @@ namespace Pims.Tools.Converters.ExcelConverter
                         {
                             "ConvertToFiscalYear" => $"{item}".ConvertToFiscalYear(nullable && (sourceType.IsDbNull() || item == null)),
                             "ConvertToDate" => $"{item}".ConvertToDate(nullable && (sourceType.IsDbNull() || item == null)),
+                            "ConvertToBoolean" => $"{item}".ConvertToBoolean(nullable && (sourceType.IsDbNull() || item == null)),
                             _ => await ConvertAsync(sourceType.IsDbNull() ? null : item, row, options.Converter, options.ConverterArgs)
                         };
                     }
