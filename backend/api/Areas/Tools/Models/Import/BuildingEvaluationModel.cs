@@ -11,7 +11,7 @@ namespace Pims.Api.Areas.Tools.Models.Import
 
         public string Key { get; set; }
 
-        public float Value { get; set; }
+        public decimal Value { get; set; }
 
         public string Note { get; set; }
         #endregion
