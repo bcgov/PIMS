@@ -4,6 +4,10 @@ export const CoreOperational =
   'provide substantial support to ongoing program needs but are not uniquely strategic \n' +
   '(i.e. alternatives exist).';
 
+export const Demolished = 'The building has been demolished.';
+
+export const Subdivided = 'The property has been subdivided.';
+
 export const CoreStrategic =
   'Core Strategic – assets that are uniquely integral to a larger long-term service delivery \n' +
   'strategy and/or are functionally and financially effective relative to critical service \n' +

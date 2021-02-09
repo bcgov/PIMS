@@ -234,6 +234,12 @@ namespace Pims.Dal.Services
             // Only administrators can dispose a property.
             if (building.ClassificationId == 4 && !isAdmin) throw new NotAuthorizedException("Building classification cannot be changed to disposed.");
 
+            // Only administrators can set a building to demolished
+            if(building.ClassificationId == 5 && isAdmin) throw new NotAuthorizedException("Building classification cannot be changed to demolished.");
+
+            // Only administrators can set property to subdivided
+            if(building.ClassificationId == 6 && isAdmin) throw new NotAuthorizedException("Building classification cannot be changed to subdivided.");
+
             var allowEdit = isAdmin || userAgencies.Contains(existingBuilding.AgencyId);
             // A building should have a unique name within the parcel it is located on.
             existingBuilding.Parcels.ForEach(pb => this.Context.ThrowIfNotUnique(pb.Parcel, building));
