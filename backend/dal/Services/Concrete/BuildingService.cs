@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using Pims.Dal.Helpers.Constants;
 
 namespace Pims.Dal.Services
 {
@@ -232,13 +233,13 @@ namespace Pims.Dal.Services
             if (existingBuilding.IsVisibleToOtherAgencies != building.IsVisibleToOtherAgencies) throw new InvalidOperationException("Building cannot be made visible to other agencies through this service.");
 
             // Only administrators can dispose a property.
-            if (building.ClassificationId == 4 && !isAdmin) throw new NotAuthorizedException("Building classification cannot be changed to disposed.");
+            if (building.ClassificationId == (int)ClassificationTypes.Classifications.Disposed && !isAdmin) throw new NotAuthorizedException("Building classification cannot be changed to disposed.");
 
             // Only administrators can set a building to demolished
-            if(building.ClassificationId == 5 && isAdmin) throw new NotAuthorizedException("Building classification cannot be changed to demolished.");
+            if(building.ClassificationId == (int)ClassificationTypes.Classifications.Demolished && !isAdmin) throw new NotAuthorizedException("Building classification cannot be changed to demolished.");
 
             // Only administrators can set property to subdivided
-            if(building.ClassificationId == 6 && isAdmin) throw new NotAuthorizedException("Building classification cannot be changed to subdivided.");
+            if(building.ClassificationId == (int)ClassificationTypes.Classifications.Subdivided && !isAdmin) throw new NotAuthorizedException("Building classification cannot be changed to subdivided.");
 
             var allowEdit = isAdmin || userAgencies.Contains(existingBuilding.AgencyId);
             // A building should have a unique name within the parcel it is located on.
