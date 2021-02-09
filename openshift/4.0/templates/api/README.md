@@ -39,11 +39,12 @@ Update the configuration file and set the appropriate parameters.
 ```conf
 ENV_NAME=dev
 IMAGE_TAG=dev
-APP_DOMAIN=pims-dev.app.developer.gov.bc.ca
+APP_DOMAIN=pims-dev.apps.silver.devops.gov.bc.ca
 APP_PORT=8080
+API_PATH=/api
 ASPNETCORE_ENVIRONMENT=Development
 ASPNETCORE_URLS=http://*:8080
-CONNECTION_STRINGS_PIMS={Connection String}
+CONNECTION_STRINGS_PIMS=Server=pims-database,1433;User ID=admin;Database=pims
 KEYCLOAK_AUDIENCE=pims-api
 KEYCLOAK_AUTHORITY=https://dev.oidc.gov.bc.ca/auth/realms/xz0xtue5
 KEYCLOAK_ADMIN_AUTHORITY=https://dev.oidc.gov.bc.ca/auth/admin/realms/xz0xtue5
@@ -68,24 +69,4 @@ Create the api deployment and save the template.
 oc project 354028-dev
 
 oc process -f deploy.yaml --param-file=deploy.dev.env | oc create --save-config=true -f -
-```
-
-Create a deployment configuration file here - `deploy-swagger.dev.env`
-Update the configuration file and set the appropriate parameters.
-
-The reason this is a separate configuration is because the order routes are created is important, but you can't control the order within a single template.
-If a route has the same domain name, but the path is different, then you need to be careful what order you create the routes.
-
-**Example**
-
-```conf
-ENV_NAME=dev
-APP_DOMAIN=pims-dev.apps.silver.devops.gov.bc.ca
-APP_PORT=8080
-```
-
-Create the swagger route deployment and save the template.
-
-```bash
-oc process -f deploy-swagger.yaml --param-file=deploy-swagger.dev.env | oc create --save-config=true -f -
 ```
