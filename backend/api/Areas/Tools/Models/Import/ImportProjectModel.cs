@@ -69,11 +69,6 @@ namespace Pims.Api.Areas.Tools.Models.Import
 
         #region Dates
         /// <summary>
-        /// get/set - The date the project was marketed.
-        /// </summary>
-        public DateTime? MarketedOn { get; set; }
-
-        /// <summary>
         /// get/set - The date the project was completed.
         /// </summary>
         public DateTime? CompletedOn { get; set; }
@@ -82,21 +77,6 @@ namespace Pims.Api.Areas.Tools.Models.Import
         /// get/set - The date the project was disposed.
         /// </summary>
         public DateTime? DisposedOn { get; set; }
-
-        /// <summary>
-        /// get/set - The date interest was received.
-        /// </summary>
-        public DateTime? InterestedReceivedOn { get; set; }
-
-        /// <summary>
-        /// get/set - When a request to be added to SPL was received.
-        /// </summary>
-        public DateTime? RequestForSplReceivedOn { get; set; }
-
-        /// <summary>
-        /// get/set - When the project was approved to be added to SPL.
-        /// </summary>
-        public DateTime? ApprovedForSplOn { get; set; }
         #endregion
 
         #region Notes
@@ -106,7 +86,44 @@ namespace Pims.Api.Areas.Tools.Models.Import
         public ICollection<KeyValuePair<string, string>> Notes { get; set; } = new List<KeyValuePair<string, string>>();
         #endregion
 
+        #region ERP
+        /// <summary>
+        /// get/set - Whether an exemption was requested for the ERP.
+        /// </summary>
+        public bool ExemptionRequested { get; set; }
+
+        /// <summary>
+        /// get/set - When the initial enhanced referral notification was sent.
+        /// </summary>
+        public DateTime? InitialNotificationSentOn { get; set; }
+
+        /// <summary>
+        /// get/set - When interest was received on.
+        /// </summary>
+        public DateTime? InterestedReceivedOn { get; set; }
+
+        /// <summary>
+        /// get/set - When the clearance enhanced referral notification was sent.
+        /// </summary>
+        public DateTime? ClearanceNotificationSentOn { get; set; }
+        #endregion
+
         #region SPL
+        /// <summary>
+        /// get/set - When a request to be added to SPL was received.
+        /// </summary>
+        public DateTime? RequestForSplReceivedOn { get; set; }
+
+        /// <summary>
+        /// get/set - When the project was approved to be added to SPL.
+        /// </summary>
+        public DateTime? ApprovedForSplOn { get; set; }
+
+        /// <summary>
+        /// get/set - The date the project was marketed.
+        /// </summary>
+        public DateTime? MarketedOn { get; set; }
+
         /// <summary>
         /// get/set - Text field describing project purchaser.
         /// </summary>
@@ -143,6 +160,11 @@ namespace Pims.Api.Areas.Tools.Models.Import
         /// get/set - The firm that did the appraisal.
         /// </summary>
         public string AppraisedBy { get; set; }
+
+        /// <summary>
+        /// get/set - The date the appraisal was provided.
+        /// </summary>
+        public DateTime? AppraisedOn { get; set; }
 
         /// <summary>
         /// get/set - The program costs of the sale.
