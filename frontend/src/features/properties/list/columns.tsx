@@ -1,6 +1,3 @@
-import { ReactComponent as BuildingSvg } from 'assets/images/icon-business.svg';
-import { ReactComponent as LandSvg } from 'assets/images/icon-lot.svg';
-
 import React from 'react';
 import { CellProps } from 'react-table';
 import { Link } from 'react-router-dom';
@@ -15,6 +12,7 @@ import queryString from 'query-string';
 import { EditableMoneyCell, MoneyCell } from 'components/Table/MoneyCell';
 import _ from 'lodash';
 import styled from 'styled-components';
+import { PropertyTypeCell } from 'components/Table/PropertyTypeCell';
 
 export const ColumnDiv = styled.div`
   display: flex;
@@ -139,9 +137,7 @@ export const columns = (
   {
     Header: 'Type',
     accessor: 'propertyTypeId',
-    Cell: ({ cell: { value } }: CellProps<IProperty, number>) => {
-      return value === 0 ? <LandSvg className="svg" /> : <BuildingSvg className="svg" />;
-    },
+    Cell: PropertyTypeCell,
     responsive: true,
     width: spacing.xsmall,
     minWidth: 60,

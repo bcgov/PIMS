@@ -71,6 +71,7 @@ exports[`renders correctly 1`] = `
           </label>
           <input
             className="col-md-5 form-control"
+            data-testid="project-name"
             disabled={true}
             id="input-name"
             name="name"
@@ -97,6 +98,7 @@ exports[`renders correctly 1`] = `
           </label>
           <textarea
             className="col-md-auto form-control"
+            data-testid="project-description"
             disabled={true}
             id="input-description"
             name="description"

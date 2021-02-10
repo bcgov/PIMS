@@ -127,7 +127,8 @@ exports[`GRE Transfer Step renders correctly 1`] = `
           </label>
           <input
             className="col-md-5 form-control"
-            disabled={true}
+            data-testid="project-name"
+            disabled={false}
             id="input-name"
             name="name"
             onBlur={[Function]}
@@ -153,7 +154,8 @@ exports[`GRE Transfer Step renders correctly 1`] = `
           </label>
           <textarea
             className="col-md-auto form-control"
-            disabled={true}
+            data-testid="project-description"
+            disabled={false}
             id="input-description"
             name="description"
             onBlur={[Function]}
@@ -777,7 +779,7 @@ exports[`GRE Transfer Step renders correctly 1`] = `
                   }
                   title=""
                 >
-                  $0
+                  $1
                 </div>
                 <div
                   className="td clickable"
@@ -799,7 +801,6 @@ exports[`GRE Transfer Step renders correctly 1`] = `
                 >
                   <svg
                     className="svg"
-                    title="Land"
                   >
                     icon-lot.svg
                   </svg>

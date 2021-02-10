@@ -584,7 +584,6 @@ exports[`Property List View Select renders correctly 1`] = `
             >
               <svg
                 class="svg"
-                title="Land"
               >
                 icon-lot.svg
               </svg>

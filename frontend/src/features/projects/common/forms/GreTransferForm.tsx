@@ -16,7 +16,7 @@ import { TypeaheadField } from 'components/common/form/Typeahead';
  * Form component of GreTransferStep.
  * @param param0 isReadOnly disable editing
  */
-const GreTransferForm = ({ canEdit }: { canEdit: boolean }) => {
+export const GreTransferForm = ({ canEdit }: { canEdit: boolean }) => {
   /** Enter edit mode if allowed and there are errors to display */
   const { values, setFieldValue, touched } = useFormikContext<IProject>();
   const agencyOptions = useCodeLookups().getOptionsByType('Agency');
@@ -45,7 +45,7 @@ const GreTransferForm = ({ canEdit }: { canEdit: boolean }) => {
   }, [setFieldValue, values.properties, values.agencyId, agencies, touched, initialAgencyId]);
   return (
     <Fragment>
-      <ProjectDraftForm isReadOnly={true} />
+      <ProjectDraftForm isReadOnly={canEdit} />
       <h3>Properties in the Project</h3>
       <p>Update Properties with New Agency Owner Name</p>
       <Form.Row>
@@ -53,6 +53,7 @@ const GreTransferForm = ({ canEdit }: { canEdit: boolean }) => {
           New Owning Agency
         </Form.Label>
         <TypeaheadField
+          data-testid="transfer-to-agency"
           options={agencyOptions}
           name="agencyId"
           labelKey="label"

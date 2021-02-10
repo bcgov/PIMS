@@ -77,6 +77,11 @@ namespace Pims.Api.Areas.Property.Models.Search
         public string ProjectStatus { get; set; }
 
         /// <summary>
+        /// get/set - The workflow code of this project, if in a project.
+        /// </summary>
+        public string ProjectWorkflow { get; set; }
+
+        /// <summary>
         /// get/set - Whether the property is sensitive data.
         /// </summary>
         public bool IsSensitive { get; set; }

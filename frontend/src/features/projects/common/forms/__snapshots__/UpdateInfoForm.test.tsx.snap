@@ -1075,7 +1075,6 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                 >
                   <svg
                     className="svg"
-                    title="Land"
                   >
                     icon-lot.svg
                   </svg>

@@ -6,8 +6,9 @@ import { PointFeature } from 'components/maps/types';
 export enum PropertyTypes {
   PARCEL = 0,
   BUILDING = 1,
-  DRAFT_PARCEL = 2,
-  DRAFT_BUILDING = 3,
+  SUBDIVISION = 2,
+  DRAFT_PARCEL = 3,
+  DRAFT_BUILDING = 4,
 }
 
 export interface IProperty {
@@ -21,6 +22,10 @@ export interface IProperty {
   projectNumbers?: string[];
   projectStatus?: string;
   isSensitive: boolean | '';
+  createdOn?: string;
+  updatedOn?: string;
+  updatedByEmail?: string;
+  updatedByName?: string;
 }
 
 export interface IStoreParcelsAction {

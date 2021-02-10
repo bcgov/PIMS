@@ -23,6 +23,7 @@ export { default as AppraisalCheckListForm } from './forms/AppraisalCheckListFor
 export { default as FirstNationsCheckListForm } from './forms/FirstNationsCheckListForm';
 export { default as SelectProjectPropertiesForm } from './forms/SelectProjectPropertiesForm';
 export { default as TasksForm } from './forms/TasksForm';
+export { default as GreTransferForm } from './forms/GreTransferForm';
 
 export { default as useStepForm } from './hooks/useStepForm';
 export { default as useProject } from './hooks/useProject';

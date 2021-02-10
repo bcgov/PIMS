@@ -54,7 +54,7 @@ export const convertToProperty = (
   latitude?: number,
   longitude?: number,
 ): IParcel | IBuilding | null => {
-  if (property.propertyTypeId === PropertyTypes.PARCEL) {
+  if ([PropertyTypes.PARCEL, PropertyTypes.SUBDIVISION].includes(property.propertyTypeId)) {
     return {
       ...property,
       latitude: latitude,
@@ -253,7 +253,7 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
   const { getParcel, getBuilding } = useApi();
   const fetchProperty = React.useCallback(
     (propertyTypeId: number, id: number) => {
-      if (propertyTypeId === PropertyTypes.PARCEL) {
+      if ([PropertyTypes.PARCEL, PropertyTypes.SUBDIVISION].includes(propertyTypeId)) {
         getParcel(id as number).then(parcel => {
           popUpContext.setPropertyInfo(parcel);
         });
