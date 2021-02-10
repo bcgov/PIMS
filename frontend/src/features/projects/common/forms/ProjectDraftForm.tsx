@@ -46,6 +46,7 @@ const ProjectDraftForm = ({
       </Form.Row>
       <Form.Row>
         <Input
+          data-testid="project-name"
           disabled={isReadOnly}
           field="name"
           label="Name"
@@ -56,6 +57,7 @@ const ProjectDraftForm = ({
       </Form.Row>
       <Form.Row>
         <TextArea
+          data-testid="project-description"
           disabled={isReadOnly}
           field="description"
           label="Description"

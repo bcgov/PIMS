@@ -65,9 +65,11 @@ const GreTransferStep = ({ formikRef }: IStepProps) => {
   const canEdit =
     canUserOverride() ||
     (canUserApproveForm() &&
-      (project.statusCode === ReviewWorkflowStatus.ERP ||
-        project.statusCode === ReviewWorkflowStatus.OnHold ||
-        project.statusCode === ReviewWorkflowStatus.ApprovedForExemption));
+      (project.statusCode === ReviewWorkflowStatus.ApprovedForSpl ||
+        project.statusCode === ReviewWorkflowStatus.ContractInPlaceConditional ||
+        project.statusCode === ReviewWorkflowStatus.ContractInPlaceUnconditional ||
+        project.statusCode === ReviewWorkflowStatus.PreMarketing ||
+        project.statusCode === ReviewWorkflowStatus.OnMarket));
   return (
     <Container fluid className="GreTransferStep">
       <Formik

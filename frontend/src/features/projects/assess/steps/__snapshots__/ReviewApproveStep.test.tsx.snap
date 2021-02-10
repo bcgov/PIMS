@@ -79,6 +79,7 @@ exports[`Review Approve Step renders correctly 1`] = `
           </label>
           <input
             class="col-md-5 form-control"
+            data-testid="project-name"
             disabled=""
             id="input-name"
             name="name"
@@ -100,6 +101,7 @@ exports[`Review Approve Step renders correctly 1`] = `
           </label>
           <textarea
             class="col-md-auto form-control"
+            data-testid="project-description"
             disabled=""
             id="input-description"
             name="description"
