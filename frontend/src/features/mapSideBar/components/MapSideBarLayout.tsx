@@ -7,6 +7,7 @@ import { InventoryPolicy } from './InventoryPolicy';
 import { SidebarSize, SidebarContextType } from '../hooks/useQueryParamSideBar';
 import { FaWindowClose } from 'react-icons/fa';
 import './MapSideBarLayout.scss';
+import variables from '_variables.module.scss';
 
 interface IMapSideBarLayoutProps {
   show: boolean;
@@ -32,7 +33,7 @@ const HeaderRow = styled.div`
 `;
 
 const CloseIcon = styled(FaWindowClose)`
-  color: #494949;
+  color: ${variables.textColor};
   font-size: 30px;
 `;
 

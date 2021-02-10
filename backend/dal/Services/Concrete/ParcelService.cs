@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using Pims.Dal.Helpers.Constants;
 
 namespace Pims.Dal.Services
 {
@@ -307,7 +308,13 @@ namespace Pims.Dal.Services
             if (originalParcel.IsVisibleToOtherAgencies != parcel.IsVisibleToOtherAgencies) throw new InvalidOperationException("Parcel cannot be made visible to other agencies through this service.");
 
             // Only administrators can dispose a property.
-            if (!isAdmin && parcel.ClassificationId == 4) throw new NotAuthorizedException("Parcel classification cannot be changed to disposed."); // TODO: Classification '4' should be a config settings.
+            if (!isAdmin && parcel.ClassificationId == (int)ClassificationTypes.Classifications.Disposed) throw new NotAuthorizedException("Parcel classification cannot be changed to disposed."); // TODO: Classification '4' should be a config settings.
+
+            // Only administrators can set parcel to subdivided
+            if(!isAdmin && parcel.ClassificationId == (int)ClassificationTypes.Classifications.Subdivided) throw new NotAuthorizedException("Parcel classification cannot be changed to subdivided.");
+
+            // Only buildings can be set to demolished
+            if(parcel.ClassificationId == (int)ClassificationTypes.Classifications.Demolished) throw new NotAuthorizedException("Only buildings may be set to demolished.");
 
             if ((parcel.Parcels.Count > 0 && parcel.Subdivisions.Count > 0)
                 || (originalParcel.Parcels.Count > 0 && parcel.Subdivisions.Count > 0)

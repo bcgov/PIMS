@@ -22,7 +22,8 @@ import { AsyncTypeahead } from 'react-bootstrap-typeahead';
 import { PropertyFilterAgencyOptions } from './PropertyFilterAgencyOptions';
 import styled from 'styled-components';
 import { ParentSelect } from 'components/common/form/ParentSelect';
-import Claims from 'constants/claims';
+import { Claims } from 'constants/claims';
+import { Classifications } from 'constants/classifications';
 
 /**
  * PropertyFilter component properties.
@@ -98,7 +99,13 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
   const agencies = (agencyLookupCodes ?? []).map(c =>
     mapLookupCodeWithParentString(c, agencyLookupCodes),
   );
-  const classifications = (propertyClassifications ?? []).map(c => mapLookupCode(c));
+  const classifications = !keycloak.hasClaim(Claims.ADMIN_PROPERTIES)
+    ? (propertyClassifications ?? [])
+        .map(c => mapLookupCode(c))
+        .filter(
+          c => +c.value !== Classifications.Demolished && +c.value !== Classifications.Subdivided,
+        )
+    : (propertyClassifications ?? []).map(c => mapLookupCode(c));
   const adminAreas = (adminAreaLookupCodes ?? []).map(c => mapLookupCode(c));
   const [clear, setClear] = useState(false);
   const [options, setOptions] = useState([]);

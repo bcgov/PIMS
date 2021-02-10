@@ -9,6 +9,7 @@ import BuildingAttributes from './BuildingAttributes';
 import { ReactElement } from 'react';
 import styled from 'styled-components';
 import { ThreeColumnItem } from './ThreeColumnItem';
+import variables from '_variables.module.scss';
 
 /**
  * Compare two dates to evaluation which is earlier.
@@ -49,11 +50,11 @@ const ContactSres = styled(Row)`
   margin: 0px 1px 5px 1px;
 
   em {
-    color: #121212;
+    color: ${variables.darkVariantColor};
   }
 
   a {
-    color: #1a5a96;
+    color: ${variables.slideOutBlue};
   }
 `;
 
@@ -142,12 +143,7 @@ export const InfoContent: React.FC<IInfoContent> = ({
         </OuterRow>
       </ListGroup>
       {propertyTypeId === PropertyTypes.PARCEL && (
-        <ParcelAttributes
-          addAssociatedBuildingLink={addAssociatedBuildingLink}
-          parcelInfo={propertyInfo as IParcel}
-          canViewDetails={canViewDetails}
-          canEditDetails={canEditDetails}
-        />
+        <ParcelAttributes parcelInfo={propertyInfo as IParcel} canViewDetails={canViewDetails} />
       )}
       {propertyTypeId === PropertyTypes.BUILDING && (
         <BuildingAttributes
