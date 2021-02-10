@@ -21,7 +21,7 @@ exports[`Map Legend View Legend renders correctly 1`] = `
         <img
           className=""
           height={25}
-          src="marker-icon-2x-green.png"
+          src="land-reg.png"
         />
       </div>
       <div
@@ -39,13 +39,31 @@ exports[`Map Legend View Legend renders correctly 1`] = `
         <img
           className=""
           height={25}
-          src="marker-icon-2x-blue.png"
+          src="building-reg.png"
         />
       </div>
       <div
         className="label col"
       >
         Building
+      </div>
+    </div>
+    <div
+      className="row"
+    >
+      <div
+        className="col-2"
+      >
+        <img
+          className=""
+          height={25}
+          src="subdiv-reg.png"
+        />
+      </div>
+      <div
+        className="label col"
+      >
+        Subdivision
       </div>
     </div>
     <div

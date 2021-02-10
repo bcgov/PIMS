@@ -599,7 +599,6 @@ exports[`Review Approve Step renders correctly 1`] = `
                   >
                     <svg
                       class="svg"
-                      title="Land"
                     >
                       icon-lot.svg
                     </svg>

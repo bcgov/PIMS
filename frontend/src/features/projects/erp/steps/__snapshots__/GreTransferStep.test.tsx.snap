@@ -799,7 +799,6 @@ exports[`GRE Transfer Step renders correctly 1`] = `
                 >
                   <svg
                     className="svg"
-                    title="Land"
                   >
                     icon-lot.svg
                   </svg>

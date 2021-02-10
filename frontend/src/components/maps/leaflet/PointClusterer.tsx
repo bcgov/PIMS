@@ -54,7 +54,7 @@ export const convertToProperty = (
   latitude?: number,
   longitude?: number,
 ): IParcel | IBuilding | null => {
-  if (property.propertyTypeId === PropertyTypes.PARCEL) {
+  if ([PropertyTypes.PARCEL, PropertyTypes.SUBDIVISION].includes(property.propertyTypeId)) {
     return {
       ...property,
       latitude: latitude,
