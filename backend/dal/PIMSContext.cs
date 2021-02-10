@@ -38,6 +38,7 @@ namespace Pims.Dal
         public DbSet<BuildingPredominateUse> BuildingPredominateUses { get; set; }
         public DbSet<BuildingOccupantType> BuildingOccupantTypes { get; set; }
         public DbSet<Parcel> Parcels { get; set; }
+        public DbSet<ParcelParcel> ParcelParcels { get; set; }
         public DbSet<ParcelEvaluation> ParcelEvaluations { get; set; }
         public DbSet<ParcelFiscal> ParcelFiscals { get; set; }
         public DbSet<PropertyClassification> PropertyClassifications { get; set; }

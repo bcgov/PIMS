@@ -151,6 +151,8 @@ namespace Pims.Dal.Services
                 .Include(p => p.Buildings).ThenInclude(pb => pb.Building).ThenInclude(b => b.Evaluations)
                 .Include(p => p.Buildings).ThenInclude(pb => pb.Building).ThenInclude(b => b.Fiscals)
                 .Include(p => p.Buildings).ThenInclude(pb => pb.Building).ThenInclude(b => b.Classification)
+                .Include(p => p.Parcels).ThenInclude(pp => pp.Parcel)
+                .Include(p => p.Subdivisions).ThenInclude(pp => pp.Subdivision)
                 .FirstOrDefault(p => p.Id == id
                     && (ownsABuilding || isAdmin || p.IsVisibleToOtherAgencies || !p.IsSensitive || (viewSensitive && userAgencies.Contains(p.AgencyId)))) ?? throw new KeyNotFoundException();
 
@@ -177,10 +179,12 @@ namespace Pims.Dal.Services
         public Parcel Add(Parcel parcel)
         {
             parcel.ThrowIfNull(nameof(parcel));
-            this.User.ThrowIfNotAuthorized(Permissions.PropertyAdd);
+            this.User.ThrowIfNotAuthorized(new[] { Permissions.PropertyAdd, Permissions.AdminProperties });
 
             var agency = this.User.GetAgency(this.Context) ??
                 throw new NotAuthorizedException("User must belong to an agency before adding parcels.");
+
+            if (parcel.Parcels.Count() > 0 && parcel.Subdivisions.Count() > 0) throw new InvalidOperationException("Parcel may only have associated parcels or subdivisions, not both.");
 
             this.Context.Parcels.ThrowIfNotUnique(parcel);
             // SRES users allowed to overwrite
@@ -189,9 +193,21 @@ namespace Pims.Dal.Services
                 parcel.AgencyId = agency.Id;
                 parcel.Agency = agency;
             }
+            parcel.PropertyTypeId = (int)(parcel.Parcels.Count > 0 ? PropertyTypes.Subdivision : PropertyTypes.Land);
             parcel.Address.Province = this.Context.Provinces.Find(parcel.Address.ProvinceId);
             parcel.Classification = this.Context.PropertyClassifications.Find(parcel.ClassificationId);
             parcel.IsVisibleToOtherAgencies = false;
+
+            parcel.Parcels.ForEach(pp =>
+            {
+                pp.Subdivision = parcel;
+                pp.Parcel = this.Context.Parcels.Find(pp.ParcelId);
+            });
+            parcel.Subdivisions.ForEach(pp =>
+            {
+                pp.Parcel = parcel;
+                pp.Subdivision = this.Context.Parcels.Find(pp.ParcelId);
+            });
 
             parcel.Buildings.ForEach(pb =>
             {
@@ -273,6 +289,8 @@ namespace Pims.Dal.Services
                 .Include(p => p.Buildings).ThenInclude(pb => pb.Building).ThenInclude(b => b.Evaluations)
                 .Include(p => p.Buildings).ThenInclude(pb => pb.Building).ThenInclude(b => b.Fiscals)
                 .Include(p => p.Buildings).ThenInclude(pb => pb.Building).ThenInclude(b => b.Address)
+                .Include(p => p.Parcels).ThenInclude(pp => pp.Parcel)
+                .Include(p => p.Subdivisions).ThenInclude(pp => pp.Subdivision)
                 .SingleOrDefault(p => p.Id == parcel.Id) ?? throw new KeyNotFoundException();
 
             var userAgencies = this.User.GetAgencies();
@@ -298,9 +316,14 @@ namespace Pims.Dal.Services
             // Only buildings can be set to demolished
             if(parcel.ClassificationId == (int)ClassificationTypes.Classifications.Demolished) throw new NotAuthorizedException("Only buildings may be set to demolished.");
 
+            if ((parcel.Parcels.Count > 0 && parcel.Subdivisions.Count > 0)
+                || (originalParcel.Parcels.Count > 0 && parcel.Subdivisions.Count > 0)
+                || (originalParcel.Subdivisions.Count > 0 && parcel.Parcels.Count > 0)) throw new InvalidOperationException("Parcel may only have assocatiated parcels or subdivisions, not both.");
+
             // Users who don't own the parcel, but only own a building cannot update the parcel.
             if (allowEdit)
             {
+                parcel.PropertyTypeId = originalParcel.PropertyTypeId;
                 this.Context.Entry(originalParcel.Address).CurrentValues.SetValues(parcel.Address);
                 this.Context.Entry(originalParcel).CurrentValues.SetValues(parcel);
                 this.Context.SetOriginalRowVersion(originalParcel);
@@ -327,6 +350,7 @@ namespace Pims.Dal.Services
                 }
                 else
                 {
+                    building.PropertyTypeId = existingBuilding.PropertyTypeId;
                     this.ThrowIfNotAllowedToUpdate(existingBuilding, _options.Project);
 
                     if (!allowEdit && !userAgencies.Contains(existingBuilding.AgencyId.Value)) throw new NotAuthorizedException("User may not update a property they don't own.");
@@ -336,6 +360,63 @@ namespace Pims.Dal.Services
                     this.Context.Entry(existingBuilding).CurrentValues.SetValues(building);
                     this.Context.Entry(existingBuilding.Address).CurrentValues.SetValues(building.Address);
                     this.Context.UpdateBuildingFinancials(existingBuilding, building.Evaluations, building.Fiscals);
+                }
+            }
+
+            // This property is a divided parcel with child subdivision parcels.
+            if (parcel.Subdivisions.Count > 0 || originalParcel.Subdivisions.Count > 0)
+            {
+                // loop through all passed in subdivisions, add any new subdivisions and remove any missing subdivisions from the current divided parcel.
+                foreach (var subdivisionId in parcel.Subdivisions.Select(pb => pb.SubdivisionId))
+                {
+                    // Check if the subdivision already exists.
+                    var existingSubdivision = originalParcel.Subdivisions
+                        .FirstOrDefault(pb => pb.SubdivisionId == subdivisionId)?.Subdivision;
+
+                    //Just add any new subdivisions, users cannot edit a subdivision within a parent parcel.
+                    if (existingSubdivision == null)
+                    {
+                        if (!allowEdit) throw new NotAuthorizedException("User may not add subdivisions to a parcel they don't own.");
+                        // This parcel is a divided parent parcel with one or more subdivisions. Therefore, add the current parcel id as the parent divided ParcelId with a ParcelParcel relationship to the new subdivisionId.
+                        var pp = new ParcelParcel() { SubdivisionId = subdivisionId, ParcelId = parcel.Id };
+
+                        originalParcel.Subdivisions.Add(pp);
+                    }
+                }
+                foreach (var subdivision in originalParcel.Subdivisions)
+                {
+                    // Delete the subdivisions that have been removed from this parent divided parcel.
+                    if (!parcel.Subdivisions.Any(e => (e.SubdivisionId == subdivision.SubdivisionId)))
+                    {
+                        this.Context.ParcelParcels.Remove(subdivision);
+                    }
+                }
+            } else {
+                // This property is a Subdivision with parent divided parcels.
+                // loop through all passed in owning divided parcels, adding any new divided parcels and removing any missing divided parcels from the current subdivision.
+                foreach (var dividedParcelId in parcel.Parcels.Select(pb => pb.ParcelId))
+                {
+                    // Check if the subdivided parcel already exists.
+                    var existingDividedParcel = originalParcel.Parcels
+                        .FirstOrDefault(pb => pb.ParcelId == dividedParcelId)?.Parcel;
+
+                    //Just add any new divided parcels, users cannot edit a parcel within a subdivision.
+                    if (existingDividedParcel == null)
+                    {
+                        if (!allowEdit) throw new NotAuthorizedException("User may not add divided parcels to a subdivision they don't own.");
+                        // This parcel is a subdivision with one or more parent divided parcels. Therefore, add the current parcel id as the SubdivisionId with a ParcelParcel relationship to the new dividedParcelId.
+                        var pp = new ParcelParcel() { SubdivisionId = parcel.Id, ParcelId = dividedParcelId };
+
+                        originalParcel.Parcels.Add(pp);
+                    }
+                }
+                foreach (var dividedParcel in originalParcel.Parcels)
+                {
+                    // Delete the divided parcels that have been removed from this subdivision parcel.
+                    if (!parcel.Parcels.Any(e => (e.ParcelId == dividedParcel.ParcelId)))
+                    {
+                        this.Context.ParcelParcels.Remove(dividedParcel);
+                    }
                 }
             }
 
@@ -353,7 +434,6 @@ namespace Pims.Dal.Services
                         this.ThrowIfNotAllowedToUpdate(parcelBuilding.Building, _options.Project);
 
                         var parcelBuildings = this.Context.ParcelBuildings.Where(pb => pb.BuildingId == parcelBuilding.BuildingId).ToArray();
-                        parcelBuildings.ForEach(pb => this.Context.ParcelBuildings.Remove(pb)); // Remove all relationships from other parcels to this building.
                         parcel.Buildings.Remove(parcelBuilding);
 
                         continue;
@@ -396,7 +476,7 @@ namespace Pims.Dal.Services
                 }
             }
 
-            return Get(parcel.Id);
+            return originalParcel;
         }
 
         /// <summary>

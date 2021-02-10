@@ -172,6 +172,7 @@ namespace Pims.Dal.Services
                 building.Agency = agency;
             }
 
+            building.PropertyTypeId = (int)PropertyTypes.Building;
             building.Address.Province = this.Context.Provinces.Find(building.Address.ProvinceId);
             building.Classification = this.Context.PropertyClassifications.Find(building.ClassificationId);
             building.IsVisibleToOtherAgencies = false;
@@ -281,6 +282,7 @@ namespace Pims.Dal.Services
 
             if (allowEdit)
             {
+                building.PropertyTypeId = existingBuilding.PropertyTypeId;
                 this.Context.Entry(existingBuilding.Address).CurrentValues.SetValues(building.Address);
                 this.Context.Entry(existingBuilding).CurrentValues.SetValues(building);
                 this.Context.SetOriginalRowVersion(existingBuilding);
@@ -294,7 +296,6 @@ namespace Pims.Dal.Services
                     {
                         this.ThrowIfNotAllowedToUpdate(parcelBuilding.Building, _options.Project);
 
-                        var parcelBuildings = this.Context.ParcelBuildings.Where(pb => pb.ParcelId == parcelBuilding.ParcelId).ToArray();
                         building.Parcels.Remove(parcelBuilding);
                         this.Context.ParcelBuildings.Remove(parcelBuilding);
 
