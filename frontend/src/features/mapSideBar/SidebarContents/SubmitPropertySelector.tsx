@@ -2,6 +2,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { InventoryPolicy } from '../components/InventoryPolicy';
 import { BuildingSvg, LandSvg } from 'components/common/Icons';
+import variables from '_variables.module.scss';
 
 const SidebarContent = styled.div`
   background-color: #fff;
@@ -19,7 +20,7 @@ const InventoryPolicyWrapper = styled.div`
   display: flex;
   justify-content: center;
   padding: 16px;
-  border-bottom: 1px solid #d9d9d9;
+  border-bottom: 1px solid ${variables.formBackground};
   margin-bottom: 16px;
 `;
 
@@ -37,7 +38,7 @@ const Action = styled.div`
   height: 89px;
   border-radius: 8px;
   fill: #ffffff;
-  border: 2px solid #1a5a96;
+  border: 2px solid ${variables.slideOutBlue};
   margin-bottom: 16px;
   display: flex;
   align-items: center;
@@ -54,14 +55,14 @@ const ActionLabelWrapper = styled.div`
 `;
 
 const BuildingIcon = styled(BuildingSvg)`
-  color: #494949;
+  color: ${variables.textColor};
   height: 47px;
   width: 47px;
   margin-right: 16px;
 `;
 
 const BareLandIcon = styled(LandSvg)`
-  color: #494949;
+  color: ${variables.textColor};
   height: 47px;
   width: 47px;
   margin-right: 16px;
@@ -69,12 +70,12 @@ const BareLandIcon = styled(LandSvg)`
 
 const ActionPrimaryText = styled.p`
   font-size: 21px;
-  color: #1a5a96;
+  color: ${variables.slideOutBlue};
   margin-bottom: 0px;
 `;
 const ActionSecondaryText = styled.p`
   font-size: 12px;
-  color: #494949;
+  color: ${variables.textColor};
   margin-bottom: 0px;
 `;
 

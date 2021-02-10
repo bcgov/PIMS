@@ -2,6 +2,9 @@ using System;
 
 namespace Pims.Dal.Entities.Models
 {
+    /// <summary>
+    /// DisposalProjectMetadata class, provides a model to capture disposal project metadata.
+    /// </summary>
     public class DisposalProjectMetadata
     {
         #region Properties

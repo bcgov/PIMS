@@ -5,6 +5,7 @@ import ElipsisControls from './ElipsisControls';
 import { IReport } from '../interfaces';
 import { formatApiDateTime } from 'utils';
 import TooltipWrapper from 'components/common/TooltipWrapper';
+import variables from '_variables.module.scss';
 
 interface IReportListitemProps {
   /** The underlying report that this control is mapped to. */
@@ -35,7 +36,7 @@ const Report = styled(Col)`
   text-overflow: ellipsis;
 
   :hover {
-    color: #3b99fc;
+    color: ${variables.iconLightColor};
     cursor: pointer;
   }
 `;

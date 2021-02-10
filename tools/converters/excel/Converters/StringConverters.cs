@@ -31,7 +31,7 @@ namespace Pims.Tools.Converters.ExcelConverter.Converters
         }
 
         /// <summary>
-        ///
+        /// Convert the 'value' to a date value, or null if allowed.
         /// </summary>
         /// <param name="value"></param>
         /// <param name="nullable"></param>
@@ -66,6 +66,25 @@ namespace Pims.Tools.Converters.ExcelConverter.Converters
             if (nullable) return null;
 
             throw new InvalidOperationException($"Unable to convert value '{value}' to date.");
+        }
+
+        /// <summary>
+        /// Convert 'value' to boolean, or null if allowed.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="nullable"></param>
+        /// <returns></returns>
+        public static Boolean? ConvertToBoolean(this string value, bool nullable = false)
+        {
+            if (Boolean.TryParse(value, out bool result))
+                return result;
+            else if (Regex.Match(value, "(?i)^yes$").Success)
+                return true;
+            else if (Regex.Match(value, "(?i)^no$").Success)
+                return false;
+
+            if (nullable) return null;
+            return false;
         }
 
         /// <summary>

@@ -1,10 +1,11 @@
 @import '../../styles.scss';
+@import '../../colors.scss';
 
 .table {
   .thead-light {
     .th {
       color: #495057;
-      background-color: #e9ecef;
+      background-color: $table-header-color;
       border-color: $table-color;
     }
   }
@@ -87,7 +88,7 @@
 
     .filter-wrapper {
       &.active {
-        color: #007bff;
+        color: $active-color;
       }
     }
   }

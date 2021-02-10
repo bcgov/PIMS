@@ -1,8 +1,9 @@
 @import '../../../../fonts.scss';
+@import '../../../../colors.scss';
 
 .ProjectDisposeView {
   .filter-container {
-    background-color: #f2f2f2;
+    background-color: $filter-background-color;
 
     .filter-bar {
       align-items: center;

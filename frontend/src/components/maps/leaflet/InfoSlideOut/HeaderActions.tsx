@@ -4,9 +4,10 @@ import { Row } from 'react-bootstrap';
 import { IBuilding, IParcel, PropertyTypes } from 'actions/parcelsActions';
 import { Link, useLocation } from 'react-router-dom';
 import queryString from 'query-string';
+import variables from '_variables.module.scss';
 
 const LinkMenu = styled(Row)`
-  background-color: #f2f2f2;
+  background-color: ${variables.filterBackgroundColor};
   height: 35px;
   width: 322px;
   margin: 0px 0px 5px -10px;
@@ -14,7 +15,7 @@ const LinkMenu = styled(Row)`
   padding: 10px;
   a {
     padding: 0px 10px;
-    color: #1a5a96;
+    color: ${variables.slideOutBlue};
   }
 `;
 
