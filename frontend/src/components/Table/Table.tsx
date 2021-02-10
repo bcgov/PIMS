@@ -119,7 +119,7 @@ export interface TableProps<T extends object = {}> extends TableOptions<T> {
   filterable?: boolean;
   filter?: { [key in keyof T]?: any };
   onFilterChange?: (values: any) => void;
-  /** have menu drop-up to avoid contianer growing in some scenraios */
+  /** have page selection menu drop-up to avoid contianer growing in some scenraios */
   dropUp?: boolean;
 }
 
