@@ -1,6 +1,3 @@
-import { ReactComponent as BuildingSvg } from 'assets/images/icon-business.svg';
-import { ReactComponent as LandSvg } from 'assets/images/icon-lot.svg';
-
 import React from 'react';
 import { CellProps } from 'react-table';
 import { Link } from 'react-router-dom';
@@ -8,6 +5,7 @@ import { formatMoney, formatNumber } from 'utils';
 import { ColumnWithProps } from 'components/Table';
 import { IProperty } from './IProperty';
 import queryString from 'query-string';
+import { PropertyTypeCell } from 'components/Table/PropertyTypeCell';
 
 const MoneyCell = ({ cell: { value } }: CellProps<IProperty, number>) => formatMoney(value);
 const NumberCell = ({ cell: { value } }: CellProps<IProperty, number>) => formatNumber(value);
@@ -65,9 +63,7 @@ export const columns: ColumnWithProps<IProperty>[] = [
   {
     Header: 'Type',
     accessor: 'propertyTypeId',
-    Cell: ({ cell: { value } }: CellProps<IProperty, number>) => {
-      return value === 0 ? <LandSvg className="svg" /> : <BuildingSvg className="svg" />;
-    },
+    Cell: PropertyTypeCell,
     responsive: true,
     width: spacing.small,
     minWidth: 65,

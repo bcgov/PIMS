@@ -106,9 +106,9 @@ const HeaderActions: React.FC<IHeaderActions> = ({
               >
                 Update
               </Link>
-              <VerticalBar />
             </>
           )}
+          <VerticalBar />
         </>
       )}
       <Link to={{ ...location }} onClick={zoomToView}>
