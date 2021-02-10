@@ -38,6 +38,7 @@ import { deleteBuilding } from 'actionCreators/buildingActionCreator';
 import useSideBarBuildingWithParcelLoader from '../hooks/useSideBarBuildingWithParcelLoader';
 import { EvaluationKeys } from 'constants/evaluationKeys';
 import { FiscalKeys } from 'constants/fiscalKeys';
+import variables from '_variables.module.scss';
 
 interface IMapSideBarContainerProps {
   refreshParcels: Function;
@@ -47,12 +48,12 @@ interface IMapSideBarContainerProps {
 
 const FloatCheck = styled(FaCheckCircle)`
   margin: 1em;
-  color: #2e8540;
+  color: ${variables.completedColor};
   float: left;
 `;
 
 const SuccessText = styled.p`
-  color: #2e8540;
+  color: ${variables.completedColor};
   margin-bottom: 0;
   font-size: 24px;
 `;
@@ -66,7 +67,7 @@ const EditButton = styled(FaEdit)`
   margin-right: 10px;
   margin-top: 5px;
   cursor: pointer;
-  color: #1a5a96;
+  color: ${variables.slideOutBlue};
   float: right;
 `;
 

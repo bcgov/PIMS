@@ -1,9 +1,11 @@
+@import '../../../../colors.scss';
+
 .parcel-usage {
   max-width: 900px;
   .classification {
     margin-top: 10px;
     margin-bottom: 10px;
-    background-color: #e9ecef;
+    background-color: $table-header-color;
     border-radius: 5px;
     .form-group {
       padding-top: 10px;

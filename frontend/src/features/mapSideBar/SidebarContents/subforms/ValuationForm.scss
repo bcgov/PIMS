@@ -1,3 +1,5 @@
+@import '../../../../colors.scss';
+
 .val-table {
   .table {
     .form-group.col {
@@ -28,7 +30,7 @@
     }
     .td,
     .th {
-      border: 2px solid #dee2e6;
+      border: 2px solid $table-color;
       justify-content: center !important;
       font-size: 18px !important;
     }

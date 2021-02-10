@@ -2,6 +2,7 @@ import * as React from 'react';
 import { ColumnInstanceWithProps } from '.';
 import { IoMdArrowDropdown, IoMdArrowDropup } from 'react-icons/io';
 import styled from 'styled-components';
+import variables from '_variables.module.scss';
 
 interface IColumnSortProps<T extends object = {}> {
   column: ColumnInstanceWithProps<T>;
@@ -16,11 +17,11 @@ const Wrapper = styled('div')`
 `;
 
 const DescIcon = styled(IoMdArrowDropdown)`
-  color: #007bff;
+  color: ${variables.activeColor};
 `;
 
 const AscIcon = styled(IoMdArrowDropup)`
-  color: #007bff;
+  color: ${variables.activeColor};
 `;
 
 function ColumnSort<T extends object = {}>({ column, onSort }: IColumnSortProps<T>) {
