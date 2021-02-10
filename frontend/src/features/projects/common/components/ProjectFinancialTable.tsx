@@ -50,9 +50,16 @@ export const ProjectFinancialTable = ({ disabled, title }: IProjectFinacialTable
   return (
     <>
       {title && (
-        <Form.Row style={{ alignItems: 'unset' }}>
-          <h3 className="col-md-8">{title}</h3>
-        </Form.Row>
+        <>
+          <Form.Row style={{ alignItems: 'unset' }}>
+            <h3 className="col-md-8">{title}</h3>
+          </Form.Row>
+          <Form.Row>
+            <h6 className="col-md-12" style={{ margin: '0 0 1rem 0' }}>
+              These values are for the <strong>project</strong>, not the individual properties.
+            </h6>
+          </Form.Row>
+        </>
       )}
       <Form.Row>
         <Col md={4}>

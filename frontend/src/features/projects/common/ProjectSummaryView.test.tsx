@@ -70,6 +70,7 @@ const getMockProject = (statusCode?: string): IProject => ({
   tierLevelId: 1,
   tasks: mockTasks,
   note: 'my notes',
+  notes: [],
   publicNote: '',
   id: 1,
   fiscalYear: 2020,
@@ -83,8 +84,10 @@ const getMockProject = (statusCode?: string): IProject => ({
     isMilestone: false,
     tasks: [],
     route: '',
-    workflow: '',
     code: statusCode ?? ReviewWorkflowStatus.PropertyReview,
+    isOptional: false,
+    isActive: false,
+    workflowCode: '',
   },
 });
 

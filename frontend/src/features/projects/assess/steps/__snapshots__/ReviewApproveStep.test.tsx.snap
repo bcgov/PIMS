@@ -159,6 +159,20 @@ exports[`Review Approve Step renders correctly 1`] = `
       <div
         class="form-row"
       >
+        <h6
+          class="col-md-12"
+          style="margin: 0px 0px 1rem 0px;"
+        >
+          These values are for the 
+          <strong>
+            project
+          </strong>
+          , not the individual properties.
+        </h6>
+      </div>
+      <div
+        class="form-row"
+      >
         <div
           class="col-md-4"
         >
@@ -326,7 +340,7 @@ exports[`Review Approve Step renders correctly 1`] = `
           class="col-md-12"
           style="margin: 1rem 0px;"
         >
-          Please make any necessary updates to the valuation information and the classification.
+          Please update  the property classification.
         </h6>
         <h2
           class="col-md-5"
