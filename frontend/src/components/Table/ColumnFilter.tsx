@@ -6,6 +6,7 @@ import { getIn, useFormikContext } from 'formik';
 import clsx from 'classnames';
 import { FiFilter } from 'react-icons/fi';
 import { FaFilter } from 'react-icons/fa';
+import variables from '_variables.module.scss';
 
 interface IColumnFilterProps {
   /** Column instance from react table */
@@ -31,7 +32,7 @@ const InputContainer = styled('div')`
 
   .form-control {
     border-radius: 0;
-    border-color: #606060;
+    border-color: ${variables.lightVariantColor};
   }
 `;
 

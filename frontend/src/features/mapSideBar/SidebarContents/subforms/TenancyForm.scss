@@ -1,3 +1,5 @@
+@import '../../../../colors.scss';
+
 .tenancy {
   .type-occupant {
     width: 300px;
@@ -32,7 +34,7 @@
   }
   .classification {
     padding-top: 10px;
-    background-color: #e9ecef;
+    background-color: $table-header-color;
     border-radius: 10px;
   }
   .check-field {

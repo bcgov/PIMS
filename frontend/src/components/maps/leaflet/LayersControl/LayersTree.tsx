@@ -10,6 +10,7 @@ import { layersTree } from './data';
 import * as L from 'leaflet';
 import { useLeaflet } from 'react-leaflet';
 import { ILayerItem } from './types';
+import variables from '_variables.module.scss';
 
 const ParentNode = styled(ListGroup.Item)`
   display: flex;
@@ -22,7 +23,7 @@ const ParentNode = styled(ListGroup.Item)`
     .form-check {
       label {
         font-weight: bold;
-        color: #494949;
+        color: ${variables.textColor};
         font-size: 13px;
       }
     }
