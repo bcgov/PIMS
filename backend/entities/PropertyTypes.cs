@@ -6,6 +6,7 @@ namespace Pims.Dal.Entities
     public enum PropertyTypes
     {
         Land = 0,
-        Building = 1
+        Building = 1,
+        Subdivision = 2
     }
 }

@@ -220,6 +220,7 @@ namespace Pims.Dal.Services.Admin
             if (parcel.Classification != null && !this.Context.PropertyClassifications.Local.Any(a => a.Id == parcel.ClassificationId))
                 this.Context.Entry(parcel.Classification).State = EntityState.Unchanged;
 
+            parcel.PropertyTypeId = (int)(parcel.Parcels.Count > 0 ? PropertyTypes.Subdivision : PropertyTypes.Land);
             parcel.Agency = this.Context.Agencies.Local.FirstOrDefault(a => a.Id == parcel.AgencyId);
             parcel.Classification = this.Context.PropertyClassifications.Local.FirstOrDefault(a => a.Id == parcel.ClassificationId);
 
@@ -278,6 +279,7 @@ namespace Pims.Dal.Services.Admin
 
             parcels.ForEach(parcel =>
             {
+                parcel.PropertyTypeId = (int)(parcel.Parcels.Count > 0 ? PropertyTypes.Subdivision : PropertyTypes.Land);
                 if (parcel == null) throw new ArgumentNullException();
 
                 if (parcel.AgencyId != 0 && !this.Context.Agencies.Local.Any(a => a.Id == parcel.AgencyId))
@@ -357,6 +359,7 @@ namespace Pims.Dal.Services.Admin
             parcel.ThrowIfNotAllowedToEdit(nameof(parcel), this.User, new[] { Permissions.SystemAdmin, Permissions.AgencyAdmin });
 
             var originalParcel = this.Context.Parcels.Find(parcel.Id) ?? throw new KeyNotFoundException();
+            parcel.PropertyTypeId = originalParcel.PropertyTypeId;
 
             var entry = this.Context.Entry(originalParcel);
             entry.CurrentValues.SetValues(parcel);
