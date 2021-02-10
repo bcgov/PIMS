@@ -22,6 +22,10 @@ export interface IProperty {
   projectNumbers?: string[];
   projectStatus?: string;
   isSensitive: boolean | '';
+  createdOn?: string;
+  updatedOn?: string;
+  updatedByEmail?: string;
+  updatedByName?: string;
 }
 
 export interface IStoreParcelsAction {
