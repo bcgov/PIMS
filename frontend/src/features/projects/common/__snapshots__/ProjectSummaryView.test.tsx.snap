@@ -223,6 +223,24 @@ exports[`Review Summary View renders approved correctly 1`] = `
       <div
         className="form-row"
       >
+        <h6
+          className="col-md-12"
+          style={
+            Object {
+              "margin": "0 0 1rem 0",
+            }
+          }
+        >
+          These values are for the 
+          <strong>
+            project
+          </strong>
+          , not the individual properties.
+        </h6>
+      </div>
+      <div
+        className="form-row"
+      >
         <div
           className="col-md-4"
         >
@@ -406,7 +424,7 @@ exports[`Review Summary View renders approved correctly 1`] = `
             }
           }
         >
-          Please make any necessary updates to the valuation information and the classification.
+          Please update  the property classification.
         </h6>
         <h2
           className="col-md-5"
@@ -1195,6 +1213,24 @@ exports[`Review Summary View renders denied correctly 1`] = `
       <div
         className="form-row"
       >
+        <h6
+          className="col-md-12"
+          style={
+            Object {
+              "margin": "0 0 1rem 0",
+            }
+          }
+        >
+          These values are for the 
+          <strong>
+            project
+          </strong>
+          , not the individual properties.
+        </h6>
+      </div>
+      <div
+        className="form-row"
+      >
         <div
           className="col-md-4"
         >
@@ -1378,7 +1414,7 @@ exports[`Review Summary View renders denied correctly 1`] = `
             }
           }
         >
-          Please make any necessary updates to the valuation information and the classification.
+          Please update  the property classification.
         </h6>
         <h2
           className="col-md-5"
@@ -2167,6 +2203,24 @@ exports[`Review Summary View renders submitted correctly 1`] = `
       <div
         className="form-row"
       >
+        <h6
+          className="col-md-12"
+          style={
+            Object {
+              "margin": "0 0 1rem 0",
+            }
+          }
+        >
+          These values are for the 
+          <strong>
+            project
+          </strong>
+          , not the individual properties.
+        </h6>
+      </div>
+      <div
+        className="form-row"
+      >
         <div
           className="col-md-4"
         >
@@ -2350,7 +2404,7 @@ exports[`Review Summary View renders submitted correctly 1`] = `
             }
           }
         >
-          Please make any necessary updates to the valuation information and the classification.
+          Please update  the property classification.
         </h6>
         <h2
           className="col-md-5"
