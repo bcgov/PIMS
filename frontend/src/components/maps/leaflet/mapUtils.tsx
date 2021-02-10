@@ -158,24 +158,24 @@ export const getMarkerIcon = (feature: ICluster) => {
   const { propertyTypeId, projectWorkflow, classificationId } = feature?.properties;
   if (projectWorkflow === Workflows.ERP) {
     switch (propertyTypeId) {
-      case PropertyTypes.PARCEL:
-        return landErpIcon;
-      case PropertyTypes.BUILDING:
-        return buildingErpIcon;
       case PropertyTypes.SUBDIVISION:
         return subdivisionErpIcon;
+      case PropertyTypes.BUILDING:
+        return buildingErpIcon;
+      default:
+        return landErpIcon;
     }
   } else if (
     classificationId === Classifications.SurplusActive ||
     classificationId === Classifications.SurplusEncumbered
   ) {
     switch (propertyTypeId) {
-      case PropertyTypes.PARCEL:
-        return landSppIcon;
       case PropertyTypes.BUILDING:
         return buildingSppIcon;
       case PropertyTypes.SUBDIVISION:
         return subdivisionSppIcon;
+      default:
+        return landSppIcon;
     }
   } else if (propertyTypeId === PropertyTypes.PARCEL) {
     return parcelIcon;
