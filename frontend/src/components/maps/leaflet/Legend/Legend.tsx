@@ -18,11 +18,11 @@ export const Legend = () => {
         label: 'Subdivision',
       },
       {
-        pin: require('assets/images/marker-icon-2x-red.png'),
+        pin: require('assets/images/marker-red.png'),
         label: 'Enhanced Referral Process',
       },
       {
-        pin: require('assets/images/marker-icon-2x-violet.png'),
+        pin: require('assets/images/marker-purple.png'),
         label: 'Surplus Properties Program',
       },
     ];

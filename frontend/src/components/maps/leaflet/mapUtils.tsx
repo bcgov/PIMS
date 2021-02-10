@@ -37,7 +37,7 @@ export const subdivisionIcon = new Icon({
 
 // draft parcel icon (green)
 export const draftParcelIcon = new Icon({
-  iconUrl: require('assets/images/marker-icon-2x-green.png'),
+  iconUrl: require('assets/images/marker-green.png'),
   shadowUrl: require('assets/images/marker-shadow.png'),
   iconSize: [25, 41],
   iconAnchor: [12, 41],
@@ -48,7 +48,7 @@ export const draftParcelIcon = new Icon({
 
 // draft building icon (blue)
 export const draftBuildingIcon = new Icon({
-  iconUrl: require('assets/images/marker-icon-2x-blue.png'),
+  iconUrl: require('assets/images/marker-blue.png'),
   shadowUrl: require('assets/images/marker-shadow.png'),
   iconSize: [25, 41],
   iconAnchor: [12, 41],
