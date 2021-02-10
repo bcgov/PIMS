@@ -159,7 +159,7 @@ export const PropertyListViewSelect: React.FC<InputProps> = ({
             name="SelectPropertiesTable"
             columns={columns}
             data={data}
-            dropUp
+            pageSizeMenuDropUp
             pageSize={pageSize}
             onRequestData={handleRequestData}
             pageCount={pageCount}
