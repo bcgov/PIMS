@@ -77,6 +77,9 @@ const SplStep = ({ formikRef }: IStepProps) => {
   const dispatch = useDispatch();
   const history = useHistory();
 
+  const goToGreTransferred = () =>
+    history.push(`./spl/gretransfer?projectNumber=${project?.projectNumber}`);
+
   //** Different validation rules based on the status selected. */
   const splValidationGroups: ValidationGroup[] = [
     {
@@ -196,6 +199,7 @@ const SplStep = ({ formikRef }: IStepProps) => {
             <SplTabs
               isReadOnly={canUserEdit !== true}
               {...{ submitStatusCode, setSubmitStatusCode, currentTab, setCurrentTab }}
+              goToGreTransferred={goToGreTransferred}
             />
             <StepErrorSummary />
             {canUserEdit && (
