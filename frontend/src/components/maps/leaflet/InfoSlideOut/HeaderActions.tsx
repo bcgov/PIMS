@@ -85,7 +85,6 @@ const HeaderActions: React.FC<IHeaderActions> = ({
             View details
           </Link>
           <VerticalBar />
-          <VerticalBar />
           {canEditDetails && (
             <>
               <Link
