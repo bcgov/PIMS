@@ -12,7 +12,7 @@ namespace Pims.Api.Areas.Property.Models.Parcel
 
         public string Key { get; set; }
 
-        public float Value { get; set; }
+        public decimal Value { get; set; }
 
         public string Note { get; set; }
 

@@ -58,6 +58,17 @@ const ContactSres = styled(Row)`
   }
 `;
 
+const getHeading = (propertyTypeId: PropertyTypes | null) => {
+  switch (propertyTypeId) {
+    case PropertyTypes.SUBDIVISION:
+      return 'Potential Subdivision';
+    case PropertyTypes.BUILDING:
+      return 'Building Identification';
+    default:
+      return 'Parcel Identification';
+  }
+};
+
 /**
  * Component that displays the appropriate information about the selected property
  * in the property info slideout
@@ -76,11 +87,7 @@ export const InfoContent: React.FC<IInfoContent> = ({
   return (
     <>
       <ListGroup>
-        {propertyTypeId === PropertyTypes.PARCEL ? (
-          <Label className="header">Parcel Identification</Label>
-        ) : (
-          <Label className="header">Building Identification</Label>
-        )}
+        <Label className="header">{getHeading(propertyTypeId)}</Label>
         {propertyTypeId === PropertyTypes.PARCEL && (
           <ParcelPIDPIN parcelInfo={propertyInfo as IParcel} />
         )}

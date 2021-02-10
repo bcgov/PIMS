@@ -69,13 +69,14 @@ namespace Pims.Dal.Services
             var projectNumbers = properties.SelectMany(p => JsonSerializer.Deserialize<IEnumerable<string>>(p.ProjectNumbers ?? "[]")).Distinct().ToArray();
             var statuses = from p in this.Context.ProjectProperties
                            where projectNumbers.Contains(p.Project.ProjectNumber)
-                           select new { p.Project.ProjectNumber, p.Project.Status };
+                           select new { p.Project.ProjectNumber, p.Project.Status, WorkflowCode = p.Project.Workflow.Code };
 
             foreach (var status in statuses)
             {
                 foreach (var projectProperty in properties.Where(property => property.ProjectNumbers.Contains(status.ProjectNumber)))
                 {
                     projectProperty.ProjectStatus = status.Status.Code;
+                    projectProperty.ProjectWorkflow = status.WorkflowCode;
                 }
             }
 
@@ -141,7 +142,20 @@ namespace Pims.Dal.Services
             }
 
             var query = this.Context.GenerateAllPropertyQuery(this.User, filter);
-            var properties = query.Select(p => p.PropertyTypeId == Entities.PropertyTypes.Land ? new ParcelModel(p, this.User) as PropertyModel : new BuildingModel(p, this.User)).ToArray();
+            var properties = query.Select(p => new[] { Entities.PropertyTypes.Land, Entities.PropertyTypes.Subdivision }.Contains(p.PropertyTypeId) ? new ParcelModel(p, this.User) as PropertyModel : new BuildingModel(p, this.User)).ToArray();
+
+            var projectNumbers = properties.SelectMany(p => JsonSerializer.Deserialize<IEnumerable<string>>(p.ProjectNumbers ?? "[]")).Distinct().ToArray();
+            var statuses = from p in this.Context.ProjectProperties
+                           where projectNumbers.Contains(p.Project.ProjectNumber)
+                           select new { p.Project.ProjectNumber, p.Project.Status, WorkflowCode = p.Project.Workflow.Code };
+
+            foreach (var status in statuses)
+            {
+                foreach (var property in properties.Where(property => property?.ProjectNumbers?.Contains(status.ProjectNumber) == true))
+                {
+                    property.ProjectWorkflow = status.WorkflowCode;
+                }
+            }
 
             // TODO: Add optional paging ability to query.
 
