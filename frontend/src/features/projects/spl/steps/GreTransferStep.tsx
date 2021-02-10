@@ -23,7 +23,7 @@ import { formatDate } from 'utils';
 import styled from 'styled-components';
 import StepErrorSummary from '../../common/components/StepErrorSummary';
 import GenericModal from 'components/common/GenericModal';
-import { GreTransferForm } from '..';
+import { GreTransferForm } from '../../common';
 
 export const GreTransferStepSchema = UpdateInfoStepYupSchema.concat(
   ProjectDraftStepYupSchema,

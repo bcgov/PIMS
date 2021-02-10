@@ -13,7 +13,6 @@ export { default as CloseOutSaleInformationForm } from './forms/CloseOutSaleInfo
 export { default as CloseOutFinancialSummaryForm } from './forms/CloseOutFinancialSummaryForm';
 export { default as CloseOutSignaturesForm } from './forms/CloseOutSignaturesForm';
 export { default as CloseOutAdjustmentForm } from './forms/CloseOutAdjustmentForm';
-export { default as GreTransferForm } from '../spl/forms/GreTransferForm';
 
 export * from './slices/splTabSlice';
 
