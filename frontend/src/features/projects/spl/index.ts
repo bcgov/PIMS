@@ -1,4 +1,5 @@
 export { default as SplStep } from './steps/SplStep';
+export { default as GreTransferStep } from './steps/GreTransferStep';
 
 export * from '../erp/slices/erpTabSlice';
 

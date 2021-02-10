@@ -20,6 +20,8 @@ interface ISplTabsProps {
   submitStatusCode?: string;
   /** status code update triggered by a form action. Will trigger a status transition if set. */
   setSubmitStatusCode: Function;
+  /** Function that will navigate to the gre transferred form when executed */
+  goToGreTransferred: Function;
 }
 
 /**
@@ -31,8 +33,9 @@ export const SplTabs: React.FunctionComponent<ISplTabsProps> = ({
   setCurrentTab,
   isReadOnly,
   setSubmitStatusCode,
+  goToGreTransferred,
 }) => {
-  const { errors, values } = useFormikContext<IProject>();
+  const { submitForm, values, errors } = useFormikContext<IProject>();
   const { canUserOverride } = useStepForm();
   const canOverride = canUserOverride();
   return (
@@ -76,7 +79,11 @@ export const SplTabs: React.FunctionComponent<ISplTabsProps> = ({
           title="Surplus Properties List"
           tabClassName={isTabInError(errors, SPPApprovalTabs.spl)}
         >
-          <SplTab isReadOnly={isReadOnly} setSubmitStatusCode={setSubmitStatusCode} />
+          <SplTab
+            isReadOnly={isReadOnly}
+            setSubmitStatusCode={setSubmitStatusCode}
+            goToGreTransferred={() => submitForm().then(() => goToGreTransferred())}
+          />
         </Tab>
         <Tab
           eventKey={SPPApprovalTabs.closeOutForm}
