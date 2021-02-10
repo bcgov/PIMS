@@ -119,6 +119,8 @@ export interface TableProps<T extends object = {}> extends TableOptions<T> {
   filterable?: boolean;
   filter?: { [key in keyof T]?: any };
   onFilterChange?: (values: any) => void;
+  /** have menu drop-up to avoid contianer growing in some scenraios */
+  dropUp?: boolean;
 }
 
 const IndeterminateCheckbox = React.forwardRef(({ indeterminate, ...rest }: any, ref) => {
@@ -557,7 +559,7 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): React
               options={props.pageSizeOptions || DEFAULT_PAGE_SELECTOR_OPTIONS}
               value={props.pageSize || DEFAULT_PAGE_SIZE}
               onChange={onPageSizeChange}
-              alignTop={props.data.length >= 20}
+              alignTop={props.dropUp ? props.dropUp : props.data.length >= 20}
             />
           )}
         </div>

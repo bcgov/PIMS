@@ -94,6 +94,10 @@ export const PropertyListViewSelect: React.FC<InputProps> = ({
     [project],
   );
 
+  const onPageSizeChanged = useCallback(size => {
+    setPageSize(size);
+  }, []);
+
   // const [loading, setLoading] = useState(false);
   const fetchIdRef = useRef(0);
   const fetchData = useTable({ fetchIdRef, setData, setPageCount });
@@ -155,7 +159,7 @@ export const PropertyListViewSelect: React.FC<InputProps> = ({
             name="SelectPropertiesTable"
             columns={columns}
             data={data}
-            lockPageSize
+            dropUp
             pageSize={pageSize}
             onRequestData={handleRequestData}
             pageCount={pageCount}
@@ -163,6 +167,7 @@ export const PropertyListViewSelect: React.FC<InputProps> = ({
             setSelectedRows={setSelectedProperties}
             clickableTooltip={clickableTooltip}
             onRowClick={onRowClick}
+            onPageSizeChange={onPageSizeChanged}
           />
         </div>
       )}
