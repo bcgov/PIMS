@@ -36,16 +36,4 @@ INSERT INTO dbo.[PropertyClassifications] (
     , 0
     , 0
     , 5
-), (
-    5
-    , 'Demolished'
-    , 0
-    , 1
-    , 6
-), (
-    6
-    , 'Subdivided'
-    , 0
-    , 1
-    , 7
 )
