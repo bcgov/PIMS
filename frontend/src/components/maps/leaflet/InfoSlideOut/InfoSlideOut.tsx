@@ -173,7 +173,7 @@ const InfoControl: React.FC<InfoControlProps> = ({ open, setOpen, onHeaderAction
           }),
         }}
       >
-        Add a Building
+        Add a new Building
       </Link>
     </>
   );
@@ -199,9 +199,7 @@ const InfoControl: React.FC<InfoControlProps> = ({ open, setOpen, onHeaderAction
             <InfoContent
               propertyInfo={popUpContext.propertyInfo}
               propertyTypeId={popUpContext.propertyTypeID}
-              addAssociatedBuildingLink={addAssociatedBuildingLink}
               canViewDetails={canViewProperty}
-              canEditDetails={canEditProperty}
             />
           </>
         );

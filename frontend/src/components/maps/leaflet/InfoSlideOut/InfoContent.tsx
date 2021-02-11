@@ -6,7 +6,6 @@ import { ParcelPIDPIN } from './ParcelPIDPIN';
 import ParcelAttributes from './ParcelAttributes';
 import './InfoSlideOut.scss';
 import BuildingAttributes from './BuildingAttributes';
-import { ReactElement } from 'react';
 import styled from 'styled-components';
 import { ThreeColumnItem } from './ThreeColumnItem';
 import variables from '_variables.module.scss';
@@ -32,12 +31,8 @@ interface IInfoContent {
   propertyInfo: IParcel | IBuilding | null;
   /** The property type [Parcel, Building] */
   propertyTypeId: PropertyTypes | null;
-  /** ReactElement used to display a link for adding an associated building */
-  addAssociatedBuildingLink: ReactElement;
   /** whether the user has the correct agency/permissions to view all the details */
   canViewDetails: boolean;
-  /** whether the user has the correct agency/permissions to edit property details */
-  canEditDetails: boolean;
 }
 
 export const OuterRow = styled(Row)`
@@ -75,14 +70,11 @@ const getHeading = (propertyTypeId: PropertyTypes | null) => {
  * @param {IInfoContent} propertyInfo the selected property
  * @param {IInfoContent} propertyTypeId the property type [Parcel, Building]
  * @param canViewDetails user can view all property details
- * @param canEditDetails user can edit property details
  */
 export const InfoContent: React.FC<IInfoContent> = ({
   propertyInfo,
   propertyTypeId,
-  addAssociatedBuildingLink,
   canViewDetails,
-  canEditDetails,
 }) => {
   return (
     <>
