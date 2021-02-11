@@ -126,7 +126,7 @@ export const createParcel = (parcel: IParcel) => async (dispatch: Function) => {
       parcel,
     );
     dispatch(success(actionTypes.ADD_PARCEL, status));
-    dispatch(storeParcelDetail(null));
+    dispatch(storeParcelDetail(data));
     dispatch(hideLoading());
     return data;
   } catch (axiosError) {
@@ -151,7 +151,7 @@ export const updateParcel = (parcel: IParcel) => async (dispatch: Function) => {
       parcel,
     );
     dispatch(success(actionTypes.UPDATE_PARCEL, status));
-    dispatch(storeParcelDetail(null));
+    dispatch(storeParcelDetail(data));
     dispatch(hideLoading());
     return data;
   } catch (axiosError) {
@@ -179,7 +179,7 @@ export const deleteParcel = (parcel: IParcel) => async (dispatch: Function) => {
       lifecycleToasts: parcelDeletingToasts,
     }).delete(ENVIRONMENT.apiUrl + API.PARCEL_ROOT + `/${parcel.id}`, { data: parcel });
     dispatch(success(actionTypes.DELETE_PARCEL, status));
-    dispatch(storeParcelDetail(null));
+    dispatch(storeParcelDetail(data));
     dispatch(hideLoading());
     return data;
   } catch (axiosError) {

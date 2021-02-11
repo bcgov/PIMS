@@ -32,6 +32,7 @@ namespace Pims.Api.Areas.Property.Mapping.Parcel
             config.NewConfig<Entity.Parcel, Model.ParcelModel>()
                 .EnableNonPublicMembers(true)
                 .Map(dest => dest.Id, src => src.Id)
+                .Map(dest => dest.PropertyTypeId, src => src.PropertyTypeId)
                 .Map(dest => dest.PID, src => src.ParcelIdentity)
                 .Map(dest => dest.PIN, src => src.PIN)
                 .Map(dest => dest.ProjectNumbers, src => JsonSerializer.Deserialize<IEnumerable<string>>(src.ProjectNumbers ?? "[]", _serializerOptions))

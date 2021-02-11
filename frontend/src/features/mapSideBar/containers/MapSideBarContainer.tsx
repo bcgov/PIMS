@@ -7,7 +7,7 @@ import { IParcel, IProperty, IBuilding } from 'actions/parcelsActions';
 import { deleteParcel, fetchParcelsDetail } from 'actionCreators/parcelsActionCreator';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
 import { BuildingForm, SubmitPropertySelector, LandForm } from '../SidebarContents';
-import { BuildingSvg, LandSvg } from 'components/common/Icons';
+import { BuildingSvg, LandSvg, SubdivisionSvg } from 'components/common/Icons';
 import { FormikValues, setIn, getIn } from 'formik';
 import { useState } from 'react';
 import useGeocoder from 'features/properties/hooks/useGeocoder';
@@ -20,25 +20,24 @@ import {
 import { LeafletMouseEvent, LatLng } from 'leaflet';
 import AssociatedLandForm from '../SidebarContents/AssociatedLandForm';
 import { toast } from 'react-toastify';
-import _ from 'lodash';
+import _, { noop } from 'lodash';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import GenericModal, { ModalSize } from 'components/common/GenericModal';
 import { FaCheckCircle, FaEdit } from 'react-icons/fa';
 import styled from 'styled-components';
 import { getMergedFinancials } from 'features/properties/components/forms/subforms/EvaluationForm';
 import { Spinner } from 'react-bootstrap';
-import { ViewOnlyLandForm, ISearchFields } from '../SidebarContents/LandForm';
+import { ViewOnlyLandForm, ISearchFields, getInitialValues } from '../SidebarContents/LandForm';
 import useSideBarParcelLoader from '../hooks/useSideBarParcelLoader';
 import useSideBarBuildingLoader from '../hooks/useSideBarBuildingLoader';
 import { ViewOnlyBuildingForm } from '../SidebarContents/BuildingForm';
-import { Claims } from 'constants/claims';
 import { Prompt } from 'react-router-dom';
 import { FaTrash } from 'react-icons/fa';
 import { deleteBuilding } from 'actionCreators/buildingActionCreator';
 import useSideBarBuildingWithParcelLoader from '../hooks/useSideBarBuildingWithParcelLoader';
-import { EvaluationKeys } from 'constants/evaluationKeys';
-import { FiscalKeys } from 'constants/fiscalKeys';
 import variables from '_variables.module.scss';
+import { withNameSpace } from 'utils/formUtils';
+import { PropertyTypes, Claims, EvaluationKeys, FiscalKeys } from 'constants/index';
 
 interface IMapSideBarContainerProps {
   refreshParcels: Function;
@@ -98,6 +97,7 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
     addBuilding,
     addBareLand,
     addAssociatedLand,
+    addSubdivision,
     addContext,
     disabled,
     setDisabled,
@@ -139,44 +139,62 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
 
   const parcelLayerService = useLayerQuery(PARCELS_LAYER_URL);
 
-  const withNameSpace: Function = (fieldName: string, nameSpace?: string) => {
-    return nameSpace ? `${nameSpace}.${fieldName}` : fieldName;
+  /**
+   * Populate the formik form using the passed parcel.
+   * @param nameSpace the formik namespace that should be used to write any retrieved data.
+   * @param matchingParcel the parcel to use to populate the formik form.
+   */
+  const formikParcelDataPopulateCallback = (
+    matchingParcel: IParcel & ISearchFields,
+    nameSpace?: string,
+  ) => {
+    if (!formikRef.current) return;
+    if (matchingParcel.propertyTypeId !== PropertyTypes.PARCEL) {
+      toast.error('That address/pid is already in use within a subdivision.');
+      return;
+    }
+    const { setValues, values } = formikRef.current;
+    matchingParcel.propertyTypeId = getIn(values, withNameSpace(nameSpace, 'propertyTypeId'));
+    matchingParcel.parcels = getIn(values, withNameSpace(nameSpace, 'parcels'));
+    matchingParcel.searchPid = getIn(values, withNameSpace(nameSpace, 'searchPid'));
+    matchingParcel.searchPin = getIn(values, withNameSpace(nameSpace, 'searchPin'));
+    matchingParcel.searchAddress = getIn(values, withNameSpace(nameSpace, 'seachAddress'));
+    matchingParcel.evaluations = getMergedFinancials(
+      matchingParcel.evaluations,
+      Object.values(EvaluationKeys),
+    );
+    matchingParcel.fiscals = getMergedFinancials(matchingParcel.fiscals, Object.values(FiscalKeys));
+    setValues(setIn(values, nameSpace ?? '', matchingParcel));
+    toast.dark('Found matching parcel within PIMS. Form data will be pre-populated.', {
+      autoClose: 7000,
+    });
   };
 
   /**
    * Attempt to fetch the parcel within PIMS matching the passed pid or pin value. If that request fails, make another request to the parcel layer with the same data.
-   * @param pidOrPin
-   * @param parcelLayerSearchCallback
-   * @param nameSpace
+   * @param pidOrPin an object containing the pid and/or the pin
+   * @param parcelLayerSearchCallback a callback that will be executed if there is not match within PIMS for the pidOrPin
+   * @param nameSpace the formik namespace that should be used to write any retrieved data.
    */
   const fetchPimsOrLayerParcel = (
     pidOrPin: any,
     parcelLayerSearchCallback: () => void,
     nameSpace?: string,
+    formikDataPopulateCallback: (
+      matchingParcel: IParcel & ISearchFields,
+      nameSpace?: string,
+    ) => void = formikParcelDataPopulateCallback,
   ) => {
-    fetchParcelsDetail(pidOrPin)(dispatch).then(resp => {
+    return fetchParcelsDetail(pidOrPin)(dispatch).then(resp => {
       const matchingParcel: (IParcel & ISearchFields) | undefined = resp?.data?.length
         ? _.first(resp.data)
         : undefined;
       if (!!formikRef?.current?.values && !!matchingParcel?.id) {
-        const { setValues, values } = formikRef.current;
-        matchingParcel.searchPid = getIn(values, withNameSpace('searchPid', nameSpace));
-        matchingParcel.searchPin = getIn(values, withNameSpace('searchPin', nameSpace));
-        matchingParcel.searchAddress = getIn(values, withNameSpace('seachAddress', nameSpace));
-        matchingParcel.evaluations = getMergedFinancials(
-          matchingParcel.evaluations,
-          Object.values(EvaluationKeys),
-        );
-        matchingParcel.fiscals = getMergedFinancials(
-          matchingParcel.fiscals,
-          Object.values(FiscalKeys),
-        );
-        setValues(setIn(values, nameSpace ?? '', matchingParcel));
-        toast.dark('Found matching parcel within PIMS. Form data will be pre-populated.', {
-          autoClose: 7000,
-        });
+        formikDataPopulateCallback(matchingParcel, nameSpace);
+        return matchingParcel;
       } else {
         parcelLayerSearchCallback();
+        return undefined;
       }
     });
   };
@@ -198,6 +216,15 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
       handleParcelDataLayerResponse(response, dispatch);
     };
     fetchPimsOrLayerParcel({ pin }, parcelLayerSearchCallback, nameSpace);
+  };
+
+  /**
+   * Find the parcel matching the passed pid.
+   * @param pid the desired parcel PID
+   * @param nameSpace The namespace of where the response should be stored.
+   */
+  const findMatchingPid = async (pid: string, nameSpace?: string): Promise<IParcel | undefined> => {
+    return await fetchPimsOrLayerParcel({ pid }, noop, nameSpace, noop);
   };
 
   const droppedMarkerSearch = (nameSpace: string, latLng?: LatLng, isParcel?: boolean) => {
@@ -294,7 +321,7 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
    */
   const ConditionalDeleteButton = () => (
     <>
-      {disabled && keycloak.canUserDeleteProperty(buildingDetail ?? parcelDetail) && (
+      {keycloak.canUserDeleteProperty(buildingDetail ?? parcelDetail) && (
         <DeleteButton
           data-testid="delete"
           onClick={() => setShowDelete(true)}
@@ -316,6 +343,12 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
         return (
           <>
             <LandSvg className="svg" /> Submit Bare Land (to inventory)
+          </>
+        );
+      case SidebarContextType.ADD_SUBDIVISION_LAND:
+        return (
+          <>
+            <SubdivisionSvg className="svg" /> Submit Subdivision (to inventory)
           </>
         );
       case SidebarContextType.VIEW_BARE_LAND:
@@ -395,6 +428,23 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
         ) : (
           <Spinner animation="border"></Spinner>
         );
+      case SidebarContextType.ADD_SUBDIVISION_LAND:
+        return (
+          <LandForm
+            setMovingPinNameSpace={setMovingPinNameSpace}
+            formikRef={formikRef}
+            handleGeocoderChanges={handleGeocoderChanges}
+            handlePidChange={handlePidChange}
+            handlePinChange={handlePinChange}
+            findMatchingPid={findMatchingPid}
+            isPropertyAdmin={keycloak.hasClaim(Claims.ADMIN_PROPERTIES)}
+            setLandComplete={setShowCompleteModal}
+            setLandUpdateComplete={setShowUpdatedModal}
+            initialValues={
+              parcelDetail ?? { ...getInitialValues(), propertyTypeId: PropertyTypes.SUBDIVISION }
+            }
+          />
+        );
       case SidebarContextType.ADD_BARE_LAND:
       case SidebarContextType.UPDATE_DEVELOPED_LAND:
       case SidebarContextType.UPDATE_BARE_LAND:
@@ -408,6 +458,7 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
             handleGeocoderChanges={handleGeocoderChanges}
             handlePidChange={handlePidChange}
             handlePinChange={handlePinChange}
+            findMatchingPid={findMatchingPid}
             isPropertyAdmin={keycloak.hasClaim(Claims.ADMIN_PROPERTIES)}
             setLandComplete={setShowCompleteModal}
             setLandUpdateComplete={setShowUpdatedModal}
@@ -448,7 +499,13 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
       case SidebarContextType.LOADING:
         return <Spinner animation="border"></Spinner>;
       default:
-        return <SubmitPropertySelector addBuilding={addBuilding} addBareLand={addBareLand} />;
+        return (
+          <SubmitPropertySelector
+            addBuilding={addBuilding}
+            addBareLand={addBareLand}
+            addSubdivision={addSubdivision}
+          />
+        );
     }
   };
 

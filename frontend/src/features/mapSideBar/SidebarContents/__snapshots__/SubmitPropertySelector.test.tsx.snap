@@ -143,6 +143,13 @@ exports[`SubmitPropertySelector component renders correctly 1`] = `
   margin-right: 16px;
 }
 
+.c11 {
+  color: #494949;
+  height: 47px;
+  width: 47px;
+  margin-right: 16px;
+}
+
 .c8 {
   font-size: 21px;
   color: slideOutBlue;
@@ -251,6 +258,29 @@ exports[`SubmitPropertySelector component renders correctly 1`] = `
           className="c10"
         >
           PID or PIN
+        </p>
+      </div>
+    </div>
+    <div
+      className="c5"
+    >
+      <svg
+        className="c11 svg"
+      >
+        project-diagram-solid.svg
+      </svg>
+      <div
+        className="c7"
+      >
+        <p
+          className="c8"
+        >
+          Add Potential Subdivision
+        </p>
+        <p
+          className="c10"
+        >
+          PID
         </p>
       </div>
     </div>

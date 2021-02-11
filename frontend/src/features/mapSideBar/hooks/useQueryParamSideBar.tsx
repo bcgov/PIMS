@@ -12,6 +12,7 @@ export enum SidebarContextType {
   ADD_BUILDING = 'addBuilding',
   ADD_BARE_LAND = 'addBareLand',
   ADD_ASSOCIATED_LAND = 'addAssociatedLand',
+  ADD_SUBDIVISION_LAND = 'addSubdivisionLand',
   VIEW_BUILDING = 'viewBuilding',
   VIEW_BARE_LAND = 'viewBareLand',
   VIEW_DEVELOPED_LAND = 'viewDevelopedLand',
@@ -32,6 +33,7 @@ interface IMapSideBar {
   addBuilding: () => void;
   addBareLand: () => void;
   addAssociatedLand: () => void;
+  addSubdivision: () => void;
   addContext: (context: SidebarContextType) => void;
   setDisabled: (disabled: boolean) => void;
   parcelId?: number;
@@ -125,6 +127,10 @@ const useQueryParamSideBar = (formikRef?: any): IMapSideBar => {
     setShow(true, SidebarContextType.ADD_ASSOCIATED_LAND, 'wide');
   };
 
+  const addSubdivision = () => {
+    setShow(true, SidebarContextType.ADD_SUBDIVISION_LAND, 'wide');
+  };
+
   const addContext = useCallback(
     (context: SidebarContextType) => {
       setShow(showSideBar, context, 'wide');
@@ -157,6 +163,7 @@ const useQueryParamSideBar = (formikRef?: any): IMapSideBar => {
     addBuilding,
     addBareLand,
     addAssociatedLand,
+    addSubdivision,
     addContext,
     setDisabled: disabled => {
       const queryParams = {

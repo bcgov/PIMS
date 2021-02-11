@@ -15,10 +15,11 @@ import { MAX_ZOOM } from 'constants/strings';
 import { Link, useLocation } from 'react-router-dom';
 import queryString from 'query-string';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
-import { IParcel, PropertyTypes } from 'actions/parcelsActions';
+import { IParcel } from 'actions/parcelsActions';
 import { ReactComponent as BuildingSvg } from 'assets/images/icon-business.svg';
 import { AssociatedBuildingsList } from './AssociatedBuildingsList';
 import variables from '_variables.module.scss';
+import { PropertyTypes } from 'constants/propertyTypes';
 
 const InfoContainer = styled.div`
   margin-right: -10px;

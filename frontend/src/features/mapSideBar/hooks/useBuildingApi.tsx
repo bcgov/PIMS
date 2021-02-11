@@ -32,7 +32,7 @@ export const useBuildingApi = () => {
         building,
       );
       dispatch(success(actionTypes.ADD_BUILDING, status));
-      dispatch(storeBuildingDetail(null));
+      dispatch(storeBuildingDetail(data));
       dispatch(hideLoading());
       return data;
     } catch (axiosError) {
@@ -55,7 +55,7 @@ export const useBuildingApi = () => {
         building,
       );
       dispatch(success(actionTypes.UPDATE_BUILDING, status));
-      dispatch(storeBuildingDetail(null));
+      dispatch(storeBuildingDetail(data));
       dispatch(hideLoading());
       return data;
     } catch (axiosError) {

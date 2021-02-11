@@ -386,8 +386,8 @@ exports[`Land Form component renders correctly 1`] = `
                       >
                         <input
                           class="input-small form-control"
-                          id="input-data.searchPid"
-                          name="data.searchPid"
+                          id="input-searchPid"
+                          name="searchPid"
                           value=""
                         />
                       </div>
@@ -428,8 +428,8 @@ exports[`Land Form component renders correctly 1`] = `
                       >
                         <input
                           class="input-small form-control"
-                          id="input-data.searchPin"
-                          name="data.searchPin"
+                          id="input-searchPin"
+                          name="searchPin"
                           type="number"
                           value=""
                         />
@@ -475,9 +475,9 @@ exports[`Land Form component renders correctly 1`] = `
                           >
                             <input
                               class="form-control"
-                              field="data.searchAddress"
-                              id="input-data.searchAddress"
-                              name="data.searchAddress"
+                              field="searchAddress"
+                              id="input-searchAddress"
+                              name="searchAddress"
                               value=""
                             />
                           </div>

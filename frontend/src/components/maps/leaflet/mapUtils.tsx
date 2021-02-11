@@ -1,9 +1,8 @@
 import { Icon, DivIcon, LatLngExpression, Layer, Marker, Map, GeoJSON } from 'leaflet';
 import { ICluster, PointFeature } from '../types';
-import { IProperty, PropertyTypes } from 'actions/parcelsActions';
+import { IProperty } from 'actions/parcelsActions';
 import Supercluster from 'supercluster';
-import { Classifications } from 'constants/classifications';
-import { Workflows } from 'constants/workflows';
+import { Classifications, Workflows, PropertyTypes } from 'constants/index';
 
 // parcel icon (green)
 export const parcelIcon = new Icon({
@@ -251,7 +250,7 @@ export const getMarkerIcon = (feature: ICluster, selected?: boolean) => {
   } else if (propertyTypeId === PropertyTypes.DRAFT_BUILDING) {
     return draftBuildingIcon;
   } else if (selected) {
-    if (projectWorkflow === Workflows.ERP) {
+    if ([Workflows.ERP, Workflows.ASSESS_EX_DISPOSAL].includes(projectWorkflow)) {
       switch (propertyTypeId) {
         case PropertyTypes.SUBDIVISION:
           return subdivisionErpIconSelect;
@@ -280,7 +279,7 @@ export const getMarkerIcon = (feature: ICluster, selected?: boolean) => {
       return buildingIconSelect;
     }
   } else {
-    if (projectWorkflow === Workflows.ERP) {
+    if ([Workflows.ERP, Workflows.ASSESS_EX_DISPOSAL].includes(projectWorkflow)) {
       switch (propertyTypeId) {
         case PropertyTypes.SUBDIVISION:
           return subdivisionErpIcon;

@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { IBuilding, IParcel, IPropertyDetail, PropertyTypes } from 'actions/parcelsActions';
+import { IBuilding, IParcel, IPropertyDetail } from 'actions/parcelsActions';
 import { IGeoSearchParams } from 'constants/API';
 import { BBox } from 'geojson';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
@@ -16,6 +16,7 @@ import { tilesInBbox } from 'tiles-in-bbox';
 import { useFilterContext } from '../providers/FIlterProvider';
 import { MUNICIPALITY_LAYER_URL, useLayerQuery } from './LayerPopup';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+import { PropertyTypes } from 'constants/propertyTypes';
 export type InventoryLayerProps = {
   /** Latitude and Longitude boundary of the layer. */
   bounds: LatLngBounds;

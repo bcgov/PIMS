@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { InventoryPolicy } from '../components/InventoryPolicy';
-import { BuildingSvg, LandSvg } from 'components/common/Icons';
+import { BuildingSvg, LandSvg, SubdivisionSvg } from 'components/common/Icons';
 import variables from '_variables.module.scss';
 
 const SidebarContent = styled.div`
@@ -68,6 +68,13 @@ const BareLandIcon = styled(LandSvg)`
   margin-right: 16px;
 `;
 
+const SubdivisionIcon = styled(SubdivisionSvg)`
+  color: #494949;
+  height: 47px;
+  width: 47px;
+  margin-right: 16px;
+`;
+
 const ActionPrimaryText = styled.p`
   font-size: 21px;
   color: ${variables.slideOutBlue};
@@ -82,11 +89,13 @@ const ActionSecondaryText = styled.p`
 interface ISubmitPropertySelectorProps {
   addBuilding: () => void;
   addBareLand: () => void;
+  addSubdivision: () => void;
 }
 
 const SubmitPropertySelector: React.FC<ISubmitPropertySelectorProps> = ({
   addBuilding,
   addBareLand,
+  addSubdivision,
 }) => {
   return (
     <SidebarContent>
@@ -110,6 +119,13 @@ const SubmitPropertySelector: React.FC<ISubmitPropertySelectorProps> = ({
           <ActionLabelWrapper>
             <ActionPrimaryText>Add Bare Land</ActionPrimaryText>
             <ActionSecondaryText>PID or PIN</ActionSecondaryText>
+          </ActionLabelWrapper>
+        </Action>
+        <Action onClick={addSubdivision}>
+          <SubdivisionIcon className="svg" />
+          <ActionLabelWrapper>
+            <ActionPrimaryText>Add Potential Subdivision</ActionPrimaryText>
+            <ActionSecondaryText>PID</ActionSecondaryText>
           </ActionLabelWrapper>
         </Action>
       </ActionsWrapper>
