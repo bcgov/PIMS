@@ -2,6 +2,7 @@ import * as React from 'react';
 import { IParcel } from 'actions/parcelsActions';
 import { OuterRow } from './InfoContent';
 import { ThreeColumnItem } from './ThreeColumnItem';
+import { pidFormatter } from 'features/properties/components/forms/subforms/PidPinForm';
 
 interface IParcelPIDPIN {
   /** the selected parcel information */
@@ -15,7 +16,9 @@ interface IParcelPIDPIN {
 export const ParcelPIDPIN: React.FC<IParcelPIDPIN> = ({ parcelInfo }) => {
   return (
     <OuterRow>
-      {parcelInfo?.pid && <ThreeColumnItem leftSideLabel={'PID'} rightSideItem={parcelInfo?.pid} />}
+      {parcelInfo?.pid && (
+        <ThreeColumnItem leftSideLabel={'PID'} rightSideItem={pidFormatter(parcelInfo?.pid)} />
+      )}
       {parcelInfo?.pin && <ThreeColumnItem leftSideLabel={'PIN'} rightSideItem={parcelInfo?.pin} />}
     </OuterRow>
   );
