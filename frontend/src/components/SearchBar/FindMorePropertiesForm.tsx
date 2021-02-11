@@ -61,6 +61,10 @@ const SearchButton = styled(props => <Button {...props} />)`
   margin-left: 665px;
 `;
 
+const ErrorMessage = styled.p`
+  color: ${variables.dangerColor};
+`;
+
 const StyledLocation = styled(props => <TypeaheadField {...props} />)`
   width: 250px;
   margin-left: 60px;
@@ -71,8 +75,9 @@ const FindMorePropertiesForm = <T extends any>(props: any) => {
     state => (state.lookupCode as ILookupCodeState).lookupCodes,
   );
 
-  const { setFieldValue } = useFormikContext<any>();
+  const { setFieldValue, handleSubmit, errors } = useFormikContext<any>();
   const [clear, setClear] = useState(false);
+  const [displayError, setDisplayError] = useState(false);
 
   const predominateUses = _.filter(lookupCodes, (lookupCode: ILookupCode) => {
     return lookupCode.type === API.PREDOMINATE_USE_CODE_SET_NAME;
@@ -81,8 +86,13 @@ const FindMorePropertiesForm = <T extends any>(props: any) => {
     return lookupCode.type === API.AMINISTRATIVE_AREA_CODE_SET_NAME;
   });
   const adminAreas = (administrativeAreas ?? []).map(c => mapLookupCode(c, null));
-
-  const { handleSubmit } = useFormikContext();
+  const handleSearch = () => {
+    if (errors.inEnhancedReferralProcess || errors.inSurplusPropertyProgram) {
+      setDisplayError(true);
+    } else {
+      handleSubmit();
+    }
+  };
 
   return (
     <>
@@ -102,6 +112,13 @@ const FindMorePropertiesForm = <T extends any>(props: any) => {
         </a>
       </p>
       <FormSection>
+        {displayError && (
+          <ErrorMessage>
+            {errors.inSurplusPropertyProgram
+              ? errors.inSurplusPropertyProgram
+              : errors.inEnhancedReferralProcess}
+          </ErrorMessage>
+        )}
         <StyledRow style={{ marginLeft: 140, paddingTop: 10 }}>
           <Check label="ERP Properties" field="inEnhancedReferralProcess" />
           <VerticalLine />
@@ -158,7 +175,13 @@ const FindMorePropertiesForm = <T extends any>(props: any) => {
         </StyledRow>
       </FormSection>
       <Row>
-        <SearchButton onClick={handleSubmit}>Search</SearchButton>
+        <SearchButton
+          onClick={() => {
+            handleSearch();
+          }}
+        >
+          Search
+        </SearchButton>
       </Row>
     </>
   );
