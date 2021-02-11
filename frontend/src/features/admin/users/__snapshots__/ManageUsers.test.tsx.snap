@@ -1,6 +1,10 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Manage Users Component Snapshot matches 1`] = `
+.c2 {
+  margin-top: 0.2rem;
+}
+
 .c1 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -1070,7 +1074,9 @@ exports[`Manage Users Component Snapshot matches 1`] = `
             <div
               style="display: flex;"
             >
-              <span>
+              <span
+                class="c2"
+              >
                 Show
               </span>
               <input
@@ -1079,7 +1085,9 @@ exports[`Manage Users Component Snapshot matches 1`] = `
                 type="number"
                 value="10"
               />
-              <span>
+              <span
+                class="c2"
+              >
                 Entries
               </span>
             </div>
