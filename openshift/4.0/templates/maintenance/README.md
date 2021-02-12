@@ -38,11 +38,11 @@ docker tag caddy image-registry.apps.silver.devops.gov.bc.ca/354028-tools/caddy
 docker push image-registry.apps.silver.devops.gov.bc.ca/354028-tools/caddy
 ```
 
-> The following doesn't currently work as the caddy image isn't compatible with our configuration.
+## Build Configuration
 
 Go to - `/pims/openshift/4.0/templates/maintenance`
 
-Create a build configuration file here - `build-proxy-caddy.dev.env`
+Create a build configuration file here - `build.dev.env`
 Update the configuration file and set the appropriate parameters.
 
 **Example**
@@ -50,16 +50,15 @@ Update the configuration file and set the appropriate parameters.
 ```conf
 GIT_REPO=https://github.com/bcgov/pims.git
 GIT_REF=dev
-IMG_SRC_NAMESPACE=354028-tools
 IMG_SRC=bcgov-s2i-caddy
+OUTPUT_IMAGE_TAG=dev
 ```
 
 Create the api build and save the template.
 
 ```bash
 oc project 354028-tools
-
-oc process -f build-proxy-caddy.yaml --param-file=build-proxy-caddy.dev.env | oc create --save-config=true -f -
+oc process -f caddy.bc.yaml --param-file=build.dev.env | oc create --save-config=true -f -
 ```
 
 You may need to manually run the build config.
@@ -68,21 +67,49 @@ You may need to manually run the build config.
 oc start-build proxy-caddy
 ```
 
+## Deployment Configuration
+
 Create a deployment configuration file here - `deploy-proxy-caddy.dev.env`
 Update the configuration file and set the appropriate parameters.
 
 **Example**
 
 ```conf
-PROJECT_NAMESPACE=354028
-ROLE_NAME=proxy
 ENV_NAME=dev
+IMAGE_TAG=dev
 APP_DOMAIN=proxy-caddy-pims-dev.apps.silver.devops.gov.bc.ca
 APP_PORT=2015
+CPU_REQUEST=100m
+CPU_LIMIT=1
+MEMORY_REQUEST=500Mi
+MEMORY_LIMIT=4Gi
 ```
 
 Create the api deployment and save the template.
 
 ```bash
-oc process -f deploy-proxy-caddy.yaml --param-file=deploy-proxy-caddy.dev.env | oc create --save-config=true -f -
+oc project 354028-dev
+oc process -f caddy.dc.yaml --param-file=deploy.dev.env | oc create --save-config=true -f -
 ```
+
+## Testing
+
+After the caddy-proxy pod is running you can test the maintenance script.
+
+Go to - `/pims/maintenance`
+
+Turn on the maintenance page.
+
+```bash
+./maintenance.sh dev on
+```
+
+Go to [https://pims-dev.apps.silver.devops.gov.bc.ca](https://pims-dev.apps.silver.devops.gov.bc.ca) and it will display the maintenance page.
+
+Turn off the maintenance page.
+
+```bash
+./maintenance.sh dev off
+```
+
+Go to [https://pims-dev.apps.silver.devops.gov.bc.ca](https://pims-dev.apps.silver.devops.gov.bc.ca) and it will display the application.
