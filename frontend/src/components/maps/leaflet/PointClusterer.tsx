@@ -361,7 +361,7 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
           !currentClusterIds.includes(+selected?.parcelDetail?.id) && (
             <SelectedPropertyMarker
               {...selected.parcelDetail}
-              icon={getMarkerIcon({ properties: selected } as any)}
+              icon={getMarkerIcon({ properties: selected } as any, true)}
               position={[
                 selected.parcelDetail!.latitude as number,
                 selected.parcelDetail!.longitude as number,
