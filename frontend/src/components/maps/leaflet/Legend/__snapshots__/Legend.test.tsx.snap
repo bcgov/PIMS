@@ -63,7 +63,7 @@ exports[`Map Legend View Legend renders correctly 1`] = `
       <div
         className="label col"
       >
-        Subdivision
+        Proposed Subdivision
       </div>
     </div>
     <div
