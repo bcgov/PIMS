@@ -7,7 +7,7 @@ import { mapLookupCode } from 'utils';
 import * as API from 'constants/API';
 import styled from 'styled-components';
 import { Container, Form, Row } from 'react-bootstrap';
-import { Button, Check, Input, Select } from 'components/common/form';
+import { Button, Check, DisplayError, Input, Select } from 'components/common/form';
 import _ from 'lodash';
 import { getIn, useFormikContext } from 'formik';
 import { TypeaheadField } from 'components/common/form/Typeahead';
@@ -61,13 +61,21 @@ const SearchButton = styled(props => <Button {...props} />)`
   margin-left: 665px;
 `;
 
-const ErrorMessage = styled.p`
-  color: ${variables.dangerColor};
-`;
-
 const StyledLocation = styled(props => <TypeaheadField {...props} />)`
   width: 250px;
   margin-left: 60px;
+`;
+
+/** the area where invalid feedback or ERP/SPL selection will be displayed */
+const InvalidFeedback = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: row-reverse;
+  margin: 0.5rem 0;
+  text-align: center;
+  .invalid-feedback {
+    display: block;
+  }
 `;
 /** This form is triggered by the FindMorePropertiesButton and contains additional filter fields for the PropertiesFilter */
 const FindMorePropertiesForm = <T extends any>(props: any) => {
@@ -86,11 +94,12 @@ const FindMorePropertiesForm = <T extends any>(props: any) => {
     return lookupCode.type === API.AMINISTRATIVE_AREA_CODE_SET_NAME;
   });
   const adminAreas = (administrativeAreas ?? []).map(c => mapLookupCode(c, null));
+
+  /** attempt submission of search, display errors if present */
   const handleSearch = () => {
-    if (errors.inEnhancedReferralProcess || errors.inSurplusPropertyProgram) {
+    handleSubmit();
+    if (errors) {
       setDisplayError(true);
-    } else {
-      handleSubmit();
     }
   };
 
@@ -113,13 +122,12 @@ const FindMorePropertiesForm = <T extends any>(props: any) => {
       </p>
       <FormSection>
         {displayError && (
-          <ErrorMessage>
-            {errors.inSurplusPropertyProgram
-              ? errors.inSurplusPropertyProgram
-              : errors.inEnhancedReferralProcess}
-          </ErrorMessage>
+          <InvalidFeedback>
+            <DisplayError errorPrompt field="inSurplusPropertyProgram" />
+          </InvalidFeedback>
         )}
-        <StyledRow style={{ marginLeft: 140, paddingTop: 10 }}>
+
+        <StyledRow style={{ marginLeft: 115, paddingTop: 10 }}>
           <Check label="ERP Properties" field="inEnhancedReferralProcess" />
           <VerticalLine />
           <Check label="SPL Properties" field="inSurplusPropertyProgram" />
