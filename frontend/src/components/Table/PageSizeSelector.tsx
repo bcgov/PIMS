@@ -2,6 +2,12 @@ import { Menu, IMenuItemProps } from 'components/menu/Menu';
 import React from 'react';
 import { Form } from 'react-bootstrap';
 import { noop } from 'lodash';
+import styled from 'styled-components';
+
+/** align text to middle of size input */
+const StyledText = styled.span`
+  margin-top: 0.2rem;
+`;
 
 interface IProps {
   options: number[];
@@ -28,7 +34,7 @@ export const TablePageSizeSelector: React.FC<IProps> = ({ options, value, onChan
   return (
     <Menu options={pageSizeOptions} width="60px" alignTop={alignTop}>
       <div style={{ display: 'flex' }}>
-        <span>Show</span>
+        <StyledText>Show</StyledText>
         <Form.Control
           size="sm"
           value={`${selected}`}
@@ -36,7 +42,7 @@ export const TablePageSizeSelector: React.FC<IProps> = ({ options, value, onChan
           style={{ width: 50, marginLeft: 10, marginRight: 10 }}
           onChange={noop}
         />
-        <span>Entries</span>
+        <StyledText>Entries</StyledText>
       </div>
     </Menu>
   );

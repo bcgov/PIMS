@@ -1,6 +1,10 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Manage access requests Snapshot matches 1`] = `
+.c0 {
+  margin-top: 0.2rem;
+}
+
 <div
   className="manage-access-requests"
 >
@@ -903,7 +907,9 @@ exports[`Manage access requests Snapshot matches 1`] = `
                 }
               }
             >
-              <span>
+              <span
+                className="c0"
+              >
                 Show
               </span>
               <input
@@ -919,7 +925,9 @@ exports[`Manage access requests Snapshot matches 1`] = `
                 type="number"
                 value="10"
               />
-              <span>
+              <span
+                className="c0"
+              >
                 Entries
               </span>
             </div>

@@ -47,6 +47,7 @@
   .ScrollContainer {
     padding: 1rem 0;
     overflow-x: auto;
+    overflow-y: inherit;
     table {
       background-color: #fff;
     }
