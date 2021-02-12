@@ -1,6 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Review Approve Step renders correctly 1`] = `
+.c2 {
+  font-size: 12px;
+  margin-top: -100px;
+  max-width: 16.7%;
+}
+
 .c1 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -874,6 +880,11 @@ exports[`Review Approve Step renders correctly 1`] = `
               id="input-appraisedNote"
               name="appraisedNote"
             />
+          </div>
+          <div
+            class="c2"
+          >
+            Please include the date the appraisal was completed
           </div>
         </div>
       </div>
