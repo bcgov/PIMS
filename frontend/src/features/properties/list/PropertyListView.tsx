@@ -15,7 +15,7 @@ import { IPropertyQueryParams, IProperty } from '.';
 import { columns as cols } from './columns';
 import { Table } from 'components/Table';
 import service from '../service';
-import { FaFolderOpen, FaFolder, FaEdit } from 'react-icons/fa';
+import { FaFolderOpen, FaFolder, FaEdit, FaFileExport } from 'react-icons/fa';
 import { Buildings } from './buildings';
 import { FaFileExcel, FaFileAlt } from 'react-icons/fa';
 import styled from 'styled-components';
@@ -40,9 +40,16 @@ import { IApiProperty } from 'features/projects/common';
 import { EvaluationKeys } from 'constants/evaluationKeys';
 import { FiscalKeys } from 'constants/fiscalKeys';
 import variables from '_variables.module.scss';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+import { Roles } from 'constants/roles';
 
 const getPropertyReportUrl = (filter: IPropertyQueryParams) =>
   `${ENVIRONMENT.apiUrl}/reports/properties?${filter ? queryString.stringify(filter) : ''}`;
+
+const getAllFieldsPropertyReportUrl = (filter: IPropertyQueryParams) =>
+  `${ENVIRONMENT.apiUrl}/reports/properties/allfields?${
+    filter ? queryString.stringify(filter) : ''
+  }`;
 
 const FileIcon = styled(Button)`
   background-color: #fff !important;
@@ -224,6 +231,7 @@ const PropertyListView: React.FC = () => {
   const [editable, setEditable] = useState(false);
   const tableFormRef = useRef<FormikProps<{ properties: IProperty[] }> | undefined>();
   const [dirtyRows, setDirtyRows] = useState<IChangedRow[]>([]);
+  const keycloak = useKeycloakWrapper();
   // lookup codes, etc
   const lookupCodes = useSelector<RootState, ILookupCode[]>(
     state => (state.lookupCode as ILookupCodeState).lookupCodes,
@@ -283,7 +291,6 @@ const PropertyListView: React.FC = () => {
   const [pageIndex, setPageIndex] = useState(0);
   const [pageCount, setPageCount] = useState(0);
 
-  // const [loading, setLoading] = useState(false);
   const fetchIdRef = useRef(0);
 
   const parsedFilter = useMemo(() => {
@@ -363,11 +370,17 @@ const PropertyListView: React.FC = () => {
 
   const dispatch = useDispatch();
 
-  const fetch = (accept: 'csv' | 'excel') => {
+  /**
+   * @param {'csv' | 'excel'} accept Whether the fetch is for type of CSV or EXCEL
+   * @param {boolean} getAllFields Enable this field to generate report with additional fields. For SRES only.
+   */
+  const fetch = (accept: 'csv' | 'excel', getAllFields?: boolean) => {
     const query = getServerQuery({ pageIndex, pageSize, filter, agencyIds });
     return dispatch(
       download({
-        url: getPropertyReportUrl({ ...query, all: true, propertyType: undefined }),
+        url: getAllFields
+          ? getAllFieldsPropertyReportUrl({ ...query, all: true, propertyType: undefined })
+          : getPropertyReportUrl({ ...query, all: true, propertyType: undefined }),
         fileName: `pims-inventory.${accept === 'csv' ? 'csv' : 'xlsx'}`,
         actionType: 'properties-report',
         headers: {
@@ -474,6 +487,17 @@ const PropertyListView: React.FC = () => {
               <FaFileAlt data-testid="csv-icon" size={36} onClick={() => fetch('csv')} />
             </FileIcon>
           </TooltipWrapper>
+          {(keycloak.hasRole(Roles.SRES_FINANCIAL_MANAGER) || keycloak.hasRole(Roles.SRES)) && (
+            <TooltipWrapper toolTipId="export-to-excel" toolTip="Export all properties and fields">
+              <FileIcon>
+                <FaFileExport
+                  data-testid="file-icon"
+                  size={36}
+                  onClick={() => fetch('excel', true)}
+                />
+              </FileIcon>
+            </TooltipWrapper>
+          )}
           <VerticalDivider />
 
           <TooltipWrapper toolTipId="edit-financial-values" toolTip={'Edit financial values'}>

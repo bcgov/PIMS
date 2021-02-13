@@ -67,8 +67,26 @@ namespace Pims.Api.Areas.Reports.Controllers
         }
 
         /// <summary>
+        /// Exports properties with all fields as an Excel file, only available for SRES
+        /// Include 'Accept' header to request the appropriate export
+        /// </summary>
+        /// <param name="all"></param>
+        /// <returns></returns>
+        [HttpGet("allfields")]
+        [HasPermission(Permissions.AdminProperties)]
+        [Produces(ContentTypes.CONTENT_TYPE_EXCELX)]
+        [ProducesResponseType(200)]
+        [SwaggerOperation(Tags = new[] { "property", "report" })]
+        public IActionResult ExportPropertiesAllFields(bool all = false)
+        {
+            var uri = new Uri(this.Request.GetDisplayUrl());
+            var query = Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(uri.Query);
+            return ExportPropertiesAllFields(new Property.Models.Search.PropertyFilterModel(query), all);
+        }
+
+        /// <summary>
         /// Exports properties as CSV or Excel file.
-        /// Include 'Accept' header to request the appropriate expor -
+        /// Include 'Accept' header to request the appropriate export -
         ///     ["text/csv", "application/application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"]
         /// </summary>
         /// <param name="filter"></param>
@@ -98,6 +116,34 @@ namespace Pims.Api.Areas.Reports.Controllers
                 _ => ReportHelper.GenerateExcel(report.Items, "PIMS")
             };
 
+        }
+        /// <summary>
+        /// Exports properties as Excel file. Has more fields than default export.
+        /// Only available for SRES
+        /// Include 'Accept' header to request the appropriate expor
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <param name="all"></param>
+        /// <returns></returns>
+        [HttpPost("filter/allfields")]
+        [HasPermission(Permissions.AdminProjects)]
+        [Produces(ContentTypes.CONTENT_TYPE_EXCELX)]
+        [ProducesResponseType(200)]
+        [SwaggerOperation(Tags = new[] { "property", "report" })]
+        public IActionResult ExportPropertiesAllFields([FromBody] Property.Models.Search.PropertyFilterModel filter, bool all = true)
+        {
+            filter.ThrowBadRequestIfNull($"The request must include a filter.");
+            if (!filter.IsValid()) throw new BadRequestException("Property filter must contain valid values.");
+            var accept = (string)this.Request.Headers["Accept"] ?? throw new BadRequestException($"HTTP request header 'Accept' is required.");
+
+            if (accept != ContentTypes.CONTENT_TYPE_EXCEL && accept != ContentTypes.CONTENT_TYPE_EXCELX)
+                throw new BadRequestException($"Invalid HTTP request header 'Accept:{accept}'.");
+
+            filter.Quantity = all ? _pimsService.Property.Count() : filter.Quantity;
+            var page = _pimsService.Property.GetPage((AllPropertyFilter)filter);
+            var report = _mapper.Map<Api.Models.PageModel<Models.AllPropertyFields.AllFieldsPropertyModel>>(page);
+
+            return ReportHelper.GenerateExcel(report.Items, "PIMS");
         }
         #endregion
         #endregion
