@@ -1,6 +1,6 @@
 import './AgencyResponseForm.scss';
 import React from 'react';
-import { Container } from 'react-bootstrap';
+import { Col, Container } from 'react-bootstrap';
 import { Form, FastDatePicker } from 'components/common/form';
 import { useFormikContext } from 'formik';
 import { IProject } from '../../common';
@@ -24,50 +24,64 @@ const AgencyResponseForm = ({ isReadOnly }: IAgencyResponseFormProps) => {
   return (
     <Container fluid className="AgencyResponseForm">
       <Form.Row>
-        <Form.Label column md={4}>
-          Date of Initial Enhanced Referral Notification Sent
-        </Form.Label>
-        <FastDatePicker
-          outerClassName="col-md-8"
-          formikProps={formikProps}
-          disabled={isReadOnly}
-          field="initialNotificationSentOn"
-        />
+        <Col>
+          <Form.Row>
+            <Form.Label column md={8}>
+              Date of Initial Enhanced Referral Notification Sent
+            </Form.Label>
+            <FastDatePicker
+              outerClassName="col-md-4"
+              formikProps={formikProps}
+              disabled={isReadOnly}
+              field="initialNotificationSentOn"
+            />
+          </Form.Row>
+          <Form.Row>
+            <Form.Label column md={8}>
+              Date of 30 Day Enhanced Referral Notification Sent
+            </Form.Label>
+            <FastDatePicker
+              outerClassName="col-md-4"
+              formikProps={formikProps}
+              disabled={isReadOnly}
+              field="thirtyDayNotificationSentOn"
+            />
+          </Form.Row>
+          <Form.Row>
+            <Form.Label column md={8}>
+              Date of 60 Day Enhanced Referral Notification Sent
+            </Form.Label>
+            <FastDatePicker
+              outerClassName="col-md-4"
+              formikProps={formikProps}
+              disabled={isReadOnly}
+              field="sixtyDayNotificationSentOn"
+            />
+          </Form.Row>
+          <Form.Row>
+            <Form.Label column md={8}>
+              Date of 90 Day Enhanced Referral Notification Sent
+            </Form.Label>
+            <FastDatePicker
+              outerClassName="col-md-4"
+              formikProps={formikProps}
+              disabled={isReadOnly}
+              field="ninetyDayNotificationSentOn"
+            />
+          </Form.Row>
+        </Col>
+        <Col style={{ padding: '0 0 0 10px' }}>
+          <Form.Label>
+            <strong>Note: </strong>Changing the dates on these fields does not change the date the
+            notifications are sent from the Common Hosted Email Service (CHES), which is managed by
+            the Exchange Lab.
+          </Form.Label>
+          <Form.Label>
+            The only way to stop future unsent notifications is to cancel the entire project.
+          </Form.Label>
+        </Col>
       </Form.Row>
-      <Form.Row>
-        <Form.Label column md={4}>
-          Date of 30 Day Enhanced Referral Notification Sent
-        </Form.Label>
-        <FastDatePicker
-          outerClassName="col-md-8"
-          formikProps={formikProps}
-          disabled={isReadOnly}
-          field="thirtyDayNotificationSentOn"
-        />
-      </Form.Row>
-      <Form.Row>
-        <Form.Label column md={4}>
-          Date of 60 Day Enhanced Referral Notification Sent
-        </Form.Label>
-        <FastDatePicker
-          outerClassName="col-md-8"
-          formikProps={formikProps}
-          disabled={isReadOnly}
-          field="sixtyDayNotificationSentOn"
-        />
-      </Form.Row>
-      <Form.Row>
-        <Form.Label column md={4}>
-          Date of 90 Day Enhanced Referral Notification Sent
-        </Form.Label>
-        <FastDatePicker
-          outerClassName="col-md-8"
-          formikProps={formikProps}
-          disabled={isReadOnly}
-          field="ninetyDayNotificationSentOn"
-        />
-      </Form.Row>
-      <AgencyInterest></AgencyInterest>
+      <AgencyInterest />
     </Container>
   );
 };
