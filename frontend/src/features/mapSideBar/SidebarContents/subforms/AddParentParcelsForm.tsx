@@ -59,7 +59,7 @@ const AddParentParcelsForm = ({
       </Col>
       <Col md={12}>
         <Form.Row>
-          <Label>Pick Parent Parcel(s)</Label>
+          <Label>Enter Parent Parcel PID(s)</Label>
           <Input
             displayErrorTooltips
             className="input-small"

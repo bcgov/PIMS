@@ -153,6 +153,7 @@ namespace Pims.Dal.Services
                 .Include(p => p.Buildings).ThenInclude(pb => pb.Building).ThenInclude(b => b.Classification)
                 .Include(p => p.Parcels).ThenInclude(pp => pp.Parcel)
                 .Include(p => p.Subdivisions).ThenInclude(pp => pp.Subdivision)
+                .Include(p => p.Projects).ThenInclude(pp => pp.Project).ThenInclude(p => p.Workflow)
                 .FirstOrDefault(p => p.Id == id
                     && (ownsABuilding || isAdmin || p.IsVisibleToOtherAgencies || !p.IsSensitive || (viewSensitive && userAgencies.Contains(p.AgencyId)))) ?? throw new KeyNotFoundException();
 
@@ -500,6 +501,8 @@ namespace Pims.Dal.Services
                 .Include(p => p.Buildings).ThenInclude(pb => pb.Building).ThenInclude(b => b.Evaluations)
                 .Include(p => p.Buildings).ThenInclude(pb => pb.Building).ThenInclude(b => b.Fiscals)
                 .Include(p => p.Buildings).ThenInclude(pb => pb.Building).ThenInclude(b => b.Address)
+                .Include(p => p.Subdivisions)
+                .Include(p => p.Parcels)
                 .SingleOrDefault(u => u.Id == parcel.Id) ?? throw new KeyNotFoundException();
 
             if (!isAdmin && (!userAgencies.Contains(originalParcel.AgencyId) || originalParcel.IsSensitive && !viewSensitive))
@@ -520,6 +523,8 @@ namespace Pims.Dal.Services
             });
             this.Context.ParcelEvaluations.RemoveRange(originalParcel.Evaluations);
             this.Context.ParcelFiscals.RemoveRange(originalParcel.Fiscals);
+            this.Context.ParcelParcels.RemoveRange(originalParcel.Parcels);
+            this.Context.ParcelParcels.RemoveRange(originalParcel.Subdivisions);
             this.Context.Parcels.Remove(originalParcel); // TODO: Shouldn't be allowed to permanently delete parcels entirely under certain conditions.
             this.Context.CommitTransaction();
         }

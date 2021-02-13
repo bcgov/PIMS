@@ -74,7 +74,7 @@ const LandSearchForm = ({
               }
               return '';
             }}
-            field={withNameSpace('searchPid')}
+            field={withNameSpace(nameSpace, 'searchPid')}
           />
           <SearchButton
             onClick={(e: any) => {
@@ -90,7 +90,7 @@ const LandSearchForm = ({
             displayErrorTooltips
             className="input-small"
             disabled={false}
-            field={withNameSpace('searchPin')}
+            field={withNameSpace(nameSpace, 'searchPin')}
             onBlurFormatter={(pin: number) => {
               if (pin > 0) {
                 return pin;
@@ -110,14 +110,19 @@ const LandSearchForm = ({
           <Label>Street Address</Label>
           <GeocoderAutoComplete
             value={searchAddress}
-            field={withNameSpace('searchAddress')}
+            field={withNameSpace(nameSpace, 'searchAddress')}
             onSelectionChanged={selection => {
               formikProps.setFieldValue(withNameSpace('searchAddress'), selection.fullAddress);
               setGeocoderResponse(selection);
             }}
-            onTextChange={value => formikProps.setFieldValue(withNameSpace('searchAddress'), value)}
-            error={getIn(formikProps.errors, withNameSpace('searchAddress'))}
-            touch={getIn(formikProps.touched, withNameSpace('searchAddress'))}
+            onTextChange={value => {
+              if (value !== geocoderResponse?.address1) {
+                setGeocoderResponse(undefined);
+              }
+              formikProps.setFieldValue(withNameSpace(nameSpace, 'searchAddress'), value);
+            }}
+            error={getIn(formikProps.errors, withNameSpace(nameSpace, 'searchAddress'))}
+            touch={getIn(formikProps.touched, withNameSpace(nameSpace, 'searchAddress'))}
             displayErrorTooltips
           />
           <SearchButton

@@ -149,12 +149,14 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
     nameSpace?: string,
   ) => {
     if (!formikRef.current) return;
+    const { resetForm, values } = formikRef.current;
+    const currentPropertyTypeId = getIn(values, withNameSpace(nameSpace, 'propertyTypeId'));
     if (matchingParcel.propertyTypeId !== PropertyTypes.PARCEL) {
       toast.error('That address/pid is already in use within a subdivision.');
       return;
     }
-    const { setValues, values } = formikRef.current;
-    matchingParcel.propertyTypeId = getIn(values, withNameSpace(nameSpace, 'propertyTypeId'));
+
+    matchingParcel.propertyTypeId = currentPropertyTypeId;
     matchingParcel.parcels = getIn(values, withNameSpace(nameSpace, 'parcels'));
     matchingParcel.searchPid = getIn(values, withNameSpace(nameSpace, 'searchPid'));
     matchingParcel.searchPin = getIn(values, withNameSpace(nameSpace, 'searchPin'));
@@ -164,7 +166,9 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
       Object.values(EvaluationKeys),
     );
     matchingParcel.fiscals = getMergedFinancials(matchingParcel.fiscals, Object.values(FiscalKeys));
-    setValues(setIn(values, nameSpace ?? '', matchingParcel));
+    resetForm({
+      values: setIn(values, nameSpace ?? '', { ...getInitialValues(), ...matchingParcel }),
+    });
     toast.dark('Found matching parcel within PIMS. Form data will be pre-populated.', {
       autoClose: 7000,
     });
@@ -228,40 +232,29 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
   };
 
   const droppedMarkerSearch = (nameSpace: string, latLng?: LatLng, isParcel?: boolean) => {
-    if (latLng) {
-      parcelLayerService.findOneWhereContains(latLng).then(resp => {
-        const properties = getIn(resp, 'features.0.properties');
-        if (properties?.PIN || properties?.PID) {
-          if (isParcel) {
-            const query: any = { pin: properties?.PIN, pid: properties.PID };
-            fetchParcelsDetail(query)(dispatch).then((resp: any) => {
-              const matchingParcel: any = resp?.data?.length ? _.first(resp?.data) : undefined;
-              if (!!nameSpace && !!formikRef?.current?.values && !!matchingParcel?.id && isParcel) {
-                const { resetForm, values } = formikRef.current;
-                matchingParcel.evaluations = getMergedFinancials(
-                  matchingParcel.evaluations,
-                  Object.values(EvaluationKeys),
-                );
-                matchingParcel.fiscals = getMergedFinancials(
-                  matchingParcel.fiscals,
-                  Object.values(FiscalKeys),
-                );
-                resetForm({ values: setIn(values, nameSpace, matchingParcel) });
-                toast.dark('Found matching parcel within PIMS. Form data will be pre-populated.', {
-                  autoClose: 7000,
-                });
-              } else {
-                parcelLayerSearch(properties, latLng);
-              }
-            });
+    if (!latLng) {
+      return;
+    }
+    parcelLayerService.findOneWhereContains(latLng).then(resp => {
+      const properties = getIn(resp, 'features.0.properties');
+      if (!properties?.PIN && !properties?.PID) {
+        toast.warning('Unable to find any details for the clicked location.');
+        return;
+      }
+      if (isParcel) {
+        const query: any = { pin: properties?.PIN, pid: properties.PID };
+        fetchParcelsDetail(query)(dispatch).then((resp: any) => {
+          const matchingParcel: any = resp?.data?.length ? _.first(resp?.data) : undefined;
+          if (!!nameSpace && !!formikRef?.current?.values && !!matchingParcel?.id && isParcel) {
+            formikParcelDataPopulateCallback(matchingParcel, nameSpace);
           } else {
             parcelLayerSearch(properties, latLng);
           }
-        } else {
-          toast.warning('Unable to find any details for the clicked location.');
-        }
-      });
-    }
+        });
+      } else {
+        parcelLayerSearch(properties, latLng);
+      }
+    });
   };
 
   const parcelLayerSearch = (properties: any, latLng?: LatLng) => {
@@ -349,6 +342,15 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
         return (
           <>
             <SubdivisionSvg className="svg" /> Submit Subdivision (to inventory)
+          </>
+        );
+      case SidebarContextType.VIEW_SUBDIVISION_LAND:
+      case SidebarContextType.UPDATE_SUBDIVISION_LAND:
+        return (
+          <>
+            <SubdivisionSvg className="svg" /> View/Update potential subdivision
+            <ConditionalEditButton />
+            <ConditionalDeleteButton />
           </>
         );
       case SidebarContextType.VIEW_BARE_LAND:
@@ -448,6 +450,7 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
       case SidebarContextType.ADD_BARE_LAND:
       case SidebarContextType.UPDATE_DEVELOPED_LAND:
       case SidebarContextType.UPDATE_BARE_LAND:
+      case SidebarContextType.UPDATE_SUBDIVISION_LAND:
         if (propertyType !== 'land') {
           setPropertyType('land');
         }
@@ -469,6 +472,7 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
         );
       case SidebarContextType.VIEW_BARE_LAND:
       case SidebarContextType.VIEW_DEVELOPED_LAND:
+      case SidebarContextType.VIEW_SUBDIVISION_LAND:
         if (propertyType !== 'land') {
           setPropertyType('land');
         }

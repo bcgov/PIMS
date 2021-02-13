@@ -136,12 +136,12 @@ const InfoControl: React.FC<InfoControlProps> = ({ open, setOpen, onHeaderAction
   const jumpToView = () =>
     leaflet.map?.setView(
       [propertyInfo?.latitude as number, propertyInfo?.longitude as number],
-      MAX_ZOOM,
+      Math.max(MAX_ZOOM, leaflet.map.getZoom()),
     );
   const zoomToView = () =>
     leaflet.map?.flyTo(
       [propertyInfo?.latitude as number, propertyInfo?.longitude as number],
-      MAX_ZOOM,
+      Math.max(MAX_ZOOM, leaflet.map.getZoom()),
     );
 
   useEffect(() => {

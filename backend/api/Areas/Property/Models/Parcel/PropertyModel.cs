@@ -12,6 +12,8 @@ namespace Pims.Api.Areas.Property.Models.Parcel
 
         public IEnumerable<string> ProjectNumbers { get; set; }
 
+        public string ProjectWorkflow { get; set; }
+
         public string Name { get; set; }
 
         public string Description { get; set; }

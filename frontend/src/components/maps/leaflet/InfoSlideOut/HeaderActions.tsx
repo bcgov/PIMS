@@ -89,9 +89,10 @@ const HeaderActions: React.FC<IHeaderActions> = ({
           >
             View details
           </Link>
-          <VerticalBar />
+
           {canEditDetails && (
             <>
+              <VerticalBar />
               <Link
                 onClick={() => {
                   jumpToView();

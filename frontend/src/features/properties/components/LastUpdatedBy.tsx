@@ -20,6 +20,7 @@ const UpdateText = styled.p`
 const LinkButton = styled.span`
   color: #18548c;
   text-decoration: underline;
+  max-width: 200px;
 `;
 
 /**

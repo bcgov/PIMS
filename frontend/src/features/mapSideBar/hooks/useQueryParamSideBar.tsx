@@ -16,9 +16,11 @@ export enum SidebarContextType {
   VIEW_BUILDING = 'viewBuilding',
   VIEW_BARE_LAND = 'viewBareLand',
   VIEW_DEVELOPED_LAND = 'viewDevelopedLand',
+  VIEW_SUBDIVISION_LAND = 'viewSubdivisionLand',
   UPDATE_BUILDING = 'updateBuilding',
   UPDATE_BARE_LAND = 'updateBareLand',
   UPDATE_DEVELOPED_LAND = 'updateDevelopedLand',
+  UPDATE_SUBDIVISION_LAND = 'updateSubdivisionLand',
   LOADING = 'loading',
 }
 
