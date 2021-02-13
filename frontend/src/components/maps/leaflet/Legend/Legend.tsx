@@ -15,7 +15,7 @@ export const Legend = () => {
       },
       {
         pin: require('assets/images/subdiv-reg.png'),
-        label: 'Subdivision',
+        label: 'Proposed Subdivision',
       },
       {
         pin: require('assets/images/marker-red.png'),
