@@ -69,7 +69,8 @@ namespace Pims.Core.Test
                 CreatedOn = DateTime.UtcNow,
                 UpdatedById = Guid.NewGuid(),
                 UpdatedOn = DateTime.UtcNow,
-                RowVersion = new byte[] { 12, 13, 14 }
+                RowVersion = new byte[] { 12, 13, 14 },
+                PropertyTypeId = 1,
             };
         }
 

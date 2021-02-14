@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { ListGroup, Row } from 'react-bootstrap';
-import { IBuilding, IParcel, PropertyTypes } from 'actions/parcelsActions';
+import { IBuilding, IParcel } from 'actions/parcelsActions';
 import { Label } from 'components/common/Label';
 import { ParcelPIDPIN } from './ParcelPIDPIN';
 import ParcelAttributes from './ParcelAttributes';
@@ -9,6 +9,7 @@ import BuildingAttributes from './BuildingAttributes';
 import styled from 'styled-components';
 import { ThreeColumnItem } from './ThreeColumnItem';
 import variables from '_variables.module.scss';
+import { PropertyTypes } from 'constants/propertyTypes';
 
 /**
  * Compare two dates to evaluation which is earlier.

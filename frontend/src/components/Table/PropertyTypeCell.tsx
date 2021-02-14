@@ -5,7 +5,7 @@ import { ReactComponent as LandSvg } from 'assets/images/icon-lot.svg';
 import { ReactComponent as SubdivisionSvg } from 'assets/images/project-diagram-solid.svg';
 
 import { IProperty } from 'actions/parcelsActions';
-import { PropertyTypes } from 'actions/parcelsActions';
+import { PropertyTypes } from 'constants/propertyTypes';
 
 /**
  * Display an icon based on the property type.

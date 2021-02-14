@@ -3,12 +3,11 @@ import { CellProps } from 'react-table';
 import { Link } from 'react-router-dom';
 import { formatNumber, mapLookupCode } from 'utils';
 import { IProperty } from '.';
-import { ColumnWithProps } from 'components/Table';
+import { ColumnWithProps, ViewPropertyCell } from 'components/Table';
 import { ParentGroupedFilter } from 'components/SearchBar/ParentGroupedFilter';
 import { FastCurrencyInput, Input, Select, SelectOption } from 'components/common/form';
 import { TypeaheadField } from 'components/common/form/Typeahead';
 import { ILookupCode } from 'actions/lookupActions';
-import queryString from 'query-string';
 import { EditableMoneyCell, MoneyCell } from 'components/Table/MoneyCell';
 import _ from 'lodash';
 import styled from 'styled-components';
@@ -281,24 +280,6 @@ export const columns = (
       // For buildings we need the parent `parcelId` property
       return row.id ?? -1;
     },
-    Cell: (props: CellProps<IProperty, number>) => {
-      return (
-        <Link
-          to={{
-            pathname: `/mapview`,
-            search: queryString.stringify({
-              sidebar: true,
-              disabled: true,
-              loadDraft: false,
-              parcelId: props.row.original.propertyTypeId === 0 ? props.row.original.id : undefined,
-              buildingId:
-                props.row.original.propertyTypeId === 1 ? props.row.original.id : undefined,
-            }),
-          }}
-        >
-          View
-        </Link>
-      );
-    },
+    Cell: ViewPropertyCell,
   },
 ];

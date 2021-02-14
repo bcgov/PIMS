@@ -16,7 +16,7 @@ import { IAgencyResponseColumns } from 'features/projects/erp/forms/AgencyRespon
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { EditableMoneyCell, MoneyCell } from 'components/Table/MoneyCell';
-import { PropertyTypes } from 'actions/parcelsActions';
+import { PropertyTypes } from 'constants/propertyTypes';
 import { PropertyTypeCell } from 'components/Table/PropertyTypeCell';
 
 const ColumnDiv = styled.div`

@@ -1,7 +1,9 @@
+export { Workflows } from './workflows';
 export { NoteTypes } from './noteTypes';
 export { Claims } from './claims';
 export { Classifications } from './classifications';
-export { PropertyTypes } from './propertyTypes';
+export { PropertyTypeNames } from './propertyTypeNames';
 export { Roles } from './roles';
 export { FiscalKeys } from './fiscalKeys';
 export { EvaluationKeys } from './evaluationKeys';
+export { PropertyTypes } from './propertyTypes';

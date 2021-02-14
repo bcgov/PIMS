@@ -17,6 +17,7 @@ import _ from 'lodash';
 import { IStep } from 'components/common/Stepper';
 import { ILeasedLand } from 'features/mapSideBar/SidebarContents/AssociatedLandForm';
 import variables from '_variables.module.scss';
+import AbbreviatedText from 'components/common/AbbreviatedText';
 
 const TabbedForm = styled(Form)`
   .hideTabs {
@@ -225,7 +226,7 @@ export const SteppedForm = function<T extends object = {}>({
 const tabTitle = (title: string, index: number, setTabToDeleteId: (index: number) => void) => {
   return (
     <>
-      {title.length < 20 ? <p>{title}</p> : <abbr title={title}>{title.substr(0, 20)}</abbr>}
+      <AbbreviatedText text={title} maxLength={20} />
       <TooltipWrapper toolTipId="remove-associated-parcel" toolTip="Remove this associated parcel">
         <FaWindowClose
           size={15}

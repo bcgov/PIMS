@@ -1,9 +1,8 @@
 import { Icon, DivIcon, LatLngExpression, Layer, Marker, Map, GeoJSON } from 'leaflet';
 import { ICluster, PointFeature } from '../types';
-import { IProperty, PropertyTypes } from 'actions/parcelsActions';
+import { IProperty } from 'actions/parcelsActions';
 import Supercluster from 'supercluster';
-import { Classifications } from 'constants/classifications';
-import { Workflows } from 'constants/workflows';
+import { Classifications, Workflows, PropertyTypes } from 'constants/index';
 
 // parcel icon (green)
 export const parcelIcon = new Icon({
@@ -245,13 +244,17 @@ export const pointToLayer = (feature: ICluster, latlng: LatLngExpression): Layer
  * Get an icon type for the specified cluster property details (type, draft, erp, spp etc)
  */
 export const getMarkerIcon = (feature: ICluster, selected?: boolean) => {
-  const { propertyTypeId, projectWorkflow, classificationId } = feature?.properties;
+  const { propertyTypeId, projectWorkflow, classificationId, parcelDetail } = feature?.properties;
   if (propertyTypeId === PropertyTypes.DRAFT_PARCEL) {
     return draftParcelIcon;
   } else if (propertyTypeId === PropertyTypes.DRAFT_BUILDING) {
     return draftBuildingIcon;
   } else if (selected) {
-    if (projectWorkflow === Workflows.ERP) {
+    const {
+      classificationId: selectedClassificationId,
+      projectWorkflow: selectedWorkflowCode,
+    } = parcelDetail;
+    if ([Workflows.ERP, Workflows.ASSESS_EX_DISPOSAL].includes(selectedWorkflowCode)) {
       switch (propertyTypeId) {
         case PropertyTypes.SUBDIVISION:
           return subdivisionErpIconSelect;
@@ -261,8 +264,8 @@ export const getMarkerIcon = (feature: ICluster, selected?: boolean) => {
           return landErpIconSelect;
       }
     } else if (
-      classificationId === Classifications.SurplusActive ||
-      classificationId === Classifications.SurplusEncumbered
+      selectedClassificationId === Classifications.SurplusActive ||
+      selectedClassificationId === Classifications.SurplusEncumbered
     ) {
       switch (propertyTypeId) {
         case PropertyTypes.BUILDING:
@@ -280,7 +283,7 @@ export const getMarkerIcon = (feature: ICluster, selected?: boolean) => {
       return buildingIconSelect;
     }
   } else {
-    if (projectWorkflow === Workflows.ERP) {
+    if ([Workflows.ERP, Workflows.ASSESS_EX_DISPOSAL].includes(projectWorkflow)) {
       switch (propertyTypeId) {
         case PropertyTypes.SUBDIVISION:
           return subdivisionErpIcon;

@@ -173,6 +173,7 @@ export const mockDetails = [
     landArea: 123,
     landLegalDescription: 'test',
     buildings: [],
+    parcels: [],
     agency: 'MOTI',
     propertyTypeId: 0,
   },
@@ -205,6 +206,7 @@ export const mockDetails = [
     landArea: 123,
     landLegalDescription: 'test',
     buildings: [],
+    parcels: [],
     evaluations: [
       {
         date: new Date(),
@@ -294,5 +296,6 @@ export const ACTIVE = {
   landArea: 123,
   landLegalDescription: 'test',
   buildings: [],
+  parcels: [],
   agency: 'FIN',
 } as IParcel;

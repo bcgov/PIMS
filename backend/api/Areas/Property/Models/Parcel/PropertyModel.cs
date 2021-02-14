@@ -8,7 +8,11 @@ namespace Pims.Api.Areas.Property.Models.Parcel
         #region Properties
         public int Id { get; set; }
 
+        public int PropertyTypeId { get; set; }
+
         public IEnumerable<string> ProjectNumbers { get; set; }
+
+        public string ProjectWorkflow { get; set; }
 
         public string Name { get; set; }
 
