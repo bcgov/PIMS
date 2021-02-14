@@ -1,6 +1,7 @@
 import * as Yup from 'yup';
 import moment from 'moment';
 import { emptyStringToNull } from 'utils';
+import { PropertyTypes } from 'constants/propertyTypes';
 
 Yup.addMethod(Yup.string, 'optional', function optional() {
   return this.transform(value => {
@@ -208,6 +209,11 @@ export const LandSchema = Yup.object().shape({
   isSensitive: Yup.boolean()
     .transform(emptyStringToNull)
     .required('Required'),
+  parcels: Yup.array().when('propertyTypeId', {
+    is: val => val === PropertyTypes.SUBDIVISION,
+    then: Yup.array().required('You must add at least one parent parcel'),
+    otherwise: Yup.array(),
+  }),
 });
 export const ParcelSchema = Yup.object()
   .shape(
@@ -325,6 +331,11 @@ export const LandIdentificationSchema = Yup.object().shape(
       .nullable()
       .transform(emptyStringToNull)
       .required('Required'),
+    parcels: Yup.array().when('propertyTypeId', {
+      is: val => val === PropertyTypes.SUBDIVISION,
+      then: Yup.array().required('You must add at least one parent parcel'),
+      otherwise: Yup.array(),
+    }),
   },
   [['pin', 'pid']],
 );

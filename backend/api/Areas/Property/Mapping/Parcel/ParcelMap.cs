@@ -6,6 +6,7 @@ using BModel = Pims.Api.Models;
 using System.Text.Json;
 using System.Collections.Generic;
 using Microsoft.Extensions.Options;
+using Pims.Dal.Helpers.Extensions;
 using System.Linq;
 
 namespace Pims.Api.Areas.Property.Mapping.Parcel
@@ -32,6 +33,8 @@ namespace Pims.Api.Areas.Property.Mapping.Parcel
             config.NewConfig<Entity.Parcel, Model.ParcelModel>()
                 .EnableNonPublicMembers(true)
                 .Map(dest => dest.Id, src => src.Id)
+                .Map(dest => dest.PropertyTypeId, src => src.PropertyTypeId)
+                .Map(dest => dest.ProjectWorkflow, src => src.GetLatestWorkflowCode())
                 .Map(dest => dest.PID, src => src.ParcelIdentity)
                 .Map(dest => dest.PIN, src => src.PIN)
                 .Map(dest => dest.ProjectNumbers, src => JsonSerializer.Deserialize<IEnumerable<string>>(src.ProjectNumbers ?? "[]", _serializerOptions))

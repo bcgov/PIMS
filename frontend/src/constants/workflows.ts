@@ -1,7 +1,9 @@
 /** Property type enum */
 export enum Workflows {
-  /** The property is land. */
+  /** The ERP workflow */
   ERP = 'ERP',
-  /** The property is a building. */
+  /** The SPL workflow */
   SPL = 'SPL',
+  /** The Disposed externally workflow */
+  ASSESS_EX_DISPOSAL = 'ASSESS-EX-DISPOSAL',
 }

@@ -4,6 +4,7 @@ import { fetchParcelDetail } from 'actionCreators/parcelsActionCreator';
 import { useDispatch } from 'react-redux';
 import React from 'react';
 import { IParcel } from 'actions/parcelsActions';
+import { PropertyTypes } from 'constants/propertyTypes';
 
 interface IUseSideBarParcelLoader {
   /** whether or not the sidebar should be displayed */
@@ -30,21 +31,10 @@ const useSideBarParcelLoader = ({
     const loadParcel = async () => {
       if (parcelId) {
         setSideBarContext(SidebarContextType.LOADING);
-        const response: any = await dispatch(fetchParcelDetail({ id: parcelId as number }));
+        const response = await fetchParcelDetail({ id: parcelId as number })(dispatch);
         setCachedParcelDetail({
           ...response,
         });
-        if (!!response?.parcelDetail?.buildings?.length) {
-          setSideBarContext(
-            disabled
-              ? SidebarContextType.VIEW_DEVELOPED_LAND
-              : SidebarContextType.UPDATE_DEVELOPED_LAND,
-          );
-        } else {
-          setSideBarContext(
-            disabled ? SidebarContextType.VIEW_BARE_LAND : SidebarContextType.UPDATE_BARE_LAND,
-          );
-        }
       }
     };
     if (showSideBar && parcelId && parcelId !== cachedParcelDetail?.id) {
@@ -61,19 +51,33 @@ const useSideBarParcelLoader = ({
    */
   useDeepCompareEffect(() => {
     if (!!parcelId && cachedParcelDetail?.id === parcelId) {
-      if (disabled) {
-        setSideBarContext(
-          hasBuildings ? SidebarContextType.VIEW_DEVELOPED_LAND : SidebarContextType.VIEW_BARE_LAND,
-        );
-      } else {
-        setSideBarContext(
-          hasBuildings
-            ? SidebarContextType.UPDATE_DEVELOPED_LAND
-            : SidebarContextType.UPDATE_BARE_LAND,
-        );
-      }
+      setContext(cachedParcelDetail);
     }
   }, [cachedParcelDetail, disabled, hasBuildings, parcelId]);
+
+  /**
+   * set the side bar context based on the parcel structure.
+   * @param parcel
+   */
+  const setContext = (parcel: IParcel) => {
+    if (parcel?.propertyTypeId === PropertyTypes.SUBDIVISION) {
+      setSideBarContext(
+        disabled
+          ? SidebarContextType.VIEW_SUBDIVISION_LAND
+          : SidebarContextType.UPDATE_SUBDIVISION_LAND,
+      );
+    } else if (!!parcel?.buildings?.length) {
+      setSideBarContext(
+        disabled
+          ? SidebarContextType.VIEW_DEVELOPED_LAND
+          : SidebarContextType.UPDATE_DEVELOPED_LAND,
+      );
+    } else {
+      setSideBarContext(
+        disabled ? SidebarContextType.VIEW_BARE_LAND : SidebarContextType.UPDATE_BARE_LAND,
+      );
+    }
+  };
 
   return {
     parcelDetail: cachedParcelDetail,

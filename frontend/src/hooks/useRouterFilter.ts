@@ -7,7 +7,7 @@ import _ from 'lodash';
 import queryString from 'query-string';
 import { TableSort } from 'components/Table/TableSort';
 import { generateMultiSortCriteria, resolveSortCriteriaFromUrl } from 'utils';
-import { PropertyTypes } from 'constants/propertyTypes';
+import { PropertyTypeNames } from 'constants/propertyTypeNames';
 
 /**
  * Extract the specified properties from the source object.
@@ -97,7 +97,7 @@ export const useRouterFilter = <T extends object>({
       if (_.intersection(Object.keys(params), filterProps).length) {
         let merged = { ...defaultFilter, ...extractProps(filterProps, params) };
         if (!merged.propertyType) {
-          merged = { ...merged, propertyType: PropertyTypes.Land };
+          merged = { ...merged, propertyType: PropertyTypeNames.Land };
         }
         // Only change state if the query parameters are different than the default filter.
         if (!_.isEqual(_.omit(merged, 'propertyType'), _.omit(filter, 'propertyType')))
@@ -105,7 +105,7 @@ export const useRouterFilter = <T extends object>({
       } else if (savedFilter?.hasOwnProperty(key)) {
         let merged = { ...defaultFilter, ...extractProps(filterProps, savedFilter[key]) };
         if (!merged.propertyType) {
-          merged = { ...merged, propertyType: PropertyTypes.Land };
+          merged = { ...merged, propertyType: PropertyTypeNames.Land };
         }
         // Only change state if the saved filter is different than the default filter.
         if (!_.isEqual(_.omit(merged, 'propertyType'), _.omit(filter, 'propertyType')))

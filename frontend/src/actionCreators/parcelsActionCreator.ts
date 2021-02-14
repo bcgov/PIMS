@@ -5,7 +5,7 @@ import { request, success, error } from 'actions/genericActions';
 import * as parcelsActions from 'actions/parcelsActions';
 import * as actionTypes from 'constants/actionTypes';
 import * as API from 'constants/API';
-import { IParcel } from 'actions/parcelsActions';
+import { IParcel, IBuilding } from 'actions/parcelsActions';
 import { ENVIRONMENT } from 'constants/environment';
 import CustomAxios from 'customAxios';
 import { AxiosResponse, AxiosError } from 'axios';
@@ -64,12 +64,12 @@ export const fetchParcelsDetail = (params: API.IPropertySearchParams) => (dispat
 
 export const fetchParcelDetail = (params: API.IParcelDetailParams, position?: [number, number]) => (
   dispatch: Function,
-) => {
+): Promise<IParcel> => {
   dispatch(request(actionTypes.GET_PARCEL_DETAIL));
   dispatch(showLoading());
   return CustomAxios()
-    .get(ENVIRONMENT.apiUrl + API.PARCEL_DETAIL(params))
-    .then((response: AxiosResponse) => {
+    .get<IParcel>(ENVIRONMENT.apiUrl + API.PARCEL_DETAIL(params))
+    .then((response: AxiosResponse<IParcel>) => {
       dispatch(success(actionTypes.GET_PARCEL_DETAIL));
       dispatch(parcelsActions.storeParcelDetail(response.data, position));
       dispatch(hideLoading());
@@ -84,11 +84,11 @@ export const fetchParcelDetail = (params: API.IParcelDetailParams, position?: [n
 export const fetchBuildingDetail = (
   params: API.IBuildingDetailParams,
   position?: [number, number],
-) => (dispatch: Function) => {
+) => (dispatch: Function): Promise<IBuilding> => {
   dispatch(request(actionTypes.GET_PARCEL_DETAIL));
   dispatch(showLoading());
   return CustomAxios()
-    .get(ENVIRONMENT.apiUrl + API.BUILDING_DETAIL(params))
+    .get<IBuilding>(ENVIRONMENT.apiUrl + API.BUILDING_DETAIL(params))
     .then((response: AxiosResponse) => {
       dispatch(success(actionTypes.GET_PARCEL_DETAIL));
       dispatch(parcelsActions.storeBuildingDetail(response.data, position));
@@ -126,7 +126,7 @@ export const createParcel = (parcel: IParcel) => async (dispatch: Function) => {
       parcel,
     );
     dispatch(success(actionTypes.ADD_PARCEL, status));
-    dispatch(storeParcelDetail(null));
+    dispatch(storeParcelDetail(data));
     dispatch(hideLoading());
     return data;
   } catch (axiosError) {
@@ -151,7 +151,7 @@ export const updateParcel = (parcel: IParcel) => async (dispatch: Function) => {
       parcel,
     );
     dispatch(success(actionTypes.UPDATE_PARCEL, status));
-    dispatch(storeParcelDetail(null));
+    dispatch(storeParcelDetail(data));
     dispatch(hideLoading());
     return data;
   } catch (axiosError) {

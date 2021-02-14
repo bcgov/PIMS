@@ -15,6 +15,7 @@ import { useHistory } from 'react-router-dom';
 import { getPropertyColumns, getColumnsWithRemove } from './columns';
 import useCodeLookups from 'hooks/useLookupCodes';
 import queryString from 'query-string';
+import { PropertyTypes } from 'constants/propertyTypes';
 
 type RequiredAttributes = {
   /** The field name */
@@ -128,8 +129,10 @@ export const PropertyListViewSelect: React.FC<InputProps> = ({
           sidebar: true,
           disabled: true,
           loadDraft: false,
-          parcelId: row.propertyTypeId === 0 ? row.id : undefined,
-          buildingId: row.propertyTypeId === 1 ? row.id : undefined,
+          parcelId: [PropertyTypes.PARCEL, PropertyTypes.SUBDIVISION].includes(row.propertyTypeId)
+            ? row.id
+            : undefined,
+          buildingId: row.propertyTypeId === PropertyTypes.BUILDING ? row.id : undefined,
         }),
       });
     },

@@ -102,6 +102,7 @@ namespace Pims.Api.Test.Controllers.Property
             var parcel = new Entity.Parcel(1, 51, 25);
             var parcels = new[] { parcel };
             var building = new Entity.Building(parcel, 51, 25);
+            building.PropertyTypeId = 1;
             var buildings = new[] { building };
 
             var service = helper.GetService<Mock<IPimsService>>();
@@ -167,8 +168,8 @@ namespace Pims.Api.Test.Controllers.Property
             var helper = new TestHelper();
             var controller = helper.CreateController<SearchController>(Permissions.PropertyView);
 
-            var building1 = new Entity.Building() { Id = 1 };
-            var building2 = new Entity.Building() { Id = 2 };
+            var building1 = new Entity.Building() { Id = 1, PropertyTypeId = 1 };
+            var building2 = new Entity.Building() { Id = 2, PropertyTypeId = 1 };
             var buildings = new[] { building1, building2 };
 
             var service = helper.GetService<Mock<IPimsService>>();

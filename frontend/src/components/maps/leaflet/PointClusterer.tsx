@@ -8,25 +8,16 @@ import { Spiderfier } from './Spiderfier';
 import { ICluster, PointFeature } from '../types';
 import { getMarkerIcon, pointToLayer, zoomToCluster } from './mapUtils';
 import useSupercluster from '../hooks/useSupercluster';
-import {
-  IBuilding,
-  IParcel,
-  IPropertyDetail,
-  storeParcelDetail,
-  storeBuildingDetail,
-  IAddress,
-  IProperty,
-} from 'actions/parcelsActions';
-import SelectedPropertyMarker from './SelectedPropertyMarker/SelectedPropertyMarker';
+import { IBuilding, IParcel, IPropertyDetail, IAddress, IProperty } from 'actions/parcelsActions';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
 import { useFilterContext } from '../providers/FIlterProvider';
 import Supercluster from 'supercluster';
-import { useDispatch } from 'react-redux';
-import { PropertyTypes } from 'actions/parcelsActions';
 import { PropertyPopUpContext } from '../providers/PropertyPopUpProvider';
 import { MAX_ZOOM } from 'constants/strings';
 import { useApi } from 'hooks/useApi';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+import { PropertyTypes } from 'constants/propertyTypes';
+import SelectedPropertyMarker from './SelectedPropertyMarker/SelectedPropertyMarker';
 
 export type PointClustererProps = {
   points: Array<PointFeature>;
@@ -110,10 +101,8 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
   const featureGroupRef = useRef<any>();
   const draftFeatureGroupRef = useRef<any>();
   const filterState = useFilterContext();
-  const dispatch = useDispatch();
 
   const [currentSelected, setCurrentSelected] = useState(selected);
-
   const [currentCluster, setCurrentCluster] = useState<
     ICluster<any, Supercluster.AnyProps> | undefined
   >(undefined);
@@ -202,12 +191,29 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
       if (expansionZoom === maxZoom && spiderfyOnMaxZoom) {
         const res = spiderfierRef.current.spiderfy(cluster);
         setSpider(res);
+        if (res.markers === undefined) {
+          setCurrentCluster(undefined);
+        } else {
+          setCurrentCluster(cluster);
+        }
       } else if (zoomToBoundsOnClick) {
         zoomToCluster(cluster, expansionZoom, map);
       }
     },
     [spiderfierRef, map, maxZoom, spiderfyOnMaxZoom, supercluster, zoomToBoundsOnClick],
   );
+
+  /**
+   * Update the map view to center on the selected parcel when it changes.
+   */
+  useDeepCompareEffect(() => {
+    if (!!selected?.parcelDetail?.latitude && !!selected?.parcelDetail?.longitude) {
+      map.setView(
+        { lat: selected.parcelDetail.latitude, lng: selected.parcelDetail.longitude },
+        Math.max(maxZoom as number, map.getZoom()),
+      );
+    }
+  }, [selected]);
 
   /**
    * Update the map bounds and zoom to make all draft properties visible.
@@ -245,6 +251,7 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
       }
       setSpider({});
       spiderfierRef.current?.unspiderfy();
+      setCurrentCluster(undefined);
     }
   }, [featureGroupRef, map, clusters, tilesLoaded]);
 
@@ -289,7 +296,6 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
                 position={[latitude, longitude]}
                 onclick={(e: any) => {
                   zoomOrSpiderfy(cluster);
-                  setCurrentCluster(cluster);
                   e.target.closePopup();
                 }}
                 icon={
@@ -324,7 +330,6 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
             />
           );
         })}
-
         {/**
          * Render markers from a spiderfied cluster click
          */}
@@ -367,12 +372,6 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
                 selected.parcelDetail!.longitude as number,
               ]}
               map={leaflet.map}
-              onpopupclose={() => {
-                selected.propertyTypeId === PropertyTypes.BUILDING &&
-                  dispatch(storeBuildingDetail(null));
-                selected.propertyTypeId === PropertyTypes.PARCEL &&
-                  dispatch(storeParcelDetail(null));
-              }}
               onclick={() => {
                 popUpContext.setPropertyInfo(selected.parcelDetail);
                 popUpContext.setPropertyTypeID(selected.propertyTypeId);

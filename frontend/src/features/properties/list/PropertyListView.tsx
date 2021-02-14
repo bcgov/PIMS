@@ -23,7 +23,7 @@ import TooltipWrapper from 'components/common/TooltipWrapper';
 import { ReactComponent as BuildingSvg } from 'assets/images/icon-business.svg';
 import { ReactComponent as LandSvg } from 'assets/images/icon-lot.svg';
 import { PropertyFilter } from '../filter';
-import { PropertyTypes } from '../../../constants/propertyTypes';
+import { PropertyTypeNames } from '../../../constants/propertyTypeNames';
 import { IPropertyFilter } from '../filter/IPropertyFilter';
 import { SortDirection, TableSort } from 'components/Table/TableSort';
 import useCodeLookups from 'hooks/useLookupCodes';
@@ -80,7 +80,7 @@ const defaultFilterValues: IPropertyFilter = {
   minLotSize: '',
   maxLotSize: '',
   rentableArea: '',
-  propertyType: PropertyTypes.Land,
+  propertyType: PropertyTypeNames.Land,
   maxAssessedValue: '',
   maxNetBookValue: '',
   maxMarketValue: '',
@@ -398,7 +398,7 @@ const PropertyListView: React.FC = () => {
     }
   };
 
-  const changePropertyType = (type: PropertyTypes) => {
+  const changePropertyType = (type: PropertyTypeNames) => {
     setPageIndex(0);
     setFilter(state => {
       return {
@@ -439,9 +439,9 @@ const PropertyListView: React.FC = () => {
               <TooltipWrapper toolTipId="show-parcels" toolTip="Show Parcels">
                 <div
                   className={
-                    filter.propertyType === PropertyTypes.Land ? 'svg-btn active' : 'svg-btn'
+                    filter.propertyType === PropertyTypeNames.Land ? 'svg-btn active' : 'svg-btn'
                   }
-                  onClick={() => changePropertyType(PropertyTypes.Land)}
+                  onClick={() => changePropertyType(PropertyTypeNames.Land)}
                 >
                   <LandSvg className="svg" />
                   Parcels view
@@ -452,9 +452,11 @@ const PropertyListView: React.FC = () => {
               <TooltipWrapper toolTipId="show-buildings" toolTip="Show Buildings">
                 <div
                   className={
-                    filter.propertyType === PropertyTypes.Building ? 'svg-btn active' : 'svg-btn'
+                    filter.propertyType === PropertyTypeNames.Building
+                      ? 'svg-btn active'
+                      : 'svg-btn'
                   }
-                  onClick={() => changePropertyType(PropertyTypes.Building)}
+                  onClick={() => changePropertyType(PropertyTypeNames.Building)}
                 >
                   <BuildingSvg className="svg" />
                   Buildings view

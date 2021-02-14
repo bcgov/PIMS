@@ -1,6 +1,6 @@
-import { PropertyTypes } from './../../actions/parcelsActions';
 import Supercluster from 'supercluster';
 import { GeoJsonProperties } from 'geojson';
+import { PropertyTypes } from 'constants/index';
 
 export type ICluster<
   P extends GeoJsonProperties = Supercluster.AnyProps,

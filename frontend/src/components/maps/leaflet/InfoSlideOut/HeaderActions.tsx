@@ -1,10 +1,11 @@
 import styled from 'styled-components';
 import * as React from 'react';
 import { Row } from 'react-bootstrap';
-import { IBuilding, IParcel, PropertyTypes } from 'actions/parcelsActions';
+import { IBuilding, IParcel } from 'actions/parcelsActions';
 import { Link, useLocation } from 'react-router-dom';
 import queryString from 'query-string';
 import variables from '_variables.module.scss';
+import { PropertyTypes } from 'constants/propertyTypes';
 
 const LinkMenu = styled(Row)`
   background-color: ${variables.filterBackgroundColor};
@@ -59,7 +60,11 @@ const HeaderActions: React.FC<IHeaderActions> = ({
   const location = useLocation();
 
   const buildingId = propertyTypeId === PropertyTypes.BUILDING ? propertyInfo?.id : undefined;
-  const parcelId = propertyTypeId === PropertyTypes.PARCEL ? propertyInfo?.id : undefined;
+  const parcelId = [PropertyTypes.PARCEL, PropertyTypes.SUBDIVISION].includes(
+    propertyTypeId as PropertyTypes,
+  )
+    ? propertyInfo?.id
+    : undefined;
   return (
     <LinkMenu>
       Actions:
@@ -84,9 +89,10 @@ const HeaderActions: React.FC<IHeaderActions> = ({
           >
             View details
           </Link>
-          <VerticalBar />
+
           {canEditDetails && (
             <>
+              <VerticalBar />
               <Link
                 onClick={() => {
                   jumpToView();
