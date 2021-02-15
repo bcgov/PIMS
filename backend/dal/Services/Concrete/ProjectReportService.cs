@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Pims.Dal.Entities;
 using Pims.Dal.Entities.Models;
 using Pims.Dal.Exceptions;
@@ -185,8 +184,8 @@ namespace Pims.Dal.Services
 
             var originalReport = this.Context.ProjectReports
                 .SingleOrDefault(p => p.Id == report.Id) ?? throw new KeyNotFoundException();
-            
-            if ((!originalReport.IsFinal && report.IsFinal && !isSPLAdmin) || (originalReport.IsFinal && !report.IsFinal && !isSPLAdmin)) throw new NotAuthorizedException ($"You do not have permissions to update the Is Final option.");
+
+            if ((!originalReport.IsFinal && report.IsFinal && !isSPLAdmin) || (originalReport.IsFinal && !report.IsFinal && !isSPLAdmin)) throw new NotAuthorizedException($"You do not have permissions to update the Is Final option.");
             if (report.To == null) throw new ArgumentNullException(nameof(report.To));
             if (originalReport.IsFinal && report.IsFinal) throw new InvalidOperationException($"Unable to update FINAL project reports.");
             if (report.From == report.To) throw new InvalidOperationException($"Project report start and end dates cannot be the same.");
@@ -304,7 +303,7 @@ namespace Pims.Dal.Services
                 .Include(p => p.Agency)
                 .Include(p => p.Status)
                 .Include(p => p.Risk)
-                .Where(p => p.Workflow.Code == "SPL" && p.Status.Code != "CA");
+                .Where(p => p.Workflow.Code == "SPL" && p.Status.Code != "CA" && p.Status.Code != "T-GRE");
             // TODO: Because project status codes could change in the future, this should be updated to not be magic strings.
 
             var fromSnapshots = new Dictionary<int, ProjectSnapshot>();
