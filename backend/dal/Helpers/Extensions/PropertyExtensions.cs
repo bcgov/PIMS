@@ -69,10 +69,23 @@ namespace Pims.Dal.Helpers.Extensions
 
             if (filter.Agencies?.Any() == true)
             {
-                // Get list of sub-agencies for any agency selected in the filter.
-                var filterAgencies = filter.Agencies.Select(a => (int?)a);
-                var agencies = filterAgencies.Concat(context.Agencies.AsNoTracking().Where(a => filterAgencies.Contains(a.Id)).SelectMany(a => a.Children.Select(ac => (int?)ac.Id)).ToArray()).Distinct();
-                query = query.Where(p => agencies.Contains(p.AgencyId));
+                IEnumerable<int?> filterAgencies;
+                if (!isAdmin)
+                {
+                    // Users can only search their own agencies.
+                    filterAgencies = filter.Agencies.Intersect(userAgencies.Select(a => (int)a)).Select(a => (int?)a);
+                }
+                else
+                {
+                    // TODO: Ideally this list would be provided by the frontend, as it is expensive to do it here.
+                    // Get list of sub-agencies for any agency selected in the filter.
+                    filterAgencies = filter.Agencies.Select(a => (int?)a);
+                }
+                if (filterAgencies.Any())
+                {
+                    var agencies = filterAgencies.Concat(context.Agencies.AsNoTracking().Where(a => filterAgencies.Contains(a.Id)).SelectMany(a => a.Children.Select(ac => (int?)ac.Id)).ToArray()).Distinct();
+                    query = query.Where(p => agencies.Contains(p.AgencyId));
+                }
             }
             if (filter.ParcelId.HasValue)
                 query = query.Where(p => p.ParcelId == filter.ParcelId);
@@ -210,11 +223,23 @@ namespace Pims.Dal.Helpers.Extensions
 
             if (filter.Agencies?.Any() == true)
             {
-                // TODO: Ideally this list would be provided by the frontend, as it is expensive to do it here.
-                // Get list of sub-agencies for any agency selected in the filter.
-                var filterAgencies = filter.Agencies.Select(a => (int?)a);
-                var agencies = filterAgencies.Concat(context.Agencies.AsNoTracking().Where(a => filterAgencies.Contains(a.Id)).SelectMany(a => a.Children.Select(ac => (int?)ac.Id)).ToArray()).Distinct();
-                query = query.Where(p => agencies.Contains(p.AgencyId));
+                IEnumerable<int?> filterAgencies;
+                if (!isAdmin)
+                {
+                    // Users can only search their own agencies.
+                    filterAgencies = filter.Agencies.Intersect(userAgencies.Select(a => (int)a)).Select(a => (int?)a);
+                }
+                else
+                {
+                    // TODO: Ideally this list would be provided by the frontend, as it is expensive to do it here.
+                    // Get list of sub-agencies for any agency selected in the filter.
+                    filterAgencies = filter.Agencies.Select(a => (int?)a);
+                }
+                if (filterAgencies.Any())
+                {
+                    var agencies = filterAgencies.Concat(context.Agencies.AsNoTracking().Where(a => filterAgencies.Contains(a.Id)).SelectMany(a => a.Children.Select(ac => (int?)ac.Id)).ToArray()).Distinct();
+                    query = query.Where(p => agencies.Contains(p.AgencyId));
+                }
             }
             if (filter.ParcelId.HasValue)
                 query = query.Where(p => p.ParcelId == filter.ParcelId);
