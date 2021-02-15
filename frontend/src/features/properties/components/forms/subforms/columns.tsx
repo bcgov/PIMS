@@ -2,14 +2,31 @@ import { FastCurrencyInput, FastDatePicker } from 'components/common/form';
 import React from 'react';
 import { useFormikContext, getIn } from 'formik';
 import { formatFiscalYear, formatMoney } from 'utils';
-import { FaBuilding } from 'react-icons/fa';
-import { LandSvg } from 'components/common/Icons';
+import { BuildingSvg, LandSvg } from 'components/common/Icons';
 import moment from 'moment';
 import { indexOfFinancial } from './EvaluationForm';
 import { EvaluationKeys } from 'constants/evaluationKeys';
 import { FiscalKeys } from 'constants/fiscalKeys';
+import TooltipIcon from 'components/common/TooltipIcon';
+import styled from 'styled-components';
 const currentMoment = moment();
 const currentYear = currentMoment.year();
+
+const StyledToolTip = styled(TooltipIcon)`
+  margin-left: 0.5rem;
+`;
+/** used to create assessed header for table with tooltip */
+const generateAssessedHeader = () => {
+  return (
+    <>
+      Assessed Value
+      <StyledToolTip
+        toolTipId="assessedTip"
+        toolTip="Your assessment issued in July applies to the next calendar year."
+      />
+    </>
+  );
+};
 
 const getEditableMoneyCell = (disabled: boolean | undefined, namespace: string, type: string) => {
   return (cellInfo: any) => {
@@ -100,9 +117,15 @@ export const getAssessedCols = (
     },
   ];
   if (includeImprovements) {
-    return [{ Header: 'Assessed Value', columns: [...basicAssessed, ...improvements] }];
+    return [
+      {
+        Header: generateAssessedHeader(),
+        id: 'assessed',
+        columns: [...basicAssessed, ...improvements],
+      },
+    ];
   } else {
-    return [{ Header: 'Assessed Value', columns: [...basicAssessed] }];
+    return [{ Header: generateAssessedHeader(), id: 'assessed', columns: [...basicAssessed] }];
   }
 };
 
@@ -194,7 +217,7 @@ export const getAssociatedBuildingsCols = (): any => {
       accessor: '',
       maxWidth: 50,
       align: 'left',
-      Cell: () => <FaBuilding size={24}></FaBuilding>,
+      Cell: () => <BuildingSvg className="svg" />,
     },
     {
       Header: 'Property Name',

@@ -7,6 +7,11 @@ namespace Pims.Dal.Entities.Models
         /// get/set - The RAEG/SPP project status
         /// </summary>
         public string ProjectStatus { get; set; }
+
+        /// <summary>
+        /// get/set - The RAEG/SPP project workflow
+        /// </summary>
+        public string ProjectWorkflow { get; set; }
         #endregion
 
         #region Constructors

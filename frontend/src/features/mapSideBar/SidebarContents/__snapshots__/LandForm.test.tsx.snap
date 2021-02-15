@@ -32,7 +32,7 @@ exports[`Land Form component renders correctly 1`] = `
 }
 
 .c1 .nav-tabs .nav-item.active svg {
-  background-color: #428bca;
+  background-color: secondaryVariantColor;
   color: white;
 }
 
@@ -61,7 +61,7 @@ exports[`Land Form component renders correctly 1`] = `
 }
 
 .c1 .nav-tabs .btn:disabled {
-  background-color: #003366;
+  background-color: primaryColor;
   cursor: default;
 }
 
@@ -115,7 +115,7 @@ exports[`Land Form component renders correctly 1`] = `
   align-items: center;
   position: -webkit-sticky;
   position: sticky;
-  background-color: #f2f2f2;
+  background-color: filterBackgroundColor;
   bottom: 40px;
 }
 
@@ -528,15 +528,17 @@ exports[`Land Form component renders correctly 1`] = `
                       <div
                         class="marker-svg col"
                       >
-                        <button
-                          class="c4"
-                        >
-                          <svg
-                            class="parcel-icon"
+                        <div>
+                          <button
+                            class="c4"
                           >
-                            draft-parcel-icon.svg
-                          </svg>
-                        </button>
+                            <svg
+                              class="parcel-icon"
+                            >
+                              draft-parcel-icon.svg
+                            </svg>
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>

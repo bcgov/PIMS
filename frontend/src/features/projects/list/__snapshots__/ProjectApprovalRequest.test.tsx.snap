@@ -1,6 +1,10 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Project Approval Request list view Matches snapshot 1`] = `
+.c0 {
+  margin-top: 0.2rem;
+}
+
 <div
   class="ProjectListView container-fluid"
 >
@@ -726,7 +730,9 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
             <div
               style="display: flex;"
             >
-              <span>
+              <span
+                class="c0"
+              >
                 Show
               </span>
               <input
@@ -735,7 +741,9 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
                 type="number"
                 value="10"
               />
-              <span>
+              <span
+                class="c0"
+              >
                 Entries
               </span>
             </div>

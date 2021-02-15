@@ -2,29 +2,22 @@ import './PointClusterer.scss';
 
 import React, { useRef, useEffect, useState, useCallback, useMemo } from 'react';
 import { DivIcon, FeatureGroup as LeafletFeatureGroup } from 'leaflet';
-import { useLeaflet, Marker, Polyline, Popup, FeatureGroup } from 'react-leaflet';
+import { useLeaflet, Marker, Polyline, FeatureGroup } from 'react-leaflet';
 import { BBox } from 'geojson';
 import { Spiderfier } from './Spiderfier';
 import { ICluster, PointFeature } from '../types';
 import { getMarkerIcon, pointToLayer, zoomToCluster } from './mapUtils';
 import useSupercluster from '../hooks/useSupercluster';
-import { PopupView } from '../PopupView';
-import {
-  IBuilding,
-  IParcel,
-  IPropertyDetail,
-  storeParcelDetail,
-  storeBuildingDetail,
-  IAddress,
-} from 'actions/parcelsActions';
-import SelectedPropertyMarker from './SelectedPropertyMarker/SelectedPropertyMarker';
+import { IBuilding, IParcel, IPropertyDetail, IAddress, IProperty } from 'actions/parcelsActions';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
 import { useFilterContext } from '../providers/FIlterProvider';
 import Supercluster from 'supercluster';
-import { useDispatch } from 'react-redux';
-import { PropertyTypes } from 'actions/parcelsActions';
 import { PropertyPopUpContext } from '../providers/PropertyPopUpProvider';
 import { MAX_ZOOM } from 'constants/strings';
+import { useApi } from 'hooks/useApi';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+import { PropertyTypes } from 'constants/propertyTypes';
+import SelectedPropertyMarker from './SelectedPropertyMarker/SelectedPropertyMarker';
 
 export type PointClustererProps = {
   points: Array<PointFeature>;
@@ -47,10 +40,16 @@ export type PointClustererProps = {
  * Converts the flat list of properties into the correct type of inventory property.
  * @param property A flat list of property values (from a Feature).
  */
-export const convertToProperty = (property: any): IParcel | IBuilding | null => {
-  if (property.propertyTypeId === PropertyTypes.PARCEL) {
+export const convertToProperty = (
+  property: any,
+  latitude?: number,
+  longitude?: number,
+): IParcel | IBuilding | null => {
+  if ([PropertyTypes.PARCEL, PropertyTypes.SUBDIVISION].includes(property.propertyTypeId)) {
     return {
       ...property,
+      latitude: latitude,
+      longitude: longitude,
       address: {
         line1: property.address,
         administrativeArea: property.administrativeArea,
@@ -61,6 +60,9 @@ export const convertToProperty = (property: any): IParcel | IBuilding | null => 
   } else if (property.propertyTypeId === PropertyTypes.BUILDING) {
     return {
       ...property,
+      totalArea: property.totalArea ?? 0,
+      latitude: latitude,
+      longitude: longitude,
       address: {
         line1: property.address,
         administrativeArea: property.administrativeArea,
@@ -99,10 +101,8 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
   const featureGroupRef = useRef<any>();
   const draftFeatureGroupRef = useRef<any>();
   const filterState = useFilterContext();
-  const dispatch = useDispatch();
 
   const [currentSelected, setCurrentSelected] = useState(selected);
-
   const [currentCluster, setCurrentCluster] = useState<
     ICluster<any, Supercluster.AnyProps> | undefined
   >(undefined);
@@ -191,12 +191,29 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
       if (expansionZoom === maxZoom && spiderfyOnMaxZoom) {
         const res = spiderfierRef.current.spiderfy(cluster);
         setSpider(res);
+        if (res.markers === undefined) {
+          setCurrentCluster(undefined);
+        } else {
+          setCurrentCluster(cluster);
+        }
       } else if (zoomToBoundsOnClick) {
         zoomToCluster(cluster, expansionZoom, map);
       }
     },
     [spiderfierRef, map, maxZoom, spiderfyOnMaxZoom, supercluster, zoomToBoundsOnClick],
   );
+
+  /**
+   * Update the map view to center on the selected parcel when it changes.
+   */
+  useDeepCompareEffect(() => {
+    if (!!selected?.parcelDetail?.latitude && !!selected?.parcelDetail?.longitude) {
+      map.setView(
+        { lat: selected.parcelDetail.latitude, lng: selected.parcelDetail.longitude },
+        Math.max(maxZoom as number, map.getZoom()),
+      );
+    }
+  }, [selected]);
 
   /**
    * Update the map bounds and zoom to make all draft properties visible.
@@ -234,10 +251,28 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
       }
       setSpider({});
       spiderfierRef.current?.unspiderfy();
+      setCurrentCluster(undefined);
     }
   }, [featureGroupRef, map, clusters, tilesLoaded]);
 
   const popUpContext = React.useContext(PropertyPopUpContext);
+
+  const { getParcel, getBuilding } = useApi();
+  const fetchProperty = React.useCallback(
+    (propertyTypeId: number, id: number) => {
+      if ([PropertyTypes.PARCEL, PropertyTypes.SUBDIVISION].includes(propertyTypeId)) {
+        getParcel(id as number).then(parcel => {
+          popUpContext.setPropertyInfo(parcel);
+        });
+      } else if (propertyTypeId === PropertyTypes.BUILDING) {
+        getBuilding(id as number).then(building => {
+          popUpContext.setPropertyInfo(building);
+        });
+      }
+    },
+    [getParcel, getBuilding, popUpContext],
+  );
+  const keycloak = useKeycloakWrapper();
   return (
     <>
       <FeatureGroup ref={featureGroupRef}>
@@ -261,7 +296,6 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
                 position={[latitude, longitude]}
                 onclick={(e: any) => {
                   zoomOrSpiderfy(cluster);
-                  setCurrentCluster(cluster);
                   e.target.closePopup();
                 }}
                 icon={
@@ -284,20 +318,18 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
               icon={getMarkerIcon(cluster)}
               onclick={() => {
                 onMarkerClick(); //open information slideout
-                const [longitude, latitude] = cluster.geometry.coordinates;
-                popUpContext.setPropertyInfo(
-                  convertToProperty({
-                    ...cluster.properties,
-                    latitude: latitude,
-                    longitude: longitude,
-                  }),
-                );
+                if (keycloak.canUserViewProperty(cluster.properties as IProperty)) {
+                  fetchProperty(cluster.properties.propertyTypeId, cluster.properties.id);
+                } else {
+                  popUpContext.setPropertyInfo(
+                    convertToProperty(cluster.properties, latitude, longitude),
+                  );
+                }
                 popUpContext.setPropertyTypeID(cluster.properties.propertyTypeId);
               }}
             />
           );
         })}
-
         {/**
          * Render markers from a spiderfied cluster click
          */}
@@ -309,14 +341,13 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
             icon={getMarkerIcon(m)}
             onclick={() => {
               onMarkerClick(); //open information slideout
-              const [longitude, latitude] = m.geometry.coordinates;
-              popUpContext.setPropertyInfo(
-                convertToProperty({
-                  ...m.properties,
-                  latitude,
-                  longitude,
-                }),
-              );
+              if (keycloak.canUserViewProperty(m.properties as IProperty)) {
+                fetchProperty(m.properties.propertyTypeId, m.properties.id);
+              } else {
+                popUpContext.setPropertyInfo(
+                  convertToProperty(m.properties, m.position.lat, m.position.lng),
+                );
+              }
               popUpContext.setPropertyTypeID(m.properties.propertyTypeId);
             }}
           />
@@ -335,18 +366,12 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
           !currentClusterIds.includes(+selected?.parcelDetail?.id) && (
             <SelectedPropertyMarker
               {...selected.parcelDetail}
-              icon={getMarkerIcon({ properties: selected } as any)}
+              icon={getMarkerIcon({ properties: selected } as any, true)}
               position={[
                 selected.parcelDetail!.latitude as number,
                 selected.parcelDetail!.longitude as number,
               ]}
               map={leaflet.map}
-              onpopupclose={() => {
-                selected.propertyTypeId === PropertyTypes.BUILDING &&
-                  dispatch(storeBuildingDetail(null));
-                selected.propertyTypeId === PropertyTypes.PARCEL &&
-                  dispatch(storeParcelDetail(null));
-              }}
               onclick={() => {
                 popUpContext.setPropertyInfo(selected.parcelDetail);
                 popUpContext.setPropertyTypeID(selected.propertyTypeId);
@@ -366,11 +391,7 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
               position={[latitude, longitude]}
               icon={getMarkerIcon(draftPoint)}
               zIndexOffset={500}
-            >
-              <Popup autoPan={false}>
-                <PopupView propertyDetail={convertToProperty(draftPoint.properties)} />
-              </Popup>
-            </Marker>
+            />
           );
         })}
       </FeatureGroup>

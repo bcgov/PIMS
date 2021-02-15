@@ -16,7 +16,7 @@ import { Col, Container, Row } from 'react-bootstrap';
 import { getIn, useFormikContext } from 'formik';
 import { Label } from 'components/common/Label';
 import { FaEdit } from 'react-icons/fa';
-import { BuildingSvg } from 'components/common/Icons';
+import { BuildingSvg, LandSvg } from 'components/common/Icons';
 import AddressForm from 'features/properties/components/forms/subforms/AddressForm';
 import { noop } from 'lodash';
 import { ParentSelect } from 'components/common/form/ParentSelect';
@@ -25,6 +25,8 @@ import { indexOfFinancial } from 'features/properties/components/forms/subforms/
 import { EvaluationKeys } from 'constants/evaluationKeys';
 import { FiscalKeys } from 'constants/fiscalKeys';
 import moment from 'moment';
+import { getAssociatedLandCols } from 'features/properties/components/forms/subforms/columns';
+import { FormikTable } from 'features/projects/common';
 
 interface IReviewProps {
   nameSpace?: string;
@@ -45,7 +47,6 @@ export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
     },
     [props.nameSpace],
   );
-  const netBookYear = getIn(formikProps.values, withNameSpace('financials.0.netbook.fiscalYear'));
   const defaultEditValues = useMemo(
     () => ({
       identification: props.disabled || formikProps.isValid,
@@ -66,7 +67,9 @@ export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
     FiscalKeys.NetBook,
     currentYear,
   );
+  const netBookYear = getIn(formikProps.values, withNameSpace(`fiscals.${fiscalIndex}.fiscalYear`));
 
+  const parcels = getIn(formikProps.values, withNameSpace('parcels'));
   return (
     <Container className="review-section">
       <Row className="review-steps">
@@ -347,6 +350,27 @@ export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
             </div>
           </Row>
         </Col>
+        {parcels?.length > 0 && (
+          <Col md={12}>
+            <Row>
+              <div className="associated-land">
+                <Row className="section-header">
+                  <span>
+                    <LandSvg className="svg" />
+                    <h5>Associated Land</h5>
+                  </span>
+                </Row>
+                <Row>
+                  <FormikTable
+                    field="data.parcels"
+                    name="parcels"
+                    columns={getAssociatedLandCols()}
+                  />
+                </Row>
+              </div>
+            </Row>
+          </Col>
+        )}
       </Row>
     </Container>
   );

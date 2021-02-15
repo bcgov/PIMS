@@ -29,6 +29,12 @@ namespace Pims.Api.Areas.Tools.Helpers
         private readonly IList<Entity.Agency> _agencies;
         private readonly IList<Entity.TierLevel> _tiers;
         private readonly JsonSerializerOptions _serializerOptions;
+
+        /// <summary>
+        /// An array of project status for marketed and beyond.
+        /// </summary>
+        /// <value></value>
+        private static readonly string[] marketed = new[] { "SPL-M", "SPL-CIP-U", "SPL-CIP-C", "DIS" };
         #endregion
 
         #region Constructors
@@ -236,20 +242,21 @@ namespace Pims.Api.Areas.Tools.Helpers
 
             var metadata = new Entity.Models.DisposalProjectSnapshotMetadata
             {
-                InitialNotificationSentOn = null, // Don't have a source for this information.
+                InitialNotificationSentOn = model.InitialNotificationSentOn,
                 ThirtyDayNotificationSentOn = null, // Don't have a source for this information.
                 SixtyDayNotificationSentOn = null, // Don't have a source for this information.
                 NinetyDayNotificationSentOn = null, // Don't have a source for this information.
                 OnHoldNotificationSentOn = null, // Don't have a source for this information.
                 InterestedReceivedOn = model.InterestedReceivedOn,
                 TransferredWithinGreOn = null, // Don't have a source for this information.
-                ClearanceNotificationSentOn = null, // Don't have a source for this information.
-                RequestForSplReceivedOn = model.RequestForSplReceivedOn, // Don't have a source for this information.
+                ClearanceNotificationSentOn = model.ClearanceNotificationSentOn,
+                RequestForSplReceivedOn = model.RequestForSplReceivedOn,
                 ApprovedForSplOn = model.ApprovedForSplOn,
-                MarketedOn = model.MarketedOn,
+                MarketedOn = marketed.Contains(project.Status.Code) ? model.MarketedOn : null, // Only assign the marketed on date if the project is in an appropriate status.
                 Purchaser = model.Purchaser,
                 OcgFinancialStatement = model.OcgFinancialStatement,
                 AppraisedBy = model.AppraisedBy,
+                AppraisedOn = model.AppraisedOn,
                 ProgramCost = model.ProgramCost,
                 SalesCost = model.SalesCost,
                 InterestComponent = model.InterestComponent,
@@ -258,7 +265,8 @@ namespace Pims.Api.Areas.Tools.Helpers
                 SaleWithLeaseInPlace = model.SaleWithLeaseInPlace,
                 DisposedOn = model.DisposedOn ?? (project.Status.Code == "DIS" ? model.CompletedOn : null),
                 OfferAmount = project.Status.Code == "DIS" ? model.Market : (decimal?)null, // This value would only be accurate if the property is disposed.
-                OfferAcceptedOn = null // Don't have a source for this information.
+                OfferAcceptedOn = null, // Don't have a source for this information.
+                ExemptionRequested = model.ExemptionRequested
             };
 
             // A prior net proceeds was provided, which means a prior snapshot needs to be generated.

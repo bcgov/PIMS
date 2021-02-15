@@ -1,6 +1,5 @@
 export const clickableTooltip = 'Click to view property details';
-export const updateInfoMessage =
-  'Please make any necessary updates to the valuation information and the classification.';
+export const updateInfoMessage = 'Please update  the property classification.';
 
 export const tierTooltips = {
   tier1Tooltip: 'Tier 1: Properties with a net value less than $1M.',
@@ -19,7 +18,7 @@ export const riskTooltips = {
 export const projectNoDescription =
   'This is a temporary number during draft state. A project number will be assigned when you submit this application.';
 export const reviewAppraisalTooltip =
-  'Required for Surplus Properties List but\noptional for Enhanced Referral Process.';
+  'Required for properties in Tier 1 and properties worth over $300,000.';
 export const reviewFirstNationsTooltip =
   'Not required to be completed before\naddition to the Surplus Properties List.';
 export const agencyResponsesNoteTooltip =

@@ -36,13 +36,14 @@ import {
   ValuationSchema,
   BuildingInformationSchema,
 } from 'utils/YupSchema';
-import { AssociatedLandListForm } from './subforms/AssociatedLandListForm';
 import { stringToNull } from 'utils';
 import useParcelLayerData from 'features/properties/hooks/useParcelLayerData';
 import DebouncedValidation from 'features/properties/components/forms/subforms/DebouncedValidation';
 import { valuesToApiFormat as landValuesToApiFormat } from './LandForm';
 import { EvaluationKeys } from 'constants/evaluationKeys';
 import { FiscalKeys } from 'constants/fiscalKeys';
+import variables from '_variables.module.scss';
+import LastUpdatedBy from 'features/properties/components/LastUpdatedBy';
 
 const Container = styled.div`
   background-color: #fff;
@@ -71,7 +72,7 @@ const FormFooter = styled.div`
   height: 70px;
   align-items: center;
   position: sticky;
-  background-color: #f2f2f2;
+  background-color: ${variables.filterBackgroundColor};
   bottom: 25px;
 `;
 
@@ -83,7 +84,7 @@ export const defaultBuildingValues: IBuilding = {
   id: '',
   isSensitive: '',
   name: '',
-  projectNumber: '',
+  projectNumbers: [],
   description: '',
   address: defaultAddressValues,
   latitude: '',
@@ -130,6 +131,7 @@ const Form: React.FC<IBuildingForm> = ({
   disabled,
   goToAssociatedLand,
   formikRef,
+  buildingData,
 }) => {
   const stepper = useFormStepper();
   useDraftMarkerSynchronizer('data');
@@ -180,8 +182,6 @@ const Form: React.FC<IBuildingForm> = ({
             disabled={disabled}
           />
         );
-      case BuildingSteps.ASSOCIATED:
-        return <AssociatedLandListForm title="View Associated Land" nameSpace="data" />;
       case BuildingSteps.REVIEW:
         return (
           <BuildingReviewPage
@@ -204,6 +204,12 @@ const Form: React.FC<IBuildingForm> = ({
       <FormContent>{render()}</FormContent>
       <FormFooter>
         <InventoryPolicy />
+        <LastUpdatedBy
+          createdOn={buildingData?.createdOn}
+          updatedOn={buildingData?.updatedOn}
+          updatedByName={buildingData?.updatedByName}
+          updatedByEmail={buildingData?.updatedByEmail}
+        />
         <FillRemainingSpace />
         {!stepper.isSubmit(stepper.current) && (
           <Button style={{ marginRight: 10 }} size="sm" onClick={() => stepper.gotoNext()}>
@@ -256,6 +262,8 @@ interface IBuildingForm {
   isPropertyAdmin?: boolean;
   /** whether this form can be interacted with */
   disabled?: boolean;
+  /** the initial values of this form, as loaded from the api */
+  buildingData?: IBuilding;
 }
 
 interface IParentBuildingForm extends IBuildingForm {
@@ -363,7 +371,6 @@ const BuidingForm: React.FC<IParentBuildingForm> = ({
     let errors = await yupErrors;
     return Object.keys(errors).length ? Promise.resolve({ data: errors }) : Promise.resolve({});
   };
-
   return (
     <Container className="buildingForm">
       <SteppedForm
@@ -391,12 +398,6 @@ const BuidingForm: React.FC<IParentBuildingForm> = ({
             completed: false,
             canGoToStep: isViewOrUpdate || !!disabled,
             validation: disabled ? undefined : { schema: ValuationSchema, nameSpace: () => 'data' },
-          },
-          {
-            route: 'associated',
-            title: 'Associated Land',
-            completed: false,
-            canGoToStep: isViewOrUpdate || !!disabled,
           },
           {
             route: 'review',
@@ -452,6 +453,7 @@ const BuidingForm: React.FC<IParentBuildingForm> = ({
           disabled={disabled}
           goToAssociatedLand={goToAssociatedLand}
           formikRef={formikRef}
+          buildingData={initialValues.data}
         />
       </SteppedForm>
     </Container>

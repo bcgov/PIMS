@@ -11,9 +11,8 @@ import { IFiscal, IEvaluation } from 'actions/parcelsActions';
 import { FiscalKeys } from 'constants/fiscalKeys';
 import { getCurrentFiscalYear, formatDate, stringToNull } from 'utils';
 import _ from 'lodash';
-import { EvaluationKeys } from 'constants/evaluationKeys';
 import moment from 'moment';
-import { NoteTypes } from '../../../constants';
+import { NoteTypes, PropertyTypes, EvaluationKeys } from 'constants/index';
 
 export const getCurrentFiscal = (fiscals: IFiscal[], key: FiscalKeys) => {
   const currentFiscal = getCurrentFiscalYear();
@@ -140,31 +139,34 @@ export const toFlatProject = (project?: IApiProject) => {
   return flatProject;
 };
 
+const isParcelOrSubdivision = (property: IProperty) =>
+  [PropertyTypes.PARCEL, PropertyTypes.SUBDIVISION].includes(property?.propertyTypeId);
+
 /** create api evaluation objects based on flat app evaluation structure */
 const getApiEvaluations = (property: IProperty): IEvaluation[] => {
   const evaluations: IEvaluation[] = [];
   evaluations.push({
-    parcelId: property.propertyTypeId === 0 ? property.id : undefined,
-    buildingId: property.propertyTypeId === 1 ? property.id : undefined,
-    value:
-      property.propertyTypeId === 0 ? property.assessedLand || 0 : property.assessedBuilding || 0,
-    date:
-      property.propertyTypeId === 0
-        ? property.assessedLandDate ?? formatDate(new Date())
-        : property.assessedBuildingDate ?? formatDate(new Date()),
+    parcelId: isParcelOrSubdivision(property) ? property.id : undefined,
+    buildingId: property.propertyTypeId === PropertyTypes.BUILDING ? property.id : undefined,
+    value: isParcelOrSubdivision(property)
+      ? property.assessedLand || 0
+      : property.assessedBuilding || 0,
+    date: isParcelOrSubdivision(property)
+      ? property.assessedLandDate ?? formatDate(new Date())
+      : property.assessedBuildingDate ?? formatDate(new Date()),
     rowVersion: property.assessedLandRowVersion,
     key: EvaluationKeys.Assessed,
     firm: property.assessedLandFirm ?? '',
   });
   evaluations.push({
-    parcelId: property.propertyTypeId === 0 ? property.id : undefined,
-    buildingId: property.propertyTypeId === 1 ? property.id : undefined,
-    value:
-      property.propertyTypeId === 0 ? property.assessedLand || 0 : property.assessedBuilding || 0,
-    date:
-      property.propertyTypeId === 0
-        ? property.assessedLandDate ?? formatDate(new Date())
-        : property.assessedBuildingDate ?? formatDate(new Date()),
+    parcelId: isParcelOrSubdivision(property) ? property.id : undefined,
+    buildingId: property.propertyTypeId === PropertyTypes.BUILDING ? property.id : undefined,
+    value: isParcelOrSubdivision(property)
+      ? property.assessedLand || 0
+      : property.assessedBuilding || 0,
+    date: isParcelOrSubdivision(property)
+      ? property.assessedLandDate ?? formatDate(new Date())
+      : property.assessedBuildingDate ?? formatDate(new Date()),
     rowVersion: property.assessedLandRowVersion,
     key: EvaluationKeys.Improvements,
     firm: property.assessedLandFirm ?? '',
@@ -179,8 +181,8 @@ export const toApiProperty = (
 ): IApiProperty => {
   const apiProperty: IApiProperty = {
     id: property.id,
-    parcelId: property.propertyTypeId === 0 ? property.id : undefined,
-    buildingId: property.propertyTypeId === 1 ? property.id : undefined,
+    parcelId: isParcelOrSubdivision(property) ? property.id : undefined,
+    buildingId: property.propertyTypeId === PropertyTypes.BUILDING ? property.id : undefined,
     pid: property.pid,
     pin: Number(property.pin),
     projectNumbers: property.projectNumbers ?? [],
@@ -208,8 +210,8 @@ export const toApiProperty = (
     evaluations: getApiEvaluations(property),
     fiscals: [
       {
-        parcelId: property.propertyTypeId === 0 ? property.id : undefined,
-        buildingId: property.propertyTypeId === 1 ? property.id : undefined,
+        parcelId: isParcelOrSubdivision(property) ? property.id : undefined,
+        buildingId: property.propertyTypeId === PropertyTypes.BUILDING ? property.id : undefined,
         value: property.netBook,
         fiscalYear: !useCurrentFiscal
           ? property.netBookFiscalYear ?? getCurrentFiscalYear()
@@ -218,8 +220,8 @@ export const toApiProperty = (
         key: FiscalKeys.NetBook,
       },
       {
-        parcelId: property.propertyTypeId === 0 ? property.id : undefined,
-        buildingId: property.propertyTypeId === 1 ? property.id : undefined,
+        parcelId: isParcelOrSubdivision(property) ? property.id : undefined,
+        buildingId: property.propertyTypeId === PropertyTypes.BUILDING ? property.id : undefined,
         value: property.market,
         fiscalYear: !useCurrentFiscal
           ? property.marketFiscalYear ?? getCurrentFiscalYear()
@@ -238,11 +240,12 @@ export const toApiProject = (project: IProject) => {
     const projectProperty: IProjectProperty = {
       id: property.projectPropertyId,
       projectNumber: project.projectNumber,
-      propertyType: property.propertyTypeId === 0 ? 'Land' : 'Building',
-      parcelId: property.propertyTypeId === 0 ? property.id : undefined,
-      parcel: property.propertyTypeId === 0 ? toApiProperty(property) : undefined,
-      buildingId: property.propertyTypeId === 1 ? property.id : undefined,
-      building: property.propertyTypeId === 1 ? toApiProperty(property) : undefined,
+      propertyType: isParcelOrSubdivision(property) ? 'Land' : 'Building',
+      parcelId: isParcelOrSubdivision(property) ? property.id : undefined,
+      parcel: isParcelOrSubdivision(property) ? toApiProperty(property) : undefined,
+      buildingId: property.propertyTypeId === PropertyTypes.BUILDING ? property.id : undefined,
+      building:
+        property.propertyTypeId === PropertyTypes.BUILDING ? toApiProperty(property) : undefined,
     };
     return projectProperty;
   });

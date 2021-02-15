@@ -1,18 +1,23 @@
-import { ReactComponent as BuildingSvg } from 'assets/images/icon-business.svg';
-import { ReactComponent as LandSvg } from 'assets/images/icon-lot.svg';
-
 import React from 'react';
 import { CellProps } from 'react-table';
 import { Link } from 'react-router-dom';
 import { formatNumber, mapLookupCode } from 'utils';
 import { IProperty } from '.';
-import { ColumnWithProps } from 'components/Table';
+import { ColumnWithProps, ViewPropertyCell } from 'components/Table';
 import { ParentGroupedFilter } from 'components/SearchBar/ParentGroupedFilter';
 import { FastCurrencyInput, Input, Select, SelectOption } from 'components/common/form';
 import { TypeaheadField } from 'components/common/form/Typeahead';
 import { ILookupCode } from 'actions/lookupActions';
-import queryString from 'query-string';
 import { EditableMoneyCell, MoneyCell } from 'components/Table/MoneyCell';
+import _ from 'lodash';
+import styled from 'styled-components';
+import { PropertyTypeCell } from 'components/Table/PropertyTypeCell';
+
+export const ColumnDiv = styled.div`
+  display: flex;
+  flex-flow: column;
+  padding-right: 5px;
+`;
 
 const NumberCell = ({ cell: { value } }: CellProps<IProperty, number>) => formatNumber(value);
 
@@ -33,6 +38,19 @@ const spacing = {
   xxlarge: unit * 8,
 };
 
+const getProjectLinkNoDrafts = (namespace: string = 'properties') => (cellInfo: any) => {
+  const projectNumbers = _.filter(cellInfo.value, (p: string) => !p.includes('DRAFT'));
+  return (
+    <ColumnDiv>
+      {projectNumbers?.map((projectNumber: string) => (
+        <React.Fragment key={projectNumber}>
+          <Link to={`/projects?projectNumber=${projectNumber}`}>{projectNumber}</Link>
+        </React.Fragment>
+      ))}
+    </ColumnDiv>
+  );
+};
+
 export const columns = (
   agencyOptions: SelectOption[],
   subAgencies: SelectOption[],
@@ -46,8 +64,8 @@ export const columns = (
     accessor: 'agencyCode', // accessor is the "key" in the data
     align: 'left',
     responsive: true,
-    width: spacing.small,
-    minWidth: 100, // px
+    width: spacing.xsmall,
+    minWidth: 80, // px
     sortable: true,
     filterable: true,
     filter: {
@@ -91,8 +109,8 @@ export const columns = (
     accessor: 'name',
     align: 'left',
     responsive: true,
-    width: spacing.medium,
-    minWidth: 80,
+    width: spacing.large,
+    minWidth: 120,
     sortable: true,
   },
   {
@@ -100,8 +118,8 @@ export const columns = (
     accessor: 'classification',
     align: 'left',
     responsive: true,
-    width: spacing.medium,
-    minWidth: 80,
+    width: spacing.small,
+    minWidth: 90,
     sortable: true,
     filterable: true,
     filter: {
@@ -118,20 +136,18 @@ export const columns = (
   {
     Header: 'Type',
     accessor: 'propertyTypeId',
-    Cell: ({ cell: { value } }: CellProps<IProperty, number>) => {
-      return value === 0 ? <LandSvg className="svg" /> : <BuildingSvg className="svg" />;
-    },
+    Cell: PropertyTypeCell,
     responsive: true,
-    width: spacing.small,
-    minWidth: 65,
+    width: spacing.xsmall,
+    minWidth: 60,
   },
   {
     Header: 'Street Address',
     accessor: 'address',
     align: 'left',
     responsive: true,
-    width: spacing.large,
-    minWidth: 160,
+    width: spacing.medium,
+    minWidth: 100,
     sortable: true,
   },
   {
@@ -162,8 +178,8 @@ export const columns = (
       : (props: any) => <EditableMoneyCell {...props} suppressValidation />,
     align: 'right',
     responsive: true,
-    width: spacing.medium,
-    minWidth: 80,
+    width: spacing.small,
+    minWidth: 100,
     sortable: true,
     filterable: true,
     filter: {
@@ -185,8 +201,8 @@ export const columns = (
       : (props: any) => <EditableMoneyCell {...props} suppressValidation />,
     align: 'right',
     responsive: true,
-    width: spacing.medium,
-    minWidth: 80,
+    width: spacing.small,
+    minWidth: 100,
     sortable: true,
     filterable: true,
     filter: {
@@ -208,8 +224,8 @@ export const columns = (
       : (props: any) => <EditableMoneyCell {...props} suppressValidation />,
     align: 'right',
     responsive: true,
-    width: spacing.medium,
-    minWidth: 80,
+    width: spacing.small,
+    minWidth: 100,
     sortable: true,
     filterable: true,
     filter: {
@@ -245,6 +261,15 @@ export const columns = (
     },
   },
   {
+    Header: 'Project #',
+    width: spacing.small,
+    minWidth: 65,
+    accessor: 'projectNumbers',
+    clickable: false,
+    align: 'right',
+    Cell: getProjectLinkNoDrafts(),
+  },
+  {
     Header: ' ',
     id: 'view-link-column',
     responsive: true,
@@ -255,24 +280,6 @@ export const columns = (
       // For buildings we need the parent `parcelId` property
       return row.id ?? -1;
     },
-    Cell: (props: CellProps<IProperty, number>) => {
-      return (
-        <Link
-          to={{
-            pathname: `/mapview`,
-            search: queryString.stringify({
-              sidebar: true,
-              disabled: true,
-              loadDraft: false,
-              parcelId: props.row.original.propertyTypeId === 0 ? props.row.original.id : undefined,
-              buildingId:
-                props.row.original.propertyTypeId === 1 ? props.row.original.id : undefined,
-            }),
-          }}
-        >
-          View
-        </Link>
-      );
-    },
+    Cell: ViewPropertyCell,
   },
 ];

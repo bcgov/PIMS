@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { PropertyTypes, storeDraftParcelsAction } from 'actions/parcelsActions';
+import { storeDraftParcelsAction } from 'actions/parcelsActions';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
 import debounce from 'lodash/debounce';
 import { useFormikContext, getIn } from 'formik';
@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import _ from 'lodash';
 import { RootState } from 'reducers/rootReducer';
 import { PointFeature } from 'components/maps/types';
+import { PropertyTypes } from 'constants/propertyTypes';
 
 /**
  * Get a list of draft markers from the current form values.

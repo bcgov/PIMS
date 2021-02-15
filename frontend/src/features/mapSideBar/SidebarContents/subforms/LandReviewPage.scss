@@ -1,3 +1,5 @@
+@import '../../../../colors.scss';
+
 .review-section {
   .row,
   .form-row,
@@ -74,11 +76,12 @@
   .usage,
   .tenancy,
   .associated-buildings,
+  .associated-land,
   .PropertyListView.container-fluid {
     margin: 10px;
     width: 100%;
     padding: 20px;
-    background-color: #f2f2f2;
+    background-color: $filter-background-color;
     border-radius: 10px;
     font-size: small;
     .form-control,
@@ -136,6 +139,6 @@
   }
   .edit {
     cursor: pointer;
-    color: #1a5a96;
+    color: $slide-out-blue;
   }
 }

@@ -50,4 +50,6 @@ export interface IPropertyFilter {
   maxMarketValue?: '';
   /** Whether to return properties owned by other agencies. */
   includeAllProperties?: boolean;
+  /** when the surplus properties filter is open */
+  surplusFilter?: boolean;
 }

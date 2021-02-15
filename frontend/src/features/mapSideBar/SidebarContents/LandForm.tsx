@@ -39,12 +39,14 @@ import { LandSteps } from 'constants/propertySteps';
 import useDraftMarkerSynchronizer from 'features/properties/hooks/useDraftMarkerSynchronizer';
 import useParcelLayerData from 'features/properties/hooks/useParcelLayerData';
 import { IStep } from 'components/common/Stepper';
-import { AssociatedBuildingListForm } from './subforms/AssociatedBuildingListForm';
 import DebouncedValidation from 'features/properties/components/forms/subforms/DebouncedValidation';
 import { IParcel } from 'actions/parcelsActions';
 import { EvaluationKeys } from 'constants/evaluationKeys';
 import { FiscalKeys } from 'constants/fiscalKeys';
 import { stringToNull } from 'utils';
+import variables from '_variables.module.scss';
+import LastUpdatedBy from 'features/properties/components/LastUpdatedBy';
+import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
 
 const Container = styled.div`
   background-color: #fff;
@@ -73,7 +75,7 @@ const FormFooter = styled.div`
   height: 70px;
   align-items: center;
   position: sticky;
-  background-color: #f2f2f2;
+  background-color: ${variables.filterBackgroundColor};
   bottom: 40px;
 `;
 
@@ -85,6 +87,7 @@ export interface ISearchFields {
   searchPid: string;
   searchPin: string;
   searchAddress: string;
+  searchParentPid: string;
 }
 
 /**
@@ -102,12 +105,14 @@ export const getInitialValues = (): IParcel & ISearchFields => {
     searchPid: '',
     searchPin: '',
     searchAddress: '',
+    searchParentPid: '',
     encumbranceReason: '',
     assessedBuilding: '',
     assessedLand: '',
     evaluations: getMergedFinancials([], Object.values(EvaluationKeys)),
     fiscals: getMergedFinancials([], Object.values(FiscalKeys)),
     id: '',
+    parcels: [],
   };
 };
 
@@ -132,6 +137,7 @@ const Form: React.FC<ILandForm> = ({
   setMovingPinNameSpace,
   handlePidChange,
   handlePinChange,
+  findMatchingPid,
   formikRef,
   isPropertyAdmin,
   initialValues,
@@ -140,6 +146,15 @@ const Form: React.FC<ILandForm> = ({
   // access the stepper to later split the form into segments
   const stepper = useFormStepper();
   const formikProps = useFormikContext<ISteppedFormValues<IParcel>>();
+  //if the pid is set externally, we must update the touched to reflect this for errors to display correctly.
+  useDeepCompareEffect(() => {
+    if (!!formikProps.values.data.pid) {
+      formikProps.setFieldTouched('data.pid', true);
+    }
+    if (!!formikProps.values.data.pin) {
+      formikProps.setFieldTouched('data.pin', true);
+    }
+  }, [formikProps.values.data.pid, formikProps.values.data.pin]);
   useParcelLayerData({
     formikRef,
     nameSpace: 'data',
@@ -148,7 +163,6 @@ const Form: React.FC<ILandForm> = ({
       : +formikProps.values.data.agencyId,
   });
   const isViewOrUpdate = !!initialValues.id;
-  const isBareLand = !initialValues?.buildings?.length;
 
   // lookup codes that will be used by subforms
   const { getOptionsByType } = useCodeLookups();
@@ -168,6 +182,7 @@ const Form: React.FC<ILandForm> = ({
               setMovingPinNameSpace={setMovingPinNameSpace}
               handlePidChange={handlePidChange}
               handlePinChange={handlePinChange}
+              findMatchingPid={findMatchingPid}
               isPropertyAdmin={isPropertyAdmin}
               nameSpace="data"
               isViewOrUpdate={isViewOrUpdate}
@@ -190,20 +205,6 @@ const Form: React.FC<ILandForm> = ({
         return (
           <LandValuationForm title="Bare Land Valuation" nameSpace="data" disabled={disabled} />
         );
-      case LandSteps.ASSOCIATED_OR_REVIEW:
-        return !isBareLand ? (
-          <AssociatedBuildingListForm title="View Associated Buildings" nameSpace="data" />
-        ) : (
-          <LandReviewPage
-            classifications={classifications}
-            agencies={agencies}
-            handlePidChange={handlePidChange}
-            handlePinChange={handlePinChange}
-            nameSpace="data"
-            disabled={disabled}
-            isPropertyAdmin={isPropertyAdmin}
-          />
-        );
       case LandSteps.REVIEW:
         return (
           <LandReviewPage
@@ -224,6 +225,12 @@ const Form: React.FC<ILandForm> = ({
       <FormContent>{render()}</FormContent>
       <FormFooter>
         <InventoryPolicy />
+        <LastUpdatedBy
+          createdOn={initialValues?.createdOn}
+          updatedOn={initialValues?.updatedOn}
+          updatedByName={initialValues?.updatedByName}
+          updatedByEmail={initialValues?.updatedByEmail}
+        />
         <FillRemainingSpace />
         {!stepper.isSubmit(stepper.current) && (
           <Button
@@ -260,6 +267,8 @@ interface ILandForm {
   handlePidChange: (pid: string) => void;
   /** help with formatting of the pin */
   handlePinChange: (pin: string) => void;
+  /** Function that searches for a parcel matching a pid within the API */
+  findMatchingPid: (pid: string, nameSpace?: string | undefined) => Promise<IParcel | undefined>;
   /** whether or not this user has property admin priviledges */
   isPropertyAdmin: boolean;
   /** initial values used to populate this form */
@@ -297,6 +306,7 @@ export const ViewOnlyLandForm: React.FC<Partial<IParentLandForm>> = (props: {
       setLandUpdateComplete={noop}
       initialValues={props.initialValues ?? ({} as any)}
       disabled={true}
+      findMatchingPid={noop as any}
     />
   );
 };
@@ -401,15 +411,6 @@ const LandForm: React.FC<IParentLandForm> = (props: IParentLandForm) => {
       validation: props.disabled ? undefined : { schema: ValuationSchema, nameSpace: () => 'data' },
     },
   ];
-
-  if (!!props.initialValues?.buildings?.length) {
-    steps.push({
-      route: 'associatedLand',
-      title: 'View Buildings',
-      completed: false,
-      canGoToStep: !!initialValues?.data?.id || !!props.disabled,
-    });
-  }
   steps.push({
     route: 'review',
     title: 'Review',
@@ -465,6 +466,7 @@ const LandForm: React.FC<IParentLandForm> = (props: IParentLandForm) => {
           handleGeocoderChanges={props.handleGeocoderChanges}
           handlePidChange={props.handlePidChange}
           handlePinChange={props.handlePinChange}
+          findMatchingPid={props.findMatchingPid}
           isPropertyAdmin={props.isPropertyAdmin}
           formikRef={props.formikRef}
           initialValues={initialValues.data}

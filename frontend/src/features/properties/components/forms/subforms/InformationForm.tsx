@@ -68,7 +68,7 @@ const InformationForm: FunctionComponent<InformationFormProps> = (props: Informa
           field={withNameSpace('agencyId')}
           options={agencies}
           filterBy={['code', 'label', 'parent']}
-          disabled={!props.isPropertyAdmin}
+          disabled={!props.isPropertyAdmin || props.disabled}
         />
         {agency?.parent && (
           <Form.Row>

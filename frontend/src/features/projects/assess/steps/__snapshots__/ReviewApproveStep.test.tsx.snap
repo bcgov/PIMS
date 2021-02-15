@@ -1,6 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Review Approve Step renders correctly 1`] = `
+.c2 {
+  font-size: 12px;
+  margin-top: -100px;
+  max-width: 16.7%;
+}
+
 .c1 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -79,6 +85,7 @@ exports[`Review Approve Step renders correctly 1`] = `
           </label>
           <input
             class="col-md-5 form-control"
+            data-testid="project-name"
             disabled=""
             id="input-name"
             name="name"
@@ -100,6 +107,7 @@ exports[`Review Approve Step renders correctly 1`] = `
           </label>
           <textarea
             class="col-md-auto form-control"
+            data-testid="project-description"
             disabled=""
             id="input-description"
             name="description"
@@ -155,6 +163,20 @@ exports[`Review Approve Step renders correctly 1`] = `
         >
           Financial Information
         </h3>
+      </div>
+      <div
+        class="form-row"
+      >
+        <h6
+          class="col-md-12"
+          style="margin: 0px 0px 1rem 0px;"
+        >
+          These values are for the 
+          <strong>
+            project
+          </strong>
+          , not the individual properties.
+        </h6>
       </div>
       <div
         class="form-row"
@@ -326,7 +348,7 @@ exports[`Review Approve Step renders correctly 1`] = `
           class="col-md-12"
           style="margin: 1rem 0px;"
         >
-          Please make any necessary updates to the valuation information and the classification.
+          Please update  the property classification.
         </h6>
         <h2
           class="col-md-5"
@@ -599,7 +621,6 @@ exports[`Review Approve Step renders correctly 1`] = `
                   >
                     <svg
                       class="svg"
-                      title="Land"
                     >
                       icon-lot.svg
                     </svg>
@@ -859,6 +880,11 @@ exports[`Review Approve Step renders correctly 1`] = `
               id="input-appraisedNote"
               name="appraisedNote"
             />
+          </div>
+          <div
+            class="c2"
+          >
+            Please include the date the appraisal was completed
           </div>
         </div>
       </div>

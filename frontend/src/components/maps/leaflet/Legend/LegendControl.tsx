@@ -7,10 +7,11 @@ import { Legend } from './Legend';
 import styled from 'styled-components';
 import { FiMapPin } from 'react-icons/fi';
 import TooltipWrapper from 'components/common/TooltipWrapper';
+import variables from '_variables.module.scss';
 
 const LegendButton = styled(Button)`
   background-color: #ffffff !important;
-  color: #121212 !important;
+  color: ${variables.darkVariantColor} !important;
   width: 40px;
   height: 40px;
   font-size: 25px;
@@ -25,7 +26,7 @@ export const LegendControl: React.FC = () => {
   return (
     <Control position="topleft">
       <ClickAwayListener onClickAway={() => setVisible(false)}>
-        <TooltipWrapper toolTipId="marker-legendId" toolTip="Marker legend">
+        <TooltipWrapper toolTipId="marker-legendId" toolTip={visible ? undefined : 'Marker legend'}>
           <LegendButton ref={target} onClick={() => setVisible(!visible)}>
             <FiMapPin />
           </LegendButton>

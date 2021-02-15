@@ -29,6 +29,7 @@ import { mapLookupCodeWithParentString, mapStatuses } from 'utils';
 import styled from 'styled-components';
 import TooltipWrapper from 'components/common/TooltipWrapper';
 import { ParentSelect } from 'components/common/form/ParentSelect';
+import variables from '_variables.module.scss';
 
 interface IProjectFilterState {
   name?: string;
@@ -55,7 +56,7 @@ export const getProjectFinancialReportUrl = (filter?: IProjectFilter) =>
 
 const FileIcon = styled(Button)`
   background-color: white !important;
-  color: #003366 !important;
+  color: ${variables.primaryColor} !important;
 `;
 
 const initialQuery: IProjectFilter = {
@@ -223,6 +224,7 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
   const handleDelete = async () => {
     const project = data?.find(p => p.projectNumber === deleteId);
     if (project) {
+      project.status = projectStatuses.find((x: any) => x.name === project.status)!;
       await service.deleteProject(project);
       setData(data?.filter(p => p.projectNumber !== project.projectNumber));
     }

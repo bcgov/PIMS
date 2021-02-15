@@ -5,6 +5,7 @@ import { ReviewWorkflowStatus } from 'features/projects/common';
 interface ISplTabProps {
   isReadOnly?: boolean;
   setSubmitStatusCode: Function;
+  goToGreTransferred: Function;
 }
 
 /**
@@ -14,6 +15,7 @@ interface ISplTabProps {
 export const SplTab: React.FunctionComponent<ISplTabProps> = ({
   isReadOnly,
   setSubmitStatusCode,
+  goToGreTransferred,
 }: ISplTabProps) => {
   return (
     <SurplusPropertyListForm
@@ -29,6 +31,7 @@ export const SplTab: React.FunctionComponent<ISplTabProps> = ({
         setSubmitStatusCode(ReviewWorkflowStatus.ContractInPlaceUnconditional)
       }
       onClickDisposedExternally={() => setSubmitStatusCode(ReviewWorkflowStatus.Disposed)}
+      onClickGreTransferred={() => goToGreTransferred()}
     />
   );
 };

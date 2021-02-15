@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using Pims.Dal.Helpers.Constants;
 
 namespace Pims.Dal.Services
 {
@@ -131,6 +132,7 @@ namespace Pims.Dal.Services
                 .Include(b => b.Parcels).ThenInclude(pb => pb.Parcel).ThenInclude(b => b.Fiscals)
                 .Include(b => b.Parcels).ThenInclude(pb => pb.Parcel).ThenInclude(b => b.Address).ThenInclude(a => a.Province)
                 .Include(b => b.Parcels).ThenInclude(pb => pb.Parcel).ThenInclude(b => b.Classification)
+                .Include(b => b.Classification)
                 .Include(p => p.BuildingPredominateUse)
                 .Include(p => p.BuildingConstructionType)
                 .Include(p => p.BuildingOccupantType)
@@ -138,6 +140,8 @@ namespace Pims.Dal.Services
                 .Include(p => p.Agency).ThenInclude(a => a.Parent)
                 .Include(p => p.Evaluations)
                 .Include(p => p.Fiscals)
+                .Include(p => p.UpdatedBy)
+                .Include(p => p.Projects).ThenInclude(pp => pp.Project).ThenInclude(p => p.Workflow)
                 .AsNoTracking()
                 .FirstOrDefault(b => b.Id == id
                     && (isAdmin
@@ -170,6 +174,7 @@ namespace Pims.Dal.Services
                 building.Agency = agency;
             }
 
+            building.PropertyTypeId = (int)PropertyTypes.Building;
             building.Address.Province = this.Context.Provinces.Find(building.Address.ProvinceId);
             building.Classification = this.Context.PropertyClassifications.Find(building.ClassificationId);
             building.IsVisibleToOtherAgencies = false;
@@ -222,6 +227,8 @@ namespace Pims.Dal.Services
             var userAgencies = this.User.GetAgenciesAsNullable();
             if (!isAdmin && !userAgencies.Contains(existingBuilding.AgencyId)) throw new NotAuthorizedException("User may not edit buildings outside of their agency.");
 
+            existingBuilding.ThrowIfPropertyInSppProject(this.User);
+
             // Do not allow switching agencies through this method.
             if (existingBuilding.AgencyId != building.AgencyId && !isAdmin) throw new NotAuthorizedException("Building cannot be transferred to the specified agency.");
 
@@ -229,7 +236,13 @@ namespace Pims.Dal.Services
             if (existingBuilding.IsVisibleToOtherAgencies != building.IsVisibleToOtherAgencies) throw new InvalidOperationException("Building cannot be made visible to other agencies through this service.");
 
             // Only administrators can dispose a property.
-            if (building.ClassificationId == 4 && !isAdmin) throw new NotAuthorizedException("Building classification cannot be changed to disposed.");
+            if (building.ClassificationId == (int)ClassificationTypes.Classifications.Disposed && !isAdmin) throw new NotAuthorizedException("Building classification cannot be changed to disposed.");
+
+            // Only administrators can set a building to demolished
+            if(building.ClassificationId == (int)ClassificationTypes.Classifications.Demolished && !isAdmin) throw new NotAuthorizedException("Building classification cannot be changed to demolished.");
+
+            // Only administrators can set property to subdivided
+            if(building.ClassificationId == (int)ClassificationTypes.Classifications.Subdivided && !isAdmin) throw new NotAuthorizedException("Building classification cannot be changed to subdivided.");
 
             var allowEdit = isAdmin || userAgencies.Contains(existingBuilding.AgencyId);
             // A building should have a unique name within the parcel it is located on.
@@ -271,6 +284,7 @@ namespace Pims.Dal.Services
 
             if (allowEdit)
             {
+                building.PropertyTypeId = existingBuilding.PropertyTypeId;
                 this.Context.Entry(existingBuilding.Address).CurrentValues.SetValues(building.Address);
                 this.Context.Entry(existingBuilding).CurrentValues.SetValues(building);
                 this.Context.SetOriginalRowVersion(existingBuilding);
@@ -284,7 +298,6 @@ namespace Pims.Dal.Services
                     {
                         this.ThrowIfNotAllowedToUpdate(parcelBuilding.Building, _options.Project);
 
-                        var parcelBuildings = this.Context.ParcelBuildings.Where(pb => pb.ParcelId == parcelBuilding.ParcelId).ToArray();
                         building.Parcels.Remove(parcelBuilding);
                         this.Context.ParcelBuildings.Remove(parcelBuilding);
 
@@ -355,6 +368,8 @@ namespace Pims.Dal.Services
             if (!isAdmin && !userAgencies.Contains(existingBuilding.AgencyId))
                 throw new NotAuthorizedException("User may not edit buildings outside of their agency.");
 
+            existingBuilding.ThrowIfPropertyInSppProject(this.User);
+
             var allowEdit = isAdmin || userAgencies.Contains(existingBuilding.AgencyId);
             if (allowEdit)
             {
@@ -382,6 +397,8 @@ namespace Pims.Dal.Services
 
             var agency_ids = this.User.GetAgenciesAsNullable(); ;
             if (!isAdmin && !agency_ids.Contains(existingBuilding.AgencyId)) throw new NotAuthorizedException("User may not remove buildings outside of their agency.");
+
+            existingBuilding.ThrowIfPropertyInSppProject(this.User);
 
             existingBuilding.RowVersion = building.RowVersion;
             this.Context.SetOriginalRowVersion(existingBuilding);

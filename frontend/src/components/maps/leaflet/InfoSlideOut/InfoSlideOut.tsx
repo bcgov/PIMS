@@ -14,13 +14,18 @@ import { useLeaflet } from 'react-leaflet';
 import { MAX_ZOOM } from 'constants/strings';
 import { Link, useLocation } from 'react-router-dom';
 import queryString from 'query-string';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+import { IParcel } from 'actions/parcelsActions';
+import { ReactComponent as BuildingSvg } from 'assets/images/icon-business.svg';
+import { AssociatedBuildingsList } from './AssociatedBuildingsList';
+import variables from '_variables.module.scss';
+import { PropertyTypes } from 'constants/propertyTypes';
 
 const InfoContainer = styled.div`
   margin-right: -10px;
   width: 341px;
   min-height: 52px;
   height: auto;
-  max-height: 500px;
   background-color: #fff;
   position: relative;
   border-radius: 4px;
@@ -35,7 +40,7 @@ const InfoContainer = styled.div`
 const InfoHeader = styled.div`
   width: 100%;
   height: 52px;
-  background-color: #1a5a96;
+  background-color: ${variables.slideOutBlue};
   color: #fff;
   display: flex;
   flex-direction: column;
@@ -48,12 +53,12 @@ const InfoHeader = styled.div`
 
 const InfoMain = styled.div`
   width: 100%;
-  max-height: 420px;
   padding-left: 10px;
   padding: 0px 10px 5px 10px;
 
   &.open {
     overflow-y: scroll;
+    max-height: calc(100vh - 380px);
   }
 `;
 
@@ -67,13 +72,36 @@ const InfoButton = styled(Button)`
   position: absolute;
   left: -51px;
   background-color: #fff;
-  color: #1a5a96;
-  border-color: #1a5a96;
+  color: ${variables.slideOutBlue};
+  border-color: ${variables.slideOutBlue};
   box-shadow: -2px 1px 4px rgba(0, 0, 0, 0.2);
   &.open {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
     top: 0px;
+  }
+`;
+
+const BuildingsButton = styled(Button)`
+  width: 40px;
+  height: 40px;
+  position: absolute;
+  left: -40px;
+  background-color: #fff;
+  color: ${variables.slideOutBlue};
+  border-color: ${variables.slideOutBlue};
+  box-shadow: -2px 1px 4px rgba(0, 0, 0, 0.2);
+  &.open {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    top: 55px;
+  }
+  .svg {
+    stroke: ${variables.slideOutBlue};
+    margin-left: -8px;
+    :hover {
+      stroke: #fff;
+    }
   }
 `;
 
@@ -88,8 +116,8 @@ const Title = styled.p`
 export type InfoControlProps = {
   /** whether the slide out is open or closed */
   open: boolean;
-  /** set the slide out as open or closed */
-  setOpen: () => void;
+  /** set the slide out as open or closed*/
+  setOpen: (state: boolean) => void;
   /** additional action for when a link is clicked */
   onHeaderActionClick?: () => void;
 };
@@ -108,12 +136,12 @@ const InfoControl: React.FC<InfoControlProps> = ({ open, setOpen, onHeaderAction
   const jumpToView = () =>
     leaflet.map?.setView(
       [propertyInfo?.latitude as number, propertyInfo?.longitude as number],
-      MAX_ZOOM,
+      Math.max(MAX_ZOOM, leaflet.map.getZoom()),
     );
   const zoomToView = () =>
     leaflet.map?.flyTo(
       [propertyInfo?.latitude as number, propertyInfo?.longitude as number],
-      MAX_ZOOM,
+      Math.max(MAX_ZOOM, leaflet.map.getZoom()),
     );
 
   useEffect(() => {
@@ -122,10 +150,17 @@ const InfoControl: React.FC<InfoControlProps> = ({ open, setOpen, onHeaderAction
       L.DomEvent.on(elem!, 'mousewheel', L.DomEvent.stopPropagation);
     }
   });
+
+  //whether the associated buildings info is open
+  const [asscBuildingsOpen, setAsscBuildingsOpen] = React.useState<boolean>(false);
+  //whether the general info is open
+  const [generalInfoOpen, setGeneralInfoOpen] = React.useState<boolean>(true);
+
   const addAssociatedBuildingLink = (
     <>
       <FaPlusSquare color="#1a5a96" className="mr-1" />
       <Link
+        style={{ color: variables.slideOutBlue }}
         to={{
           pathname: `/mapview`,
           search: queryString.stringify({
@@ -139,49 +174,106 @@ const InfoControl: React.FC<InfoControlProps> = ({ open, setOpen, onHeaderAction
           }),
         }}
       >
-        Add a Building
+        Add a new Building
       </Link>
     </>
   );
+
+  const keycloak = useKeycloakWrapper();
+  const canViewProperty = keycloak.canUserViewProperty(propertyInfo);
+  const canEditProperty = keycloak.canUserEditProperty(propertyInfo);
+
+  const renderContent = () => {
+    if (popUpContext.propertyInfo) {
+      if (generalInfoOpen || popUpContext.propertyTypeID === PropertyTypes.BUILDING) {
+        return (
+          <>
+            <HeaderActions
+              propertyInfo={popUpContext.propertyInfo}
+              propertyTypeId={popUpContext.propertyTypeID}
+              onLinkClick={onHeaderActionClick}
+              jumpToView={jumpToView}
+              zoomToView={zoomToView}
+              canViewDetails={canViewProperty}
+              canEditDetails={canEditProperty}
+            />
+            <InfoContent
+              propertyInfo={popUpContext.propertyInfo}
+              propertyTypeId={popUpContext.propertyTypeID}
+              canViewDetails={canViewProperty}
+            />
+          </>
+        );
+      } else if (
+        asscBuildingsOpen &&
+        canViewProperty &&
+        popUpContext.propertyTypeID === PropertyTypes.PARCEL
+      ) {
+        return (
+          <AssociatedBuildingsList
+            propertyInfo={popUpContext.propertyInfo as IParcel}
+            addAssociatedBuildingLink={addAssociatedBuildingLink}
+            canEditDetails={canEditProperty}
+          />
+        );
+      }
+    } else {
+      return <p>Click a pin to view the property details</p>;
+    }
+  };
 
   return (
     <Control position="topright">
       <InfoContainer id="infoContainer" className={clsx({ closed: !open })}>
         {open && (
           <InfoHeader>
-            <Title>Property Info</Title>
+            {popUpContext.propertyTypeID === PropertyTypes.BUILDING ? (
+              <Title>Building Info</Title>
+            ) : (
+              <Title>Property Info</Title>
+            )}
           </InfoHeader>
         )}
         <TooltipWrapper toolTipId="info-slideout-id" toolTip="Property Information">
           <InfoButton
             id="slideOutInfoButton"
             variant="outline-secondary"
-            onClick={setOpen}
+            onClick={() => {
+              if (!open) {
+                setOpen(true);
+                setGeneralInfoOpen(true);
+                setAsscBuildingsOpen(false);
+              } else if (open && !generalInfoOpen) {
+                setGeneralInfoOpen(true);
+                setAsscBuildingsOpen(false);
+              } else {
+                setOpen(false); //close the slide out
+              }
+            }}
             className={clsx({ open })}
           >
             <InfoIcon />
           </InfoButton>
         </TooltipWrapper>
-        <InfoMain className={clsx({ open })}>
-          {popUpContext.propertyInfo ? (
-            <>
-              <HeaderActions
-                propertyInfo={popUpContext.propertyInfo}
-                propertyTypeId={popUpContext.propertyTypeID}
-                onLinkClick={onHeaderActionClick}
-                jumpToView={jumpToView}
-                zoomToView={zoomToView}
-              />
-              <InfoContent
-                propertyInfo={popUpContext.propertyInfo}
-                propertyTypeId={popUpContext.propertyTypeID}
-                addAssociatedBuildingLink={addAssociatedBuildingLink}
-              />
-            </>
-          ) : (
-            <p>Click a pin to view the property details</p>
+        {open &&
+          popUpContext.propertyInfo &&
+          canViewProperty &&
+          popUpContext.propertyTypeID === PropertyTypes.PARCEL && (
+            <TooltipWrapper toolTipId="associated-buildings-id" toolTip="Associated Buildings">
+              <BuildingsButton
+                id="slideOutBuildings"
+                variant="outline-secondary"
+                className={clsx({ open })}
+                onClick={() => {
+                  setAsscBuildingsOpen(true);
+                  setGeneralInfoOpen(false);
+                }}
+              >
+                <BuildingSvg className="svg" />
+              </BuildingsButton>
+            </TooltipWrapper>
           )}
-        </InfoMain>
+        <InfoMain className={clsx({ open })}>{renderContent()}</InfoMain>
       </InfoContainer>
     </Control>
   );

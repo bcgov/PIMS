@@ -14,7 +14,7 @@ Array [
     />
   </div>,
   .c0 {
-  border: 1px solid #f2f2f2;
+  border: 1px solid filterBackgroundColor;
   border-radius: 4px;
   text-align: left;
   padding: 8px 12px 10px;

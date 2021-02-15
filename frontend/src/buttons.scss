@@ -2,39 +2,39 @@
 
 .svg {
   fill: none;
-  stroke: #494949;
+  stroke: $text-color;
 }
 
 .svg-btn {
-  color: #494949;
+  color: $text-color;
 }
 
 .svg-btn:hover {
-  color: #3b99fc;
+  color: $icon-light-color;
   text-decoration: none;
   cursor: pointer;
 }
 
 .svg-btn:hover svg {
-  fill: #3b99fc;
+  fill: $icon-light-color;
   stroke: #fff;
 }
 
 .svg-btn.active {
-  color: #3b99fc;
+  color: $icon-light-color;
   border-bottom-style: solid;
-  border-bottom-color: #fcba19;
+  border-bottom-color: $accent-color;
   border-bottom-width: 1px;
   background-color: transparent !important;
 }
 
 .svg-btn.active svg {
-  fill: #3b99fc;
+  fill: $icon-light-color;
   stroke: #fff;
 }
 
 .btn {
-  height: 44px;
+  min-height: 44px;
 }
 
 .btn:hover {

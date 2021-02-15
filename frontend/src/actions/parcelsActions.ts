@@ -1,14 +1,8 @@
 import * as ActionTypes from 'constants/actionTypes';
 import { PointFeature } from 'components/maps/types';
+import { PropertyTypes } from 'constants/propertyTypes';
 
 //Parcel List API action
-
-export enum PropertyTypes {
-  PARCEL = 0,
-  BUILDING = 1,
-  DRAFT_PARCEL = 2,
-  DRAFT_BUILDING = 3,
-}
 
 export interface IProperty {
   id: number | '';
@@ -18,9 +12,13 @@ export interface IProperty {
   longitude: number | '';
   name?: string;
   description?: string;
-  projectNumber?: string;
+  projectNumbers?: string[];
   projectStatus?: string;
   isSensitive: boolean | '';
+  createdOn?: string;
+  updatedOn?: string;
+  updatedByEmail?: string;
+  updatedByName?: string;
 }
 
 export interface IStoreParcelsAction {
@@ -167,6 +165,7 @@ export interface IParcel extends IProperty {
   subAgency?: string;
   agencyId: number | '';
   buildings: IBuilding[];
+  parcels: Partial<IParcel[]>;
   assessedLand: number | '';
   assessedBuilding: number | '';
   evaluations: IEvaluation[];
@@ -196,7 +195,7 @@ export interface IFlatParcel extends IProperty {
 }
 
 export interface IParcelDetail {
-  propertyTypeId: 0;
+  propertyTypeId: PropertyTypes;
   parcelDetail: IParcel | null;
   position?: [number, number]; // (optional) a way to override the positioning of the map popup
 }
@@ -221,7 +220,7 @@ export const storeParcelDetail = (
   return {
     type: ActionTypes.STORE_PARCEL_DETAIL,
     parcelDetail: {
-      propertyTypeId: 0,
+      propertyTypeId: parcel?.propertyTypeId as PropertyTypes,
       parcelDetail: parcel,
       position,
     },

@@ -101,6 +101,7 @@ const defaultFilterValues: IPropertyFilter = {
   maxMarketValue: '',
   maxNetBookValue: '',
   includeAllProperties: false,
+  surplusFilter: false,
 };
 
 /**
@@ -313,6 +314,7 @@ const Map: React.FC<MapProps> = ({
                     adminAreaLookupCodes={administrativeAreas}
                     propertyClassifications={propertyClassifications}
                     onChange={handleMapFilterChange}
+                    showAllAgencySelect={true}
                   />
                 </Container>
               </Container>
@@ -376,8 +378,8 @@ const Map: React.FC<MapProps> = ({
                     />
                     <InfoSlideOut
                       open={infoOpen}
-                      setOpen={() => {
-                        setInfoOpen(!infoOpen);
+                      setOpen={(state: boolean) => {
+                        setInfoOpen(state);
                         setLayersOpen(false);
                       }}
                       onHeaderActionClick={() => {

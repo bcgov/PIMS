@@ -24,7 +24,7 @@ namespace Pims.Dal.Configuration
             builder.Property(m => m.Note).IsRequired();
             builder.Property(m => m.Note).HasColumnType("NVARCHAR(MAX)");
 
-            builder.HasOne(m => m.Project).WithMany(m => m.Notes).HasForeignKey(m => m.ProjectId).OnDelete(DeleteBehavior.ClientSetNull);
+            builder.HasOne(m => m.Project).WithMany(m => m.Notes).HasForeignKey(m => m.ProjectId).OnDelete(DeleteBehavior.ClientCascade);
 
             builder.HasIndex(m => new { m.ProjectId, m.NoteType });
 

@@ -32,6 +32,7 @@ namespace Pims.Api.Areas.Property.Mapping.Search
         {
             config.NewConfig<Entity.Property, Model.PropertyModel>()
                 .Map(dest => dest.Id, src => src.Id)
+                .Map(dest => dest.PropertyTypeId, src => src.PropertyTypeId)
                 .Map(dest => dest.ClassificationId, src => src.ClassificationId)
                 .Map(dest => dest.Classification, src => src.Classification == null ? null : src.Classification.Name)
                 .Map(dest => dest.Name, src => src.Name)
@@ -55,7 +56,7 @@ namespace Pims.Api.Areas.Property.Mapping.Search
 
             config.NewConfig<Entity.Parcel, Model.PropertyModel>()
                 .Inherits<Entity.Property, Model.PropertyModel>()
-                .Map(dest => dest.PropertyTypeId, src => PropertyTypes.Land)
+                .Map(dest => dest.PropertyTypeId, src => src.PropertyTypeId)
                 .Map(dest => dest.PID, src => src.ParcelIdentity)
                 .Map(dest => dest.PIN, src => src.PIN)
 
@@ -76,7 +77,7 @@ namespace Pims.Api.Areas.Property.Mapping.Search
 
             config.NewConfig<Entity.Building, Model.PropertyModel>()
                 .Inherits<Entity.Property, Model.PropertyModel>()
-                .Map(dest => dest.PropertyTypeId, src => PropertyTypes.Building)
+                .Map(dest => dest.PropertyTypeId, src => src.PropertyTypeId)
                 .Map(dest => dest.ConstructionTypeId, src => src.BuildingConstructionTypeId)
                 .Map(dest => dest.ConstructionType, src => src.GetConstructionType())
                 .Map(dest => dest.PredominateUseId, src => src.BuildingPredominateUseId)

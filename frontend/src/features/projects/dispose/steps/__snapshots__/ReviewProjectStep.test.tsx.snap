@@ -71,6 +71,7 @@ exports[`renders correctly 1`] = `
           </label>
           <input
             className="col-md-5 form-control"
+            data-testid="project-name"
             disabled={true}
             id="input-name"
             name="name"
@@ -97,6 +98,7 @@ exports[`renders correctly 1`] = `
           </label>
           <textarea
             className="col-md-auto form-control"
+            data-testid="project-description"
             disabled={true}
             id="input-description"
             name="description"
@@ -162,6 +164,24 @@ exports[`renders correctly 1`] = `
         >
           Financial Information
         </h3>
+      </div>
+      <div
+        className="form-row"
+      >
+        <h6
+          className="col-md-12"
+          style={
+            Object {
+              "margin": "0 0 1rem 0",
+            }
+          }
+        >
+          These values are for the 
+          <strong>
+            project
+          </strong>
+          , not the individual properties.
+        </h6>
       </div>
       <div
         className="form-row"
@@ -349,7 +369,7 @@ exports[`renders correctly 1`] = `
             }
           }
         >
-          Please make any necessary updates to the valuation information and the classification.
+          Please update  the property classification.
         </h6>
         <h2
           className="col-md-5"

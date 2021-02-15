@@ -15,7 +15,7 @@ import { IPropertyQueryParams, IProperty } from '.';
 import { columns as cols } from './columns';
 import { Table } from 'components/Table';
 import service from '../service';
-import { FaFolderOpen, FaFolder, FaEdit } from 'react-icons/fa';
+import { FaFolderOpen, FaFolder, FaEdit, FaFileExport } from 'react-icons/fa';
 import { Buildings } from './buildings';
 import { FaFileExcel, FaFileAlt } from 'react-icons/fa';
 import styled from 'styled-components';
@@ -23,7 +23,7 @@ import TooltipWrapper from 'components/common/TooltipWrapper';
 import { ReactComponent as BuildingSvg } from 'assets/images/icon-business.svg';
 import { ReactComponent as LandSvg } from 'assets/images/icon-lot.svg';
 import { PropertyFilter } from '../filter';
-import { PropertyTypes } from '../../../constants/propertyTypes';
+import { PropertyTypeNames } from '../../../constants/propertyTypeNames';
 import { IPropertyFilter } from '../filter/IPropertyFilter';
 import { SortDirection, TableSort } from 'components/Table/TableSort';
 import useCodeLookups from 'hooks/useLookupCodes';
@@ -39,13 +39,21 @@ import { toast } from 'react-toastify';
 import { IApiProperty } from 'features/projects/common';
 import { EvaluationKeys } from 'constants/evaluationKeys';
 import { FiscalKeys } from 'constants/fiscalKeys';
+import variables from '_variables.module.scss';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+import { Roles } from 'constants/roles';
 
 const getPropertyReportUrl = (filter: IPropertyQueryParams) =>
   `${ENVIRONMENT.apiUrl}/reports/properties?${filter ? queryString.stringify(filter) : ''}`;
 
+const getAllFieldsPropertyReportUrl = (filter: IPropertyQueryParams) =>
+  `${ENVIRONMENT.apiUrl}/reports/properties/all/fields?${
+    filter ? queryString.stringify(filter) : ''
+  }`;
+
 const FileIcon = styled(Button)`
   background-color: #fff !important;
-  color: #003366 !important;
+  color: ${variables.primaryColor} !important;
   padding: 6px 5px;
 `;
 
@@ -79,7 +87,7 @@ const defaultFilterValues: IPropertyFilter = {
   minLotSize: '',
   maxLotSize: '',
   rentableArea: '',
-  propertyType: PropertyTypes.Land,
+  propertyType: PropertyTypeNames.Land,
   maxAssessedValue: '',
   maxNetBookValue: '',
   maxMarketValue: '',
@@ -223,6 +231,7 @@ const PropertyListView: React.FC = () => {
   const [editable, setEditable] = useState(false);
   const tableFormRef = useRef<FormikProps<{ properties: IProperty[] }> | undefined>();
   const [dirtyRows, setDirtyRows] = useState<IChangedRow[]>([]);
+  const keycloak = useKeycloakWrapper();
   // lookup codes, etc
   const lookupCodes = useSelector<RootState, ILookupCode[]>(
     state => (state.lookupCode as ILookupCodeState).lookupCodes,
@@ -282,7 +291,6 @@ const PropertyListView: React.FC = () => {
   const [pageIndex, setPageIndex] = useState(0);
   const [pageCount, setPageCount] = useState(0);
 
-  // const [loading, setLoading] = useState(false);
   const fetchIdRef = useRef(0);
 
   const parsedFilter = useMemo(() => {
@@ -362,11 +370,17 @@ const PropertyListView: React.FC = () => {
 
   const dispatch = useDispatch();
 
-  const fetch = (accept: 'csv' | 'excel') => {
+  /**
+   * @param {'csv' | 'excel'} accept Whether the fetch is for type of CSV or EXCEL
+   * @param {boolean} getAllFields Enable this field to generate report with additional fields. For SRES only.
+   */
+  const fetch = (accept: 'csv' | 'excel', getAllFields?: boolean) => {
     const query = getServerQuery({ pageIndex, pageSize, filter, agencyIds });
     return dispatch(
       download({
-        url: getPropertyReportUrl({ ...query, all: true, propertyType: undefined }),
+        url: getAllFields
+          ? getAllFieldsPropertyReportUrl({ ...query, all: true, propertyType: undefined })
+          : getPropertyReportUrl({ ...query, all: true, propertyType: undefined }),
         fileName: `pims-inventory.${accept === 'csv' ? 'csv' : 'xlsx'}`,
         actionType: 'properties-report',
         headers: {
@@ -397,7 +411,7 @@ const PropertyListView: React.FC = () => {
     }
   };
 
-  const changePropertyType = (type: PropertyTypes) => {
+  const changePropertyType = (type: PropertyTypeNames) => {
     setPageIndex(0);
     setFilter(state => {
       return {
@@ -438,9 +452,9 @@ const PropertyListView: React.FC = () => {
               <TooltipWrapper toolTipId="show-parcels" toolTip="Show Parcels">
                 <div
                   className={
-                    filter.propertyType === PropertyTypes.Land ? 'svg-btn active' : 'svg-btn'
+                    filter.propertyType === PropertyTypeNames.Land ? 'svg-btn active' : 'svg-btn'
                   }
-                  onClick={() => changePropertyType(PropertyTypes.Land)}
+                  onClick={() => changePropertyType(PropertyTypeNames.Land)}
                 >
                   <LandSvg className="svg" />
                   Parcels view
@@ -451,9 +465,11 @@ const PropertyListView: React.FC = () => {
               <TooltipWrapper toolTipId="show-buildings" toolTip="Show Buildings">
                 <div
                   className={
-                    filter.propertyType === PropertyTypes.Building ? 'svg-btn active' : 'svg-btn'
+                    filter.propertyType === PropertyTypeNames.Building
+                      ? 'svg-btn active'
+                      : 'svg-btn'
                   }
-                  onClick={() => changePropertyType(PropertyTypes.Building)}
+                  onClick={() => changePropertyType(PropertyTypeNames.Building)}
                 >
                   <BuildingSvg className="svg" />
                   Buildings view
@@ -471,6 +487,17 @@ const PropertyListView: React.FC = () => {
               <FaFileAlt data-testid="csv-icon" size={36} onClick={() => fetch('csv')} />
             </FileIcon>
           </TooltipWrapper>
+          {(keycloak.hasRole(Roles.SRES_FINANCIAL_MANAGER) || keycloak.hasRole(Roles.SRES)) && (
+            <TooltipWrapper toolTipId="export-to-excel" toolTip="Export all properties and fields">
+              <FileIcon>
+                <FaFileExport
+                  data-testid="file-icon"
+                  size={36}
+                  onClick={() => fetch('excel', true)}
+                />
+              </FileIcon>
+            </TooltipWrapper>
+          )}
           <VerticalDivider />
 
           <TooltipWrapper toolTipId="edit-financial-values" toolTip={'Edit financial values'}>

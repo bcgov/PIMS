@@ -32,7 +32,7 @@ exports[`Building Form component renders correctly 1`] = `
 }
 
 .c1 .nav-tabs .nav-item.active svg {
-  background-color: #428bca;
+  background-color: secondaryVariantColor;
   color: white;
 }
 
@@ -61,7 +61,7 @@ exports[`Building Form component renders correctly 1`] = `
 }
 
 .c1 .nav-tabs .btn:disabled {
-  background-color: #003366;
+  background-color: primaryColor;
   cursor: default;
 }
 
@@ -70,7 +70,7 @@ exports[`Building Form component renders correctly 1`] = `
 }
 
 .c5 {
-  border: 1px solid #f2f2f2;
+  border: 1px solid filterBackgroundColor;
   border-radius: 4px;
   text-align: left;
   padding: 8px 12px 10px;
@@ -127,7 +127,7 @@ exports[`Building Form component renders correctly 1`] = `
   align-items: center;
   position: -webkit-sticky;
   position: sticky;
-  background-color: #f2f2f2;
+  background-color: filterBackgroundColor;
   bottom: 25px;
 }
 
@@ -347,30 +347,6 @@ exports[`Building Form component renders correctly 1`] = `
                 <span
                   class="bs-stepper-label"
                 >
-                  Associated Land
-                </span>
-              </button>
-            </div>
-            <div
-              class="line"
-            />
-            <div
-              class="step"
-              data-target="stepper-4"
-            >
-              <button
-                class="step-trigger"
-                disabled=""
-                type="button"
-              >
-                <span
-                  class="bs-stepper-circle"
-                >
-                  5
-                </span>
-                <span
-                  class="bs-stepper-label"
-                >
                   Review & Submit
                 </span>
               </button>
@@ -560,7 +536,6 @@ exports[`Building Form component renders correctly 1`] = `
                         />
                       </div>
                     </div>
-                    
                     <div
                       class="row"
                     >

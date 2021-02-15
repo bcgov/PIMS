@@ -16,149 +16,179 @@ exports[`EnhancedReferralTab renders correctly 1`] = `
     <div
       className="form-row"
     >
-      <label
-        className="form-label col-form-label col-md-4"
-      >
-        Date of Initial Enhanced Referral Notification Sent
-      </label>
       <div
-        className="col-md-8 form-group"
+        className="col"
       >
         <div
-          className="react-datepicker-wrapper"
+          className="form-row"
         >
-          <div
-            className="react-datepicker__input-container"
+          <label
+            className="form-label col-form-label col-md-8"
           >
-            <input
-              autoComplete="off"
-              className="form-control date-picker"
-              disabled={false}
-              id="datepicker-initialNotificationSentOn"
-              name="initialNotificationSentOn"
-              onBlur={[Function]}
-              onChange={[Function]}
-              onClick={[Function]}
-              onFocus={[Function]}
-              onKeyDown={[Function]}
-              placeholder="--/--/----"
-              readOnly={false}
-              type="text"
-              value=""
-            />
+            Date of Initial Enhanced Referral Notification Sent
+          </label>
+          <div
+            className="col-md-4 form-group"
+          >
+            <div
+              className="react-datepicker-wrapper"
+            >
+              <div
+                className="react-datepicker__input-container"
+              >
+                <input
+                  autoComplete="off"
+                  className="form-control date-picker"
+                  disabled={false}
+                  id="datepicker-initialNotificationSentOn"
+                  name="initialNotificationSentOn"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onClick={[Function]}
+                  onFocus={[Function]}
+                  onKeyDown={[Function]}
+                  placeholder="--/--/----"
+                  readOnly={false}
+                  type="text"
+                  value=""
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          className="form-row"
+        >
+          <label
+            className="form-label col-form-label col-md-8"
+          >
+            Date of 30 Day Enhanced Referral Notification Sent
+          </label>
+          <div
+            className="col-md-4 form-group"
+          >
+            <div
+              className="react-datepicker-wrapper"
+            >
+              <div
+                className="react-datepicker__input-container"
+              >
+                <input
+                  autoComplete="off"
+                  className="form-control date-picker"
+                  disabled={false}
+                  id="datepicker-thirtyDayNotificationSentOn"
+                  name="thirtyDayNotificationSentOn"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onClick={[Function]}
+                  onFocus={[Function]}
+                  onKeyDown={[Function]}
+                  placeholder="--/--/----"
+                  readOnly={false}
+                  type="text"
+                  value=""
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          className="form-row"
+        >
+          <label
+            className="form-label col-form-label col-md-8"
+          >
+            Date of 60 Day Enhanced Referral Notification Sent
+          </label>
+          <div
+            className="col-md-4 form-group"
+          >
+            <div
+              className="react-datepicker-wrapper"
+            >
+              <div
+                className="react-datepicker__input-container"
+              >
+                <input
+                  autoComplete="off"
+                  className="form-control date-picker"
+                  disabled={false}
+                  id="datepicker-sixtyDayNotificationSentOn"
+                  name="sixtyDayNotificationSentOn"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onClick={[Function]}
+                  onFocus={[Function]}
+                  onKeyDown={[Function]}
+                  placeholder="--/--/----"
+                  readOnly={false}
+                  type="text"
+                  value=""
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          className="form-row"
+        >
+          <label
+            className="form-label col-form-label col-md-8"
+          >
+            Date of 90 Day Enhanced Referral Notification Sent
+          </label>
+          <div
+            className="col-md-4 form-group"
+          >
+            <div
+              className="react-datepicker-wrapper"
+            >
+              <div
+                className="react-datepicker__input-container"
+              >
+                <input
+                  autoComplete="off"
+                  className="form-control date-picker"
+                  disabled={false}
+                  id="datepicker-ninetyDayNotificationSentOn"
+                  name="ninetyDayNotificationSentOn"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onClick={[Function]}
+                  onFocus={[Function]}
+                  onKeyDown={[Function]}
+                  placeholder="--/--/----"
+                  readOnly={false}
+                  type="text"
+                  value=""
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <div
-      className="form-row"
-    >
-      <label
-        className="form-label col-form-label col-md-4"
-      >
-        Date of 30 Day Enhanced Referral Notification Sent
-      </label>
       <div
-        className="col-md-8 form-group"
+        className="col"
+        style={
+          Object {
+            "padding": "0 0 0 10px",
+          }
+        }
       >
-        <div
-          className="react-datepicker-wrapper"
+        <label
+          className="form-label"
         >
-          <div
-            className="react-datepicker__input-container"
-          >
-            <input
-              autoComplete="off"
-              className="form-control date-picker"
-              disabled={false}
-              id="datepicker-thirtyDayNotificationSentOn"
-              name="thirtyDayNotificationSentOn"
-              onBlur={[Function]}
-              onChange={[Function]}
-              onClick={[Function]}
-              onFocus={[Function]}
-              onKeyDown={[Function]}
-              placeholder="--/--/----"
-              readOnly={false}
-              type="text"
-              value=""
-            />
-          </div>
-        </div>
-      </div>
-    </div>
-    <div
-      className="form-row"
-    >
-      <label
-        className="form-label col-form-label col-md-4"
-      >
-        Date of 60 Day Enhanced Referral Notification Sent
-      </label>
-      <div
-        className="col-md-8 form-group"
-      >
-        <div
-          className="react-datepicker-wrapper"
+          <strong>
+            Note: 
+          </strong>
+          Changing the dates on these fields does not change the date the notifications are sent from the Common Hosted Email Service (CHES), which is managed by the Exchange Lab.
+        </label>
+        <label
+          className="form-label"
         >
-          <div
-            className="react-datepicker__input-container"
-          >
-            <input
-              autoComplete="off"
-              className="form-control date-picker"
-              disabled={false}
-              id="datepicker-sixtyDayNotificationSentOn"
-              name="sixtyDayNotificationSentOn"
-              onBlur={[Function]}
-              onChange={[Function]}
-              onClick={[Function]}
-              onFocus={[Function]}
-              onKeyDown={[Function]}
-              placeholder="--/--/----"
-              readOnly={false}
-              type="text"
-              value=""
-            />
-          </div>
-        </div>
-      </div>
-    </div>
-    <div
-      className="form-row"
-    >
-      <label
-        className="form-label col-form-label col-md-4"
-      >
-        Date of 90 Day Enhanced Referral Notification Sent
-      </label>
-      <div
-        className="col-md-8 form-group"
-      >
-        <div
-          className="react-datepicker-wrapper"
-        >
-          <div
-            className="react-datepicker__input-container"
-          >
-            <input
-              autoComplete="off"
-              className="form-control date-picker"
-              disabled={false}
-              id="datepicker-ninetyDayNotificationSentOn"
-              name="ninetyDayNotificationSentOn"
-              onBlur={[Function]}
-              onChange={[Function]}
-              onClick={[Function]}
-              onFocus={[Function]}
-              onKeyDown={[Function]}
-              placeholder="--/--/----"
-              readOnly={false}
-              type="text"
-              value=""
-            />
-          </div>
-        </div>
+          The only way to stop future unsent notifications is to cancel the entire project.
+        </label>
       </div>
     </div>
     <h3>

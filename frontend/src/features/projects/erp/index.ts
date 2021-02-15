@@ -8,6 +8,5 @@ export * from './slices/erpTabSlice';
 export { default as AgencyResponseForm } from '../erp/forms/AgencyResponseForm';
 export { default as ErpTabs } from './tabs/ErpTabs';
 export { default as EnhancedReferralCompleteForm } from '../erp/forms/EnhancedReferralCompleteForm';
-export { default as GreTransferForm } from '../erp/forms/GreTransferForm';
 
 export { default as EnhancedReferralTab } from '../erp/tabs/EnhancedReferralTab';

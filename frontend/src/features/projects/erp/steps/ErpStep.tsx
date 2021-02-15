@@ -61,7 +61,7 @@ const ErpStep = ({ formikRef }: IStepProps) => {
     dispatch(saveErpTab(tabName));
   };
   const goToGreTransferred = () =>
-    history.push(`./gretransfer?projectNumber=${project?.projectNumber}`);
+    history.push(`./erp/gretransfer?projectNumber=${project?.projectNumber}`);
   const goToSpl = () =>
     history.push(`./approved?projectNumber=${project?.projectNumber}&to=ERP-ON`);
 

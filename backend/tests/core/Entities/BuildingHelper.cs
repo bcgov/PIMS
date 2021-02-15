@@ -14,6 +14,20 @@ namespace Pims.Core.Test
         /// <summary>
         /// Creates a new instance of a Building.
         /// </summary>
+        /// <param name="id"></param>
+        /// <param name="projectNumber"></param>
+        /// <param name="name"></param>
+        /// <param name="lat"></param>
+        /// <param name="lng"></param>
+        /// <param name="agency"></param>
+        public static Entity.Building CreateBuilding(int id, string projectNumber = null, string name = null, int lat = 0, int lng = 0, Entity.Agency agency = null)
+        {
+            return CreateBuilding(id, projectNumber, name, lat, lng, agency);
+        }
+
+        /// <summary>
+        /// Creates a new instance of a Building.
+        /// </summary>
         /// <param name="parcel"></param>
         /// <param name="id"></param>
         /// <param name="projectNumber"></param>
@@ -25,8 +39,9 @@ namespace Pims.Core.Test
         public static Entity.Building CreateBuilding(Entity.Parcel parcel, int id, string projectNumber = null, string name = null, int lat = 0, int lng = 0, Entity.Agency agency = null)
         {
             projectNumber ??= $"p{id}";
-            agency ??= parcel.Agency;
-            var address = EntityHelper.CreateAddress(++parcel.AddressId, parcel.Address.Address1, parcel.Address.Address2, parcel.Address.AdministrativeArea, parcel.Address.Province, parcel.Address.Postal);
+            agency ??= parcel?.Agency ?? EntityHelper.CreateAgency(id);
+            var address = parcel != null ? EntityHelper.CreateAddress(++parcel.AddressId, parcel.Address.Address1, parcel.Address.Address2, parcel.Address.AdministrativeArea, parcel.Address.Province, parcel.Address.Postal) :
+                EntityHelper.CreateAddress(id, "1234 Street", null, "V9C9C9");
             var predominateUse = EntityHelper.CreateBuildingPredominateUse("use");
             var constructionType = EntityHelper.CreateBuildingConstructionType("type");
             var occupantType = EntityHelper.CreateBuildingOccupantType("occupant");
@@ -54,7 +69,8 @@ namespace Pims.Core.Test
                 CreatedOn = DateTime.UtcNow,
                 UpdatedById = Guid.NewGuid(),
                 UpdatedOn = DateTime.UtcNow,
-                RowVersion = new byte[] { 12, 13, 14 }
+                RowVersion = new byte[] { 12, 13, 14 },
+                PropertyTypeId = 1,
             };
         }
 
@@ -80,6 +96,21 @@ namespace Pims.Core.Test
         /// Creates a new instance of a Building.
         /// </summary>
         /// <param name="context"></param>
+        /// <param name="id"></param>
+        /// <param name="name"></param>
+        /// <param name="lat"></param>
+        /// <param name="lng"></param>
+        /// <param name="agency"></param>
+        /// <returns></returns>
+        public static Entity.Building CreateBuilding(this PimsContext context, int id, string projectNumber = null, string name = null, int lat = 0, int lng = 0, Entity.Agency agency = null)
+        {
+            return CreateBuilding(context, null, id, projectNumber, name, lat, lng, agency);
+        }
+
+        /// <summary>
+        /// Creates a new instance of a Building.
+        /// </summary>
+        /// <param name="context"></param>
         /// <param name="parcel"></param>
         /// <param name="id"></param>
         /// <param name="name"></param>
@@ -90,7 +121,7 @@ namespace Pims.Core.Test
         public static Entity.Building CreateBuilding(this PimsContext context, Entity.Parcel parcel, int id, string projectNumber = null, string name = null, int lat = 0, int lng = 0, Entity.Agency agency = null)
         {
             name ??= $"l{id}";
-            agency ??= parcel.Agency ?? EntityHelper.CreateAgency(id);
+            agency ??= parcel?.Agency ?? context.Agencies.FirstOrDefault() ?? EntityHelper.CreateAgency(id);
             var address = (parcel == null ? EntityHelper.CreateAddress(context, id, "1234 Street", null, "V9C9C9") :
                 EntityHelper.CreateAddress(id, parcel.Address.Address1, parcel.Address.Address2, parcel.Address.AdministrativeArea, parcel.Address.Province, parcel.Address.Postal));
             var predominateUse = context.BuildingPredominateUses.FirstOrDefault(b => b.Id == 1) ?? EntityHelper.CreateBuildingPredominateUse("use"); ;

@@ -1,6 +1,7 @@
 import * as Yup from 'yup';
 import moment from 'moment';
 import { emptyStringToNull } from 'utils';
+import { PropertyTypes } from 'constants/propertyTypes';
 
 Yup.addMethod(Yup.string, 'optional', function optional() {
   return this.transform(value => {
@@ -208,6 +209,11 @@ export const LandSchema = Yup.object().shape({
   isSensitive: Yup.boolean()
     .transform(emptyStringToNull)
     .required('Required'),
+  parcels: Yup.array().when('propertyTypeId', {
+    is: val => val === PropertyTypes.SUBDIVISION,
+    then: Yup.array().required('You must add at least one parent parcel'),
+    otherwise: Yup.array(),
+  }),
 });
 export const ParcelSchema = Yup.object()
   .shape(
@@ -239,18 +245,49 @@ export const ParcelSchema = Yup.object()
   )
   .concat(LandSchema);
 
-export const FilterBarSchema = Yup.object().shape({
-  minLotSize: Yup.number()
-    .typeError('Invalid')
-    .positive('Must be greater than 0')
-    .max(200000, 'Invalid'),
-  maxLotSize: Yup.number()
-    .typeError('Invalid')
-    .positive('Must be greater than 0')
-    .max(200000, 'Invalid')
-    /* Reference minLotSize field in validating maxLotSize value */
-    .moreThan(Yup.ref('minLotSize'), 'Must be greater than Min Lot Size'),
-});
+export const FilterBarSchema = Yup.object().shape(
+  {
+    minLotSize: Yup.number()
+      .typeError('Invalid')
+      .positive('Must be greater than 0')
+      .max(200000, 'Invalid'),
+    maxLotSize: Yup.number()
+      .typeError('Invalid')
+      .positive('Must be greater than 0')
+      .max(200000, 'Invalid')
+      /* Reference minLotSize field in validating maxLotSize value */
+      .moreThan(Yup.ref('minLotSize'), 'Must be greater than Min Lot Size'),
+    inEnhancedReferralProcess: Yup.boolean().when(['inSurplusPropertyProgram', 'surplusFilter'], {
+      is: (inSurplusPropertyProgram, surplusFilter) => {
+        if (!surplusFilter) {
+          return true;
+        }
+        if (inSurplusPropertyProgram) {
+          return true;
+        }
+      },
+      then: Yup.boolean().nullable(),
+      otherwise: Yup.boolean().required(
+        'ERP or SPL Properties required when using the Surplus Properties filter.',
+      ),
+    }),
+    inSurplusPropertyProgram: Yup.boolean().when(['inEnhancedReferralProcess', 'surplusFilter'], {
+      is: (inEnhancedReferralProcess, surplusFilter) => {
+        if (!surplusFilter) {
+          return true;
+        }
+        if (inEnhancedReferralProcess) {
+          return true;
+        }
+      },
+      then: Yup.boolean().nullable(),
+      otherwise: Yup.boolean().required(
+        'ERP or SPL Properties required when using the Surplus Properties filter.',
+      ),
+    }),
+  },
+  [['inSurplusPropertyProgram', 'inEnhancedReferralProcess']],
+);
 
 export const AssociatedLandOwnershipSchema = Yup.object().shape({
   type: Yup.number().required('Choose an option'),
@@ -325,6 +362,11 @@ export const LandIdentificationSchema = Yup.object().shape(
       .nullable()
       .transform(emptyStringToNull)
       .required('Required'),
+    parcels: Yup.array().when('propertyTypeId', {
+      is: val => val === PropertyTypes.SUBDIVISION,
+      then: Yup.array().required('You must add at least one parent parcel'),
+      otherwise: Yup.array(),
+    }),
   },
   [['pin', 'pid']],
 );

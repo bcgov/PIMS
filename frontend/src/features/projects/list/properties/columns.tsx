@@ -1,13 +1,8 @@
-import { ReactComponent as BuildingSvg } from 'assets/images/icon-business.svg';
-import { ReactComponent as LandSvg } from 'assets/images/icon-lot.svg';
-
-import React from 'react';
 import { CellProps } from 'react-table';
-import { Link } from 'react-router-dom';
 import { formatMoney, formatNumber } from 'utils';
-import { ColumnWithProps } from 'components/Table';
+import { ColumnWithProps, ViewPropertyCell } from 'components/Table';
 import { IProperty } from '../../common/interfaces';
-import queryString from 'query-string';
+import { PropertyTypeCell } from 'components/Table/PropertyTypeCell';
 
 const MoneyCell = ({ cell: { value } }: CellProps<IProperty, number>) => formatMoney(value);
 
@@ -109,9 +104,7 @@ export const columns: ColumnWithProps<IProperty>[] = [
   {
     Header: 'Type',
     accessor: 'propertyTypeId',
-    Cell: ({ cell: { value } }: CellProps<IProperty, number>) => {
-      return value === 0 ? <LandSvg className="svg" /> : <BuildingSvg className="svg" />;
-    },
+    Cell: PropertyTypeCell,
     responsive: true,
     width: spacing.small,
     minWidth: 65,
@@ -131,24 +124,6 @@ export const columns: ColumnWithProps<IProperty>[] = [
     responsive: true,
     width: spacing.small,
     minWidth: 65,
-    Cell: (props: CellProps<IProperty, number>) => {
-      return (
-        <Link
-          to={{
-            pathname: `/mapview`,
-            search: queryString.stringify({
-              sidebar: true,
-              disabled: true,
-              loadDraft: false,
-              parcelId: props.row.original.propertyTypeId === 0 ? props.row.original.id : undefined,
-              buildingId:
-                props.row.original.propertyTypeId === 1 ? props.row.original.id : undefined,
-            }),
-          }}
-        >
-          View
-        </Link>
-      );
-    },
+    Cell: ViewPropertyCell,
   },
 ];

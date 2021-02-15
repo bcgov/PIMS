@@ -1,8 +1,4 @@
-import { ReactComponent as BuildingSvg } from 'assets/images/icon-business.svg';
-import { ReactComponent as LandSvg } from 'assets/images/icon-lot.svg';
-
 import React from 'react';
-import { CellProps } from 'react-table';
 import { formatMoney, formatNumber, formatDate } from 'utils';
 import { IProperty, IProject, DisposeWorkflowStatus, AgencyResponses } from '../interfaces';
 import { useFormikContext, getIn } from 'formik';
@@ -20,7 +16,8 @@ import { IAgencyResponseColumns } from 'features/projects/erp/forms/AgencyRespon
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { EditableMoneyCell, MoneyCell } from 'components/Table/MoneyCell';
-import { PropertyTypes } from 'actions/parcelsActions';
+import { PropertyTypes } from 'constants/propertyTypes';
+import { PropertyTypeCell } from 'components/Table/PropertyTypeCell';
 
 const ColumnDiv = styled.div`
   display: flex;
@@ -265,15 +262,7 @@ export const getPropertyColumns = ({
       accessor: 'propertyTypeId',
       width: 60,
       clickable: true,
-      Cell: ({ cell: { value } }: CellProps<IProperty, number>) => {
-        const icon =
-          value === 0 ? (
-            <LandSvg title="Land" className="svg" />
-          ) : (
-            <BuildingSvg title="Building" className="svg" />
-          );
-        return icon;
-      },
+      Cell: PropertyTypeCell,
     },
   ]);
 
@@ -298,15 +287,7 @@ export const getAppraisedColumns = (project: IProject): any[] => [
     Header: 'Type',
     accessor: 'propertyTypeId',
     width: 60,
-    Cell: ({ cell: { value } }: CellProps<IProperty, number>) => {
-      const icon =
-        value === 0 ? (
-          <LandSvg title="Land" className="svg" />
-        ) : (
-          <BuildingSvg title="Building" className="svg" />
-        );
-      return icon;
-    },
+    Cell: PropertyTypeCell,
   },
   {
     Header: 'Appraised Value',

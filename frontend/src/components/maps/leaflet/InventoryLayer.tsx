@@ -15,7 +15,8 @@ import { flatten, uniqBy } from 'lodash';
 import { tilesInBbox } from 'tiles-in-bbox';
 import { useFilterContext } from '../providers/FIlterProvider';
 import { MUNICIPALITY_LAYER_URL, useLayerQuery } from './LayerPopup';
-
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+import { PropertyTypes } from 'constants/propertyTypes';
 export type InventoryLayerProps = {
   /** Latitude and Longitude boundary of the layer. */
   bounds: LatLngBounds;
@@ -135,6 +136,7 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
   onMarkerClick,
   selected,
 }) => {
+  const keycloak = useKeycloakWrapper();
   const { map } = useLeaflet();
   const [features, setFeatures] = useState<PointFeature[]>([]);
   const [loadingTiles, setLoadingTiles] = useState(false);
@@ -212,8 +214,13 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
        */
       const hasBuildings = (property: IParcel | IBuilding) => false;
 
-      const results = items.filter(({ properties }: any) => {
-        return properties.propertyTypeId === 1 || !hasBuildings(properties);
+      let results = items.filter(({ properties }: any) => {
+        return (
+          properties.propertyTypeId === PropertyTypes.BUILDING ||
+          !hasBuildings(properties) ||
+          (properties.propertyTypeId === PropertyTypes.SUBDIVISION &&
+            keycloak.canUserEditProperty(properties))
+        );
       }) as any;
 
       const administrativeArea = filter?.administrativeArea;

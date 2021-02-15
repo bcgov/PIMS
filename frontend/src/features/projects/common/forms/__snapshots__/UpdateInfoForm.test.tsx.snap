@@ -90,6 +90,24 @@ exports[`Update Info Form Matches Snapshot 1`] = `
     <div
       className="form-row"
     >
+      <h6
+        className="col-md-12"
+        style={
+          Object {
+            "margin": "0 0 1rem 0",
+          }
+        }
+      >
+        These values are for the 
+        <strong>
+          project
+        </strong>
+        , not the individual properties.
+      </h6>
+    </div>
+    <div
+      className="form-row"
+    >
       <div
         className="col-md-4"
       >
@@ -273,7 +291,7 @@ exports[`Update Info Form Matches Snapshot 1`] = `
           }
         }
       >
-        Please make any necessary updates to the valuation information and the classification.
+        Please update  the property classification.
       </h6>
       <h2
         className="col-md-5"
@@ -974,22 +992,14 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                   }
                   title=""
                 >
-                  <div
-                    className="form-group col"
+                  <i
+                    onBlur={[Function]}
+                    onFocus={[Function]}
+                    onMouseOut={[Function]}
+                    onMouseOver={[Function]}
                   >
-                    <div
-                      className="input-tooltip-wrapper"
-                    >
-                      <input
-                        className="form-control input-number"
-                        name="properties.0.netBook"
-                        onBlur={[Function]}
-                        onChange={[Function]}
-                        placeholder=""
-                        value={1}
-                      />
-                    </div>
-                  </div>
+                    $1
+                  </i>
                 </div>
                 <div
                   className="td"
@@ -1009,22 +1019,14 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                   }
                   title=""
                 >
-                  <div
-                    className="form-group col"
+                  <i
+                    onBlur={[Function]}
+                    onFocus={[Function]}
+                    onMouseOut={[Function]}
+                    onMouseOver={[Function]}
                   >
-                    <div
-                      className="input-tooltip-wrapper"
-                    >
-                      <input
-                        className="form-control input-number"
-                        name="properties.0.market"
-                        onBlur={[Function]}
-                        onChange={[Function]}
-                        placeholder=""
-                        value={0}
-                      />
-                    </div>
-                  </div>
+                    $0
+                  </i>
                 </div>
                 <div
                   className="td"
@@ -1044,22 +1046,14 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                   }
                   title=""
                 >
-                  <div
-                    className="form-group col"
+                  <i
+                    onBlur={[Function]}
+                    onFocus={[Function]}
+                    onMouseOut={[Function]}
+                    onMouseOver={[Function]}
                   >
-                    <div
-                      className="input-tooltip-wrapper"
-                    >
-                      <input
-                        className="form-control input-number"
-                        name="properties.0.Assessed Value"
-                        onBlur={[Function]}
-                        onChange={[Function]}
-                        placeholder=""
-                        value=""
-                      />
-                    </div>
-                  </div>
+                    $0
+                  </i>
                 </div>
                 <div
                   className="td clickable"
@@ -1081,7 +1075,6 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                 >
                   <svg
                     className="svg"
-                    title="Land"
                   >
                     icon-lot.svg
                   </svg>

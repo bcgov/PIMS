@@ -64,7 +64,7 @@ exports[`SubmitPropertySelector component renders correctly 1`] = `
   -ms-flex-pack: center;
   justify-content: center;
   padding: 16px;
-  border-bottom: 1px solid #d9d9d9;
+  border-bottom: 1px solid formBackground;
   margin-bottom: 16px;
 }
 
@@ -93,7 +93,7 @@ exports[`SubmitPropertySelector component renders correctly 1`] = `
   height: 89px;
   border-radius: 8px;
   fill: #ffffff;
-  border: 2px solid #1a5a96;
+  border: 2px solid slideOutBlue;
   margin-bottom: 16px;
   display: -webkit-box;
   display: -webkit-flex;
@@ -130,13 +130,20 @@ exports[`SubmitPropertySelector component renders correctly 1`] = `
 }
 
 .c6 {
-  color: #494949;
+  color: textColor;
   height: 47px;
   width: 47px;
   margin-right: 16px;
 }
 
 .c9 {
+  color: textColor;
+  height: 47px;
+  width: 47px;
+  margin-right: 16px;
+}
+
+.c11 {
   color: #494949;
   height: 47px;
   width: 47px;
@@ -145,13 +152,13 @@ exports[`SubmitPropertySelector component renders correctly 1`] = `
 
 .c8 {
   font-size: 21px;
-  color: #1a5a96;
+  color: slideOutBlue;
   margin-bottom: 0px;
 }
 
 .c10 {
   font-size: 12px;
-  color: #494949;
+  color: textColor;
   margin-bottom: 0px;
 }
 
@@ -251,6 +258,29 @@ exports[`SubmitPropertySelector component renders correctly 1`] = `
           className="c10"
         >
           PID or PIN
+        </p>
+      </div>
+    </div>
+    <div
+      className="c5"
+    >
+      <svg
+        className="c11 svg"
+      >
+        project-diagram-solid.svg
+      </svg>
+      <div
+        className="c7"
+      >
+        <p
+          className="c8"
+        >
+          Add Potential Subdivision
+        </p>
+        <p
+          className="c10"
+        >
+          PID
         </p>
       </div>
     </div>

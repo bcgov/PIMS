@@ -32,7 +32,7 @@ const useSideBarBuildingLoader = ({
   useDeepCompareEffect(() => {
     const loadBuilding = async () => {
       setSideBarContext(SidebarContextType.LOADING);
-      const response: any = await dispatch(fetchBuildingDetail({ id: buildingId as number }));
+      const response: IBuilding = await fetchBuildingDetail({ id: buildingId as number })(dispatch);
       setCachedBuildingDetail({
         ...response,
       });
@@ -42,7 +42,7 @@ const useSideBarBuildingLoader = ({
     };
     if (showSideBar && !!buildingId && buildingId !== cachedBuildingDetail?.id) {
       loadBuilding();
-    } else if (!buildingId && buildingId !== 0 && !!cachedBuildingDetail) {
+    } else if (!buildingId && !!cachedBuildingDetail) {
       setCachedBuildingDetail(null);
     }
   }, [dispatch, buildingId, disabled, showSideBar]);

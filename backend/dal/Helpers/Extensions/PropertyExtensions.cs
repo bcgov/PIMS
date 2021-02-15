@@ -1,11 +1,13 @@
 using Microsoft.EntityFrameworkCore;
 using Pims.Core.Extensions;
+using Pims.Dal.Exceptions;
 using Pims.Dal.Security;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using Entity = Pims.Dal.Entities;
+using Pims.Dal.Helpers.Constants;
 
 namespace Pims.Dal.Helpers.Extensions
 {
@@ -35,7 +37,8 @@ namespace Pims.Dal.Helpers.Extensions
             // Users may only view sensitive properties if they have the `sensitive-view` claim and belong to the owning agency.
             var query = context.Properties
                 .AsNoTracking()
-                .Where(p => p.ClassificationId != 4); // Disposed properties are not visible.
+                .Where(p => p.ClassificationId != (int)ClassificationTypes.Classifications.Disposed && p.ClassificationId != (int)ClassificationTypes.Classifications.Demolished && p.ClassificationId != (int)ClassificationTypes.Classifications.Subdivided); // Disposed and subdivided/demolished properties are not visible.
+
 
             // Only allowed to see user's own agency properties.
             if (!isAdmin)
@@ -43,8 +46,9 @@ namespace Pims.Dal.Helpers.Extensions
             if (!viewSensitive)
                 query = query.Where(p => !p.IsSensitive);
 
+            //for now, if the user filters by land they will also see subdivisions.
             if (filter.PropertyType.HasValue)
-                query = query.Where(p => p.PropertyTypeId == filter.PropertyType.Value);
+                query = query.Where(p => p.PropertyTypeId == filter.PropertyType.Value || (filter.PropertyType == Entity.PropertyTypes.Land && p.PropertyTypeId == Entity.PropertyTypes.Subdivision));
 
             if (filter.RentableArea.HasValue)
                 query = query.Where(p => p.RentableArea == filter.RentableArea);
@@ -65,10 +69,23 @@ namespace Pims.Dal.Helpers.Extensions
 
             if (filter.Agencies?.Any() == true)
             {
-                // Get list of sub-agencies for any agency selected in the filter.
-                var filterAgencies = filter.Agencies.Select(a => (int?)a);
-                var agencies = filterAgencies.Concat(context.Agencies.AsNoTracking().Where(a => filterAgencies.Contains(a.Id)).SelectMany(a => a.Children.Select(ac => (int?)ac.Id)).ToArray()).Distinct();
-                query = query.Where(p => agencies.Contains(p.AgencyId));
+                IEnumerable<int?> filterAgencies;
+                if (!isAdmin)
+                {
+                    // Users can only search their own agencies.
+                    filterAgencies = filter.Agencies.Intersect(userAgencies.Select(a => (int)a)).Select(a => (int?)a);
+                }
+                else
+                {
+                    // TODO: Ideally this list would be provided by the frontend, as it is expensive to do it here.
+                    // Get list of sub-agencies for any agency selected in the filter.
+                    filterAgencies = filter.Agencies.Select(a => (int?)a);
+                }
+                if (filterAgencies.Any())
+                {
+                    var agencies = filterAgencies.Concat(context.Agencies.AsNoTracking().Where(a => filterAgencies.Contains(a.Id)).SelectMany(a => a.Children.Select(ac => (int?)ac.Id)).ToArray()).Distinct();
+                    query = query.Where(p => agencies.Contains(p.AgencyId));
+                }
             }
             if (filter.ParcelId.HasValue)
                 query = query.Where(p => p.ParcelId == filter.ParcelId);
@@ -172,7 +189,9 @@ namespace Pims.Dal.Helpers.Extensions
             // Users may only view sensitive properties if they have the `sensitive-view` claim and belong to the owning agency.
             var query = context.Properties
                 .AsNoTracking()
-                .Where(p => p.ClassificationId != 4); // Disposed properties are not visible.
+                .Where(p => p.ClassificationId != (int)ClassificationTypes.Classifications.Disposed && p.ClassificationId != (int)ClassificationTypes.Classifications.Demolished && p.ClassificationId != (int)ClassificationTypes.Classifications.Subdivided // Disposed and subdivided/demolished properties are not visible.
+                && (p.PropertyTypeId != Entity.PropertyTypes.Subdivision
+                || (p.PropertyTypeId == Entity.PropertyTypes.Subdivision && (p.IsVisibleToOtherAgencies || userAgencies.Contains(p.AgencyId) || isAdmin))));
 
             // Users are not allowed to view sensitive properties outside of their agency or sub-agencies.
             if (!isAdmin)
@@ -183,7 +202,7 @@ namespace Pims.Dal.Helpers.Extensions
                 query = query.Where(p => userAgencies.Contains(p.AgencyId));
 
             if (filter.PropertyType.HasValue)
-                query = query.Where(p => p.PropertyTypeId == filter.PropertyType.Value);
+                query = query.Where(p => p.PropertyTypeId == filter.PropertyType.Value || (filter.PropertyType == Entity.PropertyTypes.Land && p.PropertyTypeId == Entity.PropertyTypes.Subdivision));
 
             if (filter.RentableArea.HasValue)
                 query = query.Where(p => p.RentableArea == filter.RentableArea);
@@ -204,11 +223,23 @@ namespace Pims.Dal.Helpers.Extensions
 
             if (filter.Agencies?.Any() == true)
             {
-                // TODO: Ideally this list would be provided by the frontend, as it is expensive to do it here.
-                // Get list of sub-agencies for any agency selected in the filter.
-                var filterAgencies = filter.Agencies.Select(a => (int?)a);
-                var agencies = filterAgencies.Concat(context.Agencies.AsNoTracking().Where(a => filterAgencies.Contains(a.Id)).SelectMany(a => a.Children.Select(ac => (int?)ac.Id)).ToArray()).Distinct();
-                query = query.Where(p => agencies.Contains(p.AgencyId));
+                IEnumerable<int?> filterAgencies;
+                if (!isAdmin)
+                {
+                    // Users can only search their own agencies.
+                    filterAgencies = filter.Agencies.Intersect(userAgencies.Select(a => (int)a)).Select(a => (int?)a);
+                }
+                else
+                {
+                    // TODO: Ideally this list would be provided by the frontend, as it is expensive to do it here.
+                    // Get list of sub-agencies for any agency selected in the filter.
+                    filterAgencies = filter.Agencies.Select(a => (int?)a);
+                }
+                if (filterAgencies.Any())
+                {
+                    var agencies = filterAgencies.Concat(context.Agencies.AsNoTracking().Where(a => filterAgencies.Contains(a.Id)).SelectMany(a => a.Children.Select(ac => (int?)ac.Id)).ToArray()).Distinct();
+                    query = query.Where(p => agencies.Contains(p.AgencyId));
+                }
             }
             if (filter.ParcelId.HasValue)
                 query = query.Where(p => p.ParcelId == filter.ParcelId);
@@ -301,6 +332,38 @@ namespace Pims.Dal.Helpers.Extensions
             // properties may be in the same agency or sub-agency of a project. A parcel in a parent agency may not be added to a sub-agency project.
             if (!parcel.AgencyId.HasValue || !projectAgencyIds.Contains(parcel.AgencyId.Value))
                 throw new InvalidOperationException("Properties may not be added to Projects with a different agency.");
+        }
+
+        /// <summary>
+        /// Throw an exception if the passed property is in an SPP project that is in a non-draft status.
+        /// </summary>
+        /// <param name="property"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public static void ThrowIfPropertyInSppProject(this Entity.Property property, ClaimsPrincipal user)
+        {
+            var isAdmin = user.HasPermission(Permissions.AdminProperties);
+            if (!isAdmin && property?.ProjectNumbers?.Contains("SPP") == true) throw new NotAuthorizedException("User may not remove buildings that are in a SPP Project.");
+        }
+
+        /// <summary>
+        /// Get the latest workflow associated to this property, using the workflow sort order.
+        /// </summary>
+        /// <param name="property"></param>
+        /// <returns>The workflow code of the latest workflow associated to this property</returns>
+        public static String GetLatestWorkflowCode(this Entity.Property property)
+        {
+            if (property is Entity.Parcel parcel && parcel.Projects.Select(pp => pp.Project).Any())
+            {
+                return parcel.Projects.Select(pp => pp.Project).
+                    Aggregate((Entity.Project projectWithLatestWorkflow, Entity.Project current) => current.Workflow.SortOrder > projectWithLatestWorkflow.Workflow.SortOrder ? current : projectWithLatestWorkflow).Workflow.Code;
+            }
+            else if (property is Entity.Building building && building.Projects.Select(pp => pp.Project).Any())
+            {
+                return building.Projects.Select(pp => pp.Project).
+                    Aggregate((Entity.Project projectWithLatestWorkflow, Entity.Project current) => current.Workflow.SortOrder > projectWithLatestWorkflow.Workflow.SortOrder ? current : projectWithLatestWorkflow).Workflow.Code;
+            }
+            return null;
         }
 
         /// <summary>

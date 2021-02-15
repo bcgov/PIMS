@@ -8,6 +8,7 @@ import LayersTree from './LayersTree';
 import * as L from 'leaflet';
 import { useEffect } from 'react';
 import TooltipWrapper from 'components/common/TooltipWrapper';
+import variables from '_variables.module.scss';
 
 const LayersContainer = styled.div`
   margin-right: -10px;
@@ -30,7 +31,7 @@ const LayersContainer = styled.div`
 const LayersHeader = styled.div`
   width: 100%;
   height: 80px;
-  background-color: #1a5a96;
+  background-color: ${variables.slideOutBlue};
   color: #fff;
   display: flex;
   flex-direction: column;
@@ -70,8 +71,8 @@ const ControlButton = styled(Button)`
   top: 0;
   left: -51px;
   background-color: #fff;
-  color: #1a5a96;
-  border-color: #1a5a96;
+  color: ${variables.slideOutBlue};
+  border-color: ${variables.slideOutBlue};
   box-shadow: -2px 1px 4px rgba(0, 0, 0, 0.2);
   &.open {
     border-top-right-radius: 0;

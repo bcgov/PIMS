@@ -14,35 +14,44 @@ const UpdateText = styled.p`
   padding: 1rem;
   display: flex;
   justify-content: flex-end;
+  margin-bottom: 0px;
 `;
 
 const LinkButton = styled.span`
-  background: none;
-  border: none;
-  padding: 0;
-  color: #069;
+  color: #18548c;
   text-decoration: underline;
+  max-width: 200px;
 `;
 
 /**
  * Display formatted last update user name, email, and date/time.
  */
-const LastUpdatedBy: React.FunctionComponent<ILastUpdatedByProps> = ({
+const LastUpdatedBy: React.FC<ILastUpdatedByProps> = ({
   createdOn,
   updatedOn,
   updatedByName,
   updatedByEmail,
 }) => {
-  return updatedOn || createdOn ? (
-    <UpdateText>
-      Last Updated By:&nbsp;
-      <TooltipWrapper toolTipId="lastUpdatedEmail" toolTip={updatedByEmail ?? 'unknown'}>
-        <LinkButton>{updatedByName ?? 'unknown'}</LinkButton>
-      </TooltipWrapper>
-      &nbsp;
-      {formatApiDateTime(updatedOn ?? createdOn)}
-    </UpdateText>
-  ) : null;
+  if (updatedOn) {
+    return (
+      <UpdateText>
+        Last Updated By:&nbsp;
+        <TooltipWrapper toolTipId="lastUpdatedEmail" toolTip={updatedByEmail ?? undefined}>
+          <LinkButton>{updatedByName ?? 'unknown'}</LinkButton>
+        </TooltipWrapper>
+        &nbsp;
+        {formatApiDateTime(updatedOn)}
+      </UpdateText>
+    );
+  } else if (createdOn) {
+    return (
+      <UpdateText>
+        Created On:&nbsp;
+        {formatApiDateTime(createdOn)}
+      </UpdateText>
+    );
+  }
+  return null;
 };
 
 export default LastUpdatedBy;

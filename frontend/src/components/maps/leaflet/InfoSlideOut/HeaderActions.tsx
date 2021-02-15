@@ -1,22 +1,22 @@
 import styled from 'styled-components';
 import * as React from 'react';
 import { Row } from 'react-bootstrap';
-import { IBuilding, IParcel, PropertyTypes } from 'actions/parcelsActions';
+import { IBuilding, IParcel } from 'actions/parcelsActions';
 import { Link, useLocation } from 'react-router-dom';
 import queryString from 'query-string';
-import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
-import Claims from 'constants/claims';
+import variables from '_variables.module.scss';
+import { PropertyTypes } from 'constants/propertyTypes';
 
 const LinkMenu = styled(Row)`
-  background-color: #f2f2f2;
+  background-color: ${variables.filterBackgroundColor};
   height: 35px;
   width: 322px;
-  margin-left: -10px;
+  margin: 0px 0px 5px -10px;
   font-size: 14px;
   padding: 10px;
   a {
     padding: 0px 10px;
-    color: #1a5a96;
+    color: ${variables.slideOutBlue};
   }
 `;
 
@@ -34,6 +34,10 @@ interface IHeaderActions {
   zoomToView: () => void;
   /** additional action to be taken when a link in the menu is clicked */
   onLinkClick?: () => void;
+  /** whether the user has the correct agency/permissions to view all the details */
+  canViewDetails: boolean;
+  /** whether the user has the correct agency/permissions to edit property details */
+  canEditDetails: boolean;
 }
 
 /**
@@ -41,6 +45,8 @@ interface IHeaderActions {
  * @param propertyInfo the selected property information
  * @param propertyTypeId the selected property type
  * @param onLinkClick additional action on menu item click
+ * @param canViewDetails user can view all property details
+ * @param canEditDetails user can edit property details
  */
 const HeaderActions: React.FC<IHeaderActions> = ({
   propertyInfo,
@@ -48,17 +54,21 @@ const HeaderActions: React.FC<IHeaderActions> = ({
   onLinkClick,
   jumpToView,
   zoomToView,
+  canViewDetails,
+  canEditDetails,
 }) => {
   const location = useLocation();
-  const keycloak = useKeycloakWrapper();
 
   const buildingId = propertyTypeId === PropertyTypes.BUILDING ? propertyInfo?.id : undefined;
-  const parcelId = propertyTypeId === PropertyTypes.PARCEL ? propertyInfo?.id : undefined;
+  const parcelId = [PropertyTypes.PARCEL, PropertyTypes.SUBDIVISION].includes(
+    propertyTypeId as PropertyTypes,
+  )
+    ? propertyInfo?.id
+    : undefined;
   return (
     <LinkMenu>
       Actions:
-      {(keycloak.hasAgency(propertyInfo?.agencyId as number) ||
-        keycloak.hasClaim(Claims.ADMIN_PROPERTIES)) && (
+      {canViewDetails && (
         <>
           <Link
             onClick={() => {
@@ -79,26 +89,31 @@ const HeaderActions: React.FC<IHeaderActions> = ({
           >
             View details
           </Link>
-          <VerticalBar />
-          <Link
-            onClick={() => {
-              jumpToView();
-              if (onLinkClick) onLinkClick();
-            }}
-            to={{
-              pathname: `/mapview`,
-              search: queryString.stringify({
-                ...queryString.parse(location.search),
-                disabled: false,
-                sidebar: true,
-                loadDraft: false,
-                buildingId: buildingId,
-                parcelId: parcelId,
-              }),
-            }}
-          >
-            Update
-          </Link>
+
+          {canEditDetails && (
+            <>
+              <VerticalBar />
+              <Link
+                onClick={() => {
+                  jumpToView();
+                  if (onLinkClick) onLinkClick();
+                }}
+                to={{
+                  pathname: `/mapview`,
+                  search: queryString.stringify({
+                    ...queryString.parse(location.search),
+                    disabled: false,
+                    sidebar: true,
+                    loadDraft: false,
+                    buildingId: buildingId,
+                    parcelId: parcelId,
+                  }),
+                }}
+              >
+                Update
+              </Link>
+            </>
+          )}
           <VerticalBar />
         </>
       )}
