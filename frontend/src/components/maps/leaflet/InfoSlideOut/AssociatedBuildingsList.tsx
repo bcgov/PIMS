@@ -35,7 +35,7 @@ export const AssociatedBuildingsList: React.FC<IAssociatedBuildings> = ({
           Associated Buildings
         </Label>
         <ListGroup.Item>Click a building name to view its details</ListGroup.Item>
-        {propertyInfo?.buildings.map((building, buildingId) => (
+        {propertyInfo?.buildings?.map((building, buildingId) => (
           <ListGroup.Item key={buildingId}>
             <Link
               className="styled-link"
