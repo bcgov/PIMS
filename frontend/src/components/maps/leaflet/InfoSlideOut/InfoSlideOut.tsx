@@ -152,9 +152,9 @@ const InfoControl: React.FC<InfoControlProps> = ({ open, setOpen, onHeaderAction
   });
 
   //whether the associated buildings info is open
-  const [buildingsOpen, setBuildingsOpen] = React.useState<boolean>(false);
-  //whether the general parcel info is open
-  const [parcelInfoOpen, setParcelInfoOpen] = React.useState<boolean>(true);
+  const [asscBuildingsOpen, setAsscBuildingsOpen] = React.useState<boolean>(false);
+  //whether the general info is open
+  const [generalInfoOpen, setGeneralInfoOpen] = React.useState<boolean>(true);
 
   const addAssociatedBuildingLink = (
     <>
@@ -185,7 +185,7 @@ const InfoControl: React.FC<InfoControlProps> = ({ open, setOpen, onHeaderAction
 
   const renderContent = () => {
     if (popUpContext.propertyInfo) {
-      if (parcelInfoOpen) {
+      if (generalInfoOpen || popUpContext.propertyTypeID === PropertyTypes.BUILDING) {
         return (
           <>
             <HeaderActions
@@ -204,7 +204,11 @@ const InfoControl: React.FC<InfoControlProps> = ({ open, setOpen, onHeaderAction
             />
           </>
         );
-      } else if (buildingsOpen && canViewProperty) {
+      } else if (
+        asscBuildingsOpen &&
+        canViewProperty &&
+        popUpContext.propertyTypeID === PropertyTypes.PARCEL
+      ) {
         return (
           <AssociatedBuildingsList
             propertyInfo={popUpContext.propertyInfo as IParcel}
@@ -237,11 +241,11 @@ const InfoControl: React.FC<InfoControlProps> = ({ open, setOpen, onHeaderAction
             onClick={() => {
               if (!open) {
                 setOpen(true);
-                setParcelInfoOpen(true);
-                setBuildingsOpen(false);
-              } else if (open && !parcelInfoOpen) {
-                setParcelInfoOpen(true);
-                setBuildingsOpen(false);
+                setGeneralInfoOpen(true);
+                setAsscBuildingsOpen(false);
+              } else if (open && !generalInfoOpen) {
+                setGeneralInfoOpen(true);
+                setAsscBuildingsOpen(false);
               } else {
                 setOpen(false); //close the slide out
               }
@@ -261,8 +265,8 @@ const InfoControl: React.FC<InfoControlProps> = ({ open, setOpen, onHeaderAction
                 variant="outline-secondary"
                 className={clsx({ open })}
                 onClick={() => {
-                  setBuildingsOpen(true);
-                  setParcelInfoOpen(false);
+                  setAsscBuildingsOpen(true);
+                  setGeneralInfoOpen(false);
                 }}
               >
                 <BuildingSvg className="svg" />
