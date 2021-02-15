@@ -219,10 +219,9 @@ namespace Pims.Dal.Services
         {
             this.User.ThrowIfNotAuthorized(Permissions.ReportsSpl);
             var report = Get(reportId);
-
-            var generatedSnapshots = GenerateSnapshots(report.From, DateTime.UtcNow);
-
-            return generatedSnapshots;
+            report.To = DateTime.UtcNow;
+            this.Update(report);
+            return this.GetSnapshots(reportId);
         }
 
         /// <summary>
