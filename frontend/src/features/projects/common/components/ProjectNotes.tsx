@@ -3,6 +3,7 @@ import { Form } from 'react-bootstrap';
 import { TextArea } from 'components/common/form';
 import './ProjectNotes.scss';
 import { NoteTypes } from 'constants/noteTypes';
+import styled from 'styled-components';
 
 export interface IProjectNotesProps {
   /** The formik field name by default this is notes */
@@ -17,7 +18,15 @@ export interface IProjectNotesProps {
   tooltip?: string;
   /** whether or not this text box can be interaced with */
   disabled?: boolean;
+  /** comment below label */
+  comment?: string;
 }
+
+const Comment = styled.div`
+  font-size: 12px;
+  margin-top: -100px;
+  max-width: 16.7%;
+`;
 
 /**
  * Simple notes component intended for use with formik - ensures consistent cross step styling.
@@ -30,6 +39,7 @@ export default function ProjectNotes({
   className,
   outerClassName,
   disabled,
+  comment,
 }: IProjectNotesProps) {
   return (
     <Form.Row className="ProjectNotes">
@@ -42,6 +52,7 @@ export default function ProjectNotes({
         className={className ?? 'col-md-5'}
         outerClassName={outerClassName ?? 'col-md-10'}
       />
+      {!!comment && <Comment>{comment}</Comment>}
     </Form.Row>
   );
 }
