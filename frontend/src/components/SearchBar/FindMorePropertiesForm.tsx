@@ -7,7 +7,7 @@ import { mapLookupCode } from 'utils';
 import * as API from 'constants/API';
 import styled from 'styled-components';
 import { Container, Form, Row } from 'react-bootstrap';
-import { Button, Check, Input, Select } from 'components/common/form';
+import { Button, Check, DisplayError, Input, Select } from 'components/common/form';
 import _ from 'lodash';
 import { getIn, useFormikContext } from 'formik';
 import { TypeaheadField } from 'components/common/form/Typeahead';
@@ -65,14 +65,27 @@ const StyledLocation = styled(props => <TypeaheadField {...props} />)`
   width: 250px;
   margin-left: 60px;
 `;
+
+/** the area where invalid feedback or ERP/SPL selection will be displayed */
+const InvalidFeedback = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: row-reverse;
+  margin: 0.5rem 0;
+  text-align: center;
+  .invalid-feedback {
+    display: block;
+  }
+`;
 /** This form is triggered by the FindMorePropertiesButton and contains additional filter fields for the PropertiesFilter */
 const FindMorePropertiesForm = <T extends any>(props: any) => {
   const lookupCodes = useSelector<RootState, ILookupCode[]>(
     state => (state.lookupCode as ILookupCodeState).lookupCodes,
   );
 
-  const { setFieldValue } = useFormikContext<any>();
+  const { setFieldValue, handleSubmit, errors } = useFormikContext<any>();
   const [clear, setClear] = useState(false);
+  const [displayError, setDisplayError] = useState(false);
 
   const predominateUses = _.filter(lookupCodes, (lookupCode: ILookupCode) => {
     return lookupCode.type === API.PREDOMINATE_USE_CODE_SET_NAME;
@@ -82,7 +95,13 @@ const FindMorePropertiesForm = <T extends any>(props: any) => {
   });
   const adminAreas = (administrativeAreas ?? []).map(c => mapLookupCode(c, null));
 
-  const { handleSubmit } = useFormikContext();
+  /** attempt submission of search, display errors if present */
+  const handleSearch = () => {
+    handleSubmit();
+    if (errors) {
+      setDisplayError(true);
+    }
+  };
 
   return (
     <>
@@ -102,7 +121,13 @@ const FindMorePropertiesForm = <T extends any>(props: any) => {
         </a>
       </p>
       <FormSection>
-        <StyledRow style={{ marginLeft: 140, paddingTop: 10 }}>
+        {displayError && (
+          <InvalidFeedback>
+            <DisplayError errorPrompt field="inSurplusPropertyProgram" />
+          </InvalidFeedback>
+        )}
+
+        <StyledRow style={{ marginLeft: 115, paddingTop: 10 }}>
           <Check label="ERP Properties" field="inEnhancedReferralProcess" />
           <VerticalLine />
           <Check label="SPL Properties" field="inSurplusPropertyProgram" />
@@ -158,7 +183,13 @@ const FindMorePropertiesForm = <T extends any>(props: any) => {
         </StyledRow>
       </FormSection>
       <Row>
-        <SearchButton onClick={handleSubmit}>Search</SearchButton>
+        <SearchButton
+          onClick={() => {
+            handleSearch();
+          }}
+        >
+          Search
+        </SearchButton>
       </Row>
     </>
   );

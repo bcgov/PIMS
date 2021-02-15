@@ -101,6 +101,7 @@ const defaultFilterValues: IPropertyFilter = {
   maxMarketValue: '',
   maxNetBookValue: '',
   includeAllProperties: false,
+  surplusFilter: false,
 };
 
 /**

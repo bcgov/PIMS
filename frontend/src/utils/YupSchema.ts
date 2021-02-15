@@ -245,18 +245,49 @@ export const ParcelSchema = Yup.object()
   )
   .concat(LandSchema);
 
-export const FilterBarSchema = Yup.object().shape({
-  minLotSize: Yup.number()
-    .typeError('Invalid')
-    .positive('Must be greater than 0')
-    .max(200000, 'Invalid'),
-  maxLotSize: Yup.number()
-    .typeError('Invalid')
-    .positive('Must be greater than 0')
-    .max(200000, 'Invalid')
-    /* Reference minLotSize field in validating maxLotSize value */
-    .moreThan(Yup.ref('minLotSize'), 'Must be greater than Min Lot Size'),
-});
+export const FilterBarSchema = Yup.object().shape(
+  {
+    minLotSize: Yup.number()
+      .typeError('Invalid')
+      .positive('Must be greater than 0')
+      .max(200000, 'Invalid'),
+    maxLotSize: Yup.number()
+      .typeError('Invalid')
+      .positive('Must be greater than 0')
+      .max(200000, 'Invalid')
+      /* Reference minLotSize field in validating maxLotSize value */
+      .moreThan(Yup.ref('minLotSize'), 'Must be greater than Min Lot Size'),
+    inEnhancedReferralProcess: Yup.boolean().when(['inSurplusPropertyProgram', 'surplusFilter'], {
+      is: (inSurplusPropertyProgram, surplusFilter) => {
+        if (!surplusFilter) {
+          return true;
+        }
+        if (inSurplusPropertyProgram) {
+          return true;
+        }
+      },
+      then: Yup.boolean().nullable(),
+      otherwise: Yup.boolean().required(
+        'ERP or SPL Properties required when using the Surplus Properties filter.',
+      ),
+    }),
+    inSurplusPropertyProgram: Yup.boolean().when(['inEnhancedReferralProcess', 'surplusFilter'], {
+      is: (inEnhancedReferralProcess, surplusFilter) => {
+        if (!surplusFilter) {
+          return true;
+        }
+        if (inEnhancedReferralProcess) {
+          return true;
+        }
+      },
+      then: Yup.boolean().nullable(),
+      otherwise: Yup.boolean().required(
+        'ERP or SPL Properties required when using the Surplus Properties filter.',
+      ),
+    }),
+  },
+  [['inSurplusPropertyProgram', 'inEnhancedReferralProcess']],
+);
 
 export const AssociatedLandOwnershipSchema = Yup.object().shape({
   type: Yup.number().required('Choose an option'),

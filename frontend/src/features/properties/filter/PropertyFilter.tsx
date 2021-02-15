@@ -154,13 +154,19 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
         setSubmitting(false);
       }}
     >
-      {({ isSubmitting, handleReset, handleSubmit, setFieldValue, values }) => (
+      {({ isSubmitting, setFieldValue, values }) => (
         <Form>
           <Form.Row className="map-filter-bar">
             <FindMorePropertiesButton
               buttonText="Find available surplus properties"
-              onEnter={() => setFindMoreOpen(true)}
-              onExit={() => setFindMoreOpen(false)}
+              onEnter={() => {
+                setFindMoreOpen(true);
+                setFieldValue('surplusFilter', true);
+              }}
+              onExit={() => {
+                setFindMoreOpen(false);
+                setFieldValue('surplusFilter', false);
+              }}
             />
             <div className="vl"></div>
 
