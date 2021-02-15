@@ -47,7 +47,7 @@ const getPropertyReportUrl = (filter: IPropertyQueryParams) =>
   `${ENVIRONMENT.apiUrl}/reports/properties?${filter ? queryString.stringify(filter) : ''}`;
 
 const getAllFieldsPropertyReportUrl = (filter: IPropertyQueryParams) =>
-  `${ENVIRONMENT.apiUrl}/reports/properties/allfields?${
+  `${ENVIRONMENT.apiUrl}/reports/properties/all/fields?${
     filter ? queryString.stringify(filter) : ''
   }`;
 

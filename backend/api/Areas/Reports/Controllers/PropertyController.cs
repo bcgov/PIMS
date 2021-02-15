@@ -2,7 +2,6 @@ using MapsterMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
-using Pims.Api.Areas.Reports.Models.Property;
 using Pims.Api.Helpers.Constants;
 using Pims.Api.Helpers.Exceptions;
 using Pims.Api.Helpers.Extensions;
@@ -67,24 +66,6 @@ namespace Pims.Api.Areas.Reports.Controllers
         }
 
         /// <summary>
-        /// Exports properties with all fields as an Excel file, only available for SRES
-        /// Include 'Accept' header to request the appropriate export
-        /// </summary>
-        /// <param name="all"></param>
-        /// <returns></returns>
-        [HttpGet("allfields")]
-        [HasPermission(Permissions.AdminProperties)]
-        [Produces(ContentTypes.CONTENT_TYPE_EXCELX)]
-        [ProducesResponseType(200)]
-        [SwaggerOperation(Tags = new[] { "property", "report" })]
-        public IActionResult ExportPropertiesAllFields(bool all = false)
-        {
-            var uri = new Uri(this.Request.GetDisplayUrl());
-            var query = Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(uri.Query);
-            return ExportPropertiesAllFields(new Property.Models.Search.PropertyFilterModel(query), all);
-        }
-
-        /// <summary>
         /// Exports properties as CSV or Excel file.
         /// Include 'Accept' header to request the appropriate export -
         ///     ["text/csv", "application/application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"]
@@ -117,6 +98,26 @@ namespace Pims.Api.Areas.Reports.Controllers
             };
 
         }
+
+        #region Return All Properties
+        /// <summary>
+        /// Exports properties with all fields as an Excel file, only available for SRES
+        /// Include 'Accept' header to request the appropriate export
+        /// </summary>
+        /// <param name="all"></param>
+        /// <returns></returns>
+        [HttpGet("all/fields")]
+        [HasPermission(Permissions.AdminProperties)]
+        [Produces(ContentTypes.CONTENT_TYPE_EXCELX)]
+        [ProducesResponseType(200)]
+        [SwaggerOperation(Tags = new[] { "property", "report" })]
+        public IActionResult ExportPropertiesAllFields(bool all = false)
+        {
+            var uri = new Uri(this.Request.GetDisplayUrl());
+            var query = Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(uri.Query);
+            return ExportPropertiesAllFields(new Property.Models.Search.PropertyFilterModel(query), all);
+        }
+
         /// <summary>
         /// Exports properties as Excel file. Has more fields than default export.
         /// Only available for SRES
@@ -125,8 +126,8 @@ namespace Pims.Api.Areas.Reports.Controllers
         /// <param name="filter"></param>
         /// <param name="all"></param>
         /// <returns></returns>
-        [HttpPost("filter/allfields")]
-        [HasPermission(Permissions.AdminProjects)]
+        [HttpPost("all/fields/filter")]
+        [HasPermission(Permissions.AdminProperties)]
         [Produces(ContentTypes.CONTENT_TYPE_EXCELX)]
         [ProducesResponseType(200)]
         [SwaggerOperation(Tags = new[] { "property", "report" })]
@@ -145,6 +146,7 @@ namespace Pims.Api.Areas.Reports.Controllers
 
             return ReportHelper.GenerateExcel(report.Items, "PIMS");
         }
+        #endregion
         #endregion
         #endregion
     }
