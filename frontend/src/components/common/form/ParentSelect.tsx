@@ -127,7 +127,8 @@ export const ParentSelect: React.FC<IParentSelect> = ({
         hideValidation
         required={required}
         renderMenu={(results, menuProps) => {
-          const parents = groupBy(
+          /** group the results by their desired parents */
+          const resultGroup = groupBy(
             results.map((x: SelectOption) => {
               return {
                 ...x,
@@ -136,28 +137,30 @@ export const ParentSelect: React.FC<IParentSelect> = ({
             }),
             x => x.parentId,
           );
-          const items = Object.keys(parents)
+          const items = Object.keys(resultGroup)
             .sort()
-            .map(parent => (
-              <Fragment key={parent}>
-                {!!results.find((x: SelectOption) => x.value === parent) && (
+            .map(parentId => (
+              <Fragment key={parentId}>
+                {!!results.find((x: SelectOption) => x.parentId === +parentId) && (
                   <Menu.Header
                     onClick={() =>
                       enableMultiple
                         ? handleMultiSelectHeaderClick(
-                            results.filter(x => x.parentId?.toString() === parent),
+                            results.filter(x => x.parentId === +parentId),
                           )
-                        : handleMenuHeaderClick(results.find(x => x.value === parent)!)
+                        : handleMenuHeaderClick(results.find(x => x.value === parentId)!)
                     }
                   >
                     <b style={{ cursor: 'pointer' }}>
+                      {/* project statuses has a different way of selecting parent value*/}
                       {field === 'statusId'
-                        ? results.find(x => x.parentId?.toString() === parent)?.parent
-                        : results.find(x => x.value === parent)?.label}
+                        ? results.find(x => x.parentId === +parentId)?.parent
+                        : results.find(x => x.value === parentId)?.label}
                     </b>
                   </Menu.Header>
                 )}
-                {sortBy(parents[parent], (x: SelectOption) => x.value).map((i, index) => {
+                {/* sorting results by value of the dropdown item */}
+                {sortBy(resultGroup[parentId], (x: SelectOption) => x.value).map((i, index) => {
                   if (i.parent) {
                     return (
                       <MenuItem key={index + 1} option={i} position={index + 1}>
