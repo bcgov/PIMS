@@ -25,6 +25,10 @@ namespace Pims.Dal.Helpers.Extensions
         /// <exception type="DbUpdateException">The PID and PIN must be unique.</exception>
         public static void ThrowIfNotUnique(this DbSet<Entity.Parcel> parcels, Entity.Parcel parcel)
         {
+            if(parcel.PropertyTypeId == (int)Entity.PropertyTypes.Subdivision)
+            {
+                return;
+            }
             var alreadyExists = parcels.Any(p => p.Id != parcel.Id && ((parcel.PID > 0 && p.PID == parcel.PID) || (parcel.PIN != null && p.PIN == parcel.PIN)));
             if (alreadyExists) throw new DbUpdateException("PID and PIN values must be unique.");
         }
