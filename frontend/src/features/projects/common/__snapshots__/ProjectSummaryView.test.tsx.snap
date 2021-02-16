@@ -813,8 +813,7 @@ exports[`Review Summary View renders approved correctly 1`] = `
             className="form-label"
             htmlFor="input-confirmation"
           >
-            I, Pims User, confirm by checking this box that I have received the approval 
-  to request the property be submitted to the Enhanced Referral Program and marketed internally to other Ministry 
+            My Ministry/Agency has received approval to request the property be submitted to the Enhanced Referral Program and marketed internally to other Ministry 
   and Broader Public Sector Agencies for 90 days before listing the property to be sold on the public commercial real estate market
           </label>
         </div>
@@ -1803,8 +1802,7 @@ exports[`Review Summary View renders denied correctly 1`] = `
             className="form-label"
             htmlFor="input-confirmation"
           >
-            I, Pims User, confirm by checking this box that I have received the approval 
-  to request the property be submitted to the Enhanced Referral Program and marketed internally to other Ministry 
+            My Ministry/Agency has received approval to request the property be submitted to the Enhanced Referral Program and marketed internally to other Ministry 
   and Broader Public Sector Agencies for 90 days before listing the property to be sold on the public commercial real estate market
           </label>
         </div>
@@ -2793,8 +2791,7 @@ exports[`Review Summary View renders submitted correctly 1`] = `
             className="form-label"
             htmlFor="input-confirmation"
           >
-            I, Pims User, confirm by checking this box that I have received the approval 
-  to request the property be submitted to the Enhanced Referral Program and marketed internally to other Ministry 
+            My Ministry/Agency has received approval to request the property be submitted to the Enhanced Referral Program and marketed internally to other Ministry 
   and Broader Public Sector Agencies for 90 days before listing the property to be sold on the public commercial real estate market
           </label>
         </div>
