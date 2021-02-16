@@ -47,6 +47,7 @@ import { stringToNull } from 'utils';
 import variables from '_variables.module.scss';
 import LastUpdatedBy from 'features/properties/components/LastUpdatedBy';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
+import { PropertyTypes } from 'constants/index';
 
 const Container = styled.div`
   background-color: #fff;
@@ -352,7 +353,12 @@ const LandForm: React.FC<IParentLandForm> = (props: IParentLandForm) => {
     );
 
     let pidDuplicated = false;
-    if (values.data.pid && initialValues.data.pid !== values.data.pid && !values.data.id) {
+    if (
+      values.data.pid &&
+      initialValues.data.pid !== values.data.pid &&
+      !values.data.id &&
+      values.data.propertyTypeId !== PropertyTypes.SUBDIVISION
+    ) {
       pidDuplicated = !(await isPidAvailable(values.data));
     }
 
@@ -361,7 +367,8 @@ const LandForm: React.FC<IParentLandForm> = (props: IParentLandForm) => {
       values.data.pin &&
       initialValues.data.pin !== values.data.pin &&
       values.data.pin.toString().length < 10 &&
-      !values.data.id
+      !values.data.id &&
+      values.data.propertyTypeId !== PropertyTypes.SUBDIVISION
     ) {
       pinDuplicated = !(await isPinAvailable(values.data));
     }
