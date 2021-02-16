@@ -37,6 +37,7 @@ const MovePinForm = ({ setMovingPinNameSpace, nameSpace }: IMovePinFormProps) =>
             }}
           >
             <SearchMarkerButton
+              type="button"
               onClick={(e: any) => {
                 setMovingPinNameSpace(nameSpace ?? '');
                 e.preventDefault();

@@ -150,6 +150,7 @@ const LandSearchForm = ({
               }}
             >
               <SearchMarkerButton
+                type="button"
                 onClick={(e: any) => {
                   setMovingPinNameSpace(nameSpace ?? '');
                   e.preventDefault();
