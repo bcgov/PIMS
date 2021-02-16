@@ -249,7 +249,14 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
       if (isParcel) {
         const query: any = { pin: properties?.PIN, pid: properties.PID };
         fetchParcelsDetail(query)(dispatch).then((resp: any) => {
-          const matchingParcel: any = resp?.data?.length ? _.first(resp?.data) : undefined;
+          const matchingParcel: any = resp?.data?.length
+            ? _.first(
+                _.filter(
+                  resp.data,
+                  (parcel: IParcel) => parcel.propertyTypeId === PropertyTypes.PARCEL,
+                ),
+              )
+            : undefined;
           if (!!nameSpace && !!formikRef?.current?.values && !!matchingParcel?.id && isParcel) {
             formikParcelDataPopulateCallback(matchingParcel, nameSpace);
           } else {
