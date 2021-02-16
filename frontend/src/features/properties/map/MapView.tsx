@@ -5,18 +5,16 @@ import { Map as LeafletMap } from 'react-leaflet';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'reducers/rootReducer';
 import { IProperty, storeParcelDetail, IPropertyDetail } from 'actions/parcelsActions';
-import { ILookupCodeState } from 'reducers/lookupCodeReducer';
-import { ILookupCode } from 'actions/lookupActions';
 import { LeafletMouseEvent } from 'leaflet';
 import useParamSideBar from '../../mapSideBar/hooks/useQueryParamSideBar';
 import { saveClickLatLng as saveLeafletMouseEvent } from 'reducers/LeafletMouseSlice';
 import * as API from 'constants/API';
-import _ from 'lodash';
 import MapSideBarContainer from 'features/mapSideBar/containers/MapSideBarContainer';
 import classNames from 'classnames';
 import { FilterProvider } from 'components/maps/providers/FIlterProvider';
 import { useLocation } from 'react-router-dom';
 import queryString from 'query-string';
+import useCodeLookups from 'hooks/useLookupCodes';
 
 /** rough center of bc Itcha Ilgachuz Provincial Park */
 const defaultLatLng = {
@@ -39,24 +37,16 @@ interface MapViewProps {
 }
 
 const MapView: React.FC<MapViewProps> = (props: MapViewProps) => {
+  const lookupCodes = useCodeLookups();
   const properties = useSelector<RootState, IProperty[]>(state => [...state.parcel.parcels]);
   const [loadedProperties, setLoadedProperties] = useState(false);
   const mapRef = useRef<LeafletMap>(null);
   const propertyDetail = useSelector<RootState, IPropertyDetail | null>(
     state => state.parcel.parcelDetail,
   );
-  const lookupCodes = useSelector<RootState, ILookupCode[]>(
-    state => (state.lookupCode as ILookupCodeState).lookupCodes,
-  );
-  const agencies = _.filter(lookupCodes, (lookupCode: ILookupCode) => {
-    return lookupCode.type === API.AGENCY_CODE_SET_NAME;
-  });
-  const propertyClassifications = _.filter(lookupCodes, (lookupCode: ILookupCode) => {
-    return lookupCode.type === API.PROPERTY_CLASSIFICATION_CODE_SET_NAME && !!lookupCode.isVisible;
-  });
-  const administrativeAreas = _.filter(lookupCodes, (lookupCode: ILookupCode) => {
-    return lookupCode.type === API.AMINISTRATIVE_AREA_CODE_SET_NAME;
-  });
+  const agencies = lookupCodes.getByType(API.AGENCY_CODE_SET_NAME);
+  const propertyClassifications = lookupCodes.getByType(API.PROPERTY_CLASSIFICATION_CODE_SET_NAME);
+  const administrativeAreas = lookupCodes.getByType(API.AMINISTRATIVE_AREA_CODE_SET_NAME);
 
   const lotSizes = fetchLotSizes();
   const dispatch = useDispatch();
