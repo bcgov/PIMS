@@ -191,7 +191,12 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
   ) => {
     return fetchParcelsDetail(pidOrPin)(dispatch).then(resp => {
       const matchingParcel: (IParcel & ISearchFields) | undefined = resp?.data?.length
-        ? _.first(resp.data)
+        ? _.first(
+            _.filter(
+              resp.data,
+              (parcel: IParcel) => parcel.propertyTypeId === PropertyTypes.PARCEL,
+            ),
+          )
         : undefined;
       if (!!formikRef?.current?.values && !!matchingParcel?.id) {
         formikDataPopulateCallback(matchingParcel, nameSpace);
