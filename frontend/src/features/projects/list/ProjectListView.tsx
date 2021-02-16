@@ -1,13 +1,10 @@
 import './ProjectListView.scss';
 
-import React, { useState, useMemo, useRef, useCallback, useEffect } from 'react';
+import React, { useState, useMemo, useRef, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Container } from 'react-bootstrap';
-import _ from 'lodash';
 import * as API from 'constants/API';
 import { RootState } from 'reducers/rootReducer';
-import { ILookupCode } from 'actions/lookupActions';
-import { ILookupCodeState } from 'reducers/lookupCodeReducer';
 import { IProjectFilter, IProject } from '.';
 import { columns as cols } from './columns';
 import { Table } from 'components/Table';
@@ -30,6 +27,8 @@ import styled from 'styled-components';
 import TooltipWrapper from 'components/common/TooltipWrapper';
 import { ParentSelect } from 'components/common/form/ParentSelect';
 import variables from '_variables.module.scss';
+import useCodeLookups from 'hooks/useLookupCodes';
+import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
 
 interface IProjectFilterState {
   name?: string;
@@ -94,17 +93,8 @@ interface IProps {
 }
 
 const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
-  // lookup codes, etc
-  const lookupCodes = useSelector<RootState, ILookupCode[]>(
-    state => (state.lookupCode as ILookupCodeState).lookupCodes,
-  );
-  const agencies = useMemo(
-    () =>
-      _.filter(lookupCodes, (lookupCode: ILookupCode) => {
-        return lookupCode.type === API.AGENCY_CODE_SET_NAME;
-      }),
-    [lookupCodes],
-  );
+  const lookupCodes = useCodeLookups();
+  const agencies = useMemo(() => lookupCodes.getByType(API.AGENCY_CODE_SET_NAME), [lookupCodes]);
   const projectStatuses = useSelector<RootState, IStatus[]>(state => state.statuses as any);
   const keycloak = useKeycloakWrapper();
   const [deleteId, setDeleteId] = React.useState<string | undefined>();
@@ -197,7 +187,7 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
   const route = history.location.pathname;
 
   // Listen for changes in pagination and use the state to fetch our new data
-  useEffect(() => {
+  useDeepCompareEffect(() => {
     route === '/projects/list' && dispatch(fetchProjectStatuses());
     fetchData({ pageIndex, pageSize, filter, agencyIds });
   }, [fetchData, pageIndex, pageSize, filter, agencyIds, dispatch, route]);

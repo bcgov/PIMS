@@ -1,9 +1,7 @@
 import './SelectProjectPropertiesStep.scss';
 
 import React, { useMemo, useCallback, useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
 import { Button, Container } from 'react-bootstrap';
-import { RootState } from 'reducers/rootReducer';
 import { Formik } from 'formik';
 import { useStepper, SelectProjectPropertiesStepYupSchema } from '..';
 import {
@@ -14,12 +12,10 @@ import {
   SelectProjectPropertiesForm,
 } from '../../common';
 import { ILookupCode } from 'actions/lookupActions';
-import { ILookupCodeState } from 'reducers/lookupCodeReducer';
 import * as API from 'constants/API';
-import _ from 'lodash';
-import useCodeLookups from 'hooks/useLookupCodes';
 import styled from 'styled-components';
 import { Classifications } from 'constants/classifications';
+import useCodeLookups from 'hooks/useLookupCodes';
 
 /** contains the link text for Show Surplus and Show All classification filter */
 const LinkButton = styled(Button)`
@@ -32,6 +28,7 @@ const LinkButton = styled(Button)`
  * @param param0 {isReadOnly formikRef} formikRef allow remote formik access, isReadOnly toggle to prevent updates.
  */
 const SelectProjectPropertiesStep = ({ isReadOnly, formikRef }: IStepProps) => {
+  const lookupCodes = useCodeLookups();
   // Filtering and pagination state
   const [filter, setFilter] = useState<IFilterBarState>({
     searchBy: 'address',
@@ -56,24 +53,13 @@ const SelectProjectPropertiesStep = ({ isReadOnly, formikRef }: IStepProps) => {
   const [pageIndex, setPageIndex] = useState(0);
   const { onSubmit, canUserEditForm } = useStepForm();
   const { project } = useStepper();
-  const lookupCodes = useSelector<RootState, ILookupCode[]>(
-    state => (state.lookupCode as ILookupCodeState).lookupCodes,
-  );
-  const agencies = useMemo(
-    () =>
-      _.filter(lookupCodes, (lookupCode: ILookupCode) => {
-        return lookupCode.type === API.AGENCY_CODE_SET_NAME;
-      }),
-    [lookupCodes],
-  );
+  const agencies = useMemo(() => lookupCodes.getByType(API.AGENCY_CODE_SET_NAME), [lookupCodes]);
   const filterByParent = useCodeLookups().filterByParent;
   const filteredAgencies: ILookupCode[] = useMemo(
     () => filterByParent(agencies, project.agencyId),
     [agencies, filterByParent, project.agencyId],
   );
-  const propertyClassifications = _.filter(lookupCodes, (lookupCode: ILookupCode) => {
-    return lookupCode.type === API.PROPERTY_CLASSIFICATION_CODE_SET_NAME;
-  });
+  const propertyClassifications = lookupCodes.getByType(API.PROPERTY_CLASSIFICATION_CODE_SET_NAME);
 
   // Update internal state whenever the filter bar state changes
   const handleFilterChange = useCallback(
