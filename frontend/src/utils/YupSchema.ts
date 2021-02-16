@@ -98,6 +98,7 @@ export const FinancialYear = Yup.object().shape({
 
 export const OccupancySchema = Yup.object().shape({
   rentableArea: Yup.number()
+    .min(1, 'Net Usable Area must be greater than 0')
     .max(Yup.ref('totalArea'), 'Net Usable Area cannot be larger than Total Area')
     .transform(emptyStringToNull)
     .required('Required'),
