@@ -45,6 +45,11 @@ describe('Approval Confirmation', () => {
     expect(getByLabelText('has received approval', { exact: false })).toBeDisabled();
   });
 
+  it('My ministry/agency displays for non SRES', () => {
+    const { getByText } = renderComponent(false);
+    expect(getByText('My Ministry/Agency', { exact: false })).toBeVisible();
+  });
+
   it('formik submitted values as expected', () => {
     const submitFn = jest.fn();
     act(() => {
