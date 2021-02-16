@@ -1,17 +1,13 @@
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
-import { RootState } from 'reducers/rootReducer';
-import { ILookupCode } from 'actions/lookupActions';
-import { ILookupCodeState } from 'reducers/lookupCodeReducer';
 import { mapLookupCode } from 'utils';
 import * as API from 'constants/API';
 import styled from 'styled-components';
 import { Container, Form, Row } from 'react-bootstrap';
 import { Button, Check, DisplayError, Input, Select } from 'components/common/form';
-import _ from 'lodash';
 import { getIn, useFormikContext } from 'formik';
 import { TypeaheadField } from 'components/common/form/Typeahead';
 import variables from '_variables.module.scss';
+import useCodeLookups from 'hooks/useLookupCodes';
 
 const StyledRow = styled(Row)`
   .form-group {
@@ -79,21 +75,17 @@ const InvalidFeedback = styled.div`
 `;
 /** This form is triggered by the FindMorePropertiesButton and contains additional filter fields for the PropertiesFilter */
 const FindMorePropertiesForm = <T extends any>(props: any) => {
-  const lookupCodes = useSelector<RootState, ILookupCode[]>(
-    state => (state.lookupCode as ILookupCodeState).lookupCodes,
-  );
-
+  const lookupCodes = useCodeLookups();
   const { setFieldValue, handleSubmit, errors } = useFormikContext<any>();
   const [clear, setClear] = useState(false);
   const [displayError, setDisplayError] = useState(false);
 
-  const predominateUses = _.filter(lookupCodes, (lookupCode: ILookupCode) => {
-    return lookupCode.type === API.PREDOMINATE_USE_CODE_SET_NAME;
-  }).map(mapLookupCode);
-  const administrativeAreas = _.filter(lookupCodes, (lookupCode: ILookupCode) => {
-    return lookupCode.type === API.AMINISTRATIVE_AREA_CODE_SET_NAME;
-  });
-  const adminAreas = (administrativeAreas ?? []).map(c => mapLookupCode(c, null));
+  const predominateUses = lookupCodes
+    .getByType(API.PREDOMINATE_USE_CODE_SET_NAME)
+    .map(mapLookupCode);
+  const adminAreas = lookupCodes
+    .getByType(API.AMINISTRATIVE_AREA_CODE_SET_NAME)
+    .map(c => mapLookupCode(c, null));
 
   /** attempt submission of search, display errors if present */
   const handleSearch = () => {

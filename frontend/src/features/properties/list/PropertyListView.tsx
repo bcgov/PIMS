@@ -1,16 +1,13 @@
 import './PropertyListView.scss';
-import React, { useState, useMemo, useRef, useCallback, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useState, useMemo, useRef, useCallback } from 'react';
+import { useDispatch } from 'react-redux';
 import { Container, Button } from 'react-bootstrap';
 import queryString from 'query-string';
-import _, { isEmpty } from 'lodash';
+import { isEmpty } from 'lodash';
 import * as API from 'constants/API';
 import { ENVIRONMENT } from 'constants/environment';
 import { decimalOrUndefined, mapLookupCode } from 'utils';
 import download from 'utils/download';
-import { RootState } from 'reducers/rootReducer';
-import { ILookupCode } from 'actions/lookupActions';
-import { ILookupCodeState } from 'reducers/lookupCodeReducer';
 import { IPropertyQueryParams, IProperty } from '.';
 import { columns as cols } from './columns';
 import { Table } from 'components/Table';
@@ -26,7 +23,6 @@ import { PropertyFilter } from '../filter';
 import { PropertyTypeNames } from '../../../constants/propertyTypeNames';
 import { IPropertyFilter } from '../filter/IPropertyFilter';
 import { SortDirection, TableSort } from 'components/Table/TableSort';
-import useCodeLookups from 'hooks/useLookupCodes';
 import { useRouterFilter } from 'hooks/useRouterFilter';
 import { Form, Formik, FormikProps, getIn, useFormikContext } from 'formik';
 import {
@@ -42,6 +38,8 @@ import { FiscalKeys } from 'constants/fiscalKeys';
 import variables from '_variables.module.scss';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { Roles } from 'constants/roles';
+import useCodeLookups from 'hooks/useLookupCodes';
+import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
 
 const getPropertyReportUrl = (filter: IPropertyQueryParams) =>
   `${ENVIRONMENT.apiUrl}/reports/properties?${filter ? queryString.stringify(filter) : ''}`;
@@ -227,42 +225,29 @@ const DirtyRowsTracker: React.FC<{ setDirtyRows: (changes: IChangedRow[]) => voi
 };
 
 const PropertyListView: React.FC = () => {
+  const lookupCodes = useCodeLookups();
   const { updateBuilding, updateParcel } = useApi();
   const [editable, setEditable] = useState(false);
   const tableFormRef = useRef<FormikProps<{ properties: IProperty[] }> | undefined>();
   const [dirtyRows, setDirtyRows] = useState<IChangedRow[]>([]);
   const keycloak = useKeycloakWrapper();
-  // lookup codes, etc
-  const lookupCodes = useSelector<RootState, ILookupCode[]>(
-    state => (state.lookupCode as ILookupCodeState).lookupCodes,
-  );
   const municipalities = useMemo(
-    () =>
-      _.filter(lookupCodes, (lookupCode: ILookupCode) => {
-        return lookupCode.type === API.AMINISTRATIVE_AREA_CODE_SET_NAME;
-      }),
+    () => lookupCodes.getByType(API.AMINISTRATIVE_AREA_CODE_SET_NAME),
     [lookupCodes],
   );
-  const agencies = useMemo(
-    () =>
-      _.filter(lookupCodes, (lookupCode: ILookupCode) => {
-        return lookupCode.type === API.AGENCY_CODE_SET_NAME;
-      }),
+  const agencies = useMemo(() => lookupCodes.getByType(API.AGENCY_CODE_SET_NAME), [lookupCodes]);
+
+  const agenciesList = agencies.filter(a => !a.parentId).map(mapLookupCode);
+  const subAgencies = agencies.filter(a => !!a.parentId).map(mapLookupCode);
+
+  const propertyClassifications = useMemo(
+    () => lookupCodes.getByType(API.PROPERTY_CLASSIFICATION_CODE_SET_NAME),
     [lookupCodes],
   );
-
-  const { getByType } = useCodeLookups();
-  const agencyOptions = getByType('Agency');
-
-  const agenciesList = agencyOptions.filter(a => !a.parentId).map(mapLookupCode);
-  const subAgencies = agencyOptions.filter(a => !!a.parentId).map(mapLookupCode);
-
-  const propertyClassifications = _.filter(lookupCodes, (lookupCode: ILookupCode) => {
-    return lookupCode.type === API.PROPERTY_CLASSIFICATION_CODE_SET_NAME;
-  });
-  const administrativeAreas = _.filter(lookupCodes, (lookupCode: ILookupCode) => {
-    return lookupCode.type === API.AMINISTRATIVE_AREA_CODE_SET_NAME;
-  });
+  const administrativeAreas = useMemo(
+    () => lookupCodes.getByType(API.AMINISTRATIVE_AREA_CODE_SET_NAME),
+    [lookupCodes],
+  );
 
   const agencyIds = useMemo(() => agencies.map(x => parseInt(x.id, 10)), [agencies]);
   const [sorting, setSorting] = useState<TableSort<IProperty>>({ description: 'asc' });
@@ -364,7 +349,7 @@ const PropertyListView: React.FC = () => {
   );
 
   // Listen for changes in pagination and use the state to fetch our new data
-  useEffect(() => {
+  useDeepCompareEffect(() => {
     fetchData({ pageIndex, pageSize, filter, agencyIds, sorting });
   }, [fetchData, pageIndex, pageSize, filter, agencyIds, sorting]);
 
