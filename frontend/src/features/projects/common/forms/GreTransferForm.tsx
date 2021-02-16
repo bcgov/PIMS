@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useMemo, useState } from 'react';
+import React, { Fragment, useMemo, useState } from 'react';
 import { ProjectDraftForm, ProjectNotes, IProject, PublicNotes, PrivateNotes } from '../../common';
 import { PropertyListViewUpdate } from '../../common/components/PropertyListViewUpdate';
 import { useFormikContext } from 'formik';
@@ -8,6 +8,7 @@ import Form from 'react-bootstrap/Form';
 import * as API from 'constants/API';
 import { TypeaheadField } from 'components/common/form/Typeahead';
 import useCodeLookups from 'hooks/useLookupCodes';
+import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
 
 /**
  * Form component of GreTransferStep.
@@ -15,12 +16,12 @@ import useCodeLookups from 'hooks/useLookupCodes';
  */
 export const GreTransferForm = ({ canEdit }: { canEdit: boolean }) => {
   /** Enter edit mode if allowed and there are errors to display */
-  const { values, setFieldValue, touched } = useFormikContext<IProject>();
-  const agencyOptions = useCodeLookups().getOptionsByType('Agency');
-  const [initialAgencyId] = useState(values.agencyId);
   const lookupCodes = useCodeLookups();
+  const { values, setFieldValue, touched } = useFormikContext<IProject>();
+  const [initialAgencyId] = useState(values.agencyId);
   const agencies = useMemo(() => lookupCodes.getByType(API.AGENCY_CODE_SET_NAME), [lookupCodes]);
-  useEffect(() => {
+  const agencyOptions = lookupCodes.getOptionsByType(API.AGENCY_CODE_SET_NAME);
+  useDeepCompareEffect(() => {
     values.properties?.forEach((property, index) => {
       if (!isNaN(values.agencyId) && values.agencyId !== initialAgencyId) {
         setFieldValue(`properties.${index}.agencyId`, values.agencyId);
