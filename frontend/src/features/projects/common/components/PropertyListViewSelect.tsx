@@ -12,6 +12,7 @@ import { getPropertyColumns, getColumnsWithRemove } from './columns';
 import queryString from 'query-string';
 import { PropertyTypes } from 'constants/propertyTypes';
 import useCodeLookups from 'hooks/useLookupCodes';
+import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
 
 type RequiredAttributes = {
   /** The field name */
@@ -100,7 +101,7 @@ export const PropertyListViewSelect: React.FC<InputProps> = ({
   );
 
   //Listen for changes in pagination and use the state to fetch our new data
-  useEffect(() => {
+  useDeepCompareEffect(() => {
     fetchData({ pageIndex, pageSize, filter, agencyIds });
   }, [agencyIds, fetchData, filter, pageIndex, pageSize]);
 
