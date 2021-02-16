@@ -1,10 +1,6 @@
 import React, { useMemo, useState, useRef, useCallback, useEffect } from 'react';
 import { FormControlProps, Container, Button } from 'react-bootstrap';
 import { useFormikContext, getIn } from 'formik';
-import { useSelector } from 'react-redux';
-import { RootState } from 'reducers/rootReducer';
-import { ILookupCode } from 'actions/lookupActions';
-import { ILookupCodeState } from 'reducers/lookupCodeReducer';
 import _ from 'lodash';
 import { IFilterBarState, IProperty, clickableTooltip, useProject } from '../../common';
 import * as API from 'constants/API';
@@ -13,9 +9,9 @@ import { Table } from 'components/Table';
 import useTable from '../../dispose/hooks/useTable';
 import { useHistory } from 'react-router-dom';
 import { getPropertyColumns, getColumnsWithRemove } from './columns';
-import useCodeLookups from 'hooks/useLookupCodes';
 import queryString from 'query-string';
 import { PropertyTypes } from 'constants/propertyTypes';
+import useCodeLookups from 'hooks/useLookupCodes';
 
 type RequiredAttributes = {
   /** The field name */
@@ -54,20 +50,11 @@ export const PropertyListViewSelect: React.FC<InputProps> = ({
   pageIndex,
   setPageIndex,
 }) => {
+  const lookupCodes = useCodeLookups();
   const { values, setFieldValue } = useFormikContext<any>();
   const existingProperties: IProperty[] = getIn(values, field);
 
-  const lookupCodes = useSelector<RootState, ILookupCode[]>(
-    state => (state.lookupCode as ILookupCodeState).lookupCodes,
-  );
-  const agencies = useMemo(
-    () =>
-      _.filter(lookupCodes, (lookupCode: ILookupCode) => {
-        return lookupCode.type === API.AGENCY_CODE_SET_NAME;
-      }),
-    [lookupCodes],
-  );
-
+  const agencies = useMemo(() => lookupCodes.getByType(API.AGENCY_CODE_SET_NAME), [lookupCodes]);
   const { project } = useProject();
   const filterByParent = useCodeLookups().filterByParent;
   // eslint-disable-next-line react-hooks/exhaustive-deps

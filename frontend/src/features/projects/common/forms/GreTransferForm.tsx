@@ -2,15 +2,12 @@ import React, { Fragment, useEffect, useMemo, useState } from 'react';
 import { ProjectDraftForm, ProjectNotes, IProject, PublicNotes, PrivateNotes } from '../../common';
 import { PropertyListViewUpdate } from '../../common/components/PropertyListViewUpdate';
 import { useFormikContext } from 'formik';
-import useCodeLookups from 'hooks/useLookupCodes';
 import _ from 'lodash';
 import { ILookupCode } from 'actions/lookupActions';
 import Form from 'react-bootstrap/Form';
-import { useSelector } from 'react-redux';
-import { RootState } from 'reducers/rootReducer';
-import { ILookupCodeState } from 'reducers/lookupCodeReducer';
 import * as API from 'constants/API';
 import { TypeaheadField } from 'components/common/form/Typeahead';
+import useCodeLookups from 'hooks/useLookupCodes';
 
 /**
  * Form component of GreTransferStep.
@@ -21,16 +18,8 @@ export const GreTransferForm = ({ canEdit }: { canEdit: boolean }) => {
   const { values, setFieldValue, touched } = useFormikContext<IProject>();
   const agencyOptions = useCodeLookups().getOptionsByType('Agency');
   const [initialAgencyId] = useState(values.agencyId);
-  const lookupCodes = useSelector<RootState, ILookupCode[]>(
-    state => (state.lookupCode as ILookupCodeState).lookupCodes,
-  );
-  const agencies = useMemo(
-    () =>
-      _.filter(lookupCodes, (lookupCode: ILookupCode) => {
-        return lookupCode.type === API.AGENCY_CODE_SET_NAME;
-      }),
-    [lookupCodes],
-  );
+  const lookupCodes = useCodeLookups();
+  const agencies = useMemo(() => lookupCodes.getByType(API.AGENCY_CODE_SET_NAME), [lookupCodes]);
   useEffect(() => {
     values.properties?.forEach((property, index) => {
       if (!isNaN(values.agencyId) && values.agencyId !== initialAgencyId) {
