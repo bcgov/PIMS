@@ -109,7 +109,6 @@ const mockProperty: IProperty = {
   market: 123,
   netBook: 223,
   assessedLand: 123,
-  appraised: 1000,
   landArea: 123,
   landLegalDescription: 'test',
 };

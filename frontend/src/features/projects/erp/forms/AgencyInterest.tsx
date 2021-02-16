@@ -1,16 +1,13 @@
 import { AgencyResponses, FormikTable, IProject } from '../../common';
 import { getIn, useFormikContext } from 'formik';
 import React from 'react';
-import { useSelector } from 'react-redux';
-import { RootState } from 'reducers/rootReducer';
 import { ILookupCode } from 'actions/lookupActions';
-import { ILookupCodeState } from 'reducers/lookupCodeReducer';
-import _ from 'lodash';
 import * as API from 'constants/API';
 import { ParentSelect } from 'components/common/form/ParentSelect';
 import { mapLookupCodeWithParentString } from 'utils';
 import { Button, Col, Row } from 'react-bootstrap';
 import { AgencyInterestColumns } from './AgencyInterestColumns';
+import useCodeLookups from 'hooks/useLookupCodes';
 
 export interface IAgencyInterestProps {
   /** Whether the controls are disabled. */
@@ -24,13 +21,9 @@ export interface IAgencyInterestProps {
 export const AgencyInterest = ({ disabled = false }: IAgencyInterestProps) => {
   const { values, setValues, setFieldValue } = useFormikContext<IProject>();
   const [enableAdd, setEnableAdd] = React.useState(false);
+  const lookupCodes = useCodeLookups();
 
-  const lookupCodes = useSelector<RootState, ILookupCode[]>(
-    state => (state.lookupCode as ILookupCodeState).lookupCodes,
-  );
-  const agencies = _.filter(lookupCodes, (lookupCode: ILookupCode) => {
-    return lookupCode.type === API.AGENCY_CODE_SET_NAME;
-  });
+  const agencies = lookupCodes.getByType(API.AGENCY_CODE_SET_NAME);
   const agencyOptions = (agencies ?? []).map(c => mapLookupCodeWithParentString(c, agencies));
 
   const onAddAgency = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => {

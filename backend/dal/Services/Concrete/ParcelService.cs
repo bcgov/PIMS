@@ -180,6 +180,7 @@ namespace Pims.Dal.Services
         public Parcel Add(Parcel parcel)
         {
             parcel.ThrowIfNull(nameof(parcel));
+            parcel.PropertyTypeId = (int)(parcel.Parcels.Count > 0 ? PropertyTypes.Subdivision : PropertyTypes.Land);
             this.User.ThrowIfNotAuthorized(new[] { Permissions.PropertyAdd, Permissions.AdminProperties });
 
             var agency = this.User.GetAgency(this.Context) ??
@@ -194,7 +195,7 @@ namespace Pims.Dal.Services
                 parcel.AgencyId = agency.Id;
                 parcel.Agency = agency;
             }
-            parcel.PropertyTypeId = (int)(parcel.Parcels.Count > 0 ? PropertyTypes.Subdivision : PropertyTypes.Land);
+
             parcel.Address.Province = this.Context.Provinces.Find(parcel.Address.ProvinceId);
             parcel.Classification = this.Context.PropertyClassifications.Find(parcel.ClassificationId);
             parcel.IsVisibleToOtherAgencies = false;
