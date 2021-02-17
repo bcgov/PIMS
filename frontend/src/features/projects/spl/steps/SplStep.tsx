@@ -157,7 +157,6 @@ const SplStep = ({ formikRef }: IStepProps) => {
     <Container fluid className="splStep">
       <Formik
         initialValues={initialValues}
-        validateOnMount={true}
         onSubmit={(values: IProject, actions) => {
           return onSubmitReview(
             values,
