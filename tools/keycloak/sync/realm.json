@@ -259,9 +259,15 @@
         "DirectAccessGrantsEnabled": true,
         "AuthorizationServicesEnabled": false,
         "RootUrl": "https://pims.gov.bc.ca",
-        "RedirectUris": ["https://pims.gov.bc.ca/*"],
+        "RedirectUris": [
+          "https://pims.gov.bc.ca/*",
+          "https://pims.apps.silver.devops.gov.bc.ca/*"
+        ],
         "BaseUrl": "/",
-        "WebOrigins": ["https://pims.gov.bc.ca"],
+        "WebOrigins": [
+          "https://pims.gov.bc.ca",
+          "https://pims.apps.silver.devops.gov.bc.ca"
+        ],
         "ProtocolMappers": [
           {
             "Name": "agencies",
@@ -449,9 +455,15 @@
         "ServiceAccountsEnabled": true,
         "AuthorizationServicesEnabled": false,
         "RootUrl": "https://pims.gov.bc.ca/api",
-        "RedirectUris": ["https://pims.gov.bc.ca/api/*"],
+        "RedirectUris": [
+          "https://pims.gov.bc.ca/api/*",
+          "https://pims.apps.silver.devops.gov.bc.ca/api/*"
+        ],
         "BaseUrl": "/",
-        "WebOrigins": ["*"],
+        "WebOrigins": [
+          "https://pims.gov.bc.ca",
+          "https://pims.apps.silver.devops.gov.bc.ca"
+        ],
         "ServiceAccount": {
           "RealmRoles": [
             "system-administrator",
@@ -485,9 +497,15 @@
         "ServiceAccountsEnabled": true,
         "AuthorizationServicesEnabled": true,
         "RootUrl": "https://pims.gov.bc.ca/api",
-        "RedirectUris": ["https://pims.gov.bc.ca/api/*"],
+        "RedirectUris": [
+          "https://pims.gov.bc.ca/api/*",
+          "https://pims.apps.silver.devops.gov.bc.ca/api/*"
+        ],
         "BaseUrl": "/",
-        "WebOrigins": ["*"],
+        "WebOrigins": [
+          "https://pims.gov.bc.ca",
+          "https://pims.apps.silver.devops.gov.bc.ca"
+        ],
         "ProtocolMappers": [
           {
             "Name": "agencies",
