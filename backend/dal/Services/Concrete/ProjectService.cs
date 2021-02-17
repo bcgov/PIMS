@@ -570,7 +570,7 @@ namespace Pims.Dal.Services
                 .Include(p => p.Workflow)
                 .SingleOrDefault(p => p.Id == project.Id) ?? throw new KeyNotFoundException();
 
-            if (!project.IsProjectInDraft(_options.Project))
+            if (!originalProject.IsProjectInDraft(_options.Project))
             {
                 this.ThrowIfNotAllowedToUpdate(originalProject, _options.Project);
             }
