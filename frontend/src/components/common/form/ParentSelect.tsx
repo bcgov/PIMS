@@ -148,14 +148,11 @@ export const ParentSelect: React.FC<IParentSelect> = ({
                         ? handleMultiSelectHeaderClick(
                             results.filter(x => x.parentId === +parentId),
                           )
-                        : handleMenuHeaderClick(results.find(x => x.value === parentId)!)
+                        : handleMenuHeaderClick(options.find(x => x.value === parentId)!)
                     }
                   >
                     <b style={{ cursor: 'pointer' }}>
-                      {/* project statuses has a different way of selecting parent value*/}
-                      {field === 'statusId'
-                        ? results.find(x => x.parentId === +parentId)?.parent
-                        : results.find(x => x.value === parentId)?.label}
+                      {results.find(x => x.parentId === +parentId)?.parent}
                     </b>
                   </Menu.Header>
                 )}
