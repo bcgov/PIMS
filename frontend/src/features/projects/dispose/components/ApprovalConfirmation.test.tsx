@@ -11,7 +11,6 @@ import { render, act, wait } from '@testing-library/react';
 jest.mock('@react-keycloak/web');
 
 const renderComponent = (isReadOnly: boolean, onSubmit?: (values: any) => void) => {
-  //const userDisplayName = 'PIMS User';
   return render(
     <Formik initialValues={{}} onSubmit={() => {}}>
       <Form>
@@ -43,34 +42,19 @@ describe('Approval Confirmation', () => {
 
   it('Input is disabled if form is readonly', () => {
     const { getByLabelText } = renderComponent(true);
-    expect(getByLabelText('confirm by checking this box', { exact: false })).toBeDisabled();
+    expect(getByLabelText('has received approval', { exact: false })).toBeDisabled();
   });
 
-  it('default user is displayed if no valid keycloak user available', () => {
-    const { getByText } = renderComponent(true);
-    expect(getByText('I, Pims User', { exact: false })).toBeVisible();
-  });
-
-  it('default user is displayed if no valid keycloak user available', () => {
-    jest.clearAllMocks();
-    (useKeycloak as jest.Mock).mockReturnValue({
-      keycloak: {
-        userInfo: {
-          agencies: ['1'],
-          name: 'Test User',
-        },
-        subject: 'test',
-      },
-    });
-    const { getByText } = renderComponent(true);
-    expect(getByText('I, Test User', { exact: false })).toBeVisible();
+  it('My ministry/agency displays for non SRES', () => {
+    const { getByText } = renderComponent(false);
+    expect(getByText('My Ministry/Agency', { exact: false })).toBeVisible();
   });
 
   it('formik submitted values as expected', () => {
     const submitFn = jest.fn();
     act(() => {
       const { getByLabelText } = renderComponent(true, submitFn);
-      const input = getByLabelText('confirm by checking this box', { exact: false });
+      const input = getByLabelText('has received approval', { exact: false });
 
       fireEvent.click(input);
     });

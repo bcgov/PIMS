@@ -113,10 +113,9 @@ function AdminDropdown() {
 function DisposeProjectsDropdown() {
   const history = useHistory();
   const keycloak = useKeycloakWrapper();
-  // admin-projects and admin-properties roles are needed to Create/View projects,
-  // but only dispose-approve is needed to see Approval requests
-  return (keycloak.hasClaim(Claims.ADMIN_PROPERTIES) && keycloak.hasClaim(Claims.ADMIN_PROJECTS)) ||
-    keycloak.hasClaim(Claims.DISPOSE_APPROVE) ? (
+  return keycloak.hasClaim(Claims.PROJECT_VIEW) ||
+    keycloak.hasClaim(Claims.DISPOSE_APPROVE) ||
+    keycloak.hasClaim(Claims.ADMIN_PROJECTS) ? (
     <NavDropdown
       className={
         history.location.pathname.includes('dispose') ||
@@ -127,15 +126,15 @@ function DisposeProjectsDropdown() {
       title="Disposal Projects"
       id="dispose"
     >
-      {keycloak.hasClaim(Claims.ADMIN_PROPERTIES) && keycloak.hasClaim(Claims.ADMIN_PROJECTS) && (
-        <>
-          <NavDropdown.Item onClick={() => history.push('/dispose')}>
-            Create Disposal Project
-          </NavDropdown.Item>
-          <NavDropdown.Item onClick={() => history.push('/projects/list')}>
-            View Projects
-          </NavDropdown.Item>
-        </>
+      {(keycloak.hasClaim(Claims.PROJECT_ADD) || keycloak.hasClaim(Claims.ADMIN_PROJECTS)) && (
+        <NavDropdown.Item onClick={() => history.push('/dispose')}>
+          Create Disposal Project
+        </NavDropdown.Item>
+      )}
+      {(keycloak.hasClaim(Claims.PROJECT_VIEW) || keycloak.hasClaim(Claims.ADMIN_PROJECTS)) && (
+        <NavDropdown.Item onClick={() => history.push('/projects/list')}>
+          View Projects
+        </NavDropdown.Item>
       )}
       {keycloak.hasClaim(Claims.DISPOSE_APPROVE) && (
         <NavDropdown.Item onClick={() => history.push('/projects/approval/requests')}>
