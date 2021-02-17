@@ -11,6 +11,5 @@ export * from './FastSelect';
 export * from './TextArea';
 export * from './FastCurrencyInput';
 export * from './FastFiscalYearInput';
-export * from './AutoCompleteText';
 export * from './Check';
 export * from './DisplayCurrency';
