@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import { formatNumber, mapLookupCode } from 'utils';
 import { IProperty } from '.';
 import { ColumnWithProps, ViewPropertyCell } from 'components/Table';
-import { ParentGroupedFilter } from 'components/SearchBar/ParentGroupedFilter';
 import { FastCurrencyInput, Input, Select, SelectOption } from 'components/common/form';
 import { TypeaheadField } from 'components/common/form/Typeahead';
 import { ILookupCode } from 'actions/lookupActions';
@@ -69,7 +68,7 @@ export const columns = (
     sortable: true,
     filterable: true,
     filter: {
-      component: ParentGroupedFilter,
+      component: TypeaheadField,
       props: {
         className: 'agency-search',
         name: 'agencies[0]',
@@ -92,7 +91,7 @@ export const columns = (
     sortable: true,
     filterable: true,
     filter: {
-      component: ParentGroupedFilter,
+      component: TypeaheadField,
       props: {
         name: 'agencies[1]',
         placeholder: 'Filter by sub agency',
