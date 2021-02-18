@@ -43,6 +43,7 @@ namespace Pims.Dal.Helpers.Extensions
                 .Include(p => p.TierLevel)
                 .Include(p => p.Risk)
                 .Include(p => p.Agency)
+                .Include(p => p.Workflow)
                 .Include(p => p.Agency).ThenInclude(a => a.Parent)
                 .Include(p => p.Notes)
                 .AsNoTracking();
