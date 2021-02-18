@@ -244,13 +244,7 @@ export const pointToLayer = (feature: ICluster, latlng: LatLngExpression): Layer
  * Get an icon type for the specified cluster property details (type, draft, erp, spp etc)
  */
 export const getMarkerIcon = (feature: ICluster, selected?: boolean) => {
-  const {
-    propertyTypeId,
-    projectWorkflow,
-    classificationId,
-    parcelDetail,
-    projectNumbers,
-  } = feature?.properties;
+  const { propertyTypeId, projectWorkflow, classificationId, parcelDetail } = feature?.properties;
   if (propertyTypeId === PropertyTypes.DRAFT_PARCEL) {
     return draftParcelIcon;
   } else if (propertyTypeId === PropertyTypes.DRAFT_BUILDING) {
@@ -268,7 +262,8 @@ export const getMarkerIcon = (feature: ICluster, selected?: boolean) => {
     } else if (
       (selectedClassificationId === Classifications.SurplusActive ||
         selectedClassificationId === Classifications.SurplusEncumbered) &&
-      projectNumbers.length
+      projectWorkflow &&
+      ![Workflows.SUBMIT_DISPOSAL].includes(projectWorkflow)
     ) {
       switch (propertyTypeId) {
         case PropertyTypes.BUILDING:
@@ -298,7 +293,8 @@ export const getMarkerIcon = (feature: ICluster, selected?: boolean) => {
     } else if (
       (classificationId === Classifications.SurplusActive ||
         classificationId === Classifications.SurplusEncumbered) &&
-      projectNumbers.length
+      projectWorkflow &&
+      ![Workflows.SUBMIT_DISPOSAL].includes(projectWorkflow)
     ) {
       switch (propertyTypeId) {
         case PropertyTypes.BUILDING:
