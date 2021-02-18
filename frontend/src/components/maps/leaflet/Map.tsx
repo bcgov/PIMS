@@ -237,11 +237,7 @@ const Map: React.FC<MapProps> = ({
   const handleMapFilterChange = async (filter: IPropertyFilter) => {
     const compareValues = (objValue: any, othValue: any) => {
       return whitelistedFilterKeys.reduce((acc, key) => {
-        return (
-          (isEqual(objValue[key], othValue[key]) ||
-            (isEmpty(objValue[key]) && isEmpty(othValue[key]))) &&
-          acc
-        );
+        return (isEqual(objValue[key], othValue[key]) || (!objValue[key] && !othValue[key])) && acc;
       }, true);
     };
     if (!isEqualWith(geoFilter, filter, compareValues)) {
