@@ -39,12 +39,10 @@ export const columns = (
       Cell: (props: CellProps<IProject>) => {
         return (
           <div>
-            {/* delete button is visible when on delete button function is passed, if it is in draft and they have the edit claim, they are an admin, or it is their project before submission */}
+            {/* delete icon will be shown only if the project is still in draft and they have the edit claim, or an admin claim, or they created the project */}
             {!!onDelete &&
-              ((projectEditClaim && props.row.original.projectNumber.includes('DRAFT')) ||
-                isAdmin ||
-                (user === props.row.original.updatedBy &&
-                  props.row.original.projectNumber.includes('DRAFT'))) && (
+              props.row.original.workflowCode === 'SUBMIT-DISPOSAL' &&
+              (projectEditClaim || isAdmin || user === props.row.original.createdBy) && (
                 <FaTrash
                   style={{ marginRight: 10, cursor: 'pointer' }}
                   onClick={(e: any) => {

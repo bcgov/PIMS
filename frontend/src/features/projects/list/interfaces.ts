@@ -27,6 +27,7 @@ export interface IProject {
   createdBy: string;
   netBook: number;
   market: number;
+  workflowCode: string;
   zoning: string;
   zoningPotential: string;
 }
