@@ -4,6 +4,7 @@ import { formatDate, formatMoney } from 'utils';
 import { IProject } from '.';
 import { ColumnWithProps } from 'components/Table';
 import { FaTrash } from 'react-icons/fa';
+import { Workflows } from 'constants/workflows';
 // NOTE - There numbers below match the total number of columns ATM (13)
 // If additional columns are added or deleted, these numbers need tp be updated...
 const howManyColumns = 13;
@@ -41,7 +42,7 @@ export const columns = (
           <div>
             {/* delete icon will be shown only if the project is still in draft and they have the edit claim, or an admin claim, or they created the project */}
             {!!onDelete &&
-              props.row.original.workflowCode === 'SUBMIT-DISPOSAL' &&
+              props.row.original.workflowCode === Workflows.SUBMIT_DISPOSAL &&
               (projectEditClaim || isAdmin || user === props.row.original.createdBy) && (
                 <FaTrash
                   style={{ marginRight: 10, cursor: 'pointer' }}
