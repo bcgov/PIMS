@@ -1409,6 +1409,8 @@ exports[`ERP Approval Step renders correctly 1`] = `
                   className="form-label"
                 >
                   The only way to stop future unsent notifications is to cancel the entire project.
+                  <br />
+                  You can, however, cancel future notifications for specific ministries by setting the response as 'Not Interested'.
                 </label>
               </div>
             </div>

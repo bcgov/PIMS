@@ -78,6 +78,9 @@ const AgencyResponseForm = ({ isReadOnly }: IAgencyResponseFormProps) => {
             </Form.Label>
             <Form.Label>
               The only way to stop future unsent notifications is to cancel the entire project.
+              <br />
+              You can, however, cancel future notifications for specific ministries by setting the
+              response as 'Not Interested'.
             </Form.Label>
           </Form.Row>
         </Col>
