@@ -84,13 +84,39 @@ namespace Pims.Dal.Helpers.Extensions
             {
                 var pidValue = filter.PID.Replace("-", "").Trim();
                 if (Int32.TryParse(pidValue, out int pid))
-                    query = query.Where(p => p.PID == pid || p.PIN == pid);
+                    query = query.Include(p => p.Buildings)
+                        .Include(p => p.CreatedBy)
+                        .Include(p => p.UpdatedBy)
+                        .Include(p => p.Buildings).ThenInclude(pb => pb.Building).ThenInclude(b => b.Address)
+                        .Include(p => p.Buildings).ThenInclude(pb => pb.Building).ThenInclude(b => b.Address.Province)
+                        .Include(p => p.Buildings).ThenInclude(pb => pb.Building).ThenInclude(b => b.BuildingConstructionType)
+                        .Include(p => p.Buildings).ThenInclude(pb => pb.Building).ThenInclude(b => b.BuildingPredominateUse)
+                        .Include(p => p.Buildings).ThenInclude(pb => pb.Building).ThenInclude(b => b.BuildingOccupantType)
+                        .Include(p => p.Buildings).ThenInclude(pb => pb.Building).ThenInclude(b => b.Evaluations)
+                        .Include(p => p.Buildings).ThenInclude(pb => pb.Building).ThenInclude(b => b.Fiscals)
+                        .Include(p => p.Buildings).ThenInclude(pb => pb.Building).ThenInclude(b => b.Classification)
+                        .Include(p => p.Parcels).ThenInclude(pp => pp.Parcel)
+                        .Include(p => p.Subdivisions).ThenInclude(pp => pp.Subdivision)
+                        .Include(p => p.Projects).ThenInclude(pp => pp.Project).ThenInclude(p => p.Workflow).Where(p => p.PID == pid || p.PIN == pid);
             }
             if (!String.IsNullOrWhiteSpace(filter.PIN))
             {
                 var pinValue = filter.PIN.Trim();
                 if (Int32.TryParse(pinValue, out int pin))
-                    query = query.Where(p => p.PIN == pin);
+                    query = query.Include(p => p.Buildings)
+                        .Include(p => p.CreatedBy)
+                        .Include(p => p.UpdatedBy)
+                        .Include(p => p.Buildings).ThenInclude(pb => pb.Building).ThenInclude(b => b.Address)
+                        .Include(p => p.Buildings).ThenInclude(pb => pb.Building).ThenInclude(b => b.Address.Province)
+                        .Include(p => p.Buildings).ThenInclude(pb => pb.Building).ThenInclude(b => b.BuildingConstructionType)
+                        .Include(p => p.Buildings).ThenInclude(pb => pb.Building).ThenInclude(b => b.BuildingPredominateUse)
+                        .Include(p => p.Buildings).ThenInclude(pb => pb.Building).ThenInclude(b => b.BuildingOccupantType)
+                        .Include(p => p.Buildings).ThenInclude(pb => pb.Building).ThenInclude(b => b.Evaluations)
+                        .Include(p => p.Buildings).ThenInclude(pb => pb.Building).ThenInclude(b => b.Fiscals)
+                        .Include(p => p.Buildings).ThenInclude(pb => pb.Building).ThenInclude(b => b.Classification)
+                        .Include(p => p.Parcels).ThenInclude(pp => pp.Parcel)
+                        .Include(p => p.Subdivisions).ThenInclude(pp => pp.Subdivision)
+                        .Include(p => p.Projects).ThenInclude(pp => pp.Project).ThenInclude(p => p.Workflow).Where(p => p.PIN == pin);
             }
             if (filter.ClassificationId.HasValue)
                 query = query.Where(p => p.ClassificationId == filter.ClassificationId);

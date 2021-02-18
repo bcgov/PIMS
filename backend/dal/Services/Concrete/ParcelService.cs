@@ -431,15 +431,6 @@ namespace Pims.Dal.Services
                 foreach (var parcelBuilding in originalParcel.Buildings)
                 {
                     var updateBuilding = parcel.Buildings.FirstOrDefault(pb => pb.BuildingId == parcelBuilding.BuildingId);
-                    if (updateBuilding == null)
-                    {
-                        this.ThrowIfNotAllowedToUpdate(parcelBuilding.Building, _options.Project);
-
-                        var parcelBuildings = this.Context.ParcelBuildings.Where(pb => pb.BuildingId == parcelBuilding.BuildingId).ToArray();
-                        parcel.Buildings.Remove(parcelBuilding);
-
-                        continue;
-                    }
 
                     // The building may have evaluations or fiscals that need to be deleted.
                     foreach (var buildingEvaluation in parcelBuilding.Building.Evaluations)
