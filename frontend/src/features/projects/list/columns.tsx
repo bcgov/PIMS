@@ -21,7 +21,12 @@ const spacing = {
   xxlarge: unit * 8,
 };
 
-export const columns = (onDelete?: (id: string) => void): ColumnWithProps<IProject>[] => {
+export const columns = (
+  onDelete?: (id: string) => void,
+  isAdmin?: boolean,
+  projectEditClaim?: boolean,
+  user?: string,
+): ColumnWithProps<IProject>[] => {
   return [
     {
       Header: 'Project No.',
@@ -34,15 +39,20 @@ export const columns = (onDelete?: (id: string) => void): ColumnWithProps<IProje
       Cell: (props: CellProps<IProject>) => {
         return (
           <div>
-            {!!onDelete && (
-              <FaTrash
-                style={{ marginRight: 10, cursor: 'pointer' }}
-                onClick={(e: any) => {
-                  e.stopPropagation();
-                  onDelete(props.row.original.projectNumber);
-                }}
-              />
-            )}
+            {/* delete button is visible when on delete button function is passed, if it is in draft and they have the edit claim, they are an admin, or it is their project before submission */}
+            {!!onDelete &&
+              ((projectEditClaim && props.row.original.projectNumber.includes('DRAFT')) ||
+                isAdmin ||
+                (user === props.row.original.updatedBy &&
+                  props.row.original.projectNumber.includes('DRAFT'))) && (
+                <FaTrash
+                  style={{ marginRight: 10, cursor: 'pointer' }}
+                  onClick={(e: any) => {
+                    e.stopPropagation();
+                    onDelete(props.row.original.projectNumber);
+                  }}
+                />
+              )}
             <span>{props.row.original.projectNumber}</span>
           </div>
         );

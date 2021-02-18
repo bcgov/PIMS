@@ -89,6 +89,7 @@ const defaultFilterValues: IPropertyFilter = {
   maxAssessedValue: '',
   maxNetBookValue: '',
   maxMarketValue: '',
+  surplusFilter: false,
 };
 
 export const flattenProperty = (apiProperty: IApiProperty): IProperty => {
@@ -159,6 +160,9 @@ const getServerQuery = (state: {
       administrativeArea,
       projectNumber,
       classificationId,
+      inSurplusPropertyProgram,
+      inEnhancedReferralProcess,
+      bareLandOnly,
       name,
       agencies,
       minLotSize,
@@ -186,6 +190,9 @@ const getServerQuery = (state: {
     agencies: parsedAgencies,
     minLandArea: decimalOrUndefined(minLotSize),
     maxLandArea: decimalOrUndefined(maxLotSize),
+    inSurplusPropertyProgram: inSurplusPropertyProgram,
+    inEnhancedReferralProcess: inEnhancedReferralProcess,
+    bareLandOnly: bareLandOnly,
     page: pageIndex + 1,
     quantity: pageSize,
     propertyType: propertyType,
@@ -536,7 +543,7 @@ const PropertyListView: React.FC = () => {
                 });
               }
 
-              toast.info('Successfully saved changes!!');
+              toast.info('Successfully saved changes');
               setDirtyRows([]);
               setData(nextProperties);
             }
