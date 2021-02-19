@@ -260,8 +260,10 @@ export const getMarkerIcon = (feature: ICluster, selected?: boolean) => {
           return landErpIconSelect;
       }
     } else if (
-      classificationId === Classifications.SurplusActive ||
-      classificationId === Classifications.SurplusEncumbered
+      (classificationId === Classifications.SurplusActive ||
+        classificationId === Classifications.SurplusEncumbered) &&
+      projectWorkflow &&
+      [Workflows.SPL].includes(projectWorkflow)
     ) {
       switch (propertyTypeId) {
         case PropertyTypes.BUILDING:
@@ -289,8 +291,10 @@ export const getMarkerIcon = (feature: ICluster, selected?: boolean) => {
           return landErpIcon;
       }
     } else if (
-      classificationId === Classifications.SurplusActive ||
-      classificationId === Classifications.SurplusEncumbered
+      (classificationId === Classifications.SurplusActive ||
+        classificationId === Classifications.SurplusEncumbered) &&
+      projectWorkflow &&
+      [Workflows.SPL].includes(projectWorkflow)
     ) {
       switch (propertyTypeId) {
         case PropertyTypes.BUILDING:
