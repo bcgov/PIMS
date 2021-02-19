@@ -12,7 +12,6 @@ const SelectedPropertyMarker: React.FC<MarkerProps & { map: Map }> = props => {
   useDeepCompareEffect(() => {
     if (ref.current.leafletElement) {
       props.map.setView(props.position, props.map.getZoom());
-      ref.current.leafletElement.openPopup();
     }
   }, [props.map, props.position]);
 
