@@ -11,6 +11,8 @@ import { ThreeColumnItem } from './ThreeColumnItem';
 import variables from '_variables.module.scss';
 import { PropertyTypes } from 'constants/propertyTypes';
 import useCodeLookups from 'hooks/useLookupCodes';
+import { useState } from 'react';
+import { ProjectNumberLink } from './ProjectNumberLink';
 
 /**
  * Compare two dates to evaluation which is earlier.
@@ -83,6 +85,7 @@ export const InfoContent: React.FC<IInfoContent> = ({
     [PropertyTypes.PARCEL, PropertyTypes.SUBDIVISION].includes(propertyTypeId);
 
   const lookupCodes = useCodeLookups();
+  const [privateProject, setPrivateProject] = useState<boolean>(false);
 
   return (
     <>
@@ -118,8 +121,23 @@ export const InfoContent: React.FC<IInfoContent> = ({
             leftSideLabel={'Classification'}
             rightSideItem={propertyInfo?.classification}
           />
+          {!!propertyInfo?.projectNumbers?.length && (
+            <ThreeColumnItem
+              leftSideLabel={
+                propertyInfo.projectNumbers.length > 1 ? 'Project Numbers' : 'Project Number'
+              }
+              rightSideItem={propertyInfo.projectNumbers.map((projectNum: string) => (
+                <ProjectNumberLink
+                  setPrivateProject={setPrivateProject}
+                  privateProject={privateProject}
+                  agencyId={propertyInfo.agencyId}
+                  projectNumber={projectNum}
+                />
+              ))}
+            />
+          )}
         </OuterRow>
-        {!canViewDetails && (
+        {(!canViewDetails || privateProject) && (
           <ContactSres>
             <em>
               For more information on this property, contact{' '}
