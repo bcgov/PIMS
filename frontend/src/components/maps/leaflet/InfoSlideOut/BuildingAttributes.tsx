@@ -76,7 +76,13 @@ export const BuildingAttributes: React.FC<IBuildingAttributes> = ({
         <ListGroup>
           <Label className="header">Valuation</Label>
           <OuterRow>
-            <ThreeColumnItem leftSideLabel={'Assessed value:'} rightSideItem={formatAssessed} />
+            {buildingInfo.parcels?.length < 1 ? (
+              <ThreeColumnItem leftSideLabel={'Assessed value:'} rightSideItem={formatAssessed} />
+            ) : (
+              <ListGroup.Item>
+                <Label>Please see the associated parcel(s) for assessment information</Label>
+              </ListGroup.Item>
+            )}
           </OuterRow>
         </ListGroup>
       )}
