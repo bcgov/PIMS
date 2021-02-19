@@ -54,7 +54,7 @@ export const columns = (
   agencyOptions: SelectOption[],
   subAgencies: SelectOption[],
   municipalities: ILookupCode[],
-  propertyClassifications: ILookupCode[],
+  propertyClassifications: SelectOption[],
   propertyType: number,
   editable?: boolean,
 ): ColumnWithProps<IProperty>[] => [
@@ -128,7 +128,7 @@ export const columns = (
         name: 'classificationId',
         placeholder: 'Filter by class',
         className: 'location-search',
-        options: propertyClassifications.map(mapLookupCode),
+        options: propertyClassifications,
       },
     },
   },

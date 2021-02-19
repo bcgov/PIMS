@@ -30,7 +30,7 @@ const sumFinancialRows = (properties: IProperty[], key: string): string => {
 };
 
 const getEditableClassificationCell = (limitLabels?: string[]) => (cellInfo: any) => {
-  const classifications = useCodeLookups().getOptionsByType('PropertyClassification');
+  const classifications = useCodeLookups().getPropertyClassificationOptions();
   const context = useFormikContext();
   return (
     <FastSelect
