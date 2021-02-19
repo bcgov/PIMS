@@ -42,7 +42,7 @@ describe('Approval Confirmation', () => {
 
   it('Input is disabled if form is readonly', () => {
     const { getByLabelText } = renderComponent(true);
-    expect(getByLabelText('has received approval', { exact: false })).toBeDisabled();
+    expect(getByLabelText('has approval/authority', { exact: false })).toBeDisabled();
   });
 
   it('My ministry/agency displays for non SRES', () => {
@@ -54,7 +54,7 @@ describe('Approval Confirmation', () => {
     const submitFn = jest.fn();
     act(() => {
       const { getByLabelText } = renderComponent(true, submitFn);
-      const input = getByLabelText('has received approval', { exact: false });
+      const input = getByLabelText('has approval/authority', { exact: false });
 
       fireEvent.click(input);
     });
