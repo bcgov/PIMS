@@ -1,14 +1,10 @@
 import * as React from 'react';
 import 'leaflet';
-import Adapter from 'enzyme-adapter-react-16';
-import Enzyme from 'enzyme';
 import 'leaflet/dist/leaflet.css';
 import InfoContent from './InfoContent';
 import { IParcel, IBuilding } from 'actions/parcelsActions';
 import { PropertyTypes } from 'constants/propertyTypes';
 import { render } from '@testing-library/react';
-
-Enzyme.configure({ adapter: new Adapter() });
 
 const mockParcelNoSub = {
   id: 1,

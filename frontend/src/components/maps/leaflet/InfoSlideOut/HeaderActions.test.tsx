@@ -1,7 +1,5 @@
 import * as React from 'react';
 import 'leaflet';
-import Adapter from 'enzyme-adapter-react-16';
-import Enzyme from 'enzyme';
 import 'leaflet/dist/leaflet.css';
 import { createMemoryHistory } from 'history';
 import { Router } from 'react-router-dom';
@@ -15,7 +13,6 @@ import { noop } from 'lodash';
 import HeaderActions from './HeaderActions';
 import { mockParcel } from './InfoContent.test';
 
-Enzyme.configure({ adapter: new Adapter() });
 const history = createMemoryHistory();
 const mockStore = configureMockStore([thunk]);
 const store = mockStore({});
