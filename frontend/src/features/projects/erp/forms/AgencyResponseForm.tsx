@@ -5,6 +5,7 @@ import { Form, FastDatePicker } from 'components/common/form';
 import { useFormikContext } from 'formik';
 import { IProject } from '../../common';
 import { AgencyInterest } from './AgencyInterest';
+import { ErpNotificationNotes } from 'features/projects/common/components/ProjectNotes';
 
 interface IAgencyResponseFormProps {
   isReadOnly?: boolean;
@@ -69,16 +70,28 @@ const AgencyResponseForm = ({ isReadOnly }: IAgencyResponseFormProps) => {
               field="ninetyDayNotificationSentOn"
             />
           </Form.Row>
+          <Form.Row>
+            <Form.Label>
+              <strong>Note: </strong>Changing the dates on these fields does not change the date the
+              notifications are sent from the Common Hosted Email Service (CHES), which is managed
+              by the Exchange Lab.
+            </Form.Label>
+            <Form.Label>
+              The only way to stop future unsent notifications is to cancel the entire project.
+              <br />
+              You can, however, cancel future notifications for specific ministries by setting the
+              response as 'Not Interested'.
+            </Form.Label>
+          </Form.Row>
         </Col>
         <Col style={{ padding: '0 0 0 10px' }}>
-          <Form.Label>
-            <strong>Note: </strong>Changing the dates on these fields does not change the date the
-            notifications are sent from the Common Hosted Email Service (CHES), which is managed by
-            the Exchange Lab.
-          </Form.Label>
-          <Form.Label>
-            The only way to stop future unsent notifications is to cancel the entire project.
-          </Form.Label>
+          <ErpNotificationNotes
+            disabled={true}
+            label="Text added to ERP Notification Emails"
+            tooltip="The contents of this note were included in the email notifications for this project."
+            outerClassName="col-md-12 reviewRequired"
+            className="col-md-8"
+          />
         </Col>
       </Form.Row>
       <AgencyInterest />
