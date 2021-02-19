@@ -6,7 +6,7 @@ UPDATE p
     SET p.[AgencyId] = (SELECT [Id] FROM dbo.[Agencies] WHERE [Code] = 'SD 05')
 FROM dbo.[Buildings] p
 JOIN dbo.[Addresses] a ON p.AddressId = a.Id
-WHERE a.[AdministrativeArea] IN ('Southeast Kootenay', 'Cranbrook', 'Fernie', 'Elkford', 'Sparwood', 'Hosmer', 'Corbin', 'Fort Steele', 'Elko', 'Jaffray', 'Rooseville', 'Newgate', 'Flathead', 'Grasmere', 'Corbin', 'Baker', 'Wardner', 'Bull River', 'Moyie', 'Wycliffe')
+WHERE a.[AdministrativeArea] IN ('Southeast Kootenay', 'Cranbrook', 'Fernie', 'Elkford', 'Sparwood', 'Hosmer', 'Corbin', 'Fort Steele', 'Elko', 'Jaffray', 'Rooseville', 'Newgate', 'Flathead', 'Grasmere', 'Baker', 'Wardner', 'Bull River', 'Moyie', 'Wycliffe')
     AND p.[AgencyId] = @CPBId
 
 UPDATE p
@@ -62,7 +62,7 @@ UPDATE p
     SET p.[AgencyId] = (SELECT [Id] FROM dbo.[Agencies] WHERE [Code] = 'SD 27')
 FROM dbo.[Buildings] p
 JOIN dbo.[Addresses] a ON p.AddressId = a.Id
-WHERE a.[AdministrativeArea] IN ('150 Mile House', 'Riske Creek', 'Bridge Lake', 'Mcleese Lake', 'Likely', 'Ulkatcho', 'Anahim Lake', 'Towdystan', 'Kleena Kleene', 'Tatla Lake', 'Redstone', 'Alexis Creek', 'Williams Lake', '100 Mile House', 'Horsefly', 'Quesnel Lake', 'Canim Lake', 'Mahood Lake', 'Bridge Lake')
+WHERE a.[AdministrativeArea] IN ('150 Mile House', 'Riske Creek', 'Bridge Lake', 'Mcleese Lake', 'Likely', 'Ulkatcho', 'Anahim Lake', 'Towdystan', 'Kleena Kleene', 'Tatla Lake', 'Redstone', 'Alexis Creek', 'Williams Lake', '100 Mile House', 'Horsefly', 'Quesnel Lake', 'Canim Lake', 'Mahood Lake')
     AND p.[AgencyId] = @CPBId
 
 UPDATE p
@@ -76,7 +76,7 @@ UPDATE p
     SET p.[AgencyId] = (SELECT [Id] FROM dbo.[Agencies] WHERE [Code] = 'SD 33')
 FROM dbo.[Buildings] p
 JOIN dbo.[Addresses] a ON p.AddressId = a.Id
-WHERE a.[AdministrativeArea] IN ('Chilliwack', 'Abbotsford', 'Rosedale', 'Cultus Lake', 'Sardis', 'Deroche', 'Errock')
+WHERE a.[AdministrativeArea] IN ('Chilliwack', 'Rosedale', 'Cultus Lake', 'Sardis')
     AND p.[AgencyId] = @CPBId
 
 UPDATE p
@@ -97,7 +97,7 @@ UPDATE p
     SET p.[AgencyId] = (SELECT [Id] FROM dbo.[Agencies] WHERE [Code] = 'SD 36')
 FROM dbo.[Buildings] p
 JOIN dbo.[Addresses] a ON p.AddressId = a.Id
-WHERE a.[AdministrativeArea] IN ('Surrey', 'White Rock', 'New Westminster')
+WHERE a.[AdministrativeArea] IN ('Surrey', 'White Rock')
     AND p.[AgencyId] = @CPBId
 
 UPDATE p
@@ -125,7 +125,7 @@ UPDATE p
     SET p.[AgencyId] = (SELECT [Id] FROM dbo.[Agencies] WHERE [Code] = 'SD 40')
 FROM dbo.[Buildings] p
 JOIN dbo.[Addresses] a ON p.AddressId = a.Id
-WHERE a.[AdministrativeArea] IN ('New Westminister', 'Garibaldi Highlands')
+WHERE a.[AdministrativeArea] IN ('New Westminster', 'Garibaldi Highlands')
     AND p.[AgencyId] = @CPBId
 
 UPDATE p
@@ -209,7 +209,7 @@ UPDATE p
     SET p.[AgencyId] = (SELECT [Id] FROM dbo.[Agencies] WHERE [Code] = 'SD 52')
 FROM dbo.[Buildings] p
 JOIN dbo.[Addresses] a ON p.AddressId = a.Id
-WHERE a.[AdministrativeArea] IN ('Prince Rupert', 'Smithers', 'Georgetown Mills', 'Port Edward', 'Metlakatla', 'Kitkatla', 'Port Essington', 'Hartley Bay')
+WHERE a.[AdministrativeArea] IN ('Prince Rupert', 'Georgetown Mills', 'Port Edward', 'Metlakatla', 'Kitkatla', 'Port Essington', 'Hartley Bay')
     AND p.[AgencyId] = @CPBId
 
 UPDATE p
@@ -335,7 +335,7 @@ UPDATE p
     SET p.[AgencyId] = (SELECT [Id] FROM dbo.[Agencies] WHERE [Code] = 'SD 74')
 FROM dbo.[Buildings] p
 JOIN dbo.[Addresses] a ON p.AddressId = a.Id
-WHERE a.[AdministrativeArea] IN ('Gold Trail', 'Bib Bar Creek', 'Clinton', 'Kelly Lake', 'Pavilion', 'Ogden', 'Shalalth', 'Lillooet', 'Cahce Creek', 'Ashcroft', 'Boston Flats', 'Spences Bridge', 'Lytton', 'Agate', 'Kanaka Bar', 'Goldbridge')
+WHERE a.[AdministrativeArea] IN ('Gold Trail', 'Bib Bar Creek', 'Clinton', 'Pavilion', 'Ogden', 'Shalalth', 'Lillooet', 'Cahce Creek', 'Ashcroft', 'Boston Flats', 'Spences Bridge', 'Lytton', 'Agate', 'Kanaka Bar', 'Goldbridge')
     AND p.[AgencyId] = @CPBId
 
 UPDATE p
@@ -363,7 +363,7 @@ UPDATE p
     SET p.[AgencyId] = (SELECT [Id] FROM dbo.[Agencies] WHERE [Code] = 'SD 81')
 FROM dbo.[Buildings] p
 JOIN dbo.[Addresses] a ON p.AddressId = a.Id
-WHERE a.[AdministrativeArea] IN ('Fort Nelson', 'Toad River', 'Liard River', 'Muncho Lake', 'Summit Lake', 'Snake River', 'Prophet River', 'Fontas')
+WHERE a.[AdministrativeArea] IN ('Fort Nelson', 'Toad River', 'Liard River', 'Muncho Lake', 'Snake River', 'Prophet River', 'Fontas')
     AND p.[AgencyId] = @CPBId
 
 UPDATE p
