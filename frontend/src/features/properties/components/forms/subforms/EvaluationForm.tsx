@@ -9,6 +9,8 @@ import _ from 'lodash';
 import { isPositiveNumberOrZero } from 'utils';
 import { Table } from 'components/Table';
 import { getNetbookCols, getAssessedCols } from './columns';
+import styled from 'styled-components';
+import { Row } from 'react-bootstrap';
 
 interface EvaluationProps {
   /** the formik tracked namespace of this component */
@@ -35,6 +37,9 @@ export interface IFinancial extends IFiscal, IEvaluation {
   updatedOn?: string;
 }
 
+const AssessedExplanation = styled(Row)`
+  text-align: left;
+`;
 const NUMBER_OF_GENERATED_EVALUATIONS = 10;
 const currentYear = moment().year();
 const adjustedFiscalYear = moment().month() >= 3 ? currentYear + 1 : currentYear;
@@ -166,20 +171,32 @@ const EvaluationForm = <T extends any>(props: EvaluationProps & FormikProps<T>) 
         <Table
           lockPageSize
           pageSize={-1}
-          name="evaluations"
-          columns={assessedCols}
-          data={assessedEvaluations}
-          manualPagination={false}
-          className="assessed"
-        />
-        <Table
-          lockPageSize
-          pageSize={-1}
           name="fiscals"
           columns={netbookCols}
           data={netBookFiscals}
           manualPagination={false}
           className="netbook"
+        />
+        {!props.isParcel && (
+          <AssessedExplanation>
+            <h5>Assessed value</h5>
+            <p>
+              If your agency <strong>does not</strong> own the land this building is on, enter the
+              Assessed Value for the building here.<br></br>
+              If your agency <strong>does</strong> own the land,{' '}
+              <strong>do not enter the building values here</strong>. The land and building
+              valuation will be input together later.
+            </p>
+          </AssessedExplanation>
+        )}
+        <Table
+          lockPageSize
+          pageSize={-1}
+          name="evaluations"
+          columns={assessedCols}
+          data={assessedEvaluations}
+          manualPagination={false}
+          className="assessed"
         />
       </div>
     </Fragment>

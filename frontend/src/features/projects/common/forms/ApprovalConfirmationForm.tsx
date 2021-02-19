@@ -15,9 +15,7 @@ const ApprovalConfirmationForm = ({ isReadOnly }: IStepProps) => {
   const isSres = keycloak.hasRole(Roles.SRES) || keycloak.hasRole(Roles.SRES_FINANCIAL_MANAGER);
   const groupName = isSres ? 'The owning Ministry/Agency' : 'My Ministry/Agency';
   const label =
-    groupName +
-    ` has received approval to request the property be submitted to the Enhanced Referral Program and marketed internally to other Ministry 
-  and Broader Public Sector Agencies for 90 days before listing the property to be sold on the public commercial real estate market`;
+    groupName + ` has approval/authority to submit the Disposal Project to SRES for review.`;
   return (
     <Fragment>
       <h3>Approval</h3>
