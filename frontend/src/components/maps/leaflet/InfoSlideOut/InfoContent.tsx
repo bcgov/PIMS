@@ -123,9 +123,7 @@ export const InfoContent: React.FC<IInfoContent> = ({
           />
           {!!propertyInfo?.projectNumbers?.length && (
             <ThreeColumnItem
-              leftSideLabel={
-                propertyInfo.projectNumbers.length > 1 ? 'Project Numbers' : 'Project Number'
-              }
+              leftSideLabel={`Project Number${propertyInfo.projectNumbers.length > 1 ? 's' : ''}`}
               rightSideItem={propertyInfo.projectNumbers.map((projectNum: string) => (
                 <ProjectNumberLink
                   setPrivateProject={setPrivateProject}
