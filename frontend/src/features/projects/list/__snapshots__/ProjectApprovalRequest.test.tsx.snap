@@ -664,6 +664,8 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
                     >
                       <a
                         href="/mapview?buildingId=1&disabled=true&loadDraft=false&sidebar=true"
+                        rel="noopener noreferrer"
+                        target="_blank"
                       >
                         View
                       </a>
