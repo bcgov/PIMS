@@ -13,6 +13,8 @@ const ViewPropertyCell = (props: CellProps<IProperty, number>) => {
   const property = props.row.original;
   return (
     <Link
+      target="_blank"
+      rel="noopener noreferrer"
       to={{
         pathname: `/mapview`,
         search: queryString.stringify({
