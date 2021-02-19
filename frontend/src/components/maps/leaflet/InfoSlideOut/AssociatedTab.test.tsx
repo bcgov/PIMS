@@ -6,7 +6,7 @@ import { Router } from 'react-router-dom';
 import thunk from 'redux-thunk';
 import configureMockStore from 'redux-mock-store';
 import { Provider } from 'react-redux';
-import { IParcel, IBuilding } from 'actions/parcelsActions';
+import { IParcel } from 'actions/parcelsActions';
 import { render } from '@testing-library/react';
 import { mockParcel, mockBuilding } from './InfoContent.test';
 import AssociatedParcelsList from './AssociatedParcelsList';
@@ -25,11 +25,11 @@ const addAssociatedBuildingLink = (
   </>
 );
 
-const AsscParcelsTab = (propertyInfo: IBuilding | null) => {
+const AsscParcelsTab = (parcels: IParcel[]) => {
   return (
     <Provider store={store}>
       <Router history={history}>
-        <AssociatedParcelsList propertyInfo={propertyInfo} />
+        <AssociatedParcelsList parcels={parcels} />
       </Router>
     </Provider>
   );
@@ -66,12 +66,12 @@ describe('Associated Buildings/Parcels view', () => {
   });
 
   it('Associated parcels list renders correctly', () => {
-    const { container } = render(AsscParcelsTab(mockBuilding));
+    const { container } = render(AsscParcelsTab(mockBuilding.parcels));
     expect(container.firstChild).toMatchSnapshot();
   });
 
   it('Associated parcels list shows parcel PID', () => {
-    const { getByText } = render(AsscParcelsTab(mockBuilding));
+    const { getByText } = render(AsscParcelsTab(mockBuilding.parcels));
     expect(getByText('000-000-000')).toBeVisible();
   });
 });

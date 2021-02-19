@@ -208,7 +208,9 @@ const InfoControl: React.FC<InfoControlProps> = ({ open, setOpen, onHeaderAction
         );
       } else if (canViewProperty) {
         if (isBuilding) {
-          return <AssociatedParcelsList propertyInfo={popUpContext.propertyInfo as IBuilding} />;
+          return (
+            <AssociatedParcelsList parcels={(popUpContext.propertyInfo as IBuilding).parcels} />
+          );
         } else {
           return (
             <AssociatedBuildingsList
