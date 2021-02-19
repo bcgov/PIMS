@@ -148,7 +148,7 @@ describe('dispose project draft step display', () => {
     history.location.pathname = '/dispose/projects/approval';
     const { getByText, getByLabelText } = render(uiElement);
     const nextButton = getByText('Next');
-    const check = getByLabelText('has received approval', { exact: false });
+    const check = getByLabelText('has approval/authority', { exact: false });
     await act(async () => {
       fireEvent.click(check);
       await wait(() => {
