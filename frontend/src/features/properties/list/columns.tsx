@@ -108,8 +108,8 @@ export const columns = (
     accessor: 'name',
     align: 'left',
     responsive: true,
-    width: spacing.large,
-    minWidth: 120,
+    width: spacing.medium,
+    minWidth: 140,
     sortable: true,
   },
   {
@@ -239,7 +239,7 @@ export const columns = (
     },
   },
   {
-    Header: 'Lot Size (in ha)',
+    Header: 'Lot Size (in\u00A0ha)',
     accessor: 'landArea',
     Cell: NumberCell,
     align: 'right',
