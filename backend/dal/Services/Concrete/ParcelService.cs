@@ -290,14 +290,6 @@ namespace Pims.Dal.Services
             parcel.ThrowIfNotAllowedToEdit(nameof(parcel), this.User, new[] { Permissions.PropertyEdit, Permissions.AdminProperties });
             var isAdmin = this.User.HasPermission(Permissions.AdminProperties);
 
-            parcel.PropertyTypeId = (int)(parcel.Parcels.Count > 0 ? PropertyTypes.Subdivision : PropertyTypes.Land);
-            if (parcel.PropertyTypeId == (int)PropertyTypes.Subdivision)
-            {
-                var parentPid = parcel.Parcels.FirstOrDefault()?.Parcel?.PID;
-                if (parentPid == null) throw new InvalidOperationException("Invalid parent parcel associated to subdivision, parent parcels must contain a valid PID");
-                parcel.PID = parentPid.Value;
-            }
-
             var originalParcel = this.Context.Parcels
                 .Include(p => p.Agency)
                 .Include(p => p.Address)
@@ -315,6 +307,14 @@ namespace Pims.Dal.Services
             var allowEdit = isAdmin || userAgencies.Contains(originalAgencyId);
             var ownsABuilding = originalParcel.Buildings.Any(pb => userAgencies.Contains(pb.Building.AgencyId.Value));
             if (!allowEdit && !ownsABuilding) throw new NotAuthorizedException("User may not edit parcels outside of their agency.");
+
+            parcel.PropertyTypeId = originalParcel.PropertyTypeId; // property type cannot be changed directly.
+            if (parcel.PropertyTypeId == (int)PropertyTypes.Subdivision)
+            {
+                var parentPid = parcel.Parcels.FirstOrDefault()?.Parcel?.PID;
+                if (parentPid == null) throw new InvalidOperationException("Invalid parent parcel associated to subdivision, parent parcels must contain a valid PID");
+                parcel.PID = parentPid.Value;
+            }
 
             originalParcel.ThrowIfPropertyInSppProject(this.User);
 
