@@ -77,13 +77,14 @@ export const InfoContent: React.FC<IInfoContent> = ({
   propertyTypeId,
   canViewDetails,
 }) => {
+  const isParcel =
+    propertyTypeId !== null &&
+    [PropertyTypes.PARCEL, PropertyTypes.SUBDIVISION].includes(propertyTypeId);
   return (
     <>
       <ListGroup>
         <Label className="header">{getHeading(propertyTypeId)}</Label>
-        {propertyTypeId === PropertyTypes.PARCEL && (
-          <ParcelPIDPIN parcelInfo={propertyInfo as IParcel} />
-        )}
+        {isParcel && <ParcelPIDPIN parcelInfo={propertyInfo as IParcel} />}
         <OuterRow>
           {canViewDetails && (
             <>
@@ -142,7 +143,7 @@ export const InfoContent: React.FC<IInfoContent> = ({
           <ThreeColumnItem leftSideLabel={'Longitude'} rightSideItem={propertyInfo?.longitude} />
         </OuterRow>
       </ListGroup>
-      {propertyTypeId === PropertyTypes.PARCEL && (
+      {isParcel && (
         <ParcelAttributes parcelInfo={propertyInfo as IParcel} canViewDetails={canViewDetails} />
       )}
       {propertyTypeId === PropertyTypes.BUILDING && (
