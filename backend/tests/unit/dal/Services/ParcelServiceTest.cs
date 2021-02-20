@@ -1244,7 +1244,7 @@ namespace Pims.Dal.Test.Services
             originalParcel.PIN = 1;
             init.SaveChanges();
             var parcel = EntityHelper.CreateParcel(2);
-            var dividedParcel = new Entity.ParcelParcel() { ParcelId = 2, SubdivisionId = 1, Parcel = originalParcel };
+            var dividedParcel = new Entity.ParcelParcel() { ParcelId = 1, SubdivisionId = 2, Parcel = originalParcel };
             parcel.Parcels.Add(dividedParcel);
 
             var options = ControllerHelper.CreateDefaultPimsOptions();
@@ -1254,9 +1254,9 @@ namespace Pims.Dal.Test.Services
             service.Add(parcel);
 
             // Update the parcel to contain a new Parcel
-            var parcelToUpdate = service.Get(1);
+            var parcelToUpdate = service.Get(2);
             parcelToUpdate.Parcels.Clear();
-            dividedParcel = new Entity.ParcelParcel() { ParcelId = 3, SubdivisionId = 1, Parcel = updatedParcel };
+            dividedParcel = new Entity.ParcelParcel() { ParcelId = 1, SubdivisionId = 3, Parcel = updatedParcel };
             parcelToUpdate.Parcels.Add(dividedParcel);
             var result = service.Update(parcelToUpdate);
 

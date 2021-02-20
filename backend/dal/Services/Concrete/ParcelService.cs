@@ -309,7 +309,7 @@ namespace Pims.Dal.Services
             if (!allowEdit && !ownsABuilding) throw new NotAuthorizedException("User may not edit parcels outside of their agency.");
 
             parcel.PropertyTypeId = originalParcel.PropertyTypeId; // property type cannot be changed directly.
-            if (parcel.PropertyTypeId == (int)PropertyTypes.Subdivision)
+            if (parcel.PropertyTypeId == (int)PropertyTypes.Subdivision && parcel.Parcels.Any())
             {
                 var parentPid = parcel.Parcels.FirstOrDefault()?.Parcel?.PID;
                 if (parentPid == null) throw new InvalidOperationException("Invalid parent parcel associated to subdivision, parent parcels must contain a valid PID");
@@ -335,7 +335,7 @@ namespace Pims.Dal.Services
 
             if ((parcel.Parcels.Count > 0 && parcel.Subdivisions.Count > 0)
                 || (originalParcel.Parcels.Count > 0 && parcel.Subdivisions.Count > 0)
-                || (originalParcel.Subdivisions.Count > 0 && parcel.Parcels.Count > 0)) throw new InvalidOperationException("Parcel may only have assocatiated parcels or subdivisions, not both.");
+                || (originalParcel.Subdivisions.Count > 0 && parcel.Parcels.Count > 0)) throw new InvalidOperationException("Parcel may only have associated parcels or subdivisions, not both.");
 
             // Users who don't own the parcel, but only own a building cannot update the parcel.
             if (allowEdit)
