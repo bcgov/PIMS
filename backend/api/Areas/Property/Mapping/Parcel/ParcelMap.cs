@@ -67,6 +67,7 @@ namespace Pims.Api.Areas.Property.Mapping.Parcel
                 .Map(dest => dest.Id, src => src.Id)
                 .Map(dest => dest.PID, src => ParcelConverter.ConvertPID(src.PID))
                 .Map(dest => dest.PIN, src => src.PIN)
+                .Map(dest => dest.PropertyTypeId, src => src.PropertyTypeId)
                 .Map(dest => dest.ProjectNumbers, src => JsonSerializer.Serialize<IEnumerable<string>>(src.ProjectNumbers ?? Enumerable.Empty<string>(), _serializerOptions))
                 .Map(dest => dest.ClassificationId, src => src.ClassificationId)
                 .Map(dest => dest.EncumbranceReason, src => src.EncumbranceReason)

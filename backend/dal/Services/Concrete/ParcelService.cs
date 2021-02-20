@@ -181,6 +181,13 @@ namespace Pims.Dal.Services
         {
             parcel.ThrowIfNull(nameof(parcel));
             parcel.PropertyTypeId = (int)(parcel.Parcels.Count > 0 ? PropertyTypes.Subdivision : PropertyTypes.Land);
+            if(parcel.PropertyTypeId == (int)PropertyTypes.Subdivision)
+            {
+                var parentPid = parcel.Parcels.FirstOrDefault()?.Parcel?.PID;
+                if (parentPid == null) throw new InvalidOperationException("Invalid parent parcel associated to subdivision, parent parcels must contain a valid PID");
+                parcel.PID = parentPid.Value;
+                parcel.PIN = this.Context.GetUniquePidPin(parcel.PID);
+            }
             this.User.ThrowIfNotAuthorized(new[] { Permissions.PropertyAdd, Permissions.AdminProperties });
 
             var agency = this.User.GetAgency(this.Context) ??
@@ -282,6 +289,14 @@ namespace Pims.Dal.Services
         {
             parcel.ThrowIfNotAllowedToEdit(nameof(parcel), this.User, new[] { Permissions.PropertyEdit, Permissions.AdminProperties });
             var isAdmin = this.User.HasPermission(Permissions.AdminProperties);
+
+            parcel.PropertyTypeId = (int)(parcel.Parcels.Count > 0 ? PropertyTypes.Subdivision : PropertyTypes.Land);
+            if (parcel.PropertyTypeId == (int)PropertyTypes.Subdivision)
+            {
+                var parentPid = parcel.Parcels.FirstOrDefault()?.Parcel?.PID;
+                if (parentPid == null) throw new InvalidOperationException("Invalid parent parcel associated to subdivision, parent parcels must contain a valid PID");
+                parcel.PID = parentPid.Value;
+            }
 
             var originalParcel = this.Context.Parcels
                 .Include(p => p.Agency)

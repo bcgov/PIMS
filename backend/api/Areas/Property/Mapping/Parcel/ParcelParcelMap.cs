@@ -38,11 +38,6 @@ namespace Pims.Api.Areas.Property.Mapping.Parcel
                 .Map(dest => dest.PIN, src => src.PIN)
                 .Inherits<Entity.BaseEntity, BModel.BaseModel>();
 
-            config.NewConfig<Model.SubdivisionParcelModel, Entity.Parcel>()
-                .EnableNonPublicMembers(true)
-                .Map(dest => dest.Id, src => src.Id)
-                .Inherits<BModel.BaseModel, Entity.BaseEntity>();
-
             config.NewConfig<Entity.ParcelParcel, Model.SubdivisionParcelModel>()
                 .EnableNonPublicMembers(true)
                 .Map(dest => dest.Id, src => src.Parcel.Id)
@@ -53,6 +48,7 @@ namespace Pims.Api.Areas.Property.Mapping.Parcel
             config.NewConfig<Model.SubdivisionParcelModel, Entity.ParcelParcel>()
                 .EnableNonPublicMembers(true)
                 .Map(dest => dest.ParcelId, src => src.Id)
+                .Map(dest => dest.Parcel.PID, src => ParcelConverter.ConvertPID(src.PID))
                 .Inherits<BModel.BaseModel, Entity.BaseEntity>();
 
 
