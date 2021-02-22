@@ -147,7 +147,10 @@ const SplStep = ({ formikRef }: IStepProps) => {
         project?.statusCode === ReviewWorkflowStatus.PreMarketing ||
         project?.statusCode === ReviewWorkflowStatus.OnMarket ||
         project?.statusCode === ReviewWorkflowStatus.ContractInPlaceConditional ||
+        project?.statusCode === ReviewWorkflowStatus.ContractInPlaceUnconditional ||
+        project?.statusCode === ReviewWorkflowStatus.NotInSpl ||
         currentTab === SPPApprovalTabs.closeOutForm));
+
   const setCurrentTab = (tabName: string) => {
     dispatch(saveSplTab(tabName));
   };

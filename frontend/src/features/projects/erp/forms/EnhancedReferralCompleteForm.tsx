@@ -1,7 +1,7 @@
 import './EnhancedReferralCompleteForm.scss';
 import React, { useState } from 'react';
 import { Container, Button, Col } from 'react-bootstrap';
-import { Form, FastDatePicker } from 'components/common/form';
+import { Form, FastDatePicker, FastCurrencyInput, FastInput } from 'components/common/form';
 import styled from 'styled-components';
 import { useFormikContext } from 'formik';
 import TooltipIcon from 'components/common/TooltipIcon';
@@ -16,6 +16,7 @@ import {
   requestForSplReceivedOn,
   approvedForSplOn,
   ProjectNotes,
+  disposeWarning,
 } from '../../common';
 import GenericModal from 'components/common/GenericModal';
 import { validateFormikWithCallback } from 'utils';
@@ -30,6 +31,7 @@ interface IEnhancedReferralCompleteFormProps {
   onClickGreTransferred: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   onClickProceedToSpl: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   onClickNotInSpl: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+  onClickDisposedExternally: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
 }
 
 /**
@@ -42,10 +44,12 @@ const EnhancedReferralCompleteForm = ({
   onClickGreTransferred,
   onClickProceedToSpl,
   onClickNotInSpl,
+  onClickDisposedExternally,
 }: IEnhancedReferralCompleteFormProps) => {
   const formikProps = useFormikContext<IProject>();
   const [proceedToSpl, setProceedToSpl] = useState(false);
   const [notInSpl, setNotInSpl] = useState(false);
+  const [disposeExternally, setDisposeExternally] = useState(false);
   return (
     <Container fluid className="EnhancedReferralCompleteForm">
       <h3>Enhanced Referral Process Complete</h3>
@@ -108,7 +112,8 @@ const EnhancedReferralCompleteForm = ({
           field="transferredWithinGreOn"
         />
         {(formikProps.values.statusCode === ReviewWorkflowStatus.InErp ||
-          formikProps.values.statusCode === ReviewWorkflowStatus.OnHold) && (
+          formikProps.values.statusCode === ReviewWorkflowStatus.OnHold ||
+          formikProps.values.statusCode === ReviewWorkflowStatus.NotInSpl) && (
           <div className="col-md-6">
             <Button
               disabled={isReadOnly || !formikProps.values.transferredWithinGreOn}
@@ -191,39 +196,121 @@ const EnhancedReferralCompleteForm = ({
                 )}
               </div>
             )}
-            {notInSpl && (
-              <GenericModal
-                display={notInSpl}
-                cancelButtonText="Close"
-                okButtonText="Yes"
-                handleOk={(e: any) => {
-                  onClickNotInSpl(e);
-                  setNotInSpl(false);
-                }}
-                handleCancel={() => {
-                  setNotInSpl(false);
-                }}
-                title="Really Not in SPL?"
-                message={notInSplWarning}
-              />
-            )}
-            {proceedToSpl && (
-              <GenericModal
-                display={proceedToSpl}
-                cancelButtonText="Close"
-                okButtonText="Proceed to SPL"
-                handleOk={(e: any) => {
-                  onClickProceedToSpl(e);
-                  setProceedToSpl(false);
-                }}
-                handleCancel={() => {
-                  setProceedToSpl(false);
-                }}
-                title="Really Proceed to SPL?"
-                message={proceedToSplWarning}
-              />
-            )}
           </Form.Row>
+          {formikProps.values.statusCode === ReviewWorkflowStatus.NotInSpl && (
+            <>
+              <OrText>OR</OrText>
+              <Form.Row>
+                <Form.Label column md={4}>
+                  <h3>Dispose Externally</h3>
+                </Form.Label>
+              </Form.Row>
+              <Form.Row>
+                <Form.Label column md={4}>
+                  Date of Accepted Offer
+                </Form.Label>
+                <FastDatePicker
+                  required
+                  outerClassName="col-md-2"
+                  formikProps={formikProps}
+                  disabled={isReadOnly}
+                  field="offerAcceptedOn"
+                />
+              </Form.Row>
+              <Form.Row>
+                <Form.Label column md={4}>
+                  Purchaser
+                </Form.Label>
+                <FastInput
+                  required
+                  field="purchaser"
+                  outerClassName="col-md-2"
+                  disabled={isReadOnly}
+                  formikProps={formikProps}
+                />
+              </Form.Row>
+              <Form.Row>
+                <Form.Label column md={4}>
+                  Offer Amount
+                </Form.Label>
+                <FastCurrencyInput
+                  required
+                  field="offerAmount"
+                  outerClassName="col-md-2"
+                  disabled={isReadOnly}
+                  formikProps={formikProps}
+                />
+              </Form.Row>
+
+              <Form.Row>
+                <Form.Label column md={4}>
+                  Disposal Date
+                </Form.Label>
+                <FastDatePicker
+                  outerClassName="col-md-2"
+                  formikProps={formikProps}
+                  disabled={isReadOnly}
+                  field="disposedOn"
+                />
+                <Button
+                  disabled={isReadOnly || !formikProps.values.disposedOn}
+                  onClick={() =>
+                    validateFormikWithCallback(formikProps, () => setDisposeExternally(true))
+                  }
+                >
+                  Dispose
+                </Button>
+              </Form.Row>
+            </>
+          )}
+          {notInSpl && (
+            <GenericModal
+              display={notInSpl}
+              cancelButtonText="Close"
+              okButtonText="Yes"
+              handleOk={(e: any) => {
+                onClickNotInSpl(e);
+                setNotInSpl(false);
+              }}
+              handleCancel={() => {
+                setNotInSpl(false);
+              }}
+              title="Really Not in SPL?"
+              message={notInSplWarning}
+            />
+          )}
+          {proceedToSpl && (
+            <GenericModal
+              display={proceedToSpl}
+              cancelButtonText="Close"
+              okButtonText="Proceed to SPL"
+              handleOk={(e: any) => {
+                onClickProceedToSpl(e);
+                setProceedToSpl(false);
+              }}
+              handleCancel={() => {
+                setProceedToSpl(false);
+              }}
+              title="Really Proceed to SPL?"
+              message={proceedToSplWarning}
+            />
+          )}
+          {disposeExternally && (
+            <GenericModal
+              display={disposeExternally}
+              cancelButtonText="Close"
+              okButtonText="Dispose Project"
+              handleOk={(e: any) => {
+                onClickDisposedExternally(e);
+                setDisposeExternally(false);
+              }}
+              handleCancel={() => {
+                setDisposeExternally(false);
+              }}
+              title="Really Dispose Project?"
+              message={disposeWarning}
+            />
+          )}
         </>
       )}
     </Container>

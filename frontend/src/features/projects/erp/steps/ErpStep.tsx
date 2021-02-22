@@ -57,6 +57,14 @@ const ErpStep = ({ formikRef }: IStepProps) => {
         project?.statusCode === ReviewWorkflowStatus.OnHold ||
         project?.statusCode === ReviewWorkflowStatus.ApprovedForExemption ||
         currentTab === SPPApprovalTabs.closeOutForm));
+  const canUserApprove =
+    canUserOverride() ||
+    (canUserApproveForm() &&
+      (project?.statusCode === ReviewWorkflowStatus.ERP ||
+        project?.statusCode === ReviewWorkflowStatus.ApprovedForErp ||
+        project?.statusCode === ReviewWorkflowStatus.OnHold ||
+        project?.statusCode === ReviewWorkflowStatus.ApprovedForExemption ||
+        project?.statusCode === ReviewWorkflowStatus.NotInSpl));
   const setCurrentTab = (tabName: string) => {
     dispatch(saveErpTab(tabName));
   };
@@ -141,7 +149,7 @@ const ErpStep = ({ formikRef }: IStepProps) => {
               {...{ submitStatusCode, setSubmitStatusCode, currentTab, setCurrentTab }}
             />
             <StepErrorSummary />
-            {canUserEdit && (
+            {canUserApprove && (
               <ApprovalActions
                 submitStatusCode={submitStatusCode}
                 setSubmitStatusCode={setSubmitStatusCode}

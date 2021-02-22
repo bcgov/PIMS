@@ -8,25 +8,30 @@ import { Formik, Form } from 'formik';
 import { getStore, mockProject as defaultProject } from '../../dispose/testUtils';
 import _ from 'lodash';
 import { Provider } from 'react-redux';
+import { Router } from 'react-router-dom';
+import { createMemoryHistory } from 'history';
 
 const mockProject = _.cloneDeep(defaultProject);
+const history = createMemoryHistory();
 
 const createElement = (storeOverride?: any) => (
   <Provider store={storeOverride ?? getStore(mockProject)}>
-    <Formik
-      initialValues={{
-        statusCode: ReviewWorkflowStatus.ApprovedForErp,
-        projectAgencyResponses: [],
-      }}
-      validateOnChange={false}
-      onSubmit={() => {}}
-    >
-      {formikProps => (
-        <Form>
-          <EnhancedReferralTab goToGreTransferred={noop} setSubmitStatusCode={noop} />
-        </Form>
-      )}
-    </Formik>
+    <Router history={history}>
+      <Formik
+        initialValues={{
+          statusCode: ReviewWorkflowStatus.ApprovedForErp,
+          projectAgencyResponses: [],
+        }}
+        validateOnChange={false}
+        onSubmit={() => {}}
+      >
+        {formikProps => (
+          <Form>
+            <EnhancedReferralTab goToGreTransferred={noop} setSubmitStatusCode={noop} />
+          </Form>
+        )}
+      </Formik>
+    </Router>
   </Provider>
 );
 
@@ -39,17 +44,21 @@ describe('EnhancedReferralTab', () => {
 
   it('renders correctly when approved for exemption', () => {
     const form = (
-      <Formik
-        initialValues={{ statusCode: ReviewWorkflowStatus.ApprovedForExemption }}
-        validateOnChange={false}
-        onSubmit={() => {}}
-      >
-        {formikProps => (
-          <Form>
-            <EnhancedReferralTab goToGreTransferred={noop} setSubmitStatusCode={noop} />
-          </Form>
-        )}
-      </Formik>
+      <Provider store={getStore(mockProject)}>
+        <Router history={history}>
+          <Formik
+            initialValues={{ statusCode: ReviewWorkflowStatus.ApprovedForExemption }}
+            validateOnChange={false}
+            onSubmit={() => {}}
+          >
+            {formikProps => (
+              <Form>
+                <EnhancedReferralTab goToGreTransferred={noop} setSubmitStatusCode={noop} />
+              </Form>
+            )}
+          </Formik>
+        </Router>
+      </Provider>
     );
     const tree = renderer.create(form).toJSON();
     expect(tree).toMatchSnapshot();
