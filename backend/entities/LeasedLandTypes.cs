@@ -10,7 +10,7 @@ namespace Pims.Dal.Entities
         /// </summary>
         Owned = 0,
         /// <summary>
-        /// The ministry leases th eland the building is on.
+        /// The ministry leases the land the building is on.
         /// </summary>
         Leased = 1,
         /// <summary>
