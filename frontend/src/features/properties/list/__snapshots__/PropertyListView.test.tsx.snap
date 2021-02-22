@@ -485,7 +485,7 @@ exports[`Property list view Matches snapshot 1`] = `
           <div
             class="tr"
             role="row"
-            style="display: flex; flex: 1 0 auto; min-width: 1180px;"
+            style="display: flex; flex: 1 0 auto; min-width: 1175px;"
           >
             <div
               class="th reset-filter svg-btn"
@@ -704,8 +704,7 @@ exports[`Property list view Matches snapshot 1`] = `
               class="th"
               colspan="1"
               role="columnheader"
-              style="box-sizing: border-box; flex: 90 0 auto; min-width: 90px; width: 3.5%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
-              width="3.5%"
+              style="box-sizing: border-box; flex: 90 0 auto; min-width: 90px; width: 90px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
             >
               <div
                 class="sortable-column"
@@ -1181,7 +1180,7 @@ exports[`Property list view Matches snapshot 1`] = `
               class="th"
               colspan="1"
               role="columnheader"
-              style="box-sizing: border-box; flex: 65 0 auto; min-width: 65px; width: 65px; justify-content: flex-end; text-align: right; align-items: center; display: flex;"
+              style="box-sizing: border-box; flex: 60 0 auto; min-width: 60px; width: 60px; justify-content: flex-end; text-align: right; align-items: center; display: flex;"
             >
               <div
                 class="sortable-column"
