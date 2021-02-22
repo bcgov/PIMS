@@ -49,7 +49,7 @@ namespace Pims.Api.Test.Routes.Admin
             // Act
             // Assert
             Assert.NotNull(endpoint);
-            endpoint.HasGet("");
+            endpoint.HasGet();
         }
 
         [Fact]
