@@ -20,6 +20,8 @@ interface IMapSideBarLayoutProps {
   title: React.ReactNode;
   hidePolicy?: boolean;
   size?: SidebarSize;
+  /** property name for title */
+  propertyName?: string;
 }
 
 const HeaderRow = styled.div`
@@ -30,6 +32,13 @@ const HeaderRow = styled.div`
     cursor: pointer;
     filter: opacity(0.8);
   }
+`;
+
+const PropertyName = styled.div`
+  font-size: 18px;
+  font-weight: 500;
+  text-align: left;
+  padding: 0 50px 5px !important;
 `;
 
 const CloseIcon = styled(FaWindowClose)`
@@ -44,6 +53,18 @@ const Title = styled.span`
   text-align: left;
 `;
 
+/** Shortens property name to a reasonable length as some are quite long */
+const formattedName = (name?: string) => {
+  if (name) {
+    if (name.length > 80) {
+      return name.substring(0, 80) + '...';
+    }
+    return name;
+  } else {
+    return '';
+  }
+};
+
 /**
  * SideBar layout with control bar and then form content passed as child props.
  * @param param0
@@ -54,6 +75,7 @@ const MapSideBarLayout: React.FunctionComponent<IMapSideBarLayoutProps> = ({
   hidePolicy,
   title,
   size,
+  propertyName,
   ...props
 }) => {
   return (
@@ -76,7 +98,7 @@ const MapSideBarLayout: React.FunctionComponent<IMapSideBarLayoutProps> = ({
                 />
               </TooltipWrapper>
             </HeaderRow>
-
+            {propertyName && <PropertyName>{formattedName(propertyName)}</PropertyName>}
             {isVisible ? props.children : null}
           </>
         )}
