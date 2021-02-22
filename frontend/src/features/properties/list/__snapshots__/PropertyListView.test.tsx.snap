@@ -28,6 +28,7 @@ exports[`Property list view Matches snapshot 1`] = `
   justify-items: center;
   position: relative;
   font-size: 12px;
+  padding: 0 5px;
 }
 
 .c0 {
@@ -484,7 +485,7 @@ exports[`Property list view Matches snapshot 1`] = `
           <div
             class="tr"
             role="row"
-            style="display: flex; flex: 1 0 auto; min-width: 1160px;"
+            style="display: flex; flex: 1 0 auto; min-width: 1175px;"
           >
             <div
               class="th reset-filter svg-btn"
@@ -534,7 +535,7 @@ exports[`Property list view Matches snapshot 1`] = `
                     stroke-linecap="round"
                     stroke-linejoin="round"
                     stroke-width="2"
-                    style="font-size: 10px; margin-right: 5px;"
+                    style="font-size: 10px;"
                     viewBox="0 0 24 24"
                     width="1em"
                     xmlns="http://www.w3.org/2000/svg"
@@ -603,7 +604,7 @@ exports[`Property list view Matches snapshot 1`] = `
                     stroke-linecap="round"
                     stroke-linejoin="round"
                     stroke-width="2"
-                    style="font-size: 10px; margin-right: 5px;"
+                    style="font-size: 10px;"
                     viewBox="0 0 24 24"
                     width="1em"
                     xmlns="http://www.w3.org/2000/svg"
@@ -656,8 +657,8 @@ exports[`Property list view Matches snapshot 1`] = `
               class="th"
               colspan="1"
               role="columnheader"
-              style="box-sizing: border-box; flex: 120 0 auto; min-width: 120px; width: 14%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
-              width="14%"
+              style="box-sizing: border-box; flex: 140 0 auto; min-width: 140px; width: 7%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+              width="7%"
             >
               <div
                 class="sortable-column"
@@ -703,8 +704,7 @@ exports[`Property list view Matches snapshot 1`] = `
               class="th"
               colspan="1"
               role="columnheader"
-              style="box-sizing: border-box; flex: 90 0 auto; min-width: 90px; width: 3.5%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
-              width="3.5%"
+              style="box-sizing: border-box; flex: 90 0 auto; min-width: 90px; width: 90px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
             >
               <div
                 class="sortable-column"
@@ -719,7 +719,7 @@ exports[`Property list view Matches snapshot 1`] = `
                     stroke-linecap="round"
                     stroke-linejoin="round"
                     stroke-width="2"
-                    style="font-size: 10px; margin-right: 5px;"
+                    style="font-size: 10px;"
                     viewBox="0 0 24 24"
                     width="1em"
                     xmlns="http://www.w3.org/2000/svg"
@@ -851,7 +851,7 @@ exports[`Property list view Matches snapshot 1`] = `
                     stroke-linecap="round"
                     stroke-linejoin="round"
                     stroke-width="2"
-                    style="font-size: 10px; margin-right: 5px;"
+                    style="font-size: 10px;"
                     viewBox="0 0 24 24"
                     width="1em"
                     xmlns="http://www.w3.org/2000/svg"
@@ -920,7 +920,7 @@ exports[`Property list view Matches snapshot 1`] = `
                     stroke-linecap="round"
                     stroke-linejoin="round"
                     stroke-width="2"
-                    style="font-size: 10px; margin-right: 5px;"
+                    style="font-size: 10px;"
                     viewBox="0 0 24 24"
                     width="1em"
                     xmlns="http://www.w3.org/2000/svg"
@@ -989,7 +989,7 @@ exports[`Property list view Matches snapshot 1`] = `
                     stroke-linecap="round"
                     stroke-linejoin="round"
                     stroke-width="2"
-                    style="font-size: 10px; margin-right: 5px;"
+                    style="font-size: 10px;"
                     viewBox="0 0 24 24"
                     width="1em"
                     xmlns="http://www.w3.org/2000/svg"
@@ -1058,7 +1058,7 @@ exports[`Property list view Matches snapshot 1`] = `
                     stroke-linecap="round"
                     stroke-linejoin="round"
                     stroke-width="2"
-                    style="font-size: 10px; margin-right: 5px;"
+                    style="font-size: 10px;"
                     viewBox="0 0 24 24"
                     width="1em"
                     xmlns="http://www.w3.org/2000/svg"
@@ -1127,7 +1127,7 @@ exports[`Property list view Matches snapshot 1`] = `
                     stroke-linecap="round"
                     stroke-linejoin="round"
                     stroke-width="2"
-                    style="font-size: 10px; margin-right: 5px;"
+                    style="font-size: 10px;"
                     viewBox="0 0 24 24"
                     width="1em"
                     xmlns="http://www.w3.org/2000/svg"
@@ -1137,7 +1137,7 @@ exports[`Property list view Matches snapshot 1`] = `
                     />
                   </svg>
                   <span>
-                    Lot Size (in ha)
+                    Lot Size (in ha)
                   </span>
                 </div>
                 <span
@@ -1180,7 +1180,7 @@ exports[`Property list view Matches snapshot 1`] = `
               class="th"
               colspan="1"
               role="columnheader"
-              style="box-sizing: border-box; flex: 65 0 auto; min-width: 65px; width: 65px; justify-content: flex-end; text-align: right; align-items: center; display: flex;"
+              style="box-sizing: border-box; flex: 60 0 auto; min-width: 60px; width: 60px; justify-content: flex-end; text-align: right; align-items: center; display: flex;"
             >
               <div
                 class="sortable-column"
