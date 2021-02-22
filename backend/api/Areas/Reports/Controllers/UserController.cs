@@ -56,7 +56,9 @@ namespace Pims.Api.Areas.Reports.Controllers
         [HttpGet]
         [HasPermission(Permissions.AdminUsers)]
         [Produces(ContentTypes.CONTENT_TYPE_CSV, ContentTypes.CONTENT_TYPE_EXCELX)]
-        [ProducesResponseType(200)]
+        [ProducesResponseType(typeof(Api.Models.PageModel<Models.User.UserModel>), 200)]
+        [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]
+        [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 403)]
         [SwaggerOperation(Tags = new[] { "user", "report" })]
         public IActionResult ExportUsers(bool all = false)
         {
@@ -76,7 +78,9 @@ namespace Pims.Api.Areas.Reports.Controllers
         [HttpPost("filter")]
         [HasPermission(Permissions.AdminUsers)]
         [Produces(ContentTypes.CONTENT_TYPE_CSV, ContentTypes.CONTENT_TYPE_EXCELX)]
-        [ProducesResponseType(200)]
+        [ProducesResponseType(typeof(Api.Models.PageModel<Models.User.UserModel>), 200)]
+        [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]
+        [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 403)]
         [SwaggerOperation(Tags = new[] { "user", "report" })]
         public IActionResult ExportUsers([FromBody] EModel.UserFilter filter, bool all = false)
         {

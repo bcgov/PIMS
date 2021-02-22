@@ -50,7 +50,7 @@ const Ribbon = styled('div')`
   margin-right: 50px;
 `;
 
-const getUserReport = (filter: IPaginateParams) =>
+const downloadUsers = (filter: IPaginateParams) =>
   `${ENVIRONMENT.apiUrl}/reports/users?${
     filter ? queryString.stringify({ ...filter, all: true }) : ''
   }`;
@@ -141,7 +141,7 @@ export const ManageUsers = () => {
     );
     return dispatch(
       download({
-        url: getUserReport(query),
+        url: downloadUsers(query),
         fileName: `pims-users.${accept === 'csv' ? 'csv' : 'xlsx'}`,
         actionType: 'users',
         headers: {
