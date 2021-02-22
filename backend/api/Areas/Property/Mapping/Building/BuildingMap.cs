@@ -65,14 +65,14 @@ namespace Pims.Api.Areas.Property.Mapping.Building
                 .Map(dest => dest.Parcels, src => src.Parcels)
                 .AfterMapping((src, dest) =>
                 {
-                    if(src.LeasedLandMetadata == null)
+                    if (src.LeasedLandMetadata == null)
                     {
                         dest.LeasedLandMetadata = new List<Model.LeasedLandMetadataModel>();
                         return;
                     }
-                    var metadata = JsonSerializer.Deserialize<IEnumerable<Entity.Models.LeasedLandMetadata>>(src.LeasedLandMetadata, _serializerOptions);
+                    var metadata = JsonSerializer.Deserialize<IEnumerable<Entity.Models.LeasedLandMetadataModel>>(src.LeasedLandMetadata, _serializerOptions);
 
-                    dest.LeasedLandMetadata = metadata.Where(m => m != null).Select(l => new Model.LeasedLandMetadataModel { OwnershipNote = l.OwnershipNote, ParcelId = l.ParcelId, Type = l.Type });
+                    dest.LeasedLandMetadata = metadata.Where(m => m != null).Select(l => new Model.LeasedLandMetadataModel { OwnershipNote = l.OwnershipNote, ParcelId = l.ParcelId, Type = (int)l.Type });
                 })
                 .Inherits<Entity.BaseEntity, BModel.BaseModel>();
 
