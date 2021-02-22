@@ -62,7 +62,7 @@ export interface IAddress {
   postal: string;
 }
 
-export enum LeasedLand {
+export enum LeasedLandTypes {
   owned = 0,
   leased = 1,
   other = 2,
@@ -127,7 +127,7 @@ export interface IFlatBuilding extends IProperty {
   assessedBuilding: number | '';
   netBook: number | '';
   leasedLand: {
-    type: LeasedLand;
+    type: LeasedLandTypes;
   };
 }
 
