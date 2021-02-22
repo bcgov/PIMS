@@ -35,25 +35,29 @@ export const AssociatedBuildingsList: React.FC<IAssociatedBuildings> = ({
           Associated Buildings
         </Label>
         <ListGroup.Item>Click a building name to view its details</ListGroup.Item>
-        {propertyInfo?.buildings?.map((building, buildingId) => (
-          <ListGroup.Item key={buildingId}>
-            <Link
-              className="styled-link"
-              to={{
-                pathname: `/mapview`,
-                search: queryString.stringify({
-                  ...queryString.parse(location.search),
-                  sidebar: true,
-                  disabled: true,
-                  loadDraft: false,
-                  buildingId: building.id,
-                }),
-              }}
-            >
-              {building.name}
-            </Link>
-          </ListGroup.Item>
-        ))}
+        {propertyInfo?.buildings?.length ? (
+          propertyInfo?.buildings?.map((building, buildingId) => (
+            <ListGroup.Item key={buildingId}>
+              <Link
+                className="styled-link"
+                to={{
+                  pathname: `/mapview`,
+                  search: queryString.stringify({
+                    ...queryString.parse(location.search),
+                    sidebar: true,
+                    disabled: true,
+                    loadDraft: false,
+                    buildingId: building.id,
+                  }),
+                }}
+              >
+                {building.name}
+              </Link>
+            </ListGroup.Item>
+          ))
+        ) : (
+          <ListGroup.Item>This parcel has no associated buildings</ListGroup.Item>
+        )}
       </ListGroup>
       {canEditDetails && (
         <ListGroup>
