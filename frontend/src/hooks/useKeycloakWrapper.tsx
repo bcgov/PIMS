@@ -49,7 +49,7 @@ export interface IKeycloak {
 /**
  * Provides extension methods to interact with the `keycloak` object.
  */
-function useKeycloakWrapper(): IKeycloak {
+export function useKeycloakWrapper(): IKeycloak {
   const { keycloak } = useKeycloak();
   const userInfo = keycloak?.userInfo as IUserInfo;
 

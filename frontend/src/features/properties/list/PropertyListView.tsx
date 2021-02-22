@@ -247,10 +247,9 @@ const PropertyListView: React.FC = () => {
   const agenciesList = agencies.filter(a => !a.parentId).map(mapLookupCode);
   const subAgencies = agencies.filter(a => !!a.parentId).map(mapLookupCode);
 
-  const propertyClassifications = useMemo(
-    () => lookupCodes.getByType(API.PROPERTY_CLASSIFICATION_CODE_SET_NAME),
-    [lookupCodes],
-  );
+  const propertyClassifications = useMemo(() => lookupCodes.getPropertyClassificationOptions(), [
+    lookupCodes,
+  ]);
   const administrativeAreas = useMemo(
     () => lookupCodes.getByType(API.AMINISTRATIVE_AREA_CODE_SET_NAME),
     [lookupCodes],
@@ -428,7 +427,6 @@ const PropertyListView: React.FC = () => {
           <PropertyFilter
             defaultFilter={defaultFilterValues}
             agencyLookupCodes={agencies}
-            propertyClassifications={propertyClassifications}
             adminAreaLookupCodes={administrativeAreas}
             onChange={handleFilterChange}
             sort={sorting}
