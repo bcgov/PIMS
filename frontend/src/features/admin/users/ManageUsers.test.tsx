@@ -8,7 +8,7 @@ import { ILookupCode } from 'actions/lookupActions';
 import * as actionTypes from 'constants/actionTypes';
 import * as reducerTypes from 'constants/reducerTypes';
 import * as API from 'constants/API';
-import { ManageUsersPage } from './ManageUsersPage';
+import { ManageUsers } from './ManageUsers';
 import { cleanup, fireEvent, render, wait } from '@testing-library/react';
 import moment from 'moment-timezone';
 
@@ -79,7 +79,7 @@ describe('Manage Users Component', () => {
     render(
       <Provider store={store}>
         <Router history={history}>
-          <ManageUsersPage />
+          <ManageUsers />
         </Router>
       </Provider>,
     );

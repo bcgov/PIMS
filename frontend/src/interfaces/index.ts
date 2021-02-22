@@ -5,4 +5,4 @@ export * from './userInfo';
 export * from './user';
 export * from './role';
 export * from './agency';
-export * from './users';
+export * from './IUsersFilter';

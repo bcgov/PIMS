@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useCallback } from 'react';
-import { Container } from 'react-bootstrap';
+import { Container, Button } from 'react-bootstrap';
 import { getUsersAction } from 'actionCreators/usersActionCreator';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'reducers/rootReducer';
@@ -26,18 +26,47 @@ import styled from 'styled-components';
 import useCodeLookups from 'hooks/useLookupCodes';
 import { isEmpty } from 'lodash';
 import _ from 'lodash';
+import variables from '_variables.module.scss';
+import { FaFileExcel } from 'react-icons/fa';
+import TooltipWrapper from 'components/common/TooltipWrapper';
+import download from 'utils/download';
+import queryString from 'query-string';
+import { ENVIRONMENT } from 'constants/environment';
+import { IPaginateParams } from 'constants/API';
 
 const TableContainer = styled(Container)`
   margin-top: 10px;
   margin-bottom: 40px;
 `;
 
-export const ManageUsersPage = () => {
+const FileIcon = styled(Button)`
+  background-color: #fff !important;
+  color: ${variables.primaryColor} !important;
+  padding: 6px 5px;
+`;
+
+const Ribbon = styled('div')`
+  text-align: right;
+  margin-right: 50px;
+`;
+
+const downloadUsers = (filter: IPaginateParams) =>
+  `${ENVIRONMENT.apiUrl}/reports/users?${
+    filter ? queryString.stringify({ ...filter, all: true }) : ''
+  }`;
+
+/**
+ * Component to manage the user accounts.
+ * Displays users in a list view.
+ * Contains a filter to find users.
+ * @component
+ * @returns A ManagerUser component.
+ */
+export const ManageUsers = () => {
   const dispatch = useDispatch();
   const { getByType } = useCodeLookups();
   const agencies = useMemo(() => getByType(API.AGENCY_CODE_SET_NAME), [getByType]);
   const roles = useMemo(() => getByType(API.ROLE_CODE_SET_NAME), [getByType]);
-
   const columns = useMemo(() => columnDefinitions, []);
 
   const pagedUsers = useSelector<RootState, IPagedItems<IUser>>(state => {
@@ -100,6 +129,28 @@ export const ManageUsersPage = () => {
     }),
   );
 
+  /**
+   * @param {'csv' | 'excel'} accept Whether the fetch is for type of CSV or EXCEL
+   */
+  const fetch = (accept: 'csv' | 'excel') => {
+    const query = toFilteredApiPaginateParams<IUsersFilter>(
+      pageIndex,
+      pageSize,
+      sort && !isEmpty(sort) ? generateMultiSortCriteria(sort) : undefined,
+      filter,
+    );
+    return dispatch(
+      download({
+        url: downloadUsers(query),
+        fileName: `pims-users.${accept === 'csv' ? 'csv' : 'xlsx'}`,
+        actionType: 'users',
+        headers: {
+          Accept: accept === 'csv' ? 'text/csv' : 'application/vnd.ms-excel',
+        },
+      }),
+    );
+  };
+
   return (
     <div className="users-management-page">
       <UsersFilterBar
@@ -119,29 +170,38 @@ export const ManageUsersPage = () => {
         }}
       />
       {
-        <TableContainer fluid>
-          <Table<IUserRecord>
-            name="usersTable"
-            columns={columns}
-            pageIndex={pageIndex}
-            data={userList}
-            defaultCanSort={true}
-            pageCount={Math.ceil(pagedUsers.total / pageSize)}
-            pageSize={pageSize}
-            onRequestData={onRequestData}
-            onSortChange={(column, direction) => {
-              if (!!direction) {
-                dispatch(getUsersSortAction({ [column]: direction }));
-              } else {
-                dispatch(getUsersSortAction({}));
-              }
-            }}
-            sort={sort}
-            onPageSizeChange={size => dispatch(setUsersPageSize(size))}
-            loading={!(users && !users.isFetching)}
-            clickableTooltip="Click IDIR/BCeID link to view User Information page"
-          />
-        </TableContainer>
+        <>
+          <Ribbon>
+            <TooltipWrapper toolTipId="export-to-excel" toolTip="Export to Excel">
+              <FileIcon>
+                <FaFileExcel data-testid="excel-icon" size={36} onClick={() => fetch('excel')} />
+              </FileIcon>
+            </TooltipWrapper>
+          </Ribbon>
+          <TableContainer fluid>
+            <Table<IUserRecord>
+              name="usersTable"
+              columns={columns}
+              pageIndex={pageIndex}
+              data={userList}
+              defaultCanSort={true}
+              pageCount={Math.ceil(pagedUsers.total / pageSize)}
+              pageSize={pageSize}
+              onRequestData={onRequestData}
+              onSortChange={(column, direction) => {
+                if (!!direction) {
+                  dispatch(getUsersSortAction({ [column]: direction }));
+                } else {
+                  dispatch(getUsersSortAction({}));
+                }
+              }}
+              sort={sort}
+              onPageSizeChange={size => dispatch(setUsersPageSize(size))}
+              loading={!(users && !users.isFetching)}
+              clickableTooltip="Click IDIR/BCeID link to view User Information page"
+            />
+          </TableContainer>
+        </>
       }
     </div>
   );
