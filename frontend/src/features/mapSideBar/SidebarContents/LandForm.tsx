@@ -166,9 +166,9 @@ const Form: React.FC<ILandForm> = ({
   const isViewOrUpdate = !!initialValues.id;
 
   // lookup codes that will be used by subforms
-  const { getOptionsByType } = useCodeLookups();
+  const { getOptionsByType, getPropertyClassificationOptions } = useCodeLookups();
   const agencies = getOptionsByType(API.AGENCY_CODE_SET_NAME);
-  const classifications = getOptionsByType(API.PROPERTY_CLASSIFICATION_CODE_SET_NAME);
+  const classifications = getPropertyClassificationOptions();
   useDraftMarkerSynchronizer('data');
 
   const render = (): React.ReactNode => {

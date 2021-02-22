@@ -1,6 +1,6 @@
 import './SelectProjectPropertiesStep.scss';
 
-import React, { useMemo, useCallback, useState, useEffect } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import { Button, Container } from 'react-bootstrap';
 import { Formik } from 'formik';
 import { useStepper, SelectProjectPropertiesStepYupSchema } from '..';
@@ -11,11 +11,8 @@ import {
   useStepForm,
   SelectProjectPropertiesForm,
 } from '../../common';
-import { ILookupCode } from 'actions/lookupActions';
-import * as API from 'constants/API';
 import styled from 'styled-components';
 import { Classifications } from 'constants/classifications';
-import useCodeLookups from 'hooks/useLookupCodes';
 
 /** contains the link text for Show Surplus and Show All classification filter */
 const LinkButton = styled(Button)`
@@ -28,7 +25,6 @@ const LinkButton = styled(Button)`
  * @param param0 {isReadOnly formikRef} formikRef allow remote formik access, isReadOnly toggle to prevent updates.
  */
 const SelectProjectPropertiesStep = ({ isReadOnly, formikRef }: IStepProps) => {
-  const lookupCodes = useCodeLookups();
   // Filtering and pagination state
   const [filter, setFilter] = useState<IFilterBarState>({
     searchBy: 'address',
@@ -53,13 +49,6 @@ const SelectProjectPropertiesStep = ({ isReadOnly, formikRef }: IStepProps) => {
   const [pageIndex, setPageIndex] = useState(0);
   const { onSubmit, canUserEditForm } = useStepForm();
   const { project } = useStepper();
-  const agencies = useMemo(() => lookupCodes.getByType(API.AGENCY_CODE_SET_NAME), [lookupCodes]);
-  const filterByParent = useCodeLookups().filterByParent;
-  const filteredAgencies: ILookupCode[] = useMemo(
-    () => filterByParent(agencies, project.agencyId),
-    [agencies, filterByParent, project.agencyId],
-  );
-  const propertyClassifications = lookupCodes.getByType(API.PROPERTY_CLASSIFICATION_CODE_SET_NAME);
 
   // Update internal state whenever the filter bar state changes
   const handleFilterChange = useCallback(
@@ -101,11 +90,7 @@ const SelectProjectPropertiesStep = ({ isReadOnly, formikRef }: IStepProps) => {
         <>
           <Container fluid className="filter-container border-bottom">
             <Container className="px-0">
-              <FilterBar
-                agencyLookupCodes={filteredAgencies}
-                propertyClassifications={propertyClassifications}
-                onChange={handleFilterChange}
-              />
+              <FilterBar onChange={handleFilterChange} />
             </Container>
           </Container>
           <div className="small-filter">

@@ -45,7 +45,6 @@ const MapView: React.FC<MapViewProps> = (props: MapViewProps) => {
     state => state.parcel.parcelDetail,
   );
   const agencies = lookupCodes.getByType(API.AGENCY_CODE_SET_NAME);
-  const propertyClassifications = lookupCodes.getByType(API.PROPERTY_CLASSIFICATION_CODE_SET_NAME);
   const administrativeAreas = lookupCodes.getByType(API.AMINISTRATIVE_AREA_CODE_SET_NAME);
 
   const lotSizes = fetchLotSizes();
@@ -78,7 +77,6 @@ const MapView: React.FC<MapViewProps> = (props: MapViewProps) => {
           properties={properties}
           selectedProperty={propertyDetail}
           agencies={agencies}
-          propertyClassifications={propertyClassifications}
           administrativeAreas={administrativeAreas}
           lotSizes={lotSizes}
           onMarkerPopupClose={() => {

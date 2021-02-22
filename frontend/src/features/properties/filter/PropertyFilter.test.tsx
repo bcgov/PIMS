@@ -14,6 +14,8 @@ import thunk from 'redux-thunk';
 import configureMockStore from 'redux-mock-store';
 import * as reducerTypes from 'constants/reducerTypes';
 import { fetchPropertyNames } from 'actionCreators/propertyActionCreator';
+import { ILookupCode } from 'actions/lookupActions';
+import * as API from 'constants/API';
 
 const onFilterChange = jest.fn<void, [IPropertyFilter]>();
 //prevent web calls from being made during tests.
@@ -24,13 +26,76 @@ jest.mock('actionCreators/propertyActionCreator');
 (fetchPropertyNames as any).mockImplementation(jest.fn(() => () => ['test']));
 
 const mockedAxios = axios as jest.Mocked<typeof axios>;
+const mockKeycloak = (claims: string[]) => {
+  (useKeycloak as jest.Mock).mockReturnValue({
+    keycloak: {
+      subject: 'test',
+      userInfo: {
+        roles: claims,
+        agencies: ['1'],
+      },
+    },
+  });
+};
 const mockStore = configureMockStore([thunk]);
 let history = createMemoryHistory();
+
+const lCodes = {
+  lookupCodes: [
+    { name: 'agencyVal', id: '1', isDisabled: false, type: API.AGENCY_CODE_SET_NAME },
+    { name: 'disabledAgency', id: '2', isDisabled: true, type: API.AGENCY_CODE_SET_NAME },
+    { name: 'roleVal', id: '1', isDisabled: false, type: API.ROLE_CODE_SET_NAME },
+    { name: 'disabledRole', id: '2', isDisabled: true, type: API.ROLE_CODE_SET_NAME },
+    {
+      name: 'Core Operational',
+      id: '0',
+      isDisabled: false,
+      type: API.PROPERTY_CLASSIFICATION_CODE_SET_NAME,
+    },
+    {
+      name: 'Core Strategic',
+      id: '1',
+      isDisabled: false,
+      type: API.PROPERTY_CLASSIFICATION_CODE_SET_NAME,
+    },
+    {
+      name: 'Surplus Active',
+      id: '2',
+      isDisabled: false,
+      type: API.PROPERTY_CLASSIFICATION_CODE_SET_NAME,
+    },
+    {
+      name: 'Surplus Encumbered',
+      id: '3',
+      isDisabled: false,
+      type: API.PROPERTY_CLASSIFICATION_CODE_SET_NAME,
+    },
+    {
+      name: 'Disposed',
+      id: '4',
+      isDisabled: false,
+      type: API.PROPERTY_CLASSIFICATION_CODE_SET_NAME,
+    },
+    {
+      name: 'Demolished',
+      id: '5',
+      isDisabled: false,
+      type: API.PROPERTY_CLASSIFICATION_CODE_SET_NAME,
+    },
+    {
+      name: 'Subdivided',
+      id: '6',
+      isDisabled: false,
+      type: API.PROPERTY_CLASSIFICATION_CODE_SET_NAME,
+    },
+  ] as ILookupCode[],
+};
 
 const getStore = (filter: any) =>
   mockStore({
     [reducerTypes.FILTER]: filter,
     [reducerTypes.PROPERTY_NAMES]: ['test'],
+    [reducerTypes.LOOKUP_CODE]: lCodes,
   });
 
 const defaultFilter: IPropertyFilter = {
@@ -55,7 +120,6 @@ const getUiElement = (filter: IPropertyFilter) => (
         defaultFilter={filter}
         agencyLookupCodes={MOCK.AGENCIES}
         adminAreaLookupCodes={MOCK.ADMINISTRATIVEAREAS}
-        propertyClassifications={MOCK.CLASSIFICATIONS}
         onChange={onFilterChange}
         showAllAgencySelect={true}
       />
@@ -72,25 +136,10 @@ describe('MapFilterBar', () => {
 
   beforeEach(() => {
     history = createMemoryHistory();
-    (useKeycloak as jest.Mock).mockReturnValue({
-      keycloak: {
-        subject: 'test',
-        userInfo: {
-          roles: ['property-view'],
-          agencies: ['1'],
-        },
-      },
-    });
+    mockKeycloak([]);
   });
   it('renders correctly', () => {
-    (useKeycloak as jest.Mock).mockReturnValue({
-      keycloak: {
-        subject: 'test',
-        userInfo: {
-          roles: ['property-view'],
-        },
-      },
-    });
+    mockKeycloak(['property-view']);
     // Capture any changes
     const tree = renderer.create(getUiElement(defaultFilter)).toJSON();
     expect(tree).toMatchSnapshot();
@@ -98,14 +147,7 @@ describe('MapFilterBar', () => {
 
   xit('submits correct values', async () => {
     // Arrange
-    (useKeycloak as jest.Mock).mockReturnValue({
-      keycloak: {
-        subject: 'test',
-        userInfo: {
-          roles: ['admin-properties'],
-        },
-      },
-    });
+    mockKeycloak(['admin-properties']);
 
     const { container } = render(getUiElement(defaultFilter));
     const address = container.querySelector('input[name="address"]');
