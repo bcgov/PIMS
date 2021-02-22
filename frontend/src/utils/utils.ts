@@ -78,17 +78,6 @@ export const isPositiveNumberOrZero = (input: string | number | undefined | null
   return !isNaN(Number(input)) && Number(input) > -1;
 };
 
-export const mapLookupCode = (
-  code: ILookupCode,
-  defaultId: number | string | null,
-): SelectOption => ({
-  label: code.name,
-  value: code.id.toString(),
-  selected: code.id === defaultId,
-  code: code.code,
-  parentId: code.parentId,
-});
-
 /** used for filters that need to display the string value of a parent agency agency */
 export const mapLookupCodeWithParentString = (
   code: ILookupCode,

@@ -1,7 +1,6 @@
 import { FastSelect, SelectOptions, TextArea } from 'components/common/form';
 import { Label } from 'components/common/Label';
 import TooltipIcon from 'components/common/TooltipIcon';
-import { Claims } from 'constants/claims';
 import { Classifications } from 'constants/classifications';
 import {
   CoreOperational,
@@ -11,13 +10,14 @@ import {
   SurplusActive,
   SurplusEncumbered,
   SurplusEncumberedOrActive,
+  Disposed,
 } from 'features/properties/components/forms/strings';
-import { getIn, useFormikContext } from 'formik';
-import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+import { FormikValues, getIn, useFormikContext } from 'formik';
 import React from 'react';
 import { Col, Row } from 'react-bootstrap';
 import styled from 'styled-components';
 import variables from '_variables.module.scss';
+import { useQueryParamSideBar, SidebarContextType } from '../../hooks/useQueryParamSideBar';
 
 const Title = styled.h4`
   float: left;
@@ -91,7 +91,9 @@ export const ClassificationForm: React.FC<IClassificationFormProps> = ({
   encumbranceField,
 }) => {
   const formikProps = useFormikContext();
-  const keycloak = useKeycloakWrapper();
+
+  const formikRef = React.useRef<FormikValues>();
+  const { context } = useQueryParamSideBar(formikRef);
   let surplusActiveOrEncumbered =
     getIn(formikProps.values, field) === Classifications.SurplusEncumbered ||
     getIn(formikProps.values, field) === Classifications.SurplusActive;
@@ -99,22 +101,33 @@ export const ClassificationForm: React.FC<IClassificationFormProps> = ({
   /** classId based on current formik values to determine which classsification information box to display */
   let classId = getIn(formikProps.values, field);
 
-  /** determine how to filter the classifications */
-  const determineFilter = (val: Number) => {
-    /** non SRES users cannot see subdivided */
-    if (keycloak.hasClaim(Claims.ADMIN_PROPERTIES)) {
-      /** only buildings can be demolished */
-      if (!fieldLabel?.includes('Building')) {
-        return val !== Classifications.Disposed && val !== Classifications.Demolished;
-      } else {
-        return val !== Classifications.Disposed;
-      }
-    } else {
-      return (
-        val !== Classifications.Subdivided &&
-        val !== Classifications.Disposed &&
-        val !== Classifications.Demolished
-      );
+  /**
+   * determine how to filter the classifications
+   * @param id - The classification id.
+   */
+  const determineFilter = (id: Number) => {
+    switch (context) {
+      case SidebarContextType.ADD_BUILDING:
+      case SidebarContextType.VIEW_BUILDING:
+      case SidebarContextType.UPDATE_BUILDING:
+        return id !== Classifications.Subdivided;
+      case SidebarContextType.ADD_BARE_LAND:
+      case SidebarContextType.VIEW_BARE_LAND:
+      case SidebarContextType.UPDATE_BARE_LAND:
+      case SidebarContextType.VIEW_DEVELOPED_LAND:
+      case SidebarContextType.UPDATE_DEVELOPED_LAND:
+        return id !== Classifications.Demolished;
+      case SidebarContextType.ADD_SUBDIVISION_LAND:
+      case SidebarContextType.VIEW_SUBDIVISION_LAND:
+      case SidebarContextType.UPDATE_SUBDIVISION_LAND:
+      case SidebarContextType.ADD_ASSOCIATED_LAND:
+        return (
+          id !== Classifications.Disposed &&
+          id !== Classifications.Demolished &&
+          id !== Classifications.Subdivided
+        );
+      default:
+        return true;
     }
   };
 
@@ -138,6 +151,8 @@ export const ClassificationForm: React.FC<IClassificationFormProps> = ({
         return InfoBoxWithContent(Demolished);
       case Classifications.Subdivided:
         return InfoBoxWithContent(Subdivided);
+      case Classifications.Disposed:
+        return InfoBoxWithContent(Disposed);
       default:
         return InfoBoxWithContent(
           'Select a classification from the dropdown list to show the definition here. For further information, see the Inventory Policy.',

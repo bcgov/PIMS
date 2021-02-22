@@ -4,11 +4,11 @@ import React, { useMemo, useRef, useState } from 'react';
 import { Col } from 'react-bootstrap';
 import { Formik, getIn } from 'formik';
 import { ILookupCode } from 'actions/lookupActions';
-import { Form, Select, SelectOption } from '../../../components/common/form';
+import { Form, Select } from '../../../components/common/form';
 import { FilterBarSchema } from 'utils/YupSchema';
 import ResetButton from 'components/common/form/ResetButton';
 import SearchButton from 'components/common/form/SearchButton';
-import { mapLookupCodeWithParentString } from 'utils';
+import { mapLookupCode, mapLookupCodeWithParentString } from 'utils';
 import { PropertyFilterOptions } from './';
 import { useRouterFilter } from 'hooks/useRouterFilter';
 import { IPropertyFilter } from './IPropertyFilter';
@@ -23,7 +23,7 @@ import { PropertyFilterAgencyOptions } from './PropertyFilterAgencyOptions';
 import styled from 'styled-components';
 import { ParentSelect } from 'components/common/form/ParentSelect';
 import { Claims } from 'constants/claims';
-import { Classifications } from 'constants/classifications';
+import useLookupCodes from 'hooks/useLookupCodes';
 
 /**
  * PropertyFilter component properties.
@@ -33,8 +33,6 @@ export interface IPropertyFilterProps {
   defaultFilter: IPropertyFilter;
   /** An array of agency lookup codes. */
   agencyLookupCodes: ILookupCode[];
-  /** An array of classification codes. */
-  propertyClassifications: ILookupCode[];
   /** An array of administrative area codes. */
   adminAreaLookupCodes: ILookupCode[];
   /** Callback event when the filter is changed during Mount. */
@@ -70,7 +68,6 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
   defaultFilter,
   agencyLookupCodes,
   adminAreaLookupCodes,
-  propertyClassifications,
   onChange,
   sort,
   onSorting,
@@ -79,6 +76,7 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
   const [propertyFilter, setPropertyFilter] = React.useState<IPropertyFilter>(defaultFilter);
   const dispatch = useDispatch();
   const keycloak = useKeycloakWrapper();
+  const lookupCodes = useLookupCodes();
   const [initialLoad, setInitialLoad] = useState(false);
   useRouterFilter({
     filter: propertyFilter,
@@ -90,22 +88,11 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
     sort: sort,
     setSorting: onSorting,
   });
-  const mapLookupCode = (code: ILookupCode): SelectOption => ({
-    label: code.name,
-    value: code.id.toString(),
-    code: code.code,
-    parentId: code.parentId,
-  });
+
   const agencies = (agencyLookupCodes ?? []).map(c =>
     mapLookupCodeWithParentString(c, agencyLookupCodes),
   );
-  const classifications = !keycloak.hasClaim(Claims.ADMIN_PROPERTIES)
-    ? (propertyClassifications ?? [])
-        .map(c => mapLookupCode(c))
-        .filter(
-          c => +c.value !== Classifications.Demolished && +c.value !== Classifications.Subdivided,
-        )
-    : (propertyClassifications ?? []).map(c => mapLookupCode(c));
+  const classifications = lookupCodes.getPropertyClassificationOptions();
   const adminAreas = (adminAreaLookupCodes ?? []).map(c => mapLookupCode(c));
   const [clear, setClear] = useState(false);
   const [options, setOptions] = useState([]);

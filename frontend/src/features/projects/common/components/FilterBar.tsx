@@ -3,10 +3,12 @@ import './FilterBar.scss';
 import React from 'react';
 import { Col } from 'react-bootstrap';
 import { Formik, useFormikContext } from 'formik';
-import { ILookupCode } from 'actions/lookupActions';
-import { Form, Select, SelectOption, InputGroup, Input } from 'components/common/form';
+import { Form, Select, InputGroup, Input } from 'components/common/form';
 import ResetButton from 'components/common/form/ResetButton';
 import SearchButton from 'components/common/form/SearchButton';
+import { useCodeLookups } from 'hooks/useLookupCodes';
+import * as API from 'constants/API';
+import { Classifications } from 'constants/classifications';
 
 const SearchBar: React.FC = () => {
   const state: { placeholders: Record<string, string> } = {
@@ -44,26 +46,22 @@ export interface IFilterBarState {
 }
 
 type FilterBarProps = {
-  agencyLookupCodes: ILookupCode[];
-  propertyClassifications: ILookupCode[];
   onChange: (value: IFilterBarState) => void;
 };
 
 /**
  * Filter bar for the Property List view
  */
-const FilterBar: React.FC<FilterBarProps> = ({
-  agencyLookupCodes,
-  propertyClassifications,
-  onChange,
-}) => {
-  const mapLookupCode = (code: ILookupCode): SelectOption => ({
-    label: code.name,
-    value: code.id.toString(),
-  });
+const FilterBar: React.FC<FilterBarProps> = ({ onChange }) => {
+  const lookupCode = useCodeLookups();
   //restrict available agencies to user agencies.
-  const agencies = (agencyLookupCodes ?? []).map(c => mapLookupCode(c));
-  const classifications = (propertyClassifications ?? []).map(c => mapLookupCode(c));
+  const agencies = lookupCode.getOptionsByType(API.AGENCY_CODE_SET_NAME);
+  const classifications = lookupCode.getPropertyClassificationOptions(
+    c =>
+      +c.value !== Classifications.Demolished &&
+      +c.value !== Classifications.Disposed &&
+      +c.value !== Classifications.Subdivided,
+  );
 
   return (
     <Formik<IFilterBarState>
