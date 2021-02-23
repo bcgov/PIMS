@@ -8,6 +8,7 @@ import { SidebarSize, SidebarContextType } from '../hooks/useQueryParamSideBar';
 import { FaWindowClose } from 'react-icons/fa';
 import './MapSideBarLayout.scss';
 import variables from '_variables.module.scss';
+import AbbreviatedText from 'components/common/AbbreviatedText';
 
 interface IMapSideBarLayoutProps {
   show: boolean;
@@ -34,13 +35,6 @@ const HeaderRow = styled.div`
   }
 `;
 
-const PropertyName = styled.div`
-  font-size: 18px;
-  font-weight: 500;
-  text-align: left;
-  padding: 0 50px 5px !important;
-`;
-
 const CloseIcon = styled(FaWindowClose)`
   color: ${variables.textColor};
   font-size: 30px;
@@ -52,18 +46,6 @@ const Title = styled.span`
   width: 100%;
   text-align: left;
 `;
-
-/** Shortens property name to a reasonable length as some are quite long */
-const formattedName = (name?: string) => {
-  if (name) {
-    if (name.length > 80) {
-      return name.substring(0, 80) + '...';
-    }
-    return name;
-  } else {
-    return '';
-  }
-};
 
 /**
  * SideBar layout with control bar and then form content passed as child props.
@@ -98,7 +80,9 @@ const MapSideBarLayout: React.FunctionComponent<IMapSideBarLayoutProps> = ({
                 />
               </TooltipWrapper>
             </HeaderRow>
-            {propertyName && <PropertyName>{formattedName(propertyName)}</PropertyName>}
+            {propertyName && (
+              <AbbreviatedText text={propertyName} maxLength={50} className="propertyName" />
+            )}
             {isVisible ? props.children : null}
           </>
         )}
