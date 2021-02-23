@@ -49,7 +49,7 @@ const ErpTabs: React.FunctionComponent<IErpTabsProps> = ({
   }
 
   return (
-    <React.Fragment>
+    <>
       <ErrorTabs setCurrentTab={setCurrentTab} currentTab={currentTab}>
         <Tab
           eventKey={SPPApprovalTabs.projectInformation}
@@ -90,7 +90,7 @@ const ErpTabs: React.FunctionComponent<IErpTabsProps> = ({
           </Tab>
         )}
       </ErrorTabs>
-    </React.Fragment>
+    </>
   );
 };
 

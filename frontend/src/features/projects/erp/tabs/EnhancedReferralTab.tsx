@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { ProjectNotes, ReviewWorkflowStatus } from '../../common';
+import { ReviewWorkflowStatus, useProject, useStepForm } from '../../common';
 import { EnhancedReferralCompleteForm, AgencyResponseForm } from '..';
 import { useFormikContext } from 'formik';
 import ExemptionEnhancedReferralCompleteForm from '../forms/ExemptionEnhancedReferralCompleteForm';
-import { Container } from 'react-bootstrap';
+import _ from 'lodash';
 
 interface IEnhancedReferralTabProps {
   isReadOnly?: boolean;
@@ -22,38 +22,47 @@ const EnhancedReferralTab: React.FunctionComponent<IEnhancedReferralTabProps> = 
 }: IEnhancedReferralTabProps) => {
   const { values } = useFormikContext();
 
-  if ((values as any).statusCode === ReviewWorkflowStatus.ApprovedForExemption) {
+  const { project } = useProject();
+  const { canUserApproveForm, canUserOverride } = useStepForm();
+  const canUserEdit =
+    !isReadOnly ||
+    canUserOverride() ||
+    (canUserApproveForm() &&
+      _.includes(
+        [
+          ReviewWorkflowStatus.ApprovedForErp,
+          ReviewWorkflowStatus.ERP,
+          ReviewWorkflowStatus.OnHold,
+          ReviewWorkflowStatus.ApprovedForExemption,
+          ReviewWorkflowStatus.NotInSpl,
+        ],
+        project?.statusCode,
+      ));
+
+  if ((values as any).exemptionRequested) {
     return (
       <ExemptionEnhancedReferralCompleteForm
-        isReadOnly={isReadOnly}
+        isReadOnly={!canUserEdit}
         onClickProceedToSpl={() => setSubmitStatusCode(ReviewWorkflowStatus.ApprovedForSpl)}
         onClickNotInSpl={() => setSubmitStatusCode(ReviewWorkflowStatus.NotInSpl)}
         onClickGreTransferred={() => goToGreTransferred()}
         onClickAddToErp={() => setSubmitStatusCode(ReviewWorkflowStatus.ApprovedForErp)}
+        onClickDisposedExternally={() => setSubmitStatusCode(ReviewWorkflowStatus.Disposed)}
       />
     );
   }
 
   return (
     <>
-      {(values as any).exemptionRequested && (
-        <Container fluid className="AgencyResponseForm">
-          <ProjectNotes
-            label="Exemption Rationale"
-            field="exemptionRationale"
-            disabled={true}
-            outerClassName="col-md-12"
-          />
-        </Container>
-      )}
-      <AgencyResponseForm isReadOnly={isReadOnly} />
+      <AgencyResponseForm isReadOnly={!canUserEdit} />
       <EnhancedReferralCompleteForm
-        isReadOnly={isReadOnly}
+        isReadOnly={!canUserEdit}
         onClickOnHold={() => {
           setSubmitStatusCode(ReviewWorkflowStatus.OnHold);
         }}
         onClickProceedToSpl={() => setSubmitStatusCode(ReviewWorkflowStatus.ApprovedForSpl)}
         onClickNotInSpl={() => setSubmitStatusCode(ReviewWorkflowStatus.NotInSpl)}
+        onClickDisposedExternally={() => setSubmitStatusCode(ReviewWorkflowStatus.Disposed)}
         onClickGreTransferred={() => goToGreTransferred()}
       />
     </>
