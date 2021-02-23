@@ -99,7 +99,7 @@ exports[`Map Legend View Legend renders correctly 1`] = `
       <div
         className="label col"
       >
-        Surplus Properties Program
+        Surplus Properties List
       </div>
     </div>
   </div>
