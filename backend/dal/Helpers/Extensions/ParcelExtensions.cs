@@ -191,6 +191,19 @@ namespace Pims.Dal.Helpers.Extensions
         }
 
         /// <summary>
+        /// Get unique a pin that will uniquely identify a parcel using a pre-existing pid.
+        /// </summary>
+        /// <param name="existingPid"></param>
+        /// <returns></returns>
+        public static int GetUniquePidPin(this PimsContext context, int existingPid)
+        {
+            // by getting the parcel with the "largest" pin, we can be sure that incrementing this PIN by one will result in a unique PIN (and therefore a unique PID/PIN).
+            var matchingParcel = context.Parcels.Where(p => p.PID == existingPid).AsNoTracking().OrderByDescending(p => p.PIN == null ? 0 : p.PIN).FirstOrDefault();
+            return (int)(matchingParcel?.PIN == null ? 1 : ++matchingParcel.PIN);
+
+        }
+
+        /// <summary>
         /// Update parcel financials
         /// </summary>
         /// <param name="context"></param>
