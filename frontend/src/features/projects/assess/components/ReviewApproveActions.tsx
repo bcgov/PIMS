@@ -1,11 +1,13 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { useFormikContext } from 'formik';
-import { ReviewWorkflowStatus, IProject } from '../../common/interfaces';
+import { ReviewWorkflowStatus, IProject, IProperty } from '../../common/interfaces';
 import GenericModal from 'components/common/GenericModal';
 import { useState, useEffect } from 'react';
 import { Button } from 'components/common/form';
 import { validateFormikWithCallback } from 'utils';
+import { PropertyTypes } from 'constants/propertyTypes';
+import { deletePotentialSubdivisionParcels } from 'features/projects/common';
 
 const FlexRight = styled.div`
   width: 100%;
@@ -33,6 +35,10 @@ export const ReviewApproveActions = ({
   const { values, submitForm } = formikProps;
   const [approveERP, setApproveERP] = useState(false);
   const [denyERP, setDenyERP] = useState(false);
+
+  const hasSubdivisions = (values.properties ?? []).some(
+    (property: IProperty) => property.propertyTypeId === PropertyTypes.SUBDIVISION,
+  );
   useEffect(() => {
     if (submitStatusCode !== undefined) {
       submitForm().then(() => setSubmitStatusCode(undefined));
@@ -108,9 +114,21 @@ export const ReviewApproveActions = ({
             handleCancel={() => setDenyERP(false)}
             title="Deny Approval"
             message={
-              !values.exemptionRequested
-                ? 'Are you sure you want to deny the project for Enhanced Referral Process? Please ensure to provide reasoning in the shared notes prior to clicking deny.'
-                : 'Are you sure you want to deny this project with the request for exemption? Please ensure to provide reasoning in the shared notes prior to clicking deny.'
+              <>
+                {!values.exemptionRequested
+                  ? `Are you sure you want to deny the project for Enhanced
+                Referral Process? Please ensure to provide reasoning in the shared notes prior to
+                clicking deny.`
+                  : `Are you sure you want to deny this project with the request for
+                exemption? Please ensure to provide reasoning in the shared notes prior to clicking
+                deny.`}
+                {hasSubdivisions && (
+                  <>
+                    <hr className="mb-3"></hr>
+                    <p>{deletePotentialSubdivisionParcels}</p>
+                  </>
+                )}
+              </>
             }
           />
         )}
