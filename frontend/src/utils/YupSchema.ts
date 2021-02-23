@@ -258,12 +258,12 @@ export const FilterBarSchema = Yup.object().shape(
       .max(200000, 'Invalid')
       /* Reference minLotSize field in validating maxLotSize value */
       .moreThan(Yup.ref('minLotSize'), 'Must be greater than Min Lot Size'),
-    inEnhancedReferralProcess: Yup.boolean().when(['inSurplusPropertyProgram', 'surplusFilter'], {
-      is: (inSurplusPropertyProgram, surplusFilter) => {
+    inEnhancedReferralProcess: Yup.boolean().when(['inSurplusPropertyList', 'surplusFilter'], {
+      is: (inSurplusPropertyList, surplusFilter) => {
         if (!surplusFilter) {
           return true;
         }
-        if (inSurplusPropertyProgram) {
+        if (inSurplusPropertyList) {
           return true;
         }
       },
@@ -272,7 +272,7 @@ export const FilterBarSchema = Yup.object().shape(
         'ERP or SPL Properties required when using the Surplus Properties filter.',
       ),
     }),
-    inSurplusPropertyProgram: Yup.boolean().when(['inEnhancedReferralProcess', 'surplusFilter'], {
+    inSurplusPropertyList: Yup.boolean().when(['inEnhancedReferralProcess', 'surplusFilter'], {
       is: (inEnhancedReferralProcess, surplusFilter) => {
         if (!surplusFilter) {
           return true;
@@ -287,7 +287,7 @@ export const FilterBarSchema = Yup.object().shape(
       ),
     }),
   },
-  [['inSurplusPropertyProgram', 'inEnhancedReferralProcess']],
+  [['inSurplusPropertyList', 'inEnhancedReferralProcess']],
 );
 
 export const AssociatedLandOwnershipSchema = Yup.object().shape({

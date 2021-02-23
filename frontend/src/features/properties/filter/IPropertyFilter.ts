@@ -25,7 +25,7 @@ export interface IPropertyFilter {
   /** The maxium lot size of the property. */
   maxLotSize: string;
   /** Whether the property is in SPP. */
-  inSurplusPropertyProgram?: boolean;
+  inSurplusPropertyList?: boolean;
   /** Whether the property is in ERP. */
   inEnhancedReferralProcess?: boolean;
   /** Select on of the property types [Land, Building]. */

@@ -62,7 +62,7 @@ namespace Pims.Dal.Entities.Models
         /// get/set - Flag indicating to show only properties that belong to a project.
         /// </summary>
         /// <value></value>
-        public bool? InSurplusPropertyProgram { get; set; }
+        public bool? InSurplusPropertyList { get; set; }
 
         /// <summary>
         /// get/set - Flag indicating to show only properties that are in en enhanced referral program.
@@ -212,7 +212,7 @@ namespace Pims.Dal.Entities.Models
 
             this.ProjectNumber = filter.GetStringValue(nameof(this.ProjectNumber));
             this.IgnorePropertiesInProjects = filter.GetBoolNullValue(nameof(this.IgnorePropertiesInProjects));
-            this.InSurplusPropertyProgram = filter.GetBoolNullValue(nameof(this.InSurplusPropertyProgram));
+            this.InSurplusPropertyList = filter.GetBoolNullValue(nameof(this.InSurplusPropertyList));
             this.PropertyType = Enum.TryParse(filter.GetStringValue(nameof(this.PropertyType), null), out propType) ? (PropertyTypes?)propType : null;
             this.Address = filter.GetStringValue(nameof(this.Address));
             this.AdministrativeArea = filter.GetStringValue(nameof(this.AdministrativeArea));
@@ -243,7 +243,7 @@ namespace Pims.Dal.Entities.Models
                 || this.SWLongitude.HasValue
                 || !String.IsNullOrWhiteSpace(this.ProjectNumber)
                 || this.IgnorePropertiesInProjects == true
-                || this.InSurplusPropertyProgram == true
+                || this.InSurplusPropertyList == true
                 || !String.IsNullOrWhiteSpace(this.Address)
                 || !String.IsNullOrWhiteSpace(this.AdministrativeArea)
                 || !String.IsNullOrWhiteSpace(this.Description)

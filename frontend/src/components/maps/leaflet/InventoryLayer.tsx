@@ -179,7 +179,7 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
       classificationId: filter?.classificationId,
       minLandArea: filter?.minLandArea,
       maxLandArea: filter?.maxLandArea,
-      inSurplusPropertyProgram: filter?.inSurplusPropertyProgram,
+      inSurplusPropertyList: filter?.inSurplusPropertyList,
       inEnhancedReferralProcess: filter?.inEnhancedReferralProcess,
       floorCount: filter?.floorCount,
       predominateUseId: Number(filter?.predominateUseId),

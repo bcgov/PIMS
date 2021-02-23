@@ -115,14 +115,14 @@ const FindMorePropertiesForm = <T extends any>(props: any) => {
       <FormSection>
         {displayError && (
           <InvalidFeedback>
-            <DisplayError errorPrompt field="inSurplusPropertyProgram" />
+            <DisplayError errorPrompt field="inSurplusPropertyList" />
           </InvalidFeedback>
         )}
 
         <StyledRow style={{ marginLeft: 115, paddingTop: 10 }}>
           <Check label="ERP Properties" field="inEnhancedReferralProcess" />
           <VerticalLine />
-          <Check label="SPL Properties" field="inSurplusPropertyProgram" />
+          <Check label="SPL Properties" field="inSurplusPropertyList" />
         </StyledRow>
       </FormSection>
       <FormSection>

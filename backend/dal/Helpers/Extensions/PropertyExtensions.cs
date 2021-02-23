@@ -95,8 +95,6 @@ namespace Pims.Dal.Helpers.Extensions
                 query = query.Where(p => p.ProjectNumbers.Contains(filter.ProjectNumber));
             if (filter.IgnorePropertiesInProjects == true)
                 query = query.Where(p => p.ProjectNumbers == null || p.ProjectNumbers == "[]");
-            if (filter.InSurplusPropertyProgram == true)
-                query = query.Where(p => !String.IsNullOrWhiteSpace(p.ProjectNumbers) && p.ProjectNumbers != "[]");
             if (!String.IsNullOrWhiteSpace(filter.Description))
                 query = query.Where(p => EF.Functions.Like(p.Description, $"%{filter.Description}%"));
             if (!String.IsNullOrWhiteSpace(filter.Name))
@@ -150,6 +148,18 @@ namespace Pims.Dal.Helpers.Extensions
             if (filter.InEnhancedReferralProcess.HasValue && filter.InEnhancedReferralProcess.Value)
             {
                 var statuses = context.Workflows.Where(w => w.Code == "ERP")
+                    .SelectMany(w => w.Status).Where(x => !x.Status.IsTerminal)
+                    .Select(x => x.StatusId).Distinct().ToArray();
+
+                query = query.Where(property =>
+                    context.Projects.Any(project =>
+                        statuses.Any(st => st == project.StatusId)
+                            && property.ProjectNumbers.Contains(project.ProjectNumber)));
+            }
+
+            if (filter.InSurplusPropertyList.HasValue && filter.InSurplusPropertyList.Value)
+            {
+                var statuses = context.Workflows.Where(w => w.Code == "SPL")
                     .SelectMany(w => w.Status).Where(x => !x.Status.IsTerminal)
                     .Select(x => x.StatusId).Distinct().ToArray();
 

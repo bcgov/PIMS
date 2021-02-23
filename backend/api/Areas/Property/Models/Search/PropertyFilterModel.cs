@@ -78,7 +78,7 @@ namespace Pims.Api.Areas.Property.Models.Search
         /// </summary>
         /// <value></value>
 
-        public bool? InSurplusPropertyProgram { get; set; }
+        public bool? InSurplusPropertyList { get; set; }
 
         /// <summary>
         /// get/set - Flag indicating to show only properties in enhanced referral process.
@@ -301,7 +301,7 @@ namespace Pims.Api.Areas.Property.Models.Search
             this.PropertyType = Enum.TryParse(filter.GetStringValue(nameof(this.PropertyType), null), out PropertyTypes propType) ? (PropertyTypes?)propType : null;
             this.ProjectNumber = filter.GetStringValue(nameof(this.ProjectNumber));
             this.IgnorePropertiesInProjects = filter.GetBoolNullValue(nameof(this.IgnorePropertiesInProjects));
-            this.InSurplusPropertyProgram = filter.GetBoolNullValue(nameof(this.InSurplusPropertyProgram));
+            this.InSurplusPropertyList = filter.GetBoolNullValue(nameof(this.InSurplusPropertyList));
             this.InEnhancedReferralProcess = filter.GetBoolNullValue(nameof(this.InEnhancedReferralProcess));
 
             this.MinMarketValue = filter.GetDecimalNullValue(nameof(this.MinMarketValue));
@@ -432,7 +432,7 @@ namespace Pims.Api.Areas.Property.Models.Search
                 ProjectNumber = model.ProjectNumber,
                 BareLandOnly = model.BareLandOnly,
                 IgnorePropertiesInProjects = model.IgnorePropertiesInProjects,
-                InSurplusPropertyProgram = model.InSurplusPropertyProgram,
+                InSurplusPropertyList = model.InSurplusPropertyList,
                 InEnhancedReferralProcess = model.InEnhancedReferralProcess,
                 Name = model.Name,
                 ParcelId = model.ParcelId,

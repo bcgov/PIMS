@@ -10,14 +10,14 @@ interface ISppButtonProps {
   handleErpClick: () => void;
   handleSppClick: () => void;
   inEnhancedReferralProcess?: boolean;
-  inSurplusPropertyProgram?: boolean;
+  inSurplusPropertyList?: boolean;
 }
 
 const SppButton: React.FC<ISppButtonProps> = ({
   handleErpClick,
   handleSppClick,
   inEnhancedReferralProcess,
-  inSurplusPropertyProgram,
+  inSurplusPropertyList,
 }) => {
   const [visible, setVisible] = useState<boolean>(false);
   const target = useRef(null);
@@ -29,7 +29,7 @@ const SppButton: React.FC<ISppButtonProps> = ({
 
   const iconColor = inEnhancedReferralProcess
     ? '#cf3e4f'
-    : inSurplusPropertyProgram
+    : inSurplusPropertyList
     ? '#a758cb'
     : '#3b99fc';
 

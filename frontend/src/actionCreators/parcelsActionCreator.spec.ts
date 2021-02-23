@@ -53,7 +53,7 @@ describe('fetchParcels action creator', () => {
       minLandArea: undefined,
       maxLandArea: undefined,
       projectNumber: undefined,
-      inSurplusPropertyProgram: false,
+      inSurplusPropertyList: false,
     };
     const url = ENVIRONMENT.apiUrl + API.PROPERTIES(params);
     const mockResponse = { data: { success: true } };
@@ -78,7 +78,7 @@ describe('fetchParcels action creator', () => {
       minLandArea: undefined,
       maxLandArea: undefined,
       projectNumber: undefined,
-      inSurplusPropertyProgram: false,
+      inSurplusPropertyList: false,
     };
     const url = ENVIRONMENT.apiUrl + API.PROPERTIES(params);
     mockAxios.onGet(url).reply(400, MOCK.ERROR);

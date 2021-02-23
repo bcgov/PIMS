@@ -83,7 +83,7 @@ export interface IPropertyFilter {
   administrativeArea?: string;
   projectNumber?: string;
   ignorePropertiesInProjects?: boolean;
-  inSurplusPropertyProgram?: boolean;
+  inSurplusPropertyList?: boolean;
   classificationId?: number;
   agencies?: number | number[];
   minLandArea?: number;

@@ -45,7 +45,7 @@ export interface IPropertySearchParams {
   classificationId?: number;
   minLandArea?: number;
   maxLandArea?: number;
-  inSurplusPropertyProgram?: boolean;
+  inSurplusPropertyList?: boolean;
   inEnhancedReferralProcess?: boolean;
 }
 export const PROPERTIES = (params: IPropertySearchParams | null) =>
@@ -61,7 +61,7 @@ export interface IGeoSearchParams {
   classificationId?: number;
   minLandArea?: number;
   maxLandArea?: number;
-  inSurplusPropertyProgram?: boolean;
+  inSurplusPropertyList?: boolean;
   inEnhancedReferralProcess?: boolean;
   name?: string;
   bareLandOnly?: boolean;
