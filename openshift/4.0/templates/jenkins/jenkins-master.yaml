@@ -1,0 +1,312 @@
+parameters:
+  - name: APP_NAME
+    displayName: "Application name"
+    description: "Name of the application."
+    required: true
+    value: jenkins
+  - name: PROJECT_NAME
+    displayName: "Openshift Project Name"
+    description: "Openshift Project Name"
+    required: true
+    value: "354028-tools"
+  - name: ENV_NAME
+    displayName: "Environment name"
+    description: "The name for the environment"
+    required: true
+    value: "tools"
+  - name: NAMESPACE
+    displayName: "Environment namespace"
+    description: "The namespace for the environment"
+    required: true
+    value: "354028"
+  - name: DOMAIN
+    displayName: "Openshift app domain"
+    description: "Openshift app domain"
+    required: true
+    value: "apps.silver.devops.gov.bc.ca"
+kind: "Template"
+apiVersion: "v1"
+metadata:
+  name: "pims-pipeline"
+  creationTimestamp: null
+objects:
+  - kind: Service
+    apiVersion: v1
+    metadata:
+      name: ${APP_NAME}-jnlp
+      namespace: ${PROJECT_NAME}
+      labels:
+        template: ${APP_NAME}-persistent-template
+    spec:
+      ports:
+        - name: agent
+          protocol: TCP
+          port: 50000
+          targetPort: 50000
+      selector:
+        name: ${APP_NAME}
+      clusterIP: 10.98.49.99
+      type: ClusterIP
+      sessionAffinity: None
+    status:
+      loadBalancer: {}
+
+  - kind: Service
+    apiVersion: v1
+    metadata:
+      annotations:
+        service.alpha.openshift.io/dependencies: '[{"name": "${APP_NAME}-jnlp", "namespace": "", "kind": "Service"}]'
+        service.openshift.io/infrastructure: "true"
+      name: ${APP_NAME}
+      namespace: ${PROJECT_NAME}
+      labels:
+        app: ${APP_NAME}
+        template: ${APP_NAME}-persistent-template
+    spec:
+      ports:
+        - name: web
+          protocol: TCP
+          port: 80
+          targetPort: 8080
+          nodePort: 32103
+      selector:
+        name: ${APP_NAME}
+      clusterIP: 10.98.140.237
+      type: NodePort
+      sessionAffinity: None
+      externalTrafficPolicy: Cluster
+    status:
+      loadBalancer: {}
+
+  - kind: Route
+    apiVersion: route.openshift.io/v1
+    metadata:
+      name: ${APP_NAME}
+      namespace: ${PROJECT_NAME}
+      labels:
+        template: ${APP_NAME}-persistent-template
+    spec:
+      host: ${APP_NAME}-${PROJECT_NAME}.${DOMAIN}
+      to:
+        kind: Service
+        name: ${APP_NAME}
+        weight: 100
+      port:
+        targetPort: web
+      tls:
+        termination: edge
+        insecureEdgeTerminationPolicy: Redirect
+      wildcardPolicy: None
+    status:
+      ingress:
+        - host: ${APP_NAME}-${PROJECT_NAME}.${DOMAIN}
+          routerName: default
+          conditions:
+            - type: Admitted
+              status: "True"
+              lastTransitionTime: "2021-02-09T22:01:00Z"
+          wildcardPolicy: None
+          routerCanonicalHostname: ${DOMAIN}
+  - kind: Route
+    apiVersion: route.openshift.io/v1
+    metadata:
+      name: ${APP_NAME}-jnlp
+      namespace: ${PROJECT_NAME}
+      labels:
+        template: ${APP_NAME}-persistent-template
+    spec:
+      host: ${APP_NAME}-jnlp-${PROJECT_NAME}.${DOMAIN}
+      to:
+        kind: Service
+        name: ${APP_NAME}-jnlp
+        weight: 100
+      port:
+        targetPort: agent
+      wildcardPolicy: None
+    status:
+      ingress:
+        - host: ${APP_NAME}-jnlp-${PROJECT_NAME}.${DOMAIN}
+          routerName: default
+          conditions:
+            - type: Admitted
+              status: "True"
+              lastTransitionTime: "2021-02-11T21:33:32Z"
+          wildcardPolicy: None
+          routerCanonicalHostname: ${DOMAIN}
+
+  - kind: Service
+    apiVersion: v1
+    metadata:
+      annotations:
+        service.alpha.openshift.io/dependencies: '[{"name": "${APP_NAME}-jnlp", "namespace": "", "kind": "Service"}]'
+        service.openshift.io/infrastructure: "true"
+      name: ${APP_NAME}
+      namespace: ${PROJECT_NAME}
+      labels:
+        app: ${APP_NAME}
+        template: ${APP_NAME}-persistent-template
+    spec:
+      ports:
+        - name: web
+          protocol: TCP
+          port: 80
+          targetPort: 8080
+          nodePort: 32103
+      selector:
+        name: ${APP_NAME}
+      clusterIP: 10.98.140.237
+      type: NodePort
+      sessionAffinity: None
+      externalTrafficPolicy: Cluster
+    status:
+      loadBalancer: {}
+  - kind: NetworkSecurityPolicy
+    apiVersion: security.devops.gov.bc.ca/v1alpha1
+    metadata:
+      name: ${APP_NAME}-master-to-internet
+      namespace: ${PROJECT_NAME}
+    spec:
+      description: Allow Jenkins master to open connections to the Internet.
+      source:
+        - - app=${APP_NAME}
+        - - role=${APP_NAME}
+        - - env=tools
+      destination:
+        - - ext:network=any
+  - apiVersion: security.devops.gov.bc.ca/v1alpha1
+    kind: NetworkSecurityPolicy
+    metadata:
+      name: ${APP_NAME}-agent-to-master
+      namespace: ${PROJECT_NAME}
+    spec:
+      description: Allow Jenkins agents to communicate with master.
+      destination:
+        - - app=${APP_NAME}
+          - role=${APP_NAME}
+          - env=tools
+          - name=${APP_NAME}
+      source:
+        - - jenkins=slave
+  - apiVersion: security.devops.gov.bc.ca/v1alpha1
+    kind: NetworkSecurityPolicy
+    metadata:
+      name: ${APP_NAME}-agent-to-jnlp-service
+      namespace: ${PROJECT_NAME}
+    spec:
+      description: Allow jenkins agents to communicate with JNLP service.
+      destination:
+        - - app=${APP_NAME}
+      source:
+        - - ${APP_NAME}=slave
+
+  - apiVersion: v1
+    kind: DeploymentConfig
+    metadata:
+      annotations:
+        description: Defines how to deploy jenkins
+      labels:
+        app: ${APP_NAME}
+        name: ${APP_NAME}
+        role: ${APP_NAME}
+        env: tools
+      name: ${APP_NAME}
+      namespace: ${PROJECT_NAME}
+    spec:
+      replicas: 1
+      selector:
+        app: ${APP_NAME}
+      strategy:
+        activeDeadlineSeconds: 21600
+        recreateParams:
+          timeoutSeconds: 600
+        resources: {}
+        type: Recreate
+      template:
+        metadata:
+          creationTimestamp: null
+          labels:
+            app: ${APP_NAME}
+            name: ${APP_NAME}
+            role: ${APP_NAME}
+          name: ${APP_NAME}
+        spec:
+          containers:
+            - env:
+                - name: OPENSHIFT_ENABLE_OAUTH
+                  value: "true"
+                - name: OPENSHIFT_JENKINS_JVM_ARCH
+                  value: x86_64
+                - name: OPENSHIFT_ENABLE_REDIRECT_PROMPT
+                  value: "true"
+                - name: KUBERNETES_MASTER
+                  value: "https://kubernetes.default:443"
+                - name: KUBERNETES_TRUST_CERTIFICATES
+                  value: "true"
+                - name: JNLP_SERVICE_NAME
+                  value: ${APP_NAME}-jnlp
+                - name: JAVA_OPTS
+                  value: >-
+                    -XX:MaxMetaspaceSize=512m -Duser.timezone=America/Vancouver
+                    -Dhudson.model.DirectoryBrowserSupport.CSP=
+              image: >-
+                docker-registry.default.svc:5000/openshift/${APP_NAME}@sha256:36f8501570cd2846cc93f34a53010f3971803876bf11362399267fcd0368feb2
+              imagePullPolicy: IfNotPresent
+              name: ${APP_NAME}
+              ports:
+                - containerPort: 8080
+                  protocol: TCP
+              resources: {}
+              terminationMessagePath: /dev/termination-log
+              terminationMessagePolicy: File
+              volumeMounts:
+                - mountPath: /var/lib/${APP_NAME}
+                  name: ${APP_NAME}-data
+          dnsPolicy: ClusterFirst
+          restartPolicy: Always
+          schedulerName: default-scheduler
+          securityContext: {}
+          serviceAccount: ${APP_NAME}
+          serviceAccountName: ${APP_NAME}
+          terminationGracePeriodSeconds: 30
+          volumes:
+            - name: ${APP_NAME}-data
+              persistentVolumeClaim:
+                claimName: ${APP_NAME}-data
+      test: false
+      triggers:
+        - imageChangeParams:
+            automatic: true
+            containerNames:
+              - ${APP_NAME}
+            from:
+              kind: ImageStreamTag
+              name: "${APP_NAME}:2"
+              namespace: openshift
+            lastTriggeredImage: >-
+              docker-registry.default.svc:5000/openshift/${APP_NAME}@sha256:36f8501570cd2846cc93f34a53010f3971803876bf11362399267fcd0368feb2
+          type: ImageChange
+        - type: ConfigChange
+    status:
+      availableReplicas: 1
+      conditions:
+        - lastTransitionTime: "2020-05-07T21:48:07Z"
+          lastUpdateTime: "2020-05-07T21:48:07Z"
+          message: replication controller "${APP_NAME}-8" successfully rolled out
+          reason: NewReplicationControllerAvailable
+          status: "True"
+          type: Progressing
+        - lastTransitionTime: "2020-05-07T21:48:24Z"
+          lastUpdateTime: "2020-05-07T21:48:24Z"
+          message: Deployment config has minimum availability.
+          status: "True"
+          type: Available
+      details:
+        causes:
+          - type: ConfigChange
+        message: config change
+      latestVersion: 8
+      observedGeneration: 19
+      readyReplicas: 1
+      replicas: 1
+      unavailableReplicas: 0
+      updatedReplicas: 1

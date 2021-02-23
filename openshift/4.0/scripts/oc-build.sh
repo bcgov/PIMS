@@ -34,7 +34,7 @@ SHORTNAME=${1:-}
 
 # E.g. <buildname>-master
 #
-BUILD_NAME="${APP_NAME}-${SHORTNAME}-${OC_JOB_NAME}"
+BUILD_NAME="${APP_NAME}-${SHORTNAME}.${OC_JOB_NAME}"
 
 # Cancel non complete builds and start a new build (apply or don't run)
 #
