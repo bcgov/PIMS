@@ -70,6 +70,8 @@ const AgencyResponseForm = ({ isReadOnly }: IAgencyResponseFormProps) => {
               field="ninetyDayNotificationSentOn"
             />
           </Form.Row>
+        </Col>
+        <Col>
           <Form.Row>
             <Form.Label>
               <strong>Note: </strong>Changing the dates on these fields does not change the date the
@@ -84,17 +86,15 @@ const AgencyResponseForm = ({ isReadOnly }: IAgencyResponseFormProps) => {
             </Form.Label>
           </Form.Row>
         </Col>
-        <Col style={{ padding: '0 0 0 10px' }}>
-          <ErpNotificationNotes
-            disabled={true}
-            label="Text added to ERP Notification Emails"
-            tooltip="The contents of this note were included in the email notifications for this project."
-            outerClassName="col-md-12 reviewRequired"
-            className="col-md-8"
-          />
-        </Col>
       </Form.Row>
-      <AgencyInterest />
+      <ErpNotificationNotes
+        disabled={true}
+        label="Text added to ERP Notification Emails"
+        tooltip="The contents of this note were included in the email notifications for this project."
+        outerClassName="col-md-12 reviewRequired"
+        className="col-md-8"
+      />
+      <AgencyInterest disabled={isReadOnly} />
     </Container>
   );
 };

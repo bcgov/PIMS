@@ -20,7 +20,7 @@ import { noop } from 'lodash';
 import { useFormStepper } from 'components/common/form/StepForm';
 import { AssociatedLandSteps } from 'constants/propertySteps';
 import { formatMoney } from 'utils/numberFormatUtils';
-import { LeasedLand } from 'actions/parcelsActions';
+import { LeasedLandTypes } from 'actions/parcelsActions';
 import { formatFiscalYear } from 'utils';
 import { ParentSelect } from 'components/common/form/ParentSelect';
 import styled from 'styled-components';
@@ -106,8 +106,8 @@ export const AssociatedLandReviewPage: React.FC<any> = (props: IReviewProps) => 
       `leasedLandMetadata.${index}.type`,
     );
     const isParcelValid =
-      leasedLandMetadataType === LeasedLand.other ||
-      (leasedLandMetadataType === LeasedLand.owned &&
+      leasedLandMetadataType === LeasedLandTypes.other ||
+      (leasedLandMetadataType === LeasedLandTypes.owned &&
         LandSchema.isValidSync(getIn(formikProps.values.data, `parcels.${index}`)));
     const parcelEditInfo = {
       identification: editInfo.identification && isParcelValid,
@@ -132,7 +132,9 @@ export const AssociatedLandReviewPage: React.FC<any> = (props: IReviewProps) => 
     );
 
     const projectNumber = getIn(formikProps.values, withNameSpace('projectNumber', index));
-    if (getIn(formikProps.values.data, `leasedLandMetadata.${index}.type`) === LeasedLand.other) {
+    if (
+      getIn(formikProps.values.data, `leasedLandMetadata.${index}.type`) === LeasedLandTypes.other
+    ) {
       return <OtherParcel index={index} />;
     } else if (stepper.getTabCurrentStep(index) !== AssociatedLandSteps.REVIEW) {
       return <EmptyParcel index={index} />;

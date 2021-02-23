@@ -2353,7 +2353,7 @@ namespace Pims.Dal.Test.Services
             var workflows = init.CreateDefaultWorkflowsWithStatus();
             init.SaveChanges();
             var project = init.CreateProject(1, 1);
-            init.SetStatus(project, "ERP", "AP-!SPL");
+            init.SetStatus(project, "ERP", "ERP-ON");
             var parcel = init.CreateParcel(1);
             project.AddProperty(parcel);
             parcel.UpdateProjectNumbers(project.ProjectNumber);
@@ -2362,11 +2362,12 @@ namespace Pims.Dal.Test.Services
             var options = ControllerHelper.CreateDefaultPimsOptions();
             var service = helper.CreateService<ProjectService>(user, options);
 
-            var transferredWithinGre = init.ProjectStatus.First(s => s.Code == "AP-!SPL");
-            project.StatusId = transferredWithinGre.Id; // Not in SPL status.
+            var notInSpl = init.ProjectStatus.First(s => s.Code == "AP-!SPL");
+            var updateProject = init.Projects.First();
+            updateProject.StatusId = notInSpl.Id; // Not in SPL status.
 
             // Act
-            await Assert.ThrowsAsync<InvalidOperationException>(async () => await service.SetStatusAsync(project, project.Workflow.Code));
+            await Assert.ThrowsAsync<InvalidOperationException>(async () => await service.SetStatusAsync(updateProject, project.Workflow.Code));
         }
 
         [Fact]

@@ -45,6 +45,11 @@ namespace Pims.Dal.Configuration
             builder.HasIndex(m => new { m.Username }).IsUnique();
             builder.HasIndex(m => new { m.IsDisabled, m.LastName, m.FirstName });
 
+            builder.Property(m => m.ApprovedOn).HasColumnType("DATETIME2");
+            builder.Property(m => m.LastLogin).HasColumnType("DATETIME2");
+
+            builder.HasOne(m => m.ApprovedBy).WithMany().HasForeignKey(m => m.ApprovedById).OnDelete(DeleteBehavior.ClientSetNull);
+
             base.Configure(builder);
         }
         #endregion

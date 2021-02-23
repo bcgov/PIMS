@@ -740,11 +740,15 @@ namespace Pims.Dal.Services
                     metadata.SixtyDayNotificationSentOn = now.AddDays(60);
                     metadata.NinetyDayNotificationSentOn = now.AddDays(90);
                     originalProject.ApprovedOn = now;
+                    metadata.ExemptionRequested = false; // Adding to ERP removes exemption.
                     break;
                 case ("AP-EXE"): // Approve for ERP Exemption
                     this.User.ThrowIfNotAuthorized(Permissions.DisposeApprove, "User does not have permission to approve project.");
                     if (metadata.ExemptionApprovedOn == null) throw new InvalidOperationException("ADM approved exemption on date is required before approving.");
                     originalProject.ApprovedOn = now;
+                    break;
+                case ("ERP-ON"): // ERP process has begun
+                    this.Context.SetProjectPropertiesVisiblity(originalProject, true);
                     break;
                 case ("AP-SPL"): // Approve for SPL
                     this.User.ThrowIfNotAuthorized(Permissions.DisposeApprove, "User does not have permission to approve project.");
@@ -757,7 +761,9 @@ namespace Pims.Dal.Services
                     break;
                 case ("AP-!SPL"): // Not in SPL
                     this.User.ThrowIfNotAuthorized(Permissions.DisposeApprove, "User does not have permission to approve project."); // TODO: Need to update permission claims to handle workflow better.
-                    if (metadata.ClearanceNotificationSentOn == null) throw new InvalidOperationException("Not in SPL status requires Clearance Notification Sent date.");
+                    var clearanceRequiredForStatus = new[] { "ERP-ON", "ERP-OH" }; // TODO: Should be configurable, not hard-coded.
+                    if (metadata.ClearanceNotificationSentOn == null
+                        && clearanceRequiredForStatus.Contains(fromStatus.Status.Code)) throw new InvalidOperationException("Not in SPL status requires Clearance Notification Sent date.");
                     originalProject.ApprovedOn = originalProject.ApprovedOn.HasValue ? originalProject.ApprovedOn : now; // Only set the date it hasn't been set yet.
                     this.Context.SetProjectPropertiesVisiblity(originalProject, false);
                     break;
@@ -781,8 +787,7 @@ namespace Pims.Dal.Services
                 case ("DIS"): // DISPOSED
                     if (metadata.DisposedOn == null) throw new InvalidOperationException("Disposed status requires date the project was disposed on.");
                     this.Context.DisposeProjectProperties(originalProject);
-                    metadata.DisposedOn = now;
-                    originalProject.CompletedOn = now;
+                    originalProject.CompletedOn = metadata.DisposedOn;
                     break;
                 case ("ERP-OH"): // OnHold
                     if (metadata.OnHoldNotificationSentOn == null) throw new InvalidOperationException("On Hold status requires On Hold Notification Sent date.");
@@ -791,9 +796,6 @@ namespace Pims.Dal.Services
                 case ("T-GRE"): // Transferred within the GRE
                     if (metadata.TransferredWithinGreOn == null) throw new InvalidOperationException("Transferred within GRE status requires Transferred Within GRE date.");
                     this.Context.TransferProjectProperties(originalProject, project);
-                    break;
-                case ("ERP-ON"):
-                    this.Context.SetProjectPropertiesVisiblity(originalProject, true);
                     break;
                 default:
                     // All other status changes can only be done by `admin-projects` or when the project is in draft mode.
