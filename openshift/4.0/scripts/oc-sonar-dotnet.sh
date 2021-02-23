@@ -30,17 +30,17 @@ export PATH="$PATH:/root/.dotnet/tools"
 TARGET=${TARGET:-dev}
 SONAR_PROJECT_KEY=${SONAR_PROJECT_KEY:-pims-api-${TARGET}}
 SONAR_PROJECT_NAME=${SONAR_PROJECT_NAME:-PIMS Backend [${TARGET}]}
-SONAR_URL=${SONAR_URL:-https://sonarqube-jcxjin-tools.pathfinder.gov.bc.ca}
+SONAR_URL=${SONAR_URL:-https://sonarqube-354028-tools.apps.silver.devops.gov.bc.ca}
 
-BACKEND_DIR="${BACKEND_DIR:-../../backend}"
+BACKEND_DIR="${BACKEND_DIR:-../../../backend}"
 TEST_DIR="${TEST_DIR:-${BACKEND_DIR}/tests/unit}"
 COVERAGE_DIR="${COVERAGE_DIR:-${TEST_DIR}/TestResults}"
 
 # Check requirements
 #
-dotnet tool list -g | grep sonarscanner >/dev/null 2>&1 || {
-  fatal_error "sonar scanner for msbuild not installed on not in PATH"
-}
+# dotnet tool list -g | grep sonarscanner >/dev/null 2>&1 || {
+#   fatal_error "sonar scanner for msbuild not installed on not in PATH"
+# }
 
 # Clean up any previous test run
 #
@@ -79,10 +79,10 @@ CMD_SONAR_END="dotnet sonarscanner end ${SONAR_TOKEN:+" -d:sonar.login=${SONAR_T
 # Execute commands
 #
 if [ "${APPLY}" ]; then
-  eval "${CMD_SONAR_BEGIN}"
+  # eval "${CMD_SONAR_BEGIN}"
   eval "${CMD_BUILD}"
   test
-  eval "${CMD_SONAR_END}"
+  # eval "${CMD_SONAR_END}"
 fi
 
 display_helper "${CMD_SONAR_BEGIN}" "${CMD_BUILD}" "dotnet test" "${CMD_SONAR_END}"

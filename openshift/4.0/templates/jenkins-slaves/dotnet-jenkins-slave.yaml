@@ -1,0 +1,40 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: dotnet-jenkins-slave-31
+  labels:
+    role: jenkins-slave
+  namespace: 354028-tools
+data:
+  dotnet31: |-
+    <org.csanchez.jenkins.plugins.kubernetes.PodTemplate>
+      <inheritFrom></inheritFrom>
+      <name>dotnet-31</name>
+      <instanceCap>5</instanceCap>
+      <idleMinutes>0</idleMinutes>
+      <label>dotnet-31</label>
+      <serviceAccount>jenkins</serviceAccount>
+      <nodeSelector></nodeSelector>
+      <volumes/>
+      <containers>
+        <org.csanchez.jenkins.plugins.kubernetes.ContainerTemplate>
+          <name>jnlp</name>
+          <image>registry.access.redhat.com/dotnet/dotnet-31-jenkins-slave-rhel7:latest</image>
+          <privileged>false</privileged>
+          <alwaysPullImage>true</alwaysPullImage>
+          <workingDir>/tmp</workingDir>
+          <command></command>
+          <args>${computer.jnlpmac} ${computer.name}</args>
+          <ttyEnabled>false</ttyEnabled>
+          <resourceRequestCpu></resourceRequestCpu>
+          <resourceRequestMemory></resourceRequestMemory>
+          <resourceLimitCpu></resourceLimitCpu>
+          <resourceLimitMemory></resourceLimitMemory>
+          <envVars/>
+        </org.csanchez.jenkins.plugins.kubernetes.ContainerTemplate>
+      </containers>
+      <envVars/>
+      <annotations/>
+      <imagePullSecrets/>
+      <nodeProperties/>
+    </org.csanchez.jenkins.plugins.kubernetes.PodTemplate>
