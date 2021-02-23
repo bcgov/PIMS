@@ -181,6 +181,13 @@ namespace Pims.Dal.Services
         {
             parcel.ThrowIfNull(nameof(parcel));
             parcel.PropertyTypeId = (int)(parcel.Parcels.Count > 0 ? PropertyTypes.Subdivision : PropertyTypes.Land);
+            if(parcel.PropertyTypeId == (int)PropertyTypes.Subdivision)
+            {
+                var parentPid = parcel.Parcels.FirstOrDefault()?.Parcel?.PID;
+                if (parentPid == null) throw new InvalidOperationException("Invalid parent parcel associated to subdivision, parent parcels must contain a valid PID");
+                parcel.PID = parentPid.Value;
+                parcel.PIN = this.Context.GetUniquePidPin(parcel.PID);
+            }
             this.User.ThrowIfNotAuthorized(new[] { Permissions.PropertyAdd, Permissions.AdminProperties });
 
             var agency = this.User.GetAgency(this.Context) ??
@@ -301,6 +308,14 @@ namespace Pims.Dal.Services
             var ownsABuilding = originalParcel.Buildings.Any(pb => userAgencies.Contains(pb.Building.AgencyId.Value));
             if (!allowEdit && !ownsABuilding) throw new NotAuthorizedException("User may not edit parcels outside of their agency.");
 
+            parcel.PropertyTypeId = originalParcel.PropertyTypeId; // property type cannot be changed directly.
+            if (parcel.PropertyTypeId == (int)PropertyTypes.Subdivision && parcel.Parcels.Any())
+            {
+                var parentPid = parcel.Parcels.FirstOrDefault()?.Parcel?.PID;
+                if (parentPid == null) throw new InvalidOperationException("Invalid parent parcel associated to subdivision, parent parcels must contain a valid PID");
+                parcel.PID = parentPid.Value;
+            }
+
             originalParcel.ThrowIfPropertyInSppProject(this.User);
 
             // Do not allow switching agencies through this method.
@@ -320,7 +335,7 @@ namespace Pims.Dal.Services
 
             if ((parcel.Parcels.Count > 0 && parcel.Subdivisions.Count > 0)
                 || (originalParcel.Parcels.Count > 0 && parcel.Subdivisions.Count > 0)
-                || (originalParcel.Subdivisions.Count > 0 && parcel.Parcels.Count > 0)) throw new InvalidOperationException("Parcel may only have assocatiated parcels or subdivisions, not both.");
+                || (originalParcel.Subdivisions.Count > 0 && parcel.Parcels.Count > 0)) throw new InvalidOperationException("Parcel may only have associated parcels or subdivisions, not both.");
 
             // Users who don't own the parcel, but only own a building cannot update the parcel.
             if (allowEdit)

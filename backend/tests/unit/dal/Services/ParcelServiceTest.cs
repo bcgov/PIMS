@@ -710,6 +710,7 @@ namespace Pims.Dal.Test.Services
             result.Description.Should().Be("a new description.");
         }
 
+
         [Fact]
         public void Add_ParcelFinancials()
         {
@@ -808,10 +809,10 @@ namespace Pims.Dal.Test.Services
             var helper = new TestHelper();
             var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.PropertyAdd).AddAgency(1);
             var init = helper.InitializeDatabase(user);
-            init.CreateParcel(1);
+            var originalParcel = init.CreateParcel(1);
             init.SaveChanges();
             var parcel = EntityHelper.CreateParcel(2);
-            var subdivision = new Entity.ParcelParcel() { ParcelId = 1, SubdivisionId = 2 };
+            var subdivision = new Entity.ParcelParcel() { ParcelId = 1, SubdivisionId = 2, Parcel = originalParcel };
             parcel.Parcels.Add(subdivision);
 
             var options = ControllerHelper.CreateDefaultPimsOptions();
@@ -849,6 +850,82 @@ namespace Pims.Dal.Test.Services
             Assert.NotNull(result);
             result.Subdivisions.FirstOrDefault().Should().Be(dividedParcel);
             result.Parcels.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void Add_Subdivision_UniquePin()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.PropertyAdd).AddAgency(1);
+            var init = helper.InitializeDatabase(user);
+            var originalParcel = init.CreateParcel(1);
+            init.SaveChanges();
+            var parcel = EntityHelper.CreateParcel(2);
+            parcel.PID = 1; //set to the same pid as the existing parcel
+            var dividedParcel = new Entity.ParcelParcel() { ParcelId = 2, SubdivisionId = 1, Parcel = originalParcel };
+            parcel.Parcels.Add(dividedParcel);
+
+            var options = ControllerHelper.CreateDefaultPimsOptions();
+            var service = helper.CreateService<ParcelService>(user, options);
+
+            // Act
+            var result = service.Add(parcel);
+
+            // Assert
+            Assert.NotNull(result);
+            result.PIN.Should().Be(1);
+        }
+
+        [Fact]
+        public void Add_Subdivision_UniqueIncrementedPin()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.PropertyAdd).AddAgency(1);
+            var init = helper.InitializeDatabase(user);
+            var originalParcel = init.CreateParcel(1);
+            originalParcel.PIN = 1;
+            init.SaveChanges();
+            var parcel = EntityHelper.CreateParcel(2);
+            parcel.PID = 1; //set to the same pid as the existing parcel
+            var dividedParcel = new Entity.ParcelParcel() { ParcelId = 2, SubdivisionId = 1, Parcel = originalParcel };
+            parcel.Parcels.Add(dividedParcel);
+
+            var options = ControllerHelper.CreateDefaultPimsOptions();
+            var service = helper.CreateService<ParcelService>(user, options);
+
+            // Act
+            var result = service.Add(parcel);
+
+            // Assert
+            Assert.NotNull(result);
+            result.PIN.Should().Be(2);
+        }
+
+        [Fact]
+        public void Add_Subdivision_TestPidReplacement()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.PropertyAdd).AddAgency(1);
+            var init = helper.InitializeDatabase(user);
+            var originalParcel = init.CreateParcel(1);
+            originalParcel.PIN = 1;
+            init.SaveChanges();
+            var parcel = EntityHelper.CreateParcel(2);
+            var dividedParcel = new Entity.ParcelParcel() { ParcelId = 2, SubdivisionId = 1, Parcel = originalParcel };
+            parcel.Parcels.Add(dividedParcel);
+
+            var options = ControllerHelper.CreateDefaultPimsOptions();
+            var service = helper.CreateService<ParcelService>(user, options);
+
+            // Act
+            var result = service.Add(parcel);
+
+            // Assert
+            Assert.NotNull(result);
+            result.PID.Should().Be(1);
         }
         #endregion
 
@@ -1075,7 +1152,7 @@ namespace Pims.Dal.Test.Services
             var helper = new TestHelper();
             var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.PropertyEdit).AddAgency(1);
             var init = helper.InitializeDatabase(user);
-            init.CreateParcel(1);
+            var originalParcel = init.CreateParcel(1);
             init.CreateParcel(2);
             init.SaveChanges();
 
@@ -1084,7 +1161,7 @@ namespace Pims.Dal.Test.Services
 
             // Act
             var parcelToUpdate = service.Get(1);
-            var divideParcel = new Entity.ParcelParcel() { ParcelId = 2, SubdivisionId = 1 };
+            var divideParcel = new Entity.ParcelParcel() { ParcelId = 2, SubdivisionId = 1, Parcel = originalParcel };
             parcelToUpdate.Parcels.Add(divideParcel);
             var result = service.Update(parcelToUpdate);
 
@@ -1104,14 +1181,14 @@ namespace Pims.Dal.Test.Services
             var init = helper.InitializeDatabase(user);
             var parcel = EntityHelper.CreateParcel(1);
 
-            init.CreateParcel(2);
+            var originalParcel = init.CreateParcel(2);
             init.SaveChanges();
 
             var options = ControllerHelper.CreateDefaultPimsOptions();
             var service = helper.CreateService<ParcelService>(user, options);
 
             // Act
-            var subdivision = new Entity.ParcelParcel() { ParcelId = 2, SubdivisionId = 1 };
+            var subdivision = new Entity.ParcelParcel() { ParcelId = 2, SubdivisionId = 1, Parcel = originalParcel };
             parcel.Parcels.Add(subdivision);
             service.Add(parcel);
 
@@ -1153,6 +1230,39 @@ namespace Pims.Dal.Test.Services
             Assert.NotNull(result);
             result.Subdivisions.Should().BeEmpty();
             result.Parcels.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void Update_Subdivision_TestPidReplacement()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.PropertyEdit, Permissions.PropertyAdd).AddAgency(1);
+            var init = helper.InitializeDatabase(user);
+            var originalParcel = init.CreateParcel(1);
+            var updatedParcel = init.CreateParcel(3);
+            originalParcel.PIN = 1;
+            init.SaveChanges();
+            var parcel = EntityHelper.CreateParcel(2);
+            var dividedParcel = new Entity.ParcelParcel() { ParcelId = 1, SubdivisionId = 2, Parcel = originalParcel };
+            parcel.Parcels.Add(dividedParcel);
+
+            var options = ControllerHelper.CreateDefaultPimsOptions();
+            var service = helper.CreateService<ParcelService>(user, options);
+
+            // Act
+            service.Add(parcel);
+
+            // Update the parcel to contain a new Parcel
+            var parcelToUpdate = service.Get(2);
+            parcelToUpdate.Parcels.Clear();
+            dividedParcel = new Entity.ParcelParcel() { ParcelId = 1, SubdivisionId = 3, Parcel = updatedParcel };
+            parcelToUpdate.Parcels.Add(dividedParcel);
+            var result = service.Update(parcelToUpdate);
+
+            // Assert
+            Assert.NotNull(result);
+            result.PID.Should().Be(3);
         }
 
         #endregion
