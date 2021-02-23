@@ -532,6 +532,7 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
       setShowSideBar={setShowSideBar}
       size={size}
       hidePolicy={true}
+      propertyName={buildingDetail?.name ?? parcelDetail?.name}
     >
       {render()}
       <Prompt message={handleLocationChange}></Prompt>

@@ -61,7 +61,7 @@ const FormContentWrapper = styled.div`
   flex-direction: column;
   width: 100%;
   height: 100%;
-  margin-bottom: 50px;
+  margin-bottom: 70px;
 `;
 
 const FormContent = styled.div`
