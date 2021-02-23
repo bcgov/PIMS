@@ -26,7 +26,7 @@ exports[`ExemptionEnhancedReferralCompleteForm renders successfully 1`] = `
           Exemption Rationale
         </label>
         <textarea
-          className="col-md-auto form-control"
+          className="col-md-5 form-control"
           disabled={true}
           id="input-exemptionRationale"
           name="exemptionRationale"
@@ -265,31 +265,27 @@ exports[`ExemptionEnhancedReferralCompleteForm renders successfully 1`] = `
           </div>
         </div>
       </div>
-      <div
-        className="justify-content-center"
+      <button
+        className="btn btn-primary"
+        disabled={true}
+        onClick={[Function]}
+        type="button"
       >
-        <button
-          className="btn btn-primary"
-          disabled={true}
-          onClick={[Function]}
-          type="button"
-        >
-          Proceed to SPL
-        </button>
-        <div
-          className="c0"
-        >
-          OR
-        </div>
-        <button
-          className="btn btn-primary"
-          disabled={false}
-          onClick={[Function]}
-          type="button"
-        >
-          Not Included in the SPL
-        </button>
+        Proceed to SPL
+      </button>
+      <div
+        className="c0"
+      >
+        OR
       </div>
+      <button
+        className="btn btn-primary"
+        disabled={false}
+        onClick={[Function]}
+        type="button"
+      >
+        Not Included in the SPL
+      </button>
     </div>
     <h3>
       Option 3: Add to Enhanced Referral Process
