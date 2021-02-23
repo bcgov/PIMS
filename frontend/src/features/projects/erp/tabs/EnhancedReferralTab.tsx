@@ -3,6 +3,7 @@ import { ReviewWorkflowStatus, useProject, useStepForm } from '../../common';
 import { EnhancedReferralCompleteForm, AgencyResponseForm } from '..';
 import { useFormikContext } from 'formik';
 import ExemptionEnhancedReferralCompleteForm from '../forms/ExemptionEnhancedReferralCompleteForm';
+import _ from 'lodash';
 
 interface IEnhancedReferralTabProps {
   isReadOnly?: boolean;
@@ -27,11 +28,16 @@ const EnhancedReferralTab: React.FunctionComponent<IEnhancedReferralTabProps> = 
     !isReadOnly ||
     canUserOverride() ||
     (canUserApproveForm() &&
-      (project?.statusCode === ReviewWorkflowStatus.ApprovedForErp ||
-        project?.statusCode === ReviewWorkflowStatus.ERP ||
-        project?.statusCode === ReviewWorkflowStatus.OnHold ||
-        project?.statusCode === ReviewWorkflowStatus.ApprovedForExemption ||
-        project?.statusCode === ReviewWorkflowStatus.NotInSpl));
+      _.includes(
+        [
+          ReviewWorkflowStatus.ApprovedForErp,
+          ReviewWorkflowStatus.ERP,
+          ReviewWorkflowStatus.OnHold,
+          ReviewWorkflowStatus.ApprovedForExemption,
+          ReviewWorkflowStatus.NotInSpl,
+        ],
+        project?.statusCode,
+      ));
 
   if ((values as any).exemptionRequested) {
     return (

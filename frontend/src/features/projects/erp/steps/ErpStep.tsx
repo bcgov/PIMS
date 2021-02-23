@@ -53,18 +53,28 @@ const ErpStep = ({ formikRef }: IStepProps) => {
   const canUserEdit =
     canUserOverride() ||
     (canUserApproveForm() &&
-      (project?.statusCode === ReviewWorkflowStatus.ERP ||
-        project?.statusCode === ReviewWorkflowStatus.OnHold ||
-        project?.statusCode === ReviewWorkflowStatus.ApprovedForExemption ||
-        currentTab === SPPApprovalTabs.closeOutForm));
+      _.includes(
+        [
+          ReviewWorkflowStatus.ERP,
+          ReviewWorkflowStatus.OnHold,
+          ReviewWorkflowStatus.ApprovedForExemption,
+        ],
+        project?.statusCode,
+      )) ||
+    currentTab === SPPApprovalTabs.closeOutForm;
   const canUserApprove =
     canUserOverride() ||
     (canUserApproveForm() &&
-      (project?.statusCode === ReviewWorkflowStatus.ERP ||
-        project?.statusCode === ReviewWorkflowStatus.ApprovedForErp ||
-        project?.statusCode === ReviewWorkflowStatus.OnHold ||
-        project?.statusCode === ReviewWorkflowStatus.ApprovedForExemption ||
-        project?.statusCode === ReviewWorkflowStatus.NotInSpl));
+      _.includes(
+        [
+          ReviewWorkflowStatus.ERP,
+          ReviewWorkflowStatus.ApprovedForErp,
+          ReviewWorkflowStatus.OnHold,
+          ReviewWorkflowStatus.ApprovedForExemption,
+          ReviewWorkflowStatus.NotInSpl,
+        ],
+        project?.statusCode,
+      ));
   const setCurrentTab = (tabName: string) => {
     dispatch(saveErpTab(tabName));
   };

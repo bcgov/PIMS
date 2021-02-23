@@ -3,7 +3,9 @@ import { Form, FastDatePicker } from 'components/common/form';
 import React from 'react';
 import { useFormikContext } from 'formik';
 
+/** ExemptionDetails component properties */
 interface IExemptionDetailsProps {
+  /** Whether the form inputs will be readonly. */
   isReadOnly?: boolean;
 }
 

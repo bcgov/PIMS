@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using Entity = Pims.Dal.Entities;
-using Pims.Dal.Entities;
 
 namespace Pims.Dal.Helpers.Extensions
 {
@@ -38,19 +37,19 @@ namespace Pims.Dal.Helpers.Extensions
             if (filter.ClassificationId.HasValue)
                 query = query.Where(p => p.ClassificationId == filter.ClassificationId);
             else
-                query = query.Where(p => p.ClassificationId != (int)ClassificationTypes.Disposed
-                    && p.ClassificationId != (int)ClassificationTypes.Demolished
-                    && p.ClassificationId != (int)ClassificationTypes.Subdivided);
+                query = query.Where(p => p.ClassificationId != (int)Entities.ClassificationTypes.Disposed
+                    && p.ClassificationId != (int)Entities.ClassificationTypes.Demolished
+                    && p.ClassificationId != (int)Entities.ClassificationTypes.Subdivided);
 
             // Users are not allowed to view sensitive properties outside of their agency or sub-agencies.
             if (!viewSensitive)
                 query = query.Where(p => !p.IsSensitive);
 
             // Display buildings or land/subdivisions
-            if (filter.PropertyType == PropertyTypes.Building)
-                query = query.Where(p => p.PropertyTypeId == PropertyTypes.Building);
-            else if (filter.PropertyType == PropertyTypes.Land)
-                query = query.Where(p => p.PropertyTypeId == PropertyTypes.Land || p.PropertyTypeId == PropertyTypes.Subdivision);
+            if (filter.PropertyType == Entities.PropertyTypes.Building)
+                query = query.Where(p => p.PropertyTypeId == Entities.PropertyTypes.Building);
+            else if (filter.PropertyType == Entities.PropertyTypes.Land)
+                query = query.Where(p => p.PropertyTypeId == Entities.PropertyTypes.Land || p.PropertyTypeId == Entities.PropertyTypes.Subdivision);
 
             // Where rentable area is less than or equal to the filter.
             if (filter.RentableArea.HasValue)
