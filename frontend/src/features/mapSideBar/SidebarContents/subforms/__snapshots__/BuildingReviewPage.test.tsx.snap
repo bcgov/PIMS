@@ -158,7 +158,6 @@ exports[`renders correctly 1`] = `
                 <div role=\\"table\\" class=\\"table\\">
                   <div class=\\"thead thead-light\\">
                     <div role=\\"row\\" style=\\"display: flex; flex: 1 0 auto; min-width: 180px;\\" class=\\"tr\\">
-                      <div class=\\"th reset-filter svg-btn\\"></div>
                       <div colspan=\\"1\\" role=\\"columnheader\\" style=\\"box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: center; display: flex;\\" class=\\"th\\">
                         <div class=\\"sortable-column\\">Type<span style=\\"flex: 1 1 auto;\\"></span></div>
                       </div>
