@@ -31,7 +31,7 @@ import { FaAngleDown, FaAngleRight, FaUndo } from 'react-icons/fa';
 import TooltipWrapper from 'components/common/TooltipWrapper';
 import ColumnSort from './ColumnSort';
 import ColumnFilter from './ColumnFilter';
-import { Formik, FormikProps } from 'formik';
+import { Form, Formik, FormikProps } from 'formik';
 import { Button } from 'components/common/form/Button';
 import classNames from 'classnames';
 import useDeepCompareMemo from 'hooks/useDeepCompareMemo';
@@ -121,6 +121,17 @@ export interface TableProps<T extends object = {}> extends TableOptions<T> {
   onFilterChange?: (values: any) => void;
   /** have page selection menu drop-up to avoid container growing in some scenarios */
   pageSizeMenuDropUp?: boolean;
+  /**
+   * An optional render callback to wrap the table body
+   */
+  renderBodyComponent?: ({
+    body,
+  }: {
+    /**
+     * table body
+     */
+    body: React.ReactNode;
+  }) => React.ReactNode;
 }
 
 const IndeterminateCheckbox = React.forwardRef(({ indeterminate, ...rest }: any, ref) => {
@@ -169,6 +180,7 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): React
     manualPagination,
     sort,
     filterable,
+    renderBodyComponent,
   } = props;
 
   React.useEffect(() => {
@@ -454,7 +466,7 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): React
       );
     };
 
-    return (
+    const body = (
       <div {...getTableBodyProps()} className="tbody">
         {page.map((row: Row<T>, index: number) => {
           // This line is necessary to prepare the rows and get the row props from `react-table` dynamically
@@ -464,6 +476,8 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): React
         })}
       </div>
     );
+
+    return !!renderBodyComponent ? renderBodyComponent({ body }) : body;
   }, [
     props.loading,
     props.detailsPanel,
@@ -499,7 +513,7 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): React
                 innerRef={filterFormRef as any}
               >
                 {actions => (
-                  <>
+                  <Form style={{ display: 'flex', width: '100%' }}>
                     {filterable && (
                       <div className={'th reset-filter svg-btn'}>
                         <TooltipWrapper
@@ -543,7 +557,7 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): React
                         {renderHeaderCell(column)}
                       </div>
                     ))}
-                  </>
+                  </Form>
                 )}
               </Formik>
             </div>

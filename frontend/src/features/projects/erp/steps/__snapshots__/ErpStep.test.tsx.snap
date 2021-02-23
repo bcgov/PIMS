@@ -1505,126 +1505,138 @@ exports[`ERP Approval Step renders correctly 1`] = `
                           }
                         }
                       >
-                        <div
-                          className="th"
-                          colSpan={1}
-                          role="columnheader"
+                        <form
+                          action="#"
+                          onReset={[Function]}
+                          onSubmit={[Function]}
                           style={
                             Object {
-                              "alignItems": "center",
-                              "boxSizing": "border-box",
                               "display": "flex",
-                              "flex": "100 0 auto",
-                              "justifyContent": "flex-start",
-                              "minWidth": "30px",
-                              "textAlign": "left",
-                              "width": "100px",
+                              "width": "100%",
                             }
                           }
                         >
                           <div
-                            className="sortable-column"
-                          >
-                            Agency
-                            <span
-                              style={
-                                Object {
-                                  "flex": "1 1 auto",
-                                }
+                            className="th"
+                            colSpan={1}
+                            role="columnheader"
+                            style={
+                              Object {
+                                "alignItems": "center",
+                                "boxSizing": "border-box",
+                                "display": "flex",
+                                "flex": "100 0 auto",
+                                "justifyContent": "flex-start",
+                                "minWidth": "30px",
+                                "textAlign": "left",
+                                "width": "100px",
                               }
-                            />
-                          </div>
-                        </div>
-                        <div
-                          className="th"
-                          colSpan={1}
-                          role="columnheader"
-                          style={
-                            Object {
-                              "alignItems": "center",
-                              "boxSizing": "border-box",
-                              "display": "flex",
-                              "flex": "60 0 auto",
-                              "justifyContent": "flex-start",
-                              "minWidth": "30px",
-                              "textAlign": "left",
-                              "width": "60px",
                             }
-                          }
-                        >
-                          <div
-                            className="sortable-column"
                           >
-                            Business Case Received Date
-                            <span
-                              style={
-                                Object {
-                                  "flex": "1 1 auto",
+                            <div
+                              className="sortable-column"
+                            >
+                              Agency
+                              <span
+                                style={
+                                  Object {
+                                    "flex": "1 1 auto",
+                                  }
                                 }
-                              }
-                            />
+                              />
+                            </div>
                           </div>
-                        </div>
-                        <div
-                          className="th"
-                          colSpan={1}
-                          role="columnheader"
-                          style={
-                            Object {
-                              "alignItems": "center",
-                              "boxSizing": "border-box",
-                              "display": "flex",
-                              "flex": "100 0 auto",
-                              "justifyContent": "flex-start",
-                              "minWidth": "30px",
-                              "textAlign": "left",
-                              "width": "100px",
+                          <div
+                            className="th"
+                            colSpan={1}
+                            role="columnheader"
+                            style={
+                              Object {
+                                "alignItems": "center",
+                                "boxSizing": "border-box",
+                                "display": "flex",
+                                "flex": "60 0 auto",
+                                "justifyContent": "flex-start",
+                                "minWidth": "30px",
+                                "textAlign": "left",
+                                "width": "60px",
+                              }
                             }
-                          }
-                        >
-                          <div
-                            className="sortable-column"
                           >
-                            Note
-                            <span
-                              style={
-                                Object {
-                                  "flex": "1 1 auto",
+                            <div
+                              className="sortable-column"
+                            >
+                              Business Case Received Date
+                              <span
+                                style={
+                                  Object {
+                                    "flex": "1 1 auto",
+                                  }
                                 }
-                              }
-                            />
+                              />
+                            </div>
                           </div>
-                        </div>
-                        <div
-                          className="th"
-                          colSpan={1}
-                          role="columnheader"
-                          style={
-                            Object {
-                              "alignItems": "center",
-                              "boxSizing": "border-box",
-                              "display": "flex",
-                              "flex": "80 0 auto",
-                              "justifyContent": "flex-start",
-                              "minWidth": "30px",
-                              "textAlign": "left",
-                              "width": "80px",
+                          <div
+                            className="th"
+                            colSpan={1}
+                            role="columnheader"
+                            style={
+                              Object {
+                                "alignItems": "center",
+                                "boxSizing": "border-box",
+                                "display": "flex",
+                                "flex": "100 0 auto",
+                                "justifyContent": "flex-start",
+                                "minWidth": "30px",
+                                "textAlign": "left",
+                                "width": "100px",
+                              }
                             }
-                          }
-                        >
-                          <div
-                            className="sortable-column"
                           >
-                            Response
-                            <span
-                              style={
-                                Object {
-                                  "flex": "1 1 auto",
+                            <div
+                              className="sortable-column"
+                            >
+                              Note
+                              <span
+                                style={
+                                  Object {
+                                    "flex": "1 1 auto",
+                                  }
                                 }
-                              }
-                            />
+                              />
+                            </div>
                           </div>
-                        </div>
+                          <div
+                            className="th"
+                            colSpan={1}
+                            role="columnheader"
+                            style={
+                              Object {
+                                "alignItems": "center",
+                                "boxSizing": "border-box",
+                                "display": "flex",
+                                "flex": "80 0 auto",
+                                "justifyContent": "flex-start",
+                                "minWidth": "30px",
+                                "textAlign": "left",
+                                "width": "80px",
+                              }
+                            }
+                          >
+                            <div
+                              className="sortable-column"
+                            >
+                              Response
+                              <span
+                                style={
+                                  Object {
+                                    "flex": "1 1 auto",
+                                  }
+                                }
+                              />
+                            </div>
+                          </div>
+                        </form>
                       </div>
                     </div>
                     <div

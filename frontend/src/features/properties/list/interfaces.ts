@@ -83,4 +83,7 @@ export interface IPropertyQueryParams {
   inSurplusPropertyProgram?: boolean;
   inEnhancedReferralProcess?: boolean;
   bareLandOnly?: boolean;
+  maxNetBookValue?: number | string;
+  maxAssessedValue?: number | string;
+  maxMarketValue?: number | string;
 }
