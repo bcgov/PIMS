@@ -43,7 +43,9 @@ namespace Pims.Core.Test
                 new Entity.PropertyClassification(1, "Core Strategic") { RowVersion = new byte[] { 12, 13, 14 } },
                 new Entity.PropertyClassification(2, "Surplus Active") { RowVersion = new byte[] { 12, 13, 14 } },
                 new Entity.PropertyClassification(3, "Surplus Encumbered") { RowVersion = new byte[] { 12, 13, 14 } },
-                new Entity.PropertyClassification(4, "Disposed", false) { RowVersion = new byte[] { 12, 13, 14 } }
+                new Entity.PropertyClassification(4, "Disposed", false) { RowVersion = new byte[] { 12, 13, 14 } },
+                new Entity.PropertyClassification(5, "Demolished", false) { RowVersion = new byte[] { 12, 13, 14 } },
+                new Entity.PropertyClassification(6, "Subdivided", false) { RowVersion = new byte[] { 12, 13, 14 } }
             };
         }
     }

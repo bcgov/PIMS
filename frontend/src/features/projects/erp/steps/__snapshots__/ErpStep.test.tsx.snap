@@ -810,7 +810,7 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
               class="col"
             >
               <div
-                class="form-row"
+                class="col-md-11 p-0 form-row"
               >
                 <label
                   class="form-label col-form-label col-md-2"

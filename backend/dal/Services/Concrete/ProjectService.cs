@@ -125,6 +125,7 @@ namespace Pims.Dal.Services
                 {
                     this.Context.Entry(pp)
                         .Reference(p => p.Parcel).Query()
+                        .Include(p => p.Parcels).ThenInclude(p => p.Parcel)
                         .Include(p => p.Evaluations)
                         .Include(p => p.Fiscals)
                         .Include(p => p.Classification)
@@ -232,6 +233,7 @@ namespace Pims.Dal.Services
                 {
                     this.Context.Entry(pp)
                     .Reference(p => p.Parcel).Query()
+                    .Include(p => p.Parcels).ThenInclude(p => p.Parcel)
                     .Include(p => p.Evaluations)
                     .Include(p => p.Fiscals)
                     .Include(p => p.Classification)
@@ -661,8 +663,7 @@ namespace Pims.Dal.Services
                 .Include(p => p.Status)
                 .Include(p => p.Agency)
                 .Include(p => p.Agency).ThenInclude(p => p.Parent)
-                .Include(p => p.Properties)
-                .ThenInclude(p => p.Parcel)
+                .Include(p => p.Properties).ThenInclude(p => p.Parcel).ThenInclude(p => p.Parcels).ThenInclude(p => p.Parcel)
                 .Include(p => p.Properties)
                 .ThenInclude(p => p.Building)
                 .Include(p => p.Tasks)
