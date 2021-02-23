@@ -61,7 +61,6 @@ export type MapProps = {
   zoom?: number;
   properties: IProperty[];
   agencies: ILookupCode[];
-  propertyClassifications: ILookupCode[];
   administrativeAreas: ILookupCode[];
   lotSizes: number[];
   mapRef: React.RefObject<ReactLeafletMap<LeafletMapProps, LeafletMap>>;
@@ -161,7 +160,6 @@ const Map: React.FC<MapProps> = ({
   lng,
   zoom: zoomProp,
   agencies,
-  propertyClassifications,
   administrativeAreas,
   lotSizes,
   selectedProperty,
@@ -339,7 +337,6 @@ const Map: React.FC<MapProps> = ({
                     }}
                     agencyLookupCodes={agencies}
                     adminAreaLookupCodes={administrativeAreas}
-                    propertyClassifications={propertyClassifications}
                     onChange={handleMapFilterChange}
                     showAllAgencySelect={true}
                   />

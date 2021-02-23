@@ -9,7 +9,7 @@ import { Button, Form as BSForm } from 'react-bootstrap';
 import styled from 'styled-components';
 import { InventoryPolicy } from '../components/InventoryPolicy';
 import * as API from 'constants/API';
-import { IBuilding, IParcel, LeasedLand } from 'actions/parcelsActions';
+import { IBuilding, IParcel, LeasedLandTypes } from 'actions/parcelsActions';
 import { ParcelIdentificationForm } from './subforms/ParcelIdentificationForm';
 import { LandUsageForm } from './subforms/LandUsageForm';
 import { valuesToApiFormat as landValuesToApiFormat } from './LandForm';
@@ -116,7 +116,7 @@ export interface IAssociatedLand extends IBuilding {
 
 export interface ILeasedLand {
   ownershipNote: string;
-  type: LeasedLand;
+  type: LeasedLandTypes;
   parcelId?: number;
 }
 /**
@@ -170,7 +170,7 @@ const getOwnedParcels = (leasedLand: ILeasedLand[], parcels: IParcel[]): IParcel
   const ownedParcels: IParcel[] = [];
   parcels.forEach((parcel: IParcel, index: number) => {
     const ll = getIn(leasedLand, index.toString());
-    if (ll?.type !== LeasedLand.other) {
+    if (ll?.type !== LeasedLandTypes.other) {
       if (ll !== undefined) {
         ll.parcelId = parcel.id === '' ? 0 : parcel.id;
       }
@@ -193,9 +193,9 @@ const Form: React.FC<IAssociatedLandForm> = ({
   const formikProps = useFormikContext<ISteppedFormValues<IAssociatedLand>>();
 
   // lookup codes that will be used by subforms
-  const { getOptionsByType } = useCodeLookups();
+  const { getOptionsByType, getPropertyClassificationOptions } = useCodeLookups();
   const agencies = getOptionsByType(API.AGENCY_CODE_SET_NAME);
-  const classifications = getOptionsByType(API.PROPERTY_CLASSIFICATION_CODE_SET_NAME);
+  const classifications = getPropertyClassificationOptions();
   const currentParcelNameSpace = `data.parcels.${stepper.currentTab}`;
   useDraftMarkerSynchronizer(`data.parcels.${stepper.currentTab}`);
   useParcelLayerData({
@@ -214,7 +214,7 @@ const Form: React.FC<IAssociatedLandForm> = ({
         );
       case AssociatedLandSteps.IDENTIFICATION_OR_REVIEW:
         return getIn(formikProps.values, `data.leasedLandMetadata.${stepper.currentTab}.type`) ===
-          LeasedLand.owned ? (
+          LeasedLandTypes.owned ? (
           <div className="parcel-identification">
             <ParcelIdentificationForm
               nameSpace={currentParcelNameSpace}
@@ -370,7 +370,7 @@ const getSteps = (formikRef: any, tab: number) => {
         nameSpace: (tabIndex: number) => `data.leasedLandMetadata.${tabIndex}`,
       },
     },
-    ...(leasedLandMetadata?.type !== LeasedLand.other ? ownedSteps : []),
+    ...(leasedLandMetadata?.type !== LeasedLandTypes.other ? ownedSteps : []),
     {
       route: 'review',
       title: 'Review & Submit',
@@ -389,7 +389,7 @@ const getParcels = (initialValues: IAssociatedLand): IParcel[] => {
   let parcelIndex = 0;
   if (initialValues?.leasedLandMetadata?.length) {
     initialValues?.leasedLandMetadata?.forEach(llm => {
-      if (llm.type === LeasedLand.owned && parcelIndex < initialValues.parcels.length) {
+      if (llm.type === LeasedLandTypes.owned && parcelIndex < initialValues.parcels.length) {
         parcels.push(initialValues.parcels[parcelIndex++]);
       } else {
         parcels.push(getInitialLandValues());
@@ -610,7 +610,7 @@ const AssociatedLandForm: React.FC<IAssociatedLandParentForm> = (
               } else {
                 return {
                   activeStep:
-                    parcelMetadata.type === LeasedLand.other
+                    parcelMetadata.type === LeasedLandTypes.other
                       ? AssociatedLandSteps.IDENTIFICATION_OR_REVIEW
                       : AssociatedLandSteps.REVIEW,
                   name: p.name?.length ? p.name : `Parcel ${index + 1}`,

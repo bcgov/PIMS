@@ -15,11 +15,13 @@ import { MAX_ZOOM } from 'constants/strings';
 import { Link, useLocation } from 'react-router-dom';
 import queryString from 'query-string';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
-import { IParcel } from 'actions/parcelsActions';
+import { IBuilding, IParcel } from 'actions/parcelsActions';
 import { ReactComponent as BuildingSvg } from 'assets/images/icon-business.svg';
 import { AssociatedBuildingsList } from './AssociatedBuildingsList';
 import variables from '_variables.module.scss';
 import { PropertyTypes } from 'constants/propertyTypes';
+import { LandSvg } from 'components/common/Icons';
+import AssociatedParcelsList from './AssociatedParcelsList';
 
 const InfoContainer = styled.div`
   margin-right: -10px;
@@ -82,7 +84,7 @@ const InfoButton = styled(Button)`
   }
 `;
 
-const BuildingsButton = styled(Button)`
+const TabButton = styled(Button)`
   width: 40px;
   height: 40px;
   position: absolute;
@@ -151,10 +153,10 @@ const InfoControl: React.FC<InfoControlProps> = ({ open, setOpen, onHeaderAction
     }
   });
 
-  //whether the associated buildings info is open
-  const [asscBuildingsOpen, setAsscBuildingsOpen] = React.useState<boolean>(false);
   //whether the general info is open
   const [generalInfoOpen, setGeneralInfoOpen] = React.useState<boolean>(true);
+
+  const isBuilding = popUpContext.propertyTypeID === PropertyTypes.BUILDING;
 
   const addAssociatedBuildingLink = (
     <>
@@ -185,7 +187,7 @@ const InfoControl: React.FC<InfoControlProps> = ({ open, setOpen, onHeaderAction
 
   const renderContent = () => {
     if (popUpContext.propertyInfo) {
-      if (generalInfoOpen || popUpContext.propertyTypeID === PropertyTypes.BUILDING) {
+      if (generalInfoOpen) {
         return (
           <>
             <HeaderActions
@@ -204,18 +206,20 @@ const InfoControl: React.FC<InfoControlProps> = ({ open, setOpen, onHeaderAction
             />
           </>
         );
-      } else if (
-        asscBuildingsOpen &&
-        canViewProperty &&
-        popUpContext.propertyTypeID === PropertyTypes.PARCEL
-      ) {
-        return (
-          <AssociatedBuildingsList
-            propertyInfo={popUpContext.propertyInfo as IParcel}
-            addAssociatedBuildingLink={addAssociatedBuildingLink}
-            canEditDetails={canEditProperty}
-          />
-        );
+      } else if (canViewProperty) {
+        if (isBuilding) {
+          return (
+            <AssociatedParcelsList parcels={(popUpContext.propertyInfo as IBuilding).parcels} />
+          );
+        } else {
+          return (
+            <AssociatedBuildingsList
+              propertyInfo={popUpContext.propertyInfo as IParcel}
+              addAssociatedBuildingLink={addAssociatedBuildingLink}
+              canEditDetails={canEditProperty}
+            />
+          );
+        }
       }
     } else {
       return <p>Click a pin to view the property details</p>;
@@ -227,11 +231,7 @@ const InfoControl: React.FC<InfoControlProps> = ({ open, setOpen, onHeaderAction
       <InfoContainer id="infoContainer" className={clsx({ closed: !open })}>
         {open && (
           <InfoHeader>
-            {popUpContext.propertyTypeID === PropertyTypes.BUILDING ? (
-              <Title>Building Info</Title>
-            ) : (
-              <Title>Property Info</Title>
-            )}
+            {isBuilding ? <Title>Building Info</Title> : <Title>Property Info</Title>}
           </InfoHeader>
         )}
         <TooltipWrapper toolTipId="info-slideout-id" toolTip="Property Information">
@@ -242,10 +242,8 @@ const InfoControl: React.FC<InfoControlProps> = ({ open, setOpen, onHeaderAction
               if (!open) {
                 setOpen(true);
                 setGeneralInfoOpen(true);
-                setAsscBuildingsOpen(false);
               } else if (open && !generalInfoOpen) {
                 setGeneralInfoOpen(true);
-                setAsscBuildingsOpen(false);
               } else {
                 setOpen(false); //close the slide out
               }
@@ -255,24 +253,23 @@ const InfoControl: React.FC<InfoControlProps> = ({ open, setOpen, onHeaderAction
             <InfoIcon />
           </InfoButton>
         </TooltipWrapper>
-        {open &&
-          popUpContext.propertyInfo &&
-          canViewProperty &&
-          popUpContext.propertyTypeID === PropertyTypes.PARCEL && (
-            <TooltipWrapper toolTipId="associated-buildings-id" toolTip="Associated Buildings">
-              <BuildingsButton
-                id="slideOutBuildings"
-                variant="outline-secondary"
-                className={clsx({ open })}
-                onClick={() => {
-                  setAsscBuildingsOpen(true);
-                  setGeneralInfoOpen(false);
-                }}
-              >
-                <BuildingSvg className="svg" />
-              </BuildingsButton>
-            </TooltipWrapper>
-          )}
+        {open && popUpContext.propertyInfo && canViewProperty && (
+          <TooltipWrapper
+            toolTipId="associated-items-id"
+            toolTip={isBuilding ? 'Associated Land' : 'Associated Buildings'}
+          >
+            <TabButton
+              id="slideOutTab"
+              variant="outline-secondary"
+              className={clsx({ open })}
+              onClick={() => {
+                setGeneralInfoOpen(false);
+              }}
+            >
+              {isBuilding ? <LandSvg className="svg" /> : <BuildingSvg className="svg" />}
+            </TabButton>
+          </TooltipWrapper>
+        )}
         <InfoMain className={clsx({ open })}>{renderContent()}</InfoMain>
       </InfoContainer>
     </Control>

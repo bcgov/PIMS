@@ -143,11 +143,11 @@ const Form: React.FC<IBuildingForm> = ({
       ? +(formikProps.values.data.agencyId as any).value
       : +formikProps.values.data.agencyId,
   });
-  const { getOptionsByType } = useCodeLookups();
+  const { getOptionsByType, getPropertyClassificationOptions } = useCodeLookups();
   const isViewOrUpdate = !!formikProps.values?.data?.id;
 
   const agencies = getOptionsByType(API.AGENCY_CODE_SET_NAME);
-  const classifications = getOptionsByType(API.PROPERTY_CLASSIFICATION_CODE_SET_NAME);
+  const classifications = getPropertyClassificationOptions();
   const predominateUses = getOptionsByType(API.PREDOMINATE_USE_CODE_SET_NAME);
   const constructionType = getOptionsByType(API.CONSTRUCTION_CODE_SET_NAME);
   const occupancyType = getOptionsByType(API.OCCUPANT_TYPE_CODE_SET_NAME);

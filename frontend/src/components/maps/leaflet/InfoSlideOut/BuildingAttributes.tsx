@@ -34,9 +34,6 @@ export const BuildingAttributes: React.FC<IBuildingAttributes> = ({
     formatAssessed = '';
   }
 
-  const newLength = buildingInfo.parcels?.length > 3 ? 3 : buildingInfo.parcels?.length;
-  const parcelsCopy = buildingInfo.parcels?.slice(0, newLength);
-
   return (
     <>
       <ListGroup>
@@ -84,21 +81,6 @@ export const BuildingAttributes: React.FC<IBuildingAttributes> = ({
               </ListGroup.Item>
             )}
           </OuterRow>
-        </ListGroup>
-      )}
-      {buildingInfo.parcels?.length >= 1 && (
-        <ListGroup>
-          <Label className="header">Associated Land</Label>
-          {parcelsCopy.map((parcel, parcelId) => (
-            <ListGroup.Item key={parcelId}>
-              {parcel.pid ? <Label>{parcel.pid}</Label> : <Label>{parcel.pin}</Label>}
-            </ListGroup.Item>
-          ))}
-          {buildingInfo.parcels.length > 3 && (
-            <ListGroup.Item>
-              <Label>+ {buildingInfo.parcels.length - 3} more</Label>
-            </ListGroup.Item>
-          )}
         </ListGroup>
       )}
     </>

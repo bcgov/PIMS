@@ -8,6 +8,8 @@ export const Demolished = 'The building has been demolished.';
 
 export const Subdivided = 'The property has been subdivided.';
 
+export const Disposed = 'The property has been diposed.';
+
 export const CoreStrategic =
   'Core Strategic – assets that are uniquely integral to a larger long-term service delivery \n' +
   'strategy and/or are functionally and financially effective relative to critical service \n' +

@@ -3,7 +3,7 @@ import './LandOwnershipForm.scss';
 import React, { useCallback, useEffect } from 'react';
 import { Container, Row } from 'react-bootstrap';
 import { RadioButtonGroup } from 'components/common/form/RadioButtonGroup';
-import { LeasedLand } from 'actions/parcelsActions';
+import { LeasedLandTypes } from 'actions/parcelsActions';
 import { useFormikContext, getIn } from 'formik';
 import LeasedLandOther from './LeasedLandOther';
 
@@ -26,11 +26,11 @@ export const LandOwnershipForm: React.FC<IIdentificationProps> = ({ nameSpace })
     }
   }, [leasedLandType, setFieldValue, values.activeTab]);
 
-  const renderRadioOption = (radioValue: LeasedLand) => {
+  const renderRadioOption = (radioValue: LeasedLandTypes) => {
     switch (+radioValue) {
-      case LeasedLand.owned:
+      case LeasedLandTypes.owned:
         return <p>Click Continue to enter the details of this associated parcel</p>;
-      case LeasedLand.other:
+      case LeasedLandTypes.other:
         return <LeasedLandOther nameSpace={nameSpace} />;
     }
   };
@@ -56,8 +56,8 @@ export const LandOwnershipForm: React.FC<IIdentificationProps> = ({ nameSpace })
         <RadioButtonGroup
           field={withNameSpace('type')}
           options={[
-            { label: 'This building is on land owned by my agency', value: LeasedLand.owned },
-            { label: 'Other', value: LeasedLand.other },
+            { label: 'This building is on land owned by my agency', value: LeasedLandTypes.owned },
+            { label: 'Other', value: LeasedLandTypes.other },
           ]}
         ></RadioButtonGroup>
       </Row>

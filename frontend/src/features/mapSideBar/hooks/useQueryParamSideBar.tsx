@@ -52,7 +52,7 @@ interface IMapSideBar {
 }
 
 /** control the state of the side bar via query params. */
-const useQueryParamSideBar = (formikRef?: any): IMapSideBar => {
+export const useQueryParamSideBar = (formikRef?: any): IMapSideBar => {
   const [showSideBar, setShowSideBar] = useState(false);
   const [contextName, setContextName] = useState<SidebarContextType>(
     SidebarContextType.ADD_PROPERTY_TYPE_SELECTOR,

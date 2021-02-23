@@ -30,12 +30,18 @@ namespace Pims.Api.Areas.Admin.Controllers
         #endregion
 
         #region Construstor
+        /// <summary>
+        /// Creates a new instance of an AccessRequestController object, initializes with specified parameters.
+        /// </summary>
+        /// <param name="pimsAdminService"></param>
+        /// <param name="mapper"></param>
+        /// <param name="userService"></param>
         public AccessRequestController(IPimsAdminService pimsAdminService,
             IMapper mapper, IUserService userService)
         {
             _pimsAdminService = pimsAdminService;
-            _mapper = mapper;
             _userService = userService;
+            _mapper = mapper;
         }
         #endregion
 
@@ -52,7 +58,7 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// <param name="agency"></param>
         /// <param name="status"></param>
         /// <returns></returns>
-        [HttpGet("")]
+        [HttpGet]
         [Produces("application/json")]
         [ProducesResponseType(typeof(PModel.PageModel<Model.AccessRequestModel>), 200)]
         [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]
@@ -83,6 +89,7 @@ namespace Pims.Api.Areas.Admin.Controllers
         [ProducesResponseType(typeof(Model.AccessRequestModel), 200)]
         [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]
         [SwaggerOperation(Tags = new[] { "admin-access-requests" })]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "To support standardized routes ({id})")]
         public IActionResult Delete(int id, [FromBody] Model.AccessRequestModel accessRequestModel)
         {
             var entity = _mapper.Map<Entity.AccessRequest>(accessRequestModel);

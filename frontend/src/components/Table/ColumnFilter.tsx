@@ -21,6 +21,7 @@ const Wrapper = styled('div')`
   justify-items: center;
   position: relative;
   font-size: 12px;
+  padding: 0 5px;
 `;
 
 const InputContainer = styled('div')`
@@ -66,9 +67,9 @@ const ColumnFilter: React.FC<IColumnFilterProps> = ({ column, onFilter, children
   return (
     <Wrapper className={clsx('filter-wrapper', { active: hasValue })}>
       {hasValue ? (
-        <FaFilter onClick={handleClick} style={{ fontSize: 10, marginRight: 5 }} />
+        <FaFilter onClick={handleClick} style={{ fontSize: 10, margin: '0 5' }} />
       ) : (
-        <FiFilter onClick={handleClick} style={{ fontSize: 10, marginRight: 5 }} />
+        <FiFilter onClick={handleClick} style={{ fontSize: 10, margin: '0 5' }} />
       )}
 
       <span onClick={handleClick}>{children}</span>
