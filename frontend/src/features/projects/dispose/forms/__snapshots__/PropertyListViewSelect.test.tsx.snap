@@ -45,9 +45,6 @@ exports[`Property List View Select renders correctly 1`] = `
           style="display: flex; flex: 1 0 auto; min-width: 675px;"
         >
           <div
-            class="th reset-filter svg-btn"
-          />
-          <div
             class="th"
             colspan="1"
             role="columnheader"
@@ -260,9 +257,6 @@ exports[`Property List View Select renders correctly 1`] = `
           role="row"
           style="display: flex; flex: 1 0 auto; min-width: 705px;"
         >
-          <div
-            class="th reset-filter svg-btn"
-          />
           <div
             class="th"
             colspan="1"

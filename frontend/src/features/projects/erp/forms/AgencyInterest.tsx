@@ -59,22 +59,25 @@ export const AgencyInterest = ({ disabled = false }: IAgencyInterestProps) => {
   return (
     <>
       <h3>Agency Interest</h3>
-      <Row>
-        <Col md={5}>
-          <ParentSelect
-            field="addAgencyResponse"
-            options={agencyOptions}
-            filterBy={['code', 'label', 'parent']}
-            placeholder="Enter an Agency"
-            onChange={onAgencySelected}
-          />
-        </Col>
-        <Col>
-          <Button onClick={onAddAgency} disabled={!enableAdd}>
-            Add
-          </Button>
-        </Col>
-      </Row>
+      {disabled ? null : (
+        <Row>
+          <Col md={5}>
+            <ParentSelect
+              field="addAgencyResponse"
+              options={agencyOptions}
+              filterBy={['code', 'label', 'parent']}
+              placeholder="Enter an Agency"
+              disabled={disabled}
+              onChange={onAgencySelected}
+            />
+          </Col>
+          <Col>
+            <Button onClick={onAddAgency} disabled={!enableAdd}>
+              Add
+            </Button>
+          </Col>
+        </Row>
+      )}
       <Row>
         <Col>
           <FormikTable

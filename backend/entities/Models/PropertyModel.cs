@@ -195,7 +195,7 @@ namespace Pims.Dal.Entities.Models
                 this.Name = property.Name;
                 this.Description = property.Description;
                 this.IsSensitive = property.IsSensitive;
-                this.AgencyId = property.AgencyId.Value;
+                this.AgencyId = property.AgencyId;
                 this.AgencyCode = property.AgencyCode;
                 this.Agency = property.Agency;
                 this.SubAgencyCode = property.SubAgencyCode;

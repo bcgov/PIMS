@@ -291,9 +291,6 @@ exports[`Project list view tests Matches snapshot 1`] = `
           style="display: flex; flex: 1 0 auto; min-width: 875px;"
         >
           <div
-            class="th reset-filter svg-btn"
-          />
-          <div
             class="th"
             colspan="1"
             role="columnheader"

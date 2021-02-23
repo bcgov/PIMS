@@ -277,9 +277,6 @@ exports[`GRE Transfer Step renders correctly 1`] = `
               }
             >
               <div
-                className="th reset-filter svg-btn"
-              />
-              <div
                 className="th"
                 colSpan={1}
                 role="columnheader"
