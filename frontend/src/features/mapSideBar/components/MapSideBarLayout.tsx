@@ -8,6 +8,7 @@ import { SidebarSize, SidebarContextType } from '../hooks/useQueryParamSideBar';
 import { FaWindowClose } from 'react-icons/fa';
 import './MapSideBarLayout.scss';
 import variables from '_variables.module.scss';
+import AbbreviatedText from 'components/common/AbbreviatedText';
 
 interface IMapSideBarLayoutProps {
   show: boolean;
@@ -20,6 +21,8 @@ interface IMapSideBarLayoutProps {
   title: React.ReactNode;
   hidePolicy?: boolean;
   size?: SidebarSize;
+  /** property name for title */
+  propertyName?: string;
 }
 
 const HeaderRow = styled.div`
@@ -54,6 +57,7 @@ const MapSideBarLayout: React.FunctionComponent<IMapSideBarLayoutProps> = ({
   hidePolicy,
   title,
   size,
+  propertyName,
   ...props
 }) => {
   return (
@@ -76,7 +80,9 @@ const MapSideBarLayout: React.FunctionComponent<IMapSideBarLayoutProps> = ({
                 />
               </TooltipWrapper>
             </HeaderRow>
-
+            {propertyName && (
+              <AbbreviatedText text={propertyName} maxLength={50} className="propertyName" />
+            )}
             {isVisible ? props.children : null}
           </>
         )}
