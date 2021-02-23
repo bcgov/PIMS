@@ -135,7 +135,7 @@ exports[`renders correctly 1`] = `
           <strong>
             do not enter the building values here
           </strong>
-          . The land and building valuation will be input together later.
+          . The land and building valuation will be input on the land form.
         </p>
       </div>
       <div
