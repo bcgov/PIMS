@@ -225,6 +225,7 @@ namespace Pims.Dal.Helpers.Extensions
                     originalProperty.Parcel.AgencyId = property.Parcel.AgencyId;
                     originalProperty.Parcel.ClassificationId = property.Parcel.ClassificationId;
                     originalProperty.Parcel.ProjectNumbers = "[]";
+                    originalProperty.Parcel.PropertyTypeId = (int)PropertyTypes.Land; // when an agency transition occurs, and subdivisions should transition into parcels.
                     return originalProperty.Parcel;
                 case (Entity.PropertyTypes.Building):
                     if (originalProperty.Building == null || property.Building == null) throw new InvalidOperationException("Unable to transfer building.");
@@ -348,7 +349,10 @@ namespace Pims.Dal.Helpers.Extensions
         /// <returns></returns>
         public static void TransferProjectProperties(this PimsContext context, Entity.Project originalProject, Entity.Project project)
         {
-            originalProject.Properties.ForEach(p =>
+            var parentParcels = originalProject.GetSubdivisionParentParcels();
+            context.DisposeSubdivisionParentParcels(parentParcels);
+            var propertiesWithNoSubdivisions = originalProject.Properties.Where(p => !parentParcels.Any(pp => p.Parcel?.Id == pp.Id));
+            propertiesWithNoSubdivisions.ForEach(p =>
             {
                 var matchingProperty = project.Properties.First(property => p.Id == property.Id);
                 context.Update(p.UpdateProjectProperty(matchingProperty));
