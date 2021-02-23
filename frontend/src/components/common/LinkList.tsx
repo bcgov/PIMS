@@ -11,6 +11,7 @@ export interface ILinkListItem {
   label: string;
   key: string | number;
   onRemoveItemClick?: () => void;
+  removeItemTitle?: string;
 }
 
 interface ILinkedListProps {
@@ -42,7 +43,7 @@ export const LinkList: React.FunctionComponent<ILinkedListProps &
             </Link>
             {!!item.onRemoveItemClick && (
               <FaRegTimesCircle
-                title="Click to remove Parent Parcel Association"
+                title={item.removeItemTitle}
                 style={{ cursor: 'pointer' }}
                 className="ml-2"
                 onClick={item.onRemoveItemClick}

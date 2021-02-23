@@ -58,6 +58,7 @@ const AddParentParcelsForm = ({
               withNameSpace(nameSpace, 'parcels'),
               parcels.filter((p: IParcel) => p.id !== parcel.id),
             ),
+          removeItemTitle: 'Click to remove Parent Parcel Association',
           search: queryString.stringify({
             ...queryString.parse(location.search),
             sidebar: true,
