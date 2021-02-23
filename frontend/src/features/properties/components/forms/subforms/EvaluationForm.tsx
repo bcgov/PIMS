@@ -185,7 +185,7 @@ const EvaluationForm = <T extends any>(props: EvaluationProps & FormikProps<T>) 
               Assessed Value for the building here.<br></br>
               If your agency <strong>does</strong> own the land,{' '}
               <strong>do not enter the building values here</strong>. The land and building
-              valuation will be input together later.
+              valuation will be input on the land form.
             </p>
           </AssessedExplanation>
         )}

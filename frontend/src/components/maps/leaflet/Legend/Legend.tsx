@@ -23,7 +23,7 @@ export const Legend = () => {
       },
       {
         pin: require('assets/images/marker-purple.png'),
-        label: 'Surplus Properties Program',
+        label: 'Surplus Properties List',
       },
     ];
   }, []);
