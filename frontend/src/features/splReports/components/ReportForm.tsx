@@ -21,7 +21,7 @@ const ReportForm: React.FunctionComponent<IReportFormProps> = ({ currentReport, 
       data={data}
       loading={snapshots === undefined}
       hideToolbar
-    ></Table>
+    />
   );
 };
 

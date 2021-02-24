@@ -1,0 +1,44 @@
+apiVersion: v1
+data:
+  podTemplate: |-
+    <org.csanchez.jenkins.plugins.kubernetes.PodTemplate>
+      <inheritFrom></inheritFrom>
+      <name>owasp-zap</name>
+      <label>owasp-zap</label>
+      <instanceCap>2</instanceCap>
+      <idleMinutes>5</idleMinutes>
+      <activeDeadlineSeconds>600</activeDeadlineSeconds>
+      <serviceAccount>jenkins</serviceAccount>
+      <nodeSelector></nodeSelector>
+      <volumes/>
+      <containers>
+        <org.csanchez.jenkins.plugins.kubernetes.ContainerTemplate>
+          <name>jnlp</name>
+          <image>image-registry.apps.silver.devops.gov.bc.ca/354028-tools/jenkins-slave-zap</image>
+          <privileged>false</privileged>
+          <alwaysPullImage>false</alwaysPullImage>
+          <workingDir>/tmp</workingDir>
+          <command></command>
+          <args>${computer.jnlpmac} ${computer.name}</args>
+          <ttyEnabled>false</ttyEnabled>
+          <resourceRequestCpu>500m</resourceRequestCpu>
+          <resourceRequestMemory>512Mi</resourceRequestMemory>
+          <resourceLimitCpu>4000m</resourceLimitCpu>
+          <resourceLimitMemory>4Gi</resourceLimitMemory>
+          <envVars/>
+        </org.csanchez.jenkins.plugins.kubernetes.ContainerTemplate>
+      </containers>
+      <envVars/>
+      <annotations/>
+      <imagePullSecrets/>
+      <nodeProperties/>
+    </org.csanchez.jenkins.plugins.kubernetes.PodTemplate>
+kind: ConfigMap
+metadata:
+  annotations:
+  labels:
+    role: jenkins-slave
+    app: jenkins
+    env: tools
+  name: owasp-zap
+  namespace: 354028-tools

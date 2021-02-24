@@ -1,0 +1,150 @@
+---
+kind: Template
+apiVersion: v1
+metadata:
+  name: "${NAME}"
+  annotations:
+    openshift.io/display-name: Generic Build Pod
+    description:
+      "${NAME} build pod template pre-configured to use a jenkins slave in the
+      same project/namespace"
+objects:
+  - apiVersion: v1
+    kind: ImageStream
+    metadata:
+      labels:
+        build: "${NAME}"
+        role: jenkins-slave
+      name: "${NAME}"
+  - apiVersion: v1
+    kind: BuildConfig
+    metadata:
+      labels:
+        build: "${NAME}"
+        type: image
+      name: "${NAME}"
+    spec:
+      nodeSelector:
+      output:
+        to:
+          kind: ImageStreamTag
+          name: "${NAME}:${SLAVE_IMAGE_TAG}"
+      postCommit: {}
+      resources: {}
+      runPolicy: Serial
+      source:
+        contextDir: "${SOURCE_CONTEXT_DIR}"
+        git:
+          ref: "${SOURCE_REPOSITORY_REF}"
+          uri: "${SOURCE_REPOSITORY_URL}"
+        type: Git
+      strategy:
+        dockerStrategy:
+          dockerfilePath: "${DOCKERFILE_PATH}"
+          from:
+            kind: DockerImage
+            name: "${BUILDER_IMAGE_NAME}"
+            imagePullPolicy: Always
+        type: Docker
+      triggers:
+        - type: ConfigChange
+        - type: ImageChange
+  - apiVersion: v1
+    kind: ConfigMap
+    metadata:
+      name: "${NAME}"
+      labels:
+        role: jenkins-slave
+    data:
+      node10: |-
+        <org.csanchez.jenkins.plugins.kubernetes.PodTemplate>
+          <inheritFrom></inheritFrom>
+          <name>${NAME}</name>
+          <label>${NAME}</label>
+          <instanceCap>2</instanceCap>
+          <idleMinutes>5</idleMinutes>
+          <activeDeadlineSeconds>600</activeDeadlineSeconds>
+          <serviceAccount>jenkins</serviceAccount>
+          <nodeSelector></nodeSelector>
+          <volumes/>
+          <containers>
+            <org.csanchez.jenkins.plugins.kubernetes.ContainerTemplate>
+              <name>jnlp</name>
+              <image>docker-registry.default.svc:5000/${NAMESPACE}/${NAME}</image>
+              <privileged>false</privileged>
+              <alwaysPullImage>false</alwaysPullImage>
+              <workingDir>/tmp</workingDir>
+              <command></command>
+              <args>${computer.jnlpmac} ${computer.name}</args>
+              <ttyEnabled>false</ttyEnabled>
+              <resourceRequestCpu>${CPU_REQUEST}</resourceRequestCpu>
+              <resourceRequestMemory>${MEMORY_REQUEST}</resourceRequestMemory>
+              <resourceLimitCpu>${CPU_LIMIT}</resourceLimitCpu>
+              <resourceLimitMemory>${MEMORY_LIMIT}</resourceLimitMemory>
+              <envVars/>
+            </org.csanchez.jenkins.plugins.kubernetes.ContainerTemplate>
+          </containers>
+          <envVars/>
+          <annotations/>
+          <imagePullSecrets/>
+          <nodeProperties/>
+        </org.csanchez.jenkins.plugins.kubernetes.PodTemplate>
+
+parameters:
+  - name: NAME
+    displayName: Name
+    description: The name assigned to all objects and the resulting imagestream.
+    required: true
+  - name: SOURCE_REPOSITORY_URL
+    displayName: Git Repository URL
+    description: The URL of the repository with your application source code.
+    required: true
+    value: https://github.com/bcgov/PIMS.git
+  - name: SOURCE_REPOSITORY_REF
+    displayName: Git Reference
+    description:
+      Set this to a branch name, tag or other ref of your repository if you
+      are not using the default (dev) branch.
+    value: dev
+  - name: SOURCE_CONTEXT_DIR
+    displayName: Git Context Directory
+    description:
+      Set this to the directory where the build information is (e.g. Dockerfile)
+      if not using the default
+  - name: BUILDER_IMAGE_NAME
+    displayName: Image name from which to build this pod
+    description:
+      The build image which this build pod will extend to create it's new
+      build pod type.
+    value: registry.access.redhat.com/openshift3/jenkins-slave-base-rhel7
+  - name: SLAVE_IMAGE_TAG
+    displayName: Image tag for Jenkins slave.
+    description: This is the image tag used for the Jenkins slave.
+    value: latest
+  - name: DOCKERFILE_PATH
+    displayName: Path to Dockerfile
+    description: Path for alternate Dockerfile to use for build
+    value: Dockerfile
+  - name: NAMESPACE
+    description: Target namespace reference (i.e. '354028-tools')
+    displayName: Namespace
+    required: true
+    value: 354028-tools
+  - name: CPU_REQUEST
+    description: Minimal CPU needed to run
+    displayName: CPU Request
+    value: 500m
+  - name: CPU_LIMIT
+    description: Maximum CPU allowed to use
+    displayName: CPU Limit
+    value: 4000m
+  - name: MEMORY_REQUEST
+    description: Minimal amount of memory needed to run
+    displayName: Memory Request
+    value: 512Mi
+  - name: MEMORY_LIMIT
+    description: Maximum amount of memory allowed to use
+    displayName: Memory Limit
+    value: 4Gi
+labels:
+  template: build-pod-template

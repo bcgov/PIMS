@@ -28,7 +28,7 @@ source "$(dirname ${0})/common.sh"
 TARGET=${TARGET:-dev}
 SONAR_PROJECT_KEY=${SONAR_PROJECT_KEY:-pims-frontend-${TARGET}}
 SONAR_PROJECT_NAME=${SONAR_PROJECT_NAME:-PIMS Frontend [${TARGET}]}
-SONAR_URL=${SONAR_URL:-https://sonarqube-jcxjin-tools.pathfinder.gov.bc.ca}
+SONAR_URL=${SONAR_URL:-https://sonarqube-354028-tools.apps.silver.devops.gov.bc.ca}
 ZAP_REPORT=${ZAP_REPORT:-}
 
 FRONTEND_DIR="${FRONTEND_DIR:-../../frontend}"
@@ -61,7 +61,7 @@ CMD_SONAR_SCAN="sonar-scanner \
 if [ "${APPLY}" ]; then
   pushd ${FRONTEND_DIR}
   eval "${CMD_TEST}"
-  eval "${CMD_SONAR_SCAN}"
+  # eval "${CMD_SONAR_SCAN}"
   popd
 fi
 

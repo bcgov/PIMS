@@ -284,9 +284,6 @@ exports[`Manage Users Component Snapshot matches 1`] = `
           style="display: flex; flex: 1 0 auto; min-width: 980px;"
         >
           <div
-            class="th reset-filter svg-btn"
-          />
-          <div
             class="th"
             colspan="1"
             role="columnheader"
