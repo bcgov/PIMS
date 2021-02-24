@@ -12,7 +12,7 @@ import { FiscalKeys } from 'constants/fiscalKeys';
 import { getCurrentFiscalYear, formatDate, stringToNull } from 'utils';
 import _ from 'lodash';
 import moment from 'moment';
-import { NoteTypes, PropertyTypes, EvaluationKeys } from 'constants/index';
+import { NoteTypes, PropertyTypes, EvaluationKeys, PropertyTypeNames } from 'constants/index';
 
 export const getCurrentFiscal = (fiscals: IFiscal[], key: FiscalKeys) => {
   const currentFiscal = getCurrentFiscalYear();
@@ -30,8 +30,8 @@ export const getCurrentYearEvaluation = (
   evaluations: IEvaluation[],
   key: EvaluationKeys,
 ): IEvaluation | undefined => {
-  const currentYearEvaluations = evaluations.filter((evaluation: IEvaluation) =>
-    moment(evaluation.date, 'YYYY-MM-DD').isSame(currentYear),
+  const currentYearEvaluations = evaluations.filter(
+    (evaluation: IEvaluation) => moment(evaluation.date, 'YYYY-MM-DD').year() === currentYear,
   );
   return getMostRecentEvaluation(currentYearEvaluations, key);
 };
@@ -90,66 +90,75 @@ export const getFlatProjectNotes = (project: IApiProject) => {
   return notes;
 };
 
+export const toFlatProperty = (apiProperty: IApiProperty, pp?: IProjectProperty): IProperty => {
+  const assessedLand = isParcelOrSubdivision(apiProperty as any)
+    ? getCurrentYearEvaluation(apiProperty.evaluations, EvaluationKeys.Assessed)
+    : undefined;
+  const assessedBuilding = getCurrentYearEvaluation(
+    apiProperty.evaluations,
+    isParcelOrSubdivision(apiProperty as any)
+      ? EvaluationKeys.Improvements
+      : EvaluationKeys.Assessed,
+  );
+  const netBook = getCurrentFiscal(apiProperty.fiscals, FiscalKeys.NetBook);
+  const market = getCurrentFiscal(apiProperty.fiscals, FiscalKeys.Market);
+  return {
+    id: apiProperty.id,
+    projectNumbers: apiProperty.projectNumbers,
+    projectPropertyId: pp?.id,
+    parcelId: apiProperty.parcelId ?? apiProperty.id,
+    pid: apiProperty.pid ?? '',
+    name: apiProperty.name,
+    description: apiProperty.description,
+    landLegalDescription: apiProperty.landLegalDescription,
+    zoning: apiProperty.zoning,
+    zoningPotential: apiProperty.zoningPotential,
+    isSensitive: apiProperty.isSensitive,
+    latitude: apiProperty.latitude,
+    longitude: apiProperty.longitude,
+    agencyId: apiProperty.agencyId,
+    agency: apiProperty.agency ?? '',
+    agencyCode: apiProperty.agency ?? '',
+    subAgency: apiProperty.subAgency,
+    classification: apiProperty.classification ?? '',
+    classificationId: apiProperty.classificationId,
+    addressId: apiProperty.address?.id as number,
+    address: `${apiProperty.address?.line1 ?? ''} , ${apiProperty.address?.administrativeArea ??
+      ''}`,
+    administrativeArea: apiProperty.address?.administrativeArea ?? '',
+    province: apiProperty.address?.province ?? '',
+    postal: apiProperty.address?.postal ?? '',
+    assessedLand: (assessedLand?.value as number) ?? '',
+    assessedLandDate: assessedLand?.date,
+    assessedLandFirm: assessedLand?.firm,
+    assessedLandRowVersion: assessedLand?.rowVersion,
+    assessedBuilding: (assessedBuilding?.value as number) ?? '',
+    assessedBuildingDate: assessedBuilding?.date,
+    assessedBuildingFirm: assessedBuilding?.firm,
+    assessedBuildingRowVersion: assessedBuilding?.rowVersion,
+    netBook: (netBook?.value as number) ?? '',
+    netBookFiscalYear: netBook?.fiscalYear as number,
+    netBookRowVersion: netBook?.rowVersion,
+    market: (market?.value as number) ?? '',
+    marketFiscalYear: market?.fiscalYear as number,
+    marketRowVersion: market?.rowVersion,
+    propertyTypeId: !!pp?.parcel ? pp.parcel.propertyTypeId ?? 0 : 1,
+    propertyType:
+      pp?.propertyType ?? isParcelOrSubdivision(apiProperty as any)
+        ? PropertyTypeNames.Land
+        : PropertyTypeNames.Building,
+    landArea: apiProperty.landArea,
+    parcels: apiProperty.parcels ?? [],
+  };
+};
+
 export const toFlatProject = (project?: IApiProject) => {
   if (!project) {
     return undefined;
   }
   const flatProperties = project.properties.map(pp => {
     const apiProperty: IApiProperty = (pp.building ?? pp.parcel) as IApiProperty;
-    const assessedLand = pp.parcel
-      ? getCurrentYearEvaluation(apiProperty.evaluations, EvaluationKeys.Assessed)
-      : null;
-    const assessedBuilding = getCurrentYearEvaluation(
-      apiProperty.evaluations,
-      EvaluationKeys.Improvements,
-    );
-    const netBook = getCurrentFiscal(apiProperty.fiscals, FiscalKeys.NetBook);
-    const market = getCurrentFiscal(apiProperty.fiscals, FiscalKeys.Market);
-    const property: IProperty = {
-      id: apiProperty.id,
-      projectNumbers: apiProperty.projectNumbers,
-      projectPropertyId: pp.id,
-      parcelId: apiProperty.parcelId ?? apiProperty.id,
-      pid: apiProperty.pid ?? '',
-      name: apiProperty.name,
-      description: apiProperty.description,
-      landLegalDescription: apiProperty.landLegalDescription,
-      zoning: apiProperty.zoning,
-      zoningPotential: apiProperty.zoningPotential,
-      isSensitive: apiProperty.isSensitive,
-      latitude: apiProperty.latitude,
-      longitude: apiProperty.longitude,
-      agencyId: apiProperty.agencyId,
-      agency: apiProperty.agency ?? '',
-      agencyCode: apiProperty.agency ?? '',
-      subAgency: apiProperty.subAgency,
-      classification: apiProperty.classification ?? '',
-      classificationId: apiProperty.classificationId,
-      addressId: apiProperty.address?.id as number,
-      address: `${apiProperty.address?.line1 ?? ''} , ${apiProperty.address?.administrativeArea ??
-        ''}`,
-      administrativeArea: apiProperty.address?.administrativeArea ?? '',
-      province: apiProperty.address?.province ?? '',
-      postal: apiProperty.address?.postal ?? '',
-      assessedLand: (assessedLand?.value as number) ?? '',
-      assessedLandDate: assessedLand?.date,
-      assessedLandFirm: assessedLand?.firm,
-      assessedLandRowVersion: assessedLand?.rowVersion,
-      assessedBuilding: (assessedBuilding?.value as number) ?? '',
-      assessedBuildingDate: assessedBuilding?.date,
-      assessedBuildingFirm: assessedBuilding?.firm,
-      assessedBuildingRowVersion: assessedBuilding?.rowVersion,
-      netBook: (netBook?.value as number) ?? '',
-      netBookFiscalYear: netBook?.fiscalYear as number,
-      netBookRowVersion: netBook?.rowVersion,
-      market: (market?.value as number) ?? '',
-      marketFiscalYear: market?.fiscalYear as number,
-      marketRowVersion: market?.rowVersion,
-      propertyTypeId: !!pp?.parcel ? pp.parcel.propertyTypeId ?? 0 : 1,
-      propertyType: pp.propertyType,
-      landArea: apiProperty.landArea,
-      parcels: apiProperty.parcels ?? [],
-    };
+    const property: IProperty = toFlatProperty(apiProperty, pp);
     return property;
   });
   //always copy the project values over initial values, this ensures that formik's requirement of non-undefined fields is satisfied.
@@ -168,34 +177,72 @@ const isParcelOrSubdivision = (property: IProperty) =>
 /** create api evaluation objects based on flat app evaluation structure */
 const getApiEvaluations = (property: IProperty): IEvaluation[] => {
   const evaluations: IEvaluation[] = [];
-  evaluations.push({
-    parcelId: isParcelOrSubdivision(property) ? property.id : undefined,
-    buildingId: property.propertyTypeId === PropertyTypes.BUILDING ? property.id : undefined,
-    value: isParcelOrSubdivision(property)
-      ? property.assessedLand || 0
-      : property.assessedBuilding || 0,
-    date: isParcelOrSubdivision(property)
-      ? property.assessedLandDate ?? formatDate(new Date())
-      : property.assessedBuildingDate ?? formatDate(new Date()),
-    rowVersion: property.assessedLandRowVersion,
-    key: EvaluationKeys.Assessed,
-    firm: property.assessedLandFirm ?? '',
-  });
-  evaluations.push({
-    parcelId: isParcelOrSubdivision(property) ? property.id : undefined,
-    buildingId: property.propertyTypeId === PropertyTypes.BUILDING ? property.id : undefined,
-    value: isParcelOrSubdivision(property)
-      ? property.assessedLand || 0
-      : property.assessedBuilding || 0,
-    date: isParcelOrSubdivision(property)
-      ? property.assessedLandDate ?? formatDate(new Date())
-      : property.assessedBuildingDate ?? formatDate(new Date()),
-    rowVersion: property.assessedLandRowVersion,
-    key: EvaluationKeys.Improvements,
-    firm: property.assessedLandFirm ?? '',
-  });
+  if (isParcelOrSubdivision(property)) {
+    if (property.assessedLand !== '' && property.assessedLand !== undefined) {
+      evaluations.push({
+        parcelId: property.id,
+        value: property.assessedLand,
+        date: property.assessedLandDate ?? formatDate(new Date()),
+        rowVersion: property.assessedLandRowVersion,
+        key: EvaluationKeys.Assessed,
+        firm: property.assessedLandFirm ?? '',
+      });
+    }
+    if (property.assessedBuilding !== '' && property.assessedBuilding !== undefined) {
+      evaluations.push({
+        parcelId: property.id,
+        value: property.assessedBuilding,
+        date: property.assessedBuildingDate ?? formatDate(new Date()),
+        rowVersion: property.assessedBuildingRowVersion,
+        key: EvaluationKeys.Improvements,
+        firm: property.assessedBuildingFirm ?? '',
+      });
+    }
+  } else {
+    if (property.assessedBuilding !== '' && property.assessedBuilding !== undefined) {
+      evaluations.push({
+        buildingId: property.id,
+        value: property.assessedBuilding,
+        date: property.assessedBuildingDate ?? formatDate(new Date()),
+        rowVersion: property.assessedBuildingRowVersion,
+        key: EvaluationKeys.Assessed,
+        firm: property.assessedBuildingFirm ?? '',
+      });
+    }
+  }
 
   return evaluations;
+};
+
+/** create api fiscal objects based on flat app fiscal structure */
+const getApiFiscals = (property: IProperty, useCurrentFiscal: boolean): IFiscal[] => {
+  const fiscals: IFiscal[] = [];
+  if (property.netBook !== '' && property.netBook !== undefined) {
+    fiscals.push({
+      parcelId: isParcelOrSubdivision(property) ? property.id : undefined,
+      buildingId: property.propertyTypeId === PropertyTypes.BUILDING ? property.id : undefined,
+      value: property.netBook,
+      fiscalYear: !useCurrentFiscal
+        ? property.netBookFiscalYear ?? getCurrentFiscalYear()
+        : getCurrentFiscalYear(),
+      rowVersion: property.netBookRowVersion,
+      key: FiscalKeys.NetBook,
+    });
+  }
+  if (property.market !== '' && property.market !== undefined) {
+    fiscals.push({
+      parcelId: isParcelOrSubdivision(property) ? property.id : undefined,
+      buildingId: property.propertyTypeId === PropertyTypes.BUILDING ? property.id : undefined,
+      value: property.market,
+      fiscalYear: !useCurrentFiscal
+        ? property.marketFiscalYear ?? getCurrentFiscalYear()
+        : getCurrentFiscalYear(),
+      rowVersion: property.marketRowVersion,
+      key: FiscalKeys.Market,
+    });
+  }
+
+  return fiscals;
 };
 
 export const toApiProperty = (
@@ -232,28 +279,7 @@ export const toApiProperty = (
     landLegalDescription: property.landLegalDescription,
     buildings: [], //parcel buildings should not be relevant to this api.
     evaluations: getApiEvaluations(property),
-    fiscals: [
-      {
-        parcelId: isParcelOrSubdivision(property) ? property.id : undefined,
-        buildingId: property.propertyTypeId === PropertyTypes.BUILDING ? property.id : undefined,
-        value: property.netBook,
-        fiscalYear: !useCurrentFiscal
-          ? property.netBookFiscalYear ?? getCurrentFiscalYear()
-          : getCurrentFiscalYear(),
-        rowVersion: property.netBookRowVersion,
-        key: FiscalKeys.NetBook,
-      },
-      {
-        parcelId: isParcelOrSubdivision(property) ? property.id : undefined,
-        buildingId: property.propertyTypeId === PropertyTypes.BUILDING ? property.id : undefined,
-        value: property.market,
-        fiscalYear: !useCurrentFiscal
-          ? property.marketFiscalYear ?? getCurrentFiscalYear()
-          : getCurrentFiscalYear(),
-        rowVersion: property.marketRowVersion,
-        key: FiscalKeys.Market,
-      },
-    ],
+    fiscals: getApiFiscals(property, useCurrentFiscal),
     rowVersion: property.rowVersion,
   };
   return apiProperty;

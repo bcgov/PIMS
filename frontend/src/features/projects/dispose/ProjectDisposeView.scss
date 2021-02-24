@@ -57,11 +57,14 @@
     &.clickable {
       cursor: pointer;
     }
-    .form-group .form-control {
-      font-size: 14px;
-      &.is-valid {
-        padding-right: 0.25rem;
-        background-image: none;
+    .form-group {
+      padding: 0px;
+      .form-control {
+        font-size: 14px;
+        &.is-valid {
+          padding-right: 0.25rem;
+          background-image: none;
+        }
       }
     }
   }

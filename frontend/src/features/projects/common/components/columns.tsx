@@ -250,12 +250,19 @@ export const getPropertyColumns = ({
       align: 'left',
     },
     {
-      Header: 'Assessed Value',
+      Header: 'Assessed Land',
       accessor: (row: IProperty) =>
         [PropertyTypes.PARCEL, PropertyTypes.SUBDIVISION].includes(row.propertyTypeId)
           ? row.assessedLand
-          : row.assessedBuilding,
-      Cell: editableFinancials ? EditableMoneyCell : MoneyCell,
+          : undefined,
+      Cell: MoneyCell,
+      minWidth: 145,
+      align: 'left',
+    },
+    {
+      Header: 'Assessed Building',
+      accessor: (row: IProperty) => row.assessedBuilding,
+      Cell: MoneyCell,
       minWidth: 145,
       align: 'left',
     },
