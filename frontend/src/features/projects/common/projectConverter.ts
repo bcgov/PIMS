@@ -184,15 +184,11 @@ const getApiEvaluations = (property: IProperty): IEvaluation[] => {
   evaluations.push({
     parcelId: isParcelOrSubdivision(property) ? property.id : undefined,
     buildingId: property.propertyTypeId === PropertyTypes.BUILDING ? property.id : undefined,
-    value: isParcelOrSubdivision(property)
-      ? property.assessedLand || 0
-      : property.assessedBuilding || 0,
-    date: isParcelOrSubdivision(property)
-      ? property.assessedLandDate ?? formatDate(new Date())
-      : property.assessedBuildingDate ?? formatDate(new Date()),
-    rowVersion: property.assessedLandRowVersion,
+    value: property.assessedBuilding || 0,
+    date: property.assessedBuildingDate ?? formatDate(new Date()),
+    rowVersion: property.assessedBuildingRowVersion,
     key: EvaluationKeys.Improvements,
-    firm: property.assessedLandFirm ?? '',
+    firm: property.assessedBuildingFirm ?? '',
   });
 
   return evaluations;
@@ -236,7 +232,7 @@ export const toApiProperty = (
       {
         parcelId: isParcelOrSubdivision(property) ? property.id : undefined,
         buildingId: property.propertyTypeId === PropertyTypes.BUILDING ? property.id : undefined,
-        value: property.netBook,
+        value: property.netBook || 0,
         fiscalYear: !useCurrentFiscal
           ? property.netBookFiscalYear ?? getCurrentFiscalYear()
           : getCurrentFiscalYear(),
@@ -246,7 +242,7 @@ export const toApiProperty = (
       {
         parcelId: isParcelOrSubdivision(property) ? property.id : undefined,
         buildingId: property.propertyTypeId === PropertyTypes.BUILDING ? property.id : undefined,
-        value: property.market,
+        value: property.market || 0,
         fiscalYear: !useCurrentFiscal
           ? property.marketFiscalYear ?? getCurrentFiscalYear()
           : getCurrentFiscalYear(),

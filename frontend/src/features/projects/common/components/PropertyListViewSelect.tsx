@@ -87,7 +87,6 @@ export const PropertyListViewSelect: React.FC<InputProps> = ({
     setPageSize(size);
   }, []);
 
-  // const [loading, setLoading] = useState(false);
   const fetchIdRef = useRef(0);
   const fetchData = useTable({ fetchIdRef, setData, setPageCount });
 
@@ -100,7 +99,7 @@ export const PropertyListViewSelect: React.FC<InputProps> = ({
     [setPageSize, setPageIndex],
   );
 
-  //Listen for changes in pagination and use the state to fetch our new data
+  // Listen for changes in pagination and use the state to fetch our new data
   useDeepCompareEffect(() => {
     fetchData({ pageIndex, pageSize, filter, agencyIds });
   }, [agencyIds, fetchData, filter, pageIndex, pageSize]);

@@ -15,8 +15,7 @@ import _ from 'lodash';
 import { IAgencyResponseColumns } from 'features/projects/erp/forms/AgencyResponseForm';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { EditableMoneyCell, MoneyCell } from 'components/Table/MoneyCell';
-import { PropertyTypes } from 'constants/propertyTypes';
+import { EditableMoneyCell, EditableLandMoneyCell, MoneyCell } from 'components/Table/MoneyCell';
 import { PropertyTypeCell } from 'components/Table/PropertyTypeCell';
 
 const ColumnDiv = styled.div`
@@ -203,6 +202,10 @@ export const defaultPropertyColumns: any[] = [
   },
 ];
 
+/**
+ * Get a an array of IDisposeColumnOptions for the project property list view.
+ * @param param0 Property column configuration values.
+ */
 export const getPropertyColumns = ({
   project,
   editableClassification,
@@ -239,25 +242,29 @@ export const getPropertyColumns = ({
       Header: 'Net Book Value',
       accessor: 'netBook',
       Cell: editableFinancials ? EditableMoneyCell : MoneyCell,
-      minWidth: 145,
-      align: 'left',
+      minWidth: 100,
+      align: 'right',
     },
     {
       Header: 'Market Value',
       accessor: 'market',
       Cell: editableFinancials ? EditableMoneyCell : MoneyCell,
-      minWidth: 145,
-      align: 'left',
+      minWidth: 100,
+      align: 'right',
     },
     {
-      Header: 'Assessed Value',
-      accessor: (row: IProperty) =>
-        [PropertyTypes.PARCEL, PropertyTypes.SUBDIVISION].includes(row.propertyTypeId)
-          ? row.assessedLand
-          : row.assessedBuilding,
+      Header: 'Assessed Land',
+      accessor: 'assessedLand',
+      Cell: editableFinancials ? EditableLandMoneyCell : MoneyCell,
+      minWidth: 100,
+      align: 'right',
+    },
+    {
+      Header: 'Assessed Building',
+      accessor: 'assessedBuilding',
       Cell: editableFinancials ? EditableMoneyCell : MoneyCell,
-      minWidth: 145,
-      align: 'left',
+      minWidth: 100,
+      align: 'right',
     },
     {
       Header: 'Type',

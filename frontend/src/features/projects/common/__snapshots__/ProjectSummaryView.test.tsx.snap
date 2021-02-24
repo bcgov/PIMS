@@ -457,7 +457,7 @@ exports[`Review Summary View renders approved correctly 1`] = `
                   Object {
                     "display": "flex",
                     "flex": "1 0 auto",
-                    "minWidth": "645px",
+                    "minWidth": "610px",
                   }
                 }
               >
@@ -650,11 +650,11 @@ exports[`Review Summary View renders approved correctly 1`] = `
                       "alignItems": "center",
                       "boxSizing": "border-box",
                       "display": "flex",
-                      "flex": "145 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "145px",
-                      "textAlign": "left",
-                      "width": "145px",
+                      "flex": "100 0 auto",
+                      "justifyContent": "flex-end",
+                      "minWidth": "100px",
+                      "textAlign": "right",
+                      "width": "100px",
                     }
                   }
                 >
@@ -680,11 +680,11 @@ exports[`Review Summary View renders approved correctly 1`] = `
                       "alignItems": "center",
                       "boxSizing": "border-box",
                       "display": "flex",
-                      "flex": "145 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "145px",
-                      "textAlign": "left",
-                      "width": "145px",
+                      "flex": "100 0 auto",
+                      "justifyContent": "flex-end",
+                      "minWidth": "100px",
+                      "textAlign": "right",
+                      "width": "100px",
                     }
                   }
                 >
@@ -710,18 +710,48 @@ exports[`Review Summary View renders approved correctly 1`] = `
                       "alignItems": "center",
                       "boxSizing": "border-box",
                       "display": "flex",
-                      "flex": "145 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "145px",
-                      "textAlign": "left",
-                      "width": "145px",
+                      "flex": "100 0 auto",
+                      "justifyContent": "flex-end",
+                      "minWidth": "100px",
+                      "textAlign": "right",
+                      "width": "100px",
                     }
                   }
                 >
                   <div
                     className="sortable-column"
                   >
-                    Assessed Value
+                    Assessed Land
+                    <span
+                      style={
+                        Object {
+                          "flex": "1 1 auto",
+                        }
+                      }
+                    />
+                  </div>
+                </div>
+                <div
+                  className="th"
+                  colSpan={1}
+                  role="columnheader"
+                  style={
+                    Object {
+                      "alignItems": "center",
+                      "boxSizing": "border-box",
+                      "display": "flex",
+                      "flex": "100 0 auto",
+                      "justifyContent": "flex-end",
+                      "minWidth": "100px",
+                      "textAlign": "right",
+                      "width": "100px",
+                    }
+                  }
+                >
+                  <div
+                    className="sortable-column"
+                  >
+                    Assessed Building
                     <span
                       style={
                         Object {
@@ -1442,7 +1472,7 @@ exports[`Review Summary View renders denied correctly 1`] = `
                   Object {
                     "display": "flex",
                     "flex": "1 0 auto",
-                    "minWidth": "645px",
+                    "minWidth": "610px",
                   }
                 }
               >
@@ -1635,11 +1665,11 @@ exports[`Review Summary View renders denied correctly 1`] = `
                       "alignItems": "center",
                       "boxSizing": "border-box",
                       "display": "flex",
-                      "flex": "145 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "145px",
-                      "textAlign": "left",
-                      "width": "145px",
+                      "flex": "100 0 auto",
+                      "justifyContent": "flex-end",
+                      "minWidth": "100px",
+                      "textAlign": "right",
+                      "width": "100px",
                     }
                   }
                 >
@@ -1665,11 +1695,11 @@ exports[`Review Summary View renders denied correctly 1`] = `
                       "alignItems": "center",
                       "boxSizing": "border-box",
                       "display": "flex",
-                      "flex": "145 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "145px",
-                      "textAlign": "left",
-                      "width": "145px",
+                      "flex": "100 0 auto",
+                      "justifyContent": "flex-end",
+                      "minWidth": "100px",
+                      "textAlign": "right",
+                      "width": "100px",
                     }
                   }
                 >
@@ -1695,18 +1725,48 @@ exports[`Review Summary View renders denied correctly 1`] = `
                       "alignItems": "center",
                       "boxSizing": "border-box",
                       "display": "flex",
-                      "flex": "145 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "145px",
-                      "textAlign": "left",
-                      "width": "145px",
+                      "flex": "100 0 auto",
+                      "justifyContent": "flex-end",
+                      "minWidth": "100px",
+                      "textAlign": "right",
+                      "width": "100px",
                     }
                   }
                 >
                   <div
                     className="sortable-column"
                   >
-                    Assessed Value
+                    Assessed Land
+                    <span
+                      style={
+                        Object {
+                          "flex": "1 1 auto",
+                        }
+                      }
+                    />
+                  </div>
+                </div>
+                <div
+                  className="th"
+                  colSpan={1}
+                  role="columnheader"
+                  style={
+                    Object {
+                      "alignItems": "center",
+                      "boxSizing": "border-box",
+                      "display": "flex",
+                      "flex": "100 0 auto",
+                      "justifyContent": "flex-end",
+                      "minWidth": "100px",
+                      "textAlign": "right",
+                      "width": "100px",
+                    }
+                  }
+                >
+                  <div
+                    className="sortable-column"
+                  >
+                    Assessed Building
                     <span
                       style={
                         Object {
@@ -2427,7 +2487,7 @@ exports[`Review Summary View renders submitted correctly 1`] = `
                   Object {
                     "display": "flex",
                     "flex": "1 0 auto",
-                    "minWidth": "645px",
+                    "minWidth": "610px",
                   }
                 }
               >
@@ -2620,11 +2680,11 @@ exports[`Review Summary View renders submitted correctly 1`] = `
                       "alignItems": "center",
                       "boxSizing": "border-box",
                       "display": "flex",
-                      "flex": "145 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "145px",
-                      "textAlign": "left",
-                      "width": "145px",
+                      "flex": "100 0 auto",
+                      "justifyContent": "flex-end",
+                      "minWidth": "100px",
+                      "textAlign": "right",
+                      "width": "100px",
                     }
                   }
                 >
@@ -2650,11 +2710,11 @@ exports[`Review Summary View renders submitted correctly 1`] = `
                       "alignItems": "center",
                       "boxSizing": "border-box",
                       "display": "flex",
-                      "flex": "145 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "145px",
-                      "textAlign": "left",
-                      "width": "145px",
+                      "flex": "100 0 auto",
+                      "justifyContent": "flex-end",
+                      "minWidth": "100px",
+                      "textAlign": "right",
+                      "width": "100px",
                     }
                   }
                 >
@@ -2680,18 +2740,48 @@ exports[`Review Summary View renders submitted correctly 1`] = `
                       "alignItems": "center",
                       "boxSizing": "border-box",
                       "display": "flex",
-                      "flex": "145 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "145px",
-                      "textAlign": "left",
-                      "width": "145px",
+                      "flex": "100 0 auto",
+                      "justifyContent": "flex-end",
+                      "minWidth": "100px",
+                      "textAlign": "right",
+                      "width": "100px",
                     }
                   }
                 >
                   <div
                     className="sortable-column"
                   >
-                    Assessed Value
+                    Assessed Land
+                    <span
+                      style={
+                        Object {
+                          "flex": "1 1 auto",
+                        }
+                      }
+                    />
+                  </div>
+                </div>
+                <div
+                  className="th"
+                  colSpan={1}
+                  role="columnheader"
+                  style={
+                    Object {
+                      "alignItems": "center",
+                      "boxSizing": "border-box",
+                      "display": "flex",
+                      "flex": "100 0 auto",
+                      "justifyContent": "flex-end",
+                      "minWidth": "100px",
+                      "textAlign": "right",
+                      "width": "100px",
+                    }
+                  }
+                >
+                  <div
+                    className="sortable-column"
+                  >
+                    Assessed Building
                     <span
                       style={
                         Object {

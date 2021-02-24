@@ -294,7 +294,7 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
               title="View Disposal Project details"
               width="3.5%"
             >
-              $0
+              
             </div>
             <div
               class="td clickable"
@@ -303,7 +303,7 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
               title="View Disposal Project details"
               width="3.5%"
             >
-              $0
+              
             </div>
             <div
               class="td clickable"
@@ -607,7 +607,7 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
                       title=""
                       width="7%"
                     >
-                      $0
+                      
                     </div>
                     <div
                       class="td"

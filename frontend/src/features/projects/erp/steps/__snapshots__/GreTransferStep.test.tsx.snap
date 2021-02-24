@@ -272,7 +272,7 @@ exports[`GRE Transfer Step renders correctly 1`] = `
                 Object {
                   "display": "flex",
                   "flex": "1 0 auto",
-                  "minWidth": "645px",
+                  "minWidth": "610px",
                 }
               }
             >
@@ -465,11 +465,11 @@ exports[`GRE Transfer Step renders correctly 1`] = `
                     "alignItems": "center",
                     "boxSizing": "border-box",
                     "display": "flex",
-                    "flex": "145 0 auto",
-                    "justifyContent": "flex-start",
-                    "minWidth": "145px",
-                    "textAlign": "left",
-                    "width": "145px",
+                    "flex": "100 0 auto",
+                    "justifyContent": "flex-end",
+                    "minWidth": "100px",
+                    "textAlign": "right",
+                    "width": "100px",
                   }
                 }
               >
@@ -495,11 +495,11 @@ exports[`GRE Transfer Step renders correctly 1`] = `
                     "alignItems": "center",
                     "boxSizing": "border-box",
                     "display": "flex",
-                    "flex": "145 0 auto",
-                    "justifyContent": "flex-start",
-                    "minWidth": "145px",
-                    "textAlign": "left",
-                    "width": "145px",
+                    "flex": "100 0 auto",
+                    "justifyContent": "flex-end",
+                    "minWidth": "100px",
+                    "textAlign": "right",
+                    "width": "100px",
                   }
                 }
               >
@@ -525,18 +525,48 @@ exports[`GRE Transfer Step renders correctly 1`] = `
                     "alignItems": "center",
                     "boxSizing": "border-box",
                     "display": "flex",
-                    "flex": "145 0 auto",
-                    "justifyContent": "flex-start",
-                    "minWidth": "145px",
-                    "textAlign": "left",
-                    "width": "145px",
+                    "flex": "100 0 auto",
+                    "justifyContent": "flex-end",
+                    "minWidth": "100px",
+                    "textAlign": "right",
+                    "width": "100px",
                   }
                 }
               >
                 <div
                   className="sortable-column"
                 >
-                  Assessed Value
+                  Assessed Land
+                  <span
+                    style={
+                      Object {
+                        "flex": "1 1 auto",
+                      }
+                    }
+                  />
+                </div>
+              </div>
+              <div
+                className="th"
+                colSpan={1}
+                role="columnheader"
+                style={
+                  Object {
+                    "alignItems": "center",
+                    "boxSizing": "border-box",
+                    "display": "flex",
+                    "flex": "100 0 auto",
+                    "justifyContent": "flex-end",
+                    "minWidth": "100px",
+                    "textAlign": "right",
+                    "width": "100px",
+                  }
+                }
+              >
+                <div
+                  className="sortable-column"
+                >
+                  Assessed Building
                   <span
                     style={
                       Object {
@@ -592,7 +622,7 @@ exports[`GRE Transfer Step renders correctly 1`] = `
                   Object {
                     "display": "flex",
                     "flex": "1 0 auto",
-                    "minWidth": "645px",
+                    "minWidth": "610px",
                   }
                 }
               >
@@ -727,11 +757,11 @@ exports[`GRE Transfer Step renders correctly 1`] = `
                       "alignItems": "flex-start",
                       "boxSizing": "border-box",
                       "display": "flex",
-                      "flex": "145 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "145px",
-                      "textAlign": "left",
-                      "width": "145px",
+                      "flex": "100 0 auto",
+                      "justifyContent": "flex-end",
+                      "minWidth": "100px",
+                      "textAlign": "right",
+                      "width": "100px",
                     }
                   }
                   title=""
@@ -747,11 +777,11 @@ exports[`GRE Transfer Step renders correctly 1`] = `
                       "alignItems": "flex-start",
                       "boxSizing": "border-box",
                       "display": "flex",
-                      "flex": "145 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "145px",
-                      "textAlign": "left",
-                      "width": "145px",
+                      "flex": "100 0 auto",
+                      "justifyContent": "flex-end",
+                      "minWidth": "100px",
+                      "textAlign": "right",
+                      "width": "100px",
                     }
                   }
                   title=""
@@ -767,17 +797,35 @@ exports[`GRE Transfer Step renders correctly 1`] = `
                       "alignItems": "flex-start",
                       "boxSizing": "border-box",
                       "display": "flex",
-                      "flex": "145 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "145px",
-                      "textAlign": "left",
-                      "width": "145px",
+                      "flex": "100 0 auto",
+                      "justifyContent": "flex-end",
+                      "minWidth": "100px",
+                      "textAlign": "right",
+                      "width": "100px",
                     }
                   }
                   title=""
                 >
                   $1
                 </div>
+                <div
+                  className="td"
+                  onClick={[Function]}
+                  role="cell"
+                  style={
+                    Object {
+                      "alignItems": "flex-start",
+                      "boxSizing": "border-box",
+                      "display": "flex",
+                      "flex": "100 0 auto",
+                      "justifyContent": "flex-end",
+                      "minWidth": "100px",
+                      "textAlign": "right",
+                      "width": "100px",
+                    }
+                  }
+                  title=""
+                />
                 <div
                   className="td clickable"
                   onClick={[Function]}
@@ -815,7 +863,7 @@ exports[`GRE Transfer Step renders correctly 1`] = `
                 Object {
                   "display": "flex",
                   "flex": "1 0 auto",
-                  "minWidth": "645px",
+                  "minWidth": "610px",
                 }
               }
             >
@@ -942,11 +990,11 @@ exports[`GRE Transfer Step renders correctly 1`] = `
                     "alignItems": "center",
                     "boxSizing": "border-box",
                     "display": "flex",
-                    "flex": "145 0 auto",
-                    "justifyContent": "flex-start",
-                    "minWidth": "145px",
-                    "textAlign": "left",
-                    "width": "145px",
+                    "flex": "100 0 auto",
+                    "justifyContent": "flex-end",
+                    "minWidth": "100px",
+                    "textAlign": "right",
+                    "width": "100px",
                   }
                 }
               >
@@ -961,11 +1009,11 @@ exports[`GRE Transfer Step renders correctly 1`] = `
                     "alignItems": "center",
                     "boxSizing": "border-box",
                     "display": "flex",
-                    "flex": "145 0 auto",
-                    "justifyContent": "flex-start",
-                    "minWidth": "145px",
-                    "textAlign": "left",
-                    "width": "145px",
+                    "flex": "100 0 auto",
+                    "justifyContent": "flex-end",
+                    "minWidth": "100px",
+                    "textAlign": "right",
+                    "width": "100px",
                   }
                 }
               >
@@ -980,11 +1028,30 @@ exports[`GRE Transfer Step renders correctly 1`] = `
                     "alignItems": "center",
                     "boxSizing": "border-box",
                     "display": "flex",
-                    "flex": "145 0 auto",
-                    "justifyContent": "flex-start",
-                    "minWidth": "145px",
-                    "textAlign": "left",
-                    "width": "145px",
+                    "flex": "100 0 auto",
+                    "justifyContent": "flex-end",
+                    "minWidth": "100px",
+                    "textAlign": "right",
+                    "width": "100px",
+                  }
+                }
+              >
+                 
+              </div>
+              <div
+                className="th"
+                colSpan={1}
+                role="columnheader"
+                style={
+                  Object {
+                    "alignItems": "center",
+                    "boxSizing": "border-box",
+                    "display": "flex",
+                    "flex": "100 0 auto",
+                    "justifyContent": "flex-end",
+                    "minWidth": "100px",
+                    "textAlign": "right",
+                    "width": "100px",
                   }
                 }
               >

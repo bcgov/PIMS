@@ -1,13 +1,13 @@
 import { getCurrentFiscalYear } from '../../../utils/utils';
 import { IBuilding, IAddress, IEvaluation, IFiscal } from 'actions/parcelsActions';
-import { NoteTypes } from '../../../constants';
+import { NoteTypes, PropertyTypes } from '../../../constants';
 
 /**
  * IProperty interface represents the model used for searching properties.
  */
 export interface IProperty {
   id: number;
-  projectPropertyId?: number;
+  projectPropertyId?: PropertyTypes;
   propertyTypeId: number;
   propertyType: string;
   pid: string;
