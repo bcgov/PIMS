@@ -31,7 +31,7 @@ SONAR_PROJECT_NAME=${SONAR_PROJECT_NAME:-PIMS Frontend [${TARGET}]}
 SONAR_URL=${SONAR_URL:-https://sonarqube-354028-tools.apps.silver.devops.gov.bc.ca}
 ZAP_REPORT=${ZAP_REPORT:-}
 
-FRONTEND_DIR="${FRONTEND_DIR:-../../frontend}"
+FRONTEND_DIR="${FRONTEND_DIR:-../../../frontend}"
 
 # Check requirements
 #
