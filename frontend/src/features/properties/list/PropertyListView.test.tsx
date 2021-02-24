@@ -206,7 +206,8 @@ describe('Property list view', () => {
       await wait(
         () => {
           expect(getByTestId('save-changes')).toBeInTheDocument();
-          expect(container.querySelector(`input[name="properties.0.market"]`)).not.toBeNull();
+          expect(getByTestId('cancel-changes')).toBeInTheDocument();
+          expect(container.querySelector(`input[name="properties.0.market"]`)).toBeDefined();
         },
         { timeout: 500 },
       );
