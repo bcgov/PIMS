@@ -7,9 +7,11 @@ exports[`login login renders correctly 1`] = `
   <div
     className="unauth container-fluid"
   >
-    <h1>
-      Search and visualize government property information
-    </h1>
+    <img
+      alt="PIMS logo"
+      className="pims-logo"
+      src="logo_with_text.png"
+    />
     <div
       className="sign-in row"
     >
@@ -19,6 +21,9 @@ exports[`login login renders correctly 1`] = `
       <div
         className="block col-md-6 col-16"
       >
+        <h1>
+          Search and visualize government property information
+        </h1>
         <h6>
           PIMS enables you to search properties owned by the Government of British Columbia
         </h6>

@@ -74,13 +74,13 @@ $narrowSidebarSize: 700px;
 .parcel-cursor,
 .parcel-cursor .map .leaflet-container.leaflet-grab,
 .parcel-cursor .map .leaflet-container.leaflet-grab .leaflet-interactive {
-  cursor: url('../../../assets/images/marker-icon-1x-green.png') 12.5 41, default;
+  cursor: url('../../../assets/images/pins/marker-icon-1x-green.png') 12.5 41, default;
 }
 
 .building-cursor,
 .building-cursor .map .leaflet-container.leaflet-grab,
 .building-cursor .map .leaflet-container.leaflet-grab .leaflet-interactive {
-  cursor: url('../../../assets/images/marker-icon-1x-blue.png') 12.5 41, default;
+  cursor: url('../../../assets/images/pins/marker-icon-1x-blue.png') 12.5 41, default;
 }
 
 .map .leaflet-marker-icon.leaflet-interactive div,
