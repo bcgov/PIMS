@@ -25,6 +25,8 @@ import { PropertyTypes } from 'constants/propertyTypes';
 import { withNameSpace } from 'utils/formUtils';
 import MovePinForm from './MovePinForm';
 import LandSearchForm from './LandSearchForm';
+import { ProjectNumberLink } from 'components/maps/leaflet/InfoSlideOut/ProjectNumberLink';
+import styled from 'styled-components';
 
 interface IIdentificationProps {
   /** used for changign the agency - note that only select users will be able to edit this field */
@@ -53,6 +55,11 @@ interface IIdentificationProps {
   disabled?: boolean;
 }
 
+const StyledProjectNumbers = styled.div`
+  flex-direction: column;
+  display: flex;
+`;
+
 export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
   nameSpace,
   index,
@@ -73,6 +80,9 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
   const agency = getIn(formikProps.values, withNameSpace(nameSpace, 'agencyId'));
   const { lookupCodes } = useCodeLookups();
   const { propertyTypeId, latitude, longitude } = getIn(formikProps.values, nameSpace);
+  const projectNumbers = getIn(formikProps.values, 'data.projectNumbers');
+  const agencyId = getIn(formikProps.values, `data.agencyId`);
+  const [privateProject, setPrivateProject] = useState(false);
 
   return (
     <Container>
@@ -212,8 +222,25 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
               required
             />
           </Form.Row>
+          {!!projectNumbers?.length && (
+            <Form.Row>
+              <Label style={{ marginTop: '1rem' }}>Project Number(s)</Label>
+              <StyledProjectNumbers>
+                {projectNumbers.map((projectNum: string) => (
+                  <ProjectNumberLink
+                    key={projectNum}
+                    projectNumber={projectNum}
+                    agencyId={agencyId}
+                    setPrivateProject={setPrivateProject}
+                    privateProject={privateProject}
+                  />
+                ))}
+              </StyledProjectNumbers>
+            </Form.Row>
+          )}
         </Col>
       </Row>
+
       <Row>
         <Col>
           <div className="input-medium harmful">

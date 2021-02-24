@@ -29,6 +29,7 @@ import { indexOfFinancial } from 'features/properties/components/forms/subforms/
 import { EvaluationKeys } from 'constants/evaluationKeys';
 import { FiscalKeys } from 'constants/fiscalKeys';
 import moment from 'moment';
+import { ProjectNumberLink } from 'components/maps/leaflet/InfoSlideOut/ProjectNumberLink';
 
 interface IReviewProps {
   nameSpace?: string;
@@ -70,12 +71,9 @@ const OtherParcel = ({ index }: any) => {
   );
 };
 
-const LinkButton = styled.span`
-  background: none;
-  border: none;
-  padding: 0;
-  color: #069;
-  text-decoration: underline;
+const StyledProjectNumbers = styled.div`
+  flex-direction: column;
+  display: flex;
 `;
 
 /**
@@ -86,6 +84,8 @@ const LinkButton = styled.span`
  */
 export const AssociatedLandReviewPage: React.FC<any> = (props: IReviewProps) => {
   const formikProps = useFormikContext<any>();
+  const [privateProject, setPrivateProject] = useState(false);
+
   const defaultEditValues = {
     identification: true,
     usage: true,
@@ -131,7 +131,9 @@ export const AssociatedLandReviewPage: React.FC<any> = (props: IReviewProps) => 
       currentYear,
     );
 
-    const projectNumber = getIn(formikProps.values, withNameSpace('projectNumber', index));
+    const projectNumbers = getIn(formikProps.values, withNameSpace('projectNumbers', index));
+    const agencyId = getIn(formikProps.values, withNameSpace('agencyId', index));
+
     if (
       getIn(formikProps.values.data, `leasedLandMetadata.${index}.type`) === LeasedLandTypes.other
     ) {
@@ -236,14 +238,20 @@ export const AssociatedLandReviewPage: React.FC<any> = (props: IReviewProps) => 
                       postText="Hectares"
                     />
                   </Row>
-                  {!!projectNumber && (
-                    <Row className="content-item">
-                      <Label>SPP</Label>
-                      <LinkButton>
-                        {
-                          projectNumber //TODO: make this a proper link when PA-1974 is fixed
-                        }
-                      </LinkButton>
+                  {!!projectNumbers?.length && (
+                    <Row style={{ marginTop: '1rem' }}>
+                      <Label>Project Number(s)</Label>
+                      <StyledProjectNumbers>
+                        {projectNumbers.map((projectNum: string) => (
+                          <ProjectNumberLink
+                            projectNumber={projectNum}
+                            key={projectNum}
+                            agencyId={agencyId}
+                            setPrivateProject={setPrivateProject}
+                            privateProject={privateProject}
+                          />
+                        ))}
+                      </StyledProjectNumbers>
                     </Row>
                   )}
                   <br></br>

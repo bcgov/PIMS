@@ -28,7 +28,7 @@ const RightCol = styled(Col)`
 
 interface IThreeColItem {
   leftSideLabel: string;
-  rightSideItem: string | number | undefined;
+  rightSideItem: string | number | React.ReactNode | undefined;
 }
 
 export const ThreeColumnItem: React.FC<IThreeColItem> = ({ leftSideLabel, rightSideItem }) => {
