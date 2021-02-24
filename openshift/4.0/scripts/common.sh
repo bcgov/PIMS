@@ -35,13 +35,6 @@ source "$(dirname ${0})/envars"
   exit 1
 }
 
-# Verify login
-#
-$(oc whoami &>/dev/null) || {
-  echo -e "\nPlease verify oc login\n"
-  exit 1
-}
-
 # Echo commands and dry run warnings
 #
 display_helper() {
