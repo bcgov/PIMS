@@ -471,6 +471,7 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): React
     props.canRowExpand,
     props.onRowClick,
     props.noRowsMessage,
+    props.columns,
     renderExpandRowStateButton,
     cellProps,
     expandedRows,

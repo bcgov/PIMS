@@ -8,10 +8,11 @@ import { useKeycloak } from '@react-keycloak/web';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 import _ from 'lodash';
-import { getStore, mockProject as defaultProject } from '../../dispose/testUtils';
+import { getStore, mockProject as defaultProject, mockFlatProject } from '../../dispose/testUtils';
 import { IProject, SPPApprovalTabs } from '../../common';
 import { SplStep } from '..';
 import Claims from 'constants/claims';
+import { PropertyTypes } from 'constants/propertyTypes';
 
 jest.mock('@react-keycloak/web');
 const mockKeycloak = (claims: string[]) => {
@@ -304,8 +305,7 @@ describe('SPL Approval Step', () => {
       });
     });
 
-    // TODO: Fix test - for some reason it's throwing "Cannot read property 'reduce' of undefined"
-    xit('spl disposes project', async (done: any) => {
+    it('spl disposes project', async (done: any) => {
       const project = _.cloneDeep(mockProject);
       project.disposedOn = new Date();
       project.statusCode = ReviewWorkflowStatus.ContractInPlaceConditional;
@@ -334,6 +334,27 @@ describe('SPL Approval Step', () => {
         disposeButton.click();
         const disposePopupButton = await component.findAllByText(/Dispose Project/);
         disposePopupButton[1].click();
+      });
+    });
+
+    it('spl disposes project with subdivisions', async (done: any) => {
+      const project = _.cloneDeep(mockFlatProject as any);
+      project.disposedOn = new Date();
+      project.statusCode = ReviewWorkflowStatus.ContractInPlaceConditional;
+      project.assessed = 123;
+      project.market = 123;
+      project.netBook = 123;
+      project.properties[0].propertyTypeId = PropertyTypes.SUBDIVISION;
+      project.properties[0].parcels = [{ id: 1, pid: '123456789', pin: 1 }];
+
+      const component = render(getSplStep(getStore(project)));
+      const disposeButton = component.getAllByText('Dispose')[0];
+
+      await act(async () => {
+        disposeButton.click();
+        await component.findAllByText(/There are one or more subdivisions/);
+        expect(await screen.findByText('PID 123-456-789')).toBeVisible();
+        done();
       });
     });
   });

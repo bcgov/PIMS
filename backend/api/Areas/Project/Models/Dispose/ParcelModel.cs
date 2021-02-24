@@ -10,6 +10,8 @@ namespace Pims.Api.Areas.Project.Models.Dispose
 
         public int? PIN { get; set; }
 
+        public int? PropertyTypeId { get; set; }
+
         public float LandArea { get; set; }
 
         public string LandLegalDescription { get; set; }
@@ -25,6 +27,8 @@ namespace Pims.Api.Areas.Project.Models.Dispose
         public IEnumerable<ParcelFiscalModel> Fiscals { get; set; } = new List<ParcelFiscalModel>();
 
         public IEnumerable<ParcelBuildingModel> Buildings { get; set; } = new List<ParcelBuildingModel>();
+
+        public IEnumerable<SubdivisionParcelModel> Parcels { get; set; } = new List<SubdivisionParcelModel>();
         #endregion
     }
 }

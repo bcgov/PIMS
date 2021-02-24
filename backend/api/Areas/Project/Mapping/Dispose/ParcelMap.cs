@@ -33,6 +33,7 @@ namespace Pims.Api.Areas.Project.Mapping.Dispose
                 .Map(dest => dest.Id, src => src.Id)
                 .Map(dest => dest.PID, src => src.ParcelIdentity)
                 .Map(dest => dest.PIN, src => src.PIN)
+                .Map(dest => dest.PropertyTypeId, src => src.PropertyTypeId)
                 .Map(dest => dest.ProjectNumbers, src => JsonSerializer.Deserialize<IEnumerable<string>>(src.ProjectNumbers ?? "[]", _serializerOptions))
                 .Map(dest => dest.Description, src => src.Description)
                 .Map(dest => dest.ClassificationId, src => src.ClassificationId)
@@ -51,6 +52,7 @@ namespace Pims.Api.Areas.Project.Mapping.Dispose
                 .Map(dest => dest.Buildings, src => src.Buildings)
                 .Map(dest => dest.Evaluations, src => src.Evaluations)
                 .Map(dest => dest.Fiscals, src => src.Fiscals)
+                .Map(dest => dest.Parcels, src => src.Parcels)
                 .Inherits<Entity.BaseEntity, BaseModel>();
 
 
@@ -73,6 +75,19 @@ namespace Pims.Api.Areas.Project.Mapping.Dispose
                 .Map(dest => dest.Buildings, src => src.Buildings)
                 .Map(dest => dest.Evaluations, src => src.Evaluations)
                 .Map(dest => dest.Fiscals, src => src.Fiscals)
+                .Map(dest => dest.Parcels, src => src.Parcels)
+                .Inherits<BaseModel, Entity.BaseEntity>();
+
+            config.NewConfig<Entity.ParcelParcel, Model.SubdivisionParcelModel>()
+                .EnableNonPublicMembers(true)
+                .Map(dest => dest.Id, src => src.Parcel.Id)
+                .Map(dest => dest.PID, src => src.Parcel.PID)
+                .Map(dest => dest.PIN, src => src.Parcel.PIN)
+                .Inherits<Entity.BaseEntity, BaseModel>();
+
+            config.NewConfig<Model.SubdivisionParcelModel, Entity.ParcelParcel>()
+                .EnableNonPublicMembers(true)
+                .Map(dest => dest.ParcelId, src => src.Id)
                 .Inherits<BaseModel, Entity.BaseEntity>();
 
             config.NewConfig<Model.ParcelModel, NetTopologySuite.Geometries.Point>()

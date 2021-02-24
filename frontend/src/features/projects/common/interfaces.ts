@@ -54,6 +54,7 @@ export interface IProperty {
   landLegalDescription: string;
   zoning?: string;
   zoningPotential?: string;
+  parcels?: IParentParcel[];
 
   // Building Properties
   parcelId?: number;
@@ -70,6 +71,12 @@ export interface IProperty {
   transferLeaseOnSale?: boolean;
   rentableArea?: number;
   rowVersion?: string;
+}
+
+export interface IParentParcel {
+  pid: string;
+  pin: number;
+  id: number;
 }
 
 /**
@@ -406,6 +413,7 @@ export interface IApiProperty {
   id: number;
   parcelId?: number;
   buildingId?: number;
+  propertyTypeId: number;
   pid?: string;
   pin?: number | '';
   projectNumbers: string[];
@@ -428,6 +436,7 @@ export interface IApiProperty {
   evaluations: IEvaluation[];
   fiscals: IFiscal[];
   rowVersion?: string;
+  parcels?: IParentParcel[];
 }
 
 export enum AgencyResponses {
