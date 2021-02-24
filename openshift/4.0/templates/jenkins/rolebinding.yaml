@@ -1,0 +1,75 @@
+kind: "Template"
+apiVersion: "v1"
+metadata:
+  name: "pims-pipeline service account"
+parameters:
+  - name: SERVICE_ACCOUNT
+    displayName: "Service Account Name"
+    description: "The name of the service account to add to the environment."
+    required: true
+    value: "jenkins"
+  - name: PROJECT_NAMESPACE
+    displayName: "OpenShift Project Namespace"
+    description: "The namespace of the OpenShift project containing the application."
+    required: true
+    value: "354028"
+objects:
+  # Add service account in tools
+  - kind: RoleBinding
+    apiVersion: rbac.authorization.k8s.io/v1
+    metadata:
+      name: ${SERVICE_ACCOUNT}-tools
+      namespace: ${PROJECT_NAMESPACE}-tools
+    roleRef:
+      kind: ClusterRole
+      apiGroup: rbac.authorization.k8s.io
+      name: edit
+    subjects:
+      - kind: ServiceAccount
+        name: ${SERVICE_ACCOUNT}
+        namespace: ${PROJECT_NAMESPACE}-tools
+
+  # Add service account in dev
+  - kind: RoleBinding
+    apiVersion: rbac.authorization.k8s.io/v1
+    metadata:
+      name: ${SERVICE_ACCOUNT}-dev
+      namespace: ${PROJECT_NAMESPACE}-dev
+    roleRef:
+      kind: ClusterRole
+      apiGroup: rbac.authorization.k8s.io
+      name: edit
+    subjects:
+      - kind: ServiceAccount
+        name: ${SERVICE_ACCOUNT}
+        namespace: ${PROJECT_NAMESPACE}-tools
+
+  # Add service account in test
+  - kind: RoleBinding
+    apiVersion: rbac.authorization.k8s.io/v1
+    metadata:
+      name: ${SERVICE_ACCOUNT}-test
+      namespace: ${PROJECT_NAMESPACE}-test
+    roleRef:
+      kind: ClusterRole
+      apiGroup: rbac.authorization.k8s.io
+      name: edit
+    subjects:
+      - kind: ServiceAccount
+        name: ${SERVICE_ACCOUNT}
+        namespace: ${PROJECT_NAMESPACE}-tools
+
+  # Add service account in prod
+  - kind: RoleBinding
+    apiVersion: rbac.authorization.k8s.io/v1
+    metadata:
+      name: ${SERVICE_ACCOUNT}-prod
+      namespace: ${PROJECT_NAMESPACE}-prod
+    roleRef:
+      kind: ClusterRole
+      apiGroup: rbac.authorization.k8s.io
+      name: edit
+    subjects:
+      - kind: ServiceAccount
+        name: ${SERVICE_ACCOUNT}
+        namespace: ${PROJECT_NAMESPACE}-tools
