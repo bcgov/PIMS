@@ -252,7 +252,9 @@ export const getPropertyColumns = ({
     {
       Header: 'Assessed Value',
       accessor: (row: IProperty) =>
-        row.propertyTypeId === PropertyTypes.PARCEL ? row.assessedLand : row.assessedBuilding,
+        [PropertyTypes.PARCEL, PropertyTypes.SUBDIVISION].includes(row.propertyTypeId)
+          ? row.assessedLand
+          : row.assessedBuilding,
       Cell: editableFinancials ? EditableMoneyCell : MoneyCell,
       minWidth: 145,
       align: 'left',

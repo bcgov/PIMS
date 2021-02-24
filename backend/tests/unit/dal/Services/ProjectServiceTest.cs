@@ -2608,6 +2608,66 @@ namespace Pims.Dal.Test.Services
         }
 
         [Fact]
+        public async void SetStatusAsync_Disposed_Success_Subdivisions()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.DisposeApprove, Permissions.AdminProjects, Permissions.ProjectView).AddAgency(1);
+
+            var init = helper.InitializeDatabase(user);
+            var workflows = init.CreateDefaultWorkflowsWithStatus();
+            init.SaveChanges();
+            var project = init.CreateProject(1, 1);
+            init.SetStatus(project, "SPL", "DIS");
+            var parcel = init.CreateParcel(1);
+            var parentParcel = init.CreateParcel(2);
+            project.AddProperty(parcel);
+            parcel.UpdateProjectNumbers(project.ProjectNumber);
+            parcel.Parcels.Add(new ParcelParcel() { ParcelId = parentParcel.Id, SubdivisionId = parcel.Id, Parcel = parentParcel });
+            var metadata = new DisposalProjectMetadata()
+            {
+                DisposedOn = DateTime.UtcNow
+            };
+            project.Metadata = JsonSerializer.Serialize(metadata);
+            init.SaveChanges();
+
+            var options = ControllerHelper.CreateDefaultPimsOptions();
+            var service = helper.CreateService<ProjectService>(user, options);
+
+            var queueService = helper.GetService<Mock<IPimsService>>();
+            queueService.Setup(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()));
+            queueService.Setup(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), It.IsAny<bool>()));
+
+            var disposed = init.ProjectStatus.First(s => s.Code == "DIS");
+            project.StatusId = disposed.Id; // Marketed status
+
+            EntityHelper.CreateAgency(2);
+            parcel.AgencyId = 2;
+            EntityHelper.CreatePropertyClassification(2, "new classification");
+            parcel.ClassificationId = 2;
+            project.Properties.First().Parcel = parcel;
+
+            // Act
+            var result = await service.SetStatusAsync(project, project.Workflow.Code);
+
+            // Assert
+            Assert.NotNull(result);
+            result.StatusId.Should().Be(disposed.Id);
+            result.Status.Should().Be(disposed);
+            JsonSerializer.Deserialize<DisposalProjectMetadata>(result.Metadata).DisposedOn.Should().NotBeNull();
+            var property = result.Properties.First().Parcel;
+            property.AgencyId.Should().BeNull();
+            property.ClassificationId.Should().Be(4);
+            property.IsVisibleToOtherAgencies.Should().BeFalse();
+            property.Parcels.Should().BeEmpty();
+            property.PropertyTypeId.Should().Be((int)PropertyTypes.Land);
+            parentParcel.ClassificationId.Should().Be(6);
+            queueService.Verify(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), null, project.StatusId, true), Times.Never());
+            queueService.Verify(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), true), Times.Once());
+
+        }
+
+        [Fact]
         public async void SetStatusAsync_Disposed_InvalidOperationException()
         {
             // Arrange

@@ -5,6 +5,7 @@ import classNames from 'classnames';
 export enum ModalSize {
   XLARGE = 'modal-xl',
   LARGE = 'modal-l',
+  MEDIUM = 'modal-m',
   SMALL = 'modal-s',
 }
 

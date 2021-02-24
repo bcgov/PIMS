@@ -39,6 +39,7 @@ export const updatePimsWarning =
 export const proceedToSplWarning = `Are you sure you want to approve this project for the Surplus Properties List?`;
 export const notInSplWarning = `Are you sure you would like to change the status of the project to Tier 1: Not Included in SPL?`;
 export const disposeWarning = `Are you sure you want to dispose this project? This will set all properties within the project to Disposed.  Which will make them unavailable to inventory.`;
+export const disposeSubdivisionWarning = `There are one or more subdivisions within this project. All subdivisions will be converted to parcels after this project is disposed. All of the following subdivision parent parcels will be re-classified as SUBDIVIDED:`;
 export const offersReceived = `Review required for offer(s) in Tier 3 & 4.`;
 export const dateEnteredMarket = 'Date Entered Market required to change status to Marketing.';
 export const projectComments = `Please provide any variances between appraised, assessed, and sale price.`;

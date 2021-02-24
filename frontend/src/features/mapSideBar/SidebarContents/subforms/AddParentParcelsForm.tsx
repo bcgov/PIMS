@@ -1,6 +1,6 @@
-import { useLocation, Link } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { getIn, useFormikContext } from 'formik';
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { Col, Form } from 'react-bootstrap';
 import { Label } from 'components/common/Label';
 import { Input, DisplayError } from 'components/common/form';
@@ -13,9 +13,9 @@ import { withNameSpace } from 'utils/formUtils';
 import queryString from 'query-string';
 import { ISteppedFormValues } from 'components/common/form/StepForm';
 import { ISearchFields } from '../LandForm';
-import { FaRegTimesCircle } from 'react-icons/fa';
 import dequal from 'dequal';
 import styled from 'styled-components';
+import { ILinkListItem, LinkList } from 'components/common/LinkList';
 
 interface IAddParentParcelsFormProps {
   /** used for determining nameSpace of field */
@@ -46,6 +46,30 @@ const AddParentParcelsForm = ({
   const parcels = getIn(values, withNameSpace(nameSpace, 'parcels'));
   const initialParcels = getIn(initialValues, withNameSpace(nameSpace, 'parcels'));
   const touch = getIn(touched, withNameSpace(nameSpace, 'parcels'));
+  const linkListItems = useMemo<ILinkListItem[]>(
+    () =>
+      parcels.map(
+        (parcel: IParcel): ILinkListItem => ({
+          key: parcel.id,
+          label: `PID ${pidFormatter(parcel.pid ?? '')}`,
+          pathName: '/mapview',
+          onRemoveItemClick: () =>
+            setFieldValue(
+              withNameSpace(nameSpace, 'parcels'),
+              parcels.filter((p: IParcel) => p.id !== parcel.id),
+            ),
+          removeItemTitle: 'Click to remove Parent Parcel Association',
+          search: queryString.stringify({
+            ...queryString.parse(location.search),
+            sidebar: true,
+            disabled: true,
+            loadDraft: false,
+            parcelId: parcel.id,
+          }),
+        }),
+      ),
+    [location.search, nameSpace, parcels, setFieldValue],
+  );
 
   useEffect(() => {
     if (!dequal(initialParcels, parcels)) {
@@ -105,44 +129,7 @@ const AddParentParcelsForm = ({
       </Col>
       <Col md={12}>
         <hr></hr>
-        {!!parcels?.length ? (
-          parcels.map((parcel: Partial<IParcel>) => (
-            <div key={parcel.id}>
-              <Link
-                target="_blank"
-                rel="noopener noreferrer"
-                to={{
-                  pathname: `/mapview`,
-
-                  search: queryString.stringify({
-                    ...queryString.parse(location.search),
-                    sidebar: true,
-                    disabled: true,
-                    loadDraft: false,
-                    parcelId: parcel.id,
-                  }),
-                }}
-              >
-                PID {pidFormatter(parcel.pid ?? '')}
-              </Link>
-              {!disabled && (
-                <FaRegTimesCircle
-                  title="Click to remove Parent Parcel Association"
-                  style={{ cursor: 'pointer' }}
-                  className="ml-2"
-                  onClick={() =>
-                    setFieldValue(
-                      withNameSpace(nameSpace, 'parcels'),
-                      parcels.filter((p: IParcel) => p.id !== parcel.id),
-                    )
-                  }
-                />
-              )}
-            </div>
-          ))
-        ) : (
-          <div>No Associated Parent Parcels</div>
-        )}
+        <LinkList noItemsMessage="No Associated Parent Parcels" listItems={linkListItems} />
         <ErrorMessage field={withNameSpace(nameSpace, 'parcels')} />
         <hr></hr>
       </Col>

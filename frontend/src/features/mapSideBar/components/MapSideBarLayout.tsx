@@ -29,10 +29,6 @@ const HeaderRow = styled.div`
   display: flex;
   align-items: center;
   height: 4rem;
-  svg:hover {
-    cursor: pointer;
-    filter: opacity(0.8);
-  }
 `;
 
 const CloseIcon = styled(FaWindowClose)`
