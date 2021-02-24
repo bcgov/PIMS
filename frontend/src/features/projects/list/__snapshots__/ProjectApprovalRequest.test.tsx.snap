@@ -35,166 +35,171 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
           role="row"
           style="display: flex; flex: 1 0 auto; min-width: 875px;"
         >
-          <div
-            class="th"
-            colspan="1"
-            role="columnheader"
-            style="box-sizing: border-box; flex: 65 0 auto; min-width: 65px; width: 3.5%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
-            width="3.5%"
+          <form
+            action="#"
+            style="display: flex; width: 100%;"
           >
             <div
-              class="sortable-column"
+              class="th"
+              colspan="1"
+              role="columnheader"
+              style="box-sizing: border-box; flex: 65 0 auto; min-width: 65px; width: 3.5%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+              width="3.5%"
             >
-              Project No.
-              <span
-                style="flex: 1 1 auto;"
-              />
+              <div
+                class="sortable-column"
+              >
+                Project No.
+                <span
+                  style="flex: 1 1 auto;"
+                />
+              </div>
             </div>
-          </div>
-          <div
-            class="th"
-            colspan="1"
-            role="columnheader"
-            style="box-sizing: border-box; flex: 200 0 auto; min-width: 200px; width: 7%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
-            width="7%"
-          >
             <div
-              class="sortable-column"
+              class="th"
+              colspan="1"
+              role="columnheader"
+              style="box-sizing: border-box; flex: 200 0 auto; min-width: 200px; width: 7%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+              width="7%"
             >
-              Name
-              <span
-                style="flex: 1 1 auto;"
-              />
+              <div
+                class="sortable-column"
+              >
+                Name
+                <span
+                  style="flex: 1 1 auto;"
+                />
+              </div>
             </div>
-          </div>
-          <div
-            class="th"
-            colspan="1"
-            role="columnheader"
-            style="box-sizing: border-box; flex: 50 0 auto; min-width: 50px; width: 7%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
-            width="7%"
-          >
             <div
-              class="sortable-column"
+              class="th"
+              colspan="1"
+              role="columnheader"
+              style="box-sizing: border-box; flex: 50 0 auto; min-width: 50px; width: 7%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+              width="7%"
             >
-              Status
-              <span
-                style="flex: 1 1 auto;"
-              />
+              <div
+                class="sortable-column"
+              >
+                Status
+                <span
+                  style="flex: 1 1 auto;"
+                />
+              </div>
             </div>
-          </div>
-          <div
-            class="th"
-            colspan="1"
-            role="columnheader"
-            style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 7%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
-            width="7%"
-          >
             <div
-              class="sortable-column"
+              class="th"
+              colspan="1"
+              role="columnheader"
+              style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 7%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+              width="7%"
             >
-              Agency
-              <span
-                style="flex: 1 1 auto;"
-              />
+              <div
+                class="sortable-column"
+              >
+                Agency
+                <span
+                  style="flex: 1 1 auto;"
+                />
+              </div>
             </div>
-          </div>
-          <div
-            class="th"
-            colspan="1"
-            role="columnheader"
-            style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 3.5%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
-            width="3.5%"
-          >
             <div
-              class="sortable-column"
+              class="th"
+              colspan="1"
+              role="columnheader"
+              style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 3.5%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+              width="3.5%"
             >
-              Zoning
-              <span
-                style="flex: 1 1 auto;"
-              />
+              <div
+                class="sortable-column"
+              >
+                Zoning
+                <span
+                  style="flex: 1 1 auto;"
+                />
+              </div>
             </div>
-          </div>
-          <div
-            class="th"
-            colspan="1"
-            role="columnheader"
-            style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 3.5%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
-            width="3.5%"
-          >
             <div
-              class="sortable-column"
+              class="th"
+              colspan="1"
+              role="columnheader"
+              style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 3.5%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+              width="3.5%"
             >
-              Zoning Potential
-              <span
-                style="flex: 1 1 auto;"
-              />
+              <div
+                class="sortable-column"
+              >
+                Zoning Potential
+                <span
+                  style="flex: 1 1 auto;"
+                />
+              </div>
             </div>
-          </div>
-          <div
-            class="th"
-            colspan="1"
-            role="columnheader"
-            style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 3.5%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
-            width="3.5%"
-          >
             <div
-              class="sortable-column"
+              class="th"
+              colspan="1"
+              role="columnheader"
+              style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 3.5%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+              width="3.5%"
             >
-              Net Book Value
-              <span
-                style="flex: 1 1 auto;"
-              />
+              <div
+                class="sortable-column"
+              >
+                Net Book Value
+                <span
+                  style="flex: 1 1 auto;"
+                />
+              </div>
             </div>
-          </div>
-          <div
-            class="th"
-            colspan="1"
-            role="columnheader"
-            style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 3.5%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
-            width="3.5%"
-          >
             <div
-              class="sortable-column"
+              class="th"
+              colspan="1"
+              role="columnheader"
+              style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 3.5%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+              width="3.5%"
             >
-              Market Value
-              <span
-                style="flex: 1 1 auto;"
-              />
+              <div
+                class="sortable-column"
+              >
+                Market Value
+                <span
+                  style="flex: 1 1 auto;"
+                />
+              </div>
             </div>
-          </div>
-          <div
-            class="th"
-            colspan="1"
-            role="columnheader"
-            style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 7%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
-            width="7%"
-          >
             <div
-              class="sortable-column"
+              class="th"
+              colspan="1"
+              role="columnheader"
+              style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 7%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+              width="7%"
             >
-              Updated On
-              <span
-                style="flex: 1 1 auto;"
-              />
+              <div
+                class="sortable-column"
+              >
+                Updated On
+                <span
+                  style="flex: 1 1 auto;"
+                />
+              </div>
             </div>
-          </div>
-          <div
-            class="th"
-            colspan="1"
-            role="columnheader"
-            style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 7%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
-            width="7%"
-          >
             <div
-              class="sortable-column"
+              class="th"
+              colspan="1"
+              role="columnheader"
+              style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 7%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+              width="7%"
             >
-              Updated By
-              <span
-                style="flex: 1 1 auto;"
-              />
+              <div
+                class="sortable-column"
+              >
+                Updated By
+                <span
+                  style="flex: 1 1 auto;"
+                />
+              </div>
             </div>
-          </div>
+          </form>
         </div>
       </div>
       <div
@@ -340,198 +345,203 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
                   role="row"
                   style="display: flex; flex: 1 0 auto; min-width: 980px;"
                 >
-                  <div
-                    class="th"
-                    colspan="1"
-                    role="columnheader"
-                    style="box-sizing: border-box; flex: 65 0 auto; min-width: 65px; width: 3.5%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
-                    width="3.5%"
+                  <form
+                    action="#"
+                    style="display: flex; width: 100%;"
                   >
                     <div
-                      class="sortable-column"
+                      class="th"
+                      colspan="1"
+                      role="columnheader"
+                      style="box-sizing: border-box; flex: 65 0 auto; min-width: 65px; width: 3.5%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+                      width="3.5%"
                     >
-                      Agency
-                      <span
-                        style="flex: 1 1 auto;"
-                      />
+                      <div
+                        class="sortable-column"
+                      >
+                        Agency
+                        <span
+                          style="flex: 1 1 auto;"
+                        />
+                      </div>
                     </div>
-                  </div>
-                  <div
-                    class="th"
-                    colspan="1"
-                    role="columnheader"
-                    style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 7%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
-                    width="7%"
-                  >
                     <div
-                      class="sortable-column"
+                      class="th"
+                      colspan="1"
+                      role="columnheader"
+                      style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 7%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+                      width="7%"
                     >
-                      Property Name
-                      <span
-                        style="flex: 1 1 auto;"
-                      />
+                      <div
+                        class="sortable-column"
+                      >
+                        Property Name
+                        <span
+                          style="flex: 1 1 auto;"
+                        />
+                      </div>
                     </div>
-                  </div>
-                  <div
-                    class="th"
-                    colspan="1"
-                    role="columnheader"
-                    style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 7%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
-                    width="7%"
-                  >
                     <div
-                      class="sortable-column"
+                      class="th"
+                      colspan="1"
+                      role="columnheader"
+                      style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 7%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+                      width="7%"
                     >
-                      Classification
-                      <span
-                        style="flex: 1 1 auto;"
-                      />
+                      <div
+                        class="sortable-column"
+                      >
+                        Classification
+                        <span
+                          style="flex: 1 1 auto;"
+                        />
+                      </div>
                     </div>
-                  </div>
-                  <div
-                    class="th"
-                    colspan="1"
-                    role="columnheader"
-                    style="box-sizing: border-box; flex: 160 0 auto; min-width: 160px; width: 14%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
-                    width="14%"
-                  >
                     <div
-                      class="sortable-column"
+                      class="th"
+                      colspan="1"
+                      role="columnheader"
+                      style="box-sizing: border-box; flex: 160 0 auto; min-width: 160px; width: 14%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+                      width="14%"
                     >
-                      Street Address
-                      <span
-                        style="flex: 1 1 auto;"
-                      />
+                      <div
+                        class="sortable-column"
+                      >
+                        Street Address
+                        <span
+                          style="flex: 1 1 auto;"
+                        />
+                      </div>
                     </div>
-                  </div>
-                  <div
-                    class="th"
-                    colspan="1"
-                    role="columnheader"
-                    style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 3.5%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
-                    width="3.5%"
-                  >
                     <div
-                      class="sortable-column"
+                      class="th"
+                      colspan="1"
+                      role="columnheader"
+                      style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 3.5%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+                      width="3.5%"
                     >
-                      Zoning
-                      <span
-                        style="flex: 1 1 auto;"
-                      />
+                      <div
+                        class="sortable-column"
+                      >
+                        Zoning
+                        <span
+                          style="flex: 1 1 auto;"
+                        />
+                      </div>
                     </div>
-                  </div>
-                  <div
-                    class="th"
-                    colspan="1"
-                    role="columnheader"
-                    style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 3.5%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
-                    width="3.5%"
-                  >
                     <div
-                      class="sortable-column"
+                      class="th"
+                      colspan="1"
+                      role="columnheader"
+                      style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 3.5%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+                      width="3.5%"
                     >
-                      Zoning Potential
-                      <span
-                        style="flex: 1 1 auto;"
-                      />
+                      <div
+                        class="sortable-column"
+                      >
+                        Zoning Potential
+                        <span
+                          style="flex: 1 1 auto;"
+                        />
+                      </div>
                     </div>
-                  </div>
-                  <div
-                    class="th"
-                    colspan="1"
-                    role="columnheader"
-                    style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 7%; justify-content: flex-end; text-align: right; align-items: center; display: flex;"
-                    width="7%"
-                  >
                     <div
-                      class="sortable-column"
+                      class="th"
+                      colspan="1"
+                      role="columnheader"
+                      style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 7%; justify-content: flex-end; text-align: right; align-items: center; display: flex;"
+                      width="7%"
                     >
-                      Assessed Value
-                      <span
-                        style="flex: 1 1 auto;"
-                      />
+                      <div
+                        class="sortable-column"
+                      >
+                        Assessed Value
+                        <span
+                          style="flex: 1 1 auto;"
+                        />
+                      </div>
                     </div>
-                  </div>
-                  <div
-                    class="th"
-                    colspan="1"
-                    role="columnheader"
-                    style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 7%; justify-content: flex-end; text-align: right; align-items: center; display: flex;"
-                    width="7%"
-                  >
                     <div
-                      class="sortable-column"
+                      class="th"
+                      colspan="1"
+                      role="columnheader"
+                      style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 7%; justify-content: flex-end; text-align: right; align-items: center; display: flex;"
+                      width="7%"
                     >
-                      Net Book Value
-                      <span
-                        style="flex: 1 1 auto;"
-                      />
+                      <div
+                        class="sortable-column"
+                      >
+                        Net Book Value
+                        <span
+                          style="flex: 1 1 auto;"
+                        />
+                      </div>
                     </div>
-                  </div>
-                  <div
-                    class="th"
-                    colspan="1"
-                    role="columnheader"
-                    style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 7%; justify-content: flex-end; text-align: right; align-items: center; display: flex;"
-                    width="7%"
-                  >
                     <div
-                      class="sortable-column"
+                      class="th"
+                      colspan="1"
+                      role="columnheader"
+                      style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 7%; justify-content: flex-end; text-align: right; align-items: center; display: flex;"
+                      width="7%"
                     >
-                      Market Value
-                      <span
-                        style="flex: 1 1 auto;"
-                      />
+                      <div
+                        class="sortable-column"
+                      >
+                        Market Value
+                        <span
+                          style="flex: 1 1 auto;"
+                        />
+                      </div>
                     </div>
-                  </div>
-                  <div
-                    class="th"
-                    colspan="1"
-                    role="columnheader"
-                    style="box-sizing: border-box; flex: 65 0 auto; min-width: 65px; width: 3.5%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
-                    width="3.5%"
-                  >
                     <div
-                      class="sortable-column"
+                      class="th"
+                      colspan="1"
+                      role="columnheader"
+                      style="box-sizing: border-box; flex: 65 0 auto; min-width: 65px; width: 3.5%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+                      width="3.5%"
                     >
-                      Type
-                      <span
-                        style="flex: 1 1 auto;"
-                      />
+                      <div
+                        class="sortable-column"
+                      >
+                        Type
+                        <span
+                          style="flex: 1 1 auto;"
+                        />
+                      </div>
                     </div>
-                  </div>
-                  <div
-                    class="th"
-                    colspan="1"
-                    role="columnheader"
-                    style="box-sizing: border-box; flex: 65 0 auto; min-width: 65px; width: 3.5%; justify-content: flex-end; text-align: right; align-items: center; display: flex;"
-                    width="3.5%"
-                  >
                     <div
-                      class="sortable-column"
+                      class="th"
+                      colspan="1"
+                      role="columnheader"
+                      style="box-sizing: border-box; flex: 65 0 auto; min-width: 65px; width: 3.5%; justify-content: flex-end; text-align: right; align-items: center; display: flex;"
+                      width="3.5%"
                     >
-                      Lot Size (in ha)
-                      <span
-                        style="flex: 1 1 auto;"
-                      />
+                      <div
+                        class="sortable-column"
+                      >
+                        Lot Size (in ha)
+                        <span
+                          style="flex: 1 1 auto;"
+                        />
+                      </div>
                     </div>
-                  </div>
-                  <div
-                    class="th"
-                    colspan="1"
-                    role="columnheader"
-                    style="box-sizing: border-box; flex: 65 0 auto; min-width: 65px; width: 3.5%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
-                    width="3.5%"
-                  >
                     <div
-                      class="sortable-column"
+                      class="th"
+                      colspan="1"
+                      role="columnheader"
+                      style="box-sizing: border-box; flex: 65 0 auto; min-width: 65px; width: 3.5%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+                      width="3.5%"
                     >
-                       
-                      <span
-                        style="flex: 1 1 auto;"
-                      />
+                      <div
+                        class="sortable-column"
+                      >
+                         
+                        <span
+                          style="flex: 1 1 auto;"
+                        />
+                      </div>
                     </div>
-                  </div>
+                  </form>
                 </div>
               </div>
               <div

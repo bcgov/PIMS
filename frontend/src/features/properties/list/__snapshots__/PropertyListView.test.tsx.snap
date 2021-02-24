@@ -472,20 +472,21 @@ exports[`Property list view Matches snapshot 1`] = `
         </svg>
       </button>
     </div>
-    <form
-      action="#"
+    <div
+      class="table"
+      role="table"
     >
       <div
-        class="table"
-        role="table"
+        class="thead thead-light"
       >
         <div
-          class="thead thead-light"
+          class="tr"
+          role="row"
+          style="display: flex; flex: 1 0 auto; min-width: 1175px;"
         >
-          <div
-            class="tr"
-            role="row"
-            style="display: flex; flex: 1 0 auto; min-width: 1175px;"
+          <form
+            action="#"
+            style="display: flex; width: 100%;"
           >
             <div
               class="th reset-filter svg-btn"
@@ -1207,20 +1208,20 @@ exports[`Property list view Matches snapshot 1`] = `
                 />
               </div>
             </div>
-          </div>
-        </div>
-        <div
-          class="table-loading"
-        >
-          <div
-            class="spinner-border"
-          />
+          </form>
         </div>
       </div>
       <div
-        class="table-toolbar"
-      />
-    </form>
+        class="table-loading"
+      >
+        <div
+          class="spinner-border"
+        />
+      </div>
+    </div>
+    <div
+      class="table-toolbar"
+    />
   </div>
 </div>
 `;
