@@ -97,7 +97,8 @@ select.form-control.is-invalid {
 }
 
 //by default, highlight dropdown options blue
-.dropdown-item {
+.dropdown-item,
+.dropdown-header {
   color: $text-color;
   &:hover {
     color: #fff;
