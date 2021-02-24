@@ -27,6 +27,8 @@ import { FiscalKeys } from 'constants/fiscalKeys';
 import moment from 'moment';
 import { getAssociatedLandCols } from 'features/properties/components/forms/subforms/columns';
 import { FormikTable } from 'features/projects/common';
+import { ProjectNumberLink } from 'components/maps/leaflet/InfoSlideOut/ProjectNumberLink';
+import styled from 'styled-components';
 
 interface IReviewProps {
   nameSpace?: string;
@@ -38,6 +40,11 @@ interface IReviewProps {
   disabled: boolean;
   isPropertyAdmin: boolean;
 }
+
+const StyledProjectNumbers = styled.div`
+  flex-direction: column;
+  display: flex;
+`;
 
 export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
   const formikProps = useFormikContext();
@@ -56,6 +63,9 @@ export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
     [formikProps.isValid, props.disabled],
   );
   const [editInfo, setEditInfo] = useState(defaultEditValues);
+  const projectNumbers = getIn(formikProps.values, withNameSpace('projectNumbers'));
+  const agencyId = getIn(formikProps.values, withNameSpace('agencyId'));
+  const [privateProject, setPrivateProject] = useState(false);
   const currentYear = moment().year();
   const evaluationIndex = indexOfFinancial(
     getIn(formikProps.values, withNameSpace('evaluations')),
@@ -202,16 +212,20 @@ export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
                   type="number"
                 />
               </Row>
-              {(formikProps.values as any).data?.projectNumber && (
-                <Row>
-                  <Label>SPP</Label>
-                  <FastInput
-                    displayErrorTooltips
-                    className="input-small"
-                    formikProps={formikProps}
-                    disabled={editInfo.identification}
-                    field={withNameSpace('projectNumber')}
-                  />
+              {!!projectNumbers?.length && (
+                <Row style={{ marginTop: '1rem' }}>
+                  <Label>Project Number(s)</Label>
+                  <StyledProjectNumbers>
+                    {projectNumbers.map((projectNum: string) => (
+                      <ProjectNumberLink
+                        projectNumber={projectNum}
+                        key={projectNum}
+                        agencyId={agencyId}
+                        setPrivateProject={setPrivateProject}
+                        privateProject={privateProject}
+                      />
+                    ))}
+                  </StyledProjectNumbers>
                 </Row>
               )}
               <Row className="sensitive check-item">

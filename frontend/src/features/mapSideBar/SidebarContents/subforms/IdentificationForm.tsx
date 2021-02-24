@@ -17,6 +17,8 @@ import useCodeLookups from 'hooks/useLookupCodes';
 import * as API from 'constants/API';
 import GenericModal from 'components/common/GenericModal';
 import { IBuilding } from 'actions/parcelsActions';
+import styled from 'styled-components';
+import { ProjectNumberLink } from 'components/maps/leaflet/InfoSlideOut/ProjectNumberLink';
 
 interface IIdentificationProps {
   /** passed down from parent to lock/unlock designated fields */
@@ -39,6 +41,11 @@ interface IIdentificationProps {
   disabled?: boolean;
 }
 
+const StyledProjectNumbers = styled.div`
+  flex-direction: column;
+  display: flex;
+`;
+
 export const IdentificationForm: React.FC<IIdentificationProps> = ({
   formikProps,
   agencies,
@@ -59,6 +66,10 @@ export const IdentificationForm: React.FC<IIdentificationProps> = ({
     [nameSpace],
   );
   const { lookupCodes } = useCodeLookups();
+  const projectNumbers = getIn(formikProps.values, 'data.projectNumbers');
+  const agencyId = getIn(formikProps.values, `data.agencyId`);
+  const [privateProject, setPrivateProject] = useState(false);
+
   return (
     <Container>
       <Row>
@@ -114,10 +125,20 @@ export const IdentificationForm: React.FC<IIdentificationProps> = ({
               disabled={disabled}
             />
           </Row>
-          {(formikProps.values as any).data.projectNumber && (
+          {!!projectNumbers?.length && (
             <Row>
-              <Label>SPP</Label>
-              <FastInput disabled formikProps={formikProps} field="projectNumber" />
+              <Label>Project Number(s)</Label>
+              <StyledProjectNumbers>
+                {projectNumbers.map((projectNum: string) => (
+                  <ProjectNumberLink
+                    projectNumber={projectNum}
+                    key={projectNum}
+                    agencyId={agencyId}
+                    setPrivateProject={setPrivateProject}
+                    privateProject={privateProject}
+                  />
+                ))}
+              </StyledProjectNumbers>
             </Row>
           )}
           <Row>
