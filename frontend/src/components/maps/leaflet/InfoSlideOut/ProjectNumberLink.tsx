@@ -1,9 +1,5 @@
-import Claims from 'constants/claims';
-import { Workflows } from 'constants/workflows';
-import { fetchProject, IProject } from 'features/projects/common';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
-import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 interface IProjectNumberLinkProps {
@@ -15,6 +11,8 @@ interface IProjectNumberLinkProps {
   setPrivateProject: Function;
   /** The result of setPrivateProject used in both the parent and child component */
   privateProject: boolean;
+  /** whether or not to add breakline underneath each project number (used for formatting in slideout) */
+  breakLine?: boolean;
 }
 
 /**
@@ -27,19 +25,16 @@ interface IProjectNumberLinkProps {
  * @param {number} agencyId The agency ID of the property being viewed
  * @param {Function} setPrivateProject Will set the parent state to determine whether the project can be viewed by user
  * @param {boolean} privateProject The resulting boolean of setPrivateProject that is used in the logic in determining whether the number will be a link
+ * @param {boolean} breakLine Optional, whether or not to add breakline underneath each project number (used for formatting in slideout)
  */
 export const ProjectNumberLink: React.FC<IProjectNumberLinkProps> = ({
   projectNumber,
   agencyId,
   setPrivateProject,
   privateProject,
+  breakLine,
 }) => {
-  const dispatch = useDispatch();
   const keycloak = useKeycloakWrapper();
-  /** Stores the various states of the project route (summary page, project status route) */
-  const [projectRoute, setProjectRoute] = useState<string>('');
-  /** State used to determine whether further project info has been fetcehd already */
-  const [loaded, setLoaded] = useState<boolean>(false);
 
   /** This function determines whether to display the project number as a link or just text */
   const displayProjectNumber = () => {
@@ -47,42 +42,25 @@ export const ProjectNumberLink: React.FC<IProjectNumberLinkProps> = ({
       return (
         <>
           {projectNumber}
-          <br />
+          {breakLine && <br />}
         </>
       );
     } else {
       return (
         <>
-          <Link to={`${projectRoute}?projectNumber=${projectNumber}`}>{projectNumber}</Link>
-          <br />
+          <Link to={`/projects?projectNumber=${projectNumber}`}>{projectNumber}</Link>
+          {breakLine && <br />}
         </>
       );
     }
   };
 
   useEffect(() => {
-    if (!loaded) {
-      if (keycloak.hasAgency(+agencyId)) {
-        (dispatch(fetchProject(projectNumber)) as any).then((project: IProject) => {
-          if (
-            keycloak.hasClaim(Claims.ADMIN_PROJECTS) ||
-            (keycloak.hasAgency(project.agencyId) &&
-              project.workflowCode === Workflows.SUBMIT_DISPOSAL)
-          ) {
-            setProjectRoute(project?.status?.route!);
-          } else if (
-            project.workflowCode !== Workflows.SUBMIT_DISPOSAL &&
-            keycloak.hasAgency(project.agencyId)
-          ) {
-            setProjectRoute('/projects/summary');
-          }
-        });
-      } else {
-        setPrivateProject(true);
-      }
-      setLoaded(true);
+    /** user does not belong to property agency nor is sres means project detail may not be viewed */
+    if (!keycloak.hasAgency(+agencyId) && !keycloak.isAdmin) {
+      setPrivateProject(true);
     }
-  }, [dispatch, projectNumber, privateProject, setPrivateProject, agencyId, keycloak, loaded]);
+  }, [setPrivateProject, agencyId, keycloak]);
 
   return displayProjectNumber();
 };

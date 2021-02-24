@@ -271,7 +271,6 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
         {clusters.map((cluster, index) => {
           // every cluster point has coordinates
           const [longitude, latitude] = cluster.geometry.coordinates;
-
           const {
             cluster: isCluster,
             point_count: pointCount,
@@ -349,13 +348,18 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
             )}
             onclick={() => {
               //sets this pin as currently selected
+              const convertedProperty = convertToProperty(
+                m.properties,
+                m.position.lat,
+                m.position.lng,
+              );
               if (
                 m.properties.propertyTypeId === PropertyTypes.PARCEL ||
                 m.properties.propertyTypeId === PropertyTypes.SUBDIVISION
               ) {
-                dispatch(parcelsActions.storeParcelDetail(m.properties as IParcel));
+                dispatch(parcelsActions.storeParcelDetail(convertedProperty as IParcel));
               } else {
-                dispatch(parcelsActions.storeBuildingDetail(m.properties as IBuilding));
+                dispatch(parcelsActions.storeBuildingDetail(convertedProperty as IBuilding));
               }
               onMarkerClick(); //open information slideout
               if (keycloak.canUserViewProperty(m.properties as IProperty)) {

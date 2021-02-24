@@ -126,10 +126,12 @@ export const InfoContent: React.FC<IInfoContent> = ({
               leftSideLabel={`Project Number${propertyInfo.projectNumbers.length > 1 ? 's' : ''}`}
               rightSideItem={propertyInfo.projectNumbers.map((projectNum: string) => (
                 <ProjectNumberLink
+                  key={projectNum}
                   setPrivateProject={setPrivateProject}
                   privateProject={privateProject}
                   agencyId={propertyInfo.agencyId}
                   projectNumber={projectNum}
+                  breakLine
                 />
               ))}
             />
