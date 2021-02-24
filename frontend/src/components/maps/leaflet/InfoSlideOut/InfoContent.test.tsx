@@ -5,6 +5,11 @@ import InfoContent from './InfoContent';
 import { IParcel, IBuilding } from 'actions/parcelsActions';
 import { PropertyTypes } from 'constants/propertyTypes';
 import { render } from '@testing-library/react';
+import configureMockStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
+import * as reducerTypes from 'constants/reducerTypes';
+import { Provider } from 'react-redux';
+import * as API from 'constants/API';
 
 const mockParcelNoSub = {
   id: 1,
@@ -90,8 +95,8 @@ export const mockBuilding = {
   totalArea: 200,
   agency: 'AEST',
   agencyId: 0,
-  agencyCode: 'BCIT',
-  subAgency: 'BCIT',
+  agencyCode: 'KPU',
+  subAgency: 'KPU',
   transferLeaseOnSale: false,
   isSensitive: false,
   buildingPredominateUse: 'University/College',
@@ -149,8 +154,32 @@ export const mockParcel = {
   buildings: [mockBuilding],
   parcels: [],
   agency: 'AEST',
-  subAgency: 'BCIT',
+  subAgency: 'KPU',
 } as IParcel;
+
+const lCodes = {
+  lookupCodes: [
+    {
+      code: 'AEST',
+      id: 1,
+      isDisabled: false,
+      name: 'Ministry of Advanced Education',
+      type: API.AGENCY_CODE_SET_NAME,
+    },
+    {
+      code: 'KPU',
+      id: 181,
+      isDisabled: false,
+      name: 'Kwantlen Polytechnic University',
+      type: API.AGENCY_CODE_SET_NAME,
+    },
+  ],
+};
+
+const mockStore = configureMockStore([thunk]);
+const store = mockStore({
+  [reducerTypes.LOOKUP_CODE]: lCodes,
+});
 
 const ContentComponent = (
   propertyInfo: IParcel | IBuilding | null,
@@ -158,11 +187,13 @@ const ContentComponent = (
   canViewDetails: boolean,
 ) => {
   return (
-    <InfoContent
-      propertyInfo={propertyInfo}
-      propertyTypeId={propertyTypeId}
-      canViewDetails={canViewDetails}
-    />
+    <Provider store={store}>
+      <InfoContent
+        propertyInfo={propertyInfo}
+        propertyTypeId={propertyTypeId}
+        canViewDetails={canViewDetails}
+      />
+    </Provider>
   );
 };
 
@@ -178,8 +209,8 @@ describe('InfoContent View', () => {
     //Identification information
     expect(getByText('000-000-000')).toBeVisible();
     expect(getByText('test name')).toBeVisible();
-    expect(getByText('AEST')).toBeVisible();
-    expect(getByText('BCIT')).toBeVisible();
+    expect(getByText('Ministry of Advanced Education')).toBeVisible();
+    expect(getByText('Kwantlen Polytechnic University')).toBeVisible();
     expect(getByText('Core Operational')).toBeVisible();
     //Location data
     expect(getByText('1234 mock Street')).toBeVisible();
@@ -204,8 +235,8 @@ describe('InfoContent View', () => {
       ContentComponent(mockParcel, PropertyTypes.PARCEL, false),
     );
     expect(queryByText('test name')).toBeNull();
-    expect(queryByText('AEST')).toBeNull();
-    expect(queryByText('BCIT')).toBeNull();
+    expect(queryByText('Ministry of Advanced Education')).toBeNull();
+    expect(queryByText('Kwantlen Polytechnic University')).toBeNull();
     //contact SRES block is shown
     expect(getByText('For more information', { exact: false })).toBeVisible();
   });
@@ -220,8 +251,8 @@ describe('InfoContent View', () => {
     expect(getByText('Building Identification')).toBeVisible();
     //Identification information
     expect(getByText('test name')).toBeVisible();
-    expect(getByText('AEST')).toBeVisible();
-    expect(getByText('BCIT')).toBeVisible();
+    expect(getByText('Ministry of Advanced Education')).toBeVisible();
+    expect(getByText('Kwantlen Polytechnic University')).toBeVisible();
     expect(getByText('Core Operational')).toBeVisible();
     //Location data
     expect(getByText('1234 mock Street')).toBeVisible();
@@ -242,8 +273,8 @@ describe('InfoContent View', () => {
       ContentComponent(mockBuilding, PropertyTypes.BUILDING, false),
     );
     expect(queryByText('test name')).toBeNull();
-    expect(queryByText('AEST')).toBeNull();
-    expect(queryByText('BCIT')).toBeNull();
+    expect(queryByText('Ministry of Advanced Education')).toBeNull();
+    expect(queryByText('Kwantlen Polytechnic University')).toBeNull();
     //contact SRES block is shown
     expect(getByText('For more information', { exact: false })).toBeVisible();
   });

@@ -79,6 +79,17 @@ export function useCodeLookups() {
       : (classifications ?? []).map(c => mapLookupCode(c));
   };
 
+  /**
+   * Returns the full name of an agency or the short code if
+   * the full name is not found
+   * @param agencyCode the short code for the agency
+   */
+  const getAgencyFullName = (agencyCode?: string) => {
+    const agencies = getByType(API.AGENCY_CODE_SET_NAME);
+    const agencyItem = agencies.find(listItem => listItem.code === agencyCode);
+    return agencyItem ? agencyItem.name : agencyCode;
+  };
+
   return {
     getOptionsByType,
     getPropertyClassificationOptions,
@@ -86,6 +97,7 @@ export function useCodeLookups() {
     getByType,
     getPublicByType,
     filterByParent,
+    getAgencyFullName,
     lookupCodes,
   };
 }

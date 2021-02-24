@@ -175,7 +175,7 @@ exports[`InfoContent View InfoContent renders correctly 1`] = `
         <div
           class="list-group-item"
         >
-          AEST
+          Ministry of Advanced Education
         </div>
       </div>
     </div>
@@ -204,7 +204,7 @@ exports[`InfoContent View InfoContent renders correctly 1`] = `
         <div
           class="list-group-item"
         >
-          BCIT
+          Kwantlen Polytechnic University
         </div>
       </div>
     </div>
