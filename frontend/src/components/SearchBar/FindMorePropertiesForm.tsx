@@ -156,7 +156,7 @@ const FindMorePropertiesForm = <T extends any>(props: any) => {
           <span style={{ marginTop: 5, marginLeft: 5, marginRight: 5 }}>-</span>
           <NumberInput field="maxLotSize" placeholder="max" />
           <VerticalLine />
-          <Check label="Bare land only" field="bareLandOnly" />
+          <Check label="Land only" field="bareLandOnly" />
         </StyledRow>
       </FormSection>
       <FormSection>
