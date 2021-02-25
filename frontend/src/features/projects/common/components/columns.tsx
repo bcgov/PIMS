@@ -240,6 +240,7 @@ export const getPropertyColumns = ({
       accessor: 'netBook',
       Cell: editableFinancials ? EditableMoneyCell : MoneyCell,
       minWidth: 145,
+      clickable: !editableFinancials,
       align: 'left',
     },
     {
@@ -247,6 +248,7 @@ export const getPropertyColumns = ({
       accessor: 'market',
       Cell: editableFinancials ? EditableMoneyCell : MoneyCell,
       minWidth: 145,
+      clickable: !editableFinancials,
       align: 'left',
     },
     {
@@ -256,6 +258,7 @@ export const getPropertyColumns = ({
           ? row.assessedLand
           : undefined,
       Cell: MoneyCell,
+      clickable: true,
       minWidth: 145,
       align: 'left',
     },
@@ -263,6 +266,7 @@ export const getPropertyColumns = ({
       Header: 'Assessed Building',
       accessor: (row: IProperty) => row.assessedBuilding,
       Cell: MoneyCell,
+      clickable: true,
       minWidth: 145,
       align: 'left',
     },

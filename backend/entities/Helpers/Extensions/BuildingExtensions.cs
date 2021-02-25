@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using Pims.Core.Extensions;
 namespace Pims.Dal.Entities.Helpers.Extensions
 {
     /// <summary>
@@ -13,7 +14,7 @@ namespace Pims.Dal.Entities.Helpers.Extensions
         /// <param name="building"></param>
         /// <param name="key"></param>
         /// <returns></returns>
-        public static decimal? GetEvaluation(this Building building, EvaluationKeys key)
+        public static decimal? GetMostRecentEvaluation(this Building building, EvaluationKeys key)
         {
             return building.Evaluations.OrderByDescending(f => f.Date).FirstOrDefault(f => f.Key == key)?.Value;
         }
@@ -24,7 +25,7 @@ namespace Pims.Dal.Entities.Helpers.Extensions
         /// <param name="building"></param>
         /// <param name="key"></param>
         /// <returns></returns>
-        public static DateTime? GetEvaluationDate(this Building building, EvaluationKeys key)
+        public static DateTime? GetMostRecentEvaluationDate(this Building building, EvaluationKeys key)
         {
             return building.Evaluations.OrderByDescending(f => f.Date).FirstOrDefault(f => f.Key == key)?.Date;
         }
@@ -35,7 +36,7 @@ namespace Pims.Dal.Entities.Helpers.Extensions
         /// <param name="building"></param>
         /// <param name="key"></param>
         /// <returns></returns>
-        public static decimal? GetFiscal(this Building building, FiscalKeys key)
+        public static decimal? GetMostRecentFiscal(this Building building, FiscalKeys key)
         {
             return building.Fiscals.OrderByDescending(f => f.FiscalYear).FirstOrDefault(f => f.Key == key)?.Value;
         }
@@ -46,9 +47,53 @@ namespace Pims.Dal.Entities.Helpers.Extensions
         /// <param name="building"></param>
         /// <param name="key"></param>
         /// <returns></returns>
-        public static int? GetFiscalYear(this Building building, FiscalKeys key)
+        public static int? GetMostRecentFiscalYear(this Building building, FiscalKeys key)
         {
             return building.Fiscals.OrderByDescending(f => f.FiscalYear).FirstOrDefault(f => f.Key == key)?.FiscalYear;
+        }
+
+        /// <summary>
+        /// Get the current evaluation for the specified 'key'.
+        /// </summary>
+        /// <param name="building"></param>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public static decimal? GetCurrentEvaluation(this Building building, EvaluationKeys key)
+        {
+            return building.Evaluations.FirstOrDefault(e => e.Date.Year == DateTime.Now.Year && e.Key == key)?.Value;
+        }
+
+        /// <summary>
+        /// Get the current evaluation date for the specified 'key'.
+        /// </summary>
+        /// <param name="building"></param>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public static DateTime? GetCurrentEvaluationDate(this Building building, EvaluationKeys key)
+        {
+            return building.Evaluations.FirstOrDefault(e => e.Date.Year == DateTime.Now.Year && e.Key == key)?.Date;
+        }
+
+        /// <summary>
+        /// Get the current fiscal for the specified 'key'.
+        /// </summary>
+        /// <param name="building"></param>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public static decimal? GetCurrentFiscal(this Building building, FiscalKeys key)
+        {
+            return building.Fiscals.FirstOrDefault(f => f.FiscalYear == DateTime.Now.GetFiscalYear() && f.Key == key)?.Value;
+        }
+
+        /// <summary>
+        /// Get the current fiscal year for the specified 'key'.
+        /// </summary>
+        /// <param name="building"></param>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public static int? GetCurrentFiscalYear(this Building building, FiscalKeys key)
+        {
+            return building.Fiscals.FirstOrDefault(f => f.FiscalYear == DateTime.Now.GetFiscalYear() && f.Key == key)?.FiscalYear;
         }
 
         /// <summary>

@@ -177,6 +177,7 @@ export const PropertyListViewSelect: React.FC<InputProps> = ({
           pageSize={-1}
           setSelectedRows={setRemovedProperties}
           clickableTooltip={clickableTooltip}
+          onRowClick={onRowClick}
           footer
         />
       </div>
