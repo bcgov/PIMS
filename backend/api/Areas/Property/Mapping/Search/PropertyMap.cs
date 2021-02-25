@@ -3,6 +3,7 @@ using Microsoft.Extensions.Options;
 using Pims.Dal.Entities;
 using Pims.Dal.Entities.Helpers.Extensions;
 using Pims.Dal.Helpers.Extensions;
+using Pims.Core.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Text.Json;
@@ -65,15 +66,15 @@ namespace Pims.Api.Areas.Property.Mapping.Search
                 .Map(dest => dest.Zoning, src => src.Zoning)
                 .Map(dest => dest.ZoningPotential, src => src.ZoningPotential)
 
-                .Map(dest => dest.Market, src => src.GetFiscal(FiscalKeys.Market))
-                .Map(dest => dest.MarketFiscalYear, src => src.GetFiscalYear(FiscalKeys.Market))
-                .Map(dest => dest.NetBook, src => src.GetFiscal(FiscalKeys.NetBook))
-                .Map(dest => dest.NetBookFiscalYear, src => src.GetFiscalYear(FiscalKeys.NetBook))
+                .Map(dest => dest.Market, src => src.GetCurrentFiscal(FiscalKeys.Market))
+                .Map(dest => dest.MarketFiscalYear, src => src.GetCurrentFiscalYear(FiscalKeys.Market))
+                .Map(dest => dest.NetBook, src => src.GetCurrentFiscal(FiscalKeys.NetBook))
+                .Map(dest => dest.NetBookFiscalYear, src => src.GetCurrentFiscalYear(FiscalKeys.NetBook))
                 // TODO: Fix assessment values.
-                .Map(dest => dest.AssessedLand, src => src.GetEvaluation(EvaluationKeys.Assessed))
-                .Map(dest => dest.AssessedLandDate, src => src.GetEvaluationDate(EvaluationKeys.Assessed))
-                .Map(dest => dest.AssessedBuilding, src => src.GetEvaluation(EvaluationKeys.Improvements))
-                .Map(dest => dest.AssessedBuildingDate, src => src.GetEvaluationDate(EvaluationKeys.Improvements));
+                .Map(dest => dest.AssessedLand, src => src.GetCurrentEvaluation(EvaluationKeys.Assessed))
+                .Map(dest => dest.AssessedLandDate, src => src.GetCurrentEvaluationDate(EvaluationKeys.Assessed))
+                .Map(dest => dest.AssessedBuilding, src => src.GetCurrentEvaluation(EvaluationKeys.Improvements))
+                .Map(dest => dest.AssessedBuildingDate, src => src.GetCurrentEvaluationDate(EvaluationKeys.Improvements));
 
             config.NewConfig<Entity.Building, Model.PropertyModel>()
                 .Inherits<Entity.Property, Model.PropertyModel>()
@@ -94,12 +95,12 @@ namespace Pims.Api.Areas.Property.Mapping.Search
                 .Map(dest => dest.PID, src => src.GetParcelIdentity())
                 .Map(dest => dest.PIN, src => src.GetPIN())
 
-                .Map(dest => dest.Market, src => src.GetFiscal(FiscalKeys.Market))
-                .Map(dest => dest.MarketFiscalYear, src => src.GetFiscalYear(FiscalKeys.Market))
-                .Map(dest => dest.NetBook, src => src.GetFiscal(FiscalKeys.NetBook))
-                .Map(dest => dest.NetBookFiscalYear, src => src.GetFiscalYear(FiscalKeys.NetBook))
-                .Map(dest => dest.AssessedBuilding, src => src.GetEvaluation(EvaluationKeys.Assessed))
-                .Map(dest => dest.AssessedBuildingDate, src => src.GetEvaluationDate(EvaluationKeys.Assessed));
+                .Map(dest => dest.Market, src => src.GetCurrentFiscal(FiscalKeys.Market))
+                .Map(dest => dest.MarketFiscalYear, src => src.GetCurrentFiscalYear(FiscalKeys.Market))
+                .Map(dest => dest.NetBook, src => src.GetCurrentFiscal(FiscalKeys.NetBook))
+                .Map(dest => dest.NetBookFiscalYear, src => src.GetCurrentFiscalYear(FiscalKeys.NetBook))
+                .Map(dest => dest.AssessedBuilding, src => src.GetCurrentEvaluation(EvaluationKeys.Assessed))
+                .Map(dest => dest.AssessedBuildingDate, src => src.GetCurrentEvaluationDate(EvaluationKeys.Assessed));
 
             config.NewConfig<Entity.Views.Property, Model.PropertyModel>()
                 .Map(dest => dest.PropertyTypeId, src => src.PropertyTypeId)
@@ -146,15 +147,15 @@ namespace Pims.Api.Areas.Property.Mapping.Search
                 .Map(dest => dest.LeaseExpiry, src => src.LeaseExpiry)
                 .Map(dest => dest.RentableArea, src => src.RentableArea)
 
-                .Map(dest => dest.Market, src => src.Market)
-                .Map(dest => dest.MarketFiscalYear, src => src.MarketFiscalYear)
-                .Map(dest => dest.NetBook, src => src.NetBook)
-                .Map(dest => dest.NetBookFiscalYear, src => src.NetBookFiscalYear)
+                .Map(dest => dest.Market, src => src.MarketFiscalYear == DateTime.Now.GetFiscalYear() ? src.Market : null)
+                .Map(dest => dest.MarketFiscalYear, src => src.MarketFiscalYear == DateTime.Now.GetFiscalYear() ? src.MarketFiscalYear : null)
+                .Map(dest => dest.NetBook, src => src.NetBookFiscalYear == DateTime.Now.GetFiscalYear() ? src.NetBook : null)
+                .Map(dest => dest.NetBookFiscalYear, src => src.NetBookFiscalYear == DateTime.Now.GetFiscalYear() ? src.NetBookFiscalYear : null)
 
-                .Map(dest => dest.AssessedLand, src => src.AssessedLand)
-                .Map(dest => dest.AssessedLandDate, src => src.AssessedLandDate)
-                .Map(dest => dest.AssessedBuilding, src => src.AssessedBuilding)
-                .Map(dest => dest.AssessedBuildingDate, src => src.AssessedBuildingDate);
+                .Map(dest => dest.AssessedLand, src => src.AssessedLandDate.HasValue && DateTime.Now.Year == src.AssessedLandDate.Value.Year ? src.AssessedLand : null)
+                .Map(dest => dest.AssessedLandDate, src => src.AssessedLandDate.HasValue && DateTime.Now.Year == src.AssessedLandDate.Value.Year ? src.AssessedLandDate : null)
+                .Map(dest => dest.AssessedBuilding, src => src.AssessedBuildingDate.HasValue && DateTime.Now.Year == src.AssessedBuildingDate.Value.Year ? src.AssessedBuilding : null)
+                .Map(dest => dest.AssessedBuildingDate, src => src.AssessedBuildingDate.HasValue && DateTime.Now.Year == src.AssessedBuildingDate.Value.Year ? src.AssessedBuildingDate : null);
 
             config.NewConfig<Entity.Models.ProjectProperty, Model.PropertyModel>()
                 .Map(dest => dest.PropertyTypeId, src => src.PropertyTypeId)

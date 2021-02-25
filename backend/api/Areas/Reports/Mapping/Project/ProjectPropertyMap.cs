@@ -29,16 +29,16 @@ namespace Pims.Api.Areas.Reports.Mapping.Project
                     src => src.Building != null ? src.Building.Address.AdministrativeArea : src.Parcel.Address.AdministrativeArea)
                 .Map(dest => dest.Assessed,
                     src => src.Building != null
-                        ? src.Building.GetEvaluation(EvaluationKeys.Assessed)
-                        : src.Parcel.GetEvaluation(EvaluationKeys.Assessed))
+                        ? src.Building.GetCurrentEvaluation(EvaluationKeys.Assessed)
+                        : src.Parcel.GetCurrentEvaluation(EvaluationKeys.Assessed))
                 .Map(dest => dest.NetBook,
                     src => src.Building != null
-                        ? src.Building.GetFiscal(FiscalKeys.NetBook)
-                        : src.Parcel.GetFiscal(FiscalKeys.NetBook))
+                        ? src.Building.GetCurrentFiscal(FiscalKeys.NetBook)
+                        : src.Parcel.GetCurrentFiscal(FiscalKeys.NetBook))
                 .Map(dest => dest.Market,
                     src => src.Building != null
-                        ? src.Building.GetFiscal(FiscalKeys.Market)
-                        : src.Parcel.GetFiscal(FiscalKeys.Market))
+                        ? src.Building.GetCurrentFiscal(FiscalKeys.Market)
+                        : src.Parcel.GetCurrentFiscal(FiscalKeys.Market))
                 .Map(dest => dest.Zoning, src => src.Building != null ? src.Building.GetZoning().First() : src.Parcel.Zoning)
                 .Map(dest => dest.ZoningPotential, src => src.Building != null ? src.Building.GetZoningPotential().First() : src.Parcel.ZoningPotential)
 

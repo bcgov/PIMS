@@ -101,8 +101,10 @@ namespace Pims.Api.Test.Controllers.Property
 
             var parcel = new Entity.Parcel(1, 51, 25);
             var parcels = new[] { parcel };
-            var building = new Entity.Building(parcel, 51, 25);
-            building.PropertyTypeId = 1;
+            var building = new Entity.Building(parcel, 51, 25)
+            {
+                PropertyTypeId = 1
+            };
             var buildings = new[] { building };
 
             var service = helper.GetService<Mock<IPimsService>>();

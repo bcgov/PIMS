@@ -617,7 +617,9 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
                       title=""
                       width="7%"
                     >
-                      $0
+                      <div
+                        class="form-group"
+                      />
                     </div>
                     <div
                       class="td"
@@ -626,7 +628,11 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
                       title=""
                       width="7%"
                     >
-                      $0
+                      <div
+                        class="form-group"
+                      >
+                        $0
+                      </div>
                     </div>
                     <div
                       class="td"
@@ -635,7 +641,11 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
                       title=""
                       width="7%"
                     >
-                      $0
+                      <div
+                        class="form-group"
+                      >
+                        $0
+                      </div>
                     </div>
                     <div
                       class="td"

@@ -272,7 +272,7 @@ exports[`GRE Transfer Step renders correctly 1`] = `
                 Object {
                   "display": "flex",
                   "flex": "1 0 auto",
-                  "minWidth": "645px",
+                  "minWidth": "790px",
                 }
               }
             >
@@ -547,7 +547,37 @@ exports[`GRE Transfer Step renders correctly 1`] = `
                   <div
                     className="sortable-column"
                   >
-                    Assessed Value
+                    Assessed Land
+                    <span
+                      style={
+                        Object {
+                          "flex": "1 1 auto",
+                        }
+                      }
+                    />
+                  </div>
+                </div>
+                <div
+                  className="th"
+                  colSpan={1}
+                  role="columnheader"
+                  style={
+                    Object {
+                      "alignItems": "center",
+                      "boxSizing": "border-box",
+                      "display": "flex",
+                      "flex": "145 0 auto",
+                      "justifyContent": "flex-start",
+                      "minWidth": "145px",
+                      "textAlign": "left",
+                      "width": "145px",
+                    }
+                  }
+                >
+                  <div
+                    className="sortable-column"
+                  >
+                    Assessed Building
                     <span
                       style={
                         Object {
@@ -604,7 +634,7 @@ exports[`GRE Transfer Step renders correctly 1`] = `
                   Object {
                     "display": "flex",
                     "flex": "1 0 auto",
-                    "minWidth": "645px",
+                    "minWidth": "790px",
                   }
                 }
               >
@@ -731,7 +761,7 @@ exports[`GRE Transfer Step renders correctly 1`] = `
                   />
                 </div>
                 <div
-                  className="td"
+                  className="td clickable"
                   onClick={[Function]}
                   role="cell"
                   style={
@@ -746,12 +776,16 @@ exports[`GRE Transfer Step renders correctly 1`] = `
                       "width": "145px",
                     }
                   }
-                  title=""
+                  title="Click to view property details"
                 >
-                  $1
+                  <div
+                    className="form-group"
+                  >
+                    $1
+                  </div>
                 </div>
                 <div
-                  className="td"
+                  className="td clickable"
                   onClick={[Function]}
                   role="cell"
                   style={
@@ -766,12 +800,16 @@ exports[`GRE Transfer Step renders correctly 1`] = `
                       "width": "145px",
                     }
                   }
-                  title=""
+                  title="Click to view property details"
                 >
-                  $0
+                  <div
+                    className="form-group"
+                  >
+                    $0
+                  </div>
                 </div>
                 <div
-                  className="td"
+                  className="td clickable"
                   onClick={[Function]}
                   role="cell"
                   style={
@@ -786,9 +824,37 @@ exports[`GRE Transfer Step renders correctly 1`] = `
                       "width": "145px",
                     }
                   }
-                  title=""
+                  title="Click to view property details"
                 >
-                  $1
+                  <div
+                    className="form-group"
+                  >
+                    $1
+                  </div>
+                </div>
+                <div
+                  className="td clickable"
+                  onClick={[Function]}
+                  role="cell"
+                  style={
+                    Object {
+                      "alignItems": "flex-start",
+                      "boxSizing": "border-box",
+                      "display": "flex",
+                      "flex": "145 0 auto",
+                      "justifyContent": "flex-start",
+                      "minWidth": "145px",
+                      "textAlign": "left",
+                      "width": "145px",
+                    }
+                  }
+                  title="Click to view property details"
+                >
+                  <div
+                    className="form-group"
+                  >
+                    
+                  </div>
                 </div>
                 <div
                   className="td clickable"
@@ -827,7 +893,7 @@ exports[`GRE Transfer Step renders correctly 1`] = `
                 Object {
                   "display": "flex",
                   "flex": "1 0 auto",
-                  "minWidth": "645px",
+                  "minWidth": "790px",
                 }
               }
             >
@@ -940,6 +1006,25 @@ exports[`GRE Transfer Step renders correctly 1`] = `
                     "minWidth": "30px",
                     "textAlign": "left",
                     "width": "100px",
+                  }
+                }
+              >
+                 
+              </div>
+              <div
+                className="th"
+                colSpan={1}
+                role="columnheader"
+                style={
+                  Object {
+                    "alignItems": "center",
+                    "boxSizing": "border-box",
+                    "display": "flex",
+                    "flex": "145 0 auto",
+                    "justifyContent": "flex-start",
+                    "minWidth": "145px",
+                    "textAlign": "left",
+                    "width": "145px",
                   }
                 }
               >

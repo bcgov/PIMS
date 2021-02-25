@@ -70,6 +70,10 @@ div.bootstrap-table {
   word-break: break-word;
 }
 
+.table .th.reset-filter.svg-btn {
+  display: none;
+}
+
 select.form-control.is-invalid {
   background-image: none;
   padding-right: 12px;

@@ -248,7 +248,7 @@ export const resolveSortCriteriaFromUrl = (input: string[]): TableSort<any> | {}
  */
 export const getCurrentFiscalYear = (): number => {
   const now = moment();
-  return now.month() >= 3 ? now.add(1, 'years').year() : now.year();
+  return now.month() >= 4 ? now.add(1, 'years').year() : now.year();
 };
 
 export const getFiscalYear = (date?: Date | string): number => {
@@ -258,7 +258,7 @@ export const getFiscalYear = (date?: Date | string): number => {
   } else {
     momentDate = moment(date);
   }
-  return momentDate.month() >= 3 ? momentDate.add(1, 'years').year() : momentDate.year();
+  return momentDate.month() >= 4 ? momentDate.add(1, 'years').year() : momentDate.year();
 };
 
 export const formatDate = (date?: string | Date) => {
