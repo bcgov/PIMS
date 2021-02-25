@@ -25,14 +25,8 @@ import { IPropertyFilter } from '../filter/IPropertyFilter';
 import { SortDirection, TableSort } from 'components/Table/TableSort';
 import { useRouterFilter } from 'hooks/useRouterFilter';
 import { Form, Formik, FormikProps, getIn, useFormikContext } from 'formik';
-import {
-  getCurrentFiscal,
-  getMostRecentEvaluation,
-  toApiProperty,
-} from 'features/projects/common/projectConverter';
 import { useApi } from 'hooks/useApi';
 import { toast } from 'react-toastify';
-import { IApiProperty } from 'features/projects/common';
 import { EvaluationKeys } from 'constants/evaluationKeys';
 import { FiscalKeys } from 'constants/fiscalKeys';
 import variables from '_variables.module.scss';
@@ -41,6 +35,12 @@ import { Roles } from 'constants/roles';
 import useCodeLookups from 'hooks/useLookupCodes';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
 import * as Yup from 'yup';
+import {
+  getCurrentYearEvaluation,
+  getCurrentFiscal,
+  toApiProperty,
+} from 'features/projects/common/projectConverter';
+import { IApiProperty } from 'features/projects/common';
 
 const getPropertyReportUrl = (filter: IPropertyQueryParams) =>
   `${ENVIRONMENT.apiUrl}/reports/properties?${filter ? queryString.stringify(filter) : ''}`;
@@ -94,10 +94,10 @@ const defaultFilterValues: IPropertyFilter = {
 };
 
 export const flattenProperty = (apiProperty: IApiProperty): IProperty => {
-  const assessedLand = getMostRecentEvaluation(apiProperty.evaluations, EvaluationKeys.Assessed);
+  const assessedLand = getCurrentYearEvaluation(apiProperty.evaluations, EvaluationKeys.Assessed);
   const assessedBuilding = apiProperty.parcelId
-    ? getMostRecentEvaluation(apiProperty.evaluations, EvaluationKeys.Improvements)
-    : getMostRecentEvaluation(apiProperty.evaluations, EvaluationKeys.Assessed);
+    ? getCurrentYearEvaluation(apiProperty.evaluations, EvaluationKeys.Improvements)
+    : getCurrentYearEvaluation(apiProperty.evaluations, EvaluationKeys.Assessed);
   const netBook = getCurrentFiscal(apiProperty.fiscals, FiscalKeys.NetBook);
   const market = getCurrentFiscal(apiProperty.fiscals, FiscalKeys.Market);
   const property: any = {

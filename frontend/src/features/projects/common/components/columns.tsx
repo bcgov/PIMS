@@ -240,6 +240,7 @@ export const getPropertyColumns = ({
       accessor: 'netBook',
       Cell: editableFinancials ? EditableMoneyCell : MoneyCell,
       minWidth: 145,
+      clickable: !editableFinancials,
       align: 'left',
     },
     {
@@ -247,15 +248,25 @@ export const getPropertyColumns = ({
       accessor: 'market',
       Cell: editableFinancials ? EditableMoneyCell : MoneyCell,
       minWidth: 145,
+      clickable: !editableFinancials,
       align: 'left',
     },
     {
-      Header: 'Assessed Value',
+      Header: 'Assessed Land',
       accessor: (row: IProperty) =>
         [PropertyTypes.PARCEL, PropertyTypes.SUBDIVISION].includes(row.propertyTypeId)
           ? row.assessedLand
-          : row.assessedBuilding,
-      Cell: editableFinancials ? EditableMoneyCell : MoneyCell,
+          : undefined,
+      Cell: MoneyCell,
+      clickable: true,
+      minWidth: 145,
+      align: 'left',
+    },
+    {
+      Header: 'Assessed Building',
+      accessor: (row: IProperty) => row.assessedBuilding,
+      Cell: MoneyCell,
+      clickable: true,
       minWidth: 145,
       align: 'left',
     },

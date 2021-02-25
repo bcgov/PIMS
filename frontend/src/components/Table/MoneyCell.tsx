@@ -6,11 +6,12 @@ import { CellProps } from 'react-table';
 import { formatMoney } from 'utils';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import TooltipWrapper from 'components/common/TooltipWrapper';
+import { Form } from 'react-bootstrap';
 
 interface IEditableCellProps {
   namespace: string;
   suppressValidation: boolean;
-  cell: CellProps<IProperty, number>;
+  cell: CellProps<IProperty, number | ''>;
 }
 
 export const EditableMoneyCell = ({
@@ -34,9 +35,11 @@ export const EditableMoneyCell = ({
       toolTipId={`${namespace}.${cell.row.id}.${cell.column.id}`}
       toolTip="You may only edit a property if it belongs to your agency and it is not part of an SPP Project."
     >
-      <i>{formatMoney(cell.value)}</i>
+      <i>{cell.value === undefined || cell.value === '' ? '' : formatMoney(cell.value)}</i>
     </TooltipWrapper>
   );
 };
 
-export const MoneyCell = ({ cell: { value } }: CellProps<IProperty, number>) => formatMoney(value);
+export const MoneyCell = ({ cell: { value } }: CellProps<IProperty, number | ''>) => (
+  <Form.Group>{value === undefined || value === '' ? '' : formatMoney(value)}</Form.Group>
+);

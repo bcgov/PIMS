@@ -7,7 +7,6 @@ import * as API from 'constants/API';
 import { DisplayError } from 'components/common/form';
 import { Table } from 'components/Table';
 import useTable from '../../dispose/hooks/useTable';
-import { useHistory } from 'react-router-dom';
 import { getPropertyColumns, getColumnsWithRemove } from './columns';
 import queryString from 'query-string';
 import { PropertyTypes } from 'constants/propertyTypes';
@@ -61,7 +60,6 @@ export const PropertyListViewSelect: React.FC<InputProps> = ({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const filteredAgencies = useMemo(() => filterByParent(agencies, project.agencyId), [agencies]);
 
-  const history = useHistory();
   const agencyIds = useMemo(() => filteredAgencies.map(x => parseInt(x.id, 10)), [
     filteredAgencies,
   ]);
@@ -109,23 +107,20 @@ export const PropertyListViewSelect: React.FC<InputProps> = ({
     setFieldValue(field, properties);
   }, [properties, setFieldValue, field]);
 
-  const onRowClick = useCallback(
-    (row: IProperty) => {
-      history.push({
-        pathname: '/mapview',
-        search: queryString.stringify({
-          sidebar: true,
-          disabled: true,
-          loadDraft: false,
-          parcelId: [PropertyTypes.PARCEL, PropertyTypes.SUBDIVISION].includes(row.propertyTypeId)
-            ? row.id
-            : undefined,
-          buildingId: row.propertyTypeId === PropertyTypes.BUILDING ? row.id : undefined,
-        }),
-      });
-    },
-    [history],
-  );
+  const onRowClick = useCallback((row: IProperty) => {
+    window.open(
+      `/mapview?${queryString.stringify({
+        sidebar: true,
+        disabled: true,
+        loadDraft: false,
+        parcelId: [PropertyTypes.PARCEL, PropertyTypes.SUBDIVISION].includes(row.propertyTypeId)
+          ? row.id
+          : undefined,
+        buildingId: row.propertyTypeId === PropertyTypes.BUILDING ? row.id : undefined,
+      })}`,
+      '_blank',
+    );
+  }, []);
 
   return (
     <Container className="col-md-12 PropertyListViewSelect">
@@ -182,6 +177,7 @@ export const PropertyListViewSelect: React.FC<InputProps> = ({
           pageSize={-1}
           setSelectedRows={setRemovedProperties}
           clickableTooltip={clickableTooltip}
+          onRowClick={onRowClick}
           footer
         />
       </div>

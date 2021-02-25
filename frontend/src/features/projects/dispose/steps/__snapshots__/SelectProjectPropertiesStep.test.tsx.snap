@@ -279,7 +279,7 @@ exports[`renders correctly 1`] = `
                 Object {
                   "display": "flex",
                   "flex": "1 0 auto",
-                  "minWidth": "675px",
+                  "minWidth": "820px",
                 }
               }
             >
@@ -596,7 +596,37 @@ exports[`renders correctly 1`] = `
                   <div
                     className="sortable-column"
                   >
-                    Assessed Value
+                    Assessed Land
+                    <span
+                      style={
+                        Object {
+                          "flex": "1 1 auto",
+                        }
+                      }
+                    />
+                  </div>
+                </div>
+                <div
+                  className="th"
+                  colSpan={1}
+                  role="columnheader"
+                  style={
+                    Object {
+                      "alignItems": "center",
+                      "boxSizing": "border-box",
+                      "display": "flex",
+                      "flex": "145 0 auto",
+                      "justifyContent": "flex-start",
+                      "minWidth": "145px",
+                      "textAlign": "left",
+                      "width": "145px",
+                    }
+                  }
+                >
+                  <div
+                    className="sortable-column"
+                  >
+                    Assessed Building
                     <span
                       style={
                         Object {
@@ -688,7 +718,7 @@ exports[`renders correctly 1`] = `
                 Object {
                   "display": "flex",
                   "flex": "1 0 auto",
-                  "minWidth": "705px",
+                  "minWidth": "850px",
                 }
               }
             >
@@ -1035,7 +1065,37 @@ exports[`renders correctly 1`] = `
                   <div
                     className="sortable-column"
                   >
-                    Assessed Value
+                    Assessed Land
+                    <span
+                      style={
+                        Object {
+                          "flex": "1 1 auto",
+                        }
+                      }
+                    />
+                  </div>
+                </div>
+                <div
+                  className="th"
+                  colSpan={1}
+                  role="columnheader"
+                  style={
+                    Object {
+                      "alignItems": "center",
+                      "boxSizing": "border-box",
+                      "display": "flex",
+                      "flex": "145 0 auto",
+                      "justifyContent": "flex-start",
+                      "minWidth": "145px",
+                      "textAlign": "left",
+                      "width": "145px",
+                    }
+                  }
+                >
+                  <div
+                    className="sortable-column"
+                  >
+                    Assessed Building
                     <span
                       style={
                         Object {

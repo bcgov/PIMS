@@ -33,18 +33,18 @@ export interface IProperty {
   postal: string;
 
   // Financial Values
-  market: number;
+  market: number | '';
   marketFiscalYear?: number;
   marketRowVersion?: string;
-  netBook: number;
+  netBook: number | '';
   netBookFiscalYear?: number;
   netBookRowVersion?: string;
 
-  assessedLand?: number;
+  assessedLand?: number | '';
   assessedLandDate?: Date | string;
   assessedLandFirm?: string;
   assessedLandRowVersion?: string;
-  assessedBuilding?: number;
+  assessedBuilding?: number | '';
   assessedBuildingDate?: Date | string;
   assessedBuildingFirm?: string;
   assessedBuildingRowVersion?: string;

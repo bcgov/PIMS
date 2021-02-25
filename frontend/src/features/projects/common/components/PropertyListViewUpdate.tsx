@@ -5,10 +5,10 @@ import { IProperty, clickableTooltip } from '../../common';
 import { DisplayError } from 'components/common/form';
 import { Table } from 'components/Table';
 import classNames from 'classnames';
-import { useHistory } from 'react-router-dom';
 import { getPropertyColumns, getColumnsWithRemove } from './columns';
 import { useStepper } from 'features/projects/dispose';
 import queryString from 'query-string';
+import { PropertyTypes } from 'constants/propertyTypes';
 
 type RequiredAttributes = {
   /** The field name */
@@ -56,7 +56,6 @@ export const PropertyListViewUpdate: React.FC<InputProps> = ({
   editableZoning,
   classificationLimitLabels,
 }) => {
-  const history = useHistory();
   const { values, setFieldValue } = useFormikContext<any>();
   const existingProperties: IProperty[] = getIn(values, field);
   const { project } = useStepper();
@@ -89,21 +88,20 @@ export const PropertyListViewUpdate: React.FC<InputProps> = ({
     ],
   );
 
-  const onRowClick = useCallback(
-    (row: IProperty) => {
-      history.push({
-        pathname: '/mapview',
-        search: queryString.stringify({
-          sidebar: true,
-          disabled: true,
-          loadDraft: false,
-          parcelId: row.propertyTypeId === 0 ? row.id : undefined,
-          buildingId: row.propertyTypeId === 1 ? row.id : undefined,
-        }),
-      });
-    },
-    [history],
-  );
+  const onRowClick = useCallback((row: IProperty) => {
+    window.open(
+      `/mapview?${queryString.stringify({
+        sidebar: true,
+        disabled: true,
+        loadDraft: false,
+        parcelId: [PropertyTypes.PARCEL, PropertyTypes.SUBDIVISION].includes(row.propertyTypeId)
+          ? row.id
+          : undefined,
+        buildingId: row.propertyTypeId === PropertyTypes.BUILDING ? row.id : undefined,
+      })}`,
+      '_blank',
+    );
+  }, []);
 
   return (
     <Container fluid>
