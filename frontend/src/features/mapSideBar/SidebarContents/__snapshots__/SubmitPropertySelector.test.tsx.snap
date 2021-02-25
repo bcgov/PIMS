@@ -252,7 +252,7 @@ exports[`SubmitPropertySelector component renders correctly 1`] = `
         <p
           className="c8"
         >
-          Add Bare Land
+          Add Land
         </p>
         <p
           className="c10"
@@ -263,6 +263,7 @@ exports[`SubmitPropertySelector component renders correctly 1`] = `
     </div>
     <div
       className="c5"
+      onClick={[Function]}
     >
       <svg
         className="c11 svg"

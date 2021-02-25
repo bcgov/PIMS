@@ -117,7 +117,7 @@ const SubmitPropertySelector: React.FC<ISubmitPropertySelectorProps> = ({
         <Action onClick={addBareLand}>
           <BareLandIcon className="svg" />
           <ActionLabelWrapper>
-            <ActionPrimaryText>Add Bare Land</ActionPrimaryText>
+            <ActionPrimaryText>Add Land</ActionPrimaryText>
             <ActionSecondaryText>PID or PIN</ActionSecondaryText>
           </ActionLabelWrapper>
         </Action>
