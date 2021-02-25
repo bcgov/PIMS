@@ -13,6 +13,7 @@ import { PropertyTypes } from 'constants/propertyTypes';
 import useCodeLookups from 'hooks/useLookupCodes';
 import { useState } from 'react';
 import { ProjectNumberLink } from './ProjectNumberLink';
+import { BuildingSvg, LandSvg, SubdivisionSvg } from 'components/common/Icons';
 
 /**
  * Compare two dates to evaluation which is earlier.
@@ -60,11 +61,26 @@ const ContactSres = styled(Row)`
 const getHeading = (propertyTypeId: PropertyTypes | null) => {
   switch (propertyTypeId) {
     case PropertyTypes.SUBDIVISION:
-      return 'Potential Subdivision';
+      return (
+        <Label className="header">
+          <SubdivisionSvg className="svg" style={{ height: 25, width: 25, marginRight: 5 }} />
+          Potential Subdivision
+        </Label>
+      );
     case PropertyTypes.BUILDING:
-      return 'Building Identification';
+      return (
+        <Label className="header">
+          <BuildingSvg className="svg" style={{ height: 25, width: 25, marginRight: 5 }} />
+          Building Identification
+        </Label>
+      );
     default:
-      return 'Parcel Identification';
+      return (
+        <Label className="header">
+          <LandSvg className="svg" style={{ height: 25, width: 25, marginRight: 5 }} />
+          Parcel Identification
+        </Label>
+      );
   }
 };
 
@@ -90,7 +106,7 @@ export const InfoContent: React.FC<IInfoContent> = ({
   return (
     <>
       <ListGroup>
-        <Label className="header">{getHeading(propertyTypeId)}</Label>
+        {getHeading(propertyTypeId)}
         {isParcel && <ParcelPIDPIN parcelInfo={propertyInfo as IParcel} />}
         <OuterRow>
           {canViewDetails && (

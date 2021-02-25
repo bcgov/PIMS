@@ -6,23 +6,23 @@ export const Legend = () => {
   const keys = React.useMemo(() => {
     return [
       {
-        pin: require('assets/images/land-reg.png'),
+        pin: require('assets/images/pins/land-reg.png'),
         label: 'Parcel',
       },
       {
-        pin: require('assets/images/building-reg.png'),
+        pin: require('assets/images/pins/building-reg.png'),
         label: 'Building',
       },
       {
-        pin: require('assets/images/subdiv-reg.png'),
+        pin: require('assets/images/pins/subdiv-reg.png'),
         label: 'Proposed Subdivision',
       },
       {
-        pin: require('assets/images/marker-red.png'),
+        pin: require('assets/images/pins/marker-red.png'),
         label: 'Enhanced Referral Process',
       },
       {
-        pin: require('assets/images/marker-purple.png'),
+        pin: require('assets/images/pins/marker-purple.png'),
         label: 'Surplus Properties List',
       },
     ];

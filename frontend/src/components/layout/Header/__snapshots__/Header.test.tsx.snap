@@ -1,6 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`header renders correctly 1`] = `
+.c0 {
+  border-left: 2px solid white;
+  font-size: 34px;
+  margin: 0 15px 0 25px;
+  vertical-align: top;
+}
+
 <nav
   className="App-header navbar navbar-expand navbar-light"
 >
@@ -20,6 +27,15 @@ exports[`header renders correctly 1`] = `
         width="156"
       />
     </a>
+    <span
+      className="c0"
+    />
+    <img
+      alt="PIMS logo"
+      className="pims-logo"
+      height="50"
+      src="logo_only.png"
+    />
   </span>
   <div
     className="title mr-auto navbar-nav"
