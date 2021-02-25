@@ -13,12 +13,16 @@
   }
 
   .brand-box {
-    padding-top: 15px;
+    padding: 10px 0;
+
+    .pims-logo {
+      margin: 0 10px;
+    }
   }
 
   .title h1 {
     margin-top: 10px;
-    padding-left: 50px;
+    padding-left: 0px;
     text-align: center;
     font-size: 24px;
     text-decoration: none solid rgb(255, 255, 255);

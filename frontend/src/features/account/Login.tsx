@@ -10,6 +10,7 @@ import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import * as actionTypes from 'constants/actionTypes';
 import { useQuery } from 'hooks/use-query';
 import { FaExternalLinkAlt } from 'react-icons/fa';
+import PIMSlogo from 'assets/images/PIMSlogo/logo_with_text.png';
 
 //check to see if user is using Internet Explorer
 //as their browser
@@ -45,10 +46,11 @@ const Login = () => {
   return (
     <Container className="login" fluid={true}>
       <Container className="unauth" fluid={true}>
-        <h1>Search and visualize government property information</h1>
+        <img className="pims-logo" src={PIMSlogo} alt="PIMS logo" />
         <Row className="sign-in">
           <Col xs={1} md={3} />
           <Col xs={16} md={6} className="block">
+            <h1>Search and visualize government property information</h1>
             <h6>
               PIMS enables you to search properties owned by the Government of British Columbia
             </h6>

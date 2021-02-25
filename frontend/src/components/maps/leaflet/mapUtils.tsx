@@ -6,8 +6,8 @@ import { Classifications, Workflows, PropertyTypes } from 'constants/index';
 
 // parcel icon (green)
 export const parcelIcon = new Icon({
-  iconUrl: require('assets/images/land-reg.png'),
-  shadowUrl: require('assets/images/marker-shadow.png'),
+  iconUrl: require('assets/images/pins/land-reg.png'),
+  shadowUrl: require('assets/images/pins/marker-shadow.png'),
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
@@ -16,8 +16,8 @@ export const parcelIcon = new Icon({
 
 // parcel icon (green) highlighted
 export const parcelIconSelect = new Icon({
-  iconUrl: require('assets/images/land-reg-highlight.png'),
-  shadowUrl: require('assets/images/marker-shadow.png'),
+  iconUrl: require('assets/images/pins/land-reg-highlight.png'),
+  shadowUrl: require('assets/images/pins/marker-shadow.png'),
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
@@ -26,8 +26,8 @@ export const parcelIconSelect = new Icon({
 
 // building icon (blue)
 export const buildingIcon = new Icon({
-  iconUrl: require('assets/images/building-reg.png'),
-  shadowUrl: require('assets/images/marker-shadow.png'),
+  iconUrl: require('assets/images/pins/building-reg.png'),
+  shadowUrl: require('assets/images/pins/marker-shadow.png'),
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
@@ -36,8 +36,8 @@ export const buildingIcon = new Icon({
 
 // building icon (blue) highlighted
 export const buildingIconSelect = new Icon({
-  iconUrl: require('assets/images/building-reg-highlight.png'),
-  shadowUrl: require('assets/images/marker-shadow.png'),
+  iconUrl: require('assets/images/pins/building-reg-highlight.png'),
+  shadowUrl: require('assets/images/pins/marker-shadow.png'),
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
@@ -46,8 +46,8 @@ export const buildingIconSelect = new Icon({
 
 // subdivision icon (green)
 export const subdivisionIcon = new Icon({
-  iconUrl: require('assets/images/subdiv-reg.png'),
-  shadowUrl: require('assets/images/marker-shadow.png'),
+  iconUrl: require('assets/images/pins/subdiv-reg.png'),
+  shadowUrl: require('assets/images/pins/marker-shadow.png'),
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
@@ -56,8 +56,8 @@ export const subdivisionIcon = new Icon({
 
 // subdivision icon (green) highlighted
 export const subdivisionIconSelect = new Icon({
-  iconUrl: require('assets/images/subdiv-reg-highlight.png'),
-  shadowUrl: require('assets/images/marker-shadow.png'),
+  iconUrl: require('assets/images/pins/subdiv-reg-highlight.png'),
+  shadowUrl: require('assets/images/pins/marker-shadow.png'),
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
@@ -66,8 +66,8 @@ export const subdivisionIconSelect = new Icon({
 
 // draft parcel icon (green)
 export const draftParcelIcon = new Icon({
-  iconUrl: require('assets/images/marker-green.png'),
-  shadowUrl: require('assets/images/marker-shadow.png'),
+  iconUrl: require('assets/images/pins/marker-green.png'),
+  shadowUrl: require('assets/images/pins/marker-shadow.png'),
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
@@ -77,8 +77,8 @@ export const draftParcelIcon = new Icon({
 
 // draft building icon (blue)
 export const draftBuildingIcon = new Icon({
-  iconUrl: require('assets/images/marker-blue.png'),
-  shadowUrl: require('assets/images/marker-shadow.png'),
+  iconUrl: require('assets/images/pins/marker-blue.png'),
+  shadowUrl: require('assets/images/pins/marker-shadow.png'),
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
@@ -88,8 +88,8 @@ export const draftBuildingIcon = new Icon({
 
 // spp icon (purple)
 export const landSppIcon = new Icon({
-  iconUrl: require('assets/images/land-spl.png'),
-  shadowUrl: require('assets/images/marker-shadow.png'),
+  iconUrl: require('assets/images/pins/land-spl.png'),
+  shadowUrl: require('assets/images/pins/marker-shadow.png'),
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
@@ -98,8 +98,8 @@ export const landSppIcon = new Icon({
 
 // spp icon (purple) highlighted
 export const landSppIconSelect = new Icon({
-  iconUrl: require('assets/images/land-spl-highlight.png'),
-  shadowUrl: require('assets/images/marker-shadow.png'),
+  iconUrl: require('assets/images/pins/land-spl-highlight.png'),
+  shadowUrl: require('assets/images/pins/marker-shadow.png'),
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
@@ -108,8 +108,8 @@ export const landSppIconSelect = new Icon({
 
 // erp icon (red)
 export const landErpIcon = new Icon({
-  iconUrl: require('assets/images/land-erp.png'),
-  shadowUrl: require('assets/images/marker-shadow.png'),
+  iconUrl: require('assets/images/pins/land-erp.png'),
+  shadowUrl: require('assets/images/pins/marker-shadow.png'),
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
@@ -118,8 +118,8 @@ export const landErpIcon = new Icon({
 
 // erp icon (red) highlight
 export const landErpIconSelect = new Icon({
-  iconUrl: require('assets/images/land-erp-highlight.png'),
-  shadowUrl: require('assets/images/marker-shadow.png'),
+  iconUrl: require('assets/images/pins/land-erp-highlight.png'),
+  shadowUrl: require('assets/images/pins/marker-shadow.png'),
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
@@ -128,8 +128,8 @@ export const landErpIconSelect = new Icon({
 
 // spp icon (purple)
 export const buildingSppIcon = new Icon({
-  iconUrl: require('assets/images/building-spl.png'),
-  shadowUrl: require('assets/images/marker-shadow.png'),
+  iconUrl: require('assets/images/pins/building-spl.png'),
+  shadowUrl: require('assets/images/pins/marker-shadow.png'),
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
@@ -138,8 +138,8 @@ export const buildingSppIcon = new Icon({
 
 // spp icon (purple) highlight
 export const buildingSppIconSelect = new Icon({
-  iconUrl: require('assets/images/building-spl-highlight.png'),
-  shadowUrl: require('assets/images/marker-shadow.png'),
+  iconUrl: require('assets/images/pins/building-spl-highlight.png'),
+  shadowUrl: require('assets/images/pins/marker-shadow.png'),
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
@@ -148,8 +148,8 @@ export const buildingSppIconSelect = new Icon({
 
 // erp icon (red)
 export const buildingErpIcon = new Icon({
-  iconUrl: require('assets/images/building-erp.png'),
-  shadowUrl: require('assets/images/marker-shadow.png'),
+  iconUrl: require('assets/images/pins/building-erp.png'),
+  shadowUrl: require('assets/images/pins/marker-shadow.png'),
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
@@ -158,8 +158,8 @@ export const buildingErpIcon = new Icon({
 
 // erp icon (red) highlighted
 export const buildingErpIconSelect = new Icon({
-  iconUrl: require('assets/images/building-erp-highlight.png'),
-  shadowUrl: require('assets/images/marker-shadow.png'),
+  iconUrl: require('assets/images/pins/building-erp-highlight.png'),
+  shadowUrl: require('assets/images/pins/marker-shadow.png'),
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
@@ -168,8 +168,8 @@ export const buildingErpIconSelect = new Icon({
 
 // spp icon (purple)
 export const subdivisionSppIcon = new Icon({
-  iconUrl: require('assets/images/subdiv-spl.png'),
-  shadowUrl: require('assets/images/marker-shadow.png'),
+  iconUrl: require('assets/images/pins/subdiv-spl.png'),
+  shadowUrl: require('assets/images/pins/marker-shadow.png'),
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
@@ -178,8 +178,8 @@ export const subdivisionSppIcon = new Icon({
 
 // spp icon (purple) highlighted
 export const subdivisionSppIconSelect = new Icon({
-  iconUrl: require('assets/images/subdiv-spl-highlight.png'),
-  shadowUrl: require('assets/images/marker-shadow.png'),
+  iconUrl: require('assets/images/pins/subdiv-spl-highlight.png'),
+  shadowUrl: require('assets/images/pins/marker-shadow.png'),
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
@@ -188,8 +188,8 @@ export const subdivisionSppIconSelect = new Icon({
 
 // erp icon (red)
 export const subdivisionErpIcon = new Icon({
-  iconUrl: require('assets/images/subdiv-erp.png'),
-  shadowUrl: require('assets/images/marker-shadow.png'),
+  iconUrl: require('assets/images/pins/subdiv-erp.png'),
+  shadowUrl: require('assets/images/pins/marker-shadow.png'),
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
@@ -198,8 +198,8 @@ export const subdivisionErpIcon = new Icon({
 
 // erp icon (red) highlight
 export const subdivisionErpIconSelect = new Icon({
-  iconUrl: require('assets/images/subdiv-erp-highlight.png'),
-  shadowUrl: require('assets/images/marker-shadow.png'),
+  iconUrl: require('assets/images/pins/subdiv-erp-highlight.png'),
+  shadowUrl: require('assets/images/pins/marker-shadow.png'),
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
