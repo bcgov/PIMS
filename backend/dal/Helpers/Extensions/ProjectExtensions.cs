@@ -226,12 +226,14 @@ namespace Pims.Dal.Helpers.Extensions
                     originalProperty.Parcel.ClassificationId = property.Parcel.ClassificationId;
                     originalProperty.Parcel.ProjectNumbers = "[]";
                     originalProperty.Parcel.PropertyTypeId = (int)PropertyTypes.Land; // when an agency transition occurs, and subdivisions should transition into parcels.
+                    originalProperty.Parcel.IsVisibleToOtherAgencies = false;
                     return originalProperty.Parcel;
                 case (Entity.PropertyTypes.Building):
                     if (originalProperty.Building == null || property.Building == null) throw new InvalidOperationException("Unable to transfer building.");
                     originalProperty.Building.AgencyId = property.Building.AgencyId;
                     originalProperty.Building.ClassificationId = property.Building.ClassificationId;
                     originalProperty.Building.ProjectNumbers = "[]";
+                    originalProperty.Building.IsVisibleToOtherAgencies = false;
                     return originalProperty.Building;
             }
 
@@ -279,6 +281,17 @@ namespace Pims.Dal.Helpers.Extensions
             project.Properties.ForEach(p =>
             {
                 context.Update(p.RemoveProjectNumber(project.ProjectNumber));
+                switch (p.PropertyType)
+                {
+                    case (Entity.PropertyTypes.Land):
+                        if (p.Parcel == null) throw new InvalidOperationException("Unable to update parcel status.");
+                        p.Parcel.IsVisibleToOtherAgencies = false;
+                        break;
+                    case (Entity.PropertyTypes.Building):
+                        if (p.Building == null) throw new InvalidOperationException("Unable to update building status.");
+                        p.Building.IsVisibleToOtherAgencies = false;
+                        break;
+                }
             });
         }
 
@@ -303,11 +316,13 @@ namespace Pims.Dal.Helpers.Extensions
                         p.Parcel.AgencyId = null;
                         p.Parcel.PropertyTypeId = (int)PropertyTypes.Land; // all subdivisions should be transitioned to parcels after they are disposed.
                         p.Parcel.Parcels.Clear(); // remove all references to parent parcels.
+                        p.Parcel.IsVisibleToOtherAgencies = false;
                         break;
                     case (Entity.PropertyTypes.Building):
                         if (p.Building == null) throw new InvalidOperationException("Unable to update building status.");
                         p.Building.ClassificationId = disposed.Id;
                         p.Building.AgencyId = null;
+                        p.Building.IsVisibleToOtherAgencies = false;
                         break;
                 }
                 context.Update(p);

@@ -2006,6 +2006,7 @@ namespace Pims.Dal.Test.Services
             result.Status.Should().Be(deny);
             result.DeniedOn.Should().NotBeNull();
             parcel.ProjectNumbers.Should().NotContain(project.ProjectNumber);
+            parcel.IsVisibleToOtherAgencies.Should().BeFalse();
             queueService.Verify(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), null, project.StatusId, true), Times.Never());
             queueService.Verify(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), true), Times.Once());
         }
@@ -2048,6 +2049,7 @@ namespace Pims.Dal.Test.Services
             result.Status.Should().Be(cancel);
             result.CancelledOn.Should().NotBeNull();
             parcel.ProjectNumbers.Should().NotContain(project.ProjectNumber);
+            parcel.IsVisibleToOtherAgencies.Should().BeFalse();
             notifyService.Verify(m => m.CancelAsync(It.IsAny<IEnumerable<Entity.NotificationQueue>>()), Times.Once);
             queueService.Verify(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), null, project.StatusId, true), Times.Never());
             queueService.Verify(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), true), Times.Once());
@@ -2174,6 +2176,7 @@ namespace Pims.Dal.Test.Services
             property.ProjectNumbers.Should().Be("[]");
             property.AgencyId.Should().Be(2);
             property.ClassificationId.Should().Be((int)ClassificationTypes.SurplusActive);
+            property.IsVisibleToOtherAgencies.Should().BeFalse();
             queueService.Verify(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), null, project.StatusId, true), Times.Never());
             queueService.Verify(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), true), Times.Once());
         }
@@ -2233,6 +2236,7 @@ namespace Pims.Dal.Test.Services
             property.ProjectNumbers.Should().Be("[]");
             property.AgencyId.Should().Be(2);
             property.ClassificationId.Should().Be((int)ClassificationTypes.SurplusActive);
+            property.IsVisibleToOtherAgencies.Should().BeFalse();
             queueService.Verify(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), null, project.StatusId, true), Times.Never());
             queueService.Verify(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), true), Times.Once());
         }
@@ -2295,6 +2299,7 @@ namespace Pims.Dal.Test.Services
             transferredSubdivision.ProjectNumbers.Should().Be("[]");
             transferredSubdivision.AgencyId.Should().Be(2);
             transferredSubdivision.ClassificationId.Should().Be((int)ClassificationTypes.SurplusActive);
+            transferredSubdivision.IsVisibleToOtherAgencies.Should().BeFalse();
             nonTransferredParent.AgencyId.Should().Be(1);
             nonTransferredParent.ClassificationId.Should().Be((int)ClassificationTypes.Subdivided);
             queueService.Verify(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), null, project.StatusId, true), Times.Never());
@@ -3154,7 +3159,7 @@ namespace Pims.Dal.Test.Services
             result.Status.Should().Be(approve);
             result.DeniedOn.Should().BeNull();
             result.ApprovedOn.Should().NotBeNull();
-            parcel.IsVisibleToOtherAgencies.Should().BeTrue();
+            parcel.IsVisibleToOtherAgencies.Should().BeFalse();
             queueService.Verify(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), null, project.StatusId, true), Times.Never());
             queueService.Verify(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), true), Times.Once());
         }
