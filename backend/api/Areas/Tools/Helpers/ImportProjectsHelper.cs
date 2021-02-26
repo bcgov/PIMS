@@ -163,7 +163,10 @@ namespace Pims.Api.Areas.Tools.Helpers
                 "Contract in Place" => GetWorkflow("SPL"),
                 "On Market" => GetWorkflow("SPL"),
                 "Pre-Market" => GetWorkflow("SPL"),
-                _ => _adminService.Workflow.GetForStatus(model.Status).OrderBy(w => w.SortOrder).Last()
+                "Not In Spl" => GetWorkflow("SPL"),
+                _ => status.Code == "AP-!SPL"
+                    ? _adminService.Workflow.Get(_workflows.FirstOrDefault(w => w.Code == "ERP").Id)
+                    : _adminService.Workflow.GetForStatus(model.Status).OrderBy(w => w.SortOrder).Last()
             };
 
             project ??= new Entity.Project();

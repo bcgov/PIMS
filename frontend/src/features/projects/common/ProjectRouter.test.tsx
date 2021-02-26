@@ -116,7 +116,7 @@ describe('project router', () => {
   it('displays gre transfer form at correct route', () => {
     history.location.pathname = '/projects/erp/gretransfer';
     const { getByText } = render(uiElement);
-    const stepHeader = getByText('Transferred within the Greater Revenue Entity');
+    const stepHeader = getByText('Transfer within the Greater Reporting Entity');
     expect(stepHeader).toBeVisible();
   });
 
