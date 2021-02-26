@@ -27,7 +27,6 @@ exports[`ExemptionEnhancedReferralCompleteForm renders successfully 1`] = `
         </label>
         <textarea
           className="col-md-5 form-control"
-          disabled={true}
           id="input-exemptionRationale"
           name="exemptionRationale"
           onBlur={[Function]}
