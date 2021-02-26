@@ -70,7 +70,7 @@ exports[`GRE Transfer Step renders correctly 1`] = `
     <div
       className="c2"
     >
-      Transferred within the Greater Revenue Entity
+      Transfer within the Greater Reporting Entity
     </div>
     <div
       className="ProjectDraftForm container-fluid"

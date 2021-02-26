@@ -70,6 +70,17 @@ const GreTransferStep = ({ formikRef }: IStepProps) => {
         project.statusCode === ReviewWorkflowStatus.ContractInPlaceUnconditional ||
         project.statusCode === ReviewWorkflowStatus.PreMarketing ||
         project.statusCode === ReviewWorkflowStatus.OnMarket));
+
+  const label = () => {
+    switch (project.statusCode) {
+      case ReviewWorkflowStatus.ApprovedForExemption:
+        return 'Approved for Surplus Property Program with Exemption';
+      case ReviewWorkflowStatus.NotInSpl:
+        return 'Not in SPL';
+      default:
+        return 'Approved for Surplus Property Program';
+    }
+  };
   return (
     <Container fluid className="GreTransferStep">
       <Formik
@@ -88,11 +99,7 @@ const GreTransferStep = ({ formikRef }: IStepProps) => {
         {({ isSubmitting, submitForm, values, validateForm, setTouched }) => (
           <Form>
             <StepStatusIcon
-              preIconLabel={
-                project.statusCode === ReviewWorkflowStatus.ApprovedForExemption
-                  ? 'Approved for Surplus Property Program with Exemption'
-                  : 'Approved for Surplus Property Program'
-              }
+              preIconLabel={label()}
               postIconLabel={`Approval Date ${formatDate(project.approvedOn)}`}
             />
             {project.statusCode === ReviewWorkflowStatus.TransferredGRE ? (
@@ -100,7 +107,7 @@ const GreTransferStep = ({ formikRef }: IStepProps) => {
                 Property Information Successfully Updated
               </CenterBoldText>
             ) : (
-              <CenterBoldText>Transferred within the Greater Revenue Entity</CenterBoldText>
+              <CenterBoldText>Transfer within the Greater Reporting Entity</CenterBoldText>
             )}
             <GreTransferForm canEdit={canEdit} />
             <StepErrorSummary />
