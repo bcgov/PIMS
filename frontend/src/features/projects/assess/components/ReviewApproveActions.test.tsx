@@ -10,6 +10,8 @@ import { createMemoryHistory } from 'history';
 import { Router } from 'react-router-dom';
 import { ReviewWorkflowStatus, DisposeWorkflowStatus } from '../../common/interfaces';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+import { mockFlatProperty } from 'mocks/filterDataMock';
+import { deletePotentialSubdivisionParcels } from 'features/projects/common';
 
 Enzyme.configure({ adapter: new Adapter() });
 const history = createMemoryHistory();
@@ -36,6 +38,7 @@ describe('Review Approve actions', () => {
   describe('approval button', () => {
     (useFormikContext as jest.Mock).mockReturnValue({
       values: {
+        properties: [{ ...mockFlatProperty, propertyTypeId: 2 }],
         statusCode: ReviewWorkflowStatus.PropertyReview,
       },
       submitForm: () => Promise.resolve(),
@@ -44,6 +47,10 @@ describe('Review Approve actions', () => {
       }),
     });
     const component = mount(element);
+    afterAll(() => {
+      jest.clearAllMocks();
+      component.unmount();
+    });
 
     it('displays confirmation when clicking approve', () => {
       const button = component.findWhere((node: { type: () => any; text: () => string }) => {
@@ -70,11 +77,17 @@ describe('Review Approve actions', () => {
   describe('denial button', () => {
     (useFormikContext as jest.Mock).mockReturnValue({
       values: {
+        properties: [{ ...mockFlatProperty, propertyTypeId: 2 }],
         statusCode: ReviewWorkflowStatus.PropertyReview,
       },
       submitForm: () => Promise.resolve(),
     });
     const component = mount(element);
+
+    afterAll(() => {
+      jest.clearAllMocks();
+      component.unmount();
+    });
 
     it('displays confirmation when clicking deny', () => {
       const button = component.findWhere((node: { type: () => any; text: () => string }) => {
@@ -82,6 +95,15 @@ describe('Review Approve actions', () => {
       });
       button.simulate('click');
       expect(component.find(GenericModal)).toHaveLength(1);
+    });
+
+    it('displays subdivision warning when project contains subdivisions when clicking deny', () => {
+      const warning = component
+        .find(GenericModal)
+        .findWhere((node: { type: () => any; text: () => string }) => {
+          return node.type() === 'p' && node.text() === deletePotentialSubdivisionParcels;
+        });
+      expect(warning).toHaveLength(1);
     });
 
     it('calls the function to change the status id', () => {
@@ -99,11 +121,13 @@ describe('Review Approve actions', () => {
   describe('buttons state when project pending approval', () => {
     (useFormikContext as jest.Mock).mockReturnValue({
       values: {
+        properties: [{ ...mockFlatProperty, propertyTypeId: 2 }],
         statusCode: ReviewWorkflowStatus.PropertyReview,
       },
       submitForm: () => Promise.resolve(),
     });
     const component = mount(element);
+
     const approve = component.findWhere((node: { type: () => any; text: () => string }) => {
       return node.type() === Button && node.text() === 'Approve';
     });
@@ -112,6 +136,10 @@ describe('Review Approve actions', () => {
     });
     const deny = component.findWhere((node: { type: () => any; text: () => string }) => {
       return node.type() === Button && node.text() === 'Deny';
+    });
+    afterAll(() => {
+      jest.clearAllMocks();
+      component.unmount();
     });
 
     it('Deny button enabled', () => {
@@ -131,6 +159,7 @@ describe('Review Approve actions', () => {
     (useFormikContext as jest.Mock).mockReturnValue({
       values: {
         statusCode: ReviewWorkflowStatus.Denied,
+        properties: [{ ...mockFlatProperty, propertyTypeId: 2 }],
       },
       submitForm: () => Promise.resolve(),
     });
@@ -143,6 +172,11 @@ describe('Review Approve actions', () => {
     });
     const deny = component.findWhere((node: { type: () => any; text: () => string }) => {
       return node.type() === Button && node.text() === 'Deny';
+    });
+
+    afterAll(() => {
+      jest.clearAllMocks();
+      component.unmount();
     });
 
     it('disables Approve button if already denied', () => {
@@ -162,6 +196,7 @@ describe('Review Approve actions', () => {
     (useFormikContext as jest.Mock).mockReturnValue({
       values: {
         statusCode: ReviewWorkflowStatus.ApprovedForErp,
+        properties: [{ ...mockFlatProperty, propertyTypeId: 2 }],
       },
       submitForm: () => Promise.resolve(),
     });
@@ -171,6 +206,11 @@ describe('Review Approve actions', () => {
     });
     const deny = component.findWhere((node: { type: () => any; text: () => string }) => {
       return node.type() === Button && node.text() === 'Deny';
+    });
+
+    afterAll(() => {
+      jest.clearAllMocks();
+      component.unmount();
     });
 
     it('disables Deny button if already approved', () => {

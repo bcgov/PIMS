@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json;
+using System.Threading.Tasks;
 using Xunit;
 using Entity = Pims.Dal.Entities;
 using Model = Pims.Api.Areas.Project.Models.Dispose;
@@ -233,7 +234,7 @@ namespace Pims.Api.Test.Controllers
             var service = helper.GetService<Mock<IPimsService>>();
             var mapper = helper.GetService<IMapper>();
             var project = EntityHelper.CreateProject(1);
-            service.Setup(m => m.Project.RemoveAsync(It.IsAny<Entity.Project>()));
+            service.Setup(m => m.Project.RemoveAsync(It.IsAny<Entity.Project>())).Returns(Task.FromResult<Entity.Project>(project));
             var modelToDelete = mapper.Map<Model.ProjectModel>(project);
 
             // Act
