@@ -7,6 +7,7 @@ import {
   ProjectDraftStepYupSchema,
   SelectProjectPropertiesStepYupSchema,
   ApproveExemptionRequestSchema,
+  DenyProjectYupSchema,
 } from '../../dispose/forms/disposalYupSchema';
 import { fetchProjectTasks } from '../../common/projectsActionCreator';
 import _ from 'lodash';
@@ -14,7 +15,6 @@ import { ReviewWorkflowStatus, IStepProps } from '../../common/interfaces';
 import { useStepForm, IProject, IProjectTask, useProject, StepErrorSummary } from '../../common';
 import { ReviewApproveForm } from '..';
 import { useHistory } from 'react-router-dom';
-import * as Yup from 'yup';
 
 export const ReviewApproveStepSchema = UpdateInfoStepYupSchema.concat(
   ProjectDraftStepYupSchema,
@@ -24,6 +24,10 @@ export const ReviewExemptionRequestSchema = ApproveExemptionRequestSchema.concat
   ReviewApproveStepSchema,
 );
 
+/**
+ * Validate the project status tasks that are required.
+ * @param project The project to validate.
+ */
 export const validateTasks = (project: IProject) => {
   const statusTasks = !project.exemptionRequested
     ? _.filter(
@@ -47,33 +51,34 @@ export const validateTasks = (project: IProject) => {
   }, {});
 };
 
-export const DenyProjectYupSchema = Yup.object().shape({
-  publicNote: Yup.string().required('Shared note must contain a reason before denying project.'),
-});
-
-export const validateDeny = (project: IProject) => {
-  return new Promise(resolve => {
-    validateYupSchema(project, DenyProjectYupSchema).then(
-      () => resolve({}),
-      (errors: any) => resolve(yupToFormErrors(errors)),
-    );
-  });
+/**
+ * Validate the deny project action.
+ * @param project The project to validate.
+ */
+export const validateDeny = async (project: IProject) => {
+  try {
+    await validateYupSchema(project, DenyProjectYupSchema);
+    return Promise.resolve({});
+  } catch (errors) {
+    return Promise.resolve(yupToFormErrors(errors));
+  }
 };
 
-export const validateApprove = (project: IProject) => {
+/**
+ * Validate the approve project action.
+ * @param project The project to validate.
+ */
+export const validateApprove = async (project: IProject) => {
   let taskErrors = validateTasks(project);
-  const yupErrors: any = validateYupSchema(
-    project,
-    project.exemptionRequested ? ReviewExemptionRequestSchema : ReviewApproveStepSchema,
-  ).then(
-    () => {
-      return taskErrors;
-    },
-    (err: any) => {
-      return _.merge(yupToFormErrors(err), taskErrors);
-    },
-  );
-  return Promise.resolve(yupErrors);
+  try {
+    await validateYupSchema(
+      project,
+      project.exemptionRequested ? ReviewExemptionRequestSchema : ReviewApproveStepSchema,
+    );
+    return Promise.resolve(taskErrors);
+  } catch (errors) {
+    return _.merge(yupToFormErrors(errors), taskErrors);
+  }
 };
 
 /**
@@ -95,11 +100,11 @@ const ReviewApproveStep = ({ formikRef }: IStepProps) => {
       project.statusCode === ReviewWorkflowStatus.ExemptionReview);
 
   // validate form and tasks, skipping validation in the case of deny and save.
-  const handleValidate = (values: IProject) => {
+  const handleValidate = async (values: IProject) => {
     if (submitStatusCode === ReviewWorkflowStatus.Denied) {
-      return validateDeny(values);
+      return await validateDeny(values);
     } else if (submitStatusCode !== undefined) {
-      return validateApprove(values);
+      return await validateApprove(values);
     }
   };
 
