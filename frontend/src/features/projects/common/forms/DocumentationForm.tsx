@@ -1,12 +1,20 @@
 import React, { Fragment } from 'react';
+import styled from 'styled-components';
 import { ProjectNotes } from '..';
 import { IStepProps, IProjectTask } from '../interfaces';
 import TasksForm from './TasksForm';
+import variables from '_variables.module.scss';
 
 interface IDocumentationFormProps extends IStepProps {
   tasks: IProjectTask[];
   showNote?: boolean;
 }
+
+const EmailText = styled.div`
+  font: BCSans, Fallback, sans-serif;
+  font-size: 14px;
+  color: ${variables.textColor};
+`;
 
 /**
  * Form component of DocumentationForm.
@@ -17,6 +25,14 @@ const DocumentationForm = ({ isReadOnly, tasks, showNote = false }: IDocumentati
     <Fragment>
       <h3>Documentation</h3>
       <TasksForm tasks={tasks ?? []} isReadOnly={isReadOnly} />
+      {!isReadOnly && (
+        <EmailText>
+          Please send documents to{' '}
+          <a href="mailto:RealPropertyDivision.Disposals@gov.bc.ca">
+            RealPropertyDivision.Disposals@gov.bc.ca
+          </a>
+        </EmailText>
+      )}
       {showNote && (
         <ProjectNotes
           label="Documentation Notes"
