@@ -195,7 +195,7 @@ INSERT INTO dbo.[ProjectStatus] (
     , 'T-GRE'
     , 1
     , 0
-    , 'The project has been transferred within the Greater Revenue Entity'
+    , 'The project has been transferred within the Greater Reporting Entity'
     , '/projects/transferred'
     , 1
 ), (
