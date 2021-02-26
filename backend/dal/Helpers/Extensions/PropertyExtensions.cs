@@ -147,24 +147,62 @@ namespace Pims.Dal.Helpers.Extensions
             if (filter.MaxAssessedValue.HasValue)
                 query = query.Where(p => p.AssessedLand <= filter.MaxAssessedValue || p.AssessedBuilding <= filter.MaxAssessedValue);
 
-            if (filter.InEnhancedReferralProcess.HasValue && filter.InEnhancedReferralProcess.Value)
-            {
-                var statuses = context.Workflows.Where(w => w.Code == "ERP")
-                    .SelectMany(w => w.Status).Where(x => !x.Status.IsTerminal)
-                    .Select(x => x.StatusId).Distinct().ToArray();
-
-                query = query.Where(property =>
-                    context.Projects.Any(project =>
-                        statuses.Any(st => st == project.StatusId)
-                            && property.ProjectNumbers.Contains(project.ProjectNumber)));
-            }
-
             if (filter.Sort?.Any() == true)
                 query = query.OrderByProperty(filter.Sort);
             else
                 query = query.OrderBy(p => p.AgencyCode).ThenBy(p => p.PID).ThenBy(p => p.PIN).ThenBy(p => p.PropertyTypeId);
 
             return query;
+        }
+
+        /// <summary>
+        /// Generates a query that returns properties in ERP and/or SPL.
+        /// Note - this does not filter properties that a user shouldn't not be able to view.
+        /// Note - this will return sensitive properties.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        private static IQueryable<Entity.Views.Property> GenerateProjectQuery(this PimsContext context, Entity.Models.AllPropertyFilter filter)
+        {
+            filter.ThrowIfNull(nameof(filter));
+
+            if (filter.InEnhancedReferralProcess == true || filter.InSurplusPropertyProgram == true)
+            {
+                var workflowCodes = new List<string>();
+                if (filter.InEnhancedReferralProcess == true) workflowCodes.Add("ERP"); // TODO: This should be configurable, not hardcoded.
+                if (filter.InSurplusPropertyProgram == true) workflowCodes.Add("SPL"); // TODO: This should be configurable, not hardcoded.
+                var codes = workflowCodes.ToArray();
+
+                // Generate a query that finds all properties in projects that match the specified workflow.
+                var properties = (from vp in context.Properties
+                                  join pp in (
+                                      context.Projects
+                                          .Where(p => codes.Contains(p.Workflow.Code))
+                                          .SelectMany(p => p.Properties)
+                                          .Where(p => p.PropertyType == Entities.PropertyTypes.Land
+                                              || p.PropertyType == Entities.PropertyTypes.Subdivision)
+                                          .Select(p => p.Parcel)
+                                      ) on new { vp.Id, PropertyTypeId = (int)vp.PropertyTypeId } equals new { pp.Id, PropertyTypeId = (int)pp.PropertyTypeId }
+                                  select new { vp.Id, vp.PropertyTypeId })
+                        .Union(from vp in context.Properties
+                               join pp in (
+                                   context.Projects
+                                       .Where(p => codes.Contains(p.Workflow.Code))
+                                       .SelectMany(p => p.Properties)
+                                       .Where(p => p.PropertyType == Entities.PropertyTypes.Building)
+                                       .Select(p => p.Building)
+                                   ) on new { vp.Id, PropertyTypeId = (int)vp.PropertyTypeId } equals new { pp.Id, PropertyTypeId = (int)pp.PropertyTypeId }
+                               select new { vp.Id, vp.PropertyTypeId })
+                        .Distinct();
+
+                // Join result of prior query to view this way because spatial data types cannot be included in a union statement.
+                return (from p in context.Properties
+                        join pp in properties on new { p.Id, p.PropertyTypeId } equals new { pp.Id, pp.PropertyTypeId }
+                        select p).AsNoTracking();
+            }
+
+            return context.Properties.AsNoTracking();
         }
 
         /// <summary>
@@ -180,15 +218,16 @@ namespace Pims.Dal.Helpers.Extensions
             filter.ThrowIfNull(nameof(filter));
             filter.ThrowIfNull(nameof(user));
 
-            var userAgencies = user.GetAgenciesAsNullable();
-            var isAdmin = user.HasPermission(Permissions.AdminProperties);
-
             // Users may only view sensitive properties if they have the `sensitive-view` claim and belong to the owning agency.
-            var query = context.Properties.AsNoTracking();
+            var query = context.GenerateProjectQuery(filter);
 
             // Users can only view their agency or sub-agency properties.
+            var isAdmin = user.HasPermission(Permissions.AdminProperties);
             if (!isAdmin)
+            {
+                var userAgencies = user.GetAgenciesAsNullable();
                 query = query.Where(p => userAgencies.Contains(p.AgencyId));
+            }
 
             query = context.GenerateCommonQuery(query, user, filter);
 
@@ -209,13 +248,14 @@ namespace Pims.Dal.Helpers.Extensions
             filter.ThrowIfNull(nameof(filter));
             filter.ThrowIfNull(nameof(user));
 
-            var userAgencies = user.GetAgenciesAsNullable();
-
-            var query = context.Properties.AsNoTracking();
+            var query = context.GenerateProjectQuery(filter);
 
             // Only return properties owned by user's agency or sub-agencies.
             if (!filter.IncludeAllProperties)
+            {
+                var userAgencies = user.GetAgenciesAsNullable();
                 query = query.Where(p => userAgencies.Contains(p.AgencyId));
+            }
 
             query = context.GenerateCommonQuery(query, user, filter);
 
