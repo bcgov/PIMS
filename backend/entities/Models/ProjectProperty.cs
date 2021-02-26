@@ -36,7 +36,7 @@ namespace Pims.Dal.Entities.Models
             AddressId = property.AddressId;
             Address = property.Address;
             AdministrativeArea = property.AdministrativeArea;
-            Province = Province;
+            Province = property.Province;
             Postal = property.Postal;
             Location = property.Location;
 
