@@ -20,7 +20,7 @@ export const ExemptionDetails = ({ isReadOnly }: IExemptionDetailsProps) => {
       <ProjectNotes
         label="Exemption Rationale"
         field="exemptionRationale"
-        disabled={true}
+        disabled={isReadOnly}
         outerClassName="col-md-12"
       />
       <Form.Row>
