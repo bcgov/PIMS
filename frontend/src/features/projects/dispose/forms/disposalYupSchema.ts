@@ -32,6 +32,10 @@ export const UpdateInfoStepYupSchema = Yup.object().shape({
   ),
 });
 
+export const DenyProjectYupSchema = Yup.object().shape({
+  publicNote: Yup.string().required('Shared note must contain a reason before denying project.'),
+});
+
 export const ApproveExemptionRequestSchema = Yup.object().shape({
   exemptionApprovedOn: Yup.date().required('Required'),
 });
