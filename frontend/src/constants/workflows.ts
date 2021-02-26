@@ -4,8 +4,10 @@ export enum Workflows {
   ERP = 'ERP',
   /** The SPL workflow */
   SPL = 'SPL',
-  /** The Disposed externally workflow */
+  /** The approved ERP exemption workflow */
   ASSESS_EX_DISPOSAL = 'ASSESS-EX-DISPOSAL',
+  /** The submitted for ERP exemption workflow */
+  ASSESS_EXEMPTION = 'ASSESS-EXEMPTION',
   /** The draft workflow */
   SUBMIT_DISPOSAL = 'SUBMIT-DISPOSAL',
 }

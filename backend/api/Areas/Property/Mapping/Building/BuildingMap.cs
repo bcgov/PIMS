@@ -34,6 +34,7 @@ namespace Pims.Api.Areas.Property.Mapping.Building
                 .Map(dest => dest.Id, src => src.Id)
                 .Map(dest => dest.ParcelId, src => src.GetParcelId())
                 .Map(dest => dest.ProjectWorkflow, src => src.GetLatestWorkflowCode())
+                .Map(dest => dest.ProjectStatus, src => src.GetLatestProjectStatus())
                 .Map(dest => dest.ProjectNumbers, src => JsonSerializer.Deserialize<IEnumerable<string>>(src.ProjectNumbers ?? "[]", _serializerOptions))
                 .Map(dest => dest.ClassificationId, src => src.ClassificationId)
                 .Map(dest => dest.Classification, src => src.Classification.Name)
