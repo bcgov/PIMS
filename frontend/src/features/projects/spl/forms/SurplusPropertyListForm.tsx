@@ -98,12 +98,7 @@ const SurplusPropertyListForm = ({
   const mainBtn = primaryButton(values.statusCode);
   const subdivisions =
     values.properties.filter((property: IProperty) => property.propertyTypeId === 2) ?? [];
-  const parentParcels = _.flatten(
-    _.uniqBy(
-      subdivisions.map(s => s.parcels ?? []),
-      'pid',
-    ),
-  );
+  const parentParcels = _.uniqBy(_.flatten(subdivisions.map(s => s.parcels ?? [])), 'pid');
 
   const linkListItems = useMemo<ILinkListItem[]>(
     () =>

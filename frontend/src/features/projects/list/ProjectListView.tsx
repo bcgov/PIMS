@@ -7,6 +7,7 @@ import * as API from 'constants/API';
 import { RootState } from 'reducers/rootReducer';
 import { IProjectFilter, IProject } from '.';
 import { columns as cols } from './columns';
+import { IProject as IProjectDetail } from 'features/projects/common';
 import { Table } from 'components/Table';
 import service from '../apiService';
 import { FaFolder, FaFolderOpen, FaFileExcel, FaFileAlt } from 'react-icons/fa';
@@ -16,7 +17,13 @@ import { Col } from 'react-bootstrap';
 import { Input, Button, Select } from 'components/common/form';
 import GenericModal from 'components/common/GenericModal';
 import { useHistory } from 'react-router-dom';
-import { ReviewWorkflowStatus, IStatus, fetchProjectStatuses } from '../common';
+import {
+  ReviewWorkflowStatus,
+  IStatus,
+  fetchProjectStatuses,
+  deleteProjectWarning,
+  deletePotentialSubdivisionParcels,
+} from '../common';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import Claims from 'constants/claims';
 import { ENVIRONMENT } from 'constants/environment';
@@ -29,6 +36,8 @@ import { ParentSelect } from 'components/common/form/ParentSelect';
 import variables from '_variables.module.scss';
 import useCodeLookups from 'hooks/useLookupCodes';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
+import { PropertyTypes } from 'constants/propertyTypes';
+import { toFlatProject } from '../common/projectConverter';
 
 interface IProjectFilterState {
   name?: string;
@@ -97,7 +106,8 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
   const agencies = useMemo(() => lookupCodes.getByType(API.AGENCY_CODE_SET_NAME), [lookupCodes]);
   const projectStatuses = useSelector<RootState, IStatus[]>(state => state.statuses as any);
   const keycloak = useKeycloakWrapper();
-  const [deleteId, setDeleteId] = React.useState<string | undefined>();
+  const [deleteProjectNumber, setDeleteProjectNumber] = React.useState<string | undefined>();
+  const [deletedProject, setDeletedProject] = React.useState<IProjectDetail | undefined>();
   const agencyIds = useMemo(() => agencies.map(x => parseInt(x.id, 10)), [agencies]);
   const agencyOptions = (agencies ?? []).map(c => mapLookupCodeWithParentString(c, agencies));
   const statuses = (projectStatuses ?? []).map(c => mapStatuses(c));
@@ -105,6 +115,9 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
 
   // We'll start our table without any data
   const [data, setData] = useState<IProject[] | undefined>(undefined);
+  const hasSubdivisions = deletedProject?.properties?.some(
+    p => p.propertyTypeId === PropertyTypes.SUBDIVISION,
+  );
 
   // Filtering and pagination state
   const [filter, setFilter] = useState<IProjectFilterState>({});
@@ -217,17 +230,18 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
   };
 
   const handleDelete = async () => {
-    const project = data?.find(p => p.projectNumber === deleteId);
+    const project = data?.find(p => p.projectNumber === deleteProjectNumber);
     if (project) {
       project.status = projectStatuses.find((x: any) => x.name === project.status)!;
-      await service.deleteProject(project);
+      const deletedProject = await service.deleteProject(project);
       setData(data?.filter(p => p.projectNumber !== project.projectNumber));
-      setDeleteId(undefined);
+      setDeleteProjectNumber(undefined);
+      setDeletedProject(toFlatProject(deletedProject));
     }
   };
 
   const initiateDelete = (projectNumber: string) => {
-    setDeleteId(projectNumber);
+    setDeleteProjectNumber(projectNumber);
   };
 
   const onRowClick = (row: IProject) => {
@@ -313,15 +327,25 @@ const ProjectListView: React.FC<IProps> = ({ filterable, title, mode }) => {
         )}
       </div>
       <div className="ScrollContainer">
-        {!!deleteId && (
+        {!!deleteProjectNumber && (
           <GenericModal
-            display={!!deleteId}
+            display={!!deleteProjectNumber}
             cancelButtonText="Cancel"
             okButtonText="Yes, Delete"
             handleOk={handleDelete}
-            handleCancel={() => setDeleteId(undefined)}
+            handleCancel={() => setDeleteProjectNumber(undefined)}
             title="Confirm Delete"
-            message="Are you sure that you want to delete this project?"
+            message={deleteProjectWarning}
+          />
+        )}
+        {hasSubdivisions && (
+          <GenericModal
+            display={hasSubdivisions}
+            okButtonText="Ok"
+            handleOk={handleDelete}
+            handleCancel={() => setDeletedProject(undefined)}
+            title="Clean up Subdivisions"
+            message={deletePotentialSubdivisionParcels}
           />
         )}
         <Container fluid className="TableToolbar">

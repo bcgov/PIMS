@@ -29,11 +29,10 @@ PROJ_TARGET="${PROJ_TARGET:-${PROJ_PREFIX}-${TARGET}}"
 # Parameters and mode variables
 #
 INSTANCE_ID=${INSTANCE_ID:-}
-OPTION="${2:--c}"
 
 # Take backup of database
 #
-OC_BACKUP="oc rsh -n ${PROJ_TARGET} dc/backup-mssql${INSTANCE_ID} bash -c './backup.sh ${OPTION}'"
+OC_BACKUP="oc rsh -n ${PROJ_TARGET} dc/pims-backup${INSTANCE_ID} bash -c './backup.sh -1'"
 
 # Execute commands
 #

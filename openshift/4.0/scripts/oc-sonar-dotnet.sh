@@ -38,9 +38,9 @@ COVERAGE_DIR="${COVERAGE_DIR:-${TEST_DIR}/TestResults}"
 
 # Check requirements
 #
-# dotnet tool list -g | grep sonarscanner >/dev/null 2>&1 || {
-#   fatal_error "sonar scanner for msbuild not installed on not in PATH"
-# }
+dotnet tool list -g | grep sonarscanner >/dev/null 2>&1 || {
+   fatal_error "sonar scanner for msbuild not installed on not in PATH"
+}
 
 # Clean up any previous test run
 #
@@ -79,10 +79,10 @@ CMD_SONAR_END="dotnet sonarscanner end ${SONAR_TOKEN:+" -d:sonar.login=${SONAR_T
 # Execute commands
 #
 if [ "${APPLY}" ]; then
-  # eval "${CMD_SONAR_BEGIN}"
+  eval "${CMD_SONAR_BEGIN}"
   eval "${CMD_BUILD}"
   test
-  # eval "${CMD_SONAR_END}"
+  eval "${CMD_SONAR_END}"
 fi
 
 display_helper "${CMD_SONAR_BEGIN}" "${CMD_BUILD}" "dotnet test" "${CMD_SONAR_END}"

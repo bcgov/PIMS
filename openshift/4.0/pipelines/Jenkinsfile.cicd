@@ -26,10 +26,10 @@ pipeline {
     NAME_SPACE = '354028'
 
     // This should match your monorepo folder structure
-    API_DIRECTORY = "backend"
-    FRONTEND_DIRECTORY = "frontend"
-    MAINTENANCE_DIRECTORY = "maintenance"
-    DEVOPS_DIRECTORY = "openshift/4.0"
+    API_DIRECTORY = 'backend'
+    FRONTEND_DIRECTORY = 'frontend'
+    MAINTENANCE_DIRECTORY = 'maintenance'
+    DEVOPS_DIRECTORY = 'openshift/4.0'
 
     // SonarQube configuration
     SONARQUBE_URL_INT = 'http://sonarqube:9000'

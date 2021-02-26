@@ -40,7 +40,7 @@ MIGRATION_IMAGE=${MIGRATION_IMAGE:-pims-migrations}
 MIGRATION_TAG=${MIGRATION_TAG:-dev}
 COMMAND=${COMMAND:-}
 
-FULL_IMAGE="docker-registry.default.svc:5000/${PROJ_TOOLS}/${MIGRATION_IMAGE}:${MIGRATION_TAG}"
+FULL_IMAGE="image-registry.openshift-image-registry.svc:5000/${PROJ_TOOLS}/${MIGRATION_IMAGE}:${MIGRATION_TAG}"
 
 # Rebuild migrations image - e.g. 'pims-migrations-dev' OR 'pims-migrations-master'
 #
@@ -55,12 +55,14 @@ OC_MIGRATE="oc run migration-job \
   --image-pull-policy=Always \
   --attach \
   --rm \
+  --labels='role=migrations,app=pims,env=prod' \
   --restart=Never \
   --env='ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}' \
   --env='ConnectionStrings__PIMS=${DB_CONNECTION_STRING}' \
   --env='DB_PASSWORD=${DB_PASSWORD}' \
-  --limits='cpu=1000m,memory=1Gi' \
-  --requests='cpu=500m,memory=512Mi'"
+  --limits='cpu=1000m,memory=2Gi' \
+  --requests='cpu=750m,memory=1Gi' \
+  --timeout=1h"
 [ "${COMMAND}" ] && OC_MIGRATE="${OC_MIGRATE} --command -- ${COMMAND}"
 
 # Execute commands

@@ -14,23 +14,23 @@ pipeline {
   agent any
   options {
     disableResume()
-    buildDiscarder(logRotator(numToKeepStr: "5")) // keep 5 builds only
+    buildDiscarder(logRotator(numToKeepStr: '5')) // keep 5 builds only
   }
   environment {
-    CI = "true"
-    PATHFINDER_URL = "apps.silver.devops.gov.bc.ca"
+    CI = 'true'
+    PATHFINDER_URL = 'apps.silver.devops.gov.bc.ca'
 
     // The name of your application
-    APP_NAME = "pims"
+    APP_NAME = 'pims'
 
     // The name of the project namespace(s).
-    NAME_SPACE = "354028"
+    NAME_SPACE = '354028'
 
     // This should match your monorepo folder structure
-    API_DIRECTORY = "backend"
-    FRONTEND_DIRECTORY = "frontend"
-    MAINTENANCE_DIRECTORY = "maintenance"
-    DEVOPS_DIRECTORY = "openshift/4.0"
+    API_DIRECTORY = 'backend'
+    FRONTEND_DIRECTORY = 'frontend'
+    MAINTENANCE_DIRECTORY = 'maintenance'
+    DEVOPS_DIRECTORY = 'openshift/4.0'
 
     // Environment Variables that should be set in OpenShift
     // -----------------------------------------------------
@@ -55,19 +55,19 @@ pipeline {
     DEBUG_OUTPUT = sh(script: 'echo "${DEBUG_OUTPUT:-false}"', returnStdout: true).trim()
   }
   stages {
-    stage("Initialize") {
+    stage('Initialize') {
       steps {
         script {
           // load supporting functions from external script files
-          commonPipeline = load "openshift/4.0/pipelines/scripts/common.groovy"
-          notify = load "openshift/4.0/pipelines/scripts/notify.groovy"
+          commonPipeline = load 'openshift/4.0/pipelines/scripts/common.groovy'
+          notify = load 'openshift/4.0/pipelines/scripts/notify.groovy'
 
           // ensure required secrets and credentials are available in the CI environment
           // [add more secrets here if needed...]
           sh "oc extract secret/rocket-chat-secrets --to=${env.WORKSPACE} --confirm"
 
           // initialize CI environment values
-          env.ROCKET_DEPLOY_WEBHOOK = readFile("rocket-deploy-webhook").trim()
+          env.ROCKET_DEPLOY_WEBHOOK = readFile('rocket-deploy-webhook').trim()
 
           if (new Boolean(DEBUG_OUTPUT)) {
             // Force OpenShift Plugin directives to be verbose
@@ -81,37 +81,37 @@ pipeline {
       }
     }
 
-    stage("Approval Prompt") {
-      options { timeout(time: 1, unit: "HOURS") }
+    stage('Approval Prompt') {
+      options { timeout(time: 1, unit: 'HOURS') }
       input {
-        message "Deploy to PROD?"
-        ok "Yes, go ahead"
+        message 'Deploy to PROD?'
+        ok 'Yes, go ahead'
       }
       steps {
-        echo "*** Promotion from TEST to PROD was approved. Proceeding... ***"
+        echo '*** Promotion from TEST to PROD was approved. Proceeding... ***'
       }
     }
 
-    stage("Version Prompt") {
+    stage('Version Prompt') {
       steps {
         script {
-          timeout(time: 10, unit: "MINUTES") {
-            def version = input(message: "Enter the desired version to release to PRODUCTION", parameters: [
-              string(name: "RELEASE VERSION", defaultValue: "", description: "Release Version")
+          timeout(time: 10, unit: 'MINUTES') {
+            def version = input(message: 'Enter the desired version to release to PRODUCTION', parameters: [
+              string(name: 'RELEASE VERSION', defaultValue: '', description: 'Release Version')
             ])
-            if (version != "") {
+            if (version != '') {
               RELEASE_VERSION = version
             } else {
-              error "***  No release version specified. Aborting pipeline.  ***"
+              error '***  No release version specified. Aborting pipeline.  ***'
             }
           }
         }
       }
     }
 
-    stage("Maintenance mode ON") {
+    stage('Maintenance mode ON') {
       environment {
-        APPLICATION_ROUTE = "pims-gov-bc-ca" // PROD route to direct to maintenance page
+        APPLICATION_ROUTE = 'pims-app' // PROD route to direct to maintenance page
       }
       steps {
         script {
@@ -120,8 +120,8 @@ pipeline {
       }
     }
 
-    stage("Database backup") {
-      options { timeout(time: 10, unit: "MINUTES") }
+    stage('Database backup') {
+      options { timeout(time: 10, unit: 'MINUTES') }
       steps {
         dir(DEVOPS_DIRECTORY) {
           sh "./player.sh backup ${DESTINATION} -apply"
@@ -129,11 +129,11 @@ pipeline {
       }
     }
 
-    stage("Database migration") {
-      options { timeout(time: 15, unit: "MINUTES") }
+    stage('Database migration') {
+      options { timeout(time: 25, unit: 'MINUTES') }
       environment {
-        DB_PASSWORD = sh(script: "oc -n 354028-prod get secret pims-db-prod-secret -o jsonpath='{.data.DB_PASSWORD}' | base64 -d", returnStdout: true).trim()
-        DB_CONNECTION_STRING = sh(script: "oc -n 354028-prod get cm pims-api-prod-db-client -o jsonpath='{.data.CONNECTION_STRINGS_PIMS}'", returnStdout: true).trim()
+        DB_PASSWORD = sh(script: "oc -n 354028-prod get secret pims-database -o jsonpath='{.data.DB_PASSWORD}' | base64 -d", returnStdout: true).trim()
+        DB_CONNECTION_STRING = sh(script: "oc -n 354028-prod get cm pims-api-database -o jsonpath='{.data.CONNECTION_STRINGS_PIMS}'", returnStdout: true).trim()
       }
       steps {
         dir(DEVOPS_DIRECTORY) {
@@ -142,8 +142,8 @@ pipeline {
       }
     }
 
-    stage("Promote to PROD") {
-      options { timeout(time: 10, unit: "MINUTES") }
+    stage('Promote to PROD') {
+      options { timeout(time: 10, unit: 'MINUTES') }
       steps {
         dir(DEVOPS_DIRECTORY) {
           sh "RELEASE_TAG=${RELEASE_VERSION} ./player.sh deploy api ${DESTINATION} -apply"
@@ -152,9 +152,9 @@ pipeline {
       }
     }
 
-    stage("Maintenance mode OFF") {
+    stage('Maintenance mode OFF') {
       environment {
-        APPLICATION_ROUTE = "pims-gov-bc-ca" // PROD route to direct to maintenance page
+        APPLICATION_ROUTE = 'pims-app' // PROD route to direct to maintenance page
       }
       steps {
         script {
@@ -163,9 +163,9 @@ pipeline {
       }
     }
 
-    stage("DONE") {
+    stage('DONE') {
       steps {
-        echo "PRODUCTION deployment complete!"
+        echo 'PRODUCTION deployment complete!'
       }
     }
   } // stages

@@ -20,7 +20,7 @@ namespace Pims.Dal.Services
         Paged<NotificationQueue> GetNotificationsInQueue(ProjectNotificationFilter filter);
         System.Threading.Tasks.Task<Project> AddAsync(Project project);
         System.Threading.Tasks.Task<Project> UpdateAsync(Project project);
-        System.Threading.Tasks.Task RemoveAsync(Project project);
+        System.Threading.Tasks.Task<Project> RemoveAsync(Project project);
         System.Threading.Tasks.Task<Project> SetStatusAsync(Project project, Workflow workflow);
         System.Threading.Tasks.Task<Project> SetStatusAsync(Project project, string workflowCode);
         System.Threading.Tasks.Task<IEnumerable<NotificationQueue>> CancelNotificationsAsync(int projectId, int? agencyId = null);
