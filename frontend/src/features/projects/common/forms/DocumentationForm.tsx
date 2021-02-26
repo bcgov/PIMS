@@ -4,6 +4,7 @@ import { ProjectNotes } from '..';
 import { IStepProps, IProjectTask } from '../interfaces';
 import TasksForm from './TasksForm';
 import variables from '_variables.module.scss';
+import { ExemptionRequest } from 'features/projects/dispose';
 
 interface IDocumentationFormProps extends IStepProps {
   tasks: IProjectTask[];
@@ -25,6 +26,16 @@ const DocumentationForm = ({ isReadOnly, tasks, showNote = false }: IDocumentati
     <Fragment>
       <h3>Documentation</h3>
       <TasksForm tasks={tasks ?? []} isReadOnly={isReadOnly} />
+      <ExemptionRequest
+        submissionStep={true}
+        sectionHeader="Enhanced Referral Process Exemption"
+        exemptionField="exemptionRequested"
+        rationaleField="exemptionRationale"
+        exemptionLabel="Apply for Enhanced Referral Process exemption"
+        tooltip="Please see Process Manual for details."
+        rationaleInstruction="Please provide your rationale below for exemption request"
+        isReadOnly={isReadOnly}
+      />
       {!isReadOnly && (
         <EmailText>
           Please send documents to{' '}
