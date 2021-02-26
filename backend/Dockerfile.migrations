@@ -15,4 +15,4 @@ RUN fix_permissions() { while [ $# -gt 0 ] ; do chgrp -R 0 "$1" && chmod -R g=u 
 # Run container by default as user with id 1001 (default)
 USER 1001
 
-ENTRYPOINT cd /src/dal && dotnet ef database update
+ENTRYPOINT cd /src/dal && dotnet ef database update -v
