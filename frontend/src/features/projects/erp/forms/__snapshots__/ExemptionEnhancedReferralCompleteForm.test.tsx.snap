@@ -115,7 +115,7 @@ exports[`ExemptionEnhancedReferralCompleteForm renders successfully 1`] = `
       </div>
     </div>
     <h3>
-      Option 1: Transfer within the GRE
+      Option 1: Transfer within the Greater Reporting Entity
     </h3>
     <div
       className="form-row"
