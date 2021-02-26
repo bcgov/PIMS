@@ -555,7 +555,7 @@ namespace Pims.Dal.Services
         /// <exception cref="KeyNotFoundException">Project does not exist.</exception>
         /// <exception cref="NotAuthorizedException">User does not have permission to delete project.</exception>
         /// <returns></returns>
-        public async System.Threading.Tasks.Task RemoveAsync(Project project)
+        public async System.Threading.Tasks.Task<Project> RemoveAsync(Project project)
         {
             project.ThrowIfNotAllowedToEdit(nameof(project), this.User, new[] { Permissions.ProjectDelete, Permissions.AdminProjects });
 
@@ -563,11 +563,10 @@ namespace Pims.Dal.Services
             var isAdmin = this.User.HasPermission(Permissions.AdminProjects);
             var originalProject = this.Context.Projects
                 .Include(p => p.Status)
-                .Include(p => p.Properties)
-                .ThenInclude(p => p.Parcel)
+                .Include(p => p.Properties).ThenInclude(p => p.Parcel).ThenInclude(p => p.Parcels)
+
                 .Include(p => p.Notes)
-                .Include(p => p.Properties)
-                .ThenInclude(p => p.Building)
+                .Include(p => p.Properties).ThenInclude(p => p.Building)
                 .Include(p => p.Tasks)
                 .Include(p => p.Workflow)
                 .SingleOrDefault(p => p.Id == project.Id) ?? throw new KeyNotFoundException();
@@ -600,6 +599,7 @@ namespace Pims.Dal.Services
             originalProject.Notifications.Clear(); // TODO: Need to test this to determine if it'll let us delete a project with existing notifications.
             this.Context.Projects.Remove(originalProject);
             this.Context.CommitTransaction();
+            return originalProject;
         }
 
         /// <summary>

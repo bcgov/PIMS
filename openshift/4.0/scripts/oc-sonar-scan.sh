@@ -61,7 +61,7 @@ CMD_SONAR_SCAN="sonar-scanner \
 if [ "${APPLY}" ]; then
   pushd ${FRONTEND_DIR}
   eval "${CMD_TEST}"
-  # eval "${CMD_SONAR_SCAN}"
+  eval "${CMD_SONAR_SCAN}"
   popd
 fi
 

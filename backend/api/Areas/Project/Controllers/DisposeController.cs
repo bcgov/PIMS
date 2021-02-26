@@ -143,8 +143,8 @@ namespace Pims.Api.Areas.Project.Controllers
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "To support standardized routes (/{projectNumber})")]
         public async Task<IActionResult> DeleteProjectAsync(string projectNumber, ProjectModel model)
         {
-            await _pimsService.Project.RemoveAsync(_mapper.Map<Entity.Project>(model));
-            return new JsonResult(model);
+            var project = await _pimsService.Project.RemoveAsync(_mapper.Map<Entity.Project>(model));
+            return new JsonResult(_mapper.Map<ProjectModel>(project));
         }
 
         #region SetStatus

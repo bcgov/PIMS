@@ -49,3 +49,6 @@ export const appraisalDateWarning =
   'You have entered an appraisal date that is older then the current appraisal date stored in PIMS. Are you sure that you would like to update PIMS to use this older date?';
 export const tabErrorWarning =
   'Please correct all of the highlighted errors within the red coloured tab(s) before continuing.';
+export const deleteProjectWarning = 'Are you sure that you want to delete this project?';
+export const deletePotentialSubdivisionParcels =
+  'There are Potential Subdivision Parcels associated with this project in the PIMS Inventory. Please delete or re-use for another Disposal Project.';
