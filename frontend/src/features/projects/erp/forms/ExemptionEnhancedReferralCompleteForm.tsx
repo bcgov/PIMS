@@ -68,7 +68,7 @@ const ExemptionEnhancedReferralCompleteForm = ({
           field="clearanceNotificationSentOn"
         />
       </Form.Row>
-      <h3>Option 1: Transfer within the GRE</h3>
+      <h3>Option 1: Transfer within the Greater Reporting Entity</h3>
 
       <Form.Row>
         <Form.Label column md={4}>
