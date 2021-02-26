@@ -203,7 +203,14 @@ const Form: React.FC<ILandForm> = ({
           </div>
         );
       case LandSteps.VALUATION:
-        return <LandValuationForm title="Land Valuation" nameSpace="data" disabled={disabled} />;
+        return (
+          <LandValuationForm
+            title="Land Valuation"
+            nameSpace="data"
+            disabled={disabled}
+            showImprovements={!!formikProps.values.data.buildings.length}
+          />
+        );
       case LandSteps.REVIEW:
         return (
           <LandReviewPage

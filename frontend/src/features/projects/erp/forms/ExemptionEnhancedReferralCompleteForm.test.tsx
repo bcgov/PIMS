@@ -26,6 +26,7 @@ const element = (func: Function, storeOverride?: any) => (
         onClickGreTransferred={noop}
         onClickNotInSpl={noop}
         onClickProceedToSpl={func}
+        onClickDisposedExternally={noop}
       />
     </Router>
   </Provider>
@@ -59,6 +60,7 @@ const FormComponent: React.FC<{
   onClickGreTransferred: any;
   onClickProceedToSpl: any;
   onClickNotInSpl: any;
+  onClickDisposedExternally: any;
   formRef?: React.MutableRefObject<FormikProps<any> | undefined>;
 }> = props => (
   <Formik
@@ -74,6 +76,7 @@ const FormComponent: React.FC<{
         onClickGreTransferred={props.onClickGreTransferred}
         onClickNotInSpl={props.onClickNotInSpl}
         onClickProceedToSpl={props.onClickProceedToSpl}
+        onClickDisposedExternally={props.onClickProceedToSpl}
       />
     </Form>
   </Formik>
@@ -89,6 +92,7 @@ describe('ExemptionEnhancedReferralCompleteForm', () => {
           onClickGreTransferred={noop}
           onClickNotInSpl={noop}
           onClickProceedToSpl={noop}
+          onClickDisposedExternally={noop}
         />,
       )
       .toJSON();
@@ -106,6 +110,7 @@ describe('ExemptionEnhancedReferralCompleteForm', () => {
         onClickGreTransferred={noop}
         onClickNotInSpl={noop}
         onClickProceedToSpl={noop}
+        onClickDisposedExternally={noop}
       />,
     );
 
@@ -169,6 +174,7 @@ describe('ExemptionEnhancedReferralCompleteForm', () => {
         onClickGreTransferred={onClickGreTransferred}
         onClickNotInSpl={noop}
         onClickProceedToSpl={noop}
+        onClickDisposedExternally={noop}
       />,
     );
 
@@ -186,6 +192,7 @@ describe('ExemptionEnhancedReferralCompleteForm', () => {
         onClickGreTransferred={noop}
         onClickNotInSpl={noop}
         onClickProceedToSpl={noop}
+        onClickDisposedExternally={noop}
       />,
     );
 
@@ -203,6 +210,7 @@ describe('ExemptionEnhancedReferralCompleteForm', () => {
         onClickGreTransferred={noop}
         onClickNotInSpl={onClickNotInSpl}
         onClickProceedToSpl={noop}
+        onClickDisposedExternally={noop}
       />,
     );
 

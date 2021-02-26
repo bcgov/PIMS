@@ -251,8 +251,8 @@ export const getMarkerIcon = (feature: ICluster, selected?: boolean) => {
     return draftBuildingIcon;
   } else if (selected) {
     if (
-      [Workflows.ERP, Workflows.ASSESS_EX_DISPOSAL].includes(projectWorkflow) ||
-      [Workflows.ERP, Workflows.ASSESS_EX_DISPOSAL].includes(parcelDetail?.projectWorkflow)
+      [Workflows.ERP].includes(projectWorkflow) ||
+      [Workflows.ERP].includes(parcelDetail?.projectWorkflow)
     ) {
       switch (propertyTypeId) {
         case PropertyTypes.SUBDIVISION:
@@ -263,8 +263,8 @@ export const getMarkerIcon = (feature: ICluster, selected?: boolean) => {
           return landErpIconSelect;
       }
     } else if (
-      [Workflows.SPL].includes(projectWorkflow) ||
-      [Workflows.SPL].includes(parcelDetail?.projectWorkflow)
+      [Workflows.SPL, Workflows.ASSESS_EX_DISPOSAL].includes(projectWorkflow) ||
+      [Workflows.SPL, Workflows.ASSESS_EX_DISPOSAL].includes(parcelDetail?.projectWorkflow)
     ) {
       switch (propertyTypeId) {
         case PropertyTypes.BUILDING:
@@ -282,7 +282,7 @@ export const getMarkerIcon = (feature: ICluster, selected?: boolean) => {
       return buildingIconSelect;
     }
   } else {
-    if ([Workflows.ERP, Workflows.ASSESS_EX_DISPOSAL].includes(projectWorkflow)) {
+    if ([Workflows.ERP].includes(projectWorkflow)) {
       switch (propertyTypeId) {
         case PropertyTypes.SUBDIVISION:
           return subdivisionErpIcon;
@@ -295,7 +295,7 @@ export const getMarkerIcon = (feature: ICluster, selected?: boolean) => {
       (classificationId === Classifications.SurplusActive ||
         classificationId === Classifications.SurplusEncumbered) &&
       projectWorkflow &&
-      [Workflows.SPL].includes(projectWorkflow)
+      [Workflows.SPL, Workflows.ASSESS_EX_DISPOSAL].includes(projectWorkflow)
     ) {
       switch (propertyTypeId) {
         case PropertyTypes.BUILDING:
