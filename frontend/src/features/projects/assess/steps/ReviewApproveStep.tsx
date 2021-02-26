@@ -7,6 +7,7 @@ import {
   ProjectDraftStepYupSchema,
   SelectProjectPropertiesStepYupSchema,
   ApproveExemptionRequestSchema,
+  DenyProjectYupSchema,
 } from '../../dispose/forms/disposalYupSchema';
 import { fetchProjectTasks } from '../../common/projectsActionCreator';
 import _ from 'lodash';
@@ -23,6 +24,10 @@ export const ReviewExemptionRequestSchema = ApproveExemptionRequestSchema.concat
   ReviewApproveStepSchema,
 );
 
+/**
+ * Validate the project status tasks that are required.
+ * @param project The project to validate.
+ */
 export const validateTasks = (project: IProject) => {
   const statusTasks = !project.exemptionRequested
     ? _.filter(
@@ -47,6 +52,36 @@ export const validateTasks = (project: IProject) => {
 };
 
 /**
+ * Validate the deny project action.
+ * @param project The project to validate.
+ */
+export const validateDeny = async (project: IProject) => {
+  try {
+    await validateYupSchema(project, DenyProjectYupSchema);
+    return Promise.resolve({});
+  } catch (errors) {
+    return Promise.resolve(yupToFormErrors(errors));
+  }
+};
+
+/**
+ * Validate the approve project action.
+ * @param project The project to validate.
+ */
+export const validateApprove = async (project: IProject) => {
+  let taskErrors = validateTasks(project);
+  try {
+    await validateYupSchema(
+      project,
+      project.exemptionRequested ? ReviewExemptionRequestSchema : ReviewApproveStepSchema,
+    );
+    return Promise.resolve(taskErrors);
+  } catch (errors) {
+    return _.merge(yupToFormErrors(errors), taskErrors);
+  }
+};
+
+/**
  * Expanded version of the ReviewApproveStep allowing for application review.
  * {isReadOnly formikRef} formikRef allow remote formik access
  */
@@ -64,25 +99,15 @@ const ReviewApproveStep = ({ formikRef }: IStepProps) => {
     (project.statusCode === ReviewWorkflowStatus.PropertyReview ||
       project.statusCode === ReviewWorkflowStatus.ExemptionReview);
 
-  //validate form and tasks, skipping validation in the case of deny and save.
-  const handleValidate = (values: IProject) => {
+  // validate form and tasks, skipping validation in the case of deny and save.
+  const handleValidate = async (values: IProject) => {
     if (submitStatusCode === ReviewWorkflowStatus.Denied) {
-      return Promise.resolve({});
+      return await validateDeny(values);
+    } else if (submitStatusCode !== undefined) {
+      return await validateApprove(values);
     }
-    let taskErrors = validateTasks(values);
-    const yupErrors: any = validateYupSchema(
-      values,
-      project.exemptionRequested ? ReviewExemptionRequestSchema : ReviewApproveStepSchema,
-    ).then(
-      () => {
-        return taskErrors;
-      },
-      (err: any) => {
-        return _.merge(yupToFormErrors(err), taskErrors);
-      },
-    );
-    return Promise.resolve(yupErrors);
   };
+
   const initialValues: IProject = {
     ...project,
     statusCode: project.status?.code,
@@ -109,16 +134,16 @@ const ReviewApproveStep = ({ formikRef }: IStepProps) => {
           const workflowCode = getNextWorkflowCode(submitStatusCode, values);
           return onSubmitReview(values, formikRef, submitStatusCode, workflowCode).then(
             (project: IProject) => {
-              if (
-                project?.statusCode === ReviewWorkflowStatus.ApprovedForErp ||
-                project?.statusCode === ReviewWorkflowStatus.ApprovedForExemption
-              ) {
-                history.push(
-                  `${project.status?.route}?projectNumber=${project.projectNumber}` ?? 'invalid',
-                );
-              }
-              if (project?.statusCode === ReviewWorkflowStatus.Denied) {
-                goToDisposePath('../summary');
+              switch (project?.statusCode) {
+                case ReviewWorkflowStatus.ApprovedForErp:
+                case ReviewWorkflowStatus.ApprovedForExemption:
+                  history.push(
+                    `${project.status?.route}?projectNumber=${project.projectNumber}` ?? 'invalid',
+                  );
+                  break;
+                case ReviewWorkflowStatus.Denied:
+                  goToDisposePath('../summary');
+                  break;
               }
             },
           );

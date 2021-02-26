@@ -174,11 +174,13 @@ namespace Pims.Dal.Helpers.Extensions
                 if (filter.InSurplusPropertyProgram == true) workflowCodes.Add("SPL"); // TODO: This should be configurable, not hardcoded.
                 var codes = workflowCodes.ToArray();
 
+                var doNotIncludeCodes = new[] { "DE", "DIS", "CA", "T-GRE" }; // TODO: This should be configurable, not hardcoded.
+
                 // Generate a query that finds all properties in projects that match the specified workflow.
                 var properties = (from vp in context.Properties
                                   join pp in (
                                       context.Projects
-                                          .Where(p => codes.Contains(p.Workflow.Code))
+                                          .Where(p => codes.Contains(p.Workflow.Code) && !doNotIncludeCodes.Contains(p.Status.Code))
                                           .SelectMany(p => p.Properties)
                                           .Where(p => p.PropertyType == Entities.PropertyTypes.Land
                                               || p.PropertyType == Entities.PropertyTypes.Subdivision)
@@ -188,7 +190,7 @@ namespace Pims.Dal.Helpers.Extensions
                         .Union(from vp in context.Properties
                                join pp in (
                                    context.Projects
-                                       .Where(p => codes.Contains(p.Workflow.Code))
+                                       .Where(p => codes.Contains(p.Workflow.Code) && !doNotIncludeCodes.Contains(p.Status.Code))
                                        .SelectMany(p => p.Properties)
                                        .Where(p => p.PropertyType == Entities.PropertyTypes.Building)
                                        .Select(p => p.Building)
