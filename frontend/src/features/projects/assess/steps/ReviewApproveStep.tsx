@@ -14,6 +14,7 @@ import { ReviewWorkflowStatus, IStepProps } from '../../common/interfaces';
 import { useStepForm, IProject, IProjectTask, useProject, StepErrorSummary } from '../../common';
 import { ReviewApproveForm } from '..';
 import { useHistory } from 'react-router-dom';
+import * as Yup from 'yup';
 
 export const ReviewApproveStepSchema = UpdateInfoStepYupSchema.concat(
   ProjectDraftStepYupSchema,
@@ -46,6 +47,35 @@ export const validateTasks = (project: IProject) => {
   }, {});
 };
 
+export const DenyProjectYupSchema = Yup.object().shape({
+  publicNote: Yup.string().required('Shared note must contain a reason before denying project.'),
+});
+
+export const validateDeny = (project: IProject) => {
+  return new Promise(resolve => {
+    validateYupSchema(project, DenyProjectYupSchema).then(
+      () => resolve({}),
+      (errors: any) => resolve(yupToFormErrors(errors)),
+    );
+  });
+};
+
+export const validateApprove = (project: IProject) => {
+  let taskErrors = validateTasks(project);
+  const yupErrors: any = validateYupSchema(
+    project,
+    project.exemptionRequested ? ReviewExemptionRequestSchema : ReviewApproveStepSchema,
+  ).then(
+    () => {
+      return taskErrors;
+    },
+    (err: any) => {
+      return _.merge(yupToFormErrors(err), taskErrors);
+    },
+  );
+  return Promise.resolve(yupErrors);
+};
+
 /**
  * Expanded version of the ReviewApproveStep allowing for application review.
  * {isReadOnly formikRef} formikRef allow remote formik access
@@ -64,25 +94,15 @@ const ReviewApproveStep = ({ formikRef }: IStepProps) => {
     (project.statusCode === ReviewWorkflowStatus.PropertyReview ||
       project.statusCode === ReviewWorkflowStatus.ExemptionReview);
 
-  //validate form and tasks, skipping validation in the case of deny and save.
+  // validate form and tasks, skipping validation in the case of deny and save.
   const handleValidate = (values: IProject) => {
     if (submitStatusCode === ReviewWorkflowStatus.Denied) {
-      return Promise.resolve({});
+      return validateDeny(values);
+    } else if (submitStatusCode !== undefined) {
+      return validateApprove(values);
     }
-    let taskErrors = validateTasks(values);
-    const yupErrors: any = validateYupSchema(
-      values,
-      project.exemptionRequested ? ReviewExemptionRequestSchema : ReviewApproveStepSchema,
-    ).then(
-      () => {
-        return taskErrors;
-      },
-      (err: any) => {
-        return _.merge(yupToFormErrors(err), taskErrors);
-      },
-    );
-    return Promise.resolve(yupErrors);
   };
+
   const initialValues: IProject = {
     ...project,
     statusCode: project.status?.code,
@@ -109,16 +129,16 @@ const ReviewApproveStep = ({ formikRef }: IStepProps) => {
           const workflowCode = getNextWorkflowCode(submitStatusCode, values);
           return onSubmitReview(values, formikRef, submitStatusCode, workflowCode).then(
             (project: IProject) => {
-              if (
-                project?.statusCode === ReviewWorkflowStatus.ApprovedForErp ||
-                project?.statusCode === ReviewWorkflowStatus.ApprovedForExemption
-              ) {
-                history.push(
-                  `${project.status?.route}?projectNumber=${project.projectNumber}` ?? 'invalid',
-                );
-              }
-              if (project?.statusCode === ReviewWorkflowStatus.Denied) {
-                goToDisposePath('../summary');
+              switch (project?.statusCode) {
+                case ReviewWorkflowStatus.ApprovedForErp:
+                case ReviewWorkflowStatus.ApprovedForExemption:
+                  history.push(
+                    `${project.status?.route}?projectNumber=${project.projectNumber}` ?? 'invalid',
+                  );
+                  break;
+                case ReviewWorkflowStatus.Denied:
+                  goToDisposePath('../summary');
+                  break;
               }
             },
           );
