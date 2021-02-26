@@ -14,6 +14,7 @@ export interface IProperty {
   description?: string;
   projectNumbers?: string[];
   projectStatus?: string;
+  projectWorkflow?: string;
   isSensitive: boolean | '';
   createdOn?: string;
   updatedOn?: string;

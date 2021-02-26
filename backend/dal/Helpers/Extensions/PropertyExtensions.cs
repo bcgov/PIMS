@@ -308,6 +308,26 @@ namespace Pims.Dal.Helpers.Extensions
         }
 
         /// <summary>
+        /// Get the latest project status associated to this property, using the workflow sort order.
+        /// </summary>
+        /// <param name="property"></param>
+        /// <returns>The status of the latest project associated to this property</returns>
+        public static String GetLatestProjectStatus(this Entity.Property property)
+        {
+            if (property is Entity.Parcel parcel && parcel.Projects.Select(pp => pp.Project).Any())
+            {
+                return parcel.Projects.Select(pp => pp.Project).
+                    Aggregate((Entity.Project projectWithLatestWorkflow, Entity.Project current) => current.Workflow.SortOrder > projectWithLatestWorkflow.Workflow.SortOrder ? current : projectWithLatestWorkflow).Status.Name;
+            }
+            else if (property is Entity.Building building && building.Projects.Select(pp => pp.Project).Any())
+            {
+                return building.Projects.Select(pp => pp.Project).
+                    Aggregate((Entity.Project projectWithLatestWorkflow, Entity.Project current) => current.Workflow.SortOrder > projectWithLatestWorkflow.Workflow.SortOrder ? current : projectWithLatestWorkflow).Status.Name;
+            }
+            return null;
+        }
+
+        /// <summary>
         /// The user may create an evaluation older then the most recent evaluation stored in PIMS. To support this, remove any evaluations that are within one year of the passed date.
         /// </summary>
         /// <param name="property"></param>

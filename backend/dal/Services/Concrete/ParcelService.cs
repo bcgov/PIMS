@@ -153,6 +153,7 @@ namespace Pims.Dal.Services
                 .Include(p => p.Parcels).ThenInclude(pp => pp.Parcel)
                 .Include(p => p.Subdivisions).ThenInclude(pp => pp.Subdivision)
                 .Include(p => p.Projects).ThenInclude(pp => pp.Project).ThenInclude(p => p.Workflow)
+                .Include(p => p.Projects).ThenInclude(pp => pp.Project).ThenInclude(p => p.Status)
                 .FirstOrDefault(p => p.Id == id
                     && (ownsABuilding || isAdmin || p.IsVisibleToOtherAgencies || !p.IsSensitive || (viewSensitive && userAgencies.Contains(p.AgencyId)))) ?? throw new KeyNotFoundException();
 
