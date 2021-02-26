@@ -1,16 +1,25 @@
+# Jenkins
+
 PIMS uses Jenkins to automate the deployment pipelines
+
+## Service Account
+
+The service account Jenkins will use needs to be created and referenced in each namespace it will have access to.
+
+- Login with the `oc`
+
+```bash
+cd openshift/4.0/templates/jenkins
+oc process -f rolebinding.yaml | oc create --save-config=true -f -
+```
 
 ## How to deploy Jenkins Master
 
 We deploy the Jenkins Master using the [jenkins-master.yaml](./jenkins-master.yaml)
 
-- Login with the `oc`
+- (Optional) Create a `.env` file with the following.
 
-- `cd openshift/4.0/templates/jenkins`
-
-- (Optional) Create a `.env` file with the following content
-
-```
+```conf
 APP_NAME=jenkins
 PROJECT_NAME=354028-tools
 ENV_NAME=tools
