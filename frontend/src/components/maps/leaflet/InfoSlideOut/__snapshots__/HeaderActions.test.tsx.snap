@@ -76,6 +76,20 @@ exports[`InfoContent View InfoContent renders correctly 1`] = `
   margin: 0px 0px 10px 0px;
 }
 
+.c5 {
+  background-color: #deefff;
+  padding: 5px 15px;
+  margin: 0px 1px 5px 1px;
+}
+
+.c5 em {
+  color: darkVariantColor;
+}
+
+.c5 a {
+  color: slideOutBlue;
+}
+
 <div
   class="list-group"
 >
@@ -243,6 +257,49 @@ exports[`InfoContent View InfoContent renders correctly 1`] = `
         </div>
       </div>
     </div>
+    <div
+      class="c1 row"
+    >
+      <div
+        class="c2 col"
+      >
+        <div
+          class="left-side list-group-item"
+        >
+          <p
+            class="label"
+          >
+            Project Number
+          </p>
+        </div>
+      </div>
+      <div
+        class="c3 col"
+      />
+      <div
+        class="c4 col"
+      >
+        <div
+          class="list-group-item"
+        >
+          SPP-00001
+          <br />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="c5 row"
+  >
+    <em>
+      For more information on this property, contact
+       
+      <a
+        href="mailto:RealPropertyDivision.Disposals@gov.bc.ca"
+      >
+        Strategic Real Estate Services (SRES)
+      </a>
+    </em>
   </div>
 </div>
 `;

@@ -10,6 +10,9 @@ import thunk from 'redux-thunk';
 import * as reducerTypes from 'constants/reducerTypes';
 import { Provider } from 'react-redux';
 import * as API from 'constants/API';
+import { Workflows } from 'constants/workflows';
+import { Router } from 'react-router-dom';
+import { createMemoryHistory } from 'history';
 
 const mockParcelNoSub = {
   id: 1,
@@ -106,6 +109,9 @@ export const mockBuilding = {
   occupantName: 'test',
   parcels: [mockParcelNoSub],
   buildingTenancy: '100%',
+  projectNumbers: ['SPP-00001'],
+  projectStatus: 'On Market',
+  projectWorkflow: Workflows.SPL,
 } as IBuilding;
 
 export const mockParcel = {
@@ -155,6 +161,9 @@ export const mockParcel = {
   parcels: [],
   agency: 'AEST',
   subAgency: 'KPU',
+  projectNumbers: ['SPP-00001'],
+  projectStatus: 'In ERP',
+  projectWorkflow: Workflows.ERP,
 } as IParcel;
 
 const lCodes = {
@@ -177,6 +186,8 @@ const lCodes = {
 };
 
 const mockStore = configureMockStore([thunk]);
+const history = createMemoryHistory();
+
 const store = mockStore({
   [reducerTypes.LOOKUP_CODE]: lCodes,
 });
@@ -188,11 +199,13 @@ const ContentComponent = (
 ) => {
   return (
     <Provider store={store}>
-      <InfoContent
-        propertyInfo={propertyInfo}
-        propertyTypeId={propertyTypeId}
-        canViewDetails={canViewDetails}
-      />
+      <Router history={history}>
+        <InfoContent
+          propertyInfo={propertyInfo}
+          propertyTypeId={propertyTypeId}
+          canViewDetails={canViewDetails}
+        />
+      </Router>
     </Provider>
   );
 };
@@ -230,6 +243,17 @@ describe('InfoContent View', () => {
     expect(getByText('$10,000')).toBeVisible();
   });
 
+  it('Shows project status if can view and property is in project', () => {
+    const { getByText } = render(ContentComponent(mockParcel, PropertyTypes.PARCEL, true));
+    expect(getByText('Property is in Enhanced Referral Process')).toBeVisible();
+    expect(getByText('In ERP')).toBeVisible();
+  });
+
+  it('Does not show project status block if not in a project', () => {
+    const { queryByText } = render(ContentComponent(mockParcelNoSub, PropertyTypes.PARCEL, true));
+    expect(queryByText('Status: ')).toBeNull();
+  });
+
   it('Shows limited parcel information when cannot view', () => {
     const { getByText, queryByText } = render(
       ContentComponent(mockParcel, PropertyTypes.PARCEL, false),
@@ -239,6 +263,8 @@ describe('InfoContent View', () => {
     expect(queryByText('Kwantlen Polytechnic University')).toBeNull();
     //contact SRES block is shown
     expect(getByText('For more information', { exact: false })).toBeVisible();
+    //project status is hidden
+    expect(queryByText('Status: ')).toBeNull();
   });
 
   it('Correct label if no sub agency', () => {
@@ -261,6 +287,9 @@ describe('InfoContent View', () => {
     //Building Attributes
     expect(getByText('University/College')).toBeVisible();
     expect(getByText('100%')).toBeVisible();
+    //Project status block
+    expect(getByText('Property is on the Surplus Properties List')).toBeVisible();
+    expect(getByText('On Market')).toBeVisible();
   });
 
   it('Building area formated correctly', () => {

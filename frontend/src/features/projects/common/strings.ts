@@ -28,7 +28,7 @@ export const cancellationWarning =
 export const onHoldNotificationTooltip =
   'Enter On Hold Notification Sent Date to be able to Place Project On Hold.';
 export const onTransferredWithinTheGreTooltip =
-  'Enter Date Transferred within the GRE to be able to Update Property Information.';
+  'Enter Date Transferred within the Greater Reporting Entity to be able to Update Property Information.';
 export const clearanceNotifictionSent =
   'Enter Clearance Notification Sent date to be able to Proceed to SPL or Not Include in SPL.';
 export const requestForSplReceivedOn =
