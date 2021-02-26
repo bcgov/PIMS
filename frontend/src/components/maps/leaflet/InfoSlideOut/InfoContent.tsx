@@ -14,6 +14,7 @@ import useCodeLookups from 'hooks/useLookupCodes';
 import { useState } from 'react';
 import { ProjectNumberLink } from './ProjectNumberLink';
 import { BuildingSvg, LandSvg, SubdivisionSvg } from 'components/common/Icons';
+import { Workflows } from 'constants/workflows';
 
 /**
  * Compare two dates to evaluation which is earlier.
@@ -58,6 +59,18 @@ const ContactSres = styled(Row)`
   }
 `;
 
+const ProjectStatus = styled.div`
+  background-color: #fff1cc;
+  text-align: center;
+  color: ${variables.textColor};
+  font-family: 'BCSans', Fallback, sans-serif;
+  padding: 5px;
+
+  p {
+    margin-bottom: 0;
+  }
+`;
+
 const getHeading = (propertyTypeId: PropertyTypes | null) => {
   switch (propertyTypeId) {
     case PropertyTypes.SUBDIVISION:
@@ -81,6 +94,23 @@ const getHeading = (propertyTypeId: PropertyTypes | null) => {
           Parcel Identification
         </Label>
       );
+  }
+};
+
+const displayProjectStatus = (workflowCode: string) => {
+  switch (workflowCode) {
+    case Workflows.ERP:
+      return 'Property is in Enhanced Referral Process';
+    case Workflows.SPL:
+      return 'Property is on the Surplus Properties List';
+    case Workflows.ASSESS_EX_DISPOSAL:
+      return 'Property has been approved for ERP exemption';
+    case Workflows.ASSESS_EXEMPTION:
+      return 'Property has been submitted to be exempt from ERP';
+    case Workflows.SUBMIT_DISPOSAL:
+      return 'Property is in a draft project';
+    default:
+      return 'Project is in Surplus Property Program';
   }
 };
 
@@ -164,6 +194,18 @@ export const InfoContent: React.FC<IInfoContent> = ({
           </ContactSres>
         )}
       </ListGroup>
+      {propertyInfo?.projectWorkflow && (
+        <ListGroup>
+          <ProjectStatus>
+            <em>{displayProjectStatus(propertyInfo?.projectWorkflow)}</em>
+            {canViewDetails && (
+              <p>
+                Status: <strong>{propertyInfo?.projectStatus}</strong>
+              </p>
+            )}
+          </ProjectStatus>
+        </ListGroup>
+      )}
       <ListGroup>
         <Label className="header">Location data</Label>
         <OuterRow>
