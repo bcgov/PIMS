@@ -104,7 +104,9 @@ const displayProjectStatus = (workflowCode: string) => {
     case Workflows.SPL:
       return 'Property is on the Surplus Properties List';
     case Workflows.ASSESS_EX_DISPOSAL:
-      return 'Property has been disposed externally';
+      return 'Property has been approved for ERP exemption';
+    case Workflows.ASSESS_EXEMPTION:
+      return 'Property has been submitted to be exempt from ERP';
     case Workflows.SUBMIT_DISPOSAL:
       return 'Property is in a draft project';
     default:
