@@ -1,3 +1,4 @@
+import Claims from 'constants/claims';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
@@ -57,7 +58,7 @@ export const ProjectNumberLink: React.FC<IProjectNumberLinkProps> = ({
 
   useEffect(() => {
     /** user does not belong to property agency nor is sres means project detail may not be viewed */
-    if (!keycloak.hasAgency(+agencyId) && !keycloak.isAdmin) {
+    if (!keycloak.hasAgency(+agencyId) && !keycloak.hasClaim(Claims.ADMIN_PROJECTS)) {
       setPrivateProject(true);
     }
   }, [setPrivateProject, agencyId, keycloak]);
