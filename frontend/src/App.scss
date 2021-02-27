@@ -23,29 +23,6 @@ ul.pagination li {
   max-width: 400px;
 }
 
-div.bootstrap-table {
-  .col {
-    border-bottom-width: 2px;
-    vertical-align: bottom;
-    border-bottom: 2px solid $table-color;
-    border: 1px solid $table-color;
-    padding: 0.75rem;
-  }
-  .row {
-    vertical-align: inherit;
-    margin: 0;
-  }
-  div.row:nth-of-type(even) {
-    background-color: rgba(0, 0, 0, 0.05);
-  }
-  form:nth-of-type(odd) {
-    background-color: rgba(0, 0, 0, 0.05);
-  }
-  .thead {
-    font-weight: 700;
-  }
-}
-
 .Toastify__toast.Toastify__toast--dark {
   color: #fff;
   background-color: $secondary-variant-color;

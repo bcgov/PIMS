@@ -122,7 +122,7 @@ namespace Pims.Api.Areas.Tools.Helpers
 
                     var prop = props.FirstOrDefault(p => String.Compare(p.Name, keyValue[0], true) == 0);
                     var modelValue = prop?.GetValue(model);
-                    if (prop != null && modelValue == null || modelValue.Equals(prop.PropertyType.GetDefault()))
+                    if (prop != null && modelValue == null || modelValue?.Equals(prop.PropertyType.GetDefault()) == true)
                     {
                         if (prop.PropertyType == typeof(DateTime) || prop.PropertyType == typeof(DateTime?))
                         {
