@@ -28,6 +28,8 @@ import { EvaluationKeys } from 'constants/evaluationKeys';
 import { FiscalKeys } from 'constants/fiscalKeys';
 import moment from 'moment';
 import { ProjectNumberLink } from 'components/maps/leaflet/InfoSlideOut/ProjectNumberLink';
+import { IBuilding } from 'actions/parcelsActions';
+import { useHistory } from 'react-router-dom';
 
 interface IReviewProps {
   nameSpace?: string;
@@ -53,7 +55,12 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
     },
     [props.nameSpace],
   );
+  const history = useHistory();
   const formikProps = useFormikContext();
+
+  const onRowClick = (data: IBuilding) => {
+    history.push(`/mapview?sidebar=true&buildingId=${data.id}`);
+  };
 
   const defaultEditValues = useMemo(
     () => ({
@@ -359,6 +366,8 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
                     field="data.buildings"
                     name="buildings"
                     columns={getAssociatedBuildingsCols()}
+                    clickableTooltip="Click to view building details"
+                    onRowClick={onRowClick}
                   />
                 </Row>
               </div>
