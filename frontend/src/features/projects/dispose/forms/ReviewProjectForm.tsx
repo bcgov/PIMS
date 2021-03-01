@@ -1,6 +1,5 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import './ReviewProjectForm.scss';
-import { ExemptionRequest } from '..';
 import { useFormikContext } from 'formik';
 import _ from 'lodash';
 import {
@@ -40,16 +39,6 @@ const ReviewProjectForm = ({ canEdit }: { canEdit: boolean }) => {
       <UpdateInfoForm isReadOnly={isReadOnly || !canEdit} />
       <DocumentationForm tasks={documentationTasks as IProjectTask[]} isReadOnly={true} />
       <ApprovalConfirmationForm isReadOnly={true} />
-      <ExemptionRequest
-        submissionStep={true}
-        sectionHeader="Enhanced Referral Process Exemption"
-        exemptionField="exemptionRequested"
-        rationaleField="exemptionRationale"
-        exemptionLabel="Apply for Enhanced Referral Process exemption"
-        tooltip="Please see Process Manual for details."
-        rationaleInstruction="Please provide your rationale below for exemption request"
-        isReadOnly={!canEdit}
-      />
     </Fragment>
   );
 };
