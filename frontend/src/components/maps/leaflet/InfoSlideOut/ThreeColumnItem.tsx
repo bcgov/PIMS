@@ -10,7 +10,7 @@ const InnerRow = styled(Row)`
 
 const LeftCol = styled(Col)`
   width: 110px;
-  max-width: 110px;
+  max-width: 135px;
   padding-right: 10px;
   padding-left: 0px;
 `;

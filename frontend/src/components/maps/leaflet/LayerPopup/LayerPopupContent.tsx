@@ -109,7 +109,10 @@ export const LayerPopupContent: React.FC<IPopupContentProps> = ({
             </StyledLink>
           ) : null}
           {bounds && curZoom! !== boundZoom ? (
-            <StyledLink to={{ ...location }} onClick={() => leaflet.map?.flyToBounds(bounds)}>
+            <StyledLink
+              to={{ ...location }}
+              onClick={() => leaflet.map?.flyToBounds(bounds, { animate: false })}
+            >
               Zoom
             </StyledLink>
           ) : null}
