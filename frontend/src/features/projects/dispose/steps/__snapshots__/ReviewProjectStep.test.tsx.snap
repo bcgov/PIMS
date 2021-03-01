@@ -766,43 +766,6 @@ exports[`renders correctly 1`] = `
       Documentation
     </h3>
     <h3>
-      Approval
-    </h3>
-    <div
-      className="form-row"
-    >
-      <div
-        className="required form-group"
-      >
-        <div
-          className="check-field"
-        >
-          <div
-            className="form-check"
-          >
-            <input
-              checked={true}
-              className="form-check-input position-static"
-              disabled={true}
-              id="input-confirmation"
-              name="confirmation"
-              onBlur={[Function]}
-              onChange={[Function]}
-              required={true}
-              type="checkbox"
-              value={true}
-            />
-          </div>
-          <label
-            className="form-label"
-            htmlFor="input-confirmation"
-          >
-            My Ministry/Agency has approval/authority to submit the Disposal Project to SRES for review.
-          </label>
-        </div>
-      </div>
-    </div>
-    <h3>
       Enhanced Referral Process Exemption
       <svg
         className="tooltip-icon"
@@ -857,6 +820,43 @@ exports[`renders correctly 1`] = `
             htmlFor="input-exemptionRequested"
           >
             Apply for Enhanced Referral Process exemption
+          </label>
+        </div>
+      </div>
+    </div>
+    <h3>
+      Approval
+    </h3>
+    <div
+      className="form-row"
+    >
+      <div
+        className="required form-group"
+      >
+        <div
+          className="check-field"
+        >
+          <div
+            className="form-check"
+          >
+            <input
+              checked={true}
+              className="form-check-input position-static"
+              disabled={true}
+              id="input-confirmation"
+              name="confirmation"
+              onBlur={[Function]}
+              onChange={[Function]}
+              required={true}
+              type="checkbox"
+              value={true}
+            />
+          </div>
+          <label
+            className="form-label"
+            htmlFor="input-confirmation"
+          >
+            My Ministry/Agency has approval/authority to submit the Disposal Project to SRES for review.
           </label>
         </div>
       </div>
