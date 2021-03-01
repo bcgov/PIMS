@@ -31,6 +31,7 @@ const history = createMemoryHistory();
 
 const store = mockStore({
   [reducerTypes.ProjectReducers.PROJECT]: { agencyId: 1 },
+  [reducerTypes.LOOKUP_CODE]: { lookupCodes: [] },
   [reducerTypes.NETWORK]: {
     [ProjectActions.GET_PROJECT]: {},
   },
