@@ -1,13 +1,37 @@
 import './ProjectDraftForm.scss';
-import React from 'react';
-import { Container } from 'react-bootstrap';
+import React, { useMemo } from 'react';
+import { Col, Container } from 'react-bootstrap';
 import { Form, Input, TextArea } from 'components/common/form';
 import { IStepProps, projectNoDescription, EditButton } from '..';
 import styled from 'styled-components';
+import useCodeLookups from 'hooks/useLookupCodes';
+import * as API from 'constants/API';
+import { ParentSelect } from 'components/common/form/ParentSelect';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+import { mapSelectOptionWithParent } from 'utils';
+import { Claims } from 'constants/claims';
 
 const ItalicText = styled.div`
   font-family: 'BCSans-Italic', Fallback, sans-serif;
   font-size: 12px;
+`;
+
+const AgencyCol = styled(Col)`
+  display: flex;
+  .form-group {
+    width: 100%;
+    .rbt {
+      width: 100%;
+      div {
+        input {
+          width: 100% !important;
+        }
+      }
+      .rbt-menu {
+        width: 370px !important;
+      }
+    }
+  }
 `;
 
 interface IProjectDraftFormProps {
@@ -24,6 +48,32 @@ const ProjectDraftForm = ({
   title,
   setIsReadOnly,
 }: IStepProps & IProjectDraftFormProps) => {
+  const { getOptionsByType } = useCodeLookups();
+  const keycloak = useKeycloakWrapper();
+  const agencies = getOptionsByType(API.AGENCY_CODE_SET_NAME);
+  const userAgency = agencies.find(a => Number(a.value) === Number(keycloak.agencyId));
+
+  const isUserAgencyAParent = useMemo(() => {
+    return !!userAgency && !userAgency.parentId;
+  }, [userAgency]);
+
+  const isSRES = useMemo(() => {
+    return (
+      keycloak.hasClaim(Claims.PROJECT_VIEW) ||
+      keycloak.hasClaim(Claims.DISPOSE_APPROVE) ||
+      keycloak.hasClaim(Claims.ADMIN_PROJECTS)
+    );
+  }, [keycloak]);
+
+  const agencyOptions = useMemo(() => {
+    const items = agencies.filter(a => {
+      return (
+        isSRES || a.value === userAgency?.value || Number(a.parentId) === Number(userAgency?.value)
+      );
+    });
+    return items.map(c => mapSelectOptionWithParent(c, agencies));
+  }, [userAgency, agencies, isSRES]);
+
   return (
     <Container fluid className="ProjectDraftForm">
       <Form.Row>
@@ -55,6 +105,19 @@ const ProjectDraftForm = ({
           required
         />
       </Form.Row>
+      {(isSRES || isUserAgencyAParent) && (
+        <Form.Row className="col-md-10">
+          <Form.Label className="col-md-1">Project Agency</Form.Label>
+          <AgencyCol className="col-md-5">
+            <ParentSelect
+              field={'agencyId'}
+              options={agencyOptions}
+              filterBy={['code', 'label', 'parent']}
+              convertValue={Number}
+            />
+          </AgencyCol>
+        </Form.Row>
+      )}
       <Form.Row>
         <TextArea
           data-testid="project-description"

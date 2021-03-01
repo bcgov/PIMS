@@ -47,12 +47,13 @@ export interface IFilterBarState {
 
 type FilterBarProps = {
   onChange: (value: IFilterBarState) => void;
+  defaultFilter: IFilterBarState;
 };
 
 /**
  * Filter bar for the Property List view
  */
-const FilterBar: React.FC<FilterBarProps> = ({ onChange }) => {
+const FilterBar: React.FC<FilterBarProps> = ({ onChange, defaultFilter }) => {
   const lookupCode = useCodeLookups();
   //restrict available agencies to user agencies.
   const agencies = lookupCode.getOptionsByType(API.AGENCY_CODE_SET_NAME);
@@ -65,17 +66,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ onChange }) => {
 
   return (
     <Formik<IFilterBarState>
-      initialValues={{
-        searchBy: 'address',
-        pid: '',
-        address: '',
-        administrativeArea: '',
-        projectNumber: '',
-        agencies: '',
-        classificationId: '',
-        minLotSize: '',
-        maxLotSize: '',
-      }}
+      initialValues={defaultFilter}
       onSubmit={(values, { setSubmitting }) => {
         setSubmitting(true);
         onChange?.({ ...values });

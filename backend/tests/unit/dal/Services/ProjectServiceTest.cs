@@ -442,6 +442,38 @@ namespace Pims.Dal.Test.Services
             queueService.Verify(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), It.IsAny<bool>()), Times.Once());
         }
 
+        /// <summary>
+        /// User cannot add project to an agency that they do not belong to.
+        /// </summary>
+        [Fact]
+        public async void AddProject_NotInAgency()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.ProjectAdd).AddAgency(1);
+
+            var init = helper.InitializeDatabase(user);
+            init.CreateDefaultWorkflowsWithStatus();
+            var agency = init.Agencies.Add(new Agency("CODE2", "Min Code 2")).Entity;
+            init.SaveChanges();
+            var tier = init.TierLevels.Find(1);
+            var status = init.Workflows.Find(1).Status.First();
+            var project = EntityHelper.CreateProject(1, agency, tier, status);
+            project.AgencyId = agency.Id;
+            project.ProjectNumber = "test-generation-override";
+
+            var options = Options.Create(new PimsOptions() { Project = new ProjectOptions() { DraftFormat = "TEST-{0:00000}" } });
+            var service = helper.CreateService<ProjectService>(user, options);
+
+            var queueService = helper.GetService<Mock<IPimsService>>();
+            queueService.Setup(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<bool>()));
+            queueService.Setup(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), It.IsAny<bool>()));
+
+            // Act
+            // Assert
+            await Assert.ThrowsAsync<NotAuthorizedException>(async () => await service.AddAsync(project));
+        }
+
         [Fact]
         public async void Add_Financials()
         {
