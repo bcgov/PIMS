@@ -367,8 +367,25 @@ namespace Pims.Dal.Services
             var status = workflow.Status.OrderBy(s => s.SortOrder).FirstOrDefault() ?? throw new ConfigurationException($"The workflow '{workflow.Name}' status have not been configured.");
 
             project.ProjectNumber = $"TEMP-{DateTime.UtcNow.Ticks:00000}"; // Temporary project number.
-            project.AgencyId = agency.Id; // Always assign the current user's agency to the project.
-            project.Agency = agency;
+
+            if (project.AgencyId != 0 )
+            {
+                var canCreateAProjectForAgency = User.GetAgenciesAsNullable().Contains(project.AgencyId) ||
+                                                 this.User.HasPermission(Permissions.AdminProjects);
+                if (!canCreateAProjectForAgency)
+                {
+                    throw new NotAuthorizedException("User does not have permission to create a project on the behalf of this agency.");
+                }
+
+                project.Agency = Context.Agencies.FirstOrDefault(a => a.Id == project.AgencyId) ??
+                                 throw new NotAuthorizedException("The specified project agency does not exist.");
+            }
+            else
+            {
+                project.AgencyId = agency.Id; // Always assign the current user's agency to the project.
+                project.Agency = agency;
+            }
+
             project.TierLevel = this.Context.TierLevels.Find(project.TierLevelId);
             project.ReportedFiscalYear = project.ReportedFiscalYear <= 0 ? DateTime.UtcNow.GetFiscalYear() : project.ReportedFiscalYear;
             project.ActualFiscalYear = project.ReportedFiscalYear;

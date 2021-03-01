@@ -88,7 +88,6 @@ exports[`renders correctly 1`] = `
                 name="agencies"
                 onBlur={[Function]}
                 onChange={[Function]}
-                value=""
               >
                 <option
                   value=""
@@ -110,7 +109,7 @@ exports[`renders correctly 1`] = `
                 name="classificationId"
                 onBlur={[Function]}
                 onChange={[Function]}
-                value=""
+                value="2"
               >
                 <option
                   value=""
