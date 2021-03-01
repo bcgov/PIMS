@@ -31,14 +31,16 @@ export const ParcelAttributes: React.FC<IParcelAttributes> = ({ parcelInfo, canV
     formatAssessed = '';
   }
 
-  let improvments = 0;
+  let improvements = 0;
   if (parcelInfo?.assessedBuilding) {
-    improvments = parcelInfo?.assessedBuilding;
+    improvements = parcelInfo?.assessedBuilding;
   } else if (parcelInfo?.buildings?.length >= 1) {
     parcelInfo.buildings.forEach((building: IBuilding) => {
-      improvments += +building.evaluations
-        .sort((a: IEvaluation, b: IEvaluation) => compareDate(a.date, b.date))
-        .reverse()[0].value;
+      if (building.evaluations?.length >= 1) {
+        improvements += +building.evaluations
+          .sort((a: IEvaluation, b: IEvaluation) => compareDate(a.date, b.date))
+          .reverse()[0].value;
+      }
     });
   }
 
@@ -69,10 +71,10 @@ export const ParcelAttributes: React.FC<IParcelAttributes> = ({ parcelInfo, canV
             <Label className="header">Valuation</Label>
             <OuterRow>
               <ThreeColumnItem leftSideLabel={'Assessed Land:'} rightSideItem={formatAssessed} />
-              {!!improvments && (
+              {!!improvements && (
                 <ThreeColumnItem
                   leftSideLabel={'Assessed Building(s):'}
-                  rightSideItem={formatMoney(improvments)}
+                  rightSideItem={formatMoney(improvements)}
                 />
               )}
             </OuterRow>
