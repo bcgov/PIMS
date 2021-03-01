@@ -239,6 +239,7 @@ const Map: React.FC<MapProps> = ({
       }, true);
     };
     if (!isEqualWith(geoFilter, filter, compareValues)) {
+      dispatch(storeParcelDetail(null));
       setGeoFilter(getQueryParams(filter));
       setChanged(true);
     }

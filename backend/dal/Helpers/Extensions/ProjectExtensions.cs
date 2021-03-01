@@ -293,7 +293,7 @@ namespace Pims.Dal.Helpers.Extensions
             var disposed = context.PropertyClassifications.AsNoTracking().FirstOrDefault(c => c.Name == "Disposed") ?? throw new KeyNotFoundException("Classification 'Disposed' not found.");
             var parentParcels = GetSubdivisionParentParcels(project);
             DisposeSubdivisionParentParcels(context, parentParcels);
-            project.Properties.ForEach(p =>
+            project.Properties.Where(p => !parentParcels.Any(pp => pp.Id == p.Id)).ForEach(p =>
             {
                 switch (p.PropertyType)
                 {

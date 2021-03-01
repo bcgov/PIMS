@@ -34,6 +34,7 @@ const HeaderRow = styled.div`
 const CloseIcon = styled(FaWindowClose)`
   color: ${variables.textColor};
   font-size: 30px;
+  cursor: pointer;
 `;
 
 const Title = styled.span`
