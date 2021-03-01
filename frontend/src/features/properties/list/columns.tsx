@@ -3,14 +3,15 @@ import { CellProps } from 'react-table';
 import { Link } from 'react-router-dom';
 import { formatNumber, mapLookupCode } from 'utils';
 import { IProperty } from '.';
-import { ColumnWithProps, ViewPropertyCell } from 'components/Table';
+import { ColumnWithProps } from 'components/Table';
 import { FastCurrencyInput, Input, Select, SelectOption } from 'components/common/form';
 import { TypeaheadField } from 'components/common/form/Typeahead';
 import { ILookupCode } from 'actions/lookupActions';
-import { EditableMoneyCell, MoneyCell } from 'components/Table/MoneyCell';
+import { EditableMoneyCell, MoneyCell, AsterixMoneyCell } from 'components/Table/MoneyCell';
 import _ from 'lodash';
 import styled from 'styled-components';
 import { PropertyTypeCell } from 'components/Table/PropertyTypeCell';
+import { PropertyTypes } from 'constants/index';
 
 export const ColumnDiv = styled.div`
   display: flex;
@@ -65,6 +66,7 @@ export const columns = (
     responsive: true,
     width: spacing.xsmall,
     minWidth: 80, // px
+    clickable: true,
     sortable: true,
     filterable: true,
     filter: {
@@ -88,6 +90,7 @@ export const columns = (
     responsive: true,
     width: spacing.medium,
     minWidth: 80,
+    clickable: true,
     sortable: true,
     filterable: true,
     filter: {
@@ -107,6 +110,7 @@ export const columns = (
     Header: 'Property Name',
     accessor: 'name',
     align: 'left',
+    clickable: true,
     responsive: true,
     width: spacing.medium,
     minWidth: 140,
@@ -119,6 +123,7 @@ export const columns = (
     responsive: false,
     width: spacing.small,
     minWidth: 90,
+    clickable: true,
     sortable: true,
     filterable: true,
     filter: {
@@ -136,6 +141,7 @@ export const columns = (
     Header: 'Type',
     accessor: 'propertyTypeId',
     Cell: PropertyTypeCell,
+    clickable: true,
     responsive: true,
     width: spacing.xsmall,
     minWidth: 60,
@@ -151,6 +157,7 @@ export const columns = (
     Header: 'Street Address',
     accessor: 'address',
     align: 'left',
+    clickable: true,
     responsive: true,
     width: spacing.medium,
     minWidth: 100,
@@ -163,6 +170,7 @@ export const columns = (
     responsive: true,
     width: spacing.medium,
     minWidth: 80,
+    clickable: true,
     sortable: true,
     filterable: true,
     filter: {
@@ -178,8 +186,8 @@ export const columns = (
     },
   },
   {
-    Header: 'Assessed Value',
-    accessor: propertyType === 0 ? 'assessedLand' : 'assessedBuilding',
+    Header: 'Assessed Land',
+    accessor: 'assessedLand',
     Cell: !editable
       ? MoneyCell
       : (props: any) => <EditableMoneyCell {...props} suppressValidation />,
@@ -187,6 +195,34 @@ export const columns = (
     responsive: true,
     width: spacing.small,
     minWidth: 100,
+    clickable: !editable,
+    sortable: true,
+    filterable: true,
+    filter: {
+      component: FastCurrencyInput,
+      props: {
+        injectFormik: true,
+        field: 'maxAssessedValue',
+        name: 'maxAssessedValue',
+        placeholder: 'Max Assessed value',
+        tooltip: 'Filter by max assessed value',
+        className: 'filter-input-control',
+      },
+    },
+  },
+  {
+    Header: 'Assessed Building(s)',
+    accessor: 'assessedBuilding',
+    Cell: !editable
+      ? propertyType === PropertyTypes.BUILDING
+        ? AsterixMoneyCell
+        : MoneyCell
+      : (props: any) => <EditableMoneyCell {...props} suppressValidation />,
+    align: 'right',
+    responsive: true,
+    width: spacing.small,
+    minWidth: 100,
+    clickable: !editable,
     sortable: true,
     filterable: true,
     filter: {
@@ -211,6 +247,7 @@ export const columns = (
     responsive: true,
     width: spacing.small,
     minWidth: 100,
+    clickable: !editable,
     sortable: true,
     filterable: true,
     filter: {
@@ -235,6 +272,7 @@ export const columns = (
     responsive: true,
     width: spacing.small,
     minWidth: 100,
+    clickable: !editable,
     sortable: true,
     filterable: true,
     filter: {
@@ -257,6 +295,7 @@ export const columns = (
     responsive: true,
     width: spacing.small,
     minWidth: 120,
+    clickable: true,
     sortable: true,
     filterable: true,
     filter: {
@@ -279,17 +318,239 @@ export const columns = (
     align: 'right',
     Cell: getProjectLinkNoDrafts(),
   },
+];
+
+export const buildingColumns = (
+  agencyOptions: SelectOption[],
+  subAgencies: SelectOption[],
+  municipalities: ILookupCode[],
+  propertyClassifications: SelectOption[],
+  propertyType: number,
+  editable?: boolean,
+): ColumnWithProps<IProperty>[] => [
   {
-    Header: ' ',
-    id: 'view-link-column',
+    Header: 'Agency',
+    accessor: 'agencyCode', // accessor is the "key" in the data
+    align: 'left',
+    responsive: true,
+    width: spacing.xsmall,
+    minWidth: 80, // px
+    clickable: true,
+    sortable: true,
+    filterable: true,
+    filter: {
+      component: TypeaheadField,
+      props: {
+        className: 'agency-search',
+        name: 'agencies[0]',
+        options: agencyOptions.map(a => ({ ...a, parentId: a.value })),
+        inputSize: 'large',
+        placeholder: 'Filter by agency',
+        filterBy: ['code'],
+        hideParent: true,
+        clearButton: true,
+      },
+    },
+  },
+  {
+    Header: 'Sub Agency',
+    accessor: 'subAgency',
+    align: 'left',
+    responsive: true,
+    width: spacing.medium,
+    minWidth: 80,
+    clickable: true,
+    sortable: true,
+    filterable: true,
+    filter: {
+      component: TypeaheadField,
+      props: {
+        name: 'agencies[1]',
+        placeholder: 'Filter by sub agency',
+        className: 'agency-search',
+        options: subAgencies,
+        labelKey: (option: SelectOption) => {
+          return `${option.label}`;
+        },
+      },
+    },
+  },
+  {
+    Header: 'Property Name',
+    accessor: 'name',
+    align: 'left',
+    clickable: true,
+    responsive: true,
+    width: spacing.medium,
+    minWidth: 140,
+    sortable: true,
+  },
+  {
+    Header: 'Classification',
+    accessor: 'classification',
+    align: 'left',
+    responsive: false,
+    width: spacing.small,
+    minWidth: 90,
+    clickable: true,
+    sortable: true,
+    filterable: true,
+    filter: {
+      component: Select,
+      props: {
+        field: 'classificationId',
+        name: 'classificationId',
+        placeholder: 'Filter by class',
+        className: 'location-search',
+        options: propertyClassifications,
+      },
+    },
+  },
+  {
+    Header: 'Type',
+    accessor: 'propertyTypeId',
+    Cell: PropertyTypeCell,
+    clickable: true,
+    responsive: true,
+    width: spacing.xsmall,
+    minWidth: 60,
+  },
+  {
+    Header: 'Street Address',
+    accessor: 'address',
+    align: 'left',
+    clickable: true,
+    responsive: true,
+    width: spacing.medium,
+    minWidth: 100,
+    sortable: true,
+  },
+  {
+    Header: 'Location',
+    accessor: 'administrativeArea',
+    align: 'left',
+    responsive: true,
+    width: spacing.medium,
+    minWidth: 80,
+    clickable: true,
+    sortable: true,
+    filterable: true,
+    filter: {
+      component: TypeaheadField,
+      props: {
+        name: 'administrativeArea',
+        placeholder: 'Filter by location',
+        className: 'location-search',
+        options: municipalities.map(mapLookupCode).map(x => x.label),
+        clearButton: true,
+        hideValidation: true,
+      },
+    },
+  },
+  {
+    Header: 'Assessed Building(s)',
+    accessor: 'assessedBuilding',
+    Cell: !editable
+      ? MoneyCell
+      : (props: any) => <EditableMoneyCell {...props} suppressValidation />,
+    align: 'right',
     responsive: true,
     width: spacing.small,
-    minWidth: 65,
-    accessor: row => {
-      // Return the parcel ID associated with this row.
-      // For buildings we need the parent `parcelId` property
-      return row.id ?? -1;
+    minWidth: 100,
+    clickable: !editable,
+    sortable: true,
+    filterable: true,
+    filter: {
+      component: FastCurrencyInput,
+      props: {
+        injectFormik: true,
+        field: 'maxAssessedValue',
+        name: 'maxAssessedValue',
+        placeholder: 'Max Assessed value',
+        tooltip: 'Filter by max assessed value',
+        className: 'filter-input-control',
+      },
     },
-    Cell: ViewPropertyCell,
+  },
+  {
+    Header: 'Net Book Value',
+    accessor: 'netBook',
+    Cell: !editable
+      ? MoneyCell
+      : (props: any) => <EditableMoneyCell {...props} suppressValidation />,
+    align: 'right',
+    responsive: true,
+    width: spacing.small,
+    minWidth: 100,
+    clickable: !editable,
+    sortable: true,
+    filterable: true,
+    filter: {
+      component: FastCurrencyInput,
+      props: {
+        injectFormik: true,
+        field: 'maxNetBookValue',
+        name: 'maxNetBookValue',
+        placeholder: 'Max Net Book Value',
+        tooltip: 'Filter by max net book value',
+        className: 'filter-input-control',
+      },
+    },
+  },
+  {
+    Header: 'Market Value',
+    accessor: 'market',
+    Cell: !editable
+      ? MoneyCell
+      : (props: any) => <EditableMoneyCell {...props} suppressValidation />,
+    align: 'right',
+    responsive: true,
+    width: spacing.small,
+    minWidth: 100,
+    clickable: !editable,
+    sortable: true,
+    filterable: true,
+    filter: {
+      component: FastCurrencyInput,
+      props: {
+        injectFormik: true,
+        field: 'maxMarketValue',
+        name: 'maxMarketValue',
+        placeholder: 'Max Market Value',
+        tooltip: 'Filter by max market value',
+        className: 'filter-input-control',
+      },
+    },
+  },
+  {
+    Header: 'Lot Size (in\u00A0ha)',
+    accessor: 'landArea',
+    Cell: NumberCell,
+    align: 'right',
+    responsive: true,
+    width: spacing.small,
+    minWidth: 120,
+    clickable: true,
+    sortable: true,
+    filterable: true,
+    filter: {
+      component: Input,
+      props: {
+        field: 'maxLotSize',
+        name: 'maxLotSize',
+        placeholder: 'Filter by Lot Size',
+        className: 'filter-input-control',
+        type: 'number',
+      },
+    },
+  },
+  {
+    Header: 'Project #',
+    width: spacing.xsmall,
+    minWidth: 60,
+    accessor: 'projectNumbers',
+    clickable: false,
+    align: 'right',
+    Cell: getProjectLinkNoDrafts(),
   },
 ];

@@ -37,6 +37,12 @@ import { Button } from 'components/common/form/Button';
 import classNames from 'classnames';
 import useDeepCompareMemo from 'hooks/useDeepCompareMemo';
 import useDeepCompareCallback from 'hooks/useDeepCompareCallback';
+import styled from 'styled-components';
+
+const TableToolbarText = styled.p`
+  flex: auto;
+  text-align: left;
+`;
 
 // these provide a way to inject custom CSS into table headers and cells
 const headerProps = <T extends object>(
@@ -113,6 +119,7 @@ export interface TableProps<T extends object = {}> extends TableOptions<T> {
   detailsPanel?: DetailsOptions<T>;
   footer?: boolean;
   hideToolbar?: boolean;
+  tableToolbarText?: string;
   manualPagination?: boolean;
   // Limit where you would like an expansion button to appear based off this props criteria
   canRowExpand?: (val: any) => boolean;
@@ -589,6 +596,7 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): React
               }
             />
           )}
+          {props.tableToolbarText && <TableToolbarText>{props.tableToolbarText}</TableToolbarText>}
         </div>
       )}
     </>
