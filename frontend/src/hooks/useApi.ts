@@ -123,7 +123,7 @@ export const useApi = (): PimsAPI => {
         `${ENVIRONMENT.apiUrl}/tools/geocoder/addresses?address=${address}+BC`,
       );
 
-      if (data.length < 0) {
+      if (data.length === 0) {
         return null;
       }
       const highestMatch = _.orderBy(data, (r: IGeocoderResponse) => r.score, ['desc'])[0];

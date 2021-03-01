@@ -15,7 +15,6 @@
     position: absolute;
     display: none !important;
     z-index: 700;
-    display: flex;
     flex-direction: column;
     &.open {
       display: flex !important;

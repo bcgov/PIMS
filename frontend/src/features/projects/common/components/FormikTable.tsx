@@ -12,6 +12,10 @@ interface IFormikTableProps {
   name: string;
   /** whether or not this table should have editable columns */
   disabled?: boolean;
+  /** whether or not to provide this table with a row click function */
+  onRowClick?: (row: any) => void;
+  /** display a tooltip to inform the user what will happen on row click */
+  clickableTooltip?: string;
 }
 
 const FormikTable: React.FC<IFormikTableProps> = ({
@@ -19,6 +23,8 @@ const FormikTable: React.FC<IFormikTableProps> = ({
   field,
   name,
   disabled,
+  onRowClick,
+  clickableTooltip,
 }: IFormikTableProps) => {
   const { values } = useFormikContext();
   const data = getIn(values, field) ?? [];
@@ -32,7 +38,9 @@ const FormikTable: React.FC<IFormikTableProps> = ({
               name={name}
               columns={columns}
               data={data}
+              onRowClick={onRowClick ?? onRowClick}
               pageCount={1}
+              clickableTooltip={clickableTooltip ?? clickableTooltip}
               hideToolbar
               footer
             />
