@@ -8,7 +8,7 @@ exports[`InfoContent View InfoContent renders correctly 1`] = `
 
 .c2 {
   width: 110px;
-  max-width: 110px;
+  max-width: 135px;
   padding-right: 10px;
   padding-left: 0px;
 }

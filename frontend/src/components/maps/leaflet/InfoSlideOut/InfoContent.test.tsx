@@ -84,7 +84,7 @@ export const mockBuilding = {
     {
       date: new Date(),
       key: 'Assessed',
-      value: 10000,
+      value: 11000,
     },
   ],
   fiscals: [
@@ -131,7 +131,7 @@ export const mockParcel = {
   name: 'test name',
   description: 'test',
   assessedLand: 10000,
-  assessedBuilding: 10000,
+  assessedBuilding: 11000,
   evaluations: [
     {
       date: new Date(),

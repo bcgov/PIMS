@@ -141,6 +141,13 @@ export const columns = (
     minWidth: 60,
   },
   {
+    Header: 'PID',
+    accessor: 'pid',
+    width: spacing.medium,
+    responsive: true,
+    align: 'left',
+  },
+  {
     Header: 'Street Address',
     accessor: 'address',
     align: 'left',
