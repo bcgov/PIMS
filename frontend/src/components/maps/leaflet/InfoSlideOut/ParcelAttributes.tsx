@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { ListGroup } from 'react-bootstrap';
-import { IParcel } from 'actions/parcelsActions';
+import { IBuilding, IEvaluation, IParcel } from 'actions/parcelsActions';
 import { Label } from 'components/common/Label';
 import './InfoSlideOut.scss';
 import { formatMoney } from 'utils/numberFormatUtils';
@@ -31,6 +31,19 @@ export const ParcelAttributes: React.FC<IParcelAttributes> = ({ parcelInfo, canV
     formatAssessed = '';
   }
 
+  let improvements = 0;
+  if (parcelInfo?.assessedBuilding) {
+    improvements = parcelInfo?.assessedBuilding;
+  } else if (parcelInfo?.buildings?.length >= 1) {
+    parcelInfo.buildings.forEach((building: IBuilding) => {
+      if (building.evaluations?.length >= 1) {
+        improvements += +building.evaluations
+          .sort((a: IEvaluation, b: IEvaluation) => compareDate(a.date, b.date))
+          .reverse()[0].value;
+      }
+    });
+  }
+
   return (
     <>
       <ListGroup>
@@ -57,7 +70,13 @@ export const ParcelAttributes: React.FC<IParcelAttributes> = ({ parcelInfo, canV
           <ListGroup>
             <Label className="header">Valuation</Label>
             <OuterRow>
-              <ThreeColumnItem leftSideLabel={'Assessed value:'} rightSideItem={formatAssessed} />
+              <ThreeColumnItem leftSideLabel={'Assessed Land:'} rightSideItem={formatAssessed} />
+              {!!improvements && (
+                <ThreeColumnItem
+                  leftSideLabel={'Assessed Building(s):'}
+                  rightSideItem={formatMoney(improvements)}
+                />
+              )}
             </OuterRow>
           </ListGroup>
         </>

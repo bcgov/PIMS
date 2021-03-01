@@ -482,7 +482,7 @@ exports[`Property list view Matches snapshot 1`] = `
         <div
           class="tr"
           role="row"
-          style="display: flex; flex: 1 0 auto; min-width: 1175px;"
+          style="display: flex; flex: 1 0 auto; min-width: 1205px;"
         >
           <form
             action="#"
@@ -780,6 +780,22 @@ exports[`Property list view Matches snapshot 1`] = `
                 class="sortable-column"
               >
                 Type
+                <span
+                  style="flex: 1 1 auto;"
+                />
+              </div>
+            </div>
+            <div
+              class="th"
+              colspan="1"
+              role="columnheader"
+              style="box-sizing: border-box; flex: 30 0 auto; min-width: 30px; width: 7%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+              width="7%"
+            >
+              <div
+                class="sortable-column"
+              >
+                PID
                 <span
                   style="flex: 1 1 auto;"
                 />
