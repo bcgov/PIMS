@@ -5,7 +5,13 @@ import { ReviewWorkflowStatus } from '../../common/interfaces';
 import GenericModal from 'components/common/GenericModal';
 import { useState, useEffect } from 'react';
 import { DisplayError, Button } from 'components/common/form';
-import { useStepForm, cancellationWarning } from '../../common';
+import {
+  useStepForm,
+  cancellationWarning,
+  IProperty,
+  deletePotentialSubdivisionParcels,
+} from '../../common';
+import { PropertyTypes } from 'constants/index';
 
 const FlexRight = styled.div`
   width: 100%;
@@ -33,6 +39,9 @@ export const ApprovalActions = ({
   const { values, submitForm } = useFormikContext<any>();
   const [cancel, setCancel] = useState(false);
   const { noFetchingProjectRequests } = useStepForm();
+  const hasSubdivisions = (values.properties ?? []).some(
+    (property: IProperty) => property.propertyTypeId === PropertyTypes.SUBDIVISION,
+  );
   useEffect(() => {
     if (submitStatusCode !== undefined) {
       submitForm().then(() => setSubmitStatusCode(undefined));
@@ -88,7 +97,17 @@ export const ApprovalActions = ({
                 setCancel(false);
               }}
               title="Really Cancel Project?"
-              message={cancellationWarning}
+              message={
+                <>
+                  <p>{cancellationWarning}</p>
+                  {hasSubdivisions && (
+                    <>
+                      <hr className="mb-3"></hr>
+                      <p>{deletePotentialSubdivisionParcels}</p>
+                    </>
+                  )}
+                </>
+              }
             />
           )}
         </span>
