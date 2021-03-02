@@ -1,9 +1,9 @@
 import React from 'react';
 import { Container } from 'react-bootstrap';
-import { Formik, setIn } from 'formik';
+import { Formik, setIn, yupToFormErrors } from 'formik';
 import { Form } from 'components/common/form';
 import { IStepProps, IProjectTask, IProject, DisposeWorkflowStatus } from '../../common/interfaces';
-import { useStepper } from '..';
+import { useStepper, EnhancedReferralExemptionSchema } from '..';
 import _ from 'lodash';
 import { useStepForm, DocumentationForm, ProjectNotes, StepErrorSummary } from '../../common';
 
@@ -16,6 +16,14 @@ const handleValidate = (project: IProject) => {
     ) {
       errors = setIn(errors, `tasks.${index}.isCompleted`, 'Required');
     }
+    try {
+      EnhancedReferralExemptionSchema.validateSync(project, {
+        abortEarly: false,
+      });
+    } catch (schemaErrors) {
+      return _.merge(errors, yupToFormErrors(schemaErrors));
+    }
+
     return errors;
   }, {});
 };

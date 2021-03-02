@@ -32,6 +32,8 @@ interface IParentSelect {
   onChange?: (vals: any) => void;
   /** get the component to select the item with closest label match to the input provided */
   selectClosest?: boolean;
+  /** Transform value */
+  convertValue?: (value: any) => any;
 }
 
 /** Component used to group children items with their parent.
@@ -50,6 +52,7 @@ export const ParentSelect: React.FC<IParentSelect> = ({
   label,
   onChange,
   selectClosest,
+  convertValue = value => value,
 }) => {
   const { setFieldValue } = useFormikContext();
   /** used to trigger onBlur so menu disappears on custom header click */
@@ -65,7 +68,7 @@ export const ParentSelect: React.FC<IParentSelect> = ({
 
   /** function that gets called when menu header is clicked */
   const handleMenuHeaderClick = (vals: SelectOption) => {
-    setFieldValue(field, vals.value);
+    setFieldValue(field, convertValue(vals.value));
     /** trigger ref in Typeahead to call onBlur so menu closes */
     setClear(true);
     onChange?.([vals]);
@@ -76,7 +79,7 @@ export const ParentSelect: React.FC<IParentSelect> = ({
     setMultiSelections(vals);
     setFieldValue(
       field,
-      vals.map((x: any) => x.value),
+      vals.map((x: any) => convertValue(x.value)),
     );
     setClear(true);
     onChange?.(vals);
@@ -109,10 +112,10 @@ export const ParentSelect: React.FC<IParentSelect> = ({
             setMultiSelections(vals);
             setFieldValue(
               field,
-              vals.map((x: any) => x.value),
+              vals.map((x: any) => convertValue(x.value)),
             );
           } else {
-            setFieldValue(field, getIn(vals[0], 'value') ?? vals[0]);
+            setFieldValue(field, convertValue(getIn(vals[0], 'value')) ?? convertValue(vals[0]));
           }
           onChange?.(vals);
         }}

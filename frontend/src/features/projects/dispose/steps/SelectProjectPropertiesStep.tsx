@@ -25,6 +25,7 @@ const LinkButton = styled(Button)`
  * @param param0 {isReadOnly formikRef} formikRef allow remote formik access, isReadOnly toggle to prevent updates.
  */
 const SelectProjectPropertiesStep = ({ isReadOnly, formikRef }: IStepProps) => {
+  const { project } = useStepper();
   // Filtering and pagination state
   const [filter, setFilter] = useState<IFilterBarState>({
     searchBy: 'address',
@@ -32,7 +33,7 @@ const SelectProjectPropertiesStep = ({ isReadOnly, formikRef }: IStepProps) => {
     address: '',
     administrativeArea: '',
     projectNumber: '',
-    agencies: '',
+    agencies: project.agencyId,
     classificationId: Classifications.SurplusActive.toString(),
     minLotSize: '',
     maxLotSize: '',
@@ -48,7 +49,6 @@ const SelectProjectPropertiesStep = ({ isReadOnly, formikRef }: IStepProps) => {
   }, [filter]);
   const [pageIndex, setPageIndex] = useState(0);
   const { onSubmit, canUserEditForm } = useStepForm();
-  const { project } = useStepper();
 
   // Update internal state whenever the filter bar state changes
   const handleFilterChange = useCallback(
@@ -90,7 +90,7 @@ const SelectProjectPropertiesStep = ({ isReadOnly, formikRef }: IStepProps) => {
         <>
           <Container fluid className="filter-container border-bottom">
             <Container className="px-0">
-              <FilterBar onChange={handleFilterChange} />
+              <FilterBar defaultFilter={filter} onChange={handleFilterChange} />
             </Container>
           </Container>
           <div className="small-filter">

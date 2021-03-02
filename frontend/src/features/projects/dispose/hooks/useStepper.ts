@@ -8,6 +8,7 @@ import { useHistory } from 'react-router-dom';
 import { IGenericNetworkAction } from 'actions/genericActions';
 import { ProjectActions } from 'constants/actionTypes';
 import { ReviewWorkflowStatus } from '../../common/interfaces';
+import { useKeycloakWrapper } from 'hooks/useKeycloakWrapper';
 
 /**
  * Get the status after the current status in this workflow. Return undefined if there is no next step.
@@ -102,11 +103,15 @@ export const getLastCompletedStatus = (
  */
 const useStepper = () => {
   const history = useHistory();
+  const keycloak = useKeycloakWrapper();
   const { currentStatus, setCurrentStatus, disposeWorkflowStatuses } = useContext(StepperContext);
-  const project: any =
-    useSelector<RootState, IProjectWrapper>(state => state.project).project || initialValues;
-  const workflowTasks: IProjectTask[] =
-    useSelector<RootState, IProjectTask[]>(state => state.tasks) || initialValues;
+  const project: any = useSelector<RootState, IProjectWrapper>(state => state.project).project || {
+    ...initialValues,
+    agencyId: keycloak.agencyId!,
+  };
+  const workflowTasks: IProjectTask[] = useSelector<RootState, IProjectTask[]>(
+    state => state.tasks,
+  ) || { ...initialValues, agencyId: keycloak.agencyId! };
   const getProjectRequest = useSelector<RootState, IGenericNetworkAction>(
     state => (state.network as any)[ProjectActions.GET_PROJECT] as any,
   );
