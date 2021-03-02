@@ -489,7 +489,7 @@ exports[`Property list view Matches snapshot 1`] = `
         <div
           class="tr"
           role="row"
-          style="display: flex; flex: 1 0 auto; min-width: 1210px;"
+          style="display: flex; flex: 1 0 auto; min-width: 1240px;"
         >
           <form
             action="#"
