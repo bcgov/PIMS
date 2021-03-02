@@ -290,43 +290,50 @@ namespace Pims.Dal.Helpers.Extensions
         }
 
         /// <summary>
-        /// Get the latest workflow associated to this property, using the workflow sort order.
+        /// Get the latest project associated to this property, using the workflow sort order.
+        /// </summary>
+        /// <param name="property"></param>
+        /// <returns>The workflow code of the latest workflow associated to this property</returns>
+        public static Entity.Project GetLatestProject(this Entity.Property property)
+        {
+            Entity.Project latestProject = null;
+            if (property is Entity.Parcel parcel && parcel.Projects.Select(pp => pp.Project).Any())
+            {
+                latestProject = parcel.Projects.Select(pp => pp.Project).
+                    Aggregate((Entity.Project projectWithLatestWorkflow, Entity.Project current) => current.Workflow?.SortOrder > projectWithLatestWorkflow?.Workflow?.SortOrder && current?.Status?.IsTerminal == false ? current : projectWithLatestWorkflow);
+            }
+            else if (property is Entity.Building building && building.Projects.Select(pp => pp.Project).Any())
+            {
+                latestProject = building.Projects.Select(pp => pp.Project).
+                    Aggregate((Entity.Project projectWithLatestWorkflow, Entity.Project current) => current?.Workflow?.SortOrder > projectWithLatestWorkflow?.Workflow?.SortOrder && current?.Status?.IsTerminal == false ? current : projectWithLatestWorkflow);
+            }
+            if (latestProject?.Status?.IsTerminal == true)
+            {
+                return null;
+            }
+            return latestProject;
+        }
+
+        /// <summary>
+        /// Get the latest non-terminal workflow associated to this property, using the workflow sort order.
         /// </summary>
         /// <param name="property"></param>
         /// <returns>The workflow code of the latest workflow associated to this property</returns>
         public static String GetLatestWorkflowCode(this Entity.Property property)
         {
-            if (property is Entity.Parcel parcel && parcel.Projects.Select(pp => pp.Project).Any())
-            {
-                return parcel.Projects.Select(pp => pp.Project).
-                    Aggregate((Entity.Project projectWithLatestWorkflow, Entity.Project current) => current.Workflow.SortOrder > projectWithLatestWorkflow.Workflow.SortOrder ? current : projectWithLatestWorkflow).Workflow.Code;
-            }
-            else if (property is Entity.Building building && building.Projects.Select(pp => pp.Project).Any())
-            {
-                return building.Projects.Select(pp => pp.Project).
-                    Aggregate((Entity.Project projectWithLatestWorkflow, Entity.Project current) => current.Workflow.SortOrder > projectWithLatestWorkflow.Workflow.SortOrder ? current : projectWithLatestWorkflow).Workflow.Code;
-            }
-            return null;
+            Entity.Project latestProject = GetLatestProject(property);
+            return latestProject?.Workflow?.Code;
         }
 
         /// <summary>
-        /// Get the latest project status associated to this property, using the workflow sort order.
+        /// Get the latest non-terminal project status associated to this property, using the workflow sort order.
         /// </summary>
         /// <param name="property"></param>
         /// <returns>The status of the latest project associated to this property</returns>
         public static String GetLatestProjectStatus(this Entity.Property property)
         {
-            if (property is Entity.Parcel parcel && parcel.Projects.Select(pp => pp.Project).Any())
-            {
-                return parcel.Projects.Select(pp => pp.Project).
-                    Aggregate((Entity.Project projectWithLatestWorkflow, Entity.Project current) => current.Workflow.SortOrder > projectWithLatestWorkflow.Workflow.SortOrder ? current : projectWithLatestWorkflow).Status.Name;
-            }
-            else if (property is Entity.Building building && building.Projects.Select(pp => pp.Project).Any())
-            {
-                return building.Projects.Select(pp => pp.Project).
-                    Aggregate((Entity.Project projectWithLatestWorkflow, Entity.Project current) => current.Workflow.SortOrder > projectWithLatestWorkflow.Workflow.SortOrder ? current : projectWithLatestWorkflow).Status.Name;
-            }
-            return null;
+            Entity.Project latestProject = GetLatestProject(property);
+            return latestProject?.Status?.Name;
         }
 
         /// <summary>

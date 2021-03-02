@@ -147,9 +147,9 @@ namespace Pims.Dal.Services
             var projectNumbers = properties.SelectMany(p => JsonSerializer.Deserialize<IEnumerable<string>>(p.ProjectNumbers ?? "[]")).Distinct().ToArray();
             var statuses = from p in this.Context.ProjectProperties
                            where projectNumbers.Contains(p.Project.ProjectNumber)
-                           select new { p.Project.ProjectNumber, p.Project.Status, WorkflowCode = p.Project.Workflow.Code };
+                           select new { p.Project.ProjectNumber, p.Project.Status, WorkflowCode = p.Project.Workflow.Code, p.Project.Status.IsTerminal };
 
-            foreach (var status in statuses)
+            foreach (var status in statuses.Where(s => !s.IsTerminal))
             {
                 foreach (var property in properties.Where(property => property?.ProjectNumbers?.Contains(status.ProjectNumber) == true))
                 {
