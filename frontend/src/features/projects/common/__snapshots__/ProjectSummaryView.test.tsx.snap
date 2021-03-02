@@ -461,348 +461,336 @@ exports[`Review Summary View renders approved correctly 1`] = `
                   }
                 }
               >
-                <form
-                  action="#"
-                  onReset={[Function]}
-                  onSubmit={[Function]}
+                <div
+                  className="th"
+                  colSpan={1}
+                  role="columnheader"
                   style={
                     Object {
+                      "alignItems": "center",
+                      "boxSizing": "border-box",
                       "display": "flex",
-                      "width": "100%",
+                      "flex": "100 0 auto",
+                      "justifyContent": "flex-start",
+                      "minWidth": "30px",
+                      "textAlign": "left",
+                      "width": "100px",
                     }
                   }
                 >
                   <div
-                    className="th"
-                    colSpan={1}
-                    role="columnheader"
-                    style={
-                      Object {
-                        "alignItems": "center",
-                        "boxSizing": "border-box",
-                        "display": "flex",
-                        "flex": "100 0 auto",
-                        "justifyContent": "flex-start",
-                        "minWidth": "30px",
-                        "textAlign": "left",
-                        "width": "100px",
-                      }
-                    }
+                    className="sortable-column"
                   >
-                    <div
-                      className="sortable-column"
-                    >
-                      Agency
-                      <span
-                        style={
-                          Object {
-                            "flex": "1 1 auto",
-                          }
+                    Agency
+                    <span
+                      style={
+                        Object {
+                          "flex": "1 1 auto",
                         }
-                      />
-                    </div>
+                      }
+                    />
                   </div>
+                </div>
+                <div
+                  className="th"
+                  colSpan={1}
+                  role="columnheader"
+                  style={
+                    Object {
+                      "alignItems": "center",
+                      "boxSizing": "border-box",
+                      "display": "flex",
+                      "flex": "100 0 auto",
+                      "justifyContent": "flex-start",
+                      "minWidth": "30px",
+                      "textAlign": "left",
+                      "width": "100px",
+                    }
+                  }
+                >
                   <div
-                    className="th"
-                    colSpan={1}
-                    role="columnheader"
-                    style={
-                      Object {
-                        "alignItems": "center",
-                        "boxSizing": "border-box",
-                        "display": "flex",
-                        "flex": "100 0 auto",
-                        "justifyContent": "flex-start",
-                        "minWidth": "30px",
-                        "textAlign": "left",
-                        "width": "100px",
-                      }
-                    }
+                    className="sortable-column"
                   >
-                    <div
-                      className="sortable-column"
-                    >
-                      Name
-                      <span
-                        style={
-                          Object {
-                            "flex": "1 1 auto",
-                          }
+                    Name
+                    <span
+                      style={
+                        Object {
+                          "flex": "1 1 auto",
                         }
-                      />
-                    </div>
+                      }
+                    />
                   </div>
+                </div>
+                <div
+                  className="th"
+                  colSpan={1}
+                  role="columnheader"
+                  style={
+                    Object {
+                      "alignItems": "center",
+                      "boxSizing": "border-box",
+                      "display": "flex",
+                      "flex": "100 0 auto",
+                      "justifyContent": "flex-start",
+                      "minWidth": "30px",
+                      "textAlign": "left",
+                      "width": "100px",
+                    }
+                  }
+                >
                   <div
-                    className="th"
-                    colSpan={1}
-                    role="columnheader"
-                    style={
-                      Object {
-                        "alignItems": "center",
-                        "boxSizing": "border-box",
-                        "display": "flex",
-                        "flex": "100 0 auto",
-                        "justifyContent": "flex-start",
-                        "minWidth": "30px",
-                        "textAlign": "left",
-                        "width": "100px",
-                      }
-                    }
+                    className="sortable-column"
                   >
-                    <div
-                      className="sortable-column"
-                    >
-                      Civic Address
-                      <span
-                        style={
-                          Object {
-                            "flex": "1 1 auto",
-                          }
+                    Civic Address
+                    <span
+                      style={
+                        Object {
+                          "flex": "1 1 auto",
                         }
-                      />
-                    </div>
+                      }
+                    />
                   </div>
+                </div>
+                <div
+                  className="th"
+                  colSpan={1}
+                  role="columnheader"
+                  style={
+                    Object {
+                      "alignItems": "center",
+                      "boxSizing": "border-box",
+                      "display": "flex",
+                      "flex": "140 0 auto",
+                      "justifyContent": "flex-start",
+                      "minWidth": "30px",
+                      "textAlign": "left",
+                      "width": "140px",
+                    }
+                  }
+                >
                   <div
-                    className="th"
-                    colSpan={1}
-                    role="columnheader"
-                    style={
-                      Object {
-                        "alignItems": "center",
-                        "boxSizing": "border-box",
-                        "display": "flex",
-                        "flex": "140 0 auto",
-                        "justifyContent": "flex-start",
-                        "minWidth": "30px",
-                        "textAlign": "left",
-                        "width": "140px",
-                      }
-                    }
+                    className="sortable-column"
                   >
-                    <div
-                      className="sortable-column"
-                    >
-                      Classification
-                      <span
-                        style={
-                          Object {
-                            "flex": "1 1 auto",
-                          }
+                    Classification
+                    <span
+                      style={
+                        Object {
+                          "flex": "1 1 auto",
                         }
-                      />
-                    </div>
+                      }
+                    />
                   </div>
+                </div>
+                <div
+                  className="th"
+                  colSpan={1}
+                  role="columnheader"
+                  style={
+                    Object {
+                      "alignItems": "center",
+                      "boxSizing": "border-box",
+                      "display": "flex",
+                      "flex": "100 0 auto",
+                      "justifyContent": "flex-start",
+                      "minWidth": "30px",
+                      "textAlign": "left",
+                      "width": "100px",
+                    }
+                  }
+                >
                   <div
-                    className="th"
-                    colSpan={1}
-                    role="columnheader"
-                    style={
-                      Object {
-                        "alignItems": "center",
-                        "boxSizing": "border-box",
-                        "display": "flex",
-                        "flex": "100 0 auto",
-                        "justifyContent": "flex-start",
-                        "minWidth": "30px",
-                        "textAlign": "left",
-                        "width": "100px",
-                      }
-                    }
+                    className="sortable-column"
                   >
-                    <div
-                      className="sortable-column"
-                    >
-                      Current Zoning Code
-                      <span
-                        style={
-                          Object {
-                            "flex": "1 1 auto",
-                          }
+                    Current Zoning Code
+                    <span
+                      style={
+                        Object {
+                          "flex": "1 1 auto",
                         }
-                      />
-                    </div>
+                      }
+                    />
                   </div>
+                </div>
+                <div
+                  className="th"
+                  colSpan={1}
+                  role="columnheader"
+                  style={
+                    Object {
+                      "alignItems": "center",
+                      "boxSizing": "border-box",
+                      "display": "flex",
+                      "flex": "100 0 auto",
+                      "justifyContent": "flex-start",
+                      "minWidth": "30px",
+                      "textAlign": "left",
+                      "width": "100px",
+                    }
+                  }
+                >
                   <div
-                    className="th"
-                    colSpan={1}
-                    role="columnheader"
-                    style={
-                      Object {
-                        "alignItems": "center",
-                        "boxSizing": "border-box",
-                        "display": "flex",
-                        "flex": "100 0 auto",
-                        "justifyContent": "flex-start",
-                        "minWidth": "30px",
-                        "textAlign": "left",
-                        "width": "100px",
-                      }
-                    }
+                    className="sortable-column"
                   >
-                    <div
-                      className="sortable-column"
-                    >
-                      Other Projects
-                      <span
-                        style={
-                          Object {
-                            "flex": "1 1 auto",
-                          }
+                    Other Projects
+                    <span
+                      style={
+                        Object {
+                          "flex": "1 1 auto",
                         }
-                      />
-                    </div>
+                      }
+                    />
                   </div>
+                </div>
+                <div
+                  className="th"
+                  colSpan={1}
+                  role="columnheader"
+                  style={
+                    Object {
+                      "alignItems": "center",
+                      "boxSizing": "border-box",
+                      "display": "flex",
+                      "flex": "145 0 auto",
+                      "justifyContent": "flex-start",
+                      "minWidth": "145px",
+                      "textAlign": "left",
+                      "width": "145px",
+                    }
+                  }
+                >
                   <div
-                    className="th"
-                    colSpan={1}
-                    role="columnheader"
-                    style={
-                      Object {
-                        "alignItems": "center",
-                        "boxSizing": "border-box",
-                        "display": "flex",
-                        "flex": "145 0 auto",
-                        "justifyContent": "flex-start",
-                        "minWidth": "145px",
-                        "textAlign": "left",
-                        "width": "145px",
-                      }
-                    }
+                    className="sortable-column"
                   >
-                    <div
-                      className="sortable-column"
-                    >
-                      Net Book Value
-                      <span
-                        style={
-                          Object {
-                            "flex": "1 1 auto",
-                          }
+                    Net Book Value
+                    <span
+                      style={
+                        Object {
+                          "flex": "1 1 auto",
                         }
-                      />
-                    </div>
+                      }
+                    />
                   </div>
+                </div>
+                <div
+                  className="th"
+                  colSpan={1}
+                  role="columnheader"
+                  style={
+                    Object {
+                      "alignItems": "center",
+                      "boxSizing": "border-box",
+                      "display": "flex",
+                      "flex": "145 0 auto",
+                      "justifyContent": "flex-start",
+                      "minWidth": "145px",
+                      "textAlign": "left",
+                      "width": "145px",
+                    }
+                  }
+                >
                   <div
-                    className="th"
-                    colSpan={1}
-                    role="columnheader"
-                    style={
-                      Object {
-                        "alignItems": "center",
-                        "boxSizing": "border-box",
-                        "display": "flex",
-                        "flex": "145 0 auto",
-                        "justifyContent": "flex-start",
-                        "minWidth": "145px",
-                        "textAlign": "left",
-                        "width": "145px",
-                      }
-                    }
+                    className="sortable-column"
                   >
-                    <div
-                      className="sortable-column"
-                    >
-                      Market Value
-                      <span
-                        style={
-                          Object {
-                            "flex": "1 1 auto",
-                          }
+                    Market Value
+                    <span
+                      style={
+                        Object {
+                          "flex": "1 1 auto",
                         }
-                      />
-                    </div>
+                      }
+                    />
                   </div>
+                </div>
+                <div
+                  className="th"
+                  colSpan={1}
+                  role="columnheader"
+                  style={
+                    Object {
+                      "alignItems": "center",
+                      "boxSizing": "border-box",
+                      "display": "flex",
+                      "flex": "145 0 auto",
+                      "justifyContent": "flex-start",
+                      "minWidth": "145px",
+                      "textAlign": "left",
+                      "width": "145px",
+                    }
+                  }
+                >
                   <div
-                    className="th"
-                    colSpan={1}
-                    role="columnheader"
-                    style={
-                      Object {
-                        "alignItems": "center",
-                        "boxSizing": "border-box",
-                        "display": "flex",
-                        "flex": "145 0 auto",
-                        "justifyContent": "flex-start",
-                        "minWidth": "145px",
-                        "textAlign": "left",
-                        "width": "145px",
-                      }
-                    }
+                    className="sortable-column"
                   >
-                    <div
-                      className="sortable-column"
-                    >
-                      Assessed Land
-                      <span
-                        style={
-                          Object {
-                            "flex": "1 1 auto",
-                          }
+                    Assessed Land
+                    <span
+                      style={
+                        Object {
+                          "flex": "1 1 auto",
                         }
-                      />
-                    </div>
+                      }
+                    />
                   </div>
+                </div>
+                <div
+                  className="th"
+                  colSpan={1}
+                  role="columnheader"
+                  style={
+                    Object {
+                      "alignItems": "center",
+                      "boxSizing": "border-box",
+                      "display": "flex",
+                      "flex": "145 0 auto",
+                      "justifyContent": "flex-start",
+                      "minWidth": "145px",
+                      "textAlign": "left",
+                      "width": "145px",
+                    }
+                  }
+                >
                   <div
-                    className="th"
-                    colSpan={1}
-                    role="columnheader"
-                    style={
-                      Object {
-                        "alignItems": "center",
-                        "boxSizing": "border-box",
-                        "display": "flex",
-                        "flex": "145 0 auto",
-                        "justifyContent": "flex-start",
-                        "minWidth": "145px",
-                        "textAlign": "left",
-                        "width": "145px",
-                      }
-                    }
+                    className="sortable-column"
                   >
-                    <div
-                      className="sortable-column"
-                    >
-                      Assessed Building
-                      <span
-                        style={
-                          Object {
-                            "flex": "1 1 auto",
-                          }
+                    Assessed Building
+                    <span
+                      style={
+                        Object {
+                          "flex": "1 1 auto",
                         }
-                      />
-                    </div>
+                      }
+                    />
                   </div>
+                </div>
+                <div
+                  className="th"
+                  colSpan={1}
+                  role="columnheader"
+                  style={
+                    Object {
+                      "alignItems": "center",
+                      "boxSizing": "border-box",
+                      "display": "flex",
+                      "flex": "60 0 auto",
+                      "justifyContent": "flex-start",
+                      "minWidth": "30px",
+                      "textAlign": "left",
+                      "width": "60px",
+                    }
+                  }
+                >
                   <div
-                    className="th"
-                    colSpan={1}
-                    role="columnheader"
-                    style={
-                      Object {
-                        "alignItems": "center",
-                        "boxSizing": "border-box",
-                        "display": "flex",
-                        "flex": "60 0 auto",
-                        "justifyContent": "flex-start",
-                        "minWidth": "30px",
-                        "textAlign": "left",
-                        "width": "60px",
-                      }
-                    }
+                    className="sortable-column"
                   >
-                    <div
-                      className="sortable-column"
-                    >
-                      Type
-                      <span
-                        style={
-                          Object {
-                            "flex": "1 1 auto",
-                          }
+                    Type
+                    <span
+                      style={
+                        Object {
+                          "flex": "1 1 auto",
                         }
-                      />
-                    </div>
+                      }
+                    />
                   </div>
-                </form>
+                </div>
               </div>
             </div>
             <div
@@ -1488,348 +1476,336 @@ exports[`Review Summary View renders denied correctly 1`] = `
                   }
                 }
               >
-                <form
-                  action="#"
-                  onReset={[Function]}
-                  onSubmit={[Function]}
+                <div
+                  className="th"
+                  colSpan={1}
+                  role="columnheader"
                   style={
                     Object {
+                      "alignItems": "center",
+                      "boxSizing": "border-box",
                       "display": "flex",
-                      "width": "100%",
+                      "flex": "100 0 auto",
+                      "justifyContent": "flex-start",
+                      "minWidth": "30px",
+                      "textAlign": "left",
+                      "width": "100px",
                     }
                   }
                 >
                   <div
-                    className="th"
-                    colSpan={1}
-                    role="columnheader"
-                    style={
-                      Object {
-                        "alignItems": "center",
-                        "boxSizing": "border-box",
-                        "display": "flex",
-                        "flex": "100 0 auto",
-                        "justifyContent": "flex-start",
-                        "minWidth": "30px",
-                        "textAlign": "left",
-                        "width": "100px",
-                      }
-                    }
+                    className="sortable-column"
                   >
-                    <div
-                      className="sortable-column"
-                    >
-                      Agency
-                      <span
-                        style={
-                          Object {
-                            "flex": "1 1 auto",
-                          }
+                    Agency
+                    <span
+                      style={
+                        Object {
+                          "flex": "1 1 auto",
                         }
-                      />
-                    </div>
+                      }
+                    />
                   </div>
+                </div>
+                <div
+                  className="th"
+                  colSpan={1}
+                  role="columnheader"
+                  style={
+                    Object {
+                      "alignItems": "center",
+                      "boxSizing": "border-box",
+                      "display": "flex",
+                      "flex": "100 0 auto",
+                      "justifyContent": "flex-start",
+                      "minWidth": "30px",
+                      "textAlign": "left",
+                      "width": "100px",
+                    }
+                  }
+                >
                   <div
-                    className="th"
-                    colSpan={1}
-                    role="columnheader"
-                    style={
-                      Object {
-                        "alignItems": "center",
-                        "boxSizing": "border-box",
-                        "display": "flex",
-                        "flex": "100 0 auto",
-                        "justifyContent": "flex-start",
-                        "minWidth": "30px",
-                        "textAlign": "left",
-                        "width": "100px",
-                      }
-                    }
+                    className="sortable-column"
                   >
-                    <div
-                      className="sortable-column"
-                    >
-                      Name
-                      <span
-                        style={
-                          Object {
-                            "flex": "1 1 auto",
-                          }
+                    Name
+                    <span
+                      style={
+                        Object {
+                          "flex": "1 1 auto",
                         }
-                      />
-                    </div>
+                      }
+                    />
                   </div>
+                </div>
+                <div
+                  className="th"
+                  colSpan={1}
+                  role="columnheader"
+                  style={
+                    Object {
+                      "alignItems": "center",
+                      "boxSizing": "border-box",
+                      "display": "flex",
+                      "flex": "100 0 auto",
+                      "justifyContent": "flex-start",
+                      "minWidth": "30px",
+                      "textAlign": "left",
+                      "width": "100px",
+                    }
+                  }
+                >
                   <div
-                    className="th"
-                    colSpan={1}
-                    role="columnheader"
-                    style={
-                      Object {
-                        "alignItems": "center",
-                        "boxSizing": "border-box",
-                        "display": "flex",
-                        "flex": "100 0 auto",
-                        "justifyContent": "flex-start",
-                        "minWidth": "30px",
-                        "textAlign": "left",
-                        "width": "100px",
-                      }
-                    }
+                    className="sortable-column"
                   >
-                    <div
-                      className="sortable-column"
-                    >
-                      Civic Address
-                      <span
-                        style={
-                          Object {
-                            "flex": "1 1 auto",
-                          }
+                    Civic Address
+                    <span
+                      style={
+                        Object {
+                          "flex": "1 1 auto",
                         }
-                      />
-                    </div>
+                      }
+                    />
                   </div>
+                </div>
+                <div
+                  className="th"
+                  colSpan={1}
+                  role="columnheader"
+                  style={
+                    Object {
+                      "alignItems": "center",
+                      "boxSizing": "border-box",
+                      "display": "flex",
+                      "flex": "140 0 auto",
+                      "justifyContent": "flex-start",
+                      "minWidth": "30px",
+                      "textAlign": "left",
+                      "width": "140px",
+                    }
+                  }
+                >
                   <div
-                    className="th"
-                    colSpan={1}
-                    role="columnheader"
-                    style={
-                      Object {
-                        "alignItems": "center",
-                        "boxSizing": "border-box",
-                        "display": "flex",
-                        "flex": "140 0 auto",
-                        "justifyContent": "flex-start",
-                        "minWidth": "30px",
-                        "textAlign": "left",
-                        "width": "140px",
-                      }
-                    }
+                    className="sortable-column"
                   >
-                    <div
-                      className="sortable-column"
-                    >
-                      Classification
-                      <span
-                        style={
-                          Object {
-                            "flex": "1 1 auto",
-                          }
+                    Classification
+                    <span
+                      style={
+                        Object {
+                          "flex": "1 1 auto",
                         }
-                      />
-                    </div>
+                      }
+                    />
                   </div>
+                </div>
+                <div
+                  className="th"
+                  colSpan={1}
+                  role="columnheader"
+                  style={
+                    Object {
+                      "alignItems": "center",
+                      "boxSizing": "border-box",
+                      "display": "flex",
+                      "flex": "100 0 auto",
+                      "justifyContent": "flex-start",
+                      "minWidth": "30px",
+                      "textAlign": "left",
+                      "width": "100px",
+                    }
+                  }
+                >
                   <div
-                    className="th"
-                    colSpan={1}
-                    role="columnheader"
-                    style={
-                      Object {
-                        "alignItems": "center",
-                        "boxSizing": "border-box",
-                        "display": "flex",
-                        "flex": "100 0 auto",
-                        "justifyContent": "flex-start",
-                        "minWidth": "30px",
-                        "textAlign": "left",
-                        "width": "100px",
-                      }
-                    }
+                    className="sortable-column"
                   >
-                    <div
-                      className="sortable-column"
-                    >
-                      Current Zoning Code
-                      <span
-                        style={
-                          Object {
-                            "flex": "1 1 auto",
-                          }
+                    Current Zoning Code
+                    <span
+                      style={
+                        Object {
+                          "flex": "1 1 auto",
                         }
-                      />
-                    </div>
+                      }
+                    />
                   </div>
+                </div>
+                <div
+                  className="th"
+                  colSpan={1}
+                  role="columnheader"
+                  style={
+                    Object {
+                      "alignItems": "center",
+                      "boxSizing": "border-box",
+                      "display": "flex",
+                      "flex": "100 0 auto",
+                      "justifyContent": "flex-start",
+                      "minWidth": "30px",
+                      "textAlign": "left",
+                      "width": "100px",
+                    }
+                  }
+                >
                   <div
-                    className="th"
-                    colSpan={1}
-                    role="columnheader"
-                    style={
-                      Object {
-                        "alignItems": "center",
-                        "boxSizing": "border-box",
-                        "display": "flex",
-                        "flex": "100 0 auto",
-                        "justifyContent": "flex-start",
-                        "minWidth": "30px",
-                        "textAlign": "left",
-                        "width": "100px",
-                      }
-                    }
+                    className="sortable-column"
                   >
-                    <div
-                      className="sortable-column"
-                    >
-                      Other Projects
-                      <span
-                        style={
-                          Object {
-                            "flex": "1 1 auto",
-                          }
+                    Other Projects
+                    <span
+                      style={
+                        Object {
+                          "flex": "1 1 auto",
                         }
-                      />
-                    </div>
+                      }
+                    />
                   </div>
+                </div>
+                <div
+                  className="th"
+                  colSpan={1}
+                  role="columnheader"
+                  style={
+                    Object {
+                      "alignItems": "center",
+                      "boxSizing": "border-box",
+                      "display": "flex",
+                      "flex": "145 0 auto",
+                      "justifyContent": "flex-start",
+                      "minWidth": "145px",
+                      "textAlign": "left",
+                      "width": "145px",
+                    }
+                  }
+                >
                   <div
-                    className="th"
-                    colSpan={1}
-                    role="columnheader"
-                    style={
-                      Object {
-                        "alignItems": "center",
-                        "boxSizing": "border-box",
-                        "display": "flex",
-                        "flex": "145 0 auto",
-                        "justifyContent": "flex-start",
-                        "minWidth": "145px",
-                        "textAlign": "left",
-                        "width": "145px",
-                      }
-                    }
+                    className="sortable-column"
                   >
-                    <div
-                      className="sortable-column"
-                    >
-                      Net Book Value
-                      <span
-                        style={
-                          Object {
-                            "flex": "1 1 auto",
-                          }
+                    Net Book Value
+                    <span
+                      style={
+                        Object {
+                          "flex": "1 1 auto",
                         }
-                      />
-                    </div>
+                      }
+                    />
                   </div>
+                </div>
+                <div
+                  className="th"
+                  colSpan={1}
+                  role="columnheader"
+                  style={
+                    Object {
+                      "alignItems": "center",
+                      "boxSizing": "border-box",
+                      "display": "flex",
+                      "flex": "145 0 auto",
+                      "justifyContent": "flex-start",
+                      "minWidth": "145px",
+                      "textAlign": "left",
+                      "width": "145px",
+                    }
+                  }
+                >
                   <div
-                    className="th"
-                    colSpan={1}
-                    role="columnheader"
-                    style={
-                      Object {
-                        "alignItems": "center",
-                        "boxSizing": "border-box",
-                        "display": "flex",
-                        "flex": "145 0 auto",
-                        "justifyContent": "flex-start",
-                        "minWidth": "145px",
-                        "textAlign": "left",
-                        "width": "145px",
-                      }
-                    }
+                    className="sortable-column"
                   >
-                    <div
-                      className="sortable-column"
-                    >
-                      Market Value
-                      <span
-                        style={
-                          Object {
-                            "flex": "1 1 auto",
-                          }
+                    Market Value
+                    <span
+                      style={
+                        Object {
+                          "flex": "1 1 auto",
                         }
-                      />
-                    </div>
+                      }
+                    />
                   </div>
+                </div>
+                <div
+                  className="th"
+                  colSpan={1}
+                  role="columnheader"
+                  style={
+                    Object {
+                      "alignItems": "center",
+                      "boxSizing": "border-box",
+                      "display": "flex",
+                      "flex": "145 0 auto",
+                      "justifyContent": "flex-start",
+                      "minWidth": "145px",
+                      "textAlign": "left",
+                      "width": "145px",
+                    }
+                  }
+                >
                   <div
-                    className="th"
-                    colSpan={1}
-                    role="columnheader"
-                    style={
-                      Object {
-                        "alignItems": "center",
-                        "boxSizing": "border-box",
-                        "display": "flex",
-                        "flex": "145 0 auto",
-                        "justifyContent": "flex-start",
-                        "minWidth": "145px",
-                        "textAlign": "left",
-                        "width": "145px",
-                      }
-                    }
+                    className="sortable-column"
                   >
-                    <div
-                      className="sortable-column"
-                    >
-                      Assessed Land
-                      <span
-                        style={
-                          Object {
-                            "flex": "1 1 auto",
-                          }
+                    Assessed Land
+                    <span
+                      style={
+                        Object {
+                          "flex": "1 1 auto",
                         }
-                      />
-                    </div>
+                      }
+                    />
                   </div>
+                </div>
+                <div
+                  className="th"
+                  colSpan={1}
+                  role="columnheader"
+                  style={
+                    Object {
+                      "alignItems": "center",
+                      "boxSizing": "border-box",
+                      "display": "flex",
+                      "flex": "145 0 auto",
+                      "justifyContent": "flex-start",
+                      "minWidth": "145px",
+                      "textAlign": "left",
+                      "width": "145px",
+                    }
+                  }
+                >
                   <div
-                    className="th"
-                    colSpan={1}
-                    role="columnheader"
-                    style={
-                      Object {
-                        "alignItems": "center",
-                        "boxSizing": "border-box",
-                        "display": "flex",
-                        "flex": "145 0 auto",
-                        "justifyContent": "flex-start",
-                        "minWidth": "145px",
-                        "textAlign": "left",
-                        "width": "145px",
-                      }
-                    }
+                    className="sortable-column"
                   >
-                    <div
-                      className="sortable-column"
-                    >
-                      Assessed Building
-                      <span
-                        style={
-                          Object {
-                            "flex": "1 1 auto",
-                          }
+                    Assessed Building
+                    <span
+                      style={
+                        Object {
+                          "flex": "1 1 auto",
                         }
-                      />
-                    </div>
+                      }
+                    />
                   </div>
+                </div>
+                <div
+                  className="th"
+                  colSpan={1}
+                  role="columnheader"
+                  style={
+                    Object {
+                      "alignItems": "center",
+                      "boxSizing": "border-box",
+                      "display": "flex",
+                      "flex": "60 0 auto",
+                      "justifyContent": "flex-start",
+                      "minWidth": "30px",
+                      "textAlign": "left",
+                      "width": "60px",
+                    }
+                  }
+                >
                   <div
-                    className="th"
-                    colSpan={1}
-                    role="columnheader"
-                    style={
-                      Object {
-                        "alignItems": "center",
-                        "boxSizing": "border-box",
-                        "display": "flex",
-                        "flex": "60 0 auto",
-                        "justifyContent": "flex-start",
-                        "minWidth": "30px",
-                        "textAlign": "left",
-                        "width": "60px",
-                      }
-                    }
+                    className="sortable-column"
                   >
-                    <div
-                      className="sortable-column"
-                    >
-                      Type
-                      <span
-                        style={
-                          Object {
-                            "flex": "1 1 auto",
-                          }
+                    Type
+                    <span
+                      style={
+                        Object {
+                          "flex": "1 1 auto",
                         }
-                      />
-                    </div>
+                      }
+                    />
                   </div>
-                </form>
+                </div>
               </div>
             </div>
             <div
@@ -2515,348 +2491,336 @@ exports[`Review Summary View renders submitted correctly 1`] = `
                   }
                 }
               >
-                <form
-                  action="#"
-                  onReset={[Function]}
-                  onSubmit={[Function]}
+                <div
+                  className="th"
+                  colSpan={1}
+                  role="columnheader"
                   style={
                     Object {
+                      "alignItems": "center",
+                      "boxSizing": "border-box",
                       "display": "flex",
-                      "width": "100%",
+                      "flex": "100 0 auto",
+                      "justifyContent": "flex-start",
+                      "minWidth": "30px",
+                      "textAlign": "left",
+                      "width": "100px",
                     }
                   }
                 >
                   <div
-                    className="th"
-                    colSpan={1}
-                    role="columnheader"
-                    style={
-                      Object {
-                        "alignItems": "center",
-                        "boxSizing": "border-box",
-                        "display": "flex",
-                        "flex": "100 0 auto",
-                        "justifyContent": "flex-start",
-                        "minWidth": "30px",
-                        "textAlign": "left",
-                        "width": "100px",
-                      }
-                    }
+                    className="sortable-column"
                   >
-                    <div
-                      className="sortable-column"
-                    >
-                      Agency
-                      <span
-                        style={
-                          Object {
-                            "flex": "1 1 auto",
-                          }
+                    Agency
+                    <span
+                      style={
+                        Object {
+                          "flex": "1 1 auto",
                         }
-                      />
-                    </div>
+                      }
+                    />
                   </div>
+                </div>
+                <div
+                  className="th"
+                  colSpan={1}
+                  role="columnheader"
+                  style={
+                    Object {
+                      "alignItems": "center",
+                      "boxSizing": "border-box",
+                      "display": "flex",
+                      "flex": "100 0 auto",
+                      "justifyContent": "flex-start",
+                      "minWidth": "30px",
+                      "textAlign": "left",
+                      "width": "100px",
+                    }
+                  }
+                >
                   <div
-                    className="th"
-                    colSpan={1}
-                    role="columnheader"
-                    style={
-                      Object {
-                        "alignItems": "center",
-                        "boxSizing": "border-box",
-                        "display": "flex",
-                        "flex": "100 0 auto",
-                        "justifyContent": "flex-start",
-                        "minWidth": "30px",
-                        "textAlign": "left",
-                        "width": "100px",
-                      }
-                    }
+                    className="sortable-column"
                   >
-                    <div
-                      className="sortable-column"
-                    >
-                      Name
-                      <span
-                        style={
-                          Object {
-                            "flex": "1 1 auto",
-                          }
+                    Name
+                    <span
+                      style={
+                        Object {
+                          "flex": "1 1 auto",
                         }
-                      />
-                    </div>
+                      }
+                    />
                   </div>
+                </div>
+                <div
+                  className="th"
+                  colSpan={1}
+                  role="columnheader"
+                  style={
+                    Object {
+                      "alignItems": "center",
+                      "boxSizing": "border-box",
+                      "display": "flex",
+                      "flex": "100 0 auto",
+                      "justifyContent": "flex-start",
+                      "minWidth": "30px",
+                      "textAlign": "left",
+                      "width": "100px",
+                    }
+                  }
+                >
                   <div
-                    className="th"
-                    colSpan={1}
-                    role="columnheader"
-                    style={
-                      Object {
-                        "alignItems": "center",
-                        "boxSizing": "border-box",
-                        "display": "flex",
-                        "flex": "100 0 auto",
-                        "justifyContent": "flex-start",
-                        "minWidth": "30px",
-                        "textAlign": "left",
-                        "width": "100px",
-                      }
-                    }
+                    className="sortable-column"
                   >
-                    <div
-                      className="sortable-column"
-                    >
-                      Civic Address
-                      <span
-                        style={
-                          Object {
-                            "flex": "1 1 auto",
-                          }
+                    Civic Address
+                    <span
+                      style={
+                        Object {
+                          "flex": "1 1 auto",
                         }
-                      />
-                    </div>
+                      }
+                    />
                   </div>
+                </div>
+                <div
+                  className="th"
+                  colSpan={1}
+                  role="columnheader"
+                  style={
+                    Object {
+                      "alignItems": "center",
+                      "boxSizing": "border-box",
+                      "display": "flex",
+                      "flex": "140 0 auto",
+                      "justifyContent": "flex-start",
+                      "minWidth": "30px",
+                      "textAlign": "left",
+                      "width": "140px",
+                    }
+                  }
+                >
                   <div
-                    className="th"
-                    colSpan={1}
-                    role="columnheader"
-                    style={
-                      Object {
-                        "alignItems": "center",
-                        "boxSizing": "border-box",
-                        "display": "flex",
-                        "flex": "140 0 auto",
-                        "justifyContent": "flex-start",
-                        "minWidth": "30px",
-                        "textAlign": "left",
-                        "width": "140px",
-                      }
-                    }
+                    className="sortable-column"
                   >
-                    <div
-                      className="sortable-column"
-                    >
-                      Classification
-                      <span
-                        style={
-                          Object {
-                            "flex": "1 1 auto",
-                          }
+                    Classification
+                    <span
+                      style={
+                        Object {
+                          "flex": "1 1 auto",
                         }
-                      />
-                    </div>
+                      }
+                    />
                   </div>
+                </div>
+                <div
+                  className="th"
+                  colSpan={1}
+                  role="columnheader"
+                  style={
+                    Object {
+                      "alignItems": "center",
+                      "boxSizing": "border-box",
+                      "display": "flex",
+                      "flex": "100 0 auto",
+                      "justifyContent": "flex-start",
+                      "minWidth": "30px",
+                      "textAlign": "left",
+                      "width": "100px",
+                    }
+                  }
+                >
                   <div
-                    className="th"
-                    colSpan={1}
-                    role="columnheader"
-                    style={
-                      Object {
-                        "alignItems": "center",
-                        "boxSizing": "border-box",
-                        "display": "flex",
-                        "flex": "100 0 auto",
-                        "justifyContent": "flex-start",
-                        "minWidth": "30px",
-                        "textAlign": "left",
-                        "width": "100px",
-                      }
-                    }
+                    className="sortable-column"
                   >
-                    <div
-                      className="sortable-column"
-                    >
-                      Current Zoning Code
-                      <span
-                        style={
-                          Object {
-                            "flex": "1 1 auto",
-                          }
+                    Current Zoning Code
+                    <span
+                      style={
+                        Object {
+                          "flex": "1 1 auto",
                         }
-                      />
-                    </div>
+                      }
+                    />
                   </div>
+                </div>
+                <div
+                  className="th"
+                  colSpan={1}
+                  role="columnheader"
+                  style={
+                    Object {
+                      "alignItems": "center",
+                      "boxSizing": "border-box",
+                      "display": "flex",
+                      "flex": "100 0 auto",
+                      "justifyContent": "flex-start",
+                      "minWidth": "30px",
+                      "textAlign": "left",
+                      "width": "100px",
+                    }
+                  }
+                >
                   <div
-                    className="th"
-                    colSpan={1}
-                    role="columnheader"
-                    style={
-                      Object {
-                        "alignItems": "center",
-                        "boxSizing": "border-box",
-                        "display": "flex",
-                        "flex": "100 0 auto",
-                        "justifyContent": "flex-start",
-                        "minWidth": "30px",
-                        "textAlign": "left",
-                        "width": "100px",
-                      }
-                    }
+                    className="sortable-column"
                   >
-                    <div
-                      className="sortable-column"
-                    >
-                      Other Projects
-                      <span
-                        style={
-                          Object {
-                            "flex": "1 1 auto",
-                          }
+                    Other Projects
+                    <span
+                      style={
+                        Object {
+                          "flex": "1 1 auto",
                         }
-                      />
-                    </div>
+                      }
+                    />
                   </div>
+                </div>
+                <div
+                  className="th"
+                  colSpan={1}
+                  role="columnheader"
+                  style={
+                    Object {
+                      "alignItems": "center",
+                      "boxSizing": "border-box",
+                      "display": "flex",
+                      "flex": "145 0 auto",
+                      "justifyContent": "flex-start",
+                      "minWidth": "145px",
+                      "textAlign": "left",
+                      "width": "145px",
+                    }
+                  }
+                >
                   <div
-                    className="th"
-                    colSpan={1}
-                    role="columnheader"
-                    style={
-                      Object {
-                        "alignItems": "center",
-                        "boxSizing": "border-box",
-                        "display": "flex",
-                        "flex": "145 0 auto",
-                        "justifyContent": "flex-start",
-                        "minWidth": "145px",
-                        "textAlign": "left",
-                        "width": "145px",
-                      }
-                    }
+                    className="sortable-column"
                   >
-                    <div
-                      className="sortable-column"
-                    >
-                      Net Book Value
-                      <span
-                        style={
-                          Object {
-                            "flex": "1 1 auto",
-                          }
+                    Net Book Value
+                    <span
+                      style={
+                        Object {
+                          "flex": "1 1 auto",
                         }
-                      />
-                    </div>
+                      }
+                    />
                   </div>
+                </div>
+                <div
+                  className="th"
+                  colSpan={1}
+                  role="columnheader"
+                  style={
+                    Object {
+                      "alignItems": "center",
+                      "boxSizing": "border-box",
+                      "display": "flex",
+                      "flex": "145 0 auto",
+                      "justifyContent": "flex-start",
+                      "minWidth": "145px",
+                      "textAlign": "left",
+                      "width": "145px",
+                    }
+                  }
+                >
                   <div
-                    className="th"
-                    colSpan={1}
-                    role="columnheader"
-                    style={
-                      Object {
-                        "alignItems": "center",
-                        "boxSizing": "border-box",
-                        "display": "flex",
-                        "flex": "145 0 auto",
-                        "justifyContent": "flex-start",
-                        "minWidth": "145px",
-                        "textAlign": "left",
-                        "width": "145px",
-                      }
-                    }
+                    className="sortable-column"
                   >
-                    <div
-                      className="sortable-column"
-                    >
-                      Market Value
-                      <span
-                        style={
-                          Object {
-                            "flex": "1 1 auto",
-                          }
+                    Market Value
+                    <span
+                      style={
+                        Object {
+                          "flex": "1 1 auto",
                         }
-                      />
-                    </div>
+                      }
+                    />
                   </div>
+                </div>
+                <div
+                  className="th"
+                  colSpan={1}
+                  role="columnheader"
+                  style={
+                    Object {
+                      "alignItems": "center",
+                      "boxSizing": "border-box",
+                      "display": "flex",
+                      "flex": "145 0 auto",
+                      "justifyContent": "flex-start",
+                      "minWidth": "145px",
+                      "textAlign": "left",
+                      "width": "145px",
+                    }
+                  }
+                >
                   <div
-                    className="th"
-                    colSpan={1}
-                    role="columnheader"
-                    style={
-                      Object {
-                        "alignItems": "center",
-                        "boxSizing": "border-box",
-                        "display": "flex",
-                        "flex": "145 0 auto",
-                        "justifyContent": "flex-start",
-                        "minWidth": "145px",
-                        "textAlign": "left",
-                        "width": "145px",
-                      }
-                    }
+                    className="sortable-column"
                   >
-                    <div
-                      className="sortable-column"
-                    >
-                      Assessed Land
-                      <span
-                        style={
-                          Object {
-                            "flex": "1 1 auto",
-                          }
+                    Assessed Land
+                    <span
+                      style={
+                        Object {
+                          "flex": "1 1 auto",
                         }
-                      />
-                    </div>
+                      }
+                    />
                   </div>
+                </div>
+                <div
+                  className="th"
+                  colSpan={1}
+                  role="columnheader"
+                  style={
+                    Object {
+                      "alignItems": "center",
+                      "boxSizing": "border-box",
+                      "display": "flex",
+                      "flex": "145 0 auto",
+                      "justifyContent": "flex-start",
+                      "minWidth": "145px",
+                      "textAlign": "left",
+                      "width": "145px",
+                    }
+                  }
+                >
                   <div
-                    className="th"
-                    colSpan={1}
-                    role="columnheader"
-                    style={
-                      Object {
-                        "alignItems": "center",
-                        "boxSizing": "border-box",
-                        "display": "flex",
-                        "flex": "145 0 auto",
-                        "justifyContent": "flex-start",
-                        "minWidth": "145px",
-                        "textAlign": "left",
-                        "width": "145px",
-                      }
-                    }
+                    className="sortable-column"
                   >
-                    <div
-                      className="sortable-column"
-                    >
-                      Assessed Building
-                      <span
-                        style={
-                          Object {
-                            "flex": "1 1 auto",
-                          }
+                    Assessed Building
+                    <span
+                      style={
+                        Object {
+                          "flex": "1 1 auto",
                         }
-                      />
-                    </div>
+                      }
+                    />
                   </div>
+                </div>
+                <div
+                  className="th"
+                  colSpan={1}
+                  role="columnheader"
+                  style={
+                    Object {
+                      "alignItems": "center",
+                      "boxSizing": "border-box",
+                      "display": "flex",
+                      "flex": "60 0 auto",
+                      "justifyContent": "flex-start",
+                      "minWidth": "30px",
+                      "textAlign": "left",
+                      "width": "60px",
+                    }
+                  }
+                >
                   <div
-                    className="th"
-                    colSpan={1}
-                    role="columnheader"
-                    style={
-                      Object {
-                        "alignItems": "center",
-                        "boxSizing": "border-box",
-                        "display": "flex",
-                        "flex": "60 0 auto",
-                        "justifyContent": "flex-start",
-                        "minWidth": "30px",
-                        "textAlign": "left",
-                        "width": "60px",
-                      }
-                    }
+                    className="sortable-column"
                   >
-                    <div
-                      className="sortable-column"
-                    >
-                      Type
-                      <span
-                        style={
-                          Object {
-                            "flex": "1 1 auto",
-                          }
+                    Type
+                    <span
+                      style={
+                        Object {
+                          "flex": "1 1 auto",
                         }
-                      />
-                    </div>
+                      }
+                    />
                   </div>
-                </form>
+                </div>
               </div>
             </div>
             <div
