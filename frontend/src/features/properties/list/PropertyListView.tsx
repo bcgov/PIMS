@@ -9,7 +9,7 @@ import { ENVIRONMENT } from 'constants/environment';
 import { decimalOrUndefined, mapLookupCode } from 'utils';
 import download from 'utils/download';
 import { IPropertyQueryParams, IProperty } from '.';
-import { columns as cols } from './columns';
+import { columns as cols, buildingColumns as buildingCols } from './columns';
 import { Table } from 'components/Table';
 import service from '../service';
 import { FaFolderOpen, FaFolder, FaEdit, FaFileExport } from 'react-icons/fa';
@@ -41,6 +41,7 @@ import {
   toApiProperty,
 } from 'features/projects/common/projectConverter';
 import { IApiProperty } from 'features/projects/common';
+import { PropertyTypes } from 'constants/index';
 
 const getPropertyReportUrl = (filter: IPropertyQueryParams) =>
   `${ENVIRONMENT.apiUrl}/reports/properties?${filter ? queryString.stringify(filter) : ''}`;
@@ -272,17 +273,48 @@ const PropertyListView: React.FC = () => {
 
   // Filtering and pagination state
   const [filter, setFilter] = useState<IPropertyFilter>(defaultFilterValues);
-  const columns = useMemo(
+  const isParcel =
+    !filter ||
+    [PropertyTypeNames.Land.toString(), PropertyTypeNames.Subdivision.toString()].includes(
+      filter?.propertyType ?? '',
+    );
+  const parcelColumns = useMemo(
     () =>
       cols(
         agenciesList,
         subAgencies,
         municipalities,
         propertyClassifications,
-        !filter || filter.propertyType === 'Land' ? 0 : 1,
+        PropertyTypes.PARCEL,
         editable,
       ),
-    [subAgencies, agenciesList, municipalities, propertyClassifications, editable, filter],
+    [agenciesList, subAgencies, municipalities, propertyClassifications, editable],
+  );
+
+  const buildingExpandColumns = useMemo(
+    () =>
+      cols(
+        agenciesList,
+        subAgencies,
+        municipalities,
+        propertyClassifications,
+        PropertyTypes.BUILDING,
+        false,
+      ),
+    [agenciesList, subAgencies, municipalities, propertyClassifications],
+  );
+
+  const buildingColumns = useMemo(
+    () =>
+      buildingCols(
+        agenciesList,
+        subAgencies,
+        municipalities,
+        propertyClassifications,
+        PropertyTypes.BUILDING,
+        editable,
+      ),
+    [agenciesList, subAgencies, municipalities, propertyClassifications, editable],
   );
 
   const [pageSize, setPageSize] = useState(10);
@@ -432,6 +464,21 @@ const PropertyListView: React.FC = () => {
       .map(value => agencySelections.find(agency => agency.value === value) || '') as any;
   }
 
+  const onRowClick = useCallback((row: IProperty) => {
+    window.open(
+      `/mapview?${queryString.stringify({
+        sidebar: true,
+        disabled: true,
+        loadDraft: false,
+        parcelId: [PropertyTypes.PARCEL, PropertyTypes.SUBDIVISION].includes(row.propertyTypeId)
+          ? row.id
+          : undefined,
+        buildingId: row.propertyTypeId === PropertyTypes.BUILDING ? row.id : undefined,
+      })}`,
+      '_blank',
+    );
+  }, []);
+
   return (
     <Container fluid className="PropertyListView">
       <Container fluid className="filter-container border-bottom">
@@ -548,13 +595,19 @@ const PropertyListView: React.FC = () => {
         <Table<IProperty>
           name="propertiesTable"
           lockPageSize={true}
-          columns={columns}
+          columns={isParcel ? parcelColumns : buildingColumns}
           data={data || []}
           loading={data === undefined}
           filterable
           sort={sorting}
           pageIndex={pageIndex}
           onRequestData={handleRequestData}
+          onRowClick={onRowClick}
+          tableToolbarText={
+            filter.propertyType === PropertyTypeNames.Building
+              ? undefined
+              : '* Assessed value per building'
+          }
           pageCount={pageCount}
           onSortChange={(column: string, direction: SortDirection) => {
             if (!!direction) {
@@ -575,7 +628,14 @@ const PropertyListView: React.FC = () => {
           detailsPanel={{
             render: val => {
               if (expandData[val.id]) {
-                return <Buildings hideHeaders={true} data={expandData[val.id]} />;
+                return (
+                  <Buildings
+                    hideHeaders={true}
+                    data={expandData[val.id]}
+                    columns={buildingExpandColumns}
+                    onRowClick={onRowClick}
+                  />
+                );
               }
             },
             icons: {

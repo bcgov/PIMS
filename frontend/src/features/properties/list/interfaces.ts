@@ -26,6 +26,7 @@ export interface IProperty {
   administrativeArea: string;
   province: string;
   postal: string;
+  city: string;
 
   // Financial Values
   market: number;
