@@ -30,9 +30,10 @@ export const fetchParcels = (parcelBounds: API.IPropertySearchParams | null) => 
         dispatch(hideLoading());
         return Promise.resolve(response);
       })
-      .catch((axiosError: AxiosError) =>
-        dispatch(error(actionTypes.GET_PARCELS, axiosError?.response?.status, axiosError)),
-      )
+      .catch((axiosError: AxiosError) => {
+        dispatch(error(actionTypes.GET_PARCELS, axiosError?.response?.status, axiosError));
+        return Promise.reject(axiosError);
+      })
       .finally(() => dispatch(hideLoading()));
   }
 
@@ -56,9 +57,10 @@ export const fetchParcelsDetail = (params: API.IPropertySearchParams) => (dispat
       dispatch(hideLoading());
       return Promise.resolve(response);
     })
-    .catch((axiosError: AxiosError) =>
-      dispatch(error(actionTypes.GET_PARCEL_DETAIL, axiosError?.response?.status, axiosError)),
-    )
+    .catch((axiosError: AxiosError) => {
+      dispatch(error(actionTypes.GET_PARCEL_DETAIL, axiosError?.response?.status, axiosError));
+      return Promise.reject(axiosError);
+    })
     .finally(() => dispatch(hideLoading()));
 };
 
@@ -75,9 +77,10 @@ export const fetchParcelDetail = (params: API.IParcelDetailParams, position?: [n
       dispatch(hideLoading());
       return response.data;
     })
-    .catch((axiosError: AxiosError) =>
-      dispatch(error(actionTypes.GET_PARCEL_DETAIL, axiosError?.response?.status, axiosError)),
-    )
+    .catch((axiosError: AxiosError) => {
+      dispatch(error(actionTypes.GET_PARCEL_DETAIL, axiosError?.response?.status, axiosError));
+      return Promise.reject(axiosError);
+    })
     .finally(() => dispatch(hideLoading()));
 };
 
@@ -95,9 +98,10 @@ export const fetchBuildingDetail = (
       dispatch(hideLoading());
       return response.data;
     })
-    .catch((axiosError: AxiosError) =>
-      dispatch(error(actionTypes.GET_PARCEL_DETAIL, axiosError?.response?.status, axiosError)),
-    )
+    .catch((axiosError: AxiosError) => {
+      dispatch(error(actionTypes.GET_PARCEL_DETAIL, axiosError?.response?.status, axiosError));
+      return Promise.reject(axiosError);
+    })
     .finally(() => dispatch(hideLoading()));
 };
 
