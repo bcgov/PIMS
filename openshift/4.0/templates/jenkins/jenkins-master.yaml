@@ -1,14 +1,19 @@
+kind: "Template"
+apiVersion: "v1"
+metadata:
+  name: "pims-pipeline"
+  creationTimestamp: null
 parameters:
   - name: APP_NAME
     displayName: "Application name"
     description: "Name of the application."
     required: true
     value: jenkins
-  - name: PROJECT_NAME
-    displayName: "Openshift Project Name"
-    description: "Openshift Project Name"
+  - name: PROJECT_NAMESPACE
+    displayName: "OpenShift Project Namespace"
+    description: "The namespace of the OpenShift project containing the application."
     required: true
-    value: "354028-tools"
+    value: "354028"
   - name: ENV_NAME
     displayName: "Environment name"
     description: "The name for the environment"
@@ -24,17 +29,12 @@ parameters:
     description: "Openshift app domain"
     required: true
     value: "apps.silver.devops.gov.bc.ca"
-kind: "Template"
-apiVersion: "v1"
-metadata:
-  name: "pims-pipeline"
-  creationTimestamp: null
 objects:
   - kind: Service
     apiVersion: v1
     metadata:
       name: ${APP_NAME}-jnlp
-      namespace: ${PROJECT_NAME}
+      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
       labels:
         template: ${APP_NAME}-persistent-template
     spec:
@@ -58,7 +58,7 @@ objects:
         service.alpha.openshift.io/dependencies: '[{"name": "${APP_NAME}-jnlp", "namespace": "", "kind": "Service"}]'
         service.openshift.io/infrastructure: "true"
       name: ${APP_NAME}
-      namespace: ${PROJECT_NAME}
+      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
       labels:
         app: ${APP_NAME}
         template: ${APP_NAME}-persistent-template
@@ -82,11 +82,11 @@ objects:
     apiVersion: route.openshift.io/v1
     metadata:
       name: ${APP_NAME}
-      namespace: ${PROJECT_NAME}
+      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
       labels:
         template: ${APP_NAME}-persistent-template
     spec:
-      host: ${APP_NAME}-${PROJECT_NAME}.${DOMAIN}
+      host: ${APP_NAME}-${PROJECT_NAMESPACE}-${ENV_NAME}.${DOMAIN}
       to:
         kind: Service
         name: ${APP_NAME}
@@ -99,7 +99,7 @@ objects:
       wildcardPolicy: None
     status:
       ingress:
-        - host: ${APP_NAME}-${PROJECT_NAME}.${DOMAIN}
+        - host: ${APP_NAME}-${PROJECT_NAMESPACE}-${ENV_NAME}.${DOMAIN}
           routerName: default
           conditions:
             - type: Admitted
@@ -111,11 +111,11 @@ objects:
     apiVersion: route.openshift.io/v1
     metadata:
       name: ${APP_NAME}-jnlp
-      namespace: ${PROJECT_NAME}
+      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
       labels:
         template: ${APP_NAME}-persistent-template
     spec:
-      host: ${APP_NAME}-jnlp-${PROJECT_NAME}.${DOMAIN}
+      host: ${APP_NAME}-jnlp-${PROJECT_NAMESPACE}-${ENV_NAME}.${DOMAIN}
       to:
         kind: Service
         name: ${APP_NAME}-jnlp
@@ -125,7 +125,7 @@ objects:
       wildcardPolicy: None
     status:
       ingress:
-        - host: ${APP_NAME}-jnlp-${PROJECT_NAME}.${DOMAIN}
+        - host: ${APP_NAME}-jnlp-${PROJECT_NAMESPACE}-${ENV_NAME}.${DOMAIN}
           routerName: default
           conditions:
             - type: Admitted
@@ -141,7 +141,7 @@ objects:
         service.alpha.openshift.io/dependencies: '[{"name": "${APP_NAME}-jnlp", "namespace": "", "kind": "Service"}]'
         service.openshift.io/infrastructure: "true"
       name: ${APP_NAME}
-      namespace: ${PROJECT_NAME}
+      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
       labels:
         app: ${APP_NAME}
         template: ${APP_NAME}-persistent-template
@@ -164,26 +164,26 @@ objects:
     apiVersion: security.devops.gov.bc.ca/v1alpha1
     metadata:
       name: ${APP_NAME}-master-to-internet
-      namespace: ${PROJECT_NAME}
+      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
     spec:
       description: Allow Jenkins master to open connections to the Internet.
       source:
         - - app=${APP_NAME}
         - - role=${APP_NAME}
-        - - env=tools
+        - - env=${ENV_NAME}
       destination:
         - - ext:network=any
   - apiVersion: security.devops.gov.bc.ca/v1alpha1
     kind: NetworkSecurityPolicy
     metadata:
       name: ${APP_NAME}-agent-to-master
-      namespace: ${PROJECT_NAME}
+      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
     spec:
       description: Allow Jenkins agents to communicate with master.
       destination:
         - - app=${APP_NAME}
           - role=${APP_NAME}
-          - env=tools
+          - env=${ENV_NAME}
           - name=${APP_NAME}
       source:
         - - jenkins=slave
@@ -191,7 +191,7 @@ objects:
     kind: NetworkSecurityPolicy
     metadata:
       name: ${APP_NAME}-agent-to-jnlp-service
-      namespace: ${PROJECT_NAME}
+      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
     spec:
       description: Allow jenkins agents to communicate with JNLP service.
       destination:
@@ -202,15 +202,15 @@ objects:
   - apiVersion: v1
     kind: DeploymentConfig
     metadata:
+      name: ${APP_NAME}
+      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
       annotations:
         description: Defines how to deploy jenkins
       labels:
         app: ${APP_NAME}
         name: ${APP_NAME}
         role: ${APP_NAME}
-        env: tools
-      name: ${APP_NAME}
-      namespace: ${PROJECT_NAME}
+        env: ${ENV_NAME}
     spec:
       replicas: 1
       selector:
