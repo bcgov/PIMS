@@ -327,3 +327,11 @@ export function emptyStringToNull(value: any, originalValue: any) {
   }
   return value;
 }
+
+/**
+ * Determine if the specified project status code requires a clearance notification sent on value.
+ * @param statusCode The project status code.
+ */
+export const clearanceNotificationSentOnRequired = (statusCode: string) => {
+  return ['ERP-ON', 'ERP-OH'].includes(statusCode);
+};
