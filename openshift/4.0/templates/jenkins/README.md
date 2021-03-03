@@ -35,7 +35,7 @@ oc process jenkins-slave.yaml | oc apply -f -
 oc process jenkins-slave.yaml --param-file=.env | oc apply -f -
 ```
 
-## Configure the CI/CD Pipeline
+## Configure the DEV CI/CD Pipeline
 
 Jenkins is being used to orchestrate jobs between GitHub and OpenShift. Anytime a Pull Request is opened against the dev/master branch, it triggers a job on Jenkins which runs the pipeline stages and reports the status back to GitHub.
 
