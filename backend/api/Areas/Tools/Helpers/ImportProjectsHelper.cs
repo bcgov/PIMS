@@ -173,7 +173,7 @@ namespace Pims.Api.Areas.Tools.Helpers
 
             project.ProjectNumber = String.IsNullOrWhiteSpace(model.ProjectNumber) ? $"TEMP-{DateTime.UtcNow.Ticks:00000}" : model.ProjectNumber;
             project.Name = model.Description.Truncate(100);
-            project.Description = model.Description;
+            project.Description = model.Description + (String.IsNullOrWhiteSpace(model.Location) ? null : Environment.NewLine + model.Location);
             project.Manager = model.Manager;
             project.ActualFiscalYear = model.ActualFiscalYear;
             project.ReportedFiscalYear = model.ReportedFiscalYear;
