@@ -36,82 +36,72 @@ exports[`renders correctly 1`] = `
             role="row"
             style="display: flex; flex: 1 0 auto; min-width: 90px;"
           >
-            <form
-              action="#"
-              style="display: flex; width: 100%;"
+            <div
+              class="th"
+              colspan="3"
+              role="columnheader"
+              style="box-sizing: border-box; flex: 250 0 auto; min-width: 90px; width: 250px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
             >
               <div
-                class="th"
-                colspan="3"
-                role="columnheader"
-                style="box-sizing: border-box; flex: 250 0 auto; min-width: 90px; width: 250px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+                class="sortable-column"
               >
-                <div
-                  class="sortable-column"
-                >
-                  Net Book Value
-                  <span
-                    style="flex: 1 1 auto;"
-                  />
-                </div>
+                Net Book Value
+                <span
+                  style="flex: 1 1 auto;"
+                />
               </div>
-            </form>
+            </div>
           </div>
           <div
             class="tr"
             role="row"
             style="display: flex; flex: 1 0 auto; min-width: 90px;"
           >
-            <form
-              action="#"
-              style="display: flex; width: 100%;"
+            <div
+              class="th"
+              colspan="1"
+              role="columnheader"
+              style="box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
             >
               <div
-                class="th"
-                colspan="1"
-                role="columnheader"
-                style="box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+                class="sortable-column"
               >
-                <div
-                  class="sortable-column"
-                >
-                  Fiscal Year
-                  <span
-                    style="flex: 1 1 auto;"
-                  />
-                </div>
+                Fiscal Year
+                <span
+                  style="flex: 1 1 auto;"
+                />
               </div>
+            </div>
+            <div
+              class="th"
+              colspan="1"
+              role="columnheader"
+              style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+            >
               <div
-                class="th"
-                colspan="1"
-                role="columnheader"
-                style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+                class="sortable-column"
               >
-                <div
-                  class="sortable-column"
-                >
-                  Effective Date
-                  <span
-                    style="flex: 1 1 auto;"
-                  />
-                </div>
+                Effective Date
+                <span
+                  style="flex: 1 1 auto;"
+                />
               </div>
+            </div>
+            <div
+              class="th"
+              colspan="1"
+              role="columnheader"
+              style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+            >
               <div
-                class="th"
-                colspan="1"
-                role="columnheader"
-                style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+                class="sortable-column"
               >
-                <div
-                  class="sortable-column"
-                >
-                  Net Book Value
-                  <span
-                    style="flex: 1 1 auto;"
-                  />
-                </div>
+                Net Book Value
+                <span
+                  style="flex: 1 1 auto;"
+                />
               </div>
-            </form>
+            </div>
           </div>
         </div>
         <div
@@ -160,81 +150,71 @@ exports[`renders correctly 1`] = `
             role="row"
             style="display: flex; flex: 1 0 auto; min-width: 60px;"
           >
-            <form
-              action="#"
-              style="display: flex; width: 100%;"
+            <div
+              class="th"
+              colspan="2"
+              role="columnheader"
+              style="box-sizing: border-box; flex: 190 0 auto; min-width: 60px; width: 190px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
             >
               <div
-                class="th"
-                colspan="2"
-                role="columnheader"
-                style="box-sizing: border-box; flex: 190 0 auto; min-width: 60px; width: 190px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+                class="sortable-column"
               >
-                <div
-                  class="sortable-column"
+                Assessed Value
+                <svg
+                  class="tooltip-icon c1"
+                  fill="currentColor"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 512 512"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
                 >
-                  Assessed Value
-                  <svg
-                    class="tooltip-icon c1"
-                    fill="currentColor"
-                    height="1em"
-                    stroke="currentColor"
-                    stroke-width="0"
-                    viewBox="0 0 512 512"
-                    width="1em"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"
-                    />
-                  </svg>
-                  <span
-                    style="flex: 1 1 auto;"
+                  <path
+                    d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"
                   />
-                </div>
+                </svg>
+                <span
+                  style="flex: 1 1 auto;"
+                />
               </div>
-            </form>
+            </div>
           </div>
           <div
             class="tr"
             role="row"
             style="display: flex; flex: 1 0 auto; min-width: 60px;"
           >
-            <form
-              action="#"
-              style="display: flex; width: 100%;"
+            <div
+              class="th"
+              colspan="1"
+              role="columnheader"
+              style="box-sizing: border-box; flex: 90 0 auto; min-width: 30px; width: 90px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
             >
               <div
-                class="th"
-                colspan="1"
-                role="columnheader"
-                style="box-sizing: border-box; flex: 90 0 auto; min-width: 30px; width: 90px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+                class="sortable-column"
               >
-                <div
-                  class="sortable-column"
-                >
-                  Assessment Year
-                  <span
-                    style="flex: 1 1 auto;"
-                  />
-                </div>
+                Assessment Year
+                <span
+                  style="flex: 1 1 auto;"
+                />
               </div>
+            </div>
+            <div
+              class="th"
+              colspan="1"
+              role="columnheader"
+              style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+            >
               <div
-                class="th"
-                colspan="1"
-                role="columnheader"
-                style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+                class="sortable-column"
               >
-                <div
-                  class="sortable-column"
-                >
-                  Assessed Building Value
-                  <span
-                    style="flex: 1 1 auto;"
-                  />
-                </div>
+                Assessed Building Value
+                <span
+                  style="flex: 1 1 auto;"
+                />
               </div>
-            </form>
+            </div>
           </div>
         </div>
         <div

@@ -25,11 +25,13 @@ export const EditableMoneyCell = ({
   const canEdit = useKeycloakWrapper().canUserEditProperty(property);
 
   return canEdit ? (
-    <FastCurrencyInput
-      formikProps={context}
-      suppressValidation={suppressValidation}
-      field={`${namespace}.${cell.row.id}.${cell.column.id}`}
-    ></FastCurrencyInput>
+    <>
+      <FastCurrencyInput
+        formikProps={context}
+        suppressValidation={suppressValidation}
+        field={`${namespace}.${cell.row.id}.${cell.column.id}`}
+      ></FastCurrencyInput>
+    </>
   ) : (
     <TooltipWrapper
       toolTipId={`${namespace}.${cell.row.id}.${cell.column.id}`}
@@ -42,4 +44,8 @@ export const EditableMoneyCell = ({
 
 export const MoneyCell = ({ cell: { value } }: CellProps<IProperty, number | ''>) => (
   <Form.Group>{value === undefined || value === '' ? '' : formatMoney(value)}</Form.Group>
+);
+
+export const AsterixMoneyCell = ({ cell: { value } }: CellProps<IProperty, number | ''>) => (
+  <Form.Group>{value === undefined || value === '' ? '' : `${formatMoney(value)} *`}</Form.Group>
 );

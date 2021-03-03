@@ -250,6 +250,7 @@ export const mockFlatProperty: IFlatProperty = {
   appraised: 1000,
   landArea: 123,
   landLegalDescription: 'test',
+  city: 'Victoria',
 } as IFlatProperty;
 
 export const ACTIVE = {
