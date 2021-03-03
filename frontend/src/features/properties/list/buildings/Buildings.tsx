@@ -1,7 +1,6 @@
 import * as React from 'react';
-import { columns } from './columns';
-import { Table } from 'components/Table';
-import { IProperty } from './IProperty';
+import { Table, ColumnWithProps } from 'components/Table';
+import { IProperty } from '..';
 
 /**
  * Buildings table component properties
@@ -12,21 +11,31 @@ export interface IProps {
   data: IProperty[];
   /** Whether to hide the headers. */
   hideHeaders?: boolean;
+  /** Optionally override the columns */
+  columns: ColumnWithProps<IProperty>[];
+  /** handle click event on table building row*/
+  onRowClick?: (data: IProperty) => void;
 }
 
 /**
  * A table displaying a list of buildings.
  * @param {IProps} props Component properties.
  */
-export const Buildings: React.FC<IProps> = ({ data, hideHeaders }) => {
+export const Buildings: React.FC<IProps> = ({
+  data,
+  hideHeaders,
+  columns: externalColumns,
+  onRowClick,
+}) => {
   return (
     <Table<IProperty>
       hideHeaders={hideHeaders}
       name="nestedPropertiesTable"
-      columns={columns}
+      columns={externalColumns}
       data={data}
       pageCount={1}
       hideToolbar={true}
+      onRowClick={onRowClick}
     />
   );
 };
