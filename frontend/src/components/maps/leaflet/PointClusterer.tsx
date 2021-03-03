@@ -20,6 +20,8 @@ import { PropertyTypes } from 'constants/propertyTypes';
 import SelectedPropertyMarker from './SelectedPropertyMarker/SelectedPropertyMarker';
 import * as parcelsActions from 'actions/parcelsActions';
 import { useDispatch } from 'react-redux';
+import { useLocation } from 'react-router-dom';
+import queryString from 'query-string';
 
 export type PointClustererProps = {
   points: Array<PointFeature>;
@@ -102,6 +104,8 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
   const featureGroupRef = useRef<any>();
   const draftFeatureGroupRef = useRef<any>();
   const filterState = useFilterContext();
+  const location = useLocation();
+  const { parcelId } = queryString.parse(location.search);
 
   const [currentSelected, setCurrentSelected] = useState(selected);
   const [currentCluster, setCurrentCluster] = useState<
@@ -144,6 +148,12 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
   useDeepCompareEffect(() => {
     if (!currentClusterIds.includes(+(selected?.parcelDetail?.id ?? 0))) {
       setCurrentSelected(selected);
+      if (!!parcelId && !!selected?.parcelDetail) {
+        map.setView(
+          [selected?.parcelDetail?.latitude as number, selected?.parcelDetail?.longitude as number],
+          Math.max(MAX_ZOOM, map.getZoom()),
+        );
+      }
     } else {
       setCurrentSelected(undefined);
     }
