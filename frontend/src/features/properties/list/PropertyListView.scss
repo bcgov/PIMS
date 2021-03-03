@@ -82,5 +82,8 @@ $contentheading-height: 60px;
     table {
       background-color: #fff;
     }
+    .table {
+      overflow-x: auto;
+    }
   }
 }
