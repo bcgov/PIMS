@@ -40,7 +40,7 @@
         "ImplicitFlowEnabled": false,
         "DirectAccessGrantsEnabled": true,
         "AuthorizationServicesEnabled": false,
-        "RootUrl": "https://pims-test.pathfinder.gov.bc.ca",
+        "RootUrl": "https://pims-test.apps.silver.devops.gov.bc.ca",
         "RedirectUris": [
           "https://pims-test.pathfinder.gov.bc.ca/*",
           "https://pims-test.apps.silver.devops.gov.bc.ca/*"
@@ -236,7 +236,7 @@
         "DirectAccessGrantsEnabled": true,
         "ServiceAccountsEnabled": true,
         "AuthorizationServicesEnabled": false,
-        "RootUrl": "https://pims-test.pathfinder.gov.bc.ca/api",
+        "RootUrl": "https://pims-test.apps.silver.devops.gov.bc.ca/api",
         "RedirectUris": [
           "https://pims-test.pathfinder.gov.bc.ca/api/*",
           "https://pims-test.apps.silver.devops.gov.bc.ca/api/*"
@@ -271,7 +271,7 @@
         "DirectAccessGrantsEnabled": true,
         "ServiceAccountsEnabled": true,
         "AuthorizationServicesEnabled": true,
-        "RootUrl": "https://pims-test.pathfinder.gov.bc.ca/api",
+        "RootUrl": "https://pims-test.apps.silver.devops.gov.bc.ca/api",
         "RedirectUris": [
           "https://pims-test.pathfinder.gov.bc.ca/api/*",
           "https://pims-test.apps.silver.devops.gov.bc.ca/api/*"
