@@ -99,7 +99,8 @@ interface DetailsOptions<T extends object> {
   getRowId: (row: T) => any;
 }
 
-export interface TableProps<T extends object = {}> extends TableOptions<T> {
+export interface TableProps<T extends object = {}, TFilter extends object = {}>
+  extends TableOptions<T> {
   name: string;
   hideHeaders?: boolean;
   onRequestData?: (props: { pageIndex: number; pageSize: number }) => void;
@@ -125,7 +126,7 @@ export interface TableProps<T extends object = {}> extends TableOptions<T> {
   canRowExpand?: (val: any) => boolean;
   className?: string;
   filterable?: boolean;
-  filter?: { [key in keyof T]?: any };
+  filter?: TFilter;
   onFilterChange?: (values: any) => void;
   /** have page selection menu drop-up to avoid container growing in some scenarios */
   pageSizeMenuDropUp?: boolean;
@@ -163,7 +164,9 @@ const IndeterminateCheckbox = React.forwardRef(({ indeterminate, ...rest }: any,
  * A table component. Supports sorting, filtering and paging.
  * Uses `react-table` to handle table logic.
  */
-const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): ReactElement => {
+const Table = <T extends object, TFilter extends object = {}>(
+  props: PropsWithChildren<TableProps<T, TFilter>>,
+): ReactElement => {
   const filterFormRef = useRef<FormikProps<any>>();
   const [expandedRows, setExpandedRows] = React.useState<T[]>([]);
   const defaultColumn = React.useMemo(
@@ -490,6 +493,11 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): React
                 <div style={{ width: '20px' }}>&nbsp;</div>
               </div>
             ) : null}
+            {filterable ? (
+              <div className="td">
+                <div style={{ width: '30px' }}>&nbsp;</div>
+              </div>
+            ) : null}
             {/* Expansion button shown on every row by default */}
             {!props.canRowExpand &&
               renderExpandRowStateButton(
@@ -570,7 +578,7 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>): React
                 >
                   {actions => (
                     <Form style={{ display: 'flex', width: '100%' }}>
-                      {renderTableHeader(headerGroup, null)}
+                      {renderTableHeader(headerGroup, actions)}
                     </Form>
                   )}
                 </Formik>
