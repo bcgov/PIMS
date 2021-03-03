@@ -20,6 +20,7 @@ import {
 } from '../../common';
 import GenericModal from 'components/common/GenericModal';
 import { validateFormikWithCallback } from 'utils';
+import { clearanceNotificationSentOnRequired } from './erpYupSchema';
 
 const OrText = styled.div`
   margin: 0.75rem 2rem 0.75rem 2rem;
@@ -50,6 +51,9 @@ const EnhancedReferralCompleteForm = ({
   const [proceedToSpl, setProceedToSpl] = useState(false);
   const [notInSpl, setNotInSpl] = useState(false);
   const [disposeExternally, setDisposeExternally] = useState(false);
+  const isClearanceNotificationSentOnRequired = clearanceNotificationSentOnRequired(
+    formikProps.values.status?.code ?? '',
+  );
   return (
     <Container fluid className="EnhancedReferralCompleteForm">
       <h3>Enhanced Referral Process Complete</h3>
@@ -147,7 +151,11 @@ const EnhancedReferralCompleteForm = ({
             <FastDatePicker
               outerClassName="col-md-2"
               formikProps={formikProps}
-              disabled={isReadOnly || !formikProps.values.clearanceNotificationSentOn}
+              disabled={
+                isReadOnly ||
+                (isClearanceNotificationSentOnRequired &&
+                  !formikProps.values.clearanceNotificationSentOn)
+              }
               field="requestForSplReceivedOn"
             />
           </Form.Row>
@@ -159,7 +167,11 @@ const EnhancedReferralCompleteForm = ({
             <FastDatePicker
               outerClassName="col-md-2"
               formikProps={formikProps}
-              disabled={isReadOnly || !formikProps.values.clearanceNotificationSentOn}
+              disabled={
+                isReadOnly ||
+                (isClearanceNotificationSentOnRequired &&
+                  !formikProps.values.clearanceNotificationSentOn)
+              }
               field="approvedForSplOn"
             />
             {(formikProps.values.statusCode === ReviewWorkflowStatus.ApprovedForErp ||
@@ -171,7 +183,8 @@ const EnhancedReferralCompleteForm = ({
                 <Button
                   disabled={
                     isReadOnly ||
-                    !formikProps.values.clearanceNotificationSentOn ||
+                    (isClearanceNotificationSentOnRequired &&
+                      !formikProps.values.clearanceNotificationSentOn) ||
                     !formikProps.values.requestForSplReceivedOn ||
                     !formikProps.values.approvedForSplOn
                   }
@@ -185,7 +198,11 @@ const EnhancedReferralCompleteForm = ({
                   <>
                     <OrText>OR</OrText>
                     <Button
-                      disabled={isReadOnly || !formikProps.values.clearanceNotificationSentOn}
+                      disabled={
+                        isReadOnly ||
+                        (isClearanceNotificationSentOnRequired &&
+                          !formikProps.values.clearanceNotificationSentOn)
+                      }
                       onClick={() =>
                         validateFormikWithCallback(formikProps, () => setNotInSpl(true))
                       }
