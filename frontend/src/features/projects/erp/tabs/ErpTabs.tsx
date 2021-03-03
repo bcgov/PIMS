@@ -69,7 +69,7 @@ const ErpTabs: React.FunctionComponent<IErpTabsProps> = ({
           tabClassName={isTabInError(errors, SPPApprovalTabs.erp)}
           eventKey={SPPApprovalTabs.erp}
           title={`${
-            values.statusCode === ReviewWorkflowStatus.ApprovedForExemption
+            values.exemptionRequested
               ? 'Exemption from the Enhanced Referral Process'
               : 'Enhanced Referral Process'
           }`}
