@@ -22,6 +22,10 @@ namespace Pims.Dal.Services
     public class ProjectService : BaseService<Project>, IProjectService
     {
         #region Variables
+        /// <summary>
+        /// An array of project status that require a clearance notification date.
+        /// </summary>
+        private readonly static string[] clearanceRequiredForStatus = new[] { "ERP-ON", "ERP-OH" }; // TODO: Should be configurable, not hard-coded.
         private readonly PimsOptions _options;
         private readonly INotificationService _notifyService;
         #endregion
@@ -368,7 +372,7 @@ namespace Pims.Dal.Services
 
             project.ProjectNumber = $"TEMP-{DateTime.UtcNow.Ticks:00000}"; // Temporary project number.
 
-            if (project.AgencyId != 0 )
+            if (project.AgencyId != 0)
             {
                 var canCreateAProjectForAgency = User.GetAgenciesAsNullable().Contains(project.AgencyId) ||
                                                  this.User.HasPermission(Permissions.AdminProjects);
@@ -769,7 +773,8 @@ namespace Pims.Dal.Services
                     break;
                 case ("AP-SPL"): // Approve for SPL
                     this.User.ThrowIfNotAuthorized(Permissions.DisposeApprove, "User does not have permission to approve project.");
-                    if (metadata.ClearanceNotificationSentOn == null) throw new InvalidOperationException("Approved for SPL status requires Clearance Notification Sent date.");
+                    if (metadata.ClearanceNotificationSentOn == null
+                        && clearanceRequiredForStatus.Contains(fromStatus.Status.Code)) throw new InvalidOperationException("Approved for SPL status requires Clearance Notification Sent date.");
                     if (metadata.RequestForSplReceivedOn == null) throw new InvalidOperationException("Approved for SPL status requires the date when the request was received.");
                     if (metadata.ApprovedForSplOn == null) throw new InvalidOperationException("Approved for SPL status requires the date when the request for SPL was approved on.");
                     originalProject.ApprovedOn = originalProject.ApprovedOn.HasValue ? originalProject.ApprovedOn : now; // Only set the date it hasn't been set yet.
@@ -778,7 +783,6 @@ namespace Pims.Dal.Services
                     break;
                 case ("AP-!SPL"): // Not in SPL
                     this.User.ThrowIfNotAuthorized(Permissions.DisposeApprove, "User does not have permission to approve project."); // TODO: Need to update permission claims to handle workflow better.
-                    var clearanceRequiredForStatus = new[] { "ERP-ON", "ERP-OH" }; // TODO: Should be configurable, not hard-coded.
                     if (metadata.ClearanceNotificationSentOn == null
                         && clearanceRequiredForStatus.Contains(fromStatus.Status.Code)) throw new InvalidOperationException("Not in SPL status requires Clearance Notification Sent date.");
                     originalProject.ApprovedOn = originalProject.ApprovedOn.HasValue ? originalProject.ApprovedOn : now; // Only set the date it hasn't been set yet.

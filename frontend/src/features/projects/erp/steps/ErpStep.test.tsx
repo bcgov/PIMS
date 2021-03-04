@@ -105,7 +105,7 @@ describe('ERP Approval Step', () => {
       const { getByText } = render(getApprovalStep());
       const proceedToSplButton = getByText(/Not Included in the SPL/);
       expect(proceedToSplButton).toBeVisible();
-      expect(proceedToSplButton).toBeDisabled();
+      expect(proceedToSplButton).toBeEnabled();
     });
     it('correct form fields are disabled', () => {
       const { queryAllByRole } = render(getApprovalStep());
@@ -114,7 +114,7 @@ describe('ERP Approval Step', () => {
         expect(textbox).toBeVisible();
         if (textbox.id.includes('Spl')) {
           //only disabled textboxes are SPL related datepickers and erp emails text
-          expect(textbox).toBeDisabled();
+          expect(textbox).toBeEnabled();
         } else {
           if (textbox.id.includes('[22]')) {
             expect(textbox).toBeDisabled();
@@ -188,7 +188,7 @@ describe('ERP Approval Step', () => {
       project.workflowCode = DisposalWorkflows.Erp;
       const component = render(getApprovalStep(getStore(project)));
       const proceedToSplButton = component.queryByText(/Not Included in the SPL/);
-      expect(proceedToSplButton).toBeDisabled();
+      expect(proceedToSplButton).toBeEnabled();
     });
     it('correct form fields are disabled', () => {
       const component = render(getApprovalStep(getStore(project)));
@@ -197,7 +197,7 @@ describe('ERP Approval Step', () => {
         expect(textbox).toBeVisible();
         if (textbox.id.includes('Spl')) {
           //only disabled textboxes are SPL related datepickers and erp emails text
-          expect(textbox).toBeDisabled();
+          expect(textbox).toBeEnabled();
         } else {
           if (textbox.id.includes('[22]')) {
             expect(textbox).toBeDisabled();
