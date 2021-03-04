@@ -114,7 +114,7 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
   }, [defaultFilter, propertyFilter, agencies]);
 
   const changeFilter = (values: IPropertyFilter) => {
-    const agencyIds = (values.agencies as any).value
+    const agencyIds = (values.agencies as any)?.value
       ? (values.agencies as any).value
       : values.agencies;
     setPropertyFilter({ ...values, agencies: agencyIds });
@@ -149,6 +149,8 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
               onEnter={() => {
                 setFindMoreOpen(true);
                 setFieldValue('surplusFilter', true);
+                setFieldValue('includeAllProperties', true);
+                !keycloak.hasClaim(Claims.ADMIN_PROPERTIES) && setFieldValue('agencies', undefined);
               }}
               onExit={() => {
                 setFindMoreOpen(false);
