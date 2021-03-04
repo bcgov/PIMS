@@ -34,7 +34,7 @@ export const layersTree: ILayerItem[] = [
       {
         key: 'municipalities',
         label: 'Municipalities',
-        on: true,
+        on: false,
         layers: 'pub:WHSE_LEGAL_ADMIN_BOUNDARIES.ABMS_MUNICIPALITIES_SP',
         url:
           'https://openmaps.gov.bc.ca/geo/pub/WHSE_LEGAL_ADMIN_BOUNDARIES.ABMS_MUNICIPALITIES_SP/ows?',

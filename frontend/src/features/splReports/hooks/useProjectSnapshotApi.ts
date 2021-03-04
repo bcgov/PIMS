@@ -121,7 +121,7 @@ export const useProjectSnapshotApi = () => {
       const { data } = await getAxios(dispatch, snapshotToasts).get<ISnapshot[]>(
         `refresh/${report.id}`,
       );
-      return _.orderBy(data, ['projectId', 'snapshotOn'], ['asc', 'desc']);
+      return data;
     },
     [dispatch],
   );

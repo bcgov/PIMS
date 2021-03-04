@@ -86,9 +86,9 @@ describe('LayersControl View', () => {
     });
   });
 
-  it('Parcel and Municipality layers should be enabled by default', () => {
+  it('Parcel should be enabled by default and Municipality layers should be disabled by default', () => {
     mount(<MapComponent />);
     waitFor(() => expect(mapRef?.current).toBeTruthy(), { timeout: 500 });
-    expect(isLayerVisible('municipalities', mapRef!.current!.leafletElement)).toBeTruthy();
+    expect(isLayerVisible('municipalities', mapRef!.current!.leafletElement)).toBeFalsy();
   });
 });
