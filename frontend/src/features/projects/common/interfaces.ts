@@ -138,6 +138,7 @@ export interface IProject {
   agencyId: number;
   agency?: string;
   subAgency?: string;
+  agencyName?: string;
   statusId: number;
   status?: IStatus;
   exemptionRequested?: boolean;
