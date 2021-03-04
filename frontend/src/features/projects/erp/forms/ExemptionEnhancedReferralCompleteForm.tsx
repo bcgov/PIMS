@@ -81,16 +81,12 @@ const ExemptionEnhancedReferralCompleteForm = ({
         <FastDatePicker
           outerClassName="col-md-2"
           formikProps={formikProps}
-          disabled={isReadOnly || !formikProps.values.clearanceNotificationSentOn}
+          disabled={isReadOnly}
           field="transferredWithinGreOn"
         />
         <div className="col-md-6">
           <Button
-            disabled={
-              isReadOnly ||
-              !formikProps.values.clearanceNotificationSentOn ||
-              !formikProps.values.transferredWithinGreOn
-            }
+            disabled={isReadOnly || !formikProps.values.transferredWithinGreOn}
             onClick={onClickGreTransferred}
           >
             Update Property Information
@@ -105,7 +101,7 @@ const ExemptionEnhancedReferralCompleteForm = ({
         <FastDatePicker
           outerClassName="col-md-2"
           formikProps={formikProps}
-          disabled={isReadOnly || !formikProps.values.clearanceNotificationSentOn}
+          disabled={isReadOnly}
           field="requestForSplReceivedOn"
         />
       </Form.Row>
@@ -116,13 +112,12 @@ const ExemptionEnhancedReferralCompleteForm = ({
         <FastDatePicker
           outerClassName="col-md-2"
           formikProps={formikProps}
-          disabled={isReadOnly || !formikProps.values.clearanceNotificationSentOn}
+          disabled={isReadOnly}
           field="approvedForSplOn"
         />
         <Button
           disabled={
             isReadOnly ||
-            !formikProps.values.clearanceNotificationSentOn ||
             !formikProps.values.requestForSplReceivedOn ||
             !formikProps.values.approvedForSplOn
           }
@@ -133,10 +128,7 @@ const ExemptionEnhancedReferralCompleteForm = ({
         {formikProps.values.statusCode !== ReviewWorkflowStatus.NotInSpl && (
           <>
             <OrText>OR</OrText>
-            <Button
-              disabled={isReadOnly || !formikProps.values.clearanceNotificationSentOn}
-              onClick={onClickNotInSpl}
-            >
+            <Button disabled={isReadOnly} onClick={onClickNotInSpl}>
               Not Included in the SPL
             </Button>
           </>
@@ -145,10 +137,7 @@ const ExemptionEnhancedReferralCompleteForm = ({
       <h3>Option 3: Add to Enhanced Referral Process</h3>
       <Form.Row>
         <div className="justify-content-center add-space-below">
-          <Button
-            disabled={isReadOnly || !formikProps.values.clearanceNotificationSentOn}
-            onClick={() => onClickAddToErp()}
-          >
+          <Button disabled={isReadOnly} onClick={() => onClickAddToErp()}>
             Add to Enhanced Referral Process
           </Button>
         </div>
