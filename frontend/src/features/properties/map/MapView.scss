@@ -31,6 +31,7 @@ $narrowSidebarSize: 700px;
 .map {
   transition: margin 1s, width 1s;
   margin-left: 0px;
+  position: relative;
 }
 .side-bar .map {
   margin-left: 930px;
