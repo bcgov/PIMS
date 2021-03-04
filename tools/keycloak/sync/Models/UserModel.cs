@@ -105,7 +105,7 @@ namespace Pims.Tools.Keycloak.Sync.Models
                 if (Int32.TryParse(a, out int id))
                     return new AgencyModel() { Id = id };
                 return null;
-            }).Where(a => a != null).ToList() : null;
+            }).Where(a => a != null).Distinct().ToList() : null;
         }
         #endregion
     }
