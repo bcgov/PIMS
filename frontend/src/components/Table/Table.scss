@@ -59,6 +59,10 @@
     &.reset-filter {
       display: flex;
       align-items: center;
+
+      &.svg-btn {
+        display: block;
+      }
     }
     &.clickable {
       cursor: pointer;
@@ -74,6 +78,26 @@
       justify-content: flex-start;
     }
     .filter-wrapper {
+      div {
+        div {
+          display: flex;
+          .form-group {
+            width: 100%;
+            .rbt {
+              width: 100%;
+              div {
+                input {
+                  width: 100% !important;
+                }
+              }
+              .rbt-menu {
+                width: 370px !important;
+              }
+            }
+          }
+        }
+      }
+
       &.active {
         color: $active-color;
       }
