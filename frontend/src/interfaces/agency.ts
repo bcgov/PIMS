@@ -17,6 +17,7 @@ export interface IAgencyDetail {
   description?: string;
   isDisabled: boolean;
   sendEmail: boolean;
+  addressTo: string;
   code: string;
   rowVersion: string;
   parent?: string;
@@ -34,6 +35,7 @@ export interface IAddAgency {
   name: string;
   code: string;
   email?: string;
+  addressTo: string;
   isDisabled: boolean;
   sendEmail: boolean;
   parentId?: number;
