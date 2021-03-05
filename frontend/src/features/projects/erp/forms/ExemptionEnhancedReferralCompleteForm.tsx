@@ -151,7 +151,6 @@ const ExemptionEnhancedReferralCompleteForm = ({
               Date of Accepted Offer
             </Form.Label>
             <FastDatePicker
-              required
               outerClassName="col-md-2"
               formikProps={formikProps}
               disabled={isReadOnly}
@@ -163,7 +162,6 @@ const ExemptionEnhancedReferralCompleteForm = ({
               Purchaser
             </Form.Label>
             <FastInput
-              required
               field="purchaser"
               outerClassName="col-md-2"
               disabled={isReadOnly}
@@ -175,7 +173,6 @@ const ExemptionEnhancedReferralCompleteForm = ({
               Offer Amount
             </Form.Label>
             <FastCurrencyInput
-              required
               field="offerAmount"
               outerClassName="col-md-2"
               disabled={isReadOnly}
@@ -188,6 +185,7 @@ const ExemptionEnhancedReferralCompleteForm = ({
               Disposal Date
             </Form.Label>
             <FastDatePicker
+              required
               outerClassName="col-md-2"
               formikProps={formikProps}
               disabled={isReadOnly}
