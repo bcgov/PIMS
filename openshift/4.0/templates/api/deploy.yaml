@@ -122,6 +122,11 @@ parameters:
     description: "Readiness health check api path."
     value: "/health/ready"
 
+  - name: REPLICAS
+    displayName: "Pod Replicas"
+    description: "Number of pod replicas to run"
+    value: "2"
+
   - name: CPU_REQUEST
     displayName: "CPU Request"
     description: "Starting amount of CPU the container can use."
@@ -386,7 +391,7 @@ objects:
               kind: ImageStreamTag
               namespace: "${PROJECT_NAMESPACE}-tools"
               name: "${APP_NAME}-${ROLE_NAME}:${IMAGE_TAG}"
-      replicas: 1
+      replicas: ${{REPLICAS}}
       selector:
         app: ${APP_NAME}
         role: ${ROLE_NAME}
