@@ -9,6 +9,7 @@ const initialState: IAgencyDetail = {
   name: '',
   description: '',
   email: '',
+  addressTo: '',
   isDisabled: false,
   sendEmail: false,
   rowVersion: '',

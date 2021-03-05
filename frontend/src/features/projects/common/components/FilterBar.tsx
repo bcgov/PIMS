@@ -1,14 +1,16 @@
 import './FilterBar.scss';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Col } from 'react-bootstrap';
-import { Formik, useFormikContext } from 'formik';
+import { Formik, getIn, useFormikContext } from 'formik';
 import { Form, Select, InputGroup, Input } from 'components/common/form';
 import ResetButton from 'components/common/form/ResetButton';
 import SearchButton from 'components/common/form/SearchButton';
 import { useCodeLookups } from 'hooks/useLookupCodes';
 import * as API from 'constants/API';
 import { Classifications } from 'constants/classifications';
+import { TypeaheadField } from 'components/common/form/Typeahead';
+import { mapLookupCode } from 'utils';
 
 const SearchBar: React.FC = () => {
   const state: { placeholders: Record<string, string> } = {
@@ -63,6 +65,11 @@ const FilterBar: React.FC<FilterBarProps> = ({ onChange, defaultFilter }) => {
       +c.value !== Classifications.Disposed &&
       +c.value !== Classifications.Subdivided,
   );
+  const lookupCodes = useCodeLookups();
+  const adminAreas = lookupCodes
+    .getByType(API.AMINISTRATIVE_AREA_CODE_SET_NAME)
+    .map(c => mapLookupCode(c));
+  const [clear, setClear] = useState(false);
 
   return (
     <Formik<IFilterBarState>
@@ -78,7 +85,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ onChange, defaultFilter }) => {
         setSubmitting(false);
       }}
     >
-      {({ isSubmitting, handleReset }) => (
+      {({ isSubmitting, handleReset, setFieldValue }) => (
         <Form>
           <Form.Row className="filter-bar">
             <Col className="bar-item">
@@ -95,6 +102,20 @@ const FilterBar: React.FC<FilterBarProps> = ({ onChange, defaultFilter }) => {
                 field="classificationId"
                 placeholder="Classification"
                 options={classifications}
+              />
+            </Col>
+            <Col className="bar-item">
+              <TypeaheadField
+                name="administrativeArea"
+                placeholder="Location"
+                selectClosest
+                hideValidation={true}
+                options={adminAreas.map(x => x.label)}
+                onChange={(vals: any) => {
+                  setFieldValue('administrativeArea', getIn(vals[0], 'name') ?? vals[0]);
+                }}
+                clearSelected={clear}
+                setClear={setClear}
               />
             </Col>
             <Col className="bar-item flex-grow-0">

@@ -213,7 +213,6 @@ const EnhancedReferralCompleteForm = ({
                   Date of Accepted Offer
                 </Form.Label>
                 <FastDatePicker
-                  required
                   outerClassName="col-md-2"
                   formikProps={formikProps}
                   disabled={isReadOnly}
@@ -225,7 +224,6 @@ const EnhancedReferralCompleteForm = ({
                   Purchaser
                 </Form.Label>
                 <FastInput
-                  required
                   field="purchaser"
                   outerClassName="col-md-2"
                   disabled={isReadOnly}
@@ -237,7 +235,6 @@ const EnhancedReferralCompleteForm = ({
                   Offer Amount
                 </Form.Label>
                 <FastCurrencyInput
-                  required
                   field="offerAmount"
                   outerClassName="col-md-2"
                   disabled={isReadOnly}
@@ -250,6 +247,7 @@ const EnhancedReferralCompleteForm = ({
                   Disposal Date
                 </Form.Label>
                 <FastDatePicker
+                  required
                   outerClassName="col-md-2"
                   formikProps={formikProps}
                   disabled={isReadOnly}

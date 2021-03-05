@@ -238,7 +238,11 @@ objects:
         env: ${ENV_NAME}
     spec:
       strategy:
-        type: Rolling
+        type: Recreate
+      recreateParams:
+        pre: {}
+        mid: {}
+        post: {}
       triggers:
         - type: ConfigChange
         - type: ImageChange
