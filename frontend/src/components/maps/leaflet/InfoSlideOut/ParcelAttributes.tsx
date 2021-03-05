@@ -1,11 +1,13 @@
 import * as React from 'react';
 import { ListGroup } from 'react-bootstrap';
-import { IBuilding, IEvaluation, IParcel } from 'actions/parcelsActions';
+import { IParcel } from 'actions/parcelsActions';
 import { Label } from 'components/common/Label';
 import './InfoSlideOut.scss';
 import { formatMoney } from 'utils/numberFormatUtils';
-import { compareDate, OuterRow } from './InfoContent';
+import { OuterRow } from './InfoContent';
 import { ThreeColumnItem } from './ThreeColumnItem';
+import { EvaluationKeys } from 'constants/evaluationKeys';
+import { getCurrentYearEvaluation } from 'features/projects/common/projectConverter';
 
 interface IParcelAttributes {
   /** the selected parcel information */
@@ -23,25 +25,20 @@ export const ParcelAttributes: React.FC<IParcelAttributes> = ({ parcelInfo, canV
   let formatAssessed;
   if (parcelInfo?.assessedLand) {
     formatAssessed = formatMoney(parcelInfo?.assessedLand);
-  } else if (parcelInfo?.evaluations?.length >= 1) {
+  } else if (!!getCurrentYearEvaluation(parcelInfo?.evaluations, EvaluationKeys.Assessed)) {
     formatAssessed = formatMoney(
-      parcelInfo?.evaluations.sort((a, b) => compareDate(a.date, b.date)).reverse()[0].value,
+      getCurrentYearEvaluation(parcelInfo?.evaluations, EvaluationKeys.Assessed)?.value,
     );
   } else {
     formatAssessed = '';
   }
-
-  let improvements = 0;
+  let improvements = '';
   if (parcelInfo?.assessedBuilding) {
-    improvements = parcelInfo?.assessedBuilding;
-  } else if (parcelInfo?.buildings?.length >= 1) {
-    parcelInfo.buildings.forEach((building: IBuilding) => {
-      if (building.evaluations?.length >= 1) {
-        improvements += +building.evaluations
-          .sort((a: IEvaluation, b: IEvaluation) => compareDate(a.date, b.date))
-          .reverse()[0].value;
-      }
-    });
+    improvements = formatMoney(parcelInfo?.assessedBuilding);
+  } else if (!!getCurrentYearEvaluation(parcelInfo?.evaluations, EvaluationKeys.Improvements)) {
+    improvements = formatMoney(
+      getCurrentYearEvaluation(parcelInfo?.evaluations, EvaluationKeys.Improvements)?.value,
+    );
   }
 
   return (
@@ -74,7 +71,7 @@ export const ParcelAttributes: React.FC<IParcelAttributes> = ({ parcelInfo, canV
               {!!improvements && (
                 <ThreeColumnItem
                   leftSideLabel={'Assessed Building(s):'}
-                  rightSideItem={formatMoney(improvements)}
+                  rightSideItem={improvements}
                 />
               )}
             </OuterRow>
