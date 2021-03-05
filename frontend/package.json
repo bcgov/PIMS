@@ -53,6 +53,7 @@
     "redux-logger": "3.0.6",
     "redux-thunk": "2.3.0",
     "reproject": "1.2.6",
+    "retry-axios": "2.4.0",
     "styled-components": "5.1.0",
     "supercluster": "7.1.0",
     "text-mask-addons": "3.8.0",
