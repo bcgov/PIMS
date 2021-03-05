@@ -26,7 +26,6 @@ Create the api build and save the template.
 
 ```bash
 oc project 354028-tools
-
 oc process -f build.yaml --param-file=build.dev.env | oc create --save-config=true -f -
 ```
 
@@ -62,6 +61,33 @@ Create the api deployment and save the template.
 
 ```bash
 oc project 354028-dev
-
 oc process -f deploy.yaml --param-file=deploy.dev.env | oc create --save-config=true -f -
+```
+
+Create a deployment configuration file here for the route - `deploy-routes.dev.env`
+Update the configuration file and set the appropriate parameters.
+
+In **PROD** you will need to get the SSL certificate values and update the `deploy-routes.yaml` file `tls` section.
+
+```yaml
+tls:
+  insecureEdgeTerminationPolicy: Redirect
+  termination: edge
+  caCertificate: "{ENTER YOUR CA CERT HERE}"
+  certificate: "{ENTER YOUR CERT HERE}"
+  key: "{ENTER YOUR CERT KEY HERE}"
+```
+
+> Do not check in your certificate values to git.
+
+**Example**
+
+```conf
+ENV_NAME=dev
+APP_DOMAIN=pims-dev.apps.silver.devops.gov.bc.ca
+APP_PORT=8080
+```
+
+```bash
+oc process -f deploy-routes.yaml --param-file=deploy-routes.dev.env | oc create --save-config=true -f -
 ```

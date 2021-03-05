@@ -32,12 +32,6 @@ parameters:
     description: "A unique identifier to allow for multiple instances (i.e. '-01')."
     value: ""
 
-  - name: IMAGE_TAG
-    displayName: "Image Tag Name"
-    description: "The image tag that will be used for this deployment.
-      This provides a way to setup an environment for other branches."
-    value: "dev"
-
   - name: APP_DOMAIN
     displayName: "Application Hostname"
     description:
@@ -49,64 +43,6 @@ parameters:
     description: "The port used to communicate with the Pod"
     value: "8080"
 
-  - name: KEYCLOAK_REALM
-    displayName: "Keycloak SSO realm"
-    description: "Keycloak SSO realm, used by the frontend login."
-    required: true
-    value: xz0xtue5
-  - name: KEYCLOAK_CONFIG_FILE_NAME
-    displayName: "keycloak.json Config File Name"
-    description: "The name of the configuration file to be used for keycloak.json."
-    required: true
-    value: "keycloak.json"
-  - name: KEYCLOAK_CONFIG_MOUNT_PATH
-    displayName: "keycloak.json Mount Path"
-    description: "The path to use to mount the config file."
-    required: true
-    value: "/tmp/app/dist/"
-  - name: KEYCLOAK_AUTHORITY_URL
-    displayName: "Keycloak Authority URL"
-    description: "The Keycloak authority URL."
-    required: true
-    value: "https://dev.oidc.gov.bc.ca/auth"
-
-  - name: REAL_IP_FROM
-    description:
-      "OpenShift cluster private IP range in CIDR notation, used by Nginx
-      ngx_http_realip_module."
-    displayName: "OpenShift Cluster IP Range"
-    required: true
-    value: "172.51.0.0/16"
-
-  - name: API_URL
-    description:
-      "The default URL to use when proxying requests to the application's
-      API.  The value here will be overridden if a API_SERVICE_NAME is defined."
-    displayName: "API URL"
-    required: false
-    value: ""
-  - name: API_PATH
-    description: "The root path for the API.  Used in conjunction with API_SERVICE_NAME."
-    displayName: "API Path"
-    required: true
-    value: "/api"
-
-  - name: CPU_REQUEST
-    displayName: "CPU Request"
-    description: "Starting amount of CPU the container can use."
-    value: "100m"
-  - name: CPU_LIMIT
-    displayName: "CPU Limit"
-    description: "Maximum amount of CPU the container can use."
-    value: "1"
-  - name: MEMORY_REQUEST
-    displayName: "Memory Request"
-    description: "Starting amount of memory the container can use."
-    value: "100Mi"
-  - name: MEMORY_LIMIT
-    displayName: "Memory Limit"
-    description: "Maximum amount of memory the container can use."
-    value: "2Gi"
 objects:
   # The route for the app.
   - kind: Route
@@ -126,6 +62,9 @@ objects:
       tls:
         insecureEdgeTerminationPolicy: Redirect
         termination: edge
+        caCertificate: ""
+        certificate: ""
+        key: ""
       to:
         kind: Service
         name: ${APP_NAME}-${ROLE_NAME}${INSTANCE}

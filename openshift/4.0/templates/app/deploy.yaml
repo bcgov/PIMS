@@ -135,29 +135,6 @@ objects:
       sessionAffinity: None
       type: ClusterIP
 
-  # The route for the app.
-  - kind: Route
-    apiVersion: v1
-    metadata:
-      name: ${APP_NAME}-${ROLE_NAME}${INSTANCE}
-      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
-      labels:
-        name: ${APP_NAME}-${ROLE_NAME}${INSTANCE}
-        app: ${APP_NAME}
-        role: ${ROLE_NAME}
-        env: ${ENV_NAME}
-    spec:
-      host: ${APP_DOMAIN}
-      port:
-        targetPort: ${APP_PORT}-tcp
-      tls:
-        insecureEdgeTerminationPolicy: Redirect
-        termination: edge
-      to:
-        kind: Service
-        name: ${APP_NAME}-${ROLE_NAME}${INSTANCE}
-        weight: 100
-
   # Keycloak configuration settings.
   - kind: ConfigMap
     apiVersion: v1

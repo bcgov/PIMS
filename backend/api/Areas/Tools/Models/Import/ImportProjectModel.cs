@@ -65,6 +65,11 @@ namespace Pims.Api.Areas.Tools.Models.Import
         /// get/set - The project manager information.
         /// </summary>
         public string Manager { get; set; }
+
+        /// <summary>
+        /// get/set - The location of the project.
+        /// </summary>
+        public string Location { get; set; }
         #endregion
 
         #region Dates

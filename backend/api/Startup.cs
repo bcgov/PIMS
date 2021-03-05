@@ -43,6 +43,7 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Pims.Api.Helpers.Logging;
 using Prometheus;
+using Pims.Api.Helpers.Exceptions;
 
 namespace Pims.Api
 {
@@ -170,14 +171,14 @@ namespace Pims.Api
                     options.Events = new JwtBearerEvents()
                     {
                         OnTokenValidated = context =>
-                            {
-                                return Task.CompletedTask;
-                            },
+                        {
+                            return Task.CompletedTask;
+                        },
                         OnAuthenticationFailed = context =>
                         {
                             context.NoResult();
-                            context.Response.StatusCode = 401;
-                            throw context.Exception;
+                            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                            throw new AuthenticationException("Failed to authenticate", context.Exception);
                         },
                         OnForbidden = context =>
                         {
