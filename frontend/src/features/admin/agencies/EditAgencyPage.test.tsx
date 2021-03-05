@@ -28,6 +28,7 @@ const selectedAgency = {
   email: 'test@email.com',
   isDisabled: false,
   sendEmail: true,
+  addressTo: 'Good morning',
   type: 'Agency',
   name: 'Test Agency',
 };
