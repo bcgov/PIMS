@@ -196,6 +196,14 @@ namespace Pims.Api.Helpers.Middleware
                     _logger.LogError(streamEx, $"Failed to read the {nameof(HttpClientRequestException)} error stream.");
                 }
             }
+            else if (ex is AuthenticationException)
+            {
+                var exception = ex as AuthenticationException;
+                message = exception.Message;
+                details = exception.InnerException.Message;
+
+                _logger.LogError(ex, "Unable to validate authentication information.");
+            }
             else
             {
                 _logger.LogError(ex, "Middleware caught unhandled exception.");
@@ -203,7 +211,6 @@ namespace Pims.Api.Helpers.Middleware
 
             if (!context.Response.HasStarted)
             {
-                var is_dev = _env.IsDevelopment();
                 var result = JsonSerializer.Serialize(new Models.ErrorResponseModel(_env, ex, message, details), _options.JsonSerializerOptions);
                 context.Response.ContentType = "application/json";
                 context.Response.StatusCode = (int)code;
