@@ -17,6 +17,11 @@ parameters:
     description: "The name of the application role (e.g api, app, database)."
     required: true
     value: "app"
+  - name: API_ROLE_NAME
+    displayName: "Component Name"
+    description: "The name of the application role for the API."
+    required: true
+    value: "api"
   - name: PROJECT_NAMESPACE
     displayName: "OpenShift Project Namespace"
     description: "The namespace of the OpenShift project containing the application."
@@ -113,6 +118,26 @@ parameters:
     description: "Maximum amount of memory the container can use."
     value: "2Gi"
 objects:
+  # Allow the app to communicate with the api.
+  - kind: NetworkPolicy
+    apiVersion: networking.k8s.io/v1
+    metadata:
+      name: pod-from-pod-permit-${NAME}-${SOURCE_ROLE}-${DESTINATION_ROLE}
+      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
+    spec:
+      #description: Allow api pod(s) to receive communication from app pod(s).
+      podSelector:
+        matchLabels:
+          app: ${APP_NAME}
+          role: ${API_ROLE_NAME}
+          env: ${ENV_NAME}
+      ingress:
+        - from:
+            - podSelector:
+                matchLabels:
+                  app: ${APP_NAME}
+                  role: ${ROLE_NAME}
+                  env: ${ENV_NAME}
   # Open up ports to communicate with the app.
   - kind: Service
     apiVersion: v1
