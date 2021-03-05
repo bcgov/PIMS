@@ -33,8 +33,8 @@ export const columns: ColumnWithProps<IProperty>[] = [
     minWidth: 65, // px
   },
   {
-    Header: 'Property Name',
-    accessor: row => (row.name ? row.name : row.pid ?? row.pin),
+    Header: 'Name/PID',
+    accessor: row => (row.name ? `${row.name} ${row.pid}` : row.pid ?? row.pin),
     align: 'left',
     responsive: true,
     width: spacing.medium,
