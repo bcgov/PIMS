@@ -76,10 +76,12 @@ const EditAgencyPage = (props: IEditAgencyPageProps) => {
     isDisabled: false,
     sendEmail: true,
     email: '',
+    addressTo: '',
     rowVersion: '',
   };
 
   const initialValues: IAgencyDetail = {
+    ...newValues,
     ...agency,
   };
 
@@ -115,6 +117,7 @@ const EditAgencyPage = (props: IEditAgencyPageProps) => {
                         email: values.email,
                         isDisabled: values.isDisabled,
                         sendEmail: values.sendEmail,
+                        addressTo: values.addressTo,
                         parentId: values.parentId ? Number(values.parentId) : undefined,
                         description: values.description,
                         rowVersion: values.rowVersion,
@@ -128,6 +131,7 @@ const EditAgencyPage = (props: IEditAgencyPageProps) => {
                     email: values.email,
                     isDisabled: values.isDisabled,
                     sendEmail: values.sendEmail,
+                    addressTo: values.addressTo,
                     parentId: Number(values.parentId),
                     description: values.description,
                   })(dispatch);
@@ -155,6 +159,7 @@ const EditAgencyPage = (props: IEditAgencyPageProps) => {
                 {checkAgencies}
                 <Input label="Description" field="description" type="text" />
                 <Input label="Agency e-mail address" field="email" type="text" />
+                <Input label="Email Addressed To" field="addressTo" type="text" />
 
                 <Form.Group className="checkboxes">
                   <TooltipWrapper
