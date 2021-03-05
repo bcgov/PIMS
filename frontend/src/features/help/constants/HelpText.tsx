@@ -107,4 +107,4 @@ export const getTopics = (currentPage: IHelpPage | undefined) => {
 /**
  * This is the email that all support tickets should be directed to when using the issue reporting system.
  */
-export const pimsSupportEmail = 'a3c7e8d5.bcgov.onmicrosoft.com@ca.teams.ms';
+export const pimsSupportEmail = 'rpdimithelp@gov.bc.ca';
