@@ -38,10 +38,18 @@ export const UserUpdateSchema = Yup.object().shape({
 export const AgencyEditSchema = Yup.object().shape({
   email: Yup.string()
     .email('Please enter a valid email.')
-    .max(100, 'Email must be less than 100 characters'),
+    .max(100, 'Email must be less than 100 characters')
+    .when('sendEmail', (sendEmail: boolean, schema: any) =>
+      sendEmail ? schema.required('Email address is required') : schema,
+    ),
   name: Yup.string()
     .max(100, 'Agency name must be less than 100 characters')
     .required('An agency name is required.'),
+  addressTo: Yup.string()
+    .max(100, 'Email addressed to must be less than 100 characters')
+    .when('sendEmail', (sendEmail: boolean, schema: any) =>
+      sendEmail ? schema.required('Email addressed to is required (i.e. Good Morning)') : schema,
+    ),
   code: Yup.string().required('An agency code is required.'),
 });
 
