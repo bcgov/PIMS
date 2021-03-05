@@ -366,7 +366,7 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
                     <div
                       class="sortable-column"
                     >
-                      Property Name
+                      Name/PID
                       <span
                         style="flex: 1 1 auto;"
                       />
