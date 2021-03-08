@@ -203,7 +203,7 @@ namespace Pims.Api.Areas.Property.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpDelete("{id}")]
-        [HasPermission(Permissions.PropertyDelete)]
+        [HasPermission(Permissions.PropertyDelete, Permissions.PropertyEdit)]
         [Produces("application/json")]
         [ProducesResponseType(typeof(Model.ParcelModel), 200)]
         [SwaggerOperation(Tags = new[] { "parcel" })]
