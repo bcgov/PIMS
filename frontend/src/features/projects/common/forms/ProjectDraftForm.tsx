@@ -9,6 +9,7 @@ import * as API from 'constants/API';
 import { ParentSelect } from 'components/common/form/ParentSelect';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { mapSelectOptionWithParent } from 'utils';
+import { useMyAgencies } from 'hooks/useMyAgencies';
 import { Claims } from 'constants/claims';
 
 const ItalicText = styled.div`
@@ -65,14 +66,7 @@ const ProjectDraftForm = ({
     );
   }, [keycloak]);
 
-  const agencyOptions = useMemo(() => {
-    const items = agencies.filter(a => {
-      return (
-        isSRES || a.value === userAgency?.value || Number(a.parentId) === Number(userAgency?.value)
-      );
-    });
-    return items.map(c => mapSelectOptionWithParent(c, agencies));
-  }, [userAgency, agencies, isSRES]);
+  const myAgencies = useMyAgencies();
 
   return (
     <Container fluid className="ProjectDraftForm">
@@ -111,7 +105,7 @@ const ProjectDraftForm = ({
           <AgencyCol className="col-md-5">
             <ParentSelect
               field={'agencyId'}
-              options={agencyOptions}
+              options={myAgencies.map(c => mapSelectOptionWithParent(c, myAgencies))}
               filterBy={['code', 'label', 'parent']}
               convertValue={Number}
             />
