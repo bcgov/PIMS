@@ -1,4 +1,3 @@
-import React from 'react';
 // reusable messages for error handling, validations, null-screens, etc.
 export const ERROR = 'Error.';
 export const ERROR_CANCELED =
@@ -9,9 +8,11 @@ export const NO_DATA = 'No data available';
 export const MAP_UNAVAILABLE = [
   'The BC Geographic Warehouse (BCGW) map layers used in this application are unavailable at this time.',
   'Please notify ',
-  <b>pims@gov.bc.ca</b>,
+  'pims@gov.bc.ca',
   ' if this problem persists.',
 ];
+export const MAP_UNAVAILABLE_STR = MAP_UNAVAILABLE.join('\n');
+export const QUERY_MAP = 'Querying BC Geographic Warehouse (BCGW) map layer';
 
 export const UNAUTHORIZED = 'You do not have permission to access this site';
 export const UNAUTHORIZED_PAGE = 'You do not have permission to access this page';
