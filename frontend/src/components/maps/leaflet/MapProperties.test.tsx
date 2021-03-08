@@ -18,8 +18,11 @@ import { useApi, PimsAPI } from 'hooks/useApi';
 import { createPoints } from './mapUtils';
 import SelectedPropertyMarker from './SelectedPropertyMarker/SelectedPropertyMarker';
 import { fetchPropertyNames } from 'actionCreators/propertyActionCreator';
+import axios from 'axios';
 
-jest.mock('axios');
+import MockAdapter from 'axios-mock-adapter';
+
+const mockAxios = new MockAdapter(axios);
 jest.mock('@react-keycloak/web');
 Enzyme.configure({ adapter: new Adapter() });
 const mockStore = configureMockStore([thunk]);
@@ -105,6 +108,10 @@ describe('MapProperties View', () => {
         agencies: [0],
       },
     },
+  });
+  beforeEach(() => {
+    mockAxios.reset();
+    mockAxios.onAny().reply(200);
   });
 
   it('Renders the marker in correct position', async () => {
