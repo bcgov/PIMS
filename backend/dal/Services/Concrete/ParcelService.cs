@@ -181,7 +181,7 @@ namespace Pims.Dal.Services
         {
             parcel.ThrowIfNull(nameof(parcel));
             parcel.PropertyTypeId = (int)(parcel.Parcels.Count > 0 ? PropertyTypes.Subdivision : PropertyTypes.Land);
-            if(parcel.PropertyTypeId == (int)PropertyTypes.Subdivision)
+            if (parcel.PropertyTypeId == (int)PropertyTypes.Subdivision)
             {
                 var parentPid = parcel.Parcels.FirstOrDefault()?.Parcel?.PID;
                 if (parentPid == null) throw new InvalidOperationException("Invalid parent parcel associated to subdivision, parent parcels must contain a valid PID");
@@ -510,7 +510,7 @@ namespace Pims.Dal.Services
                 .Include(p => p.Buildings).ThenInclude(pb => pb.Building).ThenInclude(b => b.Evaluations)
                 .Include(p => p.Buildings).ThenInclude(pb => pb.Building).ThenInclude(b => b.Fiscals)
                 .Include(p => p.Buildings).ThenInclude(pb => pb.Building).ThenInclude(b => b.Address)
-                .Include(p => p.Subdivisions)
+                .Include(p => p.Subdivisions).ThenInclude(p => p.Subdivision)
                 .Include(p => p.Parcels)
                 .SingleOrDefault(u => u.Id == parcel.Id) ?? throw new KeyNotFoundException();
 
@@ -535,6 +535,12 @@ namespace Pims.Dal.Services
             this.Context.ParcelParcels.RemoveRange(originalParcel.Parcels);
             this.Context.ParcelParcels.RemoveRange(originalParcel.Subdivisions);
             this.Context.Parcels.Remove(originalParcel); // TODO: Shouldn't be allowed to permanently delete parcels entirely under certain conditions.
+            if (parcel.PropertyTypeId == (int)PropertyTypes.Land)
+            {
+                var subdivisions = originalParcel.Subdivisions.Select(s => s.Subdivision);
+                this.Context.Parcels.RemoveRange(subdivisions);
+            }
+
             this.Context.CommitTransaction();
         }
 
