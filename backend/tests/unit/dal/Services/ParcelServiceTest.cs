@@ -1210,7 +1210,7 @@ namespace Pims.Dal.Test.Services
             var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.PropertyAdd, Permissions.PropertyEdit).AddAgency(1);
             var init = helper.InitializeDatabase(user);
             var parcel = EntityHelper.CreateParcel(1);
-            
+
             init.CreateParcel(2);
             init.SaveChanges();
 
@@ -1463,6 +1463,31 @@ namespace Pims.Dal.Test.Services
 
             // Assert
             Assert.Equal(EntityState.Detached, context.Entry(parcel).State);
+        }
+
+        /// <summary>
+        /// Parcel found.
+        /// </summary>
+        [Fact]
+        public void Remove_Parent_And_Subdivisions()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyDelete, Permissions.PropertyAdd, Permissions.PropertyView).AddAgency(1);
+            var init = helper.InitializeDatabase(user);
+            var parcel = init.CreateParcel(1);
+            var subdivision = EntityHelper.CreateParcel(2);
+            parcel.Subdivisions.Add(new Entity.ParcelParcel() { ParcelId = 1, SubdivisionId = 2, Subdivision = subdivision });
+
+            var options = ControllerHelper.CreateDefaultPimsOptions();
+            var service = helper.CreateService<ParcelService>(user, options);
+            var context = helper.GetService<PimsContext>();
+            service.Add(parcel);
+
+            // Act
+            service.Remove(parcel);
+            Assert.Throws<KeyNotFoundException>(() =>
+                service.Get(2));
         }
         #endregion
 
