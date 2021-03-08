@@ -38,6 +38,8 @@ import classNames from 'classnames';
 import useDeepCompareMemo from 'hooks/useDeepCompareMemo';
 import useDeepCompareCallback from 'hooks/useDeepCompareCallback';
 import styled from 'styled-components';
+import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
+import clsx from 'classnames';
 
 const TableToolbarText = styled.p`
   flex: auto;
@@ -115,6 +117,7 @@ export interface TableProps<T extends object = {}, TFilter extends object = {}>
   onPageSizeChange?: (size: number) => void;
   sort?: TableSort<T>;
   noRowsMessage?: string;
+  selectedRows?: T[];
   setSelectedRows?: Function;
   lockPageSize?: boolean;
   detailsPanel?: DetailsOptions<T>;
@@ -143,31 +146,73 @@ export interface TableProps<T extends object = {}, TFilter extends object = {}>
   }) => React.ReactNode;
 }
 
-const IndeterminateCheckbox = React.forwardRef(({ indeterminate, ...rest }: any, ref) => {
-  const defaultRef = React.useRef();
-  const resolvedRef: any = ref || defaultRef;
-
-  React.useEffect(() => {
-    if (resolvedRef.current) {
-      resolvedRef.current.indeterminate = indeterminate;
+const IndeterminateCheckbox = React.forwardRef(
+  ({ indeterminate, setSelected, selectedRef, allDataRef, checked, row, ...rest }: any, ref) => {
+    const defaultRef = React.useRef();
+    const resolvedRef: any = ref || defaultRef;
+    const isHeaderCheck = !!allDataRef?.current;
+    if (isHeaderCheck) {
+      rest.title = 'Click to deselect all properties.';
     }
-  }, [resolvedRef, indeterminate]);
 
-  return (
-    <>
-      <input type="checkbox" ref={resolvedRef} {...rest} />
-    </>
-  );
-});
+    React.useEffect(() => {
+      if (resolvedRef.current) {
+        resolvedRef.current.indeterminate = indeterminate;
+      }
+    }, [resolvedRef, indeterminate]);
+
+    React.useEffect(() => {
+      if (resolvedRef.current) {
+        resolvedRef.current.checked = checked;
+      }
+    }, [resolvedRef, checked]);
+
+    const onChainedChange = (e: any) => {
+      rest.onChange && !allDataRef && rest.onChange(e);
+      const currentSelected = selectedRef?.current ? [...selectedRef?.current] : [];
+      if (isHeaderCheck) {
+        setSelected([]);
+      } else {
+        if (currentSelected.find(selected => selected.id === row.original.id)) {
+          _.remove(currentSelected, row.original);
+        } else {
+          currentSelected.push(row.original);
+        }
+        setSelected(_.uniq([...currentSelected]));
+      }
+    };
+    rest.checked = isHeaderCheck
+      ? selectedRef?.current?.length === allDataRef?.current?.length &&
+        !!allDataRef?.current?.length
+      : checked;
+    return (
+      <>
+        <input
+          type="checkbox"
+          ref={resolvedRef}
+          {...rest}
+          disabled={isHeaderCheck && rest.checked === false && !indeterminate}
+          onChange={onChainedChange}
+          data-testid={`selectrow-${row?.original?.id ?? 'parent'}`}
+        />
+      </>
+    );
+  },
+);
+
+interface IIdentifiedObject {
+  id?: number | string;
+}
 
 /**
  * A table component. Supports sorting, filtering and paging.
  * Uses `react-table` to handle table logic.
  */
-const Table = <T extends object, TFilter extends object = {}>(
+const Table = <T extends IIdentifiedObject, TFilter extends object = {}>(
   props: PropsWithChildren<TableProps<T, TFilter>>,
 ): ReactElement => {
   const filterFormRef = useRef<FormikProps<any>>();
+
   const [expandedRows, setExpandedRows] = React.useState<T[]>([]);
   const defaultColumn = React.useMemo(
     () => ({
@@ -184,7 +229,8 @@ const Table = <T extends object, TFilter extends object = {}>(
     data,
     onRequestData,
     pageCount,
-    setSelectedRows,
+    selectedRows: externalSelectedRows,
+    setSelectedRows: setExternalSelectedRows,
     footer,
     pageSize: pageSizeProp,
     pageIndex: pageIndexProp,
@@ -193,6 +239,15 @@ const Table = <T extends object, TFilter extends object = {}>(
     filterable,
     renderBodyComponent,
   } = props;
+  const selectedRowsRef = React.useRef<T[]>(externalSelectedRows ?? []);
+  React.useEffect(() => {
+    selectedRowsRef.current = externalSelectedRows ?? [];
+  }, [externalSelectedRows]);
+
+  const dataRef = React.useRef<T[]>(data ?? []);
+  React.useEffect(() => {
+    dataRef.current = data ?? [];
+  }, [data]);
 
   React.useEffect(() => {
     if (filterFormRef.current) {
@@ -204,6 +259,7 @@ const Table = <T extends object, TFilter extends object = {}>(
     return !!sort ? keys(sort).map(key => ({ id: key, desc: (sort as any)[key] === 'desc' })) : [];
   }, [sort]);
   // Use the useTable hook to create your table configuration
+
   const instance = useTable(
     {
       columns,
@@ -218,6 +274,7 @@ const Table = <T extends object, TFilter extends object = {}>(
       // This means we'll also have to provide our own
       // pageCount.
       pageCount,
+      autoResetSelectedRows: false,
     },
     useFlexLayout,
     useSortBy,
@@ -225,7 +282,7 @@ const Table = <T extends object, TFilter extends object = {}>(
     useRowSelect,
     hooks => {
       hooks.visibleColumns.push(columns => {
-        return props.setSelectedRows
+        return setExternalSelectedRows
           ? [
               {
                 id: 'selection',
@@ -236,14 +293,24 @@ const Table = <T extends object, TFilter extends object = {}>(
                 // to render a checkbox
                 Header: ({ getToggleAllRowsSelectedProps }) => (
                   <div>
-                    <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
+                    <IndeterminateCheckbox
+                      {...getToggleAllRowsSelectedProps()}
+                      setSelected={setExternalSelectedRows}
+                      selectedRef={selectedRowsRef}
+                      allDataRef={dataRef}
+                    />
                   </div>
                 ),
                 // The cell can use the individual row's getToggleRowSelectedProps method
                 // to the render a checkbox
                 Cell: ({ row }: { row: any }) => (
                   <div>
-                    <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
+                    <IndeterminateCheckbox
+                      {...row.getToggleRowSelectedProps()}
+                      row={row}
+                      setSelected={setExternalSelectedRows}
+                      selectedRef={selectedRowsRef}
+                    />
                   </div>
                 ),
                 maxWidth: 40,
@@ -267,7 +334,9 @@ const Table = <T extends object, TFilter extends object = {}>(
     // which has only the rows for the active page
 
     // Get state from react-table
-    state: { pageIndex, pageSize, selectedRowIds },
+    state: { pageIndex, pageSize },
+    toggleRowSelected,
+    selectedFlatRows,
   } = instance;
 
   // Listen for changes in pagination and use the state to fetch our new data
@@ -283,13 +352,11 @@ const Table = <T extends object, TFilter extends object = {}>(
     onRequestData?.({ pageIndex: pageIndex, pageSize });
   }, [onRequestData, pageIndex, pageSize]);
 
-  useEffect(() => {
-    if (setSelectedRows && Object.keys(selectedRowIds).length) {
-      const selectedRows = _.filter(page, { isSelected: true });
-      const selectedData = selectedRows.map((row: Row<T>) => row.original);
-      setSelectedRows(selectedData);
-    }
-  }, [data, setSelectedRows, page, selectedRowIds]);
+  useDeepCompareEffect(() => {
+    page.forEach(r => {
+      toggleRowSelected(r.id, !!externalSelectedRows?.find(s => s.id === r.original.id));
+    });
+  }, [page, externalSelectedRows]);
 
   const getNextSortDirection = (column: ColumnInstanceWithProps<T>): SortDirection => {
     if (!(props.sort as any)[column.id]) return 'asc';
@@ -479,7 +546,7 @@ const Table = <T extends object, TFilter extends object = {}>(
     const renderRow = (row: Row<T>, index: number) => {
       return (
         <div key={index} className="tr-wrapper">
-          <div {...row.getRowProps()} className="tr">
+          <div {...row.getRowProps()} className={clsx('tr', row.isSelected ? 'selected' : '')}>
             {/* If canRowExpand prop is passed only allow expansions on those rows */}
             {props.canRowExpand &&
               props.canRowExpand(row) &&
@@ -553,7 +620,8 @@ const Table = <T extends object, TFilter extends object = {}>(
     cellProps,
     expandedRows,
     clickableTooltip,
-    selectedRowIds,
+    externalSelectedRows,
+    selectedFlatRows,
   ]);
 
   // Render the UI for your table

@@ -1,74 +1,63 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`renders correctly 1`] = `
+exports[`Select Project Properties Step renders correctly 1`] = `
 .c0 {
   margin-left: 0.5rem;
   margin-bottom: 0.2rem;
 }
 
 <div
-  className="SelectProjectProperties container-fluid"
+  class="SelectProjectProperties container-fluid"
 >
   <h3
-    className="mr-auto"
+    class="mr-auto"
   >
     Search and select 1 or more properties for the project
   </h3>
   <div
-    className="filter-container border-bottom container-fluid"
+    class="filter-container border-bottom container-fluid"
   >
     <div
-      className="px-0 container"
+      class="px-0 container"
     >
       <form
-        className=""
-        noValidate={true}
-        onSubmit={[Function]}
+        class=""
+        novalidate=""
       >
         <div
-          className="filter-bar form-row"
+          class="filter-bar form-row"
         >
           <div
-            className="bar-item col"
+            class="bar-item col"
           >
             <div
-              className="form-group"
+              class="form-group"
             >
               <input
-                className="form-control"
+                class="form-control"
                 id="input-pid"
                 name="pid"
-                onBlur={[Function]}
-                onChange={[Function]}
-                onFocus={[Function]}
-                onMouseOut={[Function]}
-                onMouseOver={[Function]}
                 placeholder="Enter PID or PIN"
                 value=""
               />
             </div>
           </div>
           <div
-            className="bar-item col"
+            class="bar-item col"
           >
             <div
-              className="input-group"
+              class="input-group"
             >
               <div
-                className="input-group-content"
+                class="input-group-content"
               >
                 <div
-                  className="form-group"
+                  class="form-group"
                 >
                   <input
-                    className="form-control"
+                    class="form-control"
                     id="input-address"
                     name="address"
-                    onBlur={[Function]}
-                    onChange={[Function]}
-                    onFocus={[Function]}
-                    onMouseOut={[Function]}
-                    onMouseOver={[Function]}
                     placeholder="Enter an address or city"
                     value=""
                   />
@@ -77,39 +66,40 @@ exports[`renders correctly 1`] = `
             </div>
           </div>
           <div
-            className="bar-item col"
+            class="bar-item col"
           >
             <div
-              className="form-group"
+              class="form-group"
             >
               <select
-                className="form-select form-control"
+                class="form-select form-control"
                 id="input-agencies"
                 name="agencies"
-                onBlur={[Function]}
-                onChange={[Function]}
               >
                 <option
                   value=""
                 >
                   Enter an Agency
                 </option>
+                <option
+                  class="option"
+                  value="1"
+                >
+                  agencyVal
+                </option>
               </select>
             </div>
           </div>
           <div
-            className="bar-item col"
+            class="bar-item col"
           >
             <div
-              className="form-group"
+              class="form-group"
             >
               <select
-                className="form-select form-control"
+                class="form-select form-control"
                 id="input-classificationId"
                 name="classificationId"
-                onBlur={[Function]}
-                onChange={[Function]}
-                value="2"
               >
                 <option
                   value=""
@@ -120,67 +110,38 @@ exports[`renders correctly 1`] = `
             </div>
           </div>
           <div
-            className="bar-item col"
+            class="bar-item col"
           >
             <div
-              className="form-group"
+              class="form-group"
             >
               <div
-                className="rbt"
-                style={
-                  Object {
-                    "outline": "none",
-                    "position": "relative",
-                  }
-                }
-                tabIndex={-1}
+                class="rbt"
+                style="outline: none; position: relative;"
+                tabindex="-1"
               >
                 <div
-                  style={
-                    Object {
-                      "display": "flex",
-                      "flex": 1,
-                      "height": "100%",
-                      "position": "relative",
-                    }
-                  }
+                  style="display: flex; flex: 1; height: 100%; position: relative;"
                 >
                   <input
                     aria-autocomplete="both"
-                    aria-expanded={false}
+                    aria-expanded="false"
                     aria-haspopup="listbox"
-                    autoComplete="off"
-                    className="rbt-input-main form-control rbt-input"
+                    autocomplete="off"
+                    class="rbt-input-main form-control rbt-input"
                     id="administrativeArea-field"
                     name="administrativeArea"
-                    onBlur={[Function]}
-                    onChange={[Function]}
-                    onClick={[Function]}
-                    onFocus={[Function]}
-                    onKeyDown={[Function]}
                     placeholder="Location"
                     role="combobox"
                     type="text"
                     value=""
                   />
                   <input
-                    aria-hidden={true}
-                    className="rbt-input-hint"
-                    readOnly={true}
-                    style={
-                      Object {
-                        "backgroundColor": "transparent",
-                        "borderColor": "transparent",
-                        "boxShadow": "none",
-                        "color": "rgba(0, 0, 0, 0.35)",
-                        "left": 0,
-                        "pointerEvents": "none",
-                        "position": "absolute",
-                        "top": 0,
-                        "width": "100%",
-                      }
-                    }
-                    tabIndex={-1}
+                    aria-hidden="true"
+                    class="rbt-input-hint"
+                    readonly=""
+                    style="background-color: transparent; border-color: transparent; box-shadow: none; color: rgba(0, 0, 0, 0.35); left: 0px; pointer-events: none; position: absolute; top: 0px; width: 100%; border-style: inset inset inset inset; border-width: 2px 2px 2px 2px; line-height: normal; padding: 1px 1px 1px 1px;"
+                    tabindex="-1"
                     value=""
                   />
                 </div>
@@ -188,33 +149,23 @@ exports[`renders correctly 1`] = `
             </div>
           </div>
           <div
-            className="bar-item flex-grow-0 col"
+            class="bar-item flex-grow-0 col"
           >
             <button
-              className="Button Button--icon-only bg-warning btn btn-primary"
-              disabled={false}
-              onBlur={[Function]}
-              onFocus={[Function]}
-              onMouseOut={[Function]}
-              onMouseOver={[Function]}
+              class="Button Button--icon-only bg-warning btn btn-primary"
               type="submit"
             >
               <div
-                className="Button__icon"
+                class="Button__icon"
               >
                 <svg
                   fill="currentColor"
-                  height={20}
-                  size={20}
+                  height="20"
+                  size="20"
                   stroke="currentColor"
-                  strokeWidth="0"
-                  style={
-                    Object {
-                      "color": undefined,
-                    }
-                  }
+                  stroke-width="0"
                   viewBox="0 0 512 512"
-                  width={20}
+                  width="20"
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
@@ -225,34 +176,23 @@ exports[`renders correctly 1`] = `
             </button>
           </div>
           <div
-            className="bar-item flex-grow-0 col"
+            class="bar-item flex-grow-0 col"
           >
             <button
-              className="Button Button--icon-only btn btn-info"
-              disabled={false}
-              onBlur={[Function]}
-              onClick={[Function]}
-              onFocus={[Function]}
-              onMouseOut={[Function]}
-              onMouseOver={[Function]}
+              class="Button Button--icon-only btn btn-info"
               type="reset"
             >
               <div
-                className="Button__icon"
+                class="Button__icon"
               >
                 <svg
                   fill="currentColor"
-                  height={20}
-                  size={20}
+                  height="20"
+                  size="20"
                   stroke="currentColor"
-                  strokeWidth="0"
-                  style={
-                    Object {
-                      "color": undefined,
-                    }
-                  }
+                  stroke-width="0"
                   viewBox="0 0 512 512"
-                  width={20}
+                  width="20"
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
@@ -267,21 +207,16 @@ exports[`renders correctly 1`] = `
     </div>
   </div>
   <div
-    className="small-filter"
+    class="small-filter"
   >
     <p
-      style={
-        Object {
-          "float": "right",
-        }
-      }
+      style="float: right;"
     >
       Show
        
       <button
-        className="c0 btn btn-link"
-        disabled={false}
-        onClick={[Function]}
+        class="c0 btn btn-link"
+        style="color: rgb(26, 90, 150);"
         type="button"
       >
         Surplus Active
@@ -290,9 +225,7 @@ exports[`renders correctly 1`] = `
       |
        
       <button
-        className="c0 btn btn-link"
-        disabled={false}
-        onClick={[Function]}
+        class="c0 btn btn-link"
         type="button"
       >
         All
@@ -300,928 +233,514 @@ exports[`renders correctly 1`] = `
     </p>
   </div>
   <form
-    className=""
-    noValidate={true}
-    onSubmit={[Function]}
+    class=""
+    novalidate=""
   >
     <div
-      className="col-md-12 PropertyListViewSelect container"
+      class="col-md-12 PropertyListViewSelect container"
     >
       <div
-        className="ScrollContainer"
+        class="ScrollContainer"
       >
+        <h2>
+          Available Properties
+        </h2>
         <div
-          className="TableToolbar container-fluid"
-        >
-          <h2
-            className="mr-auto"
-          >
-            Available Properties
-          </h2>
-          <button
-            className="btn btn-primary"
-            disabled={false}
-            onClick={[Function]}
-            type="button"
-          >
-            Add Selected
-          </button>
-        </div>
-        <div
-          className="table"
+          class="table"
           role="table"
-          style={
-            Object {
-              "minWidth": undefined,
-            }
-          }
         >
           <div
-            className="thead thead-light"
+            class="thead thead-light"
           >
             <div
-              className="tr"
+              class="tr"
               role="row"
-              style={
-                Object {
-                  "display": "flex",
-                  "flex": "1 0 auto",
-                  "minWidth": "820px",
-                }
-              }
+              style="display: flex; flex: 1 0 auto; min-width: 820px;"
             >
               <div
-                className="th"
-                colSpan={1}
+                class="th"
+                colspan="1"
                 role="columnheader"
-                style={
-                  Object {
-                    "alignItems": "center",
-                    "boxSizing": "border-box",
-                    "display": "flex",
-                    "flex": "40 0 auto",
-                    "justifyContent": "flex-start",
-                    "minWidth": "30px",
-                    "textAlign": "left",
-                    "width": "40px",
-                  }
-                }
+                style="box-sizing: border-box; flex: 40 0 auto; min-width: 30px; width: 40px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
               >
                 <div
-                  className="sortable-column"
+                  class="sortable-column"
                 >
                   <div>
                     <input
-                      checked={false}
-                      onChange={[Function]}
-                      style={
-                        Object {
-                          "cursor": "pointer",
-                        }
-                      }
-                      title="Toggle All Rows Selected"
+                      data-testid="selectrow-parent"
+                      disabled=""
+                      style="cursor: pointer;"
+                      title="Click to deselect all properties."
                       type="checkbox"
                     />
                   </div>
                   <span
-                    style={
-                      Object {
-                        "flex": "1 1 auto",
-                      }
-                    }
+                    style="flex: 1 1 auto;"
                   />
                 </div>
               </div>
               <div
-                className="th"
-                colSpan={1}
+                class="th"
+                colspan="1"
                 role="columnheader"
-                style={
-                  Object {
-                    "alignItems": "center",
-                    "boxSizing": "border-box",
-                    "display": "flex",
-                    "flex": "100 0 auto",
-                    "justifyContent": "flex-start",
-                    "minWidth": "30px",
-                    "textAlign": "left",
-                    "width": "100px",
-                  }
-                }
+                style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
               >
                 <div
-                  className="sortable-column"
+                  class="sortable-column"
                 >
                   Agency
                   <span
-                    style={
-                      Object {
-                        "flex": "1 1 auto",
-                      }
-                    }
+                    style="flex: 1 1 auto;"
                   />
                 </div>
               </div>
               <div
-                className="th"
-                colSpan={1}
+                class="th"
+                colspan="1"
                 role="columnheader"
-                style={
-                  Object {
-                    "alignItems": "center",
-                    "boxSizing": "border-box",
-                    "display": "flex",
-                    "flex": "100 0 auto",
-                    "justifyContent": "flex-start",
-                    "minWidth": "30px",
-                    "textAlign": "left",
-                    "width": "100px",
-                  }
-                }
+                style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
               >
                 <div
-                  className="sortable-column"
+                  class="sortable-column"
                 >
                   Name
                   <span
-                    style={
-                      Object {
-                        "flex": "1 1 auto",
-                      }
-                    }
+                    style="flex: 1 1 auto;"
                   />
                 </div>
               </div>
               <div
-                className="th"
-                colSpan={1}
+                class="th"
+                colspan="1"
                 role="columnheader"
-                style={
-                  Object {
-                    "alignItems": "center",
-                    "boxSizing": "border-box",
-                    "display": "flex",
-                    "flex": "100 0 auto",
-                    "justifyContent": "flex-start",
-                    "minWidth": "30px",
-                    "textAlign": "left",
-                    "width": "100px",
-                  }
-                }
+                style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
               >
                 <div
-                  className="sortable-column"
+                  class="sortable-column"
                 >
                   Civic Address
                   <span
-                    style={
-                      Object {
-                        "flex": "1 1 auto",
-                      }
-                    }
+                    style="flex: 1 1 auto;"
                   />
                 </div>
               </div>
               <div
-                className="th"
-                colSpan={1}
+                class="th"
+                colspan="1"
                 role="columnheader"
-                style={
-                  Object {
-                    "alignItems": "center",
-                    "boxSizing": "border-box",
-                    "display": "flex",
-                    "flex": "140 0 auto",
-                    "justifyContent": "flex-start",
-                    "minWidth": "30px",
-                    "textAlign": "left",
-                    "width": "140px",
-                  }
-                }
+                style="box-sizing: border-box; flex: 140 0 auto; min-width: 30px; width: 140px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
               >
                 <div
-                  className="sortable-column"
+                  class="sortable-column"
                 >
                   Classification
                   <span
-                    style={
-                      Object {
-                        "flex": "1 1 auto",
-                      }
-                    }
+                    style="flex: 1 1 auto;"
                   />
                 </div>
               </div>
               <div
-                className="th"
-                colSpan={1}
+                class="th"
+                colspan="1"
                 role="columnheader"
-                style={
-                  Object {
-                    "alignItems": "center",
-                    "boxSizing": "border-box",
-                    "display": "flex",
-                    "flex": "100 0 auto",
-                    "justifyContent": "flex-start",
-                    "minWidth": "30px",
-                    "textAlign": "left",
-                    "width": "100px",
-                  }
-                }
+                style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
               >
                 <div
-                  className="sortable-column"
+                  class="sortable-column"
                 >
                   Current Zoning Code
                   <span
-                    style={
-                      Object {
-                        "flex": "1 1 auto",
-                      }
-                    }
+                    style="flex: 1 1 auto;"
                   />
                 </div>
               </div>
               <div
-                className="th"
-                colSpan={1}
+                class="th"
+                colspan="1"
                 role="columnheader"
-                style={
-                  Object {
-                    "alignItems": "center",
-                    "boxSizing": "border-box",
-                    "display": "flex",
-                    "flex": "100 0 auto",
-                    "justifyContent": "flex-start",
-                    "minWidth": "30px",
-                    "textAlign": "left",
-                    "width": "100px",
-                  }
-                }
+                style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
               >
                 <div
-                  className="sortable-column"
+                  class="sortable-column"
                 >
                   Other Projects
                   <span
-                    style={
-                      Object {
-                        "flex": "1 1 auto",
-                      }
-                    }
+                    style="flex: 1 1 auto;"
                   />
                 </div>
               </div>
               <div
-                className="th"
-                colSpan={1}
+                class="th"
+                colspan="1"
                 role="columnheader"
-                style={
-                  Object {
-                    "alignItems": "center",
-                    "boxSizing": "border-box",
-                    "display": "flex",
-                    "flex": "145 0 auto",
-                    "justifyContent": "flex-start",
-                    "minWidth": "145px",
-                    "textAlign": "left",
-                    "width": "145px",
-                  }
-                }
+                style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
               >
                 <div
-                  className="sortable-column"
+                  class="sortable-column"
                 >
                   Net Book Value
                   <span
-                    style={
-                      Object {
-                        "flex": "1 1 auto",
-                      }
-                    }
+                    style="flex: 1 1 auto;"
                   />
                 </div>
               </div>
               <div
-                className="th"
-                colSpan={1}
+                class="th"
+                colspan="1"
                 role="columnheader"
-                style={
-                  Object {
-                    "alignItems": "center",
-                    "boxSizing": "border-box",
-                    "display": "flex",
-                    "flex": "145 0 auto",
-                    "justifyContent": "flex-start",
-                    "minWidth": "145px",
-                    "textAlign": "left",
-                    "width": "145px",
-                  }
-                }
+                style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
               >
                 <div
-                  className="sortable-column"
+                  class="sortable-column"
                 >
                   Market Value
                   <span
-                    style={
-                      Object {
-                        "flex": "1 1 auto",
-                      }
-                    }
+                    style="flex: 1 1 auto;"
                   />
                 </div>
               </div>
               <div
-                className="th"
-                colSpan={1}
+                class="th"
+                colspan="1"
                 role="columnheader"
-                style={
-                  Object {
-                    "alignItems": "center",
-                    "boxSizing": "border-box",
-                    "display": "flex",
-                    "flex": "145 0 auto",
-                    "justifyContent": "flex-start",
-                    "minWidth": "145px",
-                    "textAlign": "left",
-                    "width": "145px",
-                  }
-                }
+                style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
               >
                 <div
-                  className="sortable-column"
+                  class="sortable-column"
                 >
                   Assessed Land
                   <span
-                    style={
-                      Object {
-                        "flex": "1 1 auto",
-                      }
-                    }
+                    style="flex: 1 1 auto;"
                   />
                 </div>
               </div>
               <div
-                className="th"
-                colSpan={1}
+                class="th"
+                colspan="1"
                 role="columnheader"
-                style={
-                  Object {
-                    "alignItems": "center",
-                    "boxSizing": "border-box",
-                    "display": "flex",
-                    "flex": "145 0 auto",
-                    "justifyContent": "flex-start",
-                    "minWidth": "145px",
-                    "textAlign": "left",
-                    "width": "145px",
-                  }
-                }
+                style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
               >
                 <div
-                  className="sortable-column"
+                  class="sortable-column"
                 >
                   Assessed Building
                   <span
-                    style={
-                      Object {
-                        "flex": "1 1 auto",
-                      }
-                    }
+                    style="flex: 1 1 auto;"
                   />
                 </div>
               </div>
               <div
-                className="th"
-                colSpan={1}
+                class="th"
+                colspan="1"
                 role="columnheader"
-                style={
-                  Object {
-                    "alignItems": "center",
-                    "boxSizing": "border-box",
-                    "display": "flex",
-                    "flex": "60 0 auto",
-                    "justifyContent": "flex-start",
-                    "minWidth": "30px",
-                    "textAlign": "left",
-                    "width": "60px",
-                  }
-                }
+                style="box-sizing: border-box; flex: 60 0 auto; min-width: 30px; width: 60px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
               >
                 <div
-                  className="sortable-column"
+                  class="sortable-column"
                 >
                   Type
                   <span
-                    style={
-                      Object {
-                        "flex": "1 1 auto",
-                      }
-                    }
+                    style="flex: 1 1 auto;"
                   />
                 </div>
               </div>
             </div>
           </div>
           <div
-            className="no-rows-message"
+            class="table-loading"
           >
-            No rows to display
+            <div
+              class="spinner-border"
+            />
           </div>
         </div>
         <div
-          className="table-toolbar"
+          class="table-toolbar"
         />
+        <div
+          class="TableToolbar container-fluid"
+        >
+          <strong
+            class="align-self-center mr-2"
+          />
+          <button
+            class="btn btn-secondary"
+            type="button"
+          >
+            Add To Project
+          </button>
+        </div>
       </div>
       <div
-        className="ScrollContainer"
+        class="ScrollContainer"
       >
         <div
-          className="TableToolbar container-fluid"
+          class="TableToolbar container-fluid"
         >
           <h2
-            className="mr-auto"
+            class="mr-auto"
           >
             Properties in the Project
           </h2>
           <button
-            className="btn btn-primary"
-            disabled={false}
-            onClick={[Function]}
+            class="btn btn-primary"
             type="button"
           >
             Remove Selected
           </button>
         </div>
         <div
-          className="table"
+          class="table"
           role="table"
-          style={
-            Object {
-              "minWidth": undefined,
-            }
-          }
         >
           <div
-            className="thead thead-light"
+            class="thead thead-light"
           >
             <div
-              className="tr"
+              class="tr"
               role="row"
-              style={
-                Object {
-                  "display": "flex",
-                  "flex": "1 0 auto",
-                  "minWidth": "850px",
-                }
-              }
+              style="display: flex; flex: 1 0 auto; min-width: 850px;"
             >
               <div
-                className="th"
-                colSpan={1}
+                class="th"
+                colspan="1"
                 role="columnheader"
-                style={
-                  Object {
-                    "alignItems": "center",
-                    "boxSizing": "border-box",
-                    "display": "flex",
-                    "flex": "40 0 auto",
-                    "justifyContent": "flex-start",
-                    "minWidth": "30px",
-                    "textAlign": "left",
-                    "width": "40px",
-                  }
-                }
+                style="box-sizing: border-box; flex: 40 0 auto; min-width: 30px; width: 40px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
               >
                 <div
-                  className="sortable-column"
+                  class="sortable-column"
                 >
                   <div>
                     <input
-                      checked={false}
-                      onChange={[Function]}
-                      style={
-                        Object {
-                          "cursor": "pointer",
-                        }
-                      }
-                      title="Toggle All Rows Selected"
+                      data-testid="selectrow-parent"
+                      disabled=""
+                      style="cursor: pointer;"
+                      title="Click to deselect all properties."
                       type="checkbox"
                     />
                   </div>
                   <span
-                    style={
-                      Object {
-                        "flex": "1 1 auto",
-                      }
-                    }
+                    style="flex: 1 1 auto;"
                   />
                 </div>
               </div>
               <div
-                className="th"
-                colSpan={1}
+                class="th"
+                colspan="1"
                 role="columnheader"
-                style={
-                  Object {
-                    "alignItems": "center",
-                    "boxSizing": "border-box",
-                    "display": "flex",
-                    "flex": "40 0 auto",
-                    "justifyContent": "flex-start",
-                    "minWidth": "30px",
-                    "textAlign": "left",
-                    "width": "40px",
-                  }
-                }
+                style="box-sizing: border-box; flex: 40 0 auto; min-width: 30px; width: 40px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
               >
                 <div
-                  className="sortable-column"
+                  class="sortable-column"
                 >
                   
                   <span
-                    style={
-                      Object {
-                        "flex": "1 1 auto",
-                      }
-                    }
+                    style="flex: 1 1 auto;"
                   />
                 </div>
               </div>
               <div
-                className="th"
-                colSpan={1}
+                class="th"
+                colspan="1"
                 role="columnheader"
-                style={
-                  Object {
-                    "alignItems": "center",
-                    "boxSizing": "border-box",
-                    "display": "flex",
-                    "flex": "100 0 auto",
-                    "justifyContent": "flex-start",
-                    "minWidth": "30px",
-                    "textAlign": "left",
-                    "width": "100px",
-                  }
-                }
+                style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
               >
                 <div
-                  className="sortable-column"
+                  class="sortable-column"
                 >
                   Agency
                   <span
-                    style={
-                      Object {
-                        "flex": "1 1 auto",
-                      }
-                    }
+                    style="flex: 1 1 auto;"
                   />
                 </div>
               </div>
               <div
-                className="th"
-                colSpan={1}
+                class="th"
+                colspan="1"
                 role="columnheader"
-                style={
-                  Object {
-                    "alignItems": "center",
-                    "boxSizing": "border-box",
-                    "display": "flex",
-                    "flex": "100 0 auto",
-                    "justifyContent": "flex-start",
-                    "minWidth": "30px",
-                    "textAlign": "left",
-                    "width": "100px",
-                  }
-                }
+                style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
               >
                 <div
-                  className="sortable-column"
+                  class="sortable-column"
                 >
                   Name
                   <span
-                    style={
-                      Object {
-                        "flex": "1 1 auto",
-                      }
-                    }
+                    style="flex: 1 1 auto;"
                   />
                 </div>
               </div>
               <div
-                className="th"
-                colSpan={1}
+                class="th"
+                colspan="1"
                 role="columnheader"
-                style={
-                  Object {
-                    "alignItems": "center",
-                    "boxSizing": "border-box",
-                    "display": "flex",
-                    "flex": "100 0 auto",
-                    "justifyContent": "flex-start",
-                    "minWidth": "30px",
-                    "textAlign": "left",
-                    "width": "100px",
-                  }
-                }
+                style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
               >
                 <div
-                  className="sortable-column"
+                  class="sortable-column"
                 >
                   Civic Address
                   <span
-                    style={
-                      Object {
-                        "flex": "1 1 auto",
-                      }
-                    }
+                    style="flex: 1 1 auto;"
                   />
                 </div>
               </div>
               <div
-                className="th"
-                colSpan={1}
+                class="th"
+                colspan="1"
                 role="columnheader"
-                style={
-                  Object {
-                    "alignItems": "center",
-                    "boxSizing": "border-box",
-                    "display": "flex",
-                    "flex": "140 0 auto",
-                    "justifyContent": "flex-start",
-                    "minWidth": "30px",
-                    "textAlign": "left",
-                    "width": "140px",
-                  }
-                }
+                style="box-sizing: border-box; flex: 140 0 auto; min-width: 30px; width: 140px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
               >
                 <div
-                  className="sortable-column"
+                  class="sortable-column"
                 >
                   Classification
                   <span
-                    style={
-                      Object {
-                        "flex": "1 1 auto",
-                      }
-                    }
+                    style="flex: 1 1 auto;"
                   />
                 </div>
               </div>
               <div
-                className="th"
-                colSpan={1}
+                class="th"
+                colspan="1"
                 role="columnheader"
-                style={
-                  Object {
-                    "alignItems": "center",
-                    "boxSizing": "border-box",
-                    "display": "flex",
-                    "flex": "100 0 auto",
-                    "justifyContent": "flex-start",
-                    "minWidth": "30px",
-                    "textAlign": "left",
-                    "width": "100px",
-                  }
-                }
+                style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
               >
                 <div
-                  className="sortable-column"
+                  class="sortable-column"
                 >
                   Current Zoning Code
                   <span
-                    style={
-                      Object {
-                        "flex": "1 1 auto",
-                      }
-                    }
+                    style="flex: 1 1 auto;"
                   />
                 </div>
               </div>
               <div
-                className="th"
-                colSpan={1}
+                class="th"
+                colspan="1"
                 role="columnheader"
-                style={
-                  Object {
-                    "alignItems": "center",
-                    "boxSizing": "border-box",
-                    "display": "flex",
-                    "flex": "100 0 auto",
-                    "justifyContent": "flex-start",
-                    "minWidth": "30px",
-                    "textAlign": "left",
-                    "width": "100px",
-                  }
-                }
+                style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
               >
                 <div
-                  className="sortable-column"
+                  class="sortable-column"
                 >
                   Other Projects
                   <span
-                    style={
-                      Object {
-                        "flex": "1 1 auto",
-                      }
-                    }
+                    style="flex: 1 1 auto;"
                   />
                 </div>
               </div>
               <div
-                className="th"
-                colSpan={1}
+                class="th"
+                colspan="1"
                 role="columnheader"
-                style={
-                  Object {
-                    "alignItems": "center",
-                    "boxSizing": "border-box",
-                    "display": "flex",
-                    "flex": "145 0 auto",
-                    "justifyContent": "flex-start",
-                    "minWidth": "145px",
-                    "textAlign": "left",
-                    "width": "145px",
-                  }
-                }
+                style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
               >
                 <div
-                  className="sortable-column"
+                  class="sortable-column"
                 >
                   Net Book Value
                   <span
-                    style={
-                      Object {
-                        "flex": "1 1 auto",
-                      }
-                    }
+                    style="flex: 1 1 auto;"
                   />
                 </div>
               </div>
               <div
-                className="th"
-                colSpan={1}
+                class="th"
+                colspan="1"
                 role="columnheader"
-                style={
-                  Object {
-                    "alignItems": "center",
-                    "boxSizing": "border-box",
-                    "display": "flex",
-                    "flex": "145 0 auto",
-                    "justifyContent": "flex-start",
-                    "minWidth": "145px",
-                    "textAlign": "left",
-                    "width": "145px",
-                  }
-                }
+                style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
               >
                 <div
-                  className="sortable-column"
+                  class="sortable-column"
                 >
                   Market Value
                   <span
-                    style={
-                      Object {
-                        "flex": "1 1 auto",
-                      }
-                    }
+                    style="flex: 1 1 auto;"
                   />
                 </div>
               </div>
               <div
-                className="th"
-                colSpan={1}
+                class="th"
+                colspan="1"
                 role="columnheader"
-                style={
-                  Object {
-                    "alignItems": "center",
-                    "boxSizing": "border-box",
-                    "display": "flex",
-                    "flex": "145 0 auto",
-                    "justifyContent": "flex-start",
-                    "minWidth": "145px",
-                    "textAlign": "left",
-                    "width": "145px",
-                  }
-                }
+                style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
               >
                 <div
-                  className="sortable-column"
+                  class="sortable-column"
                 >
                   Assessed Land
                   <span
-                    style={
-                      Object {
-                        "flex": "1 1 auto",
-                      }
-                    }
+                    style="flex: 1 1 auto;"
                   />
                 </div>
               </div>
               <div
-                className="th"
-                colSpan={1}
+                class="th"
+                colspan="1"
                 role="columnheader"
-                style={
-                  Object {
-                    "alignItems": "center",
-                    "boxSizing": "border-box",
-                    "display": "flex",
-                    "flex": "145 0 auto",
-                    "justifyContent": "flex-start",
-                    "minWidth": "145px",
-                    "textAlign": "left",
-                    "width": "145px",
-                  }
-                }
+                style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
               >
                 <div
-                  className="sortable-column"
+                  class="sortable-column"
                 >
                   Assessed Building
                   <span
-                    style={
-                      Object {
-                        "flex": "1 1 auto",
-                      }
-                    }
+                    style="flex: 1 1 auto;"
                   />
                 </div>
               </div>
               <div
-                className="th"
-                colSpan={1}
+                class="th"
+                colspan="1"
                 role="columnheader"
-                style={
-                  Object {
-                    "alignItems": "center",
-                    "boxSizing": "border-box",
-                    "display": "flex",
-                    "flex": "60 0 auto",
-                    "justifyContent": "flex-start",
-                    "minWidth": "30px",
-                    "textAlign": "left",
-                    "width": "60px",
-                  }
-                }
+                style="box-sizing: border-box; flex: 60 0 auto; min-width: 30px; width: 60px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
               >
                 <div
-                  className="sortable-column"
+                  class="sortable-column"
                 >
                   Type
                   <span
-                    style={
-                      Object {
-                        "flex": "1 1 auto",
-                      }
-                    }
+                    style="flex: 1 1 auto;"
                   />
                 </div>
               </div>
             </div>
           </div>
           <div
-            className="no-rows-message"
+            class="no-rows-message"
           >
             No rows to display
           </div>
         </div>
         <div
-          className="table-toolbar"
+          class="table-toolbar"
         />
       </div>
     </div>
     <div
-      className="ProjectNotes form-row"
+      class="ProjectNotes form-row"
     >
       <div
-        className="col-md-10 form-group col"
+        class="col-md-10 form-group col"
       >
         <label
-          className="form-label"
-          htmlFor="input-note"
+          class="form-label"
+          for="input-note"
         >
           Notes
         </label>
         <textarea
-          className="col-md-auto form-control"
+          class="col-md-auto form-control"
           id="input-note"
           name="note"
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          onMouseOut={[Function]}
-          onMouseOver={[Function]}
-        />
+        >
+          my notes
+        </textarea>
       </div>
     </div>
     <div
-      style={
-        Object {
-          "textAlign": "right",
-        }
-      }
+      style="text-align: right;"
     />
   </form>
 </div>
