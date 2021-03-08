@@ -3,7 +3,7 @@ import './ParcelIdentificationForm.scss';
 import { FastInput, SelectOptions, Check, TextArea, InputGroup } from 'components/common/form';
 import { Label } from 'components/common/Label';
 import AddressForm from 'features/properties/components/forms/subforms/AddressForm';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useFormikContext, getIn } from 'formik';
 import PidPinForm from 'features/properties/components/forms/subforms/PidPinForm';
 import { sensitiveTooltip } from '../../../../../src/features/properties/components/forms/strings';
@@ -27,6 +27,7 @@ import MovePinForm from './MovePinForm';
 import LandSearchForm from './LandSearchForm';
 import { ProjectNumberLink } from 'components/maps/leaflet/InfoSlideOut/ProjectNumberLink';
 import styled from 'styled-components';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 
 interface IIdentificationProps {
   /** used for changign the agency - note that only select users will be able to edit this field */
@@ -77,12 +78,29 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
 
   const agencies = (props.agencies ?? []).map(c => mapSelectOptionWithParent(c, props.agencies));
   const formikProps = useFormikContext<ISteppedFormValues<IParcel>>();
-  const agency = getIn(formikProps.values, withNameSpace(nameSpace, 'agencyId'));
   const { lookupCodes } = useCodeLookups();
   const { propertyTypeId, latitude, longitude } = getIn(formikProps.values, nameSpace);
   const projectNumbers = getIn(formikProps.values, 'data.projectNumbers');
   const agencyId = getIn(formikProps.values, `data.agencyId`);
   const [privateProject, setPrivateProject] = useState(false);
+
+  const keycloak = useKeycloakWrapper();
+  const userAgency = agencies.find(a => Number(a.value) === Number(keycloak.agencyId));
+
+  const isUserAgencyAParent = useMemo(() => {
+    return !!userAgency && !userAgency.parentId;
+  }, [userAgency]);
+
+  const agencyOptions = useMemo(() => {
+    const items = agencies.filter(a => {
+      return (
+        isPropertyAdmin ||
+        Number(a.value) === Number(userAgency?.value) ||
+        Number(a.parentId) === Number(userAgency?.value)
+      );
+    });
+    return items.map(c => mapSelectOptionWithParent(c, agencies));
+  }, [userAgency, agencies, isPropertyAdmin]);
 
   return (
     <Container>
@@ -165,26 +183,14 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
             nameSpace={withNameSpace(nameSpace, 'address')}
           />
           <Form.Row>
-            <Form.Label>{agency?.parent ? 'Sub Agency' : 'Agency'}</Form.Label>
+            <Form.Label>Agency</Form.Label>
             <ParentSelect
               required
               field={withNameSpace(nameSpace, 'agencyId')}
-              options={agencies}
+              options={agencyOptions}
               filterBy={['code', 'label', 'parent']}
-              disabled={!isPropertyAdmin || disabled}
+              disabled={(!isPropertyAdmin && !isUserAgencyAParent) || disabled}
             />
-            {agency?.parent && (
-              <Form.Row>
-                <Form.Label>Agency</Form.Label>
-                <FastInput
-                  formikProps={formikProps}
-                  field="parent"
-                  disabled
-                  value={agency.parent}
-                  style={{ marginLeft: '5px' }}
-                />
-              </Form.Row>
-            )}
           </Form.Row>
         </Col>
         <Col md={6} className="form-container">

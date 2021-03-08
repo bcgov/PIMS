@@ -1,10 +1,10 @@
-import { FunctionComponent } from 'react';
+import { FunctionComponent, useMemo } from 'react';
 import React from 'react';
 import { Input, Form, TextArea, FastSelect, SelectOption } from 'components/common/form';
-import { getIn, useFormikContext } from 'formik';
+import { useFormikContext } from 'formik';
 import { ParentSelect } from 'components/common/form/ParentSelect';
 import { mapSelectOptionWithParent } from 'utils';
-
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 interface InformationFormProps {
   nameSpace?: string;
   disabled?: boolean;
@@ -36,8 +36,24 @@ const InformationForm: FunctionComponent<InformationFormProps> = (props: Informa
     return nameSpace ? `${nameSpace}.${fieldName}` : fieldName;
   };
   const formikProps = useFormikContext();
+  const keycloak = useKeycloakWrapper();
   const agencies = (props.agencies ?? []).map(c => mapSelectOptionWithParent(c, props.agencies));
-  const agency = getIn(formikProps.values, withNameSpace('agencyId'));
+  const userAgency = agencies.find(a => Number(a.value) === Number(keycloak.agencyId));
+
+  const isUserAgencyAParent = useMemo(() => {
+    return !!userAgency && !userAgency.parentId;
+  }, [userAgency]);
+
+  const agencyOptions = useMemo(() => {
+    const items = agencies.filter(a => {
+      return (
+        props.isPropertyAdmin ||
+        Number(a.value) === Number(userAgency?.value) ||
+        Number(a.parentId) === Number(userAgency?.value)
+      );
+    });
+    return items.map(c => mapSelectOptionWithParent(c, agencies));
+  }, [userAgency, agencies, props.isPropertyAdmin]);
 
   return (
     <>
@@ -63,19 +79,14 @@ const InformationForm: FunctionComponent<InformationFormProps> = (props: Informa
         </Form.Row>
       )}
       <Form.Row>
-        <Form.Label>{agency?.parent ? 'Sub Agency' : 'Agency'}</Form.Label>
+        <Form.Label>Agency</Form.Label>
         <ParentSelect
           field={withNameSpace('agencyId')}
-          options={agencies}
+          options={agencyOptions}
           filterBy={['code', 'label', 'parent']}
-          disabled={!props.isPropertyAdmin || props.disabled}
+          disabled={props.disabled || (!props.isPropertyAdmin && !isUserAgencyAParent)}
+          convertValue={Number}
         />
-        {agency?.parent && (
-          <Form.Row>
-            <Form.Label>Agency</Form.Label>
-            <Input field="parent" disabled value={agency.parent} style={{ marginLeft: '5px' }} />
-          </Form.Row>
-        )}
       </Form.Row>
     </>
   );
