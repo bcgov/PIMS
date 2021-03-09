@@ -185,6 +185,7 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
                 }
                 isLoading={initialLoad}
                 id={`name-field`}
+                inputProps={{ id: `name-field` }}
                 placeholder="Property name"
                 onSearch={() => {
                   setInitialLoad(true);

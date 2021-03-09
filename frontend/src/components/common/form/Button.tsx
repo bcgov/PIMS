@@ -21,7 +21,7 @@ export type ButtonProps = ButtonPropsBase & {
   isSubmitting?: boolean;
 };
 
-export const Button: React.FC<ButtonProps> = ({
+export const Button: React.FC<ButtonProps & React.HTMLAttributes<HTMLButtonElement>> = ({
   showSubmitting,
   isSubmitting,
   disabled,
