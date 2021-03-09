@@ -7,6 +7,7 @@ SET [Body] = REPLACE([Body], 'Dear @Model.ToAgency.AddressTo', '@(Model.ToAgency
 -- Add a default if the address to is null.
 UPDATE dbo.[NotificationTemplates]
 SET [Body] = REPLACE([Body], 'Good afternoon', '@(Model.ToAgency.AddressTo ?? "Good morning / Good afternoon")')
+WHERE [Id] != 1
 
 -- Default all emails addressed to.
 UPDATE dbo.[Agencies]
