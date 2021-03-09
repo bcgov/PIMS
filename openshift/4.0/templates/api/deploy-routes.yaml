@@ -31,11 +31,6 @@ parameters:
     displayName: "Unique Identifier"
     description: "A unique identifier to allow for multiple instances (i.e. '-01')."
     value: ""
-  - name: IMAGE_TAG
-    displayName: "Image Tag Name"
-    description: "The image tag that will be used for this deployment.
-      This provides a way to setup an environment for other branches."
-    value: "dev"
 
   - name: APP_DOMAIN
     displayName: "Application Hostname"
@@ -53,91 +48,6 @@ parameters:
     displayName: "Swagger Path"
     description: "The URL path to the API Swagger endpoint"
     value: "/api-docs"
-
-  - name: ASPNETCORE_ENVIRONMENT
-    displayName: "AspNetCore Environment"
-    description: "The ASP Net Core deployment environment setting, [Development, Staging, Production]."
-    required: true
-    value: "Production"
-  - name: ASPNETCORE_URLS
-    displayName: "AspNetCore URLs"
-    description: "The ASP Net Core URLs that the service will listen to (i.e. http://*:8080)."
-    value: "http://*:8080"
-
-  - name: DATABASE_ROLE_NAME
-    displayName: "Database Component Role Name"
-    description: "The database name of the application component role (e.g web, api, database)."
-    required: true
-    value: "database"
-  - name: CONNECTION_STRINGS_PIMS
-    displayName: "PIMS API Database Connection String"
-    description: "The PIMS API database connection string."
-    value: "Server=pims-database,1433;User ID=admin;Database=pims"
-
-  - name: KEYCLOAK_AUDIENCE
-    displayName: "Keycloak SSO audience"
-    description: "The name of the client (i.e. pims-api)."
-    value: "pims-api"
-  - name: KEYCLOAK_AUTHORITY
-    displayName: "Keycloak SSO Authority"
-    description: "The full URL to the SSO Keycloak Admin client (i.e. https://dev.oidc.gov.bc.ca/auth/realms/xz0xtue5)"
-  - name: KEYCLOAK_ADMIN_AUTHORITY
-    displayName: "Keycloak SSO Admin Authority"
-    description: "The full URL to the SSO Keycloak Admin client (i.e. https://dev.oidc.gov.bc.ca/auth/admin/realms/xz0xtue5)"
-  - name: KEYCLOAK_SECRET
-    displayName: "Keycloak client secret."
-    description: "The Keycloak SSO client secret."
-  - name: KEYCLOAK_SERVICE_ACCOUNT_SECRET
-    displayName: "Keycloak Service Account client secret."
-    description: "The Keycloak SSO Service Account client secret."
-
-  - name: CHES_USERNAME
-    displayName: "CHES Username."
-    description: "The Common Hosted Email Service username."
-    required: true
-  - name: CHES_PASSWORD
-    displayName: "CHES Username password."
-    description: "The Common Hosted Email Service password."
-    required: true
-
-  - name: GEOCODER_KEY
-    displayName: "Geocoder Secret Key."
-    description: "The Geocoder secret key that must be ."
-    required: true
-  - name: ELASTIC_PASSWORD
-    displayName: "Elasticsearch Password."
-    description: "Elasticsearch password."
-    required: true
-
-  - name: HEALTH_SCHEME
-    displayName: "Health Scheme"
-    description: "Scheme used to connect to health check endpoints (HTTP or HTTPS)."
-    value: HTTP
-  - name: LIVENESS_PATH
-    displayName: "Liveness Path"
-    description: "Liveness health check api path."
-    value: "/health/live"
-  - name: READINESS_PATH
-    displayName: "Readiness Path"
-    description: "Readiness health check api path."
-    value: "/health/ready"
-
-  - name: CPU_REQUEST
-    displayName: "CPU Request"
-    description: "Starting amount of CPU the container can use."
-    value: "100m"
-  - name: CPU_LIMIT
-    displayName: "CPU Limit"
-    description: "Maximum amount of CPU the container can use."
-    value: "1"
-  - name: MEMORY_REQUEST
-    displayName: "Memory Request"
-    description: "Starting amount of memory the container can use."
-    value: "500Mi"
-  - name: MEMORY_LIMIT
-    displayName: "Memory Limit"
-    description: "Maximum amount of memory the container can use."
-    value: "4Gi"
 objects:
   # The route for the API.
   - kind: Route

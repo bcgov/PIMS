@@ -25,6 +25,16 @@
       "stopAtEntry": false
     },
     {
+      "name": "Tool-Import",
+      "type": "coreclr",
+      "request": "launch",
+      "console": "internalConsole",
+      "preLaunchTask": "build",
+      "program": "${workspaceRoot}/tools/import/bin/Debug/netcoreapp3.1/Pims.Tools.Import.dll",
+      "cwd": "${workspaceRoot}/tools/import",
+      "stopAtEntry": false
+    },
+    {
       "name": ".NET Core Launch (api)",
       "type": "coreclr",
       "request": "launch",
