@@ -87,18 +87,32 @@ const useActiveFeatureLayer = ({
    * Note: currently this is limited to finding one parent in the case of a building. in the future, we may need to find/display all matching parcels.
    */
   useDeepCompareEffect(() => {
-    const highlightSelectedProperty = async () => {
-      const parcelLayerData = await parcelsService.findOneWhereContains({
-        lat: selectedProperty?.parcelDetail?.latitude || 0,
-        lng: selectedProperty?.parcelDetail?.longitude || 0,
-      } as LatLng);
+    const highlightSelectedProperty = async (latLng: LatLng) => {
+      const parcelLayerData = await parcelsService.findOneWhereContains(latLng);
       if (parcelLayerData?.features?.length > 0) {
         activeFeatureLayer?.addData(parcelLayerData.features[0]);
       }
     };
-    if (!!activeFeatureLayer && !!selectedProperty) {
+    if (
+      !!activeFeatureLayer &&
+      !!selectedProperty?.parcelDetail?.latitude &&
+      !!selectedProperty?.parcelDetail?.longitude
+    ) {
       activeFeatureLayer.clearLayers();
-      highlightSelectedProperty();
+      highlightSelectedProperty({
+        lat: selectedProperty.parcelDetail?.latitude as number,
+        lng: selectedProperty.parcelDetail?.longitude as number,
+      } as LatLng);
+      if (!!selectedProperty.parcelDetail?.parcels?.length) {
+        selectedProperty.parcelDetail.parcels.forEach(parcel => {
+          if (!!parcel?.longitude && !!parcel.latitude) {
+            highlightSelectedProperty({
+              lat: parcel?.latitude as number,
+              lng: parcel?.longitude as number,
+            } as LatLng);
+          }
+        });
+      }
     }
   }, [selectedProperty, activeFeatureLayer]);
 
