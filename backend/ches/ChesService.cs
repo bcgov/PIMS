@@ -217,6 +217,10 @@ namespace Pims.Ches
                 email.Cc = new string[0];
                 email.Bcc = new string[0];
             }
+            if (this.Options.AlwaysDelay.HasValue)
+            {
+                email.SendOn = email.SendOn.AddSeconds(this.Options.AlwaysDelay.Value);
+            }
 
             // Make sure there are no blank CC or BCC;
             email.To = email.To.NotNullOrWhiteSpace();
@@ -264,6 +268,11 @@ namespace Pims.Ches
                     c.Cc = new string[0];
                     c.Bcc = new string[0];
                 });
+            }
+            if (this.Options.AlwaysDelay.HasValue)
+            {
+                email.Contexts.ForEach(c =>
+                    c.SendOn = c.SendOn.AddSeconds(this.Options.AlwaysDelay.Value));
             }
 
             // Make sure there are no blank CC or BCC;
