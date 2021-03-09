@@ -28,7 +28,13 @@ namespace Pims.Core.Test
         /// <param name="permissions"></param>
         public static void HasPermissions(this HasPermissionAttribute attribute, params Permissions[] permissions)
         {
-            Assert.Equal(permissions.Select(p => (object)p).ToArray(), attribute.Arguments);
+            var attr = attribute.Arguments.First();
+            if (attr is Permissions[] aperms)
+                Assert.Equal(permissions.Select(p => p).ToArray(), aperms);
+            else if (attr is Permissions aperm)
+                Assert.Equal(permissions.Select(p => p).ToArray(), new Permissions[] { aperm });
+            else
+                Assert.True(false, "Invalid filter argument type");
         }
 
         /// <summary>

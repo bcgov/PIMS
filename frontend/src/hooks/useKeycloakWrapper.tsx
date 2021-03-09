@@ -3,6 +3,7 @@ import { IProperty } from 'actions/parcelsActions';
 import { Roles } from 'constants/roles';
 import { Claims } from 'constants/claims';
 import _ from 'lodash';
+import { PropertyTypes } from 'constants/propertyTypes';
 
 /**
  * IUserInfo interface, represents the userinfo provided by keycloak.
@@ -130,19 +131,19 @@ export function useKeycloakWrapper(): IKeycloak {
   const email = (): string | undefined => {
     return userInfo?.email;
   };
+
+  const isAdmin = hasClaim(Claims.ADMIN_PROPERTIES);
+  const canEdit = hasClaim(Claims.PROPERTY_EDIT);
+  const canDelete = hasClaim(Claims.PROPERTY_DELETE);
+
   /**
    * Return true if the user has permissions to edit this property
    * NOTE: this function will be true for MOST of PIMS, but there may be exceptions for certain cases.
    */
   const canUserEditProperty = (property: IProperty | null): boolean => {
-    return (
-      !!property &&
-      (hasClaim(Claims.ADMIN_PROPERTIES) ||
-        (hasClaim(Claims.PROPERTY_EDIT) &&
-          !!property?.agencyId &&
-          hasAgency(property.agencyId) &&
-          !_.some(property?.projectNumbers ?? '', _.method('includes', 'SPP'))))
-    );
+    const ownsProperty = !!property?.agencyId && hasAgency(property.agencyId);
+    const notInProject = !_.some(property?.projectNumbers ?? '', _.method('includes', 'SPP'));
+    return !!property && (isAdmin || (canEdit && ownsProperty && notInProject));
   };
 
   /**
@@ -150,13 +151,14 @@ export function useKeycloakWrapper(): IKeycloak {
    * NOTE: this function will be true for MOST of PIMS, but there may be exceptions for certain cases.
    */
   const canUserDeleteProperty = (property: IProperty | null): boolean => {
+    const ownsProperty = !!property?.agencyId && hasAgency(property.agencyId);
+    const notInProject = !_.some(property?.projectNumbers ?? '', _.method('includes', 'SPP'));
+    const isSubdivision = property?.propertyTypeId === PropertyTypes.SUBDIVISION;
     return (
       !!property &&
-      (hasClaim(Claims.ADMIN_PROPERTIES) ||
-        (hasClaim(Claims.PROPERTY_EDIT) &&
-          !!property?.agencyId &&
-          hasAgency(property.agencyId) &&
-          !_.some(property?.projectNumbers ?? '', _.method('includes', 'SPP'))))
+      (isAdmin ||
+        (canDelete && ownsProperty && notInProject) ||
+        (isSubdivision && canEdit && ownsProperty && notInProject))
     );
   };
 
