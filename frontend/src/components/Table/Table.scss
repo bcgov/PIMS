@@ -23,6 +23,9 @@
         &:hover {
           background-color: $table-color;
         }
+        &.selected {
+          background-color: $selected-color;
+        }
       }
       .tbody {
         padding-left: 50px;
