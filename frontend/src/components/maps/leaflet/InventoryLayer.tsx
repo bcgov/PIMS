@@ -247,10 +247,11 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
   };
 
   // Fetch the geoJSON collection of properties.
+  const parcelDetail = !!selected?.parcelDetail ?? undefined;
   useDeepCompareEffect(() => {
     setLoadingTiles(true);
     search(params);
-  }, [params, selected]);
+  }, [params, parcelDetail]);
 
   return (
     <PointClusterer
