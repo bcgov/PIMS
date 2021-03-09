@@ -64,9 +64,9 @@ namespace Pims.Notifications
                 // Send notifications to CHES.
                 var response = await SendAsync(new Model.Email()
                 {
-                    To = notification.To.Split(";"),
-                    Cc = notification.Cc?.Split(";"),
-                    Bcc = notification.Bcc?.Split(";"),
+                    To = notification.To.Split(";").Select(v => v.Trim()),
+                    Cc = notification.Cc?.Split(";").Select(v => v.Trim()),
+                    Bcc = notification.Bcc?.Split(";").Select(v => v.Trim()),
                     Encoding = (Model.EmailEncodings)Enum.Parse(typeof(Model.EmailEncodings), notification.Encoding.ToString()),
                     BodyType = (Model.EmailBodyTypes)Enum.Parse(typeof(Model.EmailBodyTypes), notification.BodyType.ToString()),
                     Priority = (Model.EmailPriorities)Enum.Parse(typeof(Model.EmailPriorities), notification.Priority.ToString()),

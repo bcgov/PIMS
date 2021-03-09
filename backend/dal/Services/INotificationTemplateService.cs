@@ -17,5 +17,6 @@ namespace Pims.Dal.Services
         void Remove(NotificationTemplate template);
         Task<NotificationQueue> SendNotificationAsync(int templateId, string to);
         Task<NotificationQueue> SendNotificationAsync<T>(int templateId, string to, T model) where T : class;
+        Task<NotificationQueue> SendNotificationAsync<T>(int templateId, string to, string cc, string bcc, T model) where T : class;
     }
 }

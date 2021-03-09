@@ -112,7 +112,7 @@ namespace Pims.Api.Test.Routes.Project
         public void SendNotificationAsync_Route()
         {
             // Arrange
-            var endpoint = typeof(TemplateController).FindMethod(nameof(TemplateController.SendProjectNotificationAsync), typeof(int), typeof(string), typeof(int));
+            var endpoint = typeof(TemplateController).FindMethod(nameof(TemplateController.SendProjectNotificationAsync), typeof(int), typeof(string), typeof(string), typeof(string), typeof(int));
 
             // Act
             // Assert

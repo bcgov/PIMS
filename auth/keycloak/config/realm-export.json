@@ -162,9 +162,7 @@
             "agency-administrator",
             "admin-roles",
             "admin-agencies",
-            "property-delete",
             "admin-properties",
-            "project-delete",
             "admin-projects"
           ]
         },
@@ -601,7 +599,6 @@
         "property-add",
         "property-view",
         "project-add",
-        "property-delete",
         "project-view"
       ],
       "clientRoles": {},
@@ -619,7 +616,6 @@
         "property-add",
         "property-view",
         "project-add",
-        "property-delete",
         "project-view"
       ],
       "clientRoles": {},
@@ -638,7 +634,6 @@
         "property-add",
         "property-view",
         "project-add",
-        "property-delete",
         "project-view"
       ],
       "clientRoles": {},
@@ -656,7 +651,6 @@
         "property-add",
         "property-view",
         "project-add",
-        "property-delete",
         "project-view"
       ],
       "clientRoles": {},
@@ -676,7 +670,6 @@
         "property-add",
         "property-view",
         "project-add",
-        "property-delete",
         "project-view"
       ],
       "clientRoles": {},
@@ -688,10 +681,10 @@
       "path": "/SRES",
       "attributes": {},
       "realmRoles": [
-        "project-delete",
         "admin-properties",
-        "admin-projects",
         "property-delete",
+        "admin-projects",
+        "project-delete",
         "dispose-approve"
       ],
       "clientRoles": {},
