@@ -55,6 +55,12 @@ namespace Pims.Ches.Configuration
         /// get/set - Always BCC the specified email address.
         /// </summary>
         public string AlwaysBcc { get; set; }
+
+        /// <summary>
+        /// get/set - Number of seconds to delay sending notifications from their configured 'send on' date and time.
+        /// </summary>
+        /// <value></value>
+        public int? AlwaysDelay { get; set; }
         #endregion
     }
 }

@@ -136,6 +136,8 @@ namespace Pims.Api.Areas.Notification.Controllers
         /// </summary>
         /// <param name="templateId"></param>
         /// <param name="to"></param>
+        /// <param name="cc"></param>
+        /// <param name="bcc"></param>
         /// <param name="projectId"></param>
         /// <returns></returns>
         [HttpPost("{templateId}/projects/{projectId}")]
@@ -144,12 +146,12 @@ namespace Pims.Api.Areas.Notification.Controllers
         [ProducesResponseType(typeof(Models.Queue.NotificationQueueModel), 201)]
         [ProducesResponseType(typeof(ErrorResponseModel), 400)]
         [SwaggerOperation(Tags = new[] { "notification" })]
-        public async Task<IActionResult> SendProjectNotificationAsync(int templateId, string to, int projectId)
+        public async Task<IActionResult> SendProjectNotificationAsync(int templateId, string to, string cc, string bcc, int projectId)
         {
             var project = _pimsService.Project.Get(projectId);
             var env = new Entity.Models.EnvironmentModel(_options.Environment.Uri, _options.Environment.Name, _options.Environment.Title);
             var model = new Entity.Models.ProjectNotificationModel(Guid.NewGuid(), env, project, project.Agency);
-            var notification = await _pimsService.NotificationTemplate.SendNotificationAsync(templateId, to, model);
+            var notification = await _pimsService.NotificationTemplate.SendNotificationAsync(templateId, to, cc, bcc, model);
 
             return CreatedAtAction(nameof(QueueController.GetNotificationQueue), new { controller = "queue", id = notification.Id }, _mapper.Map<Models.Queue.NotificationQueueModel>(notification));
         }
