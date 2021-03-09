@@ -256,6 +256,7 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
 
   const popUpContext = React.useContext(PropertyPopUpContext);
 
+  const dispatch = useDispatch();
   const { getParcel, getBuilding } = useApi();
   const fetchProperty = React.useCallback(
     (propertyTypeId: number, id: number) => {
@@ -266,14 +267,14 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
       } else if (propertyTypeId === PropertyTypes.BUILDING) {
         getBuilding(id as number).then(building => {
           popUpContext.setPropertyInfo(building);
+          dispatch(parcelsActions.storeBuildingDetail(building));
         });
       }
     },
-    [getParcel, getBuilding, popUpContext],
+    [getParcel, popUpContext, getBuilding, dispatch],
   );
 
   const keycloak = useKeycloakWrapper();
-  const dispatch = useDispatch();
 
   return (
     <>
