@@ -6,26 +6,36 @@ DECLARE @UBCId INT = (
             WHERE [Code] = 'UBC'
         )
 
-DELETE FROM dbo.[ProjectProperties]
-WHERE [ParcelId] IN (
-    SELECT [Id]
-    FROM dbo.[Parcels]
-    WHERE [AgencyId] = @UBCId
-)
+IF (@UBCId IS NOT NULL)
+BEGIN
+    DELETE FROM dbo.[ProjectProperties]
+    WHERE [ParcelId] IN (
+        SELECT [Id]
+        FROM dbo.[Parcels]
+        WHERE [AgencyId] = @UBCId
+    )
 
-DELETE FROM dbo.[ParcelEvaluations]
-WHERE [ParcelId] IN (
-    SELECT [Id]
-    FROM dbo.[Parcels]
-    WHERE [AgencyId] = @UBCId
-)
+    DELETE FROM dbo.[ParcelEvaluations]
+    WHERE [ParcelId] IN (
+        SELECT [Id]
+        FROM dbo.[Parcels]
+        WHERE [AgencyId] = @UBCId
+    )
 
-DELETE FROM dbo.[ParcelFiscals]
-WHERE [ParcelId] IN (
-    SELECT [Id]
-    FROM dbo.[Parcels]
-    WHERE [AgencyId] = @UBCId
-)
+    DELETE FROM dbo.[ParcelFiscals]
+    WHERE [ParcelId] IN (
+        SELECT [Id]
+        FROM dbo.[Parcels]
+        WHERE [AgencyId] = @UBCId
+    )
 
-DELETE FROM dbo.[Parcels]
-WHERE [AgencyId] = @UBCId
+    DELETE FROM dbo.[ParcelBuildings]
+    WHERE [ParcelId] IN (
+        SELECT [Id]
+        FROM dbo.[Parcels]
+        WHERE [AgencyId] = @UBCId
+    )
+
+    DELETE FROM dbo.[Parcels]
+    WHERE [AgencyId] = @UBCId
+END
