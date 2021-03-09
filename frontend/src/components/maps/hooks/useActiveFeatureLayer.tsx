@@ -88,10 +88,7 @@ const useActiveFeatureLayer = ({
    */
   useDeepCompareEffect(() => {
     const highlightSelectedProperty = async (latLng: LatLng) => {
-      const parcelLayerData = await parcelsService.findOneWhereContains({
-        lat: latLng.lat,
-        lng: latLng.lng,
-      } as LatLng);
+      const parcelLayerData = await parcelsService.findOneWhereContains(latLng);
       if (parcelLayerData?.features?.length > 0) {
         activeFeatureLayer?.addData(parcelLayerData.features[0]);
       }
