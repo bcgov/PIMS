@@ -10,6 +10,7 @@ export interface IReport {
 }
 
 export interface ISnapshot {
+  id?: number;
   projectId: number;
   project?: IProject;
   snapshotOn: string;
