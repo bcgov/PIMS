@@ -72,9 +72,6 @@ export interface IGeoSearchParams {
   propertyType?: string;
   includeAllProperties?: boolean;
 }
-export const GEO_PROPERTIES = (params: IGeoSearchParams | null) =>
-  `/properties/search/wfs?${params ? queryString.stringify(params) : ''}`; // get filtered properties or all if not specified.
-
 export const PARCELS_DETAIL = (params: IPropertySearchParams | null) => {
   return `/properties/parcels?${params ? queryString.stringify(params) : ''}`; // get filtered properties or all if not specified.
 };
