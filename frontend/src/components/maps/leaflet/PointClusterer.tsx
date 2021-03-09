@@ -242,7 +242,7 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
         groupBounds.isValid() &&
         group.getBounds().isValid() &&
         filterState.changed &&
-        !selected &&
+        !selected?.parcelDetail &&
         tilesLoaded
       ) {
         filterState.setChanged(false);
