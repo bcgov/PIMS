@@ -5,6 +5,7 @@ import { useFormikContext } from 'formik';
 import { ParentSelect } from 'components/common/form/ParentSelect';
 import { mapSelectOptionWithParent } from 'utils';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+import { useMyAgencies } from 'hooks/useMyAgencies';
 interface InformationFormProps {
   nameSpace?: string;
   disabled?: boolean;
@@ -44,16 +45,7 @@ const InformationForm: FunctionComponent<InformationFormProps> = (props: Informa
     return !!userAgency && !userAgency.parentId;
   }, [userAgency]);
 
-  const agencyOptions = useMemo(() => {
-    const items = agencies.filter(a => {
-      return (
-        props.isPropertyAdmin ||
-        Number(a.value) === Number(userAgency?.value) ||
-        Number(a.parentId) === Number(userAgency?.value)
-      );
-    });
-    return items.map(c => mapSelectOptionWithParent(c, agencies));
-  }, [userAgency, agencies, props.isPropertyAdmin]);
+  const myAgencies = useMyAgencies();
 
   return (
     <>
@@ -82,7 +74,7 @@ const InformationForm: FunctionComponent<InformationFormProps> = (props: Informa
         <Form.Label>Agency</Form.Label>
         <ParentSelect
           field={withNameSpace('agencyId')}
-          options={agencyOptions}
+          options={myAgencies.map(c => mapSelectOptionWithParent(c, myAgencies))}
           filterBy={['code', 'label', 'parent']}
           disabled={props.disabled || (!props.isPropertyAdmin && !isUserAgencyAParent)}
           convertValue={Number}

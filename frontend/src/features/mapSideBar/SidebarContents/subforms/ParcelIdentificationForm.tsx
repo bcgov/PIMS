@@ -28,6 +28,7 @@ import LandSearchForm from './LandSearchForm';
 import { ProjectNumberLink } from 'components/maps/leaflet/InfoSlideOut/ProjectNumberLink';
 import styled from 'styled-components';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+import { useMyAgencies } from 'hooks/useMyAgencies';
 
 interface IIdentificationProps {
   /** used for changign the agency - note that only select users will be able to edit this field */
@@ -91,16 +92,7 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
     return !!userAgency && !userAgency.parentId;
   }, [userAgency]);
 
-  const agencyOptions = useMemo(() => {
-    const items = agencies.filter(a => {
-      return (
-        isPropertyAdmin ||
-        Number(a.value) === Number(userAgency?.value) ||
-        Number(a.parentId) === Number(userAgency?.value)
-      );
-    });
-    return items.map(c => mapSelectOptionWithParent(c, agencies));
-  }, [userAgency, agencies, isPropertyAdmin]);
+  const myAgencies = useMyAgencies();
 
   return (
     <Container>
@@ -187,7 +179,7 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
             <ParentSelect
               required
               field={withNameSpace(nameSpace, 'agencyId')}
-              options={agencyOptions}
+              options={myAgencies.map(c => mapSelectOptionWithParent(c, myAgencies))}
               filterBy={['code', 'label', 'parent']}
               disabled={(!isPropertyAdmin && !isUserAgencyAParent) || disabled}
             />
