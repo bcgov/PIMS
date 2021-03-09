@@ -92,7 +92,7 @@ namespace Pims.Api.Test.Routes
             // Assert
             Assert.NotNull(endpoint);
             endpoint.HasDelete("{id}");
-            endpoint.HasPermissions(Permissions.PropertyDelete);
+            endpoint.HasPermissions(Permissions.PropertyDelete, Permissions.PropertyEdit);
         }
         #endregion
     }

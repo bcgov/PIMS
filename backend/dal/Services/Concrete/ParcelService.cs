@@ -494,11 +494,10 @@ namespace Pims.Dal.Services
         /// </summary>
         /// <param name="parcel"></param>
         /// <exception type="KeyNotFoundException">Entity does not exist in the datasource.</exception>
+        /// <exception type="NotAuthorizedException">User does not have required claim to delete property.</exception>
         /// <returns></returns>
         public void Remove(Parcel parcel)
         {
-            parcel.ThrowIfNotAllowedToEdit(nameof(parcel), this.User, new[] { Permissions.PropertyDelete, Permissions.AdminProperties });
-
             var userAgencies = this.User.GetAgenciesAsNullable();
             var viewSensitive = this.User.HasPermission(Permissions.SensitiveView);
             var isAdmin = this.User.HasPermission(Permissions.AdminProperties);
@@ -513,6 +512,12 @@ namespace Pims.Dal.Services
                 .Include(p => p.Subdivisions).ThenInclude(p => p.Subdivision)
                 .Include(p => p.Parcels)
                 .SingleOrDefault(u => u.Id == parcel.Id) ?? throw new KeyNotFoundException();
+
+            // Subdivisions can be deleted if the user has the edit claim.
+            if (originalParcel.PropertyTypeId == (int)PropertyTypes.Land)
+                parcel.ThrowIfNotAllowedToEdit(nameof(parcel), this.User, new[] { Permissions.PropertyDelete, Permissions.AdminProperties });
+            else if (originalParcel.PropertyTypeId == (int)PropertyTypes.Subdivision)
+                parcel.ThrowIfNotAllowedToEdit(nameof(parcel), this.User, new[] { Permissions.PropertyEdit, Permissions.AdminProperties });
 
             if (!isAdmin && (!userAgencies.Contains(originalParcel.AgencyId) || originalParcel.IsSensitive && !viewSensitive))
                 throw new NotAuthorizedException("User does not have permission to delete.");
