@@ -1,0 +1,64 @@
+kind: Template
+apiVersion: v1
+name: pims-network-security-policy
+parameters:
+  - name: NAME
+    displayName: "The Application Name"
+    description: "The name of the application."
+    required: true
+    value: "pims"
+  - name: NAMESPACE
+    displayName: "The Application Name"
+    description: "The name of the application."
+    required: true
+    value: "354028-dev"
+objects:
+  # Disable all communication by default.
+  - kind: NetworkPolicy
+    apiVersion: networking.k8s.io/v1
+    metadata:
+      name: deny-by-default
+    spec:
+      # The default posture for a security first namespace is to
+      # deny all traffic. If not added this rule will be added
+      # by Platform Services during environment cut-over.
+      podSelector: {}
+      ingress: []
+  # Allow internet ingress to all pods with routes.
+  - kind: NetworkPolicy
+    apiVersion: networking.k8s.io/v1
+    metadata:
+      name: allow-from-openshift-ingress
+      labels:
+        app: ${NAME}
+    spec:
+      ingress:
+        - from:
+            - namespaceSelector:
+                matchLabels:
+                  network.openshift.io/policy-group: ingress
+      podSelector: {}
+      policyTypes:
+        - Ingress
+  - kind: NetworkSecurityPolicy
+    apiVersion: security.devops.gov.bc.ca/v1alpha1
+    metadata:
+      name: any-to-any
+    spec:
+      description: |
+        allow all pods to communicate
+      source:
+        - - "$namespace=${NAMESPACE}"
+      destination:
+        - - "$namespace=${NAMESPACE}"
+  - kind: NetworkSecurityPolicy
+    apiVersion: security.devops.gov.bc.ca/v1alpha1
+    metadata:
+      name: any-to-external
+    spec:
+      description: |
+        Allow all pods to talk to external systems
+      source:
+        - - "$namespace=${NAMESPACE}"
+      destination:
+        - - "ext:network=any"

@@ -132,8 +132,8 @@ pipeline {
     stage('Database migration') {
       options { timeout(time: 25, unit: 'MINUTES') }
       environment {
-        DB_PASSWORD = sh(script: "oc -n 354028-prod get secret pims-database -o jsonpath='{.data.DB_PASSWORD}' | base64 -d", returnStdout: true).trim()
-        DB_CONNECTION_STRING = sh(script: "oc -n 354028-prod get cm pims-api-database -o jsonpath='{.data.CONNECTION_STRINGS_PIMS}'", returnStdout: true).trim()
+        DB_PASSWORD = sh(script: "oc -n 354028-${DESTINATION} get secret pims-database -o jsonpath='{.data.DB_PASSWORD}' | base64 -d", returnStdout: true).trim()
+        DB_CONNECTION_STRING = sh(script: "oc -n 354028-${DESTINATION} get cm pims-api-database -o jsonpath='{.data.CONNECTION_STRINGS_PIMS}'", returnStdout: true).trim()
       }
       steps {
         dir(DEVOPS_DIRECTORY) {

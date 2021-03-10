@@ -144,37 +144,26 @@ parameters:
     description: "Maximum amount of memory the container can use."
     value: "4Gi"
 objects:
-  # Allow the api to make requests to the internet.
-  - kind: NetworkSecurityPolicy
-    apiVersion: security.devops.gov.bc.ca/v1alpha1
-    metadata:
-      name: internal-ingress-${APP_NAME}-${ROLE_NAME}
-      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
-    spec:
-      description: Allow api to open connections to the Internet.
-      source:
-        - - app=${APP_NAME}
-          - role=${ROLE_NAME}
-          - env=${ENV_NAME}
-      destination:
-        - - ext:network=any
-
   # Allow the api to communicate with the database.
-  - kind: NetworkSecurityPolicy
-    apiVersion: security.devops.gov.bc.ca/v1alpha1
+  - kind: NetworkPolicy
+    apiVersion: networking.k8s.io/v1
     metadata:
-      name: pod-to-pod-permit-${APP_NAME}-${ROLE_NAME}-${DATABASE_ROLE_NAME}
+      name: pod-from-pod-permit-${APP_NAME}-${ROLE_NAME}-${DATABASE_ROLE_NAME}
       namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
     spec:
-      description: Allow api to communicate to the database.
-      source:
-        - - app=${APP_NAME}
-          - role=${ROLE_NAME}
-          - env=${ENV_NAME}
-      destination:
-        - - app=${APP_NAME}
-          - role=${DATABASE_ROLE_NAME}
-          - env=${ENV_NAME}
+      #description: Allow database pod(s) to receive communication from api pod(s).
+      podSelector:
+        matchLabels:
+          app: ${APP_NAME}
+          role: ${DATABASE_ROLE_NAME}
+          env: ${ENV_NAME}
+      ingress:
+        - from:
+            - podSelector:
+                matchLabels:
+                  app: ${APP_NAME}
+                  role: ${ROLE_NAME}
+                  env: ${ENV_NAME}
 
   # Open up ports to communicate with the api.
   - kind: Service
