@@ -393,6 +393,7 @@ exports[`Land Form component renders correctly 1`] = `
                       </div>
                       <button
                         class="Button Button--icon-only bg-warning btn btn-primary"
+                        id="search-button"
                         type="submit"
                       >
                         <div
@@ -436,6 +437,7 @@ exports[`Land Form component renders correctly 1`] = `
                       </div>
                       <button
                         class="Button Button--icon-only bg-warning btn btn-primary"
+                        id="search-button"
                         type="submit"
                       >
                         <div
@@ -486,6 +488,7 @@ exports[`Land Form component renders correctly 1`] = `
                       <button
                         class="Button Button--disabled Button--icon-only bg-warning btn btn-primary"
                         disabled=""
+                        id="search-button"
                         type="submit"
                       >
                         <div

@@ -193,6 +193,7 @@ exports[`Manage Users Component Snapshot matches 1`] = `
       >
         <button
           class="Button Button--icon-only bg-warning btn btn-primary"
+          id="search-button"
           type="submit"
         >
           <div
@@ -220,6 +221,7 @@ exports[`Manage Users Component Snapshot matches 1`] = `
       >
         <button
           class="Button Button--icon-only btn btn-info"
+          id="reset-button"
           type="reset"
         >
           <div
