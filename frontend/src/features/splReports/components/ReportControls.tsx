@@ -164,7 +164,7 @@ const ReportControls: React.FunctionComponent<IReportControlsProps> = ({
                       originalReport?.from === currentReport?.from) ||
                     !values.id
                   }
-                  onClick={e => {
+                  onClick={(e: any) => {
                     e.preventDefault();
                     setSubmitting(true);
                     submitForm();
