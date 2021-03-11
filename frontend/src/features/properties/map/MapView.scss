@@ -56,10 +56,10 @@ $narrowSidebarSize: 700px;
   .map-filter-container {
     margin-bottom: -#{$mapfilter-height};
   }
-}
-
-.map .leaflet-marker-icon.draft {
-  animation: blink 1.25s ease-in infinite;
+  .map .leaflet-marker-icon.draft,
+  .map .active-selected.leaflet-marker-icon {
+    animation: blink 1.25s ease-in infinite;
+  }
 }
 
 @keyframes blink {
