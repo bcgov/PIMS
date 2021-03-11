@@ -100,6 +100,8 @@ const defaultFilterValues: IPropertyFilter = {
   maxAssessedValue: '',
   maxMarketValue: '',
   maxNetBookValue: '',
+  inEnhancedReferralProcess: false,
+  inSurplusPropertyProgram: false,
   includeAllProperties: false,
   surplusFilter: false,
 };
