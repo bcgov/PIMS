@@ -11,12 +11,12 @@ using System.Net;
 using System.Net.Http;
 using Xunit;
 
-namespace Pims.Dal.Test.Libraries.Ches
+namespace Pims.Dal.Test.Libraries.Keycloak
 {
     [Trait("category", "unit")]
     [Trait("category", "keycloak")]
     [Trait("group", "keycloak")]
-    public partial class KeycloakServiceTest
+    public partial class KeycloakServiceGroupsTest
     {
         #region Tests
         #region GetGroupCountAsync
