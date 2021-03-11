@@ -1,4 +1,4 @@
-import { useEffect, useContext } from 'react';
+import { useEffect, useContext, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from 'reducers/rootReducer';
 import { StepperContext } from '..';
@@ -105,10 +105,15 @@ const useStepper = () => {
   const history = useHistory();
   const keycloak = useKeycloakWrapper();
   const { currentStatus, setCurrentStatus, disposeWorkflowStatuses } = useContext(StepperContext);
-  const project: any = useSelector<RootState, IProjectWrapper>(state => state.project).project || {
-    ...initialValues,
-    agencyId: keycloak.agencyId!,
-  };
+  const initialProject = useMemo(
+    () => ({
+      ...initialValues,
+      agencyId: keycloak.agencyId!,
+    }),
+    [keycloak],
+  );
+  const project: any =
+    useSelector<RootState, IProjectWrapper>(state => state.project).project || initialProject;
   const workflowTasks: IProjectTask[] = useSelector<RootState, IProjectTask[]>(
     state => state.tasks,
   ) || { ...initialValues, agencyId: keycloak.agencyId! };

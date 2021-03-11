@@ -19,7 +19,7 @@
     "keycloak-js": "9.0.2",
     "leaflet": "1.6.0",
     "leaflet-draw": "1.0.4",
-    "lodash": "4.17.20",
+    "lodash": "4.17.21",
     "moment": "2.25.3",
     "moment-timezone": "0.5.31",
     "node-sass": "4.14.1",
