@@ -30,7 +30,7 @@ export const getCurrentYearEvaluation = (
   evaluations: IEvaluation[],
   key: EvaluationKeys,
 ): IEvaluation | undefined => {
-  const currentYearEvaluations = evaluations.filter(
+  const currentYearEvaluations = (evaluations ?? []).filter(
     (evaluation: IEvaluation) => moment(evaluation.date, 'YYYY-MM-DD').year() === currentYear,
   );
   return getMostRecentEvaluation(currentYearEvaluations, key);
@@ -45,7 +45,7 @@ export const getMostRecentEvaluation = (
   evaluations: IEvaluation[],
   key: EvaluationKeys,
 ): IEvaluation | undefined => {
-  const mostRecentEvaluation = _.find(_.orderBy(evaluations, 'date', 'desc'), { key: key });
+  const mostRecentEvaluation = _.find(_.orderBy(evaluations ?? [], 'date', 'desc'), { key: key });
   return mostRecentEvaluation;
 };
 
@@ -62,7 +62,7 @@ export const getMostRecentAppraisal = (
   if (disposedOn) {
     targetDate = moment(disposedOn, 'YYYY-MM-DD');
   }
-  const evaluationsForYear = _.filter(evaluations, evaluation => {
+  const evaluationsForYear = _.filter(evaluations ?? [], evaluation => {
     return (
       moment
         .duration(moment(evaluation.date, 'YYYY-MM-DD').diff(targetDate))
@@ -74,6 +74,7 @@ export const getMostRecentAppraisal = (
 };
 
 export const getFlatProjectNotes = (project: IApiProject) => {
+  if (!project) return [];
   const notes: IProjectNote[] = [];
   Object.values(NoteTypes)
     .filter((key: any) => isNaN(Number(NoteTypes[key])))

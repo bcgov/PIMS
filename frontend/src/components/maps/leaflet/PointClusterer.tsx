@@ -52,6 +52,8 @@ export const convertToProperty = (
   if ([PropertyTypes.PARCEL, PropertyTypes.SUBDIVISION].includes(property.propertyTypeId)) {
     return {
       ...property,
+      evaluations: property.evaluations ?? [],
+      fiscals: property.fiscals ?? [],
       latitude: latitude,
       longitude: longitude,
       address: {
@@ -67,6 +69,8 @@ export const convertToProperty = (
       totalArea: property.totalArea ?? 0,
       latitude: latitude,
       longitude: longitude,
+      evaluations: property.evaluations ?? [],
+      fiscals: property.fiscals ?? [],
       address: {
         line1: property.address,
         administrativeArea: property.administrativeArea,
