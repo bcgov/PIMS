@@ -42,6 +42,8 @@ namespace Pims.Api.Areas.Property.Mapping.Building
                 .Map(dest => dest.AgencyId, src => src.AgencyId)
                 .Map(dest => dest.Agency, src => AgencyConverter.ConvertAgency(src.Agency))
                 .Map(dest => dest.SubAgency, src => AgencyConverter.ConvertSubAgency(src.Agency))
+                .Map(dest => dest.AgencyFullName, src => AgencyConverter.ConvertAgencyFullName(src.Agency))
+                .Map(dest => dest.SubAgencyFullName, src => AgencyConverter.ConvertSubAgencyFullName(src.Agency))
                 .Map(dest => dest.Name, src => src.Name)
                 .Map(dest => dest.Description, src => src.Description)
                 .Map(dest => dest.Latitude, src => src.Location.Y)
