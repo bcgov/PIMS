@@ -270,5 +270,25 @@ describe('Parcel Detail MapSideBarContainer', () => {
         expect(failedBuildingSaveToast).toBeVisible();
       });
     });
+    it('uses the most recent data from the api response', async () => {
+      await act(async () => {
+        history.push('/mapview/?sidebar=true&buildingId=1&disabled=false');
+        const building = { ...mockBuildingWithAssociatedLand, name: 'Modify assoc. land 12345' };
+        mockAxios.onGet().reply(200, building);
+        const { findByText } = renderContainer({});
+
+        mockAxios.onPut().reply(200, null);
+
+        const reviewButton = await findByText('Review & Submit');
+        reviewButton.click();
+        const modifyButton = await findByText('Modify Associated Land');
+        modifyButton.click();
+        await wait(async () => {
+          expect(mockAxios.history.put.length).toBe(1);
+          const associatedLandText = await screen.findByText('Modify assoc. land 12345');
+          expect(associatedLandText).toBeVisible();
+        });
+      });
+    });
   });
 });

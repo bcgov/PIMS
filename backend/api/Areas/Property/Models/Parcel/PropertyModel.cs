@@ -32,6 +32,10 @@ namespace Pims.Api.Areas.Property.Models.Parcel
 
         public string Agency { get; set; }
 
+        public virtual string SubAgencyFullName { get; set; }
+
+        public string AgencyFullName { get; set; }
+
         public AddressModel Address { get; set; }
 
         public double Latitude { get; set; }

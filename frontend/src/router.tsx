@@ -194,7 +194,7 @@ const AppRouter: React.FC = () => {
         component={SplReportContainer}
         layout={AuthLayout}
         claim={Claims.REPORTS_SPL}
-        title={getTitle('Dispose Property')}
+        title={getTitle('SPL Reports')}
       />
       <AppRoute title="*" path="*" component={() => <Redirect to="/page-not-found" />} />
     </Switch>

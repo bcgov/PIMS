@@ -101,6 +101,7 @@ export const getInitialValues = (): IParcel & ISearchFields => {
     ...defaultInformationFormValues,
     latitude: '',
     longitude: '',
+    agency: '',
     address: defaultAddressValues,
     buildings: [],
     searchPid: '',
