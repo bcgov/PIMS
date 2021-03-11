@@ -10,7 +10,6 @@ import styled from 'styled-components';
 import { ThreeColumnItem } from './ThreeColumnItem';
 import variables from '_variables.module.scss';
 import { PropertyTypes } from 'constants/propertyTypes';
-import useCodeLookups from 'hooks/useLookupCodes';
 import { useState } from 'react';
 import { ProjectNumberLink } from './ProjectNumberLink';
 import { BuildingSvg, LandSvg, SubdivisionSvg } from 'components/common/Icons';
@@ -130,9 +129,7 @@ export const InfoContent: React.FC<IInfoContent> = ({
     propertyTypeId !== null &&
     [PropertyTypes.PARCEL, PropertyTypes.SUBDIVISION].includes(propertyTypeId);
 
-  const lookupCodes = useCodeLookups();
   const [privateProject, setPrivateProject] = useState<boolean>(false);
-
   return (
     <>
       <ListGroup>
@@ -148,17 +145,17 @@ export const InfoContent: React.FC<IInfoContent> = ({
                 <>
                   <ThreeColumnItem
                     leftSideLabel={'Ministry'}
-                    rightSideItem={lookupCodes.getAgencyFullName(propertyInfo?.agency)}
+                    rightSideItem={propertyInfo?.agencyFullName}
                   />
                   <ThreeColumnItem
                     leftSideLabel={'Owning agency'}
-                    rightSideItem={lookupCodes.getAgencyFullName(propertyInfo.subAgency)}
+                    rightSideItem={propertyInfo.subAgencyFullName}
                   />
                 </>
               ) : (
                 <ThreeColumnItem
                   leftSideLabel={'Owning ministry'}
-                  rightSideItem={lookupCodes.getAgencyFullName(propertyInfo?.agency)}
+                  rightSideItem={propertyInfo?.agencyFullName}
                 />
               )}
             </>
