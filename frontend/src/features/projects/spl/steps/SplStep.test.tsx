@@ -352,7 +352,7 @@ describe('SPL Approval Step', () => {
 
       await act(async () => {
         disposeButton.click();
-        await component.findAllByText(/There are one or more subdivisions/);
+        await component.findAllByText(/Are you sure you want to complete this disposal project?/);
         expect(await screen.findByText('PID 123-456-789')).toBeVisible();
         done();
       });
