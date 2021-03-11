@@ -1,4 +1,5 @@
 using MapsterMapper;
+using Microsoft.Extensions.Logging;
 using Pims.Dal.Services.Admin;
 using Pims.Keycloak;
 using System.Security.Claims;
@@ -16,6 +17,7 @@ namespace Pims.Dal.Keycloak
         private readonly IPimsAdminService _pimsAdminService;
         private readonly IMapper _mapper;
         private readonly ClaimsPrincipal _user;
+        private readonly ILogger<IPimsKeycloakService> _logger;
         #endregion
 
         #region Constructors
@@ -25,14 +27,17 @@ namespace Pims.Dal.Keycloak
         /// <param name="keycloakService"></param>
         /// <param name="pimsService"></param>
         /// <param name="pimsAdminService"></param>
+        /// <param name="user"></param>
         /// <param name="mapper"></param>
-        public PimsKeycloakService(IKeycloakService keycloakService, IPimsService pimsService, IPimsAdminService pimsAdminService, IMapper mapper, ClaimsPrincipal user)
+        /// <param name="logger"></param>
+        public PimsKeycloakService(IKeycloakService keycloakService, IPimsService pimsService, IPimsAdminService pimsAdminService, ClaimsPrincipal user, IMapper mapper, ILogger<IPimsKeycloakService> logger)
         {
             _keycloakService = keycloakService;
             _pimsService = pimsService;
             _pimsAdminService = pimsAdminService;
             _mapper = mapper;
             _user = user;
+            _logger = logger;
         }
         #endregion
     }
