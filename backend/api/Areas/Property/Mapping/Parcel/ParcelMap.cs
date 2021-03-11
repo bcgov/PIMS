@@ -47,6 +47,8 @@ namespace Pims.Api.Areas.Property.Mapping.Parcel
                 .Map(dest => dest.AgencyId, src => src.AgencyId)
                 .Map(dest => dest.Agency, src => AgencyConverter.ConvertAgency(src.Agency))
                 .Map(dest => dest.SubAgency, src => AgencyConverter.ConvertSubAgency(src.Agency))
+                .Map(dest => dest.AgencyFullName, src => AgencyConverter.ConvertAgencyFullName(src.Agency))
+                .Map(dest => dest.SubAgencyFullName, src => AgencyConverter.ConvertSubAgencyFullName(src.Agency))
                 .Map(dest => dest.Latitude, src => src.Location.Y)
                 .Map(dest => dest.Longitude, src => src.Location.X)
                 .Map(dest => dest.Address, src => src.Address)

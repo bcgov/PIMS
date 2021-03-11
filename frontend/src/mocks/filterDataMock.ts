@@ -247,6 +247,7 @@ export const mockBuildingWithAssociatedLand: IBuilding = {
   leasedLandMetadata: [{ parcelId: 2, type: 0, ownershipNote: '' }],
   parcels: [
     {
+      agency: '',
       pid: '000-000-001',
       encumbranceReason: '',
       assessedLand: 0,
