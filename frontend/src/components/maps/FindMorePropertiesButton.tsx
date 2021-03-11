@@ -45,21 +45,16 @@ export const FindMorePropertiesButton: React.FC<IFindMorePropertiesButton> = ({
   onEnter,
   onExit,
 }) => {
-  const TitleContent = () =>
-    useMemo(
-      () => (
-        <div style={{ display: 'flex' }}>
-          <TitleForSaleSign size={42} />
-          <h3 style={{ color: variables.primaryColor }}>{buttonText}</h3>
-          <CloseButton onClick={() => document.body.click()} />
-        </div>
-      ),
-      [],
-    );
-
   /** this provides a way to create a form with tooltip like behaviour in the overlay trigger */
-  const popover = useMemo(
-    () => (
+  const popover = useMemo(() => {
+    const TitleContent = () => (
+      <div style={{ display: 'flex' }}>
+        <TitleForSaleSign size={42} />
+        <h3 style={{ color: variables.primaryColor }}>{buttonText}</h3>
+        <CloseButton onClick={() => document.body.click()} />
+      </div>
+    );
+    return (
       <StyledPopover id="popover-basic">
         <Popover.Title>
           {' '}
@@ -69,9 +64,8 @@ export const FindMorePropertiesButton: React.FC<IFindMorePropertiesButton> = ({
           <FindMorePropertiesForm />
         </Popover.Content>
       </StyledPopover>
-    ),
-    [],
-  );
+    );
+  }, [buttonText]);
 
   return (
     <OverlayTrigger

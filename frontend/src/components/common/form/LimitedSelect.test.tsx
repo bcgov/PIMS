@@ -18,7 +18,6 @@ Enzyme.configure({ adapter: new Adapter() });
   unregisterField: jest.fn(),
 });
 (getIn as jest.Mock).mockReturnValue(0);
-const context = useFormikContext();
 
 const options = [
   {
@@ -39,6 +38,7 @@ const options = [
 ];
 
 it('limited fast select renders correctly', () => {
+  const context = useFormikContext();
   const tree = renderer
     .create(
       <FastSelect
@@ -54,6 +54,7 @@ it('limited fast select renders correctly', () => {
 });
 
 it('only renders the limited options + the previous value', async () => {
+  const context = useFormikContext();
   const component = mount(
     <FastSelect
       limitLabels={['one']}

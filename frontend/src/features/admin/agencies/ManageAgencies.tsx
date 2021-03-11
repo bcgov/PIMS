@@ -62,10 +62,10 @@ const ManageAgencies: React.FC = () => {
     }),
   );
 
-  const defaultValue: IAgencyFilter = {
-    id: undefined,
-  };
   const initialValues = useMemo(() => {
+    const defaultValue: IAgencyFilter = {
+      id: undefined,
+    };
     const values = { ...defaultValue, ...filter };
     if (typeof values.id === 'number') {
       const agency = agencyLookupCodes.find(x => Number(x.id) === values?.id) as any;
@@ -74,7 +74,8 @@ const ManageAgencies: React.FC = () => {
       }
     }
     return values;
-  }, [agencyLookupCodes, filter, defaultValue]);
+  }, [agencyLookupCodes, filter]);
+
   const onRequestData = useCallback(
     ({ pageIndex }) => {
       dispatch(
@@ -131,4 +132,4 @@ const ManageAgencies: React.FC = () => {
   );
 };
 
-export default () => <ManageAgencies />;
+export default ManageAgencies;

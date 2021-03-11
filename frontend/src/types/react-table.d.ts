@@ -45,11 +45,11 @@ import {
 } from 'react-table';
 
 declare module 'react-table' {
-  export interface UseFlexLayoutInstanceProps<D extends object> {
+  export interface UseFlexLayoutInstanceProps {
     totalColumnsMinWidth: number;
   }
 
-  export interface UseFlexLayoutColumnProps<D extends object> {
+  export interface UseFlexLayoutColumnProps {
     totalMinWidth: number;
   }
 
