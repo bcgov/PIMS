@@ -22,7 +22,6 @@ export const parcelIconSelect = new Icon({
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
   shadowSize: [41, 41],
-  className: 'selected-marker',
 });
 
 // building icon (blue)
@@ -43,7 +42,6 @@ export const buildingIconSelect = new Icon({
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
   shadowSize: [41, 41],
-  className: 'selected-marker',
 });
 
 // subdivision icon (green)
@@ -64,7 +62,6 @@ export const subdivisionIconSelect = new Icon({
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
   shadowSize: [41, 41],
-  className: 'selected-marker',
 });
 
 // draft parcel icon (green)
