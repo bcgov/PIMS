@@ -17,6 +17,7 @@ import { useFilterContext } from '../providers/FIlterProvider';
 import { MUNICIPALITY_LAYER_URL, useLayerQuery } from './LayerPopup';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { PropertyTypes } from 'constants/propertyTypes';
+
 export type InventoryLayerProps = {
   /** Latitude and Longitude boundary of the layer. */
   bounds: LatLngBounds;
@@ -28,6 +29,8 @@ export type InventoryLayerProps = {
   maxZoom?: number;
   /** Search filter to apply to properties. */
   filter?: IGeoSearchParams;
+  /** Callback function to display/hide backdrop*/
+  onRequestData: (showBackdrop: boolean) => void;
   /** What to do when the marker is clicked. */
   onMarkerClick: () => void;
 
@@ -135,6 +138,7 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
   filter,
   onMarkerClick,
   selected,
+  onRequestData,
 }) => {
   const keycloak = useKeycloakWrapper();
   const { map } = useLeaflet();
@@ -197,6 +201,7 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
 
   const search = async (filters: IGeoSearchParams[]) => {
     try {
+      onRequestData(true);
       const data = flatten(await Promise.all(filters.map(x => loadTile(x)))).map(f => {
         return {
           ...f,
@@ -236,14 +241,17 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
     } catch (error) {
       toast.error((error as Error).message, { autoClose: 7000 });
       console.error(error);
+    } finally {
+      onRequestData(false);
     }
   };
 
   // Fetch the geoJSON collection of properties.
+  const parcelDetail = !!selected?.parcelDetail ?? undefined;
   useDeepCompareEffect(() => {
     setLoadingTiles(true);
     search(params);
-  }, [params, selected]);
+  }, [params, parcelDetail]);
 
   return (
     <PointClusterer

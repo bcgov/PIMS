@@ -65,6 +65,7 @@ interface UseTableProps {
   fetchIdRef: React.MutableRefObject<number>;
   setData: Function;
   setPageCount: Function;
+  setLoading: Function;
 }
 
 function transformData(data: IRowProperty[]) {
@@ -74,7 +75,7 @@ function transformData(data: IRowProperty[]) {
   return data;
 }
 
-function useTable({ fetchIdRef, setData, setPageCount }: UseTableProps) {
+function useTable({ fetchIdRef, setData, setPageCount, setLoading }: UseTableProps) {
   const fetchData = useCallback(
     async ({
       pageIndex,
@@ -93,17 +94,17 @@ function useTable({ fetchIdRef, setData, setPageCount }: UseTableProps) {
       // Only update the data if this is the latest fetch
       if (fetchId === fetchIdRef.current && agencyIds?.length > 0) {
         const query = getServerQuery({ pageIndex, pageSize, filter, agencyIds: agencyIds });
+        setLoading(true);
         const response = await CustomAxios().get<IPagedItems<IProperty>>(getPropertyListUrl(query));
-
         // The server could send back total page count.
         // For now we'll just calculate it.
-        setData(transformData(response.data.items as IRowProperty[]));
-        setPageCount(Math.ceil(response.data.total / pageSize));
+        setData(transformData((response.data?.items ?? []) as IRowProperty[]));
+        setPageCount(Math.ceil((response.data?.total ?? 0) / pageSize));
 
-        // setLoading(false);
+        setLoading(false);
       }
     },
-    [fetchIdRef, setData, setPageCount],
+    [fetchIdRef, setData, setLoading, setPageCount],
   );
 
   return fetchData;

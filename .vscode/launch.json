@@ -5,6 +5,16 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Tool-Keycloak-Sync",
+      "type": "coreclr",
+      "request": "launch",
+      "console": "internalConsole",
+      "preLaunchTask": "build",
+      "program": "${workspaceRoot}/tools/keycloak/sync/bin/Debug/netcoreapp3.1/Pims.Tools.Keycloak.Sync.dll",
+      "cwd": "${workspaceRoot}/tools/keycloak/sync",
+      "stopAtEntry": false
+    },
+    {
       "name": "Tool-Converter",
       "type": "coreclr",
       "request": "launch",
@@ -13,7 +23,18 @@
       "program": "${workspaceRoot}/tools/converters/excel/bin/Debug/netcoreapp3.1/Pims.Tools.Converters.ExcelConverter.dll",
       "cwd": "${workspaceRoot}/tools/converters/excel",
       "stopAtEntry": false
-    }, {
+    },
+    {
+      "name": "Tool-Import",
+      "type": "coreclr",
+      "request": "launch",
+      "console": "internalConsole",
+      "preLaunchTask": "build",
+      "program": "${workspaceRoot}/tools/import/bin/Debug/netcoreapp3.1/Pims.Tools.Import.dll",
+      "cwd": "${workspaceRoot}/tools/import",
+      "stopAtEntry": false
+    },
+    {
       "name": ".NET Core Launch (api)",
       "type": "coreclr",
       "request": "launch",
@@ -23,13 +44,13 @@
       "cwd": "${workspaceFolder}/backend/api",
       "stopAtEntry": false,
       "env": {
-          "ASPNETCORE_ENVIRONMENT": "Local",
-          "ASPNETCORE_URLS": "http://*:5000;https://*:433"
+        "ASPNETCORE_ENVIRONMENT": "Local",
+        "ASPNETCORE_URLS": "http://*:5000;https://*:433"
       },
       "sourceFileMap": {
-          "/Views": "${workspaceFolder}/backend/Views"
+        "/Views": "${workspaceFolder}/backend/Views"
       }
-  },
+    },
     {
       "name": ".NET Core Attach",
       "type": "coreclr",

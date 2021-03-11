@@ -181,7 +181,7 @@ namespace Pims.Dal.Services
         {
             parcel.ThrowIfNull(nameof(parcel));
             parcel.PropertyTypeId = (int)(parcel.Parcels.Count > 0 ? PropertyTypes.Subdivision : PropertyTypes.Land);
-            if(parcel.PropertyTypeId == (int)PropertyTypes.Subdivision)
+            if (parcel.PropertyTypeId == (int)PropertyTypes.Subdivision)
             {
                 var parentPid = parcel.Parcels.FirstOrDefault()?.Parcel?.PID;
                 if (parentPid == null) throw new InvalidOperationException("Invalid parent parcel associated to subdivision, parent parcels must contain a valid PID");
@@ -494,11 +494,10 @@ namespace Pims.Dal.Services
         /// </summary>
         /// <param name="parcel"></param>
         /// <exception type="KeyNotFoundException">Entity does not exist in the datasource.</exception>
+        /// <exception type="NotAuthorizedException">User does not have required claim to delete property.</exception>
         /// <returns></returns>
         public void Remove(Parcel parcel)
         {
-            parcel.ThrowIfNotAllowedToEdit(nameof(parcel), this.User, new[] { Permissions.PropertyDelete, Permissions.AdminProperties });
-
             var userAgencies = this.User.GetAgenciesAsNullable();
             var viewSensitive = this.User.HasPermission(Permissions.SensitiveView);
             var isAdmin = this.User.HasPermission(Permissions.AdminProperties);
@@ -510,9 +509,15 @@ namespace Pims.Dal.Services
                 .Include(p => p.Buildings).ThenInclude(pb => pb.Building).ThenInclude(b => b.Evaluations)
                 .Include(p => p.Buildings).ThenInclude(pb => pb.Building).ThenInclude(b => b.Fiscals)
                 .Include(p => p.Buildings).ThenInclude(pb => pb.Building).ThenInclude(b => b.Address)
-                .Include(p => p.Subdivisions)
+                .Include(p => p.Subdivisions).ThenInclude(p => p.Subdivision)
                 .Include(p => p.Parcels)
                 .SingleOrDefault(u => u.Id == parcel.Id) ?? throw new KeyNotFoundException();
+
+            // Subdivisions can be deleted if the user has the edit claim.
+            if (originalParcel.PropertyTypeId == (int)PropertyTypes.Land)
+                parcel.ThrowIfNotAllowedToEdit(nameof(parcel), this.User, new[] { Permissions.PropertyDelete, Permissions.AdminProperties });
+            else if (originalParcel.PropertyTypeId == (int)PropertyTypes.Subdivision)
+                parcel.ThrowIfNotAllowedToEdit(nameof(parcel), this.User, new[] { Permissions.PropertyEdit, Permissions.AdminProperties });
 
             if (!isAdmin && (!userAgencies.Contains(originalParcel.AgencyId) || originalParcel.IsSensitive && !viewSensitive))
                 throw new NotAuthorizedException("User does not have permission to delete.");
@@ -535,6 +540,12 @@ namespace Pims.Dal.Services
             this.Context.ParcelParcels.RemoveRange(originalParcel.Parcels);
             this.Context.ParcelParcels.RemoveRange(originalParcel.Subdivisions);
             this.Context.Parcels.Remove(originalParcel); // TODO: Shouldn't be allowed to permanently delete parcels entirely under certain conditions.
+            if (parcel.PropertyTypeId == (int)PropertyTypes.Land)
+            {
+                var subdivisions = originalParcel.Subdivisions.Select(s => s.Subdivision);
+                this.Context.Parcels.RemoveRange(subdivisions);
+            }
+
             this.Context.CommitTransaction();
         }
 

@@ -208,11 +208,11 @@ namespace Pims.Api.Test.Controllers
             var template = EntityHelper.CreateNotificationTemplate(1, "test");
             var notification = EntityHelper.CreateNotificationQueue(1, template);
             var project = EntityHelper.CreateProject(1);
-            service.Setup(m => m.NotificationTemplate.SendNotificationAsync(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<object>())).ReturnsAsync(notification);
+            service.Setup(m => m.NotificationTemplate.SendNotificationAsync(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<object>())).ReturnsAsync(notification);
             service.Setup(m => m.Project.Get(It.IsAny<int>())).Returns(project);
 
             // Act
-            var result = await controller.SendProjectNotificationAsync(template.Id, "test@test.com", project.Id);
+            var result = await controller.SendProjectNotificationAsync(template.Id, "test@test.com", null, null, project.Id);
 
             // Assert
             var actionResult = Assert.IsType<CreatedAtActionResult>(result);

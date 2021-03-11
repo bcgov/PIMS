@@ -36,6 +36,7 @@ $narrowSidebarSize: 700px;
 .map {
   transition: margin 1s, width 1s;
   margin-left: 0px;
+  position: relative;
 }
 .side-bar .map {
   margin-left: 930px;
@@ -60,10 +61,10 @@ $narrowSidebarSize: 700px;
   .map-filter-container {
     margin-bottom: -#{$mapfilter-height};
   }
-}
-
-.map .leaflet-marker-icon.draft {
-  animation: blink 1.25s ease-in infinite;
+  .map .leaflet-marker-icon.draft,
+  .map .active-selected.leaflet-marker-icon {
+    animation: blink 1.25s ease-in infinite;
+  }
 }
 
 @keyframes blink {

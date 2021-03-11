@@ -157,7 +157,7 @@ exports[`Property list view Matches snapshot 1`] = `
                     class="rbt-input-main form-control rbt-input"
                     id="agencies-field"
                     name="agencies"
-                    placeholder="Agency"
+                    placeholder="My Agencies"
                     role="combobox"
                     type="text"
                     value=""
@@ -191,6 +191,7 @@ exports[`Property list view Matches snapshot 1`] = `
                   aria-haspopup="listbox"
                   autocomplete="off"
                   class="rbt-input-main form-control rbt-input"
+                  id="name-field"
                   placeholder="Property name"
                   role="combobox"
                   type="text"
@@ -325,6 +326,7 @@ exports[`Property list view Matches snapshot 1`] = `
           >
             <button
               class="Button Button--icon-only bg-warning btn btn-primary"
+              id="search-button"
               type="submit"
             >
               <div
@@ -352,6 +354,7 @@ exports[`Property list view Matches snapshot 1`] = `
           >
             <button
               class="Button Button--icon-only btn btn-info"
+              id="reset-button"
               type="reset"
             >
               <div

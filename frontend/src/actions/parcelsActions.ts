@@ -1,3 +1,4 @@
+import { ILeasedLand } from 'features/mapSideBar/SidebarContents/AssociatedLandForm';
 import * as ActionTypes from 'constants/actionTypes';
 import { PointFeature } from 'components/maps/types';
 import { PropertyTypes } from 'constants/propertyTypes';
@@ -99,6 +100,7 @@ export interface IBuilding extends IProperty {
   evaluations: IEvaluation[];
   fiscals: IFiscal[];
   parcels: IParcel[];
+  leasedLandMetadata?: ILeasedLand[];
 }
 
 export interface IFlatBuilding extends IProperty {

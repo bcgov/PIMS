@@ -123,7 +123,6 @@ export const defaultBuildingValues: IBuilding = {
  * This form will appear after selecting 'Add Building' after navigating to Manage Property > Submit Property in PIMS
  * @component
  */
-
 const Form: React.FC<IBuildingForm> = ({
   isPropertyAdmin,
   setMovingPinNameSpace,

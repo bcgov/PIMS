@@ -11,6 +11,7 @@ const SearchButton: React.FC<ButtonProps> = ({ ...props }) => {
   return (
     <TooltipWrapper toolTipId="map-filter-search-tooltip" toolTip="Search">
       <Button
+        id="search-button"
         type="submit"
         className={props.className ?? 'bg-warning'}
         {...props}

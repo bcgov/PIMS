@@ -24,6 +24,8 @@ import styled from 'styled-components';
 import { ParentSelect } from 'components/common/form/ParentSelect';
 import { Claims } from 'constants/claims';
 import useLookupCodes from 'hooks/useLookupCodes';
+import { mapSelectOptionWithParent } from 'utils';
+import { useMyAgencies } from 'hooks/useMyAgencies';
 
 /**
  * PropertyFilter component properties.
@@ -113,8 +115,10 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
     return values;
   }, [defaultFilter, propertyFilter, agencies]);
 
+  const myAgencies = useMyAgencies();
+
   const changeFilter = (values: IPropertyFilter) => {
-    const agencyIds = (values.agencies as any).value
+    const agencyIds = (values.agencies as any)?.value
       ? (values.agencies as any).value
       : values.agencies;
     setPropertyFilter({ ...values, agencies: agencyIds });
@@ -149,6 +153,8 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
               onEnter={() => {
                 setFindMoreOpen(true);
                 setFieldValue('surplusFilter', true);
+                setFieldValue('includeAllProperties', true);
+                !keycloak.hasClaim(Claims.ADMIN_PROPERTIES) && setFieldValue('agencies', undefined);
               }}
               onExit={() => {
                 setFindMoreOpen(false);
@@ -163,9 +169,9 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
               ) : (
                 <ParentSelect
                   field="agencies"
-                  options={agencies}
+                  options={myAgencies.map(c => mapSelectOptionWithParent(c, myAgencies))}
                   filterBy={['code', 'label', 'parent']}
-                  placeholder="Agency"
+                  placeholder="My Agencies"
                   selectClosest
                   disabled={findMoreOpen}
                 />
@@ -179,6 +185,7 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
                 }
                 isLoading={initialLoad}
                 id={`name-field`}
+                inputProps={{ id: `name-field` }}
                 placeholder="Property name"
                 onSearch={() => {
                   setInitialLoad(true);

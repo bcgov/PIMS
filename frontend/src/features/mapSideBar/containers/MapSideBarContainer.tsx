@@ -20,7 +20,7 @@ import {
 import { LeafletMouseEvent, LatLng } from 'leaflet';
 import AssociatedLandForm from '../SidebarContents/AssociatedLandForm';
 import { toast } from 'react-toastify';
-import _, { noop } from 'lodash';
+import _, { noop, cloneDeep } from 'lodash';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import GenericModal, { ModalSize } from 'components/common/GenericModal';
 import { FaCheckCircle, FaEdit } from 'react-icons/fa';
@@ -30,7 +30,7 @@ import { Spinner } from 'react-bootstrap';
 import { ViewOnlyLandForm, ISearchFields, getInitialValues } from '../SidebarContents/LandForm';
 import useSideBarParcelLoader from '../hooks/useSideBarParcelLoader';
 import useSideBarBuildingLoader from '../hooks/useSideBarBuildingLoader';
-import { ViewOnlyBuildingForm } from '../SidebarContents/BuildingForm';
+import { ViewOnlyBuildingForm, valuesToApiFormat } from '../SidebarContents/BuildingForm';
 import { Prompt } from 'react-router-dom';
 import { FaTrash } from 'react-icons/fa';
 import { deleteBuilding } from 'actionCreators/buildingActionCreator';
@@ -38,6 +38,7 @@ import useSideBarBuildingWithParcelLoader from '../hooks/useSideBarBuildingWithP
 import variables from '_variables.module.scss';
 import { withNameSpace } from 'utils/formUtils';
 import { PropertyTypes, Claims, EvaluationKeys, FiscalKeys } from 'constants/index';
+import { useBuildingApi } from '../hooks/useBuildingApi';
 
 interface IMapSideBarContainerProps {
   refreshParcels: Function;
@@ -136,6 +137,7 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
   const [showCompleteModal, setShowCompleteModal] = useState(false);
   const [showUpdatedModal, setShowUpdatedModal] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
+  const { createBuilding, updateBuilding } = useBuildingApi();
 
   const parcelLayerService = useLayerQuery(PARCELS_LAYER_URL);
 
@@ -420,9 +422,26 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
               setBuildingToAssociateLand(building);
               setShowAssociateLandModal(true);
             }}
-            goToAssociatedLand={(building: IBuilding) => {
-              setBuildingToAssociateLand(building);
-              addAssociatedLand();
+            goToAssociatedLand={async (building: IBuilding) => {
+              if (!!formikRef?.current) {
+                const values = formikRef.current.values;
+                const apiValues = valuesToApiFormat(cloneDeep(values));
+                let response: IBuilding;
+                try {
+                  if (!apiValues.id) {
+                    response = await createBuilding(apiValues)(dispatch);
+                  } else {
+                    response = await updateBuilding(apiValues)(dispatch);
+                  }
+                  formikRef.current.resetForm({ values: response });
+                  setBuildingToAssociateLand(building);
+                  addAssociatedLand();
+                } catch (err) {
+                  toast.error(
+                    'Failed to save building, ensure that building data is correct and try again.',
+                  );
+                }
+              }
             }}
             isPropertyAdmin={keycloak.hasClaim(Claims.ADMIN_PROPERTIES)}
             initialValues={buildingDetail ?? buildingWithParcelDetail ?? ({} as any)}

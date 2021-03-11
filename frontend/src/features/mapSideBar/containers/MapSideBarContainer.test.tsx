@@ -13,12 +13,13 @@ import { noop } from 'lodash';
 import * as reducerTypes from 'constants/reducerTypes';
 import * as actionTypes from 'constants/actionTypes';
 import { IParcel } from 'actions/parcelsActions';
-import { mockDetails } from 'mocks/filterDataMock';
+import { mockDetails, mockBuildingWithAssociatedLand } from 'mocks/filterDataMock';
 import VisibilitySensor from 'react-visibility-sensor';
 import { useKeycloak } from '@react-keycloak/web';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import { Claims } from 'constants/claims';
+import { screen } from '@testing-library/dom';
 
 jest.mock(
   'react-visibility-sensor',
@@ -149,7 +150,7 @@ describe('Parcel Detail MapSideBarContainer', () => {
 
         await wait(async () => {
           const editButton = await findByTestId('edit');
-          expect(editButton).toBeInTheDOM();
+          expect(editButton).toBeInTheDocument();
         });
       });
     });
@@ -162,7 +163,7 @@ describe('Parcel Detail MapSideBarContainer', () => {
         const { queryByTestId } = renderContainer({});
 
         const editButton = await queryByTestId('edit');
-        expect(editButton).not.toBeInTheDOM();
+        expect(editButton).not.toBeInTheDocument();
       });
     });
 
@@ -174,7 +175,7 @@ describe('Parcel Detail MapSideBarContainer', () => {
         const { queryByTestId } = renderContainer({});
 
         const editButton = await queryByTestId('edit');
-        expect(editButton).not.toBeInTheDOM();
+        expect(editButton).not.toBeInTheDocument();
       });
     });
   });
@@ -224,6 +225,69 @@ describe('Parcel Detail MapSideBarContainer', () => {
 
         const editButton = await findByTestId('edit');
         expect(editButton).toBeInTheDocument();
+      });
+    });
+  });
+  describe('modify associated land functionality', () => {
+    beforeEach(() => {
+      mockAxios.resetHistory();
+      mockAxios.reset();
+    });
+    it('saves the building when clicked', async () => {
+      await act(async () => {
+        history.push('/mapview/?sidebar=true&buildingId=1&disabled=false');
+        const building = { ...mockBuildingWithAssociatedLand };
+        mockAxios.onGet().reply(200, building);
+        const { findByText } = renderContainer({});
+
+        mockAxios.onPut().reply(200, null);
+
+        const reviewButton = await findByText('Review & Submit');
+        reviewButton.click();
+        const modifyButton = await findByText('Modify Associated Land');
+        modifyButton.click();
+        await wait(async () => {
+          expect(mockAxios.history.put.length).toBe(1);
+          const associatedLandText = await screen.findByText('Review associated land information');
+          expect(associatedLandText).toBeVisible();
+        });
+      });
+    });
+    it('displays an error toast if the save action fails', async () => {
+      await act(async () => {
+        history.push('/mapview/?sidebar=true&buildingId=1&disabled=false');
+        const building = { ...mockBuildingWithAssociatedLand };
+        mockAxios.onGet().reply(200, building);
+        const { findByText } = renderContainer({});
+
+        mockAxios.onPut().reply(500, null);
+
+        const reviewButton = await findByText('Review & Submit');
+        reviewButton.click();
+        const modifyButton = await findByText('Modify Associated Land');
+        modifyButton.click();
+        const failedBuildingSaveToast = await screen.findByText('Failed to update Building.');
+        expect(failedBuildingSaveToast).toBeVisible();
+      });
+    });
+    it('uses the most recent data from the api response', async () => {
+      await act(async () => {
+        history.push('/mapview/?sidebar=true&buildingId=1&disabled=false');
+        const building = { ...mockBuildingWithAssociatedLand, name: 'Modify assoc. land 12345' };
+        mockAxios.onGet().reply(200, building);
+        const { findByText } = renderContainer({});
+
+        mockAxios.onPut().reply(200, null);
+
+        const reviewButton = await findByText('Review & Submit');
+        reviewButton.click();
+        const modifyButton = await findByText('Modify Associated Land');
+        modifyButton.click();
+        await wait(async () => {
+          expect(mockAxios.history.put.length).toBe(1);
+          const associatedLandText = await screen.findByText('Modify assoc. land 12345');
+          expect(associatedLandText).toBeVisible();
+        });
       });
     });
   });

@@ -17,6 +17,11 @@ parameters:
     description: "The name of the application role (e.g api, app, database)."
     required: true
     value: "app"
+  - name: API_ROLE_NAME
+    displayName: "Component Name"
+    description: "The name of the application role for the API."
+    required: true
+    value: "api"
   - name: PROJECT_NAMESPACE
     displayName: "OpenShift Project Namespace"
     description: "The namespace of the OpenShift project containing the application."
@@ -91,6 +96,11 @@ parameters:
     required: true
     value: "/api"
 
+  - name: REPLICAS
+    displayName: "Pod Replicas"
+    description: "Number of pod replicas to run"
+    value: "2"
+
   - name: CPU_REQUEST
     displayName: "CPU Request"
     description: "Starting amount of CPU the container can use."
@@ -108,6 +118,26 @@ parameters:
     description: "Maximum amount of memory the container can use."
     value: "2Gi"
 objects:
+  # Allow the app to communicate with the api.
+  - kind: NetworkPolicy
+    apiVersion: networking.k8s.io/v1
+    metadata:
+      name: pod-from-pod-permit-${NAME}-${SOURCE_ROLE}-${DESTINATION_ROLE}
+      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
+    spec:
+      #description: Allow api pod(s) to receive communication from app pod(s).
+      podSelector:
+        matchLabels:
+          app: ${APP_NAME}
+          role: ${API_ROLE_NAME}
+          env: ${ENV_NAME}
+      ingress:
+        - from:
+            - podSelector:
+                matchLabels:
+                  app: ${APP_NAME}
+                  role: ${ROLE_NAME}
+                  env: ${ENV_NAME}
   # Open up ports to communicate with the app.
   - kind: Service
     apiVersion: v1
@@ -134,29 +164,6 @@ objects:
         env: ${ENV_NAME}
       sessionAffinity: None
       type: ClusterIP
-
-  # The route for the app.
-  - kind: Route
-    apiVersion: v1
-    metadata:
-      name: ${APP_NAME}-${ROLE_NAME}${INSTANCE}
-      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
-      labels:
-        name: ${APP_NAME}-${ROLE_NAME}${INSTANCE}
-        app: ${APP_NAME}
-        role: ${ROLE_NAME}
-        env: ${ENV_NAME}
-    spec:
-      host: ${APP_DOMAIN}
-      port:
-        targetPort: ${APP_PORT}-tcp
-      tls:
-        insecureEdgeTerminationPolicy: Redirect
-        termination: edge
-      to:
-        kind: Service
-        name: ${APP_NAME}-${ROLE_NAME}${INSTANCE}
-        weight: 100
 
   # Keycloak configuration settings.
   - kind: ConfigMap
@@ -196,7 +203,7 @@ objects:
         role: ${ROLE_NAME}
         env: ${ENV_NAME}
     spec:
-      replicas: 1
+      replicas: ${{REPLICAS}}
       selector:
         name: ${APP_NAME}-${ROLE_NAME}${INSTANCE}
         app: ${APP_NAME}

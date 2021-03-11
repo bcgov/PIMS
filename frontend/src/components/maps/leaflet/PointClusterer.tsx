@@ -105,7 +105,7 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
   const draftFeatureGroupRef = useRef<any>();
   const filterState = useFilterContext();
   const location = useLocation();
-  const { parcelId } = queryString.parse(location.search);
+  const { parcelId, buildingId } = queryString.parse(location.search);
 
   const [currentSelected, setCurrentSelected] = useState(selected);
   const [currentCluster, setCurrentCluster] = useState<
@@ -242,7 +242,7 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
         groupBounds.isValid() &&
         group.getBounds().isValid() &&
         filterState.changed &&
-        !selected &&
+        !selected?.parcelDetail &&
         tilesLoaded
       ) {
         filterState.setChanged(false);
@@ -256,6 +256,7 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
 
   const popUpContext = React.useContext(PropertyPopUpContext);
 
+  const dispatch = useDispatch();
   const { getParcel, getBuilding } = useApi();
   const fetchProperty = React.useCallback(
     (propertyTypeId: number, id: number) => {
@@ -266,14 +267,14 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
       } else if (propertyTypeId === PropertyTypes.BUILDING) {
         getBuilding(id as number).then(building => {
           popUpContext.setPropertyInfo(building);
+          dispatch(parcelsActions.storeBuildingDetail(building));
         });
       }
     },
-    [getParcel, getBuilding, popUpContext],
+    [getParcel, popUpContext, getBuilding, dispatch],
   );
 
   const keycloak = useKeycloakWrapper();
-  const dispatch = useDispatch();
 
   return (
     <>
@@ -398,6 +399,11 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
             <SelectedPropertyMarker
               {...selected.parcelDetail}
               icon={getMarkerIcon({ properties: selected } as any, true)}
+              className={
+                Number(parcelId ?? buildingId) === selected?.parcelDetail?.id
+                  ? 'active-selected'
+                  : ''
+              }
               position={[
                 selected.parcelDetail!.latitude as number,
                 selected.parcelDetail!.longitude as number,

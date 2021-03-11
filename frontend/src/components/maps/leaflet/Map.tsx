@@ -49,6 +49,7 @@ import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { Claims } from '../../../constants';
 import InfoSlideOut from './InfoSlideOut/InfoSlideOut';
 import { PropertyPopUpContextProvider } from '../providers/PropertyPopUpProvider';
+import FilterBackdrop from './FilterBackdrop';
 
 export type MapViewportChangeEvent = {
   bounds: LatLngBounds | null;
@@ -99,6 +100,8 @@ const defaultFilterValues: IPropertyFilter = {
   maxAssessedValue: '',
   maxMarketValue: '',
   maxNetBookValue: '',
+  inEnhancedReferralProcess: false,
+  inSurplusPropertyProgram: false,
   includeAllProperties: false,
   surplusFilter: false,
 };
@@ -199,6 +202,8 @@ const Map: React.FC<MapProps> = ({
     parcelLayerFeature,
     setLayerPopup,
   });
+  const [showFilterBackdrop, setShowFilterBackdrop] = useState(true);
+
   const lastZoom = useSelector<RootState, number>(state => state.mapViewZoom) ?? zoomProp;
   const [zoom, setZoom] = useState(lastZoom);
   useEffect(() => {
@@ -321,13 +326,13 @@ const Map: React.FC<MapProps> = ({
 
   const [infoOpen, setInfoOpen] = React.useState(false);
   const [layersOpen, setLayersOpen] = React.useState(false);
-
   return (
     <ReactResizeDetector handleWidth>
       {({ width }: any) => {
         setMapWidth(width);
         return (
           <Container fluid className={classNames('px-0 map', { narrow: sidebarSize === 'narrow' })}>
+            <FilterBackdrop show={showFilterBackdrop} />
             {!disableMapFilterBar ? (
               <Container fluid className="px-0 map-filter-container">
                 <Container className="px-0">
@@ -422,6 +427,7 @@ const Map: React.FC<MapProps> = ({
                       }}
                       selected={selectedProperty}
                       filter={geoFilter}
+                      onRequestData={setShowFilterBackdrop}
                     ></InventoryLayer>
                   </ReactLeafletMap>
                 </PropertyPopUpContextProvider>

@@ -19,6 +19,7 @@ exports[`Filter Bar Snapshot matches 1`] = `
         <button
           className="Button Button--icon-only bg-warning btn btn-primary"
           disabled={false}
+          id="search-button"
           onBlur={[Function]}
           onFocus={[Function]}
           onMouseOut={[Function]}
@@ -56,6 +57,7 @@ exports[`Filter Bar Snapshot matches 1`] = `
         <button
           className="Button Button--icon-only btn btn-info"
           disabled={false}
+          id="reset-button"
           onBlur={[Function]}
           onClick={[Function]}
           onFocus={[Function]}

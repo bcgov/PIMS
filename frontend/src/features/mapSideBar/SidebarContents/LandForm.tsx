@@ -133,6 +133,11 @@ export const valuesToApiFormat = (values: ISteppedFormValues<IParcel>): IParcel 
   return apiValues.data;
 };
 
+/**
+ * A component used for submitting standalone land.
+ * This form will appear after selecting 'Add LAnd' after navigating to Manage Property > Submit Property in PIMS
+ * @component
+ */
 const Form: React.FC<ILandForm> = ({
   handleGeocoderChanges,
   setMovingPinNameSpace,

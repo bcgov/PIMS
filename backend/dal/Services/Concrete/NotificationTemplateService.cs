@@ -156,12 +156,25 @@ namespace Pims.Dal.Services
         /// <returns></returns>
         public async Task<NotificationQueue> SendNotificationAsync<T>(int templateId, string to, T model) where T : class // TODO: Allow for a way to pass a model to this function.
         {
+            return await SendNotificationAsync<T>(templateId, to, null, null, model);
+        }
+
+        /// <summary>
+        /// Send an email notification for the specified notification template 'templateId' to the specified list of email addresses in 'to'.
+        /// </summary>
+        /// <param name="templateId"></param>
+        /// <param name="to"></param>
+        /// <param name="cc"></param>
+        /// <param name="bcc"></param>
+        /// <returns></returns>
+        public async Task<NotificationQueue> SendNotificationAsync<T>(int templateId, string to, string cc, string bcc, T model) where T : class // TODO: Allow for a way to pass a model to this function.
+        {
             this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin);
 
             if (String.IsNullOrWhiteSpace(to)) throw new ArgumentException("Argument is required and cannot be null, empty or whitespace.", nameof(to));
 
             var template = this.Context.NotificationTemplates.Find(templateId) ?? throw new KeyNotFoundException();
-            var notification = new NotificationQueue(template, to, template.Subject, template.Body);
+            var notification = new NotificationQueue(template, to, cc, bcc, template.Subject, template.Body);
 
             this.Context.NotificationQueue.Add(notification);
             this.Context.CommitTransaction();
