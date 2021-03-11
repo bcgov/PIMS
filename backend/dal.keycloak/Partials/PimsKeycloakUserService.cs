@@ -9,6 +9,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Entity = Pims.Dal.Entities;
 using KModel = Pims.Keycloak.Models;
+using Microsoft.Extensions.Logging;
+using Pims.Core.Exceptions;
 
 namespace Pims.Dal.Keycloak
 {
@@ -116,7 +118,7 @@ namespace Pims.Dal.Keycloak
         /// <returns></returns>
         public async Task<Entity.User> UpdateUserAsync(Entity.User user)
         {
-            var kuser = await _keycloakService.GetUserAsync(user.Id) ?? throw new KeyNotFoundException();
+            var kuser = await _keycloakService.GetUserAsync(user.Id) ?? throw new KeyNotFoundException("User does not exist in Keycloak");
             var euser = _pimsAdminService.User.Get(user.Id);
 
             if (user.Username != kuser.Username) throw new InvalidOperationException($"Cannot change the username from '{kuser.Username}' to '{user.Username}'.");
@@ -129,20 +131,32 @@ namespace Pims.Dal.Keycloak
             // Update PIMS
             _mapper.Map(user, euser);
 
-            // Update Roles.
-            addRoles.ForEach(async r =>
+            // Remove all keycloak groups from user.  // TODO: Only add/remove the ones that should be removed.
+            var userGroups = await _keycloakService.GetUserGroupsAsync(euser.Id);
+            foreach (var group in userGroups)
+            {
+                await _keycloakService.RemoveGroupFromUserAsync(user.Id, group.Id);
+            }
+            foreach (var r in user.Roles)
             {
                 var role = _pimsAdminService.Role.Find(r.RoleId) ?? throw new KeyNotFoundException("Cannot assign a role to a user, when the role does not exist.");
                 if (role.KeycloakGroupId == null) throw new KeyNotFoundException("PIMS has not been synced with Keycloak.");
-                euser.Roles.Add(new Entity.UserRole(euser, role));
+                _logger.LogInformation($"Adding keycloak group '{role.Name}' to user '{euser.Username}'.");
                 await _keycloakService.AddGroupToUserAsync(user.Id, role.KeycloakGroupId.Value);
-            });
-            removeRoles.ForEach(async r =>
+            }
+
+            // Update Roles.
+            removeRoles.ForEach(r =>
             {
                 var role = _pimsAdminService.Role.Find(r.RoleId) ?? throw new KeyNotFoundException("Cannot remove a role from a user, when the role does not exist.");
                 if (role.KeycloakGroupId == null) throw new KeyNotFoundException("PIMS has not been synced with Keycloak.");
                 euser.Roles.Remove(r);
-                await _keycloakService.RemoveGroupFromUserAsync(user.Id, role.KeycloakGroupId.Value);
+            });
+            addRoles.ForEach(r =>
+            {
+                var role = _pimsAdminService.Role.Find(r.RoleId) ?? throw new KeyNotFoundException("Cannot assign a role to a user, when the role does not exist.");
+                if (role.KeycloakGroupId == null) throw new KeyNotFoundException("PIMS has not been synced with Keycloak.");
+                euser.Roles.Add(new Entity.UserRole(euser, role));
             });
 
             // Update Agencies
@@ -165,6 +179,7 @@ namespace Pims.Dal.Keycloak
                 ["agencies"] = _pimsService.User.GetAgencies(euser.Id).Select(a => a.ToString()).ToArray(),
                 ["displayName"] = new[] { user.DisplayName }
             };
+            _logger.LogInformation($"Updating keycloak agency attribute '{kmodel.Attributes["agencies"]}' for user '{euser.Username}'.");
             await _keycloakService.UpdateUserAsync(kmodel);  // TODO: Fix issue where EmailVerified will be set to false.
 
             return euser;
