@@ -426,13 +426,14 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
               if (!!formikRef?.current) {
                 const values = formikRef.current.values;
                 const apiValues = valuesToApiFormat(cloneDeep(values));
+                let response: IBuilding;
                 try {
                   if (!apiValues.id) {
-                    await createBuilding(apiValues)(dispatch);
+                    response = await createBuilding(apiValues)(dispatch);
                   } else {
-                    await updateBuilding(apiValues)(dispatch);
+                    response = await updateBuilding(apiValues)(dispatch);
                   }
-                  formikRef.current.resetForm({ values: values });
+                  formikRef.current.resetForm({ values: response });
                   setBuildingToAssociateLand(building);
                   addAssociatedLand();
                 } catch (err) {
