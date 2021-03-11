@@ -85,15 +85,16 @@ export const PropertyListViewSelect: React.FC<InputProps> = ({
     setPageSize(size);
   }, []);
 
-  // const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const fetchIdRef = useRef(0);
-  const fetchData = useTable({ fetchIdRef, setData, setPageCount });
+  const fetchData = useTable({ fetchIdRef, setData, setPageCount, setLoading });
 
   // This will get called when the table needs new data
   const handleRequestData = useCallback(
     async ({ pageIndex, pageSize }: { pageIndex: number; pageSize: number }) => {
       setPageSize(pageSize);
       setPageIndex(pageIndex);
+      setLoading(true);
     },
     [setPageSize, setPageIndex],
   );
@@ -126,21 +127,7 @@ export const PropertyListViewSelect: React.FC<InputProps> = ({
     <Container className="col-md-12 PropertyListViewSelect">
       {!disabled && (
         <div className="ScrollContainer">
-          <Container fluid className="TableToolbar">
-            <h2 className="mr-auto">Available Properties</h2>
-            <Button
-              onClick={() => {
-                setProjectProperties(
-                  _.uniqWith(
-                    _.concat(selectedProperties, properties),
-                    (p1, p2) => p1.id === p2.id && p1.propertyTypeId === p2.propertyTypeId,
-                  ),
-                );
-              }}
-            >
-              Add Selected
-            </Button>
-          </Container>
+          <h2>Available Properties</h2>
           <Table<IProperty>
             name="SelectPropertiesTable"
             columns={columns}
@@ -150,11 +137,31 @@ export const PropertyListViewSelect: React.FC<InputProps> = ({
             onRequestData={handleRequestData}
             pageCount={pageCount}
             pageIndex={pageIndex}
+            selectedRows={selectedProperties}
             setSelectedRows={setSelectedProperties}
             clickableTooltip={clickableTooltip}
             onRowClick={onRowClick}
             onPageSizeChange={onPageSizeChanged}
+            loading={loading}
           />
+          <Container fluid className="TableToolbar">
+            <strong className="align-self-center mr-2">
+              {!!selectedProperties.length ? `${selectedProperties.length} Selected` : ''}
+            </strong>
+            <Button
+              variant="secondary"
+              onClick={() => {
+                setProjectProperties(
+                  _.uniqWith(
+                    _.concat(selectedProperties, properties),
+                    (p1, p2) => p1.id === p2.id && p1.propertyTypeId === p2.propertyTypeId,
+                  ),
+                );
+              }}
+            >
+              Add To Project
+            </Button>
+          </Container>
         </div>
       )}
       <div className="ScrollContainer">

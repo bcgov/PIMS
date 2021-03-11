@@ -371,13 +371,15 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                   <div>
                     <input
                       checked={false}
+                      data-testid="selectrow-parent"
+                      disabled={true}
                       onChange={[Function]}
                       style={
                         Object {
                           "cursor": "pointer",
                         }
                       }
-                      title="Toggle All Rows Selected"
+                      title="Click to deselect all properties."
                       type="checkbox"
                     />
                   </div>
@@ -791,6 +793,8 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                   <div>
                     <input
                       checked={false}
+                      data-testid="selectrow-1"
+                      disabled={false}
                       onChange={[Function]}
                       style={
                         Object {

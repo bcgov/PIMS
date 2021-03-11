@@ -192,7 +192,20 @@ namespace Pims.Dal.Entities
         /// <param name="to"></param>
         /// <param name="subject"></param>
         /// <param name="body"></param>
-        public NotificationQueue(NotificationTemplate template, string to, string subject, string body)
+        public NotificationQueue(NotificationTemplate template, string to, string subject, string body) : this(template, to, null, null, subject, body)
+        {
+        }
+
+        /// <summary>
+        /// Create a new instance of a NotificationQueue class, initializes with specified parameters.
+        /// </summary>
+        /// <param name="template"></param>
+        /// <param name="to"></param>
+        /// <param name="cc"></param>
+        /// <param name="bcc"></param>
+        /// <param name="subject"></param>
+        /// <param name="body"></param>
+        public NotificationQueue(NotificationTemplate template, string to, string cc, string bcc, string subject, string body)
         {
             if (String.IsNullOrWhiteSpace(to)) throw new ArgumentException("Argument is required and cannot be null, empty or whitespace.", nameof(to));
             if (String.IsNullOrWhiteSpace(subject)) throw new ArgumentException("Argument is required and cannot be null, empty or whitespace.", nameof(subject));
@@ -202,6 +215,8 @@ namespace Pims.Dal.Entities
             this.TemplateId = template?.Id ?? throw new ArgumentNullException(nameof(template));
             this.Template = template;
             this.To = to;
+            this.Cc = cc;
+            this.Bcc = bcc;
             this.Subject = subject;
             this.Body = body;
             this.BodyType = template.BodyType;

@@ -219,21 +219,26 @@ parameters:
     required: true
     value: "1Gi"
 objects:
-  # Allow backup to communicate with database
-  - kind: NetworkSecurityPolicy
-    apiVersion: security.devops.gov.bc.ca/v1alpha1
+  # Allow the backup to communicate with the database.
+  - kind: NetworkPolicy
+    apiVersion: networking.k8s.io/v1
     metadata:
-      name: pod-to-pod-permit-${APP_NAME}-${ROLE_NAME}
+      name: pod-from-pod-permit-${NAME}-${ROLE_NAME}-${DATABASE_ROLE_NAME}
+      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
     spec:
-      description: Allow pod(s) to communicate to other pod(s).
-      source:
-        - - app=${APP_NAME}
-          - role=${ROLE_NAME}
-          - env=${ENV_NAME}
-      destination:
-        - - app=${APP_NAME}
-          - role=${DATABASE_ROLE_NAME}
-          - env=${ENV_NAME}
+      #description: Allow database pod(s) to receive communication from backup pod(s).
+      podSelector:
+        matchLabels:
+          app: ${APP_NAME}
+          role: ${DATABASE_ROLE_NAME}
+          env: ${ENV_NAME}
+      ingress:
+        - from:
+            - podSelector:
+                matchLabels:
+                  app: ${APP_NAME}
+                  role: ${ROLE_NAME}
+                  env: ${ENV_NAME}
 
   # Configuration settings for cronjob.
   - kind: ConfigMap

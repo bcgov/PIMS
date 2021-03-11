@@ -148,12 +148,12 @@ namespace Pims.Tools.Keycloak.Sync
             foreach (var role in roles?.Items)
             {
                 var prole = await _client.HandleRequestAsync<RoleModel>(HttpMethod.Get, $"{_options.Api.Uri}/admin/roles/{role.Id}");
-                var krole = await GetKeycloakGroupAsync(prole);
+                var krole = await GetKeycloakGroupAsync(prole, true);
                 role.KeycloakGroupId = krole.Id;
 
                 _logger.LogInformation($"Updating Role '{role.Name}'.");
-                log.Append($"Keycloak - Role updated '{role.Name}'{Environment.NewLine}");
                 await _client.HandleRequestAsync<RoleModel, RoleModel>(HttpMethod.Put, $"{_options.Api.Uri}/admin/roles/{role.Id}", role);
+                log.Append($"Keycloak - Role updated '{role.Name}'{Environment.NewLine}");
             }
         }
 
@@ -243,12 +243,12 @@ namespace Pims.Tools.Keycloak.Sync
         /// <returns></returns>
         private async Task<KModel.GroupModel> UpdateGroupInKeycloak(KModel.GroupModel group, RoleModel role)
         {
-            group.RealmRoles = role.Claims.Select(c => c.Name).ToArray();
 
             // Update the group in keycloak.
             var response = await _client.SendJsonAsync($"{_options.Auth.Keycloak.Admin.Authority}/groups/{group.Id}", HttpMethod.Put, group);
             if (response.IsSuccessStatusCode)
             {
+                await RemoveRolesFromGroupInKeycloak(group, role);
                 await AddRolesToGroupInKeycloak(group, role);
                 return await GetKeycloakGroupAsync(role, false);
             }
@@ -266,25 +266,57 @@ namespace Pims.Tools.Keycloak.Sync
         /// <returns></returns>
         private async Task AddRolesToGroupInKeycloak(KModel.GroupModel group, RoleModel role)
         {
-            foreach (var claim in role.Claims)
+            // Get the matching role from keycloak.
+            //var krole = await HandleRequestAsync<KModel.RoleModel>(HttpMethod.Get, $"{_options.Auth.Keycloak.Admin.Authority}/roles/{claim.Name}");
+            var roles = role.Claims.Select(c => new KModel.RoleModel()
+            {
+                Id = c.KeycloakRoleId.Value,
+                Name = c.Name,
+                Composite = false,
+                ClientRole = false,
+                ContainerId = _options.Auth.Keycloak.Realm,
+                Description = c.Description
+            }).ToArray();
+
+            // Update the group in keycloak.
+            var response = await _client.SendJsonAsync($"{_options.Auth.Keycloak.Admin.Authority}/groups/{group.Id}/role-mappings/realm", HttpMethod.Post, roles);
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new HttpClientRequestException(response, $"Failed to update the group '{role.Name}' with the roles '{String.Join(",", roles.Select(r => r.Name).ToArray())}' in keycloak");
+            }
+        }
+
+        /// <summary>
+        /// Remove roles from the group in keycloak.
+        /// </summary>
+        /// <param name="group"></param>
+        /// <param name="role"></param>
+        /// <returns></returns>
+        private async Task RemoveRolesFromGroupInKeycloak(KModel.GroupModel group, RoleModel role)
+        {
+            var removeRoles = group.RealmRoles.Where(r => !role.Claims.Select(c => c.Name).Contains(r));
+
+            foreach (var rname in removeRoles)
             {
                 // Get the matching role from keycloak.
-                //var krole = await HandleRequestAsync<KModel.RoleModel>(HttpMethod.Get, $"{_options.Auth.Keycloak.Admin.Authority}/roles/{claim.Name}");
-                var roles = role.Claims.Select(c => new KModel.RoleModel()
-                {
-                    Id = c.KeycloakRoleId.Value,
-                    Name = c.Name,
-                    Composite = false,
-                    ClientRole = false,
-                    ContainerId = _options.Auth.Keycloak.Realm,
-                    Description = c.Description
-                }).ToArray();
+                var krole = await _client.HandleRequestAsync<KModel.RoleModel>(HttpMethod.Get, $"{_options.Auth.Keycloak.Admin.Authority}/roles/{rname}");
+                var roles = new[] {
+                    new KModel.RoleModel()
+                    {
+                        Id = krole.Id,
+                        Name = krole.Name,
+                        Composite = false,
+                        ClientRole = false,
+                        ContainerId = _options.Auth.Keycloak.Realm,
+                        Description = krole.Description
+                    }
+                };
 
                 // Update the group in keycloak.
-                var response = await _client.SendJsonAsync($"{_options.Auth.Keycloak.Admin.Authority}/groups/{group.Id}/role-mappings/realm", HttpMethod.Post, roles);
+                var response = await _client.SendJsonAsync($"{_options.Auth.Keycloak.Admin.Authority}/groups/{group.Id}/role-mappings/realm", HttpMethod.Delete, roles);
                 if (!response.IsSuccessStatusCode)
                 {
-                    throw new HttpClientRequestException(response, $"Failed to update the group '{role.Name}' with the role '{claim.Name}' in keycloak");
+                    throw new HttpClientRequestException(response, $"Failed to update the group '{role.Name}' removing role '{rname}' in keycloak");
                 }
             }
         }

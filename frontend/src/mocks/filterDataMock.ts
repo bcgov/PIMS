@@ -385,6 +385,7 @@ export const mockBuildingWithAssociatedLand: IBuilding = {
 };
 
 export const mockFlatProperty: IFlatProperty = {
+  name: 'Test Property',
   id: 0,
   propertyTypeId: 0,
   propertyType: 'Land',

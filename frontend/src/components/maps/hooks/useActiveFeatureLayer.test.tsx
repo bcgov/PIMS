@@ -64,7 +64,7 @@ describe('useActiveFeatureLayer hook tests', () => {
       () =>
         useActiveFeatureLayer({
           mapRef: mapRef as any,
-          selectedProperty: { parcelDetail: { latitude: 0, longitude: 0 } } as any,
+          selectedProperty: { parcelDetail: { latitude: 1, longitude: 1 } } as any,
           layerPopup: undefined,
           setLayerPopup: noop,
         }),
@@ -85,7 +85,7 @@ describe('useActiveFeatureLayer hook tests', () => {
       () =>
         useActiveFeatureLayer({
           mapRef: mapRef as any,
-          selectedProperty: { parcelDetail: { latitude: 0, longitude: 0 } } as any,
+          selectedProperty: { parcelDetail: { latitude: 1, longitude: 1 } } as any,
           layerPopup: undefined,
           setLayerPopup: noop,
         }),

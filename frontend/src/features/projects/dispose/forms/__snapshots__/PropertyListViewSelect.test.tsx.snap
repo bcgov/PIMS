@@ -17,21 +17,9 @@ exports[`Property List View Select renders correctly 1`] = `
   <div
     class="ScrollContainer"
   >
-    <div
-      class="TableToolbar container-fluid"
-    >
-      <h2
-        class="mr-auto"
-      >
-        Available Properties
-      </h2>
-      <button
-        class="btn btn-primary"
-        type="button"
-      >
-        Add Selected
-      </button>
-    </div>
+    <h2>
+      Available Properties
+    </h2>
     <div
       class="table"
       role="table"
@@ -55,8 +43,10 @@ exports[`Property List View Select renders correctly 1`] = `
             >
               <div>
                 <input
+                  data-testid="selectrow-parent"
+                  disabled=""
                   style="cursor: pointer;"
-                  title="Toggle All Rows Selected"
+                  title="Click to deselect all properties."
                   type="checkbox"
                 />
               </div>
@@ -241,6 +231,19 @@ exports[`Property List View Select renders correctly 1`] = `
     <div
       class="table-toolbar"
     />
+    <div
+      class="TableToolbar container-fluid"
+    >
+      <strong
+        class="align-self-center mr-2"
+      />
+      <button
+        class="btn btn-secondary"
+        type="button"
+      >
+        Add To Project
+      </button>
+    </div>
   </div>
   <div
     class="ScrollContainer"
@@ -283,8 +286,10 @@ exports[`Property List View Select renders correctly 1`] = `
             >
               <div>
                 <input
+                  data-testid="selectrow-parent"
+                  disabled=""
                   style="cursor: pointer;"
-                  title="Toggle All Rows Selected"
+                  title="Click to deselect all properties."
                   type="checkbox"
                 />
               </div>
@@ -495,6 +500,7 @@ exports[`Property List View Select renders correctly 1`] = `
             >
               <div>
                 <input
+                  data-testid="selectrow-1"
                   style="cursor: pointer;"
                   title="Toggle Row Selected"
                   type="checkbox"
