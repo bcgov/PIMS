@@ -294,7 +294,8 @@ export const getStore = (mockProject: IProject, tab?: SPPApprovalTabs) =>
         {
           code: 'BCT',
           name: 'BC Transit',
-          id: 1,
+          value: 2,
+          id: 2,
           type: API.AGENCY_CODE_SET_NAME,
         },
       ],

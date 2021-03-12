@@ -78,6 +78,7 @@ describe('Exemption Request test', () => {
         },
         handleChange: noop,
         setFieldValue: noop,
+        setFieldTouched: noop,
       });
       const { getByText } = renderComponent(
         'test label',
