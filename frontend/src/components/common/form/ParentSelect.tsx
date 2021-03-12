@@ -59,6 +59,8 @@ export const ParentSelect: React.FC<IParentSelect> = ({
   const [clear, setClear] = useState(false);
   /** controls the multi selections displayed to the user */
   const [multiSelections, setMultiSelections] = React.useState<any>([]);
+  /** parent id used to identify parent agencies with no children */
+  const CHILDLESS_PARENT_ID = -1;
 
   /** wipe the selection from input on reset */
   useEffect(() => {
@@ -131,41 +133,57 @@ export const ParentSelect: React.FC<IParentSelect> = ({
         hideValidation
         required={required}
         renderMenu={(results, menuProps) => {
-          /** group the results by their desired parents */
-          const resultGroup = groupBy(
-            results.map((x: SelectOption) => {
-              return {
-                ...x,
-                parentId: x.parentId,
-              };
-            }),
-            x => x.parentId,
+          const parents = results.filter(x => !x.parentId);
+          const childless = parents.filter(
+            p => !results.find(r => Number(r.parentId) === Number(p.value)),
           );
+
+          // This assigns a specific id to childless parent agencies
+          // Headers will not be displayed for these childless parent agencies but they will be displayed as regular options and grouped
+          results = results.map(x => {
+            return {
+              ...x,
+              parentId: !!childless.find(c => Number(c.value) === Number(x.value))
+                ? CHILDLESS_PARENT_ID
+                : x.parentId,
+              parent: !!childless.find(c => Number(c.value) === Number(x.value))
+                ? 'Childless'
+                : x.parent,
+            };
+          });
+
+          /** group the results by their desired parents */
+          const resultGroup = groupBy(results, x => x.parentId);
+
           const items = Object.keys(resultGroup)
             .sort()
+            .reverse()
             .map(parentId => (
               <Fragment key={parentId}>
-                {!!results.find((x: SelectOption) => x.parentId === +parentId) && (
-                  <Menu.Header
-                    onClick={() =>
-                      enableMultiple
-                        ? handleMultiSelectHeaderClick(
-                            results.filter(x => x.parentId === +parentId),
-                          )
-                        : handleMenuHeaderClick(options.find(x => x.value === parentId)!)
-                    }
-                  >
-                    <b style={{ cursor: 'pointer' }}>
-                      {results.find(x => x.parentId === +parentId)?.parent}
-                    </b>
-                  </Menu.Header>
-                )}
+                {!!results.find((x: SelectOption) => x.parentId === +parentId) &&
+                  +parentId !== CHILDLESS_PARENT_ID && (
+                    <Menu.Header
+                      onClick={() =>
+                        enableMultiple
+                          ? handleMultiSelectHeaderClick(
+                              results.filter(x => x.parentId === +parentId),
+                            )
+                          : handleMenuHeaderClick(options.find(x => x.value === parentId)!)
+                      }
+                    >
+                      <b style={{ cursor: 'pointer' }}>
+                        {results.find(x => x.parentId === +parentId)?.parent}
+                      </b>
+                    </Menu.Header>
+                  )}
                 {/* sorting results by value of the dropdown item */}
                 {sortBy(resultGroup[parentId], (x: SelectOption) => x.value).map((i, index) => {
                   if (i.parent) {
                     return (
                       <MenuItem key={index + 1} option={i} position={index + 1}>
-                        <Highlighter search="">{i.label}</Highlighter>
+                        <Highlighter search="">
+                          {i.parentId === CHILDLESS_PARENT_ID ? <b>{i.label}</b> : i.label}
+                        </Highlighter>
                       </MenuItem>
                     );
                   }
@@ -173,7 +191,6 @@ export const ParentSelect: React.FC<IParentSelect> = ({
                 })}
               </Fragment>
             ));
-
           return <Menu {...menuProps}>{items}</Menu>;
         }}
       />
