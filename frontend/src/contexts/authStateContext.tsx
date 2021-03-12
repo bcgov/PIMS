@@ -22,7 +22,12 @@ export const AuthStateContextProvider = (props: { children?: any }) => {
       setUserInfo(user);
     };
 
-    loadUserInfo();
+    try {
+      loadUserInfo();
+    } catch (err) {
+      // this error isn't recoverable, so just log it for debugging purposes.
+      console.error(err);
+    }
   }, [keycloak.obj]);
 
   return (

@@ -112,7 +112,10 @@ const LandSearchForm = ({
             value={searchAddress}
             field={withNameSpace(nameSpace, 'searchAddress')}
             onSelectionChanged={selection => {
-              formikProps.setFieldValue(withNameSpace('searchAddress'), selection.fullAddress);
+              formikProps.setFieldValue(
+                withNameSpace(nameSpace, 'searchAddress'),
+                selection.fullAddress,
+              );
               setGeocoderResponse(selection);
             }}
             onTextChange={value => {
