@@ -39,8 +39,10 @@ const loadProperties = async (projectNumber: string): Promise<{ [key: string]: I
   return { [projectNumber]: project?.properties || [] };
 };
 
-export default {
+const ApiService = {
   getProjectList,
   deleteProject,
   loadProperties,
 };
+
+export default ApiService;

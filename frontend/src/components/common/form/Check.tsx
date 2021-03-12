@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './Check.scss';
 import { Form, FormCheckProps } from 'react-bootstrap';
 import { useFormikContext, getIn } from 'formik';
@@ -66,11 +66,23 @@ export const Check: React.FC<CheckProps> = ({
   toolTipId,
   ...rest
 }) => {
-  const { values, setFieldValue, errors, touched, handleBlur } = useFormikContext();
+  const {
+    values,
+    setFieldValue,
+    setFieldTouched,
+    errors,
+    touched,
+    handleBlur,
+  } = useFormikContext();
   const touch = getIn(touched, field);
   const checked = getIn(values, field);
   const error = getIn(errors, field);
   const asElement: any = is || 'input';
+  useEffect(() => {
+    if (checked === true || checked === false) {
+      setFieldTouched(field, true);
+    }
+  }, [checked, field, handleBlur, setFieldTouched]);
   return (
     <Form.Group
       controlId={`input-${field}`}
