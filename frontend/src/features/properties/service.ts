@@ -47,8 +47,9 @@ const getPropertyReport = async (filter: IPropertyQueryParams): Promise<any> => 
   return Promise.reject('Not implemented yet');
 };
 
-export default {
+const Service = {
   loadBuildings,
   getPropertyList,
   getPropertyReport,
 };
+export default Service;

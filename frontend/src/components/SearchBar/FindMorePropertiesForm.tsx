@@ -73,8 +73,9 @@ const InvalidFeedback = styled.div`
     display: block;
   }
 `;
+
 /** This form is triggered by the FindMorePropertiesButton and contains additional filter fields for the PropertiesFilter */
-const FindMorePropertiesForm = <T extends any>(props: any) => {
+const FindMorePropertiesForm = (props: any) => {
   const lookupCodes = useCodeLookups();
   const { setFieldValue, handleSubmit, errors } = useFormikContext<any>();
   const [clear, setClear] = useState(false);

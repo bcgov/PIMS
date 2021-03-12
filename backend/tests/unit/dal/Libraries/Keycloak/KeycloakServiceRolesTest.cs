@@ -10,12 +10,13 @@ using System.Net;
 using System.Net.Http;
 using Xunit;
 
-namespace Pims.Dal.Test.Libraries.Ches
+namespace Pims.Dal.Test.Libraries.Keycloak
 {
     [Trait("category", "unit")]
     [Trait("category", "keycloak")]
     [Trait("group", "keycloak")]
-    public partial class KeycloakServiceTest
+    [Trait("group", "role")]
+    public partial class KeycloakServiceRolesTest
     {
         #region Tests
         #region ById

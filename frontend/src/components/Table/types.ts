@@ -1,4 +1,3 @@
-import { ComponentType } from 'react';
 import { Column, ColumnInstance, Cell } from 'react-table';
 
 // Mixed bag of optional properties to supply to the ColumnDefinitions below

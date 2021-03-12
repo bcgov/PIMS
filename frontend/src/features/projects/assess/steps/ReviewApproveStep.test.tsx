@@ -8,7 +8,7 @@ import { Router } from 'react-router-dom';
 import { IProject, IProjectTask } from '../../common';
 import { ITask, ReviewWorkflowStatus } from '../../common/interfaces';
 import { ProjectActions } from 'constants/actionTypes';
-import { render } from '@testing-library/react';
+import { render, wait } from '@testing-library/react';
 import { useKeycloak } from '@react-keycloak/web';
 import { Claims } from 'constants/claims';
 import MockAdapter from 'axios-mock-adapter';
@@ -89,6 +89,7 @@ const incompleteTask: IProjectTask[] = [
 
 const mockProperty: IProperty = {
   id: 0,
+  city: '',
   propertyTypeId: 0,
   propertyType: 'Land',
   latitude: 23,
@@ -202,7 +203,7 @@ describe('Review Approve Step', () => {
     });
   });
 
-  it('Review step submits correctly', async done => {
+  it('Review step submits correctly', async () => {
     mockAxios.reset();
     (useKeycloak as jest.Mock).mockReturnValue({
       keycloak: {
@@ -214,24 +215,14 @@ describe('Review Approve Step', () => {
       },
     });
     let component: any;
-    await act(async () => {
+    await wait(async () => {
       component = mount(getReviewApproveStep(store(mockProject(mockTasks))));
       const button = component.findWhere((node: { type: () => any; text: () => string }) => {
         return node.type() === Button && node.text() === 'Save';
       });
 
-      mockAxios
-        .onPut()
-        .reply((config: any) => {
-          done();
-          return [200, Promise.resolve({})];
-        })
-        .onAny()
-        .reply((config: any) => {
-          return [200, Promise.resolve({})];
-        });
-
       button.simulate('click');
+      expect(mockAxios.history.put).toHaveLength(1);
     });
   });
 });

@@ -4,7 +4,7 @@ import { createMemoryHistory } from 'history';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
 import { ReviewWorkflowStatus, AgencyResponses } from '../../common/interfaces';
-import { render, act, screen, cleanup } from '@testing-library/react';
+import { render, act, screen, cleanup, wait } from '@testing-library/react';
 import { useKeycloak } from '@react-keycloak/web';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
@@ -242,7 +242,7 @@ describe('ERP Approval Step', () => {
       const proceedToSplButton = getByText(/Not Included in the SPL/);
       expect(proceedToSplButton).not.toBeDisabled();
     });
-    it('displays modal when cancel button clicked', async (done: any) => {
+    it('displays modal when cancel button clicked', async () => {
       const component = render(getApprovalStep());
       const cancelButton = component.getByText(/Cancel Project/);
       act(() => {
@@ -250,9 +250,8 @@ describe('ERP Approval Step', () => {
       });
       const cancelModel = await screen.findByText(/Really Cancel Project/);
       expect(cancelModel).toBeVisible();
-      done();
     });
-    it('displays modal when proceed to SPL button clicked', async (done: any) => {
+    it('displays modal when proceed to SPL button clicked', async () => {
       const project = _.cloneDeep(mockProject);
       project.workflowCode = DisposalWorkflows.Erp;
       project.clearanceNotificationSentOn = new Date();
@@ -269,9 +268,8 @@ describe('ERP Approval Step', () => {
       });
       const proceedModal = await screen.findByText(/Really Proceed to SPL/);
       expect(proceedModal).toBeVisible();
-      done();
     });
-    it('displays modal when not in SPL button clicked', async (done: any) => {
+    it('displays modal when not in SPL button clicked', async () => {
       const project = _.cloneDeep(mockProject);
       project.workflowCode = DisposalWorkflows.Erp;
       project.assessed = 1;
@@ -286,10 +284,9 @@ describe('ERP Approval Step', () => {
       });
       const proceedModal = await screen.findByText(/Really Not in SPL/);
       expect(proceedModal).toBeVisible();
-      done();
     });
     // TODO: Not sure why the test fails with "Invalid Date"...
-    xit('performs validation when updating status', async (done: any) => {
+    xit('performs validation when updating status', async () => {
       const project = _.cloneDeep(mockProject);
       project.tasks[0].isOptional = false;
 
@@ -301,9 +298,8 @@ describe('ERP Approval Step', () => {
 
       const errorSummary = await screen.findByText(/The form has errors/);
       expect(errorSummary).toBeVisible();
-      done();
     });
-    it('erp filters agency responses on save', async (done: any) => {
+    it('erp filters agency responses on save', async () => {
       const project = _.cloneDeep(mockProject);
       project.projectAgencyResponses = [
         {
@@ -315,23 +311,10 @@ describe('ERP Approval Step', () => {
 
       const { getByText } = render(getApprovalStep(getStore(project)));
       const saveButton = getByText(/Save/);
-      mockAxios
-        .onPut()
-        .reply((config: any) => {
-          if (JSON.parse(config.data).projectAgencyResponses?.length === 0) {
-            done();
-          } else {
-            done.fail('projectAgencyResponses was not equal to []');
-          }
-          return [200, Promise.resolve({})];
-        })
-        .onAny()
-        .reply((config: any) => {
-          return [200, Promise.resolve({})];
-        });
 
-      await act(async () => {
+      await wait(async () => {
         saveButton.click();
+        expect(mockAxios.history.put).toHaveLength(1);
       });
     });
   });

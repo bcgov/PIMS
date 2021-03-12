@@ -154,6 +154,16 @@ namespace Pims.Core.Test
         }
 
         /// <summary>
+        /// Get the mocked service for the specified 'T' type.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public Mock<T> GetMock<T>() where T : class
+        {
+            return this.BuildServiceProvider().GetService<Mock<T>>();
+        }
+
+        /// <summary>
         /// Get the mapper from the service collection.
         /// </summary>
         /// <returns></returns>

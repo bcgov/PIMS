@@ -79,35 +79,38 @@ const useDraftMarkerSynchronizer = (nameSpace: string) => {
    * @param dbProperties the currently displayed list of (DB) map properties.
    * @param nameSpace the path to extract lat/lng values from
    */
-  const synchronizeMarkers = (
-    values: any,
-    initialValues: any,
-    dbProperties: PointFeature[],
-    nameSpace: string,
-  ) => {
-    const draftMarkers = getDraftMarkers(values, initialValues, nameSpace);
-    if (draftMarkers.length) {
-      const newDraftMarkers = _.filter(
-        draftMarkers,
-        (draftMarker: PointFeature) =>
-          _.find(
-            dbProperties,
-            dbProperty =>
-              dbProperty.geometry.coordinates[0] === draftMarker.geometry.coordinates[0] &&
-              dbProperty.geometry.coordinates[1] === draftMarker.geometry.coordinates[1],
-          ) === undefined,
-      );
-      dispatch(storeDraftParcelsAction(newDraftMarkers as PointFeature[]));
-    } else {
-      dispatch(storeDraftParcelsAction([]));
-    }
-  };
+  const synchronizeMarkers = React.useMemo(
+    () => (values: any, initialValues: any, dbProperties: PointFeature[], nameSpace: string) => {
+      const draftMarkers = getDraftMarkers(values, initialValues, nameSpace);
+      if (draftMarkers.length) {
+        const newDraftMarkers = _.filter(
+          draftMarkers,
+          (draftMarker: PointFeature) =>
+            _.find(
+              dbProperties,
+              dbProperty =>
+                dbProperty.geometry.coordinates[0] === draftMarker.geometry.coordinates[0] &&
+                dbProperty.geometry.coordinates[1] === draftMarker.geometry.coordinates[1],
+            ) === undefined,
+        );
+        dispatch(storeDraftParcelsAction(newDraftMarkers as PointFeature[]));
+      } else {
+        dispatch(storeDraftParcelsAction([]));
+      }
+    },
+    [dispatch],
+  );
 
   const synchronize = useCallback(
-    debounce((values: any, initialValues: any, properties: PointFeature[], nameSpace: string) => {
-      synchronizeMarkers(values, initialValues, properties, nameSpace);
-    }, 400),
-    [],
+    (values: any, initialValues: any, properties: PointFeature[], nameSpace: string) => {
+      return debounce(
+        (values: any, initialValues: any, properties: PointFeature[], nameSpace: string) => {
+          synchronizeMarkers(values, initialValues, properties, nameSpace);
+        },
+        400,
+      )(values, initialValues, properties, nameSpace);
+    },
+    [synchronizeMarkers],
   );
 
   useDeepCompareEffect(() => {

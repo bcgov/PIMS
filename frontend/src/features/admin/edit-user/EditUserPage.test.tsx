@@ -137,27 +137,25 @@ describe('Edit user page', () => {
   });
 
   describe('when the user edit form is submitted', () => {
-    it('displays a loading toast', async done => {
+    it('displays a loading toast', async () => {
       const { getByText, findByText } = renderEditUserPage();
       const saveButton = getByText('Save');
       act(() => {
         saveButton.click();
       });
       await findByText('Updating User...');
-      done();
     });
 
-    it('displays a success toast if the request passes', async done => {
+    it('displays a success toast if the request passes', async () => {
       const { getByText, findByText } = renderEditUserPage();
       const saveButton = getByText('Save');
       act(() => {
         saveButton.click();
       });
       await findByText('User updated');
-      done();
     });
 
-    it('displays a error toast if the request fails', async done => {
+    it('displays an error toast if the request fails', async () => {
       const { getByText, findByText } = renderEditUserPage();
       const saveButton = getByText('Save');
       mockAxios.reset();
@@ -166,7 +164,6 @@ describe('Edit user page', () => {
         saveButton.click();
       });
       await findByText('Failed to update User');
-      done();
     });
 
     it('Displays the correct last login time', () => {
