@@ -82,7 +82,7 @@ describe('fetchParcels action creator', () => {
     };
     const url = ENVIRONMENT.apiUrl + API.PROPERTIES(params);
     mockAxios.onGet(url).reply(400, MOCK.ERROR);
-    return fetchParcels(params)(dispatch).then(() => {
+    return fetchParcels(params)(dispatch).catch(() => {
       expect(requestSpy).toHaveBeenCalledTimes(1);
       expect(errorSpy).toHaveBeenCalledTimes(1);
       expect(dispatch).toHaveBeenCalledTimes(4);
@@ -106,7 +106,7 @@ describe('fetchParcelDetail action creator', () => {
     const params: IParcelDetailParams = { id: 1 };
     const url = ENVIRONMENT.apiUrl + API.PARCEL_DETAIL(params);
     mockAxios.onGet(url).reply(400, MOCK.ERROR);
-    return fetchParcelDetail(params)(dispatch).then(() => {
+    return fetchParcelDetail(params)(dispatch).catch(() => {
       expect(requestSpy).toHaveBeenCalledTimes(1);
       expect(errorSpy).toHaveBeenCalledTimes(1);
       expect(dispatch).toHaveBeenCalledTimes(4);
@@ -131,7 +131,7 @@ describe('fetchBuildingDetail action creator', () => {
     const params: IParcelDetailParams = { id: 1 };
     const url = ENVIRONMENT.apiUrl + API.BUILDING_DETAIL(params);
     mockAxios.onGet(url).reply(400, MOCK.ERROR);
-    return fetchBuildingDetail(params)(dispatch).then(() => {
+    return fetchBuildingDetail(params)(dispatch).catch(() => {
       expect(requestSpy).toHaveBeenCalledTimes(1);
       expect(errorSpy).toHaveBeenCalledTimes(1);
       expect(dispatch).toHaveBeenCalledTimes(4);

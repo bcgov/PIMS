@@ -56,7 +56,7 @@ const FormContentWrapper = styled.div`
   flex-direction: column;
   width: 100%;
   height: 100%;
-  margin-bottom: 50px;
+  margin-bottom: 20px;
 `;
 
 const FormContent = styled.div`
@@ -72,7 +72,7 @@ const FormFooter = styled.div`
   align-items: center;
   position: sticky;
   background-color: ${variables.filterBackgroundColor};
-  bottom: 25px;
+  bottom: -20px;
 `;
 
 const FillRemainingSpace = styled.span`
