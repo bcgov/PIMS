@@ -13,6 +13,8 @@ $narrowSidebarSize: 700px;
   background-color: #fff;
   position: absolute;
   max-width: 930px;
+  display: flex;
+  flex-direction: column;
   &.close {
     z-index: -1;
     max-width: $narrowSidebarSize;
@@ -23,6 +25,9 @@ $narrowSidebarSize: 700px;
   }
   > div {
     padding: 20px;
+  }
+  .spinner-border {
+    align-self: center;
   }
 }
 .map-filter-container {

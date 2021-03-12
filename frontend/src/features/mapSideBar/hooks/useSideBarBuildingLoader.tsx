@@ -4,6 +4,7 @@ import { fetchBuildingDetail } from 'actionCreators/parcelsActionCreator';
 import { useDispatch } from 'react-redux';
 import React from 'react';
 import { IBuilding } from 'actions/parcelsActions';
+import { useAsyncError } from 'hooks/useAsyncError';
 
 interface IUseSideBarBuildingLoader {
   /** whether or not the sidebar should be displayed */
@@ -28,14 +29,21 @@ const useSideBarBuildingLoader = ({
 }: IUseSideBarBuildingLoader) => {
   const [cachedBuildingDetail, setCachedBuildingDetail] = React.useState<IBuilding | null>(null);
   const dispatch = useDispatch();
+  const throwError = useAsyncError();
 
   useDeepCompareEffect(() => {
     const loadBuilding = async () => {
       setSideBarContext(SidebarContextType.LOADING);
-      const response: IBuilding = await fetchBuildingDetail({ id: buildingId as number })(dispatch);
-      setCachedBuildingDetail({
-        ...response,
-      });
+      try {
+        const response: IBuilding = await fetchBuildingDetail({ id: buildingId as number })(
+          dispatch,
+        );
+        setCachedBuildingDetail({
+          ...response,
+        });
+      } catch (err) {
+        throwError(err);
+      }
       setSideBarContext(
         disabled ? SidebarContextType.VIEW_BUILDING : SidebarContextType.UPDATE_BUILDING,
       );
