@@ -8,7 +8,6 @@ import * as reducerTypes from 'constants/reducerTypes';
 import { useRouterFilter } from './useRouterFilter';
 import { renderHook } from '@testing-library/react-hooks';
 import queryString from 'query-string';
-import { IPropertyFilter } from 'features/properties/filter/IPropertyFilter';
 
 const mockStore = configureMockStore([thunk]);
 const history = createMemoryHistory();
@@ -23,6 +22,25 @@ const getWrapper = (store: any) => ({ children }: any) => (
   </Provider>
 );
 
+const emptyFilter = {
+  searchBy: 'address',
+  pid: '',
+  address: '',
+  administrativeArea: '',
+  projectNumber: '',
+  agencies: '',
+  classificationId: '',
+  minLotSize: '',
+  maxLotSize: '',
+  propertyType: 'Land',
+  rentableArea: '',
+  includeAllProperties: '',
+  maxAssessedValue: '',
+  maxMarketValue: '',
+  maxNetBookValue: '',
+  name: '',
+};
+
 const defaultFilter = {
   searchBy: 'address',
   pid: '1',
@@ -35,53 +53,80 @@ const defaultFilter = {
   maxLotSize: '8',
   parcelId: '9',
   propertyType: '10',
-  sort: '',
+  rentableArea: '',
+  includeAllProperties: '',
+  maxAssessedValue: '',
+  maxMarketValue: '',
+  maxNetBookValue: '',
+  name: '',
 };
 
-let filter: IPropertyFilter = defaultFilter;
+let filter: any = defaultFilter;
 const setFilter = (f: any) => {
   filter = f;
 };
 
 describe('useRouterFilter hook tests', () => {
-  afterEach(() => {
+  beforeEach(() => {
     filter = defaultFilter;
     history.push({});
   });
 
-  xit('will set the filter based on a query string', () => {
+  it('will set the filter based on a query string', () => {
     const expectedFilter = { ...defaultFilter, pid: '2' };
     history.push({ search: new URLSearchParams(expectedFilter).toString() });
 
     const wrapper = getWrapper(getStore({}));
-    renderHook(() => useRouterFilter(filter, setFilter, 'test'), { wrapper });
+    renderHook(() => useRouterFilter({ filter, setFilter, key: 'test' }), { wrapper });
     expect(filter).toEqual(expectedFilter);
   });
 
-  xit('will not set the filter based on an invalid query string', () => {
+  it('will not reset the query string', () => {
+    const expectedFilter = { ...defaultFilter, pid: '2' };
+    history.push({ search: new URLSearchParams(expectedFilter).toString() });
+
+    const filterWithValues: any = { ...expectedFilter };
+    Object.keys(filterWithValues).forEach(
+      k => filterWithValues[k] === '' && delete filterWithValues[k],
+    );
+
+    const wrapper = getWrapper(getStore({}));
+    renderHook(() => useRouterFilter({ filter, setFilter, key: 'test' }), { wrapper });
+    expect(history.location.search).toEqual('?' + queryString.stringify(filterWithValues));
+  });
+
+  it('will not set the filter based on an invalid query string', () => {
     history.push({ search: new URLSearchParams({ searchBy: 'address' }).toString() });
 
     const wrapper = getWrapper(getStore({}));
-    renderHook(() => useRouterFilter(filter, setFilter, 'test'), { wrapper });
-    expect(filter).toEqual(defaultFilter); // TODO: The URL has no changes, so the default filter should be returned.
+    renderHook(() => useRouterFilter({ filter, setFilter, key: 'test' }), { wrapper });
+    expect(filter).toEqual(emptyFilter);
   });
 
-  xit('will set the filter based on redux', () => {
+  it('will set the filter based on redux', () => {
     const expectedFilter = { ...defaultFilter, pid: '2' };
     const wrapper = getWrapper(getStore({ test: expectedFilter }));
-    renderHook(() => useRouterFilter(filter, setFilter, 'test'), { wrapper });
+    renderHook(() => useRouterFilter({ filter, setFilter, key: 'test' }), {
+      wrapper,
+    });
     expect(filter).toEqual(expectedFilter); // TODO: It should equal the expectedFilter...
   });
 
-  xit('will not set the filter based on redux if there is no matching key', () => {
+  it('will not set the filter based on redux if there is no matching key', () => {
     const wrapper = getWrapper(getStore({ test: defaultFilter }));
-    renderHook(() => useRouterFilter(filter, setFilter, 'mismatch'), { wrapper });
+    renderHook(() => useRouterFilter({ filter, setFilter, key: 'mismatch' }), { wrapper });
     expect(filter).toEqual(defaultFilter);
   });
 
-  xit('will set the location based on a passed filter', () => {
+  it('will set the location based on a passed filter', () => {
     const wrapper = getWrapper(getStore({ test: defaultFilter }));
-    renderHook(() => useRouterFilter(defaultFilter, setFilter, 'mismatch'), { wrapper });
-    expect(history.location.search).toEqual('?' + queryString.stringify(defaultFilter));
+    renderHook(() => useRouterFilter({ filter: defaultFilter, setFilter, key: 'mismatch' }), {
+      wrapper,
+    });
+    const filterWithValues: any = { ...defaultFilter };
+    Object.keys(filterWithValues).forEach(
+      k => filterWithValues[k] === '' && delete filterWithValues[k],
+    );
+    expect(history.location.search).toEqual('?' + queryString.stringify(filterWithValues));
   });
 });
