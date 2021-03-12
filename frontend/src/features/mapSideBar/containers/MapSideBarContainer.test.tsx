@@ -240,7 +240,7 @@ describe('Parcel Detail MapSideBarContainer', () => {
         mockAxios.onGet().reply(200, building);
         const { findByText } = renderContainer({});
 
-        mockAxios.onPut().reply(200, null);
+        mockAxios.onPut().reply(200, building);
 
         const reviewButton = await findByText('Review & Submit');
         reviewButton.click();
@@ -277,7 +277,7 @@ describe('Parcel Detail MapSideBarContainer', () => {
         mockAxios.onGet().reply(200, building);
         const { findByText } = renderContainer({});
 
-        mockAxios.onPut().reply(200, null);
+        mockAxios.onPut().reply(200, building);
 
         const reviewButton = await findByText('Review & Submit');
         reviewButton.click();

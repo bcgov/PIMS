@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux';
 import React from 'react';
 import { IParcel } from 'actions/parcelsActions';
 import { PropertyTypes } from 'constants/propertyTypes';
+import { useAsyncError } from 'hooks/useAsyncError';
 
 interface IUseSideBarParcelLoader {
   /** whether or not the sidebar should be displayed */
@@ -27,14 +28,20 @@ const useSideBarParcelLoader = ({
   const [cachedParcelDetail, setCachedParcelDetail] = React.useState<IParcel | null>(null);
   const dispatch = useDispatch();
   const hasBuildings = !!cachedParcelDetail?.buildings?.length;
+  const throwError = useAsyncError();
+
   useDeepCompareEffect(() => {
     const loadParcel = async () => {
       if (parcelId) {
         setSideBarContext(SidebarContextType.LOADING);
-        const response = await fetchParcelDetail({ id: parcelId as number })(dispatch);
-        setCachedParcelDetail({
-          ...response,
-        });
+        try {
+          const response = await fetchParcelDetail({ id: parcelId as number })(dispatch);
+          setCachedParcelDetail({
+            ...response,
+          });
+        } catch (err) {
+          throwError(err);
+        }
       }
     };
     if (showSideBar && parcelId && parcelId !== cachedParcelDetail?.id) {

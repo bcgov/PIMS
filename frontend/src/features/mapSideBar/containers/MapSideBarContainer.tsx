@@ -433,8 +433,8 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
                   } else {
                     response = await updateBuilding(apiValues)(dispatch);
                   }
-                  formikRef.current.resetForm({ values: response });
-                  setBuildingToAssociateLand(building);
+                  formikRef.current.resetForm({ values: { data: response } });
+                  setBuildingToAssociateLand(response);
                   addAssociatedLand();
                 } catch (err) {
                   toast.error(

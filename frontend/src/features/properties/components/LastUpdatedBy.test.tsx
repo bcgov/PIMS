@@ -45,13 +45,12 @@ describe('Last Updated By Component', () => {
     expect(getByText(user)).toBeVisible();
   });
 
-  it('Displays the email of the user that performed the update', async done => {
+  it('Displays the email of the user that performed the update', async () => {
     const { findByText, getByText } = render(getLastUpdatedBy(undefined, date, user, email));
     await act(async () => {
       fireEvent.mouseOver(getByText(user));
       const tooltip = await findByText(email);
       expect(tooltip).toBeInTheDocument();
     });
-    done();
   });
 });

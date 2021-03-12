@@ -86,6 +86,7 @@ export const useRouterFilter = <T extends object>({
   const reduxSearch = useSelector<RootState, any>(state => state.filter);
   const [savedFilter] = useState(reduxSearch);
   const dispatch = useDispatch();
+  const [loaded, setLoaded] = useState(false);
 
   // Extract the query parameters to initialize the filter.
   // This will only occur the first time the component loads to ensure the URL query parameters are applied.
@@ -120,26 +121,29 @@ export const useRouterFilter = <T extends object>({
           setSorting(sort as any);
         }
       }
+      setLoaded(true);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [history.location.pathname]);
 
   // If the 'filter' changes save it to redux store and update the URL.
   React.useEffect(() => {
-    const filterParams = new URLSearchParams(filter as any);
-    const sorting = generateMultiSortCriteria(sort!);
-    const allParams = {
-      ...queryString.parse(history.location.search),
-      ...queryString.parse(filterParams.toString()),
-      sorting,
-    };
-    history.push({
-      pathname: history.location.pathname,
-      search: queryString.stringify(allParams, { skipEmptyString: true, skipNull: true }),
-    });
-    const keyedFilter = { [key]: filter };
-    dispatch(saveFilter({ ...savedFilter, ...keyedFilter }));
-  }, [history, key, filter, savedFilter, dispatch, sort]);
+    if (loaded) {
+      const filterParams = new URLSearchParams(filter as any);
+      const sorting = generateMultiSortCriteria(sort!);
+      const allParams = {
+        ...queryString.parse(history.location.search),
+        ...queryString.parse(filterParams.toString()),
+        sorting,
+      };
+      history.push({
+        pathname: history.location.pathname,
+        search: queryString.stringify(allParams, { skipEmptyString: true, skipNull: true }),
+      });
+      const keyedFilter = { [key]: filter };
+      dispatch(saveFilter({ ...savedFilter, ...keyedFilter }));
+    }
+  }, [history, key, filter, savedFilter, dispatch, sort, loaded]);
 
   const updateSearch = useCallback(
     (newFilter: T) => {

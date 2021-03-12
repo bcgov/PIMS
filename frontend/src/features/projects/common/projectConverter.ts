@@ -156,7 +156,7 @@ export const toFlatProject = (project?: IApiProject) => {
   if (!project) {
     return undefined;
   }
-  const flatProperties = project.properties.map(pp => {
+  const flatProperties = project?.properties?.map(pp => {
     const apiProperty: IApiProperty = (pp.building ?? pp.parcel) as IApiProperty;
     const property: IProperty = toFlatProperty(apiProperty, pp);
     return property;
