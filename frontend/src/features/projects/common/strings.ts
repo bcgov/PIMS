@@ -38,8 +38,9 @@ export const updatePimsWarning =
   'Please ensure all the updated information is correct before clicking Update PIMS.';
 export const proceedToSplWarning = `Are you sure you want to approve this project for the Surplus Properties List?`;
 export const notInSplWarning = `Are you sure you would like to change the status of the project to Tier 1: Not Included in SPL?`;
-export const disposeWarning = `Are you sure you want to dispose this project? This will set all properties within the project to Disposed.  Which will make them unavailable to inventory.`;
-export const disposeSubdivisionWarning = `There are one or more subdivisions within this project. All subdivisions will be converted to parcels after this project is disposed. All of the following subdivision parent parcels will be re-classified as SUBDIVIDED:`;
+export const disposeWarningShort = `Are you sure you want to complete this disposal project?`;
+export const disposeWarning = `This will re-classify all properties and buildings within the project to be DISPOSED, unless there are subdivisions included, in which case the main parent parcel will be classified as SUBDIVIDED. Subdivisions will be converted to parcels in this process.`;
+export const disposeSubdivisionWarning = `This project contains one or more subdivisions. These subdivisions will be converted to real parcels.  The following parent parcels will be classified as SUBDIVIDED:`;
 export const offersReceived = `Review required for offer(s) in Tier 3 & 4.`;
 export const dateEnteredMarket = 'Date Entered Market required to change status to Marketing.';
 export const projectComments = `Please provide any variances between appraised, assessed, and sale price.`;
