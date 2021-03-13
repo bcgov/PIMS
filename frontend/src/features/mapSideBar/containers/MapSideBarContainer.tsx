@@ -280,6 +280,9 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
   };
 
   React.useEffect(() => {
+    if (!showSideBar) {
+      document.body.className = '';
+    }
     if (movingPinNameSpace !== undefined) {
       document.body.className = propertyType === 'building' ? 'building-cursor' : 'parcel-cursor';
     }
@@ -287,7 +290,7 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
       //make sure to reset the cursor when this component is disposed.
       document.body.className = '';
     };
-  }, [propertyType, movingPinNameSpace]);
+  }, [propertyType, movingPinNameSpace, context, showSideBar]);
 
   //Add a pin to the map where the user has clicked.
   useDeepCompareEffect(() => {
