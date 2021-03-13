@@ -260,15 +260,26 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
   const { getParcel, getBuilding } = useApi();
   const fetchProperty = React.useCallback(
     (propertyTypeId: number, id: number) => {
+      popUpContext.setLoading(true);
       if ([PropertyTypes.PARCEL, PropertyTypes.SUBDIVISION].includes(propertyTypeId)) {
-        getParcel(id as number).then(parcel => {
-          popUpContext.setPropertyInfo(parcel);
-        });
+        getParcel(id as number)
+          .then(parcel => {
+            popUpContext.setPropertyInfo(parcel);
+          })
+          .finally(() => {
+            popUpContext.setLoading(false);
+          });
       } else if (propertyTypeId === PropertyTypes.BUILDING) {
-        getBuilding(id as number).then(building => {
-          popUpContext.setPropertyInfo(building);
-          dispatch(parcelsActions.storeBuildingDetail(building));
-        });
+        getBuilding(id as number)
+          .then(building => {
+            popUpContext.setPropertyInfo(building);
+            if (!!building.parcels.length) {
+              dispatch(parcelsActions.storeBuildingDetail(building));
+            }
+          })
+          .finally(() => {
+            popUpContext.setLoading(false);
+          });
       }
     },
     [getParcel, popUpContext, getBuilding, dispatch],
