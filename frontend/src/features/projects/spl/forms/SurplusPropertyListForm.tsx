@@ -14,6 +14,7 @@ import {
   IProperty,
   disposeSubdivisionWarning,
   IParentParcel,
+  disposeWarningShort,
 } from '../../common';
 import './SurplusPropertyListForm.scss';
 import _ from 'lodash';
@@ -227,7 +228,8 @@ const SurplusPropertyListForm = ({
                   title="Really Dispose Project?"
                   message={
                     <>
-                      {disposeWarning}
+                      <h5>{disposeWarningShort}</h5>
+                      <p>{disposeWarning}</p>
                       {subdivisions.length > 0 && (
                         <>
                           <hr></hr>

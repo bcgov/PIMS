@@ -52,13 +52,14 @@ export const GeocoderAutoComplete: React.FC<IGeocoderAutoCompleteProps> = ({
   const errorTooltip = error && touch && displayErrorTooltips ? error : undefined;
 
   const search = useCallback(
-    debounce(async (val: string, abort: boolean) => {
-      if (!abort) {
-        const data = await api.searchAddress(val);
-        setOptions(data);
-      }
-    }, debounceTimeout || 500),
-    [],
+    (val: string, abort: boolean) =>
+      debounce(async (val: string, abort: boolean) => {
+        if (!abort) {
+          const data = await api.searchAddress(val);
+          setOptions(data);
+        }
+      }, debounceTimeout || 500)(val, abort),
+    [api, debounceTimeout],
   );
 
   const onTextChanged = async (val?: string) => {

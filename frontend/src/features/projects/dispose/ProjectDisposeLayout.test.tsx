@@ -144,7 +144,7 @@ describe('dispose project draft step display', () => {
     expect(history.location.pathname).toBe('/page-not-found');
   });
 
-  it('has next functionality', async done => {
+  it('has next functionality', async () => {
     history.location.pathname = '/dispose/projects/approval';
     const { getByText, getByLabelText } = render(uiElement);
     const nextButton = getByText('Next');
@@ -160,6 +160,5 @@ describe('dispose project draft step display', () => {
         expect(goToNextStep).toHaveBeenCalled();
       });
     });
-    done();
   });
 });

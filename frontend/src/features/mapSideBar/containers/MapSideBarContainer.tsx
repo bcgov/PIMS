@@ -280,6 +280,9 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
   };
 
   React.useEffect(() => {
+    if (!showSideBar) {
+      document.body.className = '';
+    }
     if (movingPinNameSpace !== undefined) {
       document.body.className = propertyType === 'building' ? 'building-cursor' : 'parcel-cursor';
     }
@@ -287,7 +290,7 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
       //make sure to reset the cursor when this component is disposed.
       document.body.className = '';
     };
-  }, [propertyType, movingPinNameSpace]);
+  }, [propertyType, movingPinNameSpace, context, showSideBar]);
 
   //Add a pin to the map where the user has clicked.
   useDeepCompareEffect(() => {
@@ -433,8 +436,8 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
                   } else {
                     response = await updateBuilding(apiValues)(dispatch);
                   }
-                  formikRef.current.resetForm({ values: response });
-                  setBuildingToAssociateLand(building);
+                  formikRef.current.resetForm({ values: { data: response } });
+                  setBuildingToAssociateLand(response);
                   addAssociatedLand();
                 } catch (err) {
                   toast.error(

@@ -415,4 +415,5 @@ export const ProjectApprovalRequestListView = () => {
   );
 };
 
-export default () => <ProjectListView title="My Agency's Projects" filterable={true} />;
+const projectListView = () => <ProjectListView title="My Agency's Projects" filterable={true} />;
+export default projectListView;

@@ -3,7 +3,7 @@ import { createMemoryHistory } from 'history';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
 import { ReviewWorkflowStatus, AgencyResponses } from '../../common/interfaces';
-import { render, act, screen, cleanup } from '@testing-library/react';
+import { render, act, screen, cleanup, wait } from '@testing-library/react';
 import { useKeycloak } from '@react-keycloak/web';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
@@ -205,7 +205,7 @@ describe('SPL Approval Step', () => {
       const preMarketingButton = component.getAllByText(/Unconditional/)[0];
       expect(preMarketingButton).not.toBeDisabled();
     });
-    it('displays modal when cancel button clicked', async (done: any) => {
+    it('displays modal when cancel button clicked', async () => {
       const component = render(getSplStep());
       const cancelButton = component.getByText(/Cancel Project/);
       act(() => {
@@ -213,9 +213,8 @@ describe('SPL Approval Step', () => {
       });
       const cancelModel = await screen.findByText(/Really Cancel Project/);
       expect(cancelModel).toBeVisible();
-      done();
     });
-    it('displays modal when proceed to change status to disposed externally button clicked', async (done: any) => {
+    it('displays modal when proceed to change status to disposed externally button clicked', async () => {
       const project = _.cloneDeep(mockProject);
       project.disposedOn = new Date();
       project.statusCode = ReviewWorkflowStatus.ContractInPlaceConditional;
@@ -234,9 +233,8 @@ describe('SPL Approval Step', () => {
       });
       const proceedModal = await screen.findByText(/Really Dispose Project/);
       expect(proceedModal).toBeVisible();
-      done();
     });
-    it('spl performs no validation on save', async (done: any) => {
+    it('spl performs no validation on save', async () => {
       const project = _.cloneDeep(mockProject);
       project.tasks[0].isOptional = false;
 
@@ -248,9 +246,8 @@ describe('SPL Approval Step', () => {
 
       const errorSummary = await screen.queryByText(/The following tabs have errors/);
       expect(errorSummary).toBeNull();
-      done();
     });
-    it('performs validation on dispose', async (done: any) => {
+    it('performs validation on dispose', async () => {
       const project = _.cloneDeep(mockProject);
       project.disposedOn = undefined;
       project.marketedOn = undefined;
@@ -271,9 +268,8 @@ describe('SPL Approval Step', () => {
 
       const errorSummary = await screen.findByText(/The form has errors/);
       expect(errorSummary).toBeVisible();
-      done();
     });
-    it('spl filters agency responses on save', async (done: any) => {
+    it('spl filters agency responses on save', (done: any) => {
       const project = _.cloneDeep(mockProject);
       project.projectAgencyResponses = [
         {
@@ -300,44 +296,33 @@ describe('SPL Approval Step', () => {
           return [200, Promise.resolve({})];
         });
 
-      await act(async () => {
+      act(() => {
         saveButton.click();
       });
+      return;
     });
 
-    it('spl disposes project', async (done: any) => {
+    it('spl disposes project', async () => {
       const project = _.cloneDeep(mockProject);
       project.disposedOn = new Date();
       project.statusCode = ReviewWorkflowStatus.ContractInPlaceConditional;
       project.assessed = 123;
       project.market = 123;
       project.netBook = 123;
+      project.properties = [];
 
-      const component = render(getSplStep(getStore(project)));
-      const disposeButton = component.getAllByText('Dispose')[0];
-      mockAxios
-        .onPut()
-        .reply((config: any) => {
-          if (config.url.includes(ReviewWorkflowStatus.Disposed)) {
-            done();
-          } else {
-            done.fail('status code was not disposed');
-          }
-          return [200, Promise.resolve({})];
-        })
-        .onAny()
-        .reply((config: any) => {
-          return [200, Promise.resolve({})];
-        });
+      await wait(async () => {
+        const component = render(getSplStep(getStore(project)));
+        const disposeButton = component.getAllByText('Dispose')[0];
 
-      await act(async () => {
         disposeButton.click();
         const disposePopupButton = await component.findAllByText(/Dispose Project/);
         disposePopupButton[1].click();
+        expect(mockAxios.history.put).toHaveLength(1);
       });
     });
 
-    it('spl disposes project with subdivisions', async (done: any) => {
+    it('spl disposes project with subdivisions', async () => {
       const project = _.cloneDeep(mockFlatProject as any);
       project.disposedOn = new Date();
       project.statusCode = ReviewWorkflowStatus.ContractInPlaceConditional;
@@ -352,9 +337,8 @@ describe('SPL Approval Step', () => {
 
       await act(async () => {
         disposeButton.click();
-        await component.findAllByText(/There are one or more subdivisions/);
+        await component.findAllByText(/Are you sure you want to complete this disposal project?/);
         expect(await screen.findByText('PID 123-456-789')).toBeVisible();
-        done();
       });
     });
   });

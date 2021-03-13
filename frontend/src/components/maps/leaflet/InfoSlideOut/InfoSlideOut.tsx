@@ -22,6 +22,7 @@ import variables from '_variables.module.scss';
 import { PropertyTypes } from 'constants/propertyTypes';
 import { LandSvg } from 'components/common/Icons';
 import AssociatedParcelsList from './AssociatedParcelsList';
+import FilterBackdrop from '../FilterBackdrop';
 
 const InfoContainer = styled.div`
   margin-right: -10px;
@@ -57,6 +58,7 @@ const InfoMain = styled.div`
   width: 100%;
   padding-left: 10px;
   padding: 0px 10px 5px 10px;
+  position: relative;
 
   &.open {
     overflow-y: scroll;
@@ -133,7 +135,7 @@ export type InfoControlProps = {
 const InfoControl: React.FC<InfoControlProps> = ({ open, setOpen, onHeaderActionClick }) => {
   const popUpContext = React.useContext(PropertyPopUpContext);
   const leaflet = useLeaflet();
-  const propertyInfo = popUpContext.propertyInfo;
+  const { propertyInfo } = popUpContext;
   const location = useLocation();
   const jumpToView = () =>
     leaflet.map?.setView(
@@ -191,6 +193,7 @@ const InfoControl: React.FC<InfoControlProps> = ({ open, setOpen, onHeaderAction
       if (generalInfoOpen) {
         return (
           <>
+            <FilterBackdrop show={open && popUpContext.loading}></FilterBackdrop>
             <HeaderActions
               propertyInfo={popUpContext.propertyInfo}
               propertyTypeId={popUpContext.propertyTypeID}
@@ -271,7 +274,7 @@ const InfoControl: React.FC<InfoControlProps> = ({ open, setOpen, onHeaderAction
             </TabButton>
           </TooltipWrapper>
         )}
-        <InfoMain className={clsx({ open })}>{renderContent()}</InfoMain>
+        {open && <InfoMain className={clsx({ open })}>{renderContent()}</InfoMain>}
       </InfoContainer>
     </Control>
   );
