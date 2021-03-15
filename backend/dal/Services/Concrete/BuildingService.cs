@@ -251,7 +251,7 @@ namespace Pims.Dal.Services
             foreach (var parcel in building.Parcels.Select(pb => pb.Parcel))
             {
                 // Check if the parcel already exists.
-                var existingAssociatedParcel = existingBuilding.Parcels
+                var existingAssociatedParcel = existingBuilding.Parcels.Where(pb => pb.Parcel.Id != 0)
                     .FirstOrDefault(pb => pb.ParcelId == parcel.Id)?.Parcel;
 
                 // Reset all relationships that are not changed through this update.
