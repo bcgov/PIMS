@@ -8,7 +8,7 @@ import { FastCurrencyInput, Input, Select, SelectOption } from 'components/commo
 import { TypeaheadField } from 'components/common/form/Typeahead';
 import { ILookupCode } from 'actions/lookupActions';
 import { EditableMoneyCell, MoneyCell, AsterixMoneyCell } from 'components/Table/MoneyCell';
-import _ from 'lodash';
+import _, { isEqual } from 'lodash';
 import styled from 'styled-components';
 import { PropertyTypeCell } from 'components/Table/PropertyTypeCell';
 import { PropertyTypes } from 'constants/index';
@@ -80,6 +80,9 @@ export const columns = (
         filterBy: ['code'],
         hideParent: true,
         clearButton: true,
+        getOptionByValue: (value: number | string) => {
+          return agencyOptions.filter(a => Number(a.value) === Number(value));
+        },
       },
     },
   },
@@ -100,8 +103,12 @@ export const columns = (
         placeholder: 'Filter by sub agency',
         className: 'agency-search',
         options: subAgencies,
+        clearButton: true,
         labelKey: (option: SelectOption) => {
           return `${option.label}`;
+        },
+        getOptionByValue: (value: number | string) => {
+          return subAgencies.filter(a => Number(a.value) === Number(value));
         },
       },
     },
@@ -127,13 +134,20 @@ export const columns = (
     sortable: true,
     filterable: true,
     filter: {
-      component: Select,
+      component: TypeaheadField,
       props: {
         field: 'classificationId',
         name: 'classificationId',
         placeholder: 'Filter by class',
         className: 'location-search',
         options: propertyClassifications,
+        labelKey: (option: SelectOption) => {
+          return `${option.label}`;
+        },
+        clearButton: true,
+        getOptionByValue: (value: number | string) => {
+          return propertyClassifications.filter(a => isEqual(a.value, value));
+        },
       },
     },
   },

@@ -181,9 +181,11 @@ const getServerQuery = (state: {
   let parsedAgencies: number[] = [];
   if (agencies !== null && agencies !== undefined && agencies !== '') {
     parsedAgencies = Array.isArray(agencies)
-      ? (agencies as any).map((a: any) => {
-          return parseInt(a.value, 10);
-        })
+      ? (agencies as any)
+          .filter((x: any) => !!x)
+          .map((a: any) => {
+            return parseInt(typeof a === 'string' ? a : a.value, 10);
+          })
       : [parseInt(agencies, 10)];
   }
 
@@ -331,9 +333,11 @@ const PropertyListView: React.FC = () => {
     const data = { ...filter };
     if (data.agencies) {
       data.agencies = Array.isArray(data.agencies)
-        ? (data.agencies as any).map((a: any) => {
-            return parseInt(a.value, 10);
-          })
+        ? (data.agencies as any)
+            .filter((x: any) => !!x)
+            .map((a: any) => {
+              return parseInt(typeof a === 'string' ? a : a.value, 10);
+            })
         : [parseInt(data.agencies, 10)];
     }
 
