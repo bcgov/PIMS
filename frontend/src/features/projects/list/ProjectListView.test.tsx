@@ -14,6 +14,8 @@ import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 import { useKeycloak } from '@react-keycloak/web';
 import Claims from 'constants/claims';
+import { Formik } from 'formik';
+import { noop } from 'lodash';
 
 const mockAxios = new MockAdapter(axios);
 mockAxios.onAny().reply(200, {});
@@ -100,6 +102,17 @@ const store = mockStore({
 mockAxios.onAny().reply(200, {});
 const history = createMemoryHistory();
 
+const testRender = () =>
+  render(
+    <Formik initialValues={{}} onSubmit={noop}>
+      <Provider store={store}>
+        <Router history={history}>
+          <ProjectListView />
+        </Router>
+      </Provider>
+    </Formik>,
+  );
+
 describe('Project list view tests', () => {
   // clear mocks before each test
   beforeEach(() => {
@@ -117,13 +130,7 @@ describe('Project list view tests', () => {
     mockAxios.onAny().reply(200, {});
 
     await act(async () => {
-      const { container } = render(
-        <Provider store={store}>
-          <Router history={history}>
-            <ProjectListView />
-          </Router>
-        </Provider>,
-      );
+      const { container } = testRender();
       expect(container.firstChild).toMatchSnapshot();
     });
   });
@@ -138,13 +145,7 @@ describe('Project list view tests', () => {
     });
 
     await act(async () => {
-      const { findByText, container } = render(
-        <Provider store={store}>
-          <Router history={history}>
-            <ProjectListView />
-          </Router>
-        </Provider>,
-      );
+      const { findByText, container } = testRender();
 
       // default table message when there is no data to display
       const noResults = await findByText('No rows to display');
@@ -163,13 +164,7 @@ describe('Project list view tests', () => {
     });
 
     await act(async () => {
-      const { queryByTestId, container } = render(
-        <Provider store={store}>
-          <Router history={history}>
-            <ProjectListView />
-          </Router>
-        </Provider>,
-      );
+      const { queryByTestId, container } = testRender();
       expect(queryByTestId('excel-icon')).not.toBeInTheDocument();
       expect(queryByTestId('csv-icon')).not.toBeInTheDocument();
       expect(container.querySelector('span[class="spinner-border"]')).not.toBeInTheDocument();
@@ -187,13 +182,7 @@ describe('Project list view tests', () => {
     });
 
     await act(async () => {
-      const { getByTestId, container } = render(
-        <Provider store={store}>
-          <Router history={history}>
-            <ProjectListView />
-          </Router>
-        </Provider>,
-      );
+      const { getByTestId, container } = testRender();
       expect(getByTestId('excel-icon')).toBeInTheDocument();
       expect(getByTestId('csv-icon')).toBeInTheDocument();
       expect(container.querySelector('span[class="spinner-border"]')).not.toBeInTheDocument();

@@ -29,42 +29,29 @@ exports[`MapFilterBar renders correctly 1`] = `
 }
 
 <form
-  className=""
-  noValidate={true}
-  onSubmit={[Function]}
+  class=""
+  novalidate=""
 >
   <div
-    className="map-filter-bar form-row"
+    class="map-filter-bar form-row"
   >
     <button
-      className="btn btn-primary"
-      disabled={false}
-      onClick={[Function]}
-      style={
-        Object {
-          "height": 38,
-        }
-      }
+      class="btn btn-primary"
+      style="height: 38px;"
       type="button"
     >
       <div
-        className="c0"
+        class="c0"
       >
         <svg
           fill="currentColor"
-          height={20}
-          size={20}
+          height="20"
+          size="20"
           stroke="currentColor"
-          strokeWidth="0"
-          style={
-            Object {
-              "color": undefined,
-              "marginRight": 5,
-              "marginTop": 2,
-            }
-          }
+          stroke-width="0"
+          style="margin-right: 5px; margin-top: 2px;"
           viewBox="0 0 512 512"
-          width={20}
+          width="20"
           xmlns="http://www.w3.org/2000/svg"
         >
           <path
@@ -72,106 +59,70 @@ exports[`MapFilterBar renders correctly 1`] = `
           />
         </svg>
         <p
-          style={
-            Object {
-              "marginBottom": 0,
-            }
-          }
+          style="margin-bottom: 0px;"
         >
           Surplus Properties
         </p>
       </div>
     </button>
     <div
-      className="vl"
+      class="vl"
     />
     <div
-      className="c1 col"
+      class="c1 col"
     >
       <div
-        className="form-group"
+        class="form-group"
       >
         <select
-          className="form-select form-control"
-          disabled={false}
+          class="form-select form-control"
           id="input-includeAllProperties"
           name="includeAllProperties"
-          onBlur={[Function]}
-          onChange={[Function]}
         >
           <option
-            className="option"
-            value={false}
+            class="option"
+            value="false"
           >
             My Agencies
           </option>
           <option
-            className="option"
-            value={true}
+            class="option"
+            value="true"
           >
             All Government
           </option>
         </select>
       </div>
       <div
-        className="form-group"
+        class="form-group"
       >
         <div
-          className="rbt"
-          style={
-            Object {
-              "outline": "none",
-              "position": "relative",
-            }
-          }
-          tabIndex={-1}
+          class="rbt"
+          style="outline: none; position: relative;"
+          tabindex="-1"
         >
           <div
-            style={
-              Object {
-                "display": "flex",
-                "flex": 1,
-                "height": "100%",
-                "position": "relative",
-              }
-            }
+            style="display: flex; flex: 1; height: 100%; position: relative;"
           >
             <input
               aria-autocomplete="both"
-              aria-expanded={false}
+              aria-expanded="false"
               aria-haspopup="listbox"
-              autoComplete="off"
-              className="rbt-input-main form-control rbt-input"
+              autocomplete="off"
+              class="rbt-input-main form-control rbt-input"
               id="agencies-field"
               name="agencies"
-              onBlur={[Function]}
-              onChange={[Function]}
-              onClick={[Function]}
-              onFocus={[Function]}
-              onKeyDown={[Function]}
               placeholder="Agency"
               role="combobox"
               type="text"
               value=""
             />
             <input
-              aria-hidden={true}
-              className="rbt-input-hint"
-              readOnly={true}
-              style={
-                Object {
-                  "backgroundColor": "transparent",
-                  "borderColor": "transparent",
-                  "boxShadow": "none",
-                  "color": "rgba(0, 0, 0, 0.35)",
-                  "left": 0,
-                  "pointerEvents": "none",
-                  "position": "absolute",
-                  "top": 0,
-                  "width": "100%",
-                }
-              }
-              tabIndex={-1}
+              aria-hidden="true"
+              class="rbt-input-hint"
+              readonly=""
+              style="background-color: transparent; border-color: transparent; box-shadow: none; color: rgba(0, 0, 0, 0.35); left: 0px; pointer-events: none; position: absolute; top: 0px; width: 100%; border-style: inset inset inset inset; border-width: 2px 2px 2px 2px; height: 35px; line-height: normal; padding: 1px 1px 1px 1px;"
+              tabindex="-1"
               value=""
             />
           </div>
@@ -179,132 +130,72 @@ exports[`MapFilterBar renders correctly 1`] = `
       </div>
     </div>
     <div
-      className="map-filter-typeahead col"
+      class="map-filter-typeahead col"
     >
       <div
-        className="rbt"
-        style={
-          Object {
-            "outline": "none",
-            "position": "relative",
-          }
-        }
-        tabIndex={-1}
+        class="rbt"
+        style="outline: none; position: relative;"
+        tabindex="-1"
       >
         <div
-          style={
-            Object {
-              "display": "flex",
-              "flex": 1,
-              "height": "100%",
-              "position": "relative",
-            }
-          }
+          style="display: flex; flex: 1; height: 100%; position: relative;"
         >
           <input
             aria-autocomplete="both"
-            aria-expanded={false}
+            aria-expanded="false"
             aria-haspopup="listbox"
-            autoComplete="off"
-            className="rbt-input-main form-control rbt-input"
-            disabled={false}
+            autocomplete="off"
+            class="rbt-input-main form-control rbt-input"
             id="name-field"
-            onBlur={[Function]}
-            onChange={[Function]}
-            onClick={[Function]}
-            onFocus={[Function]}
-            onKeyDown={[Function]}
             placeholder="Property name"
             role="combobox"
             type="text"
             value=""
           />
           <input
-            aria-hidden={true}
-            className="rbt-input-hint"
-            readOnly={true}
-            style={
-              Object {
-                "backgroundColor": "transparent",
-                "borderColor": "transparent",
-                "boxShadow": "none",
-                "color": "rgba(0, 0, 0, 0.35)",
-                "left": 0,
-                "pointerEvents": "none",
-                "position": "absolute",
-                "top": 0,
-                "width": "100%",
-              }
-            }
-            tabIndex={-1}
+            aria-hidden="true"
+            class="rbt-input-hint"
+            readonly=""
+            style="background-color: transparent; border-color: transparent; box-shadow: none; color: rgba(0, 0, 0, 0.35); left: 0px; pointer-events: none; position: absolute; top: 0px; width: 100%; border-style: inset inset inset inset; border-width: 2px 2px 2px 2px; line-height: normal; padding: 1px 1px 1px 1px;"
+            tabindex="-1"
             value=""
           />
         </div>
       </div>
     </div>
     <div
-      className="map-filter-typeahead col"
+      class="map-filter-typeahead col"
     >
       <div
-        className="form-group"
+        class="form-group"
       >
         <div
-          className="rbt"
-          style={
-            Object {
-              "outline": "none",
-              "position": "relative",
-            }
-          }
-          tabIndex={-1}
+          class="rbt"
+          style="outline: none; position: relative;"
+          tabindex="-1"
         >
           <div
-            style={
-              Object {
-                "display": "flex",
-                "flex": 1,
-                "height": "100%",
-                "position": "relative",
-              }
-            }
+            style="display: flex; flex: 1; height: 100%; position: relative;"
           >
             <input
               aria-autocomplete="both"
-              aria-expanded={false}
+              aria-expanded="false"
               aria-haspopup="listbox"
-              autoComplete="off"
-              className="rbt-input-main form-control rbt-input"
-              disabled={false}
+              autocomplete="off"
+              class="rbt-input-main form-control rbt-input"
               id="administrativeArea-field"
               name="administrativeArea"
-              onBlur={[Function]}
-              onChange={[Function]}
-              onClick={[Function]}
-              onFocus={[Function]}
-              onKeyDown={[Function]}
               placeholder="Location"
               role="combobox"
               type="text"
               value=""
             />
             <input
-              aria-hidden={true}
-              className="rbt-input-hint"
-              readOnly={true}
-              style={
-                Object {
-                  "backgroundColor": "transparent",
-                  "borderColor": "transparent",
-                  "boxShadow": "none",
-                  "color": "rgba(0, 0, 0, 0.35)",
-                  "left": 0,
-                  "pointerEvents": "none",
-                  "position": "absolute",
-                  "top": 0,
-                  "width": "100%",
-                }
-              }
-              tabIndex={-1}
+              aria-hidden="true"
+              class="rbt-input-hint"
+              readonly=""
+              style="background-color: transparent; border-color: transparent; box-shadow: none; color: rgba(0, 0, 0, 0.35); left: 0px; pointer-events: none; position: absolute; top: 0px; width: 100%; border-style: inset inset inset inset; border-width: 2px 2px 2px 2px; line-height: normal; padding: 1px 1px 1px 1px;"
+              tabindex="-1"
               value=""
             />
           </div>
@@ -312,34 +203,30 @@ exports[`MapFilterBar renders correctly 1`] = `
       </div>
     </div>
     <div
-      className="bar-item col"
+      class="bar-item col"
     >
       <div
-        className="input-group"
+        class="input-group"
       >
         <div
-          className="input-group-prepend"
+          class="input-group-prepend"
         >
           <div
-            className="form-group"
+            class="form-group"
           >
             <select
-              className="form-select form-control"
-              disabled={false}
+              class="form-select form-control"
               id="input-searchBy"
               name="searchBy"
-              onBlur={[Function]}
-              onChange={[Function]}
-              value="name"
             >
               <option
-                className="option"
+                class="option"
                 value="address"
               >
                 Address
               </option>
               <option
-                className="option"
+                class="option"
                 value="pid"
               >
                 PID/PIN
@@ -348,21 +235,15 @@ exports[`MapFilterBar renders correctly 1`] = `
           </div>
         </div>
         <div
-          className="input-group-content"
+          class="input-group-content"
         >
           <div
-            className="form-group"
+            class="form-group"
           >
             <input
-              className="form-control"
-              disabled={false}
+              class="form-control"
               id="input-name"
               name="name"
-              onBlur={[Function]}
-              onChange={[Function]}
-              onFocus={[Function]}
-              onMouseOut={[Function]}
-              onMouseOver={[Function]}
               placeholder=""
               value=""
             />
@@ -371,19 +252,15 @@ exports[`MapFilterBar renders correctly 1`] = `
       </div>
     </div>
     <div
-      className="bar-item col"
+      class="bar-item col"
     >
       <div
-        className="form-group"
+        class="form-group"
       >
         <select
-          className="form-select form-control"
-          disabled={false}
+          class="form-select form-control"
           id="input-classificationId"
           name="classificationId"
-          onBlur={[Function]}
-          onChange={[Function]}
-          value=""
         >
           <option
             value=""
@@ -391,25 +268,25 @@ exports[`MapFilterBar renders correctly 1`] = `
             Classification
           </option>
           <option
-            className="option"
+            class="option"
             value="0"
           >
             Core Operational
           </option>
           <option
-            className="option"
+            class="option"
             value="1"
           >
             Core Strategic
           </option>
           <option
-            className="option"
+            class="option"
             value="2"
           >
             Surplus Active
           </option>
           <option
-            className="option"
+            class="option"
             value="3"
           >
             Surplus Encumbered
@@ -418,34 +295,24 @@ exports[`MapFilterBar renders correctly 1`] = `
       </div>
     </div>
     <div
-      className="bar-item flex-grow-0 col"
+      class="bar-item flex-grow-0 col"
     >
       <button
-        className="Button Button--icon-only bg-warning btn btn-primary"
-        disabled={false}
+        class="Button Button--icon-only bg-warning btn btn-primary"
         id="search-button"
-        onBlur={[Function]}
-        onFocus={[Function]}
-        onMouseOut={[Function]}
-        onMouseOver={[Function]}
         type="submit"
       >
         <div
-          className="Button__icon"
+          class="Button__icon"
         >
           <svg
             fill="currentColor"
-            height={20}
-            size={20}
+            height="20"
+            size="20"
             stroke="currentColor"
-            strokeWidth="0"
-            style={
-              Object {
-                "color": undefined,
-              }
-            }
+            stroke-width="0"
             viewBox="0 0 512 512"
-            width={20}
+            width="20"
             xmlns="http://www.w3.org/2000/svg"
           >
             <path
@@ -456,35 +323,24 @@ exports[`MapFilterBar renders correctly 1`] = `
       </button>
     </div>
     <div
-      className="bar-item flex-grow-0 col"
+      class="bar-item flex-grow-0 col"
     >
       <button
-        className="Button Button--icon-only btn btn-info"
-        disabled={false}
+        class="Button Button--icon-only btn btn-info"
         id="reset-button"
-        onBlur={[Function]}
-        onClick={[Function]}
-        onFocus={[Function]}
-        onMouseOut={[Function]}
-        onMouseOver={[Function]}
         type="reset"
       >
         <div
-          className="Button__icon"
+          class="Button__icon"
         >
           <svg
             fill="currentColor"
-            height={20}
-            size={20}
+            height="20"
+            size="20"
             stroke="currentColor"
-            strokeWidth="0"
-            style={
-              Object {
-                "color": undefined,
-              }
-            }
+            stroke-width="0"
             viewBox="0 0 512 512"
-            width={20}
+            width="20"
             xmlns="http://www.w3.org/2000/svg"
           >
             <path

@@ -21,30 +21,27 @@ exports[`Update Info Form Matches Snapshot 1`] = `
 }
 
 <form
-  className=""
+  class=""
 >
   <div
-    className="UpdateInfoForm container-fluid"
+    class="UpdateInfoForm container-fluid"
   >
     <div
-      className="form-row"
+      class="form-row"
     >
       <label
-        className="form-label col-form-label col-md-2"
+        class="form-label col-form-label col-md-2"
       >
         Assign Tier
       </label>
       <div
-        className="required col-md-1 form-group"
+        class="required col-md-1 form-group"
       >
         <select
-          className="form-select form-control"
+          class="form-select form-control"
           id="input-tierLevelId"
           name="tierLevelId"
-          onBlur={[Function]}
-          onChange={[Function]}
-          required={true}
-          value={1}
+          required=""
         >
           <option
             value=""
@@ -52,13 +49,13 @@ exports[`Update Info Form Matches Snapshot 1`] = `
             Must Select One
           </option>
           <option
-            className="option"
+            class="option"
             value="1"
           >
             Tier 1
           </option>
           <option
-            className="option"
+            class="option"
             value="2"
           >
             Tier 2
@@ -66,7 +63,7 @@ exports[`Update Info Form Matches Snapshot 1`] = `
         </select>
       </div>
       <div
-        className="c0"
+        class="c0"
       >
         <small>
           Tier 1: Properties with a net value less than $1M.
@@ -74,29 +71,21 @@ exports[`Update Info Form Matches Snapshot 1`] = `
       </div>
     </div>
     <div
-      className="form-row"
-      style={
-        Object {
-          "alignItems": "unset",
-        }
-      }
+      class="form-row"
+      style="align-items: unset;"
     >
       <h3
-        className="col-md-8"
+        class="col-md-8"
       >
         Financial Information
       </h3>
     </div>
     <div
-      className="form-row"
+      class="form-row"
     >
       <h6
-        className="col-md-12"
-        style={
-          Object {
-            "margin": "0 0 1rem 0",
-          }
-        }
+        class="col-md-12"
+        style="margin: 0px 0px 1rem 0px;"
       >
         These values are for the 
         <strong>
@@ -106,60 +95,54 @@ exports[`Update Info Form Matches Snapshot 1`] = `
       </h6>
     </div>
     <div
-      className="form-row"
+      class="form-row"
     >
       <div
-        className="col-md-4"
+        class="col-md-4"
       >
         <div
-          className="form-row"
+          class="form-row"
         >
           <label
-            className="form-label col-form-label col-md-4"
+            class="form-label col-form-label col-md-4"
           >
             Assessed Value
           </label>
           <div
-            className="required form-group col-md-6"
+            class="required form-group col-md-6"
           >
             <div
-              className="input-tooltip-wrapper"
+              class="input-tooltip-wrapper"
             >
               <input
-                className="form-control input-number"
-                disabled={false}
+                class="form-control input-number"
                 name="assessed"
-                onBlur={[Function]}
-                onChange={[Function]}
                 placeholder=""
-                required={true}
+                required=""
                 value=""
               />
             </div>
           </div>
         </div>
         <div
-          className="form-row"
+          class="form-row"
         >
           <label
-            className="form-label col-form-label col-md-4"
+            class="form-label col-form-label col-md-4"
           >
             Net Book Value
           </label>
           <div
-            className="required form-group col-md-6"
+            class="required form-group col-md-6"
           >
             <div
-              className="input-tooltip-wrapper"
+              class="input-tooltip-wrapper"
             >
               <input
-                className="form-control input-number"
-                disabled={false}
+                class="form-control input-number"
                 name="netBook"
-                onBlur={[Function]}
-                onChange={[Function]}
                 placeholder=""
-                required={true}
+                required=""
                 value=""
               />
             </div>
@@ -167,55 +150,49 @@ exports[`Update Info Form Matches Snapshot 1`] = `
         </div>
       </div>
       <div
-        className="col-md-4"
+        class="col-md-4"
       >
         <div
-          className="form-row"
+          class="form-row"
         >
           <label
-            className="form-label col-form-label col-md-4"
+            class="form-label col-form-label col-md-4"
           >
             Estimated Market Value
           </label>
           <div
-            className="required form-group col-md-6"
+            class="required form-group col-md-6"
           >
             <div
-              className="input-tooltip-wrapper"
+              class="input-tooltip-wrapper"
             >
               <input
-                className="form-control input-number"
-                disabled={false}
+                class="form-control input-number"
                 name="market"
-                onBlur={[Function]}
-                onChange={[Function]}
                 placeholder=""
-                required={true}
+                required=""
                 value=""
               />
             </div>
           </div>
         </div>
         <div
-          className="form-row"
+          class="form-row"
         >
           <label
-            className="form-label col-form-label col-md-4"
+            class="form-label col-form-label col-md-4"
           >
             Appraised Value
           </label>
           <div
-            className="form-group col-md-6"
+            class="form-group col-md-6"
           >
             <div
-              className="input-tooltip-wrapper"
+              class="input-tooltip-wrapper"
             >
               <input
-                className="form-control input-number"
-                disabled={false}
+                class="form-control input-number"
                 name="appraised"
-                onBlur={[Function]}
-                onChange={[Function]}
                 placeholder=""
                 value=""
               />
@@ -224,28 +201,25 @@ exports[`Update Info Form Matches Snapshot 1`] = `
         </div>
       </div>
       <div
-        className="col-md-4"
+        class="col-md-4"
       >
         <div
-          className="form-row"
+          class="form-row"
         >
           <label
-            className="form-label col-form-label col-md-4"
+            class="form-label col-form-label col-md-4"
           >
             Estimated Sales Costs
           </label>
           <div
-            className="form-group col-md-6"
+            class="form-group col-md-6"
           >
             <div
-              className="input-tooltip-wrapper"
+              class="input-tooltip-wrapper"
             >
               <input
-                className="form-control input-number"
-                disabled={false}
+                class="form-control input-number"
                 name="salesCost"
-                onBlur={[Function]}
-                onChange={[Function]}
                 placeholder=""
                 value=""
               />
@@ -253,25 +227,22 @@ exports[`Update Info Form Matches Snapshot 1`] = `
           </div>
         </div>
         <div
-          className="form-row"
+          class="form-row"
         >
           <label
-            className="form-label col-form-label col-md-4"
+            class="form-label col-form-label col-md-4"
           >
             Estimated Program Recovery Fees
           </label>
           <div
-            className="form-group col-md-6"
+            class="form-group col-md-6"
           >
             <div
-              className="input-tooltip-wrapper"
+              class="input-tooltip-wrapper"
             >
               <input
-                className="form-control input-number"
-                disabled={false}
+                class="form-control input-number"
                 name="programCost"
-                onBlur={[Function]}
-                onChange={[Function]}
                 placeholder=""
                 value=""
               />
@@ -281,38 +252,30 @@ exports[`Update Info Form Matches Snapshot 1`] = `
       </div>
     </div>
     <div
-      className="form-row"
+      class="form-row"
     >
       <h6
-        className="col-md-12"
-        style={
-          Object {
-            "margin": "1rem 0",
-          }
-        }
+        class="col-md-12"
+        style="margin: 1rem 0px;"
       >
         Please update  the property classification.
       </h6>
       <h2
-        className="col-md-5"
+        class="col-md-5"
       >
         Properties in the Project
       </h2>
       <div
-        className="review-buttons col-md-7"
+        class="review-buttons col-md-7"
       >
         <button
-          className="btn btn-secondary"
-          disabled={false}
-          onClick={[Function]}
+          class="btn btn-secondary"
           type="button"
         >
           Add More Properties
         </button>
         <button
-          className="btn btn-primary"
-          disabled={false}
-          onClick={[Function]}
+          class="btn btn-primary"
           type="button"
         >
           Remove Properties
@@ -320,525 +283,270 @@ exports[`Update Info Form Matches Snapshot 1`] = `
       </div>
     </div>
     <div
-      className="container-fluid"
+      class="container-fluid"
     >
       <div
-        className="ScrollContainer"
+        class="ScrollContainer"
       >
         <div
-          className="table"
+          class="table"
           role="table"
-          style={
-            Object {
-              "minWidth": undefined,
-            }
-          }
         >
           <div
-            className="thead thead-light"
+            class="thead thead-light"
           >
             <div
-              className="tr"
+              class="tr"
               role="row"
-              style={
-                Object {
-                  "display": "flex",
-                  "flex": "1 0 auto",
-                  "minWidth": "850px",
-                }
-              }
+              style="display: flex; flex: 1 0 auto; min-width: 850px;"
             >
               <div
-                className="th"
-                colSpan={1}
+                class="th"
+                colspan="1"
                 role="columnheader"
-                style={
-                  Object {
-                    "alignItems": "center",
-                    "boxSizing": "border-box",
-                    "display": "flex",
-                    "flex": "40 0 auto",
-                    "justifyContent": "flex-start",
-                    "minWidth": "30px",
-                    "textAlign": "left",
-                    "width": "40px",
-                  }
-                }
+                style="box-sizing: border-box; flex: 40 0 auto; min-width: 30px; width: 40px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
               >
                 <div
-                  className="sortable-column"
+                  class="sortable-column"
                 >
                   <div>
                     <input
-                      checked={false}
                       data-testid="selectrow-parent"
-                      disabled={true}
-                      onChange={[Function]}
-                      style={
-                        Object {
-                          "cursor": "pointer",
-                        }
-                      }
+                      disabled=""
+                      style="cursor: pointer;"
                       title="Click to deselect all properties."
                       type="checkbox"
                     />
                   </div>
                   <span
-                    style={
-                      Object {
-                        "flex": "1 1 auto",
-                      }
-                    }
+                    style="flex: 1 1 auto;"
                   />
                 </div>
               </div>
               <div
-                className="th"
-                colSpan={1}
+                class="th"
+                colspan="1"
                 role="columnheader"
-                style={
-                  Object {
-                    "alignItems": "center",
-                    "boxSizing": "border-box",
-                    "display": "flex",
-                    "flex": "40 0 auto",
-                    "justifyContent": "flex-start",
-                    "minWidth": "30px",
-                    "textAlign": "left",
-                    "width": "40px",
-                  }
-                }
+                style="box-sizing: border-box; flex: 40 0 auto; min-width: 30px; width: 40px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
               >
                 <div
-                  className="sortable-column"
+                  class="sortable-column"
                 >
                   
                   <span
-                    style={
-                      Object {
-                        "flex": "1 1 auto",
-                      }
-                    }
+                    style="flex: 1 1 auto;"
                   />
                 </div>
               </div>
               <div
-                className="th"
-                colSpan={1}
+                class="th"
+                colspan="1"
                 role="columnheader"
-                style={
-                  Object {
-                    "alignItems": "center",
-                    "boxSizing": "border-box",
-                    "display": "flex",
-                    "flex": "100 0 auto",
-                    "justifyContent": "flex-start",
-                    "minWidth": "30px",
-                    "textAlign": "left",
-                    "width": "100px",
-                  }
-                }
+                style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
               >
                 <div
-                  className="sortable-column"
+                  class="sortable-column"
                 >
                   Agency
                   <span
-                    style={
-                      Object {
-                        "flex": "1 1 auto",
-                      }
-                    }
+                    style="flex: 1 1 auto;"
                   />
                 </div>
               </div>
               <div
-                className="th"
-                colSpan={1}
+                class="th"
+                colspan="1"
                 role="columnheader"
-                style={
-                  Object {
-                    "alignItems": "center",
-                    "boxSizing": "border-box",
-                    "display": "flex",
-                    "flex": "100 0 auto",
-                    "justifyContent": "flex-start",
-                    "minWidth": "30px",
-                    "textAlign": "left",
-                    "width": "100px",
-                  }
-                }
+                style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
               >
                 <div
-                  className="sortable-column"
+                  class="sortable-column"
                 >
                   Name
                   <span
-                    style={
-                      Object {
-                        "flex": "1 1 auto",
-                      }
-                    }
+                    style="flex: 1 1 auto;"
                   />
                 </div>
               </div>
               <div
-                className="th"
-                colSpan={1}
+                class="th"
+                colspan="1"
                 role="columnheader"
-                style={
-                  Object {
-                    "alignItems": "center",
-                    "boxSizing": "border-box",
-                    "display": "flex",
-                    "flex": "100 0 auto",
-                    "justifyContent": "flex-start",
-                    "minWidth": "30px",
-                    "textAlign": "left",
-                    "width": "100px",
-                  }
-                }
+                style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
               >
                 <div
-                  className="sortable-column"
+                  class="sortable-column"
                 >
                   Civic Address
                   <span
-                    style={
-                      Object {
-                        "flex": "1 1 auto",
-                      }
-                    }
+                    style="flex: 1 1 auto;"
                   />
                 </div>
               </div>
               <div
-                className="th"
-                colSpan={1}
+                class="th"
+                colspan="1"
                 role="columnheader"
-                style={
-                  Object {
-                    "alignItems": "center",
-                    "boxSizing": "border-box",
-                    "display": "flex",
-                    "flex": "140 0 auto",
-                    "justifyContent": "flex-start",
-                    "minWidth": "30px",
-                    "textAlign": "left",
-                    "width": "140px",
-                  }
-                }
+                style="box-sizing: border-box; flex: 140 0 auto; min-width: 30px; width: 140px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
               >
                 <div
-                  className="sortable-column"
+                  class="sortable-column"
                 >
                   Classification
                   <span
-                    style={
-                      Object {
-                        "flex": "1 1 auto",
-                      }
-                    }
+                    style="flex: 1 1 auto;"
                   />
                 </div>
               </div>
               <div
-                className="th"
-                colSpan={1}
+                class="th"
+                colspan="1"
                 role="columnheader"
-                style={
-                  Object {
-                    "alignItems": "center",
-                    "boxSizing": "border-box",
-                    "display": "flex",
-                    "flex": "100 0 auto",
-                    "justifyContent": "flex-start",
-                    "minWidth": "30px",
-                    "textAlign": "left",
-                    "width": "100px",
-                  }
-                }
+                style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
               >
                 <div
-                  className="sortable-column"
+                  class="sortable-column"
                 >
                   Current Zoning Code
                   <span
-                    style={
-                      Object {
-                        "flex": "1 1 auto",
-                      }
-                    }
+                    style="flex: 1 1 auto;"
                   />
                 </div>
               </div>
               <div
-                className="th"
-                colSpan={1}
+                class="th"
+                colspan="1"
                 role="columnheader"
-                style={
-                  Object {
-                    "alignItems": "center",
-                    "boxSizing": "border-box",
-                    "display": "flex",
-                    "flex": "100 0 auto",
-                    "justifyContent": "flex-start",
-                    "minWidth": "30px",
-                    "textAlign": "left",
-                    "width": "100px",
-                  }
-                }
+                style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
               >
                 <div
-                  className="sortable-column"
+                  class="sortable-column"
                 >
                   Other Projects
                   <span
-                    style={
-                      Object {
-                        "flex": "1 1 auto",
-                      }
-                    }
+                    style="flex: 1 1 auto;"
                   />
                 </div>
               </div>
               <div
-                className="th"
-                colSpan={1}
+                class="th"
+                colspan="1"
                 role="columnheader"
-                style={
-                  Object {
-                    "alignItems": "center",
-                    "boxSizing": "border-box",
-                    "display": "flex",
-                    "flex": "145 0 auto",
-                    "justifyContent": "flex-start",
-                    "minWidth": "145px",
-                    "textAlign": "left",
-                    "width": "145px",
-                  }
-                }
+                style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
               >
                 <div
-                  className="sortable-column"
+                  class="sortable-column"
                 >
                   Net Book Value
                   <span
-                    style={
-                      Object {
-                        "flex": "1 1 auto",
-                      }
-                    }
+                    style="flex: 1 1 auto;"
                   />
                 </div>
               </div>
               <div
-                className="th"
-                colSpan={1}
+                class="th"
+                colspan="1"
                 role="columnheader"
-                style={
-                  Object {
-                    "alignItems": "center",
-                    "boxSizing": "border-box",
-                    "display": "flex",
-                    "flex": "145 0 auto",
-                    "justifyContent": "flex-start",
-                    "minWidth": "145px",
-                    "textAlign": "left",
-                    "width": "145px",
-                  }
-                }
+                style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
               >
                 <div
-                  className="sortable-column"
+                  class="sortable-column"
                 >
                   Market Value
                   <span
-                    style={
-                      Object {
-                        "flex": "1 1 auto",
-                      }
-                    }
+                    style="flex: 1 1 auto;"
                   />
                 </div>
               </div>
               <div
-                className="th"
-                colSpan={1}
+                class="th"
+                colspan="1"
                 role="columnheader"
-                style={
-                  Object {
-                    "alignItems": "center",
-                    "boxSizing": "border-box",
-                    "display": "flex",
-                    "flex": "145 0 auto",
-                    "justifyContent": "flex-start",
-                    "minWidth": "145px",
-                    "textAlign": "left",
-                    "width": "145px",
-                  }
-                }
+                style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
               >
                 <div
-                  className="sortable-column"
+                  class="sortable-column"
                 >
                   Assessed Land
                   <span
-                    style={
-                      Object {
-                        "flex": "1 1 auto",
-                      }
-                    }
+                    style="flex: 1 1 auto;"
                   />
                 </div>
               </div>
               <div
-                className="th"
-                colSpan={1}
+                class="th"
+                colspan="1"
                 role="columnheader"
-                style={
-                  Object {
-                    "alignItems": "center",
-                    "boxSizing": "border-box",
-                    "display": "flex",
-                    "flex": "145 0 auto",
-                    "justifyContent": "flex-start",
-                    "minWidth": "145px",
-                    "textAlign": "left",
-                    "width": "145px",
-                  }
-                }
+                style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
               >
                 <div
-                  className="sortable-column"
+                  class="sortable-column"
                 >
                   Assessed Building
                   <span
-                    style={
-                      Object {
-                        "flex": "1 1 auto",
-                      }
-                    }
+                    style="flex: 1 1 auto;"
                   />
                 </div>
               </div>
               <div
-                className="th"
-                colSpan={1}
+                class="th"
+                colspan="1"
                 role="columnheader"
-                style={
-                  Object {
-                    "alignItems": "center",
-                    "boxSizing": "border-box",
-                    "display": "flex",
-                    "flex": "60 0 auto",
-                    "justifyContent": "flex-start",
-                    "minWidth": "30px",
-                    "textAlign": "left",
-                    "width": "60px",
-                  }
-                }
+                style="box-sizing: border-box; flex: 60 0 auto; min-width: 30px; width: 60px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
               >
                 <div
-                  className="sortable-column"
+                  class="sortable-column"
                 >
                   Type
                   <span
-                    style={
-                      Object {
-                        "flex": "1 1 auto",
-                      }
-                    }
+                    style="flex: 1 1 auto;"
                   />
                 </div>
               </div>
             </div>
           </div>
           <div
-            className="tbody"
+            class="tbody"
             role="rowgroup"
           >
             <div
-              className="tr-wrapper"
+              class="tr-wrapper"
             >
               <div
-                className="tr"
+                class="tr"
                 role="row"
-                style={
-                  Object {
-                    "display": "flex",
-                    "flex": "1 0 auto",
-                    "minWidth": "850px",
-                  }
-                }
+                style="display: flex; flex: 1 0 auto; min-width: 850px;"
               >
                 <div
-                  className="td"
-                  onClick={[Function]}
+                  class="td"
                   role="cell"
-                  style={
-                    Object {
-                      "alignItems": "flex-start",
-                      "boxSizing": "border-box",
-                      "display": "flex",
-                      "flex": "40 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "30px",
-                      "textAlign": "left",
-                      "width": "40px",
-                    }
-                  }
+                  style="box-sizing: border-box; flex: 40 0 auto; min-width: 30px; width: 40px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
                   title=""
                 >
                   <div>
                     <input
-                      checked={false}
                       data-testid="selectrow-1"
-                      disabled={false}
-                      onChange={[Function]}
-                      style={
-                        Object {
-                          "cursor": "pointer",
-                        }
-                      }
+                      style="cursor: pointer;"
                       title="Toggle Row Selected"
                       type="checkbox"
                     />
                   </div>
                 </div>
                 <div
-                  className="td"
-                  onClick={[Function]}
+                  class="td"
                   role="cell"
-                  style={
-                    Object {
-                      "alignItems": "flex-start",
-                      "boxSizing": "border-box",
-                      "display": "flex",
-                      "flex": "40 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "30px",
-                      "textAlign": "left",
-                      "width": "40px",
-                    }
-                  }
+                  style="box-sizing: border-box; flex: 40 0 auto; min-width: 30px; width: 40px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
                   title=""
                 >
                   <svg
                     fill="currentColor"
-                    height={16}
-                    onClick={[Function]}
-                    size={16}
+                    height="16"
+                    size="16"
                     stroke="currentColor"
-                    strokeWidth="0"
-                    style={
-                      Object {
-                        "color": undefined,
-                        "cursor": "pointer",
-                      }
-                    }
+                    stroke-width="0"
+                    style="cursor: pointer;"
                     viewBox="0 0 512 512"
-                    width={16}
+                    width="16"
                     xmlns="http://www.w3.org/2000/svg"
                   >
                     <title>
@@ -850,283 +558,126 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                   </svg>
                 </div>
                 <div
-                  className="td clickable"
-                  onClick={[Function]}
+                  class="td clickable"
                   role="cell"
-                  style={
-                    Object {
-                      "alignItems": "flex-start",
-                      "boxSizing": "border-box",
-                      "display": "flex",
-                      "flex": "100 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "30px",
-                      "textAlign": "left",
-                      "width": "100px",
-                    }
-                  }
+                  style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
                   title="Click to view property details"
                 >
                   AEST
                 </div>
                 <div
-                  className="td clickable"
-                  onClick={[Function]}
+                  class="td clickable"
                   role="cell"
-                  style={
-                    Object {
-                      "alignItems": "flex-start",
-                      "boxSizing": "border-box",
-                      "display": "flex",
-                      "flex": "100 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "30px",
-                      "textAlign": "left",
-                      "width": "100px",
-                    }
-                  }
+                  style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
                   title="Click to view property details"
                 >
                   213-221-321
                 </div>
                 <div
-                  className="td clickable"
-                  onClick={[Function]}
+                  class="td clickable"
                   role="cell"
-                  style={
-                    Object {
-                      "alignItems": "flex-start",
-                      "boxSizing": "border-box",
-                      "display": "flex",
-                      "flex": "100 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "30px",
-                      "textAlign": "left",
-                      "width": "100px",
-                    }
-                  }
+                  style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
                   title="Click to view property details"
                 >
                   Test, Alert Bay
                 </div>
                 <div
-                  className="td"
-                  onClick={[Function]}
+                  class="td"
                   role="cell"
-                  style={
-                    Object {
-                      "alignItems": "flex-start",
-                      "boxSizing": "border-box",
-                      "display": "flex",
-                      "flex": "140 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "30px",
-                      "textAlign": "left",
-                      "width": "140px",
-                    }
-                  }
+                  style="box-sizing: border-box; flex: 140 0 auto; min-width: 30px; width: 140px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
                   title=""
                 >
                   <div
-                    className="form-group"
+                    class="form-group"
                   >
                     <select
-                      className="form-control"
+                      class="form-control"
                       id="input-properties.0.classificationId-fast"
                       name="properties.0.classificationId"
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      onFocus={[Function]}
-                      onMouseOut={[Function]}
-                      onMouseOver={[Function]}
                       type="number"
-                      value={0}
                     >
                       <option
-                        hidden={true}
-                        value={0}
+                        hidden=""
+                        value="0"
                       />
                     </select>
                   </div>
                 </div>
                 <div
-                  className="td"
-                  onClick={[Function]}
+                  class="td"
                   role="cell"
-                  style={
-                    Object {
-                      "alignItems": "flex-start",
-                      "boxSizing": "border-box",
-                      "display": "flex",
-                      "flex": "100 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "30px",
-                      "textAlign": "left",
-                      "width": "100px",
-                    }
-                  }
+                  style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
                   title=""
                 >
                   <div
-                    className="form-group col"
+                    class="form-group col"
                   >
                     <input
-                      className="form-control"
+                      class="form-control"
                       id="input-properties.0.zoning"
                       name="properties.0.zoning"
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      onFocus={[Function]}
-                      onMouseOut={[Function]}
-                      onMouseOver={[Function]}
                       value=""
                     />
                   </div>
                 </div>
                 <div
-                  className="td"
-                  onClick={[Function]}
+                  class="td"
                   role="cell"
-                  style={
-                    Object {
-                      "alignItems": "flex-start",
-                      "boxSizing": "border-box",
-                      "display": "flex",
-                      "flex": "100 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "30px",
-                      "textAlign": "left",
-                      "width": "100px",
-                    }
-                  }
+                  style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
                   title=""
                 >
                   <div
-                    className="c1"
+                    class="c1"
                   />
                 </div>
                 <div
-                  className="td"
-                  onClick={[Function]}
+                  class="td"
                   role="cell"
-                  style={
-                    Object {
-                      "alignItems": "flex-start",
-                      "boxSizing": "border-box",
-                      "display": "flex",
-                      "flex": "145 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "145px",
-                      "textAlign": "left",
-                      "width": "145px",
-                    }
-                  }
+                  style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
                   title=""
                 >
-                  <i
-                    onBlur={[Function]}
-                    onFocus={[Function]}
-                    onMouseOut={[Function]}
-                    onMouseOver={[Function]}
-                  >
+                  <i>
                     $1
                   </i>
                 </div>
                 <div
-                  className="td"
-                  onClick={[Function]}
+                  class="td"
                   role="cell"
-                  style={
-                    Object {
-                      "alignItems": "flex-start",
-                      "boxSizing": "border-box",
-                      "display": "flex",
-                      "flex": "145 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "145px",
-                      "textAlign": "left",
-                      "width": "145px",
-                    }
-                  }
+                  style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
                   title=""
                 >
-                  <i
-                    onBlur={[Function]}
-                    onFocus={[Function]}
-                    onMouseOut={[Function]}
-                    onMouseOver={[Function]}
-                  >
+                  <i>
                     $0
                   </i>
                 </div>
                 <div
-                  className="td clickable"
-                  onClick={[Function]}
+                  class="td clickable"
                   role="cell"
-                  style={
-                    Object {
-                      "alignItems": "flex-start",
-                      "boxSizing": "border-box",
-                      "display": "flex",
-                      "flex": "145 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "145px",
-                      "textAlign": "left",
-                      "width": "145px",
-                    }
-                  }
+                  style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
                   title="Click to view property details"
                 >
                   <div
-                    className="form-group"
-                  >
-                    
-                  </div>
+                    class="form-group"
+                  />
                 </div>
                 <div
-                  className="td clickable"
-                  onClick={[Function]}
+                  class="td clickable"
                   role="cell"
-                  style={
-                    Object {
-                      "alignItems": "flex-start",
-                      "boxSizing": "border-box",
-                      "display": "flex",
-                      "flex": "145 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "145px",
-                      "textAlign": "left",
-                      "width": "145px",
-                    }
-                  }
+                  style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
                   title="Click to view property details"
                 >
                   <div
-                    className="form-group"
-                  >
-                    
-                  </div>
+                    class="form-group"
+                  />
                 </div>
                 <div
-                  className="td clickable"
-                  onClick={[Function]}
+                  class="td clickable"
                   role="cell"
-                  style={
-                    Object {
-                      "alignItems": "flex-start",
-                      "boxSizing": "border-box",
-                      "display": "flex",
-                      "flex": "60 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "30px",
-                      "textAlign": "left",
-                      "width": "60px",
-                    }
-                  }
+                  style="box-sizing: border-box; flex: 60 0 auto; min-width: 30px; width: 60px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
                   title="Click to view property details"
                 >
                   <svg
-                    className="svg"
+                    class="svg"
                   >
                     icon-lot.svg
                   </svg>
@@ -1135,263 +686,114 @@ exports[`Update Info Form Matches Snapshot 1`] = `
             </div>
           </div>
           <div
-            className="tfoot tfoot-light"
+            class="tfoot tfoot-light"
           >
             <div
-              className="tr"
+              class="tr"
               role="row"
-              style={
-                Object {
-                  "display": "flex",
-                  "flex": "1 0 auto",
-                  "minWidth": "850px",
-                }
-              }
+              style="display: flex; flex: 1 0 auto; min-width: 850px;"
             >
               <div
-                className="th"
-                colSpan={1}
+                class="th"
+                colspan="1"
                 role="columnheader"
-                style={
-                  Object {
-                    "alignItems": "center",
-                    "boxSizing": "border-box",
-                    "display": "flex",
-                    "flex": "40 0 auto",
-                    "justifyContent": "flex-start",
-                    "minWidth": "30px",
-                    "textAlign": "left",
-                    "width": "40px",
-                  }
-                }
+                style="box-sizing: border-box; flex: 40 0 auto; min-width: 30px; width: 40px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
               >
                  
               </div>
               <div
-                className="th"
-                colSpan={1}
+                class="th"
+                colspan="1"
                 role="columnheader"
-                style={
-                  Object {
-                    "alignItems": "center",
-                    "boxSizing": "border-box",
-                    "display": "flex",
-                    "flex": "40 0 auto",
-                    "justifyContent": "flex-start",
-                    "minWidth": "30px",
-                    "textAlign": "left",
-                    "width": "40px",
-                  }
-                }
+                style="box-sizing: border-box; flex: 40 0 auto; min-width: 30px; width: 40px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
               >
                  
               </div>
               <div
-                className="th"
-                colSpan={1}
+                class="th"
+                colspan="1"
                 role="columnheader"
-                style={
-                  Object {
-                    "alignItems": "center",
-                    "boxSizing": "border-box",
-                    "display": "flex",
-                    "flex": "100 0 auto",
-                    "justifyContent": "flex-start",
-                    "minWidth": "30px",
-                    "textAlign": "left",
-                    "width": "100px",
-                  }
-                }
+                style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
               >
                  
               </div>
               <div
-                className="th"
-                colSpan={1}
+                class="th"
+                colspan="1"
                 role="columnheader"
-                style={
-                  Object {
-                    "alignItems": "center",
-                    "boxSizing": "border-box",
-                    "display": "flex",
-                    "flex": "100 0 auto",
-                    "justifyContent": "flex-start",
-                    "minWidth": "30px",
-                    "textAlign": "left",
-                    "width": "100px",
-                  }
-                }
+                style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
               >
                  
               </div>
               <div
-                className="th"
-                colSpan={1}
+                class="th"
+                colspan="1"
                 role="columnheader"
-                style={
-                  Object {
-                    "alignItems": "center",
-                    "boxSizing": "border-box",
-                    "display": "flex",
-                    "flex": "100 0 auto",
-                    "justifyContent": "flex-start",
-                    "minWidth": "30px",
-                    "textAlign": "left",
-                    "width": "100px",
-                  }
-                }
+                style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
               >
                  
               </div>
               <div
-                className="th"
-                colSpan={1}
+                class="th"
+                colspan="1"
                 role="columnheader"
-                style={
-                  Object {
-                    "alignItems": "center",
-                    "boxSizing": "border-box",
-                    "display": "flex",
-                    "flex": "140 0 auto",
-                    "justifyContent": "flex-start",
-                    "minWidth": "30px",
-                    "textAlign": "left",
-                    "width": "140px",
-                  }
-                }
+                style="box-sizing: border-box; flex: 140 0 auto; min-width: 30px; width: 140px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
               >
                  
               </div>
               <div
-                className="th"
-                colSpan={1}
+                class="th"
+                colspan="1"
                 role="columnheader"
-                style={
-                  Object {
-                    "alignItems": "center",
-                    "boxSizing": "border-box",
-                    "display": "flex",
-                    "flex": "100 0 auto",
-                    "justifyContent": "flex-start",
-                    "minWidth": "30px",
-                    "textAlign": "left",
-                    "width": "100px",
-                  }
-                }
+                style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
               >
                  
               </div>
               <div
-                className="th"
-                colSpan={1}
+                class="th"
+                colspan="1"
                 role="columnheader"
-                style={
-                  Object {
-                    "alignItems": "center",
-                    "boxSizing": "border-box",
-                    "display": "flex",
-                    "flex": "100 0 auto",
-                    "justifyContent": "flex-start",
-                    "minWidth": "30px",
-                    "textAlign": "left",
-                    "width": "100px",
-                  }
-                }
+                style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
               >
                  
               </div>
               <div
-                className="th"
-                colSpan={1}
+                class="th"
+                colspan="1"
                 role="columnheader"
-                style={
-                  Object {
-                    "alignItems": "center",
-                    "boxSizing": "border-box",
-                    "display": "flex",
-                    "flex": "145 0 auto",
-                    "justifyContent": "flex-start",
-                    "minWidth": "145px",
-                    "textAlign": "left",
-                    "width": "145px",
-                  }
-                }
+                style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
               >
                  
               </div>
               <div
-                className="th"
-                colSpan={1}
+                class="th"
+                colspan="1"
                 role="columnheader"
-                style={
-                  Object {
-                    "alignItems": "center",
-                    "boxSizing": "border-box",
-                    "display": "flex",
-                    "flex": "145 0 auto",
-                    "justifyContent": "flex-start",
-                    "minWidth": "145px",
-                    "textAlign": "left",
-                    "width": "145px",
-                  }
-                }
+                style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
               >
                  
               </div>
               <div
-                className="th"
-                colSpan={1}
+                class="th"
+                colspan="1"
                 role="columnheader"
-                style={
-                  Object {
-                    "alignItems": "center",
-                    "boxSizing": "border-box",
-                    "display": "flex",
-                    "flex": "145 0 auto",
-                    "justifyContent": "flex-start",
-                    "minWidth": "145px",
-                    "textAlign": "left",
-                    "width": "145px",
-                  }
-                }
+                style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
               >
                  
               </div>
               <div
-                className="th"
-                colSpan={1}
+                class="th"
+                colspan="1"
                 role="columnheader"
-                style={
-                  Object {
-                    "alignItems": "center",
-                    "boxSizing": "border-box",
-                    "display": "flex",
-                    "flex": "145 0 auto",
-                    "justifyContent": "flex-start",
-                    "minWidth": "145px",
-                    "textAlign": "left",
-                    "width": "145px",
-                  }
-                }
+                style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
               >
                  
               </div>
               <div
-                className="th"
-                colSpan={1}
+                class="th"
+                colspan="1"
                 role="columnheader"
-                style={
-                  Object {
-                    "alignItems": "center",
-                    "boxSizing": "border-box",
-                    "display": "flex",
-                    "flex": "60 0 auto",
-                    "justifyContent": "flex-start",
-                    "minWidth": "30px",
-                    "textAlign": "left",
-                    "width": "60px",
-                  }
-                }
+                style="box-sizing: border-box; flex: 60 0 auto; min-width: 30px; width: 60px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
               >
                  
               </div>
@@ -1399,7 +801,7 @@ exports[`Update Info Form Matches Snapshot 1`] = `
           </div>
         </div>
         <div
-          className="table-toolbar"
+          class="table-toolbar"
         />
       </div>
     </div>

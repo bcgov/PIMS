@@ -2,122 +2,82 @@
 
 exports[`Manage Agencies Component Snapshot matches 1`] = `
 <div
-  className="ManageAgencies container-fluid"
+  class="ManageAgencies container-fluid"
 >
   <div
-    className="agency-toolbar container-fluid"
+    class="agency-toolbar container-fluid"
   >
     <form
-      className=""
-      noValidate={true}
-      onSubmit={[Function]}
+      class=""
+      novalidate=""
     >
       <div
-        className="search-bar form-row"
+        class="search-bar form-row"
       >
         <h3
-          className="filterBarHeading"
+          class="filterBarHeading"
         >
           Agencies
         </h3>
         <p
-          className="label"
+          class="label"
         >
           Search agency by name: 
         </p>
         <div
-          className="form-group"
+          class="form-group"
         >
           <div
-            className="rbt"
-            style={
-              Object {
-                "outline": "none",
-                "position": "relative",
-              }
-            }
-            tabIndex={-1}
+            class="rbt"
+            style="outline: none; position: relative;"
+            tabindex="-1"
           >
             <div
-              style={
-                Object {
-                  "display": "flex",
-                  "flex": 1,
-                  "height": "100%",
-                  "position": "relative",
-                }
-              }
+              style="display: flex; flex: 1; height: 100%; position: relative;"
             >
               <input
                 aria-autocomplete="both"
-                aria-expanded={false}
+                aria-expanded="false"
                 aria-haspopup="listbox"
-                autoComplete="off"
-                className="rbt-input-main form-control rbt-input"
+                autocomplete="off"
+                class="rbt-input-main form-control rbt-input"
                 id="id-field"
                 name="id"
-                onBlur={[Function]}
-                onChange={[Function]}
-                onClick={[Function]}
-                onFocus={[Function]}
-                onKeyDown={[Function]}
                 placeholder="Enter an Agency"
                 role="combobox"
                 type="text"
                 value=""
               />
               <input
-                aria-hidden={true}
-                className="rbt-input-hint"
-                readOnly={true}
-                style={
-                  Object {
-                    "backgroundColor": "transparent",
-                    "borderColor": "transparent",
-                    "boxShadow": "none",
-                    "color": "rgba(0, 0, 0, 0.35)",
-                    "left": 0,
-                    "pointerEvents": "none",
-                    "position": "absolute",
-                    "top": 0,
-                    "width": "100%",
-                  }
-                }
-                tabIndex={-1}
+                aria-hidden="true"
+                class="rbt-input-hint"
+                readonly=""
+                style="background-color: transparent; border-color: transparent; box-shadow: none; color: rgba(0, 0, 0, 0.35); left: 0px; pointer-events: none; position: absolute; top: 0px; width: 100%;"
+                tabindex="-1"
                 value=""
               />
             </div>
           </div>
         </div>
         <div
-          className="bar-item flex-grow-0 col"
+          class="bar-item flex-grow-0 col"
         >
           <button
-            className="Button Button--icon-only bg-primary btn btn-primary"
-            disabled={false}
+            class="Button Button--icon-only bg-primary btn btn-primary"
             id="search-button"
-            onBlur={[Function]}
-            onFocus={[Function]}
-            onMouseOut={[Function]}
-            onMouseOver={[Function]}
             type="submit"
           >
             <div
-              className="Button__icon"
+              class="Button__icon"
             >
               <svg
                 fill="currentColor"
-                height={20}
-                size={20}
+                height="20"
+                size="20"
                 stroke="currentColor"
-                strokeWidth="0"
-                style={
-                  Object {
-                    "color": undefined,
-                  }
-                }
+                stroke-width="0"
                 viewBox="0 0 512 512"
-                width={20}
+                width="20"
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <path
@@ -128,35 +88,24 @@ exports[`Manage Agencies Component Snapshot matches 1`] = `
           </button>
         </div>
         <div
-          className="bar-item flex-grow-0 col"
+          class="bar-item flex-grow-0 col"
         >
           <button
-            className="Button Button--icon-only btn btn-info"
-            disabled={false}
+            class="Button Button--icon-only btn btn-info"
             id="reset-button"
-            onBlur={[Function]}
-            onClick={[Function]}
-            onFocus={[Function]}
-            onMouseOut={[Function]}
-            onMouseOver={[Function]}
             type="reset"
           >
             <div
-              className="Button__icon"
+              class="Button__icon"
             >
               <svg
                 fill="currentColor"
-                height={20}
-                size={20}
+                height="20"
+                size="20"
                 stroke="currentColor"
-                strokeWidth="0"
-                style={
-                  Object {
-                    "color": undefined,
-                  }
-                }
+                stroke-width="0"
                 viewBox="0 0 512 512"
-                width={20}
+                width="20"
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <path
@@ -167,37 +116,26 @@ exports[`Manage Agencies Component Snapshot matches 1`] = `
           </button>
         </div>
         <div
-          className="vl"
+          class="vl"
         />
         <div
-          className="bar-item flex-grow-0 plus-button col"
+          class="bar-item flex-grow-0 plus-button col"
         >
           <button
-            className="Button Button--icon-only primary btn btn-primary"
-            disabled={false}
-            onBlur={[Function]}
-            onClick={[Function]}
-            onFocus={[Function]}
-            onMouseOut={[Function]}
-            onMouseOver={[Function]}
+            class="Button Button--icon-only primary btn btn-primary"
             type="button"
           >
             <div
-              className="Button__icon"
+              class="Button__icon"
             >
               <svg
                 fill="currentColor"
-                height={20}
-                size={20}
+                height="20"
+                size="20"
                 stroke="currentColor"
-                strokeWidth="0"
-                style={
-                  Object {
-                    "color": undefined,
-                  }
-                }
+                stroke-width="0"
                 viewBox="0 0 448 512"
-                width={20}
+                width="20"
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <path
@@ -211,351 +149,170 @@ exports[`Manage Agencies Component Snapshot matches 1`] = `
     </form>
   </div>
   <div
-    className="table-section"
+    class="table-section"
   >
     <div
-      className="table"
+      class="table"
       role="table"
-      style={
-        Object {
-          "minWidth": undefined,
-        }
-      }
     >
       <div
-        className="thead thead-light"
+        class="thead thead-light"
       >
         <div
-          className="tr"
+          class="tr"
           role="row"
-          style={
-            Object {
-              "display": "flex",
-              "flex": "1 0 auto",
-              "minWidth": "120px",
-            }
-          }
+          style="display: flex; flex: 1 0 auto; min-width: 120px;"
         >
           <div
-            className="th"
-            colSpan={1}
+            class="th"
+            colspan="1"
             role="columnheader"
-            style={
-              Object {
-                "alignItems": "center",
-                "boxSizing": "border-box",
-                "display": "flex",
-                "flex": "100 0 auto",
-                "justifyContent": "flex-start",
-                "minWidth": "30px",
-                "textAlign": "left",
-                "width": "100px",
-              }
-            }
+            style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
           >
             <div
-              className="sortable-column"
+              class="sortable-column"
             >
               Agency name
               <span
-                style={
-                  Object {
-                    "flex": "1 1 auto",
-                  }
-                }
+                style="flex: 1 1 auto;"
               />
             </div>
           </div>
           <div
-            className="th"
-            colSpan={1}
+            class="th"
+            colspan="1"
             role="columnheader"
-            style={
-              Object {
-                "alignItems": "center",
-                "boxSizing": "border-box",
-                "display": "flex",
-                "flex": "100 0 auto",
-                "justifyContent": "flex-start",
-                "minWidth": "30px",
-                "textAlign": "left",
-                "width": "100px",
-              }
-            }
+            style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
           >
             <div
-              className="sortable-column"
+              class="sortable-column"
             >
               Short name
               <span
-                style={
-                  Object {
-                    "flex": "1 1 auto",
-                  }
-                }
+                style="flex: 1 1 auto;"
               />
             </div>
           </div>
           <div
-            className="th"
-            colSpan={1}
+            class="th"
+            colspan="1"
             role="columnheader"
-            style={
-              Object {
-                "alignItems": "center",
-                "boxSizing": "border-box",
-                "display": "flex",
-                "flex": "100 0 auto",
-                "justifyContent": "flex-start",
-                "minWidth": "30px",
-                "textAlign": "left",
-                "width": "100px",
-              }
-            }
+            style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
           >
             <div
-              className="sortable-column"
+              class="sortable-column"
             >
               Description
               <span
-                style={
-                  Object {
-                    "flex": "1 1 auto",
-                  }
-                }
+                style="flex: 1 1 auto;"
               />
             </div>
           </div>
           <div
-            className="th"
-            colSpan={1}
+            class="th"
+            colspan="1"
             role="columnheader"
-            style={
-              Object {
-                "alignItems": "center",
-                "boxSizing": "border-box",
-                "display": "flex",
-                "flex": "100 0 auto",
-                "justifyContent": "flex-start",
-                "minWidth": "30px",
-                "textAlign": "left",
-                "width": "100px",
-              }
-            }
+            style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
           >
             <div
-              className="sortable-column"
+              class="sortable-column"
             >
               Parent Agency
               <span
-                style={
-                  Object {
-                    "flex": "1 1 auto",
-                  }
-                }
+                style="flex: 1 1 auto;"
               />
             </div>
           </div>
         </div>
       </div>
       <div
-        className="tbody"
+        class="tbody"
         role="rowgroup"
       >
         <div
-          className="tr-wrapper"
+          class="tr-wrapper"
         >
           <div
-            className="tr"
+            class="tr"
             role="row"
-            style={
-              Object {
-                "display": "flex",
-                "flex": "1 0 auto",
-                "minWidth": "120px",
-              }
-            }
+            style="display: flex; flex: 1 0 auto; min-width: 120px;"
           >
             <div
-              className="td clickable"
-              onClick={[Function]}
+              class="td clickable"
               role="cell"
-              style={
-                Object {
-                  "alignItems": "flex-start",
-                  "boxSizing": "border-box",
-                  "display": "flex",
-                  "flex": "100 0 auto",
-                  "justifyContent": "flex-start",
-                  "minWidth": "30px",
-                  "textAlign": "left",
-                  "width": "100px",
-                }
-              }
+              style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
               title="View agency details"
             >
               BC Assessment
             </div>
             <div
-              className="td clickable"
-              onClick={[Function]}
+              class="td clickable"
               role="cell"
-              style={
-                Object {
-                  "alignItems": "flex-start",
-                  "boxSizing": "border-box",
-                  "display": "flex",
-                  "flex": "100 0 auto",
-                  "justifyContent": "flex-start",
-                  "minWidth": "30px",
-                  "textAlign": "left",
-                  "width": "100px",
-                }
-              }
+              style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
               title="View agency details"
             >
               BCA
             </div>
             <div
-              className="td clickable"
-              onClick={[Function]}
+              class="td clickable"
               role="cell"
-              style={
-                Object {
-                  "alignItems": "flex-start",
-                  "boxSizing": "border-box",
-                  "display": "flex",
-                  "flex": "100 0 auto",
-                  "justifyContent": "flex-start",
-                  "minWidth": "30px",
-                  "textAlign": "left",
-                  "width": "100px",
-                }
-              }
+              style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
               title="View agency details"
             >
               
             </div>
             <div
-              className="td clickable"
-              onClick={[Function]}
+              class="td clickable"
               role="cell"
-              style={
-                Object {
-                  "alignItems": "flex-start",
-                  "boxSizing": "border-box",
-                  "display": "flex",
-                  "flex": "100 0 auto",
-                  "justifyContent": "flex-start",
-                  "minWidth": "30px",
-                  "textAlign": "left",
-                  "width": "100px",
-                }
-              }
+              style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
               title="View agency details"
             >
               <a
                 href="/admin/agency/undefined"
-                onClick={[Function]}
               />
             </div>
           </div>
         </div>
         <div
-          className="tr-wrapper"
+          class="tr-wrapper"
         >
           <div
-            className="tr"
+            class="tr"
             role="row"
-            style={
-              Object {
-                "display": "flex",
-                "flex": "1 0 auto",
-                "minWidth": "120px",
-              }
-            }
+            style="display: flex; flex: 1 0 auto; min-width: 120px;"
           >
             <div
-              className="td clickable"
-              onClick={[Function]}
+              class="td clickable"
               role="cell"
-              style={
-                Object {
-                  "alignItems": "flex-start",
-                  "boxSizing": "border-box",
-                  "display": "flex",
-                  "flex": "100 0 auto",
-                  "justifyContent": "flex-start",
-                  "minWidth": "30px",
-                  "textAlign": "left",
-                  "width": "100px",
-                }
-              }
+              style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
               title="View agency details"
             >
               BC Test
             </div>
             <div
-              className="td clickable"
-              onClick={[Function]}
+              class="td clickable"
               role="cell"
-              style={
-                Object {
-                  "alignItems": "flex-start",
-                  "boxSizing": "border-box",
-                  "display": "flex",
-                  "flex": "100 0 auto",
-                  "justifyContent": "flex-start",
-                  "minWidth": "30px",
-                  "textAlign": "left",
-                  "width": "100px",
-                }
-              }
+              style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
               title="View agency details"
             >
               TEST
             </div>
             <div
-              className="td clickable"
-              onClick={[Function]}
+              class="td clickable"
               role="cell"
-              style={
-                Object {
-                  "alignItems": "flex-start",
-                  "boxSizing": "border-box",
-                  "display": "flex",
-                  "flex": "100 0 auto",
-                  "justifyContent": "flex-start",
-                  "minWidth": "30px",
-                  "textAlign": "left",
-                  "width": "100px",
-                }
-              }
+              style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
               title="View agency details"
             >
               
             </div>
             <div
-              className="td clickable"
-              onClick={[Function]}
+              class="td clickable"
               role="cell"
-              style={
-                Object {
-                  "alignItems": "flex-start",
-                  "boxSizing": "border-box",
-                  "display": "flex",
-                  "flex": "100 0 auto",
-                  "justifyContent": "flex-start",
-                  "minWidth": "30px",
-                  "textAlign": "left",
-                  "width": "100px",
-                }
-              }
+              style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
               title="View agency details"
             >
               <a
                 href="/admin/agency/12"
-                onClick={[Function]}
               />
             </div>
           </div>
@@ -563,35 +320,31 @@ exports[`Manage Agencies Component Snapshot matches 1`] = `
       </div>
     </div>
     <div
-      className="table-toolbar"
+      class="table-toolbar"
     >
       <ul
-        className="pagination"
+        class="pagination"
       >
         <li
-          className="page-item disabled"
+          class="page-item disabled"
         >
           <a
             aria-disabled="true"
-            className="page-link"
-            onClick={[Function]}
-            onKeyPress={[Function]}
+            class="page-link"
             role="button"
-            tabIndex="0"
+            tabindex="0"
           >
             &lt;
           </a>
         </li>
         <li
-          className="page-item"
+          class="page-item"
         >
           <a
             aria-disabled="false"
-            className="page-link"
-            onClick={[Function]}
-            onKeyPress={[Function]}
+            class="page-link"
             role="button"
-            tabIndex="0"
+            tabindex="0"
           >
             &gt;
           </a>
