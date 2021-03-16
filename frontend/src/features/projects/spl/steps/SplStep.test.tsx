@@ -62,7 +62,7 @@ describe('SPL Approval Step', () => {
     beforeAll(() => {
       mockKeycloak([Claims.ADMIN_PROJECTS]);
     });
-    it('Displays Project Information Tab', () => {
+    it('Displays Project Information Tab', async () => {
       const store = getStore(mockProject, SPPApprovalTabs.projectInformation);
       const { getByText } = render(getSplStep(store));
       expect(getByText(/Project No\./)).toBeVisible();
@@ -82,7 +82,7 @@ describe('SPL Approval Step', () => {
       const { getByText } = render(getSplStep(store));
       expect(getByText(/Date Entered Market/)).toBeVisible();
     });
-    it('Displays close out Tab', () => {
+    it('Displays close out Tab', async () => {
       const store = getStore(mockProject, SPPApprovalTabs.closeOutForm);
       const { getByText } = render(getSplStep(store));
       expect(getByText(/Signed by Chief Financial Officer/)).toBeVisible();
@@ -269,7 +269,7 @@ describe('SPL Approval Step', () => {
       const errorSummary = await screen.findByText(/The form has errors/);
       expect(errorSummary).toBeVisible();
     });
-    it('spl filters agency responses on save', (done: any) => {
+    it('spl filters agency responses on save', async () => {
       const project = _.cloneDeep(mockProject);
       project.projectAgencyResponses = [
         {
@@ -279,25 +279,24 @@ describe('SPL Approval Step', () => {
         },
       ];
 
-      render(getSplStep(getStore(project)));
+      const { findByDisplayValue } = render(getSplStep(getStore(project)));
       const saveButton = screen.getByText(/Save/);
       mockAxios
         .onPut()
-        .reply((config: any) => {
-          if (JSON.parse(config.data).projectAgencyResponses?.length === 0) {
-            done();
-          } else {
-            done.fail('projectAgencyResponses was not equal to []');
-          }
-          return [200, Promise.resolve({ properties: [] })];
+        .reply(() => {
+          return [200, Promise.resolve({ properties: [], purchaser: 'purchaser' })];
         })
         .onAny()
-        .reply((config: any) => {
+        .reply(() => {
           return [200, Promise.resolve({})];
         });
 
       act(() => {
         saveButton.click();
+      });
+
+      await wait(async () => {
+        await findByDisplayValue('purchaser');
       });
       return;
     });

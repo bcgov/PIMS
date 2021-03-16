@@ -11,6 +11,8 @@ import * as API from 'constants/API';
 import { ManageUsers } from './ManageUsers';
 import { cleanup, fireEvent, render, wait } from '@testing-library/react';
 import moment from 'moment-timezone';
+import { Formik } from 'formik';
+import { noop } from 'lodash';
 
 const history = createMemoryHistory();
 history.push('admin');
@@ -77,11 +79,13 @@ describe('Manage Users Component', () => {
   });
   const testRender = (store: any) =>
     render(
-      <Provider store={store}>
-        <Router history={history}>
-          <ManageUsers />
-        </Router>
-      </Provider>,
+      <Formik initialValues={{}} onSubmit={noop}>
+        <Provider store={store}>
+          <Router history={history}>
+            <ManageUsers />
+          </Router>
+        </Provider>
+      </Formik>,
     );
 
   it('Snapshot matches', () => {

@@ -8,6 +8,7 @@ import {
   calcNetProceeds,
   getNumber,
 } from 'features/projects/spl/forms/CloseOutFinancialSummaryForm';
+import { useEffect } from 'react';
 
 export interface IProjectFinacialTableProps {
   /** Whether form fields are disabled. */
@@ -26,25 +27,29 @@ export const ProjectFinancialTable = ({ disabled, title }: IProjectFinacialTable
   const interestComponent = getIn(values, 'interestComponent');
   const salesCost = getIn(values, 'salesCost');
   const netBook = getIn(values, 'netBook');
-  React.useEffect(() => {
-    // Calculate the Gain before SPL.
-    setFieldValue(
-      'gainBeforeSpl',
-      calcGainBeforeSpl(
-        getNumber(market),
-        getNumber(interestComponent),
-        getNumber(salesCost),
-        getNumber(netBook),
-      ),
-    );
-  }, [market, interestComponent, salesCost, netBook, setFieldValue]);
-
   const gainBeforeSpl = getIn(values, 'gainBeforeSpl');
+  useEffect(() => {
+    const calculatedValue = calcGainBeforeSpl(
+      getNumber(market),
+      getNumber(interestComponent),
+      getNumber(salesCost),
+      getNumber(netBook),
+    );
+    if (gainBeforeSpl !== calculatedValue) {
+      // Calculate the Gain before SPL.
+      setFieldValue('gainBeforeSpl', calculatedValue);
+    }
+  }, [market, interestComponent, salesCost, netBook, setFieldValue, gainBeforeSpl]);
+
   const programCost = getIn(values, 'programCost');
-  React.useEffect(() => {
-    // Calculate the Gain after SPL.
-    setFieldValue('netProceeds', calcNetProceeds(getNumber(gainBeforeSpl), getNumber(programCost)));
-  }, [gainBeforeSpl, programCost, setFieldValue]);
+  const netProceeds = getIn(values, 'netProceeds');
+  useEffect(() => {
+    const calculatedValue = calcNetProceeds(getNumber(gainBeforeSpl), getNumber(programCost));
+    if (netProceeds !== calculatedValue) {
+      // Calculate the Gain after SPL.
+      setFieldValue('netProceeds', calculatedValue);
+    }
+  }, [gainBeforeSpl, programCost, setFieldValue, netProceeds]);
 
   const context = useFormikContext();
   return (

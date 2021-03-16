@@ -1,5 +1,4 @@
 import React from 'react';
-import renderer from 'react-test-renderer';
 import * as reducerTypes from 'constants/reducerTypes';
 import { createMemoryHistory } from 'history';
 import configureMockStore from 'redux-mock-store';
@@ -89,6 +88,35 @@ const getMockProject = (statusCode?: string): IProject => ({
     isActive: false,
     workflowCode: '',
   },
+  marketedOn: '2020-01-01',
+  offerAcceptedOn: '2020-01-01',
+  purchaser: 'purchaser',
+  offerAmount: 2,
+  disposedOn: '2020-01-01',
+  gainBeforeSpl: -13,
+  programCost: 4,
+  actualFiscalYear: '2020',
+  plannedFutureUse: 'future',
+  preliminaryFormSignedBy: 'prelimsign',
+  finalFormSignedBy: 'finalsign',
+  interestComponent: 5,
+  loanTermsNote: 'loannote',
+  ocgFinancialStatement: 6,
+  salesCost: 7,
+  netProceeds: -17,
+  market: 9,
+  netBook: 10,
+  gainNote: 'gainNote',
+  programCostNote: 'programcostnote',
+  priorYearAdjustmentAmount: 9,
+  remediationNote: 'remediationNote',
+  adjustmentNote: 'adjustmentNote',
+  closeOutNote: 'closeOutNote',
+  salesHistoryNote: 'salesHistoryNote',
+  comments: 'comments',
+  removalFromSplRequestOn: '2020-01-01',
+  removalFromSplApprovedOn: '2020-01-01',
+  removalFromSplRationale: 'rationale',
 });
 
 export const tasks: ITask[] = [
@@ -136,16 +164,16 @@ describe('Review Summary View', () => {
     mockKeycloak([]);
   });
   it('renders submitted correctly', () => {
-    const tree = renderer.create(getSummary(ReviewWorkflowStatus.PropertyReview)).toJSON();
-    expect(tree).toMatchSnapshot();
+    const { container } = render(getSummary(ReviewWorkflowStatus.PropertyReview));
+    expect(container.firstChild).toMatchSnapshot();
   });
   it('renders denied correctly', () => {
-    const tree = renderer.create(getSummary(ReviewWorkflowStatus.Denied)).toJSON();
-    expect(tree).toMatchSnapshot();
+    const { container } = render(getSummary(ReviewWorkflowStatus.Denied));
+    expect(container.firstChild).toMatchSnapshot();
   });
   it('renders approved correctly', () => {
-    const tree = renderer.create(getSummary(ReviewWorkflowStatus.ApprovedForErp)).toJSON();
-    expect(tree).toMatchSnapshot();
+    const { container } = render(getSummary(ReviewWorkflowStatus.ApprovedForErp));
+    expect(container.firstChild).toMatchSnapshot();
   });
   describe('field behaviour', () => {
     it('edit button is not visible', () => {

@@ -1,5 +1,4 @@
 import React from 'react';
-import renderer from 'react-test-renderer';
 import { render, wait, fireEvent, cleanup } from '@testing-library/react';
 import { PropertyFilter } from './';
 import * as MOCK from 'mocks/filterDataMock';
@@ -141,8 +140,8 @@ describe('MapFilterBar', () => {
   it('renders correctly', () => {
     mockKeycloak(['property-view']);
     // Capture any changes
-    const tree = renderer.create(getUiElement(defaultFilter)).toJSON();
-    expect(tree).toMatchSnapshot();
+    const { container } = render(getUiElement(defaultFilter));
+    expect(container.firstChild).toMatchSnapshot();
   });
 
   xit('submits correct values', async () => {

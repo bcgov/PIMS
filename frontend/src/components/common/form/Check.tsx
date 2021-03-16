@@ -68,21 +68,23 @@ export const Check: React.FC<CheckProps> = ({
 }) => {
   const {
     values,
+    initialValues,
     setFieldValue,
     setFieldTouched,
     errors,
     touched,
     handleBlur,
   } = useFormikContext();
+  const initialChecked = getIn(initialValues, field);
   const touch = getIn(touched, field);
   const checked = getIn(values, field);
   const error = getIn(errors, field);
   const asElement: any = is || 'input';
   useEffect(() => {
-    if (checked === true || checked === false) {
+    if ((checked === true || checked === false) && initialChecked !== checked) {
       setFieldTouched(field, true);
     }
-  }, [checked, field, handleBlur, setFieldTouched]);
+  }, [checked, field, handleBlur, setFieldTouched, initialChecked]);
   return (
     <Form.Group
       controlId={`input-${field}`}
