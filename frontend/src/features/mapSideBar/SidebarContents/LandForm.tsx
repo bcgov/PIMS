@@ -48,6 +48,7 @@ import variables from '_variables.module.scss';
 import LastUpdatedBy from 'features/properties/components/LastUpdatedBy';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
 import { PropertyTypes } from 'constants/index';
+import { fireMapRefreshEvent } from 'components/maps/hooks/useMapRefreshEvent';
 
 const Container = styled.div`
   background-color: #fff;
@@ -472,6 +473,7 @@ const LandForm: React.FC<IParentLandForm> = (props: IParentLandForm) => {
               response = await updateParcel(apiValues)(dispatch);
               props.setLandUpdateComplete(true);
             }
+            fireMapRefreshEvent();
             actions.resetForm({ values: { ...values, data: response as any } });
           } catch (error) {
           } finally {

@@ -43,6 +43,7 @@ import {
 import { EvaluationKeys } from 'constants/evaluationKeys';
 import { FiscalKeys } from 'constants/fiscalKeys';
 import variables from '_variables.module.scss';
+import { fireMapRefreshEvent } from 'components/maps/hooks/useMapRefreshEvent';
 
 const Container = styled.div`
   background-color: #fff;
@@ -518,6 +519,7 @@ const AssociatedLandForm: React.FC<IAssociatedLandParentForm> = (
         props.setAssociatedLandComplete(true);
       }
       const updatedValues = { ...newValues, data: actualBuilding };
+      fireMapRefreshEvent();
       resetForm({
         values: updatedValues,
       });

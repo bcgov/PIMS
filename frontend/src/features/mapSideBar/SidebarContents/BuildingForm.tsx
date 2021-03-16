@@ -44,6 +44,7 @@ import { EvaluationKeys } from 'constants/evaluationKeys';
 import { FiscalKeys } from 'constants/fiscalKeys';
 import variables from '_variables.module.scss';
 import LastUpdatedBy from 'features/properties/components/LastUpdatedBy';
+import { fireMapRefreshEvent } from 'components/maps/hooks/useMapRefreshEvent';
 
 const Container = styled.div`
   background-color: #fff;
@@ -437,6 +438,7 @@ const BuidingForm: React.FC<IParentBuildingForm> = ({
             } else {
               building = await updateBuilding(apiValues)(dispatch);
             }
+            fireMapRefreshEvent();
             actions.resetForm({ values: { ...values, ...{ data: building as any } } });
             setBuildingToAssociateLand(building);
           } catch (error) {

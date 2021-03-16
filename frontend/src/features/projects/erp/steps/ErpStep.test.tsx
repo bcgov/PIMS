@@ -3,7 +3,7 @@ import { createMemoryHistory } from 'history';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
 import { ReviewWorkflowStatus, AgencyResponses } from '../../common/interfaces';
-import { render, act, screen, cleanup, wait } from '@testing-library/react';
+import { render, act, screen, cleanup, wait, prettyDOM } from '@testing-library/react';
 import { useKeycloak } from '@react-keycloak/web';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
@@ -13,6 +13,7 @@ import { DisposalWorkflows, IProject, SPPApprovalTabs } from '../../common';
 import { ErpStep } from '..';
 import Claims from 'constants/claims';
 import ReactDOM from 'react-dom';
+import { fireEvent } from '@testing-library/dom';
 
 ReactDOM.createPortal = (node: any) => node;
 jest.mock('@react-keycloak/web');
@@ -284,19 +285,13 @@ describe('ERP Approval Step', () => {
       const proceedModal = await screen.findByText(/Really Not in SPL/);
       expect(proceedModal).toBeVisible();
     });
-    // TODO: Not sure why the test fails with "Invalid Date"...
-    xit('performs validation when updating status', async () => {
-      const project = _.cloneDeep(mockProject);
+    it('disables proceed to spl unless required fields are entered', async () => {
+      const project = _.cloneDeep({ ...mockProject, email: undefined });
       project.tasks[0].isOptional = false;
 
       render(getApprovalStep(getStore(project)));
       const proceedToSplButton = screen.getByText(/Proceed to SPL/);
-      act(() => {
-        proceedToSplButton.click();
-      });
-
-      const errorSummary = await screen.findByText(/The form has errors/);
-      expect(errorSummary).toBeVisible();
+      expect(proceedToSplButton).toBeDisabled();
     });
     it('erp filters agency responses on save', async () => {
       const project = _.cloneDeep(mockProject);

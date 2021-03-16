@@ -6,6 +6,7 @@ import { IPopupContentProps, LayerPopupContent } from './LayerPopupContent';
 import { Router } from 'react-router-dom';
 import queryString from 'query-string';
 import { LatLng, LatLngBounds } from 'leaflet';
+import { SidebarContextType } from 'features/mapSideBar/hooks/useQueryParamSideBar';
 
 const history = createMemoryHistory();
 jest.mock('hooks/useApi');
@@ -26,9 +27,9 @@ const mockLayer: IPopupContentProps = {
     parcel_name: '000000000',
     parcel_start_date: '2020-01-01',
     parcel_status: 'Active',
-    pid: '000000000',
+    PID: '000000001',
     pid_number: '000000000',
-    pin: '',
+    PIN: '1',
     plan_number: 'VIP00000',
     regional_district: 'Fake District',
     se_anno_cad_data: '',
@@ -71,11 +72,12 @@ describe('Layer Popup Content', () => {
     expect(link).toBeNull();
   });
 
-  xit('Populate details link appears when sideBar open', () => {
+  it('Populate details link appears when sideBar open', () => {
     history.location.search = queryString.stringify({
       disabled: false,
       loadDraft: false,
       sidebar: true,
+      sidebarContext: SidebarContextType.ADD_BUILDING,
     });
     const { getByText } = render(
       <Router history={history}>

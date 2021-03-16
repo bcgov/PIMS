@@ -23,6 +23,9 @@ import { PropertyTypes } from 'constants/propertyTypes';
 import { LandSvg } from 'components/common/Icons';
 import AssociatedParcelsList from './AssociatedParcelsList';
 import FilterBackdrop from '../FilterBackdrop';
+import * as parcelsActions from 'actions/parcelsActions';
+import { useApi } from 'hooks/useApi';
+import { useDispatch } from 'react-redux';
 
 const InfoContainer = styled.div`
   margin-right: -10px;
@@ -134,6 +137,7 @@ export type InfoControlProps = {
  */
 const InfoControl: React.FC<InfoControlProps> = ({ open, setOpen, onHeaderActionClick }) => {
   const popUpContext = React.useContext(PropertyPopUpContext);
+  const { getParcel, getBuilding } = useApi();
   const leaflet = useLeaflet();
   const { propertyInfo } = popUpContext;
   const location = useLocation();
@@ -185,6 +189,7 @@ const InfoControl: React.FC<InfoControlProps> = ({ open, setOpen, onHeaderAction
   );
 
   const keycloak = useKeycloakWrapper();
+  const dispatch = useDispatch();
   const canViewProperty = keycloak.canUserViewProperty(propertyInfo);
   const canEditProperty = keycloak.canUserEditProperty(propertyInfo);
 
@@ -243,6 +248,31 @@ const InfoControl: React.FC<InfoControlProps> = ({ open, setOpen, onHeaderAction
             id="slideOutInfoButton"
             variant="outline-secondary"
             onClick={() => {
+              const propertyTypeId = popUpContext.propertyTypeID;
+              const id = popUpContext.propertyInfo?.id;
+              if (typeof propertyTypeId === 'number' && propertyTypeId >= 0 && !!id && !open) {
+                popUpContext.setLoading(true);
+                if ([PropertyTypes.PARCEL, PropertyTypes.SUBDIVISION].includes(propertyTypeId)) {
+                  getParcel(id as number)
+                    .then((parcel: IParcel) => {
+                      popUpContext.setPropertyInfo(parcel);
+                    })
+                    .finally(() => {
+                      popUpContext.setLoading(false);
+                    });
+                } else if (propertyTypeId === PropertyTypes.BUILDING) {
+                  getBuilding(id as number)
+                    .then((building: IBuilding) => {
+                      popUpContext.setPropertyInfo(building);
+                      if (!!building.parcels.length) {
+                        dispatch(parcelsActions.storeBuildingDetail(building));
+                      }
+                    })
+                    .finally(() => {
+                      popUpContext.setLoading(false);
+                    });
+                }
+              }
               if (!open) {
                 setOpen(true);
                 setGeneralInfoOpen(true);
