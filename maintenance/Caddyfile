@@ -8,9 +8,8 @@
 
 :2015
 root * /var/www/html
-file_server {
-  index maintenance.html
-}
+try_files {path} /maintenance.html
+file_server
 
 log
 
