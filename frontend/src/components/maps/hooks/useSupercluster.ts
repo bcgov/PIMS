@@ -5,11 +5,15 @@ import deepEqual from 'dequal';
 import Supercluster from 'supercluster';
 import { ICluster } from '../types';
 
+interface SuperclusterOptions<P, C> extends Supercluster.Options<P, C> {
+  /** Optionally enable clusters recalculation */
+  enableClustering?: boolean;
+}
 export interface UseSuperclusterProps<P, C> {
   points: Array<Supercluster.PointFeature<P>>;
   bounds?: BBox;
   zoom: number;
-  options?: Supercluster.Options<P, C>;
+  options?: SuperclusterOptions<P, C>;
 }
 
 const useSupercluster = <
@@ -33,8 +37,14 @@ const useSupercluster = <
       superclusterRef.current.load(points);
     }
 
-    if (bounds) {
+    /**
+     * Only create clusters when zooming to results is done OR number of points is
+     * greater than 100 (avoid perfomrance issues when rendering all points)
+     */
+    if (bounds && (options?.enableClustering || points.length > 100)) {
       setClusters(superclusterRef.current.getClusters(bounds, zoomInt));
+    } else {
+      setClusters(points);
     }
 
     pointsRef.current = points;
