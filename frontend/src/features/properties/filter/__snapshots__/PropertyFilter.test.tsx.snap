@@ -300,11 +300,6 @@ exports[`MapFilterBar renders correctly 1`] = `
       <button
         class="Button Button--icon-only bg-warning btn btn-primary"
         id="search-button"
-        onBlur={[Function]}
-        onClick={[Function]}
-        onFocus={[Function]}
-        onMouseOut={[Function]}
-        onMouseOver={[Function]}
         type="submit"
       >
         <div
