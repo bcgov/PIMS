@@ -23,7 +23,7 @@ export const AuthStateContextProvider = (props: { children?: any }) => {
     };
 
     try {
-      loadUserInfo();
+      if (keycloak.obj.authenticated) loadUserInfo();
     } catch (err) {
       // this error isn't recoverable, so just log it for debugging purposes.
       console.error(err);
