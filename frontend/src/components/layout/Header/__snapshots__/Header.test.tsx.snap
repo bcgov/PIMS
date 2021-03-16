@@ -20,7 +20,7 @@ exports[`header renders correctly 1`] = `
       target="_blank"
     >
       <img
-        alt="Go to the Government of British Columbia website"
+        alt="Government of BC logo"
         className="bc-gov-icon"
         height="43"
         src="logo-banner.svg"
