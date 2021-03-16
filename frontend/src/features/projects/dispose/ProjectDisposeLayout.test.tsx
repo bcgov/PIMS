@@ -33,7 +33,7 @@ const match: Match = {
 };
 
 const loc = {
-  pathname: '/dispose/project/draft',
+  pathname: '/dispose/projects/draft',
   search: '?projectNumber=SPP-10001',
   hash: '',
 } as Location;
@@ -63,7 +63,15 @@ describe('dispose project draft step display', () => {
   beforeAll(() => {
     (useStepper as jest.Mock).mockReturnValue({
       currentStatus: mockWorkflow[4],
-      project: { projectNumber: '', statusId: 5 },
+      project: {
+        projectNumber: '',
+        statusId: 5,
+        netBook: 1,
+        market: 1,
+        assessed: 2,
+        name: 'name',
+        properties: [{}],
+      },
       projectStatusCompleted: noop,
       canGoToStatus: noop,
       getStatusByCode: noop,
@@ -139,7 +147,7 @@ describe('dispose project draft step display', () => {
   });
 
   it('404s if given an invalid dispose route', () => {
-    history.location.pathname = '/dispose/project/draft';
+    history.location.pathname = '/dispose/project/fake';
     render(uiElement);
     expect(history.location.pathname).toBe('/page-not-found');
   });

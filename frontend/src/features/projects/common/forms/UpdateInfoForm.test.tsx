@@ -1,5 +1,4 @@
 import React from 'react';
-import renderer from 'react-test-renderer';
 import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
@@ -78,10 +77,6 @@ const store = mockStore({
 const initialValues = mockProject.project;
 const history = createMemoryHistory();
 
-const renderComponent = () => {
-  return renderer.create(getUpdateInfoForm());
-};
-
 const initialTouched: any = {
   properties: [{ classificationId: 'Must select Surplus Active or Surplus Encumbered' }],
 };
@@ -110,8 +105,8 @@ describe('Update Info Form', () => {
     cleanup();
   });
   it('Matches Snapshot', () => {
-    const component = renderComponent();
-    expect(component.toJSON()).toMatchSnapshot();
+    const { container } = render(getUpdateInfoForm());
+    expect(container.firstChild).toMatchSnapshot();
   });
 
   it('Loads tiers from initialValues', () => {

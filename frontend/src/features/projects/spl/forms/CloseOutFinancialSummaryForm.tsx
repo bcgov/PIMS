@@ -56,25 +56,29 @@ const CloseOutFinancialSummaryForm = (props: CloseOutFinancialSummaryFormProps) 
   const interestComponent = getIn(values, 'interestComponent');
   const salesCost = getIn(values, 'salesCost');
   const netBook = getIn(values, 'netBook');
-  useEffect(() => {
-    // Calculate the Gain before SPL.
-    setFieldValue(
-      'gainBeforeSpl',
-      calcGainBeforeSpl(
-        getNumber(market),
-        getNumber(interestComponent),
-        getNumber(salesCost),
-        getNumber(netBook),
-      ),
-    );
-  }, [market, interestComponent, salesCost, netBook, setFieldValue]);
-
   const gainBeforeSpl = getIn(values, 'gainBeforeSpl');
-  const programCost = getIn(values, 'programCost');
   useEffect(() => {
-    // Calculate the Gain after SPL.
-    setFieldValue('netProceeds', calcNetProceeds(getNumber(gainBeforeSpl), getNumber(programCost)));
-  }, [gainBeforeSpl, programCost, setFieldValue]);
+    const calculatedValue = calcGainBeforeSpl(
+      getNumber(market),
+      getNumber(interestComponent),
+      getNumber(salesCost),
+      getNumber(netBook),
+    );
+    if (gainBeforeSpl !== calculatedValue) {
+      // Calculate the Gain before SPL.
+      setFieldValue('gainBeforeSpl', calculatedValue);
+    }
+  }, [market, interestComponent, salesCost, netBook, setFieldValue, gainBeforeSpl]);
+
+  const programCost = getIn(values, 'programCost');
+  const netProceeds = getIn(values, 'netProceeds');
+  useEffect(() => {
+    const calculatedValue = calcNetProceeds(getNumber(gainBeforeSpl), getNumber(programCost));
+    if (netProceeds !== calculatedValue) {
+      // Calculate the Gain after SPL.
+      setFieldValue('netProceeds', calculatedValue);
+    }
+  }, [gainBeforeSpl, programCost, setFieldValue, netProceeds]);
 
   const formikProps = useFormikContext<IProject>();
 

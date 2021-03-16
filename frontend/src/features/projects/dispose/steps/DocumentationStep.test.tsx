@@ -1,5 +1,4 @@
 import React from 'react';
-import renderer from 'react-test-renderer';
 import DocumentationStep from './DocumentationStep';
 import * as reducerTypes from 'constants/reducerTypes';
 import { createMemoryHistory } from 'history';
@@ -69,8 +68,8 @@ describe('Documentation Step', () => {
     cleanup();
   });
   it('renders correctly', () => {
-    const tree = renderer.create(uiElement).toJSON();
-    expect(tree).toMatchSnapshot();
+    const { container } = render(uiElement);
+    expect(container.firstChild).toMatchSnapshot();
   });
 
   it('renders correct labels', () => {

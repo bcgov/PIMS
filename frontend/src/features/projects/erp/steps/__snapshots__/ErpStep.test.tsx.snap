@@ -469,7 +469,7 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
                     class="form-control"
                     name="actualFiscalYear"
                     placeholder="YYYY/YYYY"
-                    value=""
+                    value="2019/2020"
                   />
                 </div>
               </div>
@@ -488,7 +488,7 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
                     class="form-control"
                     id="input-plannedFutureUse"
                     name="plannedFutureUse"
-                    value=""
+                    value="future"
                   />
                 </div>
               </div>
@@ -521,7 +521,7 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
                       class="form-control input-number"
                       name="market"
                       placeholder=""
-                      value=""
+                      value="9"
                     />
                   </div>
                 </div>
@@ -544,7 +544,7 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
                       class="form-control input-number"
                       name="interestComponent"
                       placeholder=""
-                      value=""
+                      value="5"
                     />
                   </div>
                 </div>
@@ -567,7 +567,7 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
                       class="form-control input-number"
                       name="salesCost"
                       placeholder=""
-                      value=""
+                      value="7"
                     />
                   </div>
                 </div>
@@ -590,7 +590,7 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
                       class="form-control input-number"
                       name="netBook"
                       placeholder=""
-                      value=""
+                      value="10"
                     />
                   </div>
                 </div>
@@ -615,7 +615,7 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
                       disabled=""
                       name="gainBeforeSpl"
                       placeholder=""
-                      value=""
+                      value="-13"
                     />
                   </div>
                 </div>
@@ -638,7 +638,7 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
                       class="form-control input-number"
                       name="programCost"
                       placeholder=""
-                      value=""
+                      value="4"
                     />
                   </div>
                 </div>
@@ -663,7 +663,7 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
                       disabled=""
                       name="netProceeds"
                       placeholder=""
-                      value=""
+                      value="-17"
                     />
                   </div>
                 </div>
@@ -716,7 +716,9 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
                     class="col-md-10 form-control"
                     id="input-remediationNote"
                     name="remediationNote"
-                  />
+                  >
+                    remediationNote
+                  </textarea>
                 </div>
               </div>
               <div
@@ -735,7 +737,9 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
                     class="col-md-10 form-control"
                     id="input-programCostNote"
                     name="programCostNote"
-                  />
+                  >
+                    programcostnote
+                  </textarea>
                 </div>
               </div>
               <div
@@ -754,7 +758,9 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
                     class="col-md-10 form-control"
                     id="input-gainNote"
                     name="gainNote"
-                  />
+                  >
+                    gainNote
+                  </textarea>
                 </div>
               </div>
             </div>
@@ -795,7 +801,9 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
                     class="col-md-auto form-control"
                     id="input-comments"
                     name="comments"
-                  />
+                  >
+                    comments
+                  </textarea>
                 </div>
               </div>
             </div>
@@ -827,7 +835,7 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
                       class="form-control input-number"
                       name="ocgFinancialStatement"
                       placeholder=""
-                      value=""
+                      value="6"
                     />
                   </div>
                 </div>
@@ -862,7 +870,9 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
                     class="col-md-auto form-control"
                     id="input-salesHistoryNote"
                     name="salesHistoryNote"
-                  />
+                  >
+                    salesHistoryNote
+                  </textarea>
                 </div>
               </div>
             </div>
@@ -891,7 +901,7 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
                     class="form-control"
                     id="input-preliminaryFormSignedBy"
                     name="preliminaryFormSignedBy"
-                    value=""
+                    value="prelimsign"
                   />
                 </div>
               </div>
@@ -910,7 +920,7 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
                     class="form-control"
                     id="input-finalFormSignedBy"
                     name="finalFormSignedBy"
-                    value=""
+                    value="finalsign"
                   />
                 </div>
               </div>
@@ -1007,7 +1017,7 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
                       class="form-control input-number"
                       name="priorYearAdjustmentAmount"
                       placeholder=""
-                      value=""
+                      value="9"
                     />
                   </div>
                 </div>
@@ -1067,7 +1077,9 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
                 class="col-md-auto form-control"
                 id="input-adjustmentNote"
                 name="adjustmentNote"
-              />
+              >
+                adjustmentNote
+              </textarea>
             </div>
           </div>
         </div>
@@ -1135,34 +1147,28 @@ exports[`ERP Approval Step renders correctly 1`] = `
 }
 
 <div
-  className="erpStep container-fluid"
+  class="erpStep container-fluid"
 >
   <form
     action="#"
-    onReset={[Function]}
-    onSubmit={[Function]}
   >
     <div
-      className="c0 default-status"
+      class="c0 default-status"
     >
       <h5
-        className="c1"
+        class="c1"
       >
         Approved for Surplus Property Program
       </h5>
       <svg
         fill="currentColor"
-        height={64}
-        size={64}
+        height="64"
+        size="64"
         stroke="currentColor"
-        strokeWidth="0"
-        style={
-          Object {
-            "color": "#20a74d",
-          }
-        }
+        stroke-width="0"
+        style="color: rgb(32, 167, 77);"
         viewBox="0 0 512 512"
-        width={64}
+        width="64"
         xmlns="http://www.w3.org/2000/svg"
       >
         <path
@@ -1170,112 +1176,99 @@ exports[`ERP Approval Step renders correctly 1`] = `
         />
       </svg>
       <h5
-        className="c1"
+        class="c1"
       >
         Approval Date 
       </h5>
     </div>
     <div
-      className="c2"
+      class="c2"
     >
       Approved for ERP
     </div>
     <nav
-      className="nav nav-tabs"
-      onKeyDown={[Function]}
+      class="nav nav-tabs"
       role="tablist"
     >
       <a
         aria-controls="approvalTabs-tabpane-projectInformation"
-        aria-selected={false}
-        className="nav-item nav-link"
+        aria-selected="false"
+        class="nav-item nav-link"
         data-rb-event-key="projectInformation"
         href="#"
         id="approvalTabs-tab-projectInformation"
-        onClick={[Function]}
-        onKeyDown={[Function]}
         role="tab"
-        tabIndex={-1}
+        tabindex="-1"
       >
         Project Information
       </a>
       <a
         aria-controls="approvalTabs-tabpane-documentation"
-        aria-selected={false}
-        className="nav-item nav-link"
+        aria-selected="false"
+        class="nav-item nav-link"
         data-rb-event-key="documentation"
         href="#"
         id="approvalTabs-tab-documentation"
-        onClick={[Function]}
-        onKeyDown={[Function]}
         role="tab"
-        tabIndex={-1}
+        tabindex="-1"
       >
         Documentation
       </a>
       <a
         aria-controls="approvalTabs-tabpane-enhancedReferralProcess"
-        aria-selected={true}
-        className="nav-item nav-link active"
+        aria-selected="true"
+        class="nav-item nav-link active"
         data-rb-event-key="enhancedReferralProcess"
         href="#"
         id="approvalTabs-tab-enhancedReferralProcess"
-        onClick={[Function]}
-        onKeyDown={[Function]}
         role="tab"
       >
         Enhanced Referral Process
       </a>
     </nav>
     <div
-      className="tab-content"
+      class="tab-content"
     >
       <div
-        aria-hidden={false}
+        aria-hidden="false"
         aria-labelledby="approvalTabs-tab-enhancedReferralProcess"
-        className="fade tab-pane active show"
+        class="fade tab-pane active show"
         id="approvalTabs-tabpane-enhancedReferralProcess"
         role="tabpanel"
       >
         <div
-          className="AgencyResponseForm container-fluid"
+          class="AgencyResponseForm container-fluid"
         >
           <div
-            className="form-row"
+            class="form-row"
           >
             <div
-              className="col"
+              class="col"
             >
               <div
-                className="form-row"
+                class="form-row"
               >
                 <label
-                  className="form-label col-form-label col-md-8"
+                  class="form-label col-form-label col-md-8"
                 >
                   Date of Initial Enhanced Referral Notification Sent
                 </label>
                 <div
-                  className="col-md-4 form-group"
+                  class="col-md-4 form-group"
                 >
                   <div
-                    className="react-datepicker-wrapper"
+                    class="react-datepicker-wrapper"
                   >
                     <div
-                      className="react-datepicker__input-container"
+                      class="react-datepicker__input-container"
                     >
                       <input
-                        autoComplete="off"
-                        className="form-control date-picker"
-                        disabled={true}
+                        autocomplete="off"
+                        class="form-control date-picker"
+                        disabled=""
                         id="datepicker-initialNotificationSentOn"
                         name="initialNotificationSentOn"
-                        onBlur={[Function]}
-                        onChange={[Function]}
-                        onClick={[Function]}
-                        onFocus={[Function]}
-                        onKeyDown={[Function]}
                         placeholder="--/--/----"
-                        readOnly={false}
                         type="text"
                         value=""
                       />
@@ -1284,35 +1277,29 @@ exports[`ERP Approval Step renders correctly 1`] = `
                 </div>
               </div>
               <div
-                className="form-row"
+                class="form-row"
               >
                 <label
-                  className="form-label col-form-label col-md-8"
+                  class="form-label col-form-label col-md-8"
                 >
                   Date of 30 Day Enhanced Referral Notification Sent
                 </label>
                 <div
-                  className="col-md-4 form-group"
+                  class="col-md-4 form-group"
                 >
                   <div
-                    className="react-datepicker-wrapper"
+                    class="react-datepicker-wrapper"
                   >
                     <div
-                      className="react-datepicker__input-container"
+                      class="react-datepicker__input-container"
                     >
                       <input
-                        autoComplete="off"
-                        className="form-control date-picker"
-                        disabled={true}
+                        autocomplete="off"
+                        class="form-control date-picker"
+                        disabled=""
                         id="datepicker-thirtyDayNotificationSentOn"
                         name="thirtyDayNotificationSentOn"
-                        onBlur={[Function]}
-                        onChange={[Function]}
-                        onClick={[Function]}
-                        onFocus={[Function]}
-                        onKeyDown={[Function]}
                         placeholder="--/--/----"
-                        readOnly={false}
                         type="text"
                         value=""
                       />
@@ -1321,35 +1308,29 @@ exports[`ERP Approval Step renders correctly 1`] = `
                 </div>
               </div>
               <div
-                className="form-row"
+                class="form-row"
               >
                 <label
-                  className="form-label col-form-label col-md-8"
+                  class="form-label col-form-label col-md-8"
                 >
                   Date of 60 Day Enhanced Referral Notification Sent
                 </label>
                 <div
-                  className="col-md-4 form-group"
+                  class="col-md-4 form-group"
                 >
                   <div
-                    className="react-datepicker-wrapper"
+                    class="react-datepicker-wrapper"
                   >
                     <div
-                      className="react-datepicker__input-container"
+                      class="react-datepicker__input-container"
                     >
                       <input
-                        autoComplete="off"
-                        className="form-control date-picker"
-                        disabled={true}
+                        autocomplete="off"
+                        class="form-control date-picker"
+                        disabled=""
                         id="datepicker-sixtyDayNotificationSentOn"
                         name="sixtyDayNotificationSentOn"
-                        onBlur={[Function]}
-                        onChange={[Function]}
-                        onClick={[Function]}
-                        onFocus={[Function]}
-                        onKeyDown={[Function]}
                         placeholder="--/--/----"
-                        readOnly={false}
                         type="text"
                         value=""
                       />
@@ -1358,35 +1339,29 @@ exports[`ERP Approval Step renders correctly 1`] = `
                 </div>
               </div>
               <div
-                className="form-row"
+                class="form-row"
               >
                 <label
-                  className="form-label col-form-label col-md-8"
+                  class="form-label col-form-label col-md-8"
                 >
                   Date of 90 Day Enhanced Referral Notification Sent
                 </label>
                 <div
-                  className="col-md-4 form-group"
+                  class="col-md-4 form-group"
                 >
                   <div
-                    className="react-datepicker-wrapper"
+                    class="react-datepicker-wrapper"
                   >
                     <div
-                      className="react-datepicker__input-container"
+                      class="react-datepicker__input-container"
                     >
                       <input
-                        autoComplete="off"
-                        className="form-control date-picker"
-                        disabled={true}
+                        autocomplete="off"
+                        class="form-control date-picker"
+                        disabled=""
                         id="datepicker-ninetyDayNotificationSentOn"
                         name="ninetyDayNotificationSentOn"
-                        onBlur={[Function]}
-                        onChange={[Function]}
-                        onClick={[Function]}
-                        onFocus={[Function]}
-                        onKeyDown={[Function]}
                         placeholder="--/--/----"
-                        readOnly={false}
                         type="text"
                         value=""
                       />
@@ -1396,13 +1371,13 @@ exports[`ERP Approval Step renders correctly 1`] = `
               </div>
             </div>
             <div
-              className="col"
+              class="col"
             >
               <div
-                className="form-row"
+                class="form-row"
               >
                 <label
-                  className="form-label"
+                  class="form-label"
                 >
                   <strong>
                     Note: 
@@ -1410,7 +1385,7 @@ exports[`ERP Approval Step renders correctly 1`] = `
                   Changing the dates on these fields does not change the date the notifications are sent from the Common Hosted Email Service (CHES), which is managed by the Exchange Lab.
                 </label>
                 <label
-                  className="form-label"
+                  class="form-label"
                 >
                   The only way to stop future unsent notifications is to cancel the entire project.
                   <br />
@@ -1420,31 +1395,22 @@ exports[`ERP Approval Step renders correctly 1`] = `
             </div>
           </div>
           <div
-            className="ProjectNotes form-row"
+            class="ProjectNotes form-row"
           >
             <div
-              className="col-md-12 reviewRequired form-group col"
+              class="col-md-12 reviewRequired form-group col"
             >
               <label
-                className="form-label"
-                htmlFor="input-notes[22].note"
+                class="form-label"
+                for="input-notes[22].note"
               >
                 Text added to ERP Notification Emails
                 <svg
-                  className="tooltip-icon"
+                  class="tooltip-icon"
                   fill="currentColor"
                   height="1em"
-                  onBlur={[Function]}
-                  onFocus={[Function]}
-                  onMouseOut={[Function]}
-                  onMouseOver={[Function]}
                   stroke="currentColor"
-                  strokeWidth="0"
-                  style={
-                    Object {
-                      "color": undefined,
-                    }
-                  }
+                  stroke-width="0"
                   viewBox="0 0 512 512"
                   width="1em"
                   xmlns="http://www.w3.org/2000/svg"
@@ -1455,15 +1421,10 @@ exports[`ERP Approval Step renders correctly 1`] = `
                 </svg>
               </label>
               <textarea
-                className="col-md-8 form-control"
-                disabled={true}
+                class="col-md-8 form-control"
+                disabled=""
                 id="input-notes[22].note"
                 name="notes[22].note"
-                onBlur={[Function]}
-                onChange={[Function]}
-                onFocus={[Function]}
-                onMouseOut={[Function]}
-                onMouseOver={[Function]}
               />
             </div>
           </div>
@@ -1471,164 +1432,93 @@ exports[`ERP Approval Step renders correctly 1`] = `
             Agency Interest
           </h3>
           <div
-            className="row"
+            class="row"
           >
             <div
-              className="col"
+              class="col"
             >
               <div
-                className="PropertyListView container-fluid"
+                class="PropertyListView container-fluid"
               >
                 <div
-                  className="ScrollContainer"
+                  class="ScrollContainer"
                 >
                   <div
-                    className="table"
+                    class="table"
                     role="table"
-                    style={
-                      Object {
-                        "minWidth": undefined,
-                      }
-                    }
                   >
                     <div
-                      className="thead thead-light"
+                      class="thead thead-light"
                     >
                       <div
-                        className="tr"
+                        class="tr"
                         role="row"
-                        style={
-                          Object {
-                            "display": "flex",
-                            "flex": "1 0 auto",
-                            "minWidth": "120px",
-                          }
-                        }
+                        style="display: flex; flex: 1 0 auto; min-width: 120px;"
                       >
                         <div
-                          className="th"
-                          colSpan={1}
+                          class="th"
+                          colspan="1"
                           role="columnheader"
-                          style={
-                            Object {
-                              "alignItems": "center",
-                              "boxSizing": "border-box",
-                              "display": "flex",
-                              "flex": "100 0 auto",
-                              "justifyContent": "flex-start",
-                              "minWidth": "30px",
-                              "textAlign": "left",
-                              "width": "100px",
-                            }
-                          }
+                          style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                         >
                           <div
-                            className="sortable-column"
+                            class="sortable-column"
                           >
                             Agency
                             <span
-                              style={
-                                Object {
-                                  "flex": "1 1 auto",
-                                }
-                              }
+                              style="flex: 1 1 auto;"
                             />
                           </div>
                         </div>
                         <div
-                          className="th"
-                          colSpan={1}
+                          class="th"
+                          colspan="1"
                           role="columnheader"
-                          style={
-                            Object {
-                              "alignItems": "center",
-                              "boxSizing": "border-box",
-                              "display": "flex",
-                              "flex": "60 0 auto",
-                              "justifyContent": "flex-start",
-                              "minWidth": "30px",
-                              "textAlign": "left",
-                              "width": "60px",
-                            }
-                          }
+                          style="box-sizing: border-box; flex: 60 0 auto; min-width: 30px; width: 60px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                         >
                           <div
-                            className="sortable-column"
+                            class="sortable-column"
                           >
                             Business Case Received Date
                             <span
-                              style={
-                                Object {
-                                  "flex": "1 1 auto",
-                                }
-                              }
+                              style="flex: 1 1 auto;"
                             />
                           </div>
                         </div>
                         <div
-                          className="th"
-                          colSpan={1}
+                          class="th"
+                          colspan="1"
                           role="columnheader"
-                          style={
-                            Object {
-                              "alignItems": "center",
-                              "boxSizing": "border-box",
-                              "display": "flex",
-                              "flex": "100 0 auto",
-                              "justifyContent": "flex-start",
-                              "minWidth": "30px",
-                              "textAlign": "left",
-                              "width": "100px",
-                            }
-                          }
+                          style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                         >
                           <div
-                            className="sortable-column"
+                            class="sortable-column"
                           >
                             Note
                             <span
-                              style={
-                                Object {
-                                  "flex": "1 1 auto",
-                                }
-                              }
+                              style="flex: 1 1 auto;"
                             />
                           </div>
                         </div>
                         <div
-                          className="th"
-                          colSpan={1}
+                          class="th"
+                          colspan="1"
                           role="columnheader"
-                          style={
-                            Object {
-                              "alignItems": "center",
-                              "boxSizing": "border-box",
-                              "display": "flex",
-                              "flex": "80 0 auto",
-                              "justifyContent": "flex-start",
-                              "minWidth": "30px",
-                              "textAlign": "left",
-                              "width": "80px",
-                            }
-                          }
+                          style="box-sizing: border-box; flex: 80 0 auto; min-width: 30px; width: 80px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                         >
                           <div
-                            className="sortable-column"
+                            class="sortable-column"
                           >
                             Response
                             <span
-                              style={
-                                Object {
-                                  "flex": "1 1 auto",
-                                }
-                              }
+                              style="flex: 1 1 auto;"
                             />
                           </div>
                         </div>
                       </div>
                     </div>
                     <div
-                      className="no-rows-message"
+                      class="no-rows-message"
                     >
                       No rows to display
                     </div>
@@ -1639,41 +1529,35 @@ exports[`ERP Approval Step renders correctly 1`] = `
           </div>
         </div>
         <div
-          className="EnhancedReferralCompleteForm container-fluid"
+          class="EnhancedReferralCompleteForm container-fluid"
         >
           <h3>
             Enhanced Referral Process Complete
           </h3>
           <div
-            className="form-row"
+            class="form-row"
           >
             <label
-              className="form-label col-form-label col-md-4"
+              class="form-label col-form-label col-md-4"
             >
               Interest Received On
             </label>
             <div
-              className="col-md-2 form-group"
+              class="col-md-2 form-group"
             >
               <div
-                className="react-datepicker-wrapper"
+                class="react-datepicker-wrapper"
               >
                 <div
-                  className="react-datepicker__input-container"
+                  class="react-datepicker__input-container"
                 >
                   <input
-                    autoComplete="off"
-                    className="form-control date-picker"
-                    disabled={true}
+                    autocomplete="off"
+                    class="form-control date-picker"
+                    disabled=""
                     id="datepicker-interestedReceivedOn"
                     name="interestedReceivedOn"
-                    onBlur={[Function]}
-                    onChange={[Function]}
-                    onClick={[Function]}
-                    onFocus={[Function]}
-                    onKeyDown={[Function]}
                     placeholder="--/--/----"
-                    readOnly={false}
                     type="text"
                     value=""
                   />
@@ -1682,61 +1566,47 @@ exports[`ERP Approval Step renders correctly 1`] = `
             </div>
           </div>
           <div
-            className="form-row"
+            class="form-row"
           >
             <div
-              className="col"
+              class="col"
             >
               <div
-                className="ProjectNotes form-row"
+                class="ProjectNotes form-row"
               >
                 <div
-                  className="col form-group col"
+                  class="col form-group col"
                 >
                   <label
-                    className="form-label"
-                    htmlFor="input-interestFromEnhancedReferralNote"
+                    class="form-label"
+                    for="input-interestFromEnhancedReferralNote"
                   >
                     Interest Note
                   </label>
                   <textarea
-                    className="col-md-5 form-control"
-                    disabled={true}
+                    class="col-md-5 form-control"
+                    disabled=""
                     id="input-interestFromEnhancedReferralNote"
                     name="interestFromEnhancedReferralNote"
-                    onBlur={[Function]}
-                    onChange={[Function]}
-                    onFocus={[Function]}
-                    onMouseOut={[Function]}
-                    onMouseOver={[Function]}
                   />
                 </div>
               </div>
             </div>
           </div>
           <div
-            className="form-row"
+            class="form-row"
           >
             <label
-              className="form-label col-form-label col-md-4"
+              class="form-label col-form-label col-md-4"
             >
               On Hold Notification Sent
                
               <svg
-                className="tooltip-icon"
+                class="tooltip-icon"
                 fill="currentColor"
                 height="1em"
-                onBlur={[Function]}
-                onFocus={[Function]}
-                onMouseOut={[Function]}
-                onMouseOver={[Function]}
                 stroke="currentColor"
-                strokeWidth="0"
-                style={
-                  Object {
-                    "color": undefined,
-                  }
-                }
+                stroke-width="0"
                 viewBox="0 0 512 512"
                 width="1em"
                 xmlns="http://www.w3.org/2000/svg"
@@ -1747,27 +1617,21 @@ exports[`ERP Approval Step renders correctly 1`] = `
               </svg>
             </label>
             <div
-              className="col-md-2 form-group"
+              class="col-md-2 form-group"
             >
               <div
-                className="react-datepicker-wrapper"
+                class="react-datepicker-wrapper"
               >
                 <div
-                  className="react-datepicker__input-container"
+                  class="react-datepicker__input-container"
                 >
                   <input
-                    autoComplete="off"
-                    className="form-control date-picker"
-                    disabled={true}
+                    autocomplete="off"
+                    class="form-control date-picker"
+                    disabled=""
                     id="datepicker-onHoldNotificationSentOn"
                     name="onHoldNotificationSentOn"
-                    onBlur={[Function]}
-                    onChange={[Function]}
-                    onClick={[Function]}
-                    onFocus={[Function]}
-                    onKeyDown={[Function]}
                     placeholder="--/--/----"
-                    readOnly={false}
                     type="text"
                     value=""
                   />
@@ -1775,12 +1639,11 @@ exports[`ERP Approval Step renders correctly 1`] = `
               </div>
             </div>
             <div
-              className="col-md-6"
+              class="col-md-6"
             >
               <button
-                className="btn btn-primary"
-                disabled={true}
-                onClick={[Function]}
+                class="btn btn-primary"
+                disabled=""
                 type="button"
               >
                 Place Project On Hold
@@ -1788,27 +1651,18 @@ exports[`ERP Approval Step renders correctly 1`] = `
             </div>
           </div>
           <div
-            className="form-row"
+            class="form-row"
           >
             <label
-              className="form-label col-form-label col-md-4"
+              class="form-label col-form-label col-md-4"
             >
               Date Transferred within the GRE
               <svg
-                className="tooltip-icon"
+                class="tooltip-icon"
                 fill="currentColor"
                 height="1em"
-                onBlur={[Function]}
-                onFocus={[Function]}
-                onMouseOut={[Function]}
-                onMouseOver={[Function]}
                 stroke="currentColor"
-                strokeWidth="0"
-                style={
-                  Object {
-                    "color": undefined,
-                  }
-                }
+                stroke-width="0"
                 viewBox="0 0 512 512"
                 width="1em"
                 xmlns="http://www.w3.org/2000/svg"
@@ -1819,27 +1673,21 @@ exports[`ERP Approval Step renders correctly 1`] = `
               </svg>
             </label>
             <div
-              className="col-md-2 form-group"
+              class="col-md-2 form-group"
             >
               <div
-                className="react-datepicker-wrapper"
+                class="react-datepicker-wrapper"
               >
                 <div
-                  className="react-datepicker__input-container"
+                  class="react-datepicker__input-container"
                 >
                   <input
-                    autoComplete="off"
-                    className="form-control date-picker"
-                    disabled={true}
+                    autocomplete="off"
+                    class="form-control date-picker"
+                    disabled=""
                     id="datepicker-transferredWithinGreOn"
                     name="transferredWithinGreOn"
-                    onBlur={[Function]}
-                    onChange={[Function]}
-                    onClick={[Function]}
-                    onFocus={[Function]}
-                    onKeyDown={[Function]}
                     placeholder="--/--/----"
-                    readOnly={false}
                     type="text"
                     value=""
                   />
@@ -1847,12 +1695,11 @@ exports[`ERP Approval Step renders correctly 1`] = `
               </div>
             </div>
             <div
-              className="col-md-6"
+              class="col-md-6"
             >
               <button
-                className="btn btn-primary"
-                disabled={true}
-                onClick={[Function]}
+                class="btn btn-primary"
+                disabled=""
                 type="button"
               >
                 Update Property Information
@@ -1860,32 +1707,23 @@ exports[`ERP Approval Step renders correctly 1`] = `
             </div>
           </div>
           <div
-            className="c3"
+            class="c3"
           >
             OR
           </div>
           <div
-            className="form-row"
+            class="form-row"
           >
             <label
-              className="form-label col-form-label col-md-4"
+              class="form-label col-form-label col-md-4"
             >
               Clearance Notification Sent
               <svg
-                className="tooltip-icon"
+                class="tooltip-icon"
                 fill="currentColor"
                 height="1em"
-                onBlur={[Function]}
-                onFocus={[Function]}
-                onMouseOut={[Function]}
-                onMouseOver={[Function]}
                 stroke="currentColor"
-                strokeWidth="0"
-                style={
-                  Object {
-                    "color": undefined,
-                  }
-                }
+                stroke-width="0"
                 viewBox="0 0 512 512"
                 width="1em"
                 xmlns="http://www.w3.org/2000/svg"
@@ -1896,27 +1734,21 @@ exports[`ERP Approval Step renders correctly 1`] = `
               </svg>
             </label>
             <div
-              className="col-md-2 form-group"
+              class="col-md-2 form-group"
             >
               <div
-                className="react-datepicker-wrapper"
+                class="react-datepicker-wrapper"
               >
                 <div
-                  className="react-datepicker__input-container"
+                  class="react-datepicker__input-container"
                 >
                   <input
-                    autoComplete="off"
-                    className="form-control date-picker"
-                    disabled={true}
+                    autocomplete="off"
+                    class="form-control date-picker"
+                    disabled=""
                     id="datepicker-clearanceNotificationSentOn"
                     name="clearanceNotificationSentOn"
-                    onBlur={[Function]}
-                    onChange={[Function]}
-                    onClick={[Function]}
-                    onFocus={[Function]}
-                    onKeyDown={[Function]}
                     placeholder="--/--/----"
-                    readOnly={false}
                     type="text"
                     value=""
                   />
@@ -1925,27 +1757,18 @@ exports[`ERP Approval Step renders correctly 1`] = `
             </div>
           </div>
           <div
-            className="form-row"
+            class="form-row"
           >
             <label
-              className="form-label col-form-label col-md-4"
+              class="form-label col-form-label col-md-4"
             >
               Request for SPL Received On
               <svg
-                className="tooltip-icon"
+                class="tooltip-icon"
                 fill="currentColor"
                 height="1em"
-                onBlur={[Function]}
-                onFocus={[Function]}
-                onMouseOut={[Function]}
-                onMouseOver={[Function]}
                 stroke="currentColor"
-                strokeWidth="0"
-                style={
-                  Object {
-                    "color": undefined,
-                  }
-                }
+                stroke-width="0"
                 viewBox="0 0 512 512"
                 width="1em"
                 xmlns="http://www.w3.org/2000/svg"
@@ -1956,27 +1779,21 @@ exports[`ERP Approval Step renders correctly 1`] = `
               </svg>
             </label>
             <div
-              className="col-md-2 form-group"
+              class="col-md-2 form-group"
             >
               <div
-                className="react-datepicker-wrapper"
+                class="react-datepicker-wrapper"
               >
                 <div
-                  className="react-datepicker__input-container"
+                  class="react-datepicker__input-container"
                 >
                   <input
-                    autoComplete="off"
-                    className="form-control date-picker"
-                    disabled={true}
+                    autocomplete="off"
+                    class="form-control date-picker"
+                    disabled=""
                     id="datepicker-requestForSplReceivedOn"
                     name="requestForSplReceivedOn"
-                    onBlur={[Function]}
-                    onChange={[Function]}
-                    onClick={[Function]}
-                    onFocus={[Function]}
-                    onKeyDown={[Function]}
                     placeholder="--/--/----"
-                    readOnly={false}
                     type="text"
                     value=""
                   />
@@ -1985,27 +1802,18 @@ exports[`ERP Approval Step renders correctly 1`] = `
             </div>
           </div>
           <div
-            className="form-row"
+            class="form-row"
           >
             <label
-              className="form-label col-form-label col-md-4"
+              class="form-label col-form-label col-md-4"
             >
               SPL Addition Approved On
               <svg
-                className="tooltip-icon"
+                class="tooltip-icon"
                 fill="currentColor"
                 height="1em"
-                onBlur={[Function]}
-                onFocus={[Function]}
-                onMouseOut={[Function]}
-                onMouseOver={[Function]}
                 stroke="currentColor"
-                strokeWidth="0"
-                style={
-                  Object {
-                    "color": undefined,
-                  }
-                }
+                stroke-width="0"
                 viewBox="0 0 512 512"
                 width="1em"
                 xmlns="http://www.w3.org/2000/svg"
@@ -2016,27 +1824,21 @@ exports[`ERP Approval Step renders correctly 1`] = `
               </svg>
             </label>
             <div
-              className="col-md-2 form-group"
+              class="col-md-2 form-group"
             >
               <div
-                className="react-datepicker-wrapper"
+                class="react-datepicker-wrapper"
               >
                 <div
-                  className="react-datepicker__input-container"
+                  class="react-datepicker__input-container"
                 >
                   <input
-                    autoComplete="off"
-                    className="form-control date-picker"
-                    disabled={true}
+                    autocomplete="off"
+                    class="form-control date-picker"
+                    disabled=""
                     id="datepicker-approvedForSplOn"
                     name="approvedForSplOn"
-                    onBlur={[Function]}
-                    onChange={[Function]}
-                    onClick={[Function]}
-                    onFocus={[Function]}
-                    onKeyDown={[Function]}
                     placeholder="--/--/----"
-                    readOnly={false}
                     type="text"
                     value=""
                   />
@@ -2044,30 +1846,24 @@ exports[`ERP Approval Step renders correctly 1`] = `
               </div>
             </div>
             <div
-              className="col-md-6"
-              style={
-                Object {
-                  "display": "flex",
-                }
-              }
+              class="col-md-6"
+              style="display: flex;"
             >
               <button
-                className="btn btn-primary"
-                disabled={true}
-                onClick={[Function]}
+                class="btn btn-primary"
+                disabled=""
                 type="button"
               >
                 Proceed to SPL
               </button>
               <div
-                className="c3"
+                class="c3"
               >
                 OR
               </div>
               <button
-                className="btn btn-primary"
-                disabled={true}
-                onClick={[Function]}
+                class="btn btn-primary"
+                disabled=""
                 type="button"
               >
                 Not Included in the SPL
@@ -2078,11 +1874,7 @@ exports[`ERP Approval Step renders correctly 1`] = `
       </div>
     </div>
     <div
-      style={
-        Object {
-          "textAlign": "right",
-        }
-      }
+      style="text-align: right;"
     />
   </form>
 </div>

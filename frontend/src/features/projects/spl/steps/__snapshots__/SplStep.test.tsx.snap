@@ -481,7 +481,7 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
                     class="form-control"
                     name="actualFiscalYear"
                     placeholder="YYYY/YYYY"
-                    value=""
+                    value="2019/2020"
                   />
                 </div>
               </div>
@@ -500,7 +500,7 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
                     class="form-control"
                     id="input-plannedFutureUse"
                     name="plannedFutureUse"
-                    value=""
+                    value="future"
                   />
                 </div>
               </div>
@@ -533,7 +533,7 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
                       class="form-control input-number"
                       name="market"
                       placeholder=""
-                      value=""
+                      value="9"
                     />
                   </div>
                 </div>
@@ -556,7 +556,7 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
                       class="form-control input-number"
                       name="interestComponent"
                       placeholder=""
-                      value=""
+                      value="5"
                     />
                   </div>
                 </div>
@@ -579,7 +579,7 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
                       class="form-control input-number"
                       name="salesCost"
                       placeholder=""
-                      value=""
+                      value="7"
                     />
                   </div>
                 </div>
@@ -602,7 +602,7 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
                       class="form-control input-number"
                       name="netBook"
                       placeholder=""
-                      value=""
+                      value="10"
                     />
                   </div>
                 </div>
@@ -627,7 +627,7 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
                       disabled=""
                       name="gainBeforeSpl"
                       placeholder=""
-                      value="0"
+                      value="-13"
                     />
                   </div>
                 </div>
@@ -650,7 +650,7 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
                       class="form-control input-number"
                       name="programCost"
                       placeholder=""
-                      value=""
+                      value="4"
                     />
                   </div>
                 </div>
@@ -675,7 +675,7 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
                       disabled=""
                       name="netProceeds"
                       placeholder=""
-                      value="0"
+                      value="-17"
                     />
                   </div>
                 </div>
@@ -698,7 +698,7 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
                       class="form-control input-number"
                       name="netProceeds"
                       placeholder=""
-                      value="0"
+                      value=""
                     />
                   </div>
                 </div>
@@ -728,7 +728,9 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
                     class="col-md-10 form-control"
                     id="input-remediationNote"
                     name="remediationNote"
-                  />
+                  >
+                    remediationNote
+                  </textarea>
                 </div>
               </div>
               <div
@@ -747,7 +749,9 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
                     class="col-md-10 form-control"
                     id="input-programCostNote"
                     name="programCostNote"
-                  />
+                  >
+                    programcostnote
+                  </textarea>
                 </div>
               </div>
               <div
@@ -766,7 +770,9 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
                     class="col-md-10 form-control"
                     id="input-gainNote"
                     name="gainNote"
-                  />
+                  >
+                    gainNote
+                  </textarea>
                 </div>
               </div>
             </div>
@@ -807,7 +813,9 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
                     class="col-md-auto form-control"
                     id="input-comments"
                     name="comments"
-                  />
+                  >
+                    comments
+                  </textarea>
                 </div>
               </div>
             </div>
@@ -839,7 +847,7 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
                       class="form-control input-number"
                       name="ocgFinancialStatement"
                       placeholder=""
-                      value=""
+                      value="6"
                     />
                   </div>
                 </div>
@@ -874,7 +882,9 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
                     class="col-md-auto form-control"
                     id="input-salesHistoryNote"
                     name="salesHistoryNote"
-                  />
+                  >
+                    salesHistoryNote
+                  </textarea>
                 </div>
               </div>
             </div>
@@ -903,7 +913,7 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
                     class="form-control"
                     id="input-preliminaryFormSignedBy"
                     name="preliminaryFormSignedBy"
-                    value=""
+                    value="prelimsign"
                   />
                 </div>
               </div>
@@ -922,7 +932,7 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
                     class="form-control"
                     id="input-finalFormSignedBy"
                     name="finalFormSignedBy"
-                    value=""
+                    value="finalsign"
                   />
                 </div>
               </div>
@@ -1019,7 +1029,7 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
                       class="form-control input-number"
                       name="priorYearAdjustmentAmount"
                       placeholder=""
-                      value=""
+                      value="9"
                     />
                   </div>
                 </div>
@@ -1079,7 +1089,9 @@ exports[`SPL Approval Step close out form tab renders correctly 1`] = `
                 class="col-md-auto form-control"
                 id="input-adjustmentNote"
                 name="adjustmentNote"
-              />
+              >
+                adjustmentNote
+              </textarea>
             </div>
           </div>
         </div>
@@ -1537,7 +1549,7 @@ exports[`SPL Approval Step renders correctly 1`] = `
                   name="offerAmount"
                   placeholder=""
                   required=""
-                  value="123"
+                  value="2"
                 />
               </div>
             </div>
@@ -1574,7 +1586,7 @@ exports[`SPL Approval Step renders correctly 1`] = `
                     name="removalFromSplRequestOn"
                     placeholder="--/--/----"
                     type="text"
-                    value=""
+                    value="01/01/2020"
                   />
                 </div>
               </div>
@@ -1605,7 +1617,7 @@ exports[`SPL Approval Step renders correctly 1`] = `
                     name="removalFromSplApprovedOn"
                     placeholder="--/--/----"
                     type="text"
-                    value=""
+                    value="01/01/2020"
                   />
                 </div>
               </div>
@@ -1628,7 +1640,9 @@ exports[`SPL Approval Step renders correctly 1`] = `
                 disabled=""
                 id="input-removalFromSplRationale"
                 name="removalFromSplRationale"
-              />
+              >
+                rationale
+              </textarea>
             </div>
           </div>
           <div

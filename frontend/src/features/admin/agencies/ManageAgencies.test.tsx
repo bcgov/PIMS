@@ -9,8 +9,9 @@ import * as actionTypes from 'constants/actionTypes';
 import * as reducerTypes from 'constants/reducerTypes';
 import * as API from 'constants/API';
 import ManageAgencies from './ManageAgencies';
-import { create } from 'react-test-renderer';
 import { render, cleanup } from '@testing-library/react';
+import noop from 'lodash/noop';
+import { Formik } from 'formik';
 
 const history = createMemoryHistory();
 history.push('admin/agencies');
@@ -66,30 +67,28 @@ const getStore = () =>
   });
 
 describe('Manage Agencies Component', () => {
+  beforeAll(() => {
+    const { getComputedStyle } = window;
+    window.getComputedStyle = elt => getComputedStyle(elt);
+  });
   afterEach(() => {
     cleanup();
   });
-  const componentRender = (store: any) =>
-    create(
-      <Provider store={store}>
-        <Router history={history}>
-          <ManageAgencies />
-        </Router>
-      </Provider>,
-    );
 
   const testRender = (store: any) =>
     render(
-      <Provider store={store}>
-        <Router history={history}>
-          <ManageAgencies />
-        </Router>
-      </Provider>,
+      <Formik initialValues={{}} onSubmit={noop}>
+        <Provider store={store}>
+          <Router history={history}>
+            <ManageAgencies />
+          </Router>
+        </Provider>
+      </Formik>,
     );
 
   it('Snapshot matches', () => {
-    const component = componentRender(getStore());
-    expect(component.toJSON()).toMatchSnapshot();
+    const { container } = testRender(getStore());
+    expect(container.firstChild).toMatchSnapshot();
   });
 
   it('displays correct agency labels', () => {

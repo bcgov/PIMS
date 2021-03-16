@@ -83,6 +83,10 @@ const FormComponent: React.FC<{
 );
 
 describe('ExemptionEnhancedReferralCompleteForm', () => {
+  beforeAll(() => {
+    const { getComputedStyle } = window;
+    window.getComputedStyle = elt => getComputedStyle(elt);
+  });
   it('renders successfully', () => {
     const tree = renderer
       .create(
