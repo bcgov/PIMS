@@ -57,7 +57,7 @@ describe('useSupercluster hook', () => {
     ];
 
     const zoom = 10;
-    const options = { radius: 75, maxZoom: 20 };
+    const options = { radius: 75, maxZoom: 20, enableClustering: true };
 
     // Act
     const App = () => {
