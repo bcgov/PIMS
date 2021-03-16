@@ -133,7 +133,7 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
     points,
     bounds,
     zoom,
-    options: { radius: 60, extent: 256, minZoom, maxZoom },
+    options: { radius: 60, extent: 256, minZoom, maxZoom, enableClustering: !filterState.changed },
   });
   const currentClusterIds = useMemo(() => {
     if (!currentCluster?.properties?.cluster_id) {
@@ -242,16 +242,11 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
       const group: LeafletFeatureGroup = featureGroupRef.current.leafletElement;
       const groupBounds = group.getBounds();
 
-      if (
-        groupBounds.isValid() &&
-        group.getBounds().isValid() &&
-        filterState.changed &&
-        !selected?.parcelDetail &&
-        tilesLoaded
-      ) {
+      if (groupBounds.isValid() && filterState.changed && !selected?.parcelDetail && tilesLoaded) {
         filterState.setChanged(false);
         map.fitBounds(group.getBounds(), { maxZoom: zoom > MAX_ZOOM ? zoom : MAX_ZOOM });
       }
+
       setSpider({});
       spiderfierRef.current?.unspiderfy();
       setCurrentCluster(undefined);
