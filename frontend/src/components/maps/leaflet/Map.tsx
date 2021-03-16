@@ -180,6 +180,7 @@ const Map: React.FC<MapProps> = ({
     includeAllProperties: keycloak.hasClaim(Claims.ADMIN_PROPERTIES),
   } as any);
   const [baseLayers, setBaseLayers] = useState<BaseLayer[]>([]);
+  const [triggerFilterChanged, setTriggerFilterChanged] = useState(true);
   const [activeBasemap, setActiveBasemap] = useState<BaseLayer | null>(null);
   const smallScreen = useMediaQuery({ maxWidth: 1800 });
   const [mapWidth, setMapWidth] = useState(0);
@@ -219,7 +220,6 @@ const Map: React.FC<MapProps> = ({
   }, [mapRef, mapWidth]);
 
   // TODO: refactor various zoom settings
-
   useEffect(() => {
     if (!interactive) {
       const map = mapRef.current?.leafletElement;
@@ -243,10 +243,12 @@ const Map: React.FC<MapProps> = ({
         return (isEqual(objValue[key], othValue[key]) || (!objValue[key] && !othValue[key])) && acc;
       }, true);
     };
-    if (!isEqualWith(geoFilter, filter, compareValues)) {
+    // Search button will always trigger filter changed (triggerFilterChanged is set to true when search button is clicked)
+    if (!isEqualWith(geoFilter, filter, compareValues) || triggerFilterChanged) {
       dispatch(storeParcelDetail(null));
       setGeoFilter(getQueryParams(filter));
       setChanged(true);
+      setTriggerFilterChanged(false);
     }
   };
 
@@ -344,6 +346,7 @@ const Map: React.FC<MapProps> = ({
                     agencyLookupCodes={agencies}
                     adminAreaLookupCodes={administrativeAreas}
                     onChange={handleMapFilterChange}
+                    setTriggerFilterChanged={setTriggerFilterChanged}
                     showAllAgencySelect={true}
                   />
                 </Container>

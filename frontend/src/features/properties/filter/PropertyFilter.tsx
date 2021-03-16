@@ -45,6 +45,8 @@ export interface IPropertyFilterProps {
   onSorting?: (sort: TableSort<any>) => void;
   /** Show select with my agencies/All Government dropdown */
   showAllAgencySelect?: boolean;
+  /** Override to trigger filterchanged in the parent */
+  setTriggerFilterChanged?: (used: boolean) => void;
 }
 
 const AgencyCol = styled(Col)`
@@ -74,6 +76,7 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
   sort,
   onSorting,
   showAllAgencySelect,
+  setTriggerFilterChanged,
 }) => {
   const [propertyFilter, setPropertyFilter] = React.useState<IPropertyFilter>(defaultFilter);
   const dispatch = useDispatch();
@@ -231,7 +234,10 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
               />
             </Col>
             <Col className="bar-item flex-grow-0">
-              <SearchButton disabled={isSubmitting || findMoreOpen} />
+              <SearchButton
+                disabled={isSubmitting || findMoreOpen}
+                onClick={() => setTriggerFilterChanged && setTriggerFilterChanged(true)}
+              />
             </Col>
             <Col className="bar-item flex-grow-0">
               <ResetButton disabled={isSubmitting || findMoreOpen} onClick={resetFilter} />
