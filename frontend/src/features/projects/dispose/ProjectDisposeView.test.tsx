@@ -39,7 +39,7 @@ const match: Match = {
 };
 
 const loc = {
-  pathname: '/dispose/project/draft',
+  pathname: '/dispose/projects/draft',
   search: '?projectNumber=SPP-10001',
   hash: '',
 } as Location;

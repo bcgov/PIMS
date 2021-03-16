@@ -1,5 +1,4 @@
 import React from 'react';
-import renderer from 'react-test-renderer';
 import { createMemoryHistory } from 'history';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
@@ -55,8 +54,8 @@ describe('ERP Approval Step', () => {
   });
   it('renders correctly', () => {
     mockKeycloak([]);
-    const tree = renderer.create(getApprovalStep()).toJSON();
-    expect(tree).toMatchSnapshot();
+    const { container } = render(getApprovalStep());
+    expect(container.firstChild).toMatchSnapshot();
   });
   describe('ERP tab Display', () => {
     beforeAll(() => {

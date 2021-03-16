@@ -33,29 +33,25 @@ exports[`Review Summary View renders approved correctly 1`] = `
 }
 
 <div
-  className="ProjectSummaryView container-fluid"
+  class="ProjectSummaryView container-fluid"
 >
   <div
-    className="c0 [object Object]-status"
+    class="c0 [object Object]-status"
   >
     <h5
-      className="c1"
+      class="c1"
     >
       Approved for Surplus Property Program
     </h5>
     <svg
       fill="currentColor"
-      height={64}
-      size={64}
+      height="64"
+      size="64"
       stroke="currentColor"
-      strokeWidth="0"
-      style={
-        Object {
-          "color": "#20a74d",
-        }
-      }
+      stroke-width="0"
+      style="color: rgb(32, 167, 77);"
       viewBox="0 0 512 512"
-      width={64}
+      width="64"
       xmlns="http://www.w3.org/2000/svg"
     >
       <path
@@ -63,133 +59,116 @@ exports[`Review Summary View renders approved correctly 1`] = `
       />
     </svg>
     <h5
-      className="c1"
+      class="c1"
     >
       Approval Date: Unknown Date
     </h5>
   </div>
   <form
-    className=""
+    class=""
   >
     <div
-      className="ProjectDraftForm container-fluid"
+      class="ProjectDraftForm container-fluid"
     >
       <div
-        className="form-row"
+        class="form-row"
       >
         <h3
-          className="col-md-8"
+          class="col-md-8"
         >
           Review
         </h3>
         <span
-          className="col-md-4"
+          class="col-md-4"
         />
       </div>
       <div
-        className="col-md-10 form-row"
+        class="col-md-10 form-row"
       >
         <label
-          className="col-md-2 form-label"
+          class="col-md-2 form-label"
         >
           Project No.
         </label>
         <div
-          className="col-md-2 form-group"
+          class="col-md-2 form-group"
         >
           <input
-            className="form-control"
-            disabled={true}
+            class="form-control"
+            disabled=""
             id="input-projectNumber"
             name="projectNumber"
-            onBlur={[Function]}
-            onChange={[Function]}
-            onFocus={[Function]}
-            onMouseOut={[Function]}
-            onMouseOver={[Function]}
             placeholder="SPP-XXXXXX"
             value="test-01"
           />
         </div>
       </div>
       <div
-        className="form-row"
+        class="form-row"
       >
         <div
-          className="required col-md-10 form-group"
+          class="required col-md-10 form-group"
         >
           <label
-            className="form-label"
-            htmlFor="input-name"
+            class="form-label"
+            for="input-name"
           >
             Name
           </label>
           <input
-            className="col-md-5 form-control"
+            class="col-md-5 form-control"
             data-testid="project-name"
-            disabled={true}
+            disabled=""
             id="input-name"
             name="name"
-            onBlur={[Function]}
-            onChange={[Function]}
-            onFocus={[Function]}
-            onMouseOut={[Function]}
-            onMouseOver={[Function]}
             value="my project"
           />
         </div>
       </div>
       <div
-        className="form-row"
+        class="form-row"
       >
         <div
-          className="col-md-10 form-group"
+          class="col-md-10 form-group"
         >
           <label
-            className="form-label"
-            htmlFor="input-description"
+            class="form-label"
+            for="input-description"
           >
             Description
           </label>
           <textarea
-            className="col-md-auto form-control"
+            class="col-md-auto form-control"
             data-testid="project-description"
-            disabled={true}
+            disabled=""
             id="input-description"
             name="description"
-            onBlur={[Function]}
-            onChange={[Function]}
-            onFocus={[Function]}
-            onMouseOut={[Function]}
-            onMouseOver={[Function]}
-            value="my project description"
-          />
+          >
+            my project description
+          </textarea>
         </div>
       </div>
     </div>
     <div
-      className="UpdateInfoForm container-fluid"
+      class="UpdateInfoForm container-fluid"
     >
       <div
-        className="form-row"
+        class="form-row"
       >
         <label
-          className="form-label col-form-label col-md-2"
+          class="form-label col-form-label col-md-2"
         >
           Assign Tier
         </label>
         <div
-          className="required col-md-1 form-group"
+          class="required col-md-1 form-group"
         >
           <select
-            className="form-select form-control"
-            disabled={true}
+            class="form-select form-control"
+            disabled=""
             id="input-tierLevelId"
             name="tierLevelId"
-            onBlur={[Function]}
-            onChange={[Function]}
-            required={true}
-            value={1}
+            required=""
           >
             <option
               value=""
@@ -199,7 +178,7 @@ exports[`Review Summary View renders approved correctly 1`] = `
           </select>
         </div>
         <div
-          className="c2"
+          class="c2"
         >
           <small>
             Tier 1: Properties with a net value less than $1M.
@@ -207,29 +186,21 @@ exports[`Review Summary View renders approved correctly 1`] = `
         </div>
       </div>
       <div
-        className="form-row"
-        style={
-          Object {
-            "alignItems": "unset",
-          }
-        }
+        class="form-row"
+        style="align-items: unset;"
       >
         <h3
-          className="col-md-8"
+          class="col-md-8"
         >
           Financial Information
         </h3>
       </div>
       <div
-        className="form-row"
+        class="form-row"
       >
         <h6
-          className="col-md-12"
-          style={
-            Object {
-              "margin": "0 0 1rem 0",
-            }
-          }
+          class="col-md-12"
+          style="margin: 0px 0px 1rem 0px;"
         >
           These values are for the 
           <strong>
@@ -239,116 +210,108 @@ exports[`Review Summary View renders approved correctly 1`] = `
         </h6>
       </div>
       <div
-        className="form-row"
+        class="form-row"
       >
         <div
-          className="col-md-4"
+          class="col-md-4"
         >
           <div
-            className="form-row"
+            class="form-row"
           >
             <label
-              className="form-label col-form-label col-md-4"
+              class="form-label col-form-label col-md-4"
             >
               Assessed Value
             </label>
             <div
-              className="required form-group col-md-6"
+              class="required form-group col-md-6"
             >
               <div
-                className="input-tooltip-wrapper"
+                class="input-tooltip-wrapper"
               >
                 <input
-                  className="form-control input-number"
-                  disabled={true}
+                  class="form-control input-number"
+                  disabled=""
                   name="assessed"
-                  onBlur={[Function]}
-                  onChange={[Function]}
                   placeholder=""
-                  required={true}
+                  required=""
                   value=""
                 />
               </div>
             </div>
           </div>
           <div
-            className="form-row"
+            class="form-row"
           >
             <label
-              className="form-label col-form-label col-md-4"
+              class="form-label col-form-label col-md-4"
             >
               Net Book Value
             </label>
             <div
-              className="required form-group col-md-6"
+              class="required form-group col-md-6"
             >
               <div
-                className="input-tooltip-wrapper"
+                class="input-tooltip-wrapper"
               >
                 <input
-                  className="form-control input-number"
-                  disabled={true}
+                  class="form-control input-number"
+                  disabled=""
                   name="netBook"
-                  onBlur={[Function]}
-                  onChange={[Function]}
                   placeholder=""
-                  required={true}
-                  value=""
+                  required=""
+                  value="10"
                 />
               </div>
             </div>
           </div>
         </div>
         <div
-          className="col-md-4"
+          class="col-md-4"
         >
           <div
-            className="form-row"
+            class="form-row"
           >
             <label
-              className="form-label col-form-label col-md-4"
+              class="form-label col-form-label col-md-4"
             >
               Estimated Market Value
             </label>
             <div
-              className="required form-group col-md-6"
+              class="required form-group col-md-6"
             >
               <div
-                className="input-tooltip-wrapper"
+                class="input-tooltip-wrapper"
               >
                 <input
-                  className="form-control input-number"
-                  disabled={true}
+                  class="form-control input-number"
+                  disabled=""
                   name="market"
-                  onBlur={[Function]}
-                  onChange={[Function]}
                   placeholder=""
-                  required={true}
-                  value=""
+                  required=""
+                  value="9"
                 />
               </div>
             </div>
           </div>
           <div
-            className="form-row"
+            class="form-row"
           >
             <label
-              className="form-label col-form-label col-md-4"
+              class="form-label col-form-label col-md-4"
             >
               Appraised Value
             </label>
             <div
-              className="form-group col-md-6"
+              class="form-group col-md-6"
             >
               <div
-                className="input-tooltip-wrapper"
+                class="input-tooltip-wrapper"
               >
                 <input
-                  className="form-control input-number"
-                  disabled={true}
+                  class="form-control input-number"
+                  disabled=""
                   name="appraised"
-                  onBlur={[Function]}
-                  onChange={[Function]}
                   placeholder=""
                   value=""
                 />
@@ -357,56 +320,52 @@ exports[`Review Summary View renders approved correctly 1`] = `
           </div>
         </div>
         <div
-          className="col-md-4"
+          class="col-md-4"
         >
           <div
-            className="form-row"
+            class="form-row"
           >
             <label
-              className="form-label col-form-label col-md-4"
+              class="form-label col-form-label col-md-4"
             >
               Estimated Sales Costs
             </label>
             <div
-              className="form-group col-md-6"
+              class="form-group col-md-6"
             >
               <div
-                className="input-tooltip-wrapper"
+                class="input-tooltip-wrapper"
               >
                 <input
-                  className="form-control input-number"
-                  disabled={true}
+                  class="form-control input-number"
+                  disabled=""
                   name="salesCost"
-                  onBlur={[Function]}
-                  onChange={[Function]}
                   placeholder=""
-                  value=""
+                  value="7"
                 />
               </div>
             </div>
           </div>
           <div
-            className="form-row"
+            class="form-row"
           >
             <label
-              className="form-label col-form-label col-md-4"
+              class="form-label col-form-label col-md-4"
             >
               Estimated Program Recovery Fees
             </label>
             <div
-              className="form-group col-md-6"
+              class="form-group col-md-6"
             >
               <div
-                className="input-tooltip-wrapper"
+                class="input-tooltip-wrapper"
               >
                 <input
-                  className="form-control input-number"
-                  disabled={true}
+                  class="form-control input-number"
+                  disabled=""
                   name="programCost"
-                  onBlur={[Function]}
-                  onChange={[Function]}
                   placeholder=""
-                  value=""
+                  value="4"
                 />
               </div>
             </div>
@@ -414,393 +373,213 @@ exports[`Review Summary View renders approved correctly 1`] = `
         </div>
       </div>
       <div
-        className="form-row"
+        class="form-row"
       >
         <h6
-          className="col-md-12"
-          style={
-            Object {
-              "margin": "1rem 0",
-            }
-          }
+          class="col-md-12"
+          style="margin: 1rem 0px;"
         >
           Please update  the property classification.
         </h6>
         <h2
-          className="col-md-5"
+          class="col-md-5"
         >
           Properties in the Project
         </h2>
       </div>
       <div
-        className="container-fluid"
+        class="container-fluid"
       >
         <div
-          className="ScrollContainer"
+          class="ScrollContainer"
         >
           <div
-            className="table"
+            class="table"
             role="table"
-            style={
-              Object {
-                "minWidth": undefined,
-              }
-            }
           >
             <div
-              className="thead thead-light"
+              class="thead thead-light"
             >
               <div
-                className="tr"
+                class="tr"
                 role="row"
-                style={
-                  Object {
-                    "display": "flex",
-                    "flex": "1 0 auto",
-                    "minWidth": "790px",
-                  }
-                }
+                style="display: flex; flex: 1 0 auto; min-width: 790px;"
               >
                 <div
-                  className="th"
-                  colSpan={1}
+                  class="th"
+                  colspan="1"
                   role="columnheader"
-                  style={
-                    Object {
-                      "alignItems": "center",
-                      "boxSizing": "border-box",
-                      "display": "flex",
-                      "flex": "100 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "30px",
-                      "textAlign": "left",
-                      "width": "100px",
-                    }
-                  }
+                  style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                 >
                   <div
-                    className="sortable-column"
+                    class="sortable-column"
                   >
                     Agency
                     <span
-                      style={
-                        Object {
-                          "flex": "1 1 auto",
-                        }
-                      }
+                      style="flex: 1 1 auto;"
                     />
                   </div>
                 </div>
                 <div
-                  className="th"
-                  colSpan={1}
+                  class="th"
+                  colspan="1"
                   role="columnheader"
-                  style={
-                    Object {
-                      "alignItems": "center",
-                      "boxSizing": "border-box",
-                      "display": "flex",
-                      "flex": "100 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "30px",
-                      "textAlign": "left",
-                      "width": "100px",
-                    }
-                  }
+                  style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                 >
                   <div
-                    className="sortable-column"
+                    class="sortable-column"
                   >
                     Name
                     <span
-                      style={
-                        Object {
-                          "flex": "1 1 auto",
-                        }
-                      }
+                      style="flex: 1 1 auto;"
                     />
                   </div>
                 </div>
                 <div
-                  className="th"
-                  colSpan={1}
+                  class="th"
+                  colspan="1"
                   role="columnheader"
-                  style={
-                    Object {
-                      "alignItems": "center",
-                      "boxSizing": "border-box",
-                      "display": "flex",
-                      "flex": "100 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "30px",
-                      "textAlign": "left",
-                      "width": "100px",
-                    }
-                  }
+                  style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                 >
                   <div
-                    className="sortable-column"
+                    class="sortable-column"
                   >
                     Civic Address
                     <span
-                      style={
-                        Object {
-                          "flex": "1 1 auto",
-                        }
-                      }
+                      style="flex: 1 1 auto;"
                     />
                   </div>
                 </div>
                 <div
-                  className="th"
-                  colSpan={1}
+                  class="th"
+                  colspan="1"
                   role="columnheader"
-                  style={
-                    Object {
-                      "alignItems": "center",
-                      "boxSizing": "border-box",
-                      "display": "flex",
-                      "flex": "140 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "30px",
-                      "textAlign": "left",
-                      "width": "140px",
-                    }
-                  }
+                  style="box-sizing: border-box; flex: 140 0 auto; min-width: 30px; width: 140px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                 >
                   <div
-                    className="sortable-column"
+                    class="sortable-column"
                   >
                     Classification
                     <span
-                      style={
-                        Object {
-                          "flex": "1 1 auto",
-                        }
-                      }
+                      style="flex: 1 1 auto;"
                     />
                   </div>
                 </div>
                 <div
-                  className="th"
-                  colSpan={1}
+                  class="th"
+                  colspan="1"
                   role="columnheader"
-                  style={
-                    Object {
-                      "alignItems": "center",
-                      "boxSizing": "border-box",
-                      "display": "flex",
-                      "flex": "100 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "30px",
-                      "textAlign": "left",
-                      "width": "100px",
-                    }
-                  }
+                  style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                 >
                   <div
-                    className="sortable-column"
+                    class="sortable-column"
                   >
                     Current Zoning Code
                     <span
-                      style={
-                        Object {
-                          "flex": "1 1 auto",
-                        }
-                      }
+                      style="flex: 1 1 auto;"
                     />
                   </div>
                 </div>
                 <div
-                  className="th"
-                  colSpan={1}
+                  class="th"
+                  colspan="1"
                   role="columnheader"
-                  style={
-                    Object {
-                      "alignItems": "center",
-                      "boxSizing": "border-box",
-                      "display": "flex",
-                      "flex": "100 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "30px",
-                      "textAlign": "left",
-                      "width": "100px",
-                    }
-                  }
+                  style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                 >
                   <div
-                    className="sortable-column"
+                    class="sortable-column"
                   >
                     Other Projects
                     <span
-                      style={
-                        Object {
-                          "flex": "1 1 auto",
-                        }
-                      }
+                      style="flex: 1 1 auto;"
                     />
                   </div>
                 </div>
                 <div
-                  className="th"
-                  colSpan={1}
+                  class="th"
+                  colspan="1"
                   role="columnheader"
-                  style={
-                    Object {
-                      "alignItems": "center",
-                      "boxSizing": "border-box",
-                      "display": "flex",
-                      "flex": "145 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "145px",
-                      "textAlign": "left",
-                      "width": "145px",
-                    }
-                  }
+                  style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                 >
                   <div
-                    className="sortable-column"
+                    class="sortable-column"
                   >
                     Net Book Value
                     <span
-                      style={
-                        Object {
-                          "flex": "1 1 auto",
-                        }
-                      }
+                      style="flex: 1 1 auto;"
                     />
                   </div>
                 </div>
                 <div
-                  className="th"
-                  colSpan={1}
+                  class="th"
+                  colspan="1"
                   role="columnheader"
-                  style={
-                    Object {
-                      "alignItems": "center",
-                      "boxSizing": "border-box",
-                      "display": "flex",
-                      "flex": "145 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "145px",
-                      "textAlign": "left",
-                      "width": "145px",
-                    }
-                  }
+                  style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                 >
                   <div
-                    className="sortable-column"
+                    class="sortable-column"
                   >
                     Market Value
                     <span
-                      style={
-                        Object {
-                          "flex": "1 1 auto",
-                        }
-                      }
+                      style="flex: 1 1 auto;"
                     />
                   </div>
                 </div>
                 <div
-                  className="th"
-                  colSpan={1}
+                  class="th"
+                  colspan="1"
                   role="columnheader"
-                  style={
-                    Object {
-                      "alignItems": "center",
-                      "boxSizing": "border-box",
-                      "display": "flex",
-                      "flex": "145 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "145px",
-                      "textAlign": "left",
-                      "width": "145px",
-                    }
-                  }
+                  style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                 >
                   <div
-                    className="sortable-column"
+                    class="sortable-column"
                   >
                     Assessed Land
                     <span
-                      style={
-                        Object {
-                          "flex": "1 1 auto",
-                        }
-                      }
+                      style="flex: 1 1 auto;"
                     />
                   </div>
                 </div>
                 <div
-                  className="th"
-                  colSpan={1}
+                  class="th"
+                  colspan="1"
                   role="columnheader"
-                  style={
-                    Object {
-                      "alignItems": "center",
-                      "boxSizing": "border-box",
-                      "display": "flex",
-                      "flex": "145 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "145px",
-                      "textAlign": "left",
-                      "width": "145px",
-                    }
-                  }
+                  style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                 >
                   <div
-                    className="sortable-column"
+                    class="sortable-column"
                   >
                     Assessed Building
                     <span
-                      style={
-                        Object {
-                          "flex": "1 1 auto",
-                        }
-                      }
+                      style="flex: 1 1 auto;"
                     />
                   </div>
                 </div>
                 <div
-                  className="th"
-                  colSpan={1}
+                  class="th"
+                  colspan="1"
                   role="columnheader"
-                  style={
-                    Object {
-                      "alignItems": "center",
-                      "boxSizing": "border-box",
-                      "display": "flex",
-                      "flex": "60 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "30px",
-                      "textAlign": "left",
-                      "width": "60px",
-                    }
-                  }
+                  style="box-sizing: border-box; flex: 60 0 auto; min-width: 30px; width: 60px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                 >
                   <div
-                    className="sortable-column"
+                    class="sortable-column"
                   >
                     Type
                     <span
-                      style={
-                        Object {
-                          "flex": "1 1 auto",
-                        }
-                      }
+                      style="flex: 1 1 auto;"
                     />
                   </div>
                 </div>
               </div>
             </div>
             <div
-              className="no-rows-message"
+              class="no-rows-message"
             >
               No rows to display
             </div>
           </div>
           <div
-            className="table-toolbar"
+            class="table-toolbar"
           />
         </div>
       </div>
@@ -811,20 +590,11 @@ exports[`Review Summary View renders approved correctly 1`] = `
     <h3>
       Enhanced Referral Process Exemption
       <svg
-        className="tooltip-icon"
+        class="tooltip-icon"
         fill="currentColor"
         height="1em"
-        onBlur={[Function]}
-        onFocus={[Function]}
-        onMouseOut={[Function]}
-        onMouseOver={[Function]}
         stroke="currentColor"
-        strokeWidth="0"
-        style={
-          Object {
-            "color": undefined,
-          }
-        }
+        stroke-width="0"
         viewBox="0 0 512 512"
         width="1em"
         xmlns="http://www.w3.org/2000/svg"
@@ -835,32 +605,29 @@ exports[`Review Summary View renders approved correctly 1`] = `
       </svg>
     </h3>
     <div
-      className="ProjectExemptionRequestCheck form-row"
+      class="ProjectExemptionRequestCheck form-row"
     >
       <div
-        className="form-group"
+        class="form-group"
       >
         <div
-          className="check-field"
+          class="check-field"
         >
           <div
-            className="form-check"
+            class="form-check"
           >
             <input
-              checked={false}
-              className="form-check-input position-static"
-              disabled={true}
+              class="form-check-input position-static"
+              disabled=""
               id="input-exemptionRequested"
               name="exemptionRequested"
-              onBlur={[Function]}
-              onChange={[Function]}
               type="checkbox"
-              value={false}
+              value="false"
             />
           </div>
           <label
-            className="text-wrap form-label"
-            htmlFor="input-exemptionRequested"
+            class="text-wrap form-label"
+            for="input-exemptionRequested"
           >
             Apply for Enhanced Referral Process exemption
           </label>
@@ -871,33 +638,31 @@ exports[`Review Summary View renders approved correctly 1`] = `
       Approval
     </h3>
     <div
-      className="form-row"
+      class="form-row"
     >
       <div
-        className="required form-group"
+        class="required form-group"
       >
         <div
-          className="check-field"
+          class="check-field"
         >
           <div
-            className="form-check"
+            class="form-check"
           >
             <input
-              checked={true}
-              className="form-check-input position-static"
-              disabled={true}
+              checked=""
+              class="form-check-input position-static"
+              disabled=""
               id="input-confirmation"
               name="confirmation"
-              onBlur={[Function]}
-              onChange={[Function]}
-              required={true}
+              required=""
               type="checkbox"
-              value={true}
+              value="true"
             />
           </div>
           <label
-            className="form-label"
-            htmlFor="input-confirmation"
+            class="form-label"
+            for="input-confirmation"
           >
             My Ministry/Agency has approval/authority to submit the Disposal Project to SRES for review.
           </label>
@@ -905,57 +670,44 @@ exports[`Review Summary View renders approved correctly 1`] = `
       </div>
     </div>
     <div
-      className="ProjectNotes form-row"
+      class="ProjectNotes form-row"
     >
       <div
-        className="col-md-10 form-group col"
+        class="col-md-10 form-group col"
       >
         <label
-          className="form-label"
-          htmlFor="input-note"
+          class="form-label"
+          for="input-note"
         >
           Notes
         </label>
         <textarea
-          className="col-md-5 form-control"
-          disabled={true}
+          class="col-md-5 form-control"
+          disabled=""
           id="input-note"
           name="note"
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          onMouseOut={[Function]}
-          onMouseOver={[Function]}
-          value="my notes"
-        />
+        >
+          my notes
+        </textarea>
       </div>
     </div>
     <div
-      className="ProjectNotes form-row"
+      class="ProjectNotes form-row"
     >
       <div
-        className="col-md-10 form-group col"
+        class="col-md-10 form-group col"
       >
         <label
-          className="form-label"
-          htmlFor="input-publicNote"
+          class="form-label"
+          for="input-publicNote"
         >
           Shared Notes
           <svg
-            className="tooltip-icon"
+            class="tooltip-icon"
             fill="currentColor"
             height="1em"
-            onBlur={[Function]}
-            onFocus={[Function]}
-            onMouseOut={[Function]}
-            onMouseOver={[Function]}
             stroke="currentColor"
-            strokeWidth="0"
-            style={
-              Object {
-                "color": undefined,
-              }
-            }
+            stroke-width="0"
             viewBox="0 0 512 512"
             width="1em"
             xmlns="http://www.w3.org/2000/svg"
@@ -966,46 +718,30 @@ exports[`Review Summary View renders approved correctly 1`] = `
           </svg>
         </label>
         <textarea
-          className="col-md-5 form-control"
-          disabled={true}
+          class="col-md-5 form-control"
+          disabled=""
           id="input-publicNote"
           name="publicNote"
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          onMouseOut={[Function]}
-          onMouseOver={[Function]}
-          value=""
         />
       </div>
     </div>
     <div
-      style={
-        Object {
-          "textAlign": "right",
-        }
-      }
+      style="text-align: right;"
     />
     <div
-      className="c3"
+      class="c3"
     >
       <button
-        className="btn btn-primary"
-        disabled={true}
-        onClick={[Function]}
-        style={
-          Object {
-            "marginLeft": 10,
-          }
-        }
+        class="btn btn-primary"
+        disabled=""
+        style="margin-left: 10px;"
         type="button"
       >
         Submit
       </button>
       <button
-        className="btn btn-secondary"
-        disabled={true}
-        onClick={[Function]}
+        class="btn btn-secondary"
+        disabled=""
         type="button"
       >
         Save
@@ -1048,29 +784,25 @@ exports[`Review Summary View renders denied correctly 1`] = `
 }
 
 <div
-  className="ProjectSummaryView container-fluid"
+  class="ProjectSummaryView container-fluid"
 >
   <div
-    className="c0 [object Object]-status"
+    class="c0 [object Object]-status"
   >
     <h5
-      className="c1"
+      class="c1"
     >
       Submitted
     </h5>
     <svg
       fill="currentColor"
-      height={64}
-      size={64}
+      height="64"
+      size="64"
       stroke="currentColor"
-      strokeWidth="0"
-      style={
-        Object {
-          "color": "#d8292f",
-        }
-      }
+      stroke-width="0"
+      style="color: rgb(216, 41, 47);"
       viewBox="0 0 24 24"
-      width={64}
+      width="64"
       xmlns="http://www.w3.org/2000/svg"
     >
       <path
@@ -1078,133 +810,116 @@ exports[`Review Summary View renders denied correctly 1`] = `
       />
     </svg>
     <h5
-      className="c1"
+      class="c1"
     >
       test
     </h5>
   </div>
   <form
-    className=""
+    class=""
   >
     <div
-      className="ProjectDraftForm container-fluid"
+      class="ProjectDraftForm container-fluid"
     >
       <div
-        className="form-row"
+        class="form-row"
       >
         <h3
-          className="col-md-8"
+          class="col-md-8"
         >
           Review
         </h3>
         <span
-          className="col-md-4"
+          class="col-md-4"
         />
       </div>
       <div
-        className="col-md-10 form-row"
+        class="col-md-10 form-row"
       >
         <label
-          className="col-md-2 form-label"
+          class="col-md-2 form-label"
         >
           Project No.
         </label>
         <div
-          className="col-md-2 form-group"
+          class="col-md-2 form-group"
         >
           <input
-            className="form-control"
-            disabled={true}
+            class="form-control"
+            disabled=""
             id="input-projectNumber"
             name="projectNumber"
-            onBlur={[Function]}
-            onChange={[Function]}
-            onFocus={[Function]}
-            onMouseOut={[Function]}
-            onMouseOver={[Function]}
             placeholder="SPP-XXXXXX"
             value="test-01"
           />
         </div>
       </div>
       <div
-        className="form-row"
+        class="form-row"
       >
         <div
-          className="required col-md-10 form-group"
+          class="required col-md-10 form-group"
         >
           <label
-            className="form-label"
-            htmlFor="input-name"
+            class="form-label"
+            for="input-name"
           >
             Name
           </label>
           <input
-            className="col-md-5 form-control"
+            class="col-md-5 form-control"
             data-testid="project-name"
-            disabled={true}
+            disabled=""
             id="input-name"
             name="name"
-            onBlur={[Function]}
-            onChange={[Function]}
-            onFocus={[Function]}
-            onMouseOut={[Function]}
-            onMouseOver={[Function]}
             value="my project"
           />
         </div>
       </div>
       <div
-        className="form-row"
+        class="form-row"
       >
         <div
-          className="col-md-10 form-group"
+          class="col-md-10 form-group"
         >
           <label
-            className="form-label"
-            htmlFor="input-description"
+            class="form-label"
+            for="input-description"
           >
             Description
           </label>
           <textarea
-            className="col-md-auto form-control"
+            class="col-md-auto form-control"
             data-testid="project-description"
-            disabled={true}
+            disabled=""
             id="input-description"
             name="description"
-            onBlur={[Function]}
-            onChange={[Function]}
-            onFocus={[Function]}
-            onMouseOut={[Function]}
-            onMouseOver={[Function]}
-            value="my project description"
-          />
+          >
+            my project description
+          </textarea>
         </div>
       </div>
     </div>
     <div
-      className="UpdateInfoForm container-fluid"
+      class="UpdateInfoForm container-fluid"
     >
       <div
-        className="form-row"
+        class="form-row"
       >
         <label
-          className="form-label col-form-label col-md-2"
+          class="form-label col-form-label col-md-2"
         >
           Assign Tier
         </label>
         <div
-          className="required col-md-1 form-group"
+          class="required col-md-1 form-group"
         >
           <select
-            className="form-select form-control"
-            disabled={true}
+            class="form-select form-control"
+            disabled=""
             id="input-tierLevelId"
             name="tierLevelId"
-            onBlur={[Function]}
-            onChange={[Function]}
-            required={true}
-            value={1}
+            required=""
           >
             <option
               value=""
@@ -1214,7 +929,7 @@ exports[`Review Summary View renders denied correctly 1`] = `
           </select>
         </div>
         <div
-          className="c2"
+          class="c2"
         >
           <small>
             Tier 1: Properties with a net value less than $1M.
@@ -1222,29 +937,21 @@ exports[`Review Summary View renders denied correctly 1`] = `
         </div>
       </div>
       <div
-        className="form-row"
-        style={
-          Object {
-            "alignItems": "unset",
-          }
-        }
+        class="form-row"
+        style="align-items: unset;"
       >
         <h3
-          className="col-md-8"
+          class="col-md-8"
         >
           Financial Information
         </h3>
       </div>
       <div
-        className="form-row"
+        class="form-row"
       >
         <h6
-          className="col-md-12"
-          style={
-            Object {
-              "margin": "0 0 1rem 0",
-            }
-          }
+          class="col-md-12"
+          style="margin: 0px 0px 1rem 0px;"
         >
           These values are for the 
           <strong>
@@ -1254,116 +961,108 @@ exports[`Review Summary View renders denied correctly 1`] = `
         </h6>
       </div>
       <div
-        className="form-row"
+        class="form-row"
       >
         <div
-          className="col-md-4"
+          class="col-md-4"
         >
           <div
-            className="form-row"
+            class="form-row"
           >
             <label
-              className="form-label col-form-label col-md-4"
+              class="form-label col-form-label col-md-4"
             >
               Assessed Value
             </label>
             <div
-              className="required form-group col-md-6"
+              class="required form-group col-md-6"
             >
               <div
-                className="input-tooltip-wrapper"
+                class="input-tooltip-wrapper"
               >
                 <input
-                  className="form-control input-number"
-                  disabled={true}
+                  class="form-control input-number"
+                  disabled=""
                   name="assessed"
-                  onBlur={[Function]}
-                  onChange={[Function]}
                   placeholder=""
-                  required={true}
+                  required=""
                   value=""
                 />
               </div>
             </div>
           </div>
           <div
-            className="form-row"
+            class="form-row"
           >
             <label
-              className="form-label col-form-label col-md-4"
+              class="form-label col-form-label col-md-4"
             >
               Net Book Value
             </label>
             <div
-              className="required form-group col-md-6"
+              class="required form-group col-md-6"
             >
               <div
-                className="input-tooltip-wrapper"
+                class="input-tooltip-wrapper"
               >
                 <input
-                  className="form-control input-number"
-                  disabled={true}
+                  class="form-control input-number"
+                  disabled=""
                   name="netBook"
-                  onBlur={[Function]}
-                  onChange={[Function]}
                   placeholder=""
-                  required={true}
-                  value=""
+                  required=""
+                  value="10"
                 />
               </div>
             </div>
           </div>
         </div>
         <div
-          className="col-md-4"
+          class="col-md-4"
         >
           <div
-            className="form-row"
+            class="form-row"
           >
             <label
-              className="form-label col-form-label col-md-4"
+              class="form-label col-form-label col-md-4"
             >
               Estimated Market Value
             </label>
             <div
-              className="required form-group col-md-6"
+              class="required form-group col-md-6"
             >
               <div
-                className="input-tooltip-wrapper"
+                class="input-tooltip-wrapper"
               >
                 <input
-                  className="form-control input-number"
-                  disabled={true}
+                  class="form-control input-number"
+                  disabled=""
                   name="market"
-                  onBlur={[Function]}
-                  onChange={[Function]}
                   placeholder=""
-                  required={true}
-                  value=""
+                  required=""
+                  value="9"
                 />
               </div>
             </div>
           </div>
           <div
-            className="form-row"
+            class="form-row"
           >
             <label
-              className="form-label col-form-label col-md-4"
+              class="form-label col-form-label col-md-4"
             >
               Appraised Value
             </label>
             <div
-              className="form-group col-md-6"
+              class="form-group col-md-6"
             >
               <div
-                className="input-tooltip-wrapper"
+                class="input-tooltip-wrapper"
               >
                 <input
-                  className="form-control input-number"
-                  disabled={true}
+                  class="form-control input-number"
+                  disabled=""
                   name="appraised"
-                  onBlur={[Function]}
-                  onChange={[Function]}
                   placeholder=""
                   value=""
                 />
@@ -1372,56 +1071,52 @@ exports[`Review Summary View renders denied correctly 1`] = `
           </div>
         </div>
         <div
-          className="col-md-4"
+          class="col-md-4"
         >
           <div
-            className="form-row"
+            class="form-row"
           >
             <label
-              className="form-label col-form-label col-md-4"
+              class="form-label col-form-label col-md-4"
             >
               Estimated Sales Costs
             </label>
             <div
-              className="form-group col-md-6"
+              class="form-group col-md-6"
             >
               <div
-                className="input-tooltip-wrapper"
+                class="input-tooltip-wrapper"
               >
                 <input
-                  className="form-control input-number"
-                  disabled={true}
+                  class="form-control input-number"
+                  disabled=""
                   name="salesCost"
-                  onBlur={[Function]}
-                  onChange={[Function]}
                   placeholder=""
-                  value=""
+                  value="7"
                 />
               </div>
             </div>
           </div>
           <div
-            className="form-row"
+            class="form-row"
           >
             <label
-              className="form-label col-form-label col-md-4"
+              class="form-label col-form-label col-md-4"
             >
               Estimated Program Recovery Fees
             </label>
             <div
-              className="form-group col-md-6"
+              class="form-group col-md-6"
             >
               <div
-                className="input-tooltip-wrapper"
+                class="input-tooltip-wrapper"
               >
                 <input
-                  className="form-control input-number"
-                  disabled={true}
+                  class="form-control input-number"
+                  disabled=""
                   name="programCost"
-                  onBlur={[Function]}
-                  onChange={[Function]}
                   placeholder=""
-                  value=""
+                  value="4"
                 />
               </div>
             </div>
@@ -1429,393 +1124,213 @@ exports[`Review Summary View renders denied correctly 1`] = `
         </div>
       </div>
       <div
-        className="form-row"
+        class="form-row"
       >
         <h6
-          className="col-md-12"
-          style={
-            Object {
-              "margin": "1rem 0",
-            }
-          }
+          class="col-md-12"
+          style="margin: 1rem 0px;"
         >
           Please update  the property classification.
         </h6>
         <h2
-          className="col-md-5"
+          class="col-md-5"
         >
           Properties in the Project
         </h2>
       </div>
       <div
-        className="container-fluid"
+        class="container-fluid"
       >
         <div
-          className="ScrollContainer"
+          class="ScrollContainer"
         >
           <div
-            className="table"
+            class="table"
             role="table"
-            style={
-              Object {
-                "minWidth": undefined,
-              }
-            }
           >
             <div
-              className="thead thead-light"
+              class="thead thead-light"
             >
               <div
-                className="tr"
+                class="tr"
                 role="row"
-                style={
-                  Object {
-                    "display": "flex",
-                    "flex": "1 0 auto",
-                    "minWidth": "790px",
-                  }
-                }
+                style="display: flex; flex: 1 0 auto; min-width: 790px;"
               >
                 <div
-                  className="th"
-                  colSpan={1}
+                  class="th"
+                  colspan="1"
                   role="columnheader"
-                  style={
-                    Object {
-                      "alignItems": "center",
-                      "boxSizing": "border-box",
-                      "display": "flex",
-                      "flex": "100 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "30px",
-                      "textAlign": "left",
-                      "width": "100px",
-                    }
-                  }
+                  style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                 >
                   <div
-                    className="sortable-column"
+                    class="sortable-column"
                   >
                     Agency
                     <span
-                      style={
-                        Object {
-                          "flex": "1 1 auto",
-                        }
-                      }
+                      style="flex: 1 1 auto;"
                     />
                   </div>
                 </div>
                 <div
-                  className="th"
-                  colSpan={1}
+                  class="th"
+                  colspan="1"
                   role="columnheader"
-                  style={
-                    Object {
-                      "alignItems": "center",
-                      "boxSizing": "border-box",
-                      "display": "flex",
-                      "flex": "100 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "30px",
-                      "textAlign": "left",
-                      "width": "100px",
-                    }
-                  }
+                  style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                 >
                   <div
-                    className="sortable-column"
+                    class="sortable-column"
                   >
                     Name
                     <span
-                      style={
-                        Object {
-                          "flex": "1 1 auto",
-                        }
-                      }
+                      style="flex: 1 1 auto;"
                     />
                   </div>
                 </div>
                 <div
-                  className="th"
-                  colSpan={1}
+                  class="th"
+                  colspan="1"
                   role="columnheader"
-                  style={
-                    Object {
-                      "alignItems": "center",
-                      "boxSizing": "border-box",
-                      "display": "flex",
-                      "flex": "100 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "30px",
-                      "textAlign": "left",
-                      "width": "100px",
-                    }
-                  }
+                  style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                 >
                   <div
-                    className="sortable-column"
+                    class="sortable-column"
                   >
                     Civic Address
                     <span
-                      style={
-                        Object {
-                          "flex": "1 1 auto",
-                        }
-                      }
+                      style="flex: 1 1 auto;"
                     />
                   </div>
                 </div>
                 <div
-                  className="th"
-                  colSpan={1}
+                  class="th"
+                  colspan="1"
                   role="columnheader"
-                  style={
-                    Object {
-                      "alignItems": "center",
-                      "boxSizing": "border-box",
-                      "display": "flex",
-                      "flex": "140 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "30px",
-                      "textAlign": "left",
-                      "width": "140px",
-                    }
-                  }
+                  style="box-sizing: border-box; flex: 140 0 auto; min-width: 30px; width: 140px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                 >
                   <div
-                    className="sortable-column"
+                    class="sortable-column"
                   >
                     Classification
                     <span
-                      style={
-                        Object {
-                          "flex": "1 1 auto",
-                        }
-                      }
+                      style="flex: 1 1 auto;"
                     />
                   </div>
                 </div>
                 <div
-                  className="th"
-                  colSpan={1}
+                  class="th"
+                  colspan="1"
                   role="columnheader"
-                  style={
-                    Object {
-                      "alignItems": "center",
-                      "boxSizing": "border-box",
-                      "display": "flex",
-                      "flex": "100 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "30px",
-                      "textAlign": "left",
-                      "width": "100px",
-                    }
-                  }
+                  style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                 >
                   <div
-                    className="sortable-column"
+                    class="sortable-column"
                   >
                     Current Zoning Code
                     <span
-                      style={
-                        Object {
-                          "flex": "1 1 auto",
-                        }
-                      }
+                      style="flex: 1 1 auto;"
                     />
                   </div>
                 </div>
                 <div
-                  className="th"
-                  colSpan={1}
+                  class="th"
+                  colspan="1"
                   role="columnheader"
-                  style={
-                    Object {
-                      "alignItems": "center",
-                      "boxSizing": "border-box",
-                      "display": "flex",
-                      "flex": "100 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "30px",
-                      "textAlign": "left",
-                      "width": "100px",
-                    }
-                  }
+                  style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                 >
                   <div
-                    className="sortable-column"
+                    class="sortable-column"
                   >
                     Other Projects
                     <span
-                      style={
-                        Object {
-                          "flex": "1 1 auto",
-                        }
-                      }
+                      style="flex: 1 1 auto;"
                     />
                   </div>
                 </div>
                 <div
-                  className="th"
-                  colSpan={1}
+                  class="th"
+                  colspan="1"
                   role="columnheader"
-                  style={
-                    Object {
-                      "alignItems": "center",
-                      "boxSizing": "border-box",
-                      "display": "flex",
-                      "flex": "145 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "145px",
-                      "textAlign": "left",
-                      "width": "145px",
-                    }
-                  }
+                  style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                 >
                   <div
-                    className="sortable-column"
+                    class="sortable-column"
                   >
                     Net Book Value
                     <span
-                      style={
-                        Object {
-                          "flex": "1 1 auto",
-                        }
-                      }
+                      style="flex: 1 1 auto;"
                     />
                   </div>
                 </div>
                 <div
-                  className="th"
-                  colSpan={1}
+                  class="th"
+                  colspan="1"
                   role="columnheader"
-                  style={
-                    Object {
-                      "alignItems": "center",
-                      "boxSizing": "border-box",
-                      "display": "flex",
-                      "flex": "145 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "145px",
-                      "textAlign": "left",
-                      "width": "145px",
-                    }
-                  }
+                  style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                 >
                   <div
-                    className="sortable-column"
+                    class="sortable-column"
                   >
                     Market Value
                     <span
-                      style={
-                        Object {
-                          "flex": "1 1 auto",
-                        }
-                      }
+                      style="flex: 1 1 auto;"
                     />
                   </div>
                 </div>
                 <div
-                  className="th"
-                  colSpan={1}
+                  class="th"
+                  colspan="1"
                   role="columnheader"
-                  style={
-                    Object {
-                      "alignItems": "center",
-                      "boxSizing": "border-box",
-                      "display": "flex",
-                      "flex": "145 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "145px",
-                      "textAlign": "left",
-                      "width": "145px",
-                    }
-                  }
+                  style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                 >
                   <div
-                    className="sortable-column"
+                    class="sortable-column"
                   >
                     Assessed Land
                     <span
-                      style={
-                        Object {
-                          "flex": "1 1 auto",
-                        }
-                      }
+                      style="flex: 1 1 auto;"
                     />
                   </div>
                 </div>
                 <div
-                  className="th"
-                  colSpan={1}
+                  class="th"
+                  colspan="1"
                   role="columnheader"
-                  style={
-                    Object {
-                      "alignItems": "center",
-                      "boxSizing": "border-box",
-                      "display": "flex",
-                      "flex": "145 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "145px",
-                      "textAlign": "left",
-                      "width": "145px",
-                    }
-                  }
+                  style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                 >
                   <div
-                    className="sortable-column"
+                    class="sortable-column"
                   >
                     Assessed Building
                     <span
-                      style={
-                        Object {
-                          "flex": "1 1 auto",
-                        }
-                      }
+                      style="flex: 1 1 auto;"
                     />
                   </div>
                 </div>
                 <div
-                  className="th"
-                  colSpan={1}
+                  class="th"
+                  colspan="1"
                   role="columnheader"
-                  style={
-                    Object {
-                      "alignItems": "center",
-                      "boxSizing": "border-box",
-                      "display": "flex",
-                      "flex": "60 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "30px",
-                      "textAlign": "left",
-                      "width": "60px",
-                    }
-                  }
+                  style="box-sizing: border-box; flex: 60 0 auto; min-width: 30px; width: 60px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                 >
                   <div
-                    className="sortable-column"
+                    class="sortable-column"
                   >
                     Type
                     <span
-                      style={
-                        Object {
-                          "flex": "1 1 auto",
-                        }
-                      }
+                      style="flex: 1 1 auto;"
                     />
                   </div>
                 </div>
               </div>
             </div>
             <div
-              className="no-rows-message"
+              class="no-rows-message"
             >
               No rows to display
             </div>
           </div>
           <div
-            className="table-toolbar"
+            class="table-toolbar"
           />
         </div>
       </div>
@@ -1826,20 +1341,11 @@ exports[`Review Summary View renders denied correctly 1`] = `
     <h3>
       Enhanced Referral Process Exemption
       <svg
-        className="tooltip-icon"
+        class="tooltip-icon"
         fill="currentColor"
         height="1em"
-        onBlur={[Function]}
-        onFocus={[Function]}
-        onMouseOut={[Function]}
-        onMouseOver={[Function]}
         stroke="currentColor"
-        strokeWidth="0"
-        style={
-          Object {
-            "color": undefined,
-          }
-        }
+        stroke-width="0"
         viewBox="0 0 512 512"
         width="1em"
         xmlns="http://www.w3.org/2000/svg"
@@ -1850,32 +1356,29 @@ exports[`Review Summary View renders denied correctly 1`] = `
       </svg>
     </h3>
     <div
-      className="ProjectExemptionRequestCheck form-row"
+      class="ProjectExemptionRequestCheck form-row"
     >
       <div
-        className="form-group"
+        class="form-group"
       >
         <div
-          className="check-field"
+          class="check-field"
         >
           <div
-            className="form-check"
+            class="form-check"
           >
             <input
-              checked={false}
-              className="form-check-input position-static"
-              disabled={true}
+              class="form-check-input position-static"
+              disabled=""
               id="input-exemptionRequested"
               name="exemptionRequested"
-              onBlur={[Function]}
-              onChange={[Function]}
               type="checkbox"
-              value={false}
+              value="false"
             />
           </div>
           <label
-            className="text-wrap form-label"
-            htmlFor="input-exemptionRequested"
+            class="text-wrap form-label"
+            for="input-exemptionRequested"
           >
             Apply for Enhanced Referral Process exemption
           </label>
@@ -1886,33 +1389,31 @@ exports[`Review Summary View renders denied correctly 1`] = `
       Approval
     </h3>
     <div
-      className="form-row"
+      class="form-row"
     >
       <div
-        className="required form-group"
+        class="required form-group"
       >
         <div
-          className="check-field"
+          class="check-field"
         >
           <div
-            className="form-check"
+            class="form-check"
           >
             <input
-              checked={true}
-              className="form-check-input position-static"
-              disabled={true}
+              checked=""
+              class="form-check-input position-static"
+              disabled=""
               id="input-confirmation"
               name="confirmation"
-              onBlur={[Function]}
-              onChange={[Function]}
-              required={true}
+              required=""
               type="checkbox"
-              value={true}
+              value="true"
             />
           </div>
           <label
-            className="form-label"
-            htmlFor="input-confirmation"
+            class="form-label"
+            for="input-confirmation"
           >
             My Ministry/Agency has approval/authority to submit the Disposal Project to SRES for review.
           </label>
@@ -1920,57 +1421,44 @@ exports[`Review Summary View renders denied correctly 1`] = `
       </div>
     </div>
     <div
-      className="ProjectNotes form-row"
+      class="ProjectNotes form-row"
     >
       <div
-        className="col-md-10 form-group col"
+        class="col-md-10 form-group col"
       >
         <label
-          className="form-label"
-          htmlFor="input-note"
+          class="form-label"
+          for="input-note"
         >
           Notes
         </label>
         <textarea
-          className="col-md-5 form-control"
-          disabled={true}
+          class="col-md-5 form-control"
+          disabled=""
           id="input-note"
           name="note"
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          onMouseOut={[Function]}
-          onMouseOver={[Function]}
-          value="my notes"
-        />
+        >
+          my notes
+        </textarea>
       </div>
     </div>
     <div
-      className="ProjectNotes form-row"
+      class="ProjectNotes form-row"
     >
       <div
-        className="col-md-10 form-group col"
+        class="col-md-10 form-group col"
       >
         <label
-          className="form-label"
-          htmlFor="input-publicNote"
+          class="form-label"
+          for="input-publicNote"
         >
           Shared Notes
           <svg
-            className="tooltip-icon"
+            class="tooltip-icon"
             fill="currentColor"
             height="1em"
-            onBlur={[Function]}
-            onFocus={[Function]}
-            onMouseOut={[Function]}
-            onMouseOver={[Function]}
             stroke="currentColor"
-            strokeWidth="0"
-            style={
-              Object {
-                "color": undefined,
-              }
-            }
+            stroke-width="0"
             viewBox="0 0 512 512"
             width="1em"
             xmlns="http://www.w3.org/2000/svg"
@@ -1981,46 +1469,30 @@ exports[`Review Summary View renders denied correctly 1`] = `
           </svg>
         </label>
         <textarea
-          className="col-md-5 form-control"
-          disabled={true}
+          class="col-md-5 form-control"
+          disabled=""
           id="input-publicNote"
           name="publicNote"
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          onMouseOut={[Function]}
-          onMouseOver={[Function]}
-          value=""
         />
       </div>
     </div>
     <div
-      style={
-        Object {
-          "textAlign": "right",
-        }
-      }
+      style="text-align: right;"
     />
     <div
-      className="c3"
+      class="c3"
     >
       <button
-        className="btn btn-primary"
-        disabled={true}
-        onClick={[Function]}
-        style={
-          Object {
-            "marginLeft": 10,
-          }
-        }
+        class="btn btn-primary"
+        disabled=""
+        style="margin-left: 10px;"
         type="button"
       >
         Submit
       </button>
       <button
-        className="btn btn-secondary"
-        disabled={true}
-        onClick={[Function]}
+        class="btn btn-secondary"
+        disabled=""
         type="button"
       >
         Save
@@ -2063,29 +1535,25 @@ exports[`Review Summary View renders submitted correctly 1`] = `
 }
 
 <div
-  className="ProjectSummaryView container-fluid"
+  class="ProjectSummaryView container-fluid"
 >
   <div
-    className="c0 [object Object]-status"
+    class="c0 [object Object]-status"
   >
     <h5
-      className="c1"
+      class="c1"
     >
       Submitted
     </h5>
     <svg
       fill="currentColor"
-      height={64}
-      size={64}
+      height="64"
+      size="64"
       stroke="currentColor"
-      strokeWidth="0"
-      style={
-        Object {
-          "color": "#2E8540",
-        }
-      }
+      stroke-width="0"
+      style="color: rgb(46, 133, 64);"
       viewBox="0 0 512 512"
-      width={64}
+      width="64"
       xmlns="http://www.w3.org/2000/svg"
     >
       <path
@@ -2093,133 +1561,116 @@ exports[`Review Summary View renders submitted correctly 1`] = `
       />
     </svg>
     <h5
-      className="c1"
+      class="c1"
     >
       In Review
     </h5>
   </div>
   <form
-    className=""
+    class=""
   >
     <div
-      className="ProjectDraftForm container-fluid"
+      class="ProjectDraftForm container-fluid"
     >
       <div
-        className="form-row"
+        class="form-row"
       >
         <h3
-          className="col-md-8"
+          class="col-md-8"
         >
           Review
         </h3>
         <span
-          className="col-md-4"
+          class="col-md-4"
         />
       </div>
       <div
-        className="col-md-10 form-row"
+        class="col-md-10 form-row"
       >
         <label
-          className="col-md-2 form-label"
+          class="col-md-2 form-label"
         >
           Project No.
         </label>
         <div
-          className="col-md-2 form-group"
+          class="col-md-2 form-group"
         >
           <input
-            className="form-control"
-            disabled={true}
+            class="form-control"
+            disabled=""
             id="input-projectNumber"
             name="projectNumber"
-            onBlur={[Function]}
-            onChange={[Function]}
-            onFocus={[Function]}
-            onMouseOut={[Function]}
-            onMouseOver={[Function]}
             placeholder="SPP-XXXXXX"
             value="test-01"
           />
         </div>
       </div>
       <div
-        className="form-row"
+        class="form-row"
       >
         <div
-          className="required col-md-10 form-group"
+          class="required col-md-10 form-group"
         >
           <label
-            className="form-label"
-            htmlFor="input-name"
+            class="form-label"
+            for="input-name"
           >
             Name
           </label>
           <input
-            className="col-md-5 form-control"
+            class="col-md-5 form-control"
             data-testid="project-name"
-            disabled={true}
+            disabled=""
             id="input-name"
             name="name"
-            onBlur={[Function]}
-            onChange={[Function]}
-            onFocus={[Function]}
-            onMouseOut={[Function]}
-            onMouseOver={[Function]}
             value="my project"
           />
         </div>
       </div>
       <div
-        className="form-row"
+        class="form-row"
       >
         <div
-          className="col-md-10 form-group"
+          class="col-md-10 form-group"
         >
           <label
-            className="form-label"
-            htmlFor="input-description"
+            class="form-label"
+            for="input-description"
           >
             Description
           </label>
           <textarea
-            className="col-md-auto form-control"
+            class="col-md-auto form-control"
             data-testid="project-description"
-            disabled={true}
+            disabled=""
             id="input-description"
             name="description"
-            onBlur={[Function]}
-            onChange={[Function]}
-            onFocus={[Function]}
-            onMouseOut={[Function]}
-            onMouseOver={[Function]}
-            value="my project description"
-          />
+          >
+            my project description
+          </textarea>
         </div>
       </div>
     </div>
     <div
-      className="UpdateInfoForm container-fluid"
+      class="UpdateInfoForm container-fluid"
     >
       <div
-        className="form-row"
+        class="form-row"
       >
         <label
-          className="form-label col-form-label col-md-2"
+          class="form-label col-form-label col-md-2"
         >
           Assign Tier
         </label>
         <div
-          className="required col-md-1 form-group"
+          class="required col-md-1 form-group"
         >
           <select
-            className="form-select form-control"
-            disabled={true}
+            class="form-select form-control"
+            disabled=""
             id="input-tierLevelId"
             name="tierLevelId"
-            onBlur={[Function]}
-            onChange={[Function]}
-            required={true}
-            value={1}
+            required=""
           >
             <option
               value=""
@@ -2229,7 +1680,7 @@ exports[`Review Summary View renders submitted correctly 1`] = `
           </select>
         </div>
         <div
-          className="c2"
+          class="c2"
         >
           <small>
             Tier 1: Properties with a net value less than $1M.
@@ -2237,29 +1688,21 @@ exports[`Review Summary View renders submitted correctly 1`] = `
         </div>
       </div>
       <div
-        className="form-row"
-        style={
-          Object {
-            "alignItems": "unset",
-          }
-        }
+        class="form-row"
+        style="align-items: unset;"
       >
         <h3
-          className="col-md-8"
+          class="col-md-8"
         >
           Financial Information
         </h3>
       </div>
       <div
-        className="form-row"
+        class="form-row"
       >
         <h6
-          className="col-md-12"
-          style={
-            Object {
-              "margin": "0 0 1rem 0",
-            }
-          }
+          class="col-md-12"
+          style="margin: 0px 0px 1rem 0px;"
         >
           These values are for the 
           <strong>
@@ -2269,116 +1712,108 @@ exports[`Review Summary View renders submitted correctly 1`] = `
         </h6>
       </div>
       <div
-        className="form-row"
+        class="form-row"
       >
         <div
-          className="col-md-4"
+          class="col-md-4"
         >
           <div
-            className="form-row"
+            class="form-row"
           >
             <label
-              className="form-label col-form-label col-md-4"
+              class="form-label col-form-label col-md-4"
             >
               Assessed Value
             </label>
             <div
-              className="required form-group col-md-6"
+              class="required form-group col-md-6"
             >
               <div
-                className="input-tooltip-wrapper"
+                class="input-tooltip-wrapper"
               >
                 <input
-                  className="form-control input-number"
-                  disabled={true}
+                  class="form-control input-number"
+                  disabled=""
                   name="assessed"
-                  onBlur={[Function]}
-                  onChange={[Function]}
                   placeholder=""
-                  required={true}
+                  required=""
                   value=""
                 />
               </div>
             </div>
           </div>
           <div
-            className="form-row"
+            class="form-row"
           >
             <label
-              className="form-label col-form-label col-md-4"
+              class="form-label col-form-label col-md-4"
             >
               Net Book Value
             </label>
             <div
-              className="required form-group col-md-6"
+              class="required form-group col-md-6"
             >
               <div
-                className="input-tooltip-wrapper"
+                class="input-tooltip-wrapper"
               >
                 <input
-                  className="form-control input-number"
-                  disabled={true}
+                  class="form-control input-number"
+                  disabled=""
                   name="netBook"
-                  onBlur={[Function]}
-                  onChange={[Function]}
                   placeholder=""
-                  required={true}
-                  value=""
+                  required=""
+                  value="10"
                 />
               </div>
             </div>
           </div>
         </div>
         <div
-          className="col-md-4"
+          class="col-md-4"
         >
           <div
-            className="form-row"
+            class="form-row"
           >
             <label
-              className="form-label col-form-label col-md-4"
+              class="form-label col-form-label col-md-4"
             >
               Estimated Market Value
             </label>
             <div
-              className="required form-group col-md-6"
+              class="required form-group col-md-6"
             >
               <div
-                className="input-tooltip-wrapper"
+                class="input-tooltip-wrapper"
               >
                 <input
-                  className="form-control input-number"
-                  disabled={true}
+                  class="form-control input-number"
+                  disabled=""
                   name="market"
-                  onBlur={[Function]}
-                  onChange={[Function]}
                   placeholder=""
-                  required={true}
-                  value=""
+                  required=""
+                  value="9"
                 />
               </div>
             </div>
           </div>
           <div
-            className="form-row"
+            class="form-row"
           >
             <label
-              className="form-label col-form-label col-md-4"
+              class="form-label col-form-label col-md-4"
             >
               Appraised Value
             </label>
             <div
-              className="form-group col-md-6"
+              class="form-group col-md-6"
             >
               <div
-                className="input-tooltip-wrapper"
+                class="input-tooltip-wrapper"
               >
                 <input
-                  className="form-control input-number"
-                  disabled={true}
+                  class="form-control input-number"
+                  disabled=""
                   name="appraised"
-                  onBlur={[Function]}
-                  onChange={[Function]}
                   placeholder=""
                   value=""
                 />
@@ -2387,56 +1822,52 @@ exports[`Review Summary View renders submitted correctly 1`] = `
           </div>
         </div>
         <div
-          className="col-md-4"
+          class="col-md-4"
         >
           <div
-            className="form-row"
+            class="form-row"
           >
             <label
-              className="form-label col-form-label col-md-4"
+              class="form-label col-form-label col-md-4"
             >
               Estimated Sales Costs
             </label>
             <div
-              className="form-group col-md-6"
+              class="form-group col-md-6"
             >
               <div
-                className="input-tooltip-wrapper"
+                class="input-tooltip-wrapper"
               >
                 <input
-                  className="form-control input-number"
-                  disabled={true}
+                  class="form-control input-number"
+                  disabled=""
                   name="salesCost"
-                  onBlur={[Function]}
-                  onChange={[Function]}
                   placeholder=""
-                  value=""
+                  value="7"
                 />
               </div>
             </div>
           </div>
           <div
-            className="form-row"
+            class="form-row"
           >
             <label
-              className="form-label col-form-label col-md-4"
+              class="form-label col-form-label col-md-4"
             >
               Estimated Program Recovery Fees
             </label>
             <div
-              className="form-group col-md-6"
+              class="form-group col-md-6"
             >
               <div
-                className="input-tooltip-wrapper"
+                class="input-tooltip-wrapper"
               >
                 <input
-                  className="form-control input-number"
-                  disabled={true}
+                  class="form-control input-number"
+                  disabled=""
                   name="programCost"
-                  onBlur={[Function]}
-                  onChange={[Function]}
                   placeholder=""
-                  value=""
+                  value="4"
                 />
               </div>
             </div>
@@ -2444,393 +1875,213 @@ exports[`Review Summary View renders submitted correctly 1`] = `
         </div>
       </div>
       <div
-        className="form-row"
+        class="form-row"
       >
         <h6
-          className="col-md-12"
-          style={
-            Object {
-              "margin": "1rem 0",
-            }
-          }
+          class="col-md-12"
+          style="margin: 1rem 0px;"
         >
           Please update  the property classification.
         </h6>
         <h2
-          className="col-md-5"
+          class="col-md-5"
         >
           Properties in the Project
         </h2>
       </div>
       <div
-        className="container-fluid"
+        class="container-fluid"
       >
         <div
-          className="ScrollContainer"
+          class="ScrollContainer"
         >
           <div
-            className="table"
+            class="table"
             role="table"
-            style={
-              Object {
-                "minWidth": undefined,
-              }
-            }
           >
             <div
-              className="thead thead-light"
+              class="thead thead-light"
             >
               <div
-                className="tr"
+                class="tr"
                 role="row"
-                style={
-                  Object {
-                    "display": "flex",
-                    "flex": "1 0 auto",
-                    "minWidth": "790px",
-                  }
-                }
+                style="display: flex; flex: 1 0 auto; min-width: 790px;"
               >
                 <div
-                  className="th"
-                  colSpan={1}
+                  class="th"
+                  colspan="1"
                   role="columnheader"
-                  style={
-                    Object {
-                      "alignItems": "center",
-                      "boxSizing": "border-box",
-                      "display": "flex",
-                      "flex": "100 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "30px",
-                      "textAlign": "left",
-                      "width": "100px",
-                    }
-                  }
+                  style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                 >
                   <div
-                    className="sortable-column"
+                    class="sortable-column"
                   >
                     Agency
                     <span
-                      style={
-                        Object {
-                          "flex": "1 1 auto",
-                        }
-                      }
+                      style="flex: 1 1 auto;"
                     />
                   </div>
                 </div>
                 <div
-                  className="th"
-                  colSpan={1}
+                  class="th"
+                  colspan="1"
                   role="columnheader"
-                  style={
-                    Object {
-                      "alignItems": "center",
-                      "boxSizing": "border-box",
-                      "display": "flex",
-                      "flex": "100 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "30px",
-                      "textAlign": "left",
-                      "width": "100px",
-                    }
-                  }
+                  style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                 >
                   <div
-                    className="sortable-column"
+                    class="sortable-column"
                   >
                     Name
                     <span
-                      style={
-                        Object {
-                          "flex": "1 1 auto",
-                        }
-                      }
+                      style="flex: 1 1 auto;"
                     />
                   </div>
                 </div>
                 <div
-                  className="th"
-                  colSpan={1}
+                  class="th"
+                  colspan="1"
                   role="columnheader"
-                  style={
-                    Object {
-                      "alignItems": "center",
-                      "boxSizing": "border-box",
-                      "display": "flex",
-                      "flex": "100 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "30px",
-                      "textAlign": "left",
-                      "width": "100px",
-                    }
-                  }
+                  style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                 >
                   <div
-                    className="sortable-column"
+                    class="sortable-column"
                   >
                     Civic Address
                     <span
-                      style={
-                        Object {
-                          "flex": "1 1 auto",
-                        }
-                      }
+                      style="flex: 1 1 auto;"
                     />
                   </div>
                 </div>
                 <div
-                  className="th"
-                  colSpan={1}
+                  class="th"
+                  colspan="1"
                   role="columnheader"
-                  style={
-                    Object {
-                      "alignItems": "center",
-                      "boxSizing": "border-box",
-                      "display": "flex",
-                      "flex": "140 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "30px",
-                      "textAlign": "left",
-                      "width": "140px",
-                    }
-                  }
+                  style="box-sizing: border-box; flex: 140 0 auto; min-width: 30px; width: 140px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                 >
                   <div
-                    className="sortable-column"
+                    class="sortable-column"
                   >
                     Classification
                     <span
-                      style={
-                        Object {
-                          "flex": "1 1 auto",
-                        }
-                      }
+                      style="flex: 1 1 auto;"
                     />
                   </div>
                 </div>
                 <div
-                  className="th"
-                  colSpan={1}
+                  class="th"
+                  colspan="1"
                   role="columnheader"
-                  style={
-                    Object {
-                      "alignItems": "center",
-                      "boxSizing": "border-box",
-                      "display": "flex",
-                      "flex": "100 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "30px",
-                      "textAlign": "left",
-                      "width": "100px",
-                    }
-                  }
+                  style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                 >
                   <div
-                    className="sortable-column"
+                    class="sortable-column"
                   >
                     Current Zoning Code
                     <span
-                      style={
-                        Object {
-                          "flex": "1 1 auto",
-                        }
-                      }
+                      style="flex: 1 1 auto;"
                     />
                   </div>
                 </div>
                 <div
-                  className="th"
-                  colSpan={1}
+                  class="th"
+                  colspan="1"
                   role="columnheader"
-                  style={
-                    Object {
-                      "alignItems": "center",
-                      "boxSizing": "border-box",
-                      "display": "flex",
-                      "flex": "100 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "30px",
-                      "textAlign": "left",
-                      "width": "100px",
-                    }
-                  }
+                  style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                 >
                   <div
-                    className="sortable-column"
+                    class="sortable-column"
                   >
                     Other Projects
                     <span
-                      style={
-                        Object {
-                          "flex": "1 1 auto",
-                        }
-                      }
+                      style="flex: 1 1 auto;"
                     />
                   </div>
                 </div>
                 <div
-                  className="th"
-                  colSpan={1}
+                  class="th"
+                  colspan="1"
                   role="columnheader"
-                  style={
-                    Object {
-                      "alignItems": "center",
-                      "boxSizing": "border-box",
-                      "display": "flex",
-                      "flex": "145 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "145px",
-                      "textAlign": "left",
-                      "width": "145px",
-                    }
-                  }
+                  style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                 >
                   <div
-                    className="sortable-column"
+                    class="sortable-column"
                   >
                     Net Book Value
                     <span
-                      style={
-                        Object {
-                          "flex": "1 1 auto",
-                        }
-                      }
+                      style="flex: 1 1 auto;"
                     />
                   </div>
                 </div>
                 <div
-                  className="th"
-                  colSpan={1}
+                  class="th"
+                  colspan="1"
                   role="columnheader"
-                  style={
-                    Object {
-                      "alignItems": "center",
-                      "boxSizing": "border-box",
-                      "display": "flex",
-                      "flex": "145 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "145px",
-                      "textAlign": "left",
-                      "width": "145px",
-                    }
-                  }
+                  style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                 >
                   <div
-                    className="sortable-column"
+                    class="sortable-column"
                   >
                     Market Value
                     <span
-                      style={
-                        Object {
-                          "flex": "1 1 auto",
-                        }
-                      }
+                      style="flex: 1 1 auto;"
                     />
                   </div>
                 </div>
                 <div
-                  className="th"
-                  colSpan={1}
+                  class="th"
+                  colspan="1"
                   role="columnheader"
-                  style={
-                    Object {
-                      "alignItems": "center",
-                      "boxSizing": "border-box",
-                      "display": "flex",
-                      "flex": "145 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "145px",
-                      "textAlign": "left",
-                      "width": "145px",
-                    }
-                  }
+                  style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                 >
                   <div
-                    className="sortable-column"
+                    class="sortable-column"
                   >
                     Assessed Land
                     <span
-                      style={
-                        Object {
-                          "flex": "1 1 auto",
-                        }
-                      }
+                      style="flex: 1 1 auto;"
                     />
                   </div>
                 </div>
                 <div
-                  className="th"
-                  colSpan={1}
+                  class="th"
+                  colspan="1"
                   role="columnheader"
-                  style={
-                    Object {
-                      "alignItems": "center",
-                      "boxSizing": "border-box",
-                      "display": "flex",
-                      "flex": "145 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "145px",
-                      "textAlign": "left",
-                      "width": "145px",
-                    }
-                  }
+                  style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                 >
                   <div
-                    className="sortable-column"
+                    class="sortable-column"
                   >
                     Assessed Building
                     <span
-                      style={
-                        Object {
-                          "flex": "1 1 auto",
-                        }
-                      }
+                      style="flex: 1 1 auto;"
                     />
                   </div>
                 </div>
                 <div
-                  className="th"
-                  colSpan={1}
+                  class="th"
+                  colspan="1"
                   role="columnheader"
-                  style={
-                    Object {
-                      "alignItems": "center",
-                      "boxSizing": "border-box",
-                      "display": "flex",
-                      "flex": "60 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "30px",
-                      "textAlign": "left",
-                      "width": "60px",
-                    }
-                  }
+                  style="box-sizing: border-box; flex: 60 0 auto; min-width: 30px; width: 60px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
                 >
                   <div
-                    className="sortable-column"
+                    class="sortable-column"
                   >
                     Type
                     <span
-                      style={
-                        Object {
-                          "flex": "1 1 auto",
-                        }
-                      }
+                      style="flex: 1 1 auto;"
                     />
                   </div>
                 </div>
               </div>
             </div>
             <div
-              className="no-rows-message"
+              class="no-rows-message"
             >
               No rows to display
             </div>
           </div>
           <div
-            className="table-toolbar"
+            class="table-toolbar"
           />
         </div>
       </div>
@@ -2841,20 +2092,11 @@ exports[`Review Summary View renders submitted correctly 1`] = `
     <h3>
       Enhanced Referral Process Exemption
       <svg
-        className="tooltip-icon"
+        class="tooltip-icon"
         fill="currentColor"
         height="1em"
-        onBlur={[Function]}
-        onFocus={[Function]}
-        onMouseOut={[Function]}
-        onMouseOver={[Function]}
         stroke="currentColor"
-        strokeWidth="0"
-        style={
-          Object {
-            "color": undefined,
-          }
-        }
+        stroke-width="0"
         viewBox="0 0 512 512"
         width="1em"
         xmlns="http://www.w3.org/2000/svg"
@@ -2865,32 +2107,29 @@ exports[`Review Summary View renders submitted correctly 1`] = `
       </svg>
     </h3>
     <div
-      className="ProjectExemptionRequestCheck form-row"
+      class="ProjectExemptionRequestCheck form-row"
     >
       <div
-        className="form-group"
+        class="form-group"
       >
         <div
-          className="check-field"
+          class="check-field"
         >
           <div
-            className="form-check"
+            class="form-check"
           >
             <input
-              checked={false}
-              className="form-check-input position-static"
-              disabled={true}
+              class="form-check-input position-static"
+              disabled=""
               id="input-exemptionRequested"
               name="exemptionRequested"
-              onBlur={[Function]}
-              onChange={[Function]}
               type="checkbox"
-              value={false}
+              value="false"
             />
           </div>
           <label
-            className="text-wrap form-label"
-            htmlFor="input-exemptionRequested"
+            class="text-wrap form-label"
+            for="input-exemptionRequested"
           >
             Apply for Enhanced Referral Process exemption
           </label>
@@ -2901,33 +2140,31 @@ exports[`Review Summary View renders submitted correctly 1`] = `
       Approval
     </h3>
     <div
-      className="form-row"
+      class="form-row"
     >
       <div
-        className="required form-group"
+        class="required form-group"
       >
         <div
-          className="check-field"
+          class="check-field"
         >
           <div
-            className="form-check"
+            class="form-check"
           >
             <input
-              checked={true}
-              className="form-check-input position-static"
-              disabled={true}
+              checked=""
+              class="form-check-input position-static"
+              disabled=""
               id="input-confirmation"
               name="confirmation"
-              onBlur={[Function]}
-              onChange={[Function]}
-              required={true}
+              required=""
               type="checkbox"
-              value={true}
+              value="true"
             />
           </div>
           <label
-            className="form-label"
-            htmlFor="input-confirmation"
+            class="form-label"
+            for="input-confirmation"
           >
             My Ministry/Agency has approval/authority to submit the Disposal Project to SRES for review.
           </label>
@@ -2935,57 +2172,44 @@ exports[`Review Summary View renders submitted correctly 1`] = `
       </div>
     </div>
     <div
-      className="ProjectNotes form-row"
+      class="ProjectNotes form-row"
     >
       <div
-        className="col-md-10 form-group col"
+        class="col-md-10 form-group col"
       >
         <label
-          className="form-label"
-          htmlFor="input-note"
+          class="form-label"
+          for="input-note"
         >
           Notes
         </label>
         <textarea
-          className="col-md-5 form-control"
-          disabled={true}
+          class="col-md-5 form-control"
+          disabled=""
           id="input-note"
           name="note"
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          onMouseOut={[Function]}
-          onMouseOver={[Function]}
-          value="my notes"
-        />
+        >
+          my notes
+        </textarea>
       </div>
     </div>
     <div
-      className="ProjectNotes form-row"
+      class="ProjectNotes form-row"
     >
       <div
-        className="col-md-10 form-group col"
+        class="col-md-10 form-group col"
       >
         <label
-          className="form-label"
-          htmlFor="input-publicNote"
+          class="form-label"
+          for="input-publicNote"
         >
           Shared Notes
           <svg
-            className="tooltip-icon"
+            class="tooltip-icon"
             fill="currentColor"
             height="1em"
-            onBlur={[Function]}
-            onFocus={[Function]}
-            onMouseOut={[Function]}
-            onMouseOver={[Function]}
             stroke="currentColor"
-            strokeWidth="0"
-            style={
-              Object {
-                "color": undefined,
-              }
-            }
+            stroke-width="0"
             viewBox="0 0 512 512"
             width="1em"
             xmlns="http://www.w3.org/2000/svg"
@@ -2996,46 +2220,30 @@ exports[`Review Summary View renders submitted correctly 1`] = `
           </svg>
         </label>
         <textarea
-          className="col-md-5 form-control"
-          disabled={true}
+          class="col-md-5 form-control"
+          disabled=""
           id="input-publicNote"
           name="publicNote"
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          onMouseOut={[Function]}
-          onMouseOver={[Function]}
-          value=""
         />
       </div>
     </div>
     <div
-      style={
-        Object {
-          "textAlign": "right",
-        }
-      }
+      style="text-align: right;"
     />
     <div
-      className="c3"
+      class="c3"
     >
       <button
-        className="btn btn-primary"
-        disabled={true}
-        onClick={[Function]}
-        style={
-          Object {
-            "marginLeft": 10,
-          }
-        }
+        class="btn btn-primary"
+        disabled=""
+        style="margin-left: 10px;"
         type="button"
       >
         Submit
       </button>
       <button
-        className="btn btn-secondary"
-        disabled={true}
-        onClick={[Function]}
+        class="btn btn-secondary"
+        disabled=""
         type="button"
       >
         Save

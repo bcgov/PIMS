@@ -2,44 +2,40 @@
 
 exports[`Documentation Step renders correctly 1`] = `
 <div
-  className="DocumentationStep container-fluid"
+  class="DocumentationStep container-fluid"
 >
   <form
-    className=""
-    noValidate={true}
-    onSubmit={[Function]}
+    class=""
+    novalidate=""
   >
     <h3>
       Documentation
     </h3>
     <div
-      className="tasksForm form-row"
+      class="tasksForm form-row"
     >
       <div
-        className="required form-group"
+        class="required form-group"
       >
         <div
-          className="check-field"
+          class="check-field"
         >
           <div
-            className="form-check"
+            class="form-check"
           >
             <input
-              checked={false}
-              className="form-check-input position-static"
-              disabled={true}
+              class="form-check-input position-static"
+              disabled=""
               id="input-tasks.0.isCompleted"
               name="tasks.0.isCompleted"
-              onBlur={[Function]}
-              onChange={[Function]}
-              required={true}
+              required=""
               type="checkbox"
-              value={false}
+              value="false"
             />
           </div>
           <label
-            className="form-label"
-            htmlFor="input-tasks.0.isCompleted"
+            class="form-label"
+            for="input-tasks.0.isCompleted"
           >
             Task #1
           </label>
@@ -47,33 +43,30 @@ exports[`Documentation Step renders correctly 1`] = `
       </div>
     </div>
     <div
-      className="tasksForm form-row"
+      class="tasksForm form-row"
     >
       <div
-        className="required form-group"
+        class="required form-group"
       >
         <div
-          className="check-field"
+          class="check-field"
         >
           <div
-            className="form-check"
+            class="form-check"
           >
             <input
-              checked={false}
-              className="form-check-input position-static"
-              disabled={true}
+              class="form-check-input position-static"
+              disabled=""
               id="input-tasks.1.isCompleted"
               name="tasks.1.isCompleted"
-              onBlur={[Function]}
-              onChange={[Function]}
-              required={true}
+              required=""
               type="checkbox"
-              value={false}
+              value="false"
             />
           </div>
           <label
-            className="form-label"
-            htmlFor="input-tasks.1.isCompleted"
+            class="form-label"
+            for="input-tasks.1.isCompleted"
           >
             Task #2
           </label>
@@ -83,20 +76,11 @@ exports[`Documentation Step renders correctly 1`] = `
     <h3>
       Enhanced Referral Process Exemption
       <svg
-        className="tooltip-icon"
+        class="tooltip-icon"
         fill="currentColor"
         height="1em"
-        onBlur={[Function]}
-        onFocus={[Function]}
-        onMouseOut={[Function]}
-        onMouseOver={[Function]}
         stroke="currentColor"
-        strokeWidth="0"
-        style={
-          Object {
-            "color": undefined,
-          }
-        }
+        stroke-width="0"
         viewBox="0 0 512 512"
         width="1em"
         xmlns="http://www.w3.org/2000/svg"
@@ -107,32 +91,29 @@ exports[`Documentation Step renders correctly 1`] = `
       </svg>
     </h3>
     <div
-      className="ProjectExemptionRequestCheck form-row"
+      class="ProjectExemptionRequestCheck form-row"
     >
       <div
-        className="form-group"
+        class="form-group"
       >
         <div
-          className="check-field"
+          class="check-field"
         >
           <div
-            className="form-check"
+            class="form-check"
           >
             <input
-              checked={false}
-              className="form-check-input position-static"
-              disabled={true}
+              class="form-check-input position-static"
+              disabled=""
               id="input-exemptionRequested"
               name="exemptionRequested"
-              onBlur={[Function]}
-              onChange={[Function]}
               type="checkbox"
-              value={false}
+              value="false"
             />
           </div>
           <label
-            className="text-wrap form-label"
-            htmlFor="input-exemptionRequested"
+            class="text-wrap form-label"
+            for="input-exemptionRequested"
           >
             Apply for Enhanced Referral Process exemption
           </label>
@@ -140,35 +121,26 @@ exports[`Documentation Step renders correctly 1`] = `
       </div>
     </div>
     <div
-      className="ProjectNotes form-row"
+      class="ProjectNotes form-row"
     >
       <div
-        className="col-md-10 form-group col"
+        class="col-md-10 form-group col"
       >
         <label
-          className="form-label"
-          htmlFor="input-note"
+          class="form-label"
+          for="input-note"
         >
           Notes
         </label>
         <textarea
-          className="col-md-auto form-control"
+          class="col-md-auto form-control"
           id="input-note"
           name="note"
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          onMouseOut={[Function]}
-          onMouseOver={[Function]}
         />
       </div>
     </div>
     <div
-      style={
-        Object {
-          "textAlign": "right",
-        }
-      }
+      style="text-align: right;"
     />
   </form>
 </div>

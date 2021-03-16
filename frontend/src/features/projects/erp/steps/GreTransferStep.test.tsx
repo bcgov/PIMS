@@ -1,5 +1,5 @@
 import React from 'react';
-import renderer, { act } from 'react-test-renderer';
+import { act } from 'react-test-renderer';
 import { createMemoryHistory } from 'history';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
@@ -95,8 +95,8 @@ describe('GRE Transfer Step', () => {
   });
   it('renders correctly', () => {
     mockKeycloak([]);
-    const tree = renderer.create(getGreTransferStep()).toJSON();
-    expect(tree).toMatchSnapshot();
+    const { container } = render(getGreTransferStep());
+    expect(container.firstChild).toMatchSnapshot();
   });
   describe('Display when user has required claims', () => {
     beforeAll(() => {

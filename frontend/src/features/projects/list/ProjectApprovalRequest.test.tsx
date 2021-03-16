@@ -10,6 +10,8 @@ import * as API from 'constants/API';
 import { Provider } from 'react-redux';
 import * as reducerTypes from 'constants/reducerTypes';
 import service from '../apiService';
+import { noop } from 'lodash';
+import { Formik } from 'formik';
 
 const testData = {
   items: [
@@ -95,11 +97,13 @@ describe('Project Approval Request list view', () => {
     mockedService.getProjectList.mockResolvedValueOnce(testData as any);
 
     const { container } = render(
-      <Provider store={store}>
-        <Router history={history}>
-          <ProjectApprovalRequestListView />
-        </Router>
-      </Provider>,
+      <Formik initialValues={{}} onSubmit={noop}>
+        <Provider store={store}>
+          <Router history={history}>
+            <ProjectApprovalRequestListView />
+          </Router>
+        </Provider>
+      </Formik>,
     );
     await wait(() => expect(service.getProjectList).toHaveBeenCalledTimes(1), { timeout: 500 });
     expect(container.firstChild).toMatchSnapshot();
@@ -115,11 +119,13 @@ describe('Project Approval Request list view', () => {
     });
 
     const { findByText } = render(
-      <Provider store={store}>
-        <Router history={history}>
-          <ProjectApprovalRequestListView />
-        </Router>
-      </Provider>,
+      <Formik initialValues={{}} onSubmit={noop}>
+        <Provider store={store}>
+          <Router history={history}>
+            <ProjectApprovalRequestListView />
+          </Router>
+        </Provider>
+      </Formik>,
     );
 
     // default table message when there is no data to display

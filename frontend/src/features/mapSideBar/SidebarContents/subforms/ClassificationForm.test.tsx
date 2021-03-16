@@ -1,5 +1,4 @@
 import React from 'react';
-import renderer from 'react-test-renderer';
 import { cleanup, fireEvent, render, wait } from '@testing-library/react';
 import { Formik } from 'formik';
 import { noop } from 'lodash';
@@ -99,8 +98,8 @@ const getStore = () =>
   });
 
 it('renders correctly', () => {
-  const tree = renderer.create(form).toJSON();
-  expect(tree).toMatchSnapshot();
+  const { container } = render(form);
+  expect(container.firstChild).toMatchSnapshot();
 });
 
 const form = (
