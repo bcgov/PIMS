@@ -246,6 +246,8 @@ const PropertyListView: React.FC = () => {
   const { updateBuilding, updateParcel } = useApi();
   const [editable, setEditable] = useState(false);
   const tableFormRef = useRef<FormikProps<{ properties: IProperty[] }> | undefined>();
+  /** maintains state of table's propertyType when user switches via tabs  */
+  const [propertyType, setPropertyType] = useState<PropertyTypeNames>(PropertyTypeNames.Land);
   const [dirtyRows, setDirtyRows] = useState<IChangedRow[]>([]);
   const keycloak = useKeycloakWrapper();
   const municipalities = useMemo(
@@ -347,11 +349,11 @@ const PropertyListView: React.FC = () => {
   // Update internal state whenever the filter bar state changes
   const handleFilterChange = useCallback(
     async (value: IPropertyFilter) => {
-      setFilter({ ...value });
-      updateSearch({ ...value });
+      setFilter({ ...value, propertyType: propertyType });
+      updateSearch({ ...value, propertyType: propertyType });
       setPageIndex(0); // Go to first page of results when filter changes
     },
-    [setFilter, setPageIndex, updateSearch],
+    [setFilter, setPageIndex, updateSearch, propertyType],
   );
   // This will get called when the table needs new data
   const handleRequestData = useCallback(
@@ -449,6 +451,7 @@ const PropertyListView: React.FC = () => {
   };
 
   const changePropertyType = (type: PropertyTypeNames) => {
+    setPropertyType(type);
     setPageIndex(0);
     setFilter(state => {
       return {
