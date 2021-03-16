@@ -1,7 +1,6 @@
 import React from 'react';
 import { createMemoryHistory } from 'history';
 import { Router } from 'react-router-dom';
-import renderer from 'react-test-renderer';
 import { mount } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import Enzyme from 'enzyme';
@@ -67,17 +66,17 @@ const store = mockStore({
   },
 });
 describe('AccessRequestPage functionality', () => {
+  const testRender = () =>
+    render(
+      <Provider store={successStore}>
+        <Router history={history}>
+          <AccessRequestPage />
+        </Router>
+      </Provider>,
+    );
   it('renders RequestAccessPage correctly', () => {
-    const tree = renderer
-      .create(
-        <Provider store={store}>
-          <Router history={history}>
-            <AccessRequestPage />
-          </Router>
-        </Provider>,
-      )
-      .toJSON();
-    expect(tree).toMatchSnapshot();
+    const { container } = testRender();
+    expect(container.firstChild).toMatchSnapshot();
   });
 
   describe('component functionality when requestAccess status is 200 and fetching is false', () => {
@@ -88,15 +87,6 @@ describe('AccessRequestPage functionality', () => {
         </Router>
       </Provider>,
     );
-
-    const testRender = () =>
-      render(
-        <Provider store={successStore}>
-          <Router history={history}>
-            <AccessRequestPage />
-          </Router>
-        </Provider>,
-      );
 
     it('renders dropdown for agenices and roles', () => {
       expect(componentRender.find(Select).length).toBe(2);

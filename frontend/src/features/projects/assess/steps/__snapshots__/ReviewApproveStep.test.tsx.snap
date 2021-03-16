@@ -229,7 +229,7 @@ exports[`Review Approve Step renders correctly 1`] = `
                   name="netBook"
                   placeholder=""
                   required=""
-                  value=""
+                  value="10"
                 />
               </div>
             </div>
@@ -258,7 +258,7 @@ exports[`Review Approve Step renders correctly 1`] = `
                   name="market"
                   placeholder=""
                   required=""
-                  value=""
+                  value="9"
                 />
               </div>
             </div>
@@ -310,7 +310,7 @@ exports[`Review Approve Step renders correctly 1`] = `
                   disabled=""
                   name="salesCost"
                   placeholder=""
-                  value=""
+                  value="7"
                 />
               </div>
             </div>
@@ -334,7 +334,7 @@ exports[`Review Approve Step renders correctly 1`] = `
                   disabled=""
                   name="programCost"
                   placeholder=""
-                  value=""
+                  value="4"
                 />
               </div>
             </div>

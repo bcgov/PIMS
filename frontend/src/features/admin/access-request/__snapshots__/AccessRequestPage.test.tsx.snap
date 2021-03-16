@@ -2,7 +2,7 @@
 
 exports[`AccessRequestPage functionality renders RequestAccessPage correctly 1`] = `
 <div
-  className="accessRequestPage"
+  class="accessRequestPage"
 >
   <div>
     <h3>
@@ -11,132 +11,113 @@ exports[`AccessRequestPage functionality renders RequestAccessPage correctly 1`]
   </div>
   <hr />
   <div
-    className="container-fluid"
+    class="container-fluid"
   >
     <div
-      className="justify-content-md-center row"
+      class="justify-content-md-center row"
     >
       <form
-        className="userInfo"
-        noValidate={true}
-        onSubmit={[Function]}
+        class="userInfo"
+        novalidate=""
       >
         <div
-          className="form-group"
+          class="form-group"
         >
           <label
-            className="form-label"
-            htmlFor="input-user.username"
+            class="form-label"
+            for="input-user.username"
           >
             IDIR/BCeID
           </label>
           <input
-            className="form-control"
+            class="form-control"
             id="input-user.username"
             name="user.username"
-            onBlur={[Function]}
-            onChange={[Function]}
-            onFocus={[Function]}
-            onMouseOut={[Function]}
-            onMouseOver={[Function]}
-            readOnly={true}
+            readonly=""
             type="text"
+            value=""
           />
         </div>
         <div
-          className="row"
+          class="row"
         >
           <div
-            className="col"
+            class="col"
           >
             <div
-              className="form-group"
+              class="form-group"
             >
               <label
-                className="form-label"
-                htmlFor="input-user.firstName"
+                class="form-label"
+                for="input-user.firstName"
               >
                 First Name
               </label>
               <input
-                className="form-control"
+                class="form-control"
                 id="input-user.firstName"
                 name="user.firstName"
-                onBlur={[Function]}
-                onChange={[Function]}
-                onFocus={[Function]}
-                onMouseOut={[Function]}
-                onMouseOver={[Function]}
-                readOnly={true}
+                readonly=""
                 type="text"
+                value=""
               />
             </div>
           </div>
           <div
-            className="col"
+            class="col"
           >
             <div
-              className="form-group"
+              class="form-group"
             >
               <label
-                className="form-label"
-                htmlFor="input-user.lastName"
+                class="form-label"
+                for="input-user.lastName"
               >
                 Last Name
               </label>
               <input
-                className="form-control"
+                class="form-control"
                 id="input-user.lastName"
                 name="user.lastName"
-                onBlur={[Function]}
-                onChange={[Function]}
-                onFocus={[Function]}
-                onMouseOut={[Function]}
-                onMouseOver={[Function]}
-                readOnly={true}
+                readonly=""
                 type="text"
+                value=""
               />
             </div>
           </div>
         </div>
         <div
-          className="form-group"
+          class="form-group"
         >
           <label
-            className="form-label"
-            htmlFor="input-user.email"
+            class="form-label"
+            for="input-user.email"
           >
             Email
           </label>
           <input
-            className="form-control"
+            class="form-control"
             id="input-user.email"
             name="user.email"
-            onBlur={[Function]}
-            onChange={[Function]}
-            onFocus={[Function]}
-            onMouseOut={[Function]}
-            onMouseOver={[Function]}
-            readOnly={true}
+            readonly=""
             type="email"
+            value=""
           />
         </div>
         <div
-          className="required form-group"
+          class="required form-group"
         >
           <label
-            className="form-label"
-            htmlFor="input-agency"
+            class="form-label"
+            for="input-agency"
           >
             Agency
           </label>
           <select
-            className="form-select form-control"
+            class="form-select form-control"
             id="input-agency"
             name="agency"
-            onBlur={[Function]}
-            onChange={[Function]}
-            required={true}
+            required=""
           >
             <option
               value=""
@@ -144,7 +125,7 @@ exports[`AccessRequestPage functionality renders RequestAccessPage correctly 1`]
               Please Select
             </option>
             <option
-              className="option"
+              class="option"
               value="1"
             >
               agencyVal
@@ -152,33 +133,28 @@ exports[`AccessRequestPage functionality renders RequestAccessPage correctly 1`]
           </select>
         </div>
         <div
-          className="form-group"
+          class="form-group"
         >
           <label
-            className="form-label"
-            htmlFor="input-user.position"
+            class="form-label"
+            for="input-user.position"
           >
             Position
           </label>
           <input
-            className="form-control"
+            class="form-control"
             id="input-user.position"
             name="user.position"
-            onBlur={[Function]}
-            onChange={[Function]}
-            onFocus={[Function]}
-            onMouseOut={[Function]}
-            onMouseOver={[Function]}
             placeholder="e.g) Director, Real Estate and Stakeholder Engagement"
             type="text"
             value=""
           />
         </div>
         <div
-          className="check-roles form-group"
+          class="check-roles form-group"
         >
           <label
-            className="form-label"
+            class="form-label"
           >
             Roles
              
@@ -191,18 +167,13 @@ exports[`AccessRequestPage functionality renders RequestAccessPage correctly 1`]
             </a>
           </label>
           <div
-            className="required form-group"
+            class="required form-group"
           >
             <select
-              className="form-select form-control"
+              class="form-select form-control"
               id="input-role"
               name="role"
-              onBlur={[Function]}
-              onChange={[Function]}
-              onFocus={[Function]}
-              onMouseOut={[Function]}
-              onMouseOver={[Function]}
-              required={true}
+              required=""
             >
               <option
                 value=""
@@ -210,7 +181,7 @@ exports[`AccessRequestPage functionality renders RequestAccessPage correctly 1`]
                 Please Select
               </option>
               <option
-                className="option"
+                class="option"
                 value="1"
               >
                 roleVal
@@ -219,25 +190,19 @@ exports[`AccessRequestPage functionality renders RequestAccessPage correctly 1`]
           </div>
         </div>
         <div
-          className="required form-group"
+          class="required form-group"
         >
           <label
-            className="form-label"
-            htmlFor="input-note"
+            class="form-label"
+            for="input-note"
           >
             Notes
           </label>
           <textarea
-            className="form-control"
+            class="form-control"
             id="input-note"
             name="note"
-            onBlur={[Function]}
-            onChange={[Function]}
-            onFocus={[Function]}
-            onMouseOut={[Function]}
-            onMouseOver={[Function]}
             placeholder="Please specify why you need access to PIMS and include your manager's name."
-            value=""
           />
         </div>
         <p>
@@ -258,15 +223,14 @@ exports[`AccessRequestPage functionality renders RequestAccessPage correctly 1`]
           .
         </p>
         <div
-          className="justify-content-md-center row"
+          class="justify-content-md-center row"
         >
           <div
-            className="cancelSave btn-toolbar"
+            class="cancelSave btn-toolbar"
             role="toolbar"
           >
             <button
-              className="mr-5 btn btn-primary"
-              disabled={false}
+              class="mr-5 btn btn-primary"
               type="submit"
             >
               Submit

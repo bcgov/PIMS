@@ -238,6 +238,11 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
       }
       setFeatures(results);
       setLoadingTiles(false);
+      if (results.length === 0) {
+        toast.info('No search results found');
+      } else {
+        toast.info(`${results.length} properties found`);
+      }
     } catch (error) {
       toast.error((error as Error).message, { autoClose: 7000 });
       console.error(error);
