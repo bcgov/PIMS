@@ -36,6 +36,7 @@ const AgencyCol = styled(Col)`
 `;
 
 interface IProjectDraftFormProps {
+  hideAgency?: boolean;
   setIsReadOnly?: Function;
   title?: string;
 }
@@ -48,6 +49,7 @@ const ProjectDraftForm = ({
   isReadOnly,
   title,
   setIsReadOnly,
+  hideAgency,
 }: IStepProps & IProjectDraftFormProps) => {
   const { getOptionsByType } = useCodeLookups();
   const keycloak = useKeycloakWrapper();
@@ -99,7 +101,7 @@ const ProjectDraftForm = ({
           required
         />
       </Form.Row>
-      {(isSRES || isUserAgencyAParent) && (
+      {(isSRES || isUserAgencyAParent) && !hideAgency && (
         <Form.Row className="col-md-10">
           <Form.Label className="col-md-1">Project Agency</Form.Label>
           <AgencyCol className="col-md-5">

@@ -22,6 +22,7 @@ import * as parcelsActions from 'actions/parcelsActions';
 import { useDispatch } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import queryString from 'query-string';
+import { toast } from 'react-toastify';
 
 export type PointClustererProps = {
   points: Array<PointFeature>;
@@ -265,6 +266,9 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
           .then(parcel => {
             popUpContext.setPropertyInfo(parcel);
           })
+          .catch(() => {
+            toast.error('Unable to load property details, refresh the page and try again.');
+          })
           .finally(() => {
             popUpContext.setLoading(false);
           });
@@ -275,6 +279,9 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
             if (!!building.parcels.length) {
               dispatch(parcelsActions.storeBuildingDetail(building));
             }
+          })
+          .catch(() => {
+            toast.error('Unable to load property details, refresh the page and try again.');
           })
           .finally(() => {
             popUpContext.setLoading(false);

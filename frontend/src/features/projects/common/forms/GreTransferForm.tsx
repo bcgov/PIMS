@@ -35,7 +35,7 @@ export const GreTransferForm = ({ canEdit }: { canEdit: boolean }) => {
   }, [setFieldValue, values.properties, values.agencyId, agencies, touched, initialAgencyId]);
   return (
     <Fragment>
-      <ProjectDraftForm isReadOnly={canEdit} />
+      <ProjectDraftForm isReadOnly={canEdit} hideAgency={true} />
       <h3>Properties in the Project</h3>
       <p>Update Properties with New Agency Owner Name</p>
       <Form.Row>
@@ -49,9 +49,10 @@ export const GreTransferForm = ({ canEdit }: { canEdit: boolean }) => {
           labelKey="label"
           paginate={false}
           required
-          getOptionByValue={(value: number) =>
-            _.filter(agencyOptions, { value: value?.toString() }) ?? []
-          }
+          getOptionByValue={(value: number) => {
+            const options = _.filter(agencyOptions, { value: value?.toString() }) ?? [];
+            return options;
+          }}
         />
       </Form.Row>
       <PropertyListViewUpdate
