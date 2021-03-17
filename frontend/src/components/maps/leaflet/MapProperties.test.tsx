@@ -219,7 +219,7 @@ describe('MapProperties View', () => {
     expect((loadProperties as jest.Mock).mock.calls[9][0].name).toBe('testname');
   });
 
-  it('makes no additional calls if the filter button is clicked and the filter has not changed.', async () => {
+  it('filter will fire everytime the search button is clicked', async () => {
     const mapRef = createRef<ReactLeafletMap<LeafletMapProps, LeafletMap>>();
 
     const { container } = render(getMap(mapRef, noParcels, emptyDetails));
@@ -227,7 +227,7 @@ describe('MapProperties View', () => {
     fireEvent.click(searchButton!);
 
     const { loadProperties } = useApi();
-    await wait(() => expect(loadProperties).toHaveBeenCalledTimes(9), { timeout: 500 });
+    await wait(() => expect(loadProperties).toHaveBeenCalledTimes(18), { timeout: 500 });
   });
 
   it('makes the correct calls to load the map data when the reset filter is clicked', async () => {

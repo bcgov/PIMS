@@ -218,7 +218,7 @@ namespace Pims.Dal.Services
                 pp.Subdivision = this.Context.Parcels.Find(pp.ParcelId);
             });
 
-            parcel.Buildings.ForEach(pb =>
+            parcel.Buildings.Where(pb => pb.Building != null).ForEach(pb =>
             {
                 pb.Parcel = parcel;
                 pb.Building.Address.AdministrativeArea = parcel.Address.AdministrativeArea;

@@ -202,7 +202,7 @@ const Form: React.FC<IAssociatedLandForm> = ({
   useParcelLayerData({
     formikRef,
     nameSpace: currentParcelNameSpace,
-    agencyId: +formikProps.values.data.agencyId,
+    agencyId: getIn(+formikProps.values, `data.parcels.${stepper.currentTab}.agencyId`),
   });
 
   const render = (): React.ReactNode => {
@@ -436,7 +436,9 @@ const AssociatedLandForm: React.FC<IAssociatedLandParentForm> = (
   });
   const api = useApi();
 
-  initialValues.data.agencyId = keycloak.agencyId ?? '';
+  initialValues.data.agencyId = initialValues.data.agencyId
+    ? initialValues.data.agencyId
+    : keycloak.agencyId ?? '';
 
   /**
    * Combines yup validation with manual validation of financial data for performance reasons.
@@ -631,7 +633,7 @@ const AssociatedLandForm: React.FC<IAssociatedLandParentForm> = (
             if (values.parcels !== undefined) {
               props.formikRef.current.setFieldValue('data.parcels', [
                 ...values.parcels,
-                getInitialLandValues(),
+                { ...getInitialLandValues(), agencyId: initialValues.data.agencyId },
               ]);
             }
           }}

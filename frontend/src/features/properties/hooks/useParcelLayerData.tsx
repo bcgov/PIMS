@@ -12,6 +12,7 @@ import useCodeLookups from 'hooks/useLookupCodes';
 import { toast } from 'react-toastify';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
 import { getInitialValues } from 'features/mapSideBar/SidebarContents/LandForm';
+import { useKeycloakWrapper } from 'hooks/useKeycloakWrapper';
 
 interface IUseParcelLayerDataProps {
   formikRef: React.MutableRefObject<FormikValues | undefined>;
@@ -158,6 +159,7 @@ const useParcelLayerData = ({
   const { getByType } = useCodeLookups();
   const [showOverwriteDialog, setShowOverwriteDialog] = useState(false);
   const dispatch = useDispatch();
+  const keycloak = useKeycloakWrapper();
 
   useDeepCompareEffect(() => {
     if (!!formikRef?.current && isMouseEventRecent(parcelLayerData?.e) && !!parcelLayerData?.data) {
@@ -167,7 +169,7 @@ const useParcelLayerData = ({
           formikRef,
           getByType(AMINISTRATIVE_AREA_CODE_SET_NAME),
           nameSpace ?? '',
-          agencyId,
+          agencyId ?? keycloak.agencyId ?? '',
         );
         dispatch(clearParcelLayerData());
       } else {
@@ -185,7 +187,7 @@ const useParcelLayerData = ({
         formikRef,
         getByType(AMINISTRATIVE_AREA_CODE_SET_NAME),
         nameSpace ?? '',
-        agencyId,
+        agencyId ?? keycloak.agencyId ?? '',
       ),
   };
 };
