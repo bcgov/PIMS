@@ -151,7 +151,7 @@ describe('Land Form', () => {
 
   it('Displays a reminder on the classification form if the classification is changed and there is at least one building', async () => {
     const { getByText, container } = render(
-      getLandForm(false, { ...defaultInitialValues, buildings: [{} as any] }),
+      getLandForm(false, { ...defaultInitialValues, id: 0, buildings: [{} as any] }),
     );
     await wait(() => {
       fireEvent.click(getByText(/continue/i));
@@ -163,7 +163,7 @@ describe('Land Form', () => {
 
   it('Does not display a reminder on the classification form if the classification is changed and there are no buildings', async () => {
     const { getByText, container } = render(
-      getLandForm(false, { ...defaultInitialValues, buildings: [] }),
+      getLandForm(false, { ...defaultInitialValues, id: 0, buildings: [] }),
     );
     await wait(() => {
       fireEvent.click(getByText(/continue/i));

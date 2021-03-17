@@ -118,7 +118,7 @@ export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
                   field={withNameSpace('agencyId')}
                   options={props.agencies}
                   filterBy={['code', 'label', 'parent']}
-                  disabled={editInfo.identification || !props.isPropertyAdmin}
+                  disabled={true}
                 />
               </Row>
               <Row className="content-item">

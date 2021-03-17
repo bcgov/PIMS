@@ -342,8 +342,41 @@ const LandForm: React.FC<IParentLandForm> = (props: IParentLandForm) => {
   const keycloak = useKeycloakWrapper();
   const dispatch = useDispatch();
   const api = useApi();
+  const steps: IStep[] = [
+    {
+      route: 'identification',
+      title: 'Parcel ID',
+      completed: false,
+      canGoToStep: true,
+      validation: props.disabled
+        ? undefined
+        : { schema: LandIdentificationSchema, nameSpace: () => 'data' },
+    },
+    {
+      route: 'usage',
+      title: 'Usage',
+      completed: false,
+      canGoToStep: !!props.initialValues?.id || !!props.disabled,
+      validation: props.disabled ? undefined : { schema: LandUsageSchema, nameSpace: () => 'data' },
+    },
+    {
+      route: 'valuation',
+      title: 'Valuation',
+      completed: false,
+      canGoToStep: !!props.initialValues?.id || !!props.disabled,
+      validation: props.disabled ? undefined : { schema: ValuationSchema, nameSpace: () => 'data' },
+    },
+    {
+      route: 'review',
+      title: 'Review',
+      completed: false,
+      canGoToStep: !!props.initialValues?.id || !!props.disabled,
+      validation: props.disabled ? undefined : { schema: ParcelSchema, nameSpace: () => 'data' },
+    },
+  ];
+
   const initialValues = {
-    activeStep: 0,
+    activeStep: props.initialValues?.id ? steps.length - 1 : 0,
     activeTab: 0,
     tabs: [{ activeStep: 0 }],
     data: {
@@ -413,39 +446,6 @@ const LandForm: React.FC<IParentLandForm> = (props: IParentLandForm) => {
     const response = await api.isPinAvailable(values.id, values.pin);
     return response?.available;
   };
-
-  const steps: IStep[] = [
-    {
-      route: 'identification',
-      title: 'Parcel ID',
-      completed: false,
-      canGoToStep: true,
-      validation: props.disabled
-        ? undefined
-        : { schema: LandIdentificationSchema, nameSpace: () => 'data' },
-    },
-    {
-      route: 'usage',
-      title: 'Usage',
-      completed: false,
-      canGoToStep: !!initialValues?.data?.id || !!props.disabled,
-      validation: props.disabled ? undefined : { schema: LandUsageSchema, nameSpace: () => 'data' },
-    },
-    {
-      route: 'valuation',
-      title: 'Valuation',
-      completed: false,
-      canGoToStep: !!initialValues?.data?.id || !!props.disabled,
-      validation: props.disabled ? undefined : { schema: ValuationSchema, nameSpace: () => 'data' },
-    },
-  ];
-  steps.push({
-    route: 'review',
-    title: 'Review',
-    completed: false,
-    canGoToStep: !!initialValues?.data?.id || !!props.disabled,
-    validation: props.disabled ? undefined : { schema: ParcelSchema, nameSpace: () => 'data' },
-  });
 
   return (
     <Container className="landForm">
