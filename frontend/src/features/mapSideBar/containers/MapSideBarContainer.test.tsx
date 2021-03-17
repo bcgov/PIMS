@@ -20,7 +20,6 @@ import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import { Claims } from 'constants/claims';
 import { screen } from '@testing-library/dom';
-import { findByText } from '@testing-library/dom';
 
 jest.mock(
   'react-visibility-sensor',

@@ -1,5 +1,6 @@
 package-lock.json
 **/vendor
 *.html
+*.md
 node_modules
 build

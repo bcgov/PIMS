@@ -76,7 +76,13 @@ const ColumnFilter: React.FC<IColumnFilterProps> = ({ column, onFilter, children
       <span onClick={handleClick}>{children}</span>
       {open && (
         <ClickAwayListener onClickAway={handleClick}>
-          <InputContainer>
+          <InputContainer
+            onKeyUp={(e: any) => {
+              if (e.keyCode === 13) {
+                handleClick();
+              }
+            }}
+          >
             {(column.filter?.props as any)?.injectFormik ? (
               <Control {...column.filter?.props} formikProps={context} />
             ) : (
