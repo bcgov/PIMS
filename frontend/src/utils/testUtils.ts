@@ -1,4 +1,4 @@
-import { wait, fireEvent } from '@testing-library/react';
+import { wait, fireEvent, prettyDOM } from '@testing-library/react';
 import { act } from 'react-test-renderer';
 import { Map as LeafletMap, Layer } from 'leaflet';
 
@@ -28,6 +28,7 @@ export const fillInput = async (
           },
         });
       } else if (type === 'typeahead') {
+        fireEvent.focus(input!);
         fireEvent.change(input!, {
           target: {
             value: value,

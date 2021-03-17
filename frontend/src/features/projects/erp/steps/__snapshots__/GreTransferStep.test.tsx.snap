@@ -184,7 +184,7 @@ exports[`GRE Transfer Step renders correctly 1`] = `
               name="agencyId"
               role="combobox"
               type="text"
-              value=""
+              value="BC Transit"
             />
             <input
               aria-hidden="true"

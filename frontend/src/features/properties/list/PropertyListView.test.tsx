@@ -93,7 +93,7 @@ describe('Property list view', () => {
     });
   });
 
-  xit('Displays message for empty list', async () => {
+  it('Displays message for empty list', async () => {
     mockedService.getPropertyList.mockResolvedValueOnce({
       quantity: 0,
       total: 0,
