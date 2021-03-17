@@ -76,6 +76,7 @@ export const layersTree: ILayerItem[] = [
         format: 'image/png',
         zIndex: 10,
         id: 'firstNationsReserves',
+        color: '#ebe0d7',
       },
       {
         key: 'firstNationTreatyAreas',
@@ -124,6 +125,7 @@ export const layersTree: ILayerItem[] = [
         format: 'image/png',
         zIndex: 10,
         id: 'firstNationTreatySideAgreement',
+        color: '#ffc5ae',
       },
     ],
   },
@@ -143,6 +145,7 @@ export const layersTree: ILayerItem[] = [
         zIndex: 7,
         id: 'crownLeases',
         opacity: 0.5,
+        color: '#8dc2d5',
       },
       {
         key: 'crownInventory',
@@ -155,6 +158,7 @@ export const layersTree: ILayerItem[] = [
         zIndex: 6,
         id: 'crownInventory',
         opacity: 0.5,
+        color: '#fcc1eb',
       },
       {
         key: 'crownInclusions',
@@ -223,6 +227,7 @@ export const layersTree: ILayerItem[] = [
         zIndex: 4,
         id: 'agriculturalLandReserveLines',
         opacity: 0.5,
+        color: '#00b300',
       },
     ],
   },
