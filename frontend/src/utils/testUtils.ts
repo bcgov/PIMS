@@ -1,4 +1,4 @@
-import { wait, fireEvent, prettyDOM } from '@testing-library/react';
+import { wait, fireEvent } from '@testing-library/react';
 import { act } from 'react-test-renderer';
 import { Map as LeafletMap, Layer } from 'leaflet';
 
