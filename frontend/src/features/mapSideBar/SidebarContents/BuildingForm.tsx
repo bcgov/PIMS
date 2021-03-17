@@ -236,7 +236,17 @@ const Form: React.FC<IBuildingForm> = ({
                   toolTipId="submit-building-to-inventory-tooltip"
                   toolTip="Save any changes you've made"
                 >
-                  <Button type="submit">Save Updates</Button>
+                  <Button
+                    disabled={formikProps.isSubmitting}
+                    size="sm"
+                    type="submit"
+                    onClick={() => {
+                      formikProps.setSubmitting(true);
+                      formikProps.submitForm();
+                    }}
+                  >
+                    Save Updates
+                  </Button>
                 </TooltipWrapper>
               </>
             ) : (

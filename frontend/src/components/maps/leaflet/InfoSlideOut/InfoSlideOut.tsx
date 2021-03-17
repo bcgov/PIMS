@@ -26,6 +26,7 @@ import FilterBackdrop from '../FilterBackdrop';
 import * as parcelsActions from 'actions/parcelsActions';
 import { useApi } from 'hooks/useApi';
 import { useDispatch } from 'react-redux';
+import { toast } from 'react-toastify';
 
 const InfoContainer = styled.div`
   margin-right: -10px;
@@ -257,6 +258,11 @@ const InfoControl: React.FC<InfoControlProps> = ({ open, setOpen, onHeaderAction
                     .then((parcel: IParcel) => {
                       popUpContext.setPropertyInfo(parcel);
                     })
+                    .catch(() => {
+                      toast.error(
+                        'Unable to load property details, refresh the page and try again.',
+                      );
+                    })
                     .finally(() => {
                       popUpContext.setLoading(false);
                     });
@@ -267,6 +273,11 @@ const InfoControl: React.FC<InfoControlProps> = ({ open, setOpen, onHeaderAction
                       if (!!building.parcels.length) {
                         dispatch(parcelsActions.storeBuildingDetail(building));
                       }
+                    })
+                    .catch(() => {
+                      toast.error(
+                        'Unable to load property details, refresh the page and try again.',
+                      );
                     })
                     .finally(() => {
                       popUpContext.setLoading(false);
