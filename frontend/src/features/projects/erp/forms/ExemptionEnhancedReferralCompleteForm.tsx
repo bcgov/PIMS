@@ -53,6 +53,12 @@ const ExemptionEnhancedReferralCompleteForm = ({
     }
   }, [clearanceNotificationSentOn, setFieldValue]);
 
+  const isComplete = [
+    ReviewWorkflowStatus.Disposed,
+    ReviewWorkflowStatus.Cancelled,
+    ReviewWorkflowStatus.TransferredGRE,
+  ].some(v => v === formikProps.values.statusCode);
+
   return (
     <Container fluid className="EnhancedReferralCompleteForm">
       <ExemptionDetails isReadOnly={isReadOnly} />
@@ -84,14 +90,16 @@ const ExemptionEnhancedReferralCompleteForm = ({
           disabled={isReadOnly}
           field="transferredWithinGreOn"
         />
-        <div className="col-md-6">
-          <Button
-            disabled={isReadOnly || !formikProps.values.transferredWithinGreOn}
-            onClick={onClickGreTransferred}
-          >
-            Update Property Information
-          </Button>
-        </div>
+        {!isComplete && (
+          <div className="col-md-6">
+            <Button
+              disabled={isReadOnly || !formikProps.values.transferredWithinGreOn}
+              onClick={onClickGreTransferred}
+            >
+              Update Property Information
+            </Button>
+          </div>
+        )}
       </Form.Row>
       <h3>Option 2: Proceed to Surplus Properties List</h3>
       <Form.Row>
@@ -115,35 +123,43 @@ const ExemptionEnhancedReferralCompleteForm = ({
           disabled={isReadOnly}
           field="approvedForSplOn"
         />
-        <Button
-          disabled={
-            isReadOnly ||
-            !formikProps.values.requestForSplReceivedOn ||
-            !formikProps.values.approvedForSplOn
-          }
-          onClick={() => {
-            setProceedToSpl(true);
-          }}
-        >
-          Proceed to SPL
-        </Button>
-        {formikProps.values.statusCode !== ReviewWorkflowStatus.NotInSpl && (
+        {!isComplete && formikProps.values.statusCode !== ReviewWorkflowStatus.NotInSpl && (
           <>
-            <OrText>OR</OrText>
-            <Button disabled={isReadOnly} onClick={onClickNotInSpl}>
-              Not Included in the SPL
+            <Button
+              disabled={
+                isReadOnly ||
+                !formikProps.values.requestForSplReceivedOn ||
+                !formikProps.values.approvedForSplOn
+              }
+              onClick={() => {
+                setProceedToSpl(true);
+              }}
+            >
+              Proceed to SPL
             </Button>
+            {formikProps.values.statusCode !== ReviewWorkflowStatus.NotInSpl && (
+              <>
+                <OrText>OR</OrText>
+                <Button disabled={isReadOnly} onClick={onClickNotInSpl}>
+                  Not Included in the SPL
+                </Button>
+              </>
+            )}
           </>
         )}
       </Form.Row>
-      <h3>Option 3: Add to Enhanced Referral Process</h3>
-      <Form.Row>
-        <div className="justify-content-center add-space-below">
-          <Button disabled={isReadOnly} onClick={() => onClickAddToErp()}>
-            Add to Enhanced Referral Process
-          </Button>
-        </div>
-      </Form.Row>
+      {!isComplete && (
+        <>
+          <h3>Option 3: Add to Enhanced Referral Process</h3>
+          <Form.Row>
+            <div className="justify-content-center add-space-below">
+              <Button disabled={isReadOnly} onClick={() => onClickAddToErp()}>
+                Add to Enhanced Referral Process
+              </Button>
+            </div>
+          </Form.Row>
+        </>
+      )}
 
       {formikProps.values.statusCode === ReviewWorkflowStatus.NotInSpl && (
         <>
@@ -193,14 +209,16 @@ const ExemptionEnhancedReferralCompleteForm = ({
               disabled={isReadOnly}
               field="disposedOn"
             />
-            <Button
-              disabled={isReadOnly || !formikProps.values.disposedOn}
-              onClick={() =>
-                validateFormikWithCallback(formikProps, () => setDisposeExternally(true))
-              }
-            >
-              Dispose
-            </Button>
+            {!isComplete && (
+              <Button
+                disabled={isReadOnly || !formikProps.values.disposedOn}
+                onClick={() =>
+                  validateFormikWithCallback(formikProps, () => setDisposeExternally(true))
+                }
+              >
+                Dispose
+              </Button>
+            )}
           </Form.Row>
         </>
       )}
