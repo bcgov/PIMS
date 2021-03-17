@@ -34,7 +34,7 @@ namespace Pims.Api.Areas.Reports.Mapping.Project
                 .Map(dest => dest.ProjectNumber, src => src.ProjectNumber)
                 .Map(dest => dest.ReportedFiscalYear, src => src.ReportedFiscalYear.FiscalYear())
                 .Map(dest => dest.ActualFiscalYear, src => src.ActualFiscalYear.FiscalYear())
-                .Map(dest => dest.MajorActivity, src => MajorActivity(src)) // TODO: Need valid list and determine if it can be changed.
+                .Map(dest => dest.MajorActivity, src => src.Status.Name)
                 .Map(dest => dest.Status, src => SalesStatus(src)) // TODO: Need valid list and determine if it can be changed.
                 .Map(dest => dest.AgencyCode, src => AgencyConverter.ConvertAgency(src.Agency))
                 .Map(dest => dest.Name, src => src.Name)
@@ -68,25 +68,12 @@ namespace Pims.Api.Areas.Reports.Mapping.Project
                  });
         }
 
-        private string MajorActivity(Entity.Project project)
-        {
-            return project.Status.Code switch
-            {
-                "DIS" => "Complete",
-                "SPL-PM" => "Pre-Marketing",
-                "SPL-M" => "On the Market",
-                "PSL-CIP" => "Contract in Place",
-                _ => project.Status.Name
-            };
-        }
-
-        private string SalesStatus(Entity.Project project)
+        private string SalesStatus(Entity.Project project) // TODO: Shouldn't be using hardcoded values.
         {
             return project.Status.Code switch
             {
                 "SPL-CIP-C" => "Conditionally Sold",
                 "SPL-CIP-U" => "Unconditionally Sold",
-                "DIS" => "Complete",
                 _ => project.Status.Name
             };
         }
