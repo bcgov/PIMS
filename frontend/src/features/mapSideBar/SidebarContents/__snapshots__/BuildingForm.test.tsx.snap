@@ -440,7 +440,6 @@ exports[`Building Form component renders correctly 1`] = `
                               aria-haspopup="listbox"
                               autocomplete="off"
                               class="rbt-input-main form-control rbt-input"
-                              disabled=""
                               id="building.agencyId-field"
                               name="building.agencyId"
                               role="combobox"
