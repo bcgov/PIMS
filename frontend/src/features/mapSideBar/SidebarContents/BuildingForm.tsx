@@ -44,6 +44,7 @@ import { EvaluationKeys } from 'constants/evaluationKeys';
 import { FiscalKeys } from 'constants/fiscalKeys';
 import variables from '_variables.module.scss';
 import LastUpdatedBy from 'features/properties/components/LastUpdatedBy';
+import { fireMapRefreshEvent } from 'components/maps/hooks/useMapRefreshEvent';
 
 const Container = styled.div`
   background-color: #fff;
@@ -235,11 +236,31 @@ const Form: React.FC<IBuildingForm> = ({
                   toolTipId="submit-building-to-inventory-tooltip"
                   toolTip="Save any changes you've made"
                 >
-                  <Button type="submit">Save Updates</Button>
+                  <Button
+                    disabled={formikProps.isSubmitting}
+                    size="sm"
+                    type="submit"
+                    onClick={() => {
+                      formikProps.setSubmitting(true);
+                      formikProps.submitForm();
+                    }}
+                  >
+                    Save Updates
+                  </Button>
                 </TooltipWrapper>
               </>
             ) : (
-              <Button type="submit">Submit to Inventory</Button>
+              <Button
+                disabled={formikProps.isSubmitting}
+                size="sm"
+                type="submit"
+                onClick={() => {
+                  formikProps.setSubmitting(true);
+                  formikProps.submitForm();
+                }}
+              >
+                Submit
+              </Button>
             )}
           </>
         )}
@@ -437,6 +458,7 @@ const BuidingForm: React.FC<IParentBuildingForm> = ({
             } else {
               building = await updateBuilding(apiValues)(dispatch);
             }
+            fireMapRefreshEvent();
             actions.resetForm({ values: { ...values, ...{ data: building as any } } });
             setBuildingToAssociateLand(building);
           } catch (error) {

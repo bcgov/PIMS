@@ -3,7 +3,7 @@ import MapSideBarLayout from '../components/MapSideBarLayout';
 import useParamSideBar, { SidebarContextType } from '../hooks/useQueryParamSideBar';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from 'reducers/rootReducer';
-import { IParcel, IProperty, IBuilding } from 'actions/parcelsActions';
+import { IParcel, IProperty, IBuilding, storeParcelDetail } from 'actions/parcelsActions';
 import { deleteParcel, fetchParcelsDetail } from 'actionCreators/parcelsActionCreator';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
 import { BuildingForm, SubmitPropertySelector, LandForm } from '../SidebarContents';
@@ -39,6 +39,7 @@ import variables from '_variables.module.scss';
 import { withNameSpace } from 'utils/formUtils';
 import { PropertyTypes, Claims, EvaluationKeys, FiscalKeys } from 'constants/index';
 import { useBuildingApi } from '../hooks/useBuildingApi';
+import { fireMapRefreshEvent } from 'components/maps/hooks/useMapRefreshEvent';
 
 interface IMapSideBarContainerProps {
   refreshParcels: Function;
@@ -438,6 +439,7 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
                   }
                   formikRef.current.resetForm({ values: { data: response } });
                   setBuildingToAssociateLand(response);
+                  fireMapRefreshEvent();
                   addAssociatedLand();
                 } catch (err) {
                   toast.error(
@@ -576,9 +578,13 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
                 await deleteParcel(parcelDetail as IParcel)(dispatch);
                 break;
             }
+            fireMapRefreshEvent();
+            dispatch(storeParcelDetail(null));
             setShowSideBar(false, undefined, undefined, true);
           } catch (error) {
-            // TODO: The error is always undefined...  Need to handle concurrency and other errors better.
+            toast.error(
+              'Failed to delete building, check your network connection and permissions and retry',
+            );
           }
         }}
         handleCancel={() => {

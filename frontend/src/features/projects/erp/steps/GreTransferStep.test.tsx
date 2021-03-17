@@ -1,9 +1,8 @@
 import React from 'react';
-import { act } from 'react-test-renderer';
 import { createMemoryHistory } from 'history';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
-import { render, wait } from '@testing-library/react';
+import { render, wait, act } from '@testing-library/react';
 import { useKeycloak } from '@react-keycloak/web';
 import { Claims } from 'constants/claims';
 import MockAdapter from 'axios-mock-adapter';
@@ -153,42 +152,48 @@ describe('GRE Transfer Step', () => {
       mockKeycloak([Claims.ADMIN_PROJECTS]);
     });
 
-    xit('enables update button when new agency is selected', async () => {
-      const project = _.cloneDeep(mockProject);
-      const { container } = render(getGreTransferStep(getStore(project)));
-      const updateButton = screen.getByText(/Update Property Information Management System/);
-      await fillInput(container, 'agencyId', 'BC Transit', 'typeahead');
-
-      expect(updateButton).not.toBeDisabled();
-    });
-
-    xit('displays modal when Update PIMS button clicked', async () => {
-      const project = _.cloneDeep(mockProject);
-      project.properties[0].classificationId = Classifications.CoreOperational;
-      const { container } = render(getGreTransferStep(getStore(project)));
-      const updateButton = screen.getByText(/Update Property Information Management System/);
-      await fillInput(container, 'agencyId', 'BC Transit', 'typeahead');
-      await wait(() => expect(updateButton).not.toBeDisabled());
-      updateButton.click();
-
-      const errorSummary = await screen.findByText(/Really Update PIMS/);
-      expect(errorSummary).toBeVisible();
-    });
-
-    xit('gre performs validation on update', async () => {
-      const project = _.cloneDeep(mockProject);
-      const { container } = render(getGreTransferStep(getStore(project)));
-      const updateButton = screen.getByText(/Update Property Information Management System/);
-
-      await fillInput(container, 'agencyId', 'BC Transit', 'typeahead');
+    it('enables update button when new agency is selected', async () => {
       await act(async () => {
+        const project = _.cloneDeep(mockProject);
+        const { container } = render(getGreTransferStep(getStore(project)));
+        const updateButton = screen.getByText(/Update Property Information Management System/);
+        await fillInput(container, 'agencyId', 'BC Transit', 'typeahead');
+
+        expect(updateButton).not.toBeDisabled();
+      });
+    });
+
+    it('displays modal when Update PIMS button clicked', async () => {
+      await act(async () => {
+        const project = _.cloneDeep(mockProject);
+        project.properties[0].classificationId = Classifications.CoreOperational;
+        const { container } = render(getGreTransferStep(getStore(project)));
+        const updateButton = screen.getByText(/Update Property Information Management System/);
+        await fillInput(container, 'agencyId', 'BC Transit', 'typeahead');
         await wait(() => expect(updateButton).not.toBeDisabled());
         updateButton.click();
+
+        const errorSummary = await screen.findByText(/Really Update PIMS/);
+        expect(errorSummary).toBeVisible();
       });
-      const errorSummary = await screen.findByText(
-        /Must select Core Operational or Core Strategic/,
-      );
-      expect(errorSummary).toBeVisible();
+    });
+
+    it('gre performs validation on update', async () => {
+      await act(async () => {
+        const project = _.cloneDeep(mockProject);
+        const { container } = render(getGreTransferStep(getStore(project)));
+        const updateButton = screen.getByText(/Update Property Information Management System/);
+
+        await fillInput(container, 'agencyId', 'BC Transit', 'typeahead');
+        await act(async () => {
+          await wait(() => expect(updateButton).not.toBeDisabled());
+          updateButton.click();
+        });
+        const errorSummary = await screen.findByText(
+          /Must select Core Operational or Core Strategic/,
+        );
+        expect(errorSummary).toBeVisible();
+      });
     });
   });
 });

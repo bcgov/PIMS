@@ -316,11 +316,19 @@ export const getStore = (mockProject: IProject, tab?: SPPApprovalTabs) =>
     [reducerTypes.LOOKUP_CODE]: {
       lookupCodes: [
         {
+          code: 'BCP',
+          name: 'BC Transit Parent',
+          isDisabled: false,
+          id: 1,
+          type: API.AGENCY_CODE_SET_NAME,
+        },
+        {
           code: 'BCT',
           name: 'BC Transit',
-          value: 2,
-          id: 2,
+          isDisabled: false,
+          id: 0,
           type: API.AGENCY_CODE_SET_NAME,
+          parentId: 1,
         },
       ],
     },

@@ -28,6 +28,7 @@ export const fillInput = async (
           },
         });
       } else if (type === 'typeahead') {
+        fireEvent.focus(input!);
         fireEvent.change(input!, {
           target: {
             value: value,

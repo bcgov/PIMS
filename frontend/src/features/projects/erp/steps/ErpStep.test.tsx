@@ -284,19 +284,13 @@ describe('ERP Approval Step', () => {
       const proceedModal = await screen.findByText(/Really Not in SPL/);
       expect(proceedModal).toBeVisible();
     });
-    // TODO: Not sure why the test fails with "Invalid Date"...
-    xit('performs validation when updating status', async () => {
-      const project = _.cloneDeep(mockProject);
+    it('disables proceed to spl unless required fields are entered', async () => {
+      const project = _.cloneDeep({ ...mockProject, email: undefined });
       project.tasks[0].isOptional = false;
 
       render(getApprovalStep(getStore(project)));
       const proceedToSplButton = screen.getByText(/Proceed to SPL/);
-      act(() => {
-        proceedToSplButton.click();
-      });
-
-      const errorSummary = await screen.findByText(/The form has errors/);
-      expect(errorSummary).toBeVisible();
+      expect(proceedToSplButton).toBeDisabled();
     });
     it('erp filters agency responses on save', async () => {
       const project = _.cloneDeep(mockProject);
