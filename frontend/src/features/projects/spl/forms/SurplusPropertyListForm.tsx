@@ -120,134 +120,139 @@ const SurplusPropertyListForm = ({
     [location.search, parentParcels],
   );
 
+  const isComplete = [
+    ReviewWorkflowStatus.Disposed,
+    ReviewWorkflowStatus.Cancelled,
+    ReviewWorkflowStatus.TransferredGRE,
+  ].some(v => v === formikProps.values.statusCode);
+
   return (
     <Container fluid className="SurplusPropertyListForm">
-      {values.statusCode !== ReviewWorkflowStatus.Cancelled &&
-        values.statusCode !== ReviewWorkflowStatus.Disposed && (
-          <Form.Row>
-            <Form.Label column md={3}>
-              Change the Status
-            </Form.Label>
-            <Form.Group>
-              {values.workflowCode === DisposalWorkflows.Erp && (
-                <Button
-                  disabled={
-                    isReadOnly ||
-                    !values.clearanceNotificationSentOn ||
-                    !values.requestForSplReceivedOn
-                  }
-                  onClick={onClickProceedToSPL}
-                >
-                  Return to SPL
-                </Button>
-              )}
+      {!isComplete && (
+        <Form.Row>
+          <Form.Label column md={3}>
+            Change the Status
+          </Form.Label>
+          <Form.Group>
+            {values.workflowCode === DisposalWorkflows.Erp && (
+              <Button
+                disabled={
+                  isReadOnly ||
+                  !values.clearanceNotificationSentOn ||
+                  !values.requestForSplReceivedOn
+                }
+                onClick={onClickProceedToSPL}
+              >
+                Return to SPL
+              </Button>
+            )}
 
-              {values.statusCode === ReviewWorkflowStatus.PreMarketing && (
+            {values.statusCode === ReviewWorkflowStatus.PreMarketing && (
+              <Button
+                variant="secondary"
+                disabled={isReadOnly || values.statusCode !== ReviewWorkflowStatus.PreMarketing}
+                onClick={onClickRemoveFromSPL}
+              >
+                Remove from SPL
+              </Button>
+            )}
+            {values.statusCode !== ReviewWorkflowStatus.PreMarketing &&
+              values.workflowCode === DisposalWorkflows.Spl && (
                 <Button
-                  variant="secondary"
-                  disabled={isReadOnly || values.statusCode !== ReviewWorkflowStatus.PreMarketing}
-                  onClick={onClickRemoveFromSPL}
-                >
-                  Remove from SPL
-                </Button>
-              )}
-              {values.statusCode !== ReviewWorkflowStatus.PreMarketing &&
-                values.workflowCode === DisposalWorkflows.Spl && (
-                  <Button
-                    variant={mainBtn === 'PM' ? 'primary' : 'secondary'}
-                    disabled={isReadOnly}
-                    onClick={onClickPreMarketing}
-                  >
-                    Pre-Marketing
-                  </Button>
-                )}
-              {values.statusCode !== ReviewWorkflowStatus.OnMarket &&
-                values.workflowCode === DisposalWorkflows.Spl && (
-                  <Button
-                    variant={mainBtn === 'M' ? 'primary' : 'secondary'}
-                    disabled={isReadOnly}
-                    onClick={onClickMarketedOn}
-                  >
-                    On the Market
-                  </Button>
-                )}
-              {(values.statusCode === ReviewWorkflowStatus.PreMarketing ||
-                values.statusCode === ReviewWorkflowStatus.OnMarket) && (
-                <Button
-                  variant={mainBtn === 'CIP' ? 'primary' : 'secondary'}
+                  variant={mainBtn === 'PM' ? 'primary' : 'secondary'}
                   disabled={isReadOnly}
-                  onClick={onClickContractInPlaceConditional}
+                  onClick={onClickPreMarketing}
                 >
-                  Conditional
+                  Pre-Marketing
                 </Button>
               )}
-
-              {(values.statusCode === ReviewWorkflowStatus.PreMarketing ||
-                values.statusCode === ReviewWorkflowStatus.OnMarket ||
-                values.statusCode === ReviewWorkflowStatus.ContractInPlaceConditional) && (
+            {values.statusCode !== ReviewWorkflowStatus.OnMarket &&
+              values.workflowCode === DisposalWorkflows.Spl && (
                 <Button
-                  variant={mainBtn === 'CIP' ? 'primary' : 'secondary'}
+                  variant={mainBtn === 'M' ? 'primary' : 'secondary'}
                   disabled={isReadOnly}
-                  onClick={onClickContractInPlaceUnconditional}
+                  onClick={onClickMarketedOn}
                 >
-                  Unconditional
+                  On the Market
                 </Button>
               )}
-              {(values.statusCode === ReviewWorkflowStatus.ContractInPlaceConditional ||
-                values.statusCode === ReviewWorkflowStatus.ContractInPlaceUnconditional) && (
-                <Button
-                  variant={mainBtn === 'D' ? 'primary' : 'secondary'}
-                  disabled={
-                    isReadOnly ||
-                    (values.statusCode === ReviewWorkflowStatus.ContractInPlaceConditional &&
-                      _.filter(cipConditionalTasks, { isCompleted: false, isOptional: false })
-                        .length !== 0) ||
-                    (values.statusCode === ReviewWorkflowStatus.ContractInPlaceUnconditional &&
-                      _.filter(cipUnconditionalTasks, { isCompleted: false, isOptional: false })
-                        .length !== 0)
-                  }
-                  onClick={() => setDispose(true)}
-                >
-                  Dispose
-                </Button>
-              )}
+            {(values.statusCode === ReviewWorkflowStatus.PreMarketing ||
+              values.statusCode === ReviewWorkflowStatus.OnMarket) && (
+              <Button
+                variant={mainBtn === 'CIP' ? 'primary' : 'secondary'}
+                disabled={isReadOnly}
+                onClick={onClickContractInPlaceConditional}
+              >
+                Conditional
+              </Button>
+            )}
 
-              <div className="col-md-6">
-                <GenericModal
-                  size={subdivisions.length > 0 ? ModalSize.LARGE : ModalSize.MEDIUM}
-                  display={dispose}
-                  cancelButtonText="Close"
-                  okButtonText="Dispose Project"
-                  handleOk={(e: any) => {
-                    onClickDisposedExternally(e);
-                    setDispose(false);
-                  }}
-                  handleCancel={() => {
-                    setDispose(false);
-                  }}
-                  title="Really Dispose Project?"
-                  message={
-                    <>
-                      <h5>{disposeWarningShort}</h5>
-                      <p>{disposeWarning}</p>
-                      {subdivisions.length > 0 && (
-                        <>
-                          <hr></hr>
-                          <FloatCheck size={32} />
-                          <p className="mb-3">{disposeSubdivisionWarning}</p>
-                          <LinkList
-                            noItemsMessage="No Associated Parent Parcels"
-                            listItems={linkListItems}
-                          />
-                        </>
-                      )}
-                    </>
-                  }
-                />
-              </div>
-            </Form.Group>
-          </Form.Row>
-        )}
+            {(values.statusCode === ReviewWorkflowStatus.PreMarketing ||
+              values.statusCode === ReviewWorkflowStatus.OnMarket ||
+              values.statusCode === ReviewWorkflowStatus.ContractInPlaceConditional) && (
+              <Button
+                variant={mainBtn === 'CIP' ? 'primary' : 'secondary'}
+                disabled={isReadOnly}
+                onClick={onClickContractInPlaceUnconditional}
+              >
+                Unconditional
+              </Button>
+            )}
+            {(values.statusCode === ReviewWorkflowStatus.ContractInPlaceConditional ||
+              values.statusCode === ReviewWorkflowStatus.ContractInPlaceUnconditional) && (
+              <Button
+                variant={mainBtn === 'D' ? 'primary' : 'secondary'}
+                disabled={
+                  isReadOnly ||
+                  (values.statusCode === ReviewWorkflowStatus.ContractInPlaceConditional &&
+                    _.filter(cipConditionalTasks, { isCompleted: false, isOptional: false })
+                      .length !== 0) ||
+                  (values.statusCode === ReviewWorkflowStatus.ContractInPlaceUnconditional &&
+                    _.filter(cipUnconditionalTasks, { isCompleted: false, isOptional: false })
+                      .length !== 0)
+                }
+                onClick={() => setDispose(true)}
+              >
+                Dispose
+              </Button>
+            )}
+
+            <div className="col-md-6">
+              <GenericModal
+                size={subdivisions.length > 0 ? ModalSize.LARGE : ModalSize.MEDIUM}
+                display={dispose}
+                cancelButtonText="Close"
+                okButtonText="Dispose Project"
+                handleOk={(e: any) => {
+                  onClickDisposedExternally(e);
+                  setDispose(false);
+                }}
+                handleCancel={() => {
+                  setDispose(false);
+                }}
+                title="Really Dispose Project?"
+                message={
+                  <>
+                    <h5>{disposeWarningShort}</h5>
+                    <p>{disposeWarning}</p>
+                    {subdivisions.length > 0 && (
+                      <>
+                        <hr></hr>
+                        <FloatCheck size={32} />
+                        <p className="mb-3">{disposeSubdivisionWarning}</p>
+                        <LinkList
+                          noItemsMessage="No Associated Parent Parcels"
+                          listItems={linkListItems}
+                        />
+                      </>
+                    )}
+                  </>
+                }
+              />
+            </div>
+          </Form.Group>
+        </Form.Row>
+      )}
 
       <SurplusPropertyListApprovalForm isReadOnly={isReadOnly} />
 
@@ -392,14 +397,16 @@ const SurplusPropertyListForm = ({
           disabled={isReadOnly}
           field="transferredWithinGreOn"
         />
-        <div className="col-md-6">
-          <Button
-            disabled={isReadOnly || !values.transferredWithinGreOn}
-            onClick={onClickGreTransferred}
-          >
-            Update Property Information
-          </Button>
-        </div>
+        {!isComplete && (
+          <div className="col-md-6">
+            <Button
+              disabled={isReadOnly || !values.transferredWithinGreOn}
+              onClick={onClickGreTransferred}
+            >
+              Update Property Information
+            </Button>
+          </div>
+        )}
       </Form.Row>
     </Container>
   );

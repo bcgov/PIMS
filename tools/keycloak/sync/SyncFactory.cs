@@ -294,7 +294,7 @@ namespace Pims.Tools.Keycloak.Sync
         /// <returns></returns>
         private async Task RemoveRolesFromGroupInKeycloak(KModel.GroupModel group, RoleModel role)
         {
-            var removeRoles = group.RealmRoles.Where(r => !role.Claims.Select(c => c.Name).Contains(r));
+            var removeRoles = group.RealmRoles?.Where(r => !role.Claims.Select(c => c.Name).Contains(r)) ?? new string[0];
 
             foreach (var rname in removeRoles)
             {

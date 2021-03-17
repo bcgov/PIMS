@@ -250,6 +250,7 @@ describe('ExemptionEnhancedReferralCompleteForm', () => {
     const project = _.cloneDeep(mockProject);
     project.clearanceNotificationSentOn = new Date();
     project.requestForSplReceivedOn = new Date();
+    project.approvedForSplOn = new Date();
 
     const component = render(element(splClick, getStore(project)));
 

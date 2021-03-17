@@ -53,6 +53,7 @@ const EnhancedReferralCompleteForm = ({
   const isClearanceNotificationSentOnRequired =
     !formikProps.values.clearanceNotificationSentOn &&
     clearanceNotificationSentOnRequired(formikProps.values.status?.code ?? '');
+
   return (
     <Container fluid className="EnhancedReferralCompleteForm">
       <h3>Enhanced Referral Process Complete</h3>
