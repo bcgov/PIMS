@@ -20,6 +20,7 @@ import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import { Claims } from 'constants/claims';
 import { screen } from '@testing-library/dom';
+import { findByText } from '@testing-library/dom';
 
 jest.mock(
   'react-visibility-sensor',
@@ -111,10 +112,10 @@ describe('Parcel Detail MapSideBarContainer', () => {
     it('parcel sidebar snapshot loads by id', async () => {
       await act(async () => {
         history.push('/mapview/?sidebar=true&parcelId=1');
-        const { container, findByDisplayValue } = renderContainer({});
+        const { container, findByText } = renderContainer({});
         mockAxios.reset();
         mockAxios.onGet().reply(200, mockDetails[0]);
-        await findByDisplayValue('000-000-000');
+        await findByText('test name');
         expect(container.firstChild).toMatchSnapshot();
       });
     });

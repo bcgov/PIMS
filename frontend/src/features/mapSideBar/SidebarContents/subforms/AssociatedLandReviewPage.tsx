@@ -174,7 +174,7 @@ export const AssociatedLandReviewPage: React.FC<any> = (props: IReviewProps) => 
                       field={withNameSpace('agencyId', index)}
                       options={props.agencies}
                       filterBy={['code', 'label', 'parent']}
-                      disabled={parcelEditInfo.identification || !props.isPropertyAdmin}
+                      disabled={true}
                     />
                   </Row>
                   <Row className="content-item">

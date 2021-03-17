@@ -1,3 +1,4 @@
+import { QUERY_MAP, MAP_UNAVAILABLE_STR } from './strings';
 import { toast } from 'react-toastify';
 
 /**
@@ -136,4 +137,16 @@ export const agency = {
   AGENCY_UPDATED,
   AGENCY_ERROR_TOAST_ID,
   AGENCY_ERROR,
+};
+
+/** These toasts are used to display bc data warehouse loading */
+const LAYER_DATA_LOADING_ID = 'LOADING_LAYER_DATA';
+const LAYER_DATA_LOADING = () => toast.dark(QUERY_MAP, { toastId: LAYER_DATA_LOADING_ID });
+const LAYER_DATA_ERROR_ID = 'LAYER_DATA_ERROR_ID';
+const LAYER_DATA_ERROR = () => toast.error(MAP_UNAVAILABLE_STR, { toastId: LAYER_DATA_ERROR_ID });
+export const layerData = {
+  LAYER_DATA_LOADING_ID,
+  LAYER_DATA_LOADING,
+  LAYER_DATA_ERROR_ID,
+  LAYER_DATA_ERROR,
 };

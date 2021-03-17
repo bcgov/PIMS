@@ -21,7 +21,11 @@ const element = (func: Function, storeOverride?: any) => (
   <Provider store={storeOverride ?? getStore(mockProject)}>
     <Router history={history}>
       <FormComponent
-        values={testProject}
+        values={{
+          ...testProject,
+          requestForSplReceivedOn: '2020-01-01',
+          approvedForSplOn: '2020-01-01',
+        }}
         addToErp={noop}
         onClickGreTransferred={noop}
         onClickNotInSpl={noop}
@@ -103,7 +107,7 @@ describe('ExemptionEnhancedReferralCompleteForm', () => {
     expect(tree).toMatchSnapshot();
   });
 
-  xit('disables form buttons when Clearance Notification Date is empty', async () => {
+  it('disables form buttons when Clearance Notification Date is empty', async () => {
     // need a ref here to change field values programmatically
     const formikRef = React.createRef<FormikProps<any>>();
     const { findByRole } = render(
@@ -131,17 +135,14 @@ describe('ExemptionEnhancedReferralCompleteForm', () => {
       formikRef?.current?.setFieldValue('approvedForSplOn', value);
     };
 
-    // ASSERT - all 4 buttons should be disabled when clearance notification date is empty
     act(() => {
       setClearanceDate('');
     });
 
-    expect(await findButton('Add to Enhanced Referral Process')).toBeDisabled();
     expect(await findButton('Update Property Information')).toBeDisabled();
-    expect(await findButton('Not Included in the SPL')).toBeDisabled();
     expect(await findButton('Proceed to SPL')).toBeDisabled();
 
-    // ASSERT - 2 buttons should be enabled after clearance notification date is set
+    // // ASSERT - 2 buttons should be enabled after clearance notification date is set
     act(() => {
       setClearanceDate(new Date(Date.UTC(2020, 5, 9, 8)));
     });
@@ -225,11 +226,10 @@ describe('ExemptionEnhancedReferralCompleteForm', () => {
 
   const splClick = jest.fn();
 
-  // TODO: Need to fix this, can't figure out why they second button never shows up.
-  xit('displays confirmation when clicking proceed to spl', async () => {
-    const project = _.cloneDeep(mockProject);
-    project.clearanceNotificationSentOn = new Date();
-    project.requestForSplReceivedOn = new Date();
+  it('displays confirmation when clicking proceed to spl', async () => {
+    const project = _.cloneDeep({
+      ...mockProject,
+    });
 
     const component = render(element(noop, getStore(project)));
 
@@ -246,8 +246,7 @@ describe('ExemptionEnhancedReferralCompleteForm', () => {
     expect(reallyProceedButton).toBeInTheDocument();
   });
 
-  // TODO: Need to fix this, can't figure out why they second button never shows up.
-  xit('calls the appropriate function', async () => {
+  it('calls the appropriate function', async () => {
     const project = _.cloneDeep(mockProject);
     project.clearanceNotificationSentOn = new Date();
     project.requestForSplReceivedOn = new Date();
@@ -255,7 +254,7 @@ describe('ExemptionEnhancedReferralCompleteForm', () => {
     const component = render(element(splClick, getStore(project)));
 
     const proceedButton = component.getAllByText(/^Proceed to SPL$/)[0];
-    await act(() => {
+    act(() => {
       fireEvent.click(proceedButton);
     });
 
