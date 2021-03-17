@@ -3,7 +3,7 @@ import { createMemoryHistory } from 'history';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
 import { ReviewWorkflowStatus, AgencyResponses } from '../../common/interfaces';
-import { render, act, screen, cleanup, wait, prettyDOM } from '@testing-library/react';
+import { render, act, screen, cleanup, wait } from '@testing-library/react';
 import { useKeycloak } from '@react-keycloak/web';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
@@ -13,7 +13,6 @@ import { DisposalWorkflows, IProject, SPPApprovalTabs } from '../../common';
 import { ErpStep } from '..';
 import Claims from 'constants/claims';
 import ReactDOM from 'react-dom';
-import { fireEvent } from '@testing-library/dom';
 
 ReactDOM.createPortal = (node: any) => node;
 jest.mock('@react-keycloak/web');
