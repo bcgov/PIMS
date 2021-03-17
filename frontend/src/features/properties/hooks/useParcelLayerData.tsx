@@ -16,7 +16,7 @@ import { useKeycloakWrapper } from 'hooks/useKeycloakWrapper';
 
 interface IUseParcelLayerDataProps {
   formikRef: React.MutableRefObject<FormikValues | undefined>;
-  agencyId: number;
+  agencyId?: number;
   parcelId?: number | '';
   nameSpace?: string;
 }
@@ -56,7 +56,7 @@ const setParcelFieldsFromLayerData = (
   formikRef: React.MutableRefObject<FormikValues | undefined>,
   administrativeAreas: ILookupCode[],
   nameSpace: string,
-  agencyId: number,
+  agencyId?: number,
 ) => {
   if (isFormInStateToSetLayerData(layerData, formikRef, nameSpace)) {
     toast.dark('Autofilling form utilizing BC Geographic Warehouse data.', { autoClose: 7000 });
@@ -169,7 +169,7 @@ const useParcelLayerData = ({
           formikRef,
           getByType(AMINISTRATIVE_AREA_CODE_SET_NAME),
           nameSpace ?? '',
-          agencyId ?? keycloak.agencyId ?? '',
+          agencyId ?? keycloak.agencyId,
         );
         dispatch(clearParcelLayerData());
       } else {
@@ -187,7 +187,7 @@ const useParcelLayerData = ({
         formikRef,
         getByType(AMINISTRATIVE_AREA_CODE_SET_NAME),
         nameSpace ?? '',
-        agencyId ?? keycloak.agencyId ?? '',
+        agencyId ?? keycloak.agencyId,
       ),
   };
 };

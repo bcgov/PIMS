@@ -198,11 +198,12 @@ const Form: React.FC<IAssociatedLandForm> = ({
   const agencies = getOptionsByType(API.AGENCY_CODE_SET_NAME);
   const classifications = getPropertyClassificationOptions();
   const currentParcelNameSpace = `data.parcels.${stepper.currentTab}`;
+  const agencyId = getIn(formikProps.values, `data.agencyId`);
   useDraftMarkerSynchronizer(`data.parcels.${stepper.currentTab}`);
   useParcelLayerData({
     formikRef,
     nameSpace: currentParcelNameSpace,
-    agencyId: getIn(+formikProps.values, `data.parcels.${stepper.currentTab}.agencyId`),
+    agencyId: typeof agencyId === 'number' ? agencyId : undefined,
   });
 
   const render = (): React.ReactNode => {

@@ -121,7 +121,9 @@ const ExemptionEnhancedReferralCompleteForm = ({
             !formikProps.values.requestForSplReceivedOn ||
             !formikProps.values.approvedForSplOn
           }
-          onClick={() => setProceedToSpl(true)}
+          onClick={() => {
+            setProceedToSpl(true);
+          }}
         >
           Proceed to SPL
         </Button>

@@ -10,7 +10,7 @@ import { error } from 'actions/genericActions';
 import { useSelector } from 'react-redux';
 import { RootState } from 'reducers/rootReducer';
 import { toast } from 'react-toastify';
-import { MAP_UNAVAILABLE_STR, QUERY_MAP } from 'constants/strings';
+import { layerData } from 'constants/toasts';
 import * as rax from 'retry-axios';
 
 export interface IUserLayerQuery {
@@ -84,8 +84,6 @@ export const handleParcelDataLayerResponse = (
       dispatch(error(parcelLayerDataSlice.reducer.name, axiosError?.response?.status, axiosError));
     });
 };
-let loadingToastId: React.ReactText | undefined = undefined;
-let errorToastId: React.ReactText | undefined = undefined;
 const MAX_RETRIES = 2;
 const wfsAxios = () => {
   const instance = axios.create({ timeout: 5000 });
@@ -94,12 +92,9 @@ const wfsAxios = () => {
     instance: instance,
     shouldRetry: (error: AxiosError) => {
       const cfg = rax.getConfig(error);
-      if (
-        (!errorToastId || !toast.isActive(errorToastId)) &&
-        cfg?.currentRetryAttempt === MAX_RETRIES
-      ) {
-        loadingToastId && toast.dismiss(loadingToastId);
-        errorToastId = toast.error(MAP_UNAVAILABLE_STR, { autoClose: 10000 });
+      if (cfg?.currentRetryAttempt === MAX_RETRIES) {
+        toast.dismiss(layerData.LAYER_DATA_LOADING_ID);
+        layerData.LAYER_DATA_ERROR();
       }
       return rax.shouldRetryRequest(error);
     },
@@ -107,9 +102,7 @@ const wfsAxios = () => {
   rax.attach(instance);
 
   instance.interceptors.request.use(config => {
-    if (!loadingToastId || !toast.isActive(loadingToastId)) {
-      loadingToastId = toast.dark(QUERY_MAP);
-    }
+    layerData.LAYER_DATA_LOADING();
     return config;
   });
   return instance;

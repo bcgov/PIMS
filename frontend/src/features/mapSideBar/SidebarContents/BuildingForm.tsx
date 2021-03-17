@@ -45,6 +45,7 @@ import { FiscalKeys } from 'constants/fiscalKeys';
 import variables from '_variables.module.scss';
 import LastUpdatedBy from 'features/properties/components/LastUpdatedBy';
 import { fireMapRefreshEvent } from 'components/maps/hooks/useMapRefreshEvent';
+import { IStep } from 'components/common/Stepper';
 
 const Container = styled.div`
   background-color: #fff;
@@ -358,8 +359,42 @@ const BuidingForm: React.FC<IParentBuildingForm> = ({
     },
     [nameSpace],
   );
+  const isViewOrUpdate = !!rest.initialValues?.id;
+  const steps: IStep[] = [
+    {
+      route: 'building-id',
+      title: 'Building Info',
+      completed: false,
+      canGoToStep: true,
+      validation: disabled
+        ? undefined
+        : { schema: BuildingInformationSchema, nameSpace: () => 'data' },
+    },
+    {
+      route: 'tenancy',
+      title: 'Occupancy',
+      completed: false,
+      canGoToStep: isViewOrUpdate || !!disabled,
+      validation: disabled ? undefined : { schema: OccupancySchema, nameSpace: () => 'data' },
+    },
+    {
+      route: 'valuation',
+      title: 'Valuation',
+      completed: false,
+      canGoToStep: isViewOrUpdate || !!disabled,
+      validation: disabled ? undefined : { schema: ValuationSchema, nameSpace: () => 'data' },
+    },
+    {
+      route: 'review',
+      title: 'Review & Submit',
+      completed: false,
+      canGoToStep: isViewOrUpdate || !!disabled,
+      validation: disabled ? undefined : { schema: BuildingSchema, nameSpace: () => 'data' },
+    },
+  ];
+
   const initialValues = {
-    activeStep: 0,
+    activeStep: rest.initialValues?.id ? steps.length - 1 : 0,
     activeTab: 0,
     data: {
       ...defaultBuildingValues,
@@ -371,10 +406,10 @@ const BuidingForm: React.FC<IParentBuildingForm> = ({
       fiscals: getMergedFinancials(rest.initialValues?.fiscals ?? [], Object.values(FiscalKeys)),
     },
   };
+
   initialValues.data.agencyId = initialValues.data.agencyId
     ? initialValues.data.agencyId
     : keycloak.agencyId ?? '';
-  const isViewOrUpdate = !!initialValues?.data?.id;
 
   /**
    * Combines yup validation with manual validation of financial data for performance reasons.
@@ -395,38 +430,7 @@ const BuidingForm: React.FC<IParentBuildingForm> = ({
     <Container className="buildingForm">
       <SteppedForm
         // Provide the steps
-        steps={[
-          {
-            route: 'building-id',
-            title: 'Building Info',
-            completed: false,
-            canGoToStep: true,
-            validation: disabled
-              ? undefined
-              : { schema: BuildingInformationSchema, nameSpace: () => 'data' },
-          },
-          {
-            route: 'tenancy',
-            title: 'Occupancy',
-            completed: false,
-            canGoToStep: isViewOrUpdate || !!disabled,
-            validation: disabled ? undefined : { schema: OccupancySchema, nameSpace: () => 'data' },
-          },
-          {
-            route: 'valuation',
-            title: 'Valuation',
-            completed: false,
-            canGoToStep: isViewOrUpdate || !!disabled,
-            validation: disabled ? undefined : { schema: ValuationSchema, nameSpace: () => 'data' },
-          },
-          {
-            route: 'review',
-            title: 'Review & Submit',
-            completed: false,
-            canGoToStep: isViewOrUpdate || !!disabled,
-            validation: disabled ? undefined : { schema: BuildingSchema, nameSpace: () => 'data' },
-          },
-        ]}
+        steps={steps}
         persistable={!disabled}
         persistProps={{
           name: isViewOrUpdate ? 'updated-building' : 'building',
