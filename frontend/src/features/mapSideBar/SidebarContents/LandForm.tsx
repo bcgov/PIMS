@@ -256,11 +256,20 @@ const Form: React.FC<ILandForm> = ({
             Continue
           </Button>
         )}
+
         {formikProps.dirty &&
           formikProps.isValid &&
           !disabled &&
           stepper.isSubmit(stepper.current) && (
-            <Button size="sm" type="submit">
+            <Button
+              disabled={formikProps.isSubmitting}
+              size="sm"
+              type="submit"
+              onClick={() => {
+                formikProps.setSubmitting(true);
+                formikProps.submitForm();
+              }}
+            >
               Submit
             </Button>
           )}

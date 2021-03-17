@@ -289,7 +289,15 @@ const Form: React.FC<IAssociatedLandForm> = ({
           </Button>
         )}
         {formikProps.dirty && formikProps.isValid && stepper.isSubmit(stepper.current) && (
-          <Button size="sm" type="submit">
+          <Button
+            disabled={formikProps.isSubmitting}
+            size="sm"
+            type="submit"
+            onClick={() => {
+              formikProps.setSubmitting(true);
+              formikProps.submitForm();
+            }}
+          >
             Submit
           </Button>
         )}

@@ -240,7 +240,17 @@ const Form: React.FC<IBuildingForm> = ({
                 </TooltipWrapper>
               </>
             ) : (
-              <Button type="submit">Submit to Inventory</Button>
+              <Button
+                disabled={formikProps.isSubmitting}
+                size="sm"
+                type="submit"
+                onClick={() => {
+                  formikProps.setSubmitting(true);
+                  formikProps.submitForm();
+                }}
+              >
+                Submit
+              </Button>
             )}
           </>
         )}
