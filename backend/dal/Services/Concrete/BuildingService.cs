@@ -147,7 +147,7 @@ namespace Pims.Dal.Services
                     && (isAdmin
                         || b.IsVisibleToOtherAgencies
                         || ((!b.IsSensitive || viewSensitive)
-                            && userAgencies.Contains(b.AgencyId)))) ?? throw new KeyNotFoundException();
+                            && (userAgencies.Contains(b.AgencyId) || userAgencies.Contains(b.Agency.ParentId))))) ?? throw new KeyNotFoundException();
 
             return building;
         }
@@ -167,8 +167,8 @@ namespace Pims.Dal.Services
 
             // A building should have a unique name within the parcel it is located on.
             building.Parcels.ForEach(pb => this.Context.ThrowIfNotUnique(pb.Parcel, building));
-            // SRES users allowed to overwrite
-            if (!this.User.HasPermission(Permissions.AdminProperties))
+            // SRES users allowed to overwrite, or if user belongs to parent ministry
+            if (!this.User.HasPermission(Permissions.AdminProperties) && agency.ParentId != null)
             {
                 building.AgencyId = agency.Id;
                 building.Agency = agency;
