@@ -98,7 +98,7 @@ const Header = () => {
             src={BClogoUrl}
             width="156"
             height="43"
-            alt="Go to the Government of British Columbia website"
+            alt="Government of BC logo"
           />
         </a>
         <VerticalBar />

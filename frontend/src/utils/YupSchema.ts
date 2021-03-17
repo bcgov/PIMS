@@ -276,9 +276,9 @@ export const FilterBarSchema = Yup.object().shape(
         }
       },
       then: Yup.boolean().nullable(),
-      otherwise: Yup.boolean().required(
-        'ERP or SPL Properties required when using the Surplus Properties filter.',
-      ),
+      otherwise: Yup.boolean()
+        .required()
+        .oneOf([true], 'ERP or SPL Properties required when using the Surplus Properties filter.'),
     }),
     inSurplusPropertyProgram: Yup.boolean().when(['inEnhancedReferralProcess', 'surplusFilter'], {
       is: (inEnhancedReferralProcess, surplusFilter) => {
@@ -290,9 +290,9 @@ export const FilterBarSchema = Yup.object().shape(
         }
       },
       then: Yup.boolean().nullable(),
-      otherwise: Yup.boolean().required(
-        'ERP or SPL Properties required when using the Surplus Properties filter.',
-      ),
+      otherwise: Yup.boolean()
+        .required()
+        .oneOf([true], 'ERP or SPL Properties required when using the Surplus Properties filter.'),
     }),
   },
   [['inSurplusPropertyProgram', 'inEnhancedReferralProcess']],
