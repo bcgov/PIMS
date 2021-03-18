@@ -52,117 +52,118 @@ const form = (
     )}
   </Formik>
 );
+describe('building review page', () => {
+  it('renders correctly', () => {
+    const { container } = render(form);
+    expect(pretty(container.innerHTML)).toMatchSnapshot();
+  });
 
-it('renders correctly', () => {
-  const { container } = render(form);
-  expect(pretty(container.innerHTML)).toMatchSnapshot();
-});
+  it('building identificaiton fields disabled by default', () => {
+    const { container } = render(form);
 
-it('building identificaiton fields disabled by default', () => {
-  const { container } = render(form);
+    const agency = container.querySelector('input[name="agencyId"]');
+    const name = container.querySelector('input[name="name"]');
+    const addr = container.querySelector('input[name="address.line1"]');
+    const loc = container.querySelector('input[name="address.administrativeArea"]');
+    const lat = container.querySelector('input[name="latitude"]');
+    const long = container.querySelector('input[name="longitude"]');
+    const classificationId = container.querySelector('select[name="classificationId"]');
+    const usage = container.querySelector('select[name="buildingPredominateUseId"]');
+    const constructionType = container.querySelector('select[name="buildingConstructionTypeId"]');
+    const floors = container.querySelector('input[name="buildingFloorCount"]');
+    const sensitive = container.querySelector('input[name="isSensitive"]');
 
-  const agency = container.querySelector('input[name="agencyId"]');
-  const name = container.querySelector('input[name="name"]');
-  const addr = container.querySelector('input[name="address.line1"]');
-  const loc = container.querySelector('input[name="address.administrativeArea"]');
-  const lat = container.querySelector('input[name="latitude"]');
-  const long = container.querySelector('input[name="longitude"]');
-  const classificationId = container.querySelector('select[name="classificationId"]');
-  const usage = container.querySelector('select[name="buildingPredominateUseId"]');
-  const constructionType = container.querySelector('select[name="buildingConstructionTypeId"]');
-  const floors = container.querySelector('input[name="buildingFloorCount"]');
-  const sensitive = container.querySelector('input[name="isSensitive"]');
+    expect(agency).toBeDisabled();
+    expect(name).toBeDisabled();
+    expect(addr).toBeDisabled();
+    expect(loc).toBeDisabled();
+    expect(lat).toBeDisabled();
+    expect(long).toBeDisabled();
+    expect(classificationId).toBeDisabled();
+    expect(usage).toBeDisabled();
+    expect(constructionType).toBeDisabled();
+    expect(floors).toBeDisabled();
+    expect(sensitive).toBeDisabled();
+  });
 
-  expect(agency).toBeDisabled();
-  expect(name).toBeDisabled();
-  expect(addr).toBeDisabled();
-  expect(loc).toBeDisabled();
-  expect(lat).toBeDisabled();
-  expect(long).toBeDisabled();
-  expect(classificationId).toBeDisabled();
-  expect(usage).toBeDisabled();
-  expect(constructionType).toBeDisabled();
-  expect(floors).toBeDisabled();
-  expect(sensitive).toBeDisabled();
-});
+  it('identification section editable after click', () => {
+    const { container } = render(form);
 
-it('identification section editable after click', () => {
-  const { container } = render(form);
+    const agency = container.querySelector('input[name="agencyId"]');
+    const name = container.querySelector('input[name="name"]');
+    const addr = container.querySelector('input[name="address.line1"]');
+    const loc = container.querySelector('input[name="address.administrativeArea"]');
+    const lat = container.querySelector('input[name="latitude"]');
+    const long = container.querySelector('input[name="longitude"]');
+    const classificationId = container.querySelector('select[name="classificationId"]');
+    const usage = container.querySelector('select[name="buildingPredominateUseId"]');
+    const constructionType = container.querySelector('select[name="buildingConstructionTypeId"]');
+    const floors = container.querySelector('input[name="buildingFloorCount"]');
+    const sensitive = container.querySelector('input[name="isSensitive"]');
 
-  const agency = container.querySelector('input[name="agencyId"]');
-  const name = container.querySelector('input[name="name"]');
-  const addr = container.querySelector('input[name="address.line1"]');
-  const loc = container.querySelector('input[name="address.administrativeArea"]');
-  const lat = container.querySelector('input[name="latitude"]');
-  const long = container.querySelector('input[name="longitude"]');
-  const classificationId = container.querySelector('select[name="classificationId"]');
-  const usage = container.querySelector('select[name="buildingPredominateUseId"]');
-  const constructionType = container.querySelector('select[name="buildingConstructionTypeId"]');
-  const floors = container.querySelector('input[name="buildingFloorCount"]');
-  const sensitive = container.querySelector('input[name="isSensitive"]');
+    const edit = container.querySelectorAll('svg[class="edit"]');
+    fireEvent.click(edit[0]!);
 
-  const edit = container.querySelectorAll('svg[class="edit"]');
-  fireEvent.click(edit[0]!);
+    expect(agency).toBeDisabled();
+    expect(name).not.toBeDisabled();
+    expect(addr).toBeDisabled();
+    expect(loc).toBeDisabled();
+    expect(lat).toBeDisabled();
+    expect(long).toBeDisabled();
+    expect(classificationId).not.toBeDisabled();
+    expect(usage).not.toBeDisabled();
+    expect(constructionType).not.toBeDisabled();
+    expect(floors).not.toBeDisabled();
+    expect(sensitive).not.toBeDisabled();
+  });
 
-  expect(agency).toBeDisabled();
-  expect(name).not.toBeDisabled();
-  expect(addr).toBeDisabled();
-  expect(loc).toBeDisabled();
-  expect(lat).toBeDisabled();
-  expect(long).toBeDisabled();
-  expect(classificationId).not.toBeDisabled();
-  expect(usage).not.toBeDisabled();
-  expect(constructionType).not.toBeDisabled();
-  expect(floors).not.toBeDisabled();
-  expect(sensitive).not.toBeDisabled();
-});
+  it('occupancy fields disabled by default', () => {
+    const { container } = render(form);
 
-it('occupancy fields disabled by default', () => {
-  const { container } = render(form);
+    const totalArea = container.querySelector('input[name="totalArea"]');
+    const rentableArea = container.querySelector('input[name="rentableArea"]');
+    const tenancy = container.querySelector('input[name="buildingTenancy"]');
 
-  const totalArea = container.querySelector('input[name="totalArea"]');
-  const rentableArea = container.querySelector('input[name="rentableArea"]');
-  const tenancy = container.querySelector('input[name="buildingTenancy"]');
+    expect(totalArea).toBeDisabled();
+    expect(rentableArea).toBeDisabled();
+    expect(tenancy).toBeDisabled();
+  });
 
-  expect(totalArea).toBeDisabled();
-  expect(rentableArea).toBeDisabled();
-  expect(tenancy).toBeDisabled();
-});
+  it('occupancy fields editable after click', () => {
+    const { container } = render(form);
 
-it('occupancy fields editable after click', () => {
-  const { container } = render(form);
+    const totalArea = container.querySelector('input[name="totalArea"]');
+    const rentableArea = container.querySelector('input[name="rentableArea"]');
+    const tenancy = container.querySelector('input[name="buildingTenancy"]');
 
-  const totalArea = container.querySelector('input[name="totalArea"]');
-  const rentableArea = container.querySelector('input[name="rentableArea"]');
-  const tenancy = container.querySelector('input[name="buildingTenancy"]');
+    const edit = container.querySelectorAll('svg[class="edit"]');
+    fireEvent.click(edit[1]!);
 
-  const edit = container.querySelectorAll('svg[class="edit"]');
-  fireEvent.click(edit[1]!);
+    expect(totalArea).not.toBeDisabled();
+    expect(rentableArea).not.toBeDisabled();
+    expect(tenancy).not.toBeDisabled();
+  });
 
-  expect(totalArea).not.toBeDisabled();
-  expect(rentableArea).not.toBeDisabled();
-  expect(tenancy).not.toBeDisabled();
-});
+  it('valuation fields disabled by default', () => {
+    const { container } = render(form);
 
-it('valuation fields disabled by default', () => {
-  const { container } = render(form);
+    const netbook = container.querySelector('input[name="data.fiscals.0.value"]');
+    const assessedLand = container.querySelector('input[name="data.evaluations.0.value"]');
 
-  const netbook = container.querySelector('input[name="data.fiscals.0.value"]');
-  const assessedLand = container.querySelector('input[name="data.evaluations.0.value"]');
+    expect(netbook).toBeDisabled();
+    expect(assessedLand).toBeDisabled();
+  });
 
-  expect(netbook).toBeDisabled();
-  expect(assessedLand).toBeDisabled();
-});
+  it('valuation fields editable after click', () => {
+    const { container } = render(form);
 
-it('valuation fields editable after click', () => {
-  const { container } = render(form);
+    const netbook = container.querySelector('input[name="data.fiscals.0.value"]');
+    const assessedLand = container.querySelector('input[name="data.evaluations.0.value"]');
 
-  const netbook = container.querySelector('input[name="data.fiscals.0.value"]');
-  const assessedLand = container.querySelector('input[name="data.evaluations.0.value"]');
+    const edit = container.querySelectorAll('svg[class="edit"]');
+    fireEvent.click(edit[2]!);
 
-  const edit = container.querySelectorAll('svg[class="edit"]');
-  fireEvent.click(edit[2]!);
-
-  expect(netbook).not.toBeDisabled();
-  expect(assessedLand).not.toBeDisabled();
+    expect(netbook).not.toBeDisabled();
+    expect(assessedLand).not.toBeDisabled();
+  });
 });

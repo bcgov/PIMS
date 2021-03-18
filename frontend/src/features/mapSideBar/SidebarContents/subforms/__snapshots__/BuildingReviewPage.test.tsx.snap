@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`renders correctly 1`] = `
+exports[`building review page renders correctly 1`] = `
 "<div class=\\"review-section container\\">
   <div class=\\"review-steps row\\">
     <h4>Review your building info</h4>

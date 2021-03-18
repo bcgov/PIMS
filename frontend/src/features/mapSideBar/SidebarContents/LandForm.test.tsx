@@ -95,6 +95,8 @@ const defaultInitialValues: IParcel = {
   longitude: -122,
   assessedLand: '',
   assessedBuilding: '',
+  parcels: [],
+  agency: '',
   address: {
     line1: 'address line 1',
     administrativeArea: 'Victoria',
@@ -116,6 +118,7 @@ const getLandForm = (disabled?: boolean, initialValues?: IParcel) => (
         initialValues={initialValues as any}
         setLandComplete={noop}
         setLandUpdateComplete={noop}
+        findMatchingPid={noop as any}
       />
     </Router>
   </Provider>

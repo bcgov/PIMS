@@ -98,6 +98,7 @@ const AddParentParcelsForm = ({
             field={withNameSpace(nameSpace, 'searchParentPid')}
           />
           <SearchButton
+            data-testid="search-button"
             disabled={disabled}
             onClick={async (e: any) => {
               e.preventDefault();

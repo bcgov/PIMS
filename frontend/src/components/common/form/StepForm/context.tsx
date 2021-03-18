@@ -83,7 +83,7 @@ export const StepperFormProvider: React.FC<IStepperFormProviderProps> = ({
   const validateCurrentStep = (overrideNameSpace?: string) => {
     const index = getIn(values, `tabs.${values.activeTab}.activeStep`);
     const currentStep = steps[index];
-    if (currentStep.validation) {
+    if (currentStep?.validation) {
       const nameSpace = overrideNameSpace || currentStep.validation.nameSpace(values.activeTab);
       const schema = currentStep.validation.schema;
       const validationValues = getIn(values, nameSpace);

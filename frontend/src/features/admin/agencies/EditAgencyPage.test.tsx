@@ -8,10 +8,11 @@ import { Provider } from 'react-redux';
 import * as reducerTypes from 'constants/reducerTypes';
 import { createMemoryHistory } from 'history';
 import { Router } from 'react-router-dom';
-import { render, cleanup, act } from '@testing-library/react';
+import { render, cleanup, act, screen, wait } from '@testing-library/react';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 import { ToastContainer } from 'react-toastify';
+import { fillInput } from 'utils/testUtils';
 
 const mockStore = configureMockStore([thunk]);
 const history = createMemoryHistory();
@@ -116,6 +117,78 @@ describe('Edit agency page', () => {
         saveButton.click();
       });
       await findByText('Failed to update Agency');
+    });
+
+    it('displays an error message if a new agency is missing data', async () => {
+      history.push('/new');
+      const { getByText, findByText } = renderEditAgencyPage();
+      const saveButton = getByText(/Submit Agency/i);
+      act(() => {
+        saveButton.click();
+      });
+      await findByText('An agency name is required.');
+    });
+
+    it('displays a success toast if the request passes for a new agency', async () => {
+      history.push('/new');
+      const { getByText, findByText, container } = renderEditAgencyPage();
+      mockAxios.reset();
+      mockAxios.onAny().reply(200, {});
+      await fillInput(container, 'name', 'test agency');
+      await fillInput(container, 'code', 'TA');
+      await fillInput(container, 'email', '1@1.ca');
+      await fillInput(container, 'addressTo', 'hello you');
+      const saveButton = getByText(/Submit Agency/i);
+      act(() => {
+        saveButton.click();
+      });
+      await findByText('Agency updated');
+    });
+
+    it('can delete agencies with no properties', async () => {
+      history.push('');
+      const { getByText, container } = renderEditAgencyPage();
+      mockAxios.reset();
+      mockAxios.onAny().reply(200, {});
+      mockAxios.onGet().reply(200, { total: 0 });
+      await fillInput(container, 'name', 'test agency');
+      await fillInput(container, 'code', 'TA');
+      await fillInput(container, 'email', '1@1.ca');
+      await fillInput(container, 'addressTo', 'hello you');
+      const deleteButton = getByText(/Delete Agency/i);
+      act(() => {
+        deleteButton.click();
+      });
+      await screen.findByText('Are you sure you want to permanently delete the agency?');
+      const deleteConfirm = getByText(/^Delete$/i);
+      act(() => {
+        deleteConfirm.click();
+      });
+      await wait(async () => {
+        expect(mockAxios.history.delete).toHaveLength(1);
+      });
+    });
+
+    it('can not delete agencies with properties', async () => {
+      history.push('');
+      const { getByText, container } = renderEditAgencyPage();
+      mockAxios.reset();
+      mockAxios.onAny().reply(200, {});
+      await fillInput(container, 'name', 'test agency');
+      await fillInput(container, 'code', 'TA');
+      await fillInput(container, 'email', '1@1.ca');
+      await fillInput(container, 'addressTo', 'hello you');
+      const deleteButton = getByText(/Delete Agency/i);
+      act(() => {
+        deleteButton.click();
+      });
+      await screen.findByText(
+        'You are not able to delete this agency as there are properties currently associated with it.',
+      );
+      const deleteConfirm = getByText(/^ok$/i);
+      act(() => {
+        deleteConfirm.click();
+      });
     });
   });
 });

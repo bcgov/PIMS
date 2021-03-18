@@ -521,7 +521,7 @@ const AssociatedLandForm: React.FC<IAssociatedLandParentForm> = (
   };
 
   const submit = async (newValues: ISteppedFormValues<IAssociatedLand>, isSubmit = false) => {
-    const { resetForm, setSubmitting } = props.formikRef.current;
+    const { resetForm, setSubmitting } = props.formikRef?.current ?? {};
     const apiValues = valuesToApiFormat(_.cloneDeep(newValues), keycloak.agencyId);
     try {
       const building = await updateBuilding(apiValues)(dispatch);
@@ -536,7 +536,7 @@ const AssociatedLandForm: React.FC<IAssociatedLandParentForm> = (
       });
     } catch (error) {
     } finally {
-      setSubmitting(false);
+      setSubmitting && setSubmitting(false);
       //TODO: remove any drafts for updated buildings as saving associated land also saves the building, which invalidates any drafts.
       window.localStorage.removeItem('updated-building');
     }
@@ -652,7 +652,7 @@ const AssociatedLandForm: React.FC<IAssociatedLandParentForm> = (
             shouldSubmit: boolean,
           ) => {
             if (formValues?.data?.parcels.length > tabIndex) {
-              const { setValues } = props.formikRef.current;
+              const { setValues } = props.formikRef?.current ?? {};
               const newValues = {
                 ...formValues,
                 data: {
