@@ -2,6 +2,7 @@ import { IBuilding } from './../actions/parcelsActions';
 import { ILookupCode } from '../actions/lookupActions';
 import { IParcel, IProperty } from 'actions/parcelsActions';
 import { IProperty as IFlatProperty } from 'features/properties/list';
+import { Workflows } from 'constants/index';
 
 export const SELECTEDCLASSIFICATION = {
   name: 'Core Operational',
@@ -127,6 +128,60 @@ export const PARCELS = [
   { id: 1, latitude: 48, longitude: 123 },
   { id: 2, latitude: 50, longitude: 133 },
 ] as IProperty[];
+
+export const mockParcel = {
+  id: 1,
+  pid: '000-000-000',
+  pin: '',
+  projectNumber: '',
+  zoning: '',
+  zoningPotential: '',
+  classificationId: 1,
+  encumbranceReason: '',
+  agencyId: '',
+  isSensitive: false,
+  latitude: 48,
+  longitude: 123,
+  classification: 'Core Operational',
+  name: 'test name',
+  description: 'test',
+  assessedLand: 10000,
+  assessedBuilding: 11000,
+  evaluations: [
+    {
+      date: new Date(),
+      key: 'Assessed',
+      value: 10000,
+    },
+  ],
+  fiscals: [
+    {
+      fiscalYear: 2020,
+      key: 'NetBook',
+      value: 10000,
+    },
+  ],
+  address: {
+    id: 1,
+    line1: '1234 mock Street',
+    line2: 'N/A',
+    administrativeArea: 'Victoria',
+    province: 'BC',
+    postal: 'V1V1V1',
+    provinceId: '1',
+  },
+  landArea: 123,
+  landLegalDescription: 'test description',
+  buildings: [],
+  parcels: [],
+  agency: 'AEST',
+  agencyFullName: 'Ministry of Advanced Education',
+  subAgency: 'KPU',
+  subAgencyFullName: 'Kwantlen Polytechnic University',
+  projectNumbers: ['SPP-00001'],
+  projectStatus: 'In ERP',
+  projectWorkflow: Workflows.ERP,
+} as IParcel;
 
 export const mockDetails = [
   {

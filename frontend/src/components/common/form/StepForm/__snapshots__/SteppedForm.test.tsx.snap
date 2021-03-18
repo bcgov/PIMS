@@ -86,6 +86,7 @@ exports[`SteppedForm component renders correctly 1`] = `
         Tab 1
       </p>
       <svg
+        data-testid="delete-parcel-1"
         fill="currentColor"
         height="15"
         size="15"
@@ -112,6 +113,7 @@ exports[`SteppedForm component renders correctly 1`] = `
     >
       <button
         class="Button Button--icon-only primary btn btn-primary"
+        data-testid="add-tab"
         type="button"
       >
         <div
@@ -152,7 +154,7 @@ exports[`SteppedForm component renders correctly 1`] = `
           class="bs-stepper-header"
         >
           <div
-            class="step"
+            class="step active"
             data-target="stepper-0"
           >
             <button
@@ -280,7 +282,8 @@ exports[`SteppedForm component renders correctly 1`] = `
           />
         </div>
         <p>
-          Form inputs and control button here
+          STEP: 
+          0
         </p>
         <button
           class="btn btn-outline-info"

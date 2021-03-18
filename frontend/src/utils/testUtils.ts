@@ -1,5 +1,4 @@
 import { wait, fireEvent } from '@testing-library/react';
-import { act } from 'react-test-renderer';
 import { Map as LeafletMap, Layer } from 'leaflet';
 
 export const fillInput = async (
@@ -12,7 +11,7 @@ export const fillInput = async (
   if (type === 'radio') {
     input = container.querySelector(`#input-${name}`);
   } else {
-    if (type === 'typeahead') {
+    if (type === 'typeahead' || type === 'datepicker') {
       input = container.querySelector(`input[name="${name}"]`);
     } else {
       input = container.querySelector(`${type}[name="${name}"]`);
@@ -20,33 +19,43 @@ export const fillInput = async (
   }
 
   await wait(() => {
-    act(() => {
-      if (type === 'input') {
-        fireEvent.change(input!, {
-          target: {
-            value: value,
-          },
-        });
-      } else if (type === 'typeahead') {
-        fireEvent.focus(input!);
-        fireEvent.change(input!, {
-          target: {
-            value: value,
-          },
-        });
-        const select = container.querySelector(`[aria-label="${value}"]`);
-        fireEvent.click(select!);
-      } else if (type === 'radio') {
-        fireEvent.click(input);
-      } else {
-        fireEvent.change(input!, {
-          target: {
-            value: value,
-          },
-        });
-      }
-      fireEvent.blur(input!);
-    });
+    if (type === 'input') {
+      fireEvent.change(input!, {
+        target: {
+          value: value,
+        },
+      });
+      fireEvent.focusOut(input);
+    } else if (type === 'typeahead') {
+      fireEvent.focus(input!);
+      fireEvent.change(input!, {
+        target: {
+          value: value,
+        },
+      });
+      const select = container.querySelector(`[aria-label="${value}"]`);
+      fireEvent.click(select!);
+      fireEvent.focusOut(input);
+    } else if (type === 'datepicker') {
+      fireEvent.mouseDown(input!);
+      fireEvent.change(input!, {
+        target: {
+          value: value,
+        },
+      });
+      fireEvent.keyPress(input!, { key: 'Enter', code: 'Enter' });
+    } else if (type === 'radio') {
+      fireEvent.click(input);
+      fireEvent.focusOut(input);
+    } else {
+      fireEvent.change(input!, {
+        target: {
+          value: value,
+        },
+      });
+      fireEvent.focusOut(input);
+    }
+    fireEvent.blur(input!);
   });
   return { input };
 };
