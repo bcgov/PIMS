@@ -8,7 +8,6 @@ import classNames from 'classnames';
 import GenericModal from '../GenericModal';
 import { appraisalDateWarning } from 'features/projects/common';
 import * as Popper from 'popper.js';
-import dequal from 'dequal';
 
 type RequiredAttributes = {
   /** The field name */

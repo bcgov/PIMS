@@ -2,9 +2,9 @@ import { FastDatePicker } from './FastDatePicker';
 import React from 'react';
 import { Formik } from 'formik';
 import { noop } from 'lodash';
-import { render, screen, wait, act } from '@testing-library/react';
+import { render, screen, wait } from '@testing-library/react';
 import { fillInput } from 'utils/testUtils';
-import { fireEvent, prettyDOM } from '@testing-library/dom';
+import { fireEvent } from '@testing-library/dom';
 
 const testRender = (props?: any, formikProps?: any) =>
   render(

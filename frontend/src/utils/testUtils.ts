@@ -1,4 +1,4 @@
-import { wait, fireEvent, act } from '@testing-library/react';
+import { wait, fireEvent } from '@testing-library/react';
 import { Map as LeafletMap, Layer } from 'leaflet';
 
 export const fillInput = async (
