@@ -627,7 +627,7 @@ namespace Pims.Dal.Services
         /// Change the status of the project.
         /// Only valid transitions are allowed.
         /// Use this method to transition to milestone project statuses.
-        /// Peforms additional logic on milestone transitions.
+        /// Performs additional logic on milestone transitions.
         /// Make sure you set the specified 'project' status to the destination status you want.
         /// </summary>
         /// <param name="project"></param>
@@ -657,7 +657,7 @@ namespace Pims.Dal.Services
         /// Change the status of the project.
         /// Only valid transitions are allowed.
         /// Use this method to transition to milestone project statuses.
-        /// Peforms additional logic on milestone transitions.
+        /// Performs additional logic on milestone transitions.
         /// </summary>
         /// <param name="project"></param>
         /// <param name="workflow"></param>
