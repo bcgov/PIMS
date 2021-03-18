@@ -163,6 +163,7 @@ export const SteppedForm = function<T extends object = {}>({
                     disabled={(values?.tabs?.length ?? 0) >= MAX_STEPPED_TABS}
                     toolText="Add another associated Parcel"
                     toolId="add-associated-parcel"
+                    data-testid="add-tab"
                     onClick={() => {
                       //update the data model that the tab represents
                       onAddTab && onAddTab(values.data);
@@ -230,6 +231,7 @@ const tabTitle = (title: string, index: number, setTabToDeleteId: (index: number
       <TooltipWrapper toolTipId="remove-associated-parcel" toolTip="Remove this associated parcel">
         <FaWindowClose
           size={15}
+          data-testid={`delete-parcel-${index + 1}`}
           onClick={(e: any) => {
             e.preventDefault();
             e.stopPropagation();

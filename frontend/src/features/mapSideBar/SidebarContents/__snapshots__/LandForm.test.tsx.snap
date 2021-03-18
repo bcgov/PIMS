@@ -182,6 +182,7 @@ exports[`Land Form component renders correctly 1`] = `
           Tab 1
         </p>
         <svg
+          data-testid="delete-parcel-1"
           fill="currentColor"
           height="15"
           size="15"
@@ -208,6 +209,7 @@ exports[`Land Form component renders correctly 1`] = `
       >
         <button
           class="Button Button--icon-only primary btn btn-primary"
+          data-testid="add-tab"
           type="button"
         >
           <div

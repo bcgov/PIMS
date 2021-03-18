@@ -94,7 +94,7 @@ exports[`ExemptionEnhancedReferralCompleteForm renders successfully 1`] = `
           >
             <input
               autoComplete="off"
-              className="form-control date-picker"
+              className="form-control date-picker is-valid "
               disabled={false}
               id="datepicker-clearanceNotificationSentOn"
               name="clearanceNotificationSentOn"
@@ -158,7 +158,7 @@ exports[`ExemptionEnhancedReferralCompleteForm renders successfully 1`] = `
           >
             <input
               autoComplete="off"
-              className="form-control date-picker"
+              className="form-control date-picker is-valid "
               disabled={false}
               id="datepicker-transferredWithinGreOn"
               name="transferredWithinGreOn"

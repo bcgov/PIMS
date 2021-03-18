@@ -13,13 +13,14 @@ import { noop } from 'lodash';
 import * as reducerTypes from 'constants/reducerTypes';
 import * as actionTypes from 'constants/actionTypes';
 import { IParcel } from 'actions/parcelsActions';
-import { mockDetails, mockBuildingWithAssociatedLand } from 'mocks/filterDataMock';
+import { mockDetails, mockBuildingWithAssociatedLand, mockParcel } from 'mocks/filterDataMock';
 import VisibilitySensor from 'react-visibility-sensor';
 import { useKeycloak } from '@react-keycloak/web';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import { Claims } from 'constants/claims';
 import { screen } from '@testing-library/dom';
+import { fireEvent } from '@testing-library/dom';
 
 jest.mock(
   'react-visibility-sensor',
@@ -51,7 +52,11 @@ const getStore = (parcelDetail?: IParcel) =>
     [reducerTypes.PARCEL]: { parcels: [], draftParcels: [] },
   });
 
-const history = createMemoryHistory();
+const history = createMemoryHistory({
+  getUserConfirmation: (message, callback) => {
+    callback(true);
+  },
+});
 
 const renderContainer = ({ store }: any) =>
   render(
@@ -75,7 +80,6 @@ const renderContainer = ({ store }: any) =>
 describe('Parcel Detail MapSideBarContainer', () => {
   // clear mocks before each test
   beforeEach(() => {
-    jest.resetAllMocks();
     (useKeycloak as jest.Mock).mockReturnValue({
       keycloak: {
         userInfo: {
@@ -89,7 +93,11 @@ describe('Parcel Detail MapSideBarContainer', () => {
   });
   afterEach(() => {
     history.push({ search: '' });
+    jest.resetAllMocks();
     cleanup();
+  });
+  afterAll(() => {
+    jest.clearAllMocks();
   });
 
   describe('basic data loading and display', () => {
@@ -236,7 +244,7 @@ describe('Parcel Detail MapSideBarContainer', () => {
     it('saves the building when clicked', async () => {
       await act(async () => {
         history.push('/mapview/?sidebar=true&buildingId=1&disabled=false');
-        const building = { ...mockBuildingWithAssociatedLand };
+        const building = { ...mockBuildingWithAssociatedLand, parcels: [] };
         mockAxios.onGet().reply(200, building);
         const { findByText } = renderContainer({});
 
@@ -256,7 +264,7 @@ describe('Parcel Detail MapSideBarContainer', () => {
     it('displays an error toast if the save action fails', async () => {
       await act(async () => {
         history.push('/mapview/?sidebar=true&buildingId=1&disabled=false');
-        const building = { ...mockBuildingWithAssociatedLand };
+        const building = { ...mockBuildingWithAssociatedLand, parcels: [] };
         mockAxios.onGet().reply(200, building);
         const { findByText } = renderContainer({});
 
@@ -273,7 +281,11 @@ describe('Parcel Detail MapSideBarContainer', () => {
     it('uses the most recent data from the api response', async () => {
       await act(async () => {
         history.push('/mapview/?sidebar=true&buildingId=1&disabled=false');
-        const building = { ...mockBuildingWithAssociatedLand, name: 'Modify assoc. land 12345' };
+        const building = {
+          ...mockBuildingWithAssociatedLand,
+          name: 'Modify assoc. land 12345',
+          parcels: [],
+        };
         mockAxios.onGet().reply(200, building);
         const { findByText } = renderContainer({});
 
@@ -287,6 +299,302 @@ describe('Parcel Detail MapSideBarContainer', () => {
           expect(mockAxios.history.put.length).toBe(1);
           const associatedLandText = await screen.findByText('Modify assoc. land 12345');
           expect(associatedLandText).toBeVisible();
+        });
+      });
+    });
+    describe('add tab functionality', () => {
+      it('adds tabs', async () => {
+        history.push('/mapview/?sidebar=true&buildingId=1&disabled=false');
+        const building = {
+          ...mockBuildingWithAssociatedLand,
+          name: 'Modify assoc. land 12345',
+          parcels: [{ ...mockParcel, classificationId: '' }],
+        };
+        mockAxios.onGet().reply(200, building);
+        const { findByText } = renderContainer({});
+
+        mockAxios.onPut().replyOnce(200, { ...building });
+        mockAxios.onPut().replyOnce(200, { ...building, parcels: [], leasedLandMetadata: [] });
+
+        const reviewButton = await findByText('Review & Submit');
+        reviewButton.click();
+        const modifyButton = await findByText('Modify Associated Land');
+        modifyButton.click();
+        await wait(async () => {
+          const associatedLandText = await screen.findByText('Modify assoc. land 12345');
+          expect(associatedLandText).toBeVisible();
+        });
+        const addTabButton = await screen.findByTestId('add-tab');
+        act(() => {
+          fireEvent.click(addTabButton);
+        });
+        await wait(async () => {
+          const oldDeleteIcon = await screen.queryByTestId('delete-parcel-2');
+          expect(oldDeleteIcon).toBeInTheDocument();
+        });
+      });
+      it('allows tabs to be clicked', async () => {
+        history.push('/mapview/?sidebar=true&buildingId=1&disabled=false');
+        const building = {
+          ...mockBuildingWithAssociatedLand,
+          name: 'Modify assoc. land 12345',
+          parcels: [mockParcel, { ...mockParcel, name: 'test 2' }],
+        };
+        mockAxios.onGet().reply(200, building);
+        const { findByText } = renderContainer({});
+
+        mockAxios.onPut().replyOnce(200, { ...building });
+        mockAxios.onPut().replyOnce(200, { ...building, parcels: [], leasedLandMetadata: [] });
+
+        const reviewButton = await findByText('Review & Submit');
+        reviewButton.click();
+        const modifyButton = await findByText('Modify Associated Land');
+        modifyButton.click();
+        await wait(async () => {
+          const associatedLandText = await screen.findByText('Modify assoc. land 12345');
+          expect(associatedLandText).toBeVisible();
+        });
+        const addTabButton = (await screen.findAllByText('test 2'))[0];
+        act(() => {
+          fireEvent.click(addTabButton);
+        });
+        await wait(async () => {
+          const activeTabButton = (await screen.findAllByText('test 2'))[0];
+          expect(activeTabButton.parentElement).toHaveClass('active');
+        });
+      });
+
+      it('displays a tab for each parcel', async () => {
+        history.push('/mapview/?sidebar=true&buildingId=1&disabled=false');
+        const building = {
+          ...mockBuildingWithAssociatedLand,
+          name: 'Modify assoc. land 12345',
+          parcels: [mockParcel, mockParcel],
+        };
+        mockAxios.onGet().reply(200, building);
+        const { findByText } = renderContainer({});
+
+        mockAxios.onPut().replyOnce(200, { ...building });
+        mockAxios.onPut().replyOnce(200, { ...building, parcels: [], leasedLandMetadata: [] });
+
+        const reviewButton = await findByText('Review & Submit');
+        reviewButton.click();
+        const modifyButton = await findByText('Modify Associated Land');
+        modifyButton.click();
+        await wait(async () => {
+          const associatedLandText = await screen.findByText('Modify assoc. land 12345');
+          expect(associatedLandText).toBeVisible();
+        });
+        const addTabButtons = await screen.findAllByText('test name');
+        await wait(async () => {
+          //2 of these will be the tab headers, the other two are the tabs.
+          expect(addTabButtons).toHaveLength(4);
+        });
+      });
+    });
+    describe('tab delete functionality', () => {
+      beforeEach(() => {
+        mockAxios.resetHistory();
+        mockAxios.reset();
+        jest.resetAllMocks();
+        (useKeycloak as jest.Mock).mockReturnValue({
+          keycloak: {
+            userInfo: {
+              agencies: [1],
+              roles: [Claims.PROPERTY_EDIT],
+            },
+            subject: 'test',
+          },
+        });
+      });
+      it('allows tabs to be deleted', async () => {
+        history.push('/mapview/?sidebar=true&buildingId=1&disabled=false');
+        const building = {
+          ...mockBuildingWithAssociatedLand,
+          name: 'Modify assoc. land 12345',
+          parcels: [mockParcel],
+        };
+        mockAxios.onGet().reply(200, building);
+        const { findByText } = renderContainer({});
+
+        mockAxios.onPut().replyOnce(200, building);
+        mockAxios.onPut().replyOnce(200, { ...building, parcels: [], leasedLandMetadata: [] });
+
+        const reviewButton = await findByText('Review & Submit');
+        reviewButton.click();
+        const modifyButton = await findByText('Modify Associated Land');
+        modifyButton.click();
+        await wait(async () => {
+          const associatedLandText = await screen.findByText('Modify assoc. land 12345');
+          expect(associatedLandText).toBeVisible();
+        });
+        const deleteIcon = await screen.findByTestId('delete-parcel-1');
+        act(() => {
+          fireEvent.click(deleteIcon);
+        });
+        await wait(async () => {
+          const removeText = await screen.findByText('Really Remove Associated Parcel?');
+          expect(removeText).toBeVisible();
+        });
+        const okButton = await screen.findByText('Ok');
+        act(() => {
+          fireEvent.click(okButton);
+        });
+        await wait(async () => {
+          const oldDeleteIcon = await screen.queryByTestId('delete-parcel-1');
+          expect(oldDeleteIcon).not.toBeInTheDocument();
+        });
+      });
+      it('does not delete buildings if there are errors', async () => {
+        history.push('/mapview/?sidebar=true&buildingId=1&disabled=false');
+        const building = {
+          ...mockBuildingWithAssociatedLand,
+          name: 'Modify assoc. land 12345',
+          parcels: [{ ...mockParcel, classificationId: '' }],
+        };
+        mockAxios.onGet().reply(200, building);
+        const { findByText } = renderContainer({});
+
+        mockAxios.onPut().replyOnce(200, { ...building });
+        mockAxios.onPut().replyOnce(200, { ...building, parcels: [], leasedLandMetadata: [] });
+
+        const reviewButton = await findByText('Review & Submit');
+        reviewButton.click();
+        const modifyButton = await findByText('Modify Associated Land');
+        modifyButton.click();
+        await wait(async () => {
+          const associatedLandText = await screen.findByText('Modify assoc. land 12345');
+          expect(associatedLandText).toBeVisible();
+        });
+        const deleteIcon = await screen.findByTestId('delete-parcel-1');
+        act(() => {
+          fireEvent.click(deleteIcon);
+        });
+        await wait(async () => {
+          const removeText = await screen.findByText('Really Remove Associated Parcel?');
+          expect(removeText).toBeVisible();
+        });
+        const okButton = await screen.findByText('Ok');
+        act(() => {
+          fireEvent.click(okButton);
+        });
+        await wait(async () => {
+          const oldDeleteIcon = await screen.queryByTestId('delete-parcel-1');
+          expect(oldDeleteIcon).toBeInTheDocument();
+        });
+      });
+      it('does not delete tabs if there are errors', async () => {
+        history.push('/mapview/?sidebar=true&buildingId=1&disabled=false');
+        const building = {
+          ...mockBuildingWithAssociatedLand,
+          name: 'Modify assoc. land 12345',
+          parcels: [{ ...mockParcel, classificationId: '' }],
+        };
+        mockAxios.onGet().reply(200, building);
+        const { findByText } = renderContainer({});
+
+        mockAxios.onPut().replyOnce(200, { ...building });
+        mockAxios.onPut().replyOnce(200, { ...building, parcels: [], leasedLandMetadata: [] });
+
+        const reviewButton = await findByText('Review & Submit');
+        reviewButton.click();
+        const modifyButton = await findByText('Modify Associated Land');
+        modifyButton.click();
+        await wait(async () => {
+          const associatedLandText = await screen.findByText('Modify assoc. land 12345');
+          expect(associatedLandText).toBeVisible();
+        });
+        const deleteIcon = await screen.findByTestId('delete-parcel-1');
+        act(() => {
+          fireEvent.click(deleteIcon);
+        });
+        await wait(async () => {
+          const removeText = await screen.findByText('Really Remove Associated Parcel?');
+          expect(removeText).toBeVisible();
+        });
+        const okButton = await screen.findByText('Ok');
+        act(() => {
+          fireEvent.click(okButton);
+        });
+        await wait(async () => {
+          const oldDeleteIcon = await screen.queryByTestId('delete-parcel-1');
+          expect(oldDeleteIcon).toBeInTheDocument();
+        });
+      });
+      it('deletes tabs if there is no leasedlandmetadata', async () => {
+        history.push('/mapview/?sidebar=true&buildingId=1&disabled=false');
+        const building = {
+          ...mockBuildingWithAssociatedLand,
+          name: 'Modify assoc. land 12345',
+          parcels: [{ ...mockParcel }],
+        };
+        mockAxios.onGet().reply(200, building);
+        const { findByText } = renderContainer({});
+
+        mockAxios.onPut().replyOnce(200, { ...building, leasedLandMetadata: [] });
+        mockAxios.onPut().replyOnce(200, { ...building, parcels: [], leasedLandMetadata: [] });
+
+        const reviewButton = await findByText('Review & Submit');
+        reviewButton.click();
+        const modifyButton = await findByText('Modify Associated Land');
+        modifyButton.click();
+        await wait(async () => {
+          const associatedLandText = await screen.findByText('Modify assoc. land 12345');
+          expect(associatedLandText).toBeVisible();
+        });
+        const deleteIcon = await screen.findByTestId('delete-parcel-1');
+        act(() => {
+          fireEvent.click(deleteIcon);
+        });
+        await wait(async () => {
+          const removeText = await screen.findByText('Really Remove Associated Parcel?');
+          expect(removeText).toBeVisible();
+        });
+        const okButton = await screen.findByText('Ok');
+        act(() => {
+          fireEvent.click(okButton);
+        });
+        await wait(async () => {
+          const oldDeleteIcon = await screen.queryByTestId('delete-parcel-1');
+          expect(oldDeleteIcon).not.toBeInTheDocument();
+        });
+      });
+      it('deletes tabs if there are multiple tabse and no leasedlandmetadata', async () => {
+        history.push('/mapview/?sidebar=true&buildingId=1&disabled=false');
+        const building = {
+          ...mockBuildingWithAssociatedLand,
+          name: 'Modify assoc. land 12345',
+          parcels: [mockParcel, mockParcel],
+        };
+        mockAxios.onGet().reply(200, building);
+        const { findByText } = renderContainer({});
+
+        mockAxios.onPut().replyOnce(200, { ...building, leasedLandMetadata: [] });
+        mockAxios.onPut().replyOnce(200, { ...building, parcels: [], leasedLandMetadata: [] });
+
+        const reviewButton = await findByText('Review & Submit');
+        reviewButton.click();
+        const modifyButton = await findByText('Modify Associated Land');
+        modifyButton.click();
+        await wait(async () => {
+          const associatedLandText = await screen.findByText('Modify assoc. land 12345');
+          expect(associatedLandText).toBeVisible();
+        });
+        const deleteIcon = await screen.findByTestId('delete-parcel-1');
+        act(() => {
+          fireEvent.click(deleteIcon);
+        });
+        await wait(async () => {
+          const removeText = await screen.findByText('Really Remove Associated Parcel?');
+          expect(removeText).toBeVisible();
+        });
+        const okButton = await screen.findByText('Ok');
+        act(() => {
+          fireEvent.click(okButton);
+        });
+        await wait(async () => {
+          const oldDeleteIcon = await screen.queryByTestId('delete-parcel-2');
+          expect(oldDeleteIcon).not.toBeInTheDocument();
         });
       });
     });

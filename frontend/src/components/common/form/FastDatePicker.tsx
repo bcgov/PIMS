@@ -75,7 +75,7 @@ const FormikDatePicker: FunctionComponent<FastDatePickerProps> = ({
   if (typeof value === 'string') {
     value = moment(value, 'YYYY-MM-DD').toDate();
   }
-  if (value && dequal(moment(initialValue, 'YYYY-MM-DD'), moment(value, 'YYYY-MM-DD'))) {
+  if ((value && moment(initialValue, 'YYYY-MM-DD').isSame(moment(value, 'YYYY-MM-DD')), 'day')) {
     setFieldTouched(field);
   }
   useEffect(() => {

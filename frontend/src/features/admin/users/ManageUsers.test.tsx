@@ -13,6 +13,10 @@ import { cleanup, fireEvent, render, wait } from '@testing-library/react';
 import moment from 'moment-timezone';
 import { Formik } from 'formik';
 import { noop } from 'lodash';
+import { act } from 'react-dom/test-utils';
+import MockAdapter from 'axios-mock-adapter';
+import axios from 'axios';
+import { fillInput } from 'utils/testUtils';
 
 const history = createMemoryHistory();
 history.push('admin');
@@ -26,6 +30,7 @@ const lCodes = {
     { name: 'disabledRole', id: '2', isDisabled: true, type: API.ROLE_CODE_SET_NAME },
   ] as ILookupCode[],
 };
+const mockAxios = new MockAdapter(axios);
 
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'), // use actual for all non-hook parts
@@ -63,6 +68,7 @@ const getStore = (includeDate?: boolean) =>
           },
         ],
       },
+      filter: {},
       rowsPerPage: 10,
     },
     [reducerTypes.LOOKUP_CODE]: lCodes,
@@ -74,6 +80,10 @@ const getStore = (includeDate?: boolean) =>
   });
 
 describe('Manage Users Component', () => {
+  beforeEach(() => {
+    mockAxios.resetHistory();
+  });
+
   afterEach(() => {
     cleanup();
   });
@@ -130,5 +140,31 @@ describe('Manage Users Component', () => {
       .format('YYYY-MM-DD hh:mm a');
     const { getByText } = testRender(getStore(true));
     expect(getByText(dateTime)).toBeVisible();
+  });
+
+  it('downloads data when excel icon clicked', async () => {
+    const { getByTestId } = testRender(getStore());
+    const excelIcon = getByTestId('excel-icon');
+    mockAxios.onGet().reply(200);
+
+    act(() => {
+      fireEvent.click(excelIcon);
+    });
+    await wait(() => {
+      expect(mockAxios.history.get.length).toBe(1);
+    });
+  });
+
+  it('can search for users', async () => {
+    const { container } = testRender(getStore());
+    fillInput(container, 'firstName', 'testUserFirst1');
+    const searchButton = container.querySelector('#search-button');
+    mockAxios.onPost().reply(200);
+    act(() => {
+      fireEvent.click(searchButton!);
+    });
+    await wait(() => {
+      expect(mockAxios.history.post.length).toBe(1);
+    });
   });
 });

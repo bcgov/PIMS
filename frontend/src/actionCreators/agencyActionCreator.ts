@@ -67,7 +67,7 @@ export const createAgency = (agency: IAddAgency) => async (dispatch: Function) =
   dispatch(request(actionTypes.ADD_AGENCY));
   dispatch(showLoading());
   try {
-    const { data, status } = await CustomAxios().post(
+    const { data, status } = await CustomAxios({ lifecycleToasts: agencyToasts }).post(
       ENVIRONMENT.apiUrl + API.AGENCY_ROOT(),
       agency,
     );

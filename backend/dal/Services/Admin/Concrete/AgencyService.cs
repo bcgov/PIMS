@@ -207,7 +207,7 @@ namespace Pims.Dal.Services.Admin
         {
             agency.ThrowIfNull(nameof(agency));
 
-            var original = this.Context.Agencies.Find(agency.Id) ?? throw new KeyNotFoundException();
+            var original = this.Context.Agencies.Include(a => a.Users).FirstOrDefault(a => a.Id == agency.Id) ?? throw new KeyNotFoundException();
             var updateUsers = new List<User>();
 
             // Any user associated with this agency needs to be updated.

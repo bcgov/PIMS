@@ -5,6 +5,8 @@ import { Container, Button } from 'react-bootstrap';
 import { SteppedForm, useFormStepper } from '.';
 import { Input } from '..';
 import { render } from '@testing-library/react';
+import { act } from 'react-dom/test-utils';
+import { fireEvent } from '@testing-library/dom';
 
 Enzyme.configure({ adapter: new Adapter() });
 
@@ -14,7 +16,7 @@ const FormContentComponent = () => {
     <Container>
       <Input field="data.name" placeholder="Name" />
 
-      <p>Form inputs and control button here</p>
+      <p>STEP: {stepper.current}</p>
       <Button onClick={() => stepper.gotoStep(3)} variant="outline-info">
         Go to
       </Button>
@@ -42,6 +44,7 @@ const Component = () => {
       initialValues={{
         activeStep: 0,
         data: { name: 'Quartech HQ' },
+        activeTab: 0,
       }}
       persistable
       persistProps={{
@@ -60,5 +63,46 @@ describe('SteppedForm', () => {
   it('component renders correctly', () => {
     const { container } = render(<Component />);
     expect(container.firstChild).toMatchSnapshot();
+  });
+  it('back on step 0 doesnt throw an error', () => {
+    const { getByText } = render(<Component />);
+    const backButton = getByText('Back');
+    act(() => {
+      fireEvent.click(backButton);
+    });
+    const currentStep = getByText('STEP: 0');
+    expect(currentStep).toBeInTheDocument();
+  });
+  it('goes to the next page', () => {
+    const { getByText } = render(<Component />);
+    const nextButton = getByText('Next Step');
+    act(() => {
+      fireEvent.click(nextButton);
+    });
+    const currentStep = getByText('STEP: 1');
+    expect(currentStep).toBeInTheDocument();
+  });
+  it('does not change page if next and back are clicked', () => {
+    const { getByText } = render(<Component />);
+    const nextButton = getByText('Next Step');
+    const backButton = getByText('Back');
+    act(() => {
+      fireEvent.click(nextButton);
+    });
+    let currentStep = getByText('STEP: 1');
+    act(() => {
+      fireEvent.click(backButton);
+    });
+    currentStep = getByText('STEP: 0');
+    expect(currentStep).toBeInTheDocument();
+  });
+  it('jumps to a step', () => {
+    const { getByText } = render(<Component />);
+    const jumpTo = getByText('Go to');
+    act(() => {
+      fireEvent.click(jumpTo);
+    });
+    let currentStep = getByText('STEP: 3');
+    expect(currentStep).toBeInTheDocument();
   });
 });

@@ -10,7 +10,7 @@ import { useKeycloak } from '@react-keycloak/web';
 import * as API from 'constants/API';
 import { ILookupCode } from 'actions/lookupActions';
 import * as reducerTypes from 'constants/reducerTypes';
-import { fireEvent, render, wait, screen } from '@testing-library/react';
+import { fireEvent, render, wait, screen, act, prettyDOM } from '@testing-library/react';
 import { Classifications } from 'constants/classifications';
 import { fillInput } from 'utils/testUtils';
 import { IParcel } from 'actions/parcelsActions';
@@ -95,6 +95,8 @@ const defaultInitialValues: IParcel = {
   longitude: -122,
   assessedLand: '',
   assessedBuilding: '',
+  parcels: [],
+  agency: '',
   address: {
     line1: 'address line 1',
     administrativeArea: 'Victoria',
@@ -116,6 +118,7 @@ const getLandForm = (disabled?: boolean, initialValues?: IParcel) => (
         initialValues={initialValues as any}
         setLandComplete={noop}
         setLandUpdateComplete={noop}
+        findMatchingPid={noop as any}
       />
     </Router>
   </Provider>
