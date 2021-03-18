@@ -1,11 +1,13 @@
-﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Pims.Api.Helpers.Logging
 {
+    [ExcludeFromCodeCoverage]
     public static class LoggerExtensions
     {
         public static IServiceCollection AddSerilogging(

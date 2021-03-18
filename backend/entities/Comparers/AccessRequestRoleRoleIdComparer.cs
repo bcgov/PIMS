@@ -8,7 +8,7 @@ namespace Pims.Dal.Entities.Comparers
     {
         public bool Equals([AllowNull] AccessRequestRole x, [AllowNull] AccessRequestRole y)
         {
-            return (x == null || y == null) ? false : GetHashCode(x) == GetHashCode(y);
+            return x != null && y != null && GetHashCode(x) == GetHashCode(y);
         }
 
         public int GetHashCode([DisallowNull] AccessRequestRole obj)

@@ -11,6 +11,7 @@ using Pims.Core.Exceptions;
 using Pims.Dal.Exceptions;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Net;
 using System.Text;
@@ -22,6 +23,7 @@ namespace Pims.Api.Helpers.Middleware
     /// <summary>
     /// ErrorHandlingMidleware class, provides a way to catch and handle unhandled errors in a generic way.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public class ErrorHandlingMiddleware
     {
         #region Variables

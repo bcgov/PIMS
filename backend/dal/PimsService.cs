@@ -1,6 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Pims.Dal.Services;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Security.Claims;
 
 namespace Pims.Dal
@@ -8,6 +9,7 @@ namespace Pims.Dal
     /// <summary>
     /// PimsService class, provides a encapsulated way to references all the independent services.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public class PimsService : IPimsService
     {
         #region Variables
