@@ -74,92 +74,126 @@ const ExemptionEnhancedReferralCompleteForm = ({
           field="clearanceNotificationSentOn"
         />
       </Form.Row>
-      <h3>Option 1: Transfer within the Greater Reporting Entity</h3>
-
-      <Form.Row>
-        <Form.Label column md={4}>
-          Date Transferred within the GRE
-          <TooltipIcon
-            toolTipId="onDateTransferredWithinGre"
-            toolTip={onTransferredWithinTheGreTooltip}
-          />
-        </Form.Label>
-        <FastDatePicker
-          outerClassName="col-md-2"
-          formikProps={formikProps}
-          disabled={isReadOnly}
-          field="transferredWithinGreOn"
-        />
-        {!isComplete && (
-          <div className="col-md-6">
-            <Button
-              disabled={isReadOnly || !formikProps.values.transferredWithinGreOn}
-              onClick={onClickGreTransferred}
-            >
-              Update Property Information
-            </Button>
-          </div>
-        )}
-      </Form.Row>
-      <h3>Option 2: Proceed to Surplus Properties List</h3>
-      <Form.Row>
-        <Form.Label column md={4}>
-          Request Received On
-        </Form.Label>
-        <FastDatePicker
-          outerClassName="col-md-2"
-          formikProps={formikProps}
-          disabled={isReadOnly}
-          field="requestForSplReceivedOn"
-        />
-      </Form.Row>
-      <Form.Row>
-        <Form.Label column md={4}>
-          SPL Addition Approved On
-        </Form.Label>
-        <FastDatePicker
-          outerClassName="col-md-2"
-          formikProps={formikProps}
-          disabled={isReadOnly}
-          field="approvedForSplOn"
-        />
-        {!isComplete && formikProps.values.statusCode !== ReviewWorkflowStatus.NotInSpl && (
-          <>
-            <Button
-              disabled={
-                isReadOnly ||
-                !formikProps.values.requestForSplReceivedOn ||
-                !formikProps.values.approvedForSplOn
-              }
-              onClick={() => {
-                setProceedToSpl(true);
-              }}
-            >
-              Proceed to SPL
-            </Button>
-            {formikProps.values.statusCode !== ReviewWorkflowStatus.NotInSpl && (
-              <>
-                <OrText>OR</OrText>
-                <Button disabled={isReadOnly} onClick={onClickNotInSpl}>
-                  Not Included in the SPL
-                </Button>
-              </>
-            )}
-          </>
-        )}
-      </Form.Row>
-      {!isComplete && (
+      {![
+        ReviewWorkflowStatus.ApprovedForSpl,
+        ReviewWorkflowStatus.PreMarketing,
+        ReviewWorkflowStatus.OnMarket,
+        ReviewWorkflowStatus.ContractInPlaceConditional,
+        ReviewWorkflowStatus.ContractInPlaceUnconditional,
+      ].some(v => v === formikProps.values.statusCode) && (
         <>
-          <h3>Option 3: Add to Enhanced Referral Process</h3>
+          <h3>Option 1: Transfer within the Greater Reporting Entity</h3>
           <Form.Row>
-            <div className="justify-content-center add-space-below">
-              <Button disabled={isReadOnly} onClick={() => onClickAddToErp()}>
-                Add to Enhanced Referral Process
-              </Button>
-            </div>
+            <Form.Label column md={4}>
+              Date Transferred within the GRE
+              <TooltipIcon
+                toolTipId="onDateTransferredWithinGre"
+                toolTip={onTransferredWithinTheGreTooltip}
+              />
+            </Form.Label>
+            <FastDatePicker
+              outerClassName="col-md-2"
+              formikProps={formikProps}
+              disabled={isReadOnly}
+              field="transferredWithinGreOn"
+            />
+            {!isComplete && (
+              <div className="col-md-6">
+                <Button
+                  disabled={isReadOnly || !formikProps.values.transferredWithinGreOn}
+                  onClick={onClickGreTransferred}
+                >
+                  Update Property Information
+                </Button>
+              </div>
+            )}
           </Form.Row>
         </>
       )}
+      {!isComplete &&
+        ![
+          ReviewWorkflowStatus.ApprovedForSpl,
+          ReviewWorkflowStatus.PreMarketing,
+          ReviewWorkflowStatus.OnMarket,
+          ReviewWorkflowStatus.ContractInPlaceConditional,
+          ReviewWorkflowStatus.ContractInPlaceUnconditional,
+        ].some(v => v === formikProps.values.statusCode) && (
+          <>
+            <h3>Option 2: Proceed to Surplus Properties List</h3>
+            <Form.Row>
+              <Form.Label column md={4}>
+                Request Received On
+              </Form.Label>
+              <FastDatePicker
+                outerClassName="col-md-2"
+                formikProps={formikProps}
+                disabled={isReadOnly}
+                field="requestForSplReceivedOn"
+              />
+            </Form.Row>
+            <Form.Row>
+              <Form.Label column md={4}>
+                SPL Addition Approved On
+              </Form.Label>
+              <FastDatePicker
+                outerClassName="col-md-2"
+                formikProps={formikProps}
+                disabled={isReadOnly}
+                field="approvedForSplOn"
+              />
+              {!isComplete &&
+                ![
+                  ReviewWorkflowStatus.ApprovedForSpl,
+                  ReviewWorkflowStatus.PreMarketing,
+                  ReviewWorkflowStatus.OnMarket,
+                  ReviewWorkflowStatus.ContractInPlaceConditional,
+                  ReviewWorkflowStatus.ContractInPlaceUnconditional,
+                ].some(v => v === formikProps.values.statusCode) && (
+                  <>
+                    <Button
+                      disabled={
+                        isReadOnly ||
+                        !formikProps.values.requestForSplReceivedOn ||
+                        !formikProps.values.approvedForSplOn
+                      }
+                      onClick={() => {
+                        setProceedToSpl(true);
+                      }}
+                    >
+                      Proceed to SPL
+                    </Button>
+                    {formikProps.values.statusCode !== ReviewWorkflowStatus.NotInSpl && (
+                      <>
+                        <OrText>OR</OrText>
+                        <Button disabled={isReadOnly} onClick={onClickNotInSpl}>
+                          Not Included in the SPL
+                        </Button>
+                      </>
+                    )}
+                  </>
+                )}
+            </Form.Row>
+          </>
+        )}
+      {!isComplete &&
+        ![
+          ReviewWorkflowStatus.ApprovedForSpl,
+          ReviewWorkflowStatus.PreMarketing,
+          ReviewWorkflowStatus.OnMarket,
+          ReviewWorkflowStatus.ContractInPlaceConditional,
+          ReviewWorkflowStatus.ContractInPlaceUnconditional,
+        ].some(v => v === formikProps.values.statusCode) && (
+          <>
+            <h3>Option 3: Add to Enhanced Referral Process</h3>
+            <Form.Row>
+              <div className="justify-content-center add-space-below">
+                <Button disabled={isReadOnly} onClick={() => onClickAddToErp()}>
+                  Add to Enhanced Referral Process
+                </Button>
+              </div>
+            </Form.Row>
+          </>
+        )}
 
       {formikProps.values.statusCode === ReviewWorkflowStatus.NotInSpl && (
         <>
