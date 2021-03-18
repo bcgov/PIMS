@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -11,7 +10,6 @@ using Pims.Core.Exceptions;
 using Pims.Dal.Exceptions;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Net;
 using System.Text;
@@ -23,7 +21,6 @@ namespace Pims.Api.Helpers.Middleware
     /// <summary>
     /// ErrorHandlingMidleware class, provides a way to catch and handle unhandled errors in a generic way.
     /// </summary>
-    [ExcludeFromCodeCoverage]
     public class ErrorHandlingMiddleware
     {
         #region Variables
