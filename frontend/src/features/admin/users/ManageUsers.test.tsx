@@ -68,7 +68,7 @@ const getStore = (includeDate?: boolean) =>
           },
         ],
       },
-      filter: {},
+      filter: { firstName: '' },
       rowsPerPage: 10,
     },
     [reducerTypes.LOOKUP_CODE]: lCodes,
@@ -157,7 +157,7 @@ describe('Manage Users Component', () => {
 
   it('can search for users', async () => {
     const { container } = testRender(getStore());
-    fillInput(container, 'firstName', 'testUserFirst1');
+    await fillInput(container, 'firstName', 'testUserFirst1');
     const searchButton = container.querySelector('#search-button');
     mockAxios.onPost().reply(200);
     act(() => {

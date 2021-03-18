@@ -74,7 +74,10 @@ const FormikDatePicker: FunctionComponent<FastDatePickerProps> = ({
   if (typeof value === 'string') {
     value = moment(value, 'YYYY-MM-DD').toDate();
   }
-  if ((value && moment(initialValue, 'YYYY-MM-DD').isSame(moment(value, 'YYYY-MM-DD')), 'day')) {
+  if (
+    (value && moment(initialValue, 'YYYY-MM-DD').isSame(moment(value, 'YYYY-MM-DD')), 'day') &&
+    oldDateWarning
+  ) {
     setFieldTouched(field);
   }
   useEffect(() => {

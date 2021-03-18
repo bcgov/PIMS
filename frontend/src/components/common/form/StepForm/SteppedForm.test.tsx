@@ -4,8 +4,7 @@ import Enzyme from 'enzyme';
 import { Container, Button } from 'react-bootstrap';
 import { SteppedForm, useFormStepper } from '.';
 import { Input } from '..';
-import { render } from '@testing-library/react';
-import { act } from 'react-dom/test-utils';
+import { render, act, wait } from '@testing-library/react';
 import { fireEvent } from '@testing-library/dom';
 
 Enzyme.configure({ adapter: new Adapter() });
@@ -73,36 +72,37 @@ describe('SteppedForm', () => {
     const currentStep = getByText('STEP: 0');
     expect(currentStep).toBeInTheDocument();
   });
-  it('goes to the next page', () => {
-    const { getByText } = render(<Component />);
+  it('goes to the next page', async () => {
+    const { getByText, findByText } = render(<Component />);
     const nextButton = getByText('Next Step');
-    act(() => {
+    await act(async () => {
       fireEvent.click(nextButton);
+      const currentStep = await findByText('STEP: 1');
+      expect(currentStep).toBeInTheDocument();
     });
-    const currentStep = getByText('STEP: 1');
-    expect(currentStep).toBeInTheDocument();
   });
-  it('does not change page if next and back are clicked', () => {
-    const { getByText } = render(<Component />);
+  it('does not change page if next and back are clicked', async () => {
+    const { findByText, getByText } = render(<Component />);
     const nextButton = getByText('Next Step');
     const backButton = getByText('Back');
-    act(() => {
-      fireEvent.click(nextButton);
+    fireEvent.click(nextButton);
+    await wait(async () => {
+      await findByText('STEP: 1');
     });
-    let currentStep = getByText('STEP: 1');
-    act(() => {
-      fireEvent.click(backButton);
+    fireEvent.click(backButton);
+    await wait(async () => {
+      await findByText('STEP: 0');
     });
-    currentStep = getByText('STEP: 0');
+    const currentStep = getByText('STEP: 0');
     expect(currentStep).toBeInTheDocument();
   });
-  it('jumps to a step', () => {
-    const { getByText } = render(<Component />);
+  it('jumps to a step', async () => {
+    const { getByText, findByText } = render(<Component />);
     const jumpTo = getByText('Go to');
-    act(() => {
+    await act(async () => {
       fireEvent.click(jumpTo);
+      let currentStep = await findByText('STEP: 3');
+      expect(currentStep).toBeInTheDocument();
     });
-    let currentStep = getByText('STEP: 3');
-    expect(currentStep).toBeInTheDocument();
   });
 });
