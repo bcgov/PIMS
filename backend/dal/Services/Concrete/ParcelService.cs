@@ -196,8 +196,8 @@ namespace Pims.Dal.Services
             if (parcel.Parcels.Count() > 0 && parcel.Subdivisions.Count() > 0) throw new InvalidOperationException("Parcel may only have associated parcels or subdivisions, not both.");
 
             this.Context.Parcels.ThrowIfNotUnique(parcel);
-            // SRES users allowed to overwrite
-            if (!this.User.HasPermission(Permissions.AdminProperties))
+            // If the user is not an admin, and their agency is not a parent override to their user agency
+            if (!this.User.HasPermission(Permissions.AdminProperties) && agency.ParentId != null)
             {
                 parcel.AgencyId = agency.Id;
                 parcel.Agency = agency;
