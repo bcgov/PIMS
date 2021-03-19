@@ -22,7 +22,7 @@ namespace Pims.Core.Converters
         {
             var value = reader.GetString();
 
-            return Boolean.TryParse(value, out bool result) ? result : default;
+            return Boolean.TryParse(value, out bool result) && result;
         }
 
         /// <summary>

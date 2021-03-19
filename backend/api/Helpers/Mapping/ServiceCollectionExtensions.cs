@@ -2,6 +2,7 @@ using Mapster;
 using MapsterMapper;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using System.Text.Json;
@@ -11,6 +12,7 @@ namespace Pims.Api.Helpers.Mapping
     /// <summary>
     /// ServiceCollectionExtensions static class, provides extension methods for IServiceCollection.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public static class ServiceCollectionExtensions
     {
         /// <summary>

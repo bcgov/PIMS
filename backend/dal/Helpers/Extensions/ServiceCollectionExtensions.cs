@@ -3,12 +3,15 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Pims.Dal
 {
     /// <summary>
     /// ServiceCollectionExtensions static class, provides extension methods for IServiceCollection.
     /// </summary>
+    ///
+    [ExcludeFromCodeCoverage]
     public static class ServiceCollectionExtensions
     {
         /// <summary>

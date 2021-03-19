@@ -3,12 +3,14 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using System;
 using Serilog;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Pims.Api
 {
     /// <summary>
     /// Program class, provides the main program starting point for the Geo-spatial application.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public class Program
     {
         /// <summary>

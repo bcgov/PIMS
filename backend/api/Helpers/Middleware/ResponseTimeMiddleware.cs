@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Http;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 
 namespace Pims.Api.Helpers.Middleware
@@ -7,6 +8,7 @@ namespace Pims.Api.Helpers.Middleware
     /// <summary>
     /// ResponseTimeMiddleware class, provides a way to include the response time in the header.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public class ResponseTimeMiddleware
     {
         #region Variables
