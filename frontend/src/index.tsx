@@ -12,11 +12,12 @@ import App, { store } from './App';
 import * as serviceWorker from './serviceWorker.ignore';
 import Keycloak, { KeycloakInstance } from 'keycloak-js';
 import { KeycloakProvider } from '@react-keycloak/web';
-import { Spinner } from 'react-bootstrap';
 import { Provider } from 'react-redux';
 import getKeycloakEventHandler from 'utils/KeycloakEventHandler';
 import { AuthStateContextProvider } from 'contexts/authStateContext';
 import { BrowserRouter as Router } from 'react-router-dom';
+import EmptyLayout from 'layouts/EmptyLayout';
+import LoginLoading from 'features/account/LoginLoading';
 
 //@ts-ignore
 const keycloak: KeycloakInstance = new Keycloak('/keycloak.json');
@@ -24,7 +25,11 @@ const Index = () => {
   return (
     <KeycloakProvider
       keycloak={keycloak}
-      LoadingComponent={<Spinner animation="border"></Spinner>}
+      LoadingComponent={
+        <EmptyLayout>
+          <LoginLoading />
+        </EmptyLayout>
+      }
       onEvent={getKeycloakEventHandler(keycloak)}
     >
       <Provider store={store}>
