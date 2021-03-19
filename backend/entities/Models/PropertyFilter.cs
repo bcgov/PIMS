@@ -202,7 +202,6 @@ namespace Pims.Dal.Entities.Models
         {
             // We want case-insensitive query parameter properties.
             var filter = new Dictionary<string, Microsoft.Extensions.Primitives.StringValues>(query, StringComparer.OrdinalIgnoreCase);
-            PropertyTypes propType;
 
             this.Boundary = filter.GetEnvelopNullValue("bbox");
             this.NELatitude = filter.GetDoubleNullValue(nameof(this.NELatitude));
@@ -213,7 +212,7 @@ namespace Pims.Dal.Entities.Models
             this.ProjectNumber = filter.GetStringValue(nameof(this.ProjectNumber));
             this.IgnorePropertiesInProjects = filter.GetBoolNullValue(nameof(this.IgnorePropertiesInProjects));
             this.InSurplusPropertyProgram = filter.GetBoolNullValue(nameof(this.InSurplusPropertyProgram));
-            this.PropertyType = Enum.TryParse(filter.GetStringValue(nameof(this.PropertyType), null), out propType) ? (PropertyTypes?)propType : null;
+            this.PropertyType = Enum.TryParse(filter.GetStringValue(nameof(this.PropertyType), null), out PropertyTypes propType) ? (PropertyTypes?)propType : null;
             this.Address = filter.GetStringValue(nameof(this.Address));
             this.AdministrativeArea = filter.GetStringValue(nameof(this.AdministrativeArea));
 

@@ -3,12 +3,15 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Pims.Dal.Helpers.Extensions
 {
     /// <summary>
     /// ApplicationBuilderExtensions static class, provides extension methods for ApplicationBuilder objects.
     /// </summary>
+    ///
+    [ExcludeFromCodeCoverage]
     public static class ApplicationBuilderExtensions
     {
         /// <summary>

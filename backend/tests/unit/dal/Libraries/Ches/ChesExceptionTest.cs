@@ -86,10 +86,9 @@ namespace Pims.Dal.Test.Libraries.Ches
             // Arrange
             var message = "test for inner exception 2";
             var status = HttpStatusCode.OK;
-            var helper = new TestHelper();
 
             var innerException = new HttpClientRequestException(message, status);
-            var response = new HttpResponseMessage(status)
+            new HttpResponseMessage(status)
             {
                 RequestMessage = new HttpRequestMessage(HttpMethod.Post, "https://test")
             };
@@ -126,7 +125,6 @@ namespace Pims.Dal.Test.Libraries.Ches
             // Arrange
             var message = "test for inner exception";
             var status = HttpStatusCode.OK;
-            var helper = new TestHelper();
 
             var innerException = new HttpClientRequestException(message, status);
             var response = new HttpResponseMessage(status)

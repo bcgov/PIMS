@@ -44,12 +44,14 @@ using System.Threading.Tasks;
 using Pims.Api.Helpers.Logging;
 using Prometheus;
 using Pims.Api.Helpers.Exceptions;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Pims.Api
 {
     /// <summary>
     /// Startup class, provides a way to startup the .netcore RESTful API and configure it.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public class Startup
     {
         #region Properties
@@ -89,10 +91,10 @@ namespace Pims.Api
             services.AddSerilogging(this.Configuration);
             var jsonSerializerOptions = new JsonSerializerOptions()
             {
-                IgnoreNullValues = !String.IsNullOrWhiteSpace(this.Configuration["Serialization:Json:IgnoreNullValues"]) ? Boolean.Parse(this.Configuration["Serialization:Json:IgnoreNullValues"]) : false,
-                PropertyNameCaseInsensitive = !String.IsNullOrWhiteSpace(this.Configuration["Serialization:Json:PropertyNameCaseInsensitive"]) ? Boolean.Parse(this.Configuration["Serialization:Json:PropertyNameCaseInsensitive"]) : false,
+                IgnoreNullValues = !String.IsNullOrWhiteSpace(this.Configuration["Serialization:Json:IgnoreNullValues"]) && Boolean.Parse(this.Configuration["Serialization:Json:IgnoreNullValues"]),
+                PropertyNameCaseInsensitive = !String.IsNullOrWhiteSpace(this.Configuration["Serialization:Json:PropertyNameCaseInsensitive"]) && Boolean.Parse(this.Configuration["Serialization:Json:PropertyNameCaseInsensitive"]),
                 PropertyNamingPolicy = this.Configuration["Serialization:Json:PropertyNamingPolicy"] == "CamelCase" ? JsonNamingPolicy.CamelCase : null,
-                WriteIndented = !String.IsNullOrWhiteSpace(this.Configuration["Serialization:Json:WriteIndented"]) ? Boolean.Parse(this.Configuration["Serialization:Json:WriteIndented"]) : false
+                WriteIndented = !string.IsNullOrWhiteSpace(this.Configuration["Serialization:Json:WriteIndented"]) && Boolean.Parse(this.Configuration["Serialization:Json:WriteIndented"])
             };
             services.AddMapster(jsonSerializerOptions, options =>
             {
