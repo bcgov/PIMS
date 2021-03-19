@@ -261,7 +261,7 @@ const Form: React.FC<ILandForm> = ({
           <Button
             disabled={formikProps.isSubmitting}
             size="sm"
-            type="submit"
+            type="button"
             onClick={() => {
               formikProps.setSubmitting(true);
               formikProps.submitForm();

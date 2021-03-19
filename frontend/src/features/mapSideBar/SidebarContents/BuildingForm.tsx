@@ -240,7 +240,7 @@ const Form: React.FC<IBuildingForm> = ({
                   <Button
                     disabled={formikProps.isSubmitting}
                     size="sm"
-                    type="submit"
+                    type="button"
                     onClick={() => {
                       formikProps.setSubmitting(true);
                       formikProps.submitForm();
