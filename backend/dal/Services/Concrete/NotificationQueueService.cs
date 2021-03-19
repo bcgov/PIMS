@@ -139,6 +139,7 @@ namespace Pims.Dal.Services
         /// <param name="project"></param>
         /// <param name="fromStatusId"></param>
         /// <param name="toStatusId"></param>
+        /// <param name="includeOnlyTo">Control whether transitions only require a `To Status`, not a `From Status`.</param>
         /// <returns></returns>
         public IEnumerable<NotificationQueue> GenerateNotifications(Project project, int? fromStatusId, int? toStatusId, bool includeOnlyTo = true)
         {

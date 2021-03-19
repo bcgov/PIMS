@@ -7,6 +7,7 @@ import { Col, Row } from 'react-bootstrap';
 import styled from 'styled-components';
 import { getIn } from 'formik';
 import moment from 'moment';
+import TooltipIcon from 'components/common/TooltipIcon';
 
 interface IOccupancyProps {
   formikProps: any;
@@ -19,6 +20,14 @@ interface IOccupancyProps {
 const InfoSection = styled.div`
   margin-left: 20px;
   margin-bottom: 20px;
+  .label-with-tooltip {
+    margin-right: 5px;
+  }
+`;
+
+const TooltipStyled = styled(TooltipIcon)`
+  margin-top: 0.3rem;
+  margin-right: 10px;
 `;
 
 export const OccupancyForm: React.FC<IOccupancyProps> = ({
@@ -85,7 +94,12 @@ export const OccupancyForm: React.FC<IOccupancyProps> = ({
       </Row>
       <InfoSection>
         <Row>
-          <Label>Tenancy %</Label>
+          <Label className="label-with-tooltip">Tenancy %</Label>
+          <TooltipStyled
+            toolTipId="tenancy-tooltip"
+            toolTip="Enter the percentage that your Agency tenants this building.
+            You may also write notes, for example: 90% my agency and 10% leased to the city."
+          />
           <FastInput
             displayErrorTooltips
             formikProps={formikProps}
