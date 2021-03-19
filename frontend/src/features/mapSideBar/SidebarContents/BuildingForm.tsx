@@ -217,7 +217,7 @@ const Form: React.FC<IBuildingForm> = ({
             Continue
           </Button>
         )}
-        {formikProps.dirty && stepper.isSubmit(stepper.current) && !disabled && (
+        {stepper.isSubmit(stepper.current) && !disabled && (
           <>
             {isViewOrUpdate ? (
               <>

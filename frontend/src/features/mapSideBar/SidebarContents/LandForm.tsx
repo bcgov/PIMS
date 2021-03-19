@@ -257,22 +257,19 @@ const Form: React.FC<ILandForm> = ({
           </Button>
         )}
 
-        {formikProps.dirty &&
-          formikProps.isValid &&
-          !disabled &&
-          stepper.isSubmit(stepper.current) && (
-            <Button
-              disabled={formikProps.isSubmitting}
-              size="sm"
-              type="submit"
-              onClick={() => {
-                formikProps.setSubmitting(true);
-                formikProps.submitForm();
-              }}
-            >
-              Submit
-            </Button>
-          )}
+        {formikProps.isValid && !disabled && stepper.isSubmit(stepper.current) && (
+          <Button
+            disabled={formikProps.isSubmitting}
+            size="sm"
+            type="submit"
+            onClick={() => {
+              formikProps.setSubmitting(true);
+              formikProps.submitForm();
+            }}
+          >
+            Submit
+          </Button>
+        )}
       </FormFooter>
     </FormContentWrapper>
   );
