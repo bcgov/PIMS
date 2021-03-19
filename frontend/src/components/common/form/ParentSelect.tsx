@@ -6,6 +6,15 @@ import { Label } from '../Label';
 import { SelectOption, SelectOptions } from './Select';
 import { TypeaheadField } from './Typeahead';
 import _ from 'lodash';
+import styled from 'styled-components';
+
+/** this styled component is used to help condtionally apply bold font weight to items that have been assigned the bold-item className */
+const StyledMenuItemsDiv = styled.div`
+  .bold-item {
+    font-weight: bold;
+  }
+  overflow-x: hidden;
+`;
 
 interface IParentSelect {
   /** specify the field that is being accessed */
@@ -180,11 +189,16 @@ export const ParentSelect: React.FC<IParentSelect> = ({
                 {sortBy(resultGroup[parentId], (x: SelectOption) => x.value).map((i, index) => {
                   if (i.parent) {
                     return (
-                      <MenuItem key={index + 1} option={i} position={index + 1}>
-                        <Highlighter search="">
-                          {i.parentId === CHILDLESS_PARENT_ID ? <b>{i.label}</b> : i.label}
-                        </Highlighter>
-                      </MenuItem>
+                      <StyledMenuItemsDiv>
+                        <MenuItem
+                          className={i.parentId === CHILDLESS_PARENT_ID ? 'bold-item' : 'menu-item'}
+                          key={index + 1}
+                          option={i}
+                          position={index + 1}
+                        >
+                          <Highlighter search="">{i.label}</Highlighter>
+                        </MenuItem>
+                      </StyledMenuItemsDiv>
                     );
                   }
                   return null;
