@@ -224,8 +224,8 @@ namespace Pims.Ches
 
             // Make sure there are no blank CC or BCC;
             email.To = email.To.NotNullOrWhiteSpace();
-            email.Cc = email.Cc.NotNullOrWhiteSpace();
-            email.Bcc = email.Bcc.NotNullOrWhiteSpace();
+            email.Cc = email.Cc?.NotNullOrWhiteSpace();
+            email.Bcc = email.Bcc?.NotNullOrWhiteSpace();
 
             if (this.Options.EmailEnabled)
                 return await SendAsync<EmailResponseModel, IEmail>("/email", HttpMethod.Post, email);
