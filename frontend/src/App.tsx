@@ -2,7 +2,7 @@ import './App.scss';
 import 'react-bootstrap-typeahead/css/Typeahead.css';
 import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { Spinner } from 'react-bootstrap';
+import { Spinner, Col } from 'react-bootstrap';
 import configureStore from 'configureStore';
 import { getActivateUserAction } from 'actionCreators/usersActionCreator';
 import { getFetchLookupCodeAction } from 'actionCreators/lookupCodeActionCreator';
@@ -11,6 +11,8 @@ import { AuthStateContext, IAuthState } from 'contexts/authStateContext';
 import AppRouter from 'router';
 import OnLoadActions from 'OnLoadActions';
 import { ToastContainer } from 'react-toastify';
+import PublicLayout from 'layouts/PublicLayout';
+import FilterBackdrop from 'components/maps/leaflet/FilterBackdrop';
 
 export const store = configureStore();
 
@@ -30,7 +32,13 @@ const App = () => {
     <AuthStateContext.Consumer>
       {(context: IAuthState) => {
         if (!context.ready) {
-          return <Spinner animation="border"></Spinner>;
+          return (
+            <PublicLayout>
+              <Col>
+                <FilterBackdrop show={true}></FilterBackdrop>
+              </Col>
+            </PublicLayout>
+          );
         }
 
         return (
