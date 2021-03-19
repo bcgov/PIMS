@@ -29,3 +29,5 @@ export const ProjectDisposalSubmitted = () => {
     </Container>
   );
 };
+
+export default ProjectDisposalSubmitted;

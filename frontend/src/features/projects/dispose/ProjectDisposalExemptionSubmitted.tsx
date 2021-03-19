@@ -29,3 +29,5 @@ export const ProjectDisposalExemptionSubmitted = () => {
     </Container>
   );
 };
+
+export default ProjectDisposalExemptionSubmitted;

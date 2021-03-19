@@ -1,17 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Review Summary View renders approved correctly 1`] = `
-.c3 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: row-reverse;
-  -ms-flex-direction: row-reverse;
-  flex-direction: row-reverse;
-}
-
 .c0 {
   text-align: center;
   margin-bottom: 1rem;
@@ -21,6 +10,17 @@ exports[`Review Summary View renders approved correctly 1`] = `
   padding-top: 1rem;
   padding-bottom: 1rem;
   font-family: 'BCSans',Fallback,sans-serif;
+}
+
+.c3 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row-reverse;
+  -ms-flex-direction: row-reverse;
+  flex-direction: row-reverse;
 }
 
 .c2 {
@@ -752,17 +752,6 @@ exports[`Review Summary View renders approved correctly 1`] = `
 `;
 
 exports[`Review Summary View renders denied correctly 1`] = `
-.c3 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: row-reverse;
-  -ms-flex-direction: row-reverse;
-  flex-direction: row-reverse;
-}
-
 .c0 {
   text-align: center;
   margin-bottom: 1rem;
@@ -772,6 +761,17 @@ exports[`Review Summary View renders denied correctly 1`] = `
   padding-top: 1rem;
   padding-bottom: 1rem;
   font-family: 'BCSans',Fallback,sans-serif;
+}
+
+.c3 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row-reverse;
+  -ms-flex-direction: row-reverse;
+  flex-direction: row-reverse;
 }
 
 .c2 {
@@ -1503,17 +1503,6 @@ exports[`Review Summary View renders denied correctly 1`] = `
 `;
 
 exports[`Review Summary View renders submitted correctly 1`] = `
-.c3 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: row-reverse;
-  -ms-flex-direction: row-reverse;
-  flex-direction: row-reverse;
-}
-
 .c0 {
   text-align: center;
   margin-bottom: 1rem;
@@ -1523,6 +1512,17 @@ exports[`Review Summary View renders submitted correctly 1`] = `
   padding-top: 1rem;
   padding-bottom: 1rem;
   font-family: 'BCSans',Fallback,sans-serif;
+}
+
+.c3 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row-reverse;
+  -ms-flex-direction: row-reverse;
+  flex-direction: row-reverse;
 }
 
 .c2 {

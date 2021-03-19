@@ -95,6 +95,11 @@ parameters:
     displayName: "API Path"
     required: true
     value: "/api"
+  - name: API_SERVICE_NAME
+    description: "The name of the api service in OpenShift"
+    displayName: "API Path"
+    required: true
+    value: "pims-api"
 
   - name: REPLICAS
     displayName: "Pod Replicas"
@@ -244,7 +249,7 @@ objects:
                 - name: API_URL
                   value: ${API_URL}
                 - name: API_SERVICE_NAME
-                  value: ${APP_NAME}-${ROLE_NAME}${INSTANCE}
+                  value: ${API_SERVICE_NAME}
                 - name: API_PATH
                   value: ${API_PATH}
                 - name: RealIpFrom
