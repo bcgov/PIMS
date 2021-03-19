@@ -2,7 +2,7 @@ import './App.scss';
 import 'react-bootstrap-typeahead/css/Typeahead.css';
 import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { Spinner, Col } from 'react-bootstrap';
+import { Col } from 'react-bootstrap';
 import configureStore from 'configureStore';
 import { getActivateUserAction } from 'actionCreators/usersActionCreator';
 import { getFetchLookupCodeAction } from 'actionCreators/lookupCodeActionCreator';
