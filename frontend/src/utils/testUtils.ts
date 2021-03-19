@@ -1,5 +1,4 @@
 import { wait, fireEvent } from '@testing-library/react';
-import { Map as LeafletMap, Layer } from 'leaflet';
 
 export const fillInput = async (
   container: HTMLElement,
@@ -58,16 +57,4 @@ export const fillInput = async (
     fireEvent.blur(input!);
   });
   return { input };
-};
-
-export const getInput = (container: HTMLElement, name: string, type: string = 'input') => {
-  const input = container.querySelector(`${type}[name="${name}"]`);
-  return input;
-};
-
-export const getLeafletLayers = (map?: LeafletMap): Layer[] => {
-  if (!map) {
-    return [];
-  }
-  return Object.keys((map as any)._layers).map(key => (map as any)._layers[key]);
 };

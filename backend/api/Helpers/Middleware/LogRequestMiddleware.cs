@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Pims.Core.Extensions;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 
 namespace Pims.Api.Helpers.Middleware
@@ -8,6 +9,7 @@ namespace Pims.Api.Helpers.Middleware
     /// <summary>
     /// LogRequestMiddleware class, provides a way to log requests inbound to the API.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public class LogRequestMiddleware
     {
         #region Variables

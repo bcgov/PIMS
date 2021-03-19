@@ -4,7 +4,6 @@ import { showLoading, hideLoading } from 'react-redux-loading-bar';
 import { AxiosInstance } from 'axios';
 import { ENVIRONMENT } from 'constants/environment';
 import * as _ from 'lodash';
-import { LatLngTuple } from 'leaflet';
 import { useCallback } from 'react';
 import { IGeoSearchParams } from 'constants/API';
 import queryString from 'query-string';
@@ -39,7 +38,6 @@ export interface PimsAPI extends AxiosInstance {
   ) => Promise<{ available: boolean }>;
   searchAddress: (text: string) => Promise<IGeocoderResponse[]>;
   getSitePids: (siteId: string) => Promise<IGeocoderPidsResponse>;
-  getAdministrativeAreaLatLng: (city: string) => Promise<LatLngTuple | null>;
   loadProperties: (params?: IGeoSearchParams) => Promise<any[]>;
   getBuilding: (id: number) => Promise<IBuilding>;
   getParcel: (id: number) => Promise<IParcel>;
@@ -112,22 +110,6 @@ export const useApi = (): PimsAPI => {
         `${ENVIRONMENT.apiUrl}/tools/geocoder/addresses?address=${address}+BC`,
       );
       return _.orderBy(data, (r: IGeocoderResponse) => r.score, ['desc']);
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [],
-  );
-
-  axios.getAdministrativeAreaLatLng = useCallback(
-    async (address: string): Promise<LatLngTuple | null> => {
-      const { data } = await axios.get<IGeocoderResponse[]>(
-        `${ENVIRONMENT.apiUrl}/tools/geocoder/addresses?address=${address}+BC`,
-      );
-
-      if (data.length === 0) {
-        return null;
-      }
-      const highestMatch = _.orderBy(data, (r: IGeocoderResponse) => r.score, ['desc'])[0];
-      return [highestMatch.latitude, highestMatch.longitude];
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [],
