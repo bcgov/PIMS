@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using Pims.Core.Extensions;
 using System;
 using System.Data.SqlClient;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text.Json;
 
@@ -13,6 +14,7 @@ namespace Pims.Dal
     /// <summary>
     /// PimsContextFactory class, provides a way to use the design time tools (i.e. dotnet ef database update).
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public class PimsContextFactory : IDesignTimeDbContextFactory<PimsContext>
     {
         #region Variables

@@ -10,47 +10,11 @@ import moment from 'moment-timezone';
 import { IStatus } from 'features/projects/common';
 
 /**
- * Truncates the specified 'input' value to the 'maxLength'.
- * @param input Text value you want to truncate.
- * @param maxLength The maximum length of the new string value.
- */
-export const truncate = (input: string, maxLength: number): string => {
-  if (input && input.length > 1000) {
-    return `${input.substr(0, maxLength)}...`;
-  }
-  return input;
-};
-
-/**
  * Convert the specified 'input' value into a decimal or undefined.
  * @param input The string value to convert to a decimal.
  */
 export const decimalOrUndefined = (input: string): number | undefined => {
   return input !== '' && input !== undefined ? parseInt(input, 10) : undefined;
-};
-
-/**
- * Convert the specified 'input' value into a decimal or null.
- * @param input The string value to convert to a decimal.
- */
-export const decimalOrNull = (input: string): number | null => {
-  return input !== '' && input !== undefined ? parseInt(input, 10) : null;
-};
-
-/**
- * Convert the specified 'input' value into a decimal or empty string.
- * @param input The string value to convert to a decimal.
- */
-export const decimalOrEmpty = (input: string): number | string => {
-  return input !== '' && input !== undefined ? parseInt(input, 10) : '';
-};
-
-/**
- * Convert the specified 'input' value into a float or null.
- * @param input The string value to convert to a float.
- */
-export const floatOrNull = (input: string): number | null => {
-  return input !== '' && input !== undefined ? parseFloat(input) : null;
 };
 
 /**
@@ -263,10 +227,6 @@ export const getFiscalYear = (date?: Date | string): number => {
 
 export const formatDate = (date?: string | Date) => {
   return !!date ? moment(date).format('YYYY-MM-DD') : '';
-};
-
-export const formatDateTime = (date: string | undefined) => {
-  return !!date ? moment(date).format('YYYY-MM-DD hh:mm a') : '';
 };
 
 export const formatFiscalYear = (year: string | number | undefined): string => {
