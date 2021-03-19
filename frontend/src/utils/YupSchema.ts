@@ -157,7 +157,8 @@ export const BuildingInformationSchema = Yup.object().shape({
   address: Address.required(),
   agencyId: Yup.number()
     .transform(emptyStringToNull)
-    .required('Required'),
+    .required('Required')
+    .typeError('Selection from list required.'),
   isSensitive: Yup.boolean()
     .nullable()
     .transform(emptyStringToNull)
@@ -248,6 +249,7 @@ export const ParcelSchema = Yup.object()
         .of(FinancialYear),
       agencyId: Yup.number()
         .transform(emptyStringToNull)
+        .typeError('Selection from list required.')
         .required('Required'),
     },
     [['pin', 'pid']],
@@ -365,6 +367,7 @@ export const LandIdentificationSchema = Yup.object().shape(
       .test('is-valid', 'Please enter a valid number', val => Number(val) < 200000),
     agencyId: Yup.number()
       .transform(emptyStringToNull)
+      .typeError('Selection from list required.')
       .required('Required'),
     lotSize: Yup.number(),
     isSensitive: Yup.boolean()

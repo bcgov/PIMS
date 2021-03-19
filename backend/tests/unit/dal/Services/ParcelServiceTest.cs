@@ -693,7 +693,7 @@ namespace Pims.Dal.Test.Services
         {
             // Arrange
             var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.PropertyAdd).AddAgency(1);
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.PropertyAdd).AddAgency(10);
             var init = helper.InitializeDatabase(user);
             init.SaveChanges();
             var parcel = EntityHelper.CreateParcel(1);
@@ -716,7 +716,7 @@ namespace Pims.Dal.Test.Services
         {
             // Arrange
             var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.PropertyAdd).AddAgency(1);
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.PropertyAdd).AddAgency(10);
             var init = helper.InitializeDatabase(user);
             init.SaveChanges();
             var parcel = EntityHelper.CreateParcel(1);
@@ -765,7 +765,7 @@ namespace Pims.Dal.Test.Services
         {
             // Arrange
             var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.PropertyAdd).AddAgency(1);
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.PropertyAdd).AddAgency(10);
             var init = helper.InitializeDatabase(user);
             var project = init.CreateProject(1);
             project.ReportedFiscalYear = 2020;
@@ -807,7 +807,7 @@ namespace Pims.Dal.Test.Services
         {
             // Arrange
             var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.PropertyAdd).AddAgency(1);
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.PropertyAdd).AddAgency(10);
             var init = helper.InitializeDatabase(user);
             var originalParcel = init.CreateParcel(1);
             init.SaveChanges();
@@ -832,7 +832,7 @@ namespace Pims.Dal.Test.Services
         {
             // Arrange
             var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.PropertyAdd).AddAgency(1);
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.PropertyAdd).AddAgency(10);
             var init = helper.InitializeDatabase(user);
             init.CreateParcel(1);
             init.SaveChanges();
@@ -857,7 +857,7 @@ namespace Pims.Dal.Test.Services
         {
             // Arrange
             var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.PropertyAdd).AddAgency(1);
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.PropertyAdd).AddAgency(10);
             var init = helper.InitializeDatabase(user);
             var originalParcel = init.CreateParcel(1);
             init.SaveChanges();
@@ -882,7 +882,7 @@ namespace Pims.Dal.Test.Services
         {
             // Arrange
             var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.PropertyAdd).AddAgency(1);
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.PropertyAdd).AddAgency(10);
             var init = helper.InitializeDatabase(user);
             var originalParcel = init.CreateParcel(1);
             originalParcel.PIN = 1;
@@ -908,7 +908,7 @@ namespace Pims.Dal.Test.Services
         {
             // Arrange
             var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.PropertyAdd).AddAgency(1);
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.PropertyAdd).AddAgency(10);
             var init = helper.InitializeDatabase(user);
             var originalParcel = init.CreateParcel(1);
             originalParcel.PIN = 1;
@@ -1177,7 +1177,7 @@ namespace Pims.Dal.Test.Services
         {
             // Arrange
             var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.PropertyAdd, Permissions.PropertyEdit).AddAgency(1);
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.PropertyAdd, Permissions.PropertyEdit).AddAgency(10);
             var init = helper.InitializeDatabase(user);
             var parcel = EntityHelper.CreateParcel(1);
 
@@ -1207,7 +1207,7 @@ namespace Pims.Dal.Test.Services
         {
             // Arrange
             var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.PropertyAdd, Permissions.PropertyEdit).AddAgency(1);
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.PropertyAdd, Permissions.PropertyEdit).AddAgency(10);
             var init = helper.InitializeDatabase(user);
             var parcel = EntityHelper.CreateParcel(1);
 
@@ -1237,7 +1237,7 @@ namespace Pims.Dal.Test.Services
         {
             // Arrange
             var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.PropertyEdit, Permissions.PropertyAdd).AddAgency(1);
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.PropertyEdit, Permissions.PropertyAdd).AddAgency(10);
             var init = helper.InitializeDatabase(user);
             var originalParcel = init.CreateParcel(1);
             var updatedParcel = init.CreateParcel(3);
