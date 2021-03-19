@@ -206,3 +206,5 @@ export const ManageUsers = () => {
     </div>
   );
 };
+
+export default ManageUsers;

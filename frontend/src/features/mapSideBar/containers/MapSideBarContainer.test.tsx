@@ -444,7 +444,7 @@ describe('Parcel Detail MapSideBarContainer', () => {
           const oldDeleteIcon = await screen.queryByTestId('delete-parcel-1');
           expect(oldDeleteIcon).not.toBeInTheDocument();
         });
-      });
+      }, 10000);
       it('does not delete buildings if there are errors', async () => {
         history.push('/mapview/?sidebar=true&buildingId=1&disabled=false');
         const building = {
@@ -482,8 +482,8 @@ describe('Parcel Detail MapSideBarContainer', () => {
           const oldDeleteIcon = await screen.queryByTestId('delete-parcel-1');
           expect(oldDeleteIcon).toBeInTheDocument();
         });
-      });
-      xit('does not delete tabs if there are errors', async () => {
+      }, 10000);
+      it('does not delete tabs if there are errors', async () => {
         history.push('/mapview/?sidebar=true&buildingId=1&disabled=false');
         const building = {
           ...mockBuildingWithAssociatedLand,
@@ -520,7 +520,7 @@ describe('Parcel Detail MapSideBarContainer', () => {
           const oldDeleteIcon = await screen.queryByTestId('delete-parcel-1');
           expect(oldDeleteIcon).toBeInTheDocument();
         });
-      });
+      }, 10000);
       it('deletes tabs if there is no leasedlandmetadata', async () => {
         history.push('/mapview/?sidebar=true&buildingId=1&disabled=false');
         const building = {
@@ -558,7 +558,7 @@ describe('Parcel Detail MapSideBarContainer', () => {
           const oldDeleteIcon = await screen.queryByTestId('delete-parcel-1');
           expect(oldDeleteIcon).not.toBeInTheDocument();
         });
-      });
+      }, 10000);
       it('deletes tabs if there are multiple tabs and no leasedlandmetadata', async () => {
         history.push('/mapview/?sidebar=true&buildingId=1&disabled=false');
         const building = {
@@ -596,7 +596,7 @@ describe('Parcel Detail MapSideBarContainer', () => {
           const oldDeleteIcon = await screen.queryByTestId('delete-parcel-2');
           expect(oldDeleteIcon).not.toBeInTheDocument();
         });
-      });
+      }, 10000);
     });
   });
 });
