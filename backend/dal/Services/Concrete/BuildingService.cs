@@ -167,8 +167,8 @@ namespace Pims.Dal.Services
 
             // A building should have a unique name within the parcel it is located on.
             building.Parcels.ForEach(pb => this.Context.ThrowIfNotUnique(pb.Parcel, building));
-            // SRES users allowed to overwrite
-            if (!this.User.HasPermission(Permissions.AdminProperties))
+            // If the user is not an admin, and their agency is not a parent override to their user agency
+            if (!this.User.HasPermission(Permissions.AdminProperties) && agency.ParentId != null)
             {
                 building.AgencyId = agency.Id;
                 building.Agency = agency;

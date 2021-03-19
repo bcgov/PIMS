@@ -21,7 +21,6 @@ const Wrapper = styled('div')`
   align-items: center;
   justify-items: center;
   position: relative;
-  font-size: 12px;
   padding: 0 5px;
 `;
 
