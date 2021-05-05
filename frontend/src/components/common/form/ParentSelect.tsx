@@ -100,9 +100,9 @@ export const ParentSelect: React.FC<IParentSelect> = ({
     if (value?.value) {
       return [value];
     }
-    if (value !== undefined && !_.isEmpty(value.toString())) {
+    if (value !== undefined && !_.isEmpty(value?.toString())) {
       /** select appropriate agency to set the field value to when present */
-      const option = options.find(x => x.value === value.toString() || x.value === value);
+      const option = options.find(x => x.value === value?.toString() || x.value === value);
       return option ? [option] : [];
     }
     return [];

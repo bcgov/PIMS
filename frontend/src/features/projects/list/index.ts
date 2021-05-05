@@ -1,3 +1,3 @@
 export * from './interfaces';
-export { ProjectApprovalRequestListView } from './ProjectListView';
-export { default as ProjectListView } from './ProjectListView';
+export * from './ProjectApprovalRequestListView';
+export * from './ProjectListView';

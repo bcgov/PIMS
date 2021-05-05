@@ -215,7 +215,7 @@ namespace Pims.Dal.Services
                 var agencies = (from a in this.Context.Agencies
                                 join par in this.Context.ProjectAgencyResponses on new { AgencyId = a.Id, ProjectId = project.Id } equals new { par.AgencyId, par.ProjectId } into g
                                 from n in g.DefaultIfEmpty()
-                                where !a.IsDisabled && a.SendEmail && (n == null || n.Response != NotificationResponses.Ignore)
+                                where !a.IsDisabled && a.SendEmail && (n == null || (n.Response != NotificationResponses.Unsubscribe && n.Response != NotificationResponses.Watch))
                                 select a).ToArray();
 
                 foreach (var agency in agencies)
@@ -232,7 +232,7 @@ namespace Pims.Dal.Services
                                 where a.ParentId == null
                                  && !a.IsDisabled
                                  && a.SendEmail
-                                 && (n == null || n.Response != NotificationResponses.Ignore)
+                                 && (n == null || (n.Response != NotificationResponses.Unsubscribe && n.Response != NotificationResponses.Watch))
                                 select a).ToArray();
 
                 foreach (var agency in agencies)

@@ -114,8 +114,9 @@ export const getEditableDatePickerCell = (
 };
 
 const responseOptions: SelectOption[] = [
-  { label: 'Not Interested', value: AgencyResponses.Ignore },
+  { label: 'Not Interested', value: AgencyResponses.Unsubscribe },
   { label: 'Interested', value: AgencyResponses.Watch },
+  { label: 'Send Notifications', value: AgencyResponses.Subscribe },
 ];
 
 export const getProjectLinkCell = (namespace: string = 'properties') => (cellInfo: any) => {

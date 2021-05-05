@@ -5,7 +5,17 @@ namespace Pims.Dal.Entities
     /// </summary>
     public enum NotificationResponses
     {
-        Ignore = 0,
-        Watch = 1
+        /// <summary>
+        /// Agency does not want to receive notifications.
+        /// </summary>
+        Unsubscribe = 0,
+        /// <summary>
+        /// Agency wants to receive notifications.
+        /// </summary>
+        Subscribe = 1,
+        /// <summary>
+        /// Agency does not want to receive notifications, but is interested in watching the project.
+        /// </summary>
+        Watch = 2
     }
 }
