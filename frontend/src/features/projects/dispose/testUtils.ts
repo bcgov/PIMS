@@ -1,3 +1,4 @@
+import { getCurrentFiscalYear } from 'utils';
 import {
   IProjectTask,
   DisposeWorkflowStatus,
@@ -369,7 +370,7 @@ export const mockApiProjectParcel = {
     fiscals: [
       {
         parcelId: 87,
-        fiscalYear: 2018,
+        fiscalYear: getCurrentFiscalYear() - 1,
         key: 'NetBook',
         value: 0,
         createdOn: '2020-07-19T03:52:56.3079867',
@@ -377,7 +378,7 @@ export const mockApiProjectParcel = {
       },
       {
         parcelId: 87,
-        fiscalYear: 2021,
+        fiscalYear: getCurrentFiscalYear(),
         key: 'NetBook',
         value: 1,
         createdOn: '0001-01-01T00:00:00',
@@ -386,7 +387,7 @@ export const mockApiProjectParcel = {
       },
       {
         parcelId: 87,
-        fiscalYear: 2021,
+        fiscalYear: getCurrentFiscalYear(),
         key: 'Market',
         value: 1,
         createdOn: '0001-01-01T00:00:00',
@@ -452,7 +453,7 @@ export const mockApiProjectBuilding = {
     fiscals: [
       {
         parcelId: 87,
-        fiscalYear: 2018,
+        fiscalYear: getCurrentFiscalYear() - 1,
         key: 'NetBook',
         value: 0,
         createdOn: '2020-07-19T03:52:56.3079867',
@@ -460,7 +461,7 @@ export const mockApiProjectBuilding = {
       },
       {
         parcelId: 87,
-        fiscalYear: 2021,
+        fiscalYear: getCurrentFiscalYear(),
         key: 'NetBook',
         value: 1,
         createdOn: '0001-01-01T00:00:00',
@@ -469,7 +470,7 @@ export const mockApiProjectBuilding = {
       },
       {
         parcelId: 87,
-        fiscalYear: 2021,
+        fiscalYear: getCurrentFiscalYear(),
         key: 'Market',
         value: 1,
         createdOn: '0001-01-01T00:00:00',
@@ -1069,10 +1070,10 @@ export const mockFlatProject = {
       assessedBuildingFirm: undefined,
       assessedBuildingRowVersion: undefined,
       netBook: 1,
-      netBookFiscalYear: 2021,
+      netBookFiscalYear: getCurrentFiscalYear(),
       netBookRowVersion: 'AAAAAAAAWyY=',
       market: 1,
-      marketFiscalYear: 2021,
+      marketFiscalYear: getCurrentFiscalYear(),
       marketRowVersion: 'AAAAAAAAWyc=',
       propertyTypeId: 0,
       propertyType: 'Land',
@@ -1113,10 +1114,10 @@ export const mockFlatProject = {
       assessedBuildingFirm: undefined,
       assessedBuildingRowVersion: undefined,
       netBook: 1,
-      netBookFiscalYear: 2021,
+      netBookFiscalYear: getCurrentFiscalYear(),
       netBookRowVersion: 'AAAAAAAAWyY=',
       market: 1,
-      marketFiscalYear: 2021,
+      marketFiscalYear: getCurrentFiscalYear(),
       marketRowVersion: 'AAAAAAAAWyc=',
       propertyTypeId: PropertyTypes.BUILDING,
       propertyType: 'Land',
