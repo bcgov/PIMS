@@ -18,6 +18,7 @@ import {
   mockApiProjectBuilding,
 } from '../dispose/testUtils';
 import { NoteTypes, PropertyTypes } from '../../../constants';
+import { getCurrentFiscalYear } from 'utils';
 
 const createAppraisal = (date: Moment): IEvaluation => {
   return {
@@ -77,9 +78,9 @@ describe('projectConverter function tests', () => {
     });
     it('returns the most recent fiscal', () => {
       const fiscals = [];
-      fiscals.push(createFiscal(2020));
-      fiscals.push(createFiscal(2021));
-      fiscals.push(createFiscal(2018));
+      fiscals.push(createFiscal(getCurrentFiscalYear() - 1));
+      fiscals.push(createFiscal(getCurrentFiscalYear()));
+      fiscals.push(createFiscal(getCurrentFiscalYear() - 2));
       expect(getCurrentFiscal(fiscals, FiscalKeys.Market)).toBe(fiscals[1]);
     });
   });
@@ -207,8 +208,8 @@ describe('projectConverter function tests', () => {
           ...mockApiProjectParcel,
           evaluations: [],
           fiscals: [
-            { key: FiscalKeys.Market, value: 200, fiscalYear: moment().year() },
-            { key: FiscalKeys.NetBook, value: 300, fiscalYear: moment().year() },
+            { key: FiscalKeys.Market, value: 200, fiscalYear: getCurrentFiscalYear() },
+            { key: FiscalKeys.NetBook, value: 300, fiscalYear: getCurrentFiscalYear() },
           ] as IFiscal[],
         };
         const property = toFlatProperty(apiProperty as any);
@@ -220,8 +221,8 @@ describe('projectConverter function tests', () => {
           ...mockApiProjectBuilding,
           evaluations: [],
           fiscals: [
-            { key: FiscalKeys.Market, value: 200, fiscalYear: moment().year() },
-            { key: FiscalKeys.NetBook, value: 300, fiscalYear: moment().year() },
+            { key: FiscalKeys.Market, value: 200, fiscalYear: getCurrentFiscalYear() },
+            { key: FiscalKeys.NetBook, value: 300, fiscalYear: getCurrentFiscalYear() },
           ] as IFiscal[],
         };
         const property = toFlatProperty(apiProperty as any);
