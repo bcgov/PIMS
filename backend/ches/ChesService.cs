@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Pims.Ches.Configuration;
 using Pims.Ches.Models;
@@ -26,6 +27,7 @@ namespace Pims.Ches
         private readonly ClaimsPrincipal _user;
         private TokenModel _token = null;
         private readonly JwtSecurityTokenHandler _tokenHandler;
+        private readonly ILogger<IChesService> _logger;
         #endregion
 
         #region Properties
@@ -41,12 +43,14 @@ namespace Pims.Ches
         /// <param name="user"></param>
         /// <param name="client"></param>
         /// <param name="tokenHandler"></param>
-        public ChesService(IOptions<ChesOptions> options, ClaimsPrincipal user, IHttpRequestClient client, JwtSecurityTokenHandler tokenHandler)
+        /// <param name="logger"></param>
+        public ChesService(IOptions<ChesOptions> options, ClaimsPrincipal user, IHttpRequestClient client, JwtSecurityTokenHandler tokenHandler, ILogger<IChesService> logger)
         {
             this.Options = options.Value;
             _user = user;
             this.Client = client;
             _tokenHandler = tokenHandler;
+            _logger = logger;
         }
         #endregion
 
@@ -99,6 +103,7 @@ namespace Pims.Ches
             }
             catch (HttpClientRequestException ex)
             {
+                _logger.LogError(ex, $"Failed to send/receive request: ${url}");
                 var response = await this.Client?.DeserializeAsync<Ches.Models.ErrorResponseModel>(ex.Response);
                 throw new ChesException(ex, this.Client, response);
             }
@@ -126,6 +131,7 @@ namespace Pims.Ches
             }
             catch (HttpClientRequestException ex)
             {
+                _logger.LogError(ex, $"Failed to send/receive request: ${url}");
                 var response = await this.Client?.DeserializeAsync<Ches.Models.ErrorResponseModel>(ex.Response);
                 throw new ChesException(ex, this.Client, response);
             }
@@ -157,6 +163,7 @@ namespace Pims.Ches
             }
             catch (HttpClientRequestException ex)
             {
+                _logger.LogError(ex, $"Failed to send/receive request: ${url}");
                 var response = await this.Client?.DeserializeAsync<Ches.Models.ErrorResponseModel>(ex.Response);
                 throw new ChesException(ex, this.Client, response);
             }
@@ -187,6 +194,7 @@ namespace Pims.Ches
             }
             catch (HttpClientRequestException ex)
             {
+                _logger.LogError(ex, $"Failed to send/receive request: ${this.Options.AuthUrl}");
                 var response = await this.Client?.DeserializeAsync<Ches.Models.ErrorResponseModel>(ex.Response);
                 throw new ChesException(ex, this.Client, response);
             }
