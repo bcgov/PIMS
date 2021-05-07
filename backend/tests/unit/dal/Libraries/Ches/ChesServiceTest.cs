@@ -1019,7 +1019,10 @@ namespace Pims.Dal.Test.Libraries.Ches
             {
                 Content = new StringContent("{}", Encoding.UTF8, "application/json")
             };
-            var status = new StatusResponseModel();
+            var status = new StatusResponseModel()
+            {
+                Status = "pending"
+            };
 
             var client = helper.GetService<Mock<IHttpRequestClient>>();
             client.Setup(m => m.SendAsync<TokenModel>(It.IsAny<string>(), It.IsAny<HttpMethod>(), It.IsAny<HttpRequestHeaders>(), It.IsAny<HttpContent>(), It.IsAny<Func<HttpResponseMessage, bool>>())).ReturnsAsync(token);

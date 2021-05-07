@@ -333,8 +333,14 @@ namespace Pims.Ches
         /// <returns></returns>
         public async Task<StatusResponseModel> CancelEmailAsync(Guid messageId)
         {
-            await SendAsync($"/cancel/{messageId}", HttpMethod.Delete);
-            return await GetStatusAsync(messageId);
+            // Need to determine if we can cancel the email.
+            var response = await GetStatusAsync(messageId);
+            if (response.Status == "accepted" || response.Status == "pending")
+            {
+                await SendAsync($"/cancel/{messageId}", HttpMethod.Delete);
+                response.Status = "cancelled";
+            }
+            return response;
         }
 
         /// <summary>
@@ -353,6 +359,8 @@ namespace Pims.Ches
             if (!String.IsNullOrEmpty(filter.Tag)) query.Add("tag", $"{ filter.Tag }");
             if (filter.TransactionId.HasValue) query.Add("txId", $"{ filter.TransactionId }");
 
+            // TODO: This will probably not work as CHES currently doesn't like if you attempt to cancel a message that can't be cancelled.
+            // Additionally CHES fails (times-out) if you make a request for the status of a cancelled message.
             await SendAsync($"/cancel?{query}", HttpMethod.Delete);
             return await GetStatusAsync(filter);
         }
