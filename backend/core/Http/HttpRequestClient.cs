@@ -64,8 +64,18 @@ namespace Pims.Core.Http
         /// <returns></returns>
         public async Task<TModel> DeserializeAsync<TModel>(HttpResponseMessage response)
         {
-            using var stream = await response.Content.ReadAsStreamAsync();
-            return await JsonSerializer.DeserializeAsync<TModel>(stream, _serializeOptions);
+            var data = await response.Content.ReadAsByteArrayAsync();
+
+            try
+            {
+                return JsonSerializer.Deserialize<TModel>(data, _serializeOptions);
+            }
+            catch (Exception ex)
+            {
+                var body = Encoding.Default.GetString(data);
+                _logger.LogError(ex, $"Failed to deserialize response: {body}");
+                throw ex;
+            }
         }
 
         #region HttpResponseMessage Methods
