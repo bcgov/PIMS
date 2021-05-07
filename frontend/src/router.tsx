@@ -27,7 +27,9 @@ const ProjectDisposalExemptionSubmitted = lazy(() =>
   import('features/projects/dispose/ProjectDisposalExemptionSubmitted'),
 );
 const ProjectListView = lazy(() => import('features/projects/list/ProjectListView'));
-const ProjectApprovalRequestListView = lazy(() => import('features/projects/list/ProjectListView'));
+const ProjectApprovalRequestListView = lazy(() =>
+  import('features/projects/list/ProjectApprovalRequestListView'),
+);
 const ProjectRouter = lazy(() => import('features/projects/common/ProjectRouter'));
 const ProjectDisposeView = lazy(() => import('features/projects/dispose/ProjectDisposeView'));
 const SplReportContainer = lazy(() => import('features/splReports/containers/SplReportContainer'));

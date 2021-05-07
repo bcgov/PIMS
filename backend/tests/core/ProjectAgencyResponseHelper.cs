@@ -57,7 +57,7 @@ namespace Pims.Core.Test
                 AgencyId = agencyId,
                 Note = "NOTE",
                 ReceivedOn = DateTime.UtcNow,
-                Response = Entity.NotificationResponses.Watch,
+                Response = Entity.NotificationResponses.Subscribe,
                 CreatedById = Guid.NewGuid(),
                 CreatedOn = DateTime.UtcNow,
                 UpdatedById = Guid.NewGuid(),

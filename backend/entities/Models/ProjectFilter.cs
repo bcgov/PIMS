@@ -44,12 +44,6 @@ namespace Pims.Dal.Entities.Models
         public bool? CreatedByMe { get; set; }
 
         /// <summary>
-        /// get/set - Filter by workflow - ASSESS-DISPOSAL or ASSESS-EXEMPTION.
-        /// </summary>
-        /// <value></value>
-        public bool? AssessWorkflow { get; set; }
-
-        /// <summary>
         /// get/set - Filter by workflow - SPL
         /// </summary>
         /// <value></value>
@@ -99,7 +93,6 @@ namespace Pims.Dal.Entities.Models
             this.StatusId = filter.GetIntArrayValue(nameof(this.StatusId));
             this.TierLevelId = filter.GetIntNullValue(nameof(this.TierLevelId));
             this.CreatedByMe = filter.GetBoolNullValue(nameof(this.CreatedByMe));
-            this.AssessWorkflow = filter.GetBoolNullValue(nameof(this.AssessWorkflow));
             this.SPLWorkflow = filter.GetBoolNullValue(nameof(this.SPLWorkflow));
             this.Active = filter.GetBoolNullValue(nameof(this.Active));
             this.Agencies = filter.GetIntArrayValue(nameof(this.Agencies));
@@ -121,7 +114,6 @@ namespace Pims.Dal.Entities.Models
                 || !String.IsNullOrWhiteSpace(this.Name)
                 || this.TierLevelId.HasValue
                 || this.Active.HasValue
-                || this.AssessWorkflow.HasValue
                 || this.SPLWorkflow.HasValue
                 || this.CreatedByMe.HasValue
                 || this.FiscalYear.HasValue

@@ -48,14 +48,6 @@ namespace Pims.Dal.Helpers.Extensions
                 .Include(p => p.Notes)
                 .AsNoTracking();
 
-
-            if (filter.AssessWorkflow == true)
-            {
-                var statuses = context.Workflows.Where(w => options.AssessmentWorkflows.Contains(w.Code))
-                    .SelectMany(w => w.Status).Select(x => x.StatusId).Distinct().ToArray();
-                query = query.Where(p => statuses.Contains(p.StatusId) || p.Status.Code.Equals("AS-I") || p.Status.Code.Equals("AS-EXE")); // TODO: Need optional Status paths within Workflows.
-            }
-
             if (filter.SPLWorkflow == true)
             {
                 query = query.Where(p => p.Workflow.Code == "SPL" && p.Status.Code != "CA");
@@ -687,10 +679,15 @@ namespace Pims.Dal.Helpers.Extensions
             }
 
             // Any responses that were deleted should now be ignored.
-            foreach (var response in originalProject.Responses.Except(responses))
+            foreach (var response in originalProject.Responses)
             {
-                response.Response = NotificationResponses.Ignore;
-                responses.Add(response);
+                // Look for original response in the update project.
+                var updatedResponse = updatedProject.Responses.FirstOrDefault(r => r.ProjectId == response.ProjectId && r.AgencyId == response.AgencyId);
+                if (updatedResponse == null)
+                {
+                    response.Response = NotificationResponses.Unsubscribe;
+                    responses.Add(response);
+                }
             }
             return responses;
         }

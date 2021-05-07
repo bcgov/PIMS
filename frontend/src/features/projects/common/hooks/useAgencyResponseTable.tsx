@@ -19,7 +19,7 @@ export const generateAgencyResponseRows = (
       responses.push({
         agencyId: parseInt(agency.id, 10),
         agencyCode: agency.name,
-        response: AgencyResponses.Ignore,
+        response: AgencyResponses.Unsubscribe,
         projectId: projectId,
         offerAmount: 0,
       });

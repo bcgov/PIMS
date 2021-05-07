@@ -306,7 +306,7 @@ export const toApiProject = (project: IProject) => {
     par =>
       par.rowVersion !== undefined ||
       (par.offerAmount !== undefined && par.offerAmount > 0) ||
-      par.response !== AgencyResponses.Ignore ||
+      par.response !== AgencyResponses.Unsubscribe ||
       par.note !== undefined ||
       par.receivedOn !== undefined,
   );

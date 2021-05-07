@@ -542,7 +542,7 @@ namespace Pims.Dal.Services
             }
 
             // Determine if there are any response changes.
-            var responses = project.GetResponseChanges(project);
+            var responses = originalProject.GetResponseChanges(project);
             originalProject.UpdateResponses(project);
 
             // If the note was changed generate a notification for it.
@@ -555,14 +555,7 @@ namespace Pims.Dal.Services
             this.Context.SaveChanges();
             this.Context.CommitTransaction();
 
-            try
-            {
-                await SendNotificationsAsync(originalProject, fromStatusId, responses, noteChanged);
-            }
-            catch (Exception ex)
-            {
-                this.Logger.LogError(ex, "Failed to send notifications");
-            }
+            await SendNotificationsAsync(Get(originalProject.Id), fromStatusId, responses, noteChanged);
 
             return Get(originalProject.Id);
         }
@@ -730,7 +723,7 @@ namespace Pims.Dal.Services
             }
 
             // Determine if there are any response changes.
-            var responses = project.GetResponseChanges(project);
+            var responses = originalProject.GetResponseChanges(project);
             originalProject.UpdateResponses(project);
 
             // If the note was changed generate a notification for it.
@@ -847,9 +840,10 @@ namespace Pims.Dal.Services
         /// <returns></returns>
         public async System.Threading.Tasks.Task<IEnumerable<NotificationQueue>> CancelNotificationsAsync(int projectId, int? agencyId = null)
         {
-            var page = GetNotificationsInQueue(new ProjectNotificationFilter() { Quantity = 500, ProjectId = projectId, AgencyId = agencyId, Status = new[] { NotificationStatus.Accepted, NotificationStatus.Pending } }); // TODO: Handle paging.
+            // TODO: Handle paging better, right now we're assuming 1,000 is enough.
+            var page = GetNotificationsInQueue(new ProjectNotificationFilter() { Quantity = 1000, ProjectId = projectId, AgencyId = agencyId, Status = new[] { NotificationStatus.Accepted, NotificationStatus.Pending } });
             await _notifyService.CancelAsync(page);
-            return page;
+            return page.Items;
         }
         #endregion
 
@@ -870,13 +864,18 @@ namespace Pims.Dal.Services
             {
                 switch (response.Response)
                 {
-                    case (NotificationResponses.Ignore):
+                    case NotificationResponses.Unsubscribe:
+                    case NotificationResponses.Watch:
                         // Cancel all outstanding notifications.
-                        await CancelNotificationsAsync(response.ProjectId, response.AgencyId);
+                        this.Context.NotificationQueue.UpdateRange(await CancelNotificationsAsync(response.ProjectId, response.AgencyId));
                         break;
-                    case (NotificationResponses.Watch):
+                    case NotificationResponses.Subscribe:
+                        // Ensure objects are in context
+                        if (response.Project == null) response.Project = Get(response.ProjectId);
+                        if (response.Agency == null) response.Agency = this.Context.Agencies.First(a => a.Id == response.AgencyId);
+
                         // Notifications need to be added to the queue for the interested agency.
-                        var daysSinceApproved = response.Project.ApprovedOn.HasValue ? (DateTime.UtcNow - response.Project.ApprovedOn.Value).TotalDays : 0;
+                        var daysSinceApproved = response.Project.ApprovedOn.HasValue ? (DateTime.UtcNow - response.Project.ApprovedOn.Value.ToUniversalTime()).TotalDays : 0;
 
                         // Get all notifications for the project that are configured for watching agencies and have not expired.
                         var options = this.Context.ProjectStatusNotifications
@@ -884,18 +883,33 @@ namespace Pims.Dal.Services
                             .Where(s => s.ToStatusId == response.Project.StatusId
                                 && s.Template.Audience == NotificationAudiences.WatchingAgencies
                                 && (s.Delay == NotificationDelays.Days || s.Delay == NotificationDelays.None)
-                                && s.DelayDays > daysSinceApproved);
+                                && s.DelayDays > daysSinceApproved).ToArray();
 
                         foreach (var option in options)
                         {
-                            var sendOn = option.Delay switch
-                            {
-                                NotificationDelays.None => response.Project.CreatedOn,
-                                NotificationDelays.Days => response.Project.ApprovedOn?.AddDays(option.DelayDays) ?? DateTime.UtcNow.AddDays(option.DelayDays),
-                                _ => response.Project.CreatedOn
-                            };
+                            // TODO: This is slow as a separate request is made for each notification.  Ideally this would be part of an earlier join statement.
+                            // Need to determine if there is already one pending in the queue.
+                            var notificationExists = (
+                                from nq in this.Context.NotificationQueue
+                                where nq.ProjectId == response.ProjectId
+                                    && nq.ToAgencyId == response.AgencyId
+                                    && nq.TemplateId == option.TemplateId
+                                    && (nq.Status == NotificationStatus.Accepted || nq.Status == NotificationStatus.Pending)
+                                select new { nq.Id }
+                                ).Any();
 
-                            notifications.Add(this.Self.NotificationQueue.GenerateNotification(response.Project, option, response.Agency, sendOn));
+                            // Only generate a notification if one doesn't already exist in the queue.
+                            if (!notificationExists)
+                            {
+                                var sendOn = option.Delay switch
+                                {
+                                    NotificationDelays.None => response.Project.CreatedOn,
+                                    NotificationDelays.Days => response.Project.ApprovedOn?.AddDays(option.DelayDays) ?? DateTime.UtcNow.AddDays(option.DelayDays),
+                                    _ => response.Project.CreatedOn
+                                };
+
+                                notifications.Add(this.Self.NotificationQueue.GenerateNotification(response.Project, option, response.Agency, sendOn));
+                            }
                         }
                         break;
                 };
@@ -931,7 +945,10 @@ namespace Pims.Dal.Services
             {
                 notifications.AddRange(await GenerateWatchNotificationsAsync(responses));
             }
+
             await this.Self.NotificationQueue.SendNotificationsAsync(notifications);
+
+            this.Context.CommitTransaction();
         }
         #endregion
         #endregion

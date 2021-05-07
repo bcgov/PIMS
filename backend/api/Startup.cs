@@ -208,7 +208,7 @@ namespace Pims.Api
             services.AddPimsKeycloakService();
             services.AddGeocoderService(this.Configuration.GetSection("Geocoder")); // TODO: Determine if a default value could be used instead.
             services.AddChesService(this.Configuration.GetSection("Ches"));
-            services.AddNotificationsService();
+            services.AddNotificationsService(this.Configuration.GetSection("Notifications"));
             services.AddSingleton<IAuthorizationHandler, RealmAccessRoleHandler>();
             services.AddTransient<IClaimsTransformation, KeycloakClaimTransformer>();
             services.AddHttpContextAccessor();
