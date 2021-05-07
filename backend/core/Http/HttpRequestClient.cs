@@ -2,6 +2,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Pims.Core.Exceptions;
 using System;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -65,10 +66,11 @@ namespace Pims.Core.Http
         public async Task<TModel> DeserializeAsync<TModel>(HttpResponseMessage response)
         {
             var data = await response.Content.ReadAsByteArrayAsync();
-
+            var contentType = response.Content.Headers.ContentType;
             try
             {
-                return JsonSerializer.Deserialize<TModel>(data, _serializeOptions);
+                if (contentType.MediaType.Contains("json", StringComparison.InvariantCultureIgnoreCase))
+                    return JsonSerializer.Deserialize<TModel>(data, _serializeOptions);
             }
             catch (Exception ex)
             {
@@ -76,6 +78,8 @@ namespace Pims.Core.Http
                 _logger.LogError(ex, $"Failed to deserialize response: {body}");
                 throw ex;
             }
+
+            throw new HttpClientRequestException(response, $"Response must contain JSON but was '{contentType.MediaType}'.");
         }
 
         #region HttpResponseMessage Methods
@@ -152,6 +156,7 @@ namespace Pims.Core.Http
                 }
             }
 
+            _logger.LogInformation($"HTTP request made '{message.RequestUri}'");
             return await this.Client.SendAsync(message);
         }
 
