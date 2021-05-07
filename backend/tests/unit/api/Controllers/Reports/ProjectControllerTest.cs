@@ -36,7 +36,6 @@ namespace Pims.Api.Test.Controllers.Reports
             new object [] { new ProjectFilter() { StatusId = new[] { 1 } } },
             new object [] { new ProjectFilter() { TierLevelId = 1 } },
             new object [] { new ProjectFilter() { CreatedByMe = true } },
-            new object [] { new ProjectFilter() { AssessWorkflow = false } },
             new object [] { new ProjectFilter() { SPLWorkflow = true } },
             new object [] { new ProjectFilter() { Active = true } },
             new object [] { new ProjectFilter() { Agencies = new[] { 1 } } },
@@ -102,9 +101,8 @@ namespace Pims.Api.Test.Controllers.Reports
         /// <summary>
         /// Make a successful request that passes the filter in the query string.
         /// </summary>
-        [Theory]
-        [MemberData(nameof(PropertyQueryFilters))]
-        public void ExportProjects_Csv_Query_Success(Uri uri)
+        [Fact]
+        public void ExportProjects_Csv_Query_Success()
         {
             // Arrange
             var helper = new TestHelper();

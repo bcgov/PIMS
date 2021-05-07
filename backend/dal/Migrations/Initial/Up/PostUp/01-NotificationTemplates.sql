@@ -105,7 +105,7 @@ INSERT INTO dbo.[NotificationTemplates] (
     , 'Inform owning agency their disposal project was denied.'
     , 0
     , ''
-    , 'Deibert, Yvonne CITZ:EX <Yvonne.Deibert@gov.bc.ca>; Uppal, Sanjay CITZ:EX <Sanjay.Uppal@gov.bc.ca>; Miller, Lauren CITZ:EX <Lauren.Miller@gov.bc.ca>'
+    , ''
     , ''
     , 'OwningAgency'
     , 'Utf8'
@@ -120,7 +120,7 @@ INSERT INTO dbo.[NotificationTemplates] (
     , 'Inform owning agency their disposal project was cancelled.'
     , 0
     , ''
-    , 'Deibert, Yvonne CITZ:EX <Yvonne.Deibert@gov.bc.ca>; Uppal, Sanjay CITZ:EX <Sanjay.Uppal@gov.bc.ca>; Miller, Lauren CITZ:EX <Lauren.Miller@gov.bc.ca>'
+    , ''
     , ''
     , 'OwningAgency'
     , 'Utf8'
@@ -135,7 +135,7 @@ INSERT INTO dbo.[NotificationTemplates] (
     , 'Inform owning agency their project has been approved and properties will be added to ERP.'
     , 0
     , ''
-    , 'Deibert, Yvonne CITZ:EX <Yvonne.Deibert@gov.bc.ca>; Uppal, Sanjay CITZ:EX <Sanjay.Uppal@gov.bc.ca>; Miller, Lauren CITZ:EX <Lauren.Miller@gov.bc.ca>'
+    , ''
     , ''
     , 'OwningAgency'
     , 'Utf8'
@@ -150,7 +150,7 @@ INSERT INTO dbo.[NotificationTemplates] (
     , 'Inform agencies of new properties added to ERP.'
     , 0
     , ''
-    , 'Deibert, Yvonne CITZ:EX <Yvonne.Deibert@gov.bc.ca>; Uppal, Sanjay CITZ:EX <Sanjay.Uppal@gov.bc.ca>; Miller, Lauren CITZ:EX <Lauren.Miller@gov.bc.ca>'
+    , ''
     , ''
     , 'ParentAgencies'
     , 'Utf8'
@@ -234,7 +234,7 @@ INSERT INTO dbo.[NotificationTemplates] (
     , 'ERP 30 expiration notification to inform owning agency of time remaining in ERP'
     , 0
     , ''
-    , 'Deibert, Yvonne CITZ:EX <Yvonne.Deibert@gov.bc.ca>; Uppal, Sanjay CITZ:EX <Sanjay.Uppal@gov.bc.ca>; Miller, Lauren CITZ:EX <Lauren.Miller@gov.bc.ca>'
+    , ''
     , ''
     , 'OwningAgency'
     , 'Utf8'
@@ -316,7 +316,7 @@ INSERT INTO dbo.[NotificationTemplates] (
     , 'ERP 60 expiration notification to inform owning agency of time remaining in ERP'
     , 0
     , ''
-    , 'Deibert, Yvonne CITZ:EX <Yvonne.Deibert@gov.bc.ca>; Uppal, Sanjay CITZ:EX <Sanjay.Uppal@gov.bc.ca>; Miller, Lauren CITZ:EX <Lauren.Miller@gov.bc.ca>'
+    , ''
     , ''
     , 'OwningAgency'
     , 'Utf8'
@@ -398,7 +398,7 @@ INSERT INTO dbo.[NotificationTemplates] (
     , 'ERP 90 expiration notification to inform owning agency ERP is complete.'
     , 0
     , ''
-    , 'Deibert, Yvonne CITZ:EX <Yvonne.Deibert@gov.bc.ca>; Uppal, Sanjay CITZ:EX <Sanjay.Uppal@gov.bc.ca>; Miller, Lauren CITZ:EX <Lauren.Miller@gov.bc.ca>'
+    , ''
     , ''
     , 'OwningAgency'
     , 'Utf8'
@@ -480,7 +480,7 @@ INSERT INTO dbo.[NotificationTemplates] (
     , 'ERP 30 notification to inform agencies or properties available in ERP.'
     , 0
     , ''
-    , 'Deibert, Yvonne CITZ:EX <Yvonne.Deibert@gov.bc.ca>; Uppal, Sanjay CITZ:EX <Sanjay.Uppal@gov.bc.ca>; Miller, Lauren CITZ:EX <Lauren.Miller@gov.bc.ca>'
+    , ''
     , ''
     , 'ParentAgencies'
     , 'Utf8'
@@ -565,7 +565,7 @@ INSERT INTO dbo.[NotificationTemplates] (
     , 'ERP 60 notification to inform agencies or properties available in ERP.'
     , 0
     , ''
-    , 'Deibert, Yvonne CITZ:EX <Yvonne.Deibert@gov.bc.ca>; Uppal, Sanjay CITZ:EX <Sanjay.Uppal@gov.bc.ca>; Miller, Lauren CITZ:EX <Lauren.Miller@gov.bc.ca>'
+    , ''
     , ''
     , 'ParentAgencies'
     , 'Utf8'
@@ -650,7 +650,7 @@ INSERT INTO dbo.[NotificationTemplates] (
     , 'ERP 90 expiration notification to inform agencies.'
     , 0
     , ''
-    , 'Deibert, Yvonne CITZ:EX <Yvonne.Deibert@gov.bc.ca>; Uppal, Sanjay CITZ:EX <Sanjay.Uppal@gov.bc.ca>; Miller, Lauren CITZ:EX <Lauren.Miller@gov.bc.ca>'
+    , ''
     , ''
     , 'ParentAgencies'
     , 'Utf8'
@@ -735,7 +735,7 @@ INSERT INTO dbo.[NotificationTemplates] (
     , 'ERP 30 notification to inform purchasing agencies to submit business case.'
     , 0
     , ''
-    , 'Deibert, Yvonne CITZ:EX <Yvonne.Deibert@gov.bc.ca>; Uppal, Sanjay CITZ:EX <Sanjay.Uppal@gov.bc.ca>; Miller, Lauren CITZ:EX <Lauren.Miller@gov.bc.ca>'
+    , ''
     , ''
     , 'WatchingAgencies'
     , 'Utf8'
@@ -818,7 +818,7 @@ INSERT INTO dbo.[NotificationTemplates] (
     , 'ERP 60 notification to inform purchasing agencies to submit business case.'
     , 0
     , ''
-    , 'Deibert, Yvonne CITZ:EX <Yvonne.Deibert@gov.bc.ca>; Uppal, Sanjay CITZ:EX <Sanjay.Uppal@gov.bc.ca>; Miller, Lauren CITZ:EX <Lauren.Miller@gov.bc.ca>'
+    , ''
     , ''
     , 'WatchingAgencies'
     , 'Utf8'
@@ -901,7 +901,7 @@ INSERT INTO dbo.[NotificationTemplates] (
     , 'ERP 90 expiration notification to inform purchasing agencies to submit business case.'
     , 0
     , ''
-    , 'Deibert, Yvonne CITZ:EX <Yvonne.Deibert@gov.bc.ca>; Uppal, Sanjay CITZ:EX <Sanjay.Uppal@gov.bc.ca>; Miller, Lauren CITZ:EX <Lauren.Miller@gov.bc.ca>'
+    , ''
     , ''
     , 'WatchingAgencies'
     , 'Utf8'

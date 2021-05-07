@@ -96,9 +96,8 @@ namespace Pims.Api.Test.Controllers.Reports
         /// <summary>
         /// Make a successful request that passes the filter in the query string.
         /// </summary>
-        [Theory]
-        [MemberData(nameof(PropertyQueryFilters))]
-        public void ExportUsers_Csv_Query_Success(Uri uri)
+        [Fact]
+        public void ExportUsers_Csv_Query_Success()
         {
             // Arrange
             var helper = new TestHelper();

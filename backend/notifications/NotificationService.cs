@@ -29,7 +29,14 @@ namespace Pims.Notifications
         #endregion
 
         #region Properties
+        /// <summary>
+        /// get - The CHES service.
+        /// </summary>
         protected IChesService Ches { get; }
+
+        /// <summary>
+        /// get - The notification configuration settings.
+        /// </summary>
         public NotificationOptions Options { get; }
         #endregion
 
@@ -72,7 +79,7 @@ namespace Pims.Notifications
                     Priority = (Model.EmailPriorities)Enum.Parse(typeof(Model.EmailPriorities), notification.Priority.ToString()),
                     Subject = notification.Subject,
                     Body = notification.Body,
-                    SendOn = notification.SendOn,
+                    SendOn = this.Options?.SendAllNow ?? false ? DateTime.UtcNow : notification.SendOn,
                     Tag = notification.Tag,
                 });
                 notification.ChesTransactionId = response.TransactionId;
@@ -225,7 +232,7 @@ namespace Pims.Notifications
                 Subject = email.Subject,
                 Body = email.Body,
                 Tag = email.Tag,
-                SendOn = email.SendOn,
+                SendOn = this.Options?.SendAllNow ?? false ? DateTime.UtcNow : email.SendOn,
             });
 
             return new Model.EmailResponse(response);
@@ -256,7 +263,7 @@ namespace Pims.Notifications
                     Cc = n.Cc,
                     Bcc = n.Bcc,
                     Tag = n.Tag,
-                    SendOn = n.SendOn,
+                    SendOn = this.Options?.SendAllNow ?? false ? DateTime.UtcNow : n.SendOn,
                     Context = new
                     {
                         subject = n.Subject,

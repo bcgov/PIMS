@@ -1,5 +1,6 @@
 using FluentAssertions;
 using Moq;
+using Microsoft.Extensions.Options;
 using Pims.Ches;
 using Pims.Ches.Models;
 using Pims.Core.Extensions;
@@ -46,7 +47,8 @@ namespace Pims.Dal.Test.Libraries.Notifications
         {
             // Arrange
             var helper = new TestHelper();
-            var service = helper.Create<NotificationService>();
+            var options = Options.Create(new Pims.Notifications.Configuration.NotificationOptions());
+            var service = helper.Create<NotificationService>(options);
 
             var template = new EmailTemplate()
             {
@@ -69,7 +71,8 @@ namespace Pims.Dal.Test.Libraries.Notifications
         {
             // Arrange
             var helper = new TestHelper();
-            var service = helper.Create<NotificationService>();
+            var options = Options.Create(new Pims.Notifications.Configuration.NotificationOptions());
+            var service = helper.Create<NotificationService>(options);
             var model = new { };
 
             // Act
@@ -84,7 +87,8 @@ namespace Pims.Dal.Test.Libraries.Notifications
         {
             // Arrange
             var helper = new TestHelper();
-            var service = helper.Create<NotificationService>();
+            var options = Options.Create(new Pims.Notifications.Configuration.NotificationOptions());
+            var service = helper.Create<NotificationService>(options);
 
             var email = new Email()
             {
@@ -102,7 +106,7 @@ namespace Pims.Dal.Test.Libraries.Notifications
             };
             var model = new { Id = 1 };
 
-            var ches = helper.GetService<Mock<IChesService>>();
+            var ches = helper.GetMock<IChesService>();
             ches.Setup(m => m.SendEmailAsync(It.IsAny<Pims.Ches.Models.IEmail>())).ReturnsAsync(new EmailResponseModel());
 
             // Act
@@ -145,7 +149,8 @@ namespace Pims.Dal.Test.Libraries.Notifications
         {
             // Arrange
             var helper = new TestHelper();
-            var service = helper.Create<NotificationService>();
+            var options = Options.Create(new Pims.Notifications.Configuration.NotificationOptions());
+            var service = helper.Create<NotificationService>(options);
 
             var email = new Email()
             {
@@ -205,7 +210,8 @@ namespace Pims.Dal.Test.Libraries.Notifications
         {
             // Arrange
             var helper = new TestHelper();
-            var service = helper.Create<NotificationService>();
+            var options = Options.Create(new Pims.Notifications.Configuration.NotificationOptions());
+            var service = helper.Create<NotificationService>(options);
 
             var email = new Email()
             {
@@ -268,7 +274,8 @@ namespace Pims.Dal.Test.Libraries.Notifications
         {
             // Arrange
             var helper = new TestHelper();
-            var service = helper.Create<NotificationService>();
+            var options = Options.Create(new Pims.Notifications.Configuration.NotificationOptions());
+            var service = helper.Create<NotificationService>(options);
 
             var messageId = Guid.NewGuid();
 
@@ -291,7 +298,8 @@ namespace Pims.Dal.Test.Libraries.Notifications
         {
             // Arrange
             var helper = new TestHelper();
-            var service = helper.Create<NotificationService>();
+            var options = Options.Create(new Pims.Notifications.Configuration.NotificationOptions());
+            var service = helper.Create<NotificationService>(options);
 
             var messageId = Guid.NewGuid();
 

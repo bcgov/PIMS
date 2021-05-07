@@ -364,7 +364,7 @@ namespace Pims.Api.Test.Controllers.Tools
             var agency = new Entity.Agency("Agency", "Agency");
             var tier = new Entity.TierLevel(1, "FirstTier");
             var project = new Entity.Project("RAEG-0001", "Name", tier);
-            project.Responses.Add(new Entity.ProjectAgencyResponse(project, agency, Entity.NotificationResponses.Ignore, DateTime.UtcNow.AddDays(-1)));
+            project.Responses.Add(new Entity.ProjectAgencyResponse(project, agency, Entity.NotificationResponses.Unsubscribe, DateTime.UtcNow.AddDays(-1)));
 
             var pimsService = helper.GetService<Mock<IPimsService>>();
             pimsService.Setup(m => m.Task.GetForWorkflow(It.IsAny<string>())).Returns(new Entity.Task[0]);
