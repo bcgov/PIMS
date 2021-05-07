@@ -26,7 +26,7 @@ namespace Pims.Dal.Test.Libraries.Ches
         public IConfiguration Configuration { get; }
 
         #region Tests
-        #region ChesServiceCollection 
+        #region ChesServiceCollection
         [Fact]
         public void ChesServiceCollection_Success()
         {
@@ -48,15 +48,17 @@ namespace Pims.Dal.Test.Libraries.Ches
             {
                 builder.AddJsonStream(io);
                 chesConfig = builder.Build();
-            }            
+            }
 
             var mockClientFactory = new Mock<IHttpClientFactory>();
             var mockIOptionsMonitor = new Mock<IOptionsMonitor<JsonSerializerOptions>>();
             var mockIlogger = new Mock<ILogger<HttpRequestClient>>();
+            var mockIChesService = new Mock<ILogger<IChesService>>();
 
             helper.AddSingleton(mockClientFactory.Object);
             helper.AddSingleton(mockIOptionsMonitor.Object);
             helper.AddSingleton(mockIlogger.Object);
+            helper.AddSingleton(mockIChesService.Object);
 
             // Act
             _ = helper.Services.AddChesService(section: chesConfig.GetSection("Ches"));
@@ -65,7 +67,6 @@ namespace Pims.Dal.Test.Libraries.Ches
             var chesService = helper.GetService<IChesService>();
             var httpRequestClient = helper.GetService<IHttpRequestClient>();
             var jwtSecurityTokenHandler = helper.GetService<JwtSecurityTokenHandler>();
-            
 
             // Assert
             Assert.NotNull(chesService);
