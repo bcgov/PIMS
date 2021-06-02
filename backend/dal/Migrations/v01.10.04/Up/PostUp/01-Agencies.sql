@@ -1,5 +1,16 @@
 PRINT 'Updating TRAN Agencies'
 
+----------------------------------------------------------------
+-- Summary
+-- 1) Change ownership of properties from "TRAN", "PLMB", "TIC" to "BCTFA"
+-- 2) Change ownership of projects from "TRAN", "PLMB", "TIC" to "BCTFA"
+-- 3) Move all TRAN users to the "TRAN" ministry instead of sub-agency
+-- 4) Delete sub-agencies "PLMB" and "TIC"
+--
+-- Note that users will need to be updated manually after this
+-- migration so that they reference the correct agencies (see below).
+----------------------------------------------------------------
+
 -- These are the ministry and agencies from Ministry of Transportation & Infrastructure
 DECLARE @TRAN INT = (SELECT TOP 1 [Id] FROM dbo.[Agencies] WHERE [Code] = 'TRAN')
 DECLARE @BCTFA INT = (SELECT TOP 1 [Id] FROM dbo.[Agencies] WHERE [Code] = 'BCTFA')
@@ -44,23 +55,23 @@ DROP TABLE #TRANUsers
 -- Move properties to BCTFA
 UPDATE dbo.[Parcels]
 SET [AgencyId] = @BCTFA
-WHERE [AgencyId] IN (@TRAN, @PLMB, @TIC, @BCT)
+WHERE [AgencyId] IN (@TRAN, @PLMB, @TIC)
 
 -- Move properties to BCTFA
 UPDATE dbo.[Buildings]
 SET [AgencyId] = @BCTFA
-WHERE [AgencyId] IN (@TRAN, @PLMB, @TIC, @BCT)
+WHERE [AgencyId] IN (@TRAN, @PLMB, @TIC)
 
 -- Move projects to BCTFA
 UPDATE dbo.[Projects]
 SET [AgencyId] = @BCTFA
-WHERE [AgencyId] IN (@TRAN, @PLMB, @TIC, @BCT)
+WHERE [AgencyId] IN (@TRAN, @PLMB, @TIC)
 
 -- Update any access request to use the ministry instead of the agency
 -- Since PIMS currently only supports a single agency to be selected when submitting access requests, this should be fine.
 UPDATE dbo.[AccessRequestAgencies]
 SET [AgencyId] = @TRAN
-WHERE [AgencyId] IN  (@BCTFA, @PLMB, @TIC, @BCT)
+WHERE [AgencyId] IN  (@BCTFA, @PLMB, @TIC)
 
 -- There are no relevant agency responses in production, but in any of the test dbs they need to be cleared
 DELETE FROM dbo.[ProjectAgencyResponses]
@@ -70,7 +81,7 @@ WHERE [AgencyId] IN (@PLMB, @TIC)
 -- There are no relevant notifications in the queue in production, but in any of the test dbs they need to be cleared
 UPDATE dbo.[NotificationQueue]
 SET [ToAgencyId] = @TRAN
-WHERE [ToAgencyId] IN (@BCTFA, @PLMB, @TIC, @BCT)
+WHERE [ToAgencyId] IN (@BCTFA, @PLMB, @TIC)
 
 -- Delete the invalid agencies
 DELETE FROM dbo.[Agencies]
