@@ -31,7 +31,7 @@ jobs:
       - run: npm run coverage
         working-directory: ${{env.working-directory}}
       - name: Codecov
-        uses: codecov/codecov-action@v1.0.13
+        uses: codecov/codecov-action@v1.5.0
         with:
           # User defined upload name. Visible in Codecov UI
           name: PIMS
