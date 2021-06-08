@@ -106,5 +106,6 @@ export const getTopics = (currentPage: IHelpPage | undefined) => {
 
 /**
  * This is the email that all support tickets should be directed to when using the issue reporting system.
+ * Updated as requested from rpdimithelp@gov.bc.ca to citz_rpd_imit_help@gov.bc.ca
  */
-export const pimsSupportEmail = 'rpdimithelp@gov.bc.ca';
+export const pimsSupportEmail = 'citz_rpd_imit_help@gov.bc.ca';
