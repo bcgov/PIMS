@@ -12,22 +12,34 @@ jobs:
     env:
       working-directory: ./backend
       codeCov-token: ${{ secrets.CodeCov }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
     steps:
       - uses: actions/checkout@v2
+
+      - name: Extract Branch Name
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: extract_branch
+
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 3.1.101
+
       - name: Install dependencies
         run: dotnet restore
         working-directory: ${{env.working-directory}}
+
       - name: Install coverlet for code coverage
         run: dotnet tool install -g coverlet.console --version 1.7.2
         working-directory: ${{env.working-directory}}
+
       - name: Build
         run: dotnet build --configuration Release --no-restore
         working-directory: ${{env.working-directory}}
+
       - name: Test
         run: dotnet test --no-restore --verbosity normal
         working-directory: ${{env.working-directory}}
@@ -70,6 +82,7 @@ jobs:
           mv TestResults/*/* ../TestResults/
           cd ..
           head TestResults/coverage.opencover.xml
+
       - name: Codecov
         uses: codecov/codecov-action@v1.5.0
         with:
@@ -85,3 +98,17 @@ jobs:
           env_vars: C#
           # Specify whether or not CI build should fail if Codecov runs into an error during upload
           fail_ci_if_error: true
+
+      - name: SonarScanner for .NET 5 with pull request decoration support
+        uses: highbyte/sonarscan-dotnet@2.0
+        with:
+          dotnetBuildArguments: ${{env.working-directory}}
+          dotnetDisableTests: true
+          # Optional extra command arguments the the SonarScanner 'begin' command
+          sonarBeginArguments: /d:sonar.cs.opencover.reportsPaths="**/TestResults/**/coverage.opencover.xml" -d:sonar.cs.vstest.reportsPaths="**/TestResults/*.trx"
+          # The key of the SonarQube project
+          sonarProjectKey: format('pims-api-{0}', ${{steps.extract_branch.outputs.branch}})
+          # The name of the SonarQube project
+          sonarProjectName: format('PIMS Backend [{0}]', ${{steps.extract_branch.outputs.branch}})
+          # The SonarQube server URL. For SonarCloud, skip this setting.
+          sonarHostname: ${{secrets.SONAR_URL}}
