@@ -292,14 +292,12 @@ namespace Pims.Dal.Helpers.Extensions
                     case (Entity.PropertyTypes.Land):
                         if (p.Parcel == null) throw new InvalidOperationException("Unable to update parcel status.");
                         p.Parcel.ClassificationId = disposed.Id;
-                        p.Parcel.AgencyId = null;
                         p.Parcel.PropertyTypeId = (int)PropertyTypes.Land; // all subdivisions should be transitioned to parcels after they are disposed.
                         p.Parcel.Parcels.Clear(); // remove all references to parent parcels.
                         break;
                     case (Entity.PropertyTypes.Building):
                         if (p.Building == null) throw new InvalidOperationException("Unable to update building status.");
                         p.Building.ClassificationId = disposed.Id;
-                        p.Building.AgencyId = null;
                         break;
                 }
                 context.Update(p);
