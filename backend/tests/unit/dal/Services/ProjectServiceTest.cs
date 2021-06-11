@@ -2869,7 +2869,7 @@ namespace Pims.Dal.Test.Services
             result.Status.Should().Be(disposed);
             JsonSerializer.Deserialize<DisposalProjectMetadata>(result.Metadata).DisposedOn.Should().NotBeNull();
             var property = result.Properties.First().Parcel;
-            property.AgencyId.Should().BeNull();
+            property.AgencyId.Should().Be(parcel.AgencyId);
             property.ClassificationId.Should().Be((int)ClassificationTypes.Disposed);
             property.IsVisibleToOtherAgencies.Should().BeFalse();
             queueService.Verify(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), null, project.StatusId, true), Times.Never());
@@ -2925,7 +2925,7 @@ namespace Pims.Dal.Test.Services
             result.Status.Should().Be(disposed);
             JsonSerializer.Deserialize<DisposalProjectMetadata>(result.Metadata).DisposedOn.Should().NotBeNull();
             var property = result.Properties.First().Parcel;
-            property.AgencyId.Should().BeNull();
+            property.AgencyId.Should().Be(parcel.AgencyId);
             property.ClassificationId.Should().Be((int)ClassificationTypes.Disposed);
             property.IsVisibleToOtherAgencies.Should().BeFalse();
             property.Parcels.Should().BeEmpty();
