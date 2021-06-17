@@ -10,7 +10,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App, { store } from './App';
 import * as serviceWorker from './serviceWorker.ignore';
-import Keycloak, { KeycloakInstance } from 'keycloak-js';
 import { KeycloakProvider } from '@react-keycloak/web';
 import { Provider } from 'react-redux';
 import getKeycloakEventHandler from 'utils/KeycloakEventHandler';
@@ -18,11 +17,36 @@ import { AuthStateContextProvider } from 'contexts/authStateContext';
 import { BrowserRouter as Router } from 'react-router-dom';
 import EmptyLayout from 'layouts/EmptyLayout';
 import LoginLoading from 'features/account/LoginLoading';
+import { createKeycloakInstance } from 'utils';
+import Keycloak from 'keycloak-js';
 
-//@ts-ignore
-const keycloak: KeycloakInstance = new Keycloak('/keycloak.json');
+/**
+ * Displays LoginLoading until Keycloak connection is ready.
+ * @returns Index component.
+ */
 const Index = () => {
-  return (
+  const [loading, setLoading] = React.useState(true);
+  const [keycloak, setKeycloak] = React.useState(Keycloak);
+
+  React.useEffect(() => {
+    createKeycloakInstance()
+      .then(instance => {
+        setKeycloak(instance);
+        setLoading(false);
+      })
+      .catch(() => {
+        // Ignore the error and apply the default config.
+        //@ts-ignore
+        setKeycloak(new Keycloak('./keycloak.json'));
+        setLoading(false);
+      });
+  }, []);
+
+  return loading ? (
+    <EmptyLayout>
+      <LoginLoading />
+    </EmptyLayout>
+  ) : (
     <KeycloakProvider
       keycloak={keycloak}
       LoadingComponent={
