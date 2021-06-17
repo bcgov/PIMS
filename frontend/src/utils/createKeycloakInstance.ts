@@ -13,7 +13,7 @@ export const createKeycloakInstance = async () => {
 
   //@ts-ignore
   return new Keycloak({
-    url: process.env.REACT_APP_KEYCLOAK_AUTH_SERVER_URL ?? config.authServerUrl,
+    url: process.env.REACT_APP_KEYCLOAK_AUTH_SERVER_URL ?? config['auth-server-url'],
     realm: config.realm,
     clientId: config.resource,
   } as Keycloak.KeycloakConfig);
