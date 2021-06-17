@@ -7,16 +7,16 @@ export default interface IKeycloakConfig {
   realm: string;
   // Keycloak server URL.
   // Also support `auth-server-url`.
-  authServerUrl: string;
+  ['auth-server-url']: string;
   // Whether SSL is required.
   // Also support `ssl-required`.
-  sslRequired: string;
+  ['ssl-required']: string;
   // Also known as clientId
   resource: string;
   // Whether this is a public client type.
   // Also supports `public-client`.
-  publicClient: boolean;
+  ['public-client']: boolean;
   // Confidential port number.
   // Also support `confidential-port`.
-  confidentialPort: number;
+  ['confidential-port']: number;
 }
