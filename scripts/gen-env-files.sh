@@ -15,6 +15,19 @@ passvar=$(date +%s | sha256sum | base64 | head -c 29)A8!
 echo $passvar
 
 # Set environment variables.
+# Docker Compose
+if test -f "./.env"; then
+    echo "./.env exists"
+else
+echo \
+"KEYCLOAK_PORT=8080
+DATABASE_PORT=5433
+API_HTTP_PORT=5000
+API_HTTPS_PORT=5001
+APP_HTTP_PORT=3000" >> ./.env
+fi
+
+
 # Keycloak
 if test -f "./auth/keycloak/.env"; then
     echo "./auth/keycloak/.env exists"
