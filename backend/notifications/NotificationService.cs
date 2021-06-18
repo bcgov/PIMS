@@ -13,6 +13,7 @@ using Entity = Pims.Dal.Entities;
 using Pims.Core.Exceptions;
 using Microsoft.Extensions.Logging;
 using Pims.Dal.Helpers.Extensions;
+using System.Net;
 
 namespace Pims.Notifications
 {
@@ -171,7 +172,18 @@ namespace Pims.Notifications
 
             foreach (var notification in notifications.Where(n => n.ChesMessageId.HasValue))
             {
-                await CancelAsync(notification);
+                try
+                {
+                    await CancelAsync(notification);
+                }
+                catch (HttpClientRequestException ex)
+                {
+                    // CHES returns a 404 when a message doesn't exist.  This isn't a good practice, but now I have to assume 404's are successful and I'm sending invalid message Ids.
+                    if (ex.StatusCode != HttpStatusCode.NotFound) throw;
+                    // TODO: All requests should be sent and the aggregate of the error should be returned as a collection of errors.
+                    // The present implementation will abort after a single failure.
+                    // A cut off on the number of errors allowed before aborting should also be implemented.
+                }
             }
         }
         #endregion
