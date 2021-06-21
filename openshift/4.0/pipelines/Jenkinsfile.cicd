@@ -178,7 +178,7 @@ pipeline {
       when {
         expression { new Boolean(env.SKIP_BUILD) == false }
       }
-      options { timeout(time: 20, unit: 'MINUTES') }
+      options { timeout(time: 45, unit: 'MINUTES') }
       failFast true
       parallel {
         stage('Test Frontend') {
@@ -228,7 +228,7 @@ pipeline {
       when {
         expression { new Boolean(env.SKIP_BUILD) == false }
       }
-      options { timeout(time: 25, unit: 'MINUTES') }
+      options { timeout(time: 30, unit: 'MINUTES') }
       failFast true
       parallel {
         stage('Build Frontend') {
@@ -268,7 +268,7 @@ pipeline {
       when {
         expression { new Boolean(env.SKIP_BUILD) == false }
       }
-      options { timeout(time: 15, unit: 'MINUTES') }
+      options { timeout(time: 20, unit: 'MINUTES') }
       steps {
         script {
           def img_backend = "${APP_NAME}-api"
