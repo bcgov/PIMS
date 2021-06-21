@@ -103,7 +103,7 @@ namespace Pims.Ches
             }
             catch (HttpClientRequestException ex)
             {
-                _logger.LogError(ex, $"Failed to send/receive request: ${url}");
+                _logger.LogError(ex, $"Failed to send/receive request: {ex.StatusCode} {url}");
                 var response = await this.Client?.DeserializeAsync<Ches.Models.ErrorResponseModel>(ex.Response);
                 throw new ChesException(ex, this.Client, response);
             }
@@ -131,7 +131,7 @@ namespace Pims.Ches
             }
             catch (HttpClientRequestException ex)
             {
-                _logger.LogError(ex, $"Failed to send/receive request: ${url}");
+                _logger.LogError(ex, $"Failed to send/receive request: {ex.StatusCode} {url}");
                 var response = await this.Client?.DeserializeAsync<Ches.Models.ErrorResponseModel>(ex.Response);
                 throw new ChesException(ex, this.Client, response);
             }
@@ -163,7 +163,7 @@ namespace Pims.Ches
             }
             catch (HttpClientRequestException ex)
             {
-                _logger.LogError(ex, $"Failed to send/receive request: ${url}");
+                _logger.LogError(ex, $"Failed to send/receive request: {ex.StatusCode} {url}");
                 var response = await this.Client?.DeserializeAsync<Ches.Models.ErrorResponseModel>(ex.Response);
                 throw new ChesException(ex, this.Client, response);
             }
@@ -194,7 +194,7 @@ namespace Pims.Ches
             }
             catch (HttpClientRequestException ex)
             {
-                _logger.LogError(ex, $"Failed to send/receive request: ${this.Options.AuthUrl}");
+                _logger.LogError(ex, $"Failed to send/receive request: {ex.StatusCode} {this.Options.AuthUrl}");
                 var response = await this.Client?.DeserializeAsync<Ches.Models.ErrorResponseModel>(ex.Response);
                 throw new ChesException(ex, this.Client, response);
             }
