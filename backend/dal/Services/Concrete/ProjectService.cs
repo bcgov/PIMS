@@ -840,10 +840,36 @@ namespace Pims.Dal.Services
         /// <returns></returns>
         public async System.Threading.Tasks.Task<IEnumerable<NotificationQueue>> CancelNotificationsAsync(int projectId, int? agencyId = null)
         {
-            // TODO: Handle paging better, right now we're assuming 1,000 is enough.
-            var page = GetNotificationsInQueue(new ProjectNotificationFilter() { Quantity = 1000, ProjectId = projectId, AgencyId = agencyId, Status = new[] { NotificationStatus.Accepted, NotificationStatus.Pending } });
-            await _notifyService.CancelAsync(page);
-            return page.Items;
+            var notifications = new List<NotificationQueue>();
+            try
+            {
+                var qty = 100;
+                var pos = 1;
+                var total = 101;
+
+                // Page through pending notifications to cancel them.
+                while (pos * qty < total)
+                {
+                    var page = GetNotificationsInQueue(new ProjectNotificationFilter()
+                    {
+                        Page = pos++,
+                        Quantity = qty,
+                        ProjectId = projectId,
+                        AgencyId = agencyId,
+                        Status = new[] { NotificationStatus.Accepted, NotificationStatus.Pending }
+                    });
+                    total = page.Total;
+
+                    await _notifyService.CancelAsync(page);
+                    notifications.AddRange(page.Items);
+                }
+            }
+            catch (Exception ex)
+            {
+                this.Logger.LogError(ex, $"Failed to cancel all notifications.");
+                if (_options.Notifications.ThrowExceptions) throw;
+            }
+            return notifications;
         }
         #endregion
 
