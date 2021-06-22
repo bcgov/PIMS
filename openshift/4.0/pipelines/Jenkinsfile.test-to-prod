@@ -95,7 +95,7 @@ pipeline {
     stage('Version Prompt') {
       steps {
         script {
-          timeout(time: 10, unit: 'MINUTES') {
+          timeout(time: 5, unit: 'MINUTES') {
             def version = input(message: 'Enter the desired version to release to PRODUCTION', parameters: [
               string(name: 'RELEASE VERSION', defaultValue: '', description: 'Release Version')
             ])
@@ -121,7 +121,7 @@ pipeline {
     }
 
     stage('Database backup') {
-      options { timeout(time: 10, unit: 'MINUTES') }
+      options { timeout(time: 15, unit: 'MINUTES') }
       steps {
         dir(DEVOPS_DIRECTORY) {
           sh "./player.sh backup ${DESTINATION} -apply"
@@ -143,7 +143,7 @@ pipeline {
     }
 
     stage('Promote to PROD') {
-      options { timeout(time: 10, unit: 'MINUTES') }
+      options { timeout(time: 20, unit: 'MINUTES') }
       steps {
         dir(DEVOPS_DIRECTORY) {
           sh "RELEASE_TAG=${RELEASE_VERSION} ./player.sh deploy api ${DESTINATION} -apply"
