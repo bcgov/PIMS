@@ -11,7 +11,7 @@ import { useFormikContext } from 'formik';
 import { EnhancedReferralTab } from '..';
 import { isEqual } from 'lodash';
 import { ProjectInformationTab, DocumentationTab } from '../../common';
-import { CloseOutFormTab } from 'features/projects/spl';
+import { CloseOutFormTab, SplTab } from 'features/projects/spl';
 import { isTabInError } from 'components/common/tabValidation';
 import ErrorTabs from 'components/common/ErrorTabs';
 
@@ -75,6 +75,17 @@ const ErpTabs: React.FunctionComponent<IErpTabsProps> = ({
           }`}
         >
           <EnhancedReferralTab
+            isReadOnly={isReadOnly}
+            setSubmitStatusCode={setSubmitStatusCode}
+            goToGreTransferred={() => submitForm().then(() => goToGreTransferred())}
+          />
+        </Tab>
+        <Tab
+          eventKey={SPPApprovalTabs.spl}
+          title="Surplus Properties List"
+          tabClassName={isTabInError(errors, SPPApprovalTabs.spl)}
+        >
+          <SplTab
             isReadOnly={isReadOnly}
             setSubmitStatusCode={setSubmitStatusCode}
             goToGreTransferred={() => submitForm().then(() => goToGreTransferred())}

@@ -112,6 +112,18 @@ exports[`ERP Approval Step ERP close out form tab renders correctly 1`] = `
         Enhanced Referral Process
       </a>
       <a
+        aria-controls="approvalTabs-tabpane-surplusPropertyList"
+        aria-selected="false"
+        class="nav-item nav-link"
+        data-rb-event-key="surplusPropertyList"
+        href="#"
+        id="approvalTabs-tab-surplusPropertyList"
+        role="tab"
+        tabindex="-1"
+      >
+        Surplus Properties List
+      </a>
+      <a
         aria-controls="approvalTabs-tabpane-closeOutForm"
         aria-selected="true"
         class="nav-item nav-link active"
@@ -1224,6 +1236,18 @@ exports[`ERP Approval Step renders correctly 1`] = `
         role="tab"
       >
         Enhanced Referral Process
+      </a>
+      <a
+        aria-controls="approvalTabs-tabpane-surplusPropertyList"
+        aria-selected="false"
+        class="nav-item nav-link"
+        data-rb-event-key="surplusPropertyList"
+        href="#"
+        id="approvalTabs-tab-surplusPropertyList"
+        role="tab"
+        tabindex="-1"
+      >
+        Surplus Properties List
       </a>
     </nav>
     <div
