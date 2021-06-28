@@ -185,6 +185,14 @@ namespace Pims.Api.Areas.Reports.Models.Property
         [DisplayName("Transfer Lease on Sale")]
         [CsvHelper.Configuration.Attributes.Name("Transfer Lease on Sale")]
         public bool TransferLeaseOnSale { get; set; }
+        
+        /// <summary>
+        /// get/set - The project number
+        /// </summary>
+        [DisplayName("Project Number")]
+        [CsvHelper.Configuration.Attributes.Name("Project Number")]
+        public string ProjectNumbers { get; set; }
+
         #endregion
         #endregion
     }

@@ -1,5 +1,7 @@
 using Mapster;
 using Entity = Pims.Dal.Entities;
+using System.Text.Json;
+using System.Collections.Generic;
 using Model = Pims.Api.Areas.Reports.Models.Property;
 
 namespace Pims.Api.Areas.Reports.Mapping.Property
@@ -39,7 +41,8 @@ namespace Pims.Api.Areas.Reports.Mapping.Property
                 .Map(dest => dest.RentableArea, src => src.RentableArea)
                 .Map(dest => dest.OccupantName, src => src.OccupantName)
                 .Map(dest => dest.LeaseExpiry, src => src.LeaseExpiry)
-                .Map(dest => dest.TransferLeaseOnSale, src => src.TransferLeaseOnSale);
+                .Map(dest => dest.TransferLeaseOnSale, src => src.TransferLeaseOnSale)
+                .Map(dest => dest.ProjectNumbers, src => src.ProjectNumbers);
 
         }
     }
