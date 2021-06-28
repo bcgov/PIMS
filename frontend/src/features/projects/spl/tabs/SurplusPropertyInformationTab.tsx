@@ -6,6 +6,7 @@ import {
   ProjectDraftForm,
   UpdateInfoForm,
   useProject,
+  PublicNotes,
 } from '../../common';
 import AdditionalPropertyInformationForm from '../../common/forms/AdditionalPropertyInformationForm';
 
@@ -30,8 +31,9 @@ const SurplusPropertyInformationTab: React.FunctionComponent<ISurplusPropertyInf
       />
 
       <h3>Notes</h3>
-      <ProjectNotes className="col-md-auto" disabled={true} label="Agency Notes" />
+      <ProjectNotes className="col-md-auto" disabled={true} label="Notes" />
       <PrivateNotes className="col-md-auto" disabled={isReadOnly} />
+      <PublicNotes />
       <ProjectNotes
         label="Reporting"
         field="reportingNote"
