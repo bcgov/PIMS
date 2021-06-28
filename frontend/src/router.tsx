@@ -30,6 +30,7 @@ const ProjectListView = lazy(() => import('features/projects/list/ProjectListVie
 const ProjectApprovalRequestListView = lazy(() =>
   import('features/projects/list/ProjectApprovalRequestListView'),
 );
+const SPLProjectListView = lazy(() => import('features/projects/list/SPLProjectListView'));
 const ProjectRouter = lazy(() => import('features/projects/common/ProjectRouter'));
 const ProjectDisposeView = lazy(() => import('features/projects/dispose/ProjectDisposeView'));
 const SplReportContainer = lazy(() => import('features/splReports/containers/SplReportContainer'));
@@ -150,6 +151,14 @@ const AppRouter: React.FC = () => {
           layout={AuthLayout}
           claim={Claims.PROJECT_VIEW}
           title={getTitle('View Projects')}
+        />
+        <AppRoute
+          protected
+          path="/projects/spl"
+          component={SPLProjectListView}
+          layout={AuthLayout}
+          claim={Claims.PROJECT_VIEW}
+          title={getTitle('View SPL Projects')}
         />
         <AppRoute
           protected
