@@ -7,6 +7,7 @@ import {
   UpdateInfoForm,
   useProject,
 } from '../../common';
+import { PublicNotes } from '../components/ProjectNotes';
 import AdditionalPropertyInformationForm from '../forms/AdditionalPropertyInformationForm';
 
 interface IProjectInformationTabProps {
@@ -30,8 +31,9 @@ const ProjectInformationTab: React.FunctionComponent<IProjectInformationTabProps
       />
 
       <h3>Notes</h3>
-      <ProjectNotes className="col-md-auto" disabled={true} label="Agency Notes" />
+      <ProjectNotes className="col-md-auto" disabled={true} label="Notes" />
       <PrivateNotes className="col-md-auto" disabled={isReadOnly} />
+      <PublicNotes />
       <ProjectNotes
         label="Reporting"
         tooltip="Notes for Reporting"

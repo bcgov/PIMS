@@ -12,6 +12,12 @@ exports[`GRE Transfer Step renders correctly 1`] = `
   font-family: 'BCSans',Fallback,sans-serif;
 }
 
+.c2 {
+  text-align: center;
+  font-family: 'BCSans-Bold';
+  margin-bottom: 1.5rem;
+}
+
 .c3 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -20,12 +26,6 @@ exports[`GRE Transfer Step renders correctly 1`] = `
   -webkit-flex-flow: column;
   -ms-flex-flow: column;
   flex-flow: column;
-}
-
-.c2 {
-  text-align: center;
-  font-family: 'BCSans-Bold';
-  margin-bottom: 1.5rem;
 }
 
 <div
