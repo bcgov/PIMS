@@ -136,6 +136,11 @@ function DisposeProjectsDropdown() {
           View Projects
         </NavDropdown.Item>
       )}
+      {(keycloak.hasClaim(Claims.PROJECT_VIEW) || keycloak.hasClaim(Claims.ADMIN_PROJECTS)) && (
+        <NavDropdown.Item onClick={() => history.push('/projects/spl')}>
+          View SPL Projects
+        </NavDropdown.Item>
+      )}
       {keycloak.hasClaim(Claims.DISPOSE_APPROVE) && (
         <NavDropdown.Item onClick={() => history.push('/projects/approval/requests')}>
           Approval Requests
