@@ -343,43 +343,43 @@ const SurplusPropertyListForm = ({
         </>
       )}
 
-      {values.statusCode === ReviewWorkflowStatus.PreMarketing ||
-        (values.statusCode === ReviewWorkflowStatus.Cancelled && (
-          <>
-            <Form.Row>
-              <h3>Remove from SPL</h3>
-            </Form.Row>
-            <Form.Row>
-              <Form.Label column md={3}>
-                Request for removal on
-              </Form.Label>
-              <FastDatePicker
-                outerClassName="col-md-2"
-                formikProps={formikProps}
-                disabled={isReadOnly}
-                field="removalFromSplRequestOn"
-              />
-            </Form.Row>
-            <Form.Row>
-              <Form.Label column md={3}>
-                Request for removal approved on
-              </Form.Label>
-              <FastDatePicker
-                outerClassName="col-md-2"
-                formikProps={formikProps}
-                disabled={isReadOnly}
-                field="removalFromSplApprovedOn"
-              />
-            </Form.Row>
-            <ProjectNotes
-              label="Rationale for removal"
-              field="removalFromSplRationale"
-              className="col-md-auto"
-              outerClassName="col-md-12"
+      {(values.statusCode === ReviewWorkflowStatus.PreMarketing ||
+        values.statusCode === ReviewWorkflowStatus.Cancelled) && (
+        <>
+          <Form.Row>
+            <h3>Remove from SPL</h3>
+          </Form.Row>
+          <Form.Row>
+            <Form.Label column md={3}>
+              Request for removal on
+            </Form.Label>
+            <FastDatePicker
+              outerClassName="col-md-2"
+              formikProps={formikProps}
               disabled={isReadOnly}
+              field="removalFromSplRequestOn"
             />
-          </>
-        ))}
+          </Form.Row>
+          <Form.Row>
+            <Form.Label column md={3}>
+              Request for removal approved on
+            </Form.Label>
+            <FastDatePicker
+              outerClassName="col-md-2"
+              formikProps={formikProps}
+              disabled={isReadOnly}
+              field="removalFromSplApprovedOn"
+            />
+          </Form.Row>
+          <ProjectNotes
+            label="Rationale for removal"
+            field="removalFromSplRationale"
+            className="col-md-auto"
+            outerClassName="col-md-12"
+            disabled={isReadOnly}
+          />
+        </>
+      )}
 
       <Form.Row>
         <h3>Transfer within GRE</h3>
