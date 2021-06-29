@@ -46,17 +46,21 @@ const ProjectSummaryView = ({ formikRef }: IStepProps) => {
                 {...{ currentTab, setCurrentTab, setSubmitStatusCode, submitStatusCode }}
               />
             )}
-            <ReviewProjectForm canEdit={false} />
-            <ProjectNotes disabled={!project.status?.isActive} />
-            <PublicNotes disabled={!project.status?.isActive} />
-            <StepErrorSummary />
-            <StepActions
-              onSave={() => formikProps.submitForm()}
-              onNext={noop}
-              nextDisabled={true}
-              saveDisabled={!project.status?.isActive}
-              isFetching={!noFetchingProjectRequests}
-            />
+            {project.status?.code !== ReviewWorkflowStatus.Cancelled && (
+              <>
+                <ReviewProjectForm canEdit={false} />
+                <ProjectNotes disabled={!project.status?.isActive} />
+                <PublicNotes disabled={!project.status?.isActive} />
+                <StepErrorSummary />
+                <StepActions
+                  onSave={() => formikProps.submitForm()}
+                  onNext={noop}
+                  nextDisabled={true}
+                  saveDisabled={!project.status?.isActive}
+                  isFetching={!noFetchingProjectRequests}
+                />
+              </>
+            )}
           </Form>
         )}
       </Formik>
