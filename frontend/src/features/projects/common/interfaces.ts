@@ -202,6 +202,7 @@ export interface IProject {
   removalFromSplRequestOn?: Date | string;
   removalFromSplApprovedOn?: Date | string;
   removalFromSplRationale?: string;
+  sendNotifications?: boolean;
 }
 
 export enum DisposalWorkflows {
@@ -400,6 +401,7 @@ export interface IApiProject {
   ClearanceNotificationSentOn?: Date | string;
   disposedOn?: Date | string;
   notes: IProjectNote[];
+  sendNotifications?: boolean;
 }
 
 export interface IProjectNote {

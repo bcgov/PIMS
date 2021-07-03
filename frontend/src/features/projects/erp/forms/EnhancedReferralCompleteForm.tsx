@@ -18,7 +18,7 @@ import {
   ProjectNotes,
   disposeWarning,
 } from '../../common';
-import GenericModal from 'components/common/GenericModal';
+import GenericModal, { ModalSize } from 'components/common/GenericModal';
 import { clearanceNotificationSentOnRequired, validateFormikWithCallback } from 'utils';
 
 const OrText = styled.div`
@@ -28,6 +28,7 @@ const OrText = styled.div`
 interface IEnhancedReferralCompleteFormProps {
   isReadOnly?: boolean;
   onClickOnHold: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+  onClickInErp: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   onClickGreTransferred: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   onClickProceedToSpl: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   onClickNotInSpl: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
@@ -45,6 +46,7 @@ const EnhancedReferralCompleteForm = ({
   onClickProceedToSpl,
   onClickNotInSpl,
   onClickDisposedExternally,
+  onClickInErp,
 }: IEnhancedReferralCompleteFormProps) => {
   const formikProps = useFormikContext<IProject>();
   const [proceedToSpl, setProceedToSpl] = useState(false);
@@ -53,9 +55,40 @@ const EnhancedReferralCompleteForm = ({
   const isClearanceNotificationSentOnRequired =
     !formikProps.values.clearanceNotificationSentOn &&
     clearanceNotificationSentOnRequired(formikProps.values.status?.code ?? '');
+  const [showNotificationModal, setShowNotificationModal] = useState(false);
 
   return (
     <Container fluid className="EnhancedReferralCompleteForm">
+      {showNotificationModal && (
+        <GenericModal
+          size={ModalSize.LARGE}
+          message={
+            <>
+              <p>Would you like to send a notification of this status transition?</p>
+            </>
+          }
+          okButtonText="Yes"
+          cancelButtonText="No"
+          handleCancel={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+            formikProps.setFieldValue('sendNotifications', false);
+            onClickInErp(e);
+            setShowNotificationModal(false);
+          }}
+          handleOk={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+            onClickInErp(e);
+            setShowNotificationModal(false);
+          }}
+        />
+      )}
+
+      {formikProps.values.statusCode === ReviewWorkflowStatus.NotInSpl && (
+        <>
+          <h3>Transition back to In ERP</h3>
+          <Button disabled={isReadOnly} onClick={() => setShowNotificationModal(true)}>
+            In ERP
+          </Button>
+        </>
+      )}
       <h3>Enhanced Referral Process Complete</h3>
       <Form.Row>
         <Form.Label column md={4}>

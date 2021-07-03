@@ -315,6 +315,7 @@ export const toApiProject = (project: IProject) => {
     ...project,
     properties: properties,
     projectAgencyResponses: projectAgencyResponses,
+    sendNotifications: project.sendNotifications,
     exemptionRationale: project.exemptionRationale,
     exemptionRequested: project.exemptionRequested,
     netBook: stringToNull(project.netBook),
