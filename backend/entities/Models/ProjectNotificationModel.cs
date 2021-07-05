@@ -24,6 +24,11 @@ namespace Pims.Dal.Entities.Models
         public Agency ToAgency { get; set; }
 
         /// <summary>
+        /// get/set - The email address the notification will be sent to.
+        /// </summary>
+        public string To { get; set; }
+
+        /// <summary>
         /// get/set - Environmental variables.
         /// </summary>
         public EnvironmentModel Environment { get; set; }
@@ -42,12 +47,14 @@ namespace Pims.Dal.Entities.Models
         /// <param name="environment"></param>
         /// <param name="project"></param>
         /// <param name="toAgency"></param>
-        public ProjectNotificationModel(Guid notificationKey, EnvironmentModel environment, Project project, Agency toAgency = null)
+        /// <param name="toAddress"></param>
+        public ProjectNotificationModel(Guid notificationKey, EnvironmentModel environment, Project project, Agency toAgency = null, string toAddress = null)
         {
             this.NotificationKey = notificationKey;
             this.Project = project;
             this.ToAgency = toAgency;
             this.Environment = environment;
+            this.To = toAddress;
         }
         #endregion
     }
