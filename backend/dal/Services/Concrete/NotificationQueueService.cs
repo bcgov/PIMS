@@ -204,7 +204,13 @@ namespace Pims.Dal.Services
 
             var env = new EnvironmentModel(_options.Environment.Uri, _options.Environment.Name, _options.Environment.Title);
             var notifications = new List<NotificationQueue>();
-            if (options.Template.Audience == NotificationAudiences.OwningAgency)
+            if (options.Template.Audience == NotificationAudiences.ProjectOwner)
+            {
+                var toAddress = this.Context.Users.Where(u => u.Id == project.CreatedById).Select(u => u.Email).FirstOrDefault();
+                // Generate a notification for the owner of the project, which is the user who created it.
+                notifications.Add(GenerateNotification(options, new ProjectNotificationModel(Guid.NewGuid(), env, project, project.Agency, toAddress), sendOn));
+            }
+            else if (options.Template.Audience == NotificationAudiences.OwningAgency)
             {
                 // Generate a notification for the owning agency of the project.
                 notifications.Add(GenerateNotification(options, new ProjectNotificationModel(Guid.NewGuid(), env, project, project.Agency), sendOn));
@@ -416,7 +422,7 @@ namespace Pims.Dal.Services
                 Status = NotificationStatus.Pending,
                 Priority = options.Priority,
                 SendOn = sendOn.Value,
-                To = String.Join(";", new[] { model.ToAgency?.Email, options.Template.To }.NotNull()),
+                To = String.Join(";", new[] { model.To ?? model.ToAgency?.Email, options.Template.To }.NotNull()),
                 Cc = options.Template.Cc,
                 Bcc = options.Template.Bcc
             };
