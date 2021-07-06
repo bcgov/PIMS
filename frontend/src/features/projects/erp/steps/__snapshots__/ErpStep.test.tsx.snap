@@ -1555,61 +1555,6 @@ exports[`ERP Approval Step renders correctly 1`] = `
         <div
           class="EnhancedReferralCompleteForm container-fluid"
         >
-          <div
-            class="container"
-          >
-            <div
-              class="fade modal-backdrop"
-            />
-            <div
-              aria-modal="true"
-              class="fade modal"
-              role="dialog"
-              style="display: block;"
-              tabindex="-1"
-            >
-              <div
-                class="modal-dialog modal-l"
-                role="document"
-              >
-                <div
-                  class="modal-content"
-                >
-                  <div
-                    class="modal-header"
-                  >
-                    <div
-                      class="modal-title h4"
-                    />
-                  </div>
-                  <div
-                    class="modal-body"
-                    style="max-height: 500px;"
-                  >
-                    <p>
-                      Would you like to send a notification of this status transition?
-                    </p>
-                  </div>
-                  <div
-                    class="modal-footer"
-                  >
-                    <button
-                      class="btn btn-primary"
-                      type="button"
-                    >
-                      Yes
-                    </button>
-                    <button
-                      class="btn btn-secondary"
-                      type="button"
-                    >
-                      No
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
           <h3>
             Enhanced Referral Process Complete
           </h3>
