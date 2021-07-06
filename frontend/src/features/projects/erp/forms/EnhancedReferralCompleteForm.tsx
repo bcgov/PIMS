@@ -64,14 +64,14 @@ const EnhancedReferralCompleteForm = ({
           size={ModalSize.LARGE}
           message={
             <>
-              <p>Would you like to send a notification of this status transition?</p>
+              <p>
+                Are you sure you would like to change the status to <b>In ERP?</b>
+              </p>
             </>
           }
           okButtonText="Yes"
-          cancelButtonText="No"
+          cancelButtonText="Close"
           handleCancel={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-            formikProps.setFieldValue('sendNotifications', false);
-            onClickInErp(e);
             setShowNotificationModal(false);
           }}
           handleOk={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
