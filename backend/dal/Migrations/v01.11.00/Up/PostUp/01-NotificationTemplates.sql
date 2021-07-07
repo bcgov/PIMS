@@ -2,7 +2,7 @@ PRINT N'Update [NotificationTemplates]'
 
 UPDATE dbo.[NotificationTemplates]
 SET [Audience] = N'ProjectOwner'
-WHERE [Id] IN (2, 3, 4)
+WHERE [Id] IN (2, 3, 4, 16)
 
 UPDATE dbo.[NotificationTemplates]
 SET [Body] = N'
