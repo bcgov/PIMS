@@ -21,7 +21,7 @@ namespace Pims.Dal.Services
         System.Threading.Tasks.Task<Project> AddAsync(Project project);
         System.Threading.Tasks.Task<Project> UpdateAsync(Project project);
         System.Threading.Tasks.Task<Project> RemoveAsync(Project project);
-        System.Threading.Tasks.Task<Project> SetStatusAsync(Project project, Workflow workflow);
+        System.Threading.Tasks.Task<Project> SetStatusAsync(Project project, Workflow workflow, bool sendNotifications = true);
         System.Threading.Tasks.Task<Project> SetStatusAsync(Project project, string workflowCode);
         System.Threading.Tasks.Task<IEnumerable<NotificationQueue>> CancelNotificationsAsync(int projectId, int? agencyId = null);
     }
