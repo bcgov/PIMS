@@ -38,6 +38,11 @@ namespace Pims.Api.Areas.Project.Models.Dispose
         public string Manager { get; set; }
 
         /// <summary>
+        /// get/set - Flag to determine whether to send notifications
+        /// </summary>
+        public bool SendNotifications { get; set; } = true;
+
+        /// <summary>
         /// get/set - The foreign key to the workflow.
         /// </summary>
         public int WorkflowId { get; set; }

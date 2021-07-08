@@ -166,10 +166,11 @@ namespace Pims.Api.Areas.Project.Controllers
 
             var project = _mapper.Map<Entity.Project>(model);
             var workflow = _pimsService.Workflow.Get(model.WorkflowCode);
+            var sendNotifications = model.SendNotifications;
             var status = workflow.Status.FirstOrDefault(s => s.Status.Code == model.StatusCode) ?? throw new KeyNotFoundException();
             project.WorkflowId = workflow.Id;
             project.StatusId = status.StatusId;
-            project = await _pimsService.Project.SetStatusAsync(project, workflow);
+            project = await _pimsService.Project.SetStatusAsync(project, workflow, sendNotifications);
 
             return new JsonResult(_mapper.Map<ProjectModel>(project));
         }

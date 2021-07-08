@@ -666,7 +666,7 @@ namespace Pims.Dal.Services
         /// <exception cref="InvalidOperationException">Invalid project status transition.</exception>
         /// <exception cref="InvalidOperationException">Denying a project requires a reason to be included in the shared note.</exception>
         /// <returns></returns>
-        public async System.Threading.Tasks.Task<Project> SetStatusAsync(Project project, Workflow workflow)
+        public async System.Threading.Tasks.Task<Project> SetStatusAsync(Project project, Workflow workflow, bool sendNotifications = true)
         {
             project.ThrowIfNotAllowedToEdit(nameof(project), this.User, new[] { Permissions.ProjectEdit, Permissions.AdminProjects });
             workflow.ThrowIfNull(nameof(workflow));
@@ -825,7 +825,10 @@ namespace Pims.Dal.Services
             project.CopyRowVersionTo(originalProject);
             this.Context.CommitTransaction();
 
-            await SendNotificationsAsync(originalProject, fromStatusId, responses, noteChanged);
+            if (sendNotifications)
+            {
+                await SendNotificationsAsync(originalProject, fromStatusId, responses, noteChanged);
+            }
 
             return Get(originalProject.Id);
         }

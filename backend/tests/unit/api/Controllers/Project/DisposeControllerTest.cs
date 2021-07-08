@@ -263,7 +263,7 @@ namespace Pims.Api.Test.Controllers
             var project = EntityHelper.CreateProject(1);
             var workflow = EntityHelper.CreateWorkflow(1, "test", "TEST", new[] { project.Status });
             service.Setup(m => m.Workflow.Get(It.IsAny<string>())).Returns(workflow);
-            service.Setup(m => m.Project.SetStatusAsync(It.IsAny<Entity.Project>(), It.IsAny<Entity.Workflow>())).ReturnsAsync(project);
+            service.Setup(m => m.Project.SetStatusAsync(It.IsAny<Entity.Project>(), It.IsAny<Entity.Workflow>(), true)).ReturnsAsync(project);
             service.Setup(m => m.ProjectStatus.Get(It.IsAny<int>())).Returns(project.Status);
             var model = mapper.Map<Model.ProjectModel>(project);
 
@@ -279,7 +279,7 @@ namespace Pims.Api.Test.Controllers
             actualResult.StatusId.Should().Be(1);
             actualResult.OfferAmount.Should().Be(JsonSerializer.Deserialize<Entity.Models.DisposalProjectMetadata>(project.Metadata).OfferAmount);
             service.Verify(m => m.Workflow.Get(workflow.Code), Times.Once());
-            service.Verify(m => m.Project.SetStatusAsync(It.IsAny<Entity.Project>(), workflow), Times.Once());
+            service.Verify(m => m.Project.SetStatusAsync(It.IsAny<Entity.Project>(), workflow, true), Times.Once());
         }
 
         [Theory]
@@ -339,7 +339,7 @@ namespace Pims.Api.Test.Controllers
             var status = EntityHelper.CreateProjectStatus("DRAFT", "code");
             workflow.Status.Add(new Entity.WorkflowProjectStatus(workflow, status));
             service.Setup(m => m.Workflow.Get(It.IsAny<string>())).Returns(workflow);
-            service.Setup(m => m.Project.SetStatusAsync(It.IsAny<Entity.Project>(), It.IsAny<Entity.Workflow>())).ReturnsAsync(project);
+            service.Setup(m => m.Project.SetStatusAsync(It.IsAny<Entity.Project>(), It.IsAny<Entity.Workflow>(), true)).ReturnsAsync(project);
             var model = mapper.Map<Model.ProjectModel>(project);
             var workflowCode = "code";
             var statusCode = "code";
@@ -352,7 +352,7 @@ namespace Pims.Api.Test.Controllers
             Assert.Null(actionResult.StatusCode);
             var actualResult = Assert.IsType<Model.ProjectModel>(actionResult.Value);
             Assert.Equal(mapper.Map<Model.ProjectModel>(project), actualResult, new DeepPropertyCompare());
-            service.Verify(m => m.Project.SetStatusAsync(It.IsAny<Entity.Project>(), workflow), Times.Once());
+            service.Verify(m => m.Project.SetStatusAsync(It.IsAny<Entity.Project>(), workflow, true), Times.Once());
         }
 
         [Theory]
