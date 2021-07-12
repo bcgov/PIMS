@@ -36,7 +36,7 @@ const ReviewApproveForm = ({
   const { project } = useProject();
   const formikProps = useFormikContext<IProject>();
   const { errors } = useFormikContext<IProject>();
-  const [isReadOnly, setIsReadOnly] = useState(true);
+  const [isReadOnly, setIsReadOnly] = useState(!canEdit);
   /** Enter edit mode if allowed and there are errors to display */
   useEffect(() => {
     if (Object.keys(errors).length > 0) {
@@ -58,7 +58,6 @@ const ReviewApproveForm = ({
   const exemptionInfoReviewTasks = _.filter(project.tasks, {
     statusCode: ReviewWorkflowStatus.ExemptionReview,
   });
-
   return (
     <Fragment>
       <ProjectDraftForm
