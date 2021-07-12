@@ -103,7 +103,7 @@ namespace Pims.Dal.Entities
         /// <returns></returns>
         public override string ToString()
         {
-            return String.Join(", ", new[] { this.Address1, this.Address2, this.AdministrativeArea, this.ProvinceId, this.Postal }.Where(s => String.IsNullOrWhiteSpace(s)));
+            return this.Address1 + ", " + this.AdministrativeArea + ", " + this.ProvinceId;
         }
         #endregion
     }
