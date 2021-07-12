@@ -344,7 +344,8 @@ const SurplusPropertyListForm = ({
       )}
 
       {(values.statusCode === ReviewWorkflowStatus.PreMarketing ||
-        values.statusCode === ReviewWorkflowStatus.Cancelled) && (
+        values.statusCode === ReviewWorkflowStatus.Cancelled ||
+        values.statusCode === ReviewWorkflowStatus.NotInSpl) && (
         <>
           <Form.Row>
             <h3>Remove from SPL</h3>
