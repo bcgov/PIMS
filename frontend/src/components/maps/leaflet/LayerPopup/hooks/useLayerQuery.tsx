@@ -62,7 +62,9 @@ export const saveParcelDataLayerResponse = (
       }),
     );
   } else {
-    toast.warning(`Failed to find parcel layer data. Ensure that the search criteria is valid`);
+    toast.warning(
+      `Failed to find parcel layer data. Ensure that the search criteria is valid, or manually place a marker on the map to continue the process.`,
+    );
   }
 };
 
