@@ -130,6 +130,10 @@ db-seed: ## Imports a JSON file of properties into PIMS
 	@echo "$(P) Seeding docker database..."
 	@cd tools/import; dotnet build; dotnet run;
 
+db-script: ## Export an SQL script from the migration (from=0 to=Initial).
+	@echo "$(P) Exporting script to 'db-migration.sql'"
+	@cd backend/dal; dotnet ef migrations script ${from} ${to} --output ../../db-migration.sql
+
 keycloak-sync: ## Syncs accounts with Keycloak and PIMS
 	@echo "$(P) Syncing keycloak with PIMS..."
 	@cd tools/keycloak/sync; dotnet build; dotnet run;

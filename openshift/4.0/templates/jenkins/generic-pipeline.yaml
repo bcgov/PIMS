@@ -2,7 +2,7 @@
 # that supports a Jenkinsfile for configuration.
 # Simply point it to the source control repo Jenkinsfile and it will run.
 kind: "Template"
-apiVersion: "v1"
+apiVersion: "template.openshift.io/v1"
 metadata:
   name: "pims-pipeline"
   creationTimestamp: null
