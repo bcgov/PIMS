@@ -2,6 +2,7 @@ using Mapster;
 using Microsoft.Extensions.Options;
 using Pims.Api.Mapping.Converters;
 using Pims.Dal.Helpers.Extensions;
+using Pims.Core.Extensions;
 using System.Text.Json;
 using Entity = Pims.Dal.Entities;
 using Model = Pims.Api.Areas.Reports.Models.Project;
@@ -32,8 +33,8 @@ namespace Pims.Api.Areas.Reports.Mapping.Project
                 .Map(dest => dest.ProjectNumber, src => src.ProjectNumber)
                 .Map(dest => dest.Name, src => src.Name)
                 .Map(dest => dest.Description, src => src.Description)
-                .Map(dest => dest.ReportedFiscalYear, src => src.ReportedFiscalYear)
-                .Map(dest => dest.ActualFiscalYear, src => src.ActualFiscalYear)
+                .Map(dest => dest.ReportedFiscalYear, src => src.ReportedFiscalYear.FiscalYear())
+                .Map(dest => dest.ActualFiscalYear, src => src.ActualFiscalYear.FiscalYear())
                 .Map(dest => dest.StatusCode, src => src.Status == null ? null : src.Status.Code)
                 .Map(dest => dest.Status, src => src.Status == null ? null : src.Status.Name)
                 .Map(dest => dest.Risk, src => src.Risk.Name)

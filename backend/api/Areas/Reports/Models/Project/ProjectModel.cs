@@ -27,12 +27,12 @@ namespace Pims.Api.Areas.Reports.Models.Project
         /// <summary>
         /// get/set - The reported fiscal year this project.
         /// </summary>
-        public int ReportedFiscalYear { get; set; }
+        public string ReportedFiscalYear { get; set; }
 
         /// <summary>
         /// get/set - The actual or forecasted fiscal year.
         /// </summary>
-        public int ActualFiscalYear { get; set; }
+        public string ActualFiscalYear { get; set; }
 
         /// <summary>
         /// get/set - The current workflow code.
