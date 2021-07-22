@@ -181,7 +181,7 @@ exports[`Review Summary View renders approved correctly 1`] = `
           class="c2"
         >
           <small>
-            Tier 1: Properties with a net value less than $1M.
+            Tier 1: Properties with a value less than $1M.
           </small>
         </div>
       </div>
@@ -932,7 +932,7 @@ exports[`Review Summary View renders denied correctly 1`] = `
           class="c2"
         >
           <small>
-            Tier 1: Properties with a net value less than $1M.
+            Tier 1: Properties with a value less than $1M.
           </small>
         </div>
       </div>
@@ -1683,7 +1683,7 @@ exports[`Review Summary View renders submitted correctly 1`] = `
           class="c2"
         >
           <small>
-            Tier 1: Properties with a net value less than $1M.
+            Tier 1: Properties with a value less than $1M.
           </small>
         </div>
       </div>
