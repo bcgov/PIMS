@@ -150,7 +150,7 @@ exports[`Review Approve Step renders correctly 1`] = `
           class="c0"
         >
           <small>
-            Tier 1: Properties with a net value less than $1M.
+            Tier 1: Properties with a value less than $1M.
           </small>
         </div>
       </div>

@@ -2,11 +2,10 @@ export const clickableTooltip = 'Click to view property details';
 export const updateInfoMessage = 'Please update  the property classification.';
 
 export const tierTooltips = {
-  tier1Tooltip: 'Tier 1: Properties with a net value less than $1M.',
-  tier2Tooltip: 'Tier 2: Properties with a net value of $1M or more and less than $10M.',
-  tier3Tooltip: 'Tier 3: Properties are single parcels with a net value of $10M or more.',
-  tier4Tooltip:
-    'Tier 4: Properties are multiple parcels with a cumulative net value of $10M or more.',
+  tier1Tooltip: 'Tier 1: Properties with a value less than $1M.',
+  tier2Tooltip: 'Tier 2: Properties with a value of $1M or more and less than $10M.',
+  tier3Tooltip: 'Tier 3: Properties are single parcels with a value of $10M or more.',
+  tier4Tooltip: 'Tier 4: Properties are multiple parcels with a cumulative value of $10M or more.',
 };
 
 export const riskTooltips = {
