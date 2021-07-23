@@ -33,7 +33,7 @@ namespace Pims.Core.Extensions
         /// <returns></returns>
         public static string FiscalYear(this int fiscalYear)
         {
-            return $"{(fiscalYear - 1).ToString().Substring(2, 2)}/{(fiscalYear).ToString().Substring(2, 2)}";
+            return fiscalYear > 0 ? $"{(fiscalYear - 1).ToString().Substring(2, 2)}/{(fiscalYear).ToString().Substring(2, 2)}" : "";
         }
     }
 }
