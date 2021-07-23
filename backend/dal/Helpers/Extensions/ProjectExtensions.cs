@@ -50,7 +50,7 @@ namespace Pims.Dal.Helpers.Extensions
 
             if (filter.SPLWorkflow == true)
             {
-                query = query.Where(p => p.Workflow.Code == "SPL" && p.Status.Code != "CA");
+                query = query.Where(p => p.Workflow.Code == "SPL" && p.Status.Code != "CA" && p.Status.Code != "T-GRE");
             }
 
             if (!String.IsNullOrWhiteSpace(filter.ProjectNumber))
