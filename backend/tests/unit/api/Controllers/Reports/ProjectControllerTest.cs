@@ -80,7 +80,7 @@ namespace Pims.Api.Test.Controllers.Reports
             headers.Setup(m => m["Accept"]).Returns(ContentTypes.CONTENT_TYPE_CSV);
             var agency = EntityHelper.CreateAgency(1);
 
-            var project = new Entity.Project() { Agency = agency };
+            var project = new Entity.Project() { Agency = agency, ActualFiscalYear = 2021, ReportedFiscalYear = 2021 };
             var projects = new[] { project };
 
             var service = helper.GetService<Mock<IPimsService>>();
@@ -111,7 +111,7 @@ namespace Pims.Api.Test.Controllers.Reports
             headers.Setup(m => m["Accept"]).Returns(ContentTypes.CONTENT_TYPE_CSV);
             var agency = EntityHelper.CreateAgency(1);
 
-            var project = new Entity.Project() { Agency = agency };
+            var project = new Entity.Project() { Agency = agency, ActualFiscalYear = 2021, ReportedFiscalYear = 2021 };
             var projects = new[] { project };
 
             var service = helper.GetService<Mock<IPimsService>>();
@@ -143,7 +143,7 @@ namespace Pims.Api.Test.Controllers.Reports
             headers.Setup(m => m["Accept"]).Returns(ContentTypes.CONTENT_TYPE_EXCELX);
             var agency = EntityHelper.CreateAgency(1);
 
-            var project = new Entity.Project() { Agency = agency };
+            var project = new Entity.Project() { Agency = agency, ActualFiscalYear = 2021, ReportedFiscalYear = 2021 };
             var projects = new[] { project };
 
             var service = helper.GetService<Mock<IPimsService>>();
@@ -176,7 +176,7 @@ namespace Pims.Api.Test.Controllers.Reports
             headers.Setup(m => m["Accept"]).Returns(ContentTypes.CONTENT_TYPE_EXCELX);
             var agency = EntityHelper.CreateAgency(1);
 
-            var project = new Entity.Project() { Agency = agency };
+            var project = new Entity.Project() { Agency = agency, ActualFiscalYear = 2021, ReportedFiscalYear = 2021 };
             var projects = new[] { project };
 
             var service = helper.GetService<Mock<IPimsService>>();
