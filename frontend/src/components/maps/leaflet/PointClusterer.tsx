@@ -23,6 +23,7 @@ import { useDispatch } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import queryString from 'query-string';
 import { toast } from 'react-toastify';
+import { getIn } from 'formik';
 
 export type PointClustererProps = {
   points: Array<PointFeature>;
@@ -378,8 +379,8 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
               //sets this pin as currently selected
               const convertedProperty = convertToProperty(
                 m.properties,
-                m.position.lat,
-                m.position.lng,
+                getIn(m.geometry.coordinates, '1') ?? m.position.lat,
+                getIn(m.geometry.coordinates, '0') ?? m.position.lng,
               );
               if (
                 m.properties.propertyTypeId === PropertyTypes.PARCEL ||
