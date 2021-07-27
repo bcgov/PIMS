@@ -1,5 +1,5 @@
 import React from 'react';
-import { formatMoney, formatNumber, formatDate } from 'utils';
+import { formatMoney, formatNumber, formatDate, getFiscalYear } from 'utils';
 import { DisposeWorkflowStatus, AgencyResponses } from 'features/projects/constants';
 import { IProperty, IProject } from 'features/projects/interfaces';
 import { useFormikContext, getIn } from 'formik';
@@ -261,6 +261,22 @@ export const getPropertyColumns = ({
           : undefined,
       Cell: MoneyCell,
       clickable: true,
+      minWidth: 145,
+      align: 'left',
+    },
+    {
+      Header: 'Assessment Year',
+      accessor: (row: IProperty) =>
+        [PropertyTypes.PARCEL, PropertyTypes.SUBDIVISION].includes(row.propertyTypeId)
+          ? getFiscalYear(row.assessedLandDate) + 1
+          : [PropertyTypes.BUILDING, PropertyTypes.BUILDING].includes(row.propertyTypeId)
+          ? getFiscalYear(row.assessedBuildingDate) + 1
+          : undefined,
+      className: 'form-group',
+      style: {
+        marginTop: '18px',
+      },
+      marginTop: '15px',
       minWidth: 145,
       align: 'left',
     },

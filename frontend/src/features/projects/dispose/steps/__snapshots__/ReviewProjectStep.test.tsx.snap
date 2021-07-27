@@ -402,7 +402,7 @@ exports[`renders correctly 1`] = `
                   Object {
                     "display": "flex",
                     "flex": "1 0 auto",
-                    "minWidth": "790px",
+                    "minWidth": "935px",
                   }
                 }
               >
@@ -667,6 +667,36 @@ exports[`renders correctly 1`] = `
                     className="sortable-column"
                   >
                     Assessed Land
+                    <span
+                      style={
+                        Object {
+                          "flex": "1 1 auto",
+                        }
+                      }
+                    />
+                  </div>
+                </div>
+                <div
+                  className="th"
+                  colSpan={1}
+                  role="columnheader"
+                  style={
+                    Object {
+                      "alignItems": "center",
+                      "boxSizing": "border-box",
+                      "display": "flex",
+                      "flex": "145 0 auto",
+                      "justifyContent": "flex-start",
+                      "minWidth": "145px",
+                      "textAlign": "left",
+                      "width": "145px",
+                    }
+                  }
+                >
+                  <div
+                    className="sortable-column"
+                  >
+                    Assessment Year
                     <span
                       style={
                         Object {
