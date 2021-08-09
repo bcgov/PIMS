@@ -29,12 +29,10 @@ namespace Pims.Api.Areas.Reports.Mapping.Project
         #region Methods
         public void Register(TypeAdapterConfig config)
         {
-            config.NewConfig<Entity.Project, Model.ProjectModel>()
+            config.NewConfig<Entity.Project, Model.ProjectModelExcel>()
                 .Map(dest => dest.ProjectNumber, src => src.ProjectNumber)
                 .Map(dest => dest.Name, src => src.Name)
                 .Map(dest => dest.Description, src => src.Description)
-                .Map(dest => dest.ReportedFiscalYear, src => src.ReportedFiscalYear)
-                .Map(dest => dest.ActualFiscalYear, src => src.ActualFiscalYear)
                 .Map(dest => dest.ReportedFiscalYearString, src => src.ReportedFiscalYear.FiscalYear())
                 .Map(dest => dest.ActualFiscalYearString, src => src.ActualFiscalYear.FiscalYear())
                 .Map(dest => dest.StatusCode, src => src.Status == null ? null : src.Status.Code)
