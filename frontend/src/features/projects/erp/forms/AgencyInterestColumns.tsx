@@ -1,4 +1,4 @@
-import { IProject } from '../../common';
+import { AgencyResponses, IProject } from '../../common';
 import { useFormikContext } from 'formik';
 import React from 'react';
 import { formatDate } from 'utils';
@@ -62,7 +62,14 @@ export const AgencyInterestColumns = ({ disabled = false }) => {
       accessor: 'response',
       maxWidth: 80,
       align: 'left',
-      Cell: disabled ? (cellInfo: any) => cellInfo.value ?? null : getEditableSelectCell(namespace),
+      Cell: disabled
+        ? (cellInfo: any) =>
+            (cellInfo.value === AgencyResponses.Unsubscribe
+              ? 'Not Interested'
+              : cellInfo.value === AgencyResponses.Watch
+              ? 'Interested'
+              : 'Send Notifications') ?? null
+        : getEditableSelectCell(namespace),
     },
   ];
 };
