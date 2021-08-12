@@ -400,7 +400,7 @@ namespace Pims.Dal.Helpers.Extensions
             var updatedById = originalProject.UpdatedById;
             context.Entry(originalProject).CurrentValues.SetValues(updatedProject);
             originalProject.Agency = agency; // Don't want to allow agency to change through this method.
-            originalProject.CreatedById = updatedById; // Don't want these updated externally.
+            originalProject.CreatedById = createdById; // Don't want these updated externally.
             originalProject.UpdatedById = updatedById; // Don't want these updated externally.
             context.SetOriginalRowVersion(originalProject);
 
