@@ -1,5 +1,6 @@
 using Pims.Dal.Entities;
 using System.Collections.Generic;
+using Pims.Dal.Entities.Models;
 
 namespace Pims.Dal.Services.Admin
 {
@@ -9,6 +10,9 @@ namespace Pims.Dal.Services.Admin
     public interface IAdministrativeAreaService : IBaseService<AdministrativeArea>
     {
         AdministrativeArea Get(string name);
+        AdministrativeArea Get(int id);
+        Paged<AdministrativeArea> Get(AdministrativeAreaFilter filter);
+        Paged<AdministrativeArea> Get(int page, int quantity);
         IEnumerable<AdministrativeArea> GetAll();
     }
 }

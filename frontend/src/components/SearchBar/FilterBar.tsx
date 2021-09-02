@@ -7,6 +7,8 @@ import { Form } from 'components/common/form';
 import ResetButton from 'components/common/form/ResetButton';
 import SearchButton from 'components/common/form/SearchButton';
 import PlusButton from 'components/common/form/PlusButton';
+import TooltipIcon from 'components/common/TooltipIcon';
+import { CSSProperties } from 'styled-components';
 
 interface IProps<T extends object = {}> {
   initialValues: T;
@@ -21,13 +23,22 @@ interface IProps<T extends object = {}> {
   filterBarHeading?: string;
   /** if the filter bar is enabled to add a new entity control what happens on click */
   handleAdd?: (value: any) => void;
-  /** the two probs below are for controlling the tool tip for the plust button */
+  /** the id for the tooltip of the plus button */
   toolTipAddId?: string;
+  /** the text for the tooltip of the plus button */
   toolTipAddText?: string;
   /** override formiks handleReset default for customized components */
   customReset?: () => void;
   /** custom component field name to clear/reset */
   customResetField?: string;
+  /** prop for adding tooltip to filter bar header (with icon) */
+  headerTooltip?: boolean;
+  /** prop used to control icon size of header tooltip */
+  headerTooltipSize?: number;
+  /** prop used to control css for header tooltip icon */
+  headerTooltipStyle?: CSSProperties;
+  /** prop used to control where the header tooltip is placed in relation to the icon */
+  headerTooltipPlacement?: 'top' | 'bottom' | 'right' | 'left';
 }
 
 const FilterBar = <T extends object = {}>(props: PropsWithChildren<IProps<T>>) => {
@@ -48,6 +59,15 @@ const FilterBar = <T extends object = {}>(props: PropsWithChildren<IProps<T>>) =
       {({ isSubmitting, handleReset, setFieldValue }) => (
         <Form>
           <Form.Row className="search-bar">
+            {props.headerTooltip && (
+              <TooltipIcon
+                toolTipId="filter-header-tip"
+                toolTip="Click the corresponding row to edit the administrative area"
+                style={props.headerTooltipStyle}
+                iconSize={props.headerTooltipSize}
+                placement={props.headerTooltipPlacement}
+              />
+            )}
             <h3 className="filterBarHeading">{props.filterBarHeading}</h3>
             {props.children}
             <Col className="bar-item flex-grow-0">

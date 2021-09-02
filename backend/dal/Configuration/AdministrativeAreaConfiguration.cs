@@ -25,6 +25,7 @@ namespace Pims.Dal.Configuration
             builder.Property(m => m.BoundaryType).HasMaxLength(50);
             builder.Property(m => m.GroupName).HasMaxLength(250);
 
+            builder.HasIndex(m => m.Name ).IsUnique();
             builder.HasIndex(m => new { m.Id, m.IsDisabled, m.Name, m.SortOrder });
 
             base.Configure(builder);
