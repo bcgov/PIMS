@@ -21,18 +21,18 @@ namespace Pims.Dal.Keycloak
     {
         #region Methods
         /// <summary>
-        /// Sync the user for the specified 'id' from keycloak to PIMS.
+        /// Sync the user for the specified 'keycloakUserId' from keycloak to PIMS.
         /// If the user doesn't exist in PIMS it will add it.
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="keycloakUserId"></param>
         /// <exception type="KeyNotFoundException">User does not exist in keycloak or PIMS.</exception>
         /// <returns></returns>
-        public async Task<Entity.User> SyncUserAsync(Guid id)
+        public async Task<Entity.User> SyncUserAsync(Guid keycloakUserId)
         {
-            var kuser = await _keycloakService.GetUserAsync(id) ?? throw new KeyNotFoundException();
-            var kgroups = await _keycloakService.GetUserGroupsAsync(id);
+            var kuser = await _keycloakService.GetUserAsync(keycloakUserId) ?? throw new KeyNotFoundException();
+            var kgroups = await _keycloakService.GetUserGroupsAsync(keycloakUserId);
 
-            var euser = _pimsAdminService.User.Find(id);
+            var euser = _pimsAdminService.User.GetForKeycloakUserId(keycloakUserId);
             if (euser == null)
             {
                 // The user does not exist in PIMS, it needs to be added.
@@ -93,7 +93,7 @@ namespace Pims.Dal.Keycloak
             var kusers = await _keycloakService.GetUsersAsync((page - 1) * quantity, quantity, search);
 
             // TODO: Need better performing solution.
-            var eusers = kusers.Select(u => ExceptionHelper.HandleKeyNotFound(() => _pimsAdminService.User.Get(u.Id)) ?? _mapper.Map<Entity.User>(u));
+            var eusers = kusers.Select(u => ExceptionHelper.HandleKeyNotFound(() => _pimsAdminService.User.GetForKeycloakUserId(u.Id)) ?? _mapper.Map<Entity.User>(u));
 
             return eusers;
         }
@@ -107,7 +107,7 @@ namespace Pims.Dal.Keycloak
         public async Task<Entity.User> GetUserAsync(Guid id)
         {
             var kuser = await _keycloakService.GetUserAsync(id) ?? throw new KeyNotFoundException();
-            return _pimsAdminService.User.Get(kuser.Id);
+            return _pimsAdminService.User.GetForKeycloakUserId(kuser.Id);
         }
 
         /// <summary>
@@ -119,7 +119,7 @@ namespace Pims.Dal.Keycloak
         public async Task<Entity.User> UpdateUserAsync(Entity.User user)
         {
             var kuser = await _keycloakService.GetUserAsync(user.Id) ?? throw new KeyNotFoundException("User does not exist in Keycloak");
-            var euser = _pimsAdminService.User.Get(user.Id);
+            var euser = _pimsAdminService.User.GetForKeycloakUserId(user.Id);
 
             if (user.Username != kuser.Username) throw new InvalidOperationException($"Cannot change the username from '{kuser.Username}' to '{user.Username}'.");
 

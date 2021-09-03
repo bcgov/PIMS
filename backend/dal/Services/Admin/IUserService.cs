@@ -13,11 +13,11 @@ namespace Pims.Dal.Services.Admin
         Paged<User> Get(int page, int quantity);
         Paged<User> Get(UserFilter filter);
         User Get(Guid id);
+        User GetForKeycloakUserId(Guid keycloakUserId);
 
         AccessRequest UpdateAccessRequest(AccessRequest accessRequest);
         AccessRequest GetAccessRequest(int id);
-        Paged<AccessRequest> GetAccessRequests(int page = 1, int quantity = 10, string sort = null,
-            AccessRequestStatus status = AccessRequestStatus.OnHold);
+        Paged<AccessRequest> GetAccessRequests(int page = 1, int quantity = 10, string sort = null, AccessRequestStatus status = AccessRequestStatus.OnHold);
         Paged<AccessRequest> GetAccessRequests(AccessRequestFilter filter);
     }
 }

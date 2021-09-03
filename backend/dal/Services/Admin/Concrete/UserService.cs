@@ -149,6 +149,25 @@ namespace Pims.Dal.Services.Admin
         }
 
         /// <summary>
+        /// Get the user with the specified 'keycloakUserId'.
+        /// </summary>
+        /// <param name="keycloakUserId"></param>
+        /// <exception type="KeyNotFoundException">Entity does not exist in the datasource.</exception>
+        /// <returns></returns>
+        public User GetForKeycloakUserId(Guid keycloakUserId)
+        {
+            this.User.ThrowIfNotAuthorized(Permissions.AdminUsers);
+
+            return this.Context.Users
+                .Include(u => u.Roles)
+                .ThenInclude(r => r.Role)
+                .Include(u => u.Agencies)
+                .ThenInclude(a => a.Agency)
+                .AsNoTracking()
+                .SingleOrDefault(u => u.KeycloakUserId == keycloakUserId) ?? throw new KeyNotFoundException();
+        }
+
+        /// <summary>
         /// Add the specified user to the datasource.
         /// </summary>
         /// <param name="user"></param>

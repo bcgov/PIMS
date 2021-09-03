@@ -1,5 +1,6 @@
 export interface IUserDetails {
   id?: string;
+  keycloakUserId?: string;
   username?: string;
   email?: string;
   displayName?: string;

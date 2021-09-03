@@ -3,6 +3,7 @@ import { IAgency } from './agency';
 
 export interface IUser {
   id: string;
+  keycloakUserId?: string;
   displayName?: string;
   position?: string;
   note?: string;

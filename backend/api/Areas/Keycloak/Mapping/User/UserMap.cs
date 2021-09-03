@@ -13,6 +13,7 @@ namespace Pims.Api.Areas.Keycloak.Mapping.User
         {
             config.NewConfig<Entity.User, Model.UserModel>()
                 .Map(dest => dest.Id, src => src.Id)
+                .Map(dest => dest.KeycloakUserId, src => src.KeycloakUserId)
                 .Map(dest => dest.IsDisabled, src => src.IsDisabled)
                 .Map(dest => dest.Username, src => src.Username)
                 .Map(dest => dest.Position, src => src.Position)
@@ -28,6 +29,7 @@ namespace Pims.Api.Areas.Keycloak.Mapping.User
 
             config.NewConfig<Model.UserModel, Entity.User>()
                 .Map(dest => dest.Id, src => src.Id)
+                .Map(dest => dest.KeycloakUserId, src => src.KeycloakUserId)
                 .Map(dest => dest.IsDisabled, src => src.IsDisabled)
                 .Map(dest => dest.Username, src => src.Username)
                 .Map(dest => dest.Position, src => src.Position)
@@ -43,7 +45,7 @@ namespace Pims.Api.Areas.Keycloak.Mapping.User
 
 
             config.NewConfig<Entity.User, KModel.UserModel>()
-                .Map(dest => dest.Id, src => src.Id)
+                .Map(dest => dest.Id, src => src.KeycloakUserId)
                 .Map(dest => dest.Username, src => src.Username)
                 .Map(dest => dest.FirstName, src => src.FirstName)
                 .Map(dest => dest.LastName, src => src.LastName)
@@ -53,6 +55,7 @@ namespace Pims.Api.Areas.Keycloak.Mapping.User
 
             config.NewConfig<Entity.User, Entity.User>()
                 .Map(dest => dest.Id, src => src.Id)
+                .Map(dest => dest.KeycloakUserId, src => src.KeycloakUserId)
                 .Map(dest => dest.IsDisabled, src => src.IsDisabled)
                 .Map(dest => dest.Username, src => src.Username)
                 .Map(dest => dest.Position, src => src.Position)
