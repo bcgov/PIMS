@@ -452,7 +452,7 @@ namespace Pims.Tools.Keycloak.Sync
             try
             {
                 // Make a request to keycloak to find a matching user.
-                return await _client.HandleRequestAsync<KModel.UserModel>(HttpMethod.Get, $"{_options.Auth.Keycloak.Admin.Authority}/users/{user.Id}");
+                return await _client.HandleRequestAsync<KModel.UserModel>(HttpMethod.Get, $"{_options.Auth.Keycloak.Admin.Authority}/users/{user.KeycloakUserId}");
             }
             catch (HttpClientRequestException ex)
             {

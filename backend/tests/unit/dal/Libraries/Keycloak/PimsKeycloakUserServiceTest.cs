@@ -49,7 +49,7 @@ namespace Pims.Dal.Test.Libraries.Keycloak
             keycloakServiceMock.Setup(m => m.UpdateUserAsync(It.IsAny<Pims.Keycloak.Models.UserModel>()));
 
             var pimsAdminServiceMock = helper.GetMock<Pims.Dal.Services.Admin.IPimsAdminService>();
-            pimsAdminServiceMock.Setup(m => m.User.Get(It.IsAny<Guid>())).Returns(euser);
+            pimsAdminServiceMock.Setup(m => m.User.GetForKeycloakUserId(It.IsAny<Guid>())).Returns(euser);
             pimsAdminServiceMock.Setup(m => m.Role.Find(removeRole.Id)).Returns(removeRole);
 
             var user = EntityHelper.CreateUser(euser.Id, euser.Username, "new first name", "new last name");
@@ -123,7 +123,7 @@ namespace Pims.Dal.Test.Libraries.Keycloak
             keycloakServiceMock.Setup(m => m.GetUserAsync(It.IsAny<Guid>())).ReturnsAsync(kuser);
 
             var pimsAdminServiceMock = helper.GetMock<Pims.Dal.Services.Admin.IPimsAdminService>();
-            pimsAdminServiceMock.Setup(m => m.User.Get(It.IsAny<Guid>())).Returns(euser);
+            pimsAdminServiceMock.Setup(m => m.User.GetForKeycloakUserId(It.IsAny<Guid>())).Returns(euser);
 
             // Act
             // Assert
@@ -160,7 +160,7 @@ namespace Pims.Dal.Test.Libraries.Keycloak
                 }).ToArray());
 
             var pimsAdminServiceMock = helper.GetMock<Pims.Dal.Services.Admin.IPimsAdminService>();
-            pimsAdminServiceMock.Setup(m => m.User.Get(It.IsAny<Guid>())).Returns(euser);
+            pimsAdminServiceMock.Setup(m => m.User.GetForKeycloakUserId(It.IsAny<Guid>())).Returns(euser);
 
             var user = EntityHelper.CreateUser(euser.Id, euser.Username, "new first name", "new last name");
             var addRole = user.Roles.First().Role;
@@ -203,7 +203,7 @@ namespace Pims.Dal.Test.Libraries.Keycloak
             keycloakServiceMock.Setup(m => m.UpdateUserAsync(It.IsAny<Pims.Keycloak.Models.UserModel>()));
 
             var pimsAdminServiceMock = helper.GetMock<Pims.Dal.Services.Admin.IPimsAdminService>();
-            pimsAdminServiceMock.Setup(m => m.User.Get(It.IsAny<Guid>())).Returns(euser);
+            pimsAdminServiceMock.Setup(m => m.User.GetForKeycloakUserId(It.IsAny<Guid>())).Returns(euser);
             pimsAdminServiceMock.Setup(m => m.Role.Find(removeRole.Id)).Returns<Entity.Role>(null);
 
             var user = EntityHelper.CreateUser(euser.Id, euser.Username, "new first name", "new last name");

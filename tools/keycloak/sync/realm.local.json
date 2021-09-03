@@ -17,7 +17,10 @@
         "Protocol": "openid-connect",
         "BearerOnly": true,
         "AuthorizationServicesEnabled": false,
-        "RedirectUris": ["http://localhost:5000/api/*"],
+        "RedirectUris": [
+          "http://localhost:5000/api/*",
+          "http://localhost:61081/api/*"
+        ],
         "WebOrigins": ["*"],
         "Attributes": {
           "login_theme": "keycloak"
@@ -38,7 +41,7 @@
         "DirectAccessGrantsEnabled": true,
         "AuthorizationServicesEnabled": false,
         "RootUrl": "http://localhost:3000",
-        "RedirectUris": ["http://localhost:3000/*"],
+        "RedirectUris": ["http://localhost:3000/*", "http://localhost:61080/*"],
         "BaseUrl": "/",
         "WebOrigins": ["*"],
         "ProtocolMappers": [
@@ -228,7 +231,10 @@
         "ServiceAccountsEnabled": true,
         "AuthorizationServicesEnabled": false,
         "RootUrl": "http://localhost:5000/api",
-        "RedirectUris": ["http://localhost:5000/api/*"],
+        "RedirectUris": [
+          "http://localhost:5000/api/*",
+          "http://localhost:61081/api/*"
+        ],
         "BaseUrl": "/",
         "WebOrigins": ["*"],
         "ServiceAccount": {
@@ -260,7 +266,10 @@
         "ServiceAccountsEnabled": true,
         "AuthorizationServicesEnabled": true,
         "RootUrl": "http://localhost:5000/api",
-        "RedirectUris": ["http://localhost:5000/api/*"],
+        "RedirectUris": [
+          "http://localhost:5000/api/*",
+          "http://localhost:61081/api/*"
+        ],
         "BaseUrl": "/",
         "WebOrigins": ["*"],
         "ProtocolMappers": [
