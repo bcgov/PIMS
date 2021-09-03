@@ -15,6 +15,11 @@ namespace Pims.Api.Areas.Admin.Models.User
         public Guid Id { get; set; }
 
         /// <summary>
+        /// get/set - Unique identifier to link user with Keycloak user.
+        /// </summary>
+        public Guid? KeycloakUserId { get; set; }
+
+        /// <summary>
         /// get/set - The user's unique identity.
         /// </summary>
         public string Username { get; set; }

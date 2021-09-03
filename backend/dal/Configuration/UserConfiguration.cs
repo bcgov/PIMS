@@ -50,6 +50,8 @@ namespace Pims.Dal.Configuration
 
             builder.HasOne(m => m.ApprovedBy).WithMany().HasForeignKey(m => m.ApprovedById).OnDelete(DeleteBehavior.ClientSetNull);
 
+            builder.HasIndex(m => new { m.KeycloakUserId, m.Username, m.Email }).IsUnique(true);
+
             base.Configure(builder);
         }
         #endregion

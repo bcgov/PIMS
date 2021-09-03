@@ -11,6 +11,7 @@ export const accountActiveToBool = (status: string): boolean | undefined => {
 
 export interface IUserRecord {
   id: string;
+  keycloakUserId?: string;
   email?: string;
   username?: string;
   firstName?: string;

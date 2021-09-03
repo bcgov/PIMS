@@ -9,4 +9,4 @@ bash.exe.stackdump
 auth/keycloak/config/hsperfdata_jboss/
 auth/keycloak/config/*.log
 .DS_Store
-
+/backups
