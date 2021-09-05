@@ -8,7 +8,7 @@
     "@reduxjs/toolkit": "1.5.0",
     "@types/react-bootstrap-typeahead": "3.4.7",
     "@types/react-responsive": "8.0.2",
-    "axios": "0.21.1",
+    "axios": "0.21.3",
     "bootstrap": "4.4.1",
     "classnames": "2.2.6",
     "crypto-js": "4.0.0",
