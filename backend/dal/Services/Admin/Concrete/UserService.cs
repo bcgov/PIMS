@@ -203,7 +203,8 @@ namespace Pims.Dal.Services.Admin
 
             if (!existingUser.Agencies.Any())
             {
-                user.ApprovedById = this.User.GetUserId();
+                var keycloakUserId = this.User.GetKeycloakUserId();
+                user.ApprovedById = this.Context.Users.Where(u => u.KeycloakUserId == keycloakUserId).Select(u => u.Id).FirstOrDefault();
                 user.ApprovedOn = DateTime.UtcNow;
             }
 
@@ -265,7 +266,8 @@ namespace Pims.Dal.Services.Admin
             if (isApproving)
             {
                 var approvedUser = this.Context.Users.Find(existingAccessRequest.UserId);
-                approvedUser.ApprovedById = this.User.GetUserId();
+                var keycloakUserId = this.User.GetKeycloakUserId();
+                approvedUser.ApprovedById = this.Context.Users.Where(u => u.KeycloakUserId == keycloakUserId).Select(u => u.Id).FirstOrDefault();
                 approvedUser.ApprovedOn = DateTime.UtcNow;
                 this.Context.Users.Update(approvedUser);
             }
