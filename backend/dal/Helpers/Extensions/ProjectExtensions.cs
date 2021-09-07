@@ -61,7 +61,9 @@ namespace Pims.Dal.Helpers.Extensions
                 query = query.Where(p => p.TierLevelId == filter.TierLevelId);
             if (filter.CreatedByMe.HasValue && filter.CreatedByMe.Value)
             {
-                query = query.Where(p => p.CreatedById.Equals(user.GetUserId()));
+                var keycloakUserId = user.GetKeycloakUserId();
+                var userId = context.Users.Where(u => u.KeycloakUserId == keycloakUserId).Select(u => u.Id).FirstOrDefault(); // TODO: Add User.Id to claims to speed up query.
+                query = query.Where(p => p.CreatedById.Equals(userId));
             }
 
             if (filter.FiscalYear.HasValue)

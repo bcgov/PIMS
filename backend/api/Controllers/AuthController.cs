@@ -53,8 +53,8 @@ namespace Pims.Api.Controllers
         [SwaggerOperation(Tags = new[] { "auth" })]
         public IActionResult Activate()
         {
-            var userId = this.User.GetUserId();
-            var exists = _pimsService.User.UserExists(userId);
+            var keycloakUserId = this.User.GetKeycloakUserId();
+            var exists = _pimsService.User.UserExists(keycloakUserId);
 
             var user = _pimsService.User.Activate();
             if (!exists)
@@ -62,7 +62,7 @@ namespace Pims.Api.Controllers
                 return new CreatedResult($"{user.Id}", new Model.UserModel(user));
             }
 
-            return new JsonResult(new Model.UserModel(userId));
+            return new JsonResult(new Model.UserModel(user.Id, user.KeycloakUserId));
         }
 
         /// <summary>

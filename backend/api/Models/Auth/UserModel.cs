@@ -14,6 +14,11 @@ namespace Pims.Api.Models.Auth
         /// </summary>
         /// <value></value>
         public Guid Id { get; set; }
+
+        /// <summary>
+        /// get/set - The user's keycloak id.
+        /// </summary>
+        public Guid? KeycloakUserId { get; set; }
         #endregion
 
         #region Constructors
@@ -26,9 +31,11 @@ namespace Pims.Api.Models.Auth
         /// Creates a new instance of a UserModel object, initializes it with specified arguments.
         /// </summary>
         /// <param name="id"></param>
-        public UserModel(Guid id)
+        /// <param name="keycloakUserId"></param>
+        public UserModel(Guid id, Guid? keycloakUserId)
         {
             this.Id = id;
+            this.KeycloakUserId = keycloakUserId;
         }
 
         /// <summary>
@@ -38,6 +45,7 @@ namespace Pims.Api.Models.Auth
         public UserModel(Entity.User user)
         {
             this.Id = user.Id;
+            this.KeycloakUserId = user.KeycloakUserId;
         }
         #endregion
     }

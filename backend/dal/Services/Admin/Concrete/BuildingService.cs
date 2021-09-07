@@ -218,7 +218,8 @@ namespace Pims.Dal.Services.Admin
             this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin, Permissions.AgencyAdmin);
 
             var buildings = entities.Where(e => e != null);
-            var userId = this.User.GetUserId();
+            var keycloakUserId = this.User.GetKeycloakUserId();
+            var userId = this.Context.Users.Where(u => u.KeycloakUserId == keycloakUserId).Select(u => u.Id).FirstOrDefault();
             buildings.ForEach((building) =>
             {
                 building.PropertyTypeId = (int)PropertyTypes.Building;
