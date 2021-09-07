@@ -41,15 +41,25 @@ namespace Pims.Dal.Services
 
         #region Methods
         /// <summary>
-        /// Determine if the user for the specified 'id' exists in the datasource.
+        /// Determine if the user for the specified 'KeycloakUserId' exists in the datasource.
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="KeycloakUserId"></param>
         /// <returns></returns>
-        public bool UserExists(Guid id)
+        public bool UserExists(Guid KeycloakUserId)
         {
             this.User.ThrowIfNotAuthorized();
 
-            return this.Context.Users.Any(u => u.Id == id);
+            return this.Context.Users.Any(u => u.KeycloakUserId == KeycloakUserId);
+        }
+
+        /// <summary>
+        /// Get the user for the specified 'keycloakUserId'.
+        /// </summary>
+        /// <param name="keycloakUserId"></param>
+        /// <returns></returns>
+        public User GetUserForKeycloakId(Guid keycloakUserId)
+        {
+            return this.Context.Users.FirstOrDefault(u => u.KeycloakUserId == keycloakUserId);
         }
 
         /// <summary>
@@ -61,9 +71,9 @@ namespace Pims.Dal.Services
         {
             this.User.ThrowIfNotAuthorized();
 
-            var id = this.User.GetUserId();
+            var keycloakUserId = this.User.GetKeycloakUserId();
 
-            var user = this.Context.Users.Find(id);
+            var user = GetUserForKeycloakId(keycloakUserId);
             var exists = user != null;
             if (!exists)
             {
@@ -76,9 +86,9 @@ namespace Pims.Dal.Services
                 var email = this.User.GetEmail() ?? _options.ServiceAccount?.Email ??
                     throw new ConfigurationException($"Configuration 'Pims:ServiceAccount:Email' is invalid or missing.");
 
-                this.Logger.LogInformation($"User Activation: id:{id}, email:{email}, username:{username}, first:{givenName}, surname:{surname}");
+                this.Logger.LogInformation($"User Activation: keycloak id:{keycloakUserId}, email:{email}, username:{username}, first:{givenName}, surname:{surname}");
 
-                user = new User(id, username, email, givenName, surname);
+                user = new User(keycloakUserId, username, email, givenName, surname);
                 this.Context.Users.Add(user);
             }
             else
@@ -88,7 +98,7 @@ namespace Pims.Dal.Services
             }
 
             this.Context.CommitTransaction();
-            if (!exists) this.Logger.LogInformation($"User Activated: '{id}' - '{user.Username}'.");
+            if (!exists) this.Logger.LogInformation($"User Activated: '{keycloakUserId}' - '{user.Username}'.");
             return user;
         }
 
@@ -99,7 +109,9 @@ namespace Pims.Dal.Services
         /// <returns></returns>
         public AccessRequest GetAccessRequest()
         {
-            var userId = this.User.GetUserId();
+            var keycloakUserId = this.User.GetKeycloakUserId();
+            var user = GetUserForKeycloakId(keycloakUserId);
+
             var accessRequest = this.Context.AccessRequests
                 .Include(a => a.Agencies)
                 .ThenInclude(a => a.Agency)
@@ -108,7 +120,7 @@ namespace Pims.Dal.Services
                 .Include(a => a.User)
                 .AsNoTracking()
                 .OrderByDescending(a => a.CreatedOn)
-                .FirstOrDefault(a => a.UserId == userId && a.Status == AccessRequestStatus.OnHold);
+                .FirstOrDefault(a => a.UserId == user.Id && a.Status == AccessRequestStatus.OnHold);
             return accessRequest;
         }
 
@@ -127,8 +139,9 @@ namespace Pims.Dal.Services
                 .Include(a => a.User)
                 .AsNoTracking()
                 .FirstOrDefault(a => a.Id == id) ?? throw new KeyNotFoundException();
-            var userId = this.User.GetUserId();
-            if (accessRequest.UserId != userId) throw new NotAuthorizedException();
+            var keycloakUserId = this.User.GetKeycloakUserId();
+            var user = this.GetUserForKeycloakId(keycloakUserId);
+            if (accessRequest.UserId != user.Id) throw new NotAuthorizedException();
             return accessRequest;
         }
         /// <summary>
@@ -160,12 +173,10 @@ namespace Pims.Dal.Services
         public AccessRequest AddAccessRequest(AccessRequest request)
         {
             if (request == null || request.Agencies == null || request.Roles == null) throw new ArgumentNullException(nameof(request));
-            var userId = this.User.GetUserId();
+            var keycloakUserId = this.User.GetKeycloakUserId();
             var position = request.User.Position;
-            request.User = this.Context.Users.Find(userId) ??
-                throw new KeyNotFoundException("Your account has not been activated.");
-
-            request.UserId = userId;
+            request.User = this.GetUserForKeycloakId(keycloakUserId) ?? throw new KeyNotFoundException("Your account has not been activated.");
+            request.UserId = request.User.Id;
             request.User.Position = position;
             this.Context.Entry(request.User).State = EntityState.Modified;
 
@@ -190,12 +201,11 @@ namespace Pims.Dal.Services
         public AccessRequest UpdateAccessRequest(AccessRequest request)
         {
             if (request == null || request.Agencies == null || request.Roles == null) throw new ArgumentNullException(nameof(request));
-            var userId = this.User.GetUserId();
+            var keycloakUserId = this.User.GetKeycloakUserId();
             var position = request.User.Position;
-            request.User = this.Context.Users.Find(userId) ??
-                throw new KeyNotFoundException("Your account has not been activated.");
+            request.User = this.GetUserForKeycloakId(keycloakUserId) ?? throw new KeyNotFoundException("Your account has not been activated.");
 
-            if (request.UserId != userId) throw new NotAuthorizedException(); // Not allowed to update someone elses request.
+            if (request.UserId != request.User.Id) throw new NotAuthorizedException(); // Not allowed to update someone elses request.
 
             // fetch the existing request from the datasource.
             var entity = this.Context.AccessRequests

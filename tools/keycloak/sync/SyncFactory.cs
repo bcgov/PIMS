@@ -349,7 +349,8 @@ namespace Pims.Tools.Keycloak.Sync
 
             foreach (var user in users)
             {
-                var kuser = await GetUserAsync(user);
+                var kuser = kusers.FirstOrDefault(u => u.Id == user.KeycloakUserId || u.Username == user.Username);
+                kuser = await GetUserAsync(kuser?.Id ?? user.KeycloakUserId ?? user.Id);
 
                 // Ignore users that only exist in PIMS.
                 if (kuser == null) continue;
@@ -445,14 +446,14 @@ namespace Pims.Tools.Keycloak.Sync
         /// Get the keycloak user that matches the PIMS user.
         /// If it doesn't exist return 'null'.
         /// </summary>
-        /// <param name="user"></param>
+        /// <param name="keycloakUserId"></param>
         /// <returns></returns>
-        private async Task<KModel.UserModel> GetUserAsync(UserModel user)
+        private async Task<KModel.UserModel> GetUserAsync(Guid keycloakUserId)
         {
             try
             {
                 // Make a request to keycloak to find a matching user.
-                return await _client.HandleRequestAsync<KModel.UserModel>(HttpMethod.Get, $"{_options.Auth.Keycloak.Admin.Authority}/users/{user.KeycloakUserId}");
+                return await _client.HandleRequestAsync<KModel.UserModel>(HttpMethod.Get, $"{_options.Auth.Keycloak.Admin.Authority}/users/{keycloakUserId}");
             }
             catch (HttpClientRequestException ex)
             {
