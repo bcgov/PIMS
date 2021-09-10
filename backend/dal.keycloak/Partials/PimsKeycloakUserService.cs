@@ -173,6 +173,7 @@ namespace Pims.Dal.Keycloak
 
             // Now update keycloak
             var kmodel = _mapper.Map<KModel.UserModel>(user);
+            kmodel.Id = user.KeycloakUserId.Value;
             kmodel.Attributes = new Dictionary<string, string[]>
             {
                 ["agencies"] = _pimsService.User.GetAgencies(euser.Id).Select(a => a.ToString()).ToArray(),
