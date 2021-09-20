@@ -1,5 +1,5 @@
 import TooltipWrapper from 'components/common/TooltipWrapper';
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { FaArrowAltCircleLeft } from 'react-icons/fa';
 import { ButtonToolbar, Container, Navbar, Spinner } from 'react-bootstrap';
 import { useHistory } from 'react-router';
@@ -7,11 +7,11 @@ import { Formik } from 'formik';
 import { Button, Form, Input } from 'components/common/form';
 import styled from 'styled-components';
 import { IAdministrativeArea } from './interfaces';
-import { useEffect, useCallback } from 'react';
 import { AdministrativeAreaSchema } from 'utils/YupSchema';
 import GenericModal from 'components/common/GenericModal';
-import { isAxiosError, toApiAdminArea } from 'utils';
+import { isAxiosError } from 'utils';
 import { useAdminAreaApi } from 'hooks/useApiAdminAreas';
+import { toApiAdminArea } from './utils/utils';
 
 export interface IEditAdminAreaProps {
   /** name used to identify which administrative area to edit */
@@ -95,7 +95,8 @@ const EditAdminArea = (props: IEditAdminAreaProps) => {
             }
           } else if (!!values.name) {
             try {
-              await addAdminArea({ name: values.name });
+              const data = await addAdminArea({ name: values.name });
+              history.push(`/admin/administrativeArea/${data.id}`);
             } catch (error) {
               if (isAxiosError(error)) {
                 setDuplicateModal({ msg: error.response?.data.details, show: true });

@@ -1,9 +1,9 @@
 PRINT 'Removing duplicates'
 
 DELETE FROM dbo.[AdministrativeAreas]
-WHERE [Id] NOT IN (SELECT MAX(Id)
+WHERE [Id] NOT IN (SELECT MIN(Id)
     FROM dbo.[AdministrativeAreas]
     GROUP BY [Name]
-    HAVING MAX(Id) IS NOT NULL
+    HAVING MIN(Id) IS NOT NULL
 )
 

@@ -8,7 +8,6 @@ import { showLoading, hideLoading } from 'react-redux-loading-bar';
 import { success, error, request } from 'actions/genericActions';
 import moment from 'moment-timezone';
 import { IStatus } from 'features/projects/common';
-import { IAdministrativeArea, IApiAdminArea } from 'features/admin/admin-areas/interfaces';
 
 /**
  * Convert the specified 'input' value into a decimal or undefined.
@@ -304,20 +303,4 @@ export const clearanceNotificationSentOnRequired = (statusCode: string) => {
 export const isAxiosError = (err: any): err is AxiosError => {
   if (!err) return false;
   return (err as AxiosError).isAxiosError !== undefined;
-};
-
-/** generate administrative area ready for use in api endpoints */
-export const toApiAdminArea = (adminArea: IAdministrativeArea, name?: string): IApiAdminArea => {
-  const apiAdminArea = {
-    name: name ?? adminArea.name,
-    boundaryType: adminArea.boundaryType ?? undefined,
-    abbreviation: adminArea.abbreviation ?? undefined,
-    groupName: adminArea.groupName ?? undefined,
-    id: adminArea.id,
-    isDisabled: adminArea.isDiabled ?? false,
-    code: String(adminArea.id),
-    rowVersion: adminArea.rowVersion ?? '',
-    type: 'AdministrativaArea',
-  };
-  return apiAdminArea;
 };
