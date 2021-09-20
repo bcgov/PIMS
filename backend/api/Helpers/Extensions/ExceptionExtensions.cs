@@ -1,5 +1,6 @@
 using Pims.Api.Helpers.Exceptions;
 using System;
+using Pims.Api.Models;
 
 namespace Pims.Api.Helpers.Extensions
 {
@@ -19,6 +20,23 @@ namespace Pims.Api.Helpers.Extensions
         {
             if (String.IsNullOrWhiteSpace(message)) throw new ArgumentException("Argument cannot be null, empty or whitespace.", nameof(message));
             return item ?? throw new BadRequestException(message);
+        }
+
+        /// <summary>
+        /// Generate a user friendly error message if exception is referring to a duplicate constraint.
+        /// </summary>
+        /// <param name="ex"></param>
+        /// <param name="message"></param>
+        /// <returns>User friendly error message if exception is caused by duplicate. Otherwise null.</returns>
+        public static ErrorResponseModel CheckErrorMessageForDuplicate(this Exception ex, string message)
+        {
+            if (ex.InnerException?.Message.Contains("duplicate") ?? false)
+            {
+                ErrorResponseModel error = new ErrorResponseModel(message,
+                    "Ensure that you have not entered a duplicate name into the system.");
+                return error;
+            }
+            return null;
         }
     }
 }

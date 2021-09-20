@@ -1,9 +1,7 @@
-using System;
-using System.Threading.Tasks;
+using Pims.Api.Helpers.Extensions;
 using MapsterMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Pims.Api.Models;
 using Pims.Api.Policies;
 using Pims.Dal.Security;
 using Pims.Dal.Services.Admin;
@@ -121,11 +119,10 @@ namespace Pims.Api.Areas.Admin.Controllers
             }
             catch (DbUpdateException ex)
             {
-                if (ex.InnerException?.Message.Contains("duplicate") ?? false)
+                var duplicateError = ex.CheckErrorMessageForDuplicate("Error while updating Administrative Area.");
+                if (duplicateError != null)
                 {
-                    ErrorResponseModel error = new ErrorResponseModel("Error while updating Administrative Area.",
-                        "Ensure that you have not entered a duplicate name into the system.");
-                    return BadRequest(error);
+                    return BadRequest(duplicateError);
                 }
                 throw ex;
             }
@@ -155,11 +152,10 @@ namespace Pims.Api.Areas.Admin.Controllers
             }
             catch (DbUpdateException ex)
             {
-                if (ex.InnerException?.Message.Contains("duplicate") ?? false)
+                var duplicateError = ex.CheckErrorMessageForDuplicate("Error while adding Administrative Area.");
+                if (duplicateError != null)
                 {
-                    ErrorResponseModel error = new ErrorResponseModel("Error while adding Administrative Area.",
-                        "Ensure that you have not entered a duplicate name into the system.");
-                    return BadRequest(error);
+                    return BadRequest(duplicateError);
                 }
                 throw ex;
             }
