@@ -8,7 +8,6 @@ import { showLoading, hideLoading } from 'react-redux-loading-bar';
 import { success, error, request } from 'actions/genericActions';
 import moment from 'moment-timezone';
 import { IStatus } from 'features/projects/common';
-import { IAdministrativeArea, IApiAdminArea } from 'features/admin/admin-areas/interfaces';
 
 /**
  * Convert the specified 'input' value into a decimal or undefined.
