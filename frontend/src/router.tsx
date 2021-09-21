@@ -36,7 +36,9 @@ const ProjectDisposeView = lazy(() => import('features/projects/dispose/ProjectD
 const SplReportContainer = lazy(() => import('features/splReports/containers/SplReportContainer'));
 const ManageAgencies = lazy(() => import('features/admin/agencies/ManageAgencies'));
 const EditAgencyPage = lazy(() => import('features/admin/agencies/EditAgencyPage'));
+const ManageAdminAreas = lazy(() => import('features/admin/admin-areas/ManageAdminAreas'));
 const ManageUsers = lazy(() => import('features/admin/users/ManageUsers'));
+const EditAdminArea = lazy(() => import('features/admin/admin-areas/EditAdminArea'));
 const PropertyListView = lazy(() => import('features/properties/list/PropertyListView'));
 
 const AppRouter: React.FC = () => {
@@ -223,6 +225,30 @@ const AppRouter: React.FC = () => {
           layout={AuthLayout}
           claim={Claims.ADMIN_USERS}
           title={getTitle('Edit Agency')}
+        />
+        <AppRoute
+          protected
+          path="/admin/administrativeAreas"
+          component={ManageAdminAreas}
+          layout={AuthLayout}
+          claim={Claims.ADMIN_USERS}
+          title={getTitle('Adminstrative Areas')}
+        />
+        <AppRoute
+          protected
+          path="/admin/administrativeArea/:id"
+          component={EditAdminArea}
+          layout={AuthLayout}
+          claim={Claims.ADMIN_USERS}
+          title={getTitle('Edit Adminstrative Area')}
+        />
+        <AppRoute
+          protected
+          path="/admin/administrativeArea/new"
+          component={EditAdminArea}
+          layout={AuthLayout}
+          claim={Claims.ADMIN_USERS}
+          title={getTitle('Create Administrative Area')}
         />
         <AppRoute
           protected

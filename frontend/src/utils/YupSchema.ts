@@ -53,6 +53,10 @@ export const AgencyEditSchema = Yup.object().shape({
   code: Yup.string().required('An agency code is required.'),
 });
 
+export const AdministrativeAreaSchema = Yup.object().shape({
+  name: Yup.string().required('A name is required for administrative areas'),
+});
+
 export const UserSchema = Yup.object().shape({
   email: Yup.string()
     .email()
