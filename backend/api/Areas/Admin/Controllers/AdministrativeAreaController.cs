@@ -56,7 +56,7 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// <returns>Array of administrative areas.</returns>
         [HttpGet]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(Api.Models.PageModel<Model.AdministrativeAreaModel>), 200)]
+        [ProducesResponseType(typeof(Model.AdministrativeAreaModel[]), 200)]
         [SwaggerOperation(Tags = new[] {"admin-administrative-area"})]
         public IActionResult GetAdministrativeAreas()
         {
@@ -71,7 +71,7 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// <returns>The administrative area requested.</returns>
         [HttpGet("{id}")]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(Api.Models.PageModel<Model.AdministrativeAreaModel>), 200)]
+        [ProducesResponseType(typeof(Model.AdministrativeAreaModel), 200)]
         [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]
         [SwaggerOperation(Tags = new[] {"admin-administrative-area"})]
         public IActionResult GetAdministrativeArea(int id)
