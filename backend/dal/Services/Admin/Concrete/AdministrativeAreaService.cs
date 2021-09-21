@@ -93,7 +93,7 @@ namespace Pims.Dal.Services.Admin
                     query = query.Where(a => EF.Functions.Like(a.BoundaryType, $"{filter.BoundaryType}"));
             }
 
-            var administrativeAreas = query.Skip((filter.Page - 1) * filter.Quantity).Take(filter.Quantity);
+            var administrativeAreas = query.OrderBy(a => a.Name).Skip((filter.Page - 1) * filter.Quantity).Take(filter.Quantity);
             return new Paged<AdministrativeArea>(administrativeAreas.ToArray(), filter.Page, filter.Quantity,
                 query.Count());
         }
