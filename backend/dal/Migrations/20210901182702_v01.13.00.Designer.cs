@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using Pims.Dal;
@@ -10,9 +11,10 @@ using Pims.Dal;
 namespace Pims.Dal.Migrations
 {
     [DbContext(typeof(PimsContext))]
-    partial class PimsContextModelSnapshot : ModelSnapshot
+    [Migration("20210901182702_v01.13.00")]
+    partial class v011300
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -272,9 +274,6 @@ namespace Pims.Dal.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CreatedById");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
 
                     b.HasIndex("UpdatedById");
 
@@ -2528,9 +2527,6 @@ namespace Pims.Dal.Migrations
                     b.Property<bool>("IsSystem")
                         .HasColumnType("bit");
 
-                    b.Property<Guid?>("KeycloakUserId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<DateTime?>("LastLogin")
                         .HasColumnType("DATETIME2");
 
@@ -2582,10 +2578,6 @@ namespace Pims.Dal.Migrations
                         .IsUnique();
 
                     b.HasIndex("IsDisabled", "LastName", "FirstName");
-
-                    b.HasIndex("KeycloakUserId", "Username", "Email")
-                        .IsUnique()
-                        .HasFilter("[KeycloakUserId] IS NOT NULL");
 
                     b.ToTable("Users");
                 });

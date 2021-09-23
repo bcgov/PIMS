@@ -8,17 +8,18 @@ import 'react-app-polyfill/stable';
 import 'react-toastify/dist/ReactToastify.css';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App, { store } from './App';
+import App from './App';
 import * as serviceWorker from './serviceWorker.ignore';
-import { KeycloakProvider } from '@react-keycloak/web';
+import { ReactKeycloakProvider } from '@react-keycloak/web';
 import { Provider } from 'react-redux';
-import getKeycloakEventHandler from 'utils/KeycloakEventHandler';
 import { AuthStateContextProvider } from 'contexts/authStateContext';
 import { BrowserRouter as Router } from 'react-router-dom';
 import EmptyLayout from 'layouts/EmptyLayout';
 import LoginLoading from 'features/account/LoginLoading';
-import { createKeycloakInstance } from 'utils';
 import Keycloak from 'keycloak-js';
+import getKeycloakEventHandler from 'utils/KeycloakEventHandler';
+import { store } from './store';
+import { createKeycloakInstance } from 'utils';
 
 /**
  * Displays LoginLoading until Keycloak connection is ready.
@@ -47,8 +48,8 @@ const Index = () => {
       <LoginLoading />
     </EmptyLayout>
   ) : (
-    <KeycloakProvider
-      keycloak={keycloak}
+    <ReactKeycloakProvider
+      authClient={keycloak}
       LoadingComponent={
         <EmptyLayout>
           <LoginLoading />
@@ -63,7 +64,7 @@ const Index = () => {
           </Router>
         </AuthStateContextProvider>
       </Provider>
-    </KeycloakProvider>
+    </ReactKeycloakProvider>
   );
 };
 

@@ -4,7 +4,7 @@ import { showLoading, hideLoading } from 'react-redux-loading-bar';
 import { AxiosInstance } from 'axios';
 import { ENVIRONMENT } from 'constants/environment';
 import { useCallback } from 'react';
-import { store } from 'App';
+import { store } from 'store';
 import {
   IAddAdminArea,
   IAdminAreaFilter,

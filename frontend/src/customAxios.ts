@@ -1,9 +1,9 @@
 import axios from 'axios';
 import { isEmpty } from 'lodash';
-import { store } from 'App';
 import { toast } from 'react-toastify';
+import { store } from 'store/store';
 
-const defaultEnvelope = (x: any) => ({ data: { records: x } });
+export const defaultEnvelope = (x: any) => ({ data: { records: x } });
 
 /**
  * used by the CustomAxios method.
@@ -21,23 +21,26 @@ export interface LifecycleToasts {
  * Wrapper for axios to include authentication token and error handling.
  * @param param0 Axios parameters.
  */
-const CustomAxios = ({
+export const CustomAxios = ({
   lifecycleToasts,
   selector,
   envelope = defaultEnvelope,
+  baseURL,
 }: {
   lifecycleToasts?: LifecycleToasts;
   selector?: Function;
   envelope?: typeof defaultEnvelope;
+  baseURL?: string;
 } = {}) => {
   let loadingToastId: React.ReactText | undefined = undefined;
   const instance = axios.create({
+    baseURL,
     headers: {
       'Access-Control-Allow-Origin': '*',
-      Authorization: `Bearer ${store.getState().jwt}`,
     },
   });
   instance.interceptors.request.use(config => {
+    config.headers.Authorization = `Bearer ${store.getState().jwt}`;
     if (selector !== undefined) {
       const state = store.getState();
       const storedValue = selector(state);
