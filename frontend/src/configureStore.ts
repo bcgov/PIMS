@@ -5,7 +5,7 @@ import { rootReducer } from 'reducers/rootReducer';
 import { loadingBarMiddleware } from 'react-redux-loading-bar';
 
 export default function configureStore() {
-  if (process.env.NODE_ENV === 'development') {
+  if (process.env.NODE_ENV !== 'production') {
     return createStore(rootReducer, applyMiddleware(thunk, logger, loadingBarMiddleware()));
   }
   return createStore(rootReducer, applyMiddleware(thunk, loadingBarMiddleware()));

@@ -11,6 +11,18 @@ import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 import * as API from 'constants/API';
 import { ILookupCode } from 'actions/lookupActions';
+import { useKeycloak } from '@react-keycloak/web';
+
+jest.mock('@react-keycloak/web');
+(useKeycloak as jest.Mock).mockReturnValue({
+  keycloak: {
+    userInfo: {
+      agencies: [1],
+      roles: [],
+    },
+    subject: 'test',
+  },
+});
 const mockStore = configureMockStore([thunk]);
 const mockAxios = new MockAdapter(axios);
 

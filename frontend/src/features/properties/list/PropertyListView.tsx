@@ -40,7 +40,7 @@ import {
   getCurrentFiscal,
   toApiProperty,
 } from 'features/projects/common/projectConverter';
-import { IApiProperty } from 'features/projects/common';
+import { IApiProperty } from 'features/projects/interfaces';
 import { PropertyTypes } from 'constants/index';
 
 const getPropertyReportUrl = (filter: IPropertyQueryParams) =>

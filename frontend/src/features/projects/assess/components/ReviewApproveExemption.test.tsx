@@ -8,7 +8,7 @@ import { Button } from 'react-bootstrap';
 import GenericModal from 'components/common/GenericModal';
 import { createMemoryHistory } from 'history';
 import { Router } from 'react-router-dom';
-import { ReviewWorkflowStatus, DisposeWorkflowStatus } from '../../common/interfaces';
+import { ReviewWorkflowStatus, DisposeWorkflowStatus } from 'features/projects/constants';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 
 Enzyme.configure({ adapter: new Adapter() });

@@ -7,7 +7,7 @@ import * as API from 'constants/API';
 import { RootState } from 'reducers/rootReducer';
 import { IProjectFilter, IProject } from '.';
 import { columns as cols } from './columns';
-import { IProject as IProjectDetail } from 'features/projects/common';
+import { IProject as IProjectDetail } from 'features/projects/interfaces';
 import { Table } from 'components/Table';
 import service from '../apiService';
 import { FaFolder, FaFolderOpen, FaFileExcel, FaFileAlt } from 'react-icons/fa';
@@ -18,12 +18,12 @@ import { Input, Button, Select } from 'components/common/form';
 import GenericModal from 'components/common/GenericModal';
 import { useHistory } from 'react-router-dom';
 import {
-  ReviewWorkflowStatus,
-  IStatus,
   fetchProjectStatuses,
   deleteProjectWarning,
   deletePotentialSubdivisionParcels,
 } from '../common';
+import { ReviewWorkflowStatus } from 'features/projects/constants';
+import { IStatus } from 'features/projects/interfaces';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import Claims from 'constants/claims';
 import { ENVIRONMENT } from 'constants/environment';

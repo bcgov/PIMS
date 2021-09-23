@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { Tab } from 'react-bootstrap';
-import { SPPApprovalTabs, ReviewWorkflowStatus, IProject, useStepForm } from '../../common';
+import { useStepForm } from '../../common';
+import { SPPApprovalTabs, ReviewWorkflowStatus } from 'features/projects/constants';
+import { IProject } from 'features/projects/interfaces';
 import { DocumentationTab } from '../../common';
 import { SurplusPropertyInformationTab, SplTab, CloseOutFormTab } from '..';
 import { useFormikContext } from 'formik';

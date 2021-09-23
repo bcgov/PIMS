@@ -1,4 +1,4 @@
-import { IProperty, IStatus } from '../common';
+import { IProperty, IStatus } from 'features/projects/interfaces';
 
 /**
  * IProject interface represents the model used for searching projects.

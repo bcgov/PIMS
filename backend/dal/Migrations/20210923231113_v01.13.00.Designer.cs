@@ -11,7 +11,7 @@ using Pims.Dal;
 namespace Pims.Dal.Migrations
 {
     [DbContext(typeof(PimsContext))]
-    [Migration("20210901182702_v01.13.00")]
+    [Migration("20210923231113_v01.13.00")]
     partial class v011300
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -274,6 +274,9 @@ namespace Pims.Dal.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CreatedById");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.HasIndex("UpdatedById");
 
@@ -2527,6 +2530,9 @@ namespace Pims.Dal.Migrations
                     b.Property<bool>("IsSystem")
                         .HasColumnType("bit");
 
+                    b.Property<Guid?>("KeycloakUserId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<DateTime?>("LastLogin")
                         .HasColumnType("DATETIME2");
 
@@ -2578,6 +2584,10 @@ namespace Pims.Dal.Migrations
                         .IsUnique();
 
                     b.HasIndex("IsDisabled", "LastName", "FirstName");
+
+                    b.HasIndex("KeycloakUserId", "Username", "Email")
+                        .IsUnique()
+                        .HasFilter("[KeycloakUserId] IS NOT NULL");
 
                     b.ToTable("Users");
                 });
@@ -3331,7 +3341,7 @@ namespace Pims.Dal.Migrations
                     b.HasOne("Pims.Dal.Entities.ProjectStatus", "Status")
                         .WithMany()
                         .HasForeignKey("StatusId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Pims.Dal.Entities.User", "UpdatedBy")
@@ -3341,7 +3351,7 @@ namespace Pims.Dal.Migrations
                     b.HasOne("Pims.Dal.Entities.Workflow", "Workflow")
                         .WithMany()
                         .HasForeignKey("WorkflowId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 

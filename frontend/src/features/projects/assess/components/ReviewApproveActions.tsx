@@ -1,7 +1,8 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { useFormikContext } from 'formik';
-import { ReviewWorkflowStatus, IProject, IProperty } from '../../common/interfaces';
+import { ReviewWorkflowStatus } from 'features/projects/constants';
+import { IProject, IProperty } from 'features/projects/interfaces';
 import GenericModal from 'components/common/GenericModal';
 import { useState, useEffect } from 'react';
 import { Button } from 'components/common/form';

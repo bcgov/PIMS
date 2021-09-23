@@ -1,12 +1,10 @@
 import { getCurrentFiscalYear } from 'utils';
 import {
-  IProjectTask,
   DisposeWorkflowStatus,
-  IProject,
   ReviewWorkflowStatus,
-  ITask,
   SPPApprovalTabs,
-} from '../common';
+} from 'features/projects/constants';
+import { IProjectTask, IProject, ITask } from 'features/projects/interfaces';
 import { ProjectActions } from 'constants/actionTypes';
 import * as reducerTypes from 'constants/reducerTypes';
 import configureMockStore from 'redux-mock-store';
@@ -149,6 +147,7 @@ export const mockProject: IProject = {
     isOptional: false,
     isActive: true,
   },
+  statusHistory: [],
   tierLevelId: 1,
   tasks: mockTasks,
   note: 'my notes',

@@ -5,15 +5,16 @@ import {
   DocumentationStep,
   ApprovalConfirmationStep,
   ReviewProjectStep,
-} from '.';
+} from '../dispose';
 import React from 'react';
-import { ProjectWorkflowComponent, DisposeWorkflowStatus } from '../common';
+import { DisposeWorkflowStatus } from 'features/projects/constants';
+import { IProjectWorkflowComponent } from 'features/projects/interfaces';
 
 /**
  * TODO: re-evaluate this approach. It may be cleaner/simpler to just hardcode these components to their respective routes.
  * Would still get the benefit of dynamic re-ordering based on db-config.
  */
-export const projectWorkflowComponents: ProjectWorkflowComponent[] = [
+export const projectWorkflowComponents: IProjectWorkflowComponent[] = [
   {
     component: props => <ProjectDraftStep {...props} />,
     workflowStatus: DisposeWorkflowStatus.Draft,

@@ -1,6 +1,8 @@
 import useCodeLookups from 'hooks/useLookupCodes';
 import { useMemo } from 'react';
-import { useProject, IProjectAgencyResponse, AgencyResponses } from '..';
+import { useProject } from '..';
+import { IProjectAgencyResponse } from 'features/projects/interfaces';
+import { AgencyResponses } from 'features/projects/constants';
 import { ILookupCode } from 'actions/lookupActions';
 import _ from 'lodash';
 

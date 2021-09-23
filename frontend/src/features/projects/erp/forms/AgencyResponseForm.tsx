@@ -3,7 +3,7 @@ import React from 'react';
 import { Col, Container } from 'react-bootstrap';
 import { Form, FastDatePicker } from 'components/common/form';
 import { useFormikContext } from 'formik';
-import { IProject } from '../../common';
+import { IProject } from 'features/projects/interfaces';
 import { AgencyInterest } from './AgencyInterest';
 import { ErpNotificationNotes } from 'features/projects/common/components/ProjectNotes';
 

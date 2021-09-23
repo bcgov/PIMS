@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { Col, Row } from 'react-bootstrap';
 import TasksForm from './TasksForm';
-import { ReviewWorkflowStatus, reviewAppraisalTooltip, useProject } from '../../common';
+import { reviewAppraisalTooltip, useProject } from '../../common';
+import { ReviewWorkflowStatus } from 'features/projects/constants';
 import _ from 'lodash';
 import TooltipIcon from 'components/common/TooltipIcon';
 import ProjectNotes from '../components/ProjectNotes';

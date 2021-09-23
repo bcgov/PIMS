@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { ReviewWorkflowStatus, useProject, useStepForm } from '../../common';
+import { useProject, useStepForm } from '../../common';
+import { ReviewWorkflowStatus } from 'features/projects/constants';
 import { EnhancedReferralCompleteForm, AgencyResponseForm } from '..';
 import { useFormikContext } from 'formik';
 import ExemptionEnhancedReferralCompleteForm from '../forms/ExemptionEnhancedReferralCompleteForm';

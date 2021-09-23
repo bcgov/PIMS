@@ -1,10 +1,11 @@
-import { ProjectActions } from '../../../constants/actionTypes';
-import { handleAxiosResponse } from '../../../utils/utils';
+import { ProjectActions } from 'constants/actionTypes';
+import { handleAxiosResponse } from 'utils';
 import * as API from 'constants/API';
 import { ENVIRONMENT } from 'constants/environment';
 import CustomAxios from 'customAxios';
 import { toApiProject } from './projectConverter';
-import { saveProjectStatus, saveProjectTasks, saveProject, IProject } from '.';
+import { saveProjectStatus, saveProjectTasks, saveProject } from '.';
+import { IProject } from 'features/projects/interfaces';
 import { saveProjectStatuses } from './slices/projectStatusesSlice';
 
 export const fetchProjectWorkflow = (workflowCode: string = 'SUBMIT-DISPOSAL') => (

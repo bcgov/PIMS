@@ -3339,7 +3339,7 @@ namespace Pims.Dal.Migrations
                     b.HasOne("Pims.Dal.Entities.ProjectStatus", "Status")
                         .WithMany()
                         .HasForeignKey("StatusId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Pims.Dal.Entities.User", "UpdatedBy")
@@ -3349,7 +3349,7 @@ namespace Pims.Dal.Migrations
                     b.HasOne("Pims.Dal.Entities.Workflow", "Workflow")
                         .WithMany()
                         .HasForeignKey("WorkflowId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 

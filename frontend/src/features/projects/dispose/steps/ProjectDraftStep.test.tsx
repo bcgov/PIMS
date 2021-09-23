@@ -13,6 +13,18 @@ import { fillInput } from 'utils/testUtils';
 import useStepper from '../hooks/useStepper';
 import { noop } from 'lodash';
 import { render, screen, cleanup, wait } from '@testing-library/react';
+import { useKeycloak } from '@react-keycloak/web';
+
+jest.mock('@react-keycloak/web');
+(useKeycloak as jest.Mock).mockReturnValue({
+  keycloak: {
+    userInfo: {
+      agencies: [1],
+      roles: [],
+    },
+    subject: 'test',
+  },
+});
 
 const mockAxios = new MockAdapter(axios);
 jest.mock('../hooks/useStepper');
