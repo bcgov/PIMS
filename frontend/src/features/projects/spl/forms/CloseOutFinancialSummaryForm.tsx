@@ -3,7 +3,8 @@ import React from 'react';
 import { Col } from 'react-bootstrap';
 import { getIn, useFormikContext } from 'formik';
 import { Form, FastCurrencyInput } from 'components/common/form';
-import { IProject, projectComments, ProjectNotes } from 'features/projects/common';
+import { projectComments, ProjectNotes } from 'features/projects/common';
+import { IProject } from 'features/projects/interfaces';
 
 /**
  * Calculate the gain before SPL.

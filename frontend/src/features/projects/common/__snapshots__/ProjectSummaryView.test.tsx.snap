@@ -12,6 +12,15 @@ exports[`Review Summary View renders approved correctly 1`] = `
   font-family: 'BCSans',Fallback,sans-serif;
 }
 
+.c2 {
+  padding-left: 10px;
+}
+
+.c2 small {
+  padding-top: 20px;
+  vertical-align: middle;
+}
+
 .c3 {
   width: 100%;
   display: -webkit-box;
@@ -21,15 +30,6 @@ exports[`Review Summary View renders approved correctly 1`] = `
   -webkit-flex-direction: row-reverse;
   -ms-flex-direction: row-reverse;
   flex-direction: row-reverse;
-}
-
-.c2 {
-  padding-left: 10px;
-}
-
-.c2 small {
-  padding-top: 20px;
-  vertical-align: middle;
 }
 
 <div
@@ -763,6 +763,15 @@ exports[`Review Summary View renders denied correctly 1`] = `
   font-family: 'BCSans',Fallback,sans-serif;
 }
 
+.c2 {
+  padding-left: 10px;
+}
+
+.c2 small {
+  padding-top: 20px;
+  vertical-align: middle;
+}
+
 .c3 {
   width: 100%;
   display: -webkit-box;
@@ -772,15 +781,6 @@ exports[`Review Summary View renders denied correctly 1`] = `
   -webkit-flex-direction: row-reverse;
   -ms-flex-direction: row-reverse;
   flex-direction: row-reverse;
-}
-
-.c2 {
-  padding-left: 10px;
-}
-
-.c2 small {
-  padding-top: 20px;
-  vertical-align: middle;
 }
 
 <div
@@ -1514,6 +1514,15 @@ exports[`Review Summary View renders submitted correctly 1`] = `
   font-family: 'BCSans',Fallback,sans-serif;
 }
 
+.c2 {
+  padding-left: 10px;
+}
+
+.c2 small {
+  padding-top: 20px;
+  vertical-align: middle;
+}
+
 .c3 {
   width: 100%;
   display: -webkit-box;
@@ -1523,15 +1532,6 @@ exports[`Review Summary View renders submitted correctly 1`] = `
   -webkit-flex-direction: row-reverse;
   -ms-flex-direction: row-reverse;
   flex-direction: row-reverse;
-}
-
-.c2 {
-  padding-left: 10px;
-}
-
-.c2 small {
-  padding-top: 20px;
-  vertical-align: middle;
 }
 
 <div

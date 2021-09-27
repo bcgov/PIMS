@@ -1,12 +1,8 @@
 import * as React from 'react';
 import { Tab, Spinner } from 'react-bootstrap';
-import {
-  SPPApprovalTabs,
-  initialValues,
-  ReviewWorkflowStatus,
-  IProject,
-  useStepForm,
-} from '../../common';
+import { useStepForm } from '../../common';
+import { initialValues, ReviewWorkflowStatus, SPPApprovalTabs } from 'features/projects/constants';
+import { IProject } from 'features/projects/interfaces';
 import { useFormikContext } from 'formik';
 import { EnhancedReferralTab } from '..';
 import { isEqual } from 'lodash';

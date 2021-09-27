@@ -1,4 +1,5 @@
-import { IProject, ProjectNotes } from 'features/projects/common';
+import { ProjectNotes } from 'features/projects/common';
+import { IProject } from 'features/projects/interfaces';
 import { Form, FastDatePicker } from 'components/common/form';
 import React from 'react';
 import { useFormikContext } from 'formik';

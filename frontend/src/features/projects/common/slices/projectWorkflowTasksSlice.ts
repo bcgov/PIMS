@@ -1,5 +1,5 @@
 import { createSlice, createAction } from '@reduxjs/toolkit';
-import { IProjectTask } from '..';
+import { IProjectTask } from 'features/projects/interfaces';
 
 export const saveProjectWorkflowTasks = createAction<IProjectTask[]>('saveProjectWorkflowTasks');
 export const clearProjectWorkflowTasks = createAction('clearProjectWorkflowTasks');

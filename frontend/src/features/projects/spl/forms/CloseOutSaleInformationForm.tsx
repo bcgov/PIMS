@@ -3,7 +3,7 @@ import React from 'react';
 import { Col } from 'react-bootstrap';
 import { useFormikContext } from 'formik';
 import { Form, FastDatePicker, FastFiscalYearInput, FastInput } from 'components/common/form';
-import { IProject } from 'features/projects/common';
+import { IProject } from 'features/projects/interfaces';
 
 interface CloseOutSaleInformationProps {
   isReadOnly?: boolean;

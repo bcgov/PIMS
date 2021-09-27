@@ -8,6 +8,7 @@ using System.Security.Claims;
 using Pims.Dal.Entities.Models;
 using Pims.Dal.Helpers.Extensions;
 using Pims.Dal.Security;
+using System;
 
 namespace Pims.Dal.Services.Admin
 {
@@ -110,6 +111,10 @@ namespace Pims.Dal.Services.Admin
         {
             agency.ThrowIfNull(nameof(agency));
 
+            // Enforce unique constraint on the Code.
+            var isUnique = !this.Context.Agencies.Any(a => a.Code == agency.Code && a.ParentId == agency.ParentId);
+            if (!isUnique) throw new InvalidOperationException($"Agency 'code:{agency.Code}' must be unique");
+
             base.Add(agency);
             this.Context.Entry(agency).State = EntityState.Detached;
 
@@ -139,6 +144,14 @@ namespace Pims.Dal.Services.Admin
             agency.ThrowIfNull(nameof(agency));
 
             var original = this.Context.Agencies.Find(agency.Id) ?? throw new KeyNotFoundException();
+
+            if (original.Code != agency.Code)
+            {
+                // Enforce unique constraint on the Code.
+                var isUnique = !this.Context.Agencies.Any(a => a.Id != original.Id && a.Code == agency.Code && a.ParentId == agency.ParentId);
+                if (!isUnique) throw new InvalidOperationException($"Agency 'code:{agency.Code}' must be unique");
+            }
+
             var updatedUsers = new List<User>();
 
             // If the agency has become a sub-agency, or a parent-agency then users will need to be updated.

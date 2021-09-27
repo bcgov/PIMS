@@ -1,4 +1,3 @@
-export * from './ProjectWorkflowComponents';
 export { default as ProjectDisposeView } from './ProjectDisposeView';
 export { default as ProjectSummaryView } from '../common/ProjectSummaryView';
 

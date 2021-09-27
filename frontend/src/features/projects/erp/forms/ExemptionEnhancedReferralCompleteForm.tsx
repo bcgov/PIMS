@@ -6,12 +6,12 @@ import styled from 'styled-components';
 import { useFormikContext } from 'formik';
 import TooltipIcon from 'components/common/TooltipIcon';
 import {
-  IProject,
   onTransferredWithinTheGreTooltip,
   proceedToSplWarning,
-  ReviewWorkflowStatus,
   disposeWarning,
 } from '../../common';
+import { ReviewWorkflowStatus } from 'features/projects/constants';
+import { IProject } from 'features/projects/interfaces';
 import GenericModal from 'components/common/GenericModal';
 import { validateFormikWithCallback } from 'utils';
 import { ExemptionDetails } from '../components/ExemptionDetails';

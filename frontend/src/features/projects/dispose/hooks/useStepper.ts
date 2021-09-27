@@ -2,12 +2,13 @@ import { useEffect, useContext, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from 'reducers/rootReducer';
 import { StepperContext } from '..';
-import { IProject, initialValues, IStatus, IProjectWrapper, IProjectTask } from '../../common';
+import { IProjectWrapper } from '../../common';
+import { ReviewWorkflowStatus, initialValues } from 'features/projects/constants';
+import { IStatus, IProjectTask, IProject } from 'features/projects/interfaces';
 import _ from 'lodash';
 import { useHistory } from 'react-router-dom';
 import { IGenericNetworkAction } from 'actions/genericActions';
 import { ProjectActions } from 'constants/actionTypes';
-import { ReviewWorkflowStatus } from '../../common/interfaces';
 import { useKeycloakWrapper } from 'hooks/useKeycloakWrapper';
 
 /**

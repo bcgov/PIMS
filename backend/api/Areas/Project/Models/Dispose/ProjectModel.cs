@@ -13,6 +13,7 @@ namespace Pims.Api.Areas.Project.Models.Dispose
         /// get/set - The primary key to identify the project.
         /// </summary>
         public int Id { get; set; }
+
         /// <summary>
         /// get/set - A unique project number to identify the project.
         /// </summary>
@@ -27,6 +28,7 @@ namespace Pims.Api.Areas.Project.Models.Dispose
         /// get/set - The reported fiscal year this project.
         /// </summary>
         public int ReportedFiscalYear { get; set; }
+
         /// <summary>
         /// get/set - The actual or forecasted fiscal year.
         /// </summary>
@@ -476,6 +478,11 @@ namespace Pims.Api.Areas.Project.Models.Dispose
         /// get/set - An array of agency responses associated with this project.
         /// </summary>
         public IEnumerable<ProjectAgencyResponse> ProjectAgencyResponses { get; set; } = new List<ProjectAgencyResponse>();
+
+        /// <summary>
+        /// get/set - An array of project status history associated with this project.
+        /// </summary>
+        public IEnumerable<ProjectStatusHistoryModel> StatusHistory { get; set; } = new List<ProjectStatusHistoryModel>();
         #endregion
     }
 }

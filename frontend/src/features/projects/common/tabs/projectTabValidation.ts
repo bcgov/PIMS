@@ -1,4 +1,4 @@
-import { IProject, IProjectTask } from '..';
+import { IProject, IProjectTask } from 'features/projects/interfaces';
 import { setIn, validateYupSchema, yupToFormErrors } from 'formik';
 import { ValidationGroup } from 'components/common/tabValidation';
 import _ from 'lodash';

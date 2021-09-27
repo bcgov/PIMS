@@ -1,8 +1,6 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import './ReviewApproveForm.scss';
 import {
-  ReviewWorkflowStatus,
-  DisposeWorkflowStatus,
   ProjectDraftForm,
   UpdateInfoForm,
   DocumentationForm,
@@ -13,8 +11,9 @@ import {
   PublicNotes,
   PrivateNotes,
   useProject,
-  IProject,
 } from '../../common';
+import { ReviewWorkflowStatus, DisposeWorkflowStatus } from 'features/projects/constants';
+import { IProject } from 'features/projects/interfaces';
 import TasksForm from '../../common/forms/TasksForm';
 import _ from 'lodash';
 import { useFormikContext } from 'formik';

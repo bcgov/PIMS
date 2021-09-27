@@ -1,12 +1,8 @@
 import * as React from 'react';
 import { Container, Spinner } from 'react-bootstrap';
-import {
-  useProject,
-  updateWorkflowStatus,
-  IProject,
-  IProjectWrapper,
-  ReviewWorkflowStatus,
-} from '.';
+import { useProject, updateWorkflowStatus, IProjectWrapper } from '.';
+import { ReviewWorkflowStatus } from 'features/projects/constants';
+import { IProject } from 'features/projects/interfaces';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'reducers/rootReducer';
 import _ from 'lodash';
@@ -60,7 +56,8 @@ export const ApprovalTransitionPage: React.FunctionComponent<IApprovalTransition
     if (project !== undefined && !isTransitioned) {
       // Look for a possible transition within the same workflow.
       const next = toStatus?.filter(
-        s => s.workflowCode === project.workflowCode && (!params.to || s.code === params.to),
+        (s: { workflowCode: any; code: string | string[] }) =>
+          s.workflowCode === project.workflowCode && (!params.to || s.code === params.to),
       );
       if (
         project.statusCode === ReviewWorkflowStatus.ApprovedForExemption ||

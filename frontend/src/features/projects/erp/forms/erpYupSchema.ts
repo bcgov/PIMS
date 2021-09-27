@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { IStatus } from 'features/projects/common';
+import { IStatus } from 'features/projects/interfaces';
 import { clearanceNotificationSentOnRequired } from 'utils';
 
 export const EnhancedReferralExemptionApprovedForSplSchema = Yup.object().shape({

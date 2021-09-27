@@ -29,7 +29,7 @@ namespace Pims.Api.Areas.Admin.Controllers
         private readonly IUserService _userService;
         #endregion
 
-        #region Construstor
+        #region Constructors
         /// <summary>
         /// Creates a new instance of an AccessRequestController object, initializes with specified parameters.
         /// </summary>

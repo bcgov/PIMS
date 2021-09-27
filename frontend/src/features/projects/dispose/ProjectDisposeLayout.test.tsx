@@ -14,6 +14,18 @@ import { render, fireEvent, wait } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
 import useProject from '../common/hooks/useProject';
 import { mockWorkflow } from './testUtils';
+import { useKeycloak } from '@react-keycloak/web';
+
+jest.mock('@react-keycloak/web');
+(useKeycloak as jest.Mock).mockReturnValue({
+  keycloak: {
+    userInfo: {
+      agencies: [1],
+      roles: [],
+    },
+    subject: 'test',
+  },
+});
 
 const mockStore = configureMockStore([thunk]);
 const history = createMemoryHistory();

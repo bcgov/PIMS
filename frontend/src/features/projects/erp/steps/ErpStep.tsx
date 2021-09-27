@@ -8,17 +8,13 @@ import StepErrorSummary from '../../common/components/StepErrorSummary';
 import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'reducers/rootReducer';
+import { useStepForm, StepStatusIcon, useProject, handleValidate } from '../../common';
 import {
-  useStepForm,
-  StepStatusIcon,
   SPPApprovalTabs,
   ReviewWorkflowStatus,
-  IProject,
-  IStepProps,
-  useProject,
-  handleValidate,
   DisposeWorkflowStatus,
-} from '../../common';
+} from 'features/projects/constants';
+import { IProject, IStepProps } from 'features/projects/interfaces';
 import { saveErpTab, ErpTabs, ApprovalActions } from '..';
 import {
   ProjectDraftStepYupSchema,

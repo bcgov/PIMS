@@ -3,13 +3,25 @@ import renderer from 'react-test-renderer';
 import 'jest-styled-components';
 import { noop } from 'lodash';
 import EnhancedReferralTab from './EnhancedReferralTab';
-import { ReviewWorkflowStatus } from 'features/projects/common';
+import { ReviewWorkflowStatus } from 'features/projects/constants';
 import { Formik, Form } from 'formik';
 import { getStore, mockProject as defaultProject } from '../../dispose/testUtils';
 import _ from 'lodash';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
+import { useKeycloak } from '@react-keycloak/web';
+
+jest.mock('@react-keycloak/web');
+(useKeycloak as jest.Mock).mockReturnValue({
+  keycloak: {
+    userInfo: {
+      agencies: [1],
+      roles: [],
+    },
+    subject: 'test',
+  },
+});
 
 const mockProject = _.cloneDeep(defaultProject);
 const history = createMemoryHistory();

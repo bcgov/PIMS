@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import { Form } from 'react-bootstrap';
-import { IStepProps } from '../interfaces';
+import { IStepProps } from '../../interfaces';
 import { Check } from 'components/common/form/Check';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import Roles from 'constants/roles';

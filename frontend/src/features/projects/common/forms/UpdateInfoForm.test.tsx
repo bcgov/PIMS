@@ -14,6 +14,18 @@ import axios from 'axios';
 import { ProjectActions } from 'constants/actionTypes';
 import { Classifications } from 'constants/classifications';
 import { UpdateInfoStepYupSchema } from '../../dispose';
+import { useKeycloak } from '@react-keycloak/web';
+
+jest.mock('@react-keycloak/web');
+(useKeycloak as jest.Mock).mockReturnValue({
+  keycloak: {
+    userInfo: {
+      agencies: [1],
+      roles: [],
+    },
+    subject: 'test',
+  },
+});
 
 const mockStore = configureMockStore([thunk]);
 const mockProject = {

@@ -8,7 +8,8 @@ import { MutableRefObject } from 'react';
 import { FormikValues } from 'formik';
 import { AxiosError } from 'axios';
 import { RootState } from 'reducers/rootReducer';
-import { updateWorkflowStatus, updateProject, createProject, IProject } from '..';
+import { updateWorkflowStatus, updateProject, createProject } from '..';
+import { IProject } from 'features/projects/interfaces';
 import { Roles } from 'constants/roles';
 
 /** hook providing utilities for project dispose step forms. */

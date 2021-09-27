@@ -15,6 +15,18 @@ import { AccessRequestStatus } from 'constants/accessStatus';
 import { Router } from 'react-router-dom';
 import { Formik } from 'formik';
 import { noop } from 'lodash';
+import { useKeycloak } from '@react-keycloak/web';
+
+jest.mock('@react-keycloak/web');
+(useKeycloak as jest.Mock).mockReturnValue({
+  keycloak: {
+    userInfo: {
+      agencies: [1],
+      roles: [],
+    },
+    subject: 'test',
+  },
+});
 
 const accessRequests = {
   page: 1,
@@ -84,7 +96,7 @@ const componentRender = (store: any) => {
 };
 
 describe('Manage access requests', () => {
-  afterEach(() => jest.resetAllMocks());
+  afterEach(() => jest.restoreAllMocks());
   it('Snapshot matches', () => {
     const component = componentRender(successStore);
     expect(component.toJSON()).toMatchSnapshot();

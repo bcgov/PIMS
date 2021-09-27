@@ -1,12 +1,12 @@
-import { IProjectNote } from 'features/projects/common';
 import {
+  IProjectNote,
   IApiProject,
   IProjectProperty,
   IApiProperty,
-  initialValues,
-  AgencyResponses,
-} from './interfaces';
-import { IProject, IProperty } from '.';
+  IProject,
+  IProperty,
+} from 'features/projects/interfaces';
+import { initialValues, AgencyResponses } from 'features/projects/constants';
 import { IFiscal, IEvaluation } from 'actions/parcelsActions';
 import { FiscalKeys } from 'constants/fiscalKeys';
 import { getCurrentFiscalYear, formatDate, stringToNull } from 'utils';

@@ -9,9 +9,10 @@ import {
   ProjectSummaryView,
   fetchProjectWorkflow,
   ApprovalTransitionPage,
-  IProject,
   useProject,
 } from '../common';
+import { ReviewWorkflowStatus } from 'features/projects/constants';
+import { IProject } from 'features/projects/interfaces';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'reducers/rootReducer';
 import { IGenericNetworkAction } from 'actions/genericActions';
@@ -26,7 +27,6 @@ import { GreTransferStep as ErpToGre, ErpStep } from '../erp';
 import AppRoute from 'utils/AppRoute';
 import { GreTransferStep as SplToGre, SplStep } from '../spl';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
-import { ReviewWorkflowStatus } from '../common';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { toast } from 'react-toastify';
 
