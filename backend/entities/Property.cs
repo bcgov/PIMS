@@ -1,5 +1,4 @@
 using NetTopologySuite.Geometries;
-using System.Collections.Generic;
 
 namespace Pims.Dal.Entities
 {

@@ -1,6 +1,7 @@
 import React, { useState, createContext, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { IStatus, fetchProjectWorkflow } from '../../common';
+import { fetchProjectWorkflow } from '../../common';
+import { IStatus } from 'features/projects/interfaces';
 
 export const StepperContext = createContext({} as any);
 

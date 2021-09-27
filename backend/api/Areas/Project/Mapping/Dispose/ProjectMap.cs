@@ -62,6 +62,7 @@ namespace Pims.Api.Areas.Project.Mapping.Dispose
                 .Map(dest => dest.Appraised, src => src.Appraised)
                 .Map(dest => dest.Tasks, src => src.Tasks)
                 .Map(dest => dest.ProjectAgencyResponses, src => src.Responses)
+                .Map(dest => dest.StatusHistory, src => src.StatusHistory)
                 .Map(dest => dest.Note, src => src.GetNoteText(Entity.NoteTypes.General))
                 .Map(dest => dest.PublicNote, src => src.GetNoteText(Entity.NoteTypes.Public))
                 .Map(dest => dest.PrivateNote, src => src.GetNoteText(Entity.NoteTypes.Private))

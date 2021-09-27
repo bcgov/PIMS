@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { IProject } from 'features/projects/common/interfaces';
+import { IProject } from 'features/projects/interfaces';
 import { Formik, Form, FormikProps } from 'formik';
 import ExemptionEnhancedReferralCompleteForm from './ExemptionEnhancedReferralCompleteForm';
 import renderer from 'react-test-renderer';

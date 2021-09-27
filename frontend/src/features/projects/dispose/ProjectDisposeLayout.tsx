@@ -5,17 +5,14 @@ import { useDispatch } from 'react-redux';
 import _ from 'lodash';
 import { FormikValues } from 'formik';
 import queryString from 'query-string';
+import { SresManual, updateWorkflowStatus, useStepForm, clearProject } from '../common';
 import {
-  SresManual,
   ReviewWorkflowStatus,
-  updateWorkflowStatus,
-  IProject,
-  useStepForm,
   DisposeWorkflowStatus,
-  clearProject,
-  ProjectWorkflowComponent,
-} from '../common';
-import { GeneratedDisposeStepper, useStepper, projectWorkflowComponents, StepActions } from '.';
+  projectWorkflowComponents,
+} from 'features/projects/constants';
+import { IProject, IProjectWorkflowComponent } from 'features/projects/interfaces';
+import { GeneratedDisposeStepper, useStepper, StepActions } from '.';
 
 /**
  * Top level component facilitates 'wizard' style multi-step form for disposing of projects.
@@ -100,7 +97,7 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
     });
   };
 
-  const getComponentPath = (wfc: ProjectWorkflowComponent) => {
+  const getComponentPath = (wfc: IProjectWorkflowComponent) => {
     return `${match.url}${_.find(workflowStatuses, { code: wfc.workflowStatus })?.route}`;
   };
 

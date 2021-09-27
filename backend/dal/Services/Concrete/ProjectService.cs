@@ -164,38 +164,6 @@ namespace Pims.Dal.Services
         }
 
         /// <summary>
-        /// Get the project for the specified 'id'.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="includes"></param>
-        /// <returns></returns>
-        public Project Get(int id, params Expression<Func<Project, object>>[] includes)
-        {
-            this.User.ThrowIfNotAuthorized(Permissions.ProjectView);
-
-            // Check if user has the ability to view sensitive properties.
-            var userAgencies = this.User.GetAgencies();
-            var viewSensitive = this.User.HasPermission(Permissions.SensitiveView);
-            var isAdmin = this.User.HasPermission(Permissions.AdminProjects);
-
-            var query = this.Context.Projects.AsQueryable();
-
-            var project = includes.Aggregate(query, (current, include) => current.Include(include.Name))
-                .FirstOrDefault(p => p.Id == id &&
-                    (isAdmin || userAgencies.Contains(p.AgencyId))) ?? throw new KeyNotFoundException();
-
-
-            // Remove any sensitive properties from the results if the user is not allowed to view them.
-            if (!viewSensitive)
-            {
-                project?.Properties.RemoveAll(p => p.Parcel?.IsSensitive ?? false);
-                project?.Properties.RemoveAll(p => p.Building?.IsSensitive ?? false);
-            }
-
-            return project;
-        }
-
-        /// <summary>
         /// Get the project for the specified 'projectNumber'.
         /// Will not return sensitive properties unless the user has the `sensitive-view` claim and belongs to the owning agency.
         /// </summary>
@@ -224,6 +192,8 @@ namespace Pims.Dal.Services
                 .Include(p => p.Responses).ThenInclude(a => a.Agency)
                 .Include(p => p.Notes)
                 .Include(p => p.Workflow)
+                .Include(p => p.StatusHistory).ThenInclude(p => p.Workflow)
+                .Include(p => p.StatusHistory).ThenInclude(p => p.Status)
                 .FirstOrDefault(p => p.ProjectNumber == projectNumber &&
                     (isAdmin || userAgencies.Contains(p.AgencyId))) ?? throw new KeyNotFoundException();
 
@@ -269,39 +239,6 @@ namespace Pims.Dal.Services
                 project?.Properties.RemoveAll(p => p.Building?.IsSensitive ?? false);
             }
             this.Context.Entry(project).State = EntityState.Detached;
-            return project;
-        }
-
-        /// <summary>
-        /// Get the project for the specified 'projectNumber'.
-        /// </summary>
-        /// <param name="projectNumber"></param>
-        /// <param name="includes"></param>
-        /// <returns></returns>
-        public Project Get(string projectNumber, params Expression<Func<Project, object>>[] includes)
-        {
-            if (String.IsNullOrWhiteSpace(projectNumber)) throw new ArgumentException("Argument cannot be null, empty or whitespace.", nameof(projectNumber));
-            this.User.ThrowIfNotAuthorized(Permissions.ProjectView);
-
-            // Check if user has the ability to view sensitive properties.
-            var userAgencies = this.User.GetAgencies();
-            var viewSensitive = this.User.HasPermission(Permissions.SensitiveView);
-            var isAdmin = this.User.HasPermission(Permissions.AdminProjects);
-
-            var query = this.Context.Projects.AsQueryable();
-
-            var project = includes.Aggregate(query, (current, include) => current.Include(include.Name))
-                .FirstOrDefault(p => p.ProjectNumber == projectNumber &&
-                    (isAdmin || userAgencies.Contains(p.AgencyId))) ?? throw new KeyNotFoundException();
-
-
-            // Remove any sensitive properties from the results if the user is not allowed to view them.
-            if (!viewSensitive)
-            {
-                project?.Properties.RemoveAll(p => p.Parcel?.IsSensitive ?? false);
-                project?.Properties.RemoveAll(p => p.Building?.IsSensitive ?? false);
-            }
-
             return project;
         }
 
@@ -468,7 +405,7 @@ namespace Pims.Dal.Services
                 .Include(p => p.Notes)
                 .SingleOrDefault(p => p.Id == project.Id) ?? throw new KeyNotFoundException();
 
-            //The following reduces the load on the database compared to eager loading all parcel/building props.
+            // The following reduces the load on the database compared to eager loading all parcel/building props.
             this.Context.Entry(originalProject)
                 .Collection(p => p.Properties)
                 .Load();
@@ -539,6 +476,9 @@ namespace Pims.Dal.Services
                 var statusTaskIds = fromStatus.Status.Tasks.Select(t => t.Id);
                 var incompleteStatusTaskIds = incompleteTaskIds.Intersect(statusTaskIds);
                 if (originalProject.Tasks.Any(t => !t.Task.IsOptional && !t.IsCompleted && incompleteStatusTaskIds.Contains(t.TaskId))) throw new InvalidOperationException("Not all required tasks have been completed.");
+
+                // Add a project status history to record the change.
+                this.Context.ProjectStatusHistory.Add(new ProjectStatusHistory(originalProject));
             }
 
             // Determine if there are any response changes.
@@ -611,6 +551,7 @@ namespace Pims.Dal.Services
 
             originalProject.Notifications.ForEach(n => this.Context.NotificationQueue.Remove(n));
             originalProject.Notifications.Clear(); // TODO: Need to test this to determine if it'll let us delete a project with existing notifications.
+            originalProject.StatusHistory.Clear();
             this.Context.Projects.Remove(originalProject);
             this.Context.CommitTransaction();
             return originalProject;
@@ -721,6 +662,9 @@ namespace Pims.Dal.Services
                     if (incompleteStatusTaskIds.Any()) throw new InvalidOperationException("Not all required tasks have been completed.");
                 }
             }
+
+            // Add a project status history to record the change.
+            this.Context.ProjectStatusHistory.Add(new ProjectStatusHistory(originalProject));
 
             // Determine if there are any response changes.
             var responses = originalProject.GetResponseChanges(project);

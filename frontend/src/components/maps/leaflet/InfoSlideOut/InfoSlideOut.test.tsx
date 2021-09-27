@@ -13,6 +13,18 @@ import { Router } from 'react-router-dom';
 import thunk from 'redux-thunk';
 import configureMockStore from 'redux-mock-store';
 import { Provider } from 'react-redux';
+import { useKeycloak } from '@react-keycloak/web';
+
+jest.mock('@react-keycloak/web');
+(useKeycloak as jest.Mock).mockReturnValue({
+  keycloak: {
+    userInfo: {
+      agencies: [1],
+      roles: [],
+    },
+    subject: 'test',
+  },
+});
 
 Enzyme.configure({ adapter: new Adapter() });
 const history = createMemoryHistory();

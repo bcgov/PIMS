@@ -6,8 +6,6 @@ import styled from 'styled-components';
 import { useFormikContext } from 'formik';
 import TooltipIcon from 'components/common/TooltipIcon';
 import {
-  ReviewWorkflowStatus,
-  IProject,
   onTransferredWithinTheGreTooltip,
   onHoldNotificationTooltip,
   clearanceNotifictionSent,
@@ -18,6 +16,8 @@ import {
   ProjectNotes,
   disposeWarning,
 } from '../../common';
+import { ReviewWorkflowStatus } from 'features/projects/constants';
+import { IProject } from 'features/projects/interfaces';
 import GenericModal, { ModalSize } from 'components/common/GenericModal';
 import { clearanceNotificationSentOnRequired, validateFormikWithCallback } from 'utils';
 

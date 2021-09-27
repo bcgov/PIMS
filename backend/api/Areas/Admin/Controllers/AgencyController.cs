@@ -10,6 +10,7 @@ using EModel = Pims.Dal.Entities.Models;
 using Pims.Dal.Keycloak;
 using Pims.Core.Extensions;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace Pims.Api.Areas.Admin.Controllers
 {
@@ -52,7 +53,7 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// <returns>Paged object with an array of agencys.</returns>
         [HttpGet]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(Api.Models.PageModel<Model.AgencyModel>), 200)]
+        [ProducesResponseType(typeof(IEnumerable<Model.AgencyModel>), 200)]
         [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]
         [SwaggerOperation(Tags = new[] { "admin-agency" })]
         public IActionResult GetAgencies()

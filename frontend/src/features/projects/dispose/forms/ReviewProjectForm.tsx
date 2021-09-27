@@ -3,14 +3,13 @@ import './ReviewProjectForm.scss';
 import { useFormikContext } from 'formik';
 import _ from 'lodash';
 import {
-  IProjectTask,
-  DisposeWorkflowStatus,
-  IProject,
   ProjectDraftForm,
   UpdateInfoForm,
   DocumentationForm,
   ApprovalConfirmationForm,
 } from '../../common';
+import { DisposeWorkflowStatus } from 'features/projects/constants';
+import { IProjectTask, IProject } from 'features/projects/interfaces';
 
 /**
  * Form component of ReviewProjectForm.

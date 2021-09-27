@@ -12,6 +12,18 @@ import { render } from '@testing-library/react';
 import { noop } from 'lodash';
 import HeaderActions from './HeaderActions';
 import { mockParcel } from './InfoContent.test';
+import { useKeycloak } from '@react-keycloak/web';
+
+jest.mock('@react-keycloak/web');
+(useKeycloak as jest.Mock).mockReturnValue({
+  keycloak: {
+    userInfo: {
+      agencies: [1],
+      roles: [],
+    },
+    subject: 'test',
+  },
+});
 
 const history = createMemoryHistory();
 const mockStore = configureMockStore([thunk]);

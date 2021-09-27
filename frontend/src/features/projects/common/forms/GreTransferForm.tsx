@@ -1,5 +1,6 @@
 import React, { Fragment, useMemo, useState } from 'react';
-import { ProjectDraftForm, ProjectNotes, IProject, PublicNotes, PrivateNotes } from '../../common';
+import { ProjectDraftForm, ProjectNotes, PublicNotes, PrivateNotes } from '../../common';
+import { IProject } from 'features/projects/interfaces';
 import { PropertyListViewUpdate } from '../../common/components/PropertyListViewUpdate';
 import { useFormikContext } from 'formik';
 import _ from 'lodash';

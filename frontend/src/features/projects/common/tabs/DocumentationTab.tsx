@@ -4,10 +4,10 @@ import _ from 'lodash';
 import {
   DocumentationForm,
   AppraisalCheckListForm,
-  DisposeWorkflowStatus,
   FirstNationsCheckListForm,
   useProject,
 } from '../../common';
+import { DisposeWorkflowStatus } from 'features/projects/constants';
 import { FastCurrencyInput } from 'components/common/form';
 import { useFormikContext } from 'formik';
 

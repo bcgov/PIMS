@@ -2,7 +2,8 @@ import React, { useMemo, useState, useRef, useCallback, useEffect } from 'react'
 import { FormControlProps, Container, Button } from 'react-bootstrap';
 import { useFormikContext, getIn } from 'formik';
 import _ from 'lodash';
-import { IFilterBarState, IProperty, clickableTooltip, useProject } from '../../common';
+import { IFilterBarState, clickableTooltip, useProject } from '../../common';
+import { IProperty } from 'features/projects/interfaces';
 import * as API from 'constants/API';
 import { DisplayError } from 'components/common/form';
 import { Table } from 'components/Table';
