@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import styled from 'styled-components';
 import { ProjectNotes } from '..';
-import { IStepProps, IProjectTask } from '../interfaces';
+import { IStepProps, IProjectTask } from '../../interfaces';
 import TasksForm from './TasksForm';
 import variables from '_variables.module.scss';
 import { ExemptionRequest } from 'features/projects/dispose';

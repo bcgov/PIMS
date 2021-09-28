@@ -12,8 +12,19 @@ import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 import useStepper from './hooks/useStepper';
 import { noop } from 'lodash';
-
+import { useKeycloak } from '@react-keycloak/web';
 import * as redux from 'react-redux';
+
+jest.mock('@react-keycloak/web');
+(useKeycloak as jest.Mock).mockReturnValue({
+  keycloak: {
+    userInfo: {
+      agencies: [1],
+      roles: [],
+    },
+    subject: 'test',
+  },
+});
 
 const useDispatchSpy = jest.spyOn(redux, 'useDispatch');
 const mockDispatchFn = jest.fn().mockReturnValue({ then: jest.fn() });

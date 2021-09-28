@@ -1,15 +1,8 @@
 import React, { useState } from 'react';
 import { Container, Form } from 'react-bootstrap';
-
-import {
-  IStepProps,
-  useStepForm,
-  IProject,
-  StepStatusIcon,
-  ReviewWorkflowStatus,
-  updatePimsWarning,
-  useProject,
-} from '../../common';
+import { useStepForm, StepStatusIcon, updatePimsWarning, useProject } from '../../common';
+import { ReviewWorkflowStatus } from 'features/projects/constants';
+import { IStepProps, IProject } from 'features/projects/interfaces';
 
 import { Formik } from 'formik';
 import {

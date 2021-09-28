@@ -1,9 +1,10 @@
 import { useSelector } from 'react-redux';
 import { RootState } from 'reducers/rootReducer';
-import { IStatus, IProjectWrapper } from '..';
+import { IProjectWrapper } from '..';
+import { initialValues } from 'features/projects/constants';
+import { IStatus } from 'features/projects/interfaces';
 import _ from 'lodash';
 import { useHistory } from 'react-router-dom';
-import { initialValues } from '../interfaces';
 
 /**
  * Find the workflow project status transition for the current workflow and specified 'from' and 'to'.

@@ -144,7 +144,6 @@ namespace Pims.Api.Areas.Property.Controllers
             var results = _mapper.Map<GeoJson<Models.Search.PropertyModel>[]>(properties).ToArray();
             return new JsonResult(results);
         }
-
         #endregion
 
         #region Property Paging Endpoints

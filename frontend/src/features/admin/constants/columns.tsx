@@ -35,3 +35,12 @@ export const columnDefinitions: ColumnWithProps<IAgencyRecord>[] = [
     },
   },
 ];
+
+export const adminAreasColumnDefinistions: ColumnWithProps<any>[] = [
+  {
+    Header: 'Area name',
+    accessor: 'name',
+    align: 'left',
+    clickable: true,
+  },
+];

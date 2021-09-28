@@ -12,6 +12,18 @@ import * as reducerTypes from 'constants/reducerTypes';
 import service from '../apiService';
 import { noop } from 'lodash';
 import { Formik } from 'formik';
+import { useKeycloak } from '@react-keycloak/web';
+
+jest.mock('@react-keycloak/web');
+(useKeycloak as jest.Mock).mockReturnValue({
+  keycloak: {
+    userInfo: {
+      agencies: [1],
+      roles: [],
+    },
+    subject: 'test',
+  },
+});
 
 const testData = {
   items: [

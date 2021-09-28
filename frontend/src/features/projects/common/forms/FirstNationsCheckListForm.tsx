@@ -3,7 +3,8 @@ import { Col, Row } from 'react-bootstrap';
 import TasksForm from './TasksForm';
 import _ from 'lodash';
 import TooltipIcon from 'components/common/TooltipIcon';
-import { useProject, ReviewWorkflowStatus, reviewFirstNationsTooltip } from '..';
+import { useProject, reviewFirstNationsTooltip } from '..';
+import { ReviewWorkflowStatus } from 'features/projects/constants';
 import classNames from 'classnames';
 
 interface IFirstNationsCheckListFormProps {

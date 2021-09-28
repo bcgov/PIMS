@@ -9,11 +9,23 @@ import { Router } from 'react-router-dom';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 import { render, wait, fireEvent, cleanup } from '@testing-library/react';
-import { DisposeWorkflowStatus, IProjectTask } from '../../common/interfaces';
+import { DisposeWorkflowStatus } from 'features/projects/constants';
+import { IProjectTask } from 'features/projects/interfaces';
 import { ProjectActions } from 'constants/actionTypes';
+import { useKeycloak } from '@react-keycloak/web';
 
 const mockAxios = new MockAdapter(axios);
 mockAxios.onAny().reply(200, {});
+jest.mock('@react-keycloak/web');
+(useKeycloak as jest.Mock).mockReturnValue({
+  keycloak: {
+    userInfo: {
+      agencies: [1],
+      roles: [],
+    },
+    subject: 'test',
+  },
+});
 
 const mockStore = configureMockStore([thunk]);
 const history = createMemoryHistory();

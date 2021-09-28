@@ -1,5 +1,5 @@
 import { TableSort } from 'components/Table/TableSort';
-import { IProject } from './../projects/common/interfaces';
+import { IProject } from '../projects/interfaces';
 export interface IReport {
   id?: number;
   name: string;

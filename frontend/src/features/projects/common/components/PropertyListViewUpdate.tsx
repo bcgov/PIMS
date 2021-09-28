@@ -1,7 +1,8 @@
 import React, { useMemo, useCallback } from 'react';
 import { FormControlProps, Container } from 'react-bootstrap';
 import { useFormikContext, getIn } from 'formik';
-import { IProperty, clickableTooltip } from '../../common';
+import { clickableTooltip } from '../../common';
+import { IProperty } from 'features/projects/interfaces';
 import { DisplayError } from 'components/common/form';
 import { Table } from 'components/Table';
 import classNames from 'classnames';

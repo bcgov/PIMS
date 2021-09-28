@@ -7,7 +7,7 @@ import { AxiosError } from 'axios';
 import { showLoading, hideLoading } from 'react-redux-loading-bar';
 import { success, error, request } from 'actions/genericActions';
 import moment from 'moment-timezone';
-import { IStatus } from 'features/projects/common';
+import { IStatus } from 'features/projects/interfaces';
 
 /**
  * Convert the specified 'input' value into a decimal or undefined.
@@ -294,4 +294,13 @@ export function emptyStringToNull(value: any, originalValue: any) {
  */
 export const clearanceNotificationSentOnRequired = (statusCode: string) => {
   return ['ERP-ON', 'ERP-OH'].includes(statusCode);
+};
+
+/**
+ * Determine if the specified error is an axios error, improves intellisense.
+ * @param error The error being checked.
+ */
+export const isAxiosError = (err: any): err is AxiosError => {
+  if (!err) return false;
+  return (err as AxiosError).isAxiosError !== undefined;
 };

@@ -1,3 +1,4 @@
+import './CloseOutFormTab.scss';
 import * as React from 'react';
 import {
   CloseOutSummaryForm,
@@ -7,9 +8,9 @@ import {
   CloseOutSignaturesForm,
   CloseOutAdjustmentForm,
 } from '..';
-import { ProjectNotes, IProject, ocgVarianceNote } from 'features/projects/common';
+import { ProjectNotes, ocgVarianceNote } from 'features/projects/common';
+import { IProject } from 'features/projects/interfaces';
 import { Col, Container, Form } from 'react-bootstrap';
-import './CloseOutFormTab.scss';
 import { FastCurrencyInput } from 'components/common/form';
 import { useFormikContext } from 'formik';
 

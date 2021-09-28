@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import { Form, Check } from 'components/common/form';
-import { IProjectTask, IProject } from '../interfaces';
+import { IProjectTask, IProject } from '../../interfaces';
 import { useFormikContext } from 'formik';
 import _ from 'lodash';
 import classNames from 'classnames';

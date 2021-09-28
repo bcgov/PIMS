@@ -103,6 +103,9 @@ function AdminDropdown() {
         Access Requests
       </NavDropdown.Item>
       <NavDropdown.Item onClick={() => history.push('/admin/agencies')}>Agencies</NavDropdown.Item>
+      <NavDropdown.Item onClick={() => history.push('/admin/administrativeAreas')}>
+        Administrative Areas
+      </NavDropdown.Item>
     </NavDropdown>
   ) : null;
 }

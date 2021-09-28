@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from 'reducers/rootReducer';
 import Stepper from 'components/common/Stepper';
 import { useStepper } from '..';
-import { IStatus } from '../../common';
+import { IStatus } from 'features/projects/interfaces';
 import { useHistory } from 'react-router-dom';
 
 interface GeneratedDisposeStepperProps {
