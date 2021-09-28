@@ -9,7 +9,6 @@ namespace Pims.Api.Areas.Admin.Models.User
         /// <summary>
         /// get/set - The agency description.
         /// </summary>
-        /// <value></value>
         public string Description { get; set; }
         #endregion
     }

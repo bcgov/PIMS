@@ -17,6 +17,11 @@ namespace Pims.Tools.Keycloak.Sync.Models
         public Guid Id { get; set; }
 
         /// <summary>
+        /// get/set - Unique identifier to link user with Keycloak user.
+        /// </summary>
+        public Guid? KeycloakUserId { get; set; }
+
+        /// <summary>
         /// get/set - The user's unique identity.
         /// </summary>
         public string Username { get; set; }
@@ -92,6 +97,7 @@ namespace Pims.Tools.Keycloak.Sync.Models
         public UserModel(Core.Keycloak.Models.UserModel user)
         {
             this.Id = user.Id;
+            this.KeycloakUserId = user.Id;
             this.Username = user.Username;
             this.Position = user.Attributes?.ContainsKey("position") ?? false ? user.Attributes["position"].FirstOrDefault() : null;
             this.FirstName = user.FirstName;
@@ -101,7 +107,8 @@ namespace Pims.Tools.Keycloak.Sync.Models
             this.Email = user.Email;
             this.IsDisabled = !user.Enabled;
             this.EmailVerified = user.EmailVerified;
-            this.Agencies = user.Attributes?.ContainsKey("agencies") ?? false ? user.Attributes["agencies"].Select(a => {
+            this.Agencies = user.Attributes?.ContainsKey("agencies") ?? false ? user.Attributes["agencies"].Select(a =>
+            {
                 if (Int32.TryParse(a, out int id))
                     return new AgencyModel() { Id = id };
                 return null;

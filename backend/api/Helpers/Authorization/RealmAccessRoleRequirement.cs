@@ -17,7 +17,7 @@ namespace Pims.Api.Helpers.Authorization
 
         #region Constructors
         /// <summary>
-        /// Creates a new instance of a RealmAccessRoleRequirment class.
+        /// Creates a new instance of a RealmAccessRoleRequirement class.
         /// </summary>
         /// <param name="role"></param>
         public RealmAccessRoleRequirement(string role)

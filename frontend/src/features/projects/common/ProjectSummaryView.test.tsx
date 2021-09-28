@@ -10,7 +10,8 @@ import { render } from '@testing-library/react';
 import { useKeycloak } from '@react-keycloak/web';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
-import { IProjectTask, ReviewWorkflowStatus, ITask, IProject } from '.';
+import { ReviewWorkflowStatus } from 'features/projects/constants';
+import { IProjectTask, ITask, IProject } from 'features/projects/interfaces';
 import { ProjectSummaryView } from '../dispose';
 
 jest.mock('@react-keycloak/web');

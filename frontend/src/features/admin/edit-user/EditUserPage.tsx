@@ -88,6 +88,7 @@ const EditUserPage = (props: IEditUserPageProps) => {
   };
 
   const initialValues = {
+    keycloakUserId: user.keycloakUserId,
     username: user.username,
     firstName: user.firstName,
     lastName: user.lastName,
@@ -133,6 +134,7 @@ const EditUserPage = (props: IEditUserPageProps) => {
                   { id: userId },
                   {
                     id: user.id,
+                    keycloakUserId: user.keycloakUserId,
                     username: user.username,
                     displayName: values.displayName,
                     firstName: values.firstName,

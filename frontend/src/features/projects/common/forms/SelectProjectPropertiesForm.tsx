@@ -1,7 +1,8 @@
 import './UpdateInfoForm.scss';
 import React from 'react';
 import { Form } from 'components/common/form';
-import { IStepProps, ProjectNotes, IFilterBarState, StepErrorSummary } from '../../common';
+import { ProjectNotes, IFilterBarState, StepErrorSummary } from '../../common';
+import { IStepProps } from 'features/projects/interfaces';
 import { PropertyListViewSelect } from '../components/PropertyListViewSelect';
 
 interface IUpdateInfoFormProps {

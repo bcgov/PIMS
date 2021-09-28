@@ -11,8 +11,9 @@ import {
 } from '../../dispose/forms/disposalYupSchema';
 import { fetchProjectTasks } from '../../common/projectsActionCreator';
 import _ from 'lodash';
-import { ReviewWorkflowStatus, IStepProps } from '../../common/interfaces';
-import { useStepForm, IProject, IProjectTask, useProject, StepErrorSummary } from '../../common';
+import { useStepForm, useProject, StepErrorSummary } from '../../common';
+import { ReviewWorkflowStatus } from 'features/projects/constants';
+import { IStepProps, IProject, IProjectTask } from 'features/projects/interfaces';
 import { ReviewApproveForm } from '..';
 import { useHistory } from 'react-router-dom';
 

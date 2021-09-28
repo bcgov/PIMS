@@ -17,6 +17,18 @@ import { act } from 'react-dom/test-utils';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 import { fillInput } from 'utils/testUtils';
+import { useKeycloak } from '@react-keycloak/web';
+
+jest.mock('@react-keycloak/web');
+(useKeycloak as jest.Mock).mockReturnValue({
+  keycloak: {
+    userInfo: {
+      agencies: [1],
+      roles: [],
+    },
+    subject: 'test',
+  },
+});
 
 const history = createMemoryHistory();
 history.push('admin');

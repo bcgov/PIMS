@@ -1,6 +1,7 @@
 import React from 'react';
 import { Container, Form } from 'react-bootstrap';
-import { useStepForm, IStepProps, ProjectNotes, PublicNotes } from '../../common';
+import { useStepForm, ProjectNotes, PublicNotes } from '../../common';
+import { IStepProps } from 'features/projects/interfaces';
 import { useStepper, ReviewProjectForm } from '..';
 import { Formik } from 'formik';
 import {

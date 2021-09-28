@@ -10,19 +10,13 @@ import styled from 'styled-components';
 import StepErrorSummary from '../../common/components/StepErrorSummary';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'reducers/rootReducer';
+import { useStepForm, StepStatusIcon, useProject, handleValidate } from '../../common';
 import {
-  useStepForm,
-  StepStatusIcon,
   SPPApprovalTabs,
   ReviewWorkflowStatus,
-  IProject,
-  IProjectTask,
-  IStepProps,
-  useProject,
   DisposeWorkflowStatus,
-  handleValidate,
-  IApiProject,
-} from '../../common';
+} from 'features/projects/constants';
+import { IProject, IProjectTask, IStepProps, IApiProject } from 'features/projects/interfaces';
 import { ValidationGroup } from 'components/common/tabValidation';
 import {
   saveSplTab,

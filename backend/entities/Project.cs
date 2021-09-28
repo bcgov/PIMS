@@ -193,6 +193,11 @@ namespace Pims.Dal.Entities
         /// get - A collection of snapshots of this project.
         /// </summary>
         public ICollection<ProjectSnapshot> Snapshots { get; } = new List<ProjectSnapshot>();
+
+        /// <summary>
+        /// get - A collection of project history status transitions.
+        /// </summary>
+        public ICollection<ProjectStatusHistory> StatusHistory { get; } = new List<ProjectStatusHistory>();
         #endregion
 
         #region Constructors

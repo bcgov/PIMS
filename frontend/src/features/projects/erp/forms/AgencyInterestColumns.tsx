@@ -1,4 +1,5 @@
-import { AgencyResponses, IProject } from '../../common';
+import { AgencyResponses } from 'features/projects/constants';
+import { IProject } from 'features/projects/interfaces';
 import { useFormikContext } from 'formik';
 import React from 'react';
 import { formatDate } from 'utils';

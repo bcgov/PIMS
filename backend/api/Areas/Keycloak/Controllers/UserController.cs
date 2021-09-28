@@ -50,7 +50,7 @@ namespace Pims.Api.Areas.Keycloak.Controllers
         /// Also links the user to the appropriate groups it is a member of within keycloak.!--
         /// If the group does not exist in PIMS it will add it.
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="keycloakUserId"></param>
         /// <exception type="KeyNotFoundException">The user does not exist in keycloak.</exception>
         /// <returns></returns>
         [HttpPost("sync/{id}")]
@@ -59,9 +59,9 @@ namespace Pims.Api.Areas.Keycloak.Controllers
         [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]
         [SwaggerOperation(Tags = new[] { "keycloak-user" })]
         [HasPermission(Permissions.AdminUsers)]
-        public async Task<IActionResult> SyncUserAsync(Guid id)
+        public async Task<IActionResult> SyncUserAsync(Guid keycloakUserId)
         {
-            var user = await _keycloakService.SyncUserAsync(id);
+            var user = await _keycloakService.SyncUserAsync(keycloakUserId);
             var result = _mapper.Map<Model.UserModel>(user);
 
             return new JsonResult(result);

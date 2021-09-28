@@ -4,7 +4,7 @@ import { IPagedItems } from 'interfaces';
 import { ENVIRONMENT } from 'constants/environment';
 import { IProjectFilter, IProject } from './list/interfaces';
 import { toFlatProject } from './common/projectConverter';
-import { IProperty, IApiProject } from './common';
+import { IProperty, IApiProject } from 'features/projects/interfaces';
 
 const { apiUrl: basePath } = ENVIRONMENT;
 

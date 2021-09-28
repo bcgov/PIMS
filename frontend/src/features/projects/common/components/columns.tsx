@@ -1,6 +1,7 @@
 import React from 'react';
 import { formatMoney, formatNumber, formatDate } from 'utils';
-import { IProperty, IProject, DisposeWorkflowStatus, AgencyResponses } from '../interfaces';
+import { DisposeWorkflowStatus, AgencyResponses } from 'features/projects/constants';
+import { IProperty, IProject } from 'features/projects/interfaces';
 import { useFormikContext, getIn } from 'formik';
 import {
   FastSelect,

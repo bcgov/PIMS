@@ -1,4 +1,6 @@
-import { AgencyResponses, FormikTable, IProject } from '../../common';
+import { FormikTable } from '../../common';
+import { AgencyResponses } from 'features/projects/constants';
+import { IProject } from 'features/projects/interfaces';
 import { getIn, useFormikContext } from 'formik';
 import React from 'react';
 import { ILookupCode } from 'actions/lookupActions';

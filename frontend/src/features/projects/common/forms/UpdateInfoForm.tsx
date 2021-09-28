@@ -6,15 +6,9 @@ import { Form, Select } from 'components/common/form';
 import useCodeLookups from 'hooks/useLookupCodes';
 import Button from 'react-bootstrap/Button';
 import _ from 'lodash';
-import {
-  IStepProps,
-  DisposeWorkflowStatus,
-  useProject,
-  updateInfoMessage,
-  tierTooltips,
-  riskTooltips,
-  IProject,
-} from '../../common';
+import { useProject, updateInfoMessage, tierTooltips, riskTooltips } from '../../common';
+import { DisposeWorkflowStatus } from 'features/projects/constants';
+import { IStepProps, IProject } from 'features/projects/interfaces';
 import { PropertyListViewUpdate } from '../components/PropertyListViewUpdate';
 import { Container } from 'react-bootstrap';
 import ProjectFinancialTable from '../components/ProjectFinancialTable';

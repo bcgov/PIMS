@@ -52,6 +52,7 @@ namespace Pims.Dal
         public DbSet<Project> Projects { get; set; }
         public DbSet<ProjectNumber> ProjectNumbers { get; set; }
         public DbSet<ProjectSnapshot> ProjectSnapshots { get; set; }
+        public DbSet<ProjectStatusHistory> ProjectStatusHistory { get; set; }
 
         public DbSet<ProjectReport> ProjectReports { get; set; }
         public DbSet<ProjectStatus> ProjectStatus { get; set; }
@@ -162,7 +163,8 @@ namespace Pims.Dal
             var modifiedEntries = ChangeTracker.Entries()
                     .Where(x => (x.State == EntityState.Added || x.State == EntityState.Modified));
 
-            var userId = _httpContextAccessor.HttpContext.User.GetUserId();
+            var keycloakUserId = _httpContextAccessor.HttpContext.User.GetKeycloakUserId();
+            var userId = this.Users.Where(u => u.KeycloakUserId == keycloakUserId).Select(u => u.Id).FirstOrDefault(); // TODO: Should add the User.Id to a claim so that it can be easily returned.
             foreach (var entry in modifiedEntries)
             {
                 if (entry.Entity is BaseEntity entity)

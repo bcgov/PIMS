@@ -2,7 +2,7 @@ import React from 'react';
 import { Container } from 'react-bootstrap';
 import { Formik } from 'formik';
 import { Form } from 'components/common/form';
-import { IStepProps } from '../../common/interfaces';
+import { IStepProps } from '../../interfaces';
 import { useStepper, UpdateInfoStepYupSchema } from '..';
 import { useStepForm, ProjectNotes, UpdateInfoForm, StepErrorSummary } from '../../common';
 

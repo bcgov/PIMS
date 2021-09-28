@@ -12,6 +12,7 @@ namespace Pims.Api.Areas.Admin.Mapping.User
         {
             config.NewConfig<Entity.User, Model.UserModel>()
                 .Map(dest => dest.Id, src => src.Id)
+                .Map(dest => dest.KeycloakUserId, src => src.KeycloakUserId)
                 .Map(dest => dest.IsDisabled, src => src.IsDisabled)
                 .Map(dest => dest.Username, src => src.Username)
                 .Map(dest => dest.Position, src => src.Position)
@@ -28,6 +29,7 @@ namespace Pims.Api.Areas.Admin.Mapping.User
 
             config.NewConfig<Model.UserModel, Entity.User>()
                 .Map(dest => dest.Id, src => src.Id)
+                .Map(dest => dest.KeycloakUserId, src => src.KeycloakUserId)
                 .Map(dest => dest.IsDisabled, src => src.IsDisabled)
                 .Map(dest => dest.Username, src => src.Username)
                 .Map(dest => dest.Position, src => src.Position)

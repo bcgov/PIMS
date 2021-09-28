@@ -1,5 +1,5 @@
 import { createSlice, createAction } from '@reduxjs/toolkit';
-import { IStatus } from '..';
+import { IStatus } from 'features/projects/interfaces';
 
 export const saveProjectStatuses = createAction<IStatus[]>('saveProjectStatuses');
 export const clearProjectStatuses = createAction('clearProjectStatuses');

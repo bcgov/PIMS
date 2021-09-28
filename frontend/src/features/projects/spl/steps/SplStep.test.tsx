@@ -2,14 +2,18 @@ import React from 'react';
 import { createMemoryHistory } from 'history';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
-import { ReviewWorkflowStatus, AgencyResponses } from '../../common/interfaces';
 import { render, act, screen, cleanup, wait } from '@testing-library/react';
 import { useKeycloak } from '@react-keycloak/web';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 import _ from 'lodash';
 import { getStore, mockProject as defaultProject, mockFlatProject } from '../../dispose/testUtils';
-import { IProject, SPPApprovalTabs } from '../../common';
+import {
+  ReviewWorkflowStatus,
+  AgencyResponses,
+  SPPApprovalTabs,
+} from 'features/projects/constants';
+import { IProject } from 'features/projects/interfaces';
 import { SplStep } from '..';
 import Claims from 'constants/claims';
 import { PropertyTypes } from 'constants/propertyTypes';

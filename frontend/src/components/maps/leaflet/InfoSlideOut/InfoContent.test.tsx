@@ -13,6 +13,9 @@ import * as API from 'constants/API';
 import { Workflows } from 'constants/workflows';
 import { Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
+import { useKeycloak } from '@react-keycloak/web';
+
+jest.mock('@react-keycloak/web');
 
 const mockParcelNoSub = {
   id: 1,
@@ -215,6 +218,21 @@ const ContentComponent = (
 };
 
 describe('InfoContent View', () => {
+  beforeAll(() => {
+    jest.clearAllMocks();
+  });
+  beforeEach(() => {
+    (useKeycloak as jest.Mock).mockReturnValue({
+      keycloak: {
+        userInfo: {
+          agencies: [1],
+          roles: [],
+        },
+        subject: 'test',
+      },
+    });
+  });
+
   it('InfoContent renders correctly', () => {
     const { container } = render(ContentComponent(mockParcel, PropertyTypes.PARCEL, true));
     expect(container.firstChild).toMatchSnapshot();

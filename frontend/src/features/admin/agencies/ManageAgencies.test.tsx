@@ -12,6 +12,18 @@ import ManageAgencies from './ManageAgencies';
 import { render, cleanup } from '@testing-library/react';
 import noop from 'lodash/noop';
 import { Formik } from 'formik';
+import { useKeycloak } from '@react-keycloak/web';
+
+jest.mock('@react-keycloak/web');
+(useKeycloak as jest.Mock).mockReturnValue({
+  keycloak: {
+    userInfo: {
+      agencies: [1],
+      roles: [],
+    },
+    subject: 'test',
+  },
+});
 
 const history = createMemoryHistory();
 history.push('admin/agencies');

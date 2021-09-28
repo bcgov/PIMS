@@ -1,11 +1,11 @@
 import React, { useCallback } from 'react';
-import { IPropertyFilter, IFilterBarState } from '../../common';
+import { IFilterBarState } from '../../common';
+import { IPropertyFilter, IProperty as IRowProperty } from 'features/projects/interfaces';
 import { decimalOrUndefined } from 'utils';
 import { ENVIRONMENT } from 'constants/environment';
 import CustomAxios from 'customAxios';
 import { IPagedItems } from 'interfaces';
 import { IProperty } from 'actions/parcelsActions';
-import { IProperty as IRowProperty } from '../../common';
 import queryString from 'query-string';
 
 const initialQuery: IPropertyFilter = {

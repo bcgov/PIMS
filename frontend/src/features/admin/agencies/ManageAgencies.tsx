@@ -4,7 +4,7 @@ import { Container } from 'react-bootstrap';
 import { Table } from 'components/Table';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'reducers/rootReducer';
-import { columnDefinitions } from '../constants';
+import { columnDefinitions } from '../constants/columns';
 import { IAgenciesState } from 'reducers/agencyReducer';
 import { IAgency, IAgencyDetail, IAgencyFilter, IAgencyRecord, IPagedItems } from 'interfaces';
 import { getAgenciesAction } from 'actionCreators/agencyActionCreator';

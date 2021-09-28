@@ -4,18 +4,15 @@ import { Form, FastDatePicker, FastInput, FastCurrencyInput } from 'components/c
 import { useFormikContext } from 'formik';
 import {
   ProjectNotes,
-  ReviewWorkflowStatus,
-  IProject,
   TasksForm,
   disposeWarning,
   dateEnteredMarket,
-  DisposalWorkflows,
   onTransferredWithinTheGreTooltip,
-  IProperty,
   disposeSubdivisionWarning,
-  IParentParcel,
   disposeWarningShort,
 } from '../../common';
+import { ReviewWorkflowStatus, DisposalWorkflows } from 'features/projects/constants';
+import { IProject, IProperty, IParentParcel } from 'features/projects/interfaces';
 import './SurplusPropertyListForm.scss';
 import _ from 'lodash';
 import GenericModal, { ModalSize } from 'components/common/GenericModal';
@@ -28,6 +25,7 @@ import { LinkList, ILinkListItem } from 'components/common/LinkList';
 import { useLocation } from 'react-router-dom';
 import { pidFormatter } from 'features/properties/components/forms/subforms/PidPinForm';
 import queryString from 'query-string';
+import { wasInSpl } from 'features/projects/utils';
 
 interface ISurplusPropertyListFormProps {
   isReadOnly?: boolean;
@@ -134,12 +132,13 @@ const SurplusPropertyListForm = ({
             Change the Status
           </Form.Label>
           <Form.Group>
-            {values.workflowCode === DisposalWorkflows.Erp && (
+            {values.workflowCode === DisposalWorkflows.Erp && wasInSpl(values) && (
               <Button
                 disabled={
                   isReadOnly ||
                   !values.clearanceNotificationSentOn ||
-                  !values.requestForSplReceivedOn
+                  !values.requestForSplReceivedOn ||
+                  !values.approvedForSplOn
                 }
                 onClick={onClickProceedToSPL}
               >

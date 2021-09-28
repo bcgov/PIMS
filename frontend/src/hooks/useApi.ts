@@ -8,8 +8,8 @@ import { useCallback } from 'react';
 import { IGeoSearchParams } from 'constants/API';
 import queryString from 'query-string';
 import { IBuilding, IParcel } from 'actions/parcelsActions';
-import { store } from 'App';
-import { IApiProperty } from 'features/projects/common';
+import { store } from 'store';
+import { IApiProperty } from 'features/projects/interfaces';
 
 export interface IGeocoderResponse {
   siteId: string;

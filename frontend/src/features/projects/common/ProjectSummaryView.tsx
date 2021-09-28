@@ -7,7 +7,8 @@ import './ProjectSummaryView.scss';
 import { StepActions } from '../dispose/components/StepActions';
 import { noop } from 'lodash';
 import StepErrorSummary from './components/StepErrorSummary';
-import { IStepProps, ReviewWorkflowStatus, SPPApprovalTabs } from './interfaces';
+import { ReviewWorkflowStatus, SPPApprovalTabs } from 'features/projects/constants';
+import { IStepProps } from 'features/projects/interfaces';
 import { PublicNotes } from './components/ProjectNotes';
 import { ErpTabs, saveErpTab } from '../erp';
 import { useDispatch, useSelector } from 'react-redux';
@@ -39,28 +40,30 @@ const ProjectSummaryView = ({ formikRef }: IStepProps) => {
       >
         {formikProps => (
           <Form>
-            {project.status?.code === ReviewWorkflowStatus.Cancelled && (
+            {(project.status?.code === ReviewWorkflowStatus.Cancelled ||
+              project.status?.code === ReviewWorkflowStatus.TransferredGRE) && (
               <ErpTabs
                 isReadOnly
                 goToGreTransferred={noop}
                 {...{ currentTab, setCurrentTab, setSubmitStatusCode, submitStatusCode }}
               />
             )}
-            {project.status?.code !== ReviewWorkflowStatus.Cancelled && (
-              <>
-                <ReviewProjectForm canEdit={false} />
-                <ProjectNotes disabled={!project.status?.isActive} />
-                <PublicNotes disabled={!project.status?.isActive} />
-                <StepErrorSummary />
-                <StepActions
-                  onSave={() => formikProps.submitForm()}
-                  onNext={noop}
-                  nextDisabled={true}
-                  saveDisabled={!project.status?.isActive}
-                  isFetching={!noFetchingProjectRequests}
-                />
-              </>
-            )}
+            {project.status?.code !== ReviewWorkflowStatus.Cancelled &&
+              project.status?.code !== ReviewWorkflowStatus.TransferredGRE && (
+                <>
+                  <ReviewProjectForm canEdit={false} />
+                  <ProjectNotes disabled={!project.status?.isActive} />
+                  <PublicNotes disabled={!project.status?.isActive} />
+                  <StepErrorSummary />
+                  <StepActions
+                    onSave={() => formikProps.submitForm()}
+                    onNext={noop}
+                    nextDisabled={true}
+                    saveDisabled={!project.status?.isActive}
+                    isFetching={!noFetchingProjectRequests}
+                  />
+                </>
+              )}
           </Form>
         )}
       </Formik>

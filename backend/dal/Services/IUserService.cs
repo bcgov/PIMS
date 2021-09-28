@@ -9,7 +9,7 @@ namespace Pims.Dal.Services
     /// </summary>
     public interface IUserService : IService
     {
-        bool UserExists(Guid id);
+        bool UserExists(Guid KeycloakUserId);
         User Activate();
         IEnumerable<int> GetAgencies(Guid userId);
         AccessRequest GetAccessRequest();

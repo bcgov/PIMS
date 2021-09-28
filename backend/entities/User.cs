@@ -15,6 +15,11 @@ namespace Pims.Dal.Entities
         public Guid Id { get; set; }
 
         /// <summary>
+        /// get/set - Unique identifier to link user with Keycloak user.
+        /// </summary>
+        public Guid? KeycloakUserId { get; set; }
+
+        /// <summary>
         /// get/set - The unique user name to identify the user.
         /// </summary>
         public string Username { get; set; }
@@ -122,6 +127,7 @@ namespace Pims.Dal.Entities
             if (String.IsNullOrWhiteSpace(email)) throw new ArgumentException("Argument cannot be null, whitespace or empty.", nameof(email));
 
             this.Id = id;
+            this.KeycloakUserId = id;
             this.Username = userName;
             this.Email = email;
         }

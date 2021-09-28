@@ -4,13 +4,8 @@ import React, { useCallback, useState, useEffect } from 'react';
 import { Button, Container } from 'react-bootstrap';
 import { Formik } from 'formik';
 import { useStepper, SelectProjectPropertiesStepYupSchema } from '..';
-import {
-  FilterBar,
-  IFilterBarState,
-  IStepProps,
-  useStepForm,
-  SelectProjectPropertiesForm,
-} from '../../common';
+import { FilterBar, IFilterBarState, useStepForm, SelectProjectPropertiesForm } from '../../common';
+import { IStepProps } from 'features/projects/interfaces';
 import styled from 'styled-components';
 import { Classifications } from 'constants/classifications';
 
