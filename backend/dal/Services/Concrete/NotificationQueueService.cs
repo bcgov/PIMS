@@ -389,6 +389,44 @@ namespace Pims.Dal.Services
             }
             return notification;
         }
+        
+
+        /// <summary>
+        /// Generates the access request notification for the specified 'model' and 'template'.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="template"></param>
+        /// <param name="model"></param>
+        /// <param name="sendOn"></param>
+        /// <returns></returns>
+        public NotificationQueue GenerateNotification<T>(NotificationTemplate template, T model, DateTime? sendOn = null)
+        {
+            if (template == null) throw new ArgumentNullException(nameof(template));
+            if (model == null) throw new ArgumentNullException(nameof(model));
+
+            var notification = new NotificationQueue(template, template.To, template.Subject, template.Body)
+            {
+                Key = Guid.NewGuid(),
+                Status = NotificationStatus.Pending,
+                SendOn = sendOn ?? DateTime.UtcNow,
+                To = template.To,
+                Cc = template.Cc,
+                Bcc = template.Bcc
+            };
+
+            try
+            {
+                _notifyService.Generate(notification, model);
+            }
+            catch (Exception ex)
+            {
+                this.Logger.LogError(ex, $"Failed to generate notification for template '{template.Id}'.");
+                if (_options.Notifications.ThrowExceptions)
+                    throw;
+                return null;
+            }
+            return notification;
+        }
         #endregion
 
         #region Helpers
