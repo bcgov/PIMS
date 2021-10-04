@@ -24,6 +24,7 @@ namespace Pims.Dal.Services
         IEnumerable<NotificationQueue> GenerateNotifications(Project project, ProjectStatusNotification options, DateTime? sendOn = null);
         NotificationQueue GenerateNotification(Project project, ProjectStatusNotification options, Agency agency, DateTime? sendOn = null);
         NotificationQueue GenerateNotification<T>(string to, NotificationTemplate template, T model, DateTime? sendOn = null);
+        NotificationQueue GenerateNotification<T>(NotificationTemplate template, T model, DateTime? sendOn = null);
         System.Threading.Tasks.Task SendNotificationsAsync(IEnumerable<NotificationQueue> notifications, bool saveChanges = true);
     }
 }
