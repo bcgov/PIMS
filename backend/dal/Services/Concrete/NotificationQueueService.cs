@@ -403,6 +403,7 @@ namespace Pims.Dal.Services
         {
             if (template == null) throw new ArgumentNullException(nameof(template));
             if (model == null) throw new ArgumentNullException(nameof(model));
+            if (String.IsNullOrEmpty(template.To)) throw new ArgumentException("Template requires a 'to'.", nameof(template));
 
             var notification = new NotificationQueue(template, template.To, template.Subject, template.Body)
             {
