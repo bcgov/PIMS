@@ -147,8 +147,7 @@ namespace Pims.Api.Controllers
                     new AccessRequestNotificationModel(accessRequest, _options));
                 await _pimsService.NotificationQueue.SendNotificationsAsync(new[] { notification });
 
-                var notificationForRPD = _pimsService.NotificationQueue.GenerateNotification("", templateForRPD,
-                    new AccessRequestNotificationModel(accessRequest, _options));
+                var notificationForRPD = _pimsService.NotificationQueue.GenerateNotification(templateForRPD, new AccessRequestNotificationModel(accessRequest, _options));
                 await _pimsService.NotificationQueue.SendNotificationsAsync(new[] { notificationForRPD });
                 
             }
