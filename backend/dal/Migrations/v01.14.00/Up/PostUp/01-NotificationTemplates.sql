@@ -1,10 +1,4 @@
-PRINT 'Increasing column size'
--- Make Location required.
-ALTER TABLE dbo.[NotificationTemplates]
-ALTER COLUMN
-    [Subject] NVARCHAR(325) NOT NULL;
-    
-PRINT 'Update NotificationTemplates - adding project number to ERP templates'
+PRINT 'Update NotificationTemplates - adding project numbers to the body of the ERP templates'
 
 UPDATE dbo.[NotificationTemplates]
 SET [Body] = N'
@@ -78,8 +72,7 @@ SET [Body] = N'
 <p>@Model.Project.Notes.FirstOrDefault(n => n.NoteType == NoteTypes.ErpNotification)?.Note</p>
 <p>If you have any questions regarding this matter, please contact Yvonne Deibert, Executive Director of the Strategic Real Estate Services Branch at 250-387-6348.</p>
 <p>Thank you.</p>
-<p>Strategic Real Estate Services, Real Property Division</p></body></html>',
-[Subject] = N'ACTION REQUIRED - Notification of Surplus Real Property - @using Pims.Dal.Entities @(Model.Project.Properties.AsEnumerable().FirstOrDefault(p => p.PropertyType == PropertyTypes.Land)?.Parcel.Address.ToString() ?? Model.Project.Properties.First(p => p.PropertyType == PropertyTypes.Building).Building.Address.ToString())'
+<p>Strategic Real Estate Services, Real Property Division</p></body></html>'
 WHERE [Id] = 5;
 
 UPDATE dbo.[NotificationTemplates]
