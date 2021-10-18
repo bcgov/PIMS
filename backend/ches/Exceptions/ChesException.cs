@@ -32,7 +32,7 @@ namespace Pims.Core.Exceptions
         /// <param name="client"></param>
         /// <param name="model"></param>
         public ChesException(HttpClientRequestException exception, IHttpRequestClient client, ErrorResponseModel model)
-            : this($"{exception.Message}{Environment.NewLine}", exception, exception.StatusCode)
+            : this($"{exception.Message}{Environment.NewLine}", exception, exception?.StatusCode ?? HttpStatusCode.InternalServerError)
         {
             this.Client = client;
             this.Detail = $"{model.Title}{Environment.NewLine}{model.Detail}{Environment.NewLine}{model.Type}{Environment.NewLine}{String.Join(Environment.NewLine, model.Errors.Select(e => $"\t{e.Message}"))}";

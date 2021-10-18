@@ -131,7 +131,7 @@ namespace Pims.Tools.Keycloak.Sync
                     }
                 }
 
-                throw ex;
+                throw;
             }
         }
         #endregion
@@ -202,7 +202,7 @@ namespace Pims.Tools.Keycloak.Sync
                     }
                 }
 
-                throw ex;
+                throw;
             }
         }
 
@@ -462,7 +462,7 @@ namespace Pims.Tools.Keycloak.Sync
                     return null;
                 }
 
-                throw ex;
+                throw;
             }
         }
         #endregion

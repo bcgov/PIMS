@@ -1,4 +1,4 @@
-# This is a build template for .NET Core 3.1
+# This is a build template for .NET 5.0
 # It will build a new image from the specified source control repo
 # that will run your application.
 kind: Template
@@ -6,8 +6,8 @@ apiVersion: v1
 metadata:
   name: pims-api-build
   annotations:
-    openshift.io/display-name: .NET Core 3.1 Build Template
-    description: Build template for a .NET Core 3.1 application.
+    openshift.io/display-name: .NET 5.0 Build Template
+    description: Build template for a .NET 5.0 application.
     tags: pims-api
 parameters:
   - name: APP_NAME
@@ -30,6 +30,10 @@ parameters:
     description: "The name for this environment [dev, test, prod, tools]"
     required: true
     value: "tools"
+  - name: INSTANCE
+    displayName: "Unique Identifier"
+    description: "A unique identifier to allow for multiple instances (i.e. '-01')."
+    required: false
 
   - name: GIT_URL
     displayName: Git Repository URL
@@ -46,47 +50,16 @@ parameters:
     displayName: Context Directory
     description: Set this to use a subdirectory of the source code repository
     value: backend
-
-  - name: DOTNET_BUILDER_IMAGE
-    displayName: .NET builder
-    description: The s2i image which is used to build the code.
-    required: true
-    value: dotnet-31-rhel7
-  - name: DOTNET_BUILDER_TAG
-    displayName: .NET builder tag
-    description: The s2i image tag which is used to build the code.
-    required: true
-    value: "3.1"
-
-  - name: DOTNET_STARTUP_PROJECT
-    displayName: Startup Project
-    description:
-      Set this to a project file (e.g. csproj) or a folder containing a single
-      project file.
-    required: true
-    value: api/Pims.Api.csproj
-  - name: DOTNET_PUBLISH_READYTORUN
-    displayName: Ahead-of-time compilation
-    description: Set this to 'true' to perform an ahead-of-time compilation.
-    value: "true"
-  - name: DOTNET_CONFIGURATION
-    displayName: Configuration
-    description: Set this to configuration (Release/Debug).
-    value: "Release"
-  - name: DOTNET_TEST_PROJECTS
-    displayName: Test projects
-    description: Set this to a space separated list of test projects to run before publishing.
+  - name: DOCKERFILE_PATH
+    displayName: Path to Dockerfile
+    description: Path for alternate Dockerfile to use for build
+    value: Dockerfile.ocp
 
   - name: OUTPUT_IMAGE_TAG
     displayName: Output Image Tag
     description: The tag given to the built image.
     required: true
     value: latest
-  - name: DOTNET_TOOLS
-    displayName: Output Tools
-    description: Dotnet tools to install during build.
-    required: true
-    value: dotnet-ef
 
   - name: CPU_LIMIT
     displayName: Resources CPU Limit
@@ -103,12 +76,12 @@ objects:
   - kind: ImageStream
     apiVersion: v1
     metadata:
-      name: ${APP_NAME}-${ROLE_NAME}
+      name: ${APP_NAME}-${ROLE_NAME}${INSTANCE}
       namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
       annotations:
         description: Keeps track of changes in the application image
       labels:
-        name: ${APP_NAME}-${ROLE_NAME}
+        name: ${APP_NAME}-${ROLE_NAME}${INSTANCE}
         app: ${APP_NAME}
         role: ${ROLE_NAME}
         env: ${ENV_NAME}
@@ -117,12 +90,12 @@ objects:
   - kind: BuildConfig
     apiVersion: v1
     metadata:
-      name: ${APP_NAME}-${ROLE_NAME}.${GIT_REF}
+      name: ${APP_NAME}-${ROLE_NAME}${INSTANCE}.${GIT_REF}
       namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
       annotations:
         description: Defines how to build the application
       labels:
-        name: ${APP_NAME}-${ROLE_NAME}.${GIT_REF}
+        name: ${APP_NAME}-${ROLE_NAME}${INSTANCE}.${GIT_REF}
         app: ${APP_NAME}
         role: ${ROLE_NAME}
         env: ${ENV_NAME}
@@ -139,27 +112,14 @@ objects:
           ref: ${GIT_REF}
         contextDir: ${SOURCE_CONTEXT_DIR}
       strategy:
-        type: Source
-        sourceStrategy:
-          from:
-            kind: ImageStreamTag
-            name: ${DOTNET_BUILDER_IMAGE}:${DOTNET_BUILDER_TAG}
-          # scripts: https://raw.githubusercontent.com/bcgov/PIMS/dev/.s2i/bin
-          env:
-            - name: DOTNET_CONFIGURATION
-              value: ${DOTNET_CONFIGURATION}
-            - name: DOTNET_STARTUP_PROJECT
-              value: ${DOTNET_STARTUP_PROJECT}
-            - name: DOTNET_PUBLISH_READYTORUN
-              value: ${DOTNET_PUBLISH_READYTORUN}
-            - name: DOTNET_TEST_PROJECTS
-              value: ${DOTNET_TEST_PROJECTS}
-            - name: DOTNET_TOOLS
-              value: ${DOTNET_TOOLS}
+        type: Docker
+        dockerStrategy:
+          imageOptimizationPolicy: SkipLayers
+          dockerfilePath: "${DOCKERFILE_PATH}"
       output:
         to:
           kind: ImageStreamTag
-          name: ${APP_NAME}-${ROLE_NAME}:${OUTPUT_IMAGE_TAG}
+          name: ${APP_NAME}-${ROLE_NAME}${INSTANCE}:${OUTPUT_IMAGE_TAG}
       resources:
         limits:
           cpu: ${CPU_LIMIT}

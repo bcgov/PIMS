@@ -70,13 +70,13 @@ namespace Pims.Tools.Converters.ExcelConverter
         /// </summary>
         /// <param name="options"></param>
         /// <returns></returns>
-        [Obsolete("This method is obsolete.  Call ConvertWithDataReaderAsync isntead.")]
+        [Obsolete("This method is obsolete.  Call ConvertWithDataReaderAsync instead.")]
         public async Task ConvertWithOleDbConnectionAsync(SourceOptions options)
         {
             var file = new FileInfo(options.File);
             if (file == null) throw new ArgumentNullException(nameof(file));
-            if (String.IsNullOrWhiteSpace(options.Output)) throw new ArgumentException("Argument cannot be null, emtpy or whitespace.", nameof(options.Output));
-            if (String.IsNullOrWhiteSpace(options.SheetName)) throw new ConfigurationException("Configuration 'Converter:{Source}:SheetName' cannot be null, emtpy or whitespace.");
+            if (String.IsNullOrWhiteSpace(options.Output)) throw new ArgumentException("Argument cannot be null, empty or whitespace.", nameof(options.Output));
+            if (String.IsNullOrWhiteSpace(options.SheetName)) throw new ConfigurationException("Configuration 'Converter:{Source}:SheetName' cannot be null, empty or whitespace.");
 
             _logger.LogInformation($"Reading file '{file}'.");
 
