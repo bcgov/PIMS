@@ -134,7 +134,23 @@ export const ReviewApproveActions = ({
           />
         )}
       </FlexRight>
-      {approveERP && (
+      {approveERP && !values.sendNotifications && !values.exemptionRequested && (
+        <GenericModal
+          display={approveERP}
+          cancelButtonText="Close"
+          okButtonText="Approve"
+          handleOk={() => {
+            setSubmitStatusCode(ReviewWorkflowStatus.ApprovedForErp);
+            setApproveERP(false);
+          }}
+          handleCancel={() => setApproveERP(false)}
+          title="Confirm Approval"
+          message={
+            'Are you sure you want to approve this ERP exemption with notifications disabled?'
+          }
+        />
+      )}
+      {approveERP && values.sendNotifications && (
         <GenericModal
           display={approveERP}
           cancelButtonText="Close"

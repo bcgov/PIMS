@@ -20,6 +20,7 @@ import { useFormikContext } from 'formik';
 import ExemptionRequest from '../../dispose/components/ExemptionRequest';
 import { Form, FastDatePicker } from 'components/common/form';
 import { ErpNotificationNotes } from 'features/projects/common/components/ProjectNotes';
+import NotificationCheck from 'features/projects/common/components/NotificationCheck';
 
 /**
  * Form component of ReviewApproveStep (currently a multi-step form).
@@ -33,6 +34,7 @@ const ReviewApproveForm = ({
   goToAddProperties: Function;
 }) => {
   const { project } = useProject();
+  const { values } = useFormikContext();
   const formikProps = useFormikContext<IProject>();
   const { errors } = useFormikContext<IProject>();
   const [isReadOnly, setIsReadOnly] = useState(!canEdit);
@@ -109,7 +111,15 @@ const ReviewApproveForm = ({
       <ProjectNotes outerClassName="col-md-12 reviewRequired" disabled={true} />
       <PublicNotes outerClassName="col-md-12 reviewRequired" disabled={!canEdit} />
       <PrivateNotes outerClassName="col-md-12 reviewRequired" disabled={!canEdit} />
-      <ErpNotificationNotes outerClassName="col-md-12 reviewRequired" disabled={!canEdit} />
+      {!(values as any).exemptionRequested && (
+        <NotificationCheck
+          label="Notifications should be sent for this project"
+          field="sendNotifications"
+        />
+      )}
+      {(values as any).sendNotifications && (
+        <ErpNotificationNotes outerClassName="col-md-12 reviewRequired" disabled={!canEdit} />
+      )}
     </Fragment>
   );
 };
