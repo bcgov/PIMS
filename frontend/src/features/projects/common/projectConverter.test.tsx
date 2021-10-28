@@ -162,8 +162,8 @@ describe('projectConverter function tests', () => {
           ] as IEvaluation[],
         };
         const property = toFlatProperty(apiProperty as any);
-        expect(property.assessedLand).toBe('');
-        expect(property.assessedBuilding).toBe('');
+        expect(property.assessedLand).toBe(200);
+        expect(property.assessedBuilding).toBe(300);
       });
       it('does not populate building assessed fields if all evaluations are too old', () => {
         const apiProperty = {
@@ -187,7 +187,7 @@ describe('projectConverter function tests', () => {
         };
         const property = toFlatProperty(apiProperty as any);
         expect(property.assessedLand).toBe('');
-        expect(property.assessedBuilding).toBe('');
+        expect(property.assessedBuilding).toBe(200);
       });
     });
     describe('fiscal population', () => {

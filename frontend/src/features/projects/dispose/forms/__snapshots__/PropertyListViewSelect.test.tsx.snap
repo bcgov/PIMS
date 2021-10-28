@@ -30,7 +30,7 @@ exports[`Property List View Select renders correctly 1`] = `
         <div
           class="tr"
           role="row"
-          style="display: flex; flex: 1 0 auto; min-width: 820px;"
+          style="display: flex; flex: 1 0 auto; min-width: 965px;"
         >
           <div
             class="th"
@@ -199,6 +199,21 @@ exports[`Property List View Select renders correctly 1`] = `
             <div
               class="sortable-column"
             >
+              Assessment Year
+              <span
+                style="flex: 1 1 auto;"
+              />
+            </div>
+          </div>
+          <div
+            class="th"
+            colspan="1"
+            role="columnheader"
+            style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+          >
+            <div
+              class="sortable-column"
+            >
               Assessed Building
               <span
                 style="flex: 1 1 auto;"
@@ -273,7 +288,7 @@ exports[`Property List View Select renders correctly 1`] = `
         <div
           class="tr"
           role="row"
-          style="display: flex; flex: 1 0 auto; min-width: 850px;"
+          style="display: flex; flex: 1 0 auto; min-width: 995px;"
         >
           <div
             class="th"
@@ -457,6 +472,21 @@ exports[`Property List View Select renders correctly 1`] = `
             <div
               class="sortable-column"
             >
+              Assessment Year
+              <span
+                style="flex: 1 1 auto;"
+              />
+            </div>
+          </div>
+          <div
+            class="th"
+            colspan="1"
+            role="columnheader"
+            style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+          >
+            <div
+              class="sortable-column"
+            >
               Assessed Building
               <span
                 style="flex: 1 1 auto;"
@@ -490,7 +520,7 @@ exports[`Property List View Select renders correctly 1`] = `
           <div
             class="tr"
             role="row"
-            style="display: flex; flex: 1 0 auto; min-width: 850px;"
+            style="display: flex; flex: 1 0 auto; min-width: 995px;"
           >
             <div
               class="td"
@@ -619,6 +649,14 @@ exports[`Property List View Select renders correctly 1`] = `
               </div>
             </div>
             <div
+              class="td"
+              role="cell"
+              style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
+              title=""
+            >
+              2021
+            </div>
+            <div
               class="td clickable"
               role="cell"
               style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
@@ -649,7 +687,7 @@ exports[`Property List View Select renders correctly 1`] = `
         <div
           class="tr"
           role="row"
-          style="display: flex; flex: 1 0 auto; min-width: 850px;"
+          style="display: flex; flex: 1 0 auto; min-width: 995px;"
         >
           <div
             class="th"
@@ -712,6 +750,14 @@ exports[`Property List View Select renders correctly 1`] = `
             colspan="1"
             role="columnheader"
             style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+          >
+             
+          </div>
+          <div
+            class="th"
+            colspan="1"
+            role="columnheader"
+            style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
           >
              
           </div>

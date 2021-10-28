@@ -152,10 +152,10 @@ namespace Pims.Api.Areas.Property.Mapping.Search
                 .Map(dest => dest.NetBook, src => src.NetBookFiscalYear == DateTime.Now.GetFiscalYear() ? src.NetBook : null)
                 .Map(dest => dest.NetBookFiscalYear, src => src.NetBookFiscalYear == DateTime.Now.GetFiscalYear() ? src.NetBookFiscalYear : null)
 
-                .Map(dest => dest.AssessedLand, src => src.AssessedLandDate.HasValue && DateTime.Now.Year == src.AssessedLandDate.Value.Year ? src.AssessedLand : null)
-                .Map(dest => dest.AssessedLandDate, src => src.AssessedLandDate.HasValue && DateTime.Now.Year == src.AssessedLandDate.Value.Year ? src.AssessedLandDate : null)
-                .Map(dest => dest.AssessedBuilding, src => src.AssessedBuildingDate.HasValue && DateTime.Now.Year == src.AssessedBuildingDate.Value.Year ? src.AssessedBuilding : null)
-                .Map(dest => dest.AssessedBuildingDate, src => src.AssessedBuildingDate.HasValue && DateTime.Now.Year == src.AssessedBuildingDate.Value.Year ? src.AssessedBuildingDate : null);
+                .Map(dest => dest.AssessedLand, src => src.AssessedLandDate.HasValue ? src.AssessedLand : null)
+                .Map(dest => dest.AssessedLandDate, src => src.AssessedLandDate.HasValue ? src.AssessedLandDate : null)
+                .Map(dest => dest.AssessedBuilding, src => src.AssessedBuildingDate.HasValue ? src.AssessedBuilding : null)
+                .Map(dest => dest.AssessedBuildingDate, src => src.AssessedBuildingDate.HasValue ? src.AssessedBuildingDate : null);
 
             config.NewConfig<Entity.Models.ProjectProperty, Model.PropertyModel>()
                 .Map(dest => dest.PropertyTypeId, src => src.PropertyTypeId)

@@ -19,10 +19,8 @@ export const getCurrentFiscal = (fiscals: IFiscal[], key: FiscalKeys) => {
   return _.find(fiscals, { fiscalYear: currentFiscal, key: key });
 };
 
-const currentYear = moment().year();
-
 /**
- * Get the most recent evaluation matching the current year and passed evaluation type.
+ * Get the most recent evaluation matching the passed evaluation type.
  * @param evaluations a list of evaluations belonging to this project
  * @param key only return evaluations matching this key
  */
@@ -31,7 +29,7 @@ export const getCurrentYearEvaluation = (
   key: EvaluationKeys,
 ): IEvaluation | undefined => {
   const currentYearEvaluations = (evaluations ?? []).filter(
-    (evaluation: IEvaluation) => moment(evaluation.date, 'YYYY-MM-DD').year() === currentYear,
+    (evaluation: IEvaluation) => moment(evaluation.date, 'YYYY-MM-DD').year() != null,
   );
   return getMostRecentEvaluation(currentYearEvaluations, key);
 };
