@@ -297,7 +297,8 @@ namespace Pims.Api
 
             if (!env.IsProduction())
             {
-                app.UseDatabaseErrorPage();
+                app.UseDeveloperExceptionPage();
+                app.UseMigrationsEndPoint();
             }
 
             app.UpdateDatabase<Startup>();

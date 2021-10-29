@@ -92,19 +92,19 @@ namespace Pims.Tools.Converters.ExcelConverter.Converters
             {
                 Encoding = Encoding.UTF8,
                 HasHeaderRecord = false,
-                
+
                 BadDataFound = (rc) =>
                 {
                     _logger.LogError($"Bad data in CSV '{rc.Field}'");
                 },
-                MissingFieldFound = (a, i, rc) =>
+                MissingFieldFound = (args) =>
                 {
-                    _logger.LogError($"Missing field found in CSV '{rc.Field}'");
+                    _logger.LogError($"Missing field found in CSV '{String.Join(", ", args.HeaderNames)}'");
                 }
             };
-            config.RegisterClassMap<AddressModelMap>();
             using var reader = new StreamReader(File.Open(_options.CacheFile, FileMode.OpenOrCreate, FileAccess.Read));
-            using var csv = new CsvReader(reader, config, true);
+            using var csv = new CsvReader(reader, config);
+            csv.Context.RegisterClassMap<AddressModelMap>();
             var rows = csv.GetRecords<AddressModel>();
             _cache = rows.ToDictionary(r => $"{r.CivicAddress}, {r.City}", r => r);
         }

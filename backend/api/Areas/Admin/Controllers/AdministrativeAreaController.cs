@@ -124,7 +124,7 @@ namespace Pims.Api.Areas.Admin.Controllers
                 {
                     return BadRequest(duplicateError);
                 }
-                throw ex;
+                throw;
             }
         }
 
@@ -157,7 +157,7 @@ namespace Pims.Api.Areas.Admin.Controllers
                 {
                     return BadRequest(duplicateError);
                 }
-                throw ex;
+                throw;
             }
         }
 

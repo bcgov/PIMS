@@ -11,15 +11,8 @@ namespace Pims.Api.Helpers.Exceptions
     {
         #region Properties
         /// <summary>
-        /// get - The HTTP status code of the response.
-        /// </summary>
-        /// <value></value>
-        public HttpStatusCode StatusCode { get; }
-
-        /// <summary>
         /// get - The HTTP response message.
         /// </summary>
-        /// <value></value>
         public HttpResponseMessage Response { get; }
         #endregion
 
@@ -30,9 +23,8 @@ namespace Pims.Api.Helpers.Exceptions
         /// <param name="message"></param>
         /// <param name="statusCode"></param>
         /// <returns></returns>
-        public ApiHttpRequestException(string message, HttpStatusCode statusCode = HttpStatusCode.InternalServerError) : base(message)
+        public ApiHttpRequestException(string message, HttpStatusCode statusCode = HttpStatusCode.InternalServerError) : base(message, null, statusCode)
         {
-            this.StatusCode = statusCode;
         }
 
         /// <summary>
@@ -42,9 +34,8 @@ namespace Pims.Api.Helpers.Exceptions
         /// <param name="innerException"></param>
         /// <param name="statusCode"></param>
         /// <returns></returns>
-        public ApiHttpRequestException(string message, Exception innerException, HttpStatusCode statusCode = HttpStatusCode.InternalServerError) : base(message, innerException)
+        public ApiHttpRequestException(string message, Exception innerException, HttpStatusCode statusCode = HttpStatusCode.InternalServerError) : base(message, innerException, statusCode)
         {
-            this.StatusCode = statusCode;
         }
 
         /// <summary>
@@ -52,10 +43,9 @@ namespace Pims.Api.Helpers.Exceptions
         /// </summary>
         /// <param name="response"></param>
         /// <returns></returns>
-        public ApiHttpRequestException(HttpResponseMessage response) : base($"HTTP Request '{response.RequestMessage.RequestUri}' failed")
+        public ApiHttpRequestException(HttpResponseMessage response) : base($"HTTP Request '{response.RequestMessage.RequestUri}' failed", null, response.StatusCode)
         {
             this.Response = response ?? throw new ArgumentNullException(nameof(response)); // NOSONAR
-            this.StatusCode = response.StatusCode;
         }
         #endregion
     }

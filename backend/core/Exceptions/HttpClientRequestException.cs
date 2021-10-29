@@ -11,12 +11,6 @@ namespace Pims.Core.Exceptions
     {
         #region Properties
         /// <summary>
-        /// get - The HTTP status code of the response.
-        /// </summary>
-        /// <value></value>
-        public HttpStatusCode StatusCode { get; }
-
-        /// <summary>
         /// get - The HTTP response message.
         /// </summary>
         /// <value></value>
@@ -30,9 +24,8 @@ namespace Pims.Core.Exceptions
         /// <param name="message"></param>
         /// <param name="statusCode"></param>
         /// <returns></returns>
-        public HttpClientRequestException(string message, HttpStatusCode statusCode = HttpStatusCode.InternalServerError) : base(message)
+        public HttpClientRequestException(string message, HttpStatusCode statusCode = HttpStatusCode.InternalServerError) : base(message, null, statusCode)
         {
-            this.StatusCode = statusCode;
         }
 
         /// <summary>
@@ -42,13 +35,12 @@ namespace Pims.Core.Exceptions
         /// <param name="innerException"></param>
         /// <param name="statusCode"></param>
         /// <returns></returns>
-        public HttpClientRequestException(string message, Exception innerException, HttpStatusCode statusCode = HttpStatusCode.InternalServerError) : base(message, innerException)
+        public HttpClientRequestException(string message, Exception innerException, HttpStatusCode statusCode = HttpStatusCode.InternalServerError) : base(message, innerException, statusCode)
         {
             if (innerException is HttpClientRequestException)
             {
                 this.Response = ((HttpClientRequestException)innerException).Response;
             }
-            this.StatusCode = statusCode;
         }
 
         /// <summary>
@@ -56,11 +48,10 @@ namespace Pims.Core.Exceptions
         /// </summary>
         /// <param name="response"></param>
         /// <returns></returns>
-        public HttpClientRequestException(HttpResponseMessage response) : base($"HTTP Request '{response?.RequestMessage.RequestUri}' failed")
+        public HttpClientRequestException(HttpResponseMessage response) : base($"HTTP Request '{response?.RequestMessage.RequestUri}' failed", null, response?.StatusCode)
         {
             this.Response = response ?? throw new ArgumentNullException(nameof(response)); // NOSONAR
             // TODO: Extract error response details into innerException.
-            this.StatusCode = response.StatusCode;
         }
 
         /// <summary>
@@ -68,11 +59,10 @@ namespace Pims.Core.Exceptions
         /// </summary>
         /// <param name="response"></param>
         /// <returns></returns>
-        public HttpClientRequestException(HttpResponseMessage response, string message) : base(message)
+        public HttpClientRequestException(HttpResponseMessage response, string message) : base(message, null, response?.StatusCode)
         {
             this.Response = response ?? throw new ArgumentNullException(nameof(response)); // NOSONAR
             // TODO: Extract error response details into innerException.
-            this.StatusCode = response.StatusCode;
         }
 
         /// <summary>
@@ -80,11 +70,10 @@ namespace Pims.Core.Exceptions
         /// </summary>
         /// <param name="response"></param>
         /// <returns></returns>
-        public HttpClientRequestException(HttpResponseMessage response, Exception innerException) : base($"HTTP Request '{response?.RequestMessage.RequestUri}' failed", innerException)
+        public HttpClientRequestException(HttpResponseMessage response, Exception innerException) : base($"HTTP Request '{response?.RequestMessage.RequestUri}' failed", innerException, response?.StatusCode)
         {
             this.Response = response ?? throw new ArgumentNullException(nameof(response)); // NOSONAR
             // TODO: Extract error response details into innerException.
-            this.StatusCode = response.StatusCode;
         }
         #endregion
     }
