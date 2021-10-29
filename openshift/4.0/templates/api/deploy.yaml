@@ -3,8 +3,8 @@ apiVersion: v1
 metadata:
   name: pims-api-deploy
   annotations:
-    openshift.io/display-name: .NET Core 3.1 Deployment Template
-    description: Deployment template for a .NET Core 3.1 application.
+    openshift.io/display-name: .NET 5.0 Deployment Template
+    description: Deployment template for a .NET 5.0 application.
     tags: pims-api,netcore,api
 parameters:
   - name: APP_NAME
@@ -31,11 +31,19 @@ parameters:
     displayName: "Unique Identifier"
     description: "A unique identifier to allow for multiple instances (i.e. '-01')."
     value: ""
+  - name: INSTANCELABEL
+    displayName: "Unique Identifier"
+    description: "A unique identifier to allow for multiple instances (i.e. '-01')."
+    value: ""
   - name: IMAGE_TAG
     displayName: "Image Tag Name"
     description: "The image tag that will be used for this deployment.
       This provides a way to setup an environment for other branches."
     value: "dev"
+  - name: TIME_ZONE
+    displayName: "Time Zone"
+    description: "The time zone of the pod."
+    value: "America/Los_Angeles"
 
   - name: APP_DOMAIN
     displayName: "Application Hostname"
@@ -188,7 +196,6 @@ objects:
         app: ${APP_NAME}
         role: ${ROLE_NAME}
         env: ${ENV_NAME}
-        instance: ${INSTANCE}
       type: ClusterIP
       sessionAffinity: None
 
@@ -311,7 +318,6 @@ objects:
         app: ${APP_NAME}
         role: ${ROLE_NAME}
         env: ${ENV_NAME}
-        instance: ${INSTANCE}
     spec:
       strategy:
         type: Rolling
@@ -337,7 +343,6 @@ objects:
         app: ${APP_NAME}
         role: ${ROLE_NAME}
         env: ${ENV_NAME}
-        instance: ${INSTANCE}
       template:
         metadata:
           name: ${APP_NAME}-${ROLE_NAME}${INSTANCE}
@@ -346,7 +351,6 @@ objects:
             app: ${APP_NAME}
             role: ${ROLE_NAME}
             env: ${ENV_NAME}
-            instance: ${INSTANCE}
         spec:
           containers:
             - name: ${APP_NAME}-${ROLE_NAME}${INSTANCE}
@@ -363,6 +367,8 @@ objects:
                   value: ${LIVENESS_PATH}
                 - name: HealthChecks__ReadyPath
                   value: ${READINESS_PATH}
+                - name: TZ
+                  value: ${TIME_ZONE}
                 - name: ConnectionStrings__PIMS
                   valueFrom:
                     configMapKeyRef:
@@ -437,9 +443,9 @@ objects:
                   port: ${{APP_PORT}}
                   scheme: ${HEALTH_SCHEME}
                 initialDelaySeconds: 1
-                periodSeconds: 10
+                periodSeconds: 60
                 successThreshold: 1
-                timeoutSeconds: 3
+                timeoutSeconds: 30
               livenessProbe:
                 failureThreshold: 3
                 httpGet:
@@ -447,6 +453,6 @@ objects:
                   port: ${{APP_PORT}}
                   scheme: ${HEALTH_SCHEME}
                 initialDelaySeconds: 1
-                periodSeconds: 10
+                periodSeconds: 60
                 successThreshold: 1
-                timeoutSeconds: 3
+                timeoutSeconds: 30

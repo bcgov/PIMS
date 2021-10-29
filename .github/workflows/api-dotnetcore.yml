@@ -1,4 +1,4 @@
-name: API (.NET Core)
+name: API (.NET 5.0)
 
 on:
   push:
@@ -15,19 +15,29 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Setup .NET Core
+
+      - name: Extract Branch Name
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: extract_branch
+
+      - name: Setup .NET 5.0
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 3.1.101
+          dotnet-version: 5.0.300
+
       - name: Install dependencies
         run: dotnet restore
         working-directory: ${{env.working-directory}}
+
       - name: Install coverlet for code coverage
         run: dotnet tool install -g coverlet.console --version 1.7.2
         working-directory: ${{env.working-directory}}
+
       - name: Build
         run: dotnet build --configuration Release --no-restore
         working-directory: ${{env.working-directory}}
+
       - name: Test
         run: dotnet test --no-restore --verbosity normal
         working-directory: ${{env.working-directory}}
@@ -70,6 +80,7 @@ jobs:
           mv TestResults/*/* ../TestResults/
           cd ..
           head TestResults/coverage.opencover.xml
+
       - name: Codecov
         uses: codecov/codecov-action@v1.5.0
         with:
@@ -85,3 +96,66 @@ jobs:
           env_vars: C#
           # Specify whether or not CI build should fail if Codecov runs into an error during upload
           fail_ci_if_error: true
+
+      - name: SonarScanner for .NET 5 with pull request decoration support
+        id: scan
+        uses: highbyte/sonarscan-dotnet@2.0
+        if: github.event_name == 'push'
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          dotnetBuildArguments: ${{env.working-directory}}
+          dotnetTestArguments: ${{env.working-directory}} --logger trx --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
+          # Optional extra command arguments the the SonarScanner 'begin' command
+          sonarBeginArguments: /d:sonar.cs.opencover.reportsPaths="**/TestResults/**/coverage.opencover.xml" -d:sonar.cs.vstest.reportsPaths="**/TestResults/*.trx" -d:sonar.qualitygate.wait=true
+          # The key of the SonarQube project
+          sonarProjectKey: ${{secrets.PROJECT_KEY_API}}
+          # The name of the SonarQube project
+          sonarProjectName: PIMS-API
+          # The SonarQube server URL. For SonarCloud, skip this setting.
+          sonarHostname: ${{secrets.SONAR_URL}}
+
+      - name: Find Comment
+        if: failure() && steps.scan.outcome == 'failure' && github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+        uses: peter-evans/find-comment@v1
+        id: fc
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-author: "github-actions[bot]"
+          body-includes: QUALITY GATE STATUS FOR .NET 5
+
+      - name: Check Quality Gate and Create Comment
+        if: failure() && steps.scan.outcome == 'failure' && github.event_name == 'pull_request' && steps.fc.outputs.comment-id == ''
+        uses: peter-evans/create-or-update-comment@v1
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_URL }}
+          PROJECT_KEY: ${{secrets.PROJECT_KEY_API}}
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            QUALITY GATE STATUS FOR .NET 5: FAILED.
+
+            [View and resolve details on][1]
+
+            [1]: ${{env.SONAR_HOST_URL}}/dashboard?id=${{env.PROJECT_KEY}}
+          reactions: confused
+
+      - name: Check Quality Gate and Update Comment
+        if: failure() && steps.scan.outcome == 'failure' && github.event_name == 'pull_request' && steps.fc.outputs.comment-id != '' && github.event.pull_request.head.repo.full_name == github.repository
+        uses: peter-evans/create-or-update-comment@v1
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_URL }}
+          PROJECT_KEY: ${{secrets.PROJECT_KEY_APP}}
+        with:
+          comment-id: ${{ steps.fc.outputs.comment-id }}
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            QUALITY GATE STATUS FOR .NET 5: FAILED.
+
+            [View and resolve details on][1]
+
+            [1]: ${{env.SONAR_HOST_URL}}/dashboard?id=${{env.PROJECT_KEY}}
+          edit-mode: replace
+          reactions: eyes
