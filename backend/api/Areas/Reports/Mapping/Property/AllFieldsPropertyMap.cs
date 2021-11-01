@@ -1,6 +1,7 @@
 using Mapster;
 using Entity = Pims.Dal.Entities;
 using Model = Pims.Api.Areas.Reports.Models.AllPropertyFields;
+using Pims.Core.Extensions;
 
 namespace Pims.Api.Areas.Reports.Mapping.AllPropertyFields
 {
@@ -10,7 +11,7 @@ namespace Pims.Api.Areas.Reports.Mapping.AllPropertyFields
         {
             config.NewConfig<Entity.Views.Property, Model.AllFieldsPropertyModel>()
                 .Map(dest => dest.Type, src => src.PropertyTypeId)
-                .Map(dest => dest.ProjectNumbers, src => src.ProjectNumbers)
+                .Map(dest => dest.ProjectNumbers, src => src.ProjectNumbers.FormatProjectNumbers())
                 .Map(dest => dest.Classification, src => src.Classification)
                 .Map(dest => dest.Name, src => src.Name)
                 .Map(dest => dest.Description, src => src.Description)
