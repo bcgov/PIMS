@@ -104,5 +104,16 @@ namespace Pims.Core.Extensions
             if (string.IsNullOrEmpty(value)) return value;
             return value.Length <= maxLength ? value : value.Substring(0, maxLength);
         }
+
+        /// <summary>
+        /// Clean up the project numbers array format and get rid of double quotes, brackets, and commas.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static string FormatProjectNumbers(this string value)
+        {
+            if (string.IsNullOrEmpty(value)) return value;
+            return value.Replace("\"", "").Replace("[", "").Replace("]", "").Replace(",", System.Environment.NewLine);
+        }
     }
 }
