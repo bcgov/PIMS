@@ -6,7 +6,7 @@ import { IProject } from 'features/projects/interfaces';
 import { useFormikContext } from 'formik';
 import { EnhancedReferralTab } from '..';
 import { isEqual } from 'lodash';
-import { ProjectInformationTab, DocumentationTab } from '../../common';
+import { ProjectInformationTab, DocumentationTab, NotificationTab } from '../../common';
 import { CloseOutFormTab, SplTab } from 'features/projects/spl';
 import { isTabInError } from 'components/common/tabValidation';
 import ErrorTabs from 'components/common/ErrorTabs';
@@ -76,6 +76,13 @@ const ErpTabs: React.FunctionComponent<IErpTabsProps> = ({
             setSubmitStatusCode={setSubmitStatusCode}
             goToGreTransferred={() => submitForm().then(() => goToGreTransferred())}
           />
+        </Tab>
+        <Tab
+          eventKey={SPPApprovalTabs.notification}
+          title="Notification Information"
+          tabClassName={isTabInError(errors, SPPApprovalTabs.notification)}
+        >
+          <NotificationTab isReadOnly={isReadOnly} />
         </Tab>
         <Tab
           eventKey={SPPApprovalTabs.spl}

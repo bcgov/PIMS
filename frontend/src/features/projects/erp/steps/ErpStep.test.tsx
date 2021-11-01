@@ -36,6 +36,7 @@ const mockKeycloak = (claims: string[]) => {
 const history = createMemoryHistory();
 const mockAxios = new MockAdapter(axios);
 const mockProject = _.cloneDeep(defaultProject);
+
 mockProject.statusCode = ReviewWorkflowStatus.ERP;
 mockProject.workflowCode = DisposalWorkflows.Erp;
 
@@ -54,10 +55,8 @@ describe('ERP Approval Step', () => {
   afterEach(() => {
     cleanup();
   });
-  beforeAll(() => {
-    mockAxios.onAny().reply(200, {});
-  });
   it('renders correctly', () => {
+    mockAxios.onAny().reply(200, { items: [] });
     mockKeycloak([]);
     const { container } = render(getApprovalStep());
     expect(container.firstChild).toMatchSnapshot();
@@ -67,23 +66,51 @@ describe('ERP Approval Step', () => {
       mockKeycloak([Claims.ADMIN_PROJECTS]);
     });
     it('Displays Project Information Tab', () => {
+      mockAxios.onAny().reply(200, { items: [] });
       const store = getStore(mockProject, SPPApprovalTabs.projectInformation);
       const { getByText } = render(getApprovalStep(store));
       expect(getByText(/Project No\./)).toBeVisible();
     });
     it('Displays Documentation Tab', () => {
+      mockAxios.onAny().reply(200, { items: [] });
       const store = getStore(mockProject, SPPApprovalTabs.documentation);
       const { getByText } = render(getApprovalStep(store));
       expect(getByText(/First Nations Consultation/)).toBeVisible();
     });
     it('Displays ERP Tab', () => {
+      mockAxios.onAny().reply(200, { items: [] });
       const store = getStore(mockProject, SPPApprovalTabs.erp);
       const { getByText } = render(getApprovalStep(store));
       expect(getByText(/Enhanced Referral Process Complete/)).toBeVisible();
     });
+    it('Displays Notifications Tab', () => {
+      // create a mock api call to notifications...
+      mockAxios.onGet().reply(200, {});
+      mockAxios.onPost('/api/projects/disposal/notifications').reply(200, {
+        items: [
+          {
+            id: 0,
+            key: '',
+            projectId: 1,
+            status: 'Pending',
+            sendOn: '2030-01-01',
+            to: 'test@test.com',
+            subject: 'Testing',
+            total: 1,
+            projectNumber: '',
+          },
+        ],
+      });
+      act(() => {
+        const store = getStore(mockProject, SPPApprovalTabs.notification);
+        const { getByText } = render(getApprovalStep(store));
+        expect(getByText(/Notifications:/)).toBeVisible();
+      });
+    });
   });
   describe('Display when user has required claims', () => {
     beforeAll(() => {
+      mockAxios.onAny().reply(200, { items: [] });
       mockKeycloak([Claims.ADMIN_PROJECTS]);
     });
 
@@ -131,6 +158,7 @@ describe('ERP Approval Step', () => {
   });
   describe('Display when user missing claims', () => {
     beforeAll(() => {
+      mockAxios.onAny().reply(200, { items: [] });
       mockKeycloak([]);
     });
     it('save button is not rendered', () => {
@@ -165,6 +193,7 @@ describe('ERP Approval Step', () => {
   describe('Display when project is cancelled', () => {
     let project: IProject;
     beforeAll(() => {
+      mockAxios.onAny().reply(200, { items: [] });
       mockKeycloak([Claims.ADMIN_PROJECTS]);
       project = _.cloneDeep(mockProject);
       project.statusCode = ReviewWorkflowStatus.Cancelled;
@@ -214,6 +243,7 @@ describe('ERP Approval Step', () => {
   });
   describe('form actions', () => {
     beforeAll(() => {
+      mockAxios.onAny().reply(200, { items: [] });
       mockKeycloak([Claims.ADMIN_PROJECTS]);
     });
     afterEach(() => {
@@ -247,7 +277,8 @@ describe('ERP Approval Step', () => {
       expect(proceedToSplButton).not.toBeDisabled();
     });
     it('displays modal when cancel button clicked', async () => {
-      const component = render(getApprovalStep());
+      const project = _.cloneDeep(mockProject);
+      const component = render(getApprovalStep(getStore(project)));
       const cancelButton = component.getByText(/Cancel Project/);
       act(() => {
         cancelButton.click();
@@ -310,7 +341,7 @@ describe('ERP Approval Step', () => {
       const { getByText } = render(getApprovalStep(getStore(project)));
       const saveButton = getByText(/Save/);
 
-      await waitFor(async () => {
+      await waitFor(() => {
         saveButton.click();
         expect(mockAxios.history.put).toHaveLength(1);
       });
