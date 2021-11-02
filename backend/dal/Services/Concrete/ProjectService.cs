@@ -693,10 +693,13 @@ namespace Pims.Dal.Services
                     this.User.ThrowIfNotAuthorized(Permissions.DisposeApprove, "User does not have permission to approve project.");
                     this.Context.SetProjectPropertiesVisiblity(originalProject, true);
                     // Default notification dates.
-                    metadata.InitialNotificationSentOn = now;
-                    metadata.ThirtyDayNotificationSentOn = now.AddDays(30);
-                    metadata.SixtyDayNotificationSentOn = now.AddDays(60);
-                    metadata.NinetyDayNotificationSentOn = now.AddDays(90);
+                    if (sendNotifications)
+                    {
+                        metadata.InitialNotificationSentOn = now;
+                        metadata.ThirtyDayNotificationSentOn = now.AddDays(30);
+                        metadata.SixtyDayNotificationSentOn = now.AddDays(60);
+                        metadata.NinetyDayNotificationSentOn = now.AddDays(90);
+                    }
                     originalProject.ApprovedOn = now;
                     metadata.ExemptionRequested = false; // Adding to ERP removes exemption.
                     break;
