@@ -123,7 +123,8 @@ const EnhancedReferralCompleteForm = ({
           disabled={isReadOnly}
           field="onHoldNotificationSentOn"
         />
-        {formikProps.values.statusCode === ReviewWorkflowStatus.InErp && (
+        {(formikProps.values.statusCode === ReviewWorkflowStatus.InErp ||
+          formikProps.values.statusCode === ReviewWorkflowStatus.NotInSpl) && (
           <div className="col-md-6">
             <Button
               disabled={isReadOnly || !formikProps.values.onHoldNotificationSentOn}
