@@ -112,7 +112,7 @@ namespace Pims.Dal.Services
         /// <param name="notifications"></param>
         public void Update(IEnumerable<NotificationQueue> notifications)
         {
-            this.Context.Update(notifications);
+            this.Context.UpdateRange(notifications);
             this.Context.CommitTransaction();
         }
 
@@ -389,7 +389,7 @@ namespace Pims.Dal.Services
             }
             return notification;
         }
-        
+
 
         /// <summary>
         /// Generates the access request notification for the specified 'model' and 'template'.
