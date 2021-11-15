@@ -8,7 +8,7 @@ export const NO_DATA = 'No data available';
 export const MAP_UNAVAILABLE = [
   'The BC Geographic Warehouse (BCGW) map layers used in this application are unavailable at this time.',
   'Please notify ',
-  'pims@gov.bc.ca',
+  'CITZ_RPD_IMIT_HELP@gov.bc.ca',
   ' if this problem persists.',
 ];
 export const MAP_UNAVAILABLE_STR = MAP_UNAVAILABLE.join('\n');
