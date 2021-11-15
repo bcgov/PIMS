@@ -1,12 +1,12 @@
 import * as React from 'react';
 
 var environment;
-if (process.env.NODE_ENV === 'production') {
-  environment = '';
+if (process.env.NODE_ENV === 'development') {
+  environment = 'delivery.';
 } else if (process.env.NODE_ENV === 'test') {
   environment = 'test.';
-} else if (process.env.NODE_ENV === 'development') {
-  environment = 'delivery.';
+} else if (process.env.NODE_ENV === 'production') {
+  environment = '';
 }
 
 export const MUNICIPALITY_LAYER_URL =
