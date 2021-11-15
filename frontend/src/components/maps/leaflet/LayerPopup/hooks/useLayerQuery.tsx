@@ -88,7 +88,7 @@ export const handleParcelDataLayerResponse = (
 };
 const MAX_RETRIES = 2;
 const wfsAxios = () => {
-  const instance = axios.create({ timeout: 5000 });
+  const instance = axios.create({ timeout: 5000, withCredentials: true });
   instance.defaults.raxConfig = {
     retry: MAX_RETRIES,
     instance: instance,
