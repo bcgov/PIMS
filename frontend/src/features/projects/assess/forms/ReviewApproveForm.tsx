@@ -38,6 +38,10 @@ const ReviewApproveForm = ({
   const formikProps = useFormikContext<IProject>();
   const { errors } = useFormikContext<IProject>();
   const [isReadOnly, setIsReadOnly] = useState(!canEdit);
+  /** used to maintain the send notifications value checkbox */
+  const [checkedNotificationState, setCheckedNotificationState] = useState(
+    (values as any).sendNotifications,
+  );
   /** Enter edit mode if allowed and there are errors to display */
   useEffect(() => {
     if (Object.keys(errors).length > 0) {
@@ -115,9 +119,11 @@ const ReviewApproveForm = ({
         <NotificationCheck
           label="Notifications should be sent for this project"
           field="sendNotifications"
+          checkedState={checkedNotificationState}
+          setCheckedState={setCheckedNotificationState}
         />
       )}
-      {(values as any).sendNotifications && (
+      {checkedNotificationState && (
         <ErpNotificationNotes outerClassName="col-md-12 reviewRequired" disabled={!canEdit} />
       )}
     </Fragment>

@@ -16,6 +16,9 @@ type OptionalAttributes = {
   label?: string;
   /** The form component label to display after the checkbox */
   postLabel?: string;
+  /** This will maintain the state of the checkbox on save */
+  checkedState?: boolean;
+  setCheckedState?: Function;
   /** The underlying HTML element to use when rendering the FormControl */
   as?: React.ElementType;
   /** Short hint that describes the expected value of an <input> element */
@@ -64,6 +67,8 @@ export const Check: React.FC<CheckProps> = ({
   radioLabelTwo,
   toolTip,
   toolTipId,
+  checkedState,
+  setCheckedState,
   ...rest
 }) => {
   const {
@@ -85,6 +90,12 @@ export const Check: React.FC<CheckProps> = ({
       setFieldTouched(field, true);
     }
   }, [checked, field, handleBlur, setFieldTouched, initialChecked]);
+
+  useEffect(() => {
+    if (checkedState !== (values as any).sendNotifications && setCheckedState) {
+      setFieldValue(field, checkedState);
+    }
+  }, [checkedState, field, setCheckedState, setFieldValue, values]);
   return (
     <Form.Group
       controlId={`input-${field}`}
@@ -109,14 +120,16 @@ export const Check: React.FC<CheckProps> = ({
             isInvalid={!!touch && !!error}
             type={type}
             {...rest}
-            value={checked === true}
+            value={setCheckedState ? checked === true || checkedState : checked === true}
             placeholder={placeholder}
-            checked={checked === true}
+            checked={setCheckedState ? checkedState : checked === true}
             onChange={() => {
               if (type !== 'radio') {
                 setFieldValue(field, !checked);
+                setCheckedState && setCheckedState(!checkedState);
               } else {
                 setFieldValue(field, true);
+                setCheckedState && setCheckedState(true);
               }
             }}
             onBlur={handleBlur}
