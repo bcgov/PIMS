@@ -12,11 +12,7 @@ import { FormikValues, setIn, getIn } from 'formik';
 import { useState } from 'react';
 import useGeocoder from 'features/properties/hooks/useGeocoder';
 import { isMouseEventRecent } from 'utils';
-import {
-  handleParcelDataLayerResponse,
-  PARCELS_LAYER_URL,
-  useLayerQuery,
-} from 'components/maps/leaflet/LayerPopup';
+import { handleParcelDataLayerResponse, useLayerQuery } from 'components/maps/leaflet/LayerPopup';
 import { LeafletMouseEvent, LatLng } from 'leaflet';
 import AssociatedLandForm from '../SidebarContents/AssociatedLandForm';
 import { toast } from 'react-toastify';
@@ -40,6 +36,7 @@ import { withNameSpace } from 'utils/formUtils';
 import { PropertyTypes, Claims, EvaluationKeys, FiscalKeys } from 'constants/index';
 import { useBuildingApi } from '../hooks/useBuildingApi';
 import { fireMapRefreshEvent } from 'components/maps/hooks/useMapRefreshEvent';
+import { useBoundaryLayer } from 'components/maps/leaflet/LayerPopup/hooks/useBoundaryLayer';
 
 interface IMapSideBarContainerProps {
   refreshParcels: Function;
@@ -140,7 +137,8 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
   const [showDelete, setShowDelete] = useState(false);
   const { createBuilding, updateBuilding } = useBuildingApi();
 
-  const parcelLayerService = useLayerQuery(PARCELS_LAYER_URL);
+  const layerUrl = useBoundaryLayer();
+  const parcelLayerService = useLayerQuery(layerUrl);
 
   /**
    * Populate the formik form using the passed parcel.

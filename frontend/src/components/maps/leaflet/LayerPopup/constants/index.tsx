@@ -1,20 +1,7 @@
 import * as React from 'react';
 
-var environment;
-if (process.env.NODE_ENV === 'production') {
-  environment = '';
-} else if (process.env.NODE_ENV === 'test') {
-  environment = 'test.';
-} else if (process.env.NODE_ENV === 'development') {
-  environment = 'delivery.';
-}
-
 export const MUNICIPALITY_LAYER_URL =
   'https://openmaps.gov.bc.ca/geo/pub/WHSE_LEGAL_ADMIN_BOUNDARIES.ABMS_MUNICIPALITIES_SP/wfs?SERVICE=WFS&REQUEST=GetFeature&VERSION=1.3.0&outputFormat=application/json&typeNames=pub:WHSE_LEGAL_ADMIN_BOUNDARIES.ABMS_MUNICIPALITIES_SP';
-export const PARCELS_LAYER_URL =
-  'https://' +
-  environment +
-  'apps.gov.bc.ca/ext/sgw/geo.allgov?service=WFS&version=2.0&request=GetFeature&typeName=geo.allgov:WHSE_CADASTRE.PMBC_PARCEL_FABRIC_POLY_FA_SVW&outputFormat=application/json';
 export const PARCELS_LAYER_URL_PUBLIC =
   'https://openmaps.gov.bc.ca/geo/pub/WHSE_CADASTRE.PMBC_PARCEL_FABRIC_POLY_SVW/wfs?service=WFS&REQUEST=GetFeature&VERSION=1.3.0&outputFormat=application/json&typeNames=pub:WHSE_CADASTRE.PMBC_PARCEL_FABRIC_POLY_SVW';
 
