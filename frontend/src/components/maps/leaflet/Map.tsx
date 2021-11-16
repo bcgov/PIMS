@@ -24,7 +24,6 @@ import {
   municipalityLayerPopupConfig,
   MUNICIPALITY_LAYER_URL,
   parcelLayerPopupConfig,
-  PARCELS_LAYER_URL,
 } from './LayerPopup/constants';
 import { isEmpty, isEqual, isEqualWith } from 'lodash';
 import {
@@ -50,6 +49,7 @@ import { Claims } from '../../../constants';
 import InfoSlideOut from './InfoSlideOut/InfoSlideOut';
 import { PropertyPopUpContextProvider } from '../providers/PropertyPopUpProvider';
 import FilterBackdrop from './FilterBackdrop';
+import { useBoundaryLayer } from './LayerPopup/hooks/useBoundaryLayer';
 
 export type MapViewportChangeEvent = {
   bounds: LatLngBounds | null;
@@ -185,7 +185,8 @@ const Map: React.FC<MapProps> = ({
   const smallScreen = useMediaQuery({ maxWidth: 1800 });
   const [mapWidth, setMapWidth] = useState(0);
   const municipalitiesService = useLayerQuery(MUNICIPALITY_LAYER_URL);
-  const parcelsService = useLayerQuery(PARCELS_LAYER_URL);
+  const layerUrl = useBoundaryLayer();
+  const parcelsService = useLayerQuery(layerUrl);
   const [bounds, setBounds] = useState<LatLngBounds>(defaultBounds);
   const { setChanged } = useFilterContext();
   const [layerPopup, setLayerPopup] = useState<LayerPopupInformation>();
