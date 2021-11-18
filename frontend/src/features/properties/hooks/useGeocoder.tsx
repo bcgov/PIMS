@@ -5,12 +5,12 @@ import { useState } from 'react';
 import useCodeLookups from 'hooks/useLookupCodes';
 import {
   useLayerQuery,
-  PARCELS_LAYER_URL,
   handleParcelDataLayerResponse,
   saveParcelDataLayerResponse,
 } from 'components/maps/leaflet/LayerPopup';
 import { LatLng } from 'leaflet';
 import { useDispatch } from 'react-redux';
+import { useBoundaryLayer } from 'components/maps/leaflet/LayerPopup/hooks/useBoundaryLayer';
 
 interface IUseGeocoderProps {
   formikRef: React.MutableRefObject<FormikValues | undefined>;
@@ -42,7 +42,8 @@ export interface IPidSelection {
  */
 const useGeocoder = ({ formikRef, fetchPimsOrLayerParcel }: IUseGeocoderProps) => {
   const { lookupCodes } = useCodeLookups();
-  const parcelsService = useLayerQuery(PARCELS_LAYER_URL);
+  const layerUrl = useBoundaryLayer();
+  const parcelsService = useLayerQuery(layerUrl);
   const [pidSelection, setPidSelection] = useState<IPidSelection>({ showPopup: false, geoPID: '' });
   const api = useApi();
   const dispatch = useDispatch();
