@@ -59,21 +59,26 @@ parameters:
     description: "Keycloak SSO realm, used by the frontend login."
     required: true
     value: xz0xtue5
-  - name: KEYCLOAK_CONFIG_FILE_NAME
-    displayName: "keycloak.json Config File Name"
-    description: "The name of the configuration file to be used for keycloak.json."
-    required: true
-    value: "keycloak.json"
-  - name: KEYCLOAK_CONFIG_MOUNT_PATH
-    displayName: "keycloak.json Mount Path"
-    description: "The path to use to mount the config file."
-    required: true
-    value: "/tmp/app/dist/"
   - name: KEYCLOAK_AUTHORITY_URL
     displayName: "Keycloak Authority URL"
     description: "The Keycloak authority URL."
     required: true
     value: "https://dev.oidc.gov.bc.ca/auth"
+
+  - name: FILE_CONFIG_MOUNT_PATH
+    displayName: "keycloak.json Mount Path"
+    description: "The path to use to mount the config file."
+    required: true
+    value: "/tmp/app/dist/"
+  - name: KEYCLOAK_CONFIG_FILE_NAME
+    displayName: "keycloak.json Config File Name"
+    description: "The name of the configuration file to be used for keycloak.json."
+    required: true
+    value: "keycloak.json"
+  - name: NODE_ENV
+    displayName: "Node Environment"
+    description: "A way to identify within the app which environment the app is in"
+    value: "production"
 
   - name: REAL_IP_FROM
     description:
@@ -127,7 +132,7 @@ objects:
   - kind: NetworkPolicy
     apiVersion: networking.k8s.io/v1
     metadata:
-      name: pod-from-pod-permit-${NAME}-${SOURCE_ROLE}-${DESTINATION_ROLE}
+      name: pod-from-pod-permit-${APP_NAME}-${ROLE_NAME}-${API_ROLE_NAME}
       namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
     spec:
       #description: Allow api pod(s) to receive communication from app pod(s).
@@ -143,6 +148,7 @@ objects:
                   app: ${APP_NAME}
                   role: ${ROLE_NAME}
                   env: ${ENV_NAME}
+
   # Open up ports to communicate with the app.
   - kind: Service
     apiVersion: v1
@@ -194,6 +200,25 @@ objects:
         "confidential-port": 0
         }'
 
+  # Environment Variable configuration settings.
+  - kind: ConfigMap
+    apiVersion: v1
+    metadata:
+      name: ${APP_NAME}-${ROLE_NAME}-env${INSTANCE}
+      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
+      annotations:
+        description: Environment variable configuration
+      labels:
+        name: ${APP_NAME}-${ROLE_NAME}-env${INSTANCE}
+        app: ${APP_NAME}
+        role: ${ROLE_NAME}
+        env: ${ENV_NAME}
+    type: Opaque
+    data:
+      environment.json: '{
+        "env": "${NODE_ENV}"
+        }'
+
   # How the app will be deployed to the pod.
   - kind: DeploymentConfig
     apiVersion: v1
@@ -238,6 +263,12 @@ objects:
                 items:
                   - key: "${KEYCLOAK_CONFIG_FILE_NAME}"
                     path: "${KEYCLOAK_CONFIG_FILE_NAME}"
+            - name: "${APP_NAME}-${ROLE_NAME}-envvars${INSTANCE}"
+              configMap:
+                name: ${APP_NAME}-${ROLE_NAME}-env${INSTANCE}
+                items:
+                  - key: "environment.json"
+                    path: "environment.json"
           containers:
             - name: ${APP_NAME}-${ROLE_NAME}${INSTANCE}
               image: ""
@@ -263,8 +294,11 @@ objects:
                   memory: ${MEMORY_LIMIT}
               volumeMounts:
                 - name: "${APP_NAME}-${ROLE_NAME}-keycloak${INSTANCE}"
-                  mountPath: "${KEYCLOAK_CONFIG_MOUNT_PATH}${KEYCLOAK_CONFIG_FILE_NAME}"
+                  mountPath: "${FILE_CONFIG_MOUNT_PATH}${KEYCLOAK_CONFIG_FILE_NAME}"
                   subPath: "${KEYCLOAK_CONFIG_FILE_NAME}"
+                - name: "${APP_NAME}-${ROLE_NAME}-envvars${INSTANCE}"
+                  mountPath: "${FILE_CONFIG_MOUNT_PATH}environment.json"
+                  subPath: "environment.json"
               livenessProbe:
                 httpGet:
                   path: "/nginx_status"
