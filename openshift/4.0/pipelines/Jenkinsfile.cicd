@@ -179,19 +179,6 @@ pipeline {
       }
     }
 
-    stage('Quality Gate') {
-      when {
-        expression { false } // skip this stage (for now)
-      }
-      options {
-        timeout(time: 5, unit: 'MINUTES')
-      }
-      steps {
-        //  TODO: Break the build if Quality Gate failed
-        echo '...'
-      }
-    }
-
     stage('Deploy') {
       options { timeout(time: 20, unit: 'MINUTES') }
       steps {
