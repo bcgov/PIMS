@@ -107,6 +107,20 @@ const wfsAxios = () => {
     layerData.LAYER_DATA_LOADING();
     return config;
   });
+
+  instance.interceptors.response.use(
+    response => {
+      return response;
+    },
+    error => {
+      if (axios.isCancel(error)) {
+        return Promise.resolve(error.message);
+      }
+      toast.dismiss(layerData.LAYER_DATA_LOADING_ID);
+      layerData.LAYER_DATA_ERROR();
+      return Promise.reject(error);
+    },
+  );
   return instance;
 };
 
