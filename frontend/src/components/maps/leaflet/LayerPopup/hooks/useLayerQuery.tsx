@@ -37,13 +37,9 @@ const wfsAxios = () => {
 
   instance.interceptors.response.use(
     response => {
-      toast.dismiss(layerData.LAYER_DATA_LOADING_ID);
-      layerData.LAYER_DATA_ERROR();
-      console.log(response);
       return response;
     },
     error => {
-      console.log(error);
       if (axios.isCancel(error)) {
         return Promise.resolve(error.message);
       }
