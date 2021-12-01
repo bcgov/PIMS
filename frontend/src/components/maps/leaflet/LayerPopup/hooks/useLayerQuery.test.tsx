@@ -49,7 +49,7 @@ describe('useLayerQuery hook tests', () => {
         await findOneWhereContains({ lat: 1, lng: 1 } as any);
       } catch (err) {}
 
-      expect(toastErrorSpy).toHaveBeenCalledTimes(1);
+      expect(toastErrorSpy).toHaveBeenCalledTimes(2);
     });
     it('retries failed wfs requests', async () => {
       const { findOneWhereContains } = getRenderedHook();
@@ -83,7 +83,7 @@ describe('useLayerQuery hook tests', () => {
         await findByAdministrative('city');
       } catch (err) {}
 
-      expect(toastErrorSpy).toHaveBeenCalledTimes(1);
+      expect(toastErrorSpy).toHaveBeenCalledTimes(2);
     });
     it('retries failed wfs requests', async () => {
       const { findByAdministrative } = getRenderedHook();
@@ -117,7 +117,7 @@ describe('useLayerQuery hook tests', () => {
         await findByPid('pid');
       } catch (err) {}
 
-      expect(toastErrorSpy).toHaveBeenCalledTimes(1);
+      expect(toastErrorSpy).toHaveBeenCalledTimes(2);
     });
     it('retries failed wfs requests', async () => {
       const { findByPid } = getRenderedHook();
@@ -151,7 +151,7 @@ describe('useLayerQuery hook tests', () => {
         await findByPin('pin');
       } catch (err) {}
 
-      expect(toastErrorSpy).toHaveBeenCalledTimes(1);
+      expect(toastErrorSpy).toHaveBeenCalledTimes(2);
     });
     it('retries failed wfs requests', async () => {
       const { findByPin } = getRenderedHook();
