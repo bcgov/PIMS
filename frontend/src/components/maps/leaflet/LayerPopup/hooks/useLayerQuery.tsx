@@ -47,7 +47,9 @@ const wfsAxios = () => {
       layerData.LAYER_DATA_ERROR();
 
       // Error is handled and returning empty object.
-      return Promise.resolve({});
+      return Promise.resolve({
+        features: [],
+      });
     },
   );
   return instance;
@@ -144,7 +146,7 @@ export const useLayerQuery = (url: string, geometryName: string = 'SHAPE'): IUse
         await wfsAxios().get(
           `${baseUrl}&cql_filter=CONTAINS(${geometryName},SRID=4326;POINT ( ${latlng.lng} ${latlng.lat}))`,
         )
-      )?.data;
+      )?.data ?? { features: [] };
       return data;
     },
     [baseUrl, geometryName],
@@ -157,7 +159,7 @@ export const useLayerQuery = (url: string, geometryName: string = 'SHAPE'): IUse
           await wfsAxios().get(
             `${baseUrl}&cql_filter=ADMIN_AREA_NAME='${city}' OR ADMIN_AREA_ABBREVIATION='${city}'&outputformat=json`,
           )
-        )?.data;
+        )?.data ?? { features: [] };
 
         if (data.totalFeatures === 0) {
           return null;
