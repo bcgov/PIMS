@@ -282,7 +282,6 @@ const Map: React.FC<MapProps> = ({
 
   const showLocationDetails = async (event: LeafletMouseEvent) => {
     !!onMapClick && onMapClick(event);
-    const municipality = await municipalitiesService.findOneWhereContains(event.latlng);
     const parcel = await parcelsService.findOneWhereContains(event.latlng);
     if (parcel.features.length === 0) {
       popUpContext.setBCEIDWarning(true);
@@ -293,15 +292,6 @@ const Map: React.FC<MapProps> = ({
     let displayConfig = {};
     let title = 'Municipality Information';
     let feature = {};
-    if (municipality.features.length === 1) {
-      properties = municipality.features[0].properties!;
-      displayConfig = municipalityLayerPopupConfig;
-      feature = municipality.features[0];
-      bounds = municipality.features[0]?.geometry
-        ? geoJSON(municipality.features[0].geometry).getBounds()
-        : undefined;
-    }
-
     if (parcel.features.length === 1) {
       title = 'Parcel Information';
       properties = parcel.features[0].properties!;
@@ -337,8 +327,10 @@ const Map: React.FC<MapProps> = ({
   const [layersOpen, setLayersOpen] = React.useState(false);
   const displayMessage = (
     <p>
-      Please contact <a href="mailto:CITZ_RPD_IMIT_HELP@gov.bc.ca">CITZ_RPD_IMIT_HELP@gov.bc.ca</a>{' '}
-      regarding access to the parcel layer details.
+      You might have clicked outside of a parcel boundary or you do not have access to the parcel
+      layer yet. Please contact{' '}
+      <a href="mailto:CITZ_RPD_IMIT_HELP@gov.bc.ca">CITZ_RPD_IMIT_HELP@gov.bc.ca</a> regarding
+      access to the parcel layer details.
     </p>
   );
   return (
