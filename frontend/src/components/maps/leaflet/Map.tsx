@@ -20,7 +20,7 @@ import { Feature, GeoJsonObject } from 'geojson';
 import { LegendControl } from './Legend/LegendControl';
 import { useMediaQuery } from 'react-responsive';
 import ReactResizeDetector from 'react-resize-detector';
-import { MUNICIPALITY_LAYER_URL, parcelLayerPopupConfig } from './LayerPopup/constants';
+import { parcelLayerPopupConfig } from './LayerPopup/constants';
 import { isEmpty, isEqual, isEqualWith } from 'lodash';
 import {
   LayerPopupContent,
