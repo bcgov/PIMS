@@ -181,7 +181,6 @@ const Map: React.FC<MapProps> = ({
   const [activeBasemap, setActiveBasemap] = useState<BaseLayer | null>(null);
   const smallScreen = useMediaQuery({ maxWidth: 1800 });
   const [mapWidth, setMapWidth] = useState(0);
-  const municipalitiesService = useLayerQuery(MUNICIPALITY_LAYER_URL);
   const layerUrl = useBoundaryLayer();
   const parcelsService = useLayerQuery(layerUrl);
   const [bounds, setBounds] = useState<LatLngBounds>(defaultBounds);
