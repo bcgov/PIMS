@@ -279,6 +279,8 @@ const Map: React.FC<MapProps> = ({
     !!onMapClick && onMapClick(event);
     const parcel = await parcelsService.findOneWhereContains(event.latlng);
     if (parcel.features.length === 0) {
+      const error = (parcel as any).error;
+      console.debug('test: ' + error);
       popUpContext.setBCEIDWarning(true);
     }
     let properties = {};
