@@ -26,7 +26,7 @@ parameters:
   - displayName: SonarQube version
     name: SONARQUBE_VERSION
     required: true
-    value: "lts-enterprise"
+    value: "9.2-community"
 
 objects:
   - apiVersion: v1
