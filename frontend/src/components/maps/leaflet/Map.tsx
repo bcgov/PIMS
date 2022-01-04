@@ -187,7 +187,6 @@ const Map: React.FC<MapProps> = ({
   const { setChanged } = useFilterContext();
   const [layerPopup, setLayerPopup] = useState<LayerPopupInformation>();
   const popUpContext = React.useContext(PropertyPopUpContext);
-  console.debug(popUpContext.showBCEIDWarning);
 
   if (mapRef.current && !selectedProperty?.parcelDetail) {
     lat = (mapRef.current.props.center as Array<number>)[0];
