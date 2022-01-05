@@ -26,7 +26,7 @@ parameters:
   - displayName: SonarQube version
     name: SONARQUBE_VERSION
     required: true
-    value: "8.2.2"
+    value: "lts-community"
 
 objects:
   - apiVersion: v1
@@ -42,7 +42,7 @@ objects:
             tags: sonarqube
           from:
             kind: DockerImage
-            name: "bcgovimages/sonarqube:${SONARQUBE_VERSION}"
+            name: "sonarqube:${SONARQUBE_VERSION}"
           importPolicy: {}
           name: "${SONARQUBE_VERSION}"
   - apiVersion: v1
@@ -67,7 +67,9 @@ objects:
           maxUnavailable: 25%
           timeoutSeconds: 600
           updatePeriodSeconds: 1
-        type: Rolling
+        type: Recreate
+        recreateParams:
+          timeoutSeconds: 9600
       template:
         metadata:
           annotations:
