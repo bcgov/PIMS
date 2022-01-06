@@ -324,9 +324,10 @@ const Map: React.FC<MapProps> = ({
   const displayMessage = (
     <p>
       You might have clicked outside of a parcel boundary or you do not have access to the parcel
-      layer yet. Please contact{' '}
-      <a href="mailto:CITZ_RPD_IMIT_HELP@gov.bc.ca">CITZ_RPD_IMIT_HELP@gov.bc.ca</a> regarding
-      access to the parcel layer details.
+      layer yet. You can zoom into the map to ensure that you are actually clicking within the
+      boundaries of a parcel. Please contact{' '}
+      <a href="mailto:CITZ_RPD_IMIT_HELP@gov.bc.ca">CITZ_RPD_IMIT_HELP@gov.bc.ca</a> if you are
+      still unable to access the parcel layer details.
     </p>
   );
   return (
