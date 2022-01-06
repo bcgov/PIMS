@@ -20,7 +20,8 @@ export const FindUserType = (username: string) => {
 export const useBoundaryLayer = () => {
   const env = useEnvironment();
   const username = Username();
-  const userType = FindUserType(username);
+  let userType;
+  username !== undefined ? (userType = FindUserType(username)) : (userType = 'unknown');
 
   let domain = '';
   let parcelURL = '';
@@ -46,6 +47,5 @@ export const useBoundaryLayer = () => {
         'openmaps.gov.bc.ca/geo/pub/WHSE_CADASTRE.PMBC_PARCEL_FABRIC_POLY_SVW/wfs?service=WFS&REQUEST=GetFeature&VERSION=1.3.0&outputFormat=application/json&typeNames=pub:WHSE_CADASTRE.PMBC_PARCEL_FABRIC_POLY_SVW';
       break;
   }
-
   return `https://${domain}${parcelURL}`;
 };
