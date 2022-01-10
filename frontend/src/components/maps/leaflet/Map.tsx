@@ -20,7 +20,11 @@ import { Feature, GeoJsonObject } from 'geojson';
 import { LegendControl } from './Legend/LegendControl';
 import { useMediaQuery } from 'react-responsive';
 import ReactResizeDetector from 'react-resize-detector';
-import { parcelLayerPopupConfig } from './LayerPopup/constants';
+import {
+  municipalityLayerPopupConfig,
+  MUNICIPALITY_LAYER_URL,
+  parcelLayerPopupConfig,
+} from './LayerPopup/constants';
 import { isEmpty, isEqual, isEqualWith } from 'lodash';
 import {
   LayerPopupContent,
@@ -181,6 +185,7 @@ const Map: React.FC<MapProps> = ({
   const [activeBasemap, setActiveBasemap] = useState<BaseLayer | null>(null);
   const smallScreen = useMediaQuery({ maxWidth: 1800 });
   const [mapWidth, setMapWidth] = useState(0);
+  const municipalitiesService = useLayerQuery(MUNICIPALITY_LAYER_URL);
   const layerUrl = useBoundaryLayer();
   const parcelsService = useLayerQuery(layerUrl);
   const [bounds, setBounds] = useState<LatLngBounds>(defaultBounds);
@@ -276,11 +281,10 @@ const Map: React.FC<MapProps> = ({
 
   const showLocationDetails = async (event: LeafletMouseEvent) => {
     !!onMapClick && onMapClick(event);
+    const municipality = await municipalitiesService.findOneWhereContains(event.latlng);
     const parcel = await parcelsService.findOneWhereContains(event.latlng);
     if (parcel.features.length === 0) {
-      const error = (parcel as any).error;
-      console.debug('test: ' + error);
-      popUpContext.setBCEIDWarning(true);
+      //popUpContext.setBCEIDWarning(true);
     }
     let properties = {};
     let center: LatLng | undefined;
@@ -288,6 +292,14 @@ const Map: React.FC<MapProps> = ({
     let displayConfig = {};
     let title = 'Municipality Information';
     let feature = {};
+    if (municipality.features.length === 1) {
+      properties = municipality.features[0].properties!;
+      displayConfig = municipalityLayerPopupConfig;
+      feature = municipality.features[0];
+      bounds = municipality.features[0]?.geometry
+        ? geoJSON(municipality.features[0].geometry).getBounds()
+        : undefined;
+    }
     if (parcel.features.length === 1) {
       title = 'Parcel Information';
       properties = parcel.features[0].properties!;
