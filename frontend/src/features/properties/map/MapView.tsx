@@ -15,6 +15,7 @@ import { FilterProvider } from 'components/maps/providers/FIlterProvider';
 import { useLocation } from 'react-router-dom';
 import queryString from 'query-string';
 import useCodeLookups from 'hooks/useLookupCodes';
+import { PropertyPopUpContextProvider } from 'components/maps/providers/PropertyPopUpProvider';
 
 /** rough center of bc Itcha Ilgachuz Provincial Park */
 const defaultLatLng = {
@@ -70,30 +71,32 @@ const MapView: React.FC<MapViewProps> = (props: MapViewProps) => {
         properties={properties}
       />
       <FilterProvider>
-        <Map
-          sidebarSize={size}
-          lat={defaultLatLng.lat}
-          lng={defaultLatLng.lng}
-          properties={properties}
-          selectedProperty={propertyDetail}
-          agencies={agencies}
-          administrativeAreas={administrativeAreas}
-          lotSizes={lotSizes}
-          onMarkerPopupClose={() => {
-            dispatch(storeParcelDetail(null));
-          }}
-          onViewportChanged={(mapFilterModel: MapViewportChangeEvent) => {
-            if (!loadedProperties) {
-              setLoadedProperties(true);
-            }
-          }}
-          onMapClick={saveLatLng}
-          disableMapFilterBar={disableFilter}
-          interactive={!props.disabled}
-          showParcelBoundaries={props.showParcelBoundaries ?? true}
-          zoom={6}
-          mapRef={mapRef}
-        />
+        <PropertyPopUpContextProvider>
+          <Map
+            sidebarSize={size}
+            lat={defaultLatLng.lat}
+            lng={defaultLatLng.lng}
+            properties={properties}
+            selectedProperty={propertyDetail}
+            agencies={agencies}
+            administrativeAreas={administrativeAreas}
+            lotSizes={lotSizes}
+            onMarkerPopupClose={() => {
+              dispatch(storeParcelDetail(null));
+            }}
+            onViewportChanged={(mapFilterModel: MapViewportChangeEvent) => {
+              if (!loadedProperties) {
+                setLoadedProperties(true);
+              }
+            }}
+            onMapClick={saveLatLng}
+            disableMapFilterBar={disableFilter}
+            interactive={!props.disabled}
+            showParcelBoundaries={props.showParcelBoundaries ?? true}
+            zoom={6}
+            mapRef={mapRef}
+          />
+        </PropertyPopUpContextProvider>
       </FilterProvider>
     </div>
   );

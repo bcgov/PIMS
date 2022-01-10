@@ -13,6 +13,48 @@ import { toast } from 'react-toastify';
 import { layerData } from 'constants/toasts';
 import * as rax from 'retry-axios';
 
+const MAX_RETRIES = 2;
+const wfsAxios = () => {
+  const instance = axios.create({ timeout: 5000, withCredentials: true });
+  instance.defaults.raxConfig = {
+    retry: MAX_RETRIES,
+    instance: instance,
+    shouldRetry: (error: AxiosError) => {
+      const cfg = rax.getConfig(error);
+      if (cfg?.currentRetryAttempt === MAX_RETRIES) {
+        toast.dismiss(layerData.LAYER_DATA_LOADING_ID);
+        layerData.LAYER_DATA_ERROR();
+      }
+      return rax.shouldRetryRequest(error);
+    },
+  };
+  rax.attach(instance);
+
+  instance.interceptors.request.use(config => {
+    layerData.LAYER_DATA_LOADING();
+    return config;
+  });
+
+  instance.interceptors.response.use(
+    response => {
+      return response;
+    },
+    error => {
+      if (axios.isCancel(error)) {
+        return Promise.resolve(error.message);
+      }
+      toast.dismiss(layerData.LAYER_DATA_LOADING_ID);
+      layerData.LAYER_DATA_ERROR();
+      // Error is handled and returning empty object.
+      return Promise.resolve({
+        features: [],
+        error: error,
+      });
+    },
+  );
+  return instance;
+};
+
 export interface IUserLayerQuery {
   /**
    * function to find GeoJSON shape containing a point (x, y)
@@ -86,29 +128,6 @@ export const handleParcelDataLayerResponse = (
       dispatch(error(parcelLayerDataSlice.reducer.name, axiosError?.response?.status, axiosError));
     });
 };
-const MAX_RETRIES = 2;
-const wfsAxios = () => {
-  const instance = axios.create({ timeout: 5000, withCredentials: true });
-  instance.defaults.raxConfig = {
-    retry: MAX_RETRIES,
-    instance: instance,
-    shouldRetry: (error: AxiosError) => {
-      const cfg = rax.getConfig(error);
-      if (cfg?.currentRetryAttempt === MAX_RETRIES) {
-        toast.dismiss(layerData.LAYER_DATA_LOADING_ID);
-        layerData.LAYER_DATA_ERROR();
-      }
-      return rax.shouldRetryRequest(error);
-    },
-  };
-  rax.attach(instance);
-
-  instance.interceptors.request.use(config => {
-    layerData.LAYER_DATA_LOADING();
-    return config;
-  });
-  return instance;
-};
 
 /**
  * Custom hook to fetch layer feature collection from wfs url
@@ -127,7 +146,7 @@ export const useLayerQuery = (url: string, geometryName: string = 'SHAPE'): IUse
         await wfsAxios().get(
           `${baseUrl}&cql_filter=CONTAINS(${geometryName},SRID=4326;POINT ( ${latlng.lng} ${latlng.lat}))`,
         )
-      )?.data;
+      )?.data ?? { features: [] };
       return data;
     },
     [baseUrl, geometryName],
@@ -140,7 +159,7 @@ export const useLayerQuery = (url: string, geometryName: string = 'SHAPE'): IUse
           await wfsAxios().get(
             `${baseUrl}&cql_filter=ADMIN_AREA_NAME='${city}' OR ADMIN_AREA_ABBREVIATION='${city}'&outputformat=json`,
           )
-        )?.data;
+        )?.data ?? { features: [] };
 
         if (data.totalFeatures === 0) {
           return null;
