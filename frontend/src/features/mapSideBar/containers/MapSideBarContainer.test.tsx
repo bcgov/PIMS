@@ -85,6 +85,7 @@ describe('Parcel Detail MapSideBarContainer', () => {
         userInfo: {
           agencies: [1],
           roles: [Claims.PROPERTY_EDIT],
+          username: 'test',
         },
         subject: 'test',
       },
@@ -143,6 +144,7 @@ describe('Parcel Detail MapSideBarContainer', () => {
           userInfo: {
             agencies: [1],
             roles: [Claims.PROPERTY_EDIT],
+            username: 'test',
           },
           subject: 'test',
         },
@@ -195,6 +197,7 @@ describe('Parcel Detail MapSideBarContainer', () => {
           userInfo: {
             agencies: [1],
             roles: [Claims.ADMIN_PROPERTIES],
+            username: 'test',
           },
           subject: 'test',
         },
@@ -402,6 +405,7 @@ describe('Parcel Detail MapSideBarContainer', () => {
             userInfo: {
               agencies: [1],
               roles: [Claims.PROPERTY_EDIT],
+              username: 'test',
             },
             subject: 'test',
           },
