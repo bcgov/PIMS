@@ -45,7 +45,6 @@ const wfsAxios = () => {
       }
       toast.dismiss(layerData.LAYER_DATA_LOADING_ID);
       layerData.LAYER_DATA_ERROR();
-      console.debug('error: ' + error);
       // Error is handled and returning empty object.
       return Promise.resolve({
         features: [],
