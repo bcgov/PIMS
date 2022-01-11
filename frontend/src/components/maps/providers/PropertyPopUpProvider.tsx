@@ -9,6 +9,8 @@ interface IPopUpContext {
   setPropertyTypeID: (propertyTypeID: number) => void;
   loading: boolean;
   setLoading: (loading: boolean) => void;
+  showBCEIDWarning: boolean;
+  setBCEIDWarning: (showBCEIDWarning: boolean) => void;
 }
 
 export const PropertyPopUpContext = React.createContext<IPopUpContext>({
@@ -18,6 +20,8 @@ export const PropertyPopUpContext = React.createContext<IPopUpContext>({
   setPropertyTypeID: noop,
   loading: false,
   setLoading: noop,
+  showBCEIDWarning: false,
+  setBCEIDWarning: noop,
 });
 
 /**
@@ -28,6 +32,7 @@ export const PropertyPopUpContextProvider: React.FC = ({ children }) => {
   const [propertyInfo, setPropertyInfo] = React.useState<IParcel | IBuilding | null>(null);
   const [propertyTypeID, setPropertyTypeID] = React.useState<number | null>(null);
   const [loading, setLoading] = React.useState<boolean>(false);
+  const [showBCEIDWarning, setBCEIDWarning] = React.useState<boolean>(false);
   return (
     <PropertyPopUpContext.Provider
       value={{
@@ -37,6 +42,8 @@ export const PropertyPopUpContextProvider: React.FC = ({ children }) => {
         setPropertyTypeID,
         loading,
         setLoading,
+        showBCEIDWarning,
+        setBCEIDWarning,
       }}
     >
       {children}
