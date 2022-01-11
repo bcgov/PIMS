@@ -156,7 +156,7 @@ pipeline {
     }
 
     stage('Build') {
-      options { timeout(time: 30, unit: 'MINUTES') }
+      options { timeout(time: 60, unit: 'MINUTES') }
       failFast true
       parallel {
         stage('Build Frontend') {
