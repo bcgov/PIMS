@@ -28,9 +28,6 @@ export const useBoundaryLayer = () => {
   let domain = '';
   let parcelURL = '';
   switch (env.env) {
-    case 'test':
-      domain = `${env.env}.`;
-      break;
     case 'development':
       domain = 'delivery.';
       break;
