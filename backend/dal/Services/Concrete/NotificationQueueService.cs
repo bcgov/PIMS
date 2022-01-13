@@ -315,7 +315,7 @@ namespace Pims.Dal.Services
 
             var env = new EnvironmentModel(_options.Environment.Uri, _options.Environment.Name, _options.Environment.Title);
             var model = new ProjectNotificationModel(Guid.NewGuid(), env, project, project.Agency);
-            var email = !String.IsNullOrWhiteSpace(project.Agency.Email) ? project.Agency.Email :
+            var email = !String.IsNullOrWhiteSpace(project.Agency.Email) && !(template.Audience == NotificationAudiences.ProjectOwner) ? project.Agency.Email :
                 this.Context.Users.FirstOrDefault(u => u.Id == project.CreatedById)?.Email;
 
             return GenerateNotification(email, template, model);
