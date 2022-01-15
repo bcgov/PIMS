@@ -12,8 +12,8 @@ import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureMockStore from 'redux-mock-store';
 import * as reducerTypes from 'constants/reducerTypes';
-import { fetchPropertyNames } from 'actionCreators/propertyActionCreator';
-import { ILookupCode } from 'actions/lookupActions';
+import { fetchPropertyNames } from 'store/slices/hooks/propertyActionCreator';
+import { ILookupCode } from 'actions/ILookupCode';
 import * as API from 'constants/API';
 
 const onFilterChange = jest.fn<void, [IPropertyFilter]>();

@@ -6,13 +6,14 @@ import {
   IProject,
   IProperty,
 } from 'features/projects/interfaces';
-import { initialValues, AgencyResponses } from 'features/projects/constants';
+import { AgencyResponses } from 'features/projects/constants';
 import { IFiscal, IEvaluation } from 'actions/parcelsActions';
 import { FiscalKeys } from 'constants/fiscalKeys';
 import { getCurrentFiscalYear, formatDate, stringToNull } from 'utils';
 import _ from 'lodash';
 import moment from 'moment';
 import { NoteTypes, PropertyTypes, EvaluationKeys, PropertyTypeNames } from 'constants/index';
+import { defaultProject } from '../constants/defaultValues';
 
 export const getCurrentFiscal = (fiscals: IFiscal[], key: FiscalKeys) => {
   const currentFiscal = getCurrentFiscalYear();
@@ -162,7 +163,7 @@ export const toFlatProject = (project?: IApiProject) => {
   });
   //always copy the project values over initial values, this ensures that formik's requirement of non-undefined fields is satisfied.
   const flatProject: IProject = {
-    ...initialValues,
+    ...defaultProject(),
     ...project,
     properties: flatProperties,
     notes: getFlatProjectNotes(project),

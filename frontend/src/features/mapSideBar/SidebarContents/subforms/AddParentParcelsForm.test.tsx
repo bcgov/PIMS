@@ -4,7 +4,7 @@ import { noop } from 'lodash';
 import { Formik } from 'formik';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { ILookupCode } from 'actions/lookupActions';
+import { ILookupCode } from 'actions/ILookupCode';
 import * as API from 'constants/API';
 import * as reducerTypes from 'constants/reducerTypes';
 import { Provider } from 'react-redux';

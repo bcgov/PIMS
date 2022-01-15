@@ -1,6 +1,6 @@
 import { ISnapshot } from './../interfaces';
 import CustomAxios, { LifecycleToasts } from 'customAxios';
-import { useDispatch } from 'react-redux';
+import { useAppDispatch } from 'store';
 import { showLoading, hideLoading } from 'react-redux-loading-bar';
 import { AxiosInstance } from 'axios';
 import { ENVIRONMENT } from 'constants/environment';
@@ -86,7 +86,7 @@ const snapshotToasts: LifecycleToasts = {
  * Network API hook. Provide a set of functions to access and manipulate API data related to SPL Reports.
  */
 export const useProjectSnapshotApi = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const defaultAxios = useCallback(
     getAxios(dispatch, { errorToast: () => toast.error('Failed to load reports') }),
@@ -152,16 +152,14 @@ export const useProjectSnapshotApi = () => {
 
   const exportReport = (report: IReport, accept: 'csv' | 'excel') => {
     const query = getServerQuery({ pageIndex: 0, pageSize: 1, filter: {}, agencyIds: [] });
-    return dispatch(
-      download({
-        url: getProjectFinancialReportUrl({ ...query, all: true, reportId: report?.id }),
-        fileName: `pims-spl-report.${accept === 'csv' ? 'csv' : 'xlsx'}`,
-        actionType: 'projects-report',
-        headers: {
-          Accept: accept === 'csv' ? 'text/csv' : 'application/vnd.ms-excel',
-        },
-      }),
-    );
+    return download({
+      url: getProjectFinancialReportUrl({ ...query, all: true, reportId: report?.id }),
+      fileName: `pims-spl-report.${accept === 'csv' ? 'csv' : 'xlsx'}`,
+      actionType: 'projects-report',
+      headers: {
+        Accept: accept === 'csv' ? 'text/csv' : 'application/vnd.ms-excel',
+      },
+    })(dispatch);
   };
 
   return {

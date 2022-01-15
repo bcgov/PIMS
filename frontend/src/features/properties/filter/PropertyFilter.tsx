@@ -3,7 +3,7 @@ import './PropertyFilter.scss';
 import React, { useMemo, useRef, useState } from 'react';
 import { Col } from 'react-bootstrap';
 import { Formik, getIn } from 'formik';
-import { ILookupCode } from 'actions/lookupActions';
+import { ILookupCode } from 'actions/ILookupCode';
 import { Form, Select } from '../../../components/common/form';
 import { FilterBarSchema } from 'utils/YupSchema';
 import ResetButton from 'components/common/form/ResetButton';
@@ -15,9 +15,9 @@ import { IPropertyFilter } from './IPropertyFilter';
 import { TableSort } from 'components/Table/TableSort';
 import { FindMorePropertiesButton } from 'components/maps/FindMorePropertiesButton';
 import { TypeaheadField } from 'components/common/form/Typeahead';
-import { useDispatch } from 'react-redux';
+import { useAppDispatch } from 'store';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
-import { fetchPropertyNames } from 'actionCreators/propertyActionCreator';
+import { fetchPropertyNames } from 'store/slices/hooks/propertyActionCreator';
 import { AsyncTypeahead } from 'react-bootstrap-typeahead';
 import { PropertyFilterAgencyOptions } from './PropertyFilterAgencyOptions';
 import styled from 'styled-components';
@@ -79,7 +79,7 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
   setTriggerFilterChanged,
 }) => {
   const [propertyFilter, setPropertyFilter] = React.useState<IPropertyFilter>(defaultFilter);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const keycloak = useKeycloakWrapper();
   const lookupCodes = useLookupCodes();
   const [initialLoad, setInitialLoad] = useState(false);

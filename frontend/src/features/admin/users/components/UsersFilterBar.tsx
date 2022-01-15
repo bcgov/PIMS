@@ -2,7 +2,7 @@ import * as React from 'react';
 import FilterBar from 'components/SearchBar/FilterBar';
 import { Col } from 'react-bootstrap';
 import { Input, SelectOption, Select } from 'components/common/form';
-import { ILookupCode } from 'actions/lookupActions';
+import { ILookupCode } from 'actions/ILookupCode';
 import { IUsersFilter } from 'interfaces';
 import { mapLookupCodeWithParentString } from 'utils';
 import { ParentSelect } from 'components/common/form/ParentSelect';

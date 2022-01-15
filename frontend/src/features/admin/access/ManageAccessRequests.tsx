@@ -2,50 +2,31 @@ import * as React from 'react';
 import { Container } from 'react-bootstrap';
 import { AccessRequestStatus } from 'constants/accessStatus';
 import { Table } from 'components/Table';
-import { IPaginate, toFilteredApiPaginateParams } from 'utils/CommonFunctions';
+import { toFilteredApiPaginateParams } from 'utils/CommonFunctions';
 import * as API from 'constants/API';
 import { IAccessRequest } from 'interfaces';
 import './ManageAccessRequests.scss';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from 'reducers/rootReducer';
-import { IGenericNetworkAction } from 'actions/genericActions';
-import {
-  getAccessRequestsAction,
-  getAccessRequestsFilterAction,
-} from 'actionCreators/accessRequestActionCreator';
+import { IGenericNetworkAction, useAppSelector } from 'store';
+import { useAccessRequest } from 'store/slices/hooks';
 import * as actionTypes from 'constants/actionTypes';
-import { IAccessRequestState } from 'reducers/accessRequestReducer';
 import { IAccessRequestModel } from './interfaces';
 import { AccessRequestFilter } from './components/Filter';
-import { IFilterData, getUpdateAccessRequestPageIndex } from 'actions/accessRequestActions';
+import { IFilterData } from 'actions/IFilterData';
 import { columnDefinitions } from './constants/constants';
 import { AccessRequestDetails } from './components/Details';
 
 const ManageAccessRequests = () => {
-  const dispatch = useDispatch();
+  const api = useAccessRequest();
+  const { pagedAccessRequests, pageSize, pageIndex, filter } = useAppSelector(
+    store => store.accessRequest,
+  );
   const [selectedRequest, setSelectedRequest] = React.useState<IAccessRequestModel | undefined>(
     undefined,
   );
   const columns = React.useMemo(() => columnDefinitions, []);
-  const updateRequestAccessAdmin = useSelector<RootState, IGenericNetworkAction>(
-    state =>
-      (state.network as any)[actionTypes.UPDATE_REQUEST_ACCESS_ADMIN] as IGenericNetworkAction,
-  );
-
-  const pagedAccessRequests = useSelector<RootState, IPaginate>(
-    state => (state.accessRequest as IAccessRequestState)?.pagedAccessRequests,
-  );
-
-  const pageSize = useSelector<RootState, number>(
-    state => (state.accessRequest as IAccessRequestState)?.pageSize,
-  );
-
-  const pageIndex = useSelector<RootState, number>(
-    state => (state.accessRequest as IAccessRequestState).pageIndex,
-  );
-
-  const filter = useSelector<RootState, IFilterData>(
-    state => (state.accessRequest as IAccessRequestState).filter,
+  const updateRequestAccessAdmin = useAppSelector(
+    store =>
+      (store.network as any)[actionTypes.UPDATE_REQUEST_ACCESS_ADMIN] as IGenericNetworkAction,
   );
 
   React.useEffect(() => {
@@ -57,9 +38,9 @@ const ManageAccessRequests = () => {
         filter,
       );
       paginateParams.status = AccessRequestStatus.OnHold;
-      dispatch(getAccessRequestsAction(paginateParams));
+      api.getAccessRequestsAction(paginateParams);
     }
-  }, [updateRequestAccessAdmin, pageSize, dispatch, filter, pageIndex]);
+  }, [api, pageSize, filter, pageIndex, updateRequestAccessAdmin?.isFetching]);
 
   const requests = (pagedAccessRequests.items as IAccessRequest[]).map(
     ar =>
@@ -91,7 +72,7 @@ const ManageAccessRequests = () => {
         <div className="search-bar">
           <AccessRequestFilter
             initialValues={filter}
-            applyFilter={filter => dispatch(getAccessRequestsFilterAction(filter))}
+            applyFilter={filter => api.updateFilter(filter)}
           />
         </div>
         {!!selectedRequest && (
@@ -106,7 +87,9 @@ const ManageAccessRequests = () => {
           data={requests}
           defaultCanSort={true}
           pageCount={Math.ceil(pagedAccessRequests.total / pageSize)}
-          onRequestData={req => dispatch(getUpdateAccessRequestPageIndex(req.pageIndex))}
+          onRequestData={req => () => {
+            if (pageIndex !== req.pageIndex) api.updatePageIndex(req.pageIndex);
+          }}
           onRowClick={showDetails}
           clickableTooltip="Click user IDIR/BCeID to view User Information. Click row to open Access Request details."
         />

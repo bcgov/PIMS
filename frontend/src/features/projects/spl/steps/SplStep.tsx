@@ -8,15 +8,14 @@ import { formatDate } from 'utils';
 import { Container } from 'react-bootstrap';
 import styled from 'styled-components';
 import StepErrorSummary from '../../common/components/StepErrorSummary';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from 'reducers/rootReducer';
+import { useAppDispatch, useAppSelector } from 'store';
 import { useStepForm, StepStatusIcon, useProject, handleValidate } from '../../common';
 import {
   SPPApprovalTabs,
   ReviewWorkflowStatus,
   DisposeWorkflowStatus,
 } from 'features/projects/constants';
-import { IProject, IProjectTask, IStepProps, IApiProject } from 'features/projects/interfaces';
+import { IProject, IProjectTask, IStepProps } from 'features/projects/interfaces';
 import { ValidationGroup } from 'components/common/tabValidation';
 import {
   saveSplTab,
@@ -31,7 +30,6 @@ import {
 import { ApprovalActions } from 'features/projects/erp';
 import { DocumentationStepSchema } from 'features/projects/dispose';
 import { useHistory } from 'react-router-dom';
-import { toFlatProject } from 'features/projects/common/projectConverter';
 
 const CenterBoldText = styled.div`
   text-align: center;
@@ -67,8 +65,8 @@ const SplStep = ({ formikRef }: IStepProps) => {
     project?.statusCode === ReviewWorkflowStatus.Disposed
       ? SPPApprovalTabs.closeOutForm
       : SPPApprovalTabs.spl;
-  const currentTab = useSelector<RootState, string | null>(state => state.splTab) ?? defaultTab;
-  const dispatch = useDispatch();
+  const currentTab = useAppSelector(store => store.splTab) ?? defaultTab;
+  const dispatch = useAppDispatch();
   const history = useHistory();
 
   const goToGreTransferred = () =>
@@ -165,8 +163,9 @@ const SplStep = ({ formikRef }: IStepProps) => {
             formikRef,
             submitStatusCode,
             getStatusTransitionWorkflow(submitStatusCode),
-          ).then((project: IApiProject) => {
-            actions.resetForm({ values: toFlatProject(project) });
+          ).then((project: IProject) => {
+            // actions.resetForm({ values: toFlatProject(project) });
+            actions.resetForm({ values: project });
             if (
               project?.statusCode === ReviewWorkflowStatus.NotInSpl ||
               project?.statusCode === ReviewWorkflowStatus.ApprovedForSpl
@@ -221,8 +220,9 @@ const SplStep = ({ formikRef }: IStepProps) => {
                       formikRef,
                       submitStatusCode,
                       getStatusTransitionWorkflow(submitStatusCode),
-                    ).then((project: IApiProject) => {
-                      resetForm({ values: toFlatProject(project) });
+                    ).then((project: IProject) => {
+                      // resetForm({ values: toFlatProject(project) });
+                      resetForm({ values: project });
                     });
                   }
                 }}

@@ -2,10 +2,9 @@ import './Login.scss';
 import React, { useState } from 'react';
 import { Redirect } from 'react-router-dom';
 import { Container, Row, Col, Button, Spinner, Jumbotron } from 'react-bootstrap';
-import { useSelector } from 'react-redux';
-import { IGenericNetworkAction } from 'actions/genericActions';
-import { RootState } from 'reducers/rootReducer';
-import { NEW_PIMS_USER } from 'actionCreators/usersActionCreator';
+import { useAppSelector } from 'store';
+import { IGenericNetworkAction } from 'store';
+import { NEW_PIMS_USER } from 'store/slices/hooks/usersActionCreator';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import * as actionTypes from 'constants/actionTypes';
 import { useQuery } from 'hooks/use-query';
@@ -28,8 +27,8 @@ const Login = () => {
   const keyCloakWrapper = useKeycloakWrapper();
   const keycloak = keyCloakWrapper.obj;
   const isIE = usingIE();
-  const activated = useSelector<RootState, IGenericNetworkAction>(
-    state => (state.network as any)[actionTypes.ADD_ACTIVATE_USER] as IGenericNetworkAction,
+  const activated = useAppSelector(
+    store => (store.network as any)[actionTypes.ADD_ACTIVATE_USER] as IGenericNetworkAction,
   );
   if (!keycloak) {
     return <Spinner animation="border"></Spinner>;

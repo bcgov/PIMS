@@ -8,7 +8,7 @@ import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import * as API from 'constants/API';
-import { ILookupCode } from 'actions/lookupActions';
+import { ILookupCode } from 'actions/ILookupCode';
 import * as reducerTypes from 'constants/reducerTypes';
 import { cleanup, fireEvent, render } from '@testing-library/react';
 import Claims from 'constants/claims';

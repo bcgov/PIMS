@@ -8,7 +8,7 @@ import { Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 import { useKeycloak } from '@react-keycloak/web';
 import * as API from 'constants/API';
-import { ILookupCode } from 'actions/lookupActions';
+import { ILookupCode } from 'actions/ILookupCode';
 import * as reducerTypes from 'constants/reducerTypes';
 import { fireEvent, render, wait } from '@testing-library/react';
 

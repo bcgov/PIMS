@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { Container, Spinner } from 'react-bootstrap';
 import { Route, match as Match, useHistory, Redirect, Switch } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useAppDispatch } from 'store';
 import _ from 'lodash';
 import { FormikValues } from 'formik';
 import queryString from 'query-string';
@@ -20,6 +20,7 @@ import { GeneratedDisposeStepper, useStepper, StepActions } from '.';
  */
 const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Location }) => {
   const history = useHistory();
+  const dispatch = useAppDispatch();
   const formikRef = useRef<FormikValues>();
   const {
     goToNextStep,
@@ -35,7 +36,6 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
     noFetchingProjectRequests,
     getProjectRequest,
   } = useStepForm();
-  const dispatch = useDispatch();
   const query = location?.search ?? {};
   const projectNumber = queryString.parse(query).projectNumber;
   const historyReplace = history.replace;
@@ -44,10 +44,14 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
     project: IProject,
     nextStepCode: string,
     workflowStatusCode?: string,
-  ) => {
+  ): Promise<IProject> => {
     //if we are at the most recent incomplete step, update status and project.
     if (project?.statusId === currentStatus.id) {
-      return dispatch(updateWorkflowStatus(project, nextStepCode, workflowStatusCode) as any)
+      return updateWorkflowStatus(
+        project,
+        nextStepCode,
+        workflowStatusCode,
+      )(dispatch)
         .then((project: IProject) => {
           if (goToNextStep(project) === undefined) {
             if (project.statusCode === 'AS-EXE') {
@@ -65,7 +69,10 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
         });
     } else {
       //if we are updating a previous step, just update the project with no status change.
-      return addOrUpdateProject(project, formikRef).then(() => goToNextStep(project));
+      return addOrUpdateProject(project, formikRef).then(project => {
+        goToNextStep(project);
+        return project;
+      });
     }
   };
 
@@ -90,8 +97,8 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
         if (values.id === undefined) {
           promise = addOrUpdateProject(values, formikRef);
         }
-        promise.then(project => {
-          return updateProjectStatus(project, nextStepCode!, workflowStatusCode);
+        return promise.then(project => {
+          return updateProjectStatus(project as IProject, nextStepCode!, workflowStatusCode);
         });
       }
     });

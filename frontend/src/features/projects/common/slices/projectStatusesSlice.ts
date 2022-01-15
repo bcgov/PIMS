@@ -7,7 +7,7 @@ export const clearProjectStatuses = createAction('clearProjectStatuses');
  * Slice to handle storage of project disposal statuses.
  */
 const projectStatusesSlice = createSlice({
-  name: 'projectStatuses',
+  name: 'statuses',
   initialState: [] as IStatus[],
   reducers: {},
   extraReducers: (builder: any) => {

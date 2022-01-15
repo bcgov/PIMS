@@ -1,10 +1,9 @@
 import './ProjectListView.scss';
 
 import React, { useState, useMemo, useRef, useCallback } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useAppSelector, useAppDispatch } from 'store';
 import { Container } from 'react-bootstrap';
 import * as API from 'constants/API';
-import { RootState } from 'reducers/rootReducer';
 import { IProjectFilter, IProject } from '.';
 import { columns as cols } from './columns';
 import { IProject as IProjectDetail } from 'features/projects/interfaces';
@@ -23,7 +22,6 @@ import {
   deletePotentialSubdivisionParcels,
 } from '../common';
 import { ReviewWorkflowStatus } from 'features/projects/constants';
-import { IStatus } from 'features/projects/interfaces';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import Claims from 'constants/claims';
 import { ENVIRONMENT } from 'constants/environment';
@@ -43,8 +41,8 @@ interface IProjectFilterState {
   name?: string;
   statusId?: string;
   agencyId?: string;
-  agencies?: number | null;
-  fiscalYear?: number | null;
+  agencies?: number[];
+  fiscalYear?: number | '';
 }
 
 interface IProps {
@@ -57,8 +55,8 @@ const initialValues: IProjectFilterState = {
   name: '',
   statusId: '',
   agencyId: '',
-  agencies: null,
-  fiscalYear: null,
+  agencies: [],
+  fiscalYear: '',
 };
 
 /**
@@ -73,7 +71,7 @@ export const ProjectListView: React.FC<IProps> = ({
 }) => {
   const lookupCodes = useCodeLookups();
   const agencies = useMemo(() => lookupCodes.getByType(API.AGENCY_CODE_SET_NAME), [lookupCodes]);
-  const projectStatuses = useSelector<RootState, IStatus[]>(state => state.statuses as any);
+  const projectStatuses = useAppSelector(store => store.statuses);
   const keycloak = useKeycloakWrapper();
   const [deleteProjectNumber, setDeleteProjectNumber] = React.useState<string | undefined>();
   const [deletedProject, setDeletedProject] = React.useState<IProjectDetail | undefined>();
@@ -170,32 +168,30 @@ export const ProjectListView: React.FC<IProps> = ({
     },
     [setData, setPageCount],
   );
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const route = history.location.pathname;
 
   // Listen for changes in pagination and use the state to fetch our new data
   useDeepCompareEffect(() => {
-    route === '/projects/list' && dispatch(fetchProjectStatuses());
+    route === '/projects/list' && fetchProjectStatuses()(dispatch);
     fetchData({ pageIndex, pageSize, filter, agencyIds });
   }, [fetchData, pageIndex, pageSize, filter, agencyIds, dispatch, route]);
 
   const fetch = (accept: 'csv' | 'excel', reportType: 'generic' | 'spl') => {
     const query = getServerQuery({ pageIndex, pageSize, filter, agencyIds });
-    return dispatch(
-      download({
-        url:
-          reportType === 'generic'
-            ? getProjectReportUrl({ ...query, all: true })
-            : getProjectFinancialReportUrl({ ...query, all: true }),
-        fileName: `${reportType === 'spl' ? 'pims-spl-report' : 'pims-projects'}.${
-          accept === 'csv' ? 'csv' : 'xlsx'
-        }`,
-        actionType: 'projects-report',
-        headers: {
-          Accept: accept === 'csv' ? 'text/csv' : 'application/vnd.ms-excel',
-        },
-      }),
-    );
+    return download({
+      url:
+        reportType === 'generic'
+          ? getProjectReportUrl({ ...query, all: true })
+          : getProjectFinancialReportUrl({ ...query, all: true }),
+      fileName: `${reportType === 'spl' ? 'pims-spl-report' : 'pims-projects'}.${
+        accept === 'csv' ? 'csv' : 'xlsx'
+      }`,
+      actionType: 'projects-report',
+      headers: {
+        Accept: accept === 'csv' ? 'text/csv' : 'application/vnd.ms-excel',
+      },
+    })(dispatch);
   };
 
   const handleDelete = async () => {

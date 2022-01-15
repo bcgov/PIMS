@@ -14,7 +14,7 @@ import { Classifications } from 'constants/classifications';
 import { SelectOption, SelectOptions } from 'components/common/form';
 import * as API from 'constants/API';
 import * as reducerTypes from 'constants/reducerTypes';
-import { ILookupCode } from 'actions/lookupActions';
+import { ILookupCode } from 'actions/ILookupCode';
 
 jest.mock('axios');
 jest.mock('@react-keycloak/web');

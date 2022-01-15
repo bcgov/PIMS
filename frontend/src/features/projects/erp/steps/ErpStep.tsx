@@ -6,8 +6,7 @@ import { Container } from 'react-bootstrap';
 import styled from 'styled-components';
 import StepErrorSummary from '../../common/components/StepErrorSummary';
 import { useHistory } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from 'reducers/rootReducer';
+import { useAppDispatch, useAppSelector } from 'store';
 import { useStepForm, StepStatusIcon, useProject, handleValidate } from '../../common';
 import {
   SPPApprovalTabs,
@@ -42,8 +41,8 @@ const ErpStep = ({ formikRef }: IStepProps) => {
     project.statusCode === ReviewWorkflowStatus.NotInSpl
       ? SPPApprovalTabs.closeOutForm
       : SPPApprovalTabs.erp;
-  const currentTab = useSelector<RootState, string | null>(state => state.erpTab) ?? defaultTab;
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
+  const currentTab = useAppSelector(store => store.erpTab) ?? defaultTab;
   const history = useHistory();
   const initialValues: IProject = { ...project };
   const canUserEdit =

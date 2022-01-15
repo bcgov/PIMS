@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 import { useProject } from '..';
 import { IProjectAgencyResponse } from 'features/projects/interfaces';
 import { AgencyResponses } from 'features/projects/constants';
-import { ILookupCode } from 'actions/lookupActions';
+import { ILookupCode } from 'actions/ILookupCode';
 import _ from 'lodash';
 
 /** get a list of generated and existing agencies project agency responses. */

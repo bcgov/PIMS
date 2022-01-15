@@ -4,10 +4,8 @@ import { Container } from 'react-bootstrap';
 import { match as Match } from 'react-router-dom';
 import { StepContextProvider } from '.';
 import ProjectDisposeLayout from './ProjectDisposeLayout';
-import { useDispatch, useSelector } from 'react-redux';
+import { useAppDispatch, useAppSelector } from 'store';
 import queryString from 'query-string';
-import { RootState } from 'reducers/rootReducer';
-import { IGenericNetworkAction } from 'actions/genericActions';
 import { ProjectActions } from 'constants/actionTypes';
 import { clearProject, fetchProject } from '../common';
 
@@ -18,14 +16,14 @@ import { clearProject, fetchProject } from '../common';
 const ProjectDisposeView = ({ match, location }: { match: Match; location: Location }) => {
   const query = location?.search ?? {};
   const projectNumber = queryString.parse(query).projectNumber;
-  const dispatch = useDispatch();
-  const getProjectRequest = useSelector<RootState, IGenericNetworkAction>(
-    state => (state.network as any)[ProjectActions.GET_PROJECT] as any,
+  const dispatch = useAppDispatch();
+  const getProjectRequest = useAppSelector(
+    store => (store.network as any)[ProjectActions.GET_PROJECT],
   );
   useEffect(() => {
     if (projectNumber !== null && projectNumber !== undefined) {
       dispatch(clearProject());
-      dispatch(fetchProject(projectNumber as string));
+      fetchProject(projectNumber as string)(dispatch);
     }
   }, [dispatch, projectNumber]);
 

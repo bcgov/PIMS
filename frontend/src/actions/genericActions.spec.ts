@@ -1,6 +1,6 @@
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { request, success, error } from 'actions/genericActions';
+import { request, success, error } from 'store';
 import * as ActionTypes from 'constants/actionTypes';
 
 const createMockStore = configureMockStore([thunk]);

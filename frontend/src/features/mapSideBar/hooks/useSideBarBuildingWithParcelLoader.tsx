@@ -1,11 +1,11 @@
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
 import { SidebarContextType } from './useQueryParamSideBar';
-import { useDispatch } from 'react-redux';
 import React from 'react';
 import { IParcel, IBuilding } from 'actions/parcelsActions';
 import { useApi } from 'hooks/useApi';
 import { defaultBuildingValues } from '../SidebarContents/BuildingForm';
 import { toast } from 'react-toastify';
+import { useAppDispatch } from 'store';
 
 interface IUseSideBarBuildingWithParcelLoader {
   /** whether or not the sidebar should be displayed */
@@ -26,7 +26,7 @@ const useSideBarBuildingWithParcelLoader = ({
   disabled,
 }: IUseSideBarBuildingWithParcelLoader) => {
   const [cachedBuildingDetail, setCachedBuildingDetail] = React.useState<IBuilding | null>(null);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const { getParcel } = useApi();
   /** make an api call to load the parcel based on the parcel id */
   const getAssociatedParcel = (associatedParcelId: number, callback: () => void) =>

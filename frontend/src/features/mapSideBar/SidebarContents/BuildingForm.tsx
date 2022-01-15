@@ -18,7 +18,6 @@ import { OccupancyForm } from './subforms/OccupancyForm';
 import { IdentificationForm } from './subforms/IdentificationForm';
 import { BuildingReviewPage } from './subforms/BuildingReviewPage';
 import { BuildingValuationForm } from './subforms/BuildingValuationForm';
-import { useDispatch } from 'react-redux';
 import _ from 'lodash';
 import { BuildingSteps } from 'constants/propertySteps';
 import useDraftMarkerSynchronizer from 'features/properties/hooks/useDraftMarkerSynchronizer';
@@ -46,6 +45,7 @@ import variables from '_variables.module.scss';
 import LastUpdatedBy from 'features/properties/components/LastUpdatedBy';
 import { fireMapRefreshEvent } from 'components/maps/hooks/useMapRefreshEvent';
 import { IStep } from 'components/common/Stepper';
+import { useAppDispatch } from 'store';
 
 const Container = styled.div`
   background-color: #fff;
@@ -351,7 +351,7 @@ const BuidingForm: React.FC<IParentBuildingForm> = ({
   ...rest
 }) => {
   const keycloak = useKeycloakWrapper();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const { createBuilding, updateBuilding } = useBuildingApi();
   const withNameSpace: Function = React.useCallback(
     (name?: string) => {

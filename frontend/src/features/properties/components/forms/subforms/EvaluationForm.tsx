@@ -108,8 +108,10 @@ export const getMergedFinancials = (
       (evaluation.fiscalYear as number) ?? moment(evaluation.date).year(),
     );
     if (index >= 0) {
-      evaluation.year = (evaluation.fiscalYear as number) ?? moment(evaluation.date).year();
-      placeholderFinancials[index] = evaluation;
+      placeholderFinancials[index] = {
+        ...evaluation,
+        year: (evaluation.fiscalYear as number) ?? moment(evaluation.date).year(),
+      };
     }
   });
   return _.orderBy(placeholderFinancials, 'year', 'desc');

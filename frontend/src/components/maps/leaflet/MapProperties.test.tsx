@@ -17,7 +17,7 @@ import { useKeycloak } from '@react-keycloak/web';
 import { useApi, PimsAPI } from 'hooks/useApi';
 import { createPoints } from './mapUtils';
 import SelectedPropertyMarker from './SelectedPropertyMarker/SelectedPropertyMarker';
-import { fetchPropertyNames } from 'actionCreators/propertyActionCreator';
+import { fetchPropertyNames } from 'store/slices/hooks/propertyActionCreator';
 import axios from 'axios';
 
 import MockAdapter from 'axios-mock-adapter';

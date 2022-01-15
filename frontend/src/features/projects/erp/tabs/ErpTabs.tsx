@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Tab, Spinner } from 'react-bootstrap';
 import { useStepForm } from '../../common';
-import { initialValues, ReviewWorkflowStatus, SPPApprovalTabs } from 'features/projects/constants';
+import { ReviewWorkflowStatus, SPPApprovalTabs } from 'features/projects/constants';
 import { IProject } from 'features/projects/interfaces';
 import { useFormikContext } from 'formik';
 import { EnhancedReferralTab } from '..';
@@ -10,6 +10,7 @@ import { ProjectInformationTab, DocumentationTab } from '../../common';
 import { CloseOutFormTab, SplTab } from 'features/projects/spl';
 import { isTabInError } from 'components/common/tabValidation';
 import ErrorTabs from 'components/common/ErrorTabs';
+import { defaultProject } from 'features/projects/constants/defaultValues';
 
 interface IErpTabsProps {
   /** The currently displayed tab */
@@ -40,7 +41,7 @@ const ErpTabs: React.FunctionComponent<IErpTabsProps> = ({
   const { submitForm, values, errors } = useFormikContext<IProject>();
   const { canUserOverride } = useStepForm();
   const canOverride = canUserOverride();
-  if (isEqual(values, initialValues)) {
+  if (isEqual(values, defaultProject())) {
     return <Spinner animation="border" />;
   }
 
