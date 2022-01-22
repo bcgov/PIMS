@@ -8,7 +8,7 @@ import { Router } from 'react-router-dom';
 import { ReviewWorkflowStatus } from 'features/projects/constants';
 import { ITask, IProject, IProjectTask } from 'features/projects/interfaces';
 import { ProjectActions } from 'constants/actionTypes';
-import { render, wait } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import { useKeycloak } from '@react-keycloak/web';
 import { Claims } from 'constants/claims';
 import MockAdapter from 'axios-mock-adapter';
@@ -244,7 +244,7 @@ describe('Review Approve Step', () => {
       },
     });
     let component: any;
-    await wait(async () => {
+    await waitFor(async () => {
       component = mount(getReviewApproveStep(store(mockProject(mockTasks))));
       const button = component.findWhere((node: { type: () => any; text: () => string }) => {
         return node.type() === Button && node.text() === 'Save';

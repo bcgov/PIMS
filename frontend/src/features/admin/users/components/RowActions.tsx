@@ -6,11 +6,14 @@ import { FiMoreHorizontal } from 'react-icons/fi';
 import { CellProps } from 'react-table';
 import { useHistory } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'store';
+import { IUser } from 'interfaces';
 
 export const RowActions = (props: CellProps<IUserRecord>) => {
   const dispatch = useAppDispatch();
   const history = useHistory();
-  const user = useAppSelector(store => store.users.user);
+  const user = useAppSelector(store =>
+    store.users.pagedUsers.items.find((user: IUser) => user.id === props.row.original.id),
+  );
 
   const changeAccountStatus = async (disabled: boolean) => {
     if (user) {

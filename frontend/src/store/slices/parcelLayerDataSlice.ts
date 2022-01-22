@@ -16,19 +16,19 @@ export interface IParcelLayerState {
   parcelLayerFeature: GeoJsonObject | null;
 }
 
-const initialState: IParcelLayerState = {
+export const initialParcelLayerState: IParcelLayerState = {
   parcelLayerData: null,
   parcelLayerFeature: null,
 };
 
 export const parcelLayerDataSlice = createSlice({
   name: 'parcelLayerData',
-  initialState: initialState,
+  initialState: initialParcelLayerState,
   reducers: {},
   extraReducers: (builder: any) => {
     // TODO: Fix any
     builder.addCase(saveParcelLayerData, (state: IParcelLayerState, action: PayloadAction<any>) => {
-      !!action?.payload?.e?.persist && action.payload.e.persist();
+      !!action.payload.e?.persist && action.payload.e.persist();
       state.parcelLayerData = action.payload;
     });
     builder.addCase(clearParcelLayerData, (state: IParcelLayerState) => {
@@ -38,7 +38,7 @@ export const parcelLayerDataSlice = createSlice({
     builder.addCase(
       saveParcelLayerFeature,
       (state: IParcelLayerState, action: PayloadAction<any>) => {
-        !!action?.payload?.e?.persist && action.payload.e.persist();
+        !!action.payload.e?.persist && action.payload.e.persist();
         state.parcelLayerFeature = action.payload;
       },
     );

@@ -9,8 +9,7 @@ import { createMemoryHistory } from 'history';
 import { useKeycloak } from '@react-keycloak/web';
 import * as API from 'constants/API';
 import { ILookupCode } from 'actions/ILookupCode';
-import * as reducerTypes from 'constants/reducerTypes';
-import { fireEvent, render, wait, screen } from '@testing-library/react';
+import { fireEvent, render, waitFor, screen } from '@testing-library/react';
 import { Classifications } from 'constants/classifications';
 import { fillInput } from 'utils/testUtils';
 import { IParcel } from 'actions/parcelsActions';
@@ -58,8 +57,8 @@ const lCodes = {
 };
 
 const store = mockStore({
-  [reducerTypes.LOOKUP_CODE]: lCodes,
-  [reducerTypes.PARCEL]: { parcels: [], draftParcels: [] },
+  lookupCode: lCodes,
+  parcel: { propeties: [], draftProperties: [] },
 });
 
 const promise = Promise.resolve();
@@ -137,15 +136,15 @@ describe('Land Form', () => {
 
   it('goes to corresponding steps', async () => {
     const { getByText, queryByText, getAllByText } = render(getLandForm(true));
-    await wait(() => {
+    await waitFor(() => {
       fireEvent.click(getByText(/continue/i));
     });
     expect(getByText(/Strategic Real Estate Classification/i)).toBeInTheDocument();
-    await wait(() => {
+    await waitFor(() => {
       fireEvent.click(getByText(/Continue/i));
     });
     expect(getAllByText(/Net Book Value/i)).toHaveLength(2);
-    await wait(() => {
+    await waitFor(() => {
       fireEvent.click(getByText(/Continue/i));
     });
     expect(getByText(/Review your land info/i)).toBeInTheDocument();
@@ -156,11 +155,11 @@ describe('Land Form', () => {
     const { getByText, container } = render(
       getLandForm(false, { ...defaultInitialValues, id: 0, buildings: [{} as any] }),
     );
-    await wait(() => {
+    await waitFor(() => {
       fireEvent.click(getByText(/continue/i));
     });
     expect(getByText(/Strategic Real Estate Classification/i)).toBeInTheDocument();
-    await fillInput(container, 'data.classificationId', '1', 'select');
+    fillInput(container, 'data.classificationId', '1', 'select');
     screen.getByText('Land Classification Changed');
   });
 
@@ -168,17 +167,17 @@ describe('Land Form', () => {
     const { getByText, container } = render(
       getLandForm(false, { ...defaultInitialValues, id: 0, buildings: [] }),
     );
-    await wait(() => {
+    await waitFor(() => {
       fireEvent.click(getByText(/continue/i));
     });
     expect(getByText(/Strategic Real Estate Classification/i)).toBeInTheDocument();
-    await fillInput(container, 'data.classificationId', '1', 'select');
+    fillInput(container, 'data.classificationId', '1', 'select');
     expect(screen.queryByText('Land Classification Changed')).toBeNull();
   });
 
   it('review has appropriate subforms', async () => {
     const { getByText } = render(getLandForm());
-    await wait(() => {
+    await waitFor(() => {
       fireEvent.click(getByText(/Review/i));
     });
     expect(getByText(/parcel identification/i)).toBeInTheDocument();

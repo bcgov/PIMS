@@ -2,12 +2,14 @@ import { createSlice, createAction, PayloadAction } from '@reduxjs/toolkit';
 
 export const setKeycloakReady = createAction<boolean>('setKeycloakReady');
 
+export const initialKeycloakState = false;
+
 export const keycloakReadySlice = createSlice({
   name: 'keycloakReady',
-  initialState: false,
+  initialState: initialKeycloakState,
   reducers: {},
   extraReducers: (builder: any) => {
-    builder.addCase(setKeycloakReady, (_state: any, action: PayloadAction<any>) => {
+    builder.addCase(setKeycloakReady, (_state: boolean, action: PayloadAction<boolean>) => {
       return action.payload;
     });
   },

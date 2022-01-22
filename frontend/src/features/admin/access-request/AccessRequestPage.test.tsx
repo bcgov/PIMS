@@ -11,12 +11,9 @@ import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 import AccessRequestPage from './AccessRequestPage';
 import { ILookupCode } from 'actions/ILookupCode';
-import { IGenericNetworkAction } from 'store';
-import { NETWORK } from 'constants/reducerTypes';
-import * as actionTypes from 'constants/actionTypes';
+import { IGenericNetworkAction, initialAccessRequestState } from 'store';
 import * as API from 'constants/API';
-import * as reducerTypes from 'constants/reducerTypes';
-import { render, fireEvent, wait } from '@testing-library/react';
+import { render, fireEvent, waitFor } from '@testing-library/react';
 import { fillInput } from 'utils/testUtils';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
@@ -62,18 +59,19 @@ const history = createMemoryHistory();
 const mockAxios = new MockAdapter(axios);
 mockAxios.onAny().reply(200, {});
 
-// Simulating a succesful submit
 const successStore = mockStore({
-  [reducerTypes.LOOKUP_CODE]: lCodes,
-  [NETWORK]: {
-    [actionTypes.ADD_REQUEST_ACCESS]: requestAccess,
+  accessRequest: { ...initialAccessRequestState, accessRequest: {} },
+  lookupCode: lCodes,
+  network: {
+    addRequestAccess: requestAccess,
   },
 });
 
 // Store without status of 200
 const store = mockStore({
-  [reducerTypes.LOOKUP_CODE]: lCodes,
-  [NETWORK]: {
+  accessRequest: { ...initialAccessRequestState, accessRequest: {} },
+  lookupCode: lCodes,
+  network: {
     addRequestAccess: requestAccess,
   },
 });
@@ -157,16 +155,14 @@ describe('AccessRequestPage functionality', () => {
       expect(queryByText('privateRole')).toBeNull();
     });
 
-    it('displays a success message', async () => {
+    it('displays a success message', () => {
       const { container, getByText } = testRender();
-      await fillInput(container, 'agency', '1', 'select');
-      await fillInput(container, 'role', '1', 'select');
-      await fillInput(container, 'note', 'some notes', 'textarea');
+      fillInput(container, 'agency', '1', 'select');
+      fillInput(container, 'role', '1', 'select');
+      fillInput(container, 'note', 'some notes', 'textarea');
       const submit = getByText('Submit');
-      wait(() => {
-        fireEvent.click(submit);
-        expect(getByText('Your request has been submitted.')).toBeVisible();
-      });
+      fireEvent.click(submit);
+      waitFor(() => expect(getByText('Your request has been submitted.')).toBeVisible());
     });
   });
 

@@ -43,9 +43,16 @@ export const toAccessRequest = (values: any): IAccessRequest => {
   };
 };
 
+/**
+ * Access Request hook which provides functions to interact with the API and redux store.
+ * @returns Access request actions.
+ */
 export const useAccessRequest = () => {
   const dispatch = useAppDispatch();
 
+  /**
+   * Update page index in the store.
+   */
   const updatePageIndex = React.useCallback(
     (pageIndex: number) => {
       dispatch(updateAccessRequestPageIndex(pageIndex));
@@ -53,6 +60,9 @@ export const useAccessRequest = () => {
     [dispatch],
   );
 
+  /**
+   * Update filter in the store.
+   */
   const updateFilter = React.useCallback(
     (filter: IFilterData) => {
       dispatch(updateAccessRequestFilter(filter));
@@ -109,6 +119,9 @@ export const useAccessRequest = () => {
     [dispatch],
   );
 
+  /**
+   * Update the access request.
+   */
   const getSubmitAdminAccessRequestAction = React.useCallback(
     async (accessRequest: IAccessRequest) => {
       dispatch(request(actionTypes.UPDATE_REQUEST_ACCESS_STATUS_ADMIN));
@@ -135,6 +148,9 @@ export const useAccessRequest = () => {
     [dispatch],
   );
 
+  /**
+   * Get the access request.
+   */
   const getAccessRequestsAction = React.useCallback(
     async (params: API.IPaginateAccessRequests) => {
       dispatch(request(actionTypes.GET_REQUEST_ACCESS));
@@ -159,6 +175,9 @@ export const useAccessRequest = () => {
     [dispatch],
   );
 
+  /**
+   * Delete the access request.
+   */
   const getAccessRequestsDeleteAction = React.useCallback(
     async (id: number, data: IAccessRequest) => {
       dispatch(request(actionTypes.DELETE_REQUEST_ACCESS_ADMIN));

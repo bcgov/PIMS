@@ -18,6 +18,18 @@ const parcelCreatingToasts: LifecycleToasts = {
   errorToast: pimsToasts.parcel.PARCEL_CREATING_ERROR,
 };
 
+const parcelUpdatingToasts: LifecycleToasts = {
+  loadingToast: pimsToasts.parcel.PARCEL_UPDATING,
+  successToast: pimsToasts.parcel.PARCEL_UPDATED,
+  errorToast: pimsToasts.parcel.PARCEL_UPDATING_ERROR,
+};
+
+const parcelDeletingToasts: LifecycleToasts = {
+  loadingToast: pimsToasts.parcel.PARCEL_DELETING,
+  successToast: pimsToasts.parcel.PARCEL_DELETED,
+  errorToast: pimsToasts.parcel.PARCEL_DELETING_ERROR,
+};
+
 export const fetchParcels = (parcelBounds: API.IPropertySearchParams | null) => async (
   dispatch: Dispatch<AnyAction>,
 ) => {
@@ -156,12 +168,6 @@ export const createParcel = (parcel: IParcel) => async (dispatch: Dispatch<AnyAc
   }
 };
 
-const parcelUpdatingToasts: LifecycleToasts = {
-  loadingToast: pimsToasts.parcel.PARCEL_UPDATING,
-  successToast: pimsToasts.parcel.PARCEL_UPDATED,
-  errorToast: pimsToasts.parcel.PARCEL_UPDATING_ERROR,
-};
-
 export const updateParcel = (parcel: IParcel) => async (dispatch: Dispatch<AnyAction>) => {
   dispatch(request(actionTypes.UPDATE_PARCEL));
   dispatch(showLoading());
@@ -180,12 +186,6 @@ export const updateParcel = (parcel: IParcel) => async (dispatch: Dispatch<AnyAc
     dispatch(hideLoading());
     throw Error(err.response?.data.details);
   }
-};
-
-const parcelDeletingToasts: LifecycleToasts = {
-  loadingToast: pimsToasts.parcel.PARCEL_DELETING,
-  successToast: pimsToasts.parcel.PARCEL_DELETED,
-  errorToast: pimsToasts.parcel.PARCEL_DELETING_ERROR,
 };
 
 /**

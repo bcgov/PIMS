@@ -1,8 +1,7 @@
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
-import * as networkSlice from 'store';
+import * as networkSlice from 'store/slices/networkSlice';
 import * as API from 'constants/API';
-import * as MOCK from 'mocks/dataMocks';
 import { ENVIRONMENT } from 'constants/environment';
 import {
   getActivateUserAction,
@@ -11,140 +10,184 @@ import {
   fetchUserDetail,
   getUpdateUserAction,
 } from './usersActionCreator';
+import configureMockStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
+import { initialUserState } from '..';
+import * as userSlice from 'store/slices/userSlice';
+import { IUser } from 'interfaces';
 
-const dispatch = jest.fn();
+const mockAxios = new MockAdapter(axios);
+const mockStore = configureMockStore([thunk]);
+const store = mockStore(initialUserState);
+
+const dispatchSpy = jest.spyOn(store, 'dispatch');
 const requestSpy = jest.spyOn(networkSlice, 'request');
 const successSpy = jest.spyOn(networkSlice, 'success');
 const errorSpy = jest.spyOn(networkSlice, 'error');
-const mockAxios = new MockAdapter(axios);
+const storeUsersSpy = jest.spyOn(userSlice, 'storeUsers');
+const storeUserSpy = jest.spyOn(userSlice, 'storeUser');
+const updateUserSpy = jest.spyOn(userSlice, 'updateUser');
 
 beforeEach(() => {
   mockAxios.reset();
-  dispatch.mockClear();
+  dispatchSpy.mockClear();
   requestSpy.mockClear();
   successSpy.mockClear();
   errorSpy.mockClear();
+  storeUsersSpy.mockClear();
+  storeUserSpy.mockClear();
+  updateUserSpy.mockClear();
 });
-describe('users action creator', () => {
-  describe('getActivateUserAction action creator', () => {
-    it('Request successful, dispatches `success` with correct response', () => {
-      const url = ENVIRONMENT.apiUrl + API.ACTIVATE_USER();
+
+describe('User action tests', () => {
+  describe('getActivateUserAction tests', () => {
+    it('Request successful, dispatch success', async () => {
       const mockResponse = { data: { success: true } };
-      mockAxios.onPost(url).reply(200, mockResponse);
-      return getActivateUserAction()(dispatch).then(() => {
-        expect(requestSpy).toHaveBeenCalledTimes(1);
-        expect(successSpy).toHaveBeenCalledTimes(1);
-        expect(dispatch).toHaveBeenCalledTimes(5);
-      });
+      mockAxios.onPost(ENVIRONMENT.apiUrl + API.ACTIVATE_USER()).reply(200, mockResponse);
+
+      await getActivateUserAction()(store.dispatch);
+      expect(dispatchSpy).toHaveBeenCalledTimes(5);
+      expect(requestSpy).toHaveBeenCalledTimes(1);
+      expect(successSpy).toHaveBeenCalledTimes(1);
+      expect(errorSpy).toHaveBeenCalledTimes(0);
     });
 
-    it('Request failure, dispatches `error` with correct response', () => {
-      const url = ENVIRONMENT.apiUrl + API.ACTIVATE_USER();
-      mockAxios.onPost(url).reply(400, MOCK.ERROR);
-      return getActivateUserAction()(dispatch).then(() => {
-        expect(requestSpy).toHaveBeenCalledTimes(1);
-        expect(errorSpy).toHaveBeenCalledTimes(1);
-        expect(dispatch).toHaveBeenCalledTimes(4);
-      });
+    it('Request failure, dispatch error', async () => {
+      const mockResponse = {};
+      mockAxios.onPost(ENVIRONMENT.apiUrl + API.ACTIVATE_USER()).reply(500, mockResponse);
+
+      await getActivateUserAction()(store.dispatch);
+      expect(dispatchSpy).toHaveBeenCalledTimes(4);
+      expect(requestSpy).toHaveBeenCalledTimes(1);
+      expect(successSpy).toHaveBeenCalledTimes(0);
+      expect(errorSpy).toHaveBeenCalledTimes(1);
     });
   });
 
-  describe('getUsersAction action creator', () => {
-    it('Request successful, dispatches `success` with correct response', () => {
-      const url = ENVIRONMENT.apiUrl + API.POST_USERS();
-      const mockResponse = { data: { success: true } };
-      mockAxios.onPost(url).reply(200, mockResponse);
-      return getUsersAction({} as any)(dispatch).then(() => {
-        expect(requestSpy).toHaveBeenCalledTimes(1);
-        expect(successSpy).toHaveBeenCalledTimes(1);
-        expect(dispatch).toHaveBeenCalledTimes(6);
-      });
+  describe('getUsersAction tests', () => {
+    const filter: API.IPaginateParams = {
+      page: 1,
+    };
+
+    it('Request successful, dispatch success, store response', async () => {
+      const mockResponse = { data: {} };
+      mockAxios.onPost(ENVIRONMENT.apiUrl + API.POST_USERS(), filter).reply(200, mockResponse);
+
+      await getUsersAction(filter)(store.dispatch);
+      expect(dispatchSpy).toHaveBeenCalledTimes(6);
+      expect(requestSpy).toHaveBeenCalledTimes(1);
+      expect(successSpy).toHaveBeenCalledTimes(1);
+      expect(errorSpy).toHaveBeenCalledTimes(0);
+      expect(storeUsersSpy).toHaveBeenCalledTimes(1);
     });
 
-    it('Request failure, dispatches `error` with correct response', () => {
-      const url = ENVIRONMENT.apiUrl + API.POST_USERS();
-      mockAxios.onPost(url).reply(400, MOCK.ERROR);
-      return getUsersAction({} as any)(dispatch).then(() => {
-        expect(requestSpy).toHaveBeenCalledTimes(1);
-        expect(errorSpy).toHaveBeenCalledTimes(1);
-        expect(dispatch).toHaveBeenCalledTimes(4);
-      });
-    });
-  });
+    it('Request failure, dispatch error', async () => {
+      const mockResponse = {};
+      mockAxios.onPost(ENVIRONMENT.apiUrl + API.POST_USERS(), filter).reply(500, mockResponse);
 
-  describe('getUsersPaginationAction action creator', () => {
-    it('Request successful, dispatches `success` with correct response', () => {
-      const url = ENVIRONMENT.apiUrl + API.POST_USERS();
-      const mockResponse = { data: { success: true } };
-      mockAxios.onPost(url).reply(200, mockResponse);
-      return getUsersPaginationAction({} as any)(dispatch).then(() => {
-        expect(dispatch).toHaveBeenCalledTimes(3);
-      });
-    });
-
-    it('Request failure, dispatches `error` with correct response', () => {
-      const url = ENVIRONMENT.apiUrl + API.POST_USERS();
-      mockAxios.onPost(url).reply(400, MOCK.ERROR);
-      return getUsersPaginationAction({} as any)(dispatch).then(() => {
-        expect(errorSpy).toHaveBeenCalledTimes(1);
-        expect(dispatch).toHaveBeenCalledTimes(3);
-      });
+      await getUsersAction(filter)(store.dispatch);
+      expect(dispatchSpy).toHaveBeenCalledTimes(4);
+      expect(requestSpy).toHaveBeenCalledTimes(1);
+      expect(successSpy).toHaveBeenCalledTimes(0);
+      expect(errorSpy).toHaveBeenCalledTimes(1);
+      expect(storeUsersSpy).toHaveBeenCalledTimes(0);
     });
   });
 
-  describe('fetchUserDetail action creator', () => {
-    it('Request successful, dispatches `success` with correct response', () => {
-      const id = 1;
-      const url = ENVIRONMENT.apiUrl + API.USER_DETAIL({ id } as any);
-      const mockResponse = { data: { success: true } };
-      mockAxios.onGet(url).reply(200, mockResponse);
-      return fetchUserDetail({ id } as any)(dispatch).then(() => {
-        expect(requestSpy).toHaveBeenCalledTimes(1);
-        expect(successSpy).toHaveBeenCalledTimes(1);
-        expect(dispatch).toHaveBeenCalledTimes(6);
-      });
+  describe('getUsersPaginationAction tests', () => {
+    const filter: API.IGetUsersParams = {
+      page: 1,
+    };
+
+    it('Request successful, dispatch success, store response', async () => {
+      const mockResponse = { data: {} };
+      mockAxios.onPost(ENVIRONMENT.apiUrl + API.POST_USERS(), filter).reply(200, mockResponse);
+
+      await getUsersPaginationAction(filter)(store.dispatch);
+      expect(dispatchSpy).toHaveBeenCalledTimes(3);
+      expect(requestSpy).toHaveBeenCalledTimes(0);
+      expect(successSpy).toHaveBeenCalledTimes(0);
+      expect(errorSpy).toHaveBeenCalledTimes(0);
+      expect(storeUsersSpy).toHaveBeenCalledTimes(1);
     });
 
-    it('Request failure, dispatches `error` with correct response', () => {
-      const id = 1;
-      const url = ENVIRONMENT.apiUrl + API.USER_DETAIL({ id } as any);
-      mockAxios.onGet(url).reply(400, MOCK.ERROR);
-      return fetchUserDetail({ id } as any)(dispatch).then(() => {
-        expect(requestSpy).toHaveBeenCalledTimes(1);
-        expect(errorSpy).toHaveBeenCalledTimes(1);
-        expect(dispatch).toHaveBeenCalledTimes(4);
-      });
+    it('Request failure, dispatch error', async () => {
+      const mockResponse = {};
+      mockAxios.onPost(ENVIRONMENT.apiUrl + API.POST_USERS(), filter).reply(500, mockResponse);
+
+      await getUsersPaginationAction(filter)(store.dispatch);
+      expect(dispatchSpy).toHaveBeenCalledTimes(3);
+      expect(requestSpy).toHaveBeenCalledTimes(0);
+      expect(successSpy).toHaveBeenCalledTimes(0);
+      expect(errorSpy).toHaveBeenCalledTimes(1);
+      expect(storeUsersSpy).toHaveBeenCalledTimes(0);
     });
   });
 
-  describe('getUpdateUserAction action creator', () => {
-    it('Request successful, dispatches `success` with correct response', () => {
-      const id = 1;
-      const url = ENVIRONMENT.apiUrl + API.KEYCLOAK_USER_UPDATE({ id } as any);
-      const mockResponse = { data: { success: true } };
-      mockAxios.onPut(url).reply(200, mockResponse);
-      return getUpdateUserAction(
-        { id } as any,
-        {},
-      )(dispatch).then(() => {
-        expect(requestSpy).toHaveBeenCalledTimes(1);
-        expect(successSpy).toHaveBeenCalledTimes(1);
-        expect(dispatch).toHaveBeenCalledTimes(6);
-      });
+  describe('fetchUserDetail tests', () => {
+    const filter: API.IUserDetailParams = {
+      id: '',
+    };
+
+    it('Request successful, dispatch success, store response', async () => {
+      const mockResponse = { data: {} };
+      mockAxios.onGet(ENVIRONMENT.apiUrl + API.USER_DETAIL(filter)).reply(200, mockResponse);
+
+      await fetchUserDetail(filter)(store.dispatch);
+      expect(dispatchSpy).toHaveBeenCalledTimes(6);
+      expect(requestSpy).toHaveBeenCalledTimes(1);
+      expect(successSpy).toHaveBeenCalledTimes(1);
+      expect(errorSpy).toHaveBeenCalledTimes(0);
+      expect(storeUserSpy).toHaveBeenCalledTimes(1);
     });
 
-    it('Request failure, dispatches `error` with correct response', () => {
-      const id = 1;
-      const url = ENVIRONMENT.apiUrl + API.USER_DETAIL({ id } as any);
-      mockAxios.onGet(url).reply(400, MOCK.ERROR);
-      return getUpdateUserAction(
-        { id } as any,
-        {},
-      )(dispatch).then(() => {
-        expect(requestSpy).toHaveBeenCalledTimes(1);
-        expect(errorSpy).toHaveBeenCalledTimes(1);
-        expect(dispatch).toHaveBeenCalledTimes(4);
-      });
+    it('Request failure, dispatch error', async () => {
+      const mockResponse = {};
+      mockAxios.onGet(ENVIRONMENT.apiUrl + API.USER_DETAIL(filter)).reply(500, mockResponse);
+
+      await fetchUserDetail(filter)(store.dispatch);
+      expect(dispatchSpy).toHaveBeenCalledTimes(4);
+      expect(requestSpy).toHaveBeenCalledTimes(1);
+      expect(successSpy).toHaveBeenCalledTimes(0);
+      expect(errorSpy).toHaveBeenCalledTimes(1);
+      expect(storeUserSpy).toHaveBeenCalledTimes(0);
+    });
+  });
+
+  describe('getUpdateUserAction tests', () => {
+    const filter: API.IUserDetailParams = {
+      id: '',
+    };
+    const user: IUser = {
+      id: '',
+    };
+
+    it('Request successful, dispatch success, store response', async () => {
+      const mockResponse = { data: {} };
+      mockAxios
+        .onPut(ENVIRONMENT.apiUrl + API.KEYCLOAK_USER_UPDATE(filter), user)
+        .reply(200, mockResponse);
+
+      await getUpdateUserAction(filter, user)(store.dispatch);
+      expect(dispatchSpy).toHaveBeenCalledTimes(6);
+      expect(requestSpy).toHaveBeenCalledTimes(1);
+      expect(successSpy).toHaveBeenCalledTimes(1);
+      expect(errorSpy).toHaveBeenCalledTimes(0);
+      expect(updateUserSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('Request failure, dispatch error', async () => {
+      const mockResponse = {};
+      mockAxios
+        .onPut(ENVIRONMENT.apiUrl + API.KEYCLOAK_USER_UPDATE(filter), user)
+        .reply(500, mockResponse);
+
+      await getUpdateUserAction(filter, user)(store.dispatch);
+      expect(dispatchSpy).toHaveBeenCalledTimes(4);
+      expect(requestSpy).toHaveBeenCalledTimes(1);
+      expect(successSpy).toHaveBeenCalledTimes(0);
+      expect(errorSpy).toHaveBeenCalledTimes(1);
+      expect(updateUserSpy).toHaveBeenCalledTimes(0);
     });
   });
 });

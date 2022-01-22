@@ -16,6 +16,65 @@ export interface IGenericNetworkAction {
   data?: any;
 }
 
+export const initialNetworkState = {};
+
+export const networkSlice = createSlice({
+  name: 'network',
+  initialState: initialNetworkState,
+  reducers: {},
+  extraReducers: builder => {
+    builder.addCase(storeRequest, (state: {}, action: PayloadAction<IGenericNetworkAction>) => {
+      return {
+        ...state,
+        [action.payload.name]: {
+          name: action.payload.name,
+          isFetching: true,
+          status: undefined,
+          error: undefined,
+          type: action.payload.type,
+        },
+      };
+    });
+    builder.addCase(storeSuccess, (state: {}, action: PayloadAction<IGenericNetworkAction>) => {
+      return {
+        ...state,
+        [action.payload.name]: {
+          name: action.payload.name,
+          isFetching: false,
+          status: action.payload.status,
+          error: undefined,
+          type: action.payload.type,
+          data: action.payload.data,
+        },
+      };
+    });
+    builder.addCase(storeError, (state: {}, action: PayloadAction<IGenericNetworkAction>) => {
+      return {
+        ...state,
+        [action.payload.name]: {
+          name: action.payload.name,
+          isFetching: false,
+          status: action.payload.status,
+          error: action.payload.error,
+          type: action.type,
+        },
+      };
+    });
+    builder.addCase(storeClear, (state: {}, action: PayloadAction<IGenericNetworkAction>) => {
+      return {
+        ...state,
+        [action.payload.name]: {
+          name: action.payload.name,
+          isFetching: false,
+          status: undefined,
+          error: undefined,
+          type: undefined,
+        },
+      };
+    });
+  },
+});
+
 export const success = (reducer: string, status?: number, data?: any) =>
   storeSuccess({
     isFetching: false,
@@ -56,62 +115,4 @@ export const clear = (reducer: string) =>
     data: undefined,
   });
 
-const initialState = {};
-
-export const networkSlice = createSlice({
-  name: 'network',
-  initialState: initialState,
-  reducers: {},
-  extraReducers: builder => {
-    builder.addCase(storeRequest, (state: {}, action: PayloadAction<IGenericNetworkAction>) => {
-      return {
-        ...state,
-        [action.payload.name]: {
-          name: action.payload.name,
-          isFetching: true,
-          status: undefined,
-          error: undefined,
-          type: action.payload.type,
-        },
-      };
-    });
-    builder.addCase(storeSuccess, (state: {}, action: PayloadAction<IGenericNetworkAction>) => {
-      return {
-        ...state,
-        [action.payload.name]: {
-          name: action.payload.name,
-          isFetching: false,
-          status: action.payload.status,
-          error: undefined,
-          type: action.payload.type,
-        },
-      };
-    });
-    builder.addCase(storeError, (state: {}, action: PayloadAction<IGenericNetworkAction>) => {
-      return {
-        ...state,
-        [action.payload.name]: {
-          name: action.payload.name,
-          isFetching: false,
-          status: action.payload.status,
-          error: action.payload.error,
-          type: action.type,
-        },
-      };
-    });
-    builder.addCase(storeClear, (state: {}, action: PayloadAction<IGenericNetworkAction>) => {
-      return {
-        ...state,
-        [action.payload.name]: {
-          name: action.payload.name,
-          isFetching: false,
-          status: undefined,
-          error: undefined,
-          type: undefined,
-        },
-      };
-    });
-  },
-});
-
-export default networkSlice;
+export default networkSlice.reducer;

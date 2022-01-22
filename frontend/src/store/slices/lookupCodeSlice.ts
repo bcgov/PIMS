@@ -7,13 +7,13 @@ export interface ILookupCodeState {
   lookupCodes: ILookupCode[];
 }
 
-const initialState: ILookupCodeState = {
+export const initialLookupCodeState: ILookupCodeState = {
   lookupCodes: [],
 };
 
 export const lookupCodeSlice = createSlice({
   name: 'lookupCode',
-  initialState: initialState,
+  initialState: initialLookupCodeState,
   reducers: {},
   extraReducers: builder => {
     builder.addCase(

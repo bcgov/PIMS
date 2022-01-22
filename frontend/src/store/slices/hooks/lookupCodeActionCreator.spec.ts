@@ -1,35 +1,45 @@
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 import { getFetchLookupCodeAction } from 'store/slices/hooks/lookupCodeActionCreator';
-import * as networkSlice from 'store';
+import * as networkSlice from 'store/slices/networkSlice';
+import * as lookupSlice from 'store/slices/lookupCodeSlice';
 import * as API from 'constants/API';
 import * as MOCK from 'mocks/dataMocks';
 import { ENVIRONMENT } from 'constants/environment';
+import configureMockStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
+import { initialLookupCodeState } from '..';
 
-const dispatch = jest.fn();
+const mockAxios = new MockAdapter(axios);
+const mockStore = configureMockStore([thunk]);
+const store = mockStore(initialLookupCodeState);
+
+const dispatchSpy = jest.spyOn(store, 'dispatch');
 const requestSpy = jest.spyOn(networkSlice, 'request');
 const successSpy = jest.spyOn(networkSlice, 'success');
 const errorSpy = jest.spyOn(networkSlice, 'error');
-const mockAxios = new MockAdapter(axios);
+const storeLookupCodesSpy = jest.spyOn(lookupSlice, 'storeLookupCodes');
 
 beforeEach(() => {
   mockAxios.reset();
-  dispatch.mockClear();
+  dispatchSpy.mockClear();
   requestSpy.mockClear();
   successSpy.mockClear();
   errorSpy.mockClear();
+  storeLookupCodesSpy.mockClear();
 });
 
 describe('getFetchLookupCodeAction action creator', () => {
   it('gets all codes when paramaters contains all', () => {
-    const url = ENVIRONMENT.apiUrl + API.LOOKUP_CODE_SET('all');
     const mockResponse = { data: { success: true } };
-    mockAxios.onGet(url).reply(200, mockResponse);
-    return getFetchLookupCodeAction()(dispatch)
+    mockAxios.onGet(ENVIRONMENT.apiUrl + API.LOOKUP_CODE_SET('all')).reply(200, mockResponse);
+    return getFetchLookupCodeAction()(store.dispatch)
       .then(() => {
         expect(requestSpy).toHaveBeenCalledTimes(1);
         expect(successSpy).toHaveBeenCalledTimes(1);
-        expect(dispatch).toHaveBeenCalledTimes(6);
+        expect(dispatchSpy).toHaveBeenCalledTimes(6);
+        expect(errorSpy).toHaveBeenCalledTimes(0);
+        expect(storeLookupCodesSpy).toHaveBeenCalledTimes(1);
       })
       .catch(() => {
         fail('it should not reach here');
@@ -37,13 +47,14 @@ describe('getFetchLookupCodeAction action creator', () => {
   });
 
   it('Request failure, dispatches `error` with correct response', () => {
-    const url = ENVIRONMENT.apiUrl + API.LOOKUP_CODE_SET('all');
-    mockAxios.onGet(url).reply(400, MOCK.ERROR);
-    return getFetchLookupCodeAction()(dispatch)
+    mockAxios.onGet(ENVIRONMENT.apiUrl + API.LOOKUP_CODE_SET('all')).reply(400, MOCK.ERROR);
+    return getFetchLookupCodeAction()(store.dispatch)
       .then(() => {
         expect(requestSpy).toHaveBeenCalledTimes(1);
         expect(errorSpy).toHaveBeenCalledTimes(1);
-        expect(dispatch).toHaveBeenCalledTimes(4);
+        expect(dispatchSpy).toHaveBeenCalledTimes(4);
+        expect(successSpy).toHaveBeenCalledTimes(0);
+        expect(storeLookupCodesSpy).toHaveBeenCalledTimes(0);
       })
       .catch(() => {
         fail('it should not reach here');

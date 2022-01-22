@@ -35,7 +35,7 @@ export interface IAgenciesState {
   pageIndex: number;
 }
 
-const initialState: IAgenciesState = {
+export const initialAgencyState: IAgenciesState = {
   agency: null,
   agencyDetail: initialAgency,
   pagedAgencies: { page: 1, pageIndex: 0, total: 0, quantity: 0, items: [] },
@@ -47,7 +47,7 @@ const initialState: IAgenciesState = {
 
 export const agencySlice = createSlice({
   name: 'agencies',
-  initialState: initialState,
+  initialState: initialAgencyState,
   reducers: {},
   extraReducers: builder => {
     builder.addCase(storeAgency, (state: IAgenciesState, action: PayloadAction<IAgency>) => {

@@ -3,7 +3,7 @@ import PropertyListView from './PropertyListView';
 import React from 'react';
 import { Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
-import { render, cleanup, act, wait, fireEvent } from '@testing-library/react';
+import { render, cleanup, act, waitFor, fireEvent } from '@testing-library/react';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { ILookupCode } from 'actions/ILookupCode';
@@ -87,7 +87,7 @@ describe('Property list view', () => {
         </Provider>,
       );
       expect(container.firstChild).toMatchSnapshot();
-      await wait(async () => {
+      await waitFor(async () => {
         expect(container.querySelector('span[class="spinner-border"]')).not.toBeInTheDocument();
       });
     });
@@ -163,7 +163,9 @@ describe('Property list view', () => {
         getByTestId('edit-icon'),
         new MouseEvent('click', { bubbles: true, cancelable: true }),
       );
-      await wait(() => expect(getByTestId('save-changes')).toBeInTheDocument(), { timeout: 500 });
+      await waitFor(() => expect(getByTestId('save-changes')).toBeInTheDocument(), {
+        timeout: 500,
+      });
     });
   });
 
@@ -183,7 +185,9 @@ describe('Property list view', () => {
         getByTestId('edit-icon'),
         new MouseEvent('click', { bubbles: true, cancelable: true }),
       );
-      await wait(() => expect(getByTestId('save-changes')).toBeInTheDocument(), { timeout: 500 });
+      await waitFor(() => expect(getByTestId('save-changes')).toBeInTheDocument(), {
+        timeout: 500,
+      });
     });
   });
 
@@ -203,7 +207,7 @@ describe('Property list view', () => {
         getByTestId('edit-icon'),
         new MouseEvent('click', { bubbles: true, cancelable: true }),
       );
-      await wait(
+      await waitFor(
         () => {
           expect(getByTestId('save-changes')).toBeInTheDocument();
           expect(getByTestId('cancel-changes')).toBeInTheDocument();
@@ -230,7 +234,7 @@ describe('Property list view', () => {
         getByTestId('edit-icon'),
         new MouseEvent('click', { bubbles: true, cancelable: true }),
       );
-      await wait(
+      await waitFor(
         () => {
           expect(getByTestId('save-changes')).toBeInTheDocument();
           expect(container.querySelector(`input[name="properties.0.market"]`)).toBeNull();
@@ -256,7 +260,7 @@ describe('Property list view', () => {
         getByTestId('edit-icon'),
         new MouseEvent('click', { bubbles: true, cancelable: true }),
       );
-      await wait(
+      await waitFor(
         () => {
           expect(getByTestId('save-changes')).toBeInTheDocument();
           expect(container.querySelector(`input[name="properties.0.market"]`)).toBeNull();
@@ -293,6 +297,7 @@ describe('Property list view', () => {
           address: '4155 Belshaw St',
           administrativeArea: 'Merritt',
           province: 'British Columbia',
+          city: 'city',
           postal: 'V1K1R1',
           market: 0.0,
           netBook: 0.0,
@@ -327,6 +332,7 @@ describe('Property list view', () => {
           addressId: 6,
           address: '4155 Belshaw St',
           administrativeArea: 'Merritt',
+          city: 'city',
           province: 'British Columbia',
           postal: 'V1K1R1',
           market: 0.0,

@@ -8,13 +8,13 @@ export interface ILeafletState {
   mapClickEvent: LeafletMouseEvent | null;
 }
 
-const initialState: ILeafletState = {
+export const initialLeafletState: ILeafletState = {
   mapClickEvent: null,
 };
 
 export const leafletMouseSlice = createSlice({
   name: 'leafletClickEvent',
-  initialState: initialState,
+  initialState: initialLeafletState,
   reducers: {},
   extraReducers: (builder: any) => {
     // note that redux-toolkit uses immer to prevent state from being mutated.

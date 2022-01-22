@@ -5,7 +5,6 @@ import thunk from 'redux-thunk';
 import { ILookupCode } from 'actions/ILookupCode';
 import * as API from 'constants/API';
 import { Provider } from 'react-redux';
-import * as reducerTypes from 'constants/reducerTypes';
 import { createMemoryHistory } from 'history';
 import { Router } from 'react-router-dom';
 import { render, cleanup, act } from '@testing-library/react';
@@ -53,13 +52,13 @@ const selectedUser = {
 };
 
 const store = mockStore({
-  [reducerTypes.GET_USER_DETAIL]: selectedUser,
-  [reducerTypes.LOOKUP_CODE]: lCodes,
+  users: { user: selectedUser },
+  lookupCode: lCodes,
 });
 
 const noDateStore = mockStore({
-  [reducerTypes.GET_USER_DETAIL]: { ...selectedUser, lastLogin: null },
-  [reducerTypes.LOOKUP_CODE]: lCodes,
+  users: { user: { ...selectedUser, lastLogin: null } },
+  lookupCode: lCodes,
 });
 
 const mockAxios = new MockAdapter(axios);

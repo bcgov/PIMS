@@ -40,7 +40,7 @@ export interface IUsersState {
   pageIndex: number;
 }
 
-const initialState: IUsersState = {
+export const initialUserState: IUsersState = {
   user: {
     id: '',
     username: '',
@@ -64,7 +64,7 @@ const initialState: IUsersState = {
 
 export const userSlice = createSlice({
   name: 'users',
-  initialState: initialState,
+  initialState: initialUserState,
   reducers: {},
   extraReducers: (builder: any) => {
     builder.addCase(storeUser, (state: IUsersState, action: PayloadAction<IUserDetail>) => {

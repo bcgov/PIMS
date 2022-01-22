@@ -9,7 +9,7 @@ import * as actionTypes from 'constants/actionTypes';
 import * as reducerTypes from 'constants/reducerTypes';
 import * as API from 'constants/API';
 import { ManageUsers } from './ManageUsers';
-import { cleanup, fireEvent, render, wait } from '@testing-library/react';
+import { cleanup, fireEvent, render, waitFor } from '@testing-library/react';
 import moment from 'moment-timezone';
 import { Formik } from 'formik';
 import { noop } from 'lodash';
@@ -125,7 +125,7 @@ describe('Manage Users Component', () => {
     const { getByRole, container } = testRender(getStore());
     const agency = container.querySelector('input[name="agency"]');
 
-    await wait(() => {
+    await waitFor(() => {
       fireEvent.change(agency!, {
         target: {
           value: 'age',
@@ -162,20 +162,20 @@ describe('Manage Users Component', () => {
     act(() => {
       fireEvent.click(excelIcon);
     });
-    await wait(() => {
+    await waitFor(() => {
       expect(mockAxios.history.get.length).toBe(1);
     });
   });
 
   it('can search for users', async () => {
     const { container } = testRender(getStore());
-    await fillInput(container, 'firstName', 'testUserFirst1');
+    fillInput(container, 'firstName', 'testUserFirst1');
     const searchButton = container.querySelector('#search-button');
     mockAxios.onPost().reply(200);
     act(() => {
       fireEvent.click(searchButton!);
     });
-    await wait(() => {
+    await waitFor(() => {
       expect(mockAxios.history.post.length).toBe(1);
     });
   });

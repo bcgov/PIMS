@@ -10,6 +10,12 @@ import { AxiosResponse, AxiosError } from 'axios';
 import * as pimsToasts from 'constants/toasts';
 import { Dispatch, AnyAction } from 'redux';
 
+const userToasts: LifecycleToasts = {
+  loadingToast: pimsToasts.user.USER_UPDATING,
+  successToast: pimsToasts.user.USER_UPDATED,
+  errorToast: pimsToasts.user.USER_ERROR,
+};
+
 export const getActivateUserAction = () => async (dispatch: Dispatch<AnyAction>) => {
   dispatch(request(actionTypes.ADD_ACTIVATE_USER));
   dispatch(showLoading());
@@ -74,12 +80,7 @@ export const fetchUserDetail = (id: API.IUserDetailParams) => async (
     .finally(() => dispatch(hideLoading()));
 };
 
-const userToasts: LifecycleToasts = {
-  loadingToast: pimsToasts.user.USER_UPDATING,
-  successToast: pimsToasts.user.USER_UPDATED,
-  errorToast: pimsToasts.user.USER_ERROR,
-};
-
+// TODO: Fix any
 export const getUpdateUserAction = (id: API.IUserDetailParams, updatedUser: any) => async (
   dispatch: Dispatch<AnyAction>,
 ) => {

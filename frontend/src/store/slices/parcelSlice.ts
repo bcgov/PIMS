@@ -1,6 +1,5 @@
 import { createSlice, createAction, PayloadAction } from '@reduxjs/toolkit';
-import { IPropertyDetail } from 'actions/parcelsActions';
-import { IProperty } from 'actions/parcelsActions';
+import { IPropertyDetail, IProperty } from 'actions/parcelsActions';
 import { PointFeature } from 'components/maps/types';
 
 export const storeProperties = createAction<IProperty[]>('storeProperty');
@@ -19,7 +18,7 @@ export interface IParcelState {
   pid: number;
 }
 
-const initialState: IParcelState = {
+export const initialParcelState: IParcelState = {
   properties: [],
   draftProperties: [],
   propertyDetail: null,
@@ -29,7 +28,7 @@ const initialState: IParcelState = {
 
 export const parcelSlice = createSlice({
   name: 'parcel',
-  initialState: initialState,
+  initialState: initialParcelState,
   reducers: {},
   extraReducers: builder => {
     builder.addCase(storeProperties, (state: IParcelState, action: PayloadAction<IProperty[]>) => {

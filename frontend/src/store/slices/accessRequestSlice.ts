@@ -22,17 +22,19 @@ export interface IAccessRequestState {
   pageIndex: number;
 }
 
+export const initialAccessRequestState: IAccessRequestState = {
+  pagedAccessRequests: { page: 1, pageIndex: 0, total: 0, quantity: 0, items: [] },
+  filter: { agency: '', role: '', searchText: '' },
+  sorting: { column: 'username', direction: 'desc' },
+  selections: [],
+  accessRequest: null,
+  pageSize: MAX_ACCESS_RESULTS_PER_PAGE,
+  pageIndex: 0,
+};
+
 export const accessRequestSlice = createSlice({
   name: 'accessRequest',
-  initialState: {
-    pagedAccessRequests: { page: 1, pageIndex: 0, total: 0, quantity: 0, items: [] },
-    filter: { agency: '', role: '', searchText: '' },
-    sorting: { column: 'username', direction: 'desc' },
-    selections: [],
-    accessRequest: null,
-    pageSize: MAX_ACCESS_RESULTS_PER_PAGE,
-    pageIndex: 0,
-  } as IAccessRequestState,
+  initialState: initialAccessRequestState,
   reducers: {},
   extraReducers: builder => {
     builder.addCase(
@@ -73,7 +75,10 @@ export const accessRequestSlice = createSlice({
     builder.addCase(
       updateAccessRequest,
       (state: IAccessRequestState, action: PayloadAction<IAccessRequest>) => {
-        const items = state.pagedAccessRequests.items.filter(req => req.id !== action.payload.id);
+        const items = [
+          ...state.pagedAccessRequests.items.filter(req => req.id !== action.payload.id),
+          action.payload,
+        ];
         return { ...state, pagedAccessRequests: { ...state.pagedAccessRequests, items: items } };
       },
     );
