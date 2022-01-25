@@ -1,10 +1,7 @@
 import { useCallback } from 'react';
 import React from 'react';
 import { FormikProps, getIn } from 'formik';
-import { useSelector } from 'react-redux';
-import { RootState } from 'reducers/rootReducer';
-import { ILookupCode } from 'actions/lookupActions';
-import { ILookupCodeState } from 'reducers/lookupCodeReducer';
+import { ILookupCode } from 'actions/ILookupCode';
 import _ from 'lodash';
 import * as API from 'constants/API';
 import { FastInput, Select } from 'components/common/form';
@@ -16,6 +13,7 @@ import { TypeaheadField } from 'components/common/form/Typeahead';
 import { streetAddressTooltip } from '../strings';
 import { Label } from 'components/common/Label';
 import { Form } from 'react-bootstrap';
+import { useAppSelector } from 'store';
 
 interface AddressProps {
   nameSpace?: string;
@@ -38,9 +36,7 @@ export const defaultAddressValues: IAddress = {
   postal: '',
 };
 const AddressForm = <T extends any>(props: AddressProps & FormikProps<T>) => {
-  const lookupCodes = useSelector<RootState, ILookupCode[]>(
-    state => (state.lookupCode as ILookupCodeState).lookupCodes,
-  );
+  const lookupCodes = useAppSelector(store => store.lookupCode.lookupCodes);
   const provinces = _.filter(lookupCodes, (lookupCode: ILookupCode) => {
     return lookupCode.type === API.PROVINCE_CODE_SET_NAME;
   }).map(mapLookupCode);

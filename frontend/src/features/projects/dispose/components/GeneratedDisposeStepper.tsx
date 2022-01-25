@@ -1,9 +1,7 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
-import { RootState } from 'reducers/rootReducer';
+import { useAppSelector } from 'store';
 import Stepper from 'components/common/Stepper';
 import { useStepper } from '..';
-import { IStatus } from 'features/projects/interfaces';
 import { useHistory } from 'react-router-dom';
 
 interface GeneratedDisposeStepperProps {
@@ -16,7 +14,7 @@ interface GeneratedDisposeStepperProps {
  * @param param0 GeneratedDisposeStepperProps
  */
 const GeneratedDisposeStepper = ({ activeStep, basePath }: GeneratedDisposeStepperProps) => {
-  const workflowStatuses = useSelector<RootState, IStatus[]>(state => state.projectWorkflow as any);
+  const workflowStatuses = useAppSelector(store => store.projectWorkflow);
   const { projectStatusCompleted, canGoToStatus, project } = useStepper();
   const history = useHistory();
   const steps = workflowStatuses

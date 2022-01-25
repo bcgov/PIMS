@@ -2,13 +2,9 @@ import { FeatureCollection, Geometry, GeoJsonProperties, Feature } from 'geojson
 import axios, { AxiosError } from 'axios';
 import { LatLng, geoJSON } from 'leaflet';
 import { useCallback, Dispatch } from 'react';
-import parcelLayerDataSlice, {
-  saveParcelLayerData,
-  IParcelLayerData,
-} from 'reducers/parcelLayerDataSlice';
-import { error } from 'actions/genericActions';
-import { useSelector } from 'react-redux';
-import { RootState } from 'reducers/rootReducer';
+import parcelLayerDataSlice, { saveParcelLayerData } from 'store/slices/parcelLayerDataSlice';
+import { error } from 'store';
+import { useAppSelector } from 'store';
 import { toast } from 'react-toastify';
 import { layerData } from 'constants/toasts';
 import * as rax from 'retry-axios';
@@ -135,9 +131,7 @@ export const handleParcelDataLayerResponse = (
  * @param geometry the name of the geometry in the feature collection
  */
 export const useLayerQuery = (url: string, geometryName: string = 'SHAPE'): IUserLayerQuery => {
-  const parcelLayerData = useSelector<RootState, IParcelLayerData | null>(
-    state => state.parcelLayerData?.parcelLayerData,
-  );
+  const parcelLayerData = useAppSelector(store => store.parcelLayerData?.parcelLayerData);
   const baseUrl = `${url}&srsName=EPSG:4326&count=1`;
 
   const findOneWhereContains = useCallback(

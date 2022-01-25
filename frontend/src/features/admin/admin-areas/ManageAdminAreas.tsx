@@ -10,9 +10,9 @@ import { adminAreasColumnDefinistions } from '../constants/columns';
 import { IAdminAreaFilter, IAdministrativeArea } from './interfaces';
 import { useEffect } from 'react';
 import { useCallback } from 'react';
-import { getFetchLookupCodeAction } from 'actionCreators/lookupCodeActionCreator';
-import { useDispatch } from 'react-redux';
+import { getFetchLookupCodeAction } from 'store/slices/hooks/lookupCodeActionCreator';
 import { useAdminAreaApi } from 'hooks/useApiAdminAreas';
+import { useAppDispatch } from 'store';
 
 const AdminAreaToolbarContainer = styled(Container)`
   .search-bar {
@@ -42,7 +42,7 @@ const StyledTable = styled(Table)`
 /** Component used to list the administrative areas present in the application. User's can select corresponding administrative area they wish to edit here. */
 export const ManageAdminAreas = () => {
   const history = useHistory();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const lookupCodes = useCodeLookups();
   const columns = useMemo(() => adminAreasColumnDefinistions, []);
   const administrativeAreas = lookupCodes.getByType(API.AMINISTRATIVE_AREA_CODE_SET_NAME);
@@ -70,7 +70,7 @@ export const ManageAdminAreas = () => {
 
   /** make sure lookup codes are updated when administrative area is added or deleted */
   useEffect(() => {
-    dispatch(getFetchLookupCodeAction());
+    getFetchLookupCodeAction()(dispatch);
   }, [history, dispatch]);
 
   const [filter, setFilter] = useState<IAdminAreaFilter>({});

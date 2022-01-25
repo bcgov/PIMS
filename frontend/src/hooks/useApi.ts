@@ -1,5 +1,5 @@
 import CustomAxios from 'customAxios';
-import { useDispatch } from 'react-redux';
+import { useAppDispatch } from 'store';
 import { showLoading, hideLoading } from 'react-redux-loading-bar';
 import { AxiosInstance } from 'axios';
 import { ENVIRONMENT } from 'constants/environment';
@@ -46,7 +46,7 @@ export interface PimsAPI extends AxiosInstance {
 }
 
 export const useApi = (): PimsAPI => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const axios = CustomAxios() as PimsAPI;
 
   axios.interceptors.request.use(

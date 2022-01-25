@@ -1,6 +1,6 @@
 import './PropertyListView.scss';
 import React, { useState, useMemo, useRef, useCallback } from 'react';
-import { useDispatch } from 'react-redux';
+import { useAppDispatch } from 'store';
 import { Container, Button } from 'react-bootstrap';
 import queryString from 'query-string';
 import { fill, isEmpty, pick, range, noop, keys, intersection } from 'lodash';
@@ -411,7 +411,7 @@ const PropertyListView: React.FC = () => {
     fetchData({ pageIndex, pageSize, filter, agencyIds, sorting });
   }, [fetchData, pageIndex, pageSize, filter, agencyIds, sorting]);
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   /**
    * @param {'csv' | 'excel'} accept Whether the fetch is for type of CSV or EXCEL
@@ -419,18 +419,16 @@ const PropertyListView: React.FC = () => {
    */
   const fetch = (accept: 'csv' | 'excel', getAllFields?: boolean) => {
     const query = getServerQuery({ pageIndex, pageSize, filter, agencyIds });
-    return dispatch(
-      download({
-        url: getAllFields
-          ? getAllFieldsPropertyReportUrl({ ...query, all: true, propertyType: undefined })
-          : getPropertyReportUrl({ ...query, all: true, propertyType: undefined }),
-        fileName: `pims-inventory.${accept === 'csv' ? 'csv' : 'xlsx'}`,
-        actionType: 'properties-report',
-        headers: {
-          Accept: accept === 'csv' ? 'text/csv' : 'application/vnd.ms-excel',
-        },
-      }),
-    );
+    return download({
+      url: getAllFields
+        ? getAllFieldsPropertyReportUrl({ ...query, all: true, propertyType: undefined })
+        : getPropertyReportUrl({ ...query, all: true, propertyType: undefined }),
+      fileName: `pims-inventory.${accept === 'csv' ? 'csv' : 'xlsx'}`,
+      actionType: 'properties-report',
+      headers: {
+        Accept: accept === 'csv' ? 'text/csv' : 'application/vnd.ms-excel',
+      },
+    })(dispatch);
   };
 
   const checkExpanded = (row: IProperty, property: IProperty) => {

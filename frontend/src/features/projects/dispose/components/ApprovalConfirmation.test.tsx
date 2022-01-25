@@ -6,7 +6,7 @@ import { useKeycloak } from '@react-keycloak/web';
 import { noop } from 'lodash';
 
 import { fireEvent } from '@testing-library/dom';
-import { render, act, wait } from '@testing-library/react';
+import { render, act, waitFor } from '@testing-library/react';
 
 jest.mock('@react-keycloak/web');
 
@@ -58,7 +58,7 @@ describe('Approval Confirmation', () => {
 
       fireEvent.click(input);
     });
-    wait(() => {
+    waitFor(() => {
       expect(submitFn).toHaveBeenCalledWith({ confirmation: true });
     });
   });

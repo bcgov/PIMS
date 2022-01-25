@@ -2,7 +2,7 @@ import React from 'react';
 import { createMemoryHistory } from 'history';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
-import { render, act, screen, cleanup, wait } from '@testing-library/react';
+import { render, act, screen, cleanup, waitFor } from '@testing-library/react';
 import { useKeycloak } from '@react-keycloak/web';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
@@ -310,7 +310,7 @@ describe('ERP Approval Step', () => {
       const { getByText } = render(getApprovalStep(getStore(project)));
       const saveButton = getByText(/Save/);
 
-      await wait(async () => {
+      await waitFor(async () => {
         saveButton.click();
         expect(mockAxios.history.put).toHaveLength(1);
       });

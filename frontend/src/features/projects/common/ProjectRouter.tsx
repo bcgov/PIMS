@@ -13,9 +13,6 @@ import {
 } from '../common';
 import { ReviewWorkflowStatus } from 'features/projects/constants';
 import { IProject } from 'features/projects/interfaces';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from 'reducers/rootReducer';
-import { IGenericNetworkAction } from 'actions/genericActions';
 import { ProjectActions } from 'constants/actionTypes';
 import { ReviewApproveStep } from '../assess';
 import queryString from 'query-string';
@@ -29,6 +26,7 @@ import { GreTransferStep as SplToGre, SplStep } from '../spl';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { toast } from 'react-toastify';
+import { useAppDispatch, useAppSelector } from 'store';
 
 /**
  * Top level component ensures proper context provided to child assessment form pages.
@@ -36,21 +34,21 @@ import { toast } from 'react-toastify';
  */
 const ProjectRouter = ({ location }: { match: Match; location: Location }) => {
   const query = location?.search ?? {};
+  const dispatch = useAppDispatch();
   const history = useHistory();
   const keycloak = useKeycloakWrapper();
   const formikRef = useRef<FormikValues>();
   const projectNumber = queryString.parse(query).projectNumber;
   const { project } = useProject();
-  const dispatch = useDispatch();
-  const getProjectRequest = useSelector<RootState, IGenericNetworkAction>(
-    state => (state.network as any)[ProjectActions.GET_PROJECT_WORKFLOW] as any,
+  const getProjectRequest = useAppSelector(
+    store => (store.network as any)[ProjectActions.GET_PROJECT_WORKFLOW],
   );
   useEffect(() => {
     if (projectNumber !== null && projectNumber !== undefined) {
       dispatch(clearProject());
-      (dispatch(fetchProject(projectNumber as string)) as any)
+      fetchProject(projectNumber as string)(dispatch)
         .then((project: IProject) => {
-          dispatch(fetchProjectWorkflow(project?.workflowCode));
+          fetchProjectWorkflow(project?.workflowCode)(dispatch);
         })
         .catch(() => {
           toast.error('Failed to load project, returning to project list.');

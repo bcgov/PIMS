@@ -7,8 +7,7 @@ import { useLayerQuery, parcelLayerPopupConfig } from '../leaflet/LayerPopup';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
 import { GeoJsonObject } from 'geojson';
 import { PointFeature } from '../types';
-import { useSelector } from 'react-redux';
-import { RootState } from 'reducers/rootReducer';
+import { useAppSelector } from 'store';
 import { useBoundaryLayer } from '../leaflet/LayerPopup/hooks/useBoundaryLayer';
 
 interface IUseActiveParcelMapLayer {
@@ -38,9 +37,7 @@ const useActiveFeatureLayer = ({
   const [activeFeatureLayer, setActiveFeatureLayer] = useState<GeoJSON>();
   const layerUrl = useBoundaryLayer();
   const parcelsService = useLayerQuery(layerUrl);
-  const draftProperties: PointFeature[] = useSelector<RootState, PointFeature[]>(
-    state => state.parcel.draftParcels,
-  );
+  const draftProperties: PointFeature[] = useAppSelector(store => store.parcel.draftProperties);
   if (!!mapRef.current && !activeFeatureLayer) {
     setActiveFeatureLayer(geoJSON().addTo(mapRef.current.leafletElement));
   }

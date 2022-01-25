@@ -2,10 +2,10 @@ import { ProjectApprovalRequestListView } from '.';
 import React from 'react';
 import { Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
-import { render, cleanup, wait } from '@testing-library/react';
+import { render, cleanup, waitFor } from '@testing-library/react';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { ILookupCode } from 'actions/lookupActions';
+import { ILookupCode } from 'actions/ILookupCode';
 import * as API from 'constants/API';
 import { Provider } from 'react-redux';
 import * as reducerTypes from 'constants/reducerTypes';
@@ -117,7 +117,7 @@ describe('Project Approval Request list view', () => {
         </Provider>
       </Formik>,
     );
-    await wait(() => expect(service.getProjectList).toHaveBeenCalledTimes(1), { timeout: 500 });
+    await waitFor(() => expect(service.getProjectList).toHaveBeenCalledTimes(1), { timeout: 500 });
     expect(container.firstChild).toMatchSnapshot();
   });
 
@@ -141,7 +141,7 @@ describe('Project Approval Request list view', () => {
     );
 
     // default table message when there is no data to display
-    await wait(() => expect(service.getProjectList).toHaveBeenCalledTimes(1), { timeout: 500 });
+    await waitFor(() => expect(service.getProjectList).toHaveBeenCalledTimes(1), { timeout: 500 });
     const noResults = await findByText('No rows to display');
     expect(noResults).toBeInTheDocument();
   });

@@ -1,15 +1,13 @@
 import { useEffect, useContext, useMemo } from 'react';
-import { useSelector } from 'react-redux';
-import { RootState } from 'reducers/rootReducer';
+import { useAppSelector } from 'store';
 import { StepperContext } from '..';
-import { IProjectWrapper } from '../../common';
-import { ReviewWorkflowStatus, initialValues } from 'features/projects/constants';
+import { ReviewWorkflowStatus } from 'features/projects/constants';
 import { IStatus, IProjectTask, IProject } from 'features/projects/interfaces';
 import _ from 'lodash';
 import { useHistory } from 'react-router-dom';
-import { IGenericNetworkAction } from 'actions/genericActions';
 import { ProjectActions } from 'constants/actionTypes';
 import { useKeycloakWrapper } from 'hooks/useKeycloakWrapper';
+import { defaultProject } from 'features/projects/constants/defaultValues';
 
 /**
  * Get the status after the current status in this workflow. Return undefined if there is no next step.
@@ -108,21 +106,21 @@ const useStepper = () => {
   const { currentStatus, setCurrentStatus, disposeWorkflowStatuses } = useContext(StepperContext);
   const initialProject = useMemo(
     () => ({
-      ...initialValues,
+      ...defaultProject(),
       agencyId: keycloak.agencyId!,
     }),
     [keycloak],
   );
-  const project: any =
-    useSelector<RootState, IProjectWrapper>(state => state.project).project || initialProject;
-  const workflowTasks: IProjectTask[] = useSelector<RootState, IProjectTask[]>(
-    state => state.tasks,
-  ) || { ...initialValues, agencyId: keycloak.agencyId! };
-  const getProjectRequest = useSelector<RootState, IGenericNetworkAction>(
-    state => (state.network as any)[ProjectActions.GET_PROJECT] as any,
+  const project: IProject = useAppSelector(store => store.project.project) || initialProject;
+  const workflowTasks: IProjectTask[] = useAppSelector(store => store.tasks) || {
+    ...defaultProject(),
+    agencyId: keycloak.agencyId!,
+  };
+  const getProjectRequest = useAppSelector(
+    store => (store.network as any)[ProjectActions.GET_PROJECT],
   );
-  const updateWorkflowStatusRequest = useSelector<RootState, IGenericNetworkAction>(
-    state => (state.network as any)[ProjectActions.UPDATE_WORKFLOW_STATUS] as any,
+  const updateWorkflowStatusRequest = useAppSelector(
+    store => (store.network as any)[ProjectActions.UPDATE_WORKFLOW_STATUS],
   );
 
   useEffect(() => {

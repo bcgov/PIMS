@@ -1,5 +1,5 @@
 import React, { useState, createContext, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useAppDispatch } from 'store';
 import { fetchProjectWorkflow } from '../../common';
 import { IStatus } from 'features/projects/interfaces';
 
@@ -15,13 +15,11 @@ export const StepContextProvider = (props: { children?: any }) => {
   const [disposeWorkflowStatuses, setDisposeWorkflowStatuses] = useState<IStatus[]>();
   // Make the context object (or array)
   const stepContext = { currentStatus, setCurrentStatus, disposeWorkflowStatuses };
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   useEffect(() => {
-    (dispatch(fetchProjectWorkflow('SUBMIT-DISPOSAL')) as any).then(
-      (disposeWorkflowStatuses: IStatus[]) => {
-        setDisposeWorkflowStatuses(disposeWorkflowStatuses);
-      },
-    );
+    fetchProjectWorkflow('SUBMIT-DISPOSAL')(dispatch).then((disposeWorkflowStatuses: IStatus[]) => {
+      setDisposeWorkflowStatuses(disposeWorkflowStatuses);
+    });
   }, [dispatch]);
   // Pass the value in Provider and return
   return <StepperContext.Provider value={stepContext}>{props.children}</StepperContext.Provider>;

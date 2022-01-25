@@ -2,49 +2,34 @@ import './ManageAgencies.scss';
 import React, { useMemo, useCallback, useState, useEffect } from 'react';
 import { Container } from 'react-bootstrap';
 import { Table } from 'components/Table';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from 'reducers/rootReducer';
 import { columnDefinitions } from '../constants/columns';
-import { IAgenciesState } from 'reducers/agencyReducer';
-import { IAgency, IAgencyDetail, IAgencyFilter, IAgencyRecord, IPagedItems } from 'interfaces';
-import { getAgenciesAction } from 'actionCreators/agencyActionCreator';
+import { IAgency, IAgencyFilter, IAgencyRecord } from 'interfaces';
+import { getAgenciesAction } from 'store/slices/hooks/agencyActionCreator';
 import { toFilteredApiPaginateParams } from 'utils/CommonFunctions';
-import { TableSort } from 'components/Table/TableSort';
-import { IGenericNetworkAction } from 'actions/genericActions';
+import { IGenericNetworkAction } from 'store';
 import * as actionTypes from 'constants/actionTypes';
 import { generateMultiSortCriteria } from 'utils';
 import { AgencyFilterBar } from './AgencyFilterBar';
 import useCodeLookups from 'hooks/useLookupCodes';
 import { useHistory } from 'react-router-dom';
-import { getFetchLookupCodeAction } from 'actionCreators/lookupCodeActionCreator';
+import { getFetchLookupCodeAction } from 'store/slices/hooks/lookupCodeActionCreator';
 import { isEmpty } from 'lodash';
+import { useAppDispatch, useAppSelector } from 'store';
 
 const ManageAgencies: React.FC = () => {
   const columns = useMemo(() => columnDefinitions, []);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const [filter, setFilter] = useState<IAgencyFilter>({});
   const lookupCodes = useCodeLookups();
   const agencyLookupCodes = lookupCodes.getByType('Agency');
   const history = useHistory();
 
-  const pagedAgencies = useSelector<RootState, IPagedItems<IAgency>>(state => {
-    return (state.agencies as IAgenciesState).pagedAgencies;
-  });
-
-  const pageSize = useSelector<RootState, number>(state => {
-    return (state.agencies as IAgenciesState).rowsPerPage;
-  });
-
-  const pageIndex = useSelector<RootState, number>(state => {
-    return (state.agencies as IAgenciesState).pageIndex;
-  });
-
-  const sort = useSelector<RootState, TableSort<IAgencyDetail>>(state => {
-    return (state.agencies as IAgenciesState).sort;
-  });
-
-  const agencies = useSelector<RootState, IGenericNetworkAction>(
-    state => (state.network as any)[actionTypes.GET_AGENCIES] as IGenericNetworkAction,
+  const pagedAgencies = useAppSelector(store => store.agencies.pagedAgencies);
+  const pageSize = useAppSelector(store => store.agencies.rowsPerPage);
+  const pageIndex = useAppSelector(store => store.agencies.pageIndex);
+  const sort = useAppSelector(store => store.agencies.sort);
+  const agencies = useAppSelector(
+    store => (store.network as any)[actionTypes.GET_AGENCIES] as IGenericNetworkAction,
   );
 
   const onRowClick = (row: IAgencyRecord) => {
@@ -78,22 +63,20 @@ const ManageAgencies: React.FC = () => {
 
   const onRequestData = useCallback(
     ({ pageIndex }) => {
-      dispatch(
-        getAgenciesAction(
-          toFilteredApiPaginateParams<IAgencyFilter>(
-            filter?.id ? 0 : pageIndex,
-            pageSize,
-            sort && !isEmpty(sort) ? generateMultiSortCriteria(sort) : undefined,
-            filter,
-          ),
+      getAgenciesAction(
+        toFilteredApiPaginateParams<IAgencyFilter>(
+          filter?.id ? 0 : pageIndex,
+          pageSize,
+          sort && !isEmpty(sort) ? generateMultiSortCriteria(sort) : undefined,
+          filter,
         ),
-      );
+      )(dispatch);
     },
     [dispatch, filter, pageSize, sort],
   );
 
   useEffect(() => {
-    dispatch(getFetchLookupCodeAction());
+    getFetchLookupCodeAction()(dispatch);
   }, [history, dispatch]);
 
   return (

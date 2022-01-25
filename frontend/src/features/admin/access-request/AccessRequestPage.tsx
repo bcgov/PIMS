@@ -1,17 +1,10 @@
 import React, { useEffect } from 'react';
 import './AccessRequestPage.scss';
 import { Container, Row, Col, ButtonToolbar, Button, Alert } from 'react-bootstrap';
-import {
-  getCurrentAccessRequestAction,
-  getSubmitAccessRequestAction,
-  toAccessRequest,
-} from 'actionCreators/accessRequestActionCreator';
+import { useAccessRequest, toAccessRequest } from 'store/slices/hooks';
 import { IUserInfo, IAccessRequest } from 'interfaces';
 import { Formik } from 'formik';
-import { Form, Input, TextArea, Select } from '../../../components/common/form';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from 'reducers/rootReducer';
-import { IAccessRequestState } from 'reducers/accessRequestReducer';
+import { Form, Input, TextArea, Select } from 'components/common/form';
 import * as API from 'constants/API';
 import { DISCLAIMER_URL, PRIVACY_POLICY_URL } from 'constants/strings';
 import { AccessRequestSchema } from 'utils/YupSchema';
@@ -22,6 +15,7 @@ import { Snackbar, ISnackbarState } from 'components/common/Snackbar';
 import useCodeLookups from 'hooks/useLookupCodes';
 import TooltipWrapper from 'components/common/TooltipWrapper';
 import { AUTHORIZATION_URL } from 'constants/strings';
+import { useAppSelector } from 'store';
 
 interface IAccessRequestForm extends IAccessRequest {
   agency: number;
@@ -38,22 +32,18 @@ const AccessRequestPage = () => {
   const keycloakWrapper = useKeycloakWrapper();
   const keycloak = keycloakWrapper.obj;
   const userInfo = keycloak?.userInfo as IUserInfo;
-  const dispatch = useDispatch();
+  const api = useAccessRequest();
   const [alert, setAlert] = React.useState<ISnackbarState>({});
 
   useEffect(() => {
-    dispatch(getCurrentAccessRequestAction());
-  }, [dispatch]);
-
-  const data = useSelector<RootState, IAccessRequestState>(
-    state => state.accessRequest as IAccessRequestState,
-  );
+    api.getCurrentAccessRequestAction();
+  }, [api]);
 
   const { getByType, getPublicByType } = useCodeLookups();
   const agencies = getByType(API.AGENCY_CODE_SET_NAME);
   const roles = getPublicByType(API.ROLE_CODE_SET_NAME);
 
-  const accessRequest = data?.accessRequest;
+  const accessRequest = useAppSelector(store => store.accessRequest.accessRequest);
   const initialValues: IAccessRequestForm = {
     id: accessRequest?.id ?? 0,
     userId: userInfo?.sub,
@@ -135,7 +125,7 @@ const AccessRequestPage = () => {
             validationSchema={AccessRequestSchema}
             onSubmit={async (values, { setSubmitting }) => {
               try {
-                await dispatch(getSubmitAccessRequestAction(toAccessRequest(values)));
+                await api.getSubmitAccessRequestAction(toAccessRequest(values));
                 setAlert({
                   variant: 'success',
                   message: 'Your request has been submitted.',

@@ -1,32 +1,31 @@
 import { ProjectActions } from 'constants/actionTypes';
-import { useDispatch, useSelector } from 'react-redux';
-import { clear, IGenericNetworkAction } from 'actions/genericActions';
+import { clear } from 'store';
 import _ from 'lodash';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import Claims from 'constants/claims';
 import { MutableRefObject } from 'react';
 import { FormikValues } from 'formik';
 import { AxiosError } from 'axios';
-import { RootState } from 'reducers/rootReducer';
 import { updateWorkflowStatus, updateProject, createProject } from '..';
 import { IProject } from 'features/projects/interfaces';
 import { Roles } from 'constants/roles';
+import { useAppDispatch, useAppSelector } from 'store';
 
 /** hook providing utilities for project dispose step forms. */
 const useStepForm = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const keycloak = useKeycloakWrapper();
-  const getProjectRequest = useSelector<RootState, IGenericNetworkAction>(
-    state => (state.network as any)[ProjectActions.GET_PROJECT] as any,
+  const getProjectRequest = useAppSelector(
+    store => (store.network as any)[ProjectActions.GET_PROJECT],
   );
-  const addProjectRequest = useSelector<RootState, IGenericNetworkAction>(
-    state => (state.network as any)[ProjectActions.ADD_PROJECT] as any,
+  const addProjectRequest = useAppSelector(
+    store => (store.network as any)[ProjectActions.ADD_PROJECT],
   );
-  const updateProjectRequest = useSelector<RootState, IGenericNetworkAction>(
-    state => (state.network as any)[ProjectActions.UPDATE_PROJECT] as any,
+  const updateProjectRequest = useAppSelector(
+    store => (store.network as any)[ProjectActions.UPDATE_PROJECT],
   );
-  const updateWorflowStatusRequest = useSelector<RootState, IGenericNetworkAction>(
-    state => (state.network as any)[ProjectActions.UPDATE_WORKFLOW_STATUS] as any,
+  const updateWorflowStatusRequest = useAppSelector(
+    store => (store.network as any)[ProjectActions.UPDATE_WORKFLOW_STATUS],
   );
   const noFetchingProjectRequests =
     getProjectRequest?.isFetching !== true &&
@@ -37,28 +36,40 @@ const useStepForm = () => {
   //TODO: There is a known issue in formik preventing submitForm()
   // from returning promises. For the time being the higher level
   // functions will need to handle all chained promises.
-  const onSubmit = (values: any, actions: any) => Promise.resolve(values);
+  const onSubmit = (values: any, _actions: any) => Promise.resolve(values);
 
-  const onSubmitReview = (
-    values: any,
+  const onSubmitReview = async (
+    values: IProject,
     formikRef: MutableRefObject<FormikValues | undefined>,
     statusCode?: string,
     workflow?: string,
-  ) => {
+  ): Promise<IProject> => {
     const apiValues = _.cloneDeep(values);
     if (values.exemptionRequested && statusCode !== undefined) {
-      return dispatch(
-        updateWorkflowStatus(apiValues, statusCode, workflow ?? apiValues.workflowCode),
-      );
-    } else {
-      return (statusCode !== undefined
-        ? dispatch(updateWorkflowStatus(apiValues, statusCode, workflow ?? apiValues.workflowCode))
-        : (dispatch(updateProject(apiValues)) as any)
-      ).catch((error: any) => {
+      return await updateWorkflowStatus(
+        apiValues,
+        statusCode,
+        workflow ?? apiValues.workflowCode,
+      )(dispatch);
+    }
+
+    if (statusCode !== undefined) {
+      return await updateWorkflowStatus(
+        apiValues,
+        statusCode,
+        workflow ?? apiValues.workflowCode,
+      )(dispatch).catch((error: any) => {
         const msg: string = error?.response?.data?.error ?? error.toString();
         formikRef?.current?.setStatus({ msg });
+        return apiValues;
       });
     }
+
+    return await updateProject(apiValues)(dispatch).catch((error: any) => {
+      const msg: string = error?.response?.data?.error ?? error.toString();
+      formikRef?.current?.setStatus({ msg });
+      return apiValues;
+    });
   };
 
   const canUserOverride = () => {
@@ -84,11 +95,11 @@ const useStepForm = () => {
     project: IProject,
     formikRef: MutableRefObject<FormikValues | undefined>,
   ) => {
-    let promise: Promise<any>;
+    let promise: Promise<IProject>;
     if (project.projectNumber === undefined || project.projectNumber === '') {
-      promise = dispatch(createProject(project)) as any;
+      promise = createProject(project)(dispatch);
     } else {
-      promise = dispatch(updateProject(project)) as any;
+      promise = updateProject(project)(dispatch);
     }
     return promise
       .catch((error: AxiosError) => {

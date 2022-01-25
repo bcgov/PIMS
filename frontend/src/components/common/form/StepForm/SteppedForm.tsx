@@ -169,7 +169,7 @@ export const SteppedForm = function<T extends object = {}>({
                       onAddTab && onAddTab(values.data);
                       //add a new tab to the formik tab tracker.
                       setFieldValue('tabs', [
-                        ...values.tabs,
+                        ...(values?.tabs ?? []),
                         { activeStep: 0, name: `Parcel ${(values?.tabs?.length ?? 0) + 1}` },
                       ]);
                       //set the current tab to the newly added tab.

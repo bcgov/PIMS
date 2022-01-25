@@ -4,7 +4,7 @@ import Enzyme from 'enzyme';
 import { Container, Button } from 'react-bootstrap';
 import { SteppedForm, useFormStepper } from '.';
 import { Input } from '..';
-import { render, act, wait } from '@testing-library/react';
+import { render, act } from '@testing-library/react';
 import { fireEvent } from '@testing-library/dom';
 
 Enzyme.configure({ adapter: new Adapter() });
@@ -86,13 +86,9 @@ describe('SteppedForm', () => {
     const nextButton = getByText('Next Step');
     const backButton = getByText('Back');
     fireEvent.click(nextButton);
-    await wait(async () => {
-      await findByText('STEP: 1');
-    });
+    await findByText('STEP: 1');
     fireEvent.click(backButton);
-    await wait(async () => {
-      await findByText('STEP: 0');
-    });
+    await findByText('STEP: 0');
     const currentStep = getByText('STEP: 0');
     expect(currentStep).toBeInTheDocument();
   });

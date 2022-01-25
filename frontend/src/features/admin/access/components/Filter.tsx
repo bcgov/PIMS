@@ -4,11 +4,11 @@ import { Container, Row, Col, Form } from 'react-bootstrap';
 import { Menu, IMenuItemProps } from 'components/menu/Menu';
 import { FaCaretDown, FaSearch, FaUndo } from 'react-icons/fa';
 import useCodeLookups from 'hooks/useLookupCodes';
-import { useDispatch } from 'react-redux';
-import { getFetchLookupCodeAction } from 'actionCreators/lookupCodeActionCreator';
+import { getFetchLookupCodeAction } from 'store/slices/hooks/lookupCodeActionCreator';
 import { Button } from 'components/common/form/Button';
 import TooltipWrapper from 'components/common/TooltipWrapper';
-import { IFilterData } from 'actions/accessRequestActions';
+import { IFilterData } from 'actions/IFilterData';
+import { useAppDispatch } from 'store';
 
 interface IProps {
   initialValues?: IFilterData;
@@ -20,10 +20,10 @@ export const defaultFilter: IFilterData = { searchText: '', role: '', agency: ''
 export const AccessRequestFilter = (props: IProps) => {
   const [filterState, setFilterState] = React.useState(props.initialValues || defaultFilter);
   const lookupCodes = useCodeLookups();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   React.useEffect(() => {
-    dispatch(getFetchLookupCodeAction());
+    getFetchLookupCodeAction()(dispatch);
   }, [dispatch]);
 
   const agencies: IMenuItemProps[] = lookupCodes.getByType('Agency').map(value => {

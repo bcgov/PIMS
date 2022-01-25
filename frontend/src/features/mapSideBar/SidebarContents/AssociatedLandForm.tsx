@@ -27,7 +27,6 @@ import {
   ValuationSchema,
   LandSchema,
 } from 'utils/YupSchema';
-import { useDispatch } from 'react-redux';
 import { useBuildingApi } from '../hooks/useBuildingApi';
 import _ from 'lodash';
 import { useState } from 'react';
@@ -44,6 +43,7 @@ import { EvaluationKeys } from 'constants/evaluationKeys';
 import { FiscalKeys } from 'constants/fiscalKeys';
 import variables from '_variables.module.scss';
 import { fireMapRefreshEvent } from 'components/maps/hooks/useMapRefreshEvent';
+import { useAppDispatch } from 'store';
 
 const Container = styled.div`
   background-color: #fff;
@@ -97,7 +97,7 @@ const PreAssociateSteps = styled.div`
     margin: 0px 5px;
   }
   select {
-    width 100px;
+    width: 100px;
     margin: 0px 5px;
   }
 `;
@@ -425,7 +425,7 @@ const AssociatedLandForm: React.FC<IAssociatedLandParentForm> = (
 ) => {
   const keycloak = useKeycloakWrapper();
   const { updateBuilding } = useBuildingApi();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const [numParcels, setNumParcels] = useState(1);
   const [progress, setProgress] = useState(0);
   const parcels =

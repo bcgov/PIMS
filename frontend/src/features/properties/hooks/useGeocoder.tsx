@@ -9,7 +9,7 @@ import {
   saveParcelDataLayerResponse,
 } from 'components/maps/leaflet/LayerPopup';
 import { LatLng } from 'leaflet';
-import { useDispatch } from 'react-redux';
+import { useAppDispatch } from 'store';
 import { useBoundaryLayer } from 'components/maps/leaflet/LayerPopup/hooks/useBoundaryLayer';
 
 interface IUseGeocoderProps {
@@ -46,7 +46,7 @@ const useGeocoder = ({ formikRef, fetchPimsOrLayerParcel }: IUseGeocoderProps) =
   const parcelsService = useLayerQuery(layerUrl);
   const [pidSelection, setPidSelection] = useState<IPidSelection>({ showPopup: false, geoPID: '' });
   const api = useApi();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const handleGeocoderChanges = async (data: IGeocoderResponse, nameSpace?: string) => {
     if (!!formikRef?.current && data) {

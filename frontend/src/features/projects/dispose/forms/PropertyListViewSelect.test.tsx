@@ -1,11 +1,10 @@
 import React from 'react';
-import * as reducerTypes from 'constants/reducerTypes';
 import { createMemoryHistory } from 'history';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
-import { ILookupCode } from 'actions/lookupActions';
+import { ILookupCode } from 'actions/ILookupCode';
 import * as API from 'constants/API';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
@@ -13,7 +12,7 @@ import { IFilterBarState } from '../../common/components/FilterBar';
 import { Formik } from 'formik';
 import { PropertyListViewSelect } from '../../common/components/PropertyListViewSelect';
 import { useKeycloak } from '@react-keycloak/web';
-import { render, fireEvent, cleanup, wait, act } from '@testing-library/react';
+import { render, fireEvent, cleanup, waitFor, act } from '@testing-library/react';
 import { noop } from 'lodash';
 
 jest.mock('@react-keycloak/web');
@@ -94,9 +93,9 @@ const lCodes = {
 };
 
 const store = mockStore({
-  [reducerTypes.LOOKUP_CODE]: lCodes,
-  [reducerTypes.NETWORK]: {},
-  [reducerTypes.ProjectReducers.PROJECT]: {
+  lookupCode: lCodes,
+  network: {},
+  project: {
     project: {
       name: '',
       note: '',
@@ -146,12 +145,8 @@ describe('Property List View Select', () => {
     expect(queryByText('Test, Alert Bay')).toBeInTheDocument();
     const checkbox = container.querySelector('input[title="Toggle Row Selected"]');
     const remove = getByText('Remove Selected');
-    await wait(() => {
-      fireEvent.click(checkbox!);
-    });
-    await wait(() => {
-      fireEvent.click(remove!);
-    });
+    await waitFor(() => fireEvent.click(checkbox!));
+    await waitFor(() => fireEvent.click(remove!));
     expect(queryByText('Test, Alert Bay')).toBeNull();
   });
 });

@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, wait, fireEvent, cleanup } from '@testing-library/react';
+import { render, waitFor, fireEvent, cleanup } from '@testing-library/react';
 import { PropertyFilter } from './';
 import * as MOCK from 'mocks/filterDataMock';
 import axios from 'axios';
@@ -12,17 +12,13 @@ import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureMockStore from 'redux-mock-store';
 import * as reducerTypes from 'constants/reducerTypes';
-import { fetchPropertyNames } from 'actionCreators/propertyActionCreator';
-import { ILookupCode } from 'actions/lookupActions';
+import { ILookupCode } from 'actions/ILookupCode';
 import * as API from 'constants/API';
 
 const onFilterChange = jest.fn<void, [IPropertyFilter]>();
 //prevent web calls from being made during tests.
 jest.mock('axios');
 jest.mock('@react-keycloak/web');
-jest.mock('actionCreators/propertyActionCreator');
-
-(fetchPropertyNames as any).mockImplementation(jest.fn(() => () => ['test']));
 
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 const mockKeycloak = (claims: string[]) => {
@@ -161,7 +157,7 @@ describe('MapFilterBar', () => {
 
     // Act
     // Enter values on the form fields, then click the Search button
-    await wait(() => {
+    await waitFor(() => {
       fireEvent.change(address!, {
         target: {
           value: 'mockaddress',
@@ -169,7 +165,7 @@ describe('MapFilterBar', () => {
       });
     });
 
-    await wait(() => {
+    await waitFor(() => {
       fireEvent.change(agencies!, {
         target: {
           value: '2',
@@ -177,7 +173,7 @@ describe('MapFilterBar', () => {
       });
     });
 
-    await wait(() => {
+    await waitFor(() => {
       fireEvent.change(classificationId!, {
         target: {
           value: '0',
@@ -185,7 +181,7 @@ describe('MapFilterBar', () => {
       });
     });
 
-    await wait(() => {
+    await waitFor(() => {
       fireEvent.change(minLotSize!, {
         target: {
           value: '1',
@@ -193,7 +189,7 @@ describe('MapFilterBar', () => {
       });
     });
 
-    await wait(() => {
+    await waitFor(() => {
       fireEvent.change(maxLotSize!, {
         target: {
           value: '3',
@@ -201,11 +197,11 @@ describe('MapFilterBar', () => {
       });
     });
 
-    await wait(() => {
+    await waitFor(() => {
       fireEvent.click(inSurplusPropertyProgram!);
     });
 
-    await wait(() => {
+    await waitFor(() => {
       fireEvent.click(submit!);
     });
 

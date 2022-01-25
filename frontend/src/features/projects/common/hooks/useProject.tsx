@@ -1,10 +1,8 @@
-import { useSelector } from 'react-redux';
-import { RootState } from 'reducers/rootReducer';
-import { IProjectWrapper } from '..';
-import { initialValues } from 'features/projects/constants';
+import { useAppSelector } from 'store';
 import { IStatus } from 'features/projects/interfaces';
 import _ from 'lodash';
 import { useHistory } from 'react-router-dom';
+import { defaultProject } from 'features/projects/constants/defaultValues';
 
 /**
  * Find the workflow project status transition for the current workflow and specified 'from' and 'to'.
@@ -29,8 +27,8 @@ const getStatusTransitionWorkflow = (
  * Provides a way to find a transition
  */
 const useProject = () => {
-  const project = useSelector<RootState, IProjectWrapper>(state => state.project).project;
-  const workflowStatuses = useSelector<RootState, IStatus[]>(state => state.projectWorkflow as any);
+  const project = useAppSelector(store => store.project.project);
+  const workflowStatuses = useAppSelector(store => store.projectWorkflow);
   const history = useHistory();
 
   return {
@@ -40,7 +38,7 @@ const useProject = () => {
     },
     goToDisposePath: (path: string) =>
       history.push(`./${path}?projectNumber=${project?.projectNumber}`),
-    project: project ?? initialValues,
+    project: project ?? defaultProject(),
     getStatusTransitionWorkflow: (toStatusCode?: string) =>
       getStatusTransitionWorkflow(workflowStatuses, project?.statusCode, toStatusCode),
     workflowStatuses,
