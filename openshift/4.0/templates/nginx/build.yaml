@@ -1,14 +1,12 @@
-# This is a build template for .NET 5.0
-# It will build a new image from the specified source control repo
-# that will run your application.
 kind: Template
 apiVersion: v1
 metadata:
-  name: pims-api-build
+  name: nginx-build
   annotations:
-    openshift.io/display-name: .NET 5.0 Build Template
-    description: Build template for a .NET 5.0 application.
-    tags: pims-api
+    openshift.io/display-name: Nginx Image
+    description: Build an image containing Nginx.
+    tags: nginx
+
 parameters:
   - name: SOLUTION_NAME
     displayName: Solution Group Name
@@ -17,20 +15,9 @@ parameters:
     value: pims
   - name: APP_NAME
     displayName: Application Name
-    description: The name of the application (e.g. api).
+    description: The name of the application (e.g. nginx).
     required: true
-    value: api
-
-  - name: PROJECT_NAMESPACE
-    displayName: "OpenShift Project Namespace"
-    description: "The namespace of the OpenShift project containing the application."
-    required: true
-    value: "354028"
-  - name: ENV_NAME
-    displayName: "Environment name"
-    description: "The name for this environment [dev, test, prod, tools]"
-    required: true
-    value: "tools"
+    value: nginx
 
   - name: GIT_SOURCE
     displayName: Git Source Identifier
@@ -41,21 +28,22 @@ parameters:
     displayName: Git Repository URL
     description: The URL of the repository with your application source code.
     required: true
-    value: https://github.com/bcgov/PIMS.git
+    value: https://github.com/bcgov/pims.git
   - name: GIT_REF
     displayName: Git Reference
     description:
       Set this to a branch name, tag or other ref of your repository if you
       are not using the default branch.
     value: dev
-  - name: SOURCE_CONTEXT_DIR
+  - name: CONTEXT_DIR
     displayName: Context Directory
     description: Set this to use a subdirectory of the source code repository
-    value: backend
-  - name: DOCKERFILE_PATH
-    displayName: Path to Dockerfile
-    description: Path for alternate Dockerfile to use for build
-    value: Dockerfile.ocp
+    value: nginx
+  - name: DOCKERFILE
+    displayName: Dockerfile Name
+    description: The Dockerfile name
+    required: true
+    value: Dockerfile.maintenance
 
   - name: OUTPUT_IMAGE_TAG
     displayName: Output Image Tag
@@ -72,62 +60,59 @@ parameters:
     displayName: Resources CPU Limit
     description: The resources CPU limit (in cores) for this build.
     required: true
-    value: 500m
+    value: 100m
   - name: MEMORY_REQUEST
     displayName: Requested Minimum Memory Limit
     description: Minimum requested amount of memory the container can use.
     required: true
-    value: 250Mi
+    value: 100Mi
   - name: MEMORY_LIMIT
     displayName: Memory Limit
     description: Maximum amount of memory the container can use.
     required: true
-    value: 2Gi
+    value: 1Gi
+
 objects:
-  # Image stream for the built image.
+  # The final build image.
   - kind: ImageStream
     apiVersion: v1
     metadata:
       name: ${SOLUTION_NAME}-${APP_NAME}
-      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
       annotations:
-        description: Keeps track of changes in the application image
+        description: Destination for built images.
       labels:
         name: ${SOLUTION_NAME}-${APP_NAME}
-        app: ${SOLUTION_NAME}
-        role: ${APP_NAME}
-        env: ${ENV_NAME}
+        solution: ${SOLUTION_NAME}
+        app: ${APP_NAME}
 
-  # The build config that will be created and be named for the branch you created it for.
+  # The build config that will be created will be named for the branch you created it for.
   - kind: BuildConfig
     apiVersion: v1
     metadata:
       name: ${SOLUTION_NAME}-${APP_NAME}.${GIT_SOURCE}
-      namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
       annotations:
-        description: Defines how to build the application
+        description: Build image from Dockerfile in git repo.
       labels:
         name: ${SOLUTION_NAME}-${APP_NAME}.${GIT_SOURCE}
-        app: ${SOLUTION_NAME}
-        role: ${APP_NAME}
-        env: ${ENV_NAME}
+        solution: ${SOLUTION_NAME}
+        app: ${APP_NAME}
         branch: ${GIT_REF}
     spec:
+      completionDeadlineSeconds: 1800
       triggers:
         - type: ImageChange
         - type: ConfigChange
       runPolicy: Serial
       source:
-        type: Git
         git:
           uri: ${GIT_URL}
           ref: ${GIT_REF}
-        contextDir: ${SOURCE_CONTEXT_DIR}
+        contextDir: ${CONTEXT_DIR}
       strategy:
         type: Docker
         dockerStrategy:
           imageOptimizationPolicy: SkipLayers
-          dockerfilePath: "${DOCKERFILE_PATH}"
+          dockerfilePath: ${DOCKERFILE}
       output:
         to:
           kind: ImageStreamTag
