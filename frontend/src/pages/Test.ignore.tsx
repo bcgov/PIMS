@@ -2,25 +2,23 @@ import * as React from 'react';
 import { Button, ButtonGroup, Container } from 'react-bootstrap';
 import { ENVIRONMENT } from 'constants/environment';
 import download from '../utils/download';
-import { useDispatch } from 'react-redux';
+import { useAppDispatch } from 'store';
 
 /**
  * Test provides a testing page for various things.
  */
 const Test = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const fetch = (accept: 'csv' | 'excel') =>
-    dispatch(
-      download({
-        url: ENVIRONMENT.apiUrl + '/reports/properties?classificationId=1',
-        fileName: `pims-inventory.${accept === 'csv' ? 'csv' : 'xlsx'}`,
-        actionType: 'properties-report',
-        headers: {
-          Accept: accept === 'csv' ? 'text/csv' : 'application/vnd.ms-excel',
-        },
-      }),
-    );
+    download({
+      url: ENVIRONMENT.apiUrl + '/reports/properties?classificationId=1',
+      fileName: `pims-inventory.${accept === 'csv' ? 'csv' : 'xlsx'}`,
+      actionType: 'properties-report',
+      headers: {
+        Accept: accept === 'csv' ? 'text/csv' : 'application/vnd.ms-excel',
+      },
+    })(dispatch);
 
   return (
     <Container>

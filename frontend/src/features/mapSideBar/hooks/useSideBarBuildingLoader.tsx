@@ -1,10 +1,10 @@
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
 import { SidebarContextType } from './useQueryParamSideBar';
-import { fetchBuildingDetail } from 'actionCreators/parcelsActionCreator';
-import { useDispatch } from 'react-redux';
+import { fetchBuildingDetail } from 'store/slices/hooks/parcelsActionCreator';
 import React from 'react';
 import { IBuilding } from 'actions/parcelsActions';
 import { useAsyncError } from 'hooks/useAsyncError';
+import { useAppDispatch } from 'store';
 
 interface IUseSideBarBuildingLoader {
   /** whether or not the sidebar should be displayed */
@@ -28,7 +28,7 @@ const useSideBarBuildingLoader = ({
   disabled,
 }: IUseSideBarBuildingLoader) => {
   const [cachedBuildingDetail, setCachedBuildingDetail] = React.useState<IBuilding | null>(null);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const throwError = useAsyncError();
 
   useDeepCompareEffect(() => {

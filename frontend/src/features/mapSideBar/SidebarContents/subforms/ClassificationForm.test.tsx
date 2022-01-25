@@ -1,5 +1,5 @@
 import React from 'react';
-import { cleanup, fireEvent, render, wait } from '@testing-library/react';
+import { cleanup, fireEvent, render, waitFor } from '@testing-library/react';
 import { Formik } from 'formik';
 import { noop } from 'lodash';
 import axios from 'axios';
@@ -14,7 +14,7 @@ import { Classifications } from 'constants/classifications';
 import { SelectOption, SelectOptions } from 'components/common/form';
 import * as API from 'constants/API';
 import * as reducerTypes from 'constants/reducerTypes';
-import { ILookupCode } from 'actions/lookupActions';
+import { ILookupCode } from 'actions/ILookupCode';
 
 jest.mock('axios');
 jest.mock('@react-keycloak/web');
@@ -133,7 +133,7 @@ describe('renders definitions correctly', () => {
   it('renders core operational definition', async () => {
     const { getByText, container } = render(form);
     const classificationId = container.querySelector('select[name="classificationId"]');
-    await wait(() => {
+    await waitFor(() => {
       fireEvent.change(classificationId!, {
         target: {
           value: Classifications.CoreOperational,
@@ -145,7 +145,7 @@ describe('renders definitions correctly', () => {
   it('renders core strategic definition', async () => {
     const { getByText, container } = render(form);
     const classificationId = container.querySelector('select[name="classificationId"]');
-    await wait(() => {
+    await waitFor(() => {
       fireEvent.change(classificationId!, {
         target: {
           value: Classifications.CoreStrategic,
@@ -157,7 +157,7 @@ describe('renders definitions correctly', () => {
   it('renders surplus encumbered definition', async () => {
     const { getByText, container } = render(form);
     const classificationId = container.querySelector('select[name="classificationId"]');
-    await wait(() => {
+    await waitFor(() => {
       fireEvent.change(classificationId!, {
         target: {
           value: Classifications.SurplusEncumbered,

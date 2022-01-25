@@ -1,7 +1,4 @@
-import { useSelector } from 'react-redux';
-import { RootState } from 'reducers/rootReducer';
-import { ILookupCode } from 'actions/lookupActions';
-import { ILookupCodeState } from 'reducers/lookupCodeReducer';
+import { ILookupCode } from 'actions/ILookupCode';
 import { mapLookupCode } from 'utils';
 import _ from 'lodash';
 import { useCallback } from 'react';
@@ -10,15 +7,14 @@ import * as API from 'constants/API';
 import { Classifications } from 'constants/classifications';
 import Claims from 'constants/claims';
 import { SelectOption } from 'components/common/form';
+import { useAppSelector } from 'store';
 
 /**
  * Hook to return an array ILookupCode for specific types.
  */
 export function useCodeLookups() {
   const keycloak = useKeycloakWrapper();
-  const lookupCodes = useSelector<RootState, ILookupCode[]>(
-    state => (state.lookupCode as ILookupCodeState).lookupCodes,
-  );
+  const lookupCodes = useAppSelector<ILookupCode[]>(store => store.lookupCode.lookupCodes);
   const getCodeById = (type: string, id: string): string | undefined => {
     return lookupCodes.filter(code => code.type === type && code.id === id)?.find(x => x)?.code;
   };

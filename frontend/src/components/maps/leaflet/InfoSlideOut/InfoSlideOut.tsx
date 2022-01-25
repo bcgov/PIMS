@@ -23,10 +23,10 @@ import { PropertyTypes } from 'constants/propertyTypes';
 import { LandSvg } from 'components/common/Icons';
 import AssociatedParcelsList from './AssociatedParcelsList';
 import FilterBackdrop from '../FilterBackdrop';
-import * as parcelsActions from 'actions/parcelsActions';
 import { useApi } from 'hooks/useApi';
-import { useDispatch } from 'react-redux';
+import { useAppDispatch } from 'store';
 import { toast } from 'react-toastify';
+import { storePropertyDetail } from 'store/slices/parcelSlice';
 
 const InfoContainer = styled.div`
   margin-right: -10px;
@@ -190,7 +190,7 @@ const InfoControl: React.FC<InfoControlProps> = ({ open, setOpen, onHeaderAction
   );
 
   const keycloak = useKeycloakWrapper();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const canViewProperty = keycloak.canUserViewProperty(propertyInfo);
   const canEditProperty = keycloak.canUserEditProperty(propertyInfo);
 
@@ -271,7 +271,12 @@ const InfoControl: React.FC<InfoControlProps> = ({ open, setOpen, onHeaderAction
                     .then((building: IBuilding) => {
                       popUpContext.setPropertyInfo(building);
                       if (!!building.parcels.length) {
-                        dispatch(parcelsActions.storeBuildingDetail(building));
+                        dispatch(
+                          storePropertyDetail({
+                            propertyTypeId: 1,
+                            parcelDetail: building,
+                          }),
+                        );
                       }
                     })
                     .catch(() => {

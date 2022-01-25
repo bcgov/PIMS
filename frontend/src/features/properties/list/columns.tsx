@@ -6,7 +6,7 @@ import { IProperty } from '.';
 import { ColumnWithProps } from 'components/Table';
 import { FastCurrencyInput, Input, Select, SelectOption } from 'components/common/form';
 import { TypeaheadField } from 'components/common/form/Typeahead';
-import { ILookupCode } from 'actions/lookupActions';
+import { ILookupCode } from 'actions/ILookupCode';
 import { EditableMoneyCell, MoneyCell, AsterixMoneyCell } from 'components/Table/MoneyCell';
 import _, { isEqual } from 'lodash';
 import styled from 'styled-components';

@@ -26,14 +26,13 @@ import {
   getMergedFinancials,
 } from 'features/properties/components/forms/subforms/EvaluationForm';
 import _ from 'lodash';
-import { useDispatch } from 'react-redux';
 import {
   ParcelSchema,
   LandIdentificationSchema,
   LandUsageSchema,
   ValuationSchema,
 } from 'utils/YupSchema';
-import { createParcel, updateParcel } from 'actionCreators/parcelsActionCreator';
+import { createParcel, updateParcel } from 'store/slices/hooks/parcelsActionCreator';
 import { LandValuationForm } from './subforms/LandValuationForm';
 import { LandSteps } from 'constants/propertySteps';
 import useDraftMarkerSynchronizer from 'features/properties/hooks/useDraftMarkerSynchronizer';
@@ -49,6 +48,7 @@ import LastUpdatedBy from 'features/properties/components/LastUpdatedBy';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
 import { PropertyTypes } from 'constants/index';
 import { fireMapRefreshEvent } from 'components/maps/hooks/useMapRefreshEvent';
+import { useAppDispatch } from 'store';
 
 const Container = styled.div`
   background-color: #fff;
@@ -337,7 +337,7 @@ export const ViewOnlyLandForm: React.FC<Partial<IParentLandForm>> = (props: {
  */
 const LandForm: React.FC<IParentLandForm> = (props: IParentLandForm) => {
   const keycloak = useKeycloakWrapper();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const api = useApi();
   const steps: IStep[] = [
     {

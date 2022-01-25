@@ -2,7 +2,7 @@ import React from 'react';
 import { createMemoryHistory } from 'history';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
-import { render, wait, act } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import { useKeycloak } from '@react-keycloak/web';
 import { Claims } from 'constants/claims';
 import MockAdapter from 'axios-mock-adapter';
@@ -15,7 +15,7 @@ import { ReviewWorkflowStatus } from 'features/projects/constants';
 import { IProject } from 'features/projects/interfaces';
 import { GreTransferStep } from '..';
 import { fillInput } from 'utils/testUtils';
-import { screen } from '@testing-library/dom';
+import { fireEvent, screen } from '@testing-library/dom';
 
 jest.mock('@react-keycloak/web');
 const mockProject: IProject = {
@@ -103,11 +103,11 @@ describe('GRE Transfer Step', () => {
       mockKeycloak([Claims.ADMIN_PROJECTS]);
     });
 
-    it('update button is visible but disabled', () => {
-      const { getByText } = render(getGreTransferStep());
-      const updateButton = getByText(/Update Property Information Management System/);
+    it('update button is visible but disabled', async () => {
+      const { findByText } = render(getGreTransferStep());
+      const updateButton = await findByText(/Update Property Information Management System/);
       expect(updateButton).toBeVisible();
-      expect(updateButton).toBeDisabled();
+      expect(updateButton.parentElement).toBeDisabled();
     });
     it('form fields are not disabled', () => {
       const { getByLabelText } = render(getGreTransferStep());
@@ -154,45 +154,40 @@ describe('GRE Transfer Step', () => {
     });
 
     it('enables update button when new agency is selected', async () => {
-      await act(async () => {
-        const project = _.cloneDeep(mockProject);
-        const { container } = render(getGreTransferStep(getStore(project)));
-        const updateButton = screen.getByText(/Update Property Information Management System/);
-        await fillInput(container, 'agencyId', 'BC Transit', 'typeahead');
-
-        expect(updateButton).not.toBeDisabled();
-      });
+      const project = _.cloneDeep(mockProject);
+      const { container } = render(getGreTransferStep(getStore(project)));
+      const updateButton = screen.getByText(/Update Property Information Management System/);
+      fillInput(container, 'agencyId', 'BC Transit', 'typeahead');
+      await waitFor(() => expect(updateButton).not.toBeDisabled());
     });
 
     it('displays modal when Update PIMS button clicked', async () => {
-      await act(async () => {
-        const project = _.cloneDeep(mockProject);
-        project.properties[0].classificationId = Classifications.CoreOperational;
-        const { container } = render(getGreTransferStep(getStore(project)));
-        const updateButton = screen.getByText(/Update Property Information Management System/);
-        await fillInput(container, 'agencyId', 'BC Transit', 'typeahead');
-        await wait(() => expect(updateButton).not.toBeDisabled());
-        updateButton.click();
+      const project = _.cloneDeep(mockProject);
+      project.properties[0].classificationId = Classifications.CoreOperational;
+      const { container } = render(getGreTransferStep(getStore(project)));
+      const updateButton = screen.getByText(/Update Property Information Management System/);
 
+      fillInput(container, 'agencyId', 'BC Transit', 'typeahead');
+      await waitFor(() => expect(updateButton).not.toBeDisabled());
+      fireEvent.click(updateButton);
+
+      await waitFor(async () => {
         const errorSummary = await screen.findByText(/Really Update PIMS/);
         expect(errorSummary).toBeVisible();
       });
     });
 
     it('gre performs validation on update', async () => {
-      await act(async () => {
-        const project = _.cloneDeep(mockProject);
-        const { container } = render(getGreTransferStep(getStore(project)));
-        const updateButton = screen.getByText(/Update Property Information Management System/);
+      const project = _.cloneDeep(mockProject);
+      const { container, findByText } = render(getGreTransferStep(getStore(project)));
+      const updateButton = await findByText(/Update Property Information Management System/);
 
-        await fillInput(container, 'agencyId', 'BC Transit', 'typeahead');
-        await act(async () => {
-          await wait(() => expect(updateButton).not.toBeDisabled());
-          updateButton.click();
-        });
-        const errorSummary = await screen.findByText(
-          /Must select Core Operational or Core Strategic/,
-        );
+      fillInput(container, 'agencyId', 'BC Transit', 'typeahead');
+      await waitFor(() => expect(updateButton).not.toBeDisabled());
+
+      fireEvent.click(updateButton);
+      await waitFor(async () => {
+        const errorSummary = await findByText(/Must select Core Operational or Core Strategic/);
         expect(errorSummary).toBeVisible();
       });
     });

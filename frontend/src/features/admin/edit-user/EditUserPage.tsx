@@ -1,10 +1,7 @@
 import React, { useEffect } from 'react';
 import { Navbar, Container, Row, Col, ButtonToolbar, Button } from 'react-bootstrap';
 import { Form, Input, Select, SelectOption } from '../../../components/common/form';
-import { fetchUserDetail, getUpdateUserAction } from 'actionCreators/usersActionCreator';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from 'reducers/rootReducer';
-import { IUserDetails } from 'interfaces';
+import { fetchUserDetail, getUpdateUserAction } from 'store/slices/hooks/usersActionCreator';
 import { Formik, Field } from 'formik';
 import { UserUpdateSchema } from 'utils/YupSchema';
 import { IUserDetailParams } from 'constants/API';
@@ -15,8 +12,9 @@ import { useHistory } from 'react-router-dom';
 import TooltipWrapper from 'components/common/TooltipWrapper';
 import { formatApiDateTime } from 'utils';
 import useCodeLookups from 'hooks/useLookupCodes';
-import { ILookupCode } from 'actions/lookupActions';
+import { ILookupCode } from 'actions/ILookupCode';
 import { AUTHORIZATION_URL } from 'constants/strings';
+import { useAppDispatch, useAppSelector } from 'store';
 
 interface IEditUserPageProps extends IUserDetailParams {
   match?: any;
@@ -25,16 +23,16 @@ interface IEditUserPageProps extends IUserDetailParams {
 const EditUserPage = (props: IEditUserPageProps) => {
   const userId = props?.match?.params?.id || props.id;
   const history = useHistory();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   useEffect(() => {
-    dispatch(fetchUserDetail({ id: userId }));
+    fetchUserDetail({ id: userId })(dispatch);
   }, [dispatch, userId]);
 
   const { getByType } = useCodeLookups();
   const agencies = getByType(API.AGENCY_CODE_SET_NAME);
   const roles = getByType(API.ROLE_CODE_SET_NAME);
 
-  const user = useSelector<RootState, IUserDetails>(state => state.GET_USER_DETAIL as IUserDetails);
+  const user = useAppSelector(store => store.users.user);
   const mapLookupCode = (code: ILookupCode): SelectOption => ({
     label: code.name,
     value: code.id.toString(),
@@ -129,27 +127,26 @@ const EditUserPage = (props: IEditUserPageProps) => {
               } else {
                 rolesToUpdate = user.roles;
               }
-              dispatch(
-                getUpdateUserAction(
-                  { id: userId },
-                  {
-                    id: user.id,
-                    keycloakUserId: user.keycloakUserId,
-                    username: user.username,
-                    displayName: values.displayName,
-                    firstName: values.firstName,
-                    lastName: values.lastName,
-                    email: values.email,
-                    isDisabled: values.isDisabled,
-                    rowVersion: values.rowVersion,
-                    emailVerified: values.emailVerified,
-                    agencies: agenciesToUpdate,
-                    roles: rolesToUpdate,
-                    position: values.position,
-                    note: values.note,
-                  },
-                ),
-              );
+
+              getUpdateUserAction(
+                { id: userId },
+                {
+                  id: user.id,
+                  keycloakUserId: user.keycloakUserId,
+                  username: user.username,
+                  displayName: values.displayName,
+                  firstName: values.firstName,
+                  lastName: values.lastName,
+                  email: values.email,
+                  isDisabled: values.isDisabled,
+                  rowVersion: values.rowVersion,
+                  emailVerified: values.emailVerified,
+                  agencies: agenciesToUpdate,
+                  roles: rolesToUpdate,
+                  position: values.position,
+                  note: values.note,
+                },
+              )(dispatch);
               setSubmitting(false);
             }}
           >

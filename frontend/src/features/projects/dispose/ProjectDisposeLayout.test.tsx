@@ -10,7 +10,7 @@ import * as actionTypes from 'constants/actionTypes';
 import useStepper from './hooks/useStepper';
 import useStepForm from '../common/hooks/useStepForm';
 import { noop } from 'lodash';
-import { render, fireEvent, wait } from '@testing-library/react';
+import { render, fireEvent, waitFor } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
 import useProject from '../common/hooks/useProject';
 import { mockWorkflow } from './testUtils';
@@ -171,12 +171,12 @@ describe('dispose project draft step display', () => {
     const check = getByLabelText('has approval/authority', { exact: false });
     await act(async () => {
       fireEvent.click(check);
-      await wait(() => {
+      await waitFor(() => {
         expect((check as any).checked).toBe(true);
       });
       fireEvent.click(nextButton);
 
-      await wait(() => {
+      await waitFor(() => {
         expect(goToNextStep).toHaveBeenCalled();
       });
     });

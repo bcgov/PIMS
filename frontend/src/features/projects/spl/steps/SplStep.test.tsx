@@ -2,7 +2,7 @@ import React from 'react';
 import { createMemoryHistory } from 'history';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
-import { render, act, screen, cleanup, wait } from '@testing-library/react';
+import { render, act, screen, cleanup, waitFor } from '@testing-library/react';
 import { useKeycloak } from '@react-keycloak/web';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
@@ -299,7 +299,7 @@ describe('SPL Approval Step', () => {
         saveButton.click();
       });
 
-      await wait(async () => {
+      await waitFor(async () => {
         await findByDisplayValue('purchaser');
       });
       return;
@@ -314,7 +314,7 @@ describe('SPL Approval Step', () => {
       project.netBook = 123;
       project.properties = [];
 
-      await wait(async () => {
+      await waitFor(async () => {
         const component = render(getSplStep(getStore(project)));
         const disposeButton = component.getAllByText('Dispose')[0];
 

@@ -8,7 +8,7 @@ import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
-import { render, wait, fireEvent, cleanup } from '@testing-library/react';
+import { render, waitFor, fireEvent, cleanup } from '@testing-library/react';
 import { DisposeWorkflowStatus } from 'features/projects/constants';
 import { IProjectTask } from 'features/projects/interfaces';
 import { ProjectActions } from 'constants/actionTypes';
@@ -93,7 +93,7 @@ describe('Documentation Step', () => {
   it('documentation validation works', async () => {
     const { getAllByText, container } = render(uiElement);
     const form = container.querySelector('form');
-    await wait(() => {
+    await waitFor(() => {
       fireEvent.submit(form!);
     });
     expect(getAllByText('Required')).toHaveLength(2);

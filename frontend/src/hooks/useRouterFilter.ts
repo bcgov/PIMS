@@ -1,8 +1,7 @@
-import { useDispatch, useSelector } from 'react-redux';
+import { useAppDispatch, useAppSelector } from 'store';
 import { useHistory } from 'react-router-dom';
 import React, { useCallback, useEffect, useState } from 'react';
-import { saveFilter } from 'reducers/filterSlice';
-import { RootState } from 'reducers/rootReducer';
+import { saveFilter } from 'store/slices/filterSlice';
 import _ from 'lodash';
 import queryString from 'query-string';
 import { TableSort } from 'components/Table/TableSort';
@@ -83,9 +82,9 @@ export const useRouterFilter = <T extends object>({
   setSorting,
 }: IRouterFilterProps<T>) => {
   const history = useHistory();
-  const reduxSearch = useSelector<RootState, any>(state => state.filter);
+  const dispatch = useAppDispatch();
+  const reduxSearch = useAppSelector(store => store.filter);
   const [savedFilter] = useState(reduxSearch);
-  const dispatch = useDispatch();
   const [loaded, setLoaded] = useState(false);
 
   // Extract the query parameters to initialize the filter.
@@ -104,7 +103,7 @@ export const useRouterFilter = <T extends object>({
         if (!_.isEqual(_.omit(merged, 'propertyType'), _.omit(filter, 'propertyType')))
           setFilter(merged);
       } else if (savedFilter?.hasOwnProperty(key)) {
-        let merged = { ...defaultFilter, ...extractProps(filterProps, savedFilter[key]) };
+        let merged = { ...defaultFilter, ...extractProps(filterProps, (savedFilter as any)[key]) };
         if (!merged.propertyType) {
           merged = { ...merged, propertyType: PropertyTypeNames.Land };
         }

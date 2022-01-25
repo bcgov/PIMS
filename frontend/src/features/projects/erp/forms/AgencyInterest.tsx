@@ -3,7 +3,7 @@ import { AgencyResponses } from 'features/projects/constants';
 import { IProject } from 'features/projects/interfaces';
 import { getIn, useFormikContext } from 'formik';
 import React from 'react';
-import { ILookupCode } from 'actions/lookupActions';
+import { ILookupCode } from 'actions/ILookupCode';
 import * as API from 'constants/API';
 import { ParentSelect } from 'components/common/form/ParentSelect';
 import { mapLookupCodeWithParentString } from 'utils';

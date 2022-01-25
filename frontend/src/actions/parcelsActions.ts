@@ -1,6 +1,4 @@
 import { ILeasedLand } from 'features/mapSideBar/SidebarContents/AssociatedLandForm';
-import * as ActionTypes from 'constants/actionTypes';
-import { PointFeature } from 'components/maps/types';
 import { PropertyTypes } from 'constants/propertyTypes';
 
 //Parcel List API action
@@ -26,36 +24,6 @@ export interface IProperty {
   updatedByEmail?: string;
   updatedByName?: string;
 }
-
-export interface IStoreParcelsAction {
-  type: typeof ActionTypes.STORE_PARCEL_RESULTS;
-  parcelList: IProperty[];
-}
-
-export interface IStoreDraftParcelsAction {
-  type: typeof ActionTypes.STORE_DRAFT_PARCEL_RESULTS;
-  draftParcelList: PointFeature[];
-}
-
-export interface IStoreParcelAction {
-  type: typeof ActionTypes.STORE_PARCEL_FROM_MAP_EVENT;
-  parcel: IProperty;
-}
-
-export const storeDraftParcelsAction = (parcelList: PointFeature[]): IStoreDraftParcelsAction => ({
-  type: ActionTypes.STORE_DRAFT_PARCEL_RESULTS,
-  draftParcelList: parcelList,
-});
-
-export const storeParcelsAction = (parcelList: IProperty[]): IStoreParcelsAction => ({
-  type: ActionTypes.STORE_PARCEL_RESULTS,
-  parcelList: parcelList,
-});
-
-export const storeParcelAction = (parcel: IProperty): IStoreParcelAction => ({
-  type: ActionTypes.STORE_PARCEL_FROM_MAP_EVENT,
-  parcel,
-});
 
 //Parcel Detail API action
 export interface IAddress {
@@ -205,56 +173,3 @@ export interface IBuildingDetail {
 }
 
 export type IPropertyDetail = IParcelDetail | IBuildingDetail;
-
-export interface IStoreParcelDetail {
-  type: typeof ActionTypes.STORE_PARCEL_DETAIL;
-  parcelDetail: IParcelDetail;
-}
-
-export const storeParcelDetail = (
-  parcel: IParcel | null,
-  position?: [number, number],
-): IStoreParcelDetail => {
-  return {
-    type: ActionTypes.STORE_PARCEL_DETAIL,
-    parcelDetail: {
-      propertyTypeId: parcel?.propertyTypeId as PropertyTypes,
-      parcelDetail: parcel,
-      position,
-    },
-  };
-};
-
-export interface IStoreBuildingDetail {
-  type: typeof ActionTypes.STORE_BUILDING_DETAIL;
-  parcelDetail: IBuildingDetail;
-}
-
-export const storeBuildingDetail = (
-  building: IBuilding | null,
-  position?: [number, number],
-): IStoreBuildingDetail => ({
-  type: ActionTypes.STORE_BUILDING_DETAIL,
-  parcelDetail: {
-    propertyTypeId: 1,
-    parcelDetail: building,
-    position,
-  },
-});
-
-export interface IStoreAssociatedBuildingDetail {
-  type: typeof ActionTypes.STORE_ASSOCIATED_BUILDING_DETAIL;
-  associatedBuildingDetail: IBuildingDetail;
-}
-
-export const storeAssociatedBuilding = (
-  building: IBuilding | null,
-  position?: [number, number],
-): IStoreAssociatedBuildingDetail => ({
-  type: ActionTypes.STORE_ASSOCIATED_BUILDING_DETAIL,
-  associatedBuildingDetail: {
-    propertyTypeId: 1,
-    parcelDetail: building,
-    position,
-  },
-});

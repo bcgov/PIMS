@@ -1,20 +1,22 @@
 import { KeycloakInstance } from 'keycloak-js';
 import getKeycloakEventHandler from './KeycloakEventHandler';
-import { saveJwt, clearJwt } from 'reducers/JwtSlice';
-import { setKeycloakReady } from 'reducers/keycloakReadySlice';
-import { store } from 'store';
+import * as jwtSlice from 'store/slices/jwtSlice';
+import { initialJwtState } from 'store/slices/jwtSlice';
+import * as keycloakReadySlice from 'store/slices/keycloakReadySlice';
+import { initialKeycloakState } from 'store/slices/keycloakReadySlice';
+import configureMockStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
 
-jest.mock('reducers/JwtSlice', () => ({
-  saveJwt: jest.fn(),
-  clearJwt: jest.fn(),
-}));
-jest.mock('configureStore');
-jest.mock('reducers/keycloakReadySlice');
-jest.mock('store', () => ({
-  store: {
-    dispatch: jest.fn(),
-  },
-}));
+const mockStore = configureMockStore([thunk]);
+const store = mockStore({
+  jwt: initialJwtState,
+  keycloakReady: initialKeycloakState,
+});
+
+const dispatchSpy = jest.spyOn(store, 'dispatch');
+const saveJwtSpy = jest.spyOn(jwtSlice, 'saveJwt');
+const clearJwtSpy = jest.spyOn(jwtSlice, 'clearJwt');
+const setKeycloakReadySpy = jest.spyOn(keycloakReadySlice, 'setKeycloakReady');
 
 const keycloak = ({
   subject: 'test',
@@ -24,36 +26,38 @@ const keycloak = ({
   },
   token: '123456789',
 } as any) as KeycloakInstance;
+
 const keyclockEventHandler = getKeycloakEventHandler(keycloak);
+
 describe('KeycloakEventHandler ', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
   it('saves the token when onAuthSuccess event is fired', () => {
     keyclockEventHandler('onAuthSuccess');
-    expect(saveJwt).toHaveBeenCalledWith(keycloak.token);
+    expect(saveJwtSpy).toHaveBeenCalledWith(keycloak.token);
   });
   it('saves the token when onAuthRefreshSuccess event is fired', () => {
     keyclockEventHandler('onAuthRefreshSuccess');
-    expect(saveJwt).toHaveBeenCalledWith(keycloak.token);
+    expect(saveJwtSpy).toHaveBeenCalledWith(keycloak.token);
   });
   it('clears the token when onAuthLogout event is fired', () => {
     keyclockEventHandler('onAuthLogout');
-    expect(clearJwt).toHaveBeenCalled();
+    expect(clearJwtSpy).toHaveBeenCalled();
   });
   it('clears the token when onTokenExpired event is fired', () => {
     keyclockEventHandler('onTokenExpired');
-    expect(clearJwt).toHaveBeenCalled();
+    expect(clearJwtSpy).toHaveBeenCalled();
   });
   it('sets the ready flag when onReady event is fired', () => {
     keyclockEventHandler('onReady');
-    expect(setKeycloakReady).toHaveBeenCalledWith(true);
+    expect(setKeycloakReadySpy).toHaveBeenCalledWith(true);
   });
   it('does nothing when an unexpected event is fired', () => {
     keyclockEventHandler('onInitError');
-    expect(store.dispatch).not.toHaveBeenCalled();
-    expect(saveJwt).not.toHaveBeenCalled();
-    expect(clearJwt).not.toHaveBeenCalled();
-    expect(setKeycloakReady).not.toHaveBeenCalled();
+    expect(dispatchSpy).not.toHaveBeenCalled();
+    expect(saveJwtSpy).not.toHaveBeenCalled();
+    expect(clearJwtSpy).not.toHaveBeenCalled();
+    expect(setKeycloakReadySpy).not.toHaveBeenCalled();
   });
 });

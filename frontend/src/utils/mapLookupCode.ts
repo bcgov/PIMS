@@ -1,4 +1,4 @@
-import { ILookupCode } from 'actions/lookupActions';
+import { ILookupCode } from 'actions/ILookupCode';
 import { SelectOption } from 'components/common/form';
 
 /**

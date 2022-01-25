@@ -1,26 +1,15 @@
 import React, { useEffect, useMemo, useCallback } from 'react';
 import { Container, Button } from 'react-bootstrap';
-import { getUsersAction } from 'actionCreators/usersActionCreator';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from 'reducers/rootReducer';
-import { IPagedItems } from 'interfaces/pagedItems';
+import { getUsersAction } from 'store/slices/hooks/usersActionCreator';
 import { toFilteredApiPaginateParams } from 'utils/CommonFunctions';
-import { IGenericNetworkAction } from 'actions/genericActions';
+import { IGenericNetworkAction } from 'store';
 import * as actionTypes from 'constants/actionTypes';
 import { IUser, IUsersFilter } from 'interfaces';
 import { IUserRecord } from './interfaces/IUserRecord';
-import { IUsersState } from 'reducers/usersReducer';
 import { UsersFilterBar } from './components/UsersFilterBar';
 import * as API from 'constants/API';
 import { Table } from 'components/Table';
 import { columnDefinitions } from './constants';
-import { TableSort } from 'components/Table/TableSort';
-import {
-  getUsersSortAction,
-  getUsersFilterAction,
-  getUsersPageIndexAction,
-  setUsersPageSize,
-} from 'actions/adminActions';
 import { formatApiDateTime, generateMultiSortCriteria } from 'utils';
 import styled from 'styled-components';
 import useCodeLookups from 'hooks/useLookupCodes';
@@ -33,6 +22,13 @@ import download from 'utils/download';
 import queryString from 'query-string';
 import { ENVIRONMENT } from 'constants/environment';
 import { IPaginateParams } from 'constants/API';
+import { useAppDispatch, useAppSelector } from 'store';
+import {
+  storeUserFilter,
+  storeUserPageIndex,
+  storeUserPageQuantity,
+  storeUserSort,
+} from 'store/slices/userSlice';
 
 const TableContainer = styled(Container)`
   margin-top: 10px;
@@ -63,54 +59,37 @@ const downloadUsers = (filter: IPaginateParams) =>
  * @returns A ManagerUser component.
  */
 export const ManageUsers = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const { getByType } = useCodeLookups();
   const agencies = useMemo(() => getByType(API.AGENCY_CODE_SET_NAME), [getByType]);
   const roles = useMemo(() => getByType(API.ROLE_CODE_SET_NAME), [getByType]);
   const columns = useMemo(() => columnDefinitions, []);
 
-  const pagedUsers = useSelector<RootState, IPagedItems<IUser>>(state => {
-    return (state.users as IUsersState).pagedUsers;
-  });
-
-  const pageSize = useSelector<RootState, number>(state => {
-    return (state.users as IUsersState).rowsPerPage;
-  });
-
-  const pageIndex = useSelector<RootState, number>(state => {
-    return (state.users as IUsersState).pageIndex;
-  });
-
-  const sort = useSelector<RootState, TableSort<IUserRecord>>(state => {
-    return (state.users as IUsersState).sort;
-  });
-
-  const filter = useSelector<RootState, IUsersFilter>(state => {
-    return (state.users as IUsersState).filter;
-  });
-
-  const users = useSelector<RootState, IGenericNetworkAction>(
-    state => (state.network as any)[actionTypes.GET_USERS] as IGenericNetworkAction,
+  const pagedUsers = useAppSelector(store => store.users.pagedUsers);
+  const pageSize = useAppSelector(store => store.users.rowsPerPage);
+  const pageIndex = useAppSelector(store => store.users.pageIndex);
+  const sort = useAppSelector(store => store.users.sort);
+  const filter = useAppSelector(store => store.users.filter);
+  const users = useAppSelector(
+    store => (store.network as any)[actionTypes.GET_USERS] as IGenericNetworkAction,
   );
 
   const onRequestData = useCallback(
     ({ pageIndex }) => {
-      dispatch(getUsersPageIndexAction(pageIndex));
+      dispatch(storeUserPageIndex(pageIndex));
     },
     [dispatch],
   );
 
   useEffect(() => {
-    dispatch(
-      getUsersAction(
-        toFilteredApiPaginateParams<IUsersFilter>(
-          pageIndex,
-          pageSize,
-          sort && !isEmpty(sort) ? generateMultiSortCriteria(sort) : undefined,
-          filter,
-        ),
+    getUsersAction(
+      toFilteredApiPaginateParams<IUsersFilter>(
+        pageIndex,
+        pageSize,
+        sort && !isEmpty(sort) ? generateMultiSortCriteria(sort) : undefined,
+        filter,
       ),
-    );
+    )(dispatch);
   }, [dispatch, sort, pageIndex, pageSize, filter]);
 
   let userList = pagedUsers.items.map(
@@ -139,16 +118,14 @@ export const ManageUsers = () => {
       sort && !isEmpty(sort) ? generateMultiSortCriteria(sort) : undefined,
       filter,
     );
-    return dispatch(
-      download({
-        url: downloadUsers(query),
-        fileName: `pims-users.${accept === 'csv' ? 'csv' : 'xlsx'}`,
-        actionType: 'users',
-        headers: {
-          Accept: accept === 'csv' ? 'text/csv' : 'application/vnd.ms-excel',
-        },
-      }),
-    );
+    return download({
+      url: downloadUsers(query),
+      fileName: `pims-users.${accept === 'csv' ? 'csv' : 'xlsx'}`,
+      actionType: 'users',
+      headers: {
+        Accept: accept === 'csv' ? 'text/csv' : 'application/vnd.ms-excel',
+      },
+    })(dispatch);
   };
 
   return (
@@ -160,13 +137,13 @@ export const ManageUsers = () => {
         onChange={value => {
           (value as any)?.agency
             ? dispatch(
-                getUsersFilterAction({
+                storeUserFilter({
                   ...value,
                   agency: (_.find(agencies, { id: +(value as any)?.agency }) as any)?.name,
                 }),
               )
-            : dispatch(getUsersFilterAction({ ...value, agency: '' }));
-          dispatch(getUsersPageIndexAction(0));
+            : dispatch(storeUserFilter({ ...value, agency: '' }));
+          dispatch(storeUserPageIndex(0));
         }}
       />
       {
@@ -190,13 +167,13 @@ export const ManageUsers = () => {
               onRequestData={onRequestData}
               onSortChange={(column, direction) => {
                 if (!!direction) {
-                  dispatch(getUsersSortAction({ [column]: direction }));
+                  dispatch(storeUserSort({ [column]: direction }));
                 } else {
-                  dispatch(getUsersSortAction({}));
+                  dispatch(storeUserSort({}));
                 }
               }}
               sort={sort}
-              onPageSizeChange={size => dispatch(setUsersPageSize(size))}
+              onPageSizeChange={size => dispatch(storeUserPageQuantity(size))}
               loading={!(users && !users.isFetching)}
               clickableTooltip="Click IDIR/BCeID link to view User Information page"
             />

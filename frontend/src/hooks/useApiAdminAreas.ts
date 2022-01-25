@@ -1,5 +1,5 @@
 import CustomAxios, { LifecycleToasts } from 'customAxios';
-import { useDispatch } from 'react-redux';
+import { useAppDispatch } from 'store';
 import { showLoading, hideLoading } from 'react-redux-loading-bar';
 import { AxiosInstance } from 'axios';
 import { ENVIRONMENT } from 'constants/environment';
@@ -38,7 +38,7 @@ export interface AdminAreaAPI extends AxiosInstance {
 }
 
 export const useAdminAreaApi = (): AdminAreaAPI => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const axios = CustomAxios() as AdminAreaAPI;
 
   axios.interceptors.request.use(
