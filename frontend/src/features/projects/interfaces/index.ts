@@ -13,3 +13,5 @@ export * from './IPropertyFilter';
 export * from './IStatus';
 export * from './IStepProps';
 export * from './ITask';
+export * from './INotificationFilter';
+export * from './INotification';
