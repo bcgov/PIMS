@@ -4,7 +4,7 @@ import {
   ReviewWorkflowStatus,
   SPPApprovalTabs,
 } from 'features/projects/constants';
-import { IProjectTask, IProject, ITask } from 'features/projects/interfaces';
+import { IProjectTask, IProject, ITask, INotification } from 'features/projects/interfaces';
 import { ProjectActions } from 'constants/actionTypes';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
@@ -50,6 +50,20 @@ export const mockTasks: IProjectTask[] = [
     completedOn: new Date(),
     statusId: 0,
     statusCode: DisposeWorkflowStatus.RequiredDocumentation,
+  },
+];
+
+export const mockNotification: INotification[] = [
+  {
+    id: 0,
+    key: '',
+    projectId: 1,
+    status: 'Pending',
+    sendOn: '2030-01-01',
+    to: 'test@test.com',
+    subject: 'Testing',
+    total: 0,
+    projectNumber: '',
   },
 ];
 
