@@ -751,10 +751,6 @@ const PropertyListView: React.FC = () => {
               validationSchema={Yup.object().shape({
                 properties: Yup.array().of(
                   Yup.object().shape({
-                    assessedLand: Yup.number()
-                      .min(0, 'Minimum value is $0')
-                      .max(1000000000, 'Maximum value is $1,000,000,000')
-                      .required('Required'),
                     market: Yup.number()
                       .min(0, 'Minimum value is $0')
                       .max(1000000000, 'Maximum value is $1,000,000,000')
