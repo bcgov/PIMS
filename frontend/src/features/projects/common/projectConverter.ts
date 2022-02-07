@@ -182,7 +182,7 @@ const getApiEvaluations = (property: IProperty): IEvaluation[] => {
       evaluations.push({
         parcelId: property.id,
         value: property.assessedLand,
-        date: property.assessedLandDate ?? formatDate(new Date()),
+        date: formatDate(new Date()),
         rowVersion: property.assessedLandRowVersion,
         key: EvaluationKeys.Assessed,
         firm: property.assessedLandFirm ?? '',
@@ -192,7 +192,7 @@ const getApiEvaluations = (property: IProperty): IEvaluation[] => {
       evaluations.push({
         parcelId: property.id,
         value: property.assessedBuilding,
-        date: property.assessedBuildingDate ?? formatDate(new Date()),
+        date: formatDate(new Date()),
         rowVersion: property.assessedBuildingRowVersion,
         key: EvaluationKeys.Improvements,
         firm: property.assessedBuildingFirm ?? '',
@@ -203,7 +203,7 @@ const getApiEvaluations = (property: IProperty): IEvaluation[] => {
       evaluations.push({
         buildingId: property.id,
         value: property.assessedBuilding,
-        date: property.assessedBuildingDate ?? formatDate(new Date()),
+        date: formatDate(new Date()),
         rowVersion: property.assessedBuildingRowVersion,
         key: EvaluationKeys.Assessed,
         firm: property.assessedBuildingFirm ?? '',
