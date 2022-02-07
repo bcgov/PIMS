@@ -3,7 +3,7 @@ version: "3.5"
 services:
   ####################### Keycloak #######################
   keycloak:
-    restart: on-failure:1
+    restart: "no"
     container_name: pims-keycloak
     build:
       context: ./auth/keycloak
@@ -18,7 +18,7 @@ services:
 
   ####################### Database #######################
   database:
-    restart: on-failure:1
+    restart: "no"
     container_name: pims-database
     build:
       context: database/mssql
@@ -33,7 +33,7 @@ services:
 
   ####################### Backend #######################
   backend:
-    restart: on-failure:1
+    restart: "no"
     container_name: pims-api
     build:
       context: backend
@@ -53,7 +53,7 @@ services:
   frontend:
     stdin_open: true
     tty: true
-    restart: on-failure:1
+    restart: "no"
     container_name: pims-app
     build:
       context: frontend

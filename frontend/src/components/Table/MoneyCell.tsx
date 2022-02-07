@@ -12,12 +12,14 @@ interface IEditableCellProps {
   namespace: string;
   suppressValidation: boolean;
   cell: CellProps<IProperty, number | ''>;
+  tooltip?: string;
 }
 
 export const EditableMoneyCell = ({
   namespace = 'properties',
   suppressValidation,
   cell,
+  tooltip,
 }: IEditableCellProps) => {
   const context = useFormikContext();
 
@@ -30,6 +32,7 @@ export const EditableMoneyCell = ({
         formikProps={context}
         suppressValidation={suppressValidation}
         field={`${namespace}.${cell.row.id}.${cell.column.id}`}
+        tooltip={tooltip}
       ></FastCurrencyInput>
     </>
   ) : (
