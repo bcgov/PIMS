@@ -268,9 +268,9 @@ export const getPropertyColumns = ({
       Header: 'Assessment Year',
       accessor: (row: IProperty) =>
         [PropertyTypes.PARCEL, PropertyTypes.SUBDIVISION].includes(row.propertyTypeId)
-          ? getFiscalYear(row.assessedLandDate) + 1
+          ? getFiscalYear(row.assessedLandDate)
           : [PropertyTypes.BUILDING, PropertyTypes.BUILDING].includes(row.propertyTypeId)
-          ? getFiscalYear(row.assessedBuildingDate) + 1
+          ? getFiscalYear(row.assessedBuildingDate)
           : undefined,
       className: 'form-group',
       style: {
