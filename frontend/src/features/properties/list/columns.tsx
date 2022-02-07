@@ -490,7 +490,13 @@ export const buildingColumns = (
     accessor: 'assessedBuilding',
     Cell: !editable
       ? MoneyCell
-      : (props: any) => <EditableMoneyCell {...props} suppressValidation />,
+      : (props: any) => (
+          <EditableMoneyCell
+            {...props}
+            suppressValidation
+            tooltip="Editing financial values will update most recent year only"
+          />
+        ),
     align: 'right',
     responsive: true,
     width: spacing.small,
@@ -515,7 +521,13 @@ export const buildingColumns = (
     accessor: 'netBook',
     Cell: !editable
       ? MoneyCell
-      : (props: any) => <EditableMoneyCell {...props} suppressValidation />,
+      : (props: any) => (
+          <EditableMoneyCell
+            {...props}
+            suppressValidation
+            tooltip="Editing financial values will update most recent year only"
+          />
+        ),
     align: 'right',
     responsive: true,
     width: spacing.small,
@@ -540,7 +552,13 @@ export const buildingColumns = (
     accessor: 'market',
     Cell: !editable
       ? MoneyCell
-      : (props: any) => <EditableMoneyCell {...props} suppressValidation />,
+      : (props: any) => (
+          <EditableMoneyCell
+            {...props}
+            suppressValidation
+            tooltip="Editing financial values will update most recent year only"
+          />
+        ),
     align: 'right',
     responsive: true,
     width: spacing.small,
