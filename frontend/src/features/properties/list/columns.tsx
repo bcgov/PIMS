@@ -6,12 +6,12 @@ import { IProperty } from '.';
 import { ColumnWithProps } from 'components/Table';
 import { FastCurrencyInput, Input, Select, SelectOption } from 'components/common/form';
 import { TypeaheadField } from 'components/common/form/Typeahead';
-import { ILookupCode } from 'actions/ILookupCode';
 import { EditableMoneyCell, MoneyCell, AsterixMoneyCell } from 'components/Table/MoneyCell';
 import _, { isEqual } from 'lodash';
 import styled from 'styled-components';
 import { PropertyTypeCell } from 'components/Table/PropertyTypeCell';
 import { PropertyTypes } from 'constants/index';
+import { ILookupCode } from 'actions/ILookupCode';
 
 export const ColumnDiv = styled.div`
   display: flex;
@@ -204,7 +204,13 @@ export const columns = (
     accessor: 'assessedLand',
     Cell: !editable
       ? MoneyCell
-      : (props: any) => <EditableMoneyCell {...props} suppressValidation />,
+      : (props: any) => (
+          <EditableMoneyCell
+            {...props}
+            suppressValidation
+            tooltip="Editing financial values will update most recent year only"
+          />
+        ),
     align: 'right',
     responsive: true,
     width: spacing.small,
@@ -231,7 +237,13 @@ export const columns = (
       ? propertyType === PropertyTypes.BUILDING
         ? AsterixMoneyCell
         : MoneyCell
-      : (props: any) => <EditableMoneyCell {...props} suppressValidation />,
+      : (props: any) => (
+          <EditableMoneyCell
+            {...props}
+            suppressValidation
+            tooltip="Editing financial values will update most recent year only"
+          />
+        ),
     align: 'right',
     responsive: true,
     width: spacing.small,
@@ -256,7 +268,13 @@ export const columns = (
     accessor: 'netBook',
     Cell: !editable
       ? MoneyCell
-      : (props: any) => <EditableMoneyCell {...props} suppressValidation />,
+      : (props: any) => (
+          <EditableMoneyCell
+            {...props}
+            suppressValidation
+            tooltip="Editing financial values will update most recent year only"
+          />
+        ),
     align: 'right',
     responsive: true,
     width: spacing.small,
@@ -281,7 +299,13 @@ export const columns = (
     accessor: 'market',
     Cell: !editable
       ? MoneyCell
-      : (props: any) => <EditableMoneyCell {...props} suppressValidation />,
+      : (props: any) => (
+          <EditableMoneyCell
+            {...props}
+            suppressValidation
+            tooltip="Editing financial values will update most recent year only"
+          />
+        ),
     align: 'right',
     responsive: true,
     width: spacing.small,
