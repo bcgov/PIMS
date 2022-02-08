@@ -70,6 +70,7 @@ export interface IBuilding extends IProperty {
   fiscals: IFiscal[];
   parcels: IParcel[];
   leasedLandMetadata?: ILeasedLand[];
+  rowVersion?: string;
 }
 
 export interface IFlatBuilding extends IProperty {
