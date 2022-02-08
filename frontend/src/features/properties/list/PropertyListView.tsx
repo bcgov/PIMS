@@ -184,7 +184,7 @@ export const flattenBuilding = (apiProperty: IBuilding): IProperty => {
     marketFiscalYear: market?.fiscalYear as number,
     marketRowVersion: market?.rowVersion,
     rowVersion: apiProperty.rowVersion,
-    landArea: apiProperty.totalArea,
+    totalArea: apiProperty.totalArea,
   };
   return property;
 };
