@@ -203,7 +203,7 @@ export const useApi = (): PimsAPI => {
     async (id: number, building: IApiProperty) => {
       const { data } = await axios.put<IBuilding>(
         `${ENVIRONMENT.apiUrl}/properties/buildings/${id}/financials`,
-        building,
+        { ...building, totalArea: building.landArea },
       );
       return data;
     },

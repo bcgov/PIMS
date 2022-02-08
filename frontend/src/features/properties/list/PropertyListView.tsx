@@ -40,8 +40,8 @@ import {
   getCurrentFiscal,
   toApiProperty,
 } from 'features/projects/common/projectConverter';
-import { IApiProperty } from 'features/projects/interfaces';
 import { PropertyTypes } from 'constants/index';
+import { IBuilding, IParcel } from 'actions/parcelsActions';
 
 const getPropertyReportUrl = (filter: IPropertyQueryParams) =>
   `${ENVIRONMENT.apiUrl}/reports/properties?${filter ? queryString.stringify(filter) : ''}`;
@@ -96,16 +96,17 @@ const defaultFilterValues: IPropertyFilter = {
   surplusFilter: false,
 };
 
-export const flattenProperty = (apiProperty: IApiProperty): IProperty => {
+export const flattenParcel = (apiProperty: IParcel): IProperty => {
   const assessedLand = getCurrentYearEvaluation(apiProperty.evaluations, EvaluationKeys.Assessed);
-  const assessedBuilding = apiProperty.parcelId
-    ? getCurrentYearEvaluation(apiProperty.evaluations, EvaluationKeys.Improvements)
-    : getCurrentYearEvaluation(apiProperty.evaluations, EvaluationKeys.Assessed);
+  const assessedBuilding = getCurrentYearEvaluation(
+    apiProperty.evaluations,
+    EvaluationKeys.Assessed,
+  );
   const netBook = getCurrentFiscal(apiProperty.fiscals, FiscalKeys.NetBook);
   const market = getCurrentFiscal(apiProperty.fiscals, FiscalKeys.Market);
   const property: any = {
     id: apiProperty.id,
-    parcelId: apiProperty.parcelId ?? apiProperty.id,
+    parcelId: apiProperty.id,
     pid: apiProperty.pid ?? '',
     name: apiProperty.name,
     description: apiProperty.description,
@@ -141,6 +142,49 @@ export const flattenProperty = (apiProperty: IApiProperty): IProperty => {
     marketRowVersion: market?.rowVersion,
     rowVersion: apiProperty.rowVersion,
     landArea: apiProperty.landArea,
+  };
+  return property;
+};
+
+export const flattenBuilding = (apiProperty: IBuilding): IProperty => {
+  const assessedBuilding = getCurrentYearEvaluation(
+    apiProperty.evaluations,
+    EvaluationKeys.Assessed,
+  );
+  const netBook = getCurrentFiscal(apiProperty.fiscals, FiscalKeys.NetBook);
+  const market = getCurrentFiscal(apiProperty.fiscals, FiscalKeys.Market);
+  const property: any = {
+    id: apiProperty.id,
+    parcelId: apiProperty.parcelId,
+    pid: apiProperty.pid ?? '',
+    name: apiProperty.name,
+    description: apiProperty.description,
+    landLegalDescription: '',
+    isSensitive: apiProperty.isSensitive,
+    latitude: apiProperty.latitude,
+    longitude: apiProperty.longitude,
+    agencyId: apiProperty.agencyId,
+    agency: apiProperty.agency ?? '',
+    agencyCode: apiProperty.agency ?? '',
+    subAgency: apiProperty.subAgencyFullName ?? apiProperty.subAgency,
+    classification: apiProperty.classification ?? '',
+    classificationId: apiProperty.classificationId,
+    addressId: apiProperty.address?.id as number,
+    address: `${apiProperty.address?.line1 ?? ''} , ${apiProperty.address?.administrativeArea ??
+      ''}`,
+    administrativeArea: apiProperty.address?.administrativeArea ?? '',
+    province: apiProperty.address?.province ?? '',
+    postal: apiProperty.address?.postal ?? '',
+    assessedBuilding: (assessedBuilding?.value as number) ?? 0,
+    assessedBuildingDate: assessedBuilding?.date,
+    netBook: (netBook?.value as number) ?? 0,
+    netBookFiscalYear: netBook?.fiscalYear as number,
+    netBookRowVersion: netBook?.rowVersion,
+    market: (market?.value as number) ?? 0,
+    marketFiscalYear: market?.fiscalYear as number,
+    marketRowVersion: market?.rowVersion,
+    rowVersion: apiProperty.rowVersion,
+    landArea: apiProperty.totalArea,
   };
   return property;
 };
@@ -531,7 +575,7 @@ const PropertyListView: React.FC = () => {
               if (index === change.rowId) {
                 item = {
                   ...item,
-                  ...flattenProperty(response),
+                  ...(apiProperty.parcelId ? flattenParcel(response) : flattenBuilding(response)),
                 } as any;
               }
               return item;
