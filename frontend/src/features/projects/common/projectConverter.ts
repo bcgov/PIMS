@@ -9,7 +9,7 @@ import {
 import { AgencyResponses } from 'features/projects/constants';
 import { IFiscal, IEvaluation } from 'actions/parcelsActions';
 import { FiscalKeys } from 'constants/fiscalKeys';
-import { getCurrentFiscalYear, formatDate, stringToNull } from 'utils';
+import { getCurrentFiscalYear, stringToNull } from 'utils';
 import _ from 'lodash';
 import moment from 'moment';
 import { NoteTypes, PropertyTypes, EvaluationKeys, PropertyTypeNames } from 'constants/index';
@@ -182,7 +182,7 @@ const getApiEvaluations = (property: IProperty): IEvaluation[] => {
       evaluations.push({
         parcelId: property.id,
         value: property.assessedLand,
-        date: formatDate(new Date()),
+        date: property.assessedLandDate,
         rowVersion: property.assessedLandRowVersion,
         key: EvaluationKeys.Assessed,
         firm: property.assessedLandFirm ?? '',
@@ -192,7 +192,7 @@ const getApiEvaluations = (property: IProperty): IEvaluation[] => {
       evaluations.push({
         parcelId: property.id,
         value: property.assessedBuilding,
-        date: formatDate(new Date()),
+        date: property.assessedBuildingDate,
         rowVersion: property.assessedBuildingRowVersion,
         key: EvaluationKeys.Improvements,
         firm: property.assessedBuildingFirm ?? '',
@@ -203,7 +203,7 @@ const getApiEvaluations = (property: IProperty): IEvaluation[] => {
       evaluations.push({
         buildingId: property.id,
         value: property.assessedBuilding,
-        date: formatDate(new Date()),
+        date: property.assessedBuildingDate,
         rowVersion: property.assessedBuildingRowVersion,
         key: EvaluationKeys.Assessed,
         firm: property.assessedBuildingFirm ?? '',
