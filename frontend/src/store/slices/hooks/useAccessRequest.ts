@@ -164,12 +164,13 @@ export const useAccessRequest = () => {
           dispatch(storeAccessRequests(response.data));
 
           dispatch(hideLoading());
+          return response;
         } catch (axiosError) {
           const err = axiosError as AxiosError;
-          return dispatch(error(actionTypes.GET_REQUEST_ACCESS, err?.response?.status, axiosError));
+          dispatch(error(actionTypes.GET_REQUEST_ACCESS, err?.response?.status, axiosError));
         }
       } finally {
-        return dispatch(hideLoading());
+        dispatch(hideLoading());
       }
     },
     [dispatch],
