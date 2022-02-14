@@ -1,0 +1,6 @@
+FROM nginxinc/nginx-unprivileged:1.21
+
+COPY ./html/. /usr/share/nginx/html
+COPY ./config/maintenance.conf /etc/nginx/conf.d/default.conf
+
+EXPOSE 8080
