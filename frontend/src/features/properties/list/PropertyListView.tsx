@@ -38,10 +38,10 @@ import * as Yup from 'yup';
 import {
   getCurrentYearEvaluation,
   getCurrentFiscal,
-  toApiProperty,
 } from 'features/projects/common/projectConverter';
 import { PropertyTypes } from 'constants/index';
 import { IBuilding, IParcel } from 'actions/parcelsActions';
+import { toApiProperty } from './toApiProperty';
 
 const getPropertyReportUrl = (filter: IPropertyQueryParams) =>
   `${ENVIRONMENT.apiUrl}/reports/properties?${filter ? queryString.stringify(filter) : ''}`;
@@ -100,7 +100,7 @@ export const flattenParcel = (apiProperty: IParcel): IProperty => {
   const assessedLand = getCurrentYearEvaluation(apiProperty.evaluations, EvaluationKeys.Assessed);
   const assessedBuilding = getCurrentYearEvaluation(
     apiProperty.evaluations,
-    EvaluationKeys.Assessed,
+    EvaluationKeys.Improvements,
   );
   const netBook = getCurrentFiscal(apiProperty.fiscals, FiscalKeys.NetBook);
   const market = getCurrentFiscal(apiProperty.fiscals, FiscalKeys.Market);
@@ -605,6 +605,7 @@ const PropertyListView: React.FC = () => {
       if (!errors.find(x => !!x)) {
         actions.setTouched({ properties: [] });
         setData(nextProperties);
+        actions.resetForm({ values: { properties: nextProperties } });
       } else {
         actions.resetForm({
           values: { properties: nextProperties },
@@ -694,7 +695,10 @@ const PropertyListView: React.FC = () => {
           )}
           {editable && (
             <>
-              <TooltipWrapper toolTipId="cancel-edited-financial-values" toolTip={'Cancel edits'}>
+              <TooltipWrapper
+                toolTipId="cancel-edited-financial-values"
+                toolTip={'Cancel unsaved edits'}
+              >
                 <Button
                   data-testid="cancel-changes"
                   variant="outline-primary"
