@@ -1,17 +1,18 @@
-import * as React from 'react';
-import { IProject } from 'features/projects/interfaces';
-import { Formik, Form, FormikProps } from 'formik';
-import ExemptionEnhancedReferralCompleteForm from './ExemptionEnhancedReferralCompleteForm';
-import renderer from 'react-test-renderer';
-import { noop } from 'lodash';
-import { render, fireEvent, act, screen } from '@testing-library/react';
-import Adapter from 'enzyme-adapter-react-16';
+import { act, fireEvent, render, screen } from '@testing-library/react';
+import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import Enzyme from 'enzyme';
+import { IProject } from 'features/projects/interfaces';
+import { Form, Formik, FormikProps } from 'formik';
 import { createMemoryHistory } from 'history';
-import { Router } from 'react-router-dom';
-import { Provider } from 'react-redux';
-import { getStore, mockProject as defaultProject } from '../../dispose/testUtils';
+import { noop } from 'lodash';
 import _ from 'lodash';
+import * as React from 'react';
+import { Provider } from 'react-redux';
+import { MemoryRouter } from 'react-router-dom';
+import renderer from 'react-test-renderer';
+
+import { getStore, mockProject as defaultProject } from '../../dispose/testUtils';
+import ExemptionEnhancedReferralCompleteForm from './ExemptionEnhancedReferralCompleteForm';
 
 Enzyme.configure({ adapter: new Adapter() });
 const history = createMemoryHistory();
@@ -19,7 +20,7 @@ const mockProject = _.cloneDeep(defaultProject);
 
 const element = (func: Function, storeOverride?: any) => (
   <Provider store={storeOverride ?? getStore(mockProject)}>
-    <Router history={history}>
+    <MemoryRouter initialEntries={[history.location]}>
       <FormComponent
         values={{
           ...testProject,
@@ -32,7 +33,7 @@ const element = (func: Function, storeOverride?: any) => (
         onClickProceedToSpl={func}
         onClickDisposedExternally={noop}
       />
-    </Router>
+    </MemoryRouter>
   </Provider>
 );
 const testProject: IProject = {
@@ -56,6 +57,7 @@ const testProject: IProject = {
   fiscalYear: 2021,
   projectAgencyResponses: [],
   notes: [],
+  statusHistory: [],
 };
 
 const FormComponent: React.FC<{
@@ -66,13 +68,13 @@ const FormComponent: React.FC<{
   onClickNotInSpl: any;
   onClickDisposedExternally: any;
   formRef?: React.MutableRefObject<FormikProps<any> | undefined>;
-}> = props => (
+}> = (props) => (
   <Formik
-    innerRef={instance => {
+    innerRef={(instance) => {
       if (props.formRef && instance) props.formRef.current = instance;
     }}
     initialValues={props.values}
-    onSubmit={values => {}}
+    onSubmit={(values) => {}}
   >
     <Form>
       <ExemptionEnhancedReferralCompleteForm
@@ -89,7 +91,7 @@ const FormComponent: React.FC<{
 describe('ExemptionEnhancedReferralCompleteForm', () => {
   beforeAll(() => {
     const { getComputedStyle } = window;
-    window.getComputedStyle = elt => getComputedStyle(elt);
+    window.getComputedStyle = (elt) => getComputedStyle(elt);
   });
   it('renders successfully', () => {
     const tree = renderer

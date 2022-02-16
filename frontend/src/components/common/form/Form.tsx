@@ -1,8 +1,8 @@
 import './Form.scss';
 
+import { useFormikContext } from 'formik';
 import React from 'react';
 import { Form as FormBase } from 'react-bootstrap';
-import { useFormikContext } from 'formik';
 
 type FormProps = {
   /** Adds a custom class to the <Form> component */
@@ -12,7 +12,7 @@ type FormProps = {
 
 /**
  * Formik-connected form control that provides thin wrappers for React-Bootstrap form controls;
- * e.g. <Form.Row>, <Form.Group>, <Form.Control>, etc.
+ * e.g. <Form.Group>, <Form.Group>, <Form.Control>, etc.
  */
 const Form = ({ className, children, ...rest }: FormProps) => {
   const { handleSubmit } = useFormikContext();
@@ -23,7 +23,6 @@ const Form = ({ className, children, ...rest }: FormProps) => {
   );
 };
 
-Form.Row = FormBase.Row;
 Form.Group = FormBase.Group;
 Form.Control = FormBase.Control;
 Form.Check = FormBase.Check;

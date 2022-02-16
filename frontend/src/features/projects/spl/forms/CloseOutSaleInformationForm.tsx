@@ -1,9 +1,9 @@
+import { FastDatePicker, FastFiscalYearInput, FastInput, Form } from 'components/common/form';
+import { IProject } from 'features/projects/interfaces';
+import { useFormikContext } from 'formik';
 import { Fragment } from 'react';
 import React from 'react';
 import { Col } from 'react-bootstrap';
-import { useFormikContext } from 'formik';
-import { Form, FastDatePicker, FastFiscalYearInput, FastInput } from 'components/common/form';
-import { IProject } from 'features/projects/interfaces';
 
 interface CloseOutSaleInformationProps {
   isReadOnly?: boolean;
@@ -18,9 +18,9 @@ const CloseOutSaleInformation = (props: CloseOutSaleInformationProps) => {
   return (
     <Fragment>
       <h3>Sale Information</h3>
-      <Form.Row>
+      <Form.Group>
         <Col md={6}>
-          <Form.Row>
+          <Form.Group>
             <Form.Label column md={4}>
               Sales Completion Date
             </Form.Label>
@@ -30,8 +30,8 @@ const CloseOutSaleInformation = (props: CloseOutSaleInformationProps) => {
               outerClassName="col-md-8"
               field="disposedOn"
             />
-          </Form.Row>
-          <Form.Row>
+          </Form.Group>
+          <Form.Group>
             <Form.Label column md={4}>
               Sales Adjustment Date
             </Form.Label>
@@ -41,10 +41,10 @@ const CloseOutSaleInformation = (props: CloseOutSaleInformationProps) => {
               outerClassName="col-md-8"
               field="adjustedOn"
             />
-          </Form.Row>
+          </Form.Group>
         </Col>
         <Col md={6}>
-          <Form.Row>
+          <Form.Group>
             <Form.Label column md={4}>
               Actual Fiscal Year of Sale
             </Form.Label>
@@ -54,8 +54,8 @@ const CloseOutSaleInformation = (props: CloseOutSaleInformationProps) => {
               outerClassName="col-md-8"
               field="actualFiscalYear"
             />
-          </Form.Row>
-          <Form.Row>
+          </Form.Group>
+          <Form.Group>
             <Form.Label column md={4}>
               Best Information of Future Planned Use
             </Form.Label>
@@ -65,9 +65,9 @@ const CloseOutSaleInformation = (props: CloseOutSaleInformationProps) => {
               outerClassName="col-md-8"
               field="plannedFutureUse"
             />
-          </Form.Row>
+          </Form.Group>
         </Col>
-      </Form.Row>
+      </Form.Group>
     </Fragment>
   );
 };

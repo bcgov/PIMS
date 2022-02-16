@@ -1,24 +1,24 @@
-import React from 'react';
-import { formatMoney, formatNumber, formatDate, getFiscalYear } from 'utils';
-import { DisposeWorkflowStatus, AgencyResponses } from 'features/projects/constants';
-import { IProperty, IProject } from 'features/projects/interfaces';
-import { useFormikContext, getIn } from 'formik';
 import {
+  FastDatePicker,
+  FastInput,
   FastSelect,
   SelectOption,
-  FastInput,
   TextArea,
-  FastDatePicker,
 } from 'components/common/form';
-import useCodeLookups from 'hooks/useLookupCodes';
-import { FaRegTimesCircle } from 'react-icons/fa';
-import _ from 'lodash';
+import { EditableMoneyCell, MoneyCell } from 'components/Table/MoneyCell';
+import { PropertyTypeCell } from 'components/Table/PropertyTypeCell';
+import { PropertyTypes } from 'constants/propertyTypes';
+import { AgencyResponses, DisposeWorkflowStatus } from 'features/projects/constants';
 import { IAgencyResponseColumns } from 'features/projects/erp/forms/AgencyResponseForm';
+import { IProject, IProperty } from 'features/projects/interfaces';
+import { getIn, useFormikContext } from 'formik';
+import useCodeLookups from 'hooks/useLookupCodes';
+import _ from 'lodash';
+import React from 'react';
+import { FaRegTimesCircle } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { EditableMoneyCell, MoneyCell } from 'components/Table/MoneyCell';
-import { PropertyTypes } from 'constants/propertyTypes';
-import { PropertyTypeCell } from 'components/Table/PropertyTypeCell';
+import { formatDate, formatMoney, formatNumber, getFiscalYear } from 'utils';
 
 const ColumnDiv = styled.div`
   display: flex;
@@ -83,9 +83,13 @@ const EditableInputCell = (cellInfo: any) => {
  * This information is only editable if this cell belongs to a parcel row.
  * @param cellInfo provided by react table
  */
-export const getEditableTextAreaCell = (namespace: string = 'properties') => (cellInfo: any) => {
-  return <TextArea fast field={`${namespace}.${cellInfo.row.id}.${cellInfo.column.id}`}></TextArea>;
-};
+export const getEditableTextAreaCell =
+  (namespace: string = 'properties') =>
+  (cellInfo: any) => {
+    return (
+      <TextArea fast field={`${namespace}.${cellInfo.row.id}.${cellInfo.column.id}`}></TextArea>
+    );
+  };
 
 /**
  * Create a formik date picker using the passed cellinfo to get the associated data.
@@ -94,25 +98,23 @@ export const getEditableTextAreaCell = (namespace: string = 'properties') => (ce
  * @param minDate restrict the minimum date that can be selected
  * @param oldDateWarning warn if the user selects an old date
  */
-export const getEditableDatePickerCell = (
-  namespace: string = 'properties',
-  minDate: boolean = false,
-  oldDateWarning?: boolean,
-) => (cellInfo: any) => {
-  const formikProps = useFormikContext();
-  return (
-    <FastDatePicker
-      formikProps={formikProps}
-      oldDateWarning={oldDateWarning}
-      field={`${namespace}.${cellInfo.row.id}.${cellInfo.column.id}`}
-      minDate={
-        minDate
-          ? getIn(formikProps.values, `${namespace}.${cellInfo.row.id}.${cellInfo.column.id}`)
-          : undefined
-      }
-    ></FastDatePicker>
-  );
-};
+export const getEditableDatePickerCell =
+  (namespace: string = 'properties', minDate: boolean = false, oldDateWarning?: boolean) =>
+  (cellInfo: any) => {
+    const formikProps = useFormikContext();
+    return (
+      <FastDatePicker
+        formikProps={formikProps}
+        oldDateWarning={oldDateWarning}
+        field={`${namespace}.${cellInfo.row.id}.${cellInfo.column.id}`}
+        minDate={
+          minDate
+            ? getIn(formikProps.values, `${namespace}.${cellInfo.row.id}.${cellInfo.column.id}`)
+            : undefined
+        }
+      ></FastDatePicker>
+    );
+  };
 
 const responseOptions: SelectOption[] = [
   { label: 'Not Interested', value: AgencyResponses.Unsubscribe },
@@ -120,30 +122,34 @@ const responseOptions: SelectOption[] = [
   { label: 'Send Notifications', value: AgencyResponses.Subscribe },
 ];
 
-export const getProjectLinkCell = (namespace: string = 'properties') => (cellInfo: any) => {
-  const { values } = useFormikContext<IProject>();
-  const projectNumbers = _.filter(cellInfo.value, (p: string) => values.projectNumber !== p);
-  return (
-    <ColumnDiv>
-      {projectNumbers?.map((projectNumber: string) => (
-        <React.Fragment key={projectNumber}>
-          <Link to={`/projects?projectNumber=${projectNumber}`}>{projectNumber}</Link>
-        </React.Fragment>
-      ))}
-    </ColumnDiv>
-  );
-};
+export const getProjectLinkCell =
+  (namespace: string = 'properties') =>
+  (cellInfo: any) => {
+    const { values } = useFormikContext<IProject>();
+    const projectNumbers = _.filter(cellInfo.value, (p: string) => values.projectNumber !== p);
+    return (
+      <ColumnDiv>
+        {projectNumbers?.map((projectNumber: string) => (
+          <React.Fragment key={projectNumber}>
+            <Link to={`/projects?projectNumber=${projectNumber}`}>{projectNumber}</Link>
+          </React.Fragment>
+        ))}
+      </ColumnDiv>
+    );
+  };
 
-export const getEditableSelectCell = (namespace: string = 'properties') => (cellInfo: any) => {
-  const formikProps = useFormikContext();
-  return (
-    <FastSelect
-      formikProps={formikProps}
-      options={responseOptions}
-      field={`${namespace}.${cellInfo.row.id}.${cellInfo.column.id}`}
-    />
-  );
-};
+export const getEditableSelectCell =
+  (namespace: string = 'properties') =>
+  (cellInfo: any) => {
+    const formikProps = useFormikContext();
+    return (
+      <FastSelect
+        formikProps={formikProps}
+        options={responseOptions}
+        field={`${namespace}.${cellInfo.row.id}.${cellInfo.column.id}`}
+      />
+    );
+  };
 
 export interface IDisposeColumnOptions {
   project: IProject;

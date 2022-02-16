@@ -1,19 +1,21 @@
-import React from 'react';
-import { act } from 'react-test-renderer';
-import SelectProjectProperties from './SelectProjectPropertiesStep';
+import { cleanup, fireEvent, render, waitFor } from '@testing-library/react';
+import axios from 'axios';
+import MockAdapter from 'axios-mock-adapter';
+import { ProjectActions } from 'constants/actionTypes';
+import * as API from 'constants/API';
 import * as reducerTypes from 'constants/reducerTypes';
 import { createMemoryHistory } from 'history';
+import { mockFlatProperty } from 'mocks/filterDataMock';
+import React from 'react';
+import { Provider } from 'react-redux';
+import { MemoryRouter } from 'react-router-dom';
+import { act } from 'react-test-renderer';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
-import { ProjectActions } from 'constants/actionTypes';
-import { render, waitFor, fireEvent, cleanup } from '@testing-library/react';
-import MockAdapter from 'axios-mock-adapter';
-import axios from 'axios';
+
 import { mockKeycloak, mockProject } from '../testUtils';
-import * as API from 'constants/API';
-import { mockFlatProperty } from 'mocks/filterDataMock';
+import SelectProjectProperties from './SelectProjectPropertiesStep';
+
 jest.mock('@react-keycloak/web');
 
 const mockStore = configureMockStore([thunk]);
@@ -32,9 +34,9 @@ const store = mockStore({
 
 const uiElement = (
   <Provider store={store}>
-    <Router history={history}>
+    <MemoryRouter initialEntries={[history.location]}>
       <SelectProjectProperties />
-    </Router>
+    </MemoryRouter>
   </Provider>
 );
 
@@ -140,9 +142,8 @@ describe('Select Project Properties Step', () => {
   });
   it('selected properties are maintained even if the page changes.', async () => {
     mockAxios.onAny().reply(200, { items: [mockFlatProperty], total: 6 });
-    const { findByTestId, findByText, findAllByText, getByLabelText, getByText } = render(
-      uiElement,
-    );
+    const { findByTestId, findByText, findAllByText, getByLabelText, getByText } =
+      render(uiElement);
 
     //select a property
     const selectRowCheck = await findByTestId('selectrow-0');

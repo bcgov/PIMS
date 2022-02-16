@@ -1,15 +1,17 @@
 import './Login.scss';
+
+import PIMSlogo from 'assets/images/PIMSlogo/logo_with_text.png';
+import { Jumbotron } from 'components/bootstrap';
+import * as actionTypes from 'constants/actionTypes';
+import { useQuery } from 'hooks/use-query';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import React, { useState } from 'react';
-import { Redirect } from 'react-router-dom';
-import { Container, Row, Col, Button, Spinner, Jumbotron } from 'react-bootstrap';
+import { Button, Col, Container, Row, Spinner } from 'react-bootstrap';
+import { FaExternalLinkAlt } from 'react-icons/fa';
+import { Navigate } from 'react-router-dom';
 import { useAppSelector } from 'store';
 import { IGenericNetworkAction } from 'store';
 import { NEW_PIMS_USER } from 'store/slices/hooks/usersActionCreator';
-import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
-import * as actionTypes from 'constants/actionTypes';
-import { useQuery } from 'hooks/use-query';
-import { FaExternalLinkAlt } from 'react-icons/fa';
-import PIMSlogo from 'assets/images/PIMSlogo/logo_with_text.png';
 
 //check to see if user is using Internet Explorer
 //as their browser
@@ -28,19 +30,19 @@ const Login = () => {
   const keycloak = keyCloakWrapper.obj;
   const isIE = usingIE();
   const activated = useAppSelector(
-    store => (store.network as any)[actionTypes.ADD_ACTIVATE_USER] as IGenericNetworkAction,
+    (store) => (store.network as any)[actionTypes.ADD_ACTIVATE_USER] as IGenericNetworkAction,
   );
   if (!keycloak) {
     return <Spinner animation="border"></Spinner>;
   }
   if (keycloak?.authenticated) {
     if (activated?.status === NEW_PIMS_USER || !keyCloakWrapper?.roles?.length) {
-      return <Redirect to={{ pathname: '/access/request' }} />;
+      return <Navigate to={{ pathname: '/access/request' }} />;
     }
-    return <Redirect to={redirect || '/mapview'} />;
+    return <Navigate to={redirect || '/mapview'} />;
   }
   if (isIE) {
-    return <Redirect to={{ pathname: '/ienotsupported' }} />;
+    return <Navigate to={{ pathname: '/ienotsupported' }} />;
   }
   return (
     <Container className="login" fluid={true}>

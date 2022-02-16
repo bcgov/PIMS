@@ -41,5 +41,11 @@
       "username": "sa"
     }
   ],
-  "cSpell.words": ["Formik", "Xunit", "keycloak", "pims"]
+  "cSpell.words": [
+    "Formik",
+    "Xunit",
+    "keycloak",
+    "pims"
+  ],
+  "extensions.ignoreRecommendations": true
 }

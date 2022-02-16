@@ -1,18 +1,19 @@
+import { IEvaluation, IFiscal } from 'actions/parcelsActions';
+import { FiscalKeys } from 'constants/fiscalKeys';
+import { EvaluationKeys, NoteTypes, PropertyTypeNames, PropertyTypes } from 'constants/index';
+import { AgencyResponses } from 'features/projects/constants';
 import {
-  IProjectNote,
   IApiProject,
-  IProjectProperty,
   IApiProperty,
   IProject,
+  IProjectNote,
+  IProjectProperty,
   IProperty,
 } from 'features/projects/interfaces';
-import { AgencyResponses } from 'features/projects/constants';
-import { IFiscal, IEvaluation } from 'actions/parcelsActions';
-import { FiscalKeys } from 'constants/fiscalKeys';
-import { getCurrentFiscalYear, stringToNull } from 'utils';
 import _ from 'lodash';
 import moment from 'moment';
-import { NoteTypes, PropertyTypes, EvaluationKeys, PropertyTypeNames } from 'constants/index';
+import { getCurrentFiscalYear, stringToNull } from 'utils';
+
 import { defaultProject } from '../constants/defaultValues';
 
 export const getCurrentFiscal = (fiscals: IFiscal[], key: FiscalKeys) => {
@@ -61,12 +62,9 @@ export const getMostRecentAppraisal = (
   if (disposedOn) {
     targetDate = moment(disposedOn, 'YYYY-MM-DD');
   }
-  const evaluationsForYear = _.filter(evaluations ?? [], evaluation => {
+  const evaluationsForYear = _.filter(evaluations ?? [], (evaluation) => {
     return (
-      moment
-        .duration(moment(evaluation.date, 'YYYY-MM-DD').diff(targetDate))
-        .abs()
-        .asYears() < 1
+      moment.duration(moment(evaluation.date, 'YYYY-MM-DD').diff(targetDate)).abs().asYears() < 1
     );
   });
   return getMostRecentEvaluation(evaluationsForYear, EvaluationKeys.Appraised);
@@ -77,7 +75,7 @@ export const getFlatProjectNotes = (project: IApiProject) => {
   const notes: IProjectNote[] = [];
   Object.values(NoteTypes)
     .filter((key: any) => isNaN(Number(NoteTypes[key])))
-    .forEach(type => {
+    .forEach((type) => {
       const matchingNote = _.find(project.notes, { noteType: type });
       notes.push({
         id: matchingNote?.id,
@@ -123,8 +121,9 @@ export const toFlatProperty = (apiProperty: IApiProperty, pp?: IProjectProperty)
     classification: apiProperty.classification ?? '',
     classificationId: apiProperty.classificationId,
     addressId: apiProperty.address?.id as number,
-    address: `${apiProperty.address?.line1 ?? ''} , ${apiProperty.address?.administrativeArea ??
-      ''}`,
+    address: `${apiProperty.address?.line1 ?? ''} , ${
+      apiProperty.address?.administrativeArea ?? ''
+    }`,
     administrativeArea: apiProperty.address?.administrativeArea ?? '',
     province: apiProperty.address?.province ?? '',
     postal: apiProperty.address?.postal ?? '',
@@ -156,7 +155,7 @@ export const toFlatProject = (project?: IApiProject) => {
   if (!project) {
     return undefined;
   }
-  const flatProperties = project?.properties?.map(pp => {
+  const flatProperties = project?.properties?.map((pp) => {
     const apiProperty: IApiProperty = (pp.building ?? pp.parcel) as IApiProperty;
     const property: IProperty = toFlatProperty(apiProperty, pp);
     return property;
@@ -302,7 +301,7 @@ export const toApiProject = (project: IProject) => {
 
   const projectAgencyResponses = _.filter(
     project.projectAgencyResponses,
-    par =>
+    (par) =>
       par.rowVersion !== undefined ||
       (par.offerAmount !== undefined && par.offerAmount > 0) ||
       par.response !== AgencyResponses.Unsubscribe ||
@@ -321,10 +320,10 @@ export const toApiProject = (project: IProject) => {
     market: stringToNull(project.market),
     assessed: stringToNull(project.assessed),
     appraised: stringToNull(project.appraised),
-    notes: project.notes.filter(note => note.id || note.note),
+    notes: project.notes.filter((note) => note.id || note.note),
   };
   // convert all empty strings (required by formik) to undefined
-  Object.keys(apiProject).forEach(key => {
+  Object.keys(apiProject).forEach((key) => {
     (apiProject as any)[key] =
       (apiProject as any)[key] === '' ? undefined : (apiProject as any)[key];
   });

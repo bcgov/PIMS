@@ -1,17 +1,18 @@
-import * as React from 'react';
-import { IUserRecord } from '../interfaces/IUserRecord';
-import { getUpdateUserAction } from 'store/slices/hooks/usersActionCreator';
 import { Menu } from 'components/menu/Menu';
-import { FiMoreHorizontal } from 'react-icons/fi';
-import { CellProps } from 'react-table';
-import { useHistory } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from 'store';
 import { IUser } from 'interfaces';
+import * as React from 'react';
+import { FiMoreHorizontal } from 'react-icons/fi';
+import { useNavigate } from 'react-router-dom';
+import { CellProps } from 'react-table';
+import { useAppDispatch, useAppSelector } from 'store';
+import { getUpdateUserAction } from 'store/slices/hooks/usersActionCreator';
+
+import { IUserRecord } from '../interfaces/IUserRecord';
 
 export const RowActions = (props: CellProps<IUserRecord>) => {
   const dispatch = useAppDispatch();
-  const history = useHistory();
-  const user = useAppSelector(store =>
+  const navigate = useNavigate();
+  const user = useAppSelector((store) =>
     store.users.pagedUsers.items.find((user: IUser) => user.id === props.row.original.id),
   );
 
@@ -30,7 +31,7 @@ export const RowActions = (props: CellProps<IUserRecord>) => {
   };
 
   const openUserDetails = () => {
-    history.push(`/admin/user/${props.row.original.id}`);
+    navigate(`/admin/user/${props.row.original.id}`);
   };
 
   const isLastRow = props.row.original.id === props.data[props.data.length - 1].id;

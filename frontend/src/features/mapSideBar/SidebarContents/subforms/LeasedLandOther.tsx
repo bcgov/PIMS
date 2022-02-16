@@ -1,5 +1,5 @@
-import * as React from 'react';
 import { TextArea } from 'components/common/form';
+import * as React from 'react';
 
 interface ILeasedLandOtherProps {
   nameSpace?: string;
@@ -9,7 +9,7 @@ interface ILeasedLandOtherProps {
  * Subform that allows the user to enter a note defining the land ownership situation for this building.
  * @param {ILeasedLandOtherProps} props
  */
-const LeasedLandOther: React.FunctionComponent<ILeasedLandOtherProps> = props => {
+const LeasedLandOther: React.FunctionComponent<ILeasedLandOtherProps> = (props) => {
   const withNameSpace: Function = (fieldName: string) => {
     const { nameSpace } = props;
     return nameSpace ? `${nameSpace}.${fieldName}` : fieldName;

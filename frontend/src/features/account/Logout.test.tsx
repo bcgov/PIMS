@@ -1,9 +1,10 @@
-import React from 'react';
-import { createMemoryHistory } from 'history';
-import { render, cleanup, waitFor } from '@testing-library/react';
-import { Router } from 'react-router-dom';
 import { useKeycloak } from '@react-keycloak/web';
+import { cleanup, render, waitFor } from '@testing-library/react';
+import { createMemoryHistory } from 'history';
 import { useConfiguration } from 'hooks/useConfiguration';
+import React from 'react';
+import { MemoryRouter } from 'react-router-dom';
+
 import { LogoutPage } from './Logout';
 
 jest.mock('@react-keycloak/web');
@@ -31,13 +32,9 @@ describe('logout', () => {
     (useKeycloak as jest.Mock).mockReturnValue({ keycloak: { authenticated: false } });
     (useConfiguration as jest.Mock).mockReturnValue({ siteMinderLogoutUrl: undefined });
 
-    render(
-      <Router history={history}>
-        <LogoutPage />
-      </Router>,
-    );
+    render(<LogoutPage />);
 
-    expect(history.location.pathname).toBe('/login');
+    expect(location.pathname).toBe('/login');
   });
 
   it('should redirect to siteminder logout page', async () => {
@@ -47,9 +44,9 @@ describe('logout', () => {
     });
 
     render(
-      <Router history={history}>
+      <MemoryRouter initialEntries={[history.location]}>
         <LogoutPage />
-      </Router>,
+      </MemoryRouter>,
     );
 
     await waitFor(() => expect(window.location.replace).toHaveBeenCalledTimes(1));

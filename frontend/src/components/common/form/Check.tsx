@@ -1,10 +1,12 @@
-import React, { useEffect } from 'react';
 import './Check.scss';
-import { Form, FormCheckProps } from 'react-bootstrap';
-import { useFormikContext, getIn } from 'formik';
-import { DisplayError } from './DisplayError';
+
 import classNames from 'classnames';
+import { getIn, useFormikContext } from 'formik';
+import React, { useEffect } from 'react';
+import { Form, FormCheckProps } from 'react-bootstrap';
+
 import TooltipIcon from '../TooltipIcon';
+import { DisplayError } from './DisplayError';
 
 type RequiredAttributes = {
   /** The field name */
@@ -71,15 +73,8 @@ export const Check: React.FC<CheckProps> = ({
   setCheckedState,
   ...rest
 }) => {
-  const {
-    values,
-    initialValues,
-    setFieldValue,
-    setFieldTouched,
-    errors,
-    touched,
-    handleBlur,
-  } = useFormikContext();
+  const { values, initialValues, setFieldValue, setFieldTouched, errors, touched, handleBlur } =
+    useFormikContext();
   const initialChecked = getIn(initialValues, field);
   const touch = getIn(touched, field);
   const checked = getIn(values, field);
@@ -120,7 +115,7 @@ export const Check: React.FC<CheckProps> = ({
             isInvalid={!!touch && !!error}
             type={type}
             {...rest}
-            value={setCheckedState ? checked === true || checkedState : checked === true}
+            value={setCheckedState ? `${checked === true || checkedState}` : `${checked === true}`}
             placeholder={placeholder}
             checked={setCheckedState ? checkedState : checked === true}
             onChange={() => {
@@ -147,7 +142,7 @@ export const Check: React.FC<CheckProps> = ({
               type={type}
               id={`input-${field}-2`}
               {...rest}
-              value={checked === false}
+              value={`${checked === false}`}
               placeholder={placeholder}
               checked={checked === false}
               onChange={(e: any) => {

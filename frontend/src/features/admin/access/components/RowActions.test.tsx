@@ -1,15 +1,16 @@
+import { fireEvent, render, waitFor } from '@testing-library/react';
+import { cleanup } from '@testing-library/react-hooks';
+import axios from 'axios';
+import MockAdapter from 'axios-mock-adapter';
+import * as reducerTypes from 'constants/reducerTypes';
+import { createMemoryHistory } from 'history';
 import React from 'react';
-import { RowActions } from './RowActions';
 import { Provider } from 'react-redux';
+import { MemoryRouter } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import * as reducerTypes from 'constants/reducerTypes';
-import { fireEvent, render, waitFor } from '@testing-library/react';
-import { createMemoryHistory } from 'history';
-import { Router } from 'react-router-dom';
-import MockAdapter from 'axios-mock-adapter';
-import axios from 'axios';
-import { cleanup } from '@testing-library/react-hooks';
+
+import { RowActions } from './RowActions';
 
 const mockStore = configureMockStore([thunk]);
 const history = createMemoryHistory();
@@ -46,9 +47,9 @@ const props = { data: getItems(), row: { original: { id: '1', isDisabled: false 
 const testRender = (store: any, props: any) =>
   render(
     <Provider store={store}>
-      <Router history={history}>
+      <MemoryRouter initialEntries={[history.location]}>
         <RowActions {...{ ...(props as any) }} />
-      </Router>
+      </MemoryRouter>
     </Provider>,
   );
 

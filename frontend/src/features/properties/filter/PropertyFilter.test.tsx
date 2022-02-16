@@ -1,19 +1,20 @@
-import React from 'react';
-import { render, waitFor, fireEvent, cleanup } from '@testing-library/react';
-import { PropertyFilter } from './';
-import * as MOCK from 'mocks/filterDataMock';
-import axios from 'axios';
 import { useKeycloak } from '@react-keycloak/web';
-import { IGeoSearchParams } from 'constants/API';
-import { createMemoryHistory } from 'history';
-import { IPropertyFilter } from './IPropertyFilter';
-import { Router } from 'react-router-dom';
-import { Provider } from 'react-redux';
-import thunk from 'redux-thunk';
-import configureMockStore from 'redux-mock-store';
-import * as reducerTypes from 'constants/reducerTypes';
+import { cleanup, fireEvent, render, waitFor } from '@testing-library/react';
 import { ILookupCode } from 'actions/ILookupCode';
+import axios from 'axios';
+import { IGeoSearchParams } from 'constants/API';
 import * as API from 'constants/API';
+import * as reducerTypes from 'constants/reducerTypes';
+import { createMemoryHistory } from 'history';
+import * as MOCK from 'mocks/filterDataMock';
+import React from 'react';
+import { Provider } from 'react-redux';
+import { MemoryRouter } from 'react-router-dom';
+import configureMockStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
+
+import { PropertyFilter } from './';
+import { IPropertyFilter } from './IPropertyFilter';
 
 const onFilterChange = jest.fn<void, [IPropertyFilter]>();
 //prevent web calls from being made during tests.
@@ -110,7 +111,7 @@ const defaultFilter: IPropertyFilter = {
 
 const getUiElement = (filter: IPropertyFilter) => (
   <Provider store={getStore(filter)}>
-    <Router history={history}>
+    <MemoryRouter initialEntries={[history.location]}>
       <PropertyFilter
         defaultFilter={filter}
         agencyLookupCodes={MOCK.AGENCIES}
@@ -118,7 +119,7 @@ const getUiElement = (filter: IPropertyFilter) => (
         onChange={onFilterChange}
         showAllAgencySelect={true}
       />
-    </Router>
+    </MemoryRouter>
   </Provider>
 );
 

@@ -1,19 +1,21 @@
-import * as React from 'react';
-import { ListGroup, Row } from 'react-bootstrap';
-import { IBuilding, IParcel } from 'actions/parcelsActions';
-import { Label } from 'components/common/Label';
-import { ParcelPIDPIN } from './ParcelPIDPIN';
-import ParcelAttributes from './ParcelAttributes';
 import './InfoSlideOut.scss';
-import BuildingAttributes from './BuildingAttributes';
-import styled from 'styled-components';
-import { ThreeColumnItem } from './ThreeColumnItem';
+
 import variables from '_variables.module.scss';
-import { PropertyTypes } from 'constants/propertyTypes';
-import { useState } from 'react';
-import { ProjectNumberLink } from './ProjectNumberLink';
+import { IBuilding, IParcel } from 'actions/parcelsActions';
 import { BuildingSvg, LandSvg, SubdivisionSvg } from 'components/common/Icons';
+import { Label } from 'components/common/Label';
+import { PropertyTypes } from 'constants/propertyTypes';
 import { Workflows } from 'constants/workflows';
+import * as React from 'react';
+import { useState } from 'react';
+import { ListGroup, Row } from 'react-bootstrap';
+import styled from 'styled-components';
+
+import BuildingAttributes from './BuildingAttributes';
+import ParcelAttributes from './ParcelAttributes';
+import { ParcelPIDPIN } from './ParcelPIDPIN';
+import { ProjectNumberLink } from './ProjectNumberLink';
+import { ThreeColumnItem } from './ThreeColumnItem';
 
 /**
  * Compare two dates to evaluation which is earlier.

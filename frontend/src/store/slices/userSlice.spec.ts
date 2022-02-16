@@ -1,6 +1,7 @@
 import { TableSort } from 'components/Table/TableSort';
 import { IUserRecord } from 'features/admin/users/interfaces/IUserRecord';
 import { IPagedItems, IUser, IUsersFilter } from 'interfaces';
+
 import {
   initialUserState,
   IUserDetail,
@@ -63,7 +64,7 @@ describe('User Slice tests', () => {
     };
     expect(reducer({ ...initialUserState, pagedUsers: users }, updateUser(data))).toEqual({
       ...initialUserState,
-      pagedUsers: { ...users, items: users.items.map(u => (u.id === data.id ? data : u)) },
+      pagedUsers: { ...users, items: users.items.map((u) => (u.id === data.id ? data : u)) },
     });
   });
 

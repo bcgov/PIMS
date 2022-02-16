@@ -1,8 +1,9 @@
-import React from 'react';
-import { useAppSelector } from 'store';
 import Stepper from 'components/common/Stepper';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAppSelector } from 'store';
+
 import { useStepper } from '..';
-import { useHistory } from 'react-router-dom';
 
 interface GeneratedDisposeStepperProps {
   activeStep: number;
@@ -14,12 +15,12 @@ interface GeneratedDisposeStepperProps {
  * @param param0 GeneratedDisposeStepperProps
  */
 const GeneratedDisposeStepper = ({ activeStep, basePath }: GeneratedDisposeStepperProps) => {
-  const workflowStatuses = useAppSelector(store => store.projectWorkflow);
+  const workflowStatuses = useAppSelector((store) => store.projectWorkflow);
   const { projectStatusCompleted, canGoToStatus, project } = useStepper();
-  const history = useHistory();
+  const navigate = useNavigate();
   const steps = workflowStatuses
-    .filter(i => !i.isOptional)
-    .map(wfs => ({
+    .filter((i) => !i.isOptional)
+    .map((wfs) => ({
       title: wfs.name,
       route: `${basePath}${wfs.route}?projectNumber=${project.projectNumber}`,
       completed: projectStatusCompleted(wfs),
@@ -27,7 +28,7 @@ const GeneratedDisposeStepper = ({ activeStep, basePath }: GeneratedDisposeStepp
     }));
   return (
     <Stepper
-      onChange={step => history.push(step.route)}
+      onChange={(step) => navigate(step.route)}
       activeStep={activeStep}
       steps={steps}
       activeStepMessage="Complete this form to apply to the Enhanced Referral Process or Request Exemption"

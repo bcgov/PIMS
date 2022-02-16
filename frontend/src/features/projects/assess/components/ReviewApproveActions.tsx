@@ -1,14 +1,14 @@
-import * as React from 'react';
-import styled from 'styled-components';
-import { useFormikContext } from 'formik';
-import { ReviewWorkflowStatus } from 'features/projects/constants';
-import { IProject, IProperty } from 'features/projects/interfaces';
-import GenericModal from 'components/common/GenericModal';
-import { useState, useEffect } from 'react';
 import { Button } from 'components/common/form';
-import { validateFormikWithCallback } from 'utils';
+import GenericModal from 'components/common/GenericModal';
 import { PropertyTypes } from 'constants/propertyTypes';
 import { deletePotentialSubdivisionParcels } from 'features/projects/common';
+import { ReviewWorkflowStatus } from 'features/projects/constants';
+import { IProject, IProperty } from 'features/projects/interfaces';
+import { useFormikContext } from 'formik';
+import * as React from 'react';
+import { useEffect, useState } from 'react';
+import styled from 'styled-components';
+import { validateFormikWithCallback } from 'utils';
 
 const FlexRight = styled.div`
   width: 100%;

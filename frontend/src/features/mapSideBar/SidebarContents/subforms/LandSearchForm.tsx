@@ -1,19 +1,20 @@
+import { IParcel } from 'actions/parcelsActions';
+import { ReactComponent as ParcelDraftIcon } from 'assets/images/draft-parcel-icon.svg';
+import { FastInput, Input } from 'components/common/form';
 import SearchButton from 'components/common/form/SearchButton';
-import React, { useState } from 'react';
-import { Col, Form, Row } from 'react-bootstrap';
+import { ISteppedFormValues } from 'components/common/form/StepForm';
 import { Label } from 'components/common/Label';
-import { Input, FastInput } from 'components/common/form';
 import { pidFormatter } from 'features/properties/components/forms/subforms/PidPinForm';
-import { withNameSpace } from 'utils/formUtils';
 import { GeocoderAutoComplete } from 'features/properties/components/GeocoderAutoComplete';
 import { getIn, useFormikContext } from 'formik';
-import ClickAwayListener from 'react-click-away-listener';
 import { IGeocoderResponse } from 'hooks/useApi';
-import { IParcel } from 'actions/parcelsActions';
-import { ISteppedFormValues } from 'components/common/form/StepForm';
-import { ISearchFields } from '../LandForm';
-import { ReactComponent as ParcelDraftIcon } from 'assets/images/draft-parcel-icon.svg';
+import React, { useState } from 'react';
+import { Col, Form, Row } from 'react-bootstrap';
+import ClickAwayListener from 'react-click-away-listener';
 import styled from 'styled-components';
+import { withNameSpace } from 'utils/formUtils';
+
+import { ISearchFields } from '../LandForm';
 
 const SearchMarkerButton = styled.button`
   top: 20px;
@@ -56,12 +57,12 @@ const LandSearchForm = ({
     withNameSpace(nameSpace),
   );
   return (
-    <Row noGutters className="section">
+    <Row className="section">
       <Col md={12}>
         <h5>Search for Parcel</h5>
       </Col>
       <Col md={6}>
-        <Form.Row>
+        <Form.Group>
           <Label>PID</Label>
           <Input
             displayErrorTooltips
@@ -82,8 +83,8 @@ const LandSearchForm = ({
               handlePidChange(searchPid, nameSpace);
             }}
           />
-        </Form.Row>
-        <Form.Row>
+        </Form.Group>
+        <Form.Group>
           <Label>PIN</Label>
           <FastInput
             formikProps={formikProps}
@@ -105,20 +106,20 @@ const LandSearchForm = ({
               handlePinChange(searchPin, nameSpace);
             }}
           />
-        </Form.Row>
-        <Form.Row>
+        </Form.Group>
+        <Form.Group>
           <Label>Street Address</Label>
           <GeocoderAutoComplete
             value={searchAddress}
             field={withNameSpace(nameSpace, 'searchAddress')}
-            onSelectionChanged={selection => {
+            onSelectionChanged={(selection) => {
               formikProps.setFieldValue(
                 withNameSpace(nameSpace, 'searchAddress'),
                 selection.fullAddress,
               );
               setGeocoderResponse(selection);
             }}
-            onTextChange={value => {
+            onTextChange={(value) => {
               if (value !== geocoderResponse?.address1) {
                 setGeocoderResponse(undefined);
               }
@@ -135,7 +136,7 @@ const LandSearchForm = ({
               geocoderResponse && handleGeocoderChanges(geocoderResponse, nameSpace);
             }}
           />
-        </Form.Row>
+        </Form.Group>
       </Col>
       <Col md={1}>
         <h5>OR</h5>

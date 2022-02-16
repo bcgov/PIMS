@@ -1,11 +1,12 @@
-import React from 'react';
-import { ParentSelect } from './ParentSelect';
-import renderer from 'react-test-renderer';
-import { Formik } from 'formik';
-import { SelectOptions } from './Select';
 import { fireEvent, render, waitFor } from '@testing-library/react';
 import { cleanup } from '@testing-library/react-hooks';
+import { Formik } from 'formik';
 import { noop } from 'lodash';
+import React from 'react';
+import renderer from 'react-test-renderer';
+
+import { ParentSelect } from './ParentSelect';
+import { SelectOptions } from './Select';
 
 const testOptions: SelectOptions = [
   { value: 1, label: 'parent' },

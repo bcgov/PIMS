@@ -1,14 +1,14 @@
-import * as React from 'react';
-import { Col, Form } from 'react-bootstrap';
 import { FastCurrencyInput } from 'components/common/form';
-import { getIn, useFormikContext } from 'formik';
 import { IProject } from 'features/projects/interfaces';
 import {
   calcGainBeforeSpl,
   calcNetProceeds,
   getNumber,
 } from 'features/projects/spl/forms/CloseOutFinancialSummaryForm';
+import { getIn, useFormikContext } from 'formik';
+import * as React from 'react';
 import { useEffect } from 'react';
+import { Col, Form } from 'react-bootstrap';
 
 export interface IProjectFinacialTableProps {
   /** Whether form fields are disabled. */
@@ -56,19 +56,19 @@ export const ProjectFinancialTable = ({ disabled, title }: IProjectFinacialTable
     <>
       {title && (
         <>
-          <Form.Row style={{ alignItems: 'unset' }}>
+          <Form.Group style={{ alignItems: 'unset' }}>
             <h3 className="col-md-8">{title}</h3>
-          </Form.Row>
-          <Form.Row>
+          </Form.Group>
+          <Form.Group>
             <h6 className="col-md-12" style={{ margin: '0 0 1rem 0' }}>
               These values are for the <strong>project</strong>, not the individual properties.
             </h6>
-          </Form.Row>
+          </Form.Group>
         </>
       )}
-      <Form.Row>
+      <Form.Group>
         <Col md={4}>
-          <Form.Row>
+          <Form.Group>
             <Form.Label column md={4}>
               Assessed Value
             </Form.Label>
@@ -79,8 +79,8 @@ export const ProjectFinancialTable = ({ disabled, title }: IProjectFinacialTable
               disabled={disabled}
               md={6}
             />
-          </Form.Row>
-          <Form.Row>
+          </Form.Group>
+          <Form.Group>
             <Form.Label column md={4}>
               Net Book Value
             </Form.Label>
@@ -91,10 +91,10 @@ export const ProjectFinancialTable = ({ disabled, title }: IProjectFinacialTable
               disabled={disabled}
               md={6}
             />
-          </Form.Row>
+          </Form.Group>
         </Col>
         <Col md={4}>
-          <Form.Row>
+          <Form.Group>
             <Form.Label column md={4}>
               Estimated Market Value
             </Form.Label>
@@ -105,22 +105,22 @@ export const ProjectFinancialTable = ({ disabled, title }: IProjectFinacialTable
               disabled={disabled}
               md={6}
             />
-          </Form.Row>
-          <Form.Row>
+          </Form.Group>
+          <Form.Group>
             <Form.Label column md={4}>
               Appraised Value
             </Form.Label>
             <FastCurrencyInput field="appraised" formikProps={context} disabled={disabled} md={6} />
-          </Form.Row>
+          </Form.Group>
         </Col>
         <Col md={4}>
-          <Form.Row>
+          <Form.Group>
             <Form.Label column md={4}>
               Estimated Sales Costs
             </Form.Label>
             <FastCurrencyInput field="salesCost" formikProps={context} disabled={disabled} md={6} />
-          </Form.Row>
-          <Form.Row>
+          </Form.Group>
+          <Form.Group>
             <Form.Label column md={4}>
               Estimated Program Recovery Fees
             </Form.Label>
@@ -130,9 +130,9 @@ export const ProjectFinancialTable = ({ disabled, title }: IProjectFinacialTable
               disabled={disabled}
               md={6}
             />
-          </Form.Row>
+          </Form.Group>
         </Col>
-      </Form.Row>
+      </Form.Group>
     </>
   );
 };

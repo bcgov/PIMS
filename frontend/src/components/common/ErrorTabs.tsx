@@ -1,9 +1,10 @@
-import * as React from 'react';
-import { Tabs } from 'react-bootstrap';
-import { tabErrorWarning } from '../../features/projects/common';
-import { useFormikContext } from 'formik';
 import GenericModal from 'components/common/GenericModal';
+import { useFormikContext } from 'formik';
+import * as React from 'react';
 import { useState } from 'react';
+import { Tabs } from 'react-bootstrap';
+
+import { tabErrorWarning } from '../../features/projects/common';
 
 interface IErrorTabsProps {
   /** The currently displayed tab */
@@ -42,7 +43,7 @@ const ErrorTabs: React.FunctionComponent<IErrorTabsProps> = ({
         id="approvalTabs"
         mountOnEnter={true}
         unmountOnExit={true}
-        onSelect={(key: string) => setCurrentTab(key)}
+        onSelect={(key: string | null) => setCurrentTab(key)}
       >
         {rest.children}
       </Tabs>

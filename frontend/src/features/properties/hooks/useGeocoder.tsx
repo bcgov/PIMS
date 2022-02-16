@@ -1,16 +1,16 @@
-import * as API from 'constants/API';
-import { IGeocoderResponse, useApi } from 'hooks/useApi';
-import { FormikValues, getIn, setIn } from 'formik';
-import { useState } from 'react';
-import useCodeLookups from 'hooks/useLookupCodes';
 import {
-  useLayerQuery,
   handleParcelDataLayerResponse,
   saveParcelDataLayerResponse,
+  useLayerQuery,
 } from 'components/maps/leaflet/LayerPopup';
-import { LatLng } from 'leaflet';
-import { useAppDispatch } from 'store';
 import { useBoundaryLayer } from 'components/maps/leaflet/LayerPopup/hooks/useBoundaryLayer';
+import * as API from 'constants/API';
+import { FormikValues, getIn, setIn } from 'formik';
+import { IGeocoderResponse, useApi } from 'hooks/useApi';
+import useCodeLookups from 'hooks/useLookupCodes';
+import { LatLng } from 'leaflet';
+import { useState } from 'react';
+import { useAppDispatch } from 'store';
 
 interface IUseGeocoderProps {
   formikRef: React.MutableRefObject<FormikValues | undefined>;
@@ -64,9 +64,9 @@ const useGeocoder = ({ formikRef, fetchPimsOrLayerParcel }: IUseGeocoderProps) =
       };
 
       const administrativeArea = data.administrativeArea
-        ? lookupCodes.find(code => {
+        ? lookupCodes.find((code) => {
             return (
-              code.type === API.AMINISTRATIVE_AREA_CODE_SET_NAME &&
+              code.type === API.ADMINISTRATIVE_AREA_CODE_SET_NAME &&
               code.name === data.administrativeArea
             );
           })
@@ -79,7 +79,7 @@ const useGeocoder = ({ formikRef, fetchPimsOrLayerParcel }: IUseGeocoderProps) =
       }
 
       const province = data.provinceCode
-        ? lookupCodes.find(code => {
+        ? lookupCodes.find((code) => {
             return code.type === API.PROVINCE_CODE_SET_NAME && code.code === data.provinceCode;
           })
         : undefined;
@@ -114,7 +114,7 @@ const useGeocoder = ({ formikRef, fetchPimsOrLayerParcel }: IUseGeocoderProps) =
               lat: data.latitude,
               lng: data.longitude,
             } as LatLng)
-            .then(response => {
+            .then((response) => {
               const pid = getIn(response, 'features.0.properties.PID');
               //it is possible the geocoder will fail to get the pid but the parcel layer service request will succeed. In that case, double check that the pid doesn't exist within pims.
               if (pid) {

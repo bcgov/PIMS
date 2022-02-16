@@ -1,22 +1,22 @@
+import { Button } from 'components/common/form';
+import GenericModal from 'components/common/GenericModal';
+import { ReviewWorkflowStatus } from 'features/projects/constants';
+import { IProject, IStepProps } from 'features/projects/interfaces';
+import { Formik } from 'formik';
 import React, { useState } from 'react';
 import { Container, Form } from 'react-bootstrap';
-import { useStepForm, StepStatusIcon, updatePimsWarning, useProject } from '../../common';
-import { ReviewWorkflowStatus } from 'features/projects/constants';
-import { IStepProps, IProject } from 'features/projects/interfaces';
+import styled from 'styled-components';
+import { formatDate } from 'utils';
 
-import { Formik } from 'formik';
+import { StepStatusIcon, updatePimsWarning, useProject, useStepForm } from '../../common';
+import { GreTransferForm } from '../../common';
+import StepErrorSummary from '../../common/components/StepErrorSummary';
 import {
-  UpdateInfoStepYupSchema,
+  GreTransferStepYupSchema,
   ProjectDraftStepYupSchema,
   SelectProjectPropertiesStepYupSchema,
-  GreTransferStepYupSchema,
+  UpdateInfoStepYupSchema,
 } from '../../dispose/forms/disposalYupSchema';
-import { Button } from 'components/common/form';
-import { formatDate } from 'utils';
-import styled from 'styled-components';
-import StepErrorSummary from '../../common/components/StepErrorSummary';
-import GenericModal from 'components/common/GenericModal';
-import { GreTransferForm } from '../../common';
 
 export const GreTransferStepSchema = UpdateInfoStepYupSchema.concat(
   ProjectDraftStepYupSchema,
@@ -42,12 +42,8 @@ const FlexRight = styled.div`
  */
 const GreTransferStep = ({ formikRef }: IStepProps) => {
   const { project } = useProject();
-  const {
-    onSubmitReview,
-    canUserApproveForm,
-    canUserOverride,
-    noFetchingProjectRequests,
-  } = useStepForm();
+  const { onSubmitReview, canUserApproveForm, canUserOverride, noFetchingProjectRequests } =
+    useStepForm();
   const [updatePims, setUpdatePims] = useState(false);
 
   const initialValues: IProject = {
@@ -85,7 +81,7 @@ const GreTransferStep = ({ formikRef }: IStepProps) => {
         validateOnChange={false}
         onSubmit={(values: IProject) => {
           values.agencyId = +values.agencyId;
-          values.properties?.forEach(p => (p.agencyId = +p.agencyId));
+          values.properties?.forEach((p) => (p.agencyId = +p.agencyId));
           onSubmitReview(values, formikRef, ReviewWorkflowStatus.TransferredGRE);
         }}
       >

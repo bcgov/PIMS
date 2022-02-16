@@ -1,14 +1,14 @@
-import { AgencyResponses } from 'features/projects/constants';
-import { IProject } from 'features/projects/interfaces';
-import { useFormikContext } from 'formik';
-import React from 'react';
-import { formatDate } from 'utils';
-import { FaTrash } from 'react-icons/fa';
 import {
   getEditableDatePickerCell,
   getEditableSelectCell,
   getEditableTextAreaCell,
 } from 'features/projects/common/components/columns';
+import { AgencyResponses } from 'features/projects/constants';
+import { IProject } from 'features/projects/interfaces';
+import { useFormikContext } from 'formik';
+import React from 'react';
+import { FaTrash } from 'react-icons/fa';
+import { formatDate } from 'utils';
 
 /**
  * Returns an array of columns to display within a table.

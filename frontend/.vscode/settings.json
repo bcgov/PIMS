@@ -21,5 +21,22 @@
   "jest.autoRun": {
     "onStartup": ["all-tests"]
   },
-  "cSpell.words": ["Formik", "PIMS", "siteminder"]
+  "cSpell.words": [
+    "bbox",
+    "bcgov",
+    "Clusterer",
+    "datatables",
+    "datepicker",
+    "dequal",
+    "draggable",
+    "Formik",
+    "PIMS",
+    "reduxjs",
+    "siteminder",
+    "Spiderfier",
+    "spiderfy",
+    "supercluster",
+    "toastify",
+    "typeahead"
+  ]
 }

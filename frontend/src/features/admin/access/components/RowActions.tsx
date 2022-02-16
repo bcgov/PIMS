@@ -1,11 +1,12 @@
-import { CellProps } from 'react-table';
-import { AccessRequestStatus } from 'constants/accessStatus';
 import { Menu } from 'components/menu/Menu';
+import { AccessRequestStatus } from 'constants/accessStatus';
 import React from 'react';
 import { FiMoreHorizontal } from 'react-icons/fi';
-import { IAccessRequestModel } from '../interfaces';
-import { useAccessRequest } from 'store/slices/hooks';
+import { CellProps } from 'react-table';
 import { useAppSelector } from 'store';
+import { useAccessRequest } from 'store/slices/hooks';
+
+import { IAccessRequestModel } from '../interfaces';
 
 export const RowActions = (props: CellProps<IAccessRequestModel>) => {
   const api = useAccessRequest();
@@ -13,8 +14,8 @@ export const RowActions = (props: CellProps<IAccessRequestModel>) => {
 
   const isStatusMatch = (value: AccessRequestStatus) => accessRequest.status === value;
 
-  const originalAccessRequest = useAppSelector(store =>
-    store.accessRequest.pagedAccessRequests.items.find(ar => ar.id === accessRequest.id),
+  const originalAccessRequest = useAppSelector((store) =>
+    store.accessRequest.pagedAccessRequests.items.find((ar) => ar.id === accessRequest.id),
   );
 
   const approve = () => {

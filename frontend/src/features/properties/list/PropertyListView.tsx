@@ -1,46 +1,48 @@
 import './PropertyListView.scss';
-import React, { useState, useMemo, useRef, useCallback } from 'react';
-import { useAppDispatch } from 'store';
-import { Container, Button } from 'react-bootstrap';
-import queryString from 'query-string';
-import { fill, isEmpty, pick, range, noop, keys, intersection } from 'lodash';
-import * as API from 'constants/API';
-import { ENVIRONMENT } from 'constants/environment';
-import { decimalOrUndefined, mapLookupCode } from 'utils';
-import download from 'utils/download';
-import { IPropertyQueryParams, IProperty } from '.';
-import { columns as cols, buildingColumns as buildingCols } from './columns';
-import { Table } from 'components/Table';
-import service from '../service';
-import { FaFolderOpen, FaFolder, FaEdit, FaFileExport } from 'react-icons/fa';
-import { Buildings } from './buildings';
-import { FaFileExcel, FaFileAlt } from 'react-icons/fa';
-import styled from 'styled-components';
-import TooltipWrapper from 'components/common/TooltipWrapper';
+
+import variables from '_variables.module.scss';
+import { IBuilding, IParcel } from 'actions/parcelsActions';
 import { ReactComponent as BuildingSvg } from 'assets/images/icon-business.svg';
 import { ReactComponent as LandSvg } from 'assets/images/icon-lot.svg';
-import { PropertyFilter } from '../filter';
-import { PropertyTypeNames } from '../../../constants/propertyTypeNames';
-import { IPropertyFilter } from '../filter/IPropertyFilter';
+import TooltipWrapper from 'components/common/TooltipWrapper';
+import { Table } from 'components/Table';
 import { SortDirection, TableSort } from 'components/Table/TableSort';
-import { useRouterFilter } from 'hooks/useRouterFilter';
-import { Form, Formik, FormikProps, getIn, useFormikContext } from 'formik';
-import { useApi } from 'hooks/useApi';
-import { toast } from 'react-toastify';
+import * as API from 'constants/API';
+import { ENVIRONMENT } from 'constants/environment';
 import { EvaluationKeys } from 'constants/evaluationKeys';
 import { FiscalKeys } from 'constants/fiscalKeys';
-import variables from '_variables.module.scss';
-import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
-import { Roles } from 'constants/roles';
-import useCodeLookups from 'hooks/useLookupCodes';
-import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
-import * as Yup from 'yup';
-import {
-  getCurrentYearEvaluation,
-  getCurrentFiscal,
-} from 'features/projects/common/projectConverter';
 import { PropertyTypes } from 'constants/index';
-import { IBuilding, IParcel } from 'actions/parcelsActions';
+import { Roles } from 'constants/roles';
+import {
+  getCurrentFiscal,
+  getCurrentYearEvaluation,
+} from 'features/projects/common/projectConverter';
+import { Form, Formik, FormikProps, getIn, useFormikContext } from 'formik';
+import { useApi } from 'hooks/useApi';
+import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+import useCodeLookups from 'hooks/useLookupCodes';
+import { useRouterFilter } from 'hooks/useRouterFilter';
+import { fill, intersection, isEmpty, keys, noop, pick, range } from 'lodash';
+import queryString from 'query-string';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
+import { Button, Container } from 'react-bootstrap';
+import { FaEdit, FaFileExport, FaFolder, FaFolderOpen } from 'react-icons/fa';
+import { FaFileAlt, FaFileExcel } from 'react-icons/fa';
+import { toast } from 'react-toastify';
+import { useAppDispatch } from 'store';
+import styled from 'styled-components';
+import { decimalOrUndefined, mapLookupCode } from 'utils';
+import download from 'utils/download';
+import * as Yup from 'yup';
+
+import { PropertyTypeNames } from '../../../constants/propertyTypeNames';
+import { PropertyFilter } from '../filter';
+import { IPropertyFilter } from '../filter/IPropertyFilter';
+import service from '../service';
+import { IProperty, IPropertyQueryParams } from '.';
+import { Buildings } from './buildings';
+import { buildingColumns as buildingCols, columns as cols } from './columns';
 import { toApiProperty } from './toApiProperty';
 
 const getPropertyReportUrl = (filter: IPropertyQueryParams) =>
@@ -121,8 +123,9 @@ export const flattenParcel = (apiProperty: IParcel): IProperty => {
     classification: apiProperty.classification ?? '',
     classificationId: apiProperty.classificationId,
     addressId: apiProperty.address?.id as number,
-    address: `${apiProperty.address?.line1 ?? ''} , ${apiProperty.address?.administrativeArea ??
-      ''}`,
+    address: `${apiProperty.address?.line1 ?? ''} , ${
+      apiProperty.address?.administrativeArea ?? ''
+    }`,
     administrativeArea: apiProperty.address?.administrativeArea ?? '',
     province: apiProperty.address?.province ?? '',
     postal: apiProperty.address?.postal ?? '',
@@ -164,8 +167,9 @@ export const flattenBuilding = (apiProperty: IBuilding): IProperty => {
     classification: apiProperty.classification ?? '',
     classificationId: apiProperty.classificationId,
     addressId: apiProperty.address?.id as number,
-    address: `${apiProperty.address?.line1 ?? ''} , ${apiProperty.address?.administrativeArea ??
-      ''}`,
+    address: `${apiProperty.address?.line1 ?? ''} , ${
+      apiProperty.address?.administrativeArea ?? ''
+    }`,
     administrativeArea: apiProperty.address?.administrativeArea ?? '',
     province: apiProperty.address?.province ?? '',
     postal: apiProperty.address?.postal ?? '',
@@ -264,7 +268,7 @@ const DirtyRowsTracker: React.FC<{ setDirtyRows: (changes: IChangedRow[]) => voi
 
   React.useEffect(() => {
     if (!!touched && !isEmpty(touched) && !isSubmitting) {
-      const changed = Object.keys(getIn(touched, 'properties')).map(key => ({
+      const changed = Object.keys(getIn(touched, 'properties')).map((key) => ({
         rowId: Number(key),
         ...getIn(touched, 'properties')[key],
       }));
@@ -285,23 +289,24 @@ const PropertyListView: React.FC = () => {
   const [dirtyRows, setDirtyRows] = useState<IChangedRow[]>([]);
   const keycloak = useKeycloakWrapper();
   const municipalities = useMemo(
-    () => lookupCodes.getByType(API.AMINISTRATIVE_AREA_CODE_SET_NAME),
+    () => lookupCodes.getByType(API.ADMINISTRATIVE_AREA_CODE_SET_NAME),
     [lookupCodes],
   );
   const agencies = useMemo(() => lookupCodes.getByType(API.AGENCY_CODE_SET_NAME), [lookupCodes]);
 
-  const agenciesList = agencies.filter(a => !a.parentId).map(mapLookupCode);
-  const subAgencies = agencies.filter(a => !!a.parentId).map(mapLookupCode);
+  const agenciesList = agencies.filter((a) => !a.parentId).map(mapLookupCode);
+  const subAgencies = agencies.filter((a) => !!a.parentId).map(mapLookupCode);
 
-  const propertyClassifications = useMemo(() => lookupCodes.getPropertyClassificationOptions(), [
-    lookupCodes,
-  ]);
+  const propertyClassifications = useMemo(
+    () => lookupCodes.getPropertyClassificationOptions(),
+    [lookupCodes],
+  );
   const administrativeAreas = useMemo(
-    () => lookupCodes.getByType(API.AMINISTRATIVE_AREA_CODE_SET_NAME),
+    () => lookupCodes.getByType(API.ADMINISTRATIVE_AREA_CODE_SET_NAME),
     [lookupCodes],
   );
 
-  const agencyIds = useMemo(() => agencies.map(x => parseInt(x.id, 10)), [agencies]);
+  const agencyIds = useMemo(() => agencies.map((x) => parseInt(x.id, 10)), [agencies]);
   const [sorting, setSorting] = useState<TableSort<IProperty>>({ description: 'asc' });
 
   // We'll start our table without any data
@@ -470,7 +475,7 @@ const PropertyListView: React.FC = () => {
   const loadBuildings = async (expandedRows: IProperty[]) => {
     if (expandedRows.length > 0) {
       await Promise.all(
-        expandedRows.map(async property => {
+        expandedRows.map(async (property) => {
           if (property.propertyTypeId === 0) {
             if (expandData[property.id] === undefined) {
               setExpandData({
@@ -487,7 +492,7 @@ const PropertyListView: React.FC = () => {
   const changePropertyType = (type: PropertyTypeNames) => {
     setPropertyType(type);
     setPageIndex(0);
-    setFilter(state => {
+    setFilter((state) => {
       return {
         ...state,
         propertyType: type,
@@ -500,7 +505,7 @@ const PropertyListView: React.FC = () => {
     const agencySelections = agencies.map(mapLookupCode);
     appliedFilter.agencies = filter.agencies
       .split(',')
-      .map(value => agencySelections.find(agency => agency.value === value) || '') as any;
+      .map((value) => agencySelections.find((agency) => agency.value === value) || '') as any;
   }
 
   const onRowClick = useCallback((row: IProperty) => {
@@ -526,21 +531,21 @@ const PropertyListView: React.FC = () => {
     const editableColumnKeys = ['assessedLand', 'assessedBuilding', 'netBook'];
 
     const changedRows = dirtyRows
-      .map(change => {
+      .map((change) => {
         const data = { ...values.properties![change.rowId] };
         return { data, ...change } as any;
       })
-      .filter(c => intersection(keys(c), editableColumnKeys).length > 0);
+      .filter((c) => intersection(keys(c), editableColumnKeys).length > 0);
 
     let errors: any[] = fill(range(nextProperties.length), undefined);
     let touched: any[] = fill(range(nextProperties.length), undefined);
     if (changedRows.length > 0) {
-      const changedRowIds = changedRows.map(x => x.rowId);
+      const changedRowIds = changedRows.map((x) => x.rowId);
       // Manually validate the table form
       const currentErrors = await actions.validateForm();
       const errorRowIds = keys(currentErrors.properties)
         .map(Number)
-        .filter(i => !!currentErrors.properties![i]);
+        .filter((i) => !!currentErrors.properties![i]);
       const foundRowErrorsIndexes = intersection(changedRowIds, errorRowIds);
       if (foundRowErrorsIndexes.length > 0) {
         for (const index of foundRowErrorsIndexes) {
@@ -577,8 +582,9 @@ const PropertyListView: React.FC = () => {
 
             touched[change.rowId] = pick(change, ['assessedLand', 'netBook']);
             toast.error(
-              `Failed to save changes for ${apiProperty.name ||
-                apiProperty.address?.line1}. ${errorMessage}`,
+              `Failed to save changes for ${
+                apiProperty.name || apiProperty.address?.line1
+              }. ${errorMessage}`,
             );
             errors[change.rowId] = {
               assessedLand: change.assessedland && (errorMessage || 'Save request failed.'),
@@ -589,7 +595,7 @@ const PropertyListView: React.FC = () => {
       }
 
       setDirtyRows([]);
-      if (!errors.find(x => !!x)) {
+      if (!errors.find((x) => !!x)) {
         actions.setTouched({ properties: [] });
         setData(nextProperties);
         actions.resetForm({ values: { properties: nextProperties } });
@@ -755,7 +761,7 @@ const PropertyListView: React.FC = () => {
             }
           }}
           detailsPanel={{
-            render: val => {
+            render: (val) => {
               if (expandData[val.id]) {
                 return (
                   <Buildings
@@ -771,12 +777,12 @@ const PropertyListView: React.FC = () => {
               open: <FaFolderOpen color="black" size={20} />,
               closed: <FaFolder color="black" size={20} />,
             },
-            checkExpanded: (row, state) => !!state.find(x => checkExpanded(x, row)),
+            checkExpanded: (row, state) => !!state.find((x) => checkExpanded(x, row)),
             onExpand: loadBuildings,
-            getRowId: row => row.id,
+            getRowId: (row) => row.id,
           }}
           filter={appliedFilter}
-          onFilterChange={values => {
+          onFilterChange={(values) => {
             setFilter({ ...filter, ...values });
           }}
           renderBodyComponent={({ body }) => (

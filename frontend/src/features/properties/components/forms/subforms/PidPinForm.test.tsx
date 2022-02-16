@@ -1,13 +1,14 @@
+import { cleanup, render } from '@testing-library/react';
+import { IParcel } from 'actions/parcelsActions';
+import { Form, Formik } from 'formik';
+import useKeycloakWrapper, { IKeycloak } from 'hooks/useKeycloakWrapper';
 import React from 'react';
 import renderer from 'react-test-renderer';
-import { render, cleanup } from '@testing-library/react';
-import PidPinForm from './PidPinForm';
-import useKeycloakWrapper, { IKeycloak } from 'hooks/useKeycloakWrapper';
-import { Formik, Form } from 'formik';
 import { fillInput } from 'utils/testUtils';
-import { IParcel } from 'actions/parcelsActions';
 
-jest.mock('lodash/debounce', () => jest.fn(fn => fn));
+import PidPinForm from './PidPinForm';
+
+jest.mock('lodash/debounce', () => jest.fn((fn) => fn));
 jest.mock('hooks/useKeycloakWrapper');
 (useKeycloakWrapper as jest.Mock<Partial<IKeycloak>>).mockReturnValue({ hasClaim: () => true });
 

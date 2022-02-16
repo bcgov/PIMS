@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
 import './BasemapToggle.scss';
+
+import React, { useState } from 'react';
 
 export type BaseLayer = {
   name: string;
@@ -18,7 +19,7 @@ type BasemapToggleProps = {
   onToggle?: (e: BasemapToggleEvent) => void;
 };
 
-const BasemapToggle: React.FC<BasemapToggleProps> = props => {
+const BasemapToggle: React.FC<BasemapToggleProps> = (props) => {
   // TODO: fade out when map is panning/zooming
   const [updating] = useState(false);
   const [currentBasemap, secondaryBasemap] = props.baseLayers;

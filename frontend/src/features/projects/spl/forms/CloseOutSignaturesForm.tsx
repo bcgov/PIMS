@@ -1,8 +1,8 @@
+import { FastDatePicker, FastInput, Form } from 'components/common/form';
+import { useFormikContext } from 'formik';
 import { Fragment } from 'react';
 import React from 'react';
 import { Col } from 'react-bootstrap';
-import { useFormikContext } from 'formik';
-import { Form, FastInput, FastDatePicker } from 'components/common/form';
 
 interface CloseOutSignaturesFormProps {
   isReadOnly?: boolean;
@@ -14,9 +14,9 @@ const CloseOutSignaturesForm = (props: CloseOutSignaturesFormProps) => {
   return (
     <Fragment>
       <h3>Signed by Chief Financial Officer</h3>
-      <Form.Row>
+      <Form.Group>
         <Col md={6}>
-          <Form.Row>
+          <Form.Group>
             <Form.Label column md={4}>
               Preliminary Form Signed By
             </Form.Label>
@@ -26,8 +26,8 @@ const CloseOutSignaturesForm = (props: CloseOutSignaturesFormProps) => {
               outerClassName="col-md-8"
               field="preliminaryFormSignedBy"
             />
-          </Form.Row>
-          <Form.Row>
+          </Form.Group>
+          <Form.Group>
             <Form.Label column md={4}>
               Final Form Signed by
             </Form.Label>
@@ -37,10 +37,10 @@ const CloseOutSignaturesForm = (props: CloseOutSignaturesFormProps) => {
               outerClassName="col-md-8"
               field="finalFormSignedBy"
             />
-          </Form.Row>
+          </Form.Group>
         </Col>
         <Col md={6}>
-          <Form.Row>
+          <Form.Group>
             <Form.Label column md={4}>
               Signature Date
             </Form.Label>
@@ -50,8 +50,8 @@ const CloseOutSignaturesForm = (props: CloseOutSignaturesFormProps) => {
               outerClassName="col-md-8"
               field="preliminaryFormSignedOn"
             />
-          </Form.Row>
-          <Form.Row>
+          </Form.Group>
+          <Form.Group>
             <Form.Label column md={4}>
               Signature Date
             </Form.Label>
@@ -61,9 +61,9 @@ const CloseOutSignaturesForm = (props: CloseOutSignaturesFormProps) => {
               outerClassName="col-md-8"
               field="finalFormSignedOn"
             />
-          </Form.Row>
+          </Form.Group>
         </Col>
-      </Form.Row>
+      </Form.Group>
     </Fragment>
   );
 };

@@ -1,3 +1,4 @@
+import variables from '_variables.module.scss';
 import { FastSelect, SelectOptions, TextArea } from 'components/common/form';
 import { Label } from 'components/common/Label';
 import TooltipIcon from 'components/common/TooltipIcon';
@@ -6,18 +7,18 @@ import {
   CoreOperational,
   CoreStrategic,
   Demolished,
+  Disposed,
   Subdivided,
   SurplusActive,
   SurplusEncumbered,
   SurplusEncumberedOrActive,
-  Disposed,
 } from 'features/properties/components/forms/strings';
 import { FormikValues, getIn, useFormikContext } from 'formik';
 import React from 'react';
 import { Col, Row } from 'react-bootstrap';
 import styled from 'styled-components';
-import variables from '_variables.module.scss';
-import { useQueryParamSideBar, SidebarContextType } from '../../hooks/useQueryParamSideBar';
+
+import { SidebarContextType, useQueryParamSideBar } from '../../hooks/useQueryParamSideBar';
 
 const Title = styled.h4`
   float: left;
@@ -134,7 +135,7 @@ export const ClassificationForm: React.FC<IClassificationFormProps> = ({
   let filteredClassifications = classifications;
   /** users not allowed to select disposed, but display these values if one of these classifications has already been selected. */
   filteredClassifications = classifications.filter(
-    c => determineFilter(+c.value) || +c.value === +classId,
+    (c) => determineFilter(+c.value) || +c.value === +classId,
   );
 
   const renderInfo = () => {

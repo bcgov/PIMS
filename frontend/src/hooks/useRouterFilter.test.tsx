@@ -1,13 +1,14 @@
+import { renderHook } from '@testing-library/react-hooks';
+import * as reducerTypes from 'constants/reducerTypes';
+import { createMemoryHistory } from 'history';
+import queryString from 'query-string';
 import React from 'react';
 import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
-import { createMemoryHistory } from 'history';
+import { MemoryRouter } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import * as reducerTypes from 'constants/reducerTypes';
+
 import { useRouterFilter } from './useRouterFilter';
-import { renderHook } from '@testing-library/react-hooks';
-import queryString from 'query-string';
 
 const mockStore = configureMockStore([thunk]);
 const history = createMemoryHistory();
@@ -16,11 +17,14 @@ const getStore = (filter: any) =>
     [reducerTypes.FILTER]: filter,
   });
 
-const getWrapper = (store: any) => ({ children }: any) => (
-  <Provider store={store}>
-    <Router history={history}>{children}</Router>
-  </Provider>
-);
+const getWrapper =
+  (store: any) =>
+  ({ children }: any) =>
+    (
+      <Provider store={store}>
+        <MemoryRouter initialEntries={[history.location]}>{children}</MemoryRouter>
+      </Provider>
+    );
 
 const emptyFilter = {
   searchBy: 'address',
@@ -87,7 +91,7 @@ describe('useRouterFilter hook tests', () => {
 
     const filterWithValues: any = { ...expectedFilter };
     Object.keys(filterWithValues).forEach(
-      k => filterWithValues[k] === '' && delete filterWithValues[k],
+      (k) => filterWithValues[k] === '' && delete filterWithValues[k],
     );
 
     const wrapper = getWrapper(getStore({}));
@@ -125,7 +129,7 @@ describe('useRouterFilter hook tests', () => {
     });
     const filterWithValues: any = { ...defaultFilter };
     Object.keys(filterWithValues).forEach(
-      k => filterWithValues[k] === '' && delete filterWithValues[k],
+      (k) => filterWithValues[k] === '' && delete filterWithValues[k],
     );
     expect(history.location.search).toEqual('?' + queryString.stringify(filterWithValues));
   });

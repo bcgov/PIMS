@@ -1,17 +1,18 @@
-import { FormikValues, getIn, setIn } from 'formik';
-import { isMouseEventRecent, squareMetersToHectares } from 'utils';
-import { AMINISTRATIVE_AREA_CODE_SET_NAME } from 'constants/API';
-import { useState } from 'react';
-import { IParcelLayerData, clearParcelLayerData } from 'store/slices/parcelLayerDataSlice';
 import { ILookupCode } from 'actions/ILookupCode';
-import { pidFormatter } from '../components/forms/subforms/PidPinForm';
-import _ from 'lodash';
-import { useAppSelector, useAppDispatch } from 'store';
-import useCodeLookups from 'hooks/useLookupCodes';
-import { toast } from 'react-toastify';
-import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
+import { ADMINISTRATIVE_AREA_CODE_SET_NAME } from 'constants/API';
 import { getInitialValues } from 'features/mapSideBar/SidebarContents/LandForm';
+import { FormikValues, getIn, setIn } from 'formik';
+import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
 import { useKeycloakWrapper } from 'hooks/useKeycloakWrapper';
+import useCodeLookups from 'hooks/useLookupCodes';
+import _ from 'lodash';
+import { useState } from 'react';
+import { toast } from 'react-toastify';
+import { useAppDispatch, useAppSelector } from 'store';
+import { clearParcelLayerData, IParcelLayerData } from 'store/slices/parcelLayerDataSlice';
+import { isMouseEventRecent, squareMetersToHectares } from 'utils';
+
+import { pidFormatter } from '../components/forms/subforms/PidPinForm';
 
 interface IUseParcelLayerDataProps {
   formikRef: React.MutableRefObject<FormikValues | undefined>;
@@ -152,7 +153,7 @@ const useParcelLayerData = ({
   nameSpace,
   agencyId,
 }: IUseParcelLayerDataProps) => {
-  const parcelLayerData = useAppSelector(store => store.parcelLayerData?.parcelLayerData);
+  const parcelLayerData = useAppSelector((store) => store.parcelLayerData?.parcelLayerData);
   const { getByType } = useCodeLookups();
   const [showOverwriteDialog, setShowOverwriteDialog] = useState(false);
   const dispatch = useAppDispatch();
@@ -164,7 +165,7 @@ const useParcelLayerData = ({
         setParcelFieldsFromLayerData(
           parcelLayerData,
           formikRef,
-          getByType(AMINISTRATIVE_AREA_CODE_SET_NAME),
+          getByType(ADMINISTRATIVE_AREA_CODE_SET_NAME),
           nameSpace ?? '',
           agencyId ?? keycloak.agencyId,
         );
@@ -182,7 +183,7 @@ const useParcelLayerData = ({
       setParcelFieldsFromLayerData(
         parcelLayerData,
         formikRef,
-        getByType(AMINISTRATIVE_AREA_CODE_SET_NAME),
+        getByType(ADMINISTRATIVE_AREA_CODE_SET_NAME),
         nameSpace ?? '',
         agencyId ?? keycloak.agencyId,
       ),

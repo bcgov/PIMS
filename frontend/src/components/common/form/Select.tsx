@@ -1,9 +1,11 @@
+import './Select.scss';
+
+import classNames from 'classnames';
+import { getIn, useFormikContext } from 'formik';
 import React from 'react';
 import { Form, FormControlProps } from 'react-bootstrap';
-import { useFormikContext, getIn } from 'formik';
+
 import { DisplayError } from './DisplayError';
-import classNames from 'classnames';
-import './Select.scss';
 
 type RequiredAttributes = {
   /** The field name */
@@ -83,7 +85,7 @@ export const Select: React.FC<SelectProps> = ({
     );
   };
 
-  const onSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const onSelectChange = (e: any) => {
     const updateFormValues = multiple ? handleMultipleChange : handleChange;
     updateFormValues(e);
     onChange?.(e);
@@ -97,7 +99,7 @@ export const Select: React.FC<SelectProps> = ({
   };
 
   const renderOptions = () => {
-    return options.map(option => (
+    return options.map((option) => (
       <option key={option.value} value={option.value} className="option">
         {option.label}
       </option>

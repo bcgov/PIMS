@@ -1,23 +1,24 @@
+import variables from '_variables.module.scss';
+import AbbreviatedText from 'components/common/AbbreviatedText';
 import { Persist } from 'components/common/FormikPersist';
-import { Form, Formik, FormikConfig, setIn, getIn, useFormikContext } from 'formik';
+import GenericModal from 'components/common/GenericModal';
+import { IStep } from 'components/common/Stepper';
+import TooltipWrapper from 'components/common/TooltipWrapper';
+import { ILeasedLand } from 'features/mapSideBar/SidebarContents/AssociatedLandForm';
+import { Form, Formik, FormikConfig, getIn, setIn, useFormikContext } from 'formik';
+import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
+import _ from 'lodash';
 import * as React from 'react';
+import { useState } from 'react';
+import { Tab, Tabs } from 'react-bootstrap';
+import { FaWindowClose } from 'react-icons/fa';
+import { toast } from 'react-toastify';
+import styled from 'styled-components';
+
+import PlusButton from '../PlusButton';
 import { StepperFormProvider } from './context';
 import { StepperField } from './StepperField';
 import { ISteppedFormProps, ISteppedFormValues, IStepperTab } from './types';
-import { Tabs, Tab } from 'react-bootstrap';
-import styled from 'styled-components';
-import PlusButton from '../PlusButton';
-import { FaWindowClose } from 'react-icons/fa';
-import TooltipWrapper from 'components/common/TooltipWrapper';
-import { useState } from 'react';
-import GenericModal from 'components/common/GenericModal';
-import { toast } from 'react-toastify';
-import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
-import _ from 'lodash';
-import { IStep } from 'components/common/Stepper';
-import { ILeasedLand } from 'features/mapSideBar/SidebarContents/AssociatedLandForm';
-import variables from '_variables.module.scss';
-import AbbreviatedText from 'components/common/AbbreviatedText';
 
 const TabbedForm = styled(Form)`
   .hideTabs {
@@ -86,7 +87,7 @@ export const MAX_STEPPED_TABS = 5;
  * @component
  * @example ./SteppedForm.md
  */
-export const SteppedForm = function<T extends object = {}>({
+export const SteppedForm = function <T extends object = {}>({
   steps: formSteps,
   children,
   initialValues,
@@ -133,10 +134,10 @@ export const SteppedForm = function<T extends object = {}>({
               id="steppedform-tabs"
               className={!getTabs ? 'hideTabs' : ''}
               activeKey={values.activeTab}
-              onSelect={(tab: string) => {
+              onSelect={(tab: string | null) => {
                 if (tab !== '') {
-                  setFieldValue('activeTab', +tab);
-                  onChangeTab && setSteps(onChangeTab(+tab));
+                  setFieldValue('activeTab', +(tab ?? ''));
+                  onChangeTab && setSteps(onChangeTab(+(tab ?? '')));
                 }
               }}
               unmountOnExit

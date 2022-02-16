@@ -1,6 +1,7 @@
-import * as React from 'react';
-import { SurplusPropertyListForm } from '..';
 import { ReviewWorkflowStatus } from 'features/projects/constants';
+import * as React from 'react';
+
+import { SurplusPropertyListForm } from '..';
 
 interface ISplTabProps {
   isReadOnly?: boolean;

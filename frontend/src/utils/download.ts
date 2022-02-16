@@ -1,8 +1,8 @@
+import { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import CustomAxios from 'customAxios';
-import { AxiosResponse, AxiosError, AxiosRequestConfig } from 'axios';
-import { showLoading, hideLoading } from 'react-redux-loading-bar';
-import { request, success, error } from 'store';
-import { Dispatch, AnyAction } from 'redux';
+import { hideLoading, showLoading } from 'react-redux-loading-bar';
+import { AnyAction, Dispatch } from 'redux';
+import { error, request, success } from 'store';
 
 /**
  * Download configuration options interface.

@@ -1,18 +1,20 @@
 import './UpdateInfoForm.scss';
-import React, { useState } from 'react';
-import { mapLookupCode } from 'utils';
-import { useFormikContext, getIn } from 'formik';
+
 import { Form, Select } from 'components/common/form';
-import useCodeLookups from 'hooks/useLookupCodes';
-import Button from 'react-bootstrap/Button';
-import _ from 'lodash';
-import { useProject, updateInfoMessage, tierTooltips, riskTooltips } from '../../common';
 import { DisposeWorkflowStatus } from 'features/projects/constants';
-import { IStepProps, IProject } from 'features/projects/interfaces';
-import { PropertyListViewUpdate } from '../components/PropertyListViewUpdate';
+import { IProject, IStepProps } from 'features/projects/interfaces';
+import { getIn, useFormikContext } from 'formik';
+import useCodeLookups from 'hooks/useLookupCodes';
+import _ from 'lodash';
+import React, { useState } from 'react';
 import { Container } from 'react-bootstrap';
-import ProjectFinancialTable from '../components/ProjectFinancialTable';
+import Button from 'react-bootstrap/Button';
 import styled from 'styled-components';
+import { mapLookupCode } from 'utils';
+
+import { riskTooltips, tierTooltips, updateInfoMessage, useProject } from '../../common';
+import ProjectFinancialTable from '../components/ProjectFinancialTable';
+import { PropertyListViewUpdate } from '../components/PropertyListViewUpdate';
 
 interface IUpdateInfoFormProps {
   title?: string;
@@ -90,11 +92,11 @@ const UpdateInfoForm = ({
   return (
     <Container fluid className="UpdateInfoForm">
       {title && (
-        <Form.Row style={{ alignItems: 'unset' }}>
+        <Form.Group style={{ alignItems: 'unset' }}>
           <h3 className="col-md-8">{title}</h3>
-        </Form.Row>
+        </Form.Group>
       )}
-      <Form.Row>
+      <Form.Group>
         <Form.Label column md={2}>
           Assign Tier
         </Form.Label>
@@ -110,11 +112,11 @@ const UpdateInfoForm = ({
         <Tooltip>
           <small>{tierLevelTooltip}</small>
         </Tooltip>
-      </Form.Row>
+      </Form.Group>
 
       {showRisk && (
         <>
-          <Form.Row>
+          <Form.Group>
             <Form.Label column md={2}>
               Risk
             </Form.Label>
@@ -128,12 +130,12 @@ const UpdateInfoForm = ({
             <Tooltip>
               <small>{riskTooltip}</small>
             </Tooltip>
-          </Form.Row>
+          </Form.Group>
         </>
       )}
 
       <ProjectFinancialTable disabled={!!isReadOnly} title="Financial Information" />
-      <Form.Row>
+      <Form.Group>
         <h6 className="col-md-12" style={{ margin: '1rem 0' }}>
           {updateInfoMessage}
         </h6>
@@ -141,7 +143,7 @@ const UpdateInfoForm = ({
         <ReviewButtons
           {...{ isReadOnly, selectedProperties, setSelectedProperties, goToAddProperties }}
         />
-      </Form.Row>
+      </Form.Group>
 
       <PropertyListViewUpdate
         field="properties"

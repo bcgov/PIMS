@@ -1,8 +1,8 @@
+import { FastDatePicker, Form } from 'components/common/form';
 import { ProjectNotes } from 'features/projects/common';
 import { IProject } from 'features/projects/interfaces';
-import { Form, FastDatePicker } from 'components/common/form';
-import React from 'react';
 import { useFormikContext } from 'formik';
+import React from 'react';
 
 /** ExemptionDetails component properties */
 interface IExemptionDetailsProps {
@@ -24,7 +24,7 @@ export const ExemptionDetails = ({ isReadOnly }: IExemptionDetailsProps) => {
         disabled={isReadOnly}
         outerClassName="col-md-12"
       />
-      <Form.Row>
+      <Form.Group>
         <Form.Label column md={4}>
           ADM Approved Exemption On
         </Form.Label>
@@ -35,7 +35,7 @@ export const ExemptionDetails = ({ isReadOnly }: IExemptionDetailsProps) => {
           disabled={isReadOnly}
           field="exemptionApprovedOn"
         />
-      </Form.Row>
+      </Form.Group>
     </>
   );
 };

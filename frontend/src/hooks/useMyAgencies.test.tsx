@@ -1,13 +1,14 @@
-import React from 'react';
-import { render, cleanup } from '@testing-library/react';
-import Adapter from 'enzyme-adapter-react-16';
-import Enzyme from 'enzyme';
+import { useKeycloak } from '@react-keycloak/web';
+import { cleanup, render } from '@testing-library/react';
+import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
+import Claims from 'constants/claims';
 import * as reducerTypes from 'constants/reducerTypes';
+import Enzyme from 'enzyme';
+import React from 'react';
+import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { Provider } from 'react-redux';
-import { useKeycloak } from '@react-keycloak/web';
-import Claims from 'constants/claims';
+
 import { useMyAgencies } from './useMyAgencies';
 
 jest.mock('@react-keycloak/web');
@@ -30,7 +31,7 @@ const MyAgencies = () => {
 
   return (
     <>
-      {agencies.map(agency => (
+      {agencies.map((agency) => (
         <h6 key={agency.value} data-testid={`agency-${agency.value}`}>
           {agency.label}
         </h6>

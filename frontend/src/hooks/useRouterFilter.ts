@@ -1,12 +1,12 @@
-import { useAppDispatch, useAppSelector } from 'store';
-import { useHistory } from 'react-router-dom';
-import React, { useCallback, useEffect, useState } from 'react';
-import { saveFilter } from 'store/slices/filterSlice';
+import { TableSort } from 'components/Table/TableSort';
+import { PropertyTypeNames } from 'constants/propertyTypeNames';
 import _ from 'lodash';
 import queryString from 'query-string';
-import { TableSort } from 'components/Table/TableSort';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from 'store';
+import { saveFilter } from 'store/slices/filterSlice';
 import { generateMultiSortCriteria, resolveSortCriteriaFromUrl } from 'utils';
-import { PropertyTypeNames } from 'constants/propertyTypeNames';
 
 /**
  * Extract the specified properties from the source object.
@@ -19,7 +19,7 @@ import { PropertyTypeNames } from 'constants/propertyTypeNames';
  */
 const extractProps = (props: string[], source: any): any => {
   var dest = {} as any;
-  props.forEach(p => {
+  props.forEach((p) => {
     if (source[p] !== undefined) {
       if (source[p] === 'true') {
         dest[p] = true;
@@ -81,9 +81,10 @@ export const useRouterFilter = <T extends object>({
   sort,
   setSorting,
 }: IRouterFilterProps<T>) => {
-  const history = useHistory();
+  const navigate = useNavigate();
+  const location = useLocation();
   const dispatch = useAppDispatch();
-  const reduxSearch = useAppSelector(store => store.filter);
+  const reduxSearch = useAppSelector((store) => store.filter);
   const [savedFilter] = useState(reduxSearch);
   const [loaded, setLoaded] = useState(false);
 
@@ -91,7 +92,7 @@ export const useRouterFilter = <T extends object>({
   // This will only occur the first time the component loads to ensure the URL query parameters are applied.
   useEffect(() => {
     if (setFilter) {
-      const params = queryString.parse(history.location.search);
+      const params = queryString.parse(location.search);
       // Check if query contains filter params.
       const filterProps = Object.keys(filter);
       if (_.intersection(Object.keys(params), filterProps).length) {
@@ -114,7 +115,9 @@ export const useRouterFilter = <T extends object>({
 
       if (params.sorting && setSorting) {
         const sort = resolveSortCriteriaFromUrl(
-          typeof params.sorting === 'string' ? [params.sorting] : params.sorting,
+          typeof params.sorting === 'string' && params.sorting !== null
+            ? [params.sorting]
+            : (params.sorting as string[]),
         );
         if (!_.isEmpty(sort)) {
           setSorting(sort as any);
@@ -123,7 +126,7 @@ export const useRouterFilter = <T extends object>({
       setLoaded(true);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [history.location.pathname]);
+  }, [location.pathname]);
 
   // If the 'filter' changes save it to redux store and update the URL.
   React.useEffect(() => {
@@ -131,36 +134,46 @@ export const useRouterFilter = <T extends object>({
       const filterParams = new URLSearchParams(filter as any);
       const sorting = generateMultiSortCriteria(sort!);
       const allParams = {
-        ...queryString.parse(history.location.search),
+        ...queryString.parse(location.search),
         ...queryString.parse(filterParams.toString()),
         sorting,
       };
-      history.push({
-        pathname: history.location.pathname,
+      navigate({
+        pathname: location.pathname,
         search: queryString.stringify(allParams, { skipEmptyString: true, skipNull: true }),
       });
       const keyedFilter = { [key]: filter };
       dispatch(saveFilter({ ...savedFilter, ...keyedFilter }));
     }
-  }, [history, key, filter, savedFilter, dispatch, sort, loaded]);
+  }, [
+    key,
+    filter,
+    savedFilter,
+    dispatch,
+    sort,
+    loaded,
+    location.search,
+    location.pathname,
+    navigate,
+  ]);
 
   const updateSearch = useCallback(
     (newFilter: T) => {
       const filterParams = new URLSearchParams(newFilter as any);
       const sorting = generateMultiSortCriteria(sort!);
       const allParams = {
-        ...queryString.parse(history.location.search),
+        ...queryString.parse(location.search),
         ...queryString.parse(filterParams.toString()),
         sort: sorting,
       };
-      history.push({
-        pathname: history.location.pathname,
+      navigate({
+        pathname: location.pathname,
         search: queryString.stringify(allParams, { skipEmptyString: true, skipNull: true }),
       });
       const keyedFilter = { [key]: newFilter };
       dispatch(saveFilter({ ...savedFilter, ...keyedFilter }));
     },
-    [history, key, savedFilter, dispatch, sort],
+    [sort, location.search, location.pathname, navigate, key, dispatch, savedFilter],
   );
 
   return {

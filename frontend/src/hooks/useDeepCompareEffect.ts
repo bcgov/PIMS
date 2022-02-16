@@ -1,4 +1,5 @@
-import { useEffect, EffectCallback, DependencyList } from 'react';
+import { DependencyList, EffectCallback, useEffect } from 'react';
+
 import { useDeepCompareMemoize } from './useDeepCompareMemoize';
 
 /**

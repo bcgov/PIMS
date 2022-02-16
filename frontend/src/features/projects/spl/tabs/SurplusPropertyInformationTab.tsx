@@ -1,12 +1,13 @@
 import * as React from 'react';
 import { Container } from 'react-bootstrap';
+
 import {
   PrivateNotes,
-  ProjectNotes,
   ProjectDraftForm,
+  ProjectNotes,
+  PublicNotes,
   UpdateInfoForm,
   useProject,
-  PublicNotes,
 } from '../../common';
 import AdditionalPropertyInformationForm from '../../common/forms/AdditionalPropertyInformationForm';
 
@@ -14,9 +15,9 @@ interface ISurplusPropertyInformationTabProps {
   isReadOnly?: boolean;
 }
 
-const SurplusPropertyInformationTab: React.FunctionComponent<ISurplusPropertyInformationTabProps> = ({
-  isReadOnly,
-}: ISurplusPropertyInformationTabProps) => {
+const SurplusPropertyInformationTab: React.FunctionComponent<
+  ISurplusPropertyInformationTabProps
+> = ({ isReadOnly }: ISurplusPropertyInformationTabProps) => {
   const { goToDisposePath } = useProject();
   return (
     <Container fluid>

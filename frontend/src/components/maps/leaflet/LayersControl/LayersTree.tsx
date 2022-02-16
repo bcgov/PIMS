@@ -1,16 +1,18 @@
-import { Formik, Form as FormikForm, getIn, useFormikContext } from 'formik';
-import { noop, flatten } from 'lodash';
-import * as React from 'react';
-import { ListGroup, Form } from 'react-bootstrap';
-import { FaAngleDown, FaAngleRight } from 'react-icons/fa';
-import TreeMenu, { TreeMenuItem, TreeNode } from 'react-simple-tree-menu';
 import 'react-simple-tree-menu/dist/main.css';
-import styled from 'styled-components';
-import { layersTree } from './data';
-import * as L from 'leaflet';
-import { useLeaflet } from 'react-leaflet';
-import { ILayerItem } from './types';
+
 import variables from '_variables.module.scss';
+import { Form as FormikForm, Formik, getIn, useFormikContext } from 'formik';
+import * as L from 'leaflet';
+import { flatten, noop } from 'lodash';
+import * as React from 'react';
+import { Form, ListGroup } from 'react-bootstrap';
+import { FaAngleDown, FaAngleRight } from 'react-icons/fa';
+import { useMap } from 'react-leaflet';
+import TreeMenu, { TreeMenuItem, TreeNode } from 'react-simple-tree-menu';
+import styled from 'styled-components';
+
+import { layersTree } from './data';
+import { ILayerItem } from './types';
 
 const ParentNode = styled(ListGroup.Item)`
   display: flex;
@@ -132,27 +134,27 @@ const LayerNodeCheckbox: React.FC<{ name: string; label: string; color: string }
 const featureGroup = new L.FeatureGroup();
 const LeafletListenerComp = () => {
   const { values } = useFormikContext<{ layers: ILayerItem[] }>();
-  const { map } = useLeaflet();
+  const mapInstance = useMap();
 
   React.useEffect(() => {
-    if (map) {
-      featureGroup.addTo(map);
+    if (mapInstance) {
+      featureGroup.addTo(mapInstance);
     }
 
     return () => {
-      map?.removeLayer(featureGroup);
+      mapInstance.removeLayer(featureGroup);
     };
-  }, [map]);
+  }, [mapInstance]);
 
   React.useEffect(() => {
-    if (!!map) {
+    if (!!mapInstance) {
       const currentLayers = Object.keys((featureGroup as any)._layers)
-        .map(k => (featureGroup as any)._layers[k])
-        .map(l => l.options)
-        .filter(x => !!x);
-      const layers = flatten(values.layers.map(l => l.nodes)).filter((x: any) => x.on);
+        .map((k) => (featureGroup as any)._layers[k])
+        .map((l) => l.options)
+        .filter((x) => !!x);
+      const layers = flatten(values.layers.map((l) => l.nodes)).filter((x: any) => x.on);
       const layersToAdd = layers.filter(
-        (layer: any) => !currentLayers.find(x => x.key === layer.key),
+        (layer: any) => !currentLayers.find((x) => x.key === layer.key),
       );
       const layersToRemove = currentLayers.filter(
         (layer: any) => !layers.find((x: any) => x.key === layer.key),
@@ -164,12 +166,12 @@ const LeafletListenerComp = () => {
       });
 
       featureGroup.eachLayer((layer: any) => {
-        if (layersToRemove.find(l => l.key === layer?.options?.key)) {
+        if (layersToRemove.find((l) => l.key === layer?.options?.key)) {
           featureGroup.removeLayer(layer);
         }
       });
     }
-  }, [values, map]);
+  }, [values, mapInstance]);
 
   return null;
 };
@@ -181,18 +183,18 @@ const LayersTree: React.FC<{ items: TreeMenuItem[] }> = ({ items }) => {
   const { values } = useFormikContext<any>();
 
   const getParentIndex = (key: string, layers: TreeNode[]) => {
-    return layers.findIndex(node => node.key === key);
+    return layers.findIndex((node) => node.key === key);
   };
 
   const getLayerNodeIndex = (nodeKey: string, parentKey: string, layers: TreeNode[]) => {
-    const parent = layers.find(node => node.key === parentKey);
+    const parent = layers.find((node) => node.key === parentKey);
 
     return (parent!.nodes as any).findIndex((node: TreeNode) => node.key === nodeKey);
   };
 
   return (
     <ListGroup>
-      {items.map(node => {
+      {items.map((node) => {
         if (node.level === 0) {
           if (!node.hasNodes) {
             return null;

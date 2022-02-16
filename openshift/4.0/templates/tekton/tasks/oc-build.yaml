@@ -35,6 +35,11 @@ spec:
       image: "image-registry.openshift-image-registry.svc:5000/openshift/cli:latest"
       resources: {}
       script: |
+        if [ "$(params.APP_NAME)" = "app" ]; then
+          echo "Building app base image"
+          oc start-build $(params.SOLUTION_NAME)-$(params.APP_NAME)-base.$(params.GIT_SOURCE) --follow --wait
+        fi
+
         echo "Building image"
         oc start-build $(params.SOLUTION_NAME)-$(params.APP_NAME).$(params.GIT_SOURCE) --follow --wait
 

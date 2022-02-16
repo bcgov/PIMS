@@ -1,9 +1,10 @@
+import TooltipWrapper from 'components/common/TooltipWrapper';
 import * as React from 'react';
 import { Button } from 'react-bootstrap';
-import TooltipWrapper from 'components/common/TooltipWrapper';
 import { FaPlus } from 'react-icons/fa';
-import { defaultReport } from './ReportControls';
+
 import { IReport } from '../interfaces';
+import { defaultReport } from './ReportControls';
 
 interface IAddReportControlProps {
   /** the function to call when the add button is clicked. */

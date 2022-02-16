@@ -1,9 +1,9 @@
 import { useKeycloak } from '@react-keycloak/web';
-import { Roles } from 'constants/roles';
-import { Claims } from 'constants/claims';
-import _ from 'lodash';
 import { IProperty } from 'actions/parcelsActions';
+import { Claims } from 'constants/claims';
 import { PropertyTypes } from 'constants/propertyTypes';
+import { Roles } from 'constants/roles';
+import _ from 'lodash';
 
 /**
  * IUserInfo interface, represents the userinfo provided by keycloak.
@@ -64,7 +64,7 @@ export function useKeycloakWrapper(): IKeycloak {
       claim !== null &&
       (typeof claim === 'string'
         ? userInfo?.roles?.includes(claim)
-        : claim.some(c => userInfo?.roles?.includes(c)))
+        : claim.some((c) => userInfo?.roles?.includes(c)))
     );
   };
 
@@ -78,7 +78,7 @@ export function useKeycloakWrapper(): IKeycloak {
       role !== null &&
       (typeof role === 'string'
         ? userInfo?.groups?.includes(role)
-        : role.some(r => userInfo?.groups?.includes(r)))
+        : role.some((r) => userInfo?.groups?.includes(r)))
     );
   };
 
@@ -183,7 +183,7 @@ export function useKeycloakWrapper(): IKeycloak {
     email: email(),
     isAdmin: hasRole(Roles.SYSTEM_ADMINISTRATOR) || hasRole(Roles.AGENCY_ADMINISTRATOR),
     roles: roles(),
-    agencyId: userInfo?.agencies?.find(x => x),
+    agencyId: userInfo?.agencies?.find((x) => x),
     hasRole: hasRole,
     hasClaim: hasClaim,
     hasAgency: hasAgency,

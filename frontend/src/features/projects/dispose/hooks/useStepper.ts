@@ -1,13 +1,14 @@
-import { useEffect, useContext, useMemo } from 'react';
-import { useAppSelector } from 'store';
-import { StepperContext } from '..';
-import { ReviewWorkflowStatus } from 'features/projects/constants';
-import { IStatus, IProjectTask, IProject } from 'features/projects/interfaces';
-import _ from 'lodash';
-import { useHistory } from 'react-router-dom';
 import { ProjectActions } from 'constants/actionTypes';
-import { useKeycloakWrapper } from 'hooks/useKeycloakWrapper';
+import { ReviewWorkflowStatus } from 'features/projects/constants';
 import { defaultProject } from 'features/projects/constants/defaultValues';
+import { IProject, IProjectTask, IStatus } from 'features/projects/interfaces';
+import { useKeycloakWrapper } from 'hooks/useKeycloakWrapper';
+import _ from 'lodash';
+import { useContext, useEffect, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAppSelector } from 'store';
+
+import { StepperContext } from '..';
 
 /**
  * Get the status after the current status in this workflow. Return undefined if there is no next step.
@@ -21,7 +22,7 @@ export const getNextWorkflowStatus = (
   if (!currentStatus) {
     return workflowStatuses[0];
   }
-  var requiredStatuses = workflowStatuses.filter(s => !s.isOptional);
+  var requiredStatuses = workflowStatuses.filter((s) => !s.isOptional);
   // return undefined to indicate all steps have been completed.
   if (currentStatus.sortOrder >= requiredStatuses.length - 1) {
     return undefined;
@@ -101,7 +102,7 @@ export const getLastCompletedStatus = (
  * Used to synchronize stepper UI with step UI.
  */
 const useStepper = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const keycloak = useKeycloakWrapper();
   const { currentStatus, setCurrentStatus, disposeWorkflowStatuses } = useContext(StepperContext);
   const initialProject = useMemo(
@@ -111,16 +112,16 @@ const useStepper = () => {
     }),
     [keycloak],
   );
-  const project: IProject = useAppSelector(store => store.project.project) || initialProject;
-  const workflowTasks: IProjectTask[] = useAppSelector(store => store.tasks) || {
+  const project: IProject = useAppSelector((store) => store.project.project) || initialProject;
+  const workflowTasks: IProjectTask[] = useAppSelector((store) => store.tasks) || {
     ...defaultProject(),
     agencyId: keycloak.agencyId!,
   };
   const getProjectRequest = useAppSelector(
-    store => (store.network as any)[ProjectActions.GET_PROJECT],
+    (store) => (store.network as any)[ProjectActions.GET_PROJECT],
   );
   const updateWorkflowStatusRequest = useAppSelector(
-    store => (store.network as any)[ProjectActions.UPDATE_WORKFLOW_STATUS],
+    (store) => (store.network as any)[ProjectActions.UPDATE_WORKFLOW_STATUS],
   );
 
   useEffect(() => {
@@ -172,7 +173,7 @@ const useStepper = () => {
         return undefined;
       }
       currentProject.projectNumber !== undefined &&
-        history.push(`/dispose${nextStatus.route}?projectNumber=${currentProject.projectNumber}`);
+        navigate(`/dispose${nextStatus.route}?projectNumber=${currentProject.projectNumber}`);
       return nextStatus.id;
     },
     projectStatusCompleted: (status?: IStatus) =>
@@ -182,14 +183,13 @@ const useStepper = () => {
       getLastCompletedStatus(disposeWorkflowStatuses, currentStatus, project),
     goToStepById: (statusId: number) => {
       const status: IStatus | undefined = _.find(disposeWorkflowStatuses, { id: statusId });
-      history.push(`..${status?.route}?projectNumber=${project.projectNumber}`);
+      navigate(`..${status?.route}?projectNumber=${project.projectNumber}`);
     },
     goToStepByCode: (statusCode: string) => {
       const status: IStatus | undefined = _.find(disposeWorkflowStatuses, { code: statusCode });
-      history.push(`..${status?.route}?projectNumber=${project.projectNumber}`);
+      navigate(`..${status?.route}?projectNumber=${project.projectNumber}`);
     },
-    goToDisposePath: (path: string) =>
-      history.push(`./${path}?projectNumber=${project.projectNumber}`),
+    goToDisposePath: (path: string) => navigate(`./${path}?projectNumber=${project.projectNumber}`),
   };
 };
 export default useStepper;

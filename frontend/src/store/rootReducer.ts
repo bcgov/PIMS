@@ -1,27 +1,28 @@
-import { combineReducers } from 'redux';
-import { loadingBarReducer } from 'react-redux-loading-bar';
-import {
-  leafletMouseSlice,
-  jwtSlice,
-  keycloakReadySlice,
-  mapViewZoomSlice,
-  filterSlice,
-  parcelLayerDataSlice,
-  accessRequestSlice,
-  agencySlice,
-  lookupCodeSlice,
-  parcelSlice,
-  userSlice,
-  networkSlice,
-} from './slices';
-import projectWorkflowSlice from 'features/projects/common/slices/projectWorkflowSlice';
 import projectSlice from 'features/projects/common/slices/projectSlice';
+import projectStatusesSlice from 'features/projects/common/slices/projectStatusesSlice';
 import projectTasksSlice from 'features/projects/common/slices/projectTasksSlice';
+import projectWorkflowSlice from 'features/projects/common/slices/projectWorkflowSlice';
 import ProjectWorkflowTasksSlice from 'features/projects/common/slices/projectWorkflowTasksSlice';
 import erpTabSlice from 'features/projects/erp/slices/erpTabSlice';
 import splTabSlice from 'features/projects/spl/slices/splTabSlice';
-import projectStatusesSlice from 'features/projects/common/slices/projectStatusesSlice';
 import propertyNameSlice from 'features/properties/common/slices/propertyNameSlice';
+import { loadingBarReducer } from 'react-redux-loading-bar';
+import { combineReducers } from 'redux';
+
+import {
+  accessRequestSlice,
+  agencySlice,
+  filterSlice,
+  jwtSlice,
+  keycloakReadySlice,
+  leafletMouseSlice,
+  lookupCodeSlice,
+  mapViewZoomSlice,
+  networkSlice,
+  parcelLayerDataSlice,
+  parcelSlice,
+  userSlice,
+} from './slices';
 
 export const reducerObject = {
   loadingBar: loadingBarReducer,

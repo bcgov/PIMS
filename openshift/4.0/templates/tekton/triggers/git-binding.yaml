@@ -44,6 +44,6 @@ objects:
         - name: GIT_SOURCE
           value: ${GIT_SOURCE}
         - name: VERSION
-          value: "dev" # TODO: Dynamically generate this somehow.
+          value: "latest" # TODO: Dynamically generate this somehow.
         - name: DEPLOY_TO
           value: ${DEPLOY_TO}

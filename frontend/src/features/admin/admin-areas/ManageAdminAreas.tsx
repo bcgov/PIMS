@@ -1,18 +1,19 @@
-import useCodeLookups from 'hooks/useLookupCodes';
 import { Table } from 'components/Table';
 import * as API from 'constants/API';
-import React, { useState, useMemo } from 'react';
-import { AdminAreaFilterBar } from './AdminAreasFilterBar';
-import { useHistory } from 'react-router-dom';
-import { Container, Spinner } from 'react-bootstrap';
-import styled from 'styled-components';
-import { adminAreasColumnDefinistions } from '../constants/columns';
-import { IAdminAreaFilter, IAdministrativeArea } from './interfaces';
+import { useAdminAreaApi } from 'hooks/useApiAdminAreas';
+import useCodeLookups from 'hooks/useLookupCodes';
+import React, { useMemo, useState } from 'react';
 import { useEffect } from 'react';
 import { useCallback } from 'react';
-import { getFetchLookupCodeAction } from 'store/slices/hooks/lookupCodeActionCreator';
-import { useAdminAreaApi } from 'hooks/useApiAdminAreas';
+import { Container, Spinner } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from 'store';
+import { getFetchLookupCodeAction } from 'store/slices/hooks/lookupCodeActionCreator';
+import styled from 'styled-components';
+
+import { adminAreasColumnDefinistions } from '../constants/columns';
+import { AdminAreaFilterBar } from './AdminAreasFilterBar';
+import { IAdminAreaFilter, IAdministrativeArea } from './interfaces';
 
 const AdminAreaToolbarContainer = styled(Container)`
   .search-bar {
@@ -41,14 +42,14 @@ const StyledTable = styled(Table)`
 
 /** Component used to list the administrative areas present in the application. User's can select corresponding administrative area they wish to edit here. */
 export const ManageAdminAreas = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const lookupCodes = useCodeLookups();
   const columns = useMemo(() => adminAreasColumnDefinistions, []);
-  const administrativeAreas = lookupCodes.getByType(API.AMINISTRATIVE_AREA_CODE_SET_NAME);
+  const administrativeAreas = lookupCodes.getByType(API.ADMINISTRATIVE_AREA_CODE_SET_NAME);
 
   const onRowClick = (row: IAdministrativeArea) => {
-    history.push(`/admin/administrativeArea/${row.id}`);
+    navigate(`/admin/administrativeArea/${row.id}`);
   };
 
   const [areas, setAreas] = useState(undefined);
@@ -71,7 +72,7 @@ export const ManageAdminAreas = () => {
   /** make sure lookup codes are updated when administrative area is added or deleted */
   useEffect(() => {
     getFetchLookupCodeAction()(dispatch);
-  }, [history, dispatch]);
+  }, [dispatch]);
 
   const [filter, setFilter] = useState<IAdminAreaFilter>({});
   const onRequestData = useCallback(
@@ -94,8 +95,8 @@ export const ManageAdminAreas = () => {
     <Container fluid style={{ padding: 0 }}>
       <AdminAreaToolbarContainer fluid className="admin-area-toolbar">
         <AdminAreaFilterBar
-          handleAdd={() => history.push('/admin/administrativeArea/new')}
-          onChange={value => {
+          handleAdd={() => navigate('/admin/administrativeArea/new')}
+          onChange={(value) => {
             if ((value as any).id) {
               setFilter({ ...filter, id: (value as any).id });
             } else {

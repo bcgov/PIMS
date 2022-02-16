@@ -1,17 +1,18 @@
-import invariant from 'tiny-invariant';
 import {
-  Layer,
-  Marker,
-  Map,
-  PolylineOptions,
-  Point as LeafletPoint,
+  GeoJSON,
   LatLng,
   LatLngExpression,
-  GeoJSON,
+  Layer,
+  Map,
+  Marker,
+  Point as LeafletPoint,
+  PolylineOptions,
 } from 'leaflet';
-import { AnyProps } from 'supercluster';
-import { ICluster, PointFeature } from '../types';
 import { cloneDeep } from 'lodash';
+import { AnyProps } from 'supercluster';
+import invariant from 'tiny-invariant';
+
+import { ICluster, PointFeature } from '../types';
 
 export interface SpiderfierOptions {
   /** Increase from 1 to increase the distance away from the center that spiderfied markers are placed. Use if you are using big marker icons (Default: 1). */
@@ -80,7 +81,7 @@ export class Spiderfier {
     const centerLatlng = GeoJSON.coordsToLatLng(cluster?.geometry?.coordinates as [number, number]);
     const centerXY = this.map.latLngToLayerPoint(centerLatlng); // screen coordinates
     const clusterId = getClusterId(cluster);
-    const children = getClusterPoints(clusterId).map(p => cloneDeep(p)); // work with a copy of the data
+    const children = getClusterPoints(clusterId).map((p) => cloneDeep(p)); // work with a copy of the data
 
     let positions: LeafletPoint[];
     if (children.length >= this.circleSpiralSwitchover) {
@@ -93,7 +94,7 @@ export class Spiderfier {
     const results = this.addToMap(centerXY, children, positions);
 
     // dim cluster icon
-    this.map.eachLayer(layer => {
+    this.map.eachLayer((layer) => {
       if (this.layerMatchesCluster(layer, this.cluster)) {
         const clusterMarker = layer as Marker;
         if (clusterMarker.setOpacity) {

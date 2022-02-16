@@ -1,16 +1,17 @@
-import React from 'react';
-import renderer from 'react-test-renderer';
+import { useKeycloak } from '@react-keycloak/web';
+import { ProjectActions } from 'constants/actionTypes';
 import * as reducerTypes from 'constants/reducerTypes';
+import { DisposeWorkflowStatus } from 'features/projects/constants';
+import { IProject, IProjectTask, ITask } from 'features/projects/interfaces';
 import { createMemoryHistory } from 'history';
+import React from 'react';
+import { Provider } from 'react-redux';
+import { MemoryRouter } from 'react-router-dom';
+import renderer from 'react-test-renderer';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
+
 import ReviewProjectStep from './ReviewProjectStep';
-import { DisposeWorkflowStatus } from 'features/projects/constants';
-import { ITask, IProject, IProjectTask } from 'features/projects/interfaces';
-import { ProjectActions } from 'constants/actionTypes';
-import { useKeycloak } from '@react-keycloak/web';
 
 jest.mock('@react-keycloak/web');
 (useKeycloak as jest.Mock).mockReturnValue({
@@ -71,6 +72,8 @@ const mockProject: IProject = {
   projectAgencyResponses: [],
   publicNote: 'public',
   privateNote: 'private',
+  notes: [],
+  statusHistory: [],
 };
 
 export const tasks: ITask[] = [
@@ -101,9 +104,9 @@ const store = mockStore({
 
 const uiElement = (
   <Provider store={store}>
-    <Router history={history}>
+    <MemoryRouter initialEntries={[history.location]}>
       <ReviewProjectStep />
-    </Router>
+    </MemoryRouter>
   </Provider>
 );
 

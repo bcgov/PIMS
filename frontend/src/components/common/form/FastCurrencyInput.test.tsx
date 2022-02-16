@@ -1,10 +1,11 @@
-import React from 'react';
-import Adapter from 'enzyme-adapter-react-16';
-import Enzyme from 'enzyme';
-import { Formik, Form } from 'formik';
-import { FastCurrencyInput } from './FastCurrencyInput';
 import { render } from '@testing-library/react';
+import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
+import Enzyme from 'enzyme';
+import { Form, Formik } from 'formik';
 import { noop } from 'lodash';
+import React from 'react';
+
+import { FastCurrencyInput } from './FastCurrencyInput';
 
 Enzyme.configure({ adapter: new Adapter() });
 
@@ -12,7 +13,7 @@ describe('FastCurrencyInput', () => {
   it('fast currency input renders correctly', () => {
     const { container } = render(
       <Formik initialValues={{ assessedLand: '' }} onSubmit={noop}>
-        {props => (
+        {(props) => (
           <Form>
             <FastCurrencyInput formikProps={props} field={'assessedLand'} tooltip={'Tooltip'} />
           </Form>
@@ -25,7 +26,7 @@ describe('FastCurrencyInput', () => {
   it('fast currency input should not show tooltip', () => {
     const { container } = render(
       <Formik initialValues={{ assessedLand: '' }} onSubmit={noop}>
-        {props => (
+        {(props) => (
           <Form>
             <FastCurrencyInput formikProps={props} field={'assessedLand'} />
           </Form>
@@ -39,7 +40,7 @@ describe('FastCurrencyInput', () => {
   it('fast currency input should show tooltip', () => {
     const { container } = render(
       <Formik initialValues={{ assessedLand: '' }} onSubmit={noop}>
-        {props => (
+        {(props) => (
           <Form>
             <FastCurrencyInput formikProps={props} field={'assessedLand'} tooltip="Test tooltip" />
           </Form>
@@ -53,7 +54,7 @@ describe('FastCurrencyInput', () => {
   it('fast currency input custom placeholder', () => {
     const component = render(
       <Formik initialValues={{ assessedLand: '' }} onSubmit={noop}>
-        {props => (
+        {(props) => (
           <Form>
             <FastCurrencyInput
               formikProps={props}

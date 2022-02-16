@@ -1,8 +1,9 @@
 import './ProjectDisposalSubmitted.scss';
 
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import * as React from 'react';
 import { Container } from 'react-bootstrap';
-import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+
 import StepStatusIcon from '../common/components/StepStatusIcon';
 
 /**

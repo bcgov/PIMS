@@ -10,8 +10,7 @@ export const layersTree: ILayerItem[] = [
         key: 'currentEconomicRegions',
         label: 'Current Census Economic Regions',
         on: false,
-        url:
-          'https://openmaps.gov.bc.ca/geo/pub/WHSE_HUMAN_CULTURAL_ECONOMIC.CEN_ECONOMIC_REGIONS_SVW/ows?',
+        url: 'https://openmaps.gov.bc.ca/geo/pub/WHSE_HUMAN_CULTURAL_ECONOMIC.CEN_ECONOMIC_REGIONS_SVW/ows?',
         layers: 'pub:WHSE_HUMAN_CULTURAL_ECONOMIC.CEN_ECONOMIC_REGIONS_SVW',
         transparent: true,
         format: 'image/png',
@@ -23,8 +22,7 @@ export const layersTree: ILayerItem[] = [
         key: 'moti',
         label: 'MOTI Regional Boundaries',
         on: false,
-        url:
-          'https://openmaps.gov.bc.ca/geo/pub/WHSE_ADMIN_BOUNDARIES.TADM_MOT_REGIONAL_BNDRY_POLY/ows?',
+        url: 'https://openmaps.gov.bc.ca/geo/pub/WHSE_ADMIN_BOUNDARIES.TADM_MOT_REGIONAL_BNDRY_POLY/ows?',
         layers: 'pub:WHSE_ADMIN_BOUNDARIES.TADM_MOT_REGIONAL_BNDRY_POLY',
         transparent: true,
         format: 'image/png',
@@ -36,8 +34,7 @@ export const layersTree: ILayerItem[] = [
         label: 'Municipalities',
         on: false,
         layers: 'pub:WHSE_LEGAL_ADMIN_BOUNDARIES.ABMS_MUNICIPALITIES_SP',
-        url:
-          'https://openmaps.gov.bc.ca/geo/pub/WHSE_LEGAL_ADMIN_BOUNDARIES.ABMS_MUNICIPALITIES_SP/ows?',
+        url: 'https://openmaps.gov.bc.ca/geo/pub/WHSE_LEGAL_ADMIN_BOUNDARIES.ABMS_MUNICIPALITIES_SP/ows?',
         transparent: true,
         format: 'image/png',
         zIndex: 20,
@@ -50,8 +47,7 @@ export const layersTree: ILayerItem[] = [
         label: 'Regional Districts ',
         on: false,
         layers: 'pub:WHSE_LEGAL_ADMIN_BOUNDARIES.ABMS_REGIONAL_DISTRICTS_SP',
-        url:
-          'https://openmaps.gov.bc.ca/geo/pub/WHSE_LEGAL_ADMIN_BOUNDARIES.ABMS_REGIONAL_DISTRICTS_SP/ows?',
+        url: 'https://openmaps.gov.bc.ca/geo/pub/WHSE_LEGAL_ADMIN_BOUNDARIES.ABMS_REGIONAL_DISTRICTS_SP/ows?',
         transparent: true,
         format: 'image/png',
         zIndex: 19,
@@ -69,8 +65,7 @@ export const layersTree: ILayerItem[] = [
         key: 'firstNationsReserves',
         label: 'First Nations reserves',
         on: false,
-        url:
-          'https://openmaps.gov.bc.ca/geo/pub/WHSE_ADMIN_BOUNDARIES.ADM_INDIAN_RESERVES_BANDS_SP/ows?',
+        url: 'https://openmaps.gov.bc.ca/geo/pub/WHSE_ADMIN_BOUNDARIES.ADM_INDIAN_RESERVES_BANDS_SP/ows?',
         layers: 'pub:WHSE_ADMIN_BOUNDARIES.ADM_INDIAN_RESERVES_BANDS_SP',
         transparent: true,
         format: 'image/png',
@@ -82,8 +77,7 @@ export const layersTree: ILayerItem[] = [
         key: 'firstNationTreatyAreas',
         label: 'First Nation Treaty Areas',
         on: false,
-        url:
-          'https://openmaps.gov.bc.ca/geo/pub/WHSE_LEGAL_ADMIN_BOUNDARIES.FNT_TREATY_AREA_SP/ows?',
+        url: 'https://openmaps.gov.bc.ca/geo/pub/WHSE_LEGAL_ADMIN_BOUNDARIES.FNT_TREATY_AREA_SP/ows?',
         layers: 'pub:WHSE_LEGAL_ADMIN_BOUNDARIES.FNT_TREATY_AREA_SP',
         transparent: true,
         format: 'image/png',
@@ -94,8 +88,7 @@ export const layersTree: ILayerItem[] = [
         key: 'firstNationTreatyLands',
         label: 'First Nations Treaty Lands',
         on: false,
-        url:
-          'https://openmaps.gov.bc.ca/geo/pub/WHSE_LEGAL_ADMIN_BOUNDARIES.FNT_TREATY_LAND_SP/ows?',
+        url: 'https://openmaps.gov.bc.ca/geo/pub/WHSE_LEGAL_ADMIN_BOUNDARIES.FNT_TREATY_LAND_SP/ows?',
         layers: 'pub:WHSE_LEGAL_ADMIN_BOUNDARIES.FNT_TREATY_LAND_SP',
         transparent: true,
         format: 'image/png',
@@ -106,8 +99,7 @@ export const layersTree: ILayerItem[] = [
         key: 'firstNationTreatyRelatedLands',
         label: 'First Nations Treaty Related Lands',
         on: false,
-        url:
-          'https://openmaps.gov.bc.ca/geo/pub/WHSE_LEGAL_ADMIN_BOUNDARIES.FNT_TREATY_RELATED_LAND_SP/ows?',
+        url: 'https://openmaps.gov.bc.ca/geo/pub/WHSE_LEGAL_ADMIN_BOUNDARIES.FNT_TREATY_RELATED_LAND_SP/ows?',
         layers: 'pub:WHSE_LEGAL_ADMIN_BOUNDARIES.FNT_TREATY_RELATED_LAND_SP',
         transparent: true,
         format: 'image/png',
@@ -118,8 +110,7 @@ export const layersTree: ILayerItem[] = [
         key: 'firstNationTreatySideAgreement',
         label: 'First Nation Treaty Side Agreements',
         on: false,
-        url:
-          'https://openmaps.gov.bc.ca/geo/pub/WHSE_LEGAL_ADMIN_BOUNDARIES.FNT_TREATY_SIDE_AGREEMENTS_SP/ows?',
+        url: 'https://openmaps.gov.bc.ca/geo/pub/WHSE_LEGAL_ADMIN_BOUNDARIES.FNT_TREATY_SIDE_AGREEMENTS_SP/ows?',
         layers: 'pub:WHSE_LEGAL_ADMIN_BOUNDARIES.FNT_TREATY_SIDE_AGREEMENTS_SP',
         transparent: true,
         format: 'image/png',
@@ -220,8 +211,7 @@ export const layersTree: ILayerItem[] = [
         label: 'Agricultural Land Reserve Lines',
         on: false,
         layers: 'pub:WHSE_LEGAL_ADMIN_BOUNDARIES.OATS_ALR_BOUNDARY_LINES_SVW',
-        url:
-          'https://openmaps.gov.bc.ca/geo/pub/WHSE_LEGAL_ADMIN_BOUNDARIES.OATS_ALR_BOUNDARY_LINES_SVW/ows?',
+        url: 'https://openmaps.gov.bc.ca/geo/pub/WHSE_LEGAL_ADMIN_BOUNDARIES.OATS_ALR_BOUNDARY_LINES_SVW/ows?',
         transparent: true,
         format: 'image/png',
         zIndex: 4,

@@ -1,22 +1,23 @@
-import SplReportContainer from './SplReportContainer';
-import React from 'react';
-import { Router } from 'react-router-dom';
+import { useKeycloak } from '@react-keycloak/web';
+import { queryByText, screen } from '@testing-library/dom';
+import { cleanup, fireEvent, render, waitFor } from '@testing-library/react';
+import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
+import Claims from 'constants/claims';
+import Enzyme from 'enzyme';
 import { createMemoryHistory } from 'history';
-import { render, cleanup, fireEvent, waitFor } from '@testing-library/react';
+import React from 'react';
+import { act } from 'react-dom/test-utils';
+import { Provider } from 'react-redux';
+import { MemoryRouter } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { Provider } from 'react-redux';
-import { useKeycloak } from '@react-keycloak/web';
+import { formatApiDateTime } from 'utils';
+import { fillInput } from 'utils/testUtils';
+
 import { useProjectSnapshotApi } from '../hooks/useProjectSnapshotApi';
 import { IReport, ISnapshot } from '../interfaces';
-import { formatApiDateTime } from 'utils';
-import Adapter from 'enzyme-adapter-react-16';
-import Enzyme from 'enzyme';
-import Claims from 'constants/claims';
-import { act } from 'react-dom/test-utils';
-import { screen, queryByText } from '@testing-library/dom';
-import { ToastContainer } from 'react-toastify';
-import { fillInput } from 'utils/testUtils';
+import SplReportContainer from './SplReportContainer';
 
 // Set all module functions to jest.fn
 jest.mock('../hooks/useProjectSnapshotApi');
@@ -40,17 +41,14 @@ const mockApiResponse = {
   updateProjectReport: jest.fn<Promise<any>, [IReport]>(),
 };
 
-const mockApi = ((useProjectSnapshotApi as unknown) as jest.Mock<
-  typeof mockApiResponse
->).mockReturnValue(mockApiResponse);
+const mockApi = (
+  useProjectSnapshotApi as unknown as jest.Mock<typeof mockApiResponse>
+).mockReturnValue(mockApiResponse);
 
 const mockStore = configureMockStore([thunk]);
 
-const history = createMemoryHistory({
-  getUserConfirmation: (message, callback) => {
-    callback(true);
-  },
-});
+const history = createMemoryHistory();
+
 const defaultReport: IReport = {
   id: 1,
   name: 'report 1',
@@ -87,7 +85,7 @@ const renderContainer = () =>
         lookupCode: { lookupCodes: [] },
       })}
     >
-      <Router history={history}>
+      <MemoryRouter initialEntries={[history.location]}>
         <ToastContainer
           autoClose={5000}
           hideProgressBar
@@ -96,8 +94,9 @@ const renderContainer = () =>
           rtl={false}
           pauseOnFocusLoss={false}
         />
-        <SplReportContainer />,
-      </Router>
+        <SplReportContainer />
+      </MemoryRouter>
+      ,
     </Provider>,
   );
 

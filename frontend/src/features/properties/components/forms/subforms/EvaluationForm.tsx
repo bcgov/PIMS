@@ -1,16 +1,17 @@
-import { Fragment, useMemo } from 'react';
-import React from 'react';
-import { FormikProps, useFormikContext, getIn } from 'formik';
 import { IEvaluation, IFiscal } from 'actions/parcelsActions';
+import { Table } from 'components/Table';
 import { EvaluationKeys } from 'constants/evaluationKeys';
 import { FiscalKeys } from 'constants/fiscalKeys';
-import moment from 'moment';
+import { FormikProps, getIn, useFormikContext } from 'formik';
 import _ from 'lodash';
-import { isPositiveNumberOrZero } from 'utils';
-import { Table } from 'components/Table';
-import { getNetbookCols, getAssessedCols } from './columns';
-import styled from 'styled-components';
+import moment from 'moment';
+import { Fragment, useMemo } from 'react';
+import React from 'react';
 import { Row } from 'react-bootstrap';
+import styled from 'styled-components';
+import { isPositiveNumberOrZero } from 'utils';
+
+import { getAssessedCols, getNetbookCols } from './columns';
 
 interface EvaluationProps {
   /** the formik tracked namespace of this component */
@@ -66,7 +67,7 @@ export const indexOfFinancial = (financials: IFinancial[], type: string, year?: 
  * get a list of defaultEvaluations, generating one for NUMBER_OF_GENERATED_EVALUATIONS
  */
 export const defaultFinancials: any = _.flatten(
-  yearsArray.map(year => {
+  yearsArray.map((year) => {
     return _.reduce(
       Object.values(keyTypes) as string[],
       (acc, type) => [
@@ -118,7 +119,7 @@ export const getMergedFinancials = (
 };
 
 export const filterEmptyFinancials = (evaluations: IFinancial[]) =>
-  _.filter(evaluations, evaluation => {
+  _.filter(evaluations, (evaluation) => {
     evaluation.createdOn = undefined;
     evaluation.updatedOn = undefined;
     if (evaluation.date === '') {
@@ -131,7 +132,7 @@ export const filterEmptyFinancials = (evaluations: IFinancial[]) =>
   });
 
 export const filterFutureAssessedValues = (evaluations: IFinancial[]) =>
-  _.filter(evaluations, evaluation => {
+  _.filter(evaluations, (evaluation) => {
     return (
       evaluation.key !== EvaluationKeys.Assessed ||
       (evaluation.key === EvaluationKeys.Assessed && evaluation.year! <= moment().year())
@@ -153,10 +154,10 @@ const EvaluationForm = <T extends any>(props: EvaluationProps & FormikProps<T>) 
       ),
     [props.disabled, props.isParcel, props.nameSpace, props.showImprovements],
   );
-  const netbookCols: any = useMemo(() => getNetbookCols(props.disabled, props.nameSpace), [
-    props.disabled,
-    props.nameSpace,
-  ]);
+  const netbookCols: any = useMemo(
+    () => getNetbookCols(props.disabled, props.nameSpace),
+    [props.disabled, props.nameSpace],
+  );
   const { values } = useFormikContext();
   const assessedEvaluations =
     getIn(values, `${props.nameSpace}.evaluations`)?.filter(

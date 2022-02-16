@@ -1,16 +1,17 @@
-import React from 'react';
-import { createMemoryHistory } from 'history';
-import { render, fireEvent, cleanup } from '@testing-library/react';
-import { Router } from 'react-router-dom';
-import renderer from 'react-test-renderer';
 import { useKeycloak } from '@react-keycloak/web';
-import thunk from 'redux-thunk';
-import configureMockStore from 'redux-mock-store';
-import Login from './Login';
-import * as reducerTypes from 'constants/reducerTypes';
-import { IGenericNetworkAction } from 'store';
-import { Provider } from 'react-redux';
+import { cleanup, fireEvent, render } from '@testing-library/react';
 import { ADD_ACTIVATE_USER } from 'constants/actionTypes';
+import * as reducerTypes from 'constants/reducerTypes';
+import { createMemoryHistory } from 'history';
+import React from 'react';
+import { Provider } from 'react-redux';
+import { MemoryRouter } from 'react-router-dom';
+import renderer from 'react-test-renderer';
+import configureMockStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
+import { IGenericNetworkAction } from 'store';
+
+import Login from './Login';
 
 jest.mock('axios');
 jest.mock('@react-keycloak/web');
@@ -27,9 +28,9 @@ const renderLogin = () => {
   const history = createMemoryHistory();
   return render(
     <Provider store={store}>
-      <Router history={history}>
+      <MemoryRouter initialEntries={[history.location]}>
         <Login />
-      </Router>
+      </MemoryRouter>
     </Provider>,
   );
 };
@@ -44,9 +45,9 @@ describe('login', () => {
     const tree = renderer
       .create(
         <Provider store={store}>
-          <Router history={history}>
+          <MemoryRouter initialEntries={[history.location]}>
             <Login></Login>
-          </Router>
+          </MemoryRouter>
         </Provider>,
       )
       .toJSON();
@@ -61,9 +62,7 @@ describe('login', () => {
 
     render(
       <Provider store={store}>
-        <Router history={history}>
-          <Login />
-        </Router>
+        <Login />
       </Provider>,
     );
     expect(history.location.pathname).toBe('/mapview');
@@ -88,9 +87,7 @@ describe('login', () => {
 
     render(
       <Provider store={store}>
-        <Router history={history}>
-          <Login />
-        </Router>
+        <Login />
       </Provider>,
     );
     expect(history.location.pathname).toBe('/access/request');

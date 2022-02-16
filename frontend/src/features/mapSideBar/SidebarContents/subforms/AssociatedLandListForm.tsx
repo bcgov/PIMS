@@ -1,7 +1,9 @@
 import './AssociatedBuildingListForm.scss';
-import React from 'react';
-import { Col, Row, Form } from 'react-bootstrap';
+
 import { FormikTable } from 'features/projects/common';
+import React from 'react';
+import { Col, Form, Row } from 'react-bootstrap';
+
 import { getAssociatedLandCols } from '../../../properties/components/forms/subforms/columns';
 
 interface ITenancyProps {
@@ -32,13 +34,13 @@ export const AssociatedLandListForm: React.FC<ITenancyProps> = ({ title, nameSpa
         </p>
       </Row>
       <Row>
-        <Form.Row>
+        <Form.Group>
           <FormikTable
             field={withNameSpace('parcels')}
             name="parcels"
             columns={getAssociatedLandCols()}
           />
-        </Form.Row>
+        </Form.Group>
       </Row>
     </Col>
   );

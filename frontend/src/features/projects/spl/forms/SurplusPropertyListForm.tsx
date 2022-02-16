@@ -1,31 +1,33 @@
-import React, { useState, useMemo } from 'react';
-import { Container, Button } from 'react-bootstrap';
-import { Form, FastDatePicker, FastInput, FastCurrencyInput } from 'components/common/form';
+import './SurplusPropertyListForm.scss';
+
+import variables from '_variables.module.scss';
+import { FastCurrencyInput, FastDatePicker, FastInput, Form } from 'components/common/form';
+import GenericModal, { ModalSize } from 'components/common/GenericModal';
+import { ILinkListItem, LinkList } from 'components/common/LinkList';
+import TooltipIcon from 'components/common/TooltipIcon';
+import { DisposalWorkflows, ReviewWorkflowStatus } from 'features/projects/constants';
+import { IParentParcel, IProject, IProperty } from 'features/projects/interfaces';
+import { wasInSpl } from 'features/projects/utils';
+import { pidFormatter } from 'features/properties/components/forms/subforms/PidPinForm';
 import { useFormikContext } from 'formik';
+import _ from 'lodash';
+import queryString from 'query-string';
+import React, { useMemo, useState } from 'react';
+import { Button, Container } from 'react-bootstrap';
+import { FaExclamationTriangle } from 'react-icons/fa';
+import { useLocation } from 'react-router-dom';
+import styled from 'styled-components';
+
 import {
+  dateEnteredMarket,
+  disposeSubdivisionWarning,
+  disposeWarning,
+  disposeWarningShort,
+  onTransferredWithinTheGreTooltip,
   ProjectNotes,
   TasksForm,
-  disposeWarning,
-  dateEnteredMarket,
-  onTransferredWithinTheGreTooltip,
-  disposeSubdivisionWarning,
-  disposeWarningShort,
 } from '../../common';
-import { ReviewWorkflowStatus, DisposalWorkflows } from 'features/projects/constants';
-import { IProject, IProperty, IParentParcel } from 'features/projects/interfaces';
-import './SurplusPropertyListForm.scss';
-import _ from 'lodash';
-import GenericModal, { ModalSize } from 'components/common/GenericModal';
-import TooltipIcon from 'components/common/TooltipIcon';
 import { SurplusPropertyListApprovalForm } from '..';
-import styled from 'styled-components';
-import { FaExclamationTriangle } from 'react-icons/fa';
-import variables from '_variables.module.scss';
-import { LinkList, ILinkListItem } from 'components/common/LinkList';
-import { useLocation } from 'react-router-dom';
-import { pidFormatter } from 'features/properties/components/forms/subforms/PidPinForm';
-import queryString from 'query-string';
-import { wasInSpl } from 'features/projects/utils';
 
 interface ISurplusPropertyListFormProps {
   isReadOnly?: boolean;
@@ -97,7 +99,7 @@ const SurplusPropertyListForm = ({
   const mainBtn = primaryButton(values.statusCode);
   const subdivisions =
     values.properties.filter((property: IProperty) => property.propertyTypeId === 2) ?? [];
-  const parentParcels = _.uniqBy(_.flatten(subdivisions.map(s => s.parcels ?? [])), 'pid');
+  const parentParcels = _.uniqBy(_.flatten(subdivisions.map((s) => s.parcels ?? [])), 'pid');
 
   const linkListItems = useMemo<ILinkListItem[]>(
     () =>
@@ -122,12 +124,12 @@ const SurplusPropertyListForm = ({
     ReviewWorkflowStatus.Disposed,
     ReviewWorkflowStatus.Cancelled,
     ReviewWorkflowStatus.TransferredGRE,
-  ].some(v => v === formikProps.values.statusCode);
+  ].some((v) => v === formikProps.values.statusCode);
 
   return (
     <Container fluid className="SurplusPropertyListForm">
       {!isComplete && (
-        <Form.Row>
+        <Form.Group>
           <Form.Label column md={3}>
             Change the Status
           </Form.Label>
@@ -250,15 +252,15 @@ const SurplusPropertyListForm = ({
               />
             </div>
           </Form.Group>
-        </Form.Row>
+        </Form.Group>
       )}
 
       <SurplusPropertyListApprovalForm isReadOnly={isReadOnly} />
 
-      <Form.Row>
+      <Form.Group>
         <h3>Marketing</h3>
-      </Form.Row>
-      <Form.Row>
+      </Form.Group>
+      <Form.Group>
         <Form.Label column md={3}>
           Date Entered Market
           <TooltipIcon toolTipId="dateEnteredMarket" toolTip={dateEnteredMarket} />
@@ -270,11 +272,11 @@ const SurplusPropertyListForm = ({
           disabled={isReadOnly}
           field="marketedOn"
         />
-      </Form.Row>
+      </Form.Group>
 
-      <Form.Row>
+      <Form.Group>
         <h3>Contract in Place</h3>
-      </Form.Row>
+      </Form.Group>
       <ProjectNotes
         label="Offers Received"
         tooltip="Review required for offer(s) in Tier 3 & 4"
@@ -283,7 +285,7 @@ const SurplusPropertyListForm = ({
         outerClassName="col-md-12"
         disabled={isReadOnly}
       />
-      <Form.Row>
+      <Form.Group>
         <Form.Label column md={3}>
           Date of Accepted Offer
         </Form.Label>
@@ -294,8 +296,8 @@ const SurplusPropertyListForm = ({
           disabled={isReadOnly}
           field="offerAcceptedOn"
         />
-      </Form.Row>
-      <Form.Row>
+      </Form.Group>
+      <Form.Group>
         <Form.Label column md={3}>
           Purchaser
         </Form.Label>
@@ -306,8 +308,8 @@ const SurplusPropertyListForm = ({
           disabled={isReadOnly}
           formikProps={formikProps}
         />
-      </Form.Row>
-      <Form.Row>
+      </Form.Group>
+      <Form.Group>
         <Form.Label column md={3}>
           Offer Amount
         </Form.Label>
@@ -318,17 +320,17 @@ const SurplusPropertyListForm = ({
           disabled={isReadOnly}
           formikProps={formikProps}
         />
-      </Form.Row>
+      </Form.Group>
       <TasksForm tasks={cipConditionalTasks} />
       <TasksForm tasks={cipUnconditionalTasks} />
 
       {(values.statusCode === ReviewWorkflowStatus.ContractInPlaceConditional ||
         values.statusCode === ReviewWorkflowStatus.ContractInPlaceUnconditional) && (
         <>
-          <Form.Row>
+          <Form.Group>
             <h3>Dispose Externally</h3>
-          </Form.Row>
-          <Form.Row>
+          </Form.Group>
+          <Form.Group>
             <Form.Label column md={3}>
               Disposal Date
             </Form.Label>
@@ -338,7 +340,7 @@ const SurplusPropertyListForm = ({
               disabled={isReadOnly}
               field="disposedOn"
             />
-          </Form.Row>
+          </Form.Group>
         </>
       )}
 
@@ -346,10 +348,10 @@ const SurplusPropertyListForm = ({
         values.statusCode === ReviewWorkflowStatus.Cancelled ||
         values.statusCode === ReviewWorkflowStatus.NotInSpl) && (
         <>
-          <Form.Row>
+          <Form.Group>
             <h3>Remove from SPL</h3>
-          </Form.Row>
-          <Form.Row>
+          </Form.Group>
+          <Form.Group>
             <Form.Label column md={3}>
               Request for removal on
             </Form.Label>
@@ -359,8 +361,8 @@ const SurplusPropertyListForm = ({
               disabled={isReadOnly}
               field="removalFromSplRequestOn"
             />
-          </Form.Row>
-          <Form.Row>
+          </Form.Group>
+          <Form.Group>
             <Form.Label column md={3}>
               Request for removal approved on
             </Form.Label>
@@ -370,7 +372,7 @@ const SurplusPropertyListForm = ({
               disabled={isReadOnly}
               field="removalFromSplApprovedOn"
             />
-          </Form.Row>
+          </Form.Group>
           <ProjectNotes
             label="Rationale for removal"
             field="removalFromSplRationale"
@@ -381,10 +383,10 @@ const SurplusPropertyListForm = ({
         </>
       )}
 
-      <Form.Row>
+      <Form.Group>
         <h3>Transfer within GRE</h3>
-      </Form.Row>
-      <Form.Row>
+      </Form.Group>
+      <Form.Group>
         <Form.Label column md={3}>
           Date Transferred within the GRE
           <TooltipIcon
@@ -408,7 +410,7 @@ const SurplusPropertyListForm = ({
             </Button>
           </div>
         )}
-      </Form.Row>
+      </Form.Group>
     </Container>
   );
 };

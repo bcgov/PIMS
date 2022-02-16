@@ -1,16 +1,17 @@
-import { LifecycleToasts } from '../../../customAxios';
-import { showLoading, hideLoading } from 'react-redux-loading-bar';
-import { request, success, error, storePropertyDetail, storeProperties } from 'store';
+import { IBuilding, IParcel } from 'actions/parcelsActions';
+import { AxiosError, AxiosResponse } from 'axios';
 import * as actionTypes from 'constants/actionTypes';
 import * as API from 'constants/API';
-import { IParcel, IBuilding } from 'actions/parcelsActions';
 import { ENVIRONMENT } from 'constants/environment';
-import CustomAxios from 'customAxios';
-import { AxiosResponse, AxiosError } from 'axios';
-import * as pimsToasts from 'constants/toasts';
-import _ from 'lodash';
-import { AnyAction, Dispatch } from 'redux';
 import { PropertyTypes } from 'constants/propertyTypes';
+import * as pimsToasts from 'constants/toasts';
+import CustomAxios from 'customAxios';
+import _ from 'lodash';
+import { hideLoading, showLoading } from 'react-redux-loading-bar';
+import { AnyAction, Dispatch } from 'redux';
+import { error, request, storeProperties, storePropertyDetail, success } from 'store';
+
+import { LifecycleToasts } from '../../../customAxios';
 
 const parcelCreatingToasts: LifecycleToasts = {
   loadingToast: pimsToasts.parcel.PARCEL_CREATING,
@@ -30,123 +31,117 @@ const parcelDeletingToasts: LifecycleToasts = {
   errorToast: pimsToasts.parcel.PARCEL_DELETING_ERROR,
 };
 
-export const fetchParcels = (parcelBounds: API.IPropertySearchParams | null) => async (
-  dispatch: Dispatch<AnyAction>,
-) => {
-  if (
-    !parcelBounds ||
-    (parcelBounds?.neLatitude !== parcelBounds?.swLatitude &&
-      parcelBounds?.neLongitude !== parcelBounds?.swLongitude)
-  ) {
-    dispatch(request(actionTypes.GET_PARCELS));
-    dispatch(showLoading());
-    return await CustomAxios()
-      .get(ENVIRONMENT.apiUrl + API.PROPERTIES(parcelBounds))
-      .then((response: AxiosResponse) => {
-        dispatch(success(actionTypes.GET_PARCELS));
-        dispatch(storeProperties(response.data));
-        dispatch(hideLoading());
-        return Promise.resolve(response);
-      })
-      .catch((axiosError: AxiosError) => {
-        dispatch(error(actionTypes.GET_PARCELS, axiosError?.response?.status, axiosError));
-        return Promise.reject(axiosError);
-      })
-      .finally(() => dispatch(hideLoading()));
-  }
+export const fetchParcels =
+  (parcelBounds: API.IPropertySearchParams | null) => async (dispatch: Dispatch<AnyAction>) => {
+    if (
+      !parcelBounds ||
+      (parcelBounds?.neLatitude !== parcelBounds?.swLatitude &&
+        parcelBounds?.neLongitude !== parcelBounds?.swLongitude)
+    ) {
+      dispatch(request(actionTypes.GET_PARCELS));
+      dispatch(showLoading());
+      return await CustomAxios()
+        .get(ENVIRONMENT.apiUrl + API.PROPERTIES(parcelBounds))
+        .then((response: AxiosResponse) => {
+          dispatch(success(actionTypes.GET_PARCELS));
+          dispatch(storeProperties(response.data));
+          dispatch(hideLoading());
+          return Promise.resolve(response);
+        })
+        .catch((axiosError: AxiosError) => {
+          dispatch(error(actionTypes.GET_PARCELS, axiosError?.response?.status, axiosError));
+          return Promise.reject(axiosError);
+        })
+        .finally(() => dispatch(hideLoading()));
+    }
 
-  return Promise.resolve();
-};
+    return Promise.resolve();
+  };
 
 /**
  * fetch parcels using search query parameters, such as pid or pin.
  * @param params
  */
-export const fetchParcelsDetail = (params: API.IPropertySearchParams) => async (
-  dispatch: Dispatch<AnyAction>,
-) => {
-  dispatch(request(actionTypes.GET_PARCEL_DETAIL));
-  dispatch(showLoading());
-  return await CustomAxios()
-    .get(ENVIRONMENT.apiUrl + API.PARCELS_DETAIL(params))
-    .then((response: AxiosResponse) => {
-      if (response?.data !== undefined && response.data.length > 0) {
-        dispatch(storePropertyDetail(_.first(response.data) as any));
-      }
-      dispatch(success(actionTypes.GET_PARCEL_DETAIL));
-      dispatch(hideLoading());
-      return Promise.resolve(response);
-    })
-    .catch((axiosError: AxiosError) => {
-      dispatch(error(actionTypes.GET_PARCEL_DETAIL, axiosError?.response?.status, axiosError));
-      return Promise.reject(axiosError);
-    })
-    .finally(() => dispatch(hideLoading()));
-};
+export const fetchParcelsDetail =
+  (params: API.IPropertySearchParams) => async (dispatch: Dispatch<AnyAction>) => {
+    dispatch(request(actionTypes.GET_PARCEL_DETAIL));
+    dispatch(showLoading());
+    return await CustomAxios()
+      .get(ENVIRONMENT.apiUrl + API.PARCELS_DETAIL(params))
+      .then((response: AxiosResponse) => {
+        if (response?.data !== undefined && response.data.length > 0) {
+          dispatch(storePropertyDetail(_.first(response.data) as any));
+        }
+        dispatch(success(actionTypes.GET_PARCEL_DETAIL));
+        dispatch(hideLoading());
+        return Promise.resolve(response);
+      })
+      .catch((axiosError: AxiosError) => {
+        dispatch(error(actionTypes.GET_PARCEL_DETAIL, axiosError?.response?.status, axiosError));
+        return Promise.reject(axiosError);
+      })
+      .finally(() => dispatch(hideLoading()));
+  };
 
-export const fetchParcelDetail = (
-  params: API.IParcelDetailParams,
-  position?: [number, number],
-) => async (dispatch: Dispatch<AnyAction>): Promise<IParcel> => {
-  dispatch(request(actionTypes.GET_PARCEL_DETAIL));
-  dispatch(showLoading());
-  return await CustomAxios()
-    .get<IParcel>(ENVIRONMENT.apiUrl + API.PARCEL_DETAIL(params))
-    .then((response: AxiosResponse<IParcel>) => {
-      dispatch(success(actionTypes.GET_PARCEL_DETAIL));
-      dispatch(
-        storePropertyDetail({
-          propertyTypeId: response.data?.propertyTypeId as PropertyTypes,
-          parcelDetail: response.data,
-          position,
-        }),
-      );
-      dispatch(hideLoading());
-      return response.data;
-    })
-    .catch((axiosError: AxiosError) => {
-      dispatch(error(actionTypes.GET_PARCEL_DETAIL, axiosError?.response?.status, axiosError));
-      return Promise.reject(axiosError);
-    })
-    .finally(() => dispatch(hideLoading()));
-};
+export const fetchParcelDetail =
+  (params: API.IParcelDetailParams, position?: [number, number]) =>
+  async (dispatch: Dispatch<AnyAction>): Promise<IParcel> => {
+    dispatch(request(actionTypes.GET_PARCEL_DETAIL));
+    dispatch(showLoading());
+    return await CustomAxios()
+      .get<IParcel>(ENVIRONMENT.apiUrl + API.PARCEL_DETAIL(params))
+      .then((response: AxiosResponse<IParcel>) => {
+        dispatch(success(actionTypes.GET_PARCEL_DETAIL));
+        dispatch(
+          storePropertyDetail({
+            propertyTypeId: response.data?.propertyTypeId as PropertyTypes,
+            parcelDetail: response.data,
+            position,
+          }),
+        );
+        dispatch(hideLoading());
+        return response.data;
+      })
+      .catch((axiosError: AxiosError) => {
+        dispatch(error(actionTypes.GET_PARCEL_DETAIL, axiosError?.response?.status, axiosError));
+        return Promise.reject(axiosError);
+      })
+      .finally(() => dispatch(hideLoading()));
+  };
 
-export const fetchBuildingDetail = (
-  params: API.IBuildingDetailParams,
-  position?: [number, number],
-) => async (dispatch: Dispatch<AnyAction>): Promise<IBuilding> => {
-  dispatch(request(actionTypes.GET_PARCEL_DETAIL));
-  dispatch(showLoading());
-  return await CustomAxios()
-    .get<IBuilding>(ENVIRONMENT.apiUrl + API.BUILDING_DETAIL(params))
-    .then((response: AxiosResponse) => {
-      dispatch(success(actionTypes.GET_PARCEL_DETAIL));
-      dispatch(
-        storePropertyDetail({
-          propertyTypeId: 1,
-          parcelDetail: response.data,
-          position,
-        }),
-      );
-      dispatch(hideLoading());
-      return response.data;
-    })
-    .catch((axiosError: AxiosError) => {
-      dispatch(error(actionTypes.GET_PARCEL_DETAIL, axiosError?.response?.status, axiosError));
-      return Promise.reject(axiosError);
-    })
-    .finally(() => dispatch(hideLoading()));
-};
+export const fetchBuildingDetail =
+  (params: API.IBuildingDetailParams, position?: [number, number]) =>
+  async (dispatch: Dispatch<AnyAction>): Promise<IBuilding> => {
+    dispatch(request(actionTypes.GET_PARCEL_DETAIL));
+    dispatch(showLoading());
+    return await CustomAxios()
+      .get<IBuilding>(ENVIRONMENT.apiUrl + API.BUILDING_DETAIL(params))
+      .then((response: AxiosResponse) => {
+        dispatch(success(actionTypes.GET_PARCEL_DETAIL));
+        dispatch(
+          storePropertyDetail({
+            propertyTypeId: 1,
+            parcelDetail: response.data,
+            position,
+          }),
+        );
+        dispatch(hideLoading());
+        return response.data;
+      })
+      .catch((axiosError: AxiosError) => {
+        dispatch(error(actionTypes.GET_PARCEL_DETAIL, axiosError?.response?.status, axiosError));
+        return Promise.reject(axiosError);
+      })
+      .finally(() => dispatch(hideLoading()));
+  };
 
-export const fetchPropertyDetail = (
-  id: number,
-  propertyTypeId: 0 | 1,
-  position?: [number, number],
-) => async (dispatch: Dispatch<AnyAction>) => {
-  return propertyTypeId === 0
-    ? await fetchParcelDetail({ id }, position)(dispatch)
-    : await fetchBuildingDetail({ id }, position)(dispatch);
-};
+export const fetchPropertyDetail =
+  (id: number, propertyTypeId: 0 | 1, position?: [number, number]) =>
+  async (dispatch: Dispatch<AnyAction>) => {
+    return propertyTypeId === 0
+      ? await fetchParcelDetail({ id }, position)(dispatch)
+      : await fetchBuildingDetail({ id }, position)(dispatch);
+  };
 
 export const createParcel = (parcel: IParcel) => async (dispatch: Dispatch<AnyAction>) => {
   dispatch(request(actionTypes.ADD_PARCEL));

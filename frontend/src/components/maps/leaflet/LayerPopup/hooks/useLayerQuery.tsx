@@ -1,13 +1,13 @@
-import { FeatureCollection, Geometry, GeoJsonProperties, Feature } from 'geojson';
 import axios, { AxiosError } from 'axios';
-import { LatLng, geoJSON } from 'leaflet';
-import { useCallback, Dispatch } from 'react';
-import parcelLayerDataSlice, { saveParcelLayerData } from 'store/slices/parcelLayerDataSlice';
+import { layerData } from 'constants/toasts';
+import { Feature, FeatureCollection, GeoJsonProperties, Geometry } from 'geojson';
+import { geoJSON, LatLng } from 'leaflet';
+import { Dispatch, useCallback } from 'react';
+import { toast } from 'react-toastify';
+import * as rax from 'retry-axios';
 import { error } from 'store';
 import { useAppSelector } from 'store';
-import { toast } from 'react-toastify';
-import { layerData } from 'constants/toasts';
-import * as rax from 'retry-axios';
+import parcelLayerDataSlice, { saveParcelLayerData } from 'store/slices/parcelLayerDataSlice';
 
 const MAX_RETRIES = 2;
 const wfsAxios = () => {
@@ -26,16 +26,16 @@ const wfsAxios = () => {
   };
   rax.attach(instance);
 
-  instance.interceptors.request.use(config => {
+  instance.interceptors.request.use((config) => {
     layerData.LAYER_DATA_LOADING();
     return config;
   });
 
   instance.interceptors.response.use(
-    response => {
+    (response) => {
       return response;
     },
-    error => {
+    (error) => {
       if (axios.isCancel(error)) {
         return Promise.resolve(error.message);
       }
@@ -91,11 +91,7 @@ export const saveParcelDataLayerResponse = (
         e: { timeStamp: document?.timeline?.currentTime ?? 0 } as any,
         data: {
           ...resp.features[0].properties!,
-          CENTER:
-            latLng ??
-            geoJSON(resp.features[0].geometry)
-              .getBounds()
-              .getCenter(),
+          CENTER: latLng ?? geoJSON(resp.features[0].geometry).getBounds().getCenter(),
         },
       }),
     );
@@ -131,7 +127,7 @@ export const handleParcelDataLayerResponse = (
  * @param geometry the name of the geometry in the feature collection
  */
 export const useLayerQuery = (url: string, geometryName: string = 'SHAPE'): IUserLayerQuery => {
-  const parcelLayerData = useAppSelector(store => store.parcelLayerData?.parcelLayerData);
+  const parcelLayerData = useAppSelector((store) => store.parcelLayerData?.parcelLayerData);
   const baseUrl = `${url}&srsName=EPSG:4326&count=1`;
 
   const findOneWhereContains = useCallback(

@@ -1,14 +1,15 @@
+import { cleanup } from '@testing-library/react';
+import { ADD_ACTIVATE_USER } from 'constants/actionTypes';
+import * as reducerTypes from 'constants/reducerTypes';
+import { createMemoryHistory } from 'history';
 import React from 'react';
 import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
-import { IENotSupportedPage } from './IENotSupportedPage';
-import { cleanup } from '@testing-library/react';
-import * as reducerTypes from 'constants/reducerTypes';
-import { ADD_ACTIVATE_USER } from 'constants/actionTypes';
-import thunk from 'redux-thunk';
-import configureMockStore from 'redux-mock-store';
-import { createMemoryHistory } from 'history';
+import { MemoryRouter } from 'react-router-dom';
 import renderer from 'react-test-renderer';
+import configureMockStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
+
+import { IENotSupportedPage } from './IENotSupportedPage';
 
 jest.mock('axios');
 jest.mock('@react-keycloak/web');
@@ -29,9 +30,9 @@ describe('login error page', () => {
     const tree = renderer
       .create(
         <Provider store={store}>
-          <Router history={history}>
+          <MemoryRouter initialEntries={[history.location]}>
             <IENotSupportedPage></IENotSupportedPage>
-          </Router>
+          </MemoryRouter>
         </Provider>,
       )
       .toJSON();

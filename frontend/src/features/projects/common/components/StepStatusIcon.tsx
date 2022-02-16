@@ -1,9 +1,9 @@
-import * as React from 'react';
-import styled from 'styled-components';
-import { FaRegCheckCircle, FaRegCircle } from 'react-icons/fa';
-import { MdRemoveCircleOutline } from 'react-icons/md';
 import { ReviewWorkflowStatus } from 'features/projects/constants';
 import { IStatus } from 'features/projects/interfaces';
+import * as React from 'react';
+import { FaRegCheckCircle, FaRegCircle } from 'react-icons/fa';
+import { MdRemoveCircleOutline } from 'react-icons/md';
+import styled from 'styled-components';
 import { formatDate } from 'utils';
 
 interface IStepSuccessIconProps {

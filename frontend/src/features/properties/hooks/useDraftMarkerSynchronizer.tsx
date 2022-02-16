@@ -1,12 +1,12 @@
-import * as React from 'react';
-import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
-import debounce from 'lodash/debounce';
-import { useFormikContext, getIn } from 'formik';
-import { useCallback } from 'react';
-import { useAppDispatch, useAppSelector } from 'store';
-import _ from 'lodash';
 import { PointFeature } from 'components/maps/types';
 import { PropertyTypes } from 'constants/propertyTypes';
+import { getIn, useFormikContext } from 'formik';
+import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
+import _ from 'lodash';
+import debounce from 'lodash/debounce';
+import * as React from 'react';
+import { useCallback } from 'react';
+import { useAppDispatch, useAppSelector } from 'store';
 import { storeDraftProperties } from 'store/slices/parcelSlice';
 
 /**
@@ -49,7 +49,7 @@ const getDraftMarkers = (values: any, initialValues: any, nameSpace: string) => 
  */
 const useDraftMarkerSynchronizer = (nameSpace: string) => {
   const { values, initialValues } = useFormikContext();
-  const properties = useAppSelector(store => [...store.parcel.draftProperties]);
+  const properties = useAppSelector((store) => [...store.parcel.draftProperties]);
   const dispatch = useAppDispatch();
   const nonDraftProperties = React.useMemo(
     () =>
@@ -85,7 +85,7 @@ const useDraftMarkerSynchronizer = (nameSpace: string) => {
           (draftMarker: PointFeature) =>
             _.find(
               dbProperties,
-              dbProperty =>
+              (dbProperty) =>
                 dbProperty.geometry.coordinates[0] === draftMarker.geometry.coordinates[0] &&
                 dbProperty.geometry.coordinates[1] === draftMarker.geometry.coordinates[1],
             ) === undefined,

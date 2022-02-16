@@ -1,8 +1,9 @@
+import { Form, Input } from 'components/common/form';
+import { Label } from 'components/common/Label';
 import { FunctionComponent } from 'react';
 import React from 'react';
-import { Input, Form } from 'components/common/form';
+
 import { PidPinTooltip } from '../strings';
-import { Label } from 'components/common/Label';
 
 interface PidPinProps {
   handlePidChange: (pid: string, nameSpace?: string) => void;
@@ -40,7 +41,7 @@ const PidPinForm: FunctionComponent<PidPinProps> = (props: PidPinProps) => {
 
   return (
     <>
-      <Form.Row className="flex-nowrap pid-pin">
+      <Form.Group className="flex-nowrap pid-pin">
         <Label>PID</Label>
         <Input
           required={true}
@@ -72,7 +73,7 @@ const PidPinForm: FunctionComponent<PidPinProps> = (props: PidPinProps) => {
           }}
           type="number"
         />
-      </Form.Row>
+      </Form.Group>
     </>
   );
 };

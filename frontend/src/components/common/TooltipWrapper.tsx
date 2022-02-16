@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Tooltip, OverlayTrigger, OverlayTriggerProps } from 'react-bootstrap';
+import { OverlayTrigger, OverlayTriggerProps, Tooltip } from 'react-bootstrap';
 
 /**
  * TooltipWrapper properties.
@@ -27,7 +27,7 @@ interface ITooltipWrapperProps extends Partial<OverlayTriggerProps> {
  * Wrap whatever you want in a tooltip.
  * @param props ITooltipWrapperProps
  */
-const TooltipWrapper: React.FunctionComponent<ITooltipWrapperProps> = props => {
+const TooltipWrapper: React.FunctionComponent<ITooltipWrapperProps> = (props) => {
   return (
     <>
       <OverlayTrigger
@@ -41,7 +41,7 @@ const TooltipWrapper: React.FunctionComponent<ITooltipWrapperProps> = props => {
           </Tooltip>
         }
       >
-        {props.children}
+        {props.children ?? <></>}
       </OverlayTrigger>
     </>
   );

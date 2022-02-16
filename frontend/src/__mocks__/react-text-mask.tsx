@@ -1,5 +1,5 @@
+import { MaskedInputProps } from 'components/text-mask';
 import React from 'react';
-import { MaskedInputProps } from 'react-text-mask';
 /**
  * see https://github.com/text-mask/text-mask/issues/427
  */

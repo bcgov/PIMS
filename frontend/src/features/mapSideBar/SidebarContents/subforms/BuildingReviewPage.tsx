@@ -1,34 +1,34 @@
 import './LandReviewPage.scss';
 
 import {
-  FastSelect,
-  FastInput,
-  Input,
-  TextArea,
-  InputGroup,
-  SelectOptions,
   Check,
   FastCurrencyInput,
   FastDatePicker,
+  FastInput,
+  FastSelect,
+  Input,
+  InputGroup,
+  SelectOptions,
+  TextArea,
 } from 'components/common/form';
-import React, { useCallback, useState, useMemo } from 'react';
-import { Col, Container, Row } from 'react-bootstrap';
-import { getIn, useFormikContext } from 'formik';
-import { Label } from 'components/common/Label';
-import { FaEdit } from 'react-icons/fa';
-import { BuildingSvg, LandSvg } from 'components/common/Icons';
-import AddressForm from 'features/properties/components/forms/subforms/AddressForm';
-import { noop } from 'lodash';
 import { ParentSelect } from 'components/common/form/ParentSelect';
-import { formatFiscalYear } from 'utils';
-import { indexOfFinancial } from 'features/properties/components/forms/subforms/EvaluationForm';
+import { BuildingSvg, LandSvg } from 'components/common/Icons';
+import { Label } from 'components/common/Label';
+import { ProjectNumberLink } from 'components/maps/leaflet/InfoSlideOut/ProjectNumberLink';
 import { EvaluationKeys } from 'constants/evaluationKeys';
 import { FiscalKeys } from 'constants/fiscalKeys';
-import moment from 'moment';
-import { getAssociatedLandCols } from 'features/properties/components/forms/subforms/columns';
 import { FormikTable } from 'features/projects/common';
-import { ProjectNumberLink } from 'components/maps/leaflet/InfoSlideOut/ProjectNumberLink';
+import AddressForm from 'features/properties/components/forms/subforms/AddressForm';
+import { getAssociatedLandCols } from 'features/properties/components/forms/subforms/columns';
+import { indexOfFinancial } from 'features/properties/components/forms/subforms/EvaluationForm';
+import { getIn, useFormikContext } from 'formik';
+import { noop } from 'lodash';
+import moment from 'moment';
+import React, { useCallback, useMemo, useState } from 'react';
+import { Col, Container, Row } from 'react-bootstrap';
+import { FaEdit } from 'react-icons/fa';
 import styled from 'styled-components';
+import { formatFiscalYear } from 'utils';
 
 interface IReviewProps {
   nameSpace?: string;
@@ -90,7 +90,7 @@ export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
           click the submit button to save this information to the PIMS inventory.
         </p>
       </Row>
-      <Row noGutters style={{ marginBottom: 20 }}>
+      <Row style={{ marginBottom: 20 }}>
         <Col md={6}>
           <Row>
             <div className="identification">
@@ -302,13 +302,13 @@ export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
                     formikProps={formikProps}
                     disabled={editInfo.tenancy}
                     field={withNameSpace('buildingTenancyUpdatedOn')}
-                    popperModifiers={{
-                      preventOverflow: {
-                        enabled: true,
-                        escapeWithReference: false,
-                        boundariesElement: 'scrollParent',
-                      },
-                    }}
+                    // popperModifiers={{
+                    //   preventOverflow: {
+                    //     enabled: true,
+                    //     escapeWithReference: false,
+                    //     boundariesElement: 'scrollParent',
+                    //   },
+                    // }}
                   />
                 </span>
               </Row>

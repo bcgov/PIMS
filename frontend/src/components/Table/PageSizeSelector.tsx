@@ -1,7 +1,7 @@
-import { Menu, IMenuItemProps } from 'components/menu/Menu';
+import { IMenuItemProps, Menu } from 'components/menu/Menu';
+import { noop } from 'lodash';
 import React from 'react';
 import { Form } from 'react-bootstrap';
-import { noop } from 'lodash';
 import styled from 'styled-components';
 
 /** align text to middle of size input */
@@ -26,7 +26,7 @@ export const TablePageSizeSelector: React.FC<IProps> = ({ options, value, onChan
     }
   };
 
-  const pageSizeOptions: IMenuItemProps[] = options.map(option => ({
+  const pageSizeOptions: IMenuItemProps[] = options.map((option) => ({
     label: option,
     value: option,
     onClick: () => handleValueChange(option),

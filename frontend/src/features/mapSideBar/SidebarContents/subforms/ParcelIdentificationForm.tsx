@@ -1,34 +1,35 @@
 import './ParcelIdentificationForm.scss';
 
-import { FastInput, SelectOptions, Check, TextArea, InputGroup } from 'components/common/form';
-import { Label } from 'components/common/Label';
-import AddressForm from 'features/properties/components/forms/subforms/AddressForm';
-import React, { useMemo, useState } from 'react';
-import { useFormikContext, getIn } from 'formik';
-import PidPinForm from 'features/properties/components/forms/subforms/PidPinForm';
-import { sensitiveTooltip } from '../../../../../src/features/properties/components/forms/strings';
-import { HARMFUL_DISCLOSURE_URL } from 'constants/strings';
-import { IGeocoderResponse } from 'hooks/useApi';
-import classNames from 'classnames';
-import { ISteppedFormValues } from 'components/common/form/StepForm';
-import { ParentSelect } from 'components/common/form/ParentSelect';
-import { noop } from 'lodash';
-import { Container, Row, Col, Form, ListGroup } from 'react-bootstrap';
-import TooltipWrapper from 'components/common/TooltipWrapper';
-import * as API from 'constants/API';
-import useCodeLookups from 'hooks/useLookupCodes';
-import GenericModal from 'components/common/GenericModal';
 import { IParcel } from 'actions/parcelsActions';
-import { mapSelectOptionWithParent } from 'utils';
-import AddParentParcelsForm from './AddParentParcelsForm';
-import { PropertyTypes } from 'constants/propertyTypes';
-import { withNameSpace } from 'utils/formUtils';
-import MovePinForm from './MovePinForm';
-import LandSearchForm from './LandSearchForm';
+import classNames from 'classnames';
+import { Check, FastInput, InputGroup, SelectOptions, TextArea } from 'components/common/form';
+import { ParentSelect } from 'components/common/form/ParentSelect';
+import { ISteppedFormValues } from 'components/common/form/StepForm';
+import GenericModal from 'components/common/GenericModal';
+import { Label } from 'components/common/Label';
+import TooltipWrapper from 'components/common/TooltipWrapper';
 import { ProjectNumberLink } from 'components/maps/leaflet/InfoSlideOut/ProjectNumberLink';
-import styled from 'styled-components';
+import * as API from 'constants/API';
+import { PropertyTypes } from 'constants/propertyTypes';
+import { HARMFUL_DISCLOSURE_URL } from 'constants/strings';
+import AddressForm from 'features/properties/components/forms/subforms/AddressForm';
+import PidPinForm from 'features/properties/components/forms/subforms/PidPinForm';
+import { getIn, useFormikContext } from 'formik';
+import { IGeocoderResponse } from 'hooks/useApi';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+import useCodeLookups from 'hooks/useLookupCodes';
 import { useMyAgencies } from 'hooks/useMyAgencies';
+import { noop } from 'lodash';
+import React, { useMemo, useState } from 'react';
+import { Col, Container, Form, ListGroup, Row } from 'react-bootstrap';
+import styled from 'styled-components';
+import { mapSelectOptionWithParent } from 'utils';
+import { withNameSpace } from 'utils/formUtils';
+
+import { sensitiveTooltip } from '../../../../../src/features/properties/components/forms/strings';
+import AddParentParcelsForm from './AddParentParcelsForm';
+import LandSearchForm from './LandSearchForm';
+import MovePinForm from './MovePinForm';
 
 interface IIdentificationProps {
   /** used for changign the agency - note that only select users will be able to edit this field */
@@ -77,7 +78,7 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
 }) => {
   const [overrideData, setOverrideData] = useState<IParcel>();
 
-  const agencies = (props.agencies ?? []).map(c => mapSelectOptionWithParent(c, props.agencies));
+  const agencies = (props.agencies ?? []).map((c) => mapSelectOptionWithParent(c, props.agencies));
   const formikProps = useFormikContext<ISteppedFormValues<IParcel>>();
   const { lookupCodes } = useCodeLookups();
   const { propertyTypeId, latitude, longitude } = getIn(formikProps.values, nameSpace);
@@ -86,7 +87,7 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
   const [privateProject, setPrivateProject] = useState(false);
 
   const keycloak = useKeycloakWrapper();
-  const userAgency = agencies.find(a => Number(a.value) === Number(keycloak.agencyId));
+  const userAgency = agencies.find((a) => Number(a.value) === Number(keycloak.agencyId));
 
   const isUserAgencyAParent = useMemo(() => {
     return !!userAgency && !userAgency.parentId;
@@ -97,7 +98,7 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
   return (
     <Container>
       {propertyTypeId === PropertyTypes.SUBDIVISION && (
-        <Row noGutters className="section">
+        <Row className="section">
           <AddParentParcelsForm
             nameSpace={nameSpace}
             findMatchingPid={findMatchingPid}
@@ -125,10 +126,7 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
           )}
         </>
       )}
-      <Row
-        noGutters
-        className={classNames('section', latitude === '' && longitude === '' ? 'disabled' : '')}
-      >
+      <Row className={classNames('section', latitude === '' && longitude === '' ? 'disabled' : '')}>
         <Col md={12}>
           <h5>Parcel Details</h5>
         </Col>
@@ -144,9 +142,9 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
           <AddressForm
             onGeocoderChange={(selection: IGeocoderResponse) => {
               const administrativeArea = selection.administrativeArea
-                ? lookupCodes.find(code => {
+                ? lookupCodes.find((code) => {
                     return (
-                      code.type === API.AMINISTRATIVE_AREA_CODE_SET_NAME &&
+                      code.type === API.ADMINISTRATIVE_AREA_CODE_SET_NAME &&
                       code.name === selection.administrativeArea
                     );
                   })
@@ -174,39 +172,39 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
             disabled={disabled}
             nameSpace={withNameSpace(nameSpace, 'address')}
           />
-          <Form.Row>
+          <Form.Group>
             <Form.Label>Agency</Form.Label>
             <ParentSelect
               required
               field={withNameSpace(nameSpace, 'agencyId')}
-              options={myAgencies.map(c => mapSelectOptionWithParent(c, myAgencies))}
+              options={myAgencies.map((c) => mapSelectOptionWithParent(c, myAgencies))}
               filterBy={['code', 'label', 'parent']}
               disabled={(!isPropertyAdmin && !isUserAgencyAParent) || disabled}
             />
-          </Form.Row>
+          </Form.Group>
         </Col>
         <Col md={6} className="form-container">
-          <Form.Row>
+          <Form.Group>
             <Label>Name</Label>
             <FastInput
               disabled={disabled}
               field={withNameSpace(nameSpace, 'name')}
               formikProps={formikProps}
             />
-          </Form.Row>
-          <Form.Row>
+          </Form.Group>
+          <Form.Group>
             <Label>Description</Label>
             <TextArea disabled={disabled} field={withNameSpace(nameSpace, 'description')} />
-          </Form.Row>
-          <Form.Row>
+          </Form.Group>
+          <Form.Group>
             <Label>Legal Description</Label>
             <TextArea
               disabled={disabled}
               field={withNameSpace(nameSpace, 'landLegalDescription')}
               displayErrorTooltips
             />
-          </Form.Row>
-          <Form.Row>
+          </Form.Group>
+          <Form.Group>
             <Label>Lot Size</Label>
 
             <InputGroup
@@ -219,9 +217,9 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
               postText="Hectares"
               required
             />
-          </Form.Row>
+          </Form.Group>
           {!!projectNumbers?.length && (
-            <Form.Row>
+            <Form.Group>
               <Label style={{ marginTop: '1rem' }}>Project Number(s)</Label>
               <StyledProjectNumbers>
                 {projectNumbers.map((projectNum: string) => (
@@ -234,7 +232,7 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
                   />
                 ))}
               </StyledProjectNumbers>
-            </Form.Row>
+            </Form.Group>
           )}
         </Col>
       </Row>

@@ -1,18 +1,20 @@
 import './CloseOutFormTab.scss';
+
+import { FastCurrencyInput } from 'components/common/form';
+import { ocgVarianceNote, ProjectNotes } from 'features/projects/common';
+import { IProject } from 'features/projects/interfaces';
+import { useFormikContext } from 'formik';
 import * as React from 'react';
+import { Col, Container, Form } from 'react-bootstrap';
+
 import {
-  CloseOutSummaryForm,
+  CloseOutAdjustmentForm,
+  CloseOutFinancialSummaryForm,
   CloseOutPurchaseInformationForm,
   CloseOutSaleInformationForm,
-  CloseOutFinancialSummaryForm,
   CloseOutSignaturesForm,
-  CloseOutAdjustmentForm,
+  CloseOutSummaryForm,
 } from '..';
-import { ProjectNotes, ocgVarianceNote } from 'features/projects/common';
-import { IProject } from 'features/projects/interfaces';
-import { Col, Container, Form } from 'react-bootstrap';
-import { FastCurrencyInput } from 'components/common/form';
-import { useFormikContext } from 'formik';
 
 interface ICloseOutFormTabProps {
   isReadOnly?: boolean;
@@ -33,9 +35,9 @@ const CloseOutFormTab: React.FunctionComponent<ICloseOutFormTabProps> = ({
       <CloseOutSaleInformationForm isReadOnly={isReadOnly} />
       <CloseOutFinancialSummaryForm isReadOnly={isReadOnly} />
       <h3>OCG</h3>
-      <Form.Row>
+      <Form.Group>
         <Col>
-          <Form.Row className="col-md-11 p-0">
+          <Form.Group className="col-md-11 p-0">
             <Form.Label column md={2}>
               OCG Gain / Loss
             </Form.Label>
@@ -45,7 +47,7 @@ const CloseOutFormTab: React.FunctionComponent<ICloseOutFormTabProps> = ({
               outerClassName="col-md-4"
               field="ocgFinancialStatement"
             />
-          </Form.Row>
+          </Form.Group>
           <ProjectNotes
             field="salesHistoryNote"
             label="OCG Variance Notes"
@@ -55,7 +57,7 @@ const CloseOutFormTab: React.FunctionComponent<ICloseOutFormTabProps> = ({
             tooltip={ocgVarianceNote}
           />
         </Col>
-      </Form.Row>
+      </Form.Group>
       <CloseOutSignaturesForm isReadOnly={isReadOnly} />
       <CloseOutAdjustmentForm isReadOnly={isReadOnly} />
     </Container>

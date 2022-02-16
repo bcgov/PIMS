@@ -1,12 +1,13 @@
-import React, { CSSProperties, memo, useEffect } from 'react';
-import { Form, FormControlProps } from 'react-bootstrap';
-import { getIn, FormikProps } from 'formik';
-import { DisplayError } from './DisplayError';
-import { SelectOption } from './Select';
-import { formikFieldMemo } from 'utils';
 import classNames from 'classnames';
 import TooltipIcon from 'components/common/TooltipIcon';
+import { FormikProps, getIn } from 'formik';
+import React, { CSSProperties, memo, useEffect } from 'react';
+import { Form, FormControlProps } from 'react-bootstrap';
+import { formikFieldMemo } from 'utils';
+
 import TooltipWrapper from '../TooltipWrapper';
+import { DisplayError } from './DisplayError';
+import { SelectOption } from './Select';
 
 type RequiredAttributes = {
   /** The field name */
@@ -93,7 +94,7 @@ export const FastSelect: React.FC<FastSelectProps> = memo(
     const errorTooltip = error && touch && displayErrorTooltips ? error : undefined;
     const asElement: any = is || 'select';
 
-    const handleMultipleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const handleMultipleChange = (e: any) => {
       const selected = e.target.selectedOptions;
       setFieldValue(
         field,
@@ -129,13 +130,13 @@ export const FastSelect: React.FC<FastSelectProps> = memo(
 
     const renderOptions = () => {
       if (!limitLabels) {
-        return options.map(option => (
+        return options.map((option) => (
           <option key={option.value} value={option.value}>
             {option.label}
           </option>
         ));
       } else {
-        return limitedOptions.map(option => (
+        return limitedOptions.map((option) => (
           <option key={option.value} value={option.value}>
             {option.label}
           </option>

@@ -1,20 +1,21 @@
-import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
-import * as networkSlice from 'store/slices/networkSlice';
+import MockAdapter from 'axios-mock-adapter';
 import * as API from 'constants/API';
 import { ENVIRONMENT } from 'constants/environment';
-import {
-  getActivateUserAction,
-  getUsersAction,
-  getUsersPaginationAction,
-  fetchUserDetail,
-  getUpdateUserAction,
-} from './usersActionCreator';
+import { IUser } from 'interfaces';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { initialUserState } from '..';
+import * as networkSlice from 'store/slices/networkSlice';
 import * as userSlice from 'store/slices/userSlice';
-import { IUser } from 'interfaces';
+
+import { initialUserState } from '..';
+import {
+  fetchUserDetail,
+  getActivateUserAction,
+  getUpdateUserAction,
+  getUsersAction,
+  getUsersPaginationAction,
+} from './usersActionCreator';
 
 const mockAxios = new MockAdapter(axios);
 const mockStore = configureMockStore([thunk]);

@@ -1,20 +1,21 @@
 import { ReactNode } from 'react';
-import LandingMapHelpText from '../components/text/LandingMapHelpText';
-import LandingNavigationHelpText from '../components/text/LandingNavigationHelpText';
 import React from 'react';
-import LandingFilterHelpText from '../components/text/LandingFilterHelpText';
-import QuestionForm from '../forms/QuestionForm';
-import BugForm from '../forms/BugForm';
-import FeatureRequestForm from '../forms/FeatureRequestForm';
-import { Topics, HelpPageKeys, IHelpPage } from '../interfaces';
+
+import { AssessDisposalProjectText } from '../components/text/AssesDisposalProjectText';
+import { CreateDisposalNavigationHelpText } from '../components/text/CreateDisposalNavigationHelpText';
+import DetailNavigationHelpText from '../components/text/DetailNavigationHelpText';
+import DetailViewHelpText from '../components/text/DetailViewHelpText';
+import { DisposalStepsHelpText } from '../components/text/DisposalStepsHelpText';
 import InventoryFilterHelpText from '../components/text/InventoryFilterHelpText';
 import InventoryListHelpText from '../components/text/InventoryListHelpText';
 import InventoryNavigationHelpText from '../components/text/InventoryNavigationHelpText';
-import DetailNavigationHelpText from '../components/text/DetailNavigationHelpText';
-import DetailViewHelpText from '../components/text/DetailViewHelpText';
-import { CreateDisposalNavigationHelpText } from '../components/text/CreateDisposalNavigationHelpText';
-import { DisposalStepsHelpText } from '../components/text/DisposalStepsHelpText';
-import { AssessDisposalProjectText } from '../components/text/AssesDisposalProjectText';
+import LandingFilterHelpText from '../components/text/LandingFilterHelpText';
+import LandingMapHelpText from '../components/text/LandingMapHelpText';
+import LandingNavigationHelpText from '../components/text/LandingNavigationHelpText';
+import BugForm from '../forms/BugForm';
+import FeatureRequestForm from '../forms/FeatureRequestForm';
+import QuestionForm from '../forms/QuestionForm';
+import { HelpPageKeys, IHelpPage, Topics } from '../interfaces';
 
 /**
  * a map between a topic name and the component to display when the corresponding topic name is active. This map only includes topics for the landing page.
@@ -91,9 +92,9 @@ export enum TicketTypes {
  * A map between a ticket type and a corresponding form to display when that ticket is active.
  */
 export const helpTickets = new Map<string, (props: any) => ReactNode>([
-  [TicketTypes.QUESTION, props => <QuestionForm {...props} />],
-  [TicketTypes.BUG, props => <BugForm {...props} />],
-  [TicketTypes.FEATURE_REQUEST, props => <FeatureRequestForm {...props} />],
+  [TicketTypes.QUESTION, (props) => <QuestionForm {...props} />],
+  [TicketTypes.BUG, (props) => <BugForm {...props} />],
+  [TicketTypes.FEATURE_REQUEST, (props) => <FeatureRequestForm {...props} />],
 ]);
 
 /**

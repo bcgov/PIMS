@@ -1,31 +1,33 @@
-import * as React from 'react';
-import { Container } from 'react-bootstrap';
-import { AccessRequestStatus } from 'constants/accessStatus';
+import './ManageAccessRequests.scss';
+
+import { IFilterData } from 'actions/IFilterData';
 import { Table } from 'components/Table';
-import { toFilteredApiPaginateParams } from 'utils/CommonFunctions';
+import { AccessRequestStatus } from 'constants/accessStatus';
+import * as actionTypes from 'constants/actionTypes';
 import * as API from 'constants/API';
 import { IAccessRequest } from 'interfaces';
-import './ManageAccessRequests.scss';
+import * as React from 'react';
+import { Container } from 'react-bootstrap';
 import { IGenericNetworkAction, useAppSelector } from 'store';
 import { useAccessRequest } from 'store/slices/hooks';
-import * as actionTypes from 'constants/actionTypes';
-import { IAccessRequestModel } from './interfaces';
-import { AccessRequestFilter } from './components/Filter';
-import { IFilterData } from 'actions/IFilterData';
-import { columnDefinitions } from './constants/constants';
+import { toFilteredApiPaginateParams } from 'utils/CommonFunctions';
+
 import { AccessRequestDetails } from './components/Details';
+import { AccessRequestFilter } from './components/Filter';
+import { columnDefinitions } from './constants/constants';
+import { IAccessRequestModel } from './interfaces';
 
 const ManageAccessRequests = () => {
   const api = useAccessRequest();
   const { pagedAccessRequests, pageSize, pageIndex, filter } = useAppSelector(
-    store => store.accessRequest,
+    (store) => store.accessRequest,
   );
   const [selectedRequest, setSelectedRequest] = React.useState<IAccessRequestModel | undefined>(
     undefined,
   );
   const columns = React.useMemo(() => columnDefinitions, []);
   const updateRequestAccessAdmin = useAppSelector(
-    store =>
+    (store) =>
       (store.network as any)[actionTypes.UPDATE_REQUEST_ACCESS_ADMIN] as IGenericNetworkAction,
   );
 
@@ -43,7 +45,7 @@ const ManageAccessRequests = () => {
   }, [api, pageSize, filter, pageIndex, updateRequestAccessAdmin?.isFetching]);
 
   const requests = (pagedAccessRequests.items as IAccessRequest[]).map(
-    ar =>
+    (ar) =>
       ({
         id: ar.id as number,
         userId: ar.user.id as string,
@@ -72,7 +74,7 @@ const ManageAccessRequests = () => {
         <div className="search-bar">
           <AccessRequestFilter
             initialValues={filter}
-            applyFilter={filter => api.updateFilter(filter)}
+            applyFilter={(filter) => api.updateFilter(filter)}
           />
         </div>
         {!!selectedRequest && (
@@ -87,7 +89,7 @@ const ManageAccessRequests = () => {
           data={requests}
           defaultCanSort={true}
           pageCount={Math.ceil(pagedAccessRequests.total / pageSize)}
-          onRequestData={req => () => {
+          onRequestData={(req) => () => {
             if (pageIndex !== req.pageIndex) api.updatePageIndex(req.pageIndex);
           }}
           onRowClick={showDetails}

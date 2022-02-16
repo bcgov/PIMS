@@ -1,56 +1,52 @@
 import './Map.scss';
 
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { LatLngBounds, LeafletMouseEvent, LatLng, Map as LeafletMap, geoJSON } from 'leaflet';
-import {
-  MapProps as LeafletMapProps,
-  TileLayer,
-  Popup,
-  Map as ReactLeafletMap,
-} from 'react-leaflet';
-import { IProperty, IPropertyDetail } from 'actions/parcelsActions';
-import { Container, Row, Col } from 'react-bootstrap';
 import { ILookupCode } from 'actions/ILookupCode';
-import BasemapToggle, { BasemapToggleEvent, BaseLayer } from '../BasemapToggle';
-import { setMapViewZoom, DEFAULT_MAP_ZOOM } from 'store/slices/mapViewZoomSlice';
+import { IProperty, IPropertyDetail } from 'actions/parcelsActions';
+import axios from 'axios';
+import classNames from 'classnames';
+import GenericModal from 'components/common/GenericModal';
+import { IGeoSearchParams } from 'constants/API';
+import { SidebarSize } from 'features/mapSideBar/hooks/useQueryParamSideBar';
+import { PropertyFilter } from 'features/properties/filter';
+import { IPropertyFilter } from 'features/properties/filter/IPropertyFilter';
 import { Feature } from 'geojson';
-import { LegendControl } from './Legend/LegendControl';
-import { useMediaQuery } from 'react-responsive';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+import { geoJSON, LatLng, LatLngBounds, LeafletMouseEvent, Map as LeafletMap } from 'leaflet';
+import { isEmpty, isEqual, isEqualWith } from 'lodash';
+import React, { useEffect, useState } from 'react';
+import { Col, Container, Row } from 'react-bootstrap';
+import { MapContainer, Popup, TileLayer } from 'react-leaflet';
 import ReactResizeDetector from 'react-resize-detector';
+import { useMediaQuery } from 'react-responsive';
+import { useAppDispatch, useAppSelector } from 'store';
+import { DEFAULT_MAP_ZOOM, setMapViewZoom } from 'store/slices/mapViewZoomSlice';
+import { saveParcelLayerData } from 'store/slices/parcelLayerDataSlice';
+import { storePropertyDetail } from 'store/slices/parcelSlice';
+import { decimalOrUndefined, floatOrUndefined } from 'utils';
+
+import { Claims } from '../../../constants';
+import BasemapToggle, { BaseLayer, BasemapToggleEvent } from '../BasemapToggle';
+import useActiveFeatureLayer from '../hooks/useActiveFeatureLayer';
+import { useFilterContext } from '../providers/FIlterProvider';
+import { PropertyPopUpContext } from '../providers/PropertyPopUpProvider';
+import FilterBackdrop from './FilterBackdrop';
+import InfoSlideOut from './InfoSlideOut/InfoSlideOut';
+import { InventoryLayer } from './InventoryLayer';
 import {
-  municipalityLayerPopupConfig,
   MUNICIPALITY_LAYER_URL,
+  municipalityLayerPopupConfig,
   parcelLayerPopupConfig,
 } from './LayerPopup/constants';
-import { isEmpty, isEqual, isEqualWith } from 'lodash';
+import { useBoundaryLayer } from './LayerPopup/hooks/useBoundaryLayer';
+import { useLayerQuery } from './LayerPopup/hooks/useLayerQuery';
 import {
   LayerPopupContent,
   LayerPopupTitle,
   PopupContentConfig,
 } from './LayerPopup/LayerPopupContent';
-import classNames from 'classnames';
-import { useLayerQuery } from './LayerPopup/hooks/useLayerQuery';
-import { saveParcelLayerData } from 'store/slices/parcelLayerDataSlice';
-import { SidebarSize } from 'features/mapSideBar/hooks/useQueryParamSideBar';
-import useActiveFeatureLayer from '../hooks/useActiveFeatureLayer';
 import LayersControl from './LayersControl';
-import { InventoryLayer } from './InventoryLayer';
-import { IGeoSearchParams } from 'constants/API';
-import { decimalOrUndefined, floatOrUndefined } from 'utils';
-import { IPropertyFilter } from 'features/properties/filter/IPropertyFilter';
-import { PropertyFilter } from 'features/properties/filter';
-import { useFilterContext } from '../providers/FIlterProvider';
+import { LegendControl } from './Legend/LegendControl';
 import { ZoomOutButton } from './ZoomOut/ZoomOutButton';
-import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
-import { Claims } from '../../../constants';
-import InfoSlideOut from './InfoSlideOut/InfoSlideOut';
-import { PropertyPopUpContext } from '../providers/PropertyPopUpProvider';
-import FilterBackdrop from './FilterBackdrop';
-import { useBoundaryLayer } from './LayerPopup/hooks/useBoundaryLayer';
-import GenericModal from 'components/common/GenericModal';
-import { useAppDispatch, useAppSelector } from 'store';
-import { storePropertyDetail } from 'store/slices/parcelSlice';
 
 export type MapViewportChangeEvent = {
   bounds: LatLngBounds | null;
@@ -65,7 +61,7 @@ export type MapProps = {
   agencies: ILookupCode[];
   administrativeAreas: ILookupCode[];
   lotSizes: number[];
-  mapRef: React.RefObject<ReactLeafletMap<LeafletMapProps, LeafletMap>>;
+  mapRef: React.RefObject<LeafletMap>;
   selectedProperty?: IPropertyDetail | null;
   onMarkerClick?: (obj: IProperty, position?: [number, number]) => void;
   onMarkerPopupClose?: (obj: IPropertyDetail) => void;
@@ -194,10 +190,10 @@ const Map: React.FC<MapProps> = ({
   const popUpContext = React.useContext(PropertyPopUpContext);
 
   if (mapRef.current && !selectedProperty?.parcelDetail) {
-    lat = (mapRef.current.props.center as Array<number>)[0];
-    lng = (mapRef.current.props.center as Array<number>)[1];
+    lat = mapRef.current.getCenter().lat;
+    lng = mapRef.current.getCenter().lng;
   }
-  const parcelLayerFeature = useAppSelector(store => store.parcelLayerData?.parcelLayerFeature);
+  const parcelLayerFeature = useAppSelector((store) => store.parcelLayerData?.parcelLayerFeature);
   useActiveFeatureLayer({
     selectedProperty,
     layerPopup,
@@ -207,7 +203,7 @@ const Map: React.FC<MapProps> = ({
   });
   const [showFilterBackdrop, setShowFilterBackdrop] = useState(true);
 
-  const lastZoom = useAppSelector(store => store.mapViewZoom) ?? zoomProp;
+  const lastZoom = useAppSelector((store) => store.mapViewZoom) ?? zoomProp;
   const [zoom, setZoom] = useState(lastZoom);
   useEffect(() => {
     if (lastZoom === DEFAULT_MAP_ZOOM) {
@@ -218,13 +214,13 @@ const Map: React.FC<MapProps> = ({
   }, [dispatch, lastZoom, smallScreen, zoom]);
 
   useEffect(() => {
-    mapRef.current?.leafletElement.invalidateSize();
+    mapRef.current?.invalidateSize();
   }, [mapRef, mapWidth]);
 
   // TODO: refactor various zoom settings
   useEffect(() => {
     if (!interactive) {
-      const map = mapRef.current?.leafletElement;
+      const map = mapRef.current;
       if (map) {
         map.dragging.disable();
         map.touchZoom.disable();
@@ -262,7 +258,7 @@ const Map: React.FC<MapProps> = ({
 
   useEffect(() => {
     // fetch GIS base layers configuration from /public folder
-    axios.get('/basemaps.json')?.then(result => {
+    axios.get('/basemaps.json')?.then((result) => {
       setBaseLayers(result.data?.basemaps);
       setActiveBasemap(result.data?.basemaps?.[0]);
     });
@@ -270,7 +266,7 @@ const Map: React.FC<MapProps> = ({
 
   const fitMapBounds = () => {
     if (mapRef.current) {
-      mapRef.current.leafletElement.fitBounds([
+      mapRef.current.fitBounds([
         [60.09114547, -119.49609429],
         [48.78370426, -139.35937554],
       ]);
@@ -364,7 +360,7 @@ const Map: React.FC<MapProps> = ({
                 </Container>
               </Container>
             ) : null}
-            <Row noGutters>
+            <Row>
               <Col>
                 {baseLayers?.length > 0 && (
                   <BasemapToggle baseLayers={baseLayers} onToggle={handleBasemapToggle} />
@@ -377,7 +373,7 @@ const Map: React.FC<MapProps> = ({
                     handleOk={() => popUpContext.setBCEIDWarning(false)}
                   />
                 )}
-                <ReactLeafletMap
+                <MapContainer
                   ref={mapRef}
                   center={[lat, lng]}
                   zoom={lastZoom}
@@ -386,7 +382,7 @@ const Map: React.FC<MapProps> = ({
                   }}
                   onclick={showLocationDetails}
                   closePopupOnClick={interactive}
-                  onzoomend={e => setZoom(e.sourceTarget.getZoom())}
+                  onzoomend={(e: any) => setZoom(e.sourceTarget.getZoom())}
                   onmoveend={handleBounds}
                 >
                   {activeBasemap && (
@@ -451,7 +447,7 @@ const Map: React.FC<MapProps> = ({
                     filter={geoFilter}
                     onRequestData={setShowFilterBackdrop}
                   ></InventoryLayer>
-                </ReactLeafletMap>
+                </MapContainer>
               </Col>
             </Row>
           </Container>

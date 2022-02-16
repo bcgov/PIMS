@@ -1,18 +1,18 @@
-import * as React from 'react';
-import { Formik, Form } from 'formik';
-import { Input, Button, Check, SelectOption } from 'components/common/form';
-import { FaFileExcel, FaFileAlt, FaSyncAlt } from 'react-icons/fa';
-import { Row, Form as BSForm } from 'react-bootstrap';
-import { IReport } from '../interfaces';
-import _ from 'lodash';
-import { formatApiDateTime, generateUtcNowDateTime } from 'utils';
-import styled from 'styled-components';
-import { Prompt } from 'react-router-dom';
-import TooltipWrapper from 'components/common/TooltipWrapper';
-import AddReportControl from './AddReportControl';
-import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
-import { Claims } from '../../../constants/';
 import variables from '_variables.module.scss';
+import { Button, Check, Input, SelectOption } from 'components/common/form';
+import TooltipWrapper from 'components/common/TooltipWrapper';
+import { Form, Formik } from 'formik';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+import _ from 'lodash';
+import * as React from 'react';
+import { Form as BSForm, Row } from 'react-bootstrap';
+import { FaFileAlt, FaFileExcel, FaSyncAlt } from 'react-icons/fa';
+import styled from 'styled-components';
+import { formatApiDateTime, generateUtcNowDateTime } from 'utils';
+
+import { Claims } from '../../../constants/';
+import { IReport } from '../interfaces';
+import AddReportControl from './AddReportControl';
 
 interface IReportControlsProps {
   /** the active report being displayed, snapshot data is displayed based on this report */
@@ -44,7 +44,7 @@ const getOtherOlderReports = (reports: IReport[], currentReport?: IReport) => {
   return currentReport !== undefined
     ? _.filter(
         reports,
-        report => !!report.id && report.id !== currentReport.id && currentReport.to > report.to,
+        (report) => !!report.id && report.id !== currentReport.id && currentReport.to > report.to,
       )
     : [];
 };
@@ -98,25 +98,22 @@ const ReportControls: React.FunctionComponent<IReportControlsProps> = ({
     <>
       <Formik
         initialValues={{ ...defaultReport, ...currentReport }}
-        onSubmit={values => onSave(values)}
+        onSubmit={(values) => onSave(values)}
         enableReinitialize
       >
         {({ dirty, values, submitForm, isSubmitting, setSubmitting }) => (
           <>
             <Form className="report-form m-0 flex-nowrap">
               <AddReportControl onAdd={onAdd} />
-              <Row noGutters className="d-flex align-items-center">
+              <Row className="d-flex align-items-center">
                 {reportOptions.length > 1 ? (
                   <BSForm.Group controlId="select-from" className="ml-2">
                     <BSForm.Label>From: </BSForm.Label>
                     <BSForm.Control
-                      options={reportOptions}
                       as="select"
                       value={fromId}
                       disabled={values.isFinal}
-                      onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-                        onFromChange(+e.target.value)
-                      }
+                      onChange={(e) => onFromChange(+e.target.value)}
                     >
                       {reportOptions.map((option: SelectOption) => (
                         <option key={option.value} value={option.value} className="option">
@@ -190,10 +187,10 @@ const ReportControls: React.FunctionComponent<IReportControlsProps> = ({
                 </TooltipWrapper>
               </Row>
             </Form>
-            <Prompt
+            {/* <Prompt
               when={dirty && !isSubmitting}
               message="You have unsaved changes, are you sure you want to leave? Your unsaved changes will be lost."
-            />
+            /> */}
           </>
         )}
       </Formik>

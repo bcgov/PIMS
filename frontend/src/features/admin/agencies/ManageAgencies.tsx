@@ -1,20 +1,22 @@
 import './ManageAgencies.scss';
-import React, { useMemo, useCallback, useState, useEffect } from 'react';
-import { Container } from 'react-bootstrap';
+
 import { Table } from 'components/Table';
-import { columnDefinitions } from '../constants/columns';
-import { IAgency, IAgencyFilter, IAgencyRecord } from 'interfaces';
-import { getAgenciesAction } from 'store/slices/hooks/agencyActionCreator';
-import { toFilteredApiPaginateParams } from 'utils/CommonFunctions';
-import { IGenericNetworkAction } from 'store';
 import * as actionTypes from 'constants/actionTypes';
-import { generateMultiSortCriteria } from 'utils';
-import { AgencyFilterBar } from './AgencyFilterBar';
 import useCodeLookups from 'hooks/useLookupCodes';
-import { useHistory } from 'react-router-dom';
-import { getFetchLookupCodeAction } from 'store/slices/hooks/lookupCodeActionCreator';
+import { IAgency, IAgencyFilter, IAgencyRecord } from 'interfaces';
 import { isEmpty } from 'lodash';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { Container } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
+import { IGenericNetworkAction } from 'store';
 import { useAppDispatch, useAppSelector } from 'store';
+import { getAgenciesAction } from 'store/slices/hooks/agencyActionCreator';
+import { getFetchLookupCodeAction } from 'store/slices/hooks/lookupCodeActionCreator';
+import { generateMultiSortCriteria } from 'utils';
+import { toFilteredApiPaginateParams } from 'utils/CommonFunctions';
+
+import { columnDefinitions } from '../constants/columns';
+import { AgencyFilterBar } from './AgencyFilterBar';
 
 const ManageAgencies: React.FC = () => {
   const columns = useMemo(() => columnDefinitions, []);
@@ -22,18 +24,18 @@ const ManageAgencies: React.FC = () => {
   const [filter, setFilter] = useState<IAgencyFilter>({});
   const lookupCodes = useCodeLookups();
   const agencyLookupCodes = lookupCodes.getByType('Agency');
-  const history = useHistory();
+  const navigate = useNavigate();
 
-  const pagedAgencies = useAppSelector(store => store.agencies.pagedAgencies);
-  const pageSize = useAppSelector(store => store.agencies.rowsPerPage);
-  const pageIndex = useAppSelector(store => store.agencies.pageIndex);
-  const sort = useAppSelector(store => store.agencies.sort);
+  const pagedAgencies = useAppSelector((store) => store.agencies.pagedAgencies);
+  const pageSize = useAppSelector((store) => store.agencies.rowsPerPage);
+  const pageIndex = useAppSelector((store) => store.agencies.pageIndex);
+  const sort = useAppSelector((store) => store.agencies.sort);
   const agencies = useAppSelector(
-    store => (store.network as any)[actionTypes.GET_AGENCIES] as IGenericNetworkAction,
+    (store) => (store.network as any)[actionTypes.GET_AGENCIES] as IGenericNetworkAction,
   );
 
   const onRowClick = (row: IAgencyRecord) => {
-    history.push(`/admin/agency/${row.id}`);
+    navigate(`/admin/agency/${row.id}`);
   };
 
   let agencyList = pagedAgencies.items.map(
@@ -43,7 +45,7 @@ const ManageAgencies: React.FC = () => {
       description: a.description,
       parentId: a.parentId,
       id: a.id,
-      parent: agencyLookupCodes.find(x => x.id === a.parentId)?.name,
+      parent: agencyLookupCodes.find((x) => x.id === a.parentId)?.name,
     }),
   );
 
@@ -53,7 +55,7 @@ const ManageAgencies: React.FC = () => {
     };
     const values = { ...defaultValue, ...filter };
     if (typeof values.id === 'number') {
-      const agency = agencyLookupCodes.find(x => Number(x.id) === values?.id) as any;
+      const agency = agencyLookupCodes.find((x) => Number(x.id) === values?.id) as any;
       if (agency) {
         values.id = agency;
       }
@@ -77,14 +79,14 @@ const ManageAgencies: React.FC = () => {
 
   useEffect(() => {
     getFetchLookupCodeAction()(dispatch);
-  }, [history, dispatch]);
+  }, [dispatch]);
 
   return (
     <Container fluid className="ManageAgencies">
       <Container fluid className="agency-toolbar">
         <AgencyFilterBar
           value={{ ...initialValues }}
-          onChange={value => {
+          onChange={(value) => {
             if ((value as any).id) {
               setFilter({ ...filter, id: Number((value as any).id) });
             } else {
@@ -92,7 +94,7 @@ const ManageAgencies: React.FC = () => {
             }
           }}
           handleAdd={() => {
-            history.push('/admin/agency/new');
+            navigate('/admin/agency/new');
           }}
         />
       </Container>

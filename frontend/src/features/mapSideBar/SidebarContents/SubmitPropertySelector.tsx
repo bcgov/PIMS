@@ -1,8 +1,9 @@
+import variables from '_variables.module.scss';
+import { BuildingSvg, LandSvg, SubdivisionSvg } from 'components/common/Icons';
 import * as React from 'react';
 import styled from 'styled-components';
+
 import { InventoryPolicy } from '../components/InventoryPolicy';
-import { BuildingSvg, LandSvg, SubdivisionSvg } from 'components/common/Icons';
-import variables from '_variables.module.scss';
 
 const SidebarContent = styled.div`
   background-color: #fff;

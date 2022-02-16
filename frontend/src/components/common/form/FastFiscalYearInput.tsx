@@ -1,9 +1,9 @@
-import React, { memo, useEffect } from 'react';
-import MaskedInput from 'react-text-mask';
-import { FormikProps, getIn, ErrorMessage } from 'formik';
-import { formikFieldMemo, formatDateFiscal } from 'utils';
 import classNames from 'classnames';
+import MaskedInput from 'components/text-mask';
+import { ErrorMessage, FormikProps, getIn } from 'formik';
+import React, { memo, useEffect } from 'react';
 import Form from 'react-bootstrap/Form';
+import { formatDateFiscal, formikFieldMemo } from 'utils';
 
 type RequiredAttributes = {
   /** The field name */

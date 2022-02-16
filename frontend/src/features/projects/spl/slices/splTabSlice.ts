@@ -1,4 +1,4 @@
-import { createSlice, createAction } from '@reduxjs/toolkit';
+import { createAction, createSlice } from '@reduxjs/toolkit';
 
 export const saveSplTab = createAction<string>('saveSplTab');
 export const clearSplTab = createAction('clearSplTab');

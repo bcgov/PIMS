@@ -7,7 +7,7 @@ import { IProject } from './interfaces';
  * @returns True if the project history shows SPL.
  */
 export const wasInSpl = (project: IProject) => {
-  return project?.statusHistory.some(s => s.workflow === DisposalWorkflows.Spl) ?? false;
+  return project?.statusHistory.some((s) => s.workflow === DisposalWorkflows.Spl) ?? false;
 };
 
 /**
@@ -16,5 +16,5 @@ export const wasInSpl = (project: IProject) => {
  * @returns True if the project history shows ERP.
  */
 export const wasInErp = (project: IProject) => {
-  return project?.statusHistory.some(s => s.workflow === DisposalWorkflows.Erp) ?? false;
+  return project?.statusHistory.some((s) => s.workflow === DisposalWorkflows.Erp) ?? false;
 };

@@ -1,15 +1,16 @@
+import { FastCurrencyInput } from 'components/common/form';
+import { DisposeWorkflowStatus } from 'features/projects/constants';
+import { useFormikContext } from 'formik';
+import _ from 'lodash';
 import * as React from 'react';
 import { Container, Form } from 'react-bootstrap';
-import _ from 'lodash';
+
 import {
-  DocumentationForm,
   AppraisalCheckListForm,
+  DocumentationForm,
   FirstNationsCheckListForm,
   useProject,
 } from '../../common';
-import { DisposeWorkflowStatus } from 'features/projects/constants';
-import { FastCurrencyInput } from 'components/common/form';
-import { useFormikContext } from 'formik';
 
 interface IDocumentationTabProps {
   canOverride?: boolean;
@@ -37,12 +38,12 @@ const DocumentationTab: React.FunctionComponent<IDocumentationTabProps> = ({
       <DocumentationForm tasks={documentationTasks} isReadOnly={!canOverride} showNote={true} />
       <AppraisalCheckListForm isReadOnly={isReadOnly} taskStatusCode={appraisalTaskStatusCode} />
 
-      <Form.Row>
+      <Form.Group>
         <Form.Label column md={2}>
           Appraised Value
         </Form.Label>
         <FastCurrencyInput field="appraised" formikProps={context} disabled={isReadOnly} md={2} />
-      </Form.Row>
+      </Form.Group>
       <FirstNationsCheckListForm isReadOnly={isReadOnly} />
     </Container>
   );

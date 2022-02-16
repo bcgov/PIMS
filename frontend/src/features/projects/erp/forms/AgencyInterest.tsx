@@ -1,15 +1,16 @@
-import { FormikTable } from '../../common';
+import { ILookupCode } from 'actions/ILookupCode';
+import { ParentSelect } from 'components/common/form/ParentSelect';
+import * as API from 'constants/API';
 import { AgencyResponses } from 'features/projects/constants';
 import { IProject } from 'features/projects/interfaces';
 import { getIn, useFormikContext } from 'formik';
-import React from 'react';
-import { ILookupCode } from 'actions/ILookupCode';
-import * as API from 'constants/API';
-import { ParentSelect } from 'components/common/form/ParentSelect';
-import { mapLookupCodeWithParentString } from 'utils';
-import { Button, Col, Row } from 'react-bootstrap';
-import { AgencyInterestColumns } from './AgencyInterestColumns';
 import useCodeLookups from 'hooks/useLookupCodes';
+import React from 'react';
+import { Button, Col, Row } from 'react-bootstrap';
+import { mapLookupCodeWithParentString } from 'utils';
+
+import { FormikTable } from '../../common';
+import { AgencyInterestColumns } from './AgencyInterestColumns';
 
 export interface IAgencyInterestProps {
   /** Whether the controls are disabled. */
@@ -26,12 +27,12 @@ export const AgencyInterest = ({ disabled = false }: IAgencyInterestProps) => {
   const lookupCodes = useCodeLookups();
 
   const agencies = lookupCodes.getByType(API.AGENCY_CODE_SET_NAME);
-  const agencyOptions = (agencies ?? []).map(c => mapLookupCodeWithParentString(c, agencies));
+  const agencyOptions = (agencies ?? []).map((c) => mapLookupCodeWithParentString(c, agencies));
 
   const onAddAgency = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => {
     event.preventDefault();
     const selectedAgency = getIn(values, 'addAgencyResponse');
-    const agency = agencies.find(a => ((a.id as unknown) as number) === parseInt(selectedAgency));
+    const agency = agencies.find((a) => (a.id as unknown as number) === parseInt(selectedAgency));
     if (agency !== undefined) {
       const project = addAgency({
         project: values,
@@ -51,7 +52,9 @@ export const AgencyInterest = ({ disabled = false }: IAgencyInterestProps) => {
    */
   const onAgencySelected = (vals: any) => {
     if (!!vals?.length) {
-      const found = values.projectAgencyResponses.find(r => r.agencyId === parseInt(vals[0].value));
+      const found = values.projectAgencyResponses.find(
+        (r) => r.agencyId === parseInt(vals[0].value),
+      );
       setEnableAdd(found === undefined);
     } else {
       setEnableAdd(false);

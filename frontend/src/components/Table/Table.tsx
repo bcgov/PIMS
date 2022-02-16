@@ -1,45 +1,46 @@
 import './Table.scss';
 
+import classnames from 'classnames';
+import classNames from 'classnames';
+import clsx from 'classnames';
+import { Button } from 'components/common/form/Button';
+import TooltipWrapper from 'components/common/TooltipWrapper';
+import { Form, Formik, FormikProps } from 'formik';
+import useDeepCompareCallback from 'hooks/useDeepCompareCallback';
+import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
+import useDeepCompareMemo from 'hooks/useDeepCompareMemo';
+import _, { keys } from 'lodash';
 import React, {
   PropsWithChildren,
   ReactElement,
-  useEffect,
   ReactNode,
+  useEffect,
   useMemo,
   useRef,
 } from 'react';
+import { Collapse, Spinner } from 'react-bootstrap';
+import { FaAngleDown, FaAngleRight, FaUndo } from 'react-icons/fa';
 import {
-  useTable,
-  usePagination,
-  useFlexLayout,
-  TableOptions,
-  Row,
   Cell,
+  HeaderGroup,
   IdType,
+  Row,
+  TableOptions,
+  useFlexLayout,
+  usePagination,
   useRowSelect,
   useSortBy,
-  HeaderGroup,
+  useTable,
 } from 'react-table';
-import classnames from 'classnames';
-import { TablePagination } from '.';
-import { CellWithProps, ColumnInstanceWithProps } from './types';
-import { TableSort, SortDirection } from './TableSort';
-import { TablePageSizeSelector } from './PageSizeSelector';
-import { DEFAULT_PAGE_SIZE, DEFAULT_PAGE_SELECTOR_OPTIONS } from './constants';
-import _, { keys } from 'lodash';
-import { Spinner, Collapse } from 'react-bootstrap';
-import { FaAngleDown, FaAngleRight, FaUndo } from 'react-icons/fa';
-import TooltipWrapper from 'components/common/TooltipWrapper';
-import ColumnSort from './ColumnSort';
-import ColumnFilter from './ColumnFilter';
-import { Form, Formik, FormikProps } from 'formik';
-import { Button } from 'components/common/form/Button';
-import classNames from 'classnames';
-import useDeepCompareMemo from 'hooks/useDeepCompareMemo';
-import useDeepCompareCallback from 'hooks/useDeepCompareCallback';
 import styled from 'styled-components';
-import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
-import clsx from 'classnames';
+
+import { TablePagination } from '.';
+import ColumnFilter from './ColumnFilter';
+import ColumnSort from './ColumnSort';
+import { DEFAULT_PAGE_SELECTOR_OPTIONS, DEFAULT_PAGE_SIZE } from './constants';
+import { TablePageSizeSelector } from './PageSizeSelector';
+import { SortDirection, TableSort } from './TableSort';
+import { CellWithProps, ColumnInstanceWithProps } from './types';
 
 const TableToolbarText = styled.p`
   flex: auto;
@@ -173,7 +174,7 @@ const IndeterminateCheckbox = React.forwardRef(
       if (isHeaderCheck) {
         setSelected([]);
       } else {
-        if (currentSelected.find(selected => selected.id === row.original.id)) {
+        if (currentSelected.find((selected) => selected.id === row.original.id)) {
           _.remove(currentSelected, row.original);
         } else {
           currentSelected.push(row.original);
@@ -244,9 +245,9 @@ const Table = <T extends IIdentifiedObject, TFilter extends object = {}>(
     selectedRowsRef.current = externalSelectedRows ?? [];
   }, [externalSelectedRows]);
 
-  const dataRef = React.useRef<T[]>(data ?? []);
+  const dataRef = React.useRef<T[]>(data !== null ? [...data] : []);
   React.useEffect(() => {
-    dataRef.current = data ?? [];
+    dataRef.current = [...data] ?? [];
   }, [data]);
 
   React.useEffect(() => {
@@ -256,7 +257,9 @@ const Table = <T extends IIdentifiedObject, TFilter extends object = {}>(
   }, [filterFormRef, props.filter]);
 
   const sortBy = useMemo(() => {
-    return !!sort ? keys(sort).map(key => ({ id: key, desc: (sort as any)[key] === 'desc' })) : [];
+    return !!sort
+      ? keys(sort).map((key) => ({ id: key, desc: (sort as any)[key] === 'desc' }))
+      : [];
   }, [sort]);
   // Use the useTable hook to create your table configuration
 
@@ -280,8 +283,8 @@ const Table = <T extends IIdentifiedObject, TFilter extends object = {}>(
     useSortBy,
     usePagination,
     useRowSelect,
-    hooks => {
-      hooks.visibleColumns.push(columns => {
+    (hooks) => {
+      hooks.visibleColumns.push((columns) => {
         return setExternalSelectedRows
           ? [
               {
@@ -353,8 +356,8 @@ const Table = <T extends IIdentifiedObject, TFilter extends object = {}>(
   }, [onRequestData, pageIndex, pageSize]);
 
   useDeepCompareEffect(() => {
-    page.forEach(r => {
-      toggleRowSelected(r.id, !!externalSelectedRows?.find(s => s.id === r.original.id));
+    page.forEach((r) => {
+      toggleRowSelected(r.id, !!externalSelectedRows?.find((s) => s.id === r.original.id));
     });
   }, [page, externalSelectedRows]);
 
@@ -372,7 +375,7 @@ const Table = <T extends IIdentifiedObject, TFilter extends object = {}>(
     return (
       <div className="sortable-column">
         <ColumnFilter
-          onFilter={values => {
+          onFilter={(values) => {
             if (filterFormRef.current?.dirty) {
               filterFormRef.current.submitForm();
             }
@@ -491,6 +494,14 @@ const Table = <T extends IIdentifiedObject, TFilter extends object = {}>(
     [props.detailsPanel],
   );
 
+  // these provide a way to inject custom CSS into table headers and cells
+  const headerPropsGetter = <T extends object>(
+    props: any,
+    { column }: { column: ColumnInstanceWithProps<T> },
+  ) => {
+    return getStyles(props, true, column);
+  };
+
   const renderFooter = () => {
     if (!footer || !page?.length) {
       return null;
@@ -500,15 +511,16 @@ const Table = <T extends IIdentifiedObject, TFilter extends object = {}>(
     }
     return (
       <div className="tfoot tfoot-light">
-        {footerGroups.map(footerGroup => (
-          <div {...footerGroup.getHeaderGroupProps()} className="tr">
-            {footerGroup.headers.map(
-              (column: ColumnInstanceWithProps<T> & { Footer?: Function }) => (
-                <div {...column.getHeaderProps(headerProps)} className="th">
-                  {column.Footer ? <column.Footer properties={_.map(page, 'original')} /> : null}
+        {footerGroups.map((footerGroup) => (
+          <div {...footerGroup.getFooterGroupProps()} className="tr">
+            {footerGroup.headers.map((column) => {
+              return (
+                <div {...column.getFooterProps(headerPropsGetter)} className="th">
+                  {column.render('Footer')}
+                  {/* {column.Footer ? <column.Footer properties={map(page, 'original')} /> : null} */}
                 </div>
-              ),
-            )}
+              );
+            })}
           </div>
         ))}
       </div>
@@ -532,7 +544,7 @@ const Table = <T extends IIdentifiedObject, TFilter extends object = {}>(
         props.detailsPanel.checkExpanded(data, expandedRows)
       ) {
         expanded = expandedRows.filter(
-          x => props.detailsPanel?.getRowId(x) !== props.detailsPanel?.getRowId(data),
+          (x) => props.detailsPanel?.getRowId(x) !== props.detailsPanel?.getRowId(data),
         );
       } else {
         expanded = [...expandedRows, data];
@@ -553,7 +565,7 @@ const Table = <T extends IIdentifiedObject, TFilter extends object = {}>(
               renderExpandRowStateButton(
                 props.detailsPanel && props.detailsPanel.checkExpanded(row.original, expandedRows),
                 'td expander',
-                e => handleExpandClick(e, row.original),
+                (e) => handleExpandClick(e, row.original),
               )}
             {props.canRowExpand && !props.canRowExpand(row) ? (
               <div className="td">
@@ -570,7 +582,7 @@ const Table = <T extends IIdentifiedObject, TFilter extends object = {}>(
               renderExpandRowStateButton(
                 props.detailsPanel && props.detailsPanel.checkExpanded(row.original, expandedRows),
                 'td expander',
-                e => handleExpandClick(e, row.original),
+                (e) => handleExpandClick(e, row.original),
               )}
             {row.cells.map((cell: CellWithProps<T>) => {
               return (
@@ -632,19 +644,19 @@ const Table = <T extends IIdentifiedObject, TFilter extends object = {}>(
         className={classNames('table', props.className ?? '')}
       >
         <div className="thead thead-light">
-          {headerGroups.map(headerGroup => (
+          {headerGroups.map((headerGroup) => (
             <div {...headerGroup.getHeaderGroupProps()} className="tr">
               {filterable ? (
                 <Formik
                   initialValues={props.filter || {}}
-                  onSubmit={values => {
+                  onSubmit={(values) => {
                     if (!!props.onFilterChange) {
                       props.onFilterChange(values);
                     }
                   }}
                   innerRef={filterFormRef as any}
                 >
-                  {actions => (
+                  {(actions) => (
                     <Form style={{ display: 'flex', width: '100%' }}>
                       {renderTableHeader(headerGroup, actions)}
                     </Form>

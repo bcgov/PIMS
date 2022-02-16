@@ -1,10 +1,11 @@
-import useCodeLookups from 'hooks/useLookupCodes';
-import { useMemo } from 'react';
-import { useProject } from '..';
-import { IProjectAgencyResponse } from 'features/projects/interfaces';
-import { AgencyResponses } from 'features/projects/constants';
 import { ILookupCode } from 'actions/ILookupCode';
+import { AgencyResponses } from 'features/projects/constants';
+import { IProjectAgencyResponse } from 'features/projects/interfaces';
+import useCodeLookups from 'hooks/useLookupCodes';
 import _ from 'lodash';
+import { useMemo } from 'react';
+
+import { useProject } from '..';
 
 /** get a list of generated and existing agencies project agency responses. */
 export const generateAgencyResponseRows = (
@@ -16,7 +17,7 @@ export const generateAgencyResponseRows = (
     return [];
   }
   const responses = _.cloneDeep(projectAgencyResponses);
-  agencies.forEach(agency => {
+  agencies.forEach((agency) => {
     if (!_.find(projectAgencyResponses, { agencyId: agency.id })) {
       responses.push({
         agencyId: parseInt(agency.id, 10),

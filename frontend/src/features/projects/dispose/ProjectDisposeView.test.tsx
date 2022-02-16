@@ -1,19 +1,20 @@
-import React from 'react';
-import ProjectDisposeView from './ProjectDisposeView';
+import { useKeycloak } from '@react-keycloak/web';
+import { act, cleanup, render } from '@testing-library/react';
+import axios from 'axios';
+import MockAdapter from 'axios-mock-adapter';
+import * as actionTypes from 'constants/actionTypes';
 import * as reducerTypes from 'constants/reducerTypes';
 import { createMemoryHistory } from 'history';
+import { noop } from 'lodash';
+import React from 'react';
+import { Provider } from 'react-redux';
+import * as redux from 'react-redux';
+import { matchPath, MemoryRouter } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { Provider } from 'react-redux';
-import { Router, match as Match } from 'react-router-dom';
-import * as actionTypes from 'constants/actionTypes';
-import { render, cleanup, act } from '@testing-library/react';
-import MockAdapter from 'axios-mock-adapter';
-import axios from 'axios';
+
 import useStepper from './hooks/useStepper';
-import { noop } from 'lodash';
-import { useKeycloak } from '@react-keycloak/web';
-import * as redux from 'react-redux';
+import ProjectDisposeView from './ProjectDisposeView';
 
 jest.mock('@react-keycloak/web');
 (useKeycloak as jest.Mock).mockReturnValue({
@@ -25,6 +26,7 @@ jest.mock('@react-keycloak/web');
     subject: 'test',
   },
 });
+const match = matchPath('', '/dispose');
 
 const useDispatchSpy = jest.spyOn(redux, 'useDispatch');
 const mockDispatchFn = jest.fn().mockReturnValue({ then: jest.fn() });
@@ -41,13 +43,6 @@ jest.mock('./hooks/useStepper');
   projectStatusCompleted: noop,
   canGoToStatus: noop,
 });
-
-const match: Match = {
-  path: '/dispose',
-  url: '/dispose',
-  isExact: false,
-  params: {},
-};
 
 const loc = {
   pathname: '/dispose/projects/draft',
@@ -92,9 +87,9 @@ const errorStore = mockStore({
 
 const renderElement = (store: any) => (
   <Provider store={store}>
-    <Router history={history}>
+    <MemoryRouter initialEntries={[history.location]}>
       <ProjectDisposeView match={match} location={loc} />
-    </Router>
+    </MemoryRouter>
   </Provider>
 );
 

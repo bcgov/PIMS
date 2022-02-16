@@ -1,12 +1,13 @@
-import * as React from 'react';
 import Table from 'components/Table/Table';
-import { IReport, ISnapshot, ISnapshotFilter } from '../interfaces';
-import { columns } from '../columns';
-import useCodeLookups from 'hooks/useLookupCodes';
-import * as API from 'constants/API';
-import { mapSelectOptionWithParent } from 'utils';
-import { useSplReportContext } from '../containers/SplReportContainer';
 import { SortDirection } from 'components/Table/TableSort';
+import * as API from 'constants/API';
+import useCodeLookups from 'hooks/useLookupCodes';
+import * as React from 'react';
+import { mapSelectOptionWithParent } from 'utils';
+
+import { columns } from '../columns';
+import { useSplReportContext } from '../containers/SplReportContainer';
+import { IReport, ISnapshot, ISnapshotFilter } from '../interfaces';
 
 interface IReportFormProps {
   currentReport?: IReport;
@@ -21,7 +22,7 @@ const ReportForm: React.FunctionComponent<IReportFormProps> = ({ currentReport, 
   const { getOptionsByType } = useCodeLookups();
   const agencyItems = getOptionsByType(API.AGENCY_CODE_SET_NAME);
   const agencyFilterOptions = React.useMemo(
-    () => (agencyItems || []).map(c => mapSelectOptionWithParent(c, agencyItems || [])),
+    () => (agencyItems || []).map((c) => mapSelectOptionWithParent(c, agencyItems || [])),
     [agencyItems],
   );
   const { snapshotFilter, setSnapshotFilter } = useSplReportContext();
@@ -32,7 +33,7 @@ const ReportForm: React.FunctionComponent<IReportFormProps> = ({ currentReport, 
       noRowsMessage="No Reports Available"
       filterable
       filter={snapshotFilter}
-      onFilterChange={filter => setSnapshotFilter({ ...snapshotFilter, ...filter })}
+      onFilterChange={(filter) => setSnapshotFilter({ ...snapshotFilter, ...filter })}
       onSortChange={(field: string, direction: SortDirection) => {
         setSnapshotFilter({ ...snapshotFilter, sortBy: { [field]: direction } });
       }}

@@ -1,9 +1,9 @@
+import { FastCurrencyInput, FastDatePicker, Form } from 'components/common/form';
+import { ProjectNotes } from 'features/projects/common';
+import { useFormikContext } from 'formik';
 import { Fragment } from 'react';
 import React from 'react';
 import { Col } from 'react-bootstrap';
-import { useFormikContext } from 'formik';
-import { Form, FastDatePicker, FastCurrencyInput } from 'components/common/form';
-import { ProjectNotes } from 'features/projects/common';
 
 interface CloseOutAdjustmentProps {
   isReadOnly?: boolean;
@@ -18,9 +18,9 @@ const CloseOutAdjustment = (props: CloseOutAdjustmentProps) => {
   return (
     <Fragment>
       <h3>Adjustment to Prior Year Sale</h3>
-      <Form.Row>
+      <Form.Group>
         <Col md={6}>
-          <Form.Row>
+          <Form.Group>
             <Form.Label column md={4}>
               Adjustment to Prior Year Sale Amount
             </Form.Label>
@@ -30,11 +30,11 @@ const CloseOutAdjustment = (props: CloseOutAdjustmentProps) => {
               outerClassName="col-md-8"
               field="priorYearAdjustmentAmount"
             />
-          </Form.Row>
+          </Form.Group>
         </Col>
         <Col md={6}>
-          <Form.Row></Form.Row>
-          <Form.Row>
+          <Form.Group></Form.Group>
+          <Form.Group>
             <Form.Label column md={4}>
               Adjustment to Prior Year Sale Date
             </Form.Label>
@@ -44,9 +44,9 @@ const CloseOutAdjustment = (props: CloseOutAdjustmentProps) => {
               outerClassName="col-md-8"
               field="priorYearAdjustmentOn"
             />
-          </Form.Row>
+          </Form.Group>
         </Col>
-      </Form.Row>
+      </Form.Group>
       <ProjectNotes
         label="Adjustment to Prior Year Sale Notes"
         field="adjustmentNote"

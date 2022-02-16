@@ -1,4 +1,5 @@
 import { renderHook } from '@testing-library/react-hooks';
+
 import useDeepCompareEffect from './useDeepCompareEffect';
 
 describe('useDeepCompareEffect hook', () => {

@@ -1,9 +1,10 @@
-import * as React from 'react';
 import './Label.scss';
-import { Link } from 'react-router-dom';
-import { FaRegTimesCircle } from 'react-icons/fa';
+
 import { Search } from 'history';
+import * as React from 'react';
 import { ListGroup } from 'react-bootstrap';
+import { FaRegTimesCircle } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 
 export interface ILinkListItem {
   search: Search;
@@ -24,8 +25,9 @@ interface ILinkedListProps {
  * Generic component that displays a list of links that open in a new tab. Requires input to be formatted into a list of {@link ILinkListItem}.
  * @param {ILinkedListProps} param0
  */
-export const LinkList: React.FunctionComponent<ILinkedListProps &
-  React.HTMLAttributes<HTMLDivElement>> = ({ disabled, listItems, noItemsMessage, ...rest }) => {
+export const LinkList: React.FunctionComponent<
+  ILinkedListProps & React.HTMLAttributes<HTMLDivElement>
+> = ({ disabled, listItems, noItemsMessage, ...rest }) => {
   return (
     <>
       {listItems.length ? (

@@ -1,24 +1,25 @@
-import {
-  getMostRecentAppraisal,
-  getCurrentFiscal,
-  getMostRecentEvaluation,
-  getFlatProjectNotes,
-  toFlatProject,
-  toApiProject,
-  toFlatProperty,
-} from './projectConverter';
-import moment, { Moment } from 'moment';
 import { IEvaluation, IFiscal } from 'actions/parcelsActions';
 import { EvaluationKeys } from 'constants/evaluationKeys';
 import { FiscalKeys } from 'constants/fiscalKeys';
+import moment, { Moment } from 'moment';
+import { getCurrentFiscalYear } from 'utils';
+
+import { NoteTypes, PropertyTypes } from '../../../constants';
 import {
   mockApiProject,
-  mockFlatProject,
-  mockApiProjectParcel,
   mockApiProjectBuilding,
+  mockApiProjectParcel,
+  mockFlatProject,
 } from '../dispose/testUtils';
-import { NoteTypes, PropertyTypes } from '../../../constants';
-import { getCurrentFiscalYear } from 'utils';
+import {
+  getCurrentFiscal,
+  getFlatProjectNotes,
+  getMostRecentAppraisal,
+  getMostRecentEvaluation,
+  toApiProject,
+  toFlatProject,
+  toFlatProperty,
+} from './projectConverter';
 
 const createAppraisal = (date: Moment): IEvaluation => {
   return {
@@ -148,16 +149,12 @@ describe('projectConverter function tests', () => {
             {
               key: EvaluationKeys.Assessed,
               value: 200,
-              date: moment()
-                .add(-1, 'years')
-                .toDate(),
+              date: moment().add(-1, 'years').toDate(),
             },
             {
               key: EvaluationKeys.Improvements,
               value: 300,
-              date: moment()
-                .add(-1, 'years')
-                .toDate(),
+              date: moment().add(-1, 'years').toDate(),
             },
           ] as IEvaluation[],
         };
@@ -172,16 +169,12 @@ describe('projectConverter function tests', () => {
             {
               key: EvaluationKeys.Assessed,
               value: 200,
-              date: moment()
-                .add(-1, 'years')
-                .toDate(),
+              date: moment().add(-1, 'years').toDate(),
             },
             {
               key: EvaluationKeys.Improvements,
               value: 300,
-              date: moment()
-                .add(-1, 'years')
-                .toDate(),
+              date: moment().add(-1, 'years').toDate(),
             },
           ] as IEvaluation[],
         };
@@ -237,16 +230,12 @@ describe('projectConverter function tests', () => {
             {
               key: FiscalKeys.Market,
               value: 200,
-              fiscalYear: moment()
-                .add(-1, 'years')
-                .year(),
+              fiscalYear: moment().add(-1, 'years').year(),
             },
             {
               key: FiscalKeys.NetBook,
               value: 300,
-              fiscalYear: moment()
-                .add(-1, 'years')
-                .year(),
+              fiscalYear: moment().add(-1, 'years').year(),
             },
           ] as IFiscal[],
         };
@@ -262,16 +251,12 @@ describe('projectConverter function tests', () => {
             {
               key: FiscalKeys.Market,
               value: 200,
-              fiscalYear: moment()
-                .add(-1, 'years')
-                .year(),
+              fiscalYear: moment().add(-1, 'years').year(),
             },
             {
               key: FiscalKeys.NetBook,
               value: 300,
-              fiscalYear: moment()
-                .add(-1, 'years')
-                .year(),
+              fiscalYear: moment().add(-1, 'years').year(),
             },
           ] as IFiscal[],
         };

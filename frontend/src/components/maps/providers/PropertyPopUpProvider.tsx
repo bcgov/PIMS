@@ -1,12 +1,12 @@
+import { IBuilding, IParcel } from 'actions/parcelsActions';
 import { noop } from 'lodash';
 import React from 'react';
-import { IParcel, IBuilding } from 'actions/parcelsActions';
 
 interface IPopUpContext {
   propertyInfo: IParcel | IBuilding | null;
   setPropertyInfo: (propertyInfo: IParcel | IBuilding | null) => void;
-  propertyTypeID: number | null;
-  setPropertyTypeID: (propertyTypeID: number) => void;
+  propertyTypeId: number | null;
+  setPropertyTypeId: (propertyTypeId: number) => void;
   loading: boolean;
   setLoading: (loading: boolean) => void;
   showBCEIDWarning: boolean;
@@ -16,8 +16,8 @@ interface IPopUpContext {
 export const PropertyPopUpContext = React.createContext<IPopUpContext>({
   propertyInfo: null,
   setPropertyInfo: noop,
-  propertyTypeID: null,
-  setPropertyTypeID: noop,
+  propertyTypeId: null,
+  setPropertyTypeId: noop,
   loading: false,
   setLoading: noop,
   showBCEIDWarning: false,
@@ -30,7 +30,7 @@ export const PropertyPopUpContext = React.createContext<IPopUpContext>({
  */
 export const PropertyPopUpContextProvider: React.FC = ({ children }) => {
   const [propertyInfo, setPropertyInfo] = React.useState<IParcel | IBuilding | null>(null);
-  const [propertyTypeID, setPropertyTypeID] = React.useState<number | null>(null);
+  const [propertyTypeId, setPropertyTypeId] = React.useState<number | null>(null);
   const [loading, setLoading] = React.useState<boolean>(false);
   const [showBCEIDWarning, setBCEIDWarning] = React.useState<boolean>(false);
   return (
@@ -38,8 +38,8 @@ export const PropertyPopUpContextProvider: React.FC = ({ children }) => {
       value={{
         propertyInfo,
         setPropertyInfo,
-        propertyTypeID,
-        setPropertyTypeID,
+        propertyTypeId,
+        setPropertyTypeId,
         loading,
         setLoading,
         showBCEIDWarning,

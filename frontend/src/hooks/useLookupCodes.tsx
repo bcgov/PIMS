@@ -1,33 +1,34 @@
 import { ILookupCode } from 'actions/ILookupCode';
-import { mapLookupCode } from 'utils';
+import { SelectOption } from 'components/common/form';
+import * as API from 'constants/API';
+import Claims from 'constants/claims';
+import { Classifications } from 'constants/classifications';
 import _ from 'lodash';
 import { useCallback } from 'react';
-import { useKeycloakWrapper } from './useKeycloakWrapper';
-import * as API from 'constants/API';
-import { Classifications } from 'constants/classifications';
-import Claims from 'constants/claims';
-import { SelectOption } from 'components/common/form';
 import { useAppSelector } from 'store';
+import { mapLookupCode } from 'utils';
+
+import { useKeycloakWrapper } from './useKeycloakWrapper';
 
 /**
  * Hook to return an array ILookupCode for specific types.
  */
 export function useCodeLookups() {
   const keycloak = useKeycloakWrapper();
-  const lookupCodes = useAppSelector<ILookupCode[]>(store => store.lookupCode.lookupCodes);
+  const lookupCodes = useAppSelector<ILookupCode[]>((store) => store.lookupCode.lookupCodes);
   const getCodeById = (type: string, id: string): string | undefined => {
-    return lookupCodes.filter(code => code.type === type && code.id === id)?.find(x => x)?.code;
+    return lookupCodes.filter((code) => code.type === type && code.id === id)?.find((x) => x)?.code;
   };
 
   const getByType = useCallback(
-    (type: string) => lookupCodes.filter(code => code.type === type && code.isDisabled !== true),
+    (type: string) => lookupCodes.filter((code) => code.type === type && code.isDisabled !== true),
     [lookupCodes],
   );
 
   const getPublicByType = useCallback(
     (type: string) =>
       lookupCodes.filter(
-        code => code.type === type && code.isDisabled === false && code.isPublic !== false,
+        (code) => code.type === type && code.isDisabled === false && code.isPublic !== false,
       ),
     [lookupCodes],
   );
@@ -62,17 +63,17 @@ export function useCodeLookups() {
   ) => {
     const classifications = getByType(API.PROPERTY_CLASSIFICATION_CODE_SET_NAME);
     return filter
-      ? (classifications ?? []).map(c => mapLookupCode(c)).filter(filter)
+      ? (classifications ?? []).map((c) => mapLookupCode(c)).filter(filter)
       : !keycloak.hasClaim(Claims.ADMIN_PROPERTIES)
       ? (classifications ?? [])
-          .map(c => mapLookupCode(c))
+          .map((c) => mapLookupCode(c))
           .filter(
-            c =>
+            (c) =>
               +c.value !== Classifications.Demolished &&
               +c.value !== Classifications.Subdivided &&
               +c.value !== Classifications.Disposed,
           )
-      : (classifications ?? []).map(c => mapLookupCode(c));
+      : (classifications ?? []).map((c) => mapLookupCode(c));
   };
 
   /**
@@ -82,7 +83,7 @@ export function useCodeLookups() {
    */
   const getAgencyFullName = (agencyCode?: string) => {
     const agencies = getByType(API.AGENCY_CODE_SET_NAME);
-    const agencyItem = agencies.find(listItem => listItem.code === agencyCode);
+    const agencyItem = agencies.find((listItem) => listItem.code === agencyCode);
     return agencyItem ? agencyItem.name : agencyCode;
   };
 

@@ -1,20 +1,22 @@
-import React, { useEffect } from 'react';
-import { Navbar, Container, Row, Col, ButtonToolbar, Button } from 'react-bootstrap';
-import { Form, Input, Select, SelectOption } from '../../../components/common/form';
-import { fetchUserDetail, getUpdateUserAction } from 'store/slices/hooks/usersActionCreator';
-import { Formik, Field } from 'formik';
-import { UserUpdateSchema } from 'utils/YupSchema';
+import './EditUserPage.scss';
+
+import { ILookupCode } from 'actions/ILookupCode';
+import { Label } from 'components/common/Label';
+import TooltipWrapper from 'components/common/TooltipWrapper';
 import { IUserDetailParams } from 'constants/API';
 import * as API from 'constants/API';
-import './EditUserPage.scss';
-import { Label } from 'components/common/Label';
-import { useHistory } from 'react-router-dom';
-import TooltipWrapper from 'components/common/TooltipWrapper';
-import { formatApiDateTime } from 'utils';
-import useCodeLookups from 'hooks/useLookupCodes';
-import { ILookupCode } from 'actions/ILookupCode';
 import { AUTHORIZATION_URL } from 'constants/strings';
+import { Field, Formik } from 'formik';
+import useCodeLookups from 'hooks/useLookupCodes';
+import React, { useEffect } from 'react';
+import { Button, ButtonToolbar, Col, Container, Navbar, Row } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'store';
+import { fetchUserDetail, getUpdateUserAction } from 'store/slices/hooks/usersActionCreator';
+import { formatApiDateTime } from 'utils';
+import { UserUpdateSchema } from 'utils/YupSchema';
+
+import { Form, Input, Select, SelectOption } from '../../../components/common/form';
 
 interface IEditUserPageProps extends IUserDetailParams {
   match?: any;
@@ -22,7 +24,7 @@ interface IEditUserPageProps extends IUserDetailParams {
 
 const EditUserPage = (props: IEditUserPageProps) => {
   const userId = props?.match?.params?.id || props.id;
-  const history = useHistory();
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   useEffect(() => {
     fetchUserDetail({ id: userId })(dispatch);
@@ -32,15 +34,15 @@ const EditUserPage = (props: IEditUserPageProps) => {
   const agencies = getByType(API.AGENCY_CODE_SET_NAME);
   const roles = getByType(API.ROLE_CODE_SET_NAME);
 
-  const user = useAppSelector(store => store.users.user);
+  const user = useAppSelector((store) => store.users.user);
   const mapLookupCode = (code: ILookupCode): SelectOption => ({
     label: code.name,
     value: code.id.toString(),
-    selected: !!user.roles.find(x => x.id === code.id.toString()),
+    selected: !!user.roles.find((x) => x.id === code.id.toString()),
   });
 
-  const selectAgencies = agencies.map(c => mapLookupCode(c));
-  const selectRoles = roles.map(c => mapLookupCode(c));
+  const selectAgencies = agencies.map((c) => mapLookupCode(c));
+  const selectRoles = roles.map((c) => mapLookupCode(c));
 
   // Arrays below are used to add the role/agency from the dropdown later in code
   let agenciesToUpdate: any[];
@@ -82,7 +84,7 @@ const EditUserPage = (props: IEditUserPageProps) => {
   );
 
   const goBack = () => {
-    history.goBack();
+    navigate(-1);
   };
 
   const initialValues = {
@@ -96,7 +98,7 @@ const EditUserPage = (props: IEditUserPageProps) => {
     rowVersion: user.rowVersion,
     emailVerified: false,
     agencies: user.agencies,
-    roles: user.roles.map(x => x.id),
+    roles: user.roles.map((x) => x.id),
     note: user.note,
     agency: user.agencies && user.agencies.length !== 0 ? user.agencies[0].id : '',
     role: user.roles && user.roles.length !== 0 ? user.roles[0].id : '',
@@ -123,7 +125,7 @@ const EditUserPage = (props: IEditUserPageProps) => {
               }
 
               if (values.roles) {
-                rolesToUpdate = values.roles.map(r => ({ id: r }));
+                rolesToUpdate = values.roles.map((r) => ({ id: r }));
               } else {
                 rolesToUpdate = user.roles;
               }
@@ -150,7 +152,7 @@ const EditUserPage = (props: IEditUserPageProps) => {
               setSubmitting(false);
             }}
           >
-            {props => (
+            {(props) => (
               <Form className="userInfo">
                 <Label>IDIR/BCeID</Label>
                 <Input

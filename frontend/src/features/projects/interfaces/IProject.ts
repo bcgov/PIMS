@@ -1,10 +1,10 @@
 import {
   IProjectAgencyResponse,
-  IProperty,
   IProjectNote,
-  IStatus,
-  IProjectTask,
   IProjectStatusHistory,
+  IProjectTask,
+  IProperty,
+  IStatus,
 } from '.';
 
 export interface IProject {

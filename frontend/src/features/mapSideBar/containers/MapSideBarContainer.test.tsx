@@ -1,31 +1,35 @@
-import React from 'react';
-import { Router, Route } from 'react-router-dom';
-import { createMemoryHistory } from 'history';
-import { render, cleanup, waitFor } from '@testing-library/react';
-import configureMockStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
-import { Provider } from 'react-redux';
-
-import { act } from 'react-dom/test-utils';
-import { ToastContainer } from 'react-toastify';
-import MapSideBarContainer from './MapSideBarContainer';
-import { noop } from 'lodash';
-import * as actionTypes from 'constants/actionTypes';
-import { IParcel } from 'actions/parcelsActions';
-import { mockDetails, mockBuildingWithAssociatedLand, mockParcel } from 'mocks/filterDataMock';
-import VisibilitySensor from 'react-visibility-sensor';
 import { useKeycloak } from '@react-keycloak/web';
-import axios from 'axios';
-import MockAdapter from 'axios-mock-adapter';
-import { Claims } from 'constants/claims';
 import { screen } from '@testing-library/dom';
 import { fireEvent } from '@testing-library/dom';
+import { cleanup, render, waitFor } from '@testing-library/react';
+import { IParcel } from 'actions/parcelsActions';
+import axios from 'axios';
+import MockAdapter from 'axios-mock-adapter';
+import * as actionTypes from 'constants/actionTypes';
+import { Claims } from 'constants/claims';
+import { createMemoryHistory } from 'history';
+import { noop } from 'lodash';
+import { mockBuildingWithAssociatedLand, mockDetails, mockParcel } from 'mocks/filterDataMock';
+import React from 'react';
+import { act } from 'react-dom/test-utils';
+import { Provider } from 'react-redux';
+import { MemoryRouter, Route } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import VisibilitySensor from 'react-visibility-sensor';
+import configureMockStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
+
+import MapSideBarContainer from './MapSideBarContainer';
 
 jest.mock(
   'react-visibility-sensor',
-  (): typeof VisibilitySensor => ({ children, partialVisibility, ...rest }: any) => (
-    <div {...rest}>{typeof children === 'function' ? children({ isVisible: true }) : children}</div>
-  ),
+  (): typeof VisibilitySensor =>
+    ({ children, partialVisibility, ...rest }: any) =>
+      (
+        <div {...rest}>
+          {typeof children === 'function' ? children({ isVisible: true }) : children}
+        </div>
+      ),
 );
 const mockAxios = new MockAdapter(axios);
 
@@ -50,16 +54,12 @@ const getStore = (parcelDetail?: IParcel) =>
     lookupCode: { lookupCodes: [] },
   });
 
-const history = createMemoryHistory({
-  getUserConfirmation: (message, callback) => {
-    callback(true);
-  },
-});
+const history = createMemoryHistory();
 
 const renderContainer = ({ store }: any) =>
   render(
     <Provider store={store ?? getStore()}>
-      <Router history={history}>
+      <MemoryRouter initialEntries={[history.location]}>
         <ToastContainer
           autoClose={5000}
           hideProgressBar
@@ -71,7 +71,7 @@ const renderContainer = ({ store }: any) =>
         <Route path="/mapView/:id?">
           <MapSideBarContainer refreshParcels={noop} properties={[]} />
         </Route>
-      </Router>
+      </MemoryRouter>
     </Provider>,
   );
 

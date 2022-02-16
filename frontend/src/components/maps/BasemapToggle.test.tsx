@@ -1,9 +1,10 @@
-import BasemapToggle, { BaseLayer } from './BasemapToggle';
+import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
+import { mount } from 'enzyme';
+import Enzyme from 'enzyme';
 import React from 'react';
 import renderer from 'react-test-renderer';
-import { mount } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
-import Enzyme from 'enzyme';
+
+import BasemapToggle, { BaseLayer } from './BasemapToggle';
 
 Enzyme.configure({ adapter: new Adapter() });
 
@@ -18,8 +19,7 @@ const baseMaps = [
   },
   {
     name: 'Satellite',
-    url:
-      'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
     attribution:
       'Tiles &copy; Esri &mdash; Source: Esri, DigitalGlobe, GeoEye, Earthstar Geographics, CNES/Airbus DS, USDA, USGS, AeroGRID, IGN, and the GIS User Community',
     thumbnail: 'satellite.jpg',
@@ -30,8 +30,7 @@ const baseMaps = [
 const toggledLayers = [
   {
     name: 'Satellite',
-    url:
-      'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
     attribution:
       'Tiles &copy; Esri &mdash; Source: Esri, DigitalGlobe, GeoEye, Earthstar Geographics, CNES/Airbus DS, USDA, USGS, AeroGRID, IGN, and the GIS User Community',
     thumbnail: 'satellite.jpg',

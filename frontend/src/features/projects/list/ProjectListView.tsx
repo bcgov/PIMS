@@ -1,41 +1,42 @@
 import './ProjectListView.scss';
 
-import React, { useState, useMemo, useRef, useCallback } from 'react';
-import { useAppSelector, useAppDispatch } from 'store';
-import { Container } from 'react-bootstrap';
-import * as API from 'constants/API';
-import { IProjectFilter, IProject } from '.';
-import { columns as cols } from './columns';
-import { IProject as IProjectDetail } from 'features/projects/interfaces';
-import { Table } from 'components/Table';
-import service from '../apiService';
-import { FaFolder, FaFolderOpen, FaFileExcel, FaFileAlt } from 'react-icons/fa';
-import { Properties } from './properties';
-import FilterBar from 'components/SearchBar/FilterBar';
-import { Col } from 'react-bootstrap';
-import { Input, Button, Select } from 'components/common/form';
+import variables from '_variables.module.scss';
+import { Button, Input, Select } from 'components/common/form';
+import { ParentSelect } from 'components/common/form/ParentSelect';
 import GenericModal from 'components/common/GenericModal';
-import { useHistory } from 'react-router-dom';
-import {
-  fetchProjectStatuses,
-  deleteProjectWarning,
-  deletePotentialSubdivisionParcels,
-} from '../common';
-import { ReviewWorkflowStatus } from 'features/projects/constants';
-import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+import TooltipWrapper from 'components/common/TooltipWrapper';
+import FilterBar from 'components/SearchBar/FilterBar';
+import { Table } from 'components/Table';
+import * as API from 'constants/API';
 import Claims from 'constants/claims';
 import { ENVIRONMENT } from 'constants/environment';
-import queryString from 'query-string';
-import download from 'utils/download';
-import { mapLookupCodeWithParentString, mapStatuses } from 'utils';
-import styled from 'styled-components';
-import TooltipWrapper from 'components/common/TooltipWrapper';
-import { ParentSelect } from 'components/common/form/ParentSelect';
-import variables from '_variables.module.scss';
-import useCodeLookups from 'hooks/useLookupCodes';
-import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
 import { PropertyTypes } from 'constants/propertyTypes';
+import { ReviewWorkflowStatus } from 'features/projects/constants';
+import { IProject as IProjectDetail } from 'features/projects/interfaces';
+import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+import useCodeLookups from 'hooks/useLookupCodes';
+import queryString from 'query-string';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
+import { Container } from 'react-bootstrap';
+import { Col } from 'react-bootstrap';
+import { FaFileAlt, FaFileExcel, FaFolder, FaFolderOpen } from 'react-icons/fa';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from 'store';
+import styled from 'styled-components';
+import { mapLookupCodeWithParentString, mapStatuses } from 'utils';
+import download from 'utils/download';
+
+import service from '../apiService';
+import {
+  deletePotentialSubdivisionParcels,
+  deleteProjectWarning,
+  fetchProjectStatuses,
+} from '../common';
 import { toFlatProject } from '../common/projectConverter';
+import { IProject, IProjectFilter } from '.';
+import { columns as cols } from './columns';
+import { Properties } from './properties';
 
 interface IProjectFilterState {
   name?: string;
@@ -71,19 +72,21 @@ export const ProjectListView: React.FC<IProps> = ({
 }) => {
   const lookupCodes = useCodeLookups();
   const agencies = useMemo(() => lookupCodes.getByType(API.AGENCY_CODE_SET_NAME), [lookupCodes]);
-  const projectStatuses = useAppSelector(store => store.statuses);
+  const projectStatuses = useAppSelector((store) => store.statuses);
   const keycloak = useKeycloakWrapper();
   const [deleteProjectNumber, setDeleteProjectNumber] = React.useState<string | undefined>();
   const [deletedProject, setDeletedProject] = React.useState<IProjectDetail | undefined>();
-  const agencyIds = useMemo(() => (agencies ?? []).map(x => parseInt(x.id, 10)), [agencies]);
-  const agencyOptions = (agencies ?? []).map(c => mapLookupCodeWithParentString(c, agencies ?? []));
-  const statuses = (projectStatuses ?? []).map(c => mapStatuses(c));
+  const agencyIds = useMemo(() => (agencies ?? []).map((x) => parseInt(x.id, 10)), [agencies]);
+  const agencyOptions = (agencies ?? []).map((c) =>
+    mapLookupCodeWithParentString(c, agencies ?? []),
+  );
+  const statuses = (projectStatuses ?? []).map((c) => mapStatuses(c));
   const columns = useMemo(() => cols, []);
 
   // We'll start our table without any data
   const [data, setData] = useState<IProject[] | undefined>(undefined);
   const hasSubdivisions = deletedProject?.properties?.some(
-    p => p.propertyTypeId === PropertyTypes.SUBDIVISION,
+    (p) => p.propertyTypeId === PropertyTypes.SUBDIVISION,
   );
 
   // Filtering and pagination state
@@ -92,7 +95,7 @@ export const ProjectListView: React.FC<IProps> = ({
   const [pageSize, setPageSize] = useState(10);
   const [pageIndex, setPageIndex] = useState(0);
   const [pageCount, setPageCount] = useState(0);
-  const history = useHistory();
+  const navigate = useNavigate();
 
   // const [loading, setLoading] = useState(false);
   const fetchIdRef = useRef(0);
@@ -127,7 +130,7 @@ export const ProjectListView: React.FC<IProps> = ({
     },
     [setFilter, setPageIndex, clearSelected],
   );
-  const onPageSizeChanged = useCallback(size => {
+  const onPageSizeChanged = useCallback((size) => {
     setPageSize(size);
   }, []);
 
@@ -169,7 +172,8 @@ export const ProjectListView: React.FC<IProps> = ({
     [setData, setPageCount],
   );
   const dispatch = useAppDispatch();
-  const route = history.location.pathname;
+  const location = useLocation();
+  const route = location.pathname;
 
   // Listen for changes in pagination and use the state to fetch our new data
   useDeepCompareEffect(() => {
@@ -195,11 +199,11 @@ export const ProjectListView: React.FC<IProps> = ({
   };
 
   const handleDelete = async () => {
-    const project = data?.find(p => p.projectNumber === deleteProjectNumber);
+    const project = data?.find((p) => p.projectNumber === deleteProjectNumber);
     if (project) {
       project.status = projectStatuses.find((x: any) => x.name === project.status)!;
       const deletedProject = await service.deleteProject(project);
-      setData(data?.filter(p => p.projectNumber !== project.projectNumber));
+      setData(data?.filter((p) => p.projectNumber !== project.projectNumber));
       setDeleteProjectNumber(undefined);
       setDeletedProject(toFlatProject(deletedProject));
     }
@@ -215,20 +219,20 @@ export const ProjectListView: React.FC<IProps> = ({
     );
     if (ReviewWorkflowStatuses.includes(row.statusCode)) {
       if (keycloak.hasClaim(Claims.ADMIN_PROJECTS)) {
-        history.push(`${row.statusRoute}?projectNumber=${row.projectNumber}`);
+        navigate(`${row.statusRoute}?projectNumber=${row.projectNumber}`);
       } else {
-        history.push(`/projects/summary?projectNumber=${row.projectNumber}`);
+        navigate(`/projects/summary?projectNumber=${row.projectNumber}`);
       }
     } else {
-      history.push(`/dispose${row.statusRoute}?projectNumber=${row.projectNumber}`);
+      navigate(`/dispose${row.statusRoute}?projectNumber=${row.projectNumber}`);
     }
   };
 
   const lazyLoadProperties = async (expandedRows: IProject[]) => {
     if (expandedRows.length > 0) {
-      expandedRows = expandedRows.filter(x => x.properties.length === 0);
+      expandedRows = expandedRows.filter((x) => x.properties.length === 0);
       const properties = await Promise.all(
-        expandedRows.map(async project => await service.loadProperties(project.projectNumber)),
+        expandedRows.map(async (project) => await service.loadProperties(project.projectNumber)),
       );
       const projectPropertiesMap = properties.reduce((map: any, current: any) => {
         const ids = Object.keys(current);
@@ -236,7 +240,7 @@ export const ProjectListView: React.FC<IProps> = ({
         return { ...map, [projectId]: current[projectId] };
       }, {});
       setData(
-        data?.map(d => {
+        data?.map((d) => {
           return !!projectPropertiesMap[d.projectNumber]
             ? { ...d, properties: projectPropertiesMap[d.projectNumber] }
             : d;
@@ -248,7 +252,7 @@ export const ProjectListView: React.FC<IProps> = ({
   const fiscalYears = React.useMemo(() => {
     const startYear = new Date().getFullYear() - 10;
     return Array.from(Array(12).keys())
-      .map(i => {
+      .map((i) => {
         var year = startYear + i;
         return { label: `${year - 1} / ${year}`, value: year };
       })
@@ -350,14 +354,15 @@ export const ProjectListView: React.FC<IProps> = ({
           pageIndex={pageIndex}
           onRowClick={onRowClick}
           detailsPanel={{
-            render: project => <Properties data={project.properties} />,
+            render: (project) => <Properties data={project.properties} />,
             icons: {
               open: <FaFolderOpen color="black" size={20} />,
               closed: <FaFolder color="black" size={20} />,
             },
-            checkExpanded: (row, state) => !!state.find(x => x.projectNumber === row.projectNumber),
+            checkExpanded: (row, state) =>
+              !!state.find((x) => x.projectNumber === row.projectNumber),
             onExpand: lazyLoadProperties,
-            getRowId: row => row.projectNumber,
+            getRowId: (row) => row.projectNumber,
           }}
           onPageSizeChange={onPageSizeChanged}
         />

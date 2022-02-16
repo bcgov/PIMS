@@ -1,4 +1,4 @@
-import { createSlice, createAction, PayloadAction } from '@reduxjs/toolkit';
+import { createAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { ILookupCode } from 'actions/ILookupCode';
 
 export const storeLookupCodes = createAction<ILookupCode[]>('storeLookupCodes');
@@ -15,7 +15,7 @@ export const lookupCodeSlice = createSlice({
   name: 'lookupCode',
   initialState: initialLookupCodeState,
   reducers: {},
-  extraReducers: builder => {
+  extraReducers: (builder) => {
     builder.addCase(
       storeLookupCodes,
       (state: ILookupCodeState, action: PayloadAction<ILookupCode[]>) => {

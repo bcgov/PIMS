@@ -1,9 +1,10 @@
+import { Check } from 'components/common/form/Check';
+import Roles from 'constants/roles';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import React, { Fragment } from 'react';
 import { Form } from 'react-bootstrap';
+
 import { IStepProps } from '../../interfaces';
-import { Check } from 'components/common/form/Check';
-import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
-import Roles from 'constants/roles';
 
 /**
  * Form component of ApprovalConfirmationForm.
@@ -19,9 +20,9 @@ const ApprovalConfirmationForm = ({ isReadOnly }: IStepProps) => {
   return (
     <Fragment>
       <h3>Approval</h3>
-      <Form.Row>
+      <Form.Group>
         <Check field={fieldName} postLabel={label} required disabled={isReadOnly} />
-      </Form.Row>
+      </Form.Group>
     </Fragment>
   );
 };

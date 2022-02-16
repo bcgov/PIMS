@@ -1,7 +1,8 @@
-import React, { Fragment } from 'react';
-import classNames from 'classnames';
-import { FaCheck } from 'react-icons/fa';
 import './Stepper.scss';
+
+import classNames from 'classnames';
+import React, { Fragment } from 'react';
+import { FaCheck } from 'react-icons/fa';
 import { ObjectSchema } from 'yup';
 
 export interface IStep {
@@ -10,7 +11,7 @@ export interface IStep {
   completed: boolean;
   canGoToStep: boolean;
   validation?: {
-    schema: ObjectSchema<object>;
+    schema: ObjectSchema<any>;
     nameSpace: (currentTab: number) => string;
   };
 }

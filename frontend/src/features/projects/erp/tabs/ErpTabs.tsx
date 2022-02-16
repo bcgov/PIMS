@@ -1,16 +1,17 @@
-import * as React from 'react';
-import { Tab, Spinner } from 'react-bootstrap';
-import { useStepForm } from '../../common';
-import { ReviewWorkflowStatus, SPPApprovalTabs } from 'features/projects/constants';
-import { IProject } from 'features/projects/interfaces';
-import { useFormikContext } from 'formik';
-import { EnhancedReferralTab } from '..';
-import { isEqual } from 'lodash';
-import { ProjectInformationTab, DocumentationTab, NotificationTab } from '../../common';
-import { CloseOutFormTab, SplTab } from 'features/projects/spl';
-import { isTabInError } from 'components/common/tabValidation';
 import ErrorTabs from 'components/common/ErrorTabs';
+import { isTabInError } from 'components/common/tabValidation';
+import { ReviewWorkflowStatus, SPPApprovalTabs } from 'features/projects/constants';
 import { defaultProject } from 'features/projects/constants/defaultValues';
+import { IProject } from 'features/projects/interfaces';
+import { CloseOutFormTab, SplTab } from 'features/projects/spl';
+import { useFormikContext } from 'formik';
+import { isEqual } from 'lodash';
+import * as React from 'react';
+import { Spinner, Tab } from 'react-bootstrap';
+
+import { useStepForm } from '../../common';
+import { DocumentationTab, NotificationTab, ProjectInformationTab } from '../../common';
+import { EnhancedReferralTab } from '..';
 
 interface IErpTabsProps {
   /** The currently displayed tab */

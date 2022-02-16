@@ -1,25 +1,28 @@
-import * as React from 'react';
-import { Container, Spinner } from 'react-bootstrap';
-import { useProject, updateWorkflowStatus } from '.';
+import GenericModal from 'components/common/GenericModal';
 import { ReviewWorkflowStatus } from 'features/projects/constants';
 import { IProject } from 'features/projects/interfaces';
 import _ from 'lodash';
-import { useHistory } from 'react-router-dom';
-import { useEffect, useState } from 'react';
-import { fetchProjectWorkflow } from './projectsActionCreator';
 import queryString from 'query-string';
-import GenericModal from 'components/common/GenericModal';
+import * as React from 'react';
+import { useEffect, useState } from 'react';
+import { Container, Spinner } from 'react-bootstrap';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'store';
+
+import { updateWorkflowStatus, useProject } from '.';
+import { fetchProjectWorkflow } from './projectsActionCreator';
 
 interface IApprovalTransitionPageProps {}
 
-const transitionFunction = (promise: any, history: any, toStatusCode: string) => {
+const transitionFunction = (promise: any, navigate: any, toStatusCode: string) => {
   return promise
     .then((project: IProject) => {
       if (project?.status?.route === undefined) {
         throw Error('No valid route for current project status');
       }
-      history.replace(`${project?.status?.route}?projectNumber=${project.projectNumber}`);
+      navigate(`${project?.status?.route}?projectNumber=${project.projectNumber}`, {
+        replace: true,
+      });
     })
     .catch(() => {
       throw Error(`Failed to update status to ${toStatusCode}`);
@@ -36,16 +39,19 @@ const ErrorMessage = () => {
   );
 };
 
-export const ApprovalTransitionPage: React.FunctionComponent<IApprovalTransitionPageProps> = props => {
+export const ApprovalTransitionPage: React.FunctionComponent<IApprovalTransitionPageProps> = (
+  props,
+) => {
   const { workflowStatuses } = useProject();
   const dispatch = useAppDispatch();
-  const project = useAppSelector(store => store.project.project);
+  const project = useAppSelector((store) => store.project.project);
   const [isTransitioned, setIsTransitioned] = useState(false);
-  const history = useHistory();
+  const navigate = useNavigate();
+  const location = useLocation();
   const toStatus = _.find(workflowStatuses, { code: project?.statusCode })?.toStatus;
   const [error, setError] = React.useState(false);
 
-  const params = queryString.parse(history.location.search);
+  const params = queryString.parse(location.search);
 
   useEffect(() => {
     if (!!project && toStatus === undefined) {
@@ -62,12 +68,14 @@ export const ApprovalTransitionPage: React.FunctionComponent<IApprovalTransition
         project.statusCode === ReviewWorkflowStatus.ApprovedForExemption ||
         project.statusCode === ReviewWorkflowStatus.NotInSpl
       ) {
-        history.replace(`erp?projectNumber=${project.projectNumber}`);
+        navigate(`erp?projectNumber=${project.projectNumber}`, { replace: true });
       } else if (next?.length !== 1) {
         if (project.workflowCode === 'ERP' && project.statusCode === 'AP-ERP') {
-          history.replace(`approved?projectNumber=${project.projectNumber}&to=ERP-ON`);
+          navigate(`approved?projectNumber=${project.projectNumber}&to=ERP-ON`, { replace: true });
         } else if (project.workflowCode === 'SPL' && project.statusCode === 'AP-SPL') {
-          history.replace(`/projects/premarketing?projectNumber=${project.projectNumber}`);
+          navigate(`/projects/premarketing?projectNumber=${project.projectNumber}`, {
+            replace: true,
+          });
         } else {
           // We don't currently handle this transition.
           setError(true);
@@ -77,12 +85,12 @@ export const ApprovalTransitionPage: React.FunctionComponent<IApprovalTransition
         setIsTransitioned(true);
         transitionFunction(
           updateWorkflowStatus(project, toStatusCode, project.workflowCode)(dispatch),
-          history,
+          navigate,
           toStatusCode,
         );
       }
     }
-  }, [dispatch, history, isTransitioned, project, toStatus, setError, params.to]);
+  }, [dispatch, navigate, isTransitioned, project, toStatus, setError, params.to]);
 
   return !error ? (
     <Container fluid style={{ textAlign: 'center' }}>

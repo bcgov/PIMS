@@ -1,21 +1,22 @@
-import { useLocation } from 'react-router-dom';
+import { IParcel } from 'actions/parcelsActions';
+import { DisplayError, Input } from 'components/common/form';
+import SearchButton from 'components/common/form/SearchButton';
+import { ISteppedFormValues } from 'components/common/form/StepForm';
+import { Label } from 'components/common/Label';
+import { ILinkListItem, LinkList } from 'components/common/LinkList';
+import { dequal } from 'dequal';
+import { pidFormatter } from 'features/properties/components/forms/subforms/PidPinForm';
 import { getIn, useFormikContext } from 'formik';
+import _ from 'lodash';
+import queryString from 'query-string';
 import React, { useEffect, useMemo } from 'react';
 import { Col, Form } from 'react-bootstrap';
-import { Label } from 'components/common/Label';
-import { Input, DisplayError } from 'components/common/form';
-import { pidFormatter } from 'features/properties/components/forms/subforms/PidPinForm';
-import SearchButton from 'components/common/form/SearchButton';
+import { useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import _ from 'lodash';
-import { IParcel } from 'actions/parcelsActions';
-import { withNameSpace } from 'utils/formUtils';
-import queryString from 'query-string';
-import { ISteppedFormValues } from 'components/common/form/StepForm';
-import { ISearchFields } from '../LandForm';
-import dequal from 'dequal';
 import styled from 'styled-components';
-import { ILinkListItem, LinkList } from 'components/common/LinkList';
+import { withNameSpace } from 'utils/formUtils';
+
+import { ISearchFields } from '../LandForm';
 
 interface IAddParentParcelsFormProps {
   /** used for determining nameSpace of field */
@@ -39,9 +40,8 @@ const AddParentParcelsForm = ({
   findMatchingPid,
   disabled,
 }: IAddParentParcelsFormProps) => {
-  const { values, initialValues, touched, setFieldValue, setFieldTouched } = useFormikContext<
-    ISteppedFormValues<IParcel & ISearchFields>
-  >();
+  const { values, initialValues, touched, setFieldValue, setFieldTouched } =
+    useFormikContext<ISteppedFormValues<IParcel & ISearchFields>>();
   const location = useLocation();
   const parcels = getIn(values, withNameSpace(nameSpace, 'parcels'));
   const initialParcels = getIn(initialValues, withNameSpace(nameSpace, 'parcels'));
@@ -82,7 +82,7 @@ const AddParentParcelsForm = ({
         <h5>Parent Parcels</h5>
       </Col>
       <Col md={12}>
-        <Form.Row>
+        <Form.Group>
           <Label>Enter Parent Parcel PID(s)</Label>
           <Input
             displayErrorTooltips
@@ -126,7 +126,7 @@ const AddParentParcelsForm = ({
               }
             }}
           />
-        </Form.Row>
+        </Form.Group>
       </Col>
       <Col md={12}>
         <hr></hr>

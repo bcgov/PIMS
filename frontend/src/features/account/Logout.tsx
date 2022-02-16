@@ -1,6 +1,6 @@
-import React from 'react';
-import { Redirect } from 'react-router-dom';
 import { useConfiguration } from 'hooks/useConfiguration';
+import React from 'react';
+import { Navigate } from 'react-router-dom';
 
 export const LogoutPage = () => {
   const configuration = useConfiguration();
@@ -13,5 +13,5 @@ export const LogoutPage = () => {
     }
   }, [configuration]);
 
-  return !configuration.siteMinderLogoutUrl ? <Redirect to="/login" /> : null;
+  return !configuration.siteMinderLogoutUrl ? <Navigate to="/login" /> : null;
 };

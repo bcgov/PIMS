@@ -1,13 +1,13 @@
 import {
+  clear,
+  error,
   initialNetworkState,
   networkSlice,
-  storeRequest,
   request,
+  storeError,
+  storeRequest,
   storeSuccess,
   success,
-  storeError,
-  error,
-  clear,
 } from './networkSlice';
 
 describe('Network slice tests', () => {

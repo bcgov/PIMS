@@ -1,8 +1,8 @@
-import * as React from 'react';
-import styled from 'styled-components';
-import { Button, Spinner } from 'react-bootstrap';
-import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import Claims from 'constants/claims';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+import * as React from 'react';
+import { Button, Spinner } from 'react-bootstrap';
+import styled from 'styled-components';
 
 const StepActionsWrapper = styled.div`
   width: 100%;

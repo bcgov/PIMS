@@ -1,5 +1,6 @@
 // Network URL's
 import queryString from 'query-string';
+
 import { AccessRequestStatus } from './accessStatus';
 
 // Generic Params
@@ -109,7 +110,7 @@ export const LOOKUP_CODE_SET = (codeSetName: string) => `/lookup/${codeSetName}`
 export const AGENCY_CODE_SET_NAME = 'Agency';
 export const ROLE_CODE_SET_NAME = 'Role';
 export const PROVINCE_CODE_SET_NAME = 'Province';
-export const AMINISTRATIVE_AREA_CODE_SET_NAME = 'AdministrativeArea';
+export const ADMINISTRATIVE_AREA_CODE_SET_NAME = 'AdministrativeArea';
 export const PROPERTY_CLASSIFICATION_CODE_SET_NAME = 'PropertyClassification';
 export const CONSTRUCTION_CODE_SET_NAME = 'BuildingConstructionType';
 export const PREDOMINATE_USE_CODE_SET_NAME = 'BuildingPredominateUse';

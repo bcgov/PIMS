@@ -1,6 +1,6 @@
-import { createSlice, createAction, PayloadAction } from '@reduxjs/toolkit';
-import * as ActionTypes from 'constants/actionTypes';
+import { createAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { AxiosError } from 'axios';
+import * as ActionTypes from 'constants/actionTypes';
 
 export const storeRequest = createAction<IGenericNetworkAction>('REQUEST');
 export const storeSuccess = createAction<IGenericNetworkAction>('SUCCESS');
@@ -22,7 +22,7 @@ export const networkSlice = createSlice({
   name: 'network',
   initialState: initialNetworkState,
   reducers: {},
-  extraReducers: builder => {
+  extraReducers: (builder) => {
     builder.addCase(storeRequest, (state: {}, action: PayloadAction<IGenericNetworkAction>) => {
       return {
         ...state,

@@ -1,10 +1,11 @@
+import { ColumnWithProps } from 'components/Table';
+import { Workflows } from 'constants/workflows';
 import React from 'react';
+import { FaTrash } from 'react-icons/fa';
 import { CellProps } from 'react-table';
 import { formatDate, formatMoney } from 'utils';
+
 import { IProject } from '.';
-import { ColumnWithProps } from 'components/Table';
-import { FaTrash } from 'react-icons/fa';
-import { Workflows } from 'constants/workflows';
 // NOTE - There numbers below match the total number of columns ATM (13)
 // If additional columns are added or deleted, these numbers need tp be updated...
 const howManyColumns = 13;
@@ -77,7 +78,7 @@ export const columns = (
     },
     {
       Header: 'Agency',
-      accessor: item => (item.subAgency ? `${item.subAgency} (${item.agency})` : item.agency),
+      accessor: (item) => (item.subAgency ? `${item.subAgency} (${item.agency})` : item.agency),
       align: 'left',
       responsive: true,
       clickable: true,

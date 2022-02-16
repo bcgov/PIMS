@@ -1,15 +1,16 @@
-import React, { Fragment, useMemo, useState } from 'react';
-import { ProjectDraftForm, ProjectNotes, PublicNotes, PrivateNotes } from '../../common';
-import { IProject } from 'features/projects/interfaces';
-import { PropertyListViewUpdate } from '../../common/components/PropertyListViewUpdate';
-import { useFormikContext } from 'formik';
-import _ from 'lodash';
 import { ILookupCode } from 'actions/ILookupCode';
-import Form from 'react-bootstrap/Form';
-import * as API from 'constants/API';
 import { TypeaheadField } from 'components/common/form/Typeahead';
-import useCodeLookups from 'hooks/useLookupCodes';
+import * as API from 'constants/API';
+import { IProject } from 'features/projects/interfaces';
+import { useFormikContext } from 'formik';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
+import useCodeLookups from 'hooks/useLookupCodes';
+import _ from 'lodash';
+import React, { Fragment, useMemo, useState } from 'react';
+import Form from 'react-bootstrap/Form';
+
+import { PrivateNotes, ProjectDraftForm, ProjectNotes, PublicNotes } from '../../common';
+import { PropertyListViewUpdate } from '../../common/components/PropertyListViewUpdate';
 
 /**
  * Form component of GreTransferStep.
@@ -39,7 +40,7 @@ export const GreTransferForm = ({ canEdit }: { canEdit: boolean }) => {
       <ProjectDraftForm isReadOnly={canEdit} hideAgency={true} />
       <h3>Properties in the Project</h3>
       <p>Update Properties with New Agency Owner Name</p>
-      <Form.Row>
+      <Form.Group>
         <Form.Label column md={2} htmlFor="agencyId-field">
           New Owning Agency
         </Form.Label>
@@ -55,7 +56,7 @@ export const GreTransferForm = ({ canEdit }: { canEdit: boolean }) => {
             return options;
           }}
         />
-      </Form.Row>
+      </Form.Group>
       <PropertyListViewUpdate
         disabled={!canEdit}
         field="properties"

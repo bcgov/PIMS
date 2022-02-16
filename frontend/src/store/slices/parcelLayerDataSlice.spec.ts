@@ -1,4 +1,5 @@
 import { GeoJsonObject } from 'geojson';
+
 import {
   clearParcelLayerData,
   clearParcelLayerFeature,

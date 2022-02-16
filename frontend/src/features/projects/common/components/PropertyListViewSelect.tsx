@@ -1,18 +1,19 @@
-import React, { useMemo, useState, useRef, useCallback, useEffect } from 'react';
-import { FormControlProps, Container, Button } from 'react-bootstrap';
-import { useFormikContext, getIn } from 'formik';
-import _ from 'lodash';
-import { IFilterBarState, clickableTooltip, useProject } from '../../common';
-import { IProperty } from 'features/projects/interfaces';
-import * as API from 'constants/API';
 import { DisplayError } from 'components/common/form';
 import { Table } from 'components/Table';
-import useTable from '../../dispose/hooks/useTable';
-import { getPropertyColumns, getColumnsWithRemove } from './columns';
-import queryString from 'query-string';
+import * as API from 'constants/API';
 import { PropertyTypes } from 'constants/propertyTypes';
-import useCodeLookups from 'hooks/useLookupCodes';
+import { IProperty } from 'features/projects/interfaces';
+import { getIn, useFormikContext } from 'formik';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
+import useCodeLookups from 'hooks/useLookupCodes';
+import _ from 'lodash';
+import queryString from 'query-string';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Button, Container, FormControlProps } from 'react-bootstrap';
+
+import { clickableTooltip, IFilterBarState, useProject } from '../../common';
+import useTable from '../../dispose/hooks/useTable';
+import { getColumnsWithRemove, getPropertyColumns } from './columns';
 
 type RequiredAttributes = {
   /** The field name */
@@ -61,9 +62,10 @@ export const PropertyListViewSelect: React.FC<InputProps> = ({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const filteredAgencies = useMemo(() => filterByParent(agencies, project.agencyId), [agencies]);
 
-  const agencyIds = useMemo(() => filteredAgencies.map(x => parseInt(x.id, 10)), [
-    filteredAgencies,
-  ]);
+  const agencyIds = useMemo(
+    () => filteredAgencies.map((x) => parseInt(x.id, 10)),
+    [filteredAgencies],
+  );
   if (project === undefined) {
     throw Error('unable to load project data');
   }
@@ -82,7 +84,7 @@ export const PropertyListViewSelect: React.FC<InputProps> = ({
     [project],
   );
 
-  const onPageSizeChanged = useCallback(size => {
+  const onPageSizeChanged = useCallback((size) => {
     setPageSize(size);
   }, []);
 

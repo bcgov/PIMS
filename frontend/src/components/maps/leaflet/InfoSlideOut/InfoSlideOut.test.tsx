@@ -1,19 +1,21 @@
-import * as React from 'react';
 import 'leaflet';
-import { Map as LeafletMap } from 'leaflet';
-import { Map as ReactLeafletMap, MapProps } from 'react-leaflet';
-import Adapter from 'enzyme-adapter-react-16';
-import Enzyme, { mount } from 'enzyme';
-import InfoSlideOut from './InfoSlideOut';
 import 'leaflet/dist/leaflet.css';
-import { waitFor } from '@testing-library/dom';
-import { Button } from 'react-bootstrap';
-import { createMemoryHistory } from 'history';
-import { Router } from 'react-router-dom';
-import thunk from 'redux-thunk';
-import configureMockStore from 'redux-mock-store';
-import { Provider } from 'react-redux';
+
 import { useKeycloak } from '@react-keycloak/web';
+import { waitFor } from '@testing-library/dom';
+import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
+import Enzyme, { mount } from 'enzyme';
+import { createMemoryHistory } from 'history';
+import { Map as LeafletMap } from 'leaflet';
+import * as React from 'react';
+import { Button } from 'react-bootstrap';
+import { MapContainer } from 'react-leaflet';
+import { Provider } from 'react-redux';
+import { MemoryRouter } from 'react-router-dom';
+import configureMockStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
+
+import InfoSlideOut from './InfoSlideOut';
 
 jest.mock('@react-keycloak/web');
 (useKeycloak as jest.Mock).mockReturnValue({
@@ -31,20 +33,20 @@ const history = createMemoryHistory();
 const mockStore = configureMockStore([thunk]);
 const store = mockStore({});
 
-let mapRef: React.RefObject<ReactLeafletMap<MapProps, LeafletMap>> | undefined;
+let mapRef: React.RefObject<LeafletMap> | undefined;
 
 const MapComponent = () => {
   const [open, setOpen] = React.useState(false);
   mapRef = React.useRef<any>();
   return (
     <Provider store={store}>
-      <Router history={history}>
+      <MemoryRouter initialEntries={[history.location]}>
         <div id="mapid" style={{ width: 500, height: 500 }}>
-          <ReactLeafletMap ref={mapRef} center={[48.423078, -123.360956]} zoom={18}>
+          <MapContainer ref={mapRef} center={[48.423078, -123.360956]} zoom={18}>
             <InfoSlideOut open={open} setOpen={() => setOpen(!open)} />
-          </ReactLeafletMap>
+          </MapContainer>
         </div>
-      </Router>
+      </MemoryRouter>
     </Provider>
   );
 };

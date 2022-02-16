@@ -1,22 +1,23 @@
-import React from 'react';
-import { createMemoryHistory } from 'history';
-import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
-import { render, act, screen, cleanup, waitFor } from '@testing-library/react';
 import { useKeycloak } from '@react-keycloak/web';
-import MockAdapter from 'axios-mock-adapter';
+import { act, cleanup, render, screen, waitFor } from '@testing-library/react';
 import axios from 'axios';
-import _ from 'lodash';
-import { getStore, mockProject as defaultProject, mockFlatProject } from '../../dispose/testUtils';
+import MockAdapter from 'axios-mock-adapter';
+import Claims from 'constants/claims';
+import { PropertyTypes } from 'constants/propertyTypes';
 import {
-  ReviewWorkflowStatus,
   AgencyResponses,
+  ReviewWorkflowStatus,
   SPPApprovalTabs,
 } from 'features/projects/constants';
 import { IProject } from 'features/projects/interfaces';
+import { createMemoryHistory } from 'history';
+import _ from 'lodash';
+import React from 'react';
+import { Provider } from 'react-redux';
+import { MemoryRouter } from 'react-router-dom';
+
+import { getStore, mockFlatProject, mockProject as defaultProject } from '../../dispose/testUtils';
 import { SplStep } from '..';
-import Claims from 'constants/claims';
-import { PropertyTypes } from 'constants/propertyTypes';
 
 jest.mock('@react-keycloak/web');
 const mockKeycloak = (claims: string[]) => {
@@ -40,9 +41,9 @@ mockProject.submittedOn = '2020-07-15';
 
 const getSplStep = (storeOverride?: any) => (
   <Provider store={storeOverride ?? getStore(mockProject)}>
-    <Router history={history}>
+    <MemoryRouter initialEntries={[history.location]}>
       <SplStep />
-    </Router>
+    </MemoryRouter>
   </Provider>
 );
 
@@ -112,7 +113,7 @@ describe('SPL Approval Step', () => {
     it('form fields are not disabled', () => {
       const { queryAllByRole } = render(getSplStep());
       const textboxes = queryAllByRole('textbox');
-      textboxes.forEach(textbox => {
+      textboxes.forEach((textbox) => {
         expect(textbox).toBeVisible();
         if (!textbox.className.includes('date-picker') && textbox.id !== 'input-note') {
           expect(textbox).not.toBeDisabled();
@@ -137,7 +138,7 @@ describe('SPL Approval Step', () => {
     it('form fields are disabled', () => {
       const component = render(getSplStep());
       const textboxes = component.queryAllByRole('textbox');
-      textboxes.forEach(textbox => {
+      textboxes.forEach((textbox) => {
         expect(textbox).toBeVisible();
         expect(textbox).toBeDisabled();
       });
@@ -163,7 +164,7 @@ describe('SPL Approval Step', () => {
     it('form fields are disabled', () => {
       const component = render(getSplStep(getStore(project)));
       const textboxes = component.queryAllByRole('textbox');
-      textboxes.forEach(textbox => {
+      textboxes.forEach((textbox) => {
         expect(textbox).toBeVisible();
         expect(textbox).toBeDisabled();
       });

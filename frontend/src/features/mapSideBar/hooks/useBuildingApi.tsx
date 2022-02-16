@@ -1,13 +1,13 @@
-import { request, success, error } from 'store';
 import { IBuilding } from 'actions/parcelsActions';
-import { showLoading, hideLoading } from 'react-redux-loading-bar';
-import CustomAxios, { LifecycleToasts } from 'customAxios';
-import { ENVIRONMENT } from 'constants/environment';
-import * as actionTypes from 'constants/actionTypes';
-import * as pimsToasts from 'constants/toasts';
-import * as API from 'constants/API';
-import { storePropertyDetail } from 'store/slices/parcelSlice';
 import { AxiosError } from 'axios';
+import * as actionTypes from 'constants/actionTypes';
+import * as API from 'constants/API';
+import { ENVIRONMENT } from 'constants/environment';
+import * as pimsToasts from 'constants/toasts';
+import CustomAxios, { LifecycleToasts } from 'customAxios';
+import { hideLoading, showLoading } from 'react-redux-loading-bar';
+import { error, request, success } from 'store';
+import { storePropertyDetail } from 'store/slices/parcelSlice';
 
 const buildingCreatingToasts: LifecycleToasts = {
   loadingToast: pimsToasts.building.BUILDING_CREATING,

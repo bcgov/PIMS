@@ -1,18 +1,20 @@
-import * as React from 'react';
 import 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { createMemoryHistory } from 'history';
-import { Router } from 'react-router-dom';
-import thunk from 'redux-thunk';
-import configureMockStore from 'redux-mock-store';
-import { Provider } from 'react-redux';
-import { IParcel, IBuilding } from 'actions/parcelsActions';
-import { PropertyTypes } from 'constants/propertyTypes';
+
+import { useKeycloak } from '@react-keycloak/web';
 import { render } from '@testing-library/react';
+import { IBuilding, IParcel } from 'actions/parcelsActions';
+import { PropertyTypes } from 'constants/propertyTypes';
+import { createMemoryHistory } from 'history';
 import { noop } from 'lodash';
+import * as React from 'react';
+import { Provider } from 'react-redux';
+import { MemoryRouter } from 'react-router-dom';
+import configureMockStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
+
 import HeaderActions from './HeaderActions';
 import { mockParcel } from './InfoContent.test';
-import { useKeycloak } from '@react-keycloak/web';
 
 jest.mock('@react-keycloak/web');
 (useKeycloak as jest.Mock).mockReturnValue({
@@ -37,7 +39,7 @@ const HeaderComponent = (
 ) => {
   return (
     <Provider store={store}>
-      <Router history={history}>
+      <MemoryRouter initialEntries={[history.location]}>
         <HeaderActions
           propertyInfo={propertyInfo}
           propertyTypeId={propertyTypeId}
@@ -46,7 +48,7 @@ const HeaderComponent = (
           jumpToView={noop}
           zoomToView={noop}
         />
-      </Router>
+      </MemoryRouter>
     </Provider>
   );
 };

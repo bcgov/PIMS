@@ -52,7 +52,8 @@ objects:
                   - push
             - cel:
                 filter: >-
-                  body.commits.exists(c, c.added.exists(m, m.startsWith('${CONTEXT_DIR}')))
+                  body.ref == 'refs/heads/dev'
+                  && body.commits.exists(c, c.added.exists(m, m.startsWith('${CONTEXT_DIR}')))
                     || body.commits.exists(c, c.modified.exists(m, m.startsWith('${CONTEXT_DIR}')))
                     || body.commits.exists(c, c.removed.exists(m, m.startsWith('${CONTEXT_DIR}')))
                     || body.head_commit.added.exists(m, m.startsWith('${CONTEXT_DIR}'))

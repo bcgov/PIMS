@@ -1,18 +1,19 @@
-import { ISnapshot } from './../interfaces';
-import CustomAxios, { LifecycleToasts } from 'customAxios';
-import { useAppDispatch } from 'store';
-import { showLoading, hideLoading } from 'react-redux-loading-bar';
 import { AxiosInstance } from 'axios';
 import { ENVIRONMENT } from 'constants/environment';
-import * as _ from 'lodash';
-import { IReport } from '../interfaces';
-import { useCallback } from 'react';
-import { toast } from 'react-toastify';
+import CustomAxios, { LifecycleToasts } from 'customAxios';
 import {
-  getServerQuery,
   getProjectFinancialReportUrl,
+  getServerQuery,
 } from 'features/projects/list/ProjectListView';
+import * as _ from 'lodash';
+import { useCallback } from 'react';
+import { hideLoading, showLoading } from 'react-redux-loading-bar';
+import { toast } from 'react-toastify';
+import { useAppDispatch } from 'store';
 import download from 'utils/download';
+
+import { IReport } from '../interfaces';
+import { ISnapshot } from './../interfaces';
 
 export interface IGeocoderResponse {
   siteId: string;
@@ -41,19 +42,19 @@ const getAxios = (dispatch: Function, toasts?: LifecycleToasts) => {
   axios.defaults.baseURL = baseUrl;
 
   axios.interceptors.request.use(
-    config => {
+    (config) => {
       dispatch(showLoading());
       return config;
     },
-    error => dispatch(hideLoading()),
+    (error) => dispatch(hideLoading()),
   );
 
   axios.interceptors.response.use(
-    config => {
+    (config) => {
       dispatch(hideLoading());
       return config;
     },
-    error => dispatch(hideLoading()),
+    (error) => dispatch(hideLoading()),
   );
   return axios;
 };

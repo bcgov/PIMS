@@ -1,19 +1,20 @@
+import { ILookupCode } from 'actions/ILookupCode';
+import { IAddress } from 'actions/parcelsActions';
+import { FastInput, Select } from 'components/common/form';
+import { TypeaheadField } from 'components/common/form/Typeahead';
+import { Label } from 'components/common/Label';
+import * as API from 'constants/API';
+import { FormikProps, getIn } from 'formik';
+import { IGeocoderResponse } from 'hooks/useApi';
+import _ from 'lodash';
 import { useCallback } from 'react';
 import React from 'react';
-import { FormikProps, getIn } from 'formik';
-import { ILookupCode } from 'actions/ILookupCode';
-import _ from 'lodash';
-import * as API from 'constants/API';
-import { FastInput, Select } from 'components/common/form';
-import { mapLookupCode } from 'utils';
-import { IAddress } from 'actions/parcelsActions';
-import { GeocoderAutoComplete } from '../../GeocoderAutoComplete';
-import { IGeocoderResponse } from 'hooks/useApi';
-import { TypeaheadField } from 'components/common/form/Typeahead';
-import { streetAddressTooltip } from '../strings';
-import { Label } from 'components/common/Label';
 import { Form } from 'react-bootstrap';
 import { useAppSelector } from 'store';
+import { mapLookupCode } from 'utils';
+
+import { GeocoderAutoComplete } from '../../GeocoderAutoComplete';
+import { streetAddressTooltip } from '../strings';
 
 interface AddressProps {
   nameSpace?: string;
@@ -36,12 +37,12 @@ export const defaultAddressValues: IAddress = {
   postal: '',
 };
 const AddressForm = <T extends any>(props: AddressProps & FormikProps<T>) => {
-  const lookupCodes = useAppSelector(store => store.lookupCode.lookupCodes);
+  const lookupCodes = useAppSelector((store) => store.lookupCode.lookupCodes);
   const provinces = _.filter(lookupCodes, (lookupCode: ILookupCode) => {
     return lookupCode.type === API.PROVINCE_CODE_SET_NAME;
   }).map(mapLookupCode);
   const administrativeAreas = _.filter(lookupCodes, (lookupCode: ILookupCode) => {
-    return lookupCode.type === API.AMINISTRATIVE_AREA_CODE_SET_NAME;
+    return lookupCode.type === API.ADMINISTRATIVE_AREA_CODE_SET_NAME;
   }).map(mapLookupCode);
 
   const withNameSpace: Function = useCallback(
@@ -73,7 +74,7 @@ const AddressForm = <T extends any>(props: AddressProps & FormikProps<T>) => {
   return (
     <>
       {props.hideStreetAddress !== true && (
-        <Form.Row>
+        <Form.Group>
           <Label>Street Address</Label>
           <GeocoderAutoComplete
             tooltip={props.toolTips ? streetAddressTooltip : undefined}
@@ -81,18 +82,18 @@ const AddressForm = <T extends any>(props: AddressProps & FormikProps<T>) => {
             disabled={props.disableStreetAddress || props.disabled}
             field={withNameSpace('line1')}
             onSelectionChanged={handleGeocoderChanges}
-            onTextChange={value => props.setFieldValue(withNameSpace('line1'), value)}
+            onTextChange={(value) => props.setFieldValue(withNameSpace('line1'), value)}
             error={getIn(props.errors, withNameSpace('line1'))}
             touch={getIn(props.touched, withNameSpace('line1'))}
             displayErrorTooltips
             required={true}
           />
-        </Form.Row>
+        </Form.Group>
       )}
-      <Form.Row>
+      <Form.Group>
         <Label>Location</Label>
         <TypeaheadField
-          options={administrativeAreas.map(x => x.label)}
+          options={administrativeAreas.map((x) => x.label)}
           name={withNameSpace('administrativeArea')}
           disabled={props.disabled}
           hideValidation={props.disableCheckmark}
@@ -100,8 +101,8 @@ const AddressForm = <T extends any>(props: AddressProps & FormikProps<T>) => {
           required
           displayErrorTooltips
         />
-      </Form.Row>
-      <Form.Row>
+      </Form.Group>
+      <Form.Group>
         <Label>Province</Label>
         <Select
           disabled={true}
@@ -109,8 +110,8 @@ const AddressForm = <T extends any>(props: AddressProps & FormikProps<T>) => {
           field={withNameSpace('provinceId')}
           options={provinces}
         />
-      </Form.Row>
-      <Form.Row className="postal">
+      </Form.Group>
+      <Form.Group className="postal">
         <Label>Postal Code</Label>
         <FastInput
           className="input-small"
@@ -121,7 +122,7 @@ const AddressForm = <T extends any>(props: AddressProps & FormikProps<T>) => {
           field={withNameSpace('postal')}
           displayErrorTooltips
         />
-      </Form.Row>
+      </Form.Group>
     </>
   );
 };

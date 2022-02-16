@@ -1,15 +1,15 @@
-import CustomAxios from 'customAxios';
-import { useAppDispatch } from 'store';
-import { showLoading, hideLoading } from 'react-redux-loading-bar';
-import { AxiosInstance } from 'axios';
-import { ENVIRONMENT } from 'constants/environment';
-import * as _ from 'lodash';
-import { useCallback } from 'react';
-import { IGeoSearchParams } from 'constants/API';
-import queryString from 'query-string';
 import { IBuilding, IParcel } from 'actions/parcelsActions';
-import { store } from 'store';
+import { AxiosInstance } from 'axios';
+import { IGeoSearchParams } from 'constants/API';
+import { ENVIRONMENT } from 'constants/environment';
+import CustomAxios from 'customAxios';
 import { IApiProperty } from 'features/projects/interfaces';
+import * as _ from 'lodash';
+import queryString from 'query-string';
+import { useCallback } from 'react';
+import { hideLoading, showLoading } from 'react-redux-loading-bar';
+import { useAppDispatch } from 'store';
+import { store } from 'store';
 
 export interface IGeocoderResponse {
   siteId: string;
@@ -50,23 +50,23 @@ export const useApi = (): PimsAPI => {
   const axios = CustomAxios() as PimsAPI;
 
   axios.interceptors.request.use(
-    config => {
-      config.headers.Authorization = `Bearer ${store.getState().jwt}`;
+    (config) => {
+      config!.headers!.Authorization = `Bearer ${store.getState().jwt}`;
       dispatch(showLoading());
       return config;
     },
-    error => {
+    (error) => {
       dispatch(hideLoading());
       return Promise.reject(error);
     },
   );
 
   axios.interceptors.response.use(
-    config => {
+    (config) => {
       dispatch(hideLoading());
       return config;
     },
-    error => {
+    (error) => {
       dispatch(hideLoading());
       return Promise.reject(error);
     },
@@ -74,13 +74,7 @@ export const useApi = (): PimsAPI => {
 
   axios.isPidAvailable = useCallback(
     async (parcelId: number | '' | undefined, pid: string | undefined) => {
-      const pidParam = `pid=${Number(
-        pid
-          ?.split('-')
-          .join('')
-          .split(',')
-          .join(''),
-      )}`;
+      const pidParam = `pid=${Number(pid?.split('-').join('').split(',').join(''))}`;
       let params = parcelId ? `${pidParam}&parcelId=${parcelId}` : pidParam;
       const { data } = await axios.get(
         `${ENVIRONMENT.apiUrl}/properties/parcels/check/pid-available?${params}`,
@@ -137,7 +131,7 @@ export const useApi = (): PimsAPI => {
         return data;
       } catch (error) {
         throw new Error(
-          `${(error as any).message}: An error occured while fetching properties in inventory.`,
+          `${(error as any).message}: An error occurred while fetching properties in inventory.`,
         );
       }
     },

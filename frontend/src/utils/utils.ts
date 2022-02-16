@@ -1,14 +1,14 @@
 import { ILookupCode } from 'actions/ILookupCode';
-import { startCase, isNull, isUndefined, isEmpty, lowerFirst, keys } from 'lodash';
-import { SelectOption } from 'components/common/form';
-import { FormikProps, getIn } from 'formik';
-import { SortDirection, TableSort } from 'components/Table/TableSort';
 import { AxiosError } from 'axios';
-import { showLoading, hideLoading } from 'react-redux-loading-bar';
-import { success, error, request } from 'store';
-import moment from 'moment-timezone';
+import { SelectOption } from 'components/common/form';
+import { SortDirection, TableSort } from 'components/Table/TableSort';
 import { IStatus } from 'features/projects/interfaces';
+import { FormikProps, getIn } from 'formik';
+import { isEmpty, isNull, isUndefined, keys, lowerFirst, startCase } from 'lodash';
+import moment from 'moment-timezone';
+import { hideLoading, showLoading } from 'react-redux-loading-bar';
 import { AnyAction, Dispatch } from 'redux';
+import { error, request, success } from 'store';
 
 /**
  * Convert the specified 'input' value into a decimal or undefined.
@@ -137,25 +137,24 @@ export const formikFieldMemo = (
  * @param actionType All dispatched GenericNetworkActions will use this action type.
  * @param axiosPromise The result of an axios.get, .put, ..., call.
  */
-export const handleAxiosResponse = (actionType: string, axiosPromise: Promise<any>) => async (
-  dispatch: Dispatch<AnyAction>,
-) => {
-  dispatch(request(actionType));
-  dispatch(showLoading());
-  return await axiosPromise
-    .then((response: any) => {
-      dispatch(success(actionType));
-      dispatch(hideLoading());
-      return response.data ?? response.payload;
-    })
-    .catch((axiosError: AxiosError) => {
-      dispatch(error(actionType, axiosError?.response?.status, axiosError));
-      throw axiosError;
-    })
-    .finally(() => {
-      dispatch(hideLoading());
-    });
-};
+export const handleAxiosResponse =
+  (actionType: string, axiosPromise: Promise<any>) => async (dispatch: Dispatch<AnyAction>) => {
+    dispatch(request(actionType));
+    dispatch(showLoading());
+    return await axiosPromise
+      .then((response: any) => {
+        dispatch(success(actionType));
+        dispatch(hideLoading());
+        return response.data ?? response.payload;
+      })
+      .catch((axiosError: AxiosError) => {
+        dispatch(error(actionType, axiosError?.response?.status, axiosError));
+        throw axiosError;
+      })
+      .finally(() => {
+        dispatch(hideLoading());
+      });
+  };
 
 export const validateFormikWithCallback = (formikProps: FormikProps<any>, callback: Function) => {
   formikProps.validateForm().then((errors: any) => {
@@ -184,7 +183,7 @@ export const generateMultiSortCriteria = (sort: TableSort<any>) => {
     return '';
   }
 
-  return keys(sort).map(key => `${startCase(key).replace(' ', '')} ${sort[key]}`);
+  return keys(sort).map((key) => `${startCase(key).replace(' ', '')} ${sort[key]}`);
 };
 
 /**
@@ -240,19 +239,12 @@ export const formatFiscalYear = (year: string | number | undefined): string => {
  * @param date utc date/time string.
  */
 export const formatApiDateTime = (date: string | undefined) => {
-  return !!date
-    ? moment
-        .utc(date)
-        .local()
-        .format('YYYY-MM-DD hh:mm a')
-    : '';
+  return !!date ? moment.utc(date).local().format('YYYY-MM-DD hh:mm a') : '';
 };
 
 export const formatDateFiscal = (date: string | undefined) => {
   return !!date
-    ? `${moment(date)
-        .subtract(1, 'years')
-        .format('YYYY')}/${moment(date).format('YYYY')}`
+    ? `${moment(date).subtract(1, 'years').format('YYYY')}/${moment(date).format('YYYY')}`
     : '';
 };
 
@@ -260,9 +252,7 @@ export const formatDateFiscal = (date: string | undefined) => {
  * Get the current date time in the UTC timezone. This allows the frontend to create timestamps that are compatible with timestamps created by the API.
  */
 export const generateUtcNowDateTime = () =>
-  moment(new Date())
-    .utc()
-    .format('YYYY-MM-DDTHH:mm:ss.SSSSSSS');
+  moment(new Date()).utc().format('YYYY-MM-DDTHH:mm:ss.SSSSSSS');
 
 /**
  * Returns true only if the passed mouse event occurred within the last 500ms, or the mouse event is null.

@@ -1,7 +1,7 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import GenericModal from './GenericModal';
-import { useHistory } from 'react-router-dom';
 
 /**
  * This component is intended for use with React Error Boundaries.
@@ -12,7 +12,7 @@ import { useHistory } from 'react-router-dom';
  * @param props
  */
 const ErrorModal = (props: any) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   return (
     <GenericModal
       title="App Error"
@@ -20,7 +20,7 @@ const ErrorModal = (props: any) => {
       okButtonText="Retry"
       cancelButtonText="Go to the Home Page"
       handleOk={() => window.location.reload()}
-      handleCancel={() => history.replace('/')}
+      handleCancel={() => navigate('/', { replace: true })}
     ></GenericModal>
   );
 };

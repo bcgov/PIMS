@@ -1,15 +1,16 @@
-import React from 'react';
-import { useFormikContext } from 'formik';
-import { ReviewApproveActions } from './ReviewApproveActions';
-import { mount } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
-import Enzyme from 'enzyme';
-import { Button } from 'react-bootstrap';
+import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import GenericModal from 'components/common/GenericModal';
+import { mount } from 'enzyme';
+import Enzyme from 'enzyme';
+import { DisposeWorkflowStatus, ReviewWorkflowStatus } from 'features/projects/constants';
+import { useFormikContext } from 'formik';
 import { createMemoryHistory } from 'history';
-import { Router } from 'react-router-dom';
-import { ReviewWorkflowStatus, DisposeWorkflowStatus } from 'features/projects/constants';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+import React from 'react';
+import { Button } from 'react-bootstrap';
+import { MemoryRouter } from 'react-router-dom';
+
+import { ReviewApproveActions } from './ReviewApproveActions';
 
 Enzyme.configure({ adapter: new Adapter() });
 const history = createMemoryHistory();
@@ -24,13 +25,13 @@ afterEach(() => {
 });
 
 const element = (
-  <Router history={history}>
+  <MemoryRouter initialEntries={[history.location]}>
     <ReviewApproveActions
       submitStatusCode={DisposeWorkflowStatus.Draft}
       setSubmitStatusCode={mockSubmit}
       isSubmitting={false}
     />
-  </Router>
+  </MemoryRouter>
 );
 
 describe('approve exemption review actions', () => {

@@ -1,4 +1,4 @@
-import { clearFilter, initialFilterState, saveFilter, filterSlice } from './filterSlice';
+import { clearFilter, filterSlice, initialFilterState, saveFilter } from './filterSlice';
 
 describe('Filter slice tests', () => {
   const reducer = filterSlice.reducer;

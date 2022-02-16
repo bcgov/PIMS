@@ -1,8 +1,9 @@
-import L, { DivIcon, LatLngExpression, Layer, Marker, Map, GeoJSON } from 'leaflet';
-import { ICluster, PointFeature } from '../types';
 import { IProperty } from 'actions/parcelsActions';
+import { Classifications, PropertyTypes, Workflows } from 'constants/index';
+import L, { DivIcon, GeoJSON, LatLngExpression, Layer, Map, Marker } from 'leaflet';
 import Supercluster from 'supercluster';
-import { Classifications, Workflows, PropertyTypes } from 'constants/index';
+
+import { ICluster, PointFeature } from '../types';
 
 // parcel icon (green)
 export const parcelIcon = L.icon({
@@ -237,7 +238,7 @@ export const subdivisionErpIconSelect = L.icon({
  * @param properties
  */
 export const createPoints = (properties: IProperty[]) =>
-  properties.map(x => {
+  properties.map((x) => {
     return {
       type: 'Feature',
       properties: {
@@ -367,7 +368,7 @@ export const createClusterMarker = (feature: ICluster, latlng: LatLngExpression)
   } = feature?.properties as Supercluster.ClusterProperties;
 
   if (!isCluster) {
-    return (null as unknown) as Layer;
+    return null as unknown as Layer;
   }
 
   const size = count < 100 ? 'small' : count < 1000 ? 'medium' : 'large';

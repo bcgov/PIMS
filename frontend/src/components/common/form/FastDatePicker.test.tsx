@@ -1,15 +1,16 @@
-import { FastDatePicker } from './FastDatePicker';
-import React from 'react';
+import { fireEvent } from '@testing-library/dom';
+import { render, screen, waitFor } from '@testing-library/react';
 import { Formik } from 'formik';
 import { noop } from 'lodash';
-import { render, screen, waitFor } from '@testing-library/react';
+import React from 'react';
 import { fillInput } from 'utils/testUtils';
-import { fireEvent } from '@testing-library/dom';
+
+import { FastDatePicker } from './FastDatePicker';
 
 const testRender = (props?: any, formikProps?: any) =>
   render(
     <Formik initialValues={formikProps?.initialValues ?? {}} onSubmit={noop}>
-      {formikProps => (
+      {(formikProps) => (
         <FastDatePicker
           field="test"
           {...{ ...(props ?? {}) }}

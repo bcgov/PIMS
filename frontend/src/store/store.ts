@@ -1,22 +1,16 @@
-import { createStore, applyMiddleware } from 'redux';
-import { composeWithDevTools } from 'redux-devtools-extension';
+import { configureStore } from '@reduxjs/toolkit';
+import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
+import { loadingBarMiddleware } from 'react-redux-loading-bar';
 import logger from 'redux-logger';
 import thunk from 'redux-thunk';
 import { rootReducer } from 'store/rootReducer';
-import { loadingBarMiddleware } from 'react-redux-loading-bar';
-import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 
-function configureStore() {
-  if (process.env.NODE_ENV !== 'production') {
-    return createStore(
-      rootReducer,
-      composeWithDevTools(applyMiddleware(thunk, logger, loadingBarMiddleware())),
-    );
-  }
-  return createStore(rootReducer, applyMiddleware(thunk, loadingBarMiddleware()));
-}
-
-export const store = configureStore();
+export const store = configureStore({
+  reducer: rootReducer,
+  middleware: (getDefaultMiddleware: () => any[]) =>
+    getDefaultMiddleware().concat(thunk).concat(logger).concat(loadingBarMiddleware()),
+  devTools: process.env.NODE_ENV !== 'production',
+});
 
 export type AppDispatch = typeof store.dispatch;
 export type RootState = ReturnType<typeof store.getState>;

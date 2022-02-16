@@ -1,8 +1,9 @@
 import './Login.scss';
-import React from 'react';
-import { Container, Row, Col, Button } from 'react-bootstrap';
+
 import PIMSlogo from 'assets/images/PIMSlogo/logo_with_text.png';
 import FilterBackdrop from 'components/maps/leaflet/FilterBackdrop';
+import React from 'react';
+import { Button, Col, Container, Row } from 'react-bootstrap';
 
 /**
  * Display a placeholder of the PIMS login screen when keycloak is being initialized.

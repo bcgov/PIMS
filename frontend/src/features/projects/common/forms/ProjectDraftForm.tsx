@@ -1,17 +1,19 @@
 import './ProjectDraftForm.scss';
+
+import { Form, Input, TextArea } from 'components/common/form';
+import { ParentSelect } from 'components/common/form/ParentSelect';
+import * as API from 'constants/API';
+import { Claims } from 'constants/claims';
+import { IStepProps } from 'features/projects/interfaces';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+import useCodeLookups from 'hooks/useLookupCodes';
+import { useMyAgencies } from 'hooks/useMyAgencies';
 import React, { useMemo } from 'react';
 import { Col, Container } from 'react-bootstrap';
-import { Form, Input, TextArea } from 'components/common/form';
-import { projectNoDescription, EditButton } from '..';
-import { IStepProps } from 'features/projects/interfaces';
 import styled from 'styled-components';
-import useCodeLookups from 'hooks/useLookupCodes';
-import * as API from 'constants/API';
-import { ParentSelect } from 'components/common/form/ParentSelect';
-import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { mapSelectOptionWithParent } from 'utils';
-import { useMyAgencies } from 'hooks/useMyAgencies';
-import { Claims } from 'constants/claims';
+
+import { EditButton, projectNoDescription } from '..';
 
 const ItalicText = styled.div`
   font-family: 'BCSans-Italic', Fallback, sans-serif;
@@ -55,7 +57,7 @@ const ProjectDraftForm = ({
   const { getOptionsByType } = useCodeLookups();
   const keycloak = useKeycloakWrapper();
   const agencies = getOptionsByType(API.AGENCY_CODE_SET_NAME);
-  const userAgency = agencies.find(a => Number(a.value) === Number(keycloak.agencyId));
+  const userAgency = agencies.find((a) => Number(a.value) === Number(keycloak.agencyId));
 
   const isUserAgencyAParent = useMemo(() => {
     return !!userAgency && !userAgency.parentId;
@@ -73,13 +75,13 @@ const ProjectDraftForm = ({
 
   return (
     <Container fluid className="ProjectDraftForm">
-      <Form.Row>
+      <Form.Group>
         <h3 className="col-md-8">{title ?? 'Review'}</h3>
         <span className="col-md-4">
           <EditButton {...{ formDisabled: isReadOnly, setFormDisabled: setIsReadOnly }} />
         </span>
-      </Form.Row>
-      <Form.Row className="col-md-10">
+      </Form.Group>
+      <Form.Group className="col-md-10">
         <Form.Label className="col-md-2">Project No.</Form.Label>
         <Input
           placeholder="SPP-XXXXXX"
@@ -90,8 +92,8 @@ const ProjectDraftForm = ({
         {isReadOnly === undefined && (
           <ItalicText className="col-md-7">{projectNoDescription}</ItalicText>
         )}
-      </Form.Row>
-      <Form.Row>
+      </Form.Group>
+      <Form.Group>
         <Input
           data-testid="project-name"
           disabled={isReadOnly}
@@ -101,21 +103,21 @@ const ProjectDraftForm = ({
           outerClassName="col-md-10"
           required
         />
-      </Form.Row>
+      </Form.Group>
       {(isSRES || isUserAgencyAParent) && !hideAgency && (
-        <Form.Row className="col-md-10">
+        <Form.Group className="col-md-10">
           <Form.Label className="col-md-1">Project Agency</Form.Label>
           <AgencyCol className="col-md-5">
             <ParentSelect
               field={'agencyId'}
-              options={myAgencies.map(c => mapSelectOptionWithParent(c, myAgencies))}
+              options={myAgencies.map((c) => mapSelectOptionWithParent(c, myAgencies))}
               filterBy={['code', 'label', 'parent']}
               convertValue={Number}
             />
           </AgencyCol>
-        </Form.Row>
+        </Form.Group>
       )}
-      <Form.Row>
+      <Form.Group>
         <TextArea
           data-testid="project-description"
           disabled={isReadOnly}
@@ -124,7 +126,7 @@ const ProjectDraftForm = ({
           className="col-md-auto"
           outerClassName="col-md-10"
         />
-      </Form.Row>
+      </Form.Group>
     </Container>
   );
 };

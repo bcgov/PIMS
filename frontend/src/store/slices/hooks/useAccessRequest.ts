@@ -1,24 +1,25 @@
-import { showLoading, hideLoading } from 'react-redux-loading-bar';
-import * as reducerTypes from 'constants/reducerTypes';
-import * as API from 'constants/API';
-import { IAccessRequest } from 'interfaces/accessRequests';
+import { IFilterData } from 'actions/IFilterData';
+import { AxiosError, AxiosResponse } from 'axios';
 import * as actionTypes from 'constants/actionTypes';
+import * as API from 'constants/API';
 import { ENVIRONMENT } from 'constants/environment';
+import * as reducerTypes from 'constants/reducerTypes';
 import CustomAxios from 'customAxios';
-import { AxiosResponse, AxiosError } from 'axios';
+import { IAccessRequest } from 'interfaces/accessRequests';
+import React from 'react';
+import { hideLoading, showLoading } from 'react-redux-loading-bar';
 import {
-  request,
-  success,
-  error,
   deleteAccessRequest,
+  error,
+  request,
   storeAccessRequest,
   storeAccessRequests,
+  success,
   updateAccessRequest,
   useAppDispatch,
 } from 'store';
-import React from 'react';
+
 import { updateAccessRequestFilter, updateAccessRequestPageIndex } from '..';
-import { IFilterData } from 'actions/IFilterData';
 
 /**
  * Converts the 'values' object into an IAccessRequest object

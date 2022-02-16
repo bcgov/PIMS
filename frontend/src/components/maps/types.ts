@@ -1,10 +1,10 @@
-import Supercluster from 'supercluster';
-import { GeoJsonProperties } from 'geojson';
 import { PropertyTypes } from 'constants/index';
+import { GeoJsonProperties } from 'geojson';
+import Supercluster from 'supercluster';
 
 export type ICluster<
   P extends GeoJsonProperties = Supercluster.AnyProps,
-  C extends GeoJsonProperties = Supercluster.AnyProps
+  C extends GeoJsonProperties = Supercluster.AnyProps,
 > = Supercluster.ClusterFeature<C> | Supercluster.PointFeature<P>;
 
 /**

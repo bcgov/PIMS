@@ -1,9 +1,8 @@
-const proxy = require('http-proxy-middleware');
+const { createProxyMiddleware } = require('http-proxy-middleware');
 
-module.exports = function(app) {
+module.exports = function (app) {
   app.use(
-    '/api',
-    proxy({
+    createProxyMiddleware('/api', {
       target: process.env.API_URL || 'http://backend:8080/',
       changeOrigin: true,
       secure: false,
@@ -12,10 +11,10 @@ module.exports = function(app) {
       logLevel: 'debug',
       cookiePathRewrite: '/',
       cookieDomainRewrite: '',
-      pathRewrite: function(path, req) {
+      pathRewrite: function (path, req) {
         return path;
       },
-      onProxyReq: function(proxyReq, req, res) {
+      onProxyReq: function (proxyReq, req, res) {
         proxyReq.setHeader('x-powered-by', 'onProxyReq');
       },
     }),

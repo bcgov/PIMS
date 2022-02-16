@@ -1,35 +1,36 @@
 import './SplStep.scss';
 
-import * as React from 'react';
-import { Formik, Form, getIn } from 'formik';
-import _ from 'lodash';
-import { useState } from 'react';
-import { formatDate } from 'utils';
-import { Container } from 'react-bootstrap';
-import styled from 'styled-components';
-import StepErrorSummary from '../../common/components/StepErrorSummary';
-import { useAppDispatch, useAppSelector } from 'store';
-import { useStepForm, StepStatusIcon, useProject, handleValidate } from '../../common';
-import {
-  SPPApprovalTabs,
-  ReviewWorkflowStatus,
-  DisposeWorkflowStatus,
-} from 'features/projects/constants';
-import { IProject, IProjectTask, IStepProps } from 'features/projects/interfaces';
 import { ValidationGroup } from 'components/common/tabValidation';
 import {
+  DisposeWorkflowStatus,
+  ReviewWorkflowStatus,
+  SPPApprovalTabs,
+} from 'features/projects/constants';
+import { DocumentationStepSchema } from 'features/projects/dispose';
+import { ApprovalActions } from 'features/projects/erp';
+import { IProject, IProjectTask, IStepProps } from 'features/projects/interfaces';
+import { Form, Formik, getIn } from 'formik';
+import _ from 'lodash';
+import * as React from 'react';
+import { useState } from 'react';
+import { Container } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from 'store';
+import styled from 'styled-components';
+import { formatDate } from 'utils';
+
+import { handleValidate, StepStatusIcon, useProject, useStepForm } from '../../common';
+import StepErrorSummary from '../../common/components/StepErrorSummary';
+import {
+  CloseOutFormValidationSchema,
+  RemoveFromSplYupSchema,
   saveSplTab,
   SplTabs,
   SurplusPropertyInformationYupSchema,
-  SurplusPropertyListOnMarketYupSchema,
   SurplusPropertyListContractInPlaceYupSchema,
   SurplusPropertyListDisposeYupSchema,
-  CloseOutFormValidationSchema,
-  RemoveFromSplYupSchema,
+  SurplusPropertyListOnMarketYupSchema,
 } from '..';
-import { ApprovalActions } from 'features/projects/erp';
-import { DocumentationStepSchema } from 'features/projects/dispose';
-import { useHistory } from 'react-router-dom';
 
 const CenterBoldText = styled.div`
   text-align: center;
@@ -65,12 +66,12 @@ const SplStep = ({ formikRef }: IStepProps) => {
     project?.statusCode === ReviewWorkflowStatus.Disposed
       ? SPPApprovalTabs.closeOutForm
       : SPPApprovalTabs.spl;
-  const currentTab = useAppSelector(store => store.splTab) ?? defaultTab;
+  const currentTab = useAppSelector((store) => store.splTab) ?? defaultTab;
   const dispatch = useAppDispatch();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const goToGreTransferred = () =>
-    history.push(`./spl/gretransfer?projectNumber=${project?.projectNumber}`);
+    navigate(`./spl/gretransfer?projectNumber=${project?.projectNumber}`);
 
   //** Different validation rules based on the status selected. */
   const splValidationGroups: ValidationGroup[] = [
@@ -127,7 +128,7 @@ const SplStep = ({ formikRef }: IStepProps) => {
    */
   const getValidationGroups = (statusCode?: string) => {
     if (statusCode) {
-      return splValidationGroups.filter(g => g.statusCode === statusCode);
+      return splValidationGroups.filter((g) => g.statusCode === statusCode);
     }
     return [];
   };
@@ -170,7 +171,7 @@ const SplStep = ({ formikRef }: IStepProps) => {
               project?.statusCode === ReviewWorkflowStatus.NotInSpl ||
               project?.statusCode === ReviewWorkflowStatus.ApprovedForSpl
             ) {
-              history.go(0);
+              navigate(0);
             } else if (project?.statusCode === ReviewWorkflowStatus.Disposed) {
               setCurrentTab(SPPApprovalTabs.closeOutForm);
             }

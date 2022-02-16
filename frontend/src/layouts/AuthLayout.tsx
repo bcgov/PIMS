@@ -1,17 +1,18 @@
 import './AuthLayout.scss';
 
-import React from 'react';
-import { Container, Spinner, Row, Col } from 'react-bootstrap';
+import { AppNavBar } from 'components/layout';
 import { AuthStateContext } from 'contexts/authStateContext';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+import React from 'react';
+import { Col, Container, Row, Spinner } from 'react-bootstrap';
+
 import PublicLayout from './PublicLayout';
-import { AppNavBar } from 'components/layout';
 
 const AuthLayout: React.FC = ({ children }) => {
   const { obj: keycloak } = useKeycloakWrapper();
   return (
     <AuthStateContext.Consumer>
-      {context => {
+      {(context) => {
         if (!context.ready) {
           return <Spinner animation="border"></Spinner>;
         }
@@ -26,7 +27,7 @@ const AuthLayout: React.FC = ({ children }) => {
               </Container>
             )}
             <Container fluid className="d-flex flex-column flex-grow-1" style={{ padding: 0 }}>
-              <Row className="w-100 h-100" noGutters>
+              <Row className="w-100 h-100">
                 <Col>{children}</Col>
               </Row>
             </Container>

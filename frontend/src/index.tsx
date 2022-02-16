@@ -2,69 +2,33 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'leaflet/dist/leaflet.css';
 import './index.scss'; // should be loaded last to allow for overrides without having to resort to "!important"
-
 import 'react-app-polyfill/ie11';
 import 'react-app-polyfill/stable';
 import 'react-toastify/dist/ReactToastify.css';
+
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App';
-import * as serviceWorker from './serviceWorker.ignore';
-import { ReactKeycloakProvider } from '@react-keycloak/web';
 import { Provider } from 'react-redux';
-import { AuthStateContextProvider } from 'contexts/authStateContext';
-import { BrowserRouter as Router } from 'react-router-dom';
-import EmptyLayout from 'layouts/EmptyLayout';
-import LoginLoading from 'features/account/LoginLoading';
-import Keycloak from 'keycloak-js';
-import getKeycloakEventHandler from 'utils/KeycloakEventHandler';
+import { ThemeProvider } from 'styled-components';
+
+import App from './App';
+import css from './css/_variables.module.scss';
+import * as serviceWorker from './serviceWorker';
 import { store } from './store';
-import { createKeycloakInstance } from 'utils';
 
 /**
  * Displays LoginLoading until Keycloak connection is ready.
  * @returns Index component.
  */
 const Index = () => {
-  const [loading, setLoading] = React.useState(true);
-  const [keycloak, setKeycloak] = React.useState(Keycloak);
-
-  React.useEffect(() => {
-    createKeycloakInstance()
-      .then(instance => {
-        setKeycloak(instance);
-        setLoading(false);
-      })
-      .catch(() => {
-        // Ignore the error and apply the default config.
-        //@ts-ignore
-        setKeycloak(new Keycloak('./keycloak.json'));
-        setLoading(false);
-      });
-  }, []);
-
-  return loading ? (
-    <EmptyLayout>
-      <LoginLoading />
-    </EmptyLayout>
-  ) : (
-    <ReactKeycloakProvider
-      authClient={keycloak}
-      LoadingComponent={
-        <EmptyLayout>
-          <LoginLoading />
-        </EmptyLayout>
-      }
-      onEvent={getKeycloakEventHandler(keycloak)}
-    >
-      <Provider store={store}>
-        <AuthStateContextProvider>
-          <Router>
-            <App />
-          </Router>
-        </AuthStateContextProvider>
-      </Provider>
-    </ReactKeycloakProvider>
+  return (
+    <React.StrictMode>
+      <ThemeProvider theme={{ css }}>
+        <Provider store={store}>
+          <App />
+        </Provider>
+      </ThemeProvider>
+    </React.StrictMode>
   );
 };
 

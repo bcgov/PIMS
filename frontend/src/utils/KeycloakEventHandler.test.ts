@@ -1,11 +1,12 @@
 import { KeycloakInstance } from 'keycloak-js';
-import getKeycloakEventHandler from './KeycloakEventHandler';
+import configureMockStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
 import * as jwtSlice from 'store/slices/jwtSlice';
 import { initialJwtState } from 'store/slices/jwtSlice';
 import * as keycloakReadySlice from 'store/slices/keycloakReadySlice';
 import { initialKeycloakState } from 'store/slices/keycloakReadySlice';
-import configureMockStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
+
+import getKeycloakEventHandler from './KeycloakEventHandler';
 
 const mockStore = configureMockStore([thunk]);
 const store = mockStore({
@@ -18,14 +19,14 @@ const saveJwtSpy = jest.spyOn(jwtSlice, 'saveJwt');
 const clearJwtSpy = jest.spyOn(jwtSlice, 'clearJwt');
 const setKeycloakReadySpy = jest.spyOn(keycloakReadySlice, 'setKeycloakReady');
 
-const keycloak = ({
+const keycloak = {
   subject: 'test',
   userInfo: {
     roles: [],
     agencies: ['1'],
   },
   token: '123456789',
-} as any) as KeycloakInstance;
+} as any as KeycloakInstance;
 
 const keyclockEventHandler = getKeycloakEventHandler(keycloak);
 

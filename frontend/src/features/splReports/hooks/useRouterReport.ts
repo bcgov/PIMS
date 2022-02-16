@@ -1,10 +1,11 @@
-import queryString from 'query-string';
-import { IReport } from './../interfaces';
-import { useAppDispatch } from 'store';
-import { useHistory } from 'react-router-dom';
-import React, { useState } from 'react';
-import _ from 'lodash';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
+import _ from 'lodash';
+import queryString from 'query-string';
+import React, { useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useAppDispatch } from 'store';
+
+import { IReport } from './../interfaces';
 
 interface RouterFilterProps {
   currentReport?: IReport;
@@ -21,8 +22,9 @@ export const useRouterReport = ({
   setCurrentReport,
   reports,
 }: RouterFilterProps) => {
-  const history = useHistory();
-  const [originalSearch] = useState(history.location.search);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [originalSearch] = useState(location.search);
   const dispatch = useAppDispatch();
 
   //When this hook loads, override the value of the filter with the search params. Should run once as originalSearch should never change.
@@ -42,9 +44,9 @@ export const useRouterReport = ({
   React.useEffect(() => {
     if (currentReport?.id) {
       const params = new URLSearchParams({ reportId: `${currentReport?.id ?? ''}` });
-      history.push({ search: params.toString() });
+      navigate({ search: params.toString() });
     }
-  }, [history, dispatch, currentReport]);
+  }, [navigate, dispatch, currentReport]);
 
   return;
 };

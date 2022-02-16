@@ -1,34 +1,35 @@
-import React, { useEffect, useMemo, useCallback } from 'react';
-import { Container, Button } from 'react-bootstrap';
-import { getUsersAction } from 'store/slices/hooks/usersActionCreator';
-import { toFilteredApiPaginateParams } from 'utils/CommonFunctions';
-import { IGenericNetworkAction } from 'store';
-import * as actionTypes from 'constants/actionTypes';
-import { IUser, IUsersFilter } from 'interfaces';
-import { IUserRecord } from './interfaces/IUserRecord';
-import { UsersFilterBar } from './components/UsersFilterBar';
-import * as API from 'constants/API';
+import variables from '_variables.module.scss';
+import TooltipWrapper from 'components/common/TooltipWrapper';
 import { Table } from 'components/Table';
-import { columnDefinitions } from './constants';
-import { formatApiDateTime, generateMultiSortCriteria } from 'utils';
-import styled from 'styled-components';
+import * as actionTypes from 'constants/actionTypes';
+import * as API from 'constants/API';
+import { IPaginateParams } from 'constants/API';
+import { ENVIRONMENT } from 'constants/environment';
 import useCodeLookups from 'hooks/useLookupCodes';
+import { IUser, IUsersFilter } from 'interfaces';
 import { isEmpty } from 'lodash';
 import _ from 'lodash';
-import variables from '_variables.module.scss';
-import { FaFileExcel } from 'react-icons/fa';
-import TooltipWrapper from 'components/common/TooltipWrapper';
-import download from 'utils/download';
 import queryString from 'query-string';
-import { ENVIRONMENT } from 'constants/environment';
-import { IPaginateParams } from 'constants/API';
+import React, { useCallback, useEffect, useMemo } from 'react';
+import { Button, Container } from 'react-bootstrap';
+import { FaFileExcel } from 'react-icons/fa';
+import { IGenericNetworkAction } from 'store';
 import { useAppDispatch, useAppSelector } from 'store';
+import { getUsersAction } from 'store/slices/hooks/usersActionCreator';
 import {
   storeUserFilter,
   storeUserPageIndex,
   storeUserPageQuantity,
   storeUserSort,
 } from 'store/slices/userSlice';
+import styled from 'styled-components';
+import { formatApiDateTime, generateMultiSortCriteria } from 'utils';
+import { toFilteredApiPaginateParams } from 'utils/CommonFunctions';
+import download from 'utils/download';
+
+import { UsersFilterBar } from './components/UsersFilterBar';
+import { columnDefinitions } from './constants';
+import { IUserRecord } from './interfaces/IUserRecord';
 
 const TableContainer = styled(Container)`
   margin-top: 10px;
@@ -65,13 +66,13 @@ export const ManageUsers = () => {
   const roles = useMemo(() => getByType(API.ROLE_CODE_SET_NAME), [getByType]);
   const columns = useMemo(() => columnDefinitions, []);
 
-  const pagedUsers = useAppSelector(store => store.users.pagedUsers);
-  const pageSize = useAppSelector(store => store.users.rowsPerPage);
-  const pageIndex = useAppSelector(store => store.users.pageIndex);
-  const sort = useAppSelector(store => store.users.sort);
-  const filter = useAppSelector(store => store.users.filter);
+  const pagedUsers = useAppSelector((store) => store.users.pagedUsers);
+  const pageSize = useAppSelector((store) => store.users.rowsPerPage);
+  const pageIndex = useAppSelector((store) => store.users.pageIndex);
+  const sort = useAppSelector((store) => store.users.sort);
+  const filter = useAppSelector((store) => store.users.filter);
   const users = useAppSelector(
-    store => (store.network as any)[actionTypes.GET_USERS] as IGenericNetworkAction,
+    (store) => (store.network as any)[actionTypes.GET_USERS] as IGenericNetworkAction,
   );
 
   const onRequestData = useCallback(
@@ -100,7 +101,7 @@ export const ManageUsers = () => {
       firstName: u.firstName,
       lastName: u.lastName,
       isDisabled: u.isDisabled,
-      roles: u.roles ? u.roles.map(r => r.name).join(', ') : '',
+      roles: u.roles ? u.roles.map((r) => r.name).join(', ') : '',
       agency: u.agencies && u.agencies.length > 0 ? u.agencies[0].name : '',
       position: u.position ?? '',
       lastLogin: formatApiDateTime(u.lastLogin),
@@ -134,7 +135,7 @@ export const ManageUsers = () => {
         value={filter}
         agencyLookups={agencies}
         rolesLookups={roles}
-        onChange={value => {
+        onChange={(value) => {
           (value as any)?.agency
             ? dispatch(
                 storeUserFilter({
@@ -173,7 +174,7 @@ export const ManageUsers = () => {
                 }
               }}
               sort={sort}
-              onPageSizeChange={size => dispatch(storeUserPageQuantity(size))}
+              onPageSizeChange={(size) => dispatch(storeUserPageQuantity(size))}
               loading={!(users && !users.isFetching)}
               clickableTooltip="Click IDIR/BCeID link to view User Information page"
             />

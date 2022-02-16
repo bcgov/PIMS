@@ -1,19 +1,20 @@
-import EditAgencyPage from './EditAgencyPage';
+import { useKeycloak } from '@react-keycloak/web';
+import { act, cleanup, render, screen, waitFor } from '@testing-library/react';
+import { ILookupCode } from 'actions/ILookupCode';
+import axios from 'axios';
+import MockAdapter from 'axios-mock-adapter';
+import * as API from 'constants/API';
+import { createMemoryHistory } from 'history';
 import React from 'react';
+import { Provider } from 'react-redux';
+import { MemoryRouter } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { ILookupCode } from 'actions/ILookupCode';
-import * as API from 'constants/API';
-import { Provider } from 'react-redux';
-import { createMemoryHistory } from 'history';
-import { Router } from 'react-router-dom';
-import { render, cleanup, act, screen, waitFor } from '@testing-library/react';
-import MockAdapter from 'axios-mock-adapter';
-import axios from 'axios';
-import { ToastContainer } from 'react-toastify';
-import { fillInput } from 'utils/testUtils';
-import { useKeycloak } from '@react-keycloak/web';
 import { initialAgencyState } from 'store';
+import { fillInput } from 'utils/testUtils';
+
+import EditAgencyPage from './EditAgencyPage';
 
 jest.mock('@react-keycloak/web');
 (useKeycloak as jest.Mock).mockReturnValue({
@@ -56,7 +57,7 @@ const mockAxios = new MockAdapter(axios);
 const renderEditAgencyPage = () =>
   render(
     <Provider store={store}>
-      <Router history={history}>
+      <MemoryRouter initialEntries={[history.location]}>
         <ToastContainer
           autoClose={5000}
           hideProgressBar
@@ -65,8 +66,9 @@ const renderEditAgencyPage = () =>
           rtl={false}
           pauseOnFocusLoss={false}
         />
-        <EditAgencyPage id={111} />,
-      </Router>
+        <EditAgencyPage id={111} />
+      </MemoryRouter>
+      ,
     </Provider>,
   );
 
@@ -81,9 +83,10 @@ describe('Edit agency page', () => {
   it('EditAgencyPage renders', () => {
     const { container } = render(
       <Provider store={store}>
-        <Router history={history}>
-          <EditAgencyPage id={111} />,
-        </Router>
+        <MemoryRouter initialEntries={[history.location]}>
+          <EditAgencyPage id={111} />
+        </MemoryRouter>
+        ,
       </Provider>,
     );
     expect(container.firstChild).toMatchSnapshot();

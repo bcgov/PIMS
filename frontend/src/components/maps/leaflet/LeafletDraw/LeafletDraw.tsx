@@ -1,9 +1,10 @@
+import './LeafletDraw.scss';
+
+import { Feature, FeatureCollection } from 'geojson';
+import * as L from 'leaflet';
 import * as React from 'react';
 import { useEffect } from 'react';
-import { useLeaflet } from 'react-leaflet';
-import * as L from 'leaflet';
-import { Feature, FeatureCollection } from 'geojson';
-import './LeafletDraw.scss';
+import { useMap } from 'react-leaflet';
 require('leaflet-draw');
 
 interface ILeafletDrawProps {
@@ -52,10 +53,10 @@ export const LeafletDraw: React.FC<ILeafletDrawProps> = ({
   canAdd,
   color = '#fcba19',
 }) => {
-  const { map } = useLeaflet();
+  const mapInstance = useMap();
 
   useEffect(() => {
-    if (!!map) {
+    if (!!mapInstance) {
       const drawControl = new (L.Control as any).Draw({
         position: 'topright',
         draw: !readonly && {
@@ -72,26 +73,26 @@ export const LeafletDraw: React.FC<ILeafletDrawProps> = ({
           remove: !readonly,
         },
       });
-      map.addControl(drawControl);
+      mapInstance.addControl(drawControl);
     }
-  }, [map, readonly, canAdd]);
+  }, [mapInstance, readonly, canAdd]);
 
   useEffect(() => {
-    if (!!map) {
+    if (!!mapInstance) {
       L.geoJSON(value, {
         style: {
           color,
           weight: 3,
           opacity: 1,
         },
-        filter: feature => feature.properties.editable,
-      }).eachLayer(layer => {
+        filter: (feature) => feature.properties.editable,
+      }).eachLayer((layer) => {
         featureGroup.addLayer(layer);
       });
 
-      map.addLayer(featureGroup);
+      mapInstance.addLayer(featureGroup);
 
-      map.on((L as any).Draw.Event.CREATED, (e: any) => {
+      mapInstance.on((L as any).Draw.Event.CREATED, (e: any) => {
         e.layer.options = {
           ...e.layer.options,
           color,
@@ -102,24 +103,24 @@ export const LeafletDraw: React.FC<ILeafletDrawProps> = ({
         onCreate(e.layer.toGeoJSON());
       });
 
-      map.on('draw:edited', (e: any) => {
+      mapInstance.on('draw:edited', (e: any) => {
         const layers = e.layers;
         onChange(layers.toGeoJSON());
       });
 
-      map.on('draw:deleted', (e: any) => {
+      mapInstance.on('draw:deleted', (e: any) => {
         const layers = e.layers;
         onDelete && onDelete(layers.toGeoJSON());
       });
 
       return () => {
-        map.removeEventListener((L as any).Draw.Event.CREATED);
-        map.removeEventListener('draw:edited');
-        map.removeEventListener('draw:deleted');
+        mapInstance.removeEventListener((L as any).Draw.Event.CREATED);
+        mapInstance.removeEventListener('draw:edited');
+        mapInstance.removeEventListener('draw:deleted');
         featureGroup.clearLayers();
       };
     }
-  }, [map, value, color, onDelete, onChange, onCreate]);
+  }, [mapInstance, value, color, onDelete, onChange, onCreate]);
 
   return null;
 };

@@ -1,12 +1,13 @@
-import React, { useCallback } from 'react';
-import { IFilterBarState } from '../../common';
-import { IPropertyFilter, IProperty as IRowProperty } from 'features/projects/interfaces';
-import { decimalOrUndefined } from 'utils';
+import { IProperty } from 'actions/parcelsActions';
 import { ENVIRONMENT } from 'constants/environment';
 import CustomAxios from 'customAxios';
+import { IProperty as IRowProperty, IPropertyFilter } from 'features/projects/interfaces';
 import { IPagedItems } from 'interfaces';
-import { IProperty } from 'actions/parcelsActions';
 import queryString from 'query-string';
+import React, { useCallback } from 'react';
+import { decimalOrUndefined } from 'utils';
+
+import { IFilterBarState } from '../../common';
 
 const initialQuery: IPropertyFilter = {
   page: 1,
@@ -69,7 +70,7 @@ interface UseTableProps {
 }
 
 function transformData(data: IRowProperty[]) {
-  data.forEach(property => {
+  data.forEach((property) => {
     property.address = `${property.address}, ${property.administrativeArea}`;
   });
   return data;

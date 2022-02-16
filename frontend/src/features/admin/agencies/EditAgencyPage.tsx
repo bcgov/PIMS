@@ -1,26 +1,28 @@
-import React, { useEffect, useState } from 'react';
-import { Navbar, Container, Row, ButtonToolbar, Button } from 'react-bootstrap';
-import { Check, Form, Input, Select, SelectOption } from '../../../components/common/form';
-import { IAgencyDetail } from 'interfaces';
-import { Formik } from 'formik';
-import * as API from 'constants/API';
 import './EditAgencyPage.scss';
-import { useHistory } from 'react-router-dom';
-import useCodeLookups from 'hooks/useLookupCodes';
+
 import { ILookupCode } from 'actions/ILookupCode';
+import { AxiosError } from 'axios';
+import GenericModal from 'components/common/GenericModal';
+import TooltipWrapper from 'components/common/TooltipWrapper';
+import * as API from 'constants/API';
+import service from 'features/properties/service';
+import { Formik } from 'formik';
+import useCodeLookups from 'hooks/useLookupCodes';
+import { IAgencyDetail } from 'interfaces';
+import React, { useEffect, useState } from 'react';
+import { Button, ButtonToolbar, Container, Navbar, Row } from 'react-bootstrap';
+import { FaArrowAltCircleLeft } from 'react-icons/fa';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from 'store';
 import {
   createAgency,
   deleteAgency,
   fetchAgencyDetail,
   getUpdateAgencyAction,
 } from 'store/slices/hooks/agencyActionCreator';
-import { FaArrowAltCircleLeft } from 'react-icons/fa';
-import GenericModal from 'components/common/GenericModal';
 import { AgencyEditSchema } from 'utils/YupSchema';
-import service from 'features/properties/service';
-import TooltipWrapper from 'components/common/TooltipWrapper';
-import { useAppDispatch, useAppSelector } from 'store';
-import { AxiosError } from 'axios';
+
+import { Check, Form, Input, Select, SelectOption } from '../../../components/common/form';
 
 interface IEditAgencyPageProps {
   /** id prop to identify which agency to edit */
@@ -31,9 +33,10 @@ interface IEditAgencyPageProps {
 /** This page is used to either add a new agency or edit the and agency's details */
 const EditAgencyPage = (props: IEditAgencyPageProps) => {
   const agencyId = props?.match?.params?.id || props.id;
-  const history = useHistory();
+  const navigate = useNavigate();
+  const location = useLocation();
   const dispatch = useAppDispatch();
-  const newAgency = history.location.pathname.includes('/new');
+  const newAgency = location.pathname.includes('/new');
   const [showDelete, setShowDelete] = useState(false);
   const [showFailed, setShowFailed] = useState(false);
   useEffect(() => {
@@ -43,16 +46,16 @@ const EditAgencyPage = (props: IEditAgencyPageProps) => {
   }, [dispatch, agencyId, newAgency]);
 
   const { getByType } = useCodeLookups();
-  const agencies = getByType(API.AGENCY_CODE_SET_NAME).filter(x => !x.parentId);
+  const agencies = getByType(API.AGENCY_CODE_SET_NAME).filter((x) => !x.parentId);
 
-  const agency = useAppSelector(store => store.agencies.agencyDetail);
+  const agency = useAppSelector((store) => store.agencies.agencyDetail);
   const mapLookupCode = (code: ILookupCode): SelectOption => ({
     label: code.name,
     value: code.id.toString(),
     selected: !!agency.parentId,
   });
   //
-  const selectAgencies = agencies.map(c => mapLookupCode(c));
+  const selectAgencies = agencies.map((c) => mapLookupCode(c));
   const checkAgencies = (
     <Select
       label="Parent Agency - If applicable"
@@ -64,7 +67,7 @@ const EditAgencyPage = (props: IEditAgencyPageProps) => {
   );
 
   const goBack = () => {
-    history.push('/admin/agencies');
+    navigate('/admin/agencies');
   };
 
   const newValues: any = {
@@ -85,7 +88,7 @@ const EditAgencyPage = (props: IEditAgencyPageProps) => {
 
   return (
     <div>
-      {showDelete && <DeleteModal {...{ showDelete, setShowDelete, history, dispatch, agency }} />}
+      {showDelete && <DeleteModal {...{ showDelete, setShowDelete, dispatch, agency }} />}
       {showFailed && <FailedDeleteModal {...{ showFailed, setShowFailed }} />}
       <Navbar className="navBar" expand="sm" variant="light" bg="light">
         <Navbar.Brand>
@@ -131,7 +134,7 @@ const EditAgencyPage = (props: IEditAgencyPageProps) => {
                     parentId: Number(values.parentId),
                     description: values.description,
                   })(dispatch);
-                  history.replace(`/admin/agency/${data.id}`);
+                  navigate(`/admin/agency/${data.id}`, { replace: true });
                 }
               } catch (error) {
                 const err = error as AxiosError;
@@ -143,7 +146,7 @@ const EditAgencyPage = (props: IEditAgencyPageProps) => {
               }
             }}
           >
-            {props => (
+            {(props) => (
               <Form className="agencyInfo">
                 <Input label="Agency" required field="name" value={props.values.name} type="text" />
                 <Input
@@ -217,22 +220,25 @@ const EditAgencyPage = (props: IEditAgencyPageProps) => {
 
 export default EditAgencyPage;
 
-const DeleteModal = ({ showDelete, setShowDelete, history, dispatch, agency }: any) => (
-  <GenericModal
-    message="Are you sure you want to permanently delete the agency?"
-    cancelButtonText="Cancel"
-    okButtonText="Delete"
-    display={showDelete}
-    handleOk={() => {
-      dispatch(deleteAgency(agency)).then(() => {
-        history.push('/admin/agencies');
-      });
-    }}
-    handleCancel={() => {
-      setShowDelete(false);
-    }}
-  />
-);
+const DeleteModal = ({ showDelete, setShowDelete, dispatch, agency }: any) => {
+  const navigate = useNavigate();
+  return (
+    <GenericModal
+      message="Are you sure you want to permanently delete the agency?"
+      cancelButtonText="Cancel"
+      okButtonText="Delete"
+      display={showDelete}
+      handleOk={() => {
+        dispatch(deleteAgency(agency)).then(() => {
+          navigate('/admin/agencies');
+        });
+      }}
+      handleCancel={() => {
+        setShowDelete(false);
+      }}
+    />
+  );
+};
 
 const FailedDeleteModal = ({ showFailed, setShowFailed }: any) => (
   <GenericModal

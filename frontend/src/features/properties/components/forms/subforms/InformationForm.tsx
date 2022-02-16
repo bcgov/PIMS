@@ -1,11 +1,11 @@
-import { FunctionComponent, useMemo } from 'react';
-import React from 'react';
-import { Input, Form, TextArea, FastSelect, SelectOption } from 'components/common/form';
-import { useFormikContext } from 'formik';
+import { FastSelect, Form, Input, SelectOption, TextArea } from 'components/common/form';
 import { ParentSelect } from 'components/common/form/ParentSelect';
-import { mapSelectOptionWithParent } from 'utils';
+import { useFormikContext } from 'formik';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { useMyAgencies } from 'hooks/useMyAgencies';
+import { FunctionComponent, useMemo } from 'react';
+import React from 'react';
+import { mapSelectOptionWithParent } from 'utils';
 interface InformationFormProps {
   nameSpace?: string;
   disabled?: boolean;
@@ -38,8 +38,8 @@ const InformationForm: FunctionComponent<InformationFormProps> = (props: Informa
   };
   const formikProps = useFormikContext();
   const keycloak = useKeycloakWrapper();
-  const agencies = (props.agencies ?? []).map(c => mapSelectOptionWithParent(c, props.agencies));
-  const userAgency = agencies.find(a => Number(a.value) === Number(keycloak.agencyId));
+  const agencies = (props.agencies ?? []).map((c) => mapSelectOptionWithParent(c, props.agencies));
+  const userAgency = agencies.find((a) => Number(a.value) === Number(keycloak.agencyId));
 
   const isUserAgencyAParent = useMemo(() => {
     return !!userAgency && !userAgency.parentId;
@@ -49,16 +49,16 @@ const InformationForm: FunctionComponent<InformationFormProps> = (props: Informa
 
   return (
     <>
-      <Form.Row>
+      <Form.Group>
         <Form.Label>Name</Form.Label>
         <Input disabled={props.disabled} field={withNameSpace('name')} />
-      </Form.Row>
-      <Form.Row>
+      </Form.Group>
+      <Form.Group>
         <Form.Label>Description</Form.Label>
         <TextArea disabled={props.disabled} field={withNameSpace('description')} />
-      </Form.Row>
+      </Form.Group>
       {!props.wizard && (
-        <Form.Row>
+        <Form.Group>
           <Form.Label>Classification</Form.Label>
           <FastSelect
             formikProps={formikProps}
@@ -68,18 +68,18 @@ const InformationForm: FunctionComponent<InformationFormProps> = (props: Informa
             field={withNameSpace('classificationId')}
             options={props.classifications}
           />
-        </Form.Row>
+        </Form.Group>
       )}
-      <Form.Row>
+      <Form.Group>
         <Form.Label>Agency</Form.Label>
         <ParentSelect
           field={withNameSpace('agencyId')}
-          options={myAgencies.map(c => mapSelectOptionWithParent(c, myAgencies))}
+          options={myAgencies.map((c) => mapSelectOptionWithParent(c, myAgencies))}
           filterBy={['code', 'label', 'parent']}
           disabled={props.disabled || (!props.isPropertyAdmin && !isUserAgencyAParent)}
           convertValue={Number}
         />
-      </Form.Row>
+      </Form.Group>
     </>
   );
 };

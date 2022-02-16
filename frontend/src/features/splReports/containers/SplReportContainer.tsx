@@ -1,14 +1,15 @@
-import * as React from 'react';
-import SplReportLayout from '../components/SplReportLayout';
-import { useState, useEffect } from 'react';
-import { IReport, ISnapshot, ISnapshotFilter } from '../interfaces';
-import { useProjectSnapshotApi } from '../hooks/useProjectSnapshotApi';
-import _ from 'lodash';
-import { generateUtcNowDateTime } from 'utils';
-import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
 import GenericModal from 'components/common/GenericModal';
+import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
+import _ from 'lodash';
+import * as React from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
+import { generateUtcNowDateTime } from 'utils';
+
+import SplReportLayout from '../components/SplReportLayout';
+import { useProjectSnapshotApi } from '../hooks/useProjectSnapshotApi';
 import { useRouterReport } from '../hooks/useRouterReport';
+import { IReport, ISnapshot, ISnapshotFilter } from '../interfaces';
 
 interface ISplReportContainerProps {}
 
@@ -59,7 +60,7 @@ const SplReportContainer: React.FunctionComponent<ISplReportContainerProps> = ()
       if (id) {
         let snapshots = await getProjectReportSnapshotsById(id);
         snapshots = snapshots.map(
-          s =>
+          (s) =>
             ({
               ...s,
               project: { ...s.project, agencyName: s.project?.agency || s.project?.subAgency },
@@ -68,25 +69,25 @@ const SplReportContainer: React.FunctionComponent<ISplReportContainerProps> = ()
         snapshots = _.orderBy(
           snapshots,
           _.keys(snapshotFilter.sortBy),
-          _.keys(snapshotFilter.sortBy).map(k => snapshotFilter.sortBy[k]) as ('asc' | 'desc')[],
+          _.keys(snapshotFilter.sortBy).map((k) => snapshotFilter.sortBy[k]) as ('asc' | 'desc')[],
         );
 
         if (snapshotFilter.projectNumber) {
           snapshots = _.filter(
             snapshots,
-            snapshot => snapshot.project?.projectNumber === snapshotFilter.projectNumber,
+            (snapshot) => snapshot.project?.projectNumber === snapshotFilter.projectNumber,
           );
         }
         if (snapshotFilter.agency) {
           snapshots = _.filter(
             snapshots,
-            snapshot => snapshot.project?.agencyId === snapshotFilter.agency,
+            (snapshot) => snapshot.project?.agencyId === snapshotFilter.agency,
           );
         }
         if (snapshotFilter.fiscalYear) {
           snapshots = _.filter(
             snapshots,
-            snapshot =>
+            (snapshot) =>
               Number(snapshot.project?.actualFiscalYear) === Number(snapshotFilter.fiscalYear),
           );
         }
@@ -180,7 +181,7 @@ const SplReportContainer: React.FunctionComponent<ISplReportContainerProps> = ()
       <SplReportLayout
         showSidebar={showSidebar}
         setShowSidebar={setShowSidebar}
-        onOpen={report => setCurrentReport(report)}
+        onOpen={(report) => setCurrentReport(report)}
         onDelete={onDelete}
         onFinal={onFinal}
         onRefresh={refreshSnapshots}

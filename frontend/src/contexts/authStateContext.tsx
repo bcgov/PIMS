@@ -1,5 +1,5 @@
-import * as React from 'react';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+import * as React from 'react';
 import { useAppSelector } from 'store';
 
 export interface IAuthState {
@@ -13,7 +13,7 @@ export const AuthStateContext = React.createContext<IAuthState>({
 export const AuthStateContextProvider = (props: { children?: any }) => {
   const keycloak = useKeycloakWrapper();
   const [userInfo, setUserInfo] = React.useState<any>(null);
-  const keycloakReady: boolean = useAppSelector(store => store.keycloakReady);
+  const keycloakReady: boolean = useAppSelector((store) => store.keycloakReady);
 
   React.useEffect(() => {
     const loadUserInfo = async () => {

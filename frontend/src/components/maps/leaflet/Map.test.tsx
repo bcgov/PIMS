@@ -1,24 +1,24 @@
-import React, { createRef } from 'react';
-import { createMemoryHistory } from 'history';
-import { Router } from 'react-router-dom';
-import { IProperty, IParcelDetail, IParcel } from 'actions/parcelsActions';
-import Map from './Map';
-import { Map as LeafletMap } from 'leaflet';
-import { MapProps as LeafletMapProps, Marker, Map as ReactLeafletMap } from 'react-leaflet';
+import { useKeycloak } from '@react-keycloak/web';
+import { cleanup, fireEvent, render, waitFor } from '@testing-library/react';
+import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
+import { IParcel, IParcelDetail, IProperty } from 'actions/parcelsActions';
+import axios from 'axios';
+import MockAdapter from 'axios-mock-adapter';
 import { mount } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
 import Enzyme from 'enzyme';
+import { createMemoryHistory } from 'history';
+import { PimsAPI, useApi } from 'hooks/useApi';
+import { Map as LeafletMap } from 'leaflet';
+import React, { createRef } from 'react';
+import { Marker } from 'react-leaflet';
+import { Provider } from 'react-redux';
+import { MemoryRouter } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { waitFor, fireEvent, render, cleanup } from '@testing-library/react';
-import { Provider } from 'react-redux';
-import { useKeycloak } from '@react-keycloak/web';
-import { useApi, PimsAPI } from 'hooks/useApi';
+
+import Map from './Map';
 import { createPoints } from './mapUtils';
 import SelectedPropertyMarker from './SelectedPropertyMarker/SelectedPropertyMarker';
-import axios from 'axios';
-
-import MockAdapter from 'axios-mock-adapter';
 
 const mockAxios = new MockAdapter(axios);
 jest.mock('@react-keycloak/web');
@@ -31,7 +31,7 @@ const mockParcels = [
   { id: 1, latitude: 48.455059, longitude: -123.496452, propertyTypeId: 1 },
   { id: 2, latitude: 53.917065, longitude: -122.749672, propertyTypeId: 0 },
 ] as IProperty[];
-((useApi as unknown) as jest.Mock<Partial<PimsAPI>>).mockReturnValue({
+(useApi as unknown as jest.Mock<Partial<PimsAPI>>).mockReturnValue({
   loadProperties: jest.fn(async () => {
     return createPoints(mockParcels);
   }),
@@ -112,13 +112,13 @@ describe('MapProperties View', () => {
   });
 
   const getMap = (
-    mapRef: React.RefObject<ReactLeafletMap<LeafletMapProps, LeafletMap>>,
+    mapRef: React.RefObject<LeafletMap>,
     properties: IProperty[],
     selectedProperty: any,
   ) => {
     return (
       <Provider store={store}>
-        <Router history={history}>
+        <MemoryRouter initialEntries={[history.location]}>
           <Map
             lat={48.43}
             lng={-123.37}
@@ -131,13 +131,13 @@ describe('MapProperties View', () => {
             mapRef={mapRef}
             administrativeAreas={[]}
           />
-        </Router>
+        </MemoryRouter>
       </Provider>
     );
   };
 
   it('Renders the marker in correct position', async () => {
-    const mapRef = createRef<ReactLeafletMap<LeafletMapProps, LeafletMap>>();
+    const mapRef = createRef<LeafletMap>();
     const component = mount(getMap(mapRef, mockParcels, mockDetails));
     await waitFor(() => expect(mapRef.current).toBeDefined(), { timeout: 500 });
     const selectedMarkers = component.find(SelectedPropertyMarker);
@@ -147,7 +147,7 @@ describe('MapProperties View', () => {
   });
 
   it('Should render 0 markers when there are no parcels', async () => {
-    const mapRef = createRef<ReactLeafletMap<LeafletMapProps, LeafletMap>>();
+    const mapRef = createRef<LeafletMap>();
     const component = mount(getMap(mapRef, noParcels, emptyDetails));
     await waitFor(() => expect(mapRef.current).toBeDefined(), { timeout: 500 });
     const marker = component.find(Marker);
@@ -157,7 +157,7 @@ describe('MapProperties View', () => {
   });
 
   it('Renders the properties as cluster and on selected property', async () => {
-    const mapRef = createRef<ReactLeafletMap<LeafletMapProps, LeafletMap>>();
+    const mapRef = createRef<LeafletMap>();
 
     const component = mount(getMap(mapRef, mockParcels, mockDetails));
 
@@ -174,12 +174,12 @@ describe('MapProperties View', () => {
   });
 
   it('by default makes the expected calls to load map data', async () => {
-    const mapRef = createRef<ReactLeafletMap<LeafletMapProps, LeafletMap>>();
+    const mapRef = createRef<LeafletMap>();
 
     mount(getMap(mapRef, noParcels, emptyDetails));
 
     const { loadProperties } = useApi();
-    const bbox = (loadProperties as jest.Mock).mock.calls.map(call => call[0].bbox);
+    const bbox = (loadProperties as jest.Mock).mock.calls.map((call) => call[0].bbox);
     const expectedBbox = [
       '-146.25,-135,55.77657301866769,61.60639637138628',
       '-146.25,-135,48.922499263758255,55.77657301866769',
@@ -196,7 +196,7 @@ describe('MapProperties View', () => {
   });
 
   it('makes the correct calls to load map data when filter updated.', async () => {
-    const mapRef = createRef<ReactLeafletMap<LeafletMapProps, LeafletMap>>();
+    const mapRef = createRef<LeafletMap>();
 
     const { container } = render(getMap(mapRef, noParcels, emptyDetails));
     const nameInput = container.querySelector('#name-field');
@@ -215,7 +215,7 @@ describe('MapProperties View', () => {
   });
 
   it('filter will fire everytime the search button is clicked', async () => {
-    const mapRef = createRef<ReactLeafletMap<LeafletMapProps, LeafletMap>>();
+    const mapRef = createRef<LeafletMap>();
 
     const { container } = render(getMap(mapRef, noParcels, emptyDetails));
     const searchButton = container.querySelector('#search-button');
@@ -226,7 +226,7 @@ describe('MapProperties View', () => {
   });
 
   it('makes the correct calls to load the map data when the reset filter is clicked', async () => {
-    const mapRef = createRef<ReactLeafletMap<LeafletMapProps, LeafletMap>>();
+    const mapRef = createRef<LeafletMap>();
 
     const { container } = render(getMap(mapRef, noParcels, emptyDetails));
     const { loadProperties } = useApi();

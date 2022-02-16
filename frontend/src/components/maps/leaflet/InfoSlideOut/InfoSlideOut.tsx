@@ -1,32 +1,33 @@
-import * as React from 'react';
-import { Button } from 'react-bootstrap';
-import { FaInfo, FaPlusSquare } from 'react-icons/fa';
-import Control from 'react-leaflet-control';
-import styled from 'styled-components';
-import clsx from 'classnames';
-import * as L from 'leaflet';
-import { useEffect } from 'react';
-import HeaderActions from './HeaderActions';
-import { InfoContent } from './InfoContent';
-import TooltipWrapper from 'components/common/TooltipWrapper';
-import { PropertyPopUpContext } from 'components/maps/providers/PropertyPopUpProvider';
-import { useLeaflet } from 'react-leaflet';
-import { MAX_ZOOM } from 'constants/strings';
-import { Link, useLocation } from 'react-router-dom';
-import queryString from 'query-string';
-import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+import variables from '_variables.module.scss';
 import { IBuilding, IParcel } from 'actions/parcelsActions';
 import { ReactComponent as BuildingSvg } from 'assets/images/icon-business.svg';
-import { AssociatedBuildingsList } from './AssociatedBuildingsList';
-import variables from '_variables.module.scss';
-import { PropertyTypes } from 'constants/propertyTypes';
+import clsx from 'classnames';
 import { LandSvg } from 'components/common/Icons';
-import AssociatedParcelsList from './AssociatedParcelsList';
-import FilterBackdrop from '../FilterBackdrop';
+import TooltipWrapper from 'components/common/TooltipWrapper';
+import { ControlPanel } from 'components/leaflet';
+import { PropertyPopUpContext } from 'components/maps/providers/PropertyPopUpProvider';
+import { PropertyTypes } from 'constants/propertyTypes';
+import { MAX_ZOOM } from 'constants/strings';
 import { useApi } from 'hooks/useApi';
-import { useAppDispatch } from 'store';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+import * as L from 'leaflet';
+import queryString from 'query-string';
+import * as React from 'react';
+import { useEffect } from 'react';
+import { Button } from 'react-bootstrap';
+import { FaInfo, FaPlusSquare } from 'react-icons/fa';
+import { useMap } from 'react-leaflet';
+import { Link, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { useAppDispatch } from 'store';
 import { storePropertyDetail } from 'store/slices/parcelSlice';
+import styled from 'styled-components';
+
+import FilterBackdrop from '../FilterBackdrop';
+import { AssociatedBuildingsList } from './AssociatedBuildingsList';
+import AssociatedParcelsList from './AssociatedParcelsList';
+import HeaderActions from './HeaderActions';
+import { InfoContent } from './InfoContent';
 
 const InfoContainer = styled.div`
   margin-right: -10px;
@@ -139,18 +140,18 @@ export type InfoControlProps = {
 const InfoControl: React.FC<InfoControlProps> = ({ open, setOpen, onHeaderActionClick }) => {
   const popUpContext = React.useContext(PropertyPopUpContext);
   const { getParcel, getBuilding } = useApi();
-  const leaflet = useLeaflet();
+  const mapInstance = useMap();
   const { propertyInfo } = popUpContext;
   const location = useLocation();
   const jumpToView = () =>
-    leaflet.map?.setView(
+    mapInstance?.setView(
       [propertyInfo?.latitude as number, propertyInfo?.longitude as number],
-      Math.max(MAX_ZOOM, leaflet.map.getZoom()),
+      Math.max(MAX_ZOOM, mapInstance.getZoom()),
     );
   const zoomToView = () =>
-    leaflet.map?.flyTo(
+    mapInstance?.flyTo(
       [propertyInfo?.latitude as number, propertyInfo?.longitude as number],
-      Math.max(MAX_ZOOM, leaflet.map.getZoom()),
+      Math.max(MAX_ZOOM, mapInstance.getZoom()),
       { animate: false },
     );
 
@@ -164,7 +165,7 @@ const InfoControl: React.FC<InfoControlProps> = ({ open, setOpen, onHeaderAction
   //whether the general info is open
   const [generalInfoOpen, setGeneralInfoOpen] = React.useState<boolean>(true);
 
-  const isBuilding = popUpContext.propertyTypeID === PropertyTypes.BUILDING;
+  const isBuilding = popUpContext.propertyTypeId === PropertyTypes.BUILDING;
 
   const addAssociatedBuildingLink = (
     <>
@@ -202,7 +203,7 @@ const InfoControl: React.FC<InfoControlProps> = ({ open, setOpen, onHeaderAction
             <FilterBackdrop show={open && popUpContext.loading}></FilterBackdrop>
             <HeaderActions
               propertyInfo={popUpContext.propertyInfo}
-              propertyTypeId={popUpContext.propertyTypeID}
+              propertyTypeId={popUpContext.propertyTypeId}
               onLinkClick={onHeaderActionClick}
               jumpToView={jumpToView}
               zoomToView={zoomToView}
@@ -211,7 +212,7 @@ const InfoControl: React.FC<InfoControlProps> = ({ open, setOpen, onHeaderAction
             />
             <InfoContent
               propertyInfo={popUpContext.propertyInfo}
-              propertyTypeId={popUpContext.propertyTypeID}
+              propertyTypeId={popUpContext.propertyTypeId}
               canViewDetails={canViewProperty}
             />
           </>
@@ -237,7 +238,7 @@ const InfoControl: React.FC<InfoControlProps> = ({ open, setOpen, onHeaderAction
   };
 
   return (
-    <Control position="topright">
+    <ControlPanel position="topright">
       <InfoContainer id="infoContainer" className={clsx({ closed: !open })}>
         {open && (
           <InfoHeader>
@@ -249,7 +250,7 @@ const InfoControl: React.FC<InfoControlProps> = ({ open, setOpen, onHeaderAction
             id="slideOutInfoButton"
             variant="outline-secondary"
             onClick={() => {
-              const propertyTypeId = popUpContext.propertyTypeID;
+              const propertyTypeId = popUpContext.propertyTypeId;
               const id = popUpContext.propertyInfo?.id;
               if (typeof propertyTypeId === 'number' && propertyTypeId >= 0 && !!id && !open) {
                 popUpContext.setLoading(true);
@@ -322,7 +323,7 @@ const InfoControl: React.FC<InfoControlProps> = ({ open, setOpen, onHeaderAction
         )}
         {open && <InfoMain className={clsx({ open })}>{renderContent()}</InfoMain>}
       </InfoContainer>
-    </Control>
+    </ControlPanel>
   );
 };
 export default InfoControl;

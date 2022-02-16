@@ -1,18 +1,19 @@
-import React from 'react';
+import { useKeycloak } from '@react-keycloak/web';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { ILookupCode } from 'actions/ILookupCode';
+import { IParcel } from 'actions/parcelsActions';
+import * as API from 'constants/API';
+import { Classifications } from 'constants/classifications';
+import { createMemoryHistory } from 'history';
 import noop from 'lodash/noop';
-import { LandForm } from '.';
+import React from 'react';
 import { Provider } from 'react-redux';
+import { MemoryRouter } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { Router } from 'react-router-dom';
-import { createMemoryHistory } from 'history';
-import { useKeycloak } from '@react-keycloak/web';
-import * as API from 'constants/API';
-import { ILookupCode } from 'actions/ILookupCode';
-import { fireEvent, render, waitFor, screen } from '@testing-library/react';
-import { Classifications } from 'constants/classifications';
 import { fillInput } from 'utils/testUtils';
-import { IParcel } from 'actions/parcelsActions';
+
+import { LandForm } from '.';
 
 const mockStore = configureMockStore([thunk]);
 const history = createMemoryHistory();
@@ -106,9 +107,9 @@ const defaultInitialValues: IParcel = {
 
 const getLandForm = (disabled?: boolean, initialValues?: IParcel) => (
   <Provider store={store}>
-    <Router history={history}>
+    <MemoryRouter initialEntries={[history.location]}>
       <LandForm
-        handleGeocoderChanges={() => (promise as unknown) as Promise<void>}
+        handleGeocoderChanges={() => promise as unknown as Promise<void>}
         setMovingPinNameSpace={noop}
         handlePidChange={noop}
         handlePinChange={noop}
@@ -119,7 +120,7 @@ const getLandForm = (disabled?: boolean, initialValues?: IParcel) => (
         setLandUpdateComplete={noop}
         findMatchingPid={noop as any}
       />
-    </Router>
+    </MemoryRouter>
   </Provider>
 );
 

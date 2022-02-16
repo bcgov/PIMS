@@ -1,9 +1,10 @@
-import * as React from 'react';
-import FilterBar from 'components/SearchBar/FilterBar';
-import useCodeLookups from 'hooks/useLookupCodes';
-import { Label } from 'components/common/Label';
-import * as API from 'constants/API';
 import { TypeaheadField } from 'components/common/form/Typeahead';
+import { Label } from 'components/common/Label';
+import FilterBar from 'components/SearchBar/FilterBar';
+import * as API from 'constants/API';
+import useCodeLookups from 'hooks/useLookupCodes';
+import * as React from 'react';
+
 import { IAdminAreaFilter } from './interfaces';
 
 interface IAdminAreaFilterProps {
@@ -22,7 +23,7 @@ export const AdminAreaFilterBar: React.FC<IAdminAreaFilterProps> = ({
   handleAdd,
 }) => {
   const lookupCodes = useCodeLookups();
-  const adminAreas = lookupCodes.getByType(API.AMINISTRATIVE_AREA_CODE_SET_NAME);
+  const adminAreas = lookupCodes.getByType(API.ADMINISTRATIVE_AREA_CODE_SET_NAME);
   return (
     <>
       <FilterBar<IAdminAreaFilter>
@@ -50,7 +51,7 @@ export const AdminAreaFilterBar: React.FC<IAdminAreaFilterProps> = ({
           options={adminAreas}
           placeholder="Enter name"
           filterBy={['name']}
-          labelKey={option => `${option.name}`}
+          labelKey={(option) => `${option.name}`}
         />
       </FilterBar>
     </>

@@ -1,10 +1,10 @@
-import { showLoading, hideLoading } from 'react-redux-loading-bar';
-import { request, success, error, storeLookupCodes } from 'store';
+import { AxiosError, AxiosResponse } from 'axios';
 import * as actionTypes from 'constants/actionTypes';
 import * as API from 'constants/API';
 import { ENVIRONMENT } from 'constants/environment';
 import CustomAxios from 'customAxios';
-import { AxiosResponse, AxiosError } from 'axios';
+import { hideLoading, showLoading } from 'react-redux-loading-bar';
+import { error, request, storeLookupCodes, success } from 'store';
 
 export const getFetchLookupCodeAction = () => async (dispatch: Function) => {
   dispatch(request(actionTypes.GET_LOOKUP_CODES));

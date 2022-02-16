@@ -1,13 +1,14 @@
-import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
-import { getFetchLookupCodeAction } from 'store/slices/hooks/lookupCodeActionCreator';
-import * as networkSlice from 'store/slices/networkSlice';
-import * as lookupSlice from 'store/slices/lookupCodeSlice';
+import MockAdapter from 'axios-mock-adapter';
 import * as API from 'constants/API';
-import * as MOCK from 'mocks/dataMocks';
 import { ENVIRONMENT } from 'constants/environment';
+import * as MOCK from 'mocks/dataMocks';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import { getFetchLookupCodeAction } from 'store/slices/hooks/lookupCodeActionCreator';
+import * as lookupSlice from 'store/slices/lookupCodeSlice';
+import * as networkSlice from 'store/slices/networkSlice';
+
 import { initialLookupCodeState } from '..';
 
 const mockAxios = new MockAdapter(axios);

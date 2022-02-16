@@ -1,31 +1,33 @@
-import * as React from 'react';
-import { Formik, Form } from 'formik';
-import { useState } from 'react';
-import { formatDate } from 'utils';
-import { Container } from 'react-bootstrap';
-import styled from 'styled-components';
-import StepErrorSummary from '../../common/components/StepErrorSummary';
-import { useHistory } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from 'store';
-import { useStepForm, StepStatusIcon, useProject, handleValidate } from '../../common';
+import './ErpStep.scss';
+
+import { ValidationGroup } from 'components/common/tabValidation';
 import {
-  SPPApprovalTabs,
-  ReviewWorkflowStatus,
   DisposeWorkflowStatus,
+  ReviewWorkflowStatus,
+  SPPApprovalTabs,
 } from 'features/projects/constants';
-import { IProject, IStepProps } from 'features/projects/interfaces';
-import { saveErpTab, ErpTabs, ApprovalActions } from '..';
 import {
+  DocumentationStepSchema,
   ProjectDraftStepYupSchema,
   UpdateInfoStepYupSchema,
-  DocumentationStepSchema,
 } from 'features/projects/dispose';
-import * as Yup from 'yup';
+import { IProject, IStepProps } from 'features/projects/interfaces';
+import { Form, Formik } from 'formik';
 import _ from 'lodash';
-import './ErpStep.scss';
-import { ValidationGroup } from 'components/common/tabValidation';
-import { EnhancedReferralExemptionApprovedForSplSchema } from '../forms/erpYupSchema';
 import queryString from 'query-string';
+import * as React from 'react';
+import { useState } from 'react';
+import { Container } from 'react-bootstrap';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from 'store';
+import styled from 'styled-components';
+import { formatDate } from 'utils';
+import * as Yup from 'yup';
+
+import { handleValidate, StepStatusIcon, useProject, useStepForm } from '../../common';
+import StepErrorSummary from '../../common/components/StepErrorSummary';
+import { ApprovalActions, ErpTabs, saveErpTab } from '..';
+import { EnhancedReferralExemptionApprovedForSplSchema } from '../forms/erpYupSchema';
 
 const CenterBoldText = styled.div`
   text-align: center;
@@ -42,8 +44,9 @@ const ErpStep = ({ formikRef }: IStepProps) => {
       ? SPPApprovalTabs.closeOutForm
       : SPPApprovalTabs.erp;
   const dispatch = useAppDispatch();
-  const currentTab = useAppSelector(store => store.erpTab) ?? defaultTab;
-  const history = useHistory();
+  const currentTab = useAppSelector((store) => store.erpTab) ?? defaultTab;
+  const navigate = useNavigate();
+  const location = useLocation();
   const initialValues: IProject = { ...project };
   const canUserEdit =
     canUserOverride() ||
@@ -63,11 +66,10 @@ const ErpStep = ({ formikRef }: IStepProps) => {
     dispatch(saveErpTab(tabName));
   };
   const goToGreTransferred = () =>
-    history.push(`./erp/gretransfer?projectNumber=${project?.projectNumber}`);
-  const goToSpl = () =>
-    history.push(`./approved?projectNumber=${project?.projectNumber}&to=ERP-ON`);
+    navigate(`./erp/gretransfer?projectNumber=${project?.projectNumber}`);
+  const goToSpl = () => navigate(`./approved?projectNumber=${project?.projectNumber}&to=ERP-ON`);
 
-  const params = queryString.parse(history.location.search);
+  const params = queryString.parse(location.search);
 
   const validationGroups: ValidationGroup[] = [
     {
@@ -98,7 +100,7 @@ const ErpStep = ({ formikRef }: IStepProps) => {
    */
   const getValidationGroups = (statusCode?: string) => {
     if (statusCode) {
-      return validationGroups.filter(g => g.statusCode === statusCode);
+      return validationGroups.filter((g) => g.statusCode === statusCode);
     }
     return [];
   };
@@ -117,8 +119,8 @@ const ErpStep = ({ formikRef }: IStepProps) => {
           ).then((project: IProject) => {
             if (project?.statusCode === ReviewWorkflowStatus.ApprovedForErp) {
               params.to = 'ERP-ON';
-              history.push({ search: queryString.stringify(params) });
-              history.go(0);
+              navigate({ search: queryString.stringify(params) });
+              navigate(0);
             } else if (project?.statusCode === ReviewWorkflowStatus.ApprovedForSpl) {
               goToSpl();
             } else if (project?.statusCode === ReviewWorkflowStatus.NotInSpl) {

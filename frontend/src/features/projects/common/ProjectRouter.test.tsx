@@ -1,20 +1,21 @@
-import React from 'react';
+import { useKeycloak } from '@react-keycloak/web';
+import { render } from '@testing-library/react';
+import axios from 'axios';
+import MockAdapter from 'axios-mock-adapter';
+import * as actionTypes from 'constants/actionTypes';
+import Claims from 'constants/claims';
 import * as reducerTypes from 'constants/reducerTypes';
 import { createMemoryHistory } from 'history';
+import React from 'react';
+import { Provider } from 'react-redux';
+import { matchPath, MemoryRouter } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { Provider } from 'react-redux';
-import { Router, match as Match } from 'react-router-dom';
-import * as actionTypes from 'constants/actionTypes';
-import useStepForm from '../common/hooks/useStepForm';
-import { render } from '@testing-library/react';
+
 import useProject from '../common/hooks/useProject';
+import useStepForm from '../common/hooks/useStepForm';
 import { mockWorkflow } from '../dispose/testUtils';
 import ProjectRouter from './ProjectRouter';
-import { useKeycloak } from '@react-keycloak/web';
-import Claims from 'constants/claims';
-import MockAdapter from 'axios-mock-adapter';
-import axios from 'axios';
 
 const mockStore = configureMockStore([thunk]);
 const history = createMemoryHistory();
@@ -40,13 +41,7 @@ const mockKeycloak = (claims: string[]) => {
 const mockAxios = new MockAdapter(axios);
 mockAxios.onAny().reply(200, {});
 
-const match: Match = {
-  path: '/',
-  url: '/',
-  isExact: false,
-  params: {},
-};
-
+const match = matchPath('', '/');
 const loc = {
   pathname: '/projects/assess/properties?projectNumber=SPP-10001',
   search: '?projectNumber=SPP-10001',
@@ -66,9 +61,9 @@ const store = mockStore({
 
 const uiElement = (
   <Provider store={store}>
-    <Router history={history}>
+    <MemoryRouter initialEntries={[history.location]}>
       <ProjectRouter match={match} location={loc} />
-    </Router>
+    </MemoryRouter>
   </Provider>
 );
 describe('project router', () => {

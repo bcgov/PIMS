@@ -1,20 +1,21 @@
-import React from 'react';
+import { renderHook } from '@testing-library/react-hooks';
+import * as actionTypes from 'constants/actionTypes';
 import * as reducerTypes from 'constants/reducerTypes';
+import { IProject } from 'features/projects/interfaces';
 import { createMemoryHistory } from 'history';
+import React from 'react';
+import { Provider } from 'react-redux';
+import { MemoryRouter } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
-import * as actionTypes from 'constants/actionTypes';
-import { renderHook } from '@testing-library/react-hooks';
+
+import { mockWorkflow } from '../testUtils';
 import useStepper, {
-  isStatusCompleted,
-  isStatusNavigable,
   getLastCompletedStatus,
   getNextWorkflowStatus,
+  isStatusCompleted,
+  isStatusNavigable,
 } from './useStepper';
-import { IProject } from 'features/projects/common';
-import { mockWorkflow } from '../testUtils';
 
 const mockStore = configureMockStore([thunk]);
 const history = createMemoryHistory();
@@ -35,7 +36,7 @@ describe('useStepper hook functionality', () => {
     renderHook(() => useStepper(), {
       wrapper: ({ children }) => (
         <Provider store={store}>
-          <Router history={history}>{children}</Router>
+          <MemoryRouter initialEntries={[history.location]}>{children}</MemoryRouter>
         </Provider>
       ),
     });

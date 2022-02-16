@@ -1,11 +1,12 @@
+import { FormikValues } from 'formik';
 import React, { useRef } from 'react';
-import SelectProjectPropertiesStep from '../../dispose/steps/SelectProjectPropertiesStep';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Button } from 'react-bootstrap';
-import { FormikValues } from 'formik';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+
 import { useStepForm } from '../../common';
+import SelectProjectPropertiesStep from '../../dispose/steps/SelectProjectPropertiesStep';
 
 const FlexRight = styled.div`
   width: 100%;
@@ -19,7 +20,7 @@ const FlexRight = styled.div`
  */
 const SelectProjectPropertiesPage = () => {
   const formikRef = useRef<FormikValues>();
-  const history = useHistory();
+  const navigate = useNavigate();
   const { onSave } = useStepForm();
 
   return (
@@ -28,7 +29,7 @@ const SelectProjectPropertiesPage = () => {
       <FlexRight>
         <Button
           onClick={() => {
-            onSave(formikRef).then(() => history.goBack());
+            onSave(formikRef).then(() => navigate(-1));
           }}
         >
           Update

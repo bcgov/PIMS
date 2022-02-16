@@ -1,17 +1,18 @@
 import './Header.scss';
 
-import React, { useState } from 'react';
-import { Navbar, Row, Col, Modal, Button, Nav } from 'react-bootstrap';
 import BClogoUrl from 'assets/images/logo-banner.svg';
 import PIMSlogo from 'assets/images/PIMSlogo/logo_only.png';
-import { useHistory } from 'react-router-dom';
-import { IGenericNetworkAction, clear } from 'store';
-import { FaBomb } from 'react-icons/fa';
-import _ from 'lodash';
-import { UserProfile } from './UserProfile';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
-import styled from 'styled-components';
+import _ from 'lodash';
+import React, { useState } from 'react';
+import { Button, Col, Modal, Nav, Navbar, Row } from 'react-bootstrap';
+import { FaBomb } from 'react-icons/fa';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { clear, IGenericNetworkAction } from 'store';
 import { useAppDispatch, useAppSelector } from 'store';
+import styled from 'styled-components';
+
+import { UserProfile } from './UserProfile';
 
 const VerticalBar = styled.span`
   border-left: 2px solid white;
@@ -21,28 +22,29 @@ const VerticalBar = styled.span`
 `;
 
 const Header = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
+  const location = useLocation();
   const dispatch = useAppDispatch();
   const keycloak = useKeycloakWrapper();
-  if (history.location.pathname === '/') {
-    history.replace('/mapview');
+  if (location.pathname === '/') {
+    navigate('/mapview', { replace: true });
   }
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   const handleClear = () => {
-    errors.forEach(error => dispatch(clear(error.name)));
+    errors.forEach((error) => dispatch(clear(error.name)));
     setShow(false);
   };
 
   const isNetworkError = (x: any): x is IGenericNetworkAction =>
     (x as IGenericNetworkAction).type === 'ERROR';
-  const errors = useAppSelector(store => {
+  const errors = useAppSelector((store) => {
     const errors: IGenericNetworkAction[] = [];
-    _.values(store.network).forEach(reducer => {
+    _.values(store.network).forEach((reducer) => {
       _.values(reducer)
-        .filter(x => x instanceof Object)
-        .forEach(action => {
+        .filter((x) => x instanceof Object)
+        .forEach((action) => {
           if (isNetworkError(action)) {
             errors.push(action);
           }

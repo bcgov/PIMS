@@ -1,16 +1,18 @@
-import React from 'react';
-import renderer from 'react-test-renderer';
 import 'jest-styled-components';
-import { noop } from 'lodash';
-import EnhancedReferralTab from './EnhancedReferralTab';
-import { ReviewWorkflowStatus } from 'features/projects/constants';
-import { Formik, Form } from 'formik';
-import { getStore, mockProject as defaultProject } from '../../dispose/testUtils';
-import _ from 'lodash';
-import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
-import { createMemoryHistory } from 'history';
+
 import { useKeycloak } from '@react-keycloak/web';
+import { ReviewWorkflowStatus } from 'features/projects/constants';
+import { Form, Formik } from 'formik';
+import { createMemoryHistory } from 'history';
+import { noop } from 'lodash';
+import _ from 'lodash';
+import React from 'react';
+import { Provider } from 'react-redux';
+import { MemoryRouter } from 'react-router-dom';
+import renderer from 'react-test-renderer';
+
+import { getStore, mockProject as defaultProject } from '../../dispose/testUtils';
+import EnhancedReferralTab from './EnhancedReferralTab';
 
 jest.mock('@react-keycloak/web');
 (useKeycloak as jest.Mock).mockReturnValue({
@@ -28,7 +30,7 @@ const history = createMemoryHistory();
 
 const createElement = (storeOverride?: any) => (
   <Provider store={storeOverride ?? getStore(mockProject)}>
-    <Router history={history}>
+    <MemoryRouter initialEntries={[history.location]}>
       <Formik
         initialValues={{
           statusCode: ReviewWorkflowStatus.ApprovedForErp,
@@ -37,13 +39,13 @@ const createElement = (storeOverride?: any) => (
         validateOnChange={false}
         onSubmit={() => {}}
       >
-        {formikProps => (
+        {(formikProps) => (
           <Form>
             <EnhancedReferralTab goToGreTransferred={noop} setSubmitStatusCode={noop} />
           </Form>
         )}
       </Formik>
-    </Router>
+    </MemoryRouter>
   </Provider>
 );
 
@@ -57,19 +59,19 @@ describe('EnhancedReferralTab', () => {
   it('renders correctly when approved for exemption', () => {
     const form = (
       <Provider store={getStore(mockProject)}>
-        <Router history={history}>
+        <MemoryRouter initialEntries={[history.location]}>
           <Formik
             initialValues={{ statusCode: ReviewWorkflowStatus.ApprovedForExemption }}
             validateOnChange={false}
             onSubmit={() => {}}
           >
-            {formikProps => (
+            {(formikProps) => (
               <Form>
                 <EnhancedReferralTab goToGreTransferred={noop} setSubmitStatusCode={noop} />
               </Form>
             )}
           </Formik>
-        </Router>
+        </MemoryRouter>
       </Provider>
     );
     const tree = renderer.create(form).toJSON();

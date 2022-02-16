@@ -1,23 +1,24 @@
-import React from 'react';
-import { createMemoryHistory } from 'history';
-import { Router } from 'react-router-dom';
-import { mount } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
-import Enzyme from 'enzyme';
-import { Select } from '../../../components/common/form';
-import { Formik } from 'formik';
-import configureMockStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
-import { Provider } from 'react-redux';
-import AccessRequestPage from './AccessRequestPage';
+import { useKeycloak } from '@react-keycloak/web';
+import { fireEvent, render, waitFor } from '@testing-library/react';
+import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import { ILookupCode } from 'actions/ILookupCode';
-import { IGenericNetworkAction, initialAccessRequestState } from 'store';
-import * as API from 'constants/API';
-import { render, fireEvent, waitFor } from '@testing-library/react';
-import { fillInput } from 'utils/testUtils';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
-import { useKeycloak } from '@react-keycloak/web';
+import * as API from 'constants/API';
+import { mount } from 'enzyme';
+import Enzyme from 'enzyme';
+import { Formik } from 'formik';
+import { createMemoryHistory } from 'history';
+import React from 'react';
+import { Provider } from 'react-redux';
+import { MemoryRouter } from 'react-router-dom';
+import configureMockStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
+import { IGenericNetworkAction, initialAccessRequestState } from 'store';
+import { fillInput } from 'utils/testUtils';
+
+import { Select } from '../../../components/common/form';
+import AccessRequestPage from './AccessRequestPage';
 
 jest.mock('@react-keycloak/web');
 (useKeycloak as jest.Mock).mockReturnValue({
@@ -79,9 +80,9 @@ describe('AccessRequestPage functionality', () => {
   const testRender = () =>
     render(
       <Provider store={successStore}>
-        <Router history={history}>
+        <MemoryRouter initialEntries={[history.location]}>
           <AccessRequestPage />
-        </Router>
+        </MemoryRouter>
       </Provider>,
     );
   it('renders RequestAccessPage correctly', () => {
@@ -92,9 +93,9 @@ describe('AccessRequestPage functionality', () => {
   describe('component functionality when requestAccess status is 200 and fetching is false', () => {
     const componentRender = mount(
       <Provider store={successStore}>
-        <Router history={history}>
+        <MemoryRouter initialEntries={[history.location]}>
           <AccessRequestPage />
-        </Router>
+        </MemoryRouter>
       </Provider>,
     );
 
@@ -103,12 +104,7 @@ describe('AccessRequestPage functionality', () => {
     });
 
     it('initializes form with null for agencies and roles', () => {
-      expect(
-        componentRender
-          .find(Formik)
-          .first()
-          .prop('initialValues'),
-      ).toEqual({
+      expect(componentRender.find(Formik).first().prop('initialValues')).toEqual({
         agencies: [],
         agency: undefined,
         id: 0,
@@ -169,9 +165,9 @@ describe('AccessRequestPage functionality', () => {
   it('does not show success message by default', () => {
     const component = mount(
       <Provider store={store}>
-        <Router history={history}>
+        <MemoryRouter initialEntries={[history.location]}>
           <AccessRequestPage />
-        </Router>
+        </MemoryRouter>
       </Provider>,
     );
     expect(component.find('div.alert').isEmpty).toBeTruthy();

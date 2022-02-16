@@ -1,7 +1,7 @@
+import { FastDatePicker, Form } from 'components/common/form';
+import { useFormikContext } from 'formik';
 import React from 'react';
 import { Container } from 'react-bootstrap';
-import { Form, FastDatePicker } from 'components/common/form';
-import { useFormikContext } from 'formik';
 
 interface ISurplusPropertyListApprovalFormProps {
   isReadOnly?: boolean;
@@ -16,7 +16,7 @@ const SurplusPropertyListApprovalForm = ({ isReadOnly }: ISurplusPropertyListApp
   return (
     <Container fluid>
       <h3>Surplus Properties List Approval</h3>
-      <Form.Row>
+      <Form.Group>
         <Form.Label column md={3}>
           Request for Addition to SPL Received
         </Form.Label>
@@ -27,8 +27,8 @@ const SurplusPropertyListApprovalForm = ({ isReadOnly }: ISurplusPropertyListApp
           disabled={isReadOnly}
           field="requestForSplReceivedOn"
         />
-      </Form.Row>
-      <Form.Row>
+      </Form.Group>
+      <Form.Group>
         <Form.Label column md={3}>
           Addition Approved
         </Form.Label>
@@ -39,7 +39,7 @@ const SurplusPropertyListApprovalForm = ({ isReadOnly }: ISurplusPropertyListApp
           disabled={isReadOnly}
           field="approvedForSplOn"
         />
-      </Form.Row>
+      </Form.Group>
     </Container>
   );
 };

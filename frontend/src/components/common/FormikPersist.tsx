@@ -1,10 +1,11 @@
-import * as React from 'react';
-import { FormikProps, connect } from 'formik';
-import debounce from 'lodash/debounce';
-import isEqual from 'react-fast-compare';
 import { AES, enc } from 'crypto-js';
-import GenericModal from './GenericModal';
+import { connect, FormikProps } from 'formik';
+import debounce from 'lodash/debounce';
+import * as React from 'react';
+import isEqual from 'react-fast-compare';
+
 import packageJson from '../../../package.json';
+import GenericModal from './GenericModal';
 
 export interface PersistProps {
   name: string;
@@ -111,24 +112,26 @@ class PersistImpl extends React.Component<
   render() {
     return (
       <>
-        {/** normally not required, this bypasses a snapshot test rendering issue */
-        this.state.showLoadDraftDialog && (
-          <GenericModal
-            title="Load Draft?"
-            message="You have an unsaved draft, would you like to resume editing it?"
-            cancelButtonText="Discard"
-            okButtonText="Resume Editing"
-            display={this.state.showLoadDraftDialog}
-            handleOk={() => {
-              this.setState({ showLoadDraftDialog: false });
-              this.props.persistCallback(this.loadForm());
-            }}
-            handleCancel={() => {
-              this.setState({ showLoadDraftDialog: false });
-              this.discardForm();
-            }}
-          />
-        )}
+        {
+          /** normally not required, this bypasses a snapshot test rendering issue */
+          this.state.showLoadDraftDialog && (
+            <GenericModal
+              title="Load Draft?"
+              message="You have an unsaved draft, would you like to resume editing it?"
+              cancelButtonText="Discard"
+              okButtonText="Resume Editing"
+              display={this.state.showLoadDraftDialog}
+              handleOk={() => {
+                this.setState({ showLoadDraftDialog: false });
+                this.props.persistCallback(this.loadForm());
+              }}
+              handleCancel={() => {
+                this.setState({ showLoadDraftDialog: false });
+                this.discardForm();
+              }}
+            />
+          )
+        }
       </>
     );
   }

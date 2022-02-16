@@ -1,8 +1,9 @@
 import './DisplayCurrency.scss';
 
+import MaskedInput from 'components/text-mask';
 import React from 'react';
-import MaskedInput from 'react-text-mask';
 import createNumberMask from 'text-mask-addons/dist/createNumberMask';
+
 import { defaultMaskOptions } from './FastCurrencyInput';
 
 type RequiredAttributes = {

@@ -1,17 +1,18 @@
-import React from 'react';
-import { CellProps } from 'react-table';
-import { Link } from 'react-router-dom';
-import { formatNumber, mapLookupCode } from 'utils';
-import { IProperty } from '.';
-import { ColumnWithProps } from 'components/Table';
+import { ILookupCode } from 'actions/ILookupCode';
 import { FastCurrencyInput, Input, Select, SelectOption } from 'components/common/form';
 import { TypeaheadField } from 'components/common/form/Typeahead';
-import { EditableMoneyCell, MoneyCell, AsterixMoneyCell } from 'components/Table/MoneyCell';
-import _, { isEqual } from 'lodash';
-import styled from 'styled-components';
+import { ColumnWithProps } from 'components/Table';
+import { AsterixMoneyCell, EditableMoneyCell, MoneyCell } from 'components/Table/MoneyCell';
 import { PropertyTypeCell } from 'components/Table/PropertyTypeCell';
 import { PropertyTypes } from 'constants/index';
-import { ILookupCode } from 'actions/ILookupCode';
+import _, { isEqual } from 'lodash';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { CellProps } from 'react-table';
+import styled from 'styled-components';
+import { formatNumber, mapLookupCode } from 'utils';
+
+import { IProperty } from '.';
 
 export const ColumnDiv = styled.div`
   display: flex;
@@ -38,18 +39,20 @@ const spacing = {
   xxlarge: unit * 8,
 };
 
-const getProjectLinkNoDrafts = (namespace: string = 'properties') => (cellInfo: any) => {
-  const projectNumbers = _.filter(cellInfo.value, (p: string) => !p.includes('DRAFT'));
-  return (
-    <ColumnDiv>
-      {projectNumbers?.map((projectNumber: string) => (
-        <React.Fragment key={projectNumber}>
-          <Link to={`/projects?projectNumber=${projectNumber}`}>{projectNumber}</Link>
-        </React.Fragment>
-      ))}
-    </ColumnDiv>
-  );
-};
+const getProjectLinkNoDrafts =
+  (namespace: string = 'properties') =>
+  (cellInfo: any) => {
+    const projectNumbers = _.filter(cellInfo.value, (p: string) => !p.includes('DRAFT'));
+    return (
+      <ColumnDiv>
+        {projectNumbers?.map((projectNumber: string) => (
+          <React.Fragment key={projectNumber}>
+            <Link to={`/projects?projectNumber=${projectNumber}`}>{projectNumber}</Link>
+          </React.Fragment>
+        ))}
+      </ColumnDiv>
+    );
+  };
 
 export const columns = (
   agencyOptions: SelectOption[],
@@ -74,14 +77,14 @@ export const columns = (
       props: {
         className: 'agency-search',
         name: 'agencies[0]',
-        options: agencyOptions.map(a => ({ ...a, parentId: a.value })),
+        options: agencyOptions.map((a) => ({ ...a, parentId: a.value })),
         inputSize: 'large',
         placeholder: 'Filter by agency',
         filterBy: ['code'],
         hideParent: true,
         clearButton: true,
         getOptionByValue: (value: number | string) => {
-          return agencyOptions.filter(a => Number(a.value) === Number(value));
+          return agencyOptions.filter((a) => Number(a.value) === Number(value));
         },
       },
     },
@@ -108,7 +111,7 @@ export const columns = (
           return `${option.label}`;
         },
         getOptionByValue: (value: number | string) => {
-          return subAgencies.filter(a => Number(a.value) === Number(value));
+          return subAgencies.filter((a) => Number(a.value) === Number(value));
         },
       },
     },
@@ -146,7 +149,7 @@ export const columns = (
         },
         clearButton: true,
         getOptionByValue: (value: number | string) => {
-          return propertyClassifications.filter(a => isEqual(a.value, value));
+          return propertyClassifications.filter((a) => isEqual(a.value, value));
         },
       },
     },
@@ -193,7 +196,7 @@ export const columns = (
         name: 'administrativeArea',
         placeholder: 'Filter by location',
         className: 'location-search',
-        options: municipalities.map(mapLookupCode).map(x => x.label),
+        options: municipalities.map(mapLookupCode).map((x) => x.label),
         clearButton: true,
         hideValidation: true,
       },
@@ -350,7 +353,7 @@ export const buildingColumns = (
       props: {
         className: 'agency-search',
         name: 'agencies[0]',
-        options: agencyOptions.map(a => ({ ...a, parentId: a.value })),
+        options: agencyOptions.map((a) => ({ ...a, parentId: a.value })),
         inputSize: 'large',
         placeholder: 'Filter by agency',
         filterBy: ['code'],
@@ -448,7 +451,7 @@ export const buildingColumns = (
         name: 'administrativeArea',
         placeholder: 'Filter by location',
         className: 'location-search',
-        options: municipalities.map(mapLookupCode).map(x => x.label),
+        options: municipalities.map(mapLookupCode).map((x) => x.label),
         clearButton: true,
         hideValidation: true,
       },

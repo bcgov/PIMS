@@ -1,4 +1,5 @@
-import { IBuilding, IAddress, IEvaluation, IFiscal } from 'actions/parcelsActions';
+import { IAddress, IBuilding, IEvaluation, IFiscal } from 'actions/parcelsActions';
+
 import { IParentParcel } from '.';
 
 export interface IApiProperty {

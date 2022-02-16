@@ -1,31 +1,32 @@
-import { ProjectActions } from 'constants/actionTypes';
-import { clear } from 'store';
-import _ from 'lodash';
-import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
-import Claims from 'constants/claims';
-import { MutableRefObject } from 'react';
-import { FormikValues } from 'formik';
 import { AxiosError } from 'axios';
-import { updateWorkflowStatus, updateProject, createProject } from '..';
-import { IProject } from 'features/projects/interfaces';
+import { ProjectActions } from 'constants/actionTypes';
+import Claims from 'constants/claims';
 import { Roles } from 'constants/roles';
+import { IProject } from 'features/projects/interfaces';
+import { FormikValues } from 'formik';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+import _ from 'lodash';
+import { MutableRefObject } from 'react';
+import { clear } from 'store';
 import { useAppDispatch, useAppSelector } from 'store';
+
+import { createProject, updateProject, updateWorkflowStatus } from '..';
 
 /** hook providing utilities for project dispose step forms. */
 const useStepForm = () => {
   const dispatch = useAppDispatch();
   const keycloak = useKeycloakWrapper();
   const getProjectRequest = useAppSelector(
-    store => (store.network as any)[ProjectActions.GET_PROJECT],
+    (store) => (store.network as any)[ProjectActions.GET_PROJECT],
   );
   const addProjectRequest = useAppSelector(
-    store => (store.network as any)[ProjectActions.ADD_PROJECT],
+    (store) => (store.network as any)[ProjectActions.ADD_PROJECT],
   );
   const updateProjectRequest = useAppSelector(
-    store => (store.network as any)[ProjectActions.UPDATE_PROJECT],
+    (store) => (store.network as any)[ProjectActions.UPDATE_PROJECT],
   );
   const updateWorflowStatusRequest = useAppSelector(
-    store => (store.network as any)[ProjectActions.UPDATE_WORKFLOW_STATUS],
+    (store) => (store.network as any)[ProjectActions.UPDATE_WORKFLOW_STATUS],
   );
   const noFetchingProjectRequests =
     getProjectRequest?.isFetching !== true &&

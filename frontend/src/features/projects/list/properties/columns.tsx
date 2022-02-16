@@ -1,8 +1,9 @@
+import { ColumnWithProps, MoneyCell, ViewPropertyCell } from 'components/Table';
+import { PropertyTypeCell } from 'components/Table/PropertyTypeCell';
 import { CellProps } from 'react-table';
 import { formatNumber } from 'utils';
-import { ColumnWithProps, ViewPropertyCell, MoneyCell } from 'components/Table';
+
 import { IProperty } from '../../interfaces';
-import { PropertyTypeCell } from 'components/Table/PropertyTypeCell';
 
 const NumberCell = ({ cell: { value } }: CellProps<IProperty, number>) => formatNumber(value);
 
@@ -26,7 +27,7 @@ const spacing = {
 export const columns: ColumnWithProps<IProperty>[] = [
   {
     Header: 'Agency',
-    accessor: row => (row.subAgency ? `${row.subAgency} (${row.agencyCode})` : row.agencyCode), // accessor is the "key" in the data
+    accessor: (row) => (row.subAgency ? `${row.subAgency} (${row.agencyCode})` : row.agencyCode), // accessor is the "key" in the data
     align: 'left',
     responsive: true,
     width: spacing.small,
@@ -34,7 +35,7 @@ export const columns: ColumnWithProps<IProperty>[] = [
   },
   {
     Header: 'Name/PID',
-    accessor: row => (row.name ? `${row.name} ${row.pid}` : row.pid ?? row.pin),
+    accessor: (row) => (row.name ? `${row.name} ${row.pid}` : row.pid ?? row.pin),
     align: 'left',
     responsive: true,
     width: spacing.medium,
@@ -50,7 +51,7 @@ export const columns: ColumnWithProps<IProperty>[] = [
   },
   {
     Header: 'Street Address',
-    accessor: row => `${row.address}, ${row.administrativeArea}`,
+    accessor: (row) => `${row.address}, ${row.administrativeArea}`,
     align: 'left',
     responsive: true,
     width: spacing.large,

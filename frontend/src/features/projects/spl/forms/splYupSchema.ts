@@ -22,9 +22,7 @@ export const SurplusPropertyListContractInPlaceYupSchema = Yup.object().shape({
   purchaser: Yup.string()
     .required('Required')
     .max(150, 'Purchaser must be less then 150 characters'),
-  offerAmount: Yup.number()
-    .min(1, 'Offer amount must be a positive number')
-    .required('Required'),
+  offerAmount: Yup.number().min(1, 'Offer amount must be a positive number').required('Required'),
 });
 
 export const SurplusPropertyListDisposeYupSchema = Yup.object().shape({

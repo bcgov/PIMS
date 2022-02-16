@@ -1,0 +1,28 @@
+FROM rhel8/nodejs-16 as build-deps
+
+USER root
+
+WORKDIR /usr/src/app
+COPY package*.json ./
+
+RUN npm install
+COPY . ./
+
+RUN chmod 777 /usr/src/app/nginx/default.conf
+
+# For some reason a ConfigMap can't create the `.env` file.
+# So we using a `environment.env` file instead.
+RUN if [ -f environment.env ]; then mv -f environment.env .env; fi
+RUN npm run build
+
+# Final image with production build.
+FROM nginxinc/nginx-unprivileged:1.20
+
+COPY --from=build-deps /usr/src/app/build /usr/share/nginx/html
+COPY --from=build-deps /usr/src/app/nginx/default.conf /etc/nginx/conf.d/default.conf
+
+USER 1001
+
+EXPOSE 8080
+
+CMD ["nginx", "-g", "daemon off;"]

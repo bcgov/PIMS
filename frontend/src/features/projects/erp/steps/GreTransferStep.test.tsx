@@ -1,21 +1,22 @@
-import React from 'react';
-import { createMemoryHistory } from 'history';
-import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
-import { render, waitFor } from '@testing-library/react';
 import { useKeycloak } from '@react-keycloak/web';
-import { Claims } from 'constants/claims';
-import MockAdapter from 'axios-mock-adapter';
-import axios from 'axios';
-import _ from 'lodash';
+import { fireEvent, screen } from '@testing-library/dom';
+import { render, waitFor } from '@testing-library/react';
 import { cleanup } from '@testing-library/react-hooks';
-import { getStore, mockProject as project } from '../../dispose/testUtils';
+import axios from 'axios';
+import MockAdapter from 'axios-mock-adapter';
+import { Claims } from 'constants/claims';
 import { Classifications } from 'constants/classifications';
 import { ReviewWorkflowStatus } from 'features/projects/constants';
 import { IProject } from 'features/projects/interfaces';
-import { GreTransferStep } from '..';
+import { createMemoryHistory } from 'history';
+import _ from 'lodash';
+import React from 'react';
+import { Provider } from 'react-redux';
+import { MemoryRouter } from 'react-router-dom';
 import { fillInput } from 'utils/testUtils';
-import { fireEvent, screen } from '@testing-library/dom';
+
+import { getStore, mockProject as project } from '../../dispose/testUtils';
+import { GreTransferStep } from '..';
 
 jest.mock('@react-keycloak/web');
 const mockProject: IProject = {
@@ -76,9 +77,9 @@ const history = createMemoryHistory();
 
 const getGreTransferStep = (storeOverride?: any) => (
   <Provider store={storeOverride ?? getStore(mockProject)}>
-    <Router history={history}>
+    <MemoryRouter initialEntries={[history.location]}>
       <GreTransferStep />
-    </Router>
+    </MemoryRouter>
   </Provider>
 );
 

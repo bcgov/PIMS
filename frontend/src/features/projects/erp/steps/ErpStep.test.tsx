@@ -1,23 +1,24 @@
-import React from 'react';
-import { createMemoryHistory } from 'history';
-import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
-import { render, act, screen, cleanup, waitFor } from '@testing-library/react';
 import { useKeycloak } from '@react-keycloak/web';
-import MockAdapter from 'axios-mock-adapter';
+import { act, cleanup, render, screen, waitFor } from '@testing-library/react';
 import axios from 'axios';
-import _ from 'lodash';
-import { getStore, mockProject as defaultProject } from '../../dispose/testUtils';
+import MockAdapter from 'axios-mock-adapter';
+import Claims from 'constants/claims';
 import {
+  AgencyResponses,
   DisposalWorkflows,
   ReviewWorkflowStatus,
-  AgencyResponses,
   SPPApprovalTabs,
 } from 'features/projects/constants';
 import { IProject } from 'features/projects/interfaces';
-import { ErpStep } from '..';
-import Claims from 'constants/claims';
+import { createMemoryHistory } from 'history';
+import _ from 'lodash';
+import React from 'react';
 import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
+import { MemoryRouter } from 'react-router-dom';
+
+import { getStore, mockProject as defaultProject } from '../../dispose/testUtils';
+import { ErpStep } from '..';
 
 ReactDOM.createPortal = (node: any) => node;
 jest.mock('@react-keycloak/web');
@@ -42,9 +43,9 @@ mockProject.workflowCode = DisposalWorkflows.Erp;
 
 const getApprovalStep = (storeOverride?: any) => (
   <Provider store={storeOverride ?? getStore(mockProject)}>
-    <Router history={history}>
+    <MemoryRouter initialEntries={[history.location]}>
       <ErpStep />
-    </Router>
+    </MemoryRouter>
   </Provider>
 );
 
@@ -141,7 +142,7 @@ describe('ERP Approval Step', () => {
     it('correct form fields are disabled', () => {
       const { queryAllByRole } = render(getApprovalStep());
       const textboxes = queryAllByRole('textbox');
-      textboxes.forEach(textbox => {
+      textboxes.forEach((textbox) => {
         expect(textbox).toBeVisible();
         if (textbox.id.includes('Spl')) {
           //only disabled textboxes are SPL related datepickers and erp emails text
@@ -184,7 +185,7 @@ describe('ERP Approval Step', () => {
     it('form fields are disabled', () => {
       const component = render(getApprovalStep());
       const textboxes = component.queryAllByRole('textbox');
-      textboxes.forEach(textbox => {
+      textboxes.forEach((textbox) => {
         expect(textbox).toBeVisible();
         expect(textbox).toBeDisabled();
       });
@@ -226,7 +227,7 @@ describe('ERP Approval Step', () => {
     it('correct form fields are disabled', () => {
       const component = render(getApprovalStep(getStore(project)));
       const textboxes = component.queryAllByRole('textbox');
-      textboxes.forEach(textbox => {
+      textboxes.forEach((textbox) => {
         expect(textbox).toBeVisible();
         if (textbox.id.includes('Spl')) {
           //only disabled textboxes are SPL related datepickers and erp emails text

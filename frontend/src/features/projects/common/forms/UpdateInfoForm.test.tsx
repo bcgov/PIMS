@@ -1,20 +1,19 @@
+import { useKeycloak } from '@react-keycloak/web';
+import { cleanup, fireEvent, render, waitFor } from '@testing-library/react';
+import axios from 'axios';
+import MockAdapter from 'axios-mock-adapter';
+import { ProjectActions } from 'constants/actionTypes';
+import { Classifications } from 'constants/classifications';
+import * as reducerTypes from 'constants/reducerTypes';
+import { Formik } from 'formik';
 import React from 'react';
+import { Form } from 'react-bootstrap';
 import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import UpdateInfoForm from './UpdateInfoForm';
-import * as reducerTypes from 'constants/reducerTypes';
-import { Formik } from 'formik';
-import { Form } from 'react-bootstrap';
-import { Router } from 'react-router-dom';
-import { createMemoryHistory } from 'history';
-import { render, waitFor, fireEvent, cleanup } from '@testing-library/react';
-import MockAdapter from 'axios-mock-adapter';
-import axios from 'axios';
-import { ProjectActions } from 'constants/actionTypes';
-import { Classifications } from 'constants/classifications';
+
 import { UpdateInfoStepYupSchema } from '../../dispose';
-import { useKeycloak } from '@react-keycloak/web';
+import UpdateInfoForm from './UpdateInfoForm';
 
 jest.mock('@react-keycloak/web');
 (useKeycloak as jest.Mock).mockReturnValue({
@@ -87,7 +86,6 @@ const store = mockStore({
 });
 
 const initialValues = mockProject.project;
-const history = createMemoryHistory();
 
 const initialTouched: any = {
   properties: [{ classificationId: 'Must select Surplus Active or Surplus Encumbered' }],
@@ -96,18 +94,16 @@ const initialTouched: any = {
 const getUpdateInfoForm = () => {
   return (
     <Provider store={store}>
-      <Router history={history}>
-        <Formik
-          onSubmit={() => {}}
-          initialValues={initialValues}
-          validationSchema={UpdateInfoStepYupSchema}
-          initialTouched={initialTouched}
-        >
-          <Form>
-            <UpdateInfoForm />
-          </Form>
-        </Formik>
-      </Router>
+      <Formik
+        onSubmit={() => {}}
+        initialValues={initialValues}
+        validationSchema={UpdateInfoStepYupSchema}
+        initialTouched={initialTouched}
+      >
+        <Form>
+          <UpdateInfoForm />
+        </Form>
+      </Formik>
     </Provider>
   );
 };

@@ -1,10 +1,10 @@
+import { FastCurrencyInput, Form } from 'components/common/form';
+import { projectComments, ProjectNotes } from 'features/projects/common';
+import { IProject } from 'features/projects/interfaces';
+import { getIn, useFormikContext } from 'formik';
 import { Fragment, useEffect } from 'react';
 import React from 'react';
 import { Col } from 'react-bootstrap';
-import { getIn, useFormikContext } from 'formik';
-import { Form, FastCurrencyInput } from 'components/common/form';
-import { projectComments, ProjectNotes } from 'features/projects/common';
-import { IProject } from 'features/projects/interfaces';
 
 /**
  * Calculate the gain before SPL.
@@ -86,9 +86,9 @@ const CloseOutFinancialSummaryForm = (props: CloseOutFinancialSummaryFormProps) 
   return (
     <Fragment>
       <h3>Financial Summary</h3>
-      <Form.Row>
+      <Form.Group>
         <Col>
-          <Form.Row>
+          <Form.Group>
             <Form.Label column md={6}>
               Sale Price
             </Form.Label>
@@ -98,8 +98,8 @@ const CloseOutFinancialSummaryForm = (props: CloseOutFinancialSummaryFormProps) 
               field="market"
               md={6}
             />
-          </Form.Row>
-          <Form.Row>
+          </Form.Group>
+          <Form.Group>
             <Form.Label column md={6}>
               Interest Component
             </Form.Label>
@@ -109,8 +109,8 @@ const CloseOutFinancialSummaryForm = (props: CloseOutFinancialSummaryFormProps) 
               field="interestComponent"
               md={6}
             />
-          </Form.Row>
-          <Form.Row>
+          </Form.Group>
+          <Form.Group>
             <Form.Label column md={6}>
               Cost of Sale
             </Form.Label>
@@ -120,8 +120,8 @@ const CloseOutFinancialSummaryForm = (props: CloseOutFinancialSummaryFormProps) 
               field="salesCost"
               md={6}
             />
-          </Form.Row>
-          <Form.Row>
+          </Form.Group>
+          <Form.Group>
             <Form.Label column md={6}>
               Net Book Value
             </Form.Label>
@@ -131,8 +131,8 @@ const CloseOutFinancialSummaryForm = (props: CloseOutFinancialSummaryFormProps) 
               field="netBook"
               md={6}
             />
-          </Form.Row>
-          <Form.Row style={{ borderTop: 'solid 1px grey' }}>
+          </Form.Group>
+          <Form.Group style={{ borderTop: 'solid 1px grey' }}>
             <Form.Label column md={6}>
               Gain before SPL Cost
             </Form.Label>
@@ -143,8 +143,8 @@ const CloseOutFinancialSummaryForm = (props: CloseOutFinancialSummaryFormProps) 
               allowNegative={true}
               md={6}
             />
-          </Form.Row>
-          <Form.Row>
+          </Form.Group>
+          <Form.Group>
             <Form.Label column md={6}>
               SPL Cost
             </Form.Label>
@@ -154,8 +154,8 @@ const CloseOutFinancialSummaryForm = (props: CloseOutFinancialSummaryFormProps) 
               field="programCost"
               md={6}
             />
-          </Form.Row>
-          <Form.Row style={{ borderTop: 'solid 1px grey' }}>
+          </Form.Group>
+          <Form.Group style={{ borderTop: 'solid 1px grey' }}>
             <Form.Label column md={6}>
               Gain after SPL Cost
             </Form.Label>
@@ -166,8 +166,8 @@ const CloseOutFinancialSummaryForm = (props: CloseOutFinancialSummaryFormProps) 
               allowNegative={true}
               md={6}
             />
-          </Form.Row>
-          <Form.Row>
+          </Form.Group>
+          <Form.Group>
             <Form.Label column md={4}>
               Net Proceeds
             </Form.Label>
@@ -177,7 +177,7 @@ const CloseOutFinancialSummaryForm = (props: CloseOutFinancialSummaryFormProps) 
               outerClassName="col-md-8"
               field="netProceeds"
             />
-          </Form.Row>
+          </Form.Group>
         </Col>
         <Col md={1}>&nbsp;</Col>
         <Col>
@@ -203,8 +203,8 @@ const CloseOutFinancialSummaryForm = (props: CloseOutFinancialSummaryFormProps) 
             className="col-md-10"
           />
         </Col>
-      </Form.Row>
-      <Form.Row>
+      </Form.Group>
+      <Form.Group>
         <Col>
           <ProjectNotes
             field="comments"
@@ -215,7 +215,7 @@ const CloseOutFinancialSummaryForm = (props: CloseOutFinancialSummaryFormProps) 
             disabled={props.isReadOnly}
           />
         </Col>
-      </Form.Row>
+      </Form.Group>
     </Fragment>
   );
 };

@@ -1,11 +1,11 @@
-import * as React from 'react';
-import FilterBar from 'components/SearchBar/FilterBar';
-import { Col } from 'react-bootstrap';
-import { Input, SelectOption, Select } from 'components/common/form';
 import { ILookupCode } from 'actions/ILookupCode';
-import { IUsersFilter } from 'interfaces';
-import { mapLookupCodeWithParentString } from 'utils';
+import { Input, Select, SelectOption } from 'components/common/form';
 import { ParentSelect } from 'components/common/form/ParentSelect';
+import FilterBar from 'components/SearchBar/FilterBar';
+import { IUsersFilter } from 'interfaces';
+import * as React from 'react';
+import { Col } from 'react-bootstrap';
+import { mapLookupCodeWithParentString } from 'utils';
 
 interface IProps {
   value: IUsersFilter;
@@ -20,10 +20,12 @@ export const UsersFilterBar: React.FC<IProps> = ({
   rolesLookups,
   onChange,
 }) => {
-  const agencyOptions = (agencyLookups ?? []).map(c =>
+  const agencyOptions = (agencyLookups ?? []).map((c) =>
     mapLookupCodeWithParentString(c, agencyLookups),
   );
-  const roleOptions = rolesLookups.map(rl => ({ label: rl.name, value: rl.name } as SelectOption));
+  const roleOptions = rolesLookups.map(
+    (rl) => ({ label: rl.name, value: rl.name } as SelectOption),
+  );
 
   return (
     <FilterBar<IUsersFilter>

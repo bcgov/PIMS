@@ -1,44 +1,40 @@
-import React, { useEffect, useRef } from 'react';
-import { Container, Spinner } from 'react-bootstrap';
-import { Route, match as Match, useHistory, Redirect, Switch } from 'react-router-dom';
-import { useAppDispatch } from 'store';
-import _ from 'lodash';
-import { FormikValues } from 'formik';
-import queryString from 'query-string';
-import { SresManual, updateWorkflowStatus, useStepForm, clearProject } from '../common';
 import {
-  ReviewWorkflowStatus,
   DisposeWorkflowStatus,
   projectWorkflowComponents,
+  ReviewWorkflowStatus,
 } from 'features/projects/constants';
 import { IProject, IProjectWorkflowComponent } from 'features/projects/interfaces';
-import { GeneratedDisposeStepper, useStepper, StepActions } from '.';
+import { FormikValues } from 'formik';
+import _ from 'lodash';
+import queryString from 'query-string';
+import React, { useEffect, useRef } from 'react';
+import { Container, Spinner } from 'react-bootstrap';
+import { Navigate, PathMatch, Route, Routes, useNavigate } from 'react-router-dom';
+import { useAppDispatch } from 'store';
+
+import { clearProject, SresManual, updateWorkflowStatus, useStepForm } from '../common';
+import { GeneratedDisposeStepper, StepActions, useStepper } from '.';
 
 /**
  * Top level component facilitates 'wizard' style multi-step form for disposing of projects.
  * @param param0 default react router props
  */
-const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Location }) => {
-  const history = useHistory();
+const ProjectDisposeLayout = ({
+  match,
+  location,
+}: {
+  match: PathMatch<string> | null;
+  location: Location;
+}) => {
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const formikRef = useRef<FormikValues>();
-  const {
-    goToNextStep,
-    project,
-    getNextStep,
-    currentStatus,
-    setCurrentStatus,
-    workflowStatuses,
-  } = useStepper();
-  const {
-    onSave,
-    addOrUpdateProject,
-    noFetchingProjectRequests,
-    getProjectRequest,
-  } = useStepForm();
+  const { goToNextStep, project, getNextStep, currentStatus, setCurrentStatus, workflowStatuses } =
+    useStepper();
+  const { onSave, addOrUpdateProject, noFetchingProjectRequests, getProjectRequest } =
+    useStepForm();
   const query = location?.search ?? {};
   const projectNumber = queryString.parse(query).projectNumber;
-  const historyReplace = history.replace;
 
   const updateProjectStatus = (
     project: IProject,
@@ -55,9 +51,9 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
         .then((project: IProject) => {
           if (goToNextStep(project) === undefined) {
             if (project.statusCode === 'AS-EXE') {
-              history.push('/project/exemption/submitted');
+              navigate('/project/exemption/submitted');
             } else {
-              history.push('/project/submitted');
+              navigate('/project/submitted');
             }
           }
           return project;
@@ -69,7 +65,7 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
         });
     } else {
       //if we are updating a previous step, just update the project with no status change.
-      return addOrUpdateProject(project, formikRef).then(project => {
+      return addOrUpdateProject(project, formikRef).then((project) => {
         goToNextStep(project);
         return project;
       });
@@ -97,7 +93,7 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
         if (values.id === undefined) {
           promise = addOrUpdateProject(values, formikRef);
         }
-        return promise.then(project => {
+        return promise.then((project) => {
           return updateProjectStatus(project as IProject, nextStepCode!, workflowStatusCode);
         });
       }
@@ -105,7 +101,7 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
   };
 
   const getComponentPath = (wfc: IProjectWorkflowComponent) => {
-    return `${match.url}${_.find(workflowStatuses, { code: wfc.workflowStatus })?.route}`;
+    return `${match?.pathnameBase}${_.find(workflowStatuses, { code: wfc.workflowStatus })?.route}`;
   };
 
   useEffect(() => {
@@ -113,7 +109,7 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
     if (setCurrentStatus && noFetchingProjectRequests) setCurrentStatus(statusAtRoute);
   }, [
     location.pathname,
-    historyReplace,
+    navigate,
     workflowStatuses,
     setCurrentStatus,
     project.projectNumber,
@@ -124,9 +120,9 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
   useEffect(() => {
     if (location.pathname === '/dispose' && workflowStatuses?.length > 0) {
       dispatch(clearProject());
-      historyReplace(`/dispose${workflowStatuses[0].route}`);
+      navigate(`/dispose${workflowStatuses[0].route}`, { replace: true });
     }
-  }, [historyReplace, workflowStatuses, location.pathname, dispatch, projectNumber]);
+  }, [navigate, workflowStatuses, location.pathname, dispatch, projectNumber]);
   return (
     <>
       {workflowStatuses && workflowStatuses.length ? (
@@ -136,30 +132,22 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
           {currentStatus !== undefined ? (
             <GeneratedDisposeStepper
               activeStep={currentStatus?.sortOrder ?? 0}
-              basePath={match.url}
+              basePath={match?.pathnameBase ?? '/'}
             />
           ) : null}
           {getProjectRequest?.isFetching !== true ? (
             <Container fluid className="step-content">
-              <Switch>
-                {projectWorkflowComponents.map(wfc => (
+              <Routes>
+                {projectWorkflowComponents.map((wfc) => (
                   <Route
                     key={wfc.workflowStatus.toString()}
                     path={getComponentPath(wfc)}
-                    render={() => <wfc.component formikRef={formikRef} />}
+                    element={<wfc.component formikRef={formikRef} />}
                   />
                 ))}
-                <Route
-                  exact
-                  path="/dispose"
-                  component={() => <Redirect to="/dispose/projects/draft" />}
-                />
-                <Route
-                  exact
-                  path="/dispose/*"
-                  component={() => <Redirect to="/page-not-found" />}
-                />
-              </Switch>
+                <Route path="/dispose" element={<Navigate to="/dispose/projects/draft" />} />
+                <Route path="/dispose/*" element={<Navigate to="/page-not-found" />} />
+              </Routes>
               <StepActions
                 getNextStep={getNextStep}
                 onSave={() => onSave(formikRef)}

@@ -1,9 +1,9 @@
+import { FastCurrencyInput, FastInput, Form } from 'components/common/form';
+import { IProject } from 'features/projects/interfaces';
+import { useFormikContext } from 'formik';
 import { Fragment } from 'react';
 import React from 'react';
 import { Col } from 'react-bootstrap';
-import { useFormikContext } from 'formik';
-import { Form, FastInput, FastCurrencyInput } from 'components/common/form';
-import { IProject } from 'features/projects/interfaces';
 
 interface CloseOutPurchaseInformationFormProps {
   isReadOnly?: boolean;
@@ -15,9 +15,9 @@ const CloseOutPurchaseInformationForm = (props: CloseOutPurchaseInformationFormP
   return (
     <Fragment>
       <h3>Purchase Information</h3>
-      <Form.Row>
+      <Form.Group>
         <Col md={6}>
-          <Form.Row>
+          <Form.Group>
             <Form.Label column md={4}>
               Name of Purchaser
             </Form.Label>
@@ -27,8 +27,8 @@ const CloseOutPurchaseInformationForm = (props: CloseOutPurchaseInformationFormP
               outerClassName="col-md-8"
               field="purchaser"
             />
-          </Form.Row>
-          <Form.Row>
+          </Form.Group>
+          <Form.Group>
             <Form.Label column md={4}>
               Real Estate Agent
             </Form.Label>
@@ -38,10 +38,10 @@ const CloseOutPurchaseInformationForm = (props: CloseOutPurchaseInformationFormP
               outerClassName="col-md-8"
               field="realtor"
             />
-          </Form.Row>
+          </Form.Group>
         </Col>
         <Col md={6}>
-          <Form.Row>
+          <Form.Group>
             <Form.Label column md={4}>
               Real Estate Agent Rate
             </Form.Label>
@@ -51,8 +51,8 @@ const CloseOutPurchaseInformationForm = (props: CloseOutPurchaseInformationFormP
               outerClassName="col-md-8"
               field="realtorRate"
             />
-          </Form.Row>
-          <Form.Row>
+          </Form.Group>
+          <Form.Group>
             <Form.Label column md={4}>
               Real Estate Commission Paid
             </Form.Label>
@@ -62,12 +62,12 @@ const CloseOutPurchaseInformationForm = (props: CloseOutPurchaseInformationFormP
               outerClassName="col-md-4"
               field="realtorCommission"
             />
-          </Form.Row>
+          </Form.Group>
         </Col>
-      </Form.Row>
-      <Form.Row>
+      </Form.Group>
+      <Form.Group>
         <Col md={6}>
-          <Form.Row>
+          <Form.Group>
             <Form.Label column md={4}>
               Assessed Value
             </Form.Label>
@@ -77,10 +77,10 @@ const CloseOutPurchaseInformationForm = (props: CloseOutPurchaseInformationFormP
               outerClassName="col-md-4"
               field="assessed"
             />
-          </Form.Row>
+          </Form.Group>
         </Col>
         <Col md={6}>
-          <Form.Row>
+          <Form.Group>
             <Form.Label column md={4}>
               Appraised Value
             </Form.Label>
@@ -90,9 +90,9 @@ const CloseOutPurchaseInformationForm = (props: CloseOutPurchaseInformationFormP
               outerClassName="col-md-4"
               field="appraised"
             />
-          </Form.Row>
+          </Form.Group>
         </Col>
-      </Form.Row>
+      </Form.Group>
     </Fragment>
   );
 };

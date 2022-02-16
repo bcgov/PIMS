@@ -1,20 +1,21 @@
-import React from 'react';
-import ProjectDisposeLayout from './ProjectDisposeLayout';
+import { useKeycloak } from '@react-keycloak/web';
+import { fireEvent, render, waitFor } from '@testing-library/react';
+import * as actionTypes from 'constants/actionTypes';
 import * as reducerTypes from 'constants/reducerTypes';
 import { createMemoryHistory } from 'history';
+import { noop } from 'lodash';
+import React from 'react';
+import { act } from 'react-dom/test-utils';
+import { Provider } from 'react-redux';
+import { matchPath, MemoryRouter } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { Provider } from 'react-redux';
-import { Router, match as Match } from 'react-router-dom';
-import * as actionTypes from 'constants/actionTypes';
-import useStepper from './hooks/useStepper';
-import useStepForm from '../common/hooks/useStepForm';
-import { noop } from 'lodash';
-import { render, fireEvent, waitFor } from '@testing-library/react';
-import { act } from 'react-dom/test-utils';
+
 import useProject from '../common/hooks/useProject';
+import useStepForm from '../common/hooks/useStepForm';
+import useStepper from './hooks/useStepper';
+import ProjectDisposeLayout from './ProjectDisposeLayout';
 import { mockWorkflow } from './testUtils';
-import { useKeycloak } from '@react-keycloak/web';
 
 jest.mock('@react-keycloak/web');
 (useKeycloak as jest.Mock).mockReturnValue({
@@ -37,13 +38,7 @@ jest.mock('components/Table/Table', () => ({
   default: () => <></>,
 }));
 
-const match: Match = {
-  path: '/dispose',
-  url: '/dispose',
-  isExact: false,
-  params: {},
-};
-
+const match = matchPath('', '/dispose');
 const loc = {
   pathname: '/dispose/projects/draft',
   search: '?projectNumber=SPP-10001',
@@ -63,9 +58,9 @@ const store = mockStore({
 
 const uiElement = (
   <Provider store={store}>
-    <Router history={history}>
+    <MemoryRouter initialEntries={[history.location]}>
       <ProjectDisposeLayout match={match} location={loc} />
-    </Router>
+    </MemoryRouter>
   </Provider>
 );
 describe('dispose project draft step display', () => {

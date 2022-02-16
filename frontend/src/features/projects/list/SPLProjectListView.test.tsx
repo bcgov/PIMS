@@ -1,18 +1,19 @@
-import { SPLProjectListView } from './SPLProjectListView';
-import React from 'react';
-import { Router } from 'react-router-dom';
-import { createMemoryHistory } from 'history';
-import { render, cleanup, waitFor } from '@testing-library/react';
-import configureMockStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
+import { useKeycloak } from '@react-keycloak/web';
+import { cleanup, render, waitFor } from '@testing-library/react';
 import { ILookupCode } from 'actions/ILookupCode';
 import * as API from 'constants/API';
-import { Provider } from 'react-redux';
 import * as reducerTypes from 'constants/reducerTypes';
-import service from '../apiService';
-import { noop } from 'lodash';
 import { Formik } from 'formik';
-import { useKeycloak } from '@react-keycloak/web';
+import { createMemoryHistory } from 'history';
+import { noop } from 'lodash';
+import React from 'react';
+import { Provider } from 'react-redux';
+import { MemoryRouter } from 'react-router-dom';
+import configureMockStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
+
+import service from '../apiService';
+import { SPLProjectListView } from './SPLProjectListView';
 
 jest.mock('@react-keycloak/web');
 (useKeycloak as jest.Mock).mockReturnValue({
@@ -147,9 +148,9 @@ describe('Project Approval Request list view', () => {
     const { container } = render(
       <Formik initialValues={{}} onSubmit={noop}>
         <Provider store={store}>
-          <Router history={history}>
+          <MemoryRouter initialEntries={[history.location]}>
             <SPLProjectListView />
-          </Router>
+          </MemoryRouter>
         </Provider>
       </Formik>,
     );
@@ -171,9 +172,9 @@ describe('Project Approval Request list view', () => {
     const { findByText } = render(
       <Formik initialValues={{}} onSubmit={noop}>
         <Provider store={store}>
-          <Router history={history}>
+          <MemoryRouter initialEntries={[history.location]}>
             <SPLProjectListView />
-          </Router>
+          </MemoryRouter>
         </Provider>
       </Formik>,
     );

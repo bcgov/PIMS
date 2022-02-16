@@ -1,21 +1,22 @@
-import React, { useState, useRef } from 'react';
-import Map, { MapViewportChangeEvent } from '../../../components/maps/leaflet/Map';
 import './MapView.scss';
-import { Map as LeafletMap } from 'react-leaflet';
-import { useAppDispatch, useAppSelector } from 'store';
+
 import { IProperty, IPropertyDetail } from 'actions/parcelsActions';
-import { LeafletMouseEvent } from 'leaflet';
-import useParamSideBar from '../../mapSideBar/hooks/useQueryParamSideBar';
-import { saveClickLatLng as saveLeafletMouseEvent } from 'store/slices/leafletMouseSlice';
+import classNames from 'classnames';
+import Map, { MapViewportChangeEvent } from 'components/maps/leaflet/Map';
+import { FilterProvider } from 'components/maps/providers/FIlterProvider';
+import { PropertyPopUpContextProvider } from 'components/maps/providers/PropertyPopUpProvider';
 import * as API from 'constants/API';
 import MapSideBarContainer from 'features/mapSideBar/containers/MapSideBarContainer';
-import classNames from 'classnames';
-import { FilterProvider } from 'components/maps/providers/FIlterProvider';
-import { useLocation } from 'react-router-dom';
-import queryString from 'query-string';
 import useCodeLookups from 'hooks/useLookupCodes';
-import { PropertyPopUpContextProvider } from 'components/maps/providers/PropertyPopUpProvider';
+import { LeafletMouseEvent, Map as LeafletMap } from 'leaflet';
+import queryString from 'query-string';
+import React, { useState } from 'react';
+import { useLocation } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from 'store';
+import { saveClickLatLng as saveLeafletMouseEvent } from 'store/slices/leafletMouseSlice';
 import { storePropertyDetail } from 'store/slices/parcelSlice';
+
+import useParamSideBar from '../../mapSideBar/hooks/useQueryParamSideBar';
 
 /** rough center of bc Itcha Ilgachuz Provincial Park */
 const defaultLatLng = {
@@ -40,12 +41,12 @@ interface MapViewProps {
 const MapView: React.FC<MapViewProps> = (props: MapViewProps) => {
   const lookupCodes = useCodeLookups();
   const dispatch = useAppDispatch();
-  const properties = useAppSelector(store => store.parcel.properties);
+  const properties = useAppSelector((store) => store.parcel.properties);
   const [loadedProperties, setLoadedProperties] = useState(false);
-  const mapRef = useRef<LeafletMap>(null);
-  const propertyDetail = useAppSelector(state => state.parcel.propertyDetail);
+  const propertyDetail = useAppSelector((state) => state.parcel.propertyDetail);
   const agencies = lookupCodes.getByType(API.AGENCY_CODE_SET_NAME);
-  const administrativeAreas = lookupCodes.getByType(API.AMINISTRATIVE_AREA_CODE_SET_NAME);
+  const administrativeAreas = lookupCodes.getByType(API.ADMINISTRATIVE_AREA_CODE_SET_NAME);
+  const mapRef = React.useRef<LeafletMap>(null);
 
   const lotSizes = fetchLotSizes();
 
@@ -64,7 +65,7 @@ const MapView: React.FC<MapViewProps> = (props: MapViewProps) => {
     <div className={classNames(showSideBar ? 'side-bar' : '', 'd-flex')}>
       <MapSideBarContainer
         refreshParcels={() => {
-          mapRef.current?.leafletElement.fireEvent('clear');
+          mapRef.current?.fireEvent('clear');
         }}
         properties={properties}
       />

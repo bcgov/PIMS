@@ -1,17 +1,18 @@
-import React from 'react';
+import { useKeycloak } from '@react-keycloak/web';
+import { render } from '@testing-library/react';
+import axios from 'axios';
+import MockAdapter from 'axios-mock-adapter';
+import { ProjectActions } from 'constants/actionTypes';
 import * as reducerTypes from 'constants/reducerTypes';
+import { ReviewWorkflowStatus } from 'features/projects/constants';
+import { IProject, IProjectTask, ITask } from 'features/projects/interfaces';
 import { createMemoryHistory } from 'history';
+import React from 'react';
+import { Provider } from 'react-redux';
+import { MemoryRouter } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
-import { ProjectActions } from 'constants/actionTypes';
-import { render } from '@testing-library/react';
-import { useKeycloak } from '@react-keycloak/web';
-import MockAdapter from 'axios-mock-adapter';
-import axios from 'axios';
-import { ReviewWorkflowStatus } from 'features/projects/constants';
-import { IProjectTask, ITask, IProject } from 'features/projects/interfaces';
+
 import { ProjectSummaryView } from '../dispose';
 
 jest.mock('@react-keycloak/web');
@@ -76,6 +77,7 @@ const getMockProject = (statusCode?: string): IProject => ({
   fiscalYear: 2020,
   projectAgencyResponses: [],
   statusCode: statusCode ?? ReviewWorkflowStatus.PropertyReview,
+  statusHistory: [],
   status: {
     id: 0,
     name: 'test',
@@ -149,9 +151,9 @@ const getStore = (statusCode?: string) =>
 
 const getSummary = (statusCode?: string) => (
   <Provider store={getStore(statusCode)}>
-    <Router history={history}>
+    <MemoryRouter initialEntries={[history.location]}>
       <ProjectSummaryView />
-    </Router>
+    </MemoryRouter>
   </Provider>
 );
 
@@ -185,7 +187,7 @@ describe('Review Summary View', () => {
     it('form fields are disabled', () => {
       const { queryAllByRole } = render(getSummary());
       const notes = queryAllByRole('textbox');
-      notes.forEach(note => {
+      notes.forEach((note) => {
         expect(note).toBeVisible();
         expect(note).toBeDisabled();
       });

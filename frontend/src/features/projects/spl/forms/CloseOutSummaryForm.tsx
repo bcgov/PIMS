@@ -1,8 +1,8 @@
+import { FastInput, Form } from 'components/common/form';
+import { useFormikContext } from 'formik';
 import { Fragment } from 'react';
 import React from 'react';
 import { Col } from 'react-bootstrap';
-import { useFormikContext } from 'formik';
-import { Form, FastInput } from 'components/common/form';
 
 interface CloseOutSummaryFormProps {
   isReadOnly?: boolean;
@@ -16,9 +16,9 @@ const CloseOutSummaryForm = (props: CloseOutSummaryFormProps) => {
   const formikProps = useFormikContext();
   return (
     <Fragment>
-      <Form.Row>
+      <Form.Group>
         <Col md={6}>
-          <Form.Row>
+          <Form.Group>
             <Form.Label column md={4}>
               Project Number
             </Form.Label>
@@ -28,8 +28,8 @@ const CloseOutSummaryForm = (props: CloseOutSummaryFormProps) => {
               outerClassName="col-md-8"
               field="projectNumber"
             />
-          </Form.Row>
-          <Form.Row>
+          </Form.Group>
+          <Form.Group>
             <Form.Label column md={4}>
               Agency
             </Form.Label>
@@ -39,8 +39,8 @@ const CloseOutSummaryForm = (props: CloseOutSummaryFormProps) => {
               outerClassName="col-md-8"
               field="agency"
             />
-          </Form.Row>
-          <Form.Row>
+          </Form.Group>
+          <Form.Group>
             <Form.Label column md={4}>
               Sub Agency
             </Form.Label>
@@ -50,10 +50,10 @@ const CloseOutSummaryForm = (props: CloseOutSummaryFormProps) => {
               outerClassName="col-md-8"
               field="subAgency"
             />
-          </Form.Row>
+          </Form.Group>
         </Col>
         <Col md={6}>
-          <Form.Row>
+          <Form.Group>
             <Form.Label column md={4}>
               Project Manager(s)
             </Form.Label>
@@ -63,9 +63,9 @@ const CloseOutSummaryForm = (props: CloseOutSummaryFormProps) => {
               outerClassName="col-md-8"
               field="manager"
             />
-          </Form.Row>
+          </Form.Group>
         </Col>
-      </Form.Row>
+      </Form.Group>
     </Fragment>
   );
 };

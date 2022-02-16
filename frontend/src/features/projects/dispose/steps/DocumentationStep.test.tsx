@@ -1,18 +1,19 @@
-import React from 'react';
-import DocumentationStep from './DocumentationStep';
-import * as reducerTypes from 'constants/reducerTypes';
-import { createMemoryHistory } from 'history';
-import configureMockStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
-import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
-import MockAdapter from 'axios-mock-adapter';
+import { useKeycloak } from '@react-keycloak/web';
+import { cleanup, fireEvent, render, waitFor } from '@testing-library/react';
 import axios from 'axios';
-import { render, waitFor, fireEvent, cleanup } from '@testing-library/react';
+import MockAdapter from 'axios-mock-adapter';
+import { ProjectActions } from 'constants/actionTypes';
+import * as reducerTypes from 'constants/reducerTypes';
 import { DisposeWorkflowStatus } from 'features/projects/constants';
 import { IProjectTask } from 'features/projects/interfaces';
-import { ProjectActions } from 'constants/actionTypes';
-import { useKeycloak } from '@react-keycloak/web';
+import { createMemoryHistory } from 'history';
+import React from 'react';
+import { Provider } from 'react-redux';
+import { MemoryRouter } from 'react-router-dom';
+import configureMockStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
+
+import DocumentationStep from './DocumentationStep';
 
 const mockAxios = new MockAdapter(axios);
 mockAxios.onAny().reply(200, {});
@@ -69,9 +70,9 @@ const store = mockStore({
 
 const uiElement = (
   <Provider store={store}>
-    <Router history={history}>
+    <MemoryRouter initialEntries={[history.location]}>
       <DocumentationStep />
-    </Router>
+    </MemoryRouter>
   </Provider>
 );
 

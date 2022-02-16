@@ -1,15 +1,15 @@
 import './FilterBar.scss';
 
-import React, { useState } from 'react';
-import { Col } from 'react-bootstrap';
-import { Formik, getIn, useFormikContext } from 'formik';
-import { Form, Select, InputGroup, Input } from 'components/common/form';
+import { Form, Input, InputGroup, Select } from 'components/common/form';
 import ResetButton from 'components/common/form/ResetButton';
 import SearchButton from 'components/common/form/SearchButton';
-import { useCodeLookups } from 'hooks/useLookupCodes';
+import { TypeaheadField } from 'components/common/form/Typeahead';
 import * as API from 'constants/API';
 import { Classifications } from 'constants/classifications';
-import { TypeaheadField } from 'components/common/form/Typeahead';
+import { Formik, getIn, useFormikContext } from 'formik';
+import { useCodeLookups } from 'hooks/useLookupCodes';
+import React, { useState } from 'react';
+import { Col } from 'react-bootstrap';
 import { mapLookupCode } from 'utils';
 
 const SearchBar: React.FC = () => {
@@ -60,15 +60,15 @@ const FilterBar: React.FC<FilterBarProps> = ({ onChange, defaultFilter }) => {
   //restrict available agencies to user agencies.
   const agencies = lookupCode.getOptionsByType(API.AGENCY_CODE_SET_NAME);
   const classifications = lookupCode.getPropertyClassificationOptions(
-    c =>
+    (c) =>
       +c.value !== Classifications.Demolished &&
       +c.value !== Classifications.Disposed &&
       +c.value !== Classifications.Subdivided,
   );
   const lookupCodes = useCodeLookups();
   const adminAreas = lookupCodes
-    .getByType(API.AMINISTRATIVE_AREA_CODE_SET_NAME)
-    .map(c => mapLookupCode(c));
+    .getByType(API.ADMINISTRATIVE_AREA_CODE_SET_NAME)
+    .map((c) => mapLookupCode(c));
   const [clear, setClear] = useState(false);
 
   return (
@@ -87,7 +87,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ onChange, defaultFilter }) => {
     >
       {({ isSubmitting, handleReset, setFieldValue }) => (
         <Form>
-          <Form.Row className="filter-bar">
+          <Form.Group className="filter-bar">
             <Col className="bar-item">
               <Input field="pid" placeholder="Enter PID or PIN" />
             </Col>
@@ -110,7 +110,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ onChange, defaultFilter }) => {
                 placeholder="Location"
                 selectClosest
                 hideValidation={true}
-                options={adminAreas.map(x => x.label)}
+                options={adminAreas.map((x) => x.label)}
                 onChange={(vals: any) => {
                   setFieldValue('administrativeArea', getIn(vals[0], 'name') ?? vals[0]);
                 }}
@@ -124,7 +124,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ onChange, defaultFilter }) => {
             <Col className="bar-item flex-grow-0">
               <ResetButton disabled={isSubmitting} onClick={handleReset} />
             </Col>
-          </Form.Row>
+          </Form.Group>
         </Form>
       )}
     </Formik>

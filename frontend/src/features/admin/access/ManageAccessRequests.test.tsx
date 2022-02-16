@@ -1,21 +1,22 @@
-import React from 'react';
-import { createMemoryHistory } from 'history';
-import Adapter from 'enzyme-adapter-react-16';
+import { useKeycloak } from '@react-keycloak/web';
+import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
+import { ILookupCode } from 'actions/ILookupCode';
+import { AccessRequestStatus } from 'constants/accessStatus';
+import * as actionTypes from 'constants/actionTypes';
+import * as API from 'constants/API';
+import * as reducerTypes from 'constants/reducerTypes';
 import Enzyme from 'enzyme';
+import { Formik } from 'formik';
+import { createMemoryHistory } from 'history';
+import { noop } from 'lodash';
+import React from 'react';
 import { Provider } from 'react-redux';
+import { MemoryRouter } from 'react-router-dom';
+import { create, ReactTestInstance } from 'react-test-renderer';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { ILookupCode } from 'actions/ILookupCode';
-import * as actionTypes from 'constants/actionTypes';
-import * as reducerTypes from 'constants/reducerTypes';
-import * as API from 'constants/API';
+
 import ManageAccessRequests from './ManageAccessRequests';
-import { create, ReactTestInstance } from 'react-test-renderer';
-import { AccessRequestStatus } from 'constants/accessStatus';
-import { Router } from 'react-router-dom';
-import { Formik } from 'formik';
-import { noop } from 'lodash';
-import { useKeycloak } from '@react-keycloak/web';
 
 jest.mock('@react-keycloak/web');
 (useKeycloak as jest.Mock).mockReturnValue({
@@ -85,11 +86,11 @@ const successStore = mockStore({
 const componentRender = (store: any) => {
   let component = create(
     <Formik initialValues={{}} onSubmit={noop}>
-      <Router history={history}>
+      <MemoryRouter initialEntries={[history.location]}>
         <Provider store={store}>
           <ManageAccessRequests />
         </Provider>
-      </Router>
+      </MemoryRouter>
     </Formik>,
   );
   return component;

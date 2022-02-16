@@ -20,11 +20,11 @@ export const useEnvironment = () => {
     };
 
     call()
-      .then(data => {
+      .then((data) => {
         // Update state with the file data.
         setEnv(data);
       })
-      .catch(error => {
+      .catch((error) => {
         // File doesn't exist, assume development.
         setEnv({ env: 'development' });
       });

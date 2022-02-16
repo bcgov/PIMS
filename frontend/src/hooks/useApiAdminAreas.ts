@@ -1,17 +1,17 @@
-import CustomAxios, { LifecycleToasts } from 'customAxios';
-import { useAppDispatch } from 'store';
-import { showLoading, hideLoading } from 'react-redux-loading-bar';
 import { AxiosInstance } from 'axios';
 import { ENVIRONMENT } from 'constants/environment';
-import { useCallback } from 'react';
-import { store } from 'store';
+import CustomAxios, { LifecycleToasts } from 'customAxios';
 import {
   IAddAdminArea,
   IAdminAreaFilter,
   IAdministrativeArea,
   IApiAdminArea,
 } from 'features/admin/admin-areas/interfaces';
+import { useCallback } from 'react';
+import { hideLoading, showLoading } from 'react-redux-loading-bar';
 import { toast } from 'react-toastify';
+import { useAppDispatch } from 'store';
+import { store } from 'store';
 
 export interface IGeocoderResponse {
   siteId: string;
@@ -42,23 +42,23 @@ export const useAdminAreaApi = (): AdminAreaAPI => {
   const axios = CustomAxios() as AdminAreaAPI;
 
   axios.interceptors.request.use(
-    config => {
-      config.headers.Authorization = `Bearer ${store.getState().jwt}`;
+    (config) => {
+      config!.headers!.Authorization = `Bearer ${store.getState().jwt}`;
       dispatch(showLoading());
       return config;
     },
-    error => {
+    (error) => {
       dispatch(hideLoading());
       return Promise.reject(error);
     },
   );
 
   axios.interceptors.response.use(
-    config => {
+    (config) => {
       dispatch(hideLoading());
       return config;
     },
-    error => {
+    (error) => {
       dispatch(hideLoading());
       return Promise.reject(error);
     },
@@ -123,9 +123,12 @@ export const useAdminAreaApi = (): AdminAreaAPI => {
    */
   axios.deleteAdminArea = useCallback(
     async (adminArea: IApiAdminArea) => {
-      const { data } = await CustomAxios({ lifecycleToasts: deleteToasts }).delete<
-        IAdministrativeArea
-      >(`${ENVIRONMENT.apiUrl}/admin/administrative/areas/${adminArea.id}`, { data: adminArea });
+      const { data } = await CustomAxios({
+        lifecycleToasts: deleteToasts,
+      }).delete<IAdministrativeArea>(
+        `${ENVIRONMENT.apiUrl}/admin/administrative/areas/${adminArea.id}`,
+        { data: adminArea },
+      );
       return data;
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -140,9 +143,12 @@ export const useAdminAreaApi = (): AdminAreaAPI => {
    */
   axios.updateAdminArea = useCallback(
     async (id: number, adminArea: IApiAdminArea) => {
-      const { data } = await CustomAxios({ lifecycleToasts: updateToasts }).put<
-        IAdministrativeArea
-      >(`${ENVIRONMENT.apiUrl}/admin/administrative/areas/${id}`, adminArea);
+      const { data } = await CustomAxios({
+        lifecycleToasts: updateToasts,
+      }).put<IAdministrativeArea>(
+        `${ENVIRONMENT.apiUrl}/admin/administrative/areas/${id}`,
+        adminArea,
+      );
       return data;
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps

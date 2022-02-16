@@ -1,25 +1,27 @@
 import './EnhancedReferralCompleteForm.scss';
-import React, { useState } from 'react';
-import { Container, Button, Col } from 'react-bootstrap';
-import { Form, FastDatePicker, FastCurrencyInput, FastInput } from 'components/common/form';
-import styled from 'styled-components';
-import { useFormikContext } from 'formik';
+
+import { FastCurrencyInput, FastDatePicker, FastInput, Form } from 'components/common/form';
+import GenericModal, { ModalSize } from 'components/common/GenericModal';
 import TooltipIcon from 'components/common/TooltipIcon';
-import {
-  onTransferredWithinTheGreTooltip,
-  onHoldNotificationTooltip,
-  clearanceNotifictionSent,
-  proceedToSplWarning,
-  notInSplWarning,
-  requestForSplReceivedOn,
-  approvedForSplOn,
-  ProjectNotes,
-  disposeWarning,
-} from '../../common';
 import { ReviewWorkflowStatus } from 'features/projects/constants';
 import { IProject } from 'features/projects/interfaces';
-import GenericModal, { ModalSize } from 'components/common/GenericModal';
+import { useFormikContext } from 'formik';
+import React, { useState } from 'react';
+import { Button, Col, Container } from 'react-bootstrap';
+import styled from 'styled-components';
 import { clearanceNotificationSentOnRequired, validateFormikWithCallback } from 'utils';
+
+import {
+  approvedForSplOn,
+  clearanceNotifictionSent,
+  disposeWarning,
+  notInSplWarning,
+  onHoldNotificationTooltip,
+  onTransferredWithinTheGreTooltip,
+  proceedToSplWarning,
+  ProjectNotes,
+  requestForSplReceivedOn,
+} from '../../common';
 
 const OrText = styled.div`
   margin: 0.75rem 2rem 0.75rem 2rem;
@@ -90,7 +92,7 @@ const EnhancedReferralCompleteForm = ({
         </>
       )}
       <h3>Enhanced Referral Process Complete</h3>
-      <Form.Row>
+      <Form.Group>
         <Form.Label column md={4}>
           Interest Received On
         </Form.Label>
@@ -100,8 +102,8 @@ const EnhancedReferralCompleteForm = ({
           disabled={isReadOnly}
           field="interestedReceivedOn"
         />
-      </Form.Row>
-      <Form.Row>
+      </Form.Group>
+      <Form.Group>
         <Col>
           <ProjectNotes
             field="interestFromEnhancedReferralNote"
@@ -110,9 +112,9 @@ const EnhancedReferralCompleteForm = ({
             outerClassName="col"
           />
         </Col>
-      </Form.Row>
+      </Form.Group>
 
-      <Form.Row>
+      <Form.Group>
         <Form.Label column md={4}>
           On Hold Notification Sent{' '}
           <TooltipIcon toolTipId="onHoldTooltip" toolTip={onHoldNotificationTooltip} />
@@ -134,8 +136,8 @@ const EnhancedReferralCompleteForm = ({
             </Button>
           </div>
         )}
-      </Form.Row>
-      <Form.Row>
+      </Form.Group>
+      <Form.Group>
         <Form.Label column md={4}>
           Date Transferred within the GRE
           <TooltipIcon
@@ -161,9 +163,9 @@ const EnhancedReferralCompleteForm = ({
             </Button>
           </div>
         )}
-      </Form.Row>
+      </Form.Group>
       <OrText>OR</OrText>
-      <Form.Row>
+      <Form.Group>
         <Form.Label column md={4}>
           Clearance Notification Sent
           <TooltipIcon toolTipId="clearanceNotificationSent" toolTip={clearanceNotifictionSent} />
@@ -174,10 +176,10 @@ const EnhancedReferralCompleteForm = ({
           disabled={isReadOnly}
           field="clearanceNotificationSentOn"
         />
-      </Form.Row>
+      </Form.Group>
       {formikProps.values.workflowCode === 'ERP' && (
         <>
-          <Form.Row>
+          <Form.Group>
             <Form.Label column md={4}>
               Request for SPL Received On
               <TooltipIcon toolTipId="requestForSplReceivedOn" toolTip={requestForSplReceivedOn} />
@@ -188,8 +190,8 @@ const EnhancedReferralCompleteForm = ({
               disabled={isReadOnly || isClearanceNotificationSentOnRequired}
               field="requestForSplReceivedOn"
             />
-          </Form.Row>
-          <Form.Row>
+          </Form.Group>
+          <Form.Group>
             <Form.Label column md={4}>
               SPL Addition Approved On
               <TooltipIcon toolTipId="approvedForSplOn" toolTip={approvedForSplOn} />
@@ -234,16 +236,16 @@ const EnhancedReferralCompleteForm = ({
                 )}
               </div>
             )}
-          </Form.Row>
+          </Form.Group>
           {formikProps.values.statusCode === ReviewWorkflowStatus.NotInSpl && (
             <>
               <OrText>OR</OrText>
-              <Form.Row>
+              <Form.Group>
                 <Form.Label column md={4}>
                   <h3>Dispose Externally</h3>
                 </Form.Label>
-              </Form.Row>
-              <Form.Row>
+              </Form.Group>
+              <Form.Group>
                 <Form.Label column md={4}>
                   Date of Accepted Offer
                 </Form.Label>
@@ -253,8 +255,8 @@ const EnhancedReferralCompleteForm = ({
                   disabled={isReadOnly}
                   field="offerAcceptedOn"
                 />
-              </Form.Row>
-              <Form.Row>
+              </Form.Group>
+              <Form.Group>
                 <Form.Label column md={4}>
                   Purchaser
                 </Form.Label>
@@ -264,8 +266,8 @@ const EnhancedReferralCompleteForm = ({
                   disabled={isReadOnly}
                   formikProps={formikProps}
                 />
-              </Form.Row>
-              <Form.Row>
+              </Form.Group>
+              <Form.Group>
                 <Form.Label column md={4}>
                   Offer Amount
                 </Form.Label>
@@ -275,9 +277,9 @@ const EnhancedReferralCompleteForm = ({
                   disabled={isReadOnly}
                   formikProps={formikProps}
                 />
-              </Form.Row>
+              </Form.Group>
 
-              <Form.Row>
+              <Form.Group>
                 <Form.Label column md={4}>
                   Disposal Date
                 </Form.Label>
@@ -296,7 +298,7 @@ const EnhancedReferralCompleteForm = ({
                 >
                   Dispose
                 </Button>
-              </Form.Row>
+              </Form.Group>
             </>
           )}
           {notInSpl && (
