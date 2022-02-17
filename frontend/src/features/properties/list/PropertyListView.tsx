@@ -90,7 +90,6 @@ const defaultFilterValues: IPropertyFilter = {
   propertyType: PropertyTypeNames.Land,
   maxAssessedValue: '',
   maxNetBookValue: '',
-  maxMarketValue: '',
   inSurplusPropertyProgram: false,
   inEnhancedReferralProcess: false,
   surplusFilter: false,
@@ -103,7 +102,6 @@ export const flattenParcel = (apiProperty: IParcel): IProperty => {
     EvaluationKeys.Improvements,
   );
   const netBook = getCurrentFiscal(apiProperty.fiscals, FiscalKeys.NetBook);
-  const market = getCurrentFiscal(apiProperty.fiscals, FiscalKeys.Market);
   const property: any = {
     id: apiProperty.id,
     parcelId: apiProperty.id,
@@ -137,9 +135,6 @@ export const flattenParcel = (apiProperty: IParcel): IProperty => {
     netBook: (netBook?.value as number) ?? 0,
     netBookFiscalYear: netBook?.fiscalYear as number,
     netBookRowVersion: netBook?.rowVersion,
-    market: (market?.value as number) ?? 0,
-    marketFiscalYear: market?.fiscalYear as number,
-    marketRowVersion: market?.rowVersion,
     rowVersion: apiProperty.rowVersion,
     landArea: apiProperty.landArea,
   };
@@ -152,7 +147,6 @@ export const flattenBuilding = (apiProperty: IBuilding): IProperty => {
     EvaluationKeys.Assessed,
   );
   const netBook = getCurrentFiscal(apiProperty.fiscals, FiscalKeys.NetBook);
-  const market = getCurrentFiscal(apiProperty.fiscals, FiscalKeys.Market);
   const property: any = {
     id: apiProperty.id,
     parcelId: apiProperty.parcelId,
@@ -180,9 +174,6 @@ export const flattenBuilding = (apiProperty: IBuilding): IProperty => {
     netBook: (netBook?.value as number) ?? 0,
     netBookFiscalYear: netBook?.fiscalYear as number,
     netBookRowVersion: netBook?.rowVersion,
-    market: (market?.value as number) ?? 0,
-    marketFiscalYear: market?.fiscalYear as number,
-    marketRowVersion: market?.rowVersion,
     rowVersion: apiProperty.rowVersion,
     totalArea: apiProperty.totalArea,
   };
@@ -217,7 +208,6 @@ const getServerQuery = (state: {
       maxLotSize,
       propertyType,
       maxAssessedValue,
-      maxMarketValue,
       maxNetBookValue,
     },
   } = state;
@@ -251,7 +241,6 @@ const getServerQuery = (state: {
     propertyType: propertyType,
     name: name,
     maxAssessedValue,
-    maxMarketValue,
     maxNetBookValue,
   };
   return query;
@@ -262,7 +251,6 @@ interface IChangedRow {
   assessedLand?: boolean;
   assessedBuilding?: boolean;
   netBook?: boolean;
-  market?: boolean;
 }
 
 /**
@@ -535,7 +523,7 @@ const PropertyListView: React.FC = () => {
     actions: FormikProps<{ properties: IProperty[] }>,
   ) => {
     let nextProperties = [...values.properties];
-    const editableColumnKeys = ['assessedLand', 'assessedBuilding', 'netBook', 'market'];
+    const editableColumnKeys = ['assessedLand', 'assessedBuilding', 'netBook'];
 
     const changedRows = dirtyRows
       .map(change => {
@@ -587,7 +575,7 @@ const PropertyListView: React.FC = () => {
           } catch (error) {
             const errorMessage = (error as Error).message;
 
-            touched[change.rowId] = pick(change, ['assessedLand', 'netBook', 'market']);
+            touched[change.rowId] = pick(change, ['assessedLand', 'netBook']);
             toast.error(
               `Failed to save changes for ${apiProperty.name ||
                 apiProperty.address?.line1}. ${errorMessage}`,
@@ -595,7 +583,6 @@ const PropertyListView: React.FC = () => {
             errors[change.rowId] = {
               assessedLand: change.assessedland && (errorMessage || 'Save request failed.'),
               netBook: change.netBook && (errorMessage || 'Save request failed.'),
-              market: change.market && (errorMessage || 'Save request failed.'),
             };
           }
         }
@@ -799,9 +786,6 @@ const PropertyListView: React.FC = () => {
               validationSchema={Yup.object().shape({
                 properties: Yup.array().of(
                   Yup.object().shape({
-                    market: Yup.number()
-                      .min(0, 'Minimum value is $0')
-                      .max(1000000000, 'Maximum value is $1,000,000,000'),
                     netBook: Yup.number()
                       .min(0, 'Minimum value is $0')
                       .max(1000000000, 'Maximum value is $1,000,000,000')
