@@ -491,7 +491,7 @@ exports[`Property list view Matches snapshot 1`] = `
         <div
           class="tr"
           role="row"
-          style="display: flex; flex: 1 0 auto; min-width: 1240px;"
+          style="display: flex; flex: 1 0 auto; min-width: 1140px;"
         >
           <form
             action="#"
@@ -1095,75 +1095,6 @@ exports[`Property list view Matches snapshot 1`] = `
                   </svg>
                   <span>
                     Net Book Value
-                  </span>
-                </div>
-                <span
-                  style="flex: 1 1 auto;"
-                />
-                <div
-                  class="c6"
-                >
-                  <svg
-                    fill="currentColor"
-                    height="1em"
-                    stroke="currentColor"
-                    stroke-width="0"
-                    style="margin-bottom: -5px;"
-                    viewBox="0 0 512 512"
-                    width="1em"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M128 320l128-128 128 128z"
-                    />
-                  </svg>
-                  <svg
-                    fill="currentColor"
-                    height="1em"
-                    stroke="currentColor"
-                    stroke-width="0"
-                    viewBox="0 0 512 512"
-                    width="1em"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M128 192l128 128 128-128z"
-                    />
-                  </svg>
-                </div>
-              </div>
-            </div>
-            <div
-              class="th"
-              colspan="1"
-              role="columnheader"
-              style="box-sizing: border-box; flex: 100 0 auto; min-width: 100px; width: 3.5%; justify-content: flex-end; text-align: right; align-items: center; display: flex;"
-              width="3.5%"
-            >
-              <div
-                class="sortable-column"
-              >
-                <div
-                  class="c5 filter-wrapper"
-                >
-                  <svg
-                    fill="none"
-                    height="1em"
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    style="font-size: 10px;"
-                    viewBox="0 0 24 24"
-                    width="1em"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <polygon
-                      points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"
-                    />
-                  </svg>
-                  <span>
-                    Market Value
                   </span>
                 </div>
                 <span
