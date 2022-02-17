@@ -295,37 +295,6 @@ export const columns = (
     },
   },
   {
-    Header: 'Market Value',
-    accessor: 'market',
-    Cell: !editable
-      ? MoneyCell
-      : (props: any) => (
-          <EditableMoneyCell
-            {...props}
-            suppressValidation
-            tooltip="Editing financial values will update most recent year only"
-          />
-        ),
-    align: 'right',
-    responsive: true,
-    width: spacing.small,
-    minWidth: 100,
-    clickable: !editable,
-    sortable: true,
-    filterable: true,
-    filter: {
-      component: FastCurrencyInput,
-      props: {
-        injectFormik: true,
-        field: 'maxMarketValue',
-        name: 'maxMarketValue',
-        placeholder: 'Max Market Value',
-        tooltip: 'Filter by max market value',
-        className: 'filter-input-control',
-      },
-    },
-  },
-  {
     Header: 'Lot Size (in\u00A0ha)',
     accessor: 'landArea',
     Cell: NumberCell,
@@ -543,37 +512,6 @@ export const buildingColumns = (
         name: 'maxNetBookValue',
         placeholder: 'Max Net Book Value',
         tooltip: 'Filter by max net book value',
-        className: 'filter-input-control',
-      },
-    },
-  },
-  {
-    Header: 'Market Value',
-    accessor: 'market',
-    Cell: !editable
-      ? MoneyCell
-      : (props: any) => (
-          <EditableMoneyCell
-            {...props}
-            suppressValidation
-            tooltip="Editing financial values will update most recent year only"
-          />
-        ),
-    align: 'right',
-    responsive: true,
-    width: spacing.small,
-    minWidth: 100,
-    clickable: !editable,
-    sortable: true,
-    filterable: true,
-    filter: {
-      component: FastCurrencyInput,
-      props: {
-        injectFormik: true,
-        field: 'maxMarketValue',
-        name: 'maxMarketValue',
-        placeholder: 'Max Market Value',
-        tooltip: 'Filter by max market value',
         className: 'filter-input-control',
       },
     },
