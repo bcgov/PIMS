@@ -403,7 +403,7 @@ exports[`Review Summary View renders approved correctly 1`] = `
               <div
                 class="tr"
                 role="row"
-                style="display: flex; flex: 1 0 auto; min-width: 935px;"
+                style="display: flex; flex: 1 0 auto; min-width: 790px;"
               >
                 <div
                   class="th"
@@ -505,21 +505,6 @@ exports[`Review Summary View renders approved correctly 1`] = `
                     class="sortable-column"
                   >
                     Net Book Value
-                    <span
-                      style="flex: 1 1 auto;"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="th"
-                  colspan="1"
-                  role="columnheader"
-                  style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
-                >
-                  <div
-                    class="sortable-column"
-                  >
-                    Market Value
                     <span
                       style="flex: 1 1 auto;"
                     />
@@ -1169,7 +1154,7 @@ exports[`Review Summary View renders denied correctly 1`] = `
               <div
                 class="tr"
                 role="row"
-                style="display: flex; flex: 1 0 auto; min-width: 935px;"
+                style="display: flex; flex: 1 0 auto; min-width: 790px;"
               >
                 <div
                   class="th"
@@ -1271,21 +1256,6 @@ exports[`Review Summary View renders denied correctly 1`] = `
                     class="sortable-column"
                   >
                     Net Book Value
-                    <span
-                      style="flex: 1 1 auto;"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="th"
-                  colspan="1"
-                  role="columnheader"
-                  style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
-                >
-                  <div
-                    class="sortable-column"
-                  >
-                    Market Value
                     <span
                       style="flex: 1 1 auto;"
                     />
@@ -1935,7 +1905,7 @@ exports[`Review Summary View renders submitted correctly 1`] = `
               <div
                 class="tr"
                 role="row"
-                style="display: flex; flex: 1 0 auto; min-width: 935px;"
+                style="display: flex; flex: 1 0 auto; min-width: 790px;"
               >
                 <div
                   class="th"
@@ -2037,21 +2007,6 @@ exports[`Review Summary View renders submitted correctly 1`] = `
                     class="sortable-column"
                   >
                     Net Book Value
-                    <span
-                      style="flex: 1 1 auto;"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="th"
-                  colspan="1"
-                  role="columnheader"
-                  style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
-                >
-                  <div
-                    class="sortable-column"
-                  >
-                    Market Value
                     <span
                       style="flex: 1 1 auto;"
                     />
