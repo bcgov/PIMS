@@ -60,6 +60,7 @@ export const mockBuilding: IBuilding = {
   encumbranceReason: 'encumbranceReason',
   occupantName: 'occupantName',
   transferLeaseOnSale: false,
+  isVisibleToOtherAgencies: true,
   buildingTenancy: 'buildingTenancy',
   rentableArea: 234,
   totalArea: 500,
