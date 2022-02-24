@@ -351,7 +351,6 @@ export const mockBuildingWithAssociatedLand: IBuilding = {
       buildings: [
         {
           pid: '',
-          isVisibleToOtherAgencies: true,
           totalArea: 2,
           encumbranceReason: '',
           agencyCode: 'TRAN',
@@ -473,7 +472,6 @@ export const mockBuildingWithAssociatedLand: IBuilding = {
   latitude: 47.113359492035364,
   longitude: -115.25849491716869,
   isSensitive: false,
-  isVisibleToOtherAgencies: true,
 };
 
 export const mockFlatProperty: IFlatProperty = {

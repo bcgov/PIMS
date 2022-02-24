@@ -59,7 +59,6 @@ export interface IBuilding extends IProperty {
   leaseExpiry?: string;
   occupantName: string;
   transferLeaseOnSale: boolean;
-  isVisibleToOtherAgencies: boolean;
   buildingTenancy: string;
   buildingTenancyUpdatedOn?: string;
   rentableArea: number | '';

@@ -105,7 +105,6 @@ export const defaultBuildingValues: IBuilding = {
   buildingOccupantType: undefined,
   buildingOccupantTypeId: '',
   transferLeaseOnSale: false,
-  isVisibleToOtherAgencies: true,
   occupantName: '',
   leaseExpiry: '',
   buildingTenancy: '',
@@ -335,7 +334,6 @@ export const valuesToApiFormat = (values: ISteppedFormValues<IBuilding>): IBuild
   apiValues.data.rentableArea = +apiValues.data.rentableArea;
   apiValues.data.buildingFloorCount = +(apiValues.data.buildingFloorCount ?? 0);
   apiValues.data.agencyId = +values.data.agencyId;
-  apiValues.data.isVisibleToOtherAgencies = true;
   apiValues.data.leaseExpiry = stringToNull(apiValues.data.leaseExpiry);
   apiValues.data.buildingTenancyUpdatedOn = stringToNull(apiValues.data.buildingTenancyUpdatedOn);
   apiValues.data.id = stringToNull(apiValues.data.id);
