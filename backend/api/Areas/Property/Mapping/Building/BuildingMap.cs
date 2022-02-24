@@ -63,6 +63,7 @@ namespace Pims.Api.Areas.Property.Mapping.Building
                 .Map(dest => dest.RentableArea, src => src.RentableArea)
                 .Map(dest => dest.TotalArea, src => src.TotalArea)
                 .Map(dest => dest.IsSensitive, src => src.IsSensitive)
+                .Map(dest => dest.IsVisibleToOtherAgencies, src => src.IsVisibleToOtherAgencies)
                 .Map(dest => dest.Evaluations, src => src.Evaluations)
                 .Map(dest => dest.Fiscals, src => src.Fiscals)
                 .Map(dest => dest.Parcels, src => src.Parcels)
@@ -102,6 +103,7 @@ namespace Pims.Api.Areas.Property.Mapping.Building
                 .Map(dest => dest.RentableArea, src => src.RentableArea)
                 .Map(dest => dest.TotalArea, src => src.TotalArea)
                 .Map(dest => dest.IsSensitive, src => src.IsSensitive)
+                .Map(dest => dest.IsVisibleToOtherAgencies, src => src.IsVisibleToOtherAgencies)
                 .Map(dest => dest.Evaluations, src => src.Evaluations)
                 .Map(dest => dest.Fiscals, src => src.Fiscals)
                 .AfterMapping((src, dest) =>
