@@ -7,8 +7,13 @@ import { rootReducer } from 'store/rootReducer';
 
 export const store = configureStore({
   reducer: rootReducer,
-  middleware: (getDefaultMiddleware: () => any[]) =>
-    getDefaultMiddleware().concat(thunk).concat(logger).concat(loadingBarMiddleware()),
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    })
+      .concat(thunk)
+      .concat(logger)
+      .concat(loadingBarMiddleware()),
   devTools: process.env.NODE_ENV !== 'production',
 });
 

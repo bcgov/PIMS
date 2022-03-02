@@ -8,7 +8,7 @@ import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { GeoJSON, LatLngBounds } from 'leaflet';
 import { flatten, uniqBy } from 'lodash';
 import React, { useEffect, useMemo, useState } from 'react';
-import { useMap } from 'react-leaflet';
+import { useMap, useMapEvent } from 'react-leaflet';
 import { toast } from 'react-toastify';
 import { useAppSelector } from 'store';
 import { tilesInBbox } from 'tiles-in-bbox';
@@ -237,6 +237,7 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
           });
         }
       }
+      console.log('setting features...');
       setFeatures(results);
       setLoadingTiles(false);
       if (results.length === 0) {
@@ -254,6 +255,7 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
 
   useMapRefreshEvent(() => search(params));
   useDeepCompareEffect(() => {
+    console.log('right here');
     setLoadingTiles(true);
     search(params);
   }, [params]);

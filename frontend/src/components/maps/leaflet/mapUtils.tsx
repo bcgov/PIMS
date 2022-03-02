@@ -1,4 +1,9 @@
 import { IProperty } from 'actions/parcelsActions';
+import buildingIconPng from 'assets/images/pins/building-reg.png';
+import buildingSelectedIconPng from 'assets/images/pins/building-reg-highlight.png';
+import parcelIconPng from 'assets/images/pins/land-reg.png';
+import parcelSelectedIconPng from 'assets/images/pins/land-reg-highlight.png';
+import markerShadowPng from 'assets/images/pins/marker-shadow.png';
 import { Classifications, PropertyTypes, Workflows } from 'constants/index';
 import L, { DivIcon, GeoJSON, LatLngExpression, Layer, Map, Marker } from 'leaflet';
 import Supercluster from 'supercluster';
@@ -7,8 +12,8 @@ import { ICluster, PointFeature } from '../types';
 
 // parcel icon (green)
 export const parcelIcon = L.icon({
-  iconUrl: require('assets/images/pins/land-reg.png').default ?? 'assets/images/pins/land-reg.png',
-  shadowUrl: require('assets/images/pins/marker-shadow.png').default ?? 'marker-shadow.png',
+  iconUrl: parcelIconPng,
+  shadowUrl: markerShadowPng,
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
@@ -17,10 +22,8 @@ export const parcelIcon = L.icon({
 
 // parcel icon (green) highlighted
 export const parcelIconSelect = L.icon({
-  iconUrl:
-    require('assets/images/pins/land-reg-highlight.png').default ??
-    'assets/images/pins/land-reg-highlight.png',
-  shadowUrl: require('assets/images/pins/marker-shadow.png').default ?? 'marker-shadow.png',
+  iconUrl: parcelSelectedIconPng,
+  shadowUrl: markerShadowPng,
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
@@ -29,9 +32,8 @@ export const parcelIconSelect = L.icon({
 
 // building icon (blue)
 export const buildingIcon = L.icon({
-  iconUrl:
-    require('assets/images/pins/building-reg.png').default ?? 'assets/images/pins/building-reg.png',
-  shadowUrl: require('assets/images/pins/marker-shadow.png').default ?? 'marker-shadow.png',
+  iconUrl: buildingIconPng,
+  shadowUrl: markerShadowPng,
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
@@ -40,10 +42,8 @@ export const buildingIcon = L.icon({
 
 // building icon (blue) highlighted
 export const buildingIconSelect = L.icon({
-  iconUrl:
-    require('assets/images/pins/building-reg-highlight.png').default ??
-    'assets/images/pins/building-reg-highlight.png',
-  shadowUrl: require('assets/images/pins/marker-shadow.png').default ?? 'marker-shadow.png',
+  iconUrl: buildingSelectedIconPng,
+  shadowUrl: markerShadowPng,
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],

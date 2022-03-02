@@ -11,6 +11,10 @@
     .map-filter-bar {
       align-items: center;
       padding: 1rem 0;
+      display: flex;
+      flex-wrap: wrap;
+      margin-right: -5px;
+      margin-left: -5px;
       .vl {
         border-left: 6px solid rgba(96, 96, 96, 0.2);
         height: 40px;

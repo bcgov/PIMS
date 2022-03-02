@@ -20,10 +20,12 @@ export function HelpContainer() {
   return keycloak.obj.authenticated ? (
     <Nav.Item>
       <TooltipWrapper toolTipId="help-tooltip" toolTip="Ask for Help">
-        <FaQuestionCircle
-          style={{ cursor: 'pointer', color: '#fff', marginLeft: -145 }}
-          onClick={() => setShowHelp(true)}
-        />
+        <a>
+          <FaQuestionCircle
+            style={{ cursor: 'pointer', color: '#fff', marginLeft: -145 }}
+            onClick={() => setShowHelp(true)}
+          />
+        </a>
       </TooltipWrapper>
       <HelpModal
         show={showHelp}

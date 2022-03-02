@@ -70,6 +70,7 @@ export class Spiderfier {
   spiderfy(cluster: ICluster): { lines?: any[]; markers?: any[] } {
     const { getClusterId, getClusterPoints } = this.options;
 
+    console.log('spiderfy?');
     // only one cluster expanded at a time
     if (this.cluster === cluster || cluster == null) {
       this.cluster = null;
@@ -84,6 +85,7 @@ export class Spiderfier {
     const children = getClusterPoints(clusterId).map((p) => cloneDeep(p)); // work with a copy of the data
 
     let positions: LeafletPoint[];
+    console.log('before generate points circle');
     if (children.length >= this.circleSpiralSwitchover) {
       positions = this.generatePointsSpiral(children.length, centerXY);
     } else {
@@ -113,7 +115,7 @@ export class Spiderfier {
   ): { lines?: any[]; markers?: any[] } {
     const { spiderLegPolylineOptions: legOptions } = this.options;
     const centerLatLng = this.map.layerPointToLatLng(centerXY);
-
+    console.log('adding points to map?');
     let newPos: LatLng;
     let geojson: PointFeature;
     const markers: any[] = [];
@@ -130,6 +132,7 @@ export class Spiderfier {
 
   // shrink an expanded cluster (unspiderfy)
   unspiderfy() {
+    console.log('unspiderfy');
     this.map.eachLayer((layer: Layer & AnyProps) => {
       if (layer._spiderfied) {
         layer.remove();
@@ -160,6 +163,7 @@ export class Spiderfier {
   }
 
   private generatePointsCircle(count: number, center: LeafletPoint): LeafletPoint[] {
+    console.log('generate points circle');
     const circumference =
       this.options.spiderfyDistanceMultiplier * this.circleFootSeparation * (2 + count);
     const angleStep = this.twoPI / count;
