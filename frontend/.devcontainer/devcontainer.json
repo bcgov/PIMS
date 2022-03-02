@@ -1,46 +1,45 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
 // https://github.com/microsoft/vscode-dev-containers/tree/v0.194.0/containers/typescript-node
 {
-	"name": "Node.js & TypeScript",
-	"build": {
-		"dockerfile": "Dockerfile",
-		// Update 'VARIANT' to pick a Node version: 12, 14, 16
-		"args": {
-			"VARIANT": "16"
-		},
-	},
-	"runArgs": ["--env-file", ".env"],
-  "postCreateCommand": [
-	],
-  "postStartCommand": [
-		"yarn"
-	],
-	// "appPort": 3000,
-	"forwardPorts": [40082],
+  "name": "Node.js & TypeScript",
+  "build": {
+    "dockerfile": "Dockerfile",
+    // Update 'VARIANT' to pick a Node version: 12, 14, 16
+    "args": {
+      "VARIANT": "16"
+    }
+  },
+  "runArgs": ["--env-file", ".env"],
+  "postCreateCommand": "npm install --no-save",
+  // "appPort": 3000,
+  "forwardPorts": [3000],
+  "mounts": [
+    "source=${localWorkspaceFolder}/scripts,target=/workspaces/pims/frontend/scripts,type=bind,consistency=cached"
+  ],
 
-	// Set *default* container specific settings.json values on container create.
-	"settings": {},
+  // Set *default* container specific settings.json values on container create.
+  "settings": {},
 
-	// Add the IDs of extensions you want installed when the container is created.
-	"extensions": [
-		"dbaeumer.vscode-eslint",
-		"esbenp.prettier-vscode",
-		"rvest.vs-code-prettier-eslint",
-		"formulahendry.auto-close-tag",
-		"cssho.vscode-svgviewer",
-		"jpoissonnier.vscode-styled-components",
+  // Add the IDs of extensions you want installed when the container is created.
+  "extensions": [
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "rvest.vs-code-prettier-eslint",
+    "formulahendry.auto-close-tag",
+    "cssho.vscode-svgviewer",
+    "jpoissonnier.vscode-styled-components",
     "streetsidesoftware.code-spell-checker",
     "pflannery.vscode-versionlens",
     "styled-components.vscode-styled-components",
     "eamodio.gitlens"
-	],
+  ],
 
-	// Use 'forwardPorts' to make a list of ports inside the container available locally.
-	// "forwardPorts": [],
+  // Use 'forwardPorts' to make a list of ports inside the container available locally.
+  // "forwardPorts": [],
 
-	// Use 'postCreateCommand' to run commands after the container is created.
-	// "postCreateCommand": "yarn install",
+  // Use 'postCreateCommand' to run commands after the container is created.
+  // "postCreateCommand": "yarn install",
 
-	// Comment out connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
-	"remoteUser": "node"
+  // Comment out connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
+  "remoteUser": "node"
 }

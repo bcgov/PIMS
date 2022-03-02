@@ -24,7 +24,11 @@ const usingIE = () => {
 
 const Login = () => {
   const location = useLocation();
-  const redirect = `${location.pathname}${location.search ? '?' + location.search : ''}`;
+  const redirect =
+    location.pathname && location.pathname !== '/login'
+      ? `${location.pathname}${location.search ? '?' + location.search : ''}`
+      : '/mapview';
+
   const [showInstruction, setShowInstruction] = useState(false);
   const keyCloakWrapper = useKeycloakWrapper();
   const keycloak = keyCloakWrapper.obj;

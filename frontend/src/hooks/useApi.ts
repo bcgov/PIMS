@@ -47,11 +47,12 @@ export interface PimsAPI extends AxiosInstance {
 
 export const useApi = (): PimsAPI => {
   const dispatch = useAppDispatch();
-  const axios = CustomAxios() as PimsAPI;
+  const token = store.getState().jwt;
 
+  const axios = CustomAxios() as PimsAPI;
   axios.interceptors.request.use(
     (config) => {
-      config!.headers!.Authorization = `Bearer ${store.getState().jwt}`;
+      config!.headers!.Authorization = `Bearer ${token}`;
       dispatch(showLoading());
       return config;
     },

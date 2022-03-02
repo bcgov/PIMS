@@ -75,7 +75,7 @@ export const AppRouter: React.FC = () => {
               index
               element={
                 <LayoutWrapper
-                  component={() => <MapView />}
+                  component={MapView}
                   layout={AuthLayout}
                   title={getTitle('Map View')}
                 />
@@ -85,7 +85,7 @@ export const AppRouter: React.FC = () => {
               path=":id"
               element={
                 <LayoutWrapper
-                  component={() => <MapView />}
+                  component={MapView}
                   layout={AuthLayout}
                   title={getTitle('Map View')}
                 />

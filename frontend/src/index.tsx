@@ -22,13 +22,11 @@ import { store } from './store';
  */
 const Index = () => {
   return (
-    <React.StrictMode>
-      <ThemeProvider theme={{ css }}>
-        <Provider store={store}>
-          <App />
-        </Provider>
-      </ThemeProvider>
-    </React.StrictMode>
+    <ThemeProvider theme={{ css }}>
+      <Provider store={store}>
+        <App />
+      </Provider>
+    </ThemeProvider>
   );
 };
 

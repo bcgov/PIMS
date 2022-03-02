@@ -15,7 +15,7 @@ import { geoJSON, LatLng, LatLngBounds, LeafletMouseEvent, Map as LeafletMap } f
 import { isEmpty, isEqual, isEqualWith } from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
-import { MapContainer, Popup, TileLayer } from 'react-leaflet';
+import { MapContainer, Popup, TileLayer, useMapEvents } from 'react-leaflet';
 import ReactResizeDetector from 'react-resize-detector';
 import { useMediaQuery } from 'react-responsive';
 import { useAppDispatch, useAppSelector } from 'store';
@@ -150,7 +150,6 @@ const getQueryParams = (filter: IPropertyFilter): IGeoSearchParams => {
 };
 
 const defaultBounds = new LatLngBounds([60.09114547, -119.49609429], [48.78370426, -139.35937554]);
-
 /**
  * Creates a Leaflet map and by default includes a number of preconfigured layers.
  * @param param0
@@ -274,6 +273,7 @@ const Map: React.FC<MapProps> = ({
   };
 
   const showLocationDetails = async (event: LeafletMouseEvent) => {
+    console.log('In the showLocationDetails');
     !!onMapClick && onMapClick(event);
     const municipality = await municipalitiesService.findOneWhereContains(event.latlng);
     const parcel = await parcelsService.findOneWhereContains(event.latlng);
@@ -318,7 +318,29 @@ const Map: React.FC<MapProps> = ({
     }
   };
 
+  function ShowLocationDetails() {
+    const map = useMapEvents({
+      click: (e) => {
+        showLocationDetails(e);
+      },
+    });
+    return null;
+  }
+
+  function HandleMapBounds() {
+    const map = useMapEvents({
+      moveend: (e) => {
+        handleBounds(e);
+      },
+      zoomend: (e) => {
+        setZoom(e.sourceTarget.getZoom());
+      },
+    });
+    return null;
+  }
+
   const handleBounds = (e: any) => {
+    console.log('setting bounds??');
     const boundsData: LatLngBounds = e.target.getBounds();
     if (!isEqual(boundsData.getNorthEast(), boundsData.getSouthWest())) {
       setBounds(boundsData);
@@ -339,7 +361,6 @@ const Map: React.FC<MapProps> = ({
   return (
     <ReactResizeDetector handleWidth>
       {({ width }: any) => {
-        setMapWidth(width);
         return (
           <Container fluid className={classNames('px-0 map', { narrow: sidebarSize === 'narrow' })}>
             <FilterBackdrop show={showFilterBackdrop} />
@@ -374,16 +395,13 @@ const Map: React.FC<MapProps> = ({
                   />
                 )}
                 <MapContainer
-                  ref={mapRef}
+                  innerRef={mapRef}
                   center={[lat, lng]}
                   zoom={lastZoom}
                   whenReady={() => {
                     fitMapBounds();
                   }}
-                  onclick={showLocationDetails}
                   closePopupOnClick={interactive}
-                  onzoomend={(e: any) => setZoom(e.sourceTarget.getZoom())}
-                  onmoveend={handleBounds}
                 >
                   {activeBasemap && (
                     <TileLayer
@@ -447,6 +465,8 @@ const Map: React.FC<MapProps> = ({
                     filter={geoFilter}
                     onRequestData={setShowFilterBackdrop}
                   ></InventoryLayer>
+                  <ShowLocationDetails />
+                  <HandleMapBounds />
                 </MapContainer>
               </Col>
             </Row>

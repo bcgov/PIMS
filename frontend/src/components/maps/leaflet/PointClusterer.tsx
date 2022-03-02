@@ -10,7 +10,7 @@ import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import L from 'leaflet';
 import queryString from 'query-string';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { FeatureGroup, Marker, Polyline, useMap } from 'react-leaflet';
+import { FeatureGroup, Marker, Polyline, useMap, useMapEvent } from 'react-leaflet';
 import { useDispatch } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -152,6 +152,7 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
 
   //Optionally create a new pin to represent the active property if not already displayed in a spiderfied cluster.
   useDeepCompareEffect(() => {
+    console.log('in the useDeepCompareEffect');
     if (!currentClusterIds.includes(+(selected?.parcelDetail?.id ?? 0))) {
       setCurrentSelected(selected);
       if (!!parcelId && !!selected?.parcelDetail) {
@@ -168,13 +169,14 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
   // Register event handlers to shrink and expand clusters when map is interacted with
   const componentDidMount = useCallback(() => {
     if (!spiderfierRef.current) {
+      console.log('creating a new spiderfier');
       spiderfierRef.current = new Spiderfier(mapInstance, {
         getClusterId: (cluster) => cluster?.properties?.cluster_id as number,
         getClusterPoints: (clusterId) => supercluster?.getLeaves(clusterId, Infinity) ?? [],
         pointToLayer: pointToLayer,
       });
     }
-
+    console.log('componentDidMount');
     const spiderfier = spiderfierRef.current;
 
     mapInstance.on('click', spiderfier.unspiderfy, spiderfier);
@@ -204,8 +206,17 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
         maxZoom as number,
       );
 
+      console.log(
+        'onclick handler calling...' +
+          maxZoom +
+          ' expansionZoom: ' +
+          expansionZoom +
+          ' spiderfyOnMaxZoom: ' +
+          spiderfyOnMaxZoom,
+      );
       // already at maxZoom, need to spiderfy child markers
       if (expansionZoom === maxZoom && spiderfyOnMaxZoom) {
+        console.log('about to spiderfy');
         const res = spiderfierRef.current.spiderfy(cluster);
         setSpider(res);
         if (res.markers === undefined) {
@@ -214,6 +225,7 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
           setCurrentCluster(cluster);
         }
       } else if (zoomToBoundsOnClick) {
+        console.log('about to zoomToCluster');
         zoomToCluster(cluster, expansionZoom, mapInstance);
       }
     },
@@ -224,6 +236,7 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
    * Update the map bounds and zoom to make all draft properties visible.
    */
   useDeepCompareEffect(() => {
+    console.log('usingDeepCompareEffect...!');
     const isDraft = draftPoints.length > 0;
     if (draftFeatureGroupRef.current && isDraft) {
       const group: L.FeatureGroup = draftFeatureGroupRef.current;
@@ -240,6 +253,7 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
    * Update the map bounds and zoom to make all property clusters visible.
    */
   useDeepCompareEffect(() => {
+    console.log('usingDeepCompareEffect?: ' + featureGroupRef);
     if (featureGroupRef.current) {
       const group: L.FeatureGroup = featureGroupRef.current;
       const groupBounds = group.getBounds();
@@ -248,6 +262,7 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
         filterState.setChanged(false);
         mapInstance.fitBounds(groupBounds, { maxZoom: zoom > MAX_ZOOM ? zoom : MAX_ZOOM });
       }
+      console.log('zoomingin?');
 
       setSpider({});
       spiderfierRef.current?.unspiderfy();
@@ -306,6 +321,7 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
          * Render all visible clusters
          */}
         {clusters.map((cluster, index) => {
+          console.log('clusters.length: ' + clusters.length);
           // every cluster point has coordinates
           const [longitude, latitude] = cluster.geometry.coordinates;
           const {
@@ -317,6 +333,7 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
 
           // we have a cluster to render
           if (isCluster) {
+            console.log('rendering a cluster');
             return (
               // render the cluster marker
               <Marker
@@ -324,6 +341,7 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
                 position={[latitude, longitude]}
                 eventHandlers={{
                   click: (e) => {
+                    console.log('clicking...');
                     zoomOrSpiderfy(cluster);
                     e.target.closePopup();
                   },
@@ -400,6 +418,7 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
             eventHandlers={{
               click: () => {
                 //sets this pin as currently selected
+                console.log('pin was clicked!!!');
                 const convertedProperty = convertToProperty(
                   m.properties,
                   m.geometry.coordinates[1],
