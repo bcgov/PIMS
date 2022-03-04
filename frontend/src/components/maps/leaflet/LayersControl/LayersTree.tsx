@@ -32,7 +32,7 @@ const ParentNode = styled(ListGroup.Item)`
 
 const LayerNode = styled(ListGroup.Item)`
   display: flex;
-  padding-left: 25px;
+  padding-left: 40px !important;
   border: none;
   padding-top: 5px;
   padding-bottom: 5px;
@@ -240,7 +240,7 @@ const layers = layersTree.map((parent, parentIndex) => {
     nodes: parent.nodes?.map((node: any, index) => ({
       ...node,
       zIndex: (parentIndex + 1) * index,
-      opacity: 0.3,
+      opacity: 99.9,
     })),
   };
 });
