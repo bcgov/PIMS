@@ -148,8 +148,6 @@ describe('ERP Approval Step', () => {
           expect(textbox).toBeEnabled();
         } else {
           if (textbox.id.includes('[22]')) {
-            expect(textbox).toBeDisabled();
-          } else {
             expect(textbox).not.toBeDisabled();
           }
         }
@@ -233,8 +231,6 @@ describe('ERP Approval Step', () => {
           expect(textbox).toBeEnabled();
         } else {
           if (textbox.id.includes('[22]')) {
-            expect(textbox).toBeDisabled();
-          } else {
             expect(textbox).not.toBeDisabled();
           }
         }
