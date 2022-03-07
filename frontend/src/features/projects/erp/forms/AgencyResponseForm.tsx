@@ -92,6 +92,7 @@ const AgencyResponseForm = ({ isReadOnly }: IAgencyResponseFormProps) => {
         tooltip="The contents of this note were included in the email notifications for this project."
         outerClassName="col-md-12 reviewRequired"
         className="col-md-8"
+        disabled={isReadOnly}
       />
       <AgencyInterest disabled={isReadOnly} />
     </Container>
