@@ -229,7 +229,7 @@ exports[`EnhancedReferralTab renders correctly 1`] = `
         </label>
         <textarea
           className="col-md-8 form-control"
-          disabled={true}
+          disabled={false}
           id="input-notes[22].note"
           name="notes[22].note"
           onBlur={[Function]}
@@ -991,7 +991,7 @@ exports[`EnhancedReferralTab renders correctly when approved for exemption 1`] =
         </label>
         <textarea
           className="col-md-8 form-control"
-          disabled={true}
+          disabled={false}
           id="input-notes[22].note"
           name="notes[22].note"
           onBlur={[Function]}
