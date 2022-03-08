@@ -155,16 +155,15 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
       return;
     }
 
-    matchingParcel.propertyTypeId = currentPropertyTypeId;
-    matchingParcel.parcels = getIn(values, withNameSpace(nameSpace, 'parcels'));
-    matchingParcel.searchPid = getIn(values, withNameSpace(nameSpace, 'searchPid'));
-    matchingParcel.searchPin = getIn(values, withNameSpace(nameSpace, 'searchPin'));
-    matchingParcel.searchAddress = getIn(values, withNameSpace(nameSpace, 'searchAddress'));
-    matchingParcel.evaluations = getMergedFinancials(
-      matchingParcel.evaluations,
-      Object.values(EvaluationKeys),
-    );
-    matchingParcel.fiscals = getMergedFinancials(matchingParcel.fiscals, Object.values(FiscalKeys));
+    const result = { ...matchingParcel };
+
+    result.propertyTypeId = currentPropertyTypeId;
+    result.parcels = getIn(values, withNameSpace(nameSpace, 'parcels'));
+    result.searchPid = getIn(values, withNameSpace(nameSpace, 'searchPid'));
+    result.searchPin = getIn(values, withNameSpace(nameSpace, 'searchPin'));
+    result.searchAddress = getIn(values, withNameSpace(nameSpace, 'searchAddress'));
+    result.evaluations = getMergedFinancials(result.evaluations, Object.values(EvaluationKeys));
+    result.fiscals = getMergedFinancials(matchingParcel.fiscals, Object.values(FiscalKeys));
     resetForm({
       values: setIn(values, nameSpace ?? '', { ...getInitialValues(), ...matchingParcel }),
     });
