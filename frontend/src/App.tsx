@@ -6,7 +6,7 @@ import { getActivateUserAction } from 'store/slices/hooks/usersActionCreator';
 import { getFetchLookupCodeAction } from 'store/slices/hooks/lookupCodeActionCreator';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { AuthStateContext, IAuthState } from 'contexts/authStateContext';
-import AppRouter from 'router';
+import { AppRouter } from 'features/routes';
 import OnLoadActions from 'OnLoadActions';
 import { ToastContainer } from 'react-toastify';
 import PublicLayout from 'layouts/PublicLayout';

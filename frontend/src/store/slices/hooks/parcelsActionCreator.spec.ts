@@ -23,9 +23,9 @@ const mockStore = configureMockStore([thunk]);
 const store = mockStore(initialParcelState);
 
 const dispatchSpy = jest.spyOn(store, 'dispatch');
-const requestSpy = jest.spyOn(networkSlice, 'request');
-const successSpy = jest.spyOn(networkSlice, 'success');
-const errorSpy = jest.spyOn(networkSlice, 'error');
+const requestSpy = jest.spyOn(networkSlice, 'storeRequest');
+const successSpy = jest.spyOn(networkSlice, 'storeSuccess');
+const errorSpy = jest.spyOn(networkSlice, 'storeError');
 const storePropertiesSpy = jest.spyOn(parcelSlice, 'storeProperties');
 const storeDraftPropertiesSpy = jest.spyOn(parcelSlice, 'storeDraftProperties');
 const storePropertyDetailSpy = jest.spyOn(parcelSlice, 'storePropertyDetail');

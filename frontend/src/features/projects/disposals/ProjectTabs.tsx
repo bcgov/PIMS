@@ -1,0 +1,113 @@
+import { Tab, Tabs } from 'components/tabs';
+import { useFormikContext } from 'formik';
+import { Workflow, WorkflowStatus } from 'hooks/api/projects';
+import { IProjectModel } from 'hooks/api/projects/disposals';
+import React from 'react';
+import { Spinner } from 'react-bootstrap';
+import { Switch, Route, Redirect, useLocation } from 'react-router-dom';
+import {
+  ProjectInformationTabs,
+  ProjectERPTabs,
+  ProjectDocumentation,
+  ProjectSPLTabs,
+  ProjectCloseOut,
+  ProjectNotifications,
+  ProjectNotSPL,
+} from '.';
+
+import * as styled from './styled';
+
+export interface IProjectTabProps {
+  project?: IProjectModel;
+  isLoading?: boolean;
+}
+
+export const ProjectTabs: React.FC<IProjectTabProps> = ({ project, isLoading }) => {
+  const {
+    values: { workflowCode, statusCode },
+  } = useFormikContext();
+  const location = useLocation();
+  const id = location.pathname.split('/')[3];
+
+  const [tabs, setTabs] = React.useState<React.ReactElement[]>([]);
+
+  React.useEffect(() => {
+    const tabs = [
+      <Tab key={1} label="Information" path={`/projects/disposal/${id}/information`} />,
+      <Tab key={2} label="Documentation" path={`/projects/disposal/${id}/documentation`} />,
+    ];
+
+    if (
+      workflowCode === Workflow.ERP ||
+      workflowCode === Workflow.ASSESS_EXEMPTION ||
+      workflowCode === Workflow.ASSESS_EX_DISPOSAL ||
+      !project?.statusHistory?.some(s => s.workflow === Workflow.SUBMIT_DISPOSAL) ||
+      project?.statusHistory?.some(s => s.workflow === Workflow.ERP)
+    )
+      tabs.push(
+        <Tab key={3} label="Enhanced Referral Program" path={`/projects/disposal/${id}/erp`} />,
+      );
+
+    if (
+      (workflowCode === Workflow.ERP ||
+        workflowCode === Workflow.SPL ||
+        workflowCode === Workflow.ASSESS_EX_DISPOSAL) &&
+      statusCode === WorkflowStatus.NotInSpl
+    )
+      tabs.push(<Tab key={4} label="Not in SPL" path={`/projects/disposal/${id}/not/spl`} />);
+
+    if (
+      workflowCode === Workflow.SPL ||
+      !project?.statusHistory?.some(s => s.workflow === Workflow.SUBMIT_DISPOSAL) ||
+      project?.statusHistory?.some(s => s.workflow === Workflow.SPL)
+    ) {
+      tabs.push(
+        <Tab key={5} label="Surplus Properties List" path={`/projects/disposal/${id}/spl`} />,
+      );
+    }
+
+    if (statusCode === WorkflowStatus.Disposed || workflowCode === Workflow.SPL)
+      tabs.push(<Tab key={6} label="Close Out Form" path={`/projects/disposal/${id}/close/out`} />);
+
+    tabs.push(
+      <Tab key={7} label="Notifications" path={`/projects/disposal/${id}/notifications`} />,
+    );
+    setTabs(tabs);
+  }, [workflowCode, statusCode, id, project?.statusHistory]);
+
+  return (
+    <styled.ProjectTabs className="project-tabs">
+      {isLoading && (
+        <div className="loading">
+          <Spinner animation="border"></Spinner>
+        </div>
+      )}
+
+      <Tabs tabs={tabs}>
+        <Switch>
+          <Route exact path="/projects/disposal">
+            <Redirect to={`/page-not-found`} />
+          </Route>
+          <Route exact path="/projects/disposal/:id">
+            {id === undefined || !!id ? (
+              <Redirect to={`/projects/disposal/${id}/information`} />
+            ) : (
+              <Redirect to={`/page-not-found`} />
+            )}
+          </Route>
+          <Route path="/projects/disposal/:id/information" component={ProjectInformationTabs} />
+          <Route path="/projects/disposal/:id/documentation" component={ProjectDocumentation} />
+          <Route path="/projects/disposal/:id/erp">
+            <ProjectERPTabs project={project} />
+          </Route>
+          <Route path="/projects/disposal/:id/not/spl" component={ProjectNotSPL} />
+          <Route path="/projects/disposal/:id/spl">
+            <ProjectSPLTabs project={project} />
+          </Route>
+          <Route path="/projects/disposal/:id/close/out" component={ProjectCloseOut} />
+          <Route path="/projects/disposal/:id/notifications" component={ProjectNotifications} />
+        </Switch>
+      </Tabs>
+    </styled.ProjectTabs>
+  );
+};

@@ -85,8 +85,10 @@ const getStore = (includeDate?: boolean) =>
     },
     [reducerTypes.LOOKUP_CODE]: lCodes,
     [reducerTypes.NETWORK]: {
-      [actionTypes.GET_USERS]: {
-        isFetching: false,
+      requests: {
+        [actionTypes.GET_USERS]: {
+          isFetching: false,
+        },
       },
     },
   });

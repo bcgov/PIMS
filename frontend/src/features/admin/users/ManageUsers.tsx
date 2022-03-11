@@ -71,7 +71,7 @@ export const ManageUsers = () => {
   const sort = useAppSelector(store => store.users.sort);
   const filter = useAppSelector(store => store.users.filter);
   const users = useAppSelector(
-    store => (store.network as any)[actionTypes.GET_USERS] as IGenericNetworkAction,
+    store => (store.network.requests as any)[actionTypes.GET_USERS] as IGenericNetworkAction,
   );
 
   const onRequestData = useCallback(

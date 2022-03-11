@@ -17,9 +17,9 @@ const mockStore = configureMockStore([thunk]);
 const store = mockStore(initialAccessRequestState);
 
 const dispatchSpy = jest.spyOn(store, 'dispatch');
-const requestSpy = jest.spyOn(networkSlice, 'request');
-const successSpy = jest.spyOn(networkSlice, 'success');
-const errorSpy = jest.spyOn(networkSlice, 'error');
+const requestSpy = jest.spyOn(networkSlice, 'storeRequest');
+const successSpy = jest.spyOn(networkSlice, 'storeSuccess');
+const errorSpy = jest.spyOn(networkSlice, 'storeError');
 
 const Wrapper = ({ children }: any) => <Provider store={store}>{children}</Provider>;
 
@@ -125,7 +125,7 @@ describe('Access Request hook tests', () => {
       return getAccessRequestsAction({} as any).then(() => {
         expect(requestSpy).toHaveBeenCalledTimes(1);
         expect(successSpy).toHaveBeenCalledTimes(1);
-        expect(dispatchSpy).toHaveBeenCalledTimes(6);
+        expect(dispatchSpy).toHaveBeenCalledTimes(5);
       });
     });
 

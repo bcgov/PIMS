@@ -1,9 +1,5 @@
 import { getCurrentFiscalYear } from 'utils';
-import {
-  DisposeWorkflowStatus,
-  ReviewWorkflowStatus,
-  SPPApprovalTabs,
-} from 'features/projects/constants';
+import { DisposeWorkflowStatus, SPPApprovalTabs } from 'features/projects/constants';
 import { IProjectTask, IProject, ITask, INotification } from 'features/projects/interfaces';
 import { ProjectActions } from 'constants/actionTypes';
 import configureMockStore from 'redux-mock-store';
@@ -11,6 +7,7 @@ import thunk from 'redux-thunk';
 import * as API from 'constants/API';
 import { NoteTypes, PropertyTypes } from '../../../constants';
 import { useKeycloak } from '@react-keycloak/web';
+import { WorkflowStatus } from 'hooks/api/projects';
 
 export const mockKeycloak = (claims: string[], agencies: number[]) => {
   (useKeycloak as jest.Mock).mockReturnValue({
@@ -146,7 +143,7 @@ export const mockProject: IProject = {
   properties: [],
   agencyId: 1,
   statusId: 0,
-  statusCode: ReviewWorkflowStatus.ApprovedForErp,
+  statusCode: WorkflowStatus.ApprovedForErp,
   status: {
     id: 1,
     name: 'Approved for ERP',
@@ -154,7 +151,7 @@ export const mockProject: IProject = {
     route: '',
     description: '',
     workflowCode: '',
-    code: ReviewWorkflowStatus.ApprovedForErp,
+    code: WorkflowStatus.ApprovedForErp,
     isMilestone: true,
     tasks: [],
     isOptional: false,

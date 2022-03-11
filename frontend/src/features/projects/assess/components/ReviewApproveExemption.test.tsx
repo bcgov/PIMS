@@ -8,8 +8,9 @@ import { Button } from 'react-bootstrap';
 import GenericModal from 'components/common/GenericModal';
 import { createMemoryHistory } from 'history';
 import { Router } from 'react-router-dom';
-import { ReviewWorkflowStatus, DisposeWorkflowStatus } from 'features/projects/constants';
+import { DisposeWorkflowStatus } from 'features/projects/constants';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+import { WorkflowStatus } from 'hooks/api/projects';
 
 Enzyme.configure({ adapter: new Adapter() });
 const history = createMemoryHistory();
@@ -60,7 +61,7 @@ describe('approve exemption review actions', () => {
         return node.type() === Button && node.text() === 'Approve';
       });
     confirm.simulate('click');
-    expect(mockSubmit).toHaveBeenCalledWith(ReviewWorkflowStatus.ApprovedForExemption);
+    expect(mockSubmit).toHaveBeenCalledWith(WorkflowStatus.ApprovedForExemption);
     expect(mockSubmit).toHaveBeenCalledTimes(1);
   });
 });
@@ -90,7 +91,7 @@ describe('deny exemption review actions', () => {
         return node.type() === Button && node.text() === 'Deny';
       });
     confirm.simulate('click');
-    expect(mockSubmit).toHaveBeenCalledWith(ReviewWorkflowStatus.Denied);
+    expect(mockSubmit).toHaveBeenCalledWith(WorkflowStatus.Denied);
     expect(mockSubmit).toHaveBeenCalledTimes(1);
   });
 });

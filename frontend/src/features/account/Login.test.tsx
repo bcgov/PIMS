@@ -18,7 +18,7 @@ const mockStore = configureMockStore([thunk]);
 
 const store = mockStore({
   [reducerTypes.NETWORK]: {
-    [ADD_ACTIVATE_USER]: {},
+    requests: { [ADD_ACTIVATE_USER]: {} },
   },
 });
 
@@ -82,7 +82,7 @@ describe('login', () => {
     };
     const store = mockStore({
       [reducerTypes.NETWORK]: {
-        activateUser: activatedAction,
+        requests: { activateUser: activatedAction },
       },
     });
 

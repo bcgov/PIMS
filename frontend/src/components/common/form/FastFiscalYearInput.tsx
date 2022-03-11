@@ -21,8 +21,10 @@ type OptionalAttributes = {
   className?: string;
   /** Class name of the input wrapper */
   outerClassName?: string;
-  /** formik state used for context and memo calculations */
-  formikProps: FormikProps<any>;
+  /** form label */
+  label?: string;
+  /** Whether the field is required */
+  required?: boolean;
 };
 /**
  * Formik-wrapped fiscal year input providing a simple mask over fiscal year fields
@@ -30,11 +32,13 @@ type OptionalAttributes = {
  * @param param0
  */
 const FiscalYearInput = ({
+  label,
   field,
   className,
   outerClassName,
   value,
   disabled,
+  required,
   formikProps: {
     handleBlur,
     handleChange,
@@ -61,7 +65,8 @@ const FiscalYearInput = ({
   const isInvalid = error && touch ? 'is-invalid ' : '';
   const isValid = !error && touch && value && !disabled ? 'is-valid ' : '';
   return (
-    <Form.Group className={outerClassName}>
+    <Form.Group className={classNames(!!required ? 'required' : '', outerClassName)}>
+      {!!label && <Form.Label>{label}</Form.Label>}
       <MaskedInput
         value={value >= 0 ? formatDateFiscal(value.toString()) : value}
         mask={[/\d/, /\d/, /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/]}
@@ -77,6 +82,7 @@ const FiscalYearInput = ({
         }}
         className={classNames('form-control', className, isInvalid, isValid)}
         disabled={disabled}
+        required={required}
         placeholder="YYYY/YYYY"
       />
       <ErrorMessage component="div" className="invalid-feedback" name={field}></ErrorMessage>

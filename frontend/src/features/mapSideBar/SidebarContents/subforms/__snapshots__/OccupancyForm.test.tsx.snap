@@ -31,11 +31,11 @@ exports[`occupancy form functionality renders correctly 1`] = `
     <div
       class="row"
     >
-      <p
+      <label
         class="label"
       >
         Total Area
-      </p>
+      </label>
       <div
         class="input-group required"
       >
@@ -43,7 +43,7 @@ exports[`occupancy form functionality renders correctly 1`] = `
           class="input-group-content"
         >
           <div
-            class="form-group col"
+            class="form-group"
           >
             <input
               class="form-control"
@@ -68,11 +68,11 @@ exports[`occupancy form functionality renders correctly 1`] = `
     <div
       class="row"
     >
-      <p
+      <label
         class="label"
       >
         Net Usable Area
-      </p>
+      </label>
       <div
         class="input-group required"
       >
@@ -80,7 +80,7 @@ exports[`occupancy form functionality renders correctly 1`] = `
           class="input-group-content"
         >
           <div
-            class="form-group col"
+            class="form-group"
           >
             <input
               class="form-control"
@@ -116,11 +116,11 @@ exports[`occupancy form functionality renders correctly 1`] = `
     <div
       class="row"
     >
-      <p
+      <label
         class="label label-with-tooltip"
       >
         Tenancy %
-      </p>
+      </label>
       <svg
         class="tooltip-icon c1"
         fill="currentColor"
@@ -136,7 +136,7 @@ exports[`occupancy form functionality renders correctly 1`] = `
         />
       </svg>
       <div
-        class="form-group col"
+        class="form-group"
       >
         <input
           class="percentage form-control"
@@ -145,29 +145,31 @@ exports[`occupancy form functionality renders correctly 1`] = `
           value=""
         />
       </div>
-      <p
+      <label
         class="label"
       >
         Updated On
-      </p>
+      </label>
       <div
         class="form-group"
       >
-        <div
-          class="react-datepicker-wrapper"
-        >
+        <div>
           <div
-            class="react-datepicker__input-container"
+            class="react-datepicker-wrapper"
           >
-            <input
-              autocomplete="off"
-              class="form-control date-picker"
-              id="datepicker-buildingTenancyUpdatedOn"
-              name="buildingTenancyUpdatedOn"
-              placeholder="--/--/----"
-              type="text"
-              value=""
-            />
+            <div
+              class="react-datepicker__input-container"
+            >
+              <input
+                autocomplete="off"
+                class="form-control date-picker"
+                id="datepicker-buildingTenancyUpdatedOn"
+                name="buildingTenancyUpdatedOn"
+                placeholder="--/--/----"
+                type="text"
+                value=""
+              />
+            </div>
           </div>
         </div>
       </div>

@@ -1,0 +1,72 @@
+import { Workflow, WorkflowStatus } from 'hooks/api/projects';
+import moment from 'moment';
+import * as yup from 'yup';
+
+export const notSplSchema = yup.object({
+  purchaser: yup.string().when(['workflowCode', 'statusCode'], {
+    is: (workflowCode, statusCode) => {
+      return (
+        (workflowCode === Workflow.ERP || workflowCode === Workflow.ASSESS_EX_DISPOSAL) &&
+        statusCode === WorkflowStatus.Disposed
+      );
+    },
+    then: yup.string().required('Purchaser required'),
+  }),
+  offerAmount: yup.string().when(['workflowCode', 'statusCode'], {
+    is: (workflowCode, statusCode) => {
+      return (
+        (workflowCode === Workflow.ERP || workflowCode === Workflow.ASSESS_EX_DISPOSAL) &&
+        statusCode === WorkflowStatus.Disposed
+      );
+    },
+    then: yup
+      .string()
+      .required('Offer amount required')
+      .test('isValue', 'Offer amount required', value => {
+        return !isNaN(value);
+      })
+      .min(0, 'Minimum amount is $0.00'),
+  }),
+  offerAcceptedOn: yup.string().when(['workflowCode', 'statusCode'], {
+    is: (workflowCode, statusCode) => {
+      return (
+        (workflowCode === Workflow.ERP || workflowCode === Workflow.ASSESS_EX_DISPOSAL) &&
+        statusCode === WorkflowStatus.Disposed
+      );
+    },
+    then: yup
+      .string()
+      .typeError('Offer accepted on required')
+      .required('Offer accepted on required')
+      .test('isDate', 'Offer accepted on required', value => {
+        return moment(value).isValid();
+      }),
+  }),
+  disposedOn: yup.string().when(['workflowCode', 'statusCode'], {
+    is: (workflowCode, statusCode) => {
+      return (
+        (workflowCode === Workflow.ERP || workflowCode === Workflow.ASSESS_EX_DISPOSAL) &&
+        statusCode === WorkflowStatus.Disposed
+      );
+    },
+    then: yup
+      .string()
+      .typeError('Disposal date required')
+      .required('Disposal date required')
+      .test('isDate', 'Disposal date required', value => {
+        return moment(value).isValid();
+      }),
+  }),
+  transferredWithinGreOn: yup.string().when(['workflowCode', 'statusCode'], {
+    is: (workflowCode, statusCode) => {
+      return statusCode === WorkflowStatus.TransferredGRE;
+    },
+    then: yup
+      .string()
+      .typeError('Transferred within GRE on required')
+      .required('Transferred within GRE on required')
+      .test('isDate', 'Transferred within GRE on required', value => {
+        return moment(value).isValid();
+      }),
+  }),
+});

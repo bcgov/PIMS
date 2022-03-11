@@ -1,5 +1,5 @@
 import React from 'react';
-import { formatMoney, formatNumber, formatDate, getFiscalYear } from 'utils';
+import { formatMoney, formatNumber, getFiscalYear } from 'utils';
 import { DisposeWorkflowStatus, AgencyResponses } from 'features/projects/constants';
 import { IProperty, IProject } from 'features/projects/interfaces';
 import { useFormikContext, getIn } from 'formik';
@@ -13,7 +13,6 @@ import {
 import useCodeLookups from 'hooks/useLookupCodes';
 import { FaRegTimesCircle } from 'react-icons/fa';
 import _ from 'lodash';
-import { IAgencyResponseColumns } from 'features/projects/erp/forms/AgencyResponseForm';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { EditableMoneyCell, MoneyCell } from 'components/Table/MoneyCell';
@@ -362,55 +361,3 @@ export const getAppraisedColumns = (project: IProject): any[] => [
     align: 'left',
   },
 ];
-
-export const getProjectAgencyResponseColumns = ({
-  offerAmount,
-  disabled,
-}: IAgencyResponseColumns): any => {
-  const cols = [
-    {
-      Header: 'Agency',
-      accessor: 'agencyCode', // accessor is the "key" in the data
-      align: 'left',
-    },
-    {
-      Header: 'Business Case Received Date',
-      accessor: 'receivedOn',
-      maxWidth: 60,
-      align: 'left',
-      Cell: disabled
-        ? (cellInfo: any) => formatDate(cellInfo.value) ?? null
-        : getEditableDatePickerCell('projectAgencyResponses'),
-    },
-    {
-      Header: 'Note',
-      accessor: 'note',
-      align: 'left',
-      Cell: disabled
-        ? (cellInfo: any) => cellInfo.value ?? null
-        : getEditableTextAreaCell('projectAgencyResponses'),
-    },
-    {
-      Header: 'Response',
-      accessor: 'response',
-      maxWidth: 60,
-      align: 'left',
-      Cell: disabled
-        ? (cellInfo: any) => cellInfo.value ?? null
-        : getEditableSelectCell('projectAgencyResponses'),
-    },
-  ];
-
-  if (offerAmount === true) {
-    cols.push({
-      Header: 'Offer',
-      accessor: 'offerAmount',
-      maxWidth: 60,
-      align: 'left',
-      Cell: offerAmount
-        ? (props: any) => <EditableMoneyCell {...props} namespace="projectAgencyResponses" />
-        : (cellInfo: any) => cellInfo.value ?? null,
-    });
-  }
-  return cols;
-};

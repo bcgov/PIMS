@@ -32,7 +32,7 @@ export interface ITypeaheadFieldProps<T extends TypeaheadModel> extends Typeahea
   displayErrorTooltips?: boolean;
   /** used to trigger ref.current.blur where applicable */
   clearSelected?: boolean;
-  /** restet clear  state via this component */
+  /** reset clear  state via this component */
   setClear?: Function;
   /** get the component to select the item with closest label match to the input provided */
   selectClosest?: boolean;
@@ -58,6 +58,7 @@ export function TypeaheadField<T extends TypeaheadModel>({
   selectClosest,
   clearMenu,
   displayErrorTooltips,
+  options,
   ...rest
 }: ITypeaheadFieldProps<T>) {
   const { touched, values, errors, setFieldTouched, setFieldValue } = useFormikContext();
@@ -66,6 +67,7 @@ export function TypeaheadField<T extends TypeaheadModel>({
   const error = getIn(errors, name);
   const touch = getIn(touched, name);
   const errorTooltip = error && touch && displayErrorTooltips ? error : undefined;
+
   const customBlur = (val: string) => {
     setFieldTouched(name, true);
     if (
@@ -74,14 +76,13 @@ export function TypeaheadField<T extends TypeaheadModel>({
     ) {
       const regex = new RegExp(val, 'i');
       const exact = new RegExp(`^${val}$`, 'i');
-
       /** check for exact match before returning closest fit, will return undefined if failure */
-      const checkExactMatch = rest.options.find((x: any) =>
+      const checkExactMatch = options.find((x: any) =>
         x.label ? x.label.match(exact) : x.match(exact),
       );
 
       /** returns item with the closest matching text, used if exact match is not found */
-      const matchedItem = rest.options.find((x: any) =>
+      const matchedItem = options.find((x: any) =>
         x.label ? x.label.match(regex) : x.match(regex),
       );
 
@@ -111,6 +112,7 @@ export function TypeaheadField<T extends TypeaheadModel>({
       setClear && setClear(false);
     }
   }, [clearMenu, clearSelected, setClear, name, setFieldValue]);
+
   return (
     <Form.Group className={classNames(!!required ? 'required' : '', outerClassName)}>
       {!!label && <Form.Label>{label}</Form.Label>}
@@ -118,6 +120,7 @@ export function TypeaheadField<T extends TypeaheadModel>({
       <TooltipWrapper toolTipId={`${name}-error-tooltip}`} toolTip={errorTooltip}>
         <Typeahead<T>
           {...rest}
+          options={options}
           inputProps={{ ...rest.inputProps, name: name, id: `${name}-field` }}
           isInvalid={hasError as any}
           highlightOnlyResult

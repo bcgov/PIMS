@@ -115,7 +115,10 @@ namespace Pims.Dal.Services
                 .Include(p => p.Responses)
                 .Include(p => p.Responses).ThenInclude(a => a.Agency)
                 .Include(p => p.Notes)
+                .Include(p => p.Status)
                 .Include(p => p.Workflow)
+                .Include(p => p.StatusHistory).ThenInclude(p => p.Workflow)
+                .Include(p => p.StatusHistory).ThenInclude(p => p.Status)
                 .FirstOrDefault(p => p.Id == id &&
                     (isAdmin || userAgencies.Contains(p.AgencyId))) ?? throw new KeyNotFoundException();
 
@@ -184,6 +187,7 @@ namespace Pims.Dal.Services
 
             var project = this.Context.Projects
                 .Include(p => p.Status)
+                .Include(p => p.Workflow)
                 .Include(p => p.TierLevel)
                 .Include(p => p.Risk)
                 .Include(p => p.Agency).ThenInclude(a => a.Parent)
@@ -191,7 +195,6 @@ namespace Pims.Dal.Services
                 .Include(p => p.Tasks).ThenInclude(t => t.Task).ThenInclude(t => t.Status)
                 .Include(p => p.Responses).ThenInclude(a => a.Agency)
                 .Include(p => p.Notes)
-                .Include(p => p.Workflow)
                 .Include(p => p.StatusHistory).ThenInclude(p => p.Workflow)
                 .Include(p => p.StatusHistory).ThenInclude(p => p.Status)
                 .FirstOrDefault(p => p.ProjectNumber == projectNumber &&

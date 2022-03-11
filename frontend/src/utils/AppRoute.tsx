@@ -11,7 +11,7 @@ export type IAppRouteProps = RouteProps & {
   title: string;
 };
 
-const AppRoute: React.FC<IAppRouteProps> = ({
+export const AppRoute: React.FC<IAppRouteProps> = ({
   component: Component,
   layout,
   protected: usePrivateRoute,

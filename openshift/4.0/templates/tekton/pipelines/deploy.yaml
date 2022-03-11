@@ -4,8 +4,7 @@ metadata:
   name: oc-push-to-prod
   annotations:
     openshift.io/display-name: OC Mono-repo Pipeline
-    description:
-      Releases approved images to specified environment.
+    description: Releases approved images to specified environment.
     tags: oc,pipeline
 
 parameters:
@@ -68,7 +67,7 @@ objects:
             The project namespace shortname.
             The part before the "-" (i.e. 354028-dev = 354028).
           type: string
-          default: '354028'
+          default: "354028"
 
         - name: IMAGE_TAG
           description: >-

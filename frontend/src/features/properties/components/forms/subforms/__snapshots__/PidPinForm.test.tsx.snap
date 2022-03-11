@@ -9,11 +9,11 @@ exports[`PidPin sub-form renders correctly 1`] = `
   <div
     className="flex-nowrap pid-pin form-row"
   >
-    <p
+    <label
       className="label"
     >
       PID
-    </p>
+    </label>
     <div
       className="required form-group"
     >
@@ -29,7 +29,7 @@ exports[`PidPin sub-form renders correctly 1`] = `
         value=""
       />
     </div>
-    <p
+    <label
       className="label"
       style={
         Object {
@@ -38,7 +38,7 @@ exports[`PidPin sub-form renders correctly 1`] = `
       }
     >
       PIN
-    </p>
+    </label>
     <div
       className="required form-group"
     >

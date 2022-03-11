@@ -1,6 +1,6 @@
 import { handleAxiosResponse } from 'utils/utils';
 import { showLoading, hideLoading } from 'react-redux-loading-bar';
-import { request, success, error, storeUser, storeUsers, updateUser } from 'store';
+import { storeError, storeRequest, storeSuccess, storeUser, storeUsers, updateUser } from 'store';
 import * as reducerTypes from 'constants/reducerTypes';
 import * as API from 'constants/API';
 import * as actionTypes from 'constants/actionTypes';
@@ -9,6 +9,7 @@ import CustomAxios, { LifecycleToasts } from 'customAxios';
 import { AxiosResponse, AxiosError } from 'axios';
 import * as pimsToasts from 'constants/toasts';
 import { Dispatch, AnyAction } from 'redux';
+import { error, request, success } from '.';
 
 const userToasts: LifecycleToasts = {
   loadingToast: pimsToasts.user.USER_UPDATING,
@@ -17,16 +18,18 @@ const userToasts: LifecycleToasts = {
 };
 
 export const getActivateUserAction = () => async (dispatch: Dispatch<AnyAction>) => {
-  dispatch(request(actionTypes.ADD_ACTIVATE_USER));
+  dispatch(storeRequest(request(actionTypes.ADD_ACTIVATE_USER)));
   dispatch(showLoading());
   return await CustomAxios()
     .post(ENVIRONMENT.apiUrl + API.ACTIVATE_USER(), null)
     .then((response: AxiosResponse) => {
-      dispatch(success(actionTypes.ADD_ACTIVATE_USER, response.status));
+      dispatch(storeSuccess(success(actionTypes.ADD_ACTIVATE_USER, response.status)));
       dispatch(hideLoading());
     })
     .catch((axiosError: AxiosError) =>
-      dispatch(error(actionTypes.ADD_ACTIVATE_USER, axiosError?.response?.status, axiosError)),
+      dispatch(
+        storeError(error(actionTypes.ADD_ACTIVATE_USER, axiosError?.response?.status, axiosError)),
+      ),
     )
     .finally(() => dispatch(hideLoading()));
 };
@@ -34,17 +37,17 @@ export const getActivateUserAction = () => async (dispatch: Dispatch<AnyAction>)
 export const getUsersAction = (params: API.IPaginateParams) => async (
   dispatch: Dispatch<AnyAction>,
 ) => {
-  dispatch(request(actionTypes.GET_USERS));
+  dispatch(storeRequest(request(actionTypes.GET_USERS)));
   dispatch(showLoading());
   return await CustomAxios()
     .post(ENVIRONMENT.apiUrl + API.POST_USERS(), params)
     .then((response: AxiosResponse) => {
-      dispatch(success(actionTypes.GET_USERS, response.status));
+      dispatch(storeSuccess(success(actionTypes.GET_USERS, response.status)));
       dispatch(storeUsers(response.data));
       dispatch(hideLoading());
     })
     .catch((axiosError: AxiosError) =>
-      dispatch(error(actionTypes.GET_USERS, axiosError?.response?.status, axiosError)),
+      dispatch(storeError(error(actionTypes.GET_USERS, axiosError?.response?.status, axiosError))),
     )
     .finally(() => dispatch(hideLoading()));
 };
@@ -59,7 +62,7 @@ export const getUsersPaginationAction = (params: API.IGetUsersParams) => async (
       dispatch(storeUsers(response.data));
     })
     .catch((axiosError: AxiosError) =>
-      dispatch(error(actionTypes.GET_USERS, axiosError?.response?.status, axiosError)),
+      dispatch(storeError(error(actionTypes.GET_USERS, axiosError?.response?.status, axiosError))),
     )
     .finally(() => dispatch(hideLoading()));
 };
@@ -67,16 +70,16 @@ export const getUsersPaginationAction = (params: API.IGetUsersParams) => async (
 export const fetchUserDetail = (id: API.IUserDetailParams) => async (
   dispatch: Dispatch<AnyAction>,
 ) => {
-  dispatch(request(reducerTypes.GET_USER_DETAIL));
+  dispatch(storeRequest(request(reducerTypes.GET_USER_DETAIL)));
   dispatch(showLoading());
   return await CustomAxios()
     .get(ENVIRONMENT.apiUrl + API.USER_DETAIL(id))
     .then((response: AxiosResponse) => {
-      dispatch(success(reducerTypes.GET_USER_DETAIL));
+      dispatch(storeSuccess(success(reducerTypes.GET_USER_DETAIL)));
       dispatch(storeUser(response.data));
       dispatch(hideLoading());
     })
-    .catch(() => dispatch(error(reducerTypes.GET_USER_DETAIL)))
+    .catch(() => dispatch(storeError(error(reducerTypes.GET_USER_DETAIL))))
     .finally(() => dispatch(hideLoading()));
 };
 

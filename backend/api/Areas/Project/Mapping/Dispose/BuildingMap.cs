@@ -66,7 +66,6 @@ namespace Pims.Api.Areas.Project.Mapping.Dispose
                 .Map(dest => dest.Parcels, src => new[] { new Entity.ParcelBuilding() { ParcelId = src.ParcelId, BuildingId = src.Id } })
                 .Map(dest => dest.ProjectNumbers, src => JsonSerializer.Serialize<IEnumerable<string>>(src.ProjectNumbers ?? Enumerable.Empty<string>(), _serializerOptions))
                 .Map(dest => dest.ClassificationId, src => src.ClassificationId)
-                .Map(dest => dest.Classification, src => src.Classification)
                 .Map(dest => dest.AgencyId, src => src.AgencyId)
                 .Map(dest => dest.Name, src => src.Name)
                 .Map(dest => dest.Description, src => src.Description)

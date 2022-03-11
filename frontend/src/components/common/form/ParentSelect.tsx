@@ -2,7 +2,6 @@ import { getIn, useFormikContext } from 'formik';
 import { groupBy, sortBy } from 'lodash';
 import React, { Fragment, useEffect, useState } from 'react';
 import { Highlighter, Menu, MenuItem } from 'react-bootstrap-typeahead';
-import { Label } from '../Label';
 import { SelectOption, SelectOptions } from './Select';
 import { TypeaheadField } from './Typeahead';
 import _ from 'lodash';
@@ -64,9 +63,10 @@ export const ParentSelect: React.FC<IParentSelect> = ({
   convertValue = value => value,
 }) => {
   const { values, setFieldValue } = useFormikContext();
-  const filter = getIn(values, field) as [];
+  const selected = getIn(values, field) as [];
   /** used to trigger onBlur so menu disappears on custom header click */
   const [clear, setClear] = useState(false);
+
   /** controls the multi selections displayed to the user */
   const [multiSelections, setMultiSelections] = React.useState<any>([]);
   /** parent id used to identify parent agencies with no children */
@@ -79,10 +79,9 @@ export const ParentSelect: React.FC<IParentSelect> = ({
   }, [clearSelected, setClearSelected]);
 
   React.useEffect(() => {
-    if (!!filter && !!filter.some) {
-      setMultiSelections(options.filter(o => filter.some(f => o.value === f)));
-    }
-  }, [filter, options]);
+    if (selected && !!selected.length && selected.some)
+      setMultiSelections(options.filter(o => selected?.some(f => o.value === f)));
+  }, [selected, options]);
 
   /** function that gets called when menu header is clicked */
   const handleMenuHeaderClick = (vals: SelectOption) => {
@@ -117,8 +116,8 @@ export const ParentSelect: React.FC<IParentSelect> = ({
 
   return (
     <>
-      {label && <Label required={required}>{label}</Label>}
       <TypeaheadField
+        label={label}
         disabled={disabled}
         clearMenu={clear}
         selectClosest={selectClosest}
@@ -196,7 +195,7 @@ export const ParentSelect: React.FC<IParentSelect> = ({
                 {sortBy(resultGroup[parentId], (x: SelectOption) => x.value).map((i, index) => {
                   if (i.parent) {
                     return (
-                      <StyledMenuItemsDiv>
+                      <StyledMenuItemsDiv key={index}>
                         <MenuItem
                           className={i.parentId === CHILDLESS_PARENT_ID ? 'bold-item' : 'menu-item'}
                           key={index + 1}
