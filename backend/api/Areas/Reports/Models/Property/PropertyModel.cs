@@ -78,12 +78,46 @@ namespace Pims.Api.Areas.Reports.Models.Property
         public bool IsSensitive { get; set; }
 
         /// <summary>
+        /// get/set - The date the property was last updated on.
+        /// </summary>
+        [DisplayName("Last Updated On")]
+        [CsvHelper.Configuration.Attributes.Name("Last Updated On")]
+        public DateTime? UpdatedOn { get; set; }
+
+        /// <summary>
+        /// get/set - Who had last updated the property record
+        /// </summary>
+        [DisplayName("Updated By")]
+        [CsvHelper.Configuration.Attributes.Name("Updated By")]
+        public string UpdatedBy { get; set; }
+
+        /// <summary>
         /// get/set - The most recent assessed land value.
         /// </summary>
         [DisplayName("Assessed Land Value")]
         [CsvHelper.Configuration.Attributes.Name("Assessed Land Value")]
         public decimal? AssessedLand { get; set; }
 
+        /// <summary>
+        /// get/set - The most recent assessed land year.
+        /// </summary>
+        [DisplayName("Land Assessment Year")]
+        [CsvHelper.Configuration.Attributes.Name("Land Assessment Year")]
+        public int AssessedLandDate { get; set; }
+
+        /// <summary>
+        /// get/set - The most recent net book land value.
+        /// </summary>
+        [DisplayName("Netbook Value")]
+        [CsvHelper.Configuration.Attributes.Name("Netbook Value")]
+        public decimal? NetBookValue { get; set; }
+
+        /// <summary>
+        /// get/set - The most recent netbook land value date.
+        /// </summary>
+        [DisplayName("Netbook Date")]
+        [CsvHelper.Configuration.Attributes.Name("Netbook Date")]
+        public string NetbookDate { get; set; }
         /// <summary>
         /// get/set - The most recent assessed building value.
         /// </summary>
@@ -92,11 +126,11 @@ namespace Pims.Api.Areas.Reports.Models.Property
         public decimal? AssessedBuilding { get; set; }
 
         /// <summary>
-        /// get/set - The most recent market value.
+        /// get/set - The most recent assessed building year.
         /// </summary>
-        [DisplayName("Market Value")]
-        [CsvHelper.Configuration.Attributes.Name("Market Value")]
-        public decimal Market { get; set; }
+        [DisplayName("Building Assessment Year")]
+        [CsvHelper.Configuration.Attributes.Name("Building Assessment Year")]
+        public int AssessedBuildingDate { get; set; }
 
         #region Parcel Properties
         /// <summary>
