@@ -190,7 +190,7 @@ JOIN dbo.[Provinces] ap ON adr.[ProvinceId] = ap.[Id]
 JOIN dbo.[BuildingConstructionTypes] bct ON b.[BuildingConstructionTypeId] = bct.[Id]
 JOIN dbo.[BuildingOccupantTypes] bot ON b.[BuildingOccupantTypeId] = bot.[Id]
 JOIN dbo.[BuildingPredominateUses] bpu ON b.[BuildingPredominateUseId] = bpu.[Id]
-OUTER APPLY (
+OUTER APPLY (  
     SELECT TOP 1
         [Value]
         , [Date]
