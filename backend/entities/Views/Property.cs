@@ -263,6 +263,16 @@ namespace Pims.Dal.Entities.Views
         public DateTime? LeaseExpiry { get; set; }
 
         /// <summary>
+        /// get/set - The date lasted updated on
+        /// </summary>
+        public DateTime? UpdatedOn { get; set; }
+
+        /// <summary>
+        /// get/set - The name of the person who had last updated the record
+        /// </summary>
+        public string DisplayName { get; set; }
+
+        /// <summary>
         /// get/set - The name of the occupant/organization
         /// </summary>
         public string OccupantName { get; set; }
@@ -329,10 +339,16 @@ namespace Pims.Dal.Entities.Views
             var assessed = parcel.Evaluations.OrderByDescending(e => e.Date).FirstOrDefault(e => e.Key == EvaluationKeys.Assessed);
             this.AssessedLand = assessed?.Value;
             this.AssessedLandDate = assessed?.Date;
+            this.UpdatedOn = parcel.UpdatedOn?.Date;
+            this.DisplayName = parcel.UpdatedBy?.DisplayName;
 
             var improvements = parcel.Evaluations.OrderByDescending(e => e.Date).FirstOrDefault(e => e.Key == EvaluationKeys.Improvements);
             this.AssessedBuilding = improvements?.Value;
             this.AssessedBuildingDate = improvements?.Date;
+
+            var netbook = parcel.Fiscals.OrderByDescending(n => n.FiscalYear).FirstOrDefault(n => n.Key == FiscalKeys.NetBook);
+            this.NetBook = netbook?.Value;
+            this.NetBookFiscalYear = netbook?.FiscalYear;
         }
 
         /// <summary>
@@ -357,10 +373,16 @@ namespace Pims.Dal.Entities.Views
             this.LeaseExpiry = building.LeaseExpiry;
             this.OccupantName = building.OccupantName;
             this.TransferLeaseOnSale = building.TransferLeaseOnSale;
+            this.UpdatedOn = building.UpdatedOn?.Date;
+            this.DisplayName = building.UpdatedBy?.DisplayName;
 
             var improvements = building.Evaluations.OrderByDescending(e => e.Date).FirstOrDefault(e => e.Key == EvaluationKeys.Assessed);
             this.AssessedBuilding = improvements?.Value;
             this.AssessedBuildingDate = improvements?.Date;
+
+            var netbook = building.Fiscals.OrderByDescending(n => n.FiscalYear).FirstOrDefault(n => n.Key == FiscalKeys.NetBook);
+            this.NetBook = netbook?.Value;
+            this.NetBookFiscalYear = netbook?.FiscalYear;
         }
         #endregion
     }

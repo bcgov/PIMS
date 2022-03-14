@@ -89,7 +89,8 @@ namespace Pims.Dal.Configuration.Views
                             Zoning = b.Parcels.FirstOrDefault().Parcel.Zoning,
                             ZoningPotential = b.Parcels.FirstOrDefault().Parcel.ZoningPotential,
                             LandArea = b.Parcels.FirstOrDefault().Parcel.LandArea,
-                            LandLegalDescription = b.Parcels.FirstOrDefault().Parcel.LandLegalDescription
+                            LandLegalDescription = b.Parcels.FirstOrDefault().Parcel.LandLegalDescription,
+                            UpdatedOn = b.UpdatedOn
                         })
                         .Union(
                             from p in this.Context.Parcels
@@ -141,7 +142,8 @@ namespace Pims.Dal.Configuration.Views
                                 Zoning = p.Zoning,
                                 ZoningPotential = p.ZoningPotential,
                                 LandArea = p.LandArea,
-                                LandLegalDescription = p.LandLegalDescription
+                                LandLegalDescription = p.LandLegalDescription,
+                                UpdatedOn = p.UpdatedOn
                             }
                         ));
             }
