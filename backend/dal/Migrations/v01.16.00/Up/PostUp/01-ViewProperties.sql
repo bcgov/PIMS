@@ -183,14 +183,14 @@ LEFT JOIN dbo.[ParcelBuildings] pb ON b.[Id] = pb.[BuildingId]
 LEFT JOIN dbo.[Parcels] p ON pb.[ParcelId] = p.[Id]
 JOIN dbo.[PropertyClassifications] c ON b.[ClassificationId] = c.[Id]
 LEFT JOIN dbo.[Users] u ON b.UpdatedById = u.Id
-LEFT JOIN dbo.[Agencies] a ON b.[AgencyId] = a.[Id]
+LEFT JOIN dbo.[Agencies] a ON b.[AgencyId] = a.[Id] 
 LEFT JOIN dbo.[Agencies] pa ON a.[ParentId] = pa.[Id]
 JOIN dbo.[Addresses] adr ON b.[AddressId] = adr.[Id]
 JOIN dbo.[Provinces] ap ON adr.[ProvinceId] = ap.[Id]
 JOIN dbo.[BuildingConstructionTypes] bct ON b.[BuildingConstructionTypeId] = bct.[Id]
 JOIN dbo.[BuildingOccupantTypes] bot ON b.[BuildingOccupantTypeId] = bot.[Id]
 JOIN dbo.[BuildingPredominateUses] bpu ON b.[BuildingPredominateUseId] = bpu.[Id]
-OUTER APPLY (
+OUTER APPLY (  
     SELECT TOP 1
         [Value]
         , [Date]
