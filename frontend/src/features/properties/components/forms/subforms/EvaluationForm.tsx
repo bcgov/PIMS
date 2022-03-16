@@ -158,14 +158,18 @@ const EvaluationForm = <T extends any>(props: EvaluationProps & FormikProps<T>) 
     props.nameSpace,
   ]);
   const { values } = useFormikContext();
-  const assessedEvaluations =
+  const assessedEvaluations = getMergedFinancials(
     getIn(values, `${props.nameSpace}.evaluations`)?.filter(
       (evaluation: IFinancial) => evaluation?.key === EvaluationKeys.Assessed,
-    ) ?? [];
-  const netBookFiscals =
+    ) ?? [],
+    [EvaluationKeys.Assessed],
+  );
+  const netBookFiscals = getMergedFinancials(
     getIn(values, `${props.nameSpace}.fiscals`)?.filter(
-      (evaluation: IFinancial) => evaluation?.key === FiscalKeys.NetBook,
-    ) ?? [];
+      (fiscal: IFinancial) => fiscal?.key === FiscalKeys.NetBook,
+    ) ?? [],
+    [FiscalKeys.NetBook],
+  );
 
   return (
     <Fragment>
