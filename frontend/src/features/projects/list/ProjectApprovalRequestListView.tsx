@@ -11,7 +11,7 @@ export const ProjectApprovalRequestListView = () => {
     <ProjectListView
       filterable={false}
       title="Surplus Property Program Projects - Approval Requests"
-      defaultFilter={{ statusId: '7,8' }}
+      defaultFilter={{ statusId: ['7,8'] }}
     />
   );
 };

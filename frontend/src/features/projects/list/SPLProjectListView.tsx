@@ -6,13 +6,28 @@ import { ProjectListView } from '.';
  * @returns SPLProjectListView component.
  */
 
+interface IProjectFilterState {
+  name?: string;
+  statusId?: string[];
+  agencyId?: string;
+  agencies?: number[];
+  fiscalYear?: number | '';
+}
+
+const initialValues: IProjectFilterState = {
+  name: '',
+  statusId: ['21', '40', '41', '42', '43'],
+  agencyId: '',
+  agencies: [],
+  fiscalYear: '',
+};
+
 export const SPLProjectListView = () => {
-  console.info('test');
   return (
     <ProjectListView
-      filterable={false}
+      filterable={true}
       title="Surplus Property Program Projects - SPL Projects"
-      defaultFilter={{ statusId: '21,40,41,42,43' }}
+      defaultFilter={initialValues}
     />
   );
 };

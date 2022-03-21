@@ -39,7 +39,7 @@ import { toFlatProject } from '../common/projectConverter';
 
 interface IProjectFilterState {
   name?: string;
-  statusId?: string;
+  statusId?: string[];
   agencyId?: string;
   agencies?: number[];
   fiscalYear?: number | '';
@@ -53,7 +53,7 @@ interface IProps {
 
 const initialValues: IProjectFilterState = {
   name: '',
-  statusId: '',
+  statusId: [],
   agencyId: '',
   agencies: [],
   fiscalYear: '',
@@ -173,7 +173,7 @@ export const ProjectListView: React.FC<IProps> = ({
 
   // Listen for changes in pagination and use the state to fetch our new data
   useDeepCompareEffect(() => {
-    route === '/projects/list' && fetchProjectStatuses()(dispatch);
+    route.startsWith('/projects') && fetchProjectStatuses()(dispatch);
     fetchData({ pageIndex, pageSize, filter, agencyIds });
   }, [fetchData, pageIndex, pageSize, filter, agencyIds, dispatch, route]);
 
