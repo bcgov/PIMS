@@ -79,7 +79,9 @@ export const ParentSelect: React.FC<IParentSelect> = ({
   }, [clearSelected, setClearSelected]);
 
   React.useEffect(() => {
-    setMultiSelections(options.filter(o => filter.some(f => o.value === f)));
+    if (!!filter.some) {
+      setMultiSelections(options.filter(o => filter.some(f => o.value === f)));
+    }
   }, [filter, options]);
 
   /** function that gets called when menu header is clicked */
