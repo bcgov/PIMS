@@ -79,7 +79,7 @@ export const ParentSelect: React.FC<IParentSelect> = ({
   }, [clearSelected, setClearSelected]);
 
   React.useEffect(() => {
-    if (!!filter.some) {
+    if (!!filter && !!filter.some) {
       setMultiSelections(options.filter(o => filter.some(f => o.value === f)));
     }
   }, [filter, options]);
