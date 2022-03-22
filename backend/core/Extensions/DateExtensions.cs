@@ -35,5 +35,15 @@ namespace Pims.Core.Extensions
         {
             return fiscalYear > 0 ? $"{(fiscalYear - 1).ToString().Substring(2, 2)}/{(fiscalYear).ToString().Substring(2, 2)}" : "";
         }
+        /// <summary>
+        /// Generate the fiscal year string value (i.e. 20/21).
+        /// The result treats the specified 'fiscalYear' as the last year.
+        /// </summary>
+        /// <param name="fiscalYear"></param>
+        /// <returns></returns>
+        public static string FiscalYearNullable(this int? fiscalYear)
+        {
+            return fiscalYear > 0 ? $"{(fiscalYear - 1).ToString().Substring(2, 2)}/{(fiscalYear).ToString().Substring(2, 2)}" : "";
+        }
     }
 }

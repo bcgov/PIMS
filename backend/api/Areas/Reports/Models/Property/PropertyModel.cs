@@ -103,7 +103,7 @@ namespace Pims.Api.Areas.Reports.Models.Property
         /// </summary>
         [DisplayName("Land Assessment Year")]
         [CsvHelper.Configuration.Attributes.Name("Land Assessment Year")]
-        public int AssessedLandDate { get; set; }
+        public string AssessedLandDate { get; set; }
 
         /// <summary>
         /// get/set - The most recent net book land value.
@@ -130,7 +130,7 @@ namespace Pims.Api.Areas.Reports.Models.Property
         /// </summary>
         [DisplayName("Building Assessment Year")]
         [CsvHelper.Configuration.Attributes.Name("Building Assessment Year")]
-        public int AssessedBuildingDate { get; set; }
+        public string AssessedBuildingDate { get; set; }
 
         #region Parcel Properties
         /// <summary>
