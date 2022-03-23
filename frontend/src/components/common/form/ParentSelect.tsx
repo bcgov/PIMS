@@ -63,7 +63,8 @@ export const ParentSelect: React.FC<IParentSelect> = ({
   selectClosest,
   convertValue = value => value,
 }) => {
-  const { setFieldValue } = useFormikContext();
+  const { values, setFieldValue } = useFormikContext();
+  const filter = getIn(values, field) as [];
   /** used to trigger onBlur so menu disappears on custom header click */
   const [clear, setClear] = useState(false);
   /** controls the multi selections displayed to the user */
@@ -76,6 +77,12 @@ export const ParentSelect: React.FC<IParentSelect> = ({
     clearSelected && setMultiSelections([]);
     setClearSelected && setClearSelected(false);
   }, [clearSelected, setClearSelected]);
+
+  React.useEffect(() => {
+    if (!!filter && !!filter.some) {
+      setMultiSelections(options.filter(o => filter.some(f => o.value === f)));
+    }
+  }, [filter, options]);
 
   /** function that gets called when menu header is clicked */
   const handleMenuHeaderClick = (vals: SelectOption) => {
