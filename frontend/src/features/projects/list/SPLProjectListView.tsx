@@ -1,5 +1,6 @@
 import React from 'react';
 import { ProjectListView } from '.';
+import { useAppSelector } from 'store';
 
 /**
  * A list view paging table to search for projects that have been submitted for assessment.
@@ -23,11 +24,16 @@ const initialValues: IProjectFilterState = {
 };
 
 export const SPLProjectListView = () => {
+  const projectStatuses = useAppSelector(store => store.statuses)?.filter(x =>
+    initialValues?.statusId?.includes(x.id.toString()),
+  );
   return (
     <ProjectListView
       filterable={true}
       title="Surplus Property Program Projects - SPL Projects"
       defaultFilter={initialValues}
+      statusOptions={projectStatuses}
+      showDefaultStatusOptions={false}
     />
   );
 };

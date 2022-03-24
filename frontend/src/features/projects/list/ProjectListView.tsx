@@ -36,6 +36,7 @@ import useCodeLookups from 'hooks/useLookupCodes';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
 import { PropertyTypes } from 'constants/propertyTypes';
 import { toFlatProject } from '../common/projectConverter';
+import { IStatus } from 'features/projects/interfaces';
 
 interface IProjectFilterState {
   name?: string;
@@ -44,11 +45,12 @@ interface IProjectFilterState {
   agencies?: number[];
   fiscalYear?: number | '';
 }
-
 interface IProps {
   filterable?: boolean;
   title: string;
   defaultFilter?: IProjectFilterState;
+  statusOptions?: IStatus[];
+  showDefaultStatusOptions?: boolean;
 }
 
 const initialValues: IProjectFilterState = {
@@ -68,6 +70,8 @@ export const ProjectListView: React.FC<IProps> = ({
   filterable,
   title,
   defaultFilter = initialValues,
+  statusOptions,
+  showDefaultStatusOptions = true,
 }) => {
   const lookupCodes = useCodeLookups();
   const agencies = useMemo(() => lookupCodes.getByType(API.AGENCY_CODE_SET_NAME), [lookupCodes]);
@@ -77,7 +81,9 @@ export const ProjectListView: React.FC<IProps> = ({
   const [deletedProject, setDeletedProject] = React.useState<IProjectDetail | undefined>();
   const agencyIds = useMemo(() => (agencies ?? []).map(x => parseInt(x.id, 10)), [agencies]);
   const agencyOptions = (agencies ?? []).map(c => mapLookupCodeWithParentString(c, agencies ?? []));
-  const statuses = (projectStatuses ?? []).map(c => mapStatuses(c));
+  const statuses = statusOptions
+    ? (statusOptions ?? []).map(s => mapStatuses(s))
+    : (projectStatuses ?? []).map(c => mapStatuses(c));
   const columns = useMemo(() => cols, []);
 
   // We'll start our table without any data
@@ -87,7 +93,10 @@ export const ProjectListView: React.FC<IProps> = ({
   );
 
   // Filtering and pagination state
-  const [filter, setFilter] = useState<IProjectFilterState>({ ...initialValues, ...defaultFilter });
+  const [filter, setFilter] = useState<IProjectFilterState>({
+    ...defaultFilter,
+    statusId: showDefaultStatusOptions ? defaultFilter.statusId : [],
+  });
   const [clearSelected, setClearSelected] = useState(false);
   const [pageSize, setPageSize] = useState(10);
   const [pageIndex, setPageIndex] = useState(0);
@@ -152,7 +161,10 @@ export const ProjectListView: React.FC<IProps> = ({
         const query = getServerQuery({
           pageIndex,
           pageSize,
-          filter: filter,
+          filter: {
+            ...filter,
+            statusId: filter?.statusId?.length ? filter.statusId : defaultFilter.statusId,
+          },
         });
         const data = await service.getProjectList(query);
 
@@ -259,10 +271,7 @@ export const ProjectListView: React.FC<IProps> = ({
     <Container fluid className="ProjectListView">
       <div className="filter-container">
         {filterable && (
-          <FilterBar<IProjectFilterState>
-            initialValues={{ ...initialValues, ...defaultFilter }}
-            onChange={handleFilterChange}
-          >
+          <FilterBar<IProjectFilterState> initialValues={filter} onChange={handleFilterChange}>
             <Col xs={2} className="bar-item">
               <Input field="name" placeholder="Search by project name or number" />
             </Col>
