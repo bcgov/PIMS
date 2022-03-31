@@ -63,7 +63,7 @@ export function useCodeLookups() {
     const classifications = getByType(API.PROPERTY_CLASSIFICATION_CODE_SET_NAME);
     return filter
       ? (classifications ?? []).map(c => mapLookupCode(c)).filter(filter)
-      : !keycloak.hasClaim(Claims.ADMIN_PROPERTIES)
+      : !keycloak.hasClaim(Claims.PROPERTY_EDIT)
       ? (classifications ?? [])
           .map(c => mapLookupCode(c))
           .filter(
