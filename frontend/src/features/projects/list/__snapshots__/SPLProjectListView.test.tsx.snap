@@ -55,121 +55,6 @@ exports[`Project Approval Request list view Displays a SPL project 1`] = `
                   class="rbt-input-wrapper"
                 >
                   <div
-                    class="rbt-token rbt-token-removeable"
-                    tabindex="0"
-                  >
-                    undefined
-                    <button
-                      aria-label="Remove"
-                      class="close rbt-close rbt-token-remove-button"
-                      tabindex="-1"
-                      type="button"
-                    >
-                      <span
-                        aria-hidden="true"
-                      >
-                        ×
-                      </span>
-                      <span
-                        class="sr-only"
-                      >
-                        Remove
-                      </span>
-                    </button>
-                  </div>
-                  <div
-                    class="rbt-token rbt-token-removeable"
-                    tabindex="0"
-                  >
-                    undefined
-                    <button
-                      aria-label="Remove"
-                      class="close rbt-close rbt-token-remove-button"
-                      tabindex="-1"
-                      type="button"
-                    >
-                      <span
-                        aria-hidden="true"
-                      >
-                        ×
-                      </span>
-                      <span
-                        class="sr-only"
-                      >
-                        Remove
-                      </span>
-                    </button>
-                  </div>
-                  <div
-                    class="rbt-token rbt-token-removeable"
-                    tabindex="0"
-                  >
-                    undefined
-                    <button
-                      aria-label="Remove"
-                      class="close rbt-close rbt-token-remove-button"
-                      tabindex="-1"
-                      type="button"
-                    >
-                      <span
-                        aria-hidden="true"
-                      >
-                        ×
-                      </span>
-                      <span
-                        class="sr-only"
-                      >
-                        Remove
-                      </span>
-                    </button>
-                  </div>
-                  <div
-                    class="rbt-token rbt-token-removeable"
-                    tabindex="0"
-                  >
-                    undefined
-                    <button
-                      aria-label="Remove"
-                      class="close rbt-close rbt-token-remove-button"
-                      tabindex="-1"
-                      type="button"
-                    >
-                      <span
-                        aria-hidden="true"
-                      >
-                        ×
-                      </span>
-                      <span
-                        class="sr-only"
-                      >
-                        Remove
-                      </span>
-                    </button>
-                  </div>
-                  <div
-                    class="rbt-token rbt-token-removeable"
-                    tabindex="0"
-                  >
-                    undefined
-                    <button
-                      aria-label="Remove"
-                      class="close rbt-close rbt-token-remove-button"
-                      tabindex="-1"
-                      type="button"
-                    >
-                      <span
-                        aria-hidden="true"
-                      >
-                        ×
-                      </span>
-                      <span
-                        class="sr-only"
-                      >
-                        Remove
-                      </span>
-                    </button>
-                  </div>
-                  <div
                     style="display: flex; flex: 1; height: 100%; position: relative;"
                   >
                     <input
@@ -179,7 +64,7 @@ exports[`Project Approval Request list view Displays a SPL project 1`] = `
                       class="rbt-input-main"
                       id="statusId-field"
                       name="statusId"
-                      placeholder=""
+                      placeholder="Enter a Status"
                       style="background-color: transparent; border: 0px; box-shadow: none; cursor: inherit; outline: none; padding: 0px; width: 100%; z-index: 1;"
                       type="text"
                       value=""

@@ -23,7 +23,6 @@ const initialValues: IProjectFilterState = {
 };
 
 export const ProjectApprovalRequestListView = () => {
-  console.info('test');
   return (
     <ProjectListView
       filterable={false}
