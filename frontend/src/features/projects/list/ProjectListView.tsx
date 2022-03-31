@@ -178,7 +178,7 @@ export const ProjectListView: React.FC<IProps> = ({
         setPageCount(Math.ceil(data.total / pageSize));
       }
     },
-    [setData, setPageCount],
+    [defaultFilter.statusId],
   );
   const dispatch = useAppDispatch();
   const route = history.location.pathname;
