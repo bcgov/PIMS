@@ -67,10 +67,7 @@ export function useCodeLookups() {
       ? (classifications ?? [])
           .map(c => mapLookupCode(c))
           .filter(
-            c =>
-              +c.value !== Classifications.Demolished &&
-              +c.value !== Classifications.Subdivided &&
-              +c.value !== Classifications.Disposed,
+            c => +c.value !== Classifications.Subdivided && +c.value !== Classifications.Disposed,
           )
       : (classifications ?? []).map(c => mapLookupCode(c));
   };
