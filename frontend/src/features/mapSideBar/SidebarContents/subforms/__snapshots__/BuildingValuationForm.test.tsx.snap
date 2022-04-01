@@ -838,6 +838,45 @@ exports[`renders correctly 1`] = `
                 style="box-sizing: border-box; flex: 90 0 auto; min-width: 30px; width: 90px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
                 title=""
               >
+                2023
+              </div>
+              <div
+                class="td"
+                role="cell"
+                style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
+                title=""
+              >
+                <div
+                  class="form-group col"
+                >
+                  <div
+                    class="input-tooltip-wrapper"
+                  >
+                    <input
+                      class="form-control input-number"
+                      name=".evaluations.-1.value"
+                      placeholder=""
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="tr-wrapper"
+          >
+            <div
+              class="tr"
+              role="row"
+              style="display: flex; flex: 1 0 auto; min-width: 60px;"
+            >
+              <div
+                class="td"
+                role="cell"
+                style="box-sizing: border-box; flex: 90 0 auto; min-width: 30px; width: 90px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
+                title=""
+              >
                 2022
               </div>
               <div
@@ -1112,45 +1151,6 @@ exports[`renders correctly 1`] = `
                 title=""
               >
                 2015
-              </div>
-              <div
-                class="td"
-                role="cell"
-                style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
-                title=""
-              >
-                <div
-                  class="form-group col"
-                >
-                  <div
-                    class="input-tooltip-wrapper"
-                  >
-                    <input
-                      class="form-control input-number"
-                      name=".evaluations.-1.value"
-                      placeholder=""
-                      value=""
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
-            class="tr-wrapper"
-          >
-            <div
-              class="tr"
-              role="row"
-              style="display: flex; flex: 1 0 auto; min-width: 60px;"
-            >
-              <div
-                class="td"
-                role="cell"
-                style="box-sizing: border-box; flex: 90 0 auto; min-width: 30px; width: 90px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
-                title=""
-              >
-                2014
               </div>
               <div
                 class="td"
