@@ -197,6 +197,14 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
           )
         : undefined;
       if (!!formikRef?.current?.values && !!matchingParcel?.id) {
+        formikRef.current.setFieldValue('data', {
+          ...formikRef?.current?.values?.data,
+          name: matchingParcel.name,
+          address: { ...matchingParcel.address, id: 0 },
+          description: matchingParcel.description,
+          landLegalDescription: matchingParcel.landLegalDescription,
+          landArea: matchingParcel.landArea,
+        });
         formikDataPopulateCallback(matchingParcel, nameSpace);
         return matchingParcel;
       } else {
