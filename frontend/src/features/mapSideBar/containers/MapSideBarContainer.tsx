@@ -37,11 +37,13 @@ import { fireMapRefreshEvent } from 'components/maps/hooks/useMapRefreshEvent';
 import { useBoundaryLayer } from 'components/maps/leaflet/LayerPopup/hooks/useBoundaryLayer';
 import { useAppDispatch, useAppSelector } from 'store';
 import { storePropertyDetail } from 'store/slices/parcelSlice';
+import { Map as LeafletMap } from 'react-leaflet';
 
 interface IMapSideBarContainerProps {
   refreshParcels: Function;
   properties: IProperty[];
   movingPinNameSpaceProp?: string;
+  map?: LeafletMap | null;
 }
 
 const FloatCheck = styled(FaCheckCircle)`
@@ -82,6 +84,7 @@ const DeleteButton = styled(FaTrash)`
  */
 const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = ({
   movingPinNameSpaceProp,
+  map,
 }) => {
   const keycloak = useKeycloakWrapper();
   const formikRef = React.useRef<FormikValues>();
@@ -205,6 +208,7 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
           landLegalDescription: matchingParcel.landLegalDescription,
           landArea: matchingParcel.landArea,
         });
+        map?.leafletElement.setView([+matchingParcel.latitude, +matchingParcel.longitude], 20);
         formikDataPopulateCallback(matchingParcel, nameSpace);
         return matchingParcel;
       } else {
