@@ -67,6 +67,7 @@ const MapView: React.FC<MapViewProps> = (props: MapViewProps) => {
           mapRef.current?.leafletElement.fireEvent('clear');
         }}
         properties={properties}
+        map={mapRef.current}
       />
       <FilterProvider>
         <PropertyPopUpContextProvider>
