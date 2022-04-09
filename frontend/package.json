@@ -19,7 +19,7 @@
     "leaflet": "1.6.0",
     "polylabel": "1.1.0",
     "lodash": "4.17.21",
-    "moment": "2.25.3",
+    "moment": "2.29.2",
     "moment-timezone": "0.5.31",
     "query-string": "6.12.1",
     "react": "16.12.0",
