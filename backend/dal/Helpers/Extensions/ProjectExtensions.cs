@@ -81,6 +81,11 @@ namespace Pims.Dal.Helpers.Extensions
                 query = query.Where(p => filter.StatusId.Contains(p.StatusId));
             }
 
+            if (filter.NotStatusId?.Any() == true)
+            {
+                query = query.Where(p => !filter.NotStatusId.Contains(p.StatusId));
+            }
+
             if (filter.Agencies?.Any() == true)
             {
                 // Get list of sub-agencies for any agency selected in the filter.
