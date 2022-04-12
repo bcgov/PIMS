@@ -41,6 +41,7 @@ import { IStatus } from 'features/projects/interfaces';
 interface IProjectFilterState {
   name?: string;
   statusId?: string[];
+  notStatusId?: string[];
   agencyId?: string;
   agencies?: number[];
   fiscalYear?: number | '';
@@ -56,6 +57,7 @@ interface IProps {
 const initialValues: IProjectFilterState = {
   name: '',
   statusId: [],
+  notStatusId: ['16', '23', '32'], // Denied, Cancelled, Disposed
   agencyId: '',
   agencies: [],
   fiscalYear: '',
@@ -163,6 +165,7 @@ export const ProjectListView: React.FC<IProps> = ({
           pageSize,
           filter: {
             ...filter,
+            notStatusId: filter?.statusId?.length ? [] : filter?.notStatusId,
             statusId: filter?.statusId?.length ? filter.statusId : defaultFilter.statusId,
           },
         });
