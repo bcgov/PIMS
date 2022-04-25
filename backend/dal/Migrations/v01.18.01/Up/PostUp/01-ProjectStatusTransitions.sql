@@ -197,6 +197,26 @@ IF NOT EXISTS (
   SELECT *
   FROM dbo.[WorkflowProjectStatus]
   WHERE [WorkflowId] = 6
+    AND [StatusId] = 22
+)
+BEGIN
+  INSERT INTO dbo.[WorkflowProjectStatus] (
+    [WorkflowId]
+    , [StatusId]
+    , [IsOptional]
+    , [SortOrder]
+  ) VALUES (
+      6 -- SPL
+      , 22 -- AP_!SPL
+      , 1
+      , 6
+  )
+END
+
+IF NOT EXISTS (
+  SELECT *
+  FROM dbo.[WorkflowProjectStatus]
+  WHERE [WorkflowId] = 6
     AND [StatusId] = 32
 )
 BEGIN
