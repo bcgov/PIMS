@@ -5,9 +5,13 @@ import React from 'react';
 
 import * as styled from './styled';
 
-interface IProjectSPLTransferWithinGREProps {}
+interface IProjectSPLTransferWithinGREProps {
+  disabled?: boolean;
+}
 
-export const ProjectSPLTransferWithinGRE: React.FC<IProjectSPLTransferWithinGREProps> = props => {
+export const ProjectSPLTransferWithinGRE: React.FC<IProjectSPLTransferWithinGREProps> = ({
+  disabled = false,
+}) => {
   const formik = useFormikContext<IProjectForm>();
 
   return (
@@ -18,6 +22,7 @@ export const ProjectSPLTransferWithinGRE: React.FC<IProjectSPLTransferWithinGREP
         field="transferredWithinGreOn"
         formikProps={formik}
         size="sm"
+        disabled={disabled}
       />
     </styled.ProjectSPL>
   );

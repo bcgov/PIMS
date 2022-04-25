@@ -8,10 +8,15 @@ import { IProjectForm } from '../interfaces';
 
 import * as styled from './styled';
 
-interface IProjectDocumentationProps {}
+interface IProjectDocumentationProps {
+  disabled?: boolean;
+}
 
-export const ProjectDocumentation: React.FC<IProjectDocumentationProps> = props => {
+export const ProjectDocumentation: React.FC<IProjectDocumentationProps> = ({
+  disabled = false,
+}) => {
   const formik = useFormikContext<IProjectForm>();
+  const { setFieldValue } = formik;
 
   const projectTasks = formik.values.tasks
     .filter(t => t.statusCode === DisposeWorkflowStatus.RequiredDocumentation)
@@ -21,6 +26,7 @@ export const ProjectDocumentation: React.FC<IProjectDocumentationProps> = props 
         field={`tasks.${formik.values.tasks.findIndex(ft => ft.taskId === t.taskId)}.isCompleted`}
         postLabel={t.description}
         required={!t.isOptional}
+        disabled={disabled}
       />
     ));
   const firstNationTasks = formik.values.tasks
@@ -31,6 +37,7 @@ export const ProjectDocumentation: React.FC<IProjectDocumentationProps> = props 
         field={`tasks.${formik.values.tasks.findIndex(ft => ft.taskId === t.taskId)}.isCompleted`}
         postLabel={t.description}
         required={!t.isOptional}
+        disabled={disabled}
       />
     ));
   const appraisalTasks = formik.values.tasks
@@ -41,6 +48,16 @@ export const ProjectDocumentation: React.FC<IProjectDocumentationProps> = props 
         field={`tasks.${formik.values.tasks.findIndex(ft => ft.taskId === t.taskId)}.isCompleted`}
         postLabel={t.description}
         required={!t.isOptional}
+        disabled={disabled}
+        onChange={checked => {
+          // There are essentially duplicate tasks in the disposal process that match the appraisal tasks.
+          // We need to copy the value over.
+          const appraisalName = formik.values.tasks.find(ft => ft.taskId === t.taskId)?.name;
+          const field = `tasks.${formik.values.tasks.findIndex(
+            t => t.statusCode === ReviewWorkflowStatus.DisposalProcess && t.name === appraisalName,
+          )}.isCompleted`;
+          setFieldValue(field, checked);
+        }}
       />
     ));
 
@@ -55,8 +72,13 @@ export const ProjectDocumentation: React.FC<IProjectDocumentationProps> = props 
         <Col className="form-section">
           <h2>Appraisal</h2>
           {appraisalTasks}
-          <FastCurrencyInput label="Appraisal Value" field="appraised" formikProps={formik} />
-          <TextArea label="Appraisal Note" field="appraisedNote" />
+          <FastCurrencyInput
+            label="Appraisal Value"
+            field="appraised"
+            formikProps={formik}
+            disabled={disabled}
+          />
+          <TextArea label="Appraisal Note" field="appraisedNote" disabled={disabled} />
         </Col>
       </Col>
       <Col className="form-section" grow={2}>
@@ -66,13 +88,13 @@ export const ProjectDocumentation: React.FC<IProjectDocumentationProps> = props 
             <TextArea label="Agency Notes" field="note" disabled />
           </Col>
           <Col>
-            <TextArea label="Reporting" field="reportingNote" />
+            <TextArea label="Reporting" field="reportingNote" disabled={disabled} />
           </Col>
           <Col>
-            <TextArea label="Shared Notes" field="publicNote" />
+            <TextArea label="Shared Notes" field="publicNote" disabled={disabled} />
           </Col>
           <Col>
-            <TextArea label="Private Notes" field="privateNote" />
+            <TextArea label="Private Notes" field="privateNote" disabled={disabled} />
           </Col>
         </Row>
       </Col>

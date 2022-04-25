@@ -108,7 +108,7 @@ export const ProjectStatus: React.FC<IProjectStatusProps> = ({
         <styled.ActiveStatus flex="0.75">
           <span>Status</span>
           <span>
-            {status?.code !== WorkflowStatus.NotInSpl && (
+            {status?.code !== WorkflowStatus.ApprovedForExemption && (
               <p className="workflow">{status?.workflowCode}</p>
             )}
             <b>{status?.name}</b>

@@ -94,6 +94,7 @@ export const toModel = (model: IProjectModel | undefined, values: IProjectForm):
     }),
     tasks: values.tasks.map(t => {
       const task = model?.tasks.find(i => i.taskId === t.taskId);
+
       return {
         ...task,
         projectId: values.id,

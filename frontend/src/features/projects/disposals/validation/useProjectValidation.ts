@@ -66,6 +66,20 @@ export const useProjectValidation = ({ id }: IProjectValidationProps) => {
         };
         hasErrors = true;
       }
+      // When disposing an appraisal is required.
+      if (values.statusCode === WorkflowStatus.Disposed && values.workflowCode === Workflow.SPL) {
+        const tasks = values.tasks.filter(
+          t => t.statusCode === WorkflowStatus.Disposed && !t.isOptional && !t.isCompleted,
+        );
+        tasks.forEach(t => {
+          const index = values.tasks.findIndex(ti => ti.name === t.name);
+          errors = {
+            ...errors,
+            ...setIn(errors, `tasks.${index}.isCompleted`, `${t.name} required`),
+          };
+        });
+        hasErrors = true;
+      }
 
       await documentationSchema.validate(values, { abortEarly: false });
 

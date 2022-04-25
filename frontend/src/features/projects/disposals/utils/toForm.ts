@@ -2,6 +2,7 @@ import { IProjectModel } from 'hooks/api/projects/disposals';
 import { defaultFilter } from '../constants';
 import { IProjectForm } from '../interfaces';
 import { toPropertyForm } from '.';
+import { ReviewWorkflowStatus } from 'features/projects/constants';
 
 /**
  * Initialize form values from a model.
@@ -108,18 +109,25 @@ export const toForm = (model: IProjectModel): IProjectForm => {
         note: n.note,
       };
     }),
-    tasks: model.tasks.map(t => {
+    tasks: model.tasks.map(task => {
+      // There are duplicate tasks in disposal that must match those in appraisal.
+      if (task.statusCode === ReviewWorkflowStatus.DisposalProcess) {
+        const appraisalTask = model.tasks.find(
+          t => t.statusCode === ReviewWorkflowStatus.AppraisalReview && t.name === task.name,
+        );
+        if (!!appraisalTask) task.isCompleted = appraisalTask?.isCompleted;
+      }
       return {
-        taskId: t.taskId,
-        isCompleted: t.isCompleted,
-        completedOn: t.completedOn ?? '',
-        name: t.name,
-        description: t.description ?? '',
-        isOptional: t.isOptional,
-        isDisabled: t.isDisabled,
-        sortOrder: t.sortOrder,
-        statusId: t.statusId,
-        statusCode: t.statusCode ?? '',
+        taskId: task.taskId,
+        isCompleted: task.isCompleted,
+        completedOn: task.completedOn ?? '',
+        name: task.name,
+        description: task.description ?? '',
+        isOptional: task.isOptional,
+        isDisabled: task.isDisabled,
+        sortOrder: task.sortOrder,
+        statusId: task.statusId,
+        statusCode: task.statusCode ?? '',
       };
     }),
     projectAgencyResponses: model.projectAgencyResponses.map(p => {

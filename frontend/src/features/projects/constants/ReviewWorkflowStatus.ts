@@ -5,4 +5,5 @@ export enum ReviewWorkflowStatus {
   FirstNationConsultation = 'AS-FNC',
   ExemptionReview = 'AS-EXE',
   ExemptionProcess = 'AS-EXP',
+  DisposalProcess = 'DIS',
 }

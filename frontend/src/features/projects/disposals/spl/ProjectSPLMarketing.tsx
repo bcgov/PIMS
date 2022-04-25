@@ -5,9 +5,11 @@ import React from 'react';
 
 import * as styled from './styled';
 
-interface IProjectSPLMarketingProps {}
+interface IProjectSPLMarketingProps {
+  disabled?: boolean;
+}
 
-export const ProjectSPLMarketing: React.FC<IProjectSPLMarketingProps> = props => {
+export const ProjectSPLMarketing: React.FC<IProjectSPLMarketingProps> = ({ disabled = false }) => {
   const formik = useFormikContext<IProjectForm>();
 
   return (
@@ -18,6 +20,7 @@ export const ProjectSPLMarketing: React.FC<IProjectSPLMarketingProps> = props =>
         field="marketedOn"
         formikProps={formik}
         size="sm"
+        disabled={disabled}
       />
     </styled.ProjectSPL>
   );

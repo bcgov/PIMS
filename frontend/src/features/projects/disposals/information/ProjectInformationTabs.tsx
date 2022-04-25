@@ -4,9 +4,13 @@ import { ProjectInformation, ProjectProperties } from '.';
 import { Tab, Tabs } from 'components/tabs';
 import { Route, Switch, useLocation } from 'react-router-dom';
 
-interface IProjectInformationProps {}
+interface IProjectInformationProps {
+  disabled?: boolean;
+}
 
-export const ProjectInformationTabs: React.FC<IProjectInformationProps> = props => {
+export const ProjectInformationTabs: React.FC<IProjectInformationProps> = ({
+  disabled = false,
+}) => {
   const location = useLocation();
 
   const id = location.pathname.split('/')[3];
@@ -25,11 +29,12 @@ export const ProjectInformationTabs: React.FC<IProjectInformationProps> = props 
         ]}
       >
         <Switch>
-          <Route exact path="/projects/disposal/:id/information" component={ProjectInformation} />
-          <Route
-            path="/projects/disposal/:id/information/properties"
-            component={ProjectProperties}
-          />
+          <Route exact path="/projects/disposal/:id/information">
+            <ProjectInformation disabled={disabled} />
+          </Route>
+          <Route path="/projects/disposal/:id/information/properties">
+            <ProjectProperties disabled={disabled} />
+          </Route>
         </Switch>
       </Tabs>
     </styled.ProjectInformation>

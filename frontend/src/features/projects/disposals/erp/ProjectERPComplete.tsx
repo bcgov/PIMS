@@ -1,4 +1,4 @@
-import { FastDatePicker } from 'components/common/form';
+import { FastDatePicker, TextArea } from 'components/common/form';
 import { useFormikContext } from 'formik';
 import React from 'react';
 import { ProjectNote } from '../notes';
@@ -7,32 +7,49 @@ import * as styled from './styled';
 import { Col, Row } from 'components/flex';
 import { Workflow, WorkflowStatus } from 'hooks/api/projects';
 
-export const ProjectERPComplete: React.FC = () => {
+export interface IProjectERPCompleteProps {
+  disabled?: boolean;
+}
+
+export const ProjectERPComplete: React.FC<IProjectERPCompleteProps> = ({ disabled = false }) => {
   const formik = useFormikContext<IProjectForm>();
-  const { values } = formik;
+  const { values, setFieldTouched } = formik;
   const { workflowCode, statusCode } = values;
 
   const eRequestForSplReceived =
     !!values.clearanceNotificationSentOn || !!values.requestForSplReceivedOn;
   const eApprovedForSpl = !!values.requestForSplReceivedOn || !!values.approvedForSplOn;
   const showTransferredWithinGRE =
-    (workflowCode === Workflow.ERP ||
-      workflowCode === Workflow.ASSESS_EXEMPTION ||
-      workflowCode === Workflow.ASSESS_EX_DISPOSAL) &&
-    statusCode !== WorkflowStatus.NotInSpl;
+    [Workflow.ERP, Workflow.ASSESS_EXEMPTION, Workflow.ASSESS_EX_DISPOSAL].includes(
+      workflowCode as Workflow,
+    ) && statusCode !== WorkflowStatus.NotInSpl;
+  const showNotInSpl = [Workflow.ASSESS_EX_DISPOSAL, Workflow.ERP].includes(
+    workflowCode as Workflow,
+  );
+
+  React.useEffect(() => {
+    setFieldTouched('removalFromSplRequestOn');
+    setFieldTouched('removalFromSplApprovedOn');
+    setFieldTouched('removalFromSplRationale');
+  }, [setFieldTouched]);
 
   return (
     <styled.ProjectERPComplete>
       <h2>Enhanced Referral Process Complete</h2>
       <Row>
-        <Col flex="1">
+        <Col flex="2">
           <FastDatePicker
             label="Interest Received On"
             field="interestedReceivedOn"
             formikProps={formik}
             size="sm"
+            disabled={disabled}
           />
-          <ProjectNote label="Interest Notes" field="interestFromEnhancedReferralNote" />
+          <ProjectNote
+            label="Interest Notes"
+            field="interestFromEnhancedReferralNote"
+            disabled={disabled}
+          />
         </Col>
         <Col flex="1">
           <FastDatePicker
@@ -40,6 +57,7 @@ export const ProjectERPComplete: React.FC = () => {
             field="onHoldNotificationSentOn"
             formikProps={formik}
             size="sm"
+            disabled={disabled}
           />
           {showTransferredWithinGRE && (
             <FastDatePicker
@@ -47,6 +65,7 @@ export const ProjectERPComplete: React.FC = () => {
               field="transferredWithinGreOn"
               formikProps={formik}
               size="sm"
+              disabled={disabled}
             />
           )}
           <FastDatePicker
@@ -54,22 +73,46 @@ export const ProjectERPComplete: React.FC = () => {
             field="clearanceNotificationSentOn"
             formikProps={formik}
             size="sm"
+            disabled={disabled}
           />
           <FastDatePicker
             label="Request for SPL Received On"
             field="requestForSplReceivedOn"
             formikProps={formik}
-            disabled={!eRequestForSplReceived}
+            disabled={!eRequestForSplReceived || disabled}
             size="sm"
           />
           <FastDatePicker
             label="SPL Addition Approved On"
             field="approvedForSplOn"
             formikProps={formik}
-            disabled={!eApprovedForSpl}
+            disabled={!eApprovedForSpl || disabled}
             size="sm"
           />
         </Col>
+        {showNotInSpl && (
+          <Col flex="2">
+            <FastDatePicker
+              label="Not in SPL Requested On"
+              field="removalFromSplRequestOn"
+              formikProps={formik}
+              size="sm"
+              disabled={disabled}
+            />
+            <FastDatePicker
+              label="Not in SPL Approved On"
+              field="removalFromSplApprovedOn"
+              formikProps={formik}
+              size="sm"
+              disabled={disabled}
+            />
+            <TextArea
+              label="Not in SPL Rationale"
+              field="removalFromSplRationale"
+              disabled={disabled}
+            />
+          </Col>
+        )}
       </Row>
     </styled.ProjectERPComplete>
   );

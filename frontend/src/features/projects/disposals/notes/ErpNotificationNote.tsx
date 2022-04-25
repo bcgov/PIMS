@@ -5,8 +5,17 @@ import { IProjectNoteProps, ProjectNote } from '.';
 import { IProjectForm } from '../interfaces';
 
 export const ErpNotificationNote: React.FC<IProjectNoteProps> = ({ label, tooltip, ...rest }) => {
-  const { values } = useFormikContext<IProjectForm>();
-  const indexOfNote = values.notes.findIndex(n => n.noteType === NoteType.ErpNotification);
+  const { values, setFieldValue } = useFormikContext<IProjectForm>();
+  let indexOfNote = values.notes.findIndex(n => n.noteType === NoteType.ErpNotification);
+
+  if (indexOfNote === -1) {
+    indexOfNote = values.notes.length;
+    setFieldValue(`notes[${values.notes.length}]`, {
+      id: 0,
+      noteType: NoteType.ErpNotification,
+      note: '',
+    });
+  }
 
   return (
     <ProjectNote

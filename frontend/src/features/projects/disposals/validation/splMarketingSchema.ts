@@ -5,12 +5,7 @@ import * as yup from 'yup';
 export const splMarketingSchema = yup.object({
   marketedOn: yup.string().when(['workflowCode', 'statusCode'], {
     is: (workflowCode, statusCode) => {
-      return (
-        workflowCode === Workflow.SPL &&
-        (statusCode === WorkflowStatus.OnMarket ||
-          statusCode === WorkflowStatus.ContractInPlaceConditional ||
-          statusCode === WorkflowStatus.ContractInPlaceUnconditional)
-      );
+      return workflowCode === Workflow.SPL && statusCode === WorkflowStatus.OnMarket;
     },
     then: yup
       .string()

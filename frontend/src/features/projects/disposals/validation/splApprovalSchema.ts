@@ -1,4 +1,4 @@
-import { Workflow } from 'hooks/api/projects';
+import { Workflow, WorkflowStatus } from 'hooks/api/projects';
 import moment from 'moment';
 import * as yup from 'yup';
 
@@ -26,5 +26,53 @@ export const splApprovalSchema = yup.object({
       .test('isDate', 'SPL addition approved on required', value => {
         return moment(value).isValid();
       }),
+  }),
+  removalFromSplRequestOn: yup.string().when(['workflowCode', 'statusCode'], {
+    is: (workflowCode, statusCode) => {
+      return (
+        (workflowCode === Workflow.ASSESS_EX_DISPOSAL ||
+          workflowCode === Workflow.ERP ||
+          workflowCode === Workflow.SPL) &&
+        statusCode === WorkflowStatus.NotInSpl
+      );
+    },
+    then: yup
+      .string()
+      .typeError('Remove from SPL requested date required')
+      .required('Remove from SPL requested date require')
+      .test('isDate', 'Remove from SPL requested date require', value => {
+        return moment(value).isValid();
+      }),
+  }),
+  removalFromSplApprovedOn: yup.string().when(['workflowCode', 'statusCode'], {
+    is: (workflowCode, statusCode) => {
+      return (
+        (workflowCode === Workflow.ASSESS_EX_DISPOSAL ||
+          workflowCode === Workflow.ERP ||
+          workflowCode === Workflow.SPL) &&
+        statusCode === WorkflowStatus.NotInSpl
+      );
+    },
+    then: yup
+      .string()
+      .typeError('Remove from SPL approved on date required')
+      .required('Remove from SPL approved on date require')
+      .test('isDate', 'Remove from SPL approved on date require', value => {
+        return moment(value).isValid();
+      }),
+  }),
+  removalFromSplRationale: yup.string().when(['workflowCode', 'statusCode'], {
+    is: (workflowCode, statusCode) => {
+      return (
+        (workflowCode === Workflow.ASSESS_EX_DISPOSAL ||
+          workflowCode === Workflow.ERP ||
+          workflowCode === Workflow.SPL) &&
+        statusCode === WorkflowStatus.NotInSpl
+      );
+    },
+    then: yup
+      .string()
+      .typeError('Remove from SPL rationale required')
+      .required('Remove from SPL rationale require'),
   }),
 });

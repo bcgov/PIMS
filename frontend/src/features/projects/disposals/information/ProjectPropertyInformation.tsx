@@ -4,21 +4,67 @@ import React from 'react';
 import { IProjectForm } from '../interfaces';
 import { FastCurrencyInput, Select } from 'components/common/form';
 import { useLookups, LookupType } from 'store/hooks';
+import { riskTooltips, tierTooltips } from 'features/projects/common';
 
-export interface IProjectPropertyInformationProps {}
+import * as styled from './styled';
 
-export const ProjectPropertyInformation: React.FC<IProjectPropertyInformationProps> = () => {
+export interface IProjectPropertyInformationProps {
+  disabled?: boolean;
+}
+
+export const ProjectPropertyInformation: React.FC<IProjectPropertyInformationProps> = ({
+  disabled = false,
+}) => {
   const formik = useFormikContext<IProjectForm>();
   const { controller } = useLookups();
 
   const tiers = controller.getOptions(LookupType.TierLevel);
   const risks = controller.getOptions(LookupType.ProjectRisk);
+  const { values } = formik;
+
+  /**
+   * Return a friendly tooltip for the specified tier level.
+   * @param riskId The primary key 'id' of the tier level.
+   * @returns A tooltip string.
+   */
+  const getTierLevelTooltip = (riskId: number | string) => {
+    switch (parseInt(`${riskId}`)) {
+      case 1:
+        return tierTooltips.tier1Tooltip;
+      case 2:
+        return tierTooltips.tier2Tooltip;
+      case 3:
+        return tierTooltips.tier3Tooltip;
+      case 4:
+        return tierTooltips.tier4Tooltip;
+      default:
+        return null;
+    }
+  };
+
+  /**
+   * Return a friendly tooltip for the specified project risk.
+   * @param riskId The primary key 'id' of the project risk.
+   * @returns A tooltip string.
+   */
+  const getRiskTooltip = (riskId: number | string) => {
+    switch (parseInt(`${riskId}`)) {
+      case 1:
+        return riskTooltips.risk1Tooltip;
+      case 2:
+        return riskTooltips.risk2Tooltip;
+      case 3:
+        return riskTooltips.risk3Tooltip;
+      default:
+        return null;
+    }
+  };
 
   return (
     <Col className="project-info">
       <div>
         <h2>Property Information</h2>
-        <Row>
+        <Row className="tierLevelId">
           <Select
             label="Assign Tier"
             placeholder="Must Select One"
@@ -26,7 +72,13 @@ export const ProjectPropertyInformation: React.FC<IProjectPropertyInformationPro
             type="number"
             options={tiers}
             required
+            disabled={disabled}
           />
+          <styled.Tooltip>
+            <small>{getTierLevelTooltip(values.tierLevelId)}</small>
+          </styled.Tooltip>
+        </Row>
+        <Row className="riskId">
           <Select
             label="Risk"
             placeholder="Must Select One"
@@ -34,8 +86,11 @@ export const ProjectPropertyInformation: React.FC<IProjectPropertyInformationPro
             type="number"
             options={risks}
             required
+            disabled={disabled}
           />
-          <div>&nbsp;</div>
+          <styled.Tooltip>
+            <small>{getRiskTooltip(values.riskId)}</small>
+          </styled.Tooltip>
         </Row>
       </div>
       <div>
@@ -50,12 +105,14 @@ export const ProjectPropertyInformation: React.FC<IProjectPropertyInformationPro
               field="assessed"
               required
               formikProps={formik}
+              disabled={disabled}
             />
             <FastCurrencyInput
               label="Net Book Value"
               field="netBook"
               required
               formikProps={formik}
+              disabled={disabled}
             />
           </Col>
           <Col>
@@ -64,19 +121,27 @@ export const ProjectPropertyInformation: React.FC<IProjectPropertyInformationPro
               field="market"
               required
               formikProps={formik}
+              disabled={disabled}
             />
-            <FastCurrencyInput label="Appraised Value" field="appraised" formikProps={formik} />
+            <FastCurrencyInput
+              label="Appraised Value"
+              field="appraised"
+              formikProps={formik}
+              disabled={disabled}
+            />
           </Col>
           <Col>
             <FastCurrencyInput
               label="Estimated Sales Costs"
               field="salesCost"
               formikProps={formik}
+              disabled={disabled}
             />
             <FastCurrencyInput
               label="Estimated Program Recovery Fees"
               field="programCost"
               formikProps={formik}
+              disabled={disabled}
             />
           </Col>
         </Row>

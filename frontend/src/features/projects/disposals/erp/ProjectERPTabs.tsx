@@ -1,13 +1,7 @@
 import React from 'react';
 import { Tab, Tabs } from 'components/tabs';
 import { Switch, Route, useLocation } from 'react-router-dom';
-import {
-  ProjectERPApproval,
-  ProjectERPExemption,
-  ProjectERPComplete,
-  AgencyInterest,
-  ProjectERPDisposed,
-} from '.';
+import { ProjectERPApproval, ProjectERPExemption, ProjectERPComplete, ProjectERPDisposed } from '.';
 import { Col } from 'components/flex';
 import { useFormikContext } from 'formik';
 import { Workflow, WorkflowStatus } from 'hooks/api/projects';
@@ -15,9 +9,10 @@ import { IProjectModel } from 'hooks/api/projects/disposals';
 
 interface IProjectERPTabsProps {
   project?: IProjectModel;
+  disabled?: boolean;
 }
 
-export const ProjectERPTabs: React.FC<IProjectERPTabsProps> = ({ project }) => {
+export const ProjectERPTabs: React.FC<IProjectERPTabsProps> = ({ project, disabled = false }) => {
   const {
     values: { workflowCode, statusCode },
   } = useFormikContext();
@@ -54,13 +49,20 @@ export const ProjectERPTabs: React.FC<IProjectERPTabsProps> = ({ project }) => {
     <Col>
       <Tabs tabs={tabs}>
         <Switch>
-          <Route exact path="/projects/disposal/:id/erp" component={ProjectERPApproval} />
-          <Route path="/projects/disposal/:id/erp/exemption" component={ProjectERPExemption} />
-          <Route path="/projects/disposal/:id/erp/complete" component={ProjectERPComplete} />
-          <Route path="/projects/disposal/:id/erp/disposed" component={ProjectERPDisposed} />
+          <Route exact path="/projects/disposal/:id/erp">
+            <ProjectERPApproval disabled={disabled} />
+          </Route>
+          <Route path="/projects/disposal/:id/erp/exemption">
+            <ProjectERPExemption disabled={disabled} />
+          </Route>
+          <Route path="/projects/disposal/:id/erp/complete">
+            <ProjectERPComplete disabled={disabled} />
+          </Route>
+          <Route path="/projects/disposal/:id/erp/disposed">
+            <ProjectERPDisposed disabled={disabled} />
+          </Route>
         </Switch>
       </Tabs>
-      <AgencyInterest />
     </Col>
   );
 };

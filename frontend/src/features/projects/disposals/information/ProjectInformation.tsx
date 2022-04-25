@@ -13,9 +13,11 @@ import { IProjectForm } from '../interfaces';
 
 import * as styled from './styled';
 
-interface IProjectInformationProps {}
+interface IProjectInformationProps {
+  disabled?: boolean;
+}
 
-export const ProjectInformation: React.FC<IProjectInformationProps> = props => {
+export const ProjectInformation: React.FC<IProjectInformationProps> = ({ disabled = false }) => {
   const formik = useFormikContext<IProjectForm>();
   const { controller } = useLookups();
 
@@ -26,7 +28,7 @@ export const ProjectInformation: React.FC<IProjectInformationProps> = props => {
       <Row>
         <Col>
           <Input label="Project No." field="projectNumber" disabled={true} />
-          <Input label="Name" field="name" required />
+          <Input label="Name" field="name" required disabled={disabled} />
           <ParentSelect
             label="Project Agency"
             field="agencyId"
@@ -34,9 +36,10 @@ export const ProjectInformation: React.FC<IProjectInformationProps> = props => {
             filterBy={['code', 'label', 'parent']}
             convertValue={Number}
             required
+            disabled={disabled}
           />
         </Col>
-        <TextArea label="Description" field="description" />
+        <TextArea label="Description" field="description" disabled={disabled} />
       </Row>
       <Row>
         <Col>
@@ -45,12 +48,14 @@ export const ProjectInformation: React.FC<IProjectInformationProps> = props => {
             field="approvedOn"
             formikProps={formik}
             required
+            disabled={disabled}
           />
           <FastFiscalYearInput
             label="Reported Fiscal Year"
             field="reportedFiscalYear"
             formikProps={formik}
             required
+            disabled={disabled}
           />
         </Col>
         <Col>

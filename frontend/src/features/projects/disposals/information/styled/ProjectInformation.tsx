@@ -16,5 +16,29 @@ export const ProjectInformation = styled(Col)`
         }
       }
     }
+
+    .tierLevelId {
+      align-items: flex-start;
+      align-content: flex-start;
+      div {
+        flex: unset;
+      }
+    }
+
+    .riskId {
+      align-items: flex-start;
+      align-content: flex-start;
+      div {
+        flex: unset;
+      }
+    }
+
+    select[name='tierLevelId'] {
+      width: unset;
+    }
+
+    select[name='riskId'] {
+      width: unset;
+    }
   }
 `;

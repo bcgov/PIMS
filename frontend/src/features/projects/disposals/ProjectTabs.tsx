@@ -30,6 +30,7 @@ export const ProjectTabs: React.FC<IProjectTabProps> = ({ project, isLoading }) 
   const id = location.pathname.split('/')[3];
 
   const [tabs, setTabs] = React.useState<React.ReactElement[]>([]);
+  const [disabled, setDisabled] = React.useState(false);
 
   React.useEffect(() => {
     const tabs = [
@@ -37,12 +38,22 @@ export const ProjectTabs: React.FC<IProjectTabProps> = ({ project, isLoading }) 
       <Tab key={2} label="Documentation" path={`/projects/disposal/${id}/documentation`} />,
     ];
 
+    setDisabled(
+      [
+        WorkflowStatus.Disposed,
+        WorkflowStatus.Cancelled,
+        WorkflowStatus.TransferredGRE,
+        WorkflowStatus.Denied,
+      ].includes(statusCode),
+    );
+
     if (
       workflowCode === Workflow.ERP ||
       workflowCode === Workflow.ASSESS_EXEMPTION ||
       workflowCode === Workflow.ASSESS_EX_DISPOSAL ||
       !project?.statusHistory?.some(s => s.workflow === Workflow.SUBMIT_DISPOSAL) ||
-      project?.statusHistory?.some(s => s.workflow === Workflow.ERP)
+      project?.statusHistory?.some(s => s.workflow === Workflow.ERP) ||
+      project?.statusHistory?.some(s => s.workflow === Workflow.ASSESS_EX_DISPOSAL)
     )
       tabs.push(
         <Tab key={3} label="Enhanced Referral Program" path={`/projects/disposal/${id}/erp`} />,
@@ -95,17 +106,27 @@ export const ProjectTabs: React.FC<IProjectTabProps> = ({ project, isLoading }) 
               <Redirect to={`/page-not-found`} />
             )}
           </Route>
-          <Route path="/projects/disposal/:id/information" component={ProjectInformationTabs} />
-          <Route path="/projects/disposal/:id/documentation" component={ProjectDocumentation} />
+          <Route path="/projects/disposal/:id/information">
+            <ProjectInformationTabs disabled={disabled} />
+          </Route>
+          <Route path="/projects/disposal/:id/documentation">
+            <ProjectDocumentation disabled={disabled} />
+          </Route>
           <Route path="/projects/disposal/:id/erp">
-            <ProjectERPTabs project={project} />
+            <ProjectERPTabs project={project} disabled={disabled} />
           </Route>
-          <Route path="/projects/disposal/:id/not/spl" component={ProjectNotSPL} />
+          <Route path="/projects/disposal/:id/not/spl">
+            <ProjectNotSPL disabled={disabled} />
+          </Route>
           <Route path="/projects/disposal/:id/spl">
-            <ProjectSPLTabs project={project} />
+            <ProjectSPLTabs project={project} disabled={disabled} />
           </Route>
-          <Route path="/projects/disposal/:id/close/out" component={ProjectCloseOut} />
-          <Route path="/projects/disposal/:id/notifications" component={ProjectNotifications} />
+          <Route path="/projects/disposal/:id/close/out">
+            <ProjectCloseOut />
+          </Route>
+          <Route path="/projects/disposal/:id/notifications">
+            <ProjectNotifications />
+          </Route>
         </Switch>
       </Tabs>
     </styled.ProjectTabs>

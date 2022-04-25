@@ -6,8 +6,13 @@ import { IProjectForm } from '../interfaces';
 
 import * as styled from './styled';
 import { ErpNotificationNote } from '../notes';
+import { AgencyInterest } from '.';
 
-export const ProjectERPApproval: React.FC = () => {
+export interface IProjectERPApprovalProps {
+  disabled?: boolean;
+}
+
+export const ProjectERPApproval: React.FC<IProjectERPApprovalProps> = ({ disabled = false }) => {
   const formik = useFormikContext<IProjectForm>();
 
   return (
@@ -22,12 +27,14 @@ export const ProjectERPApproval: React.FC = () => {
                 field="initialNotificationSentOn"
                 formikProps={formik}
                 size="sm"
+                disabled={disabled}
               />
               <FastDatePicker
                 label="60 Day Enhanced Referral Notification Sent On"
                 field="sixtyDayNotificationSentOn"
                 formikProps={formik}
                 size="sm"
+                disabled={disabled}
               />
             </Col>
             <Col flex="1">
@@ -36,12 +43,14 @@ export const ProjectERPApproval: React.FC = () => {
                 field="thirtyDayNotificationSentOn"
                 formikProps={formik}
                 size="sm"
+                disabled={disabled}
               />
               <FastDatePicker
                 label="90 Day Enhanced Referral Notification Sent On"
                 field="ninetyDayNotificationSentOn"
                 formikProps={formik}
                 size="sm"
+                disabled={disabled}
               />
             </Col>
           </Row>
@@ -54,6 +63,7 @@ export const ProjectERPApproval: React.FC = () => {
           <ErpNotificationNote
             label="Text added to ERP Notification Emails"
             tooltip="The contents of this note were included in the email notifications for this project."
+            disabled={disabled}
           />
         </Col>
         <Col>
@@ -62,6 +72,12 @@ export const ProjectERPApproval: React.FC = () => {
             can, however, cancel future notifications for specific ministries by setting the
             response as 'Not Interested'.
           </p>
+        </Col>
+      </Row>
+      <hr />
+      <Row>
+        <Col>
+          <AgencyInterest disabled={disabled} />
         </Col>
       </Row>
     </styled.ProjectERPApproval>

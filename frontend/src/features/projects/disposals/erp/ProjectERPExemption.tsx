@@ -5,7 +5,11 @@ import { IProjectForm } from '../interfaces';
 import { ProjectNote } from '../notes';
 import * as styled from './styled';
 
-export const ProjectERPExemption: React.FC = () => {
+export interface IProjectERPExemptionProps {
+  disabled?: boolean;
+}
+
+export const ProjectERPExemption: React.FC<IProjectERPExemptionProps> = ({ disabled = false }) => {
   const formik = useFormikContext<IProjectForm>();
 
   return (
@@ -14,13 +18,15 @@ export const ProjectERPExemption: React.FC = () => {
       <Check
         field={`exemptionRequested`}
         postLabel="Apply for Enhanced Referral Process Exemption"
+        disabled={disabled}
       />
-      <ProjectNote label="Exemption Rationale" field="exemptionRationale" />
+      <ProjectNote label="Exemption Rationale" field="exemptionRationale" disabled={disabled} />
       <FastDatePicker
         label="ADM Approved Exemption On"
         field="exemptionApprovedOn"
         formikProps={formik}
         size="sm"
+        disabled={disabled}
       />
     </styled.ProjectERPExemption>
   );

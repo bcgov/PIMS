@@ -7,9 +7,11 @@ import React from 'react';
 import * as styled from './styled';
 import { WorkflowStatus } from 'hooks/api/projects';
 
-interface IProjectNotSPLProps {}
+interface IProjectNotSPLProps {
+  disabled?: boolean;
+}
 
-export const ProjectNotSPL: React.FC<IProjectNotSPLProps> = props => {
+export const ProjectNotSPL: React.FC<IProjectNotSPLProps> = ({ disabled = false }) => {
   const formik = useFormikContext<IProjectForm>();
   const {
     values: { statusCode },
@@ -23,16 +25,28 @@ export const ProjectNotSPL: React.FC<IProjectNotSPLProps> = props => {
       <h2>Not in Surplus Properties List</h2>
       <Row>
         <Col flex="1">
-          <TextArea label="Offers Received" field="offersNote" />
-          <Input label="Purchaser" field="purchaser" />
-          <FastCurrencyInput label="Offer Amount" field="offerAmount" formikProps={formik} />
+          <TextArea label="Offers Received" field="offersNote" disabled={disabled} />
+          <Input label="Purchaser" field="purchaser" disabled={disabled} />
+          <FastCurrencyInput
+            label="Offer Amount"
+            field="offerAmount"
+            formikProps={formik}
+            disabled={disabled}
+          />
           <FastDatePicker
             label="Date of Accepted Offer"
             field="offerAcceptedOn"
             formikProps={formik}
             size="sm"
+            disabled={disabled}
           />
-          <FastDatePicker label="Disposal Date" field="disposedOn" formikProps={formik} size="sm" />
+          <FastDatePicker
+            label="Disposal Date"
+            field="disposedOn"
+            formikProps={formik}
+            size="sm"
+            disabled={disabled}
+          />
         </Col>
         <Col flex="1" align="flex-end">
           {showTransferredWithinGRE && (
@@ -41,6 +55,7 @@ export const ProjectNotSPL: React.FC<IProjectNotSPLProps> = props => {
               field="transferredWithinGreOn"
               formikProps={formik}
               size="sm"
+              disabled={disabled}
             />
           )}
         </Col>

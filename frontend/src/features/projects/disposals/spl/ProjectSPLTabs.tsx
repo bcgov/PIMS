@@ -14,9 +14,10 @@ import { IProjectModel } from 'hooks/api/projects/disposals';
 
 interface IProjectSPLTabsProps {
   project?: IProjectModel;
+  disabled?: boolean;
 }
 
-export const ProjectSPLTabs: React.FC<IProjectSPLTabsProps> = ({ project }) => {
+export const ProjectSPLTabs: React.FC<IProjectSPLTabsProps> = ({ project, disabled = false }) => {
   const {
     values: { workflowCode, statusCode },
   } = useFormikContext();
@@ -27,7 +28,6 @@ export const ProjectSPLTabs: React.FC<IProjectSPLTabsProps> = ({ project }) => {
 
   React.useEffect(() => {
     const tabs = [<Tab key={1} label="Approval" path={`/projects/disposal/${id}/spl`} exact />];
-
     if (
       workflowCode === Workflow.SPL ||
       project?.statusHistory?.some(s => s.status === WorkflowStatus.PreMarketing) ||
@@ -68,16 +68,18 @@ export const ProjectSPLTabs: React.FC<IProjectSPLTabsProps> = ({ project }) => {
     <Col>
       <Tabs tabs={tabs}>
         <Switch>
-          <Route exact path="/projects/disposal/:id/spl" component={ProjectSPLApproval} />
-          <Route path="/projects/disposal/:id/spl/marketing" component={ProjectSPLMarketing} />
-          <Route
-            path="/projects/disposal/:id/spl/contract/in/place"
-            component={ProjectSPLContractInPlace}
-          />
-          <Route
-            path="/projects/disposal/:id/spl/transfer/within/gre"
-            component={ProjectSPLTransferWithinGRE}
-          />
+          <Route exact path="/projects/disposal/:id/spl">
+            <ProjectSPLApproval disabled={disabled} />
+          </Route>
+          <Route path="/projects/disposal/:id/spl/marketing">
+            <ProjectSPLMarketing disabled={disabled} />
+          </Route>
+          <Route path="/projects/disposal/:id/spl/contract/in/place">
+            <ProjectSPLContractInPlace disabled={disabled} />
+          </Route>
+          <Route path="/projects/disposal/:id/spl/transfer/within/gre">
+            <ProjectSPLTransferWithinGRE disabled={disabled} />
+          </Route>
         </Switch>
       </Tabs>
     </Col>

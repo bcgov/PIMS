@@ -13,9 +13,11 @@ import queryString from 'query-string';
 import * as styled from './styled';
 import { toProjectProperty } from './utils';
 
-export interface IProjectPropertiesProps {}
+export interface IProjectPropertiesProps {
+  disabled?: boolean;
+}
 
-export const ProjectProperties: React.FC<IProjectPropertiesProps> = () => {
+export const ProjectProperties: React.FC<IProjectPropertiesProps> = ({ disabled = false }) => {
   const { values, setFieldValue } = useFormikContext<IProjectForm>();
 
   const [showAdd, setShowAdd] = React.useState(false);
@@ -43,23 +45,23 @@ export const ProjectProperties: React.FC<IProjectPropertiesProps> = () => {
 
   return (
     <styled.ProjectProperties>
-      <ProjectPropertyInformation />
+      <ProjectPropertyInformation disabled={disabled} />
       <Row>
         <h2>Properties in Project</h2>
         <Col flex="1" align="flex-end">
-          {!showAdd && (
+          {!showAdd && !disabled && (
             <Button onClick={() => setShowAdd(!showAdd)}>Add Properties to Project</Button>
           )}
         </Col>
       </Row>
       <Table<IProjectPropertyForm>
         name="projectProperties"
-        columns={PropertyColumns()}
+        columns={PropertyColumns(disabled)}
         data={properties}
         footer={false}
         onRowClick={handleRowClick}
       />
-      {showAdd && (
+      {showAdd && !disabled && (
         <ProjectAddProperties onAddProperty={handleAddProperty} onHide={() => setShowAdd(false)} />
       )}
     </styled.ProjectProperties>

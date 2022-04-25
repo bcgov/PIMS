@@ -9,7 +9,9 @@ import React from 'react';
 import { FaTrash } from 'react-icons/fa';
 import { IProjectForm, IProjectPropertyForm } from '../../interfaces';
 
-export const PropertyColumns = (): ColumnWithProps<IProjectPropertyForm>[] => {
+export const PropertyColumns = (
+  disabled: boolean = false,
+): ColumnWithProps<IProjectPropertyForm>[] => {
   const { setFieldValue } = useFormikContext<IProjectForm>();
 
   return [
@@ -20,14 +22,18 @@ export const PropertyColumns = (): ColumnWithProps<IProjectPropertyForm>[] => {
       maxWidth: 30,
       Cell: cell => (
         <TooltipWrapper toolTipId="project-property" toolTip="Remove Property from Project">
-          <FaTrash
-            className="remove"
-            size={16}
-            onClick={() => {
-              const results = _.difference(_.map(cell.rows, 'original'), [cell.row.original]);
-              setFieldValue('properties', results);
-            }}
-          />
+          {!disabled ? (
+            <FaTrash
+              className="remove"
+              size={16}
+              onClick={() => {
+                const results = _.difference(_.map(cell.rows, 'original'), [cell.row.original]);
+                setFieldValue('properties', results);
+              }}
+            />
+          ) : (
+            <></>
+          )}
         </TooltipWrapper>
       ),
     },
