@@ -1,4 +1,4 @@
-import { FastDatePicker, TextArea } from 'components/common/form';
+import { FastDatePicker } from 'components/common/form';
 import { useFormikContext } from 'formik';
 import React from 'react';
 import { ProjectNote } from '../notes';
@@ -23,9 +23,6 @@ export const ProjectERPComplete: React.FC<IProjectERPCompleteProps> = ({ disable
     [Workflow.ERP, Workflow.ASSESS_EXEMPTION, Workflow.ASSESS_EX_DISPOSAL].includes(
       workflowCode as Workflow,
     ) && statusCode !== WorkflowStatus.NotInSpl;
-  const showNotInSpl = [Workflow.ASSESS_EX_DISPOSAL, Workflow.ERP].includes(
-    workflowCode as Workflow,
-  );
 
   React.useEffect(() => {
     setFieldTouched('removalFromSplRequestOn');
@@ -90,29 +87,6 @@ export const ProjectERPComplete: React.FC<IProjectERPCompleteProps> = ({ disable
             size="sm"
           />
         </Col>
-        {showNotInSpl && (
-          <Col flex="2">
-            <FastDatePicker
-              label="Not in SPL Requested On"
-              field="removalFromSplRequestOn"
-              formikProps={formik}
-              size="sm"
-              disabled={disabled}
-            />
-            <FastDatePicker
-              label="Not in SPL Approved On"
-              field="removalFromSplApprovedOn"
-              formikProps={formik}
-              size="sm"
-              disabled={disabled}
-            />
-            <TextArea
-              label="Not in SPL Rationale"
-              field="removalFromSplRationale"
-              disabled={disabled}
-            />
-          </Col>
-        )}
       </Row>
     </styled.ProjectERPComplete>
   );
