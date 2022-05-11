@@ -60,10 +60,9 @@ export const ProjectTabs: React.FC<IProjectTabProps> = ({ project, isLoading }) 
       );
 
     if (
-      (workflowCode === Workflow.ERP ||
-        workflowCode === Workflow.SPL ||
-        workflowCode === Workflow.ASSESS_EX_DISPOSAL) &&
-      statusCode === WorkflowStatus.NotInSpl
+      statusCode === WorkflowStatus.NotInSpl ||
+      !project?.statusHistory?.some(s => s.workflow === Workflow.SUBMIT_DISPOSAL) ||
+      project?.statusHistory?.some(s => s.status === WorkflowStatus.NotInSpl)
     )
       tabs.push(<Tab key={4} label="Not in SPL" path={`/projects/disposal/${id}/not/spl`} />);
 
