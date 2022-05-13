@@ -22,6 +22,11 @@ namespace Pims.Dal.Entities.Models
         public string Name { get; set; }
 
         /// <summary>
+        /// get/set - The workflow Id.
+        /// </summary>
+        public int? WorkflowId { get; set; }
+
+        /// <summary>
         /// get/set - An array of status Id.
         /// </summary>
         public int[] StatusId { get; set; }
@@ -94,6 +99,7 @@ namespace Pims.Dal.Entities.Models
             var filter = new Dictionary<string, Microsoft.Extensions.Primitives.StringValues>(query, StringComparer.OrdinalIgnoreCase);
             this.ProjectNumber = filter.GetStringValue(nameof(this.ProjectNumber));
             this.Name = filter.GetStringValue(nameof(this.Name));
+            this.WorkflowId = filter.GetIntNullValue(nameof(this.WorkflowId));
             this.StatusId = filter.GetIntArrayValue("status");
             this.StatusId = filter.GetIntArrayValue(nameof(this.StatusId));
             this.NotStatusId = filter.GetIntArrayValue(nameof(this.NotStatusId));
@@ -123,6 +129,7 @@ namespace Pims.Dal.Entities.Models
                 || this.SPLWorkflow.HasValue
                 || this.CreatedByMe.HasValue
                 || this.FiscalYear.HasValue
+                || this.WorkflowId.HasValue
                 || (this.StatusId?.Any() ?? false)
                 || (this.NotStatusId?.Any() ?? false)
                 || (this.Agencies?.Any() ?? false)

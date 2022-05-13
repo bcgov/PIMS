@@ -71,6 +71,8 @@ const mockProject: IProject = {
   projectAgencyResponses: [],
   publicNote: 'public',
   privateNote: 'private',
+  notes: [],
+  statusHistory: [],
 };
 
 export const tasks: ITask[] = [
@@ -95,7 +97,7 @@ const store = mockStore({
   [reducerTypes.ProjectReducers.PROJECT]: mockProject,
   [reducerTypes.ProjectReducers.TASKS]: tasks,
   [reducerTypes.NETWORK]: {
-    [ProjectActions.GET_PROJECT]: {},
+    requests: { [ProjectActions.GET_PROJECT]: {} },
   },
 });
 

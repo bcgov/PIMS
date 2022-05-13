@@ -2,9 +2,9 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { FaRegCheckCircle, FaRegCircle } from 'react-icons/fa';
 import { MdRemoveCircleOutline } from 'react-icons/md';
-import { ReviewWorkflowStatus } from 'features/projects/constants';
 import { IStatus } from 'features/projects/interfaces';
 import { formatDate } from 'utils';
+import { WorkflowStatus } from 'hooks/api/projects';
 
 interface IStepSuccessIconProps {
   /** label displayed before the icon */
@@ -33,16 +33,16 @@ const SpacedHeader = styled.h5`
 `;
 
 const getPreIconLabel = (code?: string) =>
-  code === ReviewWorkflowStatus.ApprovedForErp || code === ReviewWorkflowStatus.ApprovedForSpl
+  code === WorkflowStatus.ApprovedForErp || code === WorkflowStatus.ApprovedForSpl
     ? 'Approved for Surplus Property Program'
     : 'Submitted';
 
 const getPostIconLabel = (approvedOn?: string | Date, status?: IStatus) => {
   switch (status?.code) {
-    case ReviewWorkflowStatus.ApprovedForErp:
-    case ReviewWorkflowStatus.ApprovedForSpl:
+    case WorkflowStatus.ApprovedForErp:
+    case WorkflowStatus.ApprovedForSpl:
       return `Approval Date: ${approvedOn ? formatDate(approvedOn) : 'Unknown Date'}`;
-    case ReviewWorkflowStatus.PropertyReview:
+    case WorkflowStatus.PropertyReview:
       return 'In Review';
     default:
       return status?.name ?? 'Unknown';
@@ -69,10 +69,10 @@ const StepStatusIcon: React.FunctionComponent<IStepSuccessIconProps> = ({
 
 const RenderIcon = ({ statusCode }: { statusCode?: string }) => {
   switch (statusCode) {
-    case ReviewWorkflowStatus.PropertyReview:
+    case WorkflowStatus.PropertyReview:
       return <FaRegCircle size={64} style={{ color: '#2E8540' }} />;
-    case ReviewWorkflowStatus.Cancelled:
-    case ReviewWorkflowStatus.Denied:
+    case WorkflowStatus.Cancelled:
+    case WorkflowStatus.Denied:
       return <MdRemoveCircleOutline size={64} style={{ color: '#d8292f' }} />;
     default:
       return <FaRegCheckCircle size={64} style={{ color: '#20a74d' }} />;

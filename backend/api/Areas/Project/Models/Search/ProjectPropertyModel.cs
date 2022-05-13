@@ -79,7 +79,7 @@ namespace Pims.Api.Areas.Project.Models.Search
         /// <summary>
         /// get/set - The id of the parcel.
         /// </summary>
-        public float ParcelId { get; set; }
+        public int? ParcelId { get; set; }
 
         /// <summary>
         /// get/set - The property zoning

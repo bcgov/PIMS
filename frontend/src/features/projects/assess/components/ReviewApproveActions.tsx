@@ -1,7 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { useFormikContext } from 'formik';
-import { ReviewWorkflowStatus } from 'features/projects/constants';
 import { IProject, IProperty } from 'features/projects/interfaces';
 import GenericModal from 'components/common/GenericModal';
 import { useState, useEffect } from 'react';
@@ -9,6 +8,7 @@ import { Button } from 'components/common/form';
 import { validateFormikWithCallback } from 'utils';
 import { PropertyTypes } from 'constants/propertyTypes';
 import { deletePotentialSubdivisionParcels } from 'features/projects/common';
+import { WorkflowStatus } from 'hooks/api/projects';
 
 const FlexRight = styled.div`
   width: 100%;
@@ -57,9 +57,9 @@ export const ReviewApproveActions = ({
           showSubmitting
           isSubmitting={isSubmitting}
           disabled={
-            values.statusCode === ReviewWorkflowStatus.Denied ||
-            values.statusCode === ReviewWorkflowStatus.ApprovedForErp ||
-            values.statusCode === ReviewWorkflowStatus.ApprovedForExemption ||
+            values.statusCode === WorkflowStatus.Denied ||
+            values.statusCode === WorkflowStatus.ApprovedForErp ||
+            values.statusCode === WorkflowStatus.ApprovedForExemption ||
             isSubmitting
           }
           style={{ marginLeft: 10 }}
@@ -71,9 +71,9 @@ export const ReviewApproveActions = ({
           showSubmitting
           isSubmitting={isSubmitting}
           disabled={
-            values.statusCode === ReviewWorkflowStatus.Denied ||
-            values.statusCode === ReviewWorkflowStatus.ApprovedForErp ||
-            values.statusCode === ReviewWorkflowStatus.ApprovedForExemption ||
+            values.statusCode === WorkflowStatus.Denied ||
+            values.statusCode === WorkflowStatus.ApprovedForErp ||
+            values.statusCode === WorkflowStatus.ApprovedForExemption ||
             isSubmitting
           }
           variant="secondary"
@@ -91,9 +91,9 @@ export const ReviewApproveActions = ({
           showSubmitting
           isSubmitting={isSubmitting}
           disabled={
-            values.statusCode === ReviewWorkflowStatus.ApprovedForErp ||
-            values.statusCode === ReviewWorkflowStatus.ApprovedForExemption ||
-            values.statusCode === ReviewWorkflowStatus.Denied ||
+            values.statusCode === WorkflowStatus.ApprovedForErp ||
+            values.statusCode === WorkflowStatus.ApprovedForExemption ||
+            values.statusCode === WorkflowStatus.Denied ||
             isSubmitting
           }
           variant="danger"
@@ -109,7 +109,7 @@ export const ReviewApproveActions = ({
             cancelButtonText="Close"
             okButtonText="Deny"
             handleOk={() => {
-              setSubmitStatusCode(ReviewWorkflowStatus.Denied);
+              setSubmitStatusCode(WorkflowStatus.Denied);
               setDenyERP(false);
             }}
             handleCancel={() => setDenyERP(false)}
@@ -140,7 +140,7 @@ export const ReviewApproveActions = ({
           cancelButtonText="Close"
           okButtonText="Approve"
           handleOk={() => {
-            setSubmitStatusCode(ReviewWorkflowStatus.ApprovedForErp);
+            setSubmitStatusCode(WorkflowStatus.ApprovedForErp);
             setApproveERP(false);
           }}
           handleCancel={() => setApproveERP(false)}
@@ -157,8 +157,8 @@ export const ReviewApproveActions = ({
           okButtonText="Approve"
           handleOk={() => {
             !values.exemptionRequested
-              ? setSubmitStatusCode(ReviewWorkflowStatus.ApprovedForErp)
-              : setSubmitStatusCode(ReviewWorkflowStatus.ApprovedForExemption);
+              ? setSubmitStatusCode(WorkflowStatus.ApprovedForErp)
+              : setSubmitStatusCode(WorkflowStatus.ApprovedForExemption);
             setApproveERP(false);
           }}
           handleCancel={() => setApproveERP(false)}

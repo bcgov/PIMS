@@ -10,3 +10,4 @@ export * from './networkSlice';
 export * from './parcelLayerDataSlice';
 export * from './parcelSlice';
 export * from './userSlice';
+export * from './projectSlice';

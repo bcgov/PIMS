@@ -26,7 +26,9 @@ const ManageAccessRequests = () => {
   const columns = React.useMemo(() => columnDefinitions, []);
   const updateRequestAccessAdmin = useAppSelector(
     store =>
-      (store.network as any)[actionTypes.UPDATE_REQUEST_ACCESS_ADMIN] as IGenericNetworkAction,
+      (store.network.requests as any)[
+        actionTypes.UPDATE_REQUEST_ACCESS_ADMIN
+      ] as IGenericNetworkAction,
   );
 
   React.useEffect(() => {

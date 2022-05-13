@@ -73,8 +73,10 @@ const store = mockStore({
   [reducerTypes.ProjectReducers.PROJECT]: {},
   [reducerTypes.ProjectReducers.WORKFLOW]: mockWorkflow,
   [reducerTypes.NETWORK]: {
-    [actionTypes.ProjectActions.GET_PROJECT]: {
-      isFetching: false,
+    requests: {
+      [actionTypes.ProjectActions.GET_PROJECT]: {
+        isFetching: false,
+      },
     },
   },
 });
@@ -83,9 +85,11 @@ const errorStore = mockStore({
   [reducerTypes.ProjectReducers.PROJECT]: {},
   [reducerTypes.ProjectReducers.WORKFLOW]: mockWorkflow,
   [reducerTypes.NETWORK]: {
-    [actionTypes.ProjectActions.GET_PROJECT]: {
-      isFetching: false,
-      error: 'error',
+    requests: {
+      [actionTypes.ProjectActions.GET_PROJECT]: {
+        isFetching: false,
+        error: 'error',
+      },
     },
   },
 });

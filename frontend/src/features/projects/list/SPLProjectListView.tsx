@@ -13,14 +13,16 @@ interface IProjectFilterState {
   agencyId?: string;
   agencies?: number[];
   fiscalYear?: number | '';
+  workflowId?: number | '';
 }
 
 const initialValues: IProjectFilterState = {
   name: '',
-  statusId: ['21', '40', '41', '42', '43'],
+  statusId: ['21', '32', '40', '41', '42', '43'],
   agencyId: '',
   agencies: [],
   fiscalYear: '',
+  workflowId: 6, // SPL
 };
 
 export const SPLProjectListView = () => {

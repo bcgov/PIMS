@@ -6,12 +6,10 @@ import {
   clearProject,
   fetchProject,
   SelectProjectPropertiesPage,
-  ProjectSummaryView,
   fetchProjectWorkflow,
-  ApprovalTransitionPage,
   useProject,
 } from '../common';
-import { ReviewWorkflowStatus } from 'features/projects/constants';
+import { DisposeWorkflowStatus, ReviewWorkflowStatus } from 'features/projects/constants';
 import { IProject } from 'features/projects/interfaces';
 import { ProjectActions } from 'constants/actionTypes';
 import { ReviewApproveStep } from '../assess';
@@ -20,29 +18,30 @@ import PrivateRoute from 'utils/PrivateRoute';
 import Claims from 'constants/claims';
 import { FormikValues } from 'formik';
 import ProjectLayout from './ProjectLayout';
-import { GreTransferStep as ErpToGre, ErpStep } from '../erp';
 import AppRoute from 'utils/AppRoute';
-import { GreTransferStep as SplToGre, SplStep } from '../spl';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { toast } from 'react-toastify';
 import { useAppDispatch, useAppSelector } from 'store';
+import { ProjectSummary } from '../summary';
 
 /**
  * Top level component ensures proper context provided to child assessment form pages.
  * @param param0 default react router props
  */
-const ProjectRouter = ({ location }: { match: Match; location: Location }) => {
-  const query = location?.search ?? {};
+export const ProjectRouter = ({ location }: { match: Match; location: Location }) => {
   const dispatch = useAppDispatch();
   const history = useHistory();
   const keycloak = useKeycloakWrapper();
   const formikRef = useRef<FormikValues>();
-  const projectNumber = queryString.parse(query).projectNumber;
   const { project } = useProject();
   const getProjectRequest = useAppSelector(
-    store => (store.network as any)[ProjectActions.GET_PROJECT_WORKFLOW],
+    store => (store.network.requests as any)[ProjectActions.GET_PROJECT_WORKFLOW],
   );
+
+  const query = location?.search ?? {};
+  const projectNumber = queryString.parse(query).projectNumber;
+
   useEffect(() => {
     if (projectNumber !== null && projectNumber !== undefined) {
       dispatch(clearProject());
@@ -59,18 +58,26 @@ const ProjectRouter = ({ location }: { match: Match; location: Location }) => {
 
   //if the user is routed to /projects, determine the correct subroute to send them to by loading the project.
   useDeepCompareEffect(() => {
+    const DisposeWorkflowStatuses = Object.keys(DisposeWorkflowStatus).map(
+      (k: string) => (DisposeWorkflowStatus as any)[k],
+    );
+    const ReviewWorkflowStatuses = Object.keys(ReviewWorkflowStatus).map(
+      (k: string) => (ReviewWorkflowStatus as any)[k],
+    );
+
     if (project.projectNumber === projectNumber && location.pathname === '/projects') {
-      const ReviewWorkflowStatuses = Object.keys(ReviewWorkflowStatus).map(
-        (k: string) => (ReviewWorkflowStatus as any)[k],
-      );
-      if (ReviewWorkflowStatuses.includes(project.statusCode)) {
+      if (DisposeWorkflowStatuses.includes(project.statusCode)) {
+        history.replace(`/dispose${project.status?.route}?projectNumber=${project.projectNumber}`);
+      } else {
         if (keycloak.hasClaim(Claims.ADMIN_PROJECTS)) {
-          history.replace(`${project.status?.route}?projectNumber=${project.projectNumber}`);
+          if (ReviewWorkflowStatuses.includes(project.statusCode)) {
+            history.replace(`${project.status?.route}?projectNumber=${project.projectNumber}`);
+          } else {
+            history.replace(`/projects/disposal/${project.id}`);
+          }
         } else {
           history.replace(`/projects/summary?projectNumber=${project.projectNumber}`);
         }
-      } else {
-        history.replace(`/dispose${project.status?.route}?projectNumber=${project.projectNumber}`);
       }
     }
   }, [project]);
@@ -78,6 +85,7 @@ const ProjectRouter = ({ location }: { match: Match; location: Location }) => {
   if (projectNumber !== null && projectNumber !== undefined && getProjectRequest?.error) {
     throw Error(`Unable to load project number ${projectNumber}`);
   }
+
   return (
     <>
       {getProjectRequest?.isFetching === false && projectNumber === project.projectNumber ? (
@@ -98,60 +106,11 @@ const ProjectRouter = ({ location }: { match: Match; location: Location }) => {
             componentProps={{ formikRef }}
           />
           <PrivateRoute
-            layout={ProjectLayout}
-            claim={Claims.ADMIN_PROJECTS}
-            path="/projects/erp/gretransfer"
-            component={ErpToGre}
-            componentProps={{ formikRef }}
-          />
-          <PrivateRoute
-            layout={ProjectLayout}
-            claim={Claims.ADMIN_PROJECTS}
-            path="/projects/spl/gretransfer"
-            component={SplToGre}
-            componentProps={{ formikRef }}
-          />
-          <PrivateRoute
-            layout={ProjectLayout}
-            claim={Claims.ADMIN_PROJECTS}
-            path={['/projects/approved']}
-            component={ApprovalTransitionPage}
-            componentProps={{ formikRef }}
-          />
-          <PrivateRoute
-            layout={ProjectLayout}
-            claim={Claims.ADMIN_PROJECTS}
-            path={['/projects/onHold', '/projects/erp']}
-            component={ErpStep}
-            componentProps={{ formikRef }}
-          />
-          <PrivateRoute
-            layout={ProjectLayout}
-            claim={Claims.ADMIN_PROJECTS}
-            path={[
-              '/projects/premarketing',
-              '/projects/marketing',
-              '/projects/contractinplace',
-              '/projects/disposed',
-            ]}
-            component={SplStep}
-            componentProps={{ formikRef }}
-          />
-          <PrivateRoute
+            exact
             layout={ProjectLayout}
             claim={Claims.PROJECT_VIEW}
-            path={[
-              '/projects/summary',
-              '/projects/transferred',
-              '/projects/denied',
-              '/projects/cancelled',
-              '/projects/premarketing',
-              '/projects/marketing',
-              '/projects/contractinplace',
-              '/projects/disposed',
-            ]}
-            component={ProjectSummaryView}
-            componentProps={{ formikRef }}
+            path={'/projects/summary'}
+            component={ProjectSummary}
           />
           {/** Due to the use of dynamic routes within the project workflows, manually redirect to not found if no valid /projects route exists */}
           <AppRoute

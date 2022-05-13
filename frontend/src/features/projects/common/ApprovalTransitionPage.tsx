@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { Container, Spinner } from 'react-bootstrap';
 import { useProject, updateWorkflowStatus } from '.';
-import { ReviewWorkflowStatus } from 'features/projects/constants';
 import { IProject } from 'features/projects/interfaces';
 import _ from 'lodash';
 import { useHistory } from 'react-router-dom';
@@ -10,6 +9,7 @@ import { fetchProjectWorkflow } from './projectsActionCreator';
 import queryString from 'query-string';
 import GenericModal from 'components/common/GenericModal';
 import { useAppDispatch, useAppSelector } from 'store';
+import { WorkflowStatus } from 'hooks/api/projects';
 
 interface IApprovalTransitionPageProps {}
 
@@ -59,15 +59,16 @@ export const ApprovalTransitionPage: React.FunctionComponent<IApprovalTransition
           s.workflowCode === project.workflowCode && (!params.to || s.code === params.to),
       );
       if (
-        project.statusCode === ReviewWorkflowStatus.ApprovedForExemption ||
-        project.statusCode === ReviewWorkflowStatus.NotInSpl
+        project.statusCode === WorkflowStatus.ApprovedForExemption ||
+        project.statusCode === WorkflowStatus.NotInSpl
       ) {
-        history.replace(`erp?projectNumber=${project.projectNumber}`);
+        history.replace(`/projects/disposal/${project.id}`);
       } else if (next?.length !== 1) {
-        if (project.workflowCode === 'ERP' && project.statusCode === 'AP-ERP') {
-          history.replace(`approved?projectNumber=${project.projectNumber}&to=ERP-ON`);
-        } else if (project.workflowCode === 'SPL' && project.statusCode === 'AP-SPL') {
-          history.replace(`/projects/premarketing?projectNumber=${project.projectNumber}`);
+        if (
+          (project.workflowCode === 'ERP' && project.statusCode === 'AP-ERP') ||
+          (project.workflowCode === 'SPL' && project.statusCode === 'AP-SPL')
+        ) {
+          history.replace(`/projects/disposal/${project.id}`);
         } else {
           // We don't currently handle this transition.
           setError(true);
