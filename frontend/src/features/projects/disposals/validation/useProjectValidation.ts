@@ -21,6 +21,12 @@ interface IProjectValidationProps {
   id: number;
 }
 
+/**
+ * Validate the project.
+ * Redirect users to the correct tab.
+ * @param param0 Hook properties
+ * @returns Formik errors.
+ */
 export const useProjectValidation = ({ id }: IProjectValidationProps) => {
   const history = useHistory();
 
@@ -31,17 +37,21 @@ export const useProjectValidation = ({ id }: IProjectValidationProps) => {
 
     errors = {
       ...errors,
-      ...(await handleErrors(values, errors, informationProjectSchema, () =>
-        history.push(`/projects/disposal/${id}/information`),
-      )),
+      ...(await handleErrors(values, errors, informationProjectSchema, () => {
+        history.push(`/projects/disposal/${id}/information`);
+        hasErrors = true;
+      })),
     };
+    if (hasErrors) return errors;
 
     errors = {
       ...errors,
-      ...(await handleErrors(values, errors, informationPropertiesSchema, () =>
-        history.push(`/projects/disposal/${id}/information/properties`),
-      )),
+      ...(await handleErrors(values, errors, informationPropertiesSchema, () => {
+        history.push(`/projects/disposal/${id}/information/properties`);
+        hasErrors = true;
+      })),
     };
+    if (hasErrors) return errors;
 
     try {
       if (!values.tasks[0].isCompleted) {
@@ -85,8 +95,10 @@ export const useProjectValidation = ({ id }: IProjectValidationProps) => {
       }
 
       await documentationSchema.validate(values, { abortEarly: false });
-
-      if (hasErrors) history.push(`/projects/disposal/${id}/documentation`);
+      if (hasErrors) {
+        history.push(`/projects/disposal/${id}/documentation`);
+        return errors;
+      }
     } catch (err) {
       errors = {
         ...errors,
@@ -101,17 +113,20 @@ export const useProjectValidation = ({ id }: IProjectValidationProps) => {
 
     errors = {
       ...errors,
-      ...(await handleErrors(values, errors, erpExemptionSchema, () =>
-        history.push(`/projects/disposal/${id}/erp/exemption`),
-      )),
+      ...(await handleErrors(values, errors, erpExemptionSchema, () => {
+        history.push(`/projects/disposal/${id}/erp/exemption`);
+        hasErrors = true;
+      })),
     };
 
     errors = {
       ...errors,
-      ...(await handleErrors(values, errors, erpCompleteSchema, () =>
-        history.push(`/projects/disposal/${id}/erp/complete`),
-      )),
+      ...(await handleErrors(values, errors, erpCompleteSchema, () => {
+        history.push(`/projects/disposal/${id}/erp/complete`);
+        hasErrors = true;
+      })),
     };
+    if (hasErrors) return errors;
 
     if (
       (workflowCode === Workflow.ERP ||
@@ -121,10 +136,12 @@ export const useProjectValidation = ({ id }: IProjectValidationProps) => {
     ) {
       errors = {
         ...errors,
-        ...(await handleErrors(values, errors, erpDisposedSchema, () =>
-          history.push(`/projects/disposal/${id}/erp/disposed`),
-        )),
+        ...(await handleErrors(values, errors, erpDisposedSchema, () => {
+          history.push(`/projects/disposal/${id}/erp/disposed`);
+          hasErrors = true;
+        })),
       };
+      if (hasErrors) return errors;
     }
 
     if (
@@ -133,40 +150,50 @@ export const useProjectValidation = ({ id }: IProjectValidationProps) => {
     ) {
       errors = {
         ...errors,
-        ...(await handleErrors(values, errors, notSplSchema, () =>
-          history.push(`/projects/disposal/${id}/not/spl`),
-        )),
+        ...(await handleErrors(values, errors, notSplSchema, () => {
+          history.push(`/projects/disposal/${id}/not/spl`);
+          hasErrors = true;
+        })),
       };
+      if (hasErrors) return errors;
     }
 
     if (originalWorkflowCode === Workflow.SPL) {
       errors = {
         ...errors,
-        ...(await handleErrors(values, errors, splApprovalSchema, () =>
-          history.push(`/projects/disposal/${id}/spl`),
-        )),
+        ...(await handleErrors(values, errors, splApprovalSchema, () => {
+          history.push(`/projects/disposal/${id}/spl`);
+          hasErrors = true;
+        })),
       };
+      if (hasErrors) return errors;
 
       errors = {
         ...errors,
-        ...(await handleErrors(values, errors, splMarketingSchema, () =>
-          history.push(`/projects/disposal/${id}/spl/marketing`),
-        )),
+        ...(await handleErrors(values, errors, splMarketingSchema, () => {
+          history.push(`/projects/disposal/${id}/spl/marketing`);
+          hasErrors = true;
+        })),
       };
+      if (hasErrors) return errors;
 
       errors = {
         ...errors,
-        ...(await handleErrors(values, errors, splContractInPlaceSchema, () =>
-          history.push(`/projects/disposal/${id}/spl/contract/in/place`),
-        )),
+        ...(await handleErrors(values, errors, splContractInPlaceSchema, () => {
+          history.push(`/projects/disposal/${id}/spl/contract/in/place`);
+          hasErrors = true;
+        })),
       };
+      if (hasErrors) return errors;
 
       errors = {
         ...errors,
-        ...(await handleErrors(values, errors, splTransferWithinGRESchema, () =>
-          history.push(`/projects/disposal/${id}/spl/transfer/within/gre`),
-        )),
+        ...(await handleErrors(values, errors, splTransferWithinGRESchema, () => {
+          history.push(`/projects/disposal/${id}/spl/transfer/within/gre`);
+          hasErrors = true;
+        })),
       };
+      if (hasErrors) return errors;
     }
 
     return errors;
