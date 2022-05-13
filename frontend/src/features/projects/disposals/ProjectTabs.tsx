@@ -16,6 +16,8 @@ import {
 } from '.';
 
 import * as styled from './styled';
+import { useKeycloakWrapper } from 'hooks/useKeycloakWrapper';
+import { Claim } from 'hooks/api';
 
 export interface IProjectTabProps {
   project?: IProjectModel;
@@ -26,11 +28,14 @@ export const ProjectTabs: React.FC<IProjectTabProps> = ({ project, isLoading }) 
   const {
     values: { workflowCode, statusCode },
   } = useFormikContext();
+  const keycloak = useKeycloakWrapper();
   const location = useLocation();
   const id = location.pathname.split('/')[3];
 
   const [tabs, setTabs] = React.useState<React.ReactElement[]>([]);
   const [disabled, setDisabled] = React.useState(false);
+
+  const isAdmin = keycloak.hasClaim(Claim.ReportsSplAdmin);
 
   React.useEffect(() => {
     const tabs = [
@@ -44,7 +49,7 @@ export const ProjectTabs: React.FC<IProjectTabProps> = ({ project, isLoading }) 
         WorkflowStatus.Cancelled,
         WorkflowStatus.TransferredGRE,
         WorkflowStatus.Denied,
-      ].includes(statusCode),
+      ].includes(statusCode) && !isAdmin,
     );
 
     if (
@@ -83,7 +88,7 @@ export const ProjectTabs: React.FC<IProjectTabProps> = ({ project, isLoading }) 
       <Tab key={7} label="Notifications" path={`/projects/disposal/${id}/notifications`} />,
     );
     setTabs(tabs);
-  }, [workflowCode, statusCode, id, project?.statusHistory]);
+  }, [workflowCode, statusCode, id, project?.statusHistory, isAdmin]);
 
   return (
     <styled.ProjectTabs className="project-tabs">

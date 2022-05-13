@@ -42,7 +42,8 @@ export const DisposalProject: React.FC<IDisposalProjectProps> = props => {
         console.error(error); // TODO: Handle error.
       }
     },
-    [api, store],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [api],
   );
 
   React.useEffect(() => {

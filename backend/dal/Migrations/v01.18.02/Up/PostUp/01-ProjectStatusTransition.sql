@@ -321,7 +321,7 @@ IF NOT EXISTS (
   FROM dbo.[ProjectStatusTransitions]
   WHERE [FromWorkflowId] = 6
     AND [FromStatusId] = 41
-    AND [ToWorkflowId] = 6
+    AND [ToWorkflowId] = 5
     AND [ToStatusId] = 22
   )
 BEGIN
@@ -335,14 +335,14 @@ BEGIN
   ) VALUES (
       6 -- SPL
       , 41 -- SPL-M
-      , 6 -- SPL
-      , 22 -- AP_!SPL
+      , 5 -- ERP
+      , 22 -- AP-!SPL
       , 'Remove from SPL'
       , 0
   )
 END
 
-PRINT 'Adding ProjectStatusTransitions - SPL AP-!SPL -> AP_SPL'
+PRINT 'Adding ProjectStatusTransitions - SPL AP-!SPL -> AP-SPL'
 
 IF NOT EXISTS (
   SELECT *
@@ -358,7 +358,7 @@ BEGIN
     , [SortOrder]
   ) VALUES (
       6 -- SPL
-      , 21 -- AP_SPL
+      , 21 -- AP-SPL
       , 1
       , 6
   )
@@ -367,7 +367,7 @@ END
 IF NOT EXISTS (
   SELECT *
   FROM dbo.[ProjectStatusTransitions]
-  WHERE [FromWorkflowId] = 6
+  WHERE [FromWorkflowId] = 5
     AND [FromStatusId] = 22
     AND [ToWorkflowId] = 6
     AND [ToStatusId] = 21
@@ -381,16 +381,16 @@ BEGIN
       , [Action]
       , [ValidateTasks]
   ) VALUES (
-      6 -- SPL
+      5 -- ERP
       , 22 -- AP-!SPL
       , 6 -- SPL
-      , 21 -- AP_SPL
+      , 21 -- AP-SPL
       , 'Approved for SPL'
       , 0
   )
 END
 
-PRINT 'Adding ProjectStatusTransitions - SPL AP-!SPL -> AP_ERP'
+PRINT 'Adding ProjectStatusTransitions - SPL AP-!SPL -> AP-ERP'
 
 IF NOT EXISTS (
   SELECT *
@@ -406,7 +406,7 @@ BEGIN
     , [SortOrder]
   ) VALUES (
       6 -- SPL
-      , 14 -- AP_ERP
+      , 14 -- AP-ERP
       , 1
       , 6
   )
@@ -415,7 +415,7 @@ END
 IF NOT EXISTS (
   SELECT *
   FROM dbo.[ProjectStatusTransitions]
-  WHERE [FromWorkflowId] = 6
+  WHERE [FromWorkflowId] = 5
     AND [FromStatusId] = 22
     AND [ToWorkflowId] = 5
     AND [ToStatusId] = 14
@@ -429,19 +429,86 @@ BEGIN
       , [Action]
       , [ValidateTasks]
   ) VALUES (
-      6 -- SPL
+      5 -- ERP
       , 22 -- AP-!SPL
       , 5 -- ERP
-      , 14 -- AP_ERP
+      , 14 -- AP-ERP
       , 'Approved for ERP'
       , 0
   )
 END
 
-PRINT 'Remove ProjectStatusTransitions - SPL SPL-PM -> AP-!SPL'
+PRINT 'Adding ProjectStatusTransitions - AP-SPL -> AP-!SPL'
+
+IF NOT EXISTS (
+  SELECT *
+  FROM dbo.[ProjectStatusTransitions]
+  WHERE [FromWorkflowId] = 6
+    AND [FromStatusId] = 21
+    AND [ToWorkflowId] = 5
+    AND [ToStatusId] = 22
+  )
+BEGIN
+  INSERT INTO dbo.[ProjectStatusTransitions] (
+      [FromWorkflowId]
+      , [FromStatusId]
+      , [ToWorkflowId]
+      , [ToStatusId]
+      , [Action]
+      , [ValidateTasks]
+  ) VALUES (
+      6 -- SPL
+      , 21 -- AP-SPL
+      , 5 -- ERP
+      , 22 -- AP-!SPL
+      , 'Remove from SPL'
+      , 0
+  )
+END
+
+PRINT 'Adding ProjectStatusTransitions - SPL-PM -> AP-!SPL'
+
+IF NOT EXISTS (
+  SELECT *
+  FROM dbo.[ProjectStatusTransitions]
+  WHERE [FromWorkflowId] = 6
+    AND [FromStatusId] = 40
+    AND [ToWorkflowId] = 5
+    AND [ToStatusId] = 22
+  )
+BEGIN
+  INSERT INTO dbo.[ProjectStatusTransitions] (
+      [FromWorkflowId]
+      , [FromStatusId]
+      , [ToWorkflowId]
+      , [ToStatusId]
+      , [Action]
+      , [ValidateTasks]
+  ) VALUES (
+      6 -- SPL
+      , 40 -- SPL-PM
+      , 5 -- ERP
+      , 22 -- AP-!SPL
+      , 'Remove from SPL'
+      , 0
+  )
+END
+
+PRINT 'Transition any SPL AP-!SPL -> ERP AP-!SPL'
+
+UPDATE dbo.[Projects]
+SET [WorkflowId] = 5 -- ERP
+WHERE [WorkflowId] = 6 -- SPL
+  AND [StatusId] = 22 -- AP-!SPL
+
+PRINT 'Remove ProjectStatusTransitions - ANYTHING -> SPL AP-!SPL'
+
+DELETE FROM dbo.[ProjectStatusTransitions]
+WHERE [ToWorkflowId] = 6 -- SPL
+  AND [ToStatusId] = 22 -- AP-!SPL
+
+PRINT 'Remove ProjectStatusTransitions - SPL AP-!SPL -> ANYTHING'
 
 DELETE FROM dbo.[ProjectStatusTransitions]
 WHERE [FromWorkflowId] = 6 -- SPL
-  AND [FromStatusId] = 40 -- SPL-PM
-  AND [ToWorkflowId] = 5 -- ERP
-  AND [ToStatusId] = 22 -- AP-!SPL
+  AND [FromStatusId] = 22 -- AP-!SPL
