@@ -28,7 +28,8 @@ const Login = () => {
   const keycloak = keyCloakWrapper.obj;
   const isIE = usingIE();
   const activated = useAppSelector(
-    store => (store.network as any)[actionTypes.ADD_ACTIVATE_USER] as IGenericNetworkAction,
+    store =>
+      (store.network.requests as any)[actionTypes.ADD_ACTIVATE_USER] as IGenericNetworkAction,
   );
   if (!keycloak) {
     return <Spinner animation="border"></Spinner>;

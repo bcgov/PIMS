@@ -63,7 +63,7 @@ const store = mockStore({
   [reducerTypes.ProjectReducers.PROJECT]: { project: { tasks: tasks } },
   [reducerTypes.ProjectReducers.TASKS]: tasks,
   [reducerTypes.NETWORK]: {
-    [ProjectActions.GET_PROJECT]: {},
+    requests: { [ProjectActions.GET_PROJECT]: {} },
   },
 });
 

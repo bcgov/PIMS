@@ -10,12 +10,12 @@ import axios, { AxiosError } from 'axios';
 import { LatLng } from 'leaflet';
 import { useCallback, Dispatch } from 'react';
 import parcelLayerDataSlice, { saveParcelLayerData } from 'store/slices/parcelLayerDataSlice';
-import { error } from 'store';
-import { useAppSelector } from 'store';
+import { storeError, useAppSelector } from 'store';
 import { toast } from 'react-toastify';
 import { layerData } from 'constants/toasts';
 import * as rax from 'retry-axios';
 import polylabel from 'polylabel';
+import { error } from 'store/slices/hooks';
 
 const MAX_RETRIES = 2;
 const wfsAxios = () => {
@@ -134,7 +134,11 @@ export const handleParcelDataLayerResponse = (
       saveParcelDataLayerResponse(resp, dispatch, latLng);
     })
     .catch((axiosError: AxiosError) => {
-      dispatch(error(parcelLayerDataSlice.reducer.name, axiosError?.response?.status, axiosError));
+      dispatch(
+        storeError(
+          error(parcelLayerDataSlice.reducer.name, axiosError?.response?.status, axiosError),
+        ),
+      );
     });
 };
 

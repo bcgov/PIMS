@@ -37,6 +37,8 @@ type OptionalAttributes = {
   tooltip?: string;
   /** Display errors in a tooltip instead of in a div */
   displayErrorTooltips?: boolean;
+  /** Display error even if field hasn't been touched */
+  errorPrompt?: boolean;
   /** add inline style to the input component */
   style?: CSSProperties;
 };
@@ -62,6 +64,7 @@ export const Input: React.FC<InputProps> = ({
   onBlurFormatter,
   tooltip,
   displayErrorTooltips,
+  errorPrompt,
   ...rest
 }) => {
   const { handleChange, handleBlur, errors, touched, values, setFieldValue } = useFormikContext<
@@ -122,7 +125,7 @@ export const Input: React.FC<InputProps> = ({
           onChange={pattern ? handleRestrictedChange : handleChange}
         />
       </TooltipWrapper>
-      <DisplayError field={field} />
+      <DisplayError field={field} errorPrompt={errorPrompt} />
     </Form.Group>
   );
 };

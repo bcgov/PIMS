@@ -13,8 +13,8 @@ import useStepper, {
   getLastCompletedStatus,
   getNextWorkflowStatus,
 } from './useStepper';
-import { IProject } from 'features/projects/common';
 import { mockWorkflow } from '../testUtils';
+import { IProject } from 'features/projects/interfaces';
 
 const mockStore = configureMockStore([thunk]);
 const history = createMemoryHistory();
@@ -23,8 +23,10 @@ const store = mockStore({
   [reducerTypes.ProjectReducers.PROJECT]: {},
   [reducerTypes.ProjectReducers.WORKFLOW]: mockWorkflow,
   [reducerTypes.NETWORK]: {
-    [actionTypes.ProjectActions.GET_PROJECT]: {
-      isFetching: false,
+    requests: {
+      [actionTypes.ProjectActions.GET_PROJECT]: {
+        isFetching: false,
+      },
     },
   },
   [reducerTypes.LOOKUP_CODE]: { lookupCodes: [] },

@@ -5,10 +5,11 @@ import { FormikProps, getIn } from 'formik';
 import { SortDirection, TableSort } from 'components/Table/TableSort';
 import { AxiosError } from 'axios';
 import { showLoading, hideLoading } from 'react-redux-loading-bar';
-import { success, error, request } from 'store';
+import { storeSuccess, storeError, storeRequest } from 'store';
 import moment from 'moment-timezone';
 import { IStatus } from 'features/projects/interfaces';
 import { AnyAction, Dispatch } from 'redux';
+import { error, request, success } from 'store/slices/hooks';
 
 /**
  * Convert the specified 'input' value into a decimal or undefined.
@@ -140,16 +141,16 @@ export const formikFieldMemo = (
 export const handleAxiosResponse = (actionType: string, axiosPromise: Promise<any>) => async (
   dispatch: Dispatch<AnyAction>,
 ) => {
-  dispatch(request(actionType));
+  dispatch(storeRequest(request(actionType)));
   dispatch(showLoading());
   return await axiosPromise
     .then((response: any) => {
-      dispatch(success(actionType));
+      dispatch(storeSuccess(success(actionType)));
       dispatch(hideLoading());
       return response.data ?? response.payload;
     })
     .catch((axiosError: AxiosError) => {
-      dispatch(error(actionType, axiosError?.response?.status, axiosError));
+      dispatch(storeError(error(actionType, axiosError?.response?.status, axiosError)));
       throw axiosError;
     })
     .finally(() => {

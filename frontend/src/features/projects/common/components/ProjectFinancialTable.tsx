@@ -3,11 +3,7 @@ import { Col, Form } from 'react-bootstrap';
 import { FastCurrencyInput } from 'components/common/form';
 import { getIn, useFormikContext } from 'formik';
 import { IProject } from 'features/projects/interfaces';
-import {
-  calcGainBeforeSpl,
-  calcNetProceeds,
-  getNumber,
-} from 'features/projects/spl/forms/CloseOutFinancialSummaryForm';
+import { calcGainBeforeSpl, calcNetProceeds, getNumber } from '../utils';
 import { useEffect } from 'react';
 
 export interface IProjectFinacialTableProps {

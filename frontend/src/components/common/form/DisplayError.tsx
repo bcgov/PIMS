@@ -1,10 +1,10 @@
 import React from 'react';
+import { useFormikContext, getIn, ErrorMessage } from 'formik';
 import { Form } from 'react-bootstrap';
-import { useFormikContext, getIn } from 'formik';
 
 type DisplayErrorProps = {
   /** The form field to show errors for */
-  field?: string;
+  field: string;
   /** Display error even if field hasn't been touched */
   errorPrompt?: boolean;
   /** css class name */
@@ -18,9 +18,9 @@ export const DisplayError: React.FC<DisplayErrorProps> = ({ field, errorPrompt, 
   const { errors, touched } = useFormikContext();
   const error = !!field ? getIn(errors, field) : null;
   const touch = !!field ? getIn(touched, field) : null;
-  return !!error && (!!touch || errorPrompt) && typeof error === 'string' ? (
+  return !!error && typeof error === 'string' ? (
     <Form.Control.Feedback type="invalid" className={className}>
-      {error}
+      {!!touch ? <ErrorMessage name={field}></ErrorMessage> : error}
     </Form.Control.Feedback>
   ) : null;
 };

@@ -13,80 +13,66 @@ exports[`building review page renders correctly 1`] = `
           <div class=\\"section-header row\\"><span><svg class=\\"svg\\">icon-business.svg</svg><h5>Building Identification</h5></span><svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 576 512\\" size=\\"20\\" class=\\"edit\\" height=\\"20\\" width=\\"20\\" xmlns=\\"http://www.w3.org/2000/svg\\">
               <path d=\\"M402.6 83.2l90.2 90.2c3.8 3.8 3.8 10 0 13.8L274.4 405.6l-92.8 10.3c-12.4 1.4-22.9-9.1-21.5-21.5l10.3-92.8L388.8 83.2c3.8-3.8 10-3.8 13.8 0zm162-22.9l-48.8-48.8c-15.2-15.2-39.9-15.2-55.2 0l-35.4 35.4c-3.8 3.8-3.8 10 0 13.8l90.2 90.2c3.8 3.8 10 3.8 13.8 0l35.4-35.4c15.2-15.3 15.2-40 0-55.2zM384 346.2V448H64V128h229.8c3.2 0 6.2-1.3 8.5-3.5l40-40c7.6-7.6 2.2-20.5-8.5-20.5H48C21.5 64 0 85.5 0 112v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V306.2c0-10.7-12.9-16-20.5-8.5l-40 40c-2.2 2.3-3.5 5.3-3.5 8.5z\\"></path>
             </svg></div>
-          <div class=\\"content-item row\\">
-            <p class=\\"label\\">Agency</p>
+          <div class=\\"content-item row\\"><label class=\\"label\\">Agency</label>
             <div class=\\"form-group\\">
               <div class=\\"rbt\\" style=\\"outline: none; position: relative;\\" tabindex=\\"-1\\">
                 <div style=\\"display: flex; flex: 1; height: 100%; position: relative;\\"><input autocomplete=\\"off\\" type=\\"text\\" name=\\"agencyId\\" id=\\"agencyId-field\\" disabled=\\"\\" aria-autocomplete=\\"both\\" aria-expanded=\\"false\\" aria-haspopup=\\"listbox\\" role=\\"combobox\\" class=\\"rbt-input-main form-control rbt-input\\" value=\\"\\"><input aria-hidden=\\"true\\" class=\\"rbt-input-hint\\" readonly=\\"\\" style=\\"background-color: transparent; border-color: transparent; box-shadow: none; color: rgba(0, 0, 0, 0.35); left: 0px; pointer-events: none; position: absolute; top: 0px; width: 100%;\\" tabindex=\\"-1\\" value=\\"\\"></div>
               </div>
             </div>
           </div>
-          <div class=\\"content-item row\\">
-            <p class=\\"label\\">Building Name</p>
+          <div class=\\"content-item row\\"><label class=\\"label\\">Building Name</label>
             <div class=\\"form-group\\"><input name=\\"name\\" disabled=\\"\\" id=\\"input-name\\" class=\\"form-control\\" value=\\"\\"></div>
           </div>
-          <div class=\\"content-item row\\">
-            <p class=\\"label\\">Description</p>
+          <div class=\\"content-item row\\"><label class=\\"label\\">Description</label>
             <div class=\\"form-group\\"><textarea name=\\"description\\" disabled=\\"\\" id=\\"input-description\\" class=\\"form-control\\"></textarea></div>
           </div>
-          <div class=\\"form-row\\">
-            <p class=\\"label\\">Street Address</p>
+          <div class=\\"form-row\\"><label class=\\"label\\">Street Address</label>
             <div class=\\"GeocoderAutoComplete\\">
               <div>
                 <div class=\\"required form-group\\"><input name=\\"address.line1\\" disabled=\\"\\" required=\\"\\" field=\\"address.line1\\" id=\\"input-address.line1\\" class=\\"form-control\\" value=\\"\\"></div>
               </div>
             </div>
           </div>
-          <div class=\\"form-row\\">
-            <p class=\\"label\\">Location</p>
+          <div class=\\"form-row\\"><label class=\\"label\\">Location</label>
             <div class=\\"required form-group\\">
               <div class=\\"rbt\\" style=\\"outline: none; position: relative;\\" tabindex=\\"-1\\">
                 <div style=\\"display: flex; flex: 1; height: 100%; position: relative;\\"><input autocomplete=\\"off\\" type=\\"text\\" name=\\"address.administrativeArea\\" id=\\"address.administrativeArea-field\\" disabled=\\"\\" aria-autocomplete=\\"both\\" aria-expanded=\\"false\\" aria-haspopup=\\"listbox\\" role=\\"combobox\\" class=\\"rbt-input-main form-control rbt-input\\" value=\\"\\"><input aria-hidden=\\"true\\" class=\\"rbt-input-hint\\" readonly=\\"\\" style=\\"background-color: transparent; border-color: transparent; box-shadow: none; color: rgba(0, 0, 0, 0.35); left: 0px; pointer-events: none; position: absolute; top: 0px; width: 100%;\\" tabindex=\\"-1\\" value=\\"\\"></div>
               </div>
             </div>
           </div>
-          <div class=\\"form-row\\">
-            <p class=\\"label\\">Province</p>
+          <div class=\\"form-row\\"><label class=\\"label\\">Province</label>
             <div class=\\"form-group\\"><select name=\\"address.provinceId\\" disabled=\\"\\" id=\\"input-address.provinceId\\" class=\\"form-select form-control\\">
                 <option value=\\"\\">Must Select One</option>
               </select></div>
           </div>
-          <div class=\\"postal form-row\\">
-            <p class=\\"label\\">Postal Code</p>
-            <div class=\\"form-group col\\"><input name=\\"address.postal\\" style=\\"width: 120px;\\" disabled=\\"\\" id=\\"input-address.postal\\" class=\\"input-small form-control\\" value=\\"\\"></div>
+          <div class=\\"postal form-row\\"><label class=\\"label\\">Postal Code</label>
+            <div class=\\"form-group\\"><input name=\\"address.postal\\" style=\\"width: 120px;\\" disabled=\\"\\" id=\\"input-address.postal\\" class=\\"input-small form-control\\" value=\\"\\"></div>
           </div><br>
-          <div class=\\"content-item row\\">
-            <p class=\\"label\\">Latitude</p>
-            <div class=\\"required form-group col\\"><input name=\\"latitude\\" disabled=\\"\\" type=\\"number\\" id=\\"input-latitude\\" class=\\"input-medium form-control\\" value=\\"\\"></div>
+          <div class=\\"content-item row\\"><label class=\\"label\\">Latitude</label>
+            <div class=\\"required form-group\\"><input name=\\"latitude\\" disabled=\\"\\" type=\\"number\\" id=\\"input-latitude\\" class=\\"input-medium form-control\\" value=\\"\\"></div>
           </div>
-          <div class=\\"content-item row\\">
-            <p class=\\"label\\">Longitude</p>
-            <div class=\\"required form-group col\\"><input name=\\"longitude\\" disabled=\\"\\" type=\\"number\\" id=\\"input-longitude\\" class=\\"input-medium form-control\\" value=\\"\\"></div>
+          <div class=\\"content-item row\\"><label class=\\"label\\">Longitude</label>
+            <div class=\\"required form-group\\"><input name=\\"longitude\\" disabled=\\"\\" type=\\"number\\" id=\\"input-longitude\\" class=\\"input-medium form-control\\" value=\\"\\"></div>
           </div><br>
-          <div class=\\"content-item row\\">
-            <p class=\\"label\\">SRES Classification</p><span class=\\"vl\\"></span>
+          <div class=\\"content-item row\\"><label class=\\"label\\">SRES Classification</label><span class=\\"vl\\"></span>
             <div class=\\"required form-group\\"><select name=\\"classificationId\\" required=\\"\\" disabled=\\"\\" type=\\"number\\" id=\\"input-classificationId-fast\\" class=\\"form-control\\">
                 <option value=\\"\\">Must Select One</option>
               </select></div>
           </div>
-          <div class=\\"content-item row\\">
-            <p class=\\"label\\">Main Usage</p>
+          <div class=\\"content-item row\\"><label class=\\"label\\">Main Usage</label>
             <div class=\\"required form-group\\"><select name=\\"buildingPredominateUseId\\" required=\\"\\" disabled=\\"\\" type=\\"number\\" id=\\"input-buildingPredominateUseId-fast\\" class=\\"form-control\\">
                 <option value=\\"\\">Must Select One</option>
               </select></div>
           </div>
-          <div class=\\"content-item row\\">
-            <p class=\\"label\\">Type of Construction</p>
+          <div class=\\"content-item row\\"><label class=\\"label\\">Type of Construction</label>
             <div class=\\"required form-group\\"><select name=\\"buildingConstructionTypeId\\" required=\\"\\" disabled=\\"\\" type=\\"number\\" id=\\"input-buildingConstructionTypeId-fast\\" class=\\"form-control\\">
                 <option value=\\"\\">Must Select One</option>
               </select></div>
           </div>
-          <div class=\\"content-item row\\">
-            <p class=\\"label\\">Number of Floors</p>
-            <div class=\\"form-group col\\"><input name=\\"buildingFloorCount\\" disabled=\\"\\" type=\\"number\\" id=\\"input-buildingFloorCount\\" class=\\"input-small form-control\\" value=\\"\\"></div>
+          <div class=\\"content-item row\\"><label class=\\"label\\">Number of Floors</label>
+            <div class=\\"form-group\\"><input name=\\"buildingFloorCount\\" disabled=\\"\\" type=\\"number\\" id=\\"input-buildingFloorCount\\" class=\\"input-small form-control\\" value=\\"\\"></div>
           </div>
-          <div class=\\"sensitive check-item row\\">
-            <p class=\\"label\\">Harmful if info released?</p>
+          <div class=\\"sensitive check-item row\\"><label class=\\"label\\">Harmful if info released?</label>
             <div class=\\"form-group\\">
               <div class=\\"check-field\\">
                 <div class=\\"form-check\\"><input name=\\"isSensitive\\" type=\\"radio\\" disabled=\\"\\" id=\\"input-isSensitive\\" class=\\"form-check-input\\" value=\\"false\\"><label title=\\"\\" for=\\"input-isSensitive\\" class=\\"form-check-label\\">Yes</label></div>
@@ -103,27 +89,23 @@ exports[`building review page renders correctly 1`] = `
           <div class=\\"section-header row\\"><span><svg class=\\"svg\\">icon-business.svg</svg><h5>Occupancy</h5></span><svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 576 512\\" size=\\"20\\" class=\\"edit\\" height=\\"20\\" width=\\"20\\" xmlns=\\"http://www.w3.org/2000/svg\\">
               <path d=\\"M402.6 83.2l90.2 90.2c3.8 3.8 3.8 10 0 13.8L274.4 405.6l-92.8 10.3c-12.4 1.4-22.9-9.1-21.5-21.5l10.3-92.8L388.8 83.2c3.8-3.8 10-3.8 13.8 0zm162-22.9l-48.8-48.8c-15.2-15.2-39.9-15.2-55.2 0l-35.4 35.4c-3.8 3.8-3.8 10 0 13.8l90.2 90.2c3.8 3.8 10 3.8 13.8 0l35.4-35.4c15.2-15.3 15.2-40 0-55.2zM384 346.2V448H64V128h229.8c3.2 0 6.2-1.3 8.5-3.5l40-40c7.6-7.6 2.2-20.5-8.5-20.5H48C21.5 64 0 85.5 0 112v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V306.2c0-10.7-12.9-16-20.5-8.5l-40 40c-2.2 2.3-3.5 5.3-3.5 8.5z\\"></path>
             </svg></div>
-          <div class=\\"content-item row\\">
-            <p class=\\"label\\">Total Area</p>
+          <div class=\\"content-item row\\"><label class=\\"label\\">Total Area</label>
             <div class=\\"input-group required disabled\\">
               <div class=\\"input-group-content\\">
-                <div class=\\"form-group col\\"><input name=\\"totalArea\\" disabled=\\"\\" type=\\"number\\" id=\\"input-totalArea\\" class=\\"form-control\\" value=\\"\\"></div>
+                <div class=\\"form-group\\"><input name=\\"totalArea\\" disabled=\\"\\" type=\\"number\\" id=\\"input-totalArea\\" class=\\"form-control\\" value=\\"\\"></div>
               </div>
               <div class=\\"input-group-append\\"><span class=\\"append-disabled input-group-text\\">Sq. M</span></div>
             </div>
           </div>
-          <div class=\\"content-item row\\">
-            <p class=\\"label\\">Net Usable Area</p>
+          <div class=\\"content-item row\\"><label class=\\"label\\">Net Usable Area</label>
             <div class=\\"input-group required disabled\\">
               <div class=\\"input-group-content\\">
-                <div class=\\"form-group col\\"><input name=\\"rentableArea\\" disabled=\\"\\" type=\\"number\\" id=\\"input-rentableArea\\" class=\\"form-control\\" value=\\"\\"></div>
+                <div class=\\"form-group\\"><input name=\\"rentableArea\\" disabled=\\"\\" type=\\"number\\" id=\\"input-rentableArea\\" class=\\"form-control\\" value=\\"\\"></div>
               </div>
               <div class=\\"input-group-append\\"><span class=\\"append-disabled input-group-text\\">Sq. M</span></div>
             </div>
           </div>
-          <div class=\\"content-item row\\">
-            <p class=\\"label\\">Tenancy %</p><span class=\\"tenancy-fields\\"><div class=\\"form-group col\\"><input name=\\"buildingTenancy\\" disabled=\\"\\" id=\\"input-buildingTenancy\\" class=\\"form-control\\" value=\\"\\"></div><div class=\\"form-group\\"><div class=\\"react-datepicker-wrapper\\"><div class=\\"react-datepicker__input-container\\"><input type=\\"text\\" id=\\"datepicker-buildingTenancyUpdatedOn\\" name=\\"buildingTenancyUpdatedOn\\" placeholder=\\"--/--/----\\" disabled=\\"\\" autocomplete=\\"off\\" class=\\"form-control date-picker\\" value=\\"\\"></div></div></div></span>
-          </div>
+          <div class=\\"content-item row\\"><label class=\\"label\\">Tenancy %</label><span class=\\"tenancy-fields\\"><div class=\\"form-group\\"><input name=\\"buildingTenancy\\" disabled=\\"\\" id=\\"input-buildingTenancy\\" class=\\"form-control\\" value=\\"\\"></div><div class=\\"form-group\\"><div><div class=\\"react-datepicker-wrapper\\"><div class=\\"react-datepicker__input-container\\"><input type=\\"text\\" id=\\"datepicker-buildingTenancyUpdatedOn\\" name=\\"buildingTenancyUpdatedOn\\" placeholder=\\"--/--/----\\" disabled=\\"\\" autocomplete=\\"off\\" class=\\"form-control date-picker\\" value=\\"\\"></div></div></div></div></span></div>
         </div>
       </div>
       <div class=\\"row\\">
@@ -131,16 +113,14 @@ exports[`building review page renders correctly 1`] = `
           <div class=\\"section-header row\\"><span><svg class=\\"svg\\">icon-business.svg</svg><h5>Valuation</h5></span><svg stroke=\\"currentColor\\" fill=\\"currentColor\\" stroke-width=\\"0\\" viewBox=\\"0 0 576 512\\" size=\\"20\\" class=\\"edit\\" height=\\"20\\" width=\\"20\\" xmlns=\\"http://www.w3.org/2000/svg\\">
               <path d=\\"M402.6 83.2l90.2 90.2c3.8 3.8 3.8 10 0 13.8L274.4 405.6l-92.8 10.3c-12.4 1.4-22.9-9.1-21.5-21.5l10.3-92.8L388.8 83.2c3.8-3.8 10-3.8 13.8 0zm162-22.9l-48.8-48.8c-15.2-15.2-39.9-15.2-55.2 0l-35.4 35.4c-3.8 3.8-3.8 10 0 13.8l90.2 90.2c3.8 3.8 10 3.8 13.8 0l35.4-35.4c15.2-15.3 15.2-40 0-55.2zM384 346.2V448H64V128h229.8c3.2 0 6.2-1.3 8.5-3.5l40-40c7.6-7.6 2.2-20.5-8.5-20.5H48C21.5 64 0 85.5 0 112v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V306.2c0-10.7-12.9-16-20.5-8.5l-40 40c-2.2 2.3-3.5 5.3-3.5 8.5z\\"></path>
             </svg></div>
-          <div style=\\"display: flex;\\" class=\\"val-item row\\">
-            <p class=\\"label\\">Net Book Value</p>
-            <div class=\\"form-group col\\">
+          <div style=\\"display: flex;\\" class=\\"val-item row\\"><label class=\\"label\\">Net Book Value</label>
+            <div class=\\"form-group\\">
               <div class=\\"input-tooltip-wrapper\\"><input name=\\"data.fiscals.0.value\\" class=\\"form-control input-number\\" disabled=\\"\\" placeholder=\\"\\" value=\\"\\"></div>
             </div>
             <div class=\\"form-group\\"><input name=\\"netbookYearDisplay\\" style=\\"width: 50px; font-size: 11px;\\" disabled=\\"\\" id=\\"input-netbookYearDisplay\\" class=\\"form-control\\" value=\\"\\"></div>
           </div>
-          <div style=\\"display: flex;\\" class=\\"val-item row\\">
-            <p class=\\"label\\">Assessed Value</p>
-            <div class=\\"form-group col\\">
+          <div style=\\"display: flex;\\" class=\\"val-item row\\"><label class=\\"label\\">Assessed Value</label>
+            <div class=\\"form-group\\">
               <div class=\\"input-tooltip-wrapper\\"><input name=\\"data.evaluations.0.value\\" class=\\"form-control input-number\\" disabled=\\"\\" placeholder=\\"\\" value=\\"\\"></div>
             </div>
             <div class=\\"form-group\\"><input name=\\"data.evaluations.0.year\\" style=\\"width: 50px; font-size: 11px;\\" disabled=\\"\\" id=\\"input-data.evaluations.0.year\\" class=\\"form-control\\" value=\\"\\"></div>

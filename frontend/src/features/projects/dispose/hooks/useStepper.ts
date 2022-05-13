@@ -117,10 +117,10 @@ const useStepper = () => {
     agencyId: keycloak.agencyId!,
   };
   const getProjectRequest = useAppSelector(
-    store => (store.network as any)[ProjectActions.GET_PROJECT],
+    store => (store.network.requests as any)[ProjectActions.GET_PROJECT],
   );
   const updateWorkflowStatusRequest = useAppSelector(
-    store => (store.network as any)[ProjectActions.UPDATE_WORKFLOW_STATUS],
+    store => (store.network.requests as any)[ProjectActions.UPDATE_WORKFLOW_STATUS],
   );
 
   useEffect(() => {

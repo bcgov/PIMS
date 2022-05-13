@@ -43,6 +43,8 @@ type OptionalAttributes = {
   toolTip?: string;
   /** id for tooltip */
   toolTipId?: string;
+  /** Event when the value changes. */
+  onChange?: (checked: boolean) => void;
 };
 
 // only "field" is required for <Check>, the rest are optional
@@ -69,6 +71,7 @@ export const Check: React.FC<CheckProps> = ({
   toolTipId,
   checkedState,
   setCheckedState,
+  onChange,
   ...rest
 }) => {
   const {
@@ -124,6 +127,7 @@ export const Check: React.FC<CheckProps> = ({
             placeholder={placeholder}
             checked={setCheckedState ? checkedState : checked === true}
             onChange={() => {
+              onChange?.(!checked);
               if (type !== 'radio') {
                 setFieldValue(field, !checked);
                 setCheckedState && setCheckedState(!checkedState);

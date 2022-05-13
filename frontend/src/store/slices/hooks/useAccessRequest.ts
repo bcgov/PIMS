@@ -7,18 +7,19 @@ import { ENVIRONMENT } from 'constants/environment';
 import CustomAxios from 'customAxios';
 import { AxiosResponse, AxiosError } from 'axios';
 import {
-  request,
-  success,
-  error,
   deleteAccessRequest,
   storeAccessRequest,
   storeAccessRequests,
+  storeError,
+  storeRequest,
+  storeSuccess,
   updateAccessRequest,
   useAppDispatch,
 } from 'store';
 import React from 'react';
 import { updateAccessRequestFilter, updateAccessRequestPageIndex } from '..';
 import { IFilterData } from 'actions/IFilterData';
+import { error, request, success } from '.';
 
 /**
  * Converts the 'values' object into an IAccessRequest object
@@ -75,16 +76,20 @@ export const useAccessRequest = () => {
    * @returns The access request if one exists, or 204 if one doesn't
    */
   const getCurrentAccessRequestAction = React.useCallback(async () => {
-    dispatch(request(reducerTypes.GET_REQUEST_ACCESS));
+    dispatch(storeRequest(request(reducerTypes.GET_REQUEST_ACCESS)));
     dispatch(showLoading());
     return await CustomAxios()
       .get(ENVIRONMENT.apiUrl + API.REQUEST_ACCESS())
       .then((response: AxiosResponse) => {
-        dispatch(success(reducerTypes.GET_REQUEST_ACCESS));
+        dispatch(storeSuccess(success(reducerTypes.GET_REQUEST_ACCESS)));
         dispatch(storeAccessRequest(response.data));
       })
       .catch((axiosError: AxiosError) =>
-        dispatch(error(reducerTypes.GET_REQUEST_ACCESS, axiosError?.response?.status, axiosError)),
+        dispatch(
+          storeError(
+            error(reducerTypes.GET_REQUEST_ACCESS, axiosError?.response?.status, axiosError),
+          ),
+        ),
       )
       .finally(() => dispatch(hideLoading()));
   }, [dispatch]);
@@ -98,7 +103,7 @@ export const useAccessRequest = () => {
    */
   const getSubmitAccessRequestAction = React.useCallback(
     async (accessRequest: IAccessRequest) => {
-      dispatch(request(actionTypes.ADD_REQUEST_ACCESS));
+      dispatch(storeRequest(request(actionTypes.ADD_REQUEST_ACCESS)));
       dispatch(showLoading());
 
       return await CustomAxios()
@@ -108,11 +113,15 @@ export const useAccessRequest = () => {
           data: accessRequest,
         })
         .then((response: AxiosResponse) => {
-          dispatch(success(actionTypes.ADD_REQUEST_ACCESS, response.status));
+          dispatch(storeSuccess(success(actionTypes.ADD_REQUEST_ACCESS, response.status)));
           dispatch(storeAccessRequest(response.data));
         })
         .catch((axiosError: AxiosError) =>
-          dispatch(error(actionTypes.ADD_REQUEST_ACCESS, axiosError?.response?.status, axiosError)),
+          dispatch(
+            storeError(
+              error(actionTypes.ADD_REQUEST_ACCESS, axiosError?.response?.status, axiosError),
+            ),
+          ),
         )
         .finally(() => dispatch(hideLoading()));
     },
@@ -124,22 +133,26 @@ export const useAccessRequest = () => {
    */
   const getSubmitAdminAccessRequestAction = React.useCallback(
     async (accessRequest: IAccessRequest) => {
-      dispatch(request(actionTypes.UPDATE_REQUEST_ACCESS_STATUS_ADMIN));
+      dispatch(storeRequest(request(actionTypes.UPDATE_REQUEST_ACCESS_STATUS_ADMIN)));
       dispatch(showLoading());
       return await CustomAxios()
         .put(ENVIRONMENT.apiUrl + API.REQUEST_ACCESS_ADMIN(), accessRequest)
         .then((response: AxiosResponse) => {
           dispatch(
-            success(actionTypes.UPDATE_REQUEST_ACCESS_ADMIN, response.status, response.data),
+            storeSuccess(
+              success(actionTypes.UPDATE_REQUEST_ACCESS_ADMIN, response.status, response.data),
+            ),
           );
           dispatch(updateAccessRequest(accessRequest));
         })
         .catch((axiosError: AxiosError) =>
           dispatch(
-            error(
-              actionTypes.UPDATE_REQUEST_ACCESS_ADMIN,
-              axiosError?.response?.status,
-              axiosError,
+            storeError(
+              error(
+                actionTypes.UPDATE_REQUEST_ACCESS_ADMIN,
+                axiosError?.response?.status,
+                axiosError,
+              ),
             ),
           ),
         )
@@ -153,21 +166,22 @@ export const useAccessRequest = () => {
    */
   const getAccessRequestsAction = React.useCallback(
     async (params: API.IPaginateAccessRequests) => {
-      dispatch(request(actionTypes.GET_REQUEST_ACCESS));
+      dispatch(storeRequest(request(actionTypes.GET_REQUEST_ACCESS)));
       dispatch(showLoading());
       try {
         try {
           const response = await CustomAxios().get(
             ENVIRONMENT.apiUrl + API.REQUEST_ACCESS_LIST(params),
           );
-          dispatch(success(actionTypes.GET_REQUEST_ACCESS, response.status));
+          dispatch(storeSuccess(success(actionTypes.GET_REQUEST_ACCESS, response.status)));
           dispatch(storeAccessRequests(response.data));
 
-          dispatch(hideLoading());
           return response;
         } catch (axiosError) {
           const err = axiosError as AxiosError;
-          dispatch(error(actionTypes.GET_REQUEST_ACCESS, err?.response?.status, axiosError));
+          dispatch(
+            storeError(error(actionTypes.GET_REQUEST_ACCESS, err?.response?.status, axiosError)),
+          );
         }
       } finally {
         dispatch(hideLoading());
@@ -181,7 +195,7 @@ export const useAccessRequest = () => {
    */
   const getAccessRequestsDeleteAction = React.useCallback(
     async (id: number, data: IAccessRequest) => {
-      dispatch(request(actionTypes.DELETE_REQUEST_ACCESS_ADMIN));
+      dispatch(storeRequest(request(actionTypes.DELETE_REQUEST_ACCESS_ADMIN)));
       dispatch(showLoading());
       return await CustomAxios()
         .request({
@@ -189,16 +203,18 @@ export const useAccessRequest = () => {
           url: ENVIRONMENT.apiUrl + API.REQUEST_ACCESS_DELETE(id),
           data,
         })
-        .then(() => {
+        .then(response => {
+          dispatch(storeSuccess(success(actionTypes.DELETE_REQUEST_ACCESS_ADMIN, response.status)));
           dispatch(deleteAccessRequest(id));
-          dispatch(hideLoading());
         })
         .catch((axiosError: AxiosError) =>
           dispatch(
-            error(
-              actionTypes.DELETE_REQUEST_ACCESS_ADMIN,
-              axiosError?.response?.status,
-              axiosError,
+            storeError(
+              error(
+                actionTypes.DELETE_REQUEST_ACCESS_ADMIN,
+                axiosError?.response?.status,
+                axiosError,
+              ),
             ),
           ),
         )

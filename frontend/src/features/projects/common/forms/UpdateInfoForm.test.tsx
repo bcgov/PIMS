@@ -82,7 +82,7 @@ const store = mockStore({
     ],
   },
   [reducerTypes.NETWORK]: {
-    [ProjectActions.GET_PROJECT]: {},
+    requests: { [ProjectActions.GET_PROJECT]: {} },
   },
 });
 

@@ -13,13 +13,12 @@ import {
   parcelSlice,
   userSlice,
   networkSlice,
+  projectSlice as disposalSlice,
 } from './slices';
 import projectWorkflowSlice from 'features/projects/common/slices/projectWorkflowSlice';
 import projectSlice from 'features/projects/common/slices/projectSlice';
 import projectTasksSlice from 'features/projects/common/slices/projectTasksSlice';
 import ProjectWorkflowTasksSlice from 'features/projects/common/slices/projectWorkflowTasksSlice';
-import erpTabSlice from 'features/projects/erp/slices/erpTabSlice';
-import splTabSlice from 'features/projects/spl/slices/splTabSlice';
 import projectStatusesSlice from 'features/projects/common/slices/projectStatusesSlice';
 import propertyNameSlice from 'features/properties/common/slices/propertyNameSlice';
 
@@ -39,13 +38,12 @@ export const reducerObject = {
   [mapViewZoomSlice.name]: mapViewZoomSlice.reducer,
 
   [projectWorkflowSlice.name]: projectWorkflowSlice.reducer,
-  [projectSlice.name]: projectSlice.reducer,
   [projectTasksSlice.name]: projectTasksSlice.reducer,
   [ProjectWorkflowTasksSlice.name]: ProjectWorkflowTasksSlice.reducer,
-  [erpTabSlice.name]: erpTabSlice.reducer,
-  [splTabSlice.name]: splTabSlice.reducer,
   [projectStatusesSlice.name]: projectStatusesSlice.reducer,
   [propertyNameSlice.name]: propertyNameSlice.reducer,
+  [projectSlice.name]: projectSlice.reducer,
+  [disposalSlice.name]: disposalSlice.reducer,
 };
 
 export const rootReducer = combineReducers(reducerObject);

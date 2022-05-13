@@ -57,11 +57,11 @@ exports[`renders correctly 1`] = `
           >
             Administrative Areas
           </h3>
-          <p
+          <label
             class="label"
           >
             Search administrative area by name: 
-          </p>
+          </label>
           <div
             class="form-group"
           >

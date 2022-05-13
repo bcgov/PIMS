@@ -35,7 +35,6 @@ export * from './slices/projectWorkflowSlice';
 export * from './strings';
 
 export { default as ProjectRouter } from './ProjectRouter';
-export { default as ProjectSummaryView } from './ProjectSummaryView';
 
 export { default as ProjectInformationTab } from './tabs/ProjectInformationTab';
 export { default as DocumentationTab } from './tabs/DocumentationTab';

@@ -45,7 +45,7 @@ exports[`InfoContent View InfoContent renders correctly 1`] = `
 <div
   class="list-group"
 >
-  <p
+  <label
     class="label header"
   >
     <svg
@@ -55,7 +55,7 @@ exports[`InfoContent View InfoContent renders correctly 1`] = `
       icon-lot.svg
     </svg>
     Parcel Identification
-  </p>
+  </label>
   <div
     class="c0 row"
   >
@@ -68,11 +68,11 @@ exports[`InfoContent View InfoContent renders correctly 1`] = `
         <div
           class="left-side list-group-item"
         >
-          <p
+          <label
             class="label"
           >
             PID
-          </p>
+          </label>
         </div>
       </div>
       <div
@@ -102,11 +102,11 @@ exports[`InfoContent View InfoContent renders correctly 1`] = `
         <div
           class="left-side list-group-item"
         >
-          <p
+          <label
             class="label"
           >
             Name
-          </p>
+          </label>
         </div>
       </div>
       <div
@@ -131,11 +131,11 @@ exports[`InfoContent View InfoContent renders correctly 1`] = `
         <div
           class="left-side list-group-item"
         >
-          <p
+          <label
             class="label"
           >
             Ministry
-          </p>
+          </label>
         </div>
       </div>
       <div
@@ -160,11 +160,11 @@ exports[`InfoContent View InfoContent renders correctly 1`] = `
         <div
           class="left-side list-group-item"
         >
-          <p
+          <label
             class="label"
           >
             Owning agency
-          </p>
+          </label>
         </div>
       </div>
       <div
@@ -189,11 +189,11 @@ exports[`InfoContent View InfoContent renders correctly 1`] = `
         <div
           class="left-side list-group-item"
         >
-          <p
+          <label
             class="label"
           >
             Classification
-          </p>
+          </label>
         </div>
       </div>
       <div
@@ -218,11 +218,11 @@ exports[`InfoContent View InfoContent renders correctly 1`] = `
         <div
           class="left-side list-group-item"
         >
-          <p
+          <label
             class="label"
           >
             Project Number
-          </p>
+          </label>
         </div>
       </div>
       <div

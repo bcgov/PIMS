@@ -378,11 +378,11 @@ exports[`Land Form component renders correctly 1`] = `
                     <div
                       class="form-row"
                     >
-                      <p
+                      <label
                         class="label"
                       >
                         PID
-                      </p>
+                      </label>
                       <div
                         class="form-group"
                       >
@@ -421,13 +421,13 @@ exports[`Land Form component renders correctly 1`] = `
                     <div
                       class="form-row"
                     >
-                      <p
+                      <label
                         class="label"
                       >
                         PIN
-                      </p>
+                      </label>
                       <div
-                        class="form-group col"
+                        class="form-group"
                       >
                         <input
                           class="input-small form-control"
@@ -465,11 +465,11 @@ exports[`Land Form component renders correctly 1`] = `
                     <div
                       class="form-row"
                     >
-                      <p
+                      <label
                         class="label"
                       >
                         Street Address
-                      </p>
+                      </label>
                       <div
                         class="GeocoderAutoComplete"
                       >
@@ -565,11 +565,11 @@ exports[`Land Form component renders correctly 1`] = `
                     <div
                       class="flex-nowrap pid-pin form-row"
                     >
-                      <p
+                      <label
                         class="label"
                       >
                         PID
-                      </p>
+                      </label>
                       <div
                         class="required form-group"
                       >
@@ -580,12 +580,12 @@ exports[`Land Form component renders correctly 1`] = `
                           value=""
                         />
                       </div>
-                      <p
+                      <label
                         class="label"
                         style="padding-left: 5px;"
                       >
                         PIN
-                      </p>
+                      </label>
                       <div
                         class="required form-group"
                       >
@@ -615,11 +615,11 @@ exports[`Land Form component renders correctly 1`] = `
                     <div
                       class="form-row"
                     >
-                      <p
+                      <label
                         class="label"
                       >
                         Street Address
-                      </p>
+                      </label>
                       <div
                         class="GeocoderAutoComplete"
                       >
@@ -642,11 +642,11 @@ exports[`Land Form component renders correctly 1`] = `
                     <div
                       class="form-row"
                     >
-                      <p
+                      <label
                         class="label"
                       >
                         Location
-                      </p>
+                      </label>
                       <div
                         class="required form-group"
                       >
@@ -685,11 +685,11 @@ exports[`Land Form component renders correctly 1`] = `
                     <div
                       class="form-row"
                     >
-                      <p
+                      <label
                         class="label"
                       >
                         Province
-                      </p>
+                      </label>
                       <div
                         class="form-group"
                       >
@@ -710,13 +710,13 @@ exports[`Land Form component renders correctly 1`] = `
                     <div
                       class="postal form-row"
                     >
-                      <p
+                      <label
                         class="label"
                       >
                         Postal Code
-                      </p>
+                      </label>
                       <div
-                        class="form-group col"
+                        class="form-group"
                       >
                         <input
                           class="input-small form-control"
@@ -777,13 +777,13 @@ exports[`Land Form component renders correctly 1`] = `
                     <div
                       class="form-row"
                     >
-                      <p
+                      <label
                         class="label"
                       >
                         Name
-                      </p>
+                      </label>
                       <div
-                        class="form-group col"
+                        class="form-group"
                       >
                         <input
                           class="form-control"
@@ -796,11 +796,11 @@ exports[`Land Form component renders correctly 1`] = `
                     <div
                       class="form-row"
                     >
-                      <p
+                      <label
                         class="label"
                       >
                         Description
-                      </p>
+                      </label>
                       <div
                         class="form-group"
                       >
@@ -814,11 +814,11 @@ exports[`Land Form component renders correctly 1`] = `
                     <div
                       class="form-row"
                     >
-                      <p
+                      <label
                         class="label"
                       >
                         Legal Description
-                      </p>
+                      </label>
                       <div
                         class="form-group"
                       >
@@ -832,11 +832,11 @@ exports[`Land Form component renders correctly 1`] = `
                     <div
                       class="form-row"
                     >
-                      <p
+                      <label
                         class="label"
                       >
                         Lot Size
-                      </p>
+                      </label>
                       <div
                         class="input-group required"
                       >
@@ -844,7 +844,7 @@ exports[`Land Form component renders correctly 1`] = `
                           class="input-group-content"
                         >
                           <div
-                            class="form-group col"
+                            class="form-group"
                           >
                             <input
                               class="form-control"

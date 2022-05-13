@@ -29,7 +29,7 @@ const ManageAgencies: React.FC = () => {
   const pageIndex = useAppSelector(store => store.agencies.pageIndex);
   const sort = useAppSelector(store => store.agencies.sort);
   const agencies = useAppSelector(
-    store => (store.network as any)[actionTypes.GET_AGENCIES] as IGenericNetworkAction,
+    store => (store.network.requests as any)[actionTypes.GET_AGENCIES] as IGenericNetworkAction,
   );
 
   const onRowClick = (row: IAgencyRecord) => {

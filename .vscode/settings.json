@@ -4,7 +4,7 @@
   "sqltools.connections": [
     {
       "database": "keycloak",
-      "dialect": "PostgreSQL",
+      "driver": "PostgreSQL",
       "name": "Keycloak",
       "askForPassword": true,
       "port": 5432,
@@ -13,7 +13,7 @@
     },
     {
       "database": "geospatial",
-      "dialect": "PostgreSQL",
+      "driver": "PostgreSQL",
       "name": "Geo-spatial",
       "password": "password",
       "port": 5433,
@@ -22,7 +22,7 @@
     },
     {
       "database": "master",
-      "dialect": "MSSQL",
+      "driver": "MSSQL",
       "name": "MSSQL-RedHat-master",
       "password": "6I6KXYc6SDscXq7j",
       "port": 1433,
@@ -31,7 +31,7 @@
     },
     {
       "database": "geospatial",
-      "dialect": "MSSQL",
+      "driver": "MSSQL",
       "isActive": true,
       "isConnected": true,
       "name": "MSSQL-RedHat-geospatial",
@@ -41,5 +41,8 @@
       "username": "sa"
     }
   ],
-  "cSpell.words": ["Formik", "Xunit", "keycloak", "pims"]
+  "cSpell.words": ["Formik", "Xunit", "keycloak", "pims"],
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
 }
