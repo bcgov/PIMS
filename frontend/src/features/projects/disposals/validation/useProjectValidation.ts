@@ -91,7 +91,7 @@ export const useProjectValidation = ({ id }: IProjectValidationProps) => {
             ...setIn(errors, `tasks.${index}.isCompleted`, `${t.name} required`),
           };
         });
-        hasErrors = true;
+        if (tasks.length) hasErrors = true;
       }
 
       await documentationSchema.validate(values, { abortEarly: false });
