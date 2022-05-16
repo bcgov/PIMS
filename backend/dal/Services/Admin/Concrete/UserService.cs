@@ -84,7 +84,6 @@ namespace Pims.Dal.Services.Admin
             {
                 if (filter.Page < 1) filter.Page = 1;
                 if (filter.Quantity < 1) filter.Quantity = 1;
-                if (filter.Quantity > 50) filter.Quantity = 50;
                 if (filter.Sort == null) filter.Sort = new string[] { };
 
                 if (!string.IsNullOrWhiteSpace(filter.Username))
@@ -106,7 +105,7 @@ namespace Pims.Dal.Services.Admin
                         EF.Functions.Like(r.Role.Name, $"%{filter.Role}")));
                 if (!string.IsNullOrWhiteSpace(filter.Agency))
                     query = query.Where(u => u.Agencies.Any(a =>
-                        EF.Functions.Like(a.Agency.Name, $"%{filter.Agency}")));
+                        EF.Functions.Like(a.Agency.Name, $"%{filter.Agency}") || EF.Functions.Like(a.Agency.Parent.Name, $"%{filter.Agency}")));
 
                 if (filter.Sort.Any())
                 {

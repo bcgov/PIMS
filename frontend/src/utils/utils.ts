@@ -1,13 +1,14 @@
-import { ILookupCode } from 'actions/lookupActions';
+import { ILookupCode } from 'actions/ILookupCode';
 import { startCase, isNull, isUndefined, isEmpty, lowerFirst, keys } from 'lodash';
 import { SelectOption } from 'components/common/form';
 import { FormikProps, getIn } from 'formik';
 import { SortDirection, TableSort } from 'components/Table/TableSort';
 import { AxiosError } from 'axios';
 import { showLoading, hideLoading } from 'react-redux-loading-bar';
-import { success, error, request } from 'actions/genericActions';
+import { success, error, request } from 'store';
 import moment from 'moment-timezone';
 import { IStatus } from 'features/projects/interfaces';
+import { AnyAction, Dispatch } from 'redux';
 
 /**
  * Convert the specified 'input' value into a decimal or undefined.
@@ -136,14 +137,12 @@ export const formikFieldMemo = (
  * @param actionType All dispatched GenericNetworkActions will use this action type.
  * @param axiosPromise The result of an axios.get, .put, ..., call.
  */
-export const handleAxiosResponse = (
-  dispatch: Function,
-  actionType: string,
-  axiosPromise: Promise<any>,
-): Promise<any> => {
+export const handleAxiosResponse = (actionType: string, axiosPromise: Promise<any>) => async (
+  dispatch: Dispatch<AnyAction>,
+) => {
   dispatch(request(actionType));
   dispatch(showLoading());
-  return axiosPromise
+  return await axiosPromise
     .then((response: any) => {
       dispatch(success(actionType));
       dispatch(hideLoading());

@@ -1,6 +1,6 @@
 import queryString from 'query-string';
 import { IReport } from './../interfaces';
-import { useDispatch } from 'react-redux';
+import { useAppDispatch } from 'store';
 import { useHistory } from 'react-router-dom';
 import React, { useState } from 'react';
 import _ from 'lodash';
@@ -23,7 +23,7 @@ export const useRouterReport = ({
 }: RouterFilterProps) => {
   const history = useHistory();
   const [originalSearch] = useState(history.location.search);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   //When this hook loads, override the value of the filter with the search params. Should run once as originalSearch should never change.
   useDeepCompareEffect(() => {

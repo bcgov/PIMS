@@ -9,8 +9,7 @@ import { toast } from 'react-toastify';
 import { PointFeature } from '../types';
 import PointClusterer from './PointClusterer';
 import { useApi } from 'hooks/useApi';
-import { useSelector } from 'react-redux';
-import { RootState } from 'reducers/rootReducer';
+import { useAppSelector } from 'store';
 import { flatten, uniqBy } from 'lodash';
 import { tilesInBbox } from 'tiles-in-bbox';
 import { useFilterContext } from '../providers/FIlterProvider';
@@ -149,9 +148,7 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
   const { changed: filterChanged } = useFilterContext();
   const municipalitiesService = useLayerQuery(MUNICIPALITY_LAYER_URL);
 
-  const draftProperties: PointFeature[] = useSelector<RootState, PointFeature[]>(
-    state => state.parcel.draftParcels,
-  );
+  const draftProperties: PointFeature[] = useAppSelector(store => store.parcel.draftProperties);
 
   if (!map) {
     throw new Error('<InventoryLayer /> must be used under a <Map> leaflet component');

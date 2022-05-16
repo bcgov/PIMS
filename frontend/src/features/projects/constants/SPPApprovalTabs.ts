@@ -4,4 +4,5 @@ export enum SPPApprovalTabs {
   erp = 'enhancedReferralProcess',
   spl = 'surplusPropertyList',
   closeOutForm = 'closeOutForm',
+  notification = 'notification',
 }

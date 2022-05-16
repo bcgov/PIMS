@@ -2,18 +2,18 @@ import EditAgencyPage from './EditAgencyPage';
 import React from 'react';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { ILookupCode } from 'actions/lookupActions';
+import { ILookupCode } from 'actions/ILookupCode';
 import * as API from 'constants/API';
 import { Provider } from 'react-redux';
-import * as reducerTypes from 'constants/reducerTypes';
 import { createMemoryHistory } from 'history';
 import { Router } from 'react-router-dom';
-import { render, cleanup, act, screen, wait } from '@testing-library/react';
+import { render, cleanup, act, screen, waitFor } from '@testing-library/react';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 import { ToastContainer } from 'react-toastify';
 import { fillInput } from 'utils/testUtils';
 import { useKeycloak } from '@react-keycloak/web';
+import { initialAgencyState } from 'store';
 
 jest.mock('@react-keycloak/web');
 (useKeycloak as jest.Mock).mockReturnValue({
@@ -47,8 +47,8 @@ const selectedAgency = {
 };
 
 const store = mockStore({
-  [reducerTypes.GET_AGENCY_DETAIL]: selectedAgency,
-  [reducerTypes.LOOKUP_CODE]: lCodes,
+  agencies: { ...initialAgencyState, agencyDetail: selectedAgency },
+  lookupCode: lCodes,
 });
 
 const mockAxios = new MockAdapter(axios);
@@ -146,10 +146,10 @@ describe('Edit agency page', () => {
       const { getByText, findByText, container } = renderEditAgencyPage();
       mockAxios.reset();
       mockAxios.onAny().reply(200, {});
-      await fillInput(container, 'name', 'test agency');
-      await fillInput(container, 'code', 'TA');
-      await fillInput(container, 'email', '1@1.ca');
-      await fillInput(container, 'addressTo', 'hello you');
+      fillInput(container, 'name', 'test agency');
+      fillInput(container, 'code', 'TA');
+      fillInput(container, 'email', '1@1.ca');
+      fillInput(container, 'addressTo', 'hello you');
       const saveButton = getByText(/Submit Agency/i);
       act(() => {
         saveButton.click();
@@ -163,10 +163,10 @@ describe('Edit agency page', () => {
       mockAxios.reset();
       mockAxios.onAny().reply(200, {});
       mockAxios.onGet().reply(200, { total: 0 });
-      await fillInput(container, 'name', 'test agency');
-      await fillInput(container, 'code', 'TA');
-      await fillInput(container, 'email', '1@1.ca');
-      await fillInput(container, 'addressTo', 'hello you');
+      fillInput(container, 'name', 'test agency');
+      fillInput(container, 'code', 'TA');
+      fillInput(container, 'email', '1@1.ca');
+      fillInput(container, 'addressTo', 'hello you');
       const deleteButton = getByText(/Delete Agency/i);
       act(() => {
         deleteButton.click();
@@ -176,9 +176,7 @@ describe('Edit agency page', () => {
       act(() => {
         deleteConfirm.click();
       });
-      await wait(async () => {
-        expect(mockAxios.history.delete).toHaveLength(1);
-      });
+      await waitFor(() => expect(mockAxios.history.delete).toHaveLength(1));
     });
 
     it('can not delete agencies with properties', async () => {
@@ -186,10 +184,10 @@ describe('Edit agency page', () => {
       const { getByText, container } = renderEditAgencyPage();
       mockAxios.reset();
       mockAxios.onAny().reply(200, {});
-      await fillInput(container, 'name', 'test agency');
-      await fillInput(container, 'code', 'TA');
-      await fillInput(container, 'email', '1@1.ca');
-      await fillInput(container, 'addressTo', 'hello you');
+      fillInput(container, 'name', 'test agency');
+      fillInput(container, 'code', 'TA');
+      fillInput(container, 'email', '1@1.ca');
+      fillInput(container, 'addressTo', 'hello you');
       const deleteButton = getByText(/Delete Agency/i);
       act(() => {
         deleteButton.click();

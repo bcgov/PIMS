@@ -1,17 +1,21 @@
-import { FeatureCollection, Geometry, GeoJsonProperties, Feature } from 'geojson';
+import {
+  FeatureCollection,
+  Geometry,
+  GeoJsonProperties,
+  Feature,
+  Polygon,
+  MultiPolygon,
+} from 'geojson';
 import axios, { AxiosError } from 'axios';
-import { LatLng, geoJSON } from 'leaflet';
+import { LatLng } from 'leaflet';
 import { useCallback, Dispatch } from 'react';
-import parcelLayerDataSlice, {
-  saveParcelLayerData,
-  IParcelLayerData,
-} from 'reducers/parcelLayerDataSlice';
-import { error } from 'actions/genericActions';
-import { useSelector } from 'react-redux';
-import { RootState } from 'reducers/rootReducer';
+import parcelLayerDataSlice, { saveParcelLayerData } from 'store/slices/parcelLayerDataSlice';
+import { error } from 'store';
+import { useAppSelector } from 'store';
 import { toast } from 'react-toastify';
 import { layerData } from 'constants/toasts';
 import * as rax from 'retry-axios';
+import polylabel from 'polylabel';
 
 const MAX_RETRIES = 2;
 const wfsAxios = () => {
@@ -89,17 +93,22 @@ export const saveParcelDataLayerResponse = (
   latLng?: LatLng,
 ) => {
   if (resp?.features?.length > 0) {
+    var coordinates;
+    resp.features[0].geometry.type === 'MultiPolygon'
+      ? (coordinates = (resp.features[0].geometry as MultiPolygon).coordinates[0])
+      : (coordinates = (resp.features[0].geometry as Polygon).coordinates);
+    // Polylabel seems to return long/lat instead of lat/long
+    var centerCoords = polylabel(coordinates, 0.00001).reverse();
+    var latitude = Number(centerCoords[0]);
+    var longitude = Number(centerCoords[1]);
+    var pinPosition = new LatLng(latitude, longitude);
     //save with a synthetic event to timestamp the relevance of this data.
     dispatch(
       saveParcelLayerData({
         e: { timeStamp: document?.timeline?.currentTime ?? 0 } as any,
         data: {
           ...resp.features[0].properties!,
-          CENTER:
-            latLng ??
-            geoJSON(resp.features[0].geometry)
-              .getBounds()
-              .getCenter(),
+          CENTER: latLng ?? pinPosition,
         },
       }),
     );
@@ -135,9 +144,7 @@ export const handleParcelDataLayerResponse = (
  * @param geometry the name of the geometry in the feature collection
  */
 export const useLayerQuery = (url: string, geometryName: string = 'SHAPE'): IUserLayerQuery => {
-  const parcelLayerData = useSelector<RootState, IParcelLayerData | null>(
-    state => state.parcelLayerData?.parcelLayerData,
-  );
+  const parcelLayerData = useAppSelector(store => store.parcelLayerData?.parcelLayerData);
   const baseUrl = `${url}&srsName=EPSG:4326&count=1`;
 
   const findOneWhereContains = useCallback(

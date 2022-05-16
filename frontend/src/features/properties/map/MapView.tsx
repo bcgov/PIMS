@@ -2,12 +2,11 @@ import React, { useState, useRef } from 'react';
 import Map, { MapViewportChangeEvent } from '../../../components/maps/leaflet/Map';
 import './MapView.scss';
 import { Map as LeafletMap } from 'react-leaflet';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from 'reducers/rootReducer';
-import { IProperty, storeParcelDetail, IPropertyDetail } from 'actions/parcelsActions';
+import { useAppDispatch, useAppSelector } from 'store';
+import { IProperty, IPropertyDetail } from 'actions/parcelsActions';
 import { LeafletMouseEvent } from 'leaflet';
 import useParamSideBar from '../../mapSideBar/hooks/useQueryParamSideBar';
-import { saveClickLatLng as saveLeafletMouseEvent } from 'reducers/LeafletMouseSlice';
+import { saveClickLatLng as saveLeafletMouseEvent } from 'store/slices/leafletMouseSlice';
 import * as API from 'constants/API';
 import MapSideBarContainer from 'features/mapSideBar/containers/MapSideBarContainer';
 import classNames from 'classnames';
@@ -16,6 +15,7 @@ import { useLocation } from 'react-router-dom';
 import queryString from 'query-string';
 import useCodeLookups from 'hooks/useLookupCodes';
 import { PropertyPopUpContextProvider } from 'components/maps/providers/PropertyPopUpProvider';
+import { storePropertyDetail } from 'store/slices/parcelSlice';
 
 /** rough center of bc Itcha Ilgachuz Provincial Park */
 const defaultLatLng = {
@@ -39,17 +39,15 @@ interface MapViewProps {
 
 const MapView: React.FC<MapViewProps> = (props: MapViewProps) => {
   const lookupCodes = useCodeLookups();
-  const properties = useSelector<RootState, IProperty[]>(state => [...state.parcel.parcels]);
+  const dispatch = useAppDispatch();
+  const properties = useAppSelector(store => store.parcel.properties);
   const [loadedProperties, setLoadedProperties] = useState(false);
   const mapRef = useRef<LeafletMap>(null);
-  const propertyDetail = useSelector<RootState, IPropertyDetail | null>(
-    state => state.parcel.parcelDetail,
-  );
+  const propertyDetail = useAppSelector(state => state.parcel.propertyDetail);
   const agencies = lookupCodes.getByType(API.AGENCY_CODE_SET_NAME);
   const administrativeAreas = lookupCodes.getByType(API.AMINISTRATIVE_AREA_CODE_SET_NAME);
 
   const lotSizes = fetchLotSizes();
-  const dispatch = useDispatch();
 
   const saveLatLng = (e: LeafletMouseEvent) => {
     if (!props.disabled) {
@@ -69,6 +67,7 @@ const MapView: React.FC<MapViewProps> = (props: MapViewProps) => {
           mapRef.current?.leafletElement.fireEvent('clear');
         }}
         properties={properties}
+        map={mapRef.current}
       />
       <FilterProvider>
         <PropertyPopUpContextProvider>
@@ -82,7 +81,7 @@ const MapView: React.FC<MapViewProps> = (props: MapViewProps) => {
             administrativeAreas={administrativeAreas}
             lotSizes={lotSizes}
             onMarkerPopupClose={() => {
-              dispatch(storeParcelDetail(null));
+              dispatch(storePropertyDetail(null));
             }}
             onViewportChanged={(mapFilterModel: MapViewportChangeEvent) => {
               if (!loadedProperties) {

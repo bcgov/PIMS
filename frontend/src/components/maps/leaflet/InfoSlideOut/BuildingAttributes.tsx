@@ -28,7 +28,10 @@ export const BuildingAttributes: React.FC<IBuildingAttributes> = ({
     formatAssessed = formatMoney(buildingInfo?.assessedBuilding);
   } else if (buildingInfo?.evaluations?.length >= 1) {
     formatAssessed = formatMoney(
-      buildingInfo?.evaluations.sort((a, b) => compareDate(a.date, b.date)).reverse()[0].value,
+      buildingInfo?.evaluations
+        .slice()
+        .sort((a, b) => compareDate(a.date, b.date))
+        .reverse()[0].value,
     );
   } else {
     formatAssessed = '';

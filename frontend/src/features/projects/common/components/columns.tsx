@@ -246,14 +246,6 @@ export const getPropertyColumns = ({
       align: 'left',
     },
     {
-      Header: 'Market Value',
-      accessor: 'market',
-      Cell: editableFinancials ? EditableMoneyCell : MoneyCell,
-      minWidth: 145,
-      clickable: !editableFinancials,
-      align: 'left',
-    },
-    {
       Header: 'Assessed Land',
       accessor: (row: IProperty) =>
         [PropertyTypes.PARCEL, PropertyTypes.SUBDIVISION].includes(row.propertyTypeId)
@@ -268,9 +260,9 @@ export const getPropertyColumns = ({
       Header: 'Assessment Year',
       accessor: (row: IProperty) =>
         [PropertyTypes.PARCEL, PropertyTypes.SUBDIVISION].includes(row.propertyTypeId)
-          ? getFiscalYear(row.assessedLandDate) + 1
+          ? getFiscalYear(row.assessedLandDate)
           : [PropertyTypes.BUILDING, PropertyTypes.BUILDING].includes(row.propertyTypeId)
-          ? getFiscalYear(row.assessedBuildingDate) + 1
+          ? getFiscalYear(row.assessedBuildingDate)
           : undefined,
       className: 'form-group',
       style: {

@@ -1,10 +1,8 @@
 import * as React from 'react';
 import MapSideBarLayout from '../components/MapSideBarLayout';
 import useParamSideBar, { SidebarContextType } from '../hooks/useQueryParamSideBar';
-import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from 'reducers/rootReducer';
-import { IParcel, IProperty, IBuilding, storeParcelDetail } from 'actions/parcelsActions';
-import { deleteParcel, fetchParcelsDetail } from 'actionCreators/parcelsActionCreator';
+import { IParcel, IProperty, IBuilding } from 'actions/parcelsActions';
+import { deleteParcel, fetchParcelsDetail } from 'store/slices/hooks/parcelsActionCreator';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
 import { BuildingForm, SubmitPropertySelector, LandForm } from '../SidebarContents';
 import { BuildingSvg, LandSvg, SubdivisionSvg } from 'components/common/Icons';
@@ -13,7 +11,7 @@ import { useState } from 'react';
 import useGeocoder from 'features/properties/hooks/useGeocoder';
 import { isMouseEventRecent } from 'utils';
 import { handleParcelDataLayerResponse, useLayerQuery } from 'components/maps/leaflet/LayerPopup';
-import { LeafletMouseEvent, LatLng } from 'leaflet';
+import { LatLng } from 'leaflet';
 import AssociatedLandForm from '../SidebarContents/AssociatedLandForm';
 import { toast } from 'react-toastify';
 import _, { noop, cloneDeep } from 'lodash';
@@ -29,7 +27,7 @@ import useSideBarBuildingLoader from '../hooks/useSideBarBuildingLoader';
 import { ViewOnlyBuildingForm, valuesToApiFormat } from '../SidebarContents/BuildingForm';
 import { Prompt } from 'react-router-dom';
 import { FaTrash } from 'react-icons/fa';
-import { deleteBuilding } from 'actionCreators/buildingActionCreator';
+import { deleteBuilding } from 'store/slices/hooks/buildingActionCreator';
 import useSideBarBuildingWithParcelLoader from '../hooks/useSideBarBuildingWithParcelLoader';
 import variables from '_variables.module.scss';
 import { withNameSpace } from 'utils/formUtils';
@@ -37,11 +35,15 @@ import { PropertyTypes, Claims, EvaluationKeys, FiscalKeys } from 'constants/ind
 import { useBuildingApi } from '../hooks/useBuildingApi';
 import { fireMapRefreshEvent } from 'components/maps/hooks/useMapRefreshEvent';
 import { useBoundaryLayer } from 'components/maps/leaflet/LayerPopup/hooks/useBoundaryLayer';
+import { useAppDispatch, useAppSelector } from 'store';
+import { storePropertyDetail } from 'store/slices/parcelSlice';
+import { Map as LeafletMap } from 'react-leaflet';
 
 interface IMapSideBarContainerProps {
   refreshParcels: Function;
   properties: IProperty[];
   movingPinNameSpaceProp?: string;
+  map?: LeafletMap | null;
 }
 
 const FloatCheck = styled(FaCheckCircle)`
@@ -58,7 +60,7 @@ const SuccessText = styled.p`
 
 const BoldText = styled.p`
   font-size: 24px;
-  fontweight: 700;
+  font-weight: 700;
 `;
 
 const EditButton = styled(FaEdit)`
@@ -82,6 +84,7 @@ const DeleteButton = styled(FaTrash)`
  */
 const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = ({
   movingPinNameSpaceProp,
+  map,
 }) => {
   const keycloak = useKeycloakWrapper();
   const formikRef = React.useRef<FormikValues>();
@@ -122,13 +125,11 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
     showSideBar,
     disabled,
   });
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const [movingPinNameSpace, setMovingPinNameSpace] = useState<string | undefined>(
     movingPinNameSpaceProp,
   );
-  const leafletMouseEvent = useSelector<RootState, LeafletMouseEvent | null>(
-    state => state.leafletClickEvent?.mapClickEvent,
-  );
+  const leafletMouseEvent = useAppSelector(store => store.leafletClickEvent?.mapClickEvent);
   const [buildingToAssociateLand, setBuildingToAssociateLand] = useState<IBuilding | undefined>();
   const [showAssociateLandModal, setShowAssociateLandModal] = useState(false);
   const [propertyType, setPropertyType] = useState('');
@@ -157,16 +158,15 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
       return;
     }
 
-    matchingParcel.propertyTypeId = currentPropertyTypeId;
-    matchingParcel.parcels = getIn(values, withNameSpace(nameSpace, 'parcels'));
-    matchingParcel.searchPid = getIn(values, withNameSpace(nameSpace, 'searchPid'));
-    matchingParcel.searchPin = getIn(values, withNameSpace(nameSpace, 'searchPin'));
-    matchingParcel.searchAddress = getIn(values, withNameSpace(nameSpace, 'seachAddress'));
-    matchingParcel.evaluations = getMergedFinancials(
-      matchingParcel.evaluations,
-      Object.values(EvaluationKeys),
-    );
-    matchingParcel.fiscals = getMergedFinancials(matchingParcel.fiscals, Object.values(FiscalKeys));
+    const result = { ...matchingParcel };
+
+    result.propertyTypeId = currentPropertyTypeId;
+    result.parcels = getIn(values, withNameSpace(nameSpace, 'parcels'));
+    result.searchPid = getIn(values, withNameSpace(nameSpace, 'searchPid'));
+    result.searchPin = getIn(values, withNameSpace(nameSpace, 'searchPin'));
+    result.searchAddress = getIn(values, withNameSpace(nameSpace, 'searchAddress'));
+    result.evaluations = getMergedFinancials(result.evaluations, Object.values(EvaluationKeys));
+    result.fiscals = getMergedFinancials(matchingParcel.fiscals, Object.values(FiscalKeys));
     resetForm({
       values: setIn(values, nameSpace ?? '', { ...getInitialValues(), ...matchingParcel }),
     });
@@ -200,6 +200,15 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
           )
         : undefined;
       if (!!formikRef?.current?.values && !!matchingParcel?.id) {
+        formikRef.current.setFieldValue('data', {
+          ...formikRef?.current?.values?.data,
+          name: matchingParcel.name,
+          address: { ...matchingParcel.address, id: 0 },
+          description: matchingParcel.description,
+          landLegalDescription: matchingParcel.landLegalDescription,
+          landArea: matchingParcel.landArea,
+        });
+        map?.leafletElement.setView([+matchingParcel.latitude, +matchingParcel.longitude], 20);
         formikDataPopulateCallback(matchingParcel, nameSpace);
         return matchingParcel;
       } else {
@@ -577,7 +586,7 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
                 break;
             }
             fireMapRefreshEvent();
-            dispatch(storeParcelDetail(null));
+            dispatch(storePropertyDetail(null));
             setShowSideBar(false, undefined, undefined, true);
           } catch (error) {
             toast.error(

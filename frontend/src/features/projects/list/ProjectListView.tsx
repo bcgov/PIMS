@@ -1,10 +1,9 @@
 import './ProjectListView.scss';
 
 import React, { useState, useMemo, useRef, useCallback } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useAppSelector, useAppDispatch } from 'store';
 import { Container } from 'react-bootstrap';
 import * as API from 'constants/API';
-import { RootState } from 'reducers/rootReducer';
 import { IProjectFilter, IProject } from '.';
 import { columns as cols } from './columns';
 import { IProject as IProjectDetail } from 'features/projects/interfaces';
@@ -23,7 +22,6 @@ import {
   deletePotentialSubdivisionParcels,
 } from '../common';
 import { ReviewWorkflowStatus } from 'features/projects/constants';
-import { IStatus } from 'features/projects/interfaces';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import Claims from 'constants/claims';
 import { ENVIRONMENT } from 'constants/environment';
@@ -38,27 +36,31 @@ import useCodeLookups from 'hooks/useLookupCodes';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
 import { PropertyTypes } from 'constants/propertyTypes';
 import { toFlatProject } from '../common/projectConverter';
+import { IStatus } from 'features/projects/interfaces';
 
 interface IProjectFilterState {
   name?: string;
-  statusId?: string;
+  statusId?: string[];
+  notStatusId?: string[];
   agencyId?: string;
-  agencies?: number | null;
-  fiscalYear?: number | null;
+  agencies?: number[];
+  fiscalYear?: number | '';
 }
-
 interface IProps {
   filterable?: boolean;
   title: string;
   defaultFilter?: IProjectFilterState;
+  statusOptions?: IStatus[];
+  showDefaultStatusOptions?: boolean;
 }
 
 const initialValues: IProjectFilterState = {
   name: '',
-  statusId: '',
+  statusId: [],
+  notStatusId: ['16', '23', '32'], // Denied, Cancelled, Disposed
   agencyId: '',
-  agencies: null,
-  fiscalYear: null,
+  agencies: [],
+  fiscalYear: '',
 };
 
 /**
@@ -70,16 +72,20 @@ export const ProjectListView: React.FC<IProps> = ({
   filterable,
   title,
   defaultFilter = initialValues,
+  statusOptions,
+  showDefaultStatusOptions = true,
 }) => {
   const lookupCodes = useCodeLookups();
   const agencies = useMemo(() => lookupCodes.getByType(API.AGENCY_CODE_SET_NAME), [lookupCodes]);
-  const projectStatuses = useSelector<RootState, IStatus[]>(state => state.statuses as any);
+  const projectStatuses = useAppSelector(store => store.statuses);
   const keycloak = useKeycloakWrapper();
   const [deleteProjectNumber, setDeleteProjectNumber] = React.useState<string | undefined>();
   const [deletedProject, setDeletedProject] = React.useState<IProjectDetail | undefined>();
   const agencyIds = useMemo(() => (agencies ?? []).map(x => parseInt(x.id, 10)), [agencies]);
   const agencyOptions = (agencies ?? []).map(c => mapLookupCodeWithParentString(c, agencies ?? []));
-  const statuses = (projectStatuses ?? []).map(c => mapStatuses(c));
+  const statuses = statusOptions
+    ? (statusOptions ?? []).map(s => mapStatuses(s))
+    : (projectStatuses ?? []).map(c => mapStatuses(c));
   const columns = useMemo(() => cols, []);
 
   // We'll start our table without any data
@@ -89,7 +95,10 @@ export const ProjectListView: React.FC<IProps> = ({
   );
 
   // Filtering and pagination state
-  const [filter, setFilter] = useState<IProjectFilterState>({ ...initialValues, ...defaultFilter });
+  const [filter, setFilter] = useState<IProjectFilterState>({
+    ...defaultFilter,
+    statusId: showDefaultStatusOptions ? defaultFilter.statusId : [],
+  });
   const [clearSelected, setClearSelected] = useState(false);
   const [pageSize, setPageSize] = useState(10);
   const [pageIndex, setPageIndex] = useState(0);
@@ -154,7 +163,11 @@ export const ProjectListView: React.FC<IProps> = ({
         const query = getServerQuery({
           pageIndex,
           pageSize,
-          filter: filter,
+          filter: {
+            ...filter,
+            notStatusId: filter?.statusId?.length ? [] : filter?.notStatusId,
+            statusId: filter?.statusId?.length ? filter.statusId : defaultFilter.statusId,
+          },
         });
         const data = await service.getProjectList(query);
 
@@ -168,34 +181,32 @@ export const ProjectListView: React.FC<IProps> = ({
         setPageCount(Math.ceil(data.total / pageSize));
       }
     },
-    [setData, setPageCount],
+    [defaultFilter.statusId],
   );
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const route = history.location.pathname;
 
   // Listen for changes in pagination and use the state to fetch our new data
   useDeepCompareEffect(() => {
-    route === '/projects/list' && dispatch(fetchProjectStatuses());
+    route.startsWith('/projects') && fetchProjectStatuses()(dispatch);
     fetchData({ pageIndex, pageSize, filter, agencyIds });
   }, [fetchData, pageIndex, pageSize, filter, agencyIds, dispatch, route]);
 
   const fetch = (accept: 'csv' | 'excel', reportType: 'generic' | 'spl') => {
     const query = getServerQuery({ pageIndex, pageSize, filter, agencyIds });
-    return dispatch(
-      download({
-        url:
-          reportType === 'generic'
-            ? getProjectReportUrl({ ...query, all: true })
-            : getProjectFinancialReportUrl({ ...query, all: true }),
-        fileName: `${reportType === 'spl' ? 'pims-spl-report' : 'pims-projects'}.${
-          accept === 'csv' ? 'csv' : 'xlsx'
-        }`,
-        actionType: 'projects-report',
-        headers: {
-          Accept: accept === 'csv' ? 'text/csv' : 'application/vnd.ms-excel',
-        },
-      }),
-    );
+    return download({
+      url:
+        reportType === 'generic'
+          ? getProjectReportUrl({ ...query, all: true })
+          : getProjectFinancialReportUrl({ ...query, all: true }),
+      fileName: `${reportType === 'spl' ? 'pims-spl-report' : 'pims-projects'}.${
+        accept === 'csv' ? 'csv' : 'xlsx'
+      }`,
+      actionType: 'projects-report',
+      headers: {
+        Accept: accept === 'csv' ? 'text/csv' : 'application/vnd.ms-excel',
+      },
+    })(dispatch);
   };
 
   const handleDelete = async () => {
@@ -263,10 +274,7 @@ export const ProjectListView: React.FC<IProps> = ({
     <Container fluid className="ProjectListView">
       <div className="filter-container">
         {filterable && (
-          <FilterBar<IProjectFilterState>
-            initialValues={{ ...initialValues, ...defaultFilter }}
-            onChange={handleFilterChange}
-          >
+          <FilterBar<IProjectFilterState> initialValues={filter} onChange={handleFilterChange}>
             <Col xs={2} className="bar-item">
               <Input field="name" placeholder="Search by project name or number" />
             </Col>

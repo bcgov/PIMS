@@ -72,10 +72,7 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
 
   let classId = getIn(formikProps.values, withNameSpace('classificationId'));
   const filteredClassifications = props.classifications.filter(
-    (c: any) =>
-      (Number(c.value) !== Classifications.SurplusActive &&
-        Number(c.value) !== Classifications.Disposed) ||
-      +c.value === +classId,
+    (c: any) => Number(c.value) !== Classifications.Disposed || +c.value === +classId,
   );
 
   const projectNumbers = getIn(formikProps.values, withNameSpace('projectNumbers'));

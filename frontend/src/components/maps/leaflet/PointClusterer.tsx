@@ -18,12 +18,12 @@ import { useApi } from 'hooks/useApi';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { PropertyTypes } from 'constants/propertyTypes';
 import SelectedPropertyMarker from './SelectedPropertyMarker/SelectedPropertyMarker';
-import * as parcelsActions from 'actions/parcelsActions';
-import { useDispatch } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import queryString from 'query-string';
 import { toast } from 'react-toastify';
 import { getIn } from 'formik';
+import { storePropertyDetail } from 'store/slices/parcelSlice';
+import { useAppDispatch } from 'store';
 
 export type PointClustererProps = {
   points: Array<PointFeature>;
@@ -257,7 +257,7 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
 
   const popUpContext = React.useContext(PropertyPopUpContext);
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const { getParcel, getBuilding } = useApi();
   const fetchProperty = React.useCallback(
     (propertyTypeId: number, id: number) => {
@@ -278,7 +278,12 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
           .then(building => {
             popUpContext.setPropertyInfo(building);
             if (!!building.parcels.length) {
-              dispatch(parcelsActions.storeBuildingDetail(building));
+              dispatch(
+                storePropertyDetail({
+                  propertyTypeId: 1,
+                  parcelDetail: building,
+                }),
+              );
             }
           })
           .catch(() => {
@@ -347,9 +352,20 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
                   cluster.properties.propertyTypeId === PropertyTypes.PARCEL ||
                   cluster.properties.propertyTypeId === PropertyTypes.SUBDIVISION
                 ) {
-                  dispatch(parcelsActions.storeParcelDetail(convertedProperty as IParcel));
+                  dispatch(
+                    storePropertyDetail({
+                      propertyTypeId: (convertedProperty as IParcel)
+                        ?.propertyTypeId as PropertyTypes,
+                      parcelDetail: convertedProperty as IParcel,
+                    }),
+                  );
                 } else {
-                  dispatch(parcelsActions.storeBuildingDetail(convertedProperty as IBuilding));
+                  dispatch(
+                    storePropertyDetail({
+                      propertyTypeId: 1,
+                      parcelDetail: convertedProperty as IBuilding,
+                    }),
+                  );
                 }
                 onMarkerClick(); //open information slideout
                 if (keycloak.canUserViewProperty(cluster.properties as IProperty)) {
@@ -386,9 +402,19 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
                 m.properties.propertyTypeId === PropertyTypes.PARCEL ||
                 m.properties.propertyTypeId === PropertyTypes.SUBDIVISION
               ) {
-                dispatch(parcelsActions.storeParcelDetail(convertedProperty as IParcel));
+                dispatch(
+                  storePropertyDetail({
+                    propertyTypeId: (convertedProperty as IParcel)?.propertyTypeId as PropertyTypes,
+                    parcelDetail: convertedProperty as IParcel,
+                  }),
+                );
               } else {
-                dispatch(parcelsActions.storeBuildingDetail(convertedProperty as IBuilding));
+                dispatch(
+                  storePropertyDetail({
+                    propertyTypeId: 1,
+                    parcelDetail: convertedProperty as IBuilding,
+                  }),
+                );
               }
               onMarkerClick(); //open information slideout
               if (keycloak.canUserViewProperty(m.properties as IProperty)) {

@@ -88,11 +88,11 @@ const AgencyResponseForm = ({ isReadOnly }: IAgencyResponseFormProps) => {
         </Col>
       </Form.Row>
       <ErpNotificationNotes
-        disabled={true}
         label="Text added to ERP Notification Emails"
         tooltip="The contents of this note were included in the email notifications for this project."
         outerClassName="col-md-12 reviewRequired"
         className="col-md-8"
+        disabled={isReadOnly}
       />
       <AgencyInterest disabled={isReadOnly} />
     </Container>

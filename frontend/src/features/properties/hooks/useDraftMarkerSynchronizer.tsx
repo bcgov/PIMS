@@ -1,14 +1,13 @@
 import * as React from 'react';
-import { storeDraftParcelsAction } from 'actions/parcelsActions';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
 import debounce from 'lodash/debounce';
 import { useFormikContext, getIn } from 'formik';
 import { useCallback } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useAppDispatch, useAppSelector } from 'store';
 import _ from 'lodash';
-import { RootState } from 'reducers/rootReducer';
 import { PointFeature } from 'components/maps/types';
 import { PropertyTypes } from 'constants/propertyTypes';
+import { storeDraftProperties } from 'store/slices/parcelSlice';
 
 /**
  * Get a list of draft markers from the current form values.
@@ -50,10 +49,8 @@ const getDraftMarkers = (values: any, initialValues: any, nameSpace: string) => 
  */
 const useDraftMarkerSynchronizer = (nameSpace: string) => {
   const { values, initialValues } = useFormikContext();
-  const properties = useSelector<RootState, PointFeature[]>(state => [
-    ...state.parcel.draftParcels,
-  ]);
-  const dispatch = useDispatch();
+  const properties = useAppSelector(store => [...store.parcel.draftProperties]);
+  const dispatch = useAppDispatch();
   const nonDraftProperties = React.useMemo(
     () =>
       properties.filter(
@@ -68,7 +65,7 @@ const useDraftMarkerSynchronizer = (nameSpace: string) => {
 
   React.useEffect(() => {
     return () => {
-      dispatch(storeDraftParcelsAction([]));
+      dispatch(storeDraftProperties([]));
     };
   }, [dispatch]);
 
@@ -93,9 +90,9 @@ const useDraftMarkerSynchronizer = (nameSpace: string) => {
                 dbProperty.geometry.coordinates[1] === draftMarker.geometry.coordinates[1],
             ) === undefined,
         );
-        dispatch(storeDraftParcelsAction(newDraftMarkers as PointFeature[]));
+        dispatch(storeDraftProperties(newDraftMarkers as PointFeature[]));
       } else {
-        dispatch(storeDraftParcelsAction([]));
+        dispatch(storeDraftProperties([]));
       }
     },
     [dispatch],

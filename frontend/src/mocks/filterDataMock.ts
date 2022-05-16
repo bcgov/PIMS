@@ -1,5 +1,5 @@
 import { IBuilding } from './../actions/parcelsActions';
-import { ILookupCode } from '../actions/lookupActions';
+import { ILookupCode } from '../actions/ILookupCode';
 import { IParcel, IProperty } from 'actions/parcelsActions';
 import { IProperty as IFlatProperty } from 'features/properties/list';
 import { Workflows } from 'constants/index';

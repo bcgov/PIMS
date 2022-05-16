@@ -4,7 +4,7 @@ import { IProject } from 'features/projects/interfaces';
 import { PropertyListViewUpdate } from '../../common/components/PropertyListViewUpdate';
 import { useFormikContext } from 'formik';
 import _ from 'lodash';
-import { ILookupCode } from 'actions/lookupActions';
+import { ILookupCode } from 'actions/ILookupCode';
 import Form from 'react-bootstrap/Form';
 import * as API from 'constants/API';
 import { TypeaheadField } from 'components/common/form/Typeahead';

@@ -1,11 +1,13 @@
-import { request, success, error } from 'actions/genericActions';
-import { IBuilding, storeBuildingDetail } from 'actions/parcelsActions';
+import { request, success, error } from 'store';
+import { IBuilding } from 'actions/parcelsActions';
 import { showLoading, hideLoading } from 'react-redux-loading-bar';
 import CustomAxios, { LifecycleToasts } from 'customAxios';
 import { ENVIRONMENT } from 'constants/environment';
 import * as actionTypes from 'constants/actionTypes';
 import * as pimsToasts from 'constants/toasts';
 import * as API from 'constants/API';
+import { storePropertyDetail } from 'store/slices/parcelSlice';
+import { AxiosError } from 'axios';
 
 const buildingCreatingToasts: LifecycleToasts = {
   loadingToast: pimsToasts.building.BUILDING_CREATING,
@@ -32,13 +34,20 @@ export const useBuildingApi = () => {
         building,
       );
       dispatch(success(actionTypes.ADD_BUILDING, status));
-      dispatch(storeBuildingDetail(data));
+      dispatch(
+        storePropertyDetail({
+          propertyTypeId: 1,
+          parcelDetail: data,
+        }),
+      );
+
       dispatch(hideLoading());
       return data;
     } catch (axiosError) {
-      dispatch(error(actionTypes.ADD_BUILDING, axiosError?.response?.status, axiosError));
+      const err = axiosError as AxiosError;
+      dispatch(error(actionTypes.ADD_BUILDING, err?.response?.status, axiosError));
       dispatch(hideLoading());
-      throw Error(axiosError.response?.data.details);
+      throw Error(err.response?.data.details);
     }
   };
 
@@ -55,13 +64,19 @@ export const useBuildingApi = () => {
         building,
       );
       dispatch(success(actionTypes.UPDATE_BUILDING, status));
-      dispatch(storeBuildingDetail(data));
+      dispatch(
+        storePropertyDetail({
+          propertyTypeId: 1,
+          parcelDetail: data,
+        }),
+      );
       dispatch(hideLoading());
       return data;
     } catch (axiosError) {
-      dispatch(error(actionTypes.UPDATE_BUILDING, axiosError?.response?.status, axiosError));
+      const err = axiosError as AxiosError;
+      dispatch(error(actionTypes.UPDATE_BUILDING, err?.response?.status, axiosError));
       dispatch(hideLoading());
-      throw Error(axiosError.response?.data.details);
+      throw Error(err.response?.data.details);
     }
   };
 

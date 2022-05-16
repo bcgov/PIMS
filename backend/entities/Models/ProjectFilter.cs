@@ -27,6 +27,11 @@ namespace Pims.Dal.Entities.Models
         public int[] StatusId { get; set; }
 
         /// <summary>
+        /// get/set - An array of status Id.
+        /// </summary>
+        public int[] NotStatusId { get; set; }
+
+        /// <summary>
         /// get/set - The project tier level.
         /// </summary>
         /// <value></value>
@@ -91,6 +96,7 @@ namespace Pims.Dal.Entities.Models
             this.Name = filter.GetStringValue(nameof(this.Name));
             this.StatusId = filter.GetIntArrayValue("status");
             this.StatusId = filter.GetIntArrayValue(nameof(this.StatusId));
+            this.NotStatusId = filter.GetIntArrayValue(nameof(this.NotStatusId));
             this.TierLevelId = filter.GetIntNullValue(nameof(this.TierLevelId));
             this.CreatedByMe = filter.GetBoolNullValue(nameof(this.CreatedByMe));
             this.SPLWorkflow = filter.GetBoolNullValue(nameof(this.SPLWorkflow));
@@ -118,6 +124,7 @@ namespace Pims.Dal.Entities.Models
                 || this.CreatedByMe.HasValue
                 || this.FiscalYear.HasValue
                 || (this.StatusId?.Any() ?? false)
+                || (this.NotStatusId?.Any() ?? false)
                 || (this.Agencies?.Any() ?? false)
                 || (this.Workflows?.Any() ?? false);
         }

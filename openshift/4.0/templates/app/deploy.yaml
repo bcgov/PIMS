@@ -7,21 +7,22 @@ metadata:
     description: Deployment template for a React frontend application served through Nginx
     tags: pims,app,react,nginx
 parameters:
+ - name: SOLUTION_NAME
+    displayName: Solution Group Name
+    description: The name of the solution (e.g pims).
+    required: true
+    value: pims
   - name: APP_NAME
-    displayName: "App Name"
-    description: "The name of the application (grouped)."
+    displayName: Application Name
+    description: The name of the application (e.g. app).
     required: true
-    value: "pims"
-  - name: ROLE_NAME
-    displayName: "Component Name"
-    description: "The name of the application role (e.g api, app, database)."
+    value: app
+  - name: API_NAME
+    displayName: API Application Name
+    description: The name of the API application.
     required: true
-    value: "app"
-  - name: API_ROLE_NAME
-    displayName: "Component Name"
-    description: "The name of the application role for the API."
-    required: true
-    value: "api"
+    value: api
+
   - name: PROJECT_NAMESPACE
     displayName: "OpenShift Project Namespace"
     description: "The namespace of the OpenShift project containing the application."
@@ -32,10 +33,6 @@ parameters:
     description: "The name for this environment [dev, test, prod, tools]"
     required: true
     value: "dev"
-  - name: INSTANCE
-    displayName: "Unique Identifier"
-    description: "A unique identifier to allow for multiple instances (i.e. '-01')."
-    value: ""
 
   - name: IMAGE_TAG
     displayName: "Image Tag Name"
@@ -132,35 +129,35 @@ objects:
   - kind: NetworkPolicy
     apiVersion: networking.k8s.io/v1
     metadata:
-      name: pod-from-pod-permit-${APP_NAME}-${ROLE_NAME}-${API_ROLE_NAME}
+      name: pod-from-pod-permit-${SOLUTION_NAME}-${APP_NAME}-${API_NAME}
       namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
     spec:
       #description: Allow api pod(s) to receive communication from app pod(s).
       podSelector:
         matchLabels:
-          app: ${APP_NAME}
-          role: ${API_ROLE_NAME}
+          app: ${SOLUTION_NAME}
+          role: ${API_NAME}
           env: ${ENV_NAME}
       ingress:
         - from:
             - podSelector:
                 matchLabels:
-                  app: ${APP_NAME}
-                  role: ${ROLE_NAME}
+                  app: ${SOLUTION_NAME}
+                  role: ${APP_NAME}
                   env: ${ENV_NAME}
 
   # Open up ports to communicate with the app.
   - kind: Service
     apiVersion: v1
     metadata:
-      name: ${APP_NAME}-${ROLE_NAME}${INSTANCE}
+      name: ${SOLUTION_NAME}-${APP_NAME}
       namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
       annotations:
         description: Exposes and load balances the application pods.
       labels:
-        name: ${APP_NAME}-${ROLE_NAME}${INSTANCE}
-        app: ${APP_NAME}
-        role: ${ROLE_NAME}
+        name: ${SOLUTION_NAME}-${APP_NAME}
+        app: ${SOLUTION_NAME}
+        role: ${APP_NAME}
         env: ${ENV_NAME}
     spec:
       ports:
@@ -169,9 +166,9 @@ objects:
           protocol: TCP
           targetPort: ${{APP_PORT}}
       selector:
-        name: ${APP_NAME}-${ROLE_NAME}${INSTANCE}
-        app: ${APP_NAME}
-        role: ${ROLE_NAME}
+        name: ${SOLUTION_NAME}-${APP_NAME}
+        app: ${SOLUTION_NAME}
+        role: ${APP_NAME}
         env: ${ENV_NAME}
       sessionAffinity: None
       type: ClusterIP
@@ -180,14 +177,14 @@ objects:
   - kind: ConfigMap
     apiVersion: v1
     metadata:
-      name: ${APP_NAME}-${ROLE_NAME}-sso${INSTANCE}
+      name: ${SOLUTION_NAME}-${APP_NAME}-sso
       namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
       annotations:
         description: Keycloak client JSON configuration
       labels:
-        name: ${APP_NAME}-${ROLE_NAME}-sso${INSTANCE}
-        app: ${APP_NAME}
-        role: ${ROLE_NAME}
+        name: ${SOLUTION_NAME}-${APP_NAME}-sso
+        app: ${SOLUTION_NAME}
+        role: ${APP_NAME}
         env: ${ENV_NAME}
     type: Opaque
     data:
@@ -195,7 +192,7 @@ objects:
         "realm": "${KEYCLOAK_REALM}",
         "auth-server-url": "${KEYCLOAK_AUTHORITY_URL}",
         "ssl-required": "external",
-        "resource": "${APP_NAME}-${ROLE_NAME}",
+        "resource": "${SOLUTION_NAME}-${APP_NAME}",
         "public-client": true,
         "confidential-port": 0
         }'
@@ -204,14 +201,14 @@ objects:
   - kind: ConfigMap
     apiVersion: v1
     metadata:
-      name: ${APP_NAME}-${ROLE_NAME}-env${INSTANCE}
+      name: ${SOLUTION_NAME}-${APP_NAME}-env
       namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
       annotations:
         description: Environment variable configuration
       labels:
-        name: ${APP_NAME}-${ROLE_NAME}-env${INSTANCE}
-        app: ${APP_NAME}
-        role: ${ROLE_NAME}
+        name: ${SOLUTION_NAME}-${APP_NAME}-env
+        app: ${SOLUTION_NAME}
+        role: ${APP_NAME}
         env: ${ENV_NAME}
     type: Opaque
     data:
@@ -223,21 +220,21 @@ objects:
   - kind: DeploymentConfig
     apiVersion: v1
     metadata:
-      name: ${APP_NAME}-${ROLE_NAME}${INSTANCE}
+      name: ${SOLUTION_NAME}-${APP_NAME}
       namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
       annotations:
-        description: "Defines how to deploy ${APP_NAME}-${ROLE_NAME}"
+        description: "Defines how to deploy ${SOLUTION_NAME}-${APP_NAME}"
       labels:
-        name: ${APP_NAME}-${ROLE_NAME}${INSTANCE}
-        app: ${APP_NAME}
-        role: ${ROLE_NAME}
+        name: ${SOLUTION_NAME}-${APP_NAME}
+        app: ${SOLUTION_NAME}
+        role: ${APP_NAME}
         env: ${ENV_NAME}
     spec:
       replicas: ${{REPLICAS}}
       selector:
-        name: ${APP_NAME}-${ROLE_NAME}${INSTANCE}
-        app: ${APP_NAME}
-        role: ${ROLE_NAME}
+        name: ${SOLUTION_NAME}-${APP_NAME}
+        app: ${SOLUTION_NAME}
+        role: ${APP_NAME}
         env: ${ENV_NAME}
       strategy:
         rollingParams:
@@ -249,28 +246,28 @@ objects:
         type: Rolling
       template:
         metadata:
-          name: ${APP_NAME}-${ROLE_NAME}${INSTANCE}
+          name: ${SOLUTION_NAME}-${APP_NAME}
           labels:
-            name: ${APP_NAME}-${ROLE_NAME}${INSTANCE}
-            app: ${APP_NAME}
-            role: ${ROLE_NAME}
+            name: ${SOLUTION_NAME}-${APP_NAME}
+            app: ${SOLUTION_NAME}
+            role: ${APP_NAME}
             env: ${ENV_NAME}
         spec:
           volumes:
-            - name: "${APP_NAME}-${ROLE_NAME}-keycloak${INSTANCE}"
+            - name: "${SOLUTION_NAME}-${APP_NAME}-keycloak"
               configMap:
-                name: ${APP_NAME}-${ROLE_NAME}-sso${INSTANCE}
+                name: ${SOLUTION_NAME}-${APP_NAME}-sso
                 items:
                   - key: "${KEYCLOAK_CONFIG_FILE_NAME}"
                     path: "${KEYCLOAK_CONFIG_FILE_NAME}"
-            - name: "${APP_NAME}-${ROLE_NAME}-envvars${INSTANCE}"
+            - name: "${SOLUTION_NAME}-${APP_NAME}-envvars"
               configMap:
-                name: ${APP_NAME}-${ROLE_NAME}-env${INSTANCE}
+                name: ${SOLUTION_NAME}-${APP_NAME}-env
                 items:
                   - key: "environment.json"
                     path: "environment.json"
           containers:
-            - name: ${APP_NAME}-${ROLE_NAME}${INSTANCE}
+            - name: ${SOLUTION_NAME}-${APP_NAME}
               image: ""
               imagePullPolicy: Always
               ports:
@@ -293,10 +290,10 @@ objects:
                   cpu: ${CPU_LIMIT}
                   memory: ${MEMORY_LIMIT}
               volumeMounts:
-                - name: "${APP_NAME}-${ROLE_NAME}-keycloak${INSTANCE}"
+                - name: "${SOLUTION_NAME}-${APP_NAME}-keycloak"
                   mountPath: "${FILE_CONFIG_MOUNT_PATH}${KEYCLOAK_CONFIG_FILE_NAME}"
                   subPath: "${KEYCLOAK_CONFIG_FILE_NAME}"
-                - name: "${APP_NAME}-${ROLE_NAME}-envvars${INSTANCE}"
+                - name: "${SOLUTION_NAME}-${APP_NAME}-envvars"
                   mountPath: "${FILE_CONFIG_MOUNT_PATH}environment.json"
                   subPath: "environment.json"
               livenessProbe:
@@ -330,8 +327,8 @@ objects:
           imageChangeParams:
             automatic: true
             containerNames:
-              - ${APP_NAME}-${ROLE_NAME}${INSTANCE}
+              - ${SOLUTION_NAME}-${APP_NAME}
             from:
               kind: ImageStreamTag
               namespace: "${PROJECT_NAMESPACE}-tools"
-              name: "${APP_NAME}-${ROLE_NAME}:${IMAGE_TAG}"
+              name: "${SOLUTION_NAME}-${APP_NAME}:${IMAGE_TAG}"

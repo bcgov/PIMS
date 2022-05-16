@@ -2734,6 +2734,9 @@ namespace Pims.Dal.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("DisplayName")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("Id")
                         .HasColumnType("int");
 
@@ -2808,6 +2811,9 @@ namespace Pims.Dal.Migrations
 
                     b.Property<bool?>("TransferLeaseOnSale")
                         .HasColumnType("bit");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Zoning")
                         .HasColumnType("nvarchar(max)");

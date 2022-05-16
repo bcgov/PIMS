@@ -5,14 +5,13 @@ import { Navbar, Row, Col, Modal, Button, Nav } from 'react-bootstrap';
 import BClogoUrl from 'assets/images/logo-banner.svg';
 import PIMSlogo from 'assets/images/PIMSlogo/logo_only.png';
 import { useHistory } from 'react-router-dom';
-import { IGenericNetworkAction, clear } from 'actions/genericActions';
-import { RootState } from 'reducers/rootReducer';
-import { useSelector, useDispatch } from 'react-redux';
+import { IGenericNetworkAction, clear } from 'store';
 import { FaBomb } from 'react-icons/fa';
 import _ from 'lodash';
 import { UserProfile } from './UserProfile';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import styled from 'styled-components';
+import { useAppDispatch, useAppSelector } from 'store';
 
 const VerticalBar = styled.span`
   border-left: 2px solid white;
@@ -23,7 +22,7 @@ const VerticalBar = styled.span`
 
 const Header = () => {
   const history = useHistory();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const keycloak = useKeycloakWrapper();
   if (history.location.pathname === '/') {
     history.replace('/mapview');
@@ -38,9 +37,9 @@ const Header = () => {
 
   const isNetworkError = (x: any): x is IGenericNetworkAction =>
     (x as IGenericNetworkAction).type === 'ERROR';
-  const errors = useSelector<RootState, IGenericNetworkAction[]>(state => {
+  const errors = useAppSelector(store => {
     const errors: IGenericNetworkAction[] = [];
-    _.values(state).forEach(reducer => {
+    _.values(store.network).forEach(reducer => {
       _.values(reducer)
         .filter(x => x instanceof Object)
         .forEach(action => {
@@ -51,6 +50,7 @@ const Header = () => {
     });
     return errors;
   });
+
   //TODO: styling - this is a placeholder, need UI.
   const errorModal = (errors: IGenericNetworkAction[]) => (
     <Modal show={show} onHide={handleClose}>

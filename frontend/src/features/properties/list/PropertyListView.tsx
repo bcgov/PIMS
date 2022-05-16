@@ -1,6 +1,6 @@
 import './PropertyListView.scss';
 import React, { useState, useMemo, useRef, useCallback } from 'react';
-import { useDispatch } from 'react-redux';
+import { useAppDispatch } from 'store';
 import { Container, Button } from 'react-bootstrap';
 import queryString from 'query-string';
 import { fill, isEmpty, pick, range, noop, keys, intersection } from 'lodash';
@@ -38,10 +38,10 @@ import * as Yup from 'yup';
 import {
   getCurrentYearEvaluation,
   getCurrentFiscal,
-  toApiProperty,
 } from 'features/projects/common/projectConverter';
-import { IApiProperty } from 'features/projects/interfaces';
 import { PropertyTypes } from 'constants/index';
+import { IBuilding, IParcel } from 'actions/parcelsActions';
+import { toApiProperty } from './toApiProperty';
 
 const getPropertyReportUrl = (filter: IPropertyQueryParams) =>
   `${ENVIRONMENT.apiUrl}/reports/properties?${filter ? queryString.stringify(filter) : ''}`;
@@ -90,22 +90,21 @@ const defaultFilterValues: IPropertyFilter = {
   propertyType: PropertyTypeNames.Land,
   maxAssessedValue: '',
   maxNetBookValue: '',
-  maxMarketValue: '',
   inSurplusPropertyProgram: false,
   inEnhancedReferralProcess: false,
   surplusFilter: false,
 };
 
-export const flattenProperty = (apiProperty: IApiProperty): IProperty => {
+export const flattenParcel = (apiProperty: IParcel): IProperty => {
   const assessedLand = getCurrentYearEvaluation(apiProperty.evaluations, EvaluationKeys.Assessed);
-  const assessedBuilding = apiProperty.parcelId
-    ? getCurrentYearEvaluation(apiProperty.evaluations, EvaluationKeys.Improvements)
-    : getCurrentYearEvaluation(apiProperty.evaluations, EvaluationKeys.Assessed);
+  const assessedBuilding = getCurrentYearEvaluation(
+    apiProperty.evaluations,
+    EvaluationKeys.Improvements,
+  );
   const netBook = getCurrentFiscal(apiProperty.fiscals, FiscalKeys.NetBook);
-  const market = getCurrentFiscal(apiProperty.fiscals, FiscalKeys.Market);
   const property: any = {
     id: apiProperty.id,
-    parcelId: apiProperty.parcelId ?? apiProperty.id,
+    parcelId: apiProperty.id,
     pid: apiProperty.pid ?? '',
     name: apiProperty.name,
     description: apiProperty.description,
@@ -136,11 +135,47 @@ export const flattenProperty = (apiProperty: IApiProperty): IProperty => {
     netBook: (netBook?.value as number) ?? 0,
     netBookFiscalYear: netBook?.fiscalYear as number,
     netBookRowVersion: netBook?.rowVersion,
-    market: (market?.value as number) ?? 0,
-    marketFiscalYear: market?.fiscalYear as number,
-    marketRowVersion: market?.rowVersion,
     rowVersion: apiProperty.rowVersion,
     landArea: apiProperty.landArea,
+  };
+  return property;
+};
+
+export const flattenBuilding = (apiProperty: IBuilding): IProperty => {
+  const assessedBuilding = getCurrentYearEvaluation(
+    apiProperty.evaluations,
+    EvaluationKeys.Assessed,
+  );
+  const netBook = getCurrentFiscal(apiProperty.fiscals, FiscalKeys.NetBook);
+  const property: any = {
+    id: apiProperty.id,
+    parcelId: apiProperty.parcelId,
+    pid: apiProperty.pid ?? '',
+    name: apiProperty.name,
+    description: apiProperty.description,
+    landLegalDescription: '',
+    isSensitive: apiProperty.isSensitive,
+    latitude: apiProperty.latitude,
+    longitude: apiProperty.longitude,
+    agencyId: apiProperty.agencyId,
+    agency: apiProperty.agency ?? '',
+    agencyCode: apiProperty.agency ?? '',
+    subAgency: apiProperty.subAgencyFullName ?? apiProperty.subAgency,
+    classification: apiProperty.classification ?? '',
+    classificationId: apiProperty.classificationId,
+    addressId: apiProperty.address?.id as number,
+    address: `${apiProperty.address?.line1 ?? ''} , ${apiProperty.address?.administrativeArea ??
+      ''}`,
+    administrativeArea: apiProperty.address?.administrativeArea ?? '',
+    province: apiProperty.address?.province ?? '',
+    postal: apiProperty.address?.postal ?? '',
+    assessedBuilding: (assessedBuilding?.value as number) ?? 0,
+    assessedBuildingDate: assessedBuilding?.date,
+    netBook: (netBook?.value as number) ?? 0,
+    netBookFiscalYear: netBook?.fiscalYear as number,
+    netBookRowVersion: netBook?.rowVersion,
+    rowVersion: apiProperty.rowVersion,
+    totalArea: apiProperty.totalArea,
   };
   return property;
 };
@@ -173,7 +208,6 @@ const getServerQuery = (state: {
       maxLotSize,
       propertyType,
       maxAssessedValue,
-      maxMarketValue,
       maxNetBookValue,
     },
   } = state;
@@ -207,7 +241,6 @@ const getServerQuery = (state: {
     propertyType: propertyType,
     name: name,
     maxAssessedValue,
-    maxMarketValue,
     maxNetBookValue,
   };
   return query;
@@ -218,7 +251,6 @@ interface IChangedRow {
   assessedLand?: boolean;
   assessedBuilding?: boolean;
   netBook?: boolean;
-  market?: boolean;
 }
 
 /**
@@ -411,7 +443,7 @@ const PropertyListView: React.FC = () => {
     fetchData({ pageIndex, pageSize, filter, agencyIds, sorting });
   }, [fetchData, pageIndex, pageSize, filter, agencyIds, sorting]);
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   /**
    * @param {'csv' | 'excel'} accept Whether the fetch is for type of CSV or EXCEL
@@ -419,18 +451,16 @@ const PropertyListView: React.FC = () => {
    */
   const fetch = (accept: 'csv' | 'excel', getAllFields?: boolean) => {
     const query = getServerQuery({ pageIndex, pageSize, filter, agencyIds });
-    return dispatch(
-      download({
-        url: getAllFields
-          ? getAllFieldsPropertyReportUrl({ ...query, all: true, propertyType: undefined })
-          : getPropertyReportUrl({ ...query, all: true, propertyType: undefined }),
-        fileName: `pims-inventory.${accept === 'csv' ? 'csv' : 'xlsx'}`,
-        actionType: 'properties-report',
-        headers: {
-          Accept: accept === 'csv' ? 'text/csv' : 'application/vnd.ms-excel',
-        },
-      }),
-    );
+    return download({
+      url: getAllFields
+        ? getAllFieldsPropertyReportUrl({ ...query, all: true, propertyType: undefined })
+        : getPropertyReportUrl({ ...query, all: true, propertyType: undefined }),
+      fileName: `pims-inventory.${accept === 'csv' ? 'csv' : 'xlsx'}`,
+      actionType: 'properties-report',
+      headers: {
+        Accept: accept === 'csv' ? 'text/csv' : 'application/vnd.ms-excel',
+      },
+    })(dispatch);
   };
 
   const checkExpanded = (row: IProperty, property: IProperty) => {
@@ -493,7 +523,7 @@ const PropertyListView: React.FC = () => {
     actions: FormikProps<{ properties: IProperty[] }>,
   ) => {
     let nextProperties = [...values.properties];
-    const editableColumnKeys = ['assessedLand', 'assessedBuilding', 'netBook', 'market'];
+    const editableColumnKeys = ['assessedLand', 'assessedBuilding', 'netBook'];
 
     const changedRows = dirtyRows
       .map(change => {
@@ -533,7 +563,7 @@ const PropertyListView: React.FC = () => {
               if (index === change.rowId) {
                 item = {
                   ...item,
-                  ...flattenProperty(response),
+                  ...(apiProperty.parcelId ? flattenParcel(response) : flattenBuilding(response)),
                 } as any;
               }
               return item;
@@ -545,7 +575,7 @@ const PropertyListView: React.FC = () => {
           } catch (error) {
             const errorMessage = (error as Error).message;
 
-            touched[change.rowId] = pick(change, ['assessedLand', 'netBook', 'market']);
+            touched[change.rowId] = pick(change, ['assessedLand', 'netBook']);
             toast.error(
               `Failed to save changes for ${apiProperty.name ||
                 apiProperty.address?.line1}. ${errorMessage}`,
@@ -553,7 +583,6 @@ const PropertyListView: React.FC = () => {
             errors[change.rowId] = {
               assessedLand: change.assessedland && (errorMessage || 'Save request failed.'),
               netBook: change.netBook && (errorMessage || 'Save request failed.'),
-              market: change.market && (errorMessage || 'Save request failed.'),
             };
           }
         }
@@ -563,6 +592,7 @@ const PropertyListView: React.FC = () => {
       if (!errors.find(x => !!x)) {
         actions.setTouched({ properties: [] });
         setData(nextProperties);
+        actions.resetForm({ values: { properties: nextProperties } });
       } else {
         actions.resetForm({
           values: { properties: nextProperties },
@@ -652,7 +682,10 @@ const PropertyListView: React.FC = () => {
           )}
           {editable && (
             <>
-              <TooltipWrapper toolTipId="cancel-edited-financial-values" toolTip={'Cancel edits'}>
+              <TooltipWrapper
+                toolTipId="cancel-edited-financial-values"
+                toolTip={'Cancel unsaved edits'}
+              >
                 <Button
                   data-testid="cancel-changes"
                   variant="outline-primary"
@@ -753,14 +786,6 @@ const PropertyListView: React.FC = () => {
               validationSchema={Yup.object().shape({
                 properties: Yup.array().of(
                   Yup.object().shape({
-                    assessedLand: Yup.number()
-                      .min(0, 'Minimum value is $0')
-                      .max(1000000000, 'Maximum value is $1,000,000,000')
-                      .required('Required'),
-                    market: Yup.number()
-                      .min(0, 'Minimum value is $0')
-                      .max(1000000000, 'Maximum value is $1,000,000,000')
-                      .required('Required'),
                     netBook: Yup.number()
                       .min(0, 'Minimum value is $0')
                       .max(1000000000, 'Maximum value is $1,000,000,000')

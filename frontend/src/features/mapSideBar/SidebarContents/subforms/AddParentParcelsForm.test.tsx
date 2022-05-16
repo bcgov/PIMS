@@ -1,10 +1,10 @@
 import React from 'react';
-import { render, act, fireEvent, screen, wait } from '@testing-library/react';
+import { render, act, fireEvent, screen, waitFor } from '@testing-library/react';
 import { noop } from 'lodash';
 import { Formik } from 'formik';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { ILookupCode } from 'actions/lookupActions';
+import { ILookupCode } from 'actions/ILookupCode';
 import * as API from 'constants/API';
 import * as reducerTypes from 'constants/reducerTypes';
 import { Provider } from 'react-redux';
@@ -84,7 +84,7 @@ describe('add parent parcels page', () => {
 
   it('makes a web request during pid searches', async () => {
     const { container, findByText, getByTestId } = render(testRender());
-    await fillInput(container, 'searchParentPid', 1);
+    fillInput(container, 'searchParentPid', 1);
     findMatchingPid.mockReturnValue(mockParcel);
     const searchButton = getByTestId('search-button');
     act(() => {
@@ -96,16 +96,20 @@ describe('add parent parcels page', () => {
 
   it('displays an error if there is no search match', async () => {
     const { container, getByTestId } = render(testRender());
-    await fillInput(container, 'searchParentPid', 1);
+    fillInput(container, 'searchParentPid', 1);
     findMatchingPid.mockReturnValue(undefined);
     const searchButton = getByTestId('search-button');
-    await wait(async () => {
-      fireEvent.click(searchButton);
+    fireEvent.click(searchButton);
 
+    await waitFor(() => {
       expect(findMatchingPid).toHaveBeenCalled();
-      await screen.findByText(
-        `enter a PID for a property that is already in the PIMS Inventory. If it is not you'll need to add it to PIMS first before trying to create a subdivision from it.`,
-      );
     });
+    await waitFor(async () =>
+      expect(
+        await screen.findByText(
+          `enter a PID for a property that is already in the PIMS Inventory. If it is not you'll need to add it to PIMS first before trying to create a subdivision from it.`,
+        ),
+      ).toBeInTheDocument(),
+    );
   });
 });
