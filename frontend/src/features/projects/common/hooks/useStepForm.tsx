@@ -1,5 +1,4 @@
 import { ProjectActions } from 'constants/actionTypes';
-import { clear } from 'store';
 import _ from 'lodash';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import Claims from 'constants/claims';
@@ -10,22 +9,24 @@ import { updateWorkflowStatus, updateProject, createProject } from '..';
 import { IProject } from 'features/projects/interfaces';
 import { Roles } from 'constants/roles';
 import { useAppDispatch, useAppSelector } from 'store';
+import { useNetworkStore } from 'store/slices/hooks';
 
 /** hook providing utilities for project dispose step forms. */
 const useStepForm = () => {
+  const network = useNetworkStore();
   const dispatch = useAppDispatch();
   const keycloak = useKeycloakWrapper();
   const getProjectRequest = useAppSelector(
-    store => (store.network as any)[ProjectActions.GET_PROJECT],
+    store => (store.network.requests as any)[ProjectActions.GET_PROJECT],
   );
   const addProjectRequest = useAppSelector(
-    store => (store.network as any)[ProjectActions.ADD_PROJECT],
+    store => (store.network.requests as any)[ProjectActions.ADD_PROJECT],
   );
   const updateProjectRequest = useAppSelector(
-    store => (store.network as any)[ProjectActions.UPDATE_PROJECT],
+    store => (store.network.requests as any)[ProjectActions.UPDATE_PROJECT],
   );
   const updateWorflowStatusRequest = useAppSelector(
-    store => (store.network as any)[ProjectActions.UPDATE_WORKFLOW_STATUS],
+    store => (store.network.requests as any)[ProjectActions.UPDATE_WORKFLOW_STATUS],
   );
   const noFetchingProjectRequests =
     getProjectRequest?.isFetching !== true &&
@@ -108,8 +109,8 @@ const useStepForm = () => {
         throw Error('axios request failed');
       })
       .finally(() => {
-        dispatch(clear(ProjectActions.UPDATE_PROJECT));
-        dispatch(clear(ProjectActions.ADD_PROJECT));
+        network.clearRequest(ProjectActions.UPDATE_PROJECT);
+        network.clearRequest(ProjectActions.ADD_PROJECT);
       });
   };
 

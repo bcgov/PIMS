@@ -20,6 +20,9 @@ import Keycloak from 'keycloak-js';
 import getKeycloakEventHandler from 'utils/KeycloakEventHandler';
 import { store } from './store';
 import { createKeycloakInstance } from 'utils';
+import { ThemeProvider } from 'styled-components';
+
+import css from './_variables.module.scss';
 
 /**
  * Displays LoginLoading until Keycloak connection is ready.
@@ -48,23 +51,25 @@ const Index = () => {
       <LoginLoading />
     </EmptyLayout>
   ) : (
-    <ReactKeycloakProvider
-      authClient={keycloak}
-      LoadingComponent={
-        <EmptyLayout>
-          <LoginLoading />
-        </EmptyLayout>
-      }
-      onEvent={getKeycloakEventHandler(keycloak)}
-    >
-      <Provider store={store}>
-        <AuthStateContextProvider>
-          <Router>
-            <App />
-          </Router>
-        </AuthStateContextProvider>
-      </Provider>
-    </ReactKeycloakProvider>
+    <ThemeProvider theme={{ css }}>
+      <ReactKeycloakProvider
+        authClient={keycloak}
+        LoadingComponent={
+          <EmptyLayout>
+            <LoginLoading />
+          </EmptyLayout>
+        }
+        onEvent={getKeycloakEventHandler(keycloak)}
+      >
+        <Provider store={store}>
+          <AuthStateContextProvider>
+            <Router>
+              <App />
+            </Router>
+          </AuthStateContextProvider>
+        </Provider>
+      </ReactKeycloakProvider>
+    </ThemeProvider>
   );
 };
 

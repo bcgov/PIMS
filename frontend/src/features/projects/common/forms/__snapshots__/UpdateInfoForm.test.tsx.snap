@@ -109,7 +109,8 @@ exports[`Update Info Form Matches Snapshot 1`] = `
             Assessed Value
           </label>
           <div
-            class="required form-group col-md-6"
+            class="required form-group"
+            md="6"
           >
             <div
               class="input-tooltip-wrapper"
@@ -133,7 +134,8 @@ exports[`Update Info Form Matches Snapshot 1`] = `
             Net Book Value
           </label>
           <div
-            class="required form-group col-md-6"
+            class="required form-group"
+            md="6"
           >
             <div
               class="input-tooltip-wrapper"
@@ -161,7 +163,8 @@ exports[`Update Info Form Matches Snapshot 1`] = `
             Estimated Market Value
           </label>
           <div
-            class="required form-group col-md-6"
+            class="required form-group"
+            md="6"
           >
             <div
               class="input-tooltip-wrapper"
@@ -185,7 +188,8 @@ exports[`Update Info Form Matches Snapshot 1`] = `
             Appraised Value
           </label>
           <div
-            class="form-group col-md-6"
+            class="form-group"
+            md="6"
           >
             <div
               class="input-tooltip-wrapper"
@@ -212,7 +216,8 @@ exports[`Update Info Form Matches Snapshot 1`] = `
             Estimated Sales Costs
           </label>
           <div
-            class="form-group col-md-6"
+            class="form-group"
+            md="6"
           >
             <div
               class="input-tooltip-wrapper"
@@ -235,7 +240,8 @@ exports[`Update Info Form Matches Snapshot 1`] = `
             Estimated Program Recovery Fees
           </label>
           <div
-            class="form-group col-md-6"
+            class="form-group"
+            md="6"
           >
             <div
               class="input-tooltip-wrapper"
@@ -610,7 +616,7 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                   title=""
                 >
                   <div
-                    class="form-group col"
+                    class="form-group"
                   >
                     <input
                       class="form-control"
@@ -656,7 +662,7 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                   style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
                   title=""
                 >
-                  2022
+                  2023
                 </div>
                 <div
                   class="td clickable"

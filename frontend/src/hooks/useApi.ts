@@ -1,4 +1,4 @@
-import CustomAxios from 'customAxios';
+import CustomAxios, { LifecycleToasts } from 'customAxios';
 import { useAppDispatch } from 'store';
 import { showLoading, hideLoading } from 'react-redux-loading-bar';
 import { AxiosInstance } from 'axios';
@@ -45,9 +45,13 @@ export interface PimsAPI extends AxiosInstance {
   updateParcel: (id: number, data: IApiProperty) => Promise<IParcel>;
 }
 
-export const useApi = (): PimsAPI => {
+export interface IApiProps {
+  lifecycleToasts?: LifecycleToasts;
+}
+
+export const useApi = (props?: IApiProps): PimsAPI => {
   const dispatch = useAppDispatch();
-  const axios = CustomAxios() as PimsAPI;
+  const axios = CustomAxios({ lifecycleToasts: props?.lifecycleToasts }) as PimsAPI;
 
   axios.interceptors.request.use(
     config => {

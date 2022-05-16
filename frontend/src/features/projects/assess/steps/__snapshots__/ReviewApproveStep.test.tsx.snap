@@ -193,7 +193,8 @@ exports[`Review Approve Step renders correctly 1`] = `
               Assessed Value
             </label>
             <div
-              class="required form-group col-md-6"
+              class="required form-group"
+              md="6"
             >
               <div
                 class="input-tooltip-wrapper"
@@ -218,7 +219,8 @@ exports[`Review Approve Step renders correctly 1`] = `
               Net Book Value
             </label>
             <div
-              class="required form-group col-md-6"
+              class="required form-group"
+              md="6"
             >
               <div
                 class="input-tooltip-wrapper"
@@ -247,7 +249,8 @@ exports[`Review Approve Step renders correctly 1`] = `
               Estimated Market Value
             </label>
             <div
-              class="required form-group col-md-6"
+              class="required form-group"
+              md="6"
             >
               <div
                 class="input-tooltip-wrapper"
@@ -272,7 +275,8 @@ exports[`Review Approve Step renders correctly 1`] = `
               Appraised Value
             </label>
             <div
-              class="form-group col-md-6"
+              class="form-group"
+              md="6"
             >
               <div
                 class="input-tooltip-wrapper"
@@ -300,7 +304,8 @@ exports[`Review Approve Step renders correctly 1`] = `
               Estimated Sales Costs
             </label>
             <div
-              class="form-group col-md-6"
+              class="form-group"
+              md="6"
             >
               <div
                 class="input-tooltip-wrapper"
@@ -324,7 +329,8 @@ exports[`Review Approve Step renders correctly 1`] = `
               Estimated Program Recovery Fees
             </label>
             <div
-              class="form-group col-md-6"
+              class="form-group"
+              md="6"
             >
               <div
                 class="input-tooltip-wrapper"
@@ -631,7 +637,7 @@ exports[`Review Approve Step renders correctly 1`] = `
                     style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
                     title=""
                   >
-                    2022
+                    2023
                   </div>
                   <div
                     class="td clickable"
@@ -804,22 +810,24 @@ exports[`Review Approve Step renders correctly 1`] = `
       <div
         class="required col-md-2 form-group"
       >
-        <div
-          class="react-datepicker-wrapper"
-        >
+        <div>
           <div
-            class="react-datepicker__input-container"
+            class="react-datepicker-wrapper"
           >
-            <input
-              autocomplete="off"
-              class="form-control date-picker"
-              id="datepicker-exemptionApprovedOn"
-              name="exemptionApprovedOn"
-              placeholder="--/--/----"
-              required=""
-              type="text"
-              value=""
-            />
+            <div
+              class="react-datepicker__input-container"
+            >
+              <input
+                autocomplete="off"
+                class="form-control date-picker"
+                id="datepicker-exemptionApprovedOn"
+                name="exemptionApprovedOn"
+                placeholder="--/--/----"
+                required=""
+                type="text"
+                value=""
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -905,7 +913,7 @@ exports[`Review Approve Step renders correctly 1`] = `
       class="ProjectNotes form-row"
     >
       <div
-        class="col-md-10 form-group col"
+        class="col-md-10 form-group"
       >
         <label
           class="form-label"
@@ -979,7 +987,7 @@ exports[`Review Approve Step renders correctly 1`] = `
           class="ProjectNotes form-row"
         >
           <div
-            class="col-md-12 reviewRequired form-group col"
+            class="col-md-12 reviewRequired form-group"
           >
             <label
               class="form-label"
@@ -1065,7 +1073,7 @@ exports[`Review Approve Step renders correctly 1`] = `
       class="ProjectNotes form-row"
     >
       <div
-        class="col-md-12 reviewRequired form-group col"
+        class="col-md-12 reviewRequired form-group"
       >
         <label
           class="form-label"
@@ -1087,7 +1095,7 @@ exports[`Review Approve Step renders correctly 1`] = `
       class="ProjectNotes form-row"
     >
       <div
-        class="col-md-12 reviewRequired form-group col"
+        class="col-md-12 reviewRequired form-group"
       >
         <label
           class="form-label"
@@ -1123,7 +1131,7 @@ exports[`Review Approve Step renders correctly 1`] = `
       class="ProjectNotes form-row"
     >
       <div
-        class="col-md-12 reviewRequired form-group col"
+        class="col-md-12 reviewRequired form-group"
       >
         <label
           class="form-label"

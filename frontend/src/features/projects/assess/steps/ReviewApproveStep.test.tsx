@@ -189,7 +189,9 @@ const store = (project: IProject) => {
     [reducerTypes.ProjectReducers.PROJECT]: { project },
     [reducerTypes.ProjectReducers.TASKS]: tasks,
     [reducerTypes.NETWORK]: {
-      [ProjectActions.GET_PROJECT]: {},
+      requests: {
+        [ProjectActions.GET_PROJECT]: {},
+      },
     },
   });
 };

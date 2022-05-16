@@ -57,8 +57,10 @@ const store = mockStore({
   [reducerTypes.ProjectReducers.PROJECT]: { project: {} },
   [reducerTypes.ProjectReducers.WORKFLOW]: mockWorkflow,
   [reducerTypes.NETWORK]: {
-    [actionTypes.ProjectActions.GET_PROJECT_WORKFLOW]: {
-      isFetching: false,
+    requests: {
+      [actionTypes.ProjectActions.GET_PROJECT_WORKFLOW]: {
+        isFetching: false,
+      },
     },
   },
   [reducerTypes.LOOKUP_CODE]: { lookupCodes: [] },
@@ -145,31 +147,10 @@ describe('project router', () => {
     expect(stepHeader).toBeVisible();
   });
 
-  it('displays gre transfer form at correct route', () => {
-    history.location.pathname = '/projects/erp/gretransfer';
-    const { getByText } = render(uiElement);
-    const stepHeader = getByText('Transfer within the Greater Reporting Entity');
-    expect(stepHeader).toBeVisible();
-  });
-
-  it('erp approval form at the on hold route', () => {
-    history.location.pathname = '/projects/onHold';
-    const { getByText } = render(uiElement);
-    const stepHeader = getByText('Approved for Surplus Property Program');
-    expect(stepHeader).toBeVisible();
-  });
-
-  it('erp approval form at the default correct route', () => {
-    history.location.pathname = '/projects/approved';
-    const { getByText } = render(uiElement);
-    const stepHeader = getByText('Surplus Property Program Project');
-    expect(stepHeader).toBeVisible();
-  });
-
   it('displays summary page at the correct route', () => {
     history.location.pathname = '/projects/summary';
     const { getByText } = render(uiElement);
-    const stepHeader = getByText('Project No.');
+    const stepHeader = getByText('Project No.:');
     expect(stepHeader).toBeVisible();
   });
 

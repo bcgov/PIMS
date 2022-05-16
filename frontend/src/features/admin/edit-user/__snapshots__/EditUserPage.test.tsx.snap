@@ -22,11 +22,11 @@ exports[`Edit user page EditUserPage renders 1`] = `
         class="userInfo"
         novalidate=""
       >
-        <p
+        <label
           class="label"
         >
           IDIR/BCeID
-        </p>
+        </label>
         <div
           class="form-group"
         >
@@ -40,11 +40,11 @@ exports[`Edit user page EditUserPage renders 1`] = `
             value="test.user"
           />
         </div>
-        <p
+        <label
           class="label"
         >
           Last Login
-        </p>
+        </label>
         <div
           class="form-group"
         >
@@ -64,11 +64,11 @@ exports[`Edit user page EditUserPage renders 1`] = `
           <div
             class="col"
           >
-            <p
+            <label
               class="label"
             >
               First Name
-            </p>
+            </label>
             <div
               class="form-group"
             >
@@ -86,11 +86,11 @@ exports[`Edit user page EditUserPage renders 1`] = `
           <div
             class="col"
           >
-            <p
+            <label
               class="label"
             >
               Last Name
-            </p>
+            </label>
             <div
               class="form-group"
             >
@@ -106,11 +106,11 @@ exports[`Edit user page EditUserPage renders 1`] = `
             </div>
           </div>
         </div>
-        <p
+        <label
           class="label"
         >
           Email
-        </p>
+        </label>
         <div
           class="form-group"
         >
@@ -153,11 +153,11 @@ exports[`Edit user page EditUserPage renders 1`] = `
             </option>
           </select>
         </div>
-        <p
+        <label
           class="label"
         >
           Position
-        </p>
+        </label>
         <div
           class="form-group"
         >
@@ -207,11 +207,11 @@ exports[`Edit user page EditUserPage renders 1`] = `
             </select>
           </div>
         </div>
-        <p
+        <label
           class="label"
         >
           Notes
-        </p>
+        </label>
         <div
           class="form-group"
         >

@@ -26,7 +26,7 @@ const store = mockStore({
     lookupCodes: [{ name: 'agencyVal', id: 1, isDisabled: false, type: API.AGENCY_CODE_SET_NAME }],
   },
   [reducerTypes.NETWORK]: {
-    [ProjectActions.GET_PROJECT]: {},
+    requests: { [ProjectActions.GET_PROJECT]: {} },
   },
 });
 

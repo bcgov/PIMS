@@ -938,6 +938,124 @@ exports[`Project Approval Request list view Displays a SPL project 1`] = `
                   </div>
                 </div>
               </div>
+              <div
+                class="tfoot tfoot-light"
+              >
+                <div
+                  class="tr"
+                  role="row"
+                  style="display: flex; flex: 1 0 auto; min-width: 980px;"
+                >
+                  <div
+                    class="th"
+                    colspan="1"
+                    role="columnheader"
+                    style="box-sizing: border-box; flex: 65 0 auto; min-width: 65px; width: 3.5%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+                    width="3.5%"
+                  >
+                     
+                  </div>
+                  <div
+                    class="th"
+                    colspan="1"
+                    role="columnheader"
+                    style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 7%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+                    width="7%"
+                  >
+                     
+                  </div>
+                  <div
+                    class="th"
+                    colspan="1"
+                    role="columnheader"
+                    style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 7%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+                    width="7%"
+                  >
+                     
+                  </div>
+                  <div
+                    class="th"
+                    colspan="1"
+                    role="columnheader"
+                    style="box-sizing: border-box; flex: 160 0 auto; min-width: 160px; width: 14%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+                    width="14%"
+                  >
+                     
+                  </div>
+                  <div
+                    class="th"
+                    colspan="1"
+                    role="columnheader"
+                    style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 3.5%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+                    width="3.5%"
+                  >
+                     
+                  </div>
+                  <div
+                    class="th"
+                    colspan="1"
+                    role="columnheader"
+                    style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 3.5%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+                    width="3.5%"
+                  >
+                     
+                  </div>
+                  <div
+                    class="th"
+                    colspan="1"
+                    role="columnheader"
+                    style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 7%; justify-content: flex-end; text-align: right; align-items: center; display: flex;"
+                    width="7%"
+                  >
+                     
+                  </div>
+                  <div
+                    class="th"
+                    colspan="1"
+                    role="columnheader"
+                    style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 7%; justify-content: flex-end; text-align: right; align-items: center; display: flex;"
+                    width="7%"
+                  >
+                     
+                  </div>
+                  <div
+                    class="th"
+                    colspan="1"
+                    role="columnheader"
+                    style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 7%; justify-content: flex-end; text-align: right; align-items: center; display: flex;"
+                    width="7%"
+                  >
+                     
+                  </div>
+                  <div
+                    class="th"
+                    colspan="1"
+                    role="columnheader"
+                    style="box-sizing: border-box; flex: 65 0 auto; min-width: 65px; width: 3.5%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+                    width="3.5%"
+                  >
+                     
+                  </div>
+                  <div
+                    class="th"
+                    colspan="1"
+                    role="columnheader"
+                    style="box-sizing: border-box; flex: 65 0 auto; min-width: 65px; width: 3.5%; justify-content: flex-end; text-align: right; align-items: center; display: flex;"
+                    width="3.5%"
+                  >
+                     
+                  </div>
+                  <div
+                    class="th"
+                    colspan="1"
+                    role="columnheader"
+                    style="box-sizing: border-box; flex: 65 0 auto; min-width: 65px; width: 3.5%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+                    width="3.5%"
+                  >
+                     
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -1417,7 +1535,225 @@ exports[`Project Approval Request list view Displays a SPL project 1`] = `
                   </div>
                 </div>
               </div>
+              <div
+                class="tfoot tfoot-light"
+              >
+                <div
+                  class="tr"
+                  role="row"
+                  style="display: flex; flex: 1 0 auto; min-width: 980px;"
+                >
+                  <div
+                    class="th"
+                    colspan="1"
+                    role="columnheader"
+                    style="box-sizing: border-box; flex: 65 0 auto; min-width: 65px; width: 3.5%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+                    width="3.5%"
+                  >
+                     
+                  </div>
+                  <div
+                    class="th"
+                    colspan="1"
+                    role="columnheader"
+                    style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 7%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+                    width="7%"
+                  >
+                     
+                  </div>
+                  <div
+                    class="th"
+                    colspan="1"
+                    role="columnheader"
+                    style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 7%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+                    width="7%"
+                  >
+                     
+                  </div>
+                  <div
+                    class="th"
+                    colspan="1"
+                    role="columnheader"
+                    style="box-sizing: border-box; flex: 160 0 auto; min-width: 160px; width: 14%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+                    width="14%"
+                  >
+                     
+                  </div>
+                  <div
+                    class="th"
+                    colspan="1"
+                    role="columnheader"
+                    style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 3.5%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+                    width="3.5%"
+                  >
+                     
+                  </div>
+                  <div
+                    class="th"
+                    colspan="1"
+                    role="columnheader"
+                    style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 3.5%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+                    width="3.5%"
+                  >
+                     
+                  </div>
+                  <div
+                    class="th"
+                    colspan="1"
+                    role="columnheader"
+                    style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 7%; justify-content: flex-end; text-align: right; align-items: center; display: flex;"
+                    width="7%"
+                  >
+                     
+                  </div>
+                  <div
+                    class="th"
+                    colspan="1"
+                    role="columnheader"
+                    style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 7%; justify-content: flex-end; text-align: right; align-items: center; display: flex;"
+                    width="7%"
+                  >
+                     
+                  </div>
+                  <div
+                    class="th"
+                    colspan="1"
+                    role="columnheader"
+                    style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 7%; justify-content: flex-end; text-align: right; align-items: center; display: flex;"
+                    width="7%"
+                  >
+                     
+                  </div>
+                  <div
+                    class="th"
+                    colspan="1"
+                    role="columnheader"
+                    style="box-sizing: border-box; flex: 65 0 auto; min-width: 65px; width: 3.5%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+                    width="3.5%"
+                  >
+                     
+                  </div>
+                  <div
+                    class="th"
+                    colspan="1"
+                    role="columnheader"
+                    style="box-sizing: border-box; flex: 65 0 auto; min-width: 65px; width: 3.5%; justify-content: flex-end; text-align: right; align-items: center; display: flex;"
+                    width="3.5%"
+                  >
+                     
+                  </div>
+                  <div
+                    class="th"
+                    colspan="1"
+                    role="columnheader"
+                    style="box-sizing: border-box; flex: 65 0 auto; min-width: 65px; width: 3.5%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+                    width="3.5%"
+                  >
+                     
+                  </div>
+                </div>
+              </div>
             </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="tfoot tfoot-light"
+      >
+        <div
+          class="tr"
+          role="row"
+          style="display: flex; flex: 1 0 auto; min-width: 875px;"
+        >
+          <div
+            class="th"
+            colspan="1"
+            role="columnheader"
+            style="box-sizing: border-box; flex: 65 0 auto; min-width: 65px; width: 3.5%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+            width="3.5%"
+          >
+             
+          </div>
+          <div
+            class="th"
+            colspan="1"
+            role="columnheader"
+            style="box-sizing: border-box; flex: 200 0 auto; min-width: 200px; width: 7%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+            width="7%"
+          >
+             
+          </div>
+          <div
+            class="th"
+            colspan="1"
+            role="columnheader"
+            style="box-sizing: border-box; flex: 50 0 auto; min-width: 50px; width: 7%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+            width="7%"
+          >
+             
+          </div>
+          <div
+            class="th"
+            colspan="1"
+            role="columnheader"
+            style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 7%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+            width="7%"
+          >
+             
+          </div>
+          <div
+            class="th"
+            colspan="1"
+            role="columnheader"
+            style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 3.5%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+            width="3.5%"
+          >
+             
+          </div>
+          <div
+            class="th"
+            colspan="1"
+            role="columnheader"
+            style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 3.5%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+            width="3.5%"
+          >
+             
+          </div>
+          <div
+            class="th"
+            colspan="1"
+            role="columnheader"
+            style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 3.5%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+            width="3.5%"
+          >
+             
+          </div>
+          <div
+            class="th"
+            colspan="1"
+            role="columnheader"
+            style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 3.5%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+            width="3.5%"
+          >
+             
+          </div>
+          <div
+            class="th"
+            colspan="1"
+            role="columnheader"
+            style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 7%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+            width="7%"
+          >
+             
+          </div>
+          <div
+            class="th"
+            colspan="1"
+            role="columnheader"
+            style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 7%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+            width="7%"
+          >
+             
           </div>
         </div>
       </div>

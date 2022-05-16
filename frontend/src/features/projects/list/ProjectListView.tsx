@@ -21,7 +21,7 @@ import {
   deleteProjectWarning,
   deletePotentialSubdivisionParcels,
 } from '../common';
-import { ReviewWorkflowStatus } from 'features/projects/constants';
+import { ReviewWorkflowStatus, DisposeWorkflowStatus } from 'features/projects/constants';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import Claims from 'constants/claims';
 import { ENVIRONMENT } from 'constants/environment';
@@ -37,6 +37,7 @@ import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
 import { PropertyTypes } from 'constants/propertyTypes';
 import { toFlatProject } from '../common/projectConverter';
 import { IStatus } from 'features/projects/interfaces';
+import { WorkflowStatus } from 'hooks/api/projects';
 
 interface IProjectFilterState {
   name?: string;
@@ -57,7 +58,7 @@ interface IProps {
 const initialValues: IProjectFilterState = {
   name: '',
   statusId: [],
-  notStatusId: ['16', '23', '32'], // Denied, Cancelled, Disposed
+  notStatusId: ['16', '20', '23', '32'], // Denied, Transferred-GRE, Cancelled, Disposed
   agencyId: '',
   agencies: [],
   fiscalYear: '',
@@ -225,17 +226,23 @@ export const ProjectListView: React.FC<IProps> = ({
   };
 
   const onRowClick = (row: IProject) => {
-    const ReviewWorkflowStatuses = Object.keys(ReviewWorkflowStatus).map(
+    const DisposalStatuses = Object.keys(DisposeWorkflowStatus).map(
+      (k: string) => (DisposeWorkflowStatus as any)[k],
+    );
+    const ReviewStatuses = Object.keys(ReviewWorkflowStatus).map(
       (k: string) => (ReviewWorkflowStatus as any)[k],
     );
-    if (ReviewWorkflowStatuses.includes(row.statusCode)) {
+    if (
+      (DisposalStatuses.includes(row.statusCode) || ReviewStatuses.includes(row.statusCode)) &&
+      row.statusCode !== WorkflowStatus.Disposed
+    ) {
+      history.push(`/projects?projectNumber=${row.projectNumber}`);
+    } else {
       if (keycloak.hasClaim(Claims.ADMIN_PROJECTS)) {
-        history.push(`${row.statusRoute}?projectNumber=${row.projectNumber}`);
+        history.push(`/projects/disposal/${row.id}`);
       } else {
         history.push(`/projects/summary?projectNumber=${row.projectNumber}`);
       }
-    } else {
-      history.push(`/dispose${row.statusRoute}?projectNumber=${row.projectNumber}`);
     }
   };
 

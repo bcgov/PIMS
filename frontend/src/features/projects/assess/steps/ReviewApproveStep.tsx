@@ -12,10 +12,10 @@ import {
 import { fetchProjectTasks } from '../../common/projectsActionCreator';
 import _ from 'lodash';
 import { useStepForm, useProject, StepErrorSummary } from '../../common';
-import { ReviewWorkflowStatus } from 'features/projects/constants';
 import { IStepProps, IProject, IProjectTask } from 'features/projects/interfaces';
 import { ReviewApproveForm } from '..';
 import { useHistory } from 'react-router-dom';
+import { WorkflowStatus } from 'hooks/api/projects';
 
 export const ReviewApproveStepSchema = UpdateInfoStepYupSchema.concat(
   ProjectDraftStepYupSchema,
@@ -34,15 +34,15 @@ export const validateTasks = (project: IProject) => {
     ? _.filter(
         project.tasks,
         task =>
-          task.statusCode === ReviewWorkflowStatus.PropertyReview ||
-          task.statusCode === ReviewWorkflowStatus.DocumentReview,
+          task.statusCode === WorkflowStatus.PropertyReview ||
+          task.statusCode === WorkflowStatus.DocumentReview,
       )
     : _.filter(
         project.tasks,
         task =>
-          task.statusCode === ReviewWorkflowStatus.ExemptionProcess ||
-          task.statusCode === ReviewWorkflowStatus.DocumentReview ||
-          task.statusCode === ReviewWorkflowStatus.ExemptionReview,
+          task.statusCode === WorkflowStatus.ExemptionProcess ||
+          task.statusCode === WorkflowStatus.DocumentReview ||
+          task.statusCode === WorkflowStatus.ExemptionReview,
       );
   return statusTasks.reduce((errors: any, task: IProjectTask, index: number) => {
     if (!task.isCompleted && !task.isOptional) {
@@ -91,18 +91,20 @@ const ReviewApproveStep = ({ formikRef }: IStepProps) => {
   const history = useHistory();
   const { onSubmitReview, canUserApproveForm } = useStepForm();
   const [submitStatusCode, setSubmitStatusCode] = useState<string | undefined>(undefined);
+  const { noFetchingProjectRequests } = useStepForm();
+
   useEffect(() => {
     fetchProjectTasks('ASSESS-DISPOSAL');
   }, []);
-  const { noFetchingProjectRequests } = useStepForm();
+
   const canEdit =
     canUserApproveForm() &&
-    (project.statusCode === ReviewWorkflowStatus.PropertyReview ||
-      project.statusCode === ReviewWorkflowStatus.ExemptionReview);
+    (project.statusCode === WorkflowStatus.PropertyReview ||
+      project.statusCode === WorkflowStatus.ExemptionReview);
 
   // validate form and tasks, skipping validation in the case of deny and save.
   const handleValidate = async (values: IProject) => {
-    if (submitStatusCode === ReviewWorkflowStatus.Denied) {
+    if (submitStatusCode === WorkflowStatus.Denied) {
       return await validateDeny(values);
     } else if (submitStatusCode !== undefined) {
       return await validateApprove(values);
@@ -116,9 +118,9 @@ const ReviewApproveStep = ({ formikRef }: IStepProps) => {
   };
 
   const getNextWorkflowCode = (submitStatusCode: string | undefined, values: any) => {
-    if (submitStatusCode === ReviewWorkflowStatus.ApprovedForErp) {
+    if (submitStatusCode === WorkflowStatus.ApprovedForErp) {
       return 'ERP';
-    } else if (submitStatusCode === ReviewWorkflowStatus.ApprovedForExemption) {
+    } else if (submitStatusCode === WorkflowStatus.ApprovedForExemption) {
       return 'ASSESS-EX-DISPOSAL';
     } else {
       return values.workflowCode;
@@ -136,13 +138,11 @@ const ReviewApproveStep = ({ formikRef }: IStepProps) => {
           return onSubmitReview(values, formikRef, submitStatusCode, workflowCode).then(
             (project: IProject) => {
               switch (project?.statusCode) {
-                case ReviewWorkflowStatus.ApprovedForErp:
-                case ReviewWorkflowStatus.ApprovedForExemption:
-                  history.push(
-                    `${project.status?.route}?projectNumber=${project.projectNumber}` ?? 'invalid',
-                  );
+                case WorkflowStatus.ApprovedForErp:
+                case WorkflowStatus.ApprovedForExemption:
+                  history.push(`/projects/disposal/${project.id}` ?? 'invalid');
                   break;
-                case ReviewWorkflowStatus.Denied:
+                case WorkflowStatus.Denied:
                   goToDisposePath('../summary');
                   break;
               }

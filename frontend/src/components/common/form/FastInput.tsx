@@ -1,5 +1,5 @@
 import React, { CSSProperties, memo, useEffect } from 'react';
-import { Col, Form, FormControlProps } from 'react-bootstrap';
+import { Form, FormControlProps } from 'react-bootstrap';
 import { getIn, FormikProps } from 'formik';
 import { DisplayError } from './DisplayError';
 import { formikFieldMemo } from 'utils';
@@ -39,6 +39,8 @@ type OptionalAttributes = {
   displayErrorTooltips?: boolean;
   /** Determine style of input if needed */
   style?: CSSProperties;
+  /** Display error even if field hasn't been touched */
+  errorPrompt?: boolean;
 };
 
 // only "field" is required for <Input>, the rest are optional
@@ -63,6 +65,7 @@ export const FastInput: React.FC<FastInputProps> = memo(
     onBlurFormatter,
     tooltip,
     displayErrorTooltips,
+    errorPrompt,
     style,
     formikProps: {
       values,
@@ -87,12 +90,11 @@ export const FastInput: React.FC<FastInputProps> = memo(
         unregisterField(field);
       };
     }, [field, registerField, unregisterField]);
-
     return (
       <Form.Group
         controlId={`input-${field}`}
         className={classNames(!!required ? 'required' : '', outerClassName)}
-        as={Col}
+        as={'div'}
       >
         {!!label && (
           <Form.Label>
@@ -125,7 +127,7 @@ export const FastInput: React.FC<FastInputProps> = memo(
             {...rest}
           />
         </TooltipWrapper>
-        {!displayErrorTooltips && <DisplayError field={field} />}
+        {!displayErrorTooltips && <DisplayError field={field} errorPrompt={errorPrompt} />}
       </Form.Group>
     );
   },

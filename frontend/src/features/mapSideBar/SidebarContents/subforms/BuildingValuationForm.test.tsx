@@ -24,5 +24,5 @@ it('renders two seperate tables for assessed value and net book value', () => {
 it('headers for (Assessed Value, Assessment Year, Assessed Building Value) + (Net Book Value, Fiscal Year, Effective Date, Net Book Value)', () => {
   const { getAllByRole } = render(form);
   const headers = getAllByRole('columnheader');
-  expect(headers).toHaveLength(7);
+  expect(headers).toHaveLength(14);
 });
