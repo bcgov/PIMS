@@ -1,22 +1,22 @@
-import { createSlice, createAction } from '@reduxjs/toolkit';
+import { createSlice, createAction, PayloadAction } from '@reduxjs/toolkit';
 import { IStatus } from '../../interfaces';
 
 export const saveProjectStatus = createAction<IStatus>('saveProjectStatus');
 export const clearProjectStatus = createAction('clearProjectStatus');
-/**
- * Slice to handle storage of project worflow information for all project disposal steps.
- */
+
+const initialState: IStatus[] = [];
+
 const projectWorkflowSlice = createSlice({
   name: 'projectWorkflow',
-  initialState: '',
+  initialState: initialState,
   reducers: {},
   extraReducers: (builder: any) => {
     // note that redux-toolkit uses immer to prevent state from being mutated.
-    builder.addCase(saveProjectStatus, (state: any, action: any) => {
+    builder.addCase(saveProjectStatus, (_state: IStatus[], action: PayloadAction<IStatus[]>) => {
       return action.payload;
     });
-    builder.addCase(clearProjectStatus, (state: any) => {
-      return {};
+    builder.addCase(clearProjectStatus, (_state: IStatus[]) => {
+      return [];
     });
   },
 });

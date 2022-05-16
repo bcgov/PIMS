@@ -23,9 +23,14 @@ namespace Pims.Api.Areas.Reports.Mapping.Property
                 .Map(dest => dest.Longitude, src => src.Location.X)
                 .Map(dest => dest.IsSensitive, src => src.IsSensitive)
 
-                .Map(dest => dest.Market, src => src.Market)
                 .Map(dest => dest.AssessedLand, src => src.AssessedLand)
+                .Map(dest => dest.AssessedLandDate, src => src.AssessedLandDate != null ? src.AssessedLandDate.Value.Year.ToString() : "")
+                .Map(dest => dest.NetBookValue, src => src.NetBook)
+                .Map(dest => dest.NetbookDate, src => src.NetBookFiscalYear.FiscalYearNullable())
                 .Map(dest => dest.AssessedBuilding, src => src.AssessedBuilding)
+                .Map(dest => dest.AssessedBuildingDate, src => src.AssessedBuildingDate != null ? src.AssessedBuildingDate.Value.Year.ToString() : "")
+                .Map(dest => dest.UpdatedOn, src => src.UpdatedOn)
+                .Map(dest => dest.UpdatedBy, src => src.DisplayName)
 
                 .Map(dest => dest.PID, src => src.ParcelIdentity)
                 .Map(dest => dest.PIN, src => src.PIN)

@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import * as reducerTypes from 'constants/reducerTypes';
-import { fireEvent, render, wait } from '@testing-library/react';
+import { fireEvent, render, waitFor } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
 import { Router } from 'react-router-dom';
 import MockAdapter from 'axios-mock-adapter';
@@ -67,10 +67,10 @@ describe('rowAction functions', () => {
     fireEvent.click(container);
     const approveButton = getByText('Approve');
     fireEvent.click(approveButton);
-    await wait(() => {
-      expect(mockAxios.history.put).toHaveLength(1);
-      expect(mockAxios.history.put[0].url).toBe('/api/keycloak/users/access/request');
-    });
+    await waitFor(() => expect(mockAxios.history.put).toHaveLength(1));
+    await waitFor(() =>
+      expect(mockAxios.history.put[0].url).toBe('/api/keycloak/users/access/request'),
+    );
   });
   it('disable button', async () => {
     const tempProps = { ...props };
@@ -80,10 +80,10 @@ describe('rowAction functions', () => {
     fireEvent.click(container);
     const holdButton = getByText('Hold');
     fireEvent.click(holdButton);
-    await wait(() => {
-      expect(mockAxios.history.put).toHaveLength(1);
-      expect(mockAxios.history.put[0].url).toBe('/api/keycloak/users/access/request');
-    });
+    await waitFor(() => expect(mockAxios.history.put).toHaveLength(1));
+    await waitFor(() =>
+      expect(mockAxios.history.put[0].url).toBe('/api/keycloak/users/access/request'),
+    );
   });
   it('open button', async () => {
     const { container, getByText } = testRender(getStore(), props);
@@ -91,9 +91,9 @@ describe('rowAction functions', () => {
     fireEvent.click(container);
     const declineButton = getByText('Decline');
     fireEvent.click(declineButton);
-    await wait(() => {
-      expect(mockAxios.history.put).toHaveLength(1);
-      expect(mockAxios.history.put[0].url).toBe('/api/keycloak/users/access/request');
-    });
+    await waitFor(() => expect(mockAxios.history.put).toHaveLength(1));
+    await waitFor(() =>
+      expect(mockAxios.history.put[0].url).toBe('/api/keycloak/users/access/request'),
+    );
   });
 });

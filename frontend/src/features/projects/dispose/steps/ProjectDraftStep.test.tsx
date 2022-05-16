@@ -12,7 +12,7 @@ import axios from 'axios';
 import { fillInput } from 'utils/testUtils';
 import useStepper from '../hooks/useStepper';
 import { noop } from 'lodash';
-import { render, screen, cleanup, wait } from '@testing-library/react';
+import { render, screen, cleanup, waitFor } from '@testing-library/react';
 import { useKeycloak } from '@react-keycloak/web';
 
 jest.mock('@react-keycloak/web');
@@ -69,9 +69,9 @@ describe('Project Draft Step', () => {
   it('requires name', async () => {
     const { container, findByText } = render(uiElement);
     container.querySelector('form');
-    await fillInput(container, 'name', '');
-    await fillInput(container, 'description', 'description', 'textarea');
-    await wait(async () => {
+    fillInput(container, 'name', '');
+    fillInput(container, 'description', 'description', 'textarea');
+    await waitFor(async () => {
       expect(await findByText('Required')).toBeInTheDocument();
     });
   });
@@ -79,9 +79,9 @@ describe('Project Draft Step', () => {
   it('can be submitted after required filled', async () => {
     const { container, findByText } = render(uiElement);
     container.querySelector('form');
-    await fillInput(container, 'name', '');
-    await fillInput(container, 'description', 'description', 'textarea');
-    await wait(async () => {
+    fillInput(container, 'name', '');
+    fillInput(container, 'description', 'description', 'textarea');
+    await waitFor(async () => {
       expect(await findByText('Required')).toBeInTheDocument();
     });
   });

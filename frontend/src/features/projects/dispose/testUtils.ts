@@ -4,9 +4,8 @@ import {
   ReviewWorkflowStatus,
   SPPApprovalTabs,
 } from 'features/projects/constants';
-import { IProjectTask, IProject, ITask } from 'features/projects/interfaces';
+import { IProjectTask, IProject, ITask, INotification } from 'features/projects/interfaces';
 import { ProjectActions } from 'constants/actionTypes';
-import * as reducerTypes from 'constants/reducerTypes';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import * as API from 'constants/API';
@@ -51,6 +50,20 @@ export const mockTasks: IProjectTask[] = [
     completedOn: new Date(),
     statusId: 0,
     statusCode: DisposeWorkflowStatus.RequiredDocumentation,
+  },
+];
+
+export const mockNotification: INotification[] = [
+  {
+    id: 0,
+    key: '',
+    projectId: 1,
+    status: 'Pending',
+    sendOn: '2030-01-01',
+    to: 'test@test.com',
+    subject: 'Testing',
+    total: 0,
+    projectNumber: '',
   },
 ];
 
@@ -313,7 +326,7 @@ export const mockWorkflow = [
 const mockStore = configureMockStore([thunk]);
 export const getStore = (mockProject: IProject, tab?: SPPApprovalTabs) =>
   mockStore({
-    [reducerTypes.LOOKUP_CODE]: {
+    lookupCode: {
       lookupCodes: [
         {
           code: 'BCP',
@@ -332,13 +345,13 @@ export const getStore = (mockProject: IProject, tab?: SPPApprovalTabs) =>
         },
       ],
     },
-    [reducerTypes.ProjectReducers.PROJECT]: { project: mockProject },
-    [reducerTypes.ProjectReducers.TASKS]: tasks,
-    [reducerTypes.NETWORK]: {
+    project: { project: mockProject },
+    tasks: tasks,
+    network: {
       [ProjectActions.GET_PROJECT]: {},
     },
-    [reducerTypes.ProjectReducers.ERP_TAB]: tab,
-    [reducerTypes.ProjectReducers.SPL_TAB]: tab,
+    erpTab: tab,
+    splTab: tab,
   });
 
 export const mockApiProjectParcel = {

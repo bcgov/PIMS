@@ -1,26 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import { Navbar, Container, Row, ButtonToolbar, Button } from 'react-bootstrap';
 import { Check, Form, Input, Select, SelectOption } from '../../../components/common/form';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from 'reducers/rootReducer';
 import { IAgencyDetail } from 'interfaces';
 import { Formik } from 'formik';
 import * as API from 'constants/API';
 import './EditAgencyPage.scss';
 import { useHistory } from 'react-router-dom';
 import useCodeLookups from 'hooks/useLookupCodes';
-import { ILookupCode } from 'actions/lookupActions';
+import { ILookupCode } from 'actions/ILookupCode';
 import {
   createAgency,
   deleteAgency,
   fetchAgencyDetail,
   getUpdateAgencyAction,
-} from 'actionCreators/agencyActionCreator';
+} from 'store/slices/hooks/agencyActionCreator';
 import { FaArrowAltCircleLeft } from 'react-icons/fa';
 import GenericModal from 'components/common/GenericModal';
 import { AgencyEditSchema } from 'utils/YupSchema';
 import service from 'features/properties/service';
 import TooltipWrapper from 'components/common/TooltipWrapper';
+import { useAppDispatch, useAppSelector } from 'store';
+import { AxiosError } from 'axios';
 
 interface IEditAgencyPageProps {
   /** id prop to identify which agency to edit */
@@ -32,22 +32,20 @@ interface IEditAgencyPageProps {
 const EditAgencyPage = (props: IEditAgencyPageProps) => {
   const agencyId = props?.match?.params?.id || props.id;
   const history = useHistory();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const newAgency = history.location.pathname.includes('/new');
   const [showDelete, setShowDelete] = useState(false);
   const [showFailed, setShowFailed] = useState(false);
   useEffect(() => {
     if (!newAgency) {
-      dispatch(fetchAgencyDetail({ id: agencyId }));
+      fetchAgencyDetail({ id: agencyId })(dispatch);
     }
   }, [dispatch, agencyId, newAgency]);
 
   const { getByType } = useCodeLookups();
   const agencies = getByType(API.AGENCY_CODE_SET_NAME).filter(x => !x.parentId);
 
-  const agency = useSelector<RootState, IAgencyDetail>(
-    state => state.GET_AGENCY_DETAIL as IAgencyDetail,
-  );
+  const agency = useAppSelector(store => store.agencies.agencyDetail);
   const mapLookupCode = (code: ILookupCode): SelectOption => ({
     label: code.name,
     value: code.id.toString(),
@@ -107,23 +105,21 @@ const EditAgencyPage = (props: IEditAgencyPageProps) => {
             onSubmit={async (values, { setSubmitting, setStatus }) => {
               try {
                 if (!newAgency) {
-                  dispatch(
-                    getUpdateAgencyAction(
-                      { id: agencyId },
-                      {
-                        id: agency.id,
-                        name: values.name,
-                        code: values.code,
-                        email: values.email,
-                        isDisabled: values.isDisabled,
-                        sendEmail: values.sendEmail,
-                        addressTo: values.addressTo,
-                        parentId: values.parentId ? Number(values.parentId) : undefined,
-                        description: values.description,
-                        rowVersion: values.rowVersion,
-                      },
-                    ),
-                  );
+                  getUpdateAgencyAction(
+                    { id: agencyId },
+                    {
+                      id: agency.id,
+                      name: values.name,
+                      code: values.code,
+                      email: values.email,
+                      isDisabled: values.isDisabled,
+                      sendEmail: values.sendEmail,
+                      addressTo: values.addressTo,
+                      parentId: values.parentId ? Number(values.parentId) : undefined,
+                      description: values.description,
+                      rowVersion: values.rowVersion,
+                    },
+                  )(dispatch);
                 } else {
                   const data = await createAgency({
                     name: values.name,
@@ -138,8 +134,9 @@ const EditAgencyPage = (props: IEditAgencyPageProps) => {
                   history.replace(`/admin/agency/${data.id}`);
                 }
               } catch (error) {
+                const err = error as AxiosError;
                 const msg: string =
-                  error?.response?.data?.error ?? 'Error saving property data, please try again.';
+                  err?.response?.data?.error ?? 'Error saving property data, please try again.';
                 setStatus({ msg });
               } finally {
                 setSubmitting(false);

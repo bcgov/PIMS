@@ -257,7 +257,7 @@ exports[`Select Project Properties Step renders correctly 1`] = `
             <div
               class="tr"
               role="row"
-              style="display: flex; flex: 1 0 auto; min-width: 965px;"
+              style="display: flex; flex: 1 0 auto; min-width: 820px;"
             >
               <div
                 class="th"
@@ -396,21 +396,6 @@ exports[`Select Project Properties Step renders correctly 1`] = `
                 <div
                   class="sortable-column"
                 >
-                  Market Value
-                  <span
-                    style="flex: 1 1 auto;"
-                  />
-                </div>
-              </div>
-              <div
-                class="th"
-                colspan="1"
-                role="columnheader"
-                style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
-              >
-                <div
-                  class="sortable-column"
-                >
                   Assessed Land
                   <span
                     style="flex: 1 1 auto;"
@@ -517,7 +502,7 @@ exports[`Select Project Properties Step renders correctly 1`] = `
             <div
               class="tr"
               role="row"
-              style="display: flex; flex: 1 0 auto; min-width: 995px;"
+              style="display: flex; flex: 1 0 auto; min-width: 850px;"
             >
               <div
                 class="th"
@@ -657,21 +642,6 @@ exports[`Select Project Properties Step renders correctly 1`] = `
                   class="sortable-column"
                 >
                   Net Book Value
-                  <span
-                    style="flex: 1 1 auto;"
-                  />
-                </div>
-              </div>
-              <div
-                class="th"
-                colspan="1"
-                role="columnheader"
-                style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
-              >
-                <div
-                  class="sortable-column"
-                >
-                  Market Value
                   <span
                     style="flex: 1 1 auto;"
                   />

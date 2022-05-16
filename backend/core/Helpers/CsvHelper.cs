@@ -74,7 +74,12 @@ namespace Pims.Core.Helpers
             dt.BeginLoadData();
             data.ForEach(item =>
             {
-                var values = columns.Select(c => c.Value.PropertyInfo.GetValue(item)).ToArray();
+                var values = columns.Select(c => {
+                    var value = c.Value.PropertyInfo.GetValue(item);
+                    if (c.Value.Column.DataType == typeof(DateTime) && value != null && (DateTime)value == DateTime.MinValue)
+                        return null;
+                    return value;
+                    }).ToArray();
                 dt.LoadDataRow(values, true);
             });
             dt.EndLoadData();

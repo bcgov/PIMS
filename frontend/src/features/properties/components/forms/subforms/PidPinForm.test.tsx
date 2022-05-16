@@ -18,12 +18,12 @@ describe('PidPin sub-form', () => {
   beforeEach(() => {
     form = (
       <Formik<Partial<IParcel>>
-        initialValues={{ pid: '', pin: '', projectNumber: '' }}
+        initialValues={{ pid: '', pin: '', projectNumbers: [] }}
         initialTouched={{ pid: true, pin: true }}
         validateOnChange={false}
         onSubmit={() => {}}
       >
-        {formikProps => (
+        {() => (
           <Form>
             <PidPinForm handlePidChange={handlePidChange} handlePinChange={handlePinChange} />
           </Form>
@@ -47,7 +47,7 @@ describe('PidPin sub-form', () => {
 
   it('formats PID values', async () => {
     const { container } = render(form);
-    const { input } = await fillInput(container, 'pid', '123456789');
+    const { input } = fillInput(container, 'pid', '123456789');
     expect(input).toHaveValue('123-456-789');
   });
 });

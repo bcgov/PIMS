@@ -8,7 +8,7 @@ import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
 import { ProjectActions } from 'constants/actionTypes';
-import { render, wait, fireEvent, cleanup } from '@testing-library/react';
+import { render, waitFor, fireEvent, cleanup } from '@testing-library/react';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 import { mockKeycloak, mockProject } from '../testUtils';
@@ -58,7 +58,7 @@ describe('Select Project Properties Step', () => {
   it('requests properties based on the users agency', async () => {
     mockAxios.onAny().reply(200, { items: [mockFlatProperty] });
     render(uiElement);
-    await wait(async () => {
+    await waitFor(async () => {
       expect(mockAxios.history.get.length).toBe(1);
       expect(mockAxios.history.get[0].url).toMatch(/agencies=1/);
     });
@@ -66,7 +66,7 @@ describe('Select Project Properties Step', () => {
   it('initially requests properties using a default classification id', async () => {
     mockAxios.onAny().reply(200, { items: [mockFlatProperty] });
     render(uiElement);
-    await wait(async () => {
+    await waitFor(async () => {
       expect(mockAxios.history.get.length).toBe(1);
       expect(mockAxios.history.get[0].url).toMatch(/classificationId=2/);
     });
@@ -74,7 +74,7 @@ describe('Select Project Properties Step', () => {
   it('requests properties that may already be in another project', async () => {
     mockAxios.onAny().reply(200, { items: [mockFlatProperty] });
     render(uiElement);
-    await wait(async () => {
+    await waitFor(async () => {
       expect(mockAxios.history.get.length).toBe(1);
       expect(mockAxios.history.get[0].url).toMatch(/ignorePropertiesInProjects=false/);
     });
@@ -83,7 +83,7 @@ describe('Select Project Properties Step', () => {
   it('renders one row per property in the response', async () => {
     mockAxios.onAny().reply(200, { items: [mockFlatProperty] });
     const { findByText } = render(uiElement);
-    await wait(async () => {
+    await waitFor(async () => {
       const propertyText = await findByText('Test Property');
       expect(propertyText).toBeInTheDocument();
     });
@@ -92,7 +92,7 @@ describe('Select Project Properties Step', () => {
   it('concatenates the address and admin area', async () => {
     mockAxios.onAny().reply(200, { items: [mockFlatProperty] });
     const { findByText } = render(uiElement);
-    await wait(async () => {
+    await waitFor(async () => {
       const propertyText = await findByText('1234 Test St, Victoria');
       expect(propertyText).toBeInTheDocument();
     });
@@ -104,7 +104,7 @@ describe('Select Project Properties Step', () => {
     };
     mockAxios.onAny().reply(200, { items: [propertyWithProjects] });
     const { findByText } = render(uiElement);
-    await wait(async () => {
+    await waitFor(async () => {
       const projectOneText = await findByText('SPP-10000');
       const projectTwoText = await findByText('SPP-10001');
       expect(projectOneText).toBeInTheDocument();
@@ -116,7 +116,7 @@ describe('Select Project Properties Step', () => {
   it('allows properties to be added to the project', async () => {
     mockAxios.onAny().reply(200, { items: [mockFlatProperty] });
     const { findByTestId, findByText, findAllByText, getByText } = render(uiElement);
-    await wait(async () => {
+    await waitFor(async () => {
       const selectRowCheck = await findByTestId('selectrow-0');
       fireEvent.click(selectRowCheck);
     });
@@ -133,7 +133,7 @@ describe('Select Project Properties Step', () => {
     await findByText('Test Property');
     const pageButton = getByLabelText('Page 2');
     fireEvent.click(pageButton);
-    await wait(async () => {
+    await waitFor(async () => {
       expect(mockAxios.history.get.length).toBe(2);
       expect(mockAxios.history.get[1].url).toMatch(/page=2/);
     });
@@ -175,7 +175,7 @@ describe('Select Project Properties Step', () => {
     fireEvent.click(pageButton);
     //ensure that the property is in both tables.
     selectRowCheck = await findByTestId('selectrow-1');
-    await wait(async () => {
+    await waitFor(async () => {
       expect(selectRowCheck).toHaveAttribute('checked', '');
     });
   });
@@ -183,7 +183,7 @@ describe('Select Project Properties Step', () => {
   it('selected properties can be removed', async () => {
     mockAxios.onAny().reply(200, { items: [mockFlatProperty] });
     const { findByTestId, findByText, findAllByText, getByTitle } = render(uiElement);
-    await wait(async () => {
+    await waitFor(async () => {
       const selectRowCheck = await findByTestId('selectrow-0');
       fireEvent.click(selectRowCheck);
     });

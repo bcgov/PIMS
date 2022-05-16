@@ -7,7 +7,7 @@ export const clearProjectTasks = createAction('clearProjectTasks');
  * Slice to handle storage of project disposal tasks.
  */
 const projectTasksSlice = createSlice({
-  name: 'projectTasks',
+  name: 'tasks',
   initialState: [] as IProjectTask[],
   reducers: {},
   extraReducers: (builder: any) => {

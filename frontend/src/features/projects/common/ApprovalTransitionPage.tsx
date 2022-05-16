@@ -1,16 +1,15 @@
 import * as React from 'react';
 import { Container, Spinner } from 'react-bootstrap';
-import { useProject, updateWorkflowStatus, IProjectWrapper } from '.';
+import { useProject, updateWorkflowStatus } from '.';
 import { ReviewWorkflowStatus } from 'features/projects/constants';
 import { IProject } from 'features/projects/interfaces';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from 'reducers/rootReducer';
 import _ from 'lodash';
 import { useHistory } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { fetchProjectWorkflow } from './projectsActionCreator';
 import queryString from 'query-string';
 import GenericModal from 'components/common/GenericModal';
+import { useAppDispatch, useAppSelector } from 'store';
 
 interface IApprovalTransitionPageProps {}
 
@@ -39,9 +38,9 @@ const ErrorMessage = () => {
 
 export const ApprovalTransitionPage: React.FunctionComponent<IApprovalTransitionPageProps> = props => {
   const { workflowStatuses } = useProject();
-  const project = useSelector<RootState, IProjectWrapper>(state => state.project).project;
+  const dispatch = useAppDispatch();
+  const project = useAppSelector(store => store.project.project);
   const [isTransitioned, setIsTransitioned] = useState(false);
-  const dispatch = useDispatch();
   const history = useHistory();
   const toStatus = _.find(workflowStatuses, { code: project?.statusCode })?.toStatus;
   const [error, setError] = React.useState(false);
@@ -50,7 +49,7 @@ export const ApprovalTransitionPage: React.FunctionComponent<IApprovalTransition
 
   useEffect(() => {
     if (!!project && toStatus === undefined) {
-      dispatch(fetchProjectWorkflow(project?.workflowCode));
+      fetchProjectWorkflow(project?.workflowCode)(dispatch);
       return;
     }
     if (project !== undefined && !isTransitioned) {
@@ -77,7 +76,7 @@ export const ApprovalTransitionPage: React.FunctionComponent<IApprovalTransition
         const toStatusCode = next[0].code;
         setIsTransitioned(true);
         transitionFunction(
-          dispatch(updateWorkflowStatus(project, toStatusCode, project.workflowCode)),
+          updateWorkflowStatus(project, toStatusCode, project.workflowCode)(dispatch),
           history,
           toStatusCode,
         );

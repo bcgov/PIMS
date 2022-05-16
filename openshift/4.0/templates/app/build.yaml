@@ -7,16 +7,17 @@ metadata:
     description: Build template for a Nginx with Node build
     tags: pims,app
 parameters:
+  - name: SOLUTION_NAME
+    displayName: Solution Group Name
+    description: The name of the solution (e.g pims).
+    required: true
+    value: pims
   - name: APP_NAME
-    displayName: "App Name"
-    description: "The name of the application (grouped)."
+    displayName: Application Name
+    description: The name of the application (e.g. app).
     required: true
-    value: "pims"
-  - name: ROLE_NAME
-    displayName: "Component Name"
-    description: "The name of the application role."
-    required: true
-    value: "app"
+    value: app
+
   - name: PROJECT_NAMESPACE
     displayName: "OpenShift Project Namespace"
     description: "The namespace of the OpenShift project containing the application."
@@ -46,6 +47,11 @@ parameters:
     description: "The s2i image tag which is used to build the code."
     value: "latest"
 
+  - name: GIT_SOURCE
+    displayName: Git Source Identifier
+    description: A way to identify different sources (i.e. "dev" or "jmf")
+    required: true
+    value: dev
   - name: GIT_URL
     displayName: "GIT Source Repo URL"
     description: "A GIT URL to your source code."
@@ -68,41 +74,53 @@ parameters:
     required: true
     value: "latest"
 
+  - name: CPU_REQUEST
+    displayName: Requested Minimum Resources CPU Limit
+    description: The requested minimum resources CPU limit (in cores) for this build.
+    required: true
+    value: 20m
   - name: CPU_LIMIT
-    displayName: "Resources CPU Limit"
-    description: "The resources CPU limit (in cores) for this build."
-    value: "1"
+    displayName: Resources CPU Limit
+    description: The resources CPU limit (in cores) for this build.
+    required: true
+    value: 500m
+  - name: MEMORY_REQUEST
+    displayName: Requested Minimum Memory Limit
+    description: Minimum requested amount of memory the container can use.
+    required: true
+    value: 250Mi
   - name: MEMORY_LIMIT
-    displayName: "Memory Limit"
-    description: "Maximum amount of memory the container can use."
-    value: "6Gi"
+    displayName: Memory Limit
+    description: Maximum amount of memory the container can use.
+    required: true
+    value: 2Gi
 objects:
   # Image stream for the built base image.
   - kind: ImageStream
     apiVersion: v1
     metadata:
-      name: ${APP_NAME}-${ROLE_NAME}-base
+      name: ${SOLUTION_NAME}-${APP_NAME}-base
       namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
       annotations:
         description: Keeps track of changes to the intermediate frontend artifacts image
     labels:
-      name: ${APP_NAME}-${ROLE_NAME}-base
-      app: ${APP_NAME}
-      role: ${ROLE_NAME}
+      name: ${SOLUTION_NAME}-${APP_NAME}-base
+      app: ${SOLUTION_NAME}
+      role: ${APP_NAME}
       env: ${ENV_NAME}
 
   # The build config that will be created and be named for the branch you created it for.
   - kind: BuildConfig
     apiVersion: v1
     metadata:
-      name: ${APP_NAME}-${ROLE_NAME}-base.${GIT_REF}
+      name: ${SOLUTION_NAME}-${APP_NAME}-base.${GIT_SOURCE}
       namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
       annotations:
         description: Intermediate build that generates the frontend artifacts (html, javascript, images, etc)
     labels:
-      name: ${APP_NAME}-${ROLE_NAME}-base.${GIT_REF}
-      app: ${APP_NAME}
-      role: ${ROLE_NAME}
+      name: ${SOLUTION_NAME}-${APP_NAME}-base.${GIT_SOURCE}
+      app: ${SOLUTION_NAME}
+      role: ${APP_NAME}
       env: ${ENV_NAME}
     spec:
       runPolicy: Parallel
@@ -126,8 +144,11 @@ objects:
       output:
         to:
           kind: ImageStreamTag
-          name: ${APP_NAME}-${ROLE_NAME}-base:${OUTPUT_IMAGE_TAG}
+          name: ${SOLUTION_NAME}-${APP_NAME}-base:${OUTPUT_IMAGE_TAG}
       resources:
+        requests:
+          cpu: ${CPU_REQUEST}
+          memory: ${MEMORY_REQUEST}
         limits:
           cpu: ${CPU_LIMIT}
           memory: ${MEMORY_LIMIT}
@@ -136,28 +157,28 @@ objects:
   - kind: ImageStream
     apiVersion: v1
     metadata:
-      name: ${APP_NAME}-${ROLE_NAME}
+      name: ${SOLUTION_NAME}-${APP_NAME}
       namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
       annotations:
         description: Keeps track of changes to the final frontend image (embedded in nginx)
     labels:
-      name: ${APP_NAME}-${ROLE_NAME}
-      app: ${APP_NAME}
-      role: ${ROLE_NAME}
+      name: ${SOLUTION_NAME}-${APP_NAME}
+      app: ${SOLUTION_NAME}
+      role: ${APP_NAME}
       env: ${ENV_NAME}
 
   # The build config that will be created and be named for the branch you created it for.
   - kind: BuildConfig
     apiVersion: v1
     metadata:
-      name: ${APP_NAME}-${ROLE_NAME}.${GIT_REF}
+      name: ${SOLUTION_NAME}-${APP_NAME}.${GIT_SOURCE}
       namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
       annotations:
         description: This (final) build takes the generated frontend artifacts and serves them through a static web server (nginx)
     labels:
-      name: ${APP_NAME}-${ROLE_NAME}.${GIT_REF}
-      app: ${APP_NAME}
-      role: ${ROLE_NAME}
+      name: ${SOLUTION_NAME}-${APP_NAME}.${GIT_SOURCE}
+      app: ${SOLUTION_NAME}
+      role: ${APP_NAME}
       env: ${ENV_NAME}
     spec:
       runPolicy: Parallel
@@ -167,13 +188,13 @@ objects:
         - type: ConfigChange
       source:
         dockerfile: |-
-          FROM ${APP_NAME}-${ROLE_NAME}-base:${OUTPUT_IMAGE_TAG}
+          FROM ${SOLUTION_NAME}-${APP_NAME}-base:${OUTPUT_IMAGE_TAG}
           COPY * /tmp/app/dist/
           CMD  /usr/libexec/s2i/run
         images:
           - from:
               kind: ImageStreamTag
-              name: ${APP_NAME}-${ROLE_NAME}-base:${OUTPUT_IMAGE_TAG}
+              name: ${SOLUTION_NAME}-${APP_NAME}-base:${OUTPUT_IMAGE_TAG}
             paths:
               - destinationDir: tmp
                 sourcePath: "/opt/app-root/src/build/."
@@ -187,8 +208,11 @@ objects:
       output:
         to:
           kind: ImageStreamTag
-          name: ${APP_NAME}-${ROLE_NAME}:${OUTPUT_IMAGE_TAG}
+          name: ${SOLUTION_NAME}-${APP_NAME}:${OUTPUT_IMAGE_TAG}
       resources:
+        requests:
+          cpu: ${CPU_REQUEST}
+          memory: ${MEMORY_REQUEST}
         limits:
           cpu: ${CPU_LIMIT}
           memory: ${MEMORY_LIMIT}

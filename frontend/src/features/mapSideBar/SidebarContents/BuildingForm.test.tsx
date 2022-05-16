@@ -8,9 +8,8 @@ import { Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 import { useKeycloak } from '@react-keycloak/web';
 import * as API from 'constants/API';
-import { ILookupCode } from 'actions/lookupActions';
-import * as reducerTypes from 'constants/reducerTypes';
-import { fireEvent, render, wait } from '@testing-library/react';
+import { ILookupCode } from 'actions/ILookupCode';
+import { fireEvent, render, waitFor } from '@testing-library/react';
 
 const mockStore = configureMockStore([thunk]);
 const history = createMemoryHistory();
@@ -25,8 +24,8 @@ const lCodes = {
 };
 
 const store = mockStore({
-  [reducerTypes.LOOKUP_CODE]: lCodes,
-  [reducerTypes.PARCEL]: { parcels: [], draftParcels: [] },
+  lookupCode: lCodes,
+  parcel: { properties: [], draftProperties: [] },
 });
 
 jest.mock('@react-keycloak/web');
@@ -82,15 +81,15 @@ describe('Building Form', () => {
 
   it('building form goes to corresponding steps', async () => {
     const { getByText } = render(getBuildingForm(true));
-    await wait(() => {
+    await waitFor(() => {
       fireEvent.click(getByText(/continue/i));
     });
     expect(getByText(/Net Usable Area/i)).toBeInTheDocument();
-    await wait(() => {
+    await waitFor(() => {
       fireEvent.click(getByText(/Continue/i));
     });
     expect(getByText('Building Valuation', { exact: true })).toBeInTheDocument();
-    await wait(() => {
+    await waitFor(() => {
       fireEvent.click(getByText(/Continue/i));
     });
     expect(getByText(/Review your building info/i)).toBeInTheDocument();
@@ -98,7 +97,7 @@ describe('Building Form', () => {
 
   it('building review has appropriate subforms', async () => {
     const { getByText } = render(getBuildingForm(true));
-    await wait(() => {
+    await waitFor(() => {
       fireEvent.click(getByText(/Review/i));
     });
     expect(getByText(/Building Identification/i)).toBeInTheDocument();

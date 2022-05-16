@@ -28,7 +28,7 @@ const SelectProjectPropertiesStep = ({ isReadOnly, formikRef }: IStepProps) => {
     address: '',
     administrativeArea: '',
     projectNumber: '',
-    agencies: project.agencyId,
+    agencies: `${project.agencyId}`,
     classificationId: Classifications.SurplusActive.toString(),
     minLotSize: '',
     maxLotSize: '',

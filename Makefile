@@ -37,9 +37,16 @@ help:
 # Docker Development
 ##############################################################################
 
-restart: | stop build up ## Restart local docker environment
+restart: ## Restart local docker environment (n=service name)
+	$(info Restart local docker environment)
+	@make stop n=$(n)
+	@make up n=$(n)
 
-refresh: | down build up ## Recreates local docker environment
+refresh: ## Recreates local docker environment (n=service name)
+	$(info Recreates local docker environment)
+	@make stop n=$(n)
+	@make build n=$(n)
+	@make up n=$(n)
 
 up: ## Runs the local containers (n=service name)
 	@echo "$(P) Running client and server..."

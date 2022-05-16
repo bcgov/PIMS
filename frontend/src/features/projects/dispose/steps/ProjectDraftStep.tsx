@@ -2,12 +2,12 @@ import React from 'react';
 import { Container } from 'react-bootstrap';
 import { Formik } from 'formik';
 import { Form } from 'components/common/form';
-import { initialValues } from 'features/projects/constants';
 import { IStepProps } from 'features/projects/interfaces';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { ProjectDraftStepYupSchema, useStepper } from '..';
 import { useStepForm, ProjectDraftForm, StepErrorSummary } from '../../common';
 import ProjectNotes from '../../common/components/ProjectNotes';
+import { defaultProject } from 'features/projects/constants/defaultValues';
 
 /**
  * Initial Project creation step - allows entry of high level project information.
@@ -22,7 +22,7 @@ const ProjectDraftStep = ({ isReadOnly, formikRef }: IStepProps) => {
     draftFormValues = { ...project };
   } else {
     //This appears to be a new project, set up some defaults.
-    draftFormValues = { ...initialValues, agencyId: keycloak.agencyId! };
+    draftFormValues = { ...defaultProject(), agencyId: keycloak.agencyId! };
   }
   const isPreDraft = () => {
     return project.agencyId === 0;

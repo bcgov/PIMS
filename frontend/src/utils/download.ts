@@ -1,7 +1,8 @@
 import CustomAxios from 'customAxios';
 import { AxiosResponse, AxiosError, AxiosRequestConfig } from 'axios';
 import { showLoading, hideLoading } from 'react-redux-loading-bar';
-import { request, success, error } from 'actions/genericActions';
+import { request, success, error } from 'store';
+import { Dispatch, AnyAction } from 'redux';
 
 /**
  * Download configuration options interface.
@@ -20,11 +21,11 @@ export interface IDownloadConfig extends AxiosRequestConfig {
  * @param config.headers - The HTTP request headers to include.  By default it will include the JWT bearer token.
  * @param config.fileName - The file name you want to save the download as.  By default it will use the current date.
  */
-const download = (config: IDownloadConfig) => (dispatch: Function) => {
+const download = (config: IDownloadConfig) => async (dispatch: Dispatch<AnyAction>) => {
   const options = { ...config, headers: { ...config.headers } };
   dispatch(request(options.actionType));
   dispatch(showLoading());
-  return CustomAxios()
+  return await CustomAxios()
     .request({
       url: options.url,
       headers: options.headers,

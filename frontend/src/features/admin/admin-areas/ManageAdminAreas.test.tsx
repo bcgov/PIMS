@@ -10,7 +10,7 @@ import { Router } from 'react-router';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 import * as API from 'constants/API';
-import { ILookupCode } from 'actions/lookupActions';
+import { ILookupCode } from 'actions/ILookupCode';
 import { useKeycloak } from '@react-keycloak/web';
 
 jest.mock('@react-keycloak/web');

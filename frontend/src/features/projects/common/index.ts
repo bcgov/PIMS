@@ -39,4 +39,5 @@ export { default as ProjectSummaryView } from './ProjectSummaryView';
 
 export { default as ProjectInformationTab } from './tabs/ProjectInformationTab';
 export { default as DocumentationTab } from './tabs/DocumentationTab';
+export { default as NotificationTab } from './tabs/NotificationTab';
 export * from './tabs/projectTabValidation';

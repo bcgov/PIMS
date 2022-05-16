@@ -1,7 +1,7 @@
-import { getCurrentFiscalYear } from 'utils';
+import { getCurrentFiscalYear } from 'utils/utils';
 import { IProject } from '../interfaces';
 
-export const initialValues: IProject = {
+export const defaultProject = (): IProject => ({
   projectNumber: '',
   name: '',
   note: '',
@@ -76,4 +76,4 @@ export const initialValues: IProject = {
   gainNote: '',
   adjustmentNote: '',
   statusHistory: [],
-};
+});

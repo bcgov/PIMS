@@ -42,12 +42,7 @@ const AssessedExplanation = styled(Row)`
 `;
 const NUMBER_OF_GENERATED_EVALUATIONS = 10;
 const currentYear = moment().year();
-const adjustedFiscalYear = moment().month() >= 3 ? currentYear + 1 : currentYear;
-const yearsArray = _.range(
-  adjustedFiscalYear,
-  adjustedFiscalYear - NUMBER_OF_GENERATED_EVALUATIONS,
-  -1,
-);
+const yearsArray = _.range(currentYear, currentYear - NUMBER_OF_GENERATED_EVALUATIONS, -1);
 const keyTypes = { ...EvaluationKeys, ...FiscalKeys };
 
 export const findMatchingFinancial = (financials: IFinancial[], type: string, year?: number) => {
@@ -108,8 +103,10 @@ export const getMergedFinancials = (
       (evaluation.fiscalYear as number) ?? moment(evaluation.date).year(),
     );
     if (index >= 0) {
-      evaluation.year = (evaluation.fiscalYear as number) ?? moment(evaluation.date).year();
-      placeholderFinancials[index] = evaluation;
+      placeholderFinancials[index] = {
+        ...evaluation,
+        year: (evaluation.fiscalYear as number) ?? moment(evaluation.date).year(),
+      };
     }
   });
   return _.orderBy(placeholderFinancials, 'year', 'desc');
@@ -156,14 +153,18 @@ const EvaluationForm = <T extends any>(props: EvaluationProps & FormikProps<T>) 
     props.nameSpace,
   ]);
   const { values } = useFormikContext();
-  const assessedEvaluations =
+  const assessedEvaluations = getMergedFinancials(
     getIn(values, `${props.nameSpace}.evaluations`)?.filter(
       (evaluation: IFinancial) => evaluation?.key === EvaluationKeys.Assessed,
-    ) ?? [];
-  const netBookFiscals =
+    ) ?? [],
+    [EvaluationKeys.Assessed],
+  );
+  const netBookFiscals = getMergedFinancials(
     getIn(values, `${props.nameSpace}.fiscals`)?.filter(
-      (evaluation: IFinancial) => evaluation?.key === FiscalKeys.NetBook,
-    ) ?? [];
+      (fiscal: IFinancial) => fiscal?.key === FiscalKeys.NetBook,
+    ) ?? [],
+    [FiscalKeys.NetBook],
+  );
 
   return (
     <Fragment>

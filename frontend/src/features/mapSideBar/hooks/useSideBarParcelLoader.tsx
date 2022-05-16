@@ -1,11 +1,11 @@
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
 import { SidebarContextType } from './useQueryParamSideBar';
-import { fetchParcelDetail } from 'actionCreators/parcelsActionCreator';
-import { useDispatch } from 'react-redux';
+import { fetchParcelDetail } from 'store/slices/hooks/parcelsActionCreator';
 import React from 'react';
 import { IParcel } from 'actions/parcelsActions';
 import { PropertyTypes } from 'constants/propertyTypes';
 import { useAsyncError } from 'hooks/useAsyncError';
+import { useAppDispatch } from 'store';
 
 interface IUseSideBarParcelLoader {
   /** whether or not the sidebar should be displayed */
@@ -26,7 +26,7 @@ const useSideBarParcelLoader = ({
   disabled,
 }: IUseSideBarParcelLoader) => {
   const [cachedParcelDetail, setCachedParcelDetail] = React.useState<IParcel | null>(null);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const hasBuildings = !!cachedParcelDetail?.buildings?.length;
   const throwError = useAsyncError();
 

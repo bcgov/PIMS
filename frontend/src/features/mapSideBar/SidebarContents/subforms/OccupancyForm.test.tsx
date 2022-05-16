@@ -1,6 +1,6 @@
 import React from 'react';
 import { OccupancyForm } from './OccupancyForm';
-import { fireEvent, render, wait, act } from '@testing-library/react';
+import { fireEvent, render, waitFor, act } from '@testing-library/react';
 import { noop } from 'lodash';
 import { Formik } from 'formik';
 import { SelectOptions } from 'components/common/form';
@@ -31,7 +31,7 @@ describe('occupancy form functionality', () => {
   it('number input for total area/square footage', async () => {
     const { container } = render(form);
     const totalArea = container.querySelector('input[name="totalArea"]');
-    await wait(() => {
+    await waitFor(() => {
       fireEvent.change(totalArea!, {
         target: {
           value: 123,
@@ -44,7 +44,7 @@ describe('occupancy form functionality', () => {
   it('number input for rentable area', async () => {
     const { container } = render(form);
     const rentableArea = container.querySelector('input[name="rentableArea"]');
-    await wait(() => {
+    await waitFor(() => {
       fireEvent.change(rentableArea!, {
         target: {
           value: 123,
@@ -57,7 +57,7 @@ describe('occupancy form functionality', () => {
   it('input for tenancy percentage', async () => {
     const { container } = render(form);
     const percentage = container.querySelector('input[name="buildingTenancy"]');
-    await wait(() => {
+    await waitFor(() => {
       fireEvent.change(percentage!, {
         target: {
           value: '123',

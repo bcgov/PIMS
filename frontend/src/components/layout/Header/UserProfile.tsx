@@ -7,7 +7,7 @@ import useCodeLookups from 'hooks/useLookupCodes';
 import styled from 'styled-components';
 import { FaSignOutAlt } from 'react-icons/fa';
 import * as API from 'constants/API';
-import { ILookupCode } from 'actions/lookupActions';
+import { ILookupCode } from 'actions/ILookupCode';
 import variables from '_variables.module.scss';
 
 /** the styling for the dropdown menu that appears after clicking the user's name */

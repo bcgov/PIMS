@@ -8,7 +8,7 @@ import { Provider } from 'react-redux';
 import * as reducerTypes from 'constants/reducerTypes';
 import { Router } from 'react-router';
 import * as API from 'constants/API';
-import { ILookupCode } from 'actions/lookupActions';
+import { ILookupCode } from 'actions/ILookupCode';
 
 const mockStore = configureMockStore([thunk]);
 

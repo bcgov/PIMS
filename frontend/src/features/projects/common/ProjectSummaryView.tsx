@@ -11,8 +11,7 @@ import { ReviewWorkflowStatus, SPPApprovalTabs } from 'features/projects/constan
 import { IStepProps } from 'features/projects/interfaces';
 import { PublicNotes } from './components/ProjectNotes';
 import { ErpTabs, saveErpTab } from '../erp';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from 'reducers/rootReducer';
+import { useAppDispatch, useAppSelector } from 'store';
 
 /**
  * Read only version of all step components. Allows notes field to be edited
@@ -22,13 +21,11 @@ const ProjectSummaryView = ({ formikRef }: IStepProps) => {
   const { onSubmitReview, noFetchingProjectRequests } = useStepForm();
   const initialValues = { ...project, confirmation: true };
   const [submitStatusCode, setSubmitStatusCode] = useState(undefined);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const setCurrentTab = (tabName: string) => {
     dispatch(saveErpTab(tabName));
   };
-  const currentTab =
-    useSelector<RootState, string | null>(state => state.erpTab) ??
-    SPPApprovalTabs.projectInformation;
+  const currentTab = useAppSelector(store => store.erpTab) ?? SPPApprovalTabs.projectInformation;
   return (
     <Container fluid className="ProjectSummaryView">
       <StepStatusIcon approvedOn={project.approvedOn} status={project.status} />

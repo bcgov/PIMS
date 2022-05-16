@@ -9,14 +9,12 @@ import {
   Popup,
   Map as ReactLeafletMap,
 } from 'react-leaflet';
-import { IProperty, IPropertyDetail, storeParcelDetail } from 'actions/parcelsActions';
+import { IProperty, IPropertyDetail } from 'actions/parcelsActions';
 import { Container, Row, Col } from 'react-bootstrap';
-import { ILookupCode } from 'actions/lookupActions';
+import { ILookupCode } from 'actions/ILookupCode';
 import BasemapToggle, { BasemapToggleEvent, BaseLayer } from '../BasemapToggle';
-import { useDispatch, useSelector } from 'react-redux';
-import { setMapViewZoom, DEFAULT_MAP_ZOOM } from 'reducers/mapViewZoomSlice';
-import { RootState } from 'reducers/rootReducer';
-import { Feature, GeoJsonObject } from 'geojson';
+import { setMapViewZoom, DEFAULT_MAP_ZOOM } from 'store/slices/mapViewZoomSlice';
+import { Feature } from 'geojson';
 import { LegendControl } from './Legend/LegendControl';
 import { useMediaQuery } from 'react-responsive';
 import ReactResizeDetector from 'react-resize-detector';
@@ -33,7 +31,7 @@ import {
 } from './LayerPopup/LayerPopupContent';
 import classNames from 'classnames';
 import { useLayerQuery } from './LayerPopup/hooks/useLayerQuery';
-import { saveParcelLayerData } from 'reducers/parcelLayerDataSlice';
+import { saveParcelLayerData } from 'store/slices/parcelLayerDataSlice';
 import { SidebarSize } from 'features/mapSideBar/hooks/useQueryParamSideBar';
 import useActiveFeatureLayer from '../hooks/useActiveFeatureLayer';
 import LayersControl from './LayersControl';
@@ -51,6 +49,8 @@ import { PropertyPopUpContext } from '../providers/PropertyPopUpProvider';
 import FilterBackdrop from './FilterBackdrop';
 import { useBoundaryLayer } from './LayerPopup/hooks/useBoundaryLayer';
 import GenericModal from 'components/common/GenericModal';
+import { useAppDispatch, useAppSelector } from 'store';
+import { storePropertyDetail } from 'store/slices/parcelSlice';
 
 export type MapViewportChangeEvent = {
   bounds: LatLngBounds | null;
@@ -175,7 +175,7 @@ const Map: React.FC<MapProps> = ({
   sidebarSize,
 }) => {
   const keycloak = useKeycloakWrapper();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const [geoFilter, setGeoFilter] = useState<IGeoSearchParams>({
     ...defaultFilterValues,
     includeAllProperties: keycloak.hasClaim(Claims.ADMIN_PROPERTIES),
@@ -197,9 +197,7 @@ const Map: React.FC<MapProps> = ({
     lat = (mapRef.current.props.center as Array<number>)[0];
     lng = (mapRef.current.props.center as Array<number>)[1];
   }
-  const parcelLayerFeature = useSelector<RootState, GeoJsonObject | null>(
-    state => state.parcelLayerData?.parcelLayerFeature,
-  );
+  const parcelLayerFeature = useAppSelector(store => store.parcelLayerData?.parcelLayerFeature);
   useActiveFeatureLayer({
     selectedProperty,
     layerPopup,
@@ -209,7 +207,7 @@ const Map: React.FC<MapProps> = ({
   });
   const [showFilterBackdrop, setShowFilterBackdrop] = useState(true);
 
-  const lastZoom = useSelector<RootState, number>(state => state.mapViewZoom) ?? zoomProp;
+  const lastZoom = useAppSelector(store => store.mapViewZoom) ?? zoomProp;
   const [zoom, setZoom] = useState(lastZoom);
   useEffect(() => {
     if (lastZoom === DEFAULT_MAP_ZOOM) {
@@ -249,7 +247,7 @@ const Map: React.FC<MapProps> = ({
     };
     // Search button will always trigger filter changed (triggerFilterChanged is set to true when search button is clicked)
     if (!isEqualWith(geoFilter, filter, compareValues) || triggerFilterChanged) {
-      dispatch(storeParcelDetail(null));
+      dispatch(storePropertyDetail(null));
       setGeoFilter(getQueryParams(filter));
       setChanged(true);
       setTriggerFilterChanged(false);
@@ -404,7 +402,7 @@ const Map: React.FC<MapProps> = ({
                       offset={[0, -25]}
                       onClose={() => {
                         setLayerPopup(undefined);
-                        dispatch(storeParcelDetail(null));
+                        dispatch(storePropertyDetail(null));
                       }}
                       closeButton={interactive}
                       autoPan={false}

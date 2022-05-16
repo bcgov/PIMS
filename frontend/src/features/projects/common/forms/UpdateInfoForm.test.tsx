@@ -8,7 +8,7 @@ import { Formik } from 'formik';
 import { Form } from 'react-bootstrap';
 import { Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
-import { render, wait, fireEvent, cleanup } from '@testing-library/react';
+import { render, waitFor, fireEvent, cleanup } from '@testing-library/react';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 import { ProjectActions } from 'constants/actionTypes';
@@ -131,7 +131,7 @@ describe('Update Info Form', () => {
     const classificationId = container.querySelector(
       'select[name="properties.0.classificationId"]',
     );
-    await wait(() => {
+    await waitFor(() => {
       fireEvent.change(classificationId!, {
         target: {
           value: Classifications.CoreOperational,

@@ -10,16 +10,17 @@ metadata:
     description: Build template for a .NET 5.0 application.
     tags: pims-api
 parameters:
-  - name: APP_NAME
-    displayName: App Name
-    description: The name of the application (grouped).
+  - name: SOLUTION_NAME
+    displayName: Solution Group Name
+    description: The name of the solution (e.g pims).
     required: true
     value: pims
-  - name: ROLE_NAME
-    displayName: Role Name
-    description: The name of the application component role (e.g ui, web, api, database).
+  - name: APP_NAME
+    displayName: Application Name
+    description: The name of the application (e.g. api).
     required: true
     value: api
+
   - name: PROJECT_NAMESPACE
     displayName: "OpenShift Project Namespace"
     description: "The namespace of the OpenShift project containing the application."
@@ -30,11 +31,12 @@ parameters:
     description: "The name for this environment [dev, test, prod, tools]"
     required: true
     value: "tools"
-  - name: INSTANCE
-    displayName: "Unique Identifier"
-    description: "A unique identifier to allow for multiple instances (i.e. '-01')."
-    required: false
 
+  - name: GIT_SOURCE
+    displayName: Git Source Identifier
+    description: A way to identify different sources (i.e. "dev" or "jmf")
+    required: true
+    value: dev
   - name: GIT_URL
     displayName: Git Repository URL
     description: The URL of the repository with your application source code.
@@ -61,43 +63,53 @@ parameters:
     required: true
     value: latest
 
+  - name: CPU_REQUEST
+    displayName: Requested Minimum Resources CPU Limit
+    description: The requested minimum resources CPU limit (in cores) for this build.
+    required: true
+    value: 20m
   - name: CPU_LIMIT
     displayName: Resources CPU Limit
     description: The resources CPU limit (in cores) for this build.
     required: true
-    value: "1"
+    value: 500m
+  - name: MEMORY_REQUEST
+    displayName: Requested Minimum Memory Limit
+    description: Minimum requested amount of memory the container can use.
+    required: true
+    value: 250Mi
   - name: MEMORY_LIMIT
     displayName: Memory Limit
     description: Maximum amount of memory the container can use.
     required: true
-    value: 6Gi
+    value: 2Gi
 objects:
   # Image stream for the built image.
   - kind: ImageStream
     apiVersion: v1
     metadata:
-      name: ${APP_NAME}-${ROLE_NAME}${INSTANCE}
+      name: ${SOLUTION_NAME}-${APP_NAME}
       namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
       annotations:
         description: Keeps track of changes in the application image
       labels:
-        name: ${APP_NAME}-${ROLE_NAME}${INSTANCE}
-        app: ${APP_NAME}
-        role: ${ROLE_NAME}
+        name: ${SOLUTION_NAME}-${APP_NAME}
+        app: ${SOLUTION_NAME}
+        role: ${APP_NAME}
         env: ${ENV_NAME}
 
   # The build config that will be created and be named for the branch you created it for.
   - kind: BuildConfig
     apiVersion: v1
     metadata:
-      name: ${APP_NAME}-${ROLE_NAME}${INSTANCE}.${GIT_REF}
+      name: ${SOLUTION_NAME}-${APP_NAME}.${GIT_SOURCE}
       namespace: ${PROJECT_NAMESPACE}-${ENV_NAME}
       annotations:
         description: Defines how to build the application
       labels:
-        name: ${APP_NAME}-${ROLE_NAME}${INSTANCE}.${GIT_REF}
-        app: ${APP_NAME}
-        role: ${ROLE_NAME}
+        name: ${SOLUTION_NAME}-${APP_NAME}.${GIT_SOURCE}
+        app: ${SOLUTION_NAME}
+        role: ${APP_NAME}
         env: ${ENV_NAME}
         branch: ${GIT_REF}
     spec:
@@ -119,8 +131,11 @@ objects:
       output:
         to:
           kind: ImageStreamTag
-          name: ${APP_NAME}-${ROLE_NAME}${INSTANCE}:${OUTPUT_IMAGE_TAG}
+          name: ${SOLUTION_NAME}-${APP_NAME}:${OUTPUT_IMAGE_TAG}
       resources:
+        requests:
+          cpu: ${CPU_REQUEST}
+          memory: ${MEMORY_REQUEST}
         limits:
           cpu: ${CPU_LIMIT}
           memory: ${MEMORY_LIMIT}
