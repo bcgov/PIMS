@@ -7,7 +7,6 @@ import classNames from 'classnames';
 import { ColProps, Form } from 'react-bootstrap';
 import TooltipIcon from '../TooltipIcon';
 import './FastCurrencyInput.scss';
-import { Col } from 'react-bootstrap';
 
 export const defaultMaskOptions = {
   prefix: '$',
@@ -46,6 +45,8 @@ type OptionalAttributes = {
   allowNegative?: boolean;
   /** Suppress validation on submit */
   suppressValidation?: boolean;
+  /** form label */
+  label?: string;
 };
 
 export type CurrencyInputProps = RequiredAttributes &
@@ -56,6 +57,7 @@ export type CurrencyInputProps = RequiredAttributes &
  * without changing the formik prop value to string.
  */
 const CurrencyInput = ({
+  label,
   field,
   className,
   outerClassName,
@@ -104,9 +106,10 @@ const CurrencyInput = ({
   return (
     <Form.Group
       className={classNames(!!required ? 'required' : '', outerClassName)}
-      as={Col}
+      as={'div'}
       md={rest.md}
     >
+      {!!label && <Form.Label>{label}</Form.Label>}
       <div className="input-tooltip-wrapper">
         <MaskedInput
           value={value}

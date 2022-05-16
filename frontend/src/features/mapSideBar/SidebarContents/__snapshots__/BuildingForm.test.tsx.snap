@@ -467,11 +467,11 @@ exports[`Building Form component renders correctly 1`] = `
                     <div
                       class="row"
                     >
-                      <p
+                      <label
                         class="label"
                       >
                         Main Usage
-                      </p>
+                      </label>
                       <div
                         class="required form-group"
                       >
@@ -493,11 +493,11 @@ exports[`Building Form component renders correctly 1`] = `
                     <div
                       class="row"
                     >
-                      <p
+                      <label
                         class="label"
                       >
                         Construction Type
-                      </p>
+                      </label>
                       <div
                         class="required form-group"
                       >
@@ -519,13 +519,13 @@ exports[`Building Form component renders correctly 1`] = `
                     <div
                       class="row"
                     >
-                      <p
+                      <label
                         class="label"
                       >
                         Number of Floors
-                      </p>
+                      </label>
                       <div
-                        class="form-group col"
+                        class="form-group"
                       >
                         <input
                           class="input-small form-control"
@@ -540,7 +540,7 @@ exports[`Building Form component renders correctly 1`] = `
                     <div
                       class="row"
                     >
-                      <p
+                      <label
                         class="label"
                       />
                       <div
@@ -624,12 +624,12 @@ exports[`Building Form component renders correctly 1`] = `
                       class="row"
                       style="display: flex;"
                     >
-                      <p
+                      <label
                         class="label"
                         style="margin-bottom: 0px; text-align: right;"
                       >
                         Building Classification
-                      </p>
+                      </label>
                       <div
                         class="required form-group"
                       >
@@ -682,11 +682,11 @@ exports[`Building Form component renders correctly 1`] = `
                     <div
                       class="form-row"
                     >
-                      <p
+                      <label
                         class="label"
                       >
                         Street Address
-                      </p>
+                      </label>
                       <div
                         class="GeocoderAutoComplete"
                       >
@@ -709,11 +709,11 @@ exports[`Building Form component renders correctly 1`] = `
                     <div
                       class="form-row"
                     >
-                      <p
+                      <label
                         class="label"
                       >
                         Location
-                      </p>
+                      </label>
                       <div
                         class="required form-group"
                       >
@@ -752,11 +752,11 @@ exports[`Building Form component renders correctly 1`] = `
                     <div
                       class="form-row"
                     >
-                      <p
+                      <label
                         class="label"
                       >
                         Province
-                      </p>
+                      </label>
                       <div
                         class="form-group"
                       >
@@ -777,13 +777,13 @@ exports[`Building Form component renders correctly 1`] = `
                     <div
                       class="postal form-row"
                     >
-                      <p
+                      <label
                         class="label"
                       >
                         Postal Code
-                      </p>
+                      </label>
                       <div
-                        class="form-group col"
+                        class="form-group"
                       >
                         <input
                           class="input-small form-control"
@@ -834,13 +834,13 @@ exports[`Building Form component renders correctly 1`] = `
                       <div
                         class="form-row"
                       >
-                        <p
+                        <label
                           class="label"
                         >
                           Latitude
-                        </p>
+                        </label>
                         <div
-                          class="required form-group col"
+                          class="required form-group"
                         >
                           <input
                             class="input-medium form-control"
@@ -854,13 +854,13 @@ exports[`Building Form component renders correctly 1`] = `
                       <div
                         class="form-row"
                       >
-                        <p
+                        <label
                           class="label"
                         >
                           Longitude
-                        </p>
+                        </label>
                         <div
-                          class="required form-group col"
+                          class="required form-group"
                         >
                           <input
                             class="input-medium form-control"

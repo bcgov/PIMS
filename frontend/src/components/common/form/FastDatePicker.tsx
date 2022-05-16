@@ -51,6 +51,7 @@ const FormikDatePicker: FunctionComponent<FastDatePickerProps> = ({
   label,
   required,
   popperModifiers,
+  size,
   formikProps: {
     values,
     initialValues,
@@ -95,39 +96,41 @@ const FormikDatePicker: FunctionComponent<FastDatePickerProps> = ({
     >
       {!!label && <Form.Label>{label}</Form.Label>}
 
-      <DatePicker
-        id={`datepicker-${field}`}
-        showYearDropdown
-        scrollableYearDropdown
-        yearDropdownItemNumber={10}
-        autoComplete="off"
-        name={field}
-        required={required}
-        placeholderText="--/--/----"
-        className={classNames('form-control', 'date-picker', isInvalid, isValid)}
-        dateFormat="MM/dd/yyyy"
-        selected={(value && new Date(value)) || null}
-        disabled={disabled}
-        minDate={minDate ? moment(minDate, 'YYYY-MM-DD').toDate() : undefined}
-        {...rest}
-        popperModifiers={popperModifiers}
-        onBlur={() => {
-          if (oldDateWarning && initialValue && moment(initialValue).isAfter(moment(value))) {
-            setOldDate(value);
-          }
-          setFieldTouched(field);
-        }}
-        onCalendarClose={() => {
-          if (oldDateWarning && initialValue && moment(initialValue).isAfter(moment(value))) {
-            setOldDate(value);
-          }
-          setFieldTouched(field);
-        }}
-        onChange={(val: any, e) => {
-          setFieldValue(field, val ? moment(val).format('YYYY-MM-DD') : '');
-        }}
-      />
-      <ErrorMessage component="div" className="invalid-feedback" name={field}></ErrorMessage>
+      <div style={{ minWidth: size === 'sm' ? '9em' : '', maxWidth: size === 'sm' ? '9em' : '' }}>
+        <DatePicker
+          id={`datepicker-${field}`}
+          showYearDropdown
+          scrollableYearDropdown
+          yearDropdownItemNumber={10}
+          autoComplete="off"
+          name={field}
+          required={required}
+          placeholderText="--/--/----"
+          className={classNames('form-control', 'date-picker', isInvalid, isValid)}
+          dateFormat="MM/dd/yyyy"
+          selected={(value && new Date(value)) || null}
+          disabled={disabled}
+          minDate={minDate ? moment(minDate, 'YYYY-MM-DD').toDate() : undefined}
+          {...rest}
+          popperModifiers={popperModifiers}
+          onBlur={() => {
+            if (oldDateWarning && initialValue && moment(initialValue).isAfter(moment(value))) {
+              setOldDate(value);
+            }
+            setFieldTouched(field);
+          }}
+          onCalendarClose={() => {
+            if (oldDateWarning && initialValue && moment(initialValue).isAfter(moment(value))) {
+              setOldDate(value);
+            }
+            setFieldTouched(field);
+          }}
+          onChange={(val: any, e) => {
+            setFieldValue(field, val ? moment(val).format('YYYY-MM-DD') : '');
+          }}
+        />
+        <ErrorMessage component="div" className="invalid-feedback" name={field}></ErrorMessage>
+      </div>
       {!!oldDate && (
         <GenericModal
           display={!!oldDate}

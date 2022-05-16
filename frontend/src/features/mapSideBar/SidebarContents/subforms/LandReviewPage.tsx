@@ -21,7 +21,6 @@ import styled from 'styled-components';
 import { ParentSelect } from 'components/common/form/ParentSelect';
 import { FormikTable } from 'features/projects/common';
 import { getAssociatedBuildingsCols } from 'features/properties/components/forms/subforms/columns';
-import { Classifications } from 'constants/classifications';
 import { formatFiscalYear } from 'utils';
 import { indexOfFinancial } from 'features/properties/components/forms/subforms/EvaluationForm';
 import { EvaluationKeys } from 'constants/evaluationKeys';
@@ -69,11 +68,6 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
     [formikProps.isValid, props.disabled],
   );
   const [editInfo, setEditInfo] = useState(defaultEditValues);
-
-  let classId = getIn(formikProps.values, withNameSpace('classificationId'));
-  const filteredClassifications = props.classifications.filter(
-    (c: any) => Number(c.value) !== Classifications.Disposed || +c.value === +classId,
-  );
 
   const projectNumbers = getIn(formikProps.values, withNameSpace('projectNumbers'));
   const agencyId = getIn(formikProps.values, withNameSpace('agencyId'));
@@ -272,7 +266,7 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
                   type="number"
                   placeholder="Must Select One"
                   field={withNameSpace('classificationId')}
-                  options={filteredClassifications}
+                  options={props.classifications}
                   required={true}
                 />
               </Row>

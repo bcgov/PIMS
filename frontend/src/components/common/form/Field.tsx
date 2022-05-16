@@ -5,7 +5,7 @@ import { DisplayError } from './DisplayError';
 
 type FieldProps = {
   /** The field name (optional) */
-  field?: string;
+  field: string;
   /** An optional label used above the input element */
   label?: string;
   /** An optional element to render next to the label  */

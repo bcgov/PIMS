@@ -231,7 +231,7 @@ const Table = <T extends IIdentifiedObject, TFilter extends object = {}>(
     pageCount,
     selectedRows: externalSelectedRows,
     setSelectedRows: setExternalSelectedRows,
-    footer,
+    footer = true,
     pageSize: pageSizeProp,
     pageIndex: pageIndexProp,
     manualPagination,
@@ -659,7 +659,7 @@ const Table = <T extends IIdentifiedObject, TFilter extends object = {}>(
         {renderBody}
         {renderFooter()}
       </div>
-      {!props.hideToolbar && (
+      {!props.hideToolbar && footer && (
         <div className="table-toolbar">
           {props.pageSize !== -1 && <TablePagination<T> instance={instance} />}
           {!props.lockPageSize && props.data.length > 0 && !props.lockPageSize && (

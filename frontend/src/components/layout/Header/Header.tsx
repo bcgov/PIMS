@@ -5,13 +5,12 @@ import { Navbar, Row, Col, Modal, Button, Nav } from 'react-bootstrap';
 import BClogoUrl from 'assets/images/logo-banner.svg';
 import PIMSlogo from 'assets/images/PIMSlogo/logo_only.png';
 import { useHistory } from 'react-router-dom';
-import { IGenericNetworkAction, clear } from 'store';
+import { IGenericNetworkAction, useAppSelector } from 'store';
 import { FaBomb } from 'react-icons/fa';
-import _ from 'lodash';
 import { UserProfile } from './UserProfile';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import styled from 'styled-components';
-import { useAppDispatch, useAppSelector } from 'store';
+import { useNetworkStore } from 'store/slices/hooks';
 
 const VerticalBar = styled.span`
   border-left: 2px solid white;
@@ -22,8 +21,12 @@ const VerticalBar = styled.span`
 
 const Header = () => {
   const history = useHistory();
-  const dispatch = useAppDispatch();
   const keycloak = useKeycloakWrapper();
+  const network = useNetworkStore();
+  const { requests } = useAppSelector(store => store.network);
+
+  const [errors, setErrors] = React.useState<IGenericNetworkAction[]>([]);
+
   if (history.location.pathname === '/') {
     history.replace('/mapview');
   }
@@ -31,25 +34,20 @@ const Header = () => {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   const handleClear = () => {
-    errors.forEach(error => dispatch(clear(error.name)));
+    errors.forEach(error => network.clearRequest(error.name));
     setShow(false);
   };
 
   const isNetworkError = (x: any): x is IGenericNetworkAction =>
     (x as IGenericNetworkAction).type === 'ERROR';
-  const errors = useAppSelector(store => {
-    const errors: IGenericNetworkAction[] = [];
-    _.values(store.network).forEach(reducer => {
-      _.values(reducer)
-        .filter(x => x instanceof Object)
-        .forEach(action => {
-          if (isNetworkError(action)) {
-            errors.push(action);
-          }
-        });
-    });
-    return errors;
-  });
+
+  React.useEffect(() => {
+    const errors: IGenericNetworkAction[] = Object.values(requests)
+      .filter(o => o instanceof Object)
+      .filter(o => isNetworkError(o))
+      .map(o => o as IGenericNetworkAction);
+    setErrors(errors);
+  }, [requests]);
 
   //TODO: styling - this is a placeholder, need UI.
   const errorModal = (errors: IGenericNetworkAction[]) => (
@@ -59,27 +57,29 @@ const Header = () => {
       </Modal.Header>
 
       <Modal.Body style={{ maxHeight: '500px', overflowY: 'scroll' }}>
-        {errors.map((error: IGenericNetworkAction, index: number) => (
-          <Row key={index} style={{ wordBreak: 'break-all' }}>
-            {process.env.NODE_ENV === 'development' ? (
-              <Col>
-                <abbr title={error.error?.response?.config?.url}>
-                  {error.error?.response?.config?.url?.substr(0, 20)}
-                </abbr>
-                : {error.error?.response?.statusText} data:{' '}
-                {JSON.stringify(error.error?.response?.data)}
-              </Col>
-            ) : (
-              <Col>
-                <abbr title={error.error?.response?.config?.url}>
-                  {error.error?.response?.config?.url?.substr(0, 20)}
-                </abbr>
-                : ({error.error?.response?.statusText ?? 'unknown'}){' '}
-                {error.error?.response?.data?.error}
-              </Col>
-            )}
-          </Row>
-        ))}
+        {errors.map((error: IGenericNetworkAction, index: number) => {
+          return (
+            <Row key={index} style={{ wordBreak: 'break-all' }}>
+              {process.env.NODE_ENV === 'development' ? (
+                <Col>
+                  <abbr title={error.error?.response?.config?.url}>
+                    {error.error?.response?.config?.url?.substr(0, 20)}
+                  </abbr>
+                  : {error.error?.response?.statusText} data:{' '}
+                  {JSON.stringify(error.error?.response?.data)}
+                </Col>
+              ) : (
+                <Col>
+                  <abbr title={error.error?.response?.config?.url}>
+                    {error.error?.response?.config?.url?.substr(0, 20)}
+                  </abbr>
+                  : ({error.error?.response?.statusText ?? 'unknown'}){' '}
+                  {error.error?.response?.data?.error}
+                </Col>
+              )}
+            </Row>
+          );
+        })}
       </Modal.Body>
 
       <Modal.Footer>

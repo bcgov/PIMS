@@ -45,7 +45,7 @@ const store = mockStore({
   [reducerTypes.ProjectReducers.PROJECT]: { agencyId: 1 },
   [reducerTypes.LOOKUP_CODE]: { lookupCodes: [] },
   [reducerTypes.NETWORK]: {
-    [ProjectActions.GET_PROJECT]: {},
+    requests: { [ProjectActions.GET_PROJECT]: {} },
   },
 });
 

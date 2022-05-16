@@ -8,10 +8,11 @@ import { Button } from 'react-bootstrap';
 import GenericModal from 'components/common/GenericModal';
 import { createMemoryHistory } from 'history';
 import { Router } from 'react-router-dom';
-import { ReviewWorkflowStatus, DisposeWorkflowStatus } from 'features/projects/constants';
+import { DisposeWorkflowStatus } from 'features/projects/constants';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { mockFlatProperty } from 'mocks/filterDataMock';
 import { deletePotentialSubdivisionParcels } from 'features/projects/common';
+import { WorkflowStatus } from 'hooks/api/projects';
 
 Enzyme.configure({ adapter: new Adapter() });
 const history = createMemoryHistory();
@@ -39,7 +40,7 @@ describe('Review Approve actions', () => {
     (useFormikContext as jest.Mock).mockReturnValue({
       values: {
         properties: [{ ...mockFlatProperty, propertyTypeId: 2 }],
-        statusCode: ReviewWorkflowStatus.PropertyReview,
+        statusCode: WorkflowStatus.PropertyReview,
       },
       submitForm: () => Promise.resolve(),
       validateForm: () => ({
@@ -69,7 +70,7 @@ describe('Review Approve actions', () => {
           return node.type() === Button && node.text() === 'Approve';
         });
       confirm.simulate('click');
-      expect(mockSubmit).toHaveBeenCalledWith(ReviewWorkflowStatus.ApprovedForErp);
+      expect(mockSubmit).toHaveBeenCalledWith(WorkflowStatus.ApprovedForErp);
       expect(mockSubmit).toHaveBeenCalledTimes(1);
     });
   });
@@ -78,7 +79,7 @@ describe('Review Approve actions', () => {
     (useFormikContext as jest.Mock).mockReturnValue({
       values: {
         properties: [{ ...mockFlatProperty, propertyTypeId: 2 }],
-        statusCode: ReviewWorkflowStatus.PropertyReview,
+        statusCode: WorkflowStatus.PropertyReview,
       },
       submitForm: () => Promise.resolve(),
     });
@@ -113,7 +114,7 @@ describe('Review Approve actions', () => {
           return node.type() === Button && node.text() === 'Deny';
         });
       confirm.simulate('click');
-      expect(mockSubmit).toHaveBeenCalledWith(ReviewWorkflowStatus.Denied);
+      expect(mockSubmit).toHaveBeenCalledWith(WorkflowStatus.Denied);
       expect(mockSubmit).toHaveBeenCalledTimes(1);
     });
   });
@@ -122,7 +123,7 @@ describe('Review Approve actions', () => {
     (useFormikContext as jest.Mock).mockReturnValue({
       values: {
         properties: [{ ...mockFlatProperty, propertyTypeId: 2 }],
-        statusCode: ReviewWorkflowStatus.PropertyReview,
+        statusCode: WorkflowStatus.PropertyReview,
       },
       submitForm: () => Promise.resolve(),
     });
@@ -158,7 +159,7 @@ describe('Review Approve actions', () => {
   describe('buttons state when project denied', () => {
     (useFormikContext as jest.Mock).mockReturnValue({
       values: {
-        statusCode: ReviewWorkflowStatus.Denied,
+        statusCode: WorkflowStatus.Denied,
         properties: [{ ...mockFlatProperty, propertyTypeId: 2 }],
       },
       submitForm: () => Promise.resolve(),
@@ -195,7 +196,7 @@ describe('Review Approve actions', () => {
   describe('buttons state when project approved', () => {
     (useFormikContext as jest.Mock).mockReturnValue({
       values: {
-        statusCode: ReviewWorkflowStatus.ApprovedForErp,
+        statusCode: WorkflowStatus.ApprovedForErp,
         properties: [{ ...mockFlatProperty, propertyTypeId: 2 }],
       },
       submitForm: () => Promise.resolve(),

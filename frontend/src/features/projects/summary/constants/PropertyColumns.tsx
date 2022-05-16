@@ -1,0 +1,109 @@
+import { BuildingSvg, LandSvg } from 'components/common/Icons';
+import { ColumnWithProps, MoneyCell } from 'components/Table';
+import { PropertyTypeName } from 'hooks/api';
+import TooltipWrapper from 'components/common/TooltipWrapper';
+import React from 'react';
+import { IProjectPropertyModel } from 'hooks/api/projects/disposals';
+import { formatAddress } from 'utils';
+
+export const PropertyColumns = (): ColumnWithProps<IProjectPropertyModel>[] => {
+  return [
+    {
+      Header: 'Agency',
+      accessor: row => row.building?.agency ?? row.parcel?.agency,
+      align: 'left',
+      clickable: false,
+      maxWidth: 50,
+    },
+    {
+      Header: 'Name',
+      accessor: row => row.building?.name ?? row.parcel?.name,
+      align: 'left',
+      clickable: false,
+      Cell: (cell: any) => {
+        return (
+          <TooltipWrapper toolTipId="project-property" toolTip={cell.value}>
+            <div>{cell.value}</div>
+          </TooltipWrapper>
+        );
+      },
+    },
+    {
+      Header: 'Civic Address',
+      accessor: row => {
+        const address = row.building?.address ?? row.parcel?.address;
+        return address ? formatAddress(address) : '';
+      },
+      align: 'left',
+      clickable: true,
+      Cell: (cell: any) => {
+        return (
+          <TooltipWrapper toolTipId="project-property" toolTip={cell.value}>
+            <div>{cell.value}</div>
+          </TooltipWrapper>
+        );
+      },
+    },
+    {
+      Header: 'Classification',
+      accessor: row => row.building?.classification ?? row.parcel?.classification,
+      align: 'left',
+      clickable: false,
+    },
+    {
+      Header: 'Other Projects',
+      accessor: row => row.building?.projectNumbers ?? row.parcel?.projectNumbers,
+      align: 'left',
+      clickable: false,
+    },
+    {
+      Header: 'Net Book Value',
+      accessor: row => {
+        return '';
+      },
+      align: 'right',
+      clickable: false,
+      Cell: MoneyCell,
+    },
+    {
+      Header: 'Assessed Land',
+      accessor: row => {
+        return '';
+      },
+      align: 'right',
+      clickable: false,
+      Cell: MoneyCell,
+    },
+    {
+      Header: 'Assessed Year',
+      accessor: row => {
+        return '';
+      },
+      clickable: false,
+      maxWidth: 50,
+    },
+    {
+      Header: 'Assessed Building',
+      accessor: row => {
+        return '';
+      },
+      align: 'right',
+      clickable: false,
+      Cell: MoneyCell,
+    },
+    {
+      Header: 'Type',
+      accessor: 'propertyType',
+      clickable: false,
+      maxWidth: 40,
+      Cell: cell => {
+        return cell.value === PropertyTypeName.Land ||
+          cell.value === PropertyTypeName.Subdivision ? (
+          <LandSvg className="svg" />
+        ) : (
+          <BuildingSvg className="svg" />
+        );
+      },
+    },
+  ];
+};

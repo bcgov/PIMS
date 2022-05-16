@@ -198,7 +198,8 @@ exports[`renders correctly 1`] = `
               Assessed Value
             </label>
             <div
-              className="required form-group col-md-6"
+              className="required form-group"
+              md={6}
             >
               <div
                 className="input-tooltip-wrapper"
@@ -225,7 +226,8 @@ exports[`renders correctly 1`] = `
               Net Book Value
             </label>
             <div
-              className="required form-group col-md-6"
+              className="required form-group"
+              md={6}
             >
               <div
                 className="input-tooltip-wrapper"
@@ -256,7 +258,8 @@ exports[`renders correctly 1`] = `
               Estimated Market Value
             </label>
             <div
-              className="required form-group col-md-6"
+              className="required form-group"
+              md={6}
             >
               <div
                 className="input-tooltip-wrapper"
@@ -283,7 +286,8 @@ exports[`renders correctly 1`] = `
               Appraised Value
             </label>
             <div
-              className="form-group col-md-6"
+              className="form-group"
+              md={6}
             >
               <div
                 className="input-tooltip-wrapper"
@@ -313,7 +317,8 @@ exports[`renders correctly 1`] = `
               Estimated Sales Costs
             </label>
             <div
-              className="form-group col-md-6"
+              className="form-group"
+              md={6}
             >
               <div
                 className="input-tooltip-wrapper"
@@ -339,7 +344,8 @@ exports[`renders correctly 1`] = `
               Estimated Program Recovery Fees
             </label>
             <div
-              className="form-group col-md-6"
+              className="form-group"
+              md={6}
             >
               <div
                 className="input-tooltip-wrapper"
@@ -853,7 +859,7 @@ exports[`renders correctly 1`] = `
       className="ProjectNotes form-row"
     >
       <div
-        className="col-md-10 form-group col"
+        className="col-md-10 form-group"
       >
         <label
           className="form-label"
@@ -879,7 +885,7 @@ exports[`renders correctly 1`] = `
       className="ProjectNotes form-row"
     >
       <div
-        className="col-md-10 form-group col"
+        className="col-md-10 form-group"
       >
         <label
           className="form-label"

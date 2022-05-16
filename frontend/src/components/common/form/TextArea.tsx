@@ -7,6 +7,8 @@ import { FastInput } from '.';
 export type TextProps = InputProps & {
   /** use FastInput instead of Input */
   fast?: boolean;
+  /** Display error even if field hasn't been touched */
+  errorPrompt?: boolean;
 };
 
 /**
@@ -21,6 +23,7 @@ export const TextArea: React.FC<TextProps> = ({
   disabled,
   custom,
   fast,
+  errorPrompt,
   ...rest
 }) => {
   const formikProps = useFormikContext();
@@ -37,6 +40,7 @@ export const TextArea: React.FC<TextProps> = ({
       className={className}
       required={required}
       disabled={disabled}
+      errorPrompt={errorPrompt}
       custom={custom}
       isInvalid={!!touch && !!error}
       {...rest}
@@ -52,6 +56,7 @@ export const TextArea: React.FC<TextProps> = ({
       className={className}
       required={required}
       disabled={disabled}
+      errorPrompt={errorPrompt}
       custom={custom}
       isInvalid={!!touch && !!error}
       {...rest}

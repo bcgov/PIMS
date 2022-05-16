@@ -75,8 +75,10 @@ const successStore = mockStore({
     pagedAccessRequests: accessRequests,
   },
   [reducerTypes.NETWORK]: {
-    [actionTypes.GET_REQUEST_ACCESS]: {
-      isFetching: false,
+    requests: {
+      [actionTypes.GET_REQUEST_ACCESS]: {
+        isFetching: false,
+      },
     },
   },
   [reducerTypes.LOOKUP_CODE]: lCodes,

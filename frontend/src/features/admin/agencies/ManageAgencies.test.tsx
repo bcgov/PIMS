@@ -72,8 +72,10 @@ const getStore = () =>
     },
     [reducerTypes.LOOKUP_CODE]: lCodes,
     [reducerTypes.NETWORK]: {
-      [actionTypes.GET_AGENCIES]: {
-        isFetching: false,
+      requests: {
+        [actionTypes.GET_AGENCIES]: {
+          isFetching: false,
+        },
       },
     },
   });
