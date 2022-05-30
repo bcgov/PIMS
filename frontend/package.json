@@ -56,7 +56,7 @@
     "text-mask-addons": "3.8.0",
     "tiles-in-bbox": "1.0.2",
     "tiny-invariant": "1.1.0",
-    "typescript": "3.8.3",
+    "typescript": "4.7.2",
     "yup": "0.28.3"
   },
   "devDependencies": {
