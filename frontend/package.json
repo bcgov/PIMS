@@ -13,7 +13,7 @@
     "classnames": "2.2.6",
     "crypto-js": "4.0.0",
     "dequal": "1.0.0",
-    "formik": "2.2.5",
+    "formik": "2.2.9",
     "http-proxy-middleware": "0.21.0",
     "keycloak-js": "15.0.2",
     "leaflet": "1.8.0",
