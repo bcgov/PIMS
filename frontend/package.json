@@ -16,7 +16,7 @@
     "formik": "2.2.5",
     "http-proxy-middleware": "0.21.0",
     "keycloak-js": "15.0.2",
-    "leaflet": "1.6.0",
+    "leaflet": "1.8.0",
     "polylabel": "1.1.0",
     "lodash": "4.17.21",
     "moment": "2.29.3",
