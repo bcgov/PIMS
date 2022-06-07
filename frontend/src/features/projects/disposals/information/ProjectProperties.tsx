@@ -12,13 +12,14 @@ import { PropertyType } from 'hooks/api';
 import queryString from 'query-string';
 import * as styled from './styled';
 import { toProjectProperty } from './utils';
+import { DisplayError } from './../../../../components/common/form/DisplayError';
 
 export interface IProjectPropertiesProps {
   disabled?: boolean;
 }
 
 export const ProjectProperties: React.FC<IProjectPropertiesProps> = ({ disabled = false }) => {
-  const { values, setFieldValue } = useFormikContext<IProjectForm>();
+  const { values, setFieldValue, errors } = useFormikContext<IProjectForm>();
 
   const [showAdd, setShowAdd] = React.useState(false);
   const properties = values.properties;
@@ -48,6 +49,9 @@ export const ProjectProperties: React.FC<IProjectPropertiesProps> = ({ disabled 
       <ProjectPropertyInformation disabled={disabled} />
       <Row>
         <h2>Properties in Project</h2>
+        <Col flex="1">
+          {errors.properties && <DisplayError field="properties" errorPrompt={true} />}
+        </Col>
         <Col flex="1" align="flex-end">
           {!showAdd && !disabled && (
             <Button onClick={() => setShowAdd(!showAdd)}>Add Properties to Project</Button>
