@@ -3,7 +3,7 @@ import { WorkflowStatus } from 'hooks/api/projects';
 import { toInteger } from 'lodash';
 
 // TODO: I was unable to figure out how to to a Yup array schema to support
-// only specific array values and provide custom errors for each.
+// only specific array values and provide custom errors for each..
 export const documentationSchema = yup.object({
   appraised: yup.string().when(['tasks'], {
     is: (tasks: { isCompleted: any }[]) => {
