@@ -4,7 +4,7 @@ import * as yup from 'yup';
 
 export const notSplSchema = yup.object({
   disposedOn: yup.string().when(['workflowCode', 'statusCode'], {
-    is: (workflowCode, statusCode) => {
+    is: (workflowCode: Workflow, statusCode: WorkflowStatus) => {
       return (
         (workflowCode === Workflow.ERP || workflowCode === Workflow.ASSESS_EX_DISPOSAL) &&
         statusCode === WorkflowStatus.Disposed
@@ -19,7 +19,7 @@ export const notSplSchema = yup.object({
       }),
   }),
   transferredWithinGreOn: yup.string().when(['workflowCode', 'statusCode'], {
-    is: (workflowCode, statusCode) => {
+    is: (workflowCode: any, statusCode: WorkflowStatus) => {
       return statusCode === WorkflowStatus.TransferredGRE;
     },
     then: yup

@@ -1,28 +1,29 @@
 import { Workflow, WorkflowStatus } from 'hooks/api/projects';
+import { toInteger } from 'lodash';
 import moment from 'moment';
 import * as yup from 'yup';
 
 export const erpDisposedSchema = yup.object({
   purchaser: yup.string().when(['workflowCode', 'statusCode'], {
-    is: (workflowCode, statusCode) => {
+    is: (workflowCode: Workflow, statusCode: WorkflowStatus) => {
       return workflowCode === Workflow.ERP && statusCode === WorkflowStatus.Disposed;
     },
     then: yup.string().required('Purchaser required'),
   }),
   offerAmount: yup.string().when(['workflowCode', 'statusCode'], {
-    is: (workflowCode, statusCode) => {
+    is: (workflowCode: Workflow, statusCode: WorkflowStatus) => {
       return workflowCode === Workflow.ERP && statusCode === WorkflowStatus.Disposed;
     },
     then: yup
       .string()
       .required('Offer amount required')
       .test('isValue', 'Offer amuont required', value => {
-        return !isNaN(value);
+        return !isNaN(toInteger(value));
       })
       .min(0, 'Minimum amount is $0.00'),
   }),
   offerAcceptedOn: yup.string().when(['workflowCode', 'statusCode'], {
-    is: (workflowCode, statusCode) => {
+    is: (workflowCode: Workflow, statusCode: WorkflowStatus) => {
       return workflowCode === Workflow.ERP && statusCode === WorkflowStatus.Disposed;
     },
     then: yup
@@ -34,7 +35,7 @@ export const erpDisposedSchema = yup.object({
       }),
   }),
   disposedOn: yup.string().when(['workflowCode', 'statusCode'], {
-    is: (workflowCode, statusCode) => {
+    is: (workflowCode: Workflow, statusCode: WorkflowStatus) => {
       return workflowCode === Workflow.ERP && statusCode === WorkflowStatus.Disposed;
     },
     then: yup
