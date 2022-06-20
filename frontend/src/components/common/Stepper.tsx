@@ -3,6 +3,7 @@ import classNames from 'classnames';
 import { FaCheck } from 'react-icons/fa';
 import './Stepper.scss';
 import { ObjectSchema } from 'yup';
+import { AnyObject } from 'yup/lib/types';
 
 export interface IStep {
   title: string;
@@ -10,7 +11,7 @@ export interface IStep {
   completed: boolean;
   canGoToStep: boolean;
   validation?: {
-    schema: ObjectSchema<object>;
+    schema: ObjectSchema<AnyObject>;
     nameSpace: (currentTab: number) => string;
   };
 }

@@ -1,10 +1,11 @@
 import { Workflow, WorkflowStatus } from 'hooks/api/projects';
+import { toInteger } from 'lodash';
 import moment from 'moment';
 import * as yup from 'yup';
 
 export const splContractInPlaceSchema = yup.object({
   purchaser: yup.string().when(['workflowCode', 'statusCode'], {
-    is: (workflowCode, statusCode) => {
+    is: (workflowCode: Workflow, statusCode: WorkflowStatus) => {
       return (
         workflowCode === Workflow.SPL &&
         (statusCode === WorkflowStatus.ContractInPlaceConditional ||
@@ -14,7 +15,7 @@ export const splContractInPlaceSchema = yup.object({
     then: yup.string().required('Purchaser required'),
   }),
   offerAmount: yup.string().when(['workflowCode', 'statusCode'], {
-    is: (workflowCode, statusCode) => {
+    is: (workflowCode: Workflow, statusCode: WorkflowStatus) => {
       return (
         workflowCode === Workflow.SPL &&
         (statusCode === WorkflowStatus.ContractInPlaceConditional ||
@@ -25,12 +26,12 @@ export const splContractInPlaceSchema = yup.object({
       .string()
       .required('Offer amount required')
       .test('isValue', 'Offer amount required', value => {
-        return !isNaN(value);
+        return !isNaN(toInteger(value));
       })
       .min(0, 'Minimum amount is $0.00'),
   }),
   offerAcceptedOn: yup.string().when(['workflowCode', 'statusCode'], {
-    is: (workflowCode, statusCode) => {
+    is: (workflowCode: Workflow, statusCode: WorkflowStatus) => {
       return (
         workflowCode === Workflow.SPL &&
         (statusCode === WorkflowStatus.ContractInPlaceConditional ||
@@ -46,7 +47,7 @@ export const splContractInPlaceSchema = yup.object({
       }),
   }),
   disposedOn: yup.string().when(['workflowCode', 'statusCode'], {
-    is: (workflowCode, statusCode) => {
+    is: (workflowCode: Workflow, statusCode: WorkflowStatus) => {
       return workflowCode === Workflow.SPL && statusCode === WorkflowStatus.Disposed;
     },
     then: yup
