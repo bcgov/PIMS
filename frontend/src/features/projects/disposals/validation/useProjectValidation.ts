@@ -16,6 +16,7 @@ import { notSplSchema } from './notSplSchema';
 import { Workflow, WorkflowStatus } from 'hooks/api/projects';
 import { splMarketingSchema } from './splMarketingSchema';
 import { splTransferWithinGRESchema } from './splTransferWithinGRESchema';
+import { AnyObject } from 'yup/lib/types';
 
 interface IProjectValidationProps {
   id: number;
@@ -203,7 +204,7 @@ export const useProjectValidation = ({ id }: IProjectValidationProps) => {
 const handleErrors = async (
   values: IProjectForm,
   errors: FormikErrors<IProjectForm>,
-  schema: Yup.ObjectSchema,
+  schema: Yup.ObjectSchema<AnyObject>,
   redirect: () => void,
 ) => {
   try {
