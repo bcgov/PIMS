@@ -5,7 +5,7 @@ export const informationProjectSchema = Yup.object({
   projectNumber: Yup.string().required('Project Number required'),
   name: Yup.string().required('Project name required'),
   agencyId: Yup.string().when(['statusCode'], {
-    is: statusCode => {
+    is: (statusCode: WorkflowStatus) => {
       return statusCode !== WorkflowStatus.TransferredGRE;
     },
     then: Yup.string()
