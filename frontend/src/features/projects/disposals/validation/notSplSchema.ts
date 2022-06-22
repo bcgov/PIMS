@@ -19,7 +19,7 @@ export const notSplSchema = yup.object({
       }),
   }),
   transferredWithinGreOn: yup.string().when(['workflowCode', 'statusCode'], {
-    is: (workflowCode: any, statusCode: WorkflowStatus) => {
+    is: (workflowCode: string, statusCode: WorkflowStatus) => {
       return statusCode === WorkflowStatus.TransferredGRE;
     },
     then: yup

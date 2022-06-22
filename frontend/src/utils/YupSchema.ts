@@ -120,7 +120,7 @@ export const OccupancySchema = Yup.object().shape({
     .required('Required'),
   buildingTenancy: Yup.string().max(100, 'Tenancy must be less then 100 characters'),
   buildingTenancyUpdatedOn: Yup.string().when('buildingTenancy', {
-    is: (val: string | any[]) => val && val.length > 0,
+    is: (val: string) => val && val.length > 0,
     then: Yup.string().required('Required'),
     otherwise: Yup.string().nullable(),
   }),
@@ -233,7 +233,7 @@ export const ParcelSchema = Yup.object()
   .shape(
     {
       pid: Yup.string().when('pin', {
-        is: (val: string | any[]) => val && val.length > 0,
+        is: (val: string) => val && val.length > 0,
         then: Yup.string().nullable(),
         otherwise: Yup.string()
           .matches(/\d\d\d[\s-]?\d\d\d[\s-]?\d\d\d/, 'PID must be in the format ###-###-###')
@@ -273,7 +273,7 @@ export const FilterBarSchema = Yup.object().shape(
       /* Reference minLotSize field in validating maxLotSize value */
       .moreThan(Yup.ref('minLotSize'), 'Must be greater than Min Lot Size'),
     inEnhancedReferralProcess: Yup.boolean().when(['inSurplusPropertyProgram', 'surplusFilter'], {
-      is: (inSurplusPropertyProgram: any, surplusFilter: any) => {
+      is: (inSurplusPropertyProgram: boolean, surplusFilter: any) => {
         if (!surplusFilter) {
           return true;
         }
@@ -287,7 +287,7 @@ export const FilterBarSchema = Yup.object().shape(
         .oneOf([true], 'ERP or SPL Properties required when using the Surplus Properties filter.'),
     }),
     inSurplusPropertyProgram: Yup.boolean().when(['inEnhancedReferralProcess', 'surplusFilter'], {
-      is: (inEnhancedReferralProcess: any, surplusFilter: any) => {
+      is: (inEnhancedReferralProcess: boolean, surplusFilter: any) => {
         if (!surplusFilter) {
           return true;
         }
@@ -330,7 +330,7 @@ export const ValuationSchema = Yup.object().shape({
 export const LandIdentificationSchema = Yup.object().shape(
   {
     pid: Yup.string().when('pin', {
-      is: (val: string | any[]) => val && val.length > 0,
+      is: (val: string) => val && val.length > 0,
       then: Yup.string().nullable(),
       otherwise: Yup.string()
         .matches(/\d\d\d[\s-]?\d\d\d[\s-]?\d\d\d/, 'PID must be in the format ###-###-###')
