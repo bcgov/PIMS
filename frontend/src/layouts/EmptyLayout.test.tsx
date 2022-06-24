@@ -1,6 +1,7 @@
-import EmptyLayout from './EmptyLayout';
 import { render } from '@testing-library/react';
 import React from 'react';
+
+import EmptyLayout from './EmptyLayout';
 
 describe('Empty Layout', () => {
   it('renders', () => {

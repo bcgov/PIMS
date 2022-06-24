@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { Container } from 'react-bootstrap';
+
 import {
-  ProjectNotes,
   PrivateNotes,
   ProjectDraftForm,
+  ProjectNotes,
   UpdateInfoForm,
   useProject,
 } from '../../common';

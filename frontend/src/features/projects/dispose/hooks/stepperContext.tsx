@@ -1,7 +1,8 @@
-import React, { useState, createContext, useEffect } from 'react';
-import { useAppDispatch } from 'store';
-import { fetchProjectWorkflow } from '../../common';
 import { IStatus } from 'features/projects/interfaces';
+import React, { createContext, useEffect, useState } from 'react';
+import { useAppDispatch } from 'store';
+
+import { fetchProjectWorkflow } from '../../common';
 
 export const StepperContext = createContext({} as any);
 

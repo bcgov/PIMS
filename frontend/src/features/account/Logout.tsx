@@ -1,6 +1,6 @@
+import { useConfiguration } from 'hooks/useConfiguration';
 import React from 'react';
 import { Redirect } from 'react-router-dom';
-import { useConfiguration } from 'hooks/useConfiguration';
 
 export const LogoutPage = () => {
   const configuration = useConfiguration();

@@ -1,15 +1,16 @@
-import React, { useMemo, useCallback } from 'react';
-import { FormControlProps, Container } from 'react-bootstrap';
-import { useFormikContext, getIn } from 'formik';
-import { clickableTooltip } from '../../common';
-import { IProperty } from 'features/projects/interfaces';
+import classNames from 'classnames';
 import { DisplayError } from 'components/common/form';
 import { Table } from 'components/Table';
-import classNames from 'classnames';
-import { getPropertyColumns, getColumnsWithRemove } from './columns';
-import { useStepper } from 'features/projects/dispose';
-import queryString from 'query-string';
 import { PropertyTypes } from 'constants/propertyTypes';
+import { useStepper } from 'features/projects/dispose';
+import { IProperty } from 'features/projects/interfaces';
+import { getIn, useFormikContext } from 'formik';
+import queryString from 'query-string';
+import React, { useCallback, useMemo } from 'react';
+import { Container, FormControlProps } from 'react-bootstrap';
+
+import { clickableTooltip } from '../../common';
+import { getColumnsWithRemove, getPropertyColumns } from './columns';
 
 type RequiredAttributes = {
   /** The field name */

@@ -1,10 +1,12 @@
-import * as React from 'react';
-import { FaEllipsisH } from 'react-icons/fa';
-import { Dropdown, DropdownButton } from 'react-bootstrap';
-import { IReport } from '../interfaces';
 import './ElipsisControls.scss';
+
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+import * as React from 'react';
+import { Dropdown, DropdownButton } from 'react-bootstrap';
+import { FaEllipsisH } from 'react-icons/fa';
+
 import { Claims } from '../../../constants/';
+import { IReport } from '../interfaces';
 
 interface IElipsisControlsProps {
   /** The underlying report that this control is mapped to. */

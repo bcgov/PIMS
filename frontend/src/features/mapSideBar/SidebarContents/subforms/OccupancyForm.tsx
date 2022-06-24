@@ -1,13 +1,13 @@
 import './TenancyForm.scss';
 
-import { FastInput, InputGroup, FastDatePicker } from 'components/common/form';
+import { FastDatePicker, FastInput, InputGroup } from 'components/common/form';
 import { Label } from 'components/common/Label';
+import TooltipIcon from 'components/common/TooltipIcon';
+import { getIn } from 'formik';
+import moment from 'moment';
 import React, { useEffect } from 'react';
 import { Col, Row } from 'react-bootstrap';
 import styled from 'styled-components';
-import { getIn } from 'formik';
-import moment from 'moment';
-import TooltipIcon from 'components/common/TooltipIcon';
 
 interface IOccupancyProps {
   formikProps: any;

@@ -1,22 +1,23 @@
-import React, { useEffect, useMemo, useState } from 'react';
 import { IBuilding, IParcel, IPropertyDetail } from 'actions/parcelsActions';
 import { IGeoSearchParams } from 'constants/API';
+import { PropertyTypes } from 'constants/propertyTypes';
 import { BBox } from 'geojson';
+import { useApi } from 'hooks/useApi';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { GeoJSON, LatLngBounds } from 'leaflet';
+import { flatten, uniqBy } from 'lodash';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useLeaflet } from 'react-leaflet';
 import { toast } from 'react-toastify';
-import { PointFeature } from '../types';
-import PointClusterer from './PointClusterer';
-import { useApi } from 'hooks/useApi';
 import { useAppSelector } from 'store';
-import { flatten, uniqBy } from 'lodash';
 import { tilesInBbox } from 'tiles-in-bbox';
-import { useFilterContext } from '../providers/FIlterProvider';
-import { MUNICIPALITY_LAYER_URL, useLayerQuery } from './LayerPopup';
-import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
-import { PropertyTypes } from 'constants/propertyTypes';
+
 import { useMapRefreshEvent } from '../hooks/useMapRefreshEvent';
+import { useFilterContext } from '../providers/FIlterProvider';
+import { PointFeature } from '../types';
+import { MUNICIPALITY_LAYER_URL, useLayerQuery } from './LayerPopup';
+import PointClusterer from './PointClusterer';
 
 export type InventoryLayerProps = {
   /** Latitude and Longitude boundary of the layer. */

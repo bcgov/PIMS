@@ -1,14 +1,16 @@
-import * as React from 'react';
-import classNames from 'classnames';
-import styled from 'styled-components';
-import TooltipWrapper from 'components/common/TooltipWrapper';
-import VisibilitySensor from 'react-visibility-sensor';
-import { InventoryPolicy } from './InventoryPolicy';
-import { SidebarSize, SidebarContextType } from '../hooks/useQueryParamSideBar';
-import { FaWindowClose } from 'react-icons/fa';
 import './MapSideBarLayout.scss';
+
 import variables from '_variables.module.scss';
+import classNames from 'classnames';
 import AbbreviatedText from 'components/common/AbbreviatedText';
+import TooltipWrapper from 'components/common/TooltipWrapper';
+import * as React from 'react';
+import { FaWindowClose } from 'react-icons/fa';
+import VisibilitySensor from 'react-visibility-sensor';
+import styled from 'styled-components';
+
+import { SidebarContextType, SidebarSize } from '../hooks/useQueryParamSideBar';
+import { InventoryPolicy } from './InventoryPolicy';
 
 interface IMapSideBarLayoutProps {
   show: boolean;

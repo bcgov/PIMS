@@ -1,22 +1,23 @@
-import {
-  fetchBuildingDetail,
-  createParcel,
-  updateParcel,
-  deleteParcel,
-  fetchParcelDetail,
-  fetchParcels,
-} from './parcelsActionCreator';
-import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
-import * as networkSlice from 'store/slices/networkSlice';
+import MockAdapter from 'axios-mock-adapter';
 import * as API from 'constants/API';
-import { IPropertySearchParams, IParcelDetailParams } from 'constants/API';
-import * as MOCK from 'mocks/dataMocks';
+import { IParcelDetailParams, IPropertySearchParams } from 'constants/API';
 import { ENVIRONMENT } from 'constants/environment';
-import thunk from 'redux-thunk';
+import * as MOCK from 'mocks/dataMocks';
 import configureMockStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
+import * as networkSlice from 'store/slices/networkSlice';
 import { initialParcelState } from 'store/slices/parcelSlice';
 import * as parcelSlice from 'store/slices/parcelSlice';
+
+import {
+  createParcel,
+  deleteParcel,
+  fetchBuildingDetail,
+  fetchParcelDetail,
+  fetchParcels,
+  updateParcel,
+} from './parcelsActionCreator';
 
 const mockAxios = new MockAdapter(axios);
 const mockStore = configureMockStore([thunk]);

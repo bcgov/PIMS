@@ -1,7 +1,7 @@
-import { Menu, IMenuItemProps } from 'components/menu/Menu';
+import { IMenuItemProps, Menu } from 'components/menu/Menu';
+import { noop } from 'lodash';
 import React from 'react';
 import { Form } from 'react-bootstrap';
-import { noop } from 'lodash';
 import styled from 'styled-components';
 
 /** align text to middle of size input */

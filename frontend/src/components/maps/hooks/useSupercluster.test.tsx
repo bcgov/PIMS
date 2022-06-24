@@ -1,7 +1,8 @@
-import React from 'react';
+import { cleanup, render } from '@testing-library/react';
 import { BBox, GeoJsonProperties } from 'geojson';
+import React from 'react';
 import Supercluster from 'supercluster';
-import { render, cleanup } from '@testing-library/react';
+
 import useSupercluster from './useSupercluster';
 
 describe('useSupercluster hook', () => {

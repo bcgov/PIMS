@@ -1,16 +1,16 @@
-import * as API from 'constants/API';
-import { IGeocoderResponse, useApi } from 'hooks/useApi';
-import { FormikValues, getIn, setIn } from 'formik';
-import { useState } from 'react';
-import useCodeLookups from 'hooks/useLookupCodes';
 import {
-  useLayerQuery,
   handleParcelDataLayerResponse,
   saveParcelDataLayerResponse,
+  useLayerQuery,
 } from 'components/maps/leaflet/LayerPopup';
-import { LatLng } from 'leaflet';
-import { useAppDispatch } from 'store';
 import { useBoundaryLayer } from 'components/maps/leaflet/LayerPopup/hooks/useBoundaryLayer';
+import * as API from 'constants/API';
+import { FormikValues, getIn, setIn } from 'formik';
+import { IGeocoderResponse, useApi } from 'hooks/useApi';
+import useCodeLookups from 'hooks/useLookupCodes';
+import { LatLng } from 'leaflet';
+import { useState } from 'react';
+import { useAppDispatch } from 'store';
 
 interface IUseGeocoderProps {
   formikRef: React.MutableRefObject<FormikValues | undefined>;

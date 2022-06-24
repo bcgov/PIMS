@@ -1,3 +1,8 @@
+import { IProperty, IPropertyDetail } from 'actions/parcelsActions';
+import { PointFeature } from 'components/maps/types';
+import { PropertyTypes } from 'constants/index';
+import { mockParcel } from 'mocks/properties';
+
 import {
   initialParcelState,
   parcelSlice,
@@ -6,10 +11,6 @@ import {
   storeProperties,
   storePropertyDetail,
 } from './parcelSlice';
-import { IPropertyDetail, IProperty } from 'actions/parcelsActions';
-import { PointFeature } from 'components/maps/types';
-import { PropertyTypes } from 'constants/index';
-import { mockParcel } from 'mocks/properties';
 
 describe('Parcel slice tests', () => {
   const reducer = parcelSlice.reducer;

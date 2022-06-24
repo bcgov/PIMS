@@ -294,6 +294,10 @@ namespace Pims.Dal.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<string>("CCEmail")
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
                     b.Property<string>("Code")
                         .IsRequired()
                         .HasMaxLength(6)

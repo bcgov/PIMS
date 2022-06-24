@@ -1,8 +1,9 @@
+import { ENVIRONMENT } from 'constants/environment';
 import * as React from 'react';
 import { Button, ButtonGroup, Container } from 'react-bootstrap';
-import { ENVIRONMENT } from 'constants/environment';
-import download from '../utils/download';
 import { useAppDispatch } from 'store';
+
+import download from '../utils/download';
 
 /**
  * Test provides a testing page for various things.

@@ -17,4 +17,5 @@ export const mapLookupCode = (
   selected: code.id === defaultId,
   code: code.code,
   parentId: code.parentId,
+  parent: '',
 });

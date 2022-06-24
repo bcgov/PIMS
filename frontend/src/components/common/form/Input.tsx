@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { Form, FormControlProps } from 'react-bootstrap';
-import { useFormikContext, getIn } from 'formik';
-import { DisplayError } from './DisplayError';
 import classNames from 'classnames';
+import { getIn, useFormikContext } from 'formik';
+import React, { useEffect, useState } from 'react';
+import { Form, FormControlProps } from 'react-bootstrap';
+import { CSSProperties } from 'styled-components';
+
 import TooltipIcon from '../TooltipIcon';
 import TooltipWrapper from '../TooltipWrapper';
-import { CSSProperties } from 'styled-components';
+import { DisplayError } from './DisplayError';
 
 type RequiredAttributes = {
   /** The field name */

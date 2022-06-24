@@ -1,8 +1,9 @@
 import { useFormikContext } from 'formik';
 import { NoteType } from 'hooks/api';
 import React from 'react';
-import { IProjectNoteProps, ProjectNote } from '.';
+
 import { IProjectForm } from '../interfaces';
+import { IProjectNoteProps, ProjectNote } from '.';
 
 export const ErpNotificationNote: React.FC<IProjectNoteProps> = ({ label, tooltip, ...rest }) => {
   const { values, setFieldValue } = useFormikContext<IProjectForm>();

@@ -1,14 +1,15 @@
-import * as React from 'react';
-import SplReportLayout from '../components/SplReportLayout';
-import { useState, useEffect } from 'react';
-import { IReport, ISnapshot, ISnapshotFilter } from '../interfaces';
-import { useProjectSnapshotApi } from '../hooks/useProjectSnapshotApi';
-import _ from 'lodash';
-import { generateUtcNowDateTime } from 'utils';
-import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
 import GenericModal from 'components/common/GenericModal';
+import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
+import _ from 'lodash';
+import * as React from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
+import { generateUtcNowDateTime } from 'utils';
+
+import SplReportLayout from '../components/SplReportLayout';
+import { useProjectSnapshotApi } from '../hooks/useProjectSnapshotApi';
 import { useRouterReport } from '../hooks/useRouterReport';
+import { IReport, ISnapshot, ISnapshotFilter } from '../interfaces';
 
 interface ISplReportContainerProps {}
 

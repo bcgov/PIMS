@@ -1,10 +1,10 @@
+import variables from '_variables.module.scss';
+import FindMorePropertiesForm from 'components/SearchBar/FindMorePropertiesForm';
 import React, { useMemo } from 'react';
 import { Button, OverlayTrigger, Popover } from 'react-bootstrap';
 import { BsXSquareFill } from 'react-icons/bs';
 import { FaSign } from 'react-icons/fa';
 import styled from 'styled-components';
-import FindMorePropertiesForm from 'components/SearchBar/FindMorePropertiesForm';
-import variables from '_variables.module.scss';
 
 const ButtonContent = styled.div`
   display: flex;

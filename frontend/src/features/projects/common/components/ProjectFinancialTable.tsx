@@ -1,10 +1,11 @@
-import * as React from 'react';
-import { Col, Form } from 'react-bootstrap';
 import { FastCurrencyInput } from 'components/common/form';
-import { getIn, useFormikContext } from 'formik';
 import { IProject } from 'features/projects/interfaces';
-import { calcGainBeforeSpl, calcNetProceeds, getNumber } from '../utils';
+import { getIn, useFormikContext } from 'formik';
+import * as React from 'react';
 import { useEffect } from 'react';
+import { Col, Form } from 'react-bootstrap';
+
+import { calcGainBeforeSpl, calcNetProceeds, getNumber } from '../utils';
 
 export interface IProjectFinacialTableProps {
   /** Whether form fields are disabled. */

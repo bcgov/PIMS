@@ -1,13 +1,14 @@
 import './SelectProjectPropertiesStep.scss';
 
-import React, { useCallback, useState, useEffect } from 'react';
-import { Button, Container } from 'react-bootstrap';
-import { Formik } from 'formik';
-import { useStepper, SelectProjectPropertiesStepYupSchema } from '..';
-import { FilterBar, IFilterBarState, useStepForm, SelectProjectPropertiesForm } from '../../common';
-import { IStepProps } from 'features/projects/interfaces';
-import styled from 'styled-components';
 import { Classifications } from 'constants/classifications';
+import { IStepProps } from 'features/projects/interfaces';
+import { Formik } from 'formik';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Button, Container } from 'react-bootstrap';
+import styled from 'styled-components';
+
+import { FilterBar, IFilterBarState, SelectProjectPropertiesForm, useStepForm } from '../../common';
+import { SelectProjectPropertiesStepYupSchema, useStepper } from '..';
 
 /** contains the link text for Show Surplus and Show All classification filter */
 const LinkButton = styled(Button)`

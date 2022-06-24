@@ -1,13 +1,14 @@
-import React from 'react';
-import { useHistory } from 'react-router-dom';
-import { Navbar, Nav, NavDropdown } from 'react-bootstrap';
 import './AppNavBar.scss';
-import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+
 import { Claims } from 'constants/claims';
-import { FaHome } from 'react-icons/fa';
-import queryString from 'query-string';
-import { SidebarContextType } from 'features/mapSideBar/hooks/useQueryParamSideBar';
 import { HelpContainer } from 'features/help/containers/HelpContainer';
+import { SidebarContextType } from 'features/mapSideBar/hooks/useQueryParamSideBar';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+import queryString from 'query-string';
+import React from 'react';
+import { Nav, Navbar, NavDropdown } from 'react-bootstrap';
+import { FaHome } from 'react-icons/fa';
+import { useHistory } from 'react-router-dom';
 
 /**
  * Nav bar with role-based functionality.

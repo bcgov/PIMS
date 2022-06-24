@@ -1,11 +1,12 @@
 import { getIn, useFormikContext } from 'formik';
 import { groupBy, sortBy } from 'lodash';
+import _ from 'lodash';
 import React, { Fragment, useEffect, useState } from 'react';
 import { Highlighter, Menu, MenuItem } from 'react-bootstrap-typeahead';
+import styled from 'styled-components';
+
 import { SelectOption, SelectOptions } from './Select';
 import { TypeaheadField } from './Typeahead';
-import _ from 'lodash';
-import styled from 'styled-components';
 
 /** this styled component is used to help condtionally apply bold font weight to items that have been assigned the bold-item className */
 const StyledMenuItemsDiv = styled.div`

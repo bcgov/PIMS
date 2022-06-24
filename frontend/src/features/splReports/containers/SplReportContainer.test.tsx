@@ -1,22 +1,23 @@
-import SplReportContainer from './SplReportContainer';
-import React from 'react';
-import { Router } from 'react-router-dom';
+import { useKeycloak } from '@react-keycloak/web';
+import { queryByText, screen } from '@testing-library/dom';
+import { cleanup, fireEvent, render, waitFor } from '@testing-library/react';
+import Claims from 'constants/claims';
+import Enzyme from 'enzyme';
+import Adapter from 'enzyme-adapter-react-16';
 import { createMemoryHistory } from 'history';
-import { render, cleanup, fireEvent, waitFor } from '@testing-library/react';
+import React from 'react';
+import { act } from 'react-dom/test-utils';
+import { Provider } from 'react-redux';
+import { Router } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { Provider } from 'react-redux';
-import { useKeycloak } from '@react-keycloak/web';
+import { formatApiDateTime } from 'utils';
+import { fillInput } from 'utils/testUtils';
+
 import { useProjectSnapshotApi } from '../hooks/useProjectSnapshotApi';
 import { IReport, ISnapshot } from '../interfaces';
-import { formatApiDateTime } from 'utils';
-import Adapter from 'enzyme-adapter-react-16';
-import Enzyme from 'enzyme';
-import Claims from 'constants/claims';
-import { act } from 'react-dom/test-utils';
-import { screen, queryByText } from '@testing-library/dom';
-import { ToastContainer } from 'react-toastify';
-import { fillInput } from 'utils/testUtils';
+import SplReportContainer from './SplReportContainer';
 
 // Set all module functions to jest.fn
 jest.mock('../hooks/useProjectSnapshotApi');

@@ -1,12 +1,12 @@
 import { renderHook } from '@testing-library/react-hooks';
-import { useLayerQuery } from 'components/maps/leaflet/LayerPopup';
-import configureMockStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
-import { Provider } from 'react-redux';
-import React from 'react';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
-import { ToastContainer, toast } from 'react-toastify';
+import { useLayerQuery } from 'components/maps/leaflet/LayerPopup';
+import React from 'react';
+import { Provider } from 'react-redux';
+import { toast, ToastContainer } from 'react-toastify';
+import configureMockStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
 
 const mockStore = configureMockStore([thunk]);
 const getStore = (values?: any) => mockStore(values ?? { parcel: { draftParcels: [] } });

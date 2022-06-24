@@ -1,6 +1,7 @@
+import './ManualLink.scss';
+
 import * as React from 'react';
 import { FiBookOpen } from 'react-icons/fi';
-import './ManualLink.scss';
 
 export type IManualLinkProps = {
   url: string;

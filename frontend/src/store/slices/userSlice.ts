@@ -1,8 +1,8 @@
-import { createSlice, createAction, PayloadAction } from '@reduxjs/toolkit';
-import { IAgency, IPagedItems, IRole, IUser, IUsersFilter } from 'interfaces';
+import { createAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { DEFAULT_PAGE_SIZE } from 'components/Table/constants';
 import { TableSort } from 'components/Table/TableSort';
 import { IUserRecord } from 'features/admin/users/interfaces/IUserRecord';
-import { DEFAULT_PAGE_SIZE } from 'components/Table/constants';
+import { IAgency, IPagedItems, IRole, IUser, IUsersFilter } from 'interfaces';
 
 export const storeUser = createAction<IUserDetail | null>('storeUser');
 export const updateUser = createAction<IUser>('updateUser');

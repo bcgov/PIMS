@@ -1,12 +1,13 @@
-import * as React from 'react';
-import { Col, Row } from 'react-bootstrap';
-import TasksForm from './TasksForm';
-import { reviewAppraisalTooltip, useProject } from '../../common';
+import classNames from 'classnames';
+import TooltipIcon from 'components/common/TooltipIcon';
 import { ReviewWorkflowStatus } from 'features/projects/constants';
 import _ from 'lodash';
-import TooltipIcon from 'components/common/TooltipIcon';
+import * as React from 'react';
+import { Col, Row } from 'react-bootstrap';
+
+import { reviewAppraisalTooltip, useProject } from '../../common';
 import ProjectNotes from '../components/ProjectNotes';
-import classNames from 'classnames';
+import TasksForm from './TasksForm';
 
 interface IAppraisalCheckListFormProps {
   className?: string;

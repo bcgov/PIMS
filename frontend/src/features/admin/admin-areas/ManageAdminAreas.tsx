@@ -1,18 +1,19 @@
-import useCodeLookups from 'hooks/useLookupCodes';
 import { Table } from 'components/Table';
 import * as API from 'constants/API';
-import React, { useState, useMemo } from 'react';
-import { AdminAreaFilterBar } from './AdminAreasFilterBar';
-import { useHistory } from 'react-router-dom';
-import { Container, Spinner } from 'react-bootstrap';
-import styled from 'styled-components';
-import { adminAreasColumnDefinistions } from '../constants/columns';
-import { IAdminAreaFilter, IAdministrativeArea } from './interfaces';
+import { useAdminAreaApi } from 'hooks/useApiAdminAreas';
+import useCodeLookups from 'hooks/useLookupCodes';
+import React, { useMemo, useState } from 'react';
 import { useEffect } from 'react';
 import { useCallback } from 'react';
-import { getFetchLookupCodeAction } from 'store/slices/hooks/lookupCodeActionCreator';
-import { useAdminAreaApi } from 'hooks/useApiAdminAreas';
+import { Container, Spinner } from 'react-bootstrap';
+import { useHistory } from 'react-router-dom';
 import { useAppDispatch } from 'store';
+import { getFetchLookupCodeAction } from 'store/slices/hooks/lookupCodeActionCreator';
+import styled from 'styled-components';
+
+import { adminAreasColumnDefinistions } from '../constants/columns';
+import { AdminAreaFilterBar } from './AdminAreasFilterBar';
+import { IAdminAreaFilter, IAdministrativeArea } from './interfaces';
 
 const AdminAreaToolbarContainer = styled(Container)`
   .search-bar {

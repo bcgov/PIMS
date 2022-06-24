@@ -1,7 +1,7 @@
+import { FastDatePicker, FastFiscalYearInput, FastInput, Form } from 'components/common/form';
+import { useFormikContext } from 'formik';
 import React from 'react';
 import { Container } from 'react-bootstrap';
-import { Form, FastInput, FastFiscalYearInput, FastDatePicker } from 'components/common/form';
-import { useFormikContext } from 'formik';
 
 interface IAdditionalPropertyInformationFormProps {
   isReadOnly?: boolean;

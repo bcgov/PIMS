@@ -1,19 +1,20 @@
+import { ILookupCode } from 'actions/ILookupCode';
+import { IAddress } from 'actions/parcelsActions';
+import { FastInput, Select } from 'components/common/form';
+import { TypeaheadField } from 'components/common/form/Typeahead';
+import { Label } from 'components/common/Label';
+import * as API from 'constants/API';
+import { FormikProps, getIn } from 'formik';
+import { IGeocoderResponse } from 'hooks/useApi';
+import _ from 'lodash';
 import { useCallback } from 'react';
 import React from 'react';
-import { FormikProps, getIn } from 'formik';
-import { ILookupCode } from 'actions/ILookupCode';
-import _ from 'lodash';
-import * as API from 'constants/API';
-import { FastInput, Select } from 'components/common/form';
-import { mapLookupCode } from 'utils';
-import { IAddress } from 'actions/parcelsActions';
-import { GeocoderAutoComplete } from '../../GeocoderAutoComplete';
-import { IGeocoderResponse } from 'hooks/useApi';
-import { TypeaheadField } from 'components/common/form/Typeahead';
-import { streetAddressTooltip } from '../strings';
-import { Label } from 'components/common/Label';
 import { Form } from 'react-bootstrap';
 import { useAppSelector } from 'store';
+import { mapLookupCode } from 'utils';
+
+import { GeocoderAutoComplete } from '../../GeocoderAutoComplete';
+import { streetAddressTooltip } from '../strings';
 
 interface AddressProps {
   nameSpace?: string;

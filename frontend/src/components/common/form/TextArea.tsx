@@ -1,7 +1,8 @@
+import { getIn, useFormikContext } from 'formik';
 import React from 'react';
-import { useFormikContext, getIn } from 'formik';
-import { Input, InputProps } from './Input';
+
 import { FastInput } from '.';
+import { Input, InputProps } from './Input';
 
 // only "field" is required for <Input>, the rest are optional
 export type TextProps = InputProps & {

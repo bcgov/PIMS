@@ -1,10 +1,10 @@
 import {
-  IProperty,
-  IParcel,
   IAddress,
   IBuilding,
   IEvaluation,
   IFiscal,
+  IParcel,
+  IProperty,
 } from 'actions/parcelsActions';
 import { PropertyTypes } from 'constants/index';
 

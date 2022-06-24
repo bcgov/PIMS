@@ -1,11 +1,12 @@
-import queryString from 'query-string';
+import { TableSort } from 'components/Table/TableSort';
+import { ENVIRONMENT } from 'constants/environment';
 import CustomAxios from 'customAxios';
 import { IPagedItems } from 'interfaces';
-import { ENVIRONMENT } from 'constants/environment';
-import { IPropertyQueryParams, IProperty } from './list/interfaces';
-import { TableSort } from 'components/Table/TableSort';
-import { generateMultiSortCriteria } from 'utils';
 import { isEmpty } from 'lodash';
+import queryString from 'query-string';
+import { generateMultiSortCriteria } from 'utils';
+
+import { IProperty, IPropertyQueryParams } from './list/interfaces';
 
 const { apiUrl: basePath } = ENVIRONMENT;
 

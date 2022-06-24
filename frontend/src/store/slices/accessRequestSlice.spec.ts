@@ -1,16 +1,17 @@
 import { IFilterData } from 'actions/IFilterData';
 import { AccessRequestStatus } from 'constants/accessStatus';
 import { IAccessRequest, IPagedItems } from 'interfaces';
+
 import {
+  accessRequestSlice,
   deleteAccessRequest,
+  initialAccessRequestState,
   storeAccessRequest,
+  storeAccessRequests,
   updateAccessRequest,
   updateAccessRequestFilter,
-  updateAccessRequestPageSize,
-  initialAccessRequestState,
-  accessRequestSlice,
-  storeAccessRequests,
   updateAccessRequestPageIndex,
+  updateAccessRequestPageSize,
 } from './accessRequestSlice';
 
 describe('Access Request slice tests', () => {

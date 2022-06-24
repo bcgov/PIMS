@@ -1,26 +1,28 @@
-import React, { Fragment, useState, useEffect } from 'react';
 import './ReviewApproveForm.scss';
+
+import { FastDatePicker, Form } from 'components/common/form';
+import NotificationCheck from 'features/projects/common/components/NotificationCheck';
+import { ErpNotificationNotes } from 'features/projects/common/components/ProjectNotes';
+import { DisposeWorkflowStatus, ReviewWorkflowStatus } from 'features/projects/constants';
+import { IProject } from 'features/projects/interfaces';
+import { useFormikContext } from 'formik';
+import _ from 'lodash';
+import React, { Fragment, useEffect, useState } from 'react';
+
 import {
-  ProjectDraftForm,
-  UpdateInfoForm,
-  DocumentationForm,
   AppraisalCheckListForm,
-  FirstNationsCheckListForm,
   ApprovalConfirmationForm,
+  DocumentationForm,
+  FirstNationsCheckListForm,
+  PrivateNotes,
+  ProjectDraftForm,
   ProjectNotes,
   PublicNotes,
-  PrivateNotes,
+  UpdateInfoForm,
   useProject,
 } from '../../common';
-import { ReviewWorkflowStatus, DisposeWorkflowStatus } from 'features/projects/constants';
-import { IProject } from 'features/projects/interfaces';
 import TasksForm from '../../common/forms/TasksForm';
-import _ from 'lodash';
-import { useFormikContext } from 'formik';
 import ExemptionRequest from '../../dispose/components/ExemptionRequest';
-import { Form, FastDatePicker } from 'components/common/form';
-import { ErpNotificationNotes } from 'features/projects/common/components/ProjectNotes';
-import NotificationCheck from 'features/projects/common/components/NotificationCheck';
 
 /**
  * Form component of ReviewApproveStep (currently a multi-step form).

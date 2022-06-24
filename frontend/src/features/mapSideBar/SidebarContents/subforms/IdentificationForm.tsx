@@ -1,24 +1,25 @@
 import './IdentificationForm.scss';
 
-import { FastSelect, FastInput, SelectOptions, Check } from 'components/common/form';
+import { IBuilding } from 'actions/parcelsActions';
+import { Check, FastInput, FastSelect, SelectOptions } from 'components/common/form';
+import GenericModal from 'components/common/GenericModal';
 import { Label } from 'components/common/Label';
+import TooltipWrapper from 'components/common/TooltipWrapper';
+import { ProjectNumberLink } from 'components/maps/leaflet/InfoSlideOut/ProjectNumberLink';
+import * as API from 'constants/API';
+import { HARMFUL_DISCLOSURE_URL } from 'constants/strings';
 import AddressForm from 'features/properties/components/forms/subforms/AddressForm';
 import InformationForm from 'features/properties/components/forms/subforms/InformationForm';
 import LatLongForm from 'features/properties/components/forms/subforms/LatLongForm';
-import React, { useState } from 'react';
-import { Col, Container, Row, ListGroup } from 'react-bootstrap';
-import TooltipWrapper from 'components/common/TooltipWrapper';
-import { sensitiveTooltip } from '../../../../../src/features/properties/components/forms/strings';
-import { HARMFUL_DISCLOSURE_URL } from 'constants/strings';
-import { ClassificationForm } from './ClassificationForm';
+import { getIn, useFormikContext } from 'formik';
 import { IGeocoderResponse } from 'hooks/useApi';
-import { useFormikContext, getIn } from 'formik';
 import useCodeLookups from 'hooks/useLookupCodes';
-import * as API from 'constants/API';
-import GenericModal from 'components/common/GenericModal';
-import { IBuilding } from 'actions/parcelsActions';
+import React, { useState } from 'react';
+import { Col, Container, ListGroup, Row } from 'react-bootstrap';
 import styled from 'styled-components';
-import { ProjectNumberLink } from 'components/maps/leaflet/InfoSlideOut/ProjectNumberLink';
+
+import { sensitiveTooltip } from '../../../../../src/features/properties/components/forms/strings';
+import { ClassificationForm } from './ClassificationForm';
 
 interface IIdentificationProps {
   /** passed down from parent to lock/unlock designated fields */

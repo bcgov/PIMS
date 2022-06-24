@@ -1,25 +1,25 @@
-import React from 'react';
-import { Router, Route } from 'react-router-dom';
-import { createMemoryHistory } from 'history';
-import { render, cleanup, waitFor } from '@testing-library/react';
-import configureMockStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
-import { Provider } from 'react-redux';
-
-import { act } from 'react-dom/test-utils';
-import { ToastContainer } from 'react-toastify';
-import MapSideBarContainer from './MapSideBarContainer';
-import { noop } from 'lodash';
-import * as actionTypes from 'constants/actionTypes';
-import { IParcel } from 'actions/parcelsActions';
-import { mockDetails, mockBuildingWithAssociatedLand, mockParcel } from 'mocks/filterDataMock';
-import VisibilitySensor from 'react-visibility-sensor';
 import { useKeycloak } from '@react-keycloak/web';
-import axios from 'axios';
-import MockAdapter from 'axios-mock-adapter';
-import { Claims } from 'constants/claims';
 import { screen } from '@testing-library/dom';
 import { fireEvent } from '@testing-library/dom';
+import { cleanup, render, waitFor } from '@testing-library/react';
+import { IParcel } from 'actions/parcelsActions';
+import axios from 'axios';
+import MockAdapter from 'axios-mock-adapter';
+import * as actionTypes from 'constants/actionTypes';
+import { Claims } from 'constants/claims';
+import { createMemoryHistory } from 'history';
+import { noop } from 'lodash';
+import { mockBuildingWithAssociatedLand, mockDetails, mockParcel } from 'mocks/filterDataMock';
+import React from 'react';
+import { act } from 'react-dom/test-utils';
+import { Provider } from 'react-redux';
+import { Route, Router } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import VisibilitySensor from 'react-visibility-sensor';
+import configureMockStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
+
+import MapSideBarContainer from './MapSideBarContainer';
 
 jest.mock(
   'react-visibility-sensor',

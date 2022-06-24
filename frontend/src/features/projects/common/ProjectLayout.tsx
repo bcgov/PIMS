@@ -1,7 +1,9 @@
+import './ProjectLayout.scss';
+
 import React from 'react';
 import { Container } from 'react-bootstrap';
+
 import { SresManual } from '../common';
-import './ProjectLayout.scss';
 
 /**
  * Top level component used for step styling

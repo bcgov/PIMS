@@ -1,5 +1,5 @@
-import * as React from 'react';
 import { TextArea } from 'components/common/form';
+import * as React from 'react';
 
 interface ILeasedLandOtherProps {
   nameSpace?: string;

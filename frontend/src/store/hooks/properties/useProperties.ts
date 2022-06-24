@@ -1,5 +1,6 @@
 import { IGeoFilter, ISearchFilter, useApiProperties } from 'hooks/api/properties/search';
 import React from 'react';
+
 import { useNetwork } from '../network';
 
 export const useProperties = () => {

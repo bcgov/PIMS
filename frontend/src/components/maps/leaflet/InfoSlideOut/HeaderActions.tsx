@@ -1,11 +1,11 @@
-import styled from 'styled-components';
+import variables from '_variables.module.scss';
+import { IBuilding, IParcel } from 'actions/parcelsActions';
+import { PropertyTypes } from 'constants/propertyTypes';
+import queryString from 'query-string';
 import * as React from 'react';
 import { Row } from 'react-bootstrap';
-import { IBuilding, IParcel } from 'actions/parcelsActions';
 import { Link, useLocation } from 'react-router-dom';
-import queryString from 'query-string';
-import variables from '_variables.module.scss';
-import { PropertyTypes } from 'constants/propertyTypes';
+import styled from 'styled-components';
 
 const LinkMenu = styled(Row)`
   background-color: ${variables.filterBackgroundColor};

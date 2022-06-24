@@ -1,9 +1,10 @@
+import { mount } from 'enzyme';
+import Enzyme from 'enzyme';
+import Adapter from 'enzyme-adapter-react-16';
+import { getIn, useFormikContext } from 'formik';
 import React from 'react';
 import renderer from 'react-test-renderer';
-import { mount } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
-import Enzyme from 'enzyme';
-import { useFormikContext, getIn } from 'formik';
+
 import { FastSelect } from './FastSelect';
 
 jest.mock('formik');

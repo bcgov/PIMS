@@ -8,8 +8,8 @@ import { IProjectStatusModel } from 'hooks/api/projects/workflows';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { useProjectDisposal, useProjectWorkflow } from 'store';
-import { IProjectForm } from './interfaces';
 
+import { IProjectForm } from './interfaces';
 import * as styled from './styled';
 import { toModel } from './utils';
 

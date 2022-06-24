@@ -1,12 +1,12 @@
-import React from 'react';
-import { Formik } from 'formik';
-import { Form } from 'react-bootstrap';
-import ApprovalConfirmationForm from '../../common/forms/ApprovalConfirmationForm';
 import { useKeycloak } from '@react-keycloak/web';
-import { noop } from 'lodash';
-
 import { fireEvent } from '@testing-library/dom';
-import { render, act, waitFor } from '@testing-library/react';
+import { act, render, waitFor } from '@testing-library/react';
+import { Formik } from 'formik';
+import { noop } from 'lodash';
+import React from 'react';
+import { Form } from 'react-bootstrap';
+
+import ApprovalConfirmationForm from '../../common/forms/ApprovalConfirmationForm';
 
 jest.mock('@react-keycloak/web');
 

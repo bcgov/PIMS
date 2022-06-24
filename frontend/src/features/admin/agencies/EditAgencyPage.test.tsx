@@ -1,19 +1,20 @@
-import EditAgencyPage from './EditAgencyPage';
+import { useKeycloak } from '@react-keycloak/web';
+import { act, cleanup, render, screen, waitFor } from '@testing-library/react';
+import { ILookupCode } from 'actions/ILookupCode';
+import axios from 'axios';
+import MockAdapter from 'axios-mock-adapter';
+import * as API from 'constants/API';
+import { createMemoryHistory } from 'history';
 import React from 'react';
+import { Provider } from 'react-redux';
+import { Router } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { ILookupCode } from 'actions/ILookupCode';
-import * as API from 'constants/API';
-import { Provider } from 'react-redux';
-import { createMemoryHistory } from 'history';
-import { Router } from 'react-router-dom';
-import { render, cleanup, act, screen, waitFor } from '@testing-library/react';
-import MockAdapter from 'axios-mock-adapter';
-import axios from 'axios';
-import { ToastContainer } from 'react-toastify';
-import { fillInput } from 'utils/testUtils';
-import { useKeycloak } from '@react-keycloak/web';
 import { initialAgencyState } from 'store';
+import { fillInput } from 'utils/testUtils';
+
+import EditAgencyPage from './EditAgencyPage';
 
 jest.mock('@react-keycloak/web');
 (useKeycloak as jest.Mock).mockReturnValue({
