@@ -38,6 +38,7 @@ export const defaultReport: IReport = {
   reportTypeId: 0,
   isFinal: false,
   to: generateUtcNowDateTime(),
+  rowVersion: '',
 };
 
 /** get all of the other reports that have a 'To' date before this date */

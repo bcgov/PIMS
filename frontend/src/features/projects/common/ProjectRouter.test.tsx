@@ -135,28 +135,28 @@ describe('project router', () => {
   });
 
   it('displays select properties page at correct route', () => {
-    history.location.pathname = '/projects/assess/properties/update';
+    history.push('/projects/assess/properties/update');
     const { getByText } = render(uiElement);
     const stepHeader = getByText('Search and select 1 or more properties for the project');
     expect(stepHeader).toBeVisible();
   });
 
   it('displays review approval form at correct route', () => {
-    history.location.pathname = '/projects/assess/properties';
+    history.push('/projects/assess/properties');
     const { getByText } = render(uiElement);
     const stepHeader = getByText('Project Application Review');
     expect(stepHeader).toBeVisible();
   });
 
   it('displays summary page at the correct route', () => {
-    history.location.pathname = '/projects/summary';
+    history.push('/projects/summary');
     const { getByText } = render(uiElement);
     const stepHeader = getByText('Project No.:');
     expect(stepHeader).toBeVisible();
   });
 
   it('404s if given an invalid dispose route', () => {
-    history.location.pathname = '/projects/invalid';
+    history.push('/projects/invalid');
     render(uiElement);
     expect(history.location.pathname).toBe('/page-not-found');
   });

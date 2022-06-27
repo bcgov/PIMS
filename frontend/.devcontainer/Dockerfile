@@ -13,7 +13,7 @@ ARG EXTRA_NODE_VERSION=v14.19.3
 RUN su node -c "npm config delete prefix"
 RUN su node -c "source /usr/local/share/nvm/nvm.sh && nvm install ${EXTRA_NODE_VERSION}"
 RUN su node -c "npm config set prefix $NVM_DIR/versions/node/${EXTRA_NODE_VERSION}"
-RUN su node -c "nvm use --delete-prefix ${EXTRA_NODE_VERSION} --silent"
+# RUN su node -c "nvm use --delete-prefix ${EXTRA_NODE_VERSION} --silent"
 
 # [Optional] Uncomment if you want to install more global node packages
 RUN su node -c "npm install -g create-react-app"

@@ -1,6 +1,20 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Property list view Matches snapshot 1`] = `
+.c5 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  justify-items: center;
+  position: relative;
+  padding: 0 5px;
+}
+
 .c6 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -14,20 +28,6 @@ exports[`Property list view Matches snapshot 1`] = `
   -ms-flex-align: center;
   align-items: center;
   justify-items: center;
-}
-
-.c5 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  justify-items: center;
-  position: relative;
-  padding: 0 5px;
 }
 
 .c7 {
@@ -141,19 +141,20 @@ exports[`Property list view Matches snapshot 1`] = `
               class="form-group"
             >
               <div
-                class="rbt"
-                style="outline: none; position: relative;"
+                class="rbt clearfix open"
+                style="position: relative;"
                 tabindex="-1"
               >
                 <div
-                  style="display: flex; flex: 1; height: 100%; position: relative;"
+                  class="rbt-input-hint-container"
+                  style="position: relative;"
                 >
                   <input
                     aria-autocomplete="both"
                     aria-expanded="false"
                     aria-haspopup="listbox"
-                    autocomplete="off"
-                    class="rbt-input-main form-control rbt-input"
+                    autocomplete="nope"
+                    class="rbt-input-main form-control rbt-input  input-lg form-control-lg"
                     id="agencies-field"
                     name="agencies"
                     placeholder="My Agencies"
@@ -161,14 +162,29 @@ exports[`Property list view Matches snapshot 1`] = `
                     type="text"
                     value=""
                   />
-                  <input
-                    aria-hidden="true"
+                  <div
                     class="rbt-input-hint"
-                    readonly=""
-                    style="background-color: transparent; border-color: transparent; box-shadow: none; color: rgba(0, 0, 0, 0.35); left: 0px; pointer-events: none; position: absolute; top: 0px; width: 100%;"
-                    tabindex="-1"
-                    value=""
-                  />
+                    style="left: 0px; pointer-events: none; position: absolute; top: 0px; display: inline-block;"
+                  >
+                    <input
+                      aria-hidden="true"
+                      readonly=""
+                      style="background-color: transparent; border-color: transparent; box-shadow: none; color: rgba(0, 0, 0, 0.35); box-sizing: content-box; width: 1px; border-style: inset inset inset inset; border-width: 2px 2px 2px 2px; line-height: normal; padding: 1px 1px 1px 1px;"
+                      tabindex="-1"
+                      value=""
+                    />
+                    <div
+                      style="height: 0px; left: 0px; overflow: scroll; position: absolute; top: 0px; visibility: hidden; white-space: pre; font-family: -webkit-small-control; letter-spacing: normal; text-transform: none;"
+                    />
+                  </div>
+                </div>
+                <div
+                  aria-atomic="true"
+                  aria-live="polite"
+                  class="sr-only rbt-sr-status"
+                  role="status"
+                >
+                  0 selections
                 </div>
               </div>
             </div>
@@ -177,33 +193,49 @@ exports[`Property list view Matches snapshot 1`] = `
             class="map-filter-typeahead col"
           >
             <div
-              class="rbt"
-              style="outline: none; position: relative;"
+              class="rbt clearfix open"
+              style="position: relative;"
               tabindex="-1"
             >
               <div
-                style="display: flex; flex: 1; height: 100%; position: relative;"
+                class="rbt-input-hint-container"
+                style="position: relative;"
               >
                 <input
                   aria-autocomplete="both"
                   aria-expanded="false"
                   aria-haspopup="listbox"
-                  autocomplete="off"
-                  class="rbt-input-main form-control rbt-input"
+                  autocomplete="nope"
+                  class="rbt-input-main form-control rbt-input "
                   id="name-field"
                   placeholder="Property name"
                   role="combobox"
                   type="text"
                   value=""
                 />
-                <input
-                  aria-hidden="true"
+                <div
                   class="rbt-input-hint"
-                  readonly=""
-                  style="background-color: transparent; border-color: transparent; box-shadow: none; color: rgba(0, 0, 0, 0.35); left: 0px; pointer-events: none; position: absolute; top: 0px; width: 100%;"
-                  tabindex="-1"
-                  value=""
-                />
+                  style="left: 0px; pointer-events: none; position: absolute; top: 0px; display: inline-block;"
+                >
+                  <input
+                    aria-hidden="true"
+                    readonly=""
+                    style="background-color: transparent; border-color: transparent; box-shadow: none; color: rgba(0, 0, 0, 0.35); box-sizing: content-box; width: 1px; border-style: inset inset inset inset; border-width: 2px 2px 2px 2px; line-height: normal; padding: 1px 1px 1px 1px;"
+                    tabindex="-1"
+                    value=""
+                  />
+                  <div
+                    style="height: 0px; left: 0px; overflow: scroll; position: absolute; top: 0px; visibility: hidden; white-space: pre; font-family: -webkit-small-control; letter-spacing: normal; text-transform: none;"
+                  />
+                </div>
+              </div>
+              <div
+                aria-atomic="true"
+                aria-live="polite"
+                class="sr-only rbt-sr-status"
+                role="status"
+              >
+                0 selections
               </div>
             </div>
           </div>
@@ -214,19 +246,20 @@ exports[`Property list view Matches snapshot 1`] = `
               class="form-group"
             >
               <div
-                class="rbt"
-                style="outline: none; position: relative;"
+                class="rbt clearfix open"
+                style="position: relative;"
                 tabindex="-1"
               >
                 <div
-                  style="display: flex; flex: 1; height: 100%; position: relative;"
+                  class="rbt-input-hint-container"
+                  style="position: relative;"
                 >
                   <input
                     aria-autocomplete="both"
                     aria-expanded="false"
                     aria-haspopup="listbox"
-                    autocomplete="off"
-                    class="rbt-input-main form-control rbt-input"
+                    autocomplete="nope"
+                    class="rbt-input-main form-control rbt-input "
                     id="administrativeArea-field"
                     name="administrativeArea"
                     placeholder="Location"
@@ -234,14 +267,29 @@ exports[`Property list view Matches snapshot 1`] = `
                     type="text"
                     value=""
                   />
-                  <input
-                    aria-hidden="true"
+                  <div
                     class="rbt-input-hint"
-                    readonly=""
-                    style="background-color: transparent; border-color: transparent; box-shadow: none; color: rgba(0, 0, 0, 0.35); left: 0px; pointer-events: none; position: absolute; top: 0px; width: 100%;"
-                    tabindex="-1"
-                    value=""
-                  />
+                    style="left: 0px; pointer-events: none; position: absolute; top: 0px; display: inline-block;"
+                  >
+                    <input
+                      aria-hidden="true"
+                      readonly=""
+                      style="background-color: transparent; border-color: transparent; box-shadow: none; color: rgba(0, 0, 0, 0.35); box-sizing: content-box; width: 1px; border-style: inset inset inset inset; border-width: 2px 2px 2px 2px; line-height: normal; padding: 1px 1px 1px 1px;"
+                      tabindex="-1"
+                      value=""
+                    />
+                    <div
+                      style="height: 0px; left: 0px; overflow: scroll; position: absolute; top: 0px; visibility: hidden; white-space: pre; font-family: -webkit-small-control; letter-spacing: normal; text-transform: none;"
+                    />
+                  </div>
+                </div>
+                <div
+                  aria-atomic="true"
+                  aria-live="polite"
+                  class="sr-only rbt-sr-status"
+                  role="status"
+                >
+                  0 selections
                 </div>
               </div>
             </div>

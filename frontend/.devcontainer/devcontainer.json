@@ -7,13 +7,13 @@
 		// Update 'VARIANT' to pick a Node version: 12, 14, 16
 		"args": {
 			"VARIANT": "14"
-		},
+		}
 	},
 	"runArgs": ["--env-file", ".env"],
   "postCreateCommand": [
 	],
   "postStartCommand": [
-		"yarn"
+		"npm"
 	],
 	// "appPort": 3000,
 	"forwardPorts": [40082],
@@ -41,7 +41,8 @@
     "naumovs.color-highlight",
     "syler.sass-indented",
     "michelemelluso.code-beautifier",
-    "editorconfig.editorconfig"
+    "orta.vscode-jest",
+    "firsttris.vscode-jest-runner"
 	],
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.

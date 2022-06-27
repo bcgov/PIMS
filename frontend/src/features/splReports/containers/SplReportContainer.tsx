@@ -97,17 +97,25 @@ const SplReportContainer: React.FunctionComponent<ISplReportContainerProps> = ()
     fetch();
   }, [id, getProjectReportSnapshotsById, snapshotFilter]);
 
-  const getReports = React.useCallback(async () => {
-    const data = await getProjectReports();
-    setReports(data);
-    if (data.length === 0) {
-      setShowSidebar(true);
-      setSnapshots([]);
-    }
-  }, [getProjectReports]);
+  const getReports = React.useCallback(
+    async (currentReport?: IReport) => {
+      const data = await getProjectReports();
+      var report = data.find(r => r.id === currentReport?.id);
+      if (!!report && !!currentReport) {
+        setCurrentReport({ ...currentReport, rowVersion: report.rowVersion });
+      }
+      setReports(data);
+      if (data.length === 0) {
+        setShowSidebar(true);
+        setSnapshots([]);
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    },
+    [getProjectReports],
+  );
 
   useDeepCompareEffect(() => {
-    getReports();
+    getReports(currentReport);
   }, [getProjectReports, getReports, currentReport]);
 
   /**
@@ -163,7 +171,7 @@ const SplReportContainer: React.FunctionComponent<ISplReportContainerProps> = ()
     }
   };
   const onSave = (report: IReport) => {
-    if (!report.isFinal && _.find(reports, { id: report.id })?.isFinal) {
+    if (!report.isFinal && reports.find(r => r.id === report.id)?.isFinal) {
       setReportToSave(report);
     } else {
       updateReport(report);

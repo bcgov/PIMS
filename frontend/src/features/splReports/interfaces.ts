@@ -8,6 +8,7 @@ export interface IReport {
   isFinal: boolean;
   to: string;
   from?: string;
+  rowVersion: string;
 }
 
 export interface ISnapshot {

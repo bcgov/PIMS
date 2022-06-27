@@ -13,7 +13,6 @@
     "crypto-js": "4.0.0",
     "dequal": "1.0.0",
     "formik": "2.2.9",
-    "history": "5.3.0",
     "http-proxy-middleware": "0.21.0",
     "keycloak-js": "15.0.2",
     "leaflet": "1.8.0",
@@ -152,7 +151,7 @@
     ],
     "coverageThreshold": {
       "global": {
-        "branches": 45,
+        "branches": 40,
         "functions": 45,
         "lines": 50,
         "statements": 50

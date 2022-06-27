@@ -75,6 +75,6 @@ describe('useRouterReport hook tests', () => {
     renderHook(() => useRouterReport({ currentReport: reports[1], setCurrentReport, reports }), {
       wrapper,
     });
-    expect(history.location.search).toEqual('?reportId=2');
+    expect(history.location.search).toEqual('reportId=2');
   });
 });

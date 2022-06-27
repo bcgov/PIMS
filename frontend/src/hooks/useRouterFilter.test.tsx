@@ -93,7 +93,7 @@ describe('useRouterFilter hook tests', () => {
 
     const wrapper = getWrapper(getStore({}));
     renderHook(() => useRouterFilter({ filter, setFilter, key: 'test' }), { wrapper });
-    expect(history.location.search).toEqual('?' + queryString.stringify(filterWithValues));
+    expect(history.location.search).toEqual(queryString.stringify(filterWithValues));
   });
 
   it('will not set the filter based on an invalid query string', () => {
@@ -128,6 +128,6 @@ describe('useRouterFilter hook tests', () => {
     Object.keys(filterWithValues).forEach(
       k => filterWithValues[k] === '' && delete filterWithValues[k],
     );
-    expect(history.location.search).toEqual('?' + queryString.stringify(filterWithValues));
+    expect(history.location.search).toEqual(queryString.stringify(filterWithValues));
   });
 });

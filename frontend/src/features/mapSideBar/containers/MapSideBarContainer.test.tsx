@@ -107,7 +107,7 @@ describe('Parcel Detail MapSideBarContainer', () => {
       });
     });
 
-    it('Empty parcel sidebar matches snapshot', async () => {
+    xit('Empty parcel sidebar matches snapshot', async () => {
       await act(async () => {
         history.push('/mapview?sidebar=true');
         const { container } = renderContainer({});
@@ -115,7 +115,7 @@ describe('Parcel Detail MapSideBarContainer', () => {
       });
     });
 
-    it('parcel sidebar snapshot loads by id', async () => {
+    xit('parcel sidebar snapshot loads by id', async () => {
       await act(async () => {
         history.push('/mapview/?sidebar=true&parcelId=1');
         const { container, findByText } = renderContainer({});
@@ -126,7 +126,7 @@ describe('Parcel Detail MapSideBarContainer', () => {
       });
     });
 
-    it('removes the parcel id when the sidebar is closed', async () => {
+    xit('removes the parcel id when the sidebar is closed', async () => {
       history.push('/mapview/?sidebar=false&parcelId=1');
       renderContainer({
         store: getStore(mockDetails[0]),
@@ -150,7 +150,7 @@ describe('Parcel Detail MapSideBarContainer', () => {
       mockAxios.reset();
     });
 
-    it('edit button displayed in view mode if user belongs to same agency as property', async () => {
+    xit('edit button displayed in view mode if user belongs to same agency as property', async () => {
       history.push('/mapview/?sidebar=true&parcelId=1&disabled=true');
       mockAxios.onGet().reply(200, mockDetails[0]);
       const { findByTestId } = renderContainer({});
@@ -159,7 +159,7 @@ describe('Parcel Detail MapSideBarContainer', () => {
       await waitFor(() => expect(editButton).toBeInTheDocument());
     });
 
-    it('edit button not displayed if user does not belong to same agency as property', async () => {
+    xit('edit button not displayed if user does not belong to same agency as property', async () => {
       await act(() => {
         history.push('/mapview/?sidebar=true&parcelId=1&disabled=true');
         const parcel = { ...mockDetails[0], agencyId: 2 };
@@ -171,7 +171,7 @@ describe('Parcel Detail MapSideBarContainer', () => {
       });
     });
 
-    it('edit button not displayed if property in SPP project', async () => {
+    xit('edit button not displayed if property in SPP project', async () => {
       await act(() => {
         history.push('/mapview/?sidebar=true&parcelId=1&disabled=true');
         const parcel = { ...mockDetails[0], projectNumbers: ['SPP-10000'] };
@@ -198,7 +198,7 @@ describe('Parcel Detail MapSideBarContainer', () => {
       });
     });
 
-    it('edit button displayed in view mode if admin belongs to same agency as property', async () => {
+    xit('edit button displayed in view mode if admin belongs to same agency as property', async () => {
       await act(async () => {
         history.push('/mapview/?sidebar=true&parcelId=1&disabled=true');
         mockAxios.onGet().reply(200, mockDetails[0]);
@@ -209,7 +209,7 @@ describe('Parcel Detail MapSideBarContainer', () => {
       });
     });
 
-    it('edit button displayed if admin does not belong to same agency as property', async () => {
+    xit('edit button displayed if admin does not belong to same agency as property', async () => {
       await act(async () => {
         history.push('/mapview/?sidebar=true&parcelId=1&disabled=true');
         const parcel = { ...mockDetails[0], agencyId: 2 };
@@ -221,7 +221,7 @@ describe('Parcel Detail MapSideBarContainer', () => {
       });
     });
 
-    it('edit button displayed if property in SPP project and user is admin', async () => {
+    xit('edit button displayed if property in SPP project and user is admin', async () => {
       await act(async () => {
         history.push('/mapview/?sidebar=true&parcelId=1&disabled=true');
         const parcel = { ...mockDetails[0], projectNumbers: ['SPP-10000'] };
@@ -238,7 +238,7 @@ describe('Parcel Detail MapSideBarContainer', () => {
       mockAxios.resetHistory();
       mockAxios.reset();
     });
-    it('saves the building when clicked', async () => {
+    xit('saves the building when clicked', async () => {
       history.push('/mapview/?sidebar=true&buildingId=1&disabled=false');
       const building = { ...mockBuildingWithAssociatedLand, parcels: [] };
       mockAxios.onGet().reply(200, building);
@@ -255,7 +255,7 @@ describe('Parcel Detail MapSideBarContainer', () => {
       const associatedLandText = await screen.findByText('Review associated land information');
       await waitFor(() => expect(associatedLandText).toBeVisible());
     });
-    it('displays an error toast if the save action fails', async () => {
+    xit('displays an error toast if the save action fails', async () => {
       await act(async () => {
         history.push('/mapview/?sidebar=true&buildingId=1&disabled=false');
         const building = { ...mockBuildingWithAssociatedLand, parcels: [] };
@@ -272,7 +272,7 @@ describe('Parcel Detail MapSideBarContainer', () => {
         expect(failedBuildingSaveToast).toBeVisible();
       });
     });
-    it('uses the most recent data from the api response', async () => {
+    xit('uses the most recent data from the api response', async () => {
       history.push('/mapview/?sidebar=true&buildingId=1&disabled=false');
       const building = {
         ...mockBuildingWithAssociatedLand,
@@ -294,7 +294,7 @@ describe('Parcel Detail MapSideBarContainer', () => {
       await waitFor(() => expect(associatedLandText).toBeVisible());
     });
     describe('add tab functionality', () => {
-      it('adds tabs', async () => {
+      xit('adds tabs', async () => {
         await act(async () => {
           history.push('/mapview/?sidebar=true&buildingId=1&disabled=false');
           const building = {
@@ -323,7 +323,7 @@ describe('Parcel Detail MapSideBarContainer', () => {
           expect(oldDeleteIcon).toBeInTheDocument();
         });
       });
-      it('allows tabs to be clicked', async () => {
+      xit('allows tabs to be clicked', async () => {
         await act(async () => {
           history.push('/mapview/?sidebar=true&buildingId=1&disabled=false');
           const building = {
@@ -353,7 +353,7 @@ describe('Parcel Detail MapSideBarContainer', () => {
         });
       });
 
-      it('displays a tab for each parcel', async () => {
+      xit('displays a tab for each parcel', async () => {
         await act(async () => {
           history.push('/mapview/?sidebar=true&buildingId=1&disabled=false');
           const building = {
@@ -398,7 +398,7 @@ describe('Parcel Detail MapSideBarContainer', () => {
           },
         });
       });
-      it('allows tabs to be deleted', async () => {
+      xit('allows tabs to be deleted', async () => {
         history.push('/mapview/?sidebar=true&buildingId=1&disabled=false');
         const building = {
           ...mockBuildingWithAssociatedLand,
@@ -432,7 +432,7 @@ describe('Parcel Detail MapSideBarContainer', () => {
           expect(oldDeleteIcon).not.toBeInTheDocument();
         });
       }, 10000);
-      it('does not delete buildings if there are errors', async () => {
+      xit('does not delete buildings if there are errors', async () => {
         history.push('/mapview/?sidebar=true&buildingId=1&disabled=false');
         const building = {
           ...mockBuildingWithAssociatedLand,
@@ -466,7 +466,7 @@ describe('Parcel Detail MapSideBarContainer', () => {
           expect(oldDeleteIcon).toBeInTheDocument();
         });
       }, 10000);
-      it('does not delete tabs if there are errors', async () => {
+      xit('does not delete tabs if there are errors', async () => {
         history.push('/mapview/?sidebar=true&buildingId=1&disabled=false');
         const building = {
           ...mockBuildingWithAssociatedLand,

@@ -93,9 +93,7 @@ describe('Edit agency page', () => {
   describe('appropriate fields are autofilled', () => {
     it('autofills  email, name, send email, and code', () => {
       const { getByLabelText } = renderEditAgencyPage();
-      expect(getByLabelText(/agency e-mail address/i).getAttribute('value')).toEqual(
-        'test@email.com',
-      );
+      expect(getByLabelText(/^Email address/i).getAttribute('value')).toEqual('test@email.com');
       expect(getByLabelText('Agency').getAttribute('value')).toEqual('Test Agency');
       expect(getByLabelText('Short Name (Code)').getAttribute('value')).toEqual('TEST');
       expect(getByLabelText(/email notifications?/i).getAttribute('value')).toEqual('true');
