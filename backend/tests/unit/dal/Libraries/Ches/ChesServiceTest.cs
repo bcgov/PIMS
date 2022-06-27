@@ -134,7 +134,7 @@ namespace Pims.Dal.Test.Libraries.Ches
             email.From.Should().Be(options.Value.From);
             email.To.Should().HaveCount(1);
             email.To.Should().Contain("test@test.com");
-            email.Cc.Should().BeEmpty();
+            email.Cc.Should().Contain("test@test.com");
             email.Bcc.Should().BeEmpty();
         }
 
@@ -234,7 +234,7 @@ namespace Pims.Dal.Test.Libraries.Ches
                 email, null), Times.Once());
             email.To.Should().HaveCount(1);
             email.To.Should().Contain("test@test.com");
-            email.Cc.Should().BeEmpty();
+            email.Cc.Should().Contain("test@test.com");
             email.Bcc.Should().BeEmpty();
         }
 
@@ -283,7 +283,7 @@ namespace Pims.Dal.Test.Libraries.Ches
                 email, null), Times.Once());
             email.To.Should().HaveCount(2);
             email.To.Should().Contain("test.1@test.com").And.Contain("test.2@test.com");
-            email.Cc.Should().BeEmpty();
+            email.Cc.Should().Contain("test@test.com");
             email.Bcc.Should().BeEmpty();
         }
 
