@@ -4,7 +4,7 @@ import * as yup from 'yup';
 
 export const splMarketingSchema = yup.object({
   marketedOn: yup.string().when(['workflowCode', 'statusCode'], {
-    is: (workflowCode, statusCode) => {
+    is: (workflowCode: Workflow, statusCode: WorkflowStatus) => {
       return workflowCode === Workflow.SPL && statusCode === WorkflowStatus.OnMarket;
     },
     then: yup
