@@ -1,8 +1,9 @@
+import variables from '_variables.module.scss';
 import * as React from 'react';
-import { ColumnInstanceWithProps } from '.';
 import { IoMdArrowDropdown, IoMdArrowDropup } from 'react-icons/io';
 import styled from 'styled-components';
-import variables from '_variables.module.scss';
+
+import { ColumnInstanceWithProps } from '.';
 
 interface IColumnSortProps<T extends object = {}> {
   column: ColumnInstanceWithProps<T>;

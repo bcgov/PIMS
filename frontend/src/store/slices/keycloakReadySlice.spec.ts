@@ -1,4 +1,4 @@
-import { keycloakReadySlice, initialKeycloakState, setKeycloakReady } from './keycloakReadySlice';
+import { initialKeycloakState, keycloakReadySlice, setKeycloakReady } from './keycloakReadySlice';
 
 describe('Keycloak ready slice tests', () => {
   const reducer = keycloakReadySlice.reducer;

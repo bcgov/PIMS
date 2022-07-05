@@ -1,8 +1,9 @@
 import { FastCurrencyInput, FastDatePicker, Input, TextArea } from 'components/common/form';
-import { useFormikContext } from 'formik';
-import { IProjectForm } from '../interfaces';
-import React from 'react';
 import { Col, Row } from 'components/flex';
+import { useFormikContext } from 'formik';
+import React from 'react';
+
+import { IProjectForm } from '../interfaces';
 import * as styled from './styled';
 
 interface IProjectSPLContractInPlaceProps {

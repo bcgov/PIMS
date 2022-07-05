@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
 import './BasemapToggle.scss';
+
+import React, { useState } from 'react';
 
 export type BaseLayer = {
   name: string;

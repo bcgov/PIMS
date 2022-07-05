@@ -1,49 +1,50 @@
-import { ISteppedFormValues, SteppedForm, useFormStepper } from 'components/common/form/StepForm';
-import { useFormikContext, yupToFormErrors, getIn, setIn } from 'formik';
-import { IGeocoderResponse, useApi } from 'hooks/useApi';
-import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
-import useCodeLookups from 'hooks/useLookupCodes';
-import { noop } from 'lodash';
-import * as React from 'react';
-import { Button, Form as BSForm } from 'react-bootstrap';
-import styled from 'styled-components';
-import { InventoryPolicy } from '../components/InventoryPolicy';
-import * as API from 'constants/API';
+import variables from '_variables.module.scss';
 import { IBuilding, IParcel, LeasedLandTypes } from 'actions/parcelsActions';
-import { ParcelIdentificationForm } from './subforms/ParcelIdentificationForm';
-import { LandUsageForm } from './subforms/LandUsageForm';
-import { valuesToApiFormat as landValuesToApiFormat } from './LandForm';
-import { LandValuationForm } from './subforms/LandValuationForm';
-import { AssociatedLandSteps } from 'constants/propertySteps';
-import { LandOwnershipForm } from './subforms/LandOwnershipForm';
-import { getInitialValues as getInitialLandValues } from './LandForm';
-import useParcelLayerData from 'features/properties/hooks/useParcelLayerData';
-import { AssociatedLandReviewPage } from './subforms/AssociatedLandReviewPage';
-import {
-  AssociatedLandSchema,
-  AssociatedLandOwnershipSchema,
-  LandIdentificationSchema,
-  LandUsageSchema,
-  ValuationSchema,
-  LandSchema,
-} from 'utils/YupSchema';
-import { useBuildingApi } from '../hooks/useBuildingApi';
-import _ from 'lodash';
-import { useState } from 'react';
-import { defaultBuildingValues } from './BuildingForm';
-import { stringToNull } from 'utils';
+import { ISteppedFormValues, SteppedForm, useFormStepper } from 'components/common/form/StepForm';
 import { IStep } from 'components/common/Stepper';
-import useDraftMarkerSynchronizer from 'features/properties/hooks/useDraftMarkerSynchronizer';
+import { fireMapRefreshEvent } from 'components/maps/hooks/useMapRefreshEvent';
+import * as API from 'constants/API';
+import { EvaluationKeys } from 'constants/evaluationKeys';
+import { FiscalKeys } from 'constants/fiscalKeys';
+import { AssociatedLandSteps } from 'constants/propertySteps';
 import DebouncedValidation from 'features/properties/components/forms/subforms/DebouncedValidation';
 import {
   filterEmptyFinancials,
   getMergedFinancials,
 } from 'features/properties/components/forms/subforms/EvaluationForm';
-import { EvaluationKeys } from 'constants/evaluationKeys';
-import { FiscalKeys } from 'constants/fiscalKeys';
-import variables from '_variables.module.scss';
-import { fireMapRefreshEvent } from 'components/maps/hooks/useMapRefreshEvent';
+import useDraftMarkerSynchronizer from 'features/properties/hooks/useDraftMarkerSynchronizer';
+import useParcelLayerData from 'features/properties/hooks/useParcelLayerData';
+import { getIn, setIn, useFormikContext, yupToFormErrors } from 'formik';
+import { IGeocoderResponse, useApi } from 'hooks/useApi';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+import useCodeLookups from 'hooks/useLookupCodes';
+import { noop } from 'lodash';
+import _ from 'lodash';
+import * as React from 'react';
+import { useState } from 'react';
+import { Button, Form as BSForm } from 'react-bootstrap';
 import { useAppDispatch } from 'store';
+import styled from 'styled-components';
+import { stringToNull } from 'utils';
+import {
+  AssociatedLandOwnershipSchema,
+  AssociatedLandSchema,
+  LandIdentificationSchema,
+  LandSchema,
+  LandUsageSchema,
+  ValuationSchema,
+} from 'utils/YupSchema';
+
+import { InventoryPolicy } from '../components/InventoryPolicy';
+import { useBuildingApi } from '../hooks/useBuildingApi';
+import { defaultBuildingValues } from './BuildingForm';
+import { valuesToApiFormat as landValuesToApiFormat } from './LandForm';
+import { getInitialValues as getInitialLandValues } from './LandForm';
+import { AssociatedLandReviewPage } from './subforms/AssociatedLandReviewPage';
+import { LandOwnershipForm } from './subforms/LandOwnershipForm';
+import { LandUsageForm } from './subforms/LandUsageForm';
+import { LandValuationForm } from './subforms/LandValuationForm';
+import { ParcelIdentificationForm } from './subforms/ParcelIdentificationForm';
 
 const Container = styled.div`
   background-color: #fff;

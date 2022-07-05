@@ -1,15 +1,15 @@
-import CustomAxios, { LifecycleToasts } from 'customAxios';
-import { useAppDispatch } from 'store';
-import { showLoading, hideLoading } from 'react-redux-loading-bar';
-import { AxiosInstance } from 'axios';
-import { ENVIRONMENT } from 'constants/environment';
-import * as _ from 'lodash';
-import { useCallback } from 'react';
-import { IGeoSearchParams } from 'constants/API';
-import queryString from 'query-string';
 import { IBuilding, IParcel } from 'actions/parcelsActions';
-import { store } from 'store';
+import { AxiosInstance } from 'axios';
+import { IGeoSearchParams } from 'constants/API';
+import { ENVIRONMENT } from 'constants/environment';
+import CustomAxios, { LifecycleToasts } from 'customAxios';
 import { IApiProperty } from 'features/projects/interfaces';
+import * as _ from 'lodash';
+import queryString from 'query-string';
+import { useCallback } from 'react';
+import { hideLoading, showLoading } from 'react-redux-loading-bar';
+import { useAppDispatch } from 'store';
+import { store } from 'store';
 
 export interface IGeocoderResponse {
   siteId: string;

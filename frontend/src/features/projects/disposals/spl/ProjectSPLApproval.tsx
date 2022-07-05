@@ -1,11 +1,11 @@
 import { FastDatePicker, TextArea } from 'components/common/form';
 import { useFormikContext } from 'formik';
-import { IProjectForm } from '../interfaces';
-import React from 'react';
-
-import * as styled from './styled';
-import { Col, Row } from 'react-bootstrap';
 import { Workflow } from 'hooks/api/projects';
+import React from 'react';
+import { Col, Row } from 'react-bootstrap';
+
+import { IProjectForm } from '../interfaces';
+import * as styled from './styled';
 
 interface IProjectSPLApprovalProps {
   disabled?: boolean;

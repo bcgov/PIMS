@@ -1,13 +1,14 @@
-import React from 'react';
+import { Table } from 'components/Table';
 import { INotificationFilter } from 'features/projects/interfaces';
 import { INotification } from 'features/projects/interfaces/INotification';
-import { columns } from './constants';
-import { Table } from 'components/Table';
-import { formatDate } from 'utils';
-import { useDisposalApi } from 'hooks/useApiDisposal';
 import { useFormikContext } from 'formik';
-import * as styled from './styled';
+import { useDisposalApi } from 'hooks/useApiDisposal';
+import React from 'react';
+import { formatDate } from 'utils';
+
 import { IProjectForm } from '../interfaces';
+import { columns } from './constants';
+import * as styled from './styled';
 
 interface IProjectNotificationsProps {
   isReadOnly?: boolean;

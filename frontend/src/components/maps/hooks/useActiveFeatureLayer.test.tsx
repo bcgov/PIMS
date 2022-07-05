@@ -1,16 +1,17 @@
-import useActiveFeatureLayer from './useActiveFeatureLayer';
-import { renderHook } from '@testing-library/react-hooks';
-import { geoJSON } from 'leaflet';
-import { useLayerQuery } from 'components/maps/leaflet/LayerPopup';
+import { useKeycloak } from '@react-keycloak/web';
 import { waitFor } from '@testing-library/react';
+import { renderHook } from '@testing-library/react-hooks';
+import { useLayerQuery } from 'components/maps/leaflet/LayerPopup';
+import { createMemoryHistory } from 'history';
+import { geoJSON } from 'leaflet';
 import { noop } from 'lodash';
-import configureMockStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
+import React from 'react';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
-import React from 'react';
-import { createMemoryHistory } from 'history';
-import { useKeycloak } from '@react-keycloak/web';
+import configureMockStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
+
+import useActiveFeatureLayer from './useActiveFeatureLayer';
 
 jest.mock('@react-keycloak/web');
 (useKeycloak as jest.Mock).mockReturnValue({

@@ -1,10 +1,11 @@
-import queryString from 'query-string';
-import CustomAxios from 'customAxios';
-import { IPagedItems } from 'interfaces';
 import { ENVIRONMENT } from 'constants/environment';
-import { IProjectFilter, IProject } from './list/interfaces';
+import CustomAxios from 'customAxios';
+import { IApiProject, IProperty } from 'features/projects/interfaces';
+import { IPagedItems } from 'interfaces';
+import queryString from 'query-string';
+
 import { toFlatProject } from './common/projectConverter';
-import { IProperty, IApiProject } from 'features/projects/interfaces';
+import { IProject, IProjectFilter } from './list/interfaces';
 
 const { apiUrl: basePath } = ENVIRONMENT;
 

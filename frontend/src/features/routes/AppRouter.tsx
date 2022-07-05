@@ -1,20 +1,19 @@
-import React, { useLayoutEffect, lazy, Suspense } from 'react';
-import { Switch, Redirect, useLocation } from 'react-router-dom';
-import Login from '../account/Login';
-import AccessDenied from '../../pages/401/AccessDenied';
-
-import { Claims } from 'constants/claims';
-import AppRoute from 'utils/AppRoute';
-import PublicLayout from 'layouts/PublicLayout';
-import AuthLayout from 'layouts/AuthLayout';
-
-import { NotFoundPage } from 'pages/404/NotFoundPage';
-import { LogoutPage } from 'features/account/Logout';
-import { IENotSupportedPage } from 'features/account/IENotSupportedPage';
 import FilterBackdrop from 'components/maps/leaflet/FilterBackdrop';
-import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
-import { Col } from 'react-bootstrap';
+import { Claims } from 'constants/claims';
+import { IENotSupportedPage } from 'features/account/IENotSupportedPage';
+import { LogoutPage } from 'features/account/Logout';
 import { ProjectLayout } from 'features/projects/disposals';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+import AuthLayout from 'layouts/AuthLayout';
+import PublicLayout from 'layouts/PublicLayout';
+import { NotFoundPage } from 'pages/404/NotFoundPage';
+import React, { lazy, Suspense, useLayoutEffect } from 'react';
+import { Col } from 'react-bootstrap';
+import { Redirect, Switch, useLocation } from 'react-router-dom';
+import AppRoute from 'utils/AppRoute';
+
+import AccessDenied from '../../pages/401/AccessDenied';
+import Login from '../account/Login';
 
 const MapView = lazy(() => import('../properties/map/MapView'));
 const AccessRequestPage = lazy(() => import('../admin/access-request/AccessRequestPage'));

@@ -1,10 +1,10 @@
 import { IParcel } from 'actions/parcelsActions';
 import { Label } from 'components/common/Label';
+import queryString from 'query-string';
 import * as React from 'react';
 import { ReactElement } from 'react';
 import { ListGroup } from 'react-bootstrap';
 import { Link, useLocation } from 'react-router-dom';
-import queryString from 'query-string';
 
 interface IAssociatedBuildings {
   /** the selected property information */

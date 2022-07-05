@@ -1,15 +1,16 @@
-import React from 'react';
+import { useKeycloak } from '@react-keycloak/web';
+import { fireEvent, render, waitFor } from '@testing-library/react';
+import { ILookupCode } from 'actions/ILookupCode';
+import * as API from 'constants/API';
+import { createMemoryHistory } from 'history';
 import noop from 'lodash/noop';
-import { BuildingForm } from '.';
+import React from 'react';
 import { Provider } from 'react-redux';
+import { Router } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { Router } from 'react-router-dom';
-import { createMemoryHistory } from 'history';
-import { useKeycloak } from '@react-keycloak/web';
-import * as API from 'constants/API';
-import { ILookupCode } from 'actions/ILookupCode';
-import { fireEvent, render, waitFor } from '@testing-library/react';
+
+import { BuildingForm } from '.';
 
 const mockStore = configureMockStore([thunk]);
 const history = createMemoryHistory();

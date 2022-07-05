@@ -6,12 +6,13 @@ import {
   TextArea,
 } from 'components/common/form';
 import { Col, Row } from 'components/flex';
-import { useFormikContext, getIn } from 'formik';
+import { getIn, useFormikContext } from 'formik';
 import React from 'react';
+
 import { IProjectForm } from '../interfaces';
 import { ProjectNote } from '../notes';
-import { getNumber, calcGainBeforeSpl, calcNetProceeds } from './utils';
 import * as styled from './styled';
+import { calcGainBeforeSpl, calcNetProceeds, getNumber } from './utils';
 
 interface IProjectCloseOutProps {}
 

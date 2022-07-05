@@ -1,10 +1,11 @@
-import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
-import { SidebarContextType } from './useQueryParamSideBar';
-import { fetchBuildingDetail } from 'store/slices/hooks/parcelsActionCreator';
-import React from 'react';
 import { IBuilding } from 'actions/parcelsActions';
 import { useAsyncError } from 'hooks/useAsyncError';
+import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
+import React from 'react';
 import { useAppDispatch } from 'store';
+import { fetchBuildingDetail } from 'store/slices/hooks/parcelsActionCreator';
+
+import { SidebarContextType } from './useQueryParamSideBar';
 
 interface IUseSideBarBuildingLoader {
   /** whether or not the sidebar should be displayed */

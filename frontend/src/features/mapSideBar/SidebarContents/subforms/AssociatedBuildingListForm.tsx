@@ -1,7 +1,9 @@
 import './AssociatedBuildingListForm.scss';
-import React from 'react';
-import { Col, Row, Form } from 'react-bootstrap';
+
 import { FormikTable } from 'features/projects/common';
+import React from 'react';
+import { Col, Form, Row } from 'react-bootstrap';
+
 import { getAssociatedBuildingsCols } from '../../../properties/components/forms/subforms/columns';
 
 interface ITenancyProps {

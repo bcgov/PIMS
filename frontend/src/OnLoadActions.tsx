@@ -1,8 +1,8 @@
-import React from 'react';
 import GenericModal from 'components/common/GenericModal';
-import { useHistory } from 'react-router-dom';
-import { PARCEL_STORAGE_NAME, clearStorage, isStorageInUse } from 'utils/storageUtils';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+import React from 'react';
+import { useHistory } from 'react-router-dom';
+import { clearStorage, isStorageInUse, PARCEL_STORAGE_NAME } from 'utils/storageUtils';
 
 const OnLoadActions: React.FC = () => {
   const history = useHistory();

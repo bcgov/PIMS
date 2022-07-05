@@ -1,20 +1,22 @@
-import React, { useEffect } from 'react';
-import { Navbar, Container, Row, Col, ButtonToolbar, Button } from 'react-bootstrap';
-import { Form, Input, Select, SelectOption } from '../../../components/common/form';
-import { fetchUserDetail, getUpdateUserAction } from 'store/slices/hooks/usersActionCreator';
-import { Formik, Field } from 'formik';
-import { UserUpdateSchema } from 'utils/YupSchema';
+import './EditUserPage.scss';
+
+import { ILookupCode } from 'actions/ILookupCode';
+import { Label } from 'components/common/Label';
+import TooltipWrapper from 'components/common/TooltipWrapper';
 import { IUserDetailParams } from 'constants/API';
 import * as API from 'constants/API';
-import './EditUserPage.scss';
-import { Label } from 'components/common/Label';
-import { useHistory } from 'react-router-dom';
-import TooltipWrapper from 'components/common/TooltipWrapper';
-import { formatApiDateTime } from 'utils';
-import useCodeLookups from 'hooks/useLookupCodes';
-import { ILookupCode } from 'actions/ILookupCode';
 import { AUTHORIZATION_URL } from 'constants/strings';
+import { Field, Formik } from 'formik';
+import useCodeLookups from 'hooks/useLookupCodes';
+import React, { useEffect } from 'react';
+import { Button, ButtonToolbar, Col, Container, Navbar, Row } from 'react-bootstrap';
+import { useHistory } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'store';
+import { fetchUserDetail, getUpdateUserAction } from 'store/slices/hooks/usersActionCreator';
+import { formatApiDateTime } from 'utils';
+import { UserUpdateSchema } from 'utils/YupSchema';
+
+import { Form, Input, Select, SelectOption } from '../../../components/common/form';
 
 interface IEditUserPageProps extends IUserDetailParams {
   match?: any;
@@ -37,6 +39,7 @@ const EditUserPage = (props: IEditUserPageProps) => {
     label: code.name,
     value: code.id.toString(),
     selected: !!user.roles.find(x => x.id === code.id.toString()),
+    parent: '',
   });
 
   const selectAgencies = agencies.map(c => mapLookupCode(c));

@@ -1,14 +1,15 @@
+import variables from '_variables.module.scss';
+import clsx from 'classnames';
+import TooltipWrapper from 'components/common/TooltipWrapper';
+import * as L from 'leaflet';
 import * as React from 'react';
+import { useEffect } from 'react';
 import { Button } from 'react-bootstrap';
 import { FaLayerGroup } from 'react-icons/fa';
 import Control from 'react-leaflet-control';
 import styled from 'styled-components';
-import clsx from 'classnames';
+
 import LayersTree from './LayersTree';
-import * as L from 'leaflet';
-import { useEffect } from 'react';
-import TooltipWrapper from 'components/common/TooltipWrapper';
-import variables from '_variables.module.scss';
 
 const LayersContainer = styled.div`
   margin-right: -10px;

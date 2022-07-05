@@ -1,14 +1,15 @@
-import EditAdminArea from './EditAdminArea';
 import { render } from '@testing-library/react';
-import React from 'react';
-import configureMockStore from 'redux-mock-store';
-import { createMemoryHistory } from 'history';
-import thunk from 'redux-thunk';
-import { Provider } from 'react-redux';
-import * as reducerTypes from 'constants/reducerTypes';
-import { Router } from 'react-router';
-import * as API from 'constants/API';
 import { ILookupCode } from 'actions/ILookupCode';
+import * as API from 'constants/API';
+import * as reducerTypes from 'constants/reducerTypes';
+import { createMemoryHistory } from 'history';
+import React from 'react';
+import { Provider } from 'react-redux';
+import { Router } from 'react-router';
+import configureMockStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
+
+import EditAdminArea from './EditAdminArea';
 
 const mockStore = configureMockStore([thunk]);
 

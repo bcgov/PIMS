@@ -1,7 +1,7 @@
+import { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import CustomAxios from 'customAxios';
-import { AxiosResponse, AxiosError, AxiosRequestConfig } from 'axios';
-import { showLoading, hideLoading } from 'react-redux-loading-bar';
-import { Dispatch, AnyAction } from 'redux';
+import { hideLoading, showLoading } from 'react-redux-loading-bar';
+import { AnyAction, Dispatch } from 'redux';
 import { storeError, storeRequest, storeSuccess } from 'store';
 import { error, request, success } from 'store/slices/hooks';
 

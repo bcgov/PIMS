@@ -1,34 +1,35 @@
-import React, { useEffect, useMemo, useCallback } from 'react';
-import { Container, Button } from 'react-bootstrap';
-import { getUsersAction } from 'store/slices/hooks/usersActionCreator';
-import { toFilteredApiPaginateParams } from 'utils/CommonFunctions';
-import { IGenericNetworkAction } from 'store';
-import * as actionTypes from 'constants/actionTypes';
-import { IUser, IUsersFilter } from 'interfaces';
-import { IUserRecord } from './interfaces/IUserRecord';
-import { UsersFilterBar } from './components/UsersFilterBar';
-import * as API from 'constants/API';
+import variables from '_variables.module.scss';
+import TooltipWrapper from 'components/common/TooltipWrapper';
 import { Table } from 'components/Table';
-import { columnDefinitions } from './constants';
-import { formatApiDateTime, generateMultiSortCriteria } from 'utils';
-import styled from 'styled-components';
+import * as actionTypes from 'constants/actionTypes';
+import * as API from 'constants/API';
+import { IPaginateParams } from 'constants/API';
+import { ENVIRONMENT } from 'constants/environment';
 import useCodeLookups from 'hooks/useLookupCodes';
+import { IUser, IUsersFilter } from 'interfaces';
 import { isEmpty } from 'lodash';
 import _ from 'lodash';
-import variables from '_variables.module.scss';
-import { FaFileExcel } from 'react-icons/fa';
-import TooltipWrapper from 'components/common/TooltipWrapper';
-import download from 'utils/download';
 import queryString from 'query-string';
-import { ENVIRONMENT } from 'constants/environment';
-import { IPaginateParams } from 'constants/API';
+import React, { useCallback, useEffect, useMemo } from 'react';
+import { Button, Container } from 'react-bootstrap';
+import { FaFileExcel } from 'react-icons/fa';
+import { IGenericNetworkAction } from 'store';
 import { useAppDispatch, useAppSelector } from 'store';
+import { getUsersAction } from 'store/slices/hooks/usersActionCreator';
 import {
   storeUserFilter,
   storeUserPageIndex,
   storeUserPageQuantity,
   storeUserSort,
 } from 'store/slices/userSlice';
+import styled from 'styled-components';
+import { formatApiDateTime, generateMultiSortCriteria } from 'utils';
+import { toFilteredApiPaginateParams } from 'utils/CommonFunctions';
+import download from 'utils/download';
+
+import { UsersFilterBar } from './components/UsersFilterBar';
+import { columnDefinitions } from './constants';
+import { IUserRecord } from './interfaces/IUserRecord';
 
 const TableContainer = styled(Container)`
   margin-top: 10px;

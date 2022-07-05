@@ -1,21 +1,22 @@
+import { IProject, IProjectTask, IStepProps } from 'features/projects/interfaces';
+import { Formik, setIn, validateYupSchema, yupToFormErrors } from 'formik';
+import { WorkflowStatus } from 'hooks/api/projects';
+import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { Container, Form } from 'react-bootstrap';
+import { useHistory } from 'react-router-dom';
+
+import { StepErrorSummary, useProject, useStepForm } from '../../common';
+import { fetchProjectTasks } from '../../common/projectsActionCreator';
 import { ReviewApproveActions } from '../../dispose';
-import { Formik, yupToFormErrors, setIn, validateYupSchema } from 'formik';
 import {
-  UpdateInfoStepYupSchema,
-  ProjectDraftStepYupSchema,
-  SelectProjectPropertiesStepYupSchema,
   ApproveExemptionRequestSchema,
   DenyProjectYupSchema,
+  ProjectDraftStepYupSchema,
+  SelectProjectPropertiesStepYupSchema,
+  UpdateInfoStepYupSchema,
 } from '../../dispose/forms/disposalYupSchema';
-import { fetchProjectTasks } from '../../common/projectsActionCreator';
-import _ from 'lodash';
-import { useStepForm, useProject, StepErrorSummary } from '../../common';
-import { IStepProps, IProject, IProjectTask } from 'features/projects/interfaces';
 import { ReviewApproveForm } from '..';
-import { useHistory } from 'react-router-dom';
-import { WorkflowStatus } from 'hooks/api/projects';
 
 export const ReviewApproveStepSchema = UpdateInfoStepYupSchema.concat(
   ProjectDraftStepYupSchema,

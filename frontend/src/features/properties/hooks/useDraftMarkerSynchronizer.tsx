@@ -1,12 +1,12 @@
-import * as React from 'react';
-import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
-import debounce from 'lodash/debounce';
-import { useFormikContext, getIn } from 'formik';
-import { useCallback } from 'react';
-import { useAppDispatch, useAppSelector } from 'store';
-import _ from 'lodash';
 import { PointFeature } from 'components/maps/types';
 import { PropertyTypes } from 'constants/propertyTypes';
+import { getIn, useFormikContext } from 'formik';
+import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
+import _ from 'lodash';
+import debounce from 'lodash/debounce';
+import * as React from 'react';
+import { useCallback } from 'react';
+import { useAppDispatch, useAppSelector } from 'store';
 import { storeDraftProperties } from 'store/slices/parcelSlice';
 
 /**

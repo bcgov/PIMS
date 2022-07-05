@@ -1,10 +1,11 @@
+import { ParentSelect } from 'components/common/form/ParentSelect';
+import { Claims } from 'constants/claims';
 import { useFormikContext } from 'formik';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import React, { useEffect } from 'react';
+
 import { Select, SelectOption } from '../../../components/common/form';
 import { IPropertyFilter } from './IPropertyFilter';
-import { ParentSelect } from 'components/common/form/ParentSelect';
-import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
-import { Claims } from 'constants/claims';
 
 interface IPropertyFilterAgencyOptions {
   disabled?: boolean;

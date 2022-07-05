@@ -1,8 +1,10 @@
+import './HelpSubmitBox.scss';
+
 import * as React from 'react';
-import { TicketTypes, helpTickets } from '../constants/HelpText';
 import { Form } from 'react-bootstrap';
 import styled from 'styled-components';
-import './HelpSubmitBox.scss';
+
+import { helpTickets, TicketTypes } from '../constants/HelpText';
 
 interface IHelpSubmitBoxProps {
   /** the keycloak user display name */

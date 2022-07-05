@@ -1,7 +1,7 @@
+import { FastInput, Form, InputGroup } from 'components/common/form';
+import { FormikProps } from 'formik';
 import { useCallback } from 'react';
 import React from 'react';
-import { FormikProps } from 'formik';
-import { Form, InputGroup, FastInput } from 'components/common/form';
 
 interface LandProps {
   nameSpace?: string;

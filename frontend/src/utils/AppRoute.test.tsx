@@ -1,9 +1,10 @@
+import { createMemoryHistory } from 'history';
 import React from 'react';
-import AppRoute from './AppRoute';
 import ReactDOM from 'react-dom';
 import { act } from 'react-dom/test-utils';
 import { Router } from 'react-router-dom';
-import { createMemoryHistory } from 'history';
+
+import AppRoute from './AppRoute';
 
 const history = createMemoryHistory();
 

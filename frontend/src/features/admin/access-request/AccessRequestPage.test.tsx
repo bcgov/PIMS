@@ -1,23 +1,24 @@
-import React from 'react';
-import { createMemoryHistory } from 'history';
-import { Router } from 'react-router-dom';
-import { mount } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
-import Enzyme from 'enzyme';
-import { Select } from '../../../components/common/form';
-import { Formik } from 'formik';
-import configureMockStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
-import { Provider } from 'react-redux';
-import AccessRequestPage from './AccessRequestPage';
+import { useKeycloak } from '@react-keycloak/web';
+import { fireEvent, render, waitFor } from '@testing-library/react';
 import { ILookupCode } from 'actions/ILookupCode';
-import { IGenericNetworkAction, initialAccessRequestState } from 'store';
-import * as API from 'constants/API';
-import { render, fireEvent, waitFor } from '@testing-library/react';
-import { fillInput } from 'utils/testUtils';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
-import { useKeycloak } from '@react-keycloak/web';
+import * as API from 'constants/API';
+import { mount } from 'enzyme';
+import Enzyme from 'enzyme';
+import Adapter from 'enzyme-adapter-react-16';
+import { Formik } from 'formik';
+import { createMemoryHistory } from 'history';
+import React from 'react';
+import { Provider } from 'react-redux';
+import { Router } from 'react-router-dom';
+import configureMockStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
+import { IGenericNetworkAction, initialAccessRequestState } from 'store';
+import { fillInput } from 'utils/testUtils';
+
+import { Select } from '../../../components/common/form';
+import AccessRequestPage from './AccessRequestPage';
 
 jest.mock('@react-keycloak/web');
 (useKeycloak as jest.Mock).mockReturnValue({

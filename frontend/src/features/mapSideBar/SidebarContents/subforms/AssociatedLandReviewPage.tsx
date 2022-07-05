@@ -1,35 +1,35 @@
 import './AssociatedLandReviewPage.scss';
 
+import { LeasedLandTypes } from 'actions/parcelsActions';
 import {
+  Check,
+  FastCurrencyInput,
   FastInput,
+  FastSelect,
   Input,
   InputGroup,
-  FastCurrencyInput,
-  Check,
-  FastSelect,
   TextArea,
 } from 'components/common/form';
-import React, { useCallback, useState } from 'react';
-import { Col, Container, Row, Button, Form } from 'react-bootstrap';
-import { useFormikContext, getIn } from 'formik';
-import { Label } from 'components/common/Label';
-import { FaEdit } from 'react-icons/fa';
-import { LandSvg } from 'components/common/Icons';
-import AddressForm from 'features/properties/components/forms/subforms/AddressForm';
-import { noop } from 'lodash';
-import { useFormStepper } from 'components/common/form/StepForm';
-import { AssociatedLandSteps } from 'constants/propertySteps';
-import { formatMoney } from 'utils/numberFormatUtils';
-import { LeasedLandTypes } from 'actions/parcelsActions';
-import { formatFiscalYear } from 'utils';
 import { ParentSelect } from 'components/common/form/ParentSelect';
-import styled from 'styled-components';
-import { LandSchema } from 'utils/YupSchema';
-import { indexOfFinancial } from 'features/properties/components/forms/subforms/EvaluationForm';
+import { useFormStepper } from 'components/common/form/StepForm';
+import { LandSvg } from 'components/common/Icons';
+import { Label } from 'components/common/Label';
+import { ProjectNumberLink } from 'components/maps/leaflet/InfoSlideOut/ProjectNumberLink';
 import { EvaluationKeys } from 'constants/evaluationKeys';
 import { FiscalKeys } from 'constants/fiscalKeys';
+import { AssociatedLandSteps } from 'constants/propertySteps';
+import AddressForm from 'features/properties/components/forms/subforms/AddressForm';
+import { indexOfFinancial } from 'features/properties/components/forms/subforms/EvaluationForm';
+import { getIn, useFormikContext } from 'formik';
+import { noop } from 'lodash';
 import moment from 'moment';
-import { ProjectNumberLink } from 'components/maps/leaflet/InfoSlideOut/ProjectNumberLink';
+import React, { useCallback, useState } from 'react';
+import { Button, Col, Container, Form, Row } from 'react-bootstrap';
+import { FaEdit } from 'react-icons/fa';
+import styled from 'styled-components';
+import { formatFiscalYear } from 'utils';
+import { formatMoney } from 'utils/numberFormatUtils';
+import { LandSchema } from 'utils/YupSchema';
 
 interface IReviewProps {
   nameSpace?: string;

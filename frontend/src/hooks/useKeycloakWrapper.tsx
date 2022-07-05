@@ -1,9 +1,9 @@
 import { useKeycloak } from '@react-keycloak/web';
-import { Roles } from 'constants/roles';
-import { Claims } from 'constants/claims';
-import _ from 'lodash';
 import { IProperty } from 'actions/parcelsActions';
+import { Claims } from 'constants/claims';
 import { PropertyTypes } from 'constants/propertyTypes';
+import { Roles } from 'constants/roles';
+import _ from 'lodash';
 
 /**
  * IUserInfo interface, represents the userinfo provided by keycloak.
