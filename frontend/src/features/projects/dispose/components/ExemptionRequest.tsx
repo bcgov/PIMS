@@ -1,11 +1,11 @@
 import './ExemptionRequest.scss';
 
-import * as React from 'react';
-import { Form } from 'react-bootstrap';
 import { Check } from 'components/common/form';
 import { TextArea } from 'components/common/form';
 import TooltipIcon from 'components/common/TooltipIcon';
-import { useFormikContext, getIn } from 'formik';
+import { getIn, useFormikContext } from 'formik';
+import * as React from 'react';
+import { Form } from 'react-bootstrap';
 
 export interface IProjectExemptionProps {
   /** the label of the ExemptionRequest checkbox */

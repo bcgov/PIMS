@@ -1,19 +1,20 @@
-import React from 'react';
+import { useKeycloak } from '@react-keycloak/web';
+import { act, cleanup, fireEvent, render, waitFor } from '@testing-library/react';
+import { ILookupCode } from 'actions/ILookupCode';
+import axios from 'axios';
+import MockAdapter from 'axios-mock-adapter';
+import * as API from 'constants/API';
+import { Formik } from 'formik';
 import { createMemoryHistory } from 'history';
-import configureMockStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
+import { noop } from 'lodash';
+import React from 'react';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
-import { ILookupCode } from 'actions/ILookupCode';
-import * as API from 'constants/API';
-import MockAdapter from 'axios-mock-adapter';
-import axios from 'axios';
+import configureMockStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
+
 import { IFilterBarState } from '../../common/components/FilterBar';
-import { Formik } from 'formik';
 import { PropertyListViewSelect } from '../../common/components/PropertyListViewSelect';
-import { useKeycloak } from '@react-keycloak/web';
-import { render, fireEvent, cleanup, waitFor, act } from '@testing-library/react';
-import { noop } from 'lodash';
 
 jest.mock('@react-keycloak/web');
 (useKeycloak as jest.Mock).mockReturnValue({

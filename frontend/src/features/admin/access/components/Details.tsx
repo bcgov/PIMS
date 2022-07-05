@@ -1,6 +1,7 @@
-import { IAccessRequestModel } from '../interfaces';
-import { Container, Modal, Button, Form, Row, Col } from 'react-bootstrap';
 import React from 'react';
+import { Button, Col, Container, Form, Modal, Row } from 'react-bootstrap';
+
+import { IAccessRequestModel } from '../interfaces';
 
 interface IProps {
   request: IAccessRequestModel;

@@ -1,4 +1,5 @@
 import React from 'react';
+
 import * as styled from './styled';
 
 export interface ITabsProps extends React.HTMLAttributes<HTMLDivElement> {

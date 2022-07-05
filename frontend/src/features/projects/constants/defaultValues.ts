@@ -1,4 +1,5 @@
 import { getCurrentFiscalYear } from 'utils/utils';
+
 import { IProject } from '../interfaces';
 
 export const defaultProject = (): IProject => ({

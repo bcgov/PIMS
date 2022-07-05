@@ -1,9 +1,10 @@
-import BasemapToggle, { BaseLayer } from './BasemapToggle';
+import { mount } from 'enzyme';
+import Enzyme from 'enzyme';
+import Adapter from 'enzyme-adapter-react-16';
 import React from 'react';
 import renderer from 'react-test-renderer';
-import { mount } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
-import Enzyme from 'enzyme';
+
+import BasemapToggle, { BaseLayer } from './BasemapToggle';
 
 Enzyme.configure({ adapter: new Adapter() });
 

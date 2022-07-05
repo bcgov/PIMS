@@ -1,5 +1,5 @@
-import * as React from 'react';
 import { noop } from 'lodash';
+import * as React from 'react';
 
 const FilterContext = React.createContext<{
   changed: boolean;

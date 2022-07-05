@@ -22,7 +22,7 @@ COPY core/*.csproj core/
 
 RUN dotnet restore
 ENV PATH="$PATH:/root/.dotnet/tools"
-RUN dotnet tool install --global dotnet-ef --version 5.0.0
+RUN dotnet tool install --global dotnet-ef --version 5.0.17
 # Copy everything else and build
 COPY . .
 WORKDIR /src/api

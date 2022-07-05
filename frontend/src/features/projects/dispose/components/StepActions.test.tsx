@@ -1,8 +1,9 @@
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+import { noop } from 'lodash';
 import React from 'react';
 import renderer from 'react-test-renderer';
+
 import { StepActions } from './StepActions';
-import { noop } from 'lodash';
-import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 
 jest.mock('hooks/useKeycloakWrapper');
 (useKeycloakWrapper as jest.Mock).mockReturnValue({ hasClaim: () => true });

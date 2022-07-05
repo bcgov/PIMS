@@ -1,8 +1,9 @@
-import React from 'react';
-import { BuildingValuationForm } from './BuildingValuationForm';
 import { render } from '@testing-library/react';
-import { noop } from 'lodash';
 import { Formik } from 'formik';
+import { noop } from 'lodash';
+import React from 'react';
+
+import { BuildingValuationForm } from './BuildingValuationForm';
 
 const form = (
   <Formik initialValues={{ assessedLand: '' }} onSubmit={noop}>

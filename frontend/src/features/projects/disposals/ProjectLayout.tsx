@@ -1,8 +1,8 @@
 import React from 'react';
 import { Container } from 'react-bootstrap';
 
-import * as styled from './styled';
 import { DisposalProject } from '.';
+import * as styled from './styled';
 
 interface IProjectLayoutProps extends React.HtmlHTMLAttributes<React.ReactNode> {}
 

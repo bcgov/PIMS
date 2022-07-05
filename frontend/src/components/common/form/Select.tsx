@@ -1,9 +1,11 @@
+import './Select.scss';
+
+import classNames from 'classnames';
+import { getIn, useFormikContext } from 'formik';
 import React from 'react';
 import { Form, FormControlProps } from 'react-bootstrap';
-import { useFormikContext, getIn } from 'formik';
+
 import { DisplayError } from './DisplayError';
-import classNames from 'classnames';
-import './Select.scss';
 
 type RequiredAttributes = {
   /** The field name */
@@ -45,7 +47,7 @@ export type SelectOption = {
   selected?: boolean;
   code?: string;
   parentId?: string | number;
-  parent?: string;
+  parent: string;
 };
 
 export type SelectOptions = SelectOption[];

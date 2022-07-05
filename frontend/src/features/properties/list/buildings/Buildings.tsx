@@ -1,5 +1,6 @@
+import { ColumnWithProps, Table } from 'components/Table';
 import * as React from 'react';
-import { Table, ColumnWithProps } from 'components/Table';
+
 import { IProperty } from '..';
 
 /**

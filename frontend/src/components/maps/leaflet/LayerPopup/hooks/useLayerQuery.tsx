@@ -1,21 +1,21 @@
-import {
-  FeatureCollection,
-  Geometry,
-  GeoJsonProperties,
-  Feature,
-  Polygon,
-  MultiPolygon,
-} from 'geojson';
 import axios, { AxiosError } from 'axios';
-import { LatLng } from 'leaflet';
-import { useCallback, Dispatch } from 'react';
-import parcelLayerDataSlice, { saveParcelLayerData } from 'store/slices/parcelLayerDataSlice';
-import { storeError, useAppSelector } from 'store';
-import { toast } from 'react-toastify';
 import { layerData } from 'constants/toasts';
-import * as rax from 'retry-axios';
+import {
+  Feature,
+  FeatureCollection,
+  GeoJsonProperties,
+  Geometry,
+  MultiPolygon,
+  Polygon,
+} from 'geojson';
+import { LatLng } from 'leaflet';
 import polylabel from 'polylabel';
+import { Dispatch, useCallback } from 'react';
+import { toast } from 'react-toastify';
+import * as rax from 'retry-axios';
+import { storeError, useAppSelector } from 'store';
 import { error } from 'store/slices/hooks';
+import parcelLayerDataSlice, { saveParcelLayerData } from 'store/slices/parcelLayerDataSlice';
 
 const MAX_RETRIES = 2;
 const wfsAxios = () => {

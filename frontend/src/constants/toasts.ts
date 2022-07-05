@@ -1,5 +1,6 @@
-import { QUERY_MAP, MAP_UNAVAILABLE_STR } from './strings';
 import { toast } from 'react-toastify';
+
+import { MAP_UNAVAILABLE_STR, QUERY_MAP } from './strings';
 
 /**
  * The purpose of this file is to centralize the toasts in use in the application in one location. This should allow us to minimize duplication of toast messages using toastIds. https://fkhadra.github.io/react-toastify/prevent-duplicate

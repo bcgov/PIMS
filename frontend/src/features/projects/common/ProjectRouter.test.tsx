@@ -1,20 +1,21 @@
-import React from 'react';
+import { useKeycloak } from '@react-keycloak/web';
+import { render } from '@testing-library/react';
+import axios from 'axios';
+import MockAdapter from 'axios-mock-adapter';
+import * as actionTypes from 'constants/actionTypes';
+import Claims from 'constants/claims';
 import * as reducerTypes from 'constants/reducerTypes';
 import { createMemoryHistory } from 'history';
+import React from 'react';
+import { Provider } from 'react-redux';
+import { match as Match, Router } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { Provider } from 'react-redux';
-import { Router, match as Match } from 'react-router-dom';
-import * as actionTypes from 'constants/actionTypes';
-import useStepForm from '../common/hooks/useStepForm';
-import { render } from '@testing-library/react';
+
 import useProject from '../common/hooks/useProject';
+import useStepForm from '../common/hooks/useStepForm';
 import { mockWorkflow } from '../dispose/testUtils';
 import ProjectRouter from './ProjectRouter';
-import { useKeycloak } from '@react-keycloak/web';
-import Claims from 'constants/claims';
-import MockAdapter from 'axios-mock-adapter';
-import axios from 'axios';
 
 const mockStore = configureMockStore([thunk]);
 const history = createMemoryHistory();
@@ -134,28 +135,28 @@ describe('project router', () => {
   });
 
   it('displays select properties page at correct route', () => {
-    history.location.pathname = '/projects/assess/properties/update';
+    history.push('/projects/assess/properties/update');
     const { getByText } = render(uiElement);
     const stepHeader = getByText('Search and select 1 or more properties for the project');
     expect(stepHeader).toBeVisible();
   });
 
   it('displays review approval form at correct route', () => {
-    history.location.pathname = '/projects/assess/properties';
+    history.push('/projects/assess/properties');
     const { getByText } = render(uiElement);
     const stepHeader = getByText('Project Application Review');
     expect(stepHeader).toBeVisible();
   });
 
   it('displays summary page at the correct route', () => {
-    history.location.pathname = '/projects/summary';
+    history.push('/projects/summary');
     const { getByText } = render(uiElement);
     const stepHeader = getByText('Project No.:');
     expect(stepHeader).toBeVisible();
   });
 
   it('404s if given an invalid dispose route', () => {
-    history.location.pathname = '/projects/invalid';
+    history.push('/projects/invalid');
     render(uiElement);
     expect(history.location.pathname).toBe('/page-not-found');
   });

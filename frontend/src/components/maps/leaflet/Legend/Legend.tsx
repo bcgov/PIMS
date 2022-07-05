@@ -1,6 +1,7 @@
-import * as React from 'react';
-import { Row, Col, Card, Image } from 'react-bootstrap';
 import './Legend.scss';
+
+import * as React from 'react';
+import { Card, Col, Image, Row } from 'react-bootstrap';
 
 export const Legend = () => {
   const keys = React.useMemo(() => {

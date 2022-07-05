@@ -1,11 +1,12 @@
 import { FastDatePicker } from 'components/common/form';
-import { useFormikContext } from 'formik';
-import React from 'react';
-import { ProjectNote } from '../notes';
-import { IProjectForm } from '../interfaces';
-import * as styled from './styled';
 import { Col, Row } from 'components/flex';
+import { useFormikContext } from 'formik';
 import { Workflow, WorkflowStatus } from 'hooks/api/projects';
+import React from 'react';
+
+import { IProjectForm } from '../interfaces';
+import { ProjectNote } from '../notes';
+import * as styled from './styled';
 
 export interface IProjectERPCompleteProps {
   disabled?: boolean;

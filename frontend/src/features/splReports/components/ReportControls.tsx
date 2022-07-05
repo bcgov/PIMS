@@ -1,18 +1,19 @@
-import * as React from 'react';
-import { Formik, Form } from 'formik';
-import { Input, Button, Check, SelectOption } from 'components/common/form';
-import { FaFileExcel, FaFileAlt, FaSyncAlt } from 'react-icons/fa';
-import { Row, Form as BSForm } from 'react-bootstrap';
-import { IReport } from '../interfaces';
-import _ from 'lodash';
-import { formatApiDateTime, generateUtcNowDateTime } from 'utils';
-import styled from 'styled-components';
-import { Prompt } from 'react-router-dom';
-import TooltipWrapper from 'components/common/TooltipWrapper';
-import AddReportControl from './AddReportControl';
-import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
-import { Claims } from '../../../constants/';
 import variables from '_variables.module.scss';
+import { Button, Check, Input, SelectOption } from 'components/common/form';
+import TooltipWrapper from 'components/common/TooltipWrapper';
+import { Form, Formik } from 'formik';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+import _ from 'lodash';
+import * as React from 'react';
+import { Form as BSForm, Row } from 'react-bootstrap';
+import { FaFileAlt, FaFileExcel, FaSyncAlt } from 'react-icons/fa';
+import { Prompt } from 'react-router-dom';
+import styled from 'styled-components';
+import { formatApiDateTime, generateUtcNowDateTime } from 'utils';
+
+import { Claims } from '../../../constants/';
+import { IReport } from '../interfaces';
+import AddReportControl from './AddReportControl';
 
 interface IReportControlsProps {
   /** the active report being displayed, snapshot data is displayed based on this report */
@@ -37,6 +38,7 @@ export const defaultReport: IReport = {
   reportTypeId: 0,
   isFinal: false,
   to: generateUtcNowDateTime(),
+  rowVersion: '',
 };
 
 /** get all of the other reports that have a 'To' date before this date */
@@ -70,6 +72,7 @@ const reportsToOptions = (reports: IReport[]) => {
   options.unshift({
     value: '',
     label: 'Choose a report',
+    parent: '',
   });
   return options;
 };

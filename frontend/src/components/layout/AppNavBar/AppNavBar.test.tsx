@@ -1,19 +1,20 @@
-import React from 'react';
-import { render, fireEvent, cleanup } from '@testing-library/react';
-import { createMemoryHistory } from 'history';
-import { Router } from 'react-router-dom';
-import { mount } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
-import Enzyme from 'enzyme';
+import { useKeycloak } from '@react-keycloak/web';
+import { cleanup, fireEvent, render } from '@testing-library/react';
+import Claims from 'constants/claims';
 import * as reducerTypes from 'constants/reducerTypes';
+import Roles from 'constants/roles';
+import { mount } from 'enzyme';
+import Enzyme from 'enzyme';
+import Adapter from 'enzyme-adapter-react-16';
+import { mountToJson } from 'enzyme-to-json';
+import { createMemoryHistory } from 'history';
+import React from 'react';
+import { Provider } from 'react-redux';
+import { Router } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { Provider } from 'react-redux';
-import { useKeycloak } from '@react-keycloak/web';
-import { mountToJson } from 'enzyme-to-json';
+
 import AppNavBar from './AppNavBar';
-import Claims from 'constants/claims';
-import Roles from 'constants/roles';
 
 jest.mock('@react-keycloak/web');
 Enzyme.configure({ adapter: new Adapter() });

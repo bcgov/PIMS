@@ -1,13 +1,12 @@
 {
   "name": "frontend",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "dependencies": {
+    "@babel/core": "7.18.5",
     "@bcgov/bc-sans": "1.0.1",
     "@react-keycloak/web": "3.4.0",
     "@reduxjs/toolkit": "1.6.0",
-    "@types/react-bootstrap-typeahead": "3.4.7",
-    "@types/react-responsive": "8.0.2",
     "axios": "0.21.3",
     "bootstrap": "4.4.1",
     "classnames": "2.2.6",
@@ -17,15 +16,15 @@
     "http-proxy-middleware": "0.21.0",
     "keycloak-js": "15.0.2",
     "leaflet": "1.8.0",
-    "polylabel": "1.1.0",
     "lodash": "4.17.21",
     "moment": "2.29.3",
     "moment-timezone": "0.5.31",
+    "polylabel": "1.1.0",
     "query-string": "6.12.1",
     "react": "16.12.0",
     "react-app-polyfill": "1.0.5",
     "react-bootstrap": "1.0.0",
-    "react-bootstrap-typeahead": "5.1.2",
+    "react-bootstrap-typeahead": "3.4.7",
     "react-click-away-listener": "1.1.0",
     "react-datepicker": "4.8.0",
     "react-dom": "16.12.0",
@@ -56,7 +55,6 @@
     "text-mask-addons": "3.8.0",
     "tiles-in-bbox": "1.0.2",
     "tiny-invariant": "1.1.0",
-    "typescript": "4.7.2",
     "yup": "0.32.11"
   },
   "devDependencies": {
@@ -107,7 +105,9 @@
     "enzyme-adapter-react-16": "1.15.2",
     "enzyme-to-json": "3.4.4",
     "eslint-config-prettier": "6.7.0",
+    "eslint-plugin-flowtype": "8.0.3",
     "eslint-plugin-prettier": "3.1.1",
+    "eslint-plugin-simple-import-sort": "7.0.0",
     "husky": "4.2.3",
     "jest-sonar-reporter": "2.0.0",
     "jest-styled-components": "7.0.2",
@@ -119,7 +119,8 @@
     "react-styleguidist": "11.1.2",
     "react-test-renderer": "16.12.0",
     "redux-devtools-extension": "2.13.9",
-    "redux-mock-store": "1.5.4"
+    "redux-mock-store": "1.5.4",
+    "typescript": "4.7.2"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -150,7 +151,7 @@
     ],
     "coverageThreshold": {
       "global": {
-        "branches": 45,
+        "branches": 40,
         "functions": 45,
         "lines": 50,
         "statements": 50
@@ -164,11 +165,18 @@
     ]
   },
   "eslintConfig": {
+    "parser": "@typescript-eslint/parser",
     "extends": [
       "react-app",
       "plugin:prettier/recommended"
     ],
-    "rules": {}
+    "plugins": [
+      "simple-import-sort"
+    ],
+    "rules": {
+      "simple-import-sort/imports": "error",
+      "simple-import-sort/exports": "error"
+    }
   },
   "husky": {
     "hooks": {

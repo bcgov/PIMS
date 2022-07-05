@@ -1,10 +1,12 @@
-import React, { useEffect } from 'react';
 import './Check.scss';
-import { Form, FormCheckProps } from 'react-bootstrap';
-import { useFormikContext, getIn } from 'formik';
-import { DisplayError } from './DisplayError';
+
 import classNames from 'classnames';
+import { getIn, useFormikContext } from 'formik';
+import React, { useEffect } from 'react';
+import { Form, FormCheckProps } from 'react-bootstrap';
+
 import TooltipIcon from '../TooltipIcon';
+import { DisplayError } from './DisplayError';
 
 type RequiredAttributes = {
   /** The field name */

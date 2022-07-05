@@ -1,17 +1,18 @@
-import React from 'react';
-import { CellProps } from 'react-table';
-import { Link } from 'react-router-dom';
-import { formatNumber, mapLookupCode } from 'utils';
-import { IProperty } from '.';
-import { ColumnWithProps } from 'components/Table';
+import { ILookupCode } from 'actions/ILookupCode';
 import { FastCurrencyInput, Input, Select, SelectOption } from 'components/common/form';
 import { TypeaheadField } from 'components/common/form/Typeahead';
-import { EditableMoneyCell, MoneyCell, AsterixMoneyCell } from 'components/Table/MoneyCell';
-import _, { isEqual } from 'lodash';
-import styled from 'styled-components';
+import { ColumnWithProps } from 'components/Table';
+import { AsterixMoneyCell, EditableMoneyCell, MoneyCell } from 'components/Table/MoneyCell';
 import { PropertyTypeCell } from 'components/Table/PropertyTypeCell';
 import { PropertyTypes } from 'constants/index';
-import { ILookupCode } from 'actions/ILookupCode';
+import _, { isEqual } from 'lodash';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { CellProps } from 'react-table';
+import styled from 'styled-components';
+import { formatNumber, mapLookupCode } from 'utils';
+
+import { IProperty } from '.';
 
 export const ColumnDiv = styled.div`
   display: flex;

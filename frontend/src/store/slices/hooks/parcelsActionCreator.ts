@@ -1,22 +1,23 @@
-import { LifecycleToasts } from '../../../customAxios';
-import { showLoading, hideLoading } from 'react-redux-loading-bar';
-import {
-  storePropertyDetail,
-  storeProperties,
-  storeRequest,
-  storeSuccess,
-  storeError,
-} from 'store';
+import { IBuilding, IParcel } from 'actions/parcelsActions';
+import { AxiosError, AxiosResponse } from 'axios';
 import * as actionTypes from 'constants/actionTypes';
 import * as API from 'constants/API';
-import { IParcel, IBuilding } from 'actions/parcelsActions';
 import { ENVIRONMENT } from 'constants/environment';
-import CustomAxios from 'customAxios';
-import { AxiosResponse, AxiosError } from 'axios';
-import * as pimsToasts from 'constants/toasts';
-import _ from 'lodash';
-import { AnyAction, Dispatch } from 'redux';
 import { PropertyTypes } from 'constants/propertyTypes';
+import * as pimsToasts from 'constants/toasts';
+import CustomAxios from 'customAxios';
+import _ from 'lodash';
+import { hideLoading, showLoading } from 'react-redux-loading-bar';
+import { AnyAction, Dispatch } from 'redux';
+import {
+  storeError,
+  storeProperties,
+  storePropertyDetail,
+  storeRequest,
+  storeSuccess,
+} from 'store';
+
+import { LifecycleToasts } from '../../../customAxios';
 import { error, request, success } from '.';
 
 const parcelCreatingToasts: LifecycleToasts = {

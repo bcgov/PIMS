@@ -1,15 +1,16 @@
-import { useFormikContext } from 'formik';
-import React from 'react';
-import { ColumnWithProps, MoneyCell } from 'components/Table';
-import { IProjectForm, IProjectPropertyForm } from '../../interfaces';
-import { Link } from 'react-router-dom';
-import moment from 'moment';
-import { PropertyType } from 'hooks/api';
-import { BuildingSvg, LandSvg } from 'components/common/Icons';
-import _ from 'lodash';
 import { FastSelect } from 'components/common/form';
+import { BuildingSvg, LandSvg } from 'components/common/Icons';
+import { ColumnWithProps, MoneyCell } from 'components/Table';
+import { useFormikContext } from 'formik';
+import { PropertyType } from 'hooks/api';
+import _ from 'lodash';
+import moment from 'moment';
+import React from 'react';
+import { Link } from 'react-router-dom';
 import { LookupType, useLookups } from 'store/hooks';
 import { mapLookupCode } from 'utils';
+
+import { IProjectForm, IProjectPropertyForm } from '../../interfaces';
 
 /**
  * Returns an array of columns to display within a table.

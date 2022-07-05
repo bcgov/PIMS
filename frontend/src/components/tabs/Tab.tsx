@@ -1,5 +1,5 @@
 import React from 'react';
-import { useLocation, useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 
 export interface ITabProps extends React.HTMLAttributes<HTMLLIElement> {
   /** The label to display */

@@ -1,26 +1,27 @@
-import { combineReducers } from 'redux';
+import projectSlice from 'features/projects/common/slices/projectSlice';
+import projectStatusesSlice from 'features/projects/common/slices/projectStatusesSlice';
+import projectTasksSlice from 'features/projects/common/slices/projectTasksSlice';
+import projectWorkflowSlice from 'features/projects/common/slices/projectWorkflowSlice';
+import ProjectWorkflowTasksSlice from 'features/projects/common/slices/projectWorkflowTasksSlice';
+import propertyNameSlice from 'features/properties/common/slices/propertyNameSlice';
 import { loadingBarReducer } from 'react-redux-loading-bar';
+import { combineReducers } from 'redux';
+
 import {
-  leafletMouseSlice,
-  jwtSlice,
-  keycloakReadySlice,
-  mapViewZoomSlice,
-  filterSlice,
-  parcelLayerDataSlice,
   accessRequestSlice,
   agencySlice,
+  filterSlice,
+  jwtSlice,
+  keycloakReadySlice,
+  leafletMouseSlice,
   lookupCodeSlice,
-  parcelSlice,
-  userSlice,
+  mapViewZoomSlice,
   networkSlice,
+  parcelLayerDataSlice,
+  parcelSlice,
   projectSlice as disposalSlice,
+  userSlice,
 } from './slices';
-import projectWorkflowSlice from 'features/projects/common/slices/projectWorkflowSlice';
-import projectSlice from 'features/projects/common/slices/projectSlice';
-import projectTasksSlice from 'features/projects/common/slices/projectTasksSlice';
-import ProjectWorkflowTasksSlice from 'features/projects/common/slices/projectWorkflowTasksSlice';
-import projectStatusesSlice from 'features/projects/common/slices/projectStatusesSlice';
-import propertyNameSlice from 'features/properties/common/slices/propertyNameSlice';
 
 export const reducerObject = {
   loadingBar: loadingBarReducer,

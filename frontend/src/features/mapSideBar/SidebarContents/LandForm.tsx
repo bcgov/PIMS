@@ -1,54 +1,55 @@
+import variables from '_variables.module.scss';
+import { IParcel } from 'actions/parcelsActions';
 import {
   ISteppedFormValues,
+  IStepperTab,
   SteppedForm,
   useFormStepper,
-  IStepperTab,
 } from 'components/common/form/StepForm';
-import { defaultInformationFormValues } from 'features/properties/components/forms/subforms/InformationForm';
-import { useFormikContext, yupToFormErrors } from 'formik';
-import { IGeocoderResponse, useApi } from 'hooks/useApi';
-import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
-import useCodeLookups from 'hooks/useLookupCodes';
-import { noop } from 'lodash';
-import * as React from 'react';
-import { Button } from 'react-bootstrap';
-import styled from 'styled-components';
-import { InventoryPolicy } from '../components/InventoryPolicy';
+import { IStep } from 'components/common/Stepper';
+import { fireMapRefreshEvent } from 'components/maps/hooks/useMapRefreshEvent';
 import * as API from 'constants/API';
+import { EvaluationKeys } from 'constants/evaluationKeys';
+import { FiscalKeys } from 'constants/fiscalKeys';
+import { PropertyTypes } from 'constants/index';
+import { LandSteps } from 'constants/propertySteps';
 import { defaultAddressValues } from 'features/properties/components/forms/subforms/AddressForm';
-import { ParcelIdentificationForm } from './subforms/ParcelIdentificationForm';
-import { LandUsageForm } from './subforms/LandUsageForm';
-import { LandReviewPage } from './subforms/LandReviewPage';
-import { defaultPidPinFormValues } from 'features/properties/components/forms/subforms/PidPinForm';
-import { defaultLandValues } from 'features/properties/components/forms/subforms/LandForm';
+import DebouncedValidation from 'features/properties/components/forms/subforms/DebouncedValidation';
 import {
   filterEmptyFinancials,
   getMergedFinancials,
 } from 'features/properties/components/forms/subforms/EvaluationForm';
-import _ from 'lodash';
-import {
-  ParcelSchema,
-  LandIdentificationSchema,
-  LandUsageSchema,
-  ValuationSchema,
-} from 'utils/YupSchema';
-import { createParcel, updateParcel } from 'store/slices/hooks/parcelsActionCreator';
-import { LandValuationForm } from './subforms/LandValuationForm';
-import { LandSteps } from 'constants/propertySteps';
+import { defaultInformationFormValues } from 'features/properties/components/forms/subforms/InformationForm';
+import { defaultLandValues } from 'features/properties/components/forms/subforms/LandForm';
+import { defaultPidPinFormValues } from 'features/properties/components/forms/subforms/PidPinForm';
+import LastUpdatedBy from 'features/properties/components/LastUpdatedBy';
 import useDraftMarkerSynchronizer from 'features/properties/hooks/useDraftMarkerSynchronizer';
 import useParcelLayerData from 'features/properties/hooks/useParcelLayerData';
-import { IStep } from 'components/common/Stepper';
-import DebouncedValidation from 'features/properties/components/forms/subforms/DebouncedValidation';
-import { IParcel } from 'actions/parcelsActions';
-import { EvaluationKeys } from 'constants/evaluationKeys';
-import { FiscalKeys } from 'constants/fiscalKeys';
-import { stringToNull } from 'utils';
-import variables from '_variables.module.scss';
-import LastUpdatedBy from 'features/properties/components/LastUpdatedBy';
+import { useFormikContext, yupToFormErrors } from 'formik';
+import { IGeocoderResponse, useApi } from 'hooks/useApi';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
-import { PropertyTypes } from 'constants/index';
-import { fireMapRefreshEvent } from 'components/maps/hooks/useMapRefreshEvent';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+import useCodeLookups from 'hooks/useLookupCodes';
+import { noop } from 'lodash';
+import _ from 'lodash';
+import * as React from 'react';
+import { Button } from 'react-bootstrap';
 import { useAppDispatch } from 'store';
+import { createParcel, updateParcel } from 'store/slices/hooks/parcelsActionCreator';
+import styled from 'styled-components';
+import { stringToNull } from 'utils';
+import {
+  LandIdentificationSchema,
+  LandUsageSchema,
+  ParcelSchema,
+  ValuationSchema,
+} from 'utils/YupSchema';
+
+import { InventoryPolicy } from '../components/InventoryPolicy';
+import { LandReviewPage } from './subforms/LandReviewPage';
+import { LandUsageForm } from './subforms/LandUsageForm';
+import { LandValuationForm } from './subforms/LandValuationForm';
+import { ParcelIdentificationForm } from './subforms/ParcelIdentificationForm';
 
 const Container = styled.div`
   background-color: #fff;

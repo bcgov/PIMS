@@ -1,12 +1,12 @@
-import React from 'react';
-import { useFormikContext } from 'formik';
-import { FastCurrencyInput } from 'components/common/form/FastCurrencyInput';
 import { IProperty } from 'actions/parcelsActions';
+import { FastCurrencyInput } from 'components/common/form/FastCurrencyInput';
+import TooltipWrapper from 'components/common/TooltipWrapper';
+import { useFormikContext } from 'formik';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+import React from 'react';
+import { Form } from 'react-bootstrap';
 import { CellProps } from 'react-table';
 import { formatMoney } from 'utils';
-import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
-import TooltipWrapper from 'components/common/TooltipWrapper';
-import { Form } from 'react-bootstrap';
 
 interface IEditableCellProps {
   namespace: string;

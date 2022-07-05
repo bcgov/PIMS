@@ -1,17 +1,18 @@
+import { Button } from 'components/common/form';
+import { Col, Row } from 'components/flex';
 import { Table } from 'components/Table';
+import { useFormikContext } from 'formik';
+import { PropertyType } from 'hooks/api';
 import { ISearchPropertyModel } from 'hooks/api/properties/search';
+import queryString from 'query-string';
 import React from 'react';
+import { useProperties } from 'store/hooks';
+
+import { defaultFilter } from '../constants';
+import { IProjectForm, IProjectPropertyFilter } from '../interfaces';
 import { ProjectPropertyFilter } from '.';
 import { AddPropertyColumns } from './constants';
-import { defaultFilter } from '../constants';
-import { useProperties } from 'store/hooks';
-import { IProjectForm, IProjectPropertyFilter } from '../interfaces';
-import queryString from 'query-string';
-import { PropertyType } from 'hooks/api';
 import * as styled from './styled';
-import { useFormikContext } from 'formik';
-import { Col, Row } from 'components/flex';
-import { Button } from 'components/common/form';
 
 interface IProjectAddPropertiesProps {
   onAddProperty?: (property: ISearchPropertyModel) => void;

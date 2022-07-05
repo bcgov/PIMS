@@ -1,13 +1,14 @@
+import { renderHook } from '@testing-library/react-hooks';
+import * as reducerTypes from 'constants/reducerTypes';
+import { createMemoryHistory } from 'history';
+import queryString from 'query-string';
 import React from 'react';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
-import { createMemoryHistory } from 'history';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import * as reducerTypes from 'constants/reducerTypes';
+
 import { useRouterFilter } from './useRouterFilter';
-import { renderHook } from '@testing-library/react-hooks';
-import queryString from 'query-string';
 
 const mockStore = configureMockStore([thunk]);
 const history = createMemoryHistory();
@@ -92,7 +93,7 @@ describe('useRouterFilter hook tests', () => {
 
     const wrapper = getWrapper(getStore({}));
     renderHook(() => useRouterFilter({ filter, setFilter, key: 'test' }), { wrapper });
-    expect(history.location.search).toEqual('?' + queryString.stringify(filterWithValues));
+    expect(history.location.search).toEqual(queryString.stringify(filterWithValues));
   });
 
   it('will not set the filter based on an invalid query string', () => {
@@ -127,6 +128,6 @@ describe('useRouterFilter hook tests', () => {
     Object.keys(filterWithValues).forEach(
       k => filterWithValues[k] === '' && delete filterWithValues[k],
     );
-    expect(history.location.search).toEqual('?' + queryString.stringify(filterWithValues));
+    expect(history.location.search).toEqual(queryString.stringify(filterWithValues));
   });
 });

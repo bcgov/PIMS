@@ -1,18 +1,20 @@
 import './UpdateInfoForm.scss';
-import React, { useState } from 'react';
-import { mapLookupCode } from 'utils';
-import { useFormikContext, getIn } from 'formik';
+
 import { Form, Select } from 'components/common/form';
-import useCodeLookups from 'hooks/useLookupCodes';
-import Button from 'react-bootstrap/Button';
-import _ from 'lodash';
-import { useProject, updateInfoMessage, tierTooltips, riskTooltips } from '../../common';
 import { DisposeWorkflowStatus } from 'features/projects/constants';
-import { IStepProps, IProject } from 'features/projects/interfaces';
-import { PropertyListViewUpdate } from '../components/PropertyListViewUpdate';
+import { IProject, IStepProps } from 'features/projects/interfaces';
+import { getIn, useFormikContext } from 'formik';
+import useCodeLookups from 'hooks/useLookupCodes';
+import _ from 'lodash';
+import React, { useState } from 'react';
 import { Container } from 'react-bootstrap';
-import ProjectFinancialTable from '../components/ProjectFinancialTable';
+import Button from 'react-bootstrap/Button';
 import styled from 'styled-components';
+import { mapLookupCode } from 'utils';
+
+import { riskTooltips, tierTooltips, updateInfoMessage, useProject } from '../../common';
+import ProjectFinancialTable from '../components/ProjectFinancialTable';
+import { PropertyListViewUpdate } from '../components/PropertyListViewUpdate';
 
 interface IUpdateInfoFormProps {
   title?: string;

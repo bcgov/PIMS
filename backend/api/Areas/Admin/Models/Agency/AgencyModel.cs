@@ -17,6 +17,11 @@ namespace Pims.Api.Areas.Admin.Models.Agency
         public string Email { get; set; }
 
         /// <summary>
+        /// get/set - The CC agency email.
+        /// </summary>
+        public string CcEmail { get; set; }
+
+        /// <summary>
         /// get/set - Whether to send email to the agency.
         /// </summary>
         public bool SendEmail { get; set; }

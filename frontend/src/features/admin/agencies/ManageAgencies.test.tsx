@@ -1,18 +1,19 @@
-import React from 'react';
-import { createMemoryHistory } from 'history';
-import { Router } from 'react-router-dom';
-import { Provider } from 'react-redux';
-import configureMockStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
+import { useKeycloak } from '@react-keycloak/web';
+import { cleanup, render } from '@testing-library/react';
 import { ILookupCode } from 'actions/ILookupCode';
 import * as actionTypes from 'constants/actionTypes';
-import * as reducerTypes from 'constants/reducerTypes';
 import * as API from 'constants/API';
-import ManageAgencies from './ManageAgencies';
-import { render, cleanup } from '@testing-library/react';
-import noop from 'lodash/noop';
+import * as reducerTypes from 'constants/reducerTypes';
 import { Formik } from 'formik';
-import { useKeycloak } from '@react-keycloak/web';
+import { createMemoryHistory } from 'history';
+import noop from 'lodash/noop';
+import React from 'react';
+import { Provider } from 'react-redux';
+import { Router } from 'react-router-dom';
+import configureMockStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
+
+import ManageAgencies from './ManageAgencies';
 
 jest.mock('@react-keycloak/web');
 (useKeycloak as jest.Mock).mockReturnValue({

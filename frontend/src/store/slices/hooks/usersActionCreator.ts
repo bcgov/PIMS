@@ -1,14 +1,15 @@
-import { handleAxiosResponse } from 'utils/utils';
-import { showLoading, hideLoading } from 'react-redux-loading-bar';
-import { storeError, storeRequest, storeSuccess, storeUser, storeUsers, updateUser } from 'store';
-import * as reducerTypes from 'constants/reducerTypes';
-import * as API from 'constants/API';
+import { AxiosError, AxiosResponse } from 'axios';
 import * as actionTypes from 'constants/actionTypes';
+import * as API from 'constants/API';
 import { ENVIRONMENT } from 'constants/environment';
-import CustomAxios, { LifecycleToasts } from 'customAxios';
-import { AxiosResponse, AxiosError } from 'axios';
+import * as reducerTypes from 'constants/reducerTypes';
 import * as pimsToasts from 'constants/toasts';
-import { Dispatch, AnyAction } from 'redux';
+import CustomAxios, { LifecycleToasts } from 'customAxios';
+import { hideLoading, showLoading } from 'react-redux-loading-bar';
+import { AnyAction, Dispatch } from 'redux';
+import { storeError, storeRequest, storeSuccess, storeUser, storeUsers, updateUser } from 'store';
+import { handleAxiosResponse } from 'utils/utils';
+
 import { error, request, success } from '.';
 
 const userToasts: LifecycleToasts = {

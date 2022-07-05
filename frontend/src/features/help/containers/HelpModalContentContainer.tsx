@@ -1,15 +1,16 @@
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import * as React from 'react';
-import {
-  helpPages,
-  TicketTypes,
-  getTopics,
-  PropertyDetailViewHelpPage,
-} from '../constants/HelpText';
+import { useLocation } from 'react-router-dom';
+
 import HelpBox from '../components/HelpBox';
 import HelpSubmitBox from '../components/HelpSubmitBox';
-import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
-import { Topics, IHelpPage, HelpPageKeys } from '../interfaces';
-import { useLocation } from 'react-router-dom';
+import {
+  getTopics,
+  helpPages,
+  PropertyDetailViewHelpPage,
+  TicketTypes,
+} from '../constants/HelpText';
+import { HelpPageKeys, IHelpPage, Topics } from '../interfaces';
 
 interface IHelpModalContentContainerProps {
   /** Set the content of the parent mailto component based on the ticket form. */

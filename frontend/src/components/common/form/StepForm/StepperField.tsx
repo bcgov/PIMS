@@ -1,6 +1,7 @@
 import Stepper from 'components/common/Stepper';
-import { useFormikContext, getIn } from 'formik';
+import { getIn, useFormikContext } from 'formik';
 import React from 'react';
+
 import { IStepperFieldProps, useFormStepper } from '.';
 
 /**

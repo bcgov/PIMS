@@ -4,8 +4,9 @@ import {
   IProjectNoteModel,
   IProjectTaskModel,
 } from 'hooks/api/projects/disposals';
-import { toPropertyModel } from '.';
+
 import { IProjectForm } from '../interfaces';
+import { toPropertyModel } from '.';
 
 /**
  * Update a project model with form

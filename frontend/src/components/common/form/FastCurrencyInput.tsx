@@ -1,12 +1,14 @@
+import './FastCurrencyInput.scss';
+
+import classNames from 'classnames';
+import { ErrorMessage, FormikProps, getIn } from 'formik';
 import React, { memo, useEffect } from 'react';
+import { ColProps, Form } from 'react-bootstrap';
 import MaskedInput from 'react-text-mask';
-import { FormikProps, getIn, ErrorMessage } from 'formik';
 import createNumberMask from 'text-mask-addons/dist/createNumberMask';
 import { formikFieldMemo, isPositiveNumberOrZero } from 'utils';
-import classNames from 'classnames';
-import { ColProps, Form } from 'react-bootstrap';
+
 import TooltipIcon from '../TooltipIcon';
-import './FastCurrencyInput.scss';
 
 export const defaultMaskOptions = {
   prefix: '$',
