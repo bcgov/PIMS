@@ -72,7 +72,7 @@ const SelectProjectPropertiesStep = ({ isReadOnly, formikRef }: IStepProps) => {
     });
   };
 
-  // Check which option is seleceted for the smaller filter to keep track of which to shade the darker blue
+  // Check which option is selected for the smaller filter to keep track of which to shade the darker blue
   const checkSelected = (option: string) => {
     if (selected.option === option && selected.selected) {
       return true;
