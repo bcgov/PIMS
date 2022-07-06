@@ -77,6 +77,7 @@ const EditAgencyPage = (props: IEditAgencyPageProps) => {
     isDisabled: false,
     sendEmail: true,
     email: '',
+    ccEmail: '',
     addressTo: '',
     rowVersion: '',
   };
