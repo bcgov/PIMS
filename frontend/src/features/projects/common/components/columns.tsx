@@ -17,7 +17,7 @@ import React from 'react';
 import { FaRegTimesCircle } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { formatMoney, formatNumber, getFiscalYear } from 'utils';
+import { formatMoney, formatNumber, getYear } from 'utils';
 
 const ColumnDiv = styled.div`
   display: flex;
@@ -259,9 +259,9 @@ export const getPropertyColumns = ({
       Header: 'Assessment Year',
       accessor: (row: IProperty) =>
         [PropertyTypes.PARCEL, PropertyTypes.SUBDIVISION].includes(row.propertyTypeId)
-          ? getFiscalYear(row.assessedLandDate)
-          : [PropertyTypes.BUILDING, PropertyTypes.BUILDING].includes(row.propertyTypeId)
-          ? getFiscalYear(row.assessedBuildingDate)
+          ? getYear(row.assessedLandDate)
+          : [PropertyTypes.BUILDING].includes(row.propertyTypeId)
+          ? getYear(row.assessedBuildingDate)
           : undefined,
       className: 'form-group',
       style: {
