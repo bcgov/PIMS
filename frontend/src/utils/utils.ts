@@ -217,6 +217,17 @@ export const getCurrentFiscalYear = (): number => {
   return now.month() >= 4 ? now.add(1, 'years').year() : now.year();
 };
 
+export const getYear = (date?: Date | string): number => {
+  let momentDate = undefined;
+  if (typeof date === 'string' || date instanceof String) {
+    momentDate = moment(date, 'YYYY-MM-DD');
+  } else {
+    momentDate = moment(date);
+  }
+  console.debug(date);
+  return momentDate.year();
+};
+
 export const getFiscalYear = (date?: Date | string): number => {
   let momentDate = undefined;
   if (typeof date === 'string' || date instanceof String) {
