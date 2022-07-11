@@ -1,8 +1,9 @@
-import { useRef, useState } from 'react';
+import deepEqual from 'dequal';
 import { BBox, GeoJsonProperties } from 'geojson';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
-import deepEqual from 'dequal';
+import { useRef, useState } from 'react';
 import Supercluster from 'supercluster';
+
 import { ICluster } from '../types';
 
 interface SuperclusterOptions<P, C> extends Supercluster.Options<P, C> {

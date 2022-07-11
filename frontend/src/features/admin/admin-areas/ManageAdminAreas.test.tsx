@@ -1,17 +1,18 @@
-import { render, fireEvent } from '@testing-library/react';
-import React from 'react';
-import configureMockStore from 'redux-mock-store';
-import { createMemoryHistory } from 'history';
-import thunk from 'redux-thunk';
-import ManageAdminAreas from './ManageAdminAreas';
-import { Provider } from 'react-redux';
-import * as reducerTypes from 'constants/reducerTypes';
-import { Router } from 'react-router';
-import MockAdapter from 'axios-mock-adapter';
-import axios from 'axios';
-import * as API from 'constants/API';
-import { ILookupCode } from 'actions/ILookupCode';
 import { useKeycloak } from '@react-keycloak/web';
+import { fireEvent, render } from '@testing-library/react';
+import { ILookupCode } from 'actions/ILookupCode';
+import axios from 'axios';
+import MockAdapter from 'axios-mock-adapter';
+import * as API from 'constants/API';
+import * as reducerTypes from 'constants/reducerTypes';
+import { createMemoryHistory } from 'history';
+import React from 'react';
+import { Provider } from 'react-redux';
+import { Router } from 'react-router';
+import configureMockStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
+
+import ManageAdminAreas from './ManageAdminAreas';
 
 jest.mock('@react-keycloak/web');
 (useKeycloak as jest.Mock).mockReturnValue({

@@ -1,9 +1,9 @@
-import { IPagedItems } from 'interfaces/pagedItems';
-import CustomAxios from 'customAxios';
 import { AxiosInstance } from 'axios';
 import { ENVIRONMENT } from 'constants/environment';
+import CustomAxios from 'customAxios';
+import { INotification, INotificationFilter } from 'features/projects/interfaces';
+import { IPagedItems } from 'interfaces/pagedItems';
 import { useCallback } from 'react';
-import { INotificationFilter, INotification } from 'features/projects/interfaces';
 import React from 'react';
 
 export interface DisposalAPI extends AxiosInstance {

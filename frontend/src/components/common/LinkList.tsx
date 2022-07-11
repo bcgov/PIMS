@@ -1,12 +1,12 @@
-import * as React from 'react';
 import './Label.scss';
-import { Link } from 'react-router-dom';
-import { FaRegTimesCircle } from 'react-icons/fa';
-import { Search } from 'history';
+
+import * as React from 'react';
 import { ListGroup } from 'react-bootstrap';
+import { FaRegTimesCircle } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 
 export interface ILinkListItem {
-  search: Search;
+  search: any; // Had to do this because upgrading dependencies resulting in the 'history' package disappearing, and the 'Search' type no longer exists.
   pathName: string;
   label: string;
   key: string | number;

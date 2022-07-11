@@ -1,9 +1,10 @@
-import React from 'react';
-import { OccupancyForm } from './OccupancyForm';
-import { fireEvent, render, waitFor, act } from '@testing-library/react';
-import { noop } from 'lodash';
-import { Formik } from 'formik';
+import { act, fireEvent, render, waitFor } from '@testing-library/react';
 import { SelectOptions } from 'components/common/form';
+import { Formik } from 'formik';
+import { noop } from 'lodash';
+import React from 'react';
+
+import { OccupancyForm } from './OccupancyForm';
 
 const mockOccupancies: SelectOptions = [
   { value: 0, label: 'Occupancy Type 1' },

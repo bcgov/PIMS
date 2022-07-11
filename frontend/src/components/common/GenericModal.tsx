@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { Modal, Button, Container } from 'react-bootstrap';
 import classNames from 'classnames';
+import React, { useEffect, useState } from 'react';
+import { Button, Container, Modal } from 'react-bootstrap';
 
 export enum ModalSize {
   XLARGE = 'modal-xl',

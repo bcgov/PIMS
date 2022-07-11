@@ -1,7 +1,7 @@
+import TooltipWrapper from 'components/common/TooltipWrapper';
 import * as React from 'react';
 import styled from 'styled-components';
 import { formatApiDateTime } from 'utils';
-import TooltipWrapper from 'components/common/TooltipWrapper';
 
 interface ILastUpdatedByProps {
   updatedByName?: string;

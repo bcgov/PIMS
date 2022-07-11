@@ -1,3 +1,5 @@
+using Microsoft.VisualBasic.CompilerServices;
+using System.Text;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -317,8 +319,9 @@ namespace Pims.Dal.Services
             var model = new ProjectNotificationModel(Guid.NewGuid(), env, project, project.Agency);
             var email = (!String.IsNullOrWhiteSpace(project.Agency.Email) && template.Audience != NotificationAudiences.ProjectOwner) ? project.Agency.Email :
                 this.Context.Users.FirstOrDefault(u => u.Id == project.CreatedById)?.Email;
+            var cc = project.Agency.CCEmail;
 
-            return GenerateNotification(email, template, model);
+            return GenerateNotification(email, cc, template, model);
         }
         #endregion
 
@@ -357,11 +360,12 @@ namespace Pims.Dal.Services
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="to"></param>
+        /// <param name="cc"></param>
         /// <param name="template"></param>
         /// <param name="model"></param>
         /// <param name="sendOn"></param>
         /// <returns></returns>
-        public NotificationQueue GenerateNotification<T>(string to, NotificationTemplate template, T model, DateTime? sendOn = null)
+        public NotificationQueue GenerateNotification<T>(string to, string cc, NotificationTemplate template, T model, DateTime? sendOn = null)
         {
             if (template == null) throw new ArgumentNullException(nameof(template));
             if (model == null) throw new ArgumentNullException(nameof(model));
@@ -371,8 +375,8 @@ namespace Pims.Dal.Services
                 Key = Guid.NewGuid(),
                 Status = NotificationStatus.Pending,
                 SendOn = sendOn ?? DateTime.UtcNow,
-                To = String.Join(";", new[] { to, template.To }),
-                Cc = template.Cc,
+                To = String.Join(";", new[] { to, template.To }.Select(v => !String.IsNullOrWhiteSpace(v))),
+                Cc = String.Join(";", new[] { cc, template.Cc }.Select(v => !String.IsNullOrWhiteSpace(v))),
                 Bcc = template.Bcc
             };
 
@@ -389,7 +393,6 @@ namespace Pims.Dal.Services
             }
             return notification;
         }
-
 
         /// <summary>
         /// Generates the access request notification for the specified 'model' and 'template'.
@@ -462,7 +465,7 @@ namespace Pims.Dal.Services
                 Priority = options.Priority,
                 SendOn = sendOn.Value,
                 To = String.Join(";", new[] { model.To ?? model.ToAgency?.Email, options.Template.To }.NotNull()),
-                Cc = options.Template.Cc,
+                Cc = String.Join(";", new[] { model.ToAgency?.CCEmail, options.Template.Cc }.NotNull()),
                 Bcc = options.Template.Bcc
             };
 

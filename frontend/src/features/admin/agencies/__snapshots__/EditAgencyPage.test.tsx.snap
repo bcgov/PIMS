@@ -124,7 +124,7 @@ exports[`Edit agency page EditAgencyPage renders 1`] = `
             class="form-label"
             for="input-email"
           >
-            Agency e-mail address
+            Email address
           </label>
           <input
             class="form-control"
@@ -141,7 +141,7 @@ exports[`Edit agency page EditAgencyPage renders 1`] = `
             class="form-label"
             for="input-addressTo"
           >
-            Email Addressed To
+            Addressed To
           </label>
           <input
             class="form-control"
@@ -149,6 +149,23 @@ exports[`Edit agency page EditAgencyPage renders 1`] = `
             name="addressTo"
             type="text"
             value="Good morning"
+          />
+        </div>
+        <div
+          class="form-group"
+        >
+          <label
+            class="form-label"
+            for="input-ccEmail"
+          >
+            CC Email address
+          </label>
+          <input
+            class="form-control"
+            id="input-ccEmail"
+            name="ccEmail"
+            type="text"
+            value=""
           />
         </div>
         <div

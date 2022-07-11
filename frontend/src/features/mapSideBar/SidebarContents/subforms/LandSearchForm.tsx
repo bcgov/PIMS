@@ -1,19 +1,20 @@
+import { IParcel } from 'actions/parcelsActions';
+import { ReactComponent as ParcelDraftIcon } from 'assets/images/draft-parcel-icon.svg';
+import { FastInput, Input } from 'components/common/form';
 import SearchButton from 'components/common/form/SearchButton';
-import React, { useState } from 'react';
-import { Col, Form, Row } from 'react-bootstrap';
+import { ISteppedFormValues } from 'components/common/form/StepForm';
 import { Label } from 'components/common/Label';
-import { Input, FastInput } from 'components/common/form';
 import { pidFormatter } from 'features/properties/components/forms/subforms/PidPinForm';
-import { withNameSpace } from 'utils/formUtils';
 import { GeocoderAutoComplete } from 'features/properties/components/GeocoderAutoComplete';
 import { getIn, useFormikContext } from 'formik';
-import ClickAwayListener from 'react-click-away-listener';
 import { IGeocoderResponse } from 'hooks/useApi';
-import { IParcel } from 'actions/parcelsActions';
-import { ISteppedFormValues } from 'components/common/form/StepForm';
-import { ISearchFields } from '../LandForm';
-import { ReactComponent as ParcelDraftIcon } from 'assets/images/draft-parcel-icon.svg';
+import React, { useState } from 'react';
+import { Col, Form, Row } from 'react-bootstrap';
+import ClickAwayListener from 'react-click-away-listener';
 import styled from 'styled-components';
+import { withNameSpace } from 'utils/formUtils';
+
+import { ISearchFields } from '../LandForm';
 
 const SearchMarkerButton = styled.button`
   top: 20px;

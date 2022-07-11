@@ -1,6 +1,6 @@
+import * as ActionTypes from 'constants/actionTypes';
 import React from 'react';
 import { clearRequest, storeError, storeRequest, storeSuccess, useAppDispatch } from 'store';
-import * as ActionTypes from 'constants/actionTypes';
 
 interface INetworkController {
   storeRequest: (name: string) => void;

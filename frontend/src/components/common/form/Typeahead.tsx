@@ -1,11 +1,12 @@
-import * as React from 'react';
-import { Typeahead, TypeaheadModel, TypeaheadProps } from 'react-bootstrap-typeahead';
-import { Form } from 'react-bootstrap';
-import { getIn, useFormikContext } from 'formik';
-import styled from 'styled-components';
-import TooltipIcon from 'components/common/TooltipIcon';
 import classNames from 'classnames';
+import TooltipIcon from 'components/common/TooltipIcon';
+import { getIn, useFormikContext } from 'formik';
+import * as React from 'react';
 import { useRef } from 'react';
+import { Form } from 'react-bootstrap';
+import { Typeahead, TypeaheadModel, TypeaheadProps } from 'react-bootstrap-typeahead';
+import styled from 'styled-components';
+
 import TooltipWrapper from '../TooltipWrapper';
 
 export interface ITypeaheadFieldProps<T extends TypeaheadModel> extends TypeaheadProps<T> {

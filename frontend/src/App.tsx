@@ -1,17 +1,18 @@
 import './App.scss';
 import 'react-bootstrap-typeahead/css/Typeahead.css';
-import React, { useEffect } from 'react';
-import { Col } from 'react-bootstrap';
-import { getActivateUserAction } from 'store/slices/hooks/usersActionCreator';
-import { getFetchLookupCodeAction } from 'store/slices/hooks/lookupCodeActionCreator';
-import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+
+import FilterBackdrop from 'components/maps/leaflet/FilterBackdrop';
 import { AuthStateContext, IAuthState } from 'contexts/authStateContext';
 import { AppRouter } from 'features/routes';
-import OnLoadActions from 'OnLoadActions';
-import { ToastContainer } from 'react-toastify';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import PublicLayout from 'layouts/PublicLayout';
-import FilterBackdrop from 'components/maps/leaflet/FilterBackdrop';
+import OnLoadActions from 'OnLoadActions';
+import React, { useEffect } from 'react';
+import { Col } from 'react-bootstrap';
+import { ToastContainer } from 'react-toastify';
 import { useAppDispatch } from 'store';
+import { getFetchLookupCodeAction } from 'store/slices/hooks/lookupCodeActionCreator';
+import { getActivateUserAction } from 'store/slices/hooks/usersActionCreator';
 
 const App = () => {
   const keycloakWrapper = useKeycloakWrapper();

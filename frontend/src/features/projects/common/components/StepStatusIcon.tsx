@@ -1,10 +1,10 @@
+import { IStatus } from 'features/projects/interfaces';
+import { WorkflowStatus } from 'hooks/api/projects';
 import * as React from 'react';
-import styled from 'styled-components';
 import { FaRegCheckCircle, FaRegCircle } from 'react-icons/fa';
 import { MdRemoveCircleOutline } from 'react-icons/md';
-import { IStatus } from 'features/projects/interfaces';
+import styled from 'styled-components';
 import { formatDate } from 'utils';
-import { WorkflowStatus } from 'hooks/api/projects';
 
 interface IStepSuccessIconProps {
   /** label displayed before the icon */

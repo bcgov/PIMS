@@ -1,31 +1,32 @@
 import './PropertyFilter.scss';
 
-import React, { useMemo, useRef, useState } from 'react';
-import { Col } from 'react-bootstrap';
-import { Formik, getIn } from 'formik';
 import { ILookupCode } from 'actions/ILookupCode';
-import { Form, Select } from '../../../components/common/form';
-import { FilterBarSchema } from 'utils/YupSchema';
+import { ParentSelect } from 'components/common/form/ParentSelect';
 import ResetButton from 'components/common/form/ResetButton';
 import SearchButton from 'components/common/form/SearchButton';
-import { mapLookupCode, mapLookupCodeWithParentString } from 'utils';
-import { PropertyFilterOptions } from './';
-import { useRouterFilter } from 'hooks/useRouterFilter';
-import { IPropertyFilter } from './IPropertyFilter';
-import { TableSort } from 'components/Table/TableSort';
-import { FindMorePropertiesButton } from 'components/maps/FindMorePropertiesButton';
 import { TypeaheadField } from 'components/common/form/Typeahead';
-import { useAppDispatch } from 'store';
-import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
-import { fetchPropertyNames } from 'store/slices/hooks/propertyActionCreator';
-import { AsyncTypeahead } from 'react-bootstrap-typeahead';
-import { PropertyFilterAgencyOptions } from './PropertyFilterAgencyOptions';
-import styled from 'styled-components';
-import { ParentSelect } from 'components/common/form/ParentSelect';
+import { FindMorePropertiesButton } from 'components/maps/FindMorePropertiesButton';
+import { TableSort } from 'components/Table/TableSort';
 import { Claims } from 'constants/claims';
+import { Formik, getIn } from 'formik';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import useLookupCodes from 'hooks/useLookupCodes';
-import { mapSelectOptionWithParent } from 'utils';
 import { useMyAgencies } from 'hooks/useMyAgencies';
+import { useRouterFilter } from 'hooks/useRouterFilter';
+import React, { useMemo, useRef, useState } from 'react';
+import { Col } from 'react-bootstrap';
+import { AsyncTypeahead } from 'react-bootstrap-typeahead';
+import { useAppDispatch } from 'store';
+import { fetchPropertyNames } from 'store/slices/hooks/propertyActionCreator';
+import styled from 'styled-components';
+import { mapLookupCode, mapLookupCodeWithParentString } from 'utils';
+import { mapSelectOptionWithParent } from 'utils';
+import { FilterBarSchema } from 'utils/YupSchema';
+
+import { Form, Select } from '../../../components/common/form';
+import { PropertyFilterOptions } from './';
+import { IPropertyFilter } from './IPropertyFilter';
+import { PropertyFilterAgencyOptions } from './PropertyFilterAgencyOptions';
 
 /**
  * PropertyFilter component properties.

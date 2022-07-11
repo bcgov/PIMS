@@ -1,8 +1,8 @@
-import { IApiProperty, IProperty } from 'features/projects/interfaces';
-import { IFiscal, IEvaluation } from 'actions/parcelsActions';
+import { IEvaluation, IFiscal } from 'actions/parcelsActions';
 import { FiscalKeys } from 'constants/fiscalKeys';
+import { EvaluationKeys, PropertyTypes } from 'constants/index';
+import { IApiProperty, IProperty } from 'features/projects/interfaces';
 import { formatDate, getCurrentFiscalYear } from 'utils';
-import { PropertyTypes, EvaluationKeys } from 'constants/index';
 
 export const toApiProperty = (
   property: IProperty,

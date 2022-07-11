@@ -1,6 +1,6 @@
 import * as React from 'react';
-import styled from 'styled-components';
 import { Alert, Toast } from 'react-bootstrap';
+import styled from 'styled-components';
 
 const ToastContainer = styled(Toast)`
   max-width: 100%;

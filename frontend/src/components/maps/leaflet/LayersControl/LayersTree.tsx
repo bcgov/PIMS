@@ -1,16 +1,18 @@
-import { Formik, Form as FormikForm, getIn, useFormikContext } from 'formik';
-import { noop, flatten } from 'lodash';
-import * as React from 'react';
-import { ListGroup, Form } from 'react-bootstrap';
-import { FaAngleDown, FaAngleRight } from 'react-icons/fa';
-import TreeMenu, { TreeMenuItem, TreeNode } from 'react-simple-tree-menu';
 import 'react-simple-tree-menu/dist/main.css';
-import styled from 'styled-components';
-import { layersTree } from './data';
-import * as L from 'leaflet';
-import { useLeaflet } from 'react-leaflet';
-import { ILayerItem } from './types';
+
 import variables from '_variables.module.scss';
+import { Form as FormikForm, Formik, getIn, useFormikContext } from 'formik';
+import * as L from 'leaflet';
+import { flatten, noop } from 'lodash';
+import * as React from 'react';
+import { Form, ListGroup } from 'react-bootstrap';
+import { FaAngleDown, FaAngleRight } from 'react-icons/fa';
+import { useLeaflet } from 'react-leaflet';
+import TreeMenu, { TreeMenuItem, TreeNode } from 'react-simple-tree-menu';
+import styled from 'styled-components';
+
+import { layersTree } from './data';
+import { ILayerItem } from './types';
 
 const ParentNode = styled(ListGroup.Item)`
   display: flex;

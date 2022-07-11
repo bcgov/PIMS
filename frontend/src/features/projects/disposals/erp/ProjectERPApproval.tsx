@@ -1,12 +1,12 @@
 import { FastDatePicker } from 'components/common/form';
-import { Row, Col } from 'components/flex';
-import React from 'react';
+import { Col, Row } from 'components/flex';
 import { useFormikContext } from 'formik';
-import { IProjectForm } from '../interfaces';
+import React from 'react';
 
-import * as styled from './styled';
+import { IProjectForm } from '../interfaces';
 import { ErpNotificationNote } from '../notes';
 import { AgencyInterest } from '.';
+import * as styled from './styled';
 
 export interface IProjectERPApprovalProps {
   disabled?: boolean;

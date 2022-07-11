@@ -1,4 +1,4 @@
-import { clearJwt, saveJwt, jwtSlice, initialJwtState } from './jwtSlice';
+import { clearJwt, initialJwtState, jwtSlice, saveJwt } from './jwtSlice';
 
 describe('JWT slice tests', () => {
   const reducer = jwtSlice.reducer;

@@ -1,11 +1,12 @@
+import classNames from 'classnames';
+import { FormikProps, getIn } from 'formik';
 import React, { CSSProperties, memo, useEffect } from 'react';
 import { Form, FormControlProps } from 'react-bootstrap';
-import { getIn, FormikProps } from 'formik';
-import { DisplayError } from './DisplayError';
 import { formikFieldMemo } from 'utils';
-import classNames from 'classnames';
+
 import TooltipIcon from '../TooltipIcon';
 import TooltipWrapper from '../TooltipWrapper';
+import { DisplayError } from './DisplayError';
 
 type RequiredAttributes = {
   /** The field name */

@@ -1,4 +1,5 @@
 import { IBaseLookupModel } from 'hooks/api/interfaces';
+
 import { IProjectTaskModel } from '.';
 
 export interface IProjectStatusModel extends IBaseLookupModel<number> {

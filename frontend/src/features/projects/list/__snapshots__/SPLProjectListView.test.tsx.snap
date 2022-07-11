@@ -43,42 +43,70 @@ exports[`Project Approval Request list view Displays a SPL project 1`] = `
             class="form-group"
           >
             <div
-              class="rbt"
-              style="outline: none; position: relative;"
+              class="rbt clearfix open"
+              style="position: relative;"
               tabindex="-1"
             >
               <div
-                class="rbt-input-multi form-control rbt-input"
+                class="form-control rbt-input-multi rbt-input input-lg form-control-lg"
                 tabindex="-1"
               >
                 <div
                   class="rbt-input-wrapper"
                 >
                   <div
-                    style="display: flex; flex: 1; height: 100%; position: relative;"
+                    class="rbt-input-hint-container"
+                    style="position: relative;"
                   >
-                    <input
-                      aria-autocomplete="list"
-                      aria-haspopup="listbox"
-                      autocomplete="off"
-                      class="rbt-input-main"
-                      id="statusId-field"
-                      name="statusId"
-                      placeholder="Enter a Status"
-                      style="background-color: transparent; border: 0px; box-shadow: none; cursor: inherit; outline: none; padding: 0px; width: 100%; z-index: 1;"
-                      type="text"
-                      value=""
-                    />
-                    <input
-                      aria-hidden="true"
+                    <div
+                      style="position: relative; z-index: 1; display: inline-block;"
+                    >
+                      <input
+                        aria-autocomplete="list"
+                        aria-haspopup="listbox"
+                        autocomplete="nope"
+                        class="rbt-input-main"
+                        id="statusId-field"
+                        name="statusId"
+                        placeholder="Enter a Status"
+                        style="background-color: transparent; border: 0px; box-shadow: none; cursor: inherit; outline: none; padding: 0px; box-sizing: content-box; width: 3px;"
+                        type="text"
+                        value=""
+                      />
+                      <div
+                        style="height: 0px; left: 0px; overflow: scroll; position: absolute; top: 0px; visibility: hidden; white-space: pre; font-family: -webkit-small-control; letter-spacing: normal; text-transform: none;"
+                      />
+                      <div
+                        style="height: 0px; left: 0px; overflow: scroll; position: absolute; top: 0px; visibility: hidden; white-space: pre; font-family: -webkit-small-control; letter-spacing: normal; text-transform: none;"
+                      >
+                        Enter a Status
+                      </div>
+                    </div>
+                    <div
                       class="rbt-input-hint"
-                      readonly=""
-                      style="background-color: transparent; border-color: transparent; box-shadow: none; color: rgba(0, 0, 0, 0.35); left: 0px; pointer-events: none; position: absolute; top: 0px; width: 100%; border-style: inset inset inset inset; border-width: 0px 0px 0px 0px; line-height: normal; padding: 0px 0px 0px 0px;"
-                      tabindex="-1"
-                      value=""
-                    />
+                      style="left: 0px; pointer-events: none; position: absolute; top: 0px; display: inline-block;"
+                    >
+                      <input
+                        aria-hidden="true"
+                        readonly=""
+                        style="background-color: transparent; border-color: transparent; box-shadow: none; color: rgba(0, 0, 0, 0.35); box-sizing: content-box; width: 3px; border-style: inset inset inset inset; border-width: 0px 0px 0px 0px; line-height: normal; padding: 0px 0px 0px 0px;"
+                        tabindex="-1"
+                        value=""
+                      />
+                      <div
+                        style="height: 0px; left: 0px; overflow: scroll; position: absolute; top: 0px; visibility: hidden; white-space: pre; font-family: -webkit-small-control; letter-spacing: normal; text-transform: none;"
+                      />
+                    </div>
                   </div>
                 </div>
+              </div>
+              <div
+                aria-atomic="true"
+                aria-live="polite"
+                class="sr-only rbt-sr-status"
+                role="status"
+              >
+                0 selections
               </div>
             </div>
           </div>
@@ -90,19 +118,20 @@ exports[`Project Approval Request list view Displays a SPL project 1`] = `
             class="form-group"
           >
             <div
-              class="rbt"
-              style="outline: none; position: relative;"
+              class="rbt clearfix open"
+              style="position: relative;"
               tabindex="-1"
             >
               <div
-                style="display: flex; flex: 1; height: 100%; position: relative;"
+                class="rbt-input-hint-container"
+                style="position: relative;"
               >
                 <input
                   aria-autocomplete="both"
                   aria-expanded="false"
                   aria-haspopup="listbox"
-                  autocomplete="off"
-                  class="rbt-input-main form-control rbt-input"
+                  autocomplete="nope"
+                  class="rbt-input-main form-control rbt-input  input-lg form-control-lg"
                   id="agencies-field"
                   name="agencies"
                   placeholder="Enter an Agency"
@@ -110,14 +139,29 @@ exports[`Project Approval Request list view Displays a SPL project 1`] = `
                   type="text"
                   value=""
                 />
-                <input
-                  aria-hidden="true"
+                <div
                   class="rbt-input-hint"
-                  readonly=""
-                  style="background-color: transparent; border-color: transparent; box-shadow: none; color: rgba(0, 0, 0, 0.35); left: 0px; pointer-events: none; position: absolute; top: 0px; width: 100%; border-style: inset inset inset inset; border-width: 2px 2px 2px 2px; line-height: normal; padding: 1px 1px 1px 1px;"
-                  tabindex="-1"
-                  value=""
-                />
+                  style="left: 0px; pointer-events: none; position: absolute; top: 0px; display: inline-block;"
+                >
+                  <input
+                    aria-hidden="true"
+                    readonly=""
+                    style="background-color: transparent; border-color: transparent; box-shadow: none; color: rgba(0, 0, 0, 0.35); box-sizing: content-box; width: 3px; border-style: inset inset inset inset; border-width: 2px 2px 2px 2px; line-height: normal; padding: 1px 1px 1px 1px;"
+                    tabindex="-1"
+                    value=""
+                  />
+                  <div
+                    style="height: 0px; left: 0px; overflow: scroll; position: absolute; top: 0px; visibility: hidden; white-space: pre; font-family: -webkit-small-control; letter-spacing: normal; text-transform: none;"
+                  />
+                </div>
+              </div>
+              <div
+                aria-atomic="true"
+                aria-live="polite"
+                class="sr-only rbt-sr-status"
+                role="status"
+              >
+                0 selections
               </div>
             </div>
           </div>

@@ -1,13 +1,14 @@
+import { Form } from 'components/common/form';
+import { defaultProject } from 'features/projects/constants/defaultValues';
+import { IStepProps } from 'features/projects/interfaces';
+import { Formik } from 'formik';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import React from 'react';
 import { Container } from 'react-bootstrap';
-import { Formik } from 'formik';
-import { Form } from 'components/common/form';
-import { IStepProps } from 'features/projects/interfaces';
-import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
-import { ProjectDraftStepYupSchema, useStepper } from '..';
-import { useStepForm, ProjectDraftForm, StepErrorSummary } from '../../common';
+
+import { ProjectDraftForm, StepErrorSummary, useStepForm } from '../../common';
 import ProjectNotes from '../../common/components/ProjectNotes';
-import { defaultProject } from 'features/projects/constants/defaultValues';
+import { ProjectDraftStepYupSchema, useStepper } from '..';
 
 /**
  * Initial Project creation step - allows entry of high level project information.

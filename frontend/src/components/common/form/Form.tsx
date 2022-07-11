@@ -1,8 +1,8 @@
 import './Form.scss';
 
+import { useFormikContext } from 'formik';
 import React from 'react';
 import { Form as FormBase } from 'react-bootstrap';
-import { useFormikContext } from 'formik';
 
 type FormProps = {
   /** Adds a custom class to the <Form> component */

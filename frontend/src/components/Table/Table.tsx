@@ -1,45 +1,46 @@
 import './Table.scss';
 
+import classnames from 'classnames';
+import classNames from 'classnames';
+import clsx from 'classnames';
+import { Button } from 'components/common/form/Button';
+import TooltipWrapper from 'components/common/TooltipWrapper';
+import { Form, Formik, FormikProps } from 'formik';
+import useDeepCompareCallback from 'hooks/useDeepCompareCallback';
+import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
+import useDeepCompareMemo from 'hooks/useDeepCompareMemo';
+import _, { keys } from 'lodash';
 import React, {
   PropsWithChildren,
   ReactElement,
-  useEffect,
   ReactNode,
+  useEffect,
   useMemo,
   useRef,
 } from 'react';
+import { Collapse, Spinner } from 'react-bootstrap';
+import { FaAngleDown, FaAngleRight, FaUndo } from 'react-icons/fa';
 import {
-  useTable,
-  usePagination,
-  useFlexLayout,
-  TableOptions,
-  Row,
   Cell,
+  HeaderGroup,
   IdType,
+  Row,
+  TableOptions,
+  useFlexLayout,
+  usePagination,
   useRowSelect,
   useSortBy,
-  HeaderGroup,
+  useTable,
 } from 'react-table';
-import classnames from 'classnames';
-import { TablePagination } from '.';
-import { CellWithProps, ColumnInstanceWithProps } from './types';
-import { TableSort, SortDirection } from './TableSort';
-import { TablePageSizeSelector } from './PageSizeSelector';
-import { DEFAULT_PAGE_SIZE, DEFAULT_PAGE_SELECTOR_OPTIONS } from './constants';
-import _, { keys } from 'lodash';
-import { Spinner, Collapse } from 'react-bootstrap';
-import { FaAngleDown, FaAngleRight, FaUndo } from 'react-icons/fa';
-import TooltipWrapper from 'components/common/TooltipWrapper';
-import ColumnSort from './ColumnSort';
-import ColumnFilter from './ColumnFilter';
-import { Form, Formik, FormikProps } from 'formik';
-import { Button } from 'components/common/form/Button';
-import classNames from 'classnames';
-import useDeepCompareMemo from 'hooks/useDeepCompareMemo';
-import useDeepCompareCallback from 'hooks/useDeepCompareCallback';
 import styled from 'styled-components';
-import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
-import clsx from 'classnames';
+
+import { TablePagination } from '.';
+import ColumnFilter from './ColumnFilter';
+import ColumnSort from './ColumnSort';
+import { DEFAULT_PAGE_SELECTOR_OPTIONS, DEFAULT_PAGE_SIZE } from './constants';
+import { TablePageSizeSelector } from './PageSizeSelector';
+import { SortDirection, TableSort } from './TableSort';
+import { CellWithProps, ColumnInstanceWithProps } from './types';
 
 const TableToolbarText = styled.p`
   flex: auto;

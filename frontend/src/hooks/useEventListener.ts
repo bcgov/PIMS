@@ -1,4 +1,4 @@
-import { useRef, useEffect, RefObject } from 'react';
+import { RefObject, useEffect, useRef } from 'react';
 
 /**
  * generic hook that provides event listener setup/teardown.

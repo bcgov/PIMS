@@ -1,22 +1,23 @@
-import * as Yup from 'yup';
 import { FormikErrors, setIn } from 'formik';
+import { Workflow, WorkflowStatus } from 'hooks/api/projects';
 import { useHistory } from 'react-router-dom';
+import * as Yup from 'yup';
+import { AnyObject } from 'yup/lib/types';
+
+import { IProjectForm } from '../interfaces';
 import {
   documentationSchema,
-  informationProjectSchema,
-  informationPropertiesSchema,
-  erpExemptionSchema,
   erpCompleteSchema,
   erpDisposedSchema,
+  erpExemptionSchema,
+  informationProjectSchema,
+  informationPropertiesSchema,
   splApprovalSchema,
   splContractInPlaceSchema,
 } from '.';
-import { IProjectForm } from '../interfaces';
 import { notSplSchema } from './notSplSchema';
-import { Workflow, WorkflowStatus } from 'hooks/api/projects';
 import { splMarketingSchema } from './splMarketingSchema';
 import { splTransferWithinGRESchema } from './splTransferWithinGRESchema';
-import { AnyObject } from 'yup/lib/types';
 
 interface IProjectValidationProps {
   id: number;

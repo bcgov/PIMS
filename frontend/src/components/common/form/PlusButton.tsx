@@ -1,6 +1,7 @@
 import React from 'react';
-import TooltipWrapper from '../TooltipWrapper';
 import { FaPlus } from 'react-icons/fa';
+
+import TooltipWrapper from '../TooltipWrapper';
 import { Button, ButtonProps } from '.';
 
 interface IPlusButtonProps extends ButtonProps {

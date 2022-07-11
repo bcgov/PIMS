@@ -143,13 +143,14 @@ namespace Pims.Api.Controllers
                 var administrators = _pimsService.User.GetAdmininstrators(accessRequest.Agencies.Select(a => a.AgencyId).ToArray());
                 var notification = _pimsService.NotificationQueue.GenerateNotification(
                     String.Join(";", administrators.Select(a => a.Email).Concat(new[] { _options.AccessRequest.SendTo }).Where(e => !String.IsNullOrWhiteSpace(e))),
+                    "",
                     template,
                     new AccessRequestNotificationModel(accessRequest, _options));
                 await _pimsService.NotificationQueue.SendNotificationsAsync(new[] { notification });
 
                 var notificationForRPD = _pimsService.NotificationQueue.GenerateNotification(templateForRPD, new AccessRequestNotificationModel(accessRequest, _options));
                 await _pimsService.NotificationQueue.SendNotificationsAsync(new[] { notificationForRPD });
-                
+
             }
             catch (Exception ex)
             {

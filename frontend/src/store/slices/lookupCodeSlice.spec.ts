@@ -1,5 +1,6 @@
 import { ILookupCode } from 'actions/ILookupCode';
-import { lookupCodeSlice, initialLookupCodeState, storeLookupCodes } from './lookupCodeSlice';
+
+import { initialLookupCodeState, lookupCodeSlice, storeLookupCodes } from './lookupCodeSlice';
 
 describe('LookupCode slice tests', () => {
   const reducer = lookupCodeSlice.reducer;

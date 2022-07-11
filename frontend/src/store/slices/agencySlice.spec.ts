@@ -1,5 +1,6 @@
 import { TableSort } from 'components/Table/TableSort';
 import { IAgency, IAgencyDetail, IAgencyFilter, IAgencyRecord, IPagedItems } from 'interfaces';
+
 import {
   initialAgencyState,
   storeAgencies,

@@ -1,5 +1,5 @@
-import { ILeasedLand } from 'features/mapSideBar/SidebarContents/AssociatedLandForm';
 import { PropertyTypes } from 'constants/propertyTypes';
+import { ILeasedLand } from 'features/mapSideBar/SidebarContents/AssociatedLandForm';
 
 //Parcel List API action
 

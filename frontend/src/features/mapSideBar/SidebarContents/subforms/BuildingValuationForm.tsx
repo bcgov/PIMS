@@ -1,8 +1,8 @@
 import './ValuationForm.scss';
 
+import EvaluationForm from 'features/properties/components/forms/subforms/EvaluationForm';
 import React from 'react';
 import { Col, Row } from 'react-bootstrap';
-import EvaluationForm from 'features/properties/components/forms/subforms/EvaluationForm';
 
 interface ITenancyProps {
   formikProps: any;

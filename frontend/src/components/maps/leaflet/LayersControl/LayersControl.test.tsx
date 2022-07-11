@@ -1,13 +1,15 @@
-import * as React from 'react';
 import 'leaflet';
-import { Map as LeafletMap } from 'leaflet';
-import { Map as ReactLeafletMap, MapProps } from 'react-leaflet';
-import Adapter from 'enzyme-adapter-react-16';
-import Enzyme, { mount } from 'enzyme';
-import LayersControl from './LayersControl';
 import 'leaflet/dist/leaflet.css';
+
 import { waitFor } from '@testing-library/dom';
+import Enzyme, { mount } from 'enzyme';
+import Adapter from 'enzyme-adapter-react-16';
+import { Map as LeafletMap } from 'leaflet';
+import * as React from 'react';
 import { Button } from 'react-bootstrap';
+import { Map as ReactLeafletMap, MapProps } from 'react-leaflet';
+
+import LayersControl from './LayersControl';
 
 jest.mock('axios');
 Enzyme.configure({ adapter: new Adapter() });

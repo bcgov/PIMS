@@ -1,6 +1,6 @@
+import { useApi } from 'hooks/api';
 import React from 'react';
 
-import { useApi } from 'hooks/api';
 import { IGeoAddressModel, ISitePidsModel } from '.';
 
 export const useApiGeocoder = () => {

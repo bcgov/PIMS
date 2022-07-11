@@ -1,20 +1,21 @@
+import { useKeycloak } from '@react-keycloak/web';
+import { act, cleanup, fireEvent, render, waitFor } from '@testing-library/react';
+import { ILookupCode } from 'actions/ILookupCode';
+import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
-import PropertyListView from './PropertyListView';
-import React from 'react';
-import { Router } from 'react-router-dom';
+import * as API from 'constants/API';
+import * as reducerTypes from 'constants/reducerTypes';
 import { createMemoryHistory } from 'history';
-import { render, cleanup, act, waitFor, fireEvent } from '@testing-library/react';
+import { mockFlatProperty } from 'mocks/filterDataMock';
+import React from 'react';
+import { Provider } from 'react-redux';
+import { Router } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { ILookupCode } from 'actions/ILookupCode';
-import * as API from 'constants/API';
-import { Provider } from 'react-redux';
-import * as reducerTypes from 'constants/reducerTypes';
+
 import service from '../service';
-import { useKeycloak } from '@react-keycloak/web';
-import axios from 'axios';
-import { mockFlatProperty } from 'mocks/filterDataMock';
 import { IProperty } from '.';
+import PropertyListView from './PropertyListView';
 
 // Set all module functions to jest.fn
 jest.mock('../service');

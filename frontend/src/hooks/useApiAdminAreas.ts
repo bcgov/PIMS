@@ -1,17 +1,17 @@
-import CustomAxios, { LifecycleToasts } from 'customAxios';
-import { useAppDispatch } from 'store';
-import { showLoading, hideLoading } from 'react-redux-loading-bar';
 import { AxiosInstance } from 'axios';
 import { ENVIRONMENT } from 'constants/environment';
-import { useCallback } from 'react';
-import { store } from 'store';
+import CustomAxios, { LifecycleToasts } from 'customAxios';
 import {
   IAddAdminArea,
   IAdminAreaFilter,
   IAdministrativeArea,
   IApiAdminArea,
 } from 'features/admin/admin-areas/interfaces';
+import { useCallback } from 'react';
+import { hideLoading, showLoading } from 'react-redux-loading-bar';
 import { toast } from 'react-toastify';
+import { useAppDispatch } from 'store';
+import { store } from 'store';
 
 export interface IGeocoderResponse {
   siteId: string;

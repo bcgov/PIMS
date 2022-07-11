@@ -1,10 +1,11 @@
-import * as React from 'react';
-import { useFormikContext, getIn, setIn, yupToFormErrors } from 'formik';
-import { noop } from 'lodash';
-import { IStepperFormContextProps, IStepperFormProviderProps, ISteppedFormValues } from './types';
-import _ from 'lodash';
-import { useCallback } from 'react';
+import { getIn, setIn, useFormikContext, yupToFormErrors } from 'formik';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
+import { noop } from 'lodash';
+import _ from 'lodash';
+import * as React from 'react';
+import { useCallback } from 'react';
+
+import { ISteppedFormValues, IStepperFormContextProps, IStepperFormProviderProps } from './types';
 
 const StepperFormContext = React.createContext<IStepperFormContextProps>({
   current: 0,

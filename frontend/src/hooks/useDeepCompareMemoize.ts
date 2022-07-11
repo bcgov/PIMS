@@ -1,5 +1,5 @@
-import React from 'react';
 import deepEqual from 'dequal';
+import React from 'react';
 
 /** util function used by other useDeep* hooks */
 export function useDeepCompareMemoize(value: React.DependencyList) {

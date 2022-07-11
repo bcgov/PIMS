@@ -2,17 +2,18 @@ import { Button } from 'components/common/form';
 import { Col, Row } from 'components/flex';
 import { Table } from 'components/Table';
 import { useFormikContext } from 'formik';
-import React from 'react';
-import { IProjectForm, IProjectPropertyForm } from '../interfaces';
-import { PropertyColumns } from './constants';
-import { ProjectAddProperties } from '.';
-import { ProjectPropertyInformation } from './ProjectPropertyInformation';
-import { ISearchPropertyModel } from 'hooks/api/properties/search';
 import { PropertyType } from 'hooks/api';
+import { ISearchPropertyModel } from 'hooks/api/properties/search';
 import queryString from 'query-string';
+import React from 'react';
+
+import { IProjectForm, IProjectPropertyForm } from '../interfaces';
+import { DisplayError } from './../../../../components/common/form/DisplayError';
+import { ProjectAddProperties } from '.';
+import { PropertyColumns } from './constants';
+import { ProjectPropertyInformation } from './ProjectPropertyInformation';
 import * as styled from './styled';
 import { toProjectProperty } from './utils';
-import { DisplayError } from './../../../../components/common/form/DisplayError';
 
 export interface IProjectPropertiesProps {
   disabled?: boolean;

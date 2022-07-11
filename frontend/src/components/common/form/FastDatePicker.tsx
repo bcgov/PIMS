@@ -1,13 +1,14 @@
-import React, { FunctionComponent, memo, useEffect, useState } from 'react';
-import { ErrorMessage, getIn, FormikProps } from 'formik';
-import DatePicker, { ReactDatePickerProps } from 'react-datepicker';
-import moment from 'moment';
-import { FormGroup, FormControlProps, Form } from 'react-bootstrap';
-import { formikFieldMemo } from 'utils';
 import classNames from 'classnames';
-import GenericModal from '../GenericModal';
 import { appraisalDateWarning } from 'features/projects/common';
+import { ErrorMessage, FormikProps, getIn } from 'formik';
+import moment from 'moment';
 import * as Popper from 'popper.js';
+import React, { FunctionComponent, memo, useEffect, useState } from 'react';
+import { Form, FormControlProps, FormGroup } from 'react-bootstrap';
+import DatePicker, { ReactDatePickerProps } from 'react-datepicker';
+import { formikFieldMemo } from 'utils';
+
+import GenericModal from '../GenericModal';
 
 type RequiredAttributes = {
   /** The field name */

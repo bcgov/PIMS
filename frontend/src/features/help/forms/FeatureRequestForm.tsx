@@ -1,8 +1,9 @@
-import * as React from 'react';
-import { Formik } from 'formik';
-import { Form } from 'react-bootstrap';
 import { Input, TextArea } from 'components/common/form';
+import { Formik } from 'formik';
 import { noop } from 'lodash';
+import * as React from 'react';
+import { Form } from 'react-bootstrap';
+
 import { pimsSupportEmail } from '../constants/HelpText';
 import { IHelpForm } from '../interfaces';
 

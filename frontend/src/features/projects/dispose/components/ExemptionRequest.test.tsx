@@ -1,8 +1,9 @@
-import * as React from 'react';
-import ExemptionRequest from './ExemptionRequest';
-import { useFormikContext, getIn } from 'formik';
 import { render } from '@testing-library/react';
+import { getIn, useFormikContext } from 'formik';
 import { noop } from 'lodash';
+import * as React from 'react';
+
+import ExemptionRequest from './ExemptionRequest';
 
 jest.mock('formik');
 (useFormikContext as jest.Mock).mockReturnValue({
