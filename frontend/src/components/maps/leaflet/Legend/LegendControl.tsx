@@ -1,13 +1,15 @@
-import * as React from 'react';
-import Control from 'react-leaflet-control';
-import { Overlay, Tooltip, Button } from 'react-bootstrap';
 import './LegendControl.scss';
-import ClickAwayListener from 'react-click-away-listener';
-import { Legend } from './Legend';
-import styled from 'styled-components';
-import { FiMapPin } from 'react-icons/fi';
-import TooltipWrapper from 'components/common/TooltipWrapper';
+
 import variables from '_variables.module.scss';
+import TooltipWrapper from 'components/common/TooltipWrapper';
+import * as React from 'react';
+import { Button, Overlay, Tooltip } from 'react-bootstrap';
+import ClickAwayListener from 'react-click-away-listener';
+import { FiMapPin } from 'react-icons/fi';
+import Control from 'react-leaflet-control';
+import styled from 'styled-components';
+
+import { Legend } from './Legend';
 
 const LegendButton = styled(Button)`
   background-color: #ffffff !important;

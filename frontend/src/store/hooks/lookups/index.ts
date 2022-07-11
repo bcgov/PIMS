@@ -1,2 +1,2 @@
-export * from './useLookups';
 export * from './constants';
+export * from './useLookups';

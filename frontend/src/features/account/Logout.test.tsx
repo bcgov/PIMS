@@ -1,9 +1,10 @@
-import React from 'react';
-import { createMemoryHistory } from 'history';
-import { render, cleanup, waitFor } from '@testing-library/react';
-import { Router } from 'react-router-dom';
 import { useKeycloak } from '@react-keycloak/web';
+import { cleanup, render, waitFor } from '@testing-library/react';
+import { createMemoryHistory } from 'history';
 import { useConfiguration } from 'hooks/useConfiguration';
+import React from 'react';
+import { Router } from 'react-router-dom';
+
 import { LogoutPage } from './Logout';
 
 jest.mock('@react-keycloak/web');

@@ -1,15 +1,15 @@
 import './FilterBar.scss';
 
-import React, { useState } from 'react';
-import { Col } from 'react-bootstrap';
-import { Formik, getIn, useFormikContext } from 'formik';
-import { Form, Select, InputGroup, Input } from 'components/common/form';
+import { Form, Input, InputGroup, Select } from 'components/common/form';
 import ResetButton from 'components/common/form/ResetButton';
 import SearchButton from 'components/common/form/SearchButton';
-import { useCodeLookups } from 'hooks/useLookupCodes';
+import { TypeaheadField } from 'components/common/form/Typeahead';
 import * as API from 'constants/API';
 import { Classifications } from 'constants/classifications';
-import { TypeaheadField } from 'components/common/form/Typeahead';
+import { Formik, getIn, useFormikContext } from 'formik';
+import { useCodeLookups } from 'hooks/useLookupCodes';
+import React, { useState } from 'react';
+import { Col } from 'react-bootstrap';
 import { mapLookupCode } from 'utils';
 
 const SearchBar: React.FC = () => {

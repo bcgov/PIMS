@@ -1,11 +1,10 @@
-import React from 'react';
-import { CellProps } from 'react-table';
+import { IProperty } from 'actions/parcelsActions';
 import { ReactComponent as BuildingSvg } from 'assets/images/icon-business.svg';
 import { ReactComponent as LandSvg } from 'assets/images/icon-lot.svg';
 import { ReactComponent as SubdivisionSvg } from 'assets/images/project-diagram-solid.svg';
-
-import { IProperty } from 'actions/parcelsActions';
 import { PropertyTypes } from 'constants/propertyTypes';
+import React from 'react';
+import { CellProps } from 'react-table';
 
 /**
  * Display an icon based on the property type.

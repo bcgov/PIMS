@@ -1,11 +1,13 @@
-import React, { FunctionComponent, useState, useEffect } from 'react';
-import { Modal, Button, Container, ModalDialog } from 'react-bootstrap';
 import './HelpModal.scss';
+
+import variables from '_variables.module.scss';
+import TooltipIcon from 'components/common/TooltipIcon';
+import React, { FunctionComponent, useEffect, useState } from 'react';
+import { Button, Container, Modal, ModalDialog } from 'react-bootstrap';
 import Draggable from 'react-draggable';
 import styled from 'styled-components';
-import TooltipIcon from 'components/common/TooltipIcon';
+
 import HelpModalContentContainer from '../containers/HelpModalContentContainer';
-import variables from '_variables.module.scss';
 
 interface ModalProps {
   /** Function to be executed when the cancel button is clicked  */

@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+
 import { IColProps } from '..';
 
 export const Col = styled.div<IColProps>`

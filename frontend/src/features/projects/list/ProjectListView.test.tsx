@@ -1,21 +1,22 @@
-import ProjectListView from './ProjectListView';
-import React from 'react';
-import { Router } from 'react-router-dom';
+import { useKeycloak } from '@react-keycloak/web';
+import { act, cleanup, render } from '@testing-library/react';
+import { ILookupCode } from 'actions/ILookupCode';
+import axios from 'axios';
+import MockAdapter from 'axios-mock-adapter';
+import * as API from 'constants/API';
+import Claims from 'constants/claims';
+import * as reducerTypes from 'constants/reducerTypes';
+import { Formik } from 'formik';
 import { createMemoryHistory } from 'history';
-import { render, cleanup, act } from '@testing-library/react';
+import { noop } from 'lodash';
+import React from 'react';
+import { Provider } from 'react-redux';
+import { Router } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { ILookupCode } from 'actions/ILookupCode';
-import * as API from 'constants/API';
-import { Provider } from 'react-redux';
-import * as reducerTypes from 'constants/reducerTypes';
+
 import service from '../apiService';
-import MockAdapter from 'axios-mock-adapter';
-import axios from 'axios';
-import { useKeycloak } from '@react-keycloak/web';
-import Claims from 'constants/claims';
-import { Formik } from 'formik';
-import { noop } from 'lodash';
+import ProjectListView from './ProjectListView';
 
 const mockAxios = new MockAdapter(axios);
 mockAxios.onAny().reply(200, {});

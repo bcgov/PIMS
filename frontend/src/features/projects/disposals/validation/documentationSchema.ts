@@ -1,6 +1,6 @@
-import * as yup from 'yup';
 import { WorkflowStatus } from 'hooks/api/projects';
 import { toInteger } from 'lodash';
+import * as yup from 'yup';
 
 // TODO: I was unable to figure out how to to a Yup array schema to support
 // only specific array values and provide custom errors for each..

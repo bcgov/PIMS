@@ -1,14 +1,15 @@
 import { FastCurrencyInput, FastDatePicker } from 'components/common/form';
-import React from 'react';
-import { useFormikContext, getIn } from 'formik';
-import { formatFiscalYear, formatMoney } from 'utils';
 import { BuildingSvg, LandSvg } from 'components/common/Icons';
-import moment from 'moment';
-import { indexOfFinancial } from './EvaluationForm';
+import TooltipIcon from 'components/common/TooltipIcon';
 import { EvaluationKeys } from 'constants/evaluationKeys';
 import { FiscalKeys } from 'constants/fiscalKeys';
-import TooltipIcon from 'components/common/TooltipIcon';
+import { getIn, useFormikContext } from 'formik';
+import moment from 'moment';
+import React from 'react';
 import styled from 'styled-components';
+import { formatFiscalYear, formatMoney } from 'utils';
+
+import { indexOfFinancial } from './EvaluationForm';
 const currentMoment = moment();
 const currentYear = currentMoment.year();
 

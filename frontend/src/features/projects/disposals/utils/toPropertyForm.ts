@@ -1,9 +1,10 @@
 import { EvaluationKeyName, FiscalKeyName, PropertyTypeName } from 'hooks/api';
 import { IProjectParcelModel, IProjectPropertyModel } from 'hooks/api/projects/disposals';
+import moment from 'moment';
 import { formatAddress } from 'utils';
+
 import { IProjectPropertyForm } from '../interfaces';
 import { convertToPropertyType, getMostRecentEvaluation, getMostRecentFiscal } from '.';
-import moment from 'moment';
 
 /**
  * Initialize form values from a property model.

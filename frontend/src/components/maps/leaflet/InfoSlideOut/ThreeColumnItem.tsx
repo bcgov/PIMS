@@ -1,7 +1,7 @@
-import * as React from 'react';
-import styled from 'styled-components';
-import { Col, ListGroup, Row } from 'react-bootstrap';
 import { Label } from 'components/common/Label';
+import * as React from 'react';
+import { Col, ListGroup, Row } from 'react-bootstrap';
+import styled from 'styled-components';
 
 const InnerRow = styled(Row)`
   margin: 0px;

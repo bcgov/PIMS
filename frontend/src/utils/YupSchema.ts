@@ -1,7 +1,7 @@
-import * as Yup from 'yup';
+import { PropertyTypes } from 'constants/propertyTypes';
 import moment from 'moment';
 import { emptyStringToNull } from 'utils';
-import { PropertyTypes } from 'constants/propertyTypes';
+import * as Yup from 'yup';
 
 Yup.addMethod(Yup.string, 'optional', function optional() {
   return this.transform(value => {

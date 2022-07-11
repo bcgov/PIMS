@@ -1,4 +1,4 @@
-import { createSlice, createAction, PayloadAction } from '@reduxjs/toolkit';
+import { createAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export const saveJwt = createAction<string>('saveJwt');
 export const clearJwt = createAction('clearJwt');

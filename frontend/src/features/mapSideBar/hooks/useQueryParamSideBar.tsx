@@ -1,9 +1,9 @@
-import { useLocation, useHistory } from 'react-router-dom';
-import { useState, useCallback, useMemo } from 'react';
-import queryString from 'query-string';
-import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
-import * as H from 'history';
 import dequal from 'dequal';
+import * as H from 'history';
+import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
+import queryString from 'query-string';
+import { useCallback, useMemo, useState } from 'react';
+import { useHistory, useLocation } from 'react-router-dom';
 
 export type SidebarSize = 'narrow' | 'wide' | undefined;
 

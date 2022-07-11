@@ -1,23 +1,23 @@
-import React from 'react';
-import { formatMoney, formatNumber, getFiscalYear } from 'utils';
-import { DisposeWorkflowStatus, AgencyResponses } from 'features/projects/constants';
-import { IProperty, IProject } from 'features/projects/interfaces';
-import { useFormikContext, getIn } from 'formik';
 import {
+  FastDatePicker,
+  FastInput,
   FastSelect,
   SelectOption,
-  FastInput,
   TextArea,
-  FastDatePicker,
 } from 'components/common/form';
+import { EditableMoneyCell, MoneyCell } from 'components/Table/MoneyCell';
+import { PropertyTypeCell } from 'components/Table/PropertyTypeCell';
+import { PropertyTypes } from 'constants/propertyTypes';
+import { AgencyResponses, DisposeWorkflowStatus } from 'features/projects/constants';
+import { IProject, IProperty } from 'features/projects/interfaces';
+import { getIn, useFormikContext } from 'formik';
 import useCodeLookups from 'hooks/useLookupCodes';
-import { FaRegTimesCircle } from 'react-icons/fa';
 import _ from 'lodash';
+import React from 'react';
+import { FaRegTimesCircle } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { EditableMoneyCell, MoneyCell } from 'components/Table/MoneyCell';
-import { PropertyTypes } from 'constants/propertyTypes';
-import { PropertyTypeCell } from 'components/Table/PropertyTypeCell';
+import { formatMoney, formatNumber, getYear } from 'utils';
 
 const ColumnDiv = styled.div`
   display: flex;
@@ -114,9 +114,9 @@ export const getEditableDatePickerCell = (
 };
 
 const responseOptions: SelectOption[] = [
-  { label: 'Not Interested', value: AgencyResponses.Unsubscribe },
-  { label: 'Interested', value: AgencyResponses.Watch },
-  { label: 'Send Notifications', value: AgencyResponses.Subscribe },
+  { label: 'Not Interested', value: AgencyResponses.Unsubscribe, parent: '' },
+  { label: 'Interested', value: AgencyResponses.Watch, parent: '' },
+  { label: 'Send Notifications', value: AgencyResponses.Subscribe, parent: '' },
 ];
 
 export const getProjectLinkCell = (namespace: string = 'properties') => (cellInfo: any) => {
@@ -259,9 +259,9 @@ export const getPropertyColumns = ({
       Header: 'Assessment Year',
       accessor: (row: IProperty) =>
         [PropertyTypes.PARCEL, PropertyTypes.SUBDIVISION].includes(row.propertyTypeId)
-          ? getFiscalYear(row.assessedLandDate)
-          : [PropertyTypes.BUILDING, PropertyTypes.BUILDING].includes(row.propertyTypeId)
-          ? getFiscalYear(row.assessedBuildingDate)
+          ? getYear(row.assessedLandDate)
+          : [PropertyTypes.BUILDING].includes(row.propertyTypeId)
+          ? getYear(row.assessedBuildingDate)
           : undefined,
       className: 'form-group',
       style: {

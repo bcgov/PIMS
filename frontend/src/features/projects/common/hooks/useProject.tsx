@@ -1,8 +1,8 @@
-import { useAppSelector } from 'store';
+import { defaultProject } from 'features/projects/constants/defaultValues';
 import { IStatus } from 'features/projects/interfaces';
 import _ from 'lodash';
 import { useHistory } from 'react-router-dom';
-import { defaultProject } from 'features/projects/constants/defaultValues';
+import { useAppSelector } from 'store';
 
 /**
  * Find the workflow project status transition for the current workflow and specified 'from' and 'to'.

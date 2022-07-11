@@ -1,4 +1,5 @@
 import { TableSort } from 'components/Table/TableSort';
+
 import { IProject } from '../projects/interfaces';
 export interface IReport {
   id?: number;
@@ -7,6 +8,7 @@ export interface IReport {
   isFinal: boolean;
   to: string;
   from?: string;
+  rowVersion: string;
 }
 
 export interface ISnapshot {

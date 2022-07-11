@@ -41,7 +41,13 @@
       "username": "sa"
     }
   ],
-  "cSpell.words": ["Formik", "Xunit", "keycloak", "pims"],
+  "cSpell.words": [
+    "Formik",
+    "keycloak",
+    "Mapster",
+    "pims",
+    "Xunit"
+  ],
   "[javascript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   }

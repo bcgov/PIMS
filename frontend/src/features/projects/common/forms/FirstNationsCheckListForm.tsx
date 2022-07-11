@@ -1,11 +1,12 @@
+import classNames from 'classnames';
+import TooltipIcon from 'components/common/TooltipIcon';
+import { ReviewWorkflowStatus } from 'features/projects/constants';
+import _ from 'lodash';
 import * as React from 'react';
 import { Col, Row } from 'react-bootstrap';
+
+import { reviewFirstNationsTooltip, useProject } from '..';
 import TasksForm from './TasksForm';
-import _ from 'lodash';
-import TooltipIcon from 'components/common/TooltipIcon';
-import { useProject, reviewFirstNationsTooltip } from '..';
-import { ReviewWorkflowStatus } from 'features/projects/constants';
-import classNames from 'classnames';
 
 interface IFirstNationsCheckListFormProps {
   className?: string;

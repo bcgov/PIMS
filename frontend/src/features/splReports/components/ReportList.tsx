@@ -1,7 +1,8 @@
 import * as React from 'react';
-import ReportListitem from './ReportListItem';
+
 import { IReport } from '../interfaces';
 import AddReportControl from './AddReportControl';
+import ReportListitem from './ReportListItem';
 
 interface IReportListProps {
   /** a list of all spl reports in the system */

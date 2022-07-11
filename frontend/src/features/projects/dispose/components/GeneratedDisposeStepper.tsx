@@ -1,8 +1,9 @@
-import React from 'react';
-import { useAppSelector } from 'store';
 import Stepper from 'components/common/Stepper';
-import { useStepper } from '..';
+import React from 'react';
 import { useHistory } from 'react-router-dom';
+import { useAppSelector } from 'store';
+
+import { useStepper } from '..';
 
 interface GeneratedDisposeStepperProps {
   activeStep: number;

@@ -1,12 +1,12 @@
+import { SidebarContextType } from 'features/mapSideBar/hooks/useQueryParamSideBar';
+import { LatLngBounds } from 'leaflet';
+import { keys } from 'lodash';
+import queryString from 'query-string';
 import * as React from 'react';
 import { Col, ListGroup, Row } from 'react-bootstrap';
-import { keys } from 'lodash';
-import styled from 'styled-components';
 import { LatLng, useLeaflet } from 'react-leaflet';
 import { Link, useLocation } from 'react-router-dom';
-import queryString from 'query-string';
-import { LatLngBounds } from 'leaflet';
-import { SidebarContextType } from 'features/mapSideBar/hooks/useQueryParamSideBar';
+import styled from 'styled-components';
 
 export const LayerPopupTitle = styled('div')`
   padding: 16px;

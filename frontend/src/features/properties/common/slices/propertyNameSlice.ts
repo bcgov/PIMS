@@ -1,4 +1,4 @@
-import { createSlice, createAction } from '@reduxjs/toolkit';
+import { createAction, createSlice } from '@reduxjs/toolkit';
 
 export const savePropertyNames = createAction<String[]>('savePropertyNames');
 export const clearPropertyNames = createAction('clearPropertyNames');

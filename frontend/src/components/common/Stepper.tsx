@@ -1,7 +1,8 @@
-import React, { Fragment } from 'react';
-import classNames from 'classnames';
-import { FaCheck } from 'react-icons/fa';
 import './Stepper.scss';
+
+import classNames from 'classnames';
+import React, { Fragment } from 'react';
+import { FaCheck } from 'react-icons/fa';
 import { ObjectSchema } from 'yup';
 import { AnyObject } from 'yup/lib/types';
 export interface IStep {

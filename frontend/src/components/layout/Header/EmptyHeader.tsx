@@ -1,9 +1,9 @@
 import './Header.scss';
 
-import React from 'react';
-import { Navbar, Nav } from 'react-bootstrap';
 import BClogoUrl from 'assets/images/logo-banner.svg';
 import PIMSlogo from 'assets/images/PIMSlogo/logo_only.png';
+import React from 'react';
+import { Nav, Navbar } from 'react-bootstrap';
 import styled from 'styled-components';
 
 const VerticalBar = styled.span`

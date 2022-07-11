@@ -1,19 +1,21 @@
-import * as React from 'react';
 import 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import InfoContent from './InfoContent';
-import { IParcel, IBuilding } from 'actions/parcelsActions';
-import { PropertyTypes } from 'constants/propertyTypes';
+
+import { useKeycloak } from '@react-keycloak/web';
 import { render } from '@testing-library/react';
+import { IBuilding, IParcel } from 'actions/parcelsActions';
+import * as API from 'constants/API';
+import { PropertyTypes } from 'constants/propertyTypes';
+import * as reducerTypes from 'constants/reducerTypes';
+import { Workflows } from 'constants/workflows';
+import { createMemoryHistory } from 'history';
+import * as React from 'react';
+import { Provider } from 'react-redux';
+import { Router } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import * as reducerTypes from 'constants/reducerTypes';
-import { Provider } from 'react-redux';
-import * as API from 'constants/API';
-import { Workflows } from 'constants/workflows';
-import { Router } from 'react-router-dom';
-import { createMemoryHistory } from 'history';
-import { useKeycloak } from '@react-keycloak/web';
+
+import InfoContent from './InfoContent';
 
 jest.mock('@react-keycloak/web');
 

@@ -1,12 +1,13 @@
 import { BuildingSvg, LandSvg } from 'components/common/Icons';
-import { ColumnWithProps, MoneyCell } from 'components/Table';
-import { PropertyType } from 'hooks/api';
-import { useFormikContext } from 'formik';
-import { Classification } from 'hooks/api';
 import TooltipWrapper from 'components/common/TooltipWrapper';
+import { ColumnWithProps, MoneyCell } from 'components/Table';
+import { useFormikContext } from 'formik';
+import { PropertyType } from 'hooks/api';
+import { Classification } from 'hooks/api';
 import _ from 'lodash';
 import React from 'react';
 import { FaTrash } from 'react-icons/fa';
+
 import { IProjectForm, IProjectPropertyForm } from '../../interfaces';
 
 export const PropertyColumns = (

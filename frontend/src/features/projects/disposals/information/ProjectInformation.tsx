@@ -8,9 +8,9 @@ import {
 import { Col, Row } from 'components/flex';
 import { useFormikContext } from 'formik';
 import React from 'react';
-import { useLookups, LookupType } from 'store/hooks';
-import { IProjectForm } from '../interfaces';
+import { LookupType, useLookups } from 'store/hooks';
 
+import { IProjectForm } from '../interfaces';
 import * as styled from './styled';
 
 interface IProjectInformationProps {

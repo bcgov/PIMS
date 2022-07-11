@@ -1,12 +1,13 @@
-import * as React from 'react';
-import { IUserRecord } from '../interfaces/IUserRecord';
-import { getUpdateUserAction } from 'store/slices/hooks/usersActionCreator';
 import { Menu } from 'components/menu/Menu';
-import { FiMoreHorizontal } from 'react-icons/fi';
-import { CellProps } from 'react-table';
-import { useHistory } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from 'store';
 import { IUser } from 'interfaces';
+import * as React from 'react';
+import { FiMoreHorizontal } from 'react-icons/fi';
+import { useHistory } from 'react-router-dom';
+import { CellProps } from 'react-table';
+import { useAppDispatch, useAppSelector } from 'store';
+import { getUpdateUserAction } from 'store/slices/hooks/usersActionCreator';
+
+import { IUserRecord } from '../interfaces/IUserRecord';
 
 export const RowActions = (props: CellProps<IUserRecord>) => {
   const dispatch = useAppDispatch();

@@ -1,8 +1,8 @@
-import { createSlice, createAction, PayloadAction } from '@reduxjs/toolkit';
+import { createAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { DEFAULT_PAGE_SIZE } from 'components/Table/constants';
+import { TableSort } from 'components/Table/TableSort';
 import { IAgencyDetail } from 'interfaces';
 import { IAgency, IAgencyFilter, IAgencyRecord, IPagedItems } from 'interfaces';
-import { TableSort } from 'components/Table/TableSort';
-import { DEFAULT_PAGE_SIZE } from 'components/Table/constants';
 
 export const storeAgency = createAction<IAgency>('storeAgency');
 export const storeAgencyDetail = createAction<IAgencyDetail>('storeAgencyDetail');
@@ -19,6 +19,7 @@ const initialAgency: IAgencyDetail = {
   name: '',
   description: '',
   email: '',
+  ccEmail: '',
   addressTo: '',
   isDisabled: false,
   sendEmail: false,

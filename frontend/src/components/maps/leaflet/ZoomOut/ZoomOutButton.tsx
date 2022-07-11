@@ -1,12 +1,12 @@
-import * as React from 'react';
-import Control from 'react-leaflet-control';
-import { Button } from 'react-bootstrap';
-import TooltipWrapper from 'components/common/TooltipWrapper';
-import styled from 'styled-components';
-import { FaExpandArrowsAlt } from 'react-icons/fa';
-import { LatLngBounds, Map as LeafletMap } from 'leaflet';
-import { MapProps as LeafletMapProps, Map as ReactLeafletMap } from 'react-leaflet';
 import variables from '_variables.module.scss';
+import TooltipWrapper from 'components/common/TooltipWrapper';
+import { LatLngBounds, Map as LeafletMap } from 'leaflet';
+import * as React from 'react';
+import { Button } from 'react-bootstrap';
+import { FaExpandArrowsAlt } from 'react-icons/fa';
+import { Map as ReactLeafletMap, MapProps as LeafletMapProps } from 'react-leaflet';
+import Control from 'react-leaflet-control';
+import styled from 'styled-components';
 
 const ZoomButton = styled(Button)`
   background-color: #ffffff !important;

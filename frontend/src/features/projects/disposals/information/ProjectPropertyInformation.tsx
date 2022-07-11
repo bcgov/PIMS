@@ -1,11 +1,11 @@
+import { FastCurrencyInput, Select } from 'components/common/form';
 import { Col, Row } from 'components/flex';
+import { riskTooltips, tierTooltips } from 'features/projects/common';
 import { useFormikContext } from 'formik';
 import React from 'react';
-import { IProjectForm } from '../interfaces';
-import { FastCurrencyInput, Select } from 'components/common/form';
-import { useLookups, LookupType } from 'store/hooks';
-import { riskTooltips, tierTooltips } from 'features/projects/common';
+import { LookupType, useLookups } from 'store/hooks';
 
+import { IProjectForm } from '../interfaces';
 import * as styled from './styled';
 
 export interface IProjectPropertyInformationProps {

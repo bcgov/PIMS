@@ -1,14 +1,15 @@
-import { LifecycleToasts } from '../../../customAxios';
-import { showLoading, hideLoading } from 'react-redux-loading-bar';
-import { storeRequest, storeError, storeSuccess } from 'store';
+import { IBuilding } from 'actions/parcelsActions';
+import { AxiosError } from 'axios';
 import * as actionTypes from 'constants/actionTypes';
 import * as API from 'constants/API';
-import { IBuilding } from 'actions/parcelsActions';
 import { ENVIRONMENT } from 'constants/environment';
-import CustomAxios from 'customAxios';
 import * as pimsToasts from 'constants/toasts';
+import CustomAxios from 'customAxios';
+import { hideLoading, showLoading } from 'react-redux-loading-bar';
 import { AnyAction, Dispatch } from 'redux';
-import { AxiosError } from 'axios';
+import { storeError, storeRequest, storeSuccess } from 'store';
+
+import { LifecycleToasts } from '../../../customAxios';
 import { error, request, success } from '.';
 
 const buildingDeletingToasts: LifecycleToasts = {

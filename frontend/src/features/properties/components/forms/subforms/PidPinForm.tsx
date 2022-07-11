@@ -1,8 +1,9 @@
+import { Form, Input } from 'components/common/form';
+import { Label } from 'components/common/Label';
 import { FunctionComponent } from 'react';
 import React from 'react';
-import { Input, Form } from 'components/common/form';
+
 import { PidPinTooltip } from '../strings';
-import { Label } from 'components/common/Label';
 
 interface PidPinProps {
   handlePidChange: (pid: string, nameSpace?: string) => void;

@@ -1,10 +1,11 @@
-import * as React from 'react';
 import { ColumnWithProps } from 'components/Table';
-import { IAccessRequestModel } from '../interfaces';
-import { CellProps } from 'react-table';
 import { AccessStatusDisplayMapper } from 'constants/accessStatus';
-import { RowActions } from '../components/RowActions';
+import * as React from 'react';
 import { Link } from 'react-router-dom';
+import { CellProps } from 'react-table';
+
+import { RowActions } from '../components/RowActions';
+import { IAccessRequestModel } from '../interfaces';
 
 export const columnDefinitions: ColumnWithProps<IAccessRequestModel>[] = [
   {

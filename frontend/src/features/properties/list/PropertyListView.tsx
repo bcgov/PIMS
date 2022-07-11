@@ -1,46 +1,48 @@
 import './PropertyListView.scss';
-import React, { useState, useMemo, useRef, useCallback } from 'react';
-import { useAppDispatch } from 'store';
-import { Container, Button } from 'react-bootstrap';
-import queryString from 'query-string';
-import { fill, isEmpty, pick, range, noop, keys, intersection } from 'lodash';
-import * as API from 'constants/API';
-import { ENVIRONMENT } from 'constants/environment';
-import { decimalOrUndefined, mapLookupCode } from 'utils';
-import download from 'utils/download';
-import { IPropertyQueryParams, IProperty } from '.';
-import { columns as cols, buildingColumns as buildingCols } from './columns';
-import { Table } from 'components/Table';
-import service from '../service';
-import { FaFolderOpen, FaFolder, FaEdit, FaFileExport } from 'react-icons/fa';
-import { Buildings } from './buildings';
-import { FaFileExcel, FaFileAlt } from 'react-icons/fa';
-import styled from 'styled-components';
-import TooltipWrapper from 'components/common/TooltipWrapper';
+
+import variables from '_variables.module.scss';
+import { IBuilding, IParcel } from 'actions/parcelsActions';
 import { ReactComponent as BuildingSvg } from 'assets/images/icon-business.svg';
 import { ReactComponent as LandSvg } from 'assets/images/icon-lot.svg';
-import { PropertyFilter } from '../filter';
-import { PropertyTypeNames } from '../../../constants/propertyTypeNames';
-import { IPropertyFilter } from '../filter/IPropertyFilter';
+import TooltipWrapper from 'components/common/TooltipWrapper';
+import { Table } from 'components/Table';
 import { SortDirection, TableSort } from 'components/Table/TableSort';
-import { useRouterFilter } from 'hooks/useRouterFilter';
-import { Form, Formik, FormikProps, getIn, useFormikContext } from 'formik';
-import { useApi } from 'hooks/useApi';
-import { toast } from 'react-toastify';
+import * as API from 'constants/API';
+import { ENVIRONMENT } from 'constants/environment';
 import { EvaluationKeys } from 'constants/evaluationKeys';
 import { FiscalKeys } from 'constants/fiscalKeys';
-import variables from '_variables.module.scss';
-import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
-import { Roles } from 'constants/roles';
-import useCodeLookups from 'hooks/useLookupCodes';
-import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
-import * as Yup from 'yup';
-import {
-  getCurrentYearEvaluation,
-  getCurrentFiscal,
-} from 'features/projects/common/projectConverter';
 import { PropertyTypes } from 'constants/index';
-import { IBuilding, IParcel } from 'actions/parcelsActions';
+import { Roles } from 'constants/roles';
+import {
+  getCurrentFiscal,
+  getCurrentYearEvaluation,
+} from 'features/projects/common/projectConverter';
+import { Form, Formik, FormikProps, getIn, useFormikContext } from 'formik';
+import { useApi } from 'hooks/useApi';
+import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+import useCodeLookups from 'hooks/useLookupCodes';
+import { useRouterFilter } from 'hooks/useRouterFilter';
+import { fill, intersection, isEmpty, keys, noop, pick, range } from 'lodash';
+import queryString from 'query-string';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
+import { Button, Container } from 'react-bootstrap';
+import { FaEdit, FaFileExport, FaFolder, FaFolderOpen } from 'react-icons/fa';
+import { FaFileAlt, FaFileExcel } from 'react-icons/fa';
+import { toast } from 'react-toastify';
+import { useAppDispatch } from 'store';
+import styled from 'styled-components';
+import { decimalOrUndefined, mapLookupCode } from 'utils';
+import download from 'utils/download';
+import * as Yup from 'yup';
+
+import { PropertyTypeNames } from '../../../constants/propertyTypeNames';
+import { PropertyFilter } from '../filter';
+import { IPropertyFilter } from '../filter/IPropertyFilter';
+import service from '../service';
+import { IProperty, IPropertyQueryParams } from '.';
+import { Buildings } from './buildings';
+import { buildingColumns as buildingCols, columns as cols } from './columns';
 import { toApiProperty } from './toApiProperty';
 
 const getPropertyReportUrl = (filter: IPropertyQueryParams) =>

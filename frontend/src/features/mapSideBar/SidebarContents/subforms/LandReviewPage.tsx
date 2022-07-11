@@ -1,33 +1,33 @@
 import './LandReviewPage.scss';
 
+import { IBuilding } from 'actions/parcelsActions';
 import {
-  FastInput,
-  Input,
-  TextArea,
-  InputGroup,
-  FastCurrencyInput,
   Check,
+  FastCurrencyInput,
+  FastInput,
   FastSelect,
+  Input,
+  InputGroup,
+  TextArea,
 } from 'components/common/form';
-import React, { useCallback, useState, useMemo } from 'react';
-import { Col, Container, Row } from 'react-bootstrap';
-import { useFormikContext, getIn } from 'formik';
-import { Label } from 'components/common/Label';
-import { FaEdit } from 'react-icons/fa';
-import { LandSvg, BuildingSvg } from 'components/common/Icons';
-import AddressForm from 'features/properties/components/forms/subforms/AddressForm';
-import { noop } from 'lodash';
-import styled from 'styled-components';
 import { ParentSelect } from 'components/common/form/ParentSelect';
-import { FormikTable } from 'features/projects/common';
-import { getAssociatedBuildingsCols } from 'features/properties/components/forms/subforms/columns';
-import { formatFiscalYear } from 'utils';
-import { indexOfFinancial } from 'features/properties/components/forms/subforms/EvaluationForm';
+import { BuildingSvg, LandSvg } from 'components/common/Icons';
+import { Label } from 'components/common/Label';
+import { ProjectNumberLink } from 'components/maps/leaflet/InfoSlideOut/ProjectNumberLink';
 import { EvaluationKeys } from 'constants/evaluationKeys';
 import { FiscalKeys } from 'constants/fiscalKeys';
+import { FormikTable } from 'features/projects/common';
+import AddressForm from 'features/properties/components/forms/subforms/AddressForm';
+import { getAssociatedBuildingsCols } from 'features/properties/components/forms/subforms/columns';
+import { indexOfFinancial } from 'features/properties/components/forms/subforms/EvaluationForm';
+import { getIn, useFormikContext } from 'formik';
+import { noop } from 'lodash';
 import moment from 'moment';
-import { ProjectNumberLink } from 'components/maps/leaflet/InfoSlideOut/ProjectNumberLink';
-import { IBuilding } from 'actions/parcelsActions';
+import React, { useCallback, useMemo, useState } from 'react';
+import { Col, Container, Row } from 'react-bootstrap';
+import { FaEdit } from 'react-icons/fa';
+import styled from 'styled-components';
+import { formatFiscalYear } from 'utils';
 
 interface IReviewProps {
   nameSpace?: string;

@@ -1,8 +1,8 @@
-import { Dropdown } from 'react-bootstrap';
-import React from 'react';
-import { IAccessRequest } from 'interfaces';
-import { useAccessRequest } from 'store/slices/hooks';
 import { AccessRequestStatus } from 'constants/accessStatus';
+import { IAccessRequest } from 'interfaces';
+import React from 'react';
+import { Dropdown } from 'react-bootstrap';
+import { useAccessRequest } from 'store/slices/hooks';
 
 interface IAccessRequestActionsProps {
   selections: IAccessRequest[];

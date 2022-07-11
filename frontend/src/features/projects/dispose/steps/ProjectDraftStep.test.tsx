@@ -1,19 +1,20 @@
-import React from 'react';
-import ProjectDraftStep from './ProjectDraftStep';
+import { useKeycloak } from '@react-keycloak/web';
+import { cleanup, render, screen, waitFor } from '@testing-library/react';
+import axios from 'axios';
+import MockAdapter from 'axios-mock-adapter';
+import { ProjectActions } from 'constants/actionTypes';
 import * as reducerTypes from 'constants/reducerTypes';
 import { createMemoryHistory } from 'history';
-import configureMockStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
+import { noop } from 'lodash';
+import React from 'react';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
-import { ProjectActions } from 'constants/actionTypes';
-import MockAdapter from 'axios-mock-adapter';
-import axios from 'axios';
+import configureMockStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
 import { fillInput } from 'utils/testUtils';
+
 import useStepper from '../hooks/useStepper';
-import { noop } from 'lodash';
-import { render, screen, cleanup, waitFor } from '@testing-library/react';
-import { useKeycloak } from '@react-keycloak/web';
+import ProjectDraftStep from './ProjectDraftStep';
 
 jest.mock('@react-keycloak/web');
 (useKeycloak as jest.Mock).mockReturnValue({

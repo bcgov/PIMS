@@ -4,8 +4,9 @@ import {
   IProjectParcelModel,
   IProjectPropertyModel,
 } from 'hooks/api/projects/disposals';
-import { convertToPropertyTypeName } from '.';
+
 import { IProjectPropertyForm } from '../interfaces';
+import { convertToPropertyTypeName } from '.';
 import { getMostRecentEvaluation } from './getMostRecentEvaluation';
 import { getMostRecentFiscal } from './getMostRecentFiscal';
 

@@ -1,21 +1,22 @@
-import React, { useEffect } from 'react';
 import './AccessRequestPage.scss';
-import { Container, Row, Col, ButtonToolbar, Button, Alert } from 'react-bootstrap';
-import { useAccessRequest, toAccessRequest } from 'store/slices/hooks';
-import { IUserInfo, IAccessRequest } from 'interfaces';
-import { Formik } from 'formik';
-import { Form, Input, TextArea, Select } from 'components/common/form';
+
+import { Form, Input, Select, TextArea } from 'components/common/form';
+import { ISnackbarState, Snackbar } from 'components/common/Snackbar';
+import TooltipWrapper from 'components/common/TooltipWrapper';
+import { AccessRequestStatus } from 'constants/accessStatus';
 import * as API from 'constants/API';
 import { DISCLAIMER_URL, PRIVACY_POLICY_URL } from 'constants/strings';
-import { AccessRequestSchema } from 'utils/YupSchema';
-import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
-import { mapLookupCode } from 'utils';
-import { AccessRequestStatus } from 'constants/accessStatus';
-import { Snackbar, ISnackbarState } from 'components/common/Snackbar';
-import useCodeLookups from 'hooks/useLookupCodes';
-import TooltipWrapper from 'components/common/TooltipWrapper';
 import { AUTHORIZATION_URL } from 'constants/strings';
+import { Formik } from 'formik';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+import useCodeLookups from 'hooks/useLookupCodes';
+import { IAccessRequest, IUserInfo } from 'interfaces';
+import React, { useEffect } from 'react';
+import { Alert, Button, ButtonToolbar, Col, Container, Row } from 'react-bootstrap';
 import { useAppSelector } from 'store';
+import { toAccessRequest, useAccessRequest } from 'store/slices/hooks';
+import { mapLookupCode } from 'utils';
+import { AccessRequestSchema } from 'utils/YupSchema';
 
 interface IAccessRequestForm extends IAccessRequest {
   agency: number;

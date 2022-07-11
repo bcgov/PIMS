@@ -1,23 +1,24 @@
-import React from 'react';
+import { useKeycloak } from '@react-keycloak/web';
+import { cleanup, fireEvent, render, waitFor } from '@testing-library/react';
+import { ILookupCode } from 'actions/ILookupCode';
+import axios from 'axios';
+import MockAdapter from 'axios-mock-adapter';
+import * as actionTypes from 'constants/actionTypes';
+import * as API from 'constants/API';
+import * as reducerTypes from 'constants/reducerTypes';
+import { Formik } from 'formik';
 import { createMemoryHistory } from 'history';
-import { Router } from 'react-router-dom';
+import { noop } from 'lodash';
+import moment from 'moment-timezone';
+import React from 'react';
+import { act } from 'react-dom/test-utils';
 import { Provider } from 'react-redux';
+import { Router } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { ILookupCode } from 'actions/ILookupCode';
-import * as actionTypes from 'constants/actionTypes';
-import * as reducerTypes from 'constants/reducerTypes';
-import * as API from 'constants/API';
-import { ManageUsers } from './ManageUsers';
-import { cleanup, fireEvent, render, waitFor } from '@testing-library/react';
-import moment from 'moment-timezone';
-import { Formik } from 'formik';
-import { noop } from 'lodash';
-import { act } from 'react-dom/test-utils';
-import MockAdapter from 'axios-mock-adapter';
-import axios from 'axios';
 import { fillInput } from 'utils/testUtils';
-import { useKeycloak } from '@react-keycloak/web';
+
+import { ManageUsers } from './ManageUsers';
 
 jest.mock('@react-keycloak/web');
 (useKeycloak as jest.Mock).mockReturnValue({

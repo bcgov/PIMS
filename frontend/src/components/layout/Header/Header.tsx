@@ -1,16 +1,17 @@
 import './Header.scss';
 
-import React, { useState } from 'react';
-import { Navbar, Row, Col, Modal, Button, Nav } from 'react-bootstrap';
 import BClogoUrl from 'assets/images/logo-banner.svg';
 import PIMSlogo from 'assets/images/PIMSlogo/logo_only.png';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+import React, { useState } from 'react';
+import { Button, Col, Modal, Nav, Navbar, Row } from 'react-bootstrap';
+import { FaBomb } from 'react-icons/fa';
 import { useHistory } from 'react-router-dom';
 import { IGenericNetworkAction, useAppSelector } from 'store';
-import { FaBomb } from 'react-icons/fa';
-import { UserProfile } from './UserProfile';
-import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
-import styled from 'styled-components';
 import { useNetworkStore } from 'store/slices/hooks';
+import styled from 'styled-components';
+
+import { UserProfile } from './UserProfile';
 
 const VerticalBar = styled.span`
   border-left: 2px solid white;

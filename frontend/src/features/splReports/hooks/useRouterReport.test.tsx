@@ -1,12 +1,13 @@
+import { renderHook } from '@testing-library/react-hooks';
+import { createMemoryHistory } from 'history';
 import React from 'react';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
-import { createMemoryHistory } from 'history';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { useRouterReport } from './useRouterReport';
-import { renderHook } from '@testing-library/react-hooks';
+
 import { IReport } from '../interfaces';
+import { useRouterReport } from './useRouterReport';
 
 const mockStore = configureMockStore([thunk]);
 const history = createMemoryHistory();
@@ -74,6 +75,6 @@ describe('useRouterReport hook tests', () => {
     renderHook(() => useRouterReport({ currentReport: reports[1], setCurrentReport, reports }), {
       wrapper,
     });
-    expect(history.location.search).toEqual('?reportId=2');
+    expect(history.location.search).toEqual('reportId=2');
   });
 });

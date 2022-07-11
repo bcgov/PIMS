@@ -1,13 +1,13 @@
-import { useCallback } from 'react';
-import React from 'react';
-import { FormikProps } from 'formik';
-import { Form, FastInput, InputGroup } from 'components/common/form';
 import { ReactComponent as BuildingDraftIcon } from 'assets/images/draft-building-icon.svg';
 import { ReactComponent as ParcelDraftIcon } from 'assets/images/draft-parcel-icon.svg';
-import styled from 'styled-components';
+import { FastInput, Form, InputGroup } from 'components/common/form';
 import { Label } from 'components/common/Label';
+import { FormikProps } from 'formik';
+import { useCallback } from 'react';
+import React from 'react';
 import { Col, Row } from 'react-bootstrap';
 import ClickAwayListener from 'react-click-away-listener';
+import styled from 'styled-components';
 
 interface LatLongFormProps {
   setMovingPinNameSpace: (nameSpace?: string) => void;
