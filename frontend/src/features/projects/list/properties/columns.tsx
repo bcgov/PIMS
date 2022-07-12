@@ -1,8 +1,9 @@
+import { ColumnWithProps, MoneyCell, ViewPropertyCell } from 'components/Table';
+import { PropertyTypeCell } from 'components/Table/PropertyTypeCell';
 import { CellProps } from 'react-table';
 import { formatNumber } from 'utils';
-import { ColumnWithProps, ViewPropertyCell, MoneyCell } from 'components/Table';
+
 import { IProperty } from '../../interfaces';
-import { PropertyTypeCell } from 'components/Table/PropertyTypeCell';
 
 const NumberCell = ({ cell: { value } }: CellProps<IProperty, number>) => formatNumber(value);
 

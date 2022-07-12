@@ -1,8 +1,8 @@
-import React from 'react';
-
 import { IPageModel, useApi } from 'hooks/api';
-import { INotificationQueueModel, IProjectModel, IProjectNotificationFilter } from '.';
+import React from 'react';
 import { toQueryString } from 'utils';
+
+import { INotificationQueueModel, IProjectModel, IProjectNotificationFilter } from '.';
 
 export const useApiProjectDisposal = () => {
   const api = useApi();

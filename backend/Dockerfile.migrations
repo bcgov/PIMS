@@ -6,7 +6,7 @@ ENV PATH="$PATH:/tmp/.dotnet/tools"
 
 # Switch to root for package installs
 USER 0
-RUN dotnet tool install --global dotnet-ef
+RUN dotnet tool install --global dotnet-ef --version 5.0.17
 
 WORKDIR /src
 COPY . .

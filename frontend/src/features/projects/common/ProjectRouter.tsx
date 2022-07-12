@@ -1,29 +1,30 @@
+import { ProjectActions } from 'constants/actionTypes';
+import Claims from 'constants/claims';
+import { DisposeWorkflowStatus, ReviewWorkflowStatus } from 'features/projects/constants';
+import { IProject } from 'features/projects/interfaces';
+import { FormikValues } from 'formik';
+import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+import queryString from 'query-string';
 import React, { useEffect, useRef } from 'react';
 import { Container, Spinner } from 'react-bootstrap';
-import { Switch, Redirect, useHistory } from 'react-router-dom';
+import { Redirect, Switch, useHistory } from 'react-router-dom';
 import { match as Match } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { useAppDispatch, useAppSelector } from 'store';
+import AppRoute from 'utils/AppRoute';
+import PrivateRoute from 'utils/PrivateRoute';
+
+import { ReviewApproveStep } from '../assess';
 import {
   clearProject,
   fetchProject,
-  SelectProjectPropertiesPage,
   fetchProjectWorkflow,
+  SelectProjectPropertiesPage,
   useProject,
 } from '../common';
-import { DisposeWorkflowStatus, ReviewWorkflowStatus } from 'features/projects/constants';
-import { IProject } from 'features/projects/interfaces';
-import { ProjectActions } from 'constants/actionTypes';
-import { ReviewApproveStep } from '../assess';
-import queryString from 'query-string';
-import PrivateRoute from 'utils/PrivateRoute';
-import Claims from 'constants/claims';
-import { FormikValues } from 'formik';
-import ProjectLayout from './ProjectLayout';
-import AppRoute from 'utils/AppRoute';
-import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
-import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
-import { toast } from 'react-toastify';
-import { useAppDispatch, useAppSelector } from 'store';
 import { ProjectSummary } from '../summary';
+import ProjectLayout from './ProjectLayout';
 
 /**
  * Top level component ensures proper context provided to child assessment form pages.

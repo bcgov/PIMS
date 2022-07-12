@@ -1,6 +1,7 @@
+import './SresManual.scss';
+
 import * as React from 'react';
 import { FiBookOpen } from 'react-icons/fi';
-import './SresManual.scss';
 
 interface ISresManualProps {
   clickUrl?: string;

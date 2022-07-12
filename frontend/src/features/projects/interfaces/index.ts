@@ -1,5 +1,7 @@
 export * from './IApiProject';
 export * from './IApiProperty';
+export * from './INotification';
+export * from './INotificationFilter';
 export * from './IParentParcel';
 export * from './IProject';
 export * from './IProjectAgencyResponse';
@@ -13,5 +15,3 @@ export * from './IPropertyFilter';
 export * from './IStatus';
 export * from './IStepProps';
 export * from './ITask';
-export * from './INotificationFilter';
-export * from './INotification';

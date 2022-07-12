@@ -1,12 +1,13 @@
-import { getIn, useFormikContext } from 'formik';
-import React from 'react';
 import { ParentSelect } from 'components/common/form/ParentSelect';
-import { Button, Col, Row } from 'react-bootstrap';
 import { FormikTable } from 'features/projects/common';
-import { AgencyInterestColumns } from './constants';
-import { IProjectForm } from '../interfaces';
-import { useLookups, LookupType } from 'store/hooks';
+import { getIn, useFormikContext } from 'formik';
 import { NotificationResponse } from 'hooks/api';
+import React from 'react';
+import { Button, Col, Row } from 'react-bootstrap';
+import { LookupType, useLookups } from 'store/hooks';
+
+import { IProjectForm } from '../interfaces';
+import { AgencyInterestColumns } from './constants';
 import { addAgency } from './utils';
 
 export interface IAgencyInterestProps {

@@ -1,29 +1,30 @@
 import './PointClusterer.scss';
 
-import React, { useRef, useEffect, useState, useCallback, useMemo } from 'react';
-import { DivIcon, FeatureGroup as LeafletFeatureGroup } from 'leaflet';
-import { useLeaflet, Marker, Polyline, FeatureGroup } from 'react-leaflet';
+import { IAddress, IBuilding, IParcel, IProperty, IPropertyDetail } from 'actions/parcelsActions';
+import { PropertyTypes } from 'constants/propertyTypes';
+import { MAX_ZOOM } from 'constants/strings';
+import { getIn } from 'formik';
 import { BBox } from 'geojson';
-import { Spiderfier } from './Spiderfier';
+import { useApi } from 'hooks/useApi';
+import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+import { DivIcon, FeatureGroup as LeafletFeatureGroup } from 'leaflet';
+import queryString from 'query-string';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { FeatureGroup, Marker, Polyline, useLeaflet } from 'react-leaflet';
+import { useLocation } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { useAppDispatch } from 'store';
+import { storePropertyDetail } from 'store/slices/parcelSlice';
+import Supercluster from 'supercluster';
+
+import useSupercluster from '../hooks/useSupercluster';
+import { useFilterContext } from '../providers/FIlterProvider';
+import { PropertyPopUpContext } from '../providers/PropertyPopUpProvider';
 import { ICluster, PointFeature } from '../types';
 import { getMarkerIcon, pointToLayer, zoomToCluster } from './mapUtils';
-import useSupercluster from '../hooks/useSupercluster';
-import { IBuilding, IParcel, IPropertyDetail, IAddress, IProperty } from 'actions/parcelsActions';
-import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
-import { useFilterContext } from '../providers/FIlterProvider';
-import Supercluster from 'supercluster';
-import { PropertyPopUpContext } from '../providers/PropertyPopUpProvider';
-import { MAX_ZOOM } from 'constants/strings';
-import { useApi } from 'hooks/useApi';
-import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
-import { PropertyTypes } from 'constants/propertyTypes';
 import SelectedPropertyMarker from './SelectedPropertyMarker/SelectedPropertyMarker';
-import { useLocation } from 'react-router-dom';
-import queryString from 'query-string';
-import { toast } from 'react-toastify';
-import { getIn } from 'formik';
-import { storePropertyDetail } from 'store/slices/parcelSlice';
-import { useAppDispatch } from 'store';
+import { Spiderfier } from './Spiderfier';
 
 export type PointClustererProps = {
   points: Array<PointFeature>;

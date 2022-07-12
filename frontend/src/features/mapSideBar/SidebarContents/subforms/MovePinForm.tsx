@@ -1,8 +1,8 @@
-import React from 'react';
-import styled from 'styled-components';
-import { Row, Col } from 'react-bootstrap';
-import ClickAwayListener from 'react-click-away-listener';
 import { ReactComponent as ParcelDraftIcon } from 'assets/images/draft-parcel-icon.svg';
+import React from 'react';
+import { Col, Row } from 'react-bootstrap';
+import ClickAwayListener from 'react-click-away-listener';
+import styled from 'styled-components';
 
 const SearchMarkerButton = styled.button`
   top: 20px;

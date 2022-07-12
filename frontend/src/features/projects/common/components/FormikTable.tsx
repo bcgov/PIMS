@@ -1,7 +1,7 @@
+import { Table } from 'components/Table';
+import { getIn, useFormikContext } from 'formik';
 import React, { useMemo } from 'react';
 import { Container } from 'react-bootstrap';
-import { Table } from 'components/Table';
-import { useFormikContext, getIn } from 'formik';
 
 interface IFormikTableProps {
   /** column array to use to build the table */

@@ -1,8 +1,9 @@
-import { IBuilding } from './../actions/parcelsActions';
-import { ILookupCode } from '../actions/ILookupCode';
 import { IParcel, IProperty } from 'actions/parcelsActions';
-import { IProperty as IFlatProperty } from 'features/properties/list';
 import { Workflows } from 'constants/index';
+import { IProperty as IFlatProperty } from 'features/properties/list';
+
+import { ILookupCode } from '../actions/ILookupCode';
+import { IBuilding } from './../actions/parcelsActions';
 
 export const SELECTEDCLASSIFICATION = {
   name: 'Core Operational',

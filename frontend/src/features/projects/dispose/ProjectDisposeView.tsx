@@ -1,13 +1,15 @@
-import React, { useEffect } from 'react';
 import './ProjectDisposeView.scss';
+
+import { ProjectActions } from 'constants/actionTypes';
+import queryString from 'query-string';
+import React, { useEffect } from 'react';
 import { Container } from 'react-bootstrap';
 import { match as Match } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from 'store';
+
+import { clearProject, fetchProject } from '../common';
 import { StepContextProvider } from '.';
 import ProjectDisposeLayout from './ProjectDisposeLayout';
-import { useAppDispatch, useAppSelector } from 'store';
-import queryString from 'query-string';
-import { ProjectActions } from 'constants/actionTypes';
-import { clearProject, fetchProject } from '../common';
 
 /**
  * Top level component facilitates 'wizard' style multi-step form for disposing of projects.

@@ -1,19 +1,20 @@
-import React from 'react';
-import { act } from 'react-test-renderer';
-import SelectProjectProperties from './SelectProjectPropertiesStep';
+import { cleanup, fireEvent, render, waitFor } from '@testing-library/react';
+import axios from 'axios';
+import MockAdapter from 'axios-mock-adapter';
+import { ProjectActions } from 'constants/actionTypes';
+import * as API from 'constants/API';
 import * as reducerTypes from 'constants/reducerTypes';
 import { createMemoryHistory } from 'history';
-import configureMockStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
+import { mockFlatProperty } from 'mocks/filterDataMock';
+import React from 'react';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
-import { ProjectActions } from 'constants/actionTypes';
-import { render, waitFor, fireEvent, cleanup } from '@testing-library/react';
-import MockAdapter from 'axios-mock-adapter';
-import axios from 'axios';
+import { act } from 'react-test-renderer';
+import configureMockStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
+
 import { mockKeycloak, mockProject } from '../testUtils';
-import * as API from 'constants/API';
-import { mockFlatProperty } from 'mocks/filterDataMock';
+import SelectProjectProperties from './SelectProjectPropertiesStep';
 jest.mock('@react-keycloak/web');
 
 const mockStore = configureMockStore([thunk]);

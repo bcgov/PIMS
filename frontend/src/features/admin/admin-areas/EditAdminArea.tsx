@@ -1,16 +1,17 @@
-import TooltipWrapper from 'components/common/TooltipWrapper';
-import React, { useState, useEffect, useCallback } from 'react';
-import { FaArrowAltCircleLeft } from 'react-icons/fa';
-import { ButtonToolbar, Container, Navbar, Spinner } from 'react-bootstrap';
-import { useHistory } from 'react-router';
-import { Formik } from 'formik';
 import { Button, Form, Input } from 'components/common/form';
-import styled from 'styled-components';
-import { IAdministrativeArea } from './interfaces';
-import { AdministrativeAreaSchema } from 'utils/YupSchema';
 import GenericModal from 'components/common/GenericModal';
-import { isAxiosError } from 'utils';
+import TooltipWrapper from 'components/common/TooltipWrapper';
+import { Formik } from 'formik';
 import { useAdminAreaApi } from 'hooks/useApiAdminAreas';
+import React, { useCallback, useEffect, useState } from 'react';
+import { ButtonToolbar, Container, Navbar, Spinner } from 'react-bootstrap';
+import { FaArrowAltCircleLeft } from 'react-icons/fa';
+import { useHistory } from 'react-router';
+import styled from 'styled-components';
+import { isAxiosError } from 'utils';
+import { AdministrativeAreaSchema } from 'utils/YupSchema';
+
+import { IAdministrativeArea } from './interfaces';
 import { toApiAdminArea } from './utils/utils';
 
 export interface IEditAdminAreaProps {

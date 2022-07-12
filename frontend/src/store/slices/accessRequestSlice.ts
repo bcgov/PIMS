@@ -1,4 +1,4 @@
-import { createSlice, createAction, PayloadAction } from '@reduxjs/toolkit';
+import { createAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { IFilterData } from 'actions/IFilterData';
 import { ISort } from 'actions/ISort';
 import { IAccessRequest, IPagedItems } from 'interfaces';

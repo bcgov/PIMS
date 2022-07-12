@@ -1,13 +1,14 @@
+import * as ActionTypes from 'constants/actionTypes';
+
 import { clear, error, request, success } from './hooks';
 import {
+  clearRequest,
   initialNetworkState,
   networkSlice,
+  storeError,
   storeRequest,
   storeSuccess,
-  storeError,
-  clearRequest,
 } from './networkSlice';
-import * as ActionTypes from 'constants/actionTypes';
 
 describe('Network slice tests', () => {
   const reducer = networkSlice.reducer;

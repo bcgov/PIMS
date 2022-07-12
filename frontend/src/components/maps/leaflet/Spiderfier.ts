@@ -1,17 +1,18 @@
-import invariant from 'tiny-invariant';
 import {
-  Layer,
-  Marker,
-  Map,
-  PolylineOptions,
-  Point as LeafletPoint,
+  GeoJSON,
   LatLng,
   LatLngExpression,
-  GeoJSON,
+  Layer,
+  Map,
+  Marker,
+  Point as LeafletPoint,
+  PolylineOptions,
 } from 'leaflet';
-import { AnyProps } from 'supercluster';
-import { ICluster, PointFeature } from '../types';
 import { cloneDeep } from 'lodash';
+import { AnyProps } from 'supercluster';
+import invariant from 'tiny-invariant';
+
+import { ICluster, PointFeature } from '../types';
 
 export interface SpiderfierOptions {
   /** Increase from 1 to increase the distance away from the center that spiderfied markers are placed. Use if you are using big marker icons (Default: 1). */

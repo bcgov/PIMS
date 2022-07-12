@@ -1,9 +1,9 @@
-import React from 'react';
-import { CellProps } from 'react-table';
 import { IProperty } from 'actions/parcelsActions';
-import { Link } from 'react-router-dom';
-import queryString from 'query-string';
 import { PropertyTypes } from 'constants/propertyTypes';
+import queryString from 'query-string';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { CellProps } from 'react-table';
 
 /**
  * A cell that provides a clickable link to view a given IProperty

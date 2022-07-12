@@ -1,2 +1,2 @@
-export * from './useApiProjectDisposal';
 export * from './interfaces';
+export * from './useApiProjectDisposal';

@@ -1,4 +1,4 @@
-import { IProjectProperty, IProjectAgencyResponse, IProjectTask, IProjectNote } from '.';
+import { IProjectAgencyResponse, IProjectNote, IProjectProperty, IProjectTask } from '.';
 
 export interface IApiProject {
   id?: number;

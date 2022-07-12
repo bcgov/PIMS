@@ -1,4 +1,5 @@
 import { IBaseModel } from 'hooks/api/interfaces';
+
 import { IProjectPropertyModel } from '.';
 
 export interface IProjectModel extends IBaseModel {

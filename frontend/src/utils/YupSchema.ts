@@ -1,7 +1,7 @@
-import * as Yup from 'yup';
+import { PropertyTypes } from 'constants/propertyTypes';
 import moment from 'moment';
 import { emptyStringToNull } from 'utils';
-import { PropertyTypes } from 'constants/propertyTypes';
+import * as Yup from 'yup';
 
 Yup.addMethod(Yup.string, 'optional', function optional() {
   return this.transform(value => {
@@ -120,7 +120,7 @@ export const OccupancySchema = Yup.object().shape({
     .required('Required'),
   buildingTenancy: Yup.string().max(100, 'Tenancy must be less then 100 characters'),
   buildingTenancyUpdatedOn: Yup.string().when('buildingTenancy', {
-    is: val => val && val.length > 0,
+    is: (val: string) => val && val.length > 0,
     then: Yup.string().required('Required'),
     otherwise: Yup.string().nullable(),
   }),
@@ -224,7 +224,7 @@ export const LandSchema = Yup.object().shape({
     .transform(emptyStringToNull)
     .required('Required'),
   parcels: Yup.array().when('propertyTypeId', {
-    is: val => val === PropertyTypes.SUBDIVISION,
+    is: (val: PropertyTypes) => val === PropertyTypes.SUBDIVISION,
     then: Yup.array().required('You must add at least one parent parcel'),
     otherwise: Yup.array(),
   }),
@@ -233,14 +233,14 @@ export const ParcelSchema = Yup.object()
   .shape(
     {
       pid: Yup.string().when('pin', {
-        is: val => val && val.length > 0,
+        is: (val: string) => val && val.length > 0,
         then: Yup.string().nullable(),
         otherwise: Yup.string()
           .matches(/\d\d\d[\s-]?\d\d\d[\s-]?\d\d\d/, 'PID must be in the format ###-###-###')
           .required('PID or PIN Required'),
       }),
       pin: Yup.string().when('pid', {
-        is: val => val && /\d\d\d-\d\d\d-\d\d\d/.test(val),
+        is: (val: string) => val && /\d\d\d-\d\d\d-\d\d\d/.test(val),
         then: Yup.string().nullable(),
         otherwise: Yup.string()
           .nullable()
@@ -273,7 +273,7 @@ export const FilterBarSchema = Yup.object().shape(
       /* Reference minLotSize field in validating maxLotSize value */
       .moreThan(Yup.ref('minLotSize'), 'Must be greater than Min Lot Size'),
     inEnhancedReferralProcess: Yup.boolean().when(['inSurplusPropertyProgram', 'surplusFilter'], {
-      is: (inSurplusPropertyProgram, surplusFilter) => {
+      is: (inSurplusPropertyProgram: boolean, surplusFilter: any) => {
         if (!surplusFilter) {
           return true;
         }
@@ -287,7 +287,7 @@ export const FilterBarSchema = Yup.object().shape(
         .oneOf([true], 'ERP or SPL Properties required when using the Surplus Properties filter.'),
     }),
     inSurplusPropertyProgram: Yup.boolean().when(['inEnhancedReferralProcess', 'surplusFilter'], {
-      is: (inEnhancedReferralProcess, surplusFilter) => {
+      is: (inEnhancedReferralProcess: boolean, surplusFilter: any) => {
         if (!surplusFilter) {
           return true;
         }
@@ -330,14 +330,14 @@ export const ValuationSchema = Yup.object().shape({
 export const LandIdentificationSchema = Yup.object().shape(
   {
     pid: Yup.string().when('pin', {
-      is: val => val && val.length > 0,
+      is: (val: string) => val && val.length > 0,
       then: Yup.string().nullable(),
       otherwise: Yup.string()
         .matches(/\d\d\d[\s-]?\d\d\d[\s-]?\d\d\d/, 'PID must be in the format ###-###-###')
         .required('PID or PIN Required'),
     }),
     pin: Yup.string().when('pid', {
-      is: val => val && /\d\d\d-\d\d\d-\d\d\d/.test(val),
+      is: (val: string) => val && /\d\d\d-\d\d\d-\d\d\d/.test(val),
       then: Yup.string().nullable(),
       otherwise: Yup.string()
         .nullable()
@@ -379,7 +379,7 @@ export const LandIdentificationSchema = Yup.object().shape(
       .transform(emptyStringToNull)
       .required('Required'),
     parcels: Yup.array().when('propertyTypeId', {
-      is: val => val === PropertyTypes.SUBDIVISION,
+      is: (val: PropertyTypes) => val === PropertyTypes.SUBDIVISION,
       then: Yup.array().required('You must add at least one parent parcel'),
       otherwise: Yup.array(),
     }),

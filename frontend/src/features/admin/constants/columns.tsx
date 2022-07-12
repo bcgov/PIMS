@@ -1,8 +1,8 @@
-import * as React from 'react';
 import { ColumnWithProps } from 'components/Table';
-import { CellProps } from 'react-table';
-import { Link } from 'react-router-dom';
 import { IAgency, IAgencyRecord } from 'interfaces';
+import * as React from 'react';
+import { Link } from 'react-router-dom';
+import { CellProps } from 'react-table';
 
 export const columnDefinitions: ColumnWithProps<IAgencyRecord>[] = [
   {

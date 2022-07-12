@@ -1,4 +1,4 @@
-import { createSlice, createAction, PayloadAction } from '@reduxjs/toolkit';
+import { createAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export const setMapViewZoom = createAction<number>('setMapViewZoom');
 export const resetMapViewZoom = createAction('resetMapViewZoom');

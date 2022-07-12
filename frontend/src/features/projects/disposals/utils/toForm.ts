@@ -1,8 +1,9 @@
+import { ReviewWorkflowStatus } from 'features/projects/constants';
 import { IProjectModel } from 'hooks/api/projects/disposals';
+
 import { defaultFilter } from '../constants';
 import { IProjectForm } from '../interfaces';
 import { toPropertyForm } from '.';
-import { ReviewWorkflowStatus } from 'features/projects/constants';
 
 /**
  * Initialize form values from a model.

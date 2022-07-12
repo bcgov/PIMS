@@ -1,16 +1,17 @@
-import MockAdapter from 'axios-mock-adapter';
+import { renderHook } from '@testing-library/react-hooks';
 import axios from 'axios';
-import * as networkSlice from 'store/slices/networkSlice';
+import MockAdapter from 'axios-mock-adapter';
 import * as API from 'constants/API';
-import * as MOCK from 'mocks/dataMocks';
 import { ENVIRONMENT } from 'constants/environment';
-import { useAccessRequest } from 'store/slices/hooks/useAccessRequest';
+import * as MOCK from 'mocks/dataMocks';
+import React from 'react';
+import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import { useAccessRequest } from 'store/slices/hooks/useAccessRequest';
+import * as networkSlice from 'store/slices/networkSlice';
+
 import { initialAccessRequestState } from '..';
-import { renderHook } from '@testing-library/react-hooks';
-import { Provider } from 'react-redux';
-import React from 'react';
 
 const mockAxios = new MockAdapter(axios);
 const mockStore = configureMockStore([thunk]);

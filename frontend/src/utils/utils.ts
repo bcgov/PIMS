@@ -1,14 +1,14 @@
 import { ILookupCode } from 'actions/ILookupCode';
-import { startCase, isNull, isUndefined, isEmpty, lowerFirst, keys } from 'lodash';
-import { SelectOption } from 'components/common/form';
-import { FormikProps, getIn } from 'formik';
-import { SortDirection, TableSort } from 'components/Table/TableSort';
 import { AxiosError } from 'axios';
-import { showLoading, hideLoading } from 'react-redux-loading-bar';
-import { storeSuccess, storeError, storeRequest } from 'store';
-import moment from 'moment-timezone';
+import { SelectOption } from 'components/common/form';
+import { SortDirection, TableSort } from 'components/Table/TableSort';
 import { IStatus } from 'features/projects/interfaces';
+import { FormikProps, getIn } from 'formik';
+import { isEmpty, isNull, isUndefined, keys, lowerFirst, startCase } from 'lodash';
+import moment from 'moment-timezone';
+import { hideLoading, showLoading } from 'react-redux-loading-bar';
 import { AnyAction, Dispatch } from 'redux';
+import { storeError, storeRequest, storeSuccess } from 'store';
 import { error, request, success } from 'store/slices/hooks';
 
 /**
@@ -54,7 +54,8 @@ export const mapLookupCodeWithParentString = (
   value: code.id.toString(),
   code: code.code,
   parentId: code.parentId,
-  parent: options.find((a: ILookupCode) => a.id.toString() === code.parentId?.toString())?.name,
+  parent:
+    options.find((a: ILookupCode) => a.id.toString() === code.parentId?.toString())?.name ?? '',
 });
 
 const createParentWorkflow = (code: string) => {
@@ -83,8 +84,9 @@ export const mapSelectOptionWithParent = (
   value: code.value.toString(),
   code: code.code,
   parentId: code.parentId,
-  parent: options.find((a: SelectOption) => a.value.toString() === code.parentId?.toString())
-    ?.label,
+  parent:
+    options.find((a: SelectOption) => a.value.toString() === code.parentId?.toString())?.label ??
+    '',
 });
 
 export const mapStatuses = (status: IStatus): SelectOption => ({
@@ -213,6 +215,17 @@ export const resolveSortCriteriaFromUrl = (input: string[]): TableSort<any> | {}
 export const getCurrentFiscalYear = (): number => {
   const now = moment();
   return now.month() >= 4 ? now.add(1, 'years').year() : now.year();
+};
+
+export const getYear = (date?: Date | string): number => {
+  let momentDate = undefined;
+  if (typeof date === 'string' || date instanceof String) {
+    momentDate = moment(date, 'YYYY-MM-DD');
+  } else {
+    momentDate = moment(date);
+  }
+  console.debug(date);
+  return momentDate.year();
 };
 
 export const getFiscalYear = (date?: Date | string): number => {

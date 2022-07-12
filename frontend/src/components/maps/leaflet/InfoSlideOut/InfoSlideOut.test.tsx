@@ -1,19 +1,21 @@
-import * as React from 'react';
 import 'leaflet';
-import { Map as LeafletMap } from 'leaflet';
-import { Map as ReactLeafletMap, MapProps } from 'react-leaflet';
-import Adapter from 'enzyme-adapter-react-16';
-import Enzyme, { mount } from 'enzyme';
-import InfoSlideOut from './InfoSlideOut';
 import 'leaflet/dist/leaflet.css';
-import { waitFor } from '@testing-library/dom';
-import { Button } from 'react-bootstrap';
-import { createMemoryHistory } from 'history';
-import { Router } from 'react-router-dom';
-import thunk from 'redux-thunk';
-import configureMockStore from 'redux-mock-store';
-import { Provider } from 'react-redux';
+
 import { useKeycloak } from '@react-keycloak/web';
+import { waitFor } from '@testing-library/dom';
+import Enzyme, { mount } from 'enzyme';
+import Adapter from 'enzyme-adapter-react-16';
+import { createMemoryHistory } from 'history';
+import { Map as LeafletMap } from 'leaflet';
+import * as React from 'react';
+import { Button } from 'react-bootstrap';
+import { Map as ReactLeafletMap, MapProps } from 'react-leaflet';
+import { Provider } from 'react-redux';
+import { Router } from 'react-router-dom';
+import configureMockStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
+
+import InfoSlideOut from './InfoSlideOut';
 
 jest.mock('@react-keycloak/web');
 (useKeycloak as jest.Mock).mockReturnValue({

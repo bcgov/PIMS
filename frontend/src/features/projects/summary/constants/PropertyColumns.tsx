@@ -1,9 +1,9 @@
 import { BuildingSvg, LandSvg } from 'components/common/Icons';
+import TooltipWrapper from 'components/common/TooltipWrapper';
 import { ColumnWithProps, MoneyCell } from 'components/Table';
 import { PropertyTypeName } from 'hooks/api';
-import TooltipWrapper from 'components/common/TooltipWrapper';
-import React from 'react';
 import { IProjectPropertyModel } from 'hooks/api/projects/disposals';
+import React from 'react';
 import { formatAddress } from 'utils';
 
 export const PropertyColumns = (): ColumnWithProps<IProjectPropertyModel>[] => {

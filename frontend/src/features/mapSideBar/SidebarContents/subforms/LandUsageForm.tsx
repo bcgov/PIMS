@@ -1,12 +1,13 @@
 import './LandUsageForm.scss';
 
 import { FastInput } from 'components/common/form';
+import GenericModal from 'components/common/GenericModal';
+import { Label } from 'components/common/Label';
+import { FormikProps, getIn, useFormikContext } from 'formik';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Container, Row } from 'react-bootstrap';
-import { FormikProps, useFormikContext, getIn } from 'formik';
-import { Label } from 'components/common/Label';
+
 import { ClassificationForm } from './ClassificationForm';
-import GenericModal from 'components/common/GenericModal';
 
 interface ILandUsageProps {
   nameSpace?: string;

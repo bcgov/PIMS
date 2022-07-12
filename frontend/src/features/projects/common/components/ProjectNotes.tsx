@@ -1,8 +1,9 @@
+import './ProjectNotes.scss';
+
+import { TextArea } from 'components/common/form';
+import { NoteTypes } from 'constants/noteTypes';
 import * as React from 'react';
 import { Form } from 'react-bootstrap';
-import { TextArea } from 'components/common/form';
-import './ProjectNotes.scss';
-import { NoteTypes } from 'constants/noteTypes';
 import styled from 'styled-components';
 
 export interface IProjectNotesProps {

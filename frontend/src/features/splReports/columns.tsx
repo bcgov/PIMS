@@ -1,8 +1,9 @@
-import { ISnapshot } from './interfaces';
-import { CellProps } from 'react-table';
-import { formatMoney, formatFiscalYear } from 'utils';
 import { Input, SelectOption } from 'components/common/form';
 import { ParentSelect } from 'components/common/form/ParentSelect';
+import { CellProps } from 'react-table';
+import { formatFiscalYear, formatMoney } from 'utils';
+
+import { ISnapshot } from './interfaces';
 
 const howManyColumns = 13;
 const totalWidthPercent = 100; // how wide the table should be; e.g. 100%

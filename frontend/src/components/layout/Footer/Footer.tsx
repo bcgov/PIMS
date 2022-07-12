@@ -1,7 +1,7 @@
 import './Footer.scss';
 
 import React from 'react';
-import { Navbar, Nav } from 'react-bootstrap';
+import { Nav, Navbar } from 'react-bootstrap';
 
 function Footer() {
   return (

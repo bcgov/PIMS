@@ -1,8 +1,9 @@
-import React from 'react';
 import './TooltipIcon.scss';
-import { OverlayTrigger, Tooltip, Overlay } from 'react-bootstrap';
-import { FaInfoCircle } from 'react-icons/fa';
+
 import classNames from 'classnames';
+import React from 'react';
+import { Overlay, OverlayTrigger, Tooltip } from 'react-bootstrap';
+import { FaInfoCircle } from 'react-icons/fa';
 import { CSSProperties } from 'styled-components';
 
 interface TooltipIconProps extends Partial<React.ComponentPropsWithRef<typeof Overlay>> {

@@ -1,15 +1,15 @@
-import { IProjectModel, IProjectPropertyModel } from 'hooks/api/projects/disposals';
-import React from 'react';
-import { useLocation } from 'react-router-dom';
-import { useProjectDisposal } from 'store/hooks';
-import queryString from 'query-string';
-
-import * as styled from './styled';
-import { Form } from 'react-bootstrap';
 import { Col, Row } from 'components/flex';
 import { Table } from 'components/Table';
-import { PropertyColumns } from './constants';
+import { IProjectModel, IProjectPropertyModel } from 'hooks/api/projects/disposals';
+import queryString from 'query-string';
+import React from 'react';
+import { Form } from 'react-bootstrap';
+import { useLocation } from 'react-router-dom';
+import { useProjectDisposal } from 'store/hooks';
 import { formatDate, formatFiscalYear, formatMoney } from 'utils';
+
+import { PropertyColumns } from './constants';
+import * as styled from './styled';
 
 export const ProjectSummary: React.FC = props => {
   const api = useProjectDisposal();

@@ -1,8 +1,9 @@
-import React from 'react';
-import Adapter from 'enzyme-adapter-react-16';
 import Enzyme from 'enzyme';
-import { TablePageSizeSelector } from './PageSizeSelector';
+import Adapter from 'enzyme-adapter-react-16';
+import React from 'react';
 import { create } from 'react-test-renderer';
+
+import { TablePageSizeSelector } from './PageSizeSelector';
 
 Enzyme.configure({ adapter: new Adapter() });
 

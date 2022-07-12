@@ -2,27 +2,27 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'leaflet/dist/leaflet.css';
 import './index.scss'; // should be loaded last to allow for overrides without having to resort to "!important"
-
 import 'react-app-polyfill/ie11';
 import 'react-app-polyfill/stable';
 import 'react-toastify/dist/ReactToastify.css';
-import React from 'react';
-import ReactDOM from 'react-dom';
-import App from './App';
-import * as serviceWorker from './serviceWorker.ignore';
+
 import { ReactKeycloakProvider } from '@react-keycloak/web';
-import { Provider } from 'react-redux';
 import { AuthStateContextProvider } from 'contexts/authStateContext';
-import { BrowserRouter as Router } from 'react-router-dom';
-import EmptyLayout from 'layouts/EmptyLayout';
 import LoginLoading from 'features/account/LoginLoading';
 import Keycloak from 'keycloak-js';
-import getKeycloakEventHandler from 'utils/KeycloakEventHandler';
-import { store } from './store';
-import { createKeycloakInstance } from 'utils';
+import EmptyLayout from 'layouts/EmptyLayout';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
+import { BrowserRouter as Router } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
+import { createKeycloakInstance } from 'utils';
+import getKeycloakEventHandler from 'utils/KeycloakEventHandler';
 
 import css from './_variables.module.scss';
+import App from './App';
+import * as serviceWorker from './serviceWorker.ignore';
+import { store } from './store';
 
 /**
  * Displays LoginLoading until Keycloak connection is ready.

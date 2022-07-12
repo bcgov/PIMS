@@ -1,8 +1,9 @@
-import React from 'react';
-import { Formik } from 'formik';
 import { render } from '@testing-library/react';
+import { Formik } from 'formik';
 import { noop } from 'lodash';
-import { CheckProps, Check } from './Check';
+import React from 'react';
+
+import { Check, CheckProps } from './Check';
 
 describe('Check component tests', () => {
   const renderCheck = (props: CheckProps, initialValues: any = { test: '' }) => (

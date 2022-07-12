@@ -1,14 +1,15 @@
-import { showLoading, hideLoading } from 'react-redux-loading-bar';
-import { storeAgencies, storeAgencyDetail, storeError, storeRequest, storeSuccess } from 'store';
+import { AxiosError, AxiosResponse } from 'axios';
 import * as actionTypes from 'constants/actionTypes';
 import * as API from 'constants/API';
 import { ENVIRONMENT } from 'constants/environment';
-import CustomAxios, { LifecycleToasts } from 'customAxios';
-import { AxiosResponse, AxiosError } from 'axios';
-import { IAddAgency, IAgency, IAgencyDetail } from 'interfaces';
-import { handleAxiosResponse } from 'utils';
 import * as pimsToasts from 'constants/toasts';
-import { Dispatch, AnyAction } from 'redux';
+import CustomAxios, { LifecycleToasts } from 'customAxios';
+import { IAddAgency, IAgency, IAgencyDetail } from 'interfaces';
+import { hideLoading, showLoading } from 'react-redux-loading-bar';
+import { AnyAction, Dispatch } from 'redux';
+import { storeAgencies, storeAgencyDetail, storeError, storeRequest, storeSuccess } from 'store';
+import { handleAxiosResponse } from 'utils';
+
 import { error, request, success } from '.';
 
 export const getAgenciesAction = (params: API.IPaginateParams) => async (

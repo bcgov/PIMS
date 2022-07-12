@@ -1,26 +1,27 @@
-import React from 'react';
+import { useKeycloak } from '@react-keycloak/web';
+import { render, waitFor } from '@testing-library/react';
+import axios from 'axios';
+import MockAdapter from 'axios-mock-adapter';
+import GenericModal from 'components/common/GenericModal';
+import { ProjectActions } from 'constants/actionTypes';
+import { Claims } from 'constants/claims';
 import * as reducerTypes from 'constants/reducerTypes';
+import { mount } from 'enzyme';
+import Enzyme from 'enzyme';
+import Adapter from 'enzyme-adapter-react-16';
+import { ReviewWorkflowStatus } from 'features/projects/constants';
+import { IProject, IProjectTask, ITask } from 'features/projects/interfaces';
+import { IProperty } from 'features/properties/list/interfaces';
 import { createMemoryHistory } from 'history';
-import configureMockStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
+import React from 'react';
+import { Button } from 'react-bootstrap';
+import { act } from 'react-dom/test-utils';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
-import { ReviewWorkflowStatus } from 'features/projects/constants';
-import { ITask, IProject, IProjectTask } from 'features/projects/interfaces';
-import { ProjectActions } from 'constants/actionTypes';
-import { render, waitFor } from '@testing-library/react';
-import { useKeycloak } from '@react-keycloak/web';
-import { Claims } from 'constants/claims';
-import MockAdapter from 'axios-mock-adapter';
-import axios from 'axios';
+import configureMockStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
+
 import { ReviewApproveStep } from '..';
-import { mount } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
-import Enzyme from 'enzyme';
-import { Button } from 'react-bootstrap';
-import GenericModal from 'components/common/GenericModal';
-import { IProperty } from 'features/properties/list/interfaces';
-import { act } from 'react-dom/test-utils';
 
 Enzyme.configure({ adapter: new Adapter() });
 

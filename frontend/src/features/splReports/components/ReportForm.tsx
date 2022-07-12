@@ -1,12 +1,13 @@
-import * as React from 'react';
 import Table from 'components/Table/Table';
-import { IReport, ISnapshot, ISnapshotFilter } from '../interfaces';
-import { columns } from '../columns';
-import useCodeLookups from 'hooks/useLookupCodes';
-import * as API from 'constants/API';
-import { mapSelectOptionWithParent } from 'utils';
-import { useSplReportContext } from '../containers/SplReportContainer';
 import { SortDirection } from 'components/Table/TableSort';
+import * as API from 'constants/API';
+import useCodeLookups from 'hooks/useLookupCodes';
+import * as React from 'react';
+import { mapSelectOptionWithParent } from 'utils';
+
+import { columns } from '../columns';
+import { useSplReportContext } from '../containers/SplReportContainer';
+import { IReport, ISnapshot, ISnapshotFilter } from '../interfaces';
 
 interface IReportFormProps {
   currentReport?: IReport;
