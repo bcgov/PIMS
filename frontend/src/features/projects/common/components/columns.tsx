@@ -113,12 +113,6 @@ export const getEditableDatePickerCell = (
   );
 };
 
-const responseOptions: SelectOption[] = [
-  { label: 'Not Interested', value: AgencyResponses.Unsubscribe, parent: '' },
-  { label: 'Interested', value: AgencyResponses.Watch, parent: '' },
-  { label: 'Send Notifications', value: AgencyResponses.Subscribe, parent: '' },
-];
-
 export const getProjectLinkCell = (namespace: string = 'properties') => (cellInfo: any) => {
   const { values } = useFormikContext<IProject>();
   const projectNumbers = _.filter(cellInfo.value, (p: string) => values.projectNumber !== p);
@@ -132,6 +126,12 @@ export const getProjectLinkCell = (namespace: string = 'properties') => (cellInf
     </ColumnDiv>
   );
 };
+
+const responseOptions: SelectOption[] = [
+  { label: 'Not Interested', value: AgencyResponses.Unsubscribe, parent: '' },
+  { label: 'Interested', value: AgencyResponses.Watch, parent: '' },
+  { label: 'Send Notifications', value: AgencyResponses.Subscribe, parent: '' },
+];
 
 export const getEditableSelectCell = (namespace: string = 'properties') => (cellInfo: any) => {
   const formikProps = useFormikContext();

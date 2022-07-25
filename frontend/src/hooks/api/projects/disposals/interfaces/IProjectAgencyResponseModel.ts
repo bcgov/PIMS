@@ -1,4 +1,4 @@
-import { NotificationResponse } from 'hooks/api/constants';
+import { AgencyResponses } from 'features/projects/constants';
 import { IBaseModel } from 'hooks/api/interfaces';
 
 export interface IProjectAgencyResponseModel extends IBaseModel {
@@ -6,7 +6,7 @@ export interface IProjectAgencyResponseModel extends IBaseModel {
   agencyId: number;
   agencyCode?: string;
   notificationId?: number;
-  response: NotificationResponse;
+  response: AgencyResponses;
   receivedOn?: Date;
   note?: string;
   offerAmount: number;
