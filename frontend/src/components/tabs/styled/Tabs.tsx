@@ -3,7 +3,7 @@ import styled from 'styled-components';
 export const Tabs = styled.div`
   padding-top: 1em;
 
-  ul {
+  & > ul {
     list-style: none;
     display: flex;
     flex-direction: row;
