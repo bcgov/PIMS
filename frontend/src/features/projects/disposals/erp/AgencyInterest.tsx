@@ -1,7 +1,7 @@
 import { ParentSelect } from 'components/common/form/ParentSelect';
 import { FormikTable } from 'features/projects/common';
+import { AgencyResponses } from 'features/projects/constants';
 import { getIn, useFormikContext } from 'formik';
-import { NotificationResponse } from 'hooks/api';
 import React from 'react';
 import { Button, Col, Row } from 'react-bootstrap';
 import { LookupType, useLookups } from 'store/hooks';
@@ -36,7 +36,7 @@ export const AgencyInterest = ({ disabled = false }: IAgencyInterestProps) => {
         project: values,
         agency: agency,
         note: '',
-        response: NotificationResponse.Watch,
+        response: AgencyResponses.Watch,
       });
       setValues(project, false);
       setEnableAdd(false);
