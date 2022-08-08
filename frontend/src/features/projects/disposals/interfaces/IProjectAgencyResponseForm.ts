@@ -1,10 +1,10 @@
-import { NotificationResponse } from 'hooks/api/constants';
+import { AgencyResponses } from 'features/projects/constants';
 
 export interface IProjectAgencyResponseForm {
   agencyId: number;
   agencyCode: string;
   notificationId: number | '';
-  response: NotificationResponse;
+  response: AgencyResponses;
   receivedOn: Date | '';
   note: string;
   offerAmount: number;

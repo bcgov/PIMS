@@ -8,7 +8,7 @@ import styled from 'styled-components';
 import { SelectOption, SelectOptions } from './Select';
 import { TypeaheadField } from './Typeahead';
 
-/** this styled component is used to help condtionally apply bold font weight to items that have been assigned the bold-item className */
+/** this styled component is used to help conditionally apply bold font weight to items that have been assigned the bold-item className */
 const StyledMenuItemsDiv = styled.div`
   .bold-item {
     font-weight: bold;
