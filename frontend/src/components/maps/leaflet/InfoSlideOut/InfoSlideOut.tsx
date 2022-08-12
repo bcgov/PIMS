@@ -192,8 +192,12 @@ const InfoControl: React.FC<InfoControlProps> = ({ open, setOpen, onHeaderAction
 
   const keycloak = useKeycloakWrapper();
   const dispatch = useAppDispatch();
-  const canViewProperty = keycloak.canUserViewProperty(propertyInfo);
-  const canEditProperty = keycloak.canUserEditProperty(propertyInfo);
+  const canViewProperty =
+    keycloak.canUserViewProperty(propertyInfo) &&
+    popUpContext.propertyTypeID !== PropertyTypes.GEOCODER;
+  const canEditProperty =
+    keycloak.canUserEditProperty(propertyInfo) &&
+    popUpContext.propertyTypeID !== PropertyTypes.GEOCODER;
 
   const renderContent = () => {
     if (popUpContext.propertyInfo) {
@@ -218,6 +222,7 @@ const InfoControl: React.FC<InfoControlProps> = ({ open, setOpen, onHeaderAction
           </>
         );
       } else if (canViewProperty) {
+        if (popUpContext.propertyTypeID === PropertyTypes.GEOCODER) return null;
         if (isBuilding) {
           return (
             <AssociatedParcelsList parcels={(popUpContext.propertyInfo as IBuilding).parcels} />
@@ -304,23 +309,26 @@ const InfoControl: React.FC<InfoControlProps> = ({ open, setOpen, onHeaderAction
             <InfoIcon />
           </InfoButton>
         </TooltipWrapper>
-        {open && popUpContext.propertyInfo && canViewProperty && (
-          <TooltipWrapper
-            toolTipId="associated-items-id"
-            toolTip={isBuilding ? 'Associated Land' : 'Associated Buildings'}
-          >
-            <TabButton
-              id="slideOutTab"
-              variant="outline-secondary"
-              className={clsx({ open })}
-              onClick={() => {
-                setGeneralInfoOpen(false);
-              }}
+        {open &&
+          popUpContext.propertyInfo &&
+          canViewProperty &&
+          popUpContext.propertyTypeID !== PropertyTypes.GEOCODER && (
+            <TooltipWrapper
+              toolTipId="associated-items-id"
+              toolTip={isBuilding ? 'Associated Land' : 'Associated Buildings'}
             >
-              {isBuilding ? <LandSvg className="svg" /> : <BuildingSvg className="svg" />}
-            </TabButton>
-          </TooltipWrapper>
-        )}
+              <TabButton
+                id="slideOutTab"
+                variant="outline-secondary"
+                className={clsx({ open })}
+                onClick={() => {
+                  setGeneralInfoOpen(false);
+                }}
+              >
+                {isBuilding ? <LandSvg className="svg" /> : <BuildingSvg className="svg" />}
+              </TabButton>
+            </TooltipWrapper>
+          )}
         {open && <InfoMain className={clsx({ open })}>{renderContent()}</InfoMain>}
       </InfoContainer>
     </Control>

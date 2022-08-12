@@ -73,6 +73,16 @@ export const subdivisionIconSelect = L.icon({
   shadowSize: [41, 41],
 });
 
+export const geocoderIcon = L.icon({
+  iconUrl:
+    require('assets/images/pins/marker-green.png').default ?? 'assets/images/pins/marker-green.png',
+  shadowUrl: require('assets/images/pins/marker-shadow.png').default ?? 'marker-shadow.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41],
+});
+
 // draft parcel icon (green)
 export const draftParcelIcon = L.icon({
   iconUrl:
@@ -305,6 +315,8 @@ export const getMarkerIcon = (feature: ICluster, selected?: boolean) => {
       return parcelIconSelect;
     } else if (propertyTypeId === PropertyTypes.SUBDIVISION) {
       return subdivisionIconSelect;
+    } else if (propertyTypeId === PropertyTypes.GEOCODER) {
+      return geocoderIcon;
     } else {
       return buildingIconSelect;
     }
@@ -336,6 +348,8 @@ export const getMarkerIcon = (feature: ICluster, selected?: boolean) => {
       return parcelIcon;
     } else if (propertyTypeId === PropertyTypes.SUBDIVISION) {
       return subdivisionIcon;
+    } else if (propertyTypeId === PropertyTypes.GEOCODER) {
+      return geocoderIcon;
     } else {
       return buildingIcon;
     }

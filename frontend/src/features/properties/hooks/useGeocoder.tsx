@@ -116,7 +116,7 @@ const useGeocoder = ({ formikRef, fetchPimsOrLayerParcel }: IUseGeocoderProps) =
             } as LatLng)
             .then(response => {
               const pid = getIn(response, 'features.0.properties.PID');
-              //it is possible the geocoder will fail to get the pid but the parcel layer service request will succeed. In that case, double check that the pid doesn't exist within pims.
+              // it is possible the geocoder will fail to get the pid but the parcel layer service request will succeed. In that case, double check that the pid doesn't exist within pims.
               if (pid) {
                 const parcelLayerSearchCallback = () => {
                   const response = parcelsService.findByPid(pid);
