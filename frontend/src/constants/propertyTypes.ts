@@ -4,4 +4,5 @@ export enum PropertyTypes {
   SUBDIVISION = 2,
   DRAFT_PARCEL = 3,
   DRAFT_BUILDING = 4,
+  GEOCODER = 5,
 }

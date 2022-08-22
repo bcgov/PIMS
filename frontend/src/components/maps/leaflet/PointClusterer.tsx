@@ -85,6 +85,20 @@ export const convertToProperty = (
     [PropertyTypes.DRAFT_BUILDING, PropertyTypes.DRAFT_PARCEL].includes(property.propertyTypeId)
   ) {
     return property;
+  } else if (property.propertyTypeId === PropertyTypes.GEOCODER) {
+    return {
+      ...property,
+      evaluations: [],
+      fiscals: [],
+      latitude: latitude,
+      longitude: longitude,
+      address: {
+        line1: property.address,
+        administrativeArea: property.administrativeArea,
+        province: property.province,
+        postal: property.postal,
+      } as IAddress,
+    } as IParcel;
   }
   return null;
 };
@@ -262,8 +276,8 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
   const { getParcel, getBuilding } = useApi();
   const fetchProperty = React.useCallback(
     (propertyTypeId: number, id: number) => {
-      popUpContext.setLoading(true);
       if ([PropertyTypes.PARCEL, PropertyTypes.SUBDIVISION].includes(propertyTypeId)) {
+        popUpContext.setLoading(true);
         getParcel(id as number)
           .then(parcel => {
             popUpContext.setPropertyInfo(parcel);
@@ -275,13 +289,14 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
             popUpContext.setLoading(false);
           });
       } else if (propertyTypeId === PropertyTypes.BUILDING) {
+        popUpContext.setLoading(true);
         getBuilding(id as number)
           .then(building => {
             popUpContext.setPropertyInfo(building);
             if (!!building.parcels.length) {
               dispatch(
                 storePropertyDetail({
-                  propertyTypeId: 1,
+                  propertyTypeId: PropertyTypes.BUILDING,
                   parcelDetail: building,
                 }),
               );
@@ -293,6 +308,9 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
           .finally(() => {
             popUpContext.setLoading(false);
           });
+      } else {
+        toast.warn('This property does not exist in inventory.');
+        Promise.resolve();
       }
     },
     [getParcel, popUpContext, getBuilding, dispatch],
@@ -336,7 +354,7 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
           }
 
           return (
-            // render single marker, not in a cluster
+            //render single marker, not in a cluster
             <Marker
               {...(cluster.properties as any)}
               key={index}
@@ -349,27 +367,26 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
                   longitude,
                 );
                 //sets this pin as currently selected
-                if (
-                  cluster.properties.propertyTypeId === PropertyTypes.PARCEL ||
-                  cluster.properties.propertyTypeId === PropertyTypes.SUBDIVISION
-                ) {
+                if (cluster.properties.propertyTypeId === PropertyTypes.BUILDING) {
                   dispatch(
                     storePropertyDetail({
-                      propertyTypeId: (convertedProperty as IParcel)
-                        ?.propertyTypeId as PropertyTypes,
-                      parcelDetail: convertedProperty as IParcel,
+                      propertyTypeId: cluster.properties.propertyTypeId,
+                      parcelDetail: convertedProperty as IBuilding,
                     }),
                   );
                 } else {
                   dispatch(
                     storePropertyDetail({
-                      propertyTypeId: 1,
-                      parcelDetail: convertedProperty as IBuilding,
+                      propertyTypeId: cluster.properties.propertyTypeId,
+                      parcelDetail: convertedProperty as IParcel,
                     }),
                   );
                 }
                 onMarkerClick(); //open information slideout
-                if (keycloak.canUserViewProperty(cluster.properties as IProperty)) {
+                if (
+                  keycloak.canUserViewProperty(cluster.properties as IProperty) &&
+                  cluster.properties.propertyTypeId !== PropertyTypes.GEOCODER
+                ) {
                   fetchProperty(cluster.properties.propertyTypeId, cluster.properties.id);
                 } else {
                   popUpContext.setPropertyInfo(convertedProperty);
@@ -418,7 +435,10 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
                 );
               }
               onMarkerClick(); //open information slideout
-              if (keycloak.canUserViewProperty(m.properties as IProperty)) {
+              if (
+                keycloak.canUserViewProperty(m.properties as IProperty) &&
+                m.properties.propertyTypeId !== PropertyTypes.GEOCODER
+              ) {
                 fetchProperty(m.properties.propertyTypeId, m.properties.id);
               } else {
                 popUpContext.setPropertyInfo(

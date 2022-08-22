@@ -21,5 +21,10 @@
   "jest.autoRun": {
     "onStartup": ["all-tests"]
   },
-  "cSpell.words": ["Formik", "PIMS", "siteminder"]
+  "cSpell.words": [
+    "bbox",
+    "Formik",
+    "PIMS",
+    "siteminder"
+  ]
 }
