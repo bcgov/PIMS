@@ -31,4 +31,5 @@ export enum Topics {
   CREATE_PROJECT_NAVIGATION = 'Navigation',
   CREATE_PROJECT_STEPS = 'Steps',
   ASSESS_PROJECT = 'Assess',
+  TUTORIALS = 'Tutorials',
 }

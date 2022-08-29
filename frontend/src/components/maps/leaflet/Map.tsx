@@ -157,7 +157,7 @@ const getQueryParams = (filter: IPropertyFilter): IGeoSearchParams => {
 const defaultBounds = new LatLngBounds([60.09114547, -119.49609429], [48.78370426, -139.35937554]);
 
 /**
- * Creates a Leaflet map and by default includes a number of preconfigured layers.
+ * Creates a Leaflet map and by default includes a number of pre-configured layers.
  * @param param0
  */
 const Map: React.FC<MapProps> = ({
