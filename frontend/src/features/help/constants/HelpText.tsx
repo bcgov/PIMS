@@ -12,6 +12,7 @@ import InventoryNavigationHelpText from '../components/text/InventoryNavigationH
 import LandingFilterHelpText from '../components/text/LandingFilterHelpText';
 import LandingMapHelpText from '../components/text/LandingMapHelpText';
 import LandingNavigationHelpText from '../components/text/LandingNavigationHelpText';
+import { TutorialHelpText } from '../components/text/TutorialHelpText';
 import BugForm from '../forms/BugForm';
 import FeatureRequestForm from '../forms/FeatureRequestForm';
 import QuestionForm from '../forms/QuestionForm';
@@ -24,6 +25,7 @@ export const landingPageTopics = new Map<Topics, ReactNode>([
   [Topics.LANDING_MAP, <LandingMapHelpText />],
   [Topics.LANDING_FILTER, <LandingFilterHelpText />],
   [Topics.LANDING_NAVIGATION, <LandingNavigationHelpText />],
+  [Topics.TUTORIALS, <TutorialHelpText />],
 ]);
 
 /**

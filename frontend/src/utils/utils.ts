@@ -224,7 +224,6 @@ export const getYear = (date?: Date | string): number => {
   } else {
     momentDate = moment(date);
   }
-  console.debug(date);
   return momentDate.year();
 };
 
