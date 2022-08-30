@@ -18,7 +18,7 @@ const ResetButton: React.FC<ButtonProps> = ({ ...props }) => {
           variant="info"
           {...props}
           icon={<FaUndo size={20} />}
-        ></Button>
+        />
       </a>
     </TooltipWrapper>
   );
