@@ -1,9 +1,9 @@
 import {
   handleParcelDataLayerResponse,
+  PARCELS_PUBLIC_LAYER_URL,
   saveParcelDataLayerResponse,
   useLayerQuery,
 } from 'components/maps/leaflet/LayerPopup';
-import { useBoundaryLayer } from 'components/maps/leaflet/LayerPopup/hooks/useBoundaryLayer';
 import * as API from 'constants/API';
 import { FormikValues, getIn, setIn } from 'formik';
 import { IGeocoderResponse, useApi } from 'hooks/useApi';
@@ -42,8 +42,7 @@ export interface IPidSelection {
  */
 const useGeocoder = ({ formikRef, fetchPimsOrLayerParcel }: IUseGeocoderProps) => {
   const { lookupCodes } = useCodeLookups();
-  const layerUrl = useBoundaryLayer();
-  const parcelsService = useLayerQuery(layerUrl);
+  const parcelsService = useLayerQuery(PARCELS_PUBLIC_LAYER_URL);
   const [pidSelection, setPidSelection] = useState<IPidSelection>({ showPopup: false, geoPID: '' });
   const api = useApi();
   const dispatch = useAppDispatch();
