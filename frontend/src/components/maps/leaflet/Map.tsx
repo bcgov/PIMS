@@ -41,8 +41,8 @@ import {
   MUNICIPALITY_LAYER_URL,
   municipalityLayerPopupConfig,
   parcelLayerPopupConfig,
+  PARCELS_PUBLIC_LAYER_URL,
 } from './LayerPopup/constants';
-import { useBoundaryLayer } from './LayerPopup/hooks/useBoundaryLayer';
 import { useLayerQuery } from './LayerPopup/hooks/useLayerQuery';
 import {
   LayerPopupContent,
@@ -187,8 +187,7 @@ const Map: React.FC<MapProps> = ({
   const smallScreen = useMediaQuery({ maxWidth: 1800 });
   const [mapWidth, setMapWidth] = useState(0);
   const municipalitiesService = useLayerQuery(MUNICIPALITY_LAYER_URL);
-  const layerUrl = useBoundaryLayer();
-  const parcelsService = useLayerQuery(layerUrl);
+  const parcelsService = useLayerQuery(PARCELS_PUBLIC_LAYER_URL);
   const [bounds, setBounds] = useState<LatLngBounds>(defaultBounds);
   const { setChanged } = useFilterContext();
   const [layerPopup, setLayerPopup] = useState<LayerPopupInformation>();

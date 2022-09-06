@@ -6,8 +6,11 @@ import { useState } from 'react';
 import { Map as ReactLeafletMap, MapProps as LeafletMapProps } from 'react-leaflet';
 import { useAppSelector } from 'store';
 
-import { parcelLayerPopupConfig, useLayerQuery } from '../leaflet/LayerPopup';
-import { useBoundaryLayer } from '../leaflet/LayerPopup/hooks/useBoundaryLayer';
+import {
+  parcelLayerPopupConfig,
+  PARCELS_PUBLIC_LAYER_URL,
+  useLayerQuery,
+} from '../leaflet/LayerPopup';
 import { LayerPopupInformation } from '../leaflet/Map';
 import { PointFeature } from '../types';
 
@@ -36,8 +39,7 @@ const useActiveFeatureLayer = ({
   parcelLayerFeature,
 }: IUseActiveParcelMapLayer) => {
   const [activeFeatureLayer, setActiveFeatureLayer] = useState<GeoJSON>();
-  const layerUrl = useBoundaryLayer();
-  const parcelsService = useLayerQuery(layerUrl);
+  const parcelsService = useLayerQuery(PARCELS_PUBLIC_LAYER_URL);
   const draftProperties: PointFeature[] = useAppSelector(store => store.parcel.draftProperties);
   if (!!mapRef.current && !activeFeatureLayer) {
     setActiveFeatureLayer(geoJSON().addTo(mapRef.current.leafletElement));
