@@ -3,8 +3,11 @@ import { IBuilding, IParcel, IProperty } from 'actions/parcelsActions';
 import GenericModal, { ModalSize } from 'components/common/GenericModal';
 import { BuildingSvg, LandSvg, SubdivisionSvg } from 'components/common/Icons';
 import { fireMapRefreshEvent } from 'components/maps/hooks/useMapRefreshEvent';
-import { handleParcelDataLayerResponse, useLayerQuery } from 'components/maps/leaflet/LayerPopup';
-import { useBoundaryLayer } from 'components/maps/leaflet/LayerPopup/hooks/useBoundaryLayer';
+import {
+  handleParcelDataLayerResponse,
+  PARCELS_PUBLIC_LAYER_URL,
+  useLayerQuery,
+} from 'components/maps/leaflet/LayerPopup';
 import { Claims, EvaluationKeys, FiscalKeys, PropertyTypes } from 'constants/index';
 import { getMergedFinancials } from 'features/properties/components/forms/subforms/EvaluationForm';
 import useGeocoder from 'features/properties/hooks/useGeocoder';
@@ -139,8 +142,7 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
   const [showDelete, setShowDelete] = useState(false);
   const { createBuilding, updateBuilding } = useBuildingApi();
 
-  const layerUrl = useBoundaryLayer();
-  const parcelLayerService = useLayerQuery(layerUrl);
+  const parcelLayerService = useLayerQuery(PARCELS_PUBLIC_LAYER_URL);
 
   /**
    * Populate the formik form using the passed parcel.
