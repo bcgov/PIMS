@@ -129,8 +129,15 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
     onChange?.({ ...values, agencies: agencyIds });
   };
 
-  const resetFilter = () => {
-    ref.current.clear();
+  const resetFilter = (
+    setFieldValue: (field: string, value: any, shouldValidate?: boolean | undefined) => void,
+  ) => {
+    ref.current?.getInstance()?.clear();
+    setFieldValue('agencies', '');
+    setFieldValue('name', '');
+    setFieldValue('classificationId', '');
+    setFieldValue('address', '');
+    setFieldValue('pid', '');
     changeFilter(defaultFilter);
     setClear(true);
   };
@@ -241,7 +248,10 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
               />
             </Col>
             <Col className="bar-item flex-grow-0">
-              <ResetButton disabled={isSubmitting || findMoreOpen} onClick={resetFilter} />
+              <ResetButton
+                disabled={isSubmitting || findMoreOpen}
+                onClick={() => resetFilter(setFieldValue)}
+              />
             </Col>
           </Form.Row>
         </Form>
