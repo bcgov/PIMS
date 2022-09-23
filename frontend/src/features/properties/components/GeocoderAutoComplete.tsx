@@ -1,5 +1,3 @@
-import './GeocoderAutoComplete.scss';
-
 import classNames from 'classnames';
 import { DisplayError } from 'components/common/form';
 import TooltipIcon from 'components/common/TooltipIcon';
@@ -12,6 +10,7 @@ import { useCallback } from 'react';
 import { Form, FormControlProps } from 'react-bootstrap';
 import ClickAwayListener from 'react-click-away-listener';
 
+import { GeocoderAutoCompleteStyled } from './GeocoderAutoCompleteStyled';
 interface IGeocoderAutoCompleteProps {
   field: string;
   placeholder?: string;
@@ -104,7 +103,7 @@ export const GeocoderAutoComplete: React.FC<IGeocoderAutoCompleteProps> = ({
   };
 
   return (
-    <div className="GeocoderAutoComplete">
+    <GeocoderAutoCompleteStyled className="GeocoderAutoComplete">
       <ClickAwayListener onClickAway={() => setOptions([])}>
         <Form.Group
           controlId={`input-${field}`}
@@ -129,7 +128,7 @@ export const GeocoderAutoComplete: React.FC<IGeocoderAutoCompleteProps> = ({
           {!errorTooltip && <DisplayError field={field} />}
         </Form.Group>
       </ClickAwayListener>
-    </div>
+    </GeocoderAutoCompleteStyled>
   );
 };
 
