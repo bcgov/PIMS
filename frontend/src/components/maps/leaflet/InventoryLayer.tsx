@@ -237,6 +237,7 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
           });
         }
       }
+      console.log('setting features...');
       setFeatures(results);
       setLoadingTiles(false);
       if (results.length === 0) {
@@ -254,6 +255,7 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
 
   useMapRefreshEvent(() => search(params));
   useDeepCompareEffect(() => {
+    console.log('right here');
     setLoadingTiles(true);
     search(params);
   }, [params]);

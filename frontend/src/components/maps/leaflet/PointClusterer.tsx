@@ -246,6 +246,7 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
         filterState.setChanged(false);
         mapInstance.fitBounds(groupBounds, { maxZoom: zoom > MAX_ZOOM ? zoom : MAX_ZOOM });
       }
+      console.log('zoomingin?');
 
       setSpider({});
       spiderfierRef.current?.unspiderfy();
@@ -398,6 +399,7 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
             eventHandlers={{
               click: () => {
                 //sets this pin as currently selected
+                console.log('pin was clicked!!!');
                 const convertedProperty = convertToProperty(
                   m.properties,
                   m.geometry.coordinates[1],
