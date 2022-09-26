@@ -58,43 +58,41 @@ const App = () => {
       }
       onEvent={getKeycloakEventHandler(keycloak)}
     >
-      <Provider store={store}>
-        <AuthStateContextProvider>
-          <Router>
-            <AuthStateContext.Consumer>
-              {(context: IAuthState) => {
-                if (!context.ready) {
-                  return (
-                    <PublicLayout>
-                      <Col>
-                        <FilterBackdrop show={true}></FilterBackdrop>
-                      </Col>
-                    </PublicLayout>
-                  );
-                }
-
+      <AuthStateContextProvider>
+        <Router>
+          <AuthStateContext.Consumer>
+            {(context: IAuthState) => {
+              if (!context.ready) {
                 return (
-                  <>
-                    <AppRouter />
-                    <OnLoadActions />
-                    <ToastContainer
-                      position="top-right"
-                      autoClose={5000}
-                      hideProgressBar
-                      newestOnTop={false}
-                      closeOnClick={false}
-                      rtl={false}
-                      pauseOnFocusLoss={false}
-                      draggable
-                      pauseOnHover
-                    />
-                  </>
+                  <PublicLayout>
+                    <Col>
+                      <FilterBackdrop show={true}></FilterBackdrop>
+                    </Col>
+                  </PublicLayout>
                 );
-              }}
-            </AuthStateContext.Consumer>
-          </Router>
-        </AuthStateContextProvider>
-      </Provider>
+              }
+
+              return (
+                <>
+                  <AppRouter />
+                  <OnLoadActions />
+                  <ToastContainer
+                    position="top-right"
+                    autoClose={5000}
+                    hideProgressBar
+                    newestOnTop={false}
+                    closeOnClick={false}
+                    rtl={false}
+                    pauseOnFocusLoss={false}
+                    draggable
+                    pauseOnHover
+                  />
+                </>
+              );
+            }}
+          </AuthStateContext.Consumer>
+        </Router>
+      </AuthStateContextProvider>
     </ReactKeycloakProvider>
   );
 };

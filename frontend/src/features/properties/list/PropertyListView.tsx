@@ -279,7 +279,7 @@ const DirtyRowsTracker: React.FC<{ setDirtyRows: (changes: IChangedRow[]) => voi
   return null;
 };
 
-const PropertyListView: React.FC = () => {
+const PropertyListView = () => {
   const lookupCodes = useCodeLookups();
   const { updateBuilding, updateParcel } = useApi();
   const [editable, setEditable] = useState(false);
@@ -288,25 +288,18 @@ const PropertyListView: React.FC = () => {
   const [propertyType, setPropertyType] = useState<PropertyTypeNames>(PropertyTypeNames.Land);
   const [dirtyRows, setDirtyRows] = useState<IChangedRow[]>([]);
   const keycloak = useKeycloakWrapper();
-  const municipalities = useMemo(
-    () => lookupCodes.getByType(API.ADMINISTRATIVE_AREA_CODE_SET_NAME),
-    [lookupCodes],
-  );
-  const agencies = useMemo(() => lookupCodes.getByType(API.AGENCY_CODE_SET_NAME), [lookupCodes]);
-
+  const municipalities = lookupCodes.getByType(API.ADMINISTRATIVE_AREA_CODE_SET_NAME);
+  console.log('municipalities: ' + municipalities);
+  const agencies = lookupCodes.getByType(API.AGENCY_CODE_SET_NAME);
+  console.log('agencies: ' + agencies);
   const agenciesList = agencies.filter((a) => !a.parentId).map(mapLookupCode);
   const subAgencies = agencies.filter((a) => !!a.parentId).map(mapLookupCode);
 
-  const propertyClassifications = useMemo(
-    () => lookupCodes.getPropertyClassificationOptions(),
-    [lookupCodes],
-  );
-  const administrativeAreas = useMemo(
-    () => lookupCodes.getByType(API.ADMINISTRATIVE_AREA_CODE_SET_NAME),
-    [lookupCodes],
-  );
+  const propertyClassifications = lookupCodes.getPropertyClassificationOptions();
+  console.log('propertyClassifications: ' + propertyClassifications.length);
+  const administrativeAreas = lookupCodes.getByType(API.ADMINISTRATIVE_AREA_CODE_SET_NAME);
 
-  const agencyIds = useMemo(() => agencies.map((x) => parseInt(x.id, 10)), [agencies]);
+  const agencyIds = agencies.map((x) => parseInt(x.id, 10));
   const [sorting, setSorting] = useState<TableSort<IProperty>>({ description: 'asc' });
 
   // We'll start our table without any data
@@ -426,7 +419,7 @@ const PropertyListView: React.FC = () => {
       // setLoading(true);
 
       // Only update the data if this is the latest fetch
-      if (agencyIds?.length > 0) {
+      if (agencyIds?.length >= 0) {
         setData(undefined);
         const query = getServerQuery({ pageIndex, pageSize, filter, agencyIds });
         const data = await service.getPropertyList(query, sorting);

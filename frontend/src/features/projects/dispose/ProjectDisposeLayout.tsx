@@ -9,7 +9,7 @@ import _ from 'lodash';
 import queryString from 'query-string';
 import React, { useEffect, useRef } from 'react';
 import { Container, Spinner } from 'react-bootstrap';
-import { Navigate, PathMatch, Route, Routes, useNavigate } from 'react-router-dom';
+import { Navigate, PathMatch, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { useAppDispatch } from 'store';
 
 import { clearProject, SresManual, updateWorkflowStatus, useStepForm } from '../common';
@@ -26,6 +26,7 @@ const ProjectDisposeLayout = ({
   match: PathMatch<string> | null;
   location: Location;
 }) => {
+  const locationPath = useLocation();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const formikRef = useRef<FormikValues>();
@@ -105,24 +106,25 @@ const ProjectDisposeLayout = ({
   };
 
   useEffect(() => {
-    let statusAtRoute = _.find(workflowStatuses, ({ route }) => location.pathname.includes(route));
+    let statusAtRoute = _.find(workflowStatuses, ({ route }) =>
+      locationPath.pathname.includes(route),
+    );
     if (setCurrentStatus && noFetchingProjectRequests) setCurrentStatus(statusAtRoute);
   }, [
-    location.pathname,
+    locationPath.pathname,
     navigate,
     workflowStatuses,
     setCurrentStatus,
     project.projectNumber,
     noFetchingProjectRequests,
   ]);
-
   //If the current route isn't set, set based on the query project status.
   useEffect(() => {
-    if (location.pathname === '/dispose' && workflowStatuses?.length > 0) {
+    if (locationPath.pathname === '/dispose' && workflowStatuses?.length > 0) {
       dispatch(clearProject());
       navigate(`/dispose${workflowStatuses[0].route}`, { replace: true });
     }
-  }, [navigate, workflowStatuses, location.pathname, dispatch, projectNumber]);
+  }, [navigate, workflowStatuses, locationPath.pathname, dispatch, projectNumber]);
   return (
     <>
       {workflowStatuses && workflowStatuses.length ? (

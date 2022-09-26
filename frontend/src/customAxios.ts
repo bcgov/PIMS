@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { isEmpty } from 'lodash';
-import React from 'react';
 import { toast } from 'react-toastify';
 import { store } from 'store/store';
 
@@ -33,60 +32,54 @@ export const CustomAxios = ({
   envelope?: typeof defaultEnvelope;
   baseURL?: string;
 } = {}) => {
-  const token = store.getState().jwt;
-  const loadingToastId = React.useRef<React.ReactText | undefined>();
+  let loadingToastId: React.ReactText | undefined = undefined;
+  const instance = axios.create({
+    baseURL,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+    },
+  });
+  instance.interceptors.request.use((config) => {
+    config!.headers!.Authorization = `Bearer ${store.getState().jwt}`;
+    if (selector !== undefined) {
+      const state = store.getState();
+      const storedValue = selector(state);
 
-  const instance = React.useMemo(() => {
-    const instance = axios.create({
-      baseURL,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-      },
-    });
-    instance.interceptors.request.use((config) => {
-      config!.headers!.Authorization = `Bearer ${token}`;
-      if (selector !== undefined) {
-        const state = store.getState();
-        const storedValue = selector(state);
-
-        if (!isEmpty(storedValue)) {
-          throw new axios.Cancel(JSON.stringify(envelope(storedValue)));
-        }
+      if (!isEmpty(storedValue)) {
+        throw new axios.Cancel(JSON.stringify(envelope(storedValue)));
       }
-      if (lifecycleToasts?.loadingToast) {
-        loadingToastId.current = lifecycleToasts.loadingToast();
+    }
+    if (lifecycleToasts?.loadingToast) {
+      loadingToastId = lifecycleToasts.loadingToast();
+    }
+    return config;
+  });
+
+  instance.interceptors.response.use(
+    (response) => {
+      if (lifecycleToasts?.successToast && response.status < 300) {
+        loadingToastId && toast.dismiss(loadingToastId);
+        lifecycleToasts.successToast();
+      } else if (lifecycleToasts?.errorToast && response.status >= 300) {
+        lifecycleToasts.errorToast();
       }
-      return config;
-    });
+      return response;
+    },
+    (error) => {
+      if (axios.isCancel(error)) {
+        return Promise.resolve(error.message);
+      }
+      if (lifecycleToasts?.errorToast) {
+        loadingToastId && toast.dismiss(loadingToastId);
+        lifecycleToasts.errorToast();
+      }
 
-    instance.interceptors.response.use(
-      (response) => {
-        if (lifecycleToasts?.successToast && response.status < 300) {
-          loadingToastId && toast.dismiss(loadingToastId.current);
-          lifecycleToasts.successToast();
-        } else if (lifecycleToasts?.errorToast && response.status >= 300) {
-          lifecycleToasts.errorToast();
-        }
-        return response;
-      },
-      (error) => {
-        if (axios.isCancel(error)) {
-          return Promise.resolve(error.message);
-        }
-        if (lifecycleToasts?.errorToast) {
-          loadingToastId && toast.dismiss(loadingToastId.current);
-          lifecycleToasts.errorToast();
-        }
-
-        // TODO: This is not returning the error to an async/await try/catch implementation...
-        //const errorMessage =
-        //  errorToastMessage || (error.response && error.response.data.message) || String.ERROR;
-        return Promise.reject(error);
-      },
-    );
-
-    return instance;
-  }, [baseURL, token, selector, lifecycleToasts, envelope]);
+      // TODO: This is not returning the error to an async/await try/catch implementation...
+      //const errorMessage =
+      //  errorToastMessage || (error.response && error.response.data.message) || String.ERROR;
+      return Promise.reject(error);
+    },
+  );
 
   return instance;
 };
