@@ -289,14 +289,11 @@ const PropertyListView = () => {
   const [dirtyRows, setDirtyRows] = useState<IChangedRow[]>([]);
   const keycloak = useKeycloakWrapper();
   const municipalities = lookupCodes.getByType(API.ADMINISTRATIVE_AREA_CODE_SET_NAME);
-  console.log('municipalities: ' + municipalities);
   const agencies = lookupCodes.getByType(API.AGENCY_CODE_SET_NAME);
-  console.log('agencies: ' + agencies);
   const agenciesList = agencies.filter((a) => !a.parentId).map(mapLookupCode);
   const subAgencies = agencies.filter((a) => !!a.parentId).map(mapLookupCode);
 
   const propertyClassifications = lookupCodes.getPropertyClassificationOptions();
-  console.log('propertyClassifications: ' + propertyClassifications.length);
   const administrativeAreas = lookupCodes.getByType(API.ADMINISTRATIVE_AREA_CODE_SET_NAME);
 
   const agencyIds = agencies.map((x) => parseInt(x.id, 10));

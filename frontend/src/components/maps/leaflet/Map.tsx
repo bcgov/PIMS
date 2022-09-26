@@ -273,7 +273,6 @@ const Map: React.FC<MapProps> = ({
   };
 
   const showLocationDetails = async (event: LeafletMouseEvent) => {
-    console.log('In the showLocationDetails');
     !!onMapClick && onMapClick(event);
     const municipality = await municipalitiesService.findOneWhereContains(event.latlng);
     const parcel = await parcelsService.findOneWhereContains(event.latlng);
@@ -340,7 +339,6 @@ const Map: React.FC<MapProps> = ({
   }
 
   const handleBounds = (e: any) => {
-    console.log('setting bounds??');
     const boundsData: LatLngBounds = e.target.getBounds();
     if (!isEqual(boundsData.getNorthEast(), boundsData.getSouthWest())) {
       setBounds(boundsData);
