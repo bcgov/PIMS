@@ -18,6 +18,7 @@ export const StepContextProvider = (props: { children?: any }) => {
   const stepContext = { currentStatus, setCurrentStatus, disposeWorkflowStatuses };
   const dispatch = useAppDispatch();
   useEffect(() => {
+    console.log('test: ' + disposeWorkflowStatuses?.length);
     fetchProjectWorkflow('SUBMIT-DISPOSAL')(dispatch).then((disposeWorkflowStatuses: IStatus[]) => {
       setDisposeWorkflowStatuses(disposeWorkflowStatuses);
     });

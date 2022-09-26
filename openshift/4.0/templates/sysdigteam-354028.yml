@@ -1,0 +1,15 @@
+apiVersion: ops.gov.bc.ca/v1alpha1
+kind: SysdigTeam
+metadata:
+  name: 354028-sysdigteam
+  namespace: 354028-tools
+spec:
+  team:
+    description: The Sysdig Team for the Platform Services Documize
+    users:
+      - name: lawrence.lau@gov.bc.ca
+        role: ROLE_TEAM_MANAGER
+      - name: sharala.perumal@gov.bc.ca
+        role: ROLE_TEAM_MANAGER
+      - name: jeremymfoster@hotmail.com
+        role: ROLE_TEAM_MANAGER

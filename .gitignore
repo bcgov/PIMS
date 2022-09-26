@@ -11,3 +11,4 @@ auth/keycloak/config/*.log
 .DS_Store
 /backups
 /app
+frontend/public/videos/

@@ -1,7 +1,8 @@
 import './Button.scss';
 
 import classnames from 'classnames';
-import React, { CSSProperties, MouseEventHandler } from 'react';
+import { rest } from 'lodash';
+import React, { CSSProperties, forwardRef, MouseEventHandler } from 'react';
 import { Button as ButtonBase, ButtonProps as ButtonPropsBase, Spinner } from 'react-bootstrap';
 
 export type ButtonProps = ButtonPropsBase & {
@@ -21,34 +22,28 @@ export type ButtonProps = ButtonPropsBase & {
   isSubmitting?: boolean;
 };
 
-export const Button: React.FC<ButtonProps & React.HTMLAttributes<HTMLButtonElement>> = ({
-  showSubmitting,
-  isSubmitting,
-  disabled,
-  icon,
-  children,
-  className,
-  ...rest
-}) => {
-  const classes = classnames({
-    Button: true,
-    'Button--disabled': disabled,
-    'Button--icon-only': (children === null || children === undefined) && icon,
-    [className!]: className,
-  });
-  return (
-    <ButtonBase className={classes} disabled={disabled} {...rest}>
-      {icon && <div className="Button__icon">{icon}</div>}
-      {children && <div className="Button__value">{children}</div>}
-      {showSubmitting && isSubmitting && (
-        <Spinner
-          animation="border"
-          size="sm"
-          role="status"
-          as="span"
-          style={{ marginLeft: '.5rem', padding: '.5rem' }}
-        />
-      )}
-    </ButtonBase>
-  );
-};
+export const Button: React.FC<ButtonProps & React.HTMLAttributes<HTMLButtonElement>> = forwardRef(
+  (props, ref) => {
+    const classes = classnames({
+      Button: true,
+      'Button--disabled': props.disabled,
+      'Button--icon-only': (props.children === null || props.children === undefined) && props.icon,
+      [props.className!]: props.className,
+    });
+    return (
+      <ButtonBase className={classes} disabled={props.disabled} {...rest}>
+        {props.icon && <div className="Button__icon">{props.icon}</div>}
+        {props.children && <div className="Button__value">{props.children}</div>}
+        {props.showSubmitting && props.isSubmitting && (
+          <Spinner
+            animation="border"
+            size="sm"
+            role="status"
+            as="span"
+            style={{ marginLeft: '.5rem', padding: '.5rem' }}
+          />
+        )}
+      </ButtonBase>
+    );
+  },
+);
