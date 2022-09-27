@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { isEmpty } from 'lodash';
-import React from 'react';
 import { toast } from 'react-toastify';
 import { store } from 'store/store';
 
@@ -34,7 +33,6 @@ export const CustomAxios = ({
   baseURL?: string;
 } = {}) => {
   let loadingToastId: React.ReactText | undefined = undefined;
-
   const instance = axios.create({
     baseURL,
     headers: {
