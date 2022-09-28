@@ -44,7 +44,7 @@ export const useBuildingApi = () => {
       dispatch(hideLoading());
       return data;
     } catch (axiosError) {
-      const err = axiosError as AxiosError;
+      const err = axiosError as AxiosError<any>;
       dispatch(error(actionTypes.ADD_BUILDING, err?.response?.status, axiosError));
       dispatch(hideLoading());
       throw Error(err.response?.data.details);
@@ -73,7 +73,7 @@ export const useBuildingApi = () => {
       dispatch(hideLoading());
       return data;
     } catch (axiosError) {
-      const err = axiosError as AxiosError;
+      const err = axiosError as AxiosError<any>;
       dispatch(error(actionTypes.UPDATE_BUILDING, err?.response?.status, axiosError));
       dispatch(hideLoading());
       throw Error(err.response?.data.details);

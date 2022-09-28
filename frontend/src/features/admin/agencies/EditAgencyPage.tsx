@@ -137,7 +137,7 @@ const EditAgencyPage = (props: IEditAgencyPageProps) => {
                   navigate(`/admin/agency/${data.id}`, { replace: true });
                 }
               } catch (error) {
-                const err = error as AxiosError;
+                const err = error as AxiosError<any>;
                 const msg: string =
                   err?.response?.data?.error ?? 'Error saving property data, please try again.';
                 setStatus({ msg });

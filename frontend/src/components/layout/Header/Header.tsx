@@ -2,6 +2,7 @@ import './Header.scss';
 
 import BClogoUrl from 'assets/images/logo-banner.svg';
 import PIMSlogo from 'assets/images/PIMSlogo/logo_only.png';
+import { AxiosError } from 'axios';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import _ from 'lodash';
 import React, { useState } from 'react';
@@ -61,27 +62,30 @@ const Header = () => {
       </Modal.Header>
 
       <Modal.Body style={{ maxHeight: '500px', overflowY: 'scroll' }}>
-        {errors.map((error: IGenericNetworkAction, index: number) => (
-          <Row key={index} style={{ wordBreak: 'break-all' }}>
-            {process.env.NODE_ENV === 'development' ? (
-              <Col>
-                <abbr title={error.error?.response?.config?.url}>
-                  {error.error?.response?.config?.url?.substr(0, 20)}
-                </abbr>
-                : {error.error?.response?.statusText} data:{' '}
-                {JSON.stringify(error.error?.response?.data)}
-              </Col>
-            ) : (
-              <Col>
-                <abbr title={error.error?.response?.config?.url}>
-                  {error.error?.response?.config?.url?.substr(0, 20)}
-                </abbr>
-                : ({error.error?.response?.statusText ?? 'unknown'}){' '}
-                {error.error?.response?.data?.error}
-              </Col>
-            )}
-          </Row>
-        ))}
+        {errors.map((error: IGenericNetworkAction, index: number) => {
+          error.error = error.error as AxiosError<any>;
+          return (
+            <Row key={index} style={{ wordBreak: 'break-all' }}>
+              {process.env.NODE_ENV === 'development' ? (
+                <Col>
+                  <abbr title={error.error?.response?.config?.url}>
+                    {error.error?.response?.config?.url?.substr(0, 20)}
+                  </abbr>
+                  : {error.error?.response?.statusText} data:{' '}
+                  {JSON.stringify(error.error?.response?.data)}
+                </Col>
+              ) : (
+                <Col>
+                  <abbr title={error.error?.response?.config?.url}>
+                    {error.error?.response?.config?.url?.substr(0, 20)}
+                  </abbr>
+                  : ({error.error?.response?.statusText ?? 'unknown'}){' '}
+                  {JSON.stringify(error.error?.response?.data)}
+                </Col>
+              )}
+            </Row>
+          );
+        })}
       </Modal.Body>
 
       <Modal.Footer>

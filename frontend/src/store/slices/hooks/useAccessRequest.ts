@@ -167,7 +167,7 @@ export const useAccessRequest = () => {
           dispatch(hideLoading());
           return response;
         } catch (axiosError) {
-          const err = axiosError as AxiosError;
+          const err = axiosError as AxiosError<any>;
           dispatch(error(actionTypes.GET_REQUEST_ACCESS, err?.response?.status, axiosError));
         }
       } finally {
