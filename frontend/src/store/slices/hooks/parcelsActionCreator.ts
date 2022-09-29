@@ -156,7 +156,7 @@ export const createParcel = (parcel: IParcel) => async (dispatch: Dispatch<AnyAc
     dispatch(hideLoading());
     return data;
   } catch (axiosError) {
-    const err = axiosError as AxiosError;
+    const err = axiosError as AxiosError<any>;
     dispatch(error(actionTypes.ADD_PARCEL, err?.response?.status, axiosError));
     dispatch(hideLoading());
     throw Error(err.response?.data.details);
@@ -176,7 +176,7 @@ export const updateParcel = (parcel: IParcel) => async (dispatch: Dispatch<AnyAc
     dispatch(hideLoading());
     return data;
   } catch (axiosError) {
-    const err = axiosError as AxiosError;
+    const err = axiosError as AxiosError<any>;
     dispatch(error(actionTypes.UPDATE_PARCEL, err?.response?.status, axiosError));
     dispatch(hideLoading());
     throw Error(err.response?.data.details);
@@ -199,7 +199,7 @@ export const deleteParcel = (parcel: IParcel) => async (dispatch: Dispatch<AnyAc
     dispatch(hideLoading());
     return data;
   } catch (axiosError) {
-    const err = axiosError as AxiosError;
+    const err = axiosError as AxiosError<any>;
     dispatch(error(actionTypes.DELETE_PARCEL, err.response?.status, axiosError));
     dispatch(hideLoading());
     throw Error(err.response?.data.details);
