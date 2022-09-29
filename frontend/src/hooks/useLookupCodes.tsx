@@ -16,7 +16,6 @@ import { useKeycloakWrapper } from './useKeycloakWrapper';
 export function useCodeLookups() {
   const keycloak = useKeycloakWrapper();
   const lookupCodes = useAppSelector<ILookupCode[]>((store) => store.lookupCode.lookupCodes);
-  console.log('agenci code lookups: ' + lookupCodes.length);
   const getCodeById = (type: string, id: string): string | undefined => {
     return lookupCodes.filter((code) => code.type === type && code.id === id)?.find((x) => x)?.code;
   };
