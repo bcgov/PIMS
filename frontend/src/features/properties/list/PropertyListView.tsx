@@ -25,12 +25,13 @@ import useCodeLookups from 'hooks/useLookupCodes';
 import { useRouterFilter } from 'hooks/useRouterFilter';
 import { fill, intersection, isEmpty, keys, noop, pick, range } from 'lodash';
 import queryString from 'query-string';
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Button, Container } from 'react-bootstrap';
 import { FaEdit, FaFileExport, FaFolder, FaFolderOpen } from 'react-icons/fa';
 import { FaFileAlt, FaFileExcel } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 import { useAppDispatch } from 'store';
+import { getFetchLookupCodeAction } from 'store/slices/hooks/lookupCodeActionCreator';
 import styled from 'styled-components';
 import { decimalOrUndefined, mapLookupCode } from 'utils';
 import download from 'utils/download';
@@ -439,6 +440,11 @@ const PropertyListView = () => {
   }, [fetchData, pageIndex, pageSize, filter, agencyIds, sorting]);
 
   const dispatch = useAppDispatch();
+
+  /** make sure lookup codes are updated on page load */
+  useEffect(() => {
+    getFetchLookupCodeAction()(dispatch);
+  }, [dispatch]);
 
   /**
    * @param {'csv' | 'excel'} accept Whether the fetch is for type of CSV or EXCEL
