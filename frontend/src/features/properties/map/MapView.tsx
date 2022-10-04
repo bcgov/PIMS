@@ -10,9 +10,10 @@ import MapSideBarContainer from 'features/mapSideBar/containers/MapSideBarContai
 import useCodeLookups from 'hooks/useLookupCodes';
 import { LeafletMouseEvent, Map as LeafletMap } from 'leaflet';
 import queryString from 'query-string';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'store';
+import { getFetchLookupCodeAction } from 'store/slices/hooks/lookupCodeActionCreator';
 import { saveClickLatLng as saveLeafletMouseEvent } from 'store/slices/leafletMouseSlice';
 import { storePropertyDetail } from 'store/slices/parcelSlice';
 
@@ -57,6 +58,11 @@ const MapView: React.FC<MapViewProps> = (props: MapViewProps) => {
   };
 
   const { showSideBar, size } = useParamSideBar();
+
+  /** make sure lookup codes are updated when map is first loaded */
+  useEffect(() => {
+    getFetchLookupCodeAction()(dispatch);
+  }, [dispatch]);
 
   const location = useLocation();
   const urlParsed = queryString.parse(location.search);

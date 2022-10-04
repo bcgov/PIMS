@@ -72,7 +72,7 @@ export const ManageAdminAreas = () => {
   /** make sure lookup codes are updated when administrative area is added or deleted */
   useEffect(() => {
     getFetchLookupCodeAction()(dispatch);
-  }, [dispatch]);
+  }, [navigate, dispatch]);
 
   const [filter, setFilter] = useState<IAdminAreaFilter>({});
   const onRequestData = useCallback(

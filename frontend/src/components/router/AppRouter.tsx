@@ -116,6 +116,18 @@ export const AppRouter: React.FC = () => {
               }
             />
           </Route>
+          <Route path="/admin/user:id?" element={<PrivateRoute claim={Claims.ADMIN_USERS} />}>
+            <Route
+              index
+              element={
+                <LayoutWrapper
+                  component={ManageUsers}
+                  layout={AuthLayout}
+                  title={getTitle('Users Management')}
+                />
+              }
+            />
+          </Route>
           <Route
             path="/admin/access/requests"
             element={<PrivateRoute claim={Claims.ADMIN_USERS} />}
@@ -159,6 +171,60 @@ export const AppRouter: React.FC = () => {
             />
           </Route>
           <Route
+            path="/admin/administrativeArea/:id"
+            element={<PrivateRoute claim={Claims.ADMIN_USERS} />}
+          >
+            <Route
+              index
+              element={
+                <LayoutWrapper
+                  component={EditAdminArea}
+                  layout={AuthLayout}
+                  title={getTitle('Edit Adminstrative Area')}
+                />
+              }
+            />
+          </Route>
+          <Route
+            path="/admin/administrativeArea/new"
+            element={<PrivateRoute claim={Claims.ADMIN_USERS} />}
+          >
+            <Route
+              index
+              element={
+                <LayoutWrapper
+                  component={EditAdminArea}
+                  layout={AuthLayout}
+                  title={getTitle('Create Adminstrative Area')}
+                />
+              }
+            />
+          </Route>
+          <Route path="/admin/user/:id" element={<PrivateRoute claim={Claims.ADMIN_USERS} />}>
+            <Route
+              index
+              element={
+                <LayoutWrapper
+                  component={EditUserPage}
+                  layout={AuthLayout}
+                  title={getTitle('Edit User')}
+                />
+              }
+            />
+          </Route>
+          <Route path="/admin/agency/:id" element={<PrivateRoute claim={Claims.ADMIN_USERS} />}>
+            <Route
+              index
+              element={
+                <LayoutWrapper
+                  component={EditAgencyPage}
+                  layout={AuthLayout}
+                  title={getTitle('Edit Agency')}
+                />
+              }
+            />
+          </Route>
+          <Route
             path="/admin"
             element={
               <PrivateRoute claim={Claims.ADMIN_USERS}>
@@ -179,7 +245,7 @@ export const AppRouter: React.FC = () => {
                     title={getTitle('Access Requests')}
                   />
                 </Route>
-                <Route path="admin/user/:id?">
+                <Route path="user/:id?">
                   <LayoutWrapper
                     component={EditUserPage}
                     layout={AuthLayout}
