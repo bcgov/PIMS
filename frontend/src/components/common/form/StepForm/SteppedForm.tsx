@@ -22,7 +22,7 @@ import { ISteppedFormProps, ISteppedFormValues, IStepperTab } from './types';
 
 const TabbedForm = styled(Form)`
   .hideTabs {
-    a.nav-item {
+    li.nav-item {
       background-color: white;
       display: none;
     }
@@ -230,15 +230,17 @@ const tabTitle = (title: string, index: number, setTabToDeleteId: (index: number
     <>
       <AbbreviatedText text={title} maxLength={20} />
       <TooltipWrapper toolTipId="remove-associated-parcel" toolTip="Remove this associated parcel">
-        <FaWindowClose
-          size={15}
-          data-testid={`delete-parcel-${index + 1}`}
-          onClick={(e: any) => {
-            e.preventDefault();
-            e.stopPropagation();
-            setTabToDeleteId(index);
-          }}
-        ></FaWindowClose>
+        <a>
+          <FaWindowClose
+            size={15}
+            data-testid={`delete-parcel-${index + 1}`}
+            onClick={(e: any) => {
+              e.preventDefault();
+              e.stopPropagation();
+              setTabToDeleteId(index);
+            }}
+          ></FaWindowClose>
+        </a>
       </TooltipWrapper>
     </>
   );
