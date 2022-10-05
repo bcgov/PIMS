@@ -12,7 +12,7 @@ import { IAgencyDetail } from 'interfaces';
 import React, { useEffect, useState } from 'react';
 import { Button, ButtonToolbar, Container, Navbar, Row } from 'react-bootstrap';
 import { FaArrowAltCircleLeft } from 'react-icons/fa';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'store';
 import {
   createAgency,
@@ -32,13 +32,17 @@ interface IEditAgencyPageProps {
 
 /** This page is used to either add a new agency or edit the and agency's details */
 const EditAgencyPage = (props: IEditAgencyPageProps) => {
-  const agencyId = props?.match?.params?.id || props.id;
+  const params = useParams();
+  // removing the double quotes surrounding the id from useParams() as stringify isn't removing those double quotes surrounding the id.
+  const agencyId = JSON.stringify(params.id).slice(1, -1);
+
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useAppDispatch();
   const newAgency = location.pathname.includes('/new');
   const [showDelete, setShowDelete] = useState(false);
   const [showFailed, setShowFailed] = useState(false);
+
   useEffect(() => {
     if (!newAgency) {
       fetchAgencyDetail({ id: agencyId })(dispatch);
@@ -187,7 +191,7 @@ const EditAgencyPage = (props: IEditAgencyPageProps) => {
                           const data = await service.getPropertyList({
                             page: 1,
                             quantity: 10,
-                            agencies: agencyId,
+                            agencies: parseInt(agencyId),
                           });
                           if (data.total === 0) {
                             setShowDelete(true);

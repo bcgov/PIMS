@@ -11,18 +11,19 @@ import * as API from 'constants/API';
 import Claims from 'constants/claims';
 import { ENVIRONMENT } from 'constants/environment';
 import { PropertyTypes } from 'constants/propertyTypes';
-import { ReviewWorkflowStatus } from 'features/projects/constants';
+import { DisposeWorkflowStatus, ReviewWorkflowStatus } from 'features/projects/constants';
 import { IProject as IProjectDetail } from 'features/projects/interfaces';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import useCodeLookups from 'hooks/useLookupCodes';
 import queryString from 'query-string';
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Container } from 'react-bootstrap';
 import { Col } from 'react-bootstrap';
 import { FaFileAlt, FaFileExcel, FaFolder, FaFolderOpen } from 'react-icons/fa';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'store';
+import { getFetchLookupCodeAction } from 'store/slices/hooks/lookupCodeActionCreator';
 import styled from 'styled-components';
 import { mapLookupCodeWithParentString, mapStatuses } from 'utils';
 import download from 'utils/download';
@@ -81,6 +82,7 @@ export const ProjectListView: React.FC<IProps> = ({
     mapLookupCodeWithParentString(c, agencies ?? []),
   );
   const statuses = (projectStatuses ?? []).map((c) => mapStatuses(c));
+  console.log('statuses: ' + statuses);
   const columns = useMemo(() => cols, []);
 
   // We'll start our table without any data
@@ -172,6 +174,12 @@ export const ProjectListView: React.FC<IProps> = ({
     [setData, setPageCount],
   );
   const dispatch = useAppDispatch();
+
+  /** make sure lookup codes are updated on page load */
+  useEffect(() => {
+    getFetchLookupCodeAction()(dispatch);
+  }, [dispatch]);
+
   const location = useLocation();
   const route = location.pathname;
 
@@ -214,12 +222,16 @@ export const ProjectListView: React.FC<IProps> = ({
   };
 
   const onRowClick = (row: IProject) => {
+    const DisposalStatuses = Object.keys(DisposeWorkflowStatus).map(
+      (k: string) => (DisposeWorkflowStatus as any)[k],
+    );
     const ReviewWorkflowStatuses = Object.keys(ReviewWorkflowStatus).map(
       (k: string) => (ReviewWorkflowStatus as any)[k],
     );
     if (ReviewWorkflowStatuses.includes(row.statusCode)) {
+      console.log('row.statusRoute: ' + row.statusRoute);
       if (keycloak.hasClaim(Claims.ADMIN_PROJECTS)) {
-        navigate(`${row.statusRoute}?projectNumber=${row.projectNumber}`);
+        navigate(`/projects/disposal/${row.id}`);
       } else {
         navigate(`/projects/summary?projectNumber=${row.projectNumber}`);
       }

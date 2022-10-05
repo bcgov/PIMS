@@ -8,6 +8,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { ButtonToolbar, Container, Navbar, Spinner } from 'react-bootstrap';
 import { FaArrowAltCircleLeft } from 'react-icons/fa';
 import { useLocation, useNavigate } from 'react-router';
+import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { isAxiosError } from 'utils';
 import { AdministrativeAreaSchema } from 'utils/YupSchema';
@@ -34,7 +35,11 @@ const EditAdminArea = (props: IEditAdminAreaProps) => {
   const [activeArea, setActiveArea] = useState<IAdministrativeArea>();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [duplicateModal, setDuplicateModal] = useState({ show: false, msg: '' });
-  const adminAreaId = props?.match?.params?.id;
+
+  const params = useParams();
+  // removing the double quotes surrounding the id from useParams() as stringify isn't removing those double quotes surrounding the id.
+  // set aminAreaId to 0 when creating a new admin area
+  const adminAreaId = params.id ? parseInt(JSON.stringify(params.id).slice(1, -1)) : 0;
 
   /** on delete we want to remove the admin area and go back to the list view */
   const onDelete = async () => {
@@ -76,11 +81,13 @@ const EditAdminArea = (props: IEditAdminAreaProps) => {
       <Navbar className="navBar" expand="sm" variant="light" bg="light">
         <Navbar.Brand>
           <TooltipWrapper toolTipId="back" toolTip="Back to administrative area list">
-            <FaArrowAltCircleLeft
-              onClick={goBack}
-              size={20}
-              style={{ marginBottom: '0.5rem', cursor: 'pointer' }}
-            />
+            <a>
+              <FaArrowAltCircleLeft
+                onClick={goBack}
+                size={20}
+                style={{ marginBottom: '0.5rem', cursor: 'pointer' }}
+              />
+            </a>
           </TooltipWrapper>
         </Navbar.Brand>
         <h4>Administrative Area</h4>
