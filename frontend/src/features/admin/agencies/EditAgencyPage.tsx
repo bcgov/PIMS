@@ -34,9 +34,7 @@ interface IEditAgencyPageProps {
 const EditAgencyPage = (props: IEditAgencyPageProps) => {
   const params = useParams();
   // removing the double quotes surrounding the id from useParams() as stringify isn't removing those double quotes surrounding the id.
-  // set aminAreaId to 0 when creating a new admin area
   const agencyId = JSON.stringify(params.id).slice(1, -1);
-  console.log('agencyId: ' + agencyId);
 
   const navigate = useNavigate();
   const location = useLocation();
