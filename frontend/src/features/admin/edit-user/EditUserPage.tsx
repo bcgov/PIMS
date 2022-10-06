@@ -12,6 +12,7 @@ import React, { useEffect } from 'react';
 import { Button, ButtonToolbar, Col, Container, Navbar, Row } from 'react-bootstrap';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'store';
+import { getFetchLookupCodeAction } from 'store/slices/hooks/lookupCodeActionCreator';
 import { fetchUserDetail, getUpdateUserAction } from 'store/slices/hooks/usersActionCreator';
 import { formatApiDateTime } from 'utils';
 import { UserUpdateSchema } from 'utils/YupSchema';
@@ -31,6 +32,11 @@ const EditUserPage = (props: IEditUserPageProps) => {
   useEffect(() => {
     fetchUserDetail({ id: userId })(dispatch);
   }, [dispatch, userId]);
+
+  /** make sure lookup codes are updated when administrative area is added or deleted */
+  useEffect(() => {
+    getFetchLookupCodeAction()(dispatch);
+  }, [dispatch]);
 
   const { getByType } = useCodeLookups();
   const agencies = getByType(API.AGENCY_CODE_SET_NAME);
@@ -73,14 +79,16 @@ const EditUserPage = (props: IEditUserPageProps) => {
         toolTipId="select-roles-tip"
         toolTip="To select multiple roles, hold Ctrl and click options."
       >
-        <Select
-          field="roles"
-          data-testid="role"
-          multiple={true}
-          required={true}
-          options={selectRoles}
-          placeholder={user?.roles?.length > 0 ? undefined : 'Please Select'}
-        />
+        <>
+          <Select
+            field="roles"
+            data-testid="role"
+            multiple={true}
+            required={true}
+            options={selectRoles}
+            placeholder={user?.roles?.length > 0 ? undefined : 'Please Select'}
+          />
+        </>
       </TooltipWrapper>
     </Form.Group>
   );
@@ -104,7 +112,7 @@ const EditUserPage = (props: IEditUserPageProps) => {
     note: user.note,
     agency: user.agencies && user.agencies.length !== 0 ? user.agencies[0].id : '',
     role: user.roles && user.roles.length !== 0 ? user.roles[0].id : '',
-    position: user.position,
+    position: user.position ?? '',
     lastLogin: formatApiDateTime(user.lastLogin),
   };
 
@@ -229,7 +237,9 @@ const EditUserPage = (props: IEditUserPageProps) => {
                     toolTipId="is-disabled-tooltip"
                     toolTip={'Click to change account status then click Save.'}
                   >
-                    <Field data-testid="isDisabled" type="checkbox" name="isDisabled" />
+                    <a>
+                      <Field data-testid="isDisabled" type="checkbox" name="isDisabled" />
+                    </a>
                   </TooltipWrapper>
                 </Form.Group>
 

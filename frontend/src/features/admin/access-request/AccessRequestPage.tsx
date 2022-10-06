@@ -13,8 +13,9 @@ import useCodeLookups from 'hooks/useLookupCodes';
 import { IAccessRequest, IUserInfo } from 'interfaces';
 import React, { useEffect } from 'react';
 import { Alert, Button, ButtonToolbar, Col, Container, Row } from 'react-bootstrap';
-import { useAppSelector } from 'store';
+import { useAppDispatch, useAppSelector } from 'store';
 import { toAccessRequest, useAccessRequest } from 'store/slices/hooks';
+import { getFetchLookupCodeAction } from 'store/slices/hooks/lookupCodeActionCreator';
 import { mapLookupCode } from 'utils';
 import { AccessRequestSchema } from 'utils/YupSchema';
 
@@ -33,12 +34,18 @@ const AccessRequestPage = () => {
   const keycloakWrapper = useKeycloakWrapper();
   const keycloak = keycloakWrapper.obj;
   const userInfo = keycloak?.userInfo as IUserInfo;
+  const dispatch = useAppDispatch();
   const api = useAccessRequest();
   const [alert, setAlert] = React.useState<ISnackbarState>({});
 
   useEffect(() => {
     api.getCurrentAccessRequestAction();
   }, [api]);
+
+  /** make sure lookup codes are updated when administrative area is added or deleted */
+  useEffect(() => {
+    getFetchLookupCodeAction()(dispatch);
+  }, [dispatch]);
 
   const { getByType, getPublicByType } = useCodeLookups();
   const agencies = getByType(API.AGENCY_CODE_SET_NAME);
@@ -91,12 +98,14 @@ const AccessRequestPage = () => {
         toolTipId="select-roles-tip"
         toolTip="To select multiple roles, hold Ctrl and select options."
       >
-        <Select
-          field="role"
-          required={true}
-          options={selectRoles}
-          placeholder={initialValues?.roles?.length > 0 ? undefined : 'Please Select'}
-        />
+        <>
+          <Select
+            field="role"
+            required={true}
+            options={selectRoles}
+            placeholder={initialValues?.roles?.length > 0 ? undefined : 'Please Select'}
+          />
+        </>
       </TooltipWrapper>
     </Form.Group>
   );
