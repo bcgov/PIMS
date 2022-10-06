@@ -82,7 +82,6 @@ export const ProjectListView: React.FC<IProps> = ({
     mapLookupCodeWithParentString(c, agencies ?? []),
   );
   const statuses = (projectStatuses ?? []).map((c) => mapStatuses(c));
-  console.log('statuses: ' + statuses);
   const columns = useMemo(() => cols, []);
 
   // We'll start our table without any data
@@ -229,7 +228,6 @@ export const ProjectListView: React.FC<IProps> = ({
       (k: string) => (ReviewWorkflowStatus as any)[k],
     );
     if (ReviewWorkflowStatuses.includes(row.statusCode)) {
-      console.log('row.statusRoute: ' + row.statusRoute);
       if (keycloak.hasClaim(Claims.ADMIN_PROJECTS)) {
         navigate(`/projects/disposal/${row.id}`);
       } else {

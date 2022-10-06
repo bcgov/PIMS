@@ -98,7 +98,9 @@ const EditAgencyPage = (props: IEditAgencyPageProps) => {
         <Navbar.Brand>
           {' '}
           <TooltipWrapper toolTipId="back" toolTip="Back to Agency list">
-            <FaArrowAltCircleLeft onClick={goBack} size={20} />
+            <a>
+              <FaArrowAltCircleLeft onClick={goBack} size={20} />
+            </a>
           </TooltipWrapper>
         </Navbar.Brand>
         <h4>Agency Information</h4>
@@ -170,13 +172,17 @@ const EditAgencyPage = (props: IEditAgencyPageProps) => {
                     toolTip="Click to change Agency status then click Save Changes."
                     toolTipId="is-disabled-tooltip"
                   >
-                    <Check field="isDisabled" label="Disable Agency?" />
+                    <a>
+                      <Check field="isDisabled" label="Disable Agency?" />
+                    </a>
                   </TooltipWrapper>
                   <TooltipWrapper
                     toolTip="Click to enable to email notifications for Agency then click Save Changes."
                     toolTipId="email-tooltip"
                   >
-                    <Check field="sendEmail" label="Email Notifications?" />
+                    <a>
+                      <Check field="sendEmail" label="Email Notifications?" />
+                    </a>
                   </TooltipWrapper>
                 </Form.Group>
 
