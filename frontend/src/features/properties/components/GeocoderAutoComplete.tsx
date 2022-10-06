@@ -64,6 +64,7 @@ export const GeocoderAutoComplete: React.FC<IGeocoderAutoCompleteProps> = ({
 
   const onTextChanged = async (val?: string) => {
     onTextChange && onTextChange(val);
+
     if (val && val.length >= 5 && val !== value) {
       await search(val, false);
     } else {
