@@ -1,6 +1,15 @@
 @import '../../../fonts.scss';
 @import '../../../variables';
 @import '../../../colors';
+
+.GeocoderAutoComplete {
+  width: unset;
+}
+
+.suggestionList {
+  top: unset !important;
+}
+
 .container-fluid {
   &.map-filter-container {
     height: auto;

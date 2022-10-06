@@ -34,7 +34,8 @@ type OptionalAttributes = {
   preText?: string;
   prepend?: React.ReactNode;
   postText?: string;
-  fast?: boolean;
+  /** Whether to use the Formik fast input, a custom input, or the standard input. */
+  fast?: boolean | React.ReactNode;
   outerClassName?: string;
   displayErrorTooltips?: boolean;
   /** style to pass down to the FastInput or Input */
@@ -93,7 +94,9 @@ export const InputGroup: React.FC<InputGroupProps> = ({
         <BootstrapInputGroup.Prepend>{PrependComponent}</BootstrapInputGroup.Prepend>
       )}
       <div className="input-group-content">
-        {fast ? (
+        {React.isValidElement(fast) ? (
+          fast
+        ) : fast ? (
           <FastInput
             formikProps={formikProps}
             disabled={disabled}
