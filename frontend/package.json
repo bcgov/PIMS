@@ -18,7 +18,7 @@
     "leaflet": "1.8.0",
     "lodash": "4.17.21",
     "moment": "2.29.3",
-    "moment-timezone": "0.5.31",
+    "moment-timezone": "0.5.35",
     "polylabel": "1.1.0",
     "query-string": "6.12.1",
     "react": "16.12.0",
