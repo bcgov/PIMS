@@ -71,7 +71,7 @@ const HelpModal: FunctionComponent<ModalProps> = ({ handleCancel, handleSubmit, 
         onHide={handleCancel}
         dialogClassName="help-modal"
       >
-        <ModalHeader closeButton>
+        <ModalHeader closeButton closeVariant="white">
           <DraggableTitle>
             Help Desk&nbsp;
             <StyledTooltip toolTipId="help-toolTip" toolTip="Click and drag to move this popup" />
