@@ -5,6 +5,7 @@ import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { useMyAgencies } from 'hooks/useMyAgencies';
 import { FunctionComponent, useMemo } from 'react';
 import React from 'react';
+import { Col, Row } from 'react-bootstrap';
 import { mapSelectOptionWithParent } from 'utils';
 interface InformationFormProps {
   nameSpace?: string;
@@ -49,36 +50,44 @@ const InformationForm: FunctionComponent<InformationFormProps> = (props: Informa
 
   return (
     <>
-      <Form.Group>
+      <Form.Group as={Row} className="mb-2">
         <Form.Label>Name</Form.Label>
-        <Input disabled={props.disabled} field={withNameSpace('name')} />
+        <Col>
+          <Input disabled={props.disabled} field={withNameSpace('name')} />
+        </Col>
       </Form.Group>
-      <Form.Group>
+      <Form.Group as={Row} className="mb-2">
         <Form.Label>Description</Form.Label>
-        <TextArea disabled={props.disabled} field={withNameSpace('description')} />
+        <Col>
+          <TextArea disabled={props.disabled} field={withNameSpace('description')} />
+        </Col>
       </Form.Group>
       {!props.wizard && (
-        <Form.Group>
+        <Form.Group as={Row} className="mb-2">
           <Form.Label>Classification</Form.Label>
-          <FastSelect
-            formikProps={formikProps}
-            disabled={props.disabled}
-            type="number"
-            placeholder="Must Select One"
-            field={withNameSpace('classificationId')}
-            options={props.classifications}
-          />
+          <Col>
+            <FastSelect
+              formikProps={formikProps}
+              disabled={props.disabled}
+              type="number"
+              placeholder="Must Select One"
+              field={withNameSpace('classificationId')}
+              options={props.classifications}
+            />
+          </Col>
         </Form.Group>
       )}
-      <Form.Group>
+      <Form.Group as={Row} className="mb-2">
         <Form.Label>Agency</Form.Label>
-        <ParentSelect
-          field={withNameSpace('agencyId')}
-          options={myAgencies.map((c) => mapSelectOptionWithParent(c, myAgencies))}
-          filterBy={['code', 'label', 'parent']}
-          disabled={props.disabled || (!props.isPropertyAdmin && !isUserAgencyAParent)}
-          convertValue={Number}
-        />
+        <Col>
+          <ParentSelect
+            field={withNameSpace('agencyId')}
+            options={myAgencies.map((c) => mapSelectOptionWithParent(c, myAgencies))}
+            filterBy={['code', 'label', 'parent']}
+            disabled={props.disabled || (!props.isPropertyAdmin && !isUserAgencyAParent)}
+            convertValue={Number}
+          />
+        </Col>
       </Form.Group>
     </>
   );

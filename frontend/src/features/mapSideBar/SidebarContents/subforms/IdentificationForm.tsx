@@ -14,8 +14,10 @@ import LatLongForm from 'features/properties/components/forms/subforms/LatLongFo
 import { getIn, useFormikContext } from 'formik';
 import { IGeocoderResponse } from 'hooks/useApi';
 import useCodeLookups from 'hooks/useLookupCodes';
-import React, { useState } from 'react';
-import { Col, Container, ListGroup, Row } from 'react-bootstrap';
+import React, { useEffect, useState } from 'react';
+import { Col, Container, Form, ListGroup, Row } from 'react-bootstrap';
+import { useAppDispatch } from 'store';
+import { getFetchLookupCodeAction } from 'store/slices/hooks';
 import styled from 'styled-components';
 
 import { sensitiveTooltip } from '../../../../../src/features/properties/components/forms/strings';
@@ -66,6 +68,10 @@ export const IdentificationForm: React.FC<IIdentificationProps> = ({
     },
     [nameSpace],
   );
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    getFetchLookupCodeAction()(dispatch);
+  }, [dispatch]);
   const { lookupCodes } = useCodeLookups();
   const projectNumbers = getIn(formikProps.values, 'data.projectNumbers');
   const agencyId = getIn(formikProps.values, `data.agencyId`);
@@ -74,7 +80,7 @@ export const IdentificationForm: React.FC<IIdentificationProps> = ({
   return (
     <Container>
       <Row>
-        <h4>Building Information</h4>
+        <h4 className="text-start">Building Information</h4>
       </Row>
       <Row>
         <Col>
@@ -88,44 +94,50 @@ export const IdentificationForm: React.FC<IIdentificationProps> = ({
           />
         </Col>
         <Col>
-          <Row>
+          <Form.Group as={Row} className="mb-2">
             <Label>Main Usage</Label>
-            <FastSelect
-              formikProps={formikProps}
-              placeholder="Must Select One"
-              field={withNameSpace('buildingPredominateUseId')}
-              type="number"
-              options={predominateUses}
-              disabled={disabled}
-              required
-              displayErrorTooltips
-            />
-          </Row>
-          <Row>
+            <Col>
+              <FastSelect
+                formikProps={formikProps}
+                placeholder="Must Select One"
+                field={withNameSpace('buildingPredominateUseId')}
+                type="number"
+                options={predominateUses}
+                disabled={disabled}
+                required
+                displayErrorTooltips
+              />
+            </Col>
+          </Form.Group>
+          <Form.Group as={Row} className="mb-2">
             <Label>Construction Type</Label>
-            <FastSelect
-              formikProps={formikProps}
-              placeholder="Must Select One"
-              field={withNameSpace('buildingConstructionTypeId')}
-              type="number"
-              options={constructionType}
-              disabled={disabled}
-              required
-              displayErrorTooltips
-            />
-          </Row>
-          <Row>
+            <Col>
+              <FastSelect
+                formikProps={formikProps}
+                placeholder="Must Select One"
+                field={withNameSpace('buildingConstructionTypeId')}
+                type="number"
+                options={constructionType}
+                disabled={disabled}
+                required
+                displayErrorTooltips
+              />
+            </Col>
+          </Form.Group>
+          <Form.Group as={Row} className="mb-2">
             <Label>Number of Floors</Label>
-            <FastInput
-              displayErrorTooltips
-              style={{ width: '100px' }}
-              className="input-small"
-              formikProps={formikProps}
-              field={withNameSpace('buildingFloorCount')}
-              type="number"
-              disabled={disabled}
-            />
-          </Row>
+            <Col>
+              <FastInput
+                displayErrorTooltips
+                style={{ width: '100px' }}
+                className="input-small"
+                formikProps={formikProps}
+                field={withNameSpace('buildingFloorCount')}
+                type="number"
+                disabled={disabled}
+              />
+            </Col>
+          </Form.Group>
           {!!projectNumbers?.length && (
             <Row>
               <Label>Project Number(s)</Label>
@@ -175,7 +187,7 @@ export const IdentificationForm: React.FC<IIdentificationProps> = ({
       />
       <hr></hr>
       <Row>
-        <h4>Location</h4>
+        <h4 className="text-start">Location</h4>
       </Row>
       <Row style={{ marginBottom: 10 }}>
         <Col>

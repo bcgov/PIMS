@@ -21,11 +21,11 @@ import { FormikTable } from 'features/projects/common';
 import AddressForm from 'features/properties/components/forms/subforms/AddressForm';
 import { getAssociatedLandCols } from 'features/properties/components/forms/subforms/columns';
 import { indexOfFinancial } from 'features/properties/components/forms/subforms/EvaluationForm';
-import { getIn, useFormikContext } from 'formik';
+import { FormikContextType, getIn, useFormikContext } from 'formik';
 import { noop } from 'lodash';
 import moment from 'moment';
 import React, { useCallback, useMemo, useState } from 'react';
-import { Col, Container, Row } from 'react-bootstrap';
+import { Col, Container, Form, Row, Stack } from 'react-bootstrap';
 import { FaEdit } from 'react-icons/fa';
 import styled from 'styled-components';
 import { formatFiscalYear } from 'utils';
@@ -47,7 +47,7 @@ const StyledProjectNumbers = styled.div`
 `;
 
 export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
-  const formikProps = useFormikContext();
+  const formikProps: FormikContextType<any> = useFormikContext();
   const withNameSpace: Function = useCallback(
     (fieldName: string) => {
       return props.nameSpace ? `${props.nameSpace}.${fieldName}` : fieldName;
@@ -91,45 +91,57 @@ export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
         </p>
       </Row>
       <Row style={{ marginBottom: 20 }}>
-        <Col md={6}>
+        <Col className="me-4">
           <Row>
             <div className="identification">
               <Row className="section-header">
-                <span>
+                <Col xs={3}>
                   <BuildingSvg className="svg" />
+                </Col>
+                <Col xs={3}>
                   <h5>Building Identification</h5>
-                </span>
-                {!props.disabled && (
-                  <FaEdit
-                    size={20}
-                    className="edit"
-                    onClick={() =>
-                      setEditInfo({
-                        ...editInfo,
-                        identification: formikProps.isValid && !editInfo.identification,
-                      })
-                    }
-                  />
-                )}
+                </Col>
+                <Col xs={3}>
+                  {!props.disabled && (
+                    <FaEdit
+                      size={20}
+                      className="edit"
+                      onClick={() =>
+                        setEditInfo({
+                          ...editInfo,
+                          identification: formikProps.isValid && !editInfo.identification,
+                        })
+                      }
+                    />
+                  )}
+                </Col>
               </Row>
-              <Row className="content-item">
+              <Form.Group as={Row} className="content-item">
                 <Label>Agency</Label>
-                <ParentSelect
-                  field={withNameSpace('agencyId')}
-                  options={props.agencies}
-                  filterBy={['code', 'label', 'parent']}
-                  disabled={true}
-                />
-              </Row>
-              <Row className="content-item">
+                <Col>
+                  <ParentSelect
+                    field={withNameSpace('agencyId')}
+                    options={props.agencies}
+                    filterBy={['code', 'label', 'parent']}
+                    disabled={true}
+                  />
+                </Col>
+              </Form.Group>
+              <Form.Group as={Row} className="content-item">
                 <Label>Building Name</Label>
-                <Input disabled={editInfo.identification} field={withNameSpace('name')} />
-              </Row>
-              <Row className="content-item">
+                <Col>
+                  <Input disabled={editInfo.identification} field={withNameSpace('name')} />
+                </Col>
+              </Form.Group>
+              <Form.Group as={Row} className="content-item">
                 <Label>Description</Label>
-                <TextArea disabled={editInfo.identification} field={withNameSpace('description')} />
-              </Row>
-
+                <Col>
+                  <TextArea
+                    disabled={editInfo.identification}
+                    field={withNameSpace('description')}
+                  />
+                </Col>
+              </Form.Group>
               <AddressForm
                 onGeocoderChange={noop}
                 {...formikProps}
@@ -151,7 +163,7 @@ export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
                   required
                 />
               </Row>
-              <Row className="content-item">
+              <Form.Group as={Row} className="content-item">
                 <Label>Longitude</Label>
                 <FastInput
                   className="input-medium"
@@ -162,56 +174,64 @@ export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
                   field={withNameSpace('longitude')}
                   required
                 />
-              </Row>
+              </Form.Group>
               <br></br>
               <Row className="content-item">
-                <Label>SRES Classification</Label>
-                <span className="vl"></span>
-                <FastSelect
-                  formikProps={formikProps}
-                  disabled={editInfo.identification}
-                  placeholder="Must Select One"
-                  field={withNameSpace('classificationId')}
-                  type="number"
-                  options={props.classifications}
-                  required
-                />
+                <Label>SRES Class</Label>
+
+                <Col>
+                  <FastSelect
+                    formikProps={formikProps}
+                    disabled={editInfo.identification}
+                    placeholder="Must Select One"
+                    field={withNameSpace('classificationId')}
+                    type="number"
+                    options={props.classifications}
+                    required
+                  />
+                </Col>
               </Row>
-              <Row className="content-item">
+              <Form.Group as={Row} className="content-item">
                 <Label>Main Usage</Label>
-                <FastSelect
-                  formikProps={formikProps}
-                  disabled={editInfo.identification}
-                  placeholder="Must Select One"
-                  field={withNameSpace('buildingPredominateUseId')}
-                  type="number"
-                  options={props.predominateUses}
-                  required
-                />
-              </Row>
-              <Row className="content-item">
-                <Label>Type of Construction</Label>
-                <FastSelect
-                  formikProps={formikProps}
-                  disabled={editInfo.identification}
-                  placeholder="Must Select One"
-                  field={withNameSpace('buildingConstructionTypeId')}
-                  type="number"
-                  options={props.constructionType}
-                  required
-                />
-              </Row>
-              <Row className="content-item">
+                <Col>
+                  <FastSelect
+                    formikProps={formikProps}
+                    disabled={editInfo.identification}
+                    placeholder="Must Select One"
+                    field={withNameSpace('buildingPredominateUseId')}
+                    type="number"
+                    options={props.predominateUses}
+                    required
+                  />
+                </Col>
+              </Form.Group>
+              <Form.Group as={Row} className="content-item">
+                <Label className="text-center">Type of Construction</Label>
+                <Col>
+                  <FastSelect
+                    formikProps={formikProps}
+                    disabled={editInfo.identification}
+                    placeholder="Must Select One"
+                    field={withNameSpace('buildingConstructionTypeId')}
+                    type="number"
+                    options={props.constructionType}
+                    required
+                  />
+                </Col>
+              </Form.Group>
+              <Form.Group as={Row} className="content-item">
                 <Label>Number of Floors</Label>
-                <FastInput
-                  displayErrorTooltips
-                  className="input-small"
-                  formikProps={formikProps}
-                  disabled={editInfo.identification}
-                  field={withNameSpace('buildingFloorCount')}
-                  type="number"
-                />
-              </Row>
+                <Col>
+                  <FastInput
+                    displayErrorTooltips
+                    className="input-small"
+                    formikProps={formikProps}
+                    disabled={editInfo.identification}
+                    field={withNameSpace('buildingFloorCount')}
+                    type="number"
+                  />
+                </Col>
+              </Form.Group>
               {!!projectNumbers?.length && (
                 <Row style={{ marginTop: '1rem' }}>
                   <Label>Project Number(s)</Label>
@@ -228,28 +248,33 @@ export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
                   </StyledProjectNumbers>
                 </Row>
               )}
-              <Row className="sensitive check-item">
-                <Label>Harmful if info released?</Label>
-                <Check
-                  type="radio"
-                  disabled={editInfo.identification}
-                  field={withNameSpace('isSensitive')}
-                  radioLabelOne="Yes"
-                  radioLabelTwo="No"
-                />
-              </Row>
+              <Form.Group as={Row} className="sensitive check-item">
+                <Col xs={6}>
+                  <Label>Harmful if info released?</Label>
+                </Col>
+                <Col xs={2}>
+                  <Check
+                    type="radio"
+                    disabled={editInfo.identification}
+                    field={withNameSpace('isSensitive')}
+                    radioLabelOne="Yes"
+                    radioLabelTwo="No"
+                  />
+                </Col>
+              </Form.Group>
             </div>
           </Row>
         </Col>
-
         <Col md={6}>
-          <Row>
-            <div className="tenancy">
-              <Row className="section-header">
-                <span>
-                  <BuildingSvg className="svg" />
-                  <h5>Occupancy</h5>
-                </span>
+          <div className="tenancy">
+            <Row className="section-header">
+              <Col>
+                <BuildingSvg className="svg" />
+              </Col>
+              <Col>
+                <h5>Occupancy</h5>
+              </Col>
+              <Col>
                 {!props.disabled && (
                   <FaEdit
                     size={20}
@@ -262,22 +287,24 @@ export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
                     }
                   />
                 )}
-              </Row>
-              <Row className="content-item">
-                <Label>Total Area</Label>
-                <InputGroup
-                  displayErrorTooltips
-                  fast={true}
-                  formikProps={formikProps}
-                  disabled={editInfo.tenancy}
-                  type="number"
-                  field={withNameSpace('totalArea')}
-                  postText="Sq. M"
-                  required
-                />
-              </Row>
-              <Row className="content-item">
-                <Label>Net Usable Area</Label>
+              </Col>
+            </Row>
+            <Form.Group as={Row} className="content-item">
+              <Label>Total Area</Label>
+              <InputGroup
+                displayErrorTooltips
+                fast={true}
+                formikProps={formikProps}
+                disabled={editInfo.tenancy}
+                type="number"
+                field={withNameSpace('totalArea')}
+                postText="Sq. M"
+                required
+              />
+            </Form.Group>
+            <Form.Group as={Row} className="content-item">
+              <Label>Net Usable Area</Label>
+              <Col>
                 <InputGroup
                   displayErrorTooltips
                   fast={true}
@@ -288,16 +315,20 @@ export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
                   postText="Sq. M"
                   required
                 />
-              </Row>
-              <Row className="content-item">
-                <Label>Tenancy %</Label>
-                <span className="tenancy-fields">
+              </Col>
+            </Form.Group>
+            <Form.Group as={Row} className="content-item">
+              <Label>Tenancy %</Label>
+              <span className="tenancy-fields" style={{ paddingLeft: 0 }}>
+                <Col>
                   <FastInput
                     displayErrorTooltips
                     formikProps={formikProps}
                     disabled={editInfo.tenancy}
                     field={withNameSpace('buildingTenancy')}
                   />
+                </Col>
+                <Col>
                   <FastDatePicker
                     formikProps={formikProps}
                     disabled={editInfo.tenancy}
@@ -310,57 +341,70 @@ export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
                     //   },
                     // }}
                   />
-                </span>
-              </Row>
-            </div>
-          </Row>
+                </Col>
+              </span>
+            </Form.Group>
+          </div>
+
           <Row>
             <div className="valuation">
               <Row className="section-header">
-                <span>
+                <Col>
                   <BuildingSvg className="svg" />
+                </Col>
+                <Col>
                   <h5>Valuation</h5>
-                </span>
-                {!props.disabled && (
-                  <FaEdit
-                    size={20}
-                    className="edit"
-                    onClick={() =>
-                      setEditInfo({
-                        ...editInfo,
-                        valuation: formikProps.isValid && !editInfo.valuation,
-                      })
-                    }
-                  />
-                )}
+                </Col>
+                <Col>
+                  {!props.disabled && (
+                    <FaEdit
+                      size={20}
+                      className="edit"
+                      onClick={() =>
+                        setEditInfo({
+                          ...editInfo,
+                          valuation: formikProps.isValid && !editInfo.valuation,
+                        })
+                      }
+                    />
+                  )}
+                </Col>
               </Row>
-              <Row className="val-item" style={{ display: 'flex' }}>
+              <Form.Group as={Row}>
                 <Label>Net Book Value</Label>
-                <FastCurrencyInput
-                  formikProps={formikProps}
-                  field={`data.fiscals.${fiscalIndex}.value`}
-                  disabled={editInfo.valuation}
-                />
-                <Input
-                  field="netbookYearDisplay"
-                  value={formatFiscalYear(netBookYear)}
-                  disabled
-                  style={{ width: 50, fontSize: 11 }}
-                />
-              </Row>
-              <Row className="val-item" style={{ display: 'flex' }}>
+                <Col xs={6}>
+                  <Stack direction="horizontal">
+                    <FastCurrencyInput
+                      formikProps={formikProps}
+                      field={`data.fiscals.${fiscalIndex}.value`}
+                      disabled={editInfo.valuation}
+                    />
+                    <Input
+                      field="netbookYearDisplay"
+                      value={formatFiscalYear(netBookYear)}
+                      disabled
+                      style={{ width: 50, fontSize: 11 }}
+                    />
+                  </Stack>
+                </Col>
+              </Form.Group>
+              <Form.Group as={Row}>
                 <Label>Assessed Value</Label>
-                <FastCurrencyInput
-                  formikProps={formikProps}
-                  field={`data.evaluations.${evaluationIndex}.value`}
-                  disabled={editInfo.valuation}
-                />
-                <Input
-                  field={`data.evaluations.${evaluationIndex}.year`}
-                  disabled
-                  style={{ width: 50, fontSize: 11 }}
-                />
-              </Row>
+                <Col xs={6}>
+                  <Stack direction="horizontal">
+                    <FastCurrencyInput
+                      formikProps={formikProps}
+                      field={`data.evaluations.${evaluationIndex}.value`}
+                      disabled={editInfo.valuation}
+                    />
+                    <Input
+                      field={`data.evaluations.${evaluationIndex}.year`}
+                      disabled
+                      style={{ width: 50, fontSize: 11 }}
+                    />
+                  </Stack>
+                </Col>
+              </Form.Group>
             </div>
           </Row>
         </Col>

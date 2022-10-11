@@ -9,7 +9,7 @@ import { IGeocoderResponse } from 'hooks/useApi';
 import _ from 'lodash';
 import { useCallback } from 'react';
 import React from 'react';
-import { Form } from 'react-bootstrap';
+import { Col, Form, Row } from 'react-bootstrap';
 import { useAppSelector } from 'store';
 import { mapLookupCode } from 'utils';
 
@@ -72,58 +72,68 @@ const AddressForm = <T extends any>(props: AddressProps & FormikProps<T>) => {
   };
 
   return (
-    <>
+    <div style={{ marginBottom: 0 }}>
       {props.hideStreetAddress !== true && (
-        <Form.Group>
-          <Label>Street Address</Label>
-          <GeocoderAutoComplete
-            tooltip={props.toolTips ? streetAddressTooltip : undefined}
-            value={getIn(props.values, withNameSpace('line1'))}
-            disabled={props.disableStreetAddress || props.disabled}
-            field={withNameSpace('line1')}
-            onSelectionChanged={handleGeocoderChanges}
-            onTextChange={(value) => props.setFieldValue(withNameSpace('line1'), value)}
-            error={getIn(props.errors, withNameSpace('line1'))}
-            touch={getIn(props.touched, withNameSpace('line1'))}
-            displayErrorTooltips
-            required={true}
-          />
+        <Form.Group as={Row}>
+          <Label style={{ marginBottom: 0 }}>Street Address</Label>
+          <Col>
+            <GeocoderAutoComplete
+              tooltip={props.toolTips ? streetAddressTooltip : undefined}
+              value={getIn(props.values, withNameSpace('line1'))}
+              disabled={props.disableStreetAddress || props.disabled}
+              field={withNameSpace('line1')}
+              onSelectionChanged={handleGeocoderChanges}
+              onTextChange={(value) => props.setFieldValue(withNameSpace('line1'), value)}
+              error={getIn(props.errors, withNameSpace('line1'))}
+              touch={getIn(props.touched, withNameSpace('line1'))}
+              displayErrorTooltips
+              required={true}
+            />
+          </Col>
         </Form.Group>
       )}
-      <Form.Group>
-        <Label>Location</Label>
-        <TypeaheadField
-          options={administrativeAreas.map((x) => x.label)}
-          name={withNameSpace('administrativeArea')}
-          disabled={props.disabled}
-          hideValidation={props.disableCheckmark}
-          paginate={false}
-          required
-          displayErrorTooltips
-        />
+      <Form.Group as={Row}>
+        <Label style={{ marginBottom: 0 }}>Location</Label>
+        <Col>
+          <TypeaheadField
+            options={administrativeAreas.map((x) => x.label)}
+            name={withNameSpace('administrativeArea')}
+            disabled={props.disabled}
+            hideValidation={props.disableCheckmark}
+            paginate={false}
+            required
+            displayErrorTooltips
+          />
+        </Col>
       </Form.Group>
-      <Form.Group>
-        <Label>Province</Label>
-        <Select
-          disabled={true}
-          placeholder="Must Select One"
-          field={withNameSpace('provinceId')}
-          options={provinces}
-        />
+      <Form.Group as={Row}>
+        <Label style={{ marginBottom: 0 }}>Province</Label>
+        <Col>
+          <Select
+            disabled={true}
+            placeholder="Must Select One"
+            field={withNameSpace('provinceId')}
+            options={provinces}
+          />
+        </Col>
       </Form.Group>
-      <Form.Group className="postal">
+      <Form.Group as={Row}>
         <Label>Postal Code</Label>
-        <FastInput
-          className="input-small"
-          formikProps={props}
-          style={{ width: '120px' }}
-          disabled={props.disabled}
-          onBlurFormatter={(postal: string) => postal.replace(postal, postalCodeFormatter(postal))}
-          field={withNameSpace('postal')}
-          displayErrorTooltips
-        />
+        <Col>
+          <FastInput
+            className="input-small"
+            formikProps={props}
+            style={{ width: '120px' }}
+            disabled={props.disabled}
+            onBlurFormatter={(postal: string) =>
+              postal.replace(postal, postalCodeFormatter(postal))
+            }
+            field={withNameSpace('postal')}
+            displayErrorTooltips
+          />
+        </Col>
       </Form.Group>
-    </>
+    </div>
   );
 };
 
