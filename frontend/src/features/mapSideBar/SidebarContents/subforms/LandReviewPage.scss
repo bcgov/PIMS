@@ -33,7 +33,6 @@
     height: 30px;
     line-height: 30px;
   }
-  .content-item .label:after,
   .field-row .label:after,
   .form-row .label:after,
   .postal .label:after,
@@ -80,7 +79,7 @@
   .PropertyListView.container-fluid {
     margin: 10px;
     width: 100%;
-    padding: 20px;
+    padding: 15px;
     background-color: $filter-background-color;
     border-radius: 10px;
     font-size: small;

@@ -6,7 +6,7 @@ import TooltipIcon from 'components/common/TooltipIcon';
 import { getIn } from 'formik';
 import moment from 'moment';
 import React, { useEffect } from 'react';
-import { Col, Row } from 'react-bootstrap';
+import { Col, Form, Row } from 'react-bootstrap';
 import styled from 'styled-components';
 
 interface IOccupancyProps {
@@ -59,60 +59,75 @@ export const OccupancyForm: React.FC<IOccupancyProps> = ({
   return (
     <Col className="tenancy">
       <Row>
-        <h4>Occupancy</h4>
+        <h4 className="text-start">Occupancy</h4>
       </Row>
       <InfoSection>
-        <Row>
+        <Form.Group as={Row}>
           <Label>Total Area</Label>
-          <InputGroup
-            displayErrorTooltips
-            fast={true}
-            formikProps={formikProps}
-            disabled={disabled || readOnly}
-            type="number"
-            field={withNameSpace('totalArea')}
-            postText="Sq. M"
-            required
-          />
-        </Row>
-        <Row>
+          <Col>
+            <InputGroup
+              displayErrorTooltips
+              fast={true}
+              formikProps={formikProps}
+              disabled={disabled || readOnly}
+              type="number"
+              field={withNameSpace('totalArea')}
+              postText="Sq. M"
+              required
+            />
+          </Col>
+        </Form.Group>
+        <Form.Group as={Row} className="mb-2">
           <Label>Net Usable Area</Label>
-          <InputGroup
-            displayErrorTooltips
-            fast={true}
-            formikProps={formikProps}
-            disabled={disabled || readOnly}
-            type="number"
-            field={withNameSpace('rentableArea')}
-            postText="Sq. M"
-            required
-          />
-        </Row>
+          <Col>
+            <InputGroup
+              displayErrorTooltips
+              fast={true}
+              formikProps={formikProps}
+              disabled={disabled || readOnly}
+              type="number"
+              field={withNameSpace('rentableArea')}
+              postText="Sq. M"
+              required
+            />
+          </Col>
+        </Form.Group>
       </InfoSection>
       <Row>
-        <h4>Tenants</h4>
+        <h4 className="text-start">Tenants</h4>
       </Row>
       <InfoSection>
         <Row>
-          <Label className="label-with-tooltip">Tenancy %</Label>
-          <TooltipStyled
-            toolTipId="tenancy-tooltip"
-            toolTip="Enter the percentage that your Agency tenants this building.
+          <Col xs={3}>
+            <Label className="label-with-tooltip">Tenancy %</Label>
+            <TooltipStyled
+              toolTipId="tenancy-tooltip"
+              toolTip="Enter the percentage that your Agency tenants this building.
             You may also write notes, for example: 90% my agency and 10% leased to the city."
-          />
-          <FastInput
-            displayErrorTooltips
-            formikProps={formikProps}
-            className="percentage"
-            disabled={disabled || readOnly}
-            field={withNameSpace('buildingTenancy')}
-          />
-          <Label>Updated On</Label>
-          <FastDatePicker
-            formikProps={formikProps}
-            disabled={disabled || readOnly}
-            field={withNameSpace('buildingTenancyUpdatedOn')}
-          />
+              className="align-top"
+            />
+          </Col>
+          <Col xs={4}>
+            <FastInput
+              displayErrorTooltips
+              formikProps={formikProps}
+              className="percentage"
+              disabled={disabled || readOnly}
+              field={withNameSpace('buildingTenancy')}
+            />
+          </Col>
+        </Row>
+        <Row>
+          <Col xs={3}>
+            <Label>Updated On</Label>
+          </Col>
+          <Col xs={2}>
+            <FastDatePicker
+              formikProps={formikProps}
+              disabled={disabled || readOnly}
+              field={withNameSpace('buildingTenancyUpdatedOn')}
+            />
+          </Col>
         </Row>
       </InfoSection>
     </Col>

@@ -15,7 +15,7 @@ import {
 } from 'features/properties/components/forms/strings';
 import { FormikValues, getIn, useFormikContext } from 'formik';
 import React from 'react';
-import { Col, Row } from 'react-bootstrap';
+import { Col, Form, Row } from 'react-bootstrap';
 import styled from 'styled-components';
 
 import { SidebarContextType, useQueryParamSideBar } from '../../hooks/useQueryParamSideBar';
@@ -164,29 +164,31 @@ export const ClassificationForm: React.FC<IClassificationFormProps> = ({
   return (
     <>
       <Row>
-        <Title>{title}</Title>
+        <Title className="text-start">{title}</Title>
       </Row>
       <Row>
         <Col md={6}>
-          <Row style={{ display: 'flex' }}>
+          <Form.Group as={Row} className="mb-2">
             <Label style={{ marginBottom: '0', textAlign: 'right' }}>{fieldLabel}</Label>
-            <FastSelect
-              formikProps={formikProps}
-              type="number"
-              style={{ marginTop: '5px', display: 'flex' }}
-              placeholder="Must Select One"
-              field={field}
-              options={filteredClassifications}
-              disabled={disabled}
-              required
-              displayErrorTooltips
-            />
+            <Col>
+              <FastSelect
+                formikProps={formikProps}
+                type="number"
+                style={{ marginTop: '5px', display: 'flex' }}
+                placeholder="Must Select One"
+                field={field}
+                options={filteredClassifications}
+                disabled={disabled}
+                required
+                displayErrorTooltips
+              />
+            </Col>
             {toolTip && (
               <div style={{ marginTop: '8px' }}>
                 <TooltipIcon toolTip={toolTip} toolTipId="classificationToolTip" />
               </div>
             )}
-          </Row>
+          </Form.Group>
         </Col>
         <Col md={6}>{renderInfo()}</Col>
       </Row>

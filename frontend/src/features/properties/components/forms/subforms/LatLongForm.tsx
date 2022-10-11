@@ -5,7 +5,7 @@ import { Label } from 'components/common/Label';
 import { FormikProps } from 'formik';
 import { useCallback } from 'react';
 import React from 'react';
-import { Col, Row } from 'react-bootstrap';
+import { Col, Row, Stack } from 'react-bootstrap';
 import ClickAwayListener from 'react-click-away-listener';
 import styled from 'styled-components';
 
@@ -79,29 +79,35 @@ const LatLongForm = <T extends any>(props: LatLongFormProps & FormikProps<T>) =>
           </ClickAwayListener>
         </Col>
       </Row>
-      <Form.Group>
-        <Label>Latitude</Label>
-        <FastInput
-          className="input-medium"
-          displayErrorTooltips
-          formikProps={props}
-          disabled={props.disabled}
-          type="number"
-          field={props.showLandArea ? withNameSpace('data.latitude') : withNameSpace('latitude')}
-          required
-        />
+      <Form.Group className="mb-2">
+        <Stack direction="horizontal" gap={2}>
+          <Form.Label>Latitude</Form.Label>
+          <FastInput
+            className="input-medium"
+            displayErrorTooltips
+            formikProps={props}
+            disabled={props.disabled}
+            type="number"
+            field={props.showLandArea ? withNameSpace('data.latitude') : withNameSpace('latitude')}
+            required
+          />
+        </Stack>
       </Form.Group>
       <Form.Group>
-        <Label>Longitude</Label>
-        <FastInput
-          className="input-medium"
-          displayErrorTooltips
-          formikProps={props}
-          disabled={props.disabled}
-          type="number"
-          field={props.showLandArea ? withNameSpace('data.longitude') : withNameSpace('longitude')}
-          required
-        />
+        <Stack direction="horizontal" gap={2}>
+          <Label>Longitude</Label>
+          <FastInput
+            className="input-medium"
+            displayErrorTooltips
+            formikProps={props}
+            disabled={props.disabled}
+            type="number"
+            field={
+              props.showLandArea ? withNameSpace('data.longitude') : withNameSpace('longitude')
+            }
+            required
+          />
+        </Stack>
       </Form.Group>
       {props.showLandArea && (
         <Form.Group>
