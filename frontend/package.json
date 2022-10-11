@@ -9,6 +9,7 @@
     "@bcgov/bc-sans": "1.0.1",
     "@react-keycloak/web": "3.4.0",
     "@reduxjs/toolkit": "1.7.2",
+    "@svgr/webpack": "6.3.1",
     "@types/react-bootstrap-typeahead": "5.1.8",
     "@types/react-responsive": "8.0.5",
     "axios": "0.27.2",
@@ -21,8 +22,8 @@
     "keycloak-js": "17.0.0",
     "leaflet": "1.7.1",
     "lodash": "4.17.21",
-    "moment": "2.29.1",
-    "moment-timezone": "0.5.34",
+    "moment": "2.29.4",
+    "moment-timezone": "0.5.37",
     "query-string": "7.1.1",
     "react": "17.0.2",
     "react-app-polyfill": "3.0.0",
@@ -41,7 +42,7 @@
     "react-resize-detector": "7.0.0",
     "react-responsive": "8.2.0",
     "react-router-dom": "6.3.0",
-    "react-scripts": "5.0.0",
+    "react-scripts": "5.0.1",
     "react-simple-tree-menu": "1.1.18",
     "react-table": "7.7.0",
     "react-toastify": "8.2.0",
@@ -118,7 +119,10 @@
     "redux-devtools-extension": "2.13.9",
     "redux-mock-store": "1.5.4"
   },
-  "resolutions": {},
+  "overrides": {
+    "@svgr/webpack": "$@svgr/webpack",
+    "scss-tokenizer": "0.4.3"
+  },
   "scripts": {
     "start": "react-scripts start",
     "build": "cross-env CI=true react-scripts build",
