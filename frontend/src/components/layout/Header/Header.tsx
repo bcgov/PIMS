@@ -17,7 +17,7 @@ import { UserProfile } from './UserProfile';
 
 const VerticalBar = styled.span`
   border-left: 2px solid white;
-  font-size: 34px;
+  font-size: 30px;
   margin: 0 15px 0 25px;
   vertical-align: top;
 `;
@@ -102,15 +102,15 @@ const Header = () => {
           <img
             className="bc-gov-icon"
             src={BClogoUrl}
-            width="156"
-            height="43"
+            width="164"
+            height="45"
             alt="Government of BC logo"
           />
         </a>
         <VerticalBar />
         <img className="pims-logo" src={PIMSlogo} height="50" alt="PIMS logo" />
       </Navbar.Brand>
-      <Nav className="title mr-auto">
+      <Nav className="title">
         <Nav.Item>
           <h1 className="longAppName">Property Inventory Management System</h1>
           <h1 className="shortAppName">PIMS</h1>
@@ -119,7 +119,7 @@ const Header = () => {
       {keycloak.obj.authenticated && <UserProfile />}
       <Nav className="other">
         {errors && errors.length ? (
-          <FaBomb size={30} className="errors" onClick={handleShow} />
+          <FaBomb size={24} className="errors" onClick={handleShow} />
         ) : null}
       </Nav>
       {errorModal(errors)}
