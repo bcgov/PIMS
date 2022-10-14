@@ -33,7 +33,7 @@ export interface ITypeaheadFieldProps<T extends TypeaheadModel> extends Typeahea
   displayErrorTooltips?: boolean;
   /** used to trigger ref.current.blur where applicable */
   clearSelected?: boolean;
-  /** restet clear  state via this component */
+  /** reset clear  state via this component */
   setClear?: Function;
   /** get the component to select the item with closest label match to the input provided */
   selectClosest?: boolean;
@@ -112,6 +112,7 @@ export function TypeaheadField<T extends TypeaheadModel>({
       setClear && setClear(false);
     }
   }, [clearMenu, clearSelected, setClear, name, setFieldValue]);
+
   return (
     <Form.Group className={classNames(!!required ? 'required' : '', outerClassName)}>
       {!!label && <Form.Label>{label}</Form.Label>}

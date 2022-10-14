@@ -132,7 +132,13 @@ export const ParentSelect: React.FC<IParentSelect> = ({
           onChange?.(vals);
         }}
         multiple={enableMultiple}
-        options={options}
+        options={options.map((option) => {
+          // Fields passed to filterBy in TypeaheadField must be strings,
+          // so properties of the options objects must be strings.
+          option.parent = option.parent?.toString() || '';
+          option.parentId = option.parentId?.toString() || '';
+          return option;
+        })}
         maxResults={options.length}
         filterBy={filterBy}
         getOptionByValue={enableMultiple ? (value: any) => value : getOptionByValue}
@@ -189,7 +195,7 @@ export const ParentSelect: React.FC<IParentSelect> = ({
                 {sortBy(resultGroup[parentId], (x: SelectOption) => x.value).map((i, index) => {
                   if (i.parent) {
                     return (
-                      <StyledMenuItemsDiv>
+                      <StyledMenuItemsDiv key={index}>
                         <MenuItem
                           className={i.parentId === CHILDLESS_PARENT_ID ? 'bold-item' : 'menu-item'}
                           key={index + 1}
