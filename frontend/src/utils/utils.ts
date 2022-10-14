@@ -82,8 +82,9 @@ export const mapSelectOptionWithParent = (
   value: code.value.toString(),
   code: code.code,
   parentId: code.parentId,
-  parent: options.find((a: SelectOption) => a.value.toString() === code.parentId?.toString())
-    ?.label,
+  parent: options
+    .find((a: SelectOption) => a.value.toString() === code.parentId?.toString())
+    ?.label.toString(),
 });
 
 export const mapStatuses = (status: IStatus): SelectOption => ({
