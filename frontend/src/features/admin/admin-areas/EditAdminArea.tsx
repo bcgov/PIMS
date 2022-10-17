@@ -81,13 +81,11 @@ const EditAdminArea = (props: IEditAdminAreaProps) => {
       <Navbar className="navBar" expand="sm" variant="light" bg="light">
         <Navbar.Brand>
           <TooltipWrapper toolTipId="back" toolTip="Back to administrative area list">
-            <a>
-              <FaArrowAltCircleLeft
-                onClick={goBack}
-                size={20}
-                style={{ marginBottom: '0.5rem', cursor: 'pointer' }}
-              />
-            </a>
+            <FaArrowAltCircleLeft
+              onClick={goBack}
+              size={20}
+              style={{ marginBottom: '0.5rem', cursor: 'pointer' }}
+            />
           </TooltipWrapper>
         </Navbar.Brand>
         <h4>Administrative Area</h4>

@@ -237,9 +237,7 @@ const EditUserPage = (props: IEditUserPageProps) => {
                     toolTipId="is-disabled-tooltip"
                     toolTip={'Click to change account status then click Save.'}
                   >
-                    <a>
-                      <Field data-testid="isDisabled" type="checkbox" name="isDisabled" />
-                    </a>
+                    <Field data-testid="isDisabled" type="checkbox" name="isDisabled" />
                   </TooltipWrapper>
                 </Form.Group>
 

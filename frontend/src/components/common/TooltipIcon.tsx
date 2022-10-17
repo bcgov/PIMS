@@ -27,13 +27,11 @@ const TooltipIcon = (props: TooltipIconProps) => (
       </Tooltip>
     }
   >
-    <a>
-      <FaInfoCircle
-        style={props.style}
-        size={props.iconSize}
-        className={classNames('tooltip-icon', props.className)}
-      />
-    </a>
+    <FaInfoCircle
+      style={props.style}
+      size={props.iconSize}
+      className={classNames('tooltip-icon', props.className)}
+    />
   </OverlayTrigger>
 );
 

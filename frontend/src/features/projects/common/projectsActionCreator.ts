@@ -3,7 +3,6 @@ import * as API from 'constants/API';
 import { ENVIRONMENT } from 'constants/environment';
 import CustomAxios from 'customAxios';
 import { IProject } from 'features/projects/interfaces';
-import { responseInterceptor } from 'http-proxy-middleware';
 import { AnyAction, Dispatch } from 'redux';
 import { handleAxiosResponse } from 'utils';
 

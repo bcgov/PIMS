@@ -92,20 +92,16 @@ export const AccessRequestFilter = (props: IProps) => {
         </Col>
         <Col className="actions">
           <TooltipWrapper toolTipId="map-filter-search-tooltip" toolTip="Search">
-            <a>
-              <Button
-                variant="warning"
-                size="sm"
-                onClick={search}
-                className="bg-warning"
-                icon={<FaSearch size={20} />}
-              />
-            </a>
+            <Button
+              variant="warning"
+              size="sm"
+              onClick={search}
+              className="bg-warning"
+              icon={<FaSearch size={20} />}
+            />
           </TooltipWrapper>
           <TooltipWrapper toolTipId="map-filter-reset-tooltip" toolTip="Reset Filter">
-            <a>
-              <Button variant="secondary" size="sm" onClick={reset} icon={<FaUndo size={20} />} />
-            </a>
+            <Button variant="secondary" size="sm" onClick={reset} icon={<FaUndo size={20} />} />
           </TooltipWrapper>
         </Col>
       </Row>
