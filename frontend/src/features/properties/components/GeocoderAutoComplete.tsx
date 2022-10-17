@@ -71,6 +71,7 @@ export const GeocoderAutoComplete: React.FC<IGeocoderAutoCompleteProps> = ({
       setOptions([]);
     }
   };
+
   React.useEffect(() => {
     return () => {
       search('', true);
