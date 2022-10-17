@@ -130,15 +130,18 @@ export const ProjectListView: React.FC<IProps> = ({
       (value as any).agencies
         ? setFilter({ ...value, agencies: (value as any)?.agencies })
         : setFilter({ ...value });
-      if ((value as any).statusId) {
-        setFilter({ ...value, statusId: (value as any).statusId?.map((x: any) => x) });
-      } else {
+      if ((value as any).statusId.length === 0) {
         setFilter({ ...value });
-        setClearSelected(!clearSelected);
+      } else if ((value as any).statusId) {
+        setFilter({
+          ...value,
+          statusId: (value as any).statusId?.map((x: any) => x),
+          notStatusId: [],
+        });
       }
       setPageIndex(0); // Go to first page of results when filter changes
     },
-    [setFilter, setPageIndex, clearSelected],
+    [setFilter, setPageIndex],
   );
   const onPageSizeChanged = useCallback(size => {
     setPageSize(size);

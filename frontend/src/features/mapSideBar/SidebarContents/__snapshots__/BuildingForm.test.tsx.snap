@@ -65,7 +65,57 @@ exports[`Building Form component renders correctly 1`] = `
   cursor: default;
 }
 
-.c8 {
+.c6 {
+  width: 250px;
+  font-size: 1rem;
+  position: relative;
+}
+
+.c6 .form.Control {
+  width: 100%;
+  height: 100%;
+  border: none;
+  font-size: 16px;
+  box-sizing: border-box;
+  -webkit-flex: 1 1;
+  -ms-flex: 1 1;
+  flex: 1 1;
+  min-width: 0;
+  margin-bottom: 0;
+}
+
+.c6 .suggestionList {
+  background-color: white;
+  border-style: solid;
+  border-color: lightslategray;
+  border-width: thin;
+  font-size: 14px;
+  text-align: left;
+  max-height: 600px;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  overflow-y: auto;
+  z-index: 999;
+  top: 0px;
+  left: -50px;
+}
+
+.c6 option {
+  padding: 10px 5px;
+  word-wrap: break-word;
+  width: 400px;
+  overflow: hidden;
+  cursor: pointer;
+  color: #494949;
+}
+
+.c6 option:hover {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.c9 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -79,7 +129,7 @@ exports[`Building Form component renders correctly 1`] = `
   align-content: center;
 }
 
-.c9 {
+.c10 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -110,7 +160,7 @@ exports[`Building Form component renders correctly 1`] = `
   margin-bottom: 10px;
 }
 
-.c6 {
+.c7 {
   top: 20px;
   right: 20px;
   border: 0px;
@@ -147,7 +197,7 @@ exports[`Building Form component renders correctly 1`] = `
   min-height: 100px;
 }
 
-.c7 {
+.c8 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -164,7 +214,7 @@ exports[`Building Form component renders correctly 1`] = `
   bottom: -20px;
 }
 
-.c10 {
+.c11 {
   -webkit-flex: 1 1 auto;
   -ms-flex: 1 1 auto;
   flex: 1 1 auto;
@@ -705,7 +755,7 @@ exports[`Building Form component renders correctly 1`] = `
                         Street Address
                       </label>
                       <div
-                        class="GeocoderAutoComplete"
+                        class="c6 GeocoderAutoComplete"
                       >
                         <div>
                           <div
@@ -856,7 +906,7 @@ exports[`Building Form component renders correctly 1`] = `
                         >
                           <div>
                             <button
-                              class="c6"
+                              class="c7"
                             >
                               <svg>
                                 draft-building-icon.svg
@@ -915,10 +965,10 @@ exports[`Building Form component renders correctly 1`] = `
             </div>
           </div>
           <div
-            class="c7"
+            class="c8"
           >
             <div
-              class="c8"
+              class="c9"
             >
               <div
                 class="SresManual"
@@ -946,13 +996,13 @@ exports[`Building Form component renders correctly 1`] = `
                 </div>
               </div>
               <small
-                class="c9 p-1 mr-2"
+                class="c10 p-1 mr-2"
               >
                 Inventory Policy
               </small>
             </div>
             <span
-              class="c10"
+              class="c11"
             />
             <button
               class="btn btn-primary btn-sm"

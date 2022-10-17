@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Property list view Matches snapshot 1`] = `
-.c5 {
+.c6 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -15,7 +15,7 @@ exports[`Property list view Matches snapshot 1`] = `
   padding: 0 5px;
 }
 
-.c6 {
+.c7 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -30,7 +30,7 @@ exports[`Property list view Matches snapshot 1`] = `
   justify-items: center;
 }
 
-.c7 {
+.c8 {
   -webkit-flex: auto;
   -ms-flex: auto;
   flex: auto;
@@ -65,19 +65,69 @@ exports[`Property list view Matches snapshot 1`] = `
 }
 
 .c2 {
+  width: 250px;
+  font-size: 1rem;
+  position: relative;
+}
+
+.c2 .form.Control {
+  width: 100%;
+  height: 100%;
+  border: none;
+  font-size: 16px;
+  box-sizing: border-box;
+  -webkit-flex: 1 1;
+  -ms-flex: 1 1;
+  flex: 1 1;
+  min-width: 0;
+  margin-bottom: 0;
+}
+
+.c2 .suggestionList {
+  background-color: white;
+  border-style: solid;
+  border-color: lightslategray;
+  border-width: thin;
+  font-size: 14px;
+  text-align: left;
+  max-height: 600px;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  overflow-y: auto;
+  z-index: 999;
+  top: 0px;
+  left: -50px;
+}
+
+.c2 option {
+  padding: 10px 5px;
+  word-wrap: break-word;
+  width: 400px;
+  overflow: hidden;
+  cursor: pointer;
+  color: #494949;
+}
+
+.c2 option:hover {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.c3 {
   background-color: #fff !important;
   color: primaryColor !important;
   padding: 6px 5px;
 }
 
-.c4 {
+.c5 {
   background-color: #fff !important;
   color: primaryColor !important;
   padding: 6px 5px;
   margin-right: 12px;
 }
 
-.c3 {
+.c4 {
   border-left: 6px solid rgba(96,96,96,0.2);
   height: 40px;
   margin-left: 1%;
@@ -330,15 +380,21 @@ exports[`Property list view Matches snapshot 1`] = `
                 class="input-group-content"
               >
                 <div
-                  class="form-group"
+                  class="c2 GeocoderAutoComplete"
                 >
-                  <input
-                    class="form-control"
-                    id="input-address"
-                    name="address"
-                    placeholder="Enter an address"
-                    value=""
-                  />
+                  <div>
+                    <div
+                      class="form-group"
+                    >
+                      <input
+                        class="form-control"
+                        field="address"
+                        id="input-address"
+                        name="address"
+                        value=""
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -466,7 +522,7 @@ exports[`Property list view Matches snapshot 1`] = `
         </div>
       </div>
       <button
-        class="c2 btn btn-primary"
+        class="c3 btn btn-primary"
         type="button"
       >
         <svg
@@ -486,7 +542,7 @@ exports[`Property list view Matches snapshot 1`] = `
         </svg>
       </button>
       <button
-        class="c2 btn btn-primary"
+        class="c3 btn btn-primary"
         type="button"
       >
         <svg
@@ -506,10 +562,10 @@ exports[`Property list view Matches snapshot 1`] = `
         </svg>
       </button>
       <div
-        class="c3"
+        class="c4"
       />
       <button
-        class="c4 btn btn-primary"
+        class="c5 btn btn-primary"
         type="button"
       >
         <svg
@@ -584,7 +640,7 @@ exports[`Property list view Matches snapshot 1`] = `
                 class="sortable-column"
               >
                 <div
-                  class="c5 filter-wrapper"
+                  class="c6 filter-wrapper"
                 >
                   <svg
                     fill="none"
@@ -610,7 +666,7 @@ exports[`Property list view Matches snapshot 1`] = `
                   style="flex: 1 1 auto;"
                 />
                 <div
-                  class="c6"
+                  class="c7"
                 >
                   <svg
                     fill="currentColor"
@@ -653,7 +709,7 @@ exports[`Property list view Matches snapshot 1`] = `
                 class="sortable-column"
               >
                 <div
-                  class="c5 filter-wrapper"
+                  class="c6 filter-wrapper"
                 >
                   <svg
                     fill="none"
@@ -679,7 +735,7 @@ exports[`Property list view Matches snapshot 1`] = `
                   style="flex: 1 1 auto;"
                 />
                 <div
-                  class="c6"
+                  class="c7"
                 >
                   <svg
                     fill="currentColor"
@@ -726,7 +782,7 @@ exports[`Property list view Matches snapshot 1`] = `
                   style="flex: 1 1 auto;"
                 />
                 <div
-                  class="c6"
+                  class="c7"
                 >
                   <svg
                     fill="currentColor"
@@ -768,7 +824,7 @@ exports[`Property list view Matches snapshot 1`] = `
                 class="sortable-column"
               >
                 <div
-                  class="c5 filter-wrapper"
+                  class="c6 filter-wrapper"
                 >
                   <svg
                     fill="none"
@@ -794,7 +850,7 @@ exports[`Property list view Matches snapshot 1`] = `
                   style="flex: 1 1 auto;"
                 />
                 <div
-                  class="c6"
+                  class="c7"
                 >
                   <svg
                     fill="currentColor"
@@ -873,7 +929,7 @@ exports[`Property list view Matches snapshot 1`] = `
                   style="flex: 1 1 auto;"
                 />
                 <div
-                  class="c6"
+                  class="c7"
                 >
                   <svg
                     fill="currentColor"
@@ -916,7 +972,7 @@ exports[`Property list view Matches snapshot 1`] = `
                 class="sortable-column"
               >
                 <div
-                  class="c5 filter-wrapper"
+                  class="c6 filter-wrapper"
                 >
                   <svg
                     fill="none"
@@ -942,7 +998,7 @@ exports[`Property list view Matches snapshot 1`] = `
                   style="flex: 1 1 auto;"
                 />
                 <div
-                  class="c6"
+                  class="c7"
                 >
                   <svg
                     fill="currentColor"
@@ -985,7 +1041,7 @@ exports[`Property list view Matches snapshot 1`] = `
                 class="sortable-column"
               >
                 <div
-                  class="c5 filter-wrapper"
+                  class="c6 filter-wrapper"
                 >
                   <svg
                     fill="none"
@@ -1011,7 +1067,7 @@ exports[`Property list view Matches snapshot 1`] = `
                   style="flex: 1 1 auto;"
                 />
                 <div
-                  class="c6"
+                  class="c7"
                 >
                   <svg
                     fill="currentColor"
@@ -1054,7 +1110,7 @@ exports[`Property list view Matches snapshot 1`] = `
                 class="sortable-column"
               >
                 <div
-                  class="c5 filter-wrapper"
+                  class="c6 filter-wrapper"
                 >
                   <svg
                     fill="none"
@@ -1080,7 +1136,7 @@ exports[`Property list view Matches snapshot 1`] = `
                   style="flex: 1 1 auto;"
                 />
                 <div
-                  class="c6"
+                  class="c7"
                 >
                   <svg
                     fill="currentColor"
@@ -1123,7 +1179,7 @@ exports[`Property list view Matches snapshot 1`] = `
                 class="sortable-column"
               >
                 <div
-                  class="c5 filter-wrapper"
+                  class="c6 filter-wrapper"
                 >
                   <svg
                     fill="none"
@@ -1149,7 +1205,7 @@ exports[`Property list view Matches snapshot 1`] = `
                   style="flex: 1 1 auto;"
                 />
                 <div
-                  class="c6"
+                  class="c7"
                 >
                   <svg
                     fill="currentColor"
@@ -1192,7 +1248,7 @@ exports[`Property list view Matches snapshot 1`] = `
                 class="sortable-column"
               >
                 <div
-                  class="c5 filter-wrapper"
+                  class="c6 filter-wrapper"
                 >
                   <svg
                     fill="none"
@@ -1218,7 +1274,7 @@ exports[`Property list view Matches snapshot 1`] = `
                   style="flex: 1 1 auto;"
                 />
                 <div
-                  class="c6"
+                  class="c7"
                 >
                   <svg
                     fill="currentColor"
@@ -1280,7 +1336,7 @@ exports[`Property list view Matches snapshot 1`] = `
       class="table-toolbar"
     >
       <p
-        class="c7"
+        class="c8"
       >
         * Assessed value per building
       </p>

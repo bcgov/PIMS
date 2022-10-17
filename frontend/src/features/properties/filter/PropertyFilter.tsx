@@ -244,7 +244,15 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
             <Col className="bar-item flex-grow-0">
               <SearchButton
                 disabled={isSubmitting || findMoreOpen}
-                onClick={() => setTriggerFilterChanged && setTriggerFilterChanged(true)}
+                onClick={() => {
+                  const add = (values.address ?? '').split(',');
+                  if (add.length > 1) {
+                    // Extract the administrative area if it was provided.
+                    setFieldValue('address', add[0]);
+                    setFieldValue('administrativeArea', add[1]);
+                  }
+                  setTriggerFilterChanged && setTriggerFilterChanged(true);
+                }}
               />
             </Col>
             <Col className="bar-item flex-grow-0">
