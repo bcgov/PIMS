@@ -1,11 +1,11 @@
 codecov:
-  require_ci_to_pass: yes
+  require_ci_to_pass: true
   branch: dev
 
 coverage:
   precision: 2
   round: down
-  range: "70...100"
+  range: '55...100'
 
 parsers:
   gcov:
@@ -16,9 +16,9 @@ parsers:
       macro: no
 
 comment:
-  layout: "reach,diff,flags,tree"
+  layout: 'reach,diff,flags,tree'
   behavior: default
-  require_changes: no
+  require_changes: false
 
 ignore:
-  - "*.ignore.*"
+  - '*.ignore.*'
