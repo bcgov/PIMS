@@ -20,6 +20,7 @@ const onFilterChange = jest.fn<void, [IPropertyFilter]>();
 //prevent web calls from being made during tests.
 jest.mock('axios');
 jest.mock('@react-keycloak/web');
+jest.mock('hooks/useApi');
 
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 const mockKeycloak = (claims: string[]) => {
