@@ -8,7 +8,7 @@ import {
 import { getIn, useFormikContext } from 'formik';
 import * as React from 'react';
 import { useEffect } from 'react';
-import { Col, Form } from 'react-bootstrap';
+import { Col, Form, Row } from 'react-bootstrap';
 
 export interface IProjectFinacialTableProps {
   /** Whether form fields are disabled. */
@@ -66,19 +66,21 @@ export const ProjectFinancialTable = ({ disabled, title }: IProjectFinacialTable
           </Form.Group>
         </>
       )}
-      <Form.Group>
+      <Form.Group as={Row}>
         <Col md={4}>
           <Form.Group>
             <Form.Label column md={4}>
               Assessed Value
             </Form.Label>
-            <FastCurrencyInput
-              field="assessed"
-              required
-              formikProps={context}
-              disabled={disabled}
-              md={6}
-            />
+            <b>
+              <FastCurrencyInput
+                field="assessed"
+                required
+                formikProps={context}
+                disabled={disabled}
+                md={6}
+              />
+            </b>
           </Form.Group>
           <Form.Group>
             <Form.Label column md={4}>
@@ -95,7 +97,7 @@ export const ProjectFinancialTable = ({ disabled, title }: IProjectFinacialTable
         </Col>
         <Col md={4}>
           <Form.Group>
-            <Form.Label column md={4}>
+            <Form.Label column md={6}>
               Estimated Market Value
             </Form.Label>
             <FastCurrencyInput
@@ -121,7 +123,7 @@ export const ProjectFinancialTable = ({ disabled, title }: IProjectFinacialTable
             <FastCurrencyInput field="salesCost" formikProps={context} disabled={disabled} md={6} />
           </Form.Group>
           <Form.Group>
-            <Form.Label column md={4}>
+            <Form.Label column md={6}>
               Estimated Program Recovery Fees
             </Form.Label>
             <FastCurrencyInput

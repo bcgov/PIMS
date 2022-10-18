@@ -245,6 +245,18 @@ export const AppRouter: React.FC = () => {
                 />
               }
             />
+            <Route path="/dispose/projects/" element={<PrivateRoute claim={Claims.PROJECT_ADD} />}>
+              <Route
+                index
+                element={
+                  <LayoutWrapper
+                    component={ProjectDisposeView}
+                    layout={AuthLayout}
+                    title={getTitle('View SPL Projects')}
+                  />
+                }
+              />
+            </Route>
             <Route
               path="/dispose/projects/draft"
               element={<PrivateRoute claim={Claims.PROJECT_ADD} />}
@@ -260,6 +272,81 @@ export const AppRouter: React.FC = () => {
                 }
               />
             </Route>
+            <Route
+              path="/dispose/projects/properties"
+              element={<PrivateRoute claim={Claims.PROJECT_ADD} />}
+            >
+              <Route
+                index
+                element={
+                  <LayoutWrapper
+                    component={ProjectDisposeView}
+                    layout={AuthLayout}
+                    title={getTitle('View SPL Projects')}
+                  />
+                }
+              />
+            </Route>
+            <Route
+              path="/dispose/projects/information"
+              element={<PrivateRoute claim={Claims.PROJECT_ADD} />}
+            >
+              <Route
+                index
+                element={
+                  <LayoutWrapper
+                    component={ProjectDisposeView}
+                    layout={AuthLayout}
+                    title={getTitle('View SPL Projects')}
+                  />
+                }
+              />
+            </Route>
+            <Route
+              path="/dispose/projects/documentation"
+              element={<PrivateRoute claim={Claims.PROJECT_ADD} />}
+            >
+              <Route
+                index
+                element={
+                  <LayoutWrapper
+                    component={ProjectDisposeView}
+                    layout={AuthLayout}
+                    title={getTitle('View SPL Projects')}
+                  />
+                }
+              />
+            </Route>
+            <Route
+              path="/dispose/projects/approval"
+              element={<PrivateRoute claim={Claims.PROJECT_ADD} />}
+            >
+              <Route
+                index
+                element={
+                  <LayoutWrapper
+                    component={ProjectDisposeView}
+                    layout={AuthLayout}
+                    title={getTitle('View SPL Projects')}
+                  />
+                }
+              />
+            </Route>
+          </Route>
+          <Route
+            path="/dispose/projects/review"
+            element={<PrivateRoute claim={Claims.PROJECT_ADD} />}
+          >
+            <Route
+              index
+              element={
+                <LayoutWrapper
+                  component={ProjectDisposeView}
+                  layout={AuthLayout}
+                  title={getTitle('View SPL Projects')}
+                />
+              }
+            />
           </Route>
           <Route path="/projects/spl" element={<PrivateRoute claim={Claims.PROJECT_VIEW} />}>
             <Route

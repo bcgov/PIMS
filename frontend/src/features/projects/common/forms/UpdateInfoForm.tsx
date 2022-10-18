@@ -9,6 +9,7 @@ import _ from 'lodash';
 import React, { useState } from 'react';
 import { Container } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { mapLookupCode } from 'utils';
 
@@ -169,15 +170,17 @@ const ReviewButtons = ({
 }: any) => {
   const { goToStepByCode } = useProject();
   const { setFieldValue, values } = useFormikContext();
+  const navigate = useNavigate();
 
   return !isReadOnly ? (
     <div className="review-buttons col-md-7">
+      {console.log(values)}
       <Button
         variant="secondary"
         onClick={() => {
-          goToAddProperties
-            ? goToAddProperties()
-            : goToStepByCode(DisposeWorkflowStatus.SelectProperties);
+          navigate(
+            `/dispose/projects/properties?projectNumber=${(values as any)?.projectNumber ?? ''}`,
+          );
         }}
       >
         Add More Properties

@@ -22,10 +22,11 @@ const GeneratedDisposeStepper = ({ activeStep, basePath }: GeneratedDisposeStepp
     .filter((i) => !i.isOptional)
     .map((wfs) => ({
       title: wfs.name,
-      route: `${basePath}${wfs.route}?projectNumber=${project.projectNumber}`,
+      route: `/dispose${wfs.route}?projectNumber=${project.projectNumber}`,
       completed: projectStatusCompleted(wfs),
       canGoToStep: canGoToStatus(wfs),
     }));
+  console.log(steps);
   return (
     <Stepper
       onChange={(step) => navigate(step.route)}

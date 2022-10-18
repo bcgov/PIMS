@@ -22,6 +22,7 @@ const ProjectDisposeView = ({
   match: PathMatch<string> | null;
   location: Location;
 }) => {
+  console.log('\n\n\n\n\n\n', match);
   const query = location?.search ?? {};
   const projectNumber = queryString.parse(query).projectNumber;
   const dispatch = useAppDispatch();
