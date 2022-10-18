@@ -4,6 +4,8 @@ import { Claims } from 'constants/claims';
 import { IENotSupportedPage } from 'features/account/IENotSupportedPage';
 import Login from 'features/account/Login';
 import { LogoutPage } from 'features/account/Logout';
+import { ProjectSummaryView } from 'features/projects/common';
+import ProjectLayout from 'features/projects/common/ProjectLayout';
 import MapView from 'features/properties/map/MapView';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import AuthLayout from 'layouts/AuthLayout';
@@ -92,6 +94,12 @@ export const AppRouter: React.FC = () => {
               }
             />
           </Route>
+          <Route
+            path={'/projects/summary'}
+            element={
+              <LayoutWrapper layout={AuthLayout} component={ProjectSummaryView}></LayoutWrapper>
+            }
+          ></Route>
           <Route path="/properties/list" element={<PrivateRoute claim={Claims.PROPERTY_VIEW} />}>
             <Route
               index
