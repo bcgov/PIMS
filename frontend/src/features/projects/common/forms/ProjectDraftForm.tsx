@@ -9,7 +9,7 @@ import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import useCodeLookups from 'hooks/useLookupCodes';
 import { useMyAgencies } from 'hooks/useMyAgencies';
 import React, { useMemo } from 'react';
-import { Col, Container } from 'react-bootstrap';
+import { Col, Container, Row } from 'react-bootstrap';
 import styled from 'styled-components';
 import { mapSelectOptionWithParent } from 'utils';
 
@@ -81,33 +81,25 @@ const ProjectDraftForm = ({
           <EditButton {...{ formDisabled: isReadOnly, setFormDisabled: setIsReadOnly }} />
         </span>
       </Form.Group>
-      <Form.Group className="col-md-10">
-        <Form.Label className="col-md-2">Project No.</Form.Label>
-        <Input
-          placeholder="SPP-XXXXXX"
-          disabled={true}
-          field="projectNumber"
-          outerClassName="col-md-2"
-        />
+      <Form.Group className="col-md-10 align-items-center" as={Row}>
+        <Form.Label className="p-0">Project No.</Form.Label>
+        <Col>
+          <Input placeholder="SPP-XXXXXX" disabled={true} field="projectNumber" />
+        </Col>
         {isReadOnly === undefined && (
           <ItalicText className="col-md-7">{projectNoDescription}</ItalicText>
         )}
       </Form.Group>
-      <Form.Group>
-        <Input
-          data-testid="project-name"
-          disabled={isReadOnly}
-          field="name"
-          label="Name"
-          className="col-md-5"
-          outerClassName="col-md-10"
-          required
-        />
+      <Form.Group className="col-md-10 align-items-center" as={Row}>
+        <Form.Label className="p-0">Name</Form.Label>
+        <Col>
+          <Input data-testid="project-name" disabled={isReadOnly} field="name" required />
+        </Col>
       </Form.Group>
       {(isSRES || isUserAgencyAParent) && !hideAgency && (
-        <Form.Group className="col-md-10">
-          <Form.Label className="col-md-1">Project Agency</Form.Label>
-          <AgencyCol className="col-md-5">
+        <Form.Group className="col-md-10 align-items-center" as={Row}>
+          <Form.Label>Project Agency</Form.Label>
+          <AgencyCol>
             <ParentSelect
               field={'agencyId'}
               options={myAgencies.map((c) => mapSelectOptionWithParent(c, myAgencies))}

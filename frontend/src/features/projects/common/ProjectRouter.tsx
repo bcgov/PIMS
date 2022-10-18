@@ -174,13 +174,7 @@ const ProjectRouter = ({
             </Route>
           </PrivateRoute>
           <PrivateRoute claim={Claims.PROJECT_VIEW}>
-            <Route path={'/projects/summary'}>
-              <LayoutWrapper
-                layout={ProjectLayout}
-                component={ProjectSummaryView}
-                componentProps={{ formikRef }}
-              ></LayoutWrapper>
-            </Route>
+            <Route path={'/projects'} element={ProjectRouter} />
             <Route path={'/projects/transferred'}>
               <LayoutWrapper
                 layout={ProjectLayout}
