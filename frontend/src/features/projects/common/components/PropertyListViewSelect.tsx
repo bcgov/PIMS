@@ -9,7 +9,7 @@ import useCodeLookups from 'hooks/useLookupCodes';
 import _ from 'lodash';
 import queryString from 'query-string';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Button, Container, FormControlProps } from 'react-bootstrap';
+import { Button, Col, Container, FormControlProps, Row } from 'react-bootstrap';
 
 import { clickableTooltip, IFilterBarState, useProject } from '../../common';
 import useTable from '../../dispose/hooks/useTable';
@@ -127,7 +127,7 @@ export const PropertyListViewSelect: React.FC<InputProps> = ({
   }, []);
 
   return (
-    <Container className="col-md-12 PropertyListViewSelect">
+    <Container fluid className="col-md-12 PropertyListViewSelect">
       {!disabled && (
         <div className="ScrollContainer">
           <h2>Available Properties</h2>
@@ -169,15 +169,21 @@ export const PropertyListViewSelect: React.FC<InputProps> = ({
       )}
       <div className="ScrollContainer">
         <Container fluid className="TableToolbar">
-          <h2 className="mr-auto">Properties in the Project</h2>
-          <Button
-            onClick={() => {
-              setRemovedProperties([]);
-              setProjectProperties(_.difference(properties, removedProperties));
-            }}
-          >
-            Remove Selected
-          </Button>
+          <Row>
+            <Col>
+              <h2 className="mr-auto">Properties in the Project</h2>
+            </Col>
+            <Col>
+              <Button
+                onClick={() => {
+                  setRemovedProperties([]);
+                  setProjectProperties(_.difference(properties, removedProperties));
+                }}
+              >
+                Remove Selected
+              </Button>
+            </Col>
+          </Row>
         </Container>
         <Table<IProperty>
           name="ProjectPropertiesTable"

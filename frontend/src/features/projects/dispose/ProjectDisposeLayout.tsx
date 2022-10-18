@@ -11,6 +11,7 @@ import React, { useEffect, useRef } from 'react';
 import { Container, Spinner } from 'react-bootstrap';
 import { Navigate, PathMatch, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { useAppDispatch } from 'store';
+import { getFetchLookupCodeAction } from 'store/slices/hooks';
 
 import { clearProject, SresManual, updateWorkflowStatus, useStepForm } from '../common';
 import { GeneratedDisposeStepper, StepActions, useStepper } from '.';
@@ -102,7 +103,7 @@ const ProjectDisposeLayout = ({
   };
 
   const getComponentPath = (wfc: IProjectWorkflowComponent) => {
-    return `${match?.pathnameBase}${_.find(workflowStatuses, { code: wfc.workflowStatus })?.route}`;
+    return `/dispose${_.find(workflowStatuses, { code: wfc.workflowStatus })?.route}`;
   };
 
   useEffect(() => {
@@ -125,6 +126,10 @@ const ProjectDisposeLayout = ({
       navigate(`/dispose${workflowStatuses[0].route}`, { replace: true });
     }
   }, [navigate, workflowStatuses, locationPath.pathname, dispatch, projectNumber]);
+
+  useEffect(() => {
+    getFetchLookupCodeAction()(dispatch);
+  }, [dispatch]);
   return (
     <>
       {workflowStatuses && workflowStatuses.length ? (
@@ -139,17 +144,13 @@ const ProjectDisposeLayout = ({
           ) : null}
           {getProjectRequest?.isFetching !== true ? (
             <Container fluid className="step-content">
-              <Routes>
-                {projectWorkflowComponents.map((wfc) => (
-                  <Route
-                    key={wfc.workflowStatus.toString()}
-                    path={getComponentPath(wfc)}
-                    element={<wfc.component formikRef={formikRef} />}
-                  />
-                ))}
-                <Route path="/dispose" element={<Navigate to="/dispose/projects/draft" />} />
-                <Route path="/dispose/*" element={<Navigate to="/page-not-found" />} />
-              </Routes>
+              {projectWorkflowComponents.map((wfc) =>
+                getComponentPath(wfc) === window.location.pathname ? (
+                  <wfc.component formikRef={formikRef} key={wfc.workflowStatus} />
+                ) : (
+                  ''
+                ),
+              )}
               <StepActions
                 getNextStep={getNextStep}
                 onSave={() => onSave(formikRef)}

@@ -102,6 +102,7 @@ const CurrencyInput = ({
   }, [field, registerField, unregisterField]);
   const isInvalid = error && touch ? 'is-invalid ' : '';
   const isValid = !error && touch && value && !disabled ? 'is-valid ' : '';
+  const inputNumberDisabled = disabled ? 'input-number-disabled' : '';
 
   return (
     <Form.Group
@@ -119,7 +120,13 @@ const CurrencyInput = ({
             setFieldValue(field, cleanValue ? parseFloat(cleanValue) : '');
           }}
           onBlur={handleBlur}
-          className={classNames('form-control input-number', className, isInvalid, isValid)}
+          className={classNames(
+            'form-control input-number',
+            className,
+            isInvalid,
+            isValid,
+            inputNumberDisabled,
+          )}
           disabled={disabled}
           required={required}
           placeholder={placeholder || ''}
