@@ -174,7 +174,6 @@ const ReviewButtons = ({
 
   return !isReadOnly ? (
     <div className="review-buttons col-md-7">
-      {console.log(values)}
       <Button
         variant="secondary"
         onClick={() => {
