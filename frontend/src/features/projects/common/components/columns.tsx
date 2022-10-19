@@ -131,7 +131,11 @@ export const getProjectLinkCell =
       <ColumnDiv>
         {projectNumbers?.map((projectNumber: string) => (
           <React.Fragment key={projectNumber}>
-            <Link to={`/projects?projectNumber=${projectNumber}`}>{projectNumber}</Link>
+            <p>{projectNumber}</p>
+
+            {/* TODO: Fix functionality to view Projects
+             <Link to={`/projects?projectNumber=${projectNumber}`}>{projectNumber}</Link>
+            */}
           </React.Fragment>
         ))}
       </ColumnDiv>

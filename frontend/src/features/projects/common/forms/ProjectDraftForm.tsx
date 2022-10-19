@@ -81,23 +81,23 @@ const ProjectDraftForm = ({
           <EditButton {...{ formDisabled: isReadOnly, setFormDisabled: setIsReadOnly }} />
         </span>
       </Form.Group>
-      <Form.Group className="col-md-10 align-items-center" as={Row}>
-        <Form.Label className="p-0">Project No.</Form.Label>
-        <Col>
+      <Form.Group className="col-md-10 align-items-center">
+        <Form.Label>Project Number:</Form.Label>
+        <Col xs={5}>
           <Input placeholder="SPP-XXXXXX" disabled={true} field="projectNumber" />
         </Col>
         {isReadOnly === undefined && (
           <ItalicText className="col-md-7">{projectNoDescription}</ItalicText>
         )}
       </Form.Group>
-      <Form.Group className="col-md-10 align-items-center" as={Row}>
-        <Form.Label className="p-0">Name</Form.Label>
-        <Col>
+      <Form.Group className="col-md-10 align-items-center">
+        <Form.Label>Name</Form.Label>
+        <Col xs={5}>
           <Input data-testid="project-name" disabled={isReadOnly} field="name" required />
         </Col>
       </Form.Group>
       {(isSRES || isUserAgencyAParent) && !hideAgency && (
-        <Form.Group className="col-md-10 align-items-center" as={Row}>
+        <Form.Group className="col-md-10 align-items-center">
           <Form.Label>Project Agency</Form.Label>
           <AgencyCol>
             <ParentSelect

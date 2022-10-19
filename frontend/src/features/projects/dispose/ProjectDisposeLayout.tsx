@@ -146,7 +146,11 @@ const ProjectDisposeLayout = ({
             <Container fluid className="step-content">
               {projectWorkflowComponents.map((wfc) =>
                 getComponentPath(wfc) === window.location.pathname ? (
-                  <wfc.component formikRef={formikRef} key={wfc.workflowStatus} />
+                  <>
+                    <wfc.component formikRef={formikRef} key={wfc.workflowStatus} />
+                    {/* Scroll to the top of the page every time the current step of the form changes */}
+                    {document.querySelector('.ProjectDisposeView')?.scrollTo?.(0, 0)}
+                  </>
                 ) : (
                   ''
                 ),
