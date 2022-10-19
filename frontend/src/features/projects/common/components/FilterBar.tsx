@@ -87,7 +87,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ onChange, defaultFilter }) => {
     >
       {({ isSubmitting, handleReset, setFieldValue }) => (
         <Form>
-          <Form.Row className="filter-bar">
+          <Form.Group className="filter-bar">
             <Col className="bar-item">
               <Input field="pid" placeholder="Enter PID or PIN" />
             </Col>
@@ -124,7 +124,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ onChange, defaultFilter }) => {
             <Col className="bar-item flex-grow-0">
               <ResetButton disabled={isSubmitting} onClick={handleReset} />
             </Col>
-          </Form.Row>
+          </Form.Group>
         </Form>
       )}
     </Formik>

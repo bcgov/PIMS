@@ -17,7 +17,7 @@ const AdditionalPropertyInformationForm = ({
   const formikProps = useFormikContext();
   return (
     <Container fluid>
-      <Form.Row>
+      <Form.Group>
         <Form.Label column md={3}>
           Project Approved On
         </Form.Label>
@@ -27,8 +27,8 @@ const AdditionalPropertyInformationForm = ({
           disabled={isReadOnly}
           field="approvedOn"
         />
-      </Form.Row>
-      <Form.Row>
+      </Form.Group>
+      <Form.Group>
         <Form.Label column md={3}>
           Manager Names
         </Form.Label>
@@ -38,8 +38,8 @@ const AdditionalPropertyInformationForm = ({
           disabled={isReadOnly}
           field="manager"
         />
-      </Form.Row>
-      <Form.Row>
+      </Form.Group>
+      <Form.Group>
         <Form.Label column md={3}>
           Reported Fiscal Year
         </Form.Label>
@@ -49,8 +49,8 @@ const AdditionalPropertyInformationForm = ({
           disabled={isReadOnly}
           field="reportedFiscalYear"
         />
-      </Form.Row>
-      <Form.Row>
+      </Form.Group>
+      <Form.Group>
         <Form.Label column md={3}>
           Actual or Forecasted Fiscal Year of Sale
         </Form.Label>
@@ -60,7 +60,7 @@ const AdditionalPropertyInformationForm = ({
           disabled={isReadOnly}
           field="actualFiscalYear"
         />
-      </Form.Row>
+      </Form.Group>
     </Container>
   );
 };

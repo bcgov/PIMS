@@ -92,11 +92,11 @@ const UpdateInfoForm = ({
   return (
     <Container fluid className="UpdateInfoForm">
       {title && (
-        <Form.Row style={{ alignItems: 'unset' }}>
+        <Form.Group style={{ alignItems: 'unset' }}>
           <h3 className="col-md-8">{title}</h3>
-        </Form.Row>
+        </Form.Group>
       )}
-      <Form.Row>
+      <Form.Group>
         <Form.Label column md={2}>
           Assign Tier
         </Form.Label>
@@ -112,11 +112,11 @@ const UpdateInfoForm = ({
         <Tooltip>
           <small>{tierLevelTooltip}</small>
         </Tooltip>
-      </Form.Row>
+      </Form.Group>
 
       {showRisk && (
         <>
-          <Form.Row>
+          <Form.Group>
             <Form.Label column md={2}>
               Risk
             </Form.Label>
@@ -130,12 +130,12 @@ const UpdateInfoForm = ({
             <Tooltip>
               <small>{riskTooltip}</small>
             </Tooltip>
-          </Form.Row>
+          </Form.Group>
         </>
       )}
 
       <ProjectFinancialTable disabled={!!isReadOnly} title="Financial Information" />
-      <Form.Row>
+      <Form.Group>
         <h6 className="col-md-12" style={{ margin: '1rem 0' }}>
           {updateInfoMessage}
         </h6>
@@ -143,7 +143,7 @@ const UpdateInfoForm = ({
         <ReviewButtons
           {...{ isReadOnly, selectedProperties, setSelectedProperties, goToAddProperties }}
         />
-      </Form.Row>
+      </Form.Group>
 
       <PropertyListViewUpdate
         field="properties"

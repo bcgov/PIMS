@@ -1,4 +1,4 @@
-import queryString from 'querystring';
+import queryString from 'query-string';
 import { useLocation } from 'react-router';
 
 export const useQuery = () => {

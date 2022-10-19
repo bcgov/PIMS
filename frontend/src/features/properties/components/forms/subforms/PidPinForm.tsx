@@ -41,7 +41,7 @@ const PidPinForm: FunctionComponent<PidPinProps> = (props: PidPinProps) => {
 
   return (
     <>
-      <Form.Row className="flex-nowrap pid-pin">
+      <Form.Group className="flex-nowrap pid-pin">
         <Label>PID</Label>
         <Input
           required={true}
@@ -73,7 +73,7 @@ const PidPinForm: FunctionComponent<PidPinProps> = (props: PidPinProps) => {
           }}
           type="number"
         />
-      </Form.Row>
+      </Form.Group>
     </>
   );
 };

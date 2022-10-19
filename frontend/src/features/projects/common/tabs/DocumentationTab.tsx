@@ -38,12 +38,12 @@ const DocumentationTab: React.FunctionComponent<IDocumentationTabProps> = ({
       <DocumentationForm tasks={documentationTasks} isReadOnly={!canOverride} showNote={true} />
       <AppraisalCheckListForm isReadOnly={isReadOnly} taskStatusCode={appraisalTaskStatusCode} />
 
-      <Form.Row>
+      <Form.Group>
         <Form.Label column md={2}>
           Appraised Value
         </Form.Label>
         <FastCurrencyInput field="appraised" formikProps={context} disabled={isReadOnly} md={2} />
-      </Form.Row>
+      </Form.Group>
       <FirstNationsCheckListForm isReadOnly={isReadOnly} />
     </Container>
   );

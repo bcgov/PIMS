@@ -102,7 +102,7 @@ const SplReportContainer: React.FunctionComponent<ISplReportContainerProps> = ()
       const data = await getProjectReports();
       var report = data.find(r => r.id === currentReport?.id);
       if (!!report && !!currentReport) {
-        setCurrentReport({ ...currentReport, rowVersion: report.rowVersion });
+        setCurrentReport({ ...currentReport });
       }
       setReports(data);
       if (data.length === 0) {

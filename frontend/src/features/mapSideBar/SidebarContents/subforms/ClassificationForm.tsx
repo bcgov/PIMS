@@ -168,19 +168,23 @@ export const ClassificationForm: React.FC<IClassificationFormProps> = ({
       </Row>
       <Row>
         <Col md={6}>
-          <Row style={{ display: 'flex' }}>
-            <Label style={{ marginBottom: '0', textAlign: 'right' }}>{fieldLabel}</Label>
-            <FastSelect
-              formikProps={formikProps}
-              type="number"
-              style={{ marginTop: '5px', display: 'flex' }}
-              placeholder="Must Select One"
-              field={field}
-              options={filteredClassifications}
-              disabled={disabled}
-              required
-              displayErrorTooltips
-            />
+          <Row>
+            <Col md="4" style={{ textAlign: 'right' }}>
+              <Label>{fieldLabel}</Label>
+            </Col>
+            <Col md="auto">
+              <FastSelect
+                formikProps={formikProps}
+                type="number"
+                style={{ marginTop: '5px', display: 'flex' }}
+                placeholder="Must Select One"
+                field={field}
+                options={filteredClassifications}
+                disabled={disabled}
+                required
+                displayErrorTooltips
+              />
+            </Col>
             {toolTip && (
               <div style={{ marginTop: '8px' }}>
                 <TooltipIcon toolTip={toolTip} toolTipId="classificationToolTip" />

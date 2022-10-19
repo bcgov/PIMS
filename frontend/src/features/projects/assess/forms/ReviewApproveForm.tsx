@@ -92,7 +92,7 @@ const ReviewApproveForm = ({
             rationaleInstruction="The agency has requested exemption with the below rationale:"
           />
           <TasksForm tasks={exemptionReviewTasks} className="reviewRequired" />
-          <Form.Row>
+          <Form.Group>
             <Form.Label column md={2}>
               ADM Approved Exemption On
             </Form.Label>
@@ -102,7 +102,7 @@ const ReviewApproveForm = ({
               formikProps={formikProps}
               field="exemptionApprovedOn"
             />
-          </Form.Row>
+          </Form.Group>
         </>
       )}
       <DocumentationForm tasks={documentationTasks} isReadOnly={true} showNote={true} />

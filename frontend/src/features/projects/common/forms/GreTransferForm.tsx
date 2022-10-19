@@ -40,7 +40,7 @@ export const GreTransferForm = ({ canEdit }: { canEdit: boolean }) => {
       <ProjectDraftForm isReadOnly={canEdit} hideAgency={true} />
       <h3>Properties in the Project</h3>
       <p>Update Properties with New Agency Owner Name</p>
-      <Form.Row>
+      <Form.Group>
         <Form.Label column md={2} htmlFor="agencyId-field">
           New Owning Agency
         </Form.Label>
@@ -56,7 +56,7 @@ export const GreTransferForm = ({ canEdit }: { canEdit: boolean }) => {
             return options;
           }}
         />
-      </Form.Row>
+      </Form.Group>
       <PropertyListViewUpdate
         disabled={!canEdit}
         field="properties"

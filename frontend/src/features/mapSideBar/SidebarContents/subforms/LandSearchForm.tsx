@@ -57,12 +57,12 @@ const LandSearchForm = ({
     withNameSpace(nameSpace),
   );
   return (
-    <Row noGutters className="section">
+    <Row className="section g-0">
       <Col md={12}>
         <h5>Search for Parcel</h5>
       </Col>
       <Col md={6}>
-        <Form.Row>
+        <Form.Group>
           <Label>PID</Label>
           <Input
             displayErrorTooltips
@@ -83,8 +83,8 @@ const LandSearchForm = ({
               handlePidChange(searchPid, nameSpace);
             }}
           />
-        </Form.Row>
-        <Form.Row>
+        </Form.Group>
+        <Form.Group>
           <Label>PIN</Label>
           <FastInput
             formikProps={formikProps}
@@ -106,8 +106,8 @@ const LandSearchForm = ({
               handlePinChange(searchPin, nameSpace);
             }}
           />
-        </Form.Row>
-        <Form.Row>
+        </Form.Group>
+        <Form.Group>
           <Label>Street Address</Label>
           <GeocoderAutoComplete
             value={searchAddress}
@@ -136,7 +136,7 @@ const LandSearchForm = ({
               geocoderResponse && handleGeocoderChanges(geocoderResponse, nameSpace);
             }}
           />
-        </Form.Row>
+        </Form.Group>
       </Col>
       <Col md={1}>
         <h5>OR</h5>

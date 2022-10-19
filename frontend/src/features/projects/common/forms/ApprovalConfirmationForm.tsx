@@ -20,9 +20,9 @@ const ApprovalConfirmationForm = ({ isReadOnly }: IStepProps) => {
   return (
     <Fragment>
       <h3>Approval</h3>
-      <Form.Row>
+      <Form.Group>
         <Check field={fieldName} postLabel={label} required disabled={isReadOnly} />
-      </Form.Row>
+      </Form.Group>
     </Fragment>
   );
 };

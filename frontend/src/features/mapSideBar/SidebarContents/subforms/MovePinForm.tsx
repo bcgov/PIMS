@@ -21,7 +21,7 @@ interface IMovePinFormProps {
 
 // Component that allows a user to move an existing parcel map marker.
 const MovePinForm = ({ setMovingPinNameSpace, nameSpace }: IMovePinFormProps) => (
-  <Row noGutters className="section">
+  <Row className="section g-0">
     <Col md={12}>
       <h5>Update Parcel Location</h5>
     </Col>

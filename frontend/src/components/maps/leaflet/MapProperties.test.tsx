@@ -1,11 +1,11 @@
 import { useKeycloak } from '@react-keycloak/web';
 import { cleanup, fireEvent, render, waitFor } from '@testing-library/react';
+import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import { IParcel, IParcelDetail, IProperty } from 'actions/parcelsActions';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import { mount } from 'enzyme';
 import Enzyme from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
 import { createMemoryHistory } from 'history';
 import { PimsAPI, useApi } from 'hooks/useApi';
 import { Map as LeafletMap } from 'leaflet';

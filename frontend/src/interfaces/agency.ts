@@ -12,7 +12,6 @@ export interface IAgency {
 export interface IAgencyDetail {
   parentId?: number;
   email: string;
-  ccEmail: string;
   id: number;
   name: string;
   description?: string;

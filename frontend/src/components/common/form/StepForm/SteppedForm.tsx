@@ -134,10 +134,10 @@ export const SteppedForm = function<T extends object = {}>({
               id="steppedform-tabs"
               className={!getTabs ? 'hideTabs' : ''}
               activeKey={values.activeTab}
-              onSelect={(tab: string) => {
+              onSelect={(tab: string | null) => {
                 if (tab !== '') {
-                  setFieldValue('activeTab', +tab);
-                  onChangeTab && setSteps(onChangeTab(+tab));
+                  setFieldValue('activeTab', +(tab ?? ''));
+                  onChangeTab && setSteps(onChangeTab(+(tab ?? '')));
                 }
               }}
               unmountOnExit
@@ -145,7 +145,7 @@ export const SteppedForm = function<T extends object = {}>({
               {getFormikTabs(values.data).map((tab, index) => (
                 <Tab
                   title={tabTitle(tab.name, index, setTabToDeleteId)}
-                  eventKey={index}
+                  eventKey={`${index}`}
                   key={`stepped-tab-${index}`}
                 >
                   <StepperFormProvider steps={steps} tabs={getFormikTabs(values.data)}>

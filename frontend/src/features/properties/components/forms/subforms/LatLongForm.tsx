@@ -79,32 +79,42 @@ const LatLongForm = <T extends any>(props: LatLongFormProps & FormikProps<T>) =>
           </ClickAwayListener>
         </Col>
       </Row>
-      <Form.Row>
-        <Label>Latitude</Label>
-        <FastInput
-          className="input-medium"
-          displayErrorTooltips
-          formikProps={props}
-          disabled={props.disabled}
-          type="number"
-          field={props.showLandArea ? withNameSpace('data.latitude') : withNameSpace('latitude')}
-          required
-        />
-      </Form.Row>
-      <Form.Row>
-        <Label>Longitude</Label>
-        <FastInput
-          className="input-medium"
-          displayErrorTooltips
-          formikProps={props}
-          disabled={props.disabled}
-          type="number"
-          field={props.showLandArea ? withNameSpace('data.longitude') : withNameSpace('longitude')}
-          required
-        />
-      </Form.Row>
+      <Row>
+        <Col md="auto">
+          <Label>Latitude</Label>
+        </Col>
+        <Col md="auto">
+          <FastInput
+            className="input-medium"
+            displayErrorTooltips
+            formikProps={props}
+            disabled={props.disabled}
+            type="number"
+            field={props.showLandArea ? withNameSpace('data.latitude') : withNameSpace('latitude')}
+            required
+          />
+        </Col>
+      </Row>
+      <Row>
+        <Col md="auto">
+          <Label>Longitude</Label>
+        </Col>
+        <Col md="auto">
+          <FastInput
+            className="input-medium"
+            displayErrorTooltips
+            formikProps={props}
+            disabled={props.disabled}
+            type="number"
+            field={
+              props.showLandArea ? withNameSpace('data.longitude') : withNameSpace('longitude')
+            }
+            required
+          />
+        </Col>
+      </Row>
       {props.showLandArea && (
-        <Form.Row>
+        <Form.Group>
           <InputGroup
             displayErrorTooltips
             fast={true}
@@ -116,7 +126,7 @@ const LatLongForm = <T extends any>(props: LatLongFormProps & FormikProps<T>) =>
             formikProps={props}
             postText="Hectares"
           />
-        </Form.Row>
+        </Form.Group>
       )}
     </div>
   );

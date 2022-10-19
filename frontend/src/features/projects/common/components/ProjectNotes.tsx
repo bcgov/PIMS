@@ -43,7 +43,7 @@ export default function ProjectNotes({
   comment,
 }: IProjectNotesProps) {
   return (
-    <Form.Row className="ProjectNotes">
+    <Form.Group className="ProjectNotes">
       <TextArea
         fast
         disabled={disabled}
@@ -54,7 +54,7 @@ export default function ProjectNotes({
         outerClassName={outerClassName ?? 'col-md-10'}
       />
       {!!comment && <Comment>{comment}</Comment>}
-    </Form.Row>
+    </Form.Group>
   );
 }
 

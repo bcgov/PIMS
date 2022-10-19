@@ -47,7 +47,7 @@ export type SelectOption = {
   selected?: boolean;
   code?: string;
   parentId?: string | number;
-  parent: string;
+  parent?: string;
 };
 
 export type SelectOptions = SelectOption[];
@@ -85,7 +85,7 @@ export const Select: React.FC<SelectProps> = ({
     );
   };
 
-  const onSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const onSelectChange = (e: any) => {
     const updateFormValues = multiple ? handleMultipleChange : handleChange;
     updateFormValues(e);
     onChange?.(e);

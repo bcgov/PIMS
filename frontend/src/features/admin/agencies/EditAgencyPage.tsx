@@ -116,7 +116,6 @@ const EditAgencyPage = (props: IEditAgencyPageProps) => {
                       name: values.name,
                       code: values.code,
                       email: values.email,
-                      ccEmail: values.ccEmail,
                       isDisabled: values.isDisabled,
                       sendEmail: values.sendEmail,
                       addressTo: values.addressTo,

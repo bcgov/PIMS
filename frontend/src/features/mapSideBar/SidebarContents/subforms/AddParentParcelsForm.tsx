@@ -4,7 +4,7 @@ import SearchButton from 'components/common/form/SearchButton';
 import { ISteppedFormValues } from 'components/common/form/StepForm';
 import { Label } from 'components/common/Label';
 import { ILinkListItem, LinkList } from 'components/common/LinkList';
-import dequal from 'dequal';
+import { dequal } from 'dequal';
 import { pidFormatter } from 'features/properties/components/forms/subforms/PidPinForm';
 import { getIn, useFormikContext } from 'formik';
 import _ from 'lodash';
@@ -83,7 +83,7 @@ const AddParentParcelsForm = ({
         <h5>Parent Parcels</h5>
       </Col>
       <Col md={12}>
-        <Form.Row>
+        <Form.Group>
           <Label>Enter Parent Parcel PID(s)</Label>
           <Input
             displayErrorTooltips
@@ -127,7 +127,7 @@ const AddParentParcelsForm = ({
               }
             }}
           />
-        </Form.Row>
+        </Form.Group>
       </Col>
       <Col md={12}>
         <hr></hr>

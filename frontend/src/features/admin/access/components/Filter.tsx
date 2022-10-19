@@ -97,11 +97,16 @@ export const AccessRequestFilter = (props: IProps) => {
               size="sm"
               onClick={search}
               className="bg-warning"
-              icon={<FaSearch size={20} />}
+              icon={<FaSearch size={25} />}
             />
           </TooltipWrapper>
           <TooltipWrapper toolTipId="map-filter-reset-tooltip" toolTip="Reset Filter">
-            <Button variant="secondary" size="sm" onClick={reset} icon={<FaUndo size={20} />} />
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={reset}
+              icon={<FaUndo size={25} style={{ marginLeft: '20px' }} />}
+            />
           </TooltipWrapper>
         </Col>
       </Row>

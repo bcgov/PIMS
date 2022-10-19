@@ -98,7 +98,7 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
   return (
     <Container>
       {propertyTypeId === PropertyTypes.SUBDIVISION && (
-        <Row noGutters className="section">
+        <Row className="section g-0">
           <AddParentParcelsForm
             nameSpace={nameSpace}
             findMatchingPid={findMatchingPid}
@@ -127,8 +127,9 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
         </>
       )}
       <Row
-        noGutters
-        className={classNames('section', latitude === '' && longitude === '' ? 'disabled' : '')}
+        className={
+          classNames('section', latitude === '' && longitude === '' ? 'disabled' : '') + 'g-0'
+        }
       >
         <Col md={12}>
           <h5>Parcel Details</h5>
@@ -175,7 +176,7 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
             disabled={disabled}
             nameSpace={withNameSpace(nameSpace, 'address')}
           />
-          <Form.Row>
+          <Form.Group>
             <Form.Label>Agency</Form.Label>
             <ParentSelect
               required
@@ -184,30 +185,30 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
               filterBy={['code', 'label', 'parent']}
               disabled={(!isPropertyAdmin && !isUserAgencyAParent) || disabled}
             />
-          </Form.Row>
+          </Form.Group>
         </Col>
         <Col md={6} className="form-container">
-          <Form.Row>
+          <Form.Group>
             <Label>Name</Label>
             <FastInput
               disabled={disabled}
               field={withNameSpace(nameSpace, 'name')}
               formikProps={formikProps}
             />
-          </Form.Row>
-          <Form.Row>
+          </Form.Group>
+          <Form.Group>
             <Label>Description</Label>
             <TextArea disabled={disabled} field={withNameSpace(nameSpace, 'description')} />
-          </Form.Row>
-          <Form.Row>
+          </Form.Group>
+          <Form.Group>
             <Label>Legal Description</Label>
             <TextArea
               disabled={disabled}
               field={withNameSpace(nameSpace, 'landLegalDescription')}
               displayErrorTooltips
             />
-          </Form.Row>
-          <Form.Row>
+          </Form.Group>
+          <Form.Group>
             <Label>Lot Size</Label>
 
             <InputGroup
@@ -220,9 +221,9 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
               postText="Hectares"
               required
             />
-          </Form.Row>
+          </Form.Group>
           {!!projectNumbers?.length && (
-            <Form.Row>
+            <Form.Group>
               <Label style={{ marginTop: '1rem' }}>Project Number(s)</Label>
               <StyledProjectNumbers>
                 {projectNumbers.map((projectNum: string) => (
@@ -235,7 +236,7 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
                   />
                 ))}
               </StyledProjectNumbers>
-            </Form.Row>
+            </Form.Group>
           )}
         </Col>
       </Row>

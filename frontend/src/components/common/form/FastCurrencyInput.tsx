@@ -3,7 +3,7 @@ import './FastCurrencyInput.scss';
 import classNames from 'classnames';
 import { ErrorMessage, FormikProps, getIn } from 'formik';
 import React, { memo, useEffect } from 'react';
-import { ColProps, Form } from 'react-bootstrap';
+import { Col, ColProps, Form } from 'react-bootstrap';
 import MaskedInput from 'react-text-mask';
 import createNumberMask from 'text-mask-addons/dist/createNumberMask';
 import { formikFieldMemo, isPositiveNumberOrZero } from 'utils';
@@ -108,7 +108,7 @@ const CurrencyInput = ({
   return (
     <Form.Group
       className={classNames(!!required ? 'required' : '', outerClassName)}
-      as={'div'}
+      as={Col}
       md={rest.md}
     >
       {!!label && <Form.Label>{label}</Form.Label>}

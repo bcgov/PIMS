@@ -38,7 +38,6 @@ export const defaultReport: IReport = {
   reportTypeId: 0,
   isFinal: false,
   to: generateUtcNowDateTime(),
-  rowVersion: '',
 };
 
 /** get all of the other reports that have a 'To' date before this date */
@@ -108,18 +107,15 @@ const ReportControls: React.FunctionComponent<IReportControlsProps> = ({
           <>
             <Form className="report-form m-0 flex-nowrap">
               <AddReportControl onAdd={onAdd} />
-              <Row noGutters className="d-flex align-items-center">
+              <Row className="d-flex align-items-center g-0">
                 {reportOptions.length > 1 ? (
                   <BSForm.Group controlId="select-from" className="ml-2">
                     <BSForm.Label>From: </BSForm.Label>
                     <BSForm.Control
-                      options={reportOptions}
                       as="select"
                       value={fromId}
                       disabled={values.isFinal}
-                      onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-                        onFromChange(+e.target.value)
-                      }
+                      onChange={(e: any) => onFromChange(+e.target.value)}
                     >
                       {reportOptions.map((option: SelectOption) => (
                         <option key={option.value} value={option.value} className="option">

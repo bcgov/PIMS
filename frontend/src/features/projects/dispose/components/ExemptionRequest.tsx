@@ -51,16 +51,16 @@ export default function ExemptionRequest({
       </h3>
       {/* only want to display the checkbox for submissions */}
       {submissionStep && (
-        <Form.Row className="ProjectExemptionRequestCheck">
+        <Form.Group className="ProjectExemptionRequestCheck">
           <Check disabled={isReadOnly} field={exemptionField} postLabel={exemptionLabel} />
-        </Form.Row>
+        </Form.Group>
       )}
       {(checked || !submissionStep) && (
         <>
           <p>
             <i>{rationaleInstruction ?? 'Provide Rationale'}</i>
           </p>
-          <Form.Row className="ProjectExemptionRequestRationale">
+          <Form.Group className="ProjectExemptionRequestRationale">
             <TextArea
               label={'Rationale'}
               field={rationaleField}
@@ -68,7 +68,7 @@ export default function ExemptionRequest({
               outerClassName="col-md-10"
               readOnly={submissionStep ? false : true}
             />
-          </Form.Row>
+          </Form.Group>
         </>
       )}
     </React.Fragment>

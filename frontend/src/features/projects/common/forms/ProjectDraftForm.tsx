@@ -75,13 +75,13 @@ const ProjectDraftForm = ({
 
   return (
     <Container fluid className="ProjectDraftForm">
-      <Form.Row>
+      <Form.Group>
         <h3 className="col-md-8">{title ?? 'Review'}</h3>
         <span className="col-md-4">
           <EditButton {...{ formDisabled: isReadOnly, setFormDisabled: setIsReadOnly }} />
         </span>
-      </Form.Row>
-      <Form.Row className="col-md-10">
+      </Form.Group>
+      <Form.Group className="col-md-10">
         <Form.Label className="col-md-2">Project No.</Form.Label>
         <Input
           placeholder="SPP-XXXXXX"
@@ -92,8 +92,8 @@ const ProjectDraftForm = ({
         {isReadOnly === undefined && (
           <ItalicText className="col-md-7">{projectNoDescription}</ItalicText>
         )}
-      </Form.Row>
-      <Form.Row>
+      </Form.Group>
+      <Form.Group>
         <Input
           data-testid="project-name"
           disabled={isReadOnly}
@@ -103,9 +103,9 @@ const ProjectDraftForm = ({
           outerClassName="col-md-10"
           required
         />
-      </Form.Row>
+      </Form.Group>
       {(isSRES || isUserAgencyAParent) && !hideAgency && (
-        <Form.Row className="col-md-10">
+        <Form.Group className="col-md-10">
           <Form.Label className="col-md-1">Project Agency</Form.Label>
           <AgencyCol className="col-md-5">
             <ParentSelect
@@ -115,9 +115,9 @@ const ProjectDraftForm = ({
               convertValue={Number}
             />
           </AgencyCol>
-        </Form.Row>
+        </Form.Group>
       )}
-      <Form.Row>
+      <Form.Group>
         <TextArea
           data-testid="project-description"
           disabled={isReadOnly}
@@ -126,7 +126,7 @@ const ProjectDraftForm = ({
           className="col-md-auto"
           outerClassName="col-md-10"
         />
-      </Form.Row>
+      </Form.Group>
     </Container>
   );
 };
