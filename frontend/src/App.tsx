@@ -9,14 +9,13 @@ import PublicLayout from 'layouts/PublicLayout';
 import OnLoadActions from 'OnLoadActions';
 import React from 'react';
 import { Col } from 'react-bootstrap';
-import { Provider } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import { getActivateUserAction, getFetchLookupCodeAction } from 'store/slices/hooks';
 import { createKeycloakInstance } from 'utils';
 import getKeycloakEventHandler from 'utils/KeycloakEventHandler';
 
-import { store, useAppDispatch } from './store';
+import { useAppDispatch } from './store';
 
 const App = () => {
   const [loading, setLoading] = React.useState(true);

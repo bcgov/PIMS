@@ -10,7 +10,7 @@ import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import L from 'leaflet';
 import queryString from 'query-string';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { FeatureGroup, Marker, Polyline, useMap, useMapEvent } from 'react-leaflet';
+import { FeatureGroup, Marker, Polyline, useMap } from 'react-leaflet';
 import { useDispatch } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';

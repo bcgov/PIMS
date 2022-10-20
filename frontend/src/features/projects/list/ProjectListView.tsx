@@ -11,7 +11,7 @@ import * as API from 'constants/API';
 import Claims from 'constants/claims';
 import { ENVIRONMENT } from 'constants/environment';
 import { PropertyTypes } from 'constants/propertyTypes';
-import { DisposeWorkflowStatus, ReviewWorkflowStatus } from 'features/projects/constants';
+import { ReviewWorkflowStatus } from 'features/projects/constants';
 import { IProject as IProjectDetail } from 'features/projects/interfaces';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
@@ -221,9 +221,6 @@ export const ProjectListView: React.FC<IProps> = ({
   };
 
   const onRowClick = (row: IProject) => {
-    const DisposalStatuses = Object.keys(DisposeWorkflowStatus).map(
-      (k: string) => (DisposeWorkflowStatus as any)[k],
-    );
     const ReviewWorkflowStatuses = Object.keys(ReviewWorkflowStatus).map(
       (k: string) => (ReviewWorkflowStatus as any)[k],
     );

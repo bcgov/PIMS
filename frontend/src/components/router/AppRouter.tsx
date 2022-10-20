@@ -13,7 +13,7 @@ import { NotFoundPage } from 'pages/404/NotFoundPage';
 import Test from 'pages/Test.ignore';
 import React, { lazy, Suspense, useLayoutEffect } from 'react';
 import { Col } from 'react-bootstrap';
-import { Navigate, Outlet, Route, Routes, useLocation } from 'react-router-dom';
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 
 import { IsAuthenticatedRoute } from './IsAuthenticatedRoute';
 import PrivateRoute from './PrivateRoute';
@@ -21,18 +21,11 @@ import PrivateRoute from './PrivateRoute';
 const AccessRequestPage = lazy(() => import('features/admin/access-request/AccessRequestPage'));
 const EditUserPage = lazy(() => import('features/admin/edit-user/EditUserPage'));
 const ManageAccessRequests = lazy(() => import('features/admin/access/ManageAccessRequests'));
-const ProjectDisposalSubmitted = lazy(
-  () => import('features/projects/dispose/ProjectDisposalSubmitted'),
-);
-const ProjectDisposalExemptionSubmitted = lazy(
-  () => import('features/projects/dispose/ProjectDisposalExemptionSubmitted'),
-);
 const ProjectListView = lazy(() => import('features/projects/list/ProjectListView'));
 const ProjectApprovalRequestListView = lazy(
   () => import('features/projects/list/ProjectApprovalRequestListView'),
 );
 const SPLProjectListView = lazy(() => import('features/projects/list/SPLProjectListView'));
-const ProjectRouter = lazy(() => import('features/projects/common/ProjectRouter'));
 const ProjectDisposeView = lazy(() => import('features/projects/dispose/ProjectDisposeView'));
 const SplReportContainer = lazy(() => import('features/splReports/containers/SplReportContainer'));
 const ManageAgencies = lazy(() => import('features/admin/agencies/ManageAgencies'));

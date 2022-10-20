@@ -67,13 +67,11 @@ const MapSideBarLayout: React.FunctionComponent<IMapSideBarLayoutProps> = ({
               <Title className="mr-auto">{title}</Title>
               {!hidePolicy && <InventoryPolicy />}
               <TooltipWrapper toolTipId="close-sidebar-tooltip" toolTip="Close Form">
-                <a>
-                  <FaWindowClose
-                    style={{ color: variables.textColor, fontSize: '30px', cursor: 'pointer' }}
-                    title="close"
-                    onClick={() => setShowSideBar(false, undefined, undefined, true)}
-                  />
-                </a>
+                <FaWindowClose
+                  style={{ color: variables.textColor, fontSize: '30px', cursor: 'pointer' }}
+                  title="close"
+                  onClick={() => setShowSideBar(false, undefined, undefined, true)}
+                />
               </TooltipWrapper>
             </HeaderRow>
             {propertyName && (

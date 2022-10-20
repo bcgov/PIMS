@@ -8,7 +8,7 @@ import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { GeoJSON, LatLngBounds } from 'leaflet';
 import { flatten, uniqBy } from 'lodash';
 import React, { useEffect, useMemo, useState } from 'react';
-import { useMap, useMapEvent } from 'react-leaflet';
+import { useMap } from 'react-leaflet';
 import { toast } from 'react-toastify';
 import { useAppSelector } from 'store';
 import { tilesInBbox } from 'tiles-in-bbox';

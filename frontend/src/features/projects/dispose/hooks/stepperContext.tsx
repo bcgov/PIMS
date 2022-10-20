@@ -22,7 +22,7 @@ export const StepContextProvider = (props: { children?: any }) => {
     fetchProjectWorkflow('SUBMIT-DISPOSAL')(dispatch).then((disposeWorkflowStatuses: IStatus[]) => {
       setDisposeWorkflowStatuses(disposeWorkflowStatuses);
     });
-  }, [dispatch]);
+  }, [dispatch, disposeWorkflowStatuses?.length]);
   // Pass the value in Provider and return
   return <StepperContext.Provider value={stepContext}>{props.children}</StepperContext.Provider>;
 };

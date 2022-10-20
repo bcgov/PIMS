@@ -15,7 +15,7 @@ const SelectedPropertyMarker: React.FC<MarkerProps & { map: Map; className: stri
   }, [props.map, props.position]);
 
   React.useEffect(() => {
-    if (props.icon?.options && !!ref.current.leafletElement.setIcon) {
+    if (props.icon?.options && !!ref.current.leafletElement?.setIcon) {
       props.icon.options.className = props.className;
       ref.current.leafletElement.setIcon(props.icon);
     }

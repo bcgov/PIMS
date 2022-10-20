@@ -179,7 +179,7 @@ const Map: React.FC<MapProps> = ({
   const [triggerFilterChanged, setTriggerFilterChanged] = useState(true);
   const [activeBasemap, setActiveBasemap] = useState<BaseLayer | null>(null);
   const smallScreen = useMediaQuery({ maxWidth: 1800 });
-  const [mapWidth, setMapWidth] = useState(0);
+  let mapWidth = 0;
   const municipalitiesService = useLayerQuery(MUNICIPALITY_LAYER_URL);
   const layerUrl = useBoundaryLayer();
   const parcelsService = useLayerQuery(layerUrl);
@@ -318,7 +318,7 @@ const Map: React.FC<MapProps> = ({
   };
 
   function ShowLocationDetails() {
-    const map = useMapEvents({
+    useMapEvents({
       click: (e) => {
         showLocationDetails(e);
       },
@@ -327,7 +327,7 @@ const Map: React.FC<MapProps> = ({
   }
 
   function HandleMapBounds() {
-    const map = useMapEvents({
+    useMapEvents({
       moveend: (e) => {
         handleBounds(e);
       },
