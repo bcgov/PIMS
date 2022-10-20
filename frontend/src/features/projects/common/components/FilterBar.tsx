@@ -9,7 +9,7 @@ import { Classifications } from 'constants/classifications';
 import { Formik, getIn, useFormikContext } from 'formik';
 import { useCodeLookups } from 'hooks/useLookupCodes';
 import React, { useState } from 'react';
-import { Col } from 'react-bootstrap';
+import { Col, Row } from 'react-bootstrap';
 import { mapLookupCode } from 'utils';
 
 const SearchBar: React.FC = () => {
@@ -87,7 +87,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ onChange, defaultFilter }) => {
     >
       {({ isSubmitting, handleReset, setFieldValue }) => (
         <Form>
-          <Form.Group className="filter-bar">
+          <Form.Group className="filter-bar" as={Row}>
             <Col className="bar-item">
               <Input field="pid" placeholder="Enter PID or PIN" />
             </Col>
