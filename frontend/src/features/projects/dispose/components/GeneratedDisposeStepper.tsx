@@ -26,7 +26,6 @@ const GeneratedDisposeStepper = ({ activeStep, basePath }: GeneratedDisposeStepp
       completed: projectStatusCompleted(wfs),
       canGoToStep: canGoToStatus(wfs),
     }));
-  console.log(steps);
   return (
     <Stepper
       onChange={(step) => navigate(step.route)}
