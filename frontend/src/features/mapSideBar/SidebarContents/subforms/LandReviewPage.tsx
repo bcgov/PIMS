@@ -99,7 +99,7 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
       </Row>
       <Row>
         <Col md={6}>
-          <Row>
+          <Row style={{ marginRight: '15px' }}>
             <div className="identification">
               <Row className="section-header">
                 <span>
@@ -120,26 +120,48 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
                 )}
               </Row>
               <Row className="content-item">
-                <Label>Agency</Label>
-                <ParentSelect
-                  required
-                  field={withNameSpace('agencyId')}
-                  options={props.agencies}
-                  filterBy={['code', 'label', 'parent']}
-                  disabled={true}
-                />
+                <Col md="auto">
+                  <Label>Agency</Label>
+                </Col>
+                <Col md="auto">
+                  <ParentSelect
+                    required
+                    field={withNameSpace('agencyId')}
+                    options={props.agencies}
+                    filterBy={['code', 'label', 'parent']}
+                    disabled={true}
+                  />
+                </Col>
               </Row>
               <Row className="content-item">
-                <Label>Name</Label>
-                <Input disabled={editInfo.identification} field={withNameSpace('name')} />
+                <Col md="auto">
+                  <Label>Name</Label>
+                </Col>
+                <Col md="auto">
+                  <Input disabled={editInfo.identification} field={withNameSpace('name')} />
+                </Col>
               </Row>
               <Row className="content-item resizable">
-                <Label>Description</Label>
-                <TextArea disabled={editInfo.identification} field={withNameSpace('description')} />
+                <Col md="auto">
+                  <Label>Description</Label>
+                </Col>
+                <Col md="auto">
+                  <TextArea
+                    disabled={editInfo.identification}
+                    field={withNameSpace('description')}
+                  />
+                </Col>
               </Row>
-              <Row className="content-item resizable">
-                <Label>Legal Description</Label>
-                <TextArea disabled={true} field={withNameSpace('landLegalDescription')} />
+              <Row
+                className="content-item resizable"
+                style={{ marginTop: '5px', marginBottom: '5px' }}
+              >
+                <Col md="auto">
+                  <Label>Legal Description</Label>
+                </Col>
+                <Col md="auto">
+                  <TextArea disabled={true} field={withNameSpace('landLegalDescription')} />
+                </Col>
               </Row>
 
               <AddressForm
@@ -149,90 +171,118 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
                 nameSpace={withNameSpace('address')}
                 disableCheckmark
                 disableStreetAddress
+                landReviewStyles
               />
               <p className="break"></p>
               <Row className="content-item">
-                <Label>PID</Label>
-                <Input
-                  displayErrorTooltips
-                  className="input-small"
-                  disabled={true}
-                  required={true}
-                  field={withNameSpace('pid')}
-                />
+                <Col md="auto">
+                  <Label>PID</Label>
+                </Col>
+                <Col md="auto">
+                  <Input
+                    displayErrorTooltips
+                    className="input-small"
+                    disabled={true}
+                    required={true}
+                    field={withNameSpace('pid')}
+                  />
+                </Col>
               </Row>
               <Row className="content-item">
-                <Label>PIN</Label>
-                <Input
-                  displayErrorTooltips
-                  className="input-small"
-                  disabled={true}
-                  required={true}
-                  field={withNameSpace('pin')}
-                />
+                <Col md="auto">
+                  <Label>PIN</Label>
+                </Col>
+                <Col md="auto">
+                  <Input
+                    displayErrorTooltips
+                    className="input-small"
+                    disabled={true}
+                    required={true}
+                    field={withNameSpace('pin')}
+                  />
+                </Col>
               </Row>
               <Row className="content-item">
-                <Label>Lot Size</Label>
-
-                <InputGroup
-                  displayErrorTooltips
-                  fast={true}
-                  disabled={true}
-                  type="number"
-                  field={withNameSpace('landArea')}
-                  formikProps={formikProps}
-                  postText="Hectares"
-                />
+                <Col md="auto">
+                  <Label>Lot Size</Label>
+                </Col>
+                <Col md="auto">
+                  <InputGroup
+                    displayErrorTooltips
+                    fast={true}
+                    disabled={true}
+                    type="number"
+                    field={withNameSpace('landArea')}
+                    formikProps={formikProps}
+                    postText="Hectares"
+                  />
+                </Col>
               </Row>
               <Row className="content-item">
-                <Label>Latitude</Label>
-                <FastInput
-                  className="input-medium"
-                  displayErrorTooltips
-                  // tooltip={latitudeTooltip}
-                  formikProps={formikProps}
-                  disabled={true}
-                  type="number"
-                  field={withNameSpace('latitude')}
-                />
+                <Col md="auto">
+                  <Label>Latitude</Label>
+                </Col>
+                <Col md="auto">
+                  <FastInput
+                    className="input-medium"
+                    displayErrorTooltips
+                    // tooltip={latitudeTooltip}
+                    formikProps={formikProps}
+                    disabled={true}
+                    type="number"
+                    field={withNameSpace('latitude')}
+                  />
+                </Col>
               </Row>
               <Row className="content-item">
-                <Label>Longitude</Label>
-                <FastInput
-                  className="input-medium"
-                  displayErrorTooltips
-                  formikProps={formikProps}
-                  disabled={true}
-                  type="number"
-                  field={withNameSpace('longitude')}
-                />
+                <Col md="auto">
+                  <Label>Longitude</Label>
+                </Col>
+                <Col md="auto">
+                  <FastInput
+                    className="input-medium"
+                    displayErrorTooltips
+                    formikProps={formikProps}
+                    disabled={true}
+                    type="number"
+                    field={withNameSpace('longitude')}
+                  />
+                </Col>
               </Row>
               {!!projectNumbers?.length && (
                 <Row style={{ marginTop: '1rem' }}>
-                  <Label>Project Number(s)</Label>
-                  <StyledProjectNumbers>
-                    {projectNumbers.map((projectNum: string) => (
-                      <ProjectNumberLink
-                        projectNumber={projectNum}
-                        key={projectNum}
-                        agencyId={agencyId}
-                        setPrivateProject={setPrivateProject}
-                        privateProject={privateProject}
-                      />
-                    ))}
-                  </StyledProjectNumbers>
+                  <Col md="auto">
+                    <Label>Project Number(s)</Label>
+                  </Col>
+                  <Col md="auto">
+                    <StyledProjectNumbers>
+                      {projectNumbers.map((projectNum: string) => (
+                        <ProjectNumberLink
+                          projectNumber={projectNum}
+                          key={projectNum}
+                          agencyId={agencyId}
+                          setPrivateProject={setPrivateProject}
+                          privateProject={privateProject}
+                        />
+                      ))}
+                    </StyledProjectNumbers>
+                  </Col>
                 </Row>
               )}
               <br></br>
               <Row className="harmful">
-                <Label>Harmful info if released?</Label>
-                <Check
-                  type="radio"
-                  field={withNameSpace('isSensitive')}
-                  radioLabelOne="Yes"
-                  radioLabelTwo="No"
-                  disabled={editInfo.identification}
-                />
+                <Col md="auto">
+                  <Label>Harmful info if released?</Label>
+                </Col>
+                <Col md="auto">
+                  <Check
+                    type="radio"
+                    field={withNameSpace('isSensitive')}
+                    radioLabelOne="Yes"
+                    radioLabelTwo="No"
+                    disabled={editInfo.identification}
+                  />
+                </Col>
               </Row>
             </div>
           </Row>
@@ -259,32 +309,44 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
                 )}
               </Row>
               <Row className="classification field-row">
-                <Label>Classification</Label>
-                <FastSelect
-                  formikProps={formikProps}
-                  disabled={editInfo.usage}
-                  type="number"
-                  placeholder="Must Select One"
-                  field={withNameSpace('classificationId')}
-                  options={props.classifications}
-                  required={true}
-                />
+                <Col md="auto" style={{ marginLeft: '20px' }}>
+                  <Label>Classification</Label>
+                </Col>
+                <Col md="auto">
+                  <FastSelect
+                    formikProps={formikProps}
+                    disabled={editInfo.usage}
+                    type="number"
+                    placeholder="Must Select One"
+                    field={withNameSpace('classificationId')}
+                    options={props.classifications}
+                    required={true}
+                  />
+                </Col>
               </Row>
               <Row className="field-row">
-                <Label>Current Zoning</Label>
-                <FastInput
-                  formikProps={formikProps}
-                  disabled={editInfo.usage}
-                  field={withNameSpace('zoning')}
-                />
+                <Col md="auto" style={{ marginLeft: '7px' }}>
+                  <Label>Current Zoning</Label>
+                </Col>
+                <Col md="auto">
+                  <FastInput
+                    formikProps={formikProps}
+                    disabled={editInfo.usage}
+                    field={withNameSpace('zoning')}
+                  />
+                </Col>
               </Row>
               <Row className="field-row">
-                <Label>Potential Zoning</Label>
-                <FastInput
-                  formikProps={formikProps}
-                  disabled={editInfo.usage}
-                  field={withNameSpace('zoningPotential')}
-                />
+                <Col md="auto">
+                  <Label>Potential Zoning</Label>
+                </Col>
+                <Col md="auto">
+                  <FastInput
+                    formikProps={formikProps}
+                    disabled={editInfo.usage}
+                    field={withNameSpace('zoningPotential')}
+                  />
+                </Col>
               </Row>
             </div>
           </Row>
@@ -309,33 +371,45 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
                 )}
               </Row>
               <Row className="val-row">
-                <Label>Net Book Value</Label>
-                <FastCurrencyInput
-                  formikProps={formikProps}
-                  field={withNameSpace(`fiscals.${fiscalIndex}.value`)}
-                  disabled={editInfo.valuation}
-                />
-                <FastInput
-                  formikProps={formikProps}
-                  field="netBookYearDisplay"
-                  value={formatFiscalYear(netBookYear)}
-                  disabled
-                  style={{ width: 50, fontSize: 11 }}
-                />
+                <Col md="auto">
+                  <Label>Net Book Value</Label>
+                </Col>
+                <Col md="auto">
+                  <FastCurrencyInput
+                    formikProps={formikProps}
+                    field={withNameSpace(`fiscals.${fiscalIndex}.value`)}
+                    disabled={editInfo.valuation}
+                  />
+                </Col>
+                <Col md="auto">
+                  <FastInput
+                    formikProps={formikProps}
+                    field="netBookYearDisplay"
+                    value={formatFiscalYear(netBookYear)}
+                    disabled
+                    style={{ width: 50, fontSize: 11 }}
+                  />
+                </Col>
               </Row>
               <Row className="val-row">
-                <Label>Assessed Value</Label>
-                <FastCurrencyInput
-                  formikProps={formikProps}
-                  field={withNameSpace(`evaluations.${evaluationIndex}.value`)}
-                  disabled={editInfo.valuation}
-                />
-                <FastInput
-                  formikProps={formikProps}
-                  field={withNameSpace(`evaluations.${evaluationIndex}.year`)}
-                  disabled
-                  style={{ width: 50, fontSize: 11 }}
-                />
+                <Col md="auto" style={{ marginLeft: '2px' }}>
+                  <Label>Assessed Value</Label>
+                </Col>
+                <Col md="auto">
+                  <FastCurrencyInput
+                    formikProps={formikProps}
+                    field={withNameSpace(`evaluations.${evaluationIndex}.value`)}
+                    disabled={editInfo.valuation}
+                  />
+                </Col>
+                <Col md="auto">
+                  <FastInput
+                    formikProps={formikProps}
+                    field={withNameSpace(`evaluations.${evaluationIndex}.year`)}
+                    disabled
+                    style={{ width: 50, fontSize: 11 }}
+                  />
+                </Col>
               </Row>
             </div>
           </Row>

@@ -104,10 +104,18 @@ const CurrencyInput = ({
   }, [field, registerField, unregisterField]);
   const isInvalid = error && touch ? 'is-invalid ' : '';
   const isValid = !error && touch && value && !disabled ? 'is-valid ' : '';
+  const inputNumberDisabled = disabled ? 'input-number-disabled' : '';
 
   return (
     <Form.Group
-      className={classNames(!!required ? 'required' : '', outerClassName)}
+      className={classNames(
+        'form-control input-number',
+        className,
+        isInvalid,
+        isValid,
+        inputNumberDisabled,
+      )}
+      style={{ border: 'none' }}
       as={Col}
       md={rest.md}
     >

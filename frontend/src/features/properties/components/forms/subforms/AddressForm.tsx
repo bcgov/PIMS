@@ -27,6 +27,12 @@ interface AddressProps {
   disableCheckmark?: boolean;
   // Use custom css for building review page of Submit a Building form
   buildingReviewStyles?: boolean;
+  // Use custom css for land review page of Submit land form
+  landReviewStyles?: boolean;
+  // Use custom css for building information page of Submit a building form
+  buildingInformationStyles?: boolean;
+  // Use custom css for parcel information page of Submit land form
+  parcelInformationStyles?: boolean;
 }
 
 export const defaultAddressValues: IAddress = {
@@ -76,8 +82,15 @@ const AddressForm = <T extends any>(props: AddressProps & FormikProps<T>) => {
   return (
     <>
       {props.hideStreetAddress !== true && (
-        <Row>
-          <Col md="auto">
+        <Row style={{ marginBottom: '10px', alignItems: 'center' }}>
+          <Col
+            md="auto"
+            style={{
+              width: '140px',
+              textAlign: 'right',
+              marginRight: props.landReviewStyles ? '20px' : 0,
+            }}
+          >
             <Label>Street Address</Label>
           </Col>
           {props.buildingReviewStyles && (
@@ -107,8 +120,15 @@ const AddressForm = <T extends any>(props: AddressProps & FormikProps<T>) => {
           </Col>
         </Row>
       )}
-      <Row>
-        <Col md="auto">
+      <Row style={{ marginBottom: '10px', alignItems: 'center' }}>
+        <Col
+          md="auto"
+          style={{
+            width: '140px',
+            textAlign: 'right',
+            marginRight: props.landReviewStyles ? '20px' : 0,
+          }}
+        >
           <Label>Location</Label>
         </Col>
         {props.buildingReviewStyles && (
@@ -134,8 +154,16 @@ const AddressForm = <T extends any>(props: AddressProps & FormikProps<T>) => {
           />
         </Col>
       </Row>
-      <Row>
-        <Col md="auto">
+      <Row style={{ marginBottom: '10px', alignItems: 'center' }}>
+        <Col
+          md="auto"
+          style={{
+            width: '140px',
+            textAlign: 'right',
+            paddingRight: props.landReviewStyles ? '55px' : '12px',
+            marginRight: props.buildingReviewStyles ? 0 : '-35px',
+          }}
+        >
           <Label>Province</Label>
         </Col>
         {props.buildingReviewStyles && (
@@ -149,7 +177,7 @@ const AddressForm = <T extends any>(props: AddressProps & FormikProps<T>) => {
             ></div>
           </Col>
         )}
-        <Col md="auto">
+        <Col md="auto" style={{ paddingRight: 0 }}>
           <Select
             disabled={true}
             placeholder="Must Select One"
@@ -158,11 +186,28 @@ const AddressForm = <T extends any>(props: AddressProps & FormikProps<T>) => {
           />
         </Col>
       </Row>
-      <Row className="postal">
-        <Col md="auto">
+      <Row className="postal" style={{ marginBottom: '10px', alignItems: 'center' }}>
+        <Col
+          md="auto"
+          style={{
+            width: '140px',
+            textAlign: 'right',
+            marginLeft: props.landReviewStyles ? '-10px' : 0,
+          }}
+        >
           <Label>Postal Code</Label>
         </Col>
-        <Col md="auto" style={{ width: props.buildingReviewStyles ? '200px' : '275px' }}>
+        <Col
+          md="auto"
+          style={{
+            width:
+              props.buildingReviewStyles || props.landReviewStyles
+                ? '200px'
+                : props.buildingInformationStyles
+                ? '275px'
+                : '250px',
+          }}
+        >
           <FastInput
             className="input-small"
             formikProps={props}

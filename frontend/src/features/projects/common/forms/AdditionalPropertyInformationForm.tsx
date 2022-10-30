@@ -1,7 +1,7 @@
 import { FastDatePicker, FastFiscalYearInput, FastInput, Form } from 'components/common/form';
 import { useFormikContext } from 'formik';
 import React from 'react';
-import { Container } from 'react-bootstrap';
+import { Col, Container, Row } from 'react-bootstrap';
 
 interface IAdditionalPropertyInformationFormProps {
   isReadOnly?: boolean;
@@ -17,50 +17,58 @@ const AdditionalPropertyInformationForm = ({
   const formikProps = useFormikContext();
   return (
     <Container fluid>
-      <Form.Group>
+      <Row>
         <Form.Label column md={3}>
           Project Approved On
         </Form.Label>
-        <FastDatePicker
-          outerClassName="col-md-2"
-          formikProps={formikProps}
-          disabled={isReadOnly}
-          field="approvedOn"
-        />
-      </Form.Group>
-      <Form.Group>
+        <Col md="auto">
+          <FastDatePicker
+            outerClassName="col-md-2"
+            formikProps={formikProps}
+            disabled={isReadOnly}
+            field="approvedOn"
+          />
+        </Col>
+      </Row>
+      <Row>
         <Form.Label column md={3}>
           Manager Names
         </Form.Label>
-        <FastInput
-          outerClassName="col-md-2"
-          formikProps={formikProps}
-          disabled={isReadOnly}
-          field="manager"
-        />
-      </Form.Group>
-      <Form.Group>
+        <Col md="auto">
+          <FastInput
+            outerClassName="col-md-2"
+            formikProps={formikProps}
+            disabled={isReadOnly}
+            field="manager"
+          />
+        </Col>
+      </Row>
+      <Row>
         <Form.Label column md={3}>
           Reported Fiscal Year
         </Form.Label>
-        <FastFiscalYearInput
-          outerClassName="col-md-2"
-          formikProps={formikProps}
-          disabled={isReadOnly}
-          field="reportedFiscalYear"
-        />
-      </Form.Group>
-      <Form.Group>
+        <Col md="auto">
+          <FastFiscalYearInput
+            outerClassName="col-md-2"
+            formikProps={formikProps}
+            disabled={isReadOnly}
+            field="reportedFiscalYear"
+          />
+        </Col>
+      </Row>
+      <Row>
         <Form.Label column md={3}>
           Actual or Forecasted Fiscal Year of Sale
         </Form.Label>
-        <FastFiscalYearInput
-          outerClassName="col-md-2"
-          formikProps={formikProps}
-          disabled={isReadOnly}
-          field="actualFiscalYear"
-        />
-      </Form.Group>
+        <Col md="auto">
+          <FastFiscalYearInput
+            outerClassName="col-md-2"
+            formikProps={formikProps}
+            disabled={isReadOnly}
+            field="actualFiscalYear"
+          />
+        </Col>
+      </Row>
     </Container>
   );
 };

@@ -85,10 +85,10 @@ const InformationForm: FunctionComponent<InformationFormProps> = (props: Informa
         </Row>
       )}
       <Row>
-        <Col md="auto">
+        <Col md="auto" style={{ marginRight: '15px' }}>
           <Form.Label>Agency</Form.Label>
         </Col>
-        <Col md="auto">
+        <Col md="auto" style={{ marginRight: '10px' }}>
           <ParentSelect
             field={withNameSpace('agencyId')}
             options={myAgencies.map(c => mapSelectOptionWithParent(c, myAgencies))}

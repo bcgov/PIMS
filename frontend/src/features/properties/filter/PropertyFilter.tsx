@@ -168,14 +168,16 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
                 {showAllAgencySelect ? (
                   <PropertyFilterAgencyOptions disabled={findMoreOpen} agencies={agencies} />
                 ) : (
-                  <ParentSelect
-                    field="agencies"
-                    options={myAgencies.map(c => mapSelectOptionWithParent(c, myAgencies))}
-                    filterBy={['code', 'label', 'parent']}
-                    placeholder="My Agencies"
-                    selectClosest
-                    disabled={findMoreOpen}
-                  />
+                  <div style={{ paddingTop: '24px' }}>
+                    <ParentSelect
+                      field="agencies"
+                      options={myAgencies.map(c => mapSelectOptionWithParent(c, myAgencies))}
+                      filterBy={['code', 'label', 'parent']}
+                      placeholder="My Agencies"
+                      selectClosest
+                      disabled={findMoreOpen}
+                    />
+                  </div>
                 )}
               </Col>
               <Col md="auto" className="filter-col" style={{ paddingTop: 24, width: 130 }}>
@@ -224,7 +226,11 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
               <Col md="auto" className="filter-col property-filter-options">
                 <PropertyFilterOptions disabled={findMoreOpen} />
               </Col>
-              <Col md="auto" className="filter-col" style={{ paddingTop: 24, width: 130 }}>
+              <Col
+                md="auto"
+                className="filter-col"
+                style={{ paddingTop: 24, width: 150, marginRight: '-20px' }}
+              >
                 <Select
                   field="classificationId"
                   placeholder="Classification"

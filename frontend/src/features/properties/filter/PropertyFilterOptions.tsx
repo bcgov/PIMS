@@ -37,6 +37,7 @@ export const PropertyFilterOptions: React.FC<IPropertyFilterOptions> = ({ disabl
 
   return (
     <InputGroup
+      style={{ marginLeft: '-35px', width: '140px' }}
       fast={
         searchBy === 'address' ? (
           <GeocoderAutoComplete

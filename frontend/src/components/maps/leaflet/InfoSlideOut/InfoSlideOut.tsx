@@ -143,6 +143,7 @@ const InfoControl: React.FC<InfoControlProps> = ({ open, setOpen, onHeaderAction
   const leaflet = useLeaflet();
   const { propertyInfo } = popUpContext;
   const location = useLocation();
+  console.log(propertyInfo?.latitude);
   const jumpToView = () =>
     leaflet.map?.setView(
       [propertyInfo?.latitude as number, propertyInfo?.longitude as number],

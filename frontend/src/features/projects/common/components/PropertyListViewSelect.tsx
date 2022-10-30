@@ -147,7 +147,7 @@ export const PropertyListViewSelect: React.FC<InputProps> = ({
             loading={loading}
           />
           <Container fluid className="TableToolbar">
-            <strong className="align-self-center mr-2">
+            <strong className="align-self-center" style={{ marginRight: 10 }}>
               {!!selectedProperties.length ? `${selectedProperties.length} Selected` : ''}
             </strong>
             <Button
@@ -168,7 +168,7 @@ export const PropertyListViewSelect: React.FC<InputProps> = ({
       )}
       <div className="ScrollContainer">
         <Container fluid className="TableToolbar">
-          <h2 className="mr-auto">Properties in the Project</h2>
+          <h2 style={{ marginRight: 'auto' }}>Properties in the Project</h2>
           <Button
             onClick={() => {
               setRemovedProperties([]);

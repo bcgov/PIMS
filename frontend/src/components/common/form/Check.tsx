@@ -108,7 +108,7 @@ export const Check: React.FC<CheckProps> = ({
     >
       <div className="check-field">
         {!!label && (
-          <Form.Label>
+          <Form.Label style={{ marginRight: '10px' }}>
             {label}
             {!!toolTip && <TooltipIcon toolTipId={toolTipId!} toolTip={toolTip} />}
           </Form.Label>

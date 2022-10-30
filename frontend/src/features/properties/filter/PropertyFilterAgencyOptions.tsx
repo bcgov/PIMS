@@ -49,7 +49,7 @@ export const PropertyFilterAgencyOptions: React.FC<IPropertyFilterAgencyOptions>
 
   return (
     <Row className="align-items-center" style={{ width: 'auto' }}>
-      <Col style={{ paddingRight: 0 }}>
+      <Col style={{ paddingRight: 0, paddingTop: '24px', marginRight: '-25px' }}>
         <Select
           field="includeAllProperties"
           options={state.options}

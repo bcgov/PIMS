@@ -9,7 +9,7 @@ import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import useCodeLookups from 'hooks/useLookupCodes';
 import { useMyAgencies } from 'hooks/useMyAgencies';
 import React, { useMemo } from 'react';
-import { Col, Container } from 'react-bootstrap';
+import { Col, Container, Row } from 'react-bootstrap';
 import styled from 'styled-components';
 import { mapSelectOptionWithParent } from 'utils';
 
@@ -75,38 +75,36 @@ const ProjectDraftForm = ({
 
   return (
     <Container fluid className="ProjectDraftForm">
-      <Form.Group>
+      <Row>
         <h3 className="col-md-8">{title ?? 'Review'}</h3>
         <span className="col-md-4">
           <EditButton {...{ formDisabled: isReadOnly, setFormDisabled: setIsReadOnly }} />
         </span>
-      </Form.Group>
-      <Form.Group className="col-md-10">
-        <Form.Label className="col-md-2">Project No.</Form.Label>
-        <Input
-          placeholder="SPP-XXXXXX"
-          disabled={true}
-          field="projectNumber"
-          outerClassName="col-md-2"
-        />
+      </Row>
+      <Row className="align-items-center" style={{ marginBottom: '5px' }}>
+        <Form.Label>Project No.</Form.Label>
+        <Col xs={5}>
+          <Input
+            style={{ width: '200px' }}
+            placeholder="SPP-XXXXXX"
+            disabled={true}
+            field="projectNumber"
+            outerClassName="col-md-2"
+          />
+        </Col>
         {isReadOnly === undefined && (
           <ItalicText className="col-md-7">{projectNoDescription}</ItalicText>
         )}
-      </Form.Group>
-      <Form.Group>
-        <Input
-          data-testid="project-name"
-          disabled={isReadOnly}
-          field="name"
-          label="Name"
-          className="col-md-5"
-          outerClassName="col-md-10"
-          required
-        />
-      </Form.Group>
+      </Row>
+      <Row className="align-items-center" style={{ marginBottom: '5px' }}>
+        <Form.Label>Name</Form.Label>
+        <Col xs={5}>
+          <Input data-testid="project-name" disabled={isReadOnly} field="name" required />
+        </Col>
+      </Row>
       {(isSRES || isUserAgencyAParent) && !hideAgency && (
-        <Form.Group className="col-md-10">
-          <Form.Label className="col-md-1">Project Agency</Form.Label>
+        <Row className="align-items-center" style={{ marginBottom: '5px' }}>
+          <Form.Label>Project Agency</Form.Label>
           <AgencyCol className="col-md-5">
             <ParentSelect
               field={'agencyId'}
@@ -115,18 +113,21 @@ const ProjectDraftForm = ({
               convertValue={Number}
             />
           </AgencyCol>
-        </Form.Group>
+        </Row>
       )}
-      <Form.Group>
-        <TextArea
-          data-testid="project-description"
-          disabled={isReadOnly}
-          field="description"
-          label="Description"
-          className="col-md-auto"
-          outerClassName="col-md-10"
-        />
-      </Form.Group>
+      <Row style={{ marginBottom: '5px' }}>
+        <Form.Label>Description</Form.Label>
+        <Col md="auto">
+          <TextArea
+            style={{ width: '500px' }}
+            data-testid="project-description"
+            disabled={isReadOnly}
+            field="description"
+            className="col-md-auto"
+            outerClassName="col-md-10"
+          />
+        </Col>
+      </Row>
     </Container>
   );
 };

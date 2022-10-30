@@ -199,6 +199,7 @@ export const IdentificationForm: React.FC<IIdentificationProps> = ({
             {...formikProps}
             nameSpace={withNameSpace('address')}
             disabled={disabled}
+            buildingInformationStyles
             onGeocoderChange={(selection: IGeocoderResponse) => {
               const administrativeArea = selection.administrativeArea
                 ? lookupCodes.find(code => {

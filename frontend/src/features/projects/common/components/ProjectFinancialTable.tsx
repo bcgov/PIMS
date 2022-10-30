@@ -3,7 +3,7 @@ import { IProject } from 'features/projects/interfaces';
 import { getIn, useFormikContext } from 'formik';
 import * as React from 'react';
 import { useEffect } from 'react';
-import { Col, Form } from 'react-bootstrap';
+import { Col, Form, Row } from 'react-bootstrap';
 
 import { calcGainBeforeSpl, calcNetProceeds, getNumber } from '../utils';
 
@@ -63,73 +63,95 @@ export const ProjectFinancialTable = ({ disabled, title }: IProjectFinacialTable
           </Form.Group>
         </>
       )}
-      <Form.Group>
+      <Row>
         <Col md={4}>
-          <Form.Group>
+          <Row className="align-items-center">
             <Form.Label column md={4}>
               Assessed Value
             </Form.Label>
-            <FastCurrencyInput
-              field="assessed"
-              required
-              formikProps={context}
-              disabled={disabled}
-              md={6}
-            />
-          </Form.Group>
-          <Form.Group>
+            <Col md="auto">
+              <FastCurrencyInput
+                field="assessed"
+                required
+                formikProps={context}
+                disabled={disabled}
+                md={6}
+              />
+            </Col>
+          </Row>
+          <Row className="align-items-center">
             <Form.Label column md={4}>
               Net Book Value
             </Form.Label>
-            <FastCurrencyInput
-              field="netBook"
-              required
-              formikProps={context}
-              disabled={disabled}
-              md={6}
-            />
-          </Form.Group>
+            <Col md="auto">
+              <FastCurrencyInput
+                field="netBook"
+                required
+                formikProps={context}
+                disabled={disabled}
+                md={6}
+              />
+            </Col>
+          </Row>
         </Col>
         <Col md={4}>
-          <Form.Group>
+          <Row className="align-items-center">
             <Form.Label column md={4}>
               Estimated Market Value
             </Form.Label>
-            <FastCurrencyInput
-              field="market"
-              required
-              formikProps={context}
-              disabled={disabled}
-              md={6}
-            />
-          </Form.Group>
-          <Form.Group>
+            <Col md="auto">
+              <FastCurrencyInput
+                field="market"
+                required
+                formikProps={context}
+                disabled={disabled}
+                md={6}
+              />
+            </Col>
+          </Row>
+          <Row className="align-items-center">
             <Form.Label column md={4}>
               Appraised Value
             </Form.Label>
-            <FastCurrencyInput field="appraised" formikProps={context} disabled={disabled} md={6} />
-          </Form.Group>
+            <Col md="auto">
+              <FastCurrencyInput
+                field="appraised"
+                formikProps={context}
+                disabled={disabled}
+                md={6}
+              />
+            </Col>
+          </Row>
         </Col>
         <Col md={4}>
-          <Form.Group>
+          <Row className="align-items-center">
             <Form.Label column md={4}>
               Estimated Sales Costs
             </Form.Label>
-            <FastCurrencyInput field="salesCost" formikProps={context} disabled={disabled} md={6} />
-          </Form.Group>
-          <Form.Group>
+            <Col md="auto">
+              <FastCurrencyInput
+                field="salesCost"
+                formikProps={context}
+                disabled={disabled}
+                md={6}
+              />
+            </Col>
+          </Row>
+          <Row className="align-items-center">
             <Form.Label column md={4}>
               Estimated Program Recovery Fees
             </Form.Label>
-            <FastCurrencyInput
-              field="programCost"
-              formikProps={context}
-              disabled={disabled}
-              md={6}
-            />
-          </Form.Group>
+            <Col md="auto">
+              <FastCurrencyInput
+                field="programCost"
+                formikProps={context}
+                disabled={disabled}
+                md={6}
+              />
+            </Col>
+          </Row>
         </Col>
-      </Form.Group>
+      </Row>
     </>
   );
 };
