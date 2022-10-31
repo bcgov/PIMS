@@ -1,4 +1,4 @@
-import { Form, Input } from 'components/common/form';
+import { Input } from 'components/common/form';
 import { Label } from 'components/common/Label';
 import { FunctionComponent } from 'react';
 import React from 'react';

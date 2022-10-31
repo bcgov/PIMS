@@ -22,7 +22,7 @@ import { mapLookupCode, mapLookupCodeWithParentString } from 'utils';
 import { mapSelectOptionWithParent } from 'utils';
 import { FilterBarSchema } from 'utils/YupSchema';
 
-import { Select } from '../../../components/common/form';
+import { Form, Select } from '../../../components/common/form';
 import { PropertyFilterOptions } from './';
 import { IPropertyFilter } from './IPropertyFilter';
 import { PropertyFilterAgencyOptions } from './PropertyFilterAgencyOptions';
@@ -113,15 +113,8 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
     onChange?.({ ...values, agencies: agencyIds });
   };
 
-  const resetFilter = (
-    setFieldValue: (field: string, value: any, shouldValidate?: boolean | undefined) => void,
-  ) => {
-    ref.current?.getInstance()?.clear();
-    setFieldValue('agencies', '');
-    setFieldValue('name', '');
-    setFieldValue('classificationId', '');
-    setFieldValue('address', '');
-    setFieldValue('pid', '');
+  const resetFilter = () => {
+    ref.current.clear();
     changeFilter(defaultFilter);
     setClear(true);
   };
@@ -141,7 +134,7 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
       }}
     >
       {({ isSubmitting, setFieldValue, values }) => (
-        <div className="container-append">
+        <Form className="container-append">
           <Container className="map-filter-container">
             <Row>
               <Col md="auto" className="filter-col pad-top">
@@ -245,14 +238,11 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
                 />
               </Col>
               <Col md="auto" className="filter-col pad-top">
-                <ResetButton
-                  disabled={isSubmitting || findMoreOpen}
-                  onClick={() => resetFilter(setFieldValue)}
-                />
+                <ResetButton disabled={isSubmitting || findMoreOpen} onClick={resetFilter} />
               </Col>
             </Row>
           </Container>
-        </div>
+        </Form>
       )}
     </Formik>
   );

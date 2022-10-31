@@ -97,7 +97,7 @@ export const Input: React.FC<InputProps> = ({
   }, [field, onBlurFormatter, pattern, restricted, setFieldValue, value]);
   return (
     <Row
-      controlId={`input-${field}`}
+      controlid={`input-${field}`}
       className={classNames(!!required ? 'required' : '', outerClassName)}
       style={{ alignItems: 'center' }}
     >
