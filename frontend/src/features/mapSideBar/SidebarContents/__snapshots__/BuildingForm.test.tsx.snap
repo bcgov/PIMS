@@ -280,30 +280,24 @@ exports[`Building Form component renders correctly 1`] = `
           type="button"
         >
           <div>
-            <button
-              class="Button Button--icon-only primary btn btn-primary"
-              data-testid="add-tab"
-              type="button"
+            <div
+              class="primary"
             >
-              <div
-                class="Button__icon"
+              <svg
+                fill="currentColor"
+                height="20"
+                size="20"
+                stroke="currentColor"
+                stroke-width="0"
+                viewBox="0 0 448 512"
+                width="20"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                <svg
-                  fill="currentColor"
-                  height="20"
-                  size="20"
-                  stroke="currentColor"
-                  stroke-width="0"
-                  viewBox="0 0 448 512"
-                  width="20"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"
-                  />
-                </svg>
-              </div>
-            </button>
+                <path
+                  d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"
+                />
+              </svg>
+            </div>
           </div>
         </button>
       </li>
@@ -682,18 +676,20 @@ exports[`Building Form component renders correctly 1`] = `
                     <div
                       class="input-medium harmful"
                     >
-                      <p>
+                      <p
+                        style="margin-bottom: -5px;"
+                      >
                         Would this information be harmful if released? 
-                        <div>
-                          <a
-                            href="https://www2.gov.bc.ca/gov/content/governments/services-for-government/policies-procedures/foippa-manual/disclosure-harmful-individual-public-safety"
-                            rel="noopener noreferrer"
-                            target="_blank"
-                          >
-                            Policy
-                          </a>
-                        </div>
                       </p>
+                      <div>
+                        <a
+                          href="https://www2.gov.bc.ca/gov/content/governments/services-for-government/policies-procedures/foippa-manual/disclosure-harmful-individual-public-safety"
+                          rel="noopener noreferrer"
+                          target="_blank"
+                        >
+                          Policy
+                        </a>
+                      </div>
                       <div
                         class=""
                       >

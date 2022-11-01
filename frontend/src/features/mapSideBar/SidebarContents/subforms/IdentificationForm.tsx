@@ -162,14 +162,14 @@ export const IdentificationForm: React.FC<IIdentificationProps> = ({
         </Col>
         <Row style={{ justifyContent: 'center' }}>
           <div className="input-medium harmful">
-            <p>
+            <p style={{ marginBottom: '-5px' }}>
               Would this information be harmful if released?&nbsp;
-              <TooltipWrapper toolTipId="sensitive-harmful" toolTip={sensitiveTooltip}>
-                <a target="_blank" rel="noopener noreferrer" href={HARMFUL_DISCLOSURE_URL}>
-                  Policy
-                </a>
-              </TooltipWrapper>
             </p>
+            <TooltipWrapper toolTipId="sensitive-harmful" toolTip={sensitiveTooltip}>
+              <a target="_blank" rel="noopener noreferrer" href={HARMFUL_DISCLOSURE_URL}>
+                Policy
+              </a>
+            </TooltipWrapper>
             <Check
               type="radio"
               field={withNameSpace('isSensitive')}
