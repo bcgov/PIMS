@@ -25,21 +25,28 @@ exports[`Select Project Properties Step renders correctly 1`] = `
         novalidate=""
       >
         <div
-          class="filter-bar form-row"
+          class="filter-bar row"
         >
           <div
             class="bar-item col"
           >
             <div
-              class="form-group"
+              class="row"
+              controlid="input-pid"
+              style="align-items: center;"
             >
-              <input
-                class="form-control"
-                id="input-pid"
-                name="pid"
-                placeholder="Enter PID or PIN"
-                value=""
-              />
+              <div
+                class="col-md-auto"
+              >
+                <div>
+                  <input
+                    class="form-control"
+                    name="pid"
+                    placeholder="Enter PID or PIN"
+                    value=""
+                  />
+                </div>
+              </div>
             </div>
           </div>
           <div
@@ -52,15 +59,22 @@ exports[`Select Project Properties Step renders correctly 1`] = `
                 class="input-group-content"
               >
                 <div
-                  class="form-group"
+                  class="row"
+                  controlid="input-address"
+                  style="align-items: center;"
                 >
-                  <input
-                    class="form-control"
-                    id="input-address"
-                    name="address"
-                    placeholder="Enter an address or city"
-                    value=""
-                  />
+                  <div
+                    class="col-md-auto"
+                  >
+                    <div>
+                      <input
+                        class="form-control"
+                        name="address"
+                        placeholder="Enter an address or city"
+                        value=""
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -69,97 +83,99 @@ exports[`Select Project Properties Step renders correctly 1`] = `
             class="bar-item col"
           >
             <div
-              class="form-group"
-            >
-              <select
-                class="form-select form-control"
-                id="input-agencies"
-                name="agencies"
-              >
-                <option
-                  value=""
-                >
-                  Enter an Agency
-                </option>
-                <option
-                  class="option"
-                  value="1"
-                >
-                  agencyVal
-                </option>
-              </select>
-            </div>
-          </div>
-          <div
-            class="bar-item col"
-          >
-            <div
-              class="form-group"
-            >
-              <select
-                class="form-select form-control"
-                id="input-classificationId"
-                name="classificationId"
-              >
-                <option
-                  value=""
-                >
-                  Classification
-                </option>
-              </select>
-            </div>
-          </div>
-          <div
-            class="bar-item col"
-          >
-            <div
-              class="form-group"
+              class="row"
+              controlid="input-agencies"
+              style="align-items: center;"
             >
               <div
-                class="rbt clearfix open"
-                style="position: relative;"
-                tabindex="-1"
+                class="col-md-auto"
+              />
+              <div
+                class="col-md-auto"
               >
-                <div
-                  class="rbt-input-hint-container"
-                  style="position: relative;"
+                <select
+                  class="form-select form-control"
+                  name="agencies"
                 >
-                  <input
-                    aria-autocomplete="both"
-                    aria-expanded="false"
-                    aria-haspopup="listbox"
-                    autocomplete="nope"
-                    class="rbt-input-main form-control rbt-input "
-                    id="administrativeArea-field"
-                    name="administrativeArea"
-                    placeholder="Location"
-                    role="combobox"
-                    type="text"
+                  <option
                     value=""
-                  />
+                  >
+                    Enter an Agency
+                  </option>
+                  <option
+                    class="option"
+                    value="1"
+                  >
+                    agencyVal
+                  </option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div
+            class="bar-item col"
+          >
+            <div
+              class="row"
+              controlid="input-classificationId"
+              style="align-items: center;"
+            >
+              <div
+                class="col-md-auto"
+              />
+              <div
+                class="col-md-auto"
+              >
+                <select
+                  class="form-select form-control"
+                  name="classificationId"
+                >
+                  <option
+                    value=""
+                  >
+                    Classification
+                  </option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div
+            class="bar-item col"
+          >
+            <div
+              class=""
+            >
+              <div>
+                <div
+                  class="rbt"
+                  style="outline: none; position: relative;"
+                  tabindex="-1"
+                >
                   <div
-                    class="rbt-input-hint"
-                    style="left: 0px; pointer-events: none; position: absolute; top: 0px; display: inline-block;"
+                    style="display: flex; flex: 1; height: 100%; position: relative;"
                   >
                     <input
+                      aria-autocomplete="both"
+                      aria-expanded="false"
+                      aria-haspopup="listbox"
+                      autocomplete="off"
+                      class="rbt-input-main form-control rbt-input"
+                      id="administrativeArea-field"
+                      name="administrativeArea"
+                      placeholder="Location"
+                      role="combobox"
+                      type="text"
+                      value=""
+                    />
+                    <input
                       aria-hidden="true"
+                      class="rbt-input-hint"
                       readonly=""
-                      style="background-color: transparent; border-color: transparent; box-shadow: none; color: rgba(0, 0, 0, 0.35); box-sizing: content-box; width: 3px; border-style: inset inset inset inset; border-width: 2px 2px 2px 2px; line-height: normal; padding: 1px 1px 1px 1px;"
+                      style="background-color: transparent; border-color: transparent; box-shadow: none; color: rgba(0, 0, 0, 0.54); left: 0px; pointer-events: none; position: absolute; top: 0px; width: 100%; border-style: inset inset inset inset; border-width: 2px 2px 2px 2px; line-height: normal; padding: 1px 1px 1px 1px;"
                       tabindex="-1"
                       value=""
                     />
-                    <div
-                      style="height: 0px; left: 0px; overflow: scroll; position: absolute; top: 0px; visibility: hidden; white-space: pre; font-family: -webkit-small-control; letter-spacing: normal; text-transform: none;"
-                    />
                   </div>
-                </div>
-                <div
-                  aria-atomic="true"
-                  aria-live="polite"
-                  class="sr-only rbt-sr-status"
-                  role="status"
-                >
-                  0 selections
                 </div>
               </div>
             </div>
@@ -167,58 +183,62 @@ exports[`Select Project Properties Step renders correctly 1`] = `
           <div
             class="bar-item flex-grow-0 col"
           >
-            <button
-              class="Button Button--icon-only bg-warning btn btn-primary"
-              id="search-button"
-              type="submit"
-            >
-              <div
-                class="Button__icon"
+            <div>
+              <button
+                class="Button Button--icon-only bg-warning btn btn-primary"
+                id="search-button"
+                type="submit"
               >
-                <svg
-                  fill="currentColor"
-                  height="20"
-                  size="20"
-                  stroke="currentColor"
-                  stroke-width="0"
-                  viewBox="0 0 512 512"
-                  width="20"
-                  xmlns="http://www.w3.org/2000/svg"
+                <div
+                  class="Button__icon"
                 >
-                  <path
-                    d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"
-                  />
-                </svg>
-              </div>
-            </button>
+                  <svg
+                    fill="currentColor"
+                    height="20"
+                    size="20"
+                    stroke="currentColor"
+                    stroke-width="0"
+                    viewBox="0 0 512 512"
+                    width="20"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"
+                    />
+                  </svg>
+                </div>
+              </button>
+            </div>
           </div>
           <div
             class="bar-item flex-grow-0 col"
           >
-            <button
-              class="Button Button--icon-only btn btn-info"
-              id="reset-button"
-              type="reset"
-            >
-              <div
-                class="Button__icon"
+            <div>
+              <button
+                class="Button Button--icon-only btn btn-info"
+                id="reset-button"
+                type="reset"
               >
-                <svg
-                  fill="currentColor"
-                  height="20"
-                  size="20"
-                  stroke="currentColor"
-                  stroke-width="0"
-                  viewBox="0 0 512 512"
-                  width="20"
-                  xmlns="http://www.w3.org/2000/svg"
+                <div
+                  class="Button__icon"
                 >
-                  <path
-                    d="M212.333 224.333H12c-6.627 0-12-5.373-12-12V12C0 5.373 5.373 0 12 0h48c6.627 0 12 5.373 12 12v78.112C117.773 39.279 184.26 7.47 258.175 8.007c136.906.994 246.448 111.623 246.157 248.532C504.041 393.258 393.12 504 256.333 504c-64.089 0-122.496-24.313-166.51-64.215-5.099-4.622-5.334-12.554-.467-17.42l33.967-33.967c4.474-4.474 11.662-4.717 16.401-.525C170.76 415.336 211.58 432 256.333 432c97.268 0 176-78.716 176-176 0-97.267-78.716-176-176-176-58.496 0-110.28 28.476-142.274 72.333h98.274c6.627 0 12 5.373 12 12v48c0 6.627-5.373 12-12 12z"
-                  />
-                </svg>
-              </div>
-            </button>
+                  <svg
+                    fill="currentColor"
+                    height="20"
+                    size="20"
+                    stroke="currentColor"
+                    stroke-width="0"
+                    viewBox="0 0 512 512"
+                    width="20"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M212.333 224.333H12c-6.627 0-12-5.373-12-12V12C0 5.373 5.373 0 12 0h48c6.627 0 12 5.373 12 12v78.112C117.773 39.279 184.26 7.47 258.175 8.007c136.906.994 246.448 111.623 246.157 248.532C504.041 393.258 393.12 504 256.333 504c-64.089 0-122.496-24.313-166.51-64.215-5.099-4.622-5.334-12.554-.467-17.42l33.967-33.967c4.474-4.474 11.662-4.717 16.401-.525C170.76 415.336 211.58 432 256.333 432c97.268 0 176-78.716 176-176 0-97.267-78.716-176-176-176-58.496 0-110.28 28.476-142.274 72.333h98.274c6.627 0 12 5.373 12 12v48c0 6.627-5.373 12-12 12z"
+                    />
+                  </svg>
+                </div>
+              </button>
+            </div>
           </div>
         </div>
       </form>
@@ -293,9 +313,7 @@ exports[`Select Project Properties Step renders correctly 1`] = `
                       type="checkbox"
                     />
                   </div>
-                  <span
-                    style="flex: 1 1 auto;"
-                  />
+                  <span />
                 </div>
               </div>
               <div
@@ -308,9 +326,7 @@ exports[`Select Project Properties Step renders correctly 1`] = `
                   class="sortable-column"
                 >
                   Agency
-                  <span
-                    style="flex: 1 1 auto;"
-                  />
+                  <span />
                 </div>
               </div>
               <div
@@ -323,9 +339,7 @@ exports[`Select Project Properties Step renders correctly 1`] = `
                   class="sortable-column"
                 >
                   Name
-                  <span
-                    style="flex: 1 1 auto;"
-                  />
+                  <span />
                 </div>
               </div>
               <div
@@ -338,9 +352,7 @@ exports[`Select Project Properties Step renders correctly 1`] = `
                   class="sortable-column"
                 >
                   Civic Address
-                  <span
-                    style="flex: 1 1 auto;"
-                  />
+                  <span />
                 </div>
               </div>
               <div
@@ -353,9 +365,7 @@ exports[`Select Project Properties Step renders correctly 1`] = `
                   class="sortable-column"
                 >
                   Classification
-                  <span
-                    style="flex: 1 1 auto;"
-                  />
+                  <span />
                 </div>
               </div>
               <div
@@ -368,9 +378,7 @@ exports[`Select Project Properties Step renders correctly 1`] = `
                   class="sortable-column"
                 >
                   Current Zoning Code
-                  <span
-                    style="flex: 1 1 auto;"
-                  />
+                  <span />
                 </div>
               </div>
               <div
@@ -383,9 +391,7 @@ exports[`Select Project Properties Step renders correctly 1`] = `
                   class="sortable-column"
                 >
                   Other Projects
-                  <span
-                    style="flex: 1 1 auto;"
-                  />
+                  <span />
                 </div>
               </div>
               <div
@@ -398,9 +404,7 @@ exports[`Select Project Properties Step renders correctly 1`] = `
                   class="sortable-column"
                 >
                   Net Book Value
-                  <span
-                    style="flex: 1 1 auto;"
-                  />
+                  <span />
                 </div>
               </div>
               <div
@@ -413,9 +417,7 @@ exports[`Select Project Properties Step renders correctly 1`] = `
                   class="sortable-column"
                 >
                   Assessed Land
-                  <span
-                    style="flex: 1 1 auto;"
-                  />
+                  <span />
                 </div>
               </div>
               <div
@@ -428,9 +430,7 @@ exports[`Select Project Properties Step renders correctly 1`] = `
                   class="sortable-column"
                 >
                   Assessment Year
-                  <span
-                    style="flex: 1 1 auto;"
-                  />
+                  <span />
                 </div>
               </div>
               <div
@@ -443,9 +443,7 @@ exports[`Select Project Properties Step renders correctly 1`] = `
                   class="sortable-column"
                 >
                   Assessed Building
-                  <span
-                    style="flex: 1 1 auto;"
-                  />
+                  <span />
                 </div>
               </div>
               <div
@@ -458,9 +456,7 @@ exports[`Select Project Properties Step renders correctly 1`] = `
                   class="sortable-column"
                 >
                   Type
-                  <span
-                    style="flex: 1 1 auto;"
-                  />
+                  <span />
                 </div>
               </div>
             </div>
@@ -480,7 +476,8 @@ exports[`Select Project Properties Step renders correctly 1`] = `
           class="TableToolbar container-fluid"
         >
           <strong
-            class="align-self-center mr-2"
+            class="align-self-center"
+            style="margin-right: 10px;"
           />
           <button
             class="btn btn-secondary"
@@ -497,7 +494,7 @@ exports[`Select Project Properties Step renders correctly 1`] = `
           class="TableToolbar container-fluid"
         >
           <h2
-            class="mr-auto"
+            style="margin-right: auto;"
           >
             Properties in the Project
           </h2>
@@ -538,9 +535,7 @@ exports[`Select Project Properties Step renders correctly 1`] = `
                       type="checkbox"
                     />
                   </div>
-                  <span
-                    style="flex: 1 1 auto;"
-                  />
+                  <span />
                 </div>
               </div>
               <div
@@ -553,9 +548,7 @@ exports[`Select Project Properties Step renders correctly 1`] = `
                   class="sortable-column"
                 >
                   
-                  <span
-                    style="flex: 1 1 auto;"
-                  />
+                  <span />
                 </div>
               </div>
               <div
@@ -568,9 +561,7 @@ exports[`Select Project Properties Step renders correctly 1`] = `
                   class="sortable-column"
                 >
                   Agency
-                  <span
-                    style="flex: 1 1 auto;"
-                  />
+                  <span />
                 </div>
               </div>
               <div
@@ -583,9 +574,7 @@ exports[`Select Project Properties Step renders correctly 1`] = `
                   class="sortable-column"
                 >
                   Name
-                  <span
-                    style="flex: 1 1 auto;"
-                  />
+                  <span />
                 </div>
               </div>
               <div
@@ -598,9 +587,7 @@ exports[`Select Project Properties Step renders correctly 1`] = `
                   class="sortable-column"
                 >
                   Civic Address
-                  <span
-                    style="flex: 1 1 auto;"
-                  />
+                  <span />
                 </div>
               </div>
               <div
@@ -613,9 +600,7 @@ exports[`Select Project Properties Step renders correctly 1`] = `
                   class="sortable-column"
                 >
                   Classification
-                  <span
-                    style="flex: 1 1 auto;"
-                  />
+                  <span />
                 </div>
               </div>
               <div
@@ -628,9 +613,7 @@ exports[`Select Project Properties Step renders correctly 1`] = `
                   class="sortable-column"
                 >
                   Current Zoning Code
-                  <span
-                    style="flex: 1 1 auto;"
-                  />
+                  <span />
                 </div>
               </div>
               <div
@@ -643,9 +626,7 @@ exports[`Select Project Properties Step renders correctly 1`] = `
                   class="sortable-column"
                 >
                   Other Projects
-                  <span
-                    style="flex: 1 1 auto;"
-                  />
+                  <span />
                 </div>
               </div>
               <div
@@ -658,9 +639,7 @@ exports[`Select Project Properties Step renders correctly 1`] = `
                   class="sortable-column"
                 >
                   Net Book Value
-                  <span
-                    style="flex: 1 1 auto;"
-                  />
+                  <span />
                 </div>
               </div>
               <div
@@ -673,9 +652,7 @@ exports[`Select Project Properties Step renders correctly 1`] = `
                   class="sortable-column"
                 >
                   Assessed Land
-                  <span
-                    style="flex: 1 1 auto;"
-                  />
+                  <span />
                 </div>
               </div>
               <div
@@ -688,9 +665,7 @@ exports[`Select Project Properties Step renders correctly 1`] = `
                   class="sortable-column"
                 >
                   Assessment Year
-                  <span
-                    style="flex: 1 1 auto;"
-                  />
+                  <span />
                 </div>
               </div>
               <div
@@ -703,9 +678,7 @@ exports[`Select Project Properties Step renders correctly 1`] = `
                   class="sortable-column"
                 >
                   Assessed Building
-                  <span
-                    style="flex: 1 1 auto;"
-                  />
+                  <span />
                 </div>
               </div>
               <div
@@ -718,9 +691,7 @@ exports[`Select Project Properties Step renders correctly 1`] = `
                   class="sortable-column"
                 >
                   Type
-                  <span
-                    style="flex: 1 1 auto;"
-                  />
+                  <span />
                 </div>
               </div>
             </div>
@@ -737,10 +708,10 @@ exports[`Select Project Properties Step renders correctly 1`] = `
       </div>
     </div>
     <div
-      class="ProjectNotes form-row"
+      class="ProjectNotes"
     >
       <div
-        class="col-md-10 form-group"
+        class="col-md-10"
       >
         <label
           class="form-label"
@@ -748,13 +719,15 @@ exports[`Select Project Properties Step renders correctly 1`] = `
         >
           Notes
         </label>
-        <textarea
-          class="col-md-auto form-control"
-          id="input-note"
-          name="note"
-        >
-          my notes
-        </textarea>
+        <div>
+          <textarea
+            class="col-md-auto form-control"
+            id="input-note"
+            name="note"
+          >
+            my notes
+          </textarea>
+        </div>
       </div>
     </div>
     <div

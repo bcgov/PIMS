@@ -11,7 +11,7 @@
     "bootstrap": "5.2.2",
     "classnames": "2.2.6",
     "crypto-js": "4.1.1",
-    "dequal": "2.0.2",
+    "dequal": "2.0.3",
     "formik": "2.2.9",
     "http-proxy-middleware": "0.21.0",
     "keycloak-js": "15.0.2",

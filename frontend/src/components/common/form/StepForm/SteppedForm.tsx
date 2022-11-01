@@ -22,7 +22,7 @@ import { ISteppedFormProps, ISteppedFormValues, IStepperTab } from './types';
 
 const TabbedForm = styled(Form)`
   .hideTabs {
-    a.nav-item {
+    li.nav-item {
       background-color: white;
       display: none;
     }
@@ -145,7 +145,7 @@ export const SteppedForm = function<T extends object = {}>({
               {getFormikTabs(values.data).map((tab, index) => (
                 <Tab
                   title={tabTitle(tab.name, index, setTabToDeleteId)}
-                  eventKey={`${index}`}
+                  eventKey={index}
                   key={`stepped-tab-${index}`}
                 >
                   <StepperFormProvider steps={steps} tabs={getFormikTabs(values.data)}>

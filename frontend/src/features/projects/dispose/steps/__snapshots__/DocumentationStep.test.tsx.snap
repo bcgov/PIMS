@@ -12,19 +12,19 @@ exports[`Documentation Step renders correctly 1`] = `
       Documentation
     </h3>
     <div
-      class="tasksForm form-row"
+      class="tasksForm"
     >
       <div
-        class="required form-group"
+        class="required"
       >
         <div
           class="check-field"
         >
           <div
-            class="form-check"
+            class=""
           >
             <input
-              class="form-check-input position-static"
+              class="form-check-input"
               disabled=""
               id="input-tasks.0.isCompleted"
               name="tasks.0.isCompleted"
@@ -43,19 +43,19 @@ exports[`Documentation Step renders correctly 1`] = `
       </div>
     </div>
     <div
-      class="tasksForm form-row"
+      class="tasksForm"
     >
       <div
-        class="required form-group"
+        class="required"
       >
         <div
           class="check-field"
         >
           <div
-            class="form-check"
+            class=""
           >
             <input
-              class="form-check-input position-static"
+              class="form-check-input"
               disabled=""
               id="input-tasks.1.isCompleted"
               name="tasks.1.isCompleted"
@@ -91,19 +91,19 @@ exports[`Documentation Step renders correctly 1`] = `
       </svg>
     </h3>
     <div
-      class="ProjectExemptionRequestCheck form-row"
+      class="ProjectExemptionRequestCheck"
     >
       <div
-        class="form-group"
+        class=""
       >
         <div
           class="check-field"
         >
           <div
-            class="form-check"
+            class=""
           >
             <input
-              class="form-check-input position-static"
+              class="form-check-input"
               disabled=""
               id="input-exemptionRequested"
               name="exemptionRequested"
@@ -121,10 +121,10 @@ exports[`Documentation Step renders correctly 1`] = `
       </div>
     </div>
     <div
-      class="ProjectNotes form-row"
+      class="ProjectNotes"
     >
       <div
-        class="col-md-10 form-group"
+        class="col-md-10"
       >
         <label
           class="form-label"
@@ -132,11 +132,13 @@ exports[`Documentation Step renders correctly 1`] = `
         >
           Notes
         </label>
-        <textarea
-          class="col-md-auto form-control"
-          id="input-note"
-          name="note"
-        />
+        <div>
+          <textarea
+            class="col-md-auto form-control"
+            id="input-note"
+            name="note"
+          />
+        </div>
       </div>
     </div>
     <div

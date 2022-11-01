@@ -39,7 +39,7 @@ exports[`Review Approve Step renders correctly 1`] = `
       class="ProjectDraftForm container-fluid"
     >
       <div
-        class="form-row"
+        class="row"
       >
         <h3
           class="col-md-8"
@@ -51,69 +51,105 @@ exports[`Review Approve Step renders correctly 1`] = `
         />
       </div>
       <div
-        class="col-md-10 form-row"
+        class="align-items-center row"
+        style="margin-bottom: 5px;"
       >
         <label
-          class="col-md-2 form-label"
+          class="form-label"
         >
           Project No.
         </label>
         <div
-          class="col-md-2 form-group"
+          class="col-5"
         >
-          <input
-            class="form-control"
-            disabled=""
-            id="input-projectNumber"
-            name="projectNumber"
-            placeholder="SPP-XXXXXX"
-            value="test-01"
-          />
+          <div
+            class="col-md-2 row"
+            controlid="input-projectNumber"
+            style="align-items: center;"
+          >
+            <div
+              class="col-md-auto"
+            >
+              <div>
+                <input
+                  class="form-control"
+                  disabled=""
+                  name="projectNumber"
+                  placeholder="SPP-XXXXXX"
+                  style="width: 200px;"
+                  value="test-01"
+                />
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <div
-        class="form-row"
+        class="align-items-center row"
+        style="margin-bottom: 5px;"
       >
-        <div
-          class="required col-md-10 form-group"
+        <label
+          class="form-label"
         >
-          <label
-            class="form-label"
-            for="input-name"
+          Name
+        </label>
+        <div
+          class="col-5"
+        >
+          <div
+            class="required row"
+            controlid="input-name"
+            style="align-items: center;"
           >
-            Name
-          </label>
-          <input
-            class="col-md-5 form-control"
-            data-testid="project-name"
-            disabled=""
-            id="input-name"
-            name="name"
-            value="my project"
-          />
+            <div
+              class="col-md-auto"
+            >
+              <div>
+                <input
+                  class="form-control"
+                  data-testid="project-name"
+                  disabled=""
+                  name="name"
+                  value="my project"
+                />
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <div
-        class="form-row"
+        class="row"
+        style="margin-bottom: 5px;"
       >
-        <div
-          class="col-md-10 form-group"
+        <label
+          class="form-label"
         >
-          <label
-            class="form-label"
-            for="input-description"
+          Description
+        </label>
+        <div
+          class="col-md-auto"
+        >
+          <div
+            class="col-md-10 row"
+            controlid="input-description"
+            style="align-items: center;"
           >
-            Description
-          </label>
-          <textarea
-            class="col-md-auto form-control"
-            data-testid="project-description"
-            disabled=""
-            id="input-description"
-            name="description"
-          >
-            my project description
-          </textarea>
+            <div
+              class="col-md-auto"
+            >
+              <div>
+                <textarea
+                  class="col-md-auto form-control"
+                  data-testid="project-description"
+                  disabled=""
+                  name="description"
+                  style="width: 500px;"
+                >
+                  my project description
+                </textarea>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -122,40 +158,60 @@ exports[`Review Approve Step renders correctly 1`] = `
     >
       
       <div
-        class="form-row"
+        class="row"
+        style="align-items: center;"
       >
-        <label
-          class="form-label col-form-label col-md-2"
-        >
-          Assign Tier
-        </label>
         <div
-          class="required col-md-1 form-group"
+          class="col-md-2"
         >
-          <select
-            class="form-select form-control"
-            disabled=""
-            id="input-tierLevelId"
-            name="tierLevelId"
-            required=""
+          <label
+            class="form-label"
           >
-            <option
-              value=""
-            >
-              Must Select One
-            </option>
-          </select>
+            Assign Tier
+          </label>
         </div>
         <div
-          class="c0"
+          class="col-md-auto"
         >
-          <small>
-            Tier 1: Properties with a value less than $1M.
-          </small>
+          <div
+            class="required col-md-1 row"
+            controlid="input-tierLevelId"
+            style="align-items: center;"
+          >
+            <div
+              class="col-md-auto"
+            />
+            <div
+              class="col-md-auto"
+            >
+              <select
+                class="form-select form-control"
+                disabled=""
+                name="tierLevelId"
+                required=""
+              >
+                <option
+                  value=""
+                >
+                  Must Select One
+                </option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div
+          class="col-md-auto"
+        >
+          <div
+            class="c0"
+          >
+            <small>
+              Tier 1: Properties with a value less than $1M.
+            </small>
+          </div>
         </div>
       </div>
       <div
-        class="form-row"
         style="align-items: unset;"
       >
         <h3
@@ -164,9 +220,7 @@ exports[`Review Approve Step renders correctly 1`] = `
           Financial Information
         </h3>
       </div>
-      <div
-        class="form-row"
-      >
+      <div>
         <h6
           class="col-md-12"
           style="margin: 0px 0px 1rem 0px;"
@@ -179,13 +233,13 @@ exports[`Review Approve Step renders correctly 1`] = `
         </h6>
       </div>
       <div
-        class="form-row"
+        class="row"
       >
         <div
           class="col-md-4"
         >
           <div
-            class="form-row"
+            class="align-items-center row"
           >
             <label
               class="form-label col-form-label col-md-4"
@@ -193,25 +247,28 @@ exports[`Review Approve Step renders correctly 1`] = `
               Assessed Value
             </label>
             <div
-              class="required form-group"
-              md="6"
+              class="col-md-auto"
             >
               <div
-                class="input-tooltip-wrapper"
+                class="form-control input-number input-number-disabled col-md-6"
               >
-                <input
-                  class="form-control input-number"
-                  disabled=""
-                  name="assessed"
-                  placeholder=""
-                  required=""
-                  value=""
-                />
+                <div
+                  class="input-tooltip-wrapper"
+                >
+                  <input
+                    class="form-control input-number"
+                    disabled=""
+                    name="assessed"
+                    placeholder=""
+                    required=""
+                    value=""
+                  />
+                </div>
               </div>
             </div>
           </div>
           <div
-            class="form-row"
+            class="align-items-center row"
           >
             <label
               class="form-label col-form-label col-md-4"
@@ -219,20 +276,23 @@ exports[`Review Approve Step renders correctly 1`] = `
               Net Book Value
             </label>
             <div
-              class="required form-group"
-              md="6"
+              class="col-md-auto"
             >
               <div
-                class="input-tooltip-wrapper"
+                class="form-control input-number input-number-disabled col-md-6"
               >
-                <input
-                  class="form-control input-number"
-                  disabled=""
-                  name="netBook"
-                  placeholder=""
-                  required=""
-                  value="10"
-                />
+                <div
+                  class="input-tooltip-wrapper"
+                >
+                  <input
+                    class="form-control input-number"
+                    disabled=""
+                    name="netBook"
+                    placeholder=""
+                    required=""
+                    value="10"
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -241,7 +301,7 @@ exports[`Review Approve Step renders correctly 1`] = `
           class="col-md-4"
         >
           <div
-            class="form-row"
+            class="align-items-center row"
           >
             <label
               class="form-label col-form-label col-md-4"
@@ -249,25 +309,28 @@ exports[`Review Approve Step renders correctly 1`] = `
               Estimated Market Value
             </label>
             <div
-              class="required form-group"
-              md="6"
+              class="col-md-auto"
             >
               <div
-                class="input-tooltip-wrapper"
+                class="form-control input-number input-number-disabled col-md-6"
               >
-                <input
-                  class="form-control input-number"
-                  disabled=""
-                  name="market"
-                  placeholder=""
-                  required=""
-                  value="9"
-                />
+                <div
+                  class="input-tooltip-wrapper"
+                >
+                  <input
+                    class="form-control input-number"
+                    disabled=""
+                    name="market"
+                    placeholder=""
+                    required=""
+                    value="9"
+                  />
+                </div>
               </div>
             </div>
           </div>
           <div
-            class="form-row"
+            class="align-items-center row"
           >
             <label
               class="form-label col-form-label col-md-4"
@@ -275,19 +338,22 @@ exports[`Review Approve Step renders correctly 1`] = `
               Appraised Value
             </label>
             <div
-              class="form-group"
-              md="6"
+              class="col-md-auto"
             >
               <div
-                class="input-tooltip-wrapper"
+                class="form-control input-number input-number-disabled col-md-6"
               >
-                <input
-                  class="form-control input-number"
-                  disabled=""
-                  name="appraised"
-                  placeholder=""
-                  value=""
-                />
+                <div
+                  class="input-tooltip-wrapper"
+                >
+                  <input
+                    class="form-control input-number"
+                    disabled=""
+                    name="appraised"
+                    placeholder=""
+                    value=""
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -296,7 +362,7 @@ exports[`Review Approve Step renders correctly 1`] = `
           class="col-md-4"
         >
           <div
-            class="form-row"
+            class="align-items-center row"
           >
             <label
               class="form-label col-form-label col-md-4"
@@ -304,24 +370,27 @@ exports[`Review Approve Step renders correctly 1`] = `
               Estimated Sales Costs
             </label>
             <div
-              class="form-group"
-              md="6"
+              class="col-md-auto"
             >
               <div
-                class="input-tooltip-wrapper"
+                class="form-control input-number input-number-disabled col-md-6"
               >
-                <input
-                  class="form-control input-number"
-                  disabled=""
-                  name="salesCost"
-                  placeholder=""
-                  value="7"
-                />
+                <div
+                  class="input-tooltip-wrapper"
+                >
+                  <input
+                    class="form-control input-number"
+                    disabled=""
+                    name="salesCost"
+                    placeholder=""
+                    value="7"
+                  />
+                </div>
               </div>
             </div>
           </div>
           <div
-            class="form-row"
+            class="align-items-center row"
           >
             <label
               class="form-label col-form-label col-md-4"
@@ -329,26 +398,29 @@ exports[`Review Approve Step renders correctly 1`] = `
               Estimated Program Recovery Fees
             </label>
             <div
-              class="form-group"
-              md="6"
+              class="col-md-auto"
             >
               <div
-                class="input-tooltip-wrapper"
+                class="form-control input-number input-number-disabled col-md-6"
               >
-                <input
-                  class="form-control input-number"
-                  disabled=""
-                  name="programCost"
-                  placeholder=""
-                  value="4"
-                />
+                <div
+                  class="input-tooltip-wrapper"
+                >
+                  <input
+                    class="form-control input-number"
+                    disabled=""
+                    name="programCost"
+                    placeholder=""
+                    value="4"
+                  />
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
       <div
-        class="form-row"
+        class="row"
       >
         <h6
           class="col-md-12"
@@ -390,9 +462,7 @@ exports[`Review Approve Step renders correctly 1`] = `
                     class="sortable-column"
                   >
                     Agency
-                    <span
-                      style="flex: 1 1 auto;"
-                    />
+                    <span />
                   </div>
                 </div>
                 <div
@@ -405,9 +475,7 @@ exports[`Review Approve Step renders correctly 1`] = `
                     class="sortable-column"
                   >
                     Name
-                    <span
-                      style="flex: 1 1 auto;"
-                    />
+                    <span />
                   </div>
                 </div>
                 <div
@@ -420,9 +488,7 @@ exports[`Review Approve Step renders correctly 1`] = `
                     class="sortable-column"
                   >
                     Civic Address
-                    <span
-                      style="flex: 1 1 auto;"
-                    />
+                    <span />
                   </div>
                 </div>
                 <div
@@ -435,9 +501,7 @@ exports[`Review Approve Step renders correctly 1`] = `
                     class="sortable-column"
                   >
                     Classification
-                    <span
-                      style="flex: 1 1 auto;"
-                    />
+                    <span />
                   </div>
                 </div>
                 <div
@@ -450,9 +514,7 @@ exports[`Review Approve Step renders correctly 1`] = `
                     class="sortable-column"
                   >
                     Current Zoning Code
-                    <span
-                      style="flex: 1 1 auto;"
-                    />
+                    <span />
                   </div>
                 </div>
                 <div
@@ -465,9 +527,7 @@ exports[`Review Approve Step renders correctly 1`] = `
                     class="sortable-column"
                   >
                     Other Projects
-                    <span
-                      style="flex: 1 1 auto;"
-                    />
+                    <span />
                   </div>
                 </div>
                 <div
@@ -480,9 +540,7 @@ exports[`Review Approve Step renders correctly 1`] = `
                     class="sortable-column"
                   >
                     Net Book Value
-                    <span
-                      style="flex: 1 1 auto;"
-                    />
+                    <span />
                   </div>
                 </div>
                 <div
@@ -495,9 +553,7 @@ exports[`Review Approve Step renders correctly 1`] = `
                     class="sortable-column"
                   >
                     Assessed Land
-                    <span
-                      style="flex: 1 1 auto;"
-                    />
+                    <span />
                   </div>
                 </div>
                 <div
@@ -510,9 +566,7 @@ exports[`Review Approve Step renders correctly 1`] = `
                     class="sortable-column"
                   >
                     Assessment Year
-                    <span
-                      style="flex: 1 1 auto;"
-                    />
+                    <span />
                   </div>
                 </div>
                 <div
@@ -525,9 +579,7 @@ exports[`Review Approve Step renders correctly 1`] = `
                     class="sortable-column"
                   >
                     Assessed Building
-                    <span
-                      style="flex: 1 1 auto;"
-                    />
+                    <span />
                   </div>
                 </div>
                 <div
@@ -540,9 +592,7 @@ exports[`Review Approve Step renders correctly 1`] = `
                     class="sortable-column"
                   >
                     Type
-                    <span
-                      style="flex: 1 1 auto;"
-                    />
+                    <span />
                   </div>
                 </div>
               </div>
@@ -613,9 +663,7 @@ exports[`Review Approve Step renders correctly 1`] = `
                     style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
                     title="Click to view property details"
                   >
-                    <div
-                      class="form-group"
-                    >
+                    <div>
                       $223
                     </div>
                   </div>
@@ -625,9 +673,7 @@ exports[`Review Approve Step renders correctly 1`] = `
                     style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
                     title="Click to view property details"
                   >
-                    <div
-                      class="form-group"
-                    >
+                    <div>
                       $123
                     </div>
                   </div>
@@ -645,9 +691,7 @@ exports[`Review Approve Step renders correctly 1`] = `
                     style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
                     title="Click to view property details"
                   >
-                    <div
-                      class="form-group"
-                    />
+                    <div />
                   </div>
                   <div
                     class="td clickable"
@@ -778,37 +822,45 @@ exports[`Review Approve Step renders correctly 1`] = `
       </i>
     </p>
     <div
-      class="ProjectExemptionRequestRationale form-row"
+      class="ProjectExemptionRequestRationale"
     >
       <div
-        class="col-md-10 form-group"
+        class="col-md-10 row"
+        controlid="input-exemptionRationale"
+        style="align-items: center;"
       >
-        <label
-          class="form-label"
-          for="input-exemptionRationale"
+        <div
+          class="col-md-auto"
         >
-          Rationale
-        </label>
-        <textarea
-          class="col-md-auto form-control"
-          id="input-exemptionRationale"
-          name="exemptionRationale"
-          readonly=""
+          <label
+            class="form-label"
+          >
+            Rationale
+          </label>
+        </div>
+        <div
+          class="col-md-auto"
         >
-          rationale
-        </textarea>
+          <div>
+            <textarea
+              class="col-md-auto form-control"
+              name="exemptionRationale"
+              readonly=""
+            >
+              rationale
+            </textarea>
+          </div>
+        </div>
       </div>
     </div>
-    <div
-      class="form-row"
-    >
+    <div>
       <label
         class="form-label col-form-label col-md-2"
       >
         ADM Approved Exemption On
       </label>
       <div
-        class="required col-md-2 form-group"
+        class="required col-md-2"
       >
         <div>
           <div
@@ -853,20 +905,20 @@ exports[`Review Approve Step renders correctly 1`] = `
       </svg>
     </h3>
     <div
-      class="ProjectExemptionRequestCheck form-row"
+      class="ProjectExemptionRequestCheck"
     >
       <div
-        class="form-group"
+        class=""
       >
         <div
           class="check-field"
         >
           <div
-            class="form-check"
+            class=""
           >
             <input
               checked=""
-              class="form-check-input position-static"
+              class="form-check-input"
               disabled=""
               id="input-exemptionRequested"
               name="exemptionRequested"
@@ -889,31 +941,41 @@ exports[`Review Approve Step renders correctly 1`] = `
       </i>
     </p>
     <div
-      class="ProjectExemptionRequestRationale form-row"
+      class="ProjectExemptionRequestRationale"
     >
       <div
-        class="col-md-10 form-group"
+        class="col-md-10 row"
+        controlid="input-exemptionRationale"
+        style="align-items: center;"
       >
-        <label
-          class="form-label"
-          for="input-exemptionRationale"
+        <div
+          class="col-md-auto"
         >
-          Rationale
-        </label>
-        <textarea
-          class="col-md-auto form-control"
-          id="input-exemptionRationale"
-          name="exemptionRationale"
+          <label
+            class="form-label"
+          >
+            Rationale
+          </label>
+        </div>
+        <div
+          class="col-md-auto"
         >
-          rationale
-        </textarea>
+          <div>
+            <textarea
+              class="col-md-auto form-control"
+              name="exemptionRationale"
+            >
+              rationale
+            </textarea>
+          </div>
+        </div>
       </div>
     </div>
     <div
-      class="ProjectNotes form-row"
+      class="ProjectNotes"
     >
       <div
-        class="col-md-10 form-group"
+        class="col-md-10"
       >
         <label
           class="form-label"
@@ -921,28 +983,30 @@ exports[`Review Approve Step renders correctly 1`] = `
         >
           Documentation Notes
         </label>
-        <textarea
-          class="col-md-auto form-control"
-          id="input-documentationNote"
-          name="documentationNote"
-        />
+        <div>
+          <textarea
+            class="col-md-auto form-control"
+            id="input-documentationNote"
+            name="documentationNote"
+          />
+        </div>
       </div>
     </div>
     <div
-      class="tasksForm reviewRequired form-row"
+      class="tasksForm reviewRequired"
     >
       <div
-        class="required form-group"
+        class="required"
       >
         <div
           class="check-field"
         >
           <div
-            class="form-check"
+            class=""
           >
             <input
               checked=""
-              class="form-check-input position-static"
+              class="form-check-input"
               disabled=""
               id="input-tasks.1.isCompleted"
               name="tasks.1.isCompleted"
@@ -984,10 +1048,10 @@ exports[`Review Approve Step renders correctly 1`] = `
           </svg>
         </h3>
         <div
-          class="ProjectNotes form-row"
+          class="ProjectNotes"
         >
           <div
-            class="col-md-12 reviewRequired form-group"
+            class="col-md-12 reviewRequired"
           >
             <label
               class="form-label"
@@ -995,11 +1059,13 @@ exports[`Review Approve Step renders correctly 1`] = `
             >
               Appraisal Notes
             </label>
-            <textarea
-              class="col-md-auto form-control"
-              id="input-appraisedNote"
-              name="appraisedNote"
-            />
+            <div>
+              <textarea
+                class="col-md-auto form-control"
+                id="input-appraisedNote"
+                name="appraisedNote"
+              />
+            </div>
           </div>
           <div
             class="c2"
@@ -1037,21 +1103,19 @@ exports[`Review Approve Step renders correctly 1`] = `
     <h3>
       Approval
     </h3>
-    <div
-      class="form-row"
-    >
+    <div>
       <div
-        class="required form-group"
+        class="required"
       >
         <div
           class="check-field"
         >
           <div
-            class="form-check"
+            class=""
           >
             <input
               checked=""
-              class="form-check-input position-static"
+              class="form-check-input"
               disabled=""
               id="input-confirmation"
               name="confirmation"
@@ -1070,10 +1134,10 @@ exports[`Review Approve Step renders correctly 1`] = `
       </div>
     </div>
     <div
-      class="ProjectNotes form-row"
+      class="ProjectNotes"
     >
       <div
-        class="col-md-12 reviewRequired form-group"
+        class="col-md-12 reviewRequired"
       >
         <label
           class="form-label"
@@ -1081,21 +1145,23 @@ exports[`Review Approve Step renders correctly 1`] = `
         >
           Notes
         </label>
-        <textarea
-          class="col-md-5 form-control"
-          disabled=""
-          id="input-note"
-          name="note"
-        >
-          my notes
-        </textarea>
+        <div>
+          <textarea
+            class="col-md-5 form-control"
+            disabled=""
+            id="input-note"
+            name="note"
+          >
+            my notes
+          </textarea>
+        </div>
       </div>
     </div>
     <div
-      class="ProjectNotes form-row"
+      class="ProjectNotes"
     >
       <div
-        class="col-md-12 reviewRequired form-group"
+        class="col-md-12 reviewRequired"
       >
         <label
           class="form-label"
@@ -1117,21 +1183,23 @@ exports[`Review Approve Step renders correctly 1`] = `
             />
           </svg>
         </label>
-        <textarea
-          class="col-md-5 form-control"
-          disabled=""
-          id="input-publicNote"
-          name="publicNote"
-        >
-          public note
-        </textarea>
+        <div>
+          <textarea
+            class="col-md-5 form-control"
+            disabled=""
+            id="input-publicNote"
+            name="publicNote"
+          >
+            public note
+          </textarea>
+        </div>
       </div>
     </div>
     <div
-      class="ProjectNotes form-row"
+      class="ProjectNotes"
     >
       <div
-        class="col-md-12 reviewRequired form-group"
+        class="col-md-12 reviewRequired"
       >
         <label
           class="form-label"
@@ -1153,14 +1221,16 @@ exports[`Review Approve Step renders correctly 1`] = `
             />
           </svg>
         </label>
-        <textarea
-          class="col-md-5 form-control"
-          disabled=""
-          id="input-privateNote"
-          name="privateNote"
-        >
-          private note
-        </textarea>
+        <div>
+          <textarea
+            class="col-md-5 form-control"
+            disabled=""
+            id="input-privateNote"
+            name="privateNote"
+          >
+            private note
+          </textarea>
+        </div>
       </div>
     </div>
     <div

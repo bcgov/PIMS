@@ -51,7 +51,7 @@ describe('FastCurrencyInput', () => {
     expect(container.querySelector('svg[className="tooltip-icon"]'));
   });
 
-  it('fast currency input custom placeholder', () => {
+  it('fast currency input custom placeholder', async () => {
     const component = render(
       <Formik initialValues={{ assessedLand: '' }} onSubmit={noop}>
         {props => (
@@ -67,6 +67,6 @@ describe('FastCurrencyInput', () => {
       </Formik>,
     );
 
-    expect(component.findByPlaceholderText('custom placeholder'));
+    expect(await component.findByPlaceholderText('custom placeholder'));
   });
 });

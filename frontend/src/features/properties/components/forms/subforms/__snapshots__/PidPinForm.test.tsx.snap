@@ -7,76 +7,137 @@ exports[`PidPin sub-form renders correctly 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="flex-nowrap pid-pin form-row"
+    className="flex-nowrap pid-pin align-items-center row"
+    style={
+      Object {
+        "marginBottom": "20px",
+      }
+    }
   >
-    <label
-      className="label"
-    >
-      PID
-    </label>
     <div
-      className="required form-group"
-    >
-      <input
-        className="input-small form-control"
-        id="input-pid"
-        name="pid"
-        onBlur={[Function]}
-        onChange={[Function]}
-        onFocus={[Function]}
-        onMouseOut={[Function]}
-        onMouseOver={[Function]}
-        value=""
-      />
-    </div>
-    <label
-      className="label"
+      className="col"
       style={
         Object {
-          "paddingLeft": "5px",
+          "width": "30px",
         }
       }
     >
-      PIN
-    </label>
+      <label
+        className="label"
+      >
+        PID
+      </label>
+    </div>
     <div
-      className="required form-group"
+      className="col-md-auto"
     >
-      <svg
-        className="tooltip-icon"
-        fill="currentColor"
-        height="1em"
-        onBlur={[Function]}
-        onFocus={[Function]}
-        onMouseOut={[Function]}
-        onMouseOver={[Function]}
-        stroke="currentColor"
-        strokeWidth="0"
+      <div
+        className="required row"
+        controlid="input-pid"
         style={
           Object {
-            "color": undefined,
+            "alignItems": "center",
           }
         }
-        viewBox="0 0 512 512"
-        width="1em"
-        xmlns="http://www.w3.org/2000/svg"
       >
-        <path
-          d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"
-        />
-      </svg>
-      <input
-        className="input-small form-control"
-        id="input-pin"
-        name="pin"
-        onBlur={[Function]}
-        onChange={[Function]}
-        onFocus={[Function]}
-        onMouseOut={[Function]}
-        onMouseOver={[Function]}
-        type="number"
-        value=""
-      />
+        <div
+          className="col-md-auto"
+        >
+          <div
+            onBlur={[Function]}
+            onFocus={[Function]}
+            onMouseOut={[Function]}
+            onMouseOver={[Function]}
+          >
+            <input
+              className="input-small form-control"
+              name="pid"
+              onBlur={[Function]}
+              onChange={[Function]}
+              value=""
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      className="col"
+      style={
+        Object {
+          "width": "20px",
+        }
+      }
+    >
+      <label
+        className="label"
+      >
+        PIN
+      </label>
+    </div>
+    <div
+      className="col-md-auto"
+    >
+      <div
+        className="required row"
+        controlid="input-pin"
+        style={
+          Object {
+            "alignItems": "center",
+          }
+        }
+      >
+        <div
+          className="col-md-auto"
+          style={
+            Object {
+              "width": "25px",
+            }
+          }
+        >
+          <svg
+            className="tooltip-icon"
+            fill="currentColor"
+            height="1em"
+            onBlur={[Function]}
+            onFocus={[Function]}
+            onMouseOut={[Function]}
+            onMouseOver={[Function]}
+            stroke="currentColor"
+            strokeWidth="0"
+            style={
+              Object {
+                "color": undefined,
+              }
+            }
+            viewBox="0 0 512 512"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"
+            />
+          </svg>
+        </div>
+        <div
+          className="col-md-auto"
+        >
+          <div
+            onBlur={[Function]}
+            onFocus={[Function]}
+            onMouseOut={[Function]}
+            onMouseOver={[Function]}
+          >
+            <input
+              className="input-small form-control"
+              name="pin"
+              onBlur={[Function]}
+              onChange={[Function]}
+              type="number"
+              value=""
+            />
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </form>

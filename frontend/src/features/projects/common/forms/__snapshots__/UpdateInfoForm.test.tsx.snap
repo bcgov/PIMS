@@ -27,51 +27,71 @@ exports[`Update Info Form Matches Snapshot 1`] = `
     class="UpdateInfoForm container-fluid"
   >
     <div
-      class="form-row"
+      class="row"
+      style="align-items: center;"
     >
-      <label
-        class="form-label col-form-label col-md-2"
-      >
-        Assign Tier
-      </label>
       <div
-        class="required col-md-1 form-group"
+        class="col-md-2"
       >
-        <select
-          class="form-select form-control"
-          id="input-tierLevelId"
-          name="tierLevelId"
-          required=""
+        <label
+          class="form-label"
         >
-          <option
-            value=""
-          >
-            Must Select One
-          </option>
-          <option
-            class="option"
-            value="1"
-          >
-            Tier 1
-          </option>
-          <option
-            class="option"
-            value="2"
-          >
-            Tier 2
-          </option>
-        </select>
+          Assign Tier
+        </label>
       </div>
       <div
-        class="c0"
+        class="col-md-auto"
       >
-        <small>
-          Tier 1: Properties with a value less than $1M.
-        </small>
+        <div
+          class="required col-md-1 row"
+          controlid="input-tierLevelId"
+          style="align-items: center;"
+        >
+          <div
+            class="col-md-auto"
+          />
+          <div
+            class="col-md-auto"
+          >
+            <select
+              class="form-select form-control"
+              name="tierLevelId"
+              required=""
+            >
+              <option
+                value=""
+              >
+                Must Select One
+              </option>
+              <option
+                class="option"
+                value="1"
+              >
+                Tier 1
+              </option>
+              <option
+                class="option"
+                value="2"
+              >
+                Tier 2
+              </option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div
+        class="col-md-auto"
+      >
+        <div
+          class="c0"
+        >
+          <small>
+            Tier 1: Properties with a value less than $1M.
+          </small>
+        </div>
       </div>
     </div>
     <div
-      class="form-row"
       style="align-items: unset;"
     >
       <h3
@@ -80,9 +100,7 @@ exports[`Update Info Form Matches Snapshot 1`] = `
         Financial Information
       </h3>
     </div>
-    <div
-      class="form-row"
-    >
+    <div>
       <h6
         class="col-md-12"
         style="margin: 0px 0px 1rem 0px;"
@@ -95,13 +113,13 @@ exports[`Update Info Form Matches Snapshot 1`] = `
       </h6>
     </div>
     <div
-      class="form-row"
+      class="row"
     >
       <div
         class="col-md-4"
       >
         <div
-          class="form-row"
+          class="align-items-center row"
         >
           <label
             class="form-label col-form-label col-md-4"
@@ -109,24 +127,27 @@ exports[`Update Info Form Matches Snapshot 1`] = `
             Assessed Value
           </label>
           <div
-            class="required form-group"
-            md="6"
+            class="col-md-auto"
           >
             <div
-              class="input-tooltip-wrapper"
+              class="form-control input-number col-md-6"
             >
-              <input
-                class="form-control input-number"
-                name="assessed"
-                placeholder=""
-                required=""
-                value=""
-              />
+              <div
+                class="input-tooltip-wrapper"
+              >
+                <input
+                  class="form-control input-number"
+                  name="assessed"
+                  placeholder=""
+                  required=""
+                  value=""
+                />
+              </div>
             </div>
           </div>
         </div>
         <div
-          class="form-row"
+          class="align-items-center row"
         >
           <label
             class="form-label col-form-label col-md-4"
@@ -134,19 +155,22 @@ exports[`Update Info Form Matches Snapshot 1`] = `
             Net Book Value
           </label>
           <div
-            class="required form-group"
-            md="6"
+            class="col-md-auto"
           >
             <div
-              class="input-tooltip-wrapper"
+              class="form-control input-number col-md-6"
             >
-              <input
-                class="form-control input-number"
-                name="netBook"
-                placeholder=""
-                required=""
-                value=""
-              />
+              <div
+                class="input-tooltip-wrapper"
+              >
+                <input
+                  class="form-control input-number"
+                  name="netBook"
+                  placeholder=""
+                  required=""
+                  value=""
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -155,7 +179,7 @@ exports[`Update Info Form Matches Snapshot 1`] = `
         class="col-md-4"
       >
         <div
-          class="form-row"
+          class="align-items-center row"
         >
           <label
             class="form-label col-form-label col-md-4"
@@ -163,24 +187,27 @@ exports[`Update Info Form Matches Snapshot 1`] = `
             Estimated Market Value
           </label>
           <div
-            class="required form-group"
-            md="6"
+            class="col-md-auto"
           >
             <div
-              class="input-tooltip-wrapper"
+              class="form-control input-number col-md-6"
             >
-              <input
-                class="form-control input-number"
-                name="market"
-                placeholder=""
-                required=""
-                value=""
-              />
+              <div
+                class="input-tooltip-wrapper"
+              >
+                <input
+                  class="form-control input-number"
+                  name="market"
+                  placeholder=""
+                  required=""
+                  value=""
+                />
+              </div>
             </div>
           </div>
         </div>
         <div
-          class="form-row"
+          class="align-items-center row"
         >
           <label
             class="form-label col-form-label col-md-4"
@@ -188,18 +215,21 @@ exports[`Update Info Form Matches Snapshot 1`] = `
             Appraised Value
           </label>
           <div
-            class="form-group"
-            md="6"
+            class="col-md-auto"
           >
             <div
-              class="input-tooltip-wrapper"
+              class="form-control input-number col-md-6"
             >
-              <input
-                class="form-control input-number"
-                name="appraised"
-                placeholder=""
-                value=""
-              />
+              <div
+                class="input-tooltip-wrapper"
+              >
+                <input
+                  class="form-control input-number"
+                  name="appraised"
+                  placeholder=""
+                  value=""
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -208,7 +238,7 @@ exports[`Update Info Form Matches Snapshot 1`] = `
         class="col-md-4"
       >
         <div
-          class="form-row"
+          class="align-items-center row"
         >
           <label
             class="form-label col-form-label col-md-4"
@@ -216,23 +246,26 @@ exports[`Update Info Form Matches Snapshot 1`] = `
             Estimated Sales Costs
           </label>
           <div
-            class="form-group"
-            md="6"
+            class="col-md-auto"
           >
             <div
-              class="input-tooltip-wrapper"
+              class="form-control input-number col-md-6"
             >
-              <input
-                class="form-control input-number"
-                name="salesCost"
-                placeholder=""
-                value=""
-              />
+              <div
+                class="input-tooltip-wrapper"
+              >
+                <input
+                  class="form-control input-number"
+                  name="salesCost"
+                  placeholder=""
+                  value=""
+                />
+              </div>
             </div>
           </div>
         </div>
         <div
-          class="form-row"
+          class="align-items-center row"
         >
           <label
             class="form-label col-form-label col-md-4"
@@ -240,25 +273,28 @@ exports[`Update Info Form Matches Snapshot 1`] = `
             Estimated Program Recovery Fees
           </label>
           <div
-            class="form-group"
-            md="6"
+            class="col-md-auto"
           >
             <div
-              class="input-tooltip-wrapper"
+              class="form-control input-number col-md-6"
             >
-              <input
-                class="form-control input-number"
-                name="programCost"
-                placeholder=""
-                value=""
-              />
+              <div
+                class="input-tooltip-wrapper"
+              >
+                <input
+                  class="form-control input-number"
+                  name="programCost"
+                  placeholder=""
+                  value=""
+                />
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
     <div
-      class="form-row"
+      class="row"
     >
       <h6
         class="col-md-12"
@@ -324,9 +360,7 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                       type="checkbox"
                     />
                   </div>
-                  <span
-                    style="flex: 1 1 auto;"
-                  />
+                  <span />
                 </div>
               </div>
               <div
@@ -339,9 +373,7 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                   class="sortable-column"
                 >
                   
-                  <span
-                    style="flex: 1 1 auto;"
-                  />
+                  <span />
                 </div>
               </div>
               <div
@@ -354,9 +386,7 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                   class="sortable-column"
                 >
                   Agency
-                  <span
-                    style="flex: 1 1 auto;"
-                  />
+                  <span />
                 </div>
               </div>
               <div
@@ -369,9 +399,7 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                   class="sortable-column"
                 >
                   Name
-                  <span
-                    style="flex: 1 1 auto;"
-                  />
+                  <span />
                 </div>
               </div>
               <div
@@ -384,9 +412,7 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                   class="sortable-column"
                 >
                   Civic Address
-                  <span
-                    style="flex: 1 1 auto;"
-                  />
+                  <span />
                 </div>
               </div>
               <div
@@ -399,9 +425,7 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                   class="sortable-column"
                 >
                   Classification
-                  <span
-                    style="flex: 1 1 auto;"
-                  />
+                  <span />
                 </div>
               </div>
               <div
@@ -414,9 +438,7 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                   class="sortable-column"
                 >
                   Current Zoning Code
-                  <span
-                    style="flex: 1 1 auto;"
-                  />
+                  <span />
                 </div>
               </div>
               <div
@@ -429,9 +451,7 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                   class="sortable-column"
                 >
                   Other Projects
-                  <span
-                    style="flex: 1 1 auto;"
-                  />
+                  <span />
                 </div>
               </div>
               <div
@@ -444,9 +464,7 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                   class="sortable-column"
                 >
                   Net Book Value
-                  <span
-                    style="flex: 1 1 auto;"
-                  />
+                  <span />
                 </div>
               </div>
               <div
@@ -459,9 +477,7 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                   class="sortable-column"
                 >
                   Assessed Land
-                  <span
-                    style="flex: 1 1 auto;"
-                  />
+                  <span />
                 </div>
               </div>
               <div
@@ -474,9 +490,7 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                   class="sortable-column"
                 >
                   Assessment Year
-                  <span
-                    style="flex: 1 1 auto;"
-                  />
+                  <span />
                 </div>
               </div>
               <div
@@ -489,9 +503,7 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                   class="sortable-column"
                 >
                   Assessed Building
-                  <span
-                    style="flex: 1 1 auto;"
-                  />
+                  <span />
                 </div>
               </div>
               <div
@@ -504,9 +516,7 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                   class="sortable-column"
                 >
                   Type
-                  <span
-                    style="flex: 1 1 auto;"
-                  />
+                  <span />
                 </div>
               </div>
             </div>
@@ -594,19 +604,21 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                   title=""
                 >
                   <div
-                    class="form-group"
+                    class=""
                   >
-                    <select
-                      class="form-control"
-                      id="input-properties.0.classificationId-fast"
-                      name="properties.0.classificationId"
-                      type="number"
-                    >
-                      <option
-                        hidden=""
-                        value="0"
-                      />
-                    </select>
+                    <div>
+                      <select
+                        class="form-control"
+                        id="input-properties.0.classificationId-fast"
+                        name="properties.0.classificationId"
+                        type="number"
+                      >
+                        <option
+                          hidden=""
+                          value="0"
+                        />
+                      </select>
+                    </div>
                   </div>
                 </div>
                 <div
@@ -616,14 +628,16 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                   title=""
                 >
                   <div
-                    class="form-group"
+                    class=""
                   >
-                    <input
-                      class="form-control"
-                      id="input-properties.0.zoning"
-                      name="properties.0.zoning"
-                      value=""
-                    />
+                    <div>
+                      <input
+                        class="form-control"
+                        id="input-properties.0.zoning"
+                        name="properties.0.zoning"
+                        value=""
+                      />
+                    </div>
                   </div>
                 </div>
                 <div
@@ -642,9 +656,11 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                   style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
                   title=""
                 >
-                  <i>
-                    $1
-                  </i>
+                  <div>
+                    <i>
+                      $1
+                    </i>
+                  </div>
                 </div>
                 <div
                   class="td clickable"
@@ -652,9 +668,7 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                   style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
                   title="Click to view property details"
                 >
-                  <div
-                    class="form-group"
-                  />
+                  <div />
                 </div>
                 <div
                   class="td"
@@ -670,9 +684,7 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                   style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
                   title="Click to view property details"
                 >
-                  <div
-                    class="form-group"
-                  />
+                  <div />
                 </div>
                 <div
                   class="td clickable"

@@ -21,6 +21,7 @@ exports[`Map Legend View Legend renders correctly 1`] = `
         <img
           className=""
           height={25}
+          src="land-reg.png"
         />
       </div>
       <div
@@ -38,6 +39,7 @@ exports[`Map Legend View Legend renders correctly 1`] = `
         <img
           className=""
           height={25}
+          src="building-reg.png"
         />
       </div>
       <div
@@ -55,6 +57,7 @@ exports[`Map Legend View Legend renders correctly 1`] = `
         <img
           className=""
           height={25}
+          src="subdiv-reg.png"
         />
       </div>
       <div
@@ -72,6 +75,7 @@ exports[`Map Legend View Legend renders correctly 1`] = `
         <img
           className=""
           height={25}
+          src="marker-red.png"
         />
       </div>
       <div
@@ -89,6 +93,7 @@ exports[`Map Legend View Legend renders correctly 1`] = `
         <img
           className=""
           height={25}
+          src="marker-purple.png"
         />
       </div>
       <div

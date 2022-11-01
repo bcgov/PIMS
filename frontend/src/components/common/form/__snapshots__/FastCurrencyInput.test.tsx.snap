@@ -5,7 +5,7 @@ exports[`FastCurrencyInput fast currency input renders correctly 1`] = `
   action="#"
 >
   <div
-    class="form-group"
+    class="form-control input-number col"
   >
     <div
       class="input-tooltip-wrapper"

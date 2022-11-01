@@ -116,6 +116,7 @@ const EditAgencyPage = (props: IEditAgencyPageProps) => {
                       name: values.name,
                       code: values.code,
                       email: values.email,
+                      ccEmail: values.ccEmail,
                       isDisabled: values.isDisabled,
                       sendEmail: values.sendEmail,
                       addressTo: values.addressTo,
@@ -149,9 +150,17 @@ const EditAgencyPage = (props: IEditAgencyPageProps) => {
           >
             {props => (
               <Form className="agencyInfo">
-                <Input label="Agency" required field="name" value={props.values.name} type="text" />
+                <Input
+                  label="Agency"
+                  aria-label="Agency"
+                  required
+                  field="name"
+                  value={props.values.name}
+                  type="text"
+                />
                 <Input
                   label="Short Name (Code)"
+                  aria-label="Short Name (Code)"
                   field="code"
                   value={props.values.code}
                   type="text"
@@ -159,7 +168,7 @@ const EditAgencyPage = (props: IEditAgencyPageProps) => {
                 />
                 {checkAgencies}
                 <Input label="Description" field="description" type="text" />
-                <Input label="Email address" field="email" type="text" />
+                <Input label="Email address" aria-label="Email address" field="email" type="text" />
                 <Input label="Addressed To" field="addressTo" type="text" />
                 <Input label="CC Email address" field="ccEmail" type="text" />
 
@@ -174,7 +183,11 @@ const EditAgencyPage = (props: IEditAgencyPageProps) => {
                     toolTip="Click to enable to email notifications for Agency then click Save Changes."
                     toolTipId="email-tooltip"
                   >
-                    <Check field="sendEmail" label="Email Notifications?" />
+                    <Check
+                      field="sendEmail"
+                      label="Email Notifications?"
+                      aria-label="Email Notifications?"
+                    />
                   </TooltipWrapper>
                 </Form.Group>
 
