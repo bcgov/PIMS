@@ -22,7 +22,7 @@ import { ISteppedFormProps, ISteppedFormValues, IStepperTab } from './types';
 
 const TabbedForm = styled(Form)`
   .hideTabs {
-    a.nav-item {
+    li.nav-item {
       background-color: white;
       display: none;
     }
@@ -134,10 +134,10 @@ export const SteppedForm = function<T extends object = {}>({
               id="steppedform-tabs"
               className={!getTabs ? 'hideTabs' : ''}
               activeKey={values.activeTab}
-              onSelect={(tab: string) => {
+              onSelect={(tab: string | null) => {
                 if (tab !== '') {
-                  setFieldValue('activeTab', +tab);
-                  onChangeTab && setSteps(onChangeTab(+tab));
+                  setFieldValue('activeTab', +(tab ?? ''));
+                  onChangeTab && setSteps(onChangeTab(+(tab ?? '')));
                 }
               }}
               unmountOnExit

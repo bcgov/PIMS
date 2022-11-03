@@ -34,13 +34,13 @@ export const AssociatedLandListForm: React.FC<ITenancyProps> = ({ title, nameSpa
         </p>
       </Row>
       <Row>
-        <Form.Row>
+        <Form.Group>
           <FormikTable
             field={withNameSpace('parcels')}
             name="parcels"
             columns={getAssociatedLandCols()}
           />
-        </Form.Row>
+        </Form.Group>
       </Row>
     </Col>
   );

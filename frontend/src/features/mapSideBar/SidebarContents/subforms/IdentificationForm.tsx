@@ -45,6 +45,7 @@ interface IIdentificationProps {
 const StyledProjectNumbers = styled.div`
   flex-direction: column;
   display: flex;
+  background: red;
 `;
 
 export const IdentificationForm: React.FC<IIdentificationProps> = ({
@@ -74,7 +75,7 @@ export const IdentificationForm: React.FC<IIdentificationProps> = ({
   return (
     <Container>
       <Row>
-        <h4>Building Information</h4>
+        <h4 className="text-start">Building Information</h4>
       </Row>
       <Row>
         <Col>
@@ -89,80 +90,95 @@ export const IdentificationForm: React.FC<IIdentificationProps> = ({
         </Col>
         <Col>
           <Row>
-            <Label>Main Usage</Label>
-            <FastSelect
-              formikProps={formikProps}
-              placeholder="Must Select One"
-              field={withNameSpace('buildingPredominateUseId')}
-              type="number"
-              options={predominateUses}
-              disabled={disabled}
-              required
-              displayErrorTooltips
-            />
+            <Col md="auto">
+              <Label>Main Usage</Label>
+            </Col>
+            <Col md="auto">
+              <FastSelect
+                formikProps={formikProps}
+                placeholder="Must Select One"
+                field={withNameSpace('buildingPredominateUseId')}
+                type="number"
+                options={predominateUses}
+                disabled={disabled}
+                required
+                displayErrorTooltips
+              />
+            </Col>
           </Row>
           <Row>
-            <Label>Construction Type</Label>
-            <FastSelect
-              formikProps={formikProps}
-              placeholder="Must Select One"
-              field={withNameSpace('buildingConstructionTypeId')}
-              type="number"
-              options={constructionType}
-              disabled={disabled}
-              required
-              displayErrorTooltips
-            />
+            <Col md="auto">
+              <Label>Construction Type</Label>
+            </Col>
+            <Col md="auto">
+              <FastSelect
+                formikProps={formikProps}
+                placeholder="Must Select One"
+                field={withNameSpace('buildingConstructionTypeId')}
+                type="number"
+                options={constructionType}
+                disabled={disabled}
+                required
+                displayErrorTooltips
+              />
+            </Col>
           </Row>
           <Row>
-            <Label>Number of Floors</Label>
-            <FastInput
-              displayErrorTooltips
-              style={{ width: '100px' }}
-              className="input-small"
-              formikProps={formikProps}
-              field={withNameSpace('buildingFloorCount')}
-              type="number"
-              disabled={disabled}
-            />
+            <Col md="auto">
+              <Label>Number of Floors</Label>
+            </Col>
+            <Col md="auto" style={{ width: '275px' }}>
+              <FastInput
+                displayErrorTooltips
+                style={{ width: '100px' }}
+                className="input-small"
+                formikProps={formikProps}
+                field={withNameSpace('buildingFloorCount')}
+                type="number"
+                disabled={disabled}
+              />
+            </Col>
           </Row>
           {!!projectNumbers?.length && (
             <Row>
-              <Label>Project Number(s)</Label>
-              <StyledProjectNumbers>
-                {projectNumbers.map((projectNum: string) => (
-                  <ProjectNumberLink
-                    projectNumber={projectNum}
-                    key={projectNum}
-                    agencyId={agencyId}
-                    setPrivateProject={setPrivateProject}
-                    privateProject={privateProject}
-                  />
-                ))}
-              </StyledProjectNumbers>
+              <Col md="auto">
+                <Label>Project Number(s)</Label>
+              </Col>
+              <Col>
+                <StyledProjectNumbers>
+                  {projectNumbers.map((projectNum: string) => (
+                    <ProjectNumberLink
+                      projectNumber={projectNum}
+                      key={projectNum}
+                      agencyId={agencyId}
+                      setPrivateProject={setPrivateProject}
+                      privateProject={privateProject}
+                    />
+                  ))}
+                </StyledProjectNumbers>
+              </Col>
             </Row>
           )}
-          <Row>
-            <Label></Label>
-            <div className="input-medium harmful">
-              <p>
-                Would this information be harmful if released?&nbsp;
-                <TooltipWrapper toolTipId="sensitive-harmful" toolTip={sensitiveTooltip}>
-                  <a target="_blank" rel="noopener noreferrer" href={HARMFUL_DISCLOSURE_URL}>
-                    Policy
-                  </a>
-                </TooltipWrapper>
-              </p>
-              <Check
-                type="radio"
-                field={withNameSpace('isSensitive')}
-                radioLabelOne="Yes"
-                radioLabelTwo="No"
-                disabled={disabled}
-              />
-            </div>
-          </Row>
         </Col>
+        <Row style={{ justifyContent: 'center' }}>
+          <div className="input-medium harmful">
+            <p style={{ marginBottom: '-5px' }}>
+              Would this information be harmful if released?&nbsp;
+            </p>
+            <TooltipWrapper toolTipId="sensitive-harmful" toolTip={sensitiveTooltip}>
+              <a target="_blank" rel="noopener noreferrer" href={HARMFUL_DISCLOSURE_URL}>
+                Policy
+              </a>
+            </TooltipWrapper>
+            <Check
+              type="radio"
+              field={withNameSpace('isSensitive')}
+              radioLabelOne="Yes"
+              radioLabelTwo="No"
+              disabled={disabled}
+            />
+          </div>
+        </Row>
       </Row>
       <hr></hr>
       <ClassificationForm
@@ -174,7 +190,7 @@ export const IdentificationForm: React.FC<IIdentificationProps> = ({
         disabled={disabled}
       />
       <hr></hr>
-      <Row>
+      <Row style={{ textAlign: 'left' }}>
         <h4>Location</h4>
       </Row>
       <Row style={{ marginBottom: 10 }}>
@@ -183,6 +199,7 @@ export const IdentificationForm: React.FC<IIdentificationProps> = ({
             {...formikProps}
             nameSpace={withNameSpace('address')}
             disabled={disabled}
+            buildingInformationStyles
             onGeocoderChange={(selection: IGeocoderResponse) => {
               const administrativeArea = selection.administrativeArea
                 ? lookupCodes.find(code => {

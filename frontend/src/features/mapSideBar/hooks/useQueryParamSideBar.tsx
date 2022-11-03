@@ -1,4 +1,4 @@
-import dequal from 'dequal';
+import { dequal } from 'dequal';
 import * as H from 'history';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
 import queryString from 'query-string';
@@ -88,9 +88,9 @@ export const useQueryParamSideBar = (formikRef?: any): IMapSideBar => {
       searchParams.sidebar === 'false' &&
       (searchParams.parcelId || searchParams.buildingId || searchParams.associatedParcelId)
     ) {
-      searchParams.parcelId = undefined;
-      searchParams.buildingId = undefined;
-      searchParams.associatedParcelId = undefined;
+      searchParams.parcelId = null;
+      searchParams.buildingId = null;
+      searchParams.associatedParcelId = null;
       history.replace({
         pathname: '/mapview',
         search: queryString.stringify(searchParams),

@@ -19,6 +19,7 @@ export type ButtonProps = ButtonPropsBase & {
   showSubmitting?: boolean;
   /** if true and showSubmitting is true, display the spinner */
   isSubmitting?: boolean;
+  ref?: any;
 };
 
 export const Button: React.FC<ButtonProps & React.HTMLAttributes<HTMLButtonElement>> = ({

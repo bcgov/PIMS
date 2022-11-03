@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Building Form component renders correctly 1`] = `
-.c1 .hideTabs a.nav-item {
+.c1 .hideTabs li.nav-item {
   background-color: white;
   display: none;
 }
@@ -227,79 +227,85 @@ exports[`Building Form component renders correctly 1`] = `
     action="#"
     class="c1"
   >
-    <nav
+    <ul
       class="hideTabs nav nav-tabs"
       role="tablist"
     >
-      <a
-        aria-controls="steppedform-tabs-tabpane-0"
-        aria-selected="true"
-        class="nav-item nav-link active"
-        data-rb-event-key="0"
-        href="#"
-        id="steppedform-tabs-tab-0"
-        role="tab"
-      >
-        <p>
-          Tab 1
-        </p>
-        <svg
-          data-testid="delete-parcel-1"
-          fill="currentColor"
-          height="15"
-          size="15"
-          stroke="currentColor"
-          stroke-width="0"
-          viewBox="0 0 512 512"
-          width="15"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M464 32H48C21.5 32 0 53.5 0 80v352c0 26.5 21.5 48 48 48h416c26.5 0 48-21.5 48-48V80c0-26.5-21.5-48-48-48zm-83.6 290.5c4.8 4.8 4.8 12.6 0 17.4l-40.5 40.5c-4.8 4.8-12.6 4.8-17.4 0L256 313.3l-66.5 67.1c-4.8 4.8-12.6 4.8-17.4 0l-40.5-40.5c-4.8-4.8-4.8-12.6 0-17.4l67.1-66.5-67.1-66.5c-4.8-4.8-4.8-12.6 0-17.4l40.5-40.5c4.8-4.8 12.6-4.8 17.4 0l66.5 67.1 66.5-67.1c4.8-4.8 12.6-4.8 17.4 0l40.5 40.5c4.8 4.8 4.8 12.6 0 17.4L313.3 256l67.1 66.5z"
-          />
-        </svg>
-      </a>
-      <a
-        aria-controls="steppedform-tabs-tabpane-"
-        aria-selected="false"
-        class="nav-item nav-link"
-        data-rb-event-key=""
-        href="#"
-        id="steppedform-tabs-tab-"
-        role="tab"
-        tabindex="-1"
+      <li
+        class="nav-item"
+        role="presentation"
       >
         <button
-          class="Button Button--icon-only primary btn btn-primary"
-          data-testid="add-tab"
+          aria-controls="steppedform-tabs-tabpane-0"
+          aria-selected="true"
+          class="nav-link active"
+          data-rr-ui-event-key="0"
+          id="steppedform-tabs-tab-0"
+          role="tab"
           type="button"
         >
-          <div
-            class="Button__icon"
-          >
+          <p>
+            Tab 1
+          </p>
+          <div>
             <svg
+              data-testid="delete-parcel-1"
               fill="currentColor"
-              height="20"
-              size="20"
+              height="15"
+              size="15"
               stroke="currentColor"
               stroke-width="0"
-              viewBox="0 0 448 512"
-              width="20"
+              viewBox="0 0 512 512"
+              width="15"
               xmlns="http://www.w3.org/2000/svg"
             >
               <path
-                d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"
+                d="M464 32H48C21.5 32 0 53.5 0 80v352c0 26.5 21.5 48 48 48h416c26.5 0 48-21.5 48-48V80c0-26.5-21.5-48-48-48zm-83.6 290.5c4.8 4.8 4.8 12.6 0 17.4l-40.5 40.5c-4.8 4.8-12.6 4.8-17.4 0L256 313.3l-66.5 67.1c-4.8 4.8-12.6 4.8-17.4 0l-40.5-40.5c-4.8-4.8-4.8-12.6 0-17.4l67.1-66.5-67.1-66.5c-4.8-4.8-4.8-12.6 0-17.4l40.5-40.5c4.8-4.8 12.6-4.8 17.4 0l66.5 67.1 66.5-67.1c4.8-4.8 12.6-4.8 17.4 0l40.5 40.5c4.8 4.8 4.8 12.6 0 17.4L313.3 256l67.1 66.5z"
               />
             </svg>
           </div>
         </button>
-      </a>
-    </nav>
+      </li>
+      <li
+        class="nav-item"
+        role="presentation"
+      >
+        <button
+          aria-selected="false"
+          class="nav-link"
+          data-rr-ui-event-key=""
+          id="steppedform-tabs-tab-"
+          role="tab"
+          tabindex="-1"
+          type="button"
+        >
+          <div>
+            <div
+              class="primary"
+            >
+              <svg
+                fill="currentColor"
+                height="20"
+                size="20"
+                stroke="currentColor"
+                stroke-width="0"
+                viewBox="0 0 448 512"
+                width="20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"
+                />
+              </svg>
+            </div>
+          </div>
+        </button>
+      </li>
+    </ul>
     <div
       class="tab-content"
     >
       <div
-        aria-hidden="false"
         aria-labelledby="steppedform-tabs-tab-0"
         class="fade tab-pane active show"
         id="steppedform-tabs-tabpane-0"
@@ -420,7 +426,9 @@ exports[`Building Form component renders correctly 1`] = `
                 <div
                   class="row"
                 >
-                  <h4>
+                  <h4
+                    class="text-start"
+                  >
                     Building Information
                   </h4>
                 </div>
@@ -431,98 +439,123 @@ exports[`Building Form component renders correctly 1`] = `
                     class="col"
                   >
                     <div
-                      class="form-row"
+                      class="row"
                     >
-                      <label
-                        class="form-label"
-                      >
-                        Name
-                      </label>
                       <div
-                        class="form-group"
+                        class="col-md-auto"
                       >
-                        <input
-                          class="form-control"
-                          id="input-building.name"
-                          name="building.name"
-                          value=""
-                        />
+                        <label
+                          class="form-label"
+                        >
+                          Name
+                        </label>
                       </div>
-                    </div>
-                    <div
-                      class="form-row"
-                    >
-                      <label
-                        class="form-label"
-                      >
-                        Description
-                      </label>
                       <div
-                        class="form-group"
-                      >
-                        <textarea
-                          class="form-control"
-                          id="input-building.description"
-                          name="building.description"
-                        />
-                      </div>
-                    </div>
-                    <div
-                      class="form-row"
-                    >
-                      <label
-                        class="form-label"
-                      >
-                        Agency
-                      </label>
-                      <div
-                        class="form-group"
+                        class="col-md-auto"
                       >
                         <div
-                          class="rbt clearfix open"
-                          style="position: relative;"
-                          tabindex="-1"
+                          class="row"
+                          controlid="input-building.name"
+                          style="align-items: center;"
                         >
                           <div
-                            class="rbt-input-hint-container"
-                            style="position: relative;"
+                            class="col-md-auto"
                           >
-                            <input
-                              aria-autocomplete="both"
-                              aria-expanded="false"
-                              aria-haspopup="listbox"
-                              autocomplete="nope"
-                              class="rbt-input-main form-control rbt-input  input-lg form-control-lg"
-                              id="building.agencyId-field"
-                              name="building.agencyId"
-                              placeholder=""
-                              role="combobox"
-                              type="text"
-                              value=""
-                            />
-                            <div
-                              class="rbt-input-hint"
-                              style="left: 0px; pointer-events: none; position: absolute; top: 0px; display: inline-block;"
-                            >
+                            <div>
                               <input
-                                aria-hidden="true"
-                                readonly=""
-                                style="background-color: transparent; border-color: transparent; box-shadow: none; color: rgba(0, 0, 0, 0.35); box-sizing: content-box; width: 3px; border-style: inset inset inset inset; border-width: 2px 2px 2px 2px; line-height: normal; padding: 1px 1px 1px 1px;"
-                                tabindex="-1"
+                                class="form-control"
+                                name="building.name"
                                 value=""
-                              />
-                              <div
-                                style="height: 0px; left: 0px; overflow: scroll; position: absolute; top: 0px; visibility: hidden; white-space: pre; font-family: -webkit-small-control; letter-spacing: normal; text-transform: none;"
                               />
                             </div>
                           </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="row"
+                    >
+                      <div
+                        class="col-md-auto"
+                      >
+                        <label
+                          class="form-label"
+                        >
+                          Description
+                        </label>
+                      </div>
+                      <div
+                        class="col-md-auto"
+                      >
+                        <div
+                          class="row"
+                          controlid="input-building.description"
+                          style="align-items: center;"
+                        >
                           <div
-                            aria-atomic="true"
-                            aria-live="polite"
-                            class="sr-only rbt-sr-status"
-                            role="status"
+                            class="col-md-auto"
                           >
-                            0 selections
+                            <div>
+                              <textarea
+                                class="form-control"
+                                name="building.description"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="row"
+                    >
+                      <div
+                        class="col-md-auto"
+                        style="margin-right: 15px;"
+                      >
+                        <label
+                          class="form-label"
+                        >
+                          Agency
+                        </label>
+                      </div>
+                      <div
+                        class="col-md-auto"
+                        style="margin-right: 10px;"
+                      >
+                        <div
+                          class=""
+                        >
+                          <div>
+                            <div
+                              class="rbt"
+                              style="outline: none; position: relative;"
+                              tabindex="-1"
+                            >
+                              <div
+                                style="display: flex; flex: 1; height: 100%; position: relative;"
+                              >
+                                <input
+                                  aria-autocomplete="both"
+                                  aria-expanded="false"
+                                  aria-haspopup="listbox"
+                                  autocomplete="off"
+                                  class="rbt-input-main form-control rbt-input"
+                                  id="building.agencyId-field"
+                                  name="building.agencyId"
+                                  role="combobox"
+                                  type="text"
+                                  value=""
+                                />
+                                <input
+                                  aria-hidden="true"
+                                  class="rbt-input-hint"
+                                  readonly=""
+                                  style="background-color: transparent; border-color: transparent; box-shadow: none; color: rgba(0, 0, 0, 0.54); left: 0px; pointer-events: none; position: absolute; top: 0px; width: 100%; border-style: inset inset inset inset; border-width: 2px 2px 2px 2px; line-height: normal; padding: 1px 1px 1px 1px;"
+                                  tabindex="-1"
+                                  value=""
+                                />
+                              </div>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -534,137 +567,170 @@ exports[`Building Form component renders correctly 1`] = `
                     <div
                       class="row"
                     >
-                      <label
-                        class="label"
-                      >
-                        Main Usage
-                      </label>
                       <div
-                        class="required form-group"
+                        class="col-md-auto"
                       >
-                        <select
-                          class="form-control"
-                          id="input-building.buildingPredominateUseId-fast"
-                          name="building.buildingPredominateUseId"
-                          required=""
-                          type="number"
+                        <label
+                          class="label"
                         >
-                          <option
-                            value=""
-                          >
-                            Must Select One
-                          </option>
-                        </select>
+                          Main Usage
+                        </label>
                       </div>
-                    </div>
-                    <div
-                      class="row"
-                    >
-                      <label
-                        class="label"
-                      >
-                        Construction Type
-                      </label>
                       <div
-                        class="required form-group"
+                        class="col-md-auto"
                       >
-                        <select
-                          class="form-control"
-                          id="input-building.buildingConstructionTypeId-fast"
-                          name="building.buildingConstructionTypeId"
-                          required=""
-                          type="number"
-                        >
-                          <option
-                            value=""
-                          >
-                            Must Select One
-                          </option>
-                        </select>
-                      </div>
-                    </div>
-                    <div
-                      class="row"
-                    >
-                      <label
-                        class="label"
-                      >
-                        Number of Floors
-                      </label>
-                      <div
-                        class="form-group"
-                      >
-                        <input
-                          class="input-small form-control"
-                          id="input-building.buildingFloorCount"
-                          name="building.buildingFloorCount"
-                          style="width: 100px;"
-                          type="number"
-                          value=""
-                        />
-                      </div>
-                    </div>
-                    <div
-                      class="row"
-                    >
-                      <label
-                        class="label"
-                      />
-                      <div
-                        class="input-medium harmful"
-                      >
-                        <p>
-                          Would this information be harmful if released? 
-                          <a
-                            href="https://www2.gov.bc.ca/gov/content/governments/services-for-government/policies-procedures/foippa-manual/disclosure-harmful-individual-public-safety"
-                            rel="noopener noreferrer"
-                            target="_blank"
-                          >
-                            Policy
-                          </a>
-                        </p>
                         <div
-                          class="form-group"
+                          class="required"
+                        >
+                          <div>
+                            <select
+                              class="form-control"
+                              id="input-building.buildingPredominateUseId-fast"
+                              name="building.buildingPredominateUseId"
+                              required=""
+                              type="number"
+                            >
+                              <option
+                                value=""
+                              >
+                                Must Select One
+                              </option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="row"
+                    >
+                      <div
+                        class="col-md-auto"
+                      >
+                        <label
+                          class="label"
+                        >
+                          Construction Type
+                        </label>
+                      </div>
+                      <div
+                        class="col-md-auto"
+                      >
+                        <div
+                          class="required"
+                        >
+                          <div>
+                            <select
+                              class="form-control"
+                              id="input-building.buildingConstructionTypeId-fast"
+                              name="building.buildingConstructionTypeId"
+                              required=""
+                              type="number"
+                            >
+                              <option
+                                value=""
+                              >
+                                Must Select One
+                              </option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="row"
+                    >
+                      <div
+                        class="col-md-auto"
+                      >
+                        <label
+                          class="label"
+                        >
+                          Number of Floors
+                        </label>
+                      </div>
+                      <div
+                        class="col-md-auto"
+                        style="width: 275px;"
+                      >
+                        <div
+                          class=""
+                        >
+                          <div>
+                            <input
+                              class="input-small form-control"
+                              id="input-building.buildingFloorCount"
+                              name="building.buildingFloorCount"
+                              style="width: 100px;"
+                              type="number"
+                              value=""
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="row"
+                    style="justify-content: center;"
+                  >
+                    <div
+                      class="input-medium harmful"
+                    >
+                      <p
+                        style="margin-bottom: -5px;"
+                      >
+                        Would this information be harmful if released? 
+                      </p>
+                      <div>
+                        <a
+                          href="https://www2.gov.bc.ca/gov/content/governments/services-for-government/policies-procedures/foippa-manual/disclosure-harmful-individual-public-safety"
+                          rel="noopener noreferrer"
+                          target="_blank"
+                        >
+                          Policy
+                        </a>
+                      </div>
+                      <div
+                        class=""
+                      >
+                        <div
+                          class="check-field"
                         >
                           <div
-                            class="check-field"
+                            class="form-check"
                           >
-                            <div
-                              class="form-check"
+                            <input
+                              class="form-check-input"
+                              id="input-building.isSensitive"
+                              name="building.isSensitive"
+                              type="radio"
+                              value="false"
+                            />
+                            <label
+                              class="form-check-label"
+                              for="input-building.isSensitive"
+                              title=""
                             >
-                              <input
-                                class="form-check-input"
-                                id="input-building.isSensitive"
-                                name="building.isSensitive"
-                                type="radio"
-                                value="false"
-                              />
-                              <label
-                                class="form-check-label"
-                                for="input-building.isSensitive"
-                                title=""
-                              >
-                                Yes
-                              </label>
-                            </div>
-                            <div
-                              class="form-check"
+                              Yes
+                            </label>
+                          </div>
+                          <div
+                            class="form-check"
+                          >
+                            <input
+                              class="form-check-input"
+                              id="input-building.isSensitive-2"
+                              name="building.isSensitive"
+                              type="radio"
+                              value="false"
+                            />
+                            <label
+                              class="form-check-label"
+                              for="input-building.isSensitive-2"
+                              title=""
                             >
-                              <input
-                                class="form-check-input"
-                                id="input-building.isSensitive-2"
-                                name="building.isSensitive"
-                                type="radio"
-                                value="false"
-                              />
-                              <label
-                                class="form-check-label"
-                                for="input-building.isSensitive-2"
-                                title=""
-                              >
-                                No
-                              </label>
-                            </div>
+                              No
+                            </label>
                           </div>
                         </div>
                       </div>
@@ -674,6 +740,7 @@ exports[`Building Form component renders correctly 1`] = `
                 <hr />
                 <div
                   class="row"
+                  style="text-align: left;"
                 >
                   <h4
                     class="c4"
@@ -689,31 +756,40 @@ exports[`Building Form component renders correctly 1`] = `
                   >
                     <div
                       class="row"
-                      style="display: flex;"
                     >
-                      <label
-                        class="label"
-                        style="margin-bottom: 0px; text-align: right;"
-                      >
-                        Building Classification
-                      </label>
                       <div
-                        class="required form-group"
+                        class="col-md-4"
+                        style="text-align: right;"
                       >
-                        <select
-                          class="form-control"
-                          id="input-building.classificationId-fast"
-                          name="building.classificationId"
-                          required=""
-                          style="margin-top: 5px; display: flex;"
-                          type="number"
+                        <label
+                          class="label"
                         >
-                          <option
-                            value=""
-                          >
-                            Must Select One
-                          </option>
-                        </select>
+                          Building Classification
+                        </label>
+                      </div>
+                      <div
+                        class="col-md-auto"
+                      >
+                        <div
+                          class="required"
+                        >
+                          <div>
+                            <select
+                              class="form-select form-control"
+                              id="input-building.classificationId-fast"
+                              name="building.classificationId"
+                              required=""
+                              style="margin-top: 5px; display: flex;"
+                              type="number"
+                            >
+                              <option
+                                value=""
+                              >
+                                Must Select One
+                              </option>
+                            </select>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -734,6 +810,7 @@ exports[`Building Form component renders correctly 1`] = `
                 <hr />
                 <div
                   class="row"
+                  style="text-align: left;"
                 >
                   <h4>
                     Location
@@ -747,135 +824,174 @@ exports[`Building Form component renders correctly 1`] = `
                     class="col"
                   >
                     <div
-                      class="form-row"
+                      class="row"
+                      style="margin-bottom: 10px; align-items: center;"
                     >
-                      <label
-                        class="label"
-                      >
-                        Street Address
-                      </label>
                       <div
-                        class="c6 GeocoderAutoComplete"
+                        class="col-md-auto"
+                        style="width: 140px; text-align: right; margin-right: 0px;"
                       >
-                        <div>
-                          <div
-                            class="required form-group"
-                          >
-                            <input
-                              class="form-control"
-                              field="building.address.line1"
-                              id="input-building.address.line1"
-                              name="building.address.line1"
-                              required=""
-                              value=""
-                            />
-                          </div>
-                        </div>
+                        <label
+                          class="label"
+                        >
+                          Street Address
+                        </label>
                       </div>
-                    </div>
-                    <div
-                      class="form-row"
-                    >
-                      <label
-                        class="label"
-                      >
-                        Location
-                      </label>
                       <div
-                        class="required form-group"
+                        class="col-md-auto"
                       >
                         <div
-                          class="rbt clearfix open"
-                          style="position: relative;"
-                          tabindex="-1"
+                          class="c6 GeocoderAutoComplete"
                         >
-                          <div
-                            class="rbt-input-hint-container"
-                            style="position: relative;"
-                          >
-                            <input
-                              aria-autocomplete="both"
-                              aria-expanded="false"
-                              aria-haspopup="listbox"
-                              autocomplete="nope"
-                              class="rbt-input-main form-control rbt-input "
-                              id="building.address.administrativeArea-field"
-                              name="building.address.administrativeArea"
-                              placeholder=""
-                              role="combobox"
-                              type="text"
-                              value=""
-                            />
+                          <div>
                             <div
-                              class="rbt-input-hint"
-                              style="left: 0px; pointer-events: none; position: absolute; top: 0px; display: inline-block;"
+                              class="required"
                             >
-                              <input
-                                aria-hidden="true"
-                                readonly=""
-                                style="background-color: transparent; border-color: transparent; box-shadow: none; color: rgba(0, 0, 0, 0.35); box-sizing: content-box; width: 3px; border-style: inset inset inset inset; border-width: 2px 2px 2px 2px; line-height: normal; padding: 1px 1px 1px 1px;"
-                                tabindex="-1"
-                                value=""
-                              />
-                              <div
-                                style="height: 0px; left: 0px; overflow: scroll; position: absolute; top: 0px; visibility: hidden; white-space: pre; font-family: -webkit-small-control; letter-spacing: normal; text-transform: none;"
-                              />
+                              <div>
+                                <input
+                                  class="form-control"
+                                  field="building.address.line1"
+                                  id="input-building.address.line1"
+                                  name="building.address.line1"
+                                  required=""
+                                  value=""
+                                />
+                              </div>
                             </div>
-                          </div>
-                          <div
-                            aria-atomic="true"
-                            aria-live="polite"
-                            class="sr-only rbt-sr-status"
-                            role="status"
-                          >
-                            0 selections
                           </div>
                         </div>
                       </div>
                     </div>
                     <div
-                      class="form-row"
+                      class="row"
+                      style="margin-bottom: 10px; align-items: center;"
                     >
-                      <label
-                        class="label"
-                      >
-                        Province
-                      </label>
                       <div
-                        class="form-group"
+                        class="col-md-auto"
+                        style="width: 140px; text-align: right; margin-right: 0px;"
                       >
-                        <select
-                          class="form-select form-control"
-                          disabled=""
-                          id="input-building.address.provinceId"
-                          name="building.address.provinceId"
+                        <label
+                          class="label"
                         >
-                          <option
-                            value=""
-                          >
-                            Must Select One
-                          </option>
-                        </select>
+                          Location
+                        </label>
+                      </div>
+                      <div
+                        class="col-md-auto"
+                      >
+                        <div
+                          class="required"
+                        >
+                          <div>
+                            <div
+                              class="rbt"
+                              style="outline: none; position: relative;"
+                              tabindex="-1"
+                            >
+                              <div
+                                style="display: flex; flex: 1; height: 100%; position: relative;"
+                              >
+                                <input
+                                  aria-autocomplete="both"
+                                  aria-expanded="false"
+                                  aria-haspopup="listbox"
+                                  autocomplete="off"
+                                  class="rbt-input-main form-control rbt-input"
+                                  id="building.address.administrativeArea-field"
+                                  name="building.address.administrativeArea"
+                                  role="combobox"
+                                  type="text"
+                                  value=""
+                                />
+                                <input
+                                  aria-hidden="true"
+                                  class="rbt-input-hint"
+                                  readonly=""
+                                  style="background-color: transparent; border-color: transparent; box-shadow: none; color: rgba(0, 0, 0, 0.54); left: 0px; pointer-events: none; position: absolute; top: 0px; width: 100%; border-style: inset inset inset inset; border-width: 2px 2px 2px 2px; line-height: normal; padding: 1px 1px 1px 1px;"
+                                  tabindex="-1"
+                                  value=""
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                     <div
-                      class="postal form-row"
+                      class="row"
+                      style="margin-bottom: 10px; align-items: center;"
                     >
-                      <label
-                        class="label"
-                      >
-                        Postal Code
-                      </label>
                       <div
-                        class="form-group"
+                        class="col-md-auto"
+                        style="width: 140px; text-align: right; padding-right: 12px; margin-right: -35px;"
                       >
-                        <input
-                          class="input-small form-control"
-                          id="input-building.address.postal"
-                          name="building.address.postal"
-                          style="width: 120px;"
-                          value=""
-                        />
+                        <label
+                          class="label"
+                        >
+                          Province
+                        </label>
+                      </div>
+                      <div
+                        class="col-md-auto"
+                        style="padding-right: 0px;"
+                      >
+                        <div
+                          class="row"
+                          controlid="input-building.address.provinceId"
+                          style="align-items: center;"
+                        >
+                          <div
+                            class="col-md-auto"
+                          />
+                          <div
+                            class="col-md-auto"
+                          >
+                            <select
+                              class="form-select form-control"
+                              disabled=""
+                              name="building.address.provinceId"
+                            >
+                              <option
+                                value=""
+                              >
+                                Must Select One
+                              </option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="postal row"
+                      style="margin-bottom: 10px; align-items: center;"
+                    >
+                      <div
+                        class="col-md-auto"
+                        style="width: 140px; text-align: right; margin-left: 0px;"
+                      >
+                        <label
+                          class="label"
+                        >
+                          Postal Code
+                        </label>
+                      </div>
+                      <div
+                        class="col-md-auto"
+                        style="width: 275px;"
+                      >
+                        <div
+                          class=""
+                        >
+                          <div>
+                            <input
+                              class="input-small form-control"
+                              id="input-building.address.postal"
+                              name="building.address.postal"
+                              style="width: 120px;"
+                              value=""
+                            />
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -916,43 +1032,63 @@ exports[`Building Form component renders correctly 1`] = `
                         </div>
                       </div>
                       <div
-                        class="form-row"
+                        class="row"
                       >
-                        <label
-                          class="label"
-                        >
-                          Latitude
-                        </label>
                         <div
-                          class="required form-group"
+                          class="col-md-auto"
                         >
-                          <input
-                            class="input-medium form-control"
-                            id="input-building.latitude"
-                            name="building.latitude"
-                            type="number"
-                            value=""
-                          />
+                          <label
+                            class="label"
+                          >
+                            Latitude
+                          </label>
+                        </div>
+                        <div
+                          class="col-md-auto"
+                        >
+                          <div
+                            class="required"
+                          >
+                            <div>
+                              <input
+                                class="input-medium form-control"
+                                id="input-building.latitude"
+                                name="building.latitude"
+                                type="number"
+                                value=""
+                              />
+                            </div>
+                          </div>
                         </div>
                       </div>
                       <div
-                        class="form-row"
+                        class="row"
                       >
-                        <label
-                          class="label"
-                        >
-                          Longitude
-                        </label>
                         <div
-                          class="required form-group"
+                          class="col-md-auto"
                         >
-                          <input
-                            class="input-medium form-control"
-                            id="input-building.longitude"
-                            name="building.longitude"
-                            type="number"
-                            value=""
-                          />
+                          <label
+                            class="label"
+                          >
+                            Longitude
+                          </label>
+                        </div>
+                        <div
+                          class="col-md-auto"
+                        >
+                          <div
+                            class="required"
+                          >
+                            <div>
+                              <input
+                                class="input-medium form-control"
+                                id="input-building.longitude"
+                                name="building.longitude"
+                                type="number"
+                                value=""
+                              />
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>

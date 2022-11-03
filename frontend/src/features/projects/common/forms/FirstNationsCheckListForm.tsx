@@ -24,13 +24,17 @@ const FirstNationsCheckListForm: React.FunctionComponent<IFirstNationsCheckListF
   return (
     <Row className={classNames(props.className)}>
       <Col>
-        <h3>
-          First Nations Consultation
-          <TooltipIcon
-            toolTipId="review-firstNations"
-            toolTip={reviewFirstNationsTooltip}
-          ></TooltipIcon>
-        </h3>
+        <Row style={{ alignItems: 'center' }}>
+          <Col md="auto">
+            <h3>First Nations Consultation</h3>
+          </Col>
+          <Col md="auto">
+            <TooltipIcon
+              toolTipId="review-firstNations"
+              toolTip={reviewFirstNationsTooltip}
+            ></TooltipIcon>
+          </Col>
+        </Row>
 
         <TasksForm tasks={tasks} isReadOnly={props.isReadOnly} />
       </Col>

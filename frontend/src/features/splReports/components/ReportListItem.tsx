@@ -42,15 +42,15 @@ const Report = styled(Col)`
   }
 `;
 
-const CheckBox = styled(Form.Control)`
+const CheckBox = styled(Form.Check)`
   height: auto;
-  width: auto;
 `;
 
 const FlexCol = styled(Col)`
   display: flex;
   align-items: center;
-  padding: 0px;
+  margin-left: -55px;
+  padding: 0;
 `;
 
 const getName = (report: IReport) =>

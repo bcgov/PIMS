@@ -3,8 +3,8 @@ import 'leaflet/dist/leaflet.css';
 
 import { useKeycloak } from '@react-keycloak/web';
 import { waitFor } from '@testing-library/dom';
+import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import Enzyme, { mount } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
 import { createMemoryHistory } from 'history';
 import { Map as LeafletMap } from 'leaflet';
 import * as React from 'react';

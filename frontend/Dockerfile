@@ -1,27 +1,11 @@
-FROM node:14.19.3-slim as node
-
-# install build toolchain
-RUN apt-get update \
-    && apt-get install --no-install-recommends -y dumb-init \
-    && rm -rf /var/lib/apt/lists/*
-
-# set entrypoint to `dumb-init` as it handles being pid 1 and forwarding signals
-# so that you dont need to bake that logic into your node app
-ENTRYPOINT ["dumb-init", "--"]
+FROM node:16.10-bullseye as node
 
 WORKDIR /usr/app
-
-# install a specific NPM version
-RUN npm install -g npm@8.5.5
-
 COPY package*.json ./
 
-RUN npm set progress=false \
-    && npm ci
-
+RUN npm install
 COPY . .
 
-# webpack-dev-server (3000)
 EXPOSE 3000
 
 CMD ["npm", "start"]

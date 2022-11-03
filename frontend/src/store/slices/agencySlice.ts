@@ -19,7 +19,6 @@ const initialAgency: IAgencyDetail = {
   name: '',
   description: '',
   email: '',
-  ccEmail: '',
   addressTo: '',
   isDisabled: false,
   sendEmail: false,

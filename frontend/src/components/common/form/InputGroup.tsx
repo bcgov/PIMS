@@ -86,13 +86,11 @@ export const InputGroup: React.FC<InputGroupProps> = ({
       {!!label && required && <Label required>{label}</Label>}
 
       {preText && (
-        <BootstrapInputGroup.Prepend>
+        <BootstrapInputGroup>
           <BootstrapInputGroup.Text>{preText}</BootstrapInputGroup.Text>
-        </BootstrapInputGroup.Prepend>
+        </BootstrapInputGroup>
       )}
-      {PrependComponent && (
-        <BootstrapInputGroup.Prepend>{PrependComponent}</BootstrapInputGroup.Prepend>
-      )}
+      {PrependComponent && <BootstrapInputGroup>{PrependComponent}</BootstrapInputGroup>}
       <div className="input-group-content">
         {React.isValidElement(fast) ? (
           fast
@@ -120,11 +118,11 @@ export const InputGroup: React.FC<InputGroupProps> = ({
         )}
       </div>
       {postText && (
-        <BootstrapInputGroup.Append>
+        <BootstrapInputGroup>
           <BootstrapInputGroup.Text className={disabled ? 'append-disabled' : ''}>
             {postText}
           </BootstrapInputGroup.Text>
-        </BootstrapInputGroup.Append>
+        </BootstrapInputGroup>
       )}
     </div>
   );

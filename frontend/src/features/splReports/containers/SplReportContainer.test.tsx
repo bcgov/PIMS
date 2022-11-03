@@ -1,9 +1,9 @@
 import { useKeycloak } from '@react-keycloak/web';
 import { queryByText, screen } from '@testing-library/dom';
 import { cleanup, fireEvent, render, waitFor } from '@testing-library/react';
+import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import Claims from 'constants/claims';
 import Enzyme from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
 import { createMemoryHistory } from 'history';
 import React from 'react';
 import { act } from 'react-dom/test-utils';
@@ -60,7 +60,6 @@ const defaultReport: IReport = {
   from: undefined,
   reportTypeId: 0,
   isFinal: false,
-  rowVersion: '',
 };
 
 const defaultSnapshot: ISnapshot = {

@@ -1,5 +1,6 @@
 import { useKeycloak } from '@react-keycloak/web';
 import { render, waitFor } from '@testing-library/react';
+import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import GenericModal from 'components/common/GenericModal';
@@ -8,7 +9,6 @@ import { Claims } from 'constants/claims';
 import * as reducerTypes from 'constants/reducerTypes';
 import { mount } from 'enzyme';
 import Enzyme from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
 import { ReviewWorkflowStatus } from 'features/projects/constants';
 import { IProject, IProjectTask, ITask } from 'features/projects/interfaces';
 import { IProperty } from 'features/properties/list/interfaces';
