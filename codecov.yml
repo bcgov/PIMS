@@ -6,7 +6,7 @@ coverage:
   target: 55
   precision: 2
   round: down
-  range: '50...100'
+  range: '75...100'
 
 parsers:
   gcov:
