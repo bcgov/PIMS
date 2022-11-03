@@ -11,7 +11,7 @@ export const ErpNotificationNote: React.FC<IProjectNoteProps> = ({ label, toolti
 
   indexOfNote = values.notes.length;
   useEffect(() => {
-    if (indexOfNote === -1) {
+    if (values.notes.length === -1 || indexOfNote === -1) {
       setFieldValue(`notes[${values.notes.length}]`, {
         id: 0,
         noteType: NoteType.ErpNotification,
