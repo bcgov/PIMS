@@ -3,10 +3,14 @@ codecov:
   branch: dev
 
 coverage:
-  target: 55
-  precision: 2
-  round: down
-  range: '75...100'
+  status:
+    patch:
+      project:
+        default:
+          target: 55
+          precision: 2
+          round: down
+          range: '75...100'
 
 parsers:
   gcov:
