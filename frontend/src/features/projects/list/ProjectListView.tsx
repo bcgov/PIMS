@@ -286,10 +286,14 @@ export const ProjectListView: React.FC<IProps> = ({
       <div className="filter-container">
         {filterable && (
           <FilterBar<IProjectFilterState> initialValues={filter} onChange={handleFilterChange}>
-            <Col xs={2} className="bar-item">
-              <Input field="name" placeholder="Search by project name or number" />
+            <Col md="auto" className="bar-item">
+              <Input
+                style={{ width: '280px' }}
+                field="name"
+                placeholder="Search by project name or number"
+              />
             </Col>
-            <Col xs={2} className="bar-item">
+            <Col md="auto" className="bar-item" style={{ width: '350px' }}>
               <ParentSelect
                 field={'statusId'}
                 options={statuses}
@@ -300,7 +304,7 @@ export const ProjectListView: React.FC<IProps> = ({
                 placeholder="Enter a Status"
               />
             </Col>
-            <Col xs={2} className="bar-item">
+            <Col md="auto" className="bar-item" style={{ marginRight: '-25px' }}>
               <ParentSelect
                 field="agencies"
                 options={agencyOptions}
@@ -308,7 +312,7 @@ export const ProjectListView: React.FC<IProps> = ({
                 placeholder="Enter an Agency"
               />
             </Col>
-            <Col xs={1} className="bar-item">
+            <Col md="auto" className="bar-item">
               <Select field="fiscalYear" options={fiscalYears} placeholder="Fiscal Year" />
             </Col>
           </FilterBar>

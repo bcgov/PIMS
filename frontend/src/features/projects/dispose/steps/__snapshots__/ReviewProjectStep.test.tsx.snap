@@ -301,7 +301,7 @@ exports[`renders correctly 1`] = `
               className="col-md-auto"
             >
               <div
-                className="form-control input-number input-number-disabled col-md-6"
+                className="required col-md-6"
                 style={
                   Object {
                     "border": "none",
@@ -319,6 +319,11 @@ exports[`renders correctly 1`] = `
                     onChange={[Function]}
                     placeholder=""
                     required={true}
+                    style={
+                      Object {
+                        "width": "200px",
+                      }
+                    }
                     value=""
                   />
                 </div>
@@ -337,7 +342,7 @@ exports[`renders correctly 1`] = `
               className="col-md-auto"
             >
               <div
-                className="form-control input-number input-number-disabled col-md-6"
+                className="required col-md-6"
                 style={
                   Object {
                     "border": "none",
@@ -355,6 +360,11 @@ exports[`renders correctly 1`] = `
                     onChange={[Function]}
                     placeholder=""
                     required={true}
+                    style={
+                      Object {
+                        "width": "200px",
+                      }
+                    }
                     value=""
                   />
                 </div>
@@ -377,7 +387,7 @@ exports[`renders correctly 1`] = `
               className="col-md-auto"
             >
               <div
-                className="form-control input-number input-number-disabled col-md-6"
+                className="required col-md-6"
                 style={
                   Object {
                     "border": "none",
@@ -395,6 +405,11 @@ exports[`renders correctly 1`] = `
                     onChange={[Function]}
                     placeholder=""
                     required={true}
+                    style={
+                      Object {
+                        "width": "200px",
+                      }
+                    }
                     value=""
                   />
                 </div>
@@ -413,7 +428,7 @@ exports[`renders correctly 1`] = `
               className="col-md-auto"
             >
               <div
-                className="form-control input-number input-number-disabled col-md-6"
+                className="col-md-6"
                 style={
                   Object {
                     "border": "none",
@@ -430,6 +445,11 @@ exports[`renders correctly 1`] = `
                     onBlur={[Function]}
                     onChange={[Function]}
                     placeholder=""
+                    style={
+                      Object {
+                        "width": "200px",
+                      }
+                    }
                     value=""
                   />
                 </div>
@@ -452,7 +472,7 @@ exports[`renders correctly 1`] = `
               className="col-md-auto"
             >
               <div
-                className="form-control input-number input-number-disabled col-md-6"
+                className="col-md-6"
                 style={
                   Object {
                     "border": "none",
@@ -469,6 +489,11 @@ exports[`renders correctly 1`] = `
                     onBlur={[Function]}
                     onChange={[Function]}
                     placeholder=""
+                    style={
+                      Object {
+                        "width": "200px",
+                      }
+                    }
                     value=""
                   />
                 </div>
@@ -487,7 +512,7 @@ exports[`renders correctly 1`] = `
               className="col-md-auto"
             >
               <div
-                className="form-control input-number input-number-disabled col-md-6"
+                className="col-md-6"
                 style={
                   Object {
                     "border": "none",
@@ -504,6 +529,11 @@ exports[`renders correctly 1`] = `
                     onBlur={[Function]}
                     onChange={[Function]}
                     placeholder=""
+                    style={
+                      Object {
+                        "width": "200px",
+                      }
+                    }
                     value=""
                   />
                 </div>
@@ -538,340 +568,365 @@ exports[`renders correctly 1`] = `
           className="ScrollContainer"
         >
           <div
-            className="table"
-            role="table"
             style={
               Object {
-                "minWidth": undefined,
+                "marginLeft": 0,
               }
             }
           >
             <div
-              className="thead thead-light"
+              className="table"
+              role="table"
+              style={
+                Object {
+                  "minWidth": undefined,
+                }
+              }
             >
               <div
-                className="tr"
-                role="row"
-                style={
-                  Object {
-                    "display": "flex",
-                    "flex": "1 0 auto",
-                    "minWidth": "790px",
-                  }
-                }
+                className="thead thead-light"
               >
                 <div
-                  className="th"
-                  colSpan={1}
-                  role="columnheader"
+                  className="tr"
+                  role="row"
                   style={
                     Object {
-                      "alignItems": "center",
-                      "boxSizing": "border-box",
                       "display": "flex",
-                      "flex": "100 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "30px",
-                      "textAlign": "left",
-                      "width": "100px",
+                      "flex": "1 0 auto",
+                      "minWidth": "790px",
                     }
                   }
                 >
                   <div
-                    className="sortable-column"
+                    className="th"
+                    colSpan={1}
+                    role="columnheader"
+                    style={
+                      Object {
+                        "alignItems": "center",
+                        "boxSizing": "border-box",
+                        "display": "flex",
+                        "flex": "100 0 auto",
+                        "justifyContent": "flex-start",
+                        "minWidth": "30px",
+                        "textAlign": "left",
+                        "width": "100px",
+                      }
+                    }
                   >
-                    Agency
-                    <span />
+                    <div
+                      className="sortable-column"
+                    >
+                      Agency
+                      <span />
+                    </div>
                   </div>
-                </div>
-                <div
-                  className="th"
-                  colSpan={1}
-                  role="columnheader"
-                  style={
-                    Object {
-                      "alignItems": "center",
-                      "boxSizing": "border-box",
-                      "display": "flex",
-                      "flex": "100 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "30px",
-                      "textAlign": "left",
-                      "width": "100px",
-                    }
-                  }
-                >
                   <div
-                    className="sortable-column"
+                    className="th"
+                    colSpan={1}
+                    role="columnheader"
+                    style={
+                      Object {
+                        "alignItems": "center",
+                        "boxSizing": "border-box",
+                        "display": "flex",
+                        "flex": "100 0 auto",
+                        "justifyContent": "flex-start",
+                        "minWidth": "30px",
+                        "textAlign": "left",
+                        "width": "100px",
+                      }
+                    }
                   >
-                    Name
-                    <span />
+                    <div
+                      className="sortable-column"
+                    >
+                      Name
+                      <span />
+                    </div>
                   </div>
-                </div>
-                <div
-                  className="th"
-                  colSpan={1}
-                  role="columnheader"
-                  style={
-                    Object {
-                      "alignItems": "center",
-                      "boxSizing": "border-box",
-                      "display": "flex",
-                      "flex": "100 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "30px",
-                      "textAlign": "left",
-                      "width": "100px",
-                    }
-                  }
-                >
                   <div
-                    className="sortable-column"
+                    className="th"
+                    colSpan={1}
+                    role="columnheader"
+                    style={
+                      Object {
+                        "alignItems": "center",
+                        "boxSizing": "border-box",
+                        "display": "flex",
+                        "flex": "100 0 auto",
+                        "justifyContent": "flex-start",
+                        "minWidth": "30px",
+                        "textAlign": "left",
+                        "width": "100px",
+                      }
+                    }
                   >
-                    Civic Address
-                    <span />
+                    <div
+                      className="sortable-column"
+                    >
+                      Civic Address
+                      <span />
+                    </div>
                   </div>
-                </div>
-                <div
-                  className="th"
-                  colSpan={1}
-                  role="columnheader"
-                  style={
-                    Object {
-                      "alignItems": "center",
-                      "boxSizing": "border-box",
-                      "display": "flex",
-                      "flex": "140 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "30px",
-                      "textAlign": "left",
-                      "width": "140px",
-                    }
-                  }
-                >
                   <div
-                    className="sortable-column"
+                    className="th"
+                    colSpan={1}
+                    role="columnheader"
+                    style={
+                      Object {
+                        "alignItems": "center",
+                        "boxSizing": "border-box",
+                        "display": "flex",
+                        "flex": "140 0 auto",
+                        "justifyContent": "flex-start",
+                        "minWidth": "30px",
+                        "textAlign": "left",
+                        "width": "140px",
+                      }
+                    }
                   >
-                    Classification
-                    <span />
+                    <div
+                      className="sortable-column"
+                    >
+                      Classification
+                      <span />
+                    </div>
                   </div>
-                </div>
-                <div
-                  className="th"
-                  colSpan={1}
-                  role="columnheader"
-                  style={
-                    Object {
-                      "alignItems": "center",
-                      "boxSizing": "border-box",
-                      "display": "flex",
-                      "flex": "100 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "30px",
-                      "textAlign": "left",
-                      "width": "100px",
-                    }
-                  }
-                >
                   <div
-                    className="sortable-column"
+                    className="th"
+                    colSpan={1}
+                    role="columnheader"
+                    style={
+                      Object {
+                        "alignItems": "center",
+                        "boxSizing": "border-box",
+                        "display": "flex",
+                        "flex": "100 0 auto",
+                        "justifyContent": "flex-start",
+                        "minWidth": "30px",
+                        "textAlign": "left",
+                        "width": "100px",
+                      }
+                    }
                   >
-                    Current Zoning Code
-                    <span />
+                    <div
+                      className="sortable-column"
+                    >
+                      Current Zoning Code
+                      <span />
+                    </div>
                   </div>
-                </div>
-                <div
-                  className="th"
-                  colSpan={1}
-                  role="columnheader"
-                  style={
-                    Object {
-                      "alignItems": "center",
-                      "boxSizing": "border-box",
-                      "display": "flex",
-                      "flex": "100 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "30px",
-                      "textAlign": "left",
-                      "width": "100px",
-                    }
-                  }
-                >
                   <div
-                    className="sortable-column"
+                    className="th"
+                    colSpan={1}
+                    role="columnheader"
+                    style={
+                      Object {
+                        "alignItems": "center",
+                        "boxSizing": "border-box",
+                        "display": "flex",
+                        "flex": "100 0 auto",
+                        "justifyContent": "flex-start",
+                        "minWidth": "30px",
+                        "textAlign": "left",
+                        "width": "100px",
+                      }
+                    }
                   >
-                    Other Projects
-                    <span />
+                    <div
+                      className="sortable-column"
+                    >
+                      Other Projects
+                      <span />
+                    </div>
                   </div>
-                </div>
-                <div
-                  className="th"
-                  colSpan={1}
-                  role="columnheader"
-                  style={
-                    Object {
-                      "alignItems": "center",
-                      "boxSizing": "border-box",
-                      "display": "flex",
-                      "flex": "145 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "145px",
-                      "textAlign": "left",
-                      "width": "145px",
-                    }
-                  }
-                >
                   <div
-                    className="sortable-column"
+                    className="th"
+                    colSpan={1}
+                    role="columnheader"
+                    style={
+                      Object {
+                        "alignItems": "center",
+                        "boxSizing": "border-box",
+                        "display": "flex",
+                        "flex": "145 0 auto",
+                        "justifyContent": "flex-start",
+                        "minWidth": "145px",
+                        "textAlign": "left",
+                        "width": "145px",
+                      }
+                    }
                   >
-                    Net Book Value
-                    <span />
+                    <div
+                      className="sortable-column"
+                    >
+                      Net Book Value
+                      <span />
+                    </div>
                   </div>
-                </div>
-                <div
-                  className="th"
-                  colSpan={1}
-                  role="columnheader"
-                  style={
-                    Object {
-                      "alignItems": "center",
-                      "boxSizing": "border-box",
-                      "display": "flex",
-                      "flex": "145 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "145px",
-                      "textAlign": "left",
-                      "width": "145px",
-                    }
-                  }
-                >
                   <div
-                    className="sortable-column"
+                    className="th"
+                    colSpan={1}
+                    role="columnheader"
+                    style={
+                      Object {
+                        "alignItems": "center",
+                        "boxSizing": "border-box",
+                        "display": "flex",
+                        "flex": "145 0 auto",
+                        "justifyContent": "flex-start",
+                        "minWidth": "145px",
+                        "textAlign": "left",
+                        "width": "145px",
+                      }
+                    }
                   >
-                    Assessed Land
-                    <span />
+                    <div
+                      className="sortable-column"
+                    >
+                      Assessed Land
+                      <span />
+                    </div>
                   </div>
-                </div>
-                <div
-                  className="th"
-                  colSpan={1}
-                  role="columnheader"
-                  style={
-                    Object {
-                      "alignItems": "center",
-                      "boxSizing": "border-box",
-                      "display": "flex",
-                      "flex": "145 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "145px",
-                      "textAlign": "left",
-                      "width": "145px",
-                    }
-                  }
-                >
                   <div
-                    className="sortable-column"
+                    className="th"
+                    colSpan={1}
+                    role="columnheader"
+                    style={
+                      Object {
+                        "alignItems": "center",
+                        "boxSizing": "border-box",
+                        "display": "flex",
+                        "flex": "145 0 auto",
+                        "justifyContent": "flex-start",
+                        "minWidth": "145px",
+                        "textAlign": "left",
+                        "width": "145px",
+                      }
+                    }
                   >
-                    Assessment Year
-                    <span />
+                    <div
+                      className="sortable-column"
+                    >
+                      Assessment Year
+                      <span />
+                    </div>
                   </div>
-                </div>
-                <div
-                  className="th"
-                  colSpan={1}
-                  role="columnheader"
-                  style={
-                    Object {
-                      "alignItems": "center",
-                      "boxSizing": "border-box",
-                      "display": "flex",
-                      "flex": "145 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "145px",
-                      "textAlign": "left",
-                      "width": "145px",
-                    }
-                  }
-                >
                   <div
-                    className="sortable-column"
+                    className="th"
+                    colSpan={1}
+                    role="columnheader"
+                    style={
+                      Object {
+                        "alignItems": "center",
+                        "boxSizing": "border-box",
+                        "display": "flex",
+                        "flex": "145 0 auto",
+                        "justifyContent": "flex-start",
+                        "minWidth": "145px",
+                        "textAlign": "left",
+                        "width": "145px",
+                      }
+                    }
                   >
-                    Assessed Building
-                    <span />
+                    <div
+                      className="sortable-column"
+                    >
+                      Assessed Building
+                      <span />
+                    </div>
                   </div>
-                </div>
-                <div
-                  className="th"
-                  colSpan={1}
-                  role="columnheader"
-                  style={
-                    Object {
-                      "alignItems": "center",
-                      "boxSizing": "border-box",
-                      "display": "flex",
-                      "flex": "60 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "30px",
-                      "textAlign": "left",
-                      "width": "60px",
-                    }
-                  }
-                >
                   <div
-                    className="sortable-column"
+                    className="th"
+                    colSpan={1}
+                    role="columnheader"
+                    style={
+                      Object {
+                        "alignItems": "center",
+                        "boxSizing": "border-box",
+                        "display": "flex",
+                        "flex": "60 0 auto",
+                        "justifyContent": "flex-start",
+                        "minWidth": "30px",
+                        "textAlign": "left",
+                        "width": "60px",
+                      }
+                    }
                   >
-                    Type
-                    <span />
+                    <div
+                      className="sortable-column"
+                    >
+                      Type
+                      <span />
+                    </div>
                   </div>
                 </div>
               </div>
+              <div
+                className="no-rows-message"
+              >
+                No rows to display
+              </div>
             </div>
             <div
-              className="no-rows-message"
-            >
-              No rows to display
-            </div>
+              className="table-toolbar"
+            />
           </div>
-          <div
-            className="table-toolbar"
-          />
         </div>
       </div>
     </div>
     <h3>
       Documentation
     </h3>
-    <h3>
-      Enhanced Referral Process Exemption
+    <div
+      className="row"
+      style={
+        Object {
+          "alignItems": "center",
+        }
+      }
+    >
       <div
-        onBlur={[Function]}
-        onFocus={[Function]}
-        onMouseOut={[Function]}
-        onMouseOver={[Function]}
+        className="col-md-auto"
       >
-        <div>
-          <svg
-            className="tooltip-icon"
-            fill="currentColor"
-            height="1em"
-            stroke="currentColor"
-            strokeWidth="0"
-            style={
-              Object {
-                "color": undefined,
+        <h3>
+          Enhanced Referral Process Exemption
+        </h3>
+      </div>
+      <div
+        className="col-md-auto"
+      >
+        <div
+          onBlur={[Function]}
+          onFocus={[Function]}
+          onMouseOut={[Function]}
+          onMouseOver={[Function]}
+        >
+          <div>
+            <svg
+              className="tooltip-icon"
+              fill="currentColor"
+              height="1em"
+              stroke="currentColor"
+              strokeWidth="0"
+              style={
+                Object {
+                  "color": undefined,
+                }
               }
-            }
-            viewBox="0 0 512 512"
-            width="1em"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"
-            />
-          </svg>
+              viewBox="0 0 512 512"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"
+              />
+            </svg>
+          </div>
         </div>
       </div>
-    </h3>
+    </div>
     <div
       className="ProjectExemptionRequestCheck"
     >
@@ -946,12 +1001,34 @@ exports[`renders correctly 1`] = `
       <div
         className="col-md-10"
       >
-        <label
-          className="form-label"
-          htmlFor="input-note"
+        <div
+          className="row"
+          style={
+            Object {
+              "alignItems": "center",
+            }
+          }
         >
-          Notes
-        </label>
+          <div
+            className="col-md-auto"
+          >
+            <label
+              className="form-label"
+              htmlFor="input-note"
+              style={
+                Object {
+                  "maxWidth": "500px",
+                  "minWidth": "100px",
+                }
+              }
+            >
+              Notes
+            </label>
+          </div>
+          <div
+            className="col-md-auto"
+          />
+        </div>
         <div
           onBlur={[Function]}
           onFocus={[Function]}
@@ -976,40 +1053,63 @@ exports[`renders correctly 1`] = `
       <div
         className="col-md-10"
       >
-        <label
-          className="form-label"
-          htmlFor="input-publicNote"
+        <div
+          className="row"
+          style={
+            Object {
+              "alignItems": "center",
+            }
+          }
         >
-          Shared Notes
           <div
-            onBlur={[Function]}
-            onFocus={[Function]}
-            onMouseOut={[Function]}
-            onMouseOver={[Function]}
+            className="col-md-auto"
           >
-            <div>
-              <svg
-                className="tooltip-icon"
-                fill="currentColor"
-                height="1em"
-                stroke="currentColor"
-                strokeWidth="0"
-                style={
-                  Object {
-                    "color": undefined,
-                  }
+            <label
+              className="form-label"
+              htmlFor="input-publicNote"
+              style={
+                Object {
+                  "maxWidth": "500px",
+                  "minWidth": "100px",
                 }
-                viewBox="0 0 512 512"
-                width="1em"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"
-                />
-              </svg>
+              }
+            >
+              Shared Notes
+            </label>
+          </div>
+          <div
+            className="col-md-auto"
+          >
+            <div
+              onBlur={[Function]}
+              onFocus={[Function]}
+              onMouseOut={[Function]}
+              onMouseOver={[Function]}
+            >
+              <div>
+                <svg
+                  className="tooltip-icon"
+                  fill="currentColor"
+                  height="1em"
+                  stroke="currentColor"
+                  strokeWidth="0"
+                  style={
+                    Object {
+                      "color": undefined,
+                    }
+                  }
+                  viewBox="0 0 512 512"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"
+                  />
+                </svg>
+              </div>
             </div>
           </div>
-        </label>
+        </div>
         <div
           onBlur={[Function]}
           onFocus={[Function]}

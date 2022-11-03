@@ -62,6 +62,7 @@ const MapView: React.FC<MapViewProps> = (props: MapViewProps) => {
   const location = useLocation();
   const urlParsed = queryString.parse(location.search);
   const disableFilter = urlParsed.sidebar === 'true' ? true : false;
+
   return (
     <div className={classNames(showSideBar ? 'side-bar' : '', 'd-flex')}>
       <MapSideBarContainer

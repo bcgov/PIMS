@@ -3,7 +3,7 @@ import './HelpModal.scss';
 import variables from '_variables.module.scss';
 import TooltipIcon from 'components/common/TooltipIcon';
 import React, { FunctionComponent, useEffect, useState } from 'react';
-import { Button, Container, Modal, ModalDialog } from 'react-bootstrap';
+import { Button, Col, Container, Modal, ModalDialog, Row } from 'react-bootstrap';
 import Draggable from 'react-draggable';
 import styled from 'styled-components';
 
@@ -73,8 +73,17 @@ const HelpModal: FunctionComponent<ModalProps> = ({ handleCancel, handleSubmit, 
       >
         <ModalHeader closeButton closeVariant="white">
           <DraggableTitle>
-            Help Desk&nbsp;
-            <StyledTooltip toolTipId="help-toolTip" toolTip="Click and drag to move this popup" />
+            <Row style={{ height: '40px' }}>
+              <Col md="auto">
+                <p>Help Desk</p>
+              </Col>
+              <Col md="auto">
+                <StyledTooltip
+                  toolTipId="help-toolTip"
+                  toolTip="Click and drag to move this popup"
+                />
+              </Col>
+            </Row>
           </DraggableTitle>
         </ModalHeader>
 

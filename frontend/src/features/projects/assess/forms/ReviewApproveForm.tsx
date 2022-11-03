@@ -73,6 +73,7 @@ const ReviewApproveForm = ({
         title="Project Property Information"
       />
       <UpdateInfoForm
+        useReviewApproveStyles={true}
         isReadOnly={isReadOnly || !canEdit}
         goToAddProperties={goToAddProperties}
         title=""

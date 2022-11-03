@@ -190,7 +190,7 @@ export const IdentificationForm: React.FC<IIdentificationProps> = ({
         disabled={disabled}
       />
       <hr></hr>
-      <Row>
+      <Row style={{ textAlign: 'left' }}>
         <h4>Location</h4>
       </Row>
       <Row style={{ marginBottom: 10 }}>

@@ -713,12 +713,25 @@ exports[`Select Project Properties Step renders correctly 1`] = `
       <div
         class="col-md-10"
       >
-        <label
-          class="form-label"
-          for="input-note"
+        <div
+          class="row"
+          style="align-items: center;"
         >
-          Notes
-        </label>
+          <div
+            class="col-md-auto"
+          >
+            <label
+              class="form-label"
+              for="input-note"
+              style="min-width: 100px; max-width: 500px;"
+            >
+              Notes
+            </label>
+          </div>
+          <div
+            class="col-md-auto"
+          />
+        </div>
         <div>
           <textarea
             class="col-md-auto form-control"

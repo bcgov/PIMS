@@ -1,4 +1,5 @@
 import './App.scss';
+import 'react-bootstrap-typeahead/css/Typeahead.css';
 
 import FilterBackdrop from 'components/maps/leaflet/FilterBackdrop';
 import { AuthStateContext, IAuthState } from 'contexts/authStateContext';

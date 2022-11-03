@@ -5,7 +5,7 @@ import { TextArea } from 'components/common/form';
 import TooltipIcon from 'components/common/TooltipIcon';
 import { getIn, useFormikContext } from 'formik';
 import * as React from 'react';
-import { Form } from 'react-bootstrap';
+import { Col, Form, Row } from 'react-bootstrap';
 
 export interface IProjectExemptionProps {
   /** the label of the ExemptionRequest checkbox */
@@ -45,10 +45,14 @@ export default function ExemptionRequest({
 
   return (
     <React.Fragment>
-      <h3>
-        {sectionHeader}
-        {submissionStep && <TooltipIcon toolTipId="exemptionTooltip" toolTip={tooltip} />}
-      </h3>
+      <Row style={{ alignItems: 'center' }}>
+        <Col md="auto">
+          <h3>{sectionHeader}</h3>
+        </Col>
+        <Col md="auto">
+          {submissionStep && <TooltipIcon toolTipId="exemptionTooltip" toolTip={tooltip} />}
+        </Col>
+      </Row>
       {/* only want to display the checkbox for submissions */}
       {submissionStep && (
         <Form.Group className="ProjectExemptionRequestCheck">
