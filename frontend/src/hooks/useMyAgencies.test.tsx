@@ -1,9 +1,9 @@
 import { useKeycloak } from '@react-keycloak/web';
 import { cleanup, render } from '@testing-library/react';
+import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import Claims from 'constants/claims';
 import * as reducerTypes from 'constants/reducerTypes';
 import Enzyme from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
 import React from 'react';
 import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';

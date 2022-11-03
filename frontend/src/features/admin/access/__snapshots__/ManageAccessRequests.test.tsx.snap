@@ -86,8 +86,7 @@ exports[`Manage access requests Snapshot matches 1`] = `
                   >
                     <div
                       className="Menu-item list-group-item"
-                      data-rb-event-key={null}
-                      disabled={false}
+                      data-rr-ui-event-key={null}
                       onClick={[Function]}
                     >
                       agencyVal
@@ -154,8 +153,7 @@ exports[`Manage access requests Snapshot matches 1`] = `
                   >
                     <div
                       className="Menu-item list-group-item"
-                      data-rb-event-key={null}
-                      disabled={false}
+                      data-rr-ui-event-key={null}
                       onClick={[Function]}
                     >
                       roleVal
@@ -179,74 +177,81 @@ exports[`Manage access requests Snapshot matches 1`] = `
           <div
             className="actions col"
           >
-            <button
-              className="Button Button--icon-only bg-warning btn btn-warning btn-sm"
-              disabled={false}
+            <div
               onBlur={[Function]}
-              onClick={[Function]}
               onFocus={[Function]}
               onMouseOut={[Function]}
               onMouseOver={[Function]}
-              type="button"
             >
-              <div
-                className="Button__icon"
+              <button
+                className="Button Button--icon-only bg-warning btn btn-warning btn-sm"
+                disabled={false}
+                onClick={[Function]}
+                type="button"
               >
-                <svg
-                  fill="currentColor"
-                  height={20}
-                  size={20}
-                  stroke="currentColor"
-                  strokeWidth="0"
-                  style={
-                    Object {
-                      "color": undefined,
-                    }
-                  }
-                  viewBox="0 0 512 512"
-                  width={20}
-                  xmlns="http://www.w3.org/2000/svg"
+                <div
+                  className="Button__icon"
                 >
-                  <path
-                    d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"
-                  />
-                </svg>
-              </div>
-            </button>
-            <button
-              className="Button Button--icon-only btn btn-secondary btn-sm"
-              disabled={false}
+                  <svg
+                    fill="currentColor"
+                    height={25}
+                    size={25}
+                    stroke="currentColor"
+                    strokeWidth="0"
+                    style={
+                      Object {
+                        "color": undefined,
+                      }
+                    }
+                    viewBox="0 0 512 512"
+                    width={25}
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"
+                    />
+                  </svg>
+                </div>
+              </button>
+            </div>
+            <div
               onBlur={[Function]}
-              onClick={[Function]}
               onFocus={[Function]}
               onMouseOut={[Function]}
               onMouseOver={[Function]}
-              type="button"
             >
-              <div
-                className="Button__icon"
+              <button
+                className="Button Button--icon-only btn btn-secondary btn-sm"
+                disabled={false}
+                onClick={[Function]}
+                type="button"
               >
-                <svg
-                  fill="currentColor"
-                  height={20}
-                  size={20}
-                  stroke="currentColor"
-                  strokeWidth="0"
-                  style={
-                    Object {
-                      "color": undefined,
-                    }
-                  }
-                  viewBox="0 0 512 512"
-                  width={20}
-                  xmlns="http://www.w3.org/2000/svg"
+                <div
+                  className="Button__icon"
                 >
-                  <path
-                    d="M212.333 224.333H12c-6.627 0-12-5.373-12-12V12C0 5.373 5.373 0 12 0h48c6.627 0 12 5.373 12 12v78.112C117.773 39.279 184.26 7.47 258.175 8.007c136.906.994 246.448 111.623 246.157 248.532C504.041 393.258 393.12 504 256.333 504c-64.089 0-122.496-24.313-166.51-64.215-5.099-4.622-5.334-12.554-.467-17.42l33.967-33.967c4.474-4.474 11.662-4.717 16.401-.525C170.76 415.336 211.58 432 256.333 432c97.268 0 176-78.716 176-176 0-97.267-78.716-176-176-176-58.496 0-110.28 28.476-142.274 72.333h98.274c6.627 0 12 5.373 12 12v48c0 6.627-5.373 12-12 12z"
-                  />
-                </svg>
-              </div>
-            </button>
+                  <svg
+                    fill="currentColor"
+                    height={25}
+                    size={25}
+                    stroke="currentColor"
+                    strokeWidth="0"
+                    style={
+                      Object {
+                        "color": undefined,
+                        "marginLeft": "20px",
+                      }
+                    }
+                    viewBox="0 0 512 512"
+                    width={25}
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M212.333 224.333H12c-6.627 0-12-5.373-12-12V12C0 5.373 5.373 0 12 0h48c6.627 0 12 5.373 12 12v78.112C117.773 39.279 184.26 7.47 258.175 8.007c136.906.994 246.448 111.623 246.157 248.532C504.041 393.258 393.12 504 256.333 504c-64.089 0-122.496-24.313-166.51-64.215-5.099-4.622-5.334-12.554-.467-17.42l33.967-33.967c4.474-4.474 11.662-4.717 16.401-.525C170.76 415.336 211.58 432 256.333 432c97.268 0 176-78.716 176-176 0-97.267-78.716-176-176-176-58.496 0-110.28 28.476-142.274 72.333h98.274c6.627 0 12 5.373 12 12v48c0 6.627-5.373 12-12 12z"
+                    />
+                  </svg>
+                </div>
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -295,13 +300,7 @@ exports[`Manage access requests Snapshot matches 1`] = `
               className="sortable-column"
             >
               IDIR/BCeID
-              <span
-                style={
-                  Object {
-                    "flex": "1 1 auto",
-                  }
-                }
-              />
+              <span />
             </div>
           </div>
           <div
@@ -325,13 +324,7 @@ exports[`Manage access requests Snapshot matches 1`] = `
               className="sortable-column"
             >
               First name
-              <span
-                style={
-                  Object {
-                    "flex": "1 1 auto",
-                  }
-                }
-              />
+              <span />
             </div>
           </div>
           <div
@@ -355,13 +348,7 @@ exports[`Manage access requests Snapshot matches 1`] = `
               className="sortable-column"
             >
               Last name
-              <span
-                style={
-                  Object {
-                    "flex": "1 1 auto",
-                  }
-                }
-              />
+              <span />
             </div>
           </div>
           <div
@@ -385,13 +372,7 @@ exports[`Manage access requests Snapshot matches 1`] = `
               className="sortable-column"
             >
               Email
-              <span
-                style={
-                  Object {
-                    "flex": "1 1 auto",
-                  }
-                }
-              />
+              <span />
             </div>
           </div>
           <div
@@ -415,13 +396,7 @@ exports[`Manage access requests Snapshot matches 1`] = `
               className="sortable-column"
             >
               Position
-              <span
-                style={
-                  Object {
-                    "flex": "1 1 auto",
-                  }
-                }
-              />
+              <span />
             </div>
           </div>
           <div
@@ -445,13 +420,7 @@ exports[`Manage access requests Snapshot matches 1`] = `
               className="sortable-column"
             >
               Status
-              <span
-                style={
-                  Object {
-                    "flex": "1 1 auto",
-                  }
-                }
-              />
+              <span />
             </div>
           </div>
           <div
@@ -475,13 +444,7 @@ exports[`Manage access requests Snapshot matches 1`] = `
               className="sortable-column"
             >
               Agency
-              <span
-                style={
-                  Object {
-                    "flex": "1 1 auto",
-                  }
-                }
-              />
+              <span />
             </div>
           </div>
           <div
@@ -505,13 +468,7 @@ exports[`Manage access requests Snapshot matches 1`] = `
               className="sortable-column"
             >
               Role
-              <span
-                style={
-                  Object {
-                    "flex": "1 1 auto",
-                  }
-                }
-              />
+              <span />
             </div>
           </div>
           <div
@@ -535,13 +492,7 @@ exports[`Manage access requests Snapshot matches 1`] = `
               className="sortable-column"
             >
                
-              <span
-                style={
-                  Object {
-                    "flex": "1 1 auto",
-                  }
-                }
-              />
+              <span />
             </div>
           </div>
         </div>
@@ -800,32 +751,30 @@ exports[`Manage access requests Snapshot matches 1`] = `
                     >
                       <div
                         className="Menu-item list-group-item"
-                        data-rb-event-key={null}
-                        disabled={false}
+                        data-rr-ui-event-key={null}
                         onClick={[Function]}
                       >
                         Approve
                       </div>
                       <div
+                        aria-disabled={true}
                         className="Menu-item list-group-item disabled"
-                        data-rb-event-key={null}
-                        disabled={false}
+                        data-rr-ui-event-key={null}
                         onClick={[Function]}
+                        tabIndex={-1}
                       >
                         Hold
                       </div>
                       <div
                         className="Menu-item list-group-item"
-                        data-rb-event-key={null}
-                        disabled={false}
+                        data-rr-ui-event-key={null}
                         onClick={[Function]}
                       >
                         Decline
                       </div>
                       <div
                         className="Menu-item list-group-item"
-                        data-rb-event-key={null}
-                        disabled={false}
+                        data-rr-ui-event-key={null}
                         onClick={[Function]}
                       >
                         Delete
@@ -1130,40 +1079,35 @@ exports[`Manage access requests Snapshot matches 1`] = `
             >
               <div
                 className="Menu-item list-group-item"
-                data-rb-event-key={null}
-                disabled={false}
+                data-rr-ui-event-key={null}
                 onClick={[Function]}
               >
                 5
               </div>
               <div
                 className="Menu-item list-group-item"
-                data-rb-event-key={null}
-                disabled={false}
+                data-rr-ui-event-key={null}
                 onClick={[Function]}
               >
                 10
               </div>
               <div
                 className="Menu-item list-group-item"
-                data-rb-event-key={null}
-                disabled={false}
+                data-rr-ui-event-key={null}
                 onClick={[Function]}
               >
                 20
               </div>
               <div
                 className="Menu-item list-group-item"
-                data-rb-event-key={null}
-                disabled={false}
+                data-rr-ui-event-key={null}
                 onClick={[Function]}
               >
                 50
               </div>
               <div
                 className="Menu-item list-group-item"
-                data-rb-event-key={null}
-                disabled={false}
+                data-rr-ui-event-key={null}
                 onClick={[Function]}
               >
                 100

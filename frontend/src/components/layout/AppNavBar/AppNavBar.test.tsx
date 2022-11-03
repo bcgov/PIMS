@@ -1,11 +1,11 @@
 import { useKeycloak } from '@react-keycloak/web';
 import { cleanup, fireEvent, render } from '@testing-library/react';
+import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import Claims from 'constants/claims';
 import * as reducerTypes from 'constants/reducerTypes';
 import Roles from 'constants/roles';
 import { mount } from 'enzyme';
 import Enzyme from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
 import { mountToJson } from 'enzyme-to-json';
 import { createMemoryHistory } from 'history';
 import React from 'react';

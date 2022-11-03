@@ -364,7 +364,7 @@ const Map: React.FC<MapProps> = ({
                 </Container>
               </Container>
             ) : null}
-            <Row noGutters>
+            <Row className="g-0">
               <Col>
                 {baseLayers?.length > 0 && (
                   <BasemapToggle baseLayers={baseLayers} onToggle={handleBasemapToggle} />

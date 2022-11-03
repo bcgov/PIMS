@@ -1,11 +1,11 @@
 import { useKeycloak } from '@react-keycloak/web';
+import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import { ILookupCode } from 'actions/ILookupCode';
 import { AccessRequestStatus } from 'constants/accessStatus';
 import * as actionTypes from 'constants/actionTypes';
 import * as API from 'constants/API';
 import * as reducerTypes from 'constants/reducerTypes';
 import Enzyme from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
 import { Formik } from 'formik';
 import { createMemoryHistory } from 'history';
 import { noop } from 'lodash';

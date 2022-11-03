@@ -1,6 +1,7 @@
 .Access-Requests-filter {
   margin-right: 0px;
   margin-left: 0px;
+  margin-bottom: 15px;
   width: 100%;
   .filters {
     .col {
@@ -10,6 +11,9 @@
       &.actions {
         :first-child {
           margin-right: 10px;
+        }
+        button {
+          width: 45px;
         }
       }
     }

@@ -94,7 +94,7 @@ export const FastSelect: React.FC<FastSelectProps> = memo(
     const errorTooltip = error && touch && displayErrorTooltips ? error : undefined;
     const asElement: any = is || 'select';
 
-    const handleMultipleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const handleMultipleChange = (e: any) => {
       const selected = e.target.selectedOptions;
       setFieldValue(
         field,

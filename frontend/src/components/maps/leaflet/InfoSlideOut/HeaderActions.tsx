@@ -23,6 +23,8 @@ const LinkMenu = styled(Row)`
 const VerticalBar = styled.div`
   border-left: 2px solid rgba(96, 96, 96, 0.2);
   height: 18px;
+  width: 0;
+  padding: 0;
 `;
 
 interface IHeaderActions {
@@ -71,6 +73,7 @@ const HeaderActions: React.FC<IHeaderActions> = ({
       {canViewDetails && (
         <>
           <Link
+            style={{ width: 95 }}
             onClick={() => {
               jumpToView();
               if (onLinkClick) onLinkClick();
@@ -94,6 +97,7 @@ const HeaderActions: React.FC<IHeaderActions> = ({
             <>
               <VerticalBar />
               <Link
+                style={{ width: 63 }}
                 onClick={() => {
                   jumpToView();
                   if (onLinkClick) onLinkClick();
@@ -117,7 +121,7 @@ const HeaderActions: React.FC<IHeaderActions> = ({
           <VerticalBar />
         </>
       )}
-      <Link to={{ ...location }} onClick={zoomToView}>
+      <Link style={{ width: 90 }} to={{ ...location }} onClick={zoomToView}>
         Zoom map
       </Link>
     </LinkMenu>

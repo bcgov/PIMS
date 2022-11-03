@@ -41,9 +41,9 @@ const QuestionForm: React.FunctionComponent<QuestionFormProps> = ({ formValues, 
       }}
     >
       <Form>
-        <Input label="User" field="user" />
-        <Input label="Email" field="email" />
-        <Input label="Page" field="page" />
+        <Input label="User" field="user" style={{ marginLeft: '27px', marginBottom: '5px' }} />
+        <Input label="Email" field="email" style={{ marginLeft: '23px', marginBottom: '5px' }} />
+        <Input label="Page" field="page" style={{ marginLeft: '27px', marginBottom: '5px' }} />
         <TextArea label="Question" field="question" />
       </Form>
     </Formik>

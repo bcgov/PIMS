@@ -1,3 +1,5 @@
+import './UsersFilterBar.scss';
+
 import { ILookupCode } from 'actions/ILookupCode';
 import { Input, Select, SelectOption } from 'components/common/form';
 import { ParentSelect } from 'components/common/form/ParentSelect';
@@ -34,22 +36,22 @@ export const UsersFilterBar: React.FC<IProps> = ({
       }}
       customResetField="agency"
     >
-      <Col className="bar-item">
-        <Input field="username" placeholder="IDIR/BCeID" />
+      <Col className="bar-item" md="auto">
+        <Input field="username" placeholder="IDIR/BCeID" className="input" />
       </Col>
-      <Col className="bar-item">
-        <Input field="firstName" placeholder="First name" />
+      <Col className="bar-item" md="auto">
+        <Input field="firstName" placeholder="First name" className="input" />
       </Col>
-      <Col className="bar-item">
-        <Input field="lastName" placeholder="Last name" />
+      <Col className="bar-item" md="auto">
+        <Input field="lastName" placeholder="Last name" className="input" />
       </Col>
-      <Col className="bar-item">
-        <Input field="email" placeholder="Email" />
+      <Col className="bar-item" md="auto">
+        <Input field="email" placeholder="Email" className="input" />
       </Col>
-      <Col className="bar-item">
-        <Input field="position" placeholder="Position" />
+      <Col className="bar-item" md="auto">
+        <Input field="position" placeholder="Position" className="input" />
       </Col>
-      <Col className="bar-item">
+      <Col className="bar-item parent-select" md="auto">
         <ParentSelect
           field="agency"
           options={agencyOptions}
@@ -57,8 +59,8 @@ export const UsersFilterBar: React.FC<IProps> = ({
           placeholder="Enter an Agency"
         />
       </Col>
-      <Col className="bar-item">
-        <Select field="role" placeholder="Role" options={roleOptions} />
+      <Col className="bar-item" md="auto">
+        <Select field="role" placeholder="Role" options={roleOptions} className="input" />
       </Col>
     </FilterBar>
   );

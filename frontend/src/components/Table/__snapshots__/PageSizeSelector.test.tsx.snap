@@ -60,40 +60,35 @@ exports[`Page size selector Snapshot matches 1`] = `
         >
           <div
             className="Menu-item list-group-item"
-            data-rb-event-key={null}
-            disabled={false}
+            data-rr-ui-event-key={null}
             onClick={[Function]}
           >
             1
           </div>
           <div
             className="Menu-item list-group-item"
-            data-rb-event-key={null}
-            disabled={false}
+            data-rr-ui-event-key={null}
             onClick={[Function]}
           >
             2
           </div>
           <div
             className="Menu-item list-group-item"
-            data-rb-event-key={null}
-            disabled={false}
+            data-rr-ui-event-key={null}
             onClick={[Function]}
           >
             3
           </div>
           <div
             className="Menu-item list-group-item"
-            data-rb-event-key={null}
-            disabled={false}
+            data-rr-ui-event-key={null}
             onClick={[Function]}
           >
             4
           </div>
           <div
             className="Menu-item list-group-item"
-            data-rb-event-key={null}
-            disabled={false}
+            data-rr-ui-event-key={null}
             onClick={[Function]}
           >
             5

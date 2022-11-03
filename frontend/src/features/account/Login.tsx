@@ -1,11 +1,12 @@
 import './Login.scss';
 
 import PIMSlogo from 'assets/images/PIMSlogo/logo_with_text.png';
+import { Jumbotron } from 'components/bootstrap';
 import * as actionTypes from 'constants/actionTypes';
 import { useQuery } from 'hooks/use-query';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import React, { useState } from 'react';
-import { Button, Col, Container, Jumbotron, Row, Spinner } from 'react-bootstrap';
+import { Button, Col, Container, Row, Spinner } from 'react-bootstrap';
 import { FaExternalLinkAlt } from 'react-icons/fa';
 import { Redirect } from 'react-router-dom';
 import { useAppSelector } from 'store';

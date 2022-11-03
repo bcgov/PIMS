@@ -5,6 +5,7 @@ import {
   ParentSelect,
   TextArea,
 } from 'components/common/form';
+import { Label } from 'components/common/Label';
 import { Col, Row } from 'components/flex';
 import { useFormikContext } from 'formik';
 import React from 'react';
@@ -27,8 +28,10 @@ export const ProjectInformation: React.FC<IProjectInformationProps> = ({ disable
     <styled.ProjectInformation className="project-details">
       <Row>
         <Col>
-          <Input label="Project No." field="projectNumber" disabled={true} />
-          <Input label="Name" field="name" required disabled={disabled} />
+          <Label>Project No.</Label>
+          <Input field="projectNumber" disabled={true} />
+          <Label>Name</Label>
+          <Input field="name" required disabled={disabled} />
           <ParentSelect
             label="Project Agency"
             field="agencyId"
@@ -39,7 +42,10 @@ export const ProjectInformation: React.FC<IProjectInformationProps> = ({ disable
             disabled={disabled}
           />
         </Col>
-        <TextArea label="Description" field="description" disabled={disabled} />
+        <Col style={{ height: '50px' }}>
+          <Label>Description</Label>
+          <TextArea field="description" disabled={disabled} />
+        </Col>
       </Row>
       <Row>
         <Col>
@@ -59,7 +65,8 @@ export const ProjectInformation: React.FC<IProjectInformationProps> = ({ disable
           />
         </Col>
         <Col>
-          <Input label="Manager Name" field="manager" />
+          <Label>Manager Name</Label>
+          <Input field="manager" />
           <FastFiscalYearInput
             label="Actual or Forecasted Fiscal Year of Sale"
             field="actualFiscalYear"

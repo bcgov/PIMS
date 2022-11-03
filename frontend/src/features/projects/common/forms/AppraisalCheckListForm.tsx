@@ -27,10 +27,17 @@ const AppraisalCheckListForm: React.FunctionComponent<IAppraisalCheckListFormPro
   return (
     <Row className={classNames(props.className)}>
       <Col>
-        <h3>
-          Appraisal
-          <TooltipIcon toolTipId="review-appraisal" toolTip={reviewAppraisalTooltip}></TooltipIcon>
-        </h3>
+        <Row style={{ alignItems: 'center' }}>
+          <Col md="auto">
+            <h3>Appraisal</h3>
+          </Col>
+          <Col md="auto">
+            <TooltipIcon
+              toolTipId="review-appraisal"
+              toolTip={reviewAppraisalTooltip}
+            ></TooltipIcon>
+          </Col>
+        </Row>
         <TasksForm tasks={tasks} isReadOnly={props.isReadOnly} />
         <ProjectNotes
           className="col-md-auto"

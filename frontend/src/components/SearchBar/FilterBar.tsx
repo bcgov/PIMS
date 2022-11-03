@@ -7,7 +7,7 @@ import SearchButton from 'components/common/form/SearchButton';
 import TooltipIcon from 'components/common/TooltipIcon';
 import { Formik } from 'formik';
 import React, { PropsWithChildren } from 'react';
-import { Col } from 'react-bootstrap';
+import { Col, Row } from 'react-bootstrap';
 import { CSSProperties } from 'styled-components';
 
 interface IProps<T extends object = {}> {
@@ -58,52 +58,60 @@ const FilterBar = <T extends object = {}>(props: PropsWithChildren<IProps<T>>) =
     >
       {({ isSubmitting, handleReset, setFieldValue }) => (
         <Form>
-          <Form.Row className="search-bar">
-            {props.headerTooltip && (
-              <TooltipIcon
-                toolTipId="filter-header-tip"
-                toolTip="Click the corresponding row to edit the administrative area"
-                style={props.headerTooltipStyle}
-                iconSize={props.headerTooltipSize}
-                placement={props.headerTooltipPlacement}
-              />
-            )}
-            <h3 className="filterBarHeading">{props.filterBarHeading}</h3>
-            {props.children}
-            <Col className="bar-item flex-grow-0">
-              <SearchButton
-                className={props.searchClassName ? props.searchClassName : 'bg-warning'}
-                disabled={isSubmitting}
-              />
-            </Col>
-            {!props.hideReset && (
-              <Col className="bar-item flex-grow-0">
-                <ResetButton
-                  disabled={isSubmitting}
-                  onClick={() => {
-                    if (props.customReset && props.customResetField) {
-                      props.customReset();
-                      setFieldValue(props.customResetField, '');
-                    } else {
-                      handleReset();
-                    }
-                  }}
-                />
-              </Col>
-            )}
-            {props.plusButton && (
-              <>
-                <div className="vl"></div>
-                <Col className="bar-item flex-grow-0 plus-button">
-                  <PlusButton
-                    onClick={props.handleAdd}
-                    toolId={props.toolTipAddId!}
-                    toolText={props.toolTipAddText!}
+          <Form.Group className="search-bar">
+            <Row style={{ justifyContent: 'center', alignItems: 'center' }}>
+              {props.headerTooltip && (
+                <Col md="auto">
+                  <TooltipIcon
+                    toolTipId="filter-header-tip"
+                    toolTip="Click the corresponding row to edit the administrative area"
+                    style={props.headerTooltipStyle}
+                    iconSize={props.headerTooltipSize}
+                    placement={props.headerTooltipPlacement}
                   />
                 </Col>
-              </>
-            )}
-          </Form.Row>
+              )}
+              <Col md="auto">
+                <h3 className="filterBarHeading">{props.filterBarHeading}</h3>
+              </Col>
+              {props.children}
+              <Col className="filter-bar-icon" md="auto">
+                <SearchButton
+                  className={props.searchClassName ? props.searchClassName : 'bg-warning'}
+                  disabled={isSubmitting}
+                />
+              </Col>
+              {!props.hideReset && (
+                <Col className="filter-bar-icon" md="auto">
+                  <ResetButton
+                    disabled={isSubmitting}
+                    onClick={() => {
+                      if (props.customReset && props.customResetField) {
+                        props.customReset();
+                        setFieldValue(props.customResetField, '');
+                      } else {
+                        handleReset();
+                      }
+                    }}
+                  />
+                </Col>
+              )}
+              {props.plusButton && (
+                <>
+                  <Col md="auto">
+                    <div className="vl"></div>
+                  </Col>
+                  <Col className="filter-bar-icon" md="auto">
+                    <PlusButton
+                      onClick={props.handleAdd}
+                      toolId={props.toolTipAddId!}
+                      toolText={props.toolTipAddText!}
+                    />
+                  </Col>
+                </>
+              )}
+            </Row>
+          </Form.Group>
         </Form>
       )}
     </Formik>
