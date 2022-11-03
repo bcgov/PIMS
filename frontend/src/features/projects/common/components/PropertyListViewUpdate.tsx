@@ -108,17 +108,19 @@ export const PropertyListViewUpdate: React.FC<InputProps> = ({
   return (
     <Container fluid>
       <div className={classNames('ScrollContainer', outerClassName)}>
-        <Table<IProperty>
-          name="UpdatePropertiesTable"
-          columns={columns}
-          data={existingProperties}
-          pageSize={-1}
-          clickableTooltip={clickableTooltip}
-          lockPageSize
-          setSelectedRows={setSelectedRows}
-          footer
-          onRowClick={onRowClick}
-        />
+        <div style={{ marginLeft: '-25px' }}>
+          <Table<IProperty>
+            name="UpdatePropertiesTable"
+            columns={columns}
+            data={existingProperties}
+            pageSize={-1}
+            clickableTooltip={clickableTooltip}
+            lockPageSize
+            setSelectedRows={setSelectedRows}
+            footer
+            onRowClick={onRowClick}
+          />
+        </div>
       </div>
       <DisplayError field={field} />
     </Container>

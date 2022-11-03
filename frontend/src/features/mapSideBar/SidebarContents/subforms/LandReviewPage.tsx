@@ -102,21 +102,25 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
           <Row style={{ marginRight: '15px' }}>
             <div className="identification">
               <Row className="section-header">
-                <span>
-                  <LandSvg className="svg" />
-                  <h5>Parcel Identification</h5>
-                </span>
+                <Col md="auto">
+                  <span>
+                    <LandSvg className="svg" />
+                    <h5>Parcel Identification</h5>
+                  </span>
+                </Col>
                 {!props.disabled && (
-                  <FaEdit
-                    size={20}
-                    className="edit"
-                    onClick={() =>
-                      setEditInfo({
-                        ...editInfo,
-                        identification: formikProps.isValid && !editInfo.identification,
-                      })
-                    }
-                  />
+                  <Col md="auto">
+                    <FaEdit
+                      size={20}
+                      className="edit"
+                      onClick={() =>
+                        setEditInfo({
+                          ...editInfo,
+                          identification: formikProps.isValid && !editInfo.identification,
+                        })
+                      }
+                    />
+                  </Col>
                 )}
               </Row>
               <Row className="content-item">
@@ -291,21 +295,25 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
           <Row>
             <div className="usage">
               <Row className="section-header">
-                <span>
-                  <LandSvg className="svg" />
-                  <h5>Usage</h5>
-                </span>
+                <Col md="auto">
+                  <span>
+                    <LandSvg className="svg" />
+                    <h5>Usage</h5>
+                  </span>
+                </Col>
                 {!props.disabled && (
-                  <FaEdit
-                    size={20}
-                    className="edit"
-                    onClick={() =>
-                      setEditInfo({
-                        ...editInfo,
-                        usage: formikProps.isValid && !editInfo.usage,
-                      })
-                    }
-                  />
+                  <Col md="auto">
+                    <FaEdit
+                      size={20}
+                      className="edit"
+                      onClick={() =>
+                        setEditInfo({
+                          ...editInfo,
+                          usage: formikProps.isValid && !editInfo.usage,
+                        })
+                      }
+                    />
+                  </Col>
                 )}
               </Row>
               <Row className="classification field-row">
@@ -338,7 +346,7 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
               </Row>
               <Row className="field-row">
                 <Col md="auto">
-                  <Label>Potential Zoning</Label>
+                  <Label style={{ marginLeft: '-0.5px' }}>Potential Zoning</Label>
                 </Col>
                 <Col md="auto">
                   <FastInput
@@ -353,21 +361,25 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
           <Row className="content-item">
             <div className="valuation">
               <Row className="section-header">
-                <span>
-                  <LandSvg className="svg" />
-                  <h5>Valuation</h5>
-                </span>
+                <Col md="auto">
+                  <span>
+                    <LandSvg className="svg" />
+                    <h5>Valuation</h5>
+                  </span>
+                </Col>
                 {!props.disabled && (
-                  <FaEdit
-                    size={20}
-                    className="edit"
-                    onClick={() =>
-                      setEditInfo({
-                        ...editInfo,
-                        valuation: formikProps.isValid && !editInfo.valuation,
-                      })
-                    }
-                  />
+                  <Col md="auto">
+                    <FaEdit
+                      size={20}
+                      className="edit"
+                      onClick={() =>
+                        setEditInfo({
+                          ...editInfo,
+                          valuation: formikProps.isValid && !editInfo.valuation,
+                        })
+                      }
+                    />
+                  </Col>
                 )}
               </Row>
               <Row className="val-row">

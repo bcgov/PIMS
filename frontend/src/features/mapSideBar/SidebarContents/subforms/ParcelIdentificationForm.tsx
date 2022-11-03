@@ -106,7 +106,7 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
           />
         </Row>
       )}
-      <Row>
+      <Row style={{ textAlign: 'left' }}>
         <h4>Parcel Identification</h4>
       </Row>
       {!disabled && (
@@ -128,7 +128,7 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
       )}
       <Row
         className={
-          classNames('section', latitude === '' && longitude === '' ? 'disabled' : '') + 'g-0'
+          classNames('section', latitude === '' && longitude === '' ? 'disabled' : '') + ' g-0'
         }
       >
         <Col md={12}>
@@ -201,10 +201,10 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
         </Col>
         <Col md={6} className="form-container">
           <Row style={{ justifyContent: 'right', alignItems: 'center', marginBottom: '20px' }}>
-            <Col md="auto">
+            <Col md="auto" style={{ marginRight: '-25px' }}>
               <Label>Name</Label>
             </Col>
-            <Col md="auto">
+            <Col md="auto" style={{ marginRight: '73px' }}>
               <FastInput
                 disabled={disabled}
                 field={withNameSpace(nameSpace, 'name')}
@@ -213,18 +213,18 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
             </Col>
           </Row>
           <Row style={{ justifyContent: 'right', alignItems: 'center', marginBottom: '20px' }}>
-            <Col md="auto" style={{ marginRight: '-12px' }}>
+            <Col md="auto" style={{ marginRight: '-37px' }}>
               <Label>Description</Label>
             </Col>
-            <Col md="auto">
+            <Col md="auto" style={{ marginRight: '70px' }}>
               <TextArea disabled={disabled} field={withNameSpace(nameSpace, 'description')} />
             </Col>
           </Row>
           <Row style={{ justifyContent: 'right', alignItems: 'center', marginBottom: '20px' }}>
-            <Col md="auto" style={{ marginRight: '-12px' }}>
+            <Col md="auto" style={{ marginRight: '-37px' }}>
               <Label>Legal Description</Label>
             </Col>
-            <Col md="auto">
+            <Col md="auto" style={{ marginRight: '70px' }}>
               <TextArea
                 disabled={disabled}
                 field={withNameSpace(nameSpace, 'landLegalDescription')}
@@ -233,10 +233,10 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
             </Col>
           </Row>
           <Row style={{ justifyContent: 'right', alignItems: 'center', marginBottom: '20px' }}>
-            <Col md="auto">
+            <Col md="auto" style={{ marginRight: '-27px' }}>
               <Label>Lot Size</Label>
             </Col>
-            <Col md="auto">
+            <Col md="auto" style={{ width: '200px', marginRight: '100px' }}>
               <InputGroup
                 displayErrorTooltips
                 fast={true}

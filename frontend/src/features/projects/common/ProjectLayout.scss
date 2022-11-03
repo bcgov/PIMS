@@ -11,11 +11,11 @@
   overflow-y: auto;
   background-color: $form-background-color;
   color: $text-color;
-  padding-left: 10rem;
-  padding-right: 10rem;
+  padding-left: 3rem;
+  padding-right: 3rem;
 
   .ProjectLayoutContent {
-    min-width: fit-content;
+    width: 98%;
     > .container-fluid {
       margin: 0.5rem 0;
       padding: 5rem 0 0 0;

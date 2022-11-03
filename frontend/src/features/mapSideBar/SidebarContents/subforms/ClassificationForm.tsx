@@ -163,7 +163,7 @@ export const ClassificationForm: React.FC<IClassificationFormProps> = ({
 
   return (
     <>
-      <Row>
+      <Row style={{ textAlign: 'left' }}>
         <Title>{title}</Title>
       </Row>
       <Row>
@@ -174,6 +174,7 @@ export const ClassificationForm: React.FC<IClassificationFormProps> = ({
             </Col>
             <Col md="auto">
               <FastSelect
+                className="form-select"
                 formikProps={formikProps}
                 type="number"
                 style={{ marginTop: '5px', display: 'flex' }}
