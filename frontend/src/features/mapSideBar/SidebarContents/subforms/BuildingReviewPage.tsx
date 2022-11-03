@@ -334,6 +334,7 @@ export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
                     type="number"
                     field={withNameSpace('totalArea')}
                     postText="Sq. M"
+                    style={{ border: 0 }}
                     required
                   />
                 </Col>
@@ -351,6 +352,7 @@ export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
                     type="number"
                     field={withNameSpace('rentableArea')}
                     postText="Sq. M"
+                    style={{ border: 0 }}
                     required
                   />
                 </Col>

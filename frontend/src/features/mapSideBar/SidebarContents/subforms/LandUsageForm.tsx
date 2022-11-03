@@ -49,7 +49,7 @@ export const LandUsageForm = <T extends any>(props: ILandUsageProps & FormikProp
         disabled={props.disabled}
       />
       <hr></hr>
-      <Row>
+      <Row style={{ textAlign: 'left' }}>
         <h4>Zoning</h4>
       </Row>
       <Row className="field-row" style={{ marginBottom: '20px', alignItems: 'center' }}>
