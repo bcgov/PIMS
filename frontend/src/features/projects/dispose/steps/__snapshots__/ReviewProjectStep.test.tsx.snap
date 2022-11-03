@@ -570,7 +570,11 @@ exports[`renders correctly 1`] = `
           <div
             style={
               Object {
+<<<<<<< HEAD
                 "marginLeft": 0,
+=======
+                "marginLeft": "-25px",
+>>>>>>> adb3a09bba6739aaf6e919f4824ceb907f5d5889
               }
             }
           >

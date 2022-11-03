@@ -337,7 +337,11 @@ exports[`Update Info Form Matches Snapshot 1`] = `
         class="ScrollContainer"
       >
         <div
+<<<<<<< HEAD
           style="margin-left: 0px;"
+=======
+          style="margin-left: -25px;"
+>>>>>>> adb3a09bba6739aaf6e919f4824ceb907f5d5889
         >
           <div
             class="table"
