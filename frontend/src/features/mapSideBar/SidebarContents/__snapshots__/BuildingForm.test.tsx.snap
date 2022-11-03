@@ -740,6 +740,7 @@ exports[`Building Form component renders correctly 1`] = `
                 <hr />
                 <div
                   class="row"
+                  style="text-align: left;"
                 >
                   <h4
                     class="c4"
@@ -774,7 +775,7 @@ exports[`Building Form component renders correctly 1`] = `
                         >
                           <div>
                             <select
-                              class="form-control"
+                              class="form-select form-control"
                               id="input-building.classificationId-fast"
                               name="building.classificationId"
                               required=""
@@ -809,6 +810,7 @@ exports[`Building Form component renders correctly 1`] = `
                 <hr />
                 <div
                   class="row"
+                  style="text-align: left;"
                 >
                   <h4>
                     Location

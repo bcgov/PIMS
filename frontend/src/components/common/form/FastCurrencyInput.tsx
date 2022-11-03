@@ -49,6 +49,8 @@ type OptionalAttributes = {
   suppressValidation?: boolean;
   /** form label */
   label?: string;
+  /** input container width */
+  customInputWidth?: string;
 };
 
 export type CurrencyInputProps = RequiredAttributes &
@@ -69,6 +71,7 @@ const CurrencyInput = ({
   tooltip,
   required,
   suppressValidation,
+  customInputWidth,
   formikProps: {
     handleBlur,
     values,
@@ -115,6 +118,7 @@ const CurrencyInput = ({
       {!!label && <Form.Label>{label}</Form.Label>}
       <div className="input-tooltip-wrapper">
         <MaskedInput
+          style={{ width: customInputWidth ?? '85%' }}
           value={value}
           mask={currencyMask}
           name={field}

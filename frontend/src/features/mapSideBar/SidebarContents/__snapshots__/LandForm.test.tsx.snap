@@ -413,6 +413,7 @@ exports[`Land Form component renders correctly 1`] = `
               >
                 <div
                   class="row"
+                  style="text-align: left;"
                 >
                   <h4>
                     Parcel Identification
@@ -666,7 +667,7 @@ exports[`Land Form component renders correctly 1`] = `
                   </div>
                 </div>
                 <div
-                  class="section disabledg-0 row"
+                  class="section disabled g-0 row"
                 >
                   <div
                     class="col-md-12"
@@ -1005,6 +1006,7 @@ exports[`Land Form component renders correctly 1`] = `
                     >
                       <div
                         class="col-md-auto"
+                        style="margin-right: -25px;"
                       >
                         <label
                           class="label"
@@ -1014,6 +1016,7 @@ exports[`Land Form component renders correctly 1`] = `
                       </div>
                       <div
                         class="col-md-auto"
+                        style="margin-right: 73px;"
                       >
                         <div
                           class=""
@@ -1035,7 +1038,7 @@ exports[`Land Form component renders correctly 1`] = `
                     >
                       <div
                         class="col-md-auto"
-                        style="margin-right: -12px;"
+                        style="margin-right: -37px;"
                       >
                         <label
                           class="label"
@@ -1045,6 +1048,7 @@ exports[`Land Form component renders correctly 1`] = `
                       </div>
                       <div
                         class="col-md-auto"
+                        style="margin-right: 70px;"
                       >
                         <div
                           class="row"
@@ -1070,7 +1074,7 @@ exports[`Land Form component renders correctly 1`] = `
                     >
                       <div
                         class="col-md-auto"
-                        style="margin-right: -12px;"
+                        style="margin-right: -37px;"
                       >
                         <label
                           class="label"
@@ -1080,6 +1084,7 @@ exports[`Land Form component renders correctly 1`] = `
                       </div>
                       <div
                         class="col-md-auto"
+                        style="margin-right: 70px;"
                       >
                         <div
                           class="row"
@@ -1105,6 +1110,7 @@ exports[`Land Form component renders correctly 1`] = `
                     >
                       <div
                         class="col-md-auto"
+                        style="margin-right: -27px;"
                       >
                         <label
                           class="label"
@@ -1114,6 +1120,7 @@ exports[`Land Form component renders correctly 1`] = `
                       </div>
                       <div
                         class="col-md-auto"
+                        style="width: 200px; margin-right: 100px;"
                       >
                         <div
                           class="input-group required"

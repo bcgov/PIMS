@@ -142,6 +142,11 @@
     padding: 0;
   }
 
+  input[type='checkbox']:disabled {
+    border: solid 1px rgb(95, 95, 95);
+    background-color: rgb(170, 169, 169);
+  }
+
   .tooltip-icon {
     margin-left: 0.5rem;
   }
