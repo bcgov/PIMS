@@ -20,6 +20,11 @@ $contentheading-height: 60px;
           padding: 0;
           margin: 0;
         }
+        // Typeahead remove button
+        .rbt-token-remove-button {
+          border: 0;
+          background: transparent;
+        }
       }
 
       .btn-warning {

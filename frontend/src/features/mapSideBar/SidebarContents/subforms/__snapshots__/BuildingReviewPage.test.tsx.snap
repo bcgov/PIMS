@@ -184,7 +184,7 @@ exports[`building review page renders correctly 1`] = `
               <div class=\\"input-group required disabled\\">
                 <div class=\\"input-group-content\\">
                   <div class=\\"\\">
-                    <div><input name=\\"totalArea\\" disabled=\\"\\" type=\\"number\\" id=\\"input-totalArea\\" class=\\"form-control\\" value=\\"\\"></div>
+                    <div><input name=\\"totalArea\\" style=\\"border: 0px;\\" disabled=\\"\\" type=\\"number\\" id=\\"input-totalArea\\" class=\\"form-control\\" value=\\"\\"></div>
                   </div>
                 </div>
                 <div class=\\"input-group\\"><span class=\\"append-disabled input-group-text\\">Sq. M</span></div>
@@ -197,7 +197,7 @@ exports[`building review page renders correctly 1`] = `
               <div class=\\"input-group required disabled\\">
                 <div class=\\"input-group-content\\">
                   <div class=\\"\\">
-                    <div><input name=\\"rentableArea\\" disabled=\\"\\" type=\\"number\\" id=\\"input-rentableArea\\" class=\\"form-control\\" value=\\"\\"></div>
+                    <div><input name=\\"rentableArea\\" style=\\"border: 0px;\\" disabled=\\"\\" type=\\"number\\" id=\\"input-rentableArea\\" class=\\"form-control\\" value=\\"\\"></div>
                   </div>
                 </div>
                 <div class=\\"input-group\\"><span class=\\"append-disabled input-group-text\\">Sq. M</span></div>
@@ -221,8 +221,8 @@ exports[`building review page renders correctly 1`] = `
           <div style=\\"display: flex;\\" class=\\"val-item row\\">
             <div class=\\"col-md-auto\\"><label class=\\"label\\">Net Book Value</label></div>
             <div class=\\"col-md-auto\\">
-              <div class=\\"form-control input-number input-number-disabled col\\">
-                <div class=\\"input-tooltip-wrapper\\"><input name=\\"data.fiscals.0.value\\" class=\\"form-control input-number\\" disabled=\\"\\" placeholder=\\"\\" value=\\"\\"></div>
+              <div class=\\"col\\">
+                <div class=\\"input-tooltip-wrapper\\"><input style=\\"width: 85%;\\" name=\\"data.fiscals.0.value\\" class=\\"form-control input-number\\" disabled=\\"\\" placeholder=\\"\\" value=\\"\\"></div>
               </div>
             </div>
             <div class=\\"col-md-auto\\">
@@ -236,8 +236,8 @@ exports[`building review page renders correctly 1`] = `
           <div style=\\"display: flex;\\" class=\\"val-item row\\">
             <div style=\\"padding-left: 2px;\\" class=\\"col-md-auto\\"><label class=\\"label\\">Assessed Value</label></div>
             <div class=\\"col-md-auto\\">
-              <div class=\\"form-control input-number input-number-disabled col\\">
-                <div class=\\"input-tooltip-wrapper\\"><input name=\\"data.evaluations.0.value\\" class=\\"form-control input-number\\" disabled=\\"\\" placeholder=\\"\\" value=\\"\\"></div>
+              <div class=\\"col\\">
+                <div class=\\"input-tooltip-wrapper\\"><input style=\\"width: 85%;\\" name=\\"data.evaluations.0.value\\" class=\\"form-control input-number\\" disabled=\\"\\" placeholder=\\"\\" value=\\"\\"></div>
               </div>
             </div>
             <div class=\\"col-md-auto\\">

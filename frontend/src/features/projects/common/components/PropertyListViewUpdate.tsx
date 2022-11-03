@@ -40,6 +40,8 @@ type OptionalAttributes = {
   editableZoning?: boolean;
   /** limit the available classification labels that are returned */
   classificationLimitLabels?: string[];
+  /** styles specific to ReviewApproveForm.tsx */
+  useReviewApproveStyles?: boolean;
 };
 
 // only "field" is required for <Input>, the rest are optional
@@ -57,6 +59,7 @@ export const PropertyListViewUpdate: React.FC<InputProps> = ({
   editableFinancials,
   editableZoning,
   classificationLimitLabels,
+  useReviewApproveStyles,
 }) => {
   const { values, setFieldValue } = useFormikContext<any>();
   const existingProperties: IProperty[] = getIn(values, field);
@@ -108,7 +111,7 @@ export const PropertyListViewUpdate: React.FC<InputProps> = ({
   return (
     <Container fluid>
       <div className={classNames('ScrollContainer', outerClassName)}>
-        <div style={{ marginLeft: '-25px' }}>
+        <div style={{ marginLeft: useReviewApproveStyles ? '-25px' : 0 }}>
           <Table<IProperty>
             name="UpdatePropertiesTable"
             columns={columns}

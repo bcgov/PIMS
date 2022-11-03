@@ -30,7 +30,7 @@ exports[`Project Approval Request list view Displays a SPL project 1`] = `
             />
           </div>
           <div
-            class="bar-item col-2"
+            class="bar-item col-md-auto"
           >
             <div
               class="row"
@@ -45,6 +45,7 @@ exports[`Project Approval Request list view Displays a SPL project 1`] = `
                     class="form-control"
                     name="name"
                     placeholder="Search by project name or number"
+                    style="width: 280px;"
                     value=""
                   />
                 </div>
@@ -52,7 +53,8 @@ exports[`Project Approval Request list view Displays a SPL project 1`] = `
             </div>
           </div>
           <div
-            class="bar-item col-2"
+            class="bar-item col-md-auto"
+            style="width: 350px;"
           >
             <div
               class=""
@@ -101,7 +103,8 @@ exports[`Project Approval Request list view Displays a SPL project 1`] = `
             </div>
           </div>
           <div
-            class="bar-item col-2"
+            class="bar-item col-md-auto"
+            style="margin-right: -25px;"
           >
             <div
               class=""
@@ -142,7 +145,7 @@ exports[`Project Approval Request list view Displays a SPL project 1`] = `
             </div>
           </div>
           <div
-            class="bar-item col-1"
+            class="bar-item col-md-auto"
           >
             <div
               class="row"

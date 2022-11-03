@@ -155,7 +155,7 @@ exports[`renders correctly 1`] = `
                 title=""
               >
                 <div
-                  class="form-control input-number col"
+                  class="col"
                 >
                   <div
                     class="input-tooltip-wrapper"
@@ -164,6 +164,7 @@ exports[`renders correctly 1`] = `
                       class="form-control input-number"
                       name=".fiscals.-1.value"
                       placeholder=""
+                      style="width: 85%;"
                       value=""
                     />
                   </div>
@@ -224,7 +225,7 @@ exports[`renders correctly 1`] = `
                 title=""
               >
                 <div
-                  class="form-control input-number col"
+                  class="col"
                 >
                   <div
                     class="input-tooltip-wrapper"
@@ -233,6 +234,7 @@ exports[`renders correctly 1`] = `
                       class="form-control input-number"
                       name=".fiscals.-1.value"
                       placeholder=""
+                      style="width: 85%;"
                       value=""
                     />
                   </div>
@@ -293,7 +295,7 @@ exports[`renders correctly 1`] = `
                 title=""
               >
                 <div
-                  class="form-control input-number col"
+                  class="col"
                 >
                   <div
                     class="input-tooltip-wrapper"
@@ -302,6 +304,7 @@ exports[`renders correctly 1`] = `
                       class="form-control input-number"
                       name=".fiscals.-1.value"
                       placeholder=""
+                      style="width: 85%;"
                       value=""
                     />
                   </div>
@@ -362,7 +365,7 @@ exports[`renders correctly 1`] = `
                 title=""
               >
                 <div
-                  class="form-control input-number col"
+                  class="col"
                 >
                   <div
                     class="input-tooltip-wrapper"
@@ -371,6 +374,7 @@ exports[`renders correctly 1`] = `
                       class="form-control input-number"
                       name=".fiscals.-1.value"
                       placeholder=""
+                      style="width: 85%;"
                       value=""
                     />
                   </div>
@@ -431,7 +435,7 @@ exports[`renders correctly 1`] = `
                 title=""
               >
                 <div
-                  class="form-control input-number col"
+                  class="col"
                 >
                   <div
                     class="input-tooltip-wrapper"
@@ -440,6 +444,7 @@ exports[`renders correctly 1`] = `
                       class="form-control input-number"
                       name=".fiscals.-1.value"
                       placeholder=""
+                      style="width: 85%;"
                       value=""
                     />
                   </div>
@@ -500,7 +505,7 @@ exports[`renders correctly 1`] = `
                 title=""
               >
                 <div
-                  class="form-control input-number col"
+                  class="col"
                 >
                   <div
                     class="input-tooltip-wrapper"
@@ -509,6 +514,7 @@ exports[`renders correctly 1`] = `
                       class="form-control input-number"
                       name=".fiscals.-1.value"
                       placeholder=""
+                      style="width: 85%;"
                       value=""
                     />
                   </div>
@@ -569,7 +575,7 @@ exports[`renders correctly 1`] = `
                 title=""
               >
                 <div
-                  class="form-control input-number col"
+                  class="col"
                 >
                   <div
                     class="input-tooltip-wrapper"
@@ -578,6 +584,7 @@ exports[`renders correctly 1`] = `
                       class="form-control input-number"
                       name=".fiscals.-1.value"
                       placeholder=""
+                      style="width: 85%;"
                       value=""
                     />
                   </div>
@@ -638,7 +645,7 @@ exports[`renders correctly 1`] = `
                 title=""
               >
                 <div
-                  class="form-control input-number col"
+                  class="col"
                 >
                   <div
                     class="input-tooltip-wrapper"
@@ -647,6 +654,7 @@ exports[`renders correctly 1`] = `
                       class="form-control input-number"
                       name=".fiscals.-1.value"
                       placeholder=""
+                      style="width: 85%;"
                       value=""
                     />
                   </div>
@@ -707,7 +715,7 @@ exports[`renders correctly 1`] = `
                 title=""
               >
                 <div
-                  class="form-control input-number col"
+                  class="col"
                 >
                   <div
                     class="input-tooltip-wrapper"
@@ -716,6 +724,7 @@ exports[`renders correctly 1`] = `
                       class="form-control input-number"
                       name=".fiscals.-1.value"
                       placeholder=""
+                      style="width: 85%;"
                       value=""
                     />
                   </div>
@@ -903,7 +912,7 @@ exports[`renders correctly 1`] = `
                 title=""
               >
                 <div
-                  class="form-control input-number col"
+                  class="col"
                 >
                   <div
                     class="input-tooltip-wrapper"
@@ -912,6 +921,7 @@ exports[`renders correctly 1`] = `
                       class="form-control input-number"
                       name=".evaluations.-1.value"
                       placeholder=""
+                      style="width: 85%;"
                       value=""
                     />
                   </div>
@@ -942,7 +952,7 @@ exports[`renders correctly 1`] = `
                 title=""
               >
                 <div
-                  class="form-control input-number col"
+                  class="col"
                 >
                   <div
                     class="input-tooltip-wrapper"
@@ -951,6 +961,7 @@ exports[`renders correctly 1`] = `
                       class="form-control input-number"
                       name=".evaluations.-1.value"
                       placeholder=""
+                      style="width: 85%;"
                       value=""
                     />
                   </div>
@@ -981,7 +992,7 @@ exports[`renders correctly 1`] = `
                 title=""
               >
                 <div
-                  class="form-control input-number col"
+                  class="col"
                 >
                   <div
                     class="input-tooltip-wrapper"
@@ -990,6 +1001,7 @@ exports[`renders correctly 1`] = `
                       class="form-control input-number"
                       name=".evaluations.-1.value"
                       placeholder=""
+                      style="width: 85%;"
                       value=""
                     />
                   </div>
@@ -1020,7 +1032,7 @@ exports[`renders correctly 1`] = `
                 title=""
               >
                 <div
-                  class="form-control input-number col"
+                  class="col"
                 >
                   <div
                     class="input-tooltip-wrapper"
@@ -1029,6 +1041,7 @@ exports[`renders correctly 1`] = `
                       class="form-control input-number"
                       name=".evaluations.-1.value"
                       placeholder=""
+                      style="width: 85%;"
                       value=""
                     />
                   </div>
@@ -1059,7 +1072,7 @@ exports[`renders correctly 1`] = `
                 title=""
               >
                 <div
-                  class="form-control input-number col"
+                  class="col"
                 >
                   <div
                     class="input-tooltip-wrapper"
@@ -1068,6 +1081,7 @@ exports[`renders correctly 1`] = `
                       class="form-control input-number"
                       name=".evaluations.-1.value"
                       placeholder=""
+                      style="width: 85%;"
                       value=""
                     />
                   </div>
@@ -1098,7 +1112,7 @@ exports[`renders correctly 1`] = `
                 title=""
               >
                 <div
-                  class="form-control input-number col"
+                  class="col"
                 >
                   <div
                     class="input-tooltip-wrapper"
@@ -1107,6 +1121,7 @@ exports[`renders correctly 1`] = `
                       class="form-control input-number"
                       name=".evaluations.-1.value"
                       placeholder=""
+                      style="width: 85%;"
                       value=""
                     />
                   </div>
@@ -1137,7 +1152,7 @@ exports[`renders correctly 1`] = `
                 title=""
               >
                 <div
-                  class="form-control input-number col"
+                  class="col"
                 >
                   <div
                     class="input-tooltip-wrapper"
@@ -1146,6 +1161,7 @@ exports[`renders correctly 1`] = `
                       class="form-control input-number"
                       name=".evaluations.-1.value"
                       placeholder=""
+                      style="width: 85%;"
                       value=""
                     />
                   </div>
@@ -1176,7 +1192,7 @@ exports[`renders correctly 1`] = `
                 title=""
               >
                 <div
-                  class="form-control input-number col"
+                  class="col"
                 >
                   <div
                     class="input-tooltip-wrapper"
@@ -1185,6 +1201,7 @@ exports[`renders correctly 1`] = `
                       class="form-control input-number"
                       name=".evaluations.-1.value"
                       placeholder=""
+                      style="width: 85%;"
                       value=""
                     />
                   </div>
@@ -1215,7 +1232,7 @@ exports[`renders correctly 1`] = `
                 title=""
               >
                 <div
-                  class="form-control input-number col"
+                  class="col"
                 >
                   <div
                     class="input-tooltip-wrapper"
@@ -1224,6 +1241,7 @@ exports[`renders correctly 1`] = `
                       class="form-control input-number"
                       name=".evaluations.-1.value"
                       placeholder=""
+                      style="width: 85%;"
                       value=""
                     />
                   </div>

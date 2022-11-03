@@ -20,6 +20,7 @@ interface IUpdateInfoFormProps {
   title?: string;
   showRisk?: boolean;
   goToAddProperties?: Function;
+  useReviewApproveStyles?: boolean;
 }
 
 const classificationLimitLabels = ['Surplus Active', 'Surplus Encumbered'];
@@ -79,6 +80,7 @@ const UpdateInfoForm = ({
   showRisk,
   goToAddProperties,
   title,
+  useReviewApproveStyles,
 }: IStepProps & IUpdateInfoFormProps) => {
   const codeLookups = useCodeLookups();
   const tierCodes = codeLookups.getByType('TierLevel').map(mapLookupCode);
@@ -154,6 +156,7 @@ const UpdateInfoForm = ({
       </Row>
 
       <PropertyListViewUpdate
+        useReviewApproveStyles={useReviewApproveStyles ?? false}
         field="properties"
         disabled={isReadOnly}
         setSelectedRows={!isReadOnly ? setSelectedProperties : undefined}
