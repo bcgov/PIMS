@@ -3,6 +3,7 @@ codecov:
   branch: dev
 
 coverage:
+  target: 55
   precision: 2
   round: down
   range: '50...100'
