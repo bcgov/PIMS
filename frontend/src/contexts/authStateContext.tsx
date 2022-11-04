@@ -27,7 +27,7 @@ export const AuthStateContextProvider = (props: { children?: any }) => {
       // this error isn't recoverable, so just log it for debugging purposes.
       console.error(err);
     }
-  }, [keycloak.obj]);
+  }, [keycloak.obj.token]);
 
   return (
     <AuthStateContext.Provider
