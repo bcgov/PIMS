@@ -10,9 +10,13 @@ RUN apt-get update \
 ENTRYPOINT ["dumb-init", "--"]
 
 WORKDIR /usr/app
+
+RUN npm install -g npm@8.5.5
+
 COPY package*.json ./
 
-RUN npm install
+RUN npm set progress=false \
+    && npm ci
 COPY . .
 
 EXPOSE 3000
