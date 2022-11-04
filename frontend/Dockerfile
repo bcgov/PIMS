@@ -11,9 +11,8 @@ ENTRYPOINT ["dumb-init", "--"]
 
 WORKDIR /usr/app
 
-RUN npm set progress=false \
-    && npm ci
-    
+RUN npm install -g npm@8.5.5
+
 COPY package*.json ./
 
 RUN npm set progress=false \
