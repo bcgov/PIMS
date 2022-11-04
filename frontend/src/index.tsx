@@ -33,17 +33,10 @@ const Index = () => {
   const [keycloak, setKeycloak] = React.useState(Keycloak);
 
   React.useEffect(() => {
-    createKeycloakInstance()
-      .then(instance => {
-        setKeycloak(instance);
-        setLoading(false);
-      })
-      .catch(() => {
-        // Ignore the error and apply the default config.
-        //@ts-ignore
-        setKeycloak(new Keycloak('./keycloak.json'));
-        setLoading(false);
-      });
+    createKeycloakInstance().then(instance => {
+      setKeycloak(instance);
+      setLoading(false);
+    });
   }, []);
 
   return loading ? (

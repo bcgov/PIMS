@@ -2,7 +2,9 @@ import { useKeycloak } from '@react-keycloak/web';
 import { IProperty } from 'actions/parcelsActions';
 import { Claims } from 'constants/claims';
 import { PropertyTypes } from 'constants/propertyTypes';
+import RoleClaims from 'constants/roleClaims';
 import { Roles } from 'constants/roles';
+import { KeycloakTokenParsed } from 'keycloak-js';
 import _ from 'lodash';
 
 /**
@@ -21,6 +23,7 @@ export interface IUserInfo {
   given_name?: string;
   family_name?: string;
   agencies: number[];
+  client_roles: string[];
 }
 
 /**
@@ -52,34 +55,32 @@ export interface IKeycloak {
  */
 export function useKeycloakWrapper(): IKeycloak {
   const { keycloak } = useKeycloak();
-  const userInfo = keycloak?.userInfo as IUserInfo;
+  const userInfo = keycloak?.tokenParsed as IUserInfo;
 
   /**
    * Determine if the user has the specified 'claim'
    * @param claim - The name of the claim
    */
-  const hasClaim = (claim?: string | Array<string>): boolean => {
-    return (
-      claim !== undefined &&
-      claim !== null &&
-      (typeof claim === 'string'
-        ? userInfo?.roles?.includes(claim)
-        : claim.some(c => userInfo?.roles?.includes(c)))
-    );
+  const hasClaim = (claim?: Claims | Array<Claims>): boolean => {
+    if (!claim) {
+      return false;
+    }
+    return typeof claim === 'string'
+      ? userInfo?.client_roles?.some(role => RoleClaims[role]?.includes(claim))
+      : claim.some(c => userInfo?.client_roles?.some(role => RoleClaims[role]?.includes(c)));
   };
 
   /**
    * Determine if the user belongs to the specified 'role'
    * @param role - The role name or an array of role name
    */
-  const hasRole = (role?: string | Array<string>): boolean => {
-    return (
-      role !== undefined &&
-      role !== null &&
-      (typeof role === 'string'
-        ? userInfo?.groups?.includes(role)
-        : role.some(r => userInfo?.groups?.includes(r)))
-    );
+  const hasRole = (role?: Roles | Array<Roles>): boolean => {
+    if (!role) {
+      return false;
+    }
+    return typeof role === 'string'
+      ? userInfo?.client_roles?.includes(role)
+      : role.some(r => userInfo?.client_roles?.includes(r));
   };
 
   /**
@@ -94,7 +95,7 @@ export function useKeycloakWrapper(): IKeycloak {
    * Return an array of roles the user belongs to
    */
   const roles = (): Array<string> => {
-    return userInfo?.groups ? [...userInfo?.groups] : [];
+    return userInfo?.client_roles ? [...userInfo?.client_roles] : [];
   };
 
   /**
@@ -175,7 +176,7 @@ export function useKeycloakWrapper(): IKeycloak {
   };
 
   return {
-    obj: keycloak,
+    obj: { ...keycloak, authenticated: !!keycloak.token },
     username: username(),
     displayName: displayName(),
     firstName: firstName(),
@@ -184,9 +185,9 @@ export function useKeycloakWrapper(): IKeycloak {
     isAdmin: hasRole(Roles.SYSTEM_ADMINISTRATOR) || hasRole(Roles.AGENCY_ADMINISTRATOR),
     roles: roles(),
     agencyId: userInfo?.agencies?.find(x => x),
-    hasRole: hasRole,
-    hasClaim: hasClaim,
-    hasAgency: hasAgency,
+    hasRole,
+    hasClaim,
+    hasAgency,
     agencyIds: userInfo?.agencies,
     canUserEditProperty,
     canUserDeleteProperty,
