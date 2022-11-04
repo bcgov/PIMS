@@ -8,8 +8,6 @@ import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { convertToGuidFormat } from 'utils/formatGuid';
 
-import { store } from '../store/store';
-
 /**
  * IUserInfo interface, represents the userinfo provided by keycloak.
  */
