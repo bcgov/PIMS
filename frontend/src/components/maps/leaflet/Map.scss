@@ -5,9 +5,8 @@
   height: calc(
     100vh - #{$header-height} - #{$navbar-height} - #{$mapfilter-height} - #{$footer-height}
   );
-  // margin-top: 10px;
+  //margin-top: 12px;
   // padding-top: 20px;
-  margin: auto;
 
   .leaflet-popup-content-wrapper {
     border-radius: 0;

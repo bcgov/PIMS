@@ -1,6 +1,6 @@
+import { IBuilding, IParcel } from 'actions/parcelsActions';
 import { noop } from 'lodash';
 import React from 'react';
-import { IParcel, IBuilding } from 'actions/parcelsActions';
 
 interface IPopUpContext {
   propertyInfo: IParcel | IBuilding | null;

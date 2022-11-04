@@ -1,10 +1,12 @@
+import { ParentSelect } from 'components/common/form/ParentSelect';
+import { Claims } from 'constants/claims';
 import { useFormikContext } from 'formik';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import React, { useEffect } from 'react';
+import { Col, Row } from 'react-bootstrap';
+
 import { Select, SelectOption } from '../../../components/common/form';
 import { IPropertyFilter } from './IPropertyFilter';
-import { ParentSelect } from 'components/common/form/ParentSelect';
-import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
-import { Claims } from 'constants/claims';
 
 interface IPropertyFilterAgencyOptions {
   disabled?: boolean;
@@ -24,7 +26,7 @@ export const PropertyFilterAgencyOptions: React.FC<IPropertyFilterAgencyOptions>
       { label: 'All Government', value: true },
     ],
   };
-  const {
+  let {
     setFieldValue,
     values: { includeAllProperties },
   } = useFormikContext<IPropertyFilter>();
@@ -38,27 +40,35 @@ export const PropertyFilterAgencyOptions: React.FC<IPropertyFilterAgencyOptions>
 
   // access the form context values, no need to pass props
 
-  const onChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  const onChange = (event: any) => {
     setFieldValue('includeAllProperties', event.target.value === 'true');
     setFieldValue('agencies', '');
   };
 
+  if (typeof includeAllProperties !== 'boolean') includeAllProperties = false;
+
   return (
-    <>
-      <Select
-        field="includeAllProperties"
-        options={state.options}
-        onChange={onChange}
-        disabled={disabled}
-      />
-      <ParentSelect
-        field="agencies"
-        options={agencies}
-        filterBy={['code', 'label', 'parent']}
-        placeholder={includeAllProperties ? '' : 'Agency'}
-        selectClosest
-        disabled={(disabled || includeAllProperties) && !keycloak.hasClaim(Claims.ADMIN_PROPERTIES)}
-      />
-    </>
+    <Row className="align-items-center" style={{ width: 'auto' }}>
+      <Col style={{ paddingRight: 0, paddingTop: '24px', marginRight: '-25px' }}>
+        <Select
+          field="includeAllProperties"
+          options={state.options}
+          onChange={onChange}
+          disabled={disabled}
+        />
+      </Col>
+      <Col style={{ paddingLeft: 0, paddingTop: '24px' }}>
+        <ParentSelect
+          field="agencies"
+          options={agencies}
+          filterBy={['code', 'label', 'parent']}
+          placeholder={includeAllProperties ? '' : 'Agency'}
+          selectClosest
+          disabled={
+            (disabled || includeAllProperties) && !keycloak.hasClaim(Claims.ADMIN_PROPERTIES)
+          }
+        />
+      </Col>
+    </Row>
   );
 };

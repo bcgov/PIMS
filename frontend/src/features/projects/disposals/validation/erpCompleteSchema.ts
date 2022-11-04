@@ -6,7 +6,11 @@ export const erpCompleteSchema = yup.object({
   onHoldNotificationSentOn: yup
     .string()
     .when(['workflowCode', 'statusCode', 'originalStatusCode'], {
-      is: (workflowCode, statusCode, originalStatusCode) => {
+      is: (
+        workflowCode: Workflow,
+        statusCode: WorkflowStatus,
+        originalStatusCode: WorkflowStatus,
+      ) => {
         return (
           workflowCode === Workflow.ERP &&
           (statusCode === WorkflowStatus.OnHold || statusCode === WorkflowStatus.TransferredGRE) &&
@@ -22,7 +26,11 @@ export const erpCompleteSchema = yup.object({
         }),
     }),
   transferredWithinGreOn: yup.string().when(['workflowCode', 'statusCode', 'originalStatusCode'], {
-    is: (workflowCode, statusCode, originalStatusCode) => {
+    is: (
+      workflowCode: Workflow,
+      statusCode: WorkflowStatus,
+      originalStatusCode: WorkflowStatus,
+    ) => {
       return (
         (workflowCode === Workflow.ERP ||
           workflowCode === Workflow.ASSESS_EXEMPTION ||
@@ -40,7 +48,7 @@ export const erpCompleteSchema = yup.object({
       }),
   }),
   clearanceNotificationSentOn: yup.string().when(['workflowCode', 'statusCode'], {
-    is: (workflowCode, statusCode) => {
+    is: (workflowCode: Workflow, statusCode: WorkflowStatus) => {
       return (
         ((workflowCode === Workflow.ERP ||
           workflowCode === Workflow.ASSESS_EXEMPTION ||
@@ -59,7 +67,7 @@ export const erpCompleteSchema = yup.object({
       }),
   }),
   requestForSplReceivedOn: yup.string().when(['workflowCode', 'statusCode'], {
-    is: (workflowCode, statusCode) => {
+    is: (workflowCode: Workflow, statusCode: WorkflowStatus) => {
       return workflowCode === Workflow.SPL && statusCode === WorkflowStatus.ApprovedForSpl;
     },
     then: yup
@@ -71,7 +79,7 @@ export const erpCompleteSchema = yup.object({
       }),
   }),
   approvedForSplOn: yup.string().when(['workflowCode', 'statusCode'], {
-    is: (workflowCode, statusCode) => {
+    is: (workflowCode: Workflow, statusCode: WorkflowStatus) => {
       return workflowCode === Workflow.SPL && statusCode === WorkflowStatus.ApprovedForSpl;
     },
     then: yup

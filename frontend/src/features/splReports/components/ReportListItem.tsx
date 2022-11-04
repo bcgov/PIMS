@@ -1,11 +1,12 @@
-import * as React from 'react';
-import styled from 'styled-components';
-import { Row, Col, Form } from 'react-bootstrap';
-import ElipsisControls from './ElipsisControls';
-import { IReport } from '../interfaces';
-import { formatApiDateTime } from 'utils';
-import TooltipWrapper from 'components/common/TooltipWrapper';
 import variables from '_variables.module.scss';
+import TooltipWrapper from 'components/common/TooltipWrapper';
+import * as React from 'react';
+import { Col, Form, Row } from 'react-bootstrap';
+import styled from 'styled-components';
+import { formatApiDateTime } from 'utils';
+
+import { IReport } from '../interfaces';
+import ElipsisControls from './ElipsisControls';
 
 interface IReportListitemProps {
   /** The underlying report that this control is mapped to. */
@@ -41,15 +42,15 @@ const Report = styled(Col)`
   }
 `;
 
-const CheckBox = styled(Form.Control)`
+const CheckBox = styled(Form.Check)`
   height: auto;
-  width: auto;
 `;
 
 const FlexCol = styled(Col)`
   display: flex;
   align-items: center;
-  padding: 0px;
+  margin-left: -55px;
+  padding: 0;
 `;
 
 const getName = (report: IReport) =>

@@ -1,16 +1,16 @@
-import * as React from 'react';
-import { IGeocoderResponse, useApi } from 'hooks/useApi';
-import './GeocoderAutoComplete.scss';
-import { Form, FormControlProps } from 'react-bootstrap';
+import classNames from 'classnames';
 import { DisplayError } from 'components/common/form';
-import ClickAwayListener from 'react-click-away-listener';
-import debounce from 'lodash/debounce';
 import TooltipIcon from 'components/common/TooltipIcon';
 import TooltipWrapper from 'components/common/TooltipWrapper';
-import { useCallback } from 'react';
-import classNames from 'classnames';
 import { useFormikContext } from 'formik';
+import { IGeocoderResponse, useApi } from 'hooks/useApi';
+import debounce from 'lodash/debounce';
+import * as React from 'react';
+import { useCallback } from 'react';
+import { Form, FormControlProps } from 'react-bootstrap';
+import ClickAwayListener from 'react-click-away-listener';
 
+import { GeocoderAutoCompleteStyled } from './GeocoderAutoCompleteStyled';
 interface IGeocoderAutoCompleteProps {
   field: string;
   placeholder?: string;
@@ -64,12 +64,14 @@ export const GeocoderAutoComplete: React.FC<IGeocoderAutoCompleteProps> = ({
 
   const onTextChanged = async (val?: string) => {
     onTextChange && onTextChange(val);
+
     if (val && val.length >= 5 && val !== value) {
       await search(val, false);
     } else {
       setOptions([]);
     }
   };
+
   React.useEffect(() => {
     return () => {
       search('', true);
@@ -103,7 +105,7 @@ export const GeocoderAutoComplete: React.FC<IGeocoderAutoCompleteProps> = ({
   };
 
   return (
-    <div className="GeocoderAutoComplete">
+    <GeocoderAutoCompleteStyled className="GeocoderAutoComplete">
       <ClickAwayListener onClickAway={() => setOptions([])}>
         <Form.Group
           controlId={`input-${field}`}
@@ -128,7 +130,7 @@ export const GeocoderAutoComplete: React.FC<IGeocoderAutoCompleteProps> = ({
           {!errorTooltip && <DisplayError field={field} />}
         </Form.Group>
       </ClickAwayListener>
-    </div>
+    </GeocoderAutoCompleteStyled>
   );
 };
 

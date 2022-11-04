@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Tooltip, OverlayTrigger, OverlayTriggerProps } from 'react-bootstrap';
+import { OverlayTrigger, OverlayTriggerProps, Tooltip } from 'react-bootstrap';
 
 /**
  * TooltipWrapper properties.
@@ -41,7 +41,7 @@ const TooltipWrapper: React.FunctionComponent<ITooltipWrapperProps> = props => {
           </Tooltip>
         }
       >
-        {props.children}
+        <div>{props.children ?? <></>}</div>
       </OverlayTrigger>
     </>
   );

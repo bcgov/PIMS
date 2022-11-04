@@ -1,5 +1,5 @@
-import { createSlice, createAction, PayloadAction } from '@reduxjs/toolkit';
-import { IPropertyDetail, IProperty } from 'actions/parcelsActions';
+import { createAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { IProperty, IPropertyDetail } from 'actions/parcelsActions';
 import { PointFeature } from 'components/maps/types';
 
 export const storeProperties = createAction<IProperty[]>('storeProperty');

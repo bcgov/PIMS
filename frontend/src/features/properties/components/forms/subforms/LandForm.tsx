@@ -1,7 +1,7 @@
+import { FastInput, Form, InputGroup } from 'components/common/form';
+import { FormikProps } from 'formik';
 import { useCallback } from 'react';
 import React from 'react';
-import { FormikProps } from 'formik';
-import { Form, InputGroup, FastInput } from 'components/common/form';
 
 interface LandProps {
   nameSpace?: string;
@@ -30,7 +30,7 @@ const LandForm = <T extends any>(props: LandProps & FormikProps<T>) => {
 
   return (
     <>
-      <Form.Row>
+      <Form.Group>
         <Form.Label>Lot Size</Form.Label>
         <InputGroup
           required
@@ -42,19 +42,19 @@ const LandForm = <T extends any>(props: LandProps & FormikProps<T>) => {
           formikProps={props}
           postText="Hectares"
         />
-      </Form.Row>
-      <Form.Row>
+      </Form.Group>
+      <Form.Group>
         <Form.Label>Current Zoning</Form.Label>
         <FastInput formikProps={props} disabled={props.disabled} field={withNameSpace('zoning')} />
-      </Form.Row>
-      <Form.Row>
+      </Form.Group>
+      <Form.Group>
         <Form.Label>Potential Zoning</Form.Label>
         <FastInput
           formikProps={props}
           disabled={props.disabled}
           field={withNameSpace('zoningPotential')}
         />
-      </Form.Row>
+      </Form.Group>
     </>
   );
 };

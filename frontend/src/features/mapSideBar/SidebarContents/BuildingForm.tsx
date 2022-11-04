@@ -1,51 +1,52 @@
+import variables from '_variables.module.scss';
+import { IBuilding } from 'actions/parcelsActions';
 import {
-  SteppedForm,
-  useFormStepper,
   ISteppedFormValues,
   IStepperTab,
+  SteppedForm,
+  useFormStepper,
 } from 'components/common/form/StepForm';
-import { useFormikContext, yupToFormErrors } from 'formik';
-import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
-import useCodeLookups from 'hooks/useLookupCodes';
-import { noop } from 'lodash';
-import * as React from 'react';
-import { Button } from 'react-bootstrap';
-import styled from 'styled-components';
-import { InventoryPolicy } from '../components/InventoryPolicy';
+import { IStep } from 'components/common/Stepper';
+import TooltipWrapper from 'components/common/TooltipWrapper';
+import { fireMapRefreshEvent } from 'components/maps/hooks/useMapRefreshEvent';
 import * as API from 'constants/API';
-import { IBuilding } from 'actions/parcelsActions';
-import { OccupancyForm } from './subforms/OccupancyForm';
-import { IdentificationForm } from './subforms/IdentificationForm';
-import { BuildingReviewPage } from './subforms/BuildingReviewPage';
-import { BuildingValuationForm } from './subforms/BuildingValuationForm';
-import _ from 'lodash';
+import { EvaluationKeys } from 'constants/evaluationKeys';
+import { FiscalKeys } from 'constants/fiscalKeys';
 import { BuildingSteps } from 'constants/propertySteps';
-import useDraftMarkerSynchronizer from 'features/properties/hooks/useDraftMarkerSynchronizer';
-import { useBuildingApi } from '../hooks/useBuildingApi';
+import { defaultAddressValues } from 'features/properties/components/forms/subforms/AddressForm';
+import DebouncedValidation from 'features/properties/components/forms/subforms/DebouncedValidation';
 import {
   filterEmptyFinancials,
   getMergedFinancials,
 } from 'features/properties/components/forms/subforms/EvaluationForm';
-import { defaultAddressValues } from 'features/properties/components/forms/subforms/AddressForm';
-import { BuildingForm } from '.';
-import TooltipWrapper from 'components/common/TooltipWrapper';
+import LastUpdatedBy from 'features/properties/components/LastUpdatedBy';
+import useDraftMarkerSynchronizer from 'features/properties/hooks/useDraftMarkerSynchronizer';
+import useParcelLayerData from 'features/properties/hooks/useParcelLayerData';
+import { useFormikContext, yupToFormErrors } from 'formik';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+import useCodeLookups from 'hooks/useLookupCodes';
+import { noop } from 'lodash';
+import _ from 'lodash';
+import * as React from 'react';
+import { Button } from 'react-bootstrap';
+import { useAppDispatch } from 'store';
+import styled from 'styled-components';
+import { stringToNull } from 'utils';
 import {
+  BuildingInformationSchema,
   BuildingSchema,
   OccupancySchema,
   ValuationSchema,
-  BuildingInformationSchema,
 } from 'utils/YupSchema';
-import { stringToNull } from 'utils';
-import useParcelLayerData from 'features/properties/hooks/useParcelLayerData';
-import DebouncedValidation from 'features/properties/components/forms/subforms/DebouncedValidation';
+
+import { InventoryPolicy } from '../components/InventoryPolicy';
+import { useBuildingApi } from '../hooks/useBuildingApi';
+import { BuildingForm } from '.';
 import { valuesToApiFormat as landValuesToApiFormat } from './LandForm';
-import { EvaluationKeys } from 'constants/evaluationKeys';
-import { FiscalKeys } from 'constants/fiscalKeys';
-import variables from '_variables.module.scss';
-import LastUpdatedBy from 'features/properties/components/LastUpdatedBy';
-import { fireMapRefreshEvent } from 'components/maps/hooks/useMapRefreshEvent';
-import { IStep } from 'components/common/Stepper';
-import { useAppDispatch } from 'store';
+import { BuildingReviewPage } from './subforms/BuildingReviewPage';
+import { BuildingValuationForm } from './subforms/BuildingValuationForm';
+import { IdentificationForm } from './subforms/IdentificationForm';
+import { OccupancyForm } from './subforms/OccupancyForm';
 
 const Container = styled.div`
   background-color: #fff;
@@ -255,6 +256,7 @@ const Form: React.FC<IBuildingForm> = ({
                 disabled={formikProps.isSubmitting}
                 size="sm"
                 type="button"
+                style={{ marginRight: '15px' }}
                 onClick={() => {
                   formikProps.setSubmitting(true);
                   formikProps.submitForm();

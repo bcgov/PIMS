@@ -1,8 +1,9 @@
-import React from 'react';
-import * as styled from './styled';
-import { ProjectInformation, ProjectProperties } from '.';
 import { Tab, Tabs } from 'components/tabs';
+import React from 'react';
 import { Route, Switch, useLocation } from 'react-router-dom';
+
+import { ProjectInformation, ProjectProperties } from '.';
+import * as styled from './styled';
 
 interface IProjectInformationProps {
   disabled?: boolean;

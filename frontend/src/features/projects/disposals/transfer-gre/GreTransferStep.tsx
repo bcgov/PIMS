@@ -1,18 +1,18 @@
-import React from 'react';
-
 import { Button, Input, ParentSelect, TextArea } from 'components/common/form';
 import GenericModal from 'components/common/GenericModal';
-import * as styled from './styled';
-import { useFormikContext } from 'formik';
-import { IProjectForm, IProjectPropertyForm } from '../interfaces';
-import { IProjectModel } from 'hooks/api/projects/disposals';
-import { LookupType, useLookups, useProjectDisposal } from 'store/hooks';
-import { TransferPropertyColumns } from './constants';
+import { Col, Row } from 'components/flex';
 import { Table } from 'components/Table';
-import { Row, Col } from 'components/flex';
+import { useFormikContext } from 'formik';
 import { WorkflowStatus } from 'hooks/api/projects';
-import { toModel } from '../utils';
+import { IProjectModel } from 'hooks/api/projects/disposals';
+import React from 'react';
 import { useHistory } from 'react-router-dom';
+import { LookupType, useLookups, useProjectDisposal } from 'store/hooks';
+
+import { IProjectForm, IProjectPropertyForm } from '../interfaces';
+import { toModel } from '../utils';
+import { TransferPropertyColumns } from './constants';
+import * as styled from './styled';
 
 interface IGreTransferStepProps {
   project: IProjectModel;

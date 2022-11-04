@@ -1,6 +1,8 @@
+import { GeocoderAutoComplete } from 'features/properties/components/GeocoderAutoComplete';
 import { useFormikContext } from 'formik';
 import React from 'react';
-import { Select, InputGroup } from '../../../components/common/form';
+
+import { InputGroup, Select } from '../../../components/common/form';
 import { IPropertyFilter } from './IPropertyFilter';
 
 interface IPropertyFilterOptions {
@@ -24,7 +26,7 @@ export const PropertyFilterOptions: React.FC<IPropertyFilterOptions> = ({ disabl
 
   // access the form context values, no need to pass props
   const {
-    values: { searchBy },
+    values: { searchBy, address },
     setFieldValue,
   } = useFormikContext<IPropertyFilter>();
   const desc = state.placeholders[searchBy] || '';
@@ -35,7 +37,25 @@ export const PropertyFilterOptions: React.FC<IPropertyFilterOptions> = ({ disabl
 
   return (
     <InputGroup
-      fast={false}
+      style={{ marginLeft: '-35px', width: '140px' }}
+      fast={
+        searchBy === 'address' ? (
+          <GeocoderAutoComplete
+            field="address"
+            value={address}
+            displayErrorTooltips
+            onSelectionChanged={selection => {
+              setFieldValue('address', selection.fullAddress);
+              setFieldValue('administrativeArea', selection.administrativeArea);
+            }}
+            onTextChange={value => {
+              setFieldValue('address', value);
+            }}
+          />
+        ) : (
+          false
+        )
+      }
       formikProps={null as any}
       prepend={
         <Select field="searchBy" options={state.options} onChange={reset} disabled={disabled} />

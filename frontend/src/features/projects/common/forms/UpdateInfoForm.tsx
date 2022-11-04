@@ -1,23 +1,26 @@
 import './UpdateInfoForm.scss';
-import React, { useState } from 'react';
-import { mapLookupCode } from 'utils';
-import { useFormikContext, getIn } from 'formik';
+
 import { Form, Select } from 'components/common/form';
-import useCodeLookups from 'hooks/useLookupCodes';
-import Button from 'react-bootstrap/Button';
-import _ from 'lodash';
-import { useProject, updateInfoMessage, tierTooltips, riskTooltips } from '../../common';
 import { DisposeWorkflowStatus } from 'features/projects/constants';
-import { IStepProps, IProject } from 'features/projects/interfaces';
-import { PropertyListViewUpdate } from '../components/PropertyListViewUpdate';
-import { Container } from 'react-bootstrap';
-import ProjectFinancialTable from '../components/ProjectFinancialTable';
+import { IProject, IStepProps } from 'features/projects/interfaces';
+import { getIn, useFormikContext } from 'formik';
+import useCodeLookups from 'hooks/useLookupCodes';
+import _ from 'lodash';
+import React, { useState } from 'react';
+import { Col, Container, Row } from 'react-bootstrap';
+import Button from 'react-bootstrap/Button';
 import styled from 'styled-components';
+import { mapLookupCode } from 'utils';
+
+import { riskTooltips, tierTooltips, updateInfoMessage, useProject } from '../../common';
+import ProjectFinancialTable from '../components/ProjectFinancialTable';
+import { PropertyListViewUpdate } from '../components/PropertyListViewUpdate';
 
 interface IUpdateInfoFormProps {
   title?: string;
   showRisk?: boolean;
   goToAddProperties?: Function;
+  useReviewApproveStyles?: boolean;
 }
 
 const classificationLimitLabels = ['Surplus Active', 'Surplus Encumbered'];
@@ -77,6 +80,7 @@ const UpdateInfoForm = ({
   showRisk,
   goToAddProperties,
   title,
+  useReviewApproveStyles,
 }: IStepProps & IUpdateInfoFormProps) => {
   const codeLookups = useCodeLookups();
   const tierCodes = codeLookups.getByType('TierLevel').map(mapLookupCode);
@@ -90,50 +94,58 @@ const UpdateInfoForm = ({
   return (
     <Container fluid className="UpdateInfoForm">
       {title && (
-        <Form.Row style={{ alignItems: 'unset' }}>
+        <Form.Group style={{ alignItems: 'unset' }}>
           <h3 className="col-md-8">{title}</h3>
-        </Form.Row>
+        </Form.Group>
       )}
-      <Form.Row>
-        <Form.Label column md={2}>
-          Assign Tier
-        </Form.Label>
-        <Select
-          disabled={isReadOnly}
-          outerClassName="col-md-1"
-          placeholder="Must Select One"
-          field="tierLevelId"
-          type="number"
-          options={tierCodes}
-          required
-        />
-        <Tooltip>
-          <small>{tierLevelTooltip}</small>
-        </Tooltip>
-      </Form.Row>
+      <Row style={{ alignItems: 'center' }}>
+        <Col md={2}>
+          <Form.Label>Assign Tier</Form.Label>
+        </Col>
+        <Col md="auto">
+          <Select
+            disabled={isReadOnly}
+            outerClassName="col-md-1"
+            placeholder="Must Select One"
+            field="tierLevelId"
+            type="number"
+            options={tierCodes}
+            required
+          />
+        </Col>
+        <Col md="auto">
+          <Tooltip>
+            <small>{tierLevelTooltip}</small>
+          </Tooltip>
+        </Col>
+      </Row>
 
       {showRisk && (
         <>
-          <Form.Row>
-            <Form.Label column md={2}>
-              Risk
-            </Form.Label>
-            <Select
-              disabled={isReadOnly}
-              outerClassName="col-md-1"
-              field="riskId"
-              type="number"
-              options={riskCodes}
-            />
-            <Tooltip>
-              <small>{riskTooltip}</small>
-            </Tooltip>
-          </Form.Row>
+          <Row style={{ alignItems: 'center' }}>
+            <Col md={2}>
+              <Form.Label>Risk</Form.Label>
+            </Col>
+            <Col md="auto">
+              <Select
+                disabled={isReadOnly}
+                outerClassName="col-md-1"
+                field="riskId"
+                type="number"
+                options={riskCodes}
+              />
+            </Col>
+            <Col md="auto">
+              <Tooltip>
+                <small>{riskTooltip}</small>
+              </Tooltip>
+            </Col>
+          </Row>
         </>
       )}
 
       <ProjectFinancialTable disabled={!!isReadOnly} title="Financial Information" />
-      <Form.Row>
+      <Row>
         <h6 className="col-md-12" style={{ margin: '1rem 0' }}>
           {updateInfoMessage}
         </h6>
@@ -141,9 +153,10 @@ const UpdateInfoForm = ({
         <ReviewButtons
           {...{ isReadOnly, selectedProperties, setSelectedProperties, goToAddProperties }}
         />
-      </Form.Row>
+      </Row>
 
       <PropertyListViewUpdate
+        useReviewApproveStyles={useReviewApproveStyles ?? false}
         field="properties"
         disabled={isReadOnly}
         setSelectedRows={!isReadOnly ? setSelectedProperties : undefined}

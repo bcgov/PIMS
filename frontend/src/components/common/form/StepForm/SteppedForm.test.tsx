@@ -1,11 +1,12 @@
-import React from 'react';
-import Adapter from 'enzyme-adapter-react-16';
-import Enzyme from 'enzyme';
-import { Container, Button } from 'react-bootstrap';
-import { SteppedForm, useFormStepper } from '.';
-import { Input } from '..';
-import { render, act } from '@testing-library/react';
 import { fireEvent } from '@testing-library/dom';
+import { act, render } from '@testing-library/react';
+import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
+import Enzyme from 'enzyme';
+import React from 'react';
+import { Button, Container } from 'react-bootstrap';
+
+import { Input } from '..';
+import { SteppedForm, useFormStepper } from '.';
 
 Enzyme.configure({ adapter: new Adapter() });
 

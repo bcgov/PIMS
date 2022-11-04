@@ -1,4 +1,4 @@
-FROM node:14-slim as node
+FROM node:16.10-bullseye as node
 
 # install build toolchain
 RUN apt-get update \
@@ -10,18 +10,11 @@ RUN apt-get update \
 ENTRYPOINT ["dumb-init", "--"]
 
 WORKDIR /usr/app
-
-# install a specific NPM version
-RUN npm install -g npm@8.8.0
-
 COPY package*.json ./
 
-RUN npm set progress=false \
-    && npm ci
-
+RUN npm install
 COPY . .
 
-# webpack-dev-server (3000)
 EXPOSE 3000
 
 CMD ["npm", "start"]

@@ -1,6 +1,7 @@
 import { ILookupCode } from 'actions/ILookupCode';
+import { AgencyResponses } from 'features/projects/constants';
+
 import { IProjectForm } from '../../interfaces';
-import { NotificationResponse } from 'hooks/api';
 
 interface IAddAgencyProps {
   /** The project to add the agency response to. */
@@ -10,7 +11,7 @@ interface IAddAgencyProps {
   /** The agency response note. */
   note: string;
   /** Whether the agency is interested or not. */
-  response: NotificationResponse;
+  response: AgencyResponses;
 }
 
 /**

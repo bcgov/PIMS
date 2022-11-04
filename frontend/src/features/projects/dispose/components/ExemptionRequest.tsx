@@ -1,11 +1,11 @@
 import './ExemptionRequest.scss';
 
-import * as React from 'react';
-import { Form } from 'react-bootstrap';
 import { Check } from 'components/common/form';
 import { TextArea } from 'components/common/form';
 import TooltipIcon from 'components/common/TooltipIcon';
-import { useFormikContext, getIn } from 'formik';
+import { getIn, useFormikContext } from 'formik';
+import * as React from 'react';
+import { Col, Form, Row } from 'react-bootstrap';
 
 export interface IProjectExemptionProps {
   /** the label of the ExemptionRequest checkbox */
@@ -45,22 +45,26 @@ export default function ExemptionRequest({
 
   return (
     <React.Fragment>
-      <h3>
-        {sectionHeader}
-        {submissionStep && <TooltipIcon toolTipId="exemptionTooltip" toolTip={tooltip} />}
-      </h3>
+      <Row style={{ alignItems: 'center' }}>
+        <Col md="auto">
+          <h3>{sectionHeader}</h3>
+        </Col>
+        <Col md="auto">
+          {submissionStep && <TooltipIcon toolTipId="exemptionTooltip" toolTip={tooltip} />}
+        </Col>
+      </Row>
       {/* only want to display the checkbox for submissions */}
       {submissionStep && (
-        <Form.Row className="ProjectExemptionRequestCheck">
+        <Form.Group className="ProjectExemptionRequestCheck">
           <Check disabled={isReadOnly} field={exemptionField} postLabel={exemptionLabel} />
-        </Form.Row>
+        </Form.Group>
       )}
       {(checked || !submissionStep) && (
         <>
           <p>
             <i>{rationaleInstruction ?? 'Provide Rationale'}</i>
           </p>
-          <Form.Row className="ProjectExemptionRequestRationale">
+          <Form.Group className="ProjectExemptionRequestRationale">
             <TextArea
               label={'Rationale'}
               field={rationaleField}
@@ -68,7 +72,7 @@ export default function ExemptionRequest({
               outerClassName="col-md-10"
               readOnly={submissionStep ? false : true}
             />
-          </Form.Row>
+          </Form.Group>
         </>
       )}
     </React.Fragment>

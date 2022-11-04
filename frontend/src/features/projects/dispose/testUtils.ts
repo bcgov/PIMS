@@ -1,13 +1,14 @@
-import { getCurrentFiscalYear } from 'utils';
-import { DisposeWorkflowStatus, SPPApprovalTabs } from 'features/projects/constants';
-import { IProjectTask, IProject, ITask, INotification } from 'features/projects/interfaces';
+import { useKeycloak } from '@react-keycloak/web';
 import { ProjectActions } from 'constants/actionTypes';
+import * as API from 'constants/API';
+import { DisposeWorkflowStatus, SPPApprovalTabs } from 'features/projects/constants';
+import { INotification, IProject, IProjectTask, ITask } from 'features/projects/interfaces';
+import { WorkflowStatus } from 'hooks/api/projects';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import * as API from 'constants/API';
+import { getCurrentFiscalYear } from 'utils';
+
 import { NoteTypes, PropertyTypes } from '../../../constants';
-import { useKeycloak } from '@react-keycloak/web';
-import { WorkflowStatus } from 'hooks/api/projects';
 
 export const mockKeycloak = (claims: string[], agencies: number[]) => {
   (useKeycloak as jest.Mock).mockReturnValue({

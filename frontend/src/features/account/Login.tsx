@@ -1,15 +1,17 @@
 import './Login.scss';
+
+import PIMSlogo from 'assets/images/PIMSlogo/logo_with_text.png';
+import { Jumbotron } from 'components/bootstrap';
+import * as actionTypes from 'constants/actionTypes';
+import { useQuery } from 'hooks/use-query';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import React, { useState } from 'react';
+import { Button, Col, Container, Row, Spinner } from 'react-bootstrap';
+import { FaExternalLinkAlt } from 'react-icons/fa';
 import { Redirect } from 'react-router-dom';
-import { Container, Row, Col, Button, Spinner, Jumbotron } from 'react-bootstrap';
 import { useAppSelector } from 'store';
 import { IGenericNetworkAction } from 'store';
 import { NEW_PIMS_USER } from 'store/slices/hooks/usersActionCreator';
-import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
-import * as actionTypes from 'constants/actionTypes';
-import { useQuery } from 'hooks/use-query';
-import { FaExternalLinkAlt } from 'react-icons/fa';
-import PIMSlogo from 'assets/images/PIMSlogo/logo_with_text.png';
 
 //check to see if user is using Internet Explorer
 //as their browser

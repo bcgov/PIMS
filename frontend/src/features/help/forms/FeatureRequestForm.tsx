@@ -1,8 +1,9 @@
-import * as React from 'react';
-import { Formik } from 'formik';
-import { Form } from 'react-bootstrap';
 import { Input, TextArea } from 'components/common/form';
+import { Formik } from 'formik';
 import { noop } from 'lodash';
+import * as React from 'react';
+import { Form } from 'react-bootstrap';
+
 import { pimsSupportEmail } from '../constants/HelpText';
 import { IHelpForm } from '../interfaces';
 
@@ -43,8 +44,8 @@ const FeatureRequestForm: React.FunctionComponent<FeatureRequestFormProps> = ({
       }}
     >
       <Form>
-        <Input label="User" field="user" />
-        <Input label="Email" field="email" />
+        <Input label="User" field="user" style={{ marginLeft: '49px', marginBottom: '10px' }} />
+        <Input label="Email" field="email" style={{ marginLeft: '42px', marginBottom: '10px' }} />
         <TextArea label="Description" field="description" />
       </Form>
     </Formik>

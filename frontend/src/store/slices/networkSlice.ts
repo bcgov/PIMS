@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import * as ActionTypes from 'constants/actionTypes';
 import { AxiosError } from 'axios';
+import * as ActionTypes from 'constants/actionTypes';
 
 export interface IGenericNetworkAction {
   isFetching: boolean;

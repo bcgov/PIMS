@@ -16,17 +16,17 @@ export default function NotificationCheck({
 }: INotificationCheckProps) {
   return (
     <>
-      <Form.Row>
+      <Form.Group>
         <h3>Notifications</h3>
-      </Form.Row>
-      <Form.Row>
+      </Form.Group>
+      <Form.Group>
         <Check
           postLabel={label}
           field={field}
           setCheckedState={setCheckedState}
           checkedState={checkedState}
         />
-      </Form.Row>
+      </Form.Group>
     </>
   );
 }

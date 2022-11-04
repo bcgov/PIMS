@@ -1,19 +1,20 @@
+import { IParcel } from 'actions/parcelsActions';
+import { ReactComponent as ParcelDraftIcon } from 'assets/images/draft-parcel-icon.svg';
+import { FastInput, Input } from 'components/common/form';
 import SearchButton from 'components/common/form/SearchButton';
-import React, { useState } from 'react';
-import { Col, Form, Row } from 'react-bootstrap';
+import { ISteppedFormValues } from 'components/common/form/StepForm';
 import { Label } from 'components/common/Label';
-import { Input, FastInput } from 'components/common/form';
 import { pidFormatter } from 'features/properties/components/forms/subforms/PidPinForm';
-import { withNameSpace } from 'utils/formUtils';
 import { GeocoderAutoComplete } from 'features/properties/components/GeocoderAutoComplete';
 import { getIn, useFormikContext } from 'formik';
-import ClickAwayListener from 'react-click-away-listener';
 import { IGeocoderResponse } from 'hooks/useApi';
-import { IParcel } from 'actions/parcelsActions';
-import { ISteppedFormValues } from 'components/common/form/StepForm';
-import { ISearchFields } from '../LandForm';
-import { ReactComponent as ParcelDraftIcon } from 'assets/images/draft-parcel-icon.svg';
+import React, { useState } from 'react';
+import { Col, Row } from 'react-bootstrap';
+import ClickAwayListener from 'react-click-away-listener';
 import styled from 'styled-components';
+import { withNameSpace } from 'utils/formUtils';
+
+import { ISearchFields } from '../LandForm';
 
 const SearchMarkerButton = styled.button`
   top: 20px;
@@ -56,86 +57,104 @@ const LandSearchForm = ({
     withNameSpace(nameSpace),
   );
   return (
-    <Row noGutters className="section">
+    <Row className="section g-0">
       <Col md={12}>
         <h5>Search for Parcel</h5>
       </Col>
       <Col md={6}>
-        <Form.Row>
-          <Label>PID</Label>
-          <Input
-            displayErrorTooltips
-            className="input-small"
-            disabled={false}
-            pattern={RegExp(/^[\d\- ]*$/)}
-            onBlurFormatter={(pid: string) => {
-              if (pid?.length > 0) {
-                return pid.replace(pid, pidFormatter(pid));
-              }
-              return '';
-            }}
-            field={withNameSpace(nameSpace, 'searchPid')}
-          />
-          <SearchButton
-            onClick={(e: any) => {
-              e.preventDefault();
-              handlePidChange(searchPid, nameSpace);
-            }}
-          />
-        </Form.Row>
-        <Form.Row>
-          <Label>PIN</Label>
-          <FastInput
-            formikProps={formikProps}
-            displayErrorTooltips
-            className="input-small"
-            disabled={false}
-            field={withNameSpace(nameSpace, 'searchPin')}
-            onBlurFormatter={(pin: number) => {
-              if (pin > 0) {
-                return pin;
-              }
-              return '';
-            }}
-            type="number"
-          />
-          <SearchButton
-            onClick={(e: any) => {
-              e.preventDefault();
-              handlePinChange(searchPin, nameSpace);
-            }}
-          />
-        </Form.Row>
-        <Form.Row>
-          <Label>Street Address</Label>
-          <GeocoderAutoComplete
-            value={searchAddress}
-            field={withNameSpace(nameSpace, 'searchAddress')}
-            onSelectionChanged={selection => {
-              formikProps.setFieldValue(
-                withNameSpace(nameSpace, 'searchAddress'),
-                selection.fullAddress,
-              );
-              setGeocoderResponse(selection);
-            }}
-            onTextChange={value => {
-              if (value !== geocoderResponse?.address1) {
-                setGeocoderResponse(undefined);
-              }
-              formikProps.setFieldValue(withNameSpace(nameSpace, 'searchAddress'), value);
-            }}
-            error={getIn(formikProps.errors, withNameSpace(nameSpace, 'searchAddress'))}
-            touch={getIn(formikProps.touched, withNameSpace(nameSpace, 'searchAddress'))}
-            displayErrorTooltips
-          />
-          <SearchButton
-            disabled={!geocoderResponse}
-            onClick={(e: any) => {
-              e.preventDefault();
-              geocoderResponse && handleGeocoderChanges(geocoderResponse, nameSpace);
-            }}
-          />
-        </Form.Row>
+        <Row style={{ alignItems: 'center' }}>
+          <Col style={{ width: '110px' }}>
+            <Label>PID</Label>
+          </Col>
+          <Col md="auto" style={{ marginRight: '-11px' }}>
+            <Input
+              displayErrorTooltips
+              className="input-small"
+              disabled={false}
+              pattern={RegExp(/^[\d\- ]*$/)}
+              onBlurFormatter={(pid: string) => {
+                if (pid?.length > 0) {
+                  return pid.replace(pid, pidFormatter(pid));
+                }
+                return '';
+              }}
+              field={withNameSpace(nameSpace, 'searchPid')}
+            />
+          </Col>
+          <Col md="auto">
+            <SearchButton
+              onClick={(e: any) => {
+                e.preventDefault();
+                handlePidChange(searchPid, nameSpace);
+              }}
+            />
+          </Col>
+        </Row>
+        <Row style={{ alignItems: 'center' }}>
+          <Col style={{ width: '110px' }}>
+            <Label>PIN</Label>
+          </Col>
+          <Col md="auto">
+            <FastInput
+              formikProps={formikProps}
+              displayErrorTooltips
+              className="input-small"
+              disabled={false}
+              field={withNameSpace(nameSpace, 'searchPin')}
+              onBlurFormatter={(pin: number) => {
+                if (pin > 0) {
+                  return pin;
+                }
+                return '';
+              }}
+              type="number"
+            />
+          </Col>
+          <Col md="auto">
+            <SearchButton
+              onClick={(e: any) => {
+                e.preventDefault();
+                handlePinChange(searchPin, nameSpace);
+              }}
+            />
+          </Col>
+        </Row>
+        <Row style={{ alignItems: 'center' }}>
+          <Col style={{ width: '110px' }}>
+            <Label>Street Address</Label>
+          </Col>
+          <Col md="auto">
+            <GeocoderAutoComplete
+              value={searchAddress}
+              field={withNameSpace(nameSpace, 'searchAddress')}
+              onSelectionChanged={selection => {
+                formikProps.setFieldValue(
+                  withNameSpace(nameSpace, 'searchAddress'),
+                  selection.fullAddress,
+                );
+                setGeocoderResponse(selection);
+              }}
+              onTextChange={value => {
+                if (value !== geocoderResponse?.address1) {
+                  setGeocoderResponse(undefined);
+                }
+                formikProps.setFieldValue(withNameSpace(nameSpace, 'searchAddress'), value);
+              }}
+              error={getIn(formikProps.errors, withNameSpace(nameSpace, 'searchAddress'))}
+              touch={getIn(formikProps.touched, withNameSpace(nameSpace, 'searchAddress'))}
+              displayErrorTooltips
+            />
+          </Col>
+          <Col md="auto">
+            <SearchButton
+              disabled={!geocoderResponse}
+              onClick={(e: any) => {
+                e.preventDefault();
+                geocoderResponse && handleGeocoderChanges(geocoderResponse, nameSpace);
+              }}
+            />
+          </Col>
+        </Row>
       </Col>
       <Col md={1}>
         <h5>OR</h5>

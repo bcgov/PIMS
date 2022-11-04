@@ -1,12 +1,13 @@
+import { ParentSelect } from 'components/common/form/ParentSelect';
+import { FormikTable } from 'features/projects/common';
+import { AgencyResponses } from 'features/projects/constants';
 import { getIn, useFormikContext } from 'formik';
 import React from 'react';
-import { ParentSelect } from 'components/common/form/ParentSelect';
 import { Button, Col, Row } from 'react-bootstrap';
-import { FormikTable } from 'features/projects/common';
-import { AgencyInterestColumns } from './constants';
+import { LookupType, useLookups } from 'store/hooks';
+
 import { IProjectForm } from '../interfaces';
-import { useLookups, LookupType } from 'store/hooks';
-import { NotificationResponse } from 'hooks/api';
+import { AgencyInterestColumns } from './constants';
 import { addAgency } from './utils';
 
 export interface IAgencyInterestProps {
@@ -35,7 +36,7 @@ export const AgencyInterest = ({ disabled = false }: IAgencyInterestProps) => {
         project: values,
         agency: agency,
         note: '',
-        response: NotificationResponse.Watch,
+        response: AgencyResponses.Watch,
       });
       setValues(project, false);
       setEnableAdd(false);

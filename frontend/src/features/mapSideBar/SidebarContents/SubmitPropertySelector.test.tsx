@@ -1,7 +1,8 @@
+import noop from 'lodash/noop';
 import React from 'react';
 import renderer from 'react-test-renderer';
+
 import SubmitPropertySelector from './SubmitPropertySelector';
-import noop from 'lodash/noop';
 
 describe('SubmitPropertySelector', () => {
   it('component renders correctly', () => {

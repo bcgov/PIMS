@@ -266,6 +266,9 @@ objects:
                 items:
                   - key: "environment.json"
                     path: "environment.json"
+            - name: file-storage
+              persistentVolumeClaim:
+                claimName: file-storage
           containers:
             - name: ${SOLUTION_NAME}-${APP_NAME}
               image: ""
@@ -296,6 +299,8 @@ objects:
                 - name: "${SOLUTION_NAME}-${APP_NAME}-envvars"
                   mountPath: "${FILE_CONFIG_MOUNT_PATH}environment.json"
                   subPath: "environment.json"
+                - name: file-storage
+                  mountPath: /tmp/app/dist/videos
               livenessProbe:
                 httpGet:
                   path: "/nginx_status"

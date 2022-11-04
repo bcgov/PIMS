@@ -1,14 +1,15 @@
-import {
-  ProjectDraftStep,
-  SelectProjectPropertiesStep,
-  UpdateInfoStep,
-  DocumentationStep,
-  ApprovalConfirmationStep,
-  ReviewProjectStep,
-} from '../dispose';
-import React from 'react';
 import { DisposeWorkflowStatus } from 'features/projects/constants';
 import { IProjectWorkflowComponent } from 'features/projects/interfaces';
+import React from 'react';
+
+import {
+  ApprovalConfirmationStep,
+  DocumentationStep,
+  ProjectDraftStep,
+  ReviewProjectStep,
+  SelectProjectPropertiesStep,
+  UpdateInfoStep,
+} from '../dispose';
 
 /**
  * TODO: re-evaluate this approach. It may be cleaner/simpler to just hardcode these components to their respective routes.

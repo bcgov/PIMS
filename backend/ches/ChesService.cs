@@ -213,17 +213,17 @@ namespace Pims.Ches
 
             if (this.Options.BccUser)
             {
-                email.Bcc = new[] { _user.GetEmail() }.Concat(email.Bcc?.Any() ?? false ? email.Bcc : new string[0]);
+                email.Bcc = new[] { _user.GetEmail() }.Concat(email.Bcc?.Any() ?? false ? email.Bcc : Array.Empty<string>());
             }
             if (!String.IsNullOrWhiteSpace(this.Options.AlwaysBcc))
             {
-                email.Bcc = this.Options.AlwaysBcc.Split(";").Select(e => e?.Trim()).Concat(email.Bcc?.Any() ?? false ? email.Bcc : new string[0]);
+                email.Bcc = this.Options.AlwaysBcc.Split(";").Select(e => e?.Trim()).Concat(email.Bcc?.Any() ?? false ? email.Bcc : Array.Empty<string>());
             }
             if (!String.IsNullOrWhiteSpace(this.Options.OverrideTo) || !this.Options.EmailAuthorized)
             {
                 email.To = !String.IsNullOrWhiteSpace(this.Options.OverrideTo) ? this.Options.OverrideTo?.Split(";").Select(e => e?.Trim()) : new[] { _user.GetEmail() };
-                email.Cc = new string[0];
-                email.Bcc = new string[0];
+                email.Cc = email.Cc.Any() ? new[] { _user.GetEmail() } : Array.Empty<string>();
+                email.Bcc = Array.Empty<string>();
             }
             if (this.Options.AlwaysDelay.HasValue)
             {
@@ -257,14 +257,14 @@ namespace Pims.Ches
                 var address = new[] { _user.GetEmail() };
                 email.Contexts.ForEach(c =>
                 {
-                    c.Bcc = address.Concat(c.Bcc?.Any() ?? false ? c.Bcc : new string[0]);
+                    c.Bcc = address.Concat(c.Bcc?.Any() ?? false ? c.Bcc : Array.Empty<string>());
                 });
             }
             if (!String.IsNullOrWhiteSpace(this.Options.AlwaysBcc))
             {
                 email.Contexts.ForEach(c =>
                 {
-                    c.Bcc = this.Options.AlwaysBcc.Split(";").Select(e => e?.Trim()).Concat(c.Bcc?.Any() ?? false ? c.Bcc : new string[0]);
+                    c.Bcc = this.Options.AlwaysBcc.Split(";").Select(e => e?.Trim()).Concat(c.Bcc?.Any() ?? false ? c.Bcc : Array.Empty<string>());
                 });
             }
             if (!String.IsNullOrWhiteSpace(this.Options.OverrideTo) || !this.Options.EmailAuthorized)
@@ -273,8 +273,8 @@ namespace Pims.Ches
                 email.Contexts.ForEach(c =>
                 {
                     c.To = address;
-                    c.Cc = new string[0];
-                    c.Bcc = new string[0];
+                    c.Cc = Array.Empty<string>();
+                    c.Bcc = Array.Empty<string>();
                 });
             }
             if (this.Options.AlwaysDelay.HasValue)
@@ -318,10 +318,10 @@ namespace Pims.Ches
             if (!filter.MessageId.HasValue && !filter.TransactionId.HasValue && String.IsNullOrWhiteSpace(filter.Status) && String.IsNullOrWhiteSpace(filter.Tag)) throw new ArgumentException("At least one parameter must be specified.");
 
             var query = HttpUtility.ParseQueryString(String.Empty);
-            if (filter.MessageId.HasValue) query.Add("msgId", $"{ filter.MessageId }");
-            if (!String.IsNullOrEmpty(filter.Status)) query.Add("status", $"{ filter.Status }");
-            if (!String.IsNullOrEmpty(filter.Tag)) query.Add("tag", $"{ filter.Tag }");
-            if (filter.TransactionId.HasValue) query.Add("txId", $"{ filter.TransactionId }");
+            if (filter.MessageId.HasValue) query.Add("msgId", $"{filter.MessageId}");
+            if (!String.IsNullOrEmpty(filter.Status)) query.Add("status", $"{filter.Status}");
+            if (!String.IsNullOrEmpty(filter.Tag)) query.Add("tag", $"{filter.Tag}");
+            if (filter.TransactionId.HasValue) query.Add("txId", $"{filter.TransactionId}");
 
             return await SendAsync<IEnumerable<StatusResponseModel>>($"/status?{query}", HttpMethod.Get);
         }
@@ -354,10 +354,10 @@ namespace Pims.Ches
             if (!filter.MessageId.HasValue && !filter.TransactionId.HasValue && String.IsNullOrWhiteSpace(filter.Status) && String.IsNullOrWhiteSpace(filter.Tag)) throw new ArgumentException("At least one parameter must be specified.");
 
             var query = HttpUtility.ParseQueryString(String.Empty);
-            if (filter.MessageId.HasValue) query.Add("msgId", $"{ filter.MessageId }");
-            if (!String.IsNullOrEmpty(filter.Status)) query.Add("status", $"{ filter.Status }");
-            if (!String.IsNullOrEmpty(filter.Tag)) query.Add("tag", $"{ filter.Tag }");
-            if (filter.TransactionId.HasValue) query.Add("txId", $"{ filter.TransactionId }");
+            if (filter.MessageId.HasValue) query.Add("msgId", $"{filter.MessageId}");
+            if (!String.IsNullOrEmpty(filter.Status)) query.Add("status", $"{filter.Status}");
+            if (!String.IsNullOrEmpty(filter.Tag)) query.Add("tag", $"{filter.Tag}");
+            if (filter.TransactionId.HasValue) query.Add("txId", $"{filter.TransactionId}");
 
             // TODO: This will probably not work as CHES currently doesn't like if you attempt to cancel a message that can't be cancelled.
             // Additionally CHES fails (times-out) if you make a request for the status of a cancelled message.

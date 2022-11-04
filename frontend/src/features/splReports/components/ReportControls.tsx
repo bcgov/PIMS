@@ -1,18 +1,19 @@
-import * as React from 'react';
-import { Formik, Form } from 'formik';
-import { Input, Button, Check, SelectOption } from 'components/common/form';
-import { FaFileExcel, FaFileAlt, FaSyncAlt } from 'react-icons/fa';
-import { Row, Form as BSForm } from 'react-bootstrap';
-import { IReport } from '../interfaces';
-import _ from 'lodash';
-import { formatApiDateTime, generateUtcNowDateTime } from 'utils';
-import styled from 'styled-components';
-import { Prompt } from 'react-router-dom';
-import TooltipWrapper from 'components/common/TooltipWrapper';
-import AddReportControl from './AddReportControl';
-import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
-import { Claims } from '../../../constants/';
 import variables from '_variables.module.scss';
+import { Button, Check, Input, SelectOption } from 'components/common/form';
+import TooltipWrapper from 'components/common/TooltipWrapper';
+import { Form, Formik } from 'formik';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+import _ from 'lodash';
+import * as React from 'react';
+import { Col, Form as BSForm, Row } from 'react-bootstrap';
+import { FaFileAlt, FaFileExcel, FaSyncAlt } from 'react-icons/fa';
+import { Prompt } from 'react-router-dom';
+import styled from 'styled-components';
+import { formatApiDateTime, generateUtcNowDateTime } from 'utils';
+
+import { Claims } from '../../../constants/';
+import { IReport } from '../interfaces';
+import AddReportControl from './AddReportControl';
 
 interface IReportControlsProps {
   /** the active report being displayed, snapshot data is displayed based on this report */
@@ -70,6 +71,7 @@ const reportsToOptions = (reports: IReport[]) => {
   options.unshift({
     value: '',
     label: 'Choose a report',
+    parent: '',
   });
   return options;
 };
@@ -105,89 +107,122 @@ const ReportControls: React.FunctionComponent<IReportControlsProps> = ({
           <>
             <Form className="report-form m-0 flex-nowrap">
               <AddReportControl onAdd={onAdd} />
-              <Row noGutters className="d-flex align-items-center">
+              <Row className="d-flex align-items-center g-0">
                 {reportOptions.length > 1 ? (
-                  <BSForm.Group controlId="select-from" className="ml-2">
-                    <BSForm.Label>From: </BSForm.Label>
-                    <BSForm.Control
-                      options={reportOptions}
-                      as="select"
-                      value={fromId}
-                      disabled={values.isFinal}
-                      onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-                        onFromChange(+e.target.value)
-                      }
+                  <Col md="auto">
+                    <Row
+                      controlId="select-from"
+                      style={{ marginLeft: '10px', display: 'flex', alignItems: 'end' }}
                     >
-                      {reportOptions.map((option: SelectOption) => (
-                        <option key={option.value} value={option.value} className="option">
-                          {option.label}
-                        </option>
-                      ))}
-                    </BSForm.Control>
-                  </BSForm.Group>
+                      <Col md="auto">
+                        <BSForm.Label>From: </BSForm.Label>
+                      </Col>
+                      <Col md="auto">
+                        <BSForm.Control
+                          style={{ maxWidth: '200px' }}
+                          as="select"
+                          value={fromId}
+                          disabled={values.isFinal}
+                          onChange={(e: any) => onFromChange(+e.target.value)}
+                        >
+                          {reportOptions.map((option: SelectOption) => (
+                            <option key={option.value} value={option.value} className="option">
+                              {option.label}
+                            </option>
+                          ))}
+                        </BSForm.Control>
+                      </Col>
+                    </Row>
+                  </Col>
                 ) : (
-                  <BSForm.Group className="ml-2">
+                  <Col md="auto">
                     <BSForm.Label>From: N/A</BSForm.Label>
-                  </BSForm.Group>
+                  </Col>
                 )}
-                <BSForm.Group controlId="input-to">
-                  <BSForm.Label>To:</BSForm.Label>
-                  <BSForm.Control type="input" disabled value={reportOn}></BSForm.Control>
-                </BSForm.Group>
-                <TooltipWrapper
-                  toolTipId="spl-reports-regenerate-report"
-                  toolTip="Regenerate Report"
-                >
+                <Col md="auto">
+                  <Row
+                    controlId="input-to"
+                    style={{ marginLeft: '10px', display: 'flex', alignItems: 'end' }}
+                  >
+                    <Col md="auto">
+                      <BSForm.Label>To:</BSForm.Label>
+                    </Col>
+                    <Col md="auto">
+                      <BSForm.Control
+                        style={{ maxWidth: '200px' }}
+                        type="input"
+                        disabled
+                        value={reportOn}
+                      ></BSForm.Control>
+                    </Col>
+                  </Row>
+                </Col>
+                <Col md="auto" style={{ marginLeft: '5px', marginRight: '5px' }}>
+                  <TooltipWrapper
+                    toolTipId="spl-reports-regenerate-report"
+                    toolTip="Regenerate Report"
+                  >
+                    <Button
+                      type="reset"
+                      variant="light"
+                      className="mr-3"
+                      disabled={values.isFinal}
+                      icon={<FaSyncAlt size={20} title="refresh-button" />}
+                      onClick={() => currentReport && onRefresh(currentReport)}
+                    ></Button>
+                  </TooltipWrapper>
+                </Col>
+                <Col md="auto">
+                  <Input label="Name:" field="name" disabled={values.isFinal} />
+                </Col>
+                <Col md="auto">
+                  <TooltipWrapper
+                    toolTipId="is-final"
+                    toolTip="Mark report as final, no more changes to be made."
+                  >
+                    <Check label="Is Final:" field="isFinal" disabled={!isSPLAdmin} />
+                  </TooltipWrapper>
+                </Col>
+                <Col md="auto">
                   <Button
-                    type="reset"
-                    variant="light"
-                    className="mr-3"
-                    disabled={values.isFinal}
-                    icon={<FaSyncAlt size={20} title="refresh-button" />}
-                    onClick={() => currentReport && onRefresh(currentReport)}
-                  ></Button>
-                </TooltipWrapper>
-                <Input label="Name:" field="name" disabled={values.isFinal} />
-                <TooltipWrapper
-                  toolTipId="is-final"
-                  toolTip="Mark report as final, no more changes to be made."
-                >
-                  <Check label="Is Final:" field="isFinal" disabled={!isSPLAdmin} />
-                </TooltipWrapper>
-                <Button
-                  className="h-75 mr-auto"
-                  type="submit"
-                  variant="primary"
-                  disabled={
-                    (!dirty &&
-                      originalReport?.to === currentReport?.to &&
-                      originalReport?.from === currentReport?.from) ||
-                    !values.id
-                  }
-                  onClick={(e: any) => {
-                    e.preventDefault();
-                    setSubmitting(true);
-                    submitForm();
-                  }}
-                >
-                  Save
-                </Button>
-                <TooltipWrapper toolTipId="export-to-excel" toolTip="Export to Excel">
-                  <FileIcon>
-                    <FaFileExcel
-                      size={36}
-                      onClick={() => currentReport && onExport(currentReport, 'excel')}
-                    />
-                  </FileIcon>
-                </TooltipWrapper>
-                <TooltipWrapper toolTipId="export-to-excel" toolTip="Export to CSV">
-                  <FileIcon>
-                    <FaFileAlt
-                      size={36}
-                      onClick={() => currentReport && onExport(currentReport, 'csv')}
-                    />
-                  </FileIcon>
-                </TooltipWrapper>
+                    className="h-75 mr-auto"
+                    type="submit"
+                    variant="primary"
+                    disabled={
+                      (!dirty &&
+                        originalReport?.to === currentReport?.to &&
+                        originalReport?.from === currentReport?.from) ||
+                      !values.id
+                    }
+                    onClick={(e: any) => {
+                      e.preventDefault();
+                      setSubmitting(true);
+                      submitForm();
+                    }}
+                  >
+                    Save
+                  </Button>
+                </Col>
+                <Col md="auto">
+                  <TooltipWrapper toolTipId="export-to-excel" toolTip="Export to Excel">
+                    <FileIcon>
+                      <FaFileExcel
+                        size={36}
+                        onClick={() => currentReport && onExport(currentReport, 'excel')}
+                      />
+                    </FileIcon>
+                  </TooltipWrapper>
+                </Col>
+                <Col md="auto">
+                  <TooltipWrapper toolTipId="export-to-excel" toolTip="Export to CSV">
+                    <FileIcon>
+                      <FaFileAlt
+                        size={36}
+                        onClick={() => currentReport && onExport(currentReport, 'csv')}
+                      />
+                    </FileIcon>
+                  </TooltipWrapper>
+                </Col>
               </Row>
             </Form>
             <Prompt

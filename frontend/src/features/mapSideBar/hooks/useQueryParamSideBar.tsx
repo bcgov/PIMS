@@ -1,9 +1,9 @@
-import { useLocation, useHistory } from 'react-router-dom';
-import { useState, useCallback, useMemo } from 'react';
-import queryString from 'query-string';
-import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
+import { dequal } from 'dequal';
 import * as H from 'history';
-import dequal from 'dequal';
+import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
+import queryString from 'query-string';
+import { useCallback, useMemo, useState } from 'react';
+import { useHistory, useLocation } from 'react-router-dom';
 
 export type SidebarSize = 'narrow' | 'wide' | undefined;
 
@@ -88,9 +88,9 @@ export const useQueryParamSideBar = (formikRef?: any): IMapSideBar => {
       searchParams.sidebar === 'false' &&
       (searchParams.parcelId || searchParams.buildingId || searchParams.associatedParcelId)
     ) {
-      searchParams.parcelId = undefined;
-      searchParams.buildingId = undefined;
-      searchParams.associatedParcelId = undefined;
+      searchParams.parcelId = null;
+      searchParams.buildingId = null;
+      searchParams.associatedParcelId = null;
       history.replace({
         pathname: '/mapview',
         search: queryString.stringify(searchParams),

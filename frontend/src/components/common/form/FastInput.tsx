@@ -1,11 +1,12 @@
-import React, { CSSProperties, memo, useEffect } from 'react';
-import { Form, FormControlProps } from 'react-bootstrap';
-import { getIn, FormikProps } from 'formik';
-import { DisplayError } from './DisplayError';
-import { formikFieldMemo } from 'utils';
 import classNames from 'classnames';
+import { FormikProps, getIn } from 'formik';
+import React, { CSSProperties, memo, useEffect } from 'react';
+import { Col, Form, FormControlProps, Row } from 'react-bootstrap';
+import { formikFieldMemo } from 'utils';
+
 import TooltipIcon from '../TooltipIcon';
 import TooltipWrapper from '../TooltipWrapper';
+import { DisplayError } from './DisplayError';
 
 type RequiredAttributes = {
   /** The field name */
@@ -97,12 +98,20 @@ export const FastInput: React.FC<FastInputProps> = memo(
         as={'div'}
       >
         {!!label && (
-          <Form.Label>
-            {label}
-            {!!tooltip && <TooltipIcon toolTipId={`${field}-tooltip`} toolTip={tooltip} />}
-          </Form.Label>
+          <Row style={{ alignItems: 'center' }}>
+            <Col md="auto">
+              <Form.Label style={{ minWidth: '100px', maxWidth: '500px' }}>{label}</Form.Label>
+            </Col>
+            <Col md="auto">
+              {!!tooltip && <TooltipIcon toolTipId={`${field}-tooltip`} toolTip={tooltip} />}
+            </Col>
+          </Row>
         )}
-        {!!tooltip && !label && <TooltipIcon toolTipId={`${field}-tooltip`} toolTip={tooltip} />}
+        {!!tooltip && !label && (
+          <Col md="auto">
+            <TooltipIcon toolTipId={`${field}-tooltip`} toolTip={tooltip} />
+          </Col>
+        )}
 
         <TooltipWrapper toolTipId={`${field}-error-tooltip}`} toolTip={errorTooltip}>
           <Form.Control

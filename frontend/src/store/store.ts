@@ -1,10 +1,10 @@
-import { createStore, applyMiddleware } from 'redux';
+import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
+import { loadingBarMiddleware } from 'react-redux-loading-bar';
+import { applyMiddleware, createStore } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import logger from 'redux-logger';
 import thunk from 'redux-thunk';
 import { rootReducer } from 'store/rootReducer';
-import { loadingBarMiddleware } from 'react-redux-loading-bar';
-import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 
 function configureStore() {
   if (process.env.NODE_ENV !== 'production') {

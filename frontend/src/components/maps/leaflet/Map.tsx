@@ -1,56 +1,57 @@
 import './Map.scss';
 
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { LatLngBounds, LeafletMouseEvent, LatLng, Map as LeafletMap, geoJSON } from 'leaflet';
-import {
-  MapProps as LeafletMapProps,
-  TileLayer,
-  Popup,
-  Map as ReactLeafletMap,
-} from 'react-leaflet';
-import { IProperty, IPropertyDetail } from 'actions/parcelsActions';
-import { Container, Row, Col } from 'react-bootstrap';
 import { ILookupCode } from 'actions/ILookupCode';
-import BasemapToggle, { BasemapToggleEvent, BaseLayer } from '../BasemapToggle';
-import { setMapViewZoom, DEFAULT_MAP_ZOOM } from 'store/slices/mapViewZoomSlice';
+import { IProperty, IPropertyDetail } from 'actions/parcelsActions';
+import axios from 'axios';
+import classNames from 'classnames';
+import GenericModal from 'components/common/GenericModal';
+import { IGeoSearchParams } from 'constants/API';
+import { SidebarSize } from 'features/mapSideBar/hooks/useQueryParamSideBar';
+import { PropertyFilter } from 'features/properties/filter';
+import { IPropertyFilter } from 'features/properties/filter/IPropertyFilter';
 import { Feature } from 'geojson';
-import { LegendControl } from './Legend/LegendControl';
-import { useMediaQuery } from 'react-responsive';
-import ReactResizeDetector from 'react-resize-detector';
-import {
-  municipalityLayerPopupConfig,
-  MUNICIPALITY_LAYER_URL,
-  parcelLayerPopupConfig,
-} from './LayerPopup/constants';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+import { geoJSON, LatLng, LatLngBounds, LeafletMouseEvent, Map as LeafletMap } from 'leaflet';
 import { isEmpty, isEqual, isEqualWith } from 'lodash';
+import React, { useEffect, useState } from 'react';
+import { Col, Container, Row } from 'react-bootstrap';
+import {
+  Map as ReactLeafletMap,
+  MapProps as LeafletMapProps,
+  Popup,
+  TileLayer,
+} from 'react-leaflet';
+import ReactResizeDetector from 'react-resize-detector';
+import { useMediaQuery } from 'react-responsive';
+import { useAppDispatch, useAppSelector } from 'store';
+import { DEFAULT_MAP_ZOOM, setMapViewZoom } from 'store/slices/mapViewZoomSlice';
+import { saveParcelLayerData } from 'store/slices/parcelLayerDataSlice';
+import { storePropertyDetail } from 'store/slices/parcelSlice';
+import { decimalOrUndefined, floatOrUndefined } from 'utils';
+
+import { Claims } from '../../../constants';
+import BasemapToggle, { BaseLayer, BasemapToggleEvent } from '../BasemapToggle';
+import useActiveFeatureLayer from '../hooks/useActiveFeatureLayer';
+import { useFilterContext } from '../providers/FIlterProvider';
+import { PropertyPopUpContext } from '../providers/PropertyPopUpProvider';
+import FilterBackdrop from './FilterBackdrop';
+import InfoSlideOut from './InfoSlideOut/InfoSlideOut';
+import { InventoryLayer } from './InventoryLayer';
+import {
+  MUNICIPALITY_LAYER_URL,
+  municipalityLayerPopupConfig,
+  parcelLayerPopupConfig,
+  PARCELS_PUBLIC_LAYER_URL,
+} from './LayerPopup/constants';
+import { useLayerQuery } from './LayerPopup/hooks/useLayerQuery';
 import {
   LayerPopupContent,
   LayerPopupTitle,
   PopupContentConfig,
 } from './LayerPopup/LayerPopupContent';
-import classNames from 'classnames';
-import { useLayerQuery } from './LayerPopup/hooks/useLayerQuery';
-import { saveParcelLayerData } from 'store/slices/parcelLayerDataSlice';
-import { SidebarSize } from 'features/mapSideBar/hooks/useQueryParamSideBar';
-import useActiveFeatureLayer from '../hooks/useActiveFeatureLayer';
 import LayersControl from './LayersControl';
-import { InventoryLayer } from './InventoryLayer';
-import { IGeoSearchParams } from 'constants/API';
-import { decimalOrUndefined, floatOrUndefined } from 'utils';
-import { IPropertyFilter } from 'features/properties/filter/IPropertyFilter';
-import { PropertyFilter } from 'features/properties/filter';
-import { useFilterContext } from '../providers/FIlterProvider';
+import { LegendControl } from './Legend/LegendControl';
 import { ZoomOutButton } from './ZoomOut/ZoomOutButton';
-import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
-import { Claims } from '../../../constants';
-import InfoSlideOut from './InfoSlideOut/InfoSlideOut';
-import { PropertyPopUpContext } from '../providers/PropertyPopUpProvider';
-import FilterBackdrop from './FilterBackdrop';
-import { useBoundaryLayer } from './LayerPopup/hooks/useBoundaryLayer';
-import GenericModal from 'components/common/GenericModal';
-import { useAppDispatch, useAppSelector } from 'store';
-import { storePropertyDetail } from 'store/slices/parcelSlice';
 
 export type MapViewportChangeEvent = {
   bounds: LatLngBounds | null;
@@ -156,7 +157,7 @@ const getQueryParams = (filter: IPropertyFilter): IGeoSearchParams => {
 const defaultBounds = new LatLngBounds([60.09114547, -119.49609429], [48.78370426, -139.35937554]);
 
 /**
- * Creates a Leaflet map and by default includes a number of preconfigured layers.
+ * Creates a Leaflet map and by default includes a number of pre-configured layers.
  * @param param0
  */
 const Map: React.FC<MapProps> = ({
@@ -186,8 +187,7 @@ const Map: React.FC<MapProps> = ({
   const smallScreen = useMediaQuery({ maxWidth: 1800 });
   const [mapWidth, setMapWidth] = useState(0);
   const municipalitiesService = useLayerQuery(MUNICIPALITY_LAYER_URL);
-  const layerUrl = useBoundaryLayer();
-  const parcelsService = useLayerQuery(layerUrl);
+  const parcelsService = useLayerQuery(PARCELS_PUBLIC_LAYER_URL);
   const [bounds, setBounds] = useState<LatLngBounds>(defaultBounds);
   const { setChanged } = useFilterContext();
   const [layerPopup, setLayerPopup] = useState<LayerPopupInformation>();
@@ -364,7 +364,7 @@ const Map: React.FC<MapProps> = ({
                 </Container>
               </Container>
             ) : null}
-            <Row noGutters>
+            <Row className="g-0">
               <Col>
                 {baseLayers?.length > 0 && (
                   <BasemapToggle baseLayers={baseLayers} onToggle={handleBasemapToggle} />

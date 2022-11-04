@@ -1,12 +1,13 @@
 import './LandUsageForm.scss';
 
 import { FastInput } from 'components/common/form';
-import React, { useCallback, useEffect, useState } from 'react';
-import { Container, Row } from 'react-bootstrap';
-import { FormikProps, useFormikContext, getIn } from 'formik';
-import { Label } from 'components/common/Label';
-import { ClassificationForm } from './ClassificationForm';
 import GenericModal from 'components/common/GenericModal';
+import { Label } from 'components/common/Label';
+import { FormikProps, getIn, useFormikContext } from 'formik';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Col, Container, Row } from 'react-bootstrap';
+
+import { ClassificationForm } from './ClassificationForm';
 
 interface ILandUsageProps {
   nameSpace?: string;
@@ -48,20 +49,32 @@ export const LandUsageForm = <T extends any>(props: ILandUsageProps & FormikProp
         disabled={props.disabled}
       />
       <hr></hr>
-      <Row>
+      <Row style={{ textAlign: 'left' }}>
         <h4>Zoning</h4>
       </Row>
-      <Row className="field-row">
-        <Label>Current Zoning</Label>
-        <FastInput formikProps={props} disabled={props.disabled} field={withNameSpace('zoning')} />
+      <Row className="field-row" style={{ marginBottom: '20px', alignItems: 'center' }}>
+        <Col md="auto">
+          <Label>Current Zoning</Label>
+        </Col>
+        <Col md="auto">
+          <FastInput
+            formikProps={props}
+            disabled={props.disabled}
+            field={withNameSpace('zoning')}
+          />
+        </Col>
       </Row>
-      <Row className="field-row">
-        <Label>Potential Zoning</Label>
-        <FastInput
-          formikProps={props}
-          disabled={props.disabled}
-          field={withNameSpace('zoningPotential')}
-        />
+      <Row className="field-row" style={{ marginBottom: '20px', alignItems: 'center' }}>
+        <Col md="auto">
+          <Label>Potential Zoning</Label>
+        </Col>
+        <Col md="auto">
+          <FastInput
+            formikProps={props}
+            disabled={props.disabled}
+            field={withNameSpace('zoningPotential')}
+          />
+        </Col>
       </Row>
       <GenericModal
         title="Land Classification Changed"

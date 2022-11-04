@@ -1,8 +1,8 @@
-import React from 'react';
-import styled from 'styled-components';
-import { Row, Col } from 'react-bootstrap';
-import ClickAwayListener from 'react-click-away-listener';
 import { ReactComponent as ParcelDraftIcon } from 'assets/images/draft-parcel-icon.svg';
+import React from 'react';
+import { Col, Row } from 'react-bootstrap';
+import ClickAwayListener from 'react-click-away-listener';
+import styled from 'styled-components';
 
 const SearchMarkerButton = styled.button`
   top: 20px;
@@ -21,7 +21,7 @@ interface IMovePinFormProps {
 
 // Component that allows a user to move an existing parcel map marker.
 const MovePinForm = ({ setMovingPinNameSpace, nameSpace }: IMovePinFormProps) => (
-  <Row noGutters className="section">
+  <Row className="section g-0">
     <Col md={12}>
       <h5>Update Parcel Location</h5>
     </Col>

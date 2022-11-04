@@ -1,15 +1,16 @@
-import CustomAxios, { LifecycleToasts } from 'customAxios';
-import { useAppDispatch } from 'store';
-import { showLoading, hideLoading } from 'react-redux-loading-bar';
-import { AxiosInstance } from 'axios';
-import { ENVIRONMENT } from 'constants/environment';
-import * as _ from 'lodash';
-import { useCallback } from 'react';
-import { IGeoSearchParams } from 'constants/API';
-import queryString from 'query-string';
 import { IBuilding, IParcel } from 'actions/parcelsActions';
-import { store } from 'store';
+import { AxiosInstance } from 'axios';
+import { IGeoSearchParams } from 'constants/API';
+import { ENVIRONMENT } from 'constants/environment';
+import CustomAxios, { LifecycleToasts } from 'customAxios';
 import { IApiProperty } from 'features/projects/interfaces';
+import { GeoJsonObject } from 'geojson';
+import * as _ from 'lodash';
+import queryString from 'query-string';
+import { useCallback } from 'react';
+import { hideLoading, showLoading } from 'react-redux-loading-bar';
+import { useAppDispatch } from 'store';
+import { store } from 'store';
 
 export interface IGeocoderResponse {
   siteId: string;
@@ -38,7 +39,7 @@ export interface PimsAPI extends AxiosInstance {
   ) => Promise<{ available: boolean }>;
   searchAddress: (text: string) => Promise<IGeocoderResponse[]>;
   getSitePids: (siteId: string) => Promise<IGeocoderPidsResponse>;
-  loadProperties: (params?: IGeoSearchParams) => Promise<any[]>;
+  loadProperties: (params?: IGeoSearchParams) => Promise<GeoJsonObject[]>;
   getBuilding: (id: number) => Promise<IBuilding>;
   getParcel: (id: number) => Promise<IParcel>;
   updateBuilding: (id: number, data: IApiProperty) => Promise<IBuilding>;
@@ -131,9 +132,9 @@ export const useApi = (props?: IApiProps): PimsAPI => {
   );
 
   axios.loadProperties = useCallback(
-    async (params?: IGeoSearchParams): Promise<any[]> => {
+    async (params?: IGeoSearchParams): Promise<GeoJsonObject[]> => {
       try {
-        const { data } = await axios.get<any[]>(
+        const { data } = await axios.get<GeoJsonObject[]>(
           `${ENVIRONMENT.apiUrl}/properties/search/wfs?${
             params ? queryString.stringify(params) : ''
           }`,
@@ -141,7 +142,7 @@ export const useApi = (props?: IApiProps): PimsAPI => {
         return data;
       } catch (error) {
         throw new Error(
-          `${(error as any).message}: An error occured while fetching properties in inventory.`,
+          `${(error as any).message}: An error occurred while fetching properties in inventory.`,
         );
       }
     },

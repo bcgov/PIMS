@@ -1,8 +1,8 @@
 import './Button.scss';
 
+import classnames from 'classnames';
 import React, { CSSProperties, MouseEventHandler } from 'react';
 import { Button as ButtonBase, ButtonProps as ButtonPropsBase, Spinner } from 'react-bootstrap';
-import classnames from 'classnames';
 
 export type ButtonProps = ButtonPropsBase & {
   /** Adds a custom class to the button element of the <Button> component */
@@ -19,6 +19,7 @@ export type ButtonProps = ButtonPropsBase & {
   showSubmitting?: boolean;
   /** if true and showSubmitting is true, display the spinner */
   isSubmitting?: boolean;
+  ref?: any;
 };
 
 export const Button: React.FC<ButtonProps & React.HTMLAttributes<HTMLButtonElement>> = ({

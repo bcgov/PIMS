@@ -1,23 +1,23 @@
 import { Tab, Tabs } from 'components/tabs';
 import { useFormikContext } from 'formik';
+import { Claim } from 'hooks/api';
 import { Workflow, WorkflowStatus } from 'hooks/api/projects';
 import { IProjectModel } from 'hooks/api/projects/disposals';
+import { useKeycloakWrapper } from 'hooks/useKeycloakWrapper';
 import React from 'react';
 import { Spinner } from 'react-bootstrap';
-import { Switch, Route, Redirect, useLocation } from 'react-router-dom';
+import { Redirect, Route, Switch, useLocation } from 'react-router-dom';
+
 import {
-  ProjectInformationTabs,
-  ProjectERPTabs,
-  ProjectDocumentation,
-  ProjectSPLTabs,
   ProjectCloseOut,
+  ProjectDocumentation,
+  ProjectERPTabs,
+  ProjectInformationTabs,
   ProjectNotifications,
   ProjectNotSPL,
+  ProjectSPLTabs,
 } from '.';
-
 import * as styled from './styled';
-import { useKeycloakWrapper } from 'hooks/useKeycloakWrapper';
-import { Claim } from 'hooks/api';
 
 export interface IProjectTabProps {
   project?: IProjectModel;

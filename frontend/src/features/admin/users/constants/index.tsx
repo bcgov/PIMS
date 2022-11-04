@@ -1,10 +1,11 @@
-import * as React from 'react';
 import { ColumnWithProps } from 'components/Table';
-import { CellProps } from 'react-table';
-import { RowActions } from '../components/RowActions';
-import { IUserRecord } from '../interfaces/IUserRecord';
+import * as React from 'react';
 import { FaCheck, FaTimes } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
+import { CellProps } from 'react-table';
+
+import { RowActions } from '../components/RowActions';
+import { IUserRecord } from '../interfaces/IUserRecord';
 
 export const columnDefinitions: ColumnWithProps<IUserRecord>[] = [
   {

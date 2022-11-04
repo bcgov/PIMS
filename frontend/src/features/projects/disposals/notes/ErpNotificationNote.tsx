@@ -1,21 +1,24 @@
 import { useFormikContext } from 'formik';
 import { NoteType } from 'hooks/api';
-import React from 'react';
-import { IProjectNoteProps, ProjectNote } from '.';
+import React, { useEffect } from 'react';
+
 import { IProjectForm } from '../interfaces';
+import { IProjectNoteProps, ProjectNote } from '.';
 
 export const ErpNotificationNote: React.FC<IProjectNoteProps> = ({ label, tooltip, ...rest }) => {
   const { values, setFieldValue } = useFormikContext<IProjectForm>();
   let indexOfNote = values.notes.findIndex(n => n.noteType === NoteType.ErpNotification);
 
-  if (indexOfNote === -1) {
-    indexOfNote = values.notes.length;
-    setFieldValue(`notes[${values.notes.length}]`, {
-      id: 0,
-      noteType: NoteType.ErpNotification,
-      note: '',
-    });
-  }
+  indexOfNote = values.notes.length;
+  useEffect(() => {
+    if (values.notes.length === -1 || indexOfNote === -1) {
+      setFieldValue(`notes[${values.notes.length}]`, {
+        id: 0,
+        noteType: NoteType.ErpNotification,
+        note: '',
+      });
+    }
+  }, [setFieldValue, indexOfNote, values.notes.length]);
 
   return (
     <ProjectNote

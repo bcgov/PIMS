@@ -1,22 +1,16 @@
-import React from 'react';
-import { OccupancyForm } from './OccupancyForm';
-import { fireEvent, render, waitFor, act } from '@testing-library/react';
-import { noop } from 'lodash';
+import { act, fireEvent, render, waitFor } from '@testing-library/react';
 import { Formik } from 'formik';
-import { SelectOptions } from 'components/common/form';
+import { noop } from 'lodash';
+import React from 'react';
 
-const mockOccupancies: SelectOptions = [
-  { value: 0, label: 'Occupancy Type 1' },
-  { value: 1, label: 'Occupancy Type 2' },
-  { value: 2, label: 'Occupancy Type 3' },
-];
+import { OccupancyForm } from './OccupancyForm';
 
 const form = (
   <Formik
     initialValues={{ assessedLand: '', buildingTenancy: '', rentableArea: '', totalArea: '' }}
     onSubmit={noop}
   >
-    {(props: any) => <OccupancyForm formikProps={props} occupantTypes={mockOccupancies} />}
+    {(props: any) => <OccupancyForm formikProps={props} />}
   </Formik>
 );
 

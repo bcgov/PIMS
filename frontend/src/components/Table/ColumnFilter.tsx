@@ -1,13 +1,14 @@
-import * as React from 'react';
-import { ColumnInstanceWithProps } from '.';
-import styled from 'styled-components';
-import ClickAwayListener from 'react-click-away-listener';
-import { getIn, useFormikContext } from 'formik';
-import clsx from 'classnames';
-import { FiFilter } from 'react-icons/fi';
-import { FaFilter } from 'react-icons/fa';
 import variables from '_variables.module.scss';
+import clsx from 'classnames';
 import TooltipWrapper from 'components/common/TooltipWrapper';
+import { getIn, useFormikContext } from 'formik';
+import * as React from 'react';
+import ClickAwayListener from 'react-click-away-listener';
+import { FaFilter } from 'react-icons/fa';
+import { FiFilter } from 'react-icons/fi';
+import styled from 'styled-components';
+
+import { ColumnInstanceWithProps } from '.';
 
 interface IColumnFilterProps {
   /** Column instance from react table */

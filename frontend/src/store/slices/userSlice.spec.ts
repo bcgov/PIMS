@@ -1,6 +1,7 @@
 import { TableSort } from 'components/Table/TableSort';
 import { IUserRecord } from 'features/admin/users/interfaces/IUserRecord';
 import { IPagedItems, IUser, IUsersFilter } from 'interfaces';
+
 import {
   initialUserState,
   IUserDetail,

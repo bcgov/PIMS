@@ -8,3 +8,4 @@ dist/
 build/
 node_modules/
 .vscode/
+public/videos

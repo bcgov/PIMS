@@ -1,15 +1,16 @@
-import React, { useMemo, useCallback } from 'react';
-import { FormControlProps, Container } from 'react-bootstrap';
-import { useFormikContext, getIn } from 'formik';
-import { clickableTooltip } from '../../common';
-import { IProperty } from 'features/projects/interfaces';
+import classNames from 'classnames';
 import { DisplayError } from 'components/common/form';
 import { Table } from 'components/Table';
-import classNames from 'classnames';
-import { getPropertyColumns, getColumnsWithRemove } from './columns';
-import { useStepper } from 'features/projects/dispose';
-import queryString from 'query-string';
 import { PropertyTypes } from 'constants/propertyTypes';
+import { useStepper } from 'features/projects/dispose';
+import { IProperty } from 'features/projects/interfaces';
+import { getIn, useFormikContext } from 'formik';
+import queryString from 'query-string';
+import React, { useCallback, useMemo } from 'react';
+import { Container, FormControlProps } from 'react-bootstrap';
+
+import { clickableTooltip } from '../../common';
+import { getColumnsWithRemove, getPropertyColumns } from './columns';
 
 type RequiredAttributes = {
   /** The field name */
@@ -39,6 +40,8 @@ type OptionalAttributes = {
   editableZoning?: boolean;
   /** limit the available classification labels that are returned */
   classificationLimitLabels?: string[];
+  /** styles specific to ReviewApproveForm.tsx */
+  useReviewApproveStyles?: boolean;
 };
 
 // only "field" is required for <Input>, the rest are optional
@@ -56,6 +59,7 @@ export const PropertyListViewUpdate: React.FC<InputProps> = ({
   editableFinancials,
   editableZoning,
   classificationLimitLabels,
+  useReviewApproveStyles,
 }) => {
   const { values, setFieldValue } = useFormikContext<any>();
   const existingProperties: IProperty[] = getIn(values, field);
@@ -107,17 +111,19 @@ export const PropertyListViewUpdate: React.FC<InputProps> = ({
   return (
     <Container fluid>
       <div className={classNames('ScrollContainer', outerClassName)}>
-        <Table<IProperty>
-          name="UpdatePropertiesTable"
-          columns={columns}
-          data={existingProperties}
-          pageSize={-1}
-          clickableTooltip={clickableTooltip}
-          lockPageSize
-          setSelectedRows={setSelectedRows}
-          footer
-          onRowClick={onRowClick}
-        />
+        <div style={{ marginLeft: useReviewApproveStyles ? '-25px' : 0 }}>
+          <Table<IProperty>
+            name="UpdatePropertiesTable"
+            columns={columns}
+            data={existingProperties}
+            pageSize={-1}
+            clickableTooltip={clickableTooltip}
+            lockPageSize
+            setSelectedRows={setSelectedRows}
+            footer
+            onRowClick={onRowClick}
+          />
+        </div>
       </div>
       <DisplayError field={field} />
     </Container>

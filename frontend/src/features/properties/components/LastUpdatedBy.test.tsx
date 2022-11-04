@@ -1,8 +1,9 @@
+import { cleanup, fireEvent, render } from '@testing-library/react';
 import React from 'react';
 import { act } from 'react-test-renderer';
-import { render, cleanup, fireEvent } from '@testing-library/react';
-import LastUpdatedBy from './LastUpdatedBy';
 import { formatApiDateTime } from 'utils';
+
+import LastUpdatedBy from './LastUpdatedBy';
 
 const getLastUpdatedBy = (
   createdOn?: string,

@@ -1,16 +1,17 @@
-import { Fragment, useMemo } from 'react';
-import React from 'react';
-import { FormikProps, useFormikContext, getIn } from 'formik';
 import { IEvaluation, IFiscal } from 'actions/parcelsActions';
+import { Table } from 'components/Table';
 import { EvaluationKeys } from 'constants/evaluationKeys';
 import { FiscalKeys } from 'constants/fiscalKeys';
-import moment from 'moment';
+import { FormikProps, getIn, useFormikContext } from 'formik';
 import _ from 'lodash';
-import { isPositiveNumberOrZero } from 'utils';
-import { Table } from 'components/Table';
-import { getNetbookCols, getAssessedCols } from './columns';
-import styled from 'styled-components';
+import moment from 'moment';
+import { Fragment, useMemo } from 'react';
+import React from 'react';
 import { Row } from 'react-bootstrap';
+import styled from 'styled-components';
+import { isPositiveNumberOrZero } from 'utils';
+
+import { getAssessedCols, getNetbookCols } from './columns';
 
 interface EvaluationProps {
   /** the formik tracked namespace of this component */

@@ -1,6 +1,20 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Property list view Matches snapshot 1`] = `
+.c5 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  justify-items: center;
+  position: relative;
+  padding: 0 5px;
+}
+
 .c6 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -14,20 +28,6 @@ exports[`Property list view Matches snapshot 1`] = `
   -ms-flex-align: center;
   align-items: center;
   justify-items: center;
-}
-
-.c5 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  justify-items: center;
-  position: relative;
-  padding: 0 5px;
 }
 
 .c7 {
@@ -49,19 +49,53 @@ exports[`Property list view Matches snapshot 1`] = `
 }
 
 .c1 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
+  width: 250px;
+  font-size: 1rem;
+  position: relative;
 }
 
-.c1 .form-control {
-  width: 165px;
-  height: 35px;
+.c1 .form.Control {
+  width: 100%;
+  height: 100%;
+  border: none;
+  font-size: 16px;
+  box-sizing: border-box;
+  -webkit-flex: 1 1;
+  -ms-flex: 1 1;
+  flex: 1 1;
+  min-width: 0;
+  margin-bottom: 0;
 }
 
-.c1 .form-group .rbt .rbt-menu {
-  width: 370px !important;
+.c1 .suggestionList {
+  background-color: white;
+  border-style: solid;
+  border-color: lightslategray;
+  border-width: thin;
+  font-size: 14px;
+  text-align: left;
+  max-height: 600px;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  overflow-y: auto;
+  z-index: 999;
+  top: 0px;
+  left: -50px;
+}
+
+.c1 option {
+  padding: 10px 5px;
+  word-wrap: break-word;
+  width: 400px;
+  overflow: hidden;
+  cursor: pointer;
+  color: #494949;
+}
+
+.c1 option:hover {
+  background-color: #007bff;
+  color: #fff;
 }
 
 .c2 {
@@ -71,9 +105,6 @@ exports[`Property list view Matches snapshot 1`] = `
 }
 
 .c4 {
-  background-color: #fff !important;
-  color: primaryColor !important;
-  padding: 6px 5px;
   margin-right: 12px;
 }
 
@@ -95,50 +126,104 @@ exports[`Property list view Matches snapshot 1`] = `
       class="px-0 container"
     >
       <form
-        class=""
+        class="container-append"
         novalidate=""
       >
         <div
-          class="map-filter-bar form-row"
+          class="map-filter-container container"
         >
-          <button
-            class="btn btn-primary"
-            style="height: 38px;"
-            type="button"
+          <div
+            class="row"
           >
             <div
-              class="c0"
+              class="filter-col pad-top col-md-auto"
             >
-              <svg
-                fill="currentColor"
-                height="20"
-                size="20"
-                stroke="currentColor"
-                stroke-width="0"
-                style="margin-right: 5px; margin-top: 2px;"
-                viewBox="0 0 512 512"
-                width="20"
-                xmlns="http://www.w3.org/2000/svg"
+              <button
+                class="btn btn-primary"
+                style="height: 38px;"
+                type="button"
               >
-                <path
-                  d="M496 64H128V16c0-8.8-7.2-16-16-16H80c-8.8 0-16 7.2-16 16v48H16C7.2 64 0 71.2 0 80v32c0 8.8 7.2 16 16 16h48v368c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16V128h368c8.8 0 16-7.2 16-16V80c0-8.8-7.2-16-16-16zM160 384h320V160H160v224z"
-                />
-              </svg>
-              <p
-                style="margin-bottom: 0px;"
-              >
-                Surplus Properties
-              </p>
+                <div
+                  class="c0"
+                >
+                  <svg
+                    fill="currentColor"
+                    height="20"
+                    size="20"
+                    stroke="currentColor"
+                    stroke-width="0"
+                    style="margin-right: 5px; margin-top: 2px;"
+                    viewBox="0 0 512 512"
+                    width="20"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M496 64H128V16c0-8.8-7.2-16-16-16H80c-8.8 0-16 7.2-16 16v48H16C7.2 64 0 71.2 0 80v32c0 8.8 7.2 16 16 16h48v368c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16V128h368c8.8 0 16-7.2 16-16V80c0-8.8-7.2-16-16-16zM160 384h320V160H160v224z"
+                    />
+                  </svg>
+                  <p
+                    style="margin-bottom: 0px;"
+                  >
+                    Surplus Properties
+                  </p>
+                </div>
+              </button>
             </div>
-          </button>
-          <div
-            class="vl"
-          />
-          <div
-            class="c1 col"
-          >
             <div
-              class="form-group"
+              class="filter-col pad-top col-md-auto"
+            >
+              <div
+                class="divider"
+              />
+            </div>
+            <div
+              class="filter-col col-md-auto"
+            >
+              <div
+                style="padding-top: 24px;"
+              >
+                <div
+                  class=""
+                >
+                  <div>
+                    <div
+                      class="rbt"
+                      style="outline: none; position: relative;"
+                      tabindex="-1"
+                    >
+                      <div
+                        style="display: flex; flex: 1; height: 100%; position: relative;"
+                      >
+                        <input
+                          aria-autocomplete="both"
+                          aria-expanded="false"
+                          aria-haspopup="listbox"
+                          autocomplete="off"
+                          class="rbt-input-main form-control rbt-input"
+                          id="agencies-field"
+                          name="agencies"
+                          placeholder="My Agencies"
+                          role="combobox"
+                          type="text"
+                          value=""
+                        />
+                        <input
+                          aria-hidden="true"
+                          class="rbt-input-hint"
+                          readonly=""
+                          style="background-color: transparent; border-color: transparent; box-shadow: none; color: rgba(0, 0, 0, 0.54); left: 0px; pointer-events: none; position: absolute; top: 0px; width: 100%;"
+                          tabindex="-1"
+                          value=""
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="filter-col col-md-auto"
+              style="padding-top: 24px; width: 130px;"
             >
               <div
                 class="rbt"
@@ -154,9 +239,8 @@ exports[`Property list view Matches snapshot 1`] = `
                     aria-haspopup="listbox"
                     autocomplete="off"
                     class="rbt-input-main form-control rbt-input"
-                    id="agencies-field"
-                    name="agencies"
-                    placeholder="My Agencies"
+                    id="name-field"
+                    placeholder="Property name"
                     role="combobox"
                     type="text"
                     value=""
@@ -165,216 +249,214 @@ exports[`Property list view Matches snapshot 1`] = `
                     aria-hidden="true"
                     class="rbt-input-hint"
                     readonly=""
-                    style="background-color: transparent; border-color: transparent; box-shadow: none; color: rgba(0, 0, 0, 0.35); left: 0px; pointer-events: none; position: absolute; top: 0px; width: 100%;"
+                    style="background-color: transparent; border-color: transparent; box-shadow: none; color: rgba(0, 0, 0, 0.54); left: 0px; pointer-events: none; position: absolute; top: 0px; width: 100%;"
                     tabindex="-1"
                     value=""
                   />
                 </div>
               </div>
             </div>
-          </div>
-          <div
-            class="map-filter-typeahead col"
-          >
             <div
-              class="rbt"
-              style="outline: none; position: relative;"
-              tabindex="-1"
+              class="filter-col col-md-auto"
+              style="padding-top: 24px; width: 130px;"
             >
               <div
-                style="display: flex; flex: 1; height: 100%; position: relative;"
+                class=""
               >
-                <input
-                  aria-autocomplete="both"
-                  aria-expanded="false"
-                  aria-haspopup="listbox"
-                  autocomplete="off"
-                  class="rbt-input-main form-control rbt-input"
-                  id="name-field"
-                  placeholder="Property name"
-                  role="combobox"
-                  type="text"
-                  value=""
-                />
-                <input
-                  aria-hidden="true"
-                  class="rbt-input-hint"
-                  readonly=""
-                  style="background-color: transparent; border-color: transparent; box-shadow: none; color: rgba(0, 0, 0, 0.35); left: 0px; pointer-events: none; position: absolute; top: 0px; width: 100%;"
-                  tabindex="-1"
-                  value=""
-                />
+                <div>
+                  <div
+                    class="rbt"
+                    style="outline: none; position: relative;"
+                    tabindex="-1"
+                  >
+                    <div
+                      style="display: flex; flex: 1; height: 100%; position: relative;"
+                    >
+                      <input
+                        aria-autocomplete="both"
+                        aria-expanded="false"
+                        aria-haspopup="listbox"
+                        autocomplete="off"
+                        class="rbt-input-main form-control rbt-input"
+                        id="administrativeArea-field"
+                        name="administrativeArea"
+                        placeholder="Location"
+                        role="combobox"
+                        type="text"
+                        value=""
+                      />
+                      <input
+                        aria-hidden="true"
+                        class="rbt-input-hint"
+                        readonly=""
+                        style="background-color: transparent; border-color: transparent; box-shadow: none; color: rgba(0, 0, 0, 0.54); left: 0px; pointer-events: none; position: absolute; top: 0px; width: 100%;"
+                        tabindex="-1"
+                        value=""
+                      />
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-          <div
-            class="map-filter-typeahead col"
-          >
             <div
-              class="form-group"
+              class="filter-col property-filter-options col-md-auto"
             >
               <div
-                class="rbt"
-                style="outline: none; position: relative;"
-                tabindex="-1"
+                class="input-group"
               >
                 <div
-                  style="display: flex; flex: 1; height: 100%; position: relative;"
+                  class="input-group"
                 >
-                  <input
-                    aria-autocomplete="both"
-                    aria-expanded="false"
-                    aria-haspopup="listbox"
-                    autocomplete="off"
-                    class="rbt-input-main form-control rbt-input"
-                    id="administrativeArea-field"
-                    name="administrativeArea"
-                    placeholder="Location"
-                    role="combobox"
-                    type="text"
-                    value=""
-                  />
-                  <input
-                    aria-hidden="true"
-                    class="rbt-input-hint"
-                    readonly=""
-                    style="background-color: transparent; border-color: transparent; box-shadow: none; color: rgba(0, 0, 0, 0.35); left: 0px; pointer-events: none; position: absolute; top: 0px; width: 100%;"
-                    tabindex="-1"
-                    value=""
-                  />
+                  <div
+                    class="row"
+                    controlid="input-searchBy"
+                    style="align-items: center;"
+                  >
+                    <div
+                      class="col-md-auto"
+                    />
+                    <div
+                      class="col-md-auto"
+                    >
+                      <select
+                        class="form-select form-control"
+                        name="searchBy"
+                      >
+                        <option
+                          class="option"
+                          value="address"
+                        >
+                          Address
+                        </option>
+                        <option
+                          class="option"
+                          value="pid"
+                        >
+                          PID/PIN
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="input-group-content"
+                >
+                  <div
+                    class="c1 GeocoderAutoComplete"
+                  >
+                    <div>
+                      <div
+                        class=""
+                      >
+                        <div>
+                          <input
+                            class="form-control"
+                            field="address"
+                            id="input-address"
+                            name="address"
+                            value=""
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div
-            class="bar-item col"
-          >
             <div
-              class="input-group"
+              class="filter-col col-md-auto"
+              style="padding-top: 24px; width: 150px; margin-right: -20px;"
             >
               <div
-                class="input-group-prepend"
+                class="row"
+                controlid="input-classificationId"
+                style="align-items: center;"
               >
                 <div
-                  class="form-group"
+                  class="col-md-auto"
+                />
+                <div
+                  class="col-md-auto"
                 >
                   <select
                     class="form-select form-control"
-                    id="input-searchBy"
-                    name="searchBy"
+                    name="classificationId"
                   >
                     <option
-                      class="option"
-                      value="address"
+                      value=""
                     >
-                      Address
+                      Classification
                     </option>
                     <option
                       class="option"
-                      value="pid"
+                      value="1"
                     >
-                      PID/PIN
+                      classificationVal
                     </option>
                   </select>
                 </div>
               </div>
-              <div
-                class="input-group-content"
-              >
-                <div
-                  class="form-group"
-                >
-                  <input
-                    class="form-control"
-                    id="input-address"
-                    name="address"
-                    placeholder="Enter an address"
-                    value=""
-                  />
-                </div>
-              </div>
             </div>
-          </div>
-          <div
-            class="bar-item col"
-          >
             <div
-              class="form-group"
+              class="filter-col pad-top col-md-auto"
             >
-              <select
-                class="form-select form-control"
-                id="input-classificationId"
-                name="classificationId"
-              >
-                <option
-                  value=""
+              <div>
+                <button
+                  class="Button Button--icon-only bg-warning btn btn-primary"
+                  id="search-button"
+                  type="submit"
                 >
-                  Classification
-                </option>
-                <option
-                  class="option"
-                  value="1"
-                >
-                  classificationVal
-                </option>
-              </select>
+                  <div
+                    class="Button__icon"
+                  >
+                    <svg
+                      fill="currentColor"
+                      height="20"
+                      size="20"
+                      stroke="currentColor"
+                      stroke-width="0"
+                      viewBox="0 0 512 512"
+                      width="20"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"
+                      />
+                    </svg>
+                  </div>
+                </button>
+              </div>
             </div>
-          </div>
-          <div
-            class="bar-item flex-grow-0 col"
-          >
-            <button
-              class="Button Button--icon-only bg-warning btn btn-primary"
-              id="search-button"
-              type="submit"
+            <div
+              class="filter-col pad-top col-md-auto"
             >
-              <div
-                class="Button__icon"
-              >
-                <svg
-                  fill="currentColor"
-                  height="20"
-                  size="20"
-                  stroke="currentColor"
-                  stroke-width="0"
-                  viewBox="0 0 512 512"
-                  width="20"
-                  xmlns="http://www.w3.org/2000/svg"
+              <div>
+                <button
+                  class="Button Button--icon-only btn btn-info"
+                  id="reset-button"
+                  type="reset"
                 >
-                  <path
-                    d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"
-                  />
-                </svg>
+                  <div
+                    class="Button__icon"
+                  >
+                    <svg
+                      fill="currentColor"
+                      height="20"
+                      size="20"
+                      stroke="currentColor"
+                      stroke-width="0"
+                      viewBox="0 0 512 512"
+                      width="20"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M212.333 224.333H12c-6.627 0-12-5.373-12-12V12C0 5.373 5.373 0 12 0h48c6.627 0 12 5.373 12 12v78.112C117.773 39.279 184.26 7.47 258.175 8.007c136.906.994 246.448 111.623 246.157 248.532C504.041 393.258 393.12 504 256.333 504c-64.089 0-122.496-24.313-166.51-64.215-5.099-4.622-5.334-12.554-.467-17.42l33.967-33.967c4.474-4.474 11.662-4.717 16.401-.525C170.76 415.336 211.58 432 256.333 432c97.268 0 176-78.716 176-176 0-97.267-78.716-176-176-176-58.496 0-110.28 28.476-142.274 72.333h98.274c6.627 0 12 5.373 12 12v48c0 6.627-5.373 12-12 12z"
+                      />
+                    </svg>
+                  </div>
+                </button>
               </div>
-            </button>
-          </div>
-          <div
-            class="bar-item flex-grow-0 col"
-          >
-            <button
-              class="Button Button--icon-only btn btn-info"
-              id="reset-button"
-              type="reset"
-            >
-              <div
-                class="Button__icon"
-              >
-                <svg
-                  fill="currentColor"
-                  height="20"
-                  size="20"
-                  stroke="currentColor"
-                  stroke-width="0"
-                  viewBox="0 0 512 512"
-                  width="20"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M212.333 224.333H12c-6.627 0-12-5.373-12-12V12C0 5.373 5.373 0 12 0h48c6.627 0 12 5.373 12 12v78.112C117.773 39.279 184.26 7.47 258.175 8.007c136.906.994 246.448 111.623 246.157 248.532C504.041 393.258 393.12 504 256.333 504c-64.089 0-122.496-24.313-166.51-64.215-5.099-4.622-5.334-12.554-.467-17.42l33.967-33.967c4.474-4.474 11.662-4.717 16.401-.525C170.76 415.336 211.58 432 256.333 432c97.268 0 176-78.716 176-176 0-97.267-78.716-176-176-176-58.496 0-110.28 28.476-142.274 72.333h98.274c6.627 0 12 5.373 12 12v48c0 6.627-5.373 12-12 12z"
-                  />
-                </svg>
-              </div>
-            </button>
+            </div>
           </div>
         </div>
       </form>
@@ -393,93 +475,103 @@ exports[`Property list view Matches snapshot 1`] = `
         class="menu"
       >
         <div>
-          <div
-            class="svg-btn active"
-          >
-            <svg
-              class="svg"
+          <div>
+            <div
+              class="svg-btn active"
             >
-              icon-lot.svg
-            </svg>
-            Parcels view
+              <svg
+                class="svg"
+              >
+                icon-lot.svg
+              </svg>
+              Parcels view
+            </div>
           </div>
         </div>
         <div>
-          <div
-            class="svg-btn"
-          >
-            <svg
-              class="svg"
+          <div>
+            <div
+              class="svg-btn"
             >
-              icon-business.svg
-            </svg>
-            Buildings view
+              <svg
+                class="svg"
+              >
+                icon-business.svg
+              </svg>
+              Buildings view
+            </div>
           </div>
         </div>
       </div>
-      <button
-        class="c2 btn btn-primary"
-        type="button"
-      >
-        <svg
-          data-testid="excel-icon"
-          fill="currentColor"
-          height="36"
-          size="36"
-          stroke="currentColor"
-          stroke-width="0"
-          viewBox="0 0 384 512"
-          width="36"
-          xmlns="http://www.w3.org/2000/svg"
+      <div>
+        <button
+          class="c2 btn btn-primary"
+          type="button"
         >
-          <path
-            d="M224 136V0H24C10.7 0 0 10.7 0 24v464c0 13.3 10.7 24 24 24h336c13.3 0 24-10.7 24-24V160H248c-13.2 0-24-10.8-24-24zm60.1 106.5L224 336l60.1 93.5c5.1 8-.6 18.5-10.1 18.5h-34.9c-4.4 0-8.5-2.4-10.6-6.3C208.9 405.5 192 373 192 373c-6.4 14.8-10 20-36.6 68.8-2.1 3.9-6.1 6.3-10.5 6.3H110c-9.5 0-15.2-10.5-10.1-18.5l60.3-93.5-60.3-93.5c-5.2-8 .6-18.5 10.1-18.5h34.8c4.4 0 8.5 2.4 10.6 6.3 26.1 48.8 20 33.6 36.6 68.5 0 0 6.1-11.7 36.6-68.5 2.1-3.9 6.2-6.3 10.6-6.3H274c9.5-.1 15.2 10.4 10.1 18.4zM384 121.9v6.1H256V0h6.1c6.4 0 12.5 2.5 17 7l97.9 98c4.5 4.5 7 10.6 7 16.9z"
-          />
-        </svg>
-      </button>
-      <button
-        class="c2 btn btn-primary"
-        type="button"
-      >
-        <svg
-          data-testid="csv-icon"
-          fill="currentColor"
-          height="36"
-          size="36"
-          stroke="currentColor"
-          stroke-width="0"
-          viewBox="0 0 384 512"
-          width="36"
-          xmlns="http://www.w3.org/2000/svg"
+          <svg
+            data-testid="excel-icon"
+            fill="currentColor"
+            height="36"
+            size="36"
+            stroke="currentColor"
+            stroke-width="0"
+            viewBox="0 0 384 512"
+            width="36"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M224 136V0H24C10.7 0 0 10.7 0 24v464c0 13.3 10.7 24 24 24h336c13.3 0 24-10.7 24-24V160H248c-13.2 0-24-10.8-24-24zm60.1 106.5L224 336l60.1 93.5c5.1 8-.6 18.5-10.1 18.5h-34.9c-4.4 0-8.5-2.4-10.6-6.3C208.9 405.5 192 373 192 373c-6.4 14.8-10 20-36.6 68.8-2.1 3.9-6.1 6.3-10.5 6.3H110c-9.5 0-15.2-10.5-10.1-18.5l60.3-93.5-60.3-93.5c-5.2-8 .6-18.5 10.1-18.5h34.8c4.4 0 8.5 2.4 10.6 6.3 26.1 48.8 20 33.6 36.6 68.5 0 0 6.1-11.7 36.6-68.5 2.1-3.9 6.2-6.3 10.6-6.3H274c9.5-.1 15.2 10.4 10.1 18.4zM384 121.9v6.1H256V0h6.1c6.4 0 12.5 2.5 17 7l97.9 98c4.5 4.5 7 10.6 7 16.9z"
+            />
+          </svg>
+        </button>
+      </div>
+      <div>
+        <button
+          class="c2 btn btn-primary"
+          type="button"
         >
-          <path
-            d="M224 136V0H24C10.7 0 0 10.7 0 24v464c0 13.3 10.7 24 24 24h336c13.3 0 24-10.7 24-24V160H248c-13.2 0-24-10.8-24-24zm64 236c0 6.6-5.4 12-12 12H108c-6.6 0-12-5.4-12-12v-8c0-6.6 5.4-12 12-12h168c6.6 0 12 5.4 12 12v8zm0-64c0 6.6-5.4 12-12 12H108c-6.6 0-12-5.4-12-12v-8c0-6.6 5.4-12 12-12h168c6.6 0 12 5.4 12 12v8zm0-72v8c0 6.6-5.4 12-12 12H108c-6.6 0-12-5.4-12-12v-8c0-6.6 5.4-12 12-12h168c6.6 0 12 5.4 12 12zm96-114.1v6.1H256V0h6.1c6.4 0 12.5 2.5 17 7l97.9 98c4.5 4.5 7 10.6 7 16.9z"
-          />
-        </svg>
-      </button>
+          <svg
+            data-testid="csv-icon"
+            fill="currentColor"
+            height="36"
+            size="36"
+            stroke="currentColor"
+            stroke-width="0"
+            viewBox="0 0 384 512"
+            width="36"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M224 136V0H24C10.7 0 0 10.7 0 24v464c0 13.3 10.7 24 24 24h336c13.3 0 24-10.7 24-24V160H248c-13.2 0-24-10.8-24-24zm64 236c0 6.6-5.4 12-12 12H108c-6.6 0-12-5.4-12-12v-8c0-6.6 5.4-12 12-12h168c6.6 0 12 5.4 12 12v8zm0-64c0 6.6-5.4 12-12 12H108c-6.6 0-12-5.4-12-12v-8c0-6.6 5.4-12 12-12h168c6.6 0 12 5.4 12 12v8zm0-72v8c0 6.6-5.4 12-12 12H108c-6.6 0-12-5.4-12-12v-8c0-6.6 5.4-12 12-12h168c6.6 0 12 5.4 12 12zm96-114.1v6.1H256V0h6.1c6.4 0 12.5 2.5 17 7l97.9 98c4.5 4.5 7 10.6 7 16.9z"
+            />
+          </svg>
+        </button>
+      </div>
       <div
         class="c3"
       />
-      <button
-        class="c4 btn btn-primary"
-        type="button"
-      >
-        <svg
-          data-testid="edit-icon"
-          fill="currentColor"
-          height="36"
-          size="36"
-          stroke="currentColor"
-          stroke-width="0"
-          viewBox="0 0 576 512"
-          width="36"
-          xmlns="http://www.w3.org/2000/svg"
+      <div>
+        <button
+          class="c2 c4 btn btn-primary"
+          type="button"
         >
-          <path
-            d="M402.6 83.2l90.2 90.2c3.8 3.8 3.8 10 0 13.8L274.4 405.6l-92.8 10.3c-12.4 1.4-22.9-9.1-21.5-21.5l10.3-92.8L388.8 83.2c3.8-3.8 10-3.8 13.8 0zm162-22.9l-48.8-48.8c-15.2-15.2-39.9-15.2-55.2 0l-35.4 35.4c-3.8 3.8-3.8 10 0 13.8l90.2 90.2c3.8 3.8 10 3.8 13.8 0l35.4-35.4c15.2-15.3 15.2-40 0-55.2zM384 346.2V448H64V128h229.8c3.2 0 6.2-1.3 8.5-3.5l40-40c7.6-7.6 2.2-20.5-8.5-20.5H48C21.5 64 0 85.5 0 112v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V306.2c0-10.7-12.9-16-20.5-8.5l-40 40c-2.2 2.3-3.5 5.3-3.5 8.5z"
-          />
-        </svg>
-      </button>
+          <svg
+            data-testid="edit-icon"
+            fill="currentColor"
+            height="36"
+            size="36"
+            stroke="currentColor"
+            stroke-width="0"
+            viewBox="0 0 576 512"
+            width="36"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M402.6 83.2l90.2 90.2c3.8 3.8 3.8 10 0 13.8L274.4 405.6l-92.8 10.3c-12.4 1.4-22.9-9.1-21.5-21.5l10.3-92.8L388.8 83.2c3.8-3.8 10-3.8 13.8 0zm162-22.9l-48.8-48.8c-15.2-15.2-39.9-15.2-55.2 0l-35.4 35.4c-3.8 3.8-3.8 10 0 13.8l90.2 90.2c3.8 3.8 10 3.8 13.8 0l35.4-35.4c15.2-15.3 15.2-40 0-55.2zM384 346.2V448H64V128h229.8c3.2 0 6.2-1.3 8.5-3.5l40-40c7.6-7.6 2.2-20.5-8.5-20.5H48C21.5 64 0 85.5 0 112v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V306.2c0-10.7-12.9-16-20.5-8.5l-40 40c-2.2 2.3-3.5 5.3-3.5 8.5z"
+            />
+          </svg>
+        </button>
+      </div>
     </div>
     <div
       class="table"
@@ -500,30 +592,32 @@ exports[`Property list view Matches snapshot 1`] = `
             <div
               class="th reset-filter svg-btn"
             >
-              <button
-                class="Button Button--icon-only btn btn-secondary"
-                style="width: 20px; height: 20px;"
-                type="button"
-              >
-                <div
-                  class="Button__icon"
+              <div>
+                <button
+                  class="Button Button--icon-only btn btn-secondary"
+                  style="width: 20px; height: 20px;"
+                  type="button"
                 >
-                  <svg
-                    fill="currentColor"
-                    height="10"
-                    size="10"
-                    stroke="currentColor"
-                    stroke-width="0"
-                    viewBox="0 0 512 512"
-                    width="10"
-                    xmlns="http://www.w3.org/2000/svg"
+                  <div
+                    class="Button__icon"
                   >
-                    <path
-                      d="M212.333 224.333H12c-6.627 0-12-5.373-12-12V12C0 5.373 5.373 0 12 0h48c6.627 0 12 5.373 12 12v78.112C117.773 39.279 184.26 7.47 258.175 8.007c136.906.994 246.448 111.623 246.157 248.532C504.041 393.258 393.12 504 256.333 504c-64.089 0-122.496-24.313-166.51-64.215-5.099-4.622-5.334-12.554-.467-17.42l33.967-33.967c4.474-4.474 11.662-4.717 16.401-.525C170.76 415.336 211.58 432 256.333 432c97.268 0 176-78.716 176-176 0-97.267-78.716-176-176-176-58.496 0-110.28 28.476-142.274 72.333h98.274c6.627 0 12 5.373 12 12v48c0 6.627-5.373 12-12 12z"
-                    />
-                  </svg>
-                </div>
-              </button>
+                    <svg
+                      fill="currentColor"
+                      height="10"
+                      size="10"
+                      stroke="currentColor"
+                      stroke-width="0"
+                      viewBox="0 0 512 512"
+                      width="10"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M212.333 224.333H12c-6.627 0-12-5.373-12-12V12C0 5.373 5.373 0 12 0h48c6.627 0 12 5.373 12 12v78.112C117.773 39.279 184.26 7.47 258.175 8.007c136.906.994 246.448 111.623 246.157 248.532C504.041 393.258 393.12 504 256.333 504c-64.089 0-122.496-24.313-166.51-64.215-5.099-4.622-5.334-12.554-.467-17.42l33.967-33.967c4.474-4.474 11.662-4.717 16.401-.525C170.76 415.336 211.58 432 256.333 432c97.268 0 176-78.716 176-176 0-97.267-78.716-176-176-176-58.496 0-110.28 28.476-142.274 72.333h98.274c6.627 0 12 5.373 12 12v48c0 6.627-5.373 12-12 12z"
+                      />
+                    </svg>
+                  </div>
+                </button>
+              </div>
             </div>
             <div
               class="th"
@@ -558,9 +652,7 @@ exports[`Property list view Matches snapshot 1`] = `
                     Agency
                   </span>
                 </div>
-                <span
-                  style="flex: 1 1 auto;"
-                />
+                <span />
                 <div
                   class="c6"
                 >
@@ -627,9 +719,7 @@ exports[`Property list view Matches snapshot 1`] = `
                     Sub Agency
                   </span>
                 </div>
-                <span
-                  style="flex: 1 1 auto;"
-                />
+                <span />
                 <div
                   class="c6"
                 >
@@ -674,9 +764,7 @@ exports[`Property list view Matches snapshot 1`] = `
                 class="sortable-column"
               >
                 Property Name
-                <span
-                  style="flex: 1 1 auto;"
-                />
+                <span />
                 <div
                   class="c6"
                 >
@@ -742,9 +830,7 @@ exports[`Property list view Matches snapshot 1`] = `
                     Classification
                   </span>
                 </div>
-                <span
-                  style="flex: 1 1 auto;"
-                />
+                <span />
                 <div
                   class="c6"
                 >
@@ -789,9 +875,7 @@ exports[`Property list view Matches snapshot 1`] = `
                 class="sortable-column"
               >
                 Type
-                <span
-                  style="flex: 1 1 auto;"
-                />
+                <span />
               </div>
             </div>
             <div
@@ -805,9 +889,7 @@ exports[`Property list view Matches snapshot 1`] = `
                 class="sortable-column"
               >
                 PID
-                <span
-                  style="flex: 1 1 auto;"
-                />
+                <span />
               </div>
             </div>
             <div
@@ -821,9 +903,7 @@ exports[`Property list view Matches snapshot 1`] = `
                 class="sortable-column"
               >
                 Street Address
-                <span
-                  style="flex: 1 1 auto;"
-                />
+                <span />
                 <div
                   class="c6"
                 >
@@ -890,9 +970,7 @@ exports[`Property list view Matches snapshot 1`] = `
                     Location
                   </span>
                 </div>
-                <span
-                  style="flex: 1 1 auto;"
-                />
+                <span />
                 <div
                   class="c6"
                 >
@@ -936,101 +1014,32 @@ exports[`Property list view Matches snapshot 1`] = `
               <div
                 class="sortable-column"
               >
-                <div
-                  class="c5 filter-wrapper"
-                >
-                  <svg
-                    fill="none"
-                    height="1em"
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    style="font-size: 10px;"
-                    viewBox="0 0 24 24"
-                    width="1em"
-                    xmlns="http://www.w3.org/2000/svg"
+                <div>
+                  <div
+                    class="c5 filter-wrapper"
                   >
-                    <polygon
-                      points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"
-                    />
-                  </svg>
-                  <span>
-                    Assessed Land
-                  </span>
+                    <svg
+                      fill="none"
+                      height="1em"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      style="font-size: 10px;"
+                      viewBox="0 0 24 24"
+                      width="1em"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <polygon
+                        points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"
+                      />
+                    </svg>
+                    <span>
+                      Assessed Land
+                    </span>
+                  </div>
                 </div>
-                <span
-                  style="flex: 1 1 auto;"
-                />
-                <div
-                  class="c6"
-                >
-                  <svg
-                    fill="currentColor"
-                    height="1em"
-                    stroke="currentColor"
-                    stroke-width="0"
-                    style="margin-bottom: -5px;"
-                    viewBox="0 0 512 512"
-                    width="1em"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M128 320l128-128 128 128z"
-                    />
-                  </svg>
-                  <svg
-                    fill="currentColor"
-                    height="1em"
-                    stroke="currentColor"
-                    stroke-width="0"
-                    viewBox="0 0 512 512"
-                    width="1em"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M128 192l128 128 128-128z"
-                    />
-                  </svg>
-                </div>
-              </div>
-            </div>
-            <div
-              class="th"
-              colspan="1"
-              role="columnheader"
-              style="box-sizing: border-box; flex: 100 0 auto; min-width: 100px; width: 3.5%; justify-content: flex-end; text-align: right; align-items: center; display: flex;"
-              width="3.5%"
-            >
-              <div
-                class="sortable-column"
-              >
-                <div
-                  class="c5 filter-wrapper"
-                >
-                  <svg
-                    fill="none"
-                    height="1em"
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    style="font-size: 10px;"
-                    viewBox="0 0 24 24"
-                    width="1em"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <polygon
-                      points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"
-                    />
-                  </svg>
-                  <span>
-                    Assessed Building(s)
-                  </span>
-                </div>
-                <span
-                  style="flex: 1 1 auto;"
-                />
+                <span />
                 <div
                   class="c6"
                 >
@@ -1074,32 +1083,101 @@ exports[`Property list view Matches snapshot 1`] = `
               <div
                 class="sortable-column"
               >
+                <div>
+                  <div
+                    class="c5 filter-wrapper"
+                  >
+                    <svg
+                      fill="none"
+                      height="1em"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      style="font-size: 10px;"
+                      viewBox="0 0 24 24"
+                      width="1em"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <polygon
+                        points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"
+                      />
+                    </svg>
+                    <span>
+                      Assessed Building(s)
+                    </span>
+                  </div>
+                </div>
+                <span />
                 <div
-                  class="c5 filter-wrapper"
+                  class="c6"
                 >
                   <svg
-                    fill="none"
+                    fill="currentColor"
                     height="1em"
                     stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    style="font-size: 10px;"
-                    viewBox="0 0 24 24"
+                    stroke-width="0"
+                    style="margin-bottom: -5px;"
+                    viewBox="0 0 512 512"
                     width="1em"
                     xmlns="http://www.w3.org/2000/svg"
                   >
-                    <polygon
-                      points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"
+                    <path
+                      d="M128 320l128-128 128 128z"
                     />
                   </svg>
-                  <span>
-                    Net Book Value
-                  </span>
+                  <svg
+                    fill="currentColor"
+                    height="1em"
+                    stroke="currentColor"
+                    stroke-width="0"
+                    viewBox="0 0 512 512"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M128 192l128 128 128-128z"
+                    />
+                  </svg>
                 </div>
-                <span
-                  style="flex: 1 1 auto;"
-                />
+              </div>
+            </div>
+            <div
+              class="th"
+              colspan="1"
+              role="columnheader"
+              style="box-sizing: border-box; flex: 100 0 auto; min-width: 100px; width: 3.5%; justify-content: flex-end; text-align: right; align-items: center; display: flex;"
+              width="3.5%"
+            >
+              <div
+                class="sortable-column"
+              >
+                <div>
+                  <div
+                    class="c5 filter-wrapper"
+                  >
+                    <svg
+                      fill="none"
+                      height="1em"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      style="font-size: 10px;"
+                      viewBox="0 0 24 24"
+                      width="1em"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <polygon
+                        points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"
+                      />
+                    </svg>
+                    <span>
+                      Net Book Value
+                    </span>
+                  </div>
+                </div>
+                <span />
                 <div
                   class="c6"
                 >
@@ -1166,9 +1244,7 @@ exports[`Property list view Matches snapshot 1`] = `
                     Lot Size (in ha)
                   </span>
                 </div>
-                <span
-                  style="flex: 1 1 auto;"
-                />
+                <span />
                 <div
                   class="c6"
                 >
@@ -1212,9 +1288,7 @@ exports[`Property list view Matches snapshot 1`] = `
                 class="sortable-column"
               >
                 Project #
-                <span
-                  style="flex: 1 1 auto;"
-                />
+                <span />
               </div>
             </div>
           </form>

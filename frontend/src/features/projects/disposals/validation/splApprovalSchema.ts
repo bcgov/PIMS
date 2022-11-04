@@ -4,7 +4,7 @@ import * as yup from 'yup';
 
 export const splApprovalSchema = yup.object({
   requestForSplReceivedOn: yup.string().when(['workflowCode', 'statusCode'], {
-    is: (workflowCode, statusCode) => {
+    is: (workflowCode: Workflow, statusCode: any) => {
       return workflowCode === Workflow.SPL;
     },
     then: yup
@@ -16,7 +16,7 @@ export const splApprovalSchema = yup.object({
       }),
   }),
   approvedForSplOn: yup.string().when(['workflowCode', 'statusCode'], {
-    is: (workflowCode, statusCode) => {
+    is: (workflowCode: Workflow, statusCode: any) => {
       return workflowCode === Workflow.SPL;
     },
     then: yup
@@ -28,7 +28,7 @@ export const splApprovalSchema = yup.object({
       }),
   }),
   removalFromSplRequestOn: yup.string().when(['workflowCode', 'statusCode'], {
-    is: (workflowCode, statusCode) => {
+    is: (workflowCode: Workflow, statusCode: WorkflowStatus) => {
       return (
         (workflowCode === Workflow.ASSESS_EX_DISPOSAL ||
           workflowCode === Workflow.ERP ||
@@ -45,7 +45,7 @@ export const splApprovalSchema = yup.object({
       }),
   }),
   removalFromSplApprovedOn: yup.string().when(['workflowCode', 'statusCode'], {
-    is: (workflowCode, statusCode) => {
+    is: (workflowCode: Workflow, statusCode: WorkflowStatus) => {
       return (
         (workflowCode === Workflow.ASSESS_EX_DISPOSAL ||
           workflowCode === Workflow.ERP ||
@@ -62,7 +62,7 @@ export const splApprovalSchema = yup.object({
       }),
   }),
   removalFromSplRationale: yup.string().when(['workflowCode', 'statusCode'], {
-    is: (workflowCode, statusCode) => {
+    is: (workflowCode: Workflow, statusCode: WorkflowStatus) => {
       return (
         (workflowCode === Workflow.ASSESS_EX_DISPOSAL ||
           workflowCode === Workflow.ERP ||

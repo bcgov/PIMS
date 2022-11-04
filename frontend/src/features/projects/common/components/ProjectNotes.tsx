@@ -1,8 +1,9 @@
+import './ProjectNotes.scss';
+
+import { TextArea } from 'components/common/form';
+import { NoteTypes } from 'constants/noteTypes';
 import * as React from 'react';
 import { Form } from 'react-bootstrap';
-import { TextArea } from 'components/common/form';
-import './ProjectNotes.scss';
-import { NoteTypes } from 'constants/noteTypes';
 import styled from 'styled-components';
 
 export interface IProjectNotesProps {
@@ -24,7 +25,6 @@ export interface IProjectNotesProps {
 
 const Comment = styled.div`
   font-size: 12px;
-  margin-top: -100px;
   max-width: 16.7%;
 `;
 
@@ -42,7 +42,7 @@ export default function ProjectNotes({
   comment,
 }: IProjectNotesProps) {
   return (
-    <Form.Row className="ProjectNotes">
+    <Form.Group className="ProjectNotes">
       <TextArea
         fast
         disabled={disabled}
@@ -53,7 +53,7 @@ export default function ProjectNotes({
         outerClassName={outerClassName ?? 'col-md-10'}
       />
       {!!comment && <Comment>{comment}</Comment>}
-    </Form.Row>
+    </Form.Group>
   );
 }
 

@@ -1,9 +1,11 @@
-import * as React from 'react';
-import FilterBar from 'components/SearchBar/FilterBar';
-import useCodeLookups from 'hooks/useLookupCodes';
-import { Label } from 'components/common/Label';
-import * as API from 'constants/API';
 import { TypeaheadField } from 'components/common/form/Typeahead';
+import { Label } from 'components/common/Label';
+import FilterBar from 'components/SearchBar/FilterBar';
+import * as API from 'constants/API';
+import useCodeLookups from 'hooks/useLookupCodes';
+import * as React from 'react';
+import { Col } from 'react-bootstrap';
+
 import { IAdminAreaFilter } from './interfaces';
 
 interface IAdminAreaFilterProps {
@@ -43,15 +45,19 @@ export const AdminAreaFilterBar: React.FC<IAdminAreaFilterProps> = ({
         }}
         customResetField="id"
       >
-        <Label>Search administrative area by name: </Label>
-        <TypeaheadField
-          hideValidation
-          name="id"
-          options={adminAreas}
-          placeholder="Enter name"
-          filterBy={['name']}
-          labelKey={option => `${option.name}`}
-        />
+        <Col md="auto">
+          <Label>Search administrative area by name: </Label>
+        </Col>
+        <Col md="auto">
+          <TypeaheadField
+            hideValidation
+            name="id"
+            options={adminAreas}
+            placeholder="Enter name"
+            filterBy={['name']}
+            labelKey={option => `${option.name}`}
+          />
+        </Col>
       </FilterBar>
     </>
   );

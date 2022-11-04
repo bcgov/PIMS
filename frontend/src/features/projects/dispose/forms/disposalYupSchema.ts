@@ -1,5 +1,5 @@
-import * as Yup from 'yup';
 import { Classifications } from 'constants/classifications';
+import * as Yup from 'yup';
 
 export const ApprovalConfirmationStepSchema = Yup.object().shape({
   confirmation: Yup.boolean()

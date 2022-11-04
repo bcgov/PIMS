@@ -1,19 +1,20 @@
+import { ILookupCode } from 'actions/ILookupCode';
+import { IAddress } from 'actions/parcelsActions';
+import { FastInput, Select } from 'components/common/form';
+import { TypeaheadField } from 'components/common/form/Typeahead';
+import { Label } from 'components/common/Label';
+import * as API from 'constants/API';
+import { FormikProps, getIn } from 'formik';
+import { IGeocoderResponse } from 'hooks/useApi';
+import _ from 'lodash';
 import { useCallback } from 'react';
 import React from 'react';
-import { FormikProps, getIn } from 'formik';
-import { ILookupCode } from 'actions/ILookupCode';
-import _ from 'lodash';
-import * as API from 'constants/API';
-import { FastInput, Select } from 'components/common/form';
-import { mapLookupCode } from 'utils';
-import { IAddress } from 'actions/parcelsActions';
-import { GeocoderAutoComplete } from '../../GeocoderAutoComplete';
-import { IGeocoderResponse } from 'hooks/useApi';
-import { TypeaheadField } from 'components/common/form/Typeahead';
-import { streetAddressTooltip } from '../strings';
-import { Label } from 'components/common/Label';
-import { Form } from 'react-bootstrap';
+import { Col, Row } from 'react-bootstrap';
 import { useAppSelector } from 'store';
+import { mapLookupCode } from 'utils';
+
+import { GeocoderAutoComplete } from '../../GeocoderAutoComplete';
+import { streetAddressTooltip } from '../strings';
 
 interface AddressProps {
   nameSpace?: string;
@@ -24,6 +25,14 @@ interface AddressProps {
   disableStreetAddress?: boolean;
   /** disable the green checkmark that appears beside the input on valid entry */
   disableCheckmark?: boolean;
+  // Use custom css for building review page of Submit a Building form
+  buildingReviewStyles?: boolean;
+  // Use custom css for land review page of Submit land form
+  landReviewStyles?: boolean;
+  // Use custom css for building information page of Submit a building form
+  buildingInformationStyles?: boolean;
+  // Use custom css for parcel information page of Submit land form
+  parcelInformationStyles?: boolean;
 }
 
 export const defaultAddressValues: IAddress = {
@@ -73,55 +82,145 @@ const AddressForm = <T extends any>(props: AddressProps & FormikProps<T>) => {
   return (
     <>
       {props.hideStreetAddress !== true && (
-        <Form.Row>
-          <Label>Street Address</Label>
-          <GeocoderAutoComplete
-            tooltip={props.toolTips ? streetAddressTooltip : undefined}
-            value={getIn(props.values, withNameSpace('line1'))}
-            disabled={props.disableStreetAddress || props.disabled}
-            field={withNameSpace('line1')}
-            onSelectionChanged={handleGeocoderChanges}
-            onTextChange={value => props.setFieldValue(withNameSpace('line1'), value)}
-            error={getIn(props.errors, withNameSpace('line1'))}
-            touch={getIn(props.touched, withNameSpace('line1'))}
-            displayErrorTooltips
-            required={true}
-          />
-        </Form.Row>
+        <Row style={{ marginBottom: '10px', alignItems: 'center' }}>
+          <Col
+            md="auto"
+            style={{
+              width: '140px',
+              textAlign: 'right',
+              marginRight: props.landReviewStyles ? '20px' : 0,
+            }}
+          >
+            <Label>Street Address</Label>
+          </Col>
+          {props.buildingReviewStyles && (
+            <Col md="auto" style={{}}>
+              <div
+                style={{
+                  borderLeft: '1px solid black',
+                  height: '30px',
+                  marginRight: '20px',
+                }}
+              ></div>
+            </Col>
+          )}
+          <Col md="auto">
+            <GeocoderAutoComplete
+              tooltip={props.toolTips ? streetAddressTooltip : undefined}
+              value={getIn(props.values, withNameSpace('line1'))}
+              disabled={props.disableStreetAddress || props.disabled}
+              field={withNameSpace('line1')}
+              onSelectionChanged={handleGeocoderChanges}
+              onTextChange={value => props.setFieldValue(withNameSpace('line1'), value)}
+              error={getIn(props.errors, withNameSpace('line1'))}
+              touch={getIn(props.touched, withNameSpace('line1'))}
+              displayErrorTooltips
+              required={true}
+            />
+          </Col>
+        </Row>
       )}
-      <Form.Row>
-        <Label>Location</Label>
-        <TypeaheadField
-          options={administrativeAreas.map(x => x.label)}
-          name={withNameSpace('administrativeArea')}
-          disabled={props.disabled}
-          hideValidation={props.disableCheckmark}
-          paginate={false}
-          required
-          displayErrorTooltips
-        />
-      </Form.Row>
-      <Form.Row>
-        <Label>Province</Label>
-        <Select
-          disabled={true}
-          placeholder="Must Select One"
-          field={withNameSpace('provinceId')}
-          options={provinces}
-        />
-      </Form.Row>
-      <Form.Row className="postal">
-        <Label>Postal Code</Label>
-        <FastInput
-          className="input-small"
-          formikProps={props}
-          style={{ width: '120px' }}
-          disabled={props.disabled}
-          onBlurFormatter={(postal: string) => postal.replace(postal, postalCodeFormatter(postal))}
-          field={withNameSpace('postal')}
-          displayErrorTooltips
-        />
-      </Form.Row>
+      <Row style={{ marginBottom: '10px', alignItems: 'center' }}>
+        <Col
+          md="auto"
+          style={{
+            width: '140px',
+            textAlign: 'right',
+            marginRight: props.landReviewStyles ? '20px' : 0,
+          }}
+        >
+          <Label>Location</Label>
+        </Col>
+        {props.buildingReviewStyles && (
+          <Col md="auto" style={{}}>
+            <div
+              style={{
+                borderLeft: '1px solid black',
+                height: '30px',
+                marginRight: '20px',
+              }}
+            ></div>
+          </Col>
+        )}
+        <Col md="auto">
+          <TypeaheadField
+            options={administrativeAreas.map(x => x.label)}
+            name={withNameSpace('administrativeArea')}
+            disabled={props.disabled}
+            hideValidation={props.disableCheckmark}
+            paginate={false}
+            required
+            displayErrorTooltips
+          />
+        </Col>
+      </Row>
+      <Row style={{ marginBottom: '10px', alignItems: 'center' }}>
+        <Col
+          md="auto"
+          style={{
+            width: '140px',
+            textAlign: 'right',
+            paddingRight: props.landReviewStyles ? '55px' : '12px',
+            marginRight: props.buildingReviewStyles ? 0 : '-35px',
+          }}
+        >
+          <Label>Province</Label>
+        </Col>
+        {props.buildingReviewStyles && (
+          <Col md="auto" style={{}}>
+            <div
+              style={{
+                borderLeft: '1px solid black',
+                height: '30px',
+                marginRight: '20px',
+              }}
+            ></div>
+          </Col>
+        )}
+        <Col md="auto" style={{ paddingRight: 0 }}>
+          <Select
+            disabled={true}
+            placeholder="Must Select One"
+            field={withNameSpace('provinceId')}
+            options={provinces}
+          />
+        </Col>
+      </Row>
+      <Row className="postal" style={{ marginBottom: '10px', alignItems: 'center' }}>
+        <Col
+          md="auto"
+          style={{
+            width: '140px',
+            textAlign: 'right',
+            marginLeft: props.landReviewStyles ? '-10px' : 0,
+          }}
+        >
+          <Label>Postal Code</Label>
+        </Col>
+        <Col
+          md="auto"
+          style={{
+            width:
+              props.buildingReviewStyles || props.landReviewStyles
+                ? '200px'
+                : props.buildingInformationStyles
+                ? '275px'
+                : '250px',
+          }}
+        >
+          <FastInput
+            className="input-small"
+            formikProps={props}
+            style={{ width: '120px' }}
+            disabled={props.disabled}
+            onBlurFormatter={(postal: string) =>
+              postal.replace(postal, postalCodeFormatter(postal))
+            }
+            field={withNameSpace('postal')}
+            displayErrorTooltips
+          />
+        </Col>
+      </Row>
     </>
   );
 };

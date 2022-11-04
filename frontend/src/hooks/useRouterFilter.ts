@@ -1,12 +1,12 @@
-import { useAppDispatch, useAppSelector } from 'store';
-import { useHistory } from 'react-router-dom';
-import React, { useCallback, useEffect, useState } from 'react';
-import { saveFilter } from 'store/slices/filterSlice';
+import { TableSort } from 'components/Table/TableSort';
+import { PropertyTypeNames } from 'constants/propertyTypeNames';
 import _ from 'lodash';
 import queryString from 'query-string';
-import { TableSort } from 'components/Table/TableSort';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from 'store';
+import { saveFilter } from 'store/slices/filterSlice';
 import { generateMultiSortCriteria, resolveSortCriteriaFromUrl } from 'utils';
-import { PropertyTypeNames } from 'constants/propertyTypeNames';
 
 /**
  * Extract the specified properties from the source object.
@@ -114,7 +114,9 @@ export const useRouterFilter = <T extends object>({
 
       if (params.sorting && setSorting) {
         const sort = resolveSortCriteriaFromUrl(
-          typeof params.sorting === 'string' ? [params.sorting] : params.sorting,
+          typeof params.sorting === 'string' && params.sorting !== null
+            ? [params.sorting]
+            : (params.sorting as string[]),
         );
         if (!_.isEmpty(sort)) {
           setSorting(sort as any);

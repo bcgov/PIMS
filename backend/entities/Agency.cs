@@ -32,6 +32,11 @@ namespace Pims.Dal.Entities
         public string Email { get; set; }
 
         /// <summary>
+        /// get/set - A CC email address for the agency.
+        /// </summary>
+        public string CCEmail { get; set; }
+
+        /// <summary>
         /// get/set - Whether notifications should be sent to this agency.
         /// </summary>
         public bool SendEmail { get; set; } = true;

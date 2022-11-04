@@ -1,19 +1,19 @@
-import React from 'react';
-import { SresManual } from '../common';
-import { ProjectStatus, ProjectTabs, GreTransferStep } from '.';
-
-import * as styled from './styled';
-import { Form, Formik } from 'formik';
-import { defaultProjectForm } from './constants';
-import { useProjectDisposal } from 'store';
-import { Route, Switch, useLocation } from 'react-router-dom';
-import { toForm, toModel } from './utils';
 import { Button } from 'components/common/form';
 import { Col, Row } from 'components/flex';
+import { Form, Formik } from 'formik';
 import { IProjectModel } from 'hooks/api/projects/disposals';
-import { IProjectForm } from './interfaces';
-import { useProjectValidation } from './validation';
+import React from 'react';
+import { Route, Switch, useLocation } from 'react-router-dom';
+import { useProjectDisposal } from 'store';
 import { useProjectStore } from 'store/slices/hooks';
+
+import { SresManual } from '../common';
+import { GreTransferStep, ProjectStatus, ProjectTabs } from '.';
+import { defaultProjectForm } from './constants';
+import { IProjectForm } from './interfaces';
+import * as styled from './styled';
+import { toForm, toModel } from './utils';
+import { useProjectValidation } from './validation';
 
 export interface IDisposalProjectProps {}
 

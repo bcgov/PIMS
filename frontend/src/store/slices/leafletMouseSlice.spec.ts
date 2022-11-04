@@ -1,9 +1,10 @@
 import { LatLng, LeafletMouseEvent, Point } from 'leaflet';
+
 import {
-  leafletMouseSlice,
-  initialLeafletState,
-  saveClickLatLng,
   clearClickLatLng,
+  initialLeafletState,
+  leafletMouseSlice,
+  saveClickLatLng,
 } from './leafletMouseSlice';
 
 describe('Leaflet mouse slice tests', () => {

@@ -4,8 +4,8 @@ import { ReviewWorkflowStatus } from 'features/projects/constants';
 import { useFormikContext } from 'formik';
 import { DisposeWorkflowStatus } from 'hooks/api/projects';
 import React from 'react';
-import { IProjectForm } from '../interfaces';
 
+import { IProjectForm } from '../interfaces';
 import * as styled from './styled';
 
 interface IProjectDocumentationProps {

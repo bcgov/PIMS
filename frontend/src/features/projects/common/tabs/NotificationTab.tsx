@@ -1,11 +1,12 @@
-import React, { useMemo, useState, useCallback } from 'react';
-import { IProject, INotificationFilter } from 'features/projects/interfaces';
-import { INotification } from 'features/projects/interfaces/INotification';
-import { columnDefinitions } from './columns';
 import { Table } from 'components/Table';
-import { formatDate } from 'utils';
-import { useDisposalApi } from 'hooks/useApiDisposal';
+import { INotificationFilter, IProject } from 'features/projects/interfaces';
+import { INotification } from 'features/projects/interfaces/INotification';
 import { useFormikContext } from 'formik';
+import { useDisposalApi } from 'hooks/useApiDisposal';
+import React, { useCallback, useMemo, useState } from 'react';
+import { formatDate } from 'utils';
+
+import { columnDefinitions } from './columns';
 
 interface INotificationTabProps {
   isReadOnly?: boolean;

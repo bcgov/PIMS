@@ -1,12 +1,13 @@
-import * as React from 'react';
-import { Col, Row } from 'react-bootstrap';
-import TasksForm from './TasksForm';
-import { reviewAppraisalTooltip, useProject } from '../../common';
+import classNames from 'classnames';
+import TooltipIcon from 'components/common/TooltipIcon';
 import { ReviewWorkflowStatus } from 'features/projects/constants';
 import _ from 'lodash';
-import TooltipIcon from 'components/common/TooltipIcon';
+import * as React from 'react';
+import { Col, Row } from 'react-bootstrap';
+
+import { reviewAppraisalTooltip, useProject } from '../../common';
 import ProjectNotes from '../components/ProjectNotes';
-import classNames from 'classnames';
+import TasksForm from './TasksForm';
 
 interface IAppraisalCheckListFormProps {
   className?: string;
@@ -26,10 +27,17 @@ const AppraisalCheckListForm: React.FunctionComponent<IAppraisalCheckListFormPro
   return (
     <Row className={classNames(props.className)}>
       <Col>
-        <h3>
-          Appraisal
-          <TooltipIcon toolTipId="review-appraisal" toolTip={reviewAppraisalTooltip}></TooltipIcon>
-        </h3>
+        <Row style={{ alignItems: 'center' }}>
+          <Col md="auto">
+            <h3>Appraisal</h3>
+          </Col>
+          <Col md="auto">
+            <TooltipIcon
+              toolTipId="review-appraisal"
+              toolTip={reviewAppraisalTooltip}
+            ></TooltipIcon>
+          </Col>
+        </Row>
         <TasksForm tasks={tasks} isReadOnly={props.isReadOnly} />
         <ProjectNotes
           className="col-md-auto"

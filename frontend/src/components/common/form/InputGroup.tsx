@@ -1,12 +1,13 @@
 import './InputGroup.scss';
 
+import classNames from 'classnames';
+import { FormikProps } from 'formik';
 import React, { CSSProperties } from 'react';
 import { FormControlProps, InputGroup as BootstrapInputGroup } from 'react-bootstrap';
-import { Input } from './Input';
-import { FastInput } from './FastInput';
-import { FormikProps } from 'formik';
-import classNames from 'classnames';
+
 import { Label } from '../Label';
+import { FastInput } from './FastInput';
+import { Input } from './Input';
 
 type RequiredAttributes = {
   /** The field name */
@@ -33,7 +34,8 @@ type OptionalAttributes = {
   preText?: string;
   prepend?: React.ReactNode;
   postText?: string;
-  fast?: boolean;
+  /** Whether to use the Formik fast input, a custom input, or the standard input. */
+  fast?: boolean | React.ReactNode;
   outerClassName?: string;
   displayErrorTooltips?: boolean;
   /** style to pass down to the FastInput or Input */
@@ -84,15 +86,15 @@ export const InputGroup: React.FC<InputGroupProps> = ({
       {!!label && required && <Label required>{label}</Label>}
 
       {preText && (
-        <BootstrapInputGroup.Prepend>
+        <BootstrapInputGroup>
           <BootstrapInputGroup.Text>{preText}</BootstrapInputGroup.Text>
-        </BootstrapInputGroup.Prepend>
+        </BootstrapInputGroup>
       )}
-      {PrependComponent && (
-        <BootstrapInputGroup.Prepend>{PrependComponent}</BootstrapInputGroup.Prepend>
-      )}
+      {PrependComponent && <BootstrapInputGroup>{PrependComponent}</BootstrapInputGroup>}
       <div className="input-group-content">
-        {fast ? (
+        {React.isValidElement(fast) ? (
+          fast
+        ) : fast ? (
           <FastInput
             formikProps={formikProps}
             disabled={disabled}
@@ -116,11 +118,11 @@ export const InputGroup: React.FC<InputGroupProps> = ({
         )}
       </div>
       {postText && (
-        <BootstrapInputGroup.Append>
+        <BootstrapInputGroup>
           <BootstrapInputGroup.Text className={disabled ? 'append-disabled' : ''}>
             {postText}
           </BootstrapInputGroup.Text>
-        </BootstrapInputGroup.Append>
+        </BootstrapInputGroup>
       )}
     </div>
   );

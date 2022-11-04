@@ -1,43 +1,47 @@
-import * as React from 'react';
-import MapSideBarLayout from '../components/MapSideBarLayout';
-import useParamSideBar, { SidebarContextType } from '../hooks/useQueryParamSideBar';
-import { IParcel, IProperty, IBuilding } from 'actions/parcelsActions';
-import { deleteParcel, fetchParcelsDetail } from 'store/slices/hooks/parcelsActionCreator';
-import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
-import { BuildingForm, SubmitPropertySelector, LandForm } from '../SidebarContents';
-import { BuildingSvg, LandSvg, SubdivisionSvg } from 'components/common/Icons';
-import { FormikValues, setIn, getIn } from 'formik';
-import { useState } from 'react';
-import useGeocoder from 'features/properties/hooks/useGeocoder';
-import { isMouseEventRecent } from 'utils';
-import { handleParcelDataLayerResponse, useLayerQuery } from 'components/maps/leaflet/LayerPopup';
-import { LatLng } from 'leaflet';
-import AssociatedLandForm from '../SidebarContents/AssociatedLandForm';
-import { toast } from 'react-toastify';
-import _, { noop, cloneDeep } from 'lodash';
-import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
-import GenericModal, { ModalSize } from 'components/common/GenericModal';
-import { FaCheckCircle, FaEdit } from 'react-icons/fa';
-import styled from 'styled-components';
-import { getMergedFinancials } from 'features/properties/components/forms/subforms/EvaluationForm';
-import { Spinner } from 'react-bootstrap';
-import { ViewOnlyLandForm, ISearchFields, getInitialValues } from '../SidebarContents/LandForm';
-import useSideBarParcelLoader from '../hooks/useSideBarParcelLoader';
-import useSideBarBuildingLoader from '../hooks/useSideBarBuildingLoader';
-import { ViewOnlyBuildingForm, valuesToApiFormat } from '../SidebarContents/BuildingForm';
-import { Prompt } from 'react-router-dom';
-import { FaTrash } from 'react-icons/fa';
-import { deleteBuilding } from 'store/slices/hooks/buildingActionCreator';
-import useSideBarBuildingWithParcelLoader from '../hooks/useSideBarBuildingWithParcelLoader';
 import variables from '_variables.module.scss';
-import { withNameSpace } from 'utils/formUtils';
-import { PropertyTypes, Claims, EvaluationKeys, FiscalKeys } from 'constants/index';
-import { useBuildingApi } from '../hooks/useBuildingApi';
+import { IBuilding, IParcel, IProperty } from 'actions/parcelsActions';
+import GenericModal, { ModalSize } from 'components/common/GenericModal';
+import { BuildingSvg, LandSvg, SubdivisionSvg } from 'components/common/Icons';
 import { fireMapRefreshEvent } from 'components/maps/hooks/useMapRefreshEvent';
-import { useBoundaryLayer } from 'components/maps/leaflet/LayerPopup/hooks/useBoundaryLayer';
-import { useAppDispatch, useAppSelector } from 'store';
-import { storePropertyDetail } from 'store/slices/parcelSlice';
+import {
+  handleParcelDataLayerResponse,
+  PARCELS_PUBLIC_LAYER_URL,
+  useLayerQuery,
+} from 'components/maps/leaflet/LayerPopup';
+import { Claims, EvaluationKeys, FiscalKeys, PropertyTypes } from 'constants/index';
+import { getMergedFinancials } from 'features/properties/components/forms/subforms/EvaluationForm';
+import useGeocoder from 'features/properties/hooks/useGeocoder';
+import { FormikValues, getIn, setIn } from 'formik';
+import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+import { LatLng } from 'leaflet';
+import _, { cloneDeep, noop } from 'lodash';
+import * as React from 'react';
+import { useState } from 'react';
+import { Spinner } from 'react-bootstrap';
+import { FaCheckCircle, FaEdit } from 'react-icons/fa';
+import { FaTrash } from 'react-icons/fa';
 import { Map as LeafletMap } from 'react-leaflet';
+import { Prompt } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { useAppDispatch, useAppSelector } from 'store';
+import { deleteBuilding } from 'store/slices/hooks/buildingActionCreator';
+import { deleteParcel, fetchParcelsDetail } from 'store/slices/hooks/parcelsActionCreator';
+import { storePropertyDetail } from 'store/slices/parcelSlice';
+import styled from 'styled-components';
+import { isMouseEventRecent } from 'utils';
+import { withNameSpace } from 'utils/formUtils';
+
+import MapSideBarLayout from '../components/MapSideBarLayout';
+import { useBuildingApi } from '../hooks/useBuildingApi';
+import useParamSideBar, { SidebarContextType } from '../hooks/useQueryParamSideBar';
+import useSideBarBuildingLoader from '../hooks/useSideBarBuildingLoader';
+import useSideBarBuildingWithParcelLoader from '../hooks/useSideBarBuildingWithParcelLoader';
+import useSideBarParcelLoader from '../hooks/useSideBarParcelLoader';
+import { BuildingForm, LandForm, SubmitPropertySelector } from '../SidebarContents';
+import AssociatedLandForm from '../SidebarContents/AssociatedLandForm';
+import { valuesToApiFormat, ViewOnlyBuildingForm } from '../SidebarContents/BuildingForm';
+import { getInitialValues, ISearchFields, ViewOnlyLandForm } from '../SidebarContents/LandForm';
 
 interface IMapSideBarContainerProps {
   refreshParcels: Function;
@@ -138,8 +142,7 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
   const [showDelete, setShowDelete] = useState(false);
   const { createBuilding, updateBuilding } = useBuildingApi();
 
-  const layerUrl = useBoundaryLayer();
-  const parcelLayerService = useLayerQuery(layerUrl);
+  const parcelLayerService = useLayerQuery(PARCELS_PUBLIC_LAYER_URL);
 
   /**
    * Populate the formik form using the passed parcel.
@@ -566,7 +569,7 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
       propertyName={buildingDetail?.name ?? parcelDetail?.name}
     >
       {render()}
-      <Prompt message={handleLocationChange}></Prompt>
+      <Prompt message={handleLocationChange as any}></Prompt>
       <GenericModal
         message="Are you sure you want to permanently delete the property from inventory?"
         size={ModalSize.SMALL}

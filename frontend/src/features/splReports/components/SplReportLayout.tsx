@@ -1,12 +1,14 @@
-import * as React from 'react';
 import './SplReportLayout.scss';
-import ReportList from './ReportList';
-import { FaChevronRight, FaChevronLeft } from 'react-icons/fa';
+
 import classNames from 'classnames';
+import * as React from 'react';
+import ClickAwayListener from 'react-click-away-listener';
+import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+
 import { IReport, ISnapshot } from '../interfaces';
 import ReportControls from './ReportControls';
 import ReportForm from './ReportForm';
-import ClickAwayListener from 'react-click-away-listener';
+import ReportList from './ReportList';
 
 interface ISplReportLayoutProps {
   showSidebar: boolean;
@@ -57,7 +59,7 @@ const SplReportLayout: React.FunctionComponent<ISplReportLayoutProps> = ({
           </button>
         </div>
       </ClickAwayListener>
-      <div className="ml-4 report-content">
+      <div className="report-content" style={{ marginLeft: '20px' }}>
         <ReportControls
           reports={reports}
           currentReport={currentReport}

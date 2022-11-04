@@ -1,9 +1,10 @@
-import React, { Fragment } from 'react';
-import { Form, Check } from 'components/common/form';
-import { IProjectTask, IProject } from '../../interfaces';
+import classNames from 'classnames';
+import { Check, Form } from 'components/common/form';
 import { useFormikContext } from 'formik';
 import _ from 'lodash';
-import classNames from 'classnames';
+import React, { Fragment } from 'react';
+
+import { IProject, IProjectTask } from '../../interfaces';
 
 interface ITaskFormParams {
   tasks: IProjectTask[];
@@ -20,14 +21,14 @@ const TasksForm = ({ tasks, isReadOnly, className }: ITaskFormParams) => {
     <Fragment>
       {tasks !== undefined &&
         tasks.map((task: any) => (
-          <Form.Row key={task.name} className={classNames('tasksForm', className)}>
+          <Form.Group key={task.name} className={classNames('tasksForm', className)}>
             <Check
               field={`tasks.${_.findIndex(values.tasks, { taskId: task.taskId })}.isCompleted`}
               postLabel={task.description}
               required={!task.isOptional}
               disabled={isReadOnly}
             />
-          </Form.Row>
+          </Form.Group>
         ))}
     </Fragment>
   );

@@ -24,6 +24,7 @@ namespace Pims.Dal.Configuration
             builder.Property(m => m.Name).IsRequired();
 
             builder.Property(m => m.Email).HasMaxLength(250);
+            builder.Property(m => m.CCEmail).HasMaxLength(250);
             builder.Property(m => m.AddressTo).HasMaxLength(100);
 
             builder.Property(m => m.Description).HasMaxLength(500);

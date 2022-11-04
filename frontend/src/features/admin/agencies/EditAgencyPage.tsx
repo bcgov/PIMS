@@ -1,26 +1,28 @@
-import React, { useEffect, useState } from 'react';
-import { Navbar, Container, Row, ButtonToolbar, Button } from 'react-bootstrap';
-import { Check, Form, Input, Select, SelectOption } from '../../../components/common/form';
-import { IAgencyDetail } from 'interfaces';
-import { Formik } from 'formik';
-import * as API from 'constants/API';
 import './EditAgencyPage.scss';
-import { useHistory } from 'react-router-dom';
-import useCodeLookups from 'hooks/useLookupCodes';
+
 import { ILookupCode } from 'actions/ILookupCode';
+import { AxiosError } from 'axios';
+import GenericModal from 'components/common/GenericModal';
+import TooltipWrapper from 'components/common/TooltipWrapper';
+import * as API from 'constants/API';
+import service from 'features/properties/service';
+import { Formik } from 'formik';
+import useCodeLookups from 'hooks/useLookupCodes';
+import { IAgencyDetail } from 'interfaces';
+import React, { useEffect, useState } from 'react';
+import { Button, ButtonToolbar, Container, Navbar, Row } from 'react-bootstrap';
+import { FaArrowAltCircleLeft } from 'react-icons/fa';
+import { useHistory } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from 'store';
 import {
   createAgency,
   deleteAgency,
   fetchAgencyDetail,
   getUpdateAgencyAction,
 } from 'store/slices/hooks/agencyActionCreator';
-import { FaArrowAltCircleLeft } from 'react-icons/fa';
-import GenericModal from 'components/common/GenericModal';
 import { AgencyEditSchema } from 'utils/YupSchema';
-import service from 'features/properties/service';
-import TooltipWrapper from 'components/common/TooltipWrapper';
-import { useAppDispatch, useAppSelector } from 'store';
-import { AxiosError } from 'axios';
+
+import { Check, Form, Input, Select, SelectOption } from '../../../components/common/form';
 
 interface IEditAgencyPageProps {
   /** id prop to identify which agency to edit */
@@ -50,6 +52,7 @@ const EditAgencyPage = (props: IEditAgencyPageProps) => {
     label: code.name,
     value: code.id.toString(),
     selected: !!agency.parentId,
+    parent: '',
   });
   //
   const selectAgencies = agencies.map(c => mapLookupCode(c));
@@ -74,6 +77,7 @@ const EditAgencyPage = (props: IEditAgencyPageProps) => {
     isDisabled: false,
     sendEmail: true,
     email: '',
+    ccEmail: '',
     addressTo: '',
     rowVersion: '',
   };
@@ -112,6 +116,7 @@ const EditAgencyPage = (props: IEditAgencyPageProps) => {
                       name: values.name,
                       code: values.code,
                       email: values.email,
+                      ccEmail: values.ccEmail,
                       isDisabled: values.isDisabled,
                       sendEmail: values.sendEmail,
                       addressTo: values.addressTo,
@@ -145,9 +150,17 @@ const EditAgencyPage = (props: IEditAgencyPageProps) => {
           >
             {props => (
               <Form className="agencyInfo">
-                <Input label="Agency" required field="name" value={props.values.name} type="text" />
+                <Input
+                  label="Agency"
+                  aria-label="Agency"
+                  required
+                  field="name"
+                  value={props.values.name}
+                  type="text"
+                />
                 <Input
                   label="Short Name (Code)"
+                  aria-label="Short Name (Code)"
                   field="code"
                   value={props.values.code}
                   type="text"
@@ -155,8 +168,9 @@ const EditAgencyPage = (props: IEditAgencyPageProps) => {
                 />
                 {checkAgencies}
                 <Input label="Description" field="description" type="text" />
-                <Input label="Agency e-mail address" field="email" type="text" />
-                <Input label="Email Addressed To" field="addressTo" type="text" />
+                <Input label="Email address" aria-label="Email address" field="email" type="text" />
+                <Input label="Addressed To" field="addressTo" type="text" />
+                <Input label="CC Email address" field="ccEmail" type="text" />
 
                 <Form.Group className="checkboxes">
                   <TooltipWrapper
@@ -169,7 +183,11 @@ const EditAgencyPage = (props: IEditAgencyPageProps) => {
                     toolTip="Click to enable to email notifications for Agency then click Save Changes."
                     toolTipId="email-tooltip"
                   >
-                    <Check field="sendEmail" label="Email Notifications?" />
+                    <Check
+                      field="sendEmail"
+                      label="Email Notifications?"
+                      aria-label="Email Notifications?"
+                    />
                   </TooltipWrapper>
                 </Form.Group>
 

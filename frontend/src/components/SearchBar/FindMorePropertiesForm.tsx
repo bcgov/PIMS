@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
-import { mapLookupCode } from 'utils';
-import * as API from 'constants/API';
-import styled from 'styled-components';
-import { Container, Form, Row } from 'react-bootstrap';
-import { Button, Check, DisplayError, Input, Select } from 'components/common/form';
-import { getIn, useFormikContext } from 'formik';
-import { TypeaheadField } from 'components/common/form/Typeahead';
 import variables from '_variables.module.scss';
+import { Button, Check, DisplayError, Input, Select } from 'components/common/form';
+import { TypeaheadField } from 'components/common/form/Typeahead';
+import * as API from 'constants/API';
+import { getIn, useFormikContext } from 'formik';
 import useCodeLookups from 'hooks/useLookupCodes';
+import React, { useState } from 'react';
+import { Col, Container, Form, Row } from 'react-bootstrap';
+import styled from 'styled-components';
+import { mapLookupCode } from 'utils';
 
 const StyledRow = styled(Row)`
   .form-group {
@@ -54,7 +54,6 @@ const FormSection = styled(props => <Container {...props} />)`
 
 const SearchButton = styled(props => <Button {...props} />)`
   margin-top: 10px;
-  margin-left: 665px;
 `;
 
 const StyledLocation = styled(props => <TypeaheadField {...props} />)`
@@ -120,59 +119,89 @@ const FindMorePropertiesForm = (props: any) => {
           </InvalidFeedback>
         )}
 
-        <StyledRow style={{ marginLeft: 115, paddingTop: 10 }}>
-          <Check label="ERP Properties" field="inEnhancedReferralProcess" />
-          <VerticalLine />
-          <Check label="SPL Properties" field="inSurplusPropertyProgram" />
+        <StyledRow style={{ marginLeft: 160, paddingTop: 20, paddingBottom: '10px' }}>
+          <Col md="auto">
+            <Check label="ERP Properties" field="inEnhancedReferralProcess" />
+          </Col>
+          <Col md="auto">
+            <VerticalLine />
+          </Col>
+          <Col md="auto">
+            <Check label="SPL Properties" field="inSurplusPropertyProgram" />
+          </Col>
         </StyledRow>
       </FormSection>
       <FormSection>
         <Row style={{ marginLeft: 5, paddingTop: 10 }}>
           <h6>Search by</h6>
         </Row>
-        <StyledRow style={{ marginLeft: 35 }}>
-          <Form.Label style={{ marginTop: '.5rem' }}>Location</Form.Label>
-          <StyledLocation
-            name="administrativeArea"
-            placeholder="Enter a location"
-            paginate={false}
-            hideValidation={true}
-            options={adminAreas.map((x: any) => x.label)}
-            onChange={(vals: any) => {
-              setFieldValue('administrativeArea', getIn(vals[0], 'name') ?? vals[0]);
-            }}
-            clearSelected={clear}
-            setClear={setClear}
-          />
-          <VerticalLine />
-          <ProjectNumber field="projectNumber" label="Project number" placeholder="SPP #" />
+        <StyledRow style={{ marginLeft: 20, paddingBottom: '20px', alignItems: 'center' }}>
+          <Col md={1} style={{ marginRight: '-25px' }}>
+            <Form.Label style={{ marginTop: '.5rem' }}>Location</Form.Label>
+          </Col>
+          <Col md="auto" style={{ marginRight: '-25px' }}>
+            <StyledLocation
+              name="administrativeArea"
+              placeholder="Enter a location"
+              paginate={false}
+              hideValidation={true}
+              options={adminAreas.map((x: any) => x.label)}
+              onChange={(vals: any) => {
+                setFieldValue('administrativeArea', getIn(vals[0], 'name') ?? vals[0]);
+              }}
+              clearSelected={clear}
+              setClear={setClear}
+            />
+          </Col>
+          <Col md="auto">
+            <VerticalLine />
+          </Col>
+          <Col md="auto">
+            <ProjectNumber field="projectNumber" label="Project number" placeholder="SPP #" />
+          </Col>
         </StyledRow>
       </FormSection>
       <FormSection>
         <Row style={{ marginLeft: 5, paddingTop: 10 }}>
           <h6>Land search criteria</h6>
         </Row>
-        <StyledRow style={{ marginLeft: -13 }}>
-          <NumberInput label="Lot size" field="minLotSize" placeholder="min" />
-          <span style={{ marginTop: 5, marginLeft: 5, marginRight: 5 }}>-</span>
-          <NumberInput field="maxLotSize" placeholder="max" />
-          <VerticalLine />
-          <Check label="Land only" field="bareLandOnly" />
+        <StyledRow style={{ marginLeft: 20, paddingBottom: '20px', alignItems: 'center' }}>
+          <Col md="auto">
+            <NumberInput label="Lot size" field="minLotSize" placeholder="min" />
+          </Col>
+          <Col md="auto">
+            <span style={{ marginTop: 5, marginLeft: 5, marginRight: 5 }}>-</span>
+          </Col>
+          <Col md="auto">
+            <NumberInput field="maxLotSize" placeholder="max" />
+          </Col>
+          <Col md="auto">
+            <VerticalLine />
+          </Col>
+          <Col md="auto">
+            <Check label="Land only" field="bareLandOnly" />
+          </Col>
         </StyledRow>
       </FormSection>
       <FormSection>
         <Row style={{ marginLeft: 5, paddingTop: 10 }}>
           <h6>Building search criteria</h6>
         </Row>
-        <StyledRow>
-          <StyledSelect
-            field="predominateUseId"
-            placeholder="Any"
-            options={predominateUses}
-            label="Predominate use"
-          />
-          <VerticalLine />
-          <NumberInput label="Net usable area" field="rentableArea" />
+        <StyledRow style={{ marginLeft: 20, paddingBottom: '20px', alignItems: 'center' }}>
+          <Col md={7} style={{ marginRight: '-35px' }}>
+            <StyledSelect
+              field="predominateUseId"
+              placeholder="Any"
+              options={predominateUses}
+              label="Predominate use"
+            />
+          </Col>
+          <Col md="auto">
+            <VerticalLine />
+          </Col>
+          <Col md="auto">
+            <NumberInput label="Net usable area" field="rentableArea" />
+          </Col>
         </StyledRow>
       </FormSection>
       <Row>

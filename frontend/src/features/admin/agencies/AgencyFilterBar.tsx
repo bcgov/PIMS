@@ -1,10 +1,11 @@
-import * as React from 'react';
-import FilterBar from 'components/SearchBar/FilterBar';
-import { IAgencyFilter } from 'interfaces';
-import useCodeLookups from 'hooks/useLookupCodes';
-import { Label } from 'components/common/Label';
-import { mapLookupCodeWithParentString } from 'utils';
 import { ParentSelect } from 'components/common/form/ParentSelect';
+import { Label } from 'components/common/Label';
+import FilterBar from 'components/SearchBar/FilterBar';
+import useCodeLookups from 'hooks/useLookupCodes';
+import { IAgencyFilter } from 'interfaces';
+import * as React from 'react';
+import { Col } from 'react-bootstrap';
+import { mapLookupCodeWithParentString } from 'utils';
 
 interface IProps {
   value: IAgencyFilter;
@@ -33,13 +34,17 @@ export const AgencyFilterBar: React.FC<IProps> = ({ value, onChange, handleAdd }
       }}
       customResetField="id"
     >
-      <Label>Search agency by name: </Label>
-      <ParentSelect
-        field="id"
-        options={agencyWithParent}
-        placeholder="Enter an Agency"
-        filterBy={['parent', 'code', 'name']}
-      />
+      <Col className="bar-item" md="auto">
+        <Label>Search agency by name: </Label>
+      </Col>
+      <Col className="bar-item parent-select" md="auto">
+        <ParentSelect
+          field="id"
+          options={agencyWithParent}
+          placeholder="Enter an Agency"
+          filterBy={['parent', 'code', 'name']}
+        />
+      </Col>
     </FilterBar>
   );
 };

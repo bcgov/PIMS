@@ -1,16 +1,16 @@
-import * as API from 'constants/API';
-import { IGeocoderResponse, useApi } from 'hooks/useApi';
-import { FormikValues, getIn, setIn } from 'formik';
-import { useState } from 'react';
-import useCodeLookups from 'hooks/useLookupCodes';
 import {
-  useLayerQuery,
   handleParcelDataLayerResponse,
+  PARCELS_PUBLIC_LAYER_URL,
   saveParcelDataLayerResponse,
+  useLayerQuery,
 } from 'components/maps/leaflet/LayerPopup';
+import * as API from 'constants/API';
+import { FormikValues, getIn, setIn } from 'formik';
+import { IGeocoderResponse, useApi } from 'hooks/useApi';
+import useCodeLookups from 'hooks/useLookupCodes';
 import { LatLng } from 'leaflet';
+import { useState } from 'react';
 import { useAppDispatch } from 'store';
-import { useBoundaryLayer } from 'components/maps/leaflet/LayerPopup/hooks/useBoundaryLayer';
 
 interface IUseGeocoderProps {
   formikRef: React.MutableRefObject<FormikValues | undefined>;
@@ -42,8 +42,7 @@ export interface IPidSelection {
  */
 const useGeocoder = ({ formikRef, fetchPimsOrLayerParcel }: IUseGeocoderProps) => {
   const { lookupCodes } = useCodeLookups();
-  const layerUrl = useBoundaryLayer();
-  const parcelsService = useLayerQuery(layerUrl);
+  const parcelsService = useLayerQuery(PARCELS_PUBLIC_LAYER_URL);
   const [pidSelection, setPidSelection] = useState<IPidSelection>({ showPopup: false, geoPID: '' });
   const api = useApi();
   const dispatch = useAppDispatch();
@@ -116,7 +115,7 @@ const useGeocoder = ({ formikRef, fetchPimsOrLayerParcel }: IUseGeocoderProps) =
             } as LatLng)
             .then(response => {
               const pid = getIn(response, 'features.0.properties.PID');
-              //it is possible the geocoder will fail to get the pid but the parcel layer service request will succeed. In that case, double check that the pid doesn't exist within pims.
+              // it is possible the geocoder will fail to get the pid but the parcel layer service request will succeed. In that case, double check that the pid doesn't exist within pims.
               if (pid) {
                 const parcelLayerSearchCallback = () => {
                   const response = parcelsService.findByPid(pid);

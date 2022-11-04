@@ -1,19 +1,21 @@
-import * as React from 'react';
-import { Container } from 'react-bootstrap';
-import { AccessRequestStatus } from 'constants/accessStatus';
+import './ManageAccessRequests.scss';
+
+import { IFilterData } from 'actions/IFilterData';
 import { Table } from 'components/Table';
-import { toFilteredApiPaginateParams } from 'utils/CommonFunctions';
+import { AccessRequestStatus } from 'constants/accessStatus';
+import * as actionTypes from 'constants/actionTypes';
 import * as API from 'constants/API';
 import { IAccessRequest } from 'interfaces';
-import './ManageAccessRequests.scss';
+import * as React from 'react';
+import { Container } from 'react-bootstrap';
 import { IGenericNetworkAction, useAppSelector } from 'store';
 import { useAccessRequest } from 'store/slices/hooks';
-import * as actionTypes from 'constants/actionTypes';
-import { IAccessRequestModel } from './interfaces';
-import { AccessRequestFilter } from './components/Filter';
-import { IFilterData } from 'actions/IFilterData';
-import { columnDefinitions } from './constants/constants';
+import { toFilteredApiPaginateParams } from 'utils/CommonFunctions';
+
 import { AccessRequestDetails } from './components/Details';
+import { AccessRequestFilter } from './components/Filter';
+import { columnDefinitions } from './constants/constants';
+import { IAccessRequestModel } from './interfaces';
 
 const ManageAccessRequests = () => {
   const api = useAccessRequest();

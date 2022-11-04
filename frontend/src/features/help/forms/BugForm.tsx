@@ -1,8 +1,9 @@
-import * as React from 'react';
-import { Formik } from 'formik';
-import { Form } from 'react-bootstrap';
 import { Input, TextArea } from 'components/common/form';
+import { Formik } from 'formik';
 import { noop } from 'lodash';
+import * as React from 'react';
+import { Form } from 'react-bootstrap';
+
 import { pimsSupportEmail } from '../constants/HelpText';
 import { IHelpForm } from '../interfaces';
 
@@ -44,12 +45,24 @@ const BugForm: React.FunctionComponent<BugFormProps> = ({ formValues, setMailto 
       }}
     >
       <Form>
-        <Input label="User" field="user" />
-        <Input label="Email" field="email" />
-        <Input label="Page" field="page" />
-        <TextArea label="Steps to Reproduce" field="stepsToReproduce" />
-        <TextArea label="Expected Result" field="expectedResult" />
-        <TextArea label="Actual Result" field="actualResult" />
+        <Input label="User" field="user" style={{ marginLeft: '12px', marginBottom: '5px' }} />
+        <Input label="Email" field="email" style={{ marginLeft: '6px', marginBottom: '5px' }} />
+        <Input label="Page" field="page" style={{ marginLeft: '10px', marginBottom: '10px' }} />
+        <TextArea
+          label="Steps to Reproduce"
+          field="stepsToReproduce"
+          style={{ marginBottom: '5px' }}
+        />
+        <TextArea
+          label="Expected Result"
+          field="expectedResult"
+          style={{ marginLeft: '26px', marginBottom: '5px' }}
+        />
+        <TextArea
+          label="Actual Result"
+          field="actualResult"
+          style={{ marginLeft: '45px', marginBottom: '5px' }}
+        />
       </Form>
     </Formik>
   );

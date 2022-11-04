@@ -1,6 +1,7 @@
-import * as React from 'react';
 import './Label.scss';
+
 import classNames from 'classnames';
+import * as React from 'react';
 interface ILabelProps {
   content?: string;
   required?: boolean;

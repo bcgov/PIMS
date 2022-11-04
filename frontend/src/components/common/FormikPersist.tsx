@@ -1,10 +1,11 @@
-import * as React from 'react';
-import { FormikProps, connect } from 'formik';
-import debounce from 'lodash/debounce';
-import isEqual from 'react-fast-compare';
 import { AES, enc } from 'crypto-js';
-import GenericModal from './GenericModal';
+import { connect, FormikProps } from 'formik';
+import debounce from 'lodash/debounce';
+import * as React from 'react';
+import isEqual from 'react-fast-compare';
+
 import packageJson from '../../../package.json';
+import GenericModal from './GenericModal';
 
 export interface PersistProps {
   name: string;

@@ -1,11 +1,11 @@
-import styled from 'styled-components';
+import variables from '_variables.module.scss';
+import { IBuilding, IParcel } from 'actions/parcelsActions';
+import { PropertyTypes } from 'constants/propertyTypes';
+import queryString from 'query-string';
 import * as React from 'react';
 import { Row } from 'react-bootstrap';
-import { IBuilding, IParcel } from 'actions/parcelsActions';
 import { Link, useLocation } from 'react-router-dom';
-import queryString from 'query-string';
-import variables from '_variables.module.scss';
-import { PropertyTypes } from 'constants/propertyTypes';
+import styled from 'styled-components';
 
 const LinkMenu = styled(Row)`
   background-color: ${variables.filterBackgroundColor};
@@ -23,6 +23,8 @@ const LinkMenu = styled(Row)`
 const VerticalBar = styled.div`
   border-left: 2px solid rgba(96, 96, 96, 0.2);
   height: 18px;
+  width: 0;
+  padding: 0;
 `;
 
 interface IHeaderActions {
@@ -71,6 +73,7 @@ const HeaderActions: React.FC<IHeaderActions> = ({
       {canViewDetails && (
         <>
           <Link
+            style={{ width: 95 }}
             onClick={() => {
               jumpToView();
               if (onLinkClick) onLinkClick();
@@ -94,6 +97,7 @@ const HeaderActions: React.FC<IHeaderActions> = ({
             <>
               <VerticalBar />
               <Link
+                style={{ width: 63 }}
                 onClick={() => {
                   jumpToView();
                   if (onLinkClick) onLinkClick();
@@ -117,7 +121,7 @@ const HeaderActions: React.FC<IHeaderActions> = ({
           <VerticalBar />
         </>
       )}
-      <Link to={{ ...location }} onClick={zoomToView}>
+      <Link style={{ width: 90 }} to={{ ...location }} onClick={zoomToView}>
         Zoom map
       </Link>
     </LinkMenu>

@@ -1,3 +1,4 @@
+import variables from '_variables.module.scss';
 import { FastSelect, SelectOptions, TextArea } from 'components/common/form';
 import { Label } from 'components/common/Label';
 import TooltipIcon from 'components/common/TooltipIcon';
@@ -6,18 +7,18 @@ import {
   CoreOperational,
   CoreStrategic,
   Demolished,
+  Disposed,
   Subdivided,
   SurplusActive,
   SurplusEncumbered,
   SurplusEncumberedOrActive,
-  Disposed,
 } from 'features/properties/components/forms/strings';
 import { FormikValues, getIn, useFormikContext } from 'formik';
 import React from 'react';
 import { Col, Row } from 'react-bootstrap';
 import styled from 'styled-components';
-import variables from '_variables.module.scss';
-import { useQueryParamSideBar, SidebarContextType } from '../../hooks/useQueryParamSideBar';
+
+import { SidebarContextType, useQueryParamSideBar } from '../../hooks/useQueryParamSideBar';
 
 const Title = styled.h4`
   float: left;
@@ -162,24 +163,29 @@ export const ClassificationForm: React.FC<IClassificationFormProps> = ({
 
   return (
     <>
-      <Row>
+      <Row style={{ textAlign: 'left' }}>
         <Title>{title}</Title>
       </Row>
       <Row>
         <Col md={6}>
-          <Row style={{ display: 'flex' }}>
-            <Label style={{ marginBottom: '0', textAlign: 'right' }}>{fieldLabel}</Label>
-            <FastSelect
-              formikProps={formikProps}
-              type="number"
-              style={{ marginTop: '5px', display: 'flex' }}
-              placeholder="Must Select One"
-              field={field}
-              options={filteredClassifications}
-              disabled={disabled}
-              required
-              displayErrorTooltips
-            />
+          <Row>
+            <Col md="4" style={{ textAlign: 'right' }}>
+              <Label>{fieldLabel}</Label>
+            </Col>
+            <Col md="auto">
+              <FastSelect
+                className="form-select"
+                formikProps={formikProps}
+                type="number"
+                style={{ marginTop: '5px', display: 'flex' }}
+                placeholder="Must Select One"
+                field={field}
+                options={filteredClassifications}
+                disabled={disabled}
+                required
+                displayErrorTooltips
+              />
+            </Col>
             {toolTip && (
               <div style={{ marginTop: '8px' }}>
                 <TooltipIcon toolTip={toolTip} toolTipId="classificationToolTip" />

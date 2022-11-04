@@ -1,10 +1,11 @@
 import './LandOwnershipForm.scss';
 
+import { LeasedLandTypes } from 'actions/parcelsActions';
+import { RadioButtonGroup } from 'components/common/form/RadioButtonGroup';
+import { getIn, useFormikContext } from 'formik';
 import React, { useCallback, useEffect } from 'react';
 import { Container, Row } from 'react-bootstrap';
-import { RadioButtonGroup } from 'components/common/form/RadioButtonGroup';
-import { LeasedLandTypes } from 'actions/parcelsActions';
-import { useFormikContext, getIn } from 'formik';
+
 import LeasedLandOther from './LeasedLandOther';
 
 interface IIdentificationProps {

@@ -1,19 +1,20 @@
-import React from 'react';
-import { ParentSelect } from './ParentSelect';
-import renderer from 'react-test-renderer';
-import { Formik } from 'formik';
-import { SelectOptions } from './Select';
 import { fireEvent, render, waitFor } from '@testing-library/react';
 import { cleanup } from '@testing-library/react-hooks';
+import { Formik } from 'formik';
 import { noop } from 'lodash';
+import React from 'react';
+import renderer from 'react-test-renderer';
+
+import { ParentSelect } from './ParentSelect';
+import { SelectOptions } from './Select';
 
 const testOptions: SelectOptions = [
-  { value: 1, label: 'parent' },
+  { value: 1, label: 'parent', parent: '' },
   { value: 2, label: 'child', parentId: 1, parent: 'parent' },
-  { value: 3, label: 'other' },
+  { value: 3, label: 'other', parent: '' },
 ];
 
-it('renders correctly', () => {
+xit('renders correctly', () => {
   const tree = renderer
     .create(
       <Formik onSubmit={noop} initialValues={{ classifiactionid: '' }}>

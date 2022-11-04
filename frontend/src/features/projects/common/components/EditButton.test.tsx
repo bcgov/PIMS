@@ -1,8 +1,9 @@
+import { cleanup, render } from '@testing-library/react';
+import { noop } from 'lodash';
 import React from 'react';
 import renderer from 'react-test-renderer';
-import { noop } from 'lodash';
+
 import EditButton from './EditButton';
-import { render, cleanup } from '@testing-library/react';
 
 const getEditButton = (setFormDisabled?: Function, formDisabled?: boolean) => {
   return <EditButton {...{ formDisabled, setFormDisabled }} />;

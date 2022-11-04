@@ -1,6 +1,7 @@
 import React from 'react';
-import { ProjectListView } from '.';
 import { useAppSelector } from 'store';
+
+import { ProjectListView } from '.';
 
 /**
  * A list view paging table to search for projects that have been submitted for assessment.

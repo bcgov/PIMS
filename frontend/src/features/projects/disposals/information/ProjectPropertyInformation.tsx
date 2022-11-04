@@ -1,11 +1,11 @@
-import { Col, Row } from 'components/flex';
+import { FastCurrencyInput, Select } from 'components/common/form';
+import { riskTooltips, tierTooltips } from 'features/projects/common';
 import { useFormikContext } from 'formik';
 import React from 'react';
-import { IProjectForm } from '../interfaces';
-import { FastCurrencyInput, Select } from 'components/common/form';
-import { useLookups, LookupType } from 'store/hooks';
-import { riskTooltips, tierTooltips } from 'features/projects/common';
+import { Col, Row } from 'react-bootstrap';
+import { LookupType, useLookups } from 'store/hooks';
 
+import { IProjectForm } from '../interfaces';
 import * as styled from './styled';
 
 export interface IProjectPropertyInformationProps {
@@ -99,10 +99,11 @@ export const ProjectPropertyInformation: React.FC<IProjectPropertyInformationPro
           These values are for the <em>project</em>, not the individual properties.
         </p>
         <Row>
-          <Col>
+          <Col md="auto">
             <FastCurrencyInput
               label="Assessed Value"
               field="assessed"
+              customInputWidth="200px"
               required
               formikProps={formik}
               disabled={disabled}
@@ -115,7 +116,7 @@ export const ProjectPropertyInformation: React.FC<IProjectPropertyInformationPro
               disabled={disabled}
             />
           </Col>
-          <Col>
+          <Col md="auto">
             <FastCurrencyInput
               label="Estimated Market Value"
               field="market"
@@ -130,7 +131,7 @@ export const ProjectPropertyInformation: React.FC<IProjectPropertyInformationPro
               disabled={disabled}
             />
           </Col>
-          <Col>
+          <Col md="auto">
             <FastCurrencyInput
               label="Estimated Sales Costs"
               field="salesCost"

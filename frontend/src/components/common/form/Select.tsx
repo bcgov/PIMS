@@ -1,9 +1,11 @@
-import React from 'react';
-import { Form, FormControlProps } from 'react-bootstrap';
-import { useFormikContext, getIn } from 'formik';
-import { DisplayError } from './DisplayError';
-import classNames from 'classnames';
 import './Select.scss';
+
+import classNames from 'classnames';
+import { getIn, useFormikContext } from 'formik';
+import React from 'react';
+import { Col, Form, FormControlProps, Row } from 'react-bootstrap';
+
+import { DisplayError } from './DisplayError';
 
 type RequiredAttributes = {
   /** The field name */
@@ -83,7 +85,7 @@ export const Select: React.FC<SelectProps> = ({
     );
   };
 
-  const onSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const onSelectChange = (e: any) => {
     const updateFormValues = multiple ? handleMultipleChange : handleChange;
     updateFormValues(e);
     onChange?.(e);
@@ -105,39 +107,42 @@ export const Select: React.FC<SelectProps> = ({
   };
 
   return (
-    <Form.Group
-      controlId={`input-${field}`}
+    <Row
+      controlid={`input-${field}`}
       className={classNames(!!required ? 'required' : '', outerClassName)}
+      style={{ alignItems: 'center' }}
     >
-      {!!label && <Form.Label>{label}</Form.Label>}
-      <Form.Control
-        as={asElement}
-        name={field}
-        className={classNames(className, 'form-select')}
-        required={required}
-        disabled={disabled}
-        custom={custom}
-        isInvalid={!!touch && !!error}
-        {...rest}
-        value={getIn(values, field)}
-        multiple={multiple}
-        onChange={onSelectChange}
-        onBlur={(e: any) => {
-          if (type === 'number' && multiple) {
-            setFieldValue(
-              field,
-              value.map((x: any) => +x),
-            );
-          } else if (type === 'number' && !isNaN(parseInt(value))) {
-            setFieldValue(field, parseInt(value));
-          }
-          handleBlur(e);
-        }}
-      >
-        {renderPlaceholder()}
-        {renderOptions()}
-      </Form.Control>
+      <Col md="auto">{!!label && <Form.Label>{label}</Form.Label>}</Col>
+      <Col md="auto">
+        <Form.Control
+          as={asElement}
+          name={field}
+          className={classNames(className, 'form-select')}
+          required={required}
+          disabled={disabled}
+          custom={custom}
+          isInvalid={!!touch && !!error}
+          {...rest}
+          value={getIn(values, field)}
+          multiple={multiple}
+          onChange={onSelectChange}
+          onBlur={(e: any) => {
+            if (type === 'number' && multiple) {
+              setFieldValue(
+                field,
+                value.map((x: any) => +x),
+              );
+            } else if (type === 'number' && !isNaN(parseInt(value))) {
+              setFieldValue(field, parseInt(value));
+            }
+            handleBlur(e);
+          }}
+        >
+          {renderPlaceholder()}
+          {renderOptions()}
+        </Form.Control>
+      </Col>
       <DisplayError field={field} />
-    </Form.Group>
+    </Row>
   );
 };

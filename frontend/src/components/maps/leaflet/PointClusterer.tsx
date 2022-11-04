@@ -1,29 +1,30 @@
 import './PointClusterer.scss';
 
-import React, { useRef, useEffect, useState, useCallback, useMemo } from 'react';
-import { DivIcon, FeatureGroup as LeafletFeatureGroup } from 'leaflet';
-import { useLeaflet, Marker, Polyline, FeatureGroup } from 'react-leaflet';
+import { IAddress, IBuilding, IParcel, IProperty, IPropertyDetail } from 'actions/parcelsActions';
+import { PropertyTypes } from 'constants/propertyTypes';
+import { MAX_ZOOM } from 'constants/strings';
+import { getIn } from 'formik';
 import { BBox } from 'geojson';
-import { Spiderfier } from './Spiderfier';
+import { useApi } from 'hooks/useApi';
+import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+import { DivIcon, FeatureGroup as LeafletFeatureGroup } from 'leaflet';
+import queryString from 'query-string';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { FeatureGroup, Marker, Polyline, useLeaflet } from 'react-leaflet';
+import { useLocation } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { useAppDispatch } from 'store';
+import { storePropertyDetail } from 'store/slices/parcelSlice';
+import Supercluster from 'supercluster';
+
+import useSupercluster from '../hooks/useSupercluster';
+import { useFilterContext } from '../providers/FIlterProvider';
+import { PropertyPopUpContext } from '../providers/PropertyPopUpProvider';
 import { ICluster, PointFeature } from '../types';
 import { getMarkerIcon, pointToLayer, zoomToCluster } from './mapUtils';
-import useSupercluster from '../hooks/useSupercluster';
-import { IBuilding, IParcel, IPropertyDetail, IAddress, IProperty } from 'actions/parcelsActions';
-import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
-import { useFilterContext } from '../providers/FIlterProvider';
-import Supercluster from 'supercluster';
-import { PropertyPopUpContext } from '../providers/PropertyPopUpProvider';
-import { MAX_ZOOM } from 'constants/strings';
-import { useApi } from 'hooks/useApi';
-import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
-import { PropertyTypes } from 'constants/propertyTypes';
 import SelectedPropertyMarker from './SelectedPropertyMarker/SelectedPropertyMarker';
-import { useLocation } from 'react-router-dom';
-import queryString from 'query-string';
-import { toast } from 'react-toastify';
-import { getIn } from 'formik';
-import { storePropertyDetail } from 'store/slices/parcelSlice';
-import { useAppDispatch } from 'store';
+import { Spiderfier } from './Spiderfier';
 
 export type PointClustererProps = {
   points: Array<PointFeature>;
@@ -84,6 +85,20 @@ export const convertToProperty = (
     [PropertyTypes.DRAFT_BUILDING, PropertyTypes.DRAFT_PARCEL].includes(property.propertyTypeId)
   ) {
     return property;
+  } else if (property.propertyTypeId === PropertyTypes.GEOCODER) {
+    return {
+      ...property,
+      evaluations: [],
+      fiscals: [],
+      latitude: latitude,
+      longitude: longitude,
+      address: {
+        line1: property.address,
+        administrativeArea: property.administrativeArea,
+        province: property.province,
+        postal: property.postal,
+      } as IAddress,
+    } as IParcel;
   }
   return null;
 };
@@ -261,8 +276,8 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
   const { getParcel, getBuilding } = useApi();
   const fetchProperty = React.useCallback(
     (propertyTypeId: number, id: number) => {
-      popUpContext.setLoading(true);
       if ([PropertyTypes.PARCEL, PropertyTypes.SUBDIVISION].includes(propertyTypeId)) {
+        popUpContext.setLoading(true);
         getParcel(id as number)
           .then(parcel => {
             popUpContext.setPropertyInfo(parcel);
@@ -274,13 +289,14 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
             popUpContext.setLoading(false);
           });
       } else if (propertyTypeId === PropertyTypes.BUILDING) {
+        popUpContext.setLoading(true);
         getBuilding(id as number)
           .then(building => {
             popUpContext.setPropertyInfo(building);
             if (!!building.parcels.length) {
               dispatch(
                 storePropertyDetail({
-                  propertyTypeId: 1,
+                  propertyTypeId: PropertyTypes.BUILDING,
                   parcelDetail: building,
                 }),
               );
@@ -292,6 +308,9 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
           .finally(() => {
             popUpContext.setLoading(false);
           });
+      } else {
+        toast.warn('This property does not exist in inventory.');
+        Promise.resolve();
       }
     },
     [getParcel, popUpContext, getBuilding, dispatch],
@@ -335,7 +354,7 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
           }
 
           return (
-            // render single marker, not in a cluster
+            //render single marker, not in a cluster
             <Marker
               {...(cluster.properties as any)}
               key={index}
@@ -348,27 +367,26 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
                   longitude,
                 );
                 //sets this pin as currently selected
-                if (
-                  cluster.properties.propertyTypeId === PropertyTypes.PARCEL ||
-                  cluster.properties.propertyTypeId === PropertyTypes.SUBDIVISION
-                ) {
+                if (cluster.properties.propertyTypeId === PropertyTypes.BUILDING) {
                   dispatch(
                     storePropertyDetail({
-                      propertyTypeId: (convertedProperty as IParcel)
-                        ?.propertyTypeId as PropertyTypes,
-                      parcelDetail: convertedProperty as IParcel,
+                      propertyTypeId: cluster.properties.propertyTypeId,
+                      parcelDetail: convertedProperty as IBuilding,
                     }),
                   );
                 } else {
                   dispatch(
                     storePropertyDetail({
-                      propertyTypeId: 1,
-                      parcelDetail: convertedProperty as IBuilding,
+                      propertyTypeId: cluster.properties.propertyTypeId,
+                      parcelDetail: convertedProperty as IParcel,
                     }),
                   );
                 }
                 onMarkerClick(); //open information slideout
-                if (keycloak.canUserViewProperty(cluster.properties as IProperty)) {
+                if (
+                  keycloak.canUserViewProperty(cluster.properties as IProperty) &&
+                  cluster.properties.propertyTypeId !== PropertyTypes.GEOCODER
+                ) {
                   fetchProperty(cluster.properties.propertyTypeId, cluster.properties.id);
                 } else {
                   popUpContext.setPropertyInfo(convertedProperty);
@@ -417,7 +435,10 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
                 );
               }
               onMarkerClick(); //open information slideout
-              if (keycloak.canUserViewProperty(m.properties as IProperty)) {
+              if (
+                keycloak.canUserViewProperty(m.properties as IProperty) &&
+                m.properties.propertyTypeId !== PropertyTypes.GEOCODER
+              ) {
                 fetchProperty(m.properties.propertyTypeId, m.properties.id);
               } else {
                 popUpContext.setPropertyInfo(

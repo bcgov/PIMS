@@ -1,21 +1,22 @@
-import { useLocation } from 'react-router-dom';
-import { getIn, useFormikContext } from 'formik';
-import React, { useEffect, useMemo } from 'react';
-import { Col, Form } from 'react-bootstrap';
-import { Label } from 'components/common/Label';
-import { Input, DisplayError } from 'components/common/form';
-import { pidFormatter } from 'features/properties/components/forms/subforms/PidPinForm';
-import SearchButton from 'components/common/form/SearchButton';
-import { toast } from 'react-toastify';
-import _ from 'lodash';
 import { IParcel } from 'actions/parcelsActions';
-import { withNameSpace } from 'utils/formUtils';
-import queryString from 'query-string';
+import { DisplayError, Input } from 'components/common/form';
+import SearchButton from 'components/common/form/SearchButton';
 import { ISteppedFormValues } from 'components/common/form/StepForm';
-import { ISearchFields } from '../LandForm';
-import dequal from 'dequal';
-import styled from 'styled-components';
+import { Label } from 'components/common/Label';
 import { ILinkListItem, LinkList } from 'components/common/LinkList';
+import { dequal } from 'dequal';
+import { pidFormatter } from 'features/properties/components/forms/subforms/PidPinForm';
+import { getIn, useFormikContext } from 'formik';
+import _ from 'lodash';
+import queryString from 'query-string';
+import React, { useEffect, useMemo } from 'react';
+import { Col, Row } from 'react-bootstrap';
+import { useLocation } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import styled from 'styled-components';
+import { withNameSpace } from 'utils/formUtils';
+
+import { ISearchFields } from '../LandForm';
 
 interface IAddParentParcelsFormProps {
   /** used for determining nameSpace of field */
@@ -82,51 +83,57 @@ const AddParentParcelsForm = ({
         <h5>Parent Parcels</h5>
       </Col>
       <Col md={12}>
-        <Form.Row>
-          <Label>Enter Parent Parcel PID(s)</Label>
-          <Input
-            displayErrorTooltips
-            className="input-small"
-            disabled={disabled}
-            pattern={RegExp(/^[\d\- ]*$/)}
-            onBlurFormatter={(pid: string) => {
-              if (pid?.length > 0) {
-                return pid.replace(pid, pidFormatter(pid));
-              }
-              return '';
-            }}
-            field={withNameSpace(nameSpace, 'searchParentPid')}
-          />
-          <SearchButton
-            data-testid="search-button"
-            disabled={disabled}
-            onClick={async (e: any) => {
-              e.preventDefault();
-              if (findMatchingPid) {
-                const pid = getIn(values, withNameSpace(nameSpace, 'searchParentPid'));
-                const loadingToast = toast.dark(`Searching for parcel...`);
-                const matchingParcel = await findMatchingPid(pid, nameSpace);
-                toast.dismiss(loadingToast);
-                if (!!matchingParcel) {
-                  setFieldValue(
-                    withNameSpace(nameSpace, 'parcels'),
-                    _.uniqBy(
-                      [...getIn(values, withNameSpace(nameSpace, 'parcels')), matchingParcel],
-                      'id',
-                    ),
-                  );
-                } else {
-                  toast.error(
-                    "enter a PID for a property that is already in the PIMS Inventory. If it is not you'll need to add it to PIMS first before trying to create a subdivision from it.",
-                    {
-                      autoClose: false,
-                    },
-                  );
+        <Row style={{ alignItems: 'center' }}>
+          <Col md="auto">
+            <Label>Enter Parent Parcel PID(s)</Label>
+          </Col>
+          <Col md="auto">
+            <Input
+              displayErrorTooltips
+              className="input-small"
+              disabled={disabled}
+              pattern={RegExp(/^[\d\- ]*$/)}
+              onBlurFormatter={(pid: string) => {
+                if (pid?.length > 0) {
+                  return pid.replace(pid, pidFormatter(pid));
                 }
-              }
-            }}
-          />
-        </Form.Row>
+                return '';
+              }}
+              field={withNameSpace(nameSpace, 'searchParentPid')}
+            />
+          </Col>
+          <Col md="auto">
+            <SearchButton
+              data-testid="search-button"
+              disabled={disabled}
+              onClick={async (e: any) => {
+                e.preventDefault();
+                if (findMatchingPid) {
+                  const pid = getIn(values, withNameSpace(nameSpace, 'searchParentPid'));
+                  const loadingToast = toast.dark(`Searching for parcel...`);
+                  const matchingParcel = await findMatchingPid(pid, nameSpace);
+                  toast.dismiss(loadingToast);
+                  if (!!matchingParcel) {
+                    setFieldValue(
+                      withNameSpace(nameSpace, 'parcels'),
+                      _.uniqBy(
+                        [...getIn(values, withNameSpace(nameSpace, 'parcels')), matchingParcel],
+                        'id',
+                      ),
+                    );
+                  } else {
+                    toast.error(
+                      "enter a PID for a property that is already in the PIMS Inventory. If it is not you'll need to add it to PIMS first before trying to create a subdivision from it.",
+                      {
+                        autoClose: false,
+                      },
+                    );
+                  }
+                }
+              }}
+            />
+          </Col>
+        </Row>
       </Col>
       <Col md={12}>
         <hr></hr>

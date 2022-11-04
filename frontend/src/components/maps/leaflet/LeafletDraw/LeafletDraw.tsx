@@ -1,9 +1,10 @@
+import './LeafletDraw.scss';
+
+import { Feature, FeatureCollection } from 'geojson';
+import * as L from 'leaflet';
 import * as React from 'react';
 import { useEffect } from 'react';
 import { useLeaflet } from 'react-leaflet';
-import * as L from 'leaflet';
-import { Feature, FeatureCollection } from 'geojson';
-import './LeafletDraw.scss';
 require('leaflet-draw');
 
 interface ILeafletDrawProps {

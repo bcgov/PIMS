@@ -1,4 +1,4 @@
-import { Column, ColumnInstance, Cell } from 'react-table';
+import { Cell, Column, ColumnInstance } from 'react-table';
 
 // Mixed bag of optional properties to supply to the ColumnDefinitions below
 // NOTE - make sure you all properties below are optional!

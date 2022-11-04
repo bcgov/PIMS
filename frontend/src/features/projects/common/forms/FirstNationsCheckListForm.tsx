@@ -1,11 +1,12 @@
+import classNames from 'classnames';
+import TooltipIcon from 'components/common/TooltipIcon';
+import { ReviewWorkflowStatus } from 'features/projects/constants';
+import _ from 'lodash';
 import * as React from 'react';
 import { Col, Row } from 'react-bootstrap';
+
+import { reviewFirstNationsTooltip, useProject } from '..';
 import TasksForm from './TasksForm';
-import _ from 'lodash';
-import TooltipIcon from 'components/common/TooltipIcon';
-import { useProject, reviewFirstNationsTooltip } from '..';
-import { ReviewWorkflowStatus } from 'features/projects/constants';
-import classNames from 'classnames';
 
 interface IFirstNationsCheckListFormProps {
   className?: string;
@@ -23,13 +24,17 @@ const FirstNationsCheckListForm: React.FunctionComponent<IFirstNationsCheckListF
   return (
     <Row className={classNames(props.className)}>
       <Col>
-        <h3>
-          First Nations Consultation
-          <TooltipIcon
-            toolTipId="review-firstNations"
-            toolTip={reviewFirstNationsTooltip}
-          ></TooltipIcon>
-        </h3>
+        <Row style={{ alignItems: 'center' }}>
+          <Col md="auto">
+            <h3>First Nations Consultation</h3>
+          </Col>
+          <Col md="auto">
+            <TooltipIcon
+              toolTipId="review-firstNations"
+              toolTip={reviewFirstNationsTooltip}
+            ></TooltipIcon>
+          </Col>
+        </Row>
 
         <TasksForm tasks={tasks} isReadOnly={props.isReadOnly} />
       </Col>

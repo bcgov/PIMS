@@ -1,22 +1,24 @@
-import React, { useEffect, useMemo, useState } from 'react';
 import { IBuilding, IParcel, IPropertyDetail } from 'actions/parcelsActions';
 import { IGeoSearchParams } from 'constants/API';
-import { BBox } from 'geojson';
+import { PropertyTypes } from 'constants/propertyTypes';
+import { BBox, Point } from 'geojson';
+import { useApiGeocoder } from 'hooks/api';
+import { useApi } from 'hooks/useApi';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { GeoJSON, LatLngBounds } from 'leaflet';
+import { flatten, uniqBy } from 'lodash';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useLeaflet } from 'react-leaflet';
 import { toast } from 'react-toastify';
-import { PointFeature } from '../types';
-import PointClusterer from './PointClusterer';
-import { useApi } from 'hooks/useApi';
 import { useAppSelector } from 'store';
-import { flatten, uniqBy } from 'lodash';
 import { tilesInBbox } from 'tiles-in-bbox';
-import { useFilterContext } from '../providers/FIlterProvider';
-import { MUNICIPALITY_LAYER_URL, useLayerQuery } from './LayerPopup';
-import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
-import { PropertyTypes } from 'constants/propertyTypes';
+
 import { useMapRefreshEvent } from '../hooks/useMapRefreshEvent';
+import { useFilterContext } from '../providers/FIlterProvider';
+import { PointFeature } from '../types';
+import { MUNICIPALITY_LAYER_URL, useLayerQuery } from './LayerPopup';
+import PointClusterer from './PointClusterer';
 
 export type InventoryLayerProps = {
   /** Latitude and Longitude boundary of the layer. */
@@ -126,6 +128,8 @@ export const defaultBounds = new LatLngBounds(
   [48.78370426, -139.35937554],
 );
 
+var counter = 1000000;
+
 /**
  * Displays the search results onto a layer with clustering.
  * This component makes a request to the PIMS API properties search WFS endpoint.
@@ -147,6 +151,7 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
   const { loadProperties } = useApi();
   const { changed: filterChanged } = useFilterContext();
   const municipalitiesService = useLayerQuery(MUNICIPALITY_LAYER_URL);
+  const geocoder = useApiGeocoder();
 
   const draftProperties: PointFeature[] = useAppSelector(store => store.parcel.draftProperties);
 
@@ -194,7 +199,33 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
   }, [filter]);
 
   const loadTile = async (filter: IGeoSearchParams) => {
-    return loadProperties(filter);
+    const inventory = await loadProperties(filter);
+
+    // Make a request to geocoder for properties with the specified address.
+    if (!!filter.address) {
+      var geo = await geocoder.addresses(filter.address, filter.bbox, filter.administrativeArea);
+      var features = geo.data.features
+        .filter(f => f?.properties?.locationDescriptor !== 'provincePoint')
+        .map(f => ({
+          ...f,
+          properties: {
+            id: !!f.properties?.blockID ? f.properties?.blockID : counter++,
+            propertyTypeId: PropertyTypes.GEOCODER,
+            isSensitive: false,
+            statusId: 0,
+            name: f.properties?.siteName,
+            address: f.properties?.fullAddress,
+            administrativeArea: f.properties?.localityName,
+            province: 'British Columbia',
+            geocoder: f.properties,
+            longitude: (f.geometry as Point).coordinates[0],
+            latitude: (f.geometry as Point).coordinates[1],
+          },
+        }));
+      return inventory.concat(features);
+    }
+
+    return inventory;
   };
 
   const search = async (filters: IGeoSearchParams[]) => {

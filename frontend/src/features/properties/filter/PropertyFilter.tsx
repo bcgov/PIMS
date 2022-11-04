@@ -1,31 +1,31 @@
 import './PropertyFilter.scss';
 
-import React, { useMemo, useRef, useState } from 'react';
-import { Col } from 'react-bootstrap';
-import { Formik, getIn } from 'formik';
 import { ILookupCode } from 'actions/ILookupCode';
-import { Form, Select } from '../../../components/common/form';
-import { FilterBarSchema } from 'utils/YupSchema';
+import { ParentSelect } from 'components/common/form/ParentSelect';
 import ResetButton from 'components/common/form/ResetButton';
 import SearchButton from 'components/common/form/SearchButton';
-import { mapLookupCode, mapLookupCodeWithParentString } from 'utils';
-import { PropertyFilterOptions } from './';
-import { useRouterFilter } from 'hooks/useRouterFilter';
-import { IPropertyFilter } from './IPropertyFilter';
-import { TableSort } from 'components/Table/TableSort';
-import { FindMorePropertiesButton } from 'components/maps/FindMorePropertiesButton';
 import { TypeaheadField } from 'components/common/form/Typeahead';
-import { useAppDispatch } from 'store';
-import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
-import { fetchPropertyNames } from 'store/slices/hooks/propertyActionCreator';
-import { AsyncTypeahead } from 'react-bootstrap-typeahead';
-import { PropertyFilterAgencyOptions } from './PropertyFilterAgencyOptions';
-import styled from 'styled-components';
-import { ParentSelect } from 'components/common/form/ParentSelect';
+import { FindMorePropertiesButton } from 'components/maps/FindMorePropertiesButton';
+import { TableSort } from 'components/Table/TableSort';
 import { Claims } from 'constants/claims';
+import { Formik, getIn } from 'formik';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import useLookupCodes from 'hooks/useLookupCodes';
-import { mapSelectOptionWithParent } from 'utils';
 import { useMyAgencies } from 'hooks/useMyAgencies';
+import { useRouterFilter } from 'hooks/useRouterFilter';
+import React, { useMemo, useRef, useState } from 'react';
+import { Col, Container, Row } from 'react-bootstrap';
+import { AsyncTypeahead } from 'react-bootstrap-typeahead';
+import { useAppDispatch } from 'store';
+import { fetchPropertyNames } from 'store/slices/hooks/propertyActionCreator';
+import { mapLookupCode, mapLookupCodeWithParentString } from 'utils';
+import { mapSelectOptionWithParent } from 'utils';
+import { FilterBarSchema } from 'utils/YupSchema';
+
+import { Form, Select } from '../../../components/common/form';
+import { PropertyFilterOptions } from './';
+import { IPropertyFilter } from './IPropertyFilter';
+import { PropertyFilterAgencyOptions } from './PropertyFilterAgencyOptions';
 
 /**
  * PropertyFilter component properties.
@@ -48,21 +48,6 @@ export interface IPropertyFilterProps {
   /** Override to trigger filterchanged in the parent */
   setTriggerFilterChanged?: (used: boolean) => void;
 }
-
-const AgencyCol = styled(Col)`
-  display: flex;
-  .form-control {
-    width: 165px;
-    height: 35px;
-  }
-  .form-group {
-    .rbt {
-      .rbt-menu {
-        width: 370px !important;
-      }
-    }
-  }
-`;
 
 /**
  * Property filter bar to search for properties.
@@ -149,100 +134,114 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
       }}
     >
       {({ isSubmitting, setFieldValue, values }) => (
-        <Form>
-          <Form.Row className="map-filter-bar">
-            <FindMorePropertiesButton
-              buttonText="Find available surplus properties"
-              onEnter={() => {
-                setFindMoreOpen(true);
-                setFieldValue('surplusFilter', true);
-                setFieldValue('includeAllProperties', true);
-                !keycloak.hasClaim(Claims.ADMIN_PROPERTIES) && setFieldValue('agencies', undefined);
-              }}
-              onExit={() => {
-                setFindMoreOpen(false);
-                setFieldValue('surplusFilter', false);
-              }}
-            />
-            <div className="vl"></div>
+        <Form className="container-append">
+          <Container className="map-filter-container">
+            <Row>
+              <Col md="auto" className="filter-col pad-top">
+                <FindMorePropertiesButton
+                  buttonText="Find available surplus properties"
+                  onEnter={() => {
+                    setFindMoreOpen(true);
+                    setFieldValue('surplusFilter', true);
+                    setFieldValue('includeAllProperties', true);
+                    !keycloak.hasClaim(Claims.ADMIN_PROPERTIES) &&
+                      setFieldValue('agencies', undefined);
+                  }}
+                  onExit={() => {
+                    setFindMoreOpen(false);
+                    setFieldValue('surplusFilter', false);
+                  }}
+                />
+              </Col>
+              <Col md="auto" className="filter-col pad-top">
+                <div className="divider"></div>
+              </Col>
 
-            <AgencyCol>
-              {showAllAgencySelect ? (
-                <PropertyFilterAgencyOptions disabled={findMoreOpen} agencies={agencies} />
-              ) : (
-                <ParentSelect
-                  field="agencies"
-                  options={myAgencies.map(c => mapSelectOptionWithParent(c, myAgencies))}
-                  filterBy={['code', 'label', 'parent']}
-                  placeholder="My Agencies"
+              <Col md="auto" className="filter-col">
+                {showAllAgencySelect ? (
+                  <PropertyFilterAgencyOptions disabled={findMoreOpen} agencies={agencies} />
+                ) : (
+                  <div style={{ paddingTop: '24px' }}>
+                    <ParentSelect
+                      field="agencies"
+                      options={myAgencies.map(c => mapSelectOptionWithParent(c, myAgencies))}
+                      filterBy={['code', 'label', 'parent']}
+                      placeholder="My Agencies"
+                      selectClosest
+                      disabled={findMoreOpen}
+                    />
+                  </div>
+                )}
+              </Col>
+              <Col md="auto" className="filter-col" style={{ paddingTop: 24, width: 130 }}>
+                <AsyncTypeahead
+                  disabled={
+                    (findMoreOpen || values.includeAllProperties === true) &&
+                    !keycloak.hasClaim(Claims.ADMIN_PROPERTIES)
+                  }
+                  isLoading={initialLoad}
+                  id={`name-field`}
+                  inputProps={{ id: `name-field` }}
+                  placeholder="Property name"
+                  onSearch={() => {
+                    setInitialLoad(true);
+                    fetchPropertyNames(keycloak.agencyId!)(dispatch).then(results => {
+                      setOptions(results);
+                      setInitialLoad(false);
+                    });
+                  }}
+                  options={options}
+                  onChange={(newValues: string[]) => {
+                    setFieldValue('name', getIn(newValues[0], 'value') ?? newValues[0]);
+                  }}
+                  ref={ref}
+                  onBlur={(e: any) =>
+                    getIn(values, 'name') !== e.target.value &&
+                    setFieldValue('name', e.target.value)
+                  }
+                />
+              </Col>
+              <Col md="auto" className="filter-col" style={{ paddingTop: 24, width: 130 }}>
+                <TypeaheadField
+                  name="administrativeArea"
+                  placeholder="Location"
                   selectClosest
+                  hideValidation={true}
+                  options={adminAreas.map(x => x.label)}
+                  onChange={(vals: any) => {
+                    setFieldValue('administrativeArea', getIn(vals[0], 'name') ?? vals[0]);
+                  }}
+                  clearSelected={clear}
+                  setClear={setClear}
                   disabled={findMoreOpen}
                 />
-              )}
-            </AgencyCol>
-            <Col className="map-filter-typeahead">
-              <AsyncTypeahead
-                disabled={
-                  (findMoreOpen || values.includeAllProperties === true) &&
-                  !keycloak.hasClaim(Claims.ADMIN_PROPERTIES)
-                }
-                isLoading={initialLoad}
-                id={`name-field`}
-                inputProps={{ id: `name-field` }}
-                placeholder="Property name"
-                onSearch={() => {
-                  setInitialLoad(true);
-                  fetchPropertyNames(keycloak.agencyId!)(dispatch).then(results => {
-                    setOptions(results);
-                    setInitialLoad(false);
-                  });
-                }}
-                options={options}
-                onChange={(newValues: string[]) => {
-                  setFieldValue('name', getIn(newValues[0], 'value') ?? newValues[0]);
-                }}
-                ref={ref}
-                onBlur={(e: any) =>
-                  getIn(values, 'name') !== e.target.value && setFieldValue('name', e.target.value)
-                }
-              />
-            </Col>
-            <Col className="map-filter-typeahead">
-              <TypeaheadField
-                name="administrativeArea"
-                placeholder="Location"
-                selectClosest
-                hideValidation={true}
-                options={adminAreas.map(x => x.label)}
-                onChange={(vals: any) => {
-                  setFieldValue('administrativeArea', getIn(vals[0], 'name') ?? vals[0]);
-                }}
-                clearSelected={clear}
-                setClear={setClear}
-                disabled={findMoreOpen}
-              />
-            </Col>
-            <Col className="bar-item">
-              <PropertyFilterOptions disabled={findMoreOpen} />
-            </Col>
-            <Col className="bar-item">
-              <Select
-                field="classificationId"
-                placeholder="Classification"
-                options={classifications}
-                disabled={findMoreOpen}
-              />
-            </Col>
-            <Col className="bar-item flex-grow-0">
-              <SearchButton
-                disabled={isSubmitting || findMoreOpen}
-                onClick={() => setTriggerFilterChanged && setTriggerFilterChanged(true)}
-              />
-            </Col>
-            <Col className="bar-item flex-grow-0">
-              <ResetButton disabled={isSubmitting || findMoreOpen} onClick={resetFilter} />
-            </Col>
-          </Form.Row>
+              </Col>
+              <Col md="auto" className="filter-col property-filter-options">
+                <PropertyFilterOptions disabled={findMoreOpen} />
+              </Col>
+              <Col
+                md="auto"
+                className="filter-col"
+                style={{ paddingTop: 24, width: 150, marginRight: '-20px' }}
+              >
+                <Select
+                  field="classificationId"
+                  placeholder="Classification"
+                  options={classifications}
+                  disabled={findMoreOpen}
+                />
+              </Col>
+              <Col md="auto" className="filter-col pad-top">
+                <SearchButton
+                  disabled={isSubmitting || findMoreOpen}
+                  onClick={() => setTriggerFilterChanged && setTriggerFilterChanged(true)}
+                />
+              </Col>
+              <Col md="auto" className="filter-col pad-top">
+                <ResetButton disabled={isSubmitting || findMoreOpen} onClick={resetFilter} />
+              </Col>
+            </Row>
+          </Container>
         </Form>
       )}
     </Formik>

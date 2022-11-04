@@ -1,20 +1,21 @@
-import React from 'react';
-import { cleanup, fireEvent, render, waitFor } from '@testing-library/react';
-import { Formik } from 'formik';
-import { noop } from 'lodash';
-import axios from 'axios';
-import thunk from 'redux-thunk';
-import configureMockStore from 'redux-mock-store';
-import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
-import { createMemoryHistory } from 'history';
 import { useKeycloak } from '@react-keycloak/web';
-import { ClassificationForm } from './ClassificationForm';
-import { Classifications } from 'constants/classifications';
+import { cleanup, fireEvent, render, waitFor } from '@testing-library/react';
+import { ILookupCode } from 'actions/ILookupCode';
+import axios from 'axios';
 import { SelectOption, SelectOptions } from 'components/common/form';
 import * as API from 'constants/API';
+import { Classifications } from 'constants/classifications';
 import * as reducerTypes from 'constants/reducerTypes';
-import { ILookupCode } from 'actions/ILookupCode';
+import { Formik } from 'formik';
+import { createMemoryHistory } from 'history';
+import { noop } from 'lodash';
+import React from 'react';
+import { Provider } from 'react-redux';
+import { Router } from 'react-router-dom';
+import configureMockStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
+
+import { ClassificationForm } from './ClassificationForm';
 
 jest.mock('axios');
 jest.mock('@react-keycloak/web');

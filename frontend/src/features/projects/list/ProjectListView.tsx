@@ -1,43 +1,44 @@
 import './ProjectListView.scss';
 
-import React, { useState, useMemo, useRef, useCallback } from 'react';
-import { useAppSelector, useAppDispatch } from 'store';
-import { Container } from 'react-bootstrap';
-import * as API from 'constants/API';
-import { IProjectFilter, IProject } from '.';
-import { columns as cols } from './columns';
-import { IProject as IProjectDetail } from 'features/projects/interfaces';
-import { Table } from 'components/Table';
-import service from '../apiService';
-import { FaFolder, FaFolderOpen, FaFileExcel, FaFileAlt } from 'react-icons/fa';
-import { Properties } from './properties';
-import FilterBar from 'components/SearchBar/FilterBar';
-import { Col } from 'react-bootstrap';
-import { Input, Button, Select } from 'components/common/form';
+import variables from '_variables.module.scss';
+import { Button, Input, Select } from 'components/common/form';
+import { ParentSelect } from 'components/common/form/ParentSelect';
 import GenericModal from 'components/common/GenericModal';
-import { useHistory } from 'react-router-dom';
-import {
-  fetchProjectStatuses,
-  deleteProjectWarning,
-  deletePotentialSubdivisionParcels,
-} from '../common';
-import { ReviewWorkflowStatus, DisposeWorkflowStatus } from 'features/projects/constants';
-import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+import TooltipWrapper from 'components/common/TooltipWrapper';
+import FilterBar from 'components/SearchBar/FilterBar';
+import { Table } from 'components/Table';
+import * as API from 'constants/API';
 import Claims from 'constants/claims';
 import { ENVIRONMENT } from 'constants/environment';
-import queryString from 'query-string';
-import download from 'utils/download';
-import { mapLookupCodeWithParentString, mapStatuses } from 'utils';
-import styled from 'styled-components';
-import TooltipWrapper from 'components/common/TooltipWrapper';
-import { ParentSelect } from 'components/common/form/ParentSelect';
-import variables from '_variables.module.scss';
-import useCodeLookups from 'hooks/useLookupCodes';
-import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
 import { PropertyTypes } from 'constants/propertyTypes';
-import { toFlatProject } from '../common/projectConverter';
+import { DisposeWorkflowStatus, ReviewWorkflowStatus } from 'features/projects/constants';
+import { IProject as IProjectDetail } from 'features/projects/interfaces';
 import { IStatus } from 'features/projects/interfaces';
 import { WorkflowStatus } from 'hooks/api/projects';
+import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+import useCodeLookups from 'hooks/useLookupCodes';
+import queryString from 'query-string';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
+import { Container } from 'react-bootstrap';
+import { Col } from 'react-bootstrap';
+import { FaFileAlt, FaFileExcel, FaFolder, FaFolderOpen } from 'react-icons/fa';
+import { useHistory } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from 'store';
+import styled from 'styled-components';
+import { mapLookupCodeWithParentString, mapStatuses } from 'utils';
+import download from 'utils/download';
+
+import service from '../apiService';
+import {
+  deletePotentialSubdivisionParcels,
+  deleteProjectWarning,
+  fetchProjectStatuses,
+} from '../common';
+import { toFlatProject } from '../common/projectConverter';
+import { IProject, IProjectFilter } from '.';
+import { columns as cols } from './columns';
+import { Properties } from './properties';
 
 interface IProjectFilterState {
   name?: string;
@@ -129,15 +130,18 @@ export const ProjectListView: React.FC<IProps> = ({
       (value as any).agencies
         ? setFilter({ ...value, agencies: (value as any)?.agencies })
         : setFilter({ ...value });
-      if ((value as any).statusId) {
-        setFilter({ ...value, statusId: (value as any).statusId?.map((x: any) => x) });
-      } else {
+      if ((value as any).statusId.length === 0) {
         setFilter({ ...value });
-        setClearSelected(!clearSelected);
+      } else if ((value as any).statusId) {
+        setFilter({
+          ...value,
+          statusId: (value as any).statusId?.map((x: any) => x),
+          notStatusId: [],
+        });
       }
       setPageIndex(0); // Go to first page of results when filter changes
     },
-    [setFilter, setPageIndex, clearSelected],
+    [setFilter, setPageIndex],
   );
   const onPageSizeChanged = useCallback(size => {
     setPageSize(size);
@@ -272,7 +276,7 @@ export const ProjectListView: React.FC<IProps> = ({
     return Array.from(Array(12).keys())
       .map(i => {
         var year = startYear + i;
-        return { label: `${year - 1} / ${year}`, value: year };
+        return { label: `${year - 1} / ${year}`, value: year, parent: '' };
       })
       .reverse();
   }, []);
@@ -282,10 +286,14 @@ export const ProjectListView: React.FC<IProps> = ({
       <div className="filter-container">
         {filterable && (
           <FilterBar<IProjectFilterState> initialValues={filter} onChange={handleFilterChange}>
-            <Col xs={2} className="bar-item">
-              <Input field="name" placeholder="Search by project name or number" />
+            <Col md="auto" className="bar-item">
+              <Input
+                style={{ width: '280px' }}
+                field="name"
+                placeholder="Search by project name or number"
+              />
             </Col>
-            <Col xs={2} className="bar-item">
+            <Col md="auto" className="bar-item" style={{ width: '350px' }}>
               <ParentSelect
                 field={'statusId'}
                 options={statuses}
@@ -296,7 +304,7 @@ export const ProjectListView: React.FC<IProps> = ({
                 placeholder="Enter a Status"
               />
             </Col>
-            <Col xs={2} className="bar-item">
+            <Col md="auto" className="bar-item" style={{ marginRight: '-25px' }}>
               <ParentSelect
                 field="agencies"
                 options={agencyOptions}
@@ -304,7 +312,7 @@ export const ProjectListView: React.FC<IProps> = ({
                 placeholder="Enter an Agency"
               />
             </Col>
-            <Col xs={1} className="bar-item">
+            <Col md="auto" className="bar-item">
               <Select field="fiscalYear" options={fiscalYears} placeholder="Fiscal Year" />
             </Col>
           </FilterBar>

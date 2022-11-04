@@ -1,32 +1,33 @@
-import * as React from 'react';
-import { Button } from 'react-bootstrap';
-import { FaInfo, FaPlusSquare } from 'react-icons/fa';
-import Control from 'react-leaflet-control';
-import styled from 'styled-components';
-import clsx from 'classnames';
-import * as L from 'leaflet';
-import { useEffect } from 'react';
-import HeaderActions from './HeaderActions';
-import { InfoContent } from './InfoContent';
-import TooltipWrapper from 'components/common/TooltipWrapper';
-import { PropertyPopUpContext } from 'components/maps/providers/PropertyPopUpProvider';
-import { useLeaflet } from 'react-leaflet';
-import { MAX_ZOOM } from 'constants/strings';
-import { Link, useLocation } from 'react-router-dom';
-import queryString from 'query-string';
-import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+import variables from '_variables.module.scss';
 import { IBuilding, IParcel } from 'actions/parcelsActions';
 import { ReactComponent as BuildingSvg } from 'assets/images/icon-business.svg';
-import { AssociatedBuildingsList } from './AssociatedBuildingsList';
-import variables from '_variables.module.scss';
-import { PropertyTypes } from 'constants/propertyTypes';
+import clsx from 'classnames';
 import { LandSvg } from 'components/common/Icons';
-import AssociatedParcelsList from './AssociatedParcelsList';
-import FilterBackdrop from '../FilterBackdrop';
+import TooltipWrapper from 'components/common/TooltipWrapper';
+import { PropertyPopUpContext } from 'components/maps/providers/PropertyPopUpProvider';
+import { PropertyTypes } from 'constants/propertyTypes';
+import { MAX_ZOOM } from 'constants/strings';
 import { useApi } from 'hooks/useApi';
-import { useAppDispatch } from 'store';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+import * as L from 'leaflet';
+import queryString from 'query-string';
+import * as React from 'react';
+import { useEffect } from 'react';
+import { Button } from 'react-bootstrap';
+import { FaInfo, FaPlusSquare } from 'react-icons/fa';
+import { useLeaflet } from 'react-leaflet';
+import Control from 'react-leaflet-control';
+import { Link, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { useAppDispatch } from 'store';
 import { storePropertyDetail } from 'store/slices/parcelSlice';
+import styled from 'styled-components';
+
+import FilterBackdrop from '../FilterBackdrop';
+import { AssociatedBuildingsList } from './AssociatedBuildingsList';
+import AssociatedParcelsList from './AssociatedParcelsList';
+import HeaderActions from './HeaderActions';
+import { InfoContent } from './InfoContent';
 
 const InfoContainer = styled.div`
   margin-right: -10px;
@@ -191,8 +192,12 @@ const InfoControl: React.FC<InfoControlProps> = ({ open, setOpen, onHeaderAction
 
   const keycloak = useKeycloakWrapper();
   const dispatch = useAppDispatch();
-  const canViewProperty = keycloak.canUserViewProperty(propertyInfo);
-  const canEditProperty = keycloak.canUserEditProperty(propertyInfo);
+  const canViewProperty =
+    keycloak.canUserViewProperty(propertyInfo) &&
+    popUpContext.propertyTypeID !== PropertyTypes.GEOCODER;
+  const canEditProperty =
+    keycloak.canUserEditProperty(propertyInfo) &&
+    popUpContext.propertyTypeID !== PropertyTypes.GEOCODER;
 
   const renderContent = () => {
     if (popUpContext.propertyInfo) {
@@ -217,6 +222,7 @@ const InfoControl: React.FC<InfoControlProps> = ({ open, setOpen, onHeaderAction
           </>
         );
       } else if (canViewProperty) {
+        if (popUpContext.propertyTypeID === PropertyTypes.GEOCODER) return null;
         if (isBuilding) {
           return (
             <AssociatedParcelsList parcels={(popUpContext.propertyInfo as IBuilding).parcels} />
@@ -303,23 +309,26 @@ const InfoControl: React.FC<InfoControlProps> = ({ open, setOpen, onHeaderAction
             <InfoIcon />
           </InfoButton>
         </TooltipWrapper>
-        {open && popUpContext.propertyInfo && canViewProperty && (
-          <TooltipWrapper
-            toolTipId="associated-items-id"
-            toolTip={isBuilding ? 'Associated Land' : 'Associated Buildings'}
-          >
-            <TabButton
-              id="slideOutTab"
-              variant="outline-secondary"
-              className={clsx({ open })}
-              onClick={() => {
-                setGeneralInfoOpen(false);
-              }}
+        {open &&
+          popUpContext.propertyInfo &&
+          canViewProperty &&
+          popUpContext.propertyTypeID !== PropertyTypes.GEOCODER && (
+            <TooltipWrapper
+              toolTipId="associated-items-id"
+              toolTip={isBuilding ? 'Associated Land' : 'Associated Buildings'}
             >
-              {isBuilding ? <LandSvg className="svg" /> : <BuildingSvg className="svg" />}
-            </TabButton>
-          </TooltipWrapper>
-        )}
+              <TabButton
+                id="slideOutTab"
+                variant="outline-secondary"
+                className={clsx({ open })}
+                onClick={() => {
+                  setGeneralInfoOpen(false);
+                }}
+              >
+                {isBuilding ? <LandSvg className="svg" /> : <BuildingSvg className="svg" />}
+              </TabButton>
+            </TooltipWrapper>
+          )}
         {open && <InfoMain className={clsx({ open })}>{renderContent()}</InfoMain>}
       </InfoContainer>
     </Control>

@@ -1,34 +1,35 @@
 import './ParcelIdentificationForm.scss';
 
-import { FastInput, SelectOptions, Check, TextArea, InputGroup } from 'components/common/form';
-import { Label } from 'components/common/Label';
-import AddressForm from 'features/properties/components/forms/subforms/AddressForm';
-import React, { useMemo, useState } from 'react';
-import { useFormikContext, getIn } from 'formik';
-import PidPinForm from 'features/properties/components/forms/subforms/PidPinForm';
-import { sensitiveTooltip } from '../../../../../src/features/properties/components/forms/strings';
-import { HARMFUL_DISCLOSURE_URL } from 'constants/strings';
-import { IGeocoderResponse } from 'hooks/useApi';
-import classNames from 'classnames';
-import { ISteppedFormValues } from 'components/common/form/StepForm';
-import { ParentSelect } from 'components/common/form/ParentSelect';
-import { noop } from 'lodash';
-import { Container, Row, Col, Form, ListGroup } from 'react-bootstrap';
-import TooltipWrapper from 'components/common/TooltipWrapper';
-import * as API from 'constants/API';
-import useCodeLookups from 'hooks/useLookupCodes';
-import GenericModal from 'components/common/GenericModal';
 import { IParcel } from 'actions/parcelsActions';
-import { mapSelectOptionWithParent } from 'utils';
-import AddParentParcelsForm from './AddParentParcelsForm';
-import { PropertyTypes } from 'constants/propertyTypes';
-import { withNameSpace } from 'utils/formUtils';
-import MovePinForm from './MovePinForm';
-import LandSearchForm from './LandSearchForm';
+import classNames from 'classnames';
+import { Check, FastInput, InputGroup, SelectOptions, TextArea } from 'components/common/form';
+import { ParentSelect } from 'components/common/form/ParentSelect';
+import { ISteppedFormValues } from 'components/common/form/StepForm';
+import GenericModal from 'components/common/GenericModal';
+import { Label } from 'components/common/Label';
+import TooltipWrapper from 'components/common/TooltipWrapper';
 import { ProjectNumberLink } from 'components/maps/leaflet/InfoSlideOut/ProjectNumberLink';
-import styled from 'styled-components';
+import * as API from 'constants/API';
+import { PropertyTypes } from 'constants/propertyTypes';
+import { HARMFUL_DISCLOSURE_URL } from 'constants/strings';
+import AddressForm from 'features/properties/components/forms/subforms/AddressForm';
+import PidPinForm from 'features/properties/components/forms/subforms/PidPinForm';
+import { getIn, useFormikContext } from 'formik';
+import { IGeocoderResponse } from 'hooks/useApi';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+import useCodeLookups from 'hooks/useLookupCodes';
 import { useMyAgencies } from 'hooks/useMyAgencies';
+import { noop } from 'lodash';
+import React, { useMemo, useState } from 'react';
+import { Col, Container, Form, ListGroup, Row } from 'react-bootstrap';
+import styled from 'styled-components';
+import { mapSelectOptionWithParent } from 'utils';
+import { withNameSpace } from 'utils/formUtils';
+
+import { sensitiveTooltip } from '../../../../../src/features/properties/components/forms/strings';
+import AddParentParcelsForm from './AddParentParcelsForm';
+import LandSearchForm from './LandSearchForm';
+import MovePinForm from './MovePinForm';
 
 interface IIdentificationProps {
   /** used for changign the agency - note that only select users will be able to edit this field */
@@ -97,7 +98,7 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
   return (
     <Container>
       {propertyTypeId === PropertyTypes.SUBDIVISION && (
-        <Row noGutters className="section">
+        <Row className="section g-0">
           <AddParentParcelsForm
             nameSpace={nameSpace}
             findMatchingPid={findMatchingPid}
@@ -105,7 +106,7 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
           />
         </Row>
       )}
-      <Row>
+      <Row style={{ textAlign: 'left' }}>
         <h4>Parcel Identification</h4>
       </Row>
       {!disabled && (
@@ -126,8 +127,9 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
         </>
       )}
       <Row
-        noGutters
-        className={classNames('section', latitude === '' && longitude === '' ? 'disabled' : '')}
+        className={
+          classNames('section', latitude === '' && longitude === '' ? 'disabled' : '') + ' g-0'
+        }
       >
         <Col md={12}>
           <h5>Parcel Details</h5>
@@ -142,6 +144,7 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
             />
           )}
           <AddressForm
+            parcelInformationStyles
             onGeocoderChange={(selection: IGeocoderResponse) => {
               const administrativeArea = selection.administrativeArea
                 ? lookupCodes.find(code => {
@@ -174,91 +177,119 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
             disabled={disabled}
             nameSpace={withNameSpace(nameSpace, 'address')}
           />
-          <Form.Row>
-            <Form.Label>Agency</Form.Label>
-            <ParentSelect
-              required
-              field={withNameSpace(nameSpace, 'agencyId')}
-              options={myAgencies.map(c => mapSelectOptionWithParent(c, myAgencies))}
-              filterBy={['code', 'label', 'parent']}
-              disabled={(!isPropertyAdmin && !isUserAgencyAParent) || disabled}
-            />
-          </Form.Row>
+          <Row
+            style={{
+              alignItems: 'center',
+              marginLeft: '-23px',
+              marginTop: '10px',
+              marginBottom: '20px',
+            }}
+          >
+            <Col md="auto" style={{ width: '160px' }}>
+              <Form.Label>Agency</Form.Label>
+            </Col>
+            <Col md="auto">
+              <ParentSelect
+                required
+                field={withNameSpace(nameSpace, 'agencyId')}
+                options={myAgencies.map(c => mapSelectOptionWithParent(c, myAgencies))}
+                filterBy={['code', 'label', 'parent']}
+                disabled={(!isPropertyAdmin && !isUserAgencyAParent) || disabled}
+              />
+            </Col>
+          </Row>
         </Col>
         <Col md={6} className="form-container">
-          <Form.Row>
-            <Label>Name</Label>
-            <FastInput
-              disabled={disabled}
-              field={withNameSpace(nameSpace, 'name')}
-              formikProps={formikProps}
-            />
-          </Form.Row>
-          <Form.Row>
-            <Label>Description</Label>
-            <TextArea disabled={disabled} field={withNameSpace(nameSpace, 'description')} />
-          </Form.Row>
-          <Form.Row>
-            <Label>Legal Description</Label>
-            <TextArea
-              disabled={disabled}
-              field={withNameSpace(nameSpace, 'landLegalDescription')}
-              displayErrorTooltips
-            />
-          </Form.Row>
-          <Form.Row>
-            <Label>Lot Size</Label>
-
-            <InputGroup
-              displayErrorTooltips
-              fast={true}
-              disabled={disabled}
-              type="number"
-              field={withNameSpace(nameSpace, 'landArea')}
-              formikProps={formikProps}
-              postText="Hectares"
-              required
-            />
-          </Form.Row>
+          <Row style={{ justifyContent: 'right', alignItems: 'center', marginBottom: '20px' }}>
+            <Col md="auto" style={{ marginRight: '-25px' }}>
+              <Label>Name</Label>
+            </Col>
+            <Col md="auto" style={{ marginRight: '73px' }}>
+              <FastInput
+                disabled={disabled}
+                field={withNameSpace(nameSpace, 'name')}
+                formikProps={formikProps}
+              />
+            </Col>
+          </Row>
+          <Row style={{ justifyContent: 'right', alignItems: 'center', marginBottom: '20px' }}>
+            <Col md="auto" style={{ marginRight: '-37px' }}>
+              <Label>Description</Label>
+            </Col>
+            <Col md="auto" style={{ marginRight: '70px' }}>
+              <TextArea disabled={disabled} field={withNameSpace(nameSpace, 'description')} />
+            </Col>
+          </Row>
+          <Row style={{ justifyContent: 'right', alignItems: 'center', marginBottom: '20px' }}>
+            <Col md="auto" style={{ marginRight: '-37px' }}>
+              <Label>Legal Description</Label>
+            </Col>
+            <Col md="auto" style={{ marginRight: '70px' }}>
+              <TextArea
+                disabled={disabled}
+                field={withNameSpace(nameSpace, 'landLegalDescription')}
+                displayErrorTooltips
+              />
+            </Col>
+          </Row>
+          <Row style={{ justifyContent: 'right', alignItems: 'center', marginBottom: '20px' }}>
+            <Col md="auto" style={{ marginRight: '-27px' }}>
+              <Label>Lot Size</Label>
+            </Col>
+            <Col md="auto" style={{ width: '200px', marginRight: '100px' }}>
+              <InputGroup
+                displayErrorTooltips
+                fast={true}
+                disabled={disabled}
+                type="number"
+                field={withNameSpace(nameSpace, 'landArea')}
+                formikProps={formikProps}
+                postText="Hectares"
+                required
+              />
+            </Col>
+          </Row>
           {!!projectNumbers?.length && (
-            <Form.Row>
-              <Label style={{ marginTop: '1rem' }}>Project Number(s)</Label>
-              <StyledProjectNumbers>
-                {projectNumbers.map((projectNum: string) => (
-                  <ProjectNumberLink
-                    key={projectNum}
-                    projectNumber={projectNum}
-                    agencyId={agencyId}
-                    setPrivateProject={setPrivateProject}
-                    privateProject={privateProject}
-                  />
-                ))}
-              </StyledProjectNumbers>
-            </Form.Row>
+            <Row style={{ justifyContent: 'right', alignItems: 'center', marginBottom: '20px' }}>
+              <Col md="auto">
+                <Label style={{ marginTop: '1rem' }}>Project Number(s)</Label>
+              </Col>
+              <Col md="auto">
+                <StyledProjectNumbers>
+                  {projectNumbers.map((projectNum: string) => (
+                    <ProjectNumberLink
+                      key={projectNum}
+                      projectNumber={projectNum}
+                      agencyId={agencyId}
+                      setPrivateProject={setPrivateProject}
+                      privateProject={privateProject}
+                    />
+                  ))}
+                </StyledProjectNumbers>
+              </Col>
+            </Row>
           )}
         </Col>
       </Row>
 
-      <Row>
-        <Col>
-          <div className="input-medium harmful">
-            <p>
-              Would this information be harmful if released?&nbsp;
-              <TooltipWrapper toolTipId="sensitive-harmful" toolTip={sensitiveTooltip}>
-                <a target="_blank" rel="noopener noreferrer" href={HARMFUL_DISCLOSURE_URL}>
-                  Policy
-                </a>
-              </TooltipWrapper>
-            </p>
-            <Check
-              type="radio"
-              field={withNameSpace(nameSpace, 'isSensitive')}
-              radioLabelOne="Yes"
-              radioLabelTwo="No"
-              disabled={disabled}
-            />
-          </div>
-        </Col>
+      <Row style={{ justifyContent: 'center', marginBottom: '20px' }}>
+        <div className="input-medium harmful">
+          <p style={{ marginBottom: '-5px' }}>
+            Would this information be harmful if released?&nbsp;
+          </p>
+          <TooltipWrapper toolTipId="sensitive-harmful" toolTip={sensitiveTooltip}>
+            <a target="_blank" rel="noopener noreferrer" href={HARMFUL_DISCLOSURE_URL}>
+              Policy
+            </a>
+          </TooltipWrapper>
+          <Check
+            type="radio"
+            field={withNameSpace(nameSpace, 'isSensitive')}
+            radioLabelOne="Yes"
+            radioLabelTwo="No"
+            disabled={disabled}
+          />
+        </div>
       </Row>
       <GenericModal
         display={!!overrideData}
