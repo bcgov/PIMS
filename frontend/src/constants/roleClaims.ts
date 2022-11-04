@@ -1,0 +1,126 @@
+/**
+ * RoleClaims.ts works as an interface for roles and claims.
+ * @returns RoleClaims object which contains a list of according claims for a given key(role).
+ * @purpose To dictate authorization for an action based on the users Role.
+ */
+
+//TODO: Change this to a JSON file and share it between the entire application via an env variable
+
+import Claims from './claims';
+import Roles from './roles';
+
+const {
+  PROPERTY_VIEW,
+  PROPERTY_EDIT,
+  PROPERTY_ADD,
+  PROPERTY_DELETE,
+  DISPOSE_REQUEST,
+  DISPOSE_APPROVE,
+  ADMIN_AGENCIES,
+  ADMIN_USERS,
+  ADMIN_ROLES,
+  ADMIN_PROPERTIES,
+  ADMIN_PROJECTS,
+  PROJECT_VIEW,
+  PROJECT_EDIT,
+  PROJECT_ADD,
+  PROJECT_DELETE,
+  REPORTS_VIEW,
+  REPORTS_SPL,
+  REPORTS_SPL_ADMIN,
+  AGENCY_ADMINISTRATOR,
+  SENSITIVE_VIEW,
+  SYSTEM_ADMINISTRATOR,
+} = Claims;
+
+interface IRoleClaims {
+  [key: string]: Array<Claims>;
+}
+
+const RoleClaims: IRoleClaims = {};
+
+RoleClaims[Roles.AGENCY_ADMINISTRATOR] = [
+  ADMIN_USERS,
+  AGENCY_ADMINISTRATOR,
+  PROJECT_ADD,
+  PROJECT_DELETE,
+  PROJECT_EDIT,
+  PROJECT_VIEW,
+  PROPERTY_ADD,
+  PROPERTY_EDIT,
+  PROPERTY_VIEW,
+  SENSITIVE_VIEW,
+];
+
+RoleClaims[Roles.ASSISTANT_DEPUTY_MINISTER] = [
+  PROJECT_ADD,
+  PROJECT_DELETE,
+  PROJECT_EDIT,
+  PROJECT_VIEW,
+  PROPERTY_ADD,
+  PROPERTY_EDIT,
+  PROPERTY_VIEW,
+  SENSITIVE_VIEW,
+];
+
+RoleClaims[Roles.ASSISTANT_DEPUTY_MINISTER_ASSISTANT] = [
+  PROJECT_ADD,
+  PROJECT_EDIT,
+  PROJECT_VIEW,
+  PROPERTY_ADD,
+  PROPERTY_EDIT,
+  PROPERTY_VIEW,
+  SENSITIVE_VIEW,
+];
+
+RoleClaims[Roles.EXECUTIVE_DIRECTOR] = [
+  PROJECT_ADD,
+  PROJECT_DELETE,
+  PROJECT_EDIT,
+  PROJECT_VIEW,
+  PROPERTY_ADD,
+  PROPERTY_EDIT,
+  PROPERTY_VIEW,
+  SENSITIVE_VIEW,
+];
+
+RoleClaims[Roles.REAL_ESTATE_MANAGER] = [
+  DISPOSE_REQUEST,
+  PROJECT_ADD,
+  PROJECT_DELETE,
+  PROJECT_EDIT,
+  PROJECT_VIEW,
+  PROPERTY_ADD,
+  PROPERTY_EDIT,
+  PROPERTY_VIEW,
+  SENSITIVE_VIEW,
+];
+
+RoleClaims[Roles.SRES] = [
+  ADMIN_PROJECTS,
+  ADMIN_PROPERTIES,
+  DISPOSE_APPROVE,
+  PROJECT_DELETE,
+  PROPERTY_DELETE,
+];
+
+RoleClaims[Roles.SRES_FINANCIAL_MANAGER] = [REPORTS_SPL, REPORTS_SPL_ADMIN, REPORTS_VIEW];
+
+RoleClaims[Roles.SYSTEM_ADMINISTRATOR] = [
+  ADMIN_AGENCIES,
+  ADMIN_PROJECTS,
+  ADMIN_PROPERTIES,
+  ADMIN_ROLES,
+  ADMIN_USERS,
+  AGENCY_ADMINISTRATOR,
+  PROJECT_ADD,
+  PROJECT_EDIT,
+  PROJECT_VIEW,
+  PROPERTY_ADD,
+  PROPERTY_EDIT,
+  PROPERTY_VIEW,
+  SENSITIVE_VIEW,
+  SYSTEM_ADMINISTRATOR,
+];
+
+export default RoleClaims;
