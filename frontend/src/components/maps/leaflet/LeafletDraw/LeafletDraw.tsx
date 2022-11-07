@@ -53,7 +53,7 @@ export const LeafletDraw: React.FC<ILeafletDrawProps> = ({
   canAdd,
   color = '#fcba19',
 }) => {
-  const { map } = useMap();
+  const map = useMap();
 
   useEffect(() => {
     if (!!map) {

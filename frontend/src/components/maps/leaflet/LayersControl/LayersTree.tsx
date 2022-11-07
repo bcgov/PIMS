@@ -134,7 +134,7 @@ const LayerNodeCheckbox: React.FC<{ name: string; label: string; color: string }
 const featureGroup = new L.FeatureGroup();
 const LeafletListenerComp = () => {
   const { values } = useFormikContext<{ layers: ILayerItem[] }>();
-  const { map } = useMap();
+  const map = useMap();
 
   React.useEffect(() => {
     if (map) {

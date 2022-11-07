@@ -1,10 +1,10 @@
 import { SidebarContextType } from 'features/mapSideBar/hooks/useQueryParamSideBar';
-import { LatLngBounds } from 'leaflet';
+import { LatLng, LatLngBounds } from 'leaflet';
 import { keys } from 'lodash';
 import queryString from 'query-string';
 import * as React from 'react';
 import { Col, ListGroup, Row } from 'react-bootstrap';
-import { LatLng, useMap } from 'react-leaflet';
+import { useMap } from 'react-leaflet';
 import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -79,8 +79,8 @@ export const LayerPopupContent: React.FC<IPopupContentProps> = ({
   const populateDetails = urlParsed.sidebar === 'true' && isEditing ? true : false;
 
   const leaflet = useMap();
-  const curZoom = leaflet.map?.getZoom();
-  const boundZoom = leaflet.map?.getBoundsZoom(bounds!);
+  const curZoom = leaflet.getZoom();
+  const boundZoom = leaflet.getBoundsZoom(bounds!);
 
   return (
     <>
@@ -111,7 +111,7 @@ export const LayerPopupContent: React.FC<IPopupContentProps> = ({
           {bounds && curZoom! !== boundZoom ? (
             <StyledLink
               to={{ ...location }}
-              onClick={() => leaflet.map?.flyToBounds(bounds, { animate: false })}
+              onClick={() => leaflet.flyToBounds(bounds, { animate: false })}
             >
               Zoom
             </StyledLink>

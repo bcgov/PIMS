@@ -23,12 +23,7 @@ import {
 import { isEmpty, isEqual, isEqualWith } from 'lodash';
 import React from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
-import {
-  MapContainer as ReactLeafletMap,
-  MapProps as LeafletMapProps,
-  Popup,
-  TileLayer,
-} from 'react-leaflet';
+import { MapContainer as ReactLeafletMap, Popup, TileLayer } from 'react-leaflet';
 import ReactResizeDetector from 'react-resize-detector';
 import { useAppDispatch, useAppSelector } from 'store';
 import { DEFAULT_MAP_ZOOM, setMapViewZoom } from 'store/slices/mapViewZoomSlice';
@@ -73,7 +68,7 @@ export type MapProps = {
   agencies: ILookupCode[];
   administrativeAreas: ILookupCode[];
   lotSizes: number[];
-  mapRef: React.RefObject<ReactLeafletMap<LeafletMapProps, LeafletMap>>;
+  mapRef: React.RefObject<LeafletMap>;
   selectedProperty?: IPropertyDetail | null;
   onMarkerClick?: (obj: IProperty, position?: [number, number]) => void;
   onMarkerPopupClose?: (obj: IPropertyDetail) => void;
@@ -255,7 +250,7 @@ const Map: React.FC<MapProps> = ({
   // TODO: refactor various zoom settings
   React.useEffect(() => {
     if (!interactive) {
-      const map = mapRef.current?.leafletElement;
+      const map = mapRef.current;
       if (map) {
         map.dragging.disable();
         map.touchZoom.disable();
@@ -342,9 +337,9 @@ const Map: React.FC<MapProps> = ({
 
   const handleResize = () => {
     // The map has changed and needs to be redrawn and possibly zoomed and centered.
-    mapRef.current?.leafletElement.invalidateSize();
-    const z = mapRef.current?.leafletElement.getZoom();
-    if (zoom !== z) mapRef.current?.leafletElement.setView(center, zoom);
+    mapRef.current?.invalidateSize();
+    const z = mapRef.current?.getZoom();
+    if (zoom !== z) mapRef.current?.setView(center, zoom);
   };
 
   return (

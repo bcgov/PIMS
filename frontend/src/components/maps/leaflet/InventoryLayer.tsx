@@ -145,7 +145,7 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
   onRequestData,
 }) => {
   const keycloak = useKeycloakWrapper();
-  const { map } = useMap();
+  const map = useMap();
   const [features, setFeatures] = useState<PointFeature[]>([]);
   const [loadingTiles, setLoadingTiles] = useState(false);
   const { loadProperties } = useApi();

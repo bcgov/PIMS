@@ -7,14 +7,14 @@ import Enzyme, { mount } from 'enzyme';
 import { Map as LeafletMap } from 'leaflet';
 import * as React from 'react';
 import { Button } from 'react-bootstrap';
-import { MapContainer as ReactLeafletMap, MapProps } from 'react-leaflet';
+import { MapContainer as ReactLeafletMap } from 'react-leaflet';
 
 import LayersControl from './LayersControl';
 
 jest.mock('axios');
 Enzyme.configure({ adapter: new Adapter() });
 
-let mapRef: React.RefObject<ReactLeafletMap<MapProps, LeafletMap>> | undefined;
+let mapRef: React.RefObject<LeafletMap> | undefined;
 
 const MapComponent = () => {
   const [open, setOpen] = React.useState(false);
@@ -91,6 +91,6 @@ describe('LayersControl View', () => {
   it('Parcel should be enabled by default and Municipality layers should be disabled by default', () => {
     mount(<MapComponent />);
     waitFor(() => expect(mapRef?.current).toBeTruthy(), { timeout: 500 });
-    expect(isLayerVisible('municipalities', mapRef!.current!.leafletElement)).toBeFalsy();
+    expect(isLayerVisible('municipalities', mapRef!.current)).toBeFalsy();
   });
 });
