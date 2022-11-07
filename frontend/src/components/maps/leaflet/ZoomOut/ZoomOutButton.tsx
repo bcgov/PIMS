@@ -5,6 +5,8 @@ import { LatLngBounds, Map as LeafletMap } from 'leaflet';
 import * as React from 'react';
 import { Button } from 'react-bootstrap';
 import { FaExpandArrowsAlt } from 'react-icons/fa';
+import { useAppDispatch } from 'store';
+import { setMapViewZoom } from 'store/slices/mapViewZoomSlice';
 import styled from 'styled-components';
 
 const ZoomButton = styled(Button)`
@@ -27,9 +29,14 @@ export type ZoomOutProps = {
  * @param bounds The latlng bounds to zoom out to
  */
 export const ZoomOutButton: React.FC<ZoomOutProps> = ({ map, bounds }) => {
+  const dispatch = useAppDispatch();
+
   const zoomOut = () => {
     map.current?.fitBounds(bounds);
+    const zoom = map.current?.getZoom();
+    if (zoom) dispatch(setMapViewZoom(zoom));
   };
+
   return (
     <ControlPanel position="topleft">
       <TooltipWrapper toolTipId="zoomout-id" toolTip="View entire province">
