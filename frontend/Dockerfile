@@ -1,22 +1,18 @@
-FROM node:16.10-bullseye as node
-
-# install build toolchain
-RUN apt-get update \
-    && apt-get install --no-install-recommends -y dumb-init \
-    && rm -rf /var/lib/apt/lists/*
-
-# set entrypoint to `dumb-init` as it handles being pid 1 and forwarding signals
-# so that you dont need to bake that logic into your node app
-ENTRYPOINT ["dumb-init", "--"]
+FROM registry.access.redhat.com/ubi8/nodejs-16:1-68.1666660386 as node
 
 WORKDIR /usr/app
 
-RUN npm install -g npm@8.5.5
+# Install npm version 8.19.3
+RUN npm i -g npm@8.19.3
 
 COPY package*.json ./
 
-RUN npm set progress=false \
-    && npm ci
+# Disable npm progress bar
+RUN npm set progress=false
+
+# Clean install dependencies
+RUN npm ci --legacy-peer-deps
+
 COPY . .
 
 EXPOSE 3000
