@@ -21,7 +21,7 @@ import { useState } from 'react';
 import { Spinner } from 'react-bootstrap';
 import { FaCheckCircle, FaEdit } from 'react-icons/fa';
 import { FaTrash } from 'react-icons/fa';
-import { Map as LeafletMap } from 'react-leaflet';
+import { MapContainer as LeafletMap } from 'react-leaflet';
 import { Prompt } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useAppDispatch, useAppSelector } from 'store';

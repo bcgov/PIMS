@@ -5,7 +5,7 @@ import { LatLngBounds, Map as LeafletMap } from 'leaflet';
 import * as React from 'react';
 import { Button } from 'react-bootstrap';
 import { FaExpandArrowsAlt } from 'react-icons/fa';
-import { Map as ReactLeafletMap, MapProps as LeafletMapProps } from 'react-leaflet';
+import { MapContainer as ReactLeafletMap, MapProps as LeafletMapProps } from 'react-leaflet';
 import { useAppDispatch } from 'store';
 import { setMapViewZoom } from 'store/slices/mapViewZoomSlice';
 import styled from 'styled-components';

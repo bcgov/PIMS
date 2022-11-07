@@ -10,7 +10,11 @@ import { createMemoryHistory } from 'history';
 import { PimsAPI, useApi } from 'hooks/useApi';
 import { Map as LeafletMap } from 'leaflet';
 import React, { createRef } from 'react';
-import { Map as ReactLeafletMap, MapProps as LeafletMapProps, Marker } from 'react-leaflet';
+import {
+  MapContainer as ReactLeafletMap,
+  MapProps as LeafletMapProps,
+  Marker,
+} from 'react-leaflet';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';

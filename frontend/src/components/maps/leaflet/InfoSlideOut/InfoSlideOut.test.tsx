@@ -9,7 +9,7 @@ import { createMemoryHistory } from 'history';
 import { Map as LeafletMap } from 'leaflet';
 import * as React from 'react';
 import { Button } from 'react-bootstrap';
-import { Map as ReactLeafletMap, MapProps } from 'react-leaflet';
+import { MapContainer as ReactLeafletMap, MapProps } from 'react-leaflet';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';

@@ -10,7 +10,7 @@ import useCodeLookups from 'hooks/useLookupCodes';
 import { LeafletMouseEvent } from 'leaflet';
 import queryString from 'query-string';
 import React, { useRef, useState } from 'react';
-import { Map as LeafletMap } from 'react-leaflet';
+import { MapContainer as LeafletMap } from 'react-leaflet';
 import { useLocation } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'store';
 import { saveClickLatLng as saveLeafletMouseEvent } from 'store/slices/leafletMouseSlice';
