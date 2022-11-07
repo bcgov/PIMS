@@ -202,7 +202,7 @@ const InfoControl: React.FC<InfoControlProps> = ({ open, setOpen, onHeaderAction
             <FilterBackdrop show={open && popUpContext.loading}></FilterBackdrop>
             <HeaderActions
               propertyInfo={popUpContext.propertyInfo}
-              propertyTypeId={popUpContext.propertyTypeId}
+              propertyTypeId={popUpContext.propertyTypeID}
               onLinkClick={onHeaderActionClick}
               jumpToView={jumpToView}
               zoomToView={zoomToView}
@@ -211,7 +211,7 @@ const InfoControl: React.FC<InfoControlProps> = ({ open, setOpen, onHeaderAction
             />
             <InfoContent
               propertyInfo={popUpContext.propertyInfo}
-              propertyTypeId={popUpContext.propertyTypeId}
+              propertyTypeId={popUpContext.propertyTypeID}
               canViewDetails={canViewProperty}
             />
           </>
@@ -249,7 +249,7 @@ const InfoControl: React.FC<InfoControlProps> = ({ open, setOpen, onHeaderAction
             id="slideOutInfoButton"
             variant="outline-secondary"
             onClick={() => {
-              const propertyTypeId = popUpContext.propertyTypeId;
+              const propertyTypeId = popUpContext.propertyTypeID;
               const id = popUpContext.propertyInfo?.id;
               if (typeof propertyTypeId === 'number' && propertyTypeId >= 0 && !!id && !open) {
                 popUpContext.setLoading(true);
