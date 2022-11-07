@@ -41,17 +41,6 @@ export function createMapContainer(
   };
 }
 
-export const deferred = () => {
-  let resolve: (value?: unknown) => void = noop;
-  const promise = new Promise(_resolve => {
-    resolve = _resolve;
-  });
-  return {
-    resolve,
-    promise,
-  };
-};
-
 export const fillInput = (
   container: HTMLElement,
   name: string,

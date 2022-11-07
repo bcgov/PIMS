@@ -7,7 +7,7 @@ import Enzyme, { mount } from 'enzyme';
 import { Map as LeafletMap } from 'leaflet';
 import * as React from 'react';
 import { Button } from 'react-bootstrap';
-import { Map as ReactLeafletMap, MapProps } from 'react-leaflet';
+import { MapContainer as ReactLeafletMap, MapProps } from 'react-leaflet';
 
 import LayersControl from './LayersControl';
 

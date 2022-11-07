@@ -164,7 +164,7 @@ const InfoControl: React.FC<InfoControlProps> = ({ open, setOpen, onHeaderAction
   //whether the general info is open
   const [generalInfoOpen, setGeneralInfoOpen] = React.useState<boolean>(true);
 
-  const isBuilding = popUpContext.propertyTypeId === PropertyTypes.BUILDING;
+  const isBuilding = popUpContext.propertyTypeID === PropertyTypes.BUILDING;
 
   const addAssociatedBuildingLink = (
     <>

@@ -3,7 +3,7 @@ import { GeoJsonObject } from 'geojson';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
 import { GeoJSON, geoJSON, LatLng, Map as LeafletMap } from 'leaflet';
 import { useState } from 'react';
-import { Map as ReactLeafletMap, MapProps as LeafletMapProps } from 'react-leaflet';
+import { MapContainer as ReactLeafletMap, MapProps as LeafletMapProps } from 'react-leaflet';
 import { useAppSelector } from 'store';
 
 import {
