@@ -381,16 +381,20 @@ exports[`Manage Agencies Component Snapshot matches 1`] = `
       class="table-toolbar"
     >
       <ul
+        aria-label="Pagination"
         class="pagination"
+        role="navigation"
       >
         <li
           class="page-item disabled"
         >
           <a
             aria-disabled="true"
-            class="page-link"
+            aria-label="Previous page"
+            class="page-link "
+            rel="prev"
             role="button"
-            tabindex="0"
+            tabindex="-1"
           >
             &lt;
           </a>
@@ -400,7 +404,9 @@ exports[`Manage Agencies Component Snapshot matches 1`] = `
         >
           <a
             aria-disabled="false"
+            aria-label="Next page"
             class="page-link"
+            rel="next"
             role="button"
             tabindex="0"
           >

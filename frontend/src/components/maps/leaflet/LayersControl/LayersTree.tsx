@@ -7,7 +7,7 @@ import { flatten, noop } from 'lodash';
 import * as React from 'react';
 import { Form, ListGroup } from 'react-bootstrap';
 import { FaAngleDown, FaAngleRight } from 'react-icons/fa';
-import { useLeaflet } from 'react-leaflet';
+import { useMap } from 'react-leaflet';
 import TreeMenu, { TreeMenuItem, TreeNode } from 'react-simple-tree-menu';
 import styled from 'styled-components';
 
@@ -134,7 +134,7 @@ const LayerNodeCheckbox: React.FC<{ name: string; label: string; color: string }
 const featureGroup = new L.FeatureGroup();
 const LeafletListenerComp = () => {
   const { values } = useFormikContext<{ layers: ILayerItem[] }>();
-  const { map } = useLeaflet();
+  const { map } = useMap();
 
   React.useEffect(() => {
     if (map) {

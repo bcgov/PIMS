@@ -11,7 +11,7 @@ import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { DivIcon, FeatureGroup as LeafletFeatureGroup } from 'leaflet';
 import queryString from 'query-string';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { FeatureGroup, Marker, Polyline, useLeaflet } from 'react-leaflet';
+import { FeatureGroup, Marker, Polyline, useMap } from 'react-leaflet';
 import { useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useAppDispatch } from 'store';
@@ -133,7 +133,7 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
     ICluster<any, Supercluster.AnyProps> | undefined
   >(undefined);
 
-  const leaflet = useLeaflet();
+  const leaflet = useMap();
   const [spider, setSpider] = useState<any>({});
   if (!leaflet || !leaflet.map) {
     throw new Error('<PointClusterer /> must be used under a <Map> leaflet component');

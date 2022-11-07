@@ -20,6 +20,7 @@ import Map from './Map';
 import { createPoints } from './mapUtils';
 import SelectedPropertyMarker from './SelectedPropertyMarker/SelectedPropertyMarker';
 
+const { ResizeObserver } = window;
 const mockAxios = new MockAdapter(axios);
 jest.mock('@react-keycloak/web');
 Enzyme.configure({ adapter: new Adapter() });
@@ -103,12 +104,24 @@ describe('MapProperties View', () => {
       },
     },
   });
+
   beforeEach(() => {
+    window.ResizeObserver = jest.fn().mockImplementation(() => ({
+      observe: jest.fn(),
+      unobserve: jest.fn(),
+      disconnect: jest.fn(),
+    }));
+
     mockAxios.reset();
     jest.clearAllMocks();
     mockAxios.onAny().reply(200);
     cleanup();
     history = createMemoryHistory();
+  });
+
+  afterEach(() => {
+    window.ResizeObserver = ResizeObserver;
+    jest.restoreAllMocks();
   });
 
   const getMap = (

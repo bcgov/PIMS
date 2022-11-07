@@ -4,6 +4,7 @@ import { ReactComponent as BuildingSvg } from 'assets/images/icon-business.svg';
 import clsx from 'classnames';
 import { LandSvg } from 'components/common/Icons';
 import TooltipWrapper from 'components/common/TooltipWrapper';
+import { ControlPanel } from 'components/leaflet';
 import { PropertyPopUpContext } from 'components/maps/providers/PropertyPopUpProvider';
 import { PropertyTypes } from 'constants/propertyTypes';
 import { MAX_ZOOM } from 'constants/strings';
@@ -15,8 +16,7 @@ import * as React from 'react';
 import { useEffect } from 'react';
 import { Button } from 'react-bootstrap';
 import { FaInfo, FaPlusSquare } from 'react-icons/fa';
-import { useLeaflet } from 'react-leaflet';
-import Control from 'react-leaflet-control';
+import { useMap } from 'react-leaflet';
 import { Link, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useAppDispatch } from 'store';
@@ -64,7 +64,6 @@ const InfoMain = styled.div`
   padding-left: 10px;
   padding: 0px 10px 5px 10px;
   position: relative;
-
   &.open {
     overflow-y: scroll;
     max-height: calc(100vh - 380px);
@@ -140,18 +139,18 @@ export type InfoControlProps = {
 const InfoControl: React.FC<InfoControlProps> = ({ open, setOpen, onHeaderActionClick }) => {
   const popUpContext = React.useContext(PropertyPopUpContext);
   const { getParcel, getBuilding } = useApi();
-  const leaflet = useLeaflet();
+  const mapInstance = useMap();
   const { propertyInfo } = popUpContext;
   const location = useLocation();
   const jumpToView = () =>
-    leaflet.map?.setView(
+    mapInstance?.setView(
       [propertyInfo?.latitude as number, propertyInfo?.longitude as number],
-      Math.max(MAX_ZOOM, leaflet.map.getZoom()),
+      Math.max(MAX_ZOOM, mapInstance.getZoom()),
     );
   const zoomToView = () =>
-    leaflet.map?.flyTo(
+    mapInstance?.flyTo(
       [propertyInfo?.latitude as number, propertyInfo?.longitude as number],
-      Math.max(MAX_ZOOM, leaflet.map.getZoom()),
+      Math.max(MAX_ZOOM, mapInstance.getZoom()),
       { animate: false },
     );
 
@@ -165,7 +164,7 @@ const InfoControl: React.FC<InfoControlProps> = ({ open, setOpen, onHeaderAction
   //whether the general info is open
   const [generalInfoOpen, setGeneralInfoOpen] = React.useState<boolean>(true);
 
-  const isBuilding = popUpContext.propertyTypeID === PropertyTypes.BUILDING;
+  const isBuilding = popUpContext.propertyTypeId === PropertyTypes.BUILDING;
 
   const addAssociatedBuildingLink = (
     <>
@@ -192,12 +191,8 @@ const InfoControl: React.FC<InfoControlProps> = ({ open, setOpen, onHeaderAction
 
   const keycloak = useKeycloakWrapper();
   const dispatch = useAppDispatch();
-  const canViewProperty =
-    keycloak.canUserViewProperty(propertyInfo) &&
-    popUpContext.propertyTypeID !== PropertyTypes.GEOCODER;
-  const canEditProperty =
-    keycloak.canUserEditProperty(propertyInfo) &&
-    popUpContext.propertyTypeID !== PropertyTypes.GEOCODER;
+  const canViewProperty = keycloak.canUserViewProperty(propertyInfo);
+  const canEditProperty = keycloak.canUserEditProperty(propertyInfo);
 
   const renderContent = () => {
     if (popUpContext.propertyInfo) {
@@ -207,7 +202,7 @@ const InfoControl: React.FC<InfoControlProps> = ({ open, setOpen, onHeaderAction
             <FilterBackdrop show={open && popUpContext.loading}></FilterBackdrop>
             <HeaderActions
               propertyInfo={popUpContext.propertyInfo}
-              propertyTypeId={popUpContext.propertyTypeID}
+              propertyTypeId={popUpContext.propertyTypeId}
               onLinkClick={onHeaderActionClick}
               jumpToView={jumpToView}
               zoomToView={zoomToView}
@@ -216,13 +211,12 @@ const InfoControl: React.FC<InfoControlProps> = ({ open, setOpen, onHeaderAction
             />
             <InfoContent
               propertyInfo={popUpContext.propertyInfo}
-              propertyTypeId={popUpContext.propertyTypeID}
+              propertyTypeId={popUpContext.propertyTypeId}
               canViewDetails={canViewProperty}
             />
           </>
         );
       } else if (canViewProperty) {
-        if (popUpContext.propertyTypeID === PropertyTypes.GEOCODER) return null;
         if (isBuilding) {
           return (
             <AssociatedParcelsList parcels={(popUpContext.propertyInfo as IBuilding).parcels} />
@@ -243,7 +237,7 @@ const InfoControl: React.FC<InfoControlProps> = ({ open, setOpen, onHeaderAction
   };
 
   return (
-    <Control position="topright">
+    <ControlPanel position="topright">
       <InfoContainer id="infoContainer" className={clsx({ closed: !open })}>
         {open && (
           <InfoHeader>
@@ -255,7 +249,7 @@ const InfoControl: React.FC<InfoControlProps> = ({ open, setOpen, onHeaderAction
             id="slideOutInfoButton"
             variant="outline-secondary"
             onClick={() => {
-              const propertyTypeId = popUpContext.propertyTypeID;
+              const propertyTypeId = popUpContext.propertyTypeId;
               const id = popUpContext.propertyInfo?.id;
               if (typeof propertyTypeId === 'number' && propertyTypeId >= 0 && !!id && !open) {
                 popUpContext.setLoading(true);
@@ -309,29 +303,26 @@ const InfoControl: React.FC<InfoControlProps> = ({ open, setOpen, onHeaderAction
             <InfoIcon />
           </InfoButton>
         </TooltipWrapper>
-        {open &&
-          popUpContext.propertyInfo &&
-          canViewProperty &&
-          popUpContext.propertyTypeID !== PropertyTypes.GEOCODER && (
-            <TooltipWrapper
-              toolTipId="associated-items-id"
-              toolTip={isBuilding ? 'Associated Land' : 'Associated Buildings'}
+        {open && popUpContext.propertyInfo && canViewProperty && (
+          <TooltipWrapper
+            toolTipId="associated-items-id"
+            toolTip={isBuilding ? 'Associated Land' : 'Associated Buildings'}
+          >
+            <TabButton
+              id="slideOutTab"
+              variant="outline-secondary"
+              className={clsx({ open })}
+              onClick={() => {
+                setGeneralInfoOpen(false);
+              }}
             >
-              <TabButton
-                id="slideOutTab"
-                variant="outline-secondary"
-                className={clsx({ open })}
-                onClick={() => {
-                  setGeneralInfoOpen(false);
-                }}
-              >
-                {isBuilding ? <LandSvg className="svg" /> : <BuildingSvg className="svg" />}
-              </TabButton>
-            </TooltipWrapper>
-          )}
+              {isBuilding ? <LandSvg className="svg" /> : <BuildingSvg className="svg" />}
+            </TabButton>
+          </TooltipWrapper>
+        )}
         {open && <InfoMain className={clsx({ open })}>{renderContent()}</InfoMain>}
       </InfoContainer>
-    </Control>
+    </ControlPanel>
   );
 };
 export default InfoControl;

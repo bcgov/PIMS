@@ -1,12 +1,12 @@
 import variables from '_variables.module.scss';
 import clsx from 'classnames';
 import TooltipWrapper from 'components/common/TooltipWrapper';
+import ControlPane from 'components/leaflet';
 import * as L from 'leaflet';
 import * as React from 'react';
 import { useEffect } from 'react';
 import { Button } from 'react-bootstrap';
 import { FaLayerGroup } from 'react-icons/fa';
-import Control from 'react-leaflet-control';
 import styled from 'styled-components';
 
 import LayersTree from './LayersTree';
@@ -22,7 +22,6 @@ const LayersContainer = styled.div`
   border-radius: 4px;
   box-shadow: -2px 1px 4px rgba(0, 0, 0, 0.2);
   z-index: 1000;
-
   &.closed {
     width: 0px;
     height: 0px;
@@ -47,7 +46,6 @@ const LayersContent = styled.div`
   width: 100%;
   height: calc(100% - 80px);
   padding: 16px;
-
   &.open {
     overflow-y: scroll;
   }
@@ -102,7 +100,7 @@ const LayersControl: React.FC<ILayersControl> = ({ open, setOpen }) => {
   });
 
   return (
-    <Control position="topright">
+    <ControlPane position="topright">
       <LayersContainer id="layersContainer" className={clsx({ closed: !open })}>
         {open && (
           <LayersHeader>
@@ -124,7 +122,7 @@ const LayersControl: React.FC<ILayersControl> = ({ open, setOpen }) => {
           <LayersTree />
         </LayersContent>
       </LayersContainer>
-    </Control>
+    </ControlPane>
   );
 };
 

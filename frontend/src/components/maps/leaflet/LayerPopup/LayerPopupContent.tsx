@@ -4,7 +4,7 @@ import { keys } from 'lodash';
 import queryString from 'query-string';
 import * as React from 'react';
 import { Col, ListGroup, Row } from 'react-bootstrap';
-import { LatLng, useLeaflet } from 'react-leaflet';
+import { LatLng, useMap } from 'react-leaflet';
 import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -78,7 +78,7 @@ export const LayerPopupContent: React.FC<IPopupContentProps> = ({
   ].includes(urlParsed.sidebarContext as any);
   const populateDetails = urlParsed.sidebar === 'true' && isEditing ? true : false;
 
-  const leaflet = useLeaflet();
+  const leaflet = useMap();
   const curZoom = leaflet.map?.getZoom();
   const boundZoom = leaflet.map?.getBoundsZoom(bounds!);
 
