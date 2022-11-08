@@ -856,16 +856,20 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
       class="table-toolbar"
     >
       <ul
+        aria-label="Pagination"
         class="pagination"
+        role="navigation"
       >
         <li
           class="page-item disabled"
         >
           <a
             aria-disabled="true"
-            class="page-link"
+            aria-label="Previous page"
+            class="page-link "
+            rel="prev"
             role="button"
-            tabindex="0"
+            tabindex="-1"
           >
             &lt;
           </a>
@@ -877,8 +881,9 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
             aria-current="page"
             aria-label="Page 1 is your current page"
             class="page-link"
+            rel="canonical"
             role="button"
-            tabindex="0"
+            tabindex="-1"
           >
             1
           </a>
@@ -888,74 +893,74 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
         >
           <a
             aria-disabled="true"
-            class="page-link"
+            aria-label="Next page"
+            class="page-link "
+            rel="next"
             role="button"
-            tabindex="0"
+            tabindex="-1"
           >
             &gt;
           </a>
         </li>
       </ul>
-      <div>
+      <div
+        class="Menu-root"
+      >
         <div
-          class="Menu-root"
+          class="Menu-button"
         >
           <div
-            class="Menu-button"
+            style="display: flex;"
           >
-            <div
-              style="display: flex;"
+            <span
+              class="c0"
             >
-              <span
-                class="c0"
-              >
-                Show
-              </span>
-              <input
-                class="form-control form-control-sm"
-                style="width: 50px; margin-left: 10px; margin-right: 10px;"
-                type="number"
-                value="10"
-              />
-              <span
-                class="c0"
-              >
-                Entries
-              </span>
-            </div>
+              Show
+            </span>
+            <input
+              class="form-control form-control-sm"
+              style="width: 50px; margin-left: 10px; margin-right: 10px;"
+              type="number"
+              value="10"
+            />
+            <span
+              class="c0"
+            >
+              Entries
+            </span>
           </div>
+        </div>
+        <div
+          class="Menu-items"
+          style="width: 60px;"
+        >
           <div
-            class="Menu-items"
-            style="width: 60px;"
+            class="Menu-options scrollable list-group"
           >
             <div
-              class="Menu-options scrollable list-group"
+              class="Menu-item list-group-item"
             >
-              <div
-                class="Menu-item list-group-item"
-              >
-                5
-              </div>
-              <div
-                class="Menu-item list-group-item"
-              >
-                10
-              </div>
-              <div
-                class="Menu-item list-group-item"
-              >
-                20
-              </div>
-              <div
-                class="Menu-item list-group-item"
-              >
-                50
-              </div>
-              <div
-                class="Menu-item list-group-item"
-              >
-                100
-              </div>
+              5
+            </div>
+            <div
+              class="Menu-item list-group-item"
+            >
+              10
+            </div>
+            <div
+              class="Menu-item list-group-item"
+            >
+              20
+            </div>
+            <div
+              class="Menu-item list-group-item"
+            >
+              50
+            </div>
+            <div
+              class="Menu-item list-group-item"
+            >
+              100
             </div>
           </div>
         </div>

@@ -581,19 +581,17 @@ exports[`Land Form component renders correctly 1`] = `
                         <div
                           class="c4 GeocoderAutoComplete"
                         >
-                          <div>
-                            <div
-                              class=""
-                            >
-                              <div>
-                                <input
-                                  class="form-control"
-                                  field="data.searchAddress"
-                                  id="input-data.searchAddress"
-                                  name="data.searchAddress"
-                                  value=""
-                                />
-                              </div>
+                          <div
+                            class=""
+                          >
+                            <div>
+                              <input
+                                class="form-control"
+                                field="data.searchAddress"
+                                id="input-data.searchAddress"
+                                name="data.searchAddress"
+                                value=""
+                              />
                             </div>
                           </div>
                         </div>
@@ -650,18 +648,16 @@ exports[`Land Form component renders correctly 1`] = `
                       <div
                         class="marker-svg col"
                       >
-                        <div>
-                          <button
-                            class="c5"
-                            type="button"
+                        <button
+                          class="c5"
+                          type="button"
+                        >
+                          <svg
+                            class="parcel-icon"
                           >
-                            <svg
-                              class="parcel-icon"
-                            >
-                              draft-parcel-icon.svg
-                            </svg>
-                          </button>
-                        </div>
+                            draft-parcel-icon.svg
+                          </svg>
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -790,20 +786,18 @@ exports[`Land Form component renders correctly 1`] = `
                         <div
                           class="c4 GeocoderAutoComplete"
                         >
-                          <div>
-                            <div
-                              class="required"
-                            >
-                              <div>
-                                <input
-                                  class="form-control"
-                                  field="data.address.line1"
-                                  id="input-data.address.line1"
-                                  name="data.address.line1"
-                                  required=""
-                                  value=""
-                                />
-                              </div>
+                          <div
+                            class="required"
+                          >
+                            <div>
+                              <input
+                                class="form-control"
+                                field="data.address.line1"
+                                id="input-data.address.line1"
+                                name="data.address.line1"
+                                required=""
+                                value=""
+                              />
                             </div>
                           </div>
                         </div>

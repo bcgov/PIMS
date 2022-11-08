@@ -1,11 +1,10 @@
 import variables from '_variables.module.scss';
 import TooltipWrapper from 'components/common/TooltipWrapper';
+import { ControlPanel } from 'components/leaflet';
 import { LatLngBounds, Map as LeafletMap } from 'leaflet';
 import * as React from 'react';
 import { Button } from 'react-bootstrap';
 import { FaExpandArrowsAlt } from 'react-icons/fa';
-import { Map as ReactLeafletMap, MapProps as LeafletMapProps } from 'react-leaflet';
-import Control from 'react-leaflet-control';
 import styled from 'styled-components';
 
 const ZoomButton = styled(Button)`
@@ -17,7 +16,7 @@ const ZoomButton = styled(Button)`
 
 export type ZoomOutProps = {
   /** The leaflet map */
-  map: React.RefObject<ReactLeafletMap<LeafletMapProps, LeafletMap>>;
+  map: React.RefObject<LeafletMap>;
   /** the default bounds of the map to zoom out to */
   bounds: LatLngBounds;
 };
@@ -29,15 +28,15 @@ export type ZoomOutProps = {
  */
 export const ZoomOutButton: React.FC<ZoomOutProps> = ({ map, bounds }) => {
   const zoomOut = () => {
-    map.current?.leafletElement.fitBounds(bounds);
+    map.current?.fitBounds(bounds);
   };
   return (
-    <Control position="topleft">
+    <ControlPanel position="topleft">
       <TooltipWrapper toolTipId="zoomout-id" toolTip="View entire province">
         <ZoomButton onClick={zoomOut}>
           <FaExpandArrowsAlt />
         </ZoomButton>
       </TooltipWrapper>
-    </Control>
+    </ControlPanel>
   );
 };

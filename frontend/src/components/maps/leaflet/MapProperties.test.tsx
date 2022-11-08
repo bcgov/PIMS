@@ -10,7 +10,7 @@ import { createMemoryHistory } from 'history';
 import { PimsAPI, useApi } from 'hooks/useApi';
 import { Map as LeafletMap } from 'leaflet';
 import React, { createRef } from 'react';
-import { Map as ReactLeafletMap, MapProps as LeafletMapProps, Marker } from 'react-leaflet';
+import { Marker } from 'react-leaflet';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
@@ -20,6 +20,7 @@ import Map from './Map';
 import { createPoints } from './mapUtils';
 import SelectedPropertyMarker from './SelectedPropertyMarker/SelectedPropertyMarker';
 
+const { ResizeObserver } = window;
 const mockAxios = new MockAdapter(axios);
 jest.mock('@react-keycloak/web');
 Enzyme.configure({ adapter: new Adapter() });
@@ -103,7 +104,14 @@ describe('MapProperties View', () => {
       },
     },
   });
+
   beforeEach(() => {
+    window.ResizeObserver = jest.fn().mockImplementation(() => ({
+      observe: jest.fn(),
+      unobserve: jest.fn(),
+      disconnect: jest.fn(),
+    }));
+
     mockAxios.reset();
     jest.clearAllMocks();
     mockAxios.onAny().reply(200);
@@ -111,8 +119,13 @@ describe('MapProperties View', () => {
     history = createMemoryHistory();
   });
 
+  afterEach(() => {
+    window.ResizeObserver = ResizeObserver;
+    jest.restoreAllMocks();
+  });
+
   const getMap = (
-    mapRef: React.RefObject<ReactLeafletMap<LeafletMapProps, LeafletMap>>,
+    mapRef: React.RefObject<LeafletMap>,
     properties: IProperty[],
     selectedProperty: any,
   ) => {
@@ -137,7 +150,7 @@ describe('MapProperties View', () => {
   };
 
   it('Renders the marker in correct position', async () => {
-    const mapRef = createRef<ReactLeafletMap<LeafletMapProps, LeafletMap>>();
+    const mapRef = createRef<LeafletMap>();
     const component = mount(getMap(mapRef, mockParcels, mockDetails));
     await waitFor(() => expect(mapRef.current).toBeDefined(), { timeout: 500 });
     const selectedMarkers = component.find(SelectedPropertyMarker);
@@ -147,7 +160,7 @@ describe('MapProperties View', () => {
   });
 
   it('Should render 0 markers when there are no parcels', async () => {
-    const mapRef = createRef<ReactLeafletMap<LeafletMapProps, LeafletMap>>();
+    const mapRef = createRef<LeafletMap>();
     const component = mount(getMap(mapRef, noParcels, emptyDetails));
     await waitFor(() => expect(mapRef.current).toBeDefined(), { timeout: 500 });
     const marker = component.find(Marker);
@@ -157,7 +170,7 @@ describe('MapProperties View', () => {
   });
 
   it('Renders the properties as cluster and on selected property', async () => {
-    const mapRef = createRef<ReactLeafletMap<LeafletMapProps, LeafletMap>>();
+    const mapRef = createRef<LeafletMap>();
 
     const component = mount(getMap(mapRef, mockParcels, mockDetails));
 
@@ -174,7 +187,7 @@ describe('MapProperties View', () => {
   });
 
   it('by default makes the expected calls to load map data', async () => {
-    const mapRef = createRef<ReactLeafletMap<LeafletMapProps, LeafletMap>>();
+    const mapRef = createRef<LeafletMap>();
 
     mount(getMap(mapRef, noParcels, emptyDetails));
 
@@ -196,7 +209,7 @@ describe('MapProperties View', () => {
   });
 
   it('makes the correct calls to load map data when filter updated.', async () => {
-    const mapRef = createRef<ReactLeafletMap<LeafletMapProps, LeafletMap>>();
+    const mapRef = createRef<LeafletMap>();
 
     const { container } = render(getMap(mapRef, noParcels, emptyDetails));
     const nameInput = container.querySelector('#name-field');
@@ -215,7 +228,7 @@ describe('MapProperties View', () => {
   });
 
   xit('filter will fire everytime the search button is clicked', async () => {
-    const mapRef = createRef<ReactLeafletMap<LeafletMapProps, LeafletMap>>();
+    const mapRef = createRef<LeafletMap>();
 
     const { container } = render(getMap(mapRef, noParcels, emptyDetails));
     const searchButton = container.querySelector('#search-button');
@@ -226,7 +239,7 @@ describe('MapProperties View', () => {
   });
 
   xit('makes the correct calls to load the map data when the reset filter is clicked', async () => {
-    const mapRef = createRef<ReactLeafletMap<LeafletMapProps, LeafletMap>>();
+    const mapRef = createRef<LeafletMap>();
 
     const { container } = render(getMap(mapRef, noParcels, emptyDetails));
     const { loadProperties } = useApi();

@@ -1,4 +1,56 @@
 import { fireEvent } from '@testing-library/react';
+import { noop } from 'lodash';
+import React from 'react';
+import { MapContainer } from 'react-leaflet';
+
+/**
+ * Utility type for generic props of component testing
+ */
+export interface PropsWithChildren {
+  children?: React.ReactNode;
+}
+
+/**
+ * Creates a Map wrapper for unit testing
+ * @param done A callback that will be called when the map has finished rendering
+ * @returns The map container instance
+ *
+ * @example
+ *    const { promise, resolve } = deferred();
+ *    render(<TestComponent/>, { wrapper: createMapContainer(resolve) })
+ *    await waitFor(() => promise)
+ *    // the map is fully initialized here...
+ */
+export function createMapContainer(
+  done: () => void = noop,
+  whenCreated: (map: L.Map) => void = noop,
+) {
+  return function Container({ children }: PropsWithChildren) {
+    return (
+      <div id="mapid" style={{ width: 500, height: 500 }}>
+        <MapContainer
+          center={[48.43, -123.37]}
+          zoom={14}
+          whenReady={done}
+          whenCreated={whenCreated}
+        >
+          {children}
+        </MapContainer>
+      </div>
+    );
+  };
+}
+
+export const deferred = () => {
+  let resolve: (value?: unknown) => void = noop;
+  const promise = new Promise(_resolve => {
+    resolve = _resolve;
+  });
+  return {
+    resolve,
+    promise,
+  };
+};
 
 export const fillInput = (
   container: HTMLElement,

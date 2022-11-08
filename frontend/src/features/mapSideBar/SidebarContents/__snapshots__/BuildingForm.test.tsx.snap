@@ -843,20 +843,18 @@ exports[`Building Form component renders correctly 1`] = `
                         <div
                           class="c6 GeocoderAutoComplete"
                         >
-                          <div>
-                            <div
-                              class="required"
-                            >
-                              <div>
-                                <input
-                                  class="form-control"
-                                  field="building.address.line1"
-                                  id="input-building.address.line1"
-                                  name="building.address.line1"
-                                  required=""
-                                  value=""
-                                />
-                              </div>
+                          <div
+                            class="required"
+                          >
+                            <div>
+                              <input
+                                class="form-control"
+                                field="building.address.line1"
+                                id="input-building.address.line1"
+                                name="building.address.line1"
+                                required=""
+                                value=""
+                              />
                             </div>
                           </div>
                         </div>
@@ -1020,15 +1018,13 @@ exports[`Building Form component renders correctly 1`] = `
                         <div
                           class="marker-svg col"
                         >
-                          <div>
-                            <button
-                              class="c7"
-                            >
-                              <svg>
-                                draft-building-icon.svg
-                              </svg>
-                            </button>
-                          </div>
+                          <button
+                            class="c7"
+                          >
+                            <svg>
+                              draft-building-icon.svg
+                            </svg>
+                          </button>
                         </div>
                       </div>
                       <div
