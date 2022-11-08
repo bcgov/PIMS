@@ -12,18 +12,11 @@ import { PropertyFilter } from 'features/properties/filter';
 import { IPropertyFilter } from 'features/properties/filter/IPropertyFilter';
 import { Feature } from 'geojson';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
-import {
-  geoJSON,
-  LatLng,
-  LatLngBounds,
-  LeafletEvent,
-  LeafletMouseEvent,
-  Map as LeafletMap,
-} from 'leaflet';
+import { geoJSON, LatLng, LatLngBounds, LeafletMouseEvent, Map as LeafletMap } from 'leaflet';
 import { isEmpty, isEqual, isEqualWith } from 'lodash';
-import React from 'react';
+import React, { useState } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
-import { MapContainer as ReactLeafletMap, Popup, TileLayer } from 'react-leaflet';
+import { MapContainer as ReactLeafletMap, Popup, TileLayer, useMapEvents } from 'react-leaflet';
 import ReactResizeDetector from 'react-resize-detector';
 import { useAppDispatch, useAppSelector } from 'store';
 import { DEFAULT_MAP_ZOOM, setMapViewZoom } from 'store/slices/mapViewZoomSlice';
@@ -195,7 +188,6 @@ const Map: React.FC<MapProps> = ({
   const { setChanged } = useFilterContext();
   const popUpContext = React.useContext(PropertyPopUpContext);
   const parcelLayerFeature = useAppSelector(store => store.parcelLayerData?.parcelLayerFeature);
-  const zoom = useAppSelector(store => store.mapViewZoom) ?? zoomProp;
 
   const [baseLayers, setBaseLayers] = React.useState<BaseLayer[]>([]);
   const [showFilterBackdrop, setShowFilterBackdrop] = React.useState(true);
@@ -209,6 +201,8 @@ const Map: React.FC<MapProps> = ({
   const [center, setCenter] = React.useState({ lat, lng });
   const [infoOpen, setInfoOpen] = React.useState(false);
   const [layersOpen, setLayersOpen] = React.useState(false);
+  const lastZoom = useAppSelector(store => store.mapViewZoom) ?? zoomProp;
+  const [zoom, setZoom] = useState(lastZoom);
 
   useActiveFeatureLayer({
     selectedProperty,
@@ -328,7 +322,28 @@ const Map: React.FC<MapProps> = ({
     }
   };
 
-  const handleMoveEnd = (e: LeafletEvent) => {
+  function ShowLocationDetails() {
+    useMapEvents({
+      click: e => {
+        showLocationDetails(e);
+      },
+    });
+    return null;
+  }
+
+  function HandleMapBounds() {
+    useMapEvents({
+      moveend: e => {
+        handleBounds(e);
+      },
+      zoomend: e => {
+        setZoom(e.sourceTarget.getZoom());
+      },
+    });
+    return null;
+  }
+
+  const handleBounds = (e: any) => {
     const boundsData: LatLngBounds = e.target.getBounds();
     if (!isEqual(boundsData.getNorthEast(), boundsData.getSouthWest())) {
       setBounds(boundsData);
@@ -384,7 +399,7 @@ const Map: React.FC<MapProps> = ({
                   zoom={zoom}
                   onclick={showLocationDetails}
                   closePopupOnClick={interactive}
-                  onmoveend={handleMoveEnd}
+                  onmoveend={handleBounds}
                 >
                   {activeBasemap && (
                     <TileLayer
@@ -448,6 +463,8 @@ const Map: React.FC<MapProps> = ({
                     filter={geoFilter}
                     onRequestData={setShowFilterBackdrop}
                   ></InventoryLayer>
+                  <ShowLocationDetails />
+                  <HandleMapBounds />
                 </ReactLeafletMap>
               </Col>
             </Row>
