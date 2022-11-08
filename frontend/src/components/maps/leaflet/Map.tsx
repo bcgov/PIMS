@@ -16,7 +16,7 @@ import { geoJSON, LatLng, LatLngBounds, LeafletMouseEvent, Map as LeafletMap } f
 import { isEmpty, isEqual, isEqualWith } from 'lodash';
 import React, { useState } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
-import { MapContainer as ReactLeafletMap, Popup, TileLayer, useMapEvents } from 'react-leaflet';
+import { MapContainer, Popup, TileLayer, useMapEvents } from 'react-leaflet';
 import ReactResizeDetector from 'react-resize-detector';
 import { useAppDispatch, useAppSelector } from 'store';
 import { DEFAULT_MAP_ZOOM, setMapViewZoom } from 'store/slices/mapViewZoomSlice';
@@ -393,7 +393,7 @@ const Map: React.FC<MapProps> = ({
                     handleOk={() => popUpContext.setBCEIDWarning(false)}
                   />
                 )}
-                <ReactLeafletMap
+                <MapContainer
                   ref={mapRef}
                   center={center}
                   zoom={zoom}
@@ -465,7 +465,7 @@ const Map: React.FC<MapProps> = ({
                   ></InventoryLayer>
                   <ShowLocationDetails />
                   <HandleMapBounds />
-                </ReactLeafletMap>
+                </MapContainer>
               </Col>
             </Row>
           </Container>

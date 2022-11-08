@@ -27,7 +27,11 @@ export const LegendControl: React.FC = () => {
 
   return (
     <ControlPane position="topleft">
-      <ClickAwayListener onClickAway={() => setVisible(false)}>
+      <ClickAwayListener
+        onClickAway={() => {
+          if (!visible) setVisible(false);
+        }}
+      >
         <>
           <TooltipWrapper
             toolTipId="marker-legendId"
