@@ -5,6 +5,7 @@ import { LatLngBounds, Map as LeafletMap } from 'leaflet';
 import * as React from 'react';
 import { Button } from 'react-bootstrap';
 import { FaExpandArrowsAlt } from 'react-icons/fa';
+import { useMap } from 'react-leaflet';
 import styled from 'styled-components';
 
 const ZoomButton = styled(Button)`
@@ -26,9 +27,10 @@ export type ZoomOutProps = {
  * @param map The leaflet map
  * @param bounds The latlng bounds to zoom out to
  */
-export const ZoomOutButton: React.FC<ZoomOutProps> = ({ map, bounds }) => {
+export const ZoomOutButton: React.FC<ZoomOutProps> = ({ bounds }) => {
+  const map = useMap();
   const zoomOut = () => {
-    map.current?.fitBounds(bounds);
+    map.fitBounds(bounds);
   };
   return (
     <ControlPanel position="topleft">
