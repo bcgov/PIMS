@@ -74,9 +74,10 @@ const HeaderActions: React.FC<IHeaderActions> = ({
         <>
           <Link
             style={{ width: 95 }}
-            onClick={() => {
+            onClick={e => {
               jumpToView();
               if (onLinkClick) onLinkClick();
+              e.stopPropagation();
             }}
             to={{
               pathname: `/mapview`,

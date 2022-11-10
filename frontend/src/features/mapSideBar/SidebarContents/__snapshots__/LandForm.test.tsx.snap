@@ -581,19 +581,17 @@ exports[`Land Form component renders correctly 1`] = `
                         <div
                           class="c4 GeocoderAutoComplete"
                         >
-                          <div>
-                            <div
-                              class=""
-                            >
-                              <div>
-                                <input
-                                  class="form-control"
-                                  field="data.searchAddress"
-                                  id="input-data.searchAddress"
-                                  name="data.searchAddress"
-                                  value=""
-                                />
-                              </div>
+                          <div
+                            class=""
+                          >
+                            <div>
+                              <input
+                                class="form-control"
+                                field="data.searchAddress"
+                                id="input-data.searchAddress"
+                                name="data.searchAddress"
+                                value=""
+                              />
                             </div>
                           </div>
                         </div>
@@ -650,18 +648,16 @@ exports[`Land Form component renders correctly 1`] = `
                       <div
                         class="marker-svg col"
                       >
-                        <div>
-                          <button
-                            class="c5"
-                            type="button"
+                        <button
+                          class="c5"
+                          type="button"
+                        >
+                          <svg
+                            class="parcel-icon"
                           >
-                            <svg
-                              class="parcel-icon"
-                            >
-                              draft-parcel-icon.svg
-                            </svg>
-                          </button>
-                        </div>
+                            draft-parcel-icon.svg
+                          </svg>
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -790,20 +786,18 @@ exports[`Land Form component renders correctly 1`] = `
                         <div
                           class="c4 GeocoderAutoComplete"
                         >
-                          <div>
-                            <div
-                              class="required"
-                            >
-                              <div>
-                                <input
-                                  class="form-control"
-                                  field="data.address.line1"
-                                  id="input-data.address.line1"
-                                  name="data.address.line1"
-                                  required=""
-                                  value=""
-                                />
-                              </div>
+                          <div
+                            class="required"
+                          >
+                            <div>
+                              <input
+                                class="form-control"
+                                field="data.address.line1"
+                                id="input-data.address.line1"
+                                name="data.address.line1"
+                                required=""
+                                value=""
+                              />
                             </div>
                           </div>
                         </div>
@@ -854,7 +848,7 @@ exports[`Land Form component renders correctly 1`] = `
                                   aria-hidden="true"
                                   class="rbt-input-hint"
                                   readonly=""
-                                  style="background-color: transparent; border-color: transparent; box-shadow: none; color: rgba(0, 0, 0, 0.54); left: 0px; pointer-events: none; position: absolute; top: 0px; width: 100%; border-style: inset inset inset inset; border-width: 2px 2px 2px 2px; line-height: normal; padding: 1px 1px 1px 1px;"
+                                  style="background-color: transparent; border-color: transparent; box-shadow: none; color: rgba(0, 0, 0, 0.54); left: 0px; pointer-events: none; position: absolute; top: 0px; width: 100%;"
                                   tabindex="-1"
                                   value=""
                                 />
@@ -986,7 +980,7 @@ exports[`Land Form component renders correctly 1`] = `
                                   aria-hidden="true"
                                   class="rbt-input-hint"
                                   readonly=""
-                                  style="background-color: transparent; border-color: transparent; box-shadow: none; color: rgba(0, 0, 0, 0.54); left: 0px; pointer-events: none; position: absolute; top: 0px; width: 100%; border-style: inset inset inset inset; border-width: 2px 2px 2px 2px; line-height: normal; padding: 1px 1px 1px 1px;"
+                                  style="background-color: transparent; border-color: transparent; box-shadow: none; color: rgba(0, 0, 0, 0.54); left: 0px; pointer-events: none; position: absolute; top: 0px; width: 100%;"
                                   tabindex="-1"
                                   value=""
                                 />
