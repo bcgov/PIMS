@@ -12,7 +12,14 @@ import { PropertyFilter } from 'features/properties/filter';
 import { IPropertyFilter } from 'features/properties/filter/IPropertyFilter';
 import { Feature } from 'geojson';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
-import { geoJSON, LatLng, LatLngBounds, LeafletMouseEvent, Map as LeafletMap } from 'leaflet';
+import {
+  geoJSON,
+  LatLng,
+  LatLngBounds,
+  LeafletEvent,
+  LeafletMouseEvent,
+  Map as LeafletMap,
+} from 'leaflet';
 import { isEmpty, isEqual, isEqualWith } from 'lodash';
 import React, { useState } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
@@ -198,11 +205,13 @@ const Map: React.FC<MapProps> = ({
     ...defaultFilterValues,
     includeAllProperties: keycloak.hasClaim(Claims.ADMIN_PROPERTIES),
   } as any);
-  const [center, setCenter] = React.useState({ lat, lng });
+  const [center, setCenter] = React.useState({
+    lat: Number(selectedProperty?.parcelDetail?.latitude ?? lat),
+    lng: Number(selectedProperty?.parcelDetail?.longitude ?? lng),
+  });
   const [infoOpen, setInfoOpen] = React.useState(false);
   const [layersOpen, setLayersOpen] = React.useState(false);
-  const lastZoom = useAppSelector(store => store.mapViewZoom) ?? zoomProp;
-  const [zoom, setZoom] = useState(lastZoom);
+  const zoom = useAppSelector(store => store.mapViewZoom) ?? zoomProp;
 
   useActiveFeatureLayer({
     selectedProperty,
@@ -222,19 +231,14 @@ const Map: React.FC<MapProps> = ({
 
   React.useEffect(() => {
     // Set the middle of the map if there is a selected parcel.
-    if (
-      mapRef.current &&
-      selectedProperty?.parcelDetail &&
-      selectedProperty.parcelDetail?.longitude &&
-      selectedProperty.parcelDetail?.latitude
-    ) {
+    if (selectedProperty?.parcelDetail) {
       setCenter({
         lng: +selectedProperty.parcelDetail.longitude,
         lat: +selectedProperty.parcelDetail.latitude,
       });
       dispatch(setMapViewZoom(MAX_ZOOM));
     }
-  }, [dispatch, mapRef, selectedProperty?.parcelDetail]);
+  }, [dispatch, selectedProperty?.parcelDetail]);
 
   React.useEffect(() => {
     // Store the current zoom level.
@@ -334,31 +338,31 @@ const Map: React.FC<MapProps> = ({
   function HandleMapBounds() {
     useMapEvents({
       moveend: e => {
-        handleBounds(e);
+        handleMoveEnd(e);
       },
       zoomend: e => {
-        setZoom(e.sourceTarget.getZoom());
+        dispatch(setMapViewZoom(e.sourceTarget.getZoom()));
       },
     });
     return null;
   }
 
-  const handleBounds = (e: any) => {
+  const handleMoveEnd = (e: any) => {
     const boundsData: LatLngBounds = e.target.getBounds();
     if (!isEqual(boundsData.getNorthEast(), boundsData.getSouthWest())) {
       setBounds(boundsData);
     }
   };
 
-  const onResize = React.useCallback(() => {
+  const targetRef = React.useRef<HTMLDivElement>(null);
+  const { width } = useResizeDetector({ targetRef });
+
+  React.useEffect(() => {
     // The map has changed and needs to be redrawn and possibly zoomed and centered.
     mapRef.current?.invalidateSize();
     const z = mapRef.current?.getZoom();
     if (zoom !== z) mapRef.current?.setView(center, zoom);
-  }, [center, mapRef, zoom]);
-
-  const targetRef = React.useRef<HTMLDivElement>(null);
-  useResizeDetector({ targetRef, refreshMode: 'throttle', onResize });
+  }, [center, mapRef, width, zoom]);
 
   return (
     <Container
@@ -403,7 +407,7 @@ const Map: React.FC<MapProps> = ({
             zoom={zoom}
             onclick={showLocationDetails}
             closePopupOnClick={interactive}
-            onmoveend={handleBounds}
+            onmoveend={handleMoveEnd}
           >
             {activeBasemap && (
               <TileLayer
