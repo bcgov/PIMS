@@ -69,7 +69,7 @@ const renderContainer = ({ store }: any) =>
           pauseOnFocusLoss={false}
         />
         <Route path="/mapView/:id?">
-          <MapSideBarContainer refreshParcels={noop} properties={[]} />
+          <MapSideBarContainer properties={[]} />
         </Route>
       </Router>
     </Provider>,

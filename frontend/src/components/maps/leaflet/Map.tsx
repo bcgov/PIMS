@@ -68,7 +68,6 @@ export type MapProps = {
   agencies: ILookupCode[];
   administrativeAreas: ILookupCode[];
   lotSizes: number[];
-  mapRef: React.RefObject<LeafletMap>;
   selectedProperty?: IPropertyDetail | null;
   onMarkerClick?: (obj: IProperty, position?: [number, number]) => void;
   onMarkerPopupClose?: (obj: IPropertyDetail) => void;
@@ -184,11 +183,11 @@ const Map: React.FC<MapProps> = ({
   onMapClick,
   disableMapFilterBar,
   interactive = true,
-  mapRef,
   sidebarSize,
 }) => {
   const keycloak = useKeycloakWrapper();
   const dispatch = useAppDispatch();
+  const [mapRef, setMapRef] = React.useState(React.useRef<LeafletMap>(null));
   const [triggerFilterChanged, setTriggerFilterChanged] = React.useState(true);
   const municipalitiesService = useLayerQuery(MUNICIPALITY_LAYER_URL);
   const parcelsService = useLayerQuery(PARCELS_PUBLIC_LAYER_URL);
@@ -326,17 +325,11 @@ const Map: React.FC<MapProps> = ({
     }
   };
 
-  function ShowLocationDetails() {
+  function MapEvents() {
     useMapEvents({
       click: e => {
         showLocationDetails(e);
       },
-    });
-    return null;
-  }
-
-  function HandleMapBounds() {
-    useMapEvents({
       moveend: e => {
         handleMoveEnd(e);
       },
@@ -402,12 +395,10 @@ const Map: React.FC<MapProps> = ({
             />
           )}
           <MapContainer
-            innerref={mapRef}
             center={center}
             zoom={zoom}
-            onclick={showLocationDetails}
             closePopupOnClick={interactive}
-            onmoveend={handleMoveEnd}
+            whenCreated={mapInstance => setMapRef({ current: mapInstance })}
           >
             {activeBasemap && (
               <TileLayer
@@ -471,8 +462,7 @@ const Map: React.FC<MapProps> = ({
               filter={geoFilter}
               onRequestData={setShowFilterBackdrop}
             ></InventoryLayer>
-            <ShowLocationDetails />
-            <HandleMapBounds />
+            <MapEvents />
           </MapContainer>
         </Col>
       </Row>
