@@ -13,6 +13,7 @@ exports[`MapFilterBar renders correctly 1`] = `
 }
 
 <form
+  autocomplete="off"
   class="container-append"
   novalidate=""
 >
