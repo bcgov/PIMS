@@ -550,7 +550,7 @@ exports[`Building Form component renders correctly 1`] = `
                                   aria-hidden="true"
                                   class="rbt-input-hint"
                                   readonly=""
-                                  style="background-color: transparent; border-color: transparent; box-shadow: none; color: rgba(0, 0, 0, 0.54); left: 0px; pointer-events: none; position: absolute; top: 0px; width: 100%;"
+                                  style="background-color: transparent; border-color: transparent; box-shadow: none; color: rgba(0, 0, 0, 0.54); left: 0px; pointer-events: none; position: absolute; top: 0px; width: 100%; border-style: inset inset inset inset; border-width: 2px 2px 2px 2px; line-height: normal; padding: 1px 1px 1px 1px;"
                                   tabindex="-1"
                                   value=""
                                 />
@@ -843,18 +843,20 @@ exports[`Building Form component renders correctly 1`] = `
                         <div
                           class="c6 GeocoderAutoComplete"
                         >
-                          <div
-                            class="required"
-                          >
-                            <div>
-                              <input
-                                class="form-control"
-                                field="building.address.line1"
-                                id="input-building.address.line1"
-                                name="building.address.line1"
-                                required=""
-                                value=""
-                              />
+                          <div>
+                            <div
+                              class="required"
+                            >
+                              <div>
+                                <input
+                                  class="form-control"
+                                  field="building.address.line1"
+                                  id="input-building.address.line1"
+                                  name="building.address.line1"
+                                  required=""
+                                  value=""
+                                />
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -905,7 +907,7 @@ exports[`Building Form component renders correctly 1`] = `
                                   aria-hidden="true"
                                   class="rbt-input-hint"
                                   readonly=""
-                                  style="background-color: transparent; border-color: transparent; box-shadow: none; color: rgba(0, 0, 0, 0.54); left: 0px; pointer-events: none; position: absolute; top: 0px; width: 100%;"
+                                  style="background-color: transparent; border-color: transparent; box-shadow: none; color: rgba(0, 0, 0, 0.54); left: 0px; pointer-events: none; position: absolute; top: 0px; width: 100%; border-style: inset inset inset inset; border-width: 2px 2px 2px 2px; line-height: normal; padding: 1px 1px 1px 1px;"
                                   tabindex="-1"
                                   value=""
                                 />
@@ -1018,13 +1020,15 @@ exports[`Building Form component renders correctly 1`] = `
                         <div
                           class="marker-svg col"
                         >
-                          <button
-                            class="c7"
-                          >
-                            <svg>
-                              draft-building-icon.svg
-                            </svg>
-                          </button>
+                          <div>
+                            <button
+                              class="c7"
+                            >
+                              <svg>
+                                draft-building-icon.svg
+                              </svg>
+                            </button>
+                          </div>
                         </div>
                       </div>
                       <div
