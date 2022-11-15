@@ -126,6 +126,7 @@ exports[`Property list view Matches snapshot 1`] = `
       class="px-0 container"
     >
       <form
+        autocomplete="off"
         class="container-append"
         novalidate=""
       >
@@ -344,17 +345,19 @@ exports[`Property list view Matches snapshot 1`] = `
                   <div
                     class="c1 GeocoderAutoComplete"
                   >
-                    <div
-                      class=""
-                    >
-                      <div>
-                        <input
-                          class="form-control"
-                          field="address"
-                          id="input-address"
-                          name="address"
-                          value=""
-                        />
+                    <div>
+                      <div
+                        class=""
+                      >
+                        <div>
+                          <input
+                            class="form-control"
+                            field="address"
+                            id="input-address"
+                            name="address"
+                            value=""
+                          />
+                        </div>
                       </div>
                     </div>
                   </div>
