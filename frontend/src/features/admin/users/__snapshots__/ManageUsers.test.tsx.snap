@@ -847,63 +847,65 @@ exports[`Manage Users Component Snapshot matches 1`] = `
               style="box-sizing: border-box; flex: 75 0 auto; min-width: 30px; width: 75px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
               title=""
             >
-              <div
-                class="Menu-root"
-              >
+              <div>
                 <div
-                  class="Menu-button"
-                >
-                  <svg
-                    fill="none"
-                    height="1em"
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    viewBox="0 0 24 24"
-                    width="1em"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <circle
-                      cx="12"
-                      cy="12"
-                      r="1"
-                    />
-                    <circle
-                      cx="19"
-                      cy="12"
-                      r="1"
-                    />
-                    <circle
-                      cx="5"
-                      cy="12"
-                      r="1"
-                    />
-                  </svg>
-                </div>
-                <div
-                  class="Menu-items"
-                  style="width: 100px;"
+                  class="Menu-root"
                 >
                   <div
-                    class="Menu-options list-group"
+                    class="Menu-button"
+                  >
+                    <svg
+                      fill="none"
+                      height="1em"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      width="1em"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <circle
+                        cx="12"
+                        cy="12"
+                        r="1"
+                      />
+                      <circle
+                        cx="19"
+                        cy="12"
+                        r="1"
+                      />
+                      <circle
+                        cx="5"
+                        cy="12"
+                        r="1"
+                      />
+                    </svg>
+                  </div>
+                  <div
+                    class="Menu-items"
+                    style="width: 100px;"
                   >
                     <div
-                      aria-disabled="true"
-                      class="Menu-item list-group-item disabled"
-                      tabindex="-1"
+                      class="Menu-options list-group"
                     >
-                      Enable
-                    </div>
-                    <div
-                      class="Menu-item list-group-item"
-                    >
-                      Disable
-                    </div>
-                    <div
-                      class="Menu-item list-group-item"
-                    >
-                      Open
+                      <div
+                        aria-disabled="true"
+                        class="Menu-item list-group-item disabled"
+                        tabindex="-1"
+                      >
+                        Enable
+                      </div>
+                      <div
+                        class="Menu-item list-group-item"
+                      >
+                        Disable
+                      </div>
+                      <div
+                        class="Menu-item list-group-item"
+                      >
+                        Open
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -1021,63 +1023,65 @@ exports[`Manage Users Component Snapshot matches 1`] = `
               style="box-sizing: border-box; flex: 75 0 auto; min-width: 30px; width: 75px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
               title=""
             >
-              <div
-                class="Menu-root"
-              >
+              <div>
                 <div
-                  class="Menu-button"
-                >
-                  <svg
-                    fill="none"
-                    height="1em"
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    viewBox="0 0 24 24"
-                    width="1em"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <circle
-                      cx="12"
-                      cy="12"
-                      r="1"
-                    />
-                    <circle
-                      cx="19"
-                      cy="12"
-                      r="1"
-                    />
-                    <circle
-                      cx="5"
-                      cy="12"
-                      r="1"
-                    />
-                  </svg>
-                </div>
-                <div
-                  class="Menu-items"
-                  style="width: 100px;"
+                  class="Menu-root"
                 >
                   <div
-                    class="Menu-options list-group"
+                    class="Menu-button"
+                  >
+                    <svg
+                      fill="none"
+                      height="1em"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      width="1em"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <circle
+                        cx="12"
+                        cy="12"
+                        r="1"
+                      />
+                      <circle
+                        cx="19"
+                        cy="12"
+                        r="1"
+                      />
+                      <circle
+                        cx="5"
+                        cy="12"
+                        r="1"
+                      />
+                    </svg>
+                  </div>
+                  <div
+                    class="Menu-items"
+                    style="width: 100px;"
                   >
                     <div
-                      class="Menu-item list-group-item"
+                      class="Menu-options list-group"
                     >
-                      Enable
-                    </div>
-                    <div
-                      aria-disabled="true"
-                      class="Menu-item list-group-item disabled"
-                      tabindex="-1"
-                    >
-                      Disable
-                    </div>
-                    <div
-                      class="Menu-item list-group-item"
-                    >
-                      Open
+                      <div
+                        class="Menu-item list-group-item"
+                      >
+                        Enable
+                      </div>
+                      <div
+                        aria-disabled="true"
+                        class="Menu-item list-group-item disabled"
+                        tabindex="-1"
+                      >
+                        Disable
+                      </div>
+                      <div
+                        class="Menu-item list-group-item"
+                      >
+                        Open
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -1189,20 +1193,16 @@ exports[`Manage Users Component Snapshot matches 1`] = `
       class="table-toolbar"
     >
       <ul
-        aria-label="Pagination"
         class="pagination"
-        role="navigation"
       >
         <li
           class="page-item disabled"
         >
           <a
             aria-disabled="true"
-            aria-label="Previous page"
-            class="page-link "
-            rel="prev"
+            class="page-link"
             role="button"
-            tabindex="-1"
+            tabindex="0"
           >
             &lt;
           </a>
@@ -1214,9 +1214,8 @@ exports[`Manage Users Component Snapshot matches 1`] = `
             aria-current="page"
             aria-label="Page 1 is your current page"
             class="page-link"
-            rel="canonical"
             role="button"
-            tabindex="-1"
+            tabindex="0"
           >
             1
           </a>
@@ -1226,74 +1225,74 @@ exports[`Manage Users Component Snapshot matches 1`] = `
         >
           <a
             aria-disabled="true"
-            aria-label="Next page"
-            class="page-link "
-            rel="next"
+            class="page-link"
             role="button"
-            tabindex="-1"
+            tabindex="0"
           >
             &gt;
           </a>
         </li>
       </ul>
-      <div
-        class="Menu-root"
-      >
+      <div>
         <div
-          class="Menu-button"
+          class="Menu-root"
         >
           <div
-            style="display: flex;"
+            class="Menu-button"
           >
-            <span
-              class="c3"
+            <div
+              style="display: flex;"
             >
-              Show
-            </span>
-            <input
-              class="form-control form-control-sm"
-              style="width: 50px; margin-left: 10px; margin-right: 10px;"
-              type="number"
-              value="10"
-            />
-            <span
-              class="c3"
-            >
-              Entries
-            </span>
+              <span
+                class="c3"
+              >
+                Show
+              </span>
+              <input
+                class="form-control form-control-sm"
+                style="width: 50px; margin-left: 10px; margin-right: 10px;"
+                type="number"
+                value="10"
+              />
+              <span
+                class="c3"
+              >
+                Entries
+              </span>
+            </div>
           </div>
-        </div>
-        <div
-          class="Menu-items"
-          style="width: 60px;"
-        >
           <div
-            class="Menu-options scrollable list-group"
+            class="Menu-items"
+            style="width: 60px;"
           >
             <div
-              class="Menu-item list-group-item"
+              class="Menu-options scrollable list-group"
             >
-              5
-            </div>
-            <div
-              class="Menu-item list-group-item"
-            >
-              10
-            </div>
-            <div
-              class="Menu-item list-group-item"
-            >
-              20
-            </div>
-            <div
-              class="Menu-item list-group-item"
-            >
-              50
-            </div>
-            <div
-              class="Menu-item list-group-item"
-            >
-              100
+              <div
+                class="Menu-item list-group-item"
+              >
+                5
+              </div>
+              <div
+                class="Menu-item list-group-item"
+              >
+                10
+              </div>
+              <div
+                class="Menu-item list-group-item"
+              >
+                20
+              </div>
+              <div
+                class="Menu-item list-group-item"
+              >
+                50
+              </div>
+              <div
+                class="Menu-item list-group-item"
+              >
+                100
+              </div>
             </div>
           </div>
         </div>

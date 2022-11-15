@@ -1721,20 +1721,16 @@ exports[`Project Approval Request list view Displays a SPL project 1`] = `
       class="table-toolbar"
     >
       <ul
-        aria-label="Pagination"
         class="pagination"
-        role="navigation"
       >
         <li
           class="page-item disabled"
         >
           <a
             aria-disabled="true"
-            aria-label="Previous page"
-            class="page-link "
-            rel="prev"
+            class="page-link"
             role="button"
-            tabindex="-1"
+            tabindex="0"
           >
             &lt;
           </a>
@@ -1746,9 +1742,8 @@ exports[`Project Approval Request list view Displays a SPL project 1`] = `
             aria-current="page"
             aria-label="Page 1 is your current page"
             class="page-link"
-            rel="canonical"
             role="button"
-            tabindex="-1"
+            tabindex="0"
           >
             1
           </a>
@@ -1758,74 +1753,74 @@ exports[`Project Approval Request list view Displays a SPL project 1`] = `
         >
           <a
             aria-disabled="true"
-            aria-label="Next page"
-            class="page-link "
-            rel="next"
+            class="page-link"
             role="button"
-            tabindex="-1"
+            tabindex="0"
           >
             &gt;
           </a>
         </li>
       </ul>
-      <div
-        class="Menu-root"
-      >
+      <div>
         <div
-          class="Menu-button"
+          class="Menu-root"
         >
           <div
-            style="display: flex;"
+            class="Menu-button"
           >
-            <span
-              class="c0"
+            <div
+              style="display: flex;"
             >
-              Show
-            </span>
-            <input
-              class="form-control form-control-sm"
-              style="width: 50px; margin-left: 10px; margin-right: 10px;"
-              type="number"
-              value="10"
-            />
-            <span
-              class="c0"
-            >
-              Entries
-            </span>
+              <span
+                class="c0"
+              >
+                Show
+              </span>
+              <input
+                class="form-control form-control-sm"
+                style="width: 50px; margin-left: 10px; margin-right: 10px;"
+                type="number"
+                value="10"
+              />
+              <span
+                class="c0"
+              >
+                Entries
+              </span>
+            </div>
           </div>
-        </div>
-        <div
-          class="Menu-items"
-          style="width: 60px;"
-        >
           <div
-            class="Menu-options scrollable list-group"
+            class="Menu-items"
+            style="width: 60px;"
           >
             <div
-              class="Menu-item list-group-item"
+              class="Menu-options scrollable list-group"
             >
-              5
-            </div>
-            <div
-              class="Menu-item list-group-item"
-            >
-              10
-            </div>
-            <div
-              class="Menu-item list-group-item"
-            >
-              20
-            </div>
-            <div
-              class="Menu-item list-group-item"
-            >
-              50
-            </div>
-            <div
-              class="Menu-item list-group-item"
-            >
-              100
+              <div
+                class="Menu-item list-group-item"
+              >
+                5
+              </div>
+              <div
+                class="Menu-item list-group-item"
+              >
+                10
+              </div>
+              <div
+                class="Menu-item list-group-item"
+              >
+                20
+              </div>
+              <div
+                class="Menu-item list-group-item"
+              >
+                50
+              </div>
+              <div
+                class="Menu-item list-group-item"
+              >
+                100
+              </div>
             </div>
           </div>
         </div>
