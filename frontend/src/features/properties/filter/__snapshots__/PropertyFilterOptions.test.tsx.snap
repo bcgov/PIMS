@@ -95,17 +95,19 @@ exports[`PropertyFilterOptions renders for address: address 1`] = `
       <div
         class="c0 GeocoderAutoComplete"
       >
-        <div
-          class=""
-        >
-          <div>
-            <input
-              class="form-control"
-              field="address"
-              id="input-address"
-              name="address"
-              value=""
-            />
+        <div>
+          <div
+            class=""
+          >
+            <div>
+              <input
+                class="form-control"
+                field="address"
+                id="input-address"
+                name="address"
+                value=""
+              />
+            </div>
           </div>
         </div>
       </div>
