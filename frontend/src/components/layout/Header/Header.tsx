@@ -7,7 +7,7 @@ import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import React, { useState } from 'react';
 import { Button, Col, Modal, Nav, Navbar, Row } from 'react-bootstrap';
 import { FaBomb } from 'react-icons/fa';
-import { useHistory } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { IGenericNetworkAction, useAppSelector } from 'store';
 import { useNetworkStore } from 'store/slices/hooks';
 import styled from 'styled-components';
@@ -22,15 +22,16 @@ const VerticalBar = styled.span`
 `;
 
 const Header = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
+  const location = useLocation();
   const keycloak = useKeycloakWrapper();
   const network = useNetworkStore();
   const { requests } = useAppSelector(store => store.network);
 
   const [errors, setErrors] = React.useState<IGenericNetworkAction[]>([]);
 
-  if (history.location.pathname === '/') {
-    history.replace('/mapview');
+  if (location.pathname === '/') {
+    navigate('/mapview', { replace: true });
   }
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);

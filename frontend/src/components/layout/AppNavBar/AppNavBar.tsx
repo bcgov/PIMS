@@ -8,19 +8,19 @@ import queryString from 'query-string';
 import React from 'react';
 import { Nav, Navbar, NavDropdown } from 'react-bootstrap';
 import { FaHome } from 'react-icons/fa';
-import { useHistory } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 /**
  * Nav bar with role-based functionality.
  */
 function AppNavBar() {
-  const history = useHistory();
+  const navigate = useNavigate();
   return (
     <Navbar variant="dark" className="map-nav" expand="lg">
       <Navbar.Toggle aria-controls="collapse" className="navbar-dark mr-auto" />
       <Navbar.Collapse className="links mr-auto">
         <Nav>
-          <Nav.Item className="home-button" onClick={() => history.push('/mapview')}>
+          <Nav.Item className="home-button" onClick={() => navigate('/mapview')}>
             <FaHome size={20} />
           </Nav.Item>
           <AdminDropdown />
@@ -40,20 +40,21 @@ function AppNavBar() {
  */
 function SubmitProperty() {
   const keycloak = useKeycloakWrapper();
-  const history = useHistory();
+  const navigate = useNavigate();
+  const location = useLocation();
   return keycloak.hasClaim(Claims.PROPERTY_ADD) ? (
     <Nav.Link
       className={
-        history.location.pathname.includes('mapview') &&
-        queryString.parse(history.location.search).sidebar === 'true'
+        location.pathname.includes('mapview') &&
+        queryString.parse(location.search).sidebar === 'true'
           ? 'active'
           : 'idle'
       }
       onClick={() =>
-        history.push({
+        navigate({
           pathname: '/mapview',
           search: queryString.stringify({
-            ...queryString.parse(history.location.search),
+            ...queryString.parse(location.search),
             sidebar: true,
             disabled: false,
             loadDraft: false,
@@ -76,11 +77,12 @@ function SubmitProperty() {
  */
 function ViewInventory() {
   const keycloak = useKeycloakWrapper();
-  const history = useHistory();
+  const navigate = useNavigate();
+  const location = useLocation();
   return keycloak.hasClaim(Claims.PROPERTY_VIEW) ? (
     <Nav.Link
-      className={history.location.pathname.includes('properties/list') ? 'active' : 'idle'}
-      onClick={() => history.push('/properties/list')}
+      className={location.pathname.includes('properties/list') ? 'active' : 'idle'}
+      onClick={() => navigate('/properties/list')}
     >
       View Property Inventory
     </Nav.Link>
@@ -92,19 +94,20 @@ function ViewInventory() {
  */
 function AdminDropdown() {
   const keycloak = useKeycloakWrapper();
-  const history = useHistory();
+  const navigate = useNavigate();
+  const location = useLocation();
   return keycloak.isAdmin ? (
     <NavDropdown
-      className={history.location.pathname.includes('admin') ? 'active' : 'idle'}
+      className={location.pathname.includes('admin') ? 'active' : 'idle'}
       title="Administration"
       id="administration"
     >
-      <NavDropdown.Item onClick={() => history.push('/admin/users')}>Users</NavDropdown.Item>
-      <NavDropdown.Item onClick={() => history.push('/admin/access/requests')}>
+      <NavDropdown.Item onClick={() => navigate('/admin/users')}>Users</NavDropdown.Item>
+      <NavDropdown.Item onClick={() => navigate('/admin/access/requests')}>
         Access Requests
       </NavDropdown.Item>
-      <NavDropdown.Item onClick={() => history.push('/admin/agencies')}>Agencies</NavDropdown.Item>
-      <NavDropdown.Item onClick={() => history.push('/admin/administrativeAreas')}>
+      <NavDropdown.Item onClick={() => navigate('/admin/agencies')}>Agencies</NavDropdown.Item>
+      <NavDropdown.Item onClick={() => navigate('/admin/administrativeAreas')}>
         Administrative Areas
       </NavDropdown.Item>
     </NavDropdown>
@@ -115,15 +118,15 @@ function AdminDropdown() {
  * Disposal Projects navigation dropdown menu.
  */
 function DisposeProjectsDropdown() {
-  const history = useHistory();
+  const navigate = useNavigate();
+  const location = useLocation();
   const keycloak = useKeycloakWrapper();
   return keycloak.hasClaim(Claims.PROJECT_VIEW) ||
     keycloak.hasClaim(Claims.DISPOSE_APPROVE) ||
     keycloak.hasClaim(Claims.ADMIN_PROJECTS) ? (
     <NavDropdown
       className={
-        history.location.pathname.includes('dispose') ||
-        history.location.pathname.includes('projects')
+        location.pathname.includes('dispose') || location.pathname.includes('projects')
           ? 'active'
           : 'idle'
       }
@@ -131,22 +134,22 @@ function DisposeProjectsDropdown() {
       id="dispose"
     >
       {(keycloak.hasClaim(Claims.PROJECT_ADD) || keycloak.hasClaim(Claims.ADMIN_PROJECTS)) && (
-        <NavDropdown.Item onClick={() => history.push('/dispose')}>
+        <NavDropdown.Item onClick={() => navigate('/dispose')}>
           Create Disposal Project
         </NavDropdown.Item>
       )}
       {(keycloak.hasClaim(Claims.PROJECT_VIEW) || keycloak.hasClaim(Claims.ADMIN_PROJECTS)) && (
-        <NavDropdown.Item onClick={() => history.push('/projects/list')}>
+        <NavDropdown.Item onClick={() => navigate('/projects/list')}>
           View Projects
         </NavDropdown.Item>
       )}
       {(keycloak.hasClaim(Claims.PROJECT_VIEW) || keycloak.hasClaim(Claims.ADMIN_PROJECTS)) && (
-        <NavDropdown.Item onClick={() => history.push('/projects/spl')}>
+        <NavDropdown.Item onClick={() => navigate('/projects/spl')}>
           View SPL Projects
         </NavDropdown.Item>
       )}
       {keycloak.hasClaim(Claims.DISPOSE_APPROVE) && (
-        <NavDropdown.Item onClick={() => history.push('/projects/approval/requests')}>
+        <NavDropdown.Item onClick={() => navigate('/projects/approval/requests')}>
           Approval Requests
         </NavDropdown.Item>
       )}
@@ -158,16 +161,17 @@ function DisposeProjectsDropdown() {
  * Reports navigation dropdown menu.
  */
 function ReportsDropdown() {
-  const history = useHistory();
+  const navigate = useNavigate();
+  const location = useLocation();
   const keycloak = useKeycloakWrapper();
   return keycloak.hasClaim(Claims.REPORTS_VIEW) ? (
     <NavDropdown
-      className={history.location.pathname.includes('reports') ? 'active' : 'idle'}
+      className={location.pathname.includes('reports') ? 'active' : 'idle'}
       title="Reports"
       id="reports"
     >
       {keycloak.hasClaim(Claims.REPORTS_SPL) && (
-        <NavDropdown.Item onClick={() => history.push('/reports/spl')}>SPL Report</NavDropdown.Item>
+        <NavDropdown.Item onClick={() => navigate('/reports/spl')}>SPL Report</NavDropdown.Item>
       )}
     </NavDropdown>
   ) : null;

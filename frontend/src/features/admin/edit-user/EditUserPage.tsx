@@ -10,7 +10,7 @@ import { Field, Formik } from 'formik';
 import useCodeLookups from 'hooks/useLookupCodes';
 import React, { useEffect } from 'react';
 import { Button, ButtonToolbar, Col, Container, Navbar, Row } from 'react-bootstrap';
-import { useHistory } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'store';
 import { fetchUserDetail, getUpdateUserAction } from 'store/slices/hooks/usersActionCreator';
 import { formatApiDateTime } from 'utils';
@@ -23,8 +23,10 @@ interface IEditUserPageProps extends IUserDetailParams {
 }
 
 const EditUserPage = (props: IEditUserPageProps) => {
-  const userId = props?.match?.params?.id || props.id;
-  const history = useHistory();
+  const params = useParams();
+  // removing the double quotes surrounding the id from useParams() as stringify isn't removing those double quotes surrounding the id.
+  const userId = JSON.stringify(params.id).slice(1, -1);
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   useEffect(() => {
     fetchUserDetail({ id: userId })(dispatch);
@@ -85,7 +87,7 @@ const EditUserPage = (props: IEditUserPageProps) => {
   );
 
   const goBack = () => {
-    history.goBack();
+    navigate(-1);
   };
 
   const initialValues = {
