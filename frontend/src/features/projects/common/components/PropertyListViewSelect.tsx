@@ -152,6 +152,7 @@ export const PropertyListViewSelect: React.FC<InputProps> = ({
             </strong>
             <Button
               variant="secondary"
+              data-testid="add-to-project-btn"
               onClick={() => {
                 setProjectProperties(
                   _.uniqWith(

@@ -124,6 +124,7 @@ export const DisposalProject: React.FC<IDisposalProjectProps> = props => {
               <ProjectTabs project={project} isLoading={isSubmitting} />
               <Row className="project-footer">
                 <Button
+                  data-testid="disposal-project-save-btn"
                   variant="primary"
                   type="submit"
                   isSubmitting={isSubmitting}

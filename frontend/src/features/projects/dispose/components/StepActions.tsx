@@ -53,6 +53,7 @@ export const StepActions: React.FC<IStepActionsProps> = ({
         disabled={nextDisabled || missingDisposeMilestonePermission || isFetching}
         style={{ marginLeft: 10 }}
         onClick={onNext}
+        data-testid="next-submit-btn"
         variant={nextLabel === 'Submit' || nextLabel === 'Next' ? 'primary' : 'secondary'}
       >
         {nextLabel}

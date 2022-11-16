@@ -91,10 +91,20 @@ export const ProjectDocumentation: React.FC<IProjectDocumentationProps> = ({
             <TextArea label="Reporting" field="reportingNote" disabled={disabled} />
           </Col>
           <Col>
-            <TextArea label="Shared Notes" field="publicNote" disabled={disabled} />
+            <TextArea
+              data-testid="proj-doc-notes-shared-textarea"
+              label="Shared Notes"
+              field="publicNote"
+              disabled={disabled}
+            />
           </Col>
           <Col>
-            <TextArea label="Private Notes" field="privateNote" disabled={disabled} />
+            <TextArea
+              data-testid="proj-doc-notes-private-textarea"
+              label="Private Notes"
+              field="privateNote"
+              disabled={disabled}
+            />
           </Col>
         </Row>
       </Col>

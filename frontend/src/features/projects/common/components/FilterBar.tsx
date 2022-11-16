@@ -27,6 +27,7 @@ const SearchBar: React.FC = () => {
 
   return (
     <InputGroup
+      data-testid="address"
       fast={false}
       formikProps={null as any}
       field={searchBy}
@@ -89,7 +90,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ onChange, defaultFilter }) => {
         <Form>
           <Row className="filter-bar">
             <Col className="bar-item">
-              <Input field="pid" placeholder="Enter PID or PIN" />
+              <Input field="pid" placeholder="Enter PID or PIN" data-testid="pid" />
             </Col>
             <Col className="bar-item">
               <SearchBar />
@@ -119,10 +120,10 @@ const FilterBar: React.FC<FilterBarProps> = ({ onChange, defaultFilter }) => {
               />
             </Col>
             <Col className="bar-item flex-grow-0">
-              <SearchButton disabled={isSubmitting} />
+              <SearchButton disabled={isSubmitting} data-testid="search-btn" />
             </Col>
             <Col className="bar-item flex-grow-0">
-              <ResetButton disabled={isSubmitting} onClick={handleReset} />
+              <ResetButton disabled={isSubmitting} data-testid="reset-btn" onClick={handleReset} />
             </Col>
           </Row>
         </Form>

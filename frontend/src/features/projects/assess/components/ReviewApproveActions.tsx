@@ -54,6 +54,7 @@ export const ReviewApproveActions = ({
       </FlexRight>
       <FlexRight>
         <Button
+          data-testid="review-approve-action-approve-btn"
           showSubmitting
           isSubmitting={isSubmitting}
           disabled={
