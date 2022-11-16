@@ -1,11 +1,12 @@
 import GenericModal from 'components/common/GenericModal';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import React from 'react';
-import { useHistory } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { clearStorage, isStorageInUse, PARCEL_STORAGE_NAME } from 'utils/storageUtils';
 
 const OnLoadActions: React.FC = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
+  const location = useLocation();
   const keycloak = useKeycloakWrapper();
   return (
     <GenericModal
@@ -14,12 +15,12 @@ const OnLoadActions: React.FC = () => {
       cancelButtonText="Discard"
       okButtonText="Resume Editing"
       display={
-        !history.location.pathname.includes('/mapview') &&
+        !location.pathname.includes('/mapview') &&
         isStorageInUse(PARCEL_STORAGE_NAME) &&
         keycloak?.obj?.authenticated
       }
       handleOk={() => {
-        history.push('/mapview?sidebar=true&loadDraft=true');
+        navigate('/mapview?sidebar=true&loadDraft=true');
       }}
       handleCancel={() => {
         clearStorage(PARCEL_STORAGE_NAME);
