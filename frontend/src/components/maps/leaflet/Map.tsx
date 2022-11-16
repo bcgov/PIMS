@@ -14,7 +14,7 @@ import { Feature } from 'geojson';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { geoJSON, LatLng, LatLngBounds, LeafletMouseEvent, Map as LeafletMap } from 'leaflet';
 import { isEmpty, isEqual, isEqualWith } from 'lodash';
-import React, { useState } from 'react';
+import React from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
 import { MapContainer, Popup, TileLayer, useMapEvents } from 'react-leaflet';
 import { useResizeDetector } from 'react-resize-detector';
@@ -61,7 +61,6 @@ export type MapProps = {
   agencies: ILookupCode[];
   administrativeAreas: ILookupCode[];
   lotSizes: number[];
-  mapRef: React.RefObject<LeafletMap>;
   selectedProperty?: IPropertyDetail | null;
   onMarkerClick?: (obj: IProperty, position?: [number, number]) => void;
   onMarkerPopupClose?: (obj: IPropertyDetail) => void;
@@ -177,11 +176,11 @@ const Map: React.FC<MapProps> = ({
   onMapClick,
   disableMapFilterBar,
   interactive = true,
-  mapRef,
   sidebarSize,
 }) => {
   const keycloak = useKeycloakWrapper();
   const dispatch = useAppDispatch();
+  const [mapRef, setMapRef] = React.useState(React.useRef<LeafletMap>(null));
   const [triggerFilterChanged, setTriggerFilterChanged] = React.useState(true);
   const municipalitiesService = useLayerQuery(MUNICIPALITY_LAYER_URL);
   const parcelsService = useLayerQuery(PARCELS_PUBLIC_LAYER_URL);
@@ -198,11 +197,13 @@ const Map: React.FC<MapProps> = ({
     ...defaultFilterValues,
     includeAllProperties: keycloak.hasClaim(Claims.ADMIN_PROPERTIES),
   } as any);
-  const [center, setCenter] = React.useState({ lat, lng });
+  const [center, setCenter] = React.useState({
+    lat: Number(selectedProperty?.parcelDetail?.latitude ?? lat),
+    lng: Number(selectedProperty?.parcelDetail?.longitude ?? lng),
+  });
   const [infoOpen, setInfoOpen] = React.useState(false);
   const [layersOpen, setLayersOpen] = React.useState(false);
-  const lastZoom = useAppSelector(store => store.mapViewZoom) ?? zoomProp;
-  const [zoom, setZoom] = useState(lastZoom);
+  const zoom = useAppSelector(store => store.mapViewZoom) ?? zoomProp;
 
   useActiveFeatureLayer({
     selectedProperty,
@@ -222,19 +223,14 @@ const Map: React.FC<MapProps> = ({
 
   React.useEffect(() => {
     // Set the middle of the map if there is a selected parcel.
-    if (
-      mapRef.current &&
-      selectedProperty?.parcelDetail &&
-      selectedProperty.parcelDetail?.longitude &&
-      selectedProperty.parcelDetail?.latitude
-    ) {
+    if (selectedProperty?.parcelDetail) {
       setCenter({
         lng: +selectedProperty.parcelDetail.longitude,
         lat: +selectedProperty.parcelDetail.latitude,
       });
       dispatch(setMapViewZoom(MAX_ZOOM));
     }
-  }, [dispatch, mapRef, selectedProperty?.parcelDetail]);
+  }, [dispatch, selectedProperty?.parcelDetail]);
 
   React.useEffect(() => {
     // Store the current zoom level.
@@ -322,43 +318,37 @@ const Map: React.FC<MapProps> = ({
     }
   };
 
-  function ShowLocationDetails() {
+  function MapEvents() {
     useMapEvents({
       click: e => {
         showLocationDetails(e);
       },
-    });
-    return null;
-  }
-
-  function HandleMapBounds() {
-    useMapEvents({
       moveend: e => {
-        handleBounds(e);
+        handleMoveEnd(e);
       },
       zoomend: e => {
-        setZoom(e.sourceTarget.getZoom());
+        dispatch(setMapViewZoom(e.sourceTarget.getZoom()));
       },
     });
     return null;
   }
 
-  const handleBounds = (e: any) => {
+  const handleMoveEnd = (e: any) => {
     const boundsData: LatLngBounds = e.target.getBounds();
     if (!isEqual(boundsData.getNorthEast(), boundsData.getSouthWest())) {
       setBounds(boundsData);
     }
   };
 
-  const onResize = React.useCallback(() => {
+  const targetRef = React.useRef<HTMLDivElement>(null);
+  const { width } = useResizeDetector({ targetRef });
+
+  React.useEffect(() => {
     // The map has changed and needs to be redrawn and possibly zoomed and centered.
     mapRef.current?.invalidateSize();
     const z = mapRef.current?.getZoom();
     if (zoom !== z) mapRef.current?.setView(center, zoom);
-  }, [center, mapRef, zoom]);
-
-  const targetRef = React.useRef<HTMLDivElement>(null);
-  useResizeDetector({ targetRef, refreshMode: 'throttle', onResize });
+  }, [center, mapRef, width, zoom]);
 
   return (
     <Container
@@ -398,12 +388,10 @@ const Map: React.FC<MapProps> = ({
             />
           )}
           <MapContainer
-            innerref={mapRef}
             center={center}
             zoom={zoom}
-            onclick={showLocationDetails}
             closePopupOnClick={interactive}
-            onmoveend={handleBounds}
+            whenCreated={mapInstance => setMapRef({ current: mapInstance })}
           >
             {activeBasemap && (
               <TileLayer
@@ -467,8 +455,7 @@ const Map: React.FC<MapProps> = ({
               filter={geoFilter}
               onRequestData={setShowFilterBackdrop}
             ></InventoryLayer>
-            <ShowLocationDetails />
-            <HandleMapBounds />
+            <MapEvents />
           </MapContainer>
         </Col>
       </Row>

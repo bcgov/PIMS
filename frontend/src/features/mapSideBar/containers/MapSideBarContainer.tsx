@@ -43,7 +43,6 @@ import { valuesToApiFormat, ViewOnlyBuildingForm } from '../SidebarContents/Buil
 import { getInitialValues, ISearchFields, ViewOnlyLandForm } from '../SidebarContents/LandForm';
 
 interface IMapSideBarContainerProps {
-  refreshParcels: Function;
   properties: IProperty[];
   movingPinNameSpaceProp?: string;
 }

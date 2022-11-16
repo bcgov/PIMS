@@ -8,7 +8,7 @@ import { PropertyPopUpContextProvider } from 'components/maps/providers/Property
 import * as API from 'constants/API';
 import MapSideBarContainer from 'features/mapSideBar/containers/MapSideBarContainer';
 import useCodeLookups from 'hooks/useLookupCodes';
-import { LeafletMouseEvent, Map as LeafletMap } from 'leaflet';
+import { LeafletMouseEvent } from 'leaflet';
 import queryString from 'query-string';
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
@@ -47,7 +47,6 @@ const MapView: React.FC<MapViewProps> = (props: MapViewProps) => {
   const propertyDetail = useAppSelector(state => state.parcel.propertyDetail);
   const agencies = lookupCodes.getByType(API.AGENCY_CODE_SET_NAME);
   const administrativeAreas = lookupCodes.getByType(API.AMINISTRATIVE_AREA_CODE_SET_NAME);
-  const mapRef = React.useRef<LeafletMap>(null);
 
   const lotSizes = fetchLotSizes();
 
@@ -69,12 +68,7 @@ const MapView: React.FC<MapViewProps> = (props: MapViewProps) => {
   const disableFilter = urlParsed.sidebar === 'true' ? true : false;
   return (
     <div className={classNames(showSideBar ? 'side-bar' : '', 'd-flex')}>
-      <MapSideBarContainer
-        refreshParcels={() => {
-          mapRef.current?.fireEvent('clear');
-        }}
-        properties={properties}
-      />
+      <MapSideBarContainer properties={properties} />
       <FilterProvider>
         <PropertyPopUpContextProvider>
           <Map
@@ -99,7 +93,6 @@ const MapView: React.FC<MapViewProps> = (props: MapViewProps) => {
             interactive={!props.disabled}
             showParcelBoundaries={props.showParcelBoundaries ?? true}
             zoom={6}
-            mapRef={mapRef}
           />
         </PropertyPopUpContextProvider>
       </FilterProvider>

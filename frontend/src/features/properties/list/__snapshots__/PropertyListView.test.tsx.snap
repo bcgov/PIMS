@@ -345,19 +345,17 @@ exports[`Property list view Matches snapshot 1`] = `
                   <div
                     class="c1 GeocoderAutoComplete"
                   >
-                    <div>
-                      <div
-                        class=""
-                      >
-                        <div>
-                          <input
-                            class="form-control"
-                            field="address"
-                            id="input-address"
-                            name="address"
-                            value=""
-                          />
-                        </div>
+                    <div
+                      class=""
+                    >
+                      <div>
+                        <input
+                          class="form-control"
+                          field="address"
+                          id="input-address"
+                          name="address"
+                          value=""
+                        />
                       </div>
                     </div>
                   </div>
