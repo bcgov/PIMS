@@ -21,7 +21,13 @@ const ApprovalConfirmationForm = ({ isReadOnly }: IStepProps) => {
     <Fragment>
       <h3>Approval</h3>
       <Form.Group>
-        <Check field={fieldName} postLabel={label} required disabled={isReadOnly} />
+        <Check
+          datatestid="approval-check"
+          field={fieldName}
+          postLabel={label}
+          required
+          disabled={isReadOnly}
+        />
       </Form.Group>
     </Fragment>
   );

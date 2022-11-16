@@ -46,6 +46,7 @@ export const columns = (
               props.row.original.workflowCode === Workflows.SUBMIT_DISPOSAL &&
               (projectEditClaim || isAdmin || user === props.row.original.createdBy) && (
                 <FaTrash
+                  data-testid="trash-icon"
                   style={{ marginRight: 10, cursor: 'pointer' }}
                   onClick={(e: any) => {
                     e.stopPropagation();

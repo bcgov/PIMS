@@ -4,6 +4,7 @@ dotenv.config({ path: '../.env' });
 
 export default defineConfig({
   e2e: {
+    projectId: 'k7dkv4',
     baseUrl: `http://localhost:${process.env.APP_HTTP_PORT || 3000}`,
     viewportHeight: 850,
     viewportWidth: 1400,
