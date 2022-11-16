@@ -7,7 +7,7 @@ import { IAgency, IAgencyFilter, IAgencyRecord } from 'interfaces';
 import { isEmpty } from 'lodash';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Container } from 'react-bootstrap';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { IGenericNetworkAction } from 'store';
 import { useAppDispatch, useAppSelector } from 'store';
 import { getAgenciesAction } from 'store/slices/hooks/agencyActionCreator';
@@ -24,7 +24,7 @@ const ManageAgencies: React.FC = () => {
   const [filter, setFilter] = useState<IAgencyFilter>({});
   const lookupCodes = useCodeLookups();
   const agencyLookupCodes = lookupCodes.getByType('Agency');
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const pagedAgencies = useAppSelector(store => store.agencies.pagedAgencies);
   const pageSize = useAppSelector(store => store.agencies.rowsPerPage);
@@ -35,7 +35,7 @@ const ManageAgencies: React.FC = () => {
   );
 
   const onRowClick = (row: IAgencyRecord) => {
-    history.push(`/admin/agency/${row.id}`);
+    navigate(`/admin/agency/${row.id}`);
   };
 
   let agencyList = pagedAgencies.items.map(
@@ -79,7 +79,7 @@ const ManageAgencies: React.FC = () => {
 
   useEffect(() => {
     getFetchLookupCodeAction()(dispatch);
-  }, [history, dispatch]);
+  }, [dispatch]);
 
   return (
     <Container fluid className="ManageAgencies">
@@ -94,7 +94,7 @@ const ManageAgencies: React.FC = () => {
             }
           }}
           handleAdd={() => {
-            history.push('/admin/agency/new');
+            navigate('/admin/agency/new');
           }}
         />
       </Container>
