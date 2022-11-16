@@ -4,7 +4,7 @@ import { WorkflowStatus } from 'hooks/api/projects';
 import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { Container, Form } from 'react-bootstrap';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { StepErrorSummary, useProject, useStepForm } from '../../common';
 import { fetchProjectTasks } from '../../common/projectsActionCreator';
@@ -89,7 +89,7 @@ export const validateApprove = async (project: IProject) => {
  */
 const ReviewApproveStep = ({ formikRef }: IStepProps) => {
   const { project, goToDisposePath } = useProject();
-  const history = useHistory();
+  const navigate = useNavigate();
   const { onSubmitReview, canUserApproveForm } = useStepForm();
   const [submitStatusCode, setSubmitStatusCode] = useState<string | undefined>(undefined);
   const { noFetchingProjectRequests } = useStepForm();
@@ -141,7 +141,7 @@ const ReviewApproveStep = ({ formikRef }: IStepProps) => {
               switch (project?.statusCode) {
                 case WorkflowStatus.ApprovedForErp:
                 case WorkflowStatus.ApprovedForExemption:
-                  history.push(`/projects/disposal/${project.id}` ?? 'invalid');
+                  navigate(`/projects/disposal/${project.id}` ?? 'invalid');
                   break;
                 case WorkflowStatus.Denied:
                   goToDisposePath('../summary');

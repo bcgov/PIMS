@@ -3,7 +3,7 @@ import * as H from 'history';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
 import queryString from 'query-string';
 import { useCallback, useMemo, useState } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 export type SidebarSize = 'narrow' | 'wide' | undefined;
 
@@ -62,7 +62,7 @@ export const useQueryParamSideBar = (formikRef?: any): IMapSideBar => {
   const [buildingId, setBuildingId] = useState<number | undefined>(undefined);
   const [associatedParcelId, setAssociatedParcelId] = useState<number | undefined>(undefined);
   const location = useLocation();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const searchParams = useMemo(() => queryString.parse(location.search), [location.search]);
   useDeepCompareEffect(() => {
@@ -83,7 +83,10 @@ export const useQueryParamSideBar = (formikRef?: any): IMapSideBar => {
       queryParams.parcelId = undefined;
       queryParams.buildingId = undefined;
       queryParams.sidebarContext = SidebarContextType.ADD_PROPERTY_TYPE_SELECTOR;
-      history.replace({ pathname: '/mapview', search: queryString.stringify(queryParams) });
+      navigate(
+        { pathname: '/mapview', search: queryString.stringify(queryParams) },
+        { replace: true },
+      );
     } else if (
       searchParams.sidebar === 'false' &&
       (searchParams.parcelId || searchParams.buildingId || searchParams.associatedParcelId)
@@ -91,10 +94,13 @@ export const useQueryParamSideBar = (formikRef?: any): IMapSideBar => {
       searchParams.parcelId = null;
       searchParams.buildingId = null;
       searchParams.associatedParcelId = null;
-      history.replace({
-        pathname: '/mapview',
-        search: queryString.stringify(searchParams),
-      });
+      navigate(
+        {
+          pathname: '/mapview',
+          search: queryString.stringify(searchParams),
+        },
+        { replace: true },
+      );
     }
   }, [searchParams]);
 
@@ -112,9 +118,9 @@ export const useQueryParamSideBar = (formikRef?: any): IMapSideBar => {
         parcelId: resetIds ? undefined : searchParams.parcelId,
         buildingId: resetIds ? undefined : searchParams.buildingId,
       };
-      history.push({ search: queryString.stringify(search) });
+      navigate({ search: queryString.stringify(search) });
     },
-    [history, searchParams],
+    [navigate, searchParams],
   );
 
   const addBuilding = () => {
@@ -174,7 +180,10 @@ export const useQueryParamSideBar = (formikRef?: any): IMapSideBar => {
         disabled: disabled,
       };
       const pathName = '/mapview';
-      history.replace({ pathname: pathName, search: queryString.stringify(queryParams) });
+      navigate(
+        { pathname: pathName, search: queryString.stringify(queryParams) },
+        { replace: true },
+      );
     },
     handleLocationChange,
   };
