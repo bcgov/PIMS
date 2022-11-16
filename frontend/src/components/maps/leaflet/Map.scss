@@ -3,7 +3,7 @@
 .leaflet-container {
   /* Subtract the header, nav-bar and footer sizes */
   height: calc(
-    100vh - #{$header-height} - #{$navbar-height} - #{$mapfilter-height} - #{$footer-height}
+    100vh - #{$header-height} - #{$navbar-height} - #{$mapfilter-height} - #{$footer-height} - 0.2vh
   );
   //margin-top: 12px;
   // padding-top: 20px;

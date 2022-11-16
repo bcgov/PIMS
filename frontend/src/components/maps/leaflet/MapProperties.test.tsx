@@ -141,7 +141,6 @@ describe('MapProperties View', () => {
             agencies={[]}
             lotSizes={[]}
             onMarkerClick={jest.fn()}
-            mapRef={mapRef}
             administrativeAreas={[]}
           />
         </Router>
