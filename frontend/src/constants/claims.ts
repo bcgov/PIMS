@@ -20,8 +20,8 @@ export enum Claims {
   REPORTS_VIEW = 'reports-view',
   REPORTS_SPL = 'reports-spl',
   REPORTS_SPL_ADMIN = 'reports-spl-admin',
-  AGENCY_ADMINISTRATOR = 'agency_administrator',
-  SENSITIVE_VIEW = 'sensitive_view',
+  AGENCY_ADMINISTRATOR = 'agency-administrator',
+  SENSITIVE_VIEW = 'sensitive-view',
   SYSTEM_ADMINISTRATOR = 'system-administrator',
 }
 
