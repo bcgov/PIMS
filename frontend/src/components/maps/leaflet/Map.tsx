@@ -12,7 +12,7 @@ import { PropertyFilter } from 'features/properties/filter';
 import { IPropertyFilter } from 'features/properties/filter/IPropertyFilter';
 import { Feature } from 'geojson';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
-import { geoJSON, LatLng, LatLngBounds, LeafletMouseEvent, Map as LeafletMap } from 'leaflet';
+import L, { geoJSON, LatLng, LatLngBounds, LeafletMouseEvent, Map as LeafletMap } from 'leaflet';
 import { isEmpty, isEqual, isEqualWith } from 'lodash';
 import React from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
@@ -273,6 +273,9 @@ const Map: React.FC<MapProps> = ({
   const handleBasemapToggle = (e: BasemapToggleEvent) => {
     const { previous, current } = e;
     setBaseLayers([current, previous]);
+    var tileLayer = L.tileLayer(current.url, {});
+    mapRef.current?.addLayer(tileLayer);
+    tileLayer.setUrl(current.url);
     setActiveBasemap(current);
   };
 
