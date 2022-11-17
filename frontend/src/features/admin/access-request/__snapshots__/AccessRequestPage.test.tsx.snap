@@ -160,6 +160,7 @@ exports[`AccessRequestPage functionality renders RequestAccessPage correctly 1`]
           </div>
           <div
             class="col-md-auto"
+            style="padding: 0px;"
           >
             <select
               class="form-select form-control"
@@ -235,6 +236,7 @@ exports[`AccessRequestPage functionality renders RequestAccessPage correctly 1`]
               />
               <div
                 class="col-md-auto"
+                style="padding: 0px;"
               >
                 <select
                   class="form-select form-control"

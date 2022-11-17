@@ -73,7 +73,7 @@ exports[`MapFilterBar renders correctly 1`] = `
         >
           <div
             class="col"
-            style="padding-right: 0px; padding-top: 24px; margin-right: -25px;"
+            style="margin-left: 10px; padding-right: 0px; padding-top: 24px;"
           >
             <div
               class="row"
@@ -85,10 +85,12 @@ exports[`MapFilterBar renders correctly 1`] = `
               />
               <div
                 class="col-md-auto"
+                style="padding: 0px;"
               >
                 <select
                   class="form-select form-control"
                   name="includeAllProperties"
+                  style="width: 150px;"
                 >
                   <option
                     class="option"
@@ -108,7 +110,7 @@ exports[`MapFilterBar renders correctly 1`] = `
           </div>
           <div
             class="col"
-            style="padding-left: 0px; padding-top: 24px;"
+            style="padding-left: 10px; padding-top: 24px; width: 160px;"
           >
             <div
               class=""
@@ -246,10 +248,12 @@ exports[`MapFilterBar renders correctly 1`] = `
               />
               <div
                 class="col-md-auto"
+                style="padding: 0px;"
               >
                 <select
                   class="form-select form-control"
                   name="searchBy"
+                  style="margin-left: 10px;"
                 >
                   <option
                     class="option"
@@ -283,7 +287,7 @@ exports[`MapFilterBar renders correctly 1`] = `
                     class="form-control"
                     name="name"
                     placeholder=""
-                    style="margin-left: -35px; width: 140px;"
+                    style="margin-left: -5px; width: 136px; margin-right: 10px;"
                     value=""
                   />
                 </div>
@@ -294,7 +298,7 @@ exports[`MapFilterBar renders correctly 1`] = `
       </div>
       <div
         class="filter-col col-md-auto"
-        style="padding-top: 24px; width: 150px; margin-right: -20px;"
+        style="padding-top: 24px; width: 150px; margin-right: -10px;"
       >
         <div
           class="row"
@@ -306,6 +310,7 @@ exports[`MapFilterBar renders correctly 1`] = `
           />
           <div
             class="col-md-auto"
+            style="padding: 0px;"
           >
             <select
               class="form-select form-control"

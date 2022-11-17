@@ -318,10 +318,12 @@ exports[`Property list view Matches snapshot 1`] = `
                     />
                     <div
                       class="col-md-auto"
+                      style="padding: 0px;"
                     >
                       <select
                         class="form-select form-control"
                         name="searchBy"
+                        style="margin-left: 10px;"
                       >
                         <option
                           class="option"
@@ -354,6 +356,7 @@ exports[`Property list view Matches snapshot 1`] = `
                           field="address"
                           id="input-address"
                           name="address"
+                          placeholder="Enter an address"
                           value=""
                         />
                       </div>
@@ -364,7 +367,7 @@ exports[`Property list view Matches snapshot 1`] = `
             </div>
             <div
               class="filter-col col-md-auto"
-              style="padding-top: 24px; width: 150px; margin-right: -20px;"
+              style="padding-top: 24px; width: 150px; margin-right: -10px;"
             >
               <div
                 class="row"
@@ -376,6 +379,7 @@ exports[`Property list view Matches snapshot 1`] = `
                 />
                 <div
                   class="col-md-auto"
+                  style="padding: 0px;"
                 >
                   <select
                     class="form-select form-control"
