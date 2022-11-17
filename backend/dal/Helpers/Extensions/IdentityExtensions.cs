@@ -7,7 +7,7 @@ using Pims.Dal.Services;
 using System;
 using System.Linq;
 using System.Security.Claims;
-
+using System.ComponentModel;
 namespace Pims.Dal.Helpers.Extensions
 {
     /// <summary>
@@ -39,6 +39,9 @@ namespace Pims.Dal.Helpers.Extensions
         /// <returns>True if the user has all of the permissions.</returns>
         public static bool HasPermissions(this ClaimsPrincipal user, params Permissions[] permission)
         {
+            Console.WriteLine("\n\n\nHasPermissions");
+            Console.WriteLine(user.ToString());
+            Console.WriteLine("\n\n\n");
             if (permission == null) throw new ArgumentNullException(nameof(permission));
             if (permission.Length == 0) throw new ArgumentOutOfRangeException(nameof(permission));
 
