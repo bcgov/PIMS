@@ -15,7 +15,7 @@
     "crypto-js": "4.1.1",
     "dequal": "2.0.3",
     "formik": "2.2.9",
-    "http-proxy-middleware": "0.21.0",
+    "http-proxy-middleware": "2.0.6",
     "keycloak-js": "15.0.2",
     "leaflet": "1.9.2",
     "lodash": "4.17.21",
