@@ -11,7 +11,7 @@ import { Workflows } from 'constants/workflows';
 import { createMemoryHistory } from 'history';
 import * as React from 'react';
 import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
@@ -208,13 +208,13 @@ const ContentComponent = (
 ) => {
   return (
     <Provider store={store}>
-      <Router history={history}>
+      <MemoryRouter initialEntries={[history.location]}>
         <InfoContent
           propertyInfo={propertyInfo}
           propertyTypeId={propertyTypeId}
           canViewDetails={canViewDetails}
         />
-      </Router>
+      </MemoryRouter>
     </Provider>
   );
 };

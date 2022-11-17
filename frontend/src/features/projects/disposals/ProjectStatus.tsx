@@ -6,7 +6,7 @@ import { WorkflowStatus } from 'hooks/api/projects';
 import { IProjectModel } from 'hooks/api/projects/disposals';
 import { IProjectStatusModel } from 'hooks/api/projects/workflows';
 import React from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useProjectDisposal, useProjectWorkflow } from 'store';
 
 import { IProjectForm } from './interfaces';
@@ -26,7 +26,7 @@ export const ProjectStatus: React.FC<IProjectStatusProps> = ({
   isSubmitting,
   setIsSubmitting,
 }) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const { values, validateForm } = useFormikContext<IProjectForm>();
   const apiWorkflow = useProjectWorkflow();
   const api = useProjectDisposal();
@@ -64,7 +64,7 @@ export const ProjectStatus: React.FC<IProjectStatusProps> = ({
           const response = await api.update(toModel(project, values));
           if (response && response.status === 200) {
             onUpdate(response.data);
-            history.push(`/projects/disposal/${project?.id}/transfer/within/gre`);
+            navigate(`/projects/disposal/${project?.id}/transfer/within/gre`);
           }
         }
       } finally {

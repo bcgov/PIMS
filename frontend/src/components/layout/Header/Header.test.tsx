@@ -7,7 +7,7 @@ import * as reducerTypes from 'constants/reducerTypes';
 import { createMemoryHistory } from 'history';
 import React from 'react';
 import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import renderer from 'react-test-renderer';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
@@ -31,7 +31,6 @@ const lCodes = {
 
 const store = mockStore({
   [reducerTypes.LOOKUP_CODE]: lCodes,
-  [reducerTypes.NETWORK]: { requests: {} },
 });
 
 test('header renders correctly', () => {
@@ -39,9 +38,9 @@ test('header renders correctly', () => {
   const tree = renderer
     .create(
       <Provider store={store}>
-        <Router history={history}>
+        <MemoryRouter initialEntries={[history.location]}>
           <Header />
-        </Router>
+        </MemoryRouter>
       </Provider>,
     )
     .toJSON();
@@ -61,9 +60,9 @@ it('User displays default if no user name information found', () => {
 
   const { getByText } = render(
     <Provider store={store}>
-      <Router history={history}>
+      <MemoryRouter initialEntries={[history.location]}>
         <Header />
-      </Router>
+      </MemoryRouter>
     </Provider>,
   );
   const name = getByText('default');
@@ -86,9 +85,9 @@ describe('UserProfile user name display', () => {
 
     const { getByText } = render(
       <Provider store={store}>
-        <Router history={history}>
+        <MemoryRouter initialEntries={[history.location]}>
           <Header />
-        </Router>
+        </MemoryRouter>
       </Provider>,
     );
     const name = getByText('display name');
@@ -110,9 +109,9 @@ describe('UserProfile user name display', () => {
 
     const { getByText } = render(
       <Provider store={store}>
-        <Router history={history}>
+        <MemoryRouter initialEntries={[history.location]}>
           <Header />
-        </Router>
+        </MemoryRouter>
       </Provider>,
     );
     const name = getByText('firstName lastName');
@@ -133,9 +132,9 @@ describe('UserProfile user name display', () => {
     });
     const { getByText } = render(
       <Provider store={store}>
-        <Router history={history}>
+        <MemoryRouter initialEntries={[history.location]}>
           <Header />
-        </Router>
+        </MemoryRouter>
       </Provider>,
     );
     fireEvent.click(getByText(/test user/i));

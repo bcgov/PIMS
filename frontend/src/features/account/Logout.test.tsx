@@ -3,7 +3,7 @@ import { cleanup, render, waitFor } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
 import { useConfiguration } from 'hooks/useConfiguration';
 import React from 'react';
-import { Router } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 
 import { LogoutPage } from './Logout';
 
@@ -33,9 +33,9 @@ describe('logout', () => {
     (useConfiguration as jest.Mock).mockReturnValue({ siteMinderLogoutUrl: undefined });
 
     render(
-      <Router history={history}>
+      <MemoryRouter initialEntries={[history.location]}>
         <LogoutPage />
-      </Router>,
+      </MemoryRouter>,
     );
 
     expect(history.location.pathname).toBe('/login');
@@ -48,9 +48,9 @@ describe('logout', () => {
     });
 
     render(
-      <Router history={history}>
+      <MemoryRouter initialEntries={[history.location]}>
         <LogoutPage />
-      </Router>,
+      </MemoryRouter>,
     );
 
     await waitFor(() => expect(window.location.replace).toHaveBeenCalledTimes(1));
