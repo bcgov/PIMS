@@ -158,7 +158,7 @@ namespace Pims.Api
                 })
                 .AddJwtBearer(options =>
                 {
-                    var key = Encoding.ASCII.GetBytes(this.Configuration["Keycloak:ServiceAccount:Secret"]);
+                    var key = Encoding.ASCII.GetBytes(this.Configuration["Keycloak:Secret"]);
                     options.RequireHttpsMetadata = false;
                     options.Authority = this.Configuration["Keycloak:Authority"];
                     options.Audience = this.Configuration["Keycloak:Audience"];
