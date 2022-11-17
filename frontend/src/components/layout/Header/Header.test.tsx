@@ -31,7 +31,6 @@ const lCodes = {
 
 const store = mockStore({
   [reducerTypes.LOOKUP_CODE]: lCodes,
-  [reducerTypes.NETWORK]: { requests: {} },
 });
 
 test('header renders correctly', () => {
