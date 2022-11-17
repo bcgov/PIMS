@@ -174,7 +174,7 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
                   </div>
                 )}
               </Col>
-              <Col md="auto" className="filter-col" style={{ paddingTop: 24, width: 130 }}>
+              <Col md="auto" className="filter-col" style={{ paddingTop: 24, width: '150px' }}>
                 <AsyncTypeahead
                   disabled={
                     (findMoreOpen || values.includeAllProperties === true) &&
@@ -202,7 +202,7 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
                   }
                 />
               </Col>
-              <Col md="auto" className="filter-col" style={{ paddingTop: 24, width: 130 }}>
+              <Col md="auto" className="filter-col" style={{ paddingTop: 24, width: '150px' }}>
                 <TypeaheadField
                   name="administrativeArea"
                   placeholder="Location"
@@ -223,7 +223,7 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
               <Col
                 md="auto"
                 className="filter-col"
-                style={{ paddingTop: 24, width: 150, marginRight: '-20px' }}
+                style={{ paddingTop: 24, width: 150, marginRight: '-10px' }}
               >
                 <Select
                   field="classificationId"

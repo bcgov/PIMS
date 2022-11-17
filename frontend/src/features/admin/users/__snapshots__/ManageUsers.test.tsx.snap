@@ -205,6 +205,7 @@ exports[`Manage Users Component Snapshot matches 1`] = `
         </div>
         <div
           class="bar-item col-md-auto"
+          style="margin-left: -12px; margin-right: 10px; margin-top: 2px;"
         >
           <div
             class="row"
@@ -216,6 +217,7 @@ exports[`Manage Users Component Snapshot matches 1`] = `
             />
             <div
               class="col-md-auto"
+              style="padding: 0px;"
             >
               <select
                 class="input form-select form-control"

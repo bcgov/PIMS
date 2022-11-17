@@ -223,6 +223,11 @@ exports[`renders correctly 1`] = `
             />
             <div
               className="col-md-auto"
+              style={
+                Object {
+                  "padding": 0,
+                }
+              }
             >
               <select
                 className="form-select form-control"
