@@ -1,7 +1,7 @@
 import { defaultProject } from 'features/projects/constants/defaultValues';
 import { IStatus } from 'features/projects/interfaces';
 import _ from 'lodash';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAppSelector } from 'store';
 
 /**
@@ -29,15 +29,15 @@ const getStatusTransitionWorkflow = (
 const useProject = () => {
   const project = useAppSelector(store => store.project.project);
   const workflowStatuses = useAppSelector(store => store.projectWorkflow);
-  const history = useHistory();
+  const navigate = useNavigate();
 
   return {
     goToStepByCode: (statusCode: string) => {
       const status: IStatus | undefined = _.find(workflowStatuses, { code: statusCode });
-      history.push(`..${status?.route}?projectNumber=${project?.projectNumber}`);
+      navigate(`..${status?.route}?projectNumber=${project?.projectNumber}`);
     },
     goToDisposePath: (path: string) =>
-      history.push(`./${path}?projectNumber=${project?.projectNumber}`),
+      navigate(`./${path}?projectNumber=${project?.projectNumber}`),
     project: project ?? defaultProject(),
     getStatusTransitionWorkflow: (toStatusCode?: string) =>
       getStatusTransitionWorkflow(workflowStatuses, project?.statusCode, toStatusCode),
