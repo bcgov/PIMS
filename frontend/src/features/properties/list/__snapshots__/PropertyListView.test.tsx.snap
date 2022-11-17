@@ -224,7 +224,7 @@ exports[`Property list view Matches snapshot 1`] = `
             </div>
             <div
               class="filter-col col-md-auto"
-              style="padding-top: 24px; width: 130px;"
+              style="padding-top: 24px; width: 150px;"
             >
               <div
                 class="rbt"
@@ -259,7 +259,7 @@ exports[`Property list view Matches snapshot 1`] = `
             </div>
             <div
               class="filter-col col-md-auto"
-              style="padding-top: 24px; width: 130px;"
+              style="padding-top: 24px; width: 150px;"
             >
               <div
                 class=""
