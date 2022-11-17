@@ -4,25 +4,35 @@ import { store } from 'store';
 import { clearJwt, saveJwt } from 'store/slices/jwtSlice';
 import { setKeycloakReady } from 'store/slices/keycloakReadySlice';
 
-const getKeycloakEventHandler = (keycloak: KeycloakInstance) => {
-  const keycloakEventHandler = (
-    eventType: AuthClientEvent,
-    error?: AuthClientError | undefined,
-  ) => {
-    if (eventType === 'onAuthSuccess') {
+const getKeycloakEventHandler = (keycloak: KeycloakInstance) => (
+  eventType: AuthClientEvent,
+  error?: AuthClientError | undefined,
+) => {
+  console.log('\n\n\n\n', { error }, '\n\n\n');
+  switch (eventType) {
+    case 'onAuthSuccess':
       store.dispatch(saveJwt(keycloak.token!));
-    } else if (eventType === 'onAuthRefreshSuccess') {
+      break;
+
+    case 'onAuthRefreshSuccess':
       store.dispatch(saveJwt(keycloak.token!));
-    } else if (eventType === 'onAuthLogout' || eventType === 'onTokenExpired') {
+      break;
+
+    case 'onAuthLogout':
+    case 'onTokenExpired':
       store.dispatch(clearJwt());
-    } else if (eventType === 'onReady') {
+      break;
+
+    case 'onReady':
       store.dispatch(setKeycloakReady(true));
-    } else {
-      //TODO: log error properly
+      if (keycloak.token) {
+        store.dispatch(saveJwt(keycloak.token));
+      }
+      break;
+
+    default:
       console.debug(`keycloak event: ${eventType} error ${error}`);
-    }
-  };
-  return keycloakEventHandler;
+  }
 };
 
 export default getKeycloakEventHandler;

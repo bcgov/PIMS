@@ -158,10 +158,11 @@ namespace Pims.Api
                 })
                 .AddJwtBearer(options =>
                 {
-                    var key = Encoding.ASCII.GetBytes(Configuration["Keycloak:Secret"]);
+                    Console.WriteLine("\n\n\n\nMade it here\n\n\n");
+                    var key = Encoding.ASCII.GetBytes("NR1Jn62Zmz9OOVrJUCcGvcldajRDb5E2");
                     options.RequireHttpsMetadata = false;
-                    options.Authority = Configuration["Keycloak:Authority"];
-                    options.Audience = Configuration["Keycloak:Audience"];
+                    options.Authority = "https://dev.loginproxy.gov.bc.ca/auth/realms/standard";
+                    options.Audience = "pims-api-sa-4366";
                     options.SaveToken = true;
                     options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
                     {
