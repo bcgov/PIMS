@@ -8,6 +8,10 @@ const getKeycloakEventHandler = (keycloak: KeycloakInstance) => (
   eventType: AuthClientEvent,
   error?: AuthClientError | undefined,
 ) => {
+<<<<<<< HEAD
+=======
+  console.log('\n\n\n\n', { error }, '\n\n\n');
+>>>>>>> b5c35e71 (Backend in working state)
   switch (eventType) {
     case 'onAuthSuccess':
       store.dispatch(saveJwt(keycloak.token!));
@@ -24,17 +28,26 @@ const getKeycloakEventHandler = (keycloak: KeycloakInstance) => (
 
     case 'onReady':
       store.dispatch(setKeycloakReady(true));
+<<<<<<< HEAD
+=======
+      if (keycloak.token) {
+        store.dispatch(saveJwt(keycloak.token));
+      }
+>>>>>>> b5c35e71 (Backend in working state)
       break;
 
     default:
       console.debug(`keycloak event: ${eventType} error ${error}`);
   }
+<<<<<<< HEAD
 
   //TODO: Fix race condition through better means than the following
   switch (error?.error) {
     case 'login_required':
       window.location.reload();
   }
+=======
+>>>>>>> b5c35e71 (Backend in working state)
 };
 
 export default getKeycloakEventHandler;
