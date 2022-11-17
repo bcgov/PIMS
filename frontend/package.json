@@ -50,7 +50,7 @@
     "redux-thunk": "2.3.0",
     "retry-axios": "2.4.0",
     "styled-components": "5.3.3",
-    "supercluster": "7.1.0",
+    "supercluster": "7.1.5",
     "text-mask-addons": "3.8.0",
     "tiles-in-bbox": "1.0.2",
     "tiny-invariant": "1.1.0",
