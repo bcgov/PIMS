@@ -62,7 +62,9 @@ describe('login', () => {
 
     render(
       <Provider store={store}>
-        <Login />
+        <MemoryRouter initialEntries={[history.location]}>
+          <Login />
+        </MemoryRouter>
       </Provider>,
     );
     expect(history.location.pathname).toBe('/mapview');
