@@ -36,6 +36,7 @@ type OptionalAttributes = {
   /** Class name of the input wrapper */
   outerClassName?: string;
   /** input "type" ie. string, number */
+  customStyles?: React.CSSProperties;
 };
 
 // only "field" and "options" are required for <Select>, the rest are optional
@@ -69,6 +70,7 @@ export const Select: React.FC<SelectProps> = ({
   onChange,
   type,
   outerClassName,
+  customStyles,
   ...rest
 }) => {
   const { values, handleBlur, handleChange, setFieldValue, errors, touched } = useFormikContext();
@@ -113,8 +115,9 @@ export const Select: React.FC<SelectProps> = ({
       style={{ alignItems: 'center' }}
     >
       <Col md="auto">{!!label && <Form.Label>{label}</Form.Label>}</Col>
-      <Col md="auto">
+      <Col md="auto" style={{ padding: 0 }}>
         <Form.Control
+          style={customStyles}
           as={asElement}
           name={field}
           className={classNames(className, 'form-select')}

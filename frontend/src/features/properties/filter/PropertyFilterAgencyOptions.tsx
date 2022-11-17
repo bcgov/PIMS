@@ -49,15 +49,16 @@ export const PropertyFilterAgencyOptions: React.FC<IPropertyFilterAgencyOptions>
 
   return (
     <Row className="align-items-center" style={{ width: 'auto' }}>
-      <Col style={{ paddingRight: 0, paddingTop: '24px', marginRight: '-25px' }}>
+      <Col style={{ marginLeft: '10px', paddingRight: '0', paddingTop: '24px' }}>
         <Select
+          customStyles={{ width: '150px' }}
           field="includeAllProperties"
           options={state.options}
           onChange={onChange}
           disabled={disabled}
         />
       </Col>
-      <Col style={{ paddingLeft: 0, paddingTop: '24px' }}>
+      <Col style={{ paddingLeft: '10px', paddingTop: '24px', width: '160px' }}>
         <ParentSelect
           field="agencies"
           options={agencies}
