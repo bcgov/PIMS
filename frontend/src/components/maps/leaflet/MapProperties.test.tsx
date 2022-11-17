@@ -12,7 +12,7 @@ import { Map as LeafletMap } from 'leaflet';
 import React, { createRef } from 'react';
 import { Marker } from 'react-leaflet';
 import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
@@ -131,7 +131,7 @@ describe('MapProperties View', () => {
   ) => {
     return (
       <Provider store={store}>
-        <Router history={history}>
+        <MemoryRouter initialEntries={[history.location]}>
           <Map
             lat={48.43}
             lng={-123.37}
@@ -143,7 +143,7 @@ describe('MapProperties View', () => {
             onMarkerClick={jest.fn()}
             administrativeAreas={[]}
           />
-        </Router>
+        </MemoryRouter>
       </Provider>
     );
   };

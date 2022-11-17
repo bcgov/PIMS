@@ -3,7 +3,7 @@ import { PropertyTypeNames } from 'constants/propertyTypeNames';
 import _ from 'lodash';
 import queryString from 'query-string';
 import React, { useCallback, useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'store';
 import { saveFilter } from 'store/slices/filterSlice';
 import { generateMultiSortCriteria, resolveSortCriteriaFromUrl } from 'utils';
@@ -81,7 +81,8 @@ export const useRouterFilter = <T extends object>({
   sort,
   setSorting,
 }: IRouterFilterProps<T>) => {
-  const history = useHistory();
+  const navigate = useNavigate();
+  const location = useLocation();
   const dispatch = useAppDispatch();
   const reduxSearch = useAppSelector(store => store.filter);
   const [savedFilter] = useState(reduxSearch);
@@ -91,7 +92,7 @@ export const useRouterFilter = <T extends object>({
   // This will only occur the first time the component loads to ensure the URL query parameters are applied.
   useEffect(() => {
     if (setFilter) {
-      const params = queryString.parse(history.location.search);
+      const params = queryString.parse(location.search);
       // Check if query contains filter params.
       const filterProps = Object.keys(filter);
       if (_.intersection(Object.keys(params), filterProps).length) {
@@ -125,7 +126,7 @@ export const useRouterFilter = <T extends object>({
       setLoaded(true);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [history.location.pathname]);
+  }, [location.pathname]);
 
   // If the 'filter' changes save it to redux store and update the URL.
   React.useEffect(() => {
@@ -133,36 +134,46 @@ export const useRouterFilter = <T extends object>({
       const filterParams = new URLSearchParams(filter as any);
       const sorting = generateMultiSortCriteria(sort!);
       const allParams = {
-        ...queryString.parse(history.location.search),
+        ...queryString.parse(location.search),
         ...queryString.parse(filterParams.toString()),
         sorting,
       };
-      history.push({
-        pathname: history.location.pathname,
+      navigate({
+        pathname: location.pathname,
         search: queryString.stringify(allParams, { skipEmptyString: true, skipNull: true }),
       });
       const keyedFilter = { [key]: filter };
       dispatch(saveFilter({ ...savedFilter, ...keyedFilter }));
     }
-  }, [history, key, filter, savedFilter, dispatch, sort, loaded]);
+  }, [
+    key,
+    filter,
+    savedFilter,
+    dispatch,
+    sort,
+    loaded,
+    location.search,
+    location.pathname,
+    navigate,
+  ]);
 
   const updateSearch = useCallback(
     (newFilter: T) => {
       const filterParams = new URLSearchParams(newFilter as any);
       const sorting = generateMultiSortCriteria(sort!);
       const allParams = {
-        ...queryString.parse(history.location.search),
+        ...queryString.parse(location.search),
         ...queryString.parse(filterParams.toString()),
         sort: sorting,
       };
-      history.push({
-        pathname: history.location.pathname,
+      navigate({
+        pathname: location.pathname,
         search: queryString.stringify(allParams, { skipEmptyString: true, skipNull: true }),
       });
       const keyedFilter = { [key]: newFilter };
       dispatch(saveFilter({ ...savedFilter, ...keyedFilter }));
     },
-    [history, key, savedFilter, dispatch, sort],
+    [sort, location.search, location.pathname, navigate, key, dispatch, savedFilter],
   );
 
   return {

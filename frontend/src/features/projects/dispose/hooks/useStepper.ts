@@ -5,7 +5,7 @@ import { IProject, IProjectTask, IStatus } from 'features/projects/interfaces';
 import { useKeycloakWrapper } from 'hooks/useKeycloakWrapper';
 import _ from 'lodash';
 import { useContext, useEffect, useMemo } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAppSelector } from 'store';
 
 import { StepperContext } from '..';
@@ -102,7 +102,7 @@ export const getLastCompletedStatus = (
  * Used to synchronize stepper UI with step UI.
  */
 const useStepper = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const keycloak = useKeycloakWrapper();
   const { currentStatus, setCurrentStatus, disposeWorkflowStatuses } = useContext(StepperContext);
   const initialProject = useMemo(
@@ -173,7 +173,7 @@ const useStepper = () => {
         return undefined;
       }
       currentProject.projectNumber !== undefined &&
-        history.push(`/dispose${nextStatus.route}?projectNumber=${currentProject.projectNumber}`);
+        navigate(`/dispose${nextStatus.route}?projectNumber=${currentProject.projectNumber}`);
       return nextStatus.id;
     },
     projectStatusCompleted: (status?: IStatus) =>
@@ -183,14 +183,13 @@ const useStepper = () => {
       getLastCompletedStatus(disposeWorkflowStatuses, currentStatus, project),
     goToStepById: (statusId: number) => {
       const status: IStatus | undefined = _.find(disposeWorkflowStatuses, { id: statusId });
-      history.push(`..${status?.route}?projectNumber=${project.projectNumber}`);
+      navigate(`..${status?.route}?projectNumber=${project.projectNumber}`);
     },
     goToStepByCode: (statusCode: string) => {
       const status: IStatus | undefined = _.find(disposeWorkflowStatuses, { code: statusCode });
-      history.push(`..${status?.route}?projectNumber=${project.projectNumber}`);
+      navigate(`..${status?.route}?projectNumber=${project.projectNumber}`);
     },
-    goToDisposePath: (path: string) =>
-      history.push(`./${path}?projectNumber=${project.projectNumber}`),
+    goToDisposePath: (path: string) => navigate(`./${path}?projectNumber=${project.projectNumber}`),
   };
 };
 export default useStepper;
