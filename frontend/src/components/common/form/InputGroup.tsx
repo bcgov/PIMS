@@ -98,7 +98,6 @@ export const InputGroup: React.FC<InputGroupProps> = ({
           <FastInput
             formikProps={formikProps}
             disabled={disabled}
-            style={style}
             field={field}
             className={className}
             placeholder={placeholder}

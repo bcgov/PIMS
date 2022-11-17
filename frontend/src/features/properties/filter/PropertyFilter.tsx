@@ -223,7 +223,7 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
               <Col
                 md="auto"
                 className="filter-col"
-                style={{ paddingTop: 24, width: 150, marginRight: '-20px' }}
+                style={{ paddingTop: 24, width: 150, marginRight: '-10px' }}
               >
                 <Select
                   field="classificationId"

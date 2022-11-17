@@ -312,7 +312,7 @@ export const ProjectListView: React.FC<IProps> = ({
                 placeholder="Enter an Agency"
               />
             </Col>
-            <Col md="auto" className="bar-item">
+            <Col md="auto" className="bar-item" style={{ marginLeft: '13px', marginRight: '8px' }}>
               <Select field="fiscalYear" options={fiscalYears} placeholder="Fiscal Year" />
             </Col>
           </FilterBar>
