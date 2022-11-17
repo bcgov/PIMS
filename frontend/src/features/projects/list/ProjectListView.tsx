@@ -23,7 +23,7 @@ import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { Container } from 'react-bootstrap';
 import { Col } from 'react-bootstrap';
 import { FaFileAlt, FaFileExcel, FaFolder, FaFolderOpen } from 'react-icons/fa';
-import { useHistory } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'store';
 import styled from 'styled-components';
 import { mapLookupCodeWithParentString, mapStatuses } from 'utils';
@@ -106,7 +106,7 @@ export const ProjectListView: React.FC<IProps> = ({
   const [pageIndex, setPageIndex] = useState(0);
   const [pageCount, setPageCount] = useState(0);
   const [projectCount, setProjectCount] = useState(0);
-  const history = useHistory();
+  const navigate = useNavigate();
 
   // const [loading, setLoading] = useState(false);
   const fetchIdRef = useRef(0);
@@ -191,7 +191,8 @@ export const ProjectListView: React.FC<IProps> = ({
     [defaultFilter.statusId],
   );
   const dispatch = useAppDispatch();
-  const route = history.location.pathname;
+  const location = useLocation();
+  const route = location.pathname;
 
   // Listen for changes in pagination and use the state to fetch our new data
   useDeepCompareEffect(() => {
@@ -242,12 +243,12 @@ export const ProjectListView: React.FC<IProps> = ({
       (DisposalStatuses.includes(row.statusCode) || ReviewStatuses.includes(row.statusCode)) &&
       row.statusCode !== WorkflowStatus.Disposed
     ) {
-      history.push(`/projects?projectNumber=${row.projectNumber}`);
+      navigate(`/projects?projectNumber=${row.projectNumber}`);
     } else {
       if (keycloak.hasClaim(Claims.ADMIN_PROJECTS)) {
-        history.push(`/projects/disposal/${row.id}`);
+        navigate(`/projects/disposal/${row.id}`);
       } else {
-        history.push(`/projects/summary?projectNumber=${row.projectNumber}`);
+        navigate(`/projects/summary?projectNumber=${row.projectNumber}`);
       }
     }
   };

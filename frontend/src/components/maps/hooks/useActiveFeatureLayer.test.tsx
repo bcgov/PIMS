@@ -7,7 +7,7 @@ import { geoJSON } from 'leaflet';
 import { noop } from 'lodash';
 import React from 'react';
 import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
@@ -43,7 +43,7 @@ const history = createMemoryHistory();
 const getStore = (values?: any) => mockStore(values ?? { parcel: { draftProperties: [] } });
 const getWrapper = (store: any) => ({ children }: any) => (
   <Provider store={store}>
-    <Router history={history}>{children}</Router>
+    <MemoryRouter initialEntries={[history.location]}>{children}</MemoryRouter>
   </Provider>
 );
 

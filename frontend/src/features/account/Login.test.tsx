@@ -5,7 +5,7 @@ import * as reducerTypes from 'constants/reducerTypes';
 import { createMemoryHistory } from 'history';
 import React from 'react';
 import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import renderer from 'react-test-renderer';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
@@ -28,9 +28,9 @@ const renderLogin = () => {
   const history = createMemoryHistory();
   return render(
     <Provider store={store}>
-      <Router history={history}>
+      <MemoryRouter initialEntries={[history.location]}>
         <Login />
-      </Router>
+      </MemoryRouter>
     </Provider>,
   );
 };
@@ -45,9 +45,9 @@ describe('login', () => {
     const tree = renderer
       .create(
         <Provider store={store}>
-          <Router history={history}>
+          <MemoryRouter initialEntries={[history.location]}>
             <Login></Login>
-          </Router>
+          </MemoryRouter>
         </Provider>,
       )
       .toJSON();
@@ -62,9 +62,9 @@ describe('login', () => {
 
     render(
       <Provider store={store}>
-        <Router history={history}>
+        <MemoryRouter initialEntries={[history.location]}>
           <Login />
-        </Router>
+        </MemoryRouter>
       </Provider>,
     );
     expect(history.location.pathname).toBe('/mapview');
@@ -89,9 +89,9 @@ describe('login', () => {
 
     render(
       <Provider store={store}>
-        <Router history={history}>
+        <MemoryRouter initialEntries={[history.location]}>
           <Login />
-        </Router>
+        </MemoryRouter>
       </Provider>,
     );
     expect(history.location.pathname).toBe('/access/request');

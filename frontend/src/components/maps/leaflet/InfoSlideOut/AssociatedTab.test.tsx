@@ -8,7 +8,7 @@ import { createMemoryHistory } from 'history';
 import * as React from 'react';
 import { FaPlusSquare } from 'react-icons/fa';
 import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
@@ -30,9 +30,9 @@ const addAssociatedBuildingLink = (
 const AsscParcelsTab = (parcels: IParcel[]) => {
   return (
     <Provider store={store}>
-      <Router history={history}>
+      <MemoryRouter initialEntries={[history.location]}>
         <AssociatedParcelsList parcels={parcels} />
-      </Router>
+      </MemoryRouter>
     </Provider>
   );
 };
@@ -40,13 +40,13 @@ const AsscParcelsTab = (parcels: IParcel[]) => {
 const AsscBuildingsTab = (propertyInfo: IParcel | null, canEditProperty: boolean) => {
   return (
     <Provider store={store}>
-      <Router history={history}>
+      <MemoryRouter initialEntries={[history.location]}>
         <AssociatedBuildingsList
           propertyInfo={propertyInfo}
           canEditDetails={canEditProperty}
           addAssociatedBuildingLink={addAssociatedBuildingLink}
         />
-      </Router>
+      </MemoryRouter>
     </Provider>
   );
 };

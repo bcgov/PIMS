@@ -4,7 +4,7 @@ import * as reducerTypes from 'constants/reducerTypes';
 import { createMemoryHistory } from 'history';
 import React from 'react';
 import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import renderer from 'react-test-renderer';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
@@ -30,9 +30,9 @@ describe('login error page', () => {
     const tree = renderer
       .create(
         <Provider store={store}>
-          <Router history={history}>
+          <MemoryRouter initialEntries={[history.location]}>
             <IENotSupportedPage></IENotSupportedPage>
-          </Router>
+          </MemoryRouter>
         </Provider>,
       )
       .toJSON();
