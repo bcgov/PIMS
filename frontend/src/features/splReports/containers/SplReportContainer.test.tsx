@@ -8,7 +8,7 @@ import { createMemoryHistory } from 'history';
 import React from 'react';
 import { act } from 'react-dom/test-utils';
 import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
@@ -47,12 +47,7 @@ const mockApi = ((useProjectSnapshotApi as unknown) as jest.Mock<
 
 const mockStore = configureMockStore([thunk]);
 
-const history = () =>
-  createMemoryHistory({
-    getUserConfirmation: (message, callback) => {
-      callback(true);
-    },
-  });
+const history = createMemoryHistory();
 const defaultReport: IReport = {
   id: 1,
   name: 'report 1',
@@ -89,7 +84,7 @@ const renderContainer = () =>
         lookupCode: { lookupCodes: [] },
       })}
     >
-      <Router history={history()}>
+      <MemoryRouter initialEntries={[history.location]}>
         <ToastContainer
           autoClose={5000}
           hideProgressBar
@@ -99,7 +94,7 @@ const renderContainer = () =>
           pauseOnFocusLoss={false}
         />
         <SplReportContainer />,
-      </Router>
+      </MemoryRouter>
     </Provider>,
   );
 

@@ -5,7 +5,7 @@ import MockAdapter from 'axios-mock-adapter';
 import { createMemoryHistory } from 'history';
 import React from 'react';
 import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
@@ -46,9 +46,9 @@ const props = { data: getItems(), row: { original: { id: '1', isDisabled: false 
 const testRender = (store: any, props: any) =>
   render(
     <Provider store={store}>
-      <Router history={history}>
+      <MemoryRouter initialEntries={[history.location]}>
         <RowActions {...{ ...(props as any) }} />
-      </Router>
+      </MemoryRouter>
     </Provider>,
   );
 

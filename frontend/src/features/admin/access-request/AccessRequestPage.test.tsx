@@ -11,7 +11,7 @@ import { Formik } from 'formik';
 import { createMemoryHistory } from 'history';
 import React from 'react';
 import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { IGenericNetworkAction, initialAccessRequestState } from 'store';
@@ -80,9 +80,9 @@ describe('AccessRequestPage functionality', () => {
   const testRender = () =>
     render(
       <Provider store={successStore}>
-        <Router history={history}>
+        <MemoryRouter initialEntries={[history.location]}>
           <AccessRequestPage />
-        </Router>
+        </MemoryRouter>
       </Provider>,
     );
   it('renders RequestAccessPage correctly', () => {
@@ -93,9 +93,9 @@ describe('AccessRequestPage functionality', () => {
   describe('component functionality when requestAccess status is 200 and fetching is false', () => {
     const componentRender = mount(
       <Provider store={successStore}>
-        <Router history={history}>
+        <MemoryRouter initialEntries={[history.location]}>
           <AccessRequestPage />
-        </Router>
+        </MemoryRouter>
       </Provider>,
     );
 
@@ -170,9 +170,9 @@ describe('AccessRequestPage functionality', () => {
   it('does not show success message by default', () => {
     const component = mount(
       <Provider store={store}>
-        <Router history={history}>
+        <MemoryRouter initialEntries={[history.location]}>
           <AccessRequestPage />
-        </Router>
+        </MemoryRouter>
       </Provider>,
     );
     expect(component.find('div.alert').isEmpty).toBeTruthy();
