@@ -59,7 +59,11 @@ export const UsersFilterBar: React.FC<IProps> = ({
           placeholder="Enter an Agency"
         />
       </Col>
-      <Col className="bar-item" md="auto">
+      <Col
+        className="bar-item"
+        md="auto"
+        style={{ marginLeft: '-12px', marginRight: '10px', marginTop: '2px' }}
+      >
         <Select field="role" placeholder="Role" options={roleOptions} className="input" />
       </Col>
     </FilterBar>

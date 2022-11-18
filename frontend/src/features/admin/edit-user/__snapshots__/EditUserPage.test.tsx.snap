@@ -175,6 +175,7 @@ exports[`Edit user page EditUserPage renders 1`] = `
           </div>
           <div
             class="col-md-auto"
+            style="padding: 0px;"
           >
             <select
               class="form-select form-control"
@@ -248,6 +249,7 @@ exports[`Edit user page EditUserPage renders 1`] = `
               />
               <div
                 class="col-md-auto"
+                style="padding: 0px;"
               >
                 <select
                   class="form-select form-control"

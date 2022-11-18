@@ -84,7 +84,7 @@ exports[`building review page renders correctly 1`] = `
             <div style=\\"padding-right: 0px;\\" class=\\"col-md-auto\\">
               <div controlid=\\"input-address.provinceId\\" style=\\"align-items: center;\\" class=\\"row\\">
                 <div class=\\"col-md-auto\\"></div>
-                <div class=\\"col-md-auto\\"><select name=\\"address.provinceId\\" disabled=\\"\\" class=\\"form-select form-control\\">
+                <div style=\\"padding: 0px;\\" class=\\"col-md-auto\\"><select name=\\"address.provinceId\\" disabled=\\"\\" class=\\"form-select form-control\\">
                     <option value=\\"\\">Must Select One</option>
                   </select></div>
               </div>
@@ -182,7 +182,7 @@ exports[`building review page renders correctly 1`] = `
               <div class=\\"input-group required disabled\\">
                 <div class=\\"input-group-content\\">
                   <div class=\\"\\">
-                    <div><input name=\\"totalArea\\" style=\\"border: 0px;\\" disabled=\\"\\" type=\\"number\\" id=\\"input-totalArea\\" class=\\"form-control\\" value=\\"\\"></div>
+                    <div><input name=\\"totalArea\\" disabled=\\"\\" type=\\"number\\" id=\\"input-totalArea\\" class=\\"form-control\\" value=\\"\\"></div>
                   </div>
                 </div>
                 <div class=\\"input-group\\"><span class=\\"append-disabled input-group-text\\">Sq. M</span></div>
@@ -195,7 +195,7 @@ exports[`building review page renders correctly 1`] = `
               <div class=\\"input-group required disabled\\">
                 <div class=\\"input-group-content\\">
                   <div class=\\"\\">
-                    <div><input name=\\"rentableArea\\" style=\\"border: 0px;\\" disabled=\\"\\" type=\\"number\\" id=\\"input-rentableArea\\" class=\\"form-control\\" value=\\"\\"></div>
+                    <div><input name=\\"rentableArea\\" disabled=\\"\\" type=\\"number\\" id=\\"input-rentableArea\\" class=\\"form-control\\" value=\\"\\"></div>
                   </div>
                 </div>
                 <div class=\\"input-group\\"><span class=\\"append-disabled input-group-text\\">Sq. M</span></div>

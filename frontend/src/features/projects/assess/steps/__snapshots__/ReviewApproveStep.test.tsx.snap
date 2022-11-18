@@ -182,6 +182,7 @@ exports[`Review Approve Step renders correctly 1`] = `
             />
             <div
               class="col-md-auto"
+              style="padding: 0px;"
             >
               <select
                 class="form-select form-control"
