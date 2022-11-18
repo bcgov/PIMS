@@ -5,7 +5,7 @@ import * as reducerTypes from 'constants/reducerTypes';
 import { createMemoryHistory } from 'history';
 import React from 'react';
 import { Provider } from 'react-redux';
-import { Router } from 'react-router';
+import { MemoryRouter } from 'react-router';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
@@ -39,9 +39,9 @@ const store = mockStore({
 it('renders correctly', () => {
   const { asFragment } = render(
     <Provider store={store}>
-      <Router history={history}>
+      <MemoryRouter initialEntries={[history.location]}>
         <EditAdminArea name="test" />
-      </Router>
+      </MemoryRouter>
     </Provider>,
   );
   expect(asFragment()).toMatchSnapshot();

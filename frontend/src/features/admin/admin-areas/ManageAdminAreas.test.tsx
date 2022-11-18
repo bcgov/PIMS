@@ -8,7 +8,7 @@ import * as reducerTypes from 'constants/reducerTypes';
 import { createMemoryHistory } from 'history';
 import React from 'react';
 import { Provider } from 'react-redux';
-import { Router } from 'react-router';
+import { MemoryRouter } from 'react-router';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
@@ -53,9 +53,9 @@ it('renders correctly', () => {
   mockAxios.onAny().reply(200, { items: [{ name: 'test' }] });
   const { asFragment } = render(
     <Provider store={store}>
-      <Router history={history}>
+      <MemoryRouter initialEntries={[history.location]}>
         <ManageAdminAreas />
-      </Router>
+      </MemoryRouter>
     </Provider>,
   );
   expect(asFragment()).toMatchSnapshot();
@@ -95,9 +95,9 @@ xit('displays items in table', () => {
 
   const { getByText } = render(
     <Provider store={store}>
-      <Router history={history}>
+      <MemoryRouter initialEntries={[history.location]}>
         <ManageAdminAreas />
-      </Router>
+      </MemoryRouter>
     </Provider>,
   );
   expect(getByText('Test 1')).toBeInTheDocument();
@@ -107,9 +107,9 @@ xit('displays items in table', () => {
 it('admin areas populated correctly as filter option', () => {
   const { container, getByText } = render(
     <Provider store={store}>
-      <Router history={history}>
+      <MemoryRouter initialEntries={[history.location]}>
         <ManageAdminAreas />
-      </Router>
+      </MemoryRouter>
     </Provider>,
   );
   const nameFilter = container.querySelector('input[name="id"]');
@@ -121,9 +121,9 @@ it('admin areas populated correctly as filter option', () => {
 it('displays tooltip corrrectly', () => {
   const { container, getByText } = render(
     <Provider store={store}>
-      <Router history={history}>
+      <MemoryRouter initialEntries={[history.location]}>
         <ManageAdminAreas />
-      </Router>
+      </MemoryRouter>
     </Provider>,
   );
   const toolTip = container.querySelector('svg[class="tooltip-icon"]');
