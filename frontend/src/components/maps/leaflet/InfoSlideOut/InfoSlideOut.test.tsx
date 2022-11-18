@@ -3,13 +3,13 @@ import 'leaflet/dist/leaflet.css';
 
 import { useKeycloak } from '@react-keycloak/web';
 import { waitFor } from '@testing-library/dom';
+import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import Enzyme, { mount } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
 import { createMemoryHistory } from 'history';
 import { Map as LeafletMap } from 'leaflet';
 import * as React from 'react';
 import { Button } from 'react-bootstrap';
-import { Map as ReactLeafletMap, MapProps } from 'react-leaflet';
+import { MapContainer as ReactLeafletMap } from 'react-leaflet';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
@@ -33,7 +33,7 @@ const history = createMemoryHistory();
 const mockStore = configureMockStore([thunk]);
 const store = mockStore({});
 
-let mapRef: React.RefObject<ReactLeafletMap<MapProps, LeafletMap>> | undefined;
+let mapRef: React.RefObject<LeafletMap> | undefined;
 
 const MapComponent = () => {
   const [open, setOpen] = React.useState(false);

@@ -20,7 +20,7 @@ exports[`renders correctly 1`] = `
       className="ProjectDraftForm container-fluid"
     >
       <div
-        className="form-row"
+        className="row"
       >
         <h3
           className="col-md-8"
@@ -32,83 +32,157 @@ exports[`renders correctly 1`] = `
         />
       </div>
       <div
-        className="col-md-10 form-row"
+        className="align-items-center row"
+        style={
+          Object {
+            "marginBottom": "5px",
+          }
+        }
       >
         <label
-          className="col-md-2 form-label"
+          className="form-label"
         >
           Project No.
         </label>
         <div
-          className="col-md-2 form-group"
+          className="col-5"
         >
-          <input
-            className="form-control"
-            disabled={true}
-            id="input-projectNumber"
-            name="projectNumber"
-            onBlur={[Function]}
-            onChange={[Function]}
-            onFocus={[Function]}
-            onMouseOut={[Function]}
-            onMouseOver={[Function]}
-            placeholder="SPP-XXXXXX"
-            value=""
-          />
+          <div
+            className="col-md-2 row"
+            controlid="input-projectNumber"
+            style={
+              Object {
+                "alignItems": "center",
+              }
+            }
+          >
+            <div
+              className="col-md-auto"
+            >
+              <div
+                onBlur={[Function]}
+                onFocus={[Function]}
+                onMouseOut={[Function]}
+                onMouseOver={[Function]}
+              >
+                <input
+                  className="form-control"
+                  disabled={true}
+                  name="projectNumber"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  placeholder="SPP-XXXXXX"
+                  style={
+                    Object {
+                      "width": "200px",
+                    }
+                  }
+                  value=""
+                />
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <div
-        className="form-row"
+        className="align-items-center row"
+        style={
+          Object {
+            "marginBottom": "5px",
+          }
+        }
       >
-        <div
-          className="required col-md-10 form-group"
+        <label
+          className="form-label"
         >
-          <label
-            className="form-label"
-            htmlFor="input-name"
+          Name
+        </label>
+        <div
+          className="col-5"
+        >
+          <div
+            className="required row"
+            controlid="input-name"
+            style={
+              Object {
+                "alignItems": "center",
+              }
+            }
           >
-            Name
-          </label>
-          <input
-            className="col-md-5 form-control"
-            data-testid="project-name"
-            disabled={true}
-            id="input-name"
-            name="name"
-            onBlur={[Function]}
-            onChange={[Function]}
-            onFocus={[Function]}
-            onMouseOut={[Function]}
-            onMouseOver={[Function]}
-            value=""
-          />
+            <div
+              className="col-md-auto"
+            >
+              <div
+                onBlur={[Function]}
+                onFocus={[Function]}
+                onMouseOut={[Function]}
+                onMouseOver={[Function]}
+              >
+                <input
+                  className="form-control"
+                  data-testid="project-name"
+                  disabled={true}
+                  name="name"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  value=""
+                />
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <div
-        className="form-row"
+        className="row"
+        style={
+          Object {
+            "marginBottom": "5px",
+          }
+        }
       >
-        <div
-          className="col-md-10 form-group"
+        <label
+          className="form-label"
         >
-          <label
-            className="form-label"
-            htmlFor="input-description"
+          Description
+        </label>
+        <div
+          className="col-md-auto"
+        >
+          <div
+            className="col-md-10 row"
+            controlid="input-description"
+            style={
+              Object {
+                "alignItems": "center",
+              }
+            }
           >
-            Description
-          </label>
-          <textarea
-            className="col-md-auto form-control"
-            data-testid="project-description"
-            disabled={true}
-            id="input-description"
-            name="description"
-            onBlur={[Function]}
-            onChange={[Function]}
-            onFocus={[Function]}
-            onMouseOut={[Function]}
-            onMouseOver={[Function]}
-            value=""
-          />
+            <div
+              className="col-md-auto"
+            >
+              <div
+                onBlur={[Function]}
+                onFocus={[Function]}
+                onMouseOut={[Function]}
+                onMouseOver={[Function]}
+              >
+                <textarea
+                  className="col-md-auto form-control"
+                  data-testid="project-description"
+                  disabled={true}
+                  name="description"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  style={
+                    Object {
+                      "width": "500px",
+                    }
+                  }
+                  value=""
+                />
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -116,43 +190,76 @@ exports[`renders correctly 1`] = `
       className="UpdateInfoForm container-fluid"
     >
       <div
-        className="form-row"
+        className="row"
+        style={
+          Object {
+            "alignItems": "center",
+          }
+        }
       >
-        <label
-          className="form-label col-form-label col-md-2"
-        >
-          Assign Tier
-        </label>
         <div
-          className="required col-md-1 form-group"
+          className="col-md-2"
         >
-          <select
-            className="form-select form-control"
-            disabled={true}
-            id="input-tierLevelId"
-            name="tierLevelId"
-            onBlur={[Function]}
-            onChange={[Function]}
-            required={true}
-            value={1}
+          <label
+            className="form-label"
           >
-            <option
-              value=""
-            >
-              Must Select One
-            </option>
-          </select>
+            Assign Tier
+          </label>
         </div>
         <div
-          className="c0"
+          className="col-md-auto"
         >
-          <small>
-            Tier 1: Properties with a value less than $1M.
-          </small>
+          <div
+            className="required col-md-1 row"
+            controlid="input-tierLevelId"
+            style={
+              Object {
+                "alignItems": "center",
+              }
+            }
+          >
+            <div
+              className="col-md-auto"
+            />
+            <div
+              className="col-md-auto"
+              style={
+                Object {
+                  "padding": 0,
+                }
+              }
+            >
+              <select
+                className="form-select form-control"
+                disabled={true}
+                name="tierLevelId"
+                onBlur={[Function]}
+                onChange={[Function]}
+                required={true}
+                value={1}
+              >
+                <option
+                  value=""
+                >
+                  Must Select One
+                </option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div
+          className="col-md-auto"
+        >
+          <div
+            className="c0"
+          >
+            <small>
+              Tier 1: Properties with a value less than $1M.
+            </small>
+          </div>
         </div>
       </div>
       <div
-        className="form-row"
         style={
           Object {
             "alignItems": "unset",
@@ -165,9 +272,7 @@ exports[`renders correctly 1`] = `
           Financial Information
         </h3>
       </div>
-      <div
-        className="form-row"
-      >
+      <div>
         <h6
           className="col-md-12"
           style={
@@ -184,13 +289,13 @@ exports[`renders correctly 1`] = `
         </h6>
       </div>
       <div
-        className="form-row"
+        className="row"
       >
         <div
           className="col-md-4"
         >
           <div
-            className="form-row"
+            className="align-items-center row"
           >
             <label
               className="form-label col-form-label col-md-4"
@@ -198,27 +303,40 @@ exports[`renders correctly 1`] = `
               Assessed Value
             </label>
             <div
-              className="required form-group"
-              md={6}
+              className="col-md-auto"
             >
               <div
-                className="input-tooltip-wrapper"
+                className="required col-md-6"
+                style={
+                  Object {
+                    "border": "none",
+                  }
+                }
               >
-                <input
-                  className="form-control input-number"
-                  disabled={true}
-                  name="assessed"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  placeholder=""
-                  required={true}
-                  value=""
-                />
+                <div
+                  className="input-tooltip-wrapper"
+                >
+                  <input
+                    className="form-control input-number"
+                    disabled={true}
+                    name="assessed"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    placeholder=""
+                    required={true}
+                    style={
+                      Object {
+                        "width": "200px",
+                      }
+                    }
+                    value=""
+                  />
+                </div>
               </div>
             </div>
           </div>
           <div
-            className="form-row"
+            className="align-items-center row"
           >
             <label
               className="form-label col-form-label col-md-4"
@@ -226,22 +344,35 @@ exports[`renders correctly 1`] = `
               Net Book Value
             </label>
             <div
-              className="required form-group"
-              md={6}
+              className="col-md-auto"
             >
               <div
-                className="input-tooltip-wrapper"
+                className="required col-md-6"
+                style={
+                  Object {
+                    "border": "none",
+                  }
+                }
               >
-                <input
-                  className="form-control input-number"
-                  disabled={true}
-                  name="netBook"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  placeholder=""
-                  required={true}
-                  value=""
-                />
+                <div
+                  className="input-tooltip-wrapper"
+                >
+                  <input
+                    className="form-control input-number"
+                    disabled={true}
+                    name="netBook"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    placeholder=""
+                    required={true}
+                    style={
+                      Object {
+                        "width": "200px",
+                      }
+                    }
+                    value=""
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -250,7 +381,7 @@ exports[`renders correctly 1`] = `
           className="col-md-4"
         >
           <div
-            className="form-row"
+            className="align-items-center row"
           >
             <label
               className="form-label col-form-label col-md-4"
@@ -258,27 +389,40 @@ exports[`renders correctly 1`] = `
               Estimated Market Value
             </label>
             <div
-              className="required form-group"
-              md={6}
+              className="col-md-auto"
             >
               <div
-                className="input-tooltip-wrapper"
+                className="required col-md-6"
+                style={
+                  Object {
+                    "border": "none",
+                  }
+                }
               >
-                <input
-                  className="form-control input-number"
-                  disabled={true}
-                  name="market"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  placeholder=""
-                  required={true}
-                  value=""
-                />
+                <div
+                  className="input-tooltip-wrapper"
+                >
+                  <input
+                    className="form-control input-number"
+                    disabled={true}
+                    name="market"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    placeholder=""
+                    required={true}
+                    style={
+                      Object {
+                        "width": "200px",
+                      }
+                    }
+                    value=""
+                  />
+                </div>
               </div>
             </div>
           </div>
           <div
-            className="form-row"
+            className="align-items-center row"
           >
             <label
               className="form-label col-form-label col-md-4"
@@ -286,21 +430,34 @@ exports[`renders correctly 1`] = `
               Appraised Value
             </label>
             <div
-              className="form-group"
-              md={6}
+              className="col-md-auto"
             >
               <div
-                className="input-tooltip-wrapper"
+                className="col-md-6"
+                style={
+                  Object {
+                    "border": "none",
+                  }
+                }
               >
-                <input
-                  className="form-control input-number"
-                  disabled={true}
-                  name="appraised"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  placeholder=""
-                  value=""
-                />
+                <div
+                  className="input-tooltip-wrapper"
+                >
+                  <input
+                    className="form-control input-number"
+                    disabled={true}
+                    name="appraised"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    placeholder=""
+                    style={
+                      Object {
+                        "width": "200px",
+                      }
+                    }
+                    value=""
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -309,7 +466,7 @@ exports[`renders correctly 1`] = `
           className="col-md-4"
         >
           <div
-            className="form-row"
+            className="align-items-center row"
           >
             <label
               className="form-label col-form-label col-md-4"
@@ -317,26 +474,39 @@ exports[`renders correctly 1`] = `
               Estimated Sales Costs
             </label>
             <div
-              className="form-group"
-              md={6}
+              className="col-md-auto"
             >
               <div
-                className="input-tooltip-wrapper"
+                className="col-md-6"
+                style={
+                  Object {
+                    "border": "none",
+                  }
+                }
               >
-                <input
-                  className="form-control input-number"
-                  disabled={true}
-                  name="salesCost"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  placeholder=""
-                  value=""
-                />
+                <div
+                  className="input-tooltip-wrapper"
+                >
+                  <input
+                    className="form-control input-number"
+                    disabled={true}
+                    name="salesCost"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    placeholder=""
+                    style={
+                      Object {
+                        "width": "200px",
+                      }
+                    }
+                    value=""
+                  />
+                </div>
               </div>
             </div>
           </div>
           <div
-            className="form-row"
+            className="align-items-center row"
           >
             <label
               className="form-label col-form-label col-md-4"
@@ -344,28 +514,41 @@ exports[`renders correctly 1`] = `
               Estimated Program Recovery Fees
             </label>
             <div
-              className="form-group"
-              md={6}
+              className="col-md-auto"
             >
               <div
-                className="input-tooltip-wrapper"
+                className="col-md-6"
+                style={
+                  Object {
+                    "border": "none",
+                  }
+                }
               >
-                <input
-                  className="form-control input-number"
-                  disabled={true}
-                  name="programCost"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  placeholder=""
-                  value=""
-                />
+                <div
+                  className="input-tooltip-wrapper"
+                >
+                  <input
+                    className="form-control input-number"
+                    disabled={true}
+                    name="programCost"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    placeholder=""
+                    style={
+                      Object {
+                        "width": "200px",
+                      }
+                    }
+                    value=""
+                  />
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
       <div
-        className="form-row"
+        className="row"
       >
         <h6
           className="col-md-12"
@@ -390,423 +573,387 @@ exports[`renders correctly 1`] = `
           className="ScrollContainer"
         >
           <div
-            className="table"
-            role="table"
             style={
               Object {
-                "minWidth": undefined,
+                "marginLeft": 0,
               }
             }
           >
             <div
-              className="thead thead-light"
+              className="table"
+              role="table"
+              style={
+                Object {
+                  "minWidth": undefined,
+                }
+              }
             >
               <div
-                className="tr"
-                role="row"
-                style={
-                  Object {
-                    "display": "flex",
-                    "flex": "1 0 auto",
-                    "minWidth": "790px",
-                  }
-                }
+                className="thead thead-light"
               >
                 <div
-                  className="th"
-                  colSpan={1}
-                  role="columnheader"
+                  className="tr"
+                  role="row"
                   style={
                     Object {
-                      "alignItems": "center",
-                      "boxSizing": "border-box",
                       "display": "flex",
-                      "flex": "100 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "30px",
-                      "textAlign": "left",
-                      "width": "100px",
+                      "flex": "1 0 auto",
+                      "minWidth": "790px",
                     }
                   }
                 >
                   <div
-                    className="sortable-column"
-                  >
-                    Agency
-                    <span
-                      style={
-                        Object {
-                          "flex": "1 1 auto",
-                        }
+                    className="th"
+                    colSpan={1}
+                    role="columnheader"
+                    style={
+                      Object {
+                        "alignItems": "center",
+                        "boxSizing": "border-box",
+                        "display": "flex",
+                        "flex": "100 0 auto",
+                        "justifyContent": "flex-start",
+                        "minWidth": "30px",
+                        "textAlign": "left",
+                        "width": "100px",
                       }
-                    />
+                    }
+                  >
+                    <div
+                      className="sortable-column"
+                    >
+                      Agency
+                      <span />
+                    </div>
                   </div>
-                </div>
-                <div
-                  className="th"
-                  colSpan={1}
-                  role="columnheader"
-                  style={
-                    Object {
-                      "alignItems": "center",
-                      "boxSizing": "border-box",
-                      "display": "flex",
-                      "flex": "100 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "30px",
-                      "textAlign": "left",
-                      "width": "100px",
-                    }
-                  }
-                >
                   <div
-                    className="sortable-column"
-                  >
-                    Name
-                    <span
-                      style={
-                        Object {
-                          "flex": "1 1 auto",
-                        }
+                    className="th"
+                    colSpan={1}
+                    role="columnheader"
+                    style={
+                      Object {
+                        "alignItems": "center",
+                        "boxSizing": "border-box",
+                        "display": "flex",
+                        "flex": "100 0 auto",
+                        "justifyContent": "flex-start",
+                        "minWidth": "30px",
+                        "textAlign": "left",
+                        "width": "100px",
                       }
-                    />
+                    }
+                  >
+                    <div
+                      className="sortable-column"
+                    >
+                      Name
+                      <span />
+                    </div>
                   </div>
-                </div>
-                <div
-                  className="th"
-                  colSpan={1}
-                  role="columnheader"
-                  style={
-                    Object {
-                      "alignItems": "center",
-                      "boxSizing": "border-box",
-                      "display": "flex",
-                      "flex": "100 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "30px",
-                      "textAlign": "left",
-                      "width": "100px",
-                    }
-                  }
-                >
                   <div
-                    className="sortable-column"
-                  >
-                    Civic Address
-                    <span
-                      style={
-                        Object {
-                          "flex": "1 1 auto",
-                        }
+                    className="th"
+                    colSpan={1}
+                    role="columnheader"
+                    style={
+                      Object {
+                        "alignItems": "center",
+                        "boxSizing": "border-box",
+                        "display": "flex",
+                        "flex": "100 0 auto",
+                        "justifyContent": "flex-start",
+                        "minWidth": "30px",
+                        "textAlign": "left",
+                        "width": "100px",
                       }
-                    />
+                    }
+                  >
+                    <div
+                      className="sortable-column"
+                    >
+                      Civic Address
+                      <span />
+                    </div>
                   </div>
-                </div>
-                <div
-                  className="th"
-                  colSpan={1}
-                  role="columnheader"
-                  style={
-                    Object {
-                      "alignItems": "center",
-                      "boxSizing": "border-box",
-                      "display": "flex",
-                      "flex": "140 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "30px",
-                      "textAlign": "left",
-                      "width": "140px",
-                    }
-                  }
-                >
                   <div
-                    className="sortable-column"
-                  >
-                    Classification
-                    <span
-                      style={
-                        Object {
-                          "flex": "1 1 auto",
-                        }
+                    className="th"
+                    colSpan={1}
+                    role="columnheader"
+                    style={
+                      Object {
+                        "alignItems": "center",
+                        "boxSizing": "border-box",
+                        "display": "flex",
+                        "flex": "140 0 auto",
+                        "justifyContent": "flex-start",
+                        "minWidth": "30px",
+                        "textAlign": "left",
+                        "width": "140px",
                       }
-                    />
+                    }
+                  >
+                    <div
+                      className="sortable-column"
+                    >
+                      Classification
+                      <span />
+                    </div>
                   </div>
-                </div>
-                <div
-                  className="th"
-                  colSpan={1}
-                  role="columnheader"
-                  style={
-                    Object {
-                      "alignItems": "center",
-                      "boxSizing": "border-box",
-                      "display": "flex",
-                      "flex": "100 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "30px",
-                      "textAlign": "left",
-                      "width": "100px",
-                    }
-                  }
-                >
                   <div
-                    className="sortable-column"
-                  >
-                    Current Zoning Code
-                    <span
-                      style={
-                        Object {
-                          "flex": "1 1 auto",
-                        }
+                    className="th"
+                    colSpan={1}
+                    role="columnheader"
+                    style={
+                      Object {
+                        "alignItems": "center",
+                        "boxSizing": "border-box",
+                        "display": "flex",
+                        "flex": "100 0 auto",
+                        "justifyContent": "flex-start",
+                        "minWidth": "30px",
+                        "textAlign": "left",
+                        "width": "100px",
                       }
-                    />
+                    }
+                  >
+                    <div
+                      className="sortable-column"
+                    >
+                      Current Zoning Code
+                      <span />
+                    </div>
                   </div>
-                </div>
-                <div
-                  className="th"
-                  colSpan={1}
-                  role="columnheader"
-                  style={
-                    Object {
-                      "alignItems": "center",
-                      "boxSizing": "border-box",
-                      "display": "flex",
-                      "flex": "100 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "30px",
-                      "textAlign": "left",
-                      "width": "100px",
-                    }
-                  }
-                >
                   <div
-                    className="sortable-column"
-                  >
-                    Other Projects
-                    <span
-                      style={
-                        Object {
-                          "flex": "1 1 auto",
-                        }
+                    className="th"
+                    colSpan={1}
+                    role="columnheader"
+                    style={
+                      Object {
+                        "alignItems": "center",
+                        "boxSizing": "border-box",
+                        "display": "flex",
+                        "flex": "100 0 auto",
+                        "justifyContent": "flex-start",
+                        "minWidth": "30px",
+                        "textAlign": "left",
+                        "width": "100px",
                       }
-                    />
+                    }
+                  >
+                    <div
+                      className="sortable-column"
+                    >
+                      Other Projects
+                      <span />
+                    </div>
                   </div>
-                </div>
-                <div
-                  className="th"
-                  colSpan={1}
-                  role="columnheader"
-                  style={
-                    Object {
-                      "alignItems": "center",
-                      "boxSizing": "border-box",
-                      "display": "flex",
-                      "flex": "145 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "145px",
-                      "textAlign": "left",
-                      "width": "145px",
-                    }
-                  }
-                >
                   <div
-                    className="sortable-column"
-                  >
-                    Net Book Value
-                    <span
-                      style={
-                        Object {
-                          "flex": "1 1 auto",
-                        }
+                    className="th"
+                    colSpan={1}
+                    role="columnheader"
+                    style={
+                      Object {
+                        "alignItems": "center",
+                        "boxSizing": "border-box",
+                        "display": "flex",
+                        "flex": "145 0 auto",
+                        "justifyContent": "flex-start",
+                        "minWidth": "145px",
+                        "textAlign": "left",
+                        "width": "145px",
                       }
-                    />
+                    }
+                  >
+                    <div
+                      className="sortable-column"
+                    >
+                      Net Book Value
+                      <span />
+                    </div>
                   </div>
-                </div>
-                <div
-                  className="th"
-                  colSpan={1}
-                  role="columnheader"
-                  style={
-                    Object {
-                      "alignItems": "center",
-                      "boxSizing": "border-box",
-                      "display": "flex",
-                      "flex": "145 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "145px",
-                      "textAlign": "left",
-                      "width": "145px",
-                    }
-                  }
-                >
                   <div
-                    className="sortable-column"
-                  >
-                    Assessed Land
-                    <span
-                      style={
-                        Object {
-                          "flex": "1 1 auto",
-                        }
+                    className="th"
+                    colSpan={1}
+                    role="columnheader"
+                    style={
+                      Object {
+                        "alignItems": "center",
+                        "boxSizing": "border-box",
+                        "display": "flex",
+                        "flex": "145 0 auto",
+                        "justifyContent": "flex-start",
+                        "minWidth": "145px",
+                        "textAlign": "left",
+                        "width": "145px",
                       }
-                    />
+                    }
+                  >
+                    <div
+                      className="sortable-column"
+                    >
+                      Assessed Land
+                      <span />
+                    </div>
                   </div>
-                </div>
-                <div
-                  className="th"
-                  colSpan={1}
-                  role="columnheader"
-                  style={
-                    Object {
-                      "alignItems": "center",
-                      "boxSizing": "border-box",
-                      "display": "flex",
-                      "flex": "145 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "145px",
-                      "textAlign": "left",
-                      "width": "145px",
-                    }
-                  }
-                >
                   <div
-                    className="sortable-column"
-                  >
-                    Assessment Year
-                    <span
-                      style={
-                        Object {
-                          "flex": "1 1 auto",
-                        }
+                    className="th"
+                    colSpan={1}
+                    role="columnheader"
+                    style={
+                      Object {
+                        "alignItems": "center",
+                        "boxSizing": "border-box",
+                        "display": "flex",
+                        "flex": "145 0 auto",
+                        "justifyContent": "flex-start",
+                        "minWidth": "145px",
+                        "textAlign": "left",
+                        "width": "145px",
                       }
-                    />
+                    }
+                  >
+                    <div
+                      className="sortable-column"
+                    >
+                      Assessment Year
+                      <span />
+                    </div>
                   </div>
-                </div>
-                <div
-                  className="th"
-                  colSpan={1}
-                  role="columnheader"
-                  style={
-                    Object {
-                      "alignItems": "center",
-                      "boxSizing": "border-box",
-                      "display": "flex",
-                      "flex": "145 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "145px",
-                      "textAlign": "left",
-                      "width": "145px",
-                    }
-                  }
-                >
                   <div
-                    className="sortable-column"
-                  >
-                    Assessed Building
-                    <span
-                      style={
-                        Object {
-                          "flex": "1 1 auto",
-                        }
+                    className="th"
+                    colSpan={1}
+                    role="columnheader"
+                    style={
+                      Object {
+                        "alignItems": "center",
+                        "boxSizing": "border-box",
+                        "display": "flex",
+                        "flex": "145 0 auto",
+                        "justifyContent": "flex-start",
+                        "minWidth": "145px",
+                        "textAlign": "left",
+                        "width": "145px",
                       }
-                    />
+                    }
+                  >
+                    <div
+                      className="sortable-column"
+                    >
+                      Assessed Building
+                      <span />
+                    </div>
                   </div>
-                </div>
-                <div
-                  className="th"
-                  colSpan={1}
-                  role="columnheader"
-                  style={
-                    Object {
-                      "alignItems": "center",
-                      "boxSizing": "border-box",
-                      "display": "flex",
-                      "flex": "60 0 auto",
-                      "justifyContent": "flex-start",
-                      "minWidth": "30px",
-                      "textAlign": "left",
-                      "width": "60px",
-                    }
-                  }
-                >
                   <div
-                    className="sortable-column"
-                  >
-                    Type
-                    <span
-                      style={
-                        Object {
-                          "flex": "1 1 auto",
-                        }
+                    className="th"
+                    colSpan={1}
+                    role="columnheader"
+                    style={
+                      Object {
+                        "alignItems": "center",
+                        "boxSizing": "border-box",
+                        "display": "flex",
+                        "flex": "60 0 auto",
+                        "justifyContent": "flex-start",
+                        "minWidth": "30px",
+                        "textAlign": "left",
+                        "width": "60px",
                       }
-                    />
+                    }
+                  >
+                    <div
+                      className="sortable-column"
+                    >
+                      Type
+                      <span />
+                    </div>
                   </div>
                 </div>
               </div>
+              <div
+                className="no-rows-message"
+              >
+                No rows to display
+              </div>
             </div>
             <div
-              className="no-rows-message"
-            >
-              No rows to display
-            </div>
+              className="table-toolbar"
+            />
           </div>
-          <div
-            className="table-toolbar"
-          />
         </div>
       </div>
     </div>
     <h3>
       Documentation
     </h3>
-    <h3>
-      Enhanced Referral Process Exemption
-      <svg
-        className="tooltip-icon"
-        fill="currentColor"
-        height="1em"
-        onBlur={[Function]}
-        onFocus={[Function]}
-        onMouseOut={[Function]}
-        onMouseOver={[Function]}
-        stroke="currentColor"
-        strokeWidth="0"
-        style={
-          Object {
-            "color": undefined,
-          }
-        }
-        viewBox="0 0 512 512"
-        width="1em"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"
-        />
-      </svg>
-    </h3>
     <div
-      className="ProjectExemptionRequestCheck form-row"
+      className="row"
+      style={
+        Object {
+          "alignItems": "center",
+        }
+      }
     >
       <div
-        className="form-group"
+        className="col-md-auto"
+      >
+        <h3>
+          Enhanced Referral Process Exemption
+        </h3>
+      </div>
+      <div
+        className="col-md-auto"
+      >
+        <div
+          onBlur={[Function]}
+          onFocus={[Function]}
+          onMouseOut={[Function]}
+          onMouseOver={[Function]}
+        >
+          <div>
+            <svg
+              className="tooltip-icon"
+              fill="currentColor"
+              height="1em"
+              stroke="currentColor"
+              strokeWidth="0"
+              style={
+                Object {
+                  "color": undefined,
+                }
+              }
+              viewBox="0 0 512 512"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"
+              />
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      className="ProjectExemptionRequestCheck"
+    >
+      <div
+        className=""
       >
         <div
           className="check-field"
         >
           <div
-            className="form-check"
+            className=""
           >
             <input
               checked={false}
-              className="form-check-input position-static"
+              className="form-check-input"
               disabled={true}
               id="input-exemptionRequested"
               name="exemptionRequested"
               onBlur={[Function]}
               onChange={[Function]}
               type="checkbox"
-              value={false}
+              value="false"
             />
           </div>
           <label
@@ -821,21 +968,19 @@ exports[`renders correctly 1`] = `
     <h3>
       Approval
     </h3>
-    <div
-      className="form-row"
-    >
+    <div>
       <div
-        className="required form-group"
+        className="required"
       >
         <div
           className="check-field"
         >
           <div
-            className="form-check"
+            className=""
           >
             <input
               checked={true}
-              className="form-check-input position-static"
+              className="form-check-input"
               disabled={true}
               id="input-confirmation"
               name="confirmation"
@@ -843,7 +988,7 @@ exports[`renders correctly 1`] = `
               onChange={[Function]}
               required={true}
               type="checkbox"
-              value={true}
+              value="true"
             />
           </div>
           <label
@@ -856,78 +1001,136 @@ exports[`renders correctly 1`] = `
       </div>
     </div>
     <div
-      className="ProjectNotes form-row"
+      className="ProjectNotes"
     >
       <div
-        className="col-md-10 form-group"
+        className="col-md-10"
       >
-        <label
-          className="form-label"
-          htmlFor="input-note"
+        <div
+          className="row"
+          style={
+            Object {
+              "alignItems": "center",
+            }
+          }
         >
-          Notes
-        </label>
-        <textarea
-          className="col-md-auto form-control"
-          disabled={true}
-          id="input-note"
-          name="note"
+          <div
+            className="col-md-auto"
+          >
+            <label
+              className="form-label"
+              htmlFor="input-note"
+              style={
+                Object {
+                  "maxWidth": "500px",
+                  "minWidth": "100px",
+                }
+              }
+            >
+              Notes
+            </label>
+          </div>
+          <div
+            className="col-md-auto"
+          />
+        </div>
+        <div
           onBlur={[Function]}
-          onChange={[Function]}
           onFocus={[Function]}
           onMouseOut={[Function]}
           onMouseOver={[Function]}
-          value=""
-        />
+        >
+          <textarea
+            className="col-md-auto form-control"
+            disabled={true}
+            id="input-note"
+            name="note"
+            onBlur={[Function]}
+            onChange={[Function]}
+            value=""
+          />
+        </div>
       </div>
     </div>
     <div
-      className="ProjectNotes form-row"
+      className="ProjectNotes"
     >
       <div
-        className="col-md-10 form-group"
+        className="col-md-10"
       >
-        <label
-          className="form-label"
-          htmlFor="input-publicNote"
-        >
-          Shared Notes
-          <svg
-            className="tooltip-icon"
-            fill="currentColor"
-            height="1em"
-            onBlur={[Function]}
-            onFocus={[Function]}
-            onMouseOut={[Function]}
-            onMouseOver={[Function]}
-            stroke="currentColor"
-            strokeWidth="0"
-            style={
-              Object {
-                "color": undefined,
-              }
+        <div
+          className="row"
+          style={
+            Object {
+              "alignItems": "center",
             }
-            viewBox="0 0 512 512"
-            width="1em"
-            xmlns="http://www.w3.org/2000/svg"
+          }
+        >
+          <div
+            className="col-md-auto"
           >
-            <path
-              d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"
-            />
-          </svg>
-        </label>
-        <textarea
-          className="col-md-auto form-control"
-          disabled={true}
-          id="input-publicNote"
-          name="publicNote"
+            <label
+              className="form-label"
+              htmlFor="input-publicNote"
+              style={
+                Object {
+                  "maxWidth": "500px",
+                  "minWidth": "100px",
+                }
+              }
+            >
+              Shared Notes
+            </label>
+          </div>
+          <div
+            className="col-md-auto"
+          >
+            <div
+              onBlur={[Function]}
+              onFocus={[Function]}
+              onMouseOut={[Function]}
+              onMouseOver={[Function]}
+            >
+              <div>
+                <svg
+                  className="tooltip-icon"
+                  fill="currentColor"
+                  height="1em"
+                  stroke="currentColor"
+                  strokeWidth="0"
+                  style={
+                    Object {
+                      "color": undefined,
+                    }
+                  }
+                  viewBox="0 0 512 512"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
           onBlur={[Function]}
-          onChange={[Function]}
           onFocus={[Function]}
           onMouseOut={[Function]}
           onMouseOver={[Function]}
-          value=""
-        />
+        >
+          <textarea
+            className="col-md-auto form-control"
+            disabled={true}
+            id="input-publicNote"
+            name="publicNote"
+            onBlur={[Function]}
+            onChange={[Function]}
+            value=""
+          />
+        </div>
       </div>
     </div>
     <label

@@ -2,31 +2,34 @@
 
 exports[`limited fast select renders correctly 1`] = `
 <div
-  className="form-group"
+  className=""
 >
-  <select
-    className="form-control"
-    id="input-TestField-fast"
-    name="TestField"
+  <div
     onBlur={[Function]}
-    onChange={[Function]}
     onFocus={[Function]}
     onMouseOut={[Function]}
     onMouseOver={[Function]}
-    type="number"
-    value={0}
   >
-    <option
-      hidden={true}
+    <select
+      className="form-control"
+      id="input-TestField-fast"
+      name="TestField"
+      onChange={[Function]}
+      type="number"
       value={0}
     >
-      zero
-    </option>
-    <option
-      value="1"
-    >
-      one
-    </option>
-  </select>
+      <option
+        hidden={true}
+        value={0}
+      >
+        zero
+      </option>
+      <option
+        value="1"
+      >
+        one
+      </option>
+    </select>
+  </div>
 </div>
 `;

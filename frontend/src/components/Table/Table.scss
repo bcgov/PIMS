@@ -20,6 +20,7 @@
     .tr-wrapper {
       border-bottom: 1px solid $table-color;
       .tr {
+        padding: 0;
         &:hover {
           background-color: $table-color;
         }

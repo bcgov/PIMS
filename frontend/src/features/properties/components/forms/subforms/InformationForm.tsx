@@ -5,7 +5,9 @@ import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { useMyAgencies } from 'hooks/useMyAgencies';
 import { FunctionComponent, useMemo } from 'react';
 import React from 'react';
+import { Col, Row } from 'react-bootstrap';
 import { mapSelectOptionWithParent } from 'utils';
+
 interface InformationFormProps {
   nameSpace?: string;
   disabled?: boolean;
@@ -49,37 +51,53 @@ const InformationForm: FunctionComponent<InformationFormProps> = (props: Informa
 
   return (
     <>
-      <Form.Row>
-        <Form.Label>Name</Form.Label>
-        <Input disabled={props.disabled} field={withNameSpace('name')} />
-      </Form.Row>
-      <Form.Row>
-        <Form.Label>Description</Form.Label>
-        <TextArea disabled={props.disabled} field={withNameSpace('description')} />
-      </Form.Row>
+      <Row>
+        <Col md="auto">
+          <Form.Label>Name</Form.Label>
+        </Col>
+        <Col md="auto">
+          <Input disabled={props.disabled} field={withNameSpace('name')} />
+        </Col>
+      </Row>
+      <Row>
+        <Col md="auto">
+          <Form.Label>Description</Form.Label>
+        </Col>
+        <Col md="auto">
+          <TextArea disabled={props.disabled} field={withNameSpace('description')} />
+        </Col>
+      </Row>
       {!props.wizard && (
-        <Form.Row>
-          <Form.Label>Classification</Form.Label>
-          <FastSelect
-            formikProps={formikProps}
-            disabled={props.disabled}
-            type="number"
-            placeholder="Must Select One"
-            field={withNameSpace('classificationId')}
-            options={props.classifications}
-          />
-        </Form.Row>
+        <Row>
+          <Col md="auto">
+            <Form.Label>Classification</Form.Label>
+          </Col>
+          <Col md="auto">
+            <FastSelect
+              formikProps={formikProps}
+              disabled={props.disabled}
+              type="number"
+              placeholder="Must Select One"
+              field={withNameSpace('classificationId')}
+              options={props.classifications}
+            />
+          </Col>
+        </Row>
       )}
-      <Form.Row>
-        <Form.Label>Agency</Form.Label>
-        <ParentSelect
-          field={withNameSpace('agencyId')}
-          options={myAgencies.map(c => mapSelectOptionWithParent(c, myAgencies))}
-          filterBy={['code', 'label', 'parent']}
-          disabled={props.disabled || (!props.isPropertyAdmin && !isUserAgencyAParent)}
-          convertValue={Number}
-        />
-      </Form.Row>
+      <Row>
+        <Col md="auto" style={{ marginRight: '15px' }}>
+          <Form.Label>Agency</Form.Label>
+        </Col>
+        <Col md="auto" style={{ marginRight: '10px' }}>
+          <ParentSelect
+            field={withNameSpace('agencyId')}
+            options={myAgencies.map(c => mapSelectOptionWithParent(c, myAgencies))}
+            filterBy={['code', 'label', 'parent']}
+            disabled={props.disabled || (!props.isPropertyAdmin && !isUserAgencyAParent)}
+            convertValue={Number}
+          />
+        </Col>
+      </Row>
     </>
   );
 };

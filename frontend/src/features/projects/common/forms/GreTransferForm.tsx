@@ -7,7 +7,7 @@ import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
 import useCodeLookups from 'hooks/useLookupCodes';
 import _ from 'lodash';
 import React, { Fragment, useMemo, useState } from 'react';
-import Form from 'react-bootstrap/Form';
+import { Col, Form, Row } from 'react-bootstrap';
 
 import { PrivateNotes, ProjectDraftForm, ProjectNotes, PublicNotes } from '../../common';
 import { PropertyListViewUpdate } from '../../common/components/PropertyListViewUpdate';
@@ -40,23 +40,25 @@ export const GreTransferForm = ({ canEdit }: { canEdit: boolean }) => {
       <ProjectDraftForm isReadOnly={canEdit} hideAgency={true} />
       <h3>Properties in the Project</h3>
       <p>Update Properties with New Agency Owner Name</p>
-      <Form.Row>
+      <Row>
         <Form.Label column md={2} htmlFor="agencyId-field">
           New Owning Agency
         </Form.Label>
-        <TypeaheadField
-          data-testid="transfer-to-agency"
-          options={agencyOptions}
-          name="agencyId"
-          labelKey="label"
-          paginate={false}
-          required
-          getOptionByValue={(value: number) => {
-            const options = _.filter(agencyOptions, { value: value?.toString() }) ?? [];
-            return options;
-          }}
-        />
-      </Form.Row>
+        <Col md="auto">
+          <TypeaheadField
+            data-testid="transfer-to-agency"
+            options={agencyOptions}
+            name="agencyId"
+            labelKey="label"
+            paginate={false}
+            required
+            getOptionByValue={(value: number) => {
+              const options = _.filter(agencyOptions, { value: value?.toString() }) ?? [];
+              return options;
+            }}
+          />
+        </Col>
+      </Row>
       <PropertyListViewUpdate
         disabled={!canEdit}
         field="properties"

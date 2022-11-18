@@ -2,7 +2,7 @@ import React from 'react';
 import { FaPlus } from 'react-icons/fa';
 
 import TooltipWrapper from '../TooltipWrapper';
-import { Button, ButtonProps } from '.';
+import { ButtonProps } from '.';
 
 interface IPlusButtonProps extends ButtonProps {
   /** set the text of the tooltip that appears on hover of the plus button */
@@ -15,10 +15,13 @@ interface IPlusButtonProps extends ButtonProps {
  * PlusButton displaying a plus button, used to add new items.
  * @param param0
  */
-const PlusButton: React.FC<IPlusButtonProps> = ({ toolId, toolText, ...props }) => {
+const PlusButton: React.FC<IPlusButtonProps> = props => {
+  const disabled = props.disabled || false;
   return (
-    <TooltipWrapper toolTipId={toolId} toolTip={toolText}>
-      <Button className="primary" {...props} icon={<FaPlus size={20} />} />
+    <TooltipWrapper toolTipId={props.toolId} toolTip={props.toolText}>
+      <div className="primary" onClick={disabled ? props.onClick : () => {}}>
+        <FaPlus size={20} />
+      </div>
     </TooltipWrapper>
   );
 };

@@ -28,17 +28,24 @@ exports[`Edit user page EditUserPage renders 1`] = `
           IDIR/BCeID
         </label>
         <div
-          class="form-group"
+          class="row"
+          controlid="input-username"
+          style="align-items: center;"
         >
-          <input
-            class="form-control"
-            data-testid="username"
-            id="input-username"
-            name="username"
-            readonly=""
-            type="text"
-            value="test.user"
-          />
+          <div
+            class="col-md-auto"
+          >
+            <div>
+              <input
+                class="form-control"
+                data-testid="username"
+                name="username"
+                readonly=""
+                type="text"
+                value="test.user"
+              />
+            </div>
+          </div>
         </div>
         <label
           class="label"
@@ -46,17 +53,24 @@ exports[`Edit user page EditUserPage renders 1`] = `
           Last Login
         </label>
         <div
-          class="form-group"
+          class="row"
+          controlid="input-lastLogin"
+          style="align-items: center;"
         >
-          <input
-            class="form-control"
-            data-testid="lastLogin"
-            id="input-lastLogin"
-            name="lastLogin"
-            readonly=""
-            type="text"
-            value=""
-          />
+          <div
+            class="col-md-auto"
+          >
+            <div>
+              <input
+                class="form-control"
+                data-testid="lastLogin"
+                name="lastLogin"
+                readonly=""
+                type="text"
+                value=""
+              />
+            </div>
+          </div>
         </div>
         <div
           class="row"
@@ -70,17 +84,24 @@ exports[`Edit user page EditUserPage renders 1`] = `
               First Name
             </label>
             <div
-              class="form-group"
+              class="row"
+              controlid="input-firstName"
+              style="align-items: center;"
             >
-              <input
-                class="form-control"
-                data-testid="firstName"
-                id="input-firstName"
-                name="firstName"
-                placeholder="Test"
-                type="text"
-                value="Test"
-              />
+              <div
+                class="col-md-auto"
+              >
+                <div>
+                  <input
+                    class="form-control"
+                    data-testid="firstName"
+                    name="firstName"
+                    placeholder="Test"
+                    type="text"
+                    value="Test"
+                  />
+                </div>
+              </div>
             </div>
           </div>
           <div
@@ -92,17 +113,24 @@ exports[`Edit user page EditUserPage renders 1`] = `
               Last Name
             </label>
             <div
-              class="form-group"
+              class="row"
+              controlid="input-lastName"
+              style="align-items: center;"
             >
-              <input
-                class="form-control"
-                data-testid="lastName"
-                id="input-lastName"
-                name="lastName"
-                placeholder="User"
-                type="text"
-                value="User"
-              />
+              <div
+                class="col-md-auto"
+              >
+                <div>
+                  <input
+                    class="form-control"
+                    data-testid="lastName"
+                    name="lastName"
+                    placeholder="User"
+                    type="text"
+                    value="User"
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -112,46 +140,62 @@ exports[`Edit user page EditUserPage renders 1`] = `
           Email
         </label>
         <div
-          class="form-group"
+          class="row"
+          controlid="input-email"
+          style="align-items: center;"
         >
-          <input
-            class="form-control"
-            data-testid="email"
-            id="input-email"
-            name="email"
-            placeholder="test@user.com"
-            type="email"
-            value="test@user.com"
-          />
+          <div
+            class="col-md-auto"
+          >
+            <div>
+              <input
+                class="form-control"
+                data-testid="email"
+                name="email"
+                placeholder="test@user.com"
+                type="email"
+                value="test@user.com"
+              />
+            </div>
+          </div>
         </div>
         <div
-          class="required form-group"
+          class="required row"
+          controlid="input-agency"
+          style="align-items: center;"
         >
-          <label
-            class="form-label"
-            for="input-agency"
+          <div
+            class="col-md-auto"
           >
-            Agency
-          </label>
-          <select
-            class="form-select form-control"
-            data-testid="agency"
-            id="input-agency"
-            name="agency"
-            required=""
+            <label
+              class="form-label"
+            >
+              Agency
+            </label>
+          </div>
+          <div
+            class="col-md-auto"
+            style="padding: 0px;"
           >
-            <option
-              value=""
+            <select
+              class="form-select form-control"
+              data-testid="agency"
+              name="agency"
+              required=""
             >
-              Please Select
-            </option>
-            <option
-              class="option"
-              value="1"
-            >
-              agencyVal
-            </option>
-          </select>
+              <option
+                value=""
+              >
+                Please Select
+              </option>
+              <option
+                class="option"
+                value="1"
+              >
+                agencyVal
+              </option>
+            </select>
+          </div>
         </div>
         <label
           class="label"
@@ -159,20 +203,27 @@ exports[`Edit user page EditUserPage renders 1`] = `
           Position
         </label>
         <div
-          class="form-group"
+          class="row"
+          controlid="input-position"
+          style="align-items: center;"
         >
-          <input
-            class="form-control"
-            data-testid="position"
-            id="input-position"
-            name="position"
-            placeholder="e.g) Director, Real Estate and Stakeholder Engagement"
-            type="text"
-            value=""
-          />
+          <div
+            class="col-md-auto"
+          >
+            <div>
+              <input
+                class="form-control"
+                data-testid="position"
+                name="position"
+                placeholder="e.g) Director, Real Estate and Stakeholder Engagement"
+                type="text"
+                value=""
+              />
+            </div>
+          </div>
         </div>
         <div
-          class="check-roles form-group"
+          class="check-roles"
         >
           <label
             class="form-label"
@@ -187,24 +238,35 @@ exports[`Edit user page EditUserPage renders 1`] = `
               Role Descriptions
             </a>
           </label>
-          <div
-            class="required form-group"
-          >
-            <select
-              class="form-select form-control"
-              data-testid="role"
-              id="input-roles"
-              multiple=""
-              name="roles"
-              required=""
+          <div>
+            <div
+              class="required row"
+              controlid="input-roles"
+              style="align-items: center;"
             >
-              <option
-                class="option"
-                value="1"
+              <div
+                class="col-md-auto"
+              />
+              <div
+                class="col-md-auto"
+                style="padding: 0px;"
               >
-                roleVal
-              </option>
-            </select>
+                <select
+                  class="form-select form-control"
+                  data-testid="role"
+                  multiple=""
+                  name="roles"
+                  required=""
+                >
+                  <option
+                    class="option"
+                    value="1"
+                  >
+                    roleVal
+                  </option>
+                </select>
+              </div>
+            </div>
           </div>
         </div>
         <label
@@ -213,33 +275,42 @@ exports[`Edit user page EditUserPage renders 1`] = `
           Notes
         </label>
         <div
-          class="form-group"
+          class="row"
+          controlid="input-note"
+          style="align-items: center;"
         >
-          <textarea
-            class="form-control"
-            data-testid="note"
-            id="input-note"
-            name="note"
-            placeholder="A note about this user"
-            type="text"
+          <div
+            class="col-md-auto"
           >
-            test note
-          </textarea>
+            <div>
+              <textarea
+                class="form-control"
+                data-testid="note"
+                name="note"
+                placeholder="A note about this user"
+                type="text"
+              >
+                test note
+              </textarea>
+            </div>
+          </div>
         </div>
         <div
-          class="is-disabled form-group"
+          class="is-disabled"
         >
           <label
             class="form-label"
           >
             Disable Account? 
           </label>
-          <input
-            data-testid="isDisabled"
-            name="isDisabled"
-            type="checkbox"
-            value="false"
-          />
+          <div>
+            <input
+              data-testid="isDisabled"
+              name="isDisabled"
+              type="checkbox"
+              value="false"
+            />
+          </div>
         </div>
         <div
           class="justify-content-md-center row"

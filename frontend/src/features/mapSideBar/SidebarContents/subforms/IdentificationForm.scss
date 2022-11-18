@@ -4,6 +4,10 @@
     color: $danger-color;
     font-weight: bold;
   }
+  .row {
+    justify-content: right;
+    padding-bottom: 10px;
+  }
   .container {
     .suggestionList {
       margin-top: 40px;
@@ -15,18 +19,17 @@
     width: 900px;
     .form-label,
     .label {
-      display: inline-block;
-      width: 140px;
       text-align: right;
-      margin-right: 10px;
     }
     .form-control,
     .AutoCompleteText {
       width: 250px;
     }
     .harmful {
+      padding: 10px;
+      margin-top: 25px;
+      width: 450px;
       background-color: $light-danger-color;
-      width: 400px;
       border-radius: 5px;
       margin-left: 14px;
       .invalid-feedback {

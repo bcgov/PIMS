@@ -114,7 +114,9 @@ export const useRouterFilter = <T extends object>({
 
       if (params.sorting && setSorting) {
         const sort = resolveSortCriteriaFromUrl(
-          typeof params.sorting === 'string' ? [params.sorting] : params.sorting,
+          typeof params.sorting === 'string' && params.sorting !== null
+            ? [params.sorting]
+            : (params.sorting as string[]),
         );
         if (!_.isEmpty(sort)) {
           setSorting(sort as any);

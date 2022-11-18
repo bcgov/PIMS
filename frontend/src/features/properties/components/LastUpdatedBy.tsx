@@ -10,7 +10,7 @@ interface ILastUpdatedByProps {
   createdOn?: string;
 }
 
-const UpdateText = styled.p`
+const UpdateText = styled.div`
   padding: 1rem;
   display: flex;
   justify-content: flex-end;

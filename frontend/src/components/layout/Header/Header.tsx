@@ -105,7 +105,7 @@ const Header = () => {
         <VerticalBar />
         <img className="pims-logo" src={PIMSlogo} height="50" alt="PIMS logo" />
       </Navbar.Brand>
-      <Nav className="title mr-auto">
+      <Nav className="title">
         <Nav.Item>
           <h1 className="longAppName">Property Inventory Management System</h1>
           <h1 className="shortAppName">PIMS</h1>

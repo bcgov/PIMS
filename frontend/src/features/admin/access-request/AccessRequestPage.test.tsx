@@ -1,12 +1,12 @@
 import { useKeycloak } from '@react-keycloak/web';
 import { fireEvent, render, waitFor } from '@testing-library/react';
+import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import { ILookupCode } from 'actions/ILookupCode';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import * as API from 'constants/API';
 import { mount } from 'enzyme';
 import Enzyme from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
 import { Formik } from 'formik';
 import { createMemoryHistory } from 'history';
 import React from 'react';

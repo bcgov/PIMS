@@ -3,7 +3,7 @@ import './FastCurrencyInput.scss';
 import classNames from 'classnames';
 import { ErrorMessage, FormikProps, getIn } from 'formik';
 import React, { memo, useEffect } from 'react';
-import { ColProps, Form } from 'react-bootstrap';
+import { Col, ColProps, Form } from 'react-bootstrap';
 import MaskedInput from 'react-text-mask';
 import createNumberMask from 'text-mask-addons/dist/createNumberMask';
 import { formikFieldMemo, isPositiveNumberOrZero } from 'utils';
@@ -49,6 +49,8 @@ type OptionalAttributes = {
   suppressValidation?: boolean;
   /** form label */
   label?: string;
+  /** input container width */
+  customInputWidth?: string;
 };
 
 export type CurrencyInputProps = RequiredAttributes &
@@ -69,6 +71,7 @@ const CurrencyInput = ({
   tooltip,
   required,
   suppressValidation,
+  customInputWidth,
   formikProps: {
     handleBlur,
     values,
@@ -108,12 +111,14 @@ const CurrencyInput = ({
   return (
     <Form.Group
       className={classNames(!!required ? 'required' : '', outerClassName)}
-      as={'div'}
+      style={{ border: 'none' }}
+      as={Col}
       md={rest.md}
     >
       {!!label && <Form.Label>{label}</Form.Label>}
       <div className="input-tooltip-wrapper">
         <MaskedInput
+          style={{ width: customInputWidth ?? '85%' }}
           value={value}
           mask={currencyMask}
           name={field}

@@ -21,22 +21,32 @@ exports[`AccessRequestPage functionality renders RequestAccessPage correctly 1`]
         novalidate=""
       >
         <div
-          class="form-group"
+          class="row"
+          controlid="input-user.username"
+          style="align-items: center;"
         >
-          <label
-            class="form-label"
-            for="input-user.username"
+          <div
+            class="col-md-auto"
           >
-            IDIR/BCeID
-          </label>
-          <input
-            class="form-control"
-            id="input-user.username"
-            name="user.username"
-            readonly=""
-            type="text"
-            value=""
-          />
+            <label
+              class="form-label"
+            >
+              IDIR/BCeID
+            </label>
+          </div>
+          <div
+            class="col-md-auto"
+          >
+            <div>
+              <input
+                class="form-control"
+                name="user.username"
+                readonly=""
+                type="text"
+                value=""
+              />
+            </div>
+          </div>
         </div>
         <div
           class="row"
@@ -45,41 +55,154 @@ exports[`AccessRequestPage functionality renders RequestAccessPage correctly 1`]
             class="col"
           >
             <div
-              class="form-group"
+              class="row"
+              controlid="input-user.firstName"
+              style="align-items: center;"
             >
-              <label
-                class="form-label"
-                for="input-user.firstName"
+              <div
+                class="col-md-auto"
               >
-                First Name
-              </label>
-              <input
-                class="form-control"
-                id="input-user.firstName"
-                name="user.firstName"
-                readonly=""
-                type="text"
-                value=""
-              />
+                <label
+                  class="form-label"
+                >
+                  First Name
+                </label>
+              </div>
+              <div
+                class="col-md-auto"
+              >
+                <div>
+                  <input
+                    class="form-control"
+                    name="user.firstName"
+                    readonly=""
+                    type="text"
+                    value=""
+                  />
+                </div>
+              </div>
             </div>
           </div>
           <div
             class="col"
           >
             <div
-              class="form-group"
+              class="row"
+              controlid="input-user.lastName"
+              style="align-items: center;"
             >
-              <label
-                class="form-label"
-                for="input-user.lastName"
+              <div
+                class="col-md-auto"
               >
-                Last Name
-              </label>
+                <label
+                  class="form-label"
+                >
+                  Last Name
+                </label>
+              </div>
+              <div
+                class="col-md-auto"
+              >
+                <div>
+                  <input
+                    class="form-control"
+                    name="user.lastName"
+                    readonly=""
+                    type="text"
+                    value=""
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="row"
+          controlid="input-user.email"
+          style="align-items: center;"
+        >
+          <div
+            class="col-md-auto"
+          >
+            <label
+              class="form-label"
+            >
+              Email
+            </label>
+          </div>
+          <div
+            class="col-md-auto"
+          >
+            <div>
               <input
                 class="form-control"
-                id="input-user.lastName"
-                name="user.lastName"
+                name="user.email"
                 readonly=""
+                type="email"
+                value=""
+              />
+            </div>
+          </div>
+        </div>
+        <div
+          class="required row"
+          controlid="input-agency"
+          style="align-items: center;"
+        >
+          <div
+            class="col-md-auto"
+          >
+            <label
+              class="form-label"
+            >
+              Agency
+            </label>
+          </div>
+          <div
+            class="col-md-auto"
+            style="padding: 0px;"
+          >
+            <select
+              class="form-select form-control"
+              name="agency"
+              required=""
+            >
+              <option
+                value=""
+              >
+                Please Select
+              </option>
+              <option
+                class="option"
+                value="1"
+              >
+                agencyVal
+              </option>
+            </select>
+          </div>
+        </div>
+        <div
+          class="row"
+          controlid="input-user.position"
+          style="align-items: center;"
+        >
+          <div
+            class="col-md-auto"
+          >
+            <label
+              class="form-label"
+            >
+              Position
+            </label>
+          </div>
+          <div
+            class="col-md-auto"
+          >
+            <div>
+              <input
+                class="form-control"
+                name="user.position"
+                placeholder="e.g) Director, Real Estate and Stakeholder Engagement"
                 type="text"
                 value=""
               />
@@ -87,71 +210,7 @@ exports[`AccessRequestPage functionality renders RequestAccessPage correctly 1`]
           </div>
         </div>
         <div
-          class="form-group"
-        >
-          <label
-            class="form-label"
-            for="input-user.email"
-          >
-            Email
-          </label>
-          <input
-            class="form-control"
-            id="input-user.email"
-            name="user.email"
-            readonly=""
-            type="email"
-            value=""
-          />
-        </div>
-        <div
-          class="required form-group"
-        >
-          <label
-            class="form-label"
-            for="input-agency"
-          >
-            Agency
-          </label>
-          <select
-            class="form-select form-control"
-            id="input-agency"
-            name="agency"
-            required=""
-          >
-            <option
-              value=""
-            >
-              Please Select
-            </option>
-            <option
-              class="option"
-              value="1"
-            >
-              agencyVal
-            </option>
-          </select>
-        </div>
-        <div
-          class="form-group"
-        >
-          <label
-            class="form-label"
-            for="input-user.position"
-          >
-            Position
-          </label>
-          <input
-            class="form-control"
-            id="input-user.position"
-            name="user.position"
-            placeholder="e.g) Director, Real Estate and Stakeholder Engagement"
-            type="text"
-            value=""
-          />
-        </div>
-        <div
-          class="check-roles form-group"
+          class="check-roles"
         >
           <label
             class="form-label"
@@ -166,44 +225,65 @@ exports[`AccessRequestPage functionality renders RequestAccessPage correctly 1`]
               Role Descriptions
             </a>
           </label>
-          <div
-            class="required form-group"
-          >
-            <select
-              class="form-select form-control"
-              id="input-role"
-              name="role"
-              required=""
+          <div>
+            <div
+              class="required row"
+              controlid="input-role"
+              style="align-items: center;"
             >
-              <option
-                value=""
+              <div
+                class="col-md-auto"
+              />
+              <div
+                class="col-md-auto"
+                style="padding: 0px;"
               >
-                Please Select
-              </option>
-              <option
-                class="option"
-                value="1"
-              >
-                roleVal
-              </option>
-            </select>
+                <select
+                  class="form-select form-control"
+                  name="role"
+                  required=""
+                >
+                  <option
+                    value=""
+                  >
+                    Please Select
+                  </option>
+                  <option
+                    class="option"
+                    value="1"
+                  >
+                    roleVal
+                  </option>
+                </select>
+              </div>
+            </div>
           </div>
         </div>
         <div
-          class="required form-group"
+          class="required row"
+          controlid="input-note"
+          style="align-items: center;"
         >
-          <label
-            class="form-label"
-            for="input-note"
+          <div
+            class="col-md-auto"
           >
-            Notes
-          </label>
-          <textarea
-            class="form-control"
-            id="input-note"
-            name="note"
-            placeholder="Please specify why you need access to PIMS and include your manager's name."
-          />
+            <label
+              class="form-label"
+            >
+              Notes
+            </label>
+          </div>
+          <div
+            class="col-md-auto"
+          >
+            <div>
+              <textarea
+                class="form-control"
+                name="note"
+                placeholder="Please specify why you need access to PIMS and include your manager's name."
+              />
+            </div>
+          </div>
         </div>
         <p>
           By clicking request, you agree to our
