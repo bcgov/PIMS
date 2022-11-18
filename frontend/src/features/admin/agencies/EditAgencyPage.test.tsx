@@ -7,7 +7,7 @@ import * as API from 'constants/API';
 import { createMemoryHistory } from 'history';
 import React from 'react';
 import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
@@ -57,7 +57,7 @@ const mockAxios = new MockAdapter(axios);
 const renderEditAgencyPage = () =>
   render(
     <Provider store={store}>
-      <Router history={history}>
+      <MemoryRouter initialEntries={[history.location]}>
         <ToastContainer
           autoClose={5000}
           hideProgressBar
@@ -67,7 +67,7 @@ const renderEditAgencyPage = () =>
           pauseOnFocusLoss={false}
         />
         <EditAgencyPage id={111} />,
-      </Router>
+      </MemoryRouter>
     </Provider>,
   );
 
@@ -82,9 +82,9 @@ describe('Edit agency page', () => {
   it('EditAgencyPage renders', () => {
     const { container } = render(
       <Provider store={store}>
-        <Router history={history}>
+        <MemoryRouter initialEntries={[history.location]}>
           <EditAgencyPage id={111} />,
-        </Router>
+        </MemoryRouter>
       </Provider>,
     );
     expect(container.firstChild).toMatchSnapshot();

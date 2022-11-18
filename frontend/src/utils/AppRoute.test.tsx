@@ -2,7 +2,7 @@ import { createMemoryHistory } from 'history';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { act } from 'react-dom/test-utils';
-import { Router } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 
 import AppRoute from './AppRoute';
 
@@ -15,9 +15,9 @@ describe('App Route', () => {
     document.body.appendChild(container);
     act(() => {
       ReactDOM.render(
-        <Router history={history}>
+        <MemoryRouter initialEntries={[history.location]}>
           <AppRoute component={() => <p>Title Test Page</p>} title={title} />
-        </Router>,
+        </MemoryRouter>,
         container,
       );
     });
