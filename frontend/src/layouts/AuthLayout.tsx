@@ -27,7 +27,7 @@ const AuthLayout: React.FC = ({ children }) => {
               </Container>
             )}
             <Container fluid className="d-flex flex-column flex-grow-1" style={{ padding: 0 }}>
-              <Row className="w-100 h-100" noGutters>
+              <Row className="w-100 h-100 g-0">
                 <Col>{children}</Col>
               </Row>
             </Container>

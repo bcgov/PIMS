@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react';
+import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import Enzyme from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
 import { Form, Formik } from 'formik';
 import { noop } from 'lodash';
 import React from 'react';
@@ -51,7 +51,7 @@ describe('FastCurrencyInput', () => {
     expect(container.querySelector('svg[className="tooltip-icon"]'));
   });
 
-  it('fast currency input custom placeholder', () => {
+  it('fast currency input custom placeholder', async () => {
     const component = render(
       <Formik initialValues={{ assessedLand: '' }} onSubmit={noop}>
         {props => (
@@ -67,6 +67,6 @@ describe('FastCurrencyInput', () => {
       </Formik>,
     );
 
-    expect(component.findByPlaceholderText('custom placeholder'));
+    expect(await component.findByPlaceholderText('custom placeholder'));
   });
 });

@@ -42,11 +42,6 @@ const FileIcon = styled(Button)`
   padding: 6px 5px;
 `;
 
-const Ribbon = styled('div')`
-  text-align: right;
-  margin-right: 50px;
-`;
-
 const downloadUsers = (filter: IPaginateParams) =>
   `${ENVIRONMENT.apiUrl}/reports/users?${
     filter ? queryString.stringify({ ...filter, all: true }) : ''
@@ -149,13 +144,13 @@ export const ManageUsers = () => {
       />
       {
         <>
-          <Ribbon>
+          <div style={{ paddingLeft: '90%' }}>
             <TooltipWrapper toolTipId="export-to-excel" toolTip="Export to Excel">
               <FileIcon>
                 <FaFileExcel data-testid="excel-icon" size={36} onClick={() => fetch('excel')} />
               </FileIcon>
             </TooltipWrapper>
-          </Ribbon>
+          </div>
           <TableContainer fluid>
             <Table<IUserRecord>
               name="usersTable"

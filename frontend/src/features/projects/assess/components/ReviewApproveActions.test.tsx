@@ -1,7 +1,7 @@
+import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import GenericModal from 'components/common/GenericModal';
 import { mount } from 'enzyme';
 import Enzyme from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
 import { deletePotentialSubdivisionParcels } from 'features/projects/common';
 import { DisposeWorkflowStatus } from 'features/projects/constants';
 import { useFormikContext } from 'formik';

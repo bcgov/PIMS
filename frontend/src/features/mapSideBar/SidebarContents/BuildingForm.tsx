@@ -256,6 +256,7 @@ const Form: React.FC<IBuildingForm> = ({
                 disabled={formikProps.isSubmitting}
                 size="sm"
                 type="button"
+                style={{ marginRight: '15px' }}
                 onClick={() => {
                   formikProps.setSubmitting(true);
                   formikProps.submitForm();

@@ -9,7 +9,7 @@ import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { GeoJSON, LatLngBounds } from 'leaflet';
 import { flatten, uniqBy } from 'lodash';
 import React, { useEffect, useMemo, useState } from 'react';
-import { useLeaflet } from 'react-leaflet';
+import { useMap } from 'react-leaflet';
 import { toast } from 'react-toastify';
 import { useAppSelector } from 'store';
 import { tilesInBbox } from 'tiles-in-bbox';
@@ -145,7 +145,7 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
   onRequestData,
 }) => {
   const keycloak = useKeycloakWrapper();
-  const { map } = useLeaflet();
+  const map = useMap();
   const [features, setFeatures] = useState<PointFeature[]>([]);
   const [loadingTiles, setLoadingTiles] = useState(false);
   const { loadProperties } = useApi();

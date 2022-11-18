@@ -382,7 +382,7 @@ const Table = <T extends IIdentifiedObject, TFilter extends object = {}>(
         >
           {column.render('Header')}
         </ColumnFilter>
-        <span style={{ flex: '1 1 auto' }} />
+        <span />
         <ColumnSort
           onSort={() => {
             const next = getNextSortDirection(column);
