@@ -9,7 +9,7 @@ import { WorkflowStatus } from 'hooks/api/projects';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import React from 'react';
 import { Button } from 'react-bootstrap';
-import { Router } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 
 import { ReviewApproveActions } from './ReviewApproveActions';
 
@@ -26,13 +26,13 @@ afterEach(() => {
 });
 
 const element = (
-  <Router history={history}>
+  <MemoryRouter initialEntries={[history.location]}>
     <ReviewApproveActions
       submitStatusCode={DisposeWorkflowStatus.Draft}
       setSubmitStatusCode={mockSubmit}
       isSubmitting={false}
     />
-  </Router>
+  </MemoryRouter>
 );
 
 describe('approve exemption review actions', () => {
