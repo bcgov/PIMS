@@ -9,7 +9,7 @@
     "@react-leaflet/core": "1.1.1",
     "@reduxjs/toolkit": "1.6.0",
     "ajv": "8.11.2",
-    "axios": "0.21.3",
+    "axios": "0.27.2",
     "bootstrap": "5.2.2",
     "classnames": "2.3.2",
     "crypto-js": "4.1.1",

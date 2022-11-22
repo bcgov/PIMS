@@ -82,7 +82,7 @@ export const createAgency = (agency: IAddAgency) => async (dispatch: Dispatch<An
     dispatch(hideLoading());
     return data;
   } catch (axiosError) {
-    const err = axiosError as AxiosError;
+    const err = axiosError as AxiosError<any>;
     dispatch(storeError(error(actionTypes.ADD_AGENCY, err?.response?.status, axiosError)));
     dispatch(hideLoading());
     throw Error(err.response?.data.details);
