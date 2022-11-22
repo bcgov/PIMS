@@ -2,6 +2,7 @@ import './Header.scss';
 
 import BClogoUrl from 'assets/images/logo-banner.svg';
 import PIMSlogo from 'assets/images/PIMSlogo/logo_only.png';
+import { AxiosError } from 'axios';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import React, { useState } from 'react';
 import { Button, Col, Modal, Nav, Navbar, Row } from 'react-bootstrap';
@@ -59,6 +60,7 @@ const Header = () => {
 
       <Modal.Body style={{ maxHeight: '500px', overflowY: 'scroll' }}>
         {errors.map((error: IGenericNetworkAction, index: number) => {
+          error.error = error.error as AxiosError<any>;
           return (
             <Row key={index} style={{ wordBreak: 'break-all' }}>
               {process.env.NODE_ENV === 'development' ? (
@@ -75,7 +77,7 @@ const Header = () => {
                     {error.error?.response?.config?.url?.substr(0, 20)}
                   </abbr>
                   : ({error.error?.response?.statusText ?? 'unknown'}){' '}
-                  {error.error?.response?.data?.error}
+                  {JSON.stringify(error.error?.response?.data)}
                 </Col>
               )}
             </Row>
