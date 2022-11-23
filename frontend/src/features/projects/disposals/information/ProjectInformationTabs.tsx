@@ -1,6 +1,6 @@
 import { Tab, Tabs } from 'components/tabs';
 import React from 'react';
-import { Route, Switch, useLocation } from 'react-router-dom';
+import { Route, Routes, useLocation } from 'react-router-dom';
 
 import { ProjectInformation, ProjectProperties } from '.';
 import * as styled from './styled';
@@ -29,14 +29,14 @@ export const ProjectInformationTabs: React.FC<IProjectInformationProps> = ({
           />,
         ]}
       >
-        <Switch>
-          <Route exact path="/projects/disposal/:id/information">
+        <Routes>
+          <Route path="/projects/disposal/:id/information">
             <ProjectInformation disabled={disabled} />
           </Route>
           <Route path="/projects/disposal/:id/information/properties">
             <ProjectProperties disabled={disabled} />
           </Route>
-        </Switch>
+        </Routes>
       </Tabs>
     </styled.ProjectInformation>
   );

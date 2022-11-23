@@ -9,7 +9,7 @@ import { createMemoryHistory } from 'history';
 import { mockFlatProperty } from 'mocks/filterDataMock';
 import React from 'react';
 import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
@@ -82,9 +82,9 @@ describe('Property list view', () => {
     await act(async () => {
       const { container } = render(
         <Provider store={store}>
-          <Router history={history}>
+          <MemoryRouter initialEntries={[history.location]}>
             <PropertyListView />,
-          </Router>
+          </MemoryRouter>
         </Provider>,
       );
       expect(container.firstChild).toMatchSnapshot();
@@ -105,9 +105,9 @@ describe('Property list view', () => {
 
     const { findByText } = render(
       <Provider store={store}>
-        <Router history={history}>
+        <MemoryRouter initialEntries={[history.location]}>
           <PropertyListView />
-        </Router>
+        </MemoryRouter>
       </Provider>,
     );
 
@@ -122,9 +122,9 @@ describe('Property list view', () => {
     await act(async () => {
       const { getByTestId, container } = render(
         <Provider store={store}>
-          <Router history={history}>
+          <MemoryRouter initialEntries={[history.location]}>
             <PropertyListView />
-          </Router>
+          </MemoryRouter>
         </Provider>,
       );
       expect(getByTestId('excel-icon')).toBeInTheDocument();
@@ -139,9 +139,9 @@ describe('Property list view', () => {
     await act(async () => {
       const { getByTestId } = render(
         <Provider store={store}>
-          <Router history={history}>
+          <MemoryRouter initialEntries={[history.location]}>
             <PropertyListView />
-          </Router>
+          </MemoryRouter>
         </Provider>,
       );
       expect(getByTestId('edit-icon')).toBeInTheDocument();
@@ -154,9 +154,9 @@ describe('Property list view', () => {
     await act(async () => {
       const { getByTestId } = render(
         <Provider store={store}>
-          <Router history={history}>
+          <MemoryRouter initialEntries={[history.location]}>
             <PropertyListView />
-          </Router>
+          </MemoryRouter>
         </Provider>,
       );
       expect(getByTestId('edit-icon')).toBeInTheDocument();
@@ -176,9 +176,9 @@ describe('Property list view', () => {
     await act(async () => {
       const { getByTestId } = render(
         <Provider store={store}>
-          <Router history={history}>
+          <MemoryRouter initialEntries={[history.location]}>
             <PropertyListView />
-          </Router>
+          </MemoryRouter>
         </Provider>,
       );
       expect(getByTestId('edit-icon')).toBeInTheDocument();
@@ -198,9 +198,9 @@ describe('Property list view', () => {
     await act(async () => {
       const { getByTestId, container } = render(
         <Provider store={store}>
-          <Router history={history}>
+          <MemoryRouter initialEntries={[history.location]}>
             <PropertyListView />
-          </Router>
+          </MemoryRouter>
         </Provider>,
       );
       expect(getByTestId('edit-icon')).toBeInTheDocument();
@@ -225,9 +225,9 @@ describe('Property list view', () => {
     await act(async () => {
       const { getByTestId, container } = render(
         <Provider store={store}>
-          <Router history={history}>
+          <MemoryRouter initialEntries={[history.location]}>
             <PropertyListView />
-          </Router>
+          </MemoryRouter>
         </Provider>,
       );
       expect(getByTestId('edit-icon')).toBeInTheDocument();
@@ -251,9 +251,9 @@ describe('Property list view', () => {
     await act(async () => {
       const { container, getByTestId } = render(
         <Provider store={store}>
-          <Router history={history}>
+          <MemoryRouter initialEntries={[history.location]}>
             <PropertyListView />
-          </Router>
+          </MemoryRouter>
         </Provider>,
       );
       expect(getByTestId('edit-icon')).toBeInTheDocument();
@@ -361,9 +361,9 @@ describe('Property list view', () => {
 
     const { findAllByRole } = render(
       <Provider store={store}>
-        <Router history={history}>
+        <MemoryRouter initialEntries={[history.location]}>
           <PropertyListView />
-        </Router>
+        </MemoryRouter>
       </Provider>,
     );
 

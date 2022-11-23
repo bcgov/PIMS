@@ -4,7 +4,7 @@ import { useFormikContext } from 'formik';
 import { Workflow, WorkflowStatus } from 'hooks/api/projects';
 import { IProjectModel } from 'hooks/api/projects/disposals';
 import React from 'react';
-import { Route, Switch, useLocation } from 'react-router-dom';
+import { Route, Routes, useLocation } from 'react-router-dom';
 
 import {
   ProjectSPLApproval,
@@ -68,8 +68,8 @@ export const ProjectSPLTabs: React.FC<IProjectSPLTabsProps> = ({ project, disabl
   return (
     <Col>
       <Tabs tabs={tabs}>
-        <Switch>
-          <Route exact path="/projects/disposal/:id/spl">
+        <Routes>
+          <Route path="/projects/disposal/:id/spl">
             <ProjectSPLApproval disabled={disabled} />
           </Route>
           <Route path="/projects/disposal/:id/spl/marketing">
@@ -81,7 +81,7 @@ export const ProjectSPLTabs: React.FC<IProjectSPLTabsProps> = ({ project, disabl
           <Route path="/projects/disposal/:id/spl/transfer/within/gre">
             <ProjectSPLTransferWithinGRE disabled={disabled} />
           </Route>
-        </Switch>
+        </Routes>
       </Tabs>
     </Col>
   );

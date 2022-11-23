@@ -9,7 +9,7 @@ import PublicLayout from 'layouts/PublicLayout';
 import { NotFoundPage } from 'pages/404/NotFoundPage';
 import React, { lazy, Suspense, useLayoutEffect } from 'react';
 import { Col } from 'react-bootstrap';
-import { Redirect, Switch, useLocation } from 'react-router-dom';
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import AppRoute from 'utils/AppRoute';
 
 import AccessDenied from '../../pages/401/AccessDenied';
@@ -65,8 +65,8 @@ export const AppRouter: React.FC = () => {
         )
       }
     >
-      <Switch>
-        <Redirect exact from="/" to="/login" />
+      <Routes>
+        <Route path="/" element={<Navigate to="/login" />}></Route>
         <AppRoute
           path="/login"
           title={getTitle('Login')}
@@ -259,8 +259,8 @@ export const AppRouter: React.FC = () => {
           claim={Claims.REPORTS_SPL}
           title={getTitle('SPL Reports')}
         />
-        <AppRoute title="*" path="*" component={() => <Redirect to="/page-not-found" />} />
-      </Switch>
+        <AppRoute title="*" path="*" component={() => <Navigate to="/page-not-found" />} />
+      </Routes>
     </Suspense>
   );
 };
