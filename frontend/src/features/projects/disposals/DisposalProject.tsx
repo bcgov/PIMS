@@ -3,7 +3,7 @@ import { Col, Row } from 'components/flex';
 import { Form, Formik } from 'formik';
 import { IProjectModel } from 'hooks/api/projects/disposals';
 import React from 'react';
-import { Route, Switch, useLocation } from 'react-router-dom';
+import { Route, Routes, useLocation } from 'react-router-dom';
 import { useProjectDisposal } from 'store';
 import { useProjectStore } from 'store/slices/hooks';
 
@@ -96,8 +96,8 @@ export const DisposalProject: React.FC<IDisposalProjectProps> = props => {
         }}
       >
         <Form className="project">
-          <Switch>
-            <Route exact path="/projects/disposal/:id/transfer/within/gre">
+          <Routes>
+            <Route path="/projects/disposal/:id/transfer/within/gre">
               {!!project && <GreTransferStep project={project} onUpdate={handleUpdate} />}
             </Route>
             <Route>
@@ -133,7 +133,7 @@ export const DisposalProject: React.FC<IDisposalProjectProps> = props => {
                 </Button>
               </Row>
             </Route>
-          </Switch>
+          </Routes>
         </Form>
       </Formik>
     </styled.DisposalProject>

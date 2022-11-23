@@ -9,7 +9,7 @@ import { noop } from 'lodash';
 import React from 'react';
 import { Provider } from 'react-redux';
 import * as redux from 'react-redux';
-import { match as Match, Router } from 'react-router-dom';
+import { matchPath, MemoryRouter } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
@@ -43,12 +43,7 @@ jest.mock('./hooks/useStepper');
   canGoToStatus: noop,
 });
 
-const match: Match = {
-  path: '/dispose',
-  url: '/dispose',
-  isExact: false,
-  params: {},
-};
+const match = matchPath('', '/dispose');
 
 const loc = {
   pathname: '/dispose/projects/draft',
@@ -97,9 +92,9 @@ const errorStore = mockStore({
 
 const renderElement = (store: any) => (
   <Provider store={store}>
-    <Router history={history}>
+    <MemoryRouter initialEntries={[history.location]}>
       <ProjectDisposeView match={match} location={loc} />
-    </Router>
+    </MemoryRouter>
   </Provider>
 );
 

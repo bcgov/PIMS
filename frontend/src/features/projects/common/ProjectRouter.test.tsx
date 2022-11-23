@@ -8,7 +8,7 @@ import * as reducerTypes from 'constants/reducerTypes';
 import { createMemoryHistory } from 'history';
 import React from 'react';
 import { Provider } from 'react-redux';
-import { match as Match, Router } from 'react-router-dom';
+import { matchPath, MemoryRouter } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
@@ -41,12 +41,7 @@ const mockKeycloak = (claims: string[]) => {
 const mockAxios = new MockAdapter(axios);
 mockAxios.onAny().reply(200, {});
 
-const match: Match = {
-  path: '/',
-  url: '/',
-  isExact: false,
-  params: {},
-};
+const match = matchPath('', '/');
 
 const loc = {
   pathname: '/projects/assess/properties?projectNumber=SPP-10001',
@@ -69,9 +64,9 @@ const store = mockStore({
 
 const uiElement = (
   <Provider store={store}>
-    <Router history={history}>
+    <MemoryRouter initialEntries={[history.location]}>
       <ProjectRouter match={match} location={loc} />
-    </Router>
+    </MemoryRouter>
   </Provider>
 );
 describe('project router', () => {
