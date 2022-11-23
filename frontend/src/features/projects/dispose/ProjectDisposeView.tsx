@@ -4,7 +4,7 @@ import { ProjectActions } from 'constants/actionTypes';
 import queryString from 'query-string';
 import React, { useEffect } from 'react';
 import { Container } from 'react-bootstrap';
-import { match as Match } from 'react-router-dom';
+import { PathMatch } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'store';
 
 import { clearProject, fetchProject } from '../common';
@@ -15,7 +15,13 @@ import ProjectDisposeLayout from './ProjectDisposeLayout';
  * Top level component facilitates 'wizard' style multi-step form for disposing of projects.
  * @param param0 default react router props
  */
-const ProjectDisposeView = ({ match, location }: { match: Match; location: Location }) => {
+const ProjectDisposeView = ({
+  match,
+  location,
+}: {
+  match: PathMatch<string> | null;
+  location: Location;
+}) => {
   const query = location?.search ?? {};
   const projectNumber = queryString.parse(query).projectNumber;
   const dispatch = useAppDispatch();

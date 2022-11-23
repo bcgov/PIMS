@@ -6,7 +6,7 @@ import { IProjectModel } from 'hooks/api/projects/disposals';
 import { useKeycloakWrapper } from 'hooks/useKeycloakWrapper';
 import React from 'react';
 import { Spinner } from 'react-bootstrap';
-import { Redirect, Route, Switch, useLocation } from 'react-router-dom';
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 
 import {
   ProjectCloseOut,
@@ -99,15 +99,15 @@ export const ProjectTabs: React.FC<IProjectTabProps> = ({ project, isLoading }) 
       )}
 
       <Tabs tabs={tabs}>
-        <Switch>
-          <Route exact path="/projects/disposal">
-            <Redirect to={`/page-not-found`} />
+        <Routes>
+          <Route path="/projects/disposal">
+            <Navigate to={`/page-not-found`} />
           </Route>
-          <Route exact path="/projects/disposal/:id">
+          <Route path="/projects/disposal/:id">
             {id === undefined || !!id ? (
-              <Redirect to={`/projects/disposal/${id}/information`} />
+              <Navigate to={`/projects/disposal/${id}/information`} />
             ) : (
-              <Redirect to={`/page-not-found`} />
+              <Navigate to={`/page-not-found`} />
             )}
           </Route>
           <Route path="/projects/disposal/:id/information">
@@ -131,7 +131,7 @@ export const ProjectTabs: React.FC<IProjectTabProps> = ({ project, isLoading }) 
           <Route path="/projects/disposal/:id/notifications">
             <ProjectNotifications />
           </Route>
-        </Switch>
+        </Routes>
       </Tabs>
     </styled.ProjectTabs>
   );

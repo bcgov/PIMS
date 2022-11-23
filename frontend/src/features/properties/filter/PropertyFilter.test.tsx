@@ -9,7 +9,7 @@ import { createMemoryHistory } from 'history';
 import * as MOCK from 'mocks/filterDataMock';
 import React from 'react';
 import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
@@ -112,7 +112,7 @@ const defaultFilter: IPropertyFilter = {
 
 const getUiElement = (filter: IPropertyFilter) => (
   <Provider store={getStore(filter)}>
-    <Router history={history}>
+    <MemoryRouter initialEntries={[history.location]}>
       <PropertyFilter
         defaultFilter={filter}
         agencyLookupCodes={MOCK.AGENCIES}
@@ -120,7 +120,7 @@ const getUiElement = (filter: IPropertyFilter) => (
         onChange={onFilterChange}
         showAllAgencySelect={true}
       />
-    </Router>
+    </MemoryRouter>
   </Provider>
 );
 

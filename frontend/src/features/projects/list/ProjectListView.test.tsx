@@ -11,7 +11,7 @@ import { createMemoryHistory } from 'history';
 import { noop } from 'lodash';
 import React from 'react';
 import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
@@ -107,9 +107,9 @@ const testRender = () =>
   render(
     <Formik initialValues={{}} onSubmit={noop}>
       <Provider store={store}>
-        <Router history={history}>
+        <MemoryRouter initialEntries={[history.location]}>
           <ProjectListView />
-        </Router>
+        </MemoryRouter>
       </Provider>
     </Formik>,
   );

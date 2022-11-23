@@ -9,7 +9,7 @@ import { createMemoryHistory } from 'history';
 import { noop } from 'lodash';
 import React from 'react';
 import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
@@ -116,7 +116,7 @@ const setPageIndex = jest.fn().mockReturnValue(0);
 const getComponent = () => {
   return (
     <Provider store={store}>
-      <Router history={history}>
+      <MemoryRouter initialEntries={[history.location]}>
         <Formik initialValues={{ properties: testData.items }} onSubmit={noop}>
           <PropertyListViewSelect
             setPageIndex={setPageIndex}
@@ -125,7 +125,7 @@ const getComponent = () => {
             field="properties"
           />
         </Formik>
-      </Router>
+      </MemoryRouter>
     </Provider>
   );
 };
