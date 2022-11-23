@@ -4,7 +4,7 @@ import { useFormikContext } from 'formik';
 import { Workflow, WorkflowStatus } from 'hooks/api/projects';
 import { IProjectModel } from 'hooks/api/projects/disposals';
 import React from 'react';
-import { Route, Switch, useLocation } from 'react-router-dom';
+import { Route, Routes, useLocation } from 'react-router-dom';
 
 import { ProjectERPApproval, ProjectERPComplete, ProjectERPDisposed, ProjectERPExemption } from '.';
 
@@ -49,8 +49,8 @@ export const ProjectERPTabs: React.FC<IProjectERPTabsProps> = ({ project, disabl
   return (
     <Col>
       <Tabs tabs={tabs}>
-        <Switch>
-          <Route exact path="/projects/disposal/:id/erp">
+        <Routes>
+          <Route path="/projects/disposal/:id/erp">
             <ProjectERPApproval disabled={disabled} />
           </Route>
           <Route path="/projects/disposal/:id/erp/exemption">
@@ -62,7 +62,7 @@ export const ProjectERPTabs: React.FC<IProjectERPTabsProps> = ({ project, disabl
           <Route path="/projects/disposal/:id/erp/disposed">
             <ProjectERPDisposed disabled={disabled} />
           </Route>
-        </Switch>
+        </Routes>
       </Tabs>
     </Col>
   );
