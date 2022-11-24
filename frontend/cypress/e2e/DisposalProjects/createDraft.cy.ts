@@ -14,7 +14,6 @@ describe('Create a disposal project', () => {
         .eq(0);
       const projectNameCell = firstTableRow.children().eq(2);
       const projectStatusCell = firstTableRow.children().eq(3);
-      cy.log(projectNameCell.text());
       // If table row for Cypress test project exists in DRAFT status
       if (projectNameCell.text() === PROJECT_NAME && projectStatusCell.text() === 'Review') {
         cy.get('[role="cell"]')
