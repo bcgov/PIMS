@@ -25,6 +25,7 @@ exports[`Documentation Step renders correctly 1`] = `
           >
             <input
               class="form-check-input"
+              data-testid="taskform-check-0"
               disabled=""
               id="input-tasks.0.isCompleted"
               name="tasks.0.isCompleted"
@@ -56,6 +57,7 @@ exports[`Documentation Step renders correctly 1`] = `
           >
             <input
               class="form-check-input"
+              data-testid="taskform-check-1"
               disabled=""
               id="input-tasks.1.isCompleted"
               name="tasks.1.isCompleted"

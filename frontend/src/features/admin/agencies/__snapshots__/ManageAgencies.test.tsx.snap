@@ -255,6 +255,7 @@ exports[`Manage Agencies Component Snapshot matches 1`] = `
           >
             <div
               class="td clickable"
+              data-testid="cell-name"
               role="cell"
               style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
               title="View agency details"
@@ -263,6 +264,7 @@ exports[`Manage Agencies Component Snapshot matches 1`] = `
             </div>
             <div
               class="td clickable"
+              data-testid="cell-code"
               role="cell"
               style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
               title="View agency details"
@@ -271,6 +273,7 @@ exports[`Manage Agencies Component Snapshot matches 1`] = `
             </div>
             <div
               class="td clickable"
+              data-testid="cell-description"
               role="cell"
               style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
               title="View agency details"
@@ -279,6 +282,7 @@ exports[`Manage Agencies Component Snapshot matches 1`] = `
             </div>
             <div
               class="td clickable"
+              data-testid="cell-parent"
               role="cell"
               style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
               title="View agency details"
@@ -299,6 +303,7 @@ exports[`Manage Agencies Component Snapshot matches 1`] = `
           >
             <div
               class="td clickable"
+              data-testid="cell-name"
               role="cell"
               style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
               title="View agency details"
@@ -307,6 +312,7 @@ exports[`Manage Agencies Component Snapshot matches 1`] = `
             </div>
             <div
               class="td clickable"
+              data-testid="cell-code"
               role="cell"
               style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
               title="View agency details"
@@ -315,6 +321,7 @@ exports[`Manage Agencies Component Snapshot matches 1`] = `
             </div>
             <div
               class="td clickable"
+              data-testid="cell-description"
               role="cell"
               style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
               title="View agency details"
@@ -323,6 +330,7 @@ exports[`Manage Agencies Component Snapshot matches 1`] = `
             </div>
             <div
               class="td clickable"
+              data-testid="cell-parent"
               role="cell"
               style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
               title="View agency details"
