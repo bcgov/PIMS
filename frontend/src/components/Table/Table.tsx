@@ -576,6 +576,7 @@ const Table = <T extends IIdentifiedObject, TFilter extends object = {}>(
             {row.cells.map((cell: CellWithProps<T>) => {
               return (
                 <div
+                  data-testid={`cell-${cell.column.id}`}
                   {...cell.getCellProps(cellProps)}
                   title={cell.column.clickable && clickableTooltip ? clickableTooltip : ''}
                   className={classnames('td', cell.column.clickable ? 'clickable' : '')}

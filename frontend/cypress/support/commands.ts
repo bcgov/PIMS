@@ -17,4 +17,6 @@
 //   cy.kcLogin('admin');
 // });
 
+import 'cypress-keycloak-commands';
+
 export = {};
