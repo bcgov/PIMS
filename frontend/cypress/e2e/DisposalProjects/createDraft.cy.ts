@@ -1,21 +1,48 @@
-import 'cypress-keycloak-commands';
 const PROJECT_NAME = 'Cypress Test Disposal Project';
 
 describe('Create a disposal project', () => {
   beforeEach(function() {
+    cy.kcLogout();
     cy.kcLogin('admin');
-    // TODO: Clean up request
+    // CLEAN UP
+    cy.visit(`/projects/list`);
+    cy.get('.tbody').then($tbody => {
+      const firstTableRow = $tbody
+        .children()
+        .eq(0)
+        .children()
+        .eq(0);
+      const projectNameCell = firstTableRow.children().eq(2);
+      const projectStatusCell = firstTableRow.children().eq(3);
+      cy.log(projectNameCell.text());
+      // If table row for Cypress test project exists in DRAFT status
+      if (projectNameCell.text() === PROJECT_NAME && projectStatusCell.text() === 'Review') {
+        cy.get('[role="cell"]')
+          .contains(PROJECT_NAME)
+          .then($projectNameField => {
+            // Get the project number from the sibling table row cell that contains PROJECT_NAME
+            const projectNumber = $projectNameField
+              .siblings()
+              .eq(1)
+              .children()
+              .children('span')
+              .text();
+            // Remove project
+            cy.get(`[data-testid="trash-icon-${projectNumber}"]`).click();
+            cy.get('[data-testid="modal-footer-ok-btn"]').click();
+          });
+      }
+    });
   });
 
   it('Create project with DRAFT status', () => {
-    cy.visit('/dispose/projects/draft');
+    cy.visit(`/dispose/projects/draft`);
 
     const inputs = {
       projectName: PROJECT_NAME,
       description: 'A test description.',
       searchFilter: {
         address: '750 6th Ave.',
-        location: 'Chilliwack',
       },
       assessedValue: '10350',
       netBookValue: '23789',
@@ -155,7 +182,15 @@ describe('Create a disposal project', () => {
       .click()
       .should('be.checked');
     cy.get('[data-testid="next-submit-btn"]').click();
+    /* <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+            [6/6] Review
+    * <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
+
+    // Description Field
+    cy.get('[data-testid="project-description"]')
+      .should('be.visible')
+      .should('be.disabled');
     // Return to project list.
-    cy.visit('/projects/list');
+    cy.visit(`/projects/list`);
   });
 });
