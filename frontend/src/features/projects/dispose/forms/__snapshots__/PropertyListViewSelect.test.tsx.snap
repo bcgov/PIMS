@@ -216,6 +216,7 @@ exports[`Property List View Select renders correctly 1`] = `
       />
       <button
         class="btn btn-secondary"
+        data-testid="add-to-project-btn"
         type="button"
       >
         Add To Project
@@ -445,6 +446,7 @@ exports[`Property List View Select renders correctly 1`] = `
           >
             <div
               class="td"
+              data-testid="cell-selection"
               role="cell"
               style="box-sizing: border-box; flex: 40 0 auto; min-width: 30px; width: 40px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
               title=""
@@ -460,6 +462,7 @@ exports[`Property List View Select renders correctly 1`] = `
             </div>
             <div
               class="td"
+              data-testid="cell-id"
               role="cell"
               style="box-sizing: border-box; flex: 40 0 auto; min-width: 30px; width: 40px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
               title=""
@@ -485,6 +488,7 @@ exports[`Property List View Select renders correctly 1`] = `
             </div>
             <div
               class="td clickable"
+              data-testid="cell-Agency"
               role="cell"
               style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
               title="Click to view property details"
@@ -493,6 +497,7 @@ exports[`Property List View Select renders correctly 1`] = `
             </div>
             <div
               class="td clickable"
+              data-testid="cell-Name"
               role="cell"
               style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
               title="Click to view property details"
@@ -501,6 +506,7 @@ exports[`Property List View Select renders correctly 1`] = `
             </div>
             <div
               class="td clickable"
+              data-testid="cell-address"
               role="cell"
               style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
               title="Click to view property details"
@@ -509,6 +515,7 @@ exports[`Property List View Select renders correctly 1`] = `
             </div>
             <div
               class="td clickable"
+              data-testid="cell-classification"
               role="cell"
               style="box-sizing: border-box; flex: 140 0 auto; min-width: 30px; width: 140px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
               title="Click to view property details"
@@ -517,6 +524,7 @@ exports[`Property List View Select renders correctly 1`] = `
             </div>
             <div
               class="td clickable"
+              data-testid="cell-zoning"
               role="cell"
               style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
               title="Click to view property details"
@@ -525,6 +533,7 @@ exports[`Property List View Select renders correctly 1`] = `
             </div>
             <div
               class="td"
+              data-testid="cell-projectNumbers"
               role="cell"
               style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
               title=""
@@ -535,6 +544,7 @@ exports[`Property List View Select renders correctly 1`] = `
             </div>
             <div
               class="td clickable"
+              data-testid="cell-netBook"
               role="cell"
               style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
               title="Click to view property details"
@@ -545,6 +555,7 @@ exports[`Property List View Select renders correctly 1`] = `
             </div>
             <div
               class="td clickable"
+              data-testid="cell-Assessed Land"
               role="cell"
               style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
               title="Click to view property details"
@@ -555,6 +566,7 @@ exports[`Property List View Select renders correctly 1`] = `
             </div>
             <div
               class="td"
+              data-testid="cell-Assessment Year"
               role="cell"
               style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
               title=""
@@ -563,6 +575,7 @@ exports[`Property List View Select renders correctly 1`] = `
             </div>
             <div
               class="td clickable"
+              data-testid="cell-Assessed Building"
               role="cell"
               style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
               title="Click to view property details"
@@ -571,6 +584,7 @@ exports[`Property List View Select renders correctly 1`] = `
             </div>
             <div
               class="td clickable"
+              data-testid="cell-propertyTypeId"
               role="cell"
               style="box-sizing: border-box; flex: 60 0 auto; min-width: 30px; width: 60px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
               title="Click to view property details"

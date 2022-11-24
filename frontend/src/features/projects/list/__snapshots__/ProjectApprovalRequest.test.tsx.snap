@@ -213,6 +213,7 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
             </div>
             <div
               class="td clickable"
+              data-testid="cell-projectNumber"
               role="cell"
               style="box-sizing: border-box; flex: 65 0 auto; min-width: 65px; width: 3.5%; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
               title="View Disposal Project details"
@@ -226,6 +227,7 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
             </div>
             <div
               class="td clickable"
+              data-testid="cell-name"
               role="cell"
               style="box-sizing: border-box; flex: 200 0 auto; min-width: 200px; width: 7%; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
               title="View Disposal Project details"
@@ -235,6 +237,7 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
             </div>
             <div
               class="td clickable"
+              data-testid="cell-status"
               role="cell"
               style="box-sizing: border-box; flex: 50 0 auto; min-width: 50px; width: 7%; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
               title="View Disposal Project details"
@@ -244,6 +247,7 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
             </div>
             <div
               class="td clickable"
+              data-testid="cell-Agency"
               role="cell"
               style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 7%; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
               title="View Disposal Project details"
@@ -253,6 +257,7 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
             </div>
             <div
               class="td clickable"
+              data-testid="cell-zoning"
               role="cell"
               style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 3.5%; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
               title="View Disposal Project details"
@@ -262,6 +267,7 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
             </div>
             <div
               class="td clickable"
+              data-testid="cell-zoningPotential"
               role="cell"
               style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 3.5%; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
               title="View Disposal Project details"
@@ -271,6 +277,7 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
             </div>
             <div
               class="td clickable"
+              data-testid="cell-netBook"
               role="cell"
               style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 3.5%; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
               title="View Disposal Project details"
@@ -280,6 +287,7 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
             </div>
             <div
               class="td clickable"
+              data-testid="cell-market"
               role="cell"
               style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 3.5%; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
               title="View Disposal Project details"
@@ -289,6 +297,7 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
             </div>
             <div
               class="td clickable"
+              data-testid="cell-updatedOn"
               role="cell"
               style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 7%; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
               title="View Disposal Project details"
@@ -298,6 +307,7 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
             </div>
             <div
               class="td clickable"
+              data-testid="cell-updatedById"
               role="cell"
               style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 7%; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
               title="View Disposal Project details"
@@ -506,6 +516,7 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
                   >
                     <div
                       class="td"
+                      data-testid="cell-Agency"
                       role="cell"
                       style="box-sizing: border-box; flex: 65 0 auto; min-width: 65px; width: 3.5%; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
                       title=""
@@ -515,6 +526,7 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
                     </div>
                     <div
                       class="td"
+                      data-testid="cell-Name/PID"
                       role="cell"
                       style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 7%; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
                       title=""
@@ -524,6 +536,7 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
                     </div>
                     <div
                       class="td"
+                      data-testid="cell-classification"
                       role="cell"
                       style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 7%; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
                       title=""
@@ -533,6 +546,7 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
                     </div>
                     <div
                       class="td"
+                      data-testid="cell-Street Address"
                       role="cell"
                       style="box-sizing: border-box; flex: 160 0 auto; min-width: 160px; width: 14%; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
                       title=""
@@ -542,6 +556,7 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
                     </div>
                     <div
                       class="td"
+                      data-testid="cell-zoning"
                       role="cell"
                       style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 3.5%; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
                       title=""
@@ -551,6 +566,7 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
                     </div>
                     <div
                       class="td"
+                      data-testid="cell-zoningPotential"
                       role="cell"
                       style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 3.5%; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
                       title=""
@@ -560,6 +576,7 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
                     </div>
                     <div
                       class="td"
+                      data-testid="cell-assessedLand"
                       role="cell"
                       style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 7%; justify-content: flex-end; text-align: right; align-items: flex-start; display: flex;"
                       title=""
@@ -569,6 +586,7 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
                     </div>
                     <div
                       class="td"
+                      data-testid="cell-netBook"
                       role="cell"
                       style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 7%; justify-content: flex-end; text-align: right; align-items: flex-start; display: flex;"
                       title=""
@@ -580,6 +598,7 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
                     </div>
                     <div
                       class="td"
+                      data-testid="cell-market"
                       role="cell"
                       style="box-sizing: border-box; flex: 80 0 auto; min-width: 80px; width: 7%; justify-content: flex-end; text-align: right; align-items: flex-start; display: flex;"
                       title=""
@@ -591,6 +610,7 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
                     </div>
                     <div
                       class="td"
+                      data-testid="cell-propertyTypeId"
                       role="cell"
                       style="box-sizing: border-box; flex: 65 0 auto; min-width: 65px; width: 3.5%; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
                       title=""
@@ -604,6 +624,7 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
                     </div>
                     <div
                       class="td"
+                      data-testid="cell-landArea"
                       role="cell"
                       style="box-sizing: border-box; flex: 65 0 auto; min-width: 65px; width: 3.5%; justify-content: flex-end; text-align: right; align-items: flex-start; display: flex;"
                       title=""
@@ -613,6 +634,7 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
                     </div>
                     <div
                       class="td"
+                      data-testid="cell-view-link-column"
                       role="cell"
                       style="box-sizing: border-box; flex: 65 0 auto; min-width: 65px; width: 3.5%; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
                       title=""

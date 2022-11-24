@@ -72,6 +72,7 @@ exports[`Review Approve Step renders correctly 1`] = `
               <div>
                 <input
                   class="form-control"
+                  data-testid="project-number"
                   disabled=""
                   name="projectNumber"
                   placeholder="SPP-XXXXXX"
@@ -257,11 +258,12 @@ exports[`Review Approve Step renders correctly 1`] = `
                 >
                   <input
                     class="form-control input-number"
+                    data-testid="assessed"
                     disabled=""
                     name="assessed"
                     placeholder=""
                     required=""
-                    style="width: 200px;"
+                    style="width: 200px; border: 2px solid #063970;"
                     value=""
                   />
                 </div>
@@ -287,11 +289,12 @@ exports[`Review Approve Step renders correctly 1`] = `
                 >
                   <input
                     class="form-control input-number"
+                    data-testid="netBook"
                     disabled=""
                     name="netBook"
                     placeholder=""
                     required=""
-                    style="width: 200px;"
+                    style="width: 200px; border: 2px solid #063970;"
                     value="10"
                   />
                 </div>
@@ -321,11 +324,12 @@ exports[`Review Approve Step renders correctly 1`] = `
                 >
                   <input
                     class="form-control input-number"
+                    data-testid="market"
                     disabled=""
                     name="market"
                     placeholder=""
                     required=""
-                    style="width: 200px;"
+                    style="width: 200px; border: 2px solid #063970;"
                     value="9"
                   />
                 </div>
@@ -351,10 +355,11 @@ exports[`Review Approve Step renders correctly 1`] = `
                 >
                   <input
                     class="form-control input-number"
+                    data-testid="appraised"
                     disabled=""
                     name="appraised"
                     placeholder=""
-                    style="width: 200px;"
+                    style="width: 200px; border: 1px solid grey;"
                     value=""
                   />
                 </div>
@@ -384,10 +389,11 @@ exports[`Review Approve Step renders correctly 1`] = `
                 >
                   <input
                     class="form-control input-number"
+                    data-testid="salesCost"
                     disabled=""
                     name="salesCost"
                     placeholder=""
-                    style="width: 200px;"
+                    style="width: 200px; border: 1px solid grey;"
                     value="7"
                   />
                 </div>
@@ -413,10 +419,11 @@ exports[`Review Approve Step renders correctly 1`] = `
                 >
                   <input
                     class="form-control input-number"
+                    data-testid="programCost"
                     disabled=""
                     name="programCost"
                     placeholder=""
-                    style="width: 200px;"
+                    style="width: 200px; border: 1px solid grey;"
                     value="4"
                   />
                 </div>
@@ -620,6 +627,7 @@ exports[`Review Approve Step renders correctly 1`] = `
                   >
                     <div
                       class="td clickable"
+                      data-testid="cell-Agency"
                       role="cell"
                       style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
                       title="Click to view property details"
@@ -628,6 +636,7 @@ exports[`Review Approve Step renders correctly 1`] = `
                     </div>
                     <div
                       class="td clickable"
+                      data-testid="cell-Name"
                       role="cell"
                       style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
                       title="Click to view property details"
@@ -636,6 +645,7 @@ exports[`Review Approve Step renders correctly 1`] = `
                     </div>
                     <div
                       class="td clickable"
+                      data-testid="cell-address"
                       role="cell"
                       style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
                       title="Click to view property details"
@@ -644,6 +654,7 @@ exports[`Review Approve Step renders correctly 1`] = `
                     </div>
                     <div
                       class="td clickable"
+                      data-testid="cell-classification"
                       role="cell"
                       style="box-sizing: border-box; flex: 140 0 auto; min-width: 30px; width: 140px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
                       title="Click to view property details"
@@ -652,12 +663,14 @@ exports[`Review Approve Step renders correctly 1`] = `
                     </div>
                     <div
                       class="td clickable"
+                      data-testid="cell-zoning"
                       role="cell"
                       style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
                       title="Click to view property details"
                     />
                     <div
                       class="td"
+                      data-testid="cell-projectNumbers"
                       role="cell"
                       style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
                       title=""
@@ -668,6 +681,7 @@ exports[`Review Approve Step renders correctly 1`] = `
                     </div>
                     <div
                       class="td clickable"
+                      data-testid="cell-netBook"
                       role="cell"
                       style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
                       title="Click to view property details"
@@ -678,6 +692,7 @@ exports[`Review Approve Step renders correctly 1`] = `
                     </div>
                     <div
                       class="td clickable"
+                      data-testid="cell-Assessed Land"
                       role="cell"
                       style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
                       title="Click to view property details"
@@ -688,6 +703,7 @@ exports[`Review Approve Step renders correctly 1`] = `
                     </div>
                     <div
                       class="td"
+                      data-testid="cell-Assessment Year"
                       role="cell"
                       style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
                       title=""
@@ -696,6 +712,7 @@ exports[`Review Approve Step renders correctly 1`] = `
                     </div>
                     <div
                       class="td clickable"
+                      data-testid="cell-Assessed Building"
                       role="cell"
                       style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
                       title="Click to view property details"
@@ -704,6 +721,7 @@ exports[`Review Approve Step renders correctly 1`] = `
                     </div>
                     <div
                       class="td clickable"
+                      data-testid="cell-propertyTypeId"
                       role="cell"
                       style="box-sizing: border-box; flex: 60 0 auto; min-width: 30px; width: 60px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
                       title="Click to view property details"
@@ -1059,6 +1077,7 @@ exports[`Review Approve Step renders correctly 1`] = `
             <input
               checked=""
               class="form-check-input"
+              data-testid="taskform-check-1"
               disabled=""
               id="input-tasks.1.isCompleted"
               name="tasks.1.isCompleted"
@@ -1215,6 +1234,7 @@ exports[`Review Approve Step renders correctly 1`] = `
             <input
               checked=""
               class="form-check-input"
+              data-testid="approval-check"
               disabled=""
               id="input-confirmation"
               name="confirmation"
