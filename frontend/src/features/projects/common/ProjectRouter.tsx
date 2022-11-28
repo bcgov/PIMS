@@ -1,19 +1,18 @@
 import { ProjectActions } from 'constants/actionTypes';
 import Claims from 'constants/claims';
+import { LayoutWrapper } from 'features/projects/common';
 import { DisposeWorkflowStatus, ReviewWorkflowStatus } from 'features/projects/constants';
 import { IProject } from 'features/projects/interfaces';
+import { PrivateRoute } from 'features/routes';
 import { FormikValues } from 'formik';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import queryString from 'query-string';
 import React, { useEffect, useRef } from 'react';
 import { Container, Spinner } from 'react-bootstrap';
-import { Navigate, Routes, useNavigate } from 'react-router-dom';
-import { PathMatch } from 'react-router-dom';
+import { Navigate, PathMatch, Route, Routes, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useAppDispatch, useAppSelector } from 'store';
-import AppRoute from 'utils/AppRoute';
-import PrivateRoute from 'utils/PrivateRoute';
 
 import { ReviewApproveStep } from '../assess';
 import {
@@ -58,7 +57,7 @@ export const ProjectRouter = ({
         })
         .catch(() => {
           toast.error('Failed to load project, returning to project list.');
-          navigate('/projects/list');
+          navigate('/projects/list', { replace: true });
         });
     }
   }, [dispatch, navigate, projectNumber]);
@@ -98,31 +97,32 @@ export const ProjectRouter = ({
       {getProjectRequest?.isFetching === false && projectNumber === project.projectNumber ? (
         <Routes>
           {/*TODO: this will probably need to be update to a map of routes/components as well.*/}
-          <PrivateRoute
-            layout={ProjectLayout}
-            claim={[Claims.ADMIN_PROJECTS, Claims.DISPOSE_APPROVE]}
-            path="/projects/assess/properties/update"
-            component={SelectProjectPropertiesPage}
-          />
-          <PrivateRoute
-            layout={ProjectLayout}
-            claim={[Claims.ADMIN_PROJECTS, Claims.DISPOSE_APPROVE]}
-            path="/projects/assess/properties"
-            component={ReviewApproveStep}
-            componentProps={{ formikRef }}
-          />
-          <PrivateRoute
-            layout={ProjectLayout}
-            claim={Claims.PROJECT_VIEW}
-            path={'/projects/summary'}
-            component={ProjectSummary}
-          />
+          <PrivateRoute claim={[Claims.ADMIN_PROJECTS, Claims.DISPOSE_APPROVE]}>
+            <Route path="/projects/assess/properties/update">
+              <LayoutWrapper
+                layout={ProjectLayout}
+                component={SelectProjectPropertiesPage}
+              ></LayoutWrapper>
+            </Route>
+            <Route path="/projects/assess/properties">
+              <LayoutWrapper
+                layout={ProjectLayout}
+                component={ReviewApproveStep}
+                componentProps={{ formikRef }}
+              ></LayoutWrapper>
+            </Route>
+          </PrivateRoute>
+          <PrivateRoute claim={Claims.PROJECT_VIEW}>
+            <Route path={'/projects/summary'}>
+              <LayoutWrapper
+                layout={ProjectLayout}
+                component={ProjectSummary}
+                componentProps={{ formikRef }}
+              ></LayoutWrapper>
+            </Route>
+          </PrivateRoute>
           {/** Due to the use of dynamic routes within the project workflows, manually redirect to not found if no valid /projects route exists */}
-          <AppRoute
-            title="*"
-            path="/projects/*"
-            component={() => <Navigate to="/page-not-found" />}
-          />
+          <Route path="/projects/*" element={<Navigate to="/page-not-found" />} />
         </Routes>
       ) : (
         <Container fluid style={{ textAlign: 'center' }}>
