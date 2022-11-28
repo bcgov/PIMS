@@ -3,7 +3,11 @@ import { Claims } from 'constants/claims';
 import { IENotSupportedPage } from 'features/account/IENotSupportedPage';
 import Login from 'features/account/Login';
 import { LogoutPage } from 'features/account/Logout';
+<<<<<<< HEAD
 import { LayoutWrapper, SelectProjectPropertiesPage } from 'features/projects/common';
+=======
+import { LayoutWrapper } from 'features/projects/common';
+>>>>>>> a8718515 (router v6.3, stable but some routes dont work)
 import { ProjectLayout } from 'features/projects/disposals';
 import {
   ProjectCloseOut,
@@ -39,7 +43,11 @@ import React, { lazy, Suspense, useLayoutEffect } from 'react';
 import { Col } from 'react-bootstrap';
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 
+<<<<<<< HEAD
 import { ReviewApproveStep } from '../projects/assess';
+=======
+import Login from '../account/Login';
+>>>>>>> a8718515 (router v6.3, stable but some routes dont work)
 import { IsAuthenticatedRoute } from './IsAuthenticatedRoute';
 import PrivateRoute from './PrivateRoute';
 

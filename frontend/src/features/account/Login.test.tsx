@@ -87,13 +87,9 @@ describe('login', () => {
 
     render(
       <Provider store={store}>
-<<<<<<< HEAD
-        <Login />
-=======
         <MemoryRouter initialEntries={[history.location]}>
           <Login />
         </MemoryRouter>
->>>>>>> 6ee3c34e (Update react-router-dom to 6.4.3)
       </Provider>,
     );
     expect(history.location.pathname).toBe('/access/request');
