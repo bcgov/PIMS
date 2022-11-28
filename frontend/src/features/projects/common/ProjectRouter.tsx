@@ -1,5 +1,6 @@
 import { ProjectActions } from 'constants/actionTypes';
 import Claims from 'constants/claims';
+import { LayoutWrapper } from 'features/projects/common';
 import { DisposeWorkflowStatus, ReviewWorkflowStatus } from 'features/projects/constants';
 import { IProject } from 'features/projects/interfaces';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
