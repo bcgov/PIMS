@@ -62,9 +62,7 @@ describe('login', () => {
 
     render(
       <Provider store={store}>
-        <MemoryRouter initialEntries={[history.location]}>
-          <Login />
-        </MemoryRouter>
+        <Login />
       </Provider>,
     );
     expect(history.location.pathname).toBe('/mapview');
@@ -89,9 +87,7 @@ describe('login', () => {
 
     render(
       <Provider store={store}>
-        <MemoryRouter initialEntries={[history.location]}>
-          <Login />
-        </MemoryRouter>
+        <Login />
       </Provider>,
     );
     expect(history.location.pathname).toBe('/access/request');
