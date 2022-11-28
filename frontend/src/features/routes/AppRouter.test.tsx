@@ -1,10 +1,9 @@
+import { LayoutWrapper as AppRoute } from 'features/projects/common';
 import { createMemoryHistory } from 'history';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { act } from 'react-dom/test-utils';
 import { MemoryRouter } from 'react-router-dom';
-
-import AppRoute from './AppRoute';
 
 const history = createMemoryHistory();
 
