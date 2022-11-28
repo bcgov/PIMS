@@ -32,11 +32,7 @@ describe('logout', () => {
     (useKeycloak as jest.Mock).mockReturnValue({ keycloak: { authenticated: false } });
     (useConfiguration as jest.Mock).mockReturnValue({ siteMinderLogoutUrl: undefined });
 
-    render(
-      <MemoryRouter initialEntries={[history.location]}>
-        <LogoutPage />
-      </MemoryRouter>,
-    );
+    render(<LogoutPage />);
 
     expect(location.pathname).toBe('/login');
   });
