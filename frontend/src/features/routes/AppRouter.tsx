@@ -346,7 +346,6 @@ export const AppRouter: React.FC = () => {
               }
             />
           </Route>
-
           {/**
            * PROJECTS -- /projects
            */}
