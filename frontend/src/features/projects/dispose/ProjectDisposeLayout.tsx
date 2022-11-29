@@ -112,7 +112,7 @@ const ProjectDisposeLayout = ({
   };
 
   const getComponentPath = (wfc: IProjectWorkflowComponent) => {
-    return `${match?.pathnameBase}${_.find(workflowStatuses, { code: wfc.workflowStatus })?.route}`;
+    return `/dispose${_.find(workflowStatuses, { code: wfc.workflowStatus })?.route}`;
   };
 
   useEffect(() => {
@@ -151,17 +151,17 @@ const ProjectDisposeLayout = ({
           ) : null}
           {getProjectRequest?.isFetching !== true ? (
             <Container fluid className="step-content">
-              <Routes>
-                {projectWorkflowComponents.map(wfc => (
-                  <Route
-                    key={wfc.workflowStatus.toString()}
-                    path={getComponentPath(wfc)}
-                    element={() => <wfc.component formikRef={formikRef} />}
-                  />
-                ))}
-                <Route path="/dispose" element={<Navigate to="/dispose/projects/draft" />} />
-                <Route path="/dispose/*" element={<Navigate to="/page-not-found" />} />
-              </Routes>
+              {projectWorkflowComponents.map(wfc =>
+                getComponentPath(wfc) === window.location.pathname ? (
+                  <div key={wfc.workflowStatus}>
+                    <wfc.component formikRef={formikRef} />
+                    {/* Scroll to the top of the page every time the current step of the form changes */}
+                    {document.querySelector('.ProjectDisposeView')?.scrollTo?.(0, 0)}
+                  </div>
+                ) : (
+                  ''
+                ),
+              )}
               <StepActions
                 getNextStep={getNextStep}
                 onSave={() => onSave(formikRef)}
