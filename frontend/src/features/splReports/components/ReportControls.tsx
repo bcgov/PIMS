@@ -110,7 +110,7 @@ const ReportControls: React.FunctionComponent<IReportControlsProps> = ({
                 {reportOptions.length > 1 ? (
                   <Col md="auto">
                     <Row
-                      controlId="select-from"
+                      controlid="select-from"
                       style={{ marginLeft: '10px', display: 'flex', alignItems: 'end' }}
                     >
                       <Col md="auto">
@@ -140,7 +140,7 @@ const ReportControls: React.FunctionComponent<IReportControlsProps> = ({
                 )}
                 <Col md="auto">
                   <Row
-                    controlId="input-to"
+                    controlid="input-to"
                     style={{ marginLeft: '10px', display: 'flex', alignItems: 'end' }}
                   >
                     <Col md="auto">
