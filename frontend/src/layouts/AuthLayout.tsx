@@ -10,6 +10,7 @@ import PublicLayout from './PublicLayout';
 
 const AuthLayout: React.FC = ({ children }) => {
   const { obj: keycloak } = useKeycloakWrapper();
+
   return (
     <AuthStateContext.Consumer>
       {context => {
@@ -27,7 +28,7 @@ const AuthLayout: React.FC = ({ children }) => {
               </Container>
             )}
             <Container fluid className="d-flex flex-column flex-grow-1" style={{ padding: 0 }}>
-              <Row className="w-100 h-100 g-0">
+              <Row className="w-100 h-100">
                 <Col>{children}</Col>
               </Row>
             </Container>
