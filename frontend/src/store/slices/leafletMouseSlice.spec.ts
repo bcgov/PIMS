@@ -25,6 +25,7 @@ describe('Leaflet mouse slice tests', () => {
       layerPoint: new Point(1, 2),
       containerPoint: new Point(3, 4),
       originalEvent: new MouseEvent('click'),
+      popup: undefined,
     };
     expect(reducer(undefined, saveClickLatLng(click))).toEqual({
       ...initialLeafletState,

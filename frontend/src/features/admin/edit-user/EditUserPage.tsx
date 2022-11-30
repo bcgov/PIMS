@@ -103,7 +103,7 @@ const EditUserPage = (props: IEditUserPageProps) => {
     note: user.note,
     agency: user.agencies && user.agencies.length !== 0 ? user.agencies[0].id : '',
     role: user.roles && user.roles.length !== 0 ? user.roles[0].id : '',
-    position: user.position,
+    position: user.position ?? '',
     lastLogin: formatApiDateTime(user.lastLogin),
   };
 
