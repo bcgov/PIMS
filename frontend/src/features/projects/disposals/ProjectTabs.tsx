@@ -6,11 +6,7 @@ import { IProjectModel } from 'hooks/api/projects/disposals';
 import { useKeycloakWrapper } from 'hooks/useKeycloakWrapper';
 import React from 'react';
 import { Spinner } from 'react-bootstrap';
-<<<<<<< HEAD
 import { Outlet, useLocation } from 'react-router-dom';
-=======
-import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
->>>>>>> 066a122a (Upgrade react router dom to v6 - chg4)
 
 import * as styled from './styled';
 
