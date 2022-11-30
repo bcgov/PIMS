@@ -4,6 +4,7 @@ import { Claim } from 'hooks/api';
 import { Workflow, WorkflowStatus } from 'hooks/api/projects';
 import { IProjectModel } from 'hooks/api/projects/disposals';
 import { useKeycloakWrapper } from 'hooks/useKeycloakWrapper';
+import AuthLayout from 'layouts/AuthLayout';
 import React from 'react';
 import { Spinner } from 'react-bootstrap';
 import { Outlet, useLocation } from 'react-router-dom';
