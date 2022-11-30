@@ -29,14 +29,8 @@ export const ProjectInformationTabs: React.FC<IProjectInformationProps> = ({
           />,
         ]}
       >
-        <Routes>
-          <Route path="/projects/disposal/:id/information">
-            <ProjectInformation disabled={disabled} />
-          </Route>
-          <Route path="/projects/disposal/:id/information/properties">
-            <ProjectProperties disabled={disabled} />
-          </Route>
-        </Routes>
+        <ProjectInformation disabled={disabled} />
+        <ProjectProperties disabled={disabled} />
       </Tabs>
     </styled.ProjectInformation>
   );
