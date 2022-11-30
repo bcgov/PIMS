@@ -8,6 +8,7 @@ import React from 'react';
 import { Spinner } from 'react-bootstrap';
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 
+import { LayoutWrapper } from '../common';
 import {
   ProjectCloseOut,
   ProjectDocumentation,
@@ -100,23 +101,18 @@ export const ProjectTabs: React.FC<IProjectTabProps> = ({ project, isLoading }) 
 
       <Tabs tabs={tabs}>
         <Routes>
-          <Route path="/projects/disposal">
-            <Navigate to={`/page-not-found`} />
-          </Route>
-          <Route path="/projects/disposal/:id">
-            {id === undefined || !!id ? (
-              <Navigate to={`/projects/disposal/${id}/information`} />
-            ) : (
-              <Navigate to={`/page-not-found`} />
-            )}
-          </Route>
+          <Route path="/projects/disposal" element={<Navigate to="/page-not-found" />} />
+          <Route
+            path="/projects/disposal/:id"
+            element={<Navigate to="/projects/disposal/{id}/information" />}
+          />
           <Route path="/projects/disposal/:id/information">
-            <ProjectInformationTabs disabled={disabled} />
+            <Route index element={<LayoutWrapper component={ProjectInformationTabs} />} />
           </Route>
           <Route path="/projects/disposal/:id/documentation">
-            <ProjectDocumentation disabled={disabled} />
+            <Route index element={<LayoutWrapper component={ProjectDocumentation} />} />
           </Route>
-          <Route path="/projects/disposal/:id/erp">
+          {/* <Route path="/projects/disposal/:id/erp">
             <ProjectERPTabs project={project} disabled={disabled} />
           </Route>
           <Route path="/projects/disposal/:id/not/spl">
@@ -130,7 +126,7 @@ export const ProjectTabs: React.FC<IProjectTabProps> = ({ project, isLoading }) 
           </Route>
           <Route path="/projects/disposal/:id/notifications">
             <ProjectNotifications />
-          </Route>
+          </Route> */}
         </Routes>
       </Tabs>
     </styled.ProjectTabs>

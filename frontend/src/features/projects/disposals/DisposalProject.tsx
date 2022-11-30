@@ -96,44 +96,37 @@ export const DisposalProject: React.FC<IDisposalProjectProps> = props => {
         }}
       >
         <Form className="project">
-          <Routes>
-            <Route path="/projects/disposal/:id/transfer/within/gre">
-              {!!project && <GreTransferStep project={project} onUpdate={handleUpdate} />}
-            </Route>
-            <Route>
-              <Row nowrap>
-                <Col>
-                  <h1>Surplus Property Program Project</h1>
-                  <Row align="center">
-                    <h2>{project?.projectNumber}</h2>
-                    <p>{project?.name}</p>
-                  </Row>
-                </Col>
-                <div className="manual">
-                  <SresManual />
-                </div>
+          <Row nowrap>
+            <Col>
+              <h1>Surplus Property Program Project</h1>
+              <Row align="center">
+                <h2>{project?.projectNumber}</h2>
+                <p>{project?.name}</p>
               </Row>
-              <Row>
-                <ProjectStatus
-                  project={project}
-                  onUpdate={handleUpdate}
-                  isSubmitting={isSubmitting}
-                  setIsSubmitting={setIsSubmitting}
-                />
-              </Row>
-              <ProjectTabs project={project} isLoading={isSubmitting} />
-              <Row className="project-footer">
-                <Button
-                  variant="primary"
-                  type="submit"
-                  isSubmitting={isSubmitting}
-                  showSubmitting={true}
-                >
-                  Save
-                </Button>
-              </Row>
-            </Route>
-          </Routes>
+            </Col>
+            <div className="manual">
+              <SresManual />
+            </div>
+          </Row>
+          <Row>
+            <ProjectStatus
+              project={project}
+              onUpdate={handleUpdate}
+              isSubmitting={isSubmitting}
+              setIsSubmitting={setIsSubmitting}
+            />
+          </Row>
+          <ProjectTabs project={project} isLoading={isSubmitting} />
+          <Row className="project-footer">
+            <Button
+              variant="primary"
+              type="submit"
+              isSubmitting={isSubmitting}
+              showSubmitting={true}
+            >
+              Save
+            </Button>
+          </Row>
         </Form>
       </Formik>
     </styled.DisposalProject>
