@@ -4,6 +4,7 @@ import { IENotSupportedPage } from 'features/account/IENotSupportedPage';
 import Login from 'features/account/Login';
 import { LogoutPage } from 'features/account/Logout';
 import { LayoutWrapper } from 'features/projects/common/LayoutWrapper';
+import { DisposalProject } from 'features/projects/disposals/DisposalProject';
 import MapView from 'features/properties/map/MapView';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import AuthLayout from 'layouts/AuthLayout';
@@ -450,6 +451,18 @@ export const AppRouter: React.FC = () => {
                 component={ProjectListView}
                 layout={AuthLayout}
                 title={getTitle('View Projects')}
+              />
+            }
+          />
+        </Route>
+        <Route path="/projects/disposal/:id" element={<PrivateRoute claim={Claims.PROJECT_ADD} />}>
+          <Route
+            index
+            element={
+              <LayoutWrapper
+                component={DisposalProject}
+                layout={AuthLayout}
+                title={getTitle('Disposal Project')}
               />
             }
           />
