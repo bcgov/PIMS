@@ -26,6 +26,7 @@ const ProjectListView = lazy(() => import('features/projects/list/ProjectListVie
 const ProjectApprovalRequestListView = lazy(() =>
   import('features/projects/list/ProjectApprovalRequestListView'),
 );
+const ProjectRouter = lazy(() => import('features/projects/common/ProjectRouter'));
 const SPLProjectListView = lazy(() => import('features/projects/list/SPLProjectListView'));
 const ProjectDisposeView = lazy(() => import('features/projects/dispose/ProjectDisposeView'));
 const SplReportContainer = lazy(() => import('features/splReports/containers/SplReportContainer'));
@@ -420,6 +421,18 @@ export const AppRouter: React.FC = () => {
               </PrivateRoute>
             }
           />
+          <Route path="/projects" element={<PrivateRoute claim={Claims.PROJECT_ADD} />}>
+            <Route
+              index
+              element={
+                <LayoutWrapper
+                  component={ProjectRouter}
+                  layout={AuthLayout}
+                  title={getTitle('Dispose Property')}
+                />
+              }
+            />
+          </Route>
           <Route path="/reports/spl" element={<PrivateRoute claim={Claims.REPORTS_SPL} />}>
             <Route
               index
