@@ -1,3 +1,5 @@
+import { LayoutWrapper } from 'features/projects/common/LayoutWrapper';
+import ProjectLayout from 'features/projects/common/ProjectLayout';
 import { IProject, IProjectTask, IStepProps } from 'features/projects/interfaces';
 import { Formik, setIn, validateYupSchema, yupToFormErrors } from 'formik';
 import { WorkflowStatus } from 'hooks/api/projects';
@@ -127,52 +129,60 @@ const ReviewApproveStep = ({ formikRef }: IStepProps) => {
       return values.workflowCode;
     }
   };
-
-  return (
-    <Container fluid className="ReviewApproveStep">
-      <Formik
-        initialValues={initialValues}
-        innerRef={formikRef}
-        enableReinitialize={true}
-        onSubmit={(values: IProject) => {
-          const workflowCode = getNextWorkflowCode(submitStatusCode, values);
-          return onSubmitReview(values, formikRef, submitStatusCode, workflowCode).then(
-            (project: IProject) => {
-              switch (project?.statusCode) {
-                case WorkflowStatus.ApprovedForErp:
-                case WorkflowStatus.ApprovedForExemption:
-                  navigate(`/projects/disposal/${project.id}` ?? 'invalid');
-                  break;
-                case WorkflowStatus.Denied:
-                  goToDisposePath('../summary');
-                  break;
-              }
-            },
-          );
-        }}
-        validate={handleValidate}
-      >
-        <Form>
-          <h1>Project Application Review</h1>
-          <ReviewApproveForm
-            goToAddProperties={() => goToDisposePath('properties/update')}
-            canEdit={canEdit}
-          />
-          <StepErrorSummary />
-          {canEdit ? (
-            <ReviewApproveActions
-              {...{
-                submitStatusCode,
-                setSubmitStatusCode,
-                isSubmitting: !noFetchingProjectRequests,
-                submitDirectly: (values: IProject) =>
-                  onSubmitReview(values, formikRef, submitStatusCode, values.workflowCode),
-              }}
+  const ReviewApproveStepContent = () => {
+    return (
+      <Container fluid className="ReviewApproveStep">
+        <Formik
+          initialValues={initialValues}
+          innerRef={formikRef}
+          enableReinitialize={true}
+          onSubmit={(values: IProject) => {
+            const workflowCode = getNextWorkflowCode(submitStatusCode, values);
+            return onSubmitReview(values, formikRef, submitStatusCode, workflowCode).then(
+              (project: IProject) => {
+                switch (project?.statusCode) {
+                  case WorkflowStatus.ApprovedForErp:
+                  case WorkflowStatus.ApprovedForExemption:
+                    navigate(`/projects/disposal/${project.id}` ?? 'invalid');
+                    break;
+                  case WorkflowStatus.Denied:
+                    goToDisposePath('../summary');
+                    break;
+                }
+              },
+            );
+          }}
+          validate={handleValidate}
+        >
+          <Form>
+            <h1>Project Application Review</h1>
+            <ReviewApproveForm
+              goToAddProperties={() => goToDisposePath('properties/update')}
+              canEdit={canEdit}
             />
-          ) : null}
-        </Form>
-      </Formik>
-    </Container>
+            <StepErrorSummary />
+            {canEdit ? (
+              <ReviewApproveActions
+                {...{
+                  submitStatusCode,
+                  setSubmitStatusCode,
+                  isSubmitting: !noFetchingProjectRequests,
+                  submitDirectly: (values: IProject) =>
+                    onSubmitReview(values, formikRef, submitStatusCode, values.workflowCode),
+                }}
+              />
+            ) : null}
+          </Form>
+        </Formik>
+      </Container>
+    );
+  };
+  return (
+    <LayoutWrapper
+      layout={ProjectLayout}
+      component={ReviewApproveStepContent}
+      componentProps={{ formikRef }}
+    ></LayoutWrapper>
   );
 };
 
