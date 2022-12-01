@@ -6,16 +6,18 @@ import { LogoutPage } from 'features/account/Logout';
 import { LayoutWrapper } from 'features/projects/common/LayoutWrapper';
 import { DisposalProject } from 'features/projects/disposals/DisposalProject';
 import MapView from 'features/properties/map/MapView';
+import { FormikValues } from 'formik';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import AuthLayout from 'layouts/AuthLayout';
 import PublicLayout from 'layouts/PublicLayout';
 import AccessDenied from 'pages/401/AccessDenied';
 import { NotFoundPage } from 'pages/404/NotFoundPage';
 import Test from 'pages/Test.ignore';
-import React, { lazy, Suspense, useLayoutEffect } from 'react';
+import React, { lazy, Suspense, useLayoutEffect, useRef } from 'react';
 import { Col } from 'react-bootstrap';
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 
+import { ReviewApproveStep } from '../projects/assess';
 import { IsAuthenticatedRoute } from './IsAuthenticatedRoute';
 import PrivateRoute from './PrivateRoute';
 
@@ -38,6 +40,7 @@ const EditAdminArea = lazy(() => import('features/admin/admin-areas/EditAdminAre
 const PropertyListView = lazy(() => import('features/properties/list/PropertyListView'));
 
 export const AppRouter: React.FC = () => {
+  const formikRef = useRef<FormikValues>();
   const location = useLocation();
   useLayoutEffect(() => {
     window.scrollTo(0, 0);
@@ -394,6 +397,23 @@ export const AppRouter: React.FC = () => {
                   layout={AuthLayout}
                   title={getTitle('View SPL Projects')}
                 />
+              }
+            />
+          </Route>
+          <Route
+            path="/projects/assess/properties"
+            element={
+              <PrivateRoute claim={[Claims.ADMIN_PROJECTS, Claims.DISPOSE_APPROVE]}></PrivateRoute>
+            }
+          >
+            <Route
+              index
+              element={
+                <LayoutWrapper
+                  layout={AuthLayout}
+                  component={ReviewApproveStep}
+                  componentProps={{ formikRef }}
+                ></LayoutWrapper>
               }
             />
           </Route>
