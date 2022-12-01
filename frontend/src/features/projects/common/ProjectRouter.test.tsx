@@ -65,7 +65,7 @@ const store = mockStore({
 const uiElement = (
   <Provider store={store}>
     <MemoryRouter initialEntries={[history.location]}>
-      <ProjectRouter match={match} location={loc} />
+      <ProjectRouter />
     </MemoryRouter>
   </Provider>
 );

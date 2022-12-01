@@ -10,7 +10,7 @@ import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import queryString from 'query-string';
 import React, { useEffect, useRef } from 'react';
 import { Container, Spinner } from 'react-bootstrap';
-import { Navigate, PathMatch, Route, Routes, useNavigate } from 'react-router-dom';
+import { Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useAppDispatch, useAppSelector } from 'store';
 
@@ -29,13 +29,7 @@ import ProjectLayout from './ProjectLayout';
  * Top level component ensures proper context provided to child assessment form pages.
  * @param param0 default react router props
  */
-export const ProjectRouter = ({
-  match,
-  location,
-}: {
-  match: PathMatch<string> | null;
-  location: Location;
-}) => {
+export const ProjectRouter = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const keycloak = useKeycloakWrapper();
@@ -44,7 +38,7 @@ export const ProjectRouter = ({
   const getProjectRequest = useAppSelector(
     store => (store.network.requests as any)[ProjectActions.GET_PROJECT_WORKFLOW],
   );
-
+  const location = useLocation();
   const query = location?.search ?? {};
   const projectNumber = queryString.parse(query).projectNumber;
 
@@ -97,30 +91,56 @@ export const ProjectRouter = ({
       {getProjectRequest?.isFetching === false && projectNumber === project.projectNumber ? (
         <Routes>
           {/*TODO: this will probably need to be update to a map of routes/components as well.*/}
-          <PrivateRoute claim={[Claims.ADMIN_PROJECTS, Claims.DISPOSE_APPROVE]}>
-            <Route path="/projects/assess/properties/update">
-              <LayoutWrapper
-                layout={ProjectLayout}
-                component={SelectProjectPropertiesPage}
-              ></LayoutWrapper>
-            </Route>
-            <Route path="/projects/assess/properties">
-              <LayoutWrapper
-                layout={ProjectLayout}
-                component={ReviewApproveStep}
-                componentProps={{ formikRef }}
-              ></LayoutWrapper>
-            </Route>
-          </PrivateRoute>
-          <PrivateRoute claim={Claims.PROJECT_VIEW}>
-            <Route path={'/projects/summary'}>
-              <LayoutWrapper
-                layout={ProjectLayout}
-                component={ProjectSummary}
-                componentProps={{ formikRef }}
-              ></LayoutWrapper>
-            </Route>
-          </PrivateRoute>
+          <Route
+            path="/projects/assess/properties/update"
+            element={
+              <PrivateRoute claim={[Claims.ADMIN_PROJECTS, Claims.DISPOSE_APPROVE]}></PrivateRoute>
+            }
+          >
+            <Route
+              index
+              element={
+                <LayoutWrapper
+                  layout={ProjectLayout}
+                  component={SelectProjectPropertiesPage}
+                ></LayoutWrapper>
+              }
+            />
+          </Route>
+          <Route
+            path="/projects/assess/properties"
+            element={
+              <PrivateRoute claim={[Claims.ADMIN_PROJECTS, Claims.DISPOSE_APPROVE]}></PrivateRoute>
+            }
+          >
+            <Route
+              index
+              element={
+                <LayoutWrapper
+                  layout={ProjectLayout}
+                  component={ReviewApproveStep}
+                  componentProps={{ formikRef }}
+                ></LayoutWrapper>
+              }
+            />
+          </Route>
+          <Route
+            path={'/projects/summary'}
+            element={
+              <PrivateRoute claim={[Claims.ADMIN_PROJECTS, Claims.DISPOSE_APPROVE]}></PrivateRoute>
+            }
+          >
+            <Route
+              index
+              element={
+                <LayoutWrapper
+                  layout={ProjectLayout}
+                  component={ProjectSummary}
+                  componentProps={{ formikRef }}
+                ></LayoutWrapper>
+              }
+            />
+          </Route>
           {/** Due to the use of dynamic routes within the project workflows, manually redirect to not found if no valid /projects route exists */}
           <Route path="/projects/*" element={<Navigate to="/page-not-found" />} />
         </Routes>
