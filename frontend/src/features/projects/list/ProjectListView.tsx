@@ -105,6 +105,7 @@ export const ProjectListView: React.FC<IProps> = ({
   const [pageSize, setPageSize] = useState(10);
   const [pageIndex, setPageIndex] = useState(0);
   const [pageCount, setPageCount] = useState(0);
+  const [projectCount, setProjectCount] = useState(0);
   const history = useHistory();
 
   // const [loading, setLoading] = useState(false);
@@ -183,6 +184,7 @@ export const ProjectListView: React.FC<IProps> = ({
             return project;
           }),
         );
+        setProjectCount(data.total);
         setPageCount(Math.ceil(data.total / pageSize));
       }
     },
@@ -344,6 +346,7 @@ export const ProjectListView: React.FC<IProps> = ({
           <h3 className="mr-4">{title}</h3>
           {keycloak.hasClaim(Claims.REPORTS_VIEW) && (
             <>
+              <h6 className="ProjectCountHeader">Found {projectCount} projects.</h6>
               <TooltipWrapper toolTipId="export-to-excel" toolTip="Export to Excel">
                 <FileIcon>
                   <FaFileExcel
