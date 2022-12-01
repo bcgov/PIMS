@@ -506,6 +506,13 @@ exports[`Property list view Matches snapshot 1`] = `
           </div>
         </div>
       </div>
+      <h6
+        class="PropertyCountHeader"
+      >
+        Found 
+        0
+         properties.
+      </h6>
       <div>
         <button
           class="c2 btn btn-primary"
