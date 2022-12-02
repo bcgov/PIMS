@@ -4,7 +4,28 @@ import { IENotSupportedPage } from 'features/account/IENotSupportedPage';
 import Login from 'features/account/Login';
 import { LogoutPage } from 'features/account/Logout';
 import { LayoutWrapper } from 'features/projects/common/LayoutWrapper';
-import { DisposalProject } from 'features/projects/disposals/DisposalProject';
+import { ProjectLayout } from 'features/projects/disposals';
+import {
+  ProjectCloseOut,
+  ProjectDocumentation,
+  ProjectERPTabs,
+  ProjectInformationTabs,
+  ProjectNotifications,
+  ProjectNotSPL,
+  ProjectSPLTabs,
+} from 'features/projects/disposals';
+import {
+  ProjectERPApproval,
+  ProjectERPComplete,
+  ProjectERPDisposed,
+  ProjectERPExemption,
+} from 'features/projects/disposals/erp';
+import {
+  ProjectSPLApproval,
+  ProjectSPLContractInPlace,
+  ProjectSPLMarketing,
+  ProjectSPLTransferWithinGRE,
+} from 'features/projects/disposals/spl';
 import MapView from 'features/properties/map/MapView';
 import { FormikValues } from 'formik';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
@@ -488,17 +509,45 @@ export const AppRouter: React.FC = () => {
             }
           />
         </Route>
-        <Route path="/projects/disposal/:id" element={<PrivateRoute claim={Claims.PROJECT_ADD} />}>
+        <Route path="/projects/disposal" element={<PrivateRoute claim={Claims.PROJECT_ADD} />}>
           <Route
-            index
+            path=":id"
             element={
               <LayoutWrapper
-                component={DisposalProject}
+                component={ProjectLayout}
                 layout={AuthLayout}
                 title={getTitle('Disposal Project')}
               />
             }
-          />
+          >
+            <Route index element={<LayoutWrapper component={ProjectInformationTabs} />} />
+            <Route
+              path="information"
+              element={<LayoutWrapper component={ProjectInformationTabs} />}
+            />
+            <Route
+              path="documentation"
+              element={<LayoutWrapper component={ProjectDocumentation} />}
+            />
+            <Route path="erp" element={<LayoutWrapper component={ProjectERPTabs} />}>
+              <Route index element={<ProjectERPApproval />} />
+              <Route path="exemption" element={<ProjectERPExemption />} />
+              <Route path="complete" element={<ProjectERPComplete />} />
+              <Route path="disposed" element={<ProjectERPDisposed />} />
+            </Route>
+            <Route path="not/spl" element={<LayoutWrapper component={ProjectNotSPL} />} />
+            <Route path="spl" element={<LayoutWrapper component={ProjectSPLTabs} />}>
+              <Route index element={<ProjectSPLApproval />} />
+              <Route path="marketing" element={<ProjectSPLMarketing />} />
+              <Route path="contract/in/place" element={<ProjectSPLContractInPlace />} />
+              <Route path="transfer/within/gre" element={<ProjectSPLTransferWithinGRE />} />
+            </Route>
+            <Route path="close/out" element={<LayoutWrapper component={ProjectCloseOut} />} />
+            <Route
+              path="notifications"
+              element={<LayoutWrapper component={ProjectNotifications} />}
+            />
+          </Route>
         </Route>
         <Route
           path="/access/request"
