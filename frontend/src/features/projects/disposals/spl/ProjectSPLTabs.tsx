@@ -4,14 +4,7 @@ import { useFormikContext } from 'formik';
 import { Workflow, WorkflowStatus } from 'hooks/api/projects';
 import { IProjectModel } from 'hooks/api/projects/disposals';
 import React from 'react';
-import { Route, Routes, useLocation } from 'react-router-dom';
-
-import {
-  ProjectSPLApproval,
-  ProjectSPLContractInPlace,
-  ProjectSPLMarketing,
-  ProjectSPLTransferWithinGRE,
-} from '.';
+import { Outlet, useLocation } from 'react-router-dom';
 
 interface IProjectSPLTabsProps {
   project?: IProjectModel;
@@ -68,20 +61,7 @@ export const ProjectSPLTabs: React.FC<IProjectSPLTabsProps> = ({ project, disabl
   return (
     <Col>
       <Tabs tabs={tabs}>
-        <Routes>
-          <Route path="/projects/disposal/:id/spl">
-            <ProjectSPLApproval disabled={disabled} />
-          </Route>
-          <Route path="/projects/disposal/:id/spl/marketing">
-            <ProjectSPLMarketing disabled={disabled} />
-          </Route>
-          <Route path="/projects/disposal/:id/spl/contract/in/place">
-            <ProjectSPLContractInPlace disabled={disabled} />
-          </Route>
-          <Route path="/projects/disposal/:id/spl/transfer/within/gre">
-            <ProjectSPLTransferWithinGRE disabled={disabled} />
-          </Route>
-        </Routes>
+        <Outlet />
       </Tabs>
     </Col>
   );
