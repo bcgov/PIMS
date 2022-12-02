@@ -1,8 +1,7 @@
 import { Tab, Tabs } from 'components/tabs';
 import React from 'react';
-import { Route, Routes, useLocation } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 
-import { ProjectInformation, ProjectProperties } from '.';
 import * as styled from './styled';
 
 interface IProjectInformationProps {
@@ -29,8 +28,7 @@ export const ProjectInformationTabs: React.FC<IProjectInformationProps> = ({
           />,
         ]}
       >
-        <ProjectInformation disabled={disabled} />
-        <ProjectProperties disabled={disabled} />
+        <Outlet />
       </Tabs>
     </styled.ProjectInformation>
   );

@@ -20,6 +20,7 @@ import {
   ProjectERPDisposed,
   ProjectERPExemption,
 } from 'features/projects/disposals/erp';
+import { ProjectInformation, ProjectProperties } from 'features/projects/disposals/information';
 import {
   ProjectSPLApproval,
   ProjectSPLContractInPlace,
@@ -524,7 +525,10 @@ export const AppRouter: React.FC = () => {
             <Route
               path="information"
               element={<LayoutWrapper component={ProjectInformationTabs} />}
-            />
+            >
+              <Route index element={<ProjectInformation />} />
+              <Route path="properties" element={<ProjectProperties />} />
+            </Route>
             <Route
               path="documentation"
               element={<LayoutWrapper component={ProjectDocumentation} />}
