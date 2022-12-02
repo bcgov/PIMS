@@ -63,7 +63,6 @@ const EditAdminArea = lazy(() => import('features/admin/admin-areas/EditAdminAre
 const PropertyListView = lazy(() => import('features/properties/list/PropertyListView'));
 
 export const AppRouter: React.FC = () => {
-  const formikRef = useRef<FormikValues>();
   const location = useLocation();
   useLayoutEffect(() => {
     window.scrollTo(0, 0);
