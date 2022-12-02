@@ -4,21 +4,10 @@ import { Claim } from 'hooks/api';
 import { Workflow, WorkflowStatus } from 'hooks/api/projects';
 import { IProjectModel } from 'hooks/api/projects/disposals';
 import { useKeycloakWrapper } from 'hooks/useKeycloakWrapper';
-import AuthLayout from 'layouts/AuthLayout';
 import React from 'react';
 import { Spinner } from 'react-bootstrap';
-import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 
-import { LayoutWrapper } from '../common';
-import {
-  ProjectCloseOut,
-  ProjectDocumentation,
-  ProjectERPTabs,
-  ProjectInformationTabs,
-  ProjectNotifications,
-  ProjectNotSPL,
-  ProjectSPLTabs,
-} from '.';
 import * as styled from './styled';
 
 export interface IProjectTabProps {
@@ -101,37 +90,7 @@ export const ProjectTabs: React.FC<IProjectTabProps> = ({ project, isLoading }) 
       )}
 
       <Tabs tabs={tabs}>
-        <Routes>
-          <Route path="/projects/disposal" element={<Navigate to="/page-not-found" />} />
-          <Route
-            path="/projects/disposal/:id"
-            element={<Navigate to="/projects/disposal/{id}/information" />}
-          />
-          <Route path="/projects/disposal/:id/information">
-            <Route
-              index
-              element={<LayoutWrapper component={ProjectInformationTabs} layout={AuthLayout} />}
-            />
-          </Route>
-          <Route path="/projects/disposal/:id/documentation">
-            <Route index element={<LayoutWrapper component={ProjectDocumentation} />} />
-          </Route>
-          <Route path="/projects/disposal/:id/erp">
-            <Route index element={<LayoutWrapper component={ProjectERPTabs} />} />
-          </Route>
-          <Route path="/projects/disposal/:id/not/spl">
-            <Route index element={<LayoutWrapper component={ProjectNotSPL} />} />
-          </Route>
-          <Route path="/projects/disposal/:id/spl">
-            <Route index element={<LayoutWrapper component={ProjectSPLTabs} />} />
-          </Route>
-          <Route path="/projects/disposal/:id/close/out">
-            <Route index element={<LayoutWrapper component={ProjectCloseOut} />} />
-          </Route>
-          <Route path="/projects/disposal/:id/notifications">
-            <Route index element={<LayoutWrapper component={ProjectNotifications} />} />
-          </Route>
-        </Routes>
+        <Outlet />
       </Tabs>
     </styled.ProjectTabs>
   );
