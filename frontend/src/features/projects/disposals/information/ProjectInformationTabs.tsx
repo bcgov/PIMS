@@ -4,13 +4,7 @@ import { Outlet, useLocation } from 'react-router-dom';
 
 import * as styled from './styled';
 
-interface IProjectInformationProps {
-  disabled?: boolean;
-}
-
-export const ProjectInformationTabs: React.FC<IProjectInformationProps> = ({
-  disabled = false,
-}) => {
+export const ProjectInformationTabs: React.FC = () => {
   const location = useLocation();
 
   const id = location.pathname.split('/')[3];

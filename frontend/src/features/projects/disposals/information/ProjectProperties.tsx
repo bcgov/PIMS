@@ -3,9 +3,12 @@ import { Col, Row } from 'components/flex';
 import { Table } from 'components/Table';
 import { useFormikContext } from 'formik';
 import { PropertyType } from 'hooks/api';
+import { Claim } from 'hooks/api';
+import { WorkflowStatus } from 'hooks/api/projects';
 import { ISearchPropertyModel } from 'hooks/api/properties/search';
+import { useKeycloakWrapper } from 'hooks/useKeycloakWrapper';
 import queryString from 'query-string';
-import React from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import { IProjectForm, IProjectPropertyForm } from '../interfaces';
 import { DisplayError } from './../../../../components/common/form/DisplayError';
@@ -15,14 +18,9 @@ import { ProjectPropertyInformation } from './ProjectPropertyInformation';
 import * as styled from './styled';
 import { toProjectProperty } from './utils';
 
-export interface IProjectPropertiesProps {
-  disabled?: boolean;
-}
-
-export const ProjectProperties: React.FC<IProjectPropertiesProps> = ({ disabled = false }) => {
+export const ProjectProperties: React.FC = () => {
   const { values, setFieldValue, errors } = useFormikContext<IProjectForm>();
-
-  const [showAdd, setShowAdd] = React.useState(false);
+  const [showAdd, setShowAdd] = useState(false);
   const properties = values.properties;
 
   const handleAddProperty = (property: ISearchPropertyModel) => {
@@ -30,7 +28,7 @@ export const ProjectProperties: React.FC<IProjectPropertiesProps> = ({ disabled 
     if (!exists) setFieldValue('properties', [...properties, toProjectProperty(values, property)]);
   };
 
-  const handleRowClick = React.useCallback((row: IProjectPropertyForm) => {
+  const handleRowClick = useCallback((row: IProjectPropertyForm) => {
     window.open(
       `/mapview?${queryString.stringify({
         sidebar: true,
@@ -44,6 +42,25 @@ export const ProjectProperties: React.FC<IProjectPropertiesProps> = ({ disabled 
       '_blank',
     );
   }, []);
+
+  // Disabled prop
+  const {
+    values: { workflowCode, statusCode },
+  } = useFormikContext();
+  const keycloak = useKeycloakWrapper();
+  const [disabled, setDisabled] = useState(false);
+  const isAdmin = keycloak.hasClaim(Claim.ReportsSplAdmin);
+
+  useEffect(() => {
+    setDisabled(
+      [
+        WorkflowStatus.Disposed,
+        WorkflowStatus.Cancelled,
+        WorkflowStatus.TransferredGRE,
+        WorkflowStatus.Denied,
+      ].includes(statusCode) && !isAdmin,
+    );
+  }, [isAdmin, workflowCode, statusCode]);
 
   return (
     <styled.ProjectProperties>
