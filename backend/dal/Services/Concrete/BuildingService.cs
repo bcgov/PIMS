@@ -164,8 +164,7 @@ namespace Pims.Dal.Services
             building.ThrowIfNull(nameof(building));
             this.User.ThrowIfNotAuthorized(Permissions.PropertyAdd);
 
-            Agency agency = User.GetAgency(Context)
- ??
+            Agency agency = User.GetAgency(Context) ??
                 throw new NotAuthorizedException("User must belong to an agency before adding buildings.");
 
             // A building should have a unique name within the parcel it is located on.

@@ -1,3 +1,4 @@
+using System.Net.Mime;
 using Microsoft.EntityFrameworkCore;
 using Pims.Core.Extensions;
 using Pims.Dal.Entities;
@@ -39,9 +40,6 @@ namespace Pims.Dal.Helpers.Extensions
         /// <returns>True if the user has all of the permissions.</returns>
         public static bool HasPermissions(this ClaimsPrincipal user, params Permissions[] permission)
         {
-            Console.WriteLine("\n\n\nHasPermissions");
-            Console.WriteLine(user.ToString());
-            Console.WriteLine("\n\n\n");
             if (permission == null) throw new ArgumentNullException(nameof(permission));
             if (permission.Length == 0) throw new ArgumentOutOfRangeException(nameof(permission));
 
