@@ -37,14 +37,6 @@ const Index = () => {
     setLoading(false);
   }, []);
 
-  //TEST
-
-  const storeData = store.getState();
-
-  React.useEffect(() => {
-    console.log(storeData);
-  }, [storeData]);
-
   return loading ? (
     <EmptyLayout>
       <LoginLoading />

@@ -25,6 +25,7 @@ export const AppRoute: React.FC<IAppRouteProps> = ({
   document.title = title;
 
   if (!!usePrivateRoute) {
+    console.log({ title, role, claim });
     return (
       <PrivateRoute {...rest} component={Component} layout={Layout} role={role} claim={claim} />
     );
