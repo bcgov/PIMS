@@ -521,7 +521,7 @@ export const AppRouter: React.FC = () => {
               />
             }
           >
-            <Route index element={<LayoutWrapper component={ProjectInformationTabs} />} />
+            <Route index element={<Navigate to={`${location.pathname}/information`} />} />
             <Route
               path="information"
               element={<LayoutWrapper component={ProjectInformationTabs} />}

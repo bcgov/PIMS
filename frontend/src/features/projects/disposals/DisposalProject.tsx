@@ -3,12 +3,12 @@ import { Col, Row } from 'components/flex';
 import { Form, Formik } from 'formik';
 import { IProjectModel } from 'hooks/api/projects/disposals';
 import React from 'react';
-import { Route, Routes, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { useProjectDisposal } from 'store';
 import { useProjectStore } from 'store/slices/hooks';
 
 import { SresManual } from '../common';
-import { GreTransferStep, ProjectStatus, ProjectTabs } from '.';
+import { ProjectStatus, ProjectTabs } from '.';
 import { defaultProjectForm } from './constants';
 import { IProjectForm } from './interfaces';
 import * as styled from './styled';
