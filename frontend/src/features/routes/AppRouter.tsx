@@ -3,7 +3,7 @@ import { Claims } from 'constants/claims';
 import { IENotSupportedPage } from 'features/account/IENotSupportedPage';
 import Login from 'features/account/Login';
 import { LogoutPage } from 'features/account/Logout';
-import { LayoutWrapper } from 'features/projects/common/LayoutWrapper';
+import { LayoutWrapper, SelectProjectPropertiesPage } from 'features/projects/common';
 import { ProjectLayout } from 'features/projects/disposals';
 import {
   ProjectCloseOut,
@@ -27,6 +27,7 @@ import {
   ProjectSPLMarketing,
   ProjectSPLTransferWithinGRE,
 } from 'features/projects/disposals/spl';
+import { ProjectSummary } from 'features/projects/summary';
 import MapView from 'features/properties/map/MapView';
 import { FormikValues } from 'formik';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
@@ -90,6 +91,10 @@ export const AppRouter: React.FC = () => {
       <Routes>
         <Route path="/" element={<IsAuthenticatedRoute />}>
           <Route index element={<Navigate to="/mapview" />} />
+          {/**
+           * MAPVIEW -- /mapview
+           * -- Index page for the whole application.
+           */}
           <Route path="mapview" element={<PrivateRoute claim={Claims.PROPERTY_VIEW} />}>
             <Route
               index
@@ -112,6 +117,10 @@ export const AppRouter: React.FC = () => {
               }
             />
           </Route>
+          {/**
+           * PROPERTY LIST -- /properties/list
+           * -- When selecting 'View Property Inventory' nav link.
+           */}
           <Route path="/properties/list" element={<PrivateRoute claim={Claims.PROPERTY_VIEW} />}>
             <Route
               index
@@ -124,36 +133,14 @@ export const AppRouter: React.FC = () => {
               }
             />
           </Route>
-          <Route path="/admin/users" element={<PrivateRoute claim={Claims.ADMIN_USERS} />}>
+          {/**
+           * ADMIN -- /admin
+           * -- When selecting 'Administration' nav link.
+           */}
+          <Route path="/admin" element={<PrivateRoute claim={Claims.ADMIN_USERS} />}>
+            <Route index element={<Navigate to="users" replace={true} />} />
             <Route
-              index
-              element={
-                <LayoutWrapper
-                  component={ManageUsers}
-                  layout={AuthLayout}
-                  title={getTitle('Users Management')}
-                />
-              }
-            />
-          </Route>
-          <Route path="/admin/user:id?" element={<PrivateRoute claim={Claims.ADMIN_USERS} />}>
-            <Route
-              index
-              element={
-                <LayoutWrapper
-                  component={ManageUsers}
-                  layout={AuthLayout}
-                  title={getTitle('Users Management')}
-                />
-              }
-            />
-          </Route>
-          <Route
-            path="/admin/access/requests"
-            element={<PrivateRoute claim={Claims.ADMIN_USERS} />}
-          >
-            <Route
-              index
+              path="access/requests"
               element={
                 <LayoutWrapper
                   component={ManageAccessRequests}
@@ -162,67 +149,18 @@ export const AppRouter: React.FC = () => {
                 />
               }
             />
-          </Route>
-          <Route path="/admin/agencies" element={<PrivateRoute claim={Claims.ADMIN_USERS} />}>
             <Route
-              index
+              path="users"
               element={
                 <LayoutWrapper
-                  component={ManageAgencies}
-                  layout={AuthLayout}
-                  title={getTitle('Agency Management')}
-                />
-              }
-            />
-          </Route>
-          <Route
-            path="/admin/administrativeAreas"
-            element={<PrivateRoute claim={Claims.ADMIN_USERS} />}
-          >
-            <Route
-              index
-              element={
-                <LayoutWrapper
-                  component={ManageAdminAreas}
+                  component={ManageUsers}
                   layout={AuthLayout}
                   title={getTitle('Users Management')}
                 />
               }
             />
-          </Route>
-          <Route
-            path="/admin/administrativeArea/:id"
-            element={<PrivateRoute claim={Claims.ADMIN_USERS} />}
-          >
             <Route
-              index
-              element={
-                <LayoutWrapper
-                  component={EditAdminArea}
-                  layout={AuthLayout}
-                  title={getTitle('Edit Adminstrative Area')}
-                />
-              }
-            />
-          </Route>
-          <Route
-            path="/admin/administrativeArea/new"
-            element={<PrivateRoute claim={Claims.ADMIN_USERS} />}
-          >
-            <Route
-              index
-              element={
-                <LayoutWrapper
-                  component={EditAdminArea}
-                  layout={AuthLayout}
-                  title={getTitle('Create Adminstrative Area')}
-                />
-              }
-            />
-          </Route>
-          <Route path="/admin/user/:id" element={<PrivateRoute claim={Claims.ADMIN_USERS} />}>
-            <Route
-              index
+              path="user/:id"
               element={
                 <LayoutWrapper
                   component={EditUserPage}
@@ -231,10 +169,18 @@ export const AppRouter: React.FC = () => {
                 />
               }
             />
-          </Route>
-          <Route path="/admin/agency/:id" element={<PrivateRoute claim={Claims.ADMIN_USERS} />}>
             <Route
-              index
+              path="agencies"
+              element={
+                <LayoutWrapper
+                  component={ManageAgencies}
+                  layout={AuthLayout}
+                  title={getTitle('Agency Management')}
+                />
+              }
+            />
+            <Route
+              path="agency/:id"
               element={
                 <LayoutWrapper
                   component={EditAgencyPage}
@@ -243,83 +189,51 @@ export const AppRouter: React.FC = () => {
                 />
               }
             />
+            <Route
+              path="agency/new"
+              element={
+                <LayoutWrapper
+                  component={EditAgencyPage}
+                  layout={AuthLayout}
+                  title={getTitle('Edit Agency')}
+                />
+              }
+            />
+            <Route
+              path="administrativeAreas"
+              element={
+                <LayoutWrapper
+                  component={ManageAdminAreas}
+                  layout={AuthLayout}
+                  title={getTitle('Adminstrative Areas')}
+                />
+              }
+            />
+            <Route
+              path="administrativeArea/:id"
+              element={
+                <LayoutWrapper
+                  component={EditAdminArea}
+                  layout={AuthLayout}
+                  title={getTitle('Edit Adminstrative Area')}
+                />
+              }
+            />
+            <Route
+              path="administrativeArea/new"
+              element={
+                <LayoutWrapper
+                  component={EditAdminArea}
+                  layout={AuthLayout}
+                  title={getTitle('Create Administrative Area')}
+                />
+              }
+            />
           </Route>
-          <Route
-            path="/admin"
-            element={
-              <PrivateRoute claim={Claims.ADMIN_USERS}>
-                <Route path="/admin/users" element={<Navigate to="admin/users" />}>
-                  <LayoutWrapper
-                    component={ManageUsers}
-                    layout={AuthLayout}
-                    title={getTitle('Users Management')}
-                  />
-                </Route>
-                <Route
-                  path="admin/access/requests"
-                  element={<Navigate to="/admin/access/requests" />}
-                >
-                  <LayoutWrapper
-                    component={ManageAccessRequests}
-                    layout={AuthLayout}
-                    title={getTitle('Access Requests')}
-                  />
-                </Route>
-                <Route path="user/:id?">
-                  <LayoutWrapper
-                    component={EditUserPage}
-                    layout={AuthLayout}
-                    title={getTitle('Edit User')}
-                  />
-                </Route>
-                <Route path="admin/agencies">
-                  <LayoutWrapper
-                    component={ManageAgencies}
-                    layout={AuthLayout}
-                    title={getTitle('Agency Management')}
-                  />
-                </Route>
-                <Route path="admin/agency/:id">
-                  <LayoutWrapper
-                    component={EditAgencyPage}
-                    layout={AuthLayout}
-                    title={getTitle('Edit Agency')}
-                  />
-                </Route>
-                <Route path="admin/agency/new">
-                  <LayoutWrapper
-                    component={EditAgencyPage}
-                    layout={AuthLayout}
-                    title={getTitle('Edit Agency')}
-                  />
-                </Route>
-                <Route
-                  path="admin/administrativeAreas"
-                  element={<Navigate to="admin/administrativeAreas" />}
-                >
-                  <LayoutWrapper
-                    component={ManageAdminAreas}
-                    layout={AuthLayout}
-                    title={getTitle('Adminstrative Areas')}
-                  />
-                </Route>
-                <Route path="admin/administrativeArea/:id">
-                  <LayoutWrapper
-                    component={EditAdminArea}
-                    layout={AuthLayout}
-                    title={getTitle('Edit Adminstrative Area')}
-                  />
-                </Route>
-                <Route path="admin/administrativeArea/new">
-                  <LayoutWrapper
-                    component={EditAdminArea}
-                    layout={AuthLayout}
-                    title={getTitle('Create Administrative Area')}
-                  />
-                </Route>
-              </PrivateRoute>
-            }
-          ></Route>
+          {/**
+           * DISPOSE -- /dispose
+           * -- When selecting 'Create Disposal Project' from 'Disposal Projects' nav link.
+           */}
           <Route path="/dispose" element={<PrivateRoute claim={Claims.PROJECT_ADD} />}>
             <Route
               index
@@ -331,8 +245,44 @@ export const AppRouter: React.FC = () => {
                 />
               }
             />
+            {/**
+             * DISPOSE PROJECT FORM - DRAFT
+             * STEP [1/6]
+             */}
+            <Route path="projects/draft" element={<PrivateRoute claim={Claims.PROJECT_ADD} />}>
+              <Route
+                index
+                element={
+                  <LayoutWrapper
+                    component={ProjectDisposeView}
+                    layout={AuthLayout}
+                    title={getTitle('View SPL Projects')}
+                  />
+                }
+              />
+            </Route>
+            {/**
+             * DISPOSE PROJECT FORM - SELECT PROPERTIES
+             * STEP [2/6]
+             */}
+            <Route path="projects/properties" element={<PrivateRoute claim={Claims.PROJECT_ADD} />}>
+              <Route
+                index
+                element={
+                  <LayoutWrapper
+                    component={ProjectDisposeView}
+                    layout={AuthLayout}
+                    title={getTitle('View SPL Projects')}
+                  />
+                }
+              />
+            </Route>
+            {/**
+             * DISPOSE PROJECT FORM - UPDATE INFORMATION
+             * STEP [3/6]
+             */}
             <Route
-              path="/dispose/projects/draft"
+              path="projects/information"
               element={<PrivateRoute claim={Claims.PROJECT_ADD} />}
             >
               <Route
@@ -346,8 +296,12 @@ export const AppRouter: React.FC = () => {
                 }
               />
             </Route>
+            {/**
+             * DISPOSE PROJECT FORM - REQUIRED DOCUMENTATION
+             * STEP [4/6]
+             */}
             <Route
-              path="/dispose/projects/properties"
+              path="projects/documentation"
               element={<PrivateRoute claim={Claims.PROJECT_ADD} />}
             >
               <Route
@@ -361,40 +315,11 @@ export const AppRouter: React.FC = () => {
                 }
               />
             </Route>
-            <Route
-              path="/dispose/projects/information"
-              element={<PrivateRoute claim={Claims.PROJECT_ADD} />}
-            >
-              <Route
-                index
-                element={
-                  <LayoutWrapper
-                    component={ProjectDisposeView}
-                    layout={AuthLayout}
-                    title={getTitle('View SPL Projects')}
-                  />
-                }
-              />
-            </Route>
-            <Route
-              path="/dispose/projects/documentation"
-              element={<PrivateRoute claim={Claims.PROJECT_ADD} />}
-            >
-              <Route
-                index
-                element={
-                  <LayoutWrapper
-                    component={ProjectDisposeView}
-                    layout={AuthLayout}
-                    title={getTitle('View SPL Projects')}
-                  />
-                }
-              />
-            </Route>
-            <Route
-              path="/dispose/projects/approval"
-              element={<PrivateRoute claim={Claims.PROJECT_ADD} />}
-            >
+            {/**
+             * DISPOSE PROJECT FORM - APPROVAL
+             * STEP [5/6]
+             */}
+            <Route path="projects/approval" element={<PrivateRoute claim={Claims.PROJECT_ADD} />}>
               <Route
                 index
                 element={
@@ -407,10 +332,11 @@ export const AppRouter: React.FC = () => {
               />
             </Route>
           </Route>
-          <Route
-            path="/dispose/projects/review"
-            element={<PrivateRoute claim={Claims.PROJECT_ADD} />}
-          >
+          {/**
+           * DISPOSE PROJECT FORM - REVIEW
+           * STEP [6/6]
+           */}
+          <Route path="projects/review" element={<PrivateRoute claim={Claims.PROJECT_ADD} />}>
             <Route
               index
               element={
@@ -422,58 +348,168 @@ export const AppRouter: React.FC = () => {
               }
             />
           </Route>
+
+          {/**
+           * PROJECTS -- /projects
+           */}
           <Route
-            path="/projects/assess/properties"
+            path="/projects"
             element={
-              <PrivateRoute claim={[Claims.ADMIN_PROJECTS, Claims.DISPOSE_APPROVE]}></PrivateRoute>
-            }
-          >
-            <Route
-              index
-              element={
-                <LayoutWrapper
-                  layout={AuthLayout}
-                  component={ReviewApproveStep}
-                  componentProps={{ formikRef }}
-                ></LayoutWrapper>
-              }
-            />
-          </Route>
-          <Route path="/projects/spl" element={<PrivateRoute claim={Claims.PROJECT_VIEW} />}>
-            <Route
-              index
-              element={
-                <LayoutWrapper
-                  component={SPLProjectListView}
-                  layout={AuthLayout}
-                  title={getTitle('View SPL Projects')}
-                />
-              }
-            />
-          </Route>
-          <Route
-            path="/projects/approval/requests"
-            element={
-              <PrivateRoute claim={Claims.DISPOSE_APPROVE}>
-                <LayoutWrapper
-                  component={ProjectApprovalRequestListView}
-                  layout={AuthLayout}
-                  title={getTitle('Surplus Property Program Projects - Approval Requests')}
-                />
-              </PrivateRoute>
-            }
-          />
-          <Route path="/projects" element={<PrivateRoute claim={Claims.PROJECT_ADD} />}>
-            <Route
-              index
-              element={
+              <PrivateRoute claim={Claims.PROJECT_ADD}>
                 <LayoutWrapper
                   component={ProjectRouter}
                   layout={AuthLayout}
                   title={getTitle('Dispose Property')}
                 />
+              </PrivateRoute>
+            }
+          >
+            {/**
+             * PROJECTS INDEX ROUTE -- /projects
+             * - When clicking on a project with status 'Submitted'.
+             */}
+            <Route
+              index
+              element={
+                location.search.length > 0 ? (
+                  <Navigate to={`assess/properties${location.search}`} />
+                ) : (
+                  <LayoutWrapper
+                    title={getTitle('Page Not Found')}
+                    component={NotFoundPage}
+                    layout={PublicLayout}
+                  />
+                )
               }
             />
+            {/**
+             * PROJECTS LIST -- /projects/list
+             * - When clicking on 'View Projects' from 'Disposal Projects' nav link.
+             */}
+            <Route path="list" element={<PrivateRoute claim={Claims.PROJECT_VIEW} />}>
+              <Route
+                index
+                element={
+                  <LayoutWrapper
+                    component={ProjectListView}
+                    layout={AuthLayout}
+                    title={getTitle('View Projects')}
+                  />
+                }
+              />
+            </Route>
+            <Route
+              path="summary"
+              element={
+                <LayoutWrapper layout={AuthLayout} component={ProjectSummary}></LayoutWrapper>
+              }
+            />
+            <Route
+              path="approval/requests"
+              element={
+                <PrivateRoute claim={Claims.DISPOSE_APPROVE}>
+                  <LayoutWrapper
+                    component={ProjectApprovalRequestListView}
+                    layout={AuthLayout}
+                    title={getTitle('Surplus Property Program Projects - Approval Requests')}
+                  />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="assess/properties"
+              element={
+                <PrivateRoute
+                  claim={[Claims.ADMIN_PROJECTS, Claims.DISPOSE_APPROVE]}
+                ></PrivateRoute>
+              }
+            >
+              <Route
+                index
+                element={
+                  <LayoutWrapper layout={AuthLayout} component={ReviewApproveStep}></LayoutWrapper>
+                }
+              />
+              <Route
+                path="update"
+                element={
+                  <LayoutWrapper
+                    layout={AuthLayout}
+                    component={SelectProjectPropertiesPage}
+                  ></LayoutWrapper>
+                }
+              />
+            </Route>
+            <Route path="spl" element={<PrivateRoute claim={Claims.PROJECT_VIEW} />}>
+              <Route
+                index
+                element={
+                  <LayoutWrapper
+                    component={SPLProjectListView}
+                    layout={AuthLayout}
+                    title={getTitle('View SPL Projects')}
+                  />
+                }
+              />
+            </Route>
+
+            {/**
+             * DISPOSAL PROJECTS -- /projects/disposal
+             * - When clicking on a project with status 'Approved for *'.
+             */}
+            <Route path="disposal" element={<PrivateRoute claim={Claims.PROJECT_ADD} />}>
+              <Route
+                path=":id"
+                element={
+                  <LayoutWrapper
+                    component={ProjectLayout}
+                    layout={AuthLayout}
+                    title={getTitle('Disposal Project')}
+                  />
+                }
+              >
+                {/**
+                 * DISPOSAL PROJECTS INDEX ROUTE -- /projects/disposal/:id
+                 * - Routes to /information from the current :id path.
+                 */}
+                <Route
+                  index
+                  element={<Navigate to={`${location.pathname}/information`} replace={true} />}
+                />
+                <Route
+                  path="information"
+                  element={<LayoutWrapper component={ProjectInformationTabs} />}
+                >
+                  {/** INFORMATION TABS INDEX ROUTE -- Index specifies the selected nested tab. */}
+                  <Route index element={<ProjectInformation />} />
+                  <Route path="properties" element={<ProjectProperties />} />
+                </Route>
+                <Route
+                  path="documentation"
+                  element={<LayoutWrapper component={ProjectDocumentation} />}
+                />
+                <Route path="erp" element={<LayoutWrapper component={ProjectERPTabs} />}>
+                  {/** ERP TABS INDEX ROUTE -- Index specifies the selected nested tab. */}
+                  <Route index element={<ProjectERPApproval />} />
+                  <Route path="exemption" element={<ProjectERPExemption />} />
+                  <Route path="complete" element={<ProjectERPComplete />} />
+                  <Route path="disposed" element={<ProjectERPDisposed />} />
+                </Route>
+                <Route path="not/spl" element={<LayoutWrapper component={ProjectNotSPL} />} />
+                <Route path="spl" element={<LayoutWrapper component={ProjectSPLTabs} />}>
+                  {/** SPL TABS INDEX ROUTE -- Index specifies the selected nested tab. */}
+                  <Route index element={<ProjectSPLApproval />} />
+                  <Route path="marketing" element={<ProjectSPLMarketing />} />
+                  <Route path="contract/in/place" element={<ProjectSPLContractInPlace />} />
+                  <Route path="transfer/within/gre" element={<ProjectSPLTransferWithinGRE />} />
+                </Route>
+                <Route path="close/out" element={<LayoutWrapper component={ProjectCloseOut} />} />
+                <Route
+                  path="notifications"
+                  element={<LayoutWrapper component={ProjectNotifications} />}
+                />
+              </Route>
+            </Route>
           </Route>
           <Route path="/reports/spl" element={<PrivateRoute claim={Claims.REPORTS_SPL} />}>
             <Route
@@ -498,64 +534,6 @@ export const AppRouter: React.FC = () => {
           path="/logout"
           element={<LayoutWrapper title={getTitle('Logout')} component={LogoutPage} />}
         />
-        <Route path="/projects/list" element={<PrivateRoute claim={Claims.PROJECT_VIEW} />}>
-          <Route
-            index
-            element={
-              <LayoutWrapper
-                component={ProjectListView}
-                layout={AuthLayout}
-                title={getTitle('View Projects')}
-              />
-            }
-          />
-        </Route>
-        <Route path="/projects/disposal" element={<PrivateRoute claim={Claims.PROJECT_ADD} />}>
-          <Route
-            path=":id"
-            element={
-              <LayoutWrapper
-                component={ProjectLayout}
-                layout={AuthLayout}
-                title={getTitle('Disposal Project')}
-              />
-            }
-          >
-            <Route
-              index
-              element={<Navigate to={`${location.pathname}/information`} replace={true} />}
-            />
-            <Route
-              path="information"
-              element={<LayoutWrapper component={ProjectInformationTabs} />}
-            >
-              <Route index element={<ProjectInformation />} />
-              <Route path="properties" element={<ProjectProperties />} />
-            </Route>
-            <Route
-              path="documentation"
-              element={<LayoutWrapper component={ProjectDocumentation} />}
-            />
-            <Route path="erp" element={<LayoutWrapper component={ProjectERPTabs} />}>
-              <Route index element={<ProjectERPApproval />} />
-              <Route path="exemption" element={<ProjectERPExemption />} />
-              <Route path="complete" element={<ProjectERPComplete />} />
-              <Route path="disposed" element={<ProjectERPDisposed />} />
-            </Route>
-            <Route path="not/spl" element={<LayoutWrapper component={ProjectNotSPL} />} />
-            <Route path="spl" element={<LayoutWrapper component={ProjectSPLTabs} />}>
-              <Route index element={<ProjectSPLApproval />} />
-              <Route path="marketing" element={<ProjectSPLMarketing />} />
-              <Route path="contract/in/place" element={<ProjectSPLContractInPlace />} />
-              <Route path="transfer/within/gre" element={<ProjectSPLTransferWithinGRE />} />
-            </Route>
-            <Route path="close/out" element={<LayoutWrapper component={ProjectCloseOut} />} />
-            <Route
-              path="notifications"
-              element={<LayoutWrapper component={ProjectNotifications} />}
-            />
-          </Route>
-        </Route>
         <Route
           path="/access/request"
           element={

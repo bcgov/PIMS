@@ -21,6 +21,7 @@ export { default as useAgencyResponseTable } from './hooks/useAgencyResponseTabl
 export { default as useProject } from './hooks/useProject';
 export { default as useStepForm } from './hooks/useStepForm';
 export { default as LayoutWrapper } from './LayoutWrapper';
+export { default as ProjectLayout } from './ProjectLayout';
 export { default as ProjectRouter } from './ProjectRouter';
 export * from './projectsActionCreator';
 export { default as projectSlice } from './slices/projectSlice';

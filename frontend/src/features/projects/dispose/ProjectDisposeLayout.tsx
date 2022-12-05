@@ -5,11 +5,11 @@ import {
 } from 'features/projects/constants';
 import { IProject, IProjectWorkflowComponent } from 'features/projects/interfaces';
 import { FormikValues } from 'formik';
-import _, { replace } from 'lodash';
+import _ from 'lodash';
 import queryString from 'query-string';
 import React, { useEffect, useRef } from 'react';
 import { Container, Spinner } from 'react-bootstrap';
-import { Navigate, PathMatch, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
+import { PathMatch, useLocation, useNavigate } from 'react-router-dom';
 import { useAppDispatch } from 'store';
 
 import { clearProject, SresManual, updateWorkflowStatus, useStepForm } from '../common';
@@ -133,7 +133,7 @@ const ProjectDisposeLayout = ({
   useEffect(() => {
     if (locationPath.pathname === '/dispose' && workflowStatuses?.length > 0) {
       dispatch(clearProject());
-      navigate(`/dispose${workflowStatuses[0].route}`, { replace: true });
+      navigate(`/dispose${workflowStatuses[0].route}`);
     }
   }, [navigate, workflowStatuses, locationPath.pathname, dispatch, projectNumber]);
 

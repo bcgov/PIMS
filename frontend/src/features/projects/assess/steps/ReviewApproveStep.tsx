@@ -1,10 +1,10 @@
 import { LayoutWrapper } from 'features/projects/common/LayoutWrapper';
 import ProjectLayout from 'features/projects/common/ProjectLayout';
-import { IProject, IProjectTask, IStepProps } from 'features/projects/interfaces';
-import { Formik, setIn, validateYupSchema, yupToFormErrors } from 'formik';
+import { IProject, IProjectTask } from 'features/projects/interfaces';
+import { Formik, FormikValues, setIn, validateYupSchema, yupToFormErrors } from 'formik';
 import { WorkflowStatus } from 'hooks/api/projects';
 import _ from 'lodash';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Container, Form } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 
@@ -89,7 +89,8 @@ export const validateApprove = async (project: IProject) => {
  * Expanded version of the ReviewApproveStep allowing for application review.
  * {isReadOnly formikRef} formikRef allow remote formik access
  */
-const ReviewApproveStep = ({ formikRef }: IStepProps) => {
+const ReviewApproveStep = () => {
+  const formikRef = useRef<FormikValues>();
   const { project, goToDisposePath } = useProject();
   const navigate = useNavigate();
   const { onSubmitReview, canUserApproveForm } = useStepForm();
@@ -134,7 +135,7 @@ const ReviewApproveStep = ({ formikRef }: IStepProps) => {
       <Container fluid className="ReviewApproveStep">
         <Formik
           initialValues={initialValues}
-          innerRef={formikRef}
+          ref={formikRef}
           enableReinitialize={true}
           onSubmit={(values: IProject) => {
             const workflowCode = getNextWorkflowCode(submitStatusCode, values);
