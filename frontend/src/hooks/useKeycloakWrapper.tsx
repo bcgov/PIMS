@@ -4,8 +4,9 @@ import { Claims } from 'constants/claims';
 import { PropertyTypes } from 'constants/propertyTypes';
 import RoleClaims from 'constants/roleClaims';
 import { Roles } from 'constants/roles';
-import { KeycloakTokenParsed } from 'keycloak-js';
 import _ from 'lodash';
+
+import { store } from '../store/store';
 
 /**
  * IUserInfo interface, represents the userinfo provided by keycloak.
@@ -54,8 +55,8 @@ export interface IKeycloak {
  * Provides extension methods to interact with the `keycloak` object.
  */
 export function useKeycloakWrapper(): IKeycloak {
-  const { keycloak } = useKeycloak();
-  const userInfo = keycloak?.tokenParsed as IUserInfo;
+  const { keycloak: keycloakInstance } = useKeycloak();
+  const userInfo = useKeycloak().keycloak.tokenParsed as IUserInfo;
 
   /**
    * Determine if the user has the specified 'claim'
@@ -88,7 +89,14 @@ export function useKeycloakWrapper(): IKeycloak {
    * @param agency - The agency name
    */
   const hasAgency = (agency?: number): boolean => {
-    return agency !== undefined && agency !== null && userInfo?.agencies?.includes(agency);
+    console.log(store.getState().usersAgencies);
+
+    return (
+      agency !== undefined &&
+      agency !== null &&
+      //@ts-ignore
+      store.getState().usersAgencies?.agencies?.some?.(a => a.id === agency)
+    );
   };
 
   /**
@@ -176,7 +184,7 @@ export function useKeycloakWrapper(): IKeycloak {
   };
 
   return {
-    obj: { ...keycloak, authenticated: !!keycloak.token },
+    obj: { ...keycloakInstance, authenticated: !!keycloakInstance.token },
     username: username(),
     displayName: displayName(),
     firstName: firstName(),

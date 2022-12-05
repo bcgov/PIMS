@@ -1,3 +1,5 @@
+using System.ComponentModel;
+using System.Globalization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,29 +20,8 @@ namespace Pims.Core.Extensions
         /// <returns></returns>
         public static Guid GetKeycloakUserId(this ClaimsPrincipal user)
         {
-            var value = user?.FindFirstValue(ClaimTypes.NameIdentifier);
-            return String.IsNullOrWhiteSpace(value) ? Guid.Empty : new Guid(value);
-        }
-
-        /// <summary>
-        /// Get the user's list of agencies they have access to.
-        /// Return 'null' if no agencies are found.
-        /// </summary>
-        /// <param name="user"></param>
-        /// <param name="delimiter"></param>
-        /// <returns></returns>
-        public static int[] GetAgencies(this ClaimsPrincipal user, string delimiter = ",")
-        {
-            var agencies = user?.FindAll("agencies");
-            var results = new List<int>();
-
-            agencies?.ForEach(c =>
-            {
-                var split = c.Value.Split(delimiter);
-                results.AddRange(split.Select(v => Int32.Parse(v)));
-            });
-
-            return results.ToArray();
+            string guid = user.Claims.First(c => c.Type == "idir_user_guid")?.Value?.ToString();
+            return String.IsNullOrWhiteSpace(guid) ? Guid.Empty : new Guid(guid);
         }
 
         /// <summary>
@@ -71,7 +52,7 @@ namespace Pims.Core.Extensions
         /// <returns></returns>
         public static string GetUsername(this ClaimsPrincipal user)
         {
-            var value = user?.FindFirstValue("username");
+            var value = user.Claims.First(c => c.Type == "idir_username")?.Value.ToString();
             return value;
         }
 

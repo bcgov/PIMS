@@ -1,3 +1,4 @@
+using System.Collections;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -40,6 +41,7 @@ namespace Pims.Dal.Services
         #endregion
 
         #region Methods
+
         /// <summary>
         /// Determine if the user for the specified 'KeycloakUserId' exists in the datasource.
         /// </summary>
@@ -71,19 +73,19 @@ namespace Pims.Dal.Services
         {
             this.User.ThrowIfNotAuthorized();
 
-            var keycloakUserId = this.User.GetKeycloakUserId();
+            Guid keycloakUserId = this.User.GetKeycloakUserId();
 
-            var user = GetUserForKeycloakId(keycloakUserId);
-            var exists = user != null;
+            User user = GetUserForKeycloakId(keycloakUserId);
+            bool exists = user != null;
             if (!exists)
             {
-                var username = this.User.GetUsername() ?? _options.ServiceAccount?.Username ??
+                string username = this.User.GetUsername() ?? _options.ServiceAccount?.Username ??
                     throw new ConfigurationException($"Configuration 'Pims:ServiceAccount:Username' is invalid or missing.");
-                var givenName = this.User.GetFirstName() ?? _options.ServiceAccount?.FirstName ??
+                string givenName = this.User.GetFirstName() ?? _options.ServiceAccount?.FirstName ??
                     throw new ConfigurationException($"Configuration 'Pims:ServiceAccount:FirstName' is invalid or missing.");
-                var surname = this.User.GetLastName() ?? _options.ServiceAccount?.LastName ??
+                string surname = this.User.GetLastName() ?? _options.ServiceAccount?.LastName ??
                     throw new ConfigurationException($"Configuration 'Pims:ServiceAccount:LastName' is invalid or missing.");
-                var email = this.User.GetEmail() ?? _options.ServiceAccount?.Email ??
+                string email = this.User.GetEmail() ?? _options.ServiceAccount?.Email ??
                     throw new ConfigurationException($"Configuration 'Pims:ServiceAccount:Email' is invalid or missing.");
 
                 this.Logger.LogInformation($"User Activation: keycloak id:{keycloakUserId}, email:{email}, username:{username}, first:{givenName}, surname:{surname}");
@@ -260,6 +262,23 @@ namespace Pims.Dal.Services
                 .ThenInclude(a => a.Agency)
                 .ThenInclude(a => a.Children)
                 .Single(u => u.Id == userId) ?? throw new KeyNotFoundException();
+            var agencies = user.Agencies.Select(a => a.AgencyId).ToList();
+            agencies.AddRange(user.Agencies.SelectMany(a => a.Agency?.Children.Where(ac => !ac.IsDisabled)).Select(a => a.Id));
+
+            return agencies.ToArray();
+        }
+
+        public IEnumerable<int> GetUsersAgencies(Guid id)
+        {
+            if (id != this.User.GetKeycloakUserId())
+            {
+                throw new UnauthorizedAccessException();
+            }
+            var user = this.Context.Users
+                .Include(u => u.Agencies)
+                .ThenInclude(a => a.Agency)
+                .ThenInclude(a => a.Children)
+                .Single(u => u.Id == id) ?? throw new KeyNotFoundException();
             var agencies = user.Agencies.Select(a => a.AgencyId).ToList();
             agencies.AddRange(user.Agencies.SelectMany(a => a.Agency?.Children.Where(ac => !ac.IsDisabled)).Select(a => a.Id));
 

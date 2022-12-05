@@ -32,7 +32,14 @@ namespace Pims.Dal.Helpers.Extensions
             filter.ThrowIfNull(nameof(filter));
 
             // Check if user has the ability to view sensitive properties.
-            var userAgencies = user.GetAgencies();
+            var dbUser = context.Users
+    .Include(u => u.Agencies)
+    .ThenInclude(a => a.Agency)
+    .ThenInclude(a => a.Children)
+    .Single(u => u.Id == user.GetKeycloakUserId());
+
+            var userAgencies = dbUser.Agencies.Select(a => a.AgencyId).ToList();
+
             var isAdmin = user.HasPermission(Permissions.AdminProjects);
 
             // Users may only view sensitive properties if they have the `sensitive-view` claim and belong to the owning agency.

@@ -73,7 +73,10 @@ export const Login = () => {
               decisions on the optimal use of real property assets on behalf of the people and
               priorities of British Columbia.
             </p>
-            <Button variant="primary" onClick={() => keycloak.login()}>
+            <Button
+              variant="primary"
+              onClick={() => keycloak.login({ redirectUri: window.location.href })}
+            >
               Sign In
             </Button>
             <p>Sign into PIMS with your government issued IDIR or with your Business BCeID.</p>
@@ -111,7 +114,6 @@ export const Login = () => {
               )}
             </Row>
           </Col>
-          <Col xs={1} md={3} />
         </Row>
       </Container>
     </Container>

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System;
 using System.Linq;
 using System.Security.Claims;
@@ -91,20 +92,18 @@ namespace Pims.Dal.Entities.Models
             this.LandLegalDescription = property.LandLegalDescription;
             this.LandArea = property.LandArea;
 
-            var userAgencies = user.GetAgenciesAsNullable();
-
             // The property belongs to the user's agency or sub-agency, so include these properties.
             // TODO: Shuffle code around so that this can use the user.HasPermission(Permissions.AdminProperties).
-            if (userAgencies.Contains(property.AgencyId) || user.HasClaim(c => c.Value == "admin-properties"))
-            {
-                this.Zoning = property.Zoning;
-                this.ZoningPotential = property.ZoningPotential;
+            // if (userAgencies.Contains(property.AgencyId) || user.HasClaim(c => c.Value == "admin-properties"))
+            // {
+            this.Zoning = property.Zoning;
+            this.ZoningPotential = property.ZoningPotential;
 
-                this.AssessedLand = property.AssessedLand;
-                this.AssessedLandDate = property.AssessedLandDate;
-                this.AssessedBuilding = property.AssessedBuilding;
-                this.AssessedBuildingDate = property.AssessedBuildingDate;
-            }
+            this.AssessedLand = property.AssessedLand;
+            this.AssessedLandDate = property.AssessedLandDate;
+            this.AssessedBuilding = property.AssessedBuilding;
+            this.AssessedBuildingDate = property.AssessedBuildingDate;
+            // }
         }
         #endregion
     }

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System;
 using System.Linq;
 using System.Security.Claims;
@@ -191,26 +192,24 @@ namespace Pims.Dal.Entities.Models
             this.Location = property.Location;
             this.Boundary = property.Boundary;
 
-            var userAgencies = user.GetAgenciesAsNullable();
-
             // The property belongs to the user's agency or sub-agency, so include these properties.
             // TODO: Shuffle code around so that this can use the user.HasPermission(Permissions.AdminProperties).
-            if (userAgencies.Contains(property.AgencyId) || user.HasClaim(c => c.Value == "admin-properties"))
-            {
-                this.Name = property.Name;
-                this.Description = property.Description;
-                this.IsSensitive = property.IsSensitive;
-                this.AgencyId = property.AgencyId;
-                this.AgencyCode = property.AgencyCode;
-                this.Agency = property.Agency;
-                this.SubAgencyCode = property.SubAgencyCode;
-                this.SubAgency = property.SubAgency;
+            // if (userAgencies.Contains(property.AgencyId) || user.HasClaim(c => c.Value == "admin-properties"))
+            // {
+            this.Name = property.Name;
+            this.Description = property.Description;
+            this.IsSensitive = property.IsSensitive;
+            this.AgencyId = property.AgencyId;
+            this.AgencyCode = property.AgencyCode;
+            this.Agency = property.Agency;
+            this.SubAgencyCode = property.SubAgencyCode;
+            this.SubAgency = property.SubAgency;
 
-                this.Market = property.Market;
-                this.MarketFiscalYear = property.MarketFiscalYear;
-                this.NetBook = property.NetBook;
-                this.NetBookFiscalYear = property.NetBookFiscalYear;
-            }
+            this.Market = property.Market;
+            this.MarketFiscalYear = property.MarketFiscalYear;
+            this.NetBook = property.NetBook;
+            this.NetBookFiscalYear = property.NetBookFiscalYear;
+            // }
         }
         #endregion
     }

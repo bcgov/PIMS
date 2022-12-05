@@ -25,7 +25,7 @@ namespace Pims.Dal.Helpers.Extensions
         /// <exception type="DbUpdateException">The PID and PIN must be unique.</exception>
         public static void ThrowIfNotUnique(this DbSet<Entity.Parcel> parcels, Entity.Parcel parcel)
         {
-            if(parcel.PropertyTypeId == (int)Entity.PropertyTypes.Subdivision)
+            if (parcel.PropertyTypeId == (int)Entity.PropertyTypes.Subdivision)
             {
                 return;
             }
@@ -46,7 +46,13 @@ namespace Pims.Dal.Helpers.Extensions
             filter.ThrowIfNull(nameof(filter));
 
             // Check if user has the ability to view sensitive properties.
-            var userAgencies = user.GetAgenciesAsNullable();
+            var dbUser = context.Users
+.Include(u => u.Agencies)
+.ThenInclude(a => a.Agency)
+.ThenInclude(a => a.Children)
+.Single(u => u.Id == user.GetKeycloakUserId());
+            var _userAgencies = dbUser.Agencies;
+            var userAgencies = _userAgencies.Select(a => (int?)a.AgencyId).AsQueryable<int?>();
             var viewSensitive = user.HasPermission(Permissions.SensitiveView);
             var isAdmin = user.HasPermission(Permissions.AdminProperties);
 
@@ -210,7 +216,7 @@ namespace Pims.Dal.Helpers.Extensions
         /// <param name="parcel"></param>
         /// <param name="parcelEvaluations"></param>
         /// <param name="parcelFiscals"></param>
-        public static void UpdateParcelFinancials(this PimsContext context,  Entity.Parcel parcel,
+        public static void UpdateParcelFinancials(this PimsContext context, Entity.Parcel parcel,
             ICollection<Entity.ParcelEvaluation> parcelEvaluations, ICollection<Entity.ParcelFiscal> parcelFiscals)
         {
             foreach (var parcelEvaluation in parcelEvaluations)
