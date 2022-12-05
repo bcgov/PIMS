@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using MapsterMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -190,6 +191,19 @@ namespace Pims.Api.Controllers
             _pimsService.User.UpdateAccessRequest(accessRequest);
             return new JsonResult(_mapper.Map<Model.AccessRequestModel>(accessRequest));
         }
+
+        [HttpGet("agencies/{id}")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Model.AccessRequestModel), 200)]
+        [ProducesResponseType(typeof(Models.ErrorResponseModel), 400)]
+        [ProducesResponseType(typeof(Models.ErrorResponseModel), 403)]
+        [SwaggerOperation(Tags = new[] { "user" })]
+        public IActionResult GetUserAgencies(Guid id)
+        {
+            IEnumerable<int> userAgencies = _pimsService.User.GetUsersAgencies(id);
+            return new JsonResult(userAgencies);
+        }
+
         #endregion
         #endregion
     }

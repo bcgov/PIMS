@@ -74,7 +74,7 @@ namespace Pims.Dal.Services.Admin
                 .AsNoTracking()
                 .Where(u => !u.IsSystem);
 
-            var userAgencies = this.User.GetAgencies();
+            var userAgencies = this.Self.User.GetAgencies(this.User.GetKeycloakUserId());
             if (userAgencies != null && User.HasPermission(Permissions.AgencyAdmin) && !User.HasPermission(Permissions.SystemAdmin))
             {
                 query = query.Where(user => user.Agencies.Any(a => userAgencies.Contains(a.AgencyId)));
@@ -326,7 +326,7 @@ namespace Pims.Dal.Services.Admin
                 .Include(p => p.User)
                 .AsNoTracking();
 
-            var userAgencies = this.User.GetAgencies();
+            var userAgencies = this.Self.User.GetAgencies(this.User.GetKeycloakUserId());
             if (userAgencies != null && User.HasPermission(Permissions.AgencyAdmin) && !User.HasPermission(Permissions.SystemAdmin))
             {
                 query = query.Where(accessRequest => accessRequest.Agencies.Any(a => userAgencies.Contains(a.AgencyId)));

@@ -116,6 +116,5 @@ rebuild-all-local-friendly-message:
 	@echo -e "\n$(P) pims_frontend will be available at http://localhost:3000"
 	@echo "$(P) pims_backend will be available at http://localhost:5000"
 	@echo "$(P) pims_database will be available at http://localhost:5433"
-	@echo "$(P) pims_keycloak will be available at http://keycloak:8080"
 
 .PHONY: docker restart build run stop clean

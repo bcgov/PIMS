@@ -1,5 +1,4 @@
 import axios from 'axios';
-import Keycloak from 'keycloak-js';
 import { isEmpty } from 'lodash';
 import { toast } from 'react-toastify';
 import { store } from 'store/store';
@@ -41,8 +40,6 @@ export const CustomAxios = ({
     },
   });
   instance.interceptors.request.use(config => {
-    console.log({ Keycloak });
-    const token = store.getState().jwt;
     config.headers.Authorization = `Bearer ${store.getState().jwt}`;
     if (selector !== undefined) {
       const state = store.getState();

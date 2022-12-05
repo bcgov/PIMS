@@ -98,6 +98,7 @@ export const AGENCY_DETAIL = (params: IAgencyDetailParams) => `/admin/agencies/$
 export const USER_DETAIL = (params: IUserDetailParams) => `/admin/users/${params.id}`;
 export const KEYCLOAK_USER_UPDATE = (params: IUserDetailParams) => `/keycloak/users/${params.id}`;
 
+export const USERS_AGENCIES = (params: IUserDetailParams) => `/users/agencies/${params.id}`;
 export interface IBuildingDetailParams {
   id: number;
 }

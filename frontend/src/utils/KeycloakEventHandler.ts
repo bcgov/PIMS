@@ -8,7 +8,6 @@ const getKeycloakEventHandler = (keycloak: KeycloakInstance) => (
   eventType: AuthClientEvent,
   error?: AuthClientError | undefined,
 ) => {
-  console.log('\n\n\n\n', { error }, '\n\n\n');
   switch (eventType) {
     case 'onAuthSuccess':
       store.dispatch(saveJwt(keycloak.token!));
@@ -25,13 +24,16 @@ const getKeycloakEventHandler = (keycloak: KeycloakInstance) => (
 
     case 'onReady':
       store.dispatch(setKeycloakReady(true));
-      if (keycloak.token) {
-        store.dispatch(saveJwt(keycloak.token));
-      }
       break;
 
     default:
       console.debug(`keycloak event: ${eventType} error ${error}`);
+  }
+
+  //TODO: Fix race condition through better means than the following
+  switch (error?.error) {
+    case 'login_required':
+      window.location.reload();
   }
 };
 
