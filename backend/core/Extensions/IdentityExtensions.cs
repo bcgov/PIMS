@@ -25,27 +25,6 @@ namespace Pims.Core.Extensions
         }
 
         /// <summary>
-        /// Get the user's list of agencies they have access to.
-        /// Return 'null' if no agencies are found.
-        /// </summary>
-        /// <param name="user"></param>
-        /// <param name="delimiter"></param>
-        /// <returns></returns>
-        public static int?[] GetAgenciesAsNullable(this ClaimsPrincipal user, string delimiter = ",")
-        {
-            var agencies = user?.FindAll("agencies");
-            var results = new List<int?>();
-
-            agencies?.ForEach(c =>
-            {
-                var split = c.Value.Split(delimiter);
-                results.AddRange(split.Select(v => (int?)Int32.Parse(v)));
-            });
-
-            return results.ToArray();
-        }
-
-        /// <summary>
         /// Get the user's username.
         /// </summary>
         /// <param name="user"></param>
