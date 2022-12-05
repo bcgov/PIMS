@@ -35,6 +35,7 @@ export const MAP_VIEW_ZOOM = 'mapViewZoom';
 export const LEAFLET_CLICK_EVENT = 'leafletClickEvent';
 export const PARCEL_LAYER_DATA = 'parcelLayerData';
 export const GET_USER_DETAIL = 'GET_USER_DETAIL';
+export const GET_USER_AGENCIES = 'GET_USER_AGENCIES';
 export const PUT_USER_DETAIL = 'PUT_USER_DETAIL';
 
 // Projects

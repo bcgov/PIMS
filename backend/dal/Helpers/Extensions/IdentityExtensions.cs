@@ -1,8 +1,10 @@
+using System.Net.Mime;
 using Microsoft.EntityFrameworkCore;
 using Pims.Core.Extensions;
 using Pims.Dal.Entities;
 using Pims.Dal.Exceptions;
 using Pims.Dal.Security;
+using Pims.Dal.Services;
 using System;
 using System.Linq;
 using System.Security.Claims;
@@ -22,17 +24,7 @@ namespace Pims.Dal.Helpers.Extensions
         /// <returns>True if the user has any of the permission.</returns>
         public static bool HasPermission(this ClaimsPrincipal user, params Permissions[] permission)
         {
-            Console.WriteLine("\n\n\nHasPermission============");
-            // foreach (PropertyDescriptor descriptor in TypeDescriptor.GetProperties(user))
-            // {
-            //     string name = descriptor.Name;
-            //     object value = descriptor.GetValue(user);
-            //     Console.WriteLine("{0}={1}", name, value);
-            // }
-            // Console.WriteLine(user.Claims.ElementAt(14).ToString());
             string[] usersRoles = user.Claims.Where(c => c.Type == "client_roles").Select(c => c.Value).ToArray();
-            Console.WriteLine(string.Join(Environment.NewLine, usersRoles));
-            Console.WriteLine("=========================\n\n\n");
             if (permission == null) throw new ArgumentNullException(nameof(permission));
             if (permission.Length == 0) throw new ArgumentOutOfRangeException(nameof(permission));
 
@@ -48,9 +40,6 @@ namespace Pims.Dal.Helpers.Extensions
         /// <returns>True if the user has all of the permissions.</returns>
         public static bool HasPermissions(this ClaimsPrincipal user, params Permissions[] permission)
         {
-            Console.WriteLine("\n\n\nHasPermissions");
-            Console.WriteLine(user.ToString());
-            Console.WriteLine("\n\n\n");
             if (permission == null) throw new ArgumentNullException(nameof(permission));
             if (permission.Length == 0) throw new ArgumentOutOfRangeException(nameof(permission));
 
@@ -206,7 +195,13 @@ namespace Pims.Dal.Helpers.Extensions
         /// <returns></returns>
         public static Agency GetAgency(this ClaimsPrincipal user, PimsContext context)
         {
-            var agencyIds = user.GetAgencies();
+            var dbUser = context.Users
+                .Include(u => u.Agencies)
+                .ThenInclude(a => a.Agency)
+                .ThenInclude(a => a.Children)
+                .Single(u => u.Id == user.GetKeycloakUserId());
+
+            var agencyIds = dbUser.Agencies.Select(a => a.AgencyId).ToList();
 
             if (agencyIds == null || !agencyIds.Any()) return null;
 

@@ -29,7 +29,13 @@ namespace Pims.Dal.Helpers.Extensions
             filter.ThrowIfNull(nameof(user));
 
             // Check if user has the ability to view sensitive properties.
-            var userAgencies = user.GetAgenciesAsNullable();
+            var dbUser = context.Users
+.Include(u => u.Agencies)
+.ThenInclude(a => a.Agency)
+.ThenInclude(a => a.Children)
+.Single(u => u.Id == user.GetKeycloakUserId());
+            var _userAgencies = dbUser.Agencies;
+            var userAgencies = _userAgencies.Select(a => (int?)a.AgencyId).AsQueryable<int?>();
             var viewSensitive = user.HasPermission(Permissions.SensitiveView);
             var isAdmin = user.HasPermission(Permissions.AdminProperties);
 
@@ -87,7 +93,7 @@ namespace Pims.Dal.Helpers.Extensions
                 if (filterAgencies.Any())
                 {
                     var agencies = filterAgencies.Concat(context.Agencies.AsNoTracking().Where(a => filterAgencies.Contains(a.Id)).SelectMany(a => a.Children.Select(ac => (int?)ac.Id)).ToArray()).Distinct();
-                    query = query.Where(p => agencies.Contains(p.AgencyId));
+                    query = query.Where(p => agencies.AsEnumerable().Contains(p.AgencyId));
                 }
             }
             if (filter.ParcelId.HasValue)
@@ -228,8 +234,14 @@ namespace Pims.Dal.Helpers.Extensions
             var isAdmin = user.HasPermission(Permissions.AdminProperties);
             if (!isAdmin)
             {
-                var userAgencies = user.GetAgenciesAsNullable();
-                query = query.Where(p => userAgencies.Contains(p.AgencyId));
+                var dbUser = context.Users
+.Include(u => u.Agencies)
+.ThenInclude(a => a.Agency)
+.ThenInclude(a => a.Children)
+.Single(u => u.Id == user.GetKeycloakUserId());
+                var _userAgencies = dbUser.Agencies;
+                var userAgencies = _userAgencies.Select(a => (int?)a.AgencyId).AsQueryable<int?>();
+                query = query.Where(p => userAgencies.AsEnumerable().Contains(p.AgencyId));
             }
 
             query = context.GenerateCommonQuery(query, user, filter);
@@ -256,8 +268,14 @@ namespace Pims.Dal.Helpers.Extensions
             // Only return properties owned by user's agency or sub-agencies.
             if (!filter.IncludeAllProperties)
             {
-                var userAgencies = user.GetAgenciesAsNullable();
-                query = query.Where(p => userAgencies.Contains(p.AgencyId));
+                var dbUser = context.Users
+.Include(u => u.Agencies)
+.ThenInclude(a => a.Agency)
+.ThenInclude(a => a.Children)
+.Single(u => u.Id == user.GetKeycloakUserId());
+                var _userAgencies = dbUser.Agencies;
+                var userAgencies = _userAgencies.Select(a => (int?)a.AgencyId).AsQueryable<int?>();
+                query = query.Where(p => userAgencies.AsEnumerable().Contains(p.AgencyId));
             }
 
             query = context.GenerateCommonQuery(query, user, filter);

@@ -71,6 +71,7 @@ export const SORT_USERS = 'SORT_USERS';
 export const SET_USERS_PAGE_SIZE = 'SET_USERS_PAGE_SIZE';
 export const SET_USERS_PAGE_INDEX = 'SET_USERS_PAGE_INDEX';
 export const SET_USERS_SORT = 'SET_USERS_SORT';
+export const SET_PROFILE = 'SET_PROFILE';
 
 //projects
 export enum ProjectActions {

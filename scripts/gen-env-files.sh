@@ -71,7 +71,9 @@ else
 echo \
 "NODE_ENV=development
 API_URL=http://backend:8080/
-CHOKIDAR_USEPOLLING=true" >> ./frontend/.env
+CHOKIDAR_USEPOLLING=true
+REACT_APP_KEYCLOAK_CLIENT_ID=pims-local-test-4292
+REACT_APP_KEYCLOAK_AUTH_SERVER_URL=https://dev.loginproxy.gov.bc.ca/auth" >> ./frontend/.env
 fi
 
 echo 'Before running all the docker containers, update the .env files with the Keycloak Client Secret (pims-service-account).'

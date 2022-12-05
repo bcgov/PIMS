@@ -1,8 +1,8 @@
 {
-  "realm": "pims",
-  "auth-server-url": "http://localhost:8080/auth",
+  "confidential-port": 0,
+  "auth-server-url": "https://dev.loginproxy.gov.bc.ca/auth",
+  "realm": "standard",
   "ssl-required": "external",
-  "resource": "pims-app",
   "public-client": true,
-  "confidential-port": 0
+  "resource": "pims-local-test-4292"
 }

@@ -1,3 +1,4 @@
+using System.Collections;
 using Microsoft.Extensions.Logging;
 using Pims.Core.Extensions;
 using Pims.Dal.Entities.Models;
@@ -141,7 +142,10 @@ namespace Pims.Dal.Services
                 filter.PropertyType = Entities.PropertyTypes.Building;
             }
 
-            var query = this.Context.GenerateAllPropertyQuery(this.User, filter);
+            IQueryable<Property> query = this.Context.GenerateAllPropertyQuery(this.User, filter);
+            IEnumerable<int?> userAgencies = this.Self.User.GetAgencies(this.User.GetKeycloakUserId()).Select(a => (int?)a);
+            Console.WriteLine("\n\n\nPropertyService 146: " + userAgencies.Any().ToString() + "\n\n\n");
+
             var properties = query.Select(p => new[] { Entities.PropertyTypes.Land, Entities.PropertyTypes.Subdivision }.Contains(p.PropertyTypeId) ? new ParcelModel(p, this.User) as PropertyModel : new BuildingModel(p, this.User)).ToArray();
 
             var projectNumbers = properties.SelectMany(p => JsonSerializer.Deserialize<IEnumerable<string>>(p.ProjectNumbers ?? "[]")).Distinct().ToArray();

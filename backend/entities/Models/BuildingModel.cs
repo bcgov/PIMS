@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System;
 using System.Linq;
 using System.Security.Claims;
@@ -97,6 +98,7 @@ namespace Pims.Dal.Entities.Models
         /// </summary>
         /// <param name="property"></param>
         /// <param name="user"></param>
+        /// <param name="userAgencies"></param>
         public BuildingModel(Views.Property property, ClaimsPrincipal user) : base(property, user)
         {
             this.PropertyTypeId = PropertyTypes.Building;
@@ -110,18 +112,16 @@ namespace Pims.Dal.Entities.Models
             this.BuildingTenancy = property.BuildingTenancy;
             this.RentableArea = property.RentableArea;
 
-            var userAgencies = user.GetAgenciesAsNullable();
-
             // The property belongs to the user's agency or sub-agency, so include these properties.
             // TODO: Shuffle code around so that this can use the user.HasPermission(Permissions.AdminProperties).
-            if (userAgencies.Contains(property.AgencyId) || user.HasClaim(c => c.Value == "admin-properties"))
-            {
-                this.LeaseExpiry = property.LeaseExpiry;
-                this.OccupantName = property.OccupantName;
-                this.TransferLeaseOnSale = property.TransferLeaseOnSale;
-                this.Assessed = property.AssessedBuilding;
-                this.AssessedDate = property.AssessedBuildingDate;
-            }
+            // if (userAgencies.Contains(property.AgencyId) || user.HasClaim(c => c.Value == "admin-properties"))
+            // {
+            this.LeaseExpiry = property.LeaseExpiry;
+            this.OccupantName = property.OccupantName;
+            this.TransferLeaseOnSale = property.TransferLeaseOnSale;
+            this.Assessed = property.AssessedBuilding;
+            this.AssessedDate = property.AssessedBuildingDate;
+            // }
         }
         #endregion
     }

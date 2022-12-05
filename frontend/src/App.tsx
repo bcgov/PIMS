@@ -5,24 +5,27 @@ import FilterBackdrop from 'components/maps/leaflet/FilterBackdrop';
 import { AuthStateContext, IAuthState } from 'contexts/authStateContext';
 import { AppRouter } from 'features/routes';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
-import { PublicLayout } from 'layouts';
+import { KeycloakInstance } from 'keycloak-js';
+import PublicLayout from 'layouts/PublicLayout';
 import OnLoadActions from 'OnLoadActions';
 import React, { useEffect } from 'react';
 import { Col } from 'react-bootstrap';
 import { ToastContainer } from 'react-toastify';
 import { useAppDispatch } from 'store';
 import { getFetchLookupCodeAction } from 'store/slices/hooks/lookupCodeActionCreator';
-import { getActivateUserAction } from 'store/slices/hooks/usersActionCreator';
+import { fetchUserAgencies, getActivateUserAction } from 'store/slices/hooks/usersActionCreator';
 
 const App = () => {
   const keycloakWrapper = useKeycloakWrapper();
-  const keycloak = keycloakWrapper.obj;
+  const keycloak: KeycloakInstance = keycloakWrapper.obj;
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (keycloak?.authenticated) {
       getActivateUserAction()(dispatch);
       getFetchLookupCodeAction()(dispatch);
+      console.log('\n\n\n', keycloakWrapper.obj);
+      fetchUserAgencies({ id: keycloakWrapper.obj.tokenParsed.idir_user_guid })(dispatch);
     }
   }, [dispatch, keycloak]);
 

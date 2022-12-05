@@ -9,6 +9,7 @@ import { combineReducers } from 'redux';
 
 import {
   accessRequestSlice,
+  agenciesSlice,
   agencySlice,
   filterSlice,
   jwtSlice,
@@ -45,6 +46,7 @@ export const reducerObject = {
   [propertyNameSlice.name]: propertyNameSlice.reducer,
   [projectSlice.name]: projectSlice.reducer,
   [disposalSlice.name]: disposalSlice.reducer,
+  [agenciesSlice.name]: agenciesSlice.reducer,
 };
 
 export const rootReducer = combineReducers(reducerObject);
