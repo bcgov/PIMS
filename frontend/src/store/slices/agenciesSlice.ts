@@ -3,7 +3,7 @@ import { createAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
 export const saveAgencies = createAction<any>('saveProfile');
 export const clearAgencies = createAction('clearProfile');
 
-export const initialProfileState = {};
+export const initialProfileState: number[] = [];
 
 export const agenciesSlice = createSlice({
   name: 'usersAgencies',
@@ -14,7 +14,7 @@ export const agenciesSlice = createSlice({
       return action.payload;
     });
     builder.addCase(clearAgencies, (_state: any) => {
-      return {};
+      return [];
     });
   },
 });

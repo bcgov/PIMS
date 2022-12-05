@@ -57,6 +57,7 @@ export interface IKeycloak {
 export function useKeycloakWrapper(): IKeycloak {
   const { keycloak: keycloakInstance } = useKeycloak();
   const userInfo = useKeycloak().keycloak.tokenParsed as IUserInfo;
+  userInfo.agencies = store.getState().usersAgencies;
 
   /**
    * Determine if the user has the specified 'claim'
@@ -89,13 +90,11 @@ export function useKeycloakWrapper(): IKeycloak {
    * @param agency - The agency name
    */
   const hasAgency = (agency?: number): boolean => {
-    console.log(store.getState().usersAgencies);
-
     return (
       agency !== undefined &&
       agency !== null &&
       //@ts-ignore
-      store.getState().usersAgencies?.agencies?.some?.(a => a.id === agency)
+      store.getState().usersAgencies.some((a: number) => a === agency)
     );
   };
 
