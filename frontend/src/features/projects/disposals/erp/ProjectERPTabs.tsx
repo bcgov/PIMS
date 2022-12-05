@@ -8,10 +8,9 @@ import { Outlet, useLocation } from 'react-router-dom';
 
 interface IProjectERPTabsProps {
   project?: IProjectModel;
-  disabled?: boolean;
 }
 
-export const ProjectERPTabs: React.FC<IProjectERPTabsProps> = ({ project, disabled = false }) => {
+export const ProjectERPTabs: React.FC<IProjectERPTabsProps> = ({ project }) => {
   const {
     values: { workflowCode, statusCode },
   } = useFormikContext();

@@ -24,7 +24,6 @@ export const ProjectTabs: React.FC<IProjectTabProps> = ({ project, isLoading }) 
   const id = location.pathname.split('/')[3];
 
   const [tabs, setTabs] = React.useState<React.ReactElement[]>([]);
-  const [disabled, setDisabled] = React.useState(false);
 
   const isAdmin = keycloak.hasClaim(Claim.ReportsSplAdmin);
 
@@ -33,15 +32,6 @@ export const ProjectTabs: React.FC<IProjectTabProps> = ({ project, isLoading }) 
       <Tab key={1} label="Information" path={`/projects/disposal/${id}/information`} />,
       <Tab key={2} label="Documentation" path={`/projects/disposal/${id}/documentation`} />,
     ];
-
-    setDisabled(
-      [
-        WorkflowStatus.Disposed,
-        WorkflowStatus.Cancelled,
-        WorkflowStatus.TransferredGRE,
-        WorkflowStatus.Denied,
-      ].includes(statusCode) && !isAdmin,
-    );
 
     if (
       workflowCode === Workflow.ERP ||

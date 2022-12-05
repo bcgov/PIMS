@@ -8,10 +8,9 @@ import { Outlet, useLocation } from 'react-router-dom';
 
 interface IProjectSPLTabsProps {
   project?: IProjectModel;
-  disabled?: boolean;
 }
 
-export const ProjectSPLTabs: React.FC<IProjectSPLTabsProps> = ({ project, disabled = false }) => {
+export const ProjectSPLTabs: React.FC<IProjectSPLTabsProps> = ({ project }) => {
   const {
     values: { workflowCode, statusCode },
   } = useFormikContext();
