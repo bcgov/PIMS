@@ -29,14 +29,13 @@ import {
 } from 'features/projects/disposals/spl';
 import { ProjectSummary } from 'features/projects/summary';
 import MapView from 'features/properties/map/MapView';
-import { FormikValues } from 'formik';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import AuthLayout from 'layouts/AuthLayout';
 import PublicLayout from 'layouts/PublicLayout';
 import AccessDenied from 'pages/401/AccessDenied';
 import { NotFoundPage } from 'pages/404/NotFoundPage';
 import Test from 'pages/Test.ignore';
-import React, { lazy, Suspense, useLayoutEffect, useRef } from 'react';
+import React, { lazy, Suspense, useLayoutEffect } from 'react';
 import { Col } from 'react-bootstrap';
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 
