@@ -2,6 +2,7 @@ import { SelectOption } from 'components/common/form';
 import * as API from 'constants/API';
 import { Claims } from 'constants/claims';
 import { useMemo } from 'react';
+import { store } from 'store';
 
 import useKeycloakWrapper from './useKeycloakWrapper';
 import useCodeLookups from './useLookupCodes';
@@ -18,7 +19,7 @@ export const useMyAgencies = (): SelectOption[] => {
 
   const keycloak = useKeycloakWrapper();
   const agencies = getOptionsByType(API.AGENCY_CODE_SET_NAME);
-  const userAgency = agencies.find(a => Number(a.value) === Number(keycloak.agencyId));
+  const userAgencyIds = store.getState().usersAgencies!;
 
   const isSRES = useMemo(() => {
     return (
@@ -32,11 +33,11 @@ export const useMyAgencies = (): SelectOption[] => {
     return agencies.filter(a => {
       return (
         isSRES ||
-        Number(a.value) === Number(userAgency?.value) ||
-        Number(a.parentId) === Number(userAgency?.value)
+        userAgencyIds.includes(Number(a.value)) ||
+        userAgencyIds.includes(Number(a.parentId))
       );
     });
-  }, [userAgency, agencies, isSRES]);
+  }, [userAgencyIds, agencies, isSRES]);
 
   return agencyOptions;
 };
