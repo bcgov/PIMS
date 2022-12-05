@@ -42,9 +42,11 @@ export const ReviewApproveActions = ({
   );
   useEffect(() => {
     if (submitStatusCode !== undefined) {
-      submitForm().then(() => setSubmitStatusCode(undefined));
+      submitForm();
+      setSubmitStatusCode(undefined);
     }
-  }, [setSubmitStatusCode, submitForm, submitStatusCode]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [submitForm, submitStatusCode]);
   return (
     <>
       <FlexRight>
