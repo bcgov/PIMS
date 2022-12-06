@@ -360,6 +360,7 @@ const PropertyListView: React.FC = () => {
   const [pageSize, setPageSize] = useState(10);
   const [pageIndex, setPageIndex] = useState(0);
   const [pageCount, setPageCount] = useState(0);
+  const [propertyCount, setPropertyCount] = useState(0);
 
   const fetchIdRef = useRef(0);
 
@@ -431,6 +432,7 @@ const PropertyListView: React.FC = () => {
         // For now we'll just calculate it.
         if (fetchId === fetchIdRef.current && data?.items) {
           setData(data.items);
+          setPropertyCount(data.total);
           setPageCount(Math.ceil(data.total / pageSize));
         }
 
@@ -652,6 +654,7 @@ const PropertyListView: React.FC = () => {
               </TooltipWrapper>
             </div>
           </div>
+          <h6 className="PropertyCountHeader">Found {propertyCount} properties.</h6>
           <TooltipWrapper toolTipId="export-to-excel" toolTip="Export to Excel">
             <FileIcon>
               <FaFileExcel data-testid="excel-icon" size={36} onClick={() => fetch('excel')} />
