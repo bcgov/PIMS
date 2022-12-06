@@ -4,10 +4,10 @@ import PIMSlogo from 'assets/images/PIMSlogo/logo_with_text.png';
 import { Jumbotron } from 'components/bootstrap';
 import * as actionTypes from 'constants/actionTypes';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Col, Container, Row, Spinner } from 'react-bootstrap';
 import { FaExternalLinkAlt } from 'react-icons/fa';
-import { Navigate, useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useAppSelector } from 'store';
 import { IGenericNetworkAction } from 'store';
 import { NEW_PIMS_USER } from 'store/slices/hooks/usersActionCreator';
@@ -24,30 +24,39 @@ const usingIE = () => {
 
 const Login = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const redirect =
     location.pathname && location.pathname !== '/login'
       ? `${location.pathname}${location.search ? '?' + location.search : ''}`
       : '/mapview';
 
-  const [showInstruction, setShowInstruction] = useState(false);
   const keyCloakWrapper = useKeycloakWrapper();
   const keycloak = keyCloakWrapper.obj;
   const isIE = usingIE();
+
+  // On component mount
+  useEffect(() => {
+    if (keycloak?.authenticated) {
+      if (activated?.status === NEW_PIMS_USER || !keyCloakWrapper?.roles?.length) {
+        navigate('/access/request');
+      }
+      navigate(redirect || 'mapview');
+    }
+    if (isIE) {
+      navigate('/ienotsupported');
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const [showInstruction, setShowInstruction] = useState(false);
   const activated = useAppSelector(
     store => (store.network as any)[actionTypes.ADD_ACTIVATE_USER] as IGenericNetworkAction,
   );
+
   if (!keycloak) {
     return <Spinner animation="border"></Spinner>;
   }
-  if (keycloak?.authenticated) {
-    if (activated?.status === NEW_PIMS_USER || !keyCloakWrapper?.roles?.length) {
-      return <Navigate to={{ pathname: '/access/request' }} />;
-    }
-    return <Navigate to={redirect || '/mapview'} />;
-  }
-  if (isIE) {
-    return <Navigate to={{ pathname: '/ienotsupported' }} />;
-  }
+
   return (
     <Container className="login" fluid={true}>
       <Container className="unauth" fluid={true}>

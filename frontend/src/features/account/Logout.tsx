@@ -2,7 +2,7 @@ import { useConfiguration } from 'hooks/useConfiguration';
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-export const LogoutPage = () => {
+export const Logout = () => {
   const configuration = useConfiguration();
   const navigate = useNavigate();
 

@@ -4,14 +4,14 @@ import { useConfiguration } from 'hooks/useConfiguration';
 import React from 'react';
 import * as Router from 'react-router';
 
-import { LogoutPage } from './Logout';
+import { Logout } from './Logout';
 
 jest.mock('@react-keycloak/web');
 jest.mock('hooks/useConfiguration');
 
 describe('logout', () => {
+  // Mock react-router useNavigate
   const navigate = jest.fn();
-
   beforeEach(() => {
     jest.spyOn(Router, 'useNavigate').mockImplementation(() => navigate);
   });
@@ -26,7 +26,7 @@ describe('logout', () => {
 
     render(
       <Router.MemoryRouter>
-        <LogoutPage />
+        <Logout />
       </Router.MemoryRouter>,
     );
 
@@ -41,7 +41,7 @@ describe('logout', () => {
 
     render(
       <Router.MemoryRouter>
-        <LogoutPage />
+        <Logout />
       </Router.MemoryRouter>,
     );
 

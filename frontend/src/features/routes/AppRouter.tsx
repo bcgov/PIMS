@@ -2,7 +2,7 @@ import FilterBackdrop from 'components/maps/leaflet/FilterBackdrop';
 import { Claims } from 'constants/claims';
 import { IENotSupportedPage } from 'features/account/IENotSupportedPage';
 import Login from 'features/account/Login';
-import { LogoutPage } from 'features/account/Logout';
+import { Logout } from 'features/account/Logout';
 import { LayoutWrapper, SelectProjectPropertiesPage } from 'features/projects/common';
 import { ProjectLayout } from 'features/projects/disposals';
 import {
@@ -525,7 +525,7 @@ export const AppRouter: React.FC = () => {
         />
         <Route
           path="/logout"
-          element={<LayoutWrapper title={getTitle('Logout')} component={LogoutPage} />}
+          element={<LayoutWrapper title={getTitle('Logout')} component={Logout} />}
         />
         <Route
           path="/access/request"
