@@ -350,27 +350,22 @@ export const AppRouter: React.FC = () => {
           {/**
            * PROJECTS -- /projects
            */}
-          <Route
-            path="/projects"
-            element={
-              <PrivateRoute claim={Claims.PROJECT_ADD}>
-                <LayoutWrapper
-                  component={ProjectRouter}
-                  layout={AuthLayout}
-                  title={getTitle('Dispose Property')}
-                />
-              </PrivateRoute>
-            }
-          >
+          <Route path="/projects" element={<PrivateRoute claim={Claims.PROJECT_ADD} />}>
             {/**
              * PROJECTS INDEX ROUTE -- /projects
              * - When clicking on a project with status 'Submitted'.
+             * If search params exist in the path, render ProjectRouter, which will navigate
+             * to the correct route. Otherwise render Page Not Found.
              */}
             <Route
               index
               element={
                 location.search.length > 0 ? (
-                  <Navigate to={`assess/properties${location.search}`} />
+                  <LayoutWrapper
+                    component={ProjectRouter}
+                    layout={AuthLayout}
+                    title={getTitle('Dispose Property')}
+                  />
                 ) : (
                   <LayoutWrapper
                     title={getTitle('Page Not Found')}
