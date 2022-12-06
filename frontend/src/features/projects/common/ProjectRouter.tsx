@@ -29,8 +29,6 @@ export const ProjectRouter = () => {
   const query = location?.search ?? {};
   const projectNumber = queryString.parse(query).projectNumber;
 
-  console.log(projectNumber);
-
   useEffect(() => {
     if (projectNumber !== null && projectNumber !== undefined) {
       dispatch(clearProject());
