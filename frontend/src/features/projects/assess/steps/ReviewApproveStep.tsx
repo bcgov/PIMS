@@ -135,7 +135,7 @@ const ReviewApproveStep = () => {
       <Container fluid className="ReviewApproveStep">
         <Formik
           initialValues={initialValues}
-          ref={formikRef}
+          innerref={formikRef}
           enableReinitialize={true}
           onSubmit={(values: IProject) => {
             const workflowCode = getNextWorkflowCode(submitStatusCode, values);
@@ -179,11 +179,7 @@ const ReviewApproveStep = () => {
     );
   };
   return (
-    <LayoutWrapper
-      layout={ProjectLayout}
-      component={ReviewApproveStepContent}
-      componentProps={{ formikRef }}
-    ></LayoutWrapper>
+    <LayoutWrapper layout={ProjectLayout} component={ReviewApproveStepContent}></LayoutWrapper>
   );
 };
 

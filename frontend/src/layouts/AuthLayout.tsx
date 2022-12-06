@@ -4,7 +4,7 @@ import { AppNavBar } from 'components/layout';
 import { AuthStateContext } from 'contexts/authStateContext';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import React from 'react';
-import { Col, Container, Row, Spinner } from 'react-bootstrap';
+import { Container, Spinner } from 'react-bootstrap';
 
 import PublicLayout from './PublicLayout';
 
