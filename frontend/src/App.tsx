@@ -24,7 +24,6 @@ const App = () => {
     if (keycloak?.authenticated) {
       getActivateUserAction()(dispatch);
       getFetchLookupCodeAction()(dispatch);
-      console.log('\n\n\n', keycloakWrapper.obj);
       fetchUserAgencies({ id: keycloakWrapper.obj.tokenParsed.idir_user_guid })(dispatch);
     }
   }, [dispatch, keycloak]);

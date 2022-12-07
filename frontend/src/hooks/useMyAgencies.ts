@@ -2,7 +2,7 @@ import { SelectOption } from 'components/common/form';
 import * as API from 'constants/API';
 import { Claims } from 'constants/claims';
 import { useMemo } from 'react';
-import { store } from 'store';
+import { useSelector } from 'react-redux';
 
 import useKeycloakWrapper from './useKeycloakWrapper';
 import useCodeLookups from './useLookupCodes';
@@ -19,7 +19,8 @@ export const useMyAgencies = (): SelectOption[] => {
 
   const keycloak = useKeycloakWrapper();
   const agencies = getOptionsByType(API.AGENCY_CODE_SET_NAME);
-  const userAgencyIds = store.getState().usersAgencies!;
+  //@ts-ignore
+  const userAgencyIds: number[] = useSelector(state => state.usersAgencies);
 
   const isSRES = useMemo(() => {
     return (
