@@ -27,7 +27,6 @@ const App = () => {
         fetchUserAgencies({ id: keycloakWrapper.obj.tokenParsed.idir_user_guid })(dispatch);
       });
       getFetchLookupCodeAction()(dispatch);
-      console.log('\n\n\n', keycloakWrapper.obj);
       fetchUserAgencies({ id: keycloakWrapper.obj.tokenParsed.idir_user_guid })(dispatch);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
