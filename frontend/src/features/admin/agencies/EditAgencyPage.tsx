@@ -34,7 +34,7 @@ interface IEditAgencyPageProps {
 const EditAgencyPage = (props: IEditAgencyPageProps) => {
   const params = useParams();
   // removing the double quotes surrounding the id from useParams() as stringify isn't removing those double quotes surrounding the id.
-  const agencyId = JSON.stringify(params.id).slice(1, -1);
+  const agencyId = params.id ? JSON.stringify(params.id).slice(1, -1) : '';
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -239,22 +239,25 @@ const EditAgencyPage = (props: IEditAgencyPageProps) => {
 
 export default EditAgencyPage;
 
-const DeleteModal = ({ showDelete, setShowDelete, history, dispatch, agency }: any) => (
-  <GenericModal
-    message="Are you sure you want to permanently delete the agency?"
-    cancelButtonText="Cancel"
-    okButtonText="Delete"
-    display={showDelete}
-    handleOk={() => {
-      dispatch(deleteAgency(agency)).then(() => {
-        history.push('/admin/agencies');
-      });
-    }}
-    handleCancel={() => {
-      setShowDelete(false);
-    }}
-  />
-);
+const DeleteModal = ({ showDelete, setShowDelete, dispatch, agency }: any) => {
+  const navigate = useNavigate();
+  return (
+    <GenericModal
+      message="Are you sure you want to permanently delete the agency?"
+      cancelButtonText="Cancel"
+      okButtonText="Delete"
+      display={showDelete}
+      handleOk={() => {
+        dispatch(deleteAgency(agency)).then(() => {
+          navigate('/admin/agencies');
+        });
+      }}
+      handleCancel={() => {
+        setShowDelete(false);
+      }}
+    />
+  );
+};
 
 const FailedDeleteModal = ({ showFailed, setShowFailed }: any) => (
   <GenericModal

@@ -157,7 +157,7 @@ describe('Edit agency page', () => {
     });
 
     it('can delete agencies with no properties', async () => {
-      history.push('');
+      history.push('/');
       const { getByText, container } = renderEditAgencyPage();
       mockAxios.reset();
       mockAxios.onAny().reply(200, {});
@@ -179,7 +179,7 @@ describe('Edit agency page', () => {
     });
 
     it('can not delete agencies with properties', async () => {
-      history.push('');
+      history.push('/');
       const { getByText, container } = renderEditAgencyPage();
       mockAxios.reset();
       mockAxios.onAny().reply(200, {});
