@@ -114,7 +114,7 @@ export const getUpdateUserAction = (id: API.IUserDetailParams, updatedUser: any)
   dispatch: Dispatch<AnyAction>,
 ) => {
   const axiosPromise = CustomAxios({ lifecycleToasts: userToasts })
-    .put(ENVIRONMENT.apiUrl + API.KEYCLOAK_USER_UPDATE(id), updatedUser)
+    .put(ENVIRONMENT.apiUrl + API.ADMIN_USER_UPDATE(id), updatedUser)
     .then((response: AxiosResponse) => {
       dispatch(updateUser(response.data));
       return Promise.resolve(response);

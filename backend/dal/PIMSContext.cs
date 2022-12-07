@@ -24,6 +24,7 @@ namespace Pims.Dal
         #region Properties
         #region Tables
         public DbSet<AccessRequest> AccessRequests { get; set; }
+        public DbSet<UserAgency> UserAgencies { get; set; }
         public DbSet<Agency> Agencies { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }

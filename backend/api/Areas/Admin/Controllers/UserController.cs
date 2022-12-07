@@ -147,7 +147,7 @@ namespace Pims.Api.Areas.Admin.Controllers
         {
             var entity = _mapper.Map<Entity.User>(model);
             _pimsAdminService.User.Update(entity);
-
+            entity = _pimsAdminService.User.Get(entity.Id);
             var user = _mapper.Map<Model.UserModel>(entity);
             return new JsonResult(user);
         }
