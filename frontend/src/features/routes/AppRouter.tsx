@@ -86,7 +86,7 @@ export const AppRouter: React.FC = () => {
         )
       }
     >
-      <Routes>
+      <Routes data-testid="approuter-routes">
         <Route path="/" element={<IsAuthenticatedRoute />}>
           <Route index element={<Navigate to="/mapview" />} />
           {/**
