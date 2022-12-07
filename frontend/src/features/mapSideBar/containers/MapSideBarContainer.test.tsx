@@ -8,7 +8,6 @@ import MockAdapter from 'axios-mock-adapter';
 import * as actionTypes from 'constants/actionTypes';
 import { Claims } from 'constants/claims';
 import { createMemoryHistory } from 'history';
-import { noop } from 'lodash';
 import { mockBuildingWithAssociatedLand, mockDetails, mockParcel } from 'mocks/filterDataMock';
 import React from 'react';
 import { act } from 'react-dom/test-utils';

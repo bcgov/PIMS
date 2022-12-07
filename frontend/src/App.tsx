@@ -24,8 +24,10 @@ const App = () => {
     if (keycloak?.authenticated) {
       getActivateUserAction()(dispatch);
       getFetchLookupCodeAction()(dispatch);
+      //TODO: Encorporate a better way of fetching user agencies.
       fetchUserAgencies({ id: keycloakWrapper.obj.tokenParsed.idir_user_guid })(dispatch);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, keycloak]);
 
   return (

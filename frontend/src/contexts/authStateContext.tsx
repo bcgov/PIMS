@@ -27,6 +27,7 @@ export const AuthStateContextProvider = (props: { children?: any }) => {
       // this error isn't recoverable, so just log it for debugging purposes.
       console.error(err);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [keycloak.obj.token]);
 
   return (
