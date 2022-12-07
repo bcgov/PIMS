@@ -47,8 +47,9 @@ const setCurrentReport = (report: IReport) => {
 
 describe('useRouterReport hook tests', () => {
   afterEach(() => {
+    const search = new URLSearchParams(defaultReport).toString();
     currentReport = undefined;
-    history.push({ search: '' });
+    history.push(`/reports/spl?${search}`);
   });
   it('the router hook will set the filter based on a query string', () => {
     history.push({ search: new URLSearchParams(defaultReport).toString() });

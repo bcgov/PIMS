@@ -81,12 +81,14 @@ describe('Layer Popup Content', () => {
   });
 
   it('Populate details link appears when sideBar open', () => {
-    history.location.search = queryString.stringify({
-      disabled: false,
-      loadDraft: false,
-      sidebar: true,
-      sidebarContext: SidebarContextType.ADD_BUILDING,
-    });
+    history.push(
+      `/mapview?${queryString.stringify({
+        disabled: false,
+        loadDraft: false,
+        sidebar: true,
+        sidebarContext: SidebarContextType.ADD_BUILDING,
+      })}`,
+    );
     const { getByText } = render(
       <MemoryRouter initialEntries={[history.location]}>
         <MapContainer>
