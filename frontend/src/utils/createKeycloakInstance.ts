@@ -1,4 +1,3 @@
-import IKeycloakConfig from 'interfaces/IKeycloakConfig';
 import Keycloak from 'keycloak-js';
 
 //@ts-ignore
