@@ -145,5 +145,3 @@ echo \
 ASPNETCORE_ENVIRONMENT=Local
 Auth__Keycloak__Secret=" >> ./tools/keycloak/sync/.env
 fi
-
-echo 'Before running all the docker containers, update the .env files with the Keycloak Client Secret (pims-service-account).'
