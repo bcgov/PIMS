@@ -125,6 +125,8 @@
     "start": "react-scripts start",
     "build": "cross-env CI=true react-scripts build",
     "test": "react-scripts test --ci --watchAll=false --runInBand",
+    "test:output": "react-scripts test --ci --watchAll=false --runInBand --json --outputFile=latestTestRun.json",
+    "test:summary": "node ./jest/summarizeLatestTestRun.mjs",
     "test:watch": "react-scripts test",
     "coverage": "react-scripts test --ci --coverage --testResultsProcessor jest-sonar-reporter --watchAll=false --runInBand",
     "update-snapshots": "react-scripts test --updateSnapshot",
@@ -146,7 +148,8 @@
       "!<rootDir>/build/**",
       "!<rootDir>/src/serviceWorker.**",
       "!<rootDir>/src/setupProxy.*",
-      "!<rootDir>/src/setupTests.*"
+      "!<rootDir>/src/setupTests.*",
+      "!<rootDir>/jest/**"
     ],
     "coverageThreshold": {
       "global": {
