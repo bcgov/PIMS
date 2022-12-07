@@ -25,7 +25,7 @@ interface IEditUserPageProps extends IUserDetailParams {
 const EditUserPage = (props: IEditUserPageProps) => {
   const params = useParams();
   // removing the double quotes surrounding the id from useParams() as stringify isn't removing those double quotes surrounding the id.
-  const userId = JSON.stringify(params.id).slice(1, -1);
+  const userId = params.id ? JSON.stringify(params.id).slice(1, -1) : '';
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   useEffect(() => {

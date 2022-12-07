@@ -12,7 +12,7 @@ import { mockBuildingWithAssociatedLand, mockDetails, mockParcel } from 'mocks/f
 import React from 'react';
 import { act } from 'react-dom/test-utils';
 import { Provider } from 'react-redux';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import VisibilitySensor from 'react-visibility-sensor';
 import configureMockStore from 'redux-mock-store';
@@ -54,7 +54,7 @@ const history = createMemoryHistory();
 const renderContainer = ({ store }: any) =>
   render(
     <Provider store={store ?? getStore()}>
-      <MemoryRouter initialEntries={[history.location]}>
+      <MemoryRouter initialEntries={['/']}>
         <ToastContainer
           autoClose={5000}
           hideProgressBar
@@ -63,9 +63,9 @@ const renderContainer = ({ store }: any) =>
           rtl={false}
           pauseOnFocusLoss={false}
         />
-        <Route path="/mapView/:id?">
-          <MapSideBarContainer properties={[]} />
-        </Route>
+        <Routes>
+          <Route path="/" element={<MapSideBarContainer properties={[]} />} />
+        </Routes>
       </MemoryRouter>
     </Provider>,
   );
