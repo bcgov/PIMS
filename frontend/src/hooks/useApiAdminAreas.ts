@@ -43,7 +43,7 @@ export const useAdminAreaApi = (): AdminAreaAPI => {
 
   axios.interceptors.request.use(
     config => {
-      config.headers.Authorization = `Bearer ${store.getState().jwt}`;
+      config.headers!.Authorization = `Bearer ${store.getState().jwt}`;
       dispatch(showLoading());
       return config;
     },

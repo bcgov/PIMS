@@ -1,3 +1,4 @@
+import { AxiosError } from 'axios';
 import { Button, Form, Input } from 'components/common/form';
 import GenericModal from 'components/common/GenericModal';
 import TooltipWrapper from 'components/common/TooltipWrapper';
@@ -91,7 +92,8 @@ const EditAdminArea = (props: IEditAdminAreaProps) => {
               await updateAdminArea(adminAreaId, toApiAdminArea(activeArea, values.name));
             } catch (error) {
               if (isAxiosError(error)) {
-                setDuplicateModal({ msg: error.response?.data.details, show: true });
+                const err = error as AxiosError<any>;
+                setDuplicateModal({ msg: err.response?.data.details, show: true });
               }
             }
           } else if (!!values.name) {
@@ -100,7 +102,8 @@ const EditAdminArea = (props: IEditAdminAreaProps) => {
               history.push(`/admin/administrativeArea/${data.id}`);
             } catch (error) {
               if (isAxiosError(error)) {
-                setDuplicateModal({ msg: error.response?.data.details, show: true });
+                const err = error as AxiosError<any>;
+                setDuplicateModal({ msg: err.response?.data.details, show: true });
               }
             }
           }
