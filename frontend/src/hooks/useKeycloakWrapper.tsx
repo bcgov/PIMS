@@ -200,6 +200,7 @@ export function useKeycloakWrapper(): IKeycloak {
       canUserDeleteProperty,
       canUserViewProperty,
     }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [keycloakInstance],
   );
 }
