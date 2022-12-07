@@ -33,7 +33,7 @@ export const deleteBuilding = (building: IBuilding) => async (dispatch: Dispatch
     dispatch(hideLoading());
     return data;
   } catch (axiosError) {
-    const err = axiosError as AxiosError;
+    const err = axiosError as AxiosError<any>;
     dispatch(storeError(error(actionTypes.DELETE_PARCEL, err?.response?.status, axiosError)));
     dispatch(hideLoading());
     throw Error(err.response?.data.details);
