@@ -4,7 +4,7 @@ import { IENotSupportedPage } from 'features/account/IENotSupportedPage';
 import Login from 'features/account/Login';
 import { Logout } from 'features/account/Logout';
 import { LayoutWrapper, SelectProjectPropertiesPage } from 'features/projects/common';
-import { ProjectLayout } from 'features/projects/disposals';
+import { GreTransferStep, ProjectLayout } from 'features/projects/disposals';
 import {
   ProjectCloseOut,
   ProjectDocumentation,
@@ -488,6 +488,22 @@ export const AppRouter: React.FC = () => {
              * - When clicking on a project with status 'Approved for *'.
              */}
             <Route path="disposal" element={<PrivateRoute claim={Claims.PROJECT_ADD} />}>
+              {/**
+               * Allows for transfer within gre in DisposalProject.tsx.
+               * Both /projects/disposal/:id and /projects/disposal/:id/transfer/within/gre
+               * will route to DisposalProject.tsx and GreTransferStep is
+               * rendered based on the pathname and other conditions.
+               */}
+              <Route
+                path=":id/transfer/within/gre"
+                element={
+                  <LayoutWrapper
+                    component={ProjectLayout}
+                    layout={AuthLayout}
+                    title={getTitle('Disposal Project')}
+                  />
+                }
+              />
               <Route
                 path=":id"
                 element={
