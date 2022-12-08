@@ -24,7 +24,7 @@ const ProjectDisposeLayout = ({
   location,
 }: {
   match: PathMatch<string> | null;
-  location: Location;
+  location: Location | null;
 }) => {
   const locationPath = useLocation();
   const navigate = useNavigate();
@@ -44,7 +44,7 @@ const ProjectDisposeLayout = ({
     noFetchingProjectRequests,
     getProjectRequest,
   } = useStepForm();
-  const query = location?.search ?? {};
+  const query = location?.search ?? '{}';
   const projectNumber = queryString.parse(query).projectNumber;
 
   const updateProjectStatus = (
@@ -146,7 +146,7 @@ const ProjectDisposeLayout = ({
           {currentStatus !== undefined ? (
             <GeneratedDisposeStepper
               activeStep={currentStatus?.sortOrder ?? 0}
-              basePath={match?.pathnameBase ?? '/'}
+              basePath="/dispose"
             />
           ) : null}
           {getProjectRequest?.isFetching !== true ? (
