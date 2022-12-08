@@ -44,7 +44,7 @@ const ProjectDisposeLayout = ({
     noFetchingProjectRequests,
     getProjectRequest,
   } = useStepForm();
-  const query = location?.search ?? '{}';
+  const query = locationPath?.search ?? '{}';
   const projectNumber = queryString.parse(query).projectNumber;
 
   const updateProjectStatus = (
