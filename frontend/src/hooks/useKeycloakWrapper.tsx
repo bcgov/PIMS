@@ -2,7 +2,6 @@ import { useKeycloak } from '@react-keycloak/web';
 import { IProperty } from 'actions/parcelsActions';
 import { Claims } from 'constants/claims';
 import { PropertyTypes } from 'constants/propertyTypes';
-import RoleClaims from 'constants/roleClaims';
 import { Roles } from 'constants/roles';
 import _ from 'lodash';
 import { useMemo } from 'react';

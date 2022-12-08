@@ -1,4 +1,3 @@
-using System.Net.Mime;
 using Microsoft.EntityFrameworkCore;
 using Pims.Core.Extensions;
 using Pims.Dal.Entities;
@@ -8,7 +7,7 @@ using Pims.Dal.Services;
 using System;
 using System.Linq;
 using System.Security.Claims;
-using System.ComponentModel;
+
 namespace Pims.Dal.Helpers.Extensions
 {
     /// <summary>
