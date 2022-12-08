@@ -5,7 +5,6 @@ import MockAdapter from 'axios-mock-adapter';
 import * as actionTypes from 'constants/actionTypes';
 import Claims from 'constants/claims';
 import * as reducerTypes from 'constants/reducerTypes';
-import { createMemoryHistory } from 'history';
 import { noop } from 'lodash';
 import React from 'react';
 import { Provider } from 'react-redux';
@@ -35,7 +34,6 @@ const mockDispatchFn = jest.fn().mockReturnValue({ then: jest.fn() });
 useDispatchSpy.mockReturnValue(mockDispatchFn);
 
 const mockStore = configureMockStore([thunk]);
-const history = createMemoryHistory();
 
 jest.mock('./hooks/useStepper');
 jest.mock('./hooks/useStepper');
@@ -45,12 +43,6 @@ jest.mock('./hooks/useStepper');
   projectStatusCompleted: noop,
   canGoToStatus: noop,
 });
-
-const loc = {
-  pathname: '/dispose/projects/draft',
-  search: '?projectNumber=SPP-10001',
-  hash: '',
-} as Location;
 
 const mockWorkflow = [
   {
@@ -93,8 +85,8 @@ const errorStore = mockStore({
 
 const renderElement = (store: any) => (
   <Provider store={store}>
-    <MemoryRouter initialEntries={[history.location]}>
-      <ProjectDisposeView match={null} location={loc} />
+    <MemoryRouter initialEntries={['/dispose?projectNumber=SPP-10001']}>
+      <ProjectDisposeView />
     </MemoryRouter>
   </Provider>
 );

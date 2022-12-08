@@ -4,7 +4,7 @@ import { ProjectActions } from 'constants/actionTypes';
 import queryString from 'query-string';
 import React, { useEffect } from 'react';
 import { Container } from 'react-bootstrap';
-import { PathMatch } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'store';
 
 import { clearProject, fetchProject } from '../common';
@@ -16,16 +16,9 @@ import ProjectDisposeLayout from './ProjectDisposeLayout';
  * @param param0 default react router props
  */
 
-//TODO: Remove match and location props, they are never used.
-const ProjectDisposeView = ({
-  match,
-  location,
-}: {
-  match: PathMatch<string> | null;
-  location: Location | null;
-}) => {
-  const query = location?.search ?? '{}';
-  const projectNumber = queryString.parse(query).projectNumber;
+const ProjectDisposeView = () => {
+  const location = useLocation();
+  const projectNumber = queryString.parse(location?.search).projectNumber;
   const dispatch = useAppDispatch();
   const getProjectRequest = useAppSelector(
     store => (store.network.requests as any)[ProjectActions.GET_PROJECT],
@@ -43,7 +36,7 @@ const ProjectDisposeView = ({
   return (
     <StepContextProvider>
       <Container fluid className="ProjectDisposeView">
-        <ProjectDisposeLayout {...{ match, location }}></ProjectDisposeLayout>
+        <ProjectDisposeLayout />
       </Container>
     </StepContextProvider>
   );
