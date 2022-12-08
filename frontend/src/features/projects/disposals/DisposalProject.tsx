@@ -8,7 +8,7 @@ import { useProjectDisposal } from 'store';
 import { useProjectStore } from 'store/slices/hooks';
 
 import { SresManual } from '../common';
-import { ProjectStatus, ProjectTabs } from '.';
+import { GreTransferStep, ProjectStatus, ProjectTabs } from '.';
 import { defaultProjectForm } from './constants';
 import { IProjectForm } from './interfaces';
 import * as styled from './styled';
@@ -96,37 +96,45 @@ export const DisposalProject: React.FC<IDisposalProjectProps> = props => {
         }}
       >
         <Form className="project">
-          <Row nowrap>
-            <Col>
-              <h1>Surplus Property Program Project</h1>
-              <Row align="center">
-                <h2>{project?.projectNumber}</h2>
-                <p>{project?.name}</p>
+          {!!project &&
+          location.pathname.includes('transfer/within/gre') &&
+          !location.pathname.includes('spl') ? (
+            <GreTransferStep project={project} onUpdate={handleUpdate} />
+          ) : (
+            <>
+              <Row nowrap>
+                <Col>
+                  <h1>Surplus Property Program Project</h1>
+                  <Row align="center">
+                    <h2>{project?.projectNumber}</h2>
+                    <p>{project?.name}</p>
+                  </Row>
+                </Col>
+                <div className="manual">
+                  <SresManual />
+                </div>
               </Row>
-            </Col>
-            <div className="manual">
-              <SresManual />
-            </div>
-          </Row>
-          <Row>
-            <ProjectStatus
-              project={project}
-              onUpdate={handleUpdate}
-              isSubmitting={isSubmitting}
-              setIsSubmitting={setIsSubmitting}
-            />
-          </Row>
-          <ProjectTabs project={project} isLoading={isSubmitting} />
-          <Row className="project-footer">
-            <Button
-              variant="primary"
-              type="submit"
-              isSubmitting={isSubmitting}
-              showSubmitting={true}
-            >
-              Save
-            </Button>
-          </Row>
+              <Row>
+                <ProjectStatus
+                  project={project}
+                  onUpdate={handleUpdate}
+                  isSubmitting={isSubmitting}
+                  setIsSubmitting={setIsSubmitting}
+                />
+              </Row>
+              <ProjectTabs project={project} isLoading={isSubmitting} />
+              <Row className="project-footer">
+                <Button
+                  variant="primary"
+                  type="submit"
+                  isSubmitting={isSubmitting}
+                  showSubmitting={true}
+                >
+                  Save
+                </Button>
+              </Row>
+            </>
+          )}
         </Form>
       </Formik>
     </styled.DisposalProject>
