@@ -31,7 +31,7 @@ namespace Pims.Core.Extensions
         /// <returns></returns>
         public static string GetUsername(this ClaimsPrincipal user)
         {
-            var value = user.Claims.First(c => c.Type == "idir_username")?.Value.ToString();
+            string value = user.Claims.First(c => c.Type == "idir_username")?.Value.ToString();
             return value;
         }
 

@@ -192,6 +192,7 @@ namespace Pims.Api.Controllers
             return new JsonResult(_mapper.Map<Model.AccessRequestModel>(accessRequest));
         }
 
+        //TODO: "Modify the /activate endpoint to also return the users agencies, removing the need for this endpoint."
         [HttpGet("agencies/{id}")]
         [Produces("application/json")]
         [ProducesResponseType(typeof(Model.AccessRequestModel), 200)]

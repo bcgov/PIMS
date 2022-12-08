@@ -1,3 +1,4 @@
+using System.Collections;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Logging;
@@ -100,7 +101,7 @@ namespace Pims.Dal.Services
             this.User.ThrowIfNotAuthorized(Permissions.ProjectView);
 
             // Check if user has the ability to view sensitive properties.
-            var userAgencies = this.Self.User.GetAgencies(this.User.GetKeycloakUserId());
+            IEnumerable<int> userAgencies = this.Self.User.GetAgencies(this.User.GetKeycloakUserId());
             var viewSensitive = this.User.HasPermission(Permissions.SensitiveView);
             var isAdmin = this.User.HasPermission(Permissions.AdminProjects);
 
@@ -181,7 +182,7 @@ namespace Pims.Dal.Services
             this.User.ThrowIfNotAuthorized(Permissions.ProjectView);
 
             // Check if user has the ability to view sensitive properties.
-            var userAgencies = this.Self.User.GetAgencies(this.User.GetKeycloakUserId());
+            IEnumerable<int> userAgencies = this.Self.User.GetAgencies(this.User.GetKeycloakUserId());
             var viewSensitive = this.User.HasPermission(Permissions.SensitiveView);
             var isAdmin = this.User.HasPermission(Permissions.AdminProjects);
 
@@ -298,7 +299,7 @@ namespace Pims.Dal.Services
             project.ThrowIfNull(nameof(project));
             this.User.ThrowIfNotAuthorized(Permissions.ProjectAdd);
 
-            var agency = this.Self.User.GetAgencies(this.User.GetKeycloakUserId()).ElementAt(0);
+            int agency = this.Self.User.GetAgencies(this.User.GetKeycloakUserId()).ElementAt(0);
 
             if (String.IsNullOrWhiteSpace(project.Name)) throw new ArgumentException("Project name is required and cannot be null, empty or whitespace.", nameof(project));
 
@@ -313,7 +314,7 @@ namespace Pims.Dal.Services
 
             if (project.AgencyId != 0)
             {
-                var userAgencies = this.Self.User.GetAgencies(this.User.GetKeycloakUserId()).Select(a => (int?)a);
+                IEnumerable<int?> userAgencies = this.Self.User.GetAgencies(this.User.GetKeycloakUserId()).Select(a => (int?)a);
 
                 var canCreateAProjectForAgency = userAgencies.Contains(project.AgencyId) ||
                                                  this.User.HasPermission(Permissions.AdminProjects);
@@ -435,7 +436,7 @@ namespace Pims.Dal.Services
                 }
             }
 
-            var userAgencies = this.Self.User.GetAgencies(this.User.GetKeycloakUserId());
+            IEnumerable<int> userAgencies = this.Self.User.GetAgencies(this.User.GetKeycloakUserId());
             var originalAgencyId = (int)this.Context.Entry(originalProject).OriginalValues[nameof(Project.AgencyId)];
             if (!isAdmin && !userAgencies.Contains(originalAgencyId)) throw new NotAuthorizedException("User may not edit projects outside of their agency.");
 
@@ -516,8 +517,8 @@ namespace Pims.Dal.Services
         {
             project.ThrowIfNotAllowedToEdit(nameof(project), this.User, new[] { Permissions.ProjectDelete, Permissions.AdminProjects });
 
-            var userAgencies = this.Self.User.GetAgencies(this.User.GetKeycloakUserId());
-            var isAdmin = this.User.HasPermission(Permissions.AdminProjects);
+            IEnumerable<int> userAgencies = this.Self.User.GetAgencies(this.User.GetKeycloakUserId());
+            bool isAdmin = this.User.HasPermission(Permissions.AdminProjects);
             var originalProject = this.Context.Projects
                 .Include(p => p.Status)
                 .Include(p => p.Properties).ThenInclude(p => p.Parcel).ThenInclude(p => p.Parcels)
@@ -630,7 +631,7 @@ namespace Pims.Dal.Services
                 .Include(p => p.Notes)
                 .FirstOrDefault(p => p.Id == project.Id) ?? throw new KeyNotFoundException();
 
-            var userAgencies = this.Self.User.GetAgencies(this.User.GetKeycloakUserId());
+            IEnumerable<int> userAgencies = this.Self.User.GetAgencies(this.User.GetKeycloakUserId());
             if (!isAdmin && !userAgencies.Contains(originalProject.AgencyId)) throw new NotAuthorizedException("User may not edit projects outside of their agency.");
 
             // Only allow valid project status transitions.

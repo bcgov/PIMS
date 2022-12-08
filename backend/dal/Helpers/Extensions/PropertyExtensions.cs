@@ -28,11 +28,13 @@ namespace Pims.Dal.Helpers.Extensions
             filter.ThrowIfNull(nameof(filter));
             filter.ThrowIfNull(nameof(user));
 
-            // Check if user has the ability to view sensitive properties.
-            var userId = context.Users.FirstOrDefault(u => u.KeycloakUserId == user.GetKeycloakUserId())?.Id;
-            var userAgencies = context.UserAgencies.Where(ua => ua.UserId == userId).Select(ua => ua.AgencyId).ToArray();
-            var subAgencies = context.Agencies.Where(a => a.ParentId != null && userAgencies.Contains(a.ParentId.Value)).Select(a => a.Id).ToArray();
+            //Fetching user's agencies from database
+            Guid? userId = context.Users.FirstOrDefault(u => u.KeycloakUserId == user.GetKeycloakUserId())?.Id;
+            int[] userAgencies = context.UserAgencies.Where(ua => ua.UserId == userId).Select(ua => ua.AgencyId).ToArray<int>();
+            int[] subAgencies = context.Agencies.Where(a => a.ParentId != null && userAgencies.Contains(a.ParentId.Value)).Select(a => a.Id).ToArray<int>();
             userAgencies = userAgencies.Concat(subAgencies).ToArray();
+
+            // Check if user has the ability to view sensitive properties.
             var viewSensitive = user.HasPermission(Permissions.SensitiveView);
             var isAdmin = user.HasPermission(Permissions.AdminProperties);
 
@@ -89,7 +91,6 @@ namespace Pims.Dal.Helpers.Extensions
                 }
                 if (filterAgencies.Any())
                 {
-                    // var agencies = filterAgencies.Concat(context.Agencies.AsNoTracking().Where(a => filterAgencies.Contains(a.Id)).SelectMany(a => a.Children.Select(ac => (int?)ac.Id)).ToArray()).Distinct();
                     query = query.Where(p => filterAgencies.AsEnumerable().Contains(p.AgencyId));
                 }
             }
@@ -231,14 +232,12 @@ namespace Pims.Dal.Helpers.Extensions
             var isAdmin = user.HasPermission(Permissions.AdminProperties);
             if (!isAdmin)
             {
-                var dbUser = context.Users
-.Include(u => u.Agencies)
-.ThenInclude(a => a.Agency)
-.ThenInclude(a => a.Children)
-.Single(u => u.Id == user.GetKeycloakUserId());
-                var _userAgencies = dbUser.Agencies;
-                var userAgencies = _userAgencies.Select(a => (int?)a.AgencyId).AsQueryable<int?>();
-                query = query.Where(p => userAgencies.AsEnumerable().Contains(p.AgencyId));
+                //Fetching user's agencies from database
+                Guid? userId = context.Users.FirstOrDefault(u => u.KeycloakUserId == user.GetKeycloakUserId())?.Id;
+                int[] userAgencies = context.UserAgencies.Where(ua => ua.UserId == userId).Select(ua => ua.AgencyId).ToArray<int>();
+                int[] subAgencies = context.Agencies.Where(a => a.ParentId != null && userAgencies.Contains(a.ParentId.Value)).Select(a => a.Id).ToArray<int>();
+                userAgencies = userAgencies.Concat(subAgencies).ToArray();
+                query = query.Where(p => userAgencies.Contains(p.AgencyId.Value));
             }
 
             query = context.GenerateCommonQuery(query, user, filter);
@@ -265,9 +264,10 @@ namespace Pims.Dal.Helpers.Extensions
             // Only return properties owned by user's agency or sub-agencies.
             if (!filter.IncludeAllProperties)
             {
-                var userId = context.Users.FirstOrDefault(u => u.KeycloakUserId == user.GetKeycloakUserId())?.Id;
-                var userAgencies = context.UserAgencies.Where(ua => ua.UserId == userId).Select(ua => ua.AgencyId).ToArray();
-                var subAgencies = context.Agencies.Where(a => a.ParentId != null && userAgencies.Contains(a.ParentId.Value)).Select(a => a.Id).ToArray();
+                //Fetching user's agencies from database
+                Guid? userId = context.Users.FirstOrDefault(u => u.KeycloakUserId == user.GetKeycloakUserId())?.Id;
+                int[] userAgencies = context.UserAgencies.Where(ua => ua.UserId == userId).Select(ua => ua.AgencyId).ToArray<int>();
+                int[] subAgencies = context.Agencies.Where(a => a.ParentId != null && userAgencies.Contains(a.ParentId.Value)).Select(a => a.Id).ToArray<int>();
                 userAgencies = userAgencies.Concat(subAgencies).ToArray();
                 query = query.Where(p => userAgencies.Contains(p.AgencyId.Value));
             }

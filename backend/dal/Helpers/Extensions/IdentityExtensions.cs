@@ -1,4 +1,3 @@
-using System.Net.Mime;
 using Microsoft.EntityFrameworkCore;
 using Pims.Core.Extensions;
 using Pims.Dal.Entities;
@@ -8,7 +7,7 @@ using Pims.Dal.Services;
 using System;
 using System.Linq;
 using System.Security.Claims;
-using System.ComponentModel;
+
 namespace Pims.Dal.Helpers.Extensions
 {
     /// <summary>
@@ -43,8 +42,9 @@ namespace Pims.Dal.Helpers.Extensions
             if (permission == null) throw new ArgumentNullException(nameof(permission));
             if (permission.Length == 0) throw new ArgumentOutOfRangeException(nameof(permission));
 
-            var roles = permission.Select(r => r.GetName()).ToArray();
-            return user.Claims.Where(c => c.Type == ClaimTypes.Role).All(c => roles.Contains(c.Value));
+            string[] roles = permission.Select(r => r.GetName()).ToArray();
+            string[] usersRoles = user.Claims.Where(c => c.Type == "client_roles").Select(c => c.Value).ToArray();
+            return usersRoles.All(c => roles.Contains(c));
         }
 
         /// <summary>
@@ -195,13 +195,11 @@ namespace Pims.Dal.Helpers.Extensions
         /// <returns></returns>
         public static Agency GetAgency(this ClaimsPrincipal user, PimsContext context)
         {
-            var dbUser = context.Users
-                .Include(u => u.Agencies)
-                .ThenInclude(a => a.Agency)
-                .ThenInclude(a => a.Children)
-                .Single(u => u.Id == user.GetKeycloakUserId());
-
-            var agencyIds = dbUser.Agencies.Select(a => a.AgencyId).ToList();
+            //Fetching user's agencies from database
+            Guid? userId = context.Users.FirstOrDefault(u => u.KeycloakUserId == user.GetKeycloakUserId())?.Id;
+            int[] agencyIds = context.UserAgencies.Where(ua => ua.UserId == userId).Select(ua => ua.AgencyId).ToArray<int>();
+            int[] subAgencies = context.Agencies.Where(a => a.ParentId != null && agencyIds.Contains(a.ParentId.Value)).Select(a => a.Id).ToArray<int>();
+            agencyIds = agencyIds.Concat(subAgencies).ToArray();
 
             if (agencyIds == null || !agencyIds.Any()) return null;
 
