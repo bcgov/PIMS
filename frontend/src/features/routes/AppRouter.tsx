@@ -27,6 +27,10 @@ import {
   ProjectSPLMarketing,
   ProjectSPLTransferWithinGRE,
 } from 'features/projects/disposals/spl';
+import {
+  ProjectDisposalExemptionSubmitted,
+  ProjectDisposalSubmitted,
+} from 'features/projects/dispose';
 import { ProjectSummary } from 'features/projects/summary';
 import MapView from 'features/properties/map/MapView';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
@@ -329,19 +333,52 @@ export const AppRouter: React.FC = () => {
                 }
               />
             </Route>
+            {/**
+             * DISPOSE PROJECT FORM - REVIEW
+             * STEP [6/6]
+             */}
+            <Route path="projects/review" element={<PrivateRoute claim={Claims.PROJECT_ADD} />}>
+              <Route
+                index
+                element={
+                  <LayoutWrapper
+                    component={ProjectDisposeView}
+                    layout={AuthLayout}
+                    title={getTitle('View SPL Projects')}
+                  />
+                }
+              />
+            </Route>
           </Route>
           {/**
-           * DISPOSE PROJECT FORM - REVIEW
-           * STEP [6/6]
+           * PROJECT SUBMITTED -- /project
+           * -- When completing and submitting a 'Create Disposal Project' form.
            */}
-          <Route path="projects/review" element={<PrivateRoute claim={Claims.PROJECT_ADD} />}>
+          <Route path="/project" element={<PrivateRoute claim={Claims.PROJECT_VIEW} />}>
+            <Route index element={<Navigate to="/project/submitted" replace />} />
+            {/**
+             * SUBMITTED -- /project/submitted
+             */}
             <Route
-              index
+              path="submitted"
               element={
                 <LayoutWrapper
-                  component={ProjectDisposeView}
+                  component={ProjectDisposalSubmitted}
                   layout={AuthLayout}
-                  title={getTitle('View SPL Projects')}
+                  title={getTitle('Dispose Property Submitted')}
+                />
+              }
+            />
+            {/**
+             * EXEMPTION SUBMITTED -- /project/exemption/submitted
+             */}
+            <Route
+              path="exemption/submitted"
+              element={
+                <LayoutWrapper
+                  component={ProjectDisposalExemptionSubmitted}
+                  layout={AuthLayout}
+                  title={getTitle('Dispose Property Submitted')}
                 />
               }
             />
