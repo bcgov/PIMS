@@ -5,6 +5,7 @@ import MockAdapter from 'axios-mock-adapter';
 import { createMemoryHistory } from 'history';
 import React from 'react';
 import { Provider } from 'react-redux';
+import * as Router from 'react-router';
 import { MemoryRouter } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
@@ -53,6 +54,10 @@ const testRender = (store: any, props: any) =>
   );
 
 describe('rowAction functions', () => {
+  const navigate = jest.fn();
+  beforeEach(() => {
+    jest.spyOn(Router, 'useNavigate').mockImplementation(() => navigate);
+  });
   beforeEach(() => {
     mockAxios.resetHistory();
   });
@@ -87,6 +92,6 @@ describe('rowAction functions', () => {
     fireEvent.click(container);
     const openButton = await findByText('Open');
     fireEvent.click(openButton);
-    await waitFor(() => expect(history.location.pathname).toBe('/admin/user/1'));
+    await waitFor(() => expect(navigate).toHaveBeenCalledWith('/admin/user/1'));
   });
 });
