@@ -100,7 +100,6 @@ namespace Pims.Dal.Entities.Models
         /// </summary>
         /// <param name="property"></param>
         /// <param name="user"></param>
-        /// <param name="userAgencies"></param>
         public BuildingModel(Views.Property property, ClaimsPrincipal user) : base(property, user)
         {
             this.PropertyTypeId = PropertyTypes.Building;
