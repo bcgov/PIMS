@@ -1,8 +1,0 @@
-{
-  "confidential-port": 0,
-  "auth-server-url": "https://dev.loginproxy.gov.bc.ca/auth",
-  "realm": "standard",
-  "ssl-required": "external",
-  "public-client": true,
-  "resource": "pims-local-test-4292"
-}

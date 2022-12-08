@@ -4,7 +4,7 @@ import 'react-bootstrap-typeahead/css/Typeahead.css';
 import FilterBackdrop from 'components/maps/leaflet/FilterBackdrop';
 import { AuthStateContext, IAuthState } from 'contexts/authStateContext';
 import { AppRouter } from 'features/routes';
-import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+import useKeycloakWrapper, { IKeycloak } from 'hooks/useKeycloakWrapper';
 import { KeycloakInstance } from 'keycloak-js';
 import PublicLayout from 'layouts/PublicLayout';
 import OnLoadActions from 'OnLoadActions';
@@ -16,7 +16,7 @@ import { getFetchLookupCodeAction } from 'store/slices/hooks/lookupCodeActionCre
 import { fetchUserAgencies, getActivateUserAction } from 'store/slices/hooks/usersActionCreator';
 
 const App = () => {
-  const keycloakWrapper = useKeycloakWrapper();
+  const keycloakWrapper: IKeycloak = useKeycloakWrapper();
   const keycloak: KeycloakInstance = keycloakWrapper.obj;
   const dispatch = useAppDispatch();
 
@@ -24,7 +24,7 @@ const App = () => {
     if (keycloak?.authenticated) {
       getActivateUserAction()(dispatch);
       getFetchLookupCodeAction()(dispatch);
-      //TODO: Encorporate a better way of fetching user agencies.
+      //TODO: Modify the "/activate" endpoint to return user agencies as well, thus removing the need for this call
       fetchUserAgencies({ id: keycloakWrapper.obj.tokenParsed.idir_user_guid })(dispatch);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

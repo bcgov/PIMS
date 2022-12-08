@@ -31,15 +31,13 @@ namespace Pims.Dal.Helpers.Extensions
             filter.ThrowIfNull(nameof(user));
             filter.ThrowIfNull(nameof(filter));
 
+            //Fetching user's agencies from database
+            Guid? userId = context.Users.FirstOrDefault(u => u.KeycloakUserId == user.GetKeycloakUserId())?.Id;
+            int[] userAgencies = context.UserAgencies.Where(ua => ua.UserId == userId).Select(ua => ua.AgencyId).ToArray<int>();
+            int[] subAgencies = context.Agencies.Where(a => a.ParentId != null && userAgencies.Contains(a.ParentId.Value)).Select(a => a.Id).ToArray<int>();
+            userAgencies = userAgencies.Concat(subAgencies).ToArray();
+
             // Check if user has the ability to view sensitive properties.
-            var dbUser = context.Users
-    .Include(u => u.Agencies)
-    .ThenInclude(a => a.Agency)
-    .ThenInclude(a => a.Children)
-    .Single(u => u.Id == user.GetKeycloakUserId());
-
-            var userAgencies = dbUser.Agencies.Select(a => a.AgencyId).ToList();
-
             var isAdmin = user.HasPermission(Permissions.AdminProjects);
 
             // Users may only view sensitive properties if they have the `sensitive-view` claim and belong to the owning agency.
@@ -69,7 +67,6 @@ namespace Pims.Dal.Helpers.Extensions
             if (filter.CreatedByMe.HasValue && filter.CreatedByMe.Value)
             {
                 var keycloakUserId = user.GetKeycloakUserId();
-                var userId = context.Users.Where(u => u.KeycloakUserId == keycloakUserId).Select(u => u.Id).FirstOrDefault(); // TODO: Add User.Id to claims to speed up query.
                 query = query.Where(p => p.CreatedById.Equals(userId));
             }
 
