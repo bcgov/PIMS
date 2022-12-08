@@ -45,14 +45,13 @@ namespace Pims.Dal.Helpers.Extensions
             filter.ThrowIfNull(nameof(user));
             filter.ThrowIfNull(nameof(filter));
 
+            //Fetching user's agencies from database
+            Guid? userId = context.Users.FirstOrDefault(u => u.KeycloakUserId == user.GetKeycloakUserId())?.Id;
+            int[] userAgencies = context.UserAgencies.Where(ua => ua.UserId == userId).Select(ua => ua.AgencyId).ToArray<int>();
+            int[] subAgencies = context.Agencies.Where(a => a.ParentId != null && userAgencies.Contains(a.ParentId.Value)).Select(a => a.Id).ToArray<int>();
+            userAgencies = userAgencies.Concat(subAgencies).ToArray();
+
             // Check if user has the ability to view sensitive properties.
-            var dbUser = context.Users
-.Include(u => u.Agencies)
-.ThenInclude(a => a.Agency)
-.ThenInclude(a => a.Children)
-.Single(u => u.Id == user.GetKeycloakUserId());
-            var _userAgencies = dbUser.Agencies;
-            var userAgencies = _userAgencies.Select(a => (int?)a.AgencyId).AsQueryable<int?>();
             var viewSensitive = user.HasPermission(Permissions.SensitiveView);
             var isAdmin = user.HasPermission(Permissions.AdminProperties);
 
@@ -70,7 +69,7 @@ namespace Pims.Dal.Helpers.Extensions
                 query = query.Where(p =>
                     p.IsVisibleToOtherAgencies
                     || ((!p.IsSensitive || viewSensitive)
-                        && userAgencies.Contains(p.AgencyId)));
+                        && userAgencies.Contains(p.AgencyId.Value)));
             }
 
             if (filter.NELatitude.HasValue && filter.NELongitude.HasValue && filter.SWLatitude.HasValue && filter.SWLongitude.HasValue)

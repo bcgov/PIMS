@@ -47,16 +47,15 @@ namespace Pims.Dal.Helpers.Extensions
             filter.ThrowIfNull(nameof(filter));
             filter.ThrowIfNull(nameof(user));
 
+            //Fetching user's agencies from database
+            Guid? userId = context.Users.FirstOrDefault(u => u.KeycloakUserId == user.GetKeycloakUserId())?.Id;
+            int[] userAgencies = context.UserAgencies.Where(ua => ua.UserId == userId).Select(ua => ua.AgencyId).ToArray<int>();
+            int[] subAgencies = context.Agencies.Where(a => a.ParentId != null && userAgencies.Contains(a.ParentId.Value)).Select(a => a.Id).ToArray<int>();
+            userAgencies = userAgencies.Concat(subAgencies).ToArray();
+
             // Check if user has the ability to view sensitive properties.
-            var dbUser = context.Users
-.Include(u => u.Agencies)
-.ThenInclude(a => a.Agency)
-.ThenInclude(a => a.Children)
-.Single(u => u.Id == user.GetKeycloakUserId());
-            var _userAgencies = dbUser.Agencies;
-            var userAgencies = _userAgencies.Select(a => (int?)a.AgencyId).AsQueryable<int?>();
-            var viewSensitive = user.HasPermission(Permissions.SensitiveView);
-            var isAdmin = user.HasPermission(Permissions.AdminProperties);
+            bool viewSensitive = user.HasPermission(Permissions.SensitiveView);
+            bool isAdmin = user.HasPermission(Permissions.AdminProperties);
 
             // Users may only view sensitive properties if they have the `sensitive-view` claim and belong to the owning agency.
             var query = context.Buildings.AsNoTracking();
@@ -66,7 +65,7 @@ namespace Pims.Dal.Helpers.Extensions
                 query = query.Where(b =>
                     b.IsVisibleToOtherAgencies
                     || ((!b.IsSensitive || viewSensitive)
-                        && userAgencies.Contains(b.AgencyId)));
+                        && userAgencies.Contains(b.AgencyId.Value)));
             }
 
             if (filter.NELatitude.HasValue && filter.NELongitude.HasValue && filter.SWLatitude.HasValue && filter.SWLongitude.HasValue)

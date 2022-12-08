@@ -1,4 +1,3 @@
-using System.Collections;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -268,18 +267,23 @@ namespace Pims.Dal.Services
             return agencies.ToArray();
         }
 
+        /// <summary>
+        /// Get the all of the agency ids that a user belongs to, given the Guid. 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public IEnumerable<int> GetUsersAgencies(Guid id)
         {
             if (id != this.User.GetKeycloakUserId())
             {
                 throw new UnauthorizedAccessException();
             }
-            var user = this.Context.Users
+            User user = this.Context.Users
                 .Include(u => u.Agencies)
                 .ThenInclude(a => a.Agency)
                 .ThenInclude(a => a.Children)
                 .Single(u => u.Id == id) ?? throw new KeyNotFoundException();
-            var agencies = user.Agencies.Select(a => a.AgencyId).ToList();
+            List<int> agencies = user.Agencies.Select(a => a.AgencyId).ToList();
             agencies.AddRange(user.Agencies.SelectMany(a => a.Agency?.Children.Where(ac => !ac.IsDisabled)).Select(a => a.Id));
 
             return agencies.ToArray();

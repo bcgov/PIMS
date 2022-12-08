@@ -44,7 +44,7 @@ namespace Pims.Dal.Services.Admin
             if (filter.Quantity < 1) throw new ArgumentException("Argument must be greater than or equal to 1.", nameof(filter.Quantity));
 
             // Check if user has the ability to view sensitive properties.
-            var userAgencies = this.Self.User.GetAgencies(this.User.GetKeycloakUserId()).Select(a => (int?)a);
+            IEnumerable<int?> userAgencies = this.Self.User.GetAgencies(this.User.GetKeycloakUserId()).Select(a => (int?)a);
 
             var viewSensitive = this.User.HasPermission(Security.Permissions.SensitiveView);
 

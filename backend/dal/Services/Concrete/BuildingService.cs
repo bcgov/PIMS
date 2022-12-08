@@ -53,9 +53,9 @@ namespace Pims.Dal.Services
         public IEnumerable<Building> Get(double neLat, double neLong, double swLat, double swLong)
         {
             this.User.ThrowIfNotAuthorized(Permissions.PropertyView);
-            // Check if user has the ability to view sensitive properties.
-            var userAgencies = this.Self.User.GetAgencies(this.User.GetKeycloakUserId()).Select(a => (int?)a);
 
+            // Check if user has the ability to view sensitive properties.
+            IEnumerable<int?> userAgencies = this.Self.User.GetAgencies(this.User.GetKeycloakUserId()).Select(a => (int?)a);
             var viewSensitive = this.User.HasPermission(Permissions.SensitiveView);
             var isAdmin = this.User.HasPermission(Permissions.AdminProperties);
 
@@ -123,7 +123,7 @@ namespace Pims.Dal.Services
         {
             this.User.ThrowIfNotAuthorized(Permissions.PropertyView);
             // Check if user has the ability to view sensitive properties.
-            var userAgencies = this.Self.User.GetAgencies(this.User.GetKeycloakUserId()).Select(a => (int?)a);
+            IEnumerable<int?> userAgencies = this.Self.User.GetAgencies(this.User.GetKeycloakUserId()).Select(a => (int?)a);
 
             var viewSensitive = this.User.HasPermission(Permissions.SensitiveView);
             var isAdmin = this.User.HasPermission(Permissions.AdminProperties);
@@ -164,7 +164,7 @@ namespace Pims.Dal.Services
             building.ThrowIfNull(nameof(building));
             this.User.ThrowIfNotAuthorized(Permissions.PropertyAdd);
 
-            var agency = User.GetAgency(Context)
+            Agency agency = User.GetAgency(Context)
  ??
                 throw new NotAuthorizedException("User must belong to an agency before adding buildings.");
 
@@ -227,7 +227,7 @@ namespace Pims.Dal.Services
                 .Include(b => b.Parcels).ThenInclude(pb => pb.Parcel).ThenInclude(b => b.Address).ThenInclude(a => a.Province)
                 .FirstOrDefault(b => b.Id == building.Id) ?? throw new KeyNotFoundException();
 
-            var userAgencies = this.Self.User.GetAgencies(this.User.GetKeycloakUserId()).Select(a => (int?)a);
+            IEnumerable<int?> userAgencies = this.Self.User.GetAgencies(this.User.GetKeycloakUserId()).Select(a => (int?)a);
 
             if (!isAdmin && !userAgencies.Contains(existingBuilding.AgencyId)) throw new NotAuthorizedException("User may not edit buildings outside of their agency.");
 
@@ -368,7 +368,7 @@ namespace Pims.Dal.Services
                 .FirstOrDefault(b => b.Id == building.Id) ?? throw new KeyNotFoundException();
             this.ThrowIfNotAllowedToUpdate(existingBuilding, _options.Project);
 
-            var userAgencies = this.Self.User.GetAgencies(this.User.GetKeycloakUserId()).Select(a => (int?)a);
+            IEnumerable<int?> userAgencies = this.Self.User.GetAgencies(this.User.GetKeycloakUserId()).Select(a => (int?)a);
 
             if (!isAdmin && !userAgencies.Contains(existingBuilding.AgencyId))
                 throw new NotAuthorizedException("User may not edit buildings outside of their agency.");
@@ -400,7 +400,7 @@ namespace Pims.Dal.Services
 
             var existingBuilding = this.Context.Buildings.Include(b => b.Evaluations).Include(b => b.Fiscals).Include(b => b.Parcels).FirstOrDefault(b => b.Id == building.Id) ?? throw new KeyNotFoundException();
 
-            var agency_ids = this.Self.User.GetAgencies(this.User.GetKeycloakUserId()).Select(a => (int?)a);
+            IEnumerable<int?> agency_ids = this.Self.User.GetAgencies(this.User.GetKeycloakUserId()).Select(a => (int?)a);
 
             if (!isAdmin && !agency_ids.Contains(existingBuilding.AgencyId)) throw new NotAuthorizedException("User may not remove buildings outside of their agency.");
 
