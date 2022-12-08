@@ -1,5 +1,3 @@
-using System.ComponentModel;
-using MapsterMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -10,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Model = Pims.Api.Models.Auth;
-using Pims.Dal.Entities;
 
 namespace Pims.Api.Controllers
 {
@@ -35,12 +32,10 @@ namespace Pims.Api.Controllers
         /// </summary>
         /// <param name="optionsKeycloak"></param>
         /// <param name="pimsService"></param>
-        /// <param name="mapper"></param>
-        public AuthController(IOptionsMonitor<Keycloak.Configuration.KeycloakOptions> optionsKeycloak, IPimsService pimsService, IMapper mapper)
+        public AuthController(IOptionsMonitor<Keycloak.Configuration.KeycloakOptions> optionsKeycloak, IPimsService pimsService)
         {
             _optionsKeycloak = optionsKeycloak.CurrentValue;
             _pimsService = pimsService;
-            _mapper = mapper;
         }
         #endregion
 
