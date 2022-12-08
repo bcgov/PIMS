@@ -9,7 +9,7 @@ import _ from 'lodash';
 import queryString from 'query-string';
 import React, { useEffect, useRef } from 'react';
 import { Container, Spinner } from 'react-bootstrap';
-import { PathMatch, useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useAppDispatch } from 'store';
 
 import { clearProject, SresManual, updateWorkflowStatus, useStepForm } from '../common';
@@ -19,14 +19,8 @@ import { GeneratedDisposeStepper, StepActions, useStepper } from '.';
  * Top level component facilitates 'wizard' style multi-step form for disposing of projects.
  * @param param0 default react router props
  */
-const ProjectDisposeLayout = ({
-  match,
-  location,
-}: {
-  match: PathMatch<string> | null;
-  location: Location | null;
-}) => {
-  const locationPath = useLocation();
+const ProjectDisposeLayout = () => {
+  const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const formikRef = useRef<FormikValues>();
@@ -44,8 +38,7 @@ const ProjectDisposeLayout = ({
     noFetchingProjectRequests,
     getProjectRequest,
   } = useStepForm();
-  const query = locationPath?.search ?? '{}';
-  const projectNumber = queryString.parse(query).projectNumber;
+  const projectNumber = queryString.parse(location?.search).projectNumber;
 
   const updateProjectStatus = (
     project: IProject,
@@ -116,12 +109,10 @@ const ProjectDisposeLayout = ({
   };
 
   useEffect(() => {
-    let statusAtRoute = _.find(workflowStatuses, ({ route }) =>
-      locationPath.pathname.includes(route),
-    );
+    let statusAtRoute = _.find(workflowStatuses, ({ route }) => location.pathname.includes(route));
     if (setCurrentStatus && noFetchingProjectRequests) setCurrentStatus(statusAtRoute);
   }, [
-    locationPath.pathname,
+    location.pathname,
     navigate,
     workflowStatuses,
     setCurrentStatus,
@@ -131,11 +122,11 @@ const ProjectDisposeLayout = ({
 
   //If the current route isn't set, set based on the query project status.
   useEffect(() => {
-    if (locationPath.pathname === '/dispose' && workflowStatuses?.length > 0) {
+    if (location.pathname === '/dispose' && workflowStatuses?.length > 0) {
       dispatch(clearProject());
       navigate(`/dispose${workflowStatuses[0].route}`);
     }
-  }, [navigate, workflowStatuses, locationPath.pathname, dispatch, projectNumber]);
+  }, [navigate, workflowStatuses, location.pathname, dispatch, projectNumber]);
 
   return (
     <>

@@ -2,7 +2,6 @@ import { useKeycloak } from '@react-keycloak/web';
 import { render } from '@testing-library/react';
 import * as actionTypes from 'constants/actionTypes';
 import * as reducerTypes from 'constants/reducerTypes';
-import { createMemoryHistory } from 'history';
 import { noop } from 'lodash';
 import React from 'react';
 import { Provider } from 'react-redux';
@@ -28,7 +27,7 @@ jest.mock('@react-keycloak/web');
 });
 
 const mockStore = configureMockStore([thunk]);
-const history = createMemoryHistory();
+
 jest.mock('./hooks/useStepper');
 jest.mock('../common/hooks/useProject');
 jest.mock('../common/hooks/useStepForm');
@@ -36,12 +35,6 @@ jest.mock('components/Table/Table', () => ({
   __esModule: true,
   default: () => <></>,
 }));
-
-const loc = {
-  pathname: '/dispose/projects/draft',
-  search: '?projectNumber=SPP-10001',
-  hash: '',
-} as Location;
 
 const store = mockStore({
   [reducerTypes.ProjectReducers.PROJECT]: {},
@@ -58,15 +51,17 @@ const store = mockStore({
 
 const uiElement = (
   <Provider store={store}>
-    <MemoryRouter initialEntries={[history.location]}>
-      <ProjectDisposeLayout match={null} location={loc} />
+    <MemoryRouter initialEntries={['/dispose?projectNumber=SPP-10001']}>
+      <ProjectDisposeLayout />
     </MemoryRouter>
   </Provider>
 );
+
 describe('dispose project draft step display', () => {
   const goToNextStep = jest.fn();
   const onSubmit = jest.fn();
   const onSave = jest.fn();
+
   beforeAll(() => {
     (useStepper as jest.Mock).mockReturnValue({
       currentStatus: mockWorkflow[4],
@@ -100,12 +95,14 @@ describe('dispose project draft step display', () => {
       }),
     });
   });
+
   afterAll(() => {
     jest.clearAllMocks();
   });
   afterEach(() => {
     goToNextStep.mockReset();
   });
+
   it('stepper renders correctly based off of workflow', () => {
     const { container } = render(uiElement);
     expect(container.firstChild).toMatchSnapshot();
