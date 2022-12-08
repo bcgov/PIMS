@@ -3,13 +3,14 @@ import { act, cleanup, render } from '@testing-library/react';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import * as actionTypes from 'constants/actionTypes';
+import Claims from 'constants/claims';
 import * as reducerTypes from 'constants/reducerTypes';
 import { createMemoryHistory } from 'history';
 import { noop } from 'lodash';
 import React from 'react';
 import { Provider } from 'react-redux';
 import * as redux from 'react-redux';
-import { matchPath, MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
@@ -17,15 +18,17 @@ import useStepper from './hooks/useStepper';
 import ProjectDisposeView from './ProjectDisposeView';
 
 jest.mock('@react-keycloak/web');
-(useKeycloak as jest.Mock).mockReturnValue({
-  keycloak: {
-    userInfo: {
-      agencies: [1],
-      roles: [],
+const mockKeycloak = (claims: string[]) => {
+  (useKeycloak as jest.Mock).mockReturnValue({
+    keycloak: {
+      userInfo: {
+        agencies: [1],
+        roles: [],
+      },
+      subject: 'test',
     },
-    subject: 'test',
-  },
-});
+  });
+};
 
 const useDispatchSpy = jest.spyOn(redux, 'useDispatch');
 const mockDispatchFn = jest.fn().mockReturnValue({ then: jest.fn() });
@@ -42,8 +45,6 @@ jest.mock('./hooks/useStepper');
   projectStatusCompleted: noop,
   canGoToStatus: noop,
 });
-
-const match = matchPath('', '/dispose');
 
 const loc = {
   pathname: '/dispose/projects/draft',
@@ -93,7 +94,7 @@ const errorStore = mockStore({
 const renderElement = (store: any) => (
   <Provider store={store}>
     <MemoryRouter initialEntries={[history.location]}>
-      <ProjectDisposeView match={match} location={loc} />
+      <ProjectDisposeView match={null} location={loc} />
     </MemoryRouter>
   </Provider>
 );
@@ -103,10 +104,16 @@ describe('Project Dispose View', () => {
     cleanup();
     jest.clearAllMocks();
   });
+
+  beforeAll(() => {
+    mockKeycloak([Claims.PROJECT_ADD]);
+  });
+
   beforeEach(() => {
     const mockAxios = new MockAdapter(axios);
     mockAxios.onAny().reply(200, {});
   });
+
   it('renders', () => {
     act(() => {
       const { container } = render(renderElement(store));

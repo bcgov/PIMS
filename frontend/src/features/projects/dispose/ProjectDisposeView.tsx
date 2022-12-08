@@ -15,14 +15,16 @@ import ProjectDisposeLayout from './ProjectDisposeLayout';
  * Top level component facilitates 'wizard' style multi-step form for disposing of projects.
  * @param param0 default react router props
  */
+
+//TODO: Remove match and location props, they are never used.
 const ProjectDisposeView = ({
   match,
   location,
 }: {
   match: PathMatch<string> | null;
-  location: Location;
+  location: Location | null;
 }) => {
-  const query = location?.search ?? {};
+  const query = location?.search ?? '{}';
   const projectNumber = queryString.parse(query).projectNumber;
   const dispatch = useAppDispatch();
   const getProjectRequest = useAppSelector(
