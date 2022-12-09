@@ -40,7 +40,7 @@ export const CustomAxios = ({
     },
   });
   instance.interceptors.request.use(config => {
-    config.headers.Authorization = `Bearer ${store.getState().jwt}`;
+    config.headers!.Authorization = `Bearer ${store.getState().jwt}`;
     if (selector !== undefined) {
       const state = store.getState();
       const storedValue = selector(state);

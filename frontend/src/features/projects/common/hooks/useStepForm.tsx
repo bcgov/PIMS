@@ -104,7 +104,7 @@ const useStepForm = () => {
       promise = updateProject(project)(dispatch);
     }
     return promise
-      .catch((error: AxiosError) => {
+      .catch((error: AxiosError<any>) => {
         const msg: string = error?.response?.data?.error ?? error.toString();
         formikRef?.current?.setStatus({ msg });
         throw Error('axios request failed');
