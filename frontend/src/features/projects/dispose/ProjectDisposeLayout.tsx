@@ -80,6 +80,12 @@ const ProjectDisposeLayout = () => {
     formikRef.current?.submitForm().then(() => {
       const values = formikRef?.current?.values;
       const errors = formikRef?.current?.errors;
+
+      // Scroll to required fields
+      const firstRequiredInputName = Object.keys(errors)[0];
+      const element = document.querySelector(`input[name='${firstRequiredInputName}']`);
+      if (element) element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
       // do not go to the next step if the form has validation errors.
       if (errors === undefined || !Object.keys(errors).length) {
         let nextStepCode = getNextStep(currentStatus)?.code;
