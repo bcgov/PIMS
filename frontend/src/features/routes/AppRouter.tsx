@@ -4,7 +4,7 @@ import { IENotSupportedPage } from 'features/account/IENotSupportedPage';
 import Login from 'features/account/Login';
 import { Logout } from 'features/account/Logout';
 import { LayoutWrapper, SelectProjectPropertiesPage } from 'features/projects/common';
-import { GreTransferStep, ProjectLayout } from 'features/projects/disposals';
+import { ProjectLayout } from 'features/projects/disposals';
 import {
   ProjectCloseOut,
   ProjectDocumentation,
