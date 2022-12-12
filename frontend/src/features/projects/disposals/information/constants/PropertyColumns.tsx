@@ -25,6 +25,7 @@ export const PropertyColumns = (
         <TooltipWrapper toolTipId="project-property" toolTip="Remove Property from Project">
           {!disabled ? (
             <FaTrash
+              data-testid="trash-icon"
               className="remove"
               size={16}
               onClick={() => {

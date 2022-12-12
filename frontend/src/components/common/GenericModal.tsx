@@ -112,7 +112,11 @@ const GenericModal = (props: ModalProps) => {
         <Modal.Body style={{ maxHeight: '500px' }}>{props.message}</Modal.Body>
 
         <Modal.Footer>
-          <Button variant={props.okButtonVariant ?? 'primary'} onClick={ok}>
+          <Button
+            data-testid="modal-footer-ok-btn"
+            variant={props.okButtonVariant ?? 'primary'}
+            onClick={ok}
+          >
             {props.okButtonText ?? 'Ok'}
           </Button>
           {props.cancelButtonText && (

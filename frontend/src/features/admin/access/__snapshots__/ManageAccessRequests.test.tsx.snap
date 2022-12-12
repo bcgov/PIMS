@@ -519,6 +519,7 @@ exports[`Manage access requests Snapshot matches 1`] = `
           >
             <div
               className="td"
+              data-testid="cell-username"
               onClick={[Function]}
               role="cell"
               style={
@@ -542,6 +543,7 @@ exports[`Manage access requests Snapshot matches 1`] = `
             </div>
             <div
               className="td clickable"
+              data-testid="cell-firstName"
               onClick={[Function]}
               role="cell"
               style={
@@ -562,6 +564,7 @@ exports[`Manage access requests Snapshot matches 1`] = `
             </div>
             <div
               className="td clickable"
+              data-testid="cell-lastName"
               onClick={[Function]}
               role="cell"
               style={
@@ -582,6 +585,7 @@ exports[`Manage access requests Snapshot matches 1`] = `
             </div>
             <div
               className="td clickable"
+              data-testid="cell-email"
               onClick={[Function]}
               role="cell"
               style={
@@ -602,6 +606,7 @@ exports[`Manage access requests Snapshot matches 1`] = `
             </div>
             <div
               className="td clickable"
+              data-testid="cell-position"
               onClick={[Function]}
               role="cell"
               style={
@@ -622,6 +627,7 @@ exports[`Manage access requests Snapshot matches 1`] = `
             </div>
             <div
               className="td clickable"
+              data-testid="cell-status"
               onClick={[Function]}
               role="cell"
               style={
@@ -642,6 +648,7 @@ exports[`Manage access requests Snapshot matches 1`] = `
             </div>
             <div
               className="td clickable"
+              data-testid="cell-agency"
               onClick={[Function]}
               role="cell"
               style={
@@ -662,6 +669,7 @@ exports[`Manage access requests Snapshot matches 1`] = `
             </div>
             <div
               className="td clickable"
+              data-testid="cell-role"
               onClick={[Function]}
               role="cell"
               style={
@@ -682,6 +690,7 @@ exports[`Manage access requests Snapshot matches 1`] = `
             </div>
             <div
               className="td"
+              data-testid="cell- "
               onClick={[Function]}
               role="cell"
               style={
