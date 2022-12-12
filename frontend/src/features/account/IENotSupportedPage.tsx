@@ -16,3 +16,5 @@ export const IENotSupportedPage: React.FC = () => {
     </Container>
   );
 };
+
+export default IENotSupportedPage;

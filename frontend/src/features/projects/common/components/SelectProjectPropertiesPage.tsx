@@ -1,4 +1,5 @@
-import { LayoutWrapper, ProjectLayout, useStepForm } from 'features/projects/common';
+import { ProjectLayout, useStepForm } from 'features/projects/common';
+import { LayoutWrapper } from 'features/routes/LayoutWrapper';
 import { FormikValues } from 'formik';
 import React, { useRef } from 'react';
 import { Button } from 'react-bootstrap';

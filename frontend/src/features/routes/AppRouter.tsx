@@ -1,15 +1,14 @@
 import FilterBackdrop from 'components/maps/leaflet/FilterBackdrop';
 import { Claims } from 'constants/claims';
-import { IENotSupportedPage } from 'features/account/IENotSupportedPage';
-import Login from 'features/account/Login';
-import { Logout } from 'features/account/Logout';
-import { LayoutWrapper, SelectProjectPropertiesPage } from 'features/projects/common';
-import { ProjectLayout } from 'features/projects/disposals';
+import { IENotSupportedPage, Login, Logout } from 'features/account';
+import { ReviewApproveStep } from 'features/projects/assess';
+import { SelectProjectPropertiesPage } from 'features/projects/common';
 import {
   ProjectCloseOut,
   ProjectDocumentation,
   ProjectERPTabs,
   ProjectInformationTabs,
+  ProjectLayout,
   ProjectNotifications,
   ProjectNotSPL,
   ProjectSPLTabs,
@@ -33,19 +32,13 @@ import {
 } from 'features/projects/dispose';
 import { ProjectSummary } from 'features/projects/summary';
 import MapView from 'features/properties/map/MapView';
+import { IsAuthenticatedRoute, LayoutWrapper, PrivateRoute } from 'features/routes';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
-import AuthLayout from 'layouts/AuthLayout';
-import PublicLayout from 'layouts/PublicLayout';
-import AccessDenied from 'pages/401/AccessDenied';
-import { NotFoundPage } from 'pages/404/NotFoundPage';
-import Test from 'pages/Test.ignore';
+import { AuthLayout, PublicLayout } from 'layouts';
+import { AccessDenied, NotFoundPage, Test } from 'pages';
 import React, { lazy, Suspense, useLayoutEffect } from 'react';
 import { Col } from 'react-bootstrap';
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
-
-import { ReviewApproveStep } from '../projects/assess';
-import { IsAuthenticatedRoute } from './IsAuthenticatedRoute';
-import PrivateRoute from './PrivateRoute';
 
 const AccessRequestPage = lazy(() => import('features/admin/access-request/AccessRequestPage'));
 const EditUserPage = lazy(() => import('features/admin/edit-user/EditUserPage'));
@@ -429,43 +422,35 @@ export const AppRouter: React.FC = () => {
             </Route>
             <Route
               path="summary"
-              element={
-                <LayoutWrapper layout={AuthLayout} component={ProjectSummary}></LayoutWrapper>
-              }
+              element={<LayoutWrapper layout={AuthLayout} component={ProjectSummary} />}
             />
             <Route
               path="approval/requests"
-              element={
-                <PrivateRoute claim={Claims.DISPOSE_APPROVE}>
+              element={<PrivateRoute claim={Claims.DISPOSE_APPROVE} />}
+            >
+              <Route
+                index
+                element={
                   <LayoutWrapper
                     component={ProjectApprovalRequestListView}
                     layout={AuthLayout}
                     title={getTitle('Surplus Property Program Projects - Approval Requests')}
                   />
-                </PrivateRoute>
-              }
-            />
+                }
+              />
+            </Route>
             <Route
               path="assess/properties"
-              element={
-                <PrivateRoute
-                  claim={[Claims.ADMIN_PROJECTS, Claims.DISPOSE_APPROVE]}
-                ></PrivateRoute>
-              }
+              element={<PrivateRoute claim={[Claims.ADMIN_PROJECTS, Claims.DISPOSE_APPROVE]} />}
             >
               <Route
                 index
-                element={
-                  <LayoutWrapper layout={AuthLayout} component={ReviewApproveStep}></LayoutWrapper>
-                }
+                element={<LayoutWrapper layout={AuthLayout} component={ReviewApproveStep} />}
               />
               <Route
                 path="update"
                 element={
-                  <LayoutWrapper
-                    layout={AuthLayout}
-                    component={SelectProjectPropertiesPage}
-                  ></LayoutWrapper>
+                  <LayoutWrapper layout={AuthLayout} component={SelectProjectPropertiesPage} />
                 }
               />
             </Route>

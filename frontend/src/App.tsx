@@ -5,7 +5,7 @@ import FilterBackdrop from 'components/maps/leaflet/FilterBackdrop';
 import { AuthStateContext, IAuthState } from 'contexts/authStateContext';
 import { AppRouter } from 'features/routes';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
-import PublicLayout from 'layouts/PublicLayout';
+import { PublicLayout } from 'layouts';
 import OnLoadActions from 'OnLoadActions';
 import React, { useEffect } from 'react';
 import { Col } from 'react-bootstrap';

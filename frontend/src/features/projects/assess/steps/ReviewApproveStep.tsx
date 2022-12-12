@@ -1,6 +1,6 @@
-import { LayoutWrapper } from 'features/projects/common/LayoutWrapper';
 import ProjectLayout from 'features/projects/common/ProjectLayout';
 import { IProject, IProjectTask, IStepProps } from 'features/projects/interfaces';
+import { LayoutWrapper } from 'features/routes';
 import { Formik, FormikValues, setIn, validateYupSchema, yupToFormErrors } from 'formik';
 import { WorkflowStatus } from 'hooks/api/projects';
 import _ from 'lodash';
