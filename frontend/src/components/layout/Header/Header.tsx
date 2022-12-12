@@ -61,7 +61,6 @@ const Header = () => {
 
       <Modal.Body style={{ maxHeight: '500px', overflowY: 'scroll' }}>
         {errors.map((error: IGenericNetworkAction, index: number) => {
-          error.error = error.error as AxiosError<any>;
           return (
             <Row key={index} style={{ wordBreak: 'break-all' }}>
               {process.env.NODE_ENV === 'development' ? (
