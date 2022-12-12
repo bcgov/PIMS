@@ -30,9 +30,9 @@ To workaround this issue temporarily you can change the Chrome behaviour by **Di
 
 ## Docker Setup
 
-To run Keycloak in a Docker container you will need to create two `.env` files, one in the `/auth/keycloak` folder, and the other in the `/auth/postgres` folder.
+To run Keycloak in a Docker container you will need to create a `.env` file in the `/auth/keycloak` folder.
 
-This will allow Keycloak to initialize with a new PostgreSQL database.
+This will allow Keycloak to initialize with the database.
 
 ### Keycloak Environment Variables
 
@@ -44,14 +44,6 @@ KEYCLOAK_PASSWORD={password}
 KEYCLOAK_IMPORT=/tmp/realm-export.json -Dkeycloak.profile.feature.scripts=enabled -Dkeycloak.profile.feature.upload_scripts=enabled
 KEYCLOAK_LOGLEVEL=WARN
 ROOT_LOGLEVEL=WARN
-
-# Database configuration
-# These are optional if you don't want to run a separate database for keycloak.
-DB_VENDOR=POSTGRES
-DB_ADDR=keycloak-db
-DB_DATABASE=keycloak
-DB_USER={username}
-DB_PASSWORD={password}
 ```
 
 | Key                      | Value                                                                   | Description                                                                                                                    |
@@ -67,17 +59,3 @@ DB_PASSWORD={password}
 | DB_DATABASE              | {keycloak}                                                              | Name of the Keycloak database.                                                                                                 |
 | DB_USER                  | {keycloak}                                                              | The name of the default database user administrator.                                                                           |
 | DB_PASSWORD              | {password}                                                              | The password for the default database user administrator.                                                                      |
-
-### Keycloak Database Environment Variables
-
-```conf
-POSTGRESQL_DATABASE=keycloak
-POSTGRESQL_USER={username}
-POSTGRESQL_PASSWORD={password}
-```
-
-| Key                 | Value      | Description                                                                                             |
-| ------------------- | ---------- | ------------------------------------------------------------------------------------------------------- |
-| POSTGRESQL_DATABASE | {keycloak} | The name of Keycloak database. Must be the same as the above **DB_DATABASE**                            |
-| POSTGRESQL_USER     | {keycloak} | The name of the default database user administrator. Must be the same as the above **DB_USER**          |
-| POSTGRESQL_PASSWORD | {password} | The password for the default database user administrator. Must be the same as the above **DB_PASSWORD** |
