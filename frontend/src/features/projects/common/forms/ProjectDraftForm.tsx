@@ -85,6 +85,7 @@ const ProjectDraftForm = ({
         <Form.Label>Project No.</Form.Label>
         <Col xs={5}>
           <Input
+            data-testid="project-number"
             style={{ width: '200px' }}
             placeholder="SPP-XXXXXX"
             disabled={true}

@@ -41,6 +41,7 @@ exports[`Select Project Properties Step renders correctly 1`] = `
                 <div>
                   <input
                     class="form-control"
+                    data-testid="pid"
                     name="pid"
                     placeholder="Enter PID or PIN"
                     value=""
@@ -69,6 +70,7 @@ exports[`Select Project Properties Step renders correctly 1`] = `
                     <div>
                       <input
                         class="form-control"
+                        data-testid="address"
                         name="address"
                         placeholder="Enter an address or city"
                         value=""
@@ -188,6 +190,7 @@ exports[`Select Project Properties Step renders correctly 1`] = `
             <div>
               <button
                 class="Button Button--icon-only bg-warning btn btn-primary"
+                data-testid="search-btn"
                 id="search-button"
                 type="submit"
               >
@@ -218,6 +221,7 @@ exports[`Select Project Properties Step renders correctly 1`] = `
             <div>
               <button
                 class="Button Button--icon-only btn btn-info"
+                data-testid="reset-btn"
                 id="reset-button"
                 type="reset"
               >
@@ -483,6 +487,7 @@ exports[`Select Project Properties Step renders correctly 1`] = `
           />
           <button
             class="btn btn-secondary"
+            data-testid="add-to-project-btn"
             type="button"
           >
             Add To Project

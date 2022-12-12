@@ -219,6 +219,7 @@ exports[`dispose project draft step display stepper renders correctly based off 
     >
       <button
         class="btn btn-primary"
+        data-testid="next-submit-btn"
         style="margin-left: 10px;"
         type="button"
       >

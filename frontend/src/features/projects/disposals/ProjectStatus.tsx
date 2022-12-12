@@ -90,6 +90,7 @@ export const ProjectStatus: React.FC<IProjectStatusProps> = ({
     .map(status => {
       return (
         <Button
+          data-testid={`project-status-${status?.name}-btn`}
           key={`${status.workflowCode}-${status.id}`}
           variant={status.code === WorkflowStatus.Cancelled ? 'danger' : 'secondary'}
           isSubmitting={isSubmitting}
@@ -124,6 +125,7 @@ export const ProjectStatus: React.FC<IProjectStatusProps> = ({
       </Row>
       {!!statusInfo && (
         <GenericModal
+          data-testid="change-status-btn"
           display={!!statusInfo}
           cancelButtonText="Close"
           okButtonText="Change Status"
