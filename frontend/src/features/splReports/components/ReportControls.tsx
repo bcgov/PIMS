@@ -7,7 +7,6 @@ import _ from 'lodash';
 import * as React from 'react';
 import { Col, Form as BSForm, Row } from 'react-bootstrap';
 import { FaFileAlt, FaFileExcel, FaSyncAlt } from 'react-icons/fa';
-import { Prompt } from 'react-router-dom';
 import styled from 'styled-components';
 import { formatApiDateTime, generateUtcNowDateTime } from 'utils';
 
@@ -111,7 +110,7 @@ const ReportControls: React.FunctionComponent<IReportControlsProps> = ({
                 {reportOptions.length > 1 ? (
                   <Col md="auto">
                     <Row
-                      controlId="select-from"
+                      controlid="select-from"
                       style={{ marginLeft: '10px', display: 'flex', alignItems: 'end' }}
                     >
                       <Col md="auto">
@@ -141,7 +140,7 @@ const ReportControls: React.FunctionComponent<IReportControlsProps> = ({
                 )}
                 <Col md="auto">
                   <Row
-                    controlId="input-to"
+                    controlid="input-to"
                     style={{ marginLeft: '10px', display: 'flex', alignItems: 'end' }}
                   >
                     <Col md="auto">
@@ -225,10 +224,10 @@ const ReportControls: React.FunctionComponent<IReportControlsProps> = ({
                 </Col>
               </Row>
             </Form>
-            <Prompt
+            {/*<Prompt
               when={dirty && !isSubmitting}
               message="You have unsaved changes, are you sure you want to leave? Your unsaved changes will be lost."
-            />
+            />*/}
           </>
         )}
       </Formik>

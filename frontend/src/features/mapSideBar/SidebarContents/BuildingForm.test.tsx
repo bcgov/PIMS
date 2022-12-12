@@ -6,7 +6,7 @@ import { createMemoryHistory } from 'history';
 import noop from 'lodash/noop';
 import React from 'react';
 import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
@@ -43,7 +43,7 @@ jest.mock('@react-keycloak/web');
 const getBuildingForm = (disabled: boolean) => {
   return (
     <Provider store={store}>
-      <Router history={history}>
+      <MemoryRouter initialEntries={[history.location]}>
         <BuildingForm
           setBuildingToAssociateLand={noop}
           goToAssociatedLand={noop}
@@ -51,21 +51,21 @@ const getBuildingForm = (disabled: boolean) => {
           nameSpace="building"
           disabled={disabled}
         />
-      </Router>
+      </MemoryRouter>
     </Provider>
   );
 };
 
 const buildingForm = (
   <Provider store={store}>
-    <Router history={history}>
+    <MemoryRouter initialEntries={[history.location]}>
       <BuildingForm
         setBuildingToAssociateLand={noop}
         goToAssociatedLand={noop}
         setMovingPinNameSpace={noop}
         nameSpace="building"
       />
-    </Router>
+    </MemoryRouter>
   </Provider>
 );
 

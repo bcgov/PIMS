@@ -10,7 +10,7 @@ import { createMemoryHistory } from 'history';
 import React from 'react';
 import { Form } from 'react-bootstrap';
 import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
@@ -97,7 +97,7 @@ const initialTouched: any = {
 const getUpdateInfoForm = () => {
   return (
     <Provider store={store}>
-      <Router history={history}>
+      <MemoryRouter initialEntries={[history.location]}>
         <Formik
           onSubmit={() => {}}
           initialValues={initialValues}
@@ -108,7 +108,7 @@ const getUpdateInfoForm = () => {
             <UpdateInfoForm />
           </Form>
         </Formik>
-      </Router>
+      </MemoryRouter>
     </Provider>
   );
 };

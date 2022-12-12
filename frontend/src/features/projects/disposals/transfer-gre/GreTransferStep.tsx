@@ -6,7 +6,7 @@ import { useFormikContext } from 'formik';
 import { WorkflowStatus } from 'hooks/api/projects';
 import { IProjectModel } from 'hooks/api/projects/disposals';
 import React from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { LookupType, useLookups, useProjectDisposal } from 'store/hooks';
 
 import { IProjectForm, IProjectPropertyForm } from '../interfaces';
@@ -24,7 +24,7 @@ interface IGreTransferStepProps {
  * {isReadOnly formikRef} formikRef allow remote formik access
  */
 export const GreTransferStep: React.FC<IGreTransferStepProps> = ({ project, onUpdate }) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const { values, setTouched, validateForm, setFieldValue } = useFormikContext<IProjectForm>();
   const { controller } = useLookups();
   const api = useProjectDisposal();
@@ -40,15 +40,15 @@ export const GreTransferStep: React.FC<IGreTransferStepProps> = ({ project, onUp
     properties.every(p => p.classificationId <= 1);
 
   React.useEffect(() => {
-    if (transferred) history.push(`/projects/disposal/${project?.id}`);
-  }, [history, project?.id, transferred]);
+    if (transferred) navigate(`/projects/disposal/${project?.id}`);
+  }, [navigate, project?.id, transferred]);
 
   return (
     <styled.GreTransferStep>
       <Row>
         <Button
           onClick={() => {
-            history.goBack();
+            navigate(-1);
           }}
         >
           Back

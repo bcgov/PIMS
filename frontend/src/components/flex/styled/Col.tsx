@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { IColProps } from '..';
+import { IColProps } from '../Col';
 
 export const Col = styled.div<IColProps>`
   display: flex;

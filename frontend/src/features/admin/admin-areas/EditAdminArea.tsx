@@ -7,7 +7,8 @@ import { useAdminAreaApi } from 'hooks/useApiAdminAreas';
 import React, { useCallback, useEffect, useState } from 'react';
 import { ButtonToolbar, Container, Navbar, Spinner } from 'react-bootstrap';
 import { FaArrowAltCircleLeft } from 'react-icons/fa';
-import { useHistory } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
+import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { isAxiosError } from 'utils';
 import { AdministrativeAreaSchema } from 'utils/YupSchema';
@@ -28,23 +29,27 @@ const EditAdminAreaContainer = styled(Container)`
 
 /** component used to edit specific administrative area selected from the ManageAdminArea component */
 const EditAdminArea = (props: IEditAdminAreaProps) => {
-  const history = useHistory();
+  const navigate = useNavigate();
+  const location = useLocation();
   const { getAdminArea, updateAdminArea, deleteAdminArea, addAdminArea } = useAdminAreaApi();
   const [activeArea, setActiveArea] = useState<IAdministrativeArea>();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [duplicateModal, setDuplicateModal] = useState({ show: false, msg: '' });
-  const adminAreaId = props?.match?.params?.id;
+  const params = useParams();
+  // removing the double quotes surrounding the id from useParams() as stringify isn't removing those double quotes surrounding the id.
+  // set aminAreaId to 0 when creating a new admin area
+  const adminAreaId = params.id ? parseInt(JSON.stringify(params.id).slice(1, -1)) : 0;
 
   /** on delete we want to remove the admin area and go back to the list view */
   const onDelete = async () => {
     if (activeArea) {
       await deleteAdminArea(toApiAdminArea(activeArea));
-      history.push('/admin/administrativeareas');
+      navigate('/admin/administrativeareas');
     }
   };
   /** simple function to navigate back to list view */
   const goBack = () => {
-    history.push('/admin/administrativeareas');
+    navigate('/admin/administrativeareas');
   };
 
   /** set the duplicate state back to initial state */
@@ -53,7 +58,7 @@ const EditAdminArea = (props: IEditAdminAreaProps) => {
   };
 
   /** used to determine whether updating or adding */
-  const newAdminArea = history.location.pathname.includes('/new');
+  const newAdminArea = location.pathname.includes('/new');
 
   const getDetails = useCallback(
     async (id: number) => {
@@ -99,7 +104,7 @@ const EditAdminArea = (props: IEditAdminAreaProps) => {
           } else if (!!values.name) {
             try {
               const data = await addAdminArea({ name: values.name });
-              history.push(`/admin/administrativeArea/${data.id}`);
+              navigate(`/admin/administrativeArea/${data.id}`);
             } catch (error) {
               if (isAxiosError(error)) {
                 const err = error as AxiosError<any>;

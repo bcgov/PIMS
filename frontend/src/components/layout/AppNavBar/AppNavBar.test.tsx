@@ -10,7 +10,7 @@ import { mountToJson } from 'enzyme-to-json';
 import { createMemoryHistory } from 'history';
 import React from 'react';
 import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
@@ -41,9 +41,9 @@ describe('AppNavBar', () => {
   it('AppNavBar snapshot test.', () => {
     const tree = mount(
       <Provider store={store}>
-        <Router history={history}>
+        <MemoryRouter initialEntries={[history.location]}>
           <AppNavBar />
-        </Router>
+        </MemoryRouter>
       </Provider>,
     );
     expect(mountToJson(tree.find(AppNavBar))).toMatchSnapshot();
@@ -62,9 +62,9 @@ describe('AppNavBar', () => {
         });
         const { getByText } = render(
           <Provider store={store}>
-            <Router history={history}>
+            <MemoryRouter initialEntries={[history.location]}>
               <AppNavBar />
-            </Router>
+            </MemoryRouter>
           </Provider>,
         );
         const element = getByText('Administration');
@@ -83,9 +83,9 @@ describe('AppNavBar', () => {
         });
         const { getByText } = render(
           <Provider store={store}>
-            <Router history={history}>
+            <MemoryRouter initialEntries={[history.location]}>
               <AppNavBar />
-            </Router>
+            </MemoryRouter>
           </Provider>,
         );
 
@@ -105,9 +105,9 @@ describe('AppNavBar', () => {
         });
         const { getByText } = render(
           <Provider store={store}>
-            <Router history={history}>
+            <MemoryRouter initialEntries={[history.location]}>
               <AppNavBar />
-            </Router>
+            </MemoryRouter>
           </Provider>,
         );
         fireEvent.click(getByText('Administration'));
@@ -127,9 +127,9 @@ describe('AppNavBar', () => {
         });
         const { getByText } = render(
           <Provider store={store}>
-            <Router history={history}>
+            <MemoryRouter initialEntries={[history.location]}>
               <AppNavBar />
-            </Router>
+            </MemoryRouter>
           </Provider>,
         );
         fireEvent.click(getByText('Administration'));
@@ -150,9 +150,9 @@ describe('AppNavBar', () => {
       });
       const { getByText } = render(
         <Provider store={store}>
-          <Router history={history}>
+          <MemoryRouter initialEntries={[history.location]}>
             <AppNavBar />
-          </Router>
+          </MemoryRouter>
         </Provider>,
       );
       const link = getByText('Submit Property');
@@ -170,9 +170,9 @@ describe('AppNavBar', () => {
       });
       const { getByText } = render(
         <Provider store={store}>
-          <Router history={history}>
+          <MemoryRouter initialEntries={[history.location]}>
             <AppNavBar />
-          </Router>
+          </MemoryRouter>
         </Provider>,
       );
 
@@ -193,9 +193,9 @@ describe('AppNavBar', () => {
         });
         const { getByText } = render(
           <Provider store={store}>
-            <Router history={history}>
+            <MemoryRouter initialEntries={[history.location]}>
               <AppNavBar />
-            </Router>
+            </MemoryRouter>
           </Provider>,
         );
         const element = getByText('Disposal Projects');
@@ -213,9 +213,9 @@ describe('AppNavBar', () => {
         });
         const { getByText } = render(
           <Provider store={store}>
-            <Router history={history}>
+            <MemoryRouter initialEntries={[history.location]}>
               <AppNavBar />
-            </Router>
+            </MemoryRouter>
           </Provider>,
         );
         const element = getByText('Disposal Projects');
@@ -233,9 +233,9 @@ describe('AppNavBar', () => {
         });
         const { getByText } = render(
           <Provider store={store}>
-            <Router history={history}>
+            <MemoryRouter initialEntries={[history.location]}>
               <AppNavBar />
-            </Router>
+            </MemoryRouter>
           </Provider>,
         );
         fireEvent.click(getByText('Disposal Projects'));
@@ -255,9 +255,9 @@ describe('AppNavBar', () => {
         });
         const { getByText } = render(
           <Provider store={store}>
-            <Router history={history}>
+            <MemoryRouter initialEntries={[history.location]}>
               <AppNavBar />
-            </Router>
+            </MemoryRouter>
           </Provider>,
         );
         fireEvent.click(getByText('Disposal Projects'));
@@ -277,9 +277,9 @@ describe('AppNavBar', () => {
         });
         const { getByText } = render(
           <Provider store={store}>
-            <Router history={history}>
+            <MemoryRouter initialEntries={[history.location]}>
               <AppNavBar />
-            </Router>
+            </MemoryRouter>
           </Provider>,
         );
         fireEvent.click(getByText('Disposal Projects'));
@@ -301,9 +301,9 @@ describe('AppNavBar', () => {
         });
         const { getByText } = render(
           <Provider store={store}>
-            <Router history={history}>
+            <MemoryRouter initialEntries={[history.location]}>
               <AppNavBar />
-            </Router>
+            </MemoryRouter>
           </Provider>,
         );
         const link = getByText('Reports');
@@ -321,9 +321,9 @@ describe('AppNavBar', () => {
         });
         const { getByText } = render(
           <Provider store={store}>
-            <Router history={history}>
+            <MemoryRouter initialEntries={[history.location]}>
               <AppNavBar />
-            </Router>
+            </MemoryRouter>
           </Provider>,
         );
         fireEvent.click(getByText('Reports'));

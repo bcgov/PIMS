@@ -9,7 +9,7 @@ import { IProjectTask } from 'features/projects/interfaces';
 import { createMemoryHistory } from 'history';
 import React from 'react';
 import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
@@ -70,9 +70,9 @@ const store = mockStore({
 
 const uiElement = (
   <Provider store={store}>
-    <Router history={history}>
+    <MemoryRouter initialEntries={[history.location]}>
       <DocumentationStep />
-    </Router>
+    </MemoryRouter>
   </Provider>
 );
 

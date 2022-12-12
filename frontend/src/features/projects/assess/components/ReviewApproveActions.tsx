@@ -5,8 +5,7 @@ import { deletePotentialSubdivisionParcels } from 'features/projects/common';
 import { IProject, IProperty } from 'features/projects/interfaces';
 import { useFormikContext } from 'formik';
 import { WorkflowStatus } from 'hooks/api/projects';
-import * as React from 'react';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { validateFormikWithCallback } from 'utils';
 
@@ -44,7 +43,8 @@ export const ReviewApproveActions = ({
     if (submitStatusCode !== undefined) {
       submitForm().then(() => setSubmitStatusCode(undefined));
     }
-  }, [setSubmitStatusCode, submitForm, submitStatusCode]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [submitForm, submitStatusCode]);
   return (
     <>
       <FlexRight>
@@ -53,6 +53,9 @@ export const ReviewApproveActions = ({
           : 'Approve for Enhanced Referral Process'}
       </FlexRight>
       <FlexRight>
+        {/**
+         * APPROVE button: (1st button, in form).
+         */}
         <Button
           showSubmitting
           isSubmitting={isSubmitting}
@@ -67,6 +70,9 @@ export const ReviewApproveActions = ({
         >
           Approve
         </Button>
+        {/**
+         * SAVE button.
+         */}
         <Button
           showSubmitting
           isSubmitting={isSubmitting}
@@ -87,6 +93,9 @@ export const ReviewApproveActions = ({
       </FlexRight>
       <FlexRight style={{ marginTop: '2rem' }}>Deny and Release Properties</FlexRight>
       <FlexRight>
+        {/**
+         * DENY button.
+         */}
         <Button
           showSubmitting
           isSubmitting={isSubmitting}
@@ -134,6 +143,9 @@ export const ReviewApproveActions = ({
           />
         )}
       </FlexRight>
+      {/**
+       * APPROVE button: (2nd button, in modal). With notifications disabled.
+       */}
       {approveERP && !values.sendNotifications && !values.exemptionRequested && (
         <GenericModal
           display={approveERP}
@@ -150,6 +162,9 @@ export const ReviewApproveActions = ({
           }
         />
       )}
+      {/**
+       * APPROVE button: (2nd button, in modal).
+       */}
       {((approveERP && values.sendNotifications) || (approveERP && values.exemptionRequested)) && (
         <GenericModal
           display={approveERP}

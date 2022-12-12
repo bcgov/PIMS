@@ -74,7 +74,7 @@ export const PropertyListViewSelect: React.FC<InputProps> = ({
   const [data, setData] = useState<IProperty[]>([]);
 
   const [pageSize, setPageSize] = useState(5);
-  const [pageCount, setPageCount] = useState(0);
+  const [pageCount, setPageCount] = useState(1);
   const [selectedProperties, setSelectedProperties] = useState([] as IProperty[]);
   const [removedProperties, setRemovedProperties] = useState([] as IProperty[]);
   const [properties, setProjectProperties] = useState(existingProperties);

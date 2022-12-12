@@ -11,7 +11,7 @@ import * as React from 'react';
 import { Button } from 'react-bootstrap';
 import { MapContainer as ReactLeafletMap } from 'react-leaflet';
 import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
@@ -40,13 +40,13 @@ const MapComponent = () => {
   mapRef = React.useRef<any>();
   return (
     <Provider store={store}>
-      <Router history={history}>
+      <MemoryRouter initialEntries={[history.location]}>
         <div id="mapid" style={{ width: 500, height: 500 }}>
           <ReactLeafletMap ref={mapRef} center={[48.423078, -123.360956]} zoom={18}>
             <InfoSlideOut open={open} setOpen={() => setOpen(!open)} />
           </ReactLeafletMap>
         </div>
-      </Router>
+      </MemoryRouter>
     </Provider>
   );
 };

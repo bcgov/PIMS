@@ -12,7 +12,7 @@ import { IAgencyDetail } from 'interfaces';
 import React, { useEffect, useState } from 'react';
 import { Button, ButtonToolbar, Container, Navbar, Row } from 'react-bootstrap';
 import { FaArrowAltCircleLeft } from 'react-icons/fa';
-import { useHistory } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'store';
 import {
   createAgency,
@@ -32,10 +32,14 @@ interface IEditAgencyPageProps {
 
 /** This page is used to either add a new agency or edit the and agency's details */
 const EditAgencyPage = (props: IEditAgencyPageProps) => {
-  const agencyId = props?.match?.params?.id || props.id;
-  const history = useHistory();
+  const params = useParams();
+  // removing the double quotes surrounding the id from useParams() as stringify isn't removing those double quotes surrounding the id.
+  const agencyId = params.id ? JSON.stringify(params.id).slice(1, -1) : '';
+
+  const navigate = useNavigate();
+  const location = useLocation();
   const dispatch = useAppDispatch();
-  const newAgency = history.location.pathname.includes('/new');
+  const newAgency = location.pathname.includes('/new');
   const [showDelete, setShowDelete] = useState(false);
   const [showFailed, setShowFailed] = useState(false);
   useEffect(() => {
@@ -67,7 +71,7 @@ const EditAgencyPage = (props: IEditAgencyPageProps) => {
   );
 
   const goBack = () => {
-    history.push('/admin/agencies');
+    navigate('/admin/agencies');
   };
 
   const newValues: any = {
@@ -89,7 +93,7 @@ const EditAgencyPage = (props: IEditAgencyPageProps) => {
 
   return (
     <div>
-      {showDelete && <DeleteModal {...{ showDelete, setShowDelete, history, dispatch, agency }} />}
+      {showDelete && <DeleteModal {...{ showDelete, setShowDelete, navigate, dispatch, agency }} />}
       {showFailed && <FailedDeleteModal {...{ showFailed, setShowFailed }} />}
       <Navbar className="navBar" expand="sm" variant="light" bg="light">
         <Navbar.Brand>
@@ -136,7 +140,7 @@ const EditAgencyPage = (props: IEditAgencyPageProps) => {
                     parentId: Number(values.parentId),
                     description: values.description,
                   })(dispatch);
-                  history.replace(`/admin/agency/${data.id}`);
+                  navigate(`/admin/agency/${data.id}`);
                 }
               } catch (error) {
                 const err = error as AxiosError<any>;
@@ -202,7 +206,7 @@ const EditAgencyPage = (props: IEditAgencyPageProps) => {
                           const data = await service.getPropertyList({
                             page: 1,
                             quantity: 10,
-                            agencies: agencyId,
+                            agencies: parseInt(agencyId),
                           });
                           if (data.total === 0) {
                             setShowDelete(true);
@@ -235,22 +239,25 @@ const EditAgencyPage = (props: IEditAgencyPageProps) => {
 
 export default EditAgencyPage;
 
-const DeleteModal = ({ showDelete, setShowDelete, history, dispatch, agency }: any) => (
-  <GenericModal
-    message="Are you sure you want to permanently delete the agency?"
-    cancelButtonText="Cancel"
-    okButtonText="Delete"
-    display={showDelete}
-    handleOk={() => {
-      dispatch(deleteAgency(agency)).then(() => {
-        history.push('/admin/agencies');
-      });
-    }}
-    handleCancel={() => {
-      setShowDelete(false);
-    }}
-  />
-);
+const DeleteModal = ({ showDelete, setShowDelete, dispatch, agency }: any) => {
+  const navigate = useNavigate();
+  return (
+    <GenericModal
+      message="Are you sure you want to permanently delete the agency?"
+      cancelButtonText="Cancel"
+      okButtonText="Delete"
+      display={showDelete}
+      handleOk={() => {
+        dispatch(deleteAgency(agency)).then(() => {
+          navigate('/admin/agencies');
+        });
+      }}
+      handleCancel={() => {
+        setShowDelete(false);
+      }}
+    />
+  );
+};
 
 const FailedDeleteModal = ({ showFailed, setShowFailed }: any) => (
   <GenericModal

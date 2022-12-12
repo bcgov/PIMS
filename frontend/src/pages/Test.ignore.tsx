@@ -8,7 +8,7 @@ import download from '../utils/download';
 /**
  * Test provides a testing page for various things.
  */
-const Test = () => {
+export const Test = () => {
   const dispatch = useAppDispatch();
 
   const fetch = (accept: 'csv' | 'excel') =>

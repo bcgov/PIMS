@@ -6,7 +6,7 @@ import queryString from 'query-string';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { Container, Spinner } from 'react-bootstrap';
-import { useHistory } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'store';
 
 import { updateWorkflowStatus, useProject } from '.';
@@ -14,13 +14,13 @@ import { fetchProjectWorkflow } from './projectsActionCreator';
 
 interface IApprovalTransitionPageProps {}
 
-const transitionFunction = (promise: any, history: any, toStatusCode: string) => {
+const transitionFunction = (promise: any, navigate: any, toStatusCode: string) => {
   return promise
     .then((project: IProject) => {
       if (project?.status?.route === undefined) {
         throw Error('No valid route for current project status');
       }
-      history.replace(`${project?.status?.route}?projectNumber=${project.projectNumber}`);
+      navigate(`${project?.status?.route}?projectNumber=${project.projectNumber}`);
     })
     .catch(() => {
       throw Error(`Failed to update status to ${toStatusCode}`);
@@ -42,11 +42,12 @@ export const ApprovalTransitionPage: React.FunctionComponent<IApprovalTransition
   const dispatch = useAppDispatch();
   const project = useAppSelector(store => store.project.project);
   const [isTransitioned, setIsTransitioned] = useState(false);
-  const history = useHistory();
+  const navigate = useNavigate();
+  const location = useLocation();
   const toStatus = _.find(workflowStatuses, { code: project?.statusCode })?.toStatus;
   const [error, setError] = React.useState(false);
 
-  const params = queryString.parse(history.location.search);
+  const params = queryString.parse(location.search);
 
   useEffect(() => {
     if (!!project && toStatus === undefined) {
@@ -63,13 +64,13 @@ export const ApprovalTransitionPage: React.FunctionComponent<IApprovalTransition
         project.statusCode === WorkflowStatus.ApprovedForExemption ||
         project.statusCode === WorkflowStatus.NotInSpl
       ) {
-        history.replace(`/projects/disposal/${project.id}`);
+        navigate(`/projects/disposal/${project.id}`);
       } else if (next?.length !== 1) {
         if (
           (project.workflowCode === 'ERP' && project.statusCode === 'AP-ERP') ||
           (project.workflowCode === 'SPL' && project.statusCode === 'AP-SPL')
         ) {
-          history.replace(`/projects/disposal/${project.id}`);
+          navigate(`/projects/disposal/${project.id}`);
         } else {
           // We don't currently handle this transition.
           setError(true);
@@ -79,12 +80,12 @@ export const ApprovalTransitionPage: React.FunctionComponent<IApprovalTransition
         setIsTransitioned(true);
         transitionFunction(
           updateWorkflowStatus(project, toStatusCode, project.workflowCode)(dispatch),
-          history,
+          navigate,
           toStatusCode,
         );
       }
     }
-  }, [dispatch, history, isTransitioned, project, toStatus, setError, params.to]);
+  }, [dispatch, navigate, isTransitioned, project, toStatus, setError, params.to]);
 
   return !error ? (
     <Container fluid style={{ textAlign: 'center' }}>

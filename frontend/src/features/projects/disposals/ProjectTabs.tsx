@@ -6,17 +6,8 @@ import { IProjectModel } from 'hooks/api/projects/disposals';
 import { useKeycloakWrapper } from 'hooks/useKeycloakWrapper';
 import React from 'react';
 import { Spinner } from 'react-bootstrap';
-import { Redirect, Route, Switch, useLocation } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 
-import {
-  ProjectCloseOut,
-  ProjectDocumentation,
-  ProjectERPTabs,
-  ProjectInformationTabs,
-  ProjectNotifications,
-  ProjectNotSPL,
-  ProjectSPLTabs,
-} from '.';
 import * as styled from './styled';
 
 export interface IProjectTabProps {
@@ -33,7 +24,6 @@ export const ProjectTabs: React.FC<IProjectTabProps> = ({ project, isLoading }) 
   const id = location.pathname.split('/')[3];
 
   const [tabs, setTabs] = React.useState<React.ReactElement[]>([]);
-  const [disabled, setDisabled] = React.useState(false);
 
   const isAdmin = keycloak.hasClaim(Claim.ReportsSplAdmin);
 
@@ -42,15 +32,6 @@ export const ProjectTabs: React.FC<IProjectTabProps> = ({ project, isLoading }) 
       <Tab key={1} label="Information" path={`/projects/disposal/${id}/information`} />,
       <Tab key={2} label="Documentation" path={`/projects/disposal/${id}/documentation`} />,
     ];
-
-    setDisabled(
-      [
-        WorkflowStatus.Disposed,
-        WorkflowStatus.Cancelled,
-        WorkflowStatus.TransferredGRE,
-        WorkflowStatus.Denied,
-      ].includes(statusCode) && !isAdmin,
-    );
 
     if (
       workflowCode === Workflow.ERP ||
@@ -99,39 +80,7 @@ export const ProjectTabs: React.FC<IProjectTabProps> = ({ project, isLoading }) 
       )}
 
       <Tabs tabs={tabs}>
-        <Switch>
-          <Route exact path="/projects/disposal">
-            <Redirect to={`/page-not-found`} />
-          </Route>
-          <Route exact path="/projects/disposal/:id">
-            {id === undefined || !!id ? (
-              <Redirect to={`/projects/disposal/${id}/information`} />
-            ) : (
-              <Redirect to={`/page-not-found`} />
-            )}
-          </Route>
-          <Route path="/projects/disposal/:id/information">
-            <ProjectInformationTabs disabled={disabled} />
-          </Route>
-          <Route path="/projects/disposal/:id/documentation">
-            <ProjectDocumentation disabled={disabled} />
-          </Route>
-          <Route path="/projects/disposal/:id/erp">
-            <ProjectERPTabs project={project} disabled={disabled} />
-          </Route>
-          <Route path="/projects/disposal/:id/not/spl">
-            <ProjectNotSPL disabled={disabled} />
-          </Route>
-          <Route path="/projects/disposal/:id/spl">
-            <ProjectSPLTabs project={project} disabled={disabled} />
-          </Route>
-          <Route path="/projects/disposal/:id/close/out">
-            <ProjectCloseOut />
-          </Route>
-          <Route path="/projects/disposal/:id/notifications">
-            <ProjectNotifications />
-          </Route>
-        </Switch>
+        <Outlet />
       </Tabs>
     </styled.ProjectTabs>
   );
