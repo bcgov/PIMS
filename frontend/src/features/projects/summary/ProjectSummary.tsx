@@ -1,6 +1,7 @@
 import { Col, Row } from 'components/flex';
 import { Table } from 'components/Table';
-import { LayoutWrapper, ProjectLayout } from 'features/projects/common';
+import { ProjectLayout } from 'features/projects/common';
+import { LayoutWrapper } from 'features/routes';
 import { IProjectModel, IProjectPropertyModel } from 'hooks/api/projects/disposals';
 import queryString from 'query-string';
 import React from 'react';

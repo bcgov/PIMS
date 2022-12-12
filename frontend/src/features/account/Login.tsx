@@ -22,7 +22,7 @@ const usingIE = () => {
   return false;
 };
 
-const Login = () => {
+export const Login = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const redirect =

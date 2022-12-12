@@ -1,11 +1,11 @@
 import React from 'react';
 
-export type ILayoutWrapperProps = {
+interface ILayoutWrapperProps {
   layout?: React.ComponentType<any>;
   component: React.ComponentType<any>;
   componentProps?: any;
   title?: string;
-};
+}
 
 // TODO: This component needs to be deleted.  Title functionality moved to layout.
 export const LayoutWrapper: React.FC<ILayoutWrapperProps> = ({

@@ -3,10 +3,9 @@ import './AuthLayout.scss';
 import { AppNavBar } from 'components/layout';
 import { AuthStateContext } from 'contexts/authStateContext';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+import { PublicLayout } from 'layouts';
 import React from 'react';
 import { Container, Spinner } from 'react-bootstrap';
-
-import PublicLayout from './PublicLayout';
 
 const AuthLayout: React.FC = ({ children }) => {
   const { obj: keycloak } = useKeycloakWrapper();

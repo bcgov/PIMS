@@ -1,7 +1,7 @@
 import { useKeycloak } from '@react-keycloak/web';
 import { render, screen } from '@testing-library/react';
 import Claims from 'constants/claims';
-import { LayoutWrapper } from 'features/projects/common';
+import { LayoutWrapper } from 'features/routes';
 import { createMemoryHistory } from 'history';
 import React from 'react';
 import ReactDOM from 'react-dom';
