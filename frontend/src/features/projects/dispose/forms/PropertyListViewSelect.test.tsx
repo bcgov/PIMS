@@ -9,7 +9,7 @@ import { createMemoryHistory } from 'history';
 import { noop } from 'lodash';
 import React from 'react';
 import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
@@ -113,41 +113,56 @@ const store = mockStore({
 
 const setPageIndex = jest.fn().mockReturnValue(0);
 
-const getComponent = () => {
-  return (
-    <Provider store={store}>
-      <Router history={history}>
-        <Formik initialValues={{ properties: testData.items }} onSubmit={noop}>
-          <PropertyListViewSelect
-            setPageIndex={setPageIndex}
-            pageIndex={0}
-            filter={filter}
-            field="properties"
-          />
-        </Formik>
-      </Router>
-    </Provider>
-  );
-};
-
 describe('Property List View Select', () => {
   afterEach(() => {
     cleanup();
   });
+
   it('renders correctly', () => {
     act(() => {
-      const { container } = render(getComponent());
+      const { container } = render(
+        <Provider store={store}>
+          <MemoryRouter initialEntries={[history.location]}>
+            <Formik initialValues={{ properties: testData.items }} onSubmit={noop}>
+              <PropertyListViewSelect
+                setPageIndex={setPageIndex}
+                pageIndex={0}
+                filter={filter}
+                field="properties"
+              />
+            </Formik>
+          </MemoryRouter>
+        </Provider>,
+      );
       expect(container.firstChild).toMatchSnapshot();
     });
   });
 
   it('removes property from project', async () => {
-    const { container, queryByText, getByText } = render(getComponent());
-    expect(queryByText('Test, Alert Bay')).toBeInTheDocument();
-    const checkbox = container.querySelector('input[title="Toggle Row Selected"]');
-    const remove = getByText('Remove Selected');
-    await waitFor(() => fireEvent.click(checkbox!));
-    await waitFor(() => fireEvent.click(remove!));
-    expect(queryByText('Test, Alert Bay')).toBeNull();
+    await act(async () => {
+      const { container, queryByText, getByText } = render(
+        <Provider store={store}>
+          <MemoryRouter initialEntries={[history.location]}>
+            <Formik initialValues={{ properties: testData.items }} onSubmit={noop}>
+              <PropertyListViewSelect
+                setPageIndex={setPageIndex}
+                pageIndex={0}
+                filter={filter}
+                field="properties"
+              />
+            </Formik>
+          </MemoryRouter>
+        </Provider>,
+      );
+      expect(queryByText('Test, Alert Bay')).toBeInTheDocument();
+
+      const checkbox = container.querySelector('input[title="Toggle Row Selected"]');
+      const remove = getByText('Remove Selected');
+
+      await waitFor(() => fireEvent.click(checkbox!));
+      await waitFor(() => fireEvent.click(remove!));
+
+      expect(queryByText('Test, Alert Bay')).toBeNull();
+    });
   });
 });

@@ -1,6 +1,6 @@
 import { createMemoryHistory } from 'history';
 import React from 'react';
-import { Router } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import renderer from 'react-test-renderer';
 
 import AccessDenied from './AccessDenied';
@@ -11,9 +11,9 @@ describe('AccessDenied', () => {
   it('renders correctly', () => {
     const tree = renderer
       .create(
-        <Router history={history}>
+        <MemoryRouter initialEntries={[history.location]}>
           <AccessDenied />
-        </Router>,
+        </MemoryRouter>,
       )
       .toJSON();
     expect(tree).toMatchSnapshot();

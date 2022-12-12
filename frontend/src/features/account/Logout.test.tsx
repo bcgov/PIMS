@@ -1,28 +1,20 @@
 import { useKeycloak } from '@react-keycloak/web';
-import { cleanup, render, waitFor } from '@testing-library/react';
-import { createMemoryHistory } from 'history';
+import { cleanup, render } from '@testing-library/react';
 import { useConfiguration } from 'hooks/useConfiguration';
 import React from 'react';
-import { Router } from 'react-router-dom';
+import * as Router from 'react-router';
 
-import { LogoutPage } from './Logout';
+import { Logout } from './Logout';
 
 jest.mock('@react-keycloak/web');
 jest.mock('hooks/useConfiguration');
-// @ts-ignore
-delete window.location;
-// @ts-ignore
-window.location = { replace: jest.fn() };
 
 describe('logout', () => {
-  const history = createMemoryHistory();
-  let { location } = window;
-
-  beforeAll(() => {
-    window.location = { replace: jest.fn() } as any;
+  // Mock react-router useNavigate
+  const navigate = jest.fn();
+  beforeEach(() => {
+    jest.spyOn(Router, 'useNavigate').mockImplementation(() => navigate);
   });
-
-  afterAll(() => (window.location = location));
 
   afterEach(() => {
     cleanup();
@@ -33,26 +25,28 @@ describe('logout', () => {
     (useConfiguration as jest.Mock).mockReturnValue({ siteMinderLogoutUrl: undefined });
 
     render(
-      <Router history={history}>
-        <LogoutPage />
-      </Router>,
+      <Router.MemoryRouter>
+        <Logout />
+      </Router.MemoryRouter>,
     );
 
-    expect(history.location.pathname).toBe('/login');
+    expect(navigate).toHaveBeenCalledWith('/login');
   });
 
-  it('should redirect to siteminder logout page', async () => {
+  it('should redirect to siteminder logout page', () => {
     (useKeycloak as jest.Mock).mockReturnValue({ keycloak: { authenticated: false } });
     (useConfiguration as jest.Mock).mockReturnValue({
       siteMinderLogoutUrl: 'http://fakesiteminder.com',
     });
 
     render(
-      <Router history={history}>
-        <LogoutPage />
-      </Router>,
+      <Router.MemoryRouter>
+        <Logout />
+      </Router.MemoryRouter>,
     );
 
-    await waitFor(() => expect(window.location.replace).toHaveBeenCalledTimes(1));
+    expect(navigate).toHaveBeenCalledWith(
+      'http://fakesiteminder.com?returl=undefined/login&retnow=1',
+    );
   });
 });

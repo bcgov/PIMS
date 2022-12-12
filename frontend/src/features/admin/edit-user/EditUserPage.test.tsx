@@ -8,7 +8,7 @@ import { createMemoryHistory } from 'history';
 import moment from 'moment-timezone';
 import React from 'react';
 import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
@@ -67,16 +67,16 @@ const mockAxios = new MockAdapter(axios);
 const testRender = () =>
   render(
     <Provider store={store}>
-      <Router history={history}>
+      <MemoryRouter initialEntries={[history.location]}>
         <EditUserPage id="TEST-ID" />,
-      </Router>
+      </MemoryRouter>
     </Provider>,
   );
 
 const renderEditUserPage = () =>
   render(
     <Provider store={store}>
-      <Router history={history}>
+      <MemoryRouter initialEntries={[history.location]}>
         <ToastContainer
           autoClose={5000}
           hideProgressBar
@@ -86,7 +86,7 @@ const renderEditUserPage = () =>
           pauseOnFocusLoss={false}
         />
         <EditUserPage id="TEST-ID" />,
-      </Router>
+      </MemoryRouter>
     </Provider>,
   );
 
@@ -101,9 +101,9 @@ describe('Edit user page', () => {
   it('EditUserPage renders', () => {
     const { container } = render(
       <Provider store={noDateStore}>
-        <Router history={history}>
+        <MemoryRouter initialEntries={[history.location]}>
           <EditUserPage id="TEST-ID" />,
-        </Router>
+        </MemoryRouter>
       </Provider>,
     );
     expect(container.firstChild).toMatchSnapshot();

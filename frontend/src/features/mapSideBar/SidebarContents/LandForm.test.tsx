@@ -8,7 +8,7 @@ import { createMemoryHistory } from 'history';
 import noop from 'lodash/noop';
 import React from 'react';
 import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { fillInput } from 'utils/testUtils';
@@ -107,7 +107,7 @@ const defaultInitialValues: IParcel = {
 
 const getLandForm = (disabled?: boolean, initialValues?: IParcel) => (
   <Provider store={store}>
-    <Router history={history}>
+    <MemoryRouter initialEntries={[history.location]}>
       <LandForm
         handleGeocoderChanges={() => (promise as unknown) as Promise<void>}
         setMovingPinNameSpace={noop}
@@ -120,7 +120,7 @@ const getLandForm = (disabled?: boolean, initialValues?: IParcel) => (
         setLandUpdateComplete={noop}
         findMatchingPid={noop as any}
       />
-    </Router>
+    </MemoryRouter>
   </Provider>
 );
 

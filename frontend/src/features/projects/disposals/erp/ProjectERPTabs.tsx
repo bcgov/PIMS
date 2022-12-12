@@ -4,16 +4,13 @@ import { useFormikContext } from 'formik';
 import { Workflow, WorkflowStatus } from 'hooks/api/projects';
 import { IProjectModel } from 'hooks/api/projects/disposals';
 import React from 'react';
-import { Route, Switch, useLocation } from 'react-router-dom';
-
-import { ProjectERPApproval, ProjectERPComplete, ProjectERPDisposed, ProjectERPExemption } from '.';
+import { Outlet, useLocation } from 'react-router-dom';
 
 interface IProjectERPTabsProps {
   project?: IProjectModel;
-  disabled?: boolean;
 }
 
-export const ProjectERPTabs: React.FC<IProjectERPTabsProps> = ({ project, disabled = false }) => {
+export const ProjectERPTabs: React.FC<IProjectERPTabsProps> = ({ project }) => {
   const {
     values: { workflowCode, statusCode },
   } = useFormikContext();
@@ -49,20 +46,7 @@ export const ProjectERPTabs: React.FC<IProjectERPTabsProps> = ({ project, disabl
   return (
     <Col>
       <Tabs tabs={tabs}>
-        <Switch>
-          <Route exact path="/projects/disposal/:id/erp">
-            <ProjectERPApproval disabled={disabled} />
-          </Route>
-          <Route path="/projects/disposal/:id/erp/exemption">
-            <ProjectERPExemption disabled={disabled} />
-          </Route>
-          <Route path="/projects/disposal/:id/erp/complete">
-            <ProjectERPComplete disabled={disabled} />
-          </Route>
-          <Route path="/projects/disposal/:id/erp/disposed">
-            <ProjectERPDisposed disabled={disabled} />
-          </Route>
-        </Switch>
+        <Outlet />
       </Tabs>
     </Col>
   );

@@ -2,10 +2,9 @@ import { useKeycloak } from '@react-keycloak/web';
 import { cleanup, fireEvent, render } from '@testing-library/react';
 import { ADD_ACTIVATE_USER } from 'constants/actionTypes';
 import * as reducerTypes from 'constants/reducerTypes';
-import { createMemoryHistory } from 'history';
 import React from 'react';
 import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
+import * as Router from 'react-router';
 import renderer from 'react-test-renderer';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
@@ -19,35 +18,40 @@ const mockStore = configureMockStore([thunk]);
 
 const store = mockStore({
   [reducerTypes.NETWORK]: {
-    requests: { [ADD_ACTIVATE_USER]: {} },
+    [ADD_ACTIVATE_USER]: {},
   },
 });
 
 //boilerplate function used by most tests to wrap the Login component with a router.
 const renderLogin = () => {
-  const history = createMemoryHistory();
   return render(
     <Provider store={store}>
-      <Router history={history}>
+      <Router.MemoryRouter initialEntries={['/login']}>
         <Login />
-      </Router>
+      </Router.MemoryRouter>
     </Provider>,
   );
 };
 
 describe('login', () => {
+  // Mock react-router Navigate
+  const navigate = jest.fn();
+  beforeEach(() => {
+    jest.spyOn(Router, 'useNavigate').mockImplementation(() => navigate);
+  });
+
   afterEach(() => {
     cleanup();
   });
+
   it('login renders correctly', () => {
     (useKeycloak as jest.Mock).mockReturnValue({ keycloak: { authenticated: false } });
-    const history = createMemoryHistory();
     const tree = renderer
       .create(
         <Provider store={store}>
-          <Router history={history}>
-            <Login></Login>
-          </Router>
+          <Router.MemoryRouter initialEntries={['/login']}>
+            <Login />
+          </Router.MemoryRouter>
         </Provider>,
       )
       .toJSON();
@@ -58,23 +62,15 @@ describe('login', () => {
     (useKeycloak as jest.Mock).mockReturnValue({
       keycloak: { authenticated: true, userInfo: { groups: ['System Administrator'] } },
     });
-    const history = createMemoryHistory();
 
-    render(
-      <Provider store={store}>
-        <Router history={history}>
-          <Login />
-        </Router>
-      </Provider>,
-    );
-    expect(history.location.pathname).toBe('/mapview');
+    renderLogin();
+    expect(navigate).toHaveBeenCalledWith('/mapview');
   });
 
   it('new users are sent to the guest page', () => {
     (useKeycloak as jest.Mock).mockReturnValue({
       keycloak: { authenticated: true, realmAccess: { roles: [{}] } },
     });
-    const history = createMemoryHistory();
     const activatedAction: IGenericNetworkAction = {
       isFetching: false,
       name: 'test',
@@ -83,18 +79,19 @@ describe('login', () => {
     };
     const store = mockStore({
       [reducerTypes.NETWORK]: {
-        requests: { activateUser: activatedAction },
+        activateUser: activatedAction,
       },
     });
 
     render(
       <Provider store={store}>
-        <Router history={history}>
+        <Router.MemoryRouter initialEntries={['/login']}>
           <Login />
-        </Router>
+        </Router.MemoryRouter>
       </Provider>,
     );
-    expect(history.location.pathname).toBe('/access/request');
+
+    expect(navigate).toHaveBeenCalledWith('/access/request');
   });
 
   it('unAuthenticated users are shown the login screen', () => {

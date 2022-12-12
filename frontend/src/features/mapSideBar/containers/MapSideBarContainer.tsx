@@ -21,7 +21,6 @@ import { useState } from 'react';
 import { Spinner } from 'react-bootstrap';
 import { FaCheckCircle, FaEdit } from 'react-icons/fa';
 import { FaTrash } from 'react-icons/fa';
-import { Prompt } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useAppDispatch, useAppSelector } from 'store';
 import { deleteBuilding } from 'store/slices/hooks/buildingActionCreator';
@@ -103,7 +102,7 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
     addContext,
     disabled,
     setDisabled,
-    handleLocationChange,
+    // handleLocationChange,
   } = useParamSideBar(formikRef);
 
   const { parcelDetail } = useSideBarParcelLoader({
@@ -564,7 +563,7 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
       propertyName={buildingDetail?.name ?? parcelDetail?.name}
     >
       {render()}
-      <Prompt message={handleLocationChange as any}></Prompt>
+      {/* <Prompt message={handleLocationChange}></Prompt> */}
       <GenericModal
         message="Are you sure you want to permanently delete the property from inventory?"
         size={ModalSize.SMALL}
