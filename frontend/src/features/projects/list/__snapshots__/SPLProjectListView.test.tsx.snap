@@ -320,6 +320,13 @@ exports[`Project Approval Request list view Displays a SPL project 1`] = `
       >
         Surplus Property Program Projects - SPL Projects
       </h3>
+      <h6
+        class="ProjectCountHeader"
+      >
+        Found 
+        1
+         projects.
+      </h6>
     </div>
     <div
       class="table"
