@@ -76,13 +76,15 @@ export const validateApprove = async (project: IProject) => {
   let taskErrors = validateTasks(project);
 
   // Scroll to required fields
-  const indexOfFirstRequiredTask = taskErrors.tasks.findIndex(
-    (element: { isCompleted: string } | undefined) => element?.isCompleted === 'Required',
-  );
-  const element = document.querySelector(
-    `input[name='tasks.${indexOfFirstRequiredTask}.isCompleted']`,
-  );
-  if (element) element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  if (taskErrors.tasks && taskErrors.tasks.length > 0) {
+    const indexOfFirstRequiredTask = taskErrors.tasks.findIndex(
+      (element: { isCompleted: string } | undefined) => element?.isCompleted === 'Required',
+    );
+    const element = document.querySelector(
+      `input[name='tasks.${indexOfFirstRequiredTask}.isCompleted']`,
+    );
+    if (element) element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
 
   try {
     await validateYupSchema(
