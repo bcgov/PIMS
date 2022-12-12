@@ -54,19 +54,7 @@ exports[`building review page renders correctly 1`] = `
               <div style=\\"border-left: 1px solid black; height: 30px; margin-right: 20px;\\"></div>
             </div>
             <div class=\\"col-md-auto\\">
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
               <div class=\\"sc-ieecCq hJWcf GeocoderAutoComplete\\">
-=======
-              <div class=\\"sc-nVkyK ccnIdy GeocoderAutoComplete\\">
->>>>>>> a8718515 (router v6.3, stable but some routes dont work)
-=======
-              <div class=\\"sc-nVkyK ccnIdy GeocoderAutoComplete\\">
->>>>>>> d75a1a8a (router v6.3, stable but some routes dont work)
-=======
-              <div class=\\"sc-ieecCq hJWcf GeocoderAutoComplete\\">
->>>>>>> d69f8b55 (Fixed and cleaned up routes in AppRouter)
                 <div class=\\"required\\">
                   <div><input name=\\"address.line1\\" disabled=\\"\\" required=\\"\\" field=\\"address.line1\\" id=\\"input-address.line1\\" class=\\"form-control\\" value=\\"\\"></div>
                 </div>
