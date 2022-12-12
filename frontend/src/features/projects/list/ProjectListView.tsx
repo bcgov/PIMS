@@ -104,7 +104,7 @@ export const ProjectListView: React.FC<IProps> = ({
   const [clearSelected, setClearSelected] = useState(false);
   const [pageSize, setPageSize] = useState(10);
   const [pageIndex, setPageIndex] = useState(0);
-  const [pageCount, setPageCount] = useState(0);
+  const [pageCount, setPageCount] = useState(1);
   const [projectCount, setProjectCount] = useState(0);
   const navigate = useNavigate();
 
