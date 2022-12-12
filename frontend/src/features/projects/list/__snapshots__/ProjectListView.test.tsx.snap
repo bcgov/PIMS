@@ -316,6 +316,13 @@ exports[`Project list view tests Matches snapshot 1`] = `
       >
         My Agency's Projects
       </h3>
+      <h6
+        class="ProjectCountHeader"
+      >
+        Found 
+        0
+         projects.
+      </h6>
     </div>
     <div
       class="table"
