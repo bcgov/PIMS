@@ -119,7 +119,8 @@
     "svgo@<3.0.2": "3.0.2",
     "scss-tokenizer": "0.4.3",
     "autoprefixer": "10.4.5",
-    "minimatch@<3.0.8": "3.0.8"
+    "minimatch@<3.0.8": "3.0.8",
+    "decode-uri-component@^0.2.0": "0.2.1"
   },
   "scripts": {
     "start": "react-scripts start",
