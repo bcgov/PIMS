@@ -2,7 +2,6 @@ import './Header.scss';
 
 import BClogoUrl from 'assets/images/logo-banner.svg';
 import PIMSlogo from 'assets/images/PIMSlogo/logo_only.png';
-import { AxiosError } from 'axios';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import React, { useState } from 'react';
 import { Button, Col, Modal, Nav, Navbar, Row } from 'react-bootstrap';
