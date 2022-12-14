@@ -36,9 +36,6 @@ const useProject = () => {
       const status: IStatus | undefined = _.find(workflowStatuses, { code: statusCode });
       navigate(`/dispose${status?.route}?projectNumber=${project?.projectNumber}`);
     },
-    goToDisposePath: (path: string) => {
-      navigate(`/dispose${path}?projectNumber=${project?.projectNumber}`);
-    },
     project: project ?? defaultProject(),
     getStatusTransitionWorkflow: (toStatusCode?: string) =>
       getStatusTransitionWorkflow(workflowStatuses, project?.statusCode, toStatusCode),
