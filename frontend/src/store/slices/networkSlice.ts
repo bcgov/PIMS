@@ -6,7 +6,7 @@ export interface IGenericNetworkAction {
   isFetching: boolean;
   name: string;
   type: string;
-  error?: AxiosError;
+  error?: AxiosError<any>;
   status?: number;
   data?: any;
 }
