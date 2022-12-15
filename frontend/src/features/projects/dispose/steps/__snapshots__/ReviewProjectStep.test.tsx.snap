@@ -67,6 +67,7 @@ exports[`renders correctly 1`] = `
               >
                 <input
                   className="form-control"
+                  data-testid="project-number"
                   disabled={true}
                   name="projectNumber"
                   onBlur={[Function]}
@@ -318,6 +319,7 @@ exports[`renders correctly 1`] = `
                 >
                   <input
                     className="form-control input-number"
+                    data-testid="assessed"
                     disabled={true}
                     name="assessed"
                     onBlur={[Function]}
@@ -326,6 +328,7 @@ exports[`renders correctly 1`] = `
                     required={true}
                     style={
                       Object {
+                        "border": "solid 2px #063970",
                         "width": "200px",
                       }
                     }
@@ -359,6 +362,7 @@ exports[`renders correctly 1`] = `
                 >
                   <input
                     className="form-control input-number"
+                    data-testid="netBook"
                     disabled={true}
                     name="netBook"
                     onBlur={[Function]}
@@ -367,6 +371,7 @@ exports[`renders correctly 1`] = `
                     required={true}
                     style={
                       Object {
+                        "border": "solid 2px #063970",
                         "width": "200px",
                       }
                     }
@@ -404,6 +409,7 @@ exports[`renders correctly 1`] = `
                 >
                   <input
                     className="form-control input-number"
+                    data-testid="market"
                     disabled={true}
                     name="market"
                     onBlur={[Function]}
@@ -412,6 +418,7 @@ exports[`renders correctly 1`] = `
                     required={true}
                     style={
                       Object {
+                        "border": "solid 2px #063970",
                         "width": "200px",
                       }
                     }
@@ -445,6 +452,7 @@ exports[`renders correctly 1`] = `
                 >
                   <input
                     className="form-control input-number"
+                    data-testid="appraised"
                     disabled={true}
                     name="appraised"
                     onBlur={[Function]}
@@ -452,6 +460,7 @@ exports[`renders correctly 1`] = `
                     placeholder=""
                     style={
                       Object {
+                        "border": "solid 1px grey",
                         "width": "200px",
                       }
                     }
@@ -489,6 +498,7 @@ exports[`renders correctly 1`] = `
                 >
                   <input
                     className="form-control input-number"
+                    data-testid="salesCost"
                     disabled={true}
                     name="salesCost"
                     onBlur={[Function]}
@@ -496,6 +506,7 @@ exports[`renders correctly 1`] = `
                     placeholder=""
                     style={
                       Object {
+                        "border": "solid 1px grey",
                         "width": "200px",
                       }
                     }
@@ -529,6 +540,7 @@ exports[`renders correctly 1`] = `
                 >
                   <input
                     className="form-control input-number"
+                    data-testid="programCost"
                     disabled={true}
                     name="programCost"
                     onBlur={[Function]}
@@ -536,6 +548,7 @@ exports[`renders correctly 1`] = `
                     placeholder=""
                     style={
                       Object {
+                        "border": "solid 1px grey",
                         "width": "200px",
                       }
                     }
@@ -981,6 +994,7 @@ exports[`renders correctly 1`] = `
             <input
               checked={true}
               className="form-check-input"
+              data-testid="approval-check"
               disabled={true}
               id="input-confirmation"
               name="confirmation"

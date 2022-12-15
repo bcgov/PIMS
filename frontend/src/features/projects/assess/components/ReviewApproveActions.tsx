@@ -57,6 +57,7 @@ export const ReviewApproveActions = ({
          * APPROVE button: (1st button, in form).
          */}
         <Button
+          data-testid="review-approve-action-approve-btn"
           showSubmitting
           isSubmitting={isSubmitting}
           disabled={
