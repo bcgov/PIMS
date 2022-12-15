@@ -6,7 +6,7 @@ import { WorkflowStatus } from 'hooks/api/projects';
 import _ from 'lodash';
 import React, { useEffect, useRef, useState } from 'react';
 import { Container, Form } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import { StepErrorSummary, useProject, useStepForm } from '../../common';
 import { fetchProjectTasks } from '../../common/projectsActionCreator';
@@ -98,8 +98,9 @@ export const validateApprove = async (project: IProject) => {
 };
 
 const ReviewApproveStepContent = ({ formikRef }: IStepProps) => {
-  const { project, goToDisposePath } = useProject();
+  const { project } = useProject();
   const navigate = useNavigate();
+  const location = useLocation();
   const { onSubmitReview, canUserApproveForm } = useStepForm();
   const [submitStatusCode, setSubmitStatusCode] = useState<string | undefined>(undefined);
   const { noFetchingProjectRequests } = useStepForm();
@@ -154,7 +155,7 @@ const ReviewApproveStepContent = ({ formikRef }: IStepProps) => {
                   navigate(`/projects/disposal/${project.id}` ?? 'invalid');
                   break;
                 case WorkflowStatus.Denied:
-                  goToDisposePath('../summary');
+                  navigate(`/projects/summary${location.search}`);
                   break;
               }
             },
@@ -165,7 +166,9 @@ const ReviewApproveStepContent = ({ formikRef }: IStepProps) => {
         <Form>
           <h1>Project Application Review</h1>
           <ReviewApproveForm
-            goToAddProperties={() => goToDisposePath('properties/update')}
+            goToAddProperties={() =>
+              navigate(`/projects/assess/properties/update${location.search}`)
+            }
             canEdit={canEdit}
           />
           <StepErrorSummary />
