@@ -29,7 +29,11 @@ namespace Pims.Dal.Helpers.Extensions
             filter.ThrowIfNull(nameof(user));
 
             //Fetching user's agencies from database
+<<<<<<< HEAD
             Guid? userId = context.Users.FirstOrDefault(u => u.KeycloakUserId == user.GetGuid())?.Id;
+=======
+            Guid? userId = context.Users.FirstOrDefault(u => u.KeycloakUserId == user.GetKeycloakUserId())?.Id;
+>>>>>>> a3ebc210eabc3e29e5b4134bcdcef0a9dec2b1a1
             int[] userAgencies = context.UserAgencies.Where(ua => ua.UserId == userId).Select(ua => ua.AgencyId).ToArray<int>();
             int[] subAgencies = context.Agencies.Where(a => a.ParentId != null && userAgencies.Contains(a.ParentId.Value)).Select(a => a.Id).ToArray<int>();
             userAgencies = userAgencies.Concat(subAgencies).ToArray();
@@ -233,7 +237,11 @@ namespace Pims.Dal.Helpers.Extensions
             if (!isAdmin)
             {
                 //Fetching user's agencies from database
+<<<<<<< HEAD
                 Guid? userId = context.Users.FirstOrDefault(u => u.KeycloakUserId == user.GetGuid())?.Id;
+=======
+                Guid? userId = context.Users.FirstOrDefault(u => u.KeycloakUserId == user.GetKeycloakUserId())?.Id;
+>>>>>>> a3ebc210eabc3e29e5b4134bcdcef0a9dec2b1a1
                 int[] userAgencies = context.UserAgencies.Where(ua => ua.UserId == userId).Select(ua => ua.AgencyId).ToArray<int>();
                 int[] subAgencies = context.Agencies.Where(a => a.ParentId != null && userAgencies.Contains(a.ParentId.Value)).Select(a => a.Id).ToArray<int>();
                 userAgencies = userAgencies.Concat(subAgencies).ToArray();
