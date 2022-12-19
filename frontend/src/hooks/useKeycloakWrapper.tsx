@@ -6,6 +6,7 @@ import { Roles } from 'constants/roles';
 import _ from 'lodash';
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
+import { convertToGuidFormat } from 'utils/formatGuid';
 
 /**
  * IUserInfo interface, represents the userinfo provided by keycloak.
@@ -24,6 +25,9 @@ export interface IUserInfo {
   family_name?: string;
   agencies: number[];
   client_roles: string[];
+  identity_provider: string;
+  idir_username: string;
+  idir_user_guid: string;
 }
 
 /**
@@ -48,6 +52,7 @@ export interface IKeycloak {
   canUserEditProperty: (property: IProperty | null) => boolean;
   canUserViewProperty: (property: IProperty | null) => boolean;
   canUserDeleteProperty: (property: IProperty | null) => boolean;
+  idir_user_guid: string;
 }
 
 /**
@@ -103,6 +108,9 @@ export function useKeycloakWrapper(): IKeycloak {
    * Return the user's username
    */
   const username = (): string => {
+    if (userInfo?.identity_provider === 'idir') {
+      return userInfo?.idir_username + '@idir';
+    }
     return userInfo?.username;
   };
 
@@ -198,6 +206,7 @@ export function useKeycloakWrapper(): IKeycloak {
       canUserEditProperty,
       canUserDeleteProperty,
       canUserViewProperty,
+      idir_user_guid: userInfo?.idir_user_guid && convertToGuidFormat(userInfo.idir_user_guid),
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [keycloakInstance],

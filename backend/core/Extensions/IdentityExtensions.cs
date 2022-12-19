@@ -18,9 +18,11 @@ namespace Pims.Core.Extensions
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
-        public static Guid GetKeycloakUserId(this ClaimsPrincipal user)
+        public static Guid GetGuid(this ClaimsPrincipal user)
         {
-            string guid = user.Claims.First(c => c.Type == "idir_user_guid")?.Value?.ToString();
+            string sub = user.Claims.First(c => c.Type == ClaimTypes.NameIdentifier)?.Value?.ToString();
+            string guid = sub.Split("@")[0];
+
             return String.IsNullOrWhiteSpace(guid) ? Guid.Empty : new Guid(guid);
         }
 
@@ -28,11 +30,26 @@ namespace Pims.Core.Extensions
         /// Get the user's username.
         /// </summary>
         /// <param name="user"></param>
-        /// <returns></returns>
+        /// <returns>String username</returns>
         public static string GetUsername(this ClaimsPrincipal user)
         {
-            string value = user.Claims.First(c => c.Type == "idir_username")?.Value.ToString();
-            return value;
+            // The BCeID and IDIR JWTs have different property names for some values, we must first get the identity provider
+            string identity_provider = user.GetIdentityProvider();
+            // Get the username by using the correct field name, dependent on the identity_provider
+            // TODO: Make an enum/array of identity providers to keep it D.R.Y.
+            if (identity_provider == "idir")
+            {
+                string value = user.Claims.First(c => c.Type == "idir_username")?.Value.ToString();
+                return value;
+            }
+            else if (identity_provider == "bceidbusiness")
+            {
+                string value = user.Claims.First(c => c.Type == "bceid_username")?.Value.ToString();
+                return value;
+            }
+
+            return "";
+
         }
 
         /// <summary>
@@ -107,6 +124,16 @@ namespace Pims.Core.Extensions
             var count = user.Claims.Count(c => c.Type == ClaimTypes.Role && role.Contains(c.Value));
 
             return count == role.Length;
+        }
+        /// <summary>
+        /// Get the identity provider from the given user
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public static string GetIdentityProvider(this ClaimsPrincipal user)
+        {
+            string identity_provider = user.Claims.First(c => c.Type == "identity_provider")?.Value.ToString();
+            return identity_provider;
         }
     }
 }

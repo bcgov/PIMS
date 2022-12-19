@@ -72,19 +72,19 @@ namespace Pims.Dal.Services
         {
             this.User.ThrowIfNotAuthorized();
 
-            Guid keycloakUserId = this.User.GetKeycloakUserId();
+            Guid keycloakUserId = this.User.GetGuid();
 
             User user = GetUserForKeycloakId(keycloakUserId);
             bool exists = user != null;
             if (!exists)
             {
-                string username = this.User.GetUsername() ?? _options.ServiceAccount?.Username ??
+                string username = this.User.GetUsername() ??
                     throw new ConfigurationException($"Configuration 'Pims:ServiceAccount:Username' is invalid or missing.");
-                string givenName = this.User.GetFirstName() ?? _options.ServiceAccount?.FirstName ??
+                string givenName = this.User.GetFirstName() ??
                     throw new ConfigurationException($"Configuration 'Pims:ServiceAccount:FirstName' is invalid or missing.");
-                string surname = this.User.GetLastName() ?? _options.ServiceAccount?.LastName ??
+                string surname = this.User.GetLastName() ??
                     throw new ConfigurationException($"Configuration 'Pims:ServiceAccount:LastName' is invalid or missing.");
-                string email = this.User.GetEmail() ?? _options.ServiceAccount?.Email ??
+                string email = this.User.GetEmail() ??
                     throw new ConfigurationException($"Configuration 'Pims:ServiceAccount:Email' is invalid or missing.");
 
                 this.Logger.LogInformation($"User Activation: keycloak id:{keycloakUserId}, email:{email}, username:{username}, first:{givenName}, surname:{surname}");
@@ -110,7 +110,7 @@ namespace Pims.Dal.Services
         /// <returns></returns>
         public AccessRequest GetAccessRequest()
         {
-            var keycloakUserId = this.User.GetKeycloakUserId();
+            var keycloakUserId = this.User.GetGuid();
             var user = GetUserForKeycloakId(keycloakUserId);
 
             var accessRequest = this.Context.AccessRequests
@@ -140,7 +140,7 @@ namespace Pims.Dal.Services
                 .Include(a => a.User)
                 .AsNoTracking()
                 .FirstOrDefault(a => a.Id == id) ?? throw new KeyNotFoundException();
-            var keycloakUserId = this.User.GetKeycloakUserId();
+            var keycloakUserId = this.User.GetGuid();
             var user = this.GetUserForKeycloakId(keycloakUserId);
             if (accessRequest.UserId != user.Id) throw new NotAuthorizedException();
             return accessRequest;
@@ -174,7 +174,7 @@ namespace Pims.Dal.Services
         public AccessRequest AddAccessRequest(AccessRequest request)
         {
             if (request == null || request.Agencies == null || request.Roles == null) throw new ArgumentNullException(nameof(request));
-            var keycloakUserId = this.User.GetKeycloakUserId();
+            var keycloakUserId = this.User.GetGuid();
             var position = request.User.Position;
             request.User = this.GetUserForKeycloakId(keycloakUserId) ?? throw new KeyNotFoundException("Your account has not been activated.");
             request.UserId = request.User.Id;
@@ -202,7 +202,7 @@ namespace Pims.Dal.Services
         public AccessRequest UpdateAccessRequest(AccessRequest request)
         {
             if (request == null || request.Agencies == null || request.Roles == null) throw new ArgumentNullException(nameof(request));
-            var keycloakUserId = this.User.GetKeycloakUserId();
+            var keycloakUserId = this.User.GetGuid();
             var position = request.User.Position;
             request.User = this.GetUserForKeycloakId(keycloakUserId) ?? throw new KeyNotFoundException("Your account has not been activated.");
 
@@ -274,7 +274,7 @@ namespace Pims.Dal.Services
         /// <returns></returns>
         public IEnumerable<int> GetUsersAgencies(Guid id)
         {
-            if (id != this.User.GetKeycloakUserId())
+            if (id != this.User.GetGuid())
             {
                 throw new UnauthorizedAccessException();
             }
@@ -282,7 +282,13 @@ namespace Pims.Dal.Services
                 .Include(u => u.Agencies)
                 .ThenInclude(a => a.Agency)
                 .ThenInclude(a => a.Children)
-                .Single(u => u.Id == id) ?? throw new KeyNotFoundException();
+                .SingleOrDefault(u => u.Id == id);
+
+            if (user == null)
+            {
+                return new int[0];
+            }
+
             List<int> agencies = user.Agencies.Select(a => a.AgencyId).ToList();
             agencies.AddRange(user.Agencies.SelectMany(a => a.Agency?.Children.Where(ac => !ac.IsDisabled)).Select(a => a.Id));
 
