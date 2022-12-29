@@ -8,6 +8,7 @@ exports[`Edit user page EditUserPage renders 1`] = `
     <a
       class="navbar-brand"
       href="#"
+      style="margin-left: 10px;"
     >
       User Information
     </a>
@@ -182,6 +183,7 @@ exports[`Edit user page EditUserPage renders 1`] = `
               data-testid="agency"
               name="agency"
               required=""
+              style="width: 450px;"
             >
               <option
                 value=""
@@ -320,13 +322,14 @@ exports[`Edit user page EditUserPage renders 1`] = `
             role="toolbar"
           >
             <button
-              class="mr-5 btn btn-secondary"
+              class="btn btn-secondary"
+              style="margin-right: 10px;"
               type="button"
             >
               Cancel
             </button>
             <button
-              class="mr-5 btn btn-primary"
+              class="btn btn-primary"
               type="submit"
             >
               Save
