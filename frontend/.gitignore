@@ -9,6 +9,7 @@ node_modules/
 coverage/
 test-report.xml
 cypress/videos
+bradmitc.json
 
 # production
 build/
