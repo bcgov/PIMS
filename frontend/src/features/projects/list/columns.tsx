@@ -42,18 +42,16 @@ export const columns = (
         return (
           <div>
             {/* delete icon will be shown only if the project is still in draft and they have the edit claim, or an admin claim, or they created the project */}
-            {!!onDelete &&
-              props.row.original.workflowCode === Workflows.SUBMIT_DISPOSAL &&
-              (projectEditClaim || isAdmin || user === props.row.original.createdBy) && (
-                <FaTrash
-                  data-testid={`trash-icon-${props.row.original.projectNumber}`}
-                  style={{ marginRight: 10, cursor: 'pointer' }}
-                  onClick={(e: any) => {
-                    e.stopPropagation();
-                    onDelete(props.row.original.projectNumber);
-                  }}
-                />
-              )}
+            {!!onDelete && (projectEditClaim || isAdmin || user === props.row.original.createdBy) && (
+              <FaTrash
+                data-testid={`trash-icon-${props.row.original.projectNumber}`}
+                style={{ marginRight: 10, cursor: 'pointer' }}
+                onClick={(e: any) => {
+                  e.stopPropagation();
+                  onDelete(props.row.original.projectNumber);
+                }}
+              />
+            )}
             <span>{props.row.original.projectNumber}</span>
             {console.log(props.row.original.projectNumber)}
           </div>

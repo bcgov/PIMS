@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Logging;
@@ -518,6 +519,28 @@ namespace Pims.Dal.Services
 
             var userAgencies = this.User.GetAgencies();
             var isAdmin = this.User.HasPermission(Permissions.AdminProjects);
+            Console.WriteLine("\n\n\nProject Context:");
+            this.Context.Projects.ForEach((e) =>
+            {
+                Console.WriteLine("\n\n\n");
+
+                foreach (PropertyDescriptor descriptor in TypeDescriptor.GetProperties(e))
+                {
+                    string name = descriptor.Name;
+                    object value = descriptor.GetValue(e);
+                    Console.WriteLine("{0}={1}", name, value);
+                };
+            });
+
+            Console.WriteLine("\n\n\nproject:");
+            foreach (PropertyDescriptor descriptor in TypeDescriptor.GetProperties(project))
+            {
+                string name = descriptor.Name;
+                object value = descriptor.GetValue(project);
+                Console.WriteLine("\n\n\n");
+                Console.WriteLine("{0}={1}", name, value);
+                Console.WriteLine("\n\n\n");
+            };
             var originalProject = this.Context.Projects
                 .Include(p => p.Status)
                 .Include(p => p.Properties).ThenInclude(p => p.Parcel).ThenInclude(p => p.Parcels)
@@ -526,7 +549,7 @@ namespace Pims.Dal.Services
                 .Include(p => p.Properties).ThenInclude(p => p.Building)
                 .Include(p => p.Tasks)
                 .Include(p => p.Workflow)
-                .SingleOrDefault(p => p.Id == project.Id) ?? throw new KeyNotFoundException();
+                .SingleOrDefault(p => p.Id == project.Id || p.ProjectNumber == project.ProjectNumber) ?? throw new KeyNotFoundException();
 
             if (!originalProject.IsProjectInDraft(_options.Project))
             {
