@@ -53,7 +53,6 @@ export const columns = (
               />
             )}
             <span>{props.row.original.projectNumber}</span>
-            {console.log(props.row.original.projectNumber)}
           </div>
         );
       },
