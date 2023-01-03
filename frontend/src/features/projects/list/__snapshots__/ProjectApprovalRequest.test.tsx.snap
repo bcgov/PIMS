@@ -250,7 +250,12 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
               title="View Disposal Project details"
               width="7%"
             >
-              Approval
+              <span
+                class="badge rounded-pill bg-secondary"
+                style="font-size: .75rem;"
+              >
+                Approval
+              </span>
             </div>
             <div
               class="td clickable"

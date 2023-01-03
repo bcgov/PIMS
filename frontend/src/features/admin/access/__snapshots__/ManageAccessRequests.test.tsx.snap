@@ -644,7 +644,16 @@ exports[`Manage access requests Snapshot matches 1`] = `
               }
               title="Click user IDIR/BCeID to view User Information. Click row to open Access Request details."
             >
-              On Hold
+              <span
+                className="badge rounded-pill bg-secondary"
+                style={
+                  Object {
+                    "fontSize": ".75rem",
+                  }
+                }
+              >
+                OnHold
+              </span>
             </div>
             <div
               className="td clickable"

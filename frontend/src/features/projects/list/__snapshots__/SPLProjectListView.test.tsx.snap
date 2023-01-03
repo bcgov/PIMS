@@ -548,7 +548,12 @@ exports[`Project Approval Request list view Displays a SPL project 1`] = `
               title="View Disposal Project details"
               width="7%"
             >
-              Approved for SPL
+              <span
+                class="badge rounded-pill bg-secondary"
+                style="font-size: .75rem;"
+              >
+                Approved for SPL
+              </span>
             </div>
             <div
               class="td clickable"
@@ -1139,7 +1144,12 @@ exports[`Project Approval Request list view Displays a SPL project 1`] = `
               title="View Disposal Project details"
               width="7%"
             >
-              Pre-Marketing
+              <span
+                class="badge rounded-pill bg-warning"
+                style="font-size: .75rem;"
+              >
+                Pre-Marketing
+              </span>
             </div>
             <div
               class="td clickable"
