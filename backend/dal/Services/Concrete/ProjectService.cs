@@ -532,6 +532,7 @@ namespace Pims.Dal.Services
                 notifications.ForEach(n =>
                 {
                     this.Context.NotificationQueue.Remove(n);
+                    _notifyService.CancelAsync(n);
                 });
 
             }
