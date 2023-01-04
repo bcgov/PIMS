@@ -171,6 +171,12 @@ exports[`Project Approval Request list view Displays a SPL project 1`] = `
                   </option>
                   <option
                     class="option"
+                    value="2024"
+                  >
+                    2023 / 2024
+                  </option>
+                  <option
+                    class="option"
                     value="2023"
                   >
                     2022 / 2023
@@ -234,12 +240,6 @@ exports[`Project Approval Request list view Displays a SPL project 1`] = `
                     value="2013"
                   >
                     2012 / 2013
-                  </option>
-                  <option
-                    class="option"
-                    value="2012"
-                  >
-                    2011 / 2012
                   </option>
                 </select>
               </div>
