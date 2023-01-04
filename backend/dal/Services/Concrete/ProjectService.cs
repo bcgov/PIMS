@@ -519,32 +519,27 @@ namespace Pims.Dal.Services
 
             var userAgencies = this.User.GetAgencies();
             var isAdmin = this.User.HasPermission(Permissions.AdminProjects);
-            Console.WriteLine("\n\n\nProject Context:");
-            this.Context.Projects.ForEach((e) =>
-            {
-                Console.WriteLine("\n\n\n");
 
-                foreach (PropertyDescriptor descriptor in TypeDescriptor.GetProperties(e))
+            // Only add functionality for removing Approved Disposal Projects if the current environment is not production
+            string env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+            if (!env.IsProduction())
+            {
+                // If the project has been submitted, we need to remove any reference to the project 
+                // from the notification queue table before deleting the project itself
+                IQueryable<NotificationQueue> notifications = this.Context.NotificationQueue.Where(n => n.ProjectId == project.Id || n.ProjectId.ToString() == project.ProjectNumber);
+
+                // NotificationQueue stores several records for each approved project. This is due to the number of people needing to be CC'd
+                notifications.ForEach(n =>
                 {
-                    string name = descriptor.Name;
-                    object value = descriptor.GetValue(e);
-                    Console.WriteLine("{0}={1}", name, value);
-                };
-            });
+                    this.Context.NotificationQueue.Remove(n);
+                });
 
-            Console.WriteLine("\n\n\nproject:");
-            foreach (PropertyDescriptor descriptor in TypeDescriptor.GetProperties(project))
-            {
-                string name = descriptor.Name;
-                object value = descriptor.GetValue(project);
-                Console.WriteLine("\n\n\n");
-                Console.WriteLine("{0}={1}", name, value);
-                Console.WriteLine("\n\n\n");
-            };
+            }
+
+
             var originalProject = this.Context.Projects
                 .Include(p => p.Status)
                 .Include(p => p.Properties).ThenInclude(p => p.Parcel).ThenInclude(p => p.Parcels)
-
                 .Include(p => p.Notes)
                 .Include(p => p.Properties).ThenInclude(p => p.Building)
                 .Include(p => p.Tasks)

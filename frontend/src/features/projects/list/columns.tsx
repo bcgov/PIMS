@@ -39,19 +39,37 @@ export const columns = (
       width: spacing.small,
       minWidth: 65,
       Cell: (props: CellProps<IProject>) => {
+        const showTrashIcon = (): boolean => {
+          if (process.env.NODE_ENV === 'production') {
+            return (
+              !!onDelete &&
+              props.row.original.workflowCode === Workflows.SUBMIT_DISPOSAL &&
+              (projectEditClaim || isAdmin || user === props.row.original.createdBy)
+            );
+          }
+          return (
+            (props.row.original.workflowCode === Workflows.SUBMIT_DISPOSAL && projectEditClaim) ||
+            isAdmin ||
+            user === props.row.original.createdBy
+          );
+        };
         return (
           <div>
             {/* delete icon will be shown only if the project is still in draft and they have the edit claim, or an admin claim, or they created the project */}
-            {!!onDelete && (projectEditClaim || isAdmin || user === props.row.original.createdBy) && (
+
+            {showTrashIcon() ? (
               <FaTrash
                 data-testid={`trash-icon-${props.row.original.projectNumber}`}
                 style={{ marginRight: 10, cursor: 'pointer' }}
                 onClick={(e: any) => {
                   e.stopPropagation();
-                  onDelete(props.row.original.projectNumber);
+                  onDelete?.(props.row.original.projectNumber);
                 }}
               />
+            ) : (
+              ''
             )}
+
             <span>{props.row.original.projectNumber}</span>
           </div>
         );
