@@ -54,7 +54,7 @@ namespace Pims.Dal.Services
             this.User.ThrowIfNotAuthorized(Permissions.PropertyView);
 
             // Check if user has the ability to view sensitive properties.
-            IEnumerable<int?> userAgencies = this.Self.User.GetAgencies(this.User.GetGuid()).Select(a => (int?)a);
+            IEnumerable<int?> userAgencies = this.Self.User.GetAgencies(this.User.GetUsername()).Select(a => (int?)a);
             var viewSensitive = this.User.HasPermission(Security.Permissions.SensitiveView);
             var isAdmin = this.User.HasPermission(Permissions.AdminProperties);
 
@@ -124,7 +124,7 @@ namespace Pims.Dal.Services
             this.User.ThrowIfNotAuthorized(Permissions.PropertyView);
 
             // Check if user has the ability to view sensitive properties.
-            IEnumerable<int?> userAgencies = this.Self.User.GetAgencies(this.User.GetGuid()).Select(a => (int?)a);
+            IEnumerable<int?> userAgencies = this.Self.User.GetAgencies(this.User.GetUsername()).Select(a => (int?)a);
             var viewSensitive = this.User.HasPermission(Permissions.SensitiveView);
             var isAdmin = this.User.HasPermission(Permissions.AdminProperties);
 
@@ -267,7 +267,7 @@ namespace Pims.Dal.Services
                 .Include(p => p.Fiscals)
                 .SingleOrDefault(p => p.Id == parcel.Id) ?? throw new KeyNotFoundException();
 
-            IEnumerable<int> userAgencies = this.Self.User.GetAgencies(this.User.GetGuid());
+            IEnumerable<int> userAgencies = this.Self.User.GetAgencies(this.User.GetUsername());
             var originalAgencyId = (int)this.Context.Entry(originalParcel).OriginalValues[nameof(Parcel.AgencyId)];
             var allowEdit = isAdmin || userAgencies.Contains(originalAgencyId);
             if (!allowEdit) throw new NotAuthorizedException("User may not edit parcels outside of their agency.");
@@ -304,7 +304,7 @@ namespace Pims.Dal.Services
                 .Include(p => p.Subdivisions).ThenInclude(pp => pp.Subdivision)
                 .SingleOrDefault(p => p.Id == parcel.Id) ?? throw new KeyNotFoundException();
 
-            IEnumerable<int> userAgencies = this.Self.User.GetAgencies(this.User.GetGuid());
+            IEnumerable<int> userAgencies = this.Self.User.GetAgencies(this.User.GetUsername());
             var originalAgencyId = (int)this.Context.Entry(originalParcel).OriginalValues[nameof(Parcel.AgencyId)];
             var allowEdit = isAdmin || userAgencies.Contains(originalAgencyId);
             var ownsABuilding = originalParcel.Buildings.Any(pb => userAgencies.Contains(pb.Building.AgencyId.Value));
@@ -500,7 +500,8 @@ namespace Pims.Dal.Services
         /// <returns></returns>
         public void Remove(Parcel parcel)
         {
-            IEnumerable<int?> userAgencies = this.Self.User.GetAgencies(this.User.GetGuid()).Select(a => (int?)a);
+            IEnumerable<int?> userAgencies = this.Self.User.GetAgencies(this.User.GetUsername()).Select(a => (int?)a);
+
 
             var viewSensitive = this.User.HasPermission(Permissions.SensitiveView);
             var isAdmin = this.User.HasPermission(Permissions.AdminProperties);

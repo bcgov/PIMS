@@ -75,7 +75,7 @@ namespace Pims.Dal.Services.Admin
                 .AsNoTracking()
                 .Where(u => !u.IsSystem);
 
-            IEnumerable<int> userAgencies = this.Self.User.GetAgencies(this.User.GetGuid());
+            IEnumerable<int> userAgencies = this.Self.User.GetAgencies(this.User.GetUsername());
             if (userAgencies != null && User.HasPermission(Permissions.AgencyAdmin) && !User.HasPermission(Permissions.SystemAdmin))
             {
                 query = query.Where(user => user.Agencies.Any(a => userAgencies.Contains(a.AgencyId)));
@@ -203,8 +203,8 @@ namespace Pims.Dal.Services.Admin
 
             if (!existingUser.Agencies.Any())
             {
-                var keycloakUserId = this.User.GetGuid();
-                user.ApprovedById = this.Context.Users.Where(u => u.KeycloakUserId == keycloakUserId).Select(u => u.Id).FirstOrDefault();
+                string username = this.User.GetUsername();
+                user.ApprovedById = this.Context.Users.Where(u => u.Username == username).Select(u => u.Id).FirstOrDefault();
                 user.ApprovedOn = DateTime.UtcNow;
             }
 
@@ -266,8 +266,8 @@ namespace Pims.Dal.Services.Admin
             if (isApproving)
             {
                 var approvedUser = this.Context.Users.Find(existingAccessRequest.UserId);
-                var keycloakUserId = this.User.GetGuid();
-                approvedUser.ApprovedById = this.Context.Users.Where(u => u.KeycloakUserId == keycloakUserId).Select(u => u.Id).FirstOrDefault();
+                string username = this.User.GetUsername();
+                approvedUser.ApprovedById = this.Context.Users.Where(u => u.Username == username).Select(u => u.Id).FirstOrDefault();
                 approvedUser.ApprovedOn = DateTime.UtcNow;
                 this.Context.Users.Update(approvedUser);
             }
@@ -327,7 +327,7 @@ namespace Pims.Dal.Services.Admin
                 .Include(p => p.User)
                 .AsNoTracking();
 
-            IEnumerable<int> userAgencies = this.Self.User.GetAgencies(this.User.GetGuid());
+            IEnumerable<int> userAgencies = this.Self.User.GetAgencies(this.User.GetUsername());
             if (userAgencies != null && User.HasPermission(Permissions.AgencyAdmin) && !User.HasPermission(Permissions.SystemAdmin))
             {
                 query = query.Where(accessRequest => accessRequest.Agencies.Any(a => userAgencies.Contains(a.AgencyId)));

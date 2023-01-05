@@ -164,8 +164,8 @@ namespace Pims.Dal
             var modifiedEntries = ChangeTracker.Entries()
                     .Where(x => (x.State == EntityState.Added || x.State == EntityState.Modified));
 
-            var keycloakUserId = _httpContextAccessor.HttpContext.User.GetGuid();
-            var userId = this.Users.Where(u => u.KeycloakUserId == keycloakUserId).Select(u => u.Id).FirstOrDefault(); // TODO: Should add the User.Id to a claim so that it can be easily returned.
+            var username = _httpContextAccessor.HttpContext.User.GetUsername();
+            var userId = this.Users.Where(u => u.Username == username).Select(u => u.Id).FirstOrDefault(); // TODO: Should add the User.Id to a claim so that it can be easily returned.
             foreach (var entry in modifiedEntries)
             {
                 if (entry.Entity is BaseEntity entity)

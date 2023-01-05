@@ -54,8 +54,8 @@ namespace Pims.Api.Controllers
         [SwaggerOperation(Tags = new[] { "auth" })]
         public IActionResult Activate()
         {
-            var keycloakUserId = this.User.GetGuid();
-            var exists = _pimsService.User.UserExists(keycloakUserId);
+            string username = this.User.GetUsername();
+            var exists = _pimsService.User.UserExists(username);
 
             var user = _pimsService.User.Activate();
             if (!exists)
