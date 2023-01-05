@@ -645,6 +645,7 @@ exports[`Manage access requests Snapshot matches 1`] = `
               title="Click user IDIR/BCeID to view User Information. Click row to open Access Request details."
             >
 <<<<<<< HEAD
+<<<<<<< HEAD
               <span
                 className="badge rounded-pill bg-secondary"
                 style={
@@ -658,6 +659,10 @@ exports[`Manage access requests Snapshot matches 1`] = `
               <span>
                 On Hold
 >>>>>>> 2856c77d (Updated react-test-renderer and jest-styled-components, down to 12 failing test suites)
+=======
+              <span>
+                On Hold
+>>>>>>> be15669b (Updated react-test-renderer and jest-styled-components, down to 12 failing test suites)
               </span>
             </div>
             <div

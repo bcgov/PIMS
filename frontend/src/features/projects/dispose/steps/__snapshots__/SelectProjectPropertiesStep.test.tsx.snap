@@ -1,5 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+<<<<<<< HEAD
 exports[`Select Project Properties Step renders correctly 1`] = `
 .c0 {
   margin-left: 0.5rem;
@@ -755,3 +756,6 @@ exports[`Select Project Properties Step renders correctly 1`] = `
   </form>
 </div>
 `;
+=======
+exports[`Select Project Properties Step renders correctly 1`] = `null`;
+>>>>>>> be15669b (Updated react-test-renderer and jest-styled-components, down to 12 failing test suites)
