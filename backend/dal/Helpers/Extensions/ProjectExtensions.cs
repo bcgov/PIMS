@@ -66,7 +66,7 @@ namespace Pims.Dal.Helpers.Extensions
                 query = query.Where(p => p.TierLevelId == filter.TierLevelId);
             if (filter.CreatedByMe.HasValue && filter.CreatedByMe.Value)
             {
-                var keycloakUserId = user.GetGuid();
+                var keycloakUserId = context.Users.FirstOrDefault(u => u.Username == user.GetUsername())?.Id; ;
                 query = query.Where(p => p.CreatedById.Equals(userId));
             }
 

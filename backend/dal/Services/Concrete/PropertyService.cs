@@ -143,7 +143,7 @@ namespace Pims.Dal.Services
             }
 
             IQueryable<Property> query = this.Context.GenerateAllPropertyQuery(this.User, filter);
-            IEnumerable<int?> userAgencies = this.Self.User.GetAgencies(this.User.GetGuid()).Select(a => (int?)a);
+            IEnumerable<int?> userAgencies = this.Self.User.GetAgencies(this.User.GetUsername()).Select(a => (int?)a);
 
             var properties = query.Select(p => new[] { Entities.PropertyTypes.Land, Entities.PropertyTypes.Subdivision }.Contains(p.PropertyTypeId) ? new ParcelModel(p, this.User) as PropertyModel : new BuildingModel(p, this.User)).ToArray();
 

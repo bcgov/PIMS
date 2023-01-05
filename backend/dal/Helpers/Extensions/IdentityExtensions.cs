@@ -196,7 +196,7 @@ namespace Pims.Dal.Helpers.Extensions
         public static Agency GetAgency(this ClaimsPrincipal user, PimsContext context)
         {
             //Fetching user's agencies from database
-            Guid? userId = context.Users.FirstOrDefault(u => u.KeycloakUserId == user.GetGuid())?.Id;
+            Guid? userId = context.Users.FirstOrDefault(u => u.Username == user.GetUsername())?.Id;
             int[] agencyIds = context.UserAgencies.Where(ua => ua.UserId == userId).Select(ua => ua.AgencyId).ToArray<int>();
             int[] subAgencies = context.Agencies.Where(a => a.ParentId != null && agencyIds.Contains(a.ParentId.Value)).Select(a => a.Id).ToArray<int>();
             agencyIds = agencyIds.Concat(subAgencies).ToArray();
