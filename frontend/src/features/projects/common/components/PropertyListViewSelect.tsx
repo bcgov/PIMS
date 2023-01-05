@@ -83,7 +83,7 @@ export const PropertyListViewSelect: React.FC<InputProps> = ({
     [project],
   );
 
-  const onPageSizeChanged = useCallback(size => {
+  const onPageSizeChanged = useCallback((size: number) => {
     setPageSize(size);
   }, []);
 

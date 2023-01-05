@@ -41,21 +41,23 @@ export const columns = (
       Cell: (props: CellProps<IProject>) => {
         return (
           <div>
-            {/* delete icon will be shown only if the project is still in draft and they have the edit claim, or an admin claim, or they created the project */}
-            {!!onDelete &&
-              props.row.original.workflowCode === Workflows.SUBMIT_DISPOSAL &&
-              (projectEditClaim || isAdmin || user === props.row.original.createdBy) && (
-                <FaTrash
-                  data-testid={`trash-icon-${props.row.original.projectNumber}`}
-                  style={{ marginRight: 10, cursor: 'pointer' }}
-                  onClick={(e: any) => {
-                    e.stopPropagation();
-                    onDelete(props.row.original.projectNumber);
-                  }}
-                />
-              )}
-            <span>{props.row.original.projectNumber}</span>
-            {console.log(props.row.original.projectNumber)}
+            <>
+              {/* delete icon will be shown only if the project is still in draft and they have the edit claim, or an admin claim, or they created the project */}
+              {!!onDelete &&
+                props.row.original.workflowCode === Workflows.SUBMIT_DISPOSAL &&
+                (projectEditClaim || isAdmin || user === props.row.original.createdBy) && (
+                  <FaTrash
+                    data-testid={`trash-icon-${props.row.original.projectNumber}`}
+                    style={{ marginRight: 10, cursor: 'pointer' }}
+                    onClick={(e: any) => {
+                      e.stopPropagation();
+                      onDelete(props.row.original.projectNumber);
+                    }}
+                  />
+                )}
+              <span>{props.row.original.projectNumber}</span>
+              {console.log(props.row.original.projectNumber)}
+            </>
           </div>
         );
       },
@@ -114,7 +116,7 @@ export const columns = (
       width: spacing.small,
       minWidth: 80,
       Cell: (props: CellProps<IProject>) => {
-        return formatMoney(props.row.original.netBook);
+        return <span>{formatMoney(props.row.original.netBook)}</span>;
       },
     },
     {
@@ -126,7 +128,7 @@ export const columns = (
       width: spacing.small,
       minWidth: 80,
       Cell: (props: CellProps<IProject>) => {
-        return formatMoney(props.row.original.market);
+        return <span>{formatMoney(props.row.original.market)}</span>;
       },
     },
     {
@@ -138,7 +140,9 @@ export const columns = (
       width: spacing.medium,
       minWidth: 80,
       Cell: (props: CellProps<IProject>) => {
-        return formatDate(props.row.original.updatedOn || props.row.original.createdOn);
+        return (
+          <span>{formatDate(props.row.original.updatedOn || props.row.original.createdOn)}</span>
+        );
       },
     },
     {
@@ -150,7 +154,7 @@ export const columns = (
       width: spacing.medium,
       minWidth: 80,
       Cell: (props: CellProps<IProject>) => {
-        return props.row.original.updatedBy || props.row.original.createdBy;
+        return <span>{props.row.original.updatedBy || props.row.original.createdBy}</span>;
       },
     },
   ];

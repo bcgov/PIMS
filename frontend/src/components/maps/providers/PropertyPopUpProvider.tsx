@@ -28,7 +28,7 @@ export const PropertyPopUpContext = React.createContext<IPopUpContext>({
  * Allows for the property information to be sent to the map
  * when the user clicks on a marker
  */
-export const PropertyPopUpContextProvider: React.FC = ({ children }) => {
+export const PropertyPopUpContextProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
   const [propertyInfo, setPropertyInfo] = React.useState<IParcel | IBuilding | null>(null);
   const [propertyTypeID, setPropertyTypeID] = React.useState<number | null>(null);
   const [loading, setLoading] = React.useState<boolean>(false);
