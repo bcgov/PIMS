@@ -329,7 +329,6 @@ const Table = <T extends IIdentifiedObject, TFilter extends object = {}>(
     getTableBodyProps,
     toggleSortBy,
     headerGroups,
-    footerGroups,
     prepareRow,
     page, // Instead of using 'rows', we'll use page,
     // which has only the rows for the active page
