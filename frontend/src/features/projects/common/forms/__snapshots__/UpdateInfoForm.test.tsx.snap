@@ -388,7 +388,6 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                   <div
                     class="sortable-column"
                   >
-                    
                     <span />
                   </div>
                 </div>
@@ -703,7 +702,7 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                     style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
                     title=""
                   >
-                    2022
+                    2023
                   </div>
                   <div
                     class="td clickable"
@@ -732,118 +731,8 @@ exports[`Update Info Form Matches Snapshot 1`] = `
             </div>
             <div
               class="tfoot tfoot-light"
-            >
-              <div
-                class="tr"
-                role="row"
-                style="display: flex; flex: 1 0 auto; min-width: 850px;"
-              >
-                <div
-                  class="th"
-                  colspan="1"
-                  role="columnheader"
-                  style="box-sizing: border-box; flex: 40 0 auto; min-width: 30px; width: 40px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
-                >
-                   
-                </div>
-                <div
-                  class="th"
-                  colspan="1"
-                  role="columnheader"
-                  style="box-sizing: border-box; flex: 40 0 auto; min-width: 30px; width: 40px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
-                >
-                   
-                </div>
-                <div
-                  class="th"
-                  colspan="1"
-                  role="columnheader"
-                  style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
-                >
-                   
-                </div>
-                <div
-                  class="th"
-                  colspan="1"
-                  role="columnheader"
-                  style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
-                >
-                   
-                </div>
-                <div
-                  class="th"
-                  colspan="1"
-                  role="columnheader"
-                  style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
-                >
-                   
-                </div>
-                <div
-                  class="th"
-                  colspan="1"
-                  role="columnheader"
-                  style="box-sizing: border-box; flex: 140 0 auto; min-width: 30px; width: 140px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
-                >
-                   
-                </div>
-                <div
-                  class="th"
-                  colspan="1"
-                  role="columnheader"
-                  style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
-                >
-                   
-                </div>
-                <div
-                  class="th"
-                  colspan="1"
-                  role="columnheader"
-                  style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
-                >
-                   
-                </div>
-                <div
-                  class="th"
-                  colspan="1"
-                  role="columnheader"
-                  style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
-                >
-                   
-                </div>
-                <div
-                  class="th"
-                  colspan="1"
-                  role="columnheader"
-                  style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
-                >
-                   
-                </div>
-                <div
-                  class="th"
-                  colspan="1"
-                  role="columnheader"
-                  style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
-                >
-                   
-                </div>
-                <div
-                  class="th"
-                  colspan="1"
-                  role="columnheader"
-                  style="box-sizing: border-box; flex: 145 0 auto; min-width: 145px; width: 145px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
-                >
-                   
-                </div>
-                <div
-                  class="th"
-                  colspan="1"
-                  role="columnheader"
-                  style="box-sizing: border-box; flex: 60 0 auto; min-width: 30px; width: 60px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
-                >
-                   
-                </div>
-              </div>
-            </div>
+              style="height: 15px;"
+            />
           </div>
           <div
             class="table-toolbar"

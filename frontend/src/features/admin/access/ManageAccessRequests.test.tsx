@@ -1,5 +1,5 @@
+import Adapter from '@cfaester/enzyme-adapter-react-18';
 import { useKeycloak } from '@react-keycloak/web';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import { ILookupCode } from 'actions/ILookupCode';
 import { AccessRequestStatus } from 'constants/accessStatus';
 import * as actionTypes from 'constants/actionTypes';

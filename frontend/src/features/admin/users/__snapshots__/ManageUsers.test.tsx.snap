@@ -784,9 +784,7 @@ exports[`Manage Users Component Snapshot matches 1`] = `
               role="cell"
               style="box-sizing: border-box; flex: 200 0 auto; min-width: 200px; width: 200px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
               title="Click IDIR/BCeID link to view User Information page"
-            >
-              
-            </div>
+            />
             <div
               class="td clickable"
               data-testid="cell-position"
@@ -841,18 +839,14 @@ exports[`Manage Users Component Snapshot matches 1`] = `
               role="cell"
               style="box-sizing: border-box; flex: 100 0 auto; min-width: 100px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
               title="Click IDIR/BCeID link to view User Information page"
-            >
-              
-            </div>
+            />
             <div
               class="td clickable"
               data-testid="cell-createdOn"
               role="cell"
               style="box-sizing: border-box; flex: 100 0 auto; min-width: 100px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
               title="Click IDIR/BCeID link to view User Information page"
-            >
-              
-            </div>
+            />
             <div
               class="td"
               data-testid="cell- "
@@ -969,9 +963,7 @@ exports[`Manage Users Component Snapshot matches 1`] = `
               role="cell"
               style="box-sizing: border-box; flex: 200 0 auto; min-width: 200px; width: 200px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
               title="Click IDIR/BCeID link to view User Information page"
-            >
-              
-            </div>
+            />
             <div
               class="td clickable"
               data-testid="cell-position"
@@ -1026,18 +1018,14 @@ exports[`Manage Users Component Snapshot matches 1`] = `
               role="cell"
               style="box-sizing: border-box; flex: 100 0 auto; min-width: 100px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
               title="Click IDIR/BCeID link to view User Information page"
-            >
-              
-            </div>
+            />
             <div
               class="td clickable"
               data-testid="cell-createdOn"
               role="cell"
               style="box-sizing: border-box; flex: 100 0 auto; min-width: 100px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
               title="Click IDIR/BCeID link to view User Information page"
-            >
-              
-            </div>
+            />
             <div
               class="td"
               data-testid="cell- "
@@ -1112,102 +1100,8 @@ exports[`Manage Users Component Snapshot matches 1`] = `
       </div>
       <div
         class="tfoot tfoot-light"
-      >
-        <div
-          class="tr"
-          role="row"
-          style="display: flex; flex: 1 0 auto; min-width: 980px;"
-        >
-          <div
-            class="th"
-            colspan="1"
-            role="columnheader"
-            style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
-          >
-             
-          </div>
-          <div
-            class="th"
-            colspan="1"
-            role="columnheader"
-            style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
-          >
-             
-          </div>
-          <div
-            class="th"
-            colspan="1"
-            role="columnheader"
-            style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
-          >
-             
-          </div>
-          <div
-            class="th"
-            colspan="1"
-            role="columnheader"
-            style="box-sizing: border-box; flex: 200 0 auto; min-width: 200px; width: 200px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
-          >
-             
-          </div>
-          <div
-            class="th"
-            colspan="1"
-            role="columnheader"
-            style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
-          >
-             
-          </div>
-          <div
-            class="th"
-            colspan="1"
-            role="columnheader"
-            style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
-          >
-             
-          </div>
-          <div
-            class="th"
-            colspan="1"
-            role="columnheader"
-            style="box-sizing: border-box; flex: 200 0 auto; min-width: 200px; width: 200px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
-          >
-             
-          </div>
-          <div
-            class="th"
-            colspan="1"
-            role="columnheader"
-            style="box-sizing: border-box; flex: 200 0 auto; min-width: 200px; width: 200px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
-          >
-             
-          </div>
-          <div
-            class="th"
-            colspan="1"
-            role="columnheader"
-            style="box-sizing: border-box; flex: 100 0 auto; min-width: 100px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
-          >
-             
-          </div>
-          <div
-            class="th"
-            colspan="1"
-            role="columnheader"
-            style="box-sizing: border-box; flex: 100 0 auto; min-width: 100px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
-          >
-             
-          </div>
-          <div
-            class="th"
-            colspan="1"
-            role="columnheader"
-            style="box-sizing: border-box; flex: 75 0 auto; min-width: 30px; width: 75px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
-          >
-             
-          </div>
-        </div>
-      </div>
+        style="height: 15px;"
+      />
     </div>
     <div
       class="table-toolbar"

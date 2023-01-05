@@ -1,6 +1,6 @@
+import Adapter from '@cfaester/enzyme-adapter-react-18';
 import { useKeycloak } from '@react-keycloak/web';
 import { render, waitFor } from '@testing-library/react';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import GenericModal from 'components/common/GenericModal';
