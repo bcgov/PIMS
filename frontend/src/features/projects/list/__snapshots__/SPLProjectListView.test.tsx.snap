@@ -1,10 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Project Approval Request list view Displays a SPL project 1`] = `
-.c0 {
-  margin-top: 0.2rem;
-}
-
 <div
   class="ProjectListView container-fluid"
 >
@@ -91,7 +87,7 @@ exports[`Project Approval Request list view Displays a SPL project 1`] = `
                           aria-hidden="true"
                           class="rbt-input-hint"
                           readonly=""
-                          style="background-color: transparent; border-color: transparent; box-shadow: none; color: rgba(0, 0, 0, 0.54); left: 0px; pointer-events: none; position: absolute; top: 0px; width: 100%; border-style: inset inset inset inset; border-width: 0px 0px 0px 0px; line-height: normal; padding: 0px 0px 0px 0px;"
+                          style="background-color: transparent; border-color: transparent; box-shadow: none; color: rgba(0, 0, 0, 0.54); left: 0px; pointer-events: none; position: absolute; top: 0px; width: 100%;"
                           tabindex="-1"
                           value=""
                         />
@@ -135,7 +131,7 @@ exports[`Project Approval Request list view Displays a SPL project 1`] = `
                       aria-hidden="true"
                       class="rbt-input-hint"
                       readonly=""
-                      style="background-color: transparent; border-color: transparent; box-shadow: none; color: rgba(0, 0, 0, 0.54); left: 0px; pointer-events: none; position: absolute; top: 0px; width: 100%; border-style: inset inset inset inset; border-width: 2px 2px 2px 2px; line-height: normal; padding: 1px 1px 1px 1px;"
+                      style="background-color: transparent; border-color: transparent; box-shadow: none; color: rgba(0, 0, 0, 0.54); left: 0px; pointer-events: none; position: absolute; top: 0px; width: 100%;"
                       tabindex="-1"
                       value=""
                     />
@@ -324,7 +320,7 @@ exports[`Project Approval Request list view Displays a SPL project 1`] = `
         class="ProjectCountHeader"
       >
         Found 
-        1
+        0
          projects.
       </h6>
     </div>
@@ -483,10 +479,10 @@ exports[`Project Approval Request list view Displays a SPL project 1`] = `
         </div>
       </div>
       <div
-        class="tbody"
-        role="rowgroup"
+        class="table-loading"
       >
         <div
+<<<<<<< HEAD
           class="tr-wrapper"
         >
           <div
@@ -1778,122 +1774,15 @@ exports[`Project Approval Request list view Displays a SPL project 1`] = `
              
           </div>
         </div>
+=======
+          class="spinner-border"
+        />
+>>>>>>> 91385993 (Updated testing-library packages and snapshots, 39 test suites currently failing)
       </div>
     </div>
     <div
       class="table-toolbar"
-    >
-      <ul
-        aria-label="Pagination"
-        class="pagination"
-        role="navigation"
-      >
-        <li
-          class="page-item disabled"
-        >
-          <a
-            aria-disabled="true"
-            aria-label="Previous page"
-            class="page-link "
-            rel="prev"
-            role="button"
-            tabindex="-1"
-          >
-            &lt;
-          </a>
-        </li>
-        <li
-          class="page-item active"
-        >
-          <a
-            aria-current="page"
-            aria-label="Page 1 is your current page"
-            class="page-link"
-            rel="canonical"
-            role="button"
-            tabindex="-1"
-          >
-            1
-          </a>
-        </li>
-        <li
-          class="page-item disabled"
-        >
-          <a
-            aria-disabled="true"
-            aria-label="Next page"
-            class="page-link "
-            rel="next"
-            role="button"
-            tabindex="-1"
-          >
-            &gt;
-          </a>
-        </li>
-      </ul>
-      <div
-        class="Menu-root"
-      >
-        <div
-          class="Menu-button"
-        >
-          <div
-            style="display: flex;"
-          >
-            <span
-              class="c0"
-            >
-              Show
-            </span>
-            <input
-              class="form-control form-control-sm"
-              style="width: 50px; margin-left: 10px; margin-right: 10px;"
-              type="number"
-              value="10"
-            />
-            <span
-              class="c0"
-            >
-              Entries
-            </span>
-          </div>
-        </div>
-        <div
-          class="Menu-items"
-          style="width: 60px;"
-        >
-          <div
-            class="Menu-options scrollable list-group"
-          >
-            <div
-              class="Menu-item list-group-item"
-            >
-              5
-            </div>
-            <div
-              class="Menu-item list-group-item"
-            >
-              10
-            </div>
-            <div
-              class="Menu-item list-group-item"
-            >
-              20
-            </div>
-            <div
-              class="Menu-item list-group-item"
-            >
-              50
-            </div>
-            <div
-              class="Menu-item list-group-item"
-            >
-              100
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    />
   </div>
 </div>
 `;

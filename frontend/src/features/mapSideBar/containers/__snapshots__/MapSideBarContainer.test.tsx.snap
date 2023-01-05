@@ -12,8 +12,4 @@ exports[`Parcel Detail MapSideBarContainer basic data loading and display parcel
 />
 `;
 
-exports[`Parcel Detail MapSideBarContainer basic data loading and display sidebar is hidden 1`] = `
-<div
-  class="Toastify"
-/>
-`;
+exports[`Parcel Detail MapSideBarContainer basic data loading and display sidebar is hidden 1`] = `null`;
