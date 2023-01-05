@@ -24,11 +24,9 @@ const App = () => {
     if (keycloak?.authenticated) {
       getActivateUserAction()(dispatch).then(() => {
         //TODO: Modify the "/activate" endpoint to return user agencies as well, thus removing the need for this call
-        fetchUserAgencies({ id: keycloakWrapper.obj.tokenParsed.idir_user_guid })(dispatch);
+        fetchUserAgencies({ username: keycloakWrapper.username })(dispatch);
       });
       getFetchLookupCodeAction()(dispatch);
-      //TODO: Modify the "/activate" endpoint to return user agencies as well, thus removing the need for this call
-      fetchUserAgencies({ id: keycloakWrapper.obj.tokenParsed.idir_user_guid })(dispatch);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, keycloak]);

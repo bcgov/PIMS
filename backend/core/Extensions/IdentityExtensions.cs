@@ -39,12 +39,12 @@ namespace Pims.Core.Extensions
             // TODO: Make an enum/array of identity providers to keep it D.R.Y.
             if (identity_provider == "idir")
             {
-                string value = user.Claims.First(c => c.Type == "idir_username")?.Value.ToString();
+                string value = user.Claims.First(c => c.Type == "idir_username")?.Value.ToString().ToLower() + "@idir";
                 return value;
             }
             else if (identity_provider == "bceidbusiness")
             {
-                string value = user.Claims.First(c => c.Type == "bceid_username")?.Value.ToString();
+                string value = user.Claims.First(c => c.Type == "bceid_username")?.Value.ToString().ToLower() + "@bceid";
                 return value;
             }
 
