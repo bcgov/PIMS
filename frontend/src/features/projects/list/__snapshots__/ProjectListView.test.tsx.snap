@@ -2,6 +2,7 @@
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 exports[`Project list view tests Matches snapshot 1`] = `
 <div
   class="ProjectListView container-fluid"
@@ -497,4 +498,6 @@ exports[`Project list view tests Matches snapshot 1`] = `
 =======
 =======
 >>>>>>> 3655a23d (Fix for LastUpdatedBy test)
+=======
+>>>>>>> 928eaaf6 (Updated testing-library packages and snapshots, 39 test suites currently failing)
 exports[`Project list view tests Matches snapshot 1`] = `null`;

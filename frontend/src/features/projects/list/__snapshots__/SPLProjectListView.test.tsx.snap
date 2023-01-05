@@ -483,6 +483,7 @@ exports[`Project Approval Request list view Displays a SPL project 1`] = `
       >
         <div
 <<<<<<< HEAD
+<<<<<<< HEAD
           class="tr-wrapper"
         >
           <div
@@ -1778,6 +1779,10 @@ exports[`Project Approval Request list view Displays a SPL project 1`] = `
           class="spinner-border"
         />
 >>>>>>> 91385993 (Updated testing-library packages and snapshots, 39 test suites currently failing)
+=======
+          class="spinner-border"
+        />
+>>>>>>> 928eaaf6 (Updated testing-library packages and snapshots, 39 test suites currently failing)
       </div>
     </div>
     <div
