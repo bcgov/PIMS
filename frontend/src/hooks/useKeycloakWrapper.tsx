@@ -94,7 +94,7 @@ export function useKeycloakWrapper(): IKeycloak {
    * @param agency - The agency name
    */
   const hasAgency = (agency?: number): boolean => {
-    return agency !== undefined && agency !== null && usersAgencies.includes(agency);
+    return agency !== undefined && agency !== null && usersAgencies?.includes?.(agency);
   };
 
   /**
@@ -109,7 +109,7 @@ export function useKeycloakWrapper(): IKeycloak {
    */
   const username = (): string => {
     if (userInfo?.identity_provider === 'idir') {
-      return userInfo?.idir_username + '@idir';
+      return userInfo?.idir_username;
     }
     return userInfo?.username;
   };

@@ -193,15 +193,15 @@ namespace Pims.Api.Controllers
         }
 
         //TODO: "Modify the /activate endpoint to also return the users agencies, removing the need for this endpoint."
-        [HttpGet("agencies/{id}")]
+        [HttpGet("agencies/{username}")]
         [Produces("application/json")]
         [ProducesResponseType(typeof(Model.AccessRequestModel), 200)]
         [ProducesResponseType(typeof(Models.ErrorResponseModel), 400)]
         [ProducesResponseType(typeof(Models.ErrorResponseModel), 403)]
         [SwaggerOperation(Tags = new[] { "user" })]
-        public IActionResult GetUserAgencies(Guid id)
+        public IActionResult GetUserAgencies(string username)
         {
-            IEnumerable<int> userAgencies = _pimsService.User.GetUsersAgencies(id);
+            IEnumerable<int> userAgencies = _pimsService.User.GetAgencies(username);
             return new JsonResult(userAgencies);
         }
 

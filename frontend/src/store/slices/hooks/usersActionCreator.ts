@@ -93,16 +93,16 @@ export const fetchUserDetail = (id: API.IUserDetailParams) => async (
     .finally(() => dispatch(hideLoading()));
 };
 
-export const fetchUserAgencies = (id: API.IUserDetailParams) => async (
+export const fetchUserAgencies = (username: API.IUserAgenciesParams) => async (
   dispatch: Dispatch<AnyAction>,
 ) => {
   dispatch(storeRequest(request(reducerTypes.GET_USER_AGENCIES)));
   dispatch(showLoading());
   return await CustomAxios()
-    .get(ENVIRONMENT.apiUrl + API.USERS_AGENCIES(id))
+    .get(ENVIRONMENT.apiUrl + API.USERS_AGENCIES(username))
     .then((response: AxiosResponse) => {
       dispatch(storeSuccess(success(reducerTypes.GET_USER_AGENCIES)));
-      dispatch(saveAgencies(response.data));
+      dispatch(saveAgencies(response.data ?? []));
       dispatch(hideLoading());
     })
     .catch(() => dispatch(storeError(error(reducerTypes.GET_USER_AGENCIES))))
