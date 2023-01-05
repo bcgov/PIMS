@@ -36,7 +36,7 @@ const store = mockStore({
 describe('useStepper hook functionality', () => {
   beforeAll(() => {
     renderHook(() => useStepper(), {
-      wrapper: ({ children }) => (
+      wrapper: ({ children }: { children: any }) => (
         <Provider store={store}>
           <MemoryRouter initialEntries={[history.location]}>{children}</MemoryRouter>
         </Provider>

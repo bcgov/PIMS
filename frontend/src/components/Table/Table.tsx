@@ -246,9 +246,9 @@ const Table = <T extends IIdentifiedObject, TFilter extends object = {}>(
     selectedRowsRef.current = externalSelectedRows ?? [];
   }, [externalSelectedRows]);
 
-  const dataRef = React.useRef<T[]>(data ?? []);
+  const dataRef = React.useRef<T[]>(data ? data.slice() : []);
   React.useEffect(() => {
-    dataRef.current = data ?? [];
+    dataRef.current = data ? data.slice() : [];
   }, [data]);
 
   React.useEffect(() => {
@@ -494,27 +494,9 @@ const Table = <T extends IIdentifiedObject, TFilter extends object = {}>(
   );
 
   const renderFooter = () => {
-    if (!footer || !page?.length) {
-      return null;
-    }
-    if (props.loading) {
-      return renderLoading();
-    }
-    return (
-      <div className="tfoot tfoot-light">
-        {footerGroups.map(footerGroup => (
-          <div {...footerGroup.getHeaderGroupProps()} className="tr">
-            {footerGroup.headers.map(
-              (column: ColumnInstanceWithProps<T> & { Footer?: Function }) => (
-                <div {...column.getHeaderProps(headerProps)} className="th">
-                  {column.Footer ? <column.Footer properties={_.map(page, 'original')} /> : null}
-                </div>
-              ),
-            )}
-          </div>
-        ))}
-      </div>
-    );
+    if (!footer || !page?.length) return null;
+    if (props.loading) return renderLoading();
+    return <div className="tfoot tfoot-light" style={{ height: '15px' }}></div>;
   };
 
   const renderBody = useDeepCompareMemo(() => {

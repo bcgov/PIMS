@@ -1,11 +1,14 @@
 import { ColumnWithProps, MoneyCell, ViewPropertyCell } from 'components/Table';
 import { PropertyTypeCell } from 'components/Table/PropertyTypeCell';
-import { CellProps } from 'react-table';
+import React from 'react';
+import { CellProps, Renderer } from 'react-table';
 import { formatNumber } from 'utils';
 
 import { IProperty } from '../../interfaces';
 
-const NumberCell = ({ cell: { value } }: CellProps<IProperty, number>) => formatNumber(value);
+const NumberCell = ({ cell: { value } }: CellProps<IProperty, number>) => (
+  <span>{formatNumber(value)}</span>
+);
 
 // NOTE - There numbers below match the total number of columns ATM (13)
 // If additional columns are added or deleted, these numbers need tp be updated...
@@ -76,7 +79,7 @@ export const columns: ColumnWithProps<IProperty>[] = [
   {
     Header: 'Assessed Value',
     accessor: 'assessedLand',
-    Cell: MoneyCell,
+    Cell: MoneyCell as Renderer<CellProps<IProperty, number | '' | undefined>>,
     align: 'right',
     responsive: true,
     width: spacing.medium,
@@ -85,7 +88,7 @@ export const columns: ColumnWithProps<IProperty>[] = [
   {
     Header: 'Net Book Value',
     accessor: 'netBook',
-    Cell: MoneyCell,
+    Cell: MoneyCell as Renderer<CellProps<IProperty, number | ''>>,
     align: 'right',
     responsive: true,
     width: spacing.medium,
@@ -94,7 +97,7 @@ export const columns: ColumnWithProps<IProperty>[] = [
   {
     Header: 'Market Value',
     accessor: 'market',
-    Cell: MoneyCell,
+    Cell: MoneyCell as Renderer<CellProps<IProperty, number | ''>>,
     align: 'right',
     responsive: true,
     width: spacing.medium,
@@ -103,7 +106,7 @@ export const columns: ColumnWithProps<IProperty>[] = [
   {
     Header: 'Type',
     accessor: 'propertyTypeId',
-    Cell: PropertyTypeCell,
+    Cell: PropertyTypeCell as Renderer<CellProps<IProperty, number>>,
     responsive: true,
     width: spacing.small,
     minWidth: 65,
@@ -123,6 +126,6 @@ export const columns: ColumnWithProps<IProperty>[] = [
     responsive: true,
     width: spacing.small,
     minWidth: 65,
-    Cell: ViewPropertyCell,
+    Cell: ViewPropertyCell as Renderer<CellProps<IProperty, number | '' | undefined>>,
   },
 ];
