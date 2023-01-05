@@ -71,7 +71,7 @@ export const ManageUsers = () => {
   );
 
   const onRequestData = useCallback(
-    ({ pageIndex }) => {
+    ({ pageIndex }: { pageIndex: number }) => {
       dispatch(storeUserPageIndex(pageIndex));
     },
     [dispatch],

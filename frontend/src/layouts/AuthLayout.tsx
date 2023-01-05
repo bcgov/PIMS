@@ -7,7 +7,7 @@ import { PublicLayout } from 'layouts';
 import React from 'react';
 import { Container, Spinner } from 'react-bootstrap';
 
-const AuthLayout: React.FC = ({ children }) => {
+const AuthLayout: React.FC<React.PropsWithChildren> = ({ children }) => {
   const { obj: keycloak } = useKeycloakWrapper();
 
   return (

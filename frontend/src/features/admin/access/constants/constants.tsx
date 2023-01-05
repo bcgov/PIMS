@@ -49,8 +49,9 @@ export const columnDefinitions: ColumnWithProps<IAccessRequestModel>[] = [
     align: 'left',
     clickable: true,
     width: 100,
-    Cell: (props: CellProps<IAccessRequestModel>) =>
-      AccessStatusDisplayMapper[props.row.original.status],
+    Cell: (props: CellProps<IAccessRequestModel>) => (
+      <span>{AccessStatusDisplayMapper[props.row.original.status]}</span>
+    ),
   },
   {
     Header: 'Agency',
