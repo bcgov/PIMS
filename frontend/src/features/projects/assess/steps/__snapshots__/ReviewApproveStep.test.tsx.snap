@@ -1,5 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+<<<<<<< HEAD
 exports[`Review Approve Step renders correctly 1`] = `
 .c2 {
   font-size: 12px;
@@ -1453,3 +1454,6 @@ exports[`Review Approve Step renders correctly 1`] = `
   </div>
 </div>
 `;
+=======
+exports[`Review Approve Step renders correctly 1`] = `null`;
+>>>>>>> 928eaaf6 (Updated testing-library packages and snapshots, 39 test suites currently failing)

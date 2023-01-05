@@ -1,5 +1,5 @@
+import Adapter from '@cfaester/enzyme-adapter-react-18';
 import { render } from '@testing-library/react';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import Enzyme from 'enzyme';
 import { Form, Formik } from 'formik';
 import { noop } from 'lodash';
