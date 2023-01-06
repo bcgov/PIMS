@@ -76,11 +76,11 @@ describe('SteppedForm', () => {
   it('goes to the next page', async () => {
     const { getByText, findByText } = render(<Component />);
     const nextButton = getByText('Next Step');
-    await act(async () => {
+    act(() => {
       fireEvent.click(nextButton);
-      const currentStep = await findByText('STEP: 1');
-      expect(currentStep).toBeInTheDocument();
     });
+    const currentStep = await findByText('STEP: 1');
+    expect(currentStep).toBeInTheDocument();
   });
   it('does not change page if next and back are clicked', async () => {
     const { findByText, getByText } = render(<Component />);
@@ -96,10 +96,11 @@ describe('SteppedForm', () => {
   it('jumps to a step', async () => {
     const { getByText, findByText } = render(<Component />);
     const jumpTo = getByText('Go to');
-    await act(async () => {
+    act(() => {
       fireEvent.click(jumpTo);
-      let currentStep = await findByText('STEP: 3');
-      expect(currentStep).toBeInTheDocument();
     });
+
+    let currentStep = await findByText('STEP: 3');
+    expect(currentStep).toBeInTheDocument();
   });
 });
