@@ -1,5 +1,5 @@
 import { useKeycloak } from '@react-keycloak/web';
-import { act, cleanup, render } from '@testing-library/react';
+import { act, cleanup, render, waitFor } from '@testing-library/react';
 import { ILookupCode } from 'actions/ILookupCode';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
@@ -144,13 +144,14 @@ describe('Project list view tests', () => {
       pageIndex: 0,
       items: [],
     });
+    const { findByText, container } = testRender();
 
-    await act(async () => {
-      const { findByText, container } = testRender();
-
+    act(() => {
       // default table message when there is no data to display
-      const noResults = await findByText('No rows to display');
-      expect(noResults).toBeVisible();
+      const noResults = findByText('No rows to display');
+      waitFor(() => {
+        expect(noResults).toBeVisible();
+      });
       expect(container.querySelector('span[class="spinner-border"]')).not.toBeInTheDocument();
     });
   });
@@ -181,9 +182,9 @@ describe('Project list view tests', () => {
       pageIndex: 0,
       items: [],
     });
+    const { getByTestId, container } = testRender();
 
     await act(async () => {
-      const { getByTestId, container } = testRender();
       expect(getByTestId('excel-icon')).toBeInTheDocument();
       expect(getByTestId('csv-icon')).toBeInTheDocument();
       expect(container.querySelector('span[class="spinner-border"]')).not.toBeInTheDocument();

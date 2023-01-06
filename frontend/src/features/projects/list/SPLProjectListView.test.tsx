@@ -156,8 +156,13 @@ describe('Project Approval Request list view', () => {
     );
     await waitFor(() => expect(service.getProjectList).toHaveBeenCalledTimes(1), { timeout: 500 });
     expect(container.firstChild).toMatchSnapshot();
-    expect(container.firstChild).toHaveTextContent('SPP-10015');
-    expect(container.firstChild).toHaveTextContent('SPP-10016');
+
+    waitFor(() => {
+      expect(container.firstChild).toHaveTextContent('SPP-10015');
+    });
+    waitFor(() => {
+      expect(container.firstChild).toHaveTextContent('SPP-10016');
+    });
   });
 
   it('Displays message for empty list', async () => {
