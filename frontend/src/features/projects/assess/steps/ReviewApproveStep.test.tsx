@@ -221,8 +221,8 @@ describe('Review Approve Step', () => {
   });
   it('edit button is visible when user has correct claims', () => {
     mockKeycloak([Claims.ADMIN_PROJECTS]);
+    const { getByText } = render(getReviewApproveStep());
     act(() => {
-      const { getByText } = render(getReviewApproveStep());
       const editButton = getByText(/Edit/);
       expect(editButton).toBeTruthy();
     });
@@ -270,8 +270,8 @@ describe('Review approve modal behaviour', () => {
         subject: 'test',
       },
     });
+    const component = mount(getReviewApproveStep(store(mockProject(incompleteTask))));
     await act(async () => {
-      const component = mount(getReviewApproveStep(store(mockProject(incompleteTask))));
       const button = component.findWhere((node: { type: () => any; text: () => string }) => {
         return node.type() === Button && node.text() === 'Approve';
       });
