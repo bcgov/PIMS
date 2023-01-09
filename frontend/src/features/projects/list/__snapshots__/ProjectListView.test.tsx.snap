@@ -1,6 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 exports[`Project list view tests Matches snapshot 1`] = `
 <div
   class="ProjectListView container-fluid"
@@ -494,5 +495,6 @@ exports[`Project list view tests Matches snapshot 1`] = `
 </div>
 `;
 =======
+=======
+>>>>>>> 3655a23d (Fix for LastUpdatedBy test)
 exports[`Project list view tests Matches snapshot 1`] = `null`;
->>>>>>> 928eaaf6 (Updated testing-library packages and snapshots, 39 test suites currently failing)
