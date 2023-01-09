@@ -8,6 +8,7 @@ node_modules/
 # testing
 coverage/
 test-report.xml
+cypress/videos
 
 # production
 build/
@@ -24,3 +25,5 @@ public/videos
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+jest/latestTestRun.json

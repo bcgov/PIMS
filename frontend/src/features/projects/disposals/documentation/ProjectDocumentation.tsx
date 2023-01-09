@@ -2,19 +2,16 @@ import { Check, FastCurrencyInput, TextArea } from 'components/common/form';
 import { Col, Row } from 'components/flex';
 import { ReviewWorkflowStatus } from 'features/projects/constants';
 import { useFormikContext } from 'formik';
+import { Claim } from 'hooks/api';
 import { DisposeWorkflowStatus } from 'hooks/api/projects';
-import React from 'react';
+import { WorkflowStatus } from 'hooks/api/projects';
+import { useKeycloakWrapper } from 'hooks/useKeycloakWrapper';
+import React, { useEffect, useState } from 'react';
 
 import { IProjectForm } from '../interfaces';
 import * as styled from './styled';
 
-interface IProjectDocumentationProps {
-  disabled?: boolean;
-}
-
-export const ProjectDocumentation: React.FC<IProjectDocumentationProps> = ({
-  disabled = false,
-}) => {
+export const ProjectDocumentation: React.FC = () => {
   const formik = useFormikContext<IProjectForm>();
   const { setFieldValue } = formik;
 
@@ -61,6 +58,25 @@ export const ProjectDocumentation: React.FC<IProjectDocumentationProps> = ({
       />
     ));
 
+  // Disabled prop
+  const {
+    values: { workflowCode, statusCode },
+  } = useFormikContext();
+  const keycloak = useKeycloakWrapper();
+  const [disabled, setDisabled] = useState(false);
+  const isAdmin = keycloak.hasClaim(Claim.ReportsSplAdmin);
+
+  useEffect(() => {
+    setDisabled(
+      [
+        WorkflowStatus.Disposed,
+        WorkflowStatus.Cancelled,
+        WorkflowStatus.TransferredGRE,
+        WorkflowStatus.Denied,
+      ].includes(statusCode) && !isAdmin,
+    );
+  }, [isAdmin, workflowCode, statusCode]);
+
   return (
     <styled.ProjectDocumentation nowrap>
       <Col grow={1}>
@@ -91,10 +107,20 @@ export const ProjectDocumentation: React.FC<IProjectDocumentationProps> = ({
             <TextArea label="Reporting" field="reportingNote" disabled={disabled} />
           </Col>
           <Col>
-            <TextArea label="Shared Notes" field="publicNote" disabled={disabled} />
+            <TextArea
+              data-testid="proj-doc-notes-shared-textarea"
+              label="Shared Notes"
+              field="publicNote"
+              disabled={disabled}
+            />
           </Col>
           <Col>
-            <TextArea label="Private Notes" field="privateNote" disabled={disabled} />
+            <TextArea
+              data-testid="proj-doc-notes-private-textarea"
+              label="Private Notes"
+              field="privateNote"
+              disabled={disabled}
+            />
           </Col>
         </Row>
       </Col>

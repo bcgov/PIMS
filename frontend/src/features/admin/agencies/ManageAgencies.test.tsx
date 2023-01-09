@@ -9,7 +9,7 @@ import { createMemoryHistory } from 'history';
 import noop from 'lodash/noop';
 import React from 'react';
 import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
@@ -94,9 +94,9 @@ describe('Manage Agencies Component', () => {
     render(
       <Formik initialValues={{}} onSubmit={noop}>
         <Provider store={store}>
-          <Router history={history}>
+          <MemoryRouter initialEntries={[history.location]}>
             <ManageAgencies />
-          </Router>
+          </MemoryRouter>
         </Provider>
       </Formik>,
     );

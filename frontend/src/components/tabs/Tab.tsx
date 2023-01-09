@@ -1,5 +1,5 @@
 import React from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 export interface ITabProps extends React.HTMLAttributes<HTMLLIElement> {
   /** The label to display */
@@ -23,7 +23,7 @@ export const Tab: React.FC<ITabProps> = ({
   ...rest
 }) => {
   const location = useLocation();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const isActive =
     active ||
@@ -33,7 +33,7 @@ export const Tab: React.FC<ITabProps> = ({
   const handleClick = !!onClick
     ? onClick
     : (e: any) => {
-        history.push(path);
+        navigate(path);
       };
   return (
     <li className={className + ' ' + (isActive ? 'active' : '')} onClick={handleClick} {...rest}>

@@ -8,9 +8,9 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import { ReactKeycloakProvider } from '@react-keycloak/web';
 import { AuthStateContextProvider } from 'contexts/authStateContext';
-import LoginLoading from 'features/account/LoginLoading';
+import { LoginLoading } from 'features/account';
 import Keycloak from 'keycloak-js';
-import EmptyLayout from 'layouts/EmptyLayout';
+import { EmptyLayout } from 'layouts';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';

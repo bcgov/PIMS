@@ -8,12 +8,11 @@ import MockAdapter from 'axios-mock-adapter';
 import * as actionTypes from 'constants/actionTypes';
 import { Claims } from 'constants/claims';
 import { createMemoryHistory } from 'history';
-import { noop } from 'lodash';
 import { mockBuildingWithAssociatedLand, mockDetails, mockParcel } from 'mocks/filterDataMock';
 import React from 'react';
 import { act } from 'react-dom/test-utils';
 import { Provider } from 'react-redux';
-import { Route, Router } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import VisibilitySensor from 'react-visibility-sensor';
 import configureMockStore from 'redux-mock-store';
@@ -50,16 +49,12 @@ const getStore = (parcelDetail?: IParcel) =>
     lookupCode: { lookupCodes: [] },
   });
 
-const history = createMemoryHistory({
-  getUserConfirmation: (message, callback) => {
-    callback(true);
-  },
-});
+const history = createMemoryHistory();
 
 const renderContainer = ({ store }: any) =>
   render(
     <Provider store={store ?? getStore()}>
-      <Router history={history}>
+      <MemoryRouter initialEntries={['/']}>
         <ToastContainer
           autoClose={5000}
           hideProgressBar
@@ -68,10 +63,10 @@ const renderContainer = ({ store }: any) =>
           rtl={false}
           pauseOnFocusLoss={false}
         />
-        <Route path="/mapView/:id?">
-          <MapSideBarContainer properties={[]} />
-        </Route>
-      </Router>
+        <Routes>
+          <Route path="/" element={<MapSideBarContainer properties={[]} />} />
+        </Routes>
+      </MemoryRouter>
     </Provider>,
   );
 

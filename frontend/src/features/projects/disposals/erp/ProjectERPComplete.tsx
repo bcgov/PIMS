@@ -1,21 +1,21 @@
 import { FastDatePicker } from 'components/common/form';
 import { Col, Row } from 'components/flex';
 import { useFormikContext } from 'formik';
+import { Claim } from 'hooks/api';
 import { Workflow, WorkflowStatus } from 'hooks/api/projects';
-import React from 'react';
+import { useKeycloakWrapper } from 'hooks/useKeycloakWrapper';
+import React, { useEffect, useState } from 'react';
 
 import { IProjectForm } from '../interfaces';
 import { ProjectNote } from '../notes';
 import * as styled from './styled';
 
-export interface IProjectERPCompleteProps {
-  disabled?: boolean;
-}
-
-export const ProjectERPComplete: React.FC<IProjectERPCompleteProps> = ({ disabled = false }) => {
+export const ProjectERPComplete: React.FC = () => {
   const formik = useFormikContext<IProjectForm>();
   const { values, setFieldTouched } = formik;
-  const { workflowCode, statusCode } = values;
+  const {
+    values: { workflowCode, statusCode },
+  } = useFormikContext();
 
   const eRequestForSplReceived =
     !!values.clearanceNotificationSentOn || !!values.requestForSplReceivedOn;
@@ -25,11 +25,27 @@ export const ProjectERPComplete: React.FC<IProjectERPCompleteProps> = ({ disable
       workflowCode as Workflow,
     ) && statusCode !== WorkflowStatus.NotInSpl;
 
-  React.useEffect(() => {
+  useEffect(() => {
     setFieldTouched('removalFromSplRequestOn');
     setFieldTouched('removalFromSplApprovedOn');
     setFieldTouched('removalFromSplRationale');
   }, [setFieldTouched]);
+
+  // Disabled prop
+  const keycloak = useKeycloakWrapper();
+  const [disabled, setDisabled] = useState(false);
+  const isAdmin = keycloak.hasClaim(Claim.ReportsSplAdmin);
+
+  useEffect(() => {
+    setDisabled(
+      [
+        WorkflowStatus.Disposed,
+        WorkflowStatus.Cancelled,
+        WorkflowStatus.TransferredGRE,
+        WorkflowStatus.Denied,
+      ].includes(statusCode) && !isAdmin,
+    );
+  }, [isAdmin, workflowCode, statusCode]);
 
   return (
     <styled.ProjectERPComplete>

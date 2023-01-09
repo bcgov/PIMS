@@ -4,7 +4,7 @@ import { ProjectActions } from 'constants/actionTypes';
 import queryString from 'query-string';
 import React, { useEffect } from 'react';
 import { Container } from 'react-bootstrap';
-import { match as Match } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'store';
 
 import { clearProject, fetchProject } from '../common';
@@ -15,9 +15,10 @@ import ProjectDisposeLayout from './ProjectDisposeLayout';
  * Top level component facilitates 'wizard' style multi-step form for disposing of projects.
  * @param param0 default react router props
  */
-const ProjectDisposeView = ({ match, location }: { match: Match; location: Location }) => {
-  const query = location?.search ?? {};
-  const projectNumber = queryString.parse(query).projectNumber;
+
+const ProjectDisposeView = () => {
+  const location = useLocation();
+  const projectNumber = queryString.parse(location?.search).projectNumber;
   const dispatch = useAppDispatch();
   const getProjectRequest = useAppSelector(
     store => (store.network.requests as any)[ProjectActions.GET_PROJECT],
@@ -35,7 +36,7 @@ const ProjectDisposeView = ({ match, location }: { match: Match; location: Locat
   return (
     <StepContextProvider>
       <Container fluid className="ProjectDisposeView">
-        <ProjectDisposeLayout {...{ match, location }}></ProjectDisposeLayout>
+        <ProjectDisposeLayout />
       </Container>
     </StepContextProvider>
   );

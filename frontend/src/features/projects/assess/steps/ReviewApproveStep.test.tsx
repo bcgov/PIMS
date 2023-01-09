@@ -17,7 +17,7 @@ import React from 'react';
 import { Button } from 'react-bootstrap';
 import { act } from 'react-dom/test-utils';
 import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
@@ -199,9 +199,9 @@ const store = (project: IProject) => {
 
 const getReviewApproveStep = (storeOverride?: any) => (
   <Provider store={storeOverride ?? store(mockProject(mockTasks))}>
-    <Router history={history}>
+    <MemoryRouter initialEntries={[history.location]}>
       <ReviewApproveStep />
-    </Router>
+    </MemoryRouter>
   </Provider>
 );
 

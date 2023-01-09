@@ -1,5 +1,5 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import GenericModal from './GenericModal';
 
@@ -12,7 +12,7 @@ import GenericModal from './GenericModal';
  * @param props
  */
 const ErrorModal = (props: any) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   return (
     <GenericModal
       title="App Error"
@@ -20,7 +20,7 @@ const ErrorModal = (props: any) => {
       okButtonText="Retry"
       cancelButtonText="Go to the Home Page"
       handleOk={() => window.location.reload()}
-      handleCancel={() => history.replace('/')}
+      handleCancel={() => navigate('/', { replace: true })}
     ></GenericModal>
   );
 };

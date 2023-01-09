@@ -54,7 +54,7 @@ exports[`building review page renders correctly 1`] = `
               <div style=\\"border-left: 1px solid black; height: 30px; margin-right: 20px;\\"></div>
             </div>
             <div class=\\"col-md-auto\\">
-              <div class=\\"sc-dlVxhl fCMkV GeocoderAutoComplete\\">
+              <div class=\\"sc-ieecCq hJWcf GeocoderAutoComplete\\">
                 <div class=\\"required\\">
                   <div><input name=\\"address.line1\\" disabled=\\"\\" required=\\"\\" field=\\"address.line1\\" id=\\"input-address.line1\\" class=\\"form-control\\" value=\\"\\"></div>
                 </div>
@@ -220,7 +220,7 @@ exports[`building review page renders correctly 1`] = `
             <div class=\\"col-md-auto\\"><label class=\\"label\\">Net Book Value</label></div>
             <div class=\\"col-md-auto\\">
               <div class=\\"col\\">
-                <div class=\\"input-tooltip-wrapper\\"><input style=\\"width: 85%;\\" name=\\"data.fiscals.0.value\\" class=\\"form-control input-number\\" disabled=\\"\\" placeholder=\\"\\" value=\\"\\"></div>
+                <div class=\\"input-tooltip-wrapper\\"><input style=\\"width: 85%; border: 1px solid grey;\\" name=\\"data.fiscals.0.value\\" class=\\"form-control input-number\\" disabled=\\"\\" placeholder=\\"\\" value=\\"\\"></div>
               </div>
             </div>
             <div class=\\"col-md-auto\\">
@@ -235,7 +235,7 @@ exports[`building review page renders correctly 1`] = `
             <div style=\\"padding-left: 2px;\\" class=\\"col-md-auto\\"><label class=\\"label\\">Assessed Value</label></div>
             <div class=\\"col-md-auto\\">
               <div class=\\"col\\">
-                <div class=\\"input-tooltip-wrapper\\"><input style=\\"width: 85%;\\" name=\\"data.evaluations.0.value\\" class=\\"form-control input-number\\" disabled=\\"\\" placeholder=\\"\\" value=\\"\\"></div>
+                <div class=\\"input-tooltip-wrapper\\"><input style=\\"width: 85%; border: 1px solid grey;\\" name=\\"data.evaluations.0.value\\" class=\\"form-control input-number\\" disabled=\\"\\" placeholder=\\"\\" value=\\"\\"></div>
               </div>
             </div>
             <div class=\\"col-md-auto\\">

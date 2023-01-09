@@ -2,7 +2,7 @@ import { renderHook } from '@testing-library/react-hooks';
 import { createMemoryHistory } from 'history';
 import React from 'react';
 import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
@@ -15,7 +15,7 @@ const getStore = () => mockStore({});
 
 const getWrapper = (store: any) => ({ children }: any) => (
   <Provider store={store}>
-    <Router history={history}>{children}</Router>
+    <MemoryRouter initialEntries={[history.location]}>{children}</MemoryRouter>
   </Provider>
 );
 
@@ -47,8 +47,9 @@ const setCurrentReport = (report: IReport) => {
 
 describe('useRouterReport hook tests', () => {
   afterEach(() => {
+    const search = new URLSearchParams(defaultReport).toString();
     currentReport = undefined;
-    history.push({ search: '' });
+    history.push(`/reports/spl?${search}`);
   });
   it('the router hook will set the filter based on a query string', () => {
     history.push({ search: new URLSearchParams(defaultReport).toString() });

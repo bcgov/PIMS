@@ -47,6 +47,7 @@ type OptionalAttributes = {
   toolTipId?: string;
   /** Event when the value changes. */
   onChange?: (checked: boolean) => void;
+  datatestid?: string;
 };
 
 // only "field" is required for <Check>, the rest are optional
@@ -73,6 +74,7 @@ export const Check: React.FC<CheckProps> = ({
   toolTipId,
   checkedState,
   setCheckedState,
+  datatestid,
   onChange,
   ...rest
 }) => {
@@ -115,6 +117,7 @@ export const Check: React.FC<CheckProps> = ({
         )}
         <>
           <Form.Check
+            data-testid={datatestid}
             label={radioLabelOne}
             as={asElement}
             name={field}
