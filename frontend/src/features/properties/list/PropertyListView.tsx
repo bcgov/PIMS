@@ -359,7 +359,7 @@ const PropertyListView: React.FC = () => {
 
   const [pageSize, setPageSize] = useState(10);
   const [pageIndex, setPageIndex] = useState(0);
-  const [pageCount, setPageCount] = useState(0);
+  const [pageCount, setPageCount] = useState(1);
   const [propertyCount, setPropertyCount] = useState(0);
 
   const fetchIdRef = useRef(0);

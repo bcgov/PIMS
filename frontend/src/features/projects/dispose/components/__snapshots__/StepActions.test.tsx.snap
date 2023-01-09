@@ -17,6 +17,7 @@ exports[`Approval Confirmation Matches Snapshot 1`] = `
 >
   <button
     className="btn btn-primary"
+    data-testid="next-submit-btn"
     disabled={false}
     onClick={[Function]}
     style={

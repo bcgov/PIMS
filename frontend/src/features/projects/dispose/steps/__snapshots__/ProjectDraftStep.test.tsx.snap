@@ -46,6 +46,7 @@ exports[`Project Draft Step renders correctly 1`] = `
               <div>
                 <input
                   class="form-control"
+                  data-testid="project-number"
                   disabled=""
                   name="projectNumber"
                   placeholder="SPP-XXXXXX"

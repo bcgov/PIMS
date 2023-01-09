@@ -8,7 +8,7 @@ import { Button, Col, Container, Row } from 'react-bootstrap';
 /**
  * Display a placeholder of the PIMS login screen when keycloak is being initialized.
  */
-const LoginLoading = () => {
+export const LoginLoading = () => {
   return (
     <Container className="login" fluid={true}>
       <FilterBackdrop show={true}></FilterBackdrop>

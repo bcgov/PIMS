@@ -71,6 +71,7 @@ export const ProjectFinancialTable = ({ disabled, title }: IProjectFinacialTable
             </Form.Label>
             <Col md="auto">
               <FastCurrencyInput
+                testid="assessed"
                 customInputWidth="200px"
                 field="assessed"
                 required
@@ -86,6 +87,7 @@ export const ProjectFinancialTable = ({ disabled, title }: IProjectFinacialTable
             </Form.Label>
             <Col md="auto">
               <FastCurrencyInput
+                testid="netBook"
                 customInputWidth="200px"
                 field="netBook"
                 required
@@ -103,6 +105,7 @@ export const ProjectFinancialTable = ({ disabled, title }: IProjectFinacialTable
             </Form.Label>
             <Col md="auto">
               <FastCurrencyInput
+                testid="market"
                 customInputWidth="200px"
                 field="market"
                 required
@@ -118,6 +121,7 @@ export const ProjectFinancialTable = ({ disabled, title }: IProjectFinacialTable
             </Form.Label>
             <Col md="auto">
               <FastCurrencyInput
+                testid="appraised"
                 customInputWidth="200px"
                 field="appraised"
                 formikProps={context}
@@ -134,6 +138,7 @@ export const ProjectFinancialTable = ({ disabled, title }: IProjectFinacialTable
             </Form.Label>
             <Col md="auto">
               <FastCurrencyInput
+                testid="salesCost"
                 customInputWidth="200px"
                 field="salesCost"
                 formikProps={context}
@@ -148,6 +153,7 @@ export const ProjectFinancialTable = ({ disabled, title }: IProjectFinacialTable
             </Form.Label>
             <Col md="auto">
               <FastCurrencyInput
+                testid="programCost"
                 customInputWidth="200px"
                 field="programCost"
                 formikProps={context}

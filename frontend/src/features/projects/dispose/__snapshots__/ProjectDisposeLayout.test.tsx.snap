@@ -208,11 +208,18 @@ exports[`dispose project draft step display stepper renders correctly based off 
   <div
     class="step-content container-fluid"
   >
+    
+    
+    
+    
+    
+    
     <div
       class="c0"
     >
       <button
         class="btn btn-primary"
+        data-testid="next-submit-btn"
         style="margin-left: 10px;"
         type="button"
       >

@@ -2,12 +2,11 @@ import './Header.scss';
 
 import BClogoUrl from 'assets/images/logo-banner.svg';
 import PIMSlogo from 'assets/images/PIMSlogo/logo_only.png';
-import { AxiosError } from 'axios';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import React, { useState } from 'react';
 import { Button, Col, Modal, Nav, Navbar, Row } from 'react-bootstrap';
 import { FaBomb } from 'react-icons/fa';
-import { useHistory } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { IGenericNetworkAction, useAppSelector } from 'store';
 import { useNetworkStore } from 'store/slices/hooks';
 import styled from 'styled-components';
@@ -22,15 +21,16 @@ const VerticalBar = styled.span`
 `;
 
 const Header = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
+  const location = useLocation();
   const keycloak = useKeycloakWrapper();
   const network = useNetworkStore();
   const { requests } = useAppSelector(store => store.network);
 
   const [errors, setErrors] = React.useState<IGenericNetworkAction[]>([]);
 
-  if (history.location.pathname === '/') {
-    history.replace('/mapview');
+  if (location.pathname === '/') {
+    navigate('/mapview', { replace: true });
   }
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
@@ -60,7 +60,6 @@ const Header = () => {
 
       <Modal.Body style={{ maxHeight: '500px', overflowY: 'scroll' }}>
         {errors.map((error: IGenericNetworkAction, index: number) => {
-          error.error = error.error as AxiosError<any>;
           return (
             <Row key={index} style={{ wordBreak: 'break-all' }}>
               {process.env.NODE_ENV === 'development' ? (

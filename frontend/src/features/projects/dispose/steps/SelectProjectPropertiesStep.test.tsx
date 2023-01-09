@@ -8,7 +8,7 @@ import { createMemoryHistory } from 'history';
 import { mockFlatProperty } from 'mocks/filterDataMock';
 import React from 'react';
 import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import { act } from 'react-test-renderer';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
@@ -33,9 +33,9 @@ const store = mockStore({
 
 const uiElement = (
   <Provider store={store}>
-    <Router history={history}>
+    <MemoryRouter initialEntries={[history.location]}>
       <SelectProjectProperties />
-    </Router>
+    </MemoryRouter>
   </Provider>
 );
 

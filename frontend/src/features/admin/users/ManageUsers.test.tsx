@@ -13,7 +13,7 @@ import moment from 'moment-timezone';
 import React from 'react';
 import { act } from 'react-dom/test-utils';
 import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { fillInput } from 'utils/testUtils';
@@ -106,9 +106,9 @@ describe('Manage Users Component', () => {
     render(
       <Formik initialValues={{}} onSubmit={noop}>
         <Provider store={store}>
-          <Router history={history}>
+          <MemoryRouter initialEntries={[history.location]}>
             <ManageUsers />
-          </Router>
+          </MemoryRouter>
         </Provider>
       </Formik>,
     );

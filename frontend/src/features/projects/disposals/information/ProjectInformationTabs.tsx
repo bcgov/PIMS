@@ -1,17 +1,10 @@
 import { Tab, Tabs } from 'components/tabs';
 import React from 'react';
-import { Route, Switch, useLocation } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 
-import { ProjectInformation, ProjectProperties } from '.';
 import * as styled from './styled';
 
-interface IProjectInformationProps {
-  disabled?: boolean;
-}
-
-export const ProjectInformationTabs: React.FC<IProjectInformationProps> = ({
-  disabled = false,
-}) => {
+export const ProjectInformationTabs: React.FC = () => {
   const location = useLocation();
 
   const id = location.pathname.split('/')[3];
@@ -29,14 +22,7 @@ export const ProjectInformationTabs: React.FC<IProjectInformationProps> = ({
           />,
         ]}
       >
-        <Switch>
-          <Route exact path="/projects/disposal/:id/information">
-            <ProjectInformation disabled={disabled} />
-          </Route>
-          <Route path="/projects/disposal/:id/information/properties">
-            <ProjectProperties disabled={disabled} />
-          </Route>
-        </Switch>
+        <Outlet />
       </Tabs>
     </styled.ProjectInformation>
   );

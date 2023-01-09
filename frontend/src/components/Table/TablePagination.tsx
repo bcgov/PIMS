@@ -10,15 +10,10 @@ export type TablePaginationProps<T extends object> = PropsWithChildren<{
 
 const TablePagination = <T extends object>(props: TablePaginationProps<T>): ReactElement | null => {
   const {
-    state: {
-      pageIndex,
-      // pageSize,  // TODO:: Change page size
-      rowCount = props.instance.rows.length,
-    },
+    state: { pageIndex, rowCount = props.instance.rows.length },
     gotoPage,
     nextPage,
     previousPage,
-    // setPageSize,  // TODO: Change page size
     pageCount,
   } = props.instance;
 
@@ -36,14 +31,8 @@ const TablePagination = <T extends object>(props: TablePaginationProps<T>): Reac
     [gotoPage, nextPage, pageIndex, previousPage],
   );
 
-  // TODO: Change page size
-  // const rowsPerPageOptions = [5, 10, 25, 50]
-  // const onChangeRowsPerPage = useCallback(
-  //   e => {
-  //     setPageSize(Number(e.target.value));
-  //   },
-  //   [setPageSize],
-  // );
+  // Only set the forcePage prop if it is less than or equal to the pageCount prop
+  const forcePage = pageIndex <= pageCount ? pageIndex : undefined;
 
   return rowCount ? (
     <ReactPaginate
@@ -54,7 +43,8 @@ const TablePagination = <T extends object>(props: TablePaginationProps<T>): Reac
       marginPagesDisplayed={2}
       pageRangeDisplayed={5}
       onPageChange={handleChangePage}
-      forcePage={pageIndex}
+      // Only set the forcePage prop if it is less than or equal to the pageCount prop
+      forcePage={forcePage}
       // css
       activeClassName="active"
       breakClassName="page-item"

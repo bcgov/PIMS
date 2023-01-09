@@ -11,7 +11,7 @@ import { createMemoryHistory } from 'history';
 import { noop } from 'lodash';
 import React from 'react';
 import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
@@ -105,7 +105,7 @@ it('renders correctly', () => {
 
 const form = (
   <Provider store={getStore()}>
-    <Router history={history}>
+    <MemoryRouter initialEntries={[history.location]}>
       <Formik onSubmit={noop} initialValues={{ classificationId: '' }}>
         <ClassificationForm
           classifications={mockClassifications}
@@ -113,7 +113,7 @@ const form = (
           encumbranceField="test"
         />
       </Formik>
-    </Router>
+    </MemoryRouter>
   </Provider>
 );
 

@@ -1,10 +1,12 @@
+import ProjectLayout from 'features/projects/common/ProjectLayout';
 import { IProject, IProjectTask, IStepProps } from 'features/projects/interfaces';
-import { Formik, setIn, validateYupSchema, yupToFormErrors } from 'formik';
+import { LayoutWrapper } from 'features/routes';
+import { Formik, FormikValues, setIn, validateYupSchema, yupToFormErrors } from 'formik';
 import { WorkflowStatus } from 'hooks/api/projects';
 import _ from 'lodash';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Container, Form } from 'react-bootstrap';
-import { useHistory } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import { StepErrorSummary, useProject, useStepForm } from '../../common';
 import { fetchProjectTasks } from '../../common/projectsActionCreator';
@@ -72,6 +74,18 @@ export const validateDeny = async (project: IProject) => {
  */
 export const validateApprove = async (project: IProject) => {
   let taskErrors = validateTasks(project);
+
+  // Scroll to required fields
+  if (taskErrors.tasks && taskErrors.tasks.length > 0) {
+    const indexOfFirstRequiredTask = taskErrors.tasks.findIndex(
+      (element: { isCompleted: string } | undefined) => element?.isCompleted === 'Required',
+    );
+    const element = document.querySelector(
+      `input[name='tasks.${indexOfFirstRequiredTask}.isCompleted']`,
+    );
+    if (element) element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
   try {
     await validateYupSchema(
       project,
@@ -83,13 +97,10 @@ export const validateApprove = async (project: IProject) => {
   }
 };
 
-/**
- * Expanded version of the ReviewApproveStep allowing for application review.
- * {isReadOnly formikRef} formikRef allow remote formik access
- */
-const ReviewApproveStep = ({ formikRef }: IStepProps) => {
-  const { project, goToDisposePath } = useProject();
-  const history = useHistory();
+const ReviewApproveStepContent = ({ formikRef }: IStepProps) => {
+  const { project } = useProject();
+  const navigate = useNavigate();
+  const location = useLocation();
   const { onSubmitReview, canUserApproveForm } = useStepForm();
   const [submitStatusCode, setSubmitStatusCode] = useState<string | undefined>(undefined);
   const { noFetchingProjectRequests } = useStepForm();
@@ -141,10 +152,10 @@ const ReviewApproveStep = ({ formikRef }: IStepProps) => {
               switch (project?.statusCode) {
                 case WorkflowStatus.ApprovedForErp:
                 case WorkflowStatus.ApprovedForExemption:
-                  history.push(`/projects/disposal/${project.id}` ?? 'invalid');
+                  navigate(`/projects/disposal/${project.id}` ?? 'invalid');
                   break;
                 case WorkflowStatus.Denied:
-                  goToDisposePath('../summary');
+                  navigate(`/projects/summary${location.search}`);
                   break;
               }
             },
@@ -155,7 +166,9 @@ const ReviewApproveStep = ({ formikRef }: IStepProps) => {
         <Form>
           <h1>Project Application Review</h1>
           <ReviewApproveForm
-            goToAddProperties={() => goToDisposePath('properties/update')}
+            goToAddProperties={() =>
+              navigate(`/projects/assess/properties/update${location.search}`)
+            }
             canEdit={canEdit}
           />
           <StepErrorSummary />
@@ -173,6 +186,18 @@ const ReviewApproveStep = ({ formikRef }: IStepProps) => {
         </Form>
       </Formik>
     </Container>
+  );
+};
+
+const ReviewApproveStep = () => {
+  const formikRef = useRef<FormikValues>();
+
+  return (
+    <LayoutWrapper
+      layout={ProjectLayout}
+      component={ReviewApproveStepContent}
+      componentProps={{ formikRef }}
+    ></LayoutWrapper>
   );
 };
 
