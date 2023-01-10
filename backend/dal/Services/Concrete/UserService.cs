@@ -100,7 +100,7 @@ namespace Pims.Dal.Services
             bool exists = user != null;
             if (!exists)
             {
-                Guid guid = this.User.GetGuid();
+                Guid guid = Guid.NewGuid();
                 string givenName = this.User.GetFirstName() ??
                     throw new ConfigurationException($"Configuration 'Pims:ServiceAccount:FirstName' is invalid or missing.");
                 string surname = this.User.GetLastName() ??
@@ -300,7 +300,7 @@ namespace Pims.Dal.Services
                 .Include(u => u.Agencies)
                 .ThenInclude(a => a.Agency)
                 .ThenInclude(a => a.Children)
-                .Single(u => u.Username == username) ?? throw new KeyNotFoundException();
+                .SingleOrDefault(u => u.Username == username) ?? throw new KeyNotFoundException();
             var agencies = user.Agencies.Select(a => a.AgencyId).ToList();
             agencies.AddRange(user.Agencies.SelectMany(a => a.Agency?.Children.Where(ac => !ac.IsDisabled)).Select(a => a.Id));
 
