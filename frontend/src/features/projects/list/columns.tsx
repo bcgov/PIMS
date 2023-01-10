@@ -55,7 +55,6 @@ export const columns = (
                 />
               )}
             <span>{props.row.original.projectNumber}</span>
-            {console.log(props.row.original.projectNumber)}
           </div>
         );
       },
@@ -75,7 +74,7 @@ export const columns = (
       align: 'left',
       responsive: true,
       clickable: true,
-      width: spacing.medium,
+      width: spacing.large,
       minWidth: 50,
     },
     {

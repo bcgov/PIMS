@@ -372,8 +372,8 @@ exports[`Project Approval Request list view Displays a SPL project 1`] = `
             class="th"
             colspan="1"
             role="columnheader"
-            style="box-sizing: border-box; flex: 50 0 auto; min-width: 50px; width: 7%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
-            width="7%"
+            style="box-sizing: border-box; flex: 50 0 auto; min-width: 50px; width: 14%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+            width="14%"
           >
             <div
               class="sortable-column"
@@ -544,11 +544,16 @@ exports[`Project Approval Request list view Displays a SPL project 1`] = `
               class="td clickable"
               data-testid="cell-status"
               role="cell"
-              style="box-sizing: border-box; flex: 50 0 auto; min-width: 50px; width: 7%; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
+              style="box-sizing: border-box; flex: 50 0 auto; min-width: 50px; width: 14%; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
               title="View Disposal Project details"
-              width="7%"
+              width="14%"
             >
-              Approved for SPL
+              <span
+                class="badge rounded-pill bg-success"
+                style="font-size: .75rem;"
+              >
+                Approved for SPL
+              </span>
             </div>
             <div
               class="td clickable"
@@ -1135,11 +1140,16 @@ exports[`Project Approval Request list view Displays a SPL project 1`] = `
               class="td clickable"
               data-testid="cell-status"
               role="cell"
-              style="box-sizing: border-box; flex: 50 0 auto; min-width: 50px; width: 7%; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
+              style="box-sizing: border-box; flex: 50 0 auto; min-width: 50px; width: 14%; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
               title="View Disposal Project details"
-              width="7%"
+              width="14%"
             >
-              Pre-Marketing
+              <span
+                class="badge rounded-pill bg-primary"
+                style="font-size: .75rem;"
+              >
+                Pre-Marketing
+              </span>
             </div>
             <div
               class="td clickable"
@@ -1699,8 +1709,8 @@ exports[`Project Approval Request list view Displays a SPL project 1`] = `
             class="th"
             colspan="1"
             role="columnheader"
-            style="box-sizing: border-box; flex: 50 0 auto; min-width: 50px; width: 7%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
-            width="7%"
+            style="box-sizing: border-box; flex: 50 0 auto; min-width: 50px; width: 14%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+            width="14%"
           >
              
           </div>

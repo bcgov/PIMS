@@ -19,6 +19,7 @@ import React, {
   useRef,
 } from 'react';
 import { Collapse, Spinner } from 'react-bootstrap';
+import Badge from 'react-bootstrap/Badge';
 import { FaAngleDown, FaAngleRight, FaUndo } from 'react-icons/fa';
 import {
   Cell,
@@ -573,21 +574,19 @@ const Table = <T extends IIdentifiedObject, TFilter extends object = {}>(
                 'td expander',
                 e => handleExpandClick(e, row.original),
               )}
-            {row.cells.map((cell: CellWithProps<T>) => {
-              return (
-                <div
-                  data-testid={`cell-${cell.column.id}`}
-                  {...cell.getCellProps(cellProps)}
-                  title={cell.column.clickable && clickableTooltip ? clickableTooltip : ''}
-                  className={classnames('td', cell.column.clickable ? 'clickable' : '')}
-                  onClick={() =>
-                    props.onRowClick && cell.column.clickable && props.onRowClick(row.original)
-                  }
-                >
-                  {cell.render('Cell')}
-                </div>
-              );
-            })}
+            {row.cells.map((cell: CellWithProps<T>) => (
+              <div
+                data-testid={`cell-${cell.column.id}`}
+                {...cell.getCellProps(cellProps)}
+                title={cell.column.clickable && clickableTooltip ? clickableTooltip : ''}
+                className={classnames('td', cell.column.clickable ? 'clickable' : '')}
+                onClick={() =>
+                  props.onRowClick && cell.column.clickable && props.onRowClick(row.original)
+                }
+              >
+                <TableCell cell={cell} />
+              </div>
+            ))}
           </div>
           {props.detailsPanel && (
             <Collapse in={props.detailsPanel.checkExpanded(row.original, expandedRows)}>
@@ -679,6 +678,115 @@ const Table = <T extends IIdentifiedObject, TFilter extends object = {}>(
       )}
     </>
   );
+};
+
+/**
+ * @description The props for the TableCell component.
+ *
+ * @author Zach Bourque <Zachary.Bourque@gov.bc.ca>
+ * @interface
+ */
+interface ITableCellProps {
+  /**
+   * @description
+   */
+  cell: CellWithProps<any>;
+}
+
+/**
+ * @description Provides custom styling based on the cell passed in.
+ *              Currently only provides custom styling for any react-table column with the header of "Status"
+ *
+ * @author Zach Bourque <Zachary.Bourque@gov.bc.ca>
+ * @param cell {CellWithProps<T>} - The cell being rendered in the react-table table
+ * @returns {ReactElement} - The custom rendered cell
+ *
+ * @example
+ * {row.cells.map((cell: CellWithProps<T>) => 
+      <div>
+        <TableCell cell={cell} />
+      </div>
+   )}
+ *
+ */
+const TableCell = ({ cell }: ITableCellProps): ReactElement => {
+  // Only return the cell as a formatted Badge component if the cell is in the "Status" / Project Status column
+  if (cell.column.Header === 'Status') {
+    return (
+      <Badge pill bg={getBadgeType(cell.value)} style={{ fontSize: '.75rem' }}>
+        {cell.value ?? ''}
+      </Badge>
+    );
+  }
+  return cell.render('Cell') as ReactElement;
+};
+
+/**
+ * @description Given the status of a project, return a colour in Bootstrap colour format, that compliments the status
+ *
+ * @author Zach Bourque <Zachary.Bourque@gov.bc.ca>
+ * @param status {string} - The status of a disposal project
+ * @returns {string} - Colour in Bootstrap colour format, that will visually compliment the status of the project
+ *
+ * @example
+ * <Badge bg={getBadgeType(cell.value)}>
+     {cell.value}
+   </Badge>
+ *
+ */
+const getBadgeType = (status: string): string => {
+  switch (status) {
+    /* Draft Statuses */
+    case 'Draft':
+    case 'Select Properties':
+    case 'Update Information':
+    case 'Approval':
+    case 'Review':
+      return 'secondary';
+
+    /* Assessment Statuses */
+    case 'Submitted':
+    case 'Document Review':
+    case 'Appraisal Review':
+    case 'First Nation Consultation':
+    case 'Exemption Review':
+      return 'primary';
+
+    /* Exemption Statuses */
+    case 'Submitted Exemption':
+    case 'Approved for Exemption':
+      return 'success';
+
+    /* General Statuses */
+    case 'Denied':
+    case 'Not in SPL':
+    case 'Cancelled':
+    case 'Disposed':
+      return 'danger';
+
+    case 'Transferred within the GRE':
+      return 'warning';
+
+    /* ERP Statuses */
+    case 'In ERP':
+    case 'On Hold':
+      return 'warning';
+    case 'Approved for ERP':
+      return 'success';
+
+    /* Pre Marketing Statuses */
+    case 'Pre-Marketing':
+    case 'On Market':
+    case 'Contract in Place - Conditional':
+      return 'primary';
+    case 'Contract in Place - Unconditional':
+      return 'info';
+    case 'Approved for SPL':
+      return 'success';
+
+    default:
+      return 'secondary';
+  }
 };
 
 export default Table;
