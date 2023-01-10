@@ -44,6 +44,7 @@ export interface IKeycloak {
   lastName?: string;
   email?: string;
   roles: string[];
+  systemRoles: string[];
   agencyId?: number;
   isAdmin: boolean;
   hasRole(role?: string | Array<string>): boolean;
@@ -106,6 +107,16 @@ export function useKeycloakWrapper(): IKeycloak {
   };
 
   /**
+   * Return an array of only system roles from Keycloak (where the role name begins with a captial letter)
+   * that the user belongs to
+   */
+  const getSystemRoles = (): Array<string> => {
+    let systemRoles: string[] = userInfo.client_roles ?? [];
+    systemRoles = systemRoles.filter(s => s.charAt(0) === s.charAt(0).toUpperCase());
+    return systemRoles ?? [];
+  };
+
+  /**
    * Return the user's username
    */
   const username = (): string => {
@@ -119,10 +130,10 @@ export function useKeycloakWrapper(): IKeycloak {
   };
 
   /**
-   * Return the user's display name
+   * Return the user's display name using the first and last name from Keycloak
    */
   const displayName = (): string | undefined => {
-    return userInfo?.name ?? userInfo?.preferred_username;
+    return userInfo?.given_name + ' ' + userInfo?.family_name ?? userInfo?.preferred_username;
   };
 
   /**
@@ -202,6 +213,7 @@ export function useKeycloakWrapper(): IKeycloak {
       email: email(),
       isAdmin: hasRole(Roles.SYSTEM_ADMINISTRATOR) || hasRole(Roles.AGENCY_ADMINISTRATOR),
       roles: roles(),
+      systemRoles: getSystemRoles(),
       agencyId: agencies()[0],
       hasRole,
       hasClaim,
