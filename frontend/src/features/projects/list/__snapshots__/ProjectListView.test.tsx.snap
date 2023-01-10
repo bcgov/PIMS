@@ -368,8 +368,8 @@ exports[`Project list view tests Matches snapshot 1`] = `
             class="th"
             colspan="1"
             role="columnheader"
-            style="box-sizing: border-box; flex: 50 0 auto; min-width: 50px; width: 7%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
-            width="7%"
+            style="box-sizing: border-box; flex: 50 0 auto; min-width: 50px; width: 14%; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
+            width="14%"
           >
             <div
               class="sortable-column"
