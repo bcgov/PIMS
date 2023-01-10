@@ -27,6 +27,7 @@ export interface IUserInfo {
   client_roles: string[];
   identity_provider: string;
   idir_username: string;
+  bceid_username: string;
   idir_user_guid: string;
 }
 
@@ -109,7 +110,10 @@ export function useKeycloakWrapper(): IKeycloak {
    */
   const username = (): string => {
     if (userInfo?.identity_provider === 'idir') {
-      return userInfo?.idir_username;
+      return userInfo?.idir_username + '@idir';
+    }
+    if (userInfo?.identity_provider === 'bceid') {
+      return userInfo?.bceid_username + '@bceid';
     }
     return userInfo?.username;
   };
