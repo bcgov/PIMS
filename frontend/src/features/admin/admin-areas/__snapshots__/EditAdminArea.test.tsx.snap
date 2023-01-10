@@ -15,6 +15,7 @@ exports[`renders correctly 1`] = `
     >
       <span
         class="navbar-brand"
+        style="margin-left: 10px;"
       >
         <div>
           <svg
@@ -54,7 +55,8 @@ exports[`renders correctly 1`] = `
           style="justify-content: center;"
         >
           <button
-            class="Button mr-5 btn btn-primary"
+            class="Button btn btn-primary"
+            style="margin-right: 10px;"
             type="submit"
           >
             <div

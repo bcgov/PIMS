@@ -78,7 +78,7 @@ const EditAdminArea = (props: IEditAdminAreaProps) => {
   return (
     <div>
       <Navbar className="navBar" expand="sm" variant="light" bg="light">
-        <Navbar.Brand>
+        <Navbar.Brand style={{ marginLeft: '10px' }}>
           <TooltipWrapper toolTipId="back" toolTip="Back to administrative area list">
             <FaArrowAltCircleLeft
               onClick={goBack}
@@ -133,10 +133,10 @@ const EditAdminArea = (props: IEditAdminAreaProps) => {
             {!activeArea && !newAdminArea ? (
               <Spinner animation="border" />
             ) : (
-              <Input field="name" label="Name: " type="text" />
+              <Input style={{ marginTop: '10px' }} field="name" label="Name: " type="text" />
             )}
             <ButtonToolbar style={{ justifyContent: 'center' }}>
-              <Button className="mr-5" type="submit">
+              <Button style={{ marginRight: '10px' }} type="submit">
                 {newAdminArea ? 'Create Administrative Area' : 'Save Changes'}
               </Button>{' '}
               {!newAdminArea ? (
