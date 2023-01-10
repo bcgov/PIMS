@@ -51,17 +51,6 @@ const EditUserPage = (props: IEditUserPageProps) => {
   let agenciesToUpdate: any[];
   let rolesToUpdate: any[];
 
-  const checkAgencies = (
-    <Select
-      label="Agency"
-      field="agency"
-      data-testid="agency"
-      required={true}
-      options={selectAgencies}
-      placeholder={user?.agencies?.length > 0 ? undefined : 'Please Select'}
-    />
-  );
-
   const checkRoles = (
     <Form.Group className={'check-roles'}>
       <Form.Label>
@@ -112,7 +101,9 @@ const EditUserPage = (props: IEditUserPageProps) => {
   return (
     <div>
       <Navbar className="navBar" expand="sm" variant="light" bg="light">
-        <Navbar.Brand href="#">User Information</Navbar.Brand>
+        <Navbar.Brand href="#" style={{ marginLeft: '10px' }}>
+          User Information
+        </Navbar.Brand>
       </Navbar>
       <Container fluid={true}>
         <Row className="user-edit-form-container">
@@ -203,7 +194,15 @@ const EditUserPage = (props: IEditUserPageProps) => {
                   type="email"
                 />
 
-                {checkAgencies}
+                <Select
+                  style={{ width: '450px' }}
+                  label="Agency"
+                  field="agency"
+                  data-testid="agency"
+                  required={true}
+                  options={selectAgencies}
+                  placeholder={user?.agencies?.length > 0 ? undefined : 'Please Select'}
+                />
 
                 <Label>Position</Label>
                 <Input
@@ -236,12 +235,15 @@ const EditUserPage = (props: IEditUserPageProps) => {
 
                 <Row className="justify-content-md-center">
                   <ButtonToolbar className="cancelSave">
-                    <Button className="mr-5" variant="secondary" type="button" onClick={goBack}>
+                    <Button
+                      style={{ marginRight: '10px' }}
+                      variant="secondary"
+                      type="button"
+                      onClick={goBack}
+                    >
                       Cancel
                     </Button>
-                    <Button className="mr-5" type="submit">
-                      Save
-                    </Button>
+                    <Button type="submit">Save</Button>
                   </ButtonToolbar>
                 </Row>
               </Form>
