@@ -736,31 +736,54 @@ const TableCell = ({ cell }: ITableCellProps): ReactElement => {
  */
 const getBadgeType = (status: string): string => {
   switch (status) {
-    case 'Approved for ERP':
+    /* Draft Statuses */
+    case 'Draft':
+    case 'Select Properties':
+    case 'Update Information':
+    case 'Approval':
+    case 'Review':
+      return 'secondary';
+
+    /* Assessment Statuses */
+    case 'Submitted':
+    case 'Document Review':
+    case 'Appraisal Review':
+    case 'First Nation Consultation':
+    case 'Exemption Review':
+      return 'primary';
+
+    /* Exemption Statuses */
+    case 'Submitted Exemption':
     case 'Approved for Exemption':
-    case 'In ERP': {
       return 'success';
-    }
+
+    /* General Statuses */
+    case 'Denied':
+    case 'Not in SPL':
     case 'Cancelled':
     case 'Disposed':
-    case 'Denied': {
-      return 'error';
-    }
-    case 'Not in SPL':
+      return 'danger';
+
+    case 'Transferred within the GRE':
+      return 'warning';
+
+    /* ERP Statuses */
+    case 'In ERP':
+    case 'On Hold':
+      return 'warning';
+    case 'Approved for ERP':
+      return 'success';
+
+    /* Pre Marketing Statuses */
     case 'Pre-Marketing':
     case 'On Market':
     case 'Contract in Place - Conditional':
-    case 'Contract in Place - Unconditional':
-    case 'On Hold':
-    case 'Transferred within the GRE': {
-      return 'warning';
-    }
-    case 'Select Properties': {
       return 'primary';
-    }
-    case 'Submitted': {
+    case 'Contract in Place - Unconditional':
       return 'info';
-    }
+    case 'Approved for SPL':
+      return 'success';
+
     default:
       return 'secondary';
   }
