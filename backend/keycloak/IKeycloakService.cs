@@ -1,4 +1,5 @@
 using System;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace Pims.Keycloak
@@ -8,6 +9,9 @@ namespace Pims.Keycloak
         #region Attack Detection
         Task DeleteAttackDetectionAsync();
         #endregion
+
+        Task<string> GetGoldUsersRolesAsync(string preferred_username);
+        Task<string> UpdateGoldRolesAsync(string preferred_username, string RoleName);
 
         #region Users
         Task<int> GetUserCountAsync();
