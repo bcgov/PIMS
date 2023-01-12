@@ -91,7 +91,7 @@ server-test: ## Runs the server tests in a container
 
 server-run: ## Starts local server containers
 	@echo "$(P) Starting server containers..."
-	@docker-compose --env-file .env up -d keycloak backend
+	@docker-compose --env-file .env up -d backend
 
 npm-clean: ## Removes local containers, images, volumes, for frontend application.
 	@echo "$(P) Removing frontend containers and volumes."

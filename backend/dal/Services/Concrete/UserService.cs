@@ -314,28 +314,6 @@ namespace Pims.Dal.Services
         /// <returns></returns>
         public IEnumerable<int> GetUsersAgencies(Guid id)
         {
-            if (id != this.User.GetKeycloakUserId())
-            {
-                throw new UnauthorizedAccessException();
-            }
-            User user = this.Context.Users
-                .Include(u => u.Agencies)
-                .ThenInclude(a => a.Agency)
-                .ThenInclude(a => a.Children)
-                .Single(u => u.Id == id) ?? throw new KeyNotFoundException();
-            List<int> agencies = user.Agencies.Select(a => a.AgencyId).ToList();
-            agencies.AddRange(user.Agencies.SelectMany(a => a.Agency?.Children.Where(ac => !ac.IsDisabled)).Select(a => a.Id));
-
-            return agencies.ToArray();
-        }
-
-        /// <summary>
-        /// Get the all of the agency ids that a user belongs to, given the Guid. 
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public IEnumerable<int> GetUsersAgencies(Guid id)
-        {
             if (id != this.User.GetGuid())
             {
                 throw new UnauthorizedAccessException();

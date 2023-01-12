@@ -6,25 +6,10 @@ if test -f "./.env"; then
     echo "./.env exists"
 else
 echo \
-"KEYCLOAK_PORT=8080
-DATABASE_PORT=5433
+"DATABASE_PORT=5433
 API_HTTP_PORT=5000
 API_HTTPS_PORT=5001
 APP_HTTP_PORT=3000" >> ./.env
-fi
-
-
-# Keycloak
-if test -f "./auth/keycloak/.env"; then
-    echo "./auth/keycloak/.env exists"
-else
-echo \
-"PROXY_ADDRESS_FORWARDING=false
-KEYCLOAK_USER=pims-local
-KEYCLOAK_PASSWORD=MWIxZWFlNTZiOTU3YTZmODEyZDUxYA8!
-KEYCLOAK_IMPORT=/tmp/realm-export.json -Dkeycloak.profile.feature.scripts=enabled -Dkeycloak.profile.feature.upload_scripts=enabled
-KEYCLOAK_LOGLEVEL=WARN
-ROOT_LOGLEVEL=WARN" >> ./auth/keycloak/.env
 fi
 
 # API Database
@@ -52,7 +37,10 @@ ASPNETCORE_URLS=http://*:8080
 DB_PASSWORD=MWIxZWFlNTZiOTU3YTZmODEyZDUxYA8!
 Keycloak__Secret=
 Keycloak__ServiceAccount__Secret=
-Keycloak__FrontendClientId=" >> ./backend/api/.env
+Keycloak__FrontendClientId=
+#Ches__Username=
+#Ches__Password=
+#Ches__OverrideTo=" >> ./backend/api/.env
 fi
 
 # DAL DB migration
