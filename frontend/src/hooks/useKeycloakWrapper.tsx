@@ -111,7 +111,7 @@ export function useKeycloakWrapper(): IKeycloak {
    * that the user belongs to
    */
   const getSystemRoles = (): Array<string> => {
-    let systemRoles: string[] = userInfo.client_roles ?? [];
+    let systemRoles: string[] = userInfo?.client_roles ?? [];
     systemRoles = systemRoles.filter(s => s.charAt(0) === s.charAt(0).toUpperCase());
     return systemRoles ?? [];
   };

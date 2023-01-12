@@ -53,6 +53,17 @@ namespace Pims.Core.Extensions
         }
 
         /// <summary>
+        /// Get the user's preferred username. 
+        /// Preferred username is a Keycloak Gold claim which contains the user's GUID followed by @ + the identity provider they used.
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns>String preferred_username</returns>
+        public static string GetPreferredUsername(this ClaimsPrincipal user)
+        {
+            return user.Claims.First(c => c.Type == "preferred_username").Value;
+        }
+
+        /// <summary>
         /// Get the user's display name.
         /// </summary>
         /// <param name="user"></param>
