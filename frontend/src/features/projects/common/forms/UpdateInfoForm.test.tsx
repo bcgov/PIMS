@@ -1,5 +1,5 @@
 import { useKeycloak } from '@react-keycloak/web';
-import { cleanup, fireEvent, render, waitFor } from '@testing-library/react';
+import { act, cleanup, fireEvent, render, waitFor } from '@testing-library/react';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import { ProjectActions } from 'constants/actionTypes';
@@ -132,13 +132,15 @@ describe('Update Info Form', () => {
     const classificationId = container.querySelector(
       'select[name="properties.0.classificationId"]',
     );
-    await waitFor(() => {
+    act(() => {
       fireEvent.change(classificationId!, {
         target: {
           value: Classifications.CoreOperational,
         },
       });
     });
-    expect(getByText('Must select Surplus Active or Surplus Encumbered')).toBeVisible();
+    waitFor(() => {
+      expect(getByText('Must select Surplus Active or Surplus Encumbered')).toBeVisible();
+    });
   });
 });

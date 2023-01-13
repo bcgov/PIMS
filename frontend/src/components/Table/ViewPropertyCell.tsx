@@ -3,13 +3,13 @@ import { PropertyTypes } from 'constants/propertyTypes';
 import queryString from 'query-string';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { CellProps } from 'react-table';
+import { CellProps, Renderer } from 'react-table';
 
 /**
  * A cell that provides a clickable link to view a given IProperty
  * @param {CellProps<IProperty, number>} props
  */
-const ViewPropertyCell = (props: CellProps<IProperty, number>) => {
+const ViewPropertyCell: Renderer<CellProps<IProperty, number>> = props => {
   const property = props.row.original;
   return (
     <Link

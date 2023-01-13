@@ -28,7 +28,7 @@ const NotificationTab: React.FunctionComponent<INotificationTabProps> = ({
   const api = useDisposalApi(projectId);
 
   const onRequestData = useCallback(
-    async ({ pageIndex }) => {
+    async ({ pageIndex }: { pageIndex: number }) => {
       const response = await api.getNotificationsPage({
         ...filter,
         page: pageIndex + 1,

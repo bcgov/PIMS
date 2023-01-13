@@ -5,7 +5,7 @@ import { useFormikContext } from 'formik';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import React from 'react';
 import { Form } from 'react-bootstrap';
-import { CellProps } from 'react-table';
+import { CellProps, Renderer } from 'react-table';
 import { formatMoney } from 'utils';
 
 interface IEditableCellProps {
@@ -45,10 +45,12 @@ export const EditableMoneyCell = ({
   );
 };
 
-export const MoneyCell = ({ cell: { value } }: CellProps<IProperty, number | ''>) => (
-  <Form.Group>{value === undefined || value === '' ? '' : formatMoney(value)}</Form.Group>
+export const MoneyCell: Renderer<CellProps<IProperty, number | ''>> = ({ cell: { value } }) => (
+  <Form.Group>{value == null || `${value}` === '' ? '' : formatMoney(value)}</Form.Group>
 );
 
-export const AsterixMoneyCell = ({ cell: { value } }: CellProps<IProperty, number | ''>) => (
+export const AsterixMoneyCell: Renderer<CellProps<IProperty, number | ''>> = ({
+  cell: { value },
+}) => (
   <Form.Group>{value === undefined || value === '' ? '' : `${formatMoney(value)} *`}</Form.Group>
 );

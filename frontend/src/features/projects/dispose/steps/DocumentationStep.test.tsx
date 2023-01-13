@@ -1,5 +1,5 @@
 import { useKeycloak } from '@react-keycloak/web';
-import { cleanup, fireEvent, render, waitFor } from '@testing-library/react';
+import { act, cleanup, fireEvent, render, waitFor } from '@testing-library/react';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import { ProjectActions } from 'constants/actionTypes';
@@ -91,12 +91,14 @@ describe('Documentation Step', () => {
     expect(getByText('Task #2')).toBeInTheDocument();
   });
 
-  it('documentation validation works', async () => {
+  it('documentation validation works', () => {
     const { getAllByText, container } = render(uiElement);
     const form = container.querySelector('form');
-    await waitFor(() => {
+    act(() => {
       fireEvent.submit(form!);
     });
-    expect(getAllByText('Required')).toHaveLength(2);
+    waitFor(() => {
+      expect(getAllByText('Required')).toHaveLength(2);
+    });
   });
 });

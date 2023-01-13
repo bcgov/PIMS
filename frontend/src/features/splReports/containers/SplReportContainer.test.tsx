@@ -1,7 +1,7 @@
+import Adapter from '@cfaester/enzyme-adapter-react-18';
 import { useKeycloak } from '@react-keycloak/web';
 import { queryByText, screen } from '@testing-library/dom';
 import { cleanup, fireEvent, render, waitFor } from '@testing-library/react';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import Claims from 'constants/claims';
 import Enzyme from 'enzyme';
 import { createMemoryHistory } from 'history';

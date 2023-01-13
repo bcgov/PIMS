@@ -64,7 +64,7 @@ const ManageAgencies: React.FC = () => {
   }, [agencyLookupCodes, filter]);
 
   const onRequestData = useCallback(
-    ({ pageIndex }) => {
+    ({ pageIndex }: { pageIndex: number }) => {
       getAgenciesAction(
         toFilteredApiPaginateParams<IAgencyFilter>(
           filter?.id ? 0 : pageIndex,
