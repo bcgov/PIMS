@@ -17,7 +17,7 @@ interface IErrorTabsProps {
  * Tab based wrapper for formik forms. Displays error modal if formik submit fails due to validation error.
  * @param param0 IErrorTabsProps
  */
-const ErrorTabs: React.FunctionComponent<IErrorTabsProps> = ({
+const ErrorTabs: React.FunctionComponent<React.PropsWithChildren<IErrorTabsProps>> = ({
   currentTab,
   setCurrentTab,
   ...rest

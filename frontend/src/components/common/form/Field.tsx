@@ -17,7 +17,7 @@ type FieldProps = {
   required?: boolean;
 };
 
-export const Field: React.FC<FieldProps> = ({
+export const Field: React.FC<React.PropsWithChildren<FieldProps>> = ({
   field,
   label,
   afterLabel,

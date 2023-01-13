@@ -27,7 +27,7 @@ const LeafControl = L.Control.extend({
   },
 });
 
-export const ControlPanel: React.FC<L.ControlOptions> = props => {
+export const ControlPanel: React.FC<React.PropsWithChildren<L.ControlOptions>> = props => {
   const map = useMap();
   const elementRef = useRef(new LeafControl(props));
   const instance = elementRef.current;

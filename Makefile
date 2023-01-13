@@ -72,10 +72,10 @@ clean: ## Removes all local containers, images, volumes, etc
 	@echo "$(P) Removing all containers, images, volumes for solution."
 	@docker-compose rm -f -v -s
 	@docker volume rm -f pims-app-node-cache
-	@docker volume rm -f pims-database-data
+	@docker volume rm -f database-data
 
 setup: ## Setup local container environment, initialize keycloak and database
-	@make build; make up; make pause-30; make db-update; make db-seed; make keycloak-sync;
+	@make build; make up; make pause-30; make db-update;
 
 pause-30:
 	@echo "$(P) Pausing 30 seconds..."
@@ -127,26 +127,18 @@ db-clean: ## Re-creates an empty docker database - ready for seeding.
 	@echo "$(P) Refreshing the database..."
 	@cd backend/dal; dotnet ef database drop --force; dotnet ef database update
 
-db-refresh: | server-run pause-30 db-clean db-seed keycloak-sync ## Refresh the database and seed it with data.
+db-refresh: | server-run pause-30 db-clean ## Refresh the database and seed it with data.
 
 db-drop: ## Drop the database.
 	@echo "$(P) Drop the database."
 	@cd backend/dal; dotnet ef database drop;
 
-db-seed: ## Imports a JSON file of properties into PIMS
-	@echo "$(P) Seeding docker database..."
-	@cd tools/import; dotnet build; dotnet run;
-
 db-script: ## Export an SQL script from the migration (from=0 to=Initial).
 	@echo "$(P) Exporting script to 'db-migration.sql'"
 	@cd backend/dal; dotnet ef migrations script ${from} ${to} --output ../../db-migration.sql
-
-keycloak-sync: ## Syncs accounts with Keycloak and PIMS
-	@echo "$(P) Syncing keycloak with PIMS..."
-	@cd tools/keycloak/sync; dotnet build; dotnet run;
 
 convert: ## Convert Excel files to JSON
 	@echo "$(P) Convert Excel files to JSON..."
 	@cd tools/converters/excel; dotnet build; dotnet run;
 
-.PHONY: local setup restart refresh up down stop build rebuild clean client-test server-test pause-30 server-run db-migrations db-add db-update db-rollback db-remove db-clean db-drop db-seed db-refresh npm-clean npm-refresh keycloak-sync convert
+.PHONY: local setup restart refresh up down stop build rebuild clean client-test server-test pause-30 server-run db-migrations db-add db-update db-rollback db-remove db-clean db-drop db-refresh npm-clean npm-refresh convert

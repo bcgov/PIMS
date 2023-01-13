@@ -24,7 +24,7 @@ const StepperFormContext = React.createContext<IStepperFormContextProps>({
  * This provider wraps the StepForm children to provide ability to control the state of the form stepper field
  * @param param0
  */
-export const StepperFormProvider: React.FC<IStepperFormProviderProps> = ({
+export const StepperFormProvider: React.FC<React.PropsWithChildren<IStepperFormProviderProps>> = ({
   children,
   steps,
   tabs,

@@ -7,7 +7,7 @@ import { Container } from 'react-bootstrap';
 import { ErrorBoundary } from 'react-error-boundary';
 import LoadingBar from 'react-redux-loading-bar';
 
-const PublicLayout: React.FC = ({ children }) => {
+const PublicLayout: React.FC<React.PropsWithChildren> = ({ children }) => {
   return (
     <>
       <LoadingBar style={{ zIndex: 9999, backgroundColor: '#fcba19', height: '3px' }} />

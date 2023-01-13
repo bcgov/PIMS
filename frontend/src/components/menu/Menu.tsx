@@ -40,7 +40,7 @@ interface IProps {
   disableScrollToMenuElement?: boolean;
 }
 
-export const Menu: React.FC<IProps> = ({
+export const Menu: React.FC<React.PropsWithChildren<IProps>> = ({
   label,
   options,
   width,
