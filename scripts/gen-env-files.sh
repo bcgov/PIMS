@@ -35,16 +35,6 @@ DB_PASSWORD=$passvar
 TIMEOUT_LENGTH=120" >> ./database/mssql/.env
 fi
 
-# API Database
-if test -f "./database/postgres/.env"; then
-    echo "./database/postgres/.env exists"
-else
-echo \
-"POSTGRES_USER=$varApiDb
-POSTGRES_PASSWORD=$passvar
-POSTGRES_DB=pims" >> ./database/postgres/.env
-fi
-
 # API
 if test -f "./backend/api/.env"; then
     echo "./backend/api/.env exists"
@@ -77,20 +67,7 @@ REACT_APP_KEYCLOAK_CLIENT_ID=pims-local-test-4292
 REACT_APP_KEYCLOAK_AUTH_SERVER_URL=https://dev.loginproxy.gov.bc.ca/auth" >> ./frontend/.env
 fi
 
-# Import tool
-if test -f "./tools/import/.env"; then
-    echo "./tools/import/.env exists"
-else
-echo \
-"Import__Quantity=50
-# Import__Skip=8500
-# Import__Delay=3000
-
 # Local
 ASPNETCORE_ENVIRONMENT=Local
 Auth__Keycloak__Secret=
 
-# Project Import
-# Import__File=./Data/projects.json
-# Api__ImportUrl=/tools/import/projects?stopOnError=false&defaults=workflow=SPL" >> ./tools/import/.env
-fi
