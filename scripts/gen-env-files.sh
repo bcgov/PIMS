@@ -1,11 +1,5 @@
 #!/bin/bash
 
-echo 'Enter a username for the keycloak database.'
-read -p 'Username: ' varKeycloakDb
-
-echo 'Enter a username for the keycloak realm administrator'
-read -p 'Username: ' varKeycloak
-
 echo 'Enter a username for the API database.'
 read -p 'Username: ' varApiDb
 
@@ -20,41 +14,10 @@ if test -f "./.env"; then
     echo "./.env exists"
 else
 echo \
-"KEYCLOAK_PORT=8080
-DATABASE_PORT=5433
+"DATABASE_PORT=5433
 API_HTTP_PORT=5000
 API_HTTPS_PORT=5001
 APP_HTTP_PORT=3000" >> ./.env
-fi
-
-
-# Keycloak
-if test -f "./auth/keycloak/.env"; then
-    echo "./auth/keycloak/.env exists"
-else
-echo \
-"PROXY_ADDRESS_FORWARDING=true
-# DB_VENDOR=POSTGRES
-# DB_ADDR=keycloak-db
-# DB_DATABASE=keycloak
-# DB_USER=$varKeycloakDb
-# DB_PASSWORD=$passvar
-KEYCLOAK_USER=$varKeycloak
-KEYCLOAK_PASSWORD=$passvar
-KEYCLOAK_IMPORT=/tmp/realm-export.json -Dkeycloak.profile.feature.scripts=enabled -Dkeycloak.profile.feature.upload_scripts=enabled
-KEYCLOAK_LOGLEVEL=WARN
-ROOT_LOGLEVEL=WARN" >> ./auth/keycloak/.env
-fi
-
-# Keycloak Database
-if test -f "./auth/postgres/.env"; then
-    echo "./auth/postgres/.env exists"
-else
-echo \
-"POSTGRESQL_DATABASE=keycloak
-POSTGRESQL_USER=$varKeycloakDb
-POSTGRESQL_PASSWORD=$passvar
-" >> ./auth/postgres/.env
 fi
 
 # API Database
@@ -90,7 +53,6 @@ echo \
 "ASPNETCORE_ENVIRONMENT=Development
 ASPNETCORE_URLS=http://*:8080
 DB_PASSWORD=$passvar
-Keycloak__Secret=
 Keycloak__ServiceAccount__Secret=" >> ./backend/api/.env
 fi
 
@@ -128,20 +90,7 @@ echo \
 ASPNETCORE_ENVIRONMENT=Local
 Auth__Keycloak__Secret=
 
-# Property Import
-Import__File=./Data/properties-todds.json
-
 # Project Import
 # Import__File=./Data/projects.json
 # Api__ImportUrl=/tools/import/projects?stopOnError=false&defaults=workflow=SPL" >> ./tools/import/.env
-fi
-
-# Keycloak sync tool
-if test -f "./tools/keycloak/sync/.env"; then
-    echo "./tools/keycloak/sync/.env exists"
-else
-echo \
-"# Local
-ASPNETCORE_ENVIRONMENT=Local
-Auth__Keycloak__Secret=" >> ./tools/keycloak/sync/.env
 fi
