@@ -1,0 +1,324 @@
+// Vitest Snapshot v1
+
+exports[`AccessRequestPage functionality > renders RequestAccessPage correctly 1`] = `
+<div
+  class="accessRequestPage"
+>
+  <div>
+    <h3>
+      Access Request
+    </h3>
+  </div>
+  <hr />
+  <div
+    class="container-fluid"
+  >
+    <div
+      class="justify-content-md-center row"
+    >
+      <form
+        class="userInfo"
+        novalidate=""
+      >
+        <div
+          class="row"
+          controlid="input-user.username"
+          style="align-items: center;"
+        >
+          <div
+            class="col-md-auto"
+          >
+            <label
+              class="form-label"
+            >
+              IDIR/BCeID
+            </label>
+          </div>
+          <div
+            class="col-md-auto"
+          >
+            <div>
+              <input
+                class="form-control"
+                name="user.username"
+                readonly=""
+                type="text"
+                value=""
+              />
+            </div>
+          </div>
+        </div>
+        <div
+          class="row"
+        >
+          <div
+            class="col"
+          >
+            <div
+              class="row"
+              controlid="input-user.firstName"
+              style="align-items: center;"
+            >
+              <div
+                class="col-md-auto"
+              >
+                <label
+                  class="form-label"
+                >
+                  First Name
+                </label>
+              </div>
+              <div
+                class="col-md-auto"
+              >
+                <div>
+                  <input
+                    class="form-control"
+                    name="user.firstName"
+                    readonly=""
+                    type="text"
+                    value=""
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="col"
+          >
+            <div
+              class="row"
+              controlid="input-user.lastName"
+              style="align-items: center;"
+            >
+              <div
+                class="col-md-auto"
+              >
+                <label
+                  class="form-label"
+                >
+                  Last Name
+                </label>
+              </div>
+              <div
+                class="col-md-auto"
+              >
+                <div>
+                  <input
+                    class="form-control"
+                    name="user.lastName"
+                    readonly=""
+                    type="text"
+                    value=""
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="row"
+          controlid="input-user.email"
+          style="align-items: center;"
+        >
+          <div
+            class="col-md-auto"
+          >
+            <label
+              class="form-label"
+            >
+              Email
+            </label>
+          </div>
+          <div
+            class="col-md-auto"
+          >
+            <div>
+              <input
+                class="form-control"
+                name="user.email"
+                readonly=""
+                type="email"
+                value=""
+              />
+            </div>
+          </div>
+        </div>
+        <div
+          class="required row"
+          controlid="input-agency"
+          style="align-items: center;"
+        >
+          <div
+            class="col-md-auto"
+          >
+            <label
+              class="form-label"
+            >
+              Agency
+            </label>
+          </div>
+          <div
+            class="col-md-auto"
+            style="padding: 0px;"
+          >
+            <select
+              class="form-select form-control"
+              name="agency"
+              required=""
+            >
+              <option
+                value=""
+              >
+                Please Select
+              </option>
+              <option
+                class="option"
+                value="1"
+              >
+                agencyVal
+              </option>
+            </select>
+          </div>
+        </div>
+        <div
+          class="row"
+          controlid="input-user.position"
+          style="align-items: center;"
+        >
+          <div
+            class="col-md-auto"
+          >
+            <label
+              class="form-label"
+            >
+              Position
+            </label>
+          </div>
+          <div
+            class="col-md-auto"
+          >
+            <div>
+              <input
+                class="form-control"
+                name="user.position"
+                placeholder="e.g) Director, Real Estate and Stakeholder Engagement"
+                type="text"
+                value=""
+              />
+            </div>
+          </div>
+        </div>
+        <div
+          class="check-roles"
+        >
+          <label
+            class="form-label"
+          >
+            Roles
+             
+            <a
+              href="https://github.com/bcgov/PIMS/wiki/Architecture-Security"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Role Descriptions
+            </a>
+          </label>
+          <div>
+            <div
+              class="required row"
+              controlid="input-role"
+              style="align-items: center;"
+            >
+              <div
+                class="col-md-auto"
+              />
+              <div
+                class="col-md-auto"
+                style="padding: 0px;"
+              >
+                <select
+                  class="form-select form-control"
+                  name="role"
+                  required=""
+                >
+                  <option
+                    value=""
+                  >
+                    Please Select
+                  </option>
+                  <option
+                    class="option"
+                    value="1"
+                  >
+                    roleVal
+                  </option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="required row"
+          controlid="input-note"
+          style="align-items: center;"
+        >
+          <div
+            class="col-md-auto"
+          >
+            <label
+              class="form-label"
+            >
+              Notes
+            </label>
+          </div>
+          <div
+            class="col-md-auto"
+          >
+            <div>
+              <textarea
+                class="form-control"
+                name="note"
+                placeholder="Please specify why you need access to PIMS and include your manager's name."
+              />
+            </div>
+          </div>
+        </div>
+        <p>
+          By clicking request, you agree to our
+           
+          <a
+            href="https://www2.gov.bc.ca//gov/content/home/disclaimer"
+          >
+            Terms and Conditions
+          </a>
+           and that you have read our
+           
+          <a
+            href="http://www.gov.bc.ca/gov/content/home/privacy"
+          >
+            Privacy Policy
+          </a>
+          .
+        </p>
+        <div
+          class="justify-content-md-center row"
+        >
+          <div
+            class="cancelSave btn-toolbar"
+            role="toolbar"
+          >
+            <button
+              class="mr-5 btn btn-primary"
+              type="submit"
+            >
+              Submit
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+`;

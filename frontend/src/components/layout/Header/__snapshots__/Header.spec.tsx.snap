@@ -1,0 +1,57 @@
+// Vitest Snapshot v1
+
+exports[`header renders correctly 1`] = `
+<nav
+  className="App-header navbar navbar-expand navbar-light"
+>
+  <span
+    className="brand-box navbar-brand"
+  >
+    <a
+      href="https://www2.gov.bc.ca/gov/content/home"
+      rel="noopener noreferrer"
+      target="_blank"
+    >
+      <img
+        alt="Government of BC logo"
+        className="bc-gov-icon"
+        height="43"
+        src="/src/assets/images/logo-banner.svg"
+        width="156"
+      />
+    </a>
+    <span
+      className="sc-fKVqWL flMFrO"
+    />
+    <img
+      alt="PIMS logo"
+      className="pims-logo"
+      height="50"
+      src="/src/assets/images/PIMSlogo/logo_only.png"
+    />
+  </span>
+  <div
+    className="title navbar-nav"
+    onKeyDown={[Function]}
+  >
+    <div
+      className="nav-item"
+    >
+      <h1
+        className="longAppName"
+      >
+        Property Inventory Management System
+      </h1>
+      <h1
+        className="shortAppName"
+      >
+        PIMS
+      </h1>
+    </div>
+  </div>
+  <div
+    className="other navbar-nav"
+    onKeyDown={[Function]}
+  />
+</nav>
+`;

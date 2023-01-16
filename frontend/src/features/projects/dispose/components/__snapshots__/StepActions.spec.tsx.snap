@@ -1,0 +1,30 @@
+// Vitest Snapshot v1
+
+exports[`Approval Confirmation > Matches Snapshot 1`] = `
+<div
+  className="sc-bdvvtL bBOvHb"
+>
+  <button
+    className="btn btn-primary"
+    data-testid="next-submit-btn"
+    disabled={false}
+    onClick={[Function]}
+    style={
+      {
+        "marginLeft": 10,
+      }
+    }
+    type="button"
+  >
+    Submit
+  </button>
+  <button
+    className="btn btn-secondary"
+    disabled={false}
+    onClick={[Function]}
+    type="button"
+  >
+    Save
+  </button>
+</div>
+`;

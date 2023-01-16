@@ -1,0 +1,258 @@
+// Vitest Snapshot v1
+
+exports[`InfoContent View > InfoContent renders correctly 1`] = `
+<div
+  class="list-group"
+>
+  <label
+    class="label header"
+  >
+    <svg
+      class="svg"
+      height="30"
+      id="Layer_1_1588194077504"
+      overflow="visible"
+      preserveAspectRatio="none"
+      style="height: 25px; width: 25px; margin-right: 5px;"
+      viewBox="0 0 32 32"
+      width="30"
+      x="0px"
+      xml:space="preserve"
+      xmlns="http://www.w3.org/2000/svg"
+      xmlns:xlink="http://www.w3.org/1999/xlink"
+      y="0px"
+    >
+      <g
+        transform="translate(1, 1)"
+      >
+        <style
+          type="text/css"
+        >
+          
+	.st0_1588194077504{stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+	.st1_1588194077504{stroke-miterlimit:10;}
+
+        </style>
+        <polygon
+          class="st0_1588194077504"
+          points="28,15 15,7.2 2,15 15,22.8"
+          vector-effect="non-scaling-stroke"
+        />
+        <line
+          class="st1_1588194077504"
+          vector-effect="non-scaling-stroke"
+          x1="8.5"
+          x2="21.5"
+          y1="18.9"
+          y2="11.1"
+        />
+        <line
+          class="st1_1588194077504"
+          vector-effect="non-scaling-stroke"
+          x1="8.5"
+          x2="21.5"
+          y1="11.1"
+          y2="18.9"
+        />
+      </g>
+    </svg>
+    Parcel Identification
+  </label>
+  <div
+    class="sc-kfPuZi gWMMCy row"
+  >
+    <div
+      class="sc-bdvvtL bCsYhg row"
+    >
+      <div
+        class="sc-gsDKAQ dWrRHe col"
+      >
+        <div
+          class="left-side list-group-item"
+        >
+          <label
+            class="label"
+          >
+            PID
+          </label>
+        </div>
+      </div>
+      <div
+        class="sc-dkPtRN gSUqGI col"
+      />
+      <div
+        class="sc-hKwDye gsruvT col"
+      >
+        <div
+          class="list-group-item"
+        >
+          000-000-000
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="sc-kfPuZi gWMMCy row"
+  >
+    <div
+      class="sc-bdvvtL bCsYhg row"
+    >
+      <div
+        class="sc-gsDKAQ dWrRHe col"
+      >
+        <div
+          class="left-side list-group-item"
+        >
+          <label
+            class="label"
+          >
+            Name
+          </label>
+        </div>
+      </div>
+      <div
+        class="sc-dkPtRN gSUqGI col"
+      />
+      <div
+        class="sc-hKwDye gsruvT col"
+      >
+        <div
+          class="list-group-item"
+        >
+          test name
+        </div>
+      </div>
+    </div>
+    <div
+      class="sc-bdvvtL bCsYhg row"
+    >
+      <div
+        class="sc-gsDKAQ dWrRHe col"
+      >
+        <div
+          class="left-side list-group-item"
+        >
+          <label
+            class="label"
+          >
+            Ministry
+          </label>
+        </div>
+      </div>
+      <div
+        class="sc-dkPtRN gSUqGI col"
+      />
+      <div
+        class="sc-hKwDye gsruvT col"
+      >
+        <div
+          class="list-group-item"
+        >
+          Ministry of Advanced Education
+        </div>
+      </div>
+    </div>
+    <div
+      class="sc-bdvvtL bCsYhg row"
+    >
+      <div
+        class="sc-gsDKAQ dWrRHe col"
+      >
+        <div
+          class="left-side list-group-item"
+        >
+          <label
+            class="label"
+          >
+            Owning agency
+          </label>
+        </div>
+      </div>
+      <div
+        class="sc-dkPtRN gSUqGI col"
+      />
+      <div
+        class="sc-hKwDye gsruvT col"
+      >
+        <div
+          class="list-group-item"
+        >
+          Kwantlen Polytechnic University
+        </div>
+      </div>
+    </div>
+    <div
+      class="sc-bdvvtL bCsYhg row"
+    >
+      <div
+        class="sc-gsDKAQ dWrRHe col"
+      >
+        <div
+          class="left-side list-group-item"
+        >
+          <label
+            class="label"
+          >
+            Classification
+          </label>
+        </div>
+      </div>
+      <div
+        class="sc-dkPtRN gSUqGI col"
+      />
+      <div
+        class="sc-hKwDye gsruvT col"
+      >
+        <div
+          class="list-group-item"
+        >
+          Core Operational
+        </div>
+      </div>
+    </div>
+    <div
+      class="sc-bdvvtL bCsYhg row"
+    >
+      <div
+        class="sc-gsDKAQ dWrRHe col"
+      >
+        <div
+          class="left-side list-group-item"
+        >
+          <label
+            class="label"
+          >
+            Project Number
+          </label>
+        </div>
+      </div>
+      <div
+        class="sc-dkPtRN gSUqGI col"
+      />
+      <div
+        class="sc-hKwDye gsruvT col"
+      >
+        <div
+          class="list-group-item"
+        >
+          SPP-00001
+          <br />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="sc-fKVqWL iqHpDH row"
+  >
+    <em>
+      For more information on this property, contact
+       
+      <a
+        href="mailto:RealPropertyDivision.Disposals@gov.bc.ca"
+      >
+        Strategic Real Estate Services (SRES)
+      </a>
+    </em>
+  </div>
+</div>
+`;

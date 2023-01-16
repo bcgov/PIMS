@@ -1,9 +1,14 @@
-// jest-dom adds custom jest matchers for asserting on DOM nodes.
-// allows you to do things like:
-// expect(element).toHaveTextContent(/react/i)
-// learn more: https://github.com/testing-library/jest-dom
-import '@testing-library/jest-dom/extend-expect';
-import 'jest-styled-components';
+import matchers, { TestingLibraryMatchers } from '@testing-library/jest-dom/matchers';
+
+declare global {
+  namespace Vi {
+    interface JestAssertion<T = any>
+      extends jest.Matchers<void, T>,
+        TestingLibraryMatchers<T, void> {}
+  }
+}
+
+expect.extend(matchers);
 
 var localStorageMock = (function() {
   var store: any = {};

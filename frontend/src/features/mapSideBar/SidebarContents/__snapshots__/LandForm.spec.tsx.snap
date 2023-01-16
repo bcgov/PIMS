@@ -1,0 +1,1088 @@
+// Vitest Snapshot v1
+
+exports[`Land Form > component renders correctly 1`] = `
+<div
+  class="sc-gWXbKe xrqiw landForm"
+>
+  <form
+    action="#"
+    class="sc-bdvvtL gewGMl"
+  >
+    <ul
+      class="hideTabs nav nav-tabs"
+      role="tablist"
+    >
+      <li
+        class="nav-item"
+        role="presentation"
+      >
+        <button
+          aria-controls="steppedform-tabs-tabpane-0"
+          aria-selected="true"
+          class="nav-link active"
+          data-rr-ui-event-key="0"
+          id="steppedform-tabs-tab-0"
+          role="tab"
+          type="button"
+        >
+          <p>
+            Tab 1
+          </p>
+          <div>
+            <svg
+              data-testid="delete-parcel-1"
+              fill="currentColor"
+              height="15"
+              size="15"
+              stroke="currentColor"
+              stroke-width="0"
+              viewBox="0 0 512 512"
+              width="15"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M464 32H48C21.5 32 0 53.5 0 80v352c0 26.5 21.5 48 48 48h416c26.5 0 48-21.5 48-48V80c0-26.5-21.5-48-48-48zm-83.6 290.5c4.8 4.8 4.8 12.6 0 17.4l-40.5 40.5c-4.8 4.8-12.6 4.8-17.4 0L256 313.3l-66.5 67.1c-4.8 4.8-12.6 4.8-17.4 0l-40.5-40.5c-4.8-4.8-4.8-12.6 0-17.4l67.1-66.5-67.1-66.5c-4.8-4.8-4.8-12.6 0-17.4l40.5-40.5c4.8-4.8 12.6-4.8 17.4 0l66.5 67.1 66.5-67.1c4.8-4.8 12.6-4.8 17.4 0l40.5 40.5c4.8 4.8 4.8 12.6 0 17.4L313.3 256l67.1 66.5z"
+              />
+            </svg>
+          </div>
+        </button>
+      </li>
+      <li
+        class="nav-item"
+        role="presentation"
+      >
+        <button
+          aria-selected="false"
+          class="nav-link"
+          data-rr-ui-event-key=""
+          id="steppedform-tabs-tab-"
+          role="tab"
+          tabindex="-1"
+          type="button"
+        >
+          <div>
+            <div
+              class="primary"
+            >
+              <svg
+                fill="currentColor"
+                height="20"
+                size="20"
+                stroke="currentColor"
+                stroke-width="0"
+                viewBox="0 0 448 512"
+                width="20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"
+                />
+              </svg>
+            </div>
+          </div>
+        </button>
+      </li>
+    </ul>
+    <div
+      class="tab-content"
+    >
+      <div
+        aria-labelledby="steppedform-tabs-tab-0"
+        class="fade tab-pane active show"
+        id="steppedform-tabs-tabpane-0"
+        role="tabpanel"
+      >
+        <div
+          class="bs-stepper"
+        >
+          <div
+            class="bs-stepper-header"
+          >
+            <div
+              class="step active"
+              data-target="stepper-0"
+            >
+              <button
+                class="step-trigger"
+                type="button"
+              >
+                <span
+                  class="bs-stepper-circle"
+                >
+                  1
+                </span>
+                <span
+                  class="bs-stepper-label"
+                >
+                  Parcel ID
+                </span>
+              </button>
+            </div>
+            <div
+              class="line"
+            />
+            <div
+              class="step"
+              data-target="stepper-1"
+            >
+              <button
+                class="step-trigger"
+                disabled=""
+                type="button"
+              >
+                <span
+                  class="bs-stepper-circle"
+                >
+                  2
+                </span>
+                <span
+                  class="bs-stepper-label"
+                >
+                  Usage
+                </span>
+              </button>
+            </div>
+            <div
+              class="line"
+            />
+            <div
+              class="step"
+              data-target="stepper-2"
+            >
+              <button
+                class="step-trigger"
+                disabled=""
+                type="button"
+              >
+                <span
+                  class="bs-stepper-circle"
+                >
+                  3
+                </span>
+                <span
+                  class="bs-stepper-label"
+                >
+                  Valuation
+                </span>
+              </button>
+            </div>
+            <div
+              class="line"
+            />
+            <div
+              class="step"
+              data-target="stepper-3"
+            >
+              <button
+                class="step-trigger"
+                disabled=""
+                type="button"
+              >
+                <span
+                  class="bs-stepper-circle"
+                >
+                  4
+                </span>
+                <span
+                  class="bs-stepper-label"
+                >
+                  Review
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div
+          class="sc-cCcXHH gpUFJa"
+        >
+          <div
+            class="sc-cidDSM kXxmco"
+          >
+            <div
+              class="parcel-identification"
+            >
+              <div
+                class="container"
+              >
+                <div
+                  class="row"
+                  style="text-align: left;"
+                >
+                  <h4>
+                    Parcel Identification
+                  </h4>
+                </div>
+                <div
+                  class="section g-0 row"
+                >
+                  <div
+                    class="col-md-12"
+                  >
+                    <h5>
+                      Search for Parcel
+                    </h5>
+                  </div>
+                  <div
+                    class="col-md-6"
+                  >
+                    <div
+                      class="row"
+                      style="align-items: center;"
+                    >
+                      <div
+                        class="col"
+                        style="width: 110px;"
+                      >
+                        <label
+                          class="label"
+                        >
+                          PID
+                        </label>
+                      </div>
+                      <div
+                        class="col-md-auto"
+                        style="margin-right: -11px;"
+                      >
+                        <div
+                          class="row"
+                          controlid="input-data.searchPid"
+                          style="align-items: center;"
+                        >
+                          <div
+                            class="col-md-auto"
+                          >
+                            <div>
+                              <input
+                                class="input-small form-control"
+                                name="data.searchPid"
+                                value=""
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        class="col-md-auto"
+                      >
+                        <div>
+                          <button
+                            class="Button Button--icon-only bg-warning btn btn-primary"
+                            id="search-button"
+                            type="submit"
+                          >
+                            <div
+                              class="Button__icon"
+                            >
+                              <svg
+                                fill="currentColor"
+                                height="20"
+                                size="20"
+                                stroke="currentColor"
+                                stroke-width="0"
+                                viewBox="0 0 512 512"
+                                width="20"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"
+                                />
+                              </svg>
+                            </div>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="row"
+                      style="align-items: center;"
+                    >
+                      <div
+                        class="col"
+                        style="width: 110px;"
+                      >
+                        <label
+                          class="label"
+                        >
+                          PIN
+                        </label>
+                      </div>
+                      <div
+                        class="col-md-auto"
+                      >
+                        <div
+                          class=""
+                        >
+                          <div>
+                            <input
+                              class="input-small form-control"
+                              id="input-data.searchPin"
+                              name="data.searchPin"
+                              type="number"
+                              value=""
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        class="col-md-auto"
+                      >
+                        <div>
+                          <button
+                            class="Button Button--icon-only bg-warning btn btn-primary"
+                            id="search-button"
+                            type="submit"
+                          >
+                            <div
+                              class="Button__icon"
+                            >
+                              <svg
+                                fill="currentColor"
+                                height="20"
+                                size="20"
+                                stroke="currentColor"
+                                stroke-width="0"
+                                viewBox="0 0 512 512"
+                                width="20"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"
+                                />
+                              </svg>
+                            </div>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="row"
+                      style="align-items: center;"
+                    >
+                      <div
+                        class="col"
+                        style="width: 110px;"
+                      >
+                        <label
+                          class="label"
+                        >
+                          Street Address
+                        </label>
+                      </div>
+                      <div
+                        class="col-md-auto"
+                      >
+                        <div
+                          class="sc-hGPBjI fowYiR GeocoderAutoComplete"
+                        >
+                          <div
+                            class=""
+                          >
+                            <div>
+                              <input
+                                class="form-control"
+                                field="data.searchAddress"
+                                id="input-data.searchAddress"
+                                name="data.searchAddress"
+                                value=""
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        class="col-md-auto"
+                      >
+                        <div>
+                          <button
+                            class="Button Button--disabled Button--icon-only bg-warning btn btn-primary"
+                            disabled=""
+                            id="search-button"
+                            type="submit"
+                          >
+                            <div
+                              class="Button__icon"
+                            >
+                              <svg
+                                fill="currentColor"
+                                height="20"
+                                size="20"
+                                stroke="currentColor"
+                                stroke-width="0"
+                                viewBox="0 0 512 512"
+                                width="20"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"
+                                />
+                              </svg>
+                            </div>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="col-md-1"
+                  >
+                    <h5>
+                      OR
+                    </h5>
+                  </div>
+                  <div
+                    class="instruction col-md-5"
+                  >
+                    <p>
+                      Click on the pin, and then click your desired location on the map to pull the parcel details.
+                    </p>
+                    <div
+                      class="row"
+                    >
+                      <div
+                        class="marker-svg col"
+                      >
+                        <button
+                          class="sc-ikJyIC bRqHNf"
+                          type="button"
+                        >
+                          <svg
+                            class="parcel-icon"
+                            height="40"
+                            overflow="visible"
+                            preserveAspectRatio="none"
+                            viewBox="0 0 24 24"
+                            width="40"
+                            xmlns="http://www.w3.org/2000/svg"
+                            xmlns:xlink="http://www.w3.org/1999/xlink"
+                          >
+                            <g>
+                              <path
+                                d="M18 8c0-3.31-2.69-6-6-6S6 4.69 6 8c0 4.5 6 11 6 11s6-6.5 6-11zm-8 0c0-1.1.9-2 2-2s2 .9 2 2-.89 2-2 2c-1.1 0-2-.9-2-2zM5 20v2h14v-2H5z"
+                                style="fill: rgb(46, 133, 64);"
+                                vector-effect="non-scaling-stroke"
+                              />
+                            </g>
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="section disabled g-0 row"
+                >
+                  <div
+                    class="col-md-12"
+                  >
+                    <h5>
+                      Parcel Details
+                    </h5>
+                  </div>
+                  <div
+                    class="col-md-6"
+                  >
+                    <div
+                      class="flex-nowrap pid-pin align-items-center row"
+                      style="margin-bottom: 20px;"
+                    >
+                      <div
+                        class="col"
+                        style="width: 30px;"
+                      >
+                        <label
+                          class="label"
+                        >
+                          PID
+                        </label>
+                      </div>
+                      <div
+                        class="col-md-auto"
+                      >
+                        <div
+                          class="required row"
+                          controlid="input-data.pid"
+                          style="align-items: center;"
+                        >
+                          <div
+                            class="col-md-auto"
+                          >
+                            <div>
+                              <input
+                                class="input-small form-control"
+                                name="data.pid"
+                                value=""
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        class="col"
+                        style="width: 20px;"
+                      >
+                        <label
+                          class="label"
+                        >
+                          PIN
+                        </label>
+                      </div>
+                      <div
+                        class="col-md-auto"
+                      >
+                        <div
+                          class="required row"
+                          controlid="input-data.pin"
+                          style="align-items: center;"
+                        >
+                          <div
+                            class="col-md-auto"
+                            style="width: 25px;"
+                          >
+                            <div>
+                              <div>
+                                <svg
+                                  class="tooltip-icon"
+                                  fill="currentColor"
+                                  height="1em"
+                                  stroke="currentColor"
+                                  stroke-width="0"
+                                  viewBox="0 0 512 512"
+                                  width="1em"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"
+                                  />
+                                </svg>
+                              </div>
+                            </div>
+                          </div>
+                          <div
+                            class="col-md-auto"
+                          >
+                            <div>
+                              <input
+                                class="input-small form-control"
+                                name="data.pin"
+                                type="number"
+                                value=""
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="row"
+                      style="margin-bottom: 10px; align-items: center;"
+                    >
+                      <div
+                        class="col-md-auto"
+                        style="width: 140px; text-align: right; margin-right: 0px;"
+                      >
+                        <label
+                          class="label"
+                        >
+                          Street Address
+                        </label>
+                      </div>
+                      <div
+                        class="col-md-auto"
+                      >
+                        <div
+                          class="sc-hGPBjI fowYiR GeocoderAutoComplete"
+                        >
+                          <div
+                            class="required"
+                          >
+                            <div>
+                              <input
+                                class="form-control"
+                                field="data.address.line1"
+                                id="input-data.address.line1"
+                                name="data.address.line1"
+                                required=""
+                                value=""
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="row"
+                      style="margin-bottom: 10px; align-items: center;"
+                    >
+                      <div
+                        class="col-md-auto"
+                        style="width: 140px; text-align: right; margin-right: 0px;"
+                      >
+                        <label
+                          class="label"
+                        >
+                          Location
+                        </label>
+                      </div>
+                      <div
+                        class="col-md-auto"
+                      >
+                        <div
+                          class="required"
+                        >
+                          <div>
+                            <div
+                              class="rbt"
+                              style="outline: none; position: relative;"
+                              tabindex="-1"
+                            >
+                              <div
+                                style="display: flex; flex: 1; height: 100%; position: relative;"
+                              >
+                                <input
+                                  aria-autocomplete="both"
+                                  aria-expanded="false"
+                                  aria-haspopup="listbox"
+                                  autocomplete="off"
+                                  class="rbt-input-main form-control rbt-input"
+                                  id="data.address.administrativeArea-field"
+                                  name="data.address.administrativeArea"
+                                  role="combobox"
+                                  type="text"
+                                  value=""
+                                />
+                                <input
+                                  aria-hidden="true"
+                                  class="rbt-input-hint"
+                                  readonly=""
+                                  style="background-color: transparent; border-color: transparent; box-shadow: none; color: rgba(0, 0, 0, 0.54); left: 0px; pointer-events: none; position: absolute; top: 0px; width: 100%;"
+                                  tabindex="-1"
+                                  value=""
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="row"
+                      style="margin-bottom: 10px; align-items: center;"
+                    >
+                      <div
+                        class="col-md-auto"
+                        style="width: 140px; text-align: right; padding-right: 12px; margin-right: -35px;"
+                      >
+                        <label
+                          class="label"
+                        >
+                          Province
+                        </label>
+                      </div>
+                      <div
+                        class="col-md-auto"
+                        style="padding-right: 0px;"
+                      >
+                        <div
+                          class="row"
+                          controlid="input-data.address.provinceId"
+                          style="align-items: center;"
+                        >
+                          <div
+                            class="col-md-auto"
+                          />
+                          <div
+                            class="col-md-auto"
+                            style="padding: 0px;"
+                          >
+                            <select
+                              class="form-select form-control"
+                              disabled=""
+                              name="data.address.provinceId"
+                            >
+                              <option
+                                value=""
+                              >
+                                Must Select One
+                              </option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="postal row"
+                      style="margin-bottom: 10px; align-items: center;"
+                    >
+                      <div
+                        class="col-md-auto"
+                        style="width: 140px; text-align: right; margin-left: 0px;"
+                      >
+                        <label
+                          class="label"
+                        >
+                          Postal Code
+                        </label>
+                      </div>
+                      <div
+                        class="col-md-auto"
+                        style="width: 250px;"
+                      >
+                        <div
+                          class=""
+                        >
+                          <div>
+                            <input
+                              class="input-small form-control"
+                              id="input-data.address.postal"
+                              name="data.address.postal"
+                              style="width: 120px;"
+                              value=""
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="row"
+                      style="align-items: center; margin-left: -23px; margin-top: 10px; margin-bottom: 20px;"
+                    >
+                      <div
+                        class="col-md-auto"
+                        style="width: 160px;"
+                      >
+                        <label
+                          class="form-label"
+                        >
+                          Agency
+                        </label>
+                      </div>
+                      <div
+                        class="col-md-auto"
+                      >
+                        <div
+                          class="required"
+                        >
+                          <div>
+                            <div
+                              class="rbt"
+                              style="outline: none; position: relative;"
+                              tabindex="-1"
+                            >
+                              <div
+                                style="display: flex; flex: 1; height: 100%; position: relative;"
+                              >
+                                <input
+                                  aria-autocomplete="both"
+                                  aria-expanded="false"
+                                  aria-haspopup="listbox"
+                                  autocomplete="off"
+                                  class="rbt-input-main form-control rbt-input"
+                                  id="data.agencyId-field"
+                                  name="data.agencyId"
+                                  role="combobox"
+                                  type="text"
+                                  value="agencyVal"
+                                />
+                                <input
+                                  aria-hidden="true"
+                                  class="rbt-input-hint"
+                                  readonly=""
+                                  style="background-color: transparent; border-color: transparent; box-shadow: none; color: rgba(0, 0, 0, 0.54); left: 0px; pointer-events: none; position: absolute; top: 0px; width: 100%;"
+                                  tabindex="-1"
+                                  value=""
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="form-container col-md-6"
+                  >
+                    <div
+                      class="row"
+                      style="justify-content: right; align-items: center; margin-bottom: 20px;"
+                    >
+                      <div
+                        class="col-md-auto"
+                        style="margin-right: -25px;"
+                      >
+                        <label
+                          class="label"
+                        >
+                          Name
+                        </label>
+                      </div>
+                      <div
+                        class="col-md-auto"
+                        style="margin-right: 73px;"
+                      >
+                        <div
+                          class=""
+                        >
+                          <div>
+                            <input
+                              class="form-control"
+                              id="input-data.name"
+                              name="data.name"
+                              value=""
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="row"
+                      style="justify-content: right; align-items: center; margin-bottom: 20px;"
+                    >
+                      <div
+                        class="col-md-auto"
+                        style="margin-right: -37px;"
+                      >
+                        <label
+                          class="label"
+                        >
+                          Description
+                        </label>
+                      </div>
+                      <div
+                        class="col-md-auto"
+                        style="margin-right: 70px;"
+                      >
+                        <div
+                          class="row"
+                          controlid="input-data.description"
+                          style="align-items: center;"
+                        >
+                          <div
+                            class="col-md-auto"
+                          >
+                            <div>
+                              <textarea
+                                class="form-control"
+                                name="data.description"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="row"
+                      style="justify-content: right; align-items: center; margin-bottom: 20px;"
+                    >
+                      <div
+                        class="col-md-auto"
+                        style="margin-right: -37px;"
+                      >
+                        <label
+                          class="label"
+                        >
+                          Legal Description
+                        </label>
+                      </div>
+                      <div
+                        class="col-md-auto"
+                        style="margin-right: 70px;"
+                      >
+                        <div
+                          class="row"
+                          controlid="input-data.landLegalDescription"
+                          style="align-items: center;"
+                        >
+                          <div
+                            class="col-md-auto"
+                          >
+                            <div>
+                              <textarea
+                                class="form-control"
+                                name="data.landLegalDescription"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="row"
+                      style="justify-content: right; align-items: center; margin-bottom: 20px;"
+                    >
+                      <div
+                        class="col-md-auto"
+                        style="margin-right: -27px;"
+                      >
+                        <label
+                          class="label"
+                        >
+                          Lot Size
+                        </label>
+                      </div>
+                      <div
+                        class="col-md-auto"
+                        style="width: 200px; margin-right: 100px;"
+                      >
+                        <div
+                          class="input-group required"
+                        >
+                          <div
+                            class="input-group-content"
+                          >
+                            <div
+                              class=""
+                            >
+                              <div>
+                                <input
+                                  class="form-control"
+                                  id="input-data.landArea"
+                                  name="data.landArea"
+                                  type="number"
+                                  value=""
+                                />
+                              </div>
+                            </div>
+                          </div>
+                          <div
+                            class="input-group"
+                          >
+                            <span
+                              class="input-group-text"
+                            >
+                              Hectares
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="row"
+                  style="justify-content: center; margin-bottom: 20px;"
+                >
+                  <div
+                    class="input-medium harmful"
+                  >
+                    <p
+                      style="margin-bottom: -5px;"
+                    >
+                      Would this information be harmful if released? 
+                    </p>
+                    <div>
+                      <a
+                        href="https://www2.gov.bc.ca/gov/content/governments/services-for-government/policies-procedures/foippa-manual/disclosure-harmful-individual-public-safety"
+                        rel="noopener noreferrer"
+                        target="_blank"
+                      >
+                        Policy
+                      </a>
+                    </div>
+                    <div
+                      class=""
+                    >
+                      <div
+                        class="check-field"
+                      >
+                        <div
+                          class="form-check"
+                        >
+                          <input
+                            class="form-check-input"
+                            id="input-data.isSensitive"
+                            name="data.isSensitive"
+                            type="radio"
+                            value="false"
+                          />
+                          <label
+                            class="form-check-label"
+                            for="input-data.isSensitive"
+                            title=""
+                          >
+                            Yes
+                          </label>
+                        </div>
+                        <div
+                          class="form-check"
+                        >
+                          <input
+                            class="form-check-input"
+                            id="input-data.isSensitive-2"
+                            name="data.isSensitive"
+                            type="radio"
+                            value="false"
+                          />
+                          <label
+                            class="form-check-label"
+                            for="input-data.isSensitive-2"
+                            title=""
+                          >
+                            No
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="container"
+                />
+              </div>
+            </div>
+          </div>
+          <div
+            class="sc-jcFjpl djYUuH"
+          >
+            <div
+              class="sc-iwjdpV elTPvu"
+            >
+              <div
+                class="SresManual"
+              >
+                <div>
+                  <svg
+                    fill="none"
+                    height="28"
+                    size="28"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                    width="28"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"
+                    />
+                    <path
+                      d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"
+                    />
+                  </svg>
+                </div>
+              </div>
+              <small
+                class="sc-cxpSdN csRfDj p-1 mr-2"
+              >
+                Inventory Policy
+              </small>
+            </div>
+            <span
+              class="sc-caiLqq fRclYl"
+            />
+            <button
+              class="btn btn-primary btn-sm"
+              type="button"
+            >
+              Continue
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="container"
+    />
+  </form>
+</div>
+`;

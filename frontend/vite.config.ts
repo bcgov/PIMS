@@ -1,3 +1,4 @@
+/// <reference types="vitest" />
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
 import svgrPlugin from 'vite-plugin-svgr';
@@ -24,6 +25,22 @@ export default defineConfig({
         cookieDomainRewrite: '',
         rewrite: path => path,
       },
+    },
+  },
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: './src/setupTests.ts',
+    coverage: {
+      reporter: ['text', 'html'],
+      exclude: [
+        'node_modules/',
+        'src/setupTests.ts',
+        'coverage/',
+        'public/',
+        'build/',
+        'src/serviceWorker.**',
+      ],
     },
   },
 });

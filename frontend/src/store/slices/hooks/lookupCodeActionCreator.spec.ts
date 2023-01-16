@@ -8,6 +8,7 @@ import thunk from 'redux-thunk';
 import { getFetchLookupCodeAction } from 'store/slices/hooks/lookupCodeActionCreator';
 import * as lookupSlice from 'store/slices/lookupCodeSlice';
 import * as networkSlice from 'store/slices/networkSlice';
+import { vi } from 'vitest';
 
 import { initialLookupCodeState } from '..';
 
@@ -15,11 +16,11 @@ const mockAxios = new MockAdapter(axios);
 const mockStore = configureMockStore([thunk]);
 const store = mockStore(initialLookupCodeState);
 
-const dispatchSpy = jest.spyOn(store, 'dispatch');
-const requestSpy = jest.spyOn(networkSlice, 'storeRequest');
-const successSpy = jest.spyOn(networkSlice, 'storeSuccess');
-const errorSpy = jest.spyOn(networkSlice, 'storeError');
-const storeLookupCodesSpy = jest.spyOn(lookupSlice, 'storeLookupCodes');
+const dispatchSpy = vi.spyOn(store, 'dispatch');
+const requestSpy = vi.spyOn(networkSlice, 'storeRequest');
+const successSpy = vi.spyOn(networkSlice, 'storeSuccess');
+const errorSpy = vi.spyOn(networkSlice, 'storeError');
+const storeLookupCodesSpy = vi.spyOn(lookupSlice, 'storeLookupCodes');
 
 beforeEach(() => {
   mockAxios.reset();

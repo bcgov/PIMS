@@ -10,6 +10,7 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { useAccessRequest } from 'store/slices/hooks/useAccessRequest';
 import * as networkSlice from 'store/slices/networkSlice';
+import { vi } from 'vitest';
 
 import { initialAccessRequestState } from '..';
 
@@ -17,10 +18,10 @@ const mockAxios = new MockAdapter(axios);
 const mockStore = configureMockStore([thunk]);
 const store = mockStore(initialAccessRequestState);
 
-const dispatchSpy = jest.spyOn(store, 'dispatch');
-const requestSpy = jest.spyOn(networkSlice, 'storeRequest');
-const successSpy = jest.spyOn(networkSlice, 'storeSuccess');
-const errorSpy = jest.spyOn(networkSlice, 'storeError');
+const dispatchSpy = vi.spyOn(store, 'dispatch');
+const requestSpy = vi.spyOn(networkSlice, 'storeRequest');
+const successSpy = vi.spyOn(networkSlice, 'storeSuccess');
+const errorSpy = vi.spyOn(networkSlice, 'storeError');
 
 const Wrapper = ({ children }: any) => <Provider store={store}>{children}</Provider>;
 
