@@ -29,7 +29,7 @@ interface ISplReportLayoutProps {
 /**
  * Top level layout component. Provides layout css and structure for the SPL Reports component.
  */
-const SplReportLayout: React.FunctionComponent<ISplReportLayoutProps> = ({
+const SplReportLayout: React.FunctionComponent<React.PropsWithChildren<ISplReportLayoutProps>> = ({
   showSidebar,
   setShowSidebar,
   onOpen,

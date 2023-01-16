@@ -8,6 +8,7 @@ import moment from 'moment';
 import React from 'react';
 import { FaPlus } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
+import { CellProps, Renderer } from 'react-table';
 
 interface IAddPropertyColumnsProps {
   onAddProperty?: (property: ISearchPropertyModel) => void;
@@ -94,14 +95,14 @@ export const AddPropertyColumns = (
       accessor: 'netBook',
       align: 'left',
       clickable: false,
-      Cell: MoneyCell,
+      Cell: MoneyCell as Renderer<CellProps<ISearchPropertyModel, number | undefined>>,
     },
     {
       Header: 'Assessed Land',
       accessor: 'assessedLand',
       align: 'left',
       clickable: false,
-      Cell: MoneyCell,
+      Cell: MoneyCell as Renderer<CellProps<ISearchPropertyModel, number | undefined>>,
     },
     {
       Header: 'Assessed Year',
@@ -117,7 +118,7 @@ export const AddPropertyColumns = (
       accessor: 'assessedBuilding',
       align: 'left',
       clickable: false,
-      Cell: MoneyCell,
+      Cell: MoneyCell as Renderer<CellProps<ISearchPropertyModel, number | undefined>>,
     },
     {
       Header: 'Type',

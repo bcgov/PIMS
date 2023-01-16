@@ -1,9 +1,9 @@
-version: "3.5"
+version: '3.5'
 
 services:
   ####################### Keycloak #######################
   keycloak:
-    restart: "no"
+    restart: 'no'
     container_name: pims-keycloak
     build:
       context: ./auth/keycloak
@@ -18,7 +18,7 @@ services:
 
   ####################### Database #######################
   database:
-    restart: "no"
+    restart: 'no'
     container_name: pims-database
     build:
       context: database/mssql
@@ -27,13 +27,13 @@ services:
     ports:
       - ${DATABASE_PORT:-5433}:1433
     volumes:
-      - pims-database-data:/var/opt/mssql
+      - database-data:/var/opt/mssql/data
     networks:
       - pims
 
   ####################### Backend #######################
   backend:
-    restart: "no"
+    restart: 'no'
     container_name: pims-api
     build:
       context: backend
@@ -53,7 +53,7 @@ services:
   frontend:
     stdin_open: true
     tty: true
-    restart: "no"
+    restart: 'no'
     container_name: pims-app
     build:
       context: frontend
@@ -77,7 +77,11 @@ networks:
 
 ####################### Volumes Definition #######################
 volumes:
-  pims-database-data:
-    name: pims-database-data
+  database-data:
+    driver: local
+    driver_opts:
+      type: none
+      device: $PWD/database/mssql/data
+      o: bind
   pims-app-node-cache:
     name: pims-app-node-cache

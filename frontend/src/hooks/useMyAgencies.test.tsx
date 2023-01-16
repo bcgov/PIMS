@@ -1,6 +1,6 @@
+import Adapter from '@cfaester/enzyme-adapter-react-18';
 import { useKeycloak } from '@react-keycloak/web';
 import { cleanup, render } from '@testing-library/react';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import Claims from 'constants/claims';
 import * as reducerTypes from 'constants/reducerTypes';
 import Enzyme from 'enzyme';

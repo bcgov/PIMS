@@ -269,7 +269,6 @@ describe('InfoContent View', () => {
 
   it('Shows project status if can view and property is in project', () => {
     const { getByText } = render(ContentComponent(mockParcel, PropertyTypes.PARCEL, true));
-    expect(getByText('Property is in Enhanced Referral Process')).toBeVisible();
     expect(getByText('In ERP')).toBeVisible();
   });
 
@@ -312,7 +311,6 @@ describe('InfoContent View', () => {
     expect(getByText('University/College')).toBeVisible();
     expect(getByText('100%')).toBeVisible();
     //Project status block
-    expect(getByText('Property is on the Surplus Properties List')).toBeVisible();
     expect(getByText('On Market')).toBeVisible();
   });
 

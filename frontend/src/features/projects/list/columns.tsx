@@ -55,7 +55,6 @@ export const columns = (
                 />
               )}
             <span>{props.row.original.projectNumber}</span>
-            {console.log(props.row.original.projectNumber)}
           </div>
         );
       },
@@ -75,7 +74,7 @@ export const columns = (
       align: 'left',
       responsive: true,
       clickable: true,
-      width: spacing.medium,
+      width: spacing.large,
       minWidth: 50,
     },
     {
@@ -114,7 +113,7 @@ export const columns = (
       width: spacing.small,
       minWidth: 80,
       Cell: (props: CellProps<IProject>) => {
-        return formatMoney(props.row.original.netBook);
+        return <span>{formatMoney(props.row.original.netBook)}</span>;
       },
     },
     {
@@ -126,7 +125,7 @@ export const columns = (
       width: spacing.small,
       minWidth: 80,
       Cell: (props: CellProps<IProject>) => {
-        return formatMoney(props.row.original.market);
+        return <span>{formatMoney(props.row.original.market)}</span>;
       },
     },
     {
@@ -138,7 +137,9 @@ export const columns = (
       width: spacing.medium,
       minWidth: 80,
       Cell: (props: CellProps<IProject>) => {
-        return formatDate(props.row.original.updatedOn || props.row.original.createdOn);
+        return (
+          <span>{formatDate(props.row.original.updatedOn || props.row.original.createdOn)}</span>
+        );
       },
     },
     {
@@ -150,7 +151,7 @@ export const columns = (
       width: spacing.medium,
       minWidth: 80,
       Cell: (props: CellProps<IProject>) => {
-        return props.row.original.updatedBy || props.row.original.createdBy;
+        return <span>{props.row.original.updatedBy || props.row.original.createdBy}</span>;
       },
     },
   ];

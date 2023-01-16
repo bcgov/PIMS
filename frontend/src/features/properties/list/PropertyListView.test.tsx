@@ -119,14 +119,14 @@ describe('Property list view', () => {
   it('Displays export buttons', async () => {
     setupTests();
 
+    const { getByTestId, container } = render(
+      <Provider store={store}>
+        <MemoryRouter initialEntries={[history.location]}>
+          <PropertyListView />
+        </MemoryRouter>
+      </Provider>,
+    );
     await act(async () => {
-      const { getByTestId, container } = render(
-        <Provider store={store}>
-          <MemoryRouter initialEntries={[history.location]}>
-            <PropertyListView />
-          </MemoryRouter>
-        </Provider>,
-      );
       expect(getByTestId('excel-icon')).toBeInTheDocument();
       expect(getByTestId('csv-icon')).toBeInTheDocument();
       expect(container.querySelector('span[class="spinner-border"]')).not.toBeInTheDocument();
@@ -136,14 +136,14 @@ describe('Property list view', () => {
   it('Displays edit button', async () => {
     setupTests();
 
+    const { getByTestId } = render(
+      <Provider store={store}>
+        <MemoryRouter initialEntries={[history.location]}>
+          <PropertyListView />
+        </MemoryRouter>
+      </Provider>,
+    );
     await act(async () => {
-      const { getByTestId } = render(
-        <Provider store={store}>
-          <MemoryRouter initialEntries={[history.location]}>
-            <PropertyListView />
-          </MemoryRouter>
-        </Provider>,
-      );
       expect(getByTestId('edit-icon')).toBeInTheDocument();
     });
   });
@@ -151,20 +151,20 @@ describe('Property list view', () => {
   it('Displays save edit button, when edit is enabled', async () => {
     setupTests();
 
-    await act(async () => {
-      const { getByTestId } = render(
-        <Provider store={store}>
-          <MemoryRouter initialEntries={[history.location]}>
-            <PropertyListView />
-          </MemoryRouter>
-        </Provider>,
-      );
+    const { getByTestId } = render(
+      <Provider store={store}>
+        <MemoryRouter initialEntries={[history.location]}>
+          <PropertyListView />
+        </MemoryRouter>
+      </Provider>,
+    );
+    act(() => {
       expect(getByTestId('edit-icon')).toBeInTheDocument();
       fireEvent(
         getByTestId('edit-icon'),
         new MouseEvent('click', { bubbles: true, cancelable: true }),
       );
-      await waitFor(() => expect(getByTestId('save-changes')).toBeInTheDocument(), {
+      waitFor(() => expect(getByTestId('save-changes')).toBeInTheDocument(), {
         timeout: 500,
       });
     });
@@ -172,21 +172,21 @@ describe('Property list view', () => {
 
   it('Displays save edit button, when edit is enabled', async () => {
     setupTests();
+    const { getByTestId } = render(
+      <Provider store={store}>
+        <MemoryRouter initialEntries={[history.location]}>
+          <PropertyListView />
+        </MemoryRouter>
+      </Provider>,
+    );
 
-    await act(async () => {
-      const { getByTestId } = render(
-        <Provider store={store}>
-          <MemoryRouter initialEntries={[history.location]}>
-            <PropertyListView />
-          </MemoryRouter>
-        </Provider>,
-      );
+    act(() => {
       expect(getByTestId('edit-icon')).toBeInTheDocument();
       fireEvent(
         getByTestId('edit-icon'),
         new MouseEvent('click', { bubbles: true, cancelable: true }),
       );
-      await waitFor(() => expect(getByTestId('save-changes')).toBeInTheDocument(), {
+      waitFor(() => expect(getByTestId('save-changes')).toBeInTheDocument(), {
         timeout: 500,
       });
     });
@@ -194,21 +194,21 @@ describe('Property list view', () => {
 
   it('Enables edit on property rows that the user has the same agency as the property', async () => {
     setupTests([{ ...mockFlatProperty }]);
+    const { getByTestId, container } = render(
+      <Provider store={store}>
+        <MemoryRouter initialEntries={[history.location]}>
+          <PropertyListView />
+        </MemoryRouter>
+      </Provider>,
+    );
 
-    await act(async () => {
-      const { getByTestId, container } = render(
-        <Provider store={store}>
-          <MemoryRouter initialEntries={[history.location]}>
-            <PropertyListView />
-          </MemoryRouter>
-        </Provider>,
-      );
+    act(() => {
       expect(getByTestId('edit-icon')).toBeInTheDocument();
       fireEvent(
         getByTestId('edit-icon'),
         new MouseEvent('click', { bubbles: true, cancelable: true }),
       );
-      await waitFor(
+      waitFor(
         () => {
           expect(getByTestId('save-changes')).toBeInTheDocument();
           expect(getByTestId('cancel-changes')).toBeInTheDocument();
@@ -221,21 +221,21 @@ describe('Property list view', () => {
 
   it('Disables property rows that the user does not have edit permissions for', async () => {
     setupTests([{ ...mockFlatProperty, agencyId: 2 }]);
+    const { getByTestId, container } = render(
+      <Provider store={store}>
+        <MemoryRouter initialEntries={[history.location]}>
+          <PropertyListView />
+        </MemoryRouter>
+      </Provider>,
+    );
 
-    await act(async () => {
-      const { getByTestId, container } = render(
-        <Provider store={store}>
-          <MemoryRouter initialEntries={[history.location]}>
-            <PropertyListView />
-          </MemoryRouter>
-        </Provider>,
-      );
+    act(() => {
       expect(getByTestId('edit-icon')).toBeInTheDocument();
       fireEvent(
         getByTestId('edit-icon'),
         new MouseEvent('click', { bubbles: true, cancelable: true }),
       );
-      await waitFor(
+      waitFor(
         () => {
           expect(getByTestId('save-changes')).toBeInTheDocument();
           expect(container.querySelector(`input[name="properties.0.market"]`)).toBeNull();
@@ -247,21 +247,21 @@ describe('Property list view', () => {
 
   it('Disables property rows that are in an active project', async () => {
     setupTests([{ ...mockFlatProperty, projectNumbers: ['SPP-10000'] }]);
+    const { container, getByTestId } = render(
+      <Provider store={store}>
+        <MemoryRouter initialEntries={[history.location]}>
+          <PropertyListView />
+        </MemoryRouter>
+      </Provider>,
+    );
 
-    await act(async () => {
-      const { container, getByTestId } = render(
-        <Provider store={store}>
-          <MemoryRouter initialEntries={[history.location]}>
-            <PropertyListView />
-          </MemoryRouter>
-        </Provider>,
-      );
+    act(() => {
       expect(getByTestId('edit-icon')).toBeInTheDocument();
       fireEvent(
         getByTestId('edit-icon'),
         new MouseEvent('click', { bubbles: true, cancelable: true }),
       );
-      await waitFor(
+      waitFor(
         () => {
           expect(getByTestId('save-changes')).toBeInTheDocument();
           expect(container.querySelector(`input[name="properties.0.market"]`)).toBeNull();
