@@ -10,6 +10,7 @@ import { Formik } from 'formik';
 import { createMemoryHistory } from 'history';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { noop } from 'lodash';
+import React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
 import { create, ReactTestInstance } from 'react-test-renderer';
@@ -23,7 +24,7 @@ import ManageAccessRequests from './ManageAccessRequests';
 
 const userRoles: string[] | Claims[] = [];
 const userAgencies: number[] = [1];
-const userAgency: number = 1;
+const userAgency = 1;
 
 vi.mock('hooks/useKeycloakWrapper');
 (useKeycloakWrapper as Vitest.Mock).mockReturnValue(
@@ -82,7 +83,7 @@ const successStore = mockStore({
 });
 
 const componentRender = (store: any) => {
-  let component = create(
+  const component = create(
     <Formik initialValues={{}} onSubmit={noop}>
       <MemoryRouter initialEntries={[history.location]}>
         <Provider store={store}>

@@ -20,27 +20,14 @@ import { vi } from 'vitest';
 import useStepper from '../hooks/useStepper';
 import ProjectDraftStep from './ProjectDraftStep';
 
-<<<<<<< HEAD:frontend/src/features/projects/dispose/steps/ProjectDraftStep.test.tsx
 const userRoles: string[] | Claims[] = [];
 const userAgencies: number[] = [1];
-const userAgency: number = 1;
+const userAgency = 1;
 
-jest.mock('hooks/useKeycloakWrapper');
-(useKeycloakWrapper as jest.Mock).mockReturnValue(
+vi.mock('hooks/useKeycloakWrapper');
+(useKeycloakWrapper as Vitest.Mock).mockReturnValue(
   new (useKeycloakMock as any)(userRoles, userAgencies, userAgency),
 );
-=======
-vi.mock('@react-keycloak/web');
-(useKeycloak as Vitest.Mock).mockReturnValue({
-  keycloak: {
-    userInfo: {
-      agencies: [1],
-      roles: [],
-    },
-    subject: 'test',
-  },
-});
->>>>>>> 3f673034 (Changed jest to vitest, 17 tests failing):frontend/src/features/projects/dispose/steps/ProjectDraftStep.spec.tsx
 
 const mockAxios = new MockAdapter(axios);
 vi.mock('../hooks/useStepper');

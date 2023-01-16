@@ -7,6 +7,7 @@ import Claims from 'constants/claims';
 import { createMemoryHistory } from 'history';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import moment from 'moment-timezone';
+import React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
@@ -20,7 +21,7 @@ import EditUserPage from './EditUserPage';
 
 const userRoles: string[] | Claims[] = [];
 const userAgencies: number[] = [1];
-const userAgency: number = 1;
+const userAgency = 1;
 
 vi.mock('hooks/useKeycloakWrapper');
 (useKeycloakWrapper as Vitest.Mock).mockReturnValue(

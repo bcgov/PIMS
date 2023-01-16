@@ -13,27 +13,20 @@ import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-<<<<<<< HEAD:frontend/src/features/projects/dispose/steps/SelectProjectPropertiesStep.test.tsx
 import useKeycloakMock from 'useKeycloakWrapperMock';
-=======
-import { vi } from 'vitest';
->>>>>>> 3f673034 (Changed jest to vitest, 17 tests failing):frontend/src/features/projects/dispose/steps/SelectProjectPropertiesStep.spec.tsx
+import Vitest, { vi } from 'vitest';
 
 import { mockProject } from '../testUtils';
 import SelectProjectProperties from './SelectProjectPropertiesStep';
-<<<<<<< HEAD:frontend/src/features/projects/dispose/steps/SelectProjectPropertiesStep.test.tsx
 
-const userAgency: number = 1;
+const userAgency = 1;
 
-jest.mock('hooks/useKeycloakWrapper');
+vi.mock('hooks/useKeycloakWrapper');
 const mockKeycloak = (userRoles: string[] | Claims[], userAgencies: number[] = [1]) => {
-  (useKeycloakWrapper as jest.Mock).mockReturnValue(
+  (useKeycloakWrapper as Vitest.Mock).mockReturnValue(
     new (useKeycloakMock as any)(userRoles, userAgencies, userAgency, true),
   );
 };
-=======
-vi.mock('@react-keycloak/web');
->>>>>>> 3f673034 (Changed jest to vitest, 17 tests failing):frontend/src/features/projects/dispose/steps/SelectProjectPropertiesStep.spec.tsx
 
 const mockStore = configureMockStore([thunk]);
 const history = createMemoryHistory();
@@ -167,9 +160,8 @@ describe('Select Project Properties Step', () => {
 
   it('selected properties are maintained even if the page changes.', async () => {
     mockAxios.onAny().reply(200, { items: [mockFlatProperty], total: 6 });
-    const { findByTestId, findByText, findAllByText, getByLabelText, getByText } = render(
-      uiElement,
-    );
+    const { findByTestId, findByText, findAllByText, getByLabelText, getByText } =
+      render(uiElement);
 
     //select a property
     const selectRowCheck = await findByTestId('selectrow-0');

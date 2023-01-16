@@ -2,6 +2,7 @@ import { cleanup, render } from '@testing-library/react';
 import Claims from 'constants/claims';
 import { useConfiguration } from 'hooks/useConfiguration';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+import React from 'react';
 import * as Router from 'react-router';
 import useKeycloakMock from 'useKeycloakWrapperMock';
 import * as Vitest from 'vitest';
@@ -11,7 +12,7 @@ import { Logout } from './Logout';
 
 const userRoles: string[] | Claims[] = [];
 const userAgencies: number[] = [1];
-const userAgency: number = 1;
+const userAgency = 1;
 
 vi.mock('hooks/useKeycloakWrapper');
 vi.mock('hooks/useConfiguration');

@@ -1,4 +1,31 @@
 // Vitest Snapshot v1
+<<<<<<<< HEAD:frontend/src/pages/404/__snapshots__/NotFoundPage.spec.tsx.snap
+========
+
+exports[`NotFoundPage > renders correctly 1`] = `
+<div
+  className="container-fluid"
+>
+  <div
+    className="row"
+  >
+    <div
+      className="col"
+    >
+      <h1>
+        Page not found
+      </h1>
+      <a
+        href="/mapview"
+        onClick={[Function]}
+      >
+        Go back to the map
+      </a>
+    </div>
+  </div>
+</div>
+`;
+>>>>>>>> ef22e273 (Changed jest to vitest, 17 tests failing):frontend/src/pages/404/__snapshots__/NotFoundPage.test.tsx.snap
 
 exports[`NotFoundPage > renders correctly 1`] = `
 <div

@@ -9,6 +9,7 @@ import { Formik } from 'formik';
 import { createMemoryHistory } from 'history';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { noop } from 'lodash';
+import React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
@@ -23,7 +24,7 @@ import AddParentParcelsForm from './AddParentParcelsForm';
 
 const userRoles: string[] | Claims[] = [];
 const userAgencies: number[] = [1];
-const userAgency: number = 1;
+const userAgency = 1;
 
 vi.mock('hooks/useKeycloakWrapper');
 (useKeycloakWrapper as Vitest.Mock).mockReturnValue(

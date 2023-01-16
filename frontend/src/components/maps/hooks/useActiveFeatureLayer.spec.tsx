@@ -6,6 +6,7 @@ import { createMemoryHistory } from 'history';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { geoJSON } from 'leaflet';
 import { noop } from 'lodash';
+import React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
@@ -17,7 +18,7 @@ import useActiveFeatureLayer from './useActiveFeatureLayer';
 
 const userRoles: string[] | Claims[] = [];
 const userAgencies: number[] = [1];
-const userAgency: number = 1;
+const userAgency = 1;
 
 vi.mock('hooks/useKeycloakWrapper');
 (useKeycloakWrapper as Vitest.Mock).mockReturnValue(
@@ -27,9 +28,9 @@ vi.mock('hooks/useKeycloakWrapper');
 const mapRef = { current: { leafletMap: {} } };
 vi.mock('leaflet');
 vi.mock('components/maps/leaflet/LayerPopup');
-let clearLayers = vi.fn();
-let addData = vi.fn();
-let findOneWhereContains = vi.fn();
+const clearLayers = vi.fn();
+const addData = vi.fn();
+const findOneWhereContains = vi.fn();
 
 (geoJSON as Vitest.Mock).mockReturnValue({
   addTo: () => ({ clearLayers, addData } as any),
@@ -43,6 +44,7 @@ const history = createMemoryHistory();
 const getStore = (values?: any) => mockStore(values ?? { parcel: { draftProperties: [] } });
 const getWrapper =
   (store: any) =>
+  // eslint-disable-next-line react/display-name
   ({ children }: any) =>
     (
       <Provider store={store}>
@@ -56,7 +58,7 @@ describe('useActiveFeatureLayer hook tests', () => {
     addData.mockClear();
     findOneWhereContains.mockClear();
   });
-  afterEach(() => {});
+
   it('sets the active feature when layerPopup information is set', () => {
     renderHook(
       () =>

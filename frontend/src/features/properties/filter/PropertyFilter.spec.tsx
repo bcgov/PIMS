@@ -13,49 +13,28 @@ import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-<<<<<<< HEAD:frontend/src/features/properties/filter/PropertyFilter.test.tsx
 import useKeycloakMock from 'useKeycloakWrapperMock';
-=======
 import * as Vitest from 'vitest';
 import { vi } from 'vitest';
->>>>>>> 3f673034 (Changed jest to vitest, 17 tests failing):frontend/src/features/properties/filter/PropertyFilter.spec.tsx
 
 import { PropertyFilter } from './';
 import { IPropertyFilter } from './IPropertyFilter';
 
 const onFilterChange = vi.fn();
 //prevent web calls from being made during tests.
-<<<<<<< HEAD:frontend/src/features/properties/filter/PropertyFilter.test.tsx
-jest.mock('axios');
-jest.mock('hooks/useKeycloakWrapper');
-jest.mock('hooks/useApi');
-
-const mockedAxios = axios as jest.Mocked<typeof axios>;
-
-const userAgencies: number[] = [1];
-const userAgency: number = 1;
-
-const mockKeycloak = (userRoles: string[] | Claims[]) => {
-  (useKeycloakWrapper as jest.Mock).mockReturnValue(
-    new (useKeycloakMock as any)(userRoles, userAgencies, userAgency),
-  );
-=======
 vi.mock('axios');
-vi.mock('@react-keycloak/web');
+vi.mock('hooks/useKeycloakWrapper');
 vi.mock('hooks/useApi');
 
 const mockedAxios = axios as Vitest.Mocked<typeof axios>;
-const mockKeycloak = (claims: string[]) => {
-  (useKeycloak as Vitest.Mock).mockReturnValue({
-    keycloak: {
-      subject: 'test',
-      userInfo: {
-        roles: claims,
-        agencies: ['1'],
-      },
-    },
-  });
->>>>>>> 3f673034 (Changed jest to vitest, 17 tests failing):frontend/src/features/properties/filter/PropertyFilter.spec.tsx
+
+const userAgencies: number[] = [1];
+const userAgency = 1;
+
+const mockKeycloak = (userRoles: string[] | Claims[]) => {
+  (useKeycloakWrapper as Vitest.Mock).mockReturnValue(
+    new (useKeycloakMock as any)(userRoles, userAgencies, userAgency),
+  );
 };
 
 const mockStore = configureMockStore([thunk]);

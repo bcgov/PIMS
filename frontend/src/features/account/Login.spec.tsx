@@ -4,6 +4,7 @@ import Claims from 'constants/claims';
 import * as reducerTypes from 'constants/reducerTypes';
 import Roles from 'constants/roles';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+import React from 'react';
 import { Provider } from 'react-redux';
 import * as Router from 'react-router';
 import renderer from 'react-test-renderer';
@@ -21,7 +22,7 @@ vi.mock('hooks/useKeycloakWrapper');
 
 const userRoles: string[] | Claims[] = [];
 const userAgencies: number[] = [1];
-const userAgency: number = 1;
+const userAgency = 1;
 
 const mockStore = configureMockStore([thunk]);
 

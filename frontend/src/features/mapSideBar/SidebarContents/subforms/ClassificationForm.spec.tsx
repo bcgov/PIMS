@@ -9,6 +9,7 @@ import { Formik } from 'formik';
 import { createMemoryHistory } from 'history';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { noop } from 'lodash';
+import React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
@@ -29,7 +30,7 @@ const mockClassifications = [
 ] as SelectOptions;
 
 const userAgencies: number[] = [1];
-const userAgency: number = 1;
+const userAgency = 1;
 
 vi.mock('hooks/useKeycloakWrapper');
 const mockKeycloak = (claims: string[]) => {
@@ -39,7 +40,7 @@ const mockKeycloak = (claims: string[]) => {
 };
 
 const mockStore = configureMockStore([thunk]);
-let history = createMemoryHistory();
+const history = createMemoryHistory();
 
 const lCodes = {
   lookupCodes: [
