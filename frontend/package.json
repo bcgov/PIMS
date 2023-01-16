@@ -109,8 +109,7 @@
     "@types/supercluster": "7.1.0",
     "@types/text-mask-addons": "3.8.1",
     "@types/yup": "0.29.14",
-    "@typescript-eslint/eslint-plugin": "5.48.2",
-    "@typescript-eslint/parser": "5.48.2",
+    "@vitejs/plugin-react": "3.0.1",
     "axios-mock-adapter": "1.21.2",
     "c8": "7.12.0",
     "cypress": "11.0.1",
@@ -135,6 +134,8 @@
     "redux-mock-store": "1.5.4",
     "sass": "1.57.1",
     "typescript": "4.5.5",
+    "vite-plugin-svgr": "2.4.0",
+    "vite-tsconfig-paths": "4.0.3",
     "vitest": "0.27.1"
   },
   "overrides": {
