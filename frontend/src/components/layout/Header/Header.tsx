@@ -27,6 +27,12 @@ const Header = () => {
   const network = useNetworkStore();
   const { requests } = useAppSelector(store => store.network);
 
+  // Change styling based on environment
+  let environment = 'production';
+  if (window.location.href.includes('localhost')) environment = 'local';
+  else if (window.location.href.includes('dev')) environment = 'development';
+  else if (window.location.href.includes('test')) environment = 'testing';
+
   const [errors, setErrors] = React.useState<IGenericNetworkAction[]>([]);
 
   if (location.pathname === '/') {
@@ -108,8 +114,36 @@ const Header = () => {
       </Navbar.Brand>
       <Nav className="title">
         <Nav.Item>
-          <h1 className="longAppName">Property Inventory Management System</h1>
-          <h1 className="shortAppName">PIMS</h1>
+          {environment === 'production' && (
+            <>
+              <h1 className="longAppName">Property Inventory Management System</h1>
+              <h1 className="shortAppName">PIMS</h1>
+            </>
+          )}
+          {environment === 'development' && (
+            <>
+              <h1 className="longAppName" style={{ marginRight: '330px' }}>
+                PIMS - Development Environment
+              </h1>
+              <h1 className="shortAppName">PIMS</h1>
+            </>
+          )}
+          {environment === 'testing' && (
+            <>
+              <h1 className="longAppName" style={{ marginRight: '400px' }}>
+                PIMS - Testing Environment
+              </h1>
+              <h1 className="shortAppName">PIMS</h1>
+            </>
+          )}
+          {environment === 'local' && (
+            <>
+              <h1 className="longAppName" style={{ marginRight: '420px' }}>
+                PIMS - Local Development
+              </h1>
+              <h1 className="shortAppName">PIMS</h1>
+            </>
+          )}
         </Nav.Item>
       </Nav>
       {keycloak.obj.authenticated && <UserProfile />}
