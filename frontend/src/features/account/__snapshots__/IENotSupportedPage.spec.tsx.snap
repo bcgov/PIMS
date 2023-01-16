@@ -1,0 +1,16 @@
+// Vitest Snapshot v1
+
+exports[`login error page > login error page renders correctly 1`] = `
+<div
+  className="unauth container-fluid"
+>
+  <br />
+  <h1>
+    PIMS does not support Internet Explorer
+  </h1>
+  <br />
+  <h6>
+    Please use a supported internet browser such as Chrome, Firefox or Edge.
+  </h6>
+</div>
+`;

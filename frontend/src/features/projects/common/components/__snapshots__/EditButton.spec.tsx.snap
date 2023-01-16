@@ -1,0 +1,12 @@
+// Vitest Snapshot v1
+
+exports[`Project Dispose Form Edit Button > Matches Snapshot 1`] = `
+<button
+  className="edit btn btn-primary"
+  disabled={false}
+  onClick={[Function]}
+  type="button"
+>
+  Edit
+</button>
+`;

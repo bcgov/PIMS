@@ -1,4 +1,28 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1
+
+exports[`NotFoundPage > renders correctly 1`] = `
+<div
+  className="container-fluid"
+>
+  <div
+    className="row"
+  >
+    <div
+      className="col"
+    >
+      <h1>
+        Page not found
+      </h1>
+      <a
+        href="/mapview"
+        onClick={[Function]}
+      >
+        Go back to the map
+      </a>
+    </div>
+  </div>
+</div>
+`;
 
 exports[`NotFoundPage renders correctly 1`] = `
 <div

@@ -9,6 +9,7 @@ import thunk from 'redux-thunk';
 import * as networkSlice from 'store/slices/networkSlice';
 import { initialParcelState } from 'store/slices/parcelSlice';
 import * as parcelSlice from 'store/slices/parcelSlice';
+import { vi } from 'vitest';
 
 import {
   createParcel,
@@ -23,15 +24,15 @@ const mockAxios = new MockAdapter(axios);
 const mockStore = configureMockStore([thunk]);
 const store = mockStore(initialParcelState);
 
-const dispatchSpy = jest.spyOn(store, 'dispatch');
-const requestSpy = jest.spyOn(networkSlice, 'storeRequest');
-const successSpy = jest.spyOn(networkSlice, 'storeSuccess');
-const errorSpy = jest.spyOn(networkSlice, 'storeError');
-const storePropertiesSpy = jest.spyOn(parcelSlice, 'storeProperties');
-const storeDraftPropertiesSpy = jest.spyOn(parcelSlice, 'storeDraftProperties');
-const storePropertyDetailSpy = jest.spyOn(parcelSlice, 'storePropertyDetail');
-const storeAssociatedPropertyDetailSpy = jest.spyOn(parcelSlice, 'storeAssociatedPropertyDetail');
-const storePidSpy = jest.spyOn(parcelSlice, 'storePid');
+const dispatchSpy = vi.spyOn(store, 'dispatch');
+const requestSpy = vi.spyOn(networkSlice, 'storeRequest');
+const successSpy = vi.spyOn(networkSlice, 'storeSuccess');
+const errorSpy = vi.spyOn(networkSlice, 'storeError');
+const storePropertiesSpy = vi.spyOn(parcelSlice, 'storeProperties');
+const storeDraftPropertiesSpy = vi.spyOn(parcelSlice, 'storeDraftProperties');
+const storePropertyDetailSpy = vi.spyOn(parcelSlice, 'storePropertyDetail');
+const storeAssociatedPropertyDetailSpy = vi.spyOn(parcelSlice, 'storeAssociatedPropertyDetail');
+const storePidSpy = vi.spyOn(parcelSlice, 'storePid');
 
 beforeEach(() => {
   mockAxios.reset();

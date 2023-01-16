@@ -9,6 +9,21 @@ import { getCurrentFiscalYear } from 'utils';
 
 import { NoteTypes, PropertyTypes } from '../../../constants';
 
+<<<<<<< HEAD
+=======
+export const mockKeycloak = (claims: string[], agencies: number[]) => {
+  useKeycloak.mockReturnValue({
+    keycloak: {
+      userInfo: {
+        agencies: agencies,
+        roles: claims,
+      },
+      subject: 'test',
+    },
+  });
+};
+
+>>>>>>> 3f673034 (Changed jest to vitest, 17 tests failing)
 export const mockTasks: IProjectTask[] = [
   {
     projectNumber: 123,

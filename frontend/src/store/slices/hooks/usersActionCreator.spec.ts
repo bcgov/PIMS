@@ -7,6 +7,7 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import * as networkSlice from 'store/slices/networkSlice';
 import * as userSlice from 'store/slices/userSlice';
+import { vi } from 'vitest';
 
 import { initialUserState } from '..';
 import {
@@ -21,13 +22,13 @@ const mockAxios = new MockAdapter(axios);
 const mockStore = configureMockStore([thunk]);
 const store = mockStore(initialUserState);
 
-const dispatchSpy = jest.spyOn(store, 'dispatch');
-const requestSpy = jest.spyOn(networkSlice, 'storeRequest');
-const successSpy = jest.spyOn(networkSlice, 'storeSuccess');
-const errorSpy = jest.spyOn(networkSlice, 'storeError');
-const storeUsersSpy = jest.spyOn(userSlice, 'storeUsers');
-const storeUserSpy = jest.spyOn(userSlice, 'storeUser');
-const updateUserSpy = jest.spyOn(userSlice, 'updateUser');
+const dispatchSpy = vi.spyOn(store, 'dispatch');
+const requestSpy = vi.spyOn(networkSlice, 'storeRequest');
+const successSpy = vi.spyOn(networkSlice, 'storeSuccess');
+const errorSpy = vi.spyOn(networkSlice, 'storeError');
+const storeUsersSpy = vi.spyOn(userSlice, 'storeUsers');
+const storeUserSpy = vi.spyOn(userSlice, 'storeUser');
+const updateUserSpy = vi.spyOn(userSlice, 'updateUser');
 
 beforeEach(() => {
   mockAxios.reset();
