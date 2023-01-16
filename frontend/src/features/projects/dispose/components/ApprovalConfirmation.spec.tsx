@@ -6,26 +6,20 @@ import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { noop } from 'lodash';
 import React from 'react';
 import { Form } from 'react-bootstrap';
-<<<<<<< HEAD:frontend/src/features/projects/dispose/components/ApprovalConfirmation.test.tsx
 import useKeycloakMock from 'useKeycloakWrapperMock';
+import Vitest, { vi } from 'vitest';
 
 import ApprovalConfirmationForm from '../../common/forms/ApprovalConfirmationForm';
 
 const userRoles: string[] | Claims[] = [];
 const userAgencies: number[] = [1];
-const userAgency: number = 1;
+const userAgency = 1;
 
-jest.mock('hooks/useKeycloakWrapper');
-=======
-import { vi } from 'vitest';
-
-import ApprovalConfirmationForm from '../../common/forms/ApprovalConfirmationForm';
-
-vi.mock('@react-keycloak/web');
->>>>>>> 3f673034 (Changed jest to vitest, 17 tests failing):frontend/src/features/projects/dispose/components/ApprovalConfirmation.spec.tsx
+vi.mock('hooks/useKeycloakWrapper');
 
 const renderComponent = (isReadOnly: boolean, onSubmit?: (values: any) => void) => {
   return render(
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     <Formik initialValues={{}} onSubmit={() => {}}>
       <Form>
         <ApprovalConfirmationForm isReadOnly={isReadOnly} />
@@ -37,20 +31,9 @@ const renderComponent = (isReadOnly: boolean, onSubmit?: (values: any) => void) 
 
 describe('Approval Confirmation', () => {
   beforeEach(() => {
-<<<<<<< HEAD:frontend/src/features/projects/dispose/components/ApprovalConfirmation.test.tsx
-    (useKeycloakWrapper as jest.Mock).mockReturnValue(
+    (useKeycloakWrapper as Vitest.Mock).mockReturnValue(
       new (useKeycloakMock as any)(userRoles, userAgencies, userAgency),
     );
-=======
-    useKeycloak.mockReturnValue({
-      keycloak: {
-        userInfo: {
-          agencies: ['1'],
-        },
-        subject: 'test',
-      },
-    });
->>>>>>> 3f673034 (Changed jest to vitest, 17 tests failing):frontend/src/features/projects/dispose/components/ApprovalConfirmation.spec.tsx
   });
   afterEach(() => {
     vi.clearAllMocks();

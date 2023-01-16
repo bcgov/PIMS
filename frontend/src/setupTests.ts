@@ -1,6 +1,7 @@
 import matchers, { TestingLibraryMatchers } from '@testing-library/jest-dom/matchers';
 
 declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Vi {
     interface JestAssertion<T = any>
       extends jest.Matchers<void, T>,
@@ -10,23 +11,23 @@ declare global {
 
 expect.extend(matchers);
 
-var localStorageMock = (function() {
-  var store: any = {};
+const localStorageMock = (function () {
+  let store: any = {};
 
   return {
-    getKeys: function() {
+    getKeys: () => {
       return store;
     },
-    getItem: function(key: string) {
+    getItem: (key: string) => {
       return store[key] || null;
     },
-    setItem: function(key: string, value: any) {
+    setItem: (key: string, value: any) => {
       store[key] = value.toString();
     },
-    removeItem: function(key: string) {
+    removeItem: (key: string) => {
       store[key] = undefined;
     },
-    clear: function() {
+    clear: () => {
       store = {};
     },
   };

@@ -1,4 +1,18 @@
 // Vitest Snapshot v1
+<<<<<<<< HEAD:frontend/src/features/projects/common/components/__snapshots__/EditButton.spec.tsx.snap
+========
+
+exports[`Project Dispose Form Edit Button > Matches Snapshot 1`] = `
+<button
+  className="edit btn btn-primary"
+  disabled={false}
+  onClick={[Function]}
+  type="button"
+>
+  Edit
+</button>
+`;
+>>>>>>>> ef22e273 (Changed jest to vitest, 17 tests failing):frontend/src/features/projects/common/components/__snapshots__/EditButton.test.tsx.snap
 
 exports[`Project Dispose Form Edit Button > Matches Snapshot 1`] = `
 <button

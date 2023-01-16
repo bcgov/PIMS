@@ -6,6 +6,7 @@ import * as actionTypes from 'constants/actionTypes';
 import { Claims } from 'constants/claims';
 import { createMemoryHistory } from 'history';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+import React from 'react';
 import { act } from 'react-dom/test-utils';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
@@ -19,15 +20,11 @@ import { vi } from 'vitest';
 
 import MapSideBarContainer from './MapSideBarContainer';
 
-vi.mock(
-  'react-visibility-sensor',
-  (): typeof VisibilitySensor =>
-    ({ children, partialVisibility, ...rest }: any) =>
-      (
-        <div {...rest}>
-          {typeof children === 'function' ? children({ isVisible: true }) : children}
-        </div>
-      ),
+vi.mock('react-visibility-sensor', (): typeof VisibilitySensor =>
+  // eslint-disable-next-line react/display-name
+  ({ children, ...rest }: any) => (
+    <div {...rest}>{typeof children === 'function' ? children({ isVisible: true }) : children}</div>
+  ),
 );
 const mockAxios = new MockAdapter(axios);
 

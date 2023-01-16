@@ -12,33 +12,22 @@ import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-<<<<<<< HEAD:frontend/src/features/properties/list/PropertyListView.test.tsx
 import useKeycloakMock from 'useKeycloakWrapperMock';
-=======
 import * as Vitest from 'vitest';
 import { vi } from 'vitest';
->>>>>>> 3f673034 (Changed jest to vitest, 17 tests failing):frontend/src/features/properties/list/PropertyListView.spec.tsx
 
 import service from '../service';
 import { IProperty } from '.';
 import PropertyListView from './PropertyListView';
 
-<<<<<<< HEAD:frontend/src/features/properties/list/PropertyListView.test.tsx
 // Set all module functions to jest.fn
-jest.mock('../service');
+vi.mock('../service');
+vi.mock('hooks/useKeycloakWrapper');
 
 const userAgencies: number[] = [1];
-const userAgency: number = 1;
-
-jest.mock('hooks/useKeycloakWrapper');
-=======
-// Set all module functions to vi.fn
-vi.mock('../service');
-vi.mock('@react-keycloak/web');
->>>>>>> 3f673034 (Changed jest to vitest, 17 tests failing):frontend/src/features/properties/list/PropertyListView.spec.tsx
+const userAgency = 1;
 
 const mockedService = service as Vitest.Mocked<typeof service>;
-
 const mockStore = configureMockStore([thunk]);
 
 const lCodes = {
@@ -71,21 +60,9 @@ const setupTests = (items?: IProperty[]) => {
     pageIndex: 0,
     items: items ?? [],
   });
-<<<<<<< HEAD:frontend/src/features/properties/list/PropertyListView.test.tsx
-  (useKeycloakWrapper as jest.Mock).mockReturnValue(
+  (useKeycloakWrapper as Vitest.Mock).mockReturnValue(
     new (useKeycloakMock as any)(['property-edit', 'property-view'], userAgencies, userAgency),
   );
-=======
-  (useKeycloak as Vitest.Mock).mockReturnValue({
-    keycloak: {
-      subject: 'test',
-      userInfo: {
-        roles: ['property-edit', 'property-view'],
-        agencies: [1],
-      },
-    },
-  });
->>>>>>> 3f673034 (Changed jest to vitest, 17 tests failing):frontend/src/features/properties/list/PropertyListView.spec.tsx
 };
 
 describe('Property list view', () => {

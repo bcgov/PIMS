@@ -8,7 +8,7 @@ import Enzyme, { mount } from 'enzyme';
 import { createMemoryHistory } from 'history';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { Map as LeafletMap } from 'leaflet';
-import * as React from 'react';
+import React from 'react';
 import { Button } from 'react-bootstrap';
 import { MapContainer as ReactLeafletMap } from 'react-leaflet';
 import { Provider } from 'react-redux';
@@ -23,7 +23,7 @@ import InfoSlideOut from './InfoSlideOut';
 
 const userRoles: string[] | Claims[] = [];
 const userAgencies: number[] = [1];
-const userAgency: number = 1;
+const userAgency = 1;
 
 vi.mock('hooks/useKeycloakWrapper');
 (useKeycloakWrapper as Vitest.Mock).mockReturnValue(

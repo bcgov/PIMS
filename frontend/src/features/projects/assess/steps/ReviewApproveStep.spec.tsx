@@ -20,39 +20,22 @@ import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-<<<<<<< HEAD:frontend/src/features/projects/assess/steps/ReviewApproveStep.test.tsx
 import useKeycloakMock from 'useKeycloakWrapperMock';
-=======
 import * as Vitest from 'vitest';
 import { vi } from 'vitest';
->>>>>>> 3f673034 (Changed jest to vitest, 17 tests failing):frontend/src/features/projects/assess/steps/ReviewApproveStep.spec.tsx
 
 import { ReviewApproveStep } from '..';
 
 Enzyme.configure({ adapter: new Adapter() });
 
-<<<<<<< HEAD:frontend/src/features/projects/assess/steps/ReviewApproveStep.test.tsx
 const userAgencies: number[] = [1];
-const userAgency: number = 1;
+const userAgency = 1;
 
-jest.mock('hooks/useKeycloakWrapper');
+vi.mock('hooks/useKeycloakWrapper');
 const mockKeycloak = (userRoles: string[] | Claims[]) => {
-  (useKeycloakWrapper as jest.Mock).mockReturnValue(
+  (useKeycloakWrapper as Vitest.Mock).mockReturnValue(
     new (useKeycloakMock as any)(userRoles, userAgencies, userAgency),
   );
-=======
-vi.mock('@react-keycloak/web');
-const mockKeycloak = (claims: string[]) => {
-  (useKeycloak as Vitest.Mock).mockReturnValue({
-    keycloak: {
-      userInfo: {
-        agencies: [1],
-        roles: claims,
-      },
-      subject: 'test',
-    },
-  });
->>>>>>> 3f673034 (Changed jest to vitest, 17 tests failing):frontend/src/features/projects/assess/steps/ReviewApproveStep.spec.tsx
 };
 
 const mockStore = configureMockStore([thunk]);
@@ -254,19 +237,7 @@ describe('Review Approve Step', () => {
 
   it('Review step submits correctly', async () => {
     mockAxios.reset();
-<<<<<<< HEAD:frontend/src/features/projects/assess/steps/ReviewApproveStep.test.tsx
     mockKeycloak([Claims.ADMIN_PROJECTS]);
-=======
-    (useKeycloak as Vitest.Mock).mockReturnValue({
-      keycloak: {
-        userInfo: {
-          agencies: [1],
-          roles: Claims.ADMIN_PROJECTS,
-        },
-        subject: 'test',
-      },
-    });
->>>>>>> 3f673034 (Changed jest to vitest, 17 tests failing):frontend/src/features/projects/assess/steps/ReviewApproveStep.spec.tsx
     let component: any;
     await waitFor(async () => {
       component = mount(getReviewApproveStep(store(mockProject(mockTasks))));
@@ -282,19 +253,7 @@ describe('Review Approve Step', () => {
 
 describe('Review approve modal behaviour', () => {
   it('confirmation popup does not appear when there are incomplete tasks', async () => {
-<<<<<<< HEAD:frontend/src/features/projects/assess/steps/ReviewApproveStep.test.tsx
     mockKeycloak([Claims.ADMIN_PROJECTS]);
-=======
-    (useKeycloak as Vitest.Mock).mockReturnValue({
-      keycloak: {
-        userInfo: {
-          agencies: [1],
-          roles: Claims.ADMIN_PROJECTS,
-        },
-        subject: 'test',
-      },
-    });
->>>>>>> 3f673034 (Changed jest to vitest, 17 tests failing):frontend/src/features/projects/assess/steps/ReviewApproveStep.spec.tsx
     const component = mount(getReviewApproveStep(store(mockProject(incompleteTask))));
     await act(async () => {
       const button = component.findWhere((node: { type: () => any; text: () => string }) => {

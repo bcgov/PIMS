@@ -25,10 +25,12 @@ import SelectedPropertyMarker from './SelectedPropertyMarker/SelectedPropertyMar
 
 const { ResizeObserver } = window;
 const mockAxios = new MockAdapter(axios);
+
 vi.mock('hooks/useKeycloakWrapper');
+vi.mock('hooks/useApi');
+
 Enzyme.configure({ adapter: new Adapter() });
 const mockStore = configureMockStore([thunk]);
-vi.mock('hooks/useApi');
 
 const userRoles: string[] | Claims[] = [];
 const userAgencies: number[] = [0];

@@ -9,12 +9,9 @@ import { Provider } from 'react-redux';
 import * as Router from 'react-router';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-<<<<<<< HEAD:frontend/src/features/projects/common/ProjectRouter.test.tsx
 import useKeycloakMock from 'useKeycloakWrapperMock';
-=======
 import * as Vitest from 'vitest';
 import { vi } from 'vitest';
->>>>>>> 3f673034 (Changed jest to vitest, 17 tests failing):frontend/src/features/projects/common/ProjectRouter.spec.tsx
 
 import useProject from '../common/hooks/useProject';
 import { mockWorkflow } from '../dispose/testUtils';
@@ -29,29 +26,14 @@ vi.mock('components/Table/Table', () => ({
   default: () => <></>,
 }));
 
-<<<<<<< HEAD:frontend/src/features/projects/common/ProjectRouter.test.tsx
 const userAgencies: number[] = [1];
-const userAgency: number = 1;
+const userAgency = 1;
 
-jest.mock('hooks/useKeycloakWrapper');
+vi.mock('hooks/useKeycloakWrapper');
 const mockKeycloak = (userRoles: string[] | Claims[]) => {
-  (useKeycloakWrapper as jest.Mock).mockReturnValue(
+  (useKeycloakWrapper as Vitest.Mock).mockReturnValue(
     new (useKeycloakMock as any)(userRoles, userAgencies, userAgency, true),
   );
-=======
-vi.mock('@react-keycloak/web');
-const mockKeycloak = (claims: string[]) => {
-  (useKeycloak as Vitest.Mock).mockReturnValue({
-    keycloak: {
-      userInfo: {
-        agencies: [1],
-        roles: claims,
-      },
-      subject: 'test',
-      authenticated: true,
-    },
-  });
->>>>>>> 3f673034 (Changed jest to vitest, 17 tests failing):frontend/src/features/projects/common/ProjectRouter.spec.tsx
 };
 
 const search = '?projectNumber=TEST-10001';

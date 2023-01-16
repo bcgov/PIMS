@@ -1,0 +1,18 @@
+// Vitest Snapshot v1
+
+exports[`AccessRequestActions renders correctly 1`] = `
+<div
+  className="dropdown"
+>
+  <button
+    aria-expanded={false}
+    className="dropdown-toggle btn btn-primary"
+    disabled={false}
+    id="dropdown-basic"
+    onClick={[Function]}
+    type="button"
+  >
+    Actions
+  </button>
+</div>
+`;

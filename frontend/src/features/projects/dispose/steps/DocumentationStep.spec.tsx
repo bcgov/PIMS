@@ -13,39 +13,23 @@ import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-<<<<<<< HEAD:frontend/src/features/projects/dispose/steps/DocumentationStep.test.tsx
 import useKeycloakMock from 'useKeycloakWrapperMock';
-=======
 import * as Vitest from 'vitest';
 import { vi } from 'vitest';
->>>>>>> 3f673034 (Changed jest to vitest, 17 tests failing):frontend/src/features/projects/dispose/steps/DocumentationStep.spec.tsx
 
 import DocumentationStep from './DocumentationStep';
 
 const mockAxios = new MockAdapter(axios);
 mockAxios.onAny().reply(200, {});
-<<<<<<< HEAD:frontend/src/features/projects/dispose/steps/DocumentationStep.test.tsx
 
 const userRoles: string[] | Claims[] = [];
 const userAgencies: number[] = [1];
-const userAgency: number = 1;
+const userAgency = 1;
 
-jest.mock('hooks/useKeycloakWrapper');
-(useKeycloakWrapper as jest.Mock).mockReturnValue(
+vi.mock('hooks/useKeycloakWrapper');
+(useKeycloakWrapper as Vitest.Mock).mockReturnValue(
   new (useKeycloakMock as any)(userRoles, userAgencies, userAgency),
 );
-=======
-vi.mock('@react-keycloak/web');
-(useKeycloak as Vitest.Mock).mockReturnValue({
-  keycloak: {
-    userInfo: {
-      agencies: [1],
-      roles: [],
-    },
-    subject: 'test',
-  },
-});
->>>>>>> 3f673034 (Changed jest to vitest, 17 tests failing):frontend/src/features/projects/dispose/steps/DocumentationStep.spec.tsx
 
 const mockStore = configureMockStore([thunk]);
 const history = createMemoryHistory();

@@ -3,6 +3,7 @@ import { cleanup, render } from '@testing-library/react';
 import Claims from 'constants/claims';
 import * as reducerTypes from 'constants/reducerTypes';
 import Enzyme from 'enzyme';
+import React from 'react';
 import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
@@ -15,7 +16,7 @@ import { useMyAgencies } from './useMyAgencies';
 
 const userRoles: string[] | Claims[] = [Claims.PROJECT_VIEW, Claims.ADMIN_PROJECTS];
 const userAgencies: number[] = [1, 8, 41];
-const userAgency: number = 1;
+const userAgency = 1;
 
 vi.mock('hooks/useKeycloakWrapper');
 
