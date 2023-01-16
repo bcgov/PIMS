@@ -8,7 +8,7 @@ import { PropertyTypes } from 'constants/index';
 import _, { isEqual } from 'lodash';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { CellProps } from 'react-table';
+import { CellProps, Renderer } from 'react-table';
 import styled from 'styled-components';
 import { formatNumber, mapLookupCode } from 'utils';
 
@@ -20,7 +20,9 @@ export const ColumnDiv = styled.div`
   padding-right: 5px;
 `;
 
-const NumberCell = ({ cell: { value } }: CellProps<IProperty, number>) => formatNumber(value);
+const NumberCell: Renderer<CellProps<IProperty, number>> = ({ cell: { value } }) => (
+  <span>{formatNumber(value)}</span>
+);
 
 // NOTE - There numbers below match the total number of columns ATM (13)
 // If additional columns are added or deleted, these numbers need tp be updated...
@@ -155,7 +157,7 @@ export const columns = (
   {
     Header: 'Type',
     accessor: 'propertyTypeId',
-    Cell: PropertyTypeCell,
+    Cell: PropertyTypeCell as Renderer<CellProps<IProperty, number>>,
     clickable: true,
     responsive: true,
     width: spacing.xsmall,
@@ -204,7 +206,7 @@ export const columns = (
     Header: 'Assessed Land',
     accessor: 'assessedLand',
     Cell: !editable
-      ? MoneyCell
+      ? (MoneyCell as Renderer<CellProps<IProperty, number | undefined>>)
       : (props: any) => (
           <EditableMoneyCell
             {...props}
@@ -236,8 +238,8 @@ export const columns = (
     accessor: 'assessedBuilding',
     Cell: !editable
       ? propertyType === PropertyTypes.BUILDING
-        ? AsterixMoneyCell
-        : MoneyCell
+        ? (AsterixMoneyCell as Renderer<CellProps<IProperty, number | undefined>>)
+        : (MoneyCell as Renderer<CellProps<IProperty, number | undefined>>)
       : (props: any) => (
           <EditableMoneyCell
             {...props}
@@ -268,7 +270,7 @@ export const columns = (
     Header: 'Net Book Value',
     accessor: 'netBook',
     Cell: !editable
-      ? MoneyCell
+      ? (MoneyCell as Renderer<CellProps<IProperty, number>>)
       : (props: any) => (
           <EditableMoneyCell
             {...props}
@@ -417,7 +419,7 @@ export const buildingColumns = (
   {
     Header: 'Type',
     accessor: 'propertyTypeId',
-    Cell: PropertyTypeCell,
+    Cell: PropertyTypeCell as Renderer<CellProps<IProperty, number>>,
     clickable: true,
     responsive: true,
     width: spacing.xsmall,
@@ -459,7 +461,7 @@ export const buildingColumns = (
     Header: 'Assessed Building(s)',
     accessor: 'assessedBuilding',
     Cell: !editable
-      ? MoneyCell
+      ? (MoneyCell as Renderer<CellProps<IProperty, number | undefined>>)
       : (props: any) => (
           <EditableMoneyCell
             {...props}
@@ -490,7 +492,7 @@ export const buildingColumns = (
     Header: 'Net Book Value',
     accessor: 'netBook',
     Cell: !editable
-      ? MoneyCell
+      ? (MoneyCell as Renderer<CellProps<IProperty, number>>)
       : (props: any) => (
           <EditableMoneyCell
             {...props}

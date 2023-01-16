@@ -7,8 +7,8 @@ exports[`Edit agency page EditAgencyPage renders 1`] = `
   >
     <span
       class="navbar-brand"
+      style="margin-left: 10px;"
     >
-       
       <div>
         <svg
           fill="currentColor"
@@ -118,6 +118,7 @@ exports[`Edit agency page EditAgencyPage renders 1`] = `
               class="form-select form-control"
               disabled=""
               name="parentId"
+              style="margin-bottom: 10px; width: 250px;"
             >
               <option
                 value=""
@@ -242,84 +243,93 @@ exports[`Edit agency page EditAgencyPage renders 1`] = `
             </div>
           </div>
         </div>
+        <hr />
         <div
-          class="checkboxes"
+          class="checkboxes row"
         >
-          <div>
-            <div
-              class=""
-            >
+          <div
+            class="col-md-auto"
+          >
+            <div>
               <div
-                class="check-field"
+                class=""
               >
-                <label
-                  class="form-label"
-                  for="input-isDisabled"
-                  style="margin-right: 10px;"
-                >
-                  Disable Agency?
-                </label>
                 <div
-                  class=""
+                  class="check-field"
                 >
-                  <input
-                    class="form-check-input"
-                    id="input-isDisabled"
-                    name="isDisabled"
-                    type="checkbox"
-                    value="false"
-                  />
+                  <label
+                    class="form-label"
+                    for="input-isDisabled"
+                    style="margin-right: 10px;"
+                  >
+                    Disable Agency?
+                  </label>
+                  <div
+                    class=""
+                  >
+                    <input
+                      class="form-check-input"
+                      id="input-isDisabled"
+                      name="isDisabled"
+                      type="checkbox"
+                      value="false"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-          <div>
-            <div
-              class=""
-            >
+          <div
+            class="col-md-auto"
+          >
+            <div>
               <div
-                class="check-field"
+                class=""
               >
-                <label
-                  class="form-label"
-                  for="input-sendEmail"
-                  style="margin-right: 10px;"
-                >
-                  Email Notifications?
-                </label>
                 <div
-                  class=""
+                  class="check-field"
                 >
-                  <input
-                    aria-label="Email Notifications?"
-                    checked=""
-                    class="form-check-input"
-                    id="input-sendEmail"
-                    name="sendEmail"
-                    type="checkbox"
-                    value="true"
-                  />
+                  <label
+                    class="form-label"
+                    for="input-sendEmail"
+                    style="margin-right: 10px;"
+                  >
+                    Email Notifications?
+                  </label>
+                  <div
+                    class=""
+                  >
+                    <input
+                      aria-label="Email Notifications?"
+                      checked=""
+                      class="form-check-input"
+                      id="input-sendEmail"
+                      name="sendEmail"
+                      type="checkbox"
+                      value="true"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <hr />
         <div
-          class="buttons row"
+          class="row"
         >
           <div
-            class="cancelSave btn-toolbar"
+            class="btn-toolbar"
             role="toolbar"
           >
             <button
-              class="bg-danger mr-5 btn btn-primary"
+              class="bg-danger btn btn-primary"
+              style="margin-left: 20px; margin-right: 40px;"
               type="button"
             >
               Delete Agency
             </button>
             <button
-              class="mr-5 btn btn-primary"
+              class="btn btn-primary"
               type="submit"
             >
               Save Changes

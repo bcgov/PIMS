@@ -1,6 +1,6 @@
+import Adapter from '@cfaester/enzyme-adapter-react-18';
 import { fireEvent } from '@testing-library/dom';
 import { act, render } from '@testing-library/react';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import Enzyme from 'enzyme';
 import React from 'react';
 import { Button, Container } from 'react-bootstrap';
@@ -76,11 +76,11 @@ describe('SteppedForm', () => {
   it('goes to the next page', async () => {
     const { getByText, findByText } = render(<Component />);
     const nextButton = getByText('Next Step');
-    await act(async () => {
+    act(() => {
       fireEvent.click(nextButton);
-      const currentStep = await findByText('STEP: 1');
-      expect(currentStep).toBeInTheDocument();
     });
+    const currentStep = await findByText('STEP: 1');
+    expect(currentStep).toBeInTheDocument();
   });
   it('does not change page if next and back are clicked', async () => {
     const { findByText, getByText } = render(<Component />);
@@ -96,10 +96,11 @@ describe('SteppedForm', () => {
   it('jumps to a step', async () => {
     const { getByText, findByText } = render(<Component />);
     const jumpTo = getByText('Go to');
-    await act(async () => {
+    act(() => {
       fireEvent.click(jumpTo);
-      let currentStep = await findByText('STEP: 3');
-      expect(currentStep).toBeInTheDocument();
     });
+
+    let currentStep = await findByText('STEP: 3');
+    expect(currentStep).toBeInTheDocument();
   });
 });

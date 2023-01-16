@@ -1,9 +1,9 @@
 import 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
+import Adapter from '@cfaester/enzyme-adapter-react-18';
 import { useKeycloak } from '@react-keycloak/web';
 import { waitFor } from '@testing-library/dom';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import Enzyme, { mount } from 'enzyme';
 import { createMemoryHistory } from 'history';
 import { Map as LeafletMap } from 'leaflet';

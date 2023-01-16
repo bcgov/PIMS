@@ -41,7 +41,11 @@ const InputContainer = styled('div')`
 /**
  * Component to display column filter component, used internally by the table
  */
-const ColumnFilter: React.FC<IColumnFilterProps> = ({ column, onFilter, children }) => {
+const ColumnFilter: React.FC<React.PropsWithChildren<IColumnFilterProps>> = ({
+  column,
+  onFilter,
+  children,
+}) => {
   const [open, setOpen] = React.useState(false);
   const context = useFormikContext();
 

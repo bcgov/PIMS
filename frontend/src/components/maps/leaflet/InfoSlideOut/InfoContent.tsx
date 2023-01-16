@@ -5,7 +5,6 @@ import { IBuilding, IParcel } from 'actions/parcelsActions';
 import { BuildingSvg, LandSvg, SubdivisionSvg } from 'components/common/Icons';
 import { Label } from 'components/common/Label';
 import { PropertyTypes } from 'constants/propertyTypes';
-import { Workflows } from 'constants/workflows';
 import * as React from 'react';
 import { useState } from 'react';
 import { ListGroup, Row } from 'react-bootstrap';
@@ -98,23 +97,6 @@ const getHeading = (propertyTypeId: PropertyTypes | null) => {
   }
 };
 
-const displayProjectStatus = (workflowCode: string) => {
-  switch (workflowCode) {
-    case Workflows.ERP:
-      return 'Property is in Enhanced Referral Process';
-    case Workflows.SPL:
-      return 'Property is on the Surplus Properties List';
-    case Workflows.ASSESS_EX_DISPOSAL:
-      return 'Property has been approved for ERP exemption';
-    case Workflows.ASSESS_EXEMPTION:
-      return 'Property has been submitted to be exempt from ERP';
-    case Workflows.SUBMIT_DISPOSAL:
-      return 'Property is in a draft project';
-    default:
-      return 'Project is in Surplus Property Program';
-  }
-};
-
 /**
  * Component that displays the appropriate information about the selected property
  * in the property info slideout
@@ -196,7 +178,6 @@ export const InfoContent: React.FC<IInfoContent> = ({
       {propertyInfo?.projectWorkflow && (
         <ListGroup>
           <ProjectStatus>
-            <em>{displayProjectStatus(propertyInfo?.projectWorkflow)}</em>
             {canViewDetails && (
               <p>
                 Status: <strong>{propertyInfo?.projectStatus}</strong>

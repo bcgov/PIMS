@@ -52,10 +52,9 @@ describe('Approval Confirmation', () => {
 
   it('formik submitted values as expected', () => {
     const submitFn = jest.fn();
+    const { getByLabelText } = renderComponent(true, submitFn);
+    const input = getByLabelText('has approval/authority', { exact: false });
     act(() => {
-      const { getByLabelText } = renderComponent(true, submitFn);
-      const input = getByLabelText('has approval/authority', { exact: false });
-
       fireEvent.click(input);
     });
     waitFor(() => {

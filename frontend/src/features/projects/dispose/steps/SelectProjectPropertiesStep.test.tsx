@@ -49,8 +49,8 @@ describe('Select Project Properties Step', () => {
   });
   it('renders correctly', async () => {
     mockAxios.onAny().reply(200, { items: [mockFlatProperty] });
-    await act(async () => {
-      const { container, findByText } = render(uiElement);
+    const { container, findByText } = render(uiElement);
+    await waitFor(async () => {
       expect(container.firstChild).toMatchSnapshot();
       await findByText('Test Property');
     });
@@ -158,7 +158,9 @@ describe('Select Project Properties Step', () => {
     const propertyNameText = await findAllByText('Test Property');
     const selectedText = getByText('1 Selected');
     expect(selectedText).toBeInTheDocument();
-    expect(propertyNameText).toHaveLength(2);
+    waitFor(() => {
+      expect(propertyNameText).toHaveLength(2);
+    });
   });
 
   it('selected properties are still checked even if the page changes.', async () => {

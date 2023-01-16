@@ -123,7 +123,7 @@ export const FastInput: React.FC<FastInputProps> = memo(
             custom={custom}
             isInvalid={!!touch && !!error}
             isValid={!!touch && !error && value && !disabled}
-            value={value}
+            value={value ?? ''}
             placeholder={placeholder}
             onBlur={(e: any) => {
               if (onBlurFormatter) {

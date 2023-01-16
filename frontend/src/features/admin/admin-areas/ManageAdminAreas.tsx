@@ -76,7 +76,7 @@ export const ManageAdminAreas = () => {
 
   const [filter, setFilter] = useState<IAdminAreaFilter>({});
   const onRequestData = useCallback(
-    async ({ pageIndex }) => {
+    async ({ pageIndex }: { pageIndex: number }) => {
       if (!!filter) {
         const response = await api.getAdminAreas({
           page: filter.id ? 0 : pageIndex + 1,
