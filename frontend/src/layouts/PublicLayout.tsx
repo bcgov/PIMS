@@ -1,5 +1,6 @@
 import './PublicLayout.scss';
 
+import classNames from 'classnames';
 import ErrorModal from 'components/common/ErrorModal';
 import { Footer, Header } from 'components/layout';
 import React from 'react';
@@ -8,11 +9,25 @@ import { ErrorBoundary } from 'react-error-boundary';
 import LoadingBar from 'react-redux-loading-bar';
 
 const PublicLayout: React.FC<React.PropsWithChildren> = ({ children }) => {
+  // Change styling based on environment
+  let environment = 'production';
+  if (window.location.href.includes('localhost')) environment = 'local';
+  else if (window.location.href.includes('dev')) environment = 'development';
+  else if (window.location.href.includes('test')) environment = 'testing';
+
   return (
     <>
       <LoadingBar style={{ zIndex: 9999, backgroundColor: '#fcba19', height: '3px' }} />
       <Container fluid className="App">
-        <header className="header-layout fixed-top">
+        <header
+          className={classNames(
+            { 'dev-environment': environment === 'development' },
+            { 'test-environment': environment === 'testing' },
+            { 'local-environment': environment === 'local' },
+            'header-layout',
+            'fixed-top',
+          )}
+        >
           <Container className="px-0">
             <Header />
           </Container>
@@ -22,7 +37,15 @@ const PublicLayout: React.FC<React.PropsWithChildren> = ({ children }) => {
           <ErrorBoundary FallbackComponent={ErrorModal}>{children}</ErrorBoundary>
         </main>
 
-        <footer className="footer-layout fixed-bottom">
+        <footer
+          className={classNames(
+            { 'dev-environment': environment === 'development' },
+            { 'test-environment': environment === 'testing' },
+            { 'local-environment': environment === 'local' },
+            'footer-layout',
+            'fixed-bottom',
+          )}
+        >
           <Container className="px-0">
             <Footer />
           </Container>
