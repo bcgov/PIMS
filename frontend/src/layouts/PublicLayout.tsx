@@ -14,6 +14,7 @@ const PublicLayout: React.FC<React.PropsWithChildren> = ({ children }) => {
   if (window.location.href.includes('localhost')) environment = 'local';
   else if (window.location.href.includes('dev')) environment = 'development';
   else if (window.location.href.includes('test')) environment = 'testing';
+
   return (
     <>
       <LoadingBar style={{ zIndex: 9999, backgroundColor: '#fcba19', height: '3px' }} />
