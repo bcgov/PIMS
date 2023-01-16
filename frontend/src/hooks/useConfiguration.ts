@@ -50,7 +50,7 @@ export const useConfiguration = (): IConfiguration => {
     : window.location.origin;
 
   return {
-    siteMinderLogoutUrl: process.env.REACT_APP_SITEMINDER_LOGOUT_URL,
+    siteMinderLogoutUrl: import.meta.env.REACT_APP_SITEMINDER_LOGOUT_URL,
     isTest,
     isDevelopment,
     isProduction,

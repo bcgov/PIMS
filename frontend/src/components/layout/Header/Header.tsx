@@ -68,7 +68,7 @@ const Header = () => {
         {errors.map((error: IGenericNetworkAction, index: number) => {
           return (
             <Row key={index} style={{ wordBreak: 'break-all' }}>
-              {process.env.NODE_ENV === 'development' ? (
+              {import.meta.env.NODE_ENV === 'development' ? (
                 <Col>
                   <abbr title={error.error?.response?.config?.url}>
                     {error.error?.response?.config?.url?.substr(0, 20)}

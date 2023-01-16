@@ -7,7 +7,7 @@ import thunk from 'redux-thunk';
 import { rootReducer } from 'store/rootReducer';
 
 function configureStore() {
-  if (process.env.NODE_ENV !== 'production') {
+  if (import.meta.env.NODE_ENV !== 'production') {
     return createStore(
       rootReducer,
       composeWithDevTools(applyMiddleware(thunk, logger, loadingBarMiddleware())),
