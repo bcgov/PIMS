@@ -11,21 +11,23 @@ const form = (
   </Formik>
 );
 
-it('renders correctly', () => {
+it('renders correctly', async () => {
   const { container } = render(form);
-  expect(container.firstChild).toMatchSnapshot();
+  await waitFor(() => expect(container.firstChild).toMatchSnapshot());
 });
 
-it('renders two seperate tables for assessed value and net book value', () => {
+it('renders two seperate tables for assessed value and net book value', async () => {
   const { getAllByRole } = render(form);
-  const tables = getAllByRole('table');
-  expect(tables).toHaveLength(2);
+  await waitFor(() => {
+    const tables = getAllByRole('table');
+    expect(tables).toHaveLength(2);
+  });
 });
 
-it('headers for (Assessed Value, Assessment Year, Assessed Building Value) + (Net Book Value, Fiscal Year, Effective Date, Net Book Value)', () => {
+it('headers for (Assessed Value, Assessment Year, Assessed Building Value) + (Net Book Value, Fiscal Year, Effective Date, Net Book Value)', async () => {
   const { getAllByRole } = render(form);
-  const headers = getAllByRole('columnheader');
-  waitFor(() => {
+  await waitFor(() => {
+    const headers = getAllByRole('columnheader');
     expect(headers).toHaveLength(14);
   });
 });

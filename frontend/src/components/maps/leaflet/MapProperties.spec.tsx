@@ -7,7 +7,7 @@ import Claims from 'constants/claims';
 import { mount } from 'enzyme';
 import Enzyme from 'enzyme';
 import { createMemoryHistory } from 'history';
-import { useApi } from 'hooks/useApi';
+import { PimsAPI, useApi } from 'hooks/useApi';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { Map as LeafletMap } from 'leaflet';
 import React, { createRef } from 'react';
@@ -17,8 +17,7 @@ import { MemoryRouter } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import useKeycloakMock from 'useKeycloakWrapperMock';
-import * as Vitest from 'vitest';
-import { vi } from 'vitest';
+import Vitest, { vi } from 'vitest';
 
 import Map from './Map';
 import { createPoints } from './mapUtils';
@@ -33,14 +32,15 @@ vi.mock('hooks/useApi');
 
 const userRoles: string[] | Claims[] = [];
 const userAgencies: number[] = [0];
-const userAgency: number = 0;
+const userAgency = 0;
 
 // This mocks the parcels of land a user can see - should be able to see 2 markers
 const mockParcels = [
   { id: 1, latitude: 48.455059, longitude: -123.496452, propertyTypeId: 1 },
   { id: 2, latitude: 53.917065, longitude: -122.749672, propertyTypeId: 0 },
 ] as IProperty[];
-(useApi as unknown as Vitest.Mock).mockReturnValue({
+
+(useApi as unknown as Vitest.Mock<Array<Partial<PimsAPI>>>).mockReturnValue({
   loadProperties: vi.fn(async () => {
     return createPoints(mockParcels);
   }),
@@ -106,7 +106,7 @@ const noParcels = [] as IProperty[];
 let history = createMemoryHistory();
 describe('MapProperties View', () => {
   (useKeycloakWrapper as Vitest.Mock).mockReturnValue(
-    new (useKeycloakMock as any)(userRoles, userAgencies, userAgency),
+    new (useKeycloakMock as Vitest.Mock)(userRoles, userAgencies, userAgency),
   );
 
   beforeEach(() => {
