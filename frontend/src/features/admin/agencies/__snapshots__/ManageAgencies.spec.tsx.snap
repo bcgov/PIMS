@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1
 
-exports[`Manage Agencies Component Snapshot matches 1`] = `
+exports[`Manage Agencies Component > Snapshot matches 1`] = `
 <div
   class="ManageAgencies container-fluid"
 >

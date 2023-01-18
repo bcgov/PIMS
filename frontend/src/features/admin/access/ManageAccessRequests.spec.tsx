@@ -30,6 +30,19 @@ vi.mock('hooks/useKeycloakWrapper');
   new (useKeycloakMock as any)(userRoles, userAgencies, userAgency),
 );
 
+Enzyme.configure({ adapter: new Adapter() });
+
+const history = createMemoryHistory();
+history.push('admin');
+const mockStore = configureMockStore([thunk]);
+
+const lCodes = {
+  lookupCodes: [
+    { name: 'agencyVal', id: '1', isDisabled: false, type: API.AGENCY_CODE_SET_NAME },
+    { name: 'roleVal', id: '1', isDisabled: false, type: API.ROLE_CODE_SET_NAME },
+  ] as ILookupCode[],
+};
+
 const accessRequests = {
   page: 1,
   total: 2,
@@ -51,24 +64,6 @@ const accessRequests = {
     },
   ],
 };
-
-Enzyme.configure({ adapter: new Adapter() });
-
-const history = createMemoryHistory();
-history.push('admin');
-const mockStore = configureMockStore([thunk]);
-
-const lCodes = {
-  lookupCodes: [
-    { name: 'agencyVal', id: '1', isDisabled: false, type: API.AGENCY_CODE_SET_NAME },
-    { name: 'roleVal', id: '1', isDisabled: false, type: API.ROLE_CODE_SET_NAME },
-  ] as ILookupCode[],
-};
-
-vi.mock('react-router-dom', () => ({
-  ...vi.requireActual('react-router-dom'), // use actual for all non-hook parts
-  useRouteMatch: () => ({ url: '/admin', path: '/admin' }),
-}));
 
 const successStore = mockStore({
   [reducerTypes.ACCESS_REQUEST]: {
@@ -100,7 +95,9 @@ const componentRender = (store: any) => {
 };
 
 describe('Manage access requests', () => {
-  afterEach(() => vi.restoreAllMocks());
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
   it('Snapshot matches', () => {
     const component = componentRender(successStore);
     expect(component.toJSON()).toMatchSnapshot();

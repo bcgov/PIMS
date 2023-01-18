@@ -47,10 +47,6 @@ const lCodes = {
 };
 const mockAxios = new MockAdapter(axios);
 
-vi.mock('react-router-dom', () => ({
-  ...vi.requireActual('react-router-dom'), // use actual for all non-hook parts
-  useRouteMatch: () => ({ url: '/admin', path: '/admin' }),
-}));
 const getStore = (includeDate?: boolean) =>
   mockStore({
     [reducerTypes.USERS]: {
