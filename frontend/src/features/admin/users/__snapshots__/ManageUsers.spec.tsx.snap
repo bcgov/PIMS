@@ -1,36 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1
 
-exports[`Manage Users Component Snapshot matches 1`] = `
-.c2 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  justify-items: center;
-}
-
-.c3 {
-  margin-top: 0.2rem;
-}
-
-.c1 {
-  margin-top: 10px;
-  margin-bottom: 40px;
-}
-
-.c0 {
-  background-color: #fff !important;
-  color: primaryColor !important;
-  padding: 6px 5px;
-}
-
+exports[`Manage Users Component > Snapshot matches 1`] = `
 <div
   class="users-management-page"
 >
@@ -306,7 +276,7 @@ exports[`Manage Users Component Snapshot matches 1`] = `
   >
     <div>
       <button
-        class="c0 btn btn-primary"
+        class="sc-dJjYzT lcZUVt btn btn-primary"
         type="button"
       >
         <svg
@@ -328,7 +298,7 @@ exports[`Manage Users Component Snapshot matches 1`] = `
     </div>
   </div>
   <div
-    class="c1 container-fluid"
+    class="sc-ieecCq hMdxtc container-fluid"
   >
     <div
       class="table"
@@ -354,7 +324,7 @@ exports[`Manage Users Component Snapshot matches 1`] = `
               IDIR/BCeID
               <span />
               <div
-                class="c2"
+                class="sc-ksdxgE fRSfXY"
               >
                 <svg
                   fill="currentColor"
@@ -398,7 +368,7 @@ exports[`Manage Users Component Snapshot matches 1`] = `
               First name
               <span />
               <div
-                class="c2"
+                class="sc-ksdxgE fRSfXY"
               >
                 <svg
                   fill="currentColor"
@@ -442,7 +412,7 @@ exports[`Manage Users Component Snapshot matches 1`] = `
               Last name
               <span />
               <div
-                class="c2"
+                class="sc-ksdxgE fRSfXY"
               >
                 <svg
                   fill="currentColor"
@@ -486,7 +456,7 @@ exports[`Manage Users Component Snapshot matches 1`] = `
               Email
               <span />
               <div
-                class="c2"
+                class="sc-ksdxgE fRSfXY"
               >
                 <svg
                   fill="currentColor"
@@ -530,7 +500,7 @@ exports[`Manage Users Component Snapshot matches 1`] = `
               Position
               <span />
               <div
-                class="c2"
+                class="sc-ksdxgE fRSfXY"
               >
                 <svg
                   fill="currentColor"
@@ -574,7 +544,7 @@ exports[`Manage Users Component Snapshot matches 1`] = `
               Active
               <span />
               <div
-                class="c2"
+                class="sc-ksdxgE fRSfXY"
               >
                 <svg
                   fill="currentColor"
@@ -618,7 +588,7 @@ exports[`Manage Users Component Snapshot matches 1`] = `
               Agency
               <span />
               <div
-                class="c2"
+                class="sc-ksdxgE fRSfXY"
               >
                 <svg
                   fill="currentColor"
@@ -688,7 +658,7 @@ exports[`Manage Users Component Snapshot matches 1`] = `
               Created On
               <span />
               <div
-                class="c2"
+                class="sc-ksdxgE fRSfXY"
               >
                 <svg
                   fill="currentColor"
@@ -1164,7 +1134,7 @@ exports[`Manage Users Component Snapshot matches 1`] = `
             style="display: flex;"
           >
             <span
-              class="c3"
+              class="sc-fFeiMQ bVXUcA"
             >
               Show
             </span>
@@ -1175,7 +1145,7 @@ exports[`Manage Users Component Snapshot matches 1`] = `
               value="10"
             />
             <span
-              class="c3"
+              class="sc-fFeiMQ bVXUcA"
             >
               Entries
             </span>

@@ -1,10 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1
 
-exports[`Manage access requests Snapshot matches 1`] = `
-.c0 {
-  margin-top: 0.2rem;
-}
-
+exports[`Manage access requests > Snapshot matches 1`] = `
 <div
   className="manage-access-requests"
 >
@@ -50,7 +46,7 @@ exports[`Manage access requests Snapshot matches 1`] = `
                   stroke="currentColor"
                   strokeWidth="0"
                   style={
-                    Object {
+                    {
                       "color": undefined,
                     }
                   }
@@ -66,7 +62,7 @@ exports[`Manage access requests Snapshot matches 1`] = `
               <div
                 className="Menu-items left"
                 style={
-                  Object {
+                  {
                     "width": "260px",
                   }
                 }
@@ -76,7 +72,7 @@ exports[`Manage access requests Snapshot matches 1`] = `
                   onChange={[Function]}
                   placeholder="Filter agencies"
                   style={
-                    Object {
+                    {
                       "width": "calc(260px - 10px)",
                     }
                   }
@@ -118,7 +114,7 @@ exports[`Manage access requests Snapshot matches 1`] = `
                   stroke="currentColor"
                   strokeWidth="0"
                   style={
-                    Object {
+                    {
                       "color": undefined,
                     }
                   }
@@ -134,7 +130,7 @@ exports[`Manage access requests Snapshot matches 1`] = `
               <div
                 className="Menu-items left"
                 style={
-                  Object {
+                  {
                     "width": "200px",
                   }
                 }
@@ -144,7 +140,7 @@ exports[`Manage access requests Snapshot matches 1`] = `
                   onChange={[Function]}
                   placeholder="Filter roles"
                   style={
-                    Object {
+                    {
                       "width": "calc(200px - 10px)",
                     }
                   }
@@ -201,7 +197,7 @@ exports[`Manage access requests Snapshot matches 1`] = `
                     stroke="currentColor"
                     strokeWidth="0"
                     style={
-                      Object {
+                      {
                         "color": undefined,
                       }
                     }
@@ -238,7 +234,7 @@ exports[`Manage access requests Snapshot matches 1`] = `
                     stroke="currentColor"
                     strokeWidth="0"
                     style={
-                      Object {
+                      {
                         "color": undefined,
                         "marginLeft": "20px",
                       }
@@ -262,7 +258,7 @@ exports[`Manage access requests Snapshot matches 1`] = `
       className="table"
       role="table"
       style={
-        Object {
+        {
           "minWidth": undefined,
         }
       }
@@ -274,7 +270,7 @@ exports[`Manage access requests Snapshot matches 1`] = `
           className="tr"
           role="row"
           style={
-            Object {
+            {
               "display": "flex",
               "flex": "1 0 auto",
               "minWidth": "780px",
@@ -286,7 +282,7 @@ exports[`Manage access requests Snapshot matches 1`] = `
             colSpan={1}
             role="columnheader"
             style={
-              Object {
+              {
                 "alignItems": "center",
                 "boxSizing": "border-box",
                 "display": "flex",
@@ -310,7 +306,7 @@ exports[`Manage access requests Snapshot matches 1`] = `
             colSpan={1}
             role="columnheader"
             style={
-              Object {
+              {
                 "alignItems": "center",
                 "boxSizing": "border-box",
                 "display": "flex",
@@ -334,7 +330,7 @@ exports[`Manage access requests Snapshot matches 1`] = `
             colSpan={1}
             role="columnheader"
             style={
-              Object {
+              {
                 "alignItems": "center",
                 "boxSizing": "border-box",
                 "display": "flex",
@@ -358,7 +354,7 @@ exports[`Manage access requests Snapshot matches 1`] = `
             colSpan={1}
             role="columnheader"
             style={
-              Object {
+              {
                 "alignItems": "center",
                 "boxSizing": "border-box",
                 "display": "flex",
@@ -382,7 +378,7 @@ exports[`Manage access requests Snapshot matches 1`] = `
             colSpan={1}
             role="columnheader"
             style={
-              Object {
+              {
                 "alignItems": "center",
                 "boxSizing": "border-box",
                 "display": "flex",
@@ -406,7 +402,7 @@ exports[`Manage access requests Snapshot matches 1`] = `
             colSpan={1}
             role="columnheader"
             style={
-              Object {
+              {
                 "alignItems": "center",
                 "boxSizing": "border-box",
                 "display": "flex",
@@ -430,7 +426,7 @@ exports[`Manage access requests Snapshot matches 1`] = `
             colSpan={1}
             role="columnheader"
             style={
-              Object {
+              {
                 "alignItems": "center",
                 "boxSizing": "border-box",
                 "display": "flex",
@@ -454,7 +450,7 @@ exports[`Manage access requests Snapshot matches 1`] = `
             colSpan={1}
             role="columnheader"
             style={
-              Object {
+              {
                 "alignItems": "center",
                 "boxSizing": "border-box",
                 "display": "flex",
@@ -478,7 +474,7 @@ exports[`Manage access requests Snapshot matches 1`] = `
             colSpan={1}
             role="columnheader"
             style={
-              Object {
+              {
                 "alignItems": "center",
                 "boxSizing": "border-box",
                 "display": "flex",
@@ -510,7 +506,7 @@ exports[`Manage access requests Snapshot matches 1`] = `
             className="tr"
             role="row"
             style={
-              Object {
+              {
                 "display": "flex",
                 "flex": "1 0 auto",
                 "minWidth": "780px",
@@ -523,7 +519,7 @@ exports[`Manage access requests Snapshot matches 1`] = `
               onClick={[Function]}
               role="cell"
               style={
-                Object {
+                {
                   "alignItems": "flex-start",
                   "boxSizing": "border-box",
                   "display": "flex",
@@ -547,7 +543,7 @@ exports[`Manage access requests Snapshot matches 1`] = `
               onClick={[Function]}
               role="cell"
               style={
-                Object {
+                {
                   "alignItems": "flex-start",
                   "boxSizing": "border-box",
                   "display": "flex",
@@ -568,7 +564,7 @@ exports[`Manage access requests Snapshot matches 1`] = `
               onClick={[Function]}
               role="cell"
               style={
-                Object {
+                {
                   "alignItems": "flex-start",
                   "boxSizing": "border-box",
                   "display": "flex",
@@ -589,7 +585,7 @@ exports[`Manage access requests Snapshot matches 1`] = `
               onClick={[Function]}
               role="cell"
               style={
-                Object {
+                {
                   "alignItems": "flex-start",
                   "boxSizing": "border-box",
                   "display": "flex",
@@ -610,7 +606,7 @@ exports[`Manage access requests Snapshot matches 1`] = `
               onClick={[Function]}
               role="cell"
               style={
-                Object {
+                {
                   "alignItems": "flex-start",
                   "boxSizing": "border-box",
                   "display": "flex",
@@ -631,7 +627,7 @@ exports[`Manage access requests Snapshot matches 1`] = `
               onClick={[Function]}
               role="cell"
               style={
-                Object {
+                {
                   "alignItems": "flex-start",
                   "boxSizing": "border-box",
                   "display": "flex",
@@ -647,7 +643,7 @@ exports[`Manage access requests Snapshot matches 1`] = `
               <span
                 className="badge rounded-pill bg-secondary"
                 style={
-                  Object {
+                  {
                     "fontSize": ".75rem",
                   }
                 }
@@ -661,7 +657,7 @@ exports[`Manage access requests Snapshot matches 1`] = `
               onClick={[Function]}
               role="cell"
               style={
-                Object {
+                {
                   "alignItems": "flex-start",
                   "boxSizing": "border-box",
                   "display": "flex",
@@ -682,7 +678,7 @@ exports[`Manage access requests Snapshot matches 1`] = `
               onClick={[Function]}
               role="cell"
               style={
-                Object {
+                {
                   "alignItems": "flex-start",
                   "boxSizing": "border-box",
                   "display": "flex",
@@ -703,7 +699,7 @@ exports[`Manage access requests Snapshot matches 1`] = `
               onClick={[Function]}
               role="cell"
               style={
-                Object {
+                {
                   "alignItems": "flex-start",
                   "boxSizing": "border-box",
                   "display": "flex",
@@ -734,7 +730,7 @@ exports[`Manage access requests Snapshot matches 1`] = `
                     strokeLinejoin="round"
                     strokeWidth="2"
                     style={
-                      Object {
+                      {
                         "color": undefined,
                       }
                     }
@@ -762,7 +758,7 @@ exports[`Manage access requests Snapshot matches 1`] = `
                 <div
                   className="Menu-items"
                   style={
-                    Object {
+                    {
                       "width": "100px",
                     }
                   }
@@ -811,7 +807,7 @@ exports[`Manage access requests Snapshot matches 1`] = `
       <div
         className="tfoot tfoot-light"
         style={
-          Object {
+          {
             "height": "15px",
           }
         }
@@ -886,13 +882,13 @@ exports[`Manage access requests Snapshot matches 1`] = `
         >
           <div
             style={
-              Object {
+              {
                 "display": "flex",
               }
             }
           >
             <span
-              className="c0"
+              className="sc-fFeiMQ bVXUcA"
             >
               Show
             </span>
@@ -900,7 +896,7 @@ exports[`Manage access requests Snapshot matches 1`] = `
               className="form-control form-control-sm"
               onChange={[Function]}
               style={
-                Object {
+                {
                   "marginLeft": 10,
                   "marginRight": 10,
                   "width": 50,
@@ -910,7 +906,7 @@ exports[`Manage access requests Snapshot matches 1`] = `
               value="10"
             />
             <span
-              className="c0"
+              className="sc-fFeiMQ bVXUcA"
             >
               Entries
             </span>
@@ -919,7 +915,7 @@ exports[`Manage access requests Snapshot matches 1`] = `
         <div
           className="Menu-items"
           style={
-            Object {
+            {
               "width": "60px",
             }
           }

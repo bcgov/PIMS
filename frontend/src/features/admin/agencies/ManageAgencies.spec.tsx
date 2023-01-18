@@ -37,10 +37,6 @@ const lCodes = {
   ] as ILookupCode[],
 };
 
-vi.mock('react-router-dom', () => ({
-  ...vi.requireActual('react-router-dom'), // use actual for all non-hook parts
-  useRouteMatch: () => ({ url: '/admin/agencies', path: '/admin/agencies' }),
-}));
 const getStore = () =>
   mockStore({
     [reducerTypes.AGENCIES]: {

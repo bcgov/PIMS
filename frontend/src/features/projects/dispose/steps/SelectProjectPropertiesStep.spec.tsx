@@ -62,9 +62,11 @@ describe('Select Project Properties Step', () => {
     mockAxios.reset();
     mockKeycloak([], [1]);
   });
+
   afterEach(() => {
     cleanup();
   });
+
   it('renders correctly', async () => {
     mockAxios.onAny().reply(200, { items: [mockFlatProperty] });
     const { container, findByText } = render(uiElement);
@@ -82,6 +84,7 @@ describe('Select Project Properties Step', () => {
       expect(mockAxios.history.get[0].url).toMatch(/agencies=1/);
     });
   });
+
   it('initially requests properties using a default classification id', async () => {
     mockAxios.onAny().reply(200, { items: [mockFlatProperty] });
     render(uiElement);
@@ -90,6 +93,7 @@ describe('Select Project Properties Step', () => {
       expect(mockAxios.history.get[0].url).toMatch(/classificationId=2/);
     });
   });
+
   it('requests properties that may already be in another project', async () => {
     mockAxios.onAny().reply(200, { items: [mockFlatProperty] });
     render(uiElement);
@@ -116,6 +120,7 @@ describe('Select Project Properties Step', () => {
       expect(propertyText).toBeInTheDocument();
     });
   });
+
   it('displays all associated projects', async () => {
     const propertyWithProjects = {
       ...mockFlatProperty,
@@ -132,6 +137,7 @@ describe('Select Project Properties Step', () => {
       expect(projectTwoText).toHaveAttribute('href', '/projects?projectNumber=SPP-10001');
     });
   });
+
   it('allows properties to be added to the project', async () => {
     mockAxios.onAny().reply(200, { items: [mockFlatProperty] });
     const { findByTestId, findByText, findAllByText, getByText } = render(uiElement);
@@ -146,6 +152,7 @@ describe('Select Project Properties Step', () => {
     expect(selectedText).toBeInTheDocument();
     expect(propertyNameText).toHaveLength(2);
   });
+
   it('requests a new page of data when a paging button is pressed', async () => {
     mockAxios.onAny().reply(200, { items: [mockFlatProperty], total: 6 });
     const { findByText, getByLabelText } = render(uiElement);
@@ -157,6 +164,7 @@ describe('Select Project Properties Step', () => {
       expect(mockAxios.history.get[1].url).toMatch(/page=2/);
     });
   });
+
   it('selected properties are maintained even if the page changes.', async () => {
     mockAxios.onAny().reply(200, { items: [mockFlatProperty], total: 6 });
     const { findByTestId, findByText, findAllByText, getByLabelText, getByText } = render(
@@ -172,6 +180,9 @@ describe('Select Project Properties Step', () => {
     //add all selected properties to the project.
     const addToProjectBtn = await findByText('Add To Project');
     fireEvent.click(addToProjectBtn);
+    //change the page back (with the property still selected)
+    const backPageButton = getByLabelText('Page 1');
+    fireEvent.click(backPageButton);
     //ensure that the property is in both tables.
     const propertyNameText = await findAllByText('Test Property');
     const selectedText = getByText('1 Selected');
