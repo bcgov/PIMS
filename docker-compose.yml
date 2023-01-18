@@ -39,6 +39,7 @@ services:
     container_name: pims-app
     build:
       context: frontend
+      target: prod
     volumes:
       - ./frontend/src:/usr/app/src
       - ./frontend/public:/usr/app/public
