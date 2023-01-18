@@ -3,4 +3,7 @@ package-lock.json
 *.html
 *.md
 node_modules
-build
+build/
+dist/
+.prettierrc.js
+

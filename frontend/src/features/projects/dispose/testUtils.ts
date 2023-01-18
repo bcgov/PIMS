@@ -6,13 +6,14 @@ import { WorkflowStatus } from 'hooks/api/projects';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { getCurrentFiscalYear } from 'utils';
+import * as Vitest from 'vitest';
 
 import { NoteTypes, PropertyTypes } from '../../../constants';
 
 <<<<<<< HEAD
 =======
 export const mockKeycloak = (claims: string[], agencies: number[]) => {
-  useKeycloak.mockReturnValue({
+  (useKeycloak as Vitest.Mock).mockReturnValue({
     keycloak: {
       userInfo: {
         agencies: agencies,
