@@ -1,9 +1,9 @@
 /// <reference types="vitest" />
 import react from '@vitejs/plugin-react';
+import dotenv from 'dotenv';
 import { defineConfig } from 'vite';
 import svgrPlugin from 'vite-plugin-svgr';
 import viteTsconfigPaths from 'vite-tsconfig-paths';
-import dotenv from 'dotenv';
 dotenv.config();
 
 // https://vitejs.dev/config/
@@ -13,7 +13,7 @@ export default defineConfig({
     outDir: 'build',
   },
   server: {
-    host: 'frontend',
+    host: true,
     port: 3000,
     proxy: {
       '/api': {
@@ -23,7 +23,7 @@ export default defineConfig({
         xfwd: true,
         cookiePathRewrite: '/',
         cookieDomainRewrite: '',
-        rewrite: path => path,
+        rewrite: (path) => path,
       },
     },
   },

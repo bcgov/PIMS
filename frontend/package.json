@@ -21,7 +21,9 @@
     "@bcgov/bc-sans": "1.0.1",
     "@react-keycloak/web": "3.4.0",
     "@react-leaflet/core": "1.1.1",
+    "@redux-devtools/extension": "3.2.5",
     "@reduxjs/toolkit": "1.9.1",
+    "@vitejs/plugin-react": "3.0.1",
     "ajv": "8.11.2",
     "axios": "0.27.2",
     "bootstrap": "5.2.2",
@@ -76,7 +78,6 @@
   "devDependencies": {
     "@babel/preset-typescript": "7.8.3",
     "@cfaester/enzyme-adapter-react-18": "0.6.0",
-    "@redux-devtools/extension": "3.2.3",
     "@testing-library/dom": "8.19.1",
     "@testing-library/jest-dom": "5.16.5",
     "@testing-library/react": "13.4.0",
@@ -110,10 +111,8 @@
     "@types/yup": "0.29.14",
     "@typescript-eslint/eslint-plugin": "5.48.2",
     "@typescript-eslint/parser": "5.48.2",
-    "@vitejs/plugin-react": "3.0.1",
     "axios-mock-adapter": "1.21.2",
     "c8": "7.12.0",
-    "cross-env": "7.0.3",
     "cypress": "11.0.1",
     "cypress-keycloak-commands": "1.2.0",
     "enzyme": "3.11.0",
@@ -128,7 +127,7 @@
     "husky": "4.3.8",
     "jsdom": "21.0.0",
     "node-sass": "8.0.0",
-    "prettier": "1.19.1",
+    "prettier": "2.8.3",
     "pretty": "2.0.0",
     "pretty-quick": "2.0.1",
     "react-docgen-typescript": "2.2.2",
@@ -148,20 +147,6 @@
     "@types/react": "18.0.26",
     "react-test-renderer": "18.2.0",
     "http-cache-semantics@<4.1.1": "4.1.1"
-  },
-  "eslintConfig": {
-    "parser": "@typescript-eslint/parser",
-    "extends": [
-      "react-app",
-      "plugin:prettier/recommended"
-    ],
-    "plugins": [
-      "simple-import-sort"
-    ],
-    "rules": {
-      "simple-import-sort/imports": "error",
-      "simple-import-sort/exports": "error"
-    }
   },
   "husky": {
     "hooks": {
