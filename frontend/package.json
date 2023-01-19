@@ -111,7 +111,6 @@
     "@types/yup": "0.29.14",
     "@typescript-eslint/eslint-plugin": "5.48.2",
     "@typescript-eslint/parser": "5.48.2",
-    "@vitejs/plugin-react": "3.0.1",
     "axios-mock-adapter": "1.21.2",
     "c8": "7.12.0",
     "cypress": "11.0.1",
