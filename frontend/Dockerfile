@@ -27,17 +27,32 @@ CMD ["npm", "start"]
 #############################
 #         Prod Build        #
 #############################
-FROM node as prod
+FROM node as prod-base
 ENV NODE_ENV=production
 
 # Install dependencies. Only installs prod dependencies when NODE_ENV=production
 RUN npm i
 
-# Needed for serve to be available within the container
-RUN npm install -g serve
-
+# Build application
 RUN npm run build
 
-WORKDIR /usr/app/dist
+## Stage 2: Nginx state for serving content
+FROM nginx:alpine-slim as prod
 
-CMD ["serve", "-p", "3000"]
+# copy custom nginx configuration from host to container
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# Set working directory to nginx asset directory
+WORKDIR /usr/share/nginx/html
+
+# Remove default nginx static assets
+RUN rm -rf ./*
+
+# Copy static assets from builder stage
+COPY --from=prod-base /usr/app/build .
+
+# Provide nginx directory the required permissions
+RUN chmod g+rwx /var/cache/nginx /var/run /var/log/nginx
+
+# Run nginx with global directives and daemon off
+ENTRYPOINT ["nginx", "-g", "daemon off;"]
