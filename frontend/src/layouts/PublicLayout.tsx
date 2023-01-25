@@ -12,8 +12,8 @@ const PublicLayout: React.FC<React.PropsWithChildren> = ({ children }) => {
   // Change styling based on environment
   let environment = 'production';
   if (window.location.href.includes('localhost')) environment = 'local';
-  else if (window.location.href.includes('dev')) environment = 'development';
-  else if (window.location.href.includes('test')) environment = 'testing';
+  else if (window.location.href.includes('pims-dev')) environment = 'development';
+  else if (window.location.href.includes('pims-test')) environment = 'testing';
 
   return (
     <>
