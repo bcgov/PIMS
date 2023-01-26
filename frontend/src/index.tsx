@@ -13,7 +13,7 @@ import Keycloak from 'keycloak-js';
 import { keycloakInstance } from 'keycloakInstance';
 import EmptyLayout from 'layouts/EmptyLayout';
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
@@ -65,7 +65,8 @@ const Index = () => {
   );
 };
 
-ReactDOM.render(<Index />, document.getElementById('root'));
+const root = createRoot(document.getElementById('root')!);
+root.render(<Index />);
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

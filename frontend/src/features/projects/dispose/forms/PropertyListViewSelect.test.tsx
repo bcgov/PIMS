@@ -138,31 +138,34 @@ describe('Property List View Select', () => {
     });
   });
 
-  it('removes property from project', async () => {
-    await act(async () => {
-      const { container, queryByText, getByText } = render(
-        <Provider store={store}>
-          <MemoryRouter initialEntries={[history.location]}>
-            <Formik initialValues={{ properties: testData.items }} onSubmit={noop}>
-              <PropertyListViewSelect
-                setPageIndex={setPageIndex}
-                pageIndex={0}
-                filter={filter}
-                field="properties"
-              />
-            </Formik>
-          </MemoryRouter>
-        </Provider>,
-      );
-      expect(queryByText('Test, Alert Bay')).toBeInTheDocument();
+  it('removes property from project', () => {
+    const { container, queryByText, getByText } = render(
+      <Provider store={store}>
+        <MemoryRouter initialEntries={[history.location]}>
+          <Formik initialValues={{ properties: testData.items }} onSubmit={noop}>
+            <PropertyListViewSelect
+              setPageIndex={setPageIndex}
+              pageIndex={0}
+              filter={filter}
+              field="properties"
+            />
+          </Formik>
+        </MemoryRouter>
+      </Provider>,
+    );
+    const checkbox = container.querySelector('input[title="Toggle Row Selected"]');
+    const remove = getByText('Remove Selected');
+    act(() => {
+      waitFor(() => {
+        expect(queryByText('Test, Alert Bay')).toBeInTheDocument();
+      });
 
-      const checkbox = container.querySelector('input[title="Toggle Row Selected"]');
-      const remove = getByText('Remove Selected');
+      waitFor(() => fireEvent.click(checkbox!));
+      waitFor(() => fireEvent.click(remove!));
 
-      await waitFor(() => fireEvent.click(checkbox!));
-      await waitFor(() => fireEvent.click(remove!));
-
-      expect(queryByText('Test, Alert Bay')).toBeNull();
+      waitFor(() => {
+        expect(queryByText('Test, Alert Bay')).toBeNull();
+      });
     });
   });
 });

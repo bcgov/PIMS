@@ -4,7 +4,7 @@ import { EmptyHeader, Footer } from 'components/layout';
 import React from 'react';
 import { Container } from 'react-bootstrap';
 
-const EmptyLayout: React.FC = ({ children }) => {
+const EmptyLayout: React.FC<React.PropsWithChildren> = ({ children }) => {
   return (
     <>
       <Container fluid className="App">

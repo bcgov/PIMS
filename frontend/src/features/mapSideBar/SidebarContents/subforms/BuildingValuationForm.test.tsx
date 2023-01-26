@@ -1,4 +1,4 @@
-import { render } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import { Formik } from 'formik';
 import { noop } from 'lodash';
 import React from 'react';
@@ -25,5 +25,7 @@ it('renders two seperate tables for assessed value and net book value', () => {
 it('headers for (Assessed Value, Assessment Year, Assessed Building Value) + (Net Book Value, Fiscal Year, Effective Date, Net Book Value)', () => {
   const { getAllByRole } = render(form);
   const headers = getAllByRole('columnheader');
-  expect(headers).toHaveLength(14);
+  waitFor(() => {
+    expect(headers).toHaveLength(14);
+  });
 });

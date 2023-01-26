@@ -49,7 +49,6 @@ namespace Pims.Core.Extensions
             }
 
             return "";
-
         }
 
         /// <summary>

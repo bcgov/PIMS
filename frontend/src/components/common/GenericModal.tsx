@@ -74,7 +74,7 @@ interface ModalProps {
  * @param props customize the component with custom text, and an operation to take when the component is closed.
  */
 const GenericModal = (props: ModalProps) => {
-  const [show, setShow] = useState(true);
+  const [show, setShow] = useState(false);
   useEffect(() => {
     if (props.display !== undefined) {
       setShow(props.display);

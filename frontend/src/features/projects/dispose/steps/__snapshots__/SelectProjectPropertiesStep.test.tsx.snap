@@ -554,7 +554,6 @@ exports[`Select Project Properties Step renders correctly 1`] = `
                 <div
                   class="sortable-column"
                 >
-                  
                   <span />
                 </div>
               </div>

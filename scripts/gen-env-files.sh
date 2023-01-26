@@ -1,13 +1,5 @@
 #!/bin/bash
 
-echo 'Enter a username for the API database.'
-read -p 'Username: ' varApiDb
-
-# Generate a random password that satisfies MSSQL password requirements.
-echo 'A password is randomly being generated.'
-passvar=$(date +%s | sha256sum | base64 | head -c 29)A8!
-echo $passvar
-
 # Set environment variables.
 # Docker Compose
 if test -f "./.env"; then
@@ -26,12 +18,12 @@ if test -f "./database/mssql/.env"; then
 else
 echo \
 "ACCEPT_EULA=Y
-MSSQL_SA_PASSWORD=$passvar
+MSSQL_SA_PASSWORD=MWIxZWFlNTZiOTU3YTZmODEyZDUxYA8!
 MSSQL_PID=Developer
 TZ=America/Los_Angeles
 DB_NAME=pims
 DB_USER=admin
-DB_PASSWORD=$passvar
+DB_PASSWORD=MWIxZWFlNTZiOTU3YTZmODEyZDUxYA8!
 TIMEOUT_LENGTH=120" >> ./database/mssql/.env
 fi
 
@@ -42,8 +34,13 @@ else
 echo \
 "ASPNETCORE_ENVIRONMENT=Development
 ASPNETCORE_URLS=http://*:8080
-DB_PASSWORD=$passvar
-Keycloak__ServiceAccount__Secret=" >> ./backend/api/.env
+DB_PASSWORD=MWIxZWFlNTZiOTU3YTZmODEyZDUxYA8!
+Keycloak__Secret=
+Keycloak__ServiceAccount__Secret=
+Keycloak__FrontendClientId=
+#Ches__Username=
+#Ches__Password=
+#Ches__OverrideTo=" >> ./backend/api/.env
 fi
 
 # DAL DB migration
@@ -52,7 +49,7 @@ if test -f "./backend/dal/.env"; then
 else
 echo \
 "ConnectionStrings__PIMS=Server=localhost,5433;Database=pims;User Id=$varApiDb;
-DB_PASSWORD=$passvar" >> ./backend/dal/.env
+DB_PASSWORD=MWIxZWFlNTZiOTU3YTZmODEyZDUxYA8!" >> ./backend/dal/.env
 fi
 
 # Application
@@ -67,7 +64,4 @@ REACT_APP_KEYCLOAK_CLIENT_ID=pims-local-test-4292
 REACT_APP_KEYCLOAK_AUTH_SERVER_URL=https://dev.loginproxy.gov.bc.ca/auth" >> ./frontend/.env
 fi
 
-# Local
-ASPNETCORE_ENVIRONMENT=Local
-Auth__Keycloak__Secret=
-
+echo 'Before running all the docker containers, update the .env files with the Keycloak Client Secret (pims-service-account).'

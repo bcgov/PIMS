@@ -144,7 +144,7 @@ export const ProjectListView: React.FC<IProps> = ({
     },
     [setFilter, setPageIndex],
   );
-  const onPageSizeChanged = useCallback(size => {
+  const onPageSizeChanged = useCallback((size: number) => {
     setPageSize(size);
   }, []);
 

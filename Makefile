@@ -75,7 +75,7 @@ clean: ## Removes all local containers, images, volumes, etc
 	@docker volume rm -f database-data
 
 setup: ## Setup local container environment, initialize keycloak and database
-	@make build; make up; make pause-30; make db-update; 
+	@make build; make up; make pause-30; make db-update;
 
 pause-30:
 	@echo "$(P) Pausing 30 seconds..."

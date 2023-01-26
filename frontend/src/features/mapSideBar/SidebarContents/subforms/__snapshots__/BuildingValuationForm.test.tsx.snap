@@ -762,50 +762,8 @@ exports[`renders correctly 1`] = `
         </div>
         <div
           class="tfoot tfoot-light"
-        >
-          <div
-            class="tr"
-            role="row"
-            style="display: flex; flex: 1 0 auto; min-width: 90px;"
-          >
-            <div
-              class="th"
-              colspan="1"
-              role="columnheader"
-              style="box-sizing: border-box; flex: 50 0 auto; min-width: 30px; width: 50px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
-            >
-               
-            </div>
-            <div
-              class="th"
-              colspan="1"
-              role="columnheader"
-              style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
-            >
-               
-            </div>
-            <div
-              class="th"
-              colspan="1"
-              role="columnheader"
-              style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
-            >
-               
-            </div>
-          </div>
-          <div
-            class="tr"
-            role="row"
-            style="display: flex; flex: 1 0 auto; min-width: 90px;"
-          >
-            <div
-              class="th"
-              colspan="3"
-              role="columnheader"
-              style="box-sizing: border-box; flex: 250 0 auto; min-width: 90px; width: 250px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
-            />
-          </div>
-        </div>
+          style="height: 15px;"
+        />
       </div>
       <div
         class="table-toolbar"
@@ -1297,42 +1255,8 @@ exports[`renders correctly 1`] = `
         </div>
         <div
           class="tfoot tfoot-light"
-        >
-          <div
-            class="tr"
-            role="row"
-            style="display: flex; flex: 1 0 auto; min-width: 60px;"
-          >
-            <div
-              class="th"
-              colspan="1"
-              role="columnheader"
-              style="box-sizing: border-box; flex: 90 0 auto; min-width: 30px; width: 90px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
-            >
-               
-            </div>
-            <div
-              class="th"
-              colspan="1"
-              role="columnheader"
-              style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
-            >
-               
-            </div>
-          </div>
-          <div
-            class="tr"
-            role="row"
-            style="display: flex; flex: 1 0 auto; min-width: 60px;"
-          >
-            <div
-              class="th"
-              colspan="2"
-              role="columnheader"
-              style="box-sizing: border-box; flex: 190 0 auto; min-width: 60px; width: 190px; justify-content: flex-start; text-align: left; align-items: center; display: flex;"
-            />
-          </div>
-        </div>
+          style="height: 15px;"
+        />
       </div>
       <div
         class="table-toolbar"
