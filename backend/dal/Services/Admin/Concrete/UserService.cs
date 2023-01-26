@@ -12,6 +12,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Net.Http;
+using System.Text;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json.Linq;
+using System.Text.Json;
+using System.ComponentModel;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace Pims.Dal.Services.Admin
 {
@@ -20,7 +28,9 @@ namespace Pims.Dal.Services.Admin
     /// </summary>
     public class UserService : BaseService<User>, IUserService
     {
+        private IConfiguration configuration;
         #region Variables
+        private string access_token = "";
         #endregion
 
         #region Constructors
@@ -31,7 +41,7 @@ namespace Pims.Dal.Services.Admin
         /// <param name="user"></param>
         /// <param name="service"></param>
         /// <param name="logger"></param>
-        public UserService(PimsContext dbContext, ClaimsPrincipal user, IPimsService service, ILogger<UserService> logger) : base(dbContext, user, service, logger) { }
+        public UserService(PimsContext dbContext, ClaimsPrincipal user, IPimsService service, ILogger<UserService> logger, IConfiguration configuration) : base(dbContext, user, service, logger) { this.configuration = configuration; }
         #endregion
 
         #region Methods
@@ -135,17 +145,50 @@ namespace Pims.Dal.Services.Admin
         /// <param name="id"></param>
         /// <exception type="KeyNotFoundException">Entity does not exist in the datasource.</exception>
         /// <returns></returns>
-        public User Get(Guid id)
+        public GoldUser Get(Guid id)
         {
             this.User.ThrowIfNotAuthorized(Permissions.AdminUsers);
 
-            return this.Context.Users
+            var user = this.Context.Users
                 .Include(u => u.Roles)
                 .ThenInclude(r => r.Role)
                 .Include(u => u.Agencies)
                 .ThenInclude(a => a.Agency)
                 .AsNoTracking()
-                .SingleOrDefault(u => u.Id == id) ?? throw new KeyNotFoundException();
+                .SingleOrDefault(u => u.Id == id);
+
+            if (user == null) throw new KeyNotFoundException();
+            GoldUser gUser = new GoldUser(user);
+            string preferred_username = GetUsersPreferredUsername(gUser.Email, gUser.Username.Split("@").Last()).Result;
+            gUser.GoldUserRoles = GetGoldUsersRolesAsync(preferred_username).Result;
+            return gUser;
+
+        }
+
+        /// <summary>
+        /// Get the user with the specified 'id'.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <exception type="KeyNotFoundException">Entity does not exist in the datasource.</exception>
+        /// <returns></returns>
+        public GoldUser Get(string username)
+        {
+            this.User.ThrowIfNotAuthorized(Permissions.AdminUsers);
+
+            var user = this.Context.Users
+                .Include(u => u.Roles)
+                .ThenInclude(r => r.Role)
+                .Include(u => u.Agencies)
+                .ThenInclude(a => a.Agency)
+                .AsNoTracking()
+                .SingleOrDefault(u => u.Username == username);
+
+            if (user == null) throw new KeyNotFoundException();
+            GoldUser gUser = new GoldUser(user);
+            string preferred_username = GetUsersPreferredUsername(gUser.Email, gUser.Username.Split("@").Last()).Result;
+            gUser.GoldUserRoles = GetGoldUsersRolesAsync(preferred_username).Result;
+            return gUser;
+
         }
 
         /// <summary>
@@ -243,6 +286,190 @@ namespace Pims.Dal.Services.Admin
             existingUser.Agencies.Clear();
 
             base.Remove(existingUser);
+        }
+
+        /// <summary>
+        /// Get all of the given user's roles from keycloak
+        /// </summary>
+        /// <param name="preferred_username"></param>
+        public async Task<IEnumerable<string>> GetGoldUsersRolesAsync(string preferred_username)
+        {
+            // TODO: Iterate on the following to make this D.R.Y.
+            HttpClient _httpClient = new HttpClient();
+            string token = await GetToken();
+
+            // Keycloak Gold only wants the clientID as a number, which is always at the end of the id, after a "-"
+            string frontendId = this.configuration["Keycloak:FrontendClientId"].Split("-").Last();
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, $"https://api.loginproxy.gov.bc.ca/api/v1/integrations/{frontendId}/{getEnv()}/users/{preferred_username}/roles");
+            request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+            HttpResponseMessage response = await _httpClient.SendAsync(request);
+            if (!response.IsSuccessStatusCode) throw new Exception("Unable to fetch roles from Keycloak Gold");
+            string payload = await response.Content.ReadAsStringAsync();
+            JsonDocument json = JsonDocument.Parse(payload);
+
+            IEnumerable<string> roles = json.RootElement.GetProperty("data").EnumerateArray().Select(r => r.GetProperty("name").GetString());
+
+            return roles;
+        }
+
+        /// <summary>
+        /// Get the given user's preferred username, which is required for subsequent Keycloak Gold API calls
+        /// </summary>
+        /// <param name="email"></param>
+        /// <param name="identityProvider">Rather @idir or @bceid</param>
+        public async Task<string> GetUsersPreferredUsername(string email, string identityProvider)
+        {
+            // TODO: Iterate on the following to make this D.R.Y.
+            HttpClient _httpClient = new HttpClient();
+            string token = await GetToken();
+
+            // Keycloak Gold only wants the clientID as a number, which is always at the end of the id, after a "-"
+            string frontendId = this.configuration["Keycloak:FrontendClientId"].Split("-").Last();
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, $"https://api.loginproxy.gov.bc.ca/api/v1/{getEnv()}/{identityProvider}/users?email={email}");
+            request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+            HttpResponseMessage response = await _httpClient.SendAsync(request);
+            if (!response.IsSuccessStatusCode) throw new Exception("Unable to get user's username from Keycloak Gold");
+            string payload = await response.Content.ReadAsStringAsync();
+
+            JsonDocument json = JsonDocument.Parse(payload);
+            string username = json.RootElement.GetProperty("data").EnumerateArray().First().GetProperty("username").GetString();
+
+            return username;
+        }
+
+        /// <summary>
+        /// Update user's roles in Keycloak, given an array of role names
+        /// </summary>
+        /// <param name="preferred_username"></param>
+        /// <param name="roles"></param>
+        public async Task<string> UpdateGoldRolesAsync(string preferred_username, IEnumerable<string> roles)
+        {
+            // TODO: Iterate on the following to make this D.R.Y.
+            HttpClient _httpClient = new HttpClient();
+            string token = await GetToken();
+
+            string frontendId = this.configuration["Keycloak:FrontendClientId"].Split("-").Last();
+
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, $"https://api.loginproxy.gov.bc.ca/api/v1/integrations/{frontendId}/{getEnv()}/users/{preferred_username}/roles");
+            request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+            var serializableRoles = roles.Select(role => new { name = role });
+            string json = JsonSerializer.Serialize(serializableRoles);
+            request.Content = new StringContent(json, Encoding.UTF8, "application/json");
+            HttpResponseMessage response = await _httpClient.SendAsync(request);
+            if (!response.IsSuccessStatusCode) throw new Exception("Unable to update roles in Keycloak Gold");
+
+            // JObject payload = JObject.Parse(await response.Content.ReadAsStringAsync());
+
+            return response.Content.ReadAsStringAsync().Result;
+        }
+
+        /// <summary>
+        /// Add a role to the given user in Keycloak Gold
+        /// </summary>
+        /// <param name="preferred_username"></param>
+        /// <param name="roleName"></param>
+        public async Task<string> AddRoleToUser(string preferred_username, string roleName)
+        {
+            // TODO: Iterate on the following to make this D.R.Y.
+            HttpClient _httpClient = new HttpClient();
+            string token = await GetToken();
+
+            string frontendId = this.configuration["Keycloak:FrontendClientId"].Split("-").Last();
+
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, $"https://api.loginproxy.gov.bc.ca/api/v1/integrations/{frontendId}/{getEnv()}/users/{preferred_username}/roles");
+            request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+            var serializableRole = new object[] { new { name = roleName } };
+            string json = JsonSerializer.Serialize(serializableRole);
+            request.Content = new StringContent(json, Encoding.UTF8, "application/json");
+            HttpResponseMessage response = await _httpClient.SendAsync(request);
+            if (!response.IsSuccessStatusCode) throw new Exception("Unable to add role in Keycloak Gold");
+
+            // JObject payload = JObject.Parse(await response.Content.ReadAsStringAsync());
+
+            return response.Content.ReadAsStringAsync().Result;
+        }
+
+        /// <summary>
+        /// Delete a role for the given user in Keycloak Gold
+        /// </summary>
+        /// <param name="preferred_username"></param>
+        /// <param name="roles"></param>
+        public async Task<string> DeleteRoleFromUser(string preferred_username, string roleName)
+        {
+            // TODO: Iterate on the following to make this D.R.Y.
+            HttpClient _httpClient = new HttpClient();
+            string token = await GetToken();
+
+            string frontendId = this.configuration["Keycloak:FrontendClientId"].Split("-").Last();
+
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Delete, $"https://api.loginproxy.gov.bc.ca/api/v1/integrations/{frontendId}/{getEnv()}/users/{preferred_username}/roles/{roleName}");
+            request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+            HttpResponseMessage response = await _httpClient.SendAsync(request);
+            if (!response.IsSuccessStatusCode) throw new Exception("Unable to delete role from user in Keycloak Gold");
+            // JObject payload = JObject.Parse(await response.Content.ReadAsStringAsync());
+
+            return response.Content.ReadAsStringAsync().Result;
+        }
+
+        private string getEnv()
+        {
+            string envName = this.configuration["Pims:Environment:Name"];
+
+            if (envName == "Production")
+            {
+                return "prod";
+            }
+            else if (envName == "Test")
+            {
+                return "test";
+            }
+            else
+            {
+                return "dev";
+            }
+
+        }
+
+
+        /// <summary>
+        /// Get an access token for the Keycloak Gold API
+        /// </summary>
+        public async Task<string> GetToken()
+        {
+            if (isTokenValid(this.access_token)) return this.access_token;
+
+            HttpClient _httpClient = new HttpClient();
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, "https://api.loginproxy.gov.bc.ca/api/v1/token");
+            request.Content = new FormUrlEncodedContent(new Dictionary<string, string>
+                {
+                    {"client_id", this.configuration["Keycloak:ServiceAccount:Client"]},
+                    {"client_secret", this.configuration["Keycloak:ServiceAccount:Secret"]},
+                    {"grant_type", "client_credentials"}
+                });
+            request.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/x-www-form-urlencoded");
+            HttpResponseMessage response = await _httpClient.SendAsync(request);
+            if (!response.IsSuccessStatusCode) throw new Exception("Unable to get token from Keycloak Gold");
+            JObject payload = JObject.Parse(await response.Content.ReadAsStringAsync());
+            string token = payload.Value<string>("access_token");
+            this.access_token = token;
+            return token;
+        }
+        /// <summary>
+        /// Tests the validity of a JWT
+        /// </summary>
+        /// <param name="token"></param>
+        private bool isTokenValid(string token)
+        {
+            try
+            {
+                var handler = new JwtSecurityTokenHandler();
+                var decodedToken = handler.ReadJwtToken(this.access_token);
+                return decodedToken.ValidTo >= DateTime.UtcNow;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
         }
 
         /// <summary>

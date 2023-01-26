@@ -67,7 +67,7 @@ namespace Pims.Core.Test
 
             foreach (var claim in permission)
             {
-                claims.Add(new Claim(ClaimTypes.Role, claim.GetName()));
+                claims.Add(new Claim("client_roles", claim.GetName()));
             }
             var user = new ClaimsPrincipal(new ClaimsIdentity(claims, "mock"));
 

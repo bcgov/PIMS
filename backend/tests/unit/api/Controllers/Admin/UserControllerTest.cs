@@ -3,6 +3,7 @@ using MapsterMapper;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Pims.Api.Areas.Admin.Controllers;
+using Pims.Api.Areas.Admin.Models.GoldUser;
 using Pims.Core.Comparers;
 using Pims.Core.Test;
 using Pims.Dal.Helpers.Extensions;
@@ -121,7 +122,7 @@ namespace PimsApi.Test.Admin.Controllers
 
             var mapper = helper.GetService<IMapper>();
             var service = helper.GetService<Mock<IPimsAdminService>>();
-            var user = EntityHelper.CreateUser("user1");
+            var user = EntityHelper.CreateUser("user1") as Pims.Dal.Entities.GoldUser;
             service.Setup(m => m.User.Get(It.IsAny<Guid>())).Returns(user);
 
             // Act
@@ -186,7 +187,7 @@ namespace PimsApi.Test.Admin.Controllers
             var service = helper.GetService<Mock<IPimsAdminService>>();
             var user = EntityHelper.CreateUser("user1");
             service.Setup(m => m.User.Update(It.IsAny<Entity.User>()));
-            var model = mapper.Map<Model.UserModel>(user);
+            var model = mapper.Map<GoldUser>(user);
 
             // Act
             var result = controller.UpdateUser(user.Id, model);

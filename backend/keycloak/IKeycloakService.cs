@@ -10,9 +10,6 @@ namespace Pims.Keycloak
         Task DeleteAttackDetectionAsync();
         #endregion
 
-        Task<string> GetGoldUsersRolesAsync(string preferred_username);
-        Task<string> UpdateGoldRolesAsync(string preferred_username, string RoleName);
-
         #region Users
         Task<int> GetUserCountAsync();
         Task<Models.UserModel[]> GetUsersAsync(int first = 0, int max = 10, string search = null);
