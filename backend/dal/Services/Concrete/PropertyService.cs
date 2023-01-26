@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Text.Json;
+using Microsoft.EntityFrameworkCore;
 
 namespace Pims.Dal.Services
 {
@@ -143,7 +144,12 @@ namespace Pims.Dal.Services
             }
 
             IQueryable<Property> query = this.Context.GenerateAllPropertyQuery(this.User, filter);
-            IEnumerable<int?> userAgencies = this.Self.User.GetAgencies(this.User.GetUsername()).Select(a => (int?)a);
+            var user = this.Context.Users
+                .Include(u => u.Agencies)
+                .ThenInclude(a => a.Agency)
+                .ThenInclude(a => a.Children)
+                .SingleOrDefault(u => u.Username == this.User.GetUsername()) ?? throw new KeyNotFoundException();
+            var userAgencies = user.Agencies.Select(a => a.AgencyId).ToList();
 
             var properties = query.Select(p => new[] { Entities.PropertyTypes.Land, Entities.PropertyTypes.Subdivision }.Contains(p.PropertyTypeId) ? new ParcelModel(p, this.User) as PropertyModel : new BuildingModel(p, this.User)).ToArray();
 
@@ -163,7 +169,7 @@ namespace Pims.Dal.Services
             //Conditionally removing values from each property object before returning; Ensuring that the user has the correct permissions for each property.
             return properties.Select(p =>
             {
-                if (userAgencies.Contains(p.AgencyId) || this.User.HasClaim(c => c.Value == "admin-properties"))
+                if (userAgencies.Contains((int)p.AgencyId) || this.User.HasClaim(c => c.Value == "admin-properties"))
                 {
                     return p;
                 }

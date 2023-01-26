@@ -163,22 +163,8 @@ namespace Pims.Dal
             // get entries that are being Added or Updated
             var modifiedEntries = ChangeTracker.Entries()
                     .Where(x => (x.State == EntityState.Added || x.State == EntityState.Modified));
-            var username = (String)null;
-
-            if (username == null)
-            {
-
-                var context = new DefaultHttpContext();
-
-                username = context.Request.Headers["username"];
-
-            }
-            else
-            {
-
-                username = _httpContextAccessor.HttpContext.User.GetUsername();
-
-            }
+            var username = _httpContextAccessor.HttpContext.User != null ?_httpContextAccessor.HttpContext.User.GetUsername() : "sresfm";
+            
             var userId = this.Users.Where(u => u.Username == username).Select(u => u.Id).FirstOrDefault(); // TODO: Should add the User.Id to a claim so that it can be easily returned.
             foreach (var entry in modifiedEntries)
             {
