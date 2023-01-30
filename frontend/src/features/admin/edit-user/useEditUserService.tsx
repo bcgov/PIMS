@@ -37,7 +37,7 @@ const useEditUserService = (): IEditUserService => {
    */
   const addRole = async (username: string, roleName: string) => {
     try {
-      const res = await axios.post('/api' + UPDATE_ROLE(username), {
+      await axios.post('/api' + UPDATE_ROLE(username), {
         name: roleName,
       });
     } catch (e) {
@@ -56,7 +56,7 @@ const useEditUserService = (): IEditUserService => {
    */
   const deleteRole = async (username: string, roleName: string) => {
     try {
-      const res = await axios.delete('/api' + UPDATE_ROLE(username), {
+      await axios.delete('/api' + UPDATE_ROLE(username), {
         data: { name: roleName },
       });
     } catch (e) {
