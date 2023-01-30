@@ -1,10 +1,10 @@
-import { useKeycloak } from '@react-keycloak/web';
 import { act, cleanup, render } from '@testing-library/react';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import * as actionTypes from 'constants/actionTypes';
 import Claims from 'constants/claims';
 import * as reducerTypes from 'constants/reducerTypes';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { noop } from 'lodash';
 import React from 'react';
 import { Provider } from 'react-redux';
@@ -12,21 +12,19 @@ import * as redux from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import useKeycloakMock from 'useKeycloakWrapperMock';
 
 import useStepper from './hooks/useStepper';
 import ProjectDisposeView from './ProjectDisposeView';
 
-jest.mock('@react-keycloak/web');
-const mockKeycloak = (claims: string[]) => {
-  (useKeycloak as jest.Mock).mockReturnValue({
-    keycloak: {
-      userInfo: {
-        agencies: [1],
-        roles: [],
-      },
-      subject: 'test',
-    },
-  });
+const userAgencies: number[] = [1];
+const userAgency: number = 1;
+
+jest.mock('hooks/useKeycloakWrapper');
+const mockKeycloak = (userRoles: string[] | Claims[]) => {
+  (useKeycloakWrapper as jest.Mock).mockReturnValue(
+    new (useKeycloakMock as any)(userRoles, userAgencies, userAgency, true),
+  );
 };
 
 const useDispatchSpy = jest.spyOn(redux, 'useDispatch');

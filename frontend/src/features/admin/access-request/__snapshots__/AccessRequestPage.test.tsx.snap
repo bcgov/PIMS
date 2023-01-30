@@ -4,219 +4,157 @@ exports[`AccessRequestPage functionality renders RequestAccessPage correctly 1`]
 <div
   class="accessRequestPage"
 >
-  <div>
-    <h3>
-      Access Request
-    </h3>
-  </div>
-  <hr />
+  <h1
+    class="accessRequestPage-header"
+  >
+    Access Request
+  </h1>
   <div
-    class="container-fluid"
+    class="userInfo container-fluid"
   >
     <div
-      class="justify-content-md-center row"
+      class="justify-content-md-center ml-0 mr-0 row"
     >
-      <form
-        class="userInfo"
-        novalidate=""
+      <div
+        class="row"
       >
         <div
-          class="row"
-          controlid="input-user.username"
-          style="align-items: center;"
-        >
-          <div
-            class="col-md-auto"
-          >
-            <label
-              class="form-label"
-            >
-              IDIR/BCeID
-            </label>
-          </div>
-          <div
-            class="col-md-auto"
-          >
-            <div>
-              <input
-                class="form-control"
-                name="user.username"
-                readonly=""
-                type="text"
-                value=""
-              />
-            </div>
-          </div>
-        </div>
-        <div
-          class="row"
-        >
-          <div
-            class="col"
-          >
-            <div
-              class="row"
-              controlid="input-user.firstName"
-              style="align-items: center;"
-            >
-              <div
-                class="col-md-auto"
-              >
-                <label
-                  class="form-label"
-                >
-                  First Name
-                </label>
-              </div>
-              <div
-                class="col-md-auto"
-              >
-                <div>
-                  <input
-                    class="form-control"
-                    name="user.firstName"
-                    readonly=""
-                    type="text"
-                    value=""
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
-            class="col"
-          >
-            <div
-              class="row"
-              controlid="input-user.lastName"
-              style="align-items: center;"
-            >
-              <div
-                class="col-md-auto"
-              >
-                <label
-                  class="form-label"
-                >
-                  Last Name
-                </label>
-              </div>
-              <div
-                class="col-md-auto"
-              >
-                <div>
-                  <input
-                    class="form-control"
-                    name="user.lastName"
-                    readonly=""
-                    type="text"
-                    value=""
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div
-          class="row"
-          controlid="input-user.email"
-          style="align-items: center;"
-        >
-          <div
-            class="col-md-auto"
-          >
-            <label
-              class="form-label"
-            >
-              Email
-            </label>
-          </div>
-          <div
-            class="col-md-auto"
-          >
-            <div>
-              <input
-                class="form-control"
-                name="user.email"
-                readonly=""
-                type="email"
-                value=""
-              />
-            </div>
-          </div>
-        </div>
-        <div
-          class="required row"
-          controlid="input-agency"
-          style="align-items: center;"
-        >
-          <div
-            class="col-md-auto"
-          >
-            <label
-              class="form-label"
-            >
-              Agency
-            </label>
-          </div>
-          <div
-            class="col-md-auto"
-            style="padding: 0px;"
-          >
-            <select
-              class="form-select form-control"
-              name="agency"
-              required=""
-            >
-              <option
-                value=""
-              >
-                Please Select
-              </option>
-              <option
-                class="option"
-                value="1"
-              >
-                agencyVal
-              </option>
-            </select>
-          </div>
-        </div>
-        <div
-          class="row"
-          controlid="input-user.position"
-          style="align-items: center;"
-        >
-          <div
-            class="col-md-auto"
-          >
-            <label
-              class="form-label"
-            >
-              Position
-            </label>
-          </div>
-          <div
-            class="col-md-auto"
-          >
-            <div>
-              <input
-                class="form-control"
-                name="user.position"
-                placeholder="e.g) Director, Real Estate and Stakeholder Engagement"
-                type="text"
-                value=""
-              />
-            </div>
-          </div>
-        </div>
-        <div
-          class="check-roles"
+          class="col-4"
         >
           <label
             class="form-label"
           >
-            Roles
-             
+            IDIR/BCeID
+          </label>
+          <h5>
+            tester
+          </h5>
+        </div>
+        <div
+          class="col-4 offset-4"
+        >
+          <label
+            class="form-label"
+          >
+            Email
+          </label>
+          <h5 />
+        </div>
+      </div>
+      <div
+        class="row"
+      >
+        <div
+          class="col-4"
+        >
+          <label
+            class="form-label"
+          >
+            First Name
+          </label>
+          <h5>
+            firstName
+          </h5>
+        </div>
+        <div
+          class="col-4 offset-4"
+        >
+          <label
+            class="form-label"
+          >
+            Last Name
+          </label>
+          <h5>
+            lastName
+          </h5>
+        </div>
+      </div>
+      <div
+        class="row"
+      >
+        <div
+          class="col-12"
+        >
+          <label
+            class="form-label"
+          >
+            Agency
+          </label>
+          <div
+            class="required mx-0 row"
+            controlid="input-agency"
+            style="align-items: center;"
+          >
+            <div
+              class="col-md-auto"
+            />
+            <div
+              class="col-md-auto"
+              style="padding: 0px;"
+            >
+              <select
+                class="agency-selector form-select form-control"
+                name="agency"
+                required=""
+              >
+                <option
+                  value=""
+                >
+                  Select an agency
+                </option>
+                <option
+                  class="option"
+                  value="1"
+                >
+                  agencyVal
+                </option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="row"
+      >
+        <div
+          class="col-12"
+        >
+          <label
+            class="form-label"
+          >
+            Position
+          </label>
+          <div
+            class="position-input mx-0 row"
+            controlid="input-user.position"
+            style="align-items: center;"
+          >
+            <div
+              class="col-md-auto"
+            >
+              <div>
+                <input
+                  class="form-control"
+                  name="user.position"
+                  placeholder="e.g Director, Real Estate and Stakeholder Engagement"
+                  type="text"
+                  value=""
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="row"
+      >
+        <div
+          class="col-12"
+        >
+          <label
+            class="form-label"
+          >
+            Role 
             <a
               href="https://github.com/bcgov/PIMS/wiki/Architecture-Security"
               rel="noopener noreferrer"
@@ -225,66 +163,72 @@ exports[`AccessRequestPage functionality renders RequestAccessPage correctly 1`]
               Role Descriptions
             </a>
           </label>
-          <div>
+          <div
+            class="required mx-0 roles-input row"
+            controlid="input-role"
+            style="align-items: center;"
+          >
             <div
-              class="required row"
-              controlid="input-role"
-              style="align-items: center;"
+              class="col-md-auto"
+            />
+            <div
+              class="col-md-auto"
+              style="padding: 0px;"
             >
-              <div
-                class="col-md-auto"
-              />
-              <div
-                class="col-md-auto"
-                style="padding: 0px;"
+              <select
+                class="form-select form-control"
+                name="role"
+                required=""
               >
-                <select
-                  class="form-select form-control"
-                  name="role"
-                  required=""
+                <option
+                  value=""
                 >
-                  <option
-                    value=""
-                  >
-                    Please Select
-                  </option>
-                  <option
-                    class="option"
-                    value="1"
-                  >
-                    roleVal
-                  </option>
-                </select>
+                  Select a role
+                </option>
+                <option
+                  class="option"
+                  value="1"
+                >
+                  roleVal
+                </option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="row"
+      >
+        <div
+          class="col-12"
+        >
+          <label
+            class="form-label"
+          >
+            Notes
+          </label>
+          <div
+            class="required notes-input mx-0 row"
+            controlid="input-note"
+            style="align-items: center;"
+          >
+            <div
+              class="col-md-auto"
+            >
+              <div>
+                <textarea
+                  class="form-control"
+                  name="note"
+                  placeholder="Please specify why you need access to PIMS and include your manager's name."
+                />
               </div>
             </div>
           </div>
         </div>
-        <div
-          class="required row"
-          controlid="input-note"
-          style="align-items: center;"
-        >
-          <div
-            class="col-md-auto"
-          >
-            <label
-              class="form-label"
-            >
-              Notes
-            </label>
-          </div>
-          <div
-            class="col-md-auto"
-          >
-            <div>
-              <textarea
-                class="form-control"
-                name="note"
-                placeholder="Please specify why you need access to PIMS and include your manager's name."
-              />
-            </div>
-          </div>
-        </div>
+      </div>
+      <div
+        class="row"
+      >
         <p>
           By clicking request, you agree to our
            
@@ -302,22 +246,26 @@ exports[`AccessRequestPage functionality renders RequestAccessPage correctly 1`]
           </a>
           .
         </p>
+      </div>
+      <div
+        class="row"
+      >
         <div
-          class="justify-content-md-center row"
+          class="col-12"
         >
           <div
-            class="cancelSave btn-toolbar"
+            class="cancelSave pt-0 pb-0 btn-toolbar"
             role="toolbar"
           >
             <button
-              class="mr-5 btn btn-primary"
+              class="w-100 btn btn-primary"
               type="submit"
             >
               Submit
             </button>
           </div>
         </div>
-      </form>
+      </div>
     </div>
   </div>
 </div>
