@@ -225,7 +225,7 @@ export function useKeycloakWrapper(): IKeycloak {
       idir_user_guid: userInfo?.idir_user_guid && convertToGuidFormat(userInfo.idir_user_guid),
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [keycloakInstance],
+    [keycloakInstance, usersAgencies.length],
   );
 }
 
