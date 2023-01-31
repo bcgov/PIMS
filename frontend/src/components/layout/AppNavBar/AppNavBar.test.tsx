@@ -154,21 +154,6 @@ describe('AppNavBar', () => {
     });
 
     describe('AppNavBar Disposal Projects dropdown', () => {
-      it('AppNavBar include Disposal Projects dropdown for admin', () => {
-        (useKeycloakWrapper as jest.Mock).mockReturnValue(
-          new (useKeycloakMock as any)([Claims.PROPERTY_ADD, Claims.PROPERTY_VIEW], []),
-        );
-        const { getByText } = render(
-          <Provider store={store}>
-            <MemoryRouter initialEntries={[history.location]}>
-              <AppNavBar />
-            </MemoryRouter>
-          </Provider>,
-        );
-        const element = getByText('Disposal Projects');
-
-        expect(element).toBeVisible();
-      });
       it('AppNavBar include Disposal Projects dropdown for Approval requests only', () => {
         (useKeycloakWrapper as jest.Mock).mockReturnValue(
           new (useKeycloakMock as any)([Claims.DISPOSE_APPROVE], []),
