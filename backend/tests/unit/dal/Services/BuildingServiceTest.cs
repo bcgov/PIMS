@@ -31,7 +31,7 @@ namespace Pims.Dal.Test.Services
             {
                 new object[] { new BuildingFilter(48.571155, -123.657596, 48.492947, -123.731803), 1 },
                 new object[] { new BuildingFilter(48.821333, -123.795017, 48.763431, -123.959783), 0 },
-                new object[] { new BuildingFilter() { Agencies = new int[] { 3 } }, 25 },
+                new object[] { new BuildingFilter() { Agencies = new int[] { 3 } }, 10 },
                 new object[] { new BuildingFilter() { ClassificationId = 2 }, 1 },
                 new object[] { new BuildingFilter() { Description = "DescriptionTest" }, 1 },
                 new object[] { new BuildingFilter() { Tenancy = "BuildingTenancy" }, 1 },
@@ -107,17 +107,6 @@ namespace Pims.Dal.Test.Services
             buildings.Next(6).BuildingPredominateUseId = 2;
             buildings.Next(7).RentableArea = 100;
             buildings.Next(8).RentableArea = 50;
-            //buildings.Next(9).AgencyId = 33;
-            //buildings.Next(10).AgencyId = 33;
-            //buildings.Next(11).AgencyId = 33;
-            //buildings.Next(12).AgencyId = 33;
-            //buildings.Next(13).AgencyId = 33;
-            //buildings.Next(14).AgencyId = 33;
-            //buildings.Next(15).AgencyId = 33;
-            //buildings.Next(16).AgencyId = 33;
-            //buildings.Next(17).AgencyId = 33;
-            //buildings.Next(18).AgencyId = 33;
-            //buildings.Next(19).AgencyId = 33;
 
             var parcel2 = init.CreateParcel(22);
             parcel2.Address.AdministrativeArea = "-AdministrativeArea-";
@@ -739,7 +728,12 @@ namespace Pims.Dal.Test.Services
             var helper = new TestHelper();
             var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.PropertyEdit);
             var init = helper.InitializeDatabase(user);
-            var building = init.CreateBuilding(1);
+            var agency = new Entity.Agency("TEST", "Test Agency")
+            {
+                Id = 111,
+                RowVersion = new byte[] { 12, 13, 14 }
+            };
+            var building = init.CreateBuilding(1, null, null, 0, 0, agency);
             init.SaveChanges();
 
             var service = helper.CreateService<BuildingService>();

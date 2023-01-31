@@ -1736,8 +1736,7 @@ namespace Pims.Dal.Test.Services
             var helper = new TestHelper();
             var user = PrincipalHelper.CreateForPermission(Permissions.ProjectDelete);
             var init = helper.InitializeDatabase(user);
-            var project = init.CreateProject(1);
-            helper.CreatePimsContext(user).AddAndSaveChanges(project);
+            var project = init.CreateProject(1, 12);
             init.SaveChanges();
 
             var options = ControllerHelper.CreateDefaultPimsOptions();

@@ -1189,11 +1189,11 @@ namespace Pims.Dal.Test.Services
         {
             // Arrange
             var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.PropertyAdd, Permissions.PropertyEdit).AddAgency(10);
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.PropertyAdd, Permissions.PropertyEdit, Permissions.AdminProperties).AddAgency(10);
             var init = helper.InitializeDatabase(user);
-            var parcel = EntityHelper.CreateParcel(1, 3);
+            var parcel = EntityHelper.CreateParcel(1);
 
-            var originalParcel = init.CreateParcel(2, 3);
+            var originalParcel = init.CreateParcel(2);
             init.SaveChanges();
 
             var options = ControllerHelper.CreateDefaultPimsOptions();
@@ -1249,7 +1249,7 @@ namespace Pims.Dal.Test.Services
         {
             // Arrange
             var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.PropertyEdit, Permissions.PropertyAdd).AddAgency(10);
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.PropertyEdit, Permissions.PropertyAdd, Permissions.AdminProperties).AddAgency(10);
             var init = helper.InitializeDatabase(user);
             var originalParcel = init.CreateParcel(1, 3);
             var updatedParcel = init.CreateParcel(3, 3);
