@@ -39,13 +39,13 @@ const lCodes = {
 };
 
 const selectedUser = {
-  username: 'test.user',
-  firstName: 'Test',
-  lastName: 'User',
-  email: 'test@user.com',
+  username: 'tester',
+  firstName: 'firstName',
+  lastName: 'lastName',
+  email: '',
   isDisabled: false,
   emailVerified: false,
-  agencies: [],
+  agencies: [1],
   roles: [{ id: '2' }],
   rowVersion: 'AAAAAAAAB9E=',
   note: 'test note',

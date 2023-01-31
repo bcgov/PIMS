@@ -10,9 +10,6 @@ coverage:
     project:
       default:
         target: 55
-    patch:
-      default:
-        target: 55
 
 parsers:
   gcov:

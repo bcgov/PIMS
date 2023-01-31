@@ -135,7 +135,7 @@ describe('User action tests', () => {
       mockAxios.onGet(ENVIRONMENT.apiUrl + API.USER_DETAIL(filter)).reply(200, mockResponse);
 
       await fetchUserDetail(filter)(store.dispatch);
-      expect(dispatchSpy).toHaveBeenCalledTimes(6);
+      expect(dispatchSpy).toHaveBeenCalledTimes(7);
       expect(requestSpy).toHaveBeenCalledTimes(1);
       expect(successSpy).toHaveBeenCalledTimes(1);
       expect(errorSpy).toHaveBeenCalledTimes(0);

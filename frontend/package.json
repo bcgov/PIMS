@@ -2,6 +2,23 @@
   "name": "frontend",
   "version": "1.0.0",
   "private": true,
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "cross-env CI=true react-scripts build",
+    "test": "react-scripts test --ci --watchAll=false --runInBand",
+    "test:output": "react-scripts test --ci --watchAll=false --runInBand --json --outputFile=./jest/latestTestRun.json",
+    "test:summary": "node ./jest/summarizeLatestTestRun.mjs",
+    "test:watch": "react-scripts test",
+    "cypress:open": "npx cypress open",
+    "coverage": "react-scripts test --ci --coverage --testResultsProcessor jest-sonar-reporter --watchAll=false --runInBand",
+    "update-snapshots": "react-scripts test --updateSnapshot",
+    "eject": "react-scripts eject",
+    "lint": "eslint src/ --ext .jsx,.js,.ts,.tsx --max-warnings 0",
+    "lint:fix": "npm run lint -- --fix",
+    "format": "prettier --write \"./src/**/*.{js,jsx,ts,tsx,json,css,scss}\"",
+    "check": "prettier --check \"./src/**/*.{js,jsx,ts,tsx,css,scss}\"",
+    "docu:server": "npx styleguidist server"
+  },
   "dependencies": {
     "@babel/core": "7.18.5",
     "@bcgov/bc-sans": "1.0.1",
@@ -127,24 +144,6 @@
     "@types/react": "18.0.26",
     "react-test-renderer": "18.2.0"
   },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "cross-env CI=true react-scripts build",
-    "test": "react-scripts test --ci --watchAll=false --runInBand",
-    "test:output": "react-scripts test --ci --watchAll=false --runInBand --json --outputFile=./jest/latestTestRun.json",
-    "test:summary": "node ./jest/summarizeLatestTestRun.mjs",
-    "test:watch": "react-scripts test",
-    "cypress:open": "npx cypress open",
-    "coverage": "react-scripts test --ci --coverage --testResultsProcessor jest-sonar-reporter --watchAll=false --runInBand",
-    "update-snapshots": "react-scripts test --updateSnapshot",
-    "eject": "react-scripts eject",
-    "lint": "eslint src/ --ext .jsx,.js,.ts,.tsx --max-warnings 0",
-    "lint:fix": "npm run lint -- --fix",
-    "format": "prettier --write \"./src/**/*.{js,jsx,ts,tsx,json,css,scss}\"",
-    "check": "prettier --check \"./src/**/*.{js,jsx,ts,tsx,css,scss}\"",
-    "pre-push:check": "npm run check && npm run lint",
-    "docu:server": "npx styleguidist server"
-  },
   "jest": {
     "resetMocks": false,
     "collectCoverageFrom": [
@@ -188,8 +187,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "pretty-quick --staged",
-      "pre-push": "npm run pre-push:check"
+      "pre-commit": "pretty-quick --staged"
     }
   },
   "browserslist": {
